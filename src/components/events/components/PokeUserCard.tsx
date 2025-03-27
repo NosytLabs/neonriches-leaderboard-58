@@ -7,6 +7,7 @@ import { DollarSign, Zap, Sparkles } from 'lucide-react';
 import { getTeamColor } from '../data';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
+import OptimizedImage from '@/components/ui/optimized-image';
 
 interface PokeUserCardProps {
   user: {
@@ -42,7 +43,13 @@ const PokeUserCard: React.FC<PokeUserCardProps> = ({
               <div className={`w-12 h-12 rounded-full overflow-hidden border-2 border-${getTeamColor(user.team)} mr-3 ${
                 isPoked ? 'animate-crown-glow' : ''
               }`}>
-                <img src={user.profileImage} alt={user.username} className="w-full h-full object-cover" />
+                <OptimizedImage 
+                  src={user.profileImage} 
+                  alt={user.username} 
+                  className="w-full h-full" 
+                  width={48}
+                  height={48}
+                />
               </div>
               <div>
                 <div className="flex items-center">

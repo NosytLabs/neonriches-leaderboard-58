@@ -2,6 +2,7 @@
 import React from 'react';
 import { DollarSign, Info } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import OptimizedImage from '@/components/ui/optimized-image';
 
 interface EventHeaderProps {
   name: string;
@@ -11,10 +12,11 @@ interface EventHeaderProps {
 const EventHeader = ({ name, image }: EventHeaderProps) => {
   return (
     <div className="relative h-48 md:h-64">
-      <img 
+      <OptimizedImage 
         src={image} 
         alt={name} 
-        className="w-full h-full object-cover"
+        className="w-full h-full"
+        loadingStrategy="eager" // Load this immediately as it's a hero image
       />
       <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
       <div className="absolute bottom-0 left-0 p-6">

@@ -8,6 +8,8 @@ import CountdownTimer from './CountdownTimer';
 import { toast } from '@/hooks/use-toast';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { formatDate } from '@/utils/timeUtils';
+import RankingDisclaimer from '@/components/shared/RankingDisclaimer';
+import OptimizedImage from '@/components/ui/optimized-image';
 
 const UpcomingEvents = () => {
   const handleNotifyMe = (eventName: string) => {
@@ -44,14 +46,22 @@ const UpcomingEvents = () => {
           </Tooltip>
         </div>
         
+        <RankingDisclaimer 
+          variant="info" 
+          messagePrefix="Events Reminder:" 
+          className="mb-6"
+        />
+        
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {upcomingEvents.map((event) => (
             <Card key={event.id} className="glass-morphism border-white/10 overflow-hidden">
               <div className="relative h-40">
-                <img 
+                <OptimizedImage 
                   src={event.image} 
                   alt={event.name} 
-                  className="w-full h-full object-cover"
+                  className="w-full h-full"
+                  loadingStrategy="lazy"
+                  placeholderColor="#1a1a2a"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
                 <div className="absolute bottom-0 left-0 p-4">
