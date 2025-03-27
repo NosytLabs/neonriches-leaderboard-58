@@ -46,7 +46,7 @@ const RoyalHero = () => {
   };
   
   const handleQuickAscension = () => {
-    playSound('coinSound', 0.3);
+    playSound('reward', 0.3);
     toast({
       title: "Nobility Beckons!",
       description: "Your journey to meaningless digital status begins now!",
