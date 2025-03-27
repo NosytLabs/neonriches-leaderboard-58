@@ -1,3 +1,4 @@
+
 import { UserProfile } from '@/contexts/AuthContext';
 import { toast } from '@/hooks/use-toast';
 
@@ -42,6 +43,7 @@ export const spendFromWallet = async (
       amount,
       type,
       date: new Date(),
+      timestamp: new Date(), // Added timestamp field
       description,
       metadata
     };
@@ -94,6 +96,7 @@ export const depositToWallet = async (
       amount,
       type: 'deposit',
       date: new Date(),
+      timestamp: new Date(), // Added timestamp field
       description
     };
     
@@ -133,7 +136,7 @@ export const getUserTransactions = async (userId: string, limit: number = 10): P
       .filter((txn: Transaction) => txn.userId === userId)
       .map((txn: Transaction) => ({
         ...txn,
-        timestamp: txn.date,
+        timestamp: txn.timestamp || txn.date, // Ensure timestamp exists
         date: new Date(txn.date)
       }))
       .sort((a: Transaction, b: Transaction) => 

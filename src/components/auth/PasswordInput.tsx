@@ -11,7 +11,8 @@ interface PasswordInputProps {
   placeholder?: string;
   hasError?: boolean;
   isValid?: boolean;
-  disabled?: boolean; // Added the disabled prop
+  disabled?: boolean;
+  required?: boolean; // Added the required prop
 }
 
 const PasswordInput = ({
@@ -22,7 +23,8 @@ const PasswordInput = ({
   placeholder = "••••••••",
   hasError = false,
   isValid = false,
-  disabled = false, // Set default value
+  disabled = false,
+  required = false, // Set default value
 }: PasswordInputProps) => {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -41,6 +43,7 @@ const PasswordInput = ({
           hasError ? 'border-destructive' : isValid ? 'border-green-500' : ''
         }`}
         disabled={disabled}
+        required={required}
       />
       <button 
         type="button" 

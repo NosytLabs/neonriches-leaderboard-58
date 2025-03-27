@@ -3,13 +3,18 @@ import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Shield, Crown } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import LoginForm from '@/components/auth/LoginForm';
 import RegisterForm from '@/components/auth/RegisterForm';
 import ThroneBackground from '@/components/ui/throne-background';
 
 const Auth = () => {
   const [activeTab, setActiveTab] = useState<'login' | 'register'>('login');
+  const navigate = useNavigate();
+  
+  const handleAuthSuccess = () => {
+    navigate('/');
+  };
   
   return (
     <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
@@ -48,10 +53,10 @@ const Auth = () => {
               </TabsTrigger>
             </TabsList>
             <TabsContent value="login">
-              <LoginForm />
+              <LoginForm onSuccess={handleAuthSuccess} />
             </TabsContent>
             <TabsContent value="register">
-              <RegisterForm />
+              <RegisterForm onSuccess={handleAuthSuccess} />
             </TabsContent>
           </Tabs>
         </CardContent>
