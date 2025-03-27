@@ -59,7 +59,13 @@ const Profile = () => {
 
   const toggleEditMode = () => {
     setEditMode(!editMode);
-    return Promise.resolve(); // Updated to return a Promise to match expected type
+    return Promise.resolve(); // Return a Promise to match the expected type
+  };
+
+  // Fix for line 75 - ensure all handlers return Promises
+  const handleTabChange = (value: string) => {
+    setActiveTab(value);
+    return Promise.resolve(); // Return a Promise to match the expected type
   };
 
   return (
@@ -72,13 +78,19 @@ const Profile = () => {
             <div className="lg:col-span-1">
               <ProfileSidebar 
                 user={user} 
-                onLogout={signOut}
-                onUpdateProfile={updateProfile}
+                onLogout={() => {
+                  signOut();
+                  return Promise.resolve();
+                }}
+                onUpdateProfile={() => {
+                  updateProfile();
+                  return Promise.resolve();
+                }}
               />
             </div>
             
             <div className="lg:col-span-3">
-              <Tabs value={activeTab} onValueChange={setActiveTab}>
+              <Tabs value={activeTab} onValueChange={handleTabChange}>
                 <TabsList className="glass-morphism border-white/10 w-full">
                   <TabsTrigger value="profile" className="flex-1">
                     <UserCog className="h-4 w-4 mr-2" />
@@ -99,7 +111,7 @@ const Profile = () => {
                     title="Your Profile" 
                     editMode={editMode} 
                     onEditToggle={toggleEditMode}
-                    onSave={() => Promise.resolve()} // Fix: Return a Promise here
+                    onSave={() => Promise.resolve()}
                   />
                   
                   {editMode ? (
@@ -109,7 +121,7 @@ const Profile = () => {
                       onSave={handleSaveProfile}
                       onCancel={() => {
                         setEditMode(false);
-                        return Promise.resolve(); // Fix: Return a Promise here
+                        return Promise.resolve();
                       }}
                     />
                   ) : (
