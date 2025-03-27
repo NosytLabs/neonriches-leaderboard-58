@@ -58,8 +58,8 @@ const Profile = () => {
   };
 
   const toggleEditMode = () => {
-    // Return a Promise to match the expected type in ProfileHeader
-    return Promise.resolve();
+    setEditMode(!editMode);
+    return Promise.resolve(); // Updated to return a Promise to match expected type
   };
 
   return (
