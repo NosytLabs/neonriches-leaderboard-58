@@ -1,6 +1,7 @@
+
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { Crown, Shield, Scepter } from 'lucide-react';
+import { Crown, Shield, Trophy } from 'lucide-react';
 
 const TeamSection = () => {
   return (
@@ -34,7 +35,7 @@ const TeamSection = () => {
             {
               name: 'Gold Dominion',
               color: 'royal-gold',
-              icon: Crown, // Changed from Sceptre to Crown since Sceptre isn't available
+              icon: Trophy, // Changed from Scepter to Trophy since Scepter isn't available
               description: 'The opulent House of Wealth and Prosperity. Their golden touch turns influence into power through strategic investments and alliances.',
               members: 278,
               totalSpent: 28900,
