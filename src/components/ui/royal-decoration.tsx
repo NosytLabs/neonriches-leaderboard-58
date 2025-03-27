@@ -1,7 +1,6 @@
-
 import React from 'react';
 import { cn } from '@/lib/utils';
-import MedievalIcon from './medieval-icon';
+import MedievalIcon, { MedievalIconName } from './medieval-icon';
 
 type DecorationVariant = 
   | 'corner-flourish'
@@ -50,7 +49,7 @@ const RoyalDecoration: React.FC<RoyalDecorationProps> = ({
   };
 
   // Define a mapping from decoration sizes to icon sizes
-  const sizeToIconSizeMap: Record<string, MedievalIcon['size']> = {
+  const sizeToIconSizeMap: Record<string, "xs" | "sm" | "md" | "lg" | "xl" | "2xl"> = {
     'sm': 'sm',
     'md': 'md',
     'lg': 'lg'
