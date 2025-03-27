@@ -50,7 +50,7 @@ export const upcomingEvents: Event[] = [
   {
     id: 'team-war-v1',
     name: 'RGB Team War',
-    description: 'Teams compete to contribute the most during the event. The winning team's members all receive a special profile border for one week. No change to the 1:1 rank ratio.',
+    description: 'Teams compete to contribute the most during the event. The winning team\'s members all receive a special profile border for one week. No change to the 1:1 rank ratio.',
     startDate: new Date(new Date().getTime() + 21 * 24 * 60 * 60 * 1000), // 21 days from now
     endDate: new Date(new Date().getTime() + 28 * 24 * 60 * 60 * 1000), // 28 days from now
     type: 'team',
