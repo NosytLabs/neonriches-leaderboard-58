@@ -9,7 +9,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
-import { Crown, Lock, Mail, User } from 'lucide-react';
+import { Crown, Lock, Mail, User, Eye, EyeOff, AlertCircle, CheckCircle } from 'lucide-react';
 import ThroneBackground from '@/components/ui/throne-background';
 
 const Auth = () => {
@@ -20,11 +20,16 @@ const Auth = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
 
+  // Form visibility states
+  const [showLoginPassword, setShowLoginPassword] = useState(false);
+  const [showRegisterPassword, setShowRegisterPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
   // Login form state
   const [loginEmail, setLoginEmail] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
   const [loginErrors, setLoginErrors] = useState({ email: '', password: '' });
-
+  
   // Register form state
   const [registerEmail, setRegisterEmail] = useState('');
   const [registerUsername, setRegisterUsername] = useState('');
@@ -37,6 +42,10 @@ const Auth = () => {
     confirmPassword: '' 
   });
 
+  // Real-time validation states
+  const [isValidatingLogin, setIsValidatingLogin] = useState(false);
+  const [isValidatingRegister, setIsValidatingRegister] = useState(false);
+
   // Redirect if already logged in
   useEffect(() => {
     if (user) {
@@ -44,6 +53,20 @@ const Auth = () => {
       navigate(redirectTo);
     }
   }, [user, navigate, location]);
+
+  // Real-time validation for login form
+  useEffect(() => {
+    if (isValidatingLogin) {
+      validateLogin();
+    }
+  }, [loginEmail, loginPassword, isValidatingLogin]);
+
+  // Real-time validation for register form
+  useEffect(() => {
+    if (isValidatingRegister) {
+      validateRegister();
+    }
+  }, [registerEmail, registerUsername, registerPassword, confirmPassword, isValidatingRegister]);
 
   const validateLogin = () => {
     const errors = { email: '', password: '' };
@@ -109,6 +132,7 @@ const Auth = () => {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    setIsValidatingLogin(true);
     if (!validateLogin()) return;
 
     setIsLoading(true);
@@ -133,6 +157,7 @@ const Auth = () => {
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    setIsValidatingRegister(true);
     if (!validateRegister()) return;
 
     setIsLoading(true);
@@ -153,6 +178,10 @@ const Auth = () => {
       setIsLoading(false);
     }
   };
+
+  const toggleLoginPasswordVisibility = () => setShowLoginPassword(!showLoginPassword);
+  const toggleRegisterPasswordVisibility = () => setShowRegisterPassword(!showRegisterPassword);
+  const toggleConfirmPasswordVisibility = () => setShowConfirmPassword(!showConfirmPassword);
 
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground">
@@ -196,10 +225,21 @@ const Auth = () => {
                           placeholder="your@email.com" 
                           value={loginEmail}
                           onChange={(e) => setLoginEmail(e.target.value)}
-                          className="glass-morphism border-white/10 pl-10"
+                          onFocus={() => setIsValidatingLogin(true)}
+                          className={`glass-morphism border-white/10 pl-10 transition-all ${
+                            loginErrors.email ? 'border-destructive' : loginEmail && !loginErrors.email ? 'border-green-500' : ''
+                          }`}
                         />
+                        {loginEmail && !loginErrors.email && (
+                          <CheckCircle className="absolute right-3 top-3 h-4 w-4 text-green-500" />
+                        )}
                       </div>
-                      {loginErrors.email && <p className="text-xs text-destructive">{loginErrors.email}</p>}
+                      {loginErrors.email && (
+                        <div className="flex items-center text-xs text-destructive mt-1">
+                          <AlertCircle className="h-3 w-3 mr-1" />
+                          {loginErrors.email}
+                        </div>
+                      )}
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="password">Password</Label>
@@ -207,14 +247,29 @@ const Auth = () => {
                         <Lock className="absolute left-3 top-3 h-4 w-4 text-white/40" />
                         <Input 
                           id="password" 
-                          type="password" 
+                          type={showLoginPassword ? "text" : "password"} 
                           placeholder="••••••••" 
                           value={loginPassword}
                           onChange={(e) => setLoginPassword(e.target.value)}
-                          className="glass-morphism border-white/10 pl-10"
+                          onFocus={() => setIsValidatingLogin(true)}
+                          className={`glass-morphism border-white/10 pl-10 pr-10 transition-all ${
+                            loginErrors.password ? 'border-destructive' : loginPassword && !loginErrors.password ? 'border-green-500' : ''
+                          }`}
                         />
+                        <button 
+                          type="button" 
+                          onClick={toggleLoginPasswordVisibility}
+                          className="absolute right-3 top-3 text-white/40 hover:text-white transition-colors"
+                        >
+                          {showLoginPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                        </button>
                       </div>
-                      {loginErrors.password && <p className="text-xs text-destructive">{loginErrors.password}</p>}
+                      {loginErrors.password && (
+                        <div className="flex items-center text-xs text-destructive mt-1">
+                          <AlertCircle className="h-3 w-3 mr-1" />
+                          {loginErrors.password}
+                        </div>
+                      )}
                     </div>
                     <div className="flex items-center space-x-2">
                       <Checkbox 
@@ -229,14 +284,29 @@ const Auth = () => {
                         Remember me
                       </label>
                     </div>
+                    <div className="text-right">
+                      <button 
+                        type="button"
+                        className="text-sm text-white/60 hover:text-royal-gold transition-colors"
+                      >
+                        Forgot your password?
+                      </button>
+                    </div>
                   </CardContent>
                   <CardFooter>
                     <Button 
                       type="submit" 
-                      className="w-full royal-button bg-gradient-royal hover:opacity-90 text-white"
+                      className="w-full royal-button bg-gradient-royal hover:opacity-90 text-white relative overflow-hidden group"
                       disabled={isLoading}
                     >
-                      {isLoading ? "Verifying..." : "Enter the Realm"}
+                      <span className="relative z-10 flex items-center justify-center">
+                        {isLoading ? "Verifying..." : (
+                          <>
+                            Enter the Realm 
+                            <Crown className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                          </>
+                        )}
+                      </span>
                     </Button>
                   </CardFooter>
                 </form>
@@ -261,10 +331,21 @@ const Auth = () => {
                           placeholder="your@email.com" 
                           value={registerEmail}
                           onChange={(e) => setRegisterEmail(e.target.value)}
-                          className="glass-morphism border-white/10 pl-10"
+                          onFocus={() => setIsValidatingRegister(true)}
+                          className={`glass-morphism border-white/10 pl-10 transition-all ${
+                            registerErrors.email ? 'border-destructive' : registerEmail && !registerErrors.email ? 'border-green-500' : ''
+                          }`}
                         />
+                        {registerEmail && !registerErrors.email && (
+                          <CheckCircle className="absolute right-3 top-3 h-4 w-4 text-green-500" />
+                        )}
                       </div>
-                      {registerErrors.email && <p className="text-xs text-destructive">{registerErrors.email}</p>}
+                      {registerErrors.email && (
+                        <div className="flex items-center text-xs text-destructive mt-1">
+                          <AlertCircle className="h-3 w-3 mr-1" />
+                          {registerErrors.email}
+                        </div>
+                      )}
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="username">Username</Label>
@@ -276,10 +357,21 @@ const Auth = () => {
                           placeholder="NobleName" 
                           value={registerUsername}
                           onChange={(e) => setRegisterUsername(e.target.value)}
-                          className="glass-morphism border-white/10 pl-10"
+                          onFocus={() => setIsValidatingRegister(true)}
+                          className={`glass-morphism border-white/10 pl-10 transition-all ${
+                            registerErrors.username ? 'border-destructive' : registerUsername && !registerErrors.username ? 'border-green-500' : ''
+                          }`}
                         />
+                        {registerUsername && !registerErrors.username && (
+                          <CheckCircle className="absolute right-3 top-3 h-4 w-4 text-green-500" />
+                        )}
                       </div>
-                      {registerErrors.username && <p className="text-xs text-destructive">{registerErrors.username}</p>}
+                      {registerErrors.username && (
+                        <div className="flex items-center text-xs text-destructive mt-1">
+                          <AlertCircle className="h-3 w-3 mr-1" />
+                          {registerErrors.username}
+                        </div>
+                      )}
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="register-password">Password</Label>
@@ -287,14 +379,29 @@ const Auth = () => {
                         <Lock className="absolute left-3 top-3 h-4 w-4 text-white/40" />
                         <Input 
                           id="register-password" 
-                          type="password" 
+                          type={showRegisterPassword ? "text" : "password"} 
                           placeholder="••••••••" 
                           value={registerPassword}
                           onChange={(e) => setRegisterPassword(e.target.value)}
-                          className="glass-morphism border-white/10 pl-10"
+                          onFocus={() => setIsValidatingRegister(true)}
+                          className={`glass-morphism border-white/10 pl-10 pr-10 transition-all ${
+                            registerErrors.password ? 'border-destructive' : registerPassword && !registerErrors.password ? 'border-green-500' : ''
+                          }`}
                         />
+                        <button 
+                          type="button" 
+                          onClick={toggleRegisterPasswordVisibility}
+                          className="absolute right-3 top-3 text-white/40 hover:text-white transition-colors"
+                        >
+                          {showRegisterPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                        </button>
                       </div>
-                      {registerErrors.password && <p className="text-xs text-destructive">{registerErrors.password}</p>}
+                      {registerErrors.password && (
+                        <div className="flex items-center text-xs text-destructive mt-1">
+                          <AlertCircle className="h-3 w-3 mr-1" />
+                          {registerErrors.password}
+                        </div>
+                      )}
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="confirm-password">Confirm Password</Label>
@@ -302,23 +409,45 @@ const Auth = () => {
                         <Lock className="absolute left-3 top-3 h-4 w-4 text-white/40" />
                         <Input 
                           id="confirm-password" 
-                          type="password" 
+                          type={showConfirmPassword ? "text" : "password"} 
                           placeholder="••••••••" 
                           value={confirmPassword}
                           onChange={(e) => setConfirmPassword(e.target.value)}
-                          className="glass-morphism border-white/10 pl-10"
+                          onFocus={() => setIsValidatingRegister(true)}
+                          className={`glass-morphism border-white/10 pl-10 pr-10 transition-all ${
+                            registerErrors.confirmPassword ? 'border-destructive' : confirmPassword && !registerErrors.confirmPassword ? 'border-green-500' : ''
+                          }`}
                         />
+                        <button 
+                          type="button" 
+                          onClick={toggleConfirmPasswordVisibility}
+                          className="absolute right-3 top-3 text-white/40 hover:text-white transition-colors"
+                        >
+                          {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                        </button>
                       </div>
-                      {registerErrors.confirmPassword && <p className="text-xs text-destructive">{registerErrors.confirmPassword}</p>}
+                      {registerErrors.confirmPassword && (
+                        <div className="flex items-center text-xs text-destructive mt-1">
+                          <AlertCircle className="h-3 w-3 mr-1" />
+                          {registerErrors.confirmPassword}
+                        </div>
+                      )}
                     </div>
                   </CardContent>
                   <CardFooter>
                     <Button 
                       type="submit" 
-                      className="w-full royal-button bg-gradient-royal hover:opacity-90 text-white"
+                      className="w-full royal-button bg-gradient-royal hover:opacity-90 text-white relative overflow-hidden group"
                       disabled={isLoading}
                     >
-                      {isLoading ? "Creating Account..." : "Claim Your Title"}
+                      <span className="relative z-10 flex items-center justify-center">
+                        {isLoading ? "Creating Account..." : (
+                          <>
+                            Claim Your Title 
+                            <Crown className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                          </>
+                        )}
+                      </span>
                     </Button>
                   </CardFooter>
                 </form>
