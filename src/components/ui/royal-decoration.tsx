@@ -49,20 +49,27 @@ const RoyalDecoration: React.FC<RoyalDecorationProps> = ({
     'right-center': 'absolute right-0 top-1/2 -translate-y-1/2',
   };
 
+  // Define a mapping from decoration sizes to icon sizes
+  const sizeToIconSizeMap: Record<string, MedievalIcon['size']> = {
+    'sm': 'sm',
+    'md': 'md',
+    'lg': 'lg'
+  };
+
   const sizeClasses = {
     sm: {
       container: 'w-12 h-12',
-      icon: 'sm',
+      icon: sizeToIconSizeMap['sm'],
       border: 'w-8 h-8'
     },
     md: {
       container: 'w-16 h-16',
-      icon: 'md',
+      icon: sizeToIconSizeMap['md'],
       border: 'w-12 h-12'
     },
     lg: {
       container: 'w-24 h-24',
-      icon: 'lg',
+      icon: sizeToIconSizeMap['lg'],
       border: 'w-16 h-16'
     }
   };
