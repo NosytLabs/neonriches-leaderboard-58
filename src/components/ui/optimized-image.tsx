@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 
 interface OptimizedImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
@@ -26,19 +26,63 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
   placeholderColor,
   ...props
 }) => {
-  const [imgSrc, setImgSrc] = React.useState<string>(src);
-  const [isLoading, setIsLoading] = React.useState<boolean>(true);
-  const [error, setError] = React.useState<boolean>(false);
+  const [imgSrc, setImgSrc] = useState<string>(src);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [error, setError] = useState<boolean>(false);
+  const [imgLoaded, setImgLoaded] = useState(false);
   
-  React.useEffect(() => {
+  // Reset state when src changes
+  useEffect(() => {
     setImgSrc(src);
     setError(false);
     setIsLoading(true);
+    setImgLoaded(false);
   }, [src]);
+  
+  // Preload the image
+  useEffect(() => {
+    if (!src) return;
+    
+    // Skip preloading for base64 images
+    if (src.startsWith('data:')) {
+      setIsLoading(false);
+      setImgLoaded(true);
+      return;
+    }
+    
+    const img = new Image();
+    
+    img.onload = () => {
+      setIsLoading(false);
+      setImgLoaded(true);
+    };
+    
+    img.onerror = () => {
+      setError(true);
+      setImgSrc(fallback);
+      setIsLoading(false);
+    };
+    
+    img.src = src;
+    
+    // Add timeout to prevent hanging on slow connections
+    const timeout = setTimeout(() => {
+      if (isLoading) {
+        setIsLoading(false);
+      }
+    }, 5000);
+    
+    return () => {
+      img.onload = null;
+      img.onerror = null;
+      clearTimeout(timeout);
+    };
+  }, [src, fallback, isLoading]);
   
   const handleError = () => {
     setError(true);
     setImgSrc(fallback);
+    setIsLoading(false);
   };
   
   const handleLoad = () => {
@@ -49,7 +93,7 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
     <div 
       className={cn(
         'relative overflow-hidden',
-        isLoading && 'animate-pulse bg-white/10',
+        isLoading && !imgLoaded && 'animate-pulse bg-white/10',
         className
       )}
       style={{ 
@@ -58,24 +102,27 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
         backgroundColor: isLoading && placeholderColor ? placeholderColor : undefined 
       }}
     >
-      <img
-        src={imgSrc}
-        alt={alt}
-        onError={handleError}
-        onLoad={handleLoad}
-        loading={loadingStrategy}
-        className={cn(
-          'transition-opacity duration-300',
-          isLoading ? 'opacity-0' : 'opacity-100',
-          objectFit === 'cover' && 'object-cover',
-          objectFit === 'contain' && 'object-contain',
-          objectFit === 'fill' && 'object-fill',
-          objectFit === 'none' && 'object-none',
-          objectFit === 'scale-down' && 'object-scale-down',
-          'w-full h-full'
-        )}
-        {...props}
-      />
+      {/* Render image only when src is available */}
+      {imgSrc && (
+        <img
+          src={imgSrc}
+          alt={alt}
+          onError={handleError}
+          onLoad={handleLoad}
+          loading={loadingStrategy}
+          className={cn(
+            'transition-opacity duration-300',
+            isLoading && !imgLoaded ? 'opacity-0' : 'opacity-100',
+            objectFit === 'cover' && 'object-cover',
+            objectFit === 'contain' && 'object-contain',
+            objectFit === 'fill' && 'object-fill',
+            objectFit === 'none' && 'object-none',
+            objectFit === 'scale-down' && 'object-scale-down',
+            'w-full h-full'
+          )}
+          {...props}
+        />
+      )}
     </div>
   );
 };

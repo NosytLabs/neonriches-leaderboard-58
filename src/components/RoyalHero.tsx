@@ -1,5 +1,4 @@
-
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Crown, Coins, Gem, Shield, Sparkles, DollarSign } from 'lucide-react';
 import ThroneBackground from '@/components/ui/throne-background';
@@ -12,8 +11,32 @@ const RoyalHero = () => {
   const heroRef = useRef<HTMLElement>(null);
   const { toast } = useToast();
   const { playSound } = useNotificationSounds();
+  const [isVisible, setIsVisible] = useState(false);
+  const [hasInteracted, setHasInteracted] = useState(false);
+  
+  useEffect(() => {
+    if (!heroRef.current) return;
+    
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setIsVisible(true);
+        }
+      },
+      { threshold: 0.1 }
+    );
+    
+    observer.observe(heroRef.current);
+    
+    return () => {
+      if (heroRef.current) {
+        observer.unobserve(heroRef.current);
+      }
+    };
+  }, []);
   
   const handleCrownClick = () => {
+    setHasInteracted(true);
     playSound('royalAnnouncement', 0.2);
     toast({
       title: "Royal Decree",
@@ -21,12 +44,11 @@ const RoyalHero = () => {
       duration: 3000,
     });
     
-    // Add sparkle effect on click
     if (heroRef.current) {
-      const sparkle = document.createElement('div');
-      sparkle.className = 'absolute w-full h-full top-0 left-0 pointer-events-none';
+      const sparkleContainer = document.createElement('div');
+      sparkleContainer.className = 'absolute w-full h-full top-0 left-0 pointer-events-none';
       
-      for (let i = 0; i < 20; i++) {
+      for (let i = 0; i < 10; i++) {
         const particle = document.createElement('div');
         particle.className = 'absolute rounded-full bg-royal-gold animate-float';
         particle.style.width = `${Math.random() * 10 + 5}px`;
@@ -34,18 +56,19 @@ const RoyalHero = () => {
         particle.style.left = `${Math.random() * 100}%`;
         particle.style.top = `50%`;
         particle.style.opacity = '0.8';
-        sparkle.appendChild(particle);
+        sparkleContainer.appendChild(particle);
       }
       
-      heroRef.current.appendChild(sparkle);
+      heroRef.current.appendChild(sparkleContainer);
       
       setTimeout(() => {
-        sparkle.remove();
+        sparkleContainer.remove();
       }, 5000);
     }
   };
   
   const handleQuickAscension = () => {
+    setHasInteracted(true);
     playSound('reward', 0.3);
     toast({
       title: "Nobility Beckons!",
@@ -55,10 +78,11 @@ const RoyalHero = () => {
     navigate('/dashboard');
   };
 
-  // Add subtle floating coins effect
   useEffect(() => {
+    if (!heroRef.current || !isVisible) return;
+    
     const interval = setInterval(() => {
-      if (heroRef.current && Math.random() > 0.7) {
+      if (heroRef.current && Math.random() > 0.8) {
         const coin = document.createElement('div');
         coin.className = 'absolute';
         coin.innerHTML = `<div class="flex items-center justify-center w-8 h-8 rounded-full bg-royal-gold/20">
@@ -72,17 +96,20 @@ const RoyalHero = () => {
         coin.style.left = `${Math.random() * 80 + 10}%`;
         coin.style.top = `${Math.random() * 80 + 10}%`;
         coin.style.animation = 'float 8s ease-in forwards';
+        coin.style.willChange = 'transform, opacity';
         
         heroRef.current.appendChild(coin);
         
         setTimeout(() => {
-          coin.remove();
+          if (coin.parentNode) {
+            coin.remove();
+          }
         }, 8000);
       }
-    }, 2000);
+    }, 3000);
     
     return () => clearInterval(interval);
-  }, []);
+  }, [isVisible]);
 
   return (
     <section ref={heroRef} className="w-full min-h-[90vh] pt-32 pb-20 relative overflow-hidden bg-gradient-to-b from-[#0D0D20] via-[#141428] to-background">
@@ -92,7 +119,7 @@ const RoyalHero = () => {
         <div className="absolute top-2/3 left-2/3 w-72 h-72 rounded-full bg-royal-navy/10 filter blur-[80px]"></div>
       </div>
       
-      <ThroneBackground variant="default" density="high" animate={true} particles={true} />
+      <ThroneBackground variant="default" density="low" animate={isVisible} particles={isVisible} />
       
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <div className="flex flex-col items-center text-center">

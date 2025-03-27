@@ -1,4 +1,5 @@
-import React, { useEffect, useRef } from 'react';
+
+import React, { useEffect, useRef, useState } from 'react';
 import { cn } from '@/lib/utils';
 
 interface ThroneBackgroundProps {
@@ -17,20 +18,60 @@ const ThroneBackground: React.FC<ThroneBackgroundProps> = ({
   className
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
   
   useEffect(() => {
-    if (!particles || !containerRef.current) return;
+    // Add visibility detection to only animate when in viewport
+    if (!containerRef.current) return;
+    
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(entry => {
+          setIsVisible(entry.isIntersecting);
+        });
+      },
+      { threshold: 0.1 }
+    );
+    
+    observer.observe(containerRef.current);
+    
+    return () => {
+      if (containerRef.current) {
+        observer.unobserve(containerRef.current);
+      }
+    };
+  }, []);
+  
+  useEffect(() => {
+    if (!particles || !containerRef.current || !isVisible) return;
     
     const container = containerRef.current;
-    const particleCount = density === 'high' ? 40 : density === 'medium' ? 25 : 15;
+    // Reduce particle count to improve performance
+    const particleCount = density === 'high' ? 20 : density === 'medium' ? 10 : 5;
     
     const existingParticles = container.querySelectorAll('.floating-particle');
     existingParticles.forEach(particle => particle.remove());
     
-    for (let i = 0; i < particleCount; i++) {
-      createParticle(container, variant);
+    // Limit particles or disable on low-end devices
+    const isLowEndDevice = window.navigator.hardwareConcurrency && window.navigator.hardwareConcurrency <= 2;
+    
+    if (isLowEndDevice && density === 'high') {
+      // Only create a few particles on low-end devices
+      for (let i = 0; i < 5; i++) {
+        createParticle(container, variant);
+      }
+    } else if (!isLowEndDevice) {
+      for (let i = 0; i < particleCount; i++) {
+        createParticle(container, variant);
+      }
     }
-  }, [particles, density, variant]);
+    
+    // Clean up particles when component unmounts
+    return () => {
+      const currentParticles = container.querySelectorAll('.floating-particle');
+      currentParticles.forEach(particle => particle.remove());
+    };
+  }, [particles, density, variant, isVisible]);
   
   const createParticle = (container: HTMLDivElement, variant: string) => {
     const particle = document.createElement('div');
@@ -64,6 +105,9 @@ const ThroneBackground: React.FC<ThroneBackgroundProps> = ({
       }
     }
     
+    // Add will-change property for better performance
+    particle.style.willChange = 'transform, opacity';
+    
     const duration = Math.random() * 10 + 5;
     particle.style.animation = `float ${duration}s ease-in forwards`;
     
@@ -93,7 +137,7 @@ const ThroneBackground: React.FC<ThroneBackgroundProps> = ({
       className={cn(
         'absolute inset-0 w-full h-full overflow-hidden',
         getVariantClasses(),
-        animate && 'animate-pulse-slow',
+        animate && isVisible && 'animate-pulse-slow',
         className
       )}
     >

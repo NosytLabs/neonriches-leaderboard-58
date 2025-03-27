@@ -1,39 +1,58 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, Suspense, lazy } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import RoyalHero from '@/components/RoyalHero';
-import RoyalFeatures from '@/components/RoyalFeatures';
-import RoyalFAQ from '@/components/RoyalFAQ';
-import RoyalBadges from '@/components/RoyalBadges';
-import TeamSection from '@/components/TeamSection';
-import CombinedLeaderboard from '@/components/leaderboard/CombinedLeaderboard';
-import RoyalDivider from '@/components/ui/royal-divider';
-import RoyalParchment from '@/components/ui/royal-parchment';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
-import { Crown, Trophy, Shield, Sparkles, ArrowRight, Gem, Coins, DollarSign, Scroll } from 'lucide-react';
+import { Crown, DollarSign, ArrowRight, Trophy, Shield, Sparkles, Gem, Coins, Scroll } from 'lucide-react';
 import useNotificationSounds from '@/hooks/use-notification-sounds';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
+
+// Lazy load heavy components
+const RoyalHero = lazy(() => import('@/components/RoyalHero'));
+const RoyalDivider = lazy(() => import('@/components/ui/royal-divider'));
+const RoyalParchment = lazy(() => import('@/components/ui/royal-parchment'));
+const CombinedLeaderboard = lazy(() => import('@/components/leaderboard/CombinedLeaderboard'));
+const RoyalFeatures = lazy(() => import('@/components/RoyalFeatures'));
+const RoyalFAQ = lazy(() => import('@/components/RoyalFAQ'));
+const RoyalBadges = lazy(() => import('@/components/RoyalBadges'));
+const TeamSection = lazy(() => import('@/components/TeamSection'));
+
+// Simple loading fallback
+const LoadingPlaceholder = () => (
+  <div className="w-full h-48 flex items-center justify-center">
+    <div className="h-8 w-8 animate-spin rounded-full border-2 border-royal-gold border-t-transparent"></div>
+  </div>
+);
 
 const Index = () => {
   const { preloadAllSounds, playSound } = useNotificationSounds();
   const { toast } = useToast();
   const { user } = useAuth();
   const navigate = useNavigate();
+  const [hasInteracted, setHasInteracted] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
   
+  // Delay sound preloading until after initial render
   useEffect(() => {
-    preloadAllSounds();
-    
     const timer = setTimeout(() => {
-      playSound('royalAnnouncement', 0.1);
-    }, 1000);
+      preloadAllSounds();
+      setIsLoaded(true);
+    }, 1500);
     
     return () => clearTimeout(timer);
-  }, [preloadAllSounds, playSound]);
+  }, [preloadAllSounds]);
+  
+  // Only play sounds after user has interacted with the page
+  useEffect(() => {
+    if (isLoaded && hasInteracted) {
+      playSound('royalAnnouncement', 0.1);
+    }
+  }, [isLoaded, hasInteracted, playSound]);
   
   const handleQuickAscension = () => {
+    setHasInteracted(true);
     playSound('reward', 0.3);
     toast({
       title: "Nobility Beckons!",
@@ -48,101 +67,106 @@ const Index = () => {
       <Header />
       
       <main>
-        <RoyalHero />
+        <Suspense fallback={<LoadingPlaceholder />}>
+          <RoyalHero />
+        </Suspense>
         
         <div className="container mx-auto px-4 py-12">
-          <RoyalParchment 
-            variant="gold" 
-            className="mb-16 p-8 relative overflow-hidden"
-            animateEntry={true}
-            ribbons={true}
-          >
-            <div className="absolute -top-20 -right-20 opacity-10">
-              <Crown size={240} className="text-royal-gold" />
-            </div>
-            
-            <div className="flex flex-col md:flex-row items-center gap-8">
-              <div className="md:w-1/3 text-center">
-                <div className="relative inline-block animate-royal-pulse">
-                  <div className="absolute -inset-2 bg-royal-gold/20 rounded-full blur-md"></div>
-                  <div className="w-32 h-32 rounded-full bg-royal-gold/20 border-2 border-royal-gold flex items-center justify-center overflow-hidden">
-                    <img 
-                      src="https://source.unsplash.com/random/?royal,portrait" 
-                      alt="Top Spender" 
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div className="absolute -top-2 -right-2 bg-royal-gold rounded-full p-1 animate-crown-glow">
-                    <Crown size={20} className="text-background" />
-                  </div>
-                </div>
-                <h3 className="mt-3 font-royal text-xl">Lord Moneybags</h3>
-                <p className="text-white/70 text-sm">Royal Rank #1</p>
-                <p className="text-royal-gold font-bold mt-1">$56,780 spent</p>
-                
-                <div className="mt-2 inline-flex items-center px-2 py-1 rounded-full bg-royal-gold/10 border border-royal-gold/20">
-                  <Trophy size={12} className="text-royal-gold mr-1" />
-                  <span className="text-xs">14 week spending streak</span>
-                </div>
+          <Suspense fallback={<LoadingPlaceholder />}>
+            <RoyalParchment 
+              variant="gold" 
+              className="mb-16 p-8 relative overflow-hidden"
+              animateEntry={true}
+              ribbons={true}
+            >
+              <div className="absolute -top-20 -right-20 opacity-10">
+                <Crown size={240} className="text-royal-gold" />
               </div>
               
-              <div className="md:w-2/3">
-                <h2 className="text-2xl md:text-3xl font-bold royal-gradient mb-4 font-royal">
-                  The Current Ruler of Our Digital Realm
-                </h2>
-                <p className="text-white/70 mb-6">
-                  Through sheer financial might, Lord Moneybags has claimed the highest position in our hierarchy. 
-                  Will you be the one to dethrone the current ruler? Remember, in this kingdom, power is purchased, 
-                  not earned through trivial matters like "merit" or "talent."
-                </p>
-                
-                <div className="mb-6 p-4 border border-royal-gold/20 rounded-lg bg-royal-gold/5 italic text-sm">
-                  <div className="flex items-start">
-                    <div className="mr-2 mt-1">
-                      <Scroll size={16} className="text-royal-gold" />
+              <div className="flex flex-col md:flex-row items-center gap-8">
+                <div className="md:w-1/3 text-center">
+                  <div className="relative inline-block animate-royal-pulse">
+                    <div className="absolute -inset-2 bg-royal-gold/20 rounded-full blur-md"></div>
+                    <div className="w-32 h-32 rounded-full bg-royal-gold/20 border-2 border-royal-gold flex items-center justify-center overflow-hidden">
+                      <img 
+                        src="https://source.unsplash.com/random/?royal,portrait" 
+                        alt="Top Spender" 
+                        className="w-full h-full object-cover"
+                        loading="lazy"
+                      />
                     </div>
-                    <p>
-                      "I, Lord Moneybags, declare my digital dominance through the most noble virtue of all: excessive spending. 
-                      My wealth is my worth. My expenditure, my excellence. Challenge me if you dare, but know that only your 
-                      currency—not your character—will determine your place in this glorious digital kingdom."
-                    </p>
+                    <div className="absolute -top-2 -right-2 bg-royal-gold rounded-full p-1 animate-crown-glow">
+                      <Crown size={20} className="text-background" />
+                    </div>
+                  </div>
+                  <h3 className="mt-3 font-royal text-xl">Lord Moneybags</h3>
+                  <p className="text-white/70 text-sm">Royal Rank #1</p>
+                  <p className="text-royal-gold font-bold mt-1">$56,780 spent</p>
+                  
+                  <div className="mt-2 inline-flex items-center px-2 py-1 rounded-full bg-royal-gold/10 border border-royal-gold/20">
+                    <Trophy size={12} className="text-royal-gold mr-1" />
+                    <span className="text-xs">14 week spending streak</span>
                   </div>
                 </div>
                 
-                <div className="flex flex-wrap gap-4">
-                  <Button
-                    className="royal-button bg-gradient-royal hover:opacity-90 text-white px-6 py-2 text-lg rounded-full font-royal"
-                    onClick={handleQuickAscension}
-                  >
-                    <div className="relative z-10 flex items-center">
-                      <Crown size={18} className="mr-2" />
-                      Challenge for the Throne
-                    </div>
-                  </Button>
+                <div className="md:w-2/3">
+                  <h2 className="text-2xl md:text-3xl font-bold royal-gradient mb-4 font-royal">
+                    The Current Ruler of Our Digital Realm
+                  </h2>
+                  <p className="text-white/70 mb-6">
+                    Through sheer financial might, Lord Moneybags has claimed the highest position in our hierarchy. 
+                    Will you be the one to dethrone the current ruler? Remember, in this kingdom, power is purchased, 
+                    not earned through trivial matters like "merit" or "talent."
+                  </p>
                   
-                  <Link to="/leaderboard">
+                  <div className="mb-6 p-4 border border-royal-gold/20 rounded-lg bg-royal-gold/5 italic text-sm">
+                    <div className="flex items-start">
+                      <div className="mr-2 mt-1">
+                        <Scroll size={16} className="text-royal-gold" />
+                      </div>
+                      <p>
+                        "I, Lord Moneybags, declare my digital dominance through the most noble virtue of all: excessive spending. 
+                        My wealth is my worth. My expenditure, my excellence. Challenge me if you dare, but know that only your 
+                        currency—not your character—will determine your place in this glorious digital kingdom."
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex flex-wrap gap-4">
                     <Button
-                      variant="outline"
-                      className="glass-morphism border-white/20 text-white hover:bg-white/10 hover:text-white px-6 py-2 text-lg rounded-full royal-button"
+                      className="royal-button bg-gradient-royal hover:opacity-90 text-white px-6 py-2 text-lg rounded-full font-royal"
+                      onClick={handleQuickAscension}
                     >
-                      <span className="relative z-10 flex items-center">
-                        View Royal Court
-                        <ArrowRight size={16} className="ml-2 group-hover:translate-x-2 transition-transform duration-300" />
-                      </span>
+                      <div className="relative z-10 flex items-center">
+                        <Crown size={18} className="mr-2" />
+                        Challenge for the Throne
+                      </div>
                     </Button>
-                  </Link>
-                </div>
-                
-                <div className="mt-6 bg-background/40 rounded-lg p-3 backdrop-blur-sm border border-white/10">
-                  <div className="text-xs text-white/60 mb-1">Overthrow Calculator:</div>
-                  <div className="flex items-center">
-                    <DollarSign size={14} className="text-royal-gold" />
-                    <span className="text-white/80 text-sm">You need <span className="text-royal-gold font-bold">$56,781</span> to claim the throne</span>
+                    
+                    <Link to="/leaderboard">
+                      <Button
+                        variant="outline"
+                        className="glass-morphism border-white/20 text-white hover:bg-white/10 hover:text-white px-6 py-2 text-lg rounded-full royal-button"
+                      >
+                        <span className="relative z-10 flex items-center">
+                          View Royal Court
+                          <ArrowRight size={16} className="ml-2 group-hover:translate-x-2 transition-transform duration-300" />
+                        </span>
+                      </Button>
+                    </Link>
+                  </div>
+                  
+                  <div className="mt-6 bg-background/40 rounded-lg p-3 backdrop-blur-sm border border-white/10">
+                    <div className="text-xs text-white/60 mb-1">Overthrow Calculator:</div>
+                    <div className="flex items-center">
+                      <DollarSign size={14} className="text-royal-gold" />
+                      <span className="text-white/80 text-sm">You need <span className="text-royal-gold font-bold">$56,781</span> to claim the throne</span>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </RoyalParchment>
+            </RoyalParchment>
+          </Suspense>
           
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold royal-gradient mb-2 font-royal">
@@ -168,7 +192,10 @@ const Index = () => {
               <Link to="/leaderboard">
                 <Button 
                   className="bg-white/10 hover:bg-white/20 text-white royal-button"
-                  onClick={() => playSound('notification', 0.2)}
+                  onClick={() => {
+                    setHasInteracted(true);
+                    playSound('notification', 0.2);
+                  }}
                 >
                   <span className="relative z-10">View Court Rankings</span>
                 </Button>
@@ -188,7 +215,10 @@ const Index = () => {
               <Link to="/events">
                 <Button 
                   className="bg-white/10 hover:bg-white/20 text-white royal-button"
-                  onClick={() => playSound('notification', 0.2)}
+                  onClick={() => {
+                    setHasInteracted(true);
+                    playSound('notification', 0.2);
+                  }}
                 >
                   <span className="relative z-10">View Royal Events</span>
                 </Button>
@@ -208,7 +238,10 @@ const Index = () => {
               <Link to="/dashboard">
                 <Button 
                   className="bg-white/10 hover:bg-white/20 text-white royal-button"
-                  onClick={() => playSound('notification', 0.2)}
+                  onClick={() => {
+                    setHasInteracted(true);
+                    playSound('notification', 0.2);
+                  }}
                 >
                   <span className="relative z-10">Join a Noble House</span>
                 </Button>
@@ -216,32 +249,39 @@ const Index = () => {
             </div>
           </div>
           
-          <RoyalDivider variant="treasure" label="ROYAL COURT STANDINGS" color="gold" className="mb-8" />
-          
-          <div className="mb-16">
-            <CombinedLeaderboard limit={5} compact={true} />
+          <Suspense fallback={<LoadingPlaceholder />}>
+            <RoyalDivider variant="treasure" label="ROYAL COURT STANDINGS" color="gold" className="mb-8" />
             
-            <div className="mt-6 text-center">
-              <Link to="/dashboard">
-                <Button 
-                  className="royal-button bg-gradient-royal hover:opacity-90 text-white px-6 py-2 rounded-full"
-                  onClick={() => playSound('notification', 0.2)}
-                >
-                  <span className="relative z-10 flex items-center">
-                    <Coins size={16} className="mr-2" />
-                    Secure Your Position
-                  </span>
-                </Button>
-              </Link>
-              <p className="mt-3 text-white/60 text-sm italic">
-                Every dollar spent elevates your standing. Why earn respect when you can simply buy it?
-              </p>
+            <div className="mb-16">
+              <CombinedLeaderboard limit={5} compact={true} />
+              
+              <div className="mt-6 text-center">
+                <Link to="/dashboard">
+                  <Button 
+                    className="royal-button bg-gradient-royal hover:opacity-90 text-white px-6 py-2 rounded-full"
+                    onClick={() => {
+                      setHasInteracted(true);
+                      playSound('notification', 0.2);
+                    }}
+                  >
+                    <span className="relative z-10 flex items-center">
+                      <Coins size={16} className="mr-2" />
+                      Secure Your Position
+                    </span>
+                  </Button>
+                </Link>
+                <p className="mt-3 text-white/60 text-sm italic">
+                  Every dollar spent elevates your standing. Why earn respect when you can simply buy it?
+                </p>
+              </div>
             </div>
-          </div>
+          </Suspense>
           
-          <RoyalFeatures />
+          <Suspense fallback={<LoadingPlaceholder />}>
+            <RoyalFeatures />
+          </Suspense>
           
-          <div className="mb-16">
+          <Suspense fallback={<LoadingPlaceholder />}>
             <RoyalDivider variant="crown" label="PATH TO NOBILITY" color="gold" className="mb-8" />
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -303,11 +343,19 @@ const Index = () => {
                 </RoyalParchment>
               </div>
             </div>
-          </div>
+          </Suspense>
           
-          <TeamSection />
-          <RoyalBadges />
-          <RoyalFAQ />
+          <Suspense fallback={<LoadingPlaceholder />}>
+            <TeamSection />
+          </Suspense>
+          
+          <Suspense fallback={<LoadingPlaceholder />}>
+            <RoyalBadges />
+          </Suspense>
+          
+          <Suspense fallback={<LoadingPlaceholder />}>
+            <RoyalFAQ />
+          </Suspense>
         </div>
       </main>
       
