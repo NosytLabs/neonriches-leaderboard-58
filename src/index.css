@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -7,14 +8,60 @@
 
 @layer base {
   :root {
+    --background: 240 30% 98%;
+    --foreground: 240 10% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+    --primary: 142.1 76.2% 36.3%;
+    --primary-foreground: 355.7 100% 97.3%;
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+    --accent: 240 4.8% 95.9%;
+    --accent-foreground: 240 5.9% 10%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 142.1 76.2% 36.3%;
+    --radius: 0.75rem;
+    
+    /* Royal theme colors - lighter for light mode */
+    --royal-crimson: 353, 68%, 42%;
+    --royal-gold: 45, 80%, 52%;
+    --royal-navy: 218, 80%, 30%;
+    --royal-purple: 270, 50%, 40%;
+    --royal-mahogany: 20, 60%, 45%;
+    --royal-velvet: 320, 50%, 35%;
+    
+    /* Team colors - lighter for light mode */
+    --team-red: 0, 70%, 60%;
+    --team-green: 120, 60%, 60%;
+    --team-blue: 210, 70%, 60%;
+    
+    /* Background elements */
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 240 10% 3.9%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 355.7 100% 97.3%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 240 5.9% 90%;
+    --sidebar-ring: 240 15% 84%;
+  }
+
+  .dark {
     --background: 240 30% 5%;
     --foreground: 0 0% 98%;
     --card: 240 30% 7%;
     --card-foreground: 0 0% 98%;
     --popover: 240 30% 7%;
     --popover-foreground: 0 0% 98%;
-    --primary: 0 0% 98%;
-    --primary-foreground: 240 25% 10%;
+    --primary: 142.1 70.6% 45.3%;
+    --primary-foreground: 355.7 100% 97.3%;
     --secondary: 240 15% 18%;
     --secondary-foreground: 0 0% 98%;
     --muted: 240 15% 18%;
@@ -25,7 +72,22 @@
     --destructive-foreground: 0 0% 98%;
     --border: 240 15% 18%;
     --input: 240 15% 18%;
-    --ring: 240 15% 84%;
+    --ring: 142.1 76.2% 36.3%;
+    
+    /* Royal theme colors - darker for dark mode */
+    --royal-crimson: 353, 68%, 32%;
+    --royal-gold: 45, 80%, 52%;
+    --royal-navy: 218, 80%, 25%;
+    --royal-purple: 270, 50%, 35%;
+    --royal-mahogany: 20, 60%, 40%;
+    --royal-velvet: 320, 50%, 30%;
+    
+    /* Team colors - darker for dark mode */
+    --team-red: 0, 70%, 50%;
+    --team-green: 120, 60%, 50%;
+    --team-blue: 210, 70%, 50%;
+    
+    /* Background elements */
     --sidebar-background: 240 30% 5%;
     --sidebar-foreground: 0 0% 98%;
     --sidebar-primary: 0 0% 98%;
@@ -236,45 +298,20 @@
 
 /* Background styles */
 .throne-bg {
-  background-color: #0D0D20;
+  background-color: hsl(var(--background));
   background-image: 
-    radial-gradient(circle at 10% 20%, rgba(139, 0, 0, 0.08) 0%, transparent 50%),
-    radial-gradient(circle at 90% 50%, rgba(212, 175, 55, 0.08) 0%, transparent 50%),
-    radial-gradient(circle at 50% 80%, rgba(0, 0, 128, 0.08) 0%, transparent 50%);
+    radial-gradient(circle at 10% 20%, rgba(var(--royal-crimson), 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 90% 50%, rgba(var(--royal-gold), 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 50% 80%, rgba(var(--royal-navy), 0.08) 0%, transparent 50%);
 }
 
 .throne-bg-enhanced {
-  background-color: #0A0A18;
+  background-color: hsl(var(--background));
   background-image: 
-    radial-gradient(circle at 10% 20%, rgba(139, 0, 0, 0.12) 0%, transparent 60%),
-    radial-gradient(circle at 90% 30%, rgba(212, 175, 55, 0.12) 0%, transparent 60%),
-    radial-gradient(circle at 50% 80%, rgba(0, 0, 128, 0.12) 0%, transparent 60%),
-    radial-gradient(circle at 20% 60%, rgba(75, 0, 130, 0.08) 0%, transparent 50%);
-}
-
-/* Color classes */
-.text-royal-mahogany {
-  color: #C04000;
-}
-
-.bg-royal-mahogany {
-  background-color: #C04000;
-}
-
-.border-royal-mahogany {
-  border-color: #C04000;
-}
-
-.text-royal-purple {
-  color: #4B0082;
-}
-
-.bg-royal-purple {
-  background-color: #4B0082;
-}
-
-.border-royal-purple {
-  border-color: #4B0082;
+    radial-gradient(circle at 10% 20%, rgba(var(--royal-crimson), 0.12) 0%, transparent 60%),
+    radial-gradient(circle at 90% 30%, rgba(var(--royal-gold), 0.12) 0%, transparent 60%),
+    radial-gradient(circle at 50% 80%, rgba(var(--royal-navy), 0.12) 0%, transparent 60%),
+    radial-gradient(circle at 20% 60%, rgba(var(--royal-purple), 0.08) 0%, transparent 50%);
 }
 
 /* Import shame effects and medieval animations after Tailwind has processed everything */

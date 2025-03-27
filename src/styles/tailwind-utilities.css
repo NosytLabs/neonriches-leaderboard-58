@@ -3,7 +3,7 @@
 @layer components {
   /* Glass morphism effects */
   .glass-morphism {
-    @apply bg-black/20 backdrop-blur-md border border-white/10;
+    @apply bg-foreground/5 backdrop-blur-md border border-foreground/10;
   }
   
   .glass-morphism-dark {
@@ -77,5 +77,10 @@
       transform: scale(1.05);
       opacity: 0.9;
     }
+  }
+
+  /* Background gradient */
+  .bg-gradient-royal {
+    @apply bg-gradient-to-r from-royal-crimson via-royal-gold to-royal-navy;
   }
 }

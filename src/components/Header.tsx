@@ -13,7 +13,8 @@ import {
   BarChart3,
   Calendar,
   Bell,
-  DollarSign
+  DollarSign,
+  Shield
 } from 'lucide-react';
 import {
   DropdownMenu,
@@ -24,6 +25,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { signOut } from '@/services/authService';
+import { ThemeToggle } from '@/components/ui/theme-toggle';
 
 const Header: React.FC = () => {
   const { user } = useAuth();
@@ -66,8 +68,8 @@ const Header: React.FC = () => {
                   to={link.path}
                   className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                     isActive(link.path)
-                      ? 'text-white bg-white/10'
-                      : 'text-white/70 hover:text-white hover:bg-white/5'
+                      ? 'text-foreground bg-foreground/10'
+                      : 'text-foreground/70 hover:text-foreground hover:bg-foreground/5'
                   }`}
                 >
                   {link.label}
@@ -76,10 +78,12 @@ const Header: React.FC = () => {
             ))}
           </nav>
           
-          {/* Auth buttons / User menu */}
+          {/* Theme Toggle and Auth buttons / User menu */}
           <div className="flex items-center">
+            <ThemeToggle />
+            
             {user ? (
-              <div className="flex items-center">
+              <div className="flex items-center ml-4">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" className="relative rounded-full h-8 w-8 p-0">
@@ -98,7 +102,7 @@ const Header: React.FC = () => {
                     <DropdownMenuLabel>
                       <div className="flex flex-col space-y-1">
                         <p className="text-sm font-medium leading-none">{user.username}</p>
-                        <p className="text-xs leading-none text-white/60">{user.email}</p>
+                        <p className="text-xs leading-none text-foreground/60">{user.email}</p>
                       </div>
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator />
@@ -142,9 +146,9 @@ const Header: React.FC = () => {
                 </DropdownMenu>
               </div>
             ) : (
-              <div className="flex items-center">
+              <div className="flex items-center ml-4">
                 <Link to="/auth">
-                  <Button variant="ghost" className="text-white/70 hover:text-white">
+                  <Button variant="ghost" className="text-foreground/70 hover:text-foreground">
                     Sign In
                   </Button>
                 </Link>
@@ -162,7 +166,7 @@ const Header: React.FC = () => {
                 variant="ghost" 
                 size="icon" 
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="text-white"
+                className="text-foreground"
               >
                 {mobileMenuOpen ? <X /> : <Menu />}
               </Button>
@@ -182,8 +186,8 @@ const Header: React.FC = () => {
                   to={link.path}
                   className={`block px-3 py-2 rounded-md text-base font-medium ${
                     isActive(link.path)
-                      ? 'text-white bg-white/10'
-                      : 'text-white/70 hover:text-white hover:bg-white/5'
+                      ? 'text-foreground bg-foreground/10'
+                      : 'text-foreground/70 hover:text-foreground hover:bg-foreground/5'
                   }`}
                   onClick={() => setMobileMenuOpen(false)}
                 >
@@ -198,7 +202,7 @@ const Header: React.FC = () => {
                   handleSignOut();
                   setMobileMenuOpen(false);
                 }}
-                className="w-full text-left block px-3 py-2 rounded-md text-base font-medium text-white/70 hover:text-white hover:bg-white/5"
+                className="w-full text-left block px-3 py-2 rounded-md text-base font-medium text-foreground/70 hover:text-foreground hover:bg-foreground/5"
               >
                 Sign Out
               </button>

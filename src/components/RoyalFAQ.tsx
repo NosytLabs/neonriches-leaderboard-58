@@ -6,12 +6,12 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { HelpCircle, Scroll } from 'lucide-react';
+import { Scroll } from 'lucide-react';
 
 const faqItems = [
   {
     question: "How does the Royal Hierarchy work?",
-    answer: "The Royal Hierarchy is a permanent leaderboard where your position is determined solely by your total financial contributions to the crown. For every $1 contributed, you gain 1 rank point. The more you contribute, the higher your position in the Royal Court."
+    answer: "The Royal Hierarchy is a permanent leaderboard where your position is determined solely by your financial contributions to the crown. For every $1 contributed, you gain 1 rank point. The more you contribute, the higher your position in the Royal Court."
   },
   {
     question: "What benefits do I get from a higher rank?",
@@ -50,8 +50,8 @@ const RoyalFAQ = () => {
               <div className="absolute -inset-4 bg-royal-gold/20 blur-xl rounded-full"></div>
             </div>
           </div>
-          <h2 className="text-4xl font-royal royal-gradient mb-4">Royal Proclamations</h2>
-          <p className="text-white/70 max-w-2xl mx-auto font-serif">
+          <h2 className="text-4xl font-medieval royal-gradient mb-4">Royal Proclamations</h2>
+          <p className="text-foreground/70 max-w-2xl mx-auto font-serif">
             Common inquiries from aspiring nobles about the court's customs and protocols.
           </p>
         </div>
@@ -59,12 +59,11 @@ const RoyalFAQ = () => {
         <div className="royal-card rounded-xl p-6 md:p-8">
           <Accordion type="single" collapsible className="w-full">
             {faqItems.map((item, index) => (
-              <AccordionItem key={index} value={`item-${index}`} className="border-b border-white/10 last:border-b-0">
-                <AccordionTrigger className="text-lg font-royal py-6 text-white hover:text-royal-gold transition-colors group flex">
-                  <HelpCircle size={18} className="mr-3 text-royal-gold opacity-70 group-hover:opacity-100" />
+              <AccordionItem key={index} value={`item-${index}`} className="border-b border-foreground/10 last:border-b-0">
+                <AccordionTrigger className="text-lg font-medieval py-6 text-foreground hover:text-royal-gold transition-colors group flex">
                   <span>{item.question}</span>
                 </AccordionTrigger>
-                <AccordionContent className="text-white/70 font-serif pl-9">
+                <AccordionContent className="text-foreground/70 font-serif">
                   {item.answer}
                 </AccordionContent>
               </AccordionItem>
