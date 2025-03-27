@@ -10,6 +10,8 @@ interface OptimizedImageProps extends React.ImgHTMLAttributes<HTMLImageElement> 
   objectFit?: 'contain' | 'cover' | 'fill' | 'none' | 'scale-down';
   className?: string;
   fallback?: string;
+  loadingStrategy?: 'eager' | 'lazy';
+  placeholderColor?: string;
 }
 
 const OptimizedImage: React.FC<OptimizedImageProps> = ({
@@ -20,6 +22,8 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
   objectFit = 'cover',
   className,
   fallback = '/placeholder.svg',
+  loadingStrategy = 'lazy',
+  placeholderColor,
   ...props
 }) => {
   const [imgSrc, setImgSrc] = React.useState<string>(src);
@@ -48,13 +52,18 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
         isLoading && 'animate-pulse bg-white/10',
         className
       )}
-      style={{ width: width ? `${width}px` : '100%', height: height ? `${height}px` : '100%' }}
+      style={{ 
+        width: width ? `${width}px` : '100%', 
+        height: height ? `${height}px` : '100%',
+        backgroundColor: isLoading && placeholderColor ? placeholderColor : undefined 
+      }}
     >
       <img
         src={imgSrc}
         alt={alt}
         onError={handleError}
         onLoad={handleLoad}
+        loading={loadingStrategy}
         className={cn(
           'transition-opacity duration-300',
           isLoading ? 'opacity-0' : 'opacity-100',

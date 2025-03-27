@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils';
 interface RankingDisclaimerProps {
   className?: string;
   messagePrefix?: string;
-  variant?: 'info' | 'warning' | 'neutral';
+  variant?: 'info' | 'warning' | 'neutral' | 'gold';
 }
 
 const RankingDisclaimer: React.FC<RankingDisclaimerProps> = ({
@@ -18,6 +18,7 @@ const RankingDisclaimer: React.FC<RankingDisclaimerProps> = ({
     switch (variant) {
       case 'info': return <Info size={16} className="text-blue-400" />;
       case 'warning': return <AlertTriangle size={16} className="text-yellow-400" />;
+      case 'gold': return <AlertCircle size={16} className="text-royal-gold" />;
       default: return <AlertCircle size={16} className="text-white/60" />;
     }
   };
@@ -26,6 +27,7 @@ const RankingDisclaimer: React.FC<RankingDisclaimerProps> = ({
     switch (variant) {
       case 'info': return 'bg-blue-500/10 border-blue-500/20';
       case 'warning': return 'bg-yellow-500/10 border-yellow-500/20';
+      case 'gold': return 'bg-royal-gold/10 border-royal-gold/20';
       default: return 'bg-white/5 border-white/10';
     }
   };

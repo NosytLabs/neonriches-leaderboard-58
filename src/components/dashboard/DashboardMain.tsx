@@ -35,7 +35,7 @@ const DashboardMain: React.FC<DashboardMainProps> = ({ user }) => {
                 <div className="text-sm text-white/70 mb-1">Total Spent</div>
                 <div className="text-2xl font-bold flex items-center">
                   <Coins className="h-5 w-5 text-royal-gold mr-2" />
-                  ${user?.totalSpent?.toFixed(2) || '0.00'}
+                  ${user?.amountSpent?.toFixed(2) || '0.00'}
                 </div>
               </div>
               
@@ -43,7 +43,7 @@ const DashboardMain: React.FC<DashboardMainProps> = ({ user }) => {
                 <div className="text-sm text-white/70 mb-1">Team Rank</div>
                 <div className="text-2xl font-bold flex items-center">
                   <Users className="h-5 w-5 text-royal-gold mr-2" />
-                  #{user?.teamRank || '??'}
+                  #{user?.rank || '??'}
                 </div>
               </div>
             </div>
