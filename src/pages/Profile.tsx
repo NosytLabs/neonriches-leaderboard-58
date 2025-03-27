@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -11,9 +10,8 @@ import { useAuth, UserProfile } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import { UserCircle, CreditCard, Settings, LogOut, Image, Link as LinkIcon, Trash2, Plus, Eye } from 'lucide-react';
+import { UserCircle, CreditCard, Settings, LogOut, Image, Link as LinkIcon, Trash2, Plus, Eye, Edit } from 'lucide-react';
 
-// Mock profile data - in a real app, this would come from a database
 const mockProfileData = {
   bio: "Blockchain enthusiast and digital art collector. Exploring the frontiers of web3 and building the metaverse one transaction at a time.",
   images: [
@@ -36,7 +34,6 @@ const Profile = () => {
   const [profileData, setProfileData] = useState(mockProfileData);
   const [editMode, setEditMode] = useState(false);
   
-  // Form states
   const [bio, setBio] = useState(profileData.bio);
   const [images, setImages] = useState(profileData.images);
   const [links, setLinks] = useState(profileData.links);
@@ -46,7 +43,6 @@ const Profile = () => {
   const [newLinkLabel, setNewLinkLabel] = useState("");
 
   if (!user) {
-    // Redirect to login if not authenticated
     navigate('/auth');
     return null;
   }
@@ -57,7 +53,6 @@ const Profile = () => {
   };
 
   const handleSaveProfile = () => {
-    // Update profile data
     const updatedProfileData = {
       bio,
       images,
@@ -83,7 +78,6 @@ const Profile = () => {
       return;
     }
 
-    // Check if we've reached the limit based on tier
     if (user.tier === 'free' && images.length >= 1) {
       toast({
         title: "Limit Reached",
@@ -129,7 +123,6 @@ const Profile = () => {
       return;
     }
 
-    // Check if we've reached the limit based on tier
     if (user.tier === 'free' && links.length >= 1) {
       toast({
         title: "Limit Reached",
@@ -172,7 +165,6 @@ const Profile = () => {
       <main className="flex-1 pt-24 pb-12 px-6">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-            {/* Sidebar */}
             <div className="lg:col-span-1">
               <div className="glass-morphism rounded-xl p-6 sticky top-24">
                 <div className="text-center mb-6">
@@ -236,7 +228,6 @@ const Profile = () => {
               </div>
             </div>
             
-            {/* Main Content */}
             <div className="lg:col-span-3">
               <div className="flex justify-between items-center mb-6">
                 <h1 className="text-3xl font-bold text-gradient">Your Profile</h1>
