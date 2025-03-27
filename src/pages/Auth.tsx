@@ -1,18 +1,20 @@
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Card } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAuth } from '@/contexts/AuthContext';
-import { Crown } from 'lucide-react';
+import { Crown, Shield, Zap } from 'lucide-react';
 import ThroneBackground from '@/components/ui/throne-background';
 import LoginForm from '@/components/auth/LoginForm';
 import RegisterForm from '@/components/auth/RegisterForm';
+import RoyalDivider from '@/components/ui/royal-divider';
 
 const Auth = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user } = useAuth();
+  const [authTab, setAuthTab] = useState<string>('login');
 
   // Redirect if already logged in
   useEffect(() => {
@@ -22,10 +24,18 @@ const Auth = () => {
     }
   }, [user, navigate, location]);
 
+  // Detect if we should show registration by default
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    if (params.get('register') === 'true') {
+      setAuthTab('register');
+    }
+  }, [location]);
+
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground">
       <div className="absolute inset-0 -z-10">
-        <ThroneBackground variant="purple" density="high" animate={true} />
+        <ThroneBackground variant="purple" density="high" animate={true} particles={true} />
       </div>
       
       <div className="flex-1 flex items-center justify-center p-6">
@@ -36,10 +46,21 @@ const Auth = () => {
             </div>
             <h1 className="text-4xl font-royal font-bold royal-gradient mb-2">SpendThrone</h1>
             <p className="text-white/70">Where your worth is measured in dollars spent</p>
+            
+            <div className="mt-4 flex items-center justify-center space-x-3">
+              <div className="flex items-center space-x-1 bg-white/10 rounded-full px-3 py-1">
+                <Shield className="h-3 w-3 text-royal-gold" />
+                <span className="text-xs">Secure Auth</span>
+              </div>
+              <div className="flex items-center space-x-1 bg-white/10 rounded-full px-3 py-1">
+                <Zap className="h-3 w-3 text-royal-gold" />
+                <span className="text-xs">New MFA Support</span>
+              </div>
+            </div>
           </div>
 
           <Card className="glass-morphism border-white/10 shadow-xl animate-fade-in" style={{ animationDelay: "100ms" }}>
-            <Tabs defaultValue="login">
+            <Tabs defaultValue={authTab} value={authTab} onValueChange={setAuthTab}>
               <TabsList className="grid grid-cols-2 glass-morphism border-white/10 mb-2">
                 <TabsTrigger value="login">Sign In</TabsTrigger>
                 <TabsTrigger value="register">Register</TabsTrigger>
@@ -55,7 +76,9 @@ const Auth = () => {
             </Tabs>
           </Card>
           
-          <div className="text-center mt-8 text-sm text-white/50 animate-fade-in" style={{ animationDelay: "200ms" }}>
+          <RoyalDivider variant="line" label="SECURE AUTHENTICATION" color="purple" className="mt-8 mb-4" />
+          
+          <div className="text-center mt-4 text-sm text-white/50 animate-fade-in" style={{ animationDelay: "200ms" }}>
             <p>By signing up, you agree to our satirical terms of service.<br/>Remember: In this kingdom, your worth is measured by your spending!</p>
           </div>
         </div>

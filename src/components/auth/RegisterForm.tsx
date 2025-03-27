@@ -1,201 +1,239 @@
 
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { useAuth } from '@/contexts/AuthContext';
-import { useToast } from '@/hooks/use-toast';
-import { Crown, Mail, User, Lock } from 'lucide-react';
-import PasswordInput from './PasswordInput';
-import FormError from './FormError';
-import { validateEmail } from '@/lib/utils';
+import { signUpWithEmail } from '@/services/authService';
+import { Mail, User, Shield } from 'lucide-react';
+import FormError from '@/components/auth/FormError';
+import PasswordInput from '@/components/auth/PasswordInput';
+import OAuthProviders from '@/components/auth/OAuthProviders';
 
 const RegisterForm = () => {
-  const navigate = useNavigate();
-  const { signUp } = useAuth();
-  const { toast } = useToast();
-  const [isLoading, setIsLoading] = useState(false);
-  
-  // Register form state
-  const [registerEmail, setRegisterEmail] = useState('');
-  const [registerUsername, setRegisterUsername] = useState('');
-  const [registerPassword, setRegisterPassword] = useState('');
+  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [registerErrors, setRegisterErrors] = useState({ 
-    email: '', 
-    username: '', 
-    password: '', 
-    confirmPassword: '' 
-  });
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [agreedTerms, setAgreedTerms] = useState(false);
 
-  // Real-time validation states
-  const [isValidatingRegister, setIsValidatingRegister] = useState(false);
+  // Password strength indicators
+  const [passwordStrength, setPasswordStrength] = useState(0);
+  const [passwordFeedback, setPasswordFeedback] = useState('');
 
-  // Real-time validation for register form
-  useEffect(() => {
-    if (isValidatingRegister) {
-      validateRegister();
+  const checkPasswordStrength = (pass: string) => {
+    if (!pass) {
+      setPasswordStrength(0);
+      setPasswordFeedback('');
+      return;
     }
-  }, [registerEmail, registerUsername, registerPassword, confirmPassword, isValidatingRegister]);
-
-  const validateRegister = () => {
-    const errors = { email: '', username: '', password: '', confirmPassword: '' };
-    let isValid = true;
-
-    const emailValidation = validateEmail(registerEmail);
-    if (!emailValidation.isValid) {
-      errors.email = emailValidation.message || 'Email is invalid';
-      isValid = false;
+    
+    let strength = 0;
+    let feedback = '';
+    
+    // Length check
+    if (pass.length >= 8) strength += 1;
+    
+    // Contains number
+    if (/\d/.test(pass)) strength += 1;
+    
+    // Contains special char
+    if (/[!@#$%^&*(),.?":{}|<>]/.test(pass)) strength += 1;
+    
+    // Contains uppercase
+    if (/[A-Z]/.test(pass)) strength += 1;
+    
+    // Contains lowercase
+    if (/[a-z]/.test(pass)) strength += 1;
+    
+    // Set feedback
+    if (strength < 2) {
+      feedback = 'Weak password';
+    } else if (strength < 4) {
+      feedback = 'Moderate password';
+    } else {
+      feedback = 'Strong password';
     }
-
-    if (!registerUsername) {
-      errors.username = 'Username is required';
-      isValid = false;
-    } else if (registerUsername.length < 3) {
-      errors.username = 'Username must be at least 3 characters';
-      isValid = false;
-    }
-
-    if (!registerPassword) {
-      errors.password = 'Password is required';
-      isValid = false;
-    } else if (registerPassword.length < 6) {
-      errors.password = 'Password must be at least 6 characters';
-      isValid = false;
-    }
-
-    if (!confirmPassword) {
-      errors.confirmPassword = 'Please confirm your password';
-      isValid = false;
-    } else if (registerPassword !== confirmPassword) {
-      errors.confirmPassword = 'Passwords do not match';
-      isValid = false;
-    }
-
-    setRegisterErrors(errors);
-    return isValid;
+    
+    setPasswordStrength(strength);
+    setPasswordFeedback(feedback);
   };
 
-  const handleRegister = async (e: React.FormEvent) => {
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newPassword = e.target.value;
+    setPassword(newPassword);
+    checkPasswordStrength(newPassword);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    setIsValidatingRegister(true);
-    if (!validateRegister()) return;
-
+    // Validate inputs
+    if (!email || !username || !password || !confirmPassword) {
+      setError('All fields are required');
+      return;
+    }
+    
+    if (password !== confirmPassword) {
+      setError('Passwords do not match');
+      return;
+    }
+    
+    if (passwordStrength < 2) {
+      setError('Please use a stronger password');
+      return;
+    }
+    
+    if (!agreedTerms) {
+      setError('You must agree to the terms and conditions');
+      return;
+    }
+    
+    setError('');
     setIsLoading(true);
+    
     try {
-      await signUp(registerEmail, registerUsername, registerPassword);
-      toast({
-        title: "Noble Title Granted!",
-        description: "Welcome to SpendThrone! Your journey to royal status begins now.",
-      });
-      navigate('/dashboard');
-    } catch (error) {
-      toast({
-        title: "Registration Failed",
-        description: "Unable to create your royal account. Please try again.",
-        variant: "destructive"
-      });
+      const success = await signUpWithEmail(email, password);
+      
+      if (success) {
+        // Registration successful
+        console.log('Registration successful');
+      }
+    } catch (err) {
+      setError(err.message || 'Failed to create account');
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <form onSubmit={handleRegister}>
-      <CardHeader>
-        <CardTitle>Create Royal Account</CardTitle>
-        <CardDescription>
-          Start your journey to the top of the SpendThrone.
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-4">
+    <div className="space-y-4 p-6">
+      <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-2">
           <Label htmlFor="register-email">Email</Label>
           <div className="relative">
             <Mail className="absolute left-3 top-3 h-4 w-4 text-white/40" />
-            <Input 
-              id="register-email" 
-              type="email" 
-              placeholder="your@email.com" 
-              value={registerEmail}
-              onChange={(e) => setRegisterEmail(e.target.value)}
-              onFocus={() => setIsValidatingRegister(true)}
-              className={`glass-morphism border-white/10 pl-10 transition-all ${
-                registerErrors.email ? 'border-destructive' : registerEmail && !registerErrors.email ? 'border-green-500' : ''
-              }`}
+            <Input
+              id="register-email"
+              placeholder="your.email@example.com"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="pl-10 glass-morphism border-white/10"
+              disabled={isLoading}
             />
           </div>
-          <FormError message={registerErrors.email} />
         </div>
+        
         <div className="space-y-2">
           <Label htmlFor="username">Username</Label>
           <div className="relative">
             <User className="absolute left-3 top-3 h-4 w-4 text-white/40" />
-            <Input 
-              id="username" 
-              type="text" 
-              placeholder="NobleName" 
-              value={registerUsername}
-              onChange={(e) => setRegisterUsername(e.target.value)}
-              onFocus={() => setIsValidatingRegister(true)}
-              className={`glass-morphism border-white/10 pl-10 transition-all ${
-                registerErrors.username ? 'border-destructive' : registerUsername && !registerErrors.username ? 'border-green-500' : ''
-              }`}
+            <Input
+              id="username"
+              placeholder="royaluser"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              className="pl-10 glass-morphism border-white/10"
+              disabled={isLoading}
             />
           </div>
-          <FormError message={registerErrors.username} />
         </div>
+        
         <div className="space-y-2">
           <Label htmlFor="register-password">Password</Label>
-          <div className="relative">
-            <Lock className="absolute left-3 top-3 h-4 w-4 text-white/40" />
-            <PasswordInput
-              id="register-password"
-              value={registerPassword}
-              onChange={(e) => setRegisterPassword(e.target.value)}
-              onFocus={() => setIsValidatingRegister(true)}
-              hasError={!!registerErrors.password}
-              isValid={!!registerPassword && !registerErrors.password}
-            />
-          </div>
-          <FormError message={registerErrors.password} />
+          <PasswordInput
+            id="register-password"
+            value={password}
+            onChange={handlePasswordChange}
+            disabled={isLoading}
+          />
+          
+          {password && (
+            <div className="mt-2">
+              <div className="flex gap-1 mb-1">
+                {[...Array(5)].map((_, i) => (
+                  <div 
+                    key={i} 
+                    className={`h-1 flex-1 rounded-full ${
+                      i < passwordStrength 
+                        ? passwordStrength < 2 
+                          ? 'bg-red-500' 
+                          : passwordStrength < 4 
+                            ? 'bg-yellow-500' 
+                            : 'bg-green-500'
+                        : 'bg-white/10'
+                    }`}
+                  />
+                ))}
+              </div>
+              <p className={`text-xs ${
+                passwordStrength < 2 
+                  ? 'text-red-400' 
+                  : passwordStrength < 4 
+                    ? 'text-yellow-400' 
+                    : 'text-green-400'
+              }`}>
+                {passwordFeedback}
+              </p>
+            </div>
+          )}
         </div>
+        
         <div className="space-y-2">
           <Label htmlFor="confirm-password">Confirm Password</Label>
-          <div className="relative">
-            <Lock className="absolute left-3 top-3 h-4 w-4 text-white/40" />
-            <PasswordInput
-              id="confirm-password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              onFocus={() => setIsValidatingRegister(true)}
-              hasError={!!registerErrors.confirmPassword}
-              isValid={!!confirmPassword && !registerErrors.confirmPassword}
-            />
-          </div>
-          <FormError message={registerErrors.confirmPassword} />
+          <PasswordInput
+            id="confirm-password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            disabled={isLoading}
+          />
+          
+          {confirmPassword && password !== confirmPassword && (
+            <p className="text-xs text-red-400 mt-1">Passwords do not match</p>
+          )}
         </div>
-      </CardContent>
-      <CardFooter>
+        
+        {error && <FormError message={error} />}
+        
+        <div className="flex items-center space-x-2 mt-4">
+          <input
+            type="checkbox"
+            id="terms"
+            className="rounded bg-transparent border-white/20 text-royal-gold"
+            checked={agreedTerms}
+            onChange={(e) => setAgreedTerms(e.target.checked)}
+          />
+          <label htmlFor="terms" className="text-sm text-white/70">
+            I agree to the terms of service and privacy policy
+          </label>
+        </div>
+        
         <Button 
           type="submit" 
-          className="w-full royal-button bg-gradient-royal hover:opacity-90 text-white relative overflow-hidden group"
+          className="w-full mt-6 bg-gradient-to-r from-royal-purple to-royal-gold hover:opacity-90 text-white"
           disabled={isLoading}
         >
-          <span className="relative z-10 flex items-center justify-center">
-            {isLoading ? "Creating Account..." : (
-              <>
-                Claim Your Title 
-                <Crown className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-              </>
-            )}
-          </span>
+          {isLoading ? (
+            <>
+              <span className="animate-spin mr-2">⚙️</span> Creating Account
+            </>
+          ) : (
+            <>
+              <Shield className="mr-2 h-4 w-4" /> Create Account
+            </>
+          )}
         </Button>
-      </CardFooter>
-    </form>
+      </form>
+      
+      <OAuthProviders 
+        isLoading={isLoading}
+        onSuccess={() => {
+          console.log('OAuth registration successful');
+        }}
+      />
+    </div>
   );
 };
 

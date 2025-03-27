@@ -1,5 +1,6 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { UserRole, UserRolePermissions, MfaSettings, UserSubscription, getRolePermissions, hasPermission } from '@/types/auth';
 
 // User types
 export interface UserProfile {
@@ -15,6 +16,10 @@ export interface UserProfile {
   spendStreak: number;
   lastSpendDate?: Date;
   gender?: 'king' | 'queen' | 'jester' | null;
+  role?: UserRole;
+  mfaSettings?: MfaSettings;
+  subscription?: UserSubscription;
+  emailVerified?: boolean;
 }
 
 interface AuthContextType {
@@ -24,6 +29,11 @@ interface AuthContextType {
   signUp: (email: string, username: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
   updateProfile: (profileData: Partial<UserProfile>) => Promise<void>;
+  hasPermission: (permission: keyof UserRolePermissions) => boolean;
+  getRolePermissions: () => UserRolePermissions | null;
+  subscription: UserSubscription | null;
+  isSubscriptionActive: boolean;
+  activeSessions: number;
 }
 
 // Create context with default values
@@ -34,6 +44,11 @@ const AuthContext = createContext<AuthContextType>({
   signUp: async () => {},
   signOut: async () => {},
   updateProfile: async () => {},
+  hasPermission: () => false,
+  getRolePermissions: () => null,
+  subscription: null,
+  isSubscriptionActive: false,
+  activeSessions: 0
 });
 
 // Mock user data - in a real app, this would come from a database
@@ -49,7 +64,28 @@ const MOCK_USER: UserProfile = {
   profileImage: 'https://i.pravatar.cc/150?img=1',
   spendStreak: 4,
   lastSpendDate: new Date(),
-  gender: 'jester'
+  gender: 'jester',
+  role: 'premium',
+  mfaSettings: {
+    enabled: true,
+    method: 'app',
+    verified: true,
+    lastVerified: new Date()
+  },
+  subscription: {
+    id: 'sub_123456',
+    tier: 'pro',
+    status: 'active',
+    startDate: new Date('2023-01-01'),
+    endDate: new Date('2024-01-01'),
+    renewalDate: new Date('2023-02-01'),
+    paymentMethod: 'credit_card',
+    autoRenew: true,
+    price: 9.99,
+    interval: 'monthly',
+    features: ['5 images', '5 links', 'custom borders', 'video embeds']
+  },
+  emailVerified: true
 };
 
 interface AuthProviderProps {
@@ -60,6 +96,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [initialized, setInitialized] = useState(false);
+  const [activeSessions, setActiveSessions] = useState(0);
+  const [subscription, setSubscription] = useState<UserSubscription | null>(null);
   const localStorageKey = 'p2w_user';
   const sessionStorageKey = 'p2w_session_user';
 
@@ -75,11 +113,20 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           try {
             const parsedUser = JSON.parse(savedUser);
             // Convert string dates back to Date objects
-            if (parsedUser.joinedAt) {
-              parsedUser.joinedAt = new Date(parsedUser.joinedAt);
-            }
+            parsedUser.joinedAt = new Date(parsedUser.joinedAt);
             if (parsedUser.lastSpendDate) {
               parsedUser.lastSpendDate = new Date(parsedUser.lastSpendDate);
+            }
+            if (parsedUser.mfaSettings?.lastVerified) {
+              parsedUser.mfaSettings.lastVerified = new Date(parsedUser.mfaSettings.lastVerified);
+            }
+            if (parsedUser.subscription) {
+              parsedUser.subscription.startDate = new Date(parsedUser.subscription.startDate);
+              parsedUser.subscription.endDate = new Date(parsedUser.subscription.endDate);
+              if (parsedUser.subscription.renewalDate) {
+                parsedUser.subscription.renewalDate = new Date(parsedUser.subscription.renewalDate);
+              }
+              setSubscription(parsedUser.subscription);
             }
             setUser(parsedUser);
           } catch (parseError) {
@@ -94,11 +141,20 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             try {
               const parsedUser = JSON.parse(sessionUser);
               // Convert string dates back to Date objects
-              if (parsedUser.joinedAt) {
-                parsedUser.joinedAt = new Date(parsedUser.joinedAt);
-              }
+              parsedUser.joinedAt = new Date(parsedUser.joinedAt);
               if (parsedUser.lastSpendDate) {
                 parsedUser.lastSpendDate = new Date(parsedUser.lastSpendDate);
+              }
+              if (parsedUser.mfaSettings?.lastVerified) {
+                parsedUser.mfaSettings.lastVerified = new Date(parsedUser.mfaSettings.lastVerified);
+              }
+              if (parsedUser.subscription) {
+                parsedUser.subscription.startDate = new Date(parsedUser.subscription.startDate);
+                parsedUser.subscription.endDate = new Date(parsedUser.subscription.endDate);
+                if (parsedUser.subscription.renewalDate) {
+                  parsedUser.subscription.renewalDate = new Date(parsedUser.subscription.renewalDate);
+                }
+                setSubscription(parsedUser.subscription);
               }
               setUser(parsedUser);
             } catch (parseError) {
@@ -107,6 +163,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             }
           }
         }
+        
+        // Mock multiple sessions
+        setActiveSessions(Math.floor(Math.random() * 3) + 1);
         
       } catch (error) {
         console.error('Auth error:', error);
@@ -127,6 +186,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       
       // For demo purposes, we'll just use our mock user
       setUser(MOCK_USER);
+      setSubscription(MOCK_USER.subscription || null);
       
       // Store user data based on remember me preference
       if (rememberMe) {
@@ -158,10 +218,20 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         team: null,
         tier: 'free',
         joinedAt: new Date(),
-        spendStreak: 0
+        spendStreak: 0,
+        role: 'user',
+        mfaSettings: {
+          enabled: false,
+          method: 'email',
+          verified: false
+        },
+        subscription: null,
+        emailVerified: false
       };
       
       setUser(newUser);
+      setSubscription(null);
+      
       // For new users, store in session storage by default
       sessionStorage.setItem(sessionStorageKey, JSON.stringify(newUser));
     } catch (error) {
@@ -176,6 +246,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     try {
       // Mock sign out
       setUser(null);
+      setSubscription(null);
       localStorage.removeItem(localStorageKey);
       sessionStorage.removeItem(sessionStorageKey);
       return Promise.resolve();
@@ -191,6 +262,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       
       const updatedUser = { ...user, ...profileData };
       setUser(updatedUser);
+      
+      if (profileData.subscription) {
+        setSubscription(profileData.subscription);
+      }
       
       // Update in both storages to ensure consistency
       if (localStorage.getItem(localStorageKey)) {
@@ -208,6 +283,18 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
+  const checkPermission = (permission: keyof UserRolePermissions): boolean => {
+    if (!user || !user.role) return false;
+    return hasPermission(user.role, permission);
+  };
+
+  const getUserRolePermissions = (): UserRolePermissions | null => {
+    if (!user || !user.role) return null;
+    return getRolePermissions(user.role);
+  };
+
+  const isSubActive = !!subscription && subscription.status === 'active' && new Date(subscription.endDate) > new Date();
+
   // Only render children once we've checked authentication
   if (!initialized) {
     return (
@@ -221,7 +308,21 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   }
 
   return (
-    <AuthContext.Provider value={{ user, loading, signIn, signUp, signOut, updateProfile }}>
+    <AuthContext.Provider 
+      value={{ 
+        user, 
+        loading, 
+        signIn, 
+        signUp, 
+        signOut, 
+        updateProfile,
+        hasPermission: checkPermission,
+        getRolePermissions: getUserRolePermissions,
+        subscription,
+        isSubscriptionActive: isSubActive,
+        activeSessions
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

@@ -20,6 +20,7 @@ const Dashboard = lazy(() => import('./pages/Dashboard'));
 const Profile = lazy(() => import('./pages/Profile'));
 const Auth = lazy(() => import('./pages/Auth'));
 const Events = lazy(() => import('./pages/Events'));
+const Updates = lazy(() => import('./pages/Updates'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 
 function App() {
@@ -32,6 +33,7 @@ function App() {
           <Route path="/profile/:username?" element={<Profile />} />
           <Route path="/auth" element={<Auth />} />
           <Route path="/events" element={<Events />} />
+          <Route path="/updates" element={<Updates />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>
