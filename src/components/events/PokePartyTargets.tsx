@@ -3,13 +3,24 @@ import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import PaymentModal from '@/components/PaymentModal';
-import { DollarSign, Clock, Zap } from 'lucide-react';
+import { DollarSign, Clock, Zap, Sparkles } from 'lucide-react';
 import { topUsers, getTeamColor } from './data';
 import { useToast } from '@/hooks/use-toast';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
 
 const PokePartyTargets = () => {
   const { toast } = useToast();
   const [pokeCooldown, setPokeCooldown] = useState<Record<number, boolean>>({});
+  const [pokeEffects, setPokeEffects] = useState<Record<number, boolean>>({});
+  
+  // Show poke effects for a short time to display animation
+  const triggerPokeEffect = (targetId: number) => {
+    setPokeEffects(prev => ({ ...prev, [targetId]: true }));
+    setTimeout(() => {
+      setPokeEffects(prev => ({ ...prev, [targetId]: false }));
+    }, 2000);
+  };
 
   const handlePoke = (targetId: number, targetName: string) => {
     if (pokeCooldown[targetId]) {
@@ -27,6 +38,40 @@ const PokePartyTargets = () => {
       description: `You've knocked ${targetName} down one rank for 24 hours.`,
     });
     
+    // Trigger visual effect
+    triggerPokeEffect(targetId);
+    
+    // Create floating particles
+    const createParticles = () => {
+      for (let i = 0; i < 5; i++) {
+        const particle = document.createElement('div');
+        particle.innerHTML = ['⚡️', '💫', '✨', '💥'][Math.floor(Math.random() * 4)];
+        particle.classList.add('absolute', 'text-xl', 'animate-float', 'pointer-events-none');
+        
+        // Random position around the target user card
+        const targetElement = document.getElementById(`user-card-${targetId}`);
+        if (targetElement) {
+          const rect = targetElement.getBoundingClientRect();
+          const randomX = Math.random() * rect.width;
+          const randomY = rect.height / 2;
+          
+          particle.style.left = `${randomX}px`;
+          particle.style.top = `${randomY}px`;
+          
+          targetElement.appendChild(particle);
+          
+          // Remove particle after animation completes
+          setTimeout(() => {
+            if (targetElement.contains(particle)) {
+              targetElement.removeChild(particle);
+            }
+          }, 5000);
+        }
+      }
+    };
+    
+    createParticles();
+    
     // Set cooldown
     setPokeCooldown({
       ...pokeCooldown,
@@ -43,70 +88,126 @@ const PokePartyTargets = () => {
   };
 
   return (
-    <div className="mb-12">
-      <div className="flex flex-col md:flex-row justify-between items-center mb-6">
-        <div>
-          <h2 className="text-2xl font-bold text-gradient mb-2">Poke Party Targets</h2>
-          <p className="text-white/70">
-            Pay $0.50 to knock someone down one rank for 24 hours. Choose your target wisely!
-          </p>
+    <TooltipProvider>
+      <div className="mb-12">
+        <div className="flex flex-col md:flex-row justify-between items-center mb-6">
+          <div>
+            <h2 className="text-2xl font-bold text-gradient mb-2">Poke Party Targets</h2>
+            <p className="text-white/70">
+              Pay $0.50 to knock someone down one rank for 24 hours. Choose your target wisely!
+            </p>
+          </div>
+          
+          <div className="flex items-center space-x-2 mt-4 md:mt-0">
+            <div className="glass-morphism border-white/10 rounded-full px-3 py-1.5 text-sm text-white/70">
+              <Clock size={14} className="inline-block mr-1.5" />
+              24h effect duration
+            </div>
+            <div className="glass-morphism border-white/10 rounded-full px-3 py-1.5 text-sm text-white/70">
+              <DollarSign size={14} className="inline-block mr-1.5" />
+              $0.50 per poke
+            </div>
+          </div>
         </div>
         
-        <div className="flex items-center space-x-2 mt-4 md:mt-0">
-          <div className="glass-morphism border-white/10 rounded-full px-3 py-1.5 text-sm text-white/70">
-            <Clock size={14} className="inline-block mr-1.5" />
-            24h effect duration
-          </div>
-          <div className="glass-morphism border-white/10 rounded-full px-3 py-1.5 text-sm text-white/70">
-            <DollarSign size={14} className="inline-block mr-1.5" />
-            $0.50 per poke
-          </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {topUsers.map((targetUser) => (
+            <Card 
+              key={targetUser.id} 
+              id={`user-card-${targetUser.id}`}
+              className={`glass-morphism border-white/10 hover:border-white/20 transition-all relative overflow-hidden ${
+                pokeEffects[targetUser.id] ? 'animate-pulse-slow' : ''
+              }`}
+            >
+              <CardContent className="pt-6">
+                <div className="flex justify-between items-center">
+                  <div className="flex items-center">
+                    <div className={`w-12 h-12 rounded-full overflow-hidden border-2 border-${getTeamColor(targetUser.team)} mr-3 ${
+                      pokeEffects[targetUser.id] ? 'animate-crown-glow' : ''
+                    }`}>
+                      <img src={targetUser.profileImage} alt={targetUser.username} className="w-full h-full object-cover" />
+                    </div>
+                    <div>
+                      <div className="flex items-center">
+                        <h3 className="font-medium">{targetUser.username}</h3>
+                        <span className={`ml-2 text-xs bg-white/10 px-2 py-0.5 rounded-full text-white/70 ${
+                          pokeEffects[targetUser.id] ? 'line-through' : ''
+                        }`}>
+                          Rank #{targetUser.rank}
+                        </span>
+                        {pokeEffects[targetUser.id] && (
+                          <span className="ml-2 text-xs bg-team-red/20 px-2 py-0.5 rounded-full text-team-red animate-fade-in">
+                            Rank #{targetUser.rank + 1}
+                          </span>
+                        )}
+                      </div>
+                      <div className={`inline-flex items-center px-2 py-0.5 mt-1 rounded-full text-xs font-medium bg-${getTeamColor(targetUser.team)}/10 text-${getTeamColor(targetUser.team)} border border-${getTeamColor(targetUser.team)}/30`}>
+                        Team {targetUser.team.charAt(0).toUpperCase() + targetUser.team.slice(1)}
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <HoverCard>
+                    <HoverCardTrigger asChild>
+                      <div>
+                        <PaymentModal
+                          amount={0.5}
+                          title="Poke a User"
+                          description={`Pay $0.50 to drop ${targetUser.username} down one rank for 24 hours.`}
+                          onSuccess={() => handlePoke(targetUser.id, targetUser.username)}
+                          trigger={
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Button 
+                                  className={`transition-all duration-300 ${pokeCooldown[targetUser.id] 
+                                    ? 'bg-white/10 text-white/50' 
+                                    : 'bg-white/10 hover:bg-team-red/80 hover:text-white text-white'
+                                  } ${pokeEffects[targetUser.id] ? 'bg-team-red/80 text-white' : ''}`}
+                                  disabled={pokeCooldown[targetUser.id]}
+                                >
+                                  {pokeEffects[targetUser.id] ? (
+                                    <Sparkles size={16} className="mr-2 animate-crown-glow" />
+                                  ) : (
+                                    <Zap size={16} className="mr-2" />
+                                  )}
+                                  {pokeCooldown[targetUser.id] 
+                                    ? 'Cooldown' 
+                                    : pokeEffects[targetUser.id] 
+                                      ? 'Poked!' 
+                                      : 'Poke - $0.50'
+                                  }
+                                </Button>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                {pokeCooldown[targetUser.id] 
+                                  ? 'You must wait before poking again' 
+                                  : 'Drop this user down one rank for 24 hours'
+                                }
+                              </TooltipContent>
+                            </Tooltip>
+                          }
+                        />
+                      </div>
+                    </HoverCardTrigger>
+                    <HoverCardContent className="glass-morphism border-white/10 w-80 p-4">
+                      <div className="space-y-2">
+                        <h4 className="text-sm font-medium">Poke Effect:</h4>
+                        <p className="text-sm text-white/70">
+                          This will temporarily drop {targetUser.username} from rank #{targetUser.rank} to #{targetUser.rank + 1} for 24 hours.
+                        </p>
+                        <div className="text-xs text-white/50 mt-2">
+                          After poking, you'll need to wait 24 hours before poking this user again.
+                        </div>
+                      </div>
+                    </HoverCardContent>
+                  </HoverCard>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
         </div>
       </div>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {topUsers.map((targetUser) => (
-          <Card key={targetUser.id} className="glass-morphism border-white/10 hover:border-white/20 transition-all">
-            <CardContent className="pt-6">
-              <div className="flex justify-between items-center">
-                <div className="flex items-center">
-                  <div className={`w-12 h-12 rounded-full overflow-hidden border-2 border-${getTeamColor(targetUser.team)} mr-3`}>
-                    <img src={targetUser.profileImage} alt={targetUser.username} className="w-full h-full object-cover" />
-                  </div>
-                  <div>
-                    <div className="flex items-center">
-                      <h3 className="font-medium">{targetUser.username}</h3>
-                      <span className="ml-2 text-xs bg-white/10 px-2 py-0.5 rounded-full text-white/70">
-                        Rank #{targetUser.rank}
-                      </span>
-                    </div>
-                    <div className={`inline-flex items-center px-2 py-0.5 mt-1 rounded-full text-xs font-medium bg-${getTeamColor(targetUser.team)}/10 text-${getTeamColor(targetUser.team)} border border-${getTeamColor(targetUser.team)}/30`}>
-                      Team {targetUser.team.charAt(0).toUpperCase() + targetUser.team.slice(1)}
-                    </div>
-                  </div>
-                </div>
-                
-                <PaymentModal
-                  amount={0.5}
-                  title="Poke a User"
-                  description={`Pay $0.50 to drop ${targetUser.username} down one rank for 24 hours.`}
-                  onSuccess={() => handlePoke(targetUser.id, targetUser.username)}
-                  trigger={
-                    <Button 
-                      className="bg-white/10 hover:bg-white/20 text-white"
-                      disabled={pokeCooldown[targetUser.id]}
-                    >
-                      <Zap size={16} className="mr-2" />
-                      {pokeCooldown[targetUser.id] ? 'Cooldown' : 'Poke - $0.50'}
-                    </Button>
-                  }
-                />
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-    </div>
+    </TooltipProvider>
   );
 };
 
