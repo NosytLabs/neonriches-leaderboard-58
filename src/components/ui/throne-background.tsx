@@ -61,8 +61,8 @@ const ThroneBackground: React.FC<ThroneBackgroundProps> = ({
     
     const colors = colorScheme[variant];
     
-    // Create particles
-    const particles = Array.from({ length: particleCount }, () => ({
+    // Create particles array before using it
+    const particlesArray = Array.from({ length: particleCount }, () => ({
       x: Math.random() * canvas.width,
       y: Math.random() * canvas.height,
       radius: Math.random() * 2 + 1,
@@ -78,7 +78,7 @@ const ThroneBackground: React.FC<ThroneBackgroundProps> = ({
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       
       // Draw particles
-      particles.forEach(particle => {
+      particlesArray.forEach(particle => {
         ctx.beginPath();
         ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
         ctx.fillStyle = particle.color + Math.floor(particle.opacity * 255).toString(16).padStart(2, '0');

@@ -1,4 +1,3 @@
-
 :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 255, 255, 255;
@@ -200,14 +199,13 @@ body {
 
 /* Enhanced royal card styling - fixed to use pure CSS instead of Tailwind @apply */
 .royal-card-enhanced {
-  background-color: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(16px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), 0 0 15px rgba(212, 175, 55, 0.15);
+  backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.15);
   padding: 1.5rem;
   position: relative;
   overflow: hidden;
-  transition: all 0.3s;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), 0 0 15px rgba(212, 175, 55, 0.15);
+  transition: all 300ms;
 }
 
 .royal-card-enhanced:hover {
@@ -277,7 +275,7 @@ body {
   position: relative;
   overflow: hidden;
   z-index: 10;
-  transition: all 0.3s;
+  transition: all 300ms;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35), 0 0 8px rgba(212, 175, 55, 0.25);
 }
 
@@ -405,12 +403,12 @@ body {
 
 /* New: Glass card effect with royal styling - fixed to use pure CSS instead of Tailwind @apply */
 .glass-card-royal {
-  backdrop-filter: blur(16px);
+  backdrop-filter: blur(12px);
   background-color: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(212, 175, 55, 0.2);
   border-radius: 0.5rem;
   padding: 1.25rem;
-  transition: all 0.3s;
+  transition: all 300ms;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2), 0 0 8px rgba(212, 175, 55, 0.1);
 }
 

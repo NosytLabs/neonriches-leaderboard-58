@@ -7,7 +7,7 @@ import LeaderboardFooter from './LeaderboardFooter';
 import { mockLeaderboardData } from './LeaderboardData';
 import { useToast } from '@/hooks/use-toast';
 import { Crown, Coins } from 'lucide-react';
-import useFloatingCoins from '@/hooks/use-floating-coins';
+import { useFloatingCoins } from '@/hooks/use-floating-coins';
 
 const RoyalCourt = () => {
   const [leaderboardData, setLeaderboardData] = useState(mockLeaderboardData);

@@ -1,148 +1,122 @@
 
-/* This file contains custom utility classes for the project */
 @layer components {
-  /* Glass morphism effects */
   .glass-morphism {
-    @apply bg-foreground/5 backdrop-blur-md border border-foreground/10;
+    @apply bg-black/20 backdrop-blur-md border border-white/10 shadow-md;
   }
   
-  .glass-morphism-dark {
-    @apply bg-black/40 backdrop-blur-md border border-white/10;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  /* Royal button with shimmer effect */
+  .btn-royal {
+    @apply relative overflow-hidden bg-gradient-to-r from-royal-crimson via-royal-gold to-royal-navy 
+    text-white font-bold py-2 px-4 rounded shadow-lg hover:shadow-xl transition-all duration-300;
   }
   
-  .glass-morphism-highlight {
-    @apply bg-foreground/10 backdrop-blur-md border border-royal-gold/20;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 15px rgba(212, 175, 55, 0.15);
+  .btn-royal::after {
+    @apply content-[''] absolute top-0 -left-[100%] w-full h-full bg-white/20 skew-x-[-20deg] transition-all duration-1000;
   }
   
-  /* Royal gradient */
-  .royal-gradient {
-    @apply bg-gradient-to-r from-royal-crimson via-royal-gold to-royal-navy text-transparent bg-clip-text;
+  .btn-royal:hover::after {
+    @apply left-[100%];
   }
   
-  /* Royal card with enhanced shadow */
-  .royal-card-enhanced {
-    @apply bg-foreground/5 backdrop-blur-xl border border-white/15 p-6 relative overflow-hidden transition-all duration-300;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), 0 0 10px rgba(212, 175, 55, 0.1);
+  /* Medieval-themed inputs */
+  .input-royal {
+    @apply bg-black/20 border border-royal-gold/30 rounded-md px-4 py-2 text-white
+    focus:outline-none focus:ring-2 focus:ring-royal-gold/50 focus:border-royal-gold/50
+    placeholder:text-white/50;
   }
   
-  /* Royal button */
-  .royal-button {
-    @apply relative overflow-hidden z-10;
+  /* Gradient text for royal elements */
+  .royal-text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-royal-gold via-royal-crimson to-royal-navy;
   }
   
-  /* Enhanced button hover effect */
-  .royal-button-enhanced {
-    @apply relative overflow-hidden z-10 transition-all duration-300;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3), 0 0 5px rgba(212, 175, 55, 0.2);
+  /* Animated border for premium elements */
+  .royal-border-animated {
+    @apply relative;
   }
   
-  .royal-button-enhanced::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(
-      90deg,
-      transparent,
-      rgba(255, 255, 255, 0.3),
-      transparent
-    );
-    transition: 0.5s;
-    z-index: -1;
+  .royal-border-animated::before {
+    @apply content-[''] absolute -inset-[2px] rounded-lg bg-gradient-to-r from-royal-gold via-royal-crimson to-royal-navy
+    animate-slow-spin opacity-70 blur-[2px] -z-10;
   }
   
-  .royal-button-enhanced:hover {
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), 0 0 10px rgba(212, 175, 55, 0.4);
+  /* Medieval-themed cards */
+  .card-medieval {
+    @apply bg-black/40 border border-royal-gold/20 rounded-lg p-6
+    backdrop-blur-md shadow-xl transition-all duration-300
+    hover:border-royal-gold/40 hover:shadow-royal-gold/10;
   }
   
-  .royal-button-enhanced:hover::before {
-    left: 100%;
+  /* Parchment-style container */
+  .parchment {
+    @apply bg-royal-parchment/10 border border-royal-gold/20 rounded-md p-6
+    bg-[url('/throne-assets/parchment-texture.png')] bg-cover bg-center
+    text-white/90 shadow-inner;
   }
+  
+  /* Team color variations */
+  .team-red-bg {
+    @apply bg-gradient-to-br from-royal-crimson/20 to-royal-velvet/20 border-royal-crimson/30;
+  }
+  
+  .team-green-bg {
+    @apply bg-gradient-to-br from-royal-gold/20 to-royal-forest/20 border-royal-gold/30;
+  }
+  
+  .team-blue-bg {
+    @apply bg-gradient-to-br from-royal-navy/20 to-royal-purple/20 border-royal-navy/30;
+  }
+  
+  /* Animate utility classes */
+  .animate-slow-spin {
+    animation: spin 12s linear infinite;
+  }
+  
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+  
+  .animate-pulse-slow {
+    animation: pulse 4s ease-in-out infinite;
+  }
+  
+  /* Decorative elements */
+  .medieval-corner-ornament {
+    @apply relative;
+  }
+  
+  .medieval-corner-ornament::before {
+    @apply content-[''] absolute top-2 left-2 w-4 h-4 border-t border-l border-royal-gold/60;
+  }
+  
+  .medieval-corner-ornament::after {
+    @apply content-[''] absolute bottom-2 right-2 w-4 h-4 border-b border-r border-royal-gold/60;
+  }
+}
 
-  /* Gold border glow effect */
-  .gold-border-glow {
-    box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
   }
-  
-  /* Animate royal pulse effect */
-  .animate-royal-pulse {
-    animation: royal-pulse 2s ease-in-out infinite;
+  50% {
+    transform: translateY(-10px);
   }
-  
-  @keyframes royal-pulse {
-    0%, 100% {
-      transform: scale(1);
-      opacity: 1;
-    }
-    50% {
-      transform: scale(1.05);
-      opacity: 0.9;
-    }
-  }
+}
 
-  /* Background gradient */
-  .bg-gradient-royal {
-    @apply bg-gradient-to-r from-royal-crimson via-royal-gold to-royal-navy;
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.7;
   }
-  
-  /* Medieval background with patterns */
-  .bg-medieval-pattern {
-    background-color: rgba(13, 17, 23, 0.95);
-    background-image: url('/throne-assets/medieval-patterns.svg');
-    background-size: 100px 100px;
-    background-repeat: repeat;
+  50% {
+    opacity: 0.3;
   }
-  
-  /* Parchment background */
-  .bg-parchment {
-    background-color: rgba(245, 222, 179, 0.05);
-    background-image: url('/throne-assets/parchment-texture.svg');
-    background-size: cover;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
   }
-  
-  /* Royal border with accent */
-  .royal-border {
-    @apply border border-royal-gold/30 relative;
-  }
-  
-  .royal-border::before {
-    content: '';
-    position: absolute;
-    top: -2px;
-    left: -2px;
-    right: -2px;
-    bottom: -2px;
-    border: 1px solid rgba(212, 175, 55, 0.1);
-    pointer-events: none;
-    z-index: -1;
-  }
-  
-  /* Team colors with enhanced contrast */
-  .text-team-red {
-    @apply text-royal-crimson-bright;
-  }
-  
-  .text-team-green {
-    @apply text-royal-gold-bright;
-  }
-  
-  .text-team-blue {
-    @apply text-royal-navy-bright;
-  }
-  
-  .bg-team-red {
-    @apply bg-royal-crimson;
-  }
-  
-  .bg-team-green {
-    @apply bg-royal-gold;
-  }
-  
-  .bg-team-blue {
-    @apply bg-royal-navy;
+  to {
+    transform: rotate(360deg);
   }
 }
