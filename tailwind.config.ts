@@ -63,21 +63,24 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				// Royal team colors
+				// Enhanced Royal team colors with richer hues
 				team: {
-					red: '#9B26AF',    // Royal Purple
-					green: '#FFD700',  // Royal Gold
-					blue: '#0055A4',   // Royal Blue
+					red: '#B026FF',    // Deeper Royal Purple
+					green: '#FFD700',  // Brighter Royal Gold
+					blue: '#1E56A0',   // Deeper Royal Blue
 				},
-				// Royal theme colors
+				// Enhanced Royal theme colors
 				royal: {
-					purple: '#9B26AF', // Royal Purple
-					gold: '#FFD700',   // Royal Gold
-					blue: '#0055A4',   // Royal Blue
-					crimson: '#DC143C',// Royal Crimson
-					emerald: '#50C878',// Royal Emerald
-					amber: '#FFBF00',  // Royal Amber
-					silver: '#C0C0C0',  // Royal Silver
+					purple: '#B026FF', // Deeper Royal Purple
+					gold: '#FFD700',   // Brighter Royal Gold
+					blue: '#1E56A0',   // Deeper Royal Blue
+					crimson: '#E61C5D',// Brighter Royal Crimson
+					emerald: '#3CB371',// Richer Royal Emerald
+					amber: '#FFC000',  // Richer Royal Amber
+					silver: '#D9D9D9',  // Brighter Royal Silver
+					midnight: '#16213E', // New Royal Midnight
+					charcoal: '#1A1E2C', // New Royal Charcoal
+					pearl: '#F5F3F4',    // New Royal Pearl
 				}
 			},
 			borderRadius: {
@@ -120,27 +123,39 @@ export default {
 				},
 				'glow': {
 					'0%, 100%': { filter: 'brightness(1)' },
-					'50%': { filter: 'brightness(1.3)' }
+					'50%': { filter: 'brightness(1.5)' }
 				},
 				'float': {
 					'0%, 100%': { transform: 'translateY(0)' },
-					'50%': { transform: 'translateY(-10px)' }
+					'50%': { transform: 'translateY(-15px)' }
 				},
 				'pulse-slow': {
 					'0%, 100%': { opacity: '1' },
-					'50%': { opacity: '0.8' }
+					'50%': { opacity: '0.7' }
 				},
 				'shimmer': {
 					'0%': { backgroundPosition: '200% 0' },
 					'100%': { backgroundPosition: '-200% 0' }
 				},
 				'crown-glow': {
-					'0%, 100%': { filter: 'drop-shadow(0 0 5px rgba(255, 215, 0, 0.5))' },
-					'50%': { filter: 'drop-shadow(0 0 15px rgba(255, 215, 0, 0.8))' }
+					'0%, 100%': { filter: 'drop-shadow(0 0 8px rgba(255, 215, 0, 0.6))' },
+					'50%': { filter: 'drop-shadow(0 0 20px rgba(255, 215, 0, 1))' }
 				},
 				'royal-pulse': {
 					'0%, 100%': { transform: 'scale(1)' },
-					'50%': { transform: 'scale(1.05)' }
+					'50%': { transform: 'scale(1.08)' }
+				},
+				'sparkle': {
+					'0%, 100%': { opacity: '0' },
+					'50%': { opacity: '1' }
+				},
+				'rotate-slow': {
+					'0%': { transform: 'rotate(0deg)' },
+					'100%': { transform: 'rotate(360deg)' }
+				},
+				'bounce-subtle': {
+					'0%, 100%': { transform: 'translateY(0)' },
+					'50%': { transform: 'translateY(-5px)' }
 				}
 			},
 			animation: {
@@ -157,7 +172,10 @@ export default {
 				'pulse-slow': 'pulse-slow 3s ease-in-out infinite',
 				'shimmer': 'shimmer 7s linear infinite',
 				'crown-glow': 'crown-glow 3s ease-in-out infinite',
-				'royal-pulse': 'royal-pulse 2s ease-in-out infinite'
+				'royal-pulse': 'royal-pulse 2s ease-in-out infinite',
+				'sparkle': 'sparkle 2s ease-in-out infinite',
+				'rotate-slow': 'rotate-slow 12s linear infinite',
+				'bounce-subtle': 'bounce-subtle 3s ease-in-out infinite'
 			},
 			backdropFilter: {
 				'none': 'none',
@@ -167,6 +185,12 @@ export default {
 				'serif': ['Playfair Display', 'Georgia', 'serif'],
 				'royal': ['Cinzel', 'serif'],
 				'sans': ['Inter', 'sans-serif']
+			},
+			backgroundImage: {
+				'gradient-royal': 'linear-gradient(135deg, #B026FF 0%, #FFD700 50%, #1E56A0 100%)',
+				'gradient-gold': 'linear-gradient(to right, #FFD700, #FFC000, #FFD700)',
+				'gradient-purple': 'linear-gradient(to right, #9B26AF, #B026FF, #9B26AF)',
+				'gradient-blue': 'linear-gradient(to right, #0055A4, #1E56A0, #0055A4)',
 			}
 		}
 	},

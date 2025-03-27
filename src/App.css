@@ -4,15 +4,18 @@
   min-height: 100vh;
 }
 
+/* Logo styles */
 .logo {
   height: 6em;
   padding: 1.5em;
   will-change: filter;
   transition: filter 300ms;
 }
+
 .logo:hover {
   filter: drop-shadow(0 0 2em #646cffaa);
 }
+
 .logo.react:hover {
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
@@ -32,10 +35,159 @@
   }
 }
 
+/* Card styling */
 .card {
   padding: 2em;
 }
 
 .read-the-docs {
   color: #888;
+}
+
+/* Enhanced royal card styling */
+.royal-card {
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  background-color: rgba(22, 33, 62, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.royal-card:hover {
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+  border-color: rgba(255, 215, 0, 0.3);
+}
+
+/* Enhanced royal text effects */
+.royal-text-glow {
+  text-shadow: 0 0 5px rgba(255, 215, 0, 0.7);
+}
+
+.royal-heading {
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-weight: bold;
+  background: linear-gradient(135deg, #B026FF, #FFD700, #1E56A0);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Royal shimmer effect */
+.royal-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.royal-shimmer::after {
+  content: '';
+  position: absolute;
+  top: -100%;
+  left: -100%;
+  width: 300%;
+  height: 300%;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.03) 20%,
+    rgba(255, 255, 255, 0.1) 40%,
+    rgba(255, 255, 255, 0.03) 60%,
+    rgba(255, 255, 255, 0) 80%
+  );
+  transform: rotate(45deg);
+  animation: shimmer 7s linear infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%) rotate(45deg);
+  }
+  100% {
+    transform: translateX(100%) rotate(45deg);
+  }
+}
+
+/* Enhanced backgrounds */
+.royal-gradient-bg {
+  background: linear-gradient(135deg, #16213E 0%, #1A1E2C 100%);
+}
+
+.royal-pattern-bg {
+  background-color: #16213E;
+  background-image: 
+    radial-gradient(rgba(176, 38, 255, 0.1) 1px, transparent 1px),
+    radial-gradient(rgba(30, 86, 160, 0.1) 1px, transparent 1px);
+  background-size: 20px 20px;
+  background-position: 0 0, 10px 10px;
+}
+
+/* Royal button effects */
+.royal-button-outline {
+  position: relative;
+}
+
+.royal-button-outline::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, #B026FF, #FFD700, #1E56A0, #B026FF);
+  border-radius: 100px;
+  z-index: -1;
+  animation: rotate-slow 4s linear infinite;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.royal-button-outline:hover::before {
+  opacity: 1;
+}
+
+/* Navigation link effects */
+.royal-nav-link {
+  position: relative;
+  overflow: hidden;
+}
+
+.royal-nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: #FFD700;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.3s ease;
+}
+
+.royal-nav-link:hover::after,
+.royal-nav-link.active::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* Enhanced scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(26, 30, 44, 0.5);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #B026FF, #1E56A0);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(to bottom, #FFD700, #B026FF);
 }
