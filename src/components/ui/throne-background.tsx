@@ -70,73 +70,74 @@ const ThroneBackground: React.FC<ThroneBackgroundProps> = ({
     // Significantly reduce particle count
     const particleCount = isLowEndDevice 
       ? 3 
-      : (density === 'high' ? 10 : density === 'medium' ? 5 : 3);
+      : (density === 'high' ? 8 : density === 'medium' ? 4 : 2);
     
-    // Clean up old particles
-    const existingParticles = container.querySelectorAll('.floating-particle');
-    existingParticles.forEach(particle => particle.remove());
+    // Create list of particle elements
+    const particleElements: HTMLDivElement[] = [];
     
-    // Batch particle creation with requestAnimationFrame
-    requestAnimationFrame(() => {
-      for (let i = 0; i < particleCount; i++) {
-        createParticle(container, variant);
+    // Batch particle creation in a document fragment for better performance
+    const fragment = document.createDocumentFragment();
+    
+    for (let i = 0; i < particleCount; i++) {
+      const particle = document.createElement('div');
+      particle.className = 'floating-particle absolute rounded-full opacity-0 pointer-events-none';
+      
+      // Create fewer, larger particles that are more visible
+      const size = Math.random() * 6 + 4;
+      particle.style.width = `${size}px`;
+      particle.style.height = `${size}px`;
+      
+      // Position randomly but avoid edges
+      particle.style.left = `${Math.random() * 80 + 10}%`;
+      particle.style.top = `${Math.random() * 80 + 10}%`;
+      
+      // Apply colors based on variant
+      if (variant === 'royal') {
+        const colors = ['#D4AF37', '#8B0000', '#000080'];
+        particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+      } else if (variant === 'dark') {
+        particle.style.backgroundColor = `rgba(255, 255, 255, ${Math.random() * 0.2 + 0.1})`;
+      } else if (variant === 'light') {
+        particle.style.backgroundColor = `rgba(0, 0, 0, ${Math.random() * 0.2 + 0.1})`;
+      } else if (variant === 'purple') {
+        const opacity = Math.random() * 0.2 + 0.1;
+        particle.style.backgroundColor = `rgba(128, 0, 128, ${opacity})`;
+      } else {
+        const opacity = Math.random() * 0.2 + 0.1;
+        if (Math.random() > 0.6) {
+          particle.style.backgroundColor = `rgba(212, 175, 55, ${opacity})`;
+        } else if (Math.random() > 0.3) {
+          particle.style.backgroundColor = `rgba(139, 0, 0, ${opacity})`;
+        } else {
+          particle.style.backgroundColor = `rgba(0, 0, 128, ${opacity})`;
+        }
       }
-    });
+      
+      // Use transform and opacity instead of left/top for better performance
+      particle.style.willChange = 'transform, opacity';
+      
+      // Use longer animation duration to reduce CPU usage
+      const duration = Math.random() * 10 + 10;
+      particle.style.animation = `float ${duration}s ease-in forwards`;
+      
+      // Stagger animation starts to spread out the rendering load
+      particle.style.animationDelay = `${Math.random() * 10}s`;
+      
+      fragment.appendChild(particle);
+      particleElements.push(particle);
+    }
+    
+    container.appendChild(fragment);
     
     // Clean up particles when component unmounts or becomes invisible
     return () => {
-      const currentParticles = container.querySelectorAll('.floating-particle');
-      currentParticles.forEach(particle => particle.remove());
+      particleElements.forEach(particle => {
+        if (particle.parentNode === container) {
+          container.removeChild(particle);
+        }
+      });
     };
   }, [particles, density, variant, isVisible, isLowEndDevice]);
-  
-  const createParticle = (container: HTMLDivElement, variant: string) => {
-    const particle = document.createElement('div');
-    particle.className = 'floating-particle absolute rounded-full opacity-0 pointer-events-none';
-    
-    // Create fewer, larger particles that are more visible
-    const size = Math.random() * 6 + 4;
-    particle.style.width = `${size}px`;
-    particle.style.height = `${size}px`;
-    
-    // Position randomly but avoid edges
-    particle.style.left = `${Math.random() * 80 + 10}%`;
-    particle.style.top = `${Math.random() * 80 + 10}%`;
-    
-    // Apply colors based on variant
-    if (variant === 'royal') {
-      const colors = ['#D4AF37', '#8B0000', '#000080'];
-      particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-    } else if (variant === 'dark') {
-      particle.style.backgroundColor = `rgba(255, 255, 255, ${Math.random() * 0.2 + 0.1})`;
-    } else if (variant === 'light') {
-      particle.style.backgroundColor = `rgba(0, 0, 0, ${Math.random() * 0.2 + 0.1})`;
-    } else if (variant === 'purple') {
-      const opacity = Math.random() * 0.2 + 0.1;
-      particle.style.backgroundColor = `rgba(128, 0, 128, ${opacity})`;
-    } else {
-      const opacity = Math.random() * 0.2 + 0.1;
-      if (Math.random() > 0.6) {
-        particle.style.backgroundColor = `rgba(212, 175, 55, ${opacity})`;
-      } else if (Math.random() > 0.3) {
-        particle.style.backgroundColor = `rgba(139, 0, 0, ${opacity})`;
-      } else {
-        particle.style.backgroundColor = `rgba(0, 0, 128, ${opacity})`;
-      }
-    }
-    
-    // Optimize rendering with will-change
-    particle.style.willChange = 'transform, opacity';
-    
-    // Use longer animation duration to reduce CPU usage
-    const duration = Math.random() * 10 + 10;
-    particle.style.animation = `float ${duration}s ease-in forwards`;
-    
-    // Stagger animation starts to spread out the rendering load
-    particle.style.animationDelay = `${Math.random() * 10}s`;
-    
-    container.appendChild(particle);
-  };
   
   const getVariantClasses = () => {
     switch (variant) {

@@ -39,11 +39,6 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
     setError(false);
     setIsLoading(true);
     setImgLoaded(false);
-  }, [src]);
-  
-  // Preload the image
-  useEffect(() => {
-    if (!src || skipPreload) return;
     
     // Skip preloading for base64 images or SVGs - they're already fast
     if (src.startsWith('data:') || src.endsWith('.svg')) {
@@ -51,6 +46,13 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
       setImgLoaded(true);
       return;
     }
+  }, [src]);
+  
+  // Preload the image
+  useEffect(() => {
+    if (!src || skipPreload || src.startsWith('data:') || src.endsWith('.svg')) return;
+    
+    let isMounted = true;
     
     // Use intersection observer to only preload when near viewport
     const imgObserver = new IntersectionObserver((entries) => {
@@ -58,14 +60,18 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
         const img = new Image();
         
         img.onload = () => {
-          setIsLoading(false);
-          setImgLoaded(true);
+          if (isMounted) {
+            setIsLoading(false);
+            setImgLoaded(true);
+          }
         };
         
         img.onerror = () => {
-          setError(true);
-          setImgSrc(fallback);
-          setIsLoading(false);
+          if (isMounted) {
+            setError(true);
+            setImgSrc(fallback);
+            setIsLoading(false);
+          }
         };
         
         img.src = src;
@@ -73,23 +79,31 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
         // Cleanup
         imgObserver.disconnect();
       }
+    }, { 
+      rootMargin: '200px', // Load images 200px before they come into view
+      threshold: 0.01 
     });
     
     // Create a temporary element to observe
     const tempDiv = document.createElement('div');
+    document.body.appendChild(tempDiv);
     imgObserver.observe(tempDiv);
     
     // Add timeout to prevent hanging on slow connections
     const timeout = setTimeout(() => {
-      if (isLoading) {
+      if (isMounted && isLoading) {
         setIsLoading(false);
         imgObserver.disconnect();
       }
     }, 3000);
     
     return () => {
+      isMounted = false;
       imgObserver.disconnect();
       clearTimeout(timeout);
+      if (tempDiv.parentNode) {
+        document.body.removeChild(tempDiv);
+      }
     };
   }, [src, fallback, isLoading, skipPreload]);
   

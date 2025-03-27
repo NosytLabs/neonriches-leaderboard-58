@@ -22,6 +22,11 @@ const soundsMap: SoundMap = {
     src: 'https://assets.mixkit.co/sfx/preview/mixkit-unlock-game-notification-253.mp3',
     description: 'Purchase confirmation',
     volume: 0.3
+  },
+  royalAnnouncement: {
+    src: 'https://assets.mixkit.co/sfx/preview/mixkit-fairy-arcade-sparkle-866.mp3',
+    description: 'Royal announcement chime',
+    volume: 0.2
   }
 };
 
@@ -56,11 +61,6 @@ const additionalSounds: SoundMap = {
     src: 'https://assets.mixkit.co/sfx/preview/mixkit-sword-slides-2793.mp3',
     description: 'Sword draw or clash',
     volume: 0.3
-  },
-  royalAnnouncement: {
-    src: 'https://assets.mixkit.co/sfx/preview/mixkit-fairy-arcade-sparkle-866.mp3',
-    description: 'Royal announcement chime',
-    volume: 0.2
   }
 };
 
@@ -71,7 +71,7 @@ const useNotificationSounds = () => {
   const preloadAttempted = useRef(false);
   
   // Preload only essential sounds on initial load
-  const preloadEssentialSounds = useCallback(() => {
+  const preloadSounds = useCallback(() => {
     // Skip if already attempted to prevent multiple preload calls
     if (preloadAttempted.current) return;
     preloadAttempted.current = true;
@@ -193,7 +193,7 @@ const useNotificationSounds = () => {
   
   return {
     playSound,
-    preloadSounds: preloadEssentialSounds,
+    preloadSounds,
     soundsLoaded: initialLoadComplete,
     loadedSoundTypes: loadedSounds
   };

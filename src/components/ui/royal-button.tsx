@@ -40,14 +40,28 @@ const RoyalButton: React.FC<RoyalButtonProps> = ({
   
   // Get custom styles based on variant for the ones not directly supported
   const getCustomStyles = () => {
-    if (variant === 'mahogany') {
-      return 'border-royal-mahogany/70 bg-transparent text-royal-mahogany hover:bg-royal-mahogany/10';
+    switch (variant) {
+      case 'mahogany':
+        return 'border-royal-mahogany/70 bg-transparent text-royal-mahogany hover:bg-royal-mahogany/10';
+      case 'glass':
+        return 'glass-morphism hover:glass-morphism-highlight transition-all duration-300';
+      default:
+        return '';
     }
-    return '';
   };
   
-  const renderContent = () => (
-    <>
+  return (
+    <Button
+      variant={getVariant()}
+      size={size}
+      className={cn(
+        'relative overflow-hidden',
+        shimmer && 'royal-shine',
+        getCustomStyles(),
+        className
+      )}
+      {...props}
+    >
       {glow && (
         <div className="absolute inset-0 rounded-md opacity-50 blur-md" 
           style={{ 
@@ -75,22 +89,6 @@ const RoyalButton: React.FC<RoyalButtonProps> = ({
           <Sparkles size={12} className="absolute -top-1 -right-1 text-white/60 animate-sparkle" />
         )}
       </div>
-    </>
-  );
-  
-  return (
-    <Button
-      variant={getVariant()}
-      size={size}
-      className={cn(
-        'relative overflow-hidden',
-        shimmer && 'royal-shine',
-        variant === 'mahogany' && 'border-royal-mahogany/70 bg-transparent text-royal-mahogany hover:bg-royal-mahogany/10',
-        className
-      )}
-      {...props}
-    >
-      {renderContent()}
     </Button>
   );
 };

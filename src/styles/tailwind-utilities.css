@@ -56,4 +56,20 @@
   .royal-button-enhanced:hover::before {
     left: 100%;
   }
+  
+  /* Royal pulse animation */
+  .animate-royal-pulse {
+    animation: royal-pulse 2s ease-in-out infinite;
+  }
+  
+  @keyframes royal-pulse {
+    0%, 100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    50% {
+      transform: scale(1.05);
+      opacity: 0.9;
+    }
+  }
 }
