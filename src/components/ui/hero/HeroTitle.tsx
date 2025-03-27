@@ -1,16 +1,14 @@
 
-import React, { ReactNode } from 'react';
+import React from 'react';
 
-interface HeroTitleProps {
-  children: ReactNode;
-  className?: string;
+export interface HeroTitleProps {
+  children?: React.ReactNode;
 }
 
-const HeroTitle = ({ children, className = '' }: HeroTitleProps) => {
+const HeroTitle: React.FC<HeroTitleProps> = ({ children }) => {
   return (
-    <h1 className={`relative text-5xl md:text-7xl font-royal tracking-tight mb-6 group ${className}`}>
-      {children}
-      <div className="absolute -inset-x-8 -inset-y-4 bg-royal-gold/10 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+    <h1 className="text-5xl md:text-6xl font-bold mt-6 mb-3 royal-text royal-gradient font-medieval">
+      {children || "P2W.FUN"}
     </h1>
   );
 };

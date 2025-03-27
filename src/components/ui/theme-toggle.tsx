@@ -26,15 +26,15 @@ export function ThemeToggle() {
       <DropdownMenuContent align="end" className="glass-morphism border-royal-gold/30 animate-scale-in">
         <DropdownMenuItem onClick={() => setTheme("light")} className="cursor-pointer hover:bg-white/10 focus:bg-white/15">
           <Sun className="mr-2 h-4 w-4 text-royal-gold" />
-          <span>Light Theme</span>
+          <span className="font-medieval-text">Daylight Realm</span>
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => setTheme("dark")} className="cursor-pointer hover:bg-white/10 focus:bg-white/15">
           <Moon className="mr-2 h-4 w-4 text-royal-gold" />
-          <span>Dark Theme</span>
+          <span className="font-medieval-text">Night Kingdom</span>
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => setTheme("system")} className="cursor-pointer hover:bg-white/10 focus:bg-white/15">
           <Crown className="mr-2 h-4 w-4 text-royal-gold" />
-          <span>System Default</span>
+          <span className="font-medieval-text">Royal Default</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

@@ -1,19 +1,20 @@
 
-import React, { ReactNode } from 'react';
-import { DollarSign } from 'lucide-react';
+import React from 'react';
 
-interface HeroValueDisplayProps {
-  children: ReactNode;
-  className?: string;
+export interface HeroValueDisplayProps {
+  label: string;
+  value: string;
+  icon: React.ReactNode;
 }
 
-const HeroValueDisplay = ({ children, className = '' }: HeroValueDisplayProps) => {
+const HeroValueDisplay: React.FC<HeroValueDisplayProps> = ({ label, value, icon }) => {
   return (
-    <div className={`glass-morphism border-royal-gold/30 rounded-xl px-8 py-5 mb-10 max-w-lg mx-auto royal-shine ${className}`}>
-      <div className="flex items-center justify-center">
-        <DollarSign size={36} className="text-royal-gold mr-4 animate-royal-pulse" />
-        <span className="text-3xl font-royal text-royal-gold">{children}</span>
+    <div className="text-center">
+      <div className="text-white/60 text-sm flex items-center justify-center mb-1">
+        {icon}
+        <span className="ml-1.5">{label}</span>
       </div>
+      <div className="text-2xl font-bold royal-text-shimmer">{value}</div>
     </div>
   );
 };

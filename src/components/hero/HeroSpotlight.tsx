@@ -1,205 +1,187 @@
 
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React from 'react';
+import { Card, CardContent } from '@/components/ui/card';
+import { Crown, Coins, Award, TrendingUp, Gem, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Crown, Trophy, ArrowRight, DollarSign, Scroll, Globe, Shield, Gift, Sparkles } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
-import useNotificationSounds from '@/hooks/use-notification-sounds';
-
-interface SpotlightBenefit {
-  icon: React.ReactNode;
-  title: string;
-  description: string;
-}
+import { Link } from 'react-router-dom';
 
 interface HeroSpotlightProps {
   topSpender: {
     username: string;
-    profileImage?: string;
+    profileImage: string;
     amountSpent: number;
     rank: number;
-    team: string | null;
+    team: string;
     spendingStreak: number;
   };
-  currentUserAmount?: number;
+  currentUserAmount: number;
 }
 
-const HeroSpotlight: React.FC<HeroSpotlightProps> = ({ 
-  topSpender, 
-  currentUserAmount = 0 
-}) => {
-  const navigate = useNavigate();
-  const { toast } = useToast();
-  const { playSound } = useNotificationSounds();
-  const [imageLoaded, setImageLoaded] = useState(false);
-  
-  // Calculate how much more is needed to beat the top spender
-  const amountNeeded = topSpender.amountSpent - currentUserAmount + 1;
-  
-  const handleQuickAscension = () => {
-    playSound('reward', 0.3);
-    toast({
-      title: "Nobility Beckons!",
-      description: "Your journey to meaningless digital status begins now!",
-      duration: 3000,
-    });
-    navigate('/dashboard');
-  };
-
-  // Enhanced benefits of being the top spender
-  const benefits: SpotlightBenefit[] = [
+const HeroSpotlight: React.FC<HeroSpotlightProps> = ({ topSpender, currentUserAmount }) => {
+  const benefitsList = [
     {
-      icon: <Crown size={20} className="text-royal-gold" />,
-      title: "Royal Recognition",
-      description: "Your profile crowned and featured across the kingdom"
+      icon: <Crown className="h-5 w-5 text-royal-gold" />,
+      title: "Royal Status",
+      description: "Attain medieval nobility through the power of your wallet"
     },
     {
-      icon: <Shield size={20} className="text-royal-gold" />,
-      title: "Noble Privileges",
-      description: "Exclusive access to royal customization options"
+      icon: <Gem className="h-5 w-5 text-royal-purple" />,
+      title: "Profile Customization",
+      description: "Unlock exclusive design elements for your royal profile"
     },
     {
-      icon: <Globe size={20} className="text-royal-gold" />,
-      title: "Kingdom Influence",
-      description: "Drive subjects to your external domains"
+      icon: <Shield className="h-5 w-5 text-royal-navy" />,
+      title: "Team Glory",
+      description: "Contribute to your house's standing in the royal court"
     },
     {
-      icon: <Gift size={20} className="text-royal-gold" />,
-      title: "Royal Treasury",
-      description: "First access to special events and rewards"
+      icon: <Coins className="h-5 w-5 text-royal-gold" />,
+      title: "Weekly Rewards",
+      description: "Win additional benefits in the weekly crown tournaments"
     }
   ];
-  
-  // Preload the background image
-  useEffect(() => {
-    const img = new Image();
-    img.src = "https://source.unsplash.com/random/?medieval,throne,castle,royal";
-    img.onload = () => setImageLoaded(true);
-  }, []);
-  
+
   return (
-    <div className="royal-card-enhanced mb-16 p-0 relative overflow-hidden animate-parchment-unfurl">
-      {/* Enhanced background with better image selection and effects */}
-      <div className="absolute inset-0 w-full h-full z-0">
-        <div className={`transition-opacity duration-1000 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}>
-          <div 
-            className="absolute inset-0 bg-cover bg-center" 
-            style={{ 
-              backgroundImage: `url(https://source.unsplash.com/random/?medieval,throne,castle,royal)`,
-              filter: 'brightness(0.35) contrast(1.1)'
-            }}
-          ></div>
-        </div>
-        <div className="absolute inset-0 bg-gradient-to-br from-royal-navy/90 via-transparent to-royal-crimson/90"></div>
+    <div className="mb-16 relative">
+      <div className="absolute top-0 left-0 w-full h-full -z-10 bg-gradient-radial from-royal-purple/10 to-transparent"></div>
+      
+      <div className="text-center mb-8">
+        <h2 className="text-3xl font-bold royal-gradient mb-2 font-medieval">Royal Court Spotlight</h2>
+        <p className="text-white/70 max-w-2xl mx-auto">
+          Behold the current monarch of meaningless digital prestige. Will you challenge their reign with your wealth?
+        </p>
       </div>
       
-      {/* Ornamental corners - more detailed */}
-      <div className="absolute top-0 left-0 w-24 h-24 border-t-2 border-l-2 border-royal-gold/40 rounded-tl-sm pointer-events-none z-10"></div>
-      <div className="absolute top-0 right-0 w-24 h-24 border-t-2 border-r-2 border-royal-gold/40 rounded-tr-sm pointer-events-none z-10"></div>
-      <div className="absolute bottom-0 left-0 w-24 h-24 border-b-2 border-l-2 border-royal-gold/40 rounded-bl-sm pointer-events-none z-10"></div>
-      <div className="absolute bottom-0 right-0 w-24 h-24 border-b-2 border-r-2 border-royal-gold/40 rounded-br-sm pointer-events-none z-10"></div>
-      
-      <div className="relative z-10 p-10">
-        <div className="flex flex-col md:flex-row items-center gap-10">
-          <div className="md:w-1/3 text-center">
-            <div className="relative inline-block animate-royal-pulse">
-              <div className="absolute -inset-3 bg-royal-gold/30 rounded-full blur-md"></div>
-              <div className="w-36 h-36 rounded-full bg-royal-gold/20 border-4 border-royal-gold/60 flex items-center justify-center overflow-hidden">
-                <img 
-                  src={topSpender.profileImage || "https://source.unsplash.com/random/?royal,portrait,medieval"}
-                  alt={topSpender.username}
-                  className="w-full h-full object-cover"
-                  loading="lazy"
-                />
-              </div>
-              {/* Crown decoration with animation */}
-              <div className="absolute -top-4 -right-2 bg-royal-gold rounded-full p-2 animate-crown-glow">
-                <Crown size={24} className="text-background" />
-              </div>
-              {/* Sparkle effects */}
-              <Sparkles size={16} className="absolute top-3 -left-2 text-royal-gold animate-sparkle" />
-              <Sparkles size={12} className="absolute bottom-5 -right-3 text-royal-gold animate-sparkle" style={{ animationDelay: '0.5s' }} />
-            </div>
-            <h3 className="mt-4 font-medieval text-2xl text-foreground">Lord {topSpender.username}</h3>
-            <p className="text-foreground/70 text-sm">Sovereign Ruler #{topSpender.rank}</p>
-            <p className="text-royal-gold font-bold mt-1 text-xl">${topSpender.amountSpent.toLocaleString()} spent</p>
-            
-            <div className="mt-3 inline-flex items-center px-3 py-1 rounded-full bg-royal-gold/20 border border-royal-gold/40">
-              <Trophy size={14} className="text-royal-gold mr-2" />
-              <span className="text-sm">{topSpender.spendingStreak} week spending streak</span>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Top Spender Showcase */}
+        <Card className="glass-morphism relative border-royal-gold/30 col-span-1 royal-shine overflow-hidden h-full">
+          <div className="absolute top-0 right-0 w-20 h-20 rounded-bl-full bg-gradient-to-br from-royal-gold/30 to-royal-purple/30 z-0"></div>
+          
+          <div className="absolute top-2 left-2">
+            <div className="flex items-center gap-1 bg-royal-gold/20 backdrop-blur-sm px-2 py-1 rounded-full text-xs">
+              <Crown className="h-3 w-3 text-royal-gold" />
+              <span className="text-royal-gold font-medieval">Top Spender</span>
             </div>
           </div>
           
-          <div className="md:w-2/3">
-            <h2 className="text-2xl md:text-3xl font-bold royal-gradient mb-4 font-medieval">
-              The Current Sovereign of Our Digital Realm
-            </h2>
-            <p className="text-foreground/70 mb-6 leading-relaxed">
-              Through sheer financial conquest, Lord {topSpender.username} has claimed the throne of our hierarchy. 
-              Will you be the one to challenge this ruler's reign? In this kingdom, power isn't earned through 
-              trivial matters like "merit" or "talent" — it is purchased with cold, hard currency.
-            </p>
-            
-            <div className="mb-6 p-5 border-2 border-royal-gold/30 rounded-lg bg-royal-gold/5 backdrop-blur-sm italic royal-corner-ornament">
-              <div className="flex items-start">
-                <div className="mr-3 mt-1">
-                  <Scroll size={20} className="text-royal-gold" />
-                </div>
-                <p className="font-medieval text-white/90 leading-relaxed">
-                  "I, Lord {topSpender.username}, proclaim my digital dominance through the most noble virtue: excessive spending. 
-                  My wealth defines my worth. My expenditure, my excellence. Challenge me if you dare, but know that only your 
-                  treasury—not your character—shall determine your place in this glorious digital kingdom."
-                </p>
+          <CardContent className="pt-12 pb-6 flex flex-col items-center">
+            <div className="relative mb-4">
+              <div className="absolute -inset-1 rounded-full bg-royal-gold/30 animate-pulse-slow"></div>
+              <div className="relative w-24 h-24 rounded-full overflow-hidden border-2 border-royal-gold">
+                <img 
+                  src={topSpender.profileImage} 
+                  alt={topSpender.username} 
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div className="absolute -bottom-2 -right-2 bg-royal-gold rounded-full p-1.5 shadow-lg">
+                <Crown className="h-5 w-5 text-black" />
               </div>
             </div>
             
-            <div className="grid grid-cols-2 gap-4 mb-8">
-              {benefits.map((benefit, index) => (
+            <h3 className="text-xl font-bold royal-gradient font-medieval">{topSpender.username}</h3>
+            
+            <div className="space-y-2 w-full mt-4">
+              <div className="glass-morphism border-white/10 px-3 py-2 rounded-lg flex justify-between items-center">
+                <span className="text-sm text-white/70 flex items-center">
+                  <Coins className="h-4 w-4 mr-1.5 text-royal-gold" />
+                  Royal Tribute
+                </span>
+                <span className="font-mono text-royal-gold-bright font-bold">${topSpender.amountSpent.toLocaleString()}</span>
+              </div>
+              
+              <div className="glass-morphism border-white/10 px-3 py-2 rounded-lg flex justify-between items-center">
+                <span className="text-sm text-white/70 flex items-center">
+                  <TrendingUp className="h-4 w-4 mr-1.5 text-royal-gold" />
+                  Current Rank
+                </span>
+                <span className="font-mono text-royal-gold-bright font-bold">#{topSpender.rank}</span>
+              </div>
+              
+              <div className="glass-morphism border-white/10 px-3 py-2 rounded-lg flex justify-between items-center">
+                <span className="text-sm text-white/70 flex items-center">
+                  <Award className="h-4 w-4 mr-1.5 text-royal-gold" />
+                  Spending Streak
+                </span>
+                <span className="font-mono text-royal-gold-bright font-bold">{topSpender.spendingStreak} weeks</span>
+              </div>
+            </div>
+            
+            <div className="mt-6 glass-morphism border-white/10 px-4 py-3 rounded-lg w-full text-center">
+              <p className="text-sm text-white/70 italic font-medieval-text">
+                "A noble achievement that cost real money for digital prestige."
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+        
+        {/* Benefits Section */}
+        <Card className="glass-morphism border-white/10 col-span-2 h-full">
+          <CardContent className="p-6">
+            <h3 className="text-xl font-bold royal-gradient mb-5 font-medieval">Royal Benefits</h3>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
+              {benefitsList.map((benefit, index) => (
                 <div 
                   key={index} 
-                  className="flex items-start p-3 backdrop-blur-sm bg-background/10 rounded-md border border-royal-gold/20 hover:border-royal-gold/40 transition-all duration-300"
+                  className="glass-morphism border-white/10 p-4 rounded-lg transition-all duration-300 hover:border-royal-gold/30 hover:-translate-y-1"
                 >
-                  <div className="mr-3 mt-1">{benefit.icon}</div>
-                  <div>
-                    <h4 className="text-sm font-bold text-royal-gold">{benefit.title}</h4>
-                    <p className="text-xs text-foreground/80">{benefit.description}</p>
+                  <div className="flex items-start">
+                    <div className="mr-3 mt-0.5">
+                      {benefit.icon}
+                    </div>
+                    <div>
+                      <h4 className="font-bold mb-1 text-royal-gold font-medieval">{benefit.title}</h4>
+                      <p className="text-sm text-white/70 font-medieval-text">{benefit.description}</p>
+                    </div>
                   </div>
                 </div>
               ))}
             </div>
             
-            <div className="flex flex-wrap gap-5">
-              <Button
-                className="royal-button-enhanced bg-gradient-to-r from-royal-crimson via-royal-gold to-royal-navy hover:opacity-90 text-white px-6 py-3 text-lg rounded-full font-medieval"
-                onClick={handleQuickAscension}
-              >
-                <div className="relative z-10 flex items-center">
-                  <Crown size={20} className="mr-2 animate-crown-glow" />
-                  Challenge for the Throne
+            <div className="glass-morphism border-royal-gold/20 p-4 rounded-lg mb-6">
+              <div className="flex items-start">
+                <div className="mr-3">
+                  <Crown className="h-6 w-6 text-royal-gold animate-crown-glow" />
                 </div>
-              </Button>
-              
-              <Button
-                variant="outline"
-                className="glass-morphism border-white/30 text-foreground hover:bg-foreground/10 hover:text-foreground px-6 py-3 text-lg rounded-full royal-button"
-                onClick={() => navigate('/leaderboard')}
-              >
-                <span className="relative z-10 flex items-center">
-                  View Royal Court
-                  <ArrowRight size={18} className="ml-2 group-hover:translate-x-2 transition-transform duration-300" />
-                </span>
-              </Button>
-            </div>
-            
-            <div className="mt-6 bg-background/50 rounded-lg p-4 backdrop-blur-md border border-foreground/20">
-              <div className="text-sm text-foreground/60 mb-1 font-medieval">Royal Overthrow Calculator:</div>
-              <div className="flex items-center">
-                <DollarSign size={16} className="text-royal-gold mr-2" />
-                <span className="text-foreground/90 text-base">You need <span className="text-royal-gold font-bold text-lg">${amountNeeded.toLocaleString()}</span> to claim the throne</span>
+                <div>
+                  <h4 className="font-bold text-lg mb-1 royal-gradient font-medieval">Your Current Status</h4>
+                  <p className="text-white/70 mb-2 font-medieval-text">
+                    You've contributed <span className="text-royal-gold font-bold">${currentUserAmount}</span> to your digital prestige.
+                  </p>
+                  
+                  <div className="h-2 w-full bg-white/10 rounded-full overflow-hidden mt-3">
+                    <div 
+                      className="h-full bg-gradient-to-r from-royal-crimson to-royal-gold" 
+                      style={{ width: `${Math.min((currentUserAmount / 1000) * 100, 100)}%` }}
+                    ></div>
+                  </div>
+                  
+                  <div className="flex justify-between text-xs text-white/50 mt-1">
+                    <span>$0</span>
+                    <span>$1,000</span>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
+            
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <Link to="/dashboard" className="flex-1">
+                <Button className="w-full bg-gradient-to-r from-royal-purple to-royal-gold hover:opacity-90 text-white royal-button">
+                  <Crown className="mr-2 h-4 w-4" />
+                  Ascend the Ranks
+                </Button>
+              </Link>
+              
+              <Link to="/leaderboard" className="flex-1">
+                <Button variant="outline" className="w-full glass-morphism border-white/10 hover:bg-white/10 text-white">
+                  <Shield className="mr-2 h-4 w-4" />
+                  View Full Court
+                </Button>
+              </Link>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

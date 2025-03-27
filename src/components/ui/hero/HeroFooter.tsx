@@ -1,17 +1,14 @@
 
 import React from 'react';
 
-interface HeroFooterProps {
-  text: string;
-  className?: string;
+export interface HeroFooterProps {
+  text?: string;
 }
 
-const HeroFooter = ({ text, className = '' }: HeroFooterProps) => {
+const HeroFooter: React.FC<HeroFooterProps> = ({ text }) => {
   return (
-    <div className={`mt-20 text-center ${className}`}>
-      <p className="text-xs text-white/60 italic max-w-md mx-auto">
-        {text}
-      </p>
+    <div className="text-xs text-white/50 pt-20 pb-4 italic">
+      {text || "Disclaimer: No actual value is provided. You're paying for pixels and pride."}
     </div>
   );
 };

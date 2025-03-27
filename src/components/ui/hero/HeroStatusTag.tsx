@@ -1,17 +1,14 @@
 
-import React, { ReactNode } from 'react';
+import React from 'react';
 
-interface HeroStatusTagProps {
-  children: ReactNode;
-  className?: string;
+export interface HeroStatusTagProps {
+  children?: React.ReactNode;
 }
 
-const HeroStatusTag = ({ children, className = '' }: HeroStatusTagProps) => {
+const HeroStatusTag: React.FC<HeroStatusTagProps> = ({ children }) => {
   return (
-    <div className="inline-block animate-bounce-subtle">
-      <div className={`glass-morphism backdrop-blur-xl border border-royal-gold/20 rounded-full py-2 px-6 mb-6 ${className}`}>
-        {children}
-      </div>
+    <div className="inline-block px-3 py-1 bg-royal-gold/20 border border-royal-gold/30 rounded-full text-royal-gold text-xs font-medium tracking-wide animate-pulse-slow">
+      {children || "THE ULTIMATE PAY-TO-WIN EXPERIENCE"}
     </div>
   );
 };

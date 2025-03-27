@@ -3,337 +3,77 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Import custom styles after Tailwind directives */
-@import './styles/tailwind-utilities.css';
+/* Import custom styles */
+@import './styles/theme.css';
 @import './styles/fonts.css';
 
-@layer base {
-  :root {
-    --background: 240 30% 98%;
-    --foreground: 240 10% 3.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 240 10% 3.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 3.9%;
-    --primary: 142.1 76.2% 36.3%;
-    --primary-foreground: 355.7 100% 97.3%;
-    --secondary: 240 4.8% 95.9%;
-    --secondary-foreground: 240 5.9% 10%;
-    --muted: 240 4.8% 95.9%;
-    --muted-foreground: 240 3.8% 46.1%;
-    --accent: 240 4.8% 95.9%;
-    --accent-foreground: 240 5.9% 10%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 240 5.9% 90%;
-    --input: 240 5.9% 90%;
-    --ring: 142.1 76.2% 36.3%;
-    --radius: 0.75rem;
-    
-    /* Royal theme colors - lighter for light mode */
-    --royal-crimson: 353, 68%, 42%;
-    --royal-gold: 45, 80%, 52%;
-    --royal-navy: 218, 80%, 30%;
-    --royal-purple: 270, 50%, 40%;
-    --royal-mahogany: 20, 60%, 45%;
-    --royal-velvet: 320, 50%, 35%;
-    
-    /* Team colors - lighter for light mode */
-    --team-red: 0, 70%, 60%;
-    --team-green: 120, 60%, 60%;
-    --team-blue: 210, 70%, 60%;
-    
-    /* Background elements */
-    --sidebar-background: 0 0% 100%;
-    --sidebar-foreground: 240 10% 3.9%;
-    --sidebar-primary: 240 5.9% 10%;
-    --sidebar-primary-foreground: 355.7 100% 97.3%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 240 5.9% 90%;
-    --sidebar-ring: 240 15% 84%;
-  }
+:root {
+  --background: 240 10% 3.9%;
+  --foreground: 0 0% 98%;
+  --card: 240 10% 3.9%;
+  --card-foreground: 0 0% 98%;
+  --popover: 240 10% 3.9%;
+  --popover-foreground: 0 0% 98%;
+  --primary: 0 0% 98%;
+  --primary-foreground: 240 5.9% 10%;
+  --secondary: 240 3.7% 15.9%;
+  --secondary-foreground: 0 0% 98%;
+  --muted: 240 3.7% 15.9%;
+  --muted-foreground: 240 5% 64.9%;
+  --accent: 240 3.7% 15.9%;
+  --accent-foreground: 0 0% 98%;
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 240 3.7% 15.9%;
+  --input: 240 3.7% 15.9%;
+  --ring: 240 4.9% 83.9%;
 
-  .dark {
-    --background: 240 30% 5%;
-    --foreground: 0 0% 98%;
-    --card: 240 30% 7%;
-    --card-foreground: 0 0% 98%;
-    --popover: 240 30% 7%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 142.1 70.6% 45.3%;
-    --primary-foreground: 355.7 100% 97.3%;
-    --secondary: 240 15% 18%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 240 15% 18%;
-    --muted-foreground: 240 15% 65%;
-    --accent: 240 15% 18%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 65% 30%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 240 15% 18%;
-    --input: 240 15% 18%;
-    --ring: 142.1 76.2% 36.3%;
-    
-    /* Royal theme colors - darker for dark mode */
-    --royal-crimson: 353, 68%, 32%;
-    --royal-gold: 45, 80%, 52%;
-    --royal-navy: 218, 80%, 25%;
-    --royal-purple: 270, 50%, 35%;
-    --royal-mahogany: 20, 60%, 40%;
-    --royal-velvet: 320, 50%, 30%;
-    
-    /* Team colors - darker for dark mode */
-    --team-red: 0, 70%, 50%;
-    --team-green: 120, 60%, 50%;
-    --team-blue: 210, 70%, 50%;
-    
-    /* Background elements */
-    --sidebar-background: 240 30% 5%;
-    --sidebar-foreground: 0 0% 98%;
-    --sidebar-primary: 0 0% 98%;
-    --sidebar-primary-foreground: 240 25% 10%;
-    --sidebar-accent: 240 15% 18%;
-    --sidebar-accent-foreground: 0 0% 98%;
-    --sidebar-border: 240 15% 18%;
-    --sidebar-ring: 240 15% 84%;
-  }
-  
-  body {
-    @apply font-medieval-text;
-  }
-  
-  h1, h2, h3, h4, h5, h6 {
-    @apply font-medieval;
-  }
+  /* Medieval Theme Colors */
+  --royal-gold: #D4AF37;
+  --royal-crimson: #9B2335;
+  --royal-navy: #1F4788;
+  --royal-purple: #7851A9;
+  --royal-velvet: #604D8D;
+  --royal-mahogany: #A65E44;
+  --royal-emerald: #2C784A;
 }
 
-/* Keep all the keyframe animations */
-@keyframes float {
-  0% {
-    transform: translateY(0) rotate(0deg);
-    opacity: 0;
-  }
-  10% {
-    opacity: 0.8;
-  }
-  90% {
-    opacity: 0.8;
-  }
-  100% {
-    transform: translateY(-120vh) rotate(360deg);
-    opacity: 0;
-  }
+.medieval-theme {
+  --background: 240 10% 5%;
+  --foreground: 0 0% 95%;
+  --border-radius: 0.5rem;
 }
 
-@keyframes crown-glow {
-  0%, 100% {
-    filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.6));
-  }
-  50% {
-    filter: drop-shadow(0 0 20px rgba(212, 175, 55, 1));
-  }
+html, body {
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+  background-color: hsl(240 10% 3.9%);
 }
 
-@keyframes pulse-slow {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.7;
-  }
+body {
+  font-family: 'Inter', sans-serif;
 }
 
-@keyframes sparkle {
-  0%, 100% {
-    opacity: 0;
-    transform: scale(0.8);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.2);
-  }
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-@keyframes rotate-slow {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
 }
 
-@keyframes bounce-subtle {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-5px);
-  }
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
 }
 
-@keyframes royal-shimmer {
-  0% {
-    background-position: -1000px;
-  }
-  100% {
-    background-position: 1000px;
-  }
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
 }
 
-@keyframes quill-write {
-  0%, 100% {
-    transform: translateX(0) rotate(0deg);
-  }
-  25% {
-    transform: translateX(10px) rotate(2deg);
-  }
-  50% {
-    transform: translateX(5px) rotate(-1deg);
-  }
-  75% {
-    transform: translateX(8px) rotate(1deg);
-  }
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
 }
-
-@keyframes parchment-unfurl {
-  0% {
-    opacity: 0;
-    transform: scale(0.9) translateY(20px);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1) translateY(0);
-  }
-}
-
-@keyframes seal-stamp {
-  0% {
-    opacity: 0;
-    transform: scale(1.5) rotate(15deg);
-  }
-  50% {
-    opacity: 0.8;
-  }
-  60% {
-    transform: scale(0.9) rotate(-5deg);
-  }
-  70% {
-    transform: scale(1.1) rotate(3deg);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1) rotate(0);
-  }
-}
-
-@keyframes coin-flip {
-  0% {
-    transform: rotateY(0deg);
-  }
-  100% {
-    transform: rotateY(360deg);
-  }
-}
-
-@keyframes gold-dust {
-  0% {
-    transform: translateY(0) scale(1);
-    opacity: 0.8;
-  }
-  100% {
-    transform: translateY(-20px) scale(0);
-    opacity: 0;
-  }
-}
-
-/* Animation classes */
-.animate-parchment-unfurl {
-  animation: parchment-unfurl 0.8s ease-out forwards;
-}
-
-.animate-seal-stamp {
-  animation: seal-stamp 0.6s ease-out forwards;
-}
-
-.animate-quill-write {
-  animation: quill-write 2s ease-in-out infinite;
-}
-
-.animate-coin-flip {
-  animation: coin-flip 1.5s ease-in-out infinite;
-}
-
-.animate-gold-dust {
-  animation: gold-dust 2s ease-out forwards;
-}
-
-/* Text effects */
-.royal-text-shimmer {
-  background: linear-gradient(
-    90deg, 
-    #8B0000 0%, 
-    #D4AF37 15%, 
-    #000080 30%, 
-    #D4AF37 45%, 
-    #8B0000 60%, 
-    #D4AF37 75%, 
-    #000080 90%, 
-    #D4AF37 100%
-  );
-  background-size: 200% auto;
-  color: transparent;
-  -webkit-background-clip: text;
-  background-clip: text;
-  animation: royal-shimmer 7s linear infinite;
-}
-
-.gold-border-glow {
-  box-shadow: 0 0 15px rgba(212, 175, 55, 0.3), 
-              inset 0 0 15px rgba(212, 175, 55, 0.3);
-}
-
-.gold-dust::before {
-  content: '';
-  position: absolute;
-  width: 4px;
-  height: 4px;
-  background: rgba(212, 175, 55, 0.8);
-  border-radius: 50%;
-  filter: blur(1px);
-  animation: gold-dust 2s ease-out forwards;
-}
-
-/* Background styles */
-.throne-bg {
-  background-color: hsl(var(--background));
-  background-image: 
-    radial-gradient(circle at 10% 20%, rgba(var(--royal-crimson), 0.08) 0%, transparent 50%),
-    radial-gradient(circle at 90% 50%, rgba(var(--royal-gold), 0.08) 0%, transparent 50%),
-    radial-gradient(circle at 50% 80%, rgba(var(--royal-navy), 0.08) 0%, transparent 50%);
-}
-
-.throne-bg-enhanced {
-  background-color: hsl(var(--background));
-  background-image: 
-    radial-gradient(circle at 10% 20%, rgba(var(--royal-crimson), 0.12) 0%, transparent 60%),
-    radial-gradient(circle at 90% 30%, rgba(var(--royal-gold), 0.12) 0%, transparent 60%),
-    radial-gradient(circle at 50% 80%, rgba(var(--royal-navy), 0.12) 0%, transparent 60%),
-    radial-gradient(circle at 20% 60%, rgba(var(--royal-purple), 0.08) 0%, transparent 50%);
-}
-
-/* Enhanced glass morphism */
-.glass-morphism {
-  @apply backdrop-blur-xl bg-white/5 border border-white/10;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-}
-
-.glass-morphism-highlight {
-  @apply backdrop-blur-xl bg-white/8 border border-royal-gold/20;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 8px rgba(212, 175, 55, 0.15);
-}
-
-/* Import shame effects and medieval animations after Tailwind has processed everything */
-@import './styles/shame-effects.css';
-@import './styles/medieval-animations.css';

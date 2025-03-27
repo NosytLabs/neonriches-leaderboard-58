@@ -1,16 +1,15 @@
 
 import React from 'react';
 
-interface HeroQuoteProps {
-  text: string;
-  className?: string;
+export interface HeroQuoteProps {
+  text?: string;
 }
 
-const HeroQuote = ({ text, className = '' }: HeroQuoteProps) => {
+const HeroQuote: React.FC<HeroQuoteProps> = ({ text }) => {
   return (
-    <p className={`text-xl md:text-2xl text-white/80 max-w-3xl mb-16 font-serif leading-relaxed italic ${className}`}>
-      {text}
-    </p>
+    <div className="italic text-white/60 max-w-xl mx-auto my-8 font-medieval-text">
+      <p>"{text || "Why earn nobility through deeds when you can simply purchase it with currency? A truly modern aristocracy."}"</p>
+    </div>
   );
 };
 

@@ -1,15 +1,14 @@
 
 import React from 'react';
 
-interface HeroSubtitleProps {
-  text: string;
-  className?: string;
+export interface HeroSubtitleProps {
+  text?: string;
 }
 
-const HeroSubtitle = ({ text, className = '' }: HeroSubtitleProps) => {
+const HeroSubtitle: React.FC<HeroSubtitleProps> = ({ text }) => {
   return (
-    <p className={`text-xl md:text-2xl text-white/90 max-w-3xl mb-8 font-serif leading-relaxed ${className}`}>
-      {text}
+    <p className="text-xl md:text-2xl text-white/70 max-w-2xl mx-auto mb-8 font-medieval-text">
+      {text || "Where your wallet determines your worth and digital nobility is just a payment away."}
     </p>
   );
 };
