@@ -64,7 +64,6 @@ const CombinedLeaderboard: React.FC<{
   const { toast } = useToast();
   const { playSound } = useNotificationSounds();
 
-  // Handle search and filtering
   const handleSearch = (query: string) => {
     setSearchQuery(query);
     filterData(query, teamFilter);
@@ -78,12 +77,10 @@ const CombinedLeaderboard: React.FC<{
   const filterData = (query: string, team: 'all' | 'red' | 'green' | 'blue') => {
     let filtered = [...mockLeaderboardData];
     
-    // Apply team filter
     if (team !== 'all') {
       filtered = filtered.filter(user => user.team === team);
     }
     
-    // Apply search
     if (query) {
       const lowercaseQuery = query.toLowerCase();
       filtered = filtered.filter(user => 
@@ -91,7 +88,6 @@ const CombinedLeaderboard: React.FC<{
       );
     }
     
-    // Apply sort
     filtered = sortData(filtered, sortDirection);
     
     setFilteredData(filtered);
@@ -138,7 +134,6 @@ const CombinedLeaderboard: React.FC<{
     
     const amount = getShameActionPrice(shameAction);
     
-    // In a production app, this would call an API to process the payment and shame action
     setTimeout(() => {
       toast({
         title: "Royal Decree of Shame",
@@ -200,10 +195,8 @@ const CombinedLeaderboard: React.FC<{
       </CardHeader>
       
       <CardContent className="p-0">
-        {/* Search and Filters */}
         <div className="p-4 border-b border-white/10 space-y-4">
           <div className="flex flex-col md:flex-row justify-between gap-4">
-            {/* Search */}
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/40" size={16} />
               <Input
@@ -214,7 +207,6 @@ const CombinedLeaderboard: React.FC<{
               />
             </div>
             
-            {/* Team Filter */}
             <div className="flex items-center space-x-2">
               <div className="flex rounded-md overflow-hidden">
                 <Button
@@ -255,7 +247,6 @@ const CombinedLeaderboard: React.FC<{
                 </Button>
               </div>
               
-              {/* Sort Toggle */}
               <Button
                 variant="outline"
                 size="sm"
@@ -272,7 +263,6 @@ const CombinedLeaderboard: React.FC<{
           </div>
         </div>
 
-        {/* Leaderboard List */}
         <div className="divide-y divide-white/10">
           {filteredData.slice(0, limit).map((user, index) => (
             <div
@@ -283,14 +273,12 @@ const CombinedLeaderboard: React.FC<{
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-4">
-                  {/* Rank */}
                   <div className="flex items-center justify-center w-8 h-8 rounded-full glass-morphism border-white/10">
                     {getRankIcon(index + 1) || (
                       <span className="text-sm font-bold">#{index + 1}</span>
                     )}
                   </div>
                   
-                  {/* User Info */}
                   <div className="flex items-center space-x-3">
                     <Avatar className={`h-10 w-10 border-2 ${getTeamBorderColor(user.team)}`}>
                       {user.profileImage ? (
@@ -318,7 +306,6 @@ const CombinedLeaderboard: React.FC<{
                   </div>
                 </div>
                 
-                {/* Shame Actions */}
                 {!compact && (
                   <div className="flex items-center space-x-2">
                     <Button
@@ -352,7 +339,6 @@ const CombinedLeaderboard: React.FC<{
           ))}
         </div>
         
-        {/* No Results */}
         {filteredData.length === 0 && (
           <div className="p-8 text-center text-white/50">
             <Crown size={32} className="mx-auto mb-2 text-royal-gold/50" />
@@ -361,13 +347,15 @@ const CombinedLeaderboard: React.FC<{
         )}
       </CardContent>
 
-      {/* Shame Modal */}
       {showShameModal && selectedUser && (
         <ShameModal
           targetUser={{
             id: parseInt(selectedUser.id),
             username: selectedUser.username,
-            profileImage: selectedUser.profileImage || '/placeholder.svg'
+            profileImage: selectedUser.profileImage || '/placeholder.svg',
+            amountSpent: selectedUser.amountSpent,
+            rank: selectedUser.rank,
+            team: selectedUser.team || 'red'
           }}
           shameAction={shameAction}
           onClose={() => setShowShameModal(false)}

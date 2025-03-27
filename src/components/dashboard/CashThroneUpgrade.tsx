@@ -10,18 +10,19 @@ import { Badge } from '@/components/ui/badge';
 interface SpendToRankUpProps {
   user: {
     rank: number;
-    spendStreak: number;
+    spendStreak?: number;
   };
   onPaymentSuccess: (amount: number) => void;
 }
 
 const SpendToRankUp = ({ user, onPaymentSuccess }: SpendToRankUpProps) => {
   const [suggestedAmount, setSuggestedAmount] = useState(100);
+  const spendStreak = user.spendStreak || 0; // Default to 0 if undefined
   
   const getStreakLabel = () => {
-    if (user.spendStreak >= 12) return "Legendary Patron";
-    if (user.spendStreak >= 8) return "Devoted Supporter";
-    if (user.spendStreak >= 4) return "Loyal Subject";
+    if (spendStreak >= 12) return "Legendary Patron";
+    if (spendStreak >= 8) return "Devoted Supporter";
+    if (spendStreak >= 4) return "Loyal Subject";
     return "Occasional Contributor";
   };
 
@@ -68,27 +69,27 @@ const SpendToRankUp = ({ user, onPaymentSuccess }: SpendToRankUpProps) => {
                 <span className="font-medium">Spending Streak</span>
               </div>
               <Badge variant="outline" className={`
-                ${user.spendStreak >= 12 ? 'bg-royal-gold/20 border-royal-gold/30' : 
-                  user.spendStreak >= 8 ? 'bg-royal-purple/20 border-royal-purple/30' : 
+                ${spendStreak >= 12 ? 'bg-royal-gold/20 border-royal-gold/30' : 
+                  spendStreak >= 8 ? 'bg-royal-purple/20 border-royal-purple/30' : 
                   'bg-royal-blue/20 border-royal-blue/30'}
                 text-white
               `}>
-                {user.spendStreak} weeks
+                {spendStreak} weeks
               </Badge>
             </div>
             <div className="text-sm text-white/70">
               <div className="flex justify-between mb-1">
                 <span>{getStreakLabel()}</span>
                 <span className="text-xs text-white/50">Cosmetic Badge: {
-                  user.spendStreak >= 12 ? 'Legendary' : user.spendStreak >= 8 ? 'Epic' : user.spendStreak >= 4 ? 'Rare' : 'Basic'
+                  spendStreak >= 12 ? 'Legendary' : spendStreak >= 8 ? 'Epic' : spendStreak >= 4 ? 'Rare' : 'Basic'
                 }</span>
               </div>
               <div className="w-full h-2 bg-white/10 rounded-full mt-2 overflow-hidden">
                 <div 
-                  className={`h-full ${user.spendStreak >= 12 ? 'bg-gradient-to-r from-royal-gold to-royal-amber' : 
-                    user.spendStreak >= 8 ? 'bg-gradient-to-r from-royal-purple to-royal-blue' : 
+                  className={`h-full ${spendStreak >= 12 ? 'bg-gradient-to-r from-royal-gold to-royal-amber' : 
+                    spendStreak >= 8 ? 'bg-gradient-to-r from-royal-purple to-royal-blue' : 
                     'bg-royal-blue'}`} 
-                  style={{ width: `${Math.min(user.spendStreak * 8.33, 100)}%` }}
+                  style={{ width: `${Math.min(spendStreak * 8.33, 100)}%` }}
                 ></div>
               </div>
               <div className="flex justify-between mt-1 text-xs text-white/50">

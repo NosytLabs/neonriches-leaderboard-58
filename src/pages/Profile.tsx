@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
@@ -57,7 +58,8 @@ const Profile = () => {
   };
 
   const toggleEditMode = () => {
-    setEditMode(!editMode);
+    // Return a Promise to match the expected type in ProfileHeader
+    return Promise.resolve();
   };
 
   return (
@@ -97,7 +99,7 @@ const Profile = () => {
                     title="Your Profile" 
                     editMode={editMode} 
                     onEditToggle={toggleEditMode}
-                    onSave={() => {}} // Not used directly, just for API consistency
+                    onSave={() => Promise.resolve()} // Return a Promise
                   />
                   
                   {editMode ? (
@@ -121,8 +123,8 @@ const Profile = () => {
                   <ProfileHeader 
                     title="Subscription Management" 
                     subtitle="Manage your subscription and billing details"
-                    onEditToggle={() => {}}
-                    onSave={() => {}}
+                    onEditToggle={() => Promise.resolve()}
+                    onSave={() => Promise.resolve()}
                     showEditButton={false}
                   />
                   
@@ -133,8 +135,8 @@ const Profile = () => {
                   <ProfileHeader 
                     title="Security Settings" 
                     subtitle="Manage your account security and authentication"
-                    onEditToggle={() => {}}
-                    onSave={() => {}}
+                    onEditToggle={() => Promise.resolve()}
+                    onSave={() => Promise.resolve()}
                     showEditButton={false}
                   />
                   
