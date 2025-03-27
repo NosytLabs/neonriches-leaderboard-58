@@ -14,6 +14,7 @@ import HeroStatusTag from '@/components/ui/hero/HeroStatusTag';
 import HeroValueDisplay from '@/components/ui/hero/HeroValueDisplay';
 import HeroFeatureSection from '@/components/ui/hero/HeroFeatureSection';
 import HeroFooter from '@/components/ui/hero/HeroFooter';
+import useFloatingCoins from '@/hooks/use-floating-coins';
 
 const RoyalHero = () => {
   const navigate = useNavigate();
@@ -43,6 +44,16 @@ const RoyalHero = () => {
       }
     };
   }, []);
+  
+  // Use our new hook for floating coins
+  useFloatingCoins({
+    containerRef: heroRef,
+    enabled: isVisible,
+    frequency: 0.8,  // Higher value = fewer coins
+    duration: 8000,
+    minDelay: 3000,
+    maxDelay: 5000
+  });
   
   const handleCrownClick = () => {
     setHasInteracted(true);

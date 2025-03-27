@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import LeaderboardHeader from './LeaderboardHeader';
 import LeaderboardFilters from './LeaderboardFilters';
 import LeaderboardTable from './LeaderboardTable';
@@ -7,12 +7,23 @@ import LeaderboardFooter from './LeaderboardFooter';
 import { mockLeaderboardData } from './LeaderboardData';
 import { useToast } from '@/hooks/use-toast';
 import { Crown, Coins } from 'lucide-react';
+import useFloatingCoins from '@/hooks/use-floating-coins';
 
 const RoyalCourt = () => {
   const [leaderboardData, setLeaderboardData] = useState(mockLeaderboardData);
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
   const [activeFilter, setActiveFilter] = useState<string | null>(null);
   const { toast } = useToast();
+  const containerRef = useRef<HTMLElement>(null);
+  
+  // Use our new hook for floating coins
+  useFloatingCoins({
+    containerRef,
+    frequency: 0.8, // Fewer coins (20% chance)
+    duration: 5000,
+    minDelay: 15000, // Longer delay between coins
+    maxDelay: 20000
+  });
   
   // Satirical welcome toast
   useEffect(() => {
@@ -65,33 +76,8 @@ const RoyalCourt = () => {
     });
   };
   
-  // Easter egg - random gold coin animations
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const shouldShowCoin = Math.random() > 0.8;
-      
-      if (shouldShowCoin) {
-        const coin = document.createElement('div');
-        coin.innerHTML = '<div class="flex items-center justify-center w-8 h-8 rounded-full bg-royal-gold/20"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-royal-gold"><circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><path d="M12 18V6"/></svg></div>';
-        coin.className = 'fixed z-50 animate-float';
-        coin.style.top = `${Math.random() * 70 + 10}vh`;
-        coin.style.left = `${Math.random() * 70 + 15}vw`;
-        coin.style.animationDuration = `${3 + Math.random() * 4}s`;
-        coin.style.opacity = '0.7';
-        
-        document.body.appendChild(coin);
-        
-        setTimeout(() => {
-          document.body.removeChild(coin);
-        }, 5000);
-      }
-    }, 15000);
-    
-    return () => clearInterval(interval);
-  }, []);
-  
   return (
-    <section id="leaderboard" className="w-full py-20 px-6 throne-bg relative">
+    <section ref={containerRef} id="leaderboard" className="w-full py-20 px-6 throne-bg relative">
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
         <div className="absolute -top-10 left-1/4 w-96 h-96 bg-royal-purple/10 rounded-full filter blur-[100px] animate-pulse-slow"></div>
         <div className="absolute top-1/3 right-1/4 w-64 h-64 bg-royal-gold/10 rounded-full filter blur-[80px] animate-pulse-slow" style={{ animationDelay: '1s' }}></div>

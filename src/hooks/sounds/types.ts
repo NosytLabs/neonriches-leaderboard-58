@@ -1,19 +1,13 @@
-
-export type SoundType = 'shame' | 'reward' | 'notification' | 'rankUp' | 'rankDown' | 'potion' | 'swordClash' | 'royalAnnouncement' | 'purchase';
+export interface SoundAssets {
+  [key: string]: {
+    url: string;
+    volume: number;
+    description: string;
+  };
+}
 
 export interface SoundInfo {
-  src: string;
+  id: string;
+  url: string;
   description: string;
-  volume: number;
-}
-
-export interface SoundMap {
-  [key: string]: SoundInfo;
-}
-
-export interface UseNotificationSoundsReturn {
-  playSound: (type: SoundType, volumeMultiplier?: number) => Promise<void>;
-  preloadSounds: () => void;
-  soundsLoaded: boolean;
-  loadedSoundTypes: string[];
 }

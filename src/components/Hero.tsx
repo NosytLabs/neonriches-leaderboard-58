@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Crown, Coins, Gem, Shield, DollarSign } from 'lucide-react';
@@ -13,10 +12,19 @@ import HeroStatusTag from '@/components/ui/hero/HeroStatusTag';
 import HeroValueDisplay from '@/components/ui/hero/HeroValueDisplay';
 import HeroFeatureSection from '@/components/ui/hero/HeroFeatureSection';
 import HeroFooter from '@/components/ui/hero/HeroFooter';
+import useFloatingCoins from '@/hooks/use-floating-coins';
 
 const Hero = () => {
   const navigate = useNavigate();
   const heroRef = useRef<HTMLElement>(null);
+  
+  useFloatingCoins({
+    containerRef: heroRef,
+    frequency: 0.7,
+    duration: 8000,
+    minDelay: 2000, 
+    maxDelay: 5000
+  });
   
   const handleCrownClick = () => {
     toast({
@@ -25,7 +33,6 @@ const Hero = () => {
       duration: 3000,
     });
     
-    // Add sparkle effect on click
     if (heroRef.current) {
       const sparkle = document.createElement('div');
       sparkle.className = 'absolute w-full h-full top-0 left-0 pointer-events-none';
@@ -57,35 +64,6 @@ const Hero = () => {
     });
     navigate('/dashboard');
   };
-
-  // Add subtle floating coins effect
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (heroRef.current && Math.random() > 0.7) {
-        const coin = document.createElement('div');
-        coin.className = 'absolute';
-        coin.innerHTML = `<div class="flex items-center justify-center w-8 h-8 rounded-full bg-royal-gold/20">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-royal-gold">
-            <circle cx="12" cy="12" r="10"/>
-            <path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/>
-            <path d="M12 18V6"/>
-          </svg>
-        </div>`;
-        
-        coin.style.left = `${Math.random() * 80 + 10}%`;
-        coin.style.top = `${Math.random() * 80 + 10}%`;
-        coin.style.animation = 'float 8s ease-in forwards';
-        
-        heroRef.current.appendChild(coin);
-        
-        setTimeout(() => {
-          coin.remove();
-        }, 8000);
-      }
-    }, 2000);
-    
-    return () => clearInterval(interval);
-  }, []);
 
   const features = [
     {
