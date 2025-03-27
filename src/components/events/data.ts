@@ -12,7 +12,7 @@ export interface Event {
     badge?: string;
     currency?: number;
   };
-  progress?: number; // Adding this to fix potential reference
+  progress?: number;
 }
 
 // Current event data
@@ -29,7 +29,7 @@ export const currentEvent: Event = {
     badge: 'Poker Extraordinaire',
     currency: 0
   },
-  progress: 0.6 // Adding sample progress
+  progress: 0.6
 };
 
 // Upcoming events data
@@ -76,7 +76,7 @@ export const eventStats = {
   }
 };
 
-// Mock poke targets - renamed from pokeTargets to topUsers
+// Top users (poke targets)
 export const topUsers = [
   {
     id: 1,
