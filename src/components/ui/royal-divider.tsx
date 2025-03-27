@@ -1,84 +1,53 @@
 
 import React from 'react';
-import { Crown, Sparkles, Shield, Trophy } from 'lucide-react';
+import { Crown, Star, Shield, GemIcon } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface RoyalDividerProps {
-  variant?: 'crown' | 'sparkles' | 'shield' | 'trophy' | 'line';
+  variant?: 'line' | 'crown' | 'stars' | 'shield';
   label?: string;
+  color?: 'gold' | 'crimson' | 'navy' | 'royal';
   className?: string;
-  color?: 'crimson' | 'gold' | 'navy' | 'default' | 'royal';
 }
 
-const RoyalDivider = ({ 
-  variant = 'crown',
+const RoyalDivider: React.FC<RoyalDividerProps> = ({
+  variant = 'line',
   label,
-  className = '',
-  color = 'default'
-}: RoyalDividerProps) => {
-  const getColorClass = () => {
-    switch (color) {
-      case 'crimson': return 'from-royal-crimson/30 via-royal-crimson/50 to-royal-crimson/30';
-      case 'gold': return 'from-royal-gold/30 via-royal-gold/50 to-royal-gold/30';
-      case 'navy': return 'from-royal-navy/30 via-royal-navy/50 to-royal-navy/30';
-      case 'royal': return 'from-royal-crimson/30 via-royal-gold/50 to-royal-navy/30';
-      default: return 'from-transparent via-royal-gold/40 to-transparent';
-    }
+  color = 'gold',
+  className
+}) => {
+  // Define color classes
+  const colorClasses = {
+    gold: 'text-royal-gold border-royal-gold/30',
+    crimson: 'text-royal-crimson border-royal-crimson/30',
+    navy: 'text-royal-navy border-royal-navy/30',
+    royal: 'royal-gradient border-white/20'
   };
   
-  const getIconColor = () => {
-    switch (color) {
-      case 'crimson': return 'text-royal-crimson';
-      case 'gold': return 'text-royal-gold';
-      case 'navy': return 'text-royal-navy';
-      case 'royal': return 'text-royal-gold';
-      default: return 'text-royal-gold';
-    }
-  };
-  
-  const renderIcon = () => {
-    const iconColorClass = getIconColor();
-    
+  // Get the icon based on variant
+  const getIconComponent = () => {
     switch (variant) {
       case 'crown':
-        return <Crown size={28} className={`${iconColorClass} animate-crown-glow`} />;
-      case 'sparkles':
-        return <Sparkles size={28} className={`${iconColorClass} animate-pulse-slow`} />;
+        return <Crown size={18} className={color === 'royal' ? 'text-royal-gold' : ''} />;
+      case 'stars':
+        return <Star size={18} className={color === 'royal' ? 'text-royal-gold' : ''} />;
       case 'shield':
-        return <Shield size={28} className={iconColorClass} />;
-      case 'trophy':
-        return <Trophy size={28} className={iconColorClass} />;
+        return <Shield size={18} className={color === 'royal' ? 'text-royal-gold' : ''} />;
       default:
         return null;
     }
   };
   
-  const gradientClass = getColorClass();
-  
   return (
-    <div className={`flex items-center justify-center w-full my-10 ${className}`}>
-      {variant === 'line' ? (
-        <div className="w-full max-w-4xl mx-auto flex items-center">
-          <div className={`h-px bg-gradient-to-r ${gradientClass} flex-grow`}></div>
-          {label && (
-            <span className="mx-6 text-white/60 text-sm font-royal uppercase tracking-wider px-4">{label}</span>
-          )}
-          <div className={`h-px bg-gradient-to-r ${gradientClass} flex-grow`}></div>
-        </div>
-      ) : (
-        <div className="w-full max-w-4xl mx-auto flex items-center">
-          <div className={`h-px bg-gradient-to-r ${gradientClass} flex-grow`}></div>
-          <div className="relative mx-5 py-3 group">
-            <div className="transition-all duration-300 ease-in-out group-hover:scale-110 royal-sparkle">
-              {renderIcon()}
-            </div>
-            <div className="absolute -inset-3 bg-gradient-to-r from-royal-crimson/10 via-royal-gold/10 to-royal-navy/10 rounded-full blur-md -z-10 opacity-70 group-hover:opacity-100 transition-opacity duration-300"></div>
-            {label && (
-              <span className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 whitespace-nowrap text-white/60 text-xs font-royal uppercase tracking-wider">{label}</span>
-            )}
-          </div>
-          <div className={`h-px bg-gradient-to-r ${gradientClass} flex-grow`}></div>
+    <div className={cn('royal-divider', className)}>
+      <div className={`h-px flex-grow ${colorClasses[color].split(' ')[1]}`}></div>
+      {(label || variant !== 'line') && (
+        <div className={`flex items-center px-3 font-royal text-xs ${colorClasses[color].split(' ')[0]}`}>
+          {variant !== 'line' && getIconComponent()}
+          {label && <span className={variant !== 'line' ? 'ml-2' : ''}>{label}</span>}
         </div>
       )}
+      <div className={`h-px flex-grow ${colorClasses[color].split(' ')[1]}`}></div>
     </div>
   );
 };

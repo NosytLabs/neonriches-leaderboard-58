@@ -20,13 +20,20 @@ const buttonVariants = cva(
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
         royal:
-          "bg-gradient-to-r from-royal-crimson via-royal-gold to-royal-navy text-white hover:opacity-90",
+          "bg-gradient-to-r from-royal-crimson via-royal-gold to-royal-navy text-white hover:opacity-90 royal-button",
+        royalGold:
+          "bg-gradient-to-r from-royal-gold/80 via-royal-gold to-royal-gold/80 text-background hover:opacity-90 royal-button",
+        royalCrimson:
+          "bg-gradient-to-r from-royal-crimson/80 via-royal-crimson to-royal-crimson/80 text-white hover:opacity-90 royal-button",
+        royalNavy:
+          "bg-gradient-to-r from-royal-navy/80 via-royal-navy to-royal-navy/80 text-white hover:opacity-90 royal-button",
       },
       size: {
         default: "h-10 px-4 py-2",
         sm: "h-9 rounded-md px-3",
         lg: "h-11 rounded-md px-8",
         icon: "h-10 w-10",
+        xl: "h-12 rounded-md px-10 text-lg",
       },
     },
     defaultVariants: {

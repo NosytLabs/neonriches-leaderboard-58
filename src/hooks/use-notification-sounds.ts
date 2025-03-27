@@ -1,59 +1,116 @@
 
-// Define sound effect paths with consistent medieval themes
-const SOUND_EFFECTS = {
-  shame: 'https://assets.mixkit.co/active_storage/sfx/212/212-preview.mp3', // Medieval crowd laugh
-  reward: 'https://assets.mixkit.co/active_storage/sfx/270/270-preview.mp3', // Coins dropping
-  notification: 'https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3', // Scroll unfolding/paper sound
-  rankUp: 'https://assets.mixkit.co/active_storage/sfx/1993/1993-preview.mp3', // Trumpet fanfare
-  rankDown: 'https://assets.mixkit.co/active_storage/sfx/209/209-preview.mp3', // Crowd booing
-  potion: 'https://assets.mixkit.co/active_storage/sfx/2019/2019-preview.mp3', // Magic potion effect
-  swordClash: 'https://assets.mixkit.co/active_storage/sfx/981/981-preview.mp3', // Sword clash
-  royalAnnouncement: 'https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3', // Royal horn announcement
-  purchase: 'https://assets.mixkit.co/active_storage/sfx/156/156-preview.mp3' // Cash register
-} as const;
+import { useState, useCallback, useEffect } from 'react';
 
-// Sound player hook
-export const useNotificationSounds = () => {
-  // Track loading state for sounds
-  const soundCache: Record<string, HTMLAudioElement> = {};
+type SoundType = 'shame' | 'reward' | 'notification' | 'rankUp' | 'rankDown' | 'potion' | 'swordClash' | 'royalAnnouncement' | 'purchase';
 
-  // Preload a sound
-  const preloadSound = (type: keyof typeof SOUND_EFFECTS) => {
-    if (!soundCache[type]) {
-      soundCache[type] = new Audio(SOUND_EFFECTS[type]);
-      // Start loading the audio file
-      soundCache[type].load();
-    }
+interface SoundMap {
+  [key: string]: {
+    src: string;
+    description: string;
+    volume: number;
   };
+}
 
+const soundsMap: SoundMap = {
+  shame: {
+    src: 'https://assets.mixkit.co/sfx/preview/mixkit-cartoon-toy-whistle-616.mp3',
+    description: 'Playful shame whistle',
+    volume: 0.4
+  },
+  reward: {
+    src: 'https://assets.mixkit.co/sfx/preview/mixkit-coins-handling-1939.mp3',
+    description: 'Coins dropping',
+    volume: 0.3
+  },
+  notification: {
+    src: 'https://assets.mixkit.co/sfx/preview/mixkit-software-interface-start-2574.mp3',
+    description: 'Soft notification',
+    volume: 0.2
+  },
+  rankUp: {
+    src: 'https://assets.mixkit.co/sfx/preview/mixkit-winning-chimes-2015.mp3',
+    description: 'Ascending rank notification',
+    volume: 0.3
+  },
+  rankDown: {
+    src: 'https://assets.mixkit.co/sfx/preview/mixkit-losing-bleeps-2026.mp3',
+    description: 'Descending rank notification',
+    volume: 0.3
+  },
+  potion: {
+    src: 'https://assets.mixkit.co/sfx/preview/mixkit-magical-coin-win-1936.mp3',
+    description: 'Magical potion or effect',
+    volume: 0.3
+  },
+  swordClash: {
+    src: 'https://assets.mixkit.co/sfx/preview/mixkit-sword-slides-2793.mp3',
+    description: 'Sword draw or clash',
+    volume: 0.3
+  },
+  royalAnnouncement: {
+    src: 'https://assets.mixkit.co/sfx/preview/mixkit-fairy-arcade-sparkle-866.mp3',
+    description: 'Royal announcement chime',
+    volume: 0.2
+  },
+  purchase: {
+    src: 'https://assets.mixkit.co/sfx/preview/mixkit-unlock-game-notification-253.mp3',
+    description: 'Purchase confirmation',
+    volume: 0.3
+  }
+};
+
+const useNotificationSounds = () => {
+  const [audioElements, setAudioElements] = useState<{[key: string]: HTMLAudioElement}>({});
+  const [loaded, setLoaded] = useState(false);
+  
   // Preload all sounds
-  const preloadAllSounds = () => {
-    Object.keys(SOUND_EFFECTS).forEach(type => {
-      preloadSound(type as keyof typeof SOUND_EFFECTS);
+  const preloadAllSounds = useCallback(() => {
+    const newAudioElements: {[key: string]: HTMLAudioElement} = {};
+    
+    Object.entries(soundsMap).forEach(([key, { src }]) => {
+      const audio = new Audio(src);
+      audio.preload = 'auto';
+      newAudioElements[key] = audio;
     });
-  };
-
-  // Play a sound effect
-  const playSound = (type: keyof typeof SOUND_EFFECTS, volume = 0.3) => {
-    if (!soundCache[type]) {
-      preloadSound(type);
+    
+    setAudioElements(newAudioElements);
+    setLoaded(true);
+  }, []);
+  
+  // Play a specific sound with custom volume
+  const playSound = useCallback((type: SoundType, volumeMultiplier = 1) => {
+    // Skip if sounds aren't loaded yet
+    if (!loaded) return;
+    
+    // Skip if sound doesn't exist
+    if (!audioElements[type]) {
+      console.warn(`Sound "${type}" not found`);
+      return;
     }
     
-    const audio = soundCache[type];
-    audio.volume = volume;
-    
-    // Reset the audio to the beginning if it's already playing
-    audio.currentTime = 0;
-    
-    audio.play().catch(e => {
-      console.log('Audio playback error:', e);
-      // If playback fails, try creating a new audio instance
-      soundCache[type] = new Audio(SOUND_EFFECTS[type]);
-      soundCache[type].load();
-    });
+    try {
+      // Create a clone to allow for overlapping sounds
+      const sound = audioElements[type].cloneNode() as HTMLAudioElement;
+      
+      // Set volume (capped at 1.0)
+      const baseVolume = soundsMap[type]?.volume || 0.3;
+      sound.volume = Math.min(baseVolume * volumeMultiplier, 1.0);
+      
+      // Play the sound
+      sound.play().catch(e => {
+        // Most browsers require user interaction before playing audio
+        console.log('Audio playback error:', e);
+      });
+    } catch (error) {
+      console.error('Failed to play sound:', error);
+    }
+  }, [audioElements, loaded]);
+  
+  return {
+    playSound,
+    preloadAllSounds,
+    soundsLoaded: loaded
   };
-
-  return { playSound, preloadSound, preloadAllSounds };
 };
 
 export default useNotificationSounds;

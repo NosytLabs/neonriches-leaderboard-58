@@ -4,21 +4,26 @@ import { useNavigate } from 'react-router-dom';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Scroll, ShieldAlert, Scale, Crown } from 'lucide-react';
+import { Scroll, ShieldAlert, Scale, Crown, Coins, HandCoins } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { useToast } from '@/hooks/use-toast';
 import RoyalDivider from '@/components/ui/royal-divider';
 import ThroneBackground from '@/components/ui/throne-background';
+import useNotificationSounds from '@/hooks/use-notification-sounds';
 
 const TermsOfService = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { playSound } = useNotificationSounds();
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [acceptedSatire, setAcceptedSatire] = useState(false);
   const [acceptedNoRefunds, setAcceptedNoRefunds] = useState(false);
 
   const handleAccept = () => {
+    // Play royal sound
+    playSound('royalAnnouncement', 0.2);
+    
     // Store in localStorage that user has accepted terms
     localStorage.setItem('acceptedTerms', 'true');
     localStorage.setItem('termsAcceptedDate', new Date().toISOString());
@@ -35,6 +40,11 @@ const TermsOfService = () => {
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground">
       <div className="absolute inset-0 -z-10">
+        <div className="absolute inset-0 opacity-40">
+          <div className="absolute top-1/3 left-1/4 w-64 h-64 rounded-full bg-royal-crimson/10 filter blur-[100px]"></div>
+          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 rounded-full bg-royal-gold/10 filter blur-[120px]"></div>
+          <div className="absolute top-2/3 left-2/3 w-72 h-72 rounded-full bg-royal-navy/10 filter blur-[80px]"></div>
+        </div>
         <ThroneBackground variant="royal" density="medium" animate={true} particles={false} />
       </div>
       
@@ -42,15 +52,18 @@ const TermsOfService = () => {
       
       <main className="flex-1 pt-24 pb-12 px-4 md:px-6">
         <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-8">
+          <div className="text-center mb-8 animate-fade-in">
             <div className="inline-flex items-center justify-center mb-4">
-              <Scroll size={40} className="text-royal-gold animate-royal-pulse" />
+              <div className="relative">
+                <Scroll size={40} className="text-royal-gold animate-royal-pulse" />
+                <div className="absolute -inset-4 bg-royal-gold/10 rounded-full blur-md"></div>
+              </div>
             </div>
             <h1 className="text-4xl font-royal font-bold royal-gradient mb-2">Royal Terms of Service</h1>
             <p className="text-white/70">Official proclamation of rights, responsibilities, and royal satire</p>
           </div>
           
-          <Card className="glass-morphism border-white/10 shadow-xl mb-8">
+          <Card className="glass-morphism border-royal-gold/20 shadow-xl mb-8 royal-shine animate-fade-in" style={{animationDelay: "0.2s"}}>
             <CardHeader>
               <CardTitle className="flex items-center text-xl font-royal royal-gradient">
                 <Crown className="mr-2 h-5 w-5 text-royal-gold" />
@@ -67,7 +80,7 @@ const TermsOfService = () => {
                   <h3 className="text-lg font-semibold text-royal-gold">1. Introduction to the Kingdom</h3>
                   <p>
                     Welcome to SpendThrone ("the Kingdom"), a satirical web application that parodies pay-to-win mechanics 
-                    and social hierarchies. By accessing our Kingdom, you acknowledge that this is a satirical service 
+                    and social hierarchies. By accessing our Kingdom, you acknowledge that this is a <span className="text-royal-gold font-bold">SATIRICAL</span> service 
                     designed for entertainment purposes only.
                   </p>
                 </section>
@@ -75,7 +88,7 @@ const TermsOfService = () => {
                 <section>
                   <h3 className="text-lg font-semibold text-royal-gold">2. The Royal Satire Disclaimer</h3>
                   <p>
-                    SpendThrone is an explicit satire of pay-to-win mechanics, social status purchasing, and the concept 
+                    SpendThrone is an <span className="text-royal-gold">explicit satire</span> of pay-to-win mechanics, social status purchasing, and the concept 
                     of equating wealth with worth. All titles, ranks, and benefits are meaningless outside of our platform 
                     and are designed to humorously critique these real-world phenomena.
                   </p>
@@ -83,11 +96,16 @@ const TermsOfService = () => {
                 
                 <section>
                   <h3 className="text-lg font-semibold text-royal-gold">3. Royal Treasury (Payments & Refunds)</h3>
-                  <p>
-                    All contributions to the Royal Treasury (payments) are final. No refunds shall be provided, as the purpose 
-                    of the Kingdom is to satirically part willing nobles from their gold. You acknowledge that you are spending 
-                    real currency for virtual, satirical status that has no actual value.
-                  </p>
+                  <div className="glass-morphism border-royal-crimson/30 rounded-lg p-4 bg-royal-crimson/5 my-3">
+                    <div className="flex items-start">
+                      <HandCoins className="h-5 w-5 text-royal-crimson mr-2 mt-0.5 flex-shrink-0" />
+                      <p className="text-royal-crimson/90 font-medium m-0">
+                        <span className="font-bold">ABSOLUTE NO REFUNDS POLICY:</span> All contributions to the Royal Treasury (payments) are final and non-refundable. 
+                        In keeping with the satirical nature of our Kingdom, once you part with your gold, it becomes property of the Crown. 
+                        You acknowledge that you are spending real currency for virtual, satirical status that has no actual value whatsoever.
+                      </p>
+                    </div>
+                  </div>
                 </section>
                 
                 <section>
@@ -117,7 +135,7 @@ const TermsOfService = () => {
                   <h3 className="text-lg font-semibold text-royal-gold">6. Cancellation of Noble Status</h3>
                   <p>
                     We reserve the right to terminate accounts that violate our terms, post inappropriate content, or otherwise 
-                    disrupt the Kingdom. No refunds shall be provided upon termination.
+                    disrupt the Kingdom. No refunds shall be provided upon termination, in accordance with our strict No Refunds policy.
                   </p>
                 </section>
                 
@@ -133,7 +151,7 @@ const TermsOfService = () => {
                 
                 <section>
                   <h3 className="text-lg font-semibold text-royal-gold">8. Disclaimer of Warranties</h3>
-                  <p>
+                  <p className="uppercase font-bold text-sm">
                     THE KINGDOM IS PROVIDED "AS IS" WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED. 
                     WE DO NOT GUARANTEE THAT THE SERVICE WILL BE UNINTERRUPTED, SECURE, OR ERROR-FREE.
                   </p>
@@ -141,7 +159,7 @@ const TermsOfService = () => {
                 
                 <section>
                   <h3 className="text-lg font-semibold text-royal-gold">9. Limitation of Liability</h3>
-                  <p>
+                  <p className="uppercase font-bold text-sm">
                     IN NO EVENT SHALL SPENDTHRONE BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, 
                     OR PUNITIVE DAMAGES ARISING OUT OF OR RELATED TO YOUR USE OF THE SERVICE, INCLUDING THE LOSS OF MONEY 
                     SPENT ON THE PLATFORM.
@@ -155,6 +173,24 @@ const TermsOfService = () => {
                     constitutes acceptance of the new terms.
                   </p>
                 </section>
+                
+                <section className="glass-morphism border-royal-gold/30 rounded-lg p-4 bg-royal-gold/5 my-6">
+                  <h3 className="text-lg font-semibold text-royal-gold flex items-center">
+                    <Coins className="mr-2 h-5 w-5" />
+                    The Complete Satire Disclosure
+                  </h3>
+                  <p className="text-white/90">
+                    SpendThrone is a complete satire of societal mechanisms that equate wealth with worth. By participating, 
+                    you acknowledge that:
+                  </p>
+                  <ul className="list-disc pl-6 space-y-1 mt-2">
+                    <li>All ranks, titles, and privileges are meaningless outside this platform</li>
+                    <li>Your spending confers no actual social status or real-world benefits</li>
+                    <li>The entire premise of the platform is to parody and critique wealth-based status systems</li>
+                    <li>All payments made to the platform are final and non-refundable</li>
+                    <li>Participation is entirely voluntary and at your own financial risk</li>
+                  </ul>
+                </section>
               </div>
             </CardContent>
             <CardFooter className="flex-col space-y-4">
@@ -163,7 +199,7 @@ const TermsOfService = () => {
                   id="terms" 
                   checked={acceptedTerms}
                   onCheckedChange={(checked) => setAcceptedTerms(!!checked)}
-                  className="mt-1"
+                  className="mt-1 data-[state=checked]:bg-royal-gold data-[state=checked]:border-royal-gold"
                 />
                 <label htmlFor="terms" className="text-sm text-white/70">
                   I agree to the Terms of Service and understand this is a satirical platform.
@@ -175,7 +211,7 @@ const TermsOfService = () => {
                   id="satire" 
                   checked={acceptedSatire}
                   onCheckedChange={(checked) => setAcceptedSatire(!!checked)}
-                  className="mt-1"
+                  className="mt-1 data-[state=checked]:bg-royal-gold data-[state=checked]:border-royal-gold"
                 />
                 <label htmlFor="satire" className="text-sm text-white/70">
                   I understand that SpendThrone is a satirical parody of pay-to-win mechanics and does not provide actual value for money spent.
@@ -187,19 +223,19 @@ const TermsOfService = () => {
                   id="noRefunds" 
                   checked={acceptedNoRefunds}
                   onCheckedChange={(checked) => setAcceptedNoRefunds(!!checked)}
-                  className="mt-1"
+                  className="mt-1 data-[state=checked]:bg-royal-gold data-[state=checked]:border-royal-gold"
                 />
-                <label htmlFor="noRefunds" className="text-sm text-white/70">
-                  I acknowledge that all payments are final and non-refundable, as befits a satire of wealth-based status.
+                <label htmlFor="noRefunds" className="text-sm text-white/90 font-medium">
+                  I acknowledge that all payments are final and <span className="text-royal-crimson font-bold">NON-REFUNDABLE</span>, as befits a satire of wealth-based status.
                 </label>
               </div>
               
               <Button 
-                className="w-full mt-4 bg-gradient-to-r from-royal-crimson via-royal-gold to-royal-navy"
+                className="w-full mt-4 bg-gradient-to-r from-royal-crimson via-royal-gold to-royal-navy hover:opacity-90 text-white royal-button animate-pulse-slow"
                 disabled={!acceptedTerms || !acceptedSatire || !acceptedNoRefunds}
                 onClick={handleAccept}
               >
-                <ShieldAlert className="mr-2 h-4 w-4" />
+                <Crown className="mr-2 h-4 w-4" />
                 I Solemnly Swear Allegiance to These Terms
               </Button>
             </CardFooter>

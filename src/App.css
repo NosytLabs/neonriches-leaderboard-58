@@ -1,14 +1,19 @@
+
 /* Global Styles */
 .glass-morphism {
-  @apply bg-black/30 backdrop-blur-lg;
+  @apply bg-black/30 backdrop-blur-lg border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.3)];
 }
 
 .glass-morphism-highlight {
-  @apply bg-black/40 backdrop-blur-lg;
+  @apply bg-black/40 backdrop-blur-lg border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.4)];
 }
 
 .royal-gradient {
   @apply bg-clip-text text-transparent bg-gradient-to-r from-royal-crimson via-royal-gold to-royal-navy;
+}
+
+.royal-gradient-bg {
+  @apply bg-gradient-to-r from-royal-crimson/5 via-royal-gold/5 to-royal-navy/5;
 }
 
 .animate-royal-pulse {
@@ -18,12 +23,45 @@
 @keyframes royal-pulse {
   0%, 100% {
     opacity: 1;
-    filter: drop-shadow(0 0 4px rgba(207, 181, 59, 0.5));
+    filter: drop-shadow(0 0 4px rgba(212, 175, 55, 0.5));
   }
   50% {
     opacity: 0.7;
-    filter: drop-shadow(0 0 10px rgba(207, 181, 59, 0.8));
+    filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.8));
   }
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-150%) rotate(30deg);
+  }
+  100% {
+    transform: translateX(150%) rotate(30deg);
+  }
+}
+
+.royal-shine {
+  position: relative;
+  overflow: hidden;
+}
+
+.royal-shine::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    to bottom right,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0) 40%,
+    rgba(255, 255, 255, 0.4) 50%,
+    rgba(255, 255, 255, 0) 60%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: rotate(30deg);
+  animation: shimmer 3.5s linear infinite;
 }
 
 /* Team-specific colors */
@@ -32,7 +70,7 @@
 }
 
 .bg-team-green {
-  background-color: #CFB53B;
+  background-color: #D4AF37;
 }
 
 .bg-team-blue {
@@ -44,7 +82,7 @@
 }
 
 .text-team-green {
-  color: #CFB53B;
+  color: #D4AF37;
 }
 
 .text-team-blue {
@@ -56,7 +94,7 @@
 }
 
 .border-team-green {
-  border-color: #CFB53B;
+  border-color: #D4AF37;
 }
 
 .border-team-blue {
@@ -65,7 +103,15 @@
 
 /* Royal colors */
 .text-royal-gold {
-  color: #CFB53B;
+  color: #D4AF37;
+}
+
+.text-royal-crimson {
+  color: #8B0000;
+}
+
+.text-royal-navy {
+  color: #000080;
 }
 
 .text-royal-purple {
@@ -73,7 +119,15 @@
 }
 
 .bg-royal-gold {
-  background-color: #CFB53B;
+  background-color: #D4AF37;
+}
+
+.bg-royal-crimson {
+  background-color: #8B0000;
+}
+
+.bg-royal-navy {
+  background-color: #000080;
 }
 
 .bg-royal-purple {
@@ -81,7 +135,15 @@
 }
 
 .border-royal-gold {
-  border-color: #CFB53B;
+  border-color: #D4AF37;
+}
+
+.border-royal-crimson {
+  border-color: #8B0000;
+}
+
+.border-royal-navy {
+  border-color: #000080;
 }
 
 .border-royal-purple {
@@ -109,3 +171,69 @@
 .animate-fade-in > *:nth-child(3) { animation-delay: 0.3s; }
 .animate-fade-in > *:nth-child(4) { animation-delay: 0.4s; }
 .animate-fade-in > *:nth-child(5) { animation-delay: 0.5s; }
+
+/* Royal Divider */
+.royal-divider {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin: 2rem 0;
+}
+
+.royal-divider::before,
+.royal-divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+}
+
+.royal-divider-label {
+  padding: 0 1rem;
+  color: #D4AF37;
+  font-family: 'Cinzel', serif;
+  letter-spacing: 1px;
+  font-size: 0.8rem;
+}
+
+/* Royal Button */
+.royal-button {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.royal-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: 0.5s;
+  z-index: -1;
+}
+
+.royal-button:hover::before {
+  left: 100%;
+}
+
+/* Royal Card */
+.royal-card {
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(13, 13, 32, 0.7);
+  backdrop-filter: blur(12px);
+}
+
+.royal-card:hover {
+  border-color: rgba(212, 175, 55, 0.3);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  transform: translateY(-5px);
+}
