@@ -5,12 +5,14 @@ import Footer from '@/components/Footer';
 import ThroneBackground from '@/components/ui/throne-background';
 import RoyalDivider from '@/components/ui/royal-divider';
 import { Crown } from 'lucide-react';
+import { UserProfile } from '@/contexts/AuthContext';
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
+  user: UserProfile;
 }
 
-const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
+const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, user }) => {
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground">
       <Header />

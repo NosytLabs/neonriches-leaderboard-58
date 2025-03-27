@@ -4,7 +4,7 @@ import { Navigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import DashboardLayout from '@/components/dashboard/DashboardLayout';
 import DashboardMain from '@/components/dashboard/DashboardMain';
-import DashboardWelcome from '@/components/dashboard/DashboardWelcome';
+import { DashboardWelcome } from '@/components/dashboard/DashboardWelcome';
 import ThroneBackground from '@/components/ui/throne-background';
 
 const Dashboard = () => {
