@@ -9,6 +9,7 @@ import InteractiveLeaderboard from '@/components/dashboard/InteractiveLeaderboar
 import CashThroneUpgrade from '@/components/dashboard/CashThroneUpgrade';
 import RoyalDecrees from '@/components/dashboard/RoyalDecrees';
 import BriberyBanner from '@/components/dashboard/BriberyBanner';
+import SpendingVisualizer from '@/components/dashboard/SpendingVisualizer';
 import { mockSpendingData, mockTeamDistribution, mockRankHistory } from '@/components/dashboard/data';
 import RoyalDivider from '@/components/ui/royal-divider';
 import { UserProfile } from '@/contexts/AuthContext';
@@ -24,30 +25,47 @@ interface DashboardMainProps {
 const DashboardMain: React.FC<DashboardMainProps> = ({ user, updateProfile }) => {
   const [suggestedAmount, setSuggestedAmount] = useState(100);
 
-  const handlePaymentSuccess = (amount: number) => {
-    // In a real app, this would update the user's state with the new amount spent
-    console.log(`Royal Tribute of $${amount} successfully added to your coffers!`);
-    
-    // Determine what fancy title to give based on amount
-    let toastTitle = "Royal Treasury Expanded!";
-    let description = `Your tribute of $${amount} has been graciously accepted by the crown.`;
-    
-    if (amount >= 500) {
-      toastTitle = "MAGNIFICENT LARGESSE!";
-      description = `Your extravagant tribute of $${amount} has the royal accountants weeping with joy!`;
-    } else if (amount >= 250) {
-      toastTitle = "Exemplary Generosity!";
-      description = `Your tribute of $${amount} has earned you the Crown's distinguished favor!`;
-    } else if (amount >= 100) {
-      toastTitle = "Noble Contribution!";
-      description = `The royal coffers grow by $${amount}. Your loyalty shall be remembered!`;
+  const handlePaymentSuccess = async (amount: number) => {
+    try {
+      // Update the user's amount spent
+      const newAmountSpent = user.amountSpent + amount;
+      const newRank = Math.max(1, user.rank - Math.floor(amount / 100)); // Simple mock calculation
+      
+      await updateProfile({
+        amountSpent: newAmountSpent,
+        rank: newRank,
+        lastSpendDate: new Date()
+      });
+      
+      // Determine what fancy title to give based on amount
+      let toastTitle = "Royal Treasury Expanded!";
+      let description = `Your tribute of $${amount} has been graciously accepted by the crown.`;
+      
+      if (amount >= 500) {
+        toastTitle = "MAGNIFICENT LARGESSE!";
+        description = `Your extravagant tribute of $${amount} has the royal accountants weeping with joy!`;
+      } else if (amount >= 250) {
+        toastTitle = "Exemplary Generosity!";
+        description = `Your tribute of $${amount} has earned you the Crown's distinguished favor!`;
+      } else if (amount >= 100) {
+        toastTitle = "Noble Contribution!";
+        description = `The royal coffers grow by $${amount}. Your loyalty shall be remembered!`;
+      }
+      
+      toast({
+        title: toastTitle,
+        description: description,
+        duration: 5000,
+      });
+      
+    } catch (error) {
+      console.error("Failed to update profile after payment:", error);
+      toast({
+        title: "Treasury Error",
+        description: "Your payment was processed but your profile couldn't be updated. Please refresh.",
+        variant: "destructive"
+      });
     }
-    
-    toast({
-      title: toastTitle,
-      description: description,
-      duration: 5000,
-    });
   };
 
   const handleGenderChange = async (gender: 'king' | 'queen' | 'jester' | null) => {
@@ -107,26 +125,32 @@ const DashboardMain: React.FC<DashboardMainProps> = ({ user, updateProfile }) =>
       </div>
       
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8 animate-fade-in" style={{ animationDelay: "200ms" }}>
-        <TeamDistribution data={mockTeamDistribution} />
-        <RankTrajectory data={mockRankHistory} />
+        <div className="lg:col-span-2">
+          <SpendingVisualizer 
+            user={user} 
+            onSpend={handlePaymentSuccess} 
+          />
+        </div>
         <GenderSelection userProfile={user} onGenderChange={handleGenderChange} />
       </div>
       
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8 animate-fade-in" style={{ animationDelay: "300ms" }}>
-        <div className="lg:col-span-2">
-          <InteractiveLeaderboard />
-        </div>
+        <TeamDistribution data={mockTeamDistribution} />
+        <RankTrajectory data={mockRankHistory} />
         <CashThroneUpgrade 
           user={user} 
           onPaymentSuccess={handlePaymentSuccess} 
         />
       </div>
       
-      <div className="mb-8 animate-fade-in" style={{ animationDelay: "300ms" }}>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8 animate-fade-in" style={{ animationDelay: "300ms" }}>
+        <div className="lg:col-span-2">
+          <InteractiveLeaderboard />
+        </div>
         <RoyalDecrees />
       </div>
       
-      <div className="animate-fade-in" style={{ animationDelay: "400ms" }}>
+      <div className="mb-8 animate-fade-in" style={{ animationDelay: "400ms" }}>
         <BriberyBanner onPaymentSuccess={handlePaymentSuccess} />
       </div>
       

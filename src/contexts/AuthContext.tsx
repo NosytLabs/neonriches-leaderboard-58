@@ -20,7 +20,7 @@ export interface UserProfile {
 interface AuthContextType {
   user: UserProfile | null;
   loading: boolean;
-  signIn: (email: string, password: string) => Promise<void>;
+  signIn: (email: string, password: string, rememberMe?: boolean) => Promise<void>;
   signUp: (email: string, username: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
   updateProfile: (profileData: Partial<UserProfile>) => Promise<void>;
@@ -60,14 +60,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [initialized, setInitialized] = useState(false);
+  const localStorageKey = 'p2w_user';
+  const sessionStorageKey = 'p2w_session_user';
 
   // Mock authentication - would be replaced with real authentication
   useEffect(() => {
     // Simulate loading user data
     const checkAuth = async () => {
       try {
-        // In a real app, this would check localStorage/cookies and validate with backend
-        const savedUser = localStorage.getItem('p2w_user');
+        // Check localStorage first (for remember me)
+        const savedUser = localStorage.getItem(localStorageKey);
         
         if (savedUser) {
           try {
@@ -81,8 +83,28 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             }
             setUser(parsedUser);
           } catch (parseError) {
-            console.error('Error parsing saved user:', parseError);
-            localStorage.removeItem('p2w_user');
+            console.error('Error parsing saved user from localStorage:', parseError);
+            localStorage.removeItem(localStorageKey);
+          }
+        } else {
+          // If not found in localStorage, check sessionStorage (for session-only login)
+          const sessionUser = sessionStorage.getItem(sessionStorageKey);
+          
+          if (sessionUser) {
+            try {
+              const parsedUser = JSON.parse(sessionUser);
+              // Convert string dates back to Date objects
+              if (parsedUser.joinedAt) {
+                parsedUser.joinedAt = new Date(parsedUser.joinedAt);
+              }
+              if (parsedUser.lastSpendDate) {
+                parsedUser.lastSpendDate = new Date(parsedUser.lastSpendDate);
+              }
+              setUser(parsedUser);
+            } catch (parseError) {
+              console.error('Error parsing saved user from sessionStorage:', parseError);
+              sessionStorage.removeItem(sessionStorageKey);
+            }
           }
         }
         
@@ -97,7 +119,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     checkAuth();
   }, []);
 
-  const signIn = async (email: string, password: string) => {
+  const signIn = async (email: string, password: string, rememberMe = false) => {
     setLoading(true);
     try {
       // Mock sign in - would call an API in a real app
@@ -105,7 +127,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       
       // For demo purposes, we'll just use our mock user
       setUser(MOCK_USER);
-      localStorage.setItem('p2w_user', JSON.stringify(MOCK_USER));
+      
+      // Store user data based on remember me preference
+      if (rememberMe) {
+        localStorage.setItem(localStorageKey, JSON.stringify(MOCK_USER));
+      } else {
+        sessionStorage.setItem(sessionStorageKey, JSON.stringify(MOCK_USER));
+      }
     } catch (error) {
       console.error('Sign in error:', error);
       throw error;
@@ -134,7 +162,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       };
       
       setUser(newUser);
-      localStorage.setItem('p2w_user', JSON.stringify(newUser));
+      // For new users, store in session storage by default
+      sessionStorage.setItem(sessionStorageKey, JSON.stringify(newUser));
     } catch (error) {
       console.error('Sign up error:', error);
       throw error;
@@ -147,7 +176,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     try {
       // Mock sign out
       setUser(null);
-      localStorage.removeItem('p2w_user');
+      localStorage.removeItem(localStorageKey);
+      sessionStorage.removeItem(sessionStorageKey);
       return Promise.resolve();
     } catch (error) {
       console.error('Sign out error:', error);
@@ -161,7 +191,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       
       const updatedUser = { ...user, ...profileData };
       setUser(updatedUser);
-      localStorage.setItem('p2w_user', JSON.stringify(updatedUser));
+      
+      // Update in both storages to ensure consistency
+      if (localStorage.getItem(localStorageKey)) {
+        localStorage.setItem(localStorageKey, JSON.stringify(updatedUser));
+      }
+      
+      if (sessionStorage.getItem(sessionStorageKey)) {
+        sessionStorage.setItem(sessionStorageKey, JSON.stringify(updatedUser));
+      }
+      
       return Promise.resolve();
     } catch (error) {
       console.error('Update profile error:', error);
