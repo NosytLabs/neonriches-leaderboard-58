@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
@@ -364,7 +363,9 @@ const CombinedLeaderboard: React.FC<{
               profileImage: selectedUser.profileImage || '/placeholder.svg',
               totalSpent: selectedUser.amountSpent,
               rank: selectedUser.rank,
-              team: selectedUser.team || null
+              team: selectedUser.team || null,
+              tier: 'free',
+              spendStreak: 0
             }}
             shameType={shameAction}
             onConfirm={confirmShame}

@@ -181,7 +181,9 @@ const PublicShamingFestival = () => {
                 profileImage: selectedUser.profileImage,
                 totalSpent: selectedUser.amountSpent,
                 rank: selectedUser.rank,
-                team: selectedUser.team
+                team: selectedUser.team,
+                tier: 'free', // Add missing property
+                spendStreak: 0 // Add missing property
               }}
               shameType={selectedAction}
               onConfirm={confirmShame}
