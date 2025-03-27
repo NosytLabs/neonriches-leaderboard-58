@@ -6,7 +6,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Scroll } from 'lucide-react';
+import { Scroll, Crown } from 'lucide-react';
 
 const faqItems = [
   {
@@ -34,6 +34,10 @@ const faqItems = [
     answer: "The Affluent Assembly Prize Pool receives 15% of all weekly contributions. Half is distributed through the Sustenance Fund (based on spending consistency and loyalty), and half through the Whale Endowment (rewarding top spenders). Distribution occurs weekly, with bonuses for spending streaks and lifetime contribution milestones."
   },
   {
+    question: "What exclusive features does the top spender get?",
+    answer: "The current throne holder (top spender) enjoys the most prestigious benefits: a featured showcase on our homepage, complete control over their profile layout, maximized exposure for their external links, and exclusive premium customization options that are unavailable to others. This essentially serves as a promotional spot for their brand or persona."
+  },
+  {
     question: "Can I customize my profile?",
     answer: "Yes. All patrons can create basic profiles with limited text and a single image. Nobles who have contributed $25 or more unlock the Pro Tier with enhanced features including more images, links, custom RGB gradients and borders, video embeds, and detailed visitor statistics."
   }
@@ -56,15 +60,28 @@ const RoyalFAQ = () => {
           </p>
         </div>
         
-        <div className="royal-card rounded-xl p-6 md:p-8">
+        <div className="royal-card-enhanced rounded-xl p-6 md:p-8 backdrop-blur-md">
           <Accordion type="single" collapsible className="w-full">
             {faqItems.map((item, index) => (
-              <AccordionItem key={index} value={`item-${index}`} className="border-b border-foreground/10 last:border-b-0">
-                <AccordionTrigger className="text-lg font-medieval py-6 text-foreground hover:text-royal-gold transition-colors group flex">
-                  <span>{item.question}</span>
+              <AccordionItem 
+                key={index} 
+                value={`item-${index}`} 
+                className="border-b border-foreground/10 last:border-b-0"
+              >
+                <AccordionTrigger 
+                  className="text-lg font-medieval py-6 text-foreground hover:text-royal-gold transition-colors group flex items-center"
+                >
+                  <div className="flex items-center">
+                    {index === 6 && (
+                      <Crown size={16} className="mr-2 text-royal-gold animate-crown-glow" />
+                    )}
+                    <span>{item.question}</span>
+                  </div>
                 </AccordionTrigger>
                 <AccordionContent className="text-foreground/70 font-serif">
-                  {item.answer}
+                  <div className="pt-2 pb-4 medieval-border royal-corner-ornament">
+                    {item.answer}
+                  </div>
                 </AccordionContent>
               </AccordionItem>
             ))}

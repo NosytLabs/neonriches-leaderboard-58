@@ -180,3 +180,136 @@ body {
   border: 1px solid rgba(205, 127, 50, 0.5);
   color: rgb(205, 127, 50);
 }
+
+/* Enhanced card styling */
+.royal-card-enhanced {
+  @apply glass-morphism backdrop-blur-xl border border-white/10 p-6 relative overflow-hidden transition-all duration-300;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), 0 0 10px rgba(212, 175, 55, 0.1);
+}
+
+.royal-card-enhanced:hover {
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), 0 0 15px rgba(212, 175, 55, 0.2);
+  border-color: rgba(212, 175, 55, 0.3);
+}
+
+/* Medieval ornamental styling */
+.medieval-border {
+  position: relative;
+  padding: 1rem;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 0.25rem;
+}
+
+.medieval-border::before {
+  content: '';
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+  right: 0.5rem;
+  bottom: 0.5rem;
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  pointer-events: none;
+}
+
+.royal-corner-ornament {
+  position: relative;
+}
+
+.royal-corner-ornament::before {
+  content: '';
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  border-top: 2px solid rgba(212, 175, 55, 0.6);
+  border-left: 2px solid rgba(212, 175, 55, 0.6);
+  top: 5px;
+  left: 5px;
+}
+
+.royal-corner-ornament::after {
+  content: '';
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  border-bottom: 2px solid rgba(212, 175, 55, 0.6);
+  border-right: 2px solid rgba(212, 175, 55, 0.6);
+  bottom: 5px;
+  right: 5px;
+}
+
+/* Background style for medieval themes */
+.throne-bg {
+  position: relative;
+  background-color: #0D1117;
+  background-image: 
+    radial-gradient(rgba(212, 175, 55, 0.1) 1px, transparent 1px),
+    radial-gradient(rgba(212, 175, 55, 0.05) 1px, transparent 1px);
+  background-size: 20px 20px;
+  background-position: 0 0, 10px 10px;
+}
+
+/* Enhanced button style */
+.royal-button-enhanced {
+  @apply relative overflow-hidden z-10 transition-all duration-300;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3), 0 0 5px rgba(212, 175, 55, 0.2);
+}
+
+.royal-button-enhanced:hover {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), 0 0 10px rgba(212, 175, 55, 0.4);
+  transform: translateY(-2px);
+}
+
+.royal-button-enhanced:active {
+  transform: translateY(1px);
+}
+
+/* Parchment animation */
+.animate-parchment-unfurl {
+  animation: parchment-unfurl 0.8s ease-out forwards;
+}
+
+@keyframes parchment-unfurl {
+  0% {
+    opacity: 0;
+    transform: scale(0.9) translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Gold dust animation */
+.animate-gold-dust {
+  position: relative;
+}
+
+.animate-gold-dust::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: radial-gradient(
+    circle,
+    rgba(212, 175, 55, 0.6) 1px,
+    transparent 1px
+  );
+  background-size: 8px 8px;
+  animation: gold-dust 3s ease-out infinite;
+  pointer-events: none;
+}
+
+@keyframes gold-dust {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+}

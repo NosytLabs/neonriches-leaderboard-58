@@ -12,41 +12,54 @@ type ThemeProviderProps = {
 type ThemeProviderState = {
   theme: Theme;
   setTheme: (theme: Theme) => void;
+  isDarkTheme: boolean;
 };
 
 const initialState: ThemeProviderState = {
   theme: "system",
   setTheme: () => null,
+  isDarkTheme: true,
 };
 
 const ThemeProviderContext = createContext<ThemeProviderState>(initialState);
 
 export function ThemeProvider({
   children,
-  defaultTheme = "system",
+  defaultTheme = "dark", // Change default to dark
   storageKey = "p2w-ui-theme",
   ...props
 }: ThemeProviderProps) {
   const [theme, setTheme] = useState<Theme>(
     () => (localStorage.getItem(storageKey) as Theme) || defaultTheme
   );
+  const [isDarkTheme, setIsDarkTheme] = useState<boolean>(true);
 
   useEffect(() => {
     const root = window.document.documentElement;
     
     root.classList.remove("light", "dark");
     
+    let effectiveTheme: "dark" | "light" = "dark";
+    
     if (theme === "system") {
-      const systemTheme = window.matchMedia("(prefers-color-scheme: dark)")
-        .matches
+      effectiveTheme = window.matchMedia("(prefers-color-scheme: dark)").matches
         ? "dark"
         : "light";
-      
-      root.classList.add(systemTheme);
-      return;
+    } else {
+      effectiveTheme = theme;
     }
     
-    root.classList.add(theme);
+    root.classList.add(effectiveTheme);
+    setIsDarkTheme(effectiveTheme === "dark");
+    
+    // Add medieval-theme class for consistent styling
+    if (!root.classList.contains("medieval-theme")) {
+      root.classList.add("medieval-theme");
+    }
+    
+    // Set CSS variables for royal colors
+    document.documentElement.style.setProperty('--royal-gold-opacity', effectiveTheme === 'dark' ? '1' : '0.85');
+    
   }, [theme]);
 
   const value = {
@@ -55,6 +68,7 @@ export function ThemeProvider({
       localStorage.setItem(storageKey, theme);
       setTheme(theme);
     },
+    isDarkTheme,
   };
 
   return (

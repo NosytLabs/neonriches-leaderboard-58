@@ -1,20 +1,22 @@
 
 import React from 'react';
-import { Crown, Scroll, Feather, Map } from 'lucide-react';
+import { Crown, Scroll, Feather, Map, Trophy, Shield } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface RoyalDividerProps {
-  variant?: 'line' | 'crown' | 'ornate' | 'scroll' | 'quill' | 'treasure';
+  variant?: 'line' | 'crown' | 'ornate' | 'scroll' | 'quill' | 'treasure' | 'trophy' | 'shield';
   label?: string;
   className?: string;
   color?: 'royal' | 'gold' | 'crimson' | 'navy' | 'purple';
+  animate?: boolean;
 }
 
 const RoyalDivider: React.FC<RoyalDividerProps> = ({
   variant = 'line',
   label,
   className,
-  color = 'royal'
+  color = 'royal',
+  animate = false
 }) => {
   const colorMap = {
     royal: 'royal-gradient',
@@ -34,119 +36,74 @@ const RoyalDivider: React.FC<RoyalDividerProps> = ({
     }
   };
 
-  const renderDivider = () => {
+  const getIcon = () => {
     switch (variant) {
       case 'crown':
-        return (
-          <div className={cn('flex items-center w-full my-6', className)}>
-            <div className={cn('flex-grow border-t', getLineColor())}></div>
-            <div className="flex items-center mx-4">
-              {label && (
-                <span className={cn("text-xs font-royal tracking-widest mx-2", colorMap[color])}>
-                  {label}
-                </span>
-              )}
-              <Crown className={cn("h-4 w-4", colorMap[color])} />
-            </div>
-            <div className={cn('flex-grow border-t', getLineColor())}></div>
-          </div>
-        );
-        
+        return <Crown className={cn("h-5 w-5", colorMap[color], animate && "animate-crown-glow")} />;
       case 'scroll':
-        return (
-          <div className={cn('flex items-center w-full my-6', className)}>
-            <div className={cn('flex-grow border-t', getLineColor())}></div>
-            <div className="flex items-center mx-4">
-              <Scroll className={cn("h-4 w-4 mr-2", colorMap[color])} />
-              {label && (
-                <span className={cn("text-xs font-royal tracking-widest", colorMap[color])}>
-                  {label}
-                </span>
-              )}
-            </div>
-            <div className={cn('flex-grow border-t', getLineColor())}></div>
-          </div>
-        );
-      
+        return <Scroll className={cn("h-5 w-5", colorMap[color], animate && "animate-quill-write")} />;
       case 'quill':
-        return (
-          <div className={cn('flex items-center w-full my-6 relative', className)}>
-            <div className={cn('flex-grow border-t', getLineColor())}></div>
-            <div className="flex items-center mx-4">
-              <Feather className={cn("h-4 w-4 mr-2 animate-quill-write", colorMap[color])} />
-              {label && (
-                <span className={cn("text-xs font-royal tracking-widest", colorMap[color])}>
-                  {label}
-                </span>
-              )}
-            </div>
-            <div className={cn('flex-grow border-t', getLineColor())}></div>
-          </div>
-        );
-        
+        return <Feather className={cn("h-5 w-5", colorMap[color], animate && "animate-quill-write")} />;
       case 'treasure':
-        return (
-          <div className={cn('flex items-center w-full my-6 relative', className)}>
-            <div className={cn('flex-grow h-px', getLineColor())}></div>
-            <div className="flex items-center mx-4 relative">
-              <div className="absolute -inset-3 bg-royal-gold/10 rounded-full blur-md"></div>
-              {label && (
-                <span className={cn("text-xs font-royal tracking-widest px-3 relative z-10", colorMap[color])}>
-                  {label}
-                </span>
-              )}
-            </div>
-            <div className={cn('flex-grow h-px', getLineColor())}></div>
-            
-            {/* Gold dust effect */}
-            <div className="absolute left-1/4 -top-1 transform -translate-x-1/2">
-              <div className={cn("h-2 w-2 rounded-full animate-sparkle", color === 'gold' ? 'bg-royal-gold/60' : color === 'crimson' ? 'bg-royal-crimson/60' : color === 'navy' ? 'bg-royal-navy/60' : color === 'purple' ? 'bg-royal-purple/60' : 'bg-white/40')}></div>
-            </div>
-            <div className="absolute right-1/4 -top-1 transform translate-x-1/2" style={{ animationDelay: '0.5s' }}>
-              <div className={cn("h-2 w-2 rounded-full animate-sparkle", color === 'gold' ? 'bg-royal-gold/60' : color === 'crimson' ? 'bg-royal-crimson/60' : color === 'navy' ? 'bg-royal-navy/60' : color === 'purple' ? 'bg-royal-purple/60' : 'bg-white/40')}></div>
-            </div>
-          </div>
-        );
-        
-      case 'ornate':
-        return (
-          <div className={cn('flex items-center w-full my-6 relative', className)}>
-            <div className={cn('flex-grow h-px', getLineColor())}></div>
-            <div className="flex items-center mx-3">
-              {label && (
-                <span className={cn("text-xs font-royal tracking-widest bg-background px-3 relative z-10", colorMap[color])}>
-                  {label}
-                </span>
-              )}
-            </div>
-            <div className={cn('flex-grow h-px', getLineColor())}></div>
-            
-            {/* Ornate decorations */}
-            <div className="absolute left-1/4 -top-1 transform -translate-x-1/2">
-              <div className={cn("h-2 w-2 rotate-45", color === 'gold' ? 'bg-royal-gold/30' : color === 'crimson' ? 'bg-royal-crimson/30' : color === 'navy' ? 'bg-royal-navy/30' : color === 'purple' ? 'bg-royal-purple/30' : 'bg-white/20')}></div>
-            </div>
-            <div className="absolute right-1/4 -top-1 transform translate-x-1/2">
-              <div className={cn("h-2 w-2 rotate-45", color === 'gold' ? 'bg-royal-gold/30' : color === 'crimson' ? 'bg-royal-crimson/30' : color === 'navy' ? 'bg-royal-navy/30' : color === 'purple' ? 'bg-royal-purple/30' : 'bg-white/20')}></div>
-            </div>
-          </div>
-        );
-        
-      default: // line
-        return (
-          <div className={cn('flex items-center w-full my-6', className)}>
-            <div className={cn('flex-grow border-t', getLineColor())}></div>
-            {label && (
-              <span className={cn("text-xs font-royal tracking-widest mx-4", colorMap[color])}>
-                {label}
-              </span>
-            )}
-            <div className={cn('flex-grow border-t', getLineColor())}></div>
-          </div>
-        );
+        return <Map className={cn("h-5 w-5", colorMap[color], animate && "animate-sparkle")} />;
+      case 'trophy':
+        return <Trophy className={cn("h-5 w-5", colorMap[color], animate && "animate-sparkle")} />;
+      case 'shield':
+        return <Shield className={cn("h-5 w-5", colorMap[color], animate && "animate-bounce-subtle")} />;
+      default:
+        return null;
     }
   };
 
-  return renderDivider();
+  return (
+    <div className={cn('flex items-center w-full my-8', className)}>
+      <div className={cn('flex-grow h-px', getLineColor())}></div>
+      
+      {variant !== 'line' && (
+        <div className="flex items-center mx-4 relative">
+          <div className="absolute -inset-3 bg-royal-gold/10 rounded-full blur-md"></div>
+          {getIcon()}
+          {label && (
+            <span className={cn("text-xs font-medieval tracking-widest mx-3 uppercase", colorMap[color])}>
+              {label}
+            </span>
+          )}
+        </div>
+      )}
+      
+      {variant === 'line' && label && (
+        <div className="mx-4">
+          <span className={cn("text-xs font-medieval tracking-widest px-4 py-1 rounded-full bg-foreground/5", colorMap[color])}>
+            {label}
+          </span>
+        </div>
+      )}
+      
+      <div className={cn('flex-grow h-px', getLineColor())}></div>
+      
+      {/* Gold dust effect */}
+      {animate && (
+        <>
+          <div className="absolute left-1/4 -top-1 transform -translate-x-1/2">
+            <div className={cn("h-2 w-2 rounded-full animate-sparkle", 
+              color === 'gold' ? 'bg-royal-gold/60' : 
+              color === 'crimson' ? 'bg-royal-crimson/60' : 
+              color === 'navy' ? 'bg-royal-navy/60' : 
+              color === 'purple' ? 'bg-royal-purple/60' : 'bg-white/40')}>
+            </div>
+          </div>
+          <div className="absolute right-1/4 -top-1 transform translate-x-1/2" style={{ animationDelay: '0.5s' }}>
+            <div className={cn("h-2 w-2 rounded-full animate-sparkle", 
+              color === 'gold' ? 'bg-royal-gold/60' : 
+              color === 'crimson' ? 'bg-royal-crimson/60' : 
+              color === 'navy' ? 'bg-royal-navy/60' : 
+              color === 'purple' ? 'bg-royal-purple/60' : 'bg-white/40')}>
+            </div>
+          </div>
+        </>
+      )}
+    </div>
+  );
 };
 
 export default RoyalDivider;

@@ -163,6 +163,33 @@
   }
 }
 
+@keyframes float {
+  0% {
+    transform: translateY(0) translateX(0);
+    opacity: 0.7;
+  }
+  50% {
+    transform: translateY(-100px) translateX(15px);
+    opacity: 0.3;
+  }
+  100% {
+    transform: translateY(-200px) translateX(-10px);
+    opacity: 0;
+  }
+}
+
+@keyframes royal-pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.9;
+  }
+}
+
+/* Animation classes */
 .animate-quill-write {
   animation: quill-write 2s ease-in-out infinite;
 }
@@ -219,6 +246,22 @@
   animation: torch-light 1.5s ease-in-out infinite;
 }
 
+.animate-float {
+  animation: float 3s ease-in forwards;
+}
+
+.animate-royal-pulse {
+  animation: royal-pulse 2s ease-in-out infinite;
+}
+
+/* Floating particles */
+.floating-particle {
+  position: absolute;
+  border-radius: 50%;
+  z-index: 10;
+  will-change: transform, opacity;
+}
+
 /* Medieval decorative elements */
 .medieval-border {
   position: relative;
@@ -258,7 +301,7 @@
   right: 5px;
 }
 
-/* New decorative elements */
+/* Royal decorative elements */
 .royal-frame {
   position: relative;
   border: 1px solid rgba(212, 175, 55, 0.3);
@@ -303,4 +346,65 @@
 .royal-dot-pattern {
   background-image: radial-gradient(rgba(212, 175, 55, 0.2) 1px, transparent 1px);
   background-size: 10px 10px;
+}
+
+/* Enhanced royal card */
+.royal-card {
+  background-color: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.royal-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.3), transparent);
+}
+
+.royal-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.3), transparent);
+}
+
+/* Royal button effects */
+.royal-button {
+  position: relative;
+  overflow: hidden;
+}
+
+.royal-button::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.1) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: rotate(30deg);
+  transition: all 0.5s;
+  opacity: 0;
+  z-index: 0;
+}
+
+.royal-button:hover::before {
+  animation: royal-shine 1.5s ease-out;
+  opacity: 1;
 }
