@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Crown, Shield, Sceptre, GraduationCap } from 'lucide-react';
+import { Crown, Shield, Award, GraduationCap } from 'lucide-react';
 
 const Footer = () => {
   return (
