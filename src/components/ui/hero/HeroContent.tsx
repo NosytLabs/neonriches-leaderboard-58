@@ -1,115 +1,125 @@
 
-import React from 'react';
-import useFloatingCoins from '@/hooks/use-floating-coins';
-import { useCrownInteraction } from '@/hooks/use-crown-interaction';
-import { useQuickAscension } from '@/hooks/use-quick-ascension';
-import HeroStatusTag from './HeroStatusTag';
-import HeroCrown from './HeroCrown';
+import React, { useRef, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import HeroTitle from './HeroTitle';
 import HeroSubtitle from './HeroSubtitle';
-import HeroValueDisplay from './HeroValueDisplay';
 import HeroQuote from './HeroQuote';
+import HeroStatusTag from './HeroStatusTag';
 import HeroActionButtons from './HeroActionButtons';
-import HeroFeatureSection from './HeroFeatureSection';
 import HeroFooter from './HeroFooter';
-import { Crown, Gem, Shield, Coins, Trophy, DollarSign } from 'lucide-react';
+import HeroBackground from './HeroBackground';
+import useFloatingCoins from '@/hooks/use-floating-coins';
 
 interface HeroContentProps {
-  isVisible: boolean;
-  heroRef: React.RefObject<HTMLElement>;
+  title?: string;
+  subtitle?: string;
+  quote?: string;
+  statusTag?: string;
+  className?: string;
 }
 
-const HeroContent: React.FC<HeroContentProps> = ({ isVisible, heroRef }) => {
-  const { handleCrownClick } = useCrownInteraction();
-  const handleQuickAscension = useQuickAscension();
+const HeroContent: React.FC<HeroContentProps> = ({
+  title,
+  subtitle,
+  quote,
+  statusTag,
+  className = ''
+}) => {
+  const containerRef = useRef<HTMLDivElement>(null);
   
-  // Use the floating coins hook
-  useFloatingCoins({
-    containerRef: heroRef,
-    enabled: isVisible,
-    frequency: 0.8,
-    duration: 8000,
-    minDelay: 3000,
-    maxDelay: 5000
-  });
-
-  const features = [
-    {
-      color: 'royal-crimson',
-      icon: <Crown className="h-10 w-10 text-royal-crimson" />,
-      title: "Royal Status",
-      description: "Showcase your rank proudly in our digital hierarchy"
-    },
-    {
-      color: 'royal-gold',
-      icon: <Coins className="h-10 w-10 text-royal-gold" />,
-      title: "Wealth Display",
-      description: "Flaunt your financial triumph for all to envy"
-    },
-    {
-      color: 'royal-navy',
-      icon: <Shield className="h-10 w-10 text-royal-navy" />,
-      title: "Team Glory",
-      description: "Join a noble house and compete for collective prestige"
-    },
-    {
-      color: 'royal-purple',
-      icon: <Gem className="h-10 w-10 text-royal-purple" />,
-      title: "Profile Prestige",
-      description: "Unlock exclusive profile customization options"
-    },
-    {
-      color: 'royal-mahogany',
-      icon: <Trophy className="h-10 w-10 text-royal-mahogany" />,
-      title: "Spending Badges",
-      description: "Collect prestigious badges based on your expenditure"
-    },
-    {
-      color: 'royal-velvet',
-      icon: <DollarSign className="h-10 w-10 text-royal-velvet" />,
-      title: "Weekly Rewards",
-      description: "Compete in weekly tournaments for additional benefits"
+  // Setup floating coins effect
+  useEffect(() => {
+    if (containerRef.current) {
+      const triggerFloatingCoins = () => {
+        const containerEl = containerRef.current;
+        if (containerEl) {
+          useFloatingCoins({
+            containerRef: { current: containerEl as HTMLElement },
+            frequency: 0.2,
+            duration: 3000,
+            minDelay: 100,
+            maxDelay: 2000
+          });
+        }
+      };
+      
+      // Trigger once on mount
+      triggerFloatingCoins();
+      
+      // Set up interval to periodically create new coins
+      const interval = setInterval(triggerFloatingCoins, 5000);
+      
+      return () => clearInterval(interval);
     }
-  ];
-
+  }, []);
+  
   return (
-    <div className="container mx-auto px-4 relative z-10 pt-10 pb-20">
-      <div className="text-center mb-16 animate-parchment-unfurl">
-        <HeroStatusTag />
+    <div className={`relative z-10 pt-32 pb-20 ${className}`} ref={containerRef}>
+      {/* Background effects */}
+      <HeroBackground />
+      
+      {/* Main content with animations */}
+      <div className="container px-4 mx-auto text-center relative z-10">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="space-y-6"
+        >
+          {statusTag && (
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.2, duration: 0.5 }}
+            >
+              <HeroStatusTag>{statusTag}</HeroStatusTag>
+            </motion.div>
+          )}
+          
+          <motion.div 
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ delay: 0.4, duration: 0.6 }}
+          >
+            <HeroTitle>{title}</HeroTitle>
+          </motion.div>
+          
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.6, duration: 0.6 }}
+          >
+            <HeroSubtitle text={subtitle} />
+          </motion.div>
+          
+          {quote && (
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.8, duration: 0.6 }}
+            >
+              <HeroQuote text={quote} />
+            </motion.div>
+          )}
+          
+          <motion.div 
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1, duration: 0.6 }}
+          >
+            <HeroActionButtons />
+          </motion.div>
+        </motion.div>
         
-        <div className="my-6">
-          <HeroCrown onClick={handleCrownClick} />
-        </div>
-        
-        <HeroTitle />
-        <HeroSubtitle />
-        
-        <div className="flex justify-center space-x-12 mt-8">
-          <HeroValueDisplay 
-            label="Court Members" 
-            value="10,568" 
-            icon={<Shield size={18} className="text-royal-gold" />} 
-          />
-          <HeroValueDisplay 
-            label="Gold Spent" 
-            value="$1,245,789" 
-            icon={<Coins size={18} className="text-royal-gold" />} 
-          />
-          <HeroValueDisplay 
-            label="Active Nobles" 
-            value="1,287" 
-            icon={<Crown size={18} className="text-royal-gold" />} 
-          />
-        </div>
-        
-        <HeroQuote />
-        
-        <HeroActionButtons onAscend={handleQuickAscension} />
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.2, duration: 0.6 }}
+          className="mt-32"
+        >
+          <HeroFooter />
+        </motion.div>
       </div>
-      
-      <HeroFeatureSection features={features} />
-      
-      <HeroFooter />
     </div>
   );
 };

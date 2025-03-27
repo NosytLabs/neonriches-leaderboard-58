@@ -198,9 +198,15 @@ body {
   box-shadow: 0 0 5px rgba(205, 127, 50, 0.3);
 }
 
-/* Enhanced royal card styling */
+/* Enhanced royal card styling - fixed to use pure CSS instead of Tailwind @apply */
 .royal-card-enhanced {
-  @apply glass-morphism backdrop-blur-xl border border-white/15 p-6 relative overflow-hidden transition-all duration-300;
+  background-color: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 1.5rem;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), 0 0 15px rgba(212, 175, 55, 0.15);
 }
 
@@ -266,9 +272,12 @@ body {
   background-position: 0 0, 10px 10px;
 }
 
-/* Enhanced royal button style */
+/* Enhanced royal button style - fixed to use pure CSS instead of Tailwind @apply */
 .royal-button-enhanced {
-  @apply relative overflow-hidden z-10 transition-all duration-300;
+  position: relative;
+  overflow: hidden;
+  z-index: 10;
+  transition: all 0.3s;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35), 0 0 8px rgba(212, 175, 55, 0.25);
 }
 
@@ -394,14 +403,19 @@ body {
   letter-spacing: 0.5px;
 }
 
-/* New: Glass card effect with royal styling */
+/* New: Glass card effect with royal styling - fixed to use pure CSS instead of Tailwind @apply */
 .glass-card-royal {
-  @apply backdrop-blur-xl bg-white/5 border border-royal-gold/20 rounded-lg p-5 transition-all duration-300;
+  backdrop-filter: blur(16px);
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  border-radius: 0.5rem;
+  padding: 1.25rem;
+  transition: all 0.3s;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2), 0 0 8px rgba(212, 175, 55, 0.1);
 }
 
 .glass-card-royal:hover {
-  @apply border-royal-gold/30;
+  border-color: rgba(212, 175, 55, 0.3);
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3), 0 0 15px rgba(212, 175, 55, 0.2);
 }
 
