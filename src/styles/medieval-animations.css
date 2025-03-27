@@ -115,6 +115,54 @@
   }
 }
 
+@keyframes spin-slow {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes banner-wave {
+  0%, 100% {
+    transform: skewX(0deg);
+  }
+  25% {
+    transform: skewX(3deg);
+  }
+  75% {
+    transform: skewX(-3deg);
+  }
+}
+
+@keyframes bounce-subtle {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes medieval-float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes torch-light {
+  0%, 100% {
+    filter: drop-shadow(0 0 8px rgba(255, 153, 0, 0.8));
+  }
+  50% {
+    filter: drop-shadow(0 0 15px rgba(255, 153, 0, 1));
+  }
+}
+
 .animate-quill-write {
   animation: quill-write 2s ease-in-out infinite;
 }
@@ -149,6 +197,26 @@
 
 .animate-flame-flicker {
   animation: flame-flicker 2s ease-in-out infinite;
+}
+
+.animate-spin-slow {
+  animation: spin-slow 12s linear infinite;
+}
+
+.animate-banner-wave {
+  animation: banner-wave 3s ease-in-out infinite;
+}
+
+.animate-bounce-subtle {
+  animation: bounce-subtle 2s ease-in-out infinite;
+}
+
+.animate-medieval-float {
+  animation: medieval-float 3s ease-in-out infinite;
+}
+
+.animate-torch-light {
+  animation: torch-light 1.5s ease-in-out infinite;
 }
 
 /* Medieval decorative elements */
@@ -188,4 +256,51 @@
   border-right: 2px solid rgba(212, 175, 55, 0.5);
   bottom: 5px;
   right: 5px;
+}
+
+/* New decorative elements */
+.royal-frame {
+  position: relative;
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.1);
+}
+
+.royal-frame::before {
+  content: '';
+  position: absolute;
+  top: -3px;
+  left: -3px;
+  right: -3px;
+  bottom: -3px;
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  z-index: -1;
+}
+
+.royal-corner-ornament::before {
+  content: '';
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  border-top: 3px solid rgba(212, 175, 55, 0.6);
+  border-left: 3px solid rgba(212, 175, 55, 0.6);
+  top: 5px;
+  left: 5px;
+  filter: drop-shadow(0 0 2px rgba(212, 175, 55, 0.4));
+}
+
+.royal-corner-ornament::after {
+  content: '';
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  border-bottom: 3px solid rgba(212, 175, 55, 0.6);
+  border-right: 3px solid rgba(212, 175, 55, 0.6);
+  bottom: 5px;
+  right: 5px;
+  filter: drop-shadow(0 0 2px rgba(212, 175, 55, 0.4));
+}
+
+.royal-dot-pattern {
+  background-image: radial-gradient(rgba(212, 175, 55, 0.2) 1px, transparent 1px);
+  background-size: 10px 10px;
 }
