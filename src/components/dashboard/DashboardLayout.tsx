@@ -6,20 +6,24 @@ import ThroneBackground from '@/components/ui/throne-background';
 import RoyalDivider from '@/components/ui/royal-divider';
 import { Crown } from 'lucide-react';
 import { UserProfile } from '@/contexts/AuthContext';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
-  user: UserProfile;
+  user?: UserProfile;
 }
 
 const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, user }) => {
+  const authContext = useAuth();
+  const currentUser = user || authContext.user;
+
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground">
       <Header />
       
       <main className="flex-1 pt-24 pb-12 px-6 relative">
         <div className="absolute inset-0 -z-10">
-          <ThroneBackground variant="purple" density="high" animate={true} />
+          <ThroneBackground variant="royal" density="high" animate={true} />
         </div>
         
         <div className="max-w-7xl mx-auto">

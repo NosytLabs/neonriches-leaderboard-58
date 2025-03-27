@@ -6,7 +6,7 @@ import { Sparkles } from 'lucide-react';
 
 interface RoyalButtonProps extends Omit<ButtonProps, 'variant'> {
   variant?: 'royal' | 'royalGold' | 'royalCrimson' | 'royalNavy' | 'glass' | 'outline' | 'mahogany';
-  size?: 'sm' | 'md' | 'lg' | 'xl';
+  size?: 'sm' | 'default' | 'lg' | 'xl' | 'xxl';
   glow?: boolean;
   shimmer?: boolean;
   icon?: React.ReactNode;
@@ -16,7 +16,7 @@ interface RoyalButtonProps extends Omit<ButtonProps, 'variant'> {
 const RoyalButton: React.FC<RoyalButtonProps> = ({
   children,
   variant = 'royal',
-  size = 'md',
+  size = 'default',
   glow = false,
   shimmer = false,
   icon,
@@ -34,17 +34,6 @@ const RoyalButton: React.FC<RoyalButtonProps> = ({
       case 'mahogany': return 'outline';
       case 'glass': return 'glass';
       case 'outline': return 'outline';
-      default: return 'default';
-    }
-  };
-  
-  // Map custom sizes to shadcn sizes
-  const getSize = (): ButtonProps['size'] => {
-    switch (size) {
-      case 'sm': return 'sm';
-      case 'md': return 'default';
-      case 'lg': return 'lg';
-      case 'xl': return 'xl';
       default: return 'default';
     }
   };
@@ -92,7 +81,7 @@ const RoyalButton: React.FC<RoyalButtonProps> = ({
   return (
     <Button
       variant={getVariant()}
-      size={size === 'md' ? 'default' : size}
+      size={size}
       className={cn(
         'relative overflow-hidden',
         shimmer && 'royal-shine',

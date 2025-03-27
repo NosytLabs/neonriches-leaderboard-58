@@ -10,8 +10,11 @@ import PublicShamingFestival from '@/components/events/PublicShamingFestival';
 import EventStats from '@/components/events/EventStats';
 import EventBenefits from '@/components/events/EventBenefits';
 import ThroneBackground from '@/components/ui/throne-background';
+import { useAuth } from '@/contexts/AuthContext';
 
 const Events = () => {
+  const { user } = useAuth();
+
   return (
     <DashboardLayout>
       <div className="relative min-h-screen">

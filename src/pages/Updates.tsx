@@ -6,6 +6,7 @@ import { CalendarDays, Trophy, Megaphone, Scroll, Clock, Crown, Gift } from 'luc
 import RoyalButton from '@/components/ui/royal-button';
 import ThroneBackground from '@/components/ui/throne-background';
 import { Link } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
 
 const updates = [
   {
@@ -73,6 +74,8 @@ const getUpdateBadge = (type: string) => {
 };
 
 const Updates = () => {
+  const { user } = useAuth();
+
   return (
     <DashboardLayout>
       <div className="relative">

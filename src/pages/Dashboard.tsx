@@ -1,10 +1,12 @@
 
 import React, { useState, useEffect } from 'react';
 import DashboardLayout from '@/components/dashboard/DashboardLayout';
-import { DashboardMain } from '@/components/dashboard/DashboardMain';
+import DashboardMain from '@/components/dashboard/DashboardMain';
 import ThroneBackground from '@/components/ui/throne-background';
+import { useAuth } from '@/contexts/AuthContext';
 
 const Dashboard = () => {
+  const { user } = useAuth();
   // State for background appearance
   const [backgroundVariant, setBackgroundVariant] = useState<'default' | 'royal' | 'dark' | 'light'>('royal');
 
@@ -26,7 +28,7 @@ const Dashboard = () => {
     <DashboardLayout>
       <div className="relative min-h-[calc(100vh-4rem)]">
         <ThroneBackground variant={backgroundVariant} particles density="medium" />
-        <DashboardMain />
+        <DashboardMain user={user} updateProfile={useAuth().updateProfile} />
       </div>
     </DashboardLayout>
   );

@@ -3,7 +3,7 @@ import React, { useEffect, useRef } from 'react';
 import { cn } from '@/lib/utils';
 
 interface ThroneBackgroundProps {
-  variant?: 'default' | 'royal' | 'dark' | 'light';
+  variant?: 'default' | 'royal' | 'dark' | 'light' | 'purple';
   density?: 'low' | 'medium' | 'high';
   animate?: boolean;
   particles?: boolean;
@@ -58,6 +58,9 @@ const ThroneBackground: React.FC<ThroneBackgroundProps> = ({
       particle.style.backgroundColor = `rgba(255, 255, 255, ${Math.random() * 0.2 + 0.1})`;
     } else if (variant === 'light') {
       particle.style.backgroundColor = `rgba(0, 0, 0, ${Math.random() * 0.2 + 0.1})`;
+    } else if (variant === 'purple') {
+      const opacity = Math.random() * 0.2 + 0.1;
+      particle.style.backgroundColor = `rgba(128, 0, 128, ${opacity})`; // purple
     } else { // default
       const opacity = Math.random() * 0.2 + 0.1;
       if (Math.random() > 0.6) {
@@ -87,6 +90,8 @@ const ThroneBackground: React.FC<ThroneBackgroundProps> = ({
         return 'bg-gradient-to-b from-black/20 via-black/10 to-transparent';
       case 'light':
         return 'bg-gradient-to-b from-white/10 via-white/5 to-transparent';
+      case 'purple':
+        return 'bg-gradient-to-b from-royal-purple/10 via-royal-velvet/5 to-transparent';
       default:
         return 'throne-bg-enhanced';
     }
