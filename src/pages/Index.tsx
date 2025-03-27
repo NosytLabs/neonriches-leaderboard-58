@@ -1,4 +1,5 @@
-import React from 'react';
+
+import React, { useEffect } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Hero from '@/components/Hero';
@@ -10,9 +11,17 @@ import CombinedLeaderboard from '@/components/leaderboard/CombinedLeaderboard';
 import RoyalDivider from '@/components/ui/royal-divider';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
-import { Crown, Trophy, Users, Sparkles } from 'lucide-react';
+import { Crown, Trophy, Shield, Sparkles } from 'lucide-react';
+import useNotificationSounds from '@/hooks/use-notification-sounds';
 
 const Index = () => {
+  const { preloadAllSounds } = useNotificationSounds();
+  
+  // Preload all sound effects when the homepage loads
+  useEffect(() => {
+    preloadAllSounds();
+  }, []);
+  
   return (
     <div className="min-h-screen bg-background text-foreground">
       <Header />
@@ -49,7 +58,7 @@ const Index = () => {
               <Trophy className="h-12 w-12 text-royal-gold mx-auto mb-4" />
               <h3 className="text-xl font-bold mb-2">Weekly Events</h3>
               <p className="text-white/70 mb-4">
-                Participate in weekly events like Poke Party where you can pay to drop others down in rank.
+                Participate in weekly events like Public Shaming Festival where you can pay to shame other nobles.
               </p>
               <Link to="/events">
                 <Button className="bg-white/10 hover:bg-white/20 text-white">
@@ -59,14 +68,14 @@ const Index = () => {
             </div>
             
             <div className="glass-morphism border-white/10 rounded-lg p-6 text-center">
-              <Users className="h-12 w-12 text-royal-gold mx-auto mb-4" />
-              <h3 className="text-xl font-bold mb-2">Team Competition</h3>
+              <Shield className="h-12 w-12 text-royal-gold mx-auto mb-4" />
+              <h3 className="text-xl font-bold mb-2">Royal Court Teams</h3>
               <p className="text-white/70 mb-4">
-                Join one of three RGB teams and compete for team glory and additional bonuses.
+                Join one of three noble houses and compete for team glory and additional royal benefits.
               </p>
               <Link to="/dashboard">
                 <Button className="bg-white/10 hover:bg-white/20 text-white">
-                  Join a Team
+                  Join a House
                 </Button>
               </Link>
             </div>

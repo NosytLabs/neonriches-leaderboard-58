@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
@@ -21,10 +20,11 @@ import { mockLeaderboardData } from '@/components/dashboard/leaderboard/Leaderbo
 import { LeaderboardUser } from '@/components/dashboard/leaderboard/LeaderboardUtils';
 import RoyalDivider from '@/components/ui/royal-divider';
 import { useToast } from '@/hooks/use-toast';
-import ShameModal from '@/components/events/components/ShameModal';
 import { Link } from 'react-router-dom';
 import { getShameActionPrice, getShameActionTitle } from '@/components/events/utils/shameUtils';
 import { ShameAction } from '@/components/events/hooks/useShameEffect';
+import useNotificationSounds from '@/hooks/use-notification-sounds';
+import ShameModal from '../events/components/ShameModal';
 
 const CombinedLeaderboard: React.FC<{
   className?: string;
@@ -40,6 +40,7 @@ const CombinedLeaderboard: React.FC<{
   const [shameAction, setShameAction] = useState<ShameAction>('tomatoes');
   const [showShameModal, setShowShameModal] = useState(false);
   const { toast } = useToast();
+  const { playSound } = useNotificationSounds();
 
   // Handle search and filtering
   const handleSearch = (query: string) => {
@@ -99,6 +100,9 @@ const CombinedLeaderboard: React.FC<{
       description: "You are now viewing another noble's profile. How delightfully scandalous!",
       duration: 3000,
     });
+
+    // Play notification sound
+    playSound('notification');
   };
 
   const handleShameUser = (user: LeaderboardUser, action: ShameAction) => {
@@ -107,9 +111,7 @@ const CombinedLeaderboard: React.FC<{
     setShowShameModal(true);
     
     // Play subtle medieval sound effect
-    const audio = new Audio('/assets/sounds/scroll-unfurl.mp3');
-    audio.volume = 0.3;
-    audio.play().catch(e => console.log('Audio playback error:', e));
+    playSound('notification');
   };
 
   const confirmShame = () => {
@@ -129,9 +131,7 @@ const CombinedLeaderboard: React.FC<{
       setSelectedUser(null);
       
       // Play shame sound effect
-      const audio = new Audio('/assets/sounds/crowd-laugh.mp3');
-      audio.volume = 0.4;
-      audio.play().catch(e => console.log('Audio playback error:', e));
+      playSound('shame');
     }, 500);
   };
 
@@ -346,7 +346,11 @@ const CombinedLeaderboard: React.FC<{
       {/* Shame Modal */}
       {showShameModal && selectedUser && (
         <ShameModal
-          selectedUser={selectedUser}
+          targetUser={{
+            id: parseInt(selectedUser.id),
+            username: selectedUser.username,
+            profileImage: selectedUser.profileImage || '/placeholder.svg'
+          }}
           shameAction={shameAction}
           onClose={() => setShowShameModal(false)}
           onConfirm={confirmShame}
