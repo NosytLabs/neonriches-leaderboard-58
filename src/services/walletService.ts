@@ -15,6 +15,39 @@ export interface Transaction {
   metadata?: any;
 }
 
+// Helper function to generate transaction ID
+const generateTransactionId = (): string => {
+  return `txn_${Math.random().toString(36).substring(2, 9)}`;
+};
+
+// Helper function to create a transaction record
+const createTransactionRecord = (
+  userId: string, 
+  amount: number, 
+  type: TransactionType, 
+  description: string,
+  metadata?: any
+): Transaction => {
+  const now = new Date();
+  return {
+    id: generateTransactionId(),
+    userId,
+    amount,
+    type,
+    date: now,
+    timestamp: now,
+    description,
+    metadata
+  };
+};
+
+// Helper function to save transaction to storage
+const saveTransaction = (transaction: Transaction): void => {
+  const transactionHistory = JSON.parse(localStorage.getItem('p2w_transactions') || '[]');
+  transactionHistory.push(transaction);
+  localStorage.setItem('p2w_transactions', JSON.stringify(transactionHistory));
+};
+
 export const spendFromWallet = async (
   user: UserProfile,
   amount: number,
@@ -33,25 +66,17 @@ export const spendFromWallet = async (
   }
   
   try {
-    // In a real app, this would be an API call
-    // For this demo, we'll simulate a successful transaction
-    
     // Create transaction record
-    const transaction: Transaction = {
-      id: `txn_${Math.random().toString(36).substring(2, 9)}`,
-      userId: user.id,
+    const transaction = createTransactionRecord(
+      user.id,
       amount,
       type,
-      date: new Date(),
-      timestamp: new Date(), // Added timestamp field
       description,
       metadata
-    };
+    );
     
-    // Store transaction history
-    const transactionHistory = JSON.parse(localStorage.getItem('p2w_transactions') || '[]');
-    transactionHistory.push(transaction);
-    localStorage.setItem('p2w_transactions', JSON.stringify(transactionHistory));
+    // Save transaction
+    saveTransaction(transaction);
     
     // Update user's wallet balance locally
     const updatedUser = {
@@ -87,23 +112,16 @@ export const depositToWallet = async (
   updateUserFn: (data: Partial<UserProfile>) => Promise<void>
 ): Promise<boolean> => {
   try {
-    // In a real app, this would be an API call
-    
     // Create transaction record
-    const transaction: Transaction = {
-      id: `txn_${Math.random().toString(36).substring(2, 9)}`,
-      userId: user.id,
+    const transaction = createTransactionRecord(
+      user.id,
       amount,
-      type: 'deposit',
-      date: new Date(),
-      timestamp: new Date(), // Added timestamp field
+      'deposit',
       description
-    };
+    );
     
-    // Store transaction history
-    const transactionHistory = JSON.parse(localStorage.getItem('p2w_transactions') || '[]');
-    transactionHistory.push(transaction);
-    localStorage.setItem('p2w_transactions', JSON.stringify(transactionHistory));
+    // Save transaction
+    saveTransaction(transaction);
     
     // Update user's wallet balance
     await updateUserFn({
@@ -129,8 +147,6 @@ export const depositToWallet = async (
 
 export const getUserTransactions = async (userId: string, limit: number = 10): Promise<Transaction[]> => {
   try {
-    // In a real app, this would be an API call
-    // For this demo, we'll return transactions from localStorage
     const transactionHistory = JSON.parse(localStorage.getItem('p2w_transactions') || '[]');
     const userTransactions = transactionHistory
       .filter((txn: Transaction) => txn.userId === userId)

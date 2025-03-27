@@ -1,9 +1,6 @@
 
 import React, { useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { AuthProvider } from '@/contexts/AuthContext';
-import { ThemeProvider } from '@/contexts/ThemeContext';
-import { Toaster } from '@/components/ui/toaster';
+import { Routes, Route } from 'react-router-dom';
 import useNotificationSounds from '@/hooks/use-notification-sounds';
 
 // Pages
@@ -13,10 +10,10 @@ import ProfilePage from '@/pages/ProfilePage';
 import EventsPage from '@/pages/EventsPage';
 import LeaderboardPage from '@/pages/LeaderboardPage';
 import RoyalPrestige from '@/pages/RoyalPrestige';
+import Auth from '@/pages/Auth';
 
 // Import CSS files
 import './index.css';
-import './styles/tailwind-utilities.css';
 import './styles/medieval-animations.css';
 import './styles/cosmetics.css';
 
@@ -49,21 +46,15 @@ function App() {
   }, [preloadSounds]);
   
   return (
-    <ThemeProvider>
-      <AuthProvider>
-        <Router>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/profile" element={<ProfilePage />} />
-            <Route path="/events" element={<EventsPage />} />
-            <Route path="/leaderboard" element={<LeaderboardPage />} />
-            <Route path="/royal-prestige" element={<RoyalPrestige />} />
-          </Routes>
-          <Toaster />
-        </Router>
-      </AuthProvider>
-    </ThemeProvider>
+    <Routes>
+      <Route path="/" element={<Index />} />
+      <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="/profile" element={<ProfilePage />} />
+      <Route path="/events" element={<EventsPage />} />
+      <Route path="/leaderboard" element={<LeaderboardPage />} />
+      <Route path="/royal-prestige" element={<RoyalPrestige />} />
+      <Route path="/auth" element={<Auth />} />
+    </Routes>
   );
 }
 

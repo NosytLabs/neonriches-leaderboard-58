@@ -1,16 +1,15 @@
-
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
-import { TeamColor, teamData } from '@/types/teams';
+import { TeamColor } from '@/types/teams';
 import { Users, Clock } from 'lucide-react';
 import { switchUserTeam } from '@/services/teamService';
+import { teamData } from '@/utils/teamUtils';
 
 interface TeamSwitchModalProps {
   trigger?: React.ReactNode;
   onSuccess?: () => void;
-  // Add support for controlled modal
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
   user?: any;
@@ -31,10 +30,8 @@ const TeamSwitchModal: React.FC<TeamSwitchModalProps> = ({
   const [error, setError] = useState<string | null>(null);
   const [internalOpen, setInternalOpen] = useState(false);
   
-  // Use either the provided user or the one from auth context
   const user = providedUser || authUser;
   
-  // Use controlled or uncontrolled open state
   const open = controlledOpen !== undefined ? controlledOpen : internalOpen;
   const setOpen = onOpenChange || setInternalOpen;
   
@@ -54,14 +51,12 @@ const TeamSwitchModal: React.FC<TeamSwitchModalProps> = ({
     
     try {
       if (onTeamChange) {
-        // Use the provided onTeamChange callback
         await onTeamChange(selectedTeam);
         if (onSuccess) {
           onSuccess();
         }
         setOpen(false);
       } else {
-        // Use the default implementation
         const result = await switchUserTeam(user, selectedTeam, updateProfile);
         
         if (result.success) {
@@ -80,7 +75,6 @@ const TeamSwitchModal: React.FC<TeamSwitchModalProps> = ({
     }
   };
   
-  // Get the time since last team switch
   const getLastSwitchTime = () => {
     const lastTeamSwitchTime = localStorage.getItem('lastTeamSwitch');
     if (lastTeamSwitchTime) {
