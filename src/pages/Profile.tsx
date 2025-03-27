@@ -99,7 +99,7 @@ const Profile = () => {
                     title="Your Profile" 
                     editMode={editMode} 
                     onEditToggle={toggleEditMode}
-                    onSave={() => Promise.resolve()} // Return a Promise
+                    onSave={() => Promise.resolve()} // Fix: Return a Promise here
                   />
                   
                   {editMode ? (
@@ -107,7 +107,10 @@ const Profile = () => {
                       user={user}
                       profileData={profileData}
                       onSave={handleSaveProfile}
-                      onCancel={() => setEditMode(false)}
+                      onCancel={() => {
+                        setEditMode(false);
+                        return Promise.resolve(); // Fix: Return a Promise here
+                      }}
                     />
                   ) : (
                     <ProfileViewer 
