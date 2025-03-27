@@ -13,7 +13,7 @@ import RoyalDivider from '@/components/ui/royal-divider';
 import RoyalParchment from '@/components/ui/royal-parchment';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
-import { Crown, Trophy, Shield, Sparkles, ArrowRight, Gem, Coins, DollarSign } from 'lucide-react';
+import { Crown, Trophy, Shield, Sparkles, ArrowRight, Gem, Coins, DollarSign, Scroll } from 'lucide-react';
 import useNotificationSounds from '@/hooks/use-notification-sounds';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
@@ -105,7 +105,7 @@ const Index = () => {
                 <div className="mb-6 p-4 border border-royal-gold/20 rounded-lg bg-royal-gold/5 italic text-sm">
                   <div className="flex items-start">
                     <div className="mr-2 mt-1">
-                      <ScrollText size={16} className="text-royal-gold" />
+                      <Scroll size={16} className="text-royal-gold" />
                     </div>
                     <p>
                       "I, Lord Moneybags, declare my digital dominance through the most noble virtue of all: excessive spending. 

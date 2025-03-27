@@ -1,6 +1,5 @@
-
 import React from 'react';
-import { Crown, ScrollText, Feather, TreasureMap } from 'lucide-react';
+import { Crown, Scroll, Feather, Map } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface RoyalDividerProps {
@@ -57,7 +56,7 @@ const RoyalDivider: React.FC<RoyalDividerProps> = ({
           <div className={cn('flex items-center w-full my-6', className)}>
             <div className={cn('flex-grow border-t', getLineColor())}></div>
             <div className="flex items-center mx-4">
-              <ScrollText className={cn("h-4 w-4 mr-2", colorMap[color])} />
+              <Scroll className={cn("h-4 w-4 mr-2", colorMap[color])} />
               {label && (
                 <span className={cn("text-xs font-royal tracking-widest", colorMap[color])}>
                   {label}
