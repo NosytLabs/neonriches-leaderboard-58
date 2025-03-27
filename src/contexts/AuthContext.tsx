@@ -1,5 +1,6 @@
+
 import React, { createContext, useState, useEffect, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { UserSubscription } from '@/types/auth';
 
 export interface UserProfile {
@@ -77,17 +78,31 @@ const mockUser: UserProfile = {
 
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<UserProfile | null>(() => {
-    const storedUser = localStorage.getItem('p2w_user');
-    return storedUser ? JSON.parse(storedUser) : mockUser;
+    try {
+      const storedUser = localStorage.getItem('p2w_user');
+      return storedUser ? JSON.parse(storedUser) : mockUser;
+    } catch (error) {
+      console.error('Failed to load user from localStorage:', error);
+      return mockUser;
+    }
   });
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     if (user) {
-      localStorage.setItem('p2w_user', JSON.stringify(user));
+      try {
+        localStorage.setItem('p2w_user', JSON.stringify(user));
+      } catch (error) {
+        console.error('Failed to save user to localStorage:', error);
+      }
     } else {
-      localStorage.removeItem('p2w_user');
+      try {
+        localStorage.removeItem('p2w_user');
+      } catch (error) {
+        console.error('Failed to remove user from localStorage:', error);
+      }
     }
   }, [user]);
 
@@ -95,15 +110,20 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setLoading(true);
     return new Promise<void>((resolve) => {
       setTimeout(() => {
-        const mockAuth = email === 'user@example.com' && password === 'password';
-        if (mockAuth) {
-          setUser(mockUser);
-          navigate('/dashboard');
-        } else {
-          console.error('Invalid credentials');
+        try {
+          const mockAuth = email === 'user@example.com' && password === 'password';
+          if (mockAuth) {
+            setUser(mockUser);
+            navigate('/dashboard');
+          } else {
+            console.error('Invalid credentials');
+          }
+        } catch (error) {
+          console.error('Error during sign in:', error);
+        } finally {
+          setLoading(false);
+          resolve();
         }
-        setLoading(false);
-        resolve();
       }, 1000);
     });
   };
@@ -112,56 +132,74 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setLoading(true);
     return new Promise<void>((resolve) => {
       setTimeout(() => {
-        const newUser: UserProfile = {
-          id: Math.random().toString(36).substring(2, 9),
-          username,
-          email,
-          profileImage: 'https://i.pravatar.cc/150?img=11',
-          amountSpent: 0,
-          rank: 100,
-          team: null,
-          tier: 'free',
-          walletBalance: 0,
-          acceptedTerms: false,
-          subscription: undefined
-        };
-        setUser(newUser);
-        navigate('/dashboard');
-        setLoading(false);
-        resolve();
+        try {
+          const newUser: UserProfile = {
+            id: Math.random().toString(36).substring(2, 9),
+            username,
+            email,
+            profileImage: 'https://i.pravatar.cc/150?img=11',
+            amountSpent: 0,
+            rank: 100,
+            team: null,
+            tier: 'free',
+            walletBalance: 0,
+            acceptedTerms: false,
+            subscription: undefined
+          };
+          setUser(newUser);
+          navigate('/dashboard');
+        } catch (error) {
+          console.error('Error during sign up:', error);
+        } finally {
+          setLoading(false);
+          resolve();
+        }
       }, 1500);
     });
   };
 
   const signOut = () => {
-    setUser(null);
-    localStorage.removeItem('p2w_user');
-    navigate('/auth');
+    try {
+      setUser(null);
+      localStorage.removeItem('p2w_user');
+      navigate('/auth');
+    } catch (error) {
+      console.error('Error during sign out:', error);
+    }
   };
 
   const updateProfile = async (data: Partial<UserProfile>) => {
     return new Promise<void>((resolve) => {
       setTimeout(() => {
-        if (user) {
-          const updatedUser = { ...user, ...data };
-          setUser(updatedUser);
-          localStorage.setItem('p2w_user', JSON.stringify(updatedUser));
+        try {
+          if (user) {
+            const updatedUser = { ...user, ...data };
+            setUser(updatedUser);
+            localStorage.setItem('p2w_user', JSON.stringify(updatedUser));
+          }
+        } catch (error) {
+          console.error('Error updating profile:', error);
+        } finally {
+          resolve();
         }
-        resolve();
       }, 500);
     });
   };
 
   useEffect(() => {
     if (user && !user.acceptedTerms) {
-      const acceptedTerms = localStorage.getItem('acceptedTerms') === 'true';
-      const termsAcceptedDate = localStorage.getItem('termsAcceptedDate');
-      
-      if (acceptedTerms && termsAcceptedDate) {
-        updateProfile({ 
-          acceptedTerms: true,
-          termsAcceptedDate
-        });
+      try {
+        const acceptedTerms = localStorage.getItem('acceptedTerms') === 'true';
+        const termsAcceptedDate = localStorage.getItem('termsAcceptedDate');
+        
+        if (acceptedTerms && termsAcceptedDate) {
+          updateProfile({ 
+            acceptedTerms: true,
+            termsAcceptedDate
+          });
+        }
+      } catch (error) {
+        console.error('Error checking terms acceptance:', error);
       }
     }
   }, [user]);

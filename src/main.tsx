@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { createRoot } from 'react-dom/client';
+import { BrowserRouter as Router } from 'react-router-dom';
 import App from './App.tsx';
 import './index.css';
 import { initPerformanceMonitoring } from './utils/performanceMonitoring';
@@ -25,12 +26,12 @@ class ErrorBoundary extends React.Component<{ children: React.ReactNode }, { has
     if (this.state.hasError) {
       return (
         <div className="h-screen w-screen flex items-center justify-center bg-background">
-          <div className="glass-morphism p-8 rounded-xl max-w-md">
+          <div className="glass-morphism-dark p-8 rounded-xl max-w-md">
             <h1 className="text-2xl font-bold mb-4 text-white">Something went wrong</h1>
             <p className="text-white/70 mb-6">The application encountered an error. Please refresh the page.</p>
             <button 
               onClick={() => window.location.reload()} 
-              className="bg-gradient-to-r from-royal-purple to-royal-blue text-white px-4 py-2 rounded-md"
+              className="bg-gradient-to-r from-royal-purple to-royal-gold text-white px-4 py-2 rounded-md"
             >
               Refresh
             </button>
@@ -63,9 +64,11 @@ if (!rootElement) {
     root.render(
       <React.StrictMode>
         <ErrorBoundary>
-          <AuthProvider>
-            <App />
-          </AuthProvider>
+          <Router>
+            <AuthProvider>
+              <App />
+            </AuthProvider>
+          </Router>
         </ErrorBoundary>
       </React.StrictMode>
     );

@@ -1,6 +1,6 @@
 
 import React, { Suspense, lazy } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import './App.css';
 import { Toaster } from '@/components/ui/toaster';
 
@@ -27,7 +27,7 @@ const TermsOfService = lazy(() => import('./pages/TermsOfService'));
 
 function App() {
   return (
-    <Router>
+    <>
       <Suspense fallback={<LoadingFallback />}>
         <Routes>
           <Route path="/" element={<Index />} />
@@ -42,7 +42,7 @@ function App() {
         </Routes>
       </Suspense>
       <Toaster />
-    </Router>
+    </>
   );
 }
 
