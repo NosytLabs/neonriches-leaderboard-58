@@ -4,13 +4,14 @@ import { useNavigate } from 'react-router-dom';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Scroll, ShieldAlert, Scale, Crown, Coins, HandCoins } from 'lucide-react';
+import { Scroll, ShieldAlert, Scale, Crown, Coins, HandCoins, GemIcon } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { useToast } from '@/hooks/use-toast';
 import RoyalDivider from '@/components/ui/royal-divider';
 import ThroneBackground from '@/components/ui/throne-background';
 import useNotificationSounds from '@/hooks/use-notification-sounds';
+import RoyalParchment from '@/components/ui/royal-parchment';
 
 const TermsOfService = () => {
   const navigate = useNavigate();
@@ -45,7 +46,7 @@ const TermsOfService = () => {
           <div className="absolute bottom-1/4 right-1/4 w-96 h-96 rounded-full bg-royal-gold/10 filter blur-[120px]"></div>
           <div className="absolute top-2/3 left-2/3 w-72 h-72 rounded-full bg-royal-navy/10 filter blur-[80px]"></div>
         </div>
-        <ThroneBackground variant="royal" density="medium" animate={true} particles={false} />
+        <ThroneBackground variant="royal" density="medium" animate={true} particles={true} />
       </div>
       
       <Header />
@@ -63,7 +64,7 @@ const TermsOfService = () => {
             <p className="text-white/70">Official proclamation of rights, responsibilities, and royal satire</p>
           </div>
           
-          <Card className="glass-morphism border-royal-gold/20 shadow-xl mb-8 royal-shine animate-fade-in" style={{animationDelay: "0.2s"}}>
+          <RoyalParchment className="mb-8 animate-fade-in">
             <CardHeader>
               <CardTitle className="flex items-center text-xl font-royal royal-gradient">
                 <Crown className="mr-2 h-5 w-5 text-royal-gold" />
@@ -231,7 +232,8 @@ const TermsOfService = () => {
               </div>
               
               <Button 
-                className="w-full mt-4 bg-gradient-to-r from-royal-crimson via-royal-gold to-royal-navy hover:opacity-90 text-white royal-button animate-pulse-slow"
+                variant="royal"
+                className="w-full mt-4 royal-button animate-pulse-slow"
                 disabled={!acceptedTerms || !acceptedSatire || !acceptedNoRefunds}
                 onClick={handleAccept}
               >
@@ -239,7 +241,7 @@ const TermsOfService = () => {
                 I Solemnly Swear Allegiance to These Terms
               </Button>
             </CardFooter>
-          </Card>
+          </RoyalParchment>
         </div>
       </main>
       

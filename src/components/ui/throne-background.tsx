@@ -2,7 +2,7 @@
 import React, { useEffect, useRef } from 'react';
 
 interface ThroneBackgroundProps {
-  variant?: 'default' | 'blue' | 'gold' | 'purple' | 'royal';
+  variant?: 'default' | 'blue' | 'gold' | 'crimson' | 'royal';
   density?: 'low' | 'medium' | 'high';
   animate?: boolean;
   particles?: boolean;
@@ -49,9 +49,9 @@ const ThroneBackground: React.FC<ThroneBackgroundProps> = ({
         particleColors = ['#D4AF37', '#FFD700', '#FFC125', '#FFBA00'];
         bgGradient = { start: '#20190D', mid: '#24201A', end: '#1F1A0F' };
         break;
-      case 'purple':
-        particleColors = ['#8E44AD', '#5B2C6F', '#4A235A', '#6C3483'];
-        bgGradient = { start: '#140D20', mid: '#191124', end: '#170F1F' };
+      case 'crimson':
+        particleColors = ['#8B0000', '#A52A2A', '#B22222', '#C41E3A'];
+        bgGradient = { start: '#200D0D', mid: '#241111', end: '#1F0F0F' };
         break;
       case 'royal':
         particleColors = ['#8B0000', '#D4AF37', '#000080', '#4B0082'];
@@ -98,17 +98,17 @@ const ThroneBackground: React.FC<ThroneBackgroundProps> = ({
         canvas.width * 0.2, canvas.height * 0.3, canvas.width * 0.5
       );
       
-      if (variant === 'royal') {
-        radialGradient1.addColorStop(0, 'rgba(139, 0, 0, 0.08)');
+      if (variant === 'royal' || variant === 'crimson') {
+        radialGradient1.addColorStop(0, 'rgba(139, 0, 0, 0.1)');
         radialGradient1.addColorStop(1, 'rgba(139, 0, 0, 0)');
       } else if (variant === 'gold') {
-        radialGradient1.addColorStop(0, 'rgba(212, 175, 55, 0.08)');
+        radialGradient1.addColorStop(0, 'rgba(212, 175, 55, 0.1)');
         radialGradient1.addColorStop(1, 'rgba(212, 175, 55, 0)');
       } else if (variant === 'blue') {
-        radialGradient1.addColorStop(0, 'rgba(0, 0, 128, 0.08)');
+        radialGradient1.addColorStop(0, 'rgba(0, 0, 128, 0.1)');
         radialGradient1.addColorStop(1, 'rgba(0, 0, 128, 0)');
       } else {
-        radialGradient1.addColorStop(0, 'rgba(75, 0, 130, 0.08)');
+        radialGradient1.addColorStop(0, 'rgba(75, 0, 130, 0.1)');
         radialGradient1.addColorStop(1, 'rgba(75, 0, 130, 0)');
       }
       
@@ -121,17 +121,17 @@ const ThroneBackground: React.FC<ThroneBackgroundProps> = ({
         canvas.width * 0.8, canvas.height * 0.5, canvas.width * 0.6
       );
       
-      if (variant === 'royal') {
-        radialGradient2.addColorStop(0, 'rgba(212, 175, 55, 0.08)');
+      if (variant === 'royal' || variant === 'gold') {
+        radialGradient2.addColorStop(0, 'rgba(212, 175, 55, 0.12)');
         radialGradient2.addColorStop(1, 'rgba(212, 175, 55, 0)');
-      } else if (variant === 'gold') {
-        radialGradient2.addColorStop(0, 'rgba(255, 215, 0, 0.08)');
-        radialGradient2.addColorStop(1, 'rgba(255, 215, 0, 0)');
+      } else if (variant === 'crimson') {
+        radialGradient2.addColorStop(0, 'rgba(165, 42, 42, 0.1)');
+        radialGradient2.addColorStop(1, 'rgba(165, 42, 42, 0)');
       } else if (variant === 'blue') {
-        radialGradient2.addColorStop(0, 'rgba(52, 152, 219, 0.08)');
+        radialGradient2.addColorStop(0, 'rgba(52, 152, 219, 0.1)');
         radialGradient2.addColorStop(1, 'rgba(52, 152, 219, 0)');
       } else {
-        radialGradient2.addColorStop(0, 'rgba(142, 68, 173, 0.08)');
+        radialGradient2.addColorStop(0, 'rgba(142, 68, 173, 0.1)');
         radialGradient2.addColorStop(1, 'rgba(142, 68, 173, 0)');
       }
       
@@ -144,17 +144,17 @@ const ThroneBackground: React.FC<ThroneBackgroundProps> = ({
         canvas.width * 0.5, canvas.height * 0.8, canvas.width * 0.6
       );
       
-      if (variant === 'royal') {
-        radialGradient3.addColorStop(0, 'rgba(0, 0, 128, 0.08)');
+      if (variant === 'royal' || variant === 'blue') {
+        radialGradient3.addColorStop(0, 'rgba(0, 0, 128, 0.1)');
         radialGradient3.addColorStop(1, 'rgba(0, 0, 128, 0)');
       } else if (variant === 'gold') {
-        radialGradient3.addColorStop(0, 'rgba(184, 134, 11, 0.08)');
+        radialGradient3.addColorStop(0, 'rgba(184, 134, 11, 0.1)');
         radialGradient3.addColorStop(1, 'rgba(184, 134, 11, 0)');
-      } else if (variant === 'blue') {
-        radialGradient3.addColorStop(0, 'rgba(8, 76, 97, 0.08)');
-        radialGradient3.addColorStop(1, 'rgba(8, 76, 97, 0)');
+      } else if (variant === 'crimson') {
+        radialGradient3.addColorStop(0, 'rgba(178, 34, 34, 0.1)');
+        radialGradient3.addColorStop(1, 'rgba(178, 34, 34, 0)');
       } else {
-        radialGradient3.addColorStop(0, 'rgba(74, 35, 90, 0.08)');
+        radialGradient3.addColorStop(0, 'rgba(74, 35, 90, 0.1)');
         radialGradient3.addColorStop(1, 'rgba(74, 35, 90, 0)');
       }
       

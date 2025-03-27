@@ -27,6 +27,7 @@ export const gradientClasses = {
   gold: 'bg-gradient-to-r from-royal-gold/80 via-royal-gold to-royal-gold/80',
   crimson: 'bg-gradient-to-r from-royal-crimson/80 via-royal-crimson to-royal-crimson/80',
   navy: 'bg-gradient-to-r from-royal-navy/80 via-royal-navy to-royal-navy/80',
+  velvet: 'bg-gradient-to-r from-royal-velvet/80 via-royal-purple to-royal-velvet/80',
 };
 
 // Helper to get CSS gradient
@@ -40,6 +41,8 @@ export const getCSSGradient = (type: keyof typeof gradientClasses): string => {
       return 'linear-gradient(to right, rgba(139, 0, 0, 0.8), #8B0000, rgba(139, 0, 0, 0.8))';
     case 'navy':
       return 'linear-gradient(to right, rgba(0, 0, 128, 0.8), #000080, rgba(0, 0, 128, 0.8))';
+    case 'velvet':
+      return 'linear-gradient(to right, rgba(93, 0, 51, 0.8), #4B0082, rgba(93, 0, 51, 0.8))';
     default:
       return 'linear-gradient(to right, #8B0000, #D4AF37, #000080)';
   }
@@ -85,6 +88,16 @@ export const getTeamBorderColorClass = (team: string | null | undefined) => {
   }
 };
 
+// Get team gradient class
+export const getTeamGradientClass = (team: string | null | undefined) => {
+  switch (team) {
+    case 'red': return gradientClasses.crimson;
+    case 'green': return gradientClasses.gold;
+    case 'blue': return gradientClasses.navy;
+    default: return '';
+  }
+};
+
 // Get rank color based on position
 export const getRankColor = (rank: number) => {
   if (rank === 1) return ROYAL_COLORS.gold;
@@ -103,4 +116,49 @@ export const getRankTextColorClass = (rank: number) => {
   if (rank <= 10) return 'text-royal-purple';
   if (rank <= 50) return 'text-royal-navy';
   return 'text-gray-500';
+};
+
+// Get rank badge class based on position
+export const getRankBadgeClass = (rank: number) => {
+  if (rank === 1) return 'bg-royal-gold/20 text-royal-gold border-royal-gold/50';
+  if (rank === 2) return 'bg-gray-300/20 text-gray-300 border-gray-300/50';
+  if (rank === 3) return 'bg-amber-700/20 text-amber-700 border-amber-700/50';
+  if (rank <= 10) return 'bg-royal-purple/20 text-royal-purple border-royal-purple/50';
+  if (rank <= 50) return 'bg-royal-navy/20 text-royal-navy border-royal-navy/50';
+  return 'bg-gray-500/20 text-gray-500 border-gray-500/50';
+};
+
+// Spending tier utilities
+export const getSpendingTier = (amountSpent: number) => {
+  if (amountSpent >= 25000) return 'whale';
+  if (amountSpent >= 10000) return 'shark';
+  if (amountSpent >= 5000) return 'dolphin';
+  if (amountSpent >= 1000) return 'fish';
+  if (amountSpent >= 250) return 'octopus';
+  if (amountSpent >= 0) return 'crab';
+  return 'crab';
+};
+
+export const getSpendingTierLabel = (tier: string) => {
+  switch (tier) {
+    case 'whale': return 'Monarch of the Deep';
+    case 'shark': return 'Apex Predator';
+    case 'dolphin': return 'Speed of the Current';
+    case 'fish': return 'Abyssal Light';
+    case 'octopus': return 'Kraken\'s Ink';
+    case 'crab': return 'Crab\'s Riches';
+    default: return 'Commoner';
+  }
+};
+
+export const getSpendingTierColor = (tier: string) => {
+  switch (tier) {
+    case 'whale': return ROYAL_COLORS.purple;
+    case 'shark': return ROYAL_COLORS.crimson;
+    case 'dolphin': return ROYAL_COLORS.navy;
+    case 'fish': return '#1e90ff';
+    case 'octopus': return '#800080';
+    case 'crab': return ROYAL_COLORS.bronze;
+    default: return '#999999';
+  }
 };

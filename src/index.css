@@ -99,6 +99,15 @@
   }
 }
 
+@keyframes royal-shimmer {
+  0% {
+    background-position: -1000px;
+  }
+  100% {
+    background-position: 1000px;
+  }
+}
+
 .royal-gradient {
   background: linear-gradient(90deg, #8B0000, #D4AF37, #000080);
   -webkit-background-clip: text;
@@ -185,6 +194,30 @@
   );
   transform: rotate(30deg);
   animation: shimmer 3.5s linear infinite;
+}
+
+.royal-text-shimmer {
+  background: linear-gradient(
+    90deg, 
+    #8B0000 0%, 
+    #D4AF37 15%, 
+    #000080 30%, 
+    #D4AF37 45%, 
+    #8B0000 60%, 
+    #D4AF37 75%, 
+    #000080 90%, 
+    #D4AF37 100%
+  );
+  background-size: 200% auto;
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: royal-shimmer 7s linear infinite;
+}
+
+.gold-border-glow {
+  box-shadow: 0 0 15px rgba(212, 175, 55, 0.3), 
+              inset 0 0 15px rgba(212, 175, 55, 0.3);
 }
 
 :root {
@@ -274,3 +307,52 @@
 .royal-button:hover::before {
   left: 100%;
 }
+
+.animate-royal-pulse {
+  animation: royal-pulse 2s ease-in-out infinite;
+}
+
+@keyframes royal-pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.08);
+  }
+}
+
+.animate-crown-glow {
+  animation: crown-glow 3s ease-in-out infinite;
+}
+
+.animate-sparkle {
+  animation: sparkle 2s ease-in-out infinite;
+}
+
+.animate-rotate-slow {
+  animation: rotate-slow 12s linear infinite;
+}
+
+.animate-bounce-subtle {
+  animation: bounce-subtle 3s ease-in-out infinite;
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 3s ease-in-out infinite;
+}
+
+.animate-fade-in {
+  animation: fade-in 0.4s ease-out;
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+

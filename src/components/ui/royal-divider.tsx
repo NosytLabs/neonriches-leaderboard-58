@@ -1,10 +1,10 @@
 
 import React from 'react';
-import { Crown, Star, Shield, GemIcon } from 'lucide-react';
+import { Crown, Star, Shield, Gem } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface RoyalDividerProps {
-  variant?: 'line' | 'crown' | 'stars' | 'shield';
+  variant?: 'line' | 'crown' | 'stars' | 'shield' | 'gem';
   label?: string;
   color?: 'gold' | 'crimson' | 'navy' | 'royal';
   className?: string;
@@ -33,13 +33,15 @@ const RoyalDivider: React.FC<RoyalDividerProps> = ({
         return <Star size={18} className={color === 'royal' ? 'text-royal-gold' : ''} />;
       case 'shield':
         return <Shield size={18} className={color === 'royal' ? 'text-royal-gold' : ''} />;
+      case 'gem':
+        return <Gem size={18} className={color === 'royal' ? 'text-royal-gold' : ''} />;
       default:
         return null;
     }
   };
   
   return (
-    <div className={cn('royal-divider', className)}>
+    <div className={cn('royal-divider flex items-center my-6', className)}>
       <div className={`h-px flex-grow ${colorClasses[color].split(' ')[1]}`}></div>
       {(label || variant !== 'line') && (
         <div className={`flex items-center px-3 font-royal text-xs ${colorClasses[color].split(' ')[0]}`}>
