@@ -1,194 +1,88 @@
 
 import React, { useState } from 'react';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { signInWithEmail } from '@/services/authService';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Mail, KeyRound, Shield } from 'lucide-react';
-import FormError from '@/components/auth/FormError';
-import PasswordInput from '@/components/auth/PasswordInput';
-import OAuthProviders from '@/components/auth/OAuthProviders';
-import MagicLinkForm from '@/components/auth/MagicLinkForm';
-import PasswordResetForm from '@/components/auth/PasswordResetForm';
-import MfaVerification from '@/components/auth/MfaVerification';
+import FormError from './FormError';
+import PasswordInput from './PasswordInput';
+import OAuthProviders from './OAuthProviders';
 
-const LoginForm = () => {
+interface LoginFormProps {
+  onSuccess: () => void;
+}
+
+const LoginForm: React.FC<LoginFormProps> = ({ onSuccess }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [remember, setRemember] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [authMethod, setAuthMethod] = useState<'password' | 'magic'>('password');
-  const [showResetForm, setShowResetForm] = useState(false);
-  const [showMfaVerification, setShowMfaVerification] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (!email || !password) {
-      setError('Please enter both email and password');
-      return;
-    }
-    
-    setError('');
+    setError(null);
     setIsLoading(true);
-    
+
     try {
       const success = await signInWithEmail(email, password);
-      
       if (success) {
-        // Simulate MFA requirement for demo purposes
-        // In a real app, this would be determined by the server
-        if (email.includes('admin')) {
-          setShowMfaVerification(true);
-        } else {
-          // Redirect or other success action would happen here
-          console.log('Login successful, redirecting...');
-        }
+        onSuccess();
+      } else {
+        setError('Login failed. Please check your credentials.');
       }
     } catch (err) {
-      setError(err.message || 'Invalid email or password');
+      setError(err instanceof Error ? err.message : 'An unknown error occurred');
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleAuthTypeChange = (value: string) => {
-    setAuthMethod(value as 'password' | 'magic');
-    setError('');
-  };
-
-  if (showMfaVerification) {
-    return (
-      <MfaVerification 
-        email={email}
-        onCancel={() => setShowMfaVerification(false)}
-        onSuccess={() => {
-          console.log('MFA verification successful, redirecting...');
-          // Redirect or other success action would happen here
-        }}
-      />
-    );
-  }
-
-  if (showResetForm) {
-    return (
-      <PasswordResetForm
-        onCancel={() => setShowResetForm(false)}
-        onSuccess={() => {
-          // Optional: auto-switch back to login after successful reset request
-          setTimeout(() => setShowResetForm(false), 3000);
-        }}
-      />
-    );
-  }
-
   return (
-    <div className="space-y-4 p-6">
-      <Tabs 
-        defaultValue="password" 
-        value={authMethod} 
-        onValueChange={handleAuthTypeChange}
-        className="w-full"
-      >
-        <TabsList className="grid grid-cols-2 w-full mb-6 glass-morphism border-white/10">
-          <TabsTrigger value="password" className="data-[state=active]:bg-white/10">
-            <KeyRound className="h-4 w-4 mr-2" />
-            Password
-          </TabsTrigger>
-          <TabsTrigger value="magic" className="data-[state=active]:bg-white/10">
-            <Mail className="h-4 w-4 mr-2" />
-            Magic Link
-          </TabsTrigger>
-        </TabsList>
-        
-        <TabsContent value="password" className="space-y-4">
-          <form onSubmit={handleSubmit}>
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <div className="relative">
-                  <Mail className="absolute left-3 top-3 h-4 w-4 text-white/40" />
-                  <Input
-                    id="email"
-                    placeholder="your.email@example.com"
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="pl-10 glass-morphism border-white/10"
-                    disabled={isLoading}
-                  />
-                </div>
-              </div>
-              
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="password">Password</Label>
-                  <Button 
-                    variant="link" 
-                    className="text-royal-gold p-0 h-auto font-normal text-xs"
-                    onClick={() => setShowResetForm(true)}
-                    type="button"
-                  >
-                    Forgot password?
-                  </Button>
-                </div>
-                <PasswordInput
-                  id="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  disabled={isLoading}
-                />
-              </div>
-              
-              {error && <FormError message={error} />}
-              
-              <div className="flex items-center space-x-2 mt-4">
-                <input
-                  type="checkbox"
-                  id="remember"
-                  className="rounded bg-transparent border-white/20 text-royal-gold"
-                  checked={remember}
-                  onChange={(e) => setRemember(e.target.checked)}
-                />
-                <label htmlFor="remember" className="text-sm text-white/70">
-                  Remember me for 30 days
-                </label>
-              </div>
-              
-              <Button 
-                type="submit" 
-                className="w-full mt-6 bg-gradient-to-r from-royal-purple to-royal-gold hover:opacity-90 text-white"
-                disabled={isLoading}
-              >
-                {isLoading ? (
-                  <>
-                    <span className="animate-spin mr-2">⚙️</span> Signing in
-                  </>
-                ) : (
-                  <>
-                    <Shield className="mr-2 h-4 w-4" /> Sign in
-                  </>
-                )}
-              </Button>
-            </div>
-          </form>
-        </TabsContent>
-        
-        <TabsContent value="magic">
-          <MagicLinkForm onSuccess={() => {
-            console.log('Magic link sent successfully');
-          }} />
-        </TabsContent>
-      </Tabs>
+    <div className="space-y-4 py-2">
+      <OAuthProviders />
       
-      <OAuthProviders 
-        isLoading={isLoading}
-        onSuccess={() => {
-          console.log('OAuth login successful');
-        }}
-      />
+      <div className="relative">
+        <div className="absolute inset-0 flex items-center">
+          <span className="w-full border-t border-white/10" />
+        </div>
+        <div className="relative flex justify-center text-xs uppercase">
+          <span className="bg-background px-2 text-white/50">Or continue with</span>
+        </div>
+      </div>
+      
+      <form onSubmit={handleSubmit} className="space-y-4">
+        {error && <FormError message={error} />}
+        
+        <div className="space-y-2">
+          <Label htmlFor="email">Email</Label>
+          <Input
+            id="email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="you@example.com"
+            required
+            className="glass-morphism border-white/10"
+          />
+        </div>
+        
+        <div className="space-y-2">
+          <div className="flex items-center justify-between">
+            <Label htmlFor="password">Password</Label>
+            <a href="#" className="text-xs underline text-white/70">Forgot password?</a>
+          </div>
+          <PasswordInput
+            id="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </div>
+        
+        <Button type="submit" className="w-full" disabled={isLoading}>
+          {isLoading ? 'Signing in...' : 'Sign in'}
+        </Button>
+      </form>
     </div>
   );
 };

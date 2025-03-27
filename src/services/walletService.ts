@@ -1,4 +1,3 @@
-
 import { UserProfile } from '@/contexts/AuthContext';
 import { toast } from '@/hooks/use-toast';
 
@@ -10,6 +9,7 @@ export interface Transaction {
   amount: number;
   type: TransactionType;
   date: Date;
+  timestamp: Date;
   description: string;
   metadata?: any;
 }
@@ -121,5 +121,29 @@ export const depositToWallet = async (
       variant: "destructive"
     });
     return false;
+  }
+};
+
+export const getUserTransactions = async (userId: string, limit: number = 10): Promise<Transaction[]> => {
+  try {
+    // In a real app, this would be an API call
+    // For this demo, we'll return transactions from localStorage
+    const transactionHistory = JSON.parse(localStorage.getItem('p2w_transactions') || '[]');
+    const userTransactions = transactionHistory
+      .filter((txn: Transaction) => txn.userId === userId)
+      .map((txn: Transaction) => ({
+        ...txn,
+        timestamp: txn.date,
+        date: new Date(txn.date)
+      }))
+      .sort((a: Transaction, b: Transaction) => 
+        new Date(b.date).getTime() - new Date(a.date).getTime()
+      )
+      .slice(0, limit);
+    
+    return userTransactions;
+  } catch (error) {
+    console.error("Error fetching transactions:", error);
+    return [];
   }
 };
