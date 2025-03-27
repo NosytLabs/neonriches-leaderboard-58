@@ -4,8 +4,8 @@ import { Button, ButtonProps } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { Sparkles } from 'lucide-react';
 
-interface RoyalButtonProps extends ButtonProps {
-  variant?: 'royal' | 'gold' | 'crimson' | 'navy' | 'mahogany' | 'glass' | 'outline';
+interface RoyalButtonProps extends Omit<ButtonProps, 'variant'> {
+  variant?: 'royal' | 'royalGold' | 'royalCrimson' | 'royalNavy' | 'glass' | 'outline' | 'mahogany';
   size?: 'sm' | 'md' | 'lg' | 'xl';
   glow?: boolean;
   shimmer?: boolean;
@@ -28,10 +28,10 @@ const RoyalButton: React.FC<RoyalButtonProps> = ({
   const getVariant = (): ButtonProps['variant'] => {
     switch (variant) {
       case 'royal': return 'royal';
-      case 'gold': return 'royalGold';
-      case 'crimson': return 'royalCrimson';
-      case 'navy': return 'royalNavy';
-      case 'mahogany': return variant === 'mahogany' ? 'outline' : 'outline';
+      case 'royalGold': return 'royalGold';
+      case 'royalCrimson': return 'royalCrimson';
+      case 'royalNavy': return 'royalNavy';
+      case 'mahogany': return 'outline';
       case 'glass': return 'glass';
       case 'outline': return 'outline';
       default: return 'default';
@@ -63,9 +63,9 @@ const RoyalButton: React.FC<RoyalButtonProps> = ({
         <div className="absolute inset-0 rounded-md opacity-50 blur-md" 
           style={{ 
             background: variant === 'royal' ? 'linear-gradient(to right, rgba(139, 0, 0, 0.3), rgba(212, 175, 55, 0.3), rgba(0, 0, 128, 0.3))' :
-                       variant === 'gold' ? 'rgba(212, 175, 55, 0.3)' :
-                       variant === 'crimson' ? 'rgba(139, 0, 0, 0.3)' :
-                       variant === 'navy' ? 'rgba(0, 0, 128, 0.3)' :
+                       variant === 'royalGold' ? 'rgba(212, 175, 55, 0.3)' :
+                       variant === 'royalCrimson' ? 'rgba(139, 0, 0, 0.3)' :
+                       variant === 'royalNavy' ? 'rgba(0, 0, 128, 0.3)' :
                        variant === 'mahogany' ? 'rgba(192, 64, 0, 0.3)' : 'transparent'
           }} 
         />
@@ -92,11 +92,11 @@ const RoyalButton: React.FC<RoyalButtonProps> = ({
   return (
     <Button
       variant={getVariant()}
-      size={getSize()}
+      size={size === 'md' ? 'default' : size}
       className={cn(
         'relative overflow-hidden',
         shimmer && 'royal-shine',
-        getCustomStyles(),
+        variant === 'mahogany' && 'border-royal-mahogany/70 bg-transparent text-royal-mahogany hover:bg-royal-mahogany/10',
         className
       )}
       {...props}

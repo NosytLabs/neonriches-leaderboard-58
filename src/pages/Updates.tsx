@@ -1,351 +1,163 @@
 
-import React, { useState } from 'react';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Textarea } from '@/components/ui/textarea';
-import { 
-  History, 
-  Star, 
-  FileText, 
-  MessageSquare, 
-  ThumbsUp, 
-  AlertTriangle, 
-  Zap, 
-  Shield, 
-  RefreshCw,
-  Send
-} from 'lucide-react';
-import { toast } from '@/hooks/use-toast';
+import React from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import DashboardLayout from '@/components/dashboard/DashboardLayout';
+import { CalendarDays, Trophy, Megaphone, Scroll, Clock, Crown, Gift } from 'lucide-react';
+import RoyalButton from '@/components/ui/royal-button';
+import ThroneBackground from '@/components/ui/throne-background';
+import { Link } from 'react-router-dom';
 
-interface Update {
-  id: string;
-  version: string;
-  date: string;
-  title: string;
-  description: string;
-  changes: {
-    features: string[];
-    improvements: string[];
-    fixes: string[];
-  };
-  major: boolean;
-}
-
-// Sample updates data
-const updates: Update[] = [
+const updates = [
   {
-    id: 'v2.0.0',
-    version: '2.0.0',
-    date: '2023-10-15',
-    title: 'The Royal Upgrade',
-    description: 'Complete redesign with a royal theme, enhanced security, and Solana integration',
-    changes: {
-      features: [
-        'New royal-themed UI with purple and gold accents',
-        'Solana wallet integration for prize pool',
-        'Monthly subscription model for PRO tier',
-        'Enhanced security with multi-factor authentication',
-        'Role-based access control system',
-        'Magic link authentication option'
-      ],
-      improvements: [
-        'Improved loading animations',
-        'More consistent styling across the application',
-        'Better mobile responsiveness',
-        'Enhanced profile customization options',
-        'Streamlined payment process'
-      ],
-      fixes: [
-        'Fixed leaderboard sorting issues',
-        'Resolved profile image upload errors',
-        'Fixed team assignment bugs',
-        'Corrected prize pool calculation errors',
-        'Fixed authentication token expiration issues'
-      ]
-    },
-    major: true
+    id: 1,
+    title: 'Royal Tournament Announced',
+    date: 'Today',
+    description: 'Introducing our first Royal Tournament where nobles can compete for exclusive titles and badges. Event starts in 3 days.',
+    type: 'event',
+    cta: 'View Details'
   },
   {
-    id: 'v1.5.0',
-    version: '1.5.0',
-    date: '2023-09-01',
-    title: 'Events Update',
-    description: 'New events system and performance improvements',
-    changes: {
-      features: [
-        'Introduced weekly events system',
-        'Added Poke Party event',
-        'New event rewards and badges'
-      ],
-      improvements: [
-        'Improved leaderboard performance',
-        'Enhanced profile editor',
-        'Better mobile experience'
-      ],
-      fixes: [
-        'Fixed profile link validation',
-        'Resolved team switching issues',
-        'Fixed payment processing errors'
-      ]
-    },
-    major: false
+    id: 2,
+    title: 'New Throne Mechanics',
+    date: 'Yesterday',
+    description: 'We\'ve updated how the Throne works with new visual effects for top spenders and enhanced public shaming features.',
+    type: 'feature',
+    cta: 'See Changes'
   },
   {
-    id: 'v1.2.0',
-    version: '1.2.0',
-    date: '2023-07-15',
-    title: 'Teams & Profiles',
-    description: 'Team functionality and profile enhancements',
-    changes: {
-      features: [
-        'Added RGB team system',
-        'Team competition and rankings',
-        'Enhanced profile customization'
-      ],
-      improvements: [
-        'Improved payment flow',
-        'Better error messaging',
-        'Enhanced UI animations'
-      ],
-      fixes: [
-        'Fixed authentication issues',
-        'Resolved profile image loading',
-        'Fixed spending streak calculation'
-      ]
-    },
-    major: false
+    id: 3,
+    title: 'Royal Decree: Prize Pool Increases',
+    date: '3 days ago',
+    description: 'By order of the Royal Treasury, the prize pool allocation has increased to 20% of all spending, creating more incentive for whales.',
+    type: 'announcement',
+    cta: 'Read More'
   },
   {
-    id: 'v1.0.0',
-    version: '1.0.0',
-    date: '2023-06-01',
-    title: 'Initial Release',
-    description: 'The first public release of SpendThrone',
-    changes: {
-      features: [
-        'Basic pay-to-win leaderboard',
-        'User profiles and rankings',
-        'Payment processing',
-        'Authentication system'
-      ],
-      improvements: [],
-      fixes: []
-    },
-    major: true
-  }
+    id: 4,
+    title: 'Historical Spending Analytics',
+    date: '1 week ago',
+    description: 'Now you can view detailed analytics of your spending history and compare it to other nobles in similar spending tiers.',
+    type: 'feature',
+    cta: 'View Analytics'
+  },
+  {
+    id: 5,
+    title: 'Medieval Themed Profile Badges',
+    date: '2 weeks ago',
+    description: 'New medieval themed profile badges are now available for all spending tiers. Display your wealth with style!',
+    type: 'feature',
+    cta: 'Browse Badges'
+  },
 ];
 
+const getUpdateIcon = (type: string) => {
+  switch (type) {
+    case 'event': return <CalendarDays className="h-6 w-6 text-royal-gold" />;
+    case 'feature': return <Gift className="h-6 w-6 text-royal-navy" />;
+    case 'announcement': return <Megaphone className="h-6 w-6 text-royal-crimson" />;
+    default: return <Scroll className="h-6 w-6 text-white/70" />;
+  }
+};
+
+const getUpdateBadge = (type: string) => {
+  switch (type) {
+    case 'event':
+      return <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-royal-gold/10 text-royal-gold">Event</span>;
+    case 'feature':
+      return <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-royal-navy/10 text-royal-navy">Feature</span>;
+    case 'announcement':
+      return <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-royal-crimson/10 text-royal-crimson">Announcement</span>;
+    default:
+      return <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-white/10 text-white/70">Update</span>;
+  }
+};
+
 const Updates = () => {
-  const [activeTab, setActiveTab] = useState('all');
-  const [feedback, setFeedback] = useState('');
-  const [submitting, setSubmitting] = useState(false);
-  
-  const handleSubmitFeedback = async () => {
-    if (!feedback.trim()) {
-      toast({
-        title: "Error",
-        description: "Please enter your feedback before submitting",
-        variant: "destructive"
-      });
-      return;
-    }
-    
-    setSubmitting(true);
-    
-    // Mock API call
-    try {
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      toast({
-        title: "Feedback Submitted",
-        description: "Thank you for your feedback!",
-      });
-      
-      setFeedback('');
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to submit feedback. Please try again later.",
-        variant: "destructive"
-      });
-    } finally {
-      setSubmitting(false);
-    }
-  };
-  
-  const filteredUpdates = activeTab === 'all' ? updates : 
-                          activeTab === 'major' ? updates.filter(u => u.major) :
-                          updates.slice(0, 1);
-  
   return (
-    <div className="min-h-screen flex flex-col bg-background text-foreground">
-      <Header />
-      
-      <main className="flex-1 pt-24 pb-12 px-6">
-        <div className="max-w-5xl mx-auto">
-          <div className="mb-8 text-center">
-            <div className="inline-flex items-center justify-center mb-2">
-              <History size={28} className="text-royal-gold mr-2" />
-              <h1 className="text-3xl font-bold">Updates & Changelog</h1>
+    <DashboardLayout>
+      <div className="relative">
+        <ThroneBackground variant="royal" particles />
+        
+        <div className="container px-4 py-8 max-w-7xl mx-auto">
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h1 className="text-2xl font-bold mb-2 flex items-center">
+                <Scroll className="mr-2 h-6 w-6 text-royal-gold" />
+                Royal Proclamations & Updates
+              </h1>
+              <p className="text-white/70">
+                Stay informed about the latest changes and events in the kingdom
+              </p>
             </div>
-            <p className="text-white/70 max-w-2xl mx-auto">
-              Track the evolution of SpendThrone with our detailed changelog. 
-              See new features, improvements, and bug fixes across versions.
-            </p>
+            
+            <div className="flex items-center space-x-2">
+              <Link to="/events">
+                <RoyalButton variant="royalGold" size="sm">
+                  <Trophy className="mr-2 h-4 w-4" />
+                  Current Events
+                </RoyalButton>
+              </Link>
+            </div>
           </div>
           
-          <Tabs defaultValue="all" value={activeTab} onValueChange={setActiveTab} className="mb-8">
-            <div className="flex justify-center">
-              <TabsList className="glass-morphism border-white/10">
-                <TabsTrigger value="all">All Updates</TabsTrigger>
-                <TabsTrigger value="latest">Latest</TabsTrigger>
-                <TabsTrigger value="major">Major Releases</TabsTrigger>
-              </TabsList>
-            </div>
-          </Tabs>
-          
-          <div className="space-y-8">
-            {filteredUpdates.map((update) => (
+          <div className="grid gap-6">
+            {updates.map((update) => (
               <Card key={update.id} className="glass-morphism border-white/10 overflow-hidden">
-                <CardHeader>
-                  <div className="flex flex-col md:flex-row justify-between md:items-center gap-4">
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <CardTitle>{update.title}</CardTitle>
-                        {update.major && (
-                          <Badge className="bg-royal-gold text-black">
-                            <Star className="h-3 w-3 mr-1" />
-                            Major Update
-                          </Badge>
-                        )}
-                      </div>
-                      <CardDescription>
-                        Version {update.version} • Released on {update.date}
-                      </CardDescription>
+                <CardContent className="p-6">
+                  <div className="flex items-start space-x-4">
+                    <div className="flex-shrink-0 mt-1">
+                      {getUpdateIcon(update.type)}
                     </div>
                     
-                    <div className="flex gap-2">
-                      <Button variant="outline" size="sm" className="glass-morphism border-white/10">
-                        <MessageSquare className="h-4 w-4 mr-1" />
-                        Discuss
-                      </Button>
-                      <Button variant="outline" size="sm" className="glass-morphism border-white/10">
-                        <ThumbsUp className="h-4 w-4 mr-1" />
-                        Like
-                      </Button>
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-3">
+                          <h3 className="text-lg font-semibold text-white">{update.title}</h3>
+                          {getUpdateBadge(update.type)}
+                        </div>
+                        
+                        <div className="flex items-center text-white/50 text-sm">
+                          <Clock className="h-4 w-4 mr-1" />
+                          {update.date}
+                        </div>
+                      </div>
+                      
+                      <p className="mt-2 text-white/70">{update.description}</p>
+                      
+                      <div className="mt-4">
+                        <RoyalButton 
+                          variant="outline" 
+                          size="sm"
+                        >
+                          {update.cta}
+                        </RoyalButton>
+                      </div>
                     </div>
-                  </div>
-                </CardHeader>
-                
-                <CardContent className="space-y-6">
-                  <p className="text-white/70">{update.description}</p>
-                  
-                  <div className="space-y-4">
-                    {update.changes.features.length > 0 && (
-                      <div>
-                        <h3 className="text-md font-semibold flex items-center mb-2">
-                          <Zap className="h-4 w-4 mr-2 text-royal-gold" />
-                          New Features
-                        </h3>
-                        <ul className="space-y-1">
-                          {update.changes.features.map((feature, index) => (
-                            <li key={index} className="flex items-start">
-                              <span className="text-royal-gold mr-2">•</span>
-                              <span className="text-white/70 text-sm">{feature}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-                    
-                    {update.changes.improvements.length > 0 && (
-                      <div>
-                        <h3 className="text-md font-semibold flex items-center mb-2">
-                          <RefreshCw className="h-4 w-4 mr-2 text-blue-400" />
-                          Improvements
-                        </h3>
-                        <ul className="space-y-1">
-                          {update.changes.improvements.map((improvement, index) => (
-                            <li key={index} className="flex items-start">
-                              <span className="text-blue-400 mr-2">•</span>
-                              <span className="text-white/70 text-sm">{improvement}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-                    
-                    {update.changes.fixes.length > 0 && (
-                      <div>
-                        <h3 className="text-md font-semibold flex items-center mb-2">
-                          <Shield className="h-4 w-4 mr-2 text-green-400" />
-                          Bug Fixes
-                        </h3>
-                        <ul className="space-y-1">
-                          {update.changes.fixes.map((fix, index) => (
-                            <li key={index} className="flex items-start">
-                              <span className="text-green-400 mr-2">•</span>
-                              <span className="text-white/70 text-sm">{fix}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
                   </div>
                 </CardContent>
               </Card>
             ))}
           </div>
           
-          <Card className="glass-morphism border-white/10 mt-12">
-            <CardHeader>
-              <div className="flex items-center">
-                <FileText className="h-5 w-5 mr-2 text-royal-gold" />
-                <CardTitle>Submit Feedback</CardTitle>
+          <div className="mt-12 glass-morphism border-white/10 p-6 rounded-lg bg-gradient-to-r from-royal-crimson/10 via-royal-gold/10 to-royal-navy/10">
+            <div className="flex items-center">
+              <Crown className="h-8 w-8 text-royal-gold mr-3" />
+              <div>
+                <h2 className="text-xl font-bold">Never Miss a Royal Decree</h2>
+                <p className="text-white/70">Subscribe to notifications to get immediate updates on changes and events.</p>
               </div>
-              <CardDescription>
-                We value your input! Let us know what you think about our recent updates.
-              </CardDescription>
-            </CardHeader>
+            </div>
             
-            <CardContent>
-              <div className="space-y-4">
-                <Textarea 
-                  placeholder="Share your thoughts, suggestions, or report issues..."
-                  className="min-h-[120px] glass-morphism border-white/10"
-                  value={feedback}
-                  onChange={(e) => setFeedback(e.target.value)}
-                />
-                
-                <div className="flex justify-end">
-                  <Button 
-                    className="bg-gradient-to-r from-royal-purple to-royal-gold hover:opacity-90 text-white"
-                    onClick={handleSubmitFeedback}
-                    disabled={submitting}
-                  >
-                    {submitting ? (
-                      <>
-                        <span className="animate-spin mr-2">⚙️</span> Submitting
-                      </>
-                    ) : (
-                      <>
-                        <Send className="h-4 w-4 mr-2" /> Submit Feedback
-                      </>
-                    )}
-                  </Button>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+            <div className="mt-4 flex justify-center">
+              <RoyalButton variant="royalGold" className="w-full sm:w-auto">
+                <Megaphone className="mr-2 h-4 w-4" />
+                Subscribe to Royal Announcements
+              </RoyalButton>
+            </div>
+          </div>
         </div>
-      </main>
-      
-      <Footer />
-    </div>
+      </div>
+    </DashboardLayout>
   );
 };
 

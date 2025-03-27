@@ -1,319 +1,204 @@
 
-/* Global Styles */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --royal-crimson: 139, 0, 0;     /* #8B0000 */
+  --royal-gold: 212, 175, 55;     /* #D4AF37 */
+  --royal-navy: 0, 0, 128;        /* #000080 */
+  --royal-purple: 102, 51, 153;   /* #663399 */
+  --royal-mahogany: 192, 64, 0;   /* #C04000 */
+  --royal-velvet: 128, 0, 128;    /* #800080 */
+  --team-red: 220, 38, 38;        /* #DC2626 */
+  --team-green: 132, 204, 22;     /* #84CC16 */
+  --team-blue: 59, 130, 246;      /* #3B82F6 */
+}
+
+body {
+  background-color: #0f1019;
+  color: #f8f8f8;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Glassmorphism */
 .glass-morphism {
-  @apply bg-black/40 backdrop-blur-lg border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.4)];
+  @apply backdrop-blur-xl bg-white/5 border border-white/10 shadow-[0_4px_12px_-2px_rgba(0,0,0,0.3)];
 }
 
 .glass-morphism-highlight {
-  @apply bg-black/50 backdrop-blur-lg border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.5)];
+  @apply backdrop-blur-xl bg-white/10 border border-white/20 shadow-[0_4px_12px_-2px_rgba(0,0,0,0.4)];
+}
+
+/* Gradients & Backgrounds */
+.throne-bg {
+  background: linear-gradient(to bottom, rgba(30, 30, 40, 0.9), rgba(15, 15, 25, 0.95));
+}
+
+.throne-bg-enhanced {
+  background: linear-gradient(135deg, rgba(139, 0, 0, 0.05) 0%, rgba(212, 175, 55, 0.05) 50%, rgba(0, 0, 128, 0.05) 100%);
+}
+
+.text-gradient {
+  @apply bg-gradient-to-br from-white via-white/90 to-white/70 bg-clip-text text-transparent;
 }
 
 .royal-gradient {
-  @apply bg-clip-text text-transparent bg-gradient-to-r from-royal-crimson via-royal-gold to-royal-navy;
+  background: linear-gradient(135deg, rgba(139, 0, 0, 0.8) 0%, rgba(212, 175, 55, 0.8) 50%, rgba(0, 0, 128, 0.8) 100%);
 }
 
-.royal-gradient-bg {
-  @apply bg-gradient-to-r from-royal-crimson/10 via-royal-gold/10 to-royal-navy/10;
+.gold-gradient {
+  background: linear-gradient(135deg, #D4AF37 0%, #FFF9C4 50%, #D4AF37 100%);
 }
 
-.animate-royal-pulse {
-  animation: royal-pulse 2s infinite;
+/* Team Colors */
+.team-red-bg {
+  background-color: rgba(var(--team-red), 0.2);
 }
 
-@keyframes royal-pulse {
-  0%, 100% {
-    opacity: 1;
-    filter: drop-shadow(0 0 5px rgba(212, 175, 55, 0.6));
-  }
-  50% {
-    opacity: 0.8;
-    filter: drop-shadow(0 0 12px rgba(212, 175, 55, 0.9));
-  }
+.team-green-bg {
+  background-color: rgba(var(--team-green), 0.2);
 }
 
-@keyframes shimmer {
-  0% {
-    transform: translateX(-150%) rotate(30deg);
-  }
-  100% {
-    transform: translateX(150%) rotate(30deg);
-  }
-}
-
-.royal-shine {
-  position: relative;
-  overflow: hidden;
-}
-
-.royal-shine::after {
-  content: '';
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: linear-gradient(
-    to bottom right,
-    rgba(255, 255, 255, 0) 0%,
-    rgba(255, 255, 255, 0) 40%,
-    rgba(255, 255, 255, 0.4) 50%,
-    rgba(255, 255, 255, 0) 60%,
-    rgba(255, 255, 255, 0) 100%
-  );
-  transform: rotate(30deg);
-  animation: shimmer 3.5s linear infinite;
-}
-
-/* Team-specific colors */
-.bg-team-red {
-  background-color: #8B0000;
-}
-
-.bg-team-green {
-  background-color: #D4AF37;
-}
-
-.bg-team-blue {
-  background-color: #000080;
-}
-
-.text-team-red {
-  color: #8B0000;
-}
-
-.text-team-green {
-  color: #D4AF37;
-}
-
-.text-team-blue {
-  color: #000080;
-}
-
-.border-team-red {
-  border-color: #8B0000;
-}
-
-.border-team-green {
-  border-color: #D4AF37;
-}
-
-.border-team-blue {
-  border-color: #000080;
-}
-
-/* Royal colors */
-.text-royal-gold {
-  color: #D4AF37;
-}
-
-.text-royal-crimson {
-  color: #8B0000;
-}
-
-.text-royal-navy {
-  color: #000080;
-}
-
-.text-royal-purple {
-  color: #4B0082;
-}
-
-.text-royal-mahogany {
-  color: #C04000;
-}
-
-.bg-royal-gold {
-  background-color: #D4AF37;
-}
-
-.bg-royal-crimson {
-  background-color: #8B0000;
-}
-
-.bg-royal-navy {
-  background-color: #000080;
-}
-
-.bg-royal-purple {
-  background-color: #4B0082;
-}
-
-.bg-royal-mahogany {
-  background-color: #C04000;
-}
-
-.border-royal-gold {
-  border-color: #D4AF37;
-}
-
-.border-royal-crimson {
-  border-color: #8B0000;
-}
-
-.border-royal-navy {
-  border-color: #000080;
-}
-
-.border-royal-purple {
-  border-color: #4B0082;
-}
-
-.border-royal-mahogany {
-  border-color: #C04000;
-}
-
-/* Font classes */
-.font-royal {
-  font-family: 'Cinzel', serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+.team-blue-bg {
+  background-color: rgba(var(--team-blue), 0.2);
 }
 
 /* Animations */
-@keyframes fade-in {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.5;
+  }
+  50% {
+    transform: translateY(-20px);
+    opacity: 0.2;
+  }
+  100% {
+    transform: translateY(-40px);
+    opacity: 0;
+  }
 }
 
-.animate-fade-in {
-  animation: fade-in 0.5s ease-out forwards;
+@keyframes royal-shine {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
-/* For sequential fade-ins, children can have delayed animations */
-.animate-fade-in > *:nth-child(1) { animation-delay: 0.1s; }
-.animate-fade-in > *:nth-child(2) { animation-delay: 0.2s; }
-.animate-fade-in > *:nth-child(3) { animation-delay: 0.3s; }
-.animate-fade-in > *:nth-child(4) { animation-delay: 0.4s; }
-.animate-fade-in > *:nth-child(5) { animation-delay: 0.5s; }
-
-/* Enhanced royal divider */
-.royal-divider {
-  position: relative;
-  display: flex;
-  align-items: center;
-  width: 100%;
-  margin: 2.5rem 0;
+@keyframes pulse-slow {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
 }
 
-.royal-divider::before,
-.royal-divider::after {
-  content: '';
-  flex: 1;
-  border-bottom: 2px solid rgba(212, 175, 55, 0.3);
-  box-shadow: 0 0 8px rgba(212, 175, 55, 0.2);
+@keyframes crown-glow {
+  0%, 100% {
+    filter: drop-shadow(0 0 3px rgba(212, 175, 55, 0.7));
+  }
+  50% {
+    filter: drop-shadow(0 0 6px rgba(212, 175, 55, 0.9));
+  }
 }
 
-.royal-divider-label {
-  padding: 0 1.5rem;
-  color: #D4AF37;
-  font-family: 'Cinzel', serif;
-  letter-spacing: 2px;
-  font-size: 0.85rem;
-  text-shadow: 0 0 5px rgba(212, 175, 55, 0.5);
+@keyframes sparkle {
+  0%, 100% {
+    opacity: 0.4;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
 }
 
-/* Enhanced royal button */
-.royal-button {
-  position: relative;
-  overflow: hidden;
-  transition: all 0.3s ease;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4), 0 0 5px rgba(212, 175, 55, 0.3);
+.animate-pulse-slow {
+  animation: pulse-slow 3s ease-in-out infinite;
 }
 
-.royal-button::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.2),
-    transparent
-  );
-  transition: 0.5s;
-  z-index: -1;
+.animate-crown-glow {
+  animation: crown-glow 2s ease-in-out infinite;
 }
 
-.royal-button:hover::before {
-  left: 100%;
+.animate-sparkle {
+  animation: sparkle 1.5s ease-in-out infinite;
 }
 
-.royal-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5), 0 0 10px rgba(212, 175, 55, 0.4);
+.royal-shine {
+  background-size: 200% 200%;
+  animation: royal-shine 2s ease infinite;
 }
 
-/* Enhanced royal card */
-.royal-card {
-  transition: all 0.4s ease;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(10, 10, 25, 0.8);
-  backdrop-filter: blur(12px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-}
-
-.royal-card:hover {
-  border-color: rgba(212, 175, 55, 0.3);
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 15px rgba(212, 175, 55, 0.2);
-  transform: translateY(-5px);
-}
-
-/* Enhanced scrollbars for webkit browsers */
+/* Scrollbars */
 ::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+  width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(
-    to bottom,
-    rgba(139, 0, 0, 0.5),
-    rgba(212, 175, 55, 0.5),
-    rgba(0, 0, 128, 0.5)
-  );
-  border-radius: 5px;
+  background: rgba(212, 175, 55, 0.3);
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(
-    to bottom,
-    rgba(139, 0, 0, 0.8),
-    rgba(212, 175, 55, 0.8),
-    rgba(0, 0, 128, 0.8)
-  );
+  background: rgba(212, 175, 55, 0.5);
 }
 
-/* Gold dust animation for special elements */
-.gold-dust {
-  position: relative;
+/* Royal Text */
+.royal-text-shadow {
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
-.gold-dust::before,
-.gold-dust::after {
-  content: '';
-  position: absolute;
-  width: 3px;
-  height: 3px;
-  background: rgba(212, 175, 55, 0.8);
-  border-radius: 50%;
-  filter: blur(1px);
-  opacity: 0;
-  animation: float 3s ease-in infinite;
+.gold-text {
+  color: #D4AF37;
 }
 
-.gold-dust::before {
-  left: 10%;
-  top: 50%;
+.crimson-text {
+  color: #8B0000;
 }
 
-.gold-dust::after {
-  left: 90%;
-  top: 50%;
-  animation-delay: 1.5s;
+.navy-text {
+  color: #000080;
+}
+
+/* Spending Tiers */
+.tier-crab {
+  @apply bg-amber-700/20 text-amber-500 border border-amber-700/30;
+}
+
+.tier-octopus {
+  @apply bg-purple-500/20 text-purple-400 border border-purple-500/30;
+}
+
+.tier-fish {
+  @apply bg-blue-500/20 text-blue-400 border border-blue-500/30;
+}
+
+.tier-dolphin {
+  @apply bg-royal-navy/20 text-royal-navy border border-royal-navy/30;
+}
+
+.tier-shark {
+  @apply bg-royal-crimson/20 text-royal-crimson border border-royal-crimson/30;
+}
+
+.tier-whale {
+  @apply bg-royal-purple/20 text-royal-purple border border-royal-purple/30;
 }

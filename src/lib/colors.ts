@@ -1,4 +1,3 @@
-
 // Royal theme colors
 export const ROYAL_COLORS = {
   crimson: '#8B0000',   // Deep red
@@ -134,50 +133,91 @@ export const getRankBadgeClass = (rank: number) => {
   return 'bg-gray-500/20 text-gray-500 border-gray-500/50';
 };
 
-// Spending tier utilities
-export const getSpendingTier = (amountSpent: number) => {
-  if (amountSpent >= 25000) return 'whale';
-  if (amountSpent >= 10000) return 'shark';
-  if (amountSpent >= 5000) return 'dolphin';
-  if (amountSpent >= 1000) return 'fish';
-  if (amountSpent >= 250) return 'octopus';
-  if (amountSpent >= 0) return 'crab';
+// Spending tier boundaries
+export const SPENDING_TIERS = {
+  CRAB: 50,        // $0-$50
+  OCTOPUS: 250,    // $50-$250
+  FISH: 1000,      // $250-$1,000
+  DOLPHIN: 5000,   // $1,000-$5,000
+  SHARK: 10000,    // $5,000-$10,000
+  WHALE: 25000,    // $10,000+
+};
+
+// Get spending tier based on amount spent
+export const getSpendingTier = (amountSpent: number): string => {
+  if (amountSpent >= SPENDING_TIERS.WHALE) return 'whale';
+  if (amountSpent >= SPENDING_TIERS.SHARK) return 'shark';
+  if (amountSpent >= SPENDING_TIERS.DOLPHIN) return 'dolphin';
+  if (amountSpent >= SPENDING_TIERS.FISH) return 'fish';
+  if (amountSpent >= SPENDING_TIERS.OCTOPUS) return 'octopus';
   return 'crab';
 };
 
-export const getSpendingTierLabel = (tier: string) => {
+// Get friendly label for spending tier
+export const getSpendingTierLabel = (tier: string): string => {
   switch (tier) {
-    case 'whale': return 'Monarch of the Deep';
-    case 'shark': return 'Apex Predator';
-    case 'dolphin': return 'Speed of the Current';
-    case 'fish': return 'Abyssal Light';
-    case 'octopus': return 'Kraken\'s Ink';
-    case 'crab': return 'Crab\'s Riches';
+    case 'whale': return 'Whale';
+    case 'shark': return 'Shark';
+    case 'dolphin': return 'Dolphin';
+    case 'fish': return 'Fish';
+    case 'octopus': return 'Octopus';
+    case 'crab': return 'Crab';
     default: return 'Commoner';
   }
 };
 
-export const getSpendingTierColor = (tier: string) => {
+// Get CSS classes for spending tier badges
+export const getSpendingTierBadgeClass = (tier: string): string => {
   switch (tier) {
-    case 'whale': return ROYAL_COLORS.purple;
-    case 'shark': return ROYAL_COLORS.crimson;
-    case 'dolphin': return ROYAL_COLORS.navy;
-    case 'fish': return '#1e90ff';
-    case 'octopus': return '#800080';
-    case 'crab': return ROYAL_COLORS.bronze;
-    default: return '#999999';
+    case 'whale': return 'tier-whale';
+    case 'shark': return 'tier-shark';
+    case 'dolphin': return 'tier-dolphin';
+    case 'fish': return 'tier-fish';
+    case 'octopus': return 'tier-octopus';
+    case 'crab': return 'tier-crab';
+    default: return 'bg-gray-500/20 text-gray-400 border border-gray-500/30';
   }
 };
 
-// Get spending tier badge class
-export const getSpendingTierBadgeClass = (tier: string) => {
+// Get spending tier emoji
+export const getSpendingTierEmoji = (tier: string): string => {
   switch (tier) {
-    case 'whale': return 'bg-royal-purple/20 text-royal-purple border-royal-purple/50';
-    case 'shark': return 'bg-royal-crimson/20 text-royal-crimson border-royal-crimson/50';
-    case 'dolphin': return 'bg-royal-navy/20 text-royal-navy border-royal-navy/50';
-    case 'fish': return 'bg-blue-500/20 text-blue-500 border-blue-500/50';
-    case 'octopus': return 'bg-purple-500/20 text-purple-500 border-purple-500/50';
-    case 'crab': return 'bg-amber-700/20 text-amber-700 border-amber-700/50';
-    default: return 'bg-gray-500/20 text-gray-500 border-gray-500/50';
+    case 'whale': return '🐋';
+    case 'shark': return '🦈';
+    case 'dolphin': return '🐬';
+    case 'fish': return '🐠';
+    case 'octopus': return '🐙';
+    case 'crab': return '🦀';
+    default: return '👤';
+  }
+};
+
+// Generate bg and text colors for team
+export const getTeamColors = (team: string | null): { bg: string, text: string, border: string } => {
+  switch (team) {
+    case 'red':
+      return { 
+        bg: 'bg-team-red/20', 
+        text: 'text-team-red', 
+        border: 'border-team-red/30' 
+      };
+    case 'green':
+      return { 
+        bg: 'bg-team-green/20', 
+        text: 'text-team-green', 
+        border: 'border-team-green/30' 
+      };
+    case 'blue':
+      return { 
+        bg: 'bg-team-blue/20', 
+        text: 'text-team-blue', 
+        border: 'border-team-blue/30' 
+      };
+    default:
+      return { 
+        bg: 'bg-white/10', 
+        text: 'text-white/70', 
+        border: 'border-white/20' 
+      };
   }
 };

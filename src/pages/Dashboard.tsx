@@ -1,50 +1,34 @@
 
-import React from 'react';
-import { Navigate } from 'react-router-dom';
-import { useAuth } from '@/contexts/AuthContext';
+import React, { useState, useEffect } from 'react';
 import DashboardLayout from '@/components/dashboard/DashboardLayout';
-import DashboardMain from '@/components/dashboard/DashboardMain';
-import { DashboardWelcome } from '@/components/dashboard/DashboardWelcome';
+import { DashboardMain } from '@/components/dashboard/DashboardMain';
 import ThroneBackground from '@/components/ui/throne-background';
 
 const Dashboard = () => {
-  const { user, loading, updateProfile } = useAuth();
+  // State for background appearance
+  const [backgroundVariant, setBackgroundVariant] = useState<'default' | 'royal' | 'dark' | 'light'>('royal');
 
-  if (loading) {
-    return (
-      <div className="h-screen w-screen flex items-center justify-center bg-background">
-        <div className="flex flex-col items-center gap-4">
-          <div className="h-16 w-16 animate-spin rounded-full border-4 border-royal-gold border-t-transparent"></div>
-          <p className="text-white/70 text-lg">Loading royal experience...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (!user) {
-    return <Navigate to="/auth" replace />;
-  }
-
-  // Map team to appropriate background variant
-  const getBackgroundVariant = () => {
-    if (user.team === 'red') return 'purple';
-    if (user.team === 'green') return 'gold';
-    if (user.team === 'blue') return 'blue';
-    return 'default';
-  };
+  // Effect to handle background change based on spending tier or other factors
+  useEffect(() => {
+    // Example logic - in real app, this would be based on user data
+    const userSpendingTier = localStorage.getItem('userSpendingTier');
+    
+    if (userSpendingTier === 'whale' || userSpendingTier === 'shark') {
+      setBackgroundVariant('royal');
+    } else if (userSpendingTier === 'dolphin' || userSpendingTier === 'fish') {
+      setBackgroundVariant('dark');
+    } else {
+      setBackgroundVariant('default');
+    }
+  }, []);
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <ThroneBackground variant={getBackgroundVariant()} density="medium" />
-      
-      <DashboardLayout user={user}>
-        <div className="mb-8">
-          <DashboardWelcome user={user} />
-        </div>
-        
-        <DashboardMain user={user} updateProfile={updateProfile} />
-      </DashboardLayout>
-    </div>
+    <DashboardLayout>
+      <div className="relative min-h-[calc(100vh-4rem)]">
+        <ThroneBackground variant={backgroundVariant} particles density="medium" />
+        <DashboardMain />
+      </div>
+    </DashboardLayout>
   );
 };
 
