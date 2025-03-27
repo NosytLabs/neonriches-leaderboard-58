@@ -6,10 +6,10 @@ import { Trophy, Crown, Users, Zap } from 'lucide-react';
 const EventStats = () => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-12">
-      <Card className="glass-morphism border-white/10 p-4">
+      <Card className="glass-morphism border-white/10 p-4 hover:border-purple-500/30 transition-all duration-300">
         <div className="flex items-center">
-          <div className="w-10 h-10 rounded-full bg-royal-purple/10 flex items-center justify-center mr-3 border border-royal-purple/30">
-            <Crown size={20} className="text-royal-purple" />
+          <div className="w-10 h-10 rounded-full bg-purple-500/10 flex items-center justify-center mr-3 border border-purple-500/30 royal-glow">
+            <Crown size={20} className="text-purple-500 animate-crown-glow" />
           </div>
           <div>
             <div className="text-sm text-white/50">Active Events</div>
@@ -18,10 +18,10 @@ const EventStats = () => {
         </div>
       </Card>
       
-      <Card className="glass-morphism border-white/10 p-4">
+      <Card className="glass-morphism border-white/10 p-4 hover:border-amber-500/30 transition-all duration-300">
         <div className="flex items-center">
-          <div className="w-10 h-10 rounded-full bg-royal-gold/10 flex items-center justify-center mr-3 border border-royal-gold/30">
-            <Trophy size={20} className="text-royal-gold" />
+          <div className="w-10 h-10 rounded-full bg-amber-500/10 flex items-center justify-center mr-3 border border-amber-500/30 royal-glow">
+            <Trophy size={20} className="text-amber-500" />
           </div>
           <div>
             <div className="text-sm text-white/50">Event Pool</div>
@@ -30,10 +30,10 @@ const EventStats = () => {
         </div>
       </Card>
       
-      <Card className="glass-morphism border-white/10 p-4">
+      <Card className="glass-morphism border-white/10 p-4 hover:border-blue-500/30 transition-all duration-300">
         <div className="flex items-center">
-          <div className="w-10 h-10 rounded-full bg-royal-blue/10 flex items-center justify-center mr-3 border border-royal-blue/30">
-            <Users size={20} className="text-royal-blue" />
+          <div className="w-10 h-10 rounded-full bg-blue-500/10 flex items-center justify-center mr-3 border border-blue-500/30 royal-glow">
+            <Users size={20} className="text-blue-500" />
           </div>
           <div>
             <div className="text-sm text-white/50">Participants</div>
@@ -42,10 +42,10 @@ const EventStats = () => {
         </div>
       </Card>
       
-      <Card className="glass-morphism border-white/10 p-4">
+      <Card className="glass-morphism border-white/10 p-4 hover:border-white/20 transition-all duration-300">
         <div className="flex items-center">
           <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center mr-3 border border-white/30">
-            <Zap size={20} className="text-white" />
+            <Zap size={20} className="text-white animate-pulse-slow" />
           </div>
           <div>
             <div className="text-sm text-white/50">Pokes Used</div>

@@ -29,18 +29,49 @@ const PokeUserCard: React.FC<PokeUserCardProps> = ({
   isOnCooldown, 
   onPoke 
 }) => {
+  const getTeamBgColor = (team: string) => {
+    switch (team.toLowerCase()) {
+      case 'red': return 'bg-purple-500';
+      case 'green': return 'bg-amber-500';
+      case 'blue': return 'bg-blue-500';
+      default: return 'bg-amber-500';
+    }
+  };
+  
+  const getTeamBorderColor = (team: string) => {
+    switch (team.toLowerCase()) {
+      case 'red': return 'border-purple-500';
+      case 'green': return 'border-amber-500';
+      case 'blue': return 'border-blue-500';
+      default: return 'border-amber-500';
+    }
+  };
+  
+  const getTeamTextColor = (team: string) => {
+    switch (team.toLowerCase()) {
+      case 'red': return 'text-purple-500';
+      case 'green': return 'text-amber-500';
+      case 'blue': return 'text-blue-500';
+      default: return 'text-amber-500';
+    }
+  };
+
   return (
     <TooltipProvider>
       <Card 
         id={`user-card-${user.id}`}
-        className={`glass-morphism border-white/10 hover:border-white/20 transition-all relative overflow-hidden ${
-          isPoked ? 'animate-pulse-slow' : ''
+        className={`glass-morphism border-white/10 hover:border-${getTeamColor(user.team)}/30 transition-all relative overflow-hidden ${
+          isPoked ? 'animate-pulse-slow royal-glow' : ''
         }`}
       >
+        {isPoked && (
+          <div className="absolute -inset-0.5 bg-gradient-to-r from-purple-500/10 via-amber-500/10 to-blue-500/10 animate-pulse-slow -z-10 rounded-md"></div>
+        )}
+        
         <CardContent className="pt-6">
           <div className="flex justify-between items-center">
             <div className="flex items-center">
-              <div className={`w-12 h-12 rounded-full overflow-hidden border-2 border-${getTeamColor(user.team)} mr-3 ${
+              <div className={`w-12 h-12 rounded-full overflow-hidden border-2 ${getTeamBorderColor(user.team)} mr-3 ${
                 isPoked ? 'animate-crown-glow' : ''
               }`}>
                 <OptimizedImage 
@@ -60,12 +91,12 @@ const PokeUserCard: React.FC<PokeUserCardProps> = ({
                     Rank #{user.rank}
                   </span>
                   {isPoked && (
-                    <span className="ml-2 text-xs bg-team-red/20 px-2 py-0.5 rounded-full text-team-red animate-fade-in">
+                    <span className="ml-2 text-xs bg-purple-500/20 px-2 py-0.5 rounded-full text-purple-300 animate-fade-in">
                       Visually #{user.rank + 1}
                     </span>
                   )}
                 </div>
-                <div className={`inline-flex items-center px-2 py-0.5 mt-1 rounded-full text-xs font-medium bg-${getTeamColor(user.team)}/10 text-${getTeamColor(user.team)} border border-${getTeamColor(user.team)}/30`}>
+                <div className={`inline-flex items-center px-2 py-0.5 mt-1 rounded-full text-xs font-medium ${getTeamBgColor(user.team)}/10 ${getTeamTextColor(user.team)} border ${getTeamBorderColor(user.team)}/30`}>
                   Team {user.team.charAt(0).toUpperCase() + user.team.slice(1)}
                 </div>
               </div>
@@ -85,8 +116,8 @@ const PokeUserCard: React.FC<PokeUserCardProps> = ({
                           <Button 
                             className={`transition-all duration-300 ${isOnCooldown 
                               ? 'bg-white/10 text-white/50' 
-                              : 'bg-white/10 hover:bg-team-red/80 hover:text-white text-white'
-                            } ${isPoked ? 'bg-team-red/80 text-white' : ''}`}
+                              : 'bg-white/10 hover:bg-purple-500/80 hover:text-white text-white'
+                            } ${isPoked ? 'bg-purple-500/80 text-white' : ''}`}
                             disabled={isOnCooldown}
                           >
                             {isPoked ? (
@@ -119,8 +150,8 @@ const PokeUserCard: React.FC<PokeUserCardProps> = ({
                   <p className="text-sm text-white/70">
                     This will temporarily show {user.username} as rank #{user.rank + 1} instead of #{user.rank} for 24 hours. This is purely visual and does not affect their actual standing.
                   </p>
-                  <div className="flex items-center gap-2 mt-2 bg-royal-gold/5 p-2 rounded border border-royal-gold/20">
-                    <DollarSign size={16} className="text-royal-gold shrink-0" />
+                  <div className="flex items-center gap-2 mt-2 bg-amber-500/5 p-2 rounded border border-amber-500/20">
+                    <DollarSign size={16} className="text-amber-500 shrink-0" />
                     <p className="text-xs text-white/80">
                       <strong>$1 = 1 Rank Guarantee:</strong> All users' actual ranks are always calculated based solely on total spending.
                     </p>

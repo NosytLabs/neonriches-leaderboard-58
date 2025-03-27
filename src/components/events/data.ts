@@ -107,7 +107,7 @@ export const topUsers = [
   },
   {
     id: 4,
-    username: 'RoyalSpender',
+    username: 'RegalSpender',
     rank: 5,
     amountSpent: 690,
     team: 'blue',

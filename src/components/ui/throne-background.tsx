@@ -18,9 +18,9 @@ const ThroneBackground = ({
   
   const getColor = () => {
     switch (variant) {
-      case 'purple': return 'royal-purple';
-      case 'gold': return 'royal-gold';
-      case 'blue': return 'royal-blue';
+      case 'purple': return 'purple-500';
+      case 'gold': return 'amber-500';
+      case 'blue': return 'blue-500';
       default: return '';
     }
   };
@@ -53,11 +53,11 @@ const ThroneBackground = ({
         
         // Set particle color based on variant
         if (variant === 'purple') {
-          particle.style.backgroundColor = 'rgba(176, 38, 255, 0.5)';
+          particle.style.backgroundColor = 'rgba(168, 85, 247, 0.5)';
         } else if (variant === 'gold') {
-          particle.style.backgroundColor = 'rgba(255, 215, 0, 0.5)';
+          particle.style.backgroundColor = 'rgba(245, 158, 11, 0.5)';
         } else if (variant === 'blue') {
-          particle.style.backgroundColor = 'rgba(30, 86, 160, 0.5)';
+          particle.style.backgroundColor = 'rgba(59, 130, 246, 0.5)';
         }
         
         // Randomize particle properties
@@ -73,6 +73,27 @@ const ThroneBackground = ({
         particle.style.animation = `float ${duration}s linear ${delay}s infinite`;
         
         container.appendChild(particle);
+      }
+      
+      // Add sparkles for extra flair
+      if (variant === 'gold' || variant === 'default') {
+        for (let i = 0; i < 10; i++) {
+          const sparkle = document.createElement('div');
+          sparkle.innerHTML = '✨';
+          sparkle.classList.add('absolute', 'text-xs', 'animate-float', 'opacity-30');
+          sparkle.style.left = `${Math.random() * 100}%`;
+          sparkle.style.top = `${Math.random() * 100}%`;
+          sparkle.style.animationDuration = `${8 + Math.random() * 12}s`;
+          sparkle.style.animationDelay = `${Math.random() * 5}s`;
+          
+          container.appendChild(sparkle);
+          
+          setTimeout(() => {
+            if (container.contains(sparkle)) {
+              container.removeChild(sparkle);
+            }
+          }, 20000);
+        }
       }
     }
   }, [particles, variant]);
@@ -90,7 +111,7 @@ const ThroneBackground = ({
       backgroundElements.push(
         <div 
           key={i}
-          className={`absolute rounded-full ${color ? `bg-${color}/10` : 'bg-gradient-to-br from-royal-purple/10 via-royal-gold/10 to-royal-blue/10'} blur-[100px] ${animate ? 'animate-pulse-slow' : ''}`}
+          className={`absolute rounded-full ${color ? `bg-${color}/10` : 'bg-gradient-to-br from-purple-500/10 via-amber-500/10 to-blue-500/10'} blur-[100px] ${animate ? 'animate-pulse-slow' : ''}`}
           style={{
             width: `${size}px`,
             height: `${size}px`,
@@ -111,7 +132,7 @@ const ThroneBackground = ({
     <div ref={containerRef} className="absolute inset-0 -z-10 overflow-hidden">
       {renderElements()}
       {particles && <div className="royal-particles"></div>}
-      <div className="absolute inset-0 bg-background/30"></div>
+      <div className="absolute inset-0 bg-[#0f0823]/30"></div>
     </div>
   );
 };
