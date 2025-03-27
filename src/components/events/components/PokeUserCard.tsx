@@ -4,10 +4,10 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import PaymentModal from '@/components/PaymentModal';
 import { DollarSign, Zap, Sparkles } from 'lucide-react';
-import { getTeamColor } from '../data';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
 import OptimizedImage from '@/components/ui/optimized-image';
+import { getTeamBgColor, getTeamBorderColor, getTeamTextColor } from '../utils/teamUtils';
 
 interface PokeUserCardProps {
   user: {
@@ -29,38 +29,11 @@ const PokeUserCard: React.FC<PokeUserCardProps> = ({
   isOnCooldown, 
   onPoke 
 }) => {
-  const getTeamBgColor = (team: string) => {
-    switch (team.toLowerCase()) {
-      case 'red': return 'bg-purple-500';
-      case 'green': return 'bg-amber-500';
-      case 'blue': return 'bg-blue-500';
-      default: return 'bg-amber-500';
-    }
-  };
-  
-  const getTeamBorderColor = (team: string) => {
-    switch (team.toLowerCase()) {
-      case 'red': return 'border-purple-500';
-      case 'green': return 'border-amber-500';
-      case 'blue': return 'border-blue-500';
-      default: return 'border-amber-500';
-    }
-  };
-  
-  const getTeamTextColor = (team: string) => {
-    switch (team.toLowerCase()) {
-      case 'red': return 'text-purple-500';
-      case 'green': return 'text-amber-500';
-      case 'blue': return 'text-blue-500';
-      default: return 'text-amber-500';
-    }
-  };
-
   return (
     <TooltipProvider>
       <Card 
         id={`user-card-${user.id}`}
-        className={`glass-morphism border-white/10 hover:border-${getTeamColor(user.team)}/30 transition-all relative overflow-hidden ${
+        className={`glass-morphism border-white/10 transition-all relative overflow-hidden hover:border-${user.team === 'red' ? 'purple' : user.team}-500/30 ${
           isPoked ? 'animate-pulse-slow royal-glow' : ''
         }`}
       >
