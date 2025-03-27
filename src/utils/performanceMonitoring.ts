@@ -28,6 +28,12 @@ const THRESHOLDS = {
   },
 };
 
+// Define type for layout shift entries
+interface LayoutShiftEntry extends PerformanceEntry {
+  hadRecentInput?: boolean;
+  value?: number;
+}
+
 /**
  * PerformanceMonitor class to handle tracking and reporting performance metrics
  */
@@ -39,71 +45,76 @@ class PerformanceMonitor {
    * Initialize the performance monitoring
    */
   public init() {
-    if (typeof window === 'undefined' || !('PerformanceObserver' in window)) {
-      console.warn('PerformanceObserver not supported in this environment');
-      return;
-    }
+    try {
+      if (typeof window === 'undefined' || !('PerformanceObserver' in window)) {
+        console.warn('PerformanceObserver not supported in this environment');
+        return;
+      }
 
-    this.trackTimeToFirstByte();
-    this.initPerformanceObservers();
+      this.trackTimeToFirstByte();
+      this.initPerformanceObservers();
+    } catch (error) {
+      console.error('Error initializing performance monitoring:', error);
+    }
   }
 
   /**
    * Initialize all performance observers
    */
   private initPerformanceObservers() {
-    // First Contentful Paint (FCP)
-    this.createObserver('paint', (entries) => {
-      for (const entry of entries.getEntries()) {
-        if (entry.name === 'first-contentful-paint') {
+    try {
+      // First Contentful Paint (FCP)
+      this.createObserver('paint', (entries) => {
+        for (const entry of entries.getEntries()) {
+          if (entry.name === 'first-contentful-paint') {
+            const value = entry.startTime;
+            const rating = this.getRating('FCP', value);
+            this.metrics.FCP = { value, rating };
+            console.info(`[Performance] FCP: ${value.toFixed(2)}ms`);
+          }
+        }
+      });
+
+      // Largest Contentful Paint (LCP)
+      this.createObserver('largest-contentful-paint', (entries) => {
+        const entry = entries.getEntries().pop();
+        if (entry) {
           const value = entry.startTime;
-          const rating = this.getRating('FCP', value);
-          this.metrics.FCP = { value, rating };
-          console.info(`[Performance] FCP: ${value.toFixed(2)}ms`);
+          const rating = this.getRating('LCP', value);
+          this.metrics.LCP = { value, rating };
+          console.info(`[Performance] LCP: ${value.toFixed(2)}ms`);
         }
-      }
-    });
+      });
 
-    // Largest Contentful Paint (LCP)
-    this.createObserver('largest-contentful-paint', (entries) => {
-      const entry = entries.getEntries().pop();
-      if (entry) {
-        const value = entry.startTime;
-        const rating = this.getRating('LCP', value);
-        this.metrics.LCP = { value, rating };
-        console.info(`[Performance] LCP: ${value.toFixed(2)}ms`);
-      }
-    });
-
-    // First Input Delay (FID)
-    this.createObserver('first-input', (entries) => {
-      const entry = entries.getEntries()[0];
-      if (entry) {
-        const value = entry.duration;
-        const rating = this.getRating('FID', value);
-        this.metrics.FID = { value, rating };
-        console.info(`[Performance] FID: ${value.toFixed(2)}ms`);
-      }
-    });
-
-    // Cumulative Layout Shift (CLS)
-    this.createObserver('layout-shift', (entries) => {
-      let clsValue = 0;
-      for (const entry of entries.getEntries()) {
-        // Need to type-cast the entry to access specific properties
-        const layoutShiftEntry = entry as PerformanceEntry & {
-          hadRecentInput?: boolean;
-          value?: number;
-        };
-        
-        if (!layoutShiftEntry.hadRecentInput) {
-          clsValue += layoutShiftEntry.value || 0;
+      // First Input Delay (FID)
+      this.createObserver('first-input', (entries) => {
+        const entry = entries.getEntries()[0];
+        if (entry) {
+          const value = entry.duration;
+          const rating = this.getRating('FID', value);
+          this.metrics.FID = { value, rating };
+          console.info(`[Performance] FID: ${value.toFixed(2)}ms`);
         }
-      }
-      const rating = this.getRating('CLS', clsValue);
-      this.metrics.CLS = { value: clsValue, rating };
-      console.info(`[Performance] CLS: ${clsValue.toFixed(3)}`);
-    });
+      });
+
+      // Cumulative Layout Shift (CLS)
+      this.createObserver('layout-shift', (entries) => {
+        let clsValue = 0;
+        for (const entry of entries.getEntries()) {
+          // Type-cast the entry to access specific properties
+          const layoutShiftEntry = entry as LayoutShiftEntry;
+          
+          if (layoutShiftEntry && !layoutShiftEntry.hadRecentInput) {
+            clsValue += layoutShiftEntry.value || 0;
+          }
+        }
+        const rating = this.getRating('CLS', clsValue);
+        this.metrics.CLS = { value: clsValue, rating };
+        console.info(`[Performance] CLS: ${clsValue.toFixed(3)}`);
+      });
+    } catch (error) {
+      console.error('Error initializing performance observers:', error);
+    }
   }
 
   /**
@@ -123,14 +134,21 @@ class PerformanceMonitor {
    * Track Time to First Byte (TTFB)
    */
   private trackTimeToFirstByte() {
-    if (performance && performance.getEntriesByType) {
-      const navEntry = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
-      if (navEntry) {
-        const ttfb = navEntry.responseStart;
-        const rating = this.getRating('TTFB', ttfb);
-        this.metrics.TTFB = { value: ttfb, rating };
-        console.info(`[Performance] TTFB: ${ttfb.toFixed(2)}ms`);
+    try {
+      if (performance && performance.getEntriesByType) {
+        const navEntries = performance.getEntriesByType('navigation');
+        if (navEntries && navEntries.length > 0) {
+          const navEntry = navEntries[0] as PerformanceNavigationTiming;
+          if (navEntry) {
+            const ttfb = navEntry.responseStart;
+            const rating = this.getRating('TTFB', ttfb);
+            this.metrics.TTFB = { value: ttfb, rating };
+            console.info(`[Performance] TTFB: ${ttfb.toFixed(2)}ms`);
+          }
+        }
       }
+    } catch (error) {
+      console.error('Error tracking TTFB:', error);
     }
   }
 
@@ -138,18 +156,33 @@ class PerformanceMonitor {
    * Get performance rating based on thresholds
    */
   private getRating(metric: keyof typeof THRESHOLDS, value: number): string {
-    const threshold = THRESHOLDS[metric];
-    if (value <= threshold.good) return 'good';
-    if (value <= threshold.poor) return 'needs-improvement';
-    return 'poor';
+    try {
+      const threshold = THRESHOLDS[metric];
+      if (value <= threshold.good) return 'good';
+      if (value <= threshold.poor) return 'needs-improvement';
+      return 'poor';
+    } catch (error) {
+      console.error(`Error getting rating for ${metric}:`, error);
+      return 'unknown';
+    }
   }
 
   /**
    * Disconnect all observers
    */
   public disconnect() {
-    this.observers.forEach(observer => observer.disconnect());
-    this.observers = [];
+    try {
+      this.observers.forEach(observer => {
+        try {
+          observer.disconnect();
+        } catch (e) {
+          console.error('Error disconnecting observer:', e);
+        }
+      });
+      this.observers = [];
+    } catch (error) {
+      console.error('Error disconnecting observers:', error);
+    }
   }
 
   /**
@@ -167,17 +200,32 @@ const performanceMonitor = new PerformanceMonitor();
  * Initialize performance monitoring
  */
 export const initPerformanceMonitoring = () => {
-  performanceMonitor.init();
-  
-  // Clean up when page is unloaded
-  window.addEventListener('unload', () => {
-    performanceMonitor.disconnect();
-  });
+  try {
+    performanceMonitor.init();
+    
+    // Clean up when page is unloaded
+    if (typeof window !== 'undefined') {
+      window.addEventListener('unload', () => {
+        try {
+          performanceMonitor.disconnect();
+        } catch (e) {
+          console.error('Error during performance monitoring cleanup:', e);
+        }
+      });
+    }
+  } catch (error) {
+    console.error('Error in initPerformanceMonitoring:', error);
+  }
 };
 
 /**
  * Get collected performance metrics
  */
 export const getPerformanceMetrics = () => {
-  return performanceMonitor.getMetrics();
+  try {
+    return performanceMonitor.getMetrics();
+  } catch (error) {
+    console.error('Error getting performance metrics:', error);
+    return {};
+  }
 };

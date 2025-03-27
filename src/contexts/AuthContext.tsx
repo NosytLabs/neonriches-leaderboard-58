@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
 // User types
 export interface UserProfile {
@@ -25,7 +26,15 @@ interface AuthContextType {
   updateProfile: (profileData: Partial<UserProfile>) => Promise<void>;
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+// Create context with default values
+const AuthContext = createContext<AuthContextType>({
+  user: null,
+  loading: true,
+  signIn: async () => {},
+  signUp: async () => {},
+  signOut: async () => {},
+  updateProfile: async () => {},
+});
 
 // Mock user data - in a real app, this would come from a database
 const MOCK_USER: UserProfile = {
@@ -43,9 +52,14 @@ const MOCK_USER: UserProfile = {
   gender: 'jester'
 };
 
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+interface AuthProviderProps {
+  children: ReactNode;
+}
+
+export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
+  const [initialized, setInitialized] = useState(false);
 
   // Mock authentication - would be replaced with real authentication
   useEffect(() => {
@@ -56,13 +70,27 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         const savedUser = localStorage.getItem('p2w_user');
         
         if (savedUser) {
-          setUser(JSON.parse(savedUser));
+          try {
+            const parsedUser = JSON.parse(savedUser);
+            // Convert string dates back to Date objects
+            if (parsedUser.joinedAt) {
+              parsedUser.joinedAt = new Date(parsedUser.joinedAt);
+            }
+            if (parsedUser.lastSpendDate) {
+              parsedUser.lastSpendDate = new Date(parsedUser.lastSpendDate);
+            }
+            setUser(parsedUser);
+          } catch (parseError) {
+            console.error('Error parsing saved user:', parseError);
+            localStorage.removeItem('p2w_user');
+          }
         }
         
       } catch (error) {
         console.error('Auth error:', error);
       } finally {
         setLoading(false);
+        setInitialized(true);
       }
     };
 
@@ -94,7 +122,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       
       const newUser: UserProfile = {
         ...MOCK_USER,
-        id: Math.random().toString(36).substr(2, 9),
+        id: Math.random().toString(36).substring(2, 9),
         email,
         username,
         amountSpent: 0,
@@ -116,20 +144,42 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const signOut = async () => {
-    // Mock sign out
-    setUser(null);
-    localStorage.removeItem('p2w_user');
-    return Promise.resolve();
+    try {
+      // Mock sign out
+      setUser(null);
+      localStorage.removeItem('p2w_user');
+      return Promise.resolve();
+    } catch (error) {
+      console.error('Sign out error:', error);
+      throw error;
+    }
   };
 
   const updateProfile = async (profileData: Partial<UserProfile>) => {
-    if (!user) throw new Error('No user logged in');
-    
-    const updatedUser = { ...user, ...profileData };
-    setUser(updatedUser);
-    localStorage.setItem('p2w_user', JSON.stringify(updatedUser));
-    return Promise.resolve();
+    try {
+      if (!user) throw new Error('No user logged in');
+      
+      const updatedUser = { ...user, ...profileData };
+      setUser(updatedUser);
+      localStorage.setItem('p2w_user', JSON.stringify(updatedUser));
+      return Promise.resolve();
+    } catch (error) {
+      console.error('Update profile error:', error);
+      throw error;
+    }
   };
+
+  // Only render children once we've checked authentication
+  if (!initialized) {
+    return (
+      <div className="h-screen w-screen flex items-center justify-center bg-background">
+        <div className="flex flex-col items-center gap-4">
+          <div className="h-16 w-16 animate-spin rounded-full border-4 border-royal-gold border-t-transparent"></div>
+          <p className="text-white/70 text-lg">Loading royal experience...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <AuthContext.Provider value={{ user, loading, signIn, signUp, signOut, updateProfile }}>
@@ -140,7 +190,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (context === undefined) {
+  if (!context) {
     throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
