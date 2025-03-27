@@ -44,8 +44,8 @@ const EventStats = () => {
       
       <Card className="glass-morphism border-white/10 p-4">
         <div className="flex items-center">
-          <div className="w-10 h-10 rounded-full bg-royal-crimson/10 flex items-center justify-center mr-3 border border-royal-crimson/30">
-            <Zap size={20} className="text-royal-crimson" />
+          <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center mr-3 border border-white/30">
+            <Zap size={20} className="text-white" />
           </div>
           <div>
             <div className="text-sm text-white/50">Pokes Used</div>

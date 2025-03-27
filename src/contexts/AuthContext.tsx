@@ -13,7 +13,7 @@ export interface UserProfile {
   profileImage?: string;
   spendStreak: number;
   lastSpendDate?: Date;
-  gender?: 'king' | 'queen' | 'monarch' | null;
+  gender?: 'king' | 'queen' | 'jester' | null;
 }
 
 interface AuthContextType {
@@ -40,7 +40,7 @@ const MOCK_USER: UserProfile = {
   profileImage: 'https://i.pravatar.cc/150?img=1',
   spendStreak: 4,
   lastSpendDate: new Date(),
-  gender: 'monarch'
+  gender: 'jester'
 };
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {

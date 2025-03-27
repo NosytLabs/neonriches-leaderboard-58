@@ -78,24 +78,6 @@ const Index = () => {
     <div className="min-h-screen flex flex-col bg-background text-foreground overflow-x-hidden">
       <Header />
       
-      {/* Royal Cursor Enhancement */}
-      <div className="fixed top-4 right-4 z-50 glass-morphism rounded-full p-2 flex space-x-2 opacity-70 hover:opacity-100 transition-opacity">
-        <button 
-          className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-royal-gold/20 transition-colors"
-          onClick={() => document.body.classList.toggle('cursor-crown')}
-          title="Toggle Crown Cursor"
-        >
-          <Crown size={18} className="text-royal-gold" />
-        </button>
-        <button 
-          className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-royal-gold/20 transition-colors"
-          onClick={() => document.body.classList.toggle('cursor-coin')}
-          title="Toggle Coin Cursor"
-        >
-          <Sparkles size={18} className="text-royal-gold" />
-        </button>
-      </div>
-      
       <main>
         <Hero />
         <Leaderboard />

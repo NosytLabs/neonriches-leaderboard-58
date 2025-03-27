@@ -48,15 +48,6 @@
   animation: pulse-slow 3s ease-in-out infinite;
 }
 
-/* Custom cursors */
-.cursor-crown {
-  cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 24 24' fill='none' stroke='gold' stroke-width='2'><path d='m20 16-4-4 4-4'/><path d='m4 8 4 4-4 4'/><path d='M16 4h4v4'/><path d='M8 4H4v4'/><path d='M4 16v4h4'/><path d='M16 20h4v-4'/></svg>"), auto;
-}
-
-.cursor-coin {
-  cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 24 24' fill='none' stroke='gold' stroke-width='2'><circle cx='12' cy='12' r='8'/><path d='M8 14h8'/><path d='M12 10v8'/></svg>"), auto;
-}
-
 /* Royal gradient text */
 .royal-gradient {
   background: linear-gradient(90deg, #9B26AF, #FFD700, #0055A4);
@@ -117,4 +108,52 @@
     radial-gradient(circle at 10% 20%, rgba(155, 38, 175, 0.05) 0%, transparent 50%),
     radial-gradient(circle at 90% 50%, rgba(255, 215, 0, 0.05) 0%, transparent 50%),
     radial-gradient(circle at 50% 80%, rgba(0, 85, 164, 0.05) 0%, transparent 50%);
+}
+
+/* Environment variables through data attributes */
+:root {
+  --api-url: attr(data-api-url);
+  --stripe-key: attr(data-stripe-key);
+}
+
+/* Security-focused styles */
+.content-security {
+  content-visibility: auto;
+}
+
+.overflow-protection {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Improved layout alignment */
+.content-aligned {
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+@media (min-width: 768px) {
+  .content-aligned {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+/* Performance optimizations */
+.will-change-opacity {
+  will-change: opacity;
+}
+
+.will-change-transform {
+  will-change: transform;
+}
+
+/* Accessibility improvements */
+.focus-visible:focus-visible {
+  outline: 2px solid #FFD700;
+  outline-offset: 2px;
 }
