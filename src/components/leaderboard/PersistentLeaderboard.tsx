@@ -276,7 +276,7 @@ const PersistentLeaderboard: React.FC<PersistentLeaderboardProps> = ({
                       )}
                       
                       {showTeams && rank.team && (
-                        <div className={`w-2 h-2 rounded-full ml-2 ${getTeamColor(rank.team)}`}></div>
+                        <div className={`w-2 h-2 rounded-full ml-2 ${getTeamColor(rank.team as TeamColor)}`}></div>
                       )}
                     </div>
                     
