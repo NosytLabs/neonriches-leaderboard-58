@@ -1,13 +1,13 @@
 
 import { useState, useCallback, useRef } from 'react';
-import { SoundInfo } from './types';
+import { SoundMap } from './types';
 
 interface UseAudioLoaderReturn {
   audioElements: {[key: string]: HTMLAudioElement};
   loadedSounds: string[];
   isInitialLoadComplete: boolean;
-  preloadCoreSounds: (soundMap: {[key: string]: SoundInfo}) => void;
-  loadSound: (type: string, soundInfo: SoundInfo) => Promise<void>;
+  preloadCoreSounds: (soundMap: SoundMap) => void;
+  loadSound: (type: string, soundInfo: SoundMap[string]) => Promise<void>;
 }
 
 const useAudioLoader = (): UseAudioLoaderReturn => {
@@ -17,7 +17,7 @@ const useAudioLoader = (): UseAudioLoaderReturn => {
   const preloadAttempted = useRef(false);
   
   // Preload core sounds on initial load
-  const preloadCoreSounds = useCallback((soundMap: {[key: string]: SoundInfo}) => {
+  const preloadCoreSounds = useCallback((soundMap: SoundMap) => {
     // Skip if already attempted to prevent multiple preload calls
     if (preloadAttempted.current) return;
     preloadAttempted.current = true;
@@ -27,7 +27,7 @@ const useAudioLoader = (): UseAudioLoaderReturn => {
       let loadedCount = 0;
       const totalSounds = Object.keys(soundMap).length;
       
-      Object.entries(soundMap).forEach(([key, { src }]) => {
+      Object.entries(soundMap).forEach(([key, soundInfo]) => {
         const audio = new Audio();
         
         // Add load event to track when preloading is complete
@@ -51,7 +51,7 @@ const useAudioLoader = (): UseAudioLoaderReturn => {
         }, { once: true });
         
         audio.preload = 'auto';
-        audio.src = src;
+        audio.src = soundInfo.src;
         newAudioElements[key] = audio;
       });
       
@@ -71,7 +71,7 @@ const useAudioLoader = (): UseAudioLoaderReturn => {
   }, [isInitialLoadComplete]);
   
   // Load a specific sound on demand
-  const loadSound = useCallback((type: string, soundInfo: SoundInfo): Promise<void> => {
+  const loadSound = useCallback((type: string, soundInfo: SoundMap[string]): Promise<void> => {
     // Skip if already loaded
     if (audioElements[type]) return Promise.resolve();
     

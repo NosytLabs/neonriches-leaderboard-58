@@ -1,5 +1,5 @@
 
-import { SoundMap } from './types';
+import { SoundMap, SoundInfo } from './types';
 
 // Core sounds that load immediately
 export const coreSounds: SoundMap = {
@@ -55,6 +55,6 @@ export const additionalSounds: SoundMap = {
 };
 
 // Get sound info from either core or additional sounds
-export const getSoundInfo = (type: string): SoundInfo | undefined => {
+export const getSoundInfo = (type: string): SoundMap[string] | undefined => {
   return coreSounds[type] || additionalSounds[type];
 };
