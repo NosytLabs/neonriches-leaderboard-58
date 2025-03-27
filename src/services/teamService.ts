@@ -92,7 +92,7 @@ export const getTeamRankings = () => {
   
   // Assign ranks
   const rankedTeams = rankings.map((item, index) => ({
-    ...teamData[item.team],
+    ...teamData[item.team as TeamColor],
     rank: index + 1,
     totalSpent: item.total
   }));

@@ -11,6 +11,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Badge } from '@/components/ui/badge';
 import { applyUserSpending } from '@/services/spendingService';
 import { Link } from 'react-router-dom';
+import { TeamColor } from '@/types/teams';
 
 interface PersistentLeaderboardProps {
   limit?: number;
@@ -33,7 +34,7 @@ const PersistentLeaderboard: React.FC<PersistentLeaderboardProps> = ({
   const [rankings, setRankings] = useState<UserRankData[]>([]);
   const [filteredRankings, setFilteredRankings] = useState<UserRankData[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
-  const [teamFilter, setTeamFilter] = useState<'all' | 'red' | 'green' | 'blue'>('all');
+  const [teamFilter, setTeamFilter] = useState<'all' | TeamColor>('all');
   const [userRank, setUserRank] = useState<UserRankData | null>(null);
   
   // Load rankings
@@ -83,7 +84,7 @@ const PersistentLeaderboard: React.FC<PersistentLeaderboardProps> = ({
     }
   };
   
-  const getTeamColor = (team: 'red' | 'green' | 'blue' | null | undefined) => {
+  const getTeamColor = (team: TeamColor | null | undefined) => {
     if (!team) return 'bg-gray-500';
     
     switch(team) {
