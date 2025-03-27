@@ -1,57 +1,131 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useToast } from '@/hooks/use-toast';
+
+export type UserTier = 'free' | 'pro';
+export type TeamColor = 'red' | 'green' | 'blue' | null;
+export type GenderType = 'king' | 'queen' | 'jester' | null;
 
 export interface UserProfile {
   id: string;
   username: string;
   email: string;
-  profileImage?: string;
-  amountSpent: number;
   walletBalance: number;
+  amountSpent: number;
   rank: number;
-  spendStreak: number;
-  tier: string;
-  team?: 'red' | 'green' | 'blue' | null;
-  gender?: 'king' | 'queen' | 'jester' | null;
+  tier: UserTier;
+  team: TeamColor;
+  gender?: GenderType;
+  profileImage?: string;
+  bio?: string;
+  joinDate: Date;
+  spendStreak?: number;
+  lastSpend?: Date;
   cosmetics?: {
-    decorations?: string[];
+    borders?: string[];
     colors?: string[];
     fonts?: string[];
     emojis?: string[];
+    effects?: string[];
+    badges?: string[];
+    frames?: string[];
+    backgrounds?: string[];
+    [key: string]: string[] | undefined;
   };
-  subscription?: UserSubscription;
-  role?: string;
+  activeCosmetics?: {
+    border?: string;
+    color?: string;
+    font?: string;
+    emoji?: string;
+    effect?: string;
+    badge?: string;
+    frame?: string;
+    background?: string;
+    [key: string]: string | undefined;
+  };
+  // New marketing-focused fields
+  profileViews?: number;
+  profileClicks?: number;
+  followers?: number;
+  socialLinks?: {
+    platform: string;
+    url: string;
+    clicks?: number;
+  }[];
+  marketingStats?: {
+    impressions: number;
+    engagement: number;
+    conversionRate: number;
+  };
 }
 
-export interface UserSubscription {
+export interface Subscription {
   id: string;
-  tier: string;
-  status: 'active' | 'canceled' | 'expired';
+  status: 'active' | 'inactive' | 'canceled';
+  plan: 'monthly' | 'yearly';
   startDate: Date;
   endDate: Date;
-  renewalDate?: Date;
-  paymentMethod: string;
   autoRenew: boolean;
-  price: number;
-  interval: 'monthly' | 'quarterly' | 'annual';
-  features: string[];
 }
 
 interface AuthContextType {
   user: UserProfile | null;
-  login: (email: string, password: string) => Promise<void>;
-  register: (email: string, password: string, username: string) => Promise<void>;
-  logout: () => Promise<void>;
-  loading: boolean;
-  updateUserProfile: (userData: Partial<UserProfile>) => Promise<void>;
-  subscription?: UserSubscription | null;
-  updateProfile: (userData: Partial<UserProfile>) => Promise<void>;
-  signOut: () => Promise<void>;
+  subscription: Subscription | null;
+  signIn: (email: string, password: string) => Promise<void>;
+  signOut: () => void;
+  updateUserProfile: (data: Partial<UserProfile>) => Promise<void>;
+  updateProfile: (data: Partial<UserProfile>) => Promise<void>;
 }
 
-const AuthContext = createContext<AuthContextType>({} as AuthContextType);
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const useAuth = () => useContext(AuthContext);
+// Mock user data
+const mockUserData: UserProfile = {
+  id: '123456',
+  username: 'RoyalUser',
+  email: 'user@example.com',
+  walletBalance: 100,
+  amountSpent: 250,
+  rank: 42,
+  tier: 'free',
+  team: 'green',
+  gender: 'king',
+  profileImage: 'https://i.pravatar.cc/150?img=3',
+  bio: 'Digital royalty in the making. Climbing the ranks one dollar at a time.',
+  joinDate: new Date('2023-01-15'),
+  spendStreak: 3,
+  lastSpend: new Date(),
+  cosmetics: {
+    borders: ['gold-border', 'silver-border'],
+    colors: ['royal-purple'],
+    fonts: ['medieval-blackletter'],
+    emojis: ['crown-emoji', 'gem-emoji'],
+  },
+  activeCosmetics: {
+    border: 'gold-border',
+    color: 'royal-purple',
+    font: 'medieval-blackletter',
+    emoji: 'crown-emoji',
+  },
+  profileViews: 120,
+  profileClicks: 35,
+  followers: 12,
+  socialLinks: [
+    { platform: 'twitter', url: 'https://twitter.com/example', clicks: 15 },
+    { platform: 'instagram', url: 'https://instagram.com/example', clicks: 20 },
+  ],
+};
+
+// Mock subscription data
+const mockSubscription: Subscription = {
+  id: 'sub_123456',
+  status: 'active',
+  plan: 'monthly',
+  startDate: new Date('2023-05-01'),
+  endDate: new Date('2023-06-01'),
+  autoRenew: true,
+};
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<UserProfile | null>(null);
@@ -198,4 +272,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   );
 };
 
-export default AuthProvider;
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
+};

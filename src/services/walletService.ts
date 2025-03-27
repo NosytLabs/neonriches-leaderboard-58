@@ -2,7 +2,7 @@
 import { UserProfile } from '@/contexts/AuthContext';
 import { toast } from '@/hooks/use-toast';
 
-export type TransactionType = 'shame' | 'deposit' | 'spend' | 'advertisement' | 'subscription' | 'cosmetic' | 'wish';
+export type TransactionType = 'shame' | 'deposit' | 'spend' | 'advertisement' | 'subscription' | 'cosmetic' | 'profile' | 'marketing';
 
 export interface Transaction {
   id: string;

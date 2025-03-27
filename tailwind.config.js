@@ -1,4 +1,3 @@
-
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: ["class"],
@@ -60,21 +59,35 @@ module.exports = {
           foreground: "hsl(var(--card-foreground))",
         },
         
-        // Royal colors
-        'royal-gold': '#D4AF37',
+        // Royal colors updated with purple theme
+        'royal-gold': '#9B87F5',
         'royal-crimson': '#9B2335',
-        'royal-navy': '#1F4788',
+        'royal-navy': '#4C1D95',
         'royal-purple': '#7851A9',
-        'royal-velvet': '#604D8D',
+        'royal-velvet': '#6E59A5',
         'royal-forest': '#2C784A',
         'royal-mahogany': '#A65E44',
         'royal-parchment': '#F5E6CA',
-        'royal-blue': '#336699',
+        'royal-blue': '#6D28D9',
         
-        // Team colors
-        'team-red': '#9B2335', // royal-crimson
-        'team-green': '#D4AF37', // royal-gold
-        'team-blue': '#1F4788', // royal-navy
+        // Purple marketing theme
+        'purple': {
+          50: '#F5F3FF',
+          100: '#EDE9FE',
+          200: '#DDD6FE',
+          300: '#C4B5FD',
+          400: '#A78BFA',
+          500: '#8B5CF6',
+          600: '#7C3AED',
+          700: '#6D28D9',
+          800: '#5B21B6',
+          900: '#4C1D95',
+        },
+        
+        // Team colors - reusing existing scheme for compatibility
+        'team-red': '#9B2335',
+        'team-green': '#9B87F5', // now purple
+        'team-blue': '#4C1D95', // deep purple
       },
       borderRadius: {
         lg: "var(--radius)",

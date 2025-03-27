@@ -1,36 +1,45 @@
-
 :root {
-  /* Enhanced Royal colors with improved contrast and brightness */
-  --royal-gold: #D4AF37;
-  --royal-gold-bright: #F1C40F;
-  --royal-gold-dark: #A67C00;
-  --royal-crimson: #9B2335;
+  /* Purple Marketing Theme Colors */
+  --purple-primary: #8B5CF6;
+  --purple-primary-bright: #A78BFA;
+  --purple-primary-dark: #7C3AED;
+  --purple-secondary: #C4B5FD;
+  --purple-secondary-light: #DDD6FE;
+  --purple-accent: #EDE9FE;
+  --purple-deep: #4C1D95;
+  --purple-muted: #9F7AEA;
+  
+  /* Legacy royal colors - repurposed with purple tones */
+  --royal-gold: #9B87F5;      /* Repurposed as purple-gold */
+  --royal-gold-bright: #B8A5FF;
+  --royal-gold-dark: #7E69AB;
+  --royal-crimson: #9B2335;   /* Keep for contrast */
   --royal-crimson-bright: #C41E3A;
   --royal-crimson-dark: #800020;
-  --royal-navy: #1F4788;
-  --royal-navy-bright: #336699;
-  --royal-navy-dark: #002366;
-  --royal-purple: #7851A9;
+  --royal-navy: #4C1D95;      /* Repurposed as deep purple */
+  --royal-navy-bright: #6D28D9;
+  --royal-navy-dark: #3B0764;
+  --royal-purple: #7851A9;    /* Already purple */
   --royal-purple-bright: #9B59B6;
   --royal-purple-dark: #5B3256;
-  --royal-velvet: #604D8D;
-  --royal-mahogany: #A65E44;
-  --royal-emerald: #2C784A;
+  --royal-velvet: #6E59A5;    /* Already purple-ish */
+  --royal-mahogany: #A65E44;  /* Keep for contrast */
+  --royal-emerald: #2C784A;   /* Keep for contrast */
   --royal-parchment: #F5E6CA;
   
-  /* Team colors */
+  /* Team colors (keeping for backward compatibility) */
   --team-red: var(--royal-crimson);
   --team-green: var(--royal-gold);
   --team-blue: var(--royal-navy);
   
   /* Background gradients */
-  --bg-royal-gradient: linear-gradient(135deg, #0D0D20 0%, #141428 50%, #1D1E33 100%);
-  --bg-royal-gradient-inverted: linear-gradient(315deg, #0D0D20 0%, #141428 50%, #1D1E33 100%);
+  --bg-purple-gradient: linear-gradient(135deg, #1D1933 0%, #2D2252 50%, #3D2B75 100%);
+  --bg-purple-gradient-inverted: linear-gradient(315deg, #1D1933 0%, #2D2252 50%, #3D2B75 100%);
 }
 
-/* Royal Gradients */
+/* Royal Gradients repurposed for marketing */
 .royal-gradient {
-  background: linear-gradient(to right, var(--royal-crimson-bright) 0%, var(--royal-gold) 50%, var(--royal-navy-bright) 100%);
+  background: linear-gradient(to right, var(--purple-primary-dark) 0%, var(--purple-primary) 50%, var(--purple-muted) 100%);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -57,7 +66,7 @@
 }
 
 .text-team-green {
-  color: var(--royal-gold);
+  color: var(--purple-primary);
 }
 
 .text-team-blue {
@@ -69,7 +78,7 @@
 }
 
 .bg-team-green {
-  background-color: var(--royal-gold);
+  background-color: var(--purple-primary);
 }
 
 .bg-team-blue {
@@ -81,17 +90,6 @@
   font-family: 'Cinzel', serif;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
   letter-spacing: 0.03em;
-}
-
-.royal-text-shimmer {
-  position: relative;
-  background: linear-gradient(to right, #fff 0%, #FFF8E1 10%, #fff 20%);
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-size: 200% auto;
-  animation: shine 3s linear infinite;
-  text-shadow: 0px 0px 1px rgba(0, 0, 0, 0.3), 0px 4px 8px rgba(0, 0, 0, 0.3);
 }
 
 /* Royal Button Effect */
@@ -356,4 +354,38 @@
   0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
   40% { transform: translateY(-10px); }
   60% { transform: translateY(-5px); }
+}
+
+body {
+  background-color: #1A1A2E;
+  color: #FFFFFF;
+}
+
+/* Marketing specific styles */
+.marketing-badge {
+  background-color: rgba(139, 92, 246, 0.2);
+  border: 1px solid rgba(139, 92, 246, 0.4);
+  color: #A78BFA;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.profile-highlight {
+  border: 2px solid rgba(139, 92, 246, 0.6);
+  box-shadow: 0 0 15px rgba(139, 92, 246, 0.4);
+  transition: all 0.3s ease;
+}
+
+.profile-highlight:hover {
+  box-shadow: 0 0 20px rgba(139, 92, 246, 0.7);
+  transform: translateY(-2px);
+}
+
+.marketing-banner {
+  background: linear-gradient(to right, rgba(76, 29, 149, 0.8), rgba(139, 92, 246, 0.8));
+  padding: 1rem;
+  border-radius: 0.5rem;
+  border-left: 4px solid #A78BFA;
 }

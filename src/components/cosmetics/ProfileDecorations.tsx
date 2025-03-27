@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { UserProfile } from '@/contexts/AuthContext';
-import { Sparkles, Crown, Star, Award, Shield } from 'lucide-react';
+import { Crown, Sparkles } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import RoyalButton from '@/components/ui/royal-button';
 
@@ -9,9 +9,9 @@ interface DecorationItem {
   id: string;
   name: string;
   description: string;
-  icon: React.ReactNode;
   price: number;
-  preview: React.ReactNode;
+  preview: string;
+  rarity: 'common' | 'rare' | 'legendary';
 }
 
 interface ProfileDecorationsProps {
@@ -20,112 +20,108 @@ interface ProfileDecorationsProps {
 }
 
 const ProfileDecorations: React.FC<ProfileDecorationsProps> = ({ onPurchase, user }) => {
-  const userDecorations = user?.cosmetics?.decorations || [];
+  const userDecorations = user?.cosmetics?.borders || [];
 
   const decorations: DecorationItem[] = [
     {
-      id: 'royal-crown',
-      name: 'Royal Crown',
-      description: 'Display a majestic crown above your name on the leaderboard',
-      icon: <Crown className="text-royal-gold h-6 w-6" />,
-      price: 50,
-      preview: (
-        <div className="flex flex-col items-center">
-          <Crown className="text-royal-gold h-10 w-10 animate-crown-glow" />
-          <span className="mt-2 font-medieval">Username</span>
-        </div>
-      )
-    },
-    {
-      id: 'golden-sparkle',
-      name: 'Golden Sparkle',
-      description: 'Add a sparkling effect to your profile throughout the kingdom',
-      icon: <Sparkles className="text-royal-gold h-6 w-6" />,
-      price: 30,
-      preview: (
-        <div className="relative flex items-center justify-center">
-          <Sparkles className="absolute -top-2 -right-2 text-royal-gold h-4 w-4 animate-sparkle" />
-          <Sparkles className="absolute -bottom-2 -left-2 text-royal-gold h-4 w-4 animate-sparkle" style={{ animationDelay: '0.5s' }} />
-          <span className="font-medieval">Username</span>
-        </div>
-      )
-    },
-    {
-      id: 'noble-star',
-      name: 'Noble Star',
-      description: 'A distinguished star emblem appears beside your name',
-      icon: <Star className="text-royal-gold h-6 w-6" />,
+      id: 'gold-border',
+      name: 'Royal Gold Border',
+      description: 'A shimmering gold border for your profile',
       price: 25,
-      preview: (
-        <div className="flex items-center">
-          <Star className="text-royal-gold h-6 w-6 mr-2 animate-pulse-slow" />
-          <span className="font-medieval">Username</span>
-        </div>
-      )
+      preview: 'linear-gradient(to right, #FFD700, #FFC107)',
+      rarity: 'common'
     },
     {
-      id: 'royal-crest',
-      name: 'Royal Crest',
-      description: 'Display your nobility with an elegant family crest',
-      icon: <Shield className="text-royal-purple h-6 w-6" />,
+      id: 'purple-aura',
+      name: 'Purple Aura',
+      description: 'A mysterious purple aura that pulses around your profile',
+      price: 35,
+      preview: 'linear-gradient(to right, #7E69AB, #9B59B6)',
+      rarity: 'rare'
+    },
+    {
+      id: 'royal-frame',
+      name: 'Royal Frame',
+      description: 'An ornate frame with royal embellishments',
+      price: 50,
+      preview: 'linear-gradient(to right, #D4AF37, #FFC107)',
+      rarity: 'rare'
+    },
+    {
+      id: 'animated-sparkles',
+      name: 'Animated Sparkles',
+      description: 'Twinkling sparkles that animate around your profile',
       price: 75,
-      preview: (
-        <div className="relative">
-          <Shield className="text-royal-purple h-12 w-12 mx-auto mb-1 opacity-80" />
-          <span className="absolute inset-0 flex items-center justify-center text-white text-xs font-bold mt-1">P2W</span>
-          <span className="font-medieval text-center block">Username</span>
-        </div>
-      )
+      preview: 'linear-gradient(to right, #FFEB3B, #FFF59D)',
+      rarity: 'legendary'
     },
     {
-      id: 'medal-of-honor',
-      name: 'Medal of Honor',
-      description: 'A prestigious medal that shows your commitment to status',
-      icon: <Award className="text-royal-gold h-6 w-6" />,
-      price: 40,
-      preview: (
-        <div className="flex items-center">
-          <Award className="text-royal-gold h-8 w-8 mr-2" />
-          <span className="font-medieval">Username</span>
-        </div>
-      )
+      id: 'royal-crown',
+      name: 'Royal Crown Badge',
+      description: 'A prestigious crown badge for your profile header',
+      price: 100,
+      preview: 'linear-gradient(to right, #FFD700, #FFA000)',
+      rarity: 'legendary'
+    },
+    {
+      id: 'purple-flames',
+      name: 'Purple Flames',
+      description: 'Ethereal purple flames that dance around your profile',
+      price: 85,
+      preview: 'linear-gradient(to right, #6D28D9, #8B5CF6)',
+      rarity: 'legendary'
     }
   ];
+
+  const getRarityClass = (rarity: string) => {
+    switch (rarity) {
+      case 'common':
+        return 'bg-gray-500/20 text-gray-300 border-gray-500/40';
+      case 'rare':
+        return 'bg-purple-400/20 text-purple-400 border-purple-400/40';
+      case 'legendary':
+        return 'bg-purple-600/20 text-purple-500 border-purple-600/40';
+      default:
+        return 'bg-gray-500/20 text-gray-300 border-gray-500/40';
+    }
+  };
 
   return (
     <div className="space-y-4">
       <h3 className="text-lg font-bold royal-gradient font-medieval">Profile Decorations</h3>
-      <p className="text-white/70">Adorn your profile with symbols of nobility and distinction.</p>
+      <p className="text-white/70">Enhance your profile with exclusive decorations to stand out.</p>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
         {decorations.map((item) => {
           const isOwned = userDecorations.includes(item.id);
           
           return (
-            <div key={item.id} className="glass-morphism border-white/10 rounded-lg p-4 transition-all duration-300 hover:border-royal-gold/30">
+            <div key={item.id} className="glass-morphism border-white/10 rounded-lg p-4 transition-all duration-300 hover:border-purple-400/30">
               <div className="flex justify-between items-start mb-3">
                 <div className="flex items-center">
-                  <div className="w-10 h-10 rounded-full flex items-center justify-center bg-royal-gold/10 mr-3">
-                    {item.icon}
+                  <div className="w-10 h-10 rounded-full flex items-center justify-center mr-3" 
+                       style={{ background: item.preview }}>
+                    <Crown className="h-5 w-5 text-white" />
                   </div>
                   <div>
                     <h4 className="font-medium">{item.name}</h4>
                     <p className="text-xs text-white/60">${item.price}</p>
                   </div>
                 </div>
-                {isOwned && (
-                  <Badge variant="outline" className="bg-royal-gold/20 border-royal-gold/40 text-royal-gold">
-                    Owned
-                  </Badge>
-                )}
+                <Badge className={getRarityClass(item.rarity)}>
+                  {item.rarity.charAt(0).toUpperCase() + item.rarity.slice(1)}
+                </Badge>
               </div>
               
               <p className="text-sm text-white/70 mb-4">
                 {item.description}
               </p>
               
-              <div className="bg-black/30 rounded-lg p-3 mb-4 flex items-center justify-center">
-                {item.preview}
+              <div className="h-16 rounded-lg mb-4 flex items-center justify-center" 
+                   style={{ background: item.preview, position: 'relative' }}>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <Sparkles className="h-8 w-8 text-white animate-pulse" />
+                </div>
               </div>
               
               <RoyalButton
@@ -133,7 +129,7 @@ const ProfileDecorations: React.FC<ProfileDecorationsProps> = ({ onPurchase, use
                 size="sm"
                 className="w-full"
                 disabled={isOwned}
-                onClick={() => onPurchase(item.name, item.price, 'decorations', item.id)}
+                onClick={() => onPurchase(item.name, item.price, 'borders', item.id)}
               >
                 {isOwned ? 'Already Owned' : `Purchase for $${item.price}`}
               </RoyalButton>
