@@ -4,16 +4,27 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import ThroneBackground from '@/components/ui/throne-background';
 import RoyalDivider from '@/components/ui/royal-divider';
-import { Crown } from 'lucide-react';
+import { Crown, Scroll } from 'lucide-react';
 import { UserProfile } from '@/contexts/AuthContext';
 import { useAuth } from '@/contexts/AuthContext';
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
   user?: UserProfile;
+  title?: string;
+  subtitle?: string;
+  icon?: React.ReactNode;
+  showHeader?: boolean;
 }
 
-const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, user }) => {
+const DashboardLayout: React.FC<DashboardLayoutProps> = ({ 
+  children, 
+  user,
+  title = "Royal Treasury",
+  subtitle = "Where commoners' money transforms into digital nobility, and wealth is measured in pixels.",
+  icon = <Crown size={32} className="text-royal-gold animate-crown-glow" />,
+  showHeader = true
+}) => {
   const authContext = useAuth();
   const currentUser = user || authContext.user;
 
@@ -21,24 +32,30 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, user }) => 
     <div className="min-h-screen flex flex-col bg-background text-foreground">
       <Header />
       
-      <main className="flex-1 pt-24 pb-12 px-6 relative">
+      <main className="flex-1 pt-24 pb-16 relative">
         <div className="absolute inset-0 -z-10">
           <ThroneBackground variant="royal" density="high" animate={true} />
         </div>
         
-        <div className="max-w-7xl mx-auto">
-          <div className="mb-8 animate-fade-in">
-            <div className="flex items-center mb-2">
-              <div className="relative mr-3">
-                <Crown size={32} className="text-royal-gold animate-crown-glow" />
-                <div className="absolute -inset-2 bg-royal-gold/10 rounded-full blur-lg"></div>
+        <div className="max-w-7xl mx-auto px-6">
+          {showHeader && (
+            <div className="mb-10 animate-fade-in">
+              <div className="flex items-center mb-3">
+                <div className="relative mr-4">
+                  {icon}
+                  <div className="absolute -inset-3 bg-royal-gold/10 rounded-full blur-lg"></div>
+                </div>
+                <h1 className="text-3xl font-bold royal-gradient font-medieval">{title}</h1>
               </div>
-              <h1 className="text-3xl font-bold royal-gradient">Your Royal Treasury</h1>
+              <div className="flex items-center ml-12">
+                <Scroll className="h-4 w-4 text-white/40 mr-2" />
+                <p className="text-white/70 italic font-medieval">
+                  "{subtitle}"
+                </p>
+              </div>
+              <RoyalDivider variant="line" className="mt-6" />
             </div>
-            <p className="text-white/70 italic ml-10">
-              "Where commoners' money transforms into digital nobility, and wealth is measured in pixels."
-            </p>
-          </div>
+          )}
           
           {children}
         </div>

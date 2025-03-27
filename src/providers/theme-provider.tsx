@@ -25,7 +25,7 @@ const ThemeProviderContext = createContext<ThemeProviderState>(initialState);
 
 export function ThemeProvider({
   children,
-  defaultTheme = "dark", // Change default to dark
+  defaultTheme = "dark", // Keep dark as default
   storageKey = "p2w-ui-theme",
   ...props
 }: ThemeProviderProps) {
@@ -57,8 +57,10 @@ export function ThemeProvider({
       root.classList.add("medieval-theme");
     }
     
-    // Set CSS variables for royal colors
+    // Set CSS variables for enhanced royal colors
     document.documentElement.style.setProperty('--royal-gold-opacity', effectiveTheme === 'dark' ? '1' : '0.85');
+    document.documentElement.style.setProperty('--royal-parchment', effectiveTheme === 'dark' ? 'rgba(245, 222, 179, 0.05)' : 'rgba(245, 222, 179, 0.15)');
+    document.documentElement.style.setProperty('--royal-gradient-opacity', effectiveTheme === 'dark' ? '0.9' : '0.7');
     
   }, [theme]);
 

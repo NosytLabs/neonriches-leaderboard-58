@@ -1,0 +1,47 @@
+
+/* Import medieval style fonts */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&display=swap');
+
+/* Font classes */
+.font-medieval {
+  font-family: 'Cinzel', serif;
+}
+
+.font-medieval-text {
+  font-family: 'Cormorant Garamond', serif;
+}
+
+/* Royal text with medieval style */
+.royal-text {
+  font-family: 'Cinzel', serif;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+}
+
+/* Parchment text style */
+.parchment-text {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  line-height: 1.6;
+}
+
+/* Heading with medieval style */
+h1.medieval-heading,
+h2.medieval-heading,
+h3.medieval-heading {
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin-bottom: 0.5em;
+}
+
+/* Drop cap for first letter */
+.medieval-drop-cap::first-letter {
+  font-family: 'Cinzel', serif;
+  font-size: 3em;
+  line-height: 0.8;
+  float: left;
+  margin-right: 0.1em;
+  color: var(--royal-gold);
+}

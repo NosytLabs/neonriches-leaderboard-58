@@ -3,8 +3,9 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Import custom utilities after Tailwind directives */
+/* Import custom styles after Tailwind directives */
 @import './styles/tailwind-utilities.css';
+@import './styles/fonts.css';
 
 @layer base {
   :root {
@@ -96,6 +97,14 @@
     --sidebar-accent-foreground: 0 0% 98%;
     --sidebar-border: 240 15% 18%;
     --sidebar-ring: 240 15% 84%;
+  }
+  
+  body {
+    @apply font-medieval-text;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-medieval;
   }
 }
 
@@ -312,6 +321,17 @@
     radial-gradient(circle at 90% 30%, rgba(var(--royal-gold), 0.12) 0%, transparent 60%),
     radial-gradient(circle at 50% 80%, rgba(var(--royal-navy), 0.12) 0%, transparent 60%),
     radial-gradient(circle at 20% 60%, rgba(var(--royal-purple), 0.08) 0%, transparent 50%);
+}
+
+/* Enhanced glass morphism */
+.glass-morphism {
+  @apply backdrop-blur-xl bg-white/5 border border-white/10;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.glass-morphism-highlight {
+  @apply backdrop-blur-xl bg-white/8 border border-royal-gold/20;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 8px rgba(212, 175, 55, 0.15);
 }
 
 /* Import shame effects and medieval animations after Tailwind has processed everything */

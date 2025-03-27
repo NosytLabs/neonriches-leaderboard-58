@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Moon, Sun } from "lucide-react";
+import { Moon, Sun, Crown } from "lucide-react";
 import { useTheme } from "@/providers/theme-provider";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,27 +16,25 @@ export function ThemeToggle() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="relative hover:bg-transparent">
+        <Button variant="ghost" size="icon" className="relative hover:bg-transparent royal-button group">
           <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0 text-royal-gold hover:text-royal-gold/80" />
           <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100 text-royal-gold hover:text-royal-gold/80" />
           <span className="sr-only">Toggle theme</span>
-          <div className="absolute -inset-2 rounded-full bg-royal-gold/10 opacity-0 transition-opacity group-hover:opacity-100"></div>
+          <div className="absolute -inset-2 rounded-full bg-royal-gold/10 opacity-0 transition-opacity group-hover:opacity-100 group-hover:animate-pulse"></div>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="glass-morphism border-royal-gold/20">
-        <DropdownMenuItem onClick={() => setTheme("light")} className="cursor-pointer hover:bg-white/10">
+      <DropdownMenuContent align="end" className="glass-morphism border-royal-gold/30 animate-scale-in">
+        <DropdownMenuItem onClick={() => setTheme("light")} className="cursor-pointer hover:bg-white/10 focus:bg-white/15">
           <Sun className="mr-2 h-4 w-4 text-royal-gold" />
-          <span>Light</span>
+          <span>Light Theme</span>
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("dark")} className="cursor-pointer hover:bg-white/10">
+        <DropdownMenuItem onClick={() => setTheme("dark")} className="cursor-pointer hover:bg-white/10 focus:bg-white/15">
           <Moon className="mr-2 h-4 w-4 text-royal-gold" />
-          <span>Dark</span>
+          <span>Dark Theme</span>
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("system")} className="cursor-pointer hover:bg-white/10">
-          <span className="mr-2 h-4 w-4 flex items-center justify-center">
-            <span className="text-royal-gold text-xs">⚙️</span>
-          </span>
-          <span>System</span>
+        <DropdownMenuItem onClick={() => setTheme("system")} className="cursor-pointer hover:bg-white/10 focus:bg-white/15">
+          <Crown className="mr-2 h-4 w-4 text-royal-gold" />
+          <span>System Default</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

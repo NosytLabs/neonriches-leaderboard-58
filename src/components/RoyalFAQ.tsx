@@ -6,89 +6,89 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Scroll, Crown } from 'lucide-react';
-
-const faqItems = [
-  {
-    question: "How does the Royal Hierarchy work?",
-    answer: "The Royal Hierarchy is a permanent leaderboard where your position is determined solely by your financial contributions to the crown. For every $1 contributed, you gain 1 rank point. The more you contribute, the higher your position in the Royal Court."
-  },
-  {
-    question: "What benefits do I get from a higher rank?",
-    answer: "Higher ranks come with numerous privileges: customizable profile pages with enhanced features, access to exclusive events, special titles and badges, increased visibility in the Royal Court, and eligibility for the weekly prize pool distributions. The higher your rank, the more influence and perks you enjoy."
-  },
-  {
-    question: "What are the Royal Houses?",
-    answer: "The Royal Houses are three competing dynasties: the Purple Dynasty (wisdom and magic), the Gold Dominion (wealth and prosperity), and the Azure Order (honor and diplomacy). When you join a house, your contributions also benefit your dynasty's standing, and you can participate in house-exclusive events and competitions."
-  },
-  {
-    question: "Do rankings ever reset?",
-    answer: "No. The Royal Court maintains a permanent record of all contributions. Your rank is eternal, though your relative position may change as other nobles ascend or descend. This ensures that your investment in status remains valuable over time."
-  },
-  {
-    question: "How do the weekly events work?",
-    answer: "Each week features special events like Poke Party, Rank Multiplier, or Team Takeover that provide alternative ways to influence the rankings. These events may allow you to temporarily affect others' positions, gain bonus rank points, or earn special rewards through strategic participation rather than direct spending."
-  },
-  {
-    question: "What is the Prize Pool and how is it distributed?",
-    answer: "The Affluent Assembly Prize Pool receives 15% of all weekly contributions. Half is distributed through the Sustenance Fund (based on spending consistency and loyalty), and half through the Whale Endowment (rewarding top spenders). Distribution occurs weekly, with bonuses for spending streaks and lifetime contribution milestones."
-  },
-  {
-    question: "What exclusive features does the top spender get?",
-    answer: "The current throne holder (top spender) enjoys the most prestigious benefits: a featured showcase on our homepage, complete control over their profile layout, maximized exposure for their external links, and exclusive premium customization options that are unavailable to others. This essentially serves as a promotional spot for their brand or persona."
-  },
-  {
-    question: "Can I customize my profile?",
-    answer: "Yes. All patrons can create basic profiles with limited text and a single image. Nobles who have contributed $25 or more unlock the Pro Tier with enhanced features including more images, links, custom RGB gradients and borders, video embeds, and detailed visitor statistics."
-  }
-];
+import { Shield, Trophy, Crown, DollarSign, Scroll, Users, Sparkles } from "lucide-react";
+import RoyalDivider from '@/components/ui/royal-divider';
 
 const RoyalFAQ = () => {
+  const faqItems = [
+    {
+      question: "How is my rank determined?",
+      answer: "Your rank is determined purely by how much money you've contributed to the platform. Each $1 spent equals 1 unit of rank. The leaderboard never resets, so your investment in digital prestige is eternal.",
+      icon: <Trophy className="h-5 w-5 text-royal-gold" />,
+    },
+    {
+      question: "What are Noble Houses and how do I join one?",
+      answer: "Noble Houses (Red, Green, and Blue) are teams you can join to compete collectively. Your spending contributes to your house's total. Join a house through your dashboard, but choose wisely—switching houses requires a significant 'disloyalty tax'.",
+      icon: <Shield className="h-5 w-5 text-royal-gold" />,
+    },
+    {
+      question: "What benefits do top spenders receive?",
+      answer: "Top spenders unlock exclusive profile customization options, including animated borders, premium layouts, and special badges. The #1 spender receives the Crown Badge, maximum visibility across the site, and double rewards from weekly events.",
+      icon: <Crown className="h-5 w-5 text-royal-gold" />,
+    },
+    {
+      question: "How do weekly events work?",
+      answer: "Each week features different events where you can spend money to affect the leaderboard temporarily. During the Public Shaming Festival, you can pay to drop others down in rank. Team Wars let houses compete for weekly glory and rewards.",
+      icon: <Sparkles className="h-5 w-5 text-royal-gold" />,
+    },
+    {
+      question: "What are spending tiers and their benefits?",
+      answer: "As you spend more, you progress through tiers from Crab ($0-$50) to Whale ($25,000+). Each tier unlocks new profile customization options, more visibility on the platform, and greater influence in weekly events.",
+      icon: <DollarSign className="h-5 w-5 text-royal-gold" />,
+    },
+    {
+      question: "Is there a prize pool or rewards system?",
+      answer: "Yes! 15% of each week's spending goes into the prize pool, split between consistent spenders and the top whales. The distribution heavily favors those at the top of the hierarchy, with special bonuses for maintaining spending streaks.",
+      icon: <Scroll className="h-5 w-5 text-royal-gold" />,
+    },
+    {
+      question: "How do team challenges work?",
+      answer: "Team challenges pit the three houses against each other in weekly competitions. The winning team receives bonuses to their members' visibility and temporary rank boosts. Team members must actively participate to receive these benefits.",
+      icon: <Users className="h-5 w-5 text-royal-gold" />,
+    },
+  ];
+
   return (
-    <section className="w-full py-20 px-6 relative overflow-hidden throne-bg">
-      <div className="max-w-4xl mx-auto">
-        <div className="text-center mb-12">
-          <div className="inline-block mb-4">
-            <div className="relative">
-              <Scroll size={40} className="text-royal-gold mx-auto" />
-              <div className="absolute -inset-4 bg-royal-gold/20 blur-xl rounded-full"></div>
-            </div>
-          </div>
-          <h2 className="text-4xl font-medieval royal-gradient mb-4">Royal Proclamations</h2>
-          <p className="text-foreground/70 max-w-2xl mx-auto font-serif">
-            Common inquiries from aspiring nobles about the court's customs and protocols.
+    <div className="my-16 animate-parchment-unfurl">
+      <div className="text-center mb-10">
+        <h2 className="text-3xl font-bold royal-gradient mb-3 font-medieval">Royal Court FAQ</h2>
+        <p className="text-foreground/70 max-w-2xl mx-auto">
+          Common inquiries from nobles about our digital hierarchy
+        </p>
+      </div>
+      
+      <RoyalDivider variant="line" className="mb-8" />
+      
+      <div className="glass-morphism border-royal-gold/20 rounded-lg p-6 max-w-4xl mx-auto">
+        <Accordion type="single" collapsible className="space-y-4">
+          {faqItems.map((item, index) => (
+            <AccordionItem 
+              key={index} 
+              value={`item-${index}`}
+              className="border border-royal-gold/20 rounded-lg px-6 py-2 mb-4 bg-background/20 data-[state=open]:bg-background/40 transition-all duration-300"
+            >
+              <AccordionTrigger className="py-4 hover:no-underline group">
+                <div className="flex items-center text-left">
+                  <div className="mr-3">{item.icon}</div>
+                  <span className="text-lg font-medieval group-hover:text-royal-gold transition-colors">
+                    {item.question}
+                  </span>
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="text-foreground/70 pt-2 pb-4 pl-10 leading-relaxed">
+                {item.answer}
+              </AccordionContent>
+            </AccordionItem>
+          ))}
+        </Accordion>
+        
+        <div className="mt-8 text-center p-4 border border-royal-gold/30 rounded-lg bg-royal-gold/5 royal-corner-ornament">
+          <p className="text-sm text-white/70 font-medieval">
+            "Remember, in our kingdom, your worth is measured not by talent or merit, but by the weight of your financial contributions."
           </p>
         </div>
-        
-        <div className="royal-card-enhanced rounded-xl p-6 md:p-8 backdrop-blur-md">
-          <Accordion type="single" collapsible className="w-full">
-            {faqItems.map((item, index) => (
-              <AccordionItem 
-                key={index} 
-                value={`item-${index}`} 
-                className="border-b border-foreground/10 last:border-b-0"
-              >
-                <AccordionTrigger 
-                  className="text-lg font-medieval py-6 text-foreground hover:text-royal-gold transition-colors group flex items-center"
-                >
-                  <div className="flex items-center">
-                    {index === 6 && (
-                      <Crown size={16} className="mr-2 text-royal-gold animate-crown-glow" />
-                    )}
-                    <span>{item.question}</span>
-                  </div>
-                </AccordionTrigger>
-                <AccordionContent className="text-foreground/70 font-serif">
-                  <div className="pt-2 pb-4 medieval-border royal-corner-ornament">
-                    {item.answer}
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
-        </div>
       </div>
-    </section>
+    </div>
   );
 };
 

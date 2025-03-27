@@ -1,5 +1,5 @@
 
-import React, { useRef } from 'react';
+import React from 'react';
 import useFloatingCoins from '@/hooks/use-floating-coins';
 import { useCrownInteraction } from '@/hooks/use-crown-interaction';
 import { useQuickAscension } from '@/hooks/use-quick-ascension';
@@ -12,7 +12,7 @@ import HeroQuote from './HeroQuote';
 import HeroActionButtons from './HeroActionButtons';
 import HeroFeatureSection from './HeroFeatureSection';
 import HeroFooter from './HeroFooter';
-import { Crown, Gem, Shield } from 'lucide-react';
+import { Crown, Gem, Shield, Coins, Trophy, DollarSign } from 'lucide-react';
 
 interface HeroContentProps {
   isVisible: boolean;
@@ -36,62 +36,80 @@ const HeroContent: React.FC<HeroContentProps> = ({ isVisible, heroRef }) => {
   const features = [
     {
       color: 'royal-crimson',
-      title: 'Wealth Equals Status',
-      description: 'One dollar equals one rank point. No skills, talents, or merits considered—just pure, unadulterated wealth.',
-      icon: <Crown size={28} className="text-royal-crimson" />
-    }, 
+      icon: <Crown className="h-10 w-10 text-royal-crimson" />,
+      title: "Royal Status",
+      description: "Showcase your rank proudly in our digital hierarchy"
+    },
     {
       color: 'royal-gold',
-      title: 'Digital Prestige',
-      description: 'Spend real currency for completely digital, utterly meaningless prestige. The perfect satire of modern status seeking.',
-      icon: <Gem size={28} className="text-royal-gold" />
-    }, 
+      icon: <Coins className="h-10 w-10 text-royal-gold" />,
+      title: "Wealth Display",
+      description: "Flaunt your financial triumph for all to envy"
+    },
     {
       color: 'royal-navy',
-      title: 'Eternal Rankings',
-      description: 'The leaderboard never resets. Your financial contributions to this absurd hierarchy are eternally recorded.',
-      icon: <Shield size={28} className="text-royal-navy" />
+      icon: <Shield className="h-10 w-10 text-royal-navy" />,
+      title: "Team Glory",
+      description: "Join a noble house and compete for collective prestige"
+    },
+    {
+      color: 'royal-purple',
+      icon: <Gem className="h-10 w-10 text-royal-purple" />,
+      title: "Profile Prestige",
+      description: "Unlock exclusive profile customization options"
+    },
+    {
+      color: 'royal-mahogany',
+      icon: <Trophy className="h-10 w-10 text-royal-mahogany" />,
+      title: "Spending Badges",
+      description: "Collect prestigious badges based on your expenditure"
+    },
+    {
+      color: 'royal-velvet',
+      icon: <DollarSign className="h-10 w-10 text-royal-velvet" />,
+      title: "Weekly Rewards",
+      description: "Compete in weekly tournaments for additional benefits"
     }
   ];
 
   return (
-    <div className="max-w-7xl mx-auto px-6 relative z-10">
-      <div className="flex flex-col items-center text-center">
-        <HeroStatusTag>
-          <span className="text-sm text-white/80 flex items-center">
-            <span className="inline-block w-2.5 h-2.5 rounded-full bg-royal-gold mr-2 animate-pulse"></span>
-            <span className="font-bold tracking-wide text-royal-gold">NOBILITY FOR SALE</span> — The Throne Awaits Your Tribute
-          </span>
-        </HeroStatusTag>
+    <div className="container mx-auto px-4 relative z-10 pt-10 pb-20">
+      <div className="text-center mb-16 animate-parchment-unfurl">
+        <HeroStatusTag />
         
-        <HeroCrown onClick={() => handleCrownClick(heroRef)} />
+        <div className="my-6">
+          <HeroCrown onClick={handleCrownClick} />
+        </div>
         
-        <HeroTitle>
-          <span className="block text-royal-gold drop-shadow-[0_4px_20px_rgba(255,215,0,0.4)]">
-            Purchase Your
-          </span>
-          <span className="block text-royal-gold drop-shadow-[0_4px_20px_rgba(255,215,0,0.4)]">
-            Place in Nobility
-          </span>
-        </HeroTitle>
+        <HeroTitle />
+        <HeroSubtitle />
         
-        <HeroSubtitle text="In our digital kingdom, your rank is determined by one factor alone:" />
+        <div className="flex justify-center space-x-12 mt-8">
+          <HeroValueDisplay 
+            label="Court Members" 
+            value="10,568" 
+            icon={<Shield size={18} className="text-royal-gold" />} 
+          />
+          <HeroValueDisplay 
+            label="Gold Spent" 
+            value="$1,245,789" 
+            icon={<Coins size={18} className="text-royal-gold" />} 
+          />
+          <HeroValueDisplay 
+            label="Active Nobles" 
+            value="1,287" 
+            icon={<Crown size={18} className="text-royal-gold" />} 
+          />
+        </div>
         
-        <HeroValueDisplay>The Size of Your Tribute</HeroValueDisplay>
+        <HeroQuote />
         
-        <HeroQuote text="&quot;Where the wealthy become nobility and everyone else becomes inconsequential.&quot;" />
-        
-        <HeroActionButtons 
-          primaryText="Secure Your Nobility"
-          secondaryText="View The Royal Court"
-          onPrimaryClick={handleQuickAscension}
-          secondaryLink="/leaderboard"
-        />
-        
-        <HeroFeatureSection features={features} />
-        
-        <HeroFooter text="* By participating, you acknowledge that you're spending real money for fake status in a satirical experiment about the absurdity of wealth-based hierarchies. And we think that's hilarious." />
+        <HeroActionButtons onAscend={handleQuickAscension} />
       </div>
+      
+      <HeroFeatureSection features={features} />
+      
+      <HeroFooter />
     </div>
   );
 };
