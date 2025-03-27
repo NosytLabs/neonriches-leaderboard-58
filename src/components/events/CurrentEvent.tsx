@@ -2,10 +2,11 @@
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
-import { Calendar, Info } from 'lucide-react';
+import { Calendar, Info, DollarSign } from 'lucide-react';
 import { currentEvent, formatDate } from './data';
 import CountdownTimer from './CountdownTimer';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 
 const CurrentEvent = () => {
   return (
@@ -23,8 +24,9 @@ const CurrentEvent = () => {
               <span className="bg-team-red text-white text-xs px-2 py-1 rounded-full">
                 ACTIVE EVENT
               </span>
-              <span className="bg-white/20 text-white text-xs px-2 py-1 rounded-full">
-                COSMETIC ONLY
+              <span className="bg-white/20 text-white text-xs px-2 py-1 rounded-full flex items-center gap-1">
+                <DollarSign size={10} className="text-royal-gold" />
+                <span>COSMETIC ONLY</span>
               </span>
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -68,11 +70,12 @@ const CurrentEvent = () => {
             </div>
           </div>
           
-          <div className="bg-white/5 p-3 rounded-lg">
-            <p className="text-sm text-white/80 italic">
-              <strong>Important:</strong> All events are purely for fun and cosmetic rewards. Your actual rank on the leaderboard is always calculated based solely on your total spending, where $1 equals 1 unit of rank.
-            </p>
-          </div>
+          <Alert className="bg-royal-gold/5 border-royal-gold/20">
+            <DollarSign className="h-4 w-4 text-royal-gold" />
+            <AlertDescription className="text-white/80">
+              <strong>$1 = 1 Rank Guarantee:</strong> All events are purely for fun and cosmetic rewards. Your actual rank on the leaderboard is always calculated based solely on your total spending, where $1 equals 1 unit of rank.
+            </AlertDescription>
+          </Alert>
         </CardContent>
       </Card>
     </TooltipProvider>

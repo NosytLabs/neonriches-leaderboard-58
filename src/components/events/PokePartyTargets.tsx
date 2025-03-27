@@ -3,11 +3,12 @@ import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import PaymentModal from '@/components/PaymentModal';
-import { DollarSign, Clock, Zap, Sparkles } from 'lucide-react';
+import { DollarSign, Clock, Zap, Sparkles, Info } from 'lucide-react';
 import { topUsers, getTeamColor } from './data';
 import { useToast } from '@/hooks/use-toast';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 
 const PokePartyTargets = () => {
   const { toast } = useToast();
@@ -110,6 +111,14 @@ const PokePartyTargets = () => {
           </div>
         </div>
         
+        <Alert className="mb-6 border-white/10 bg-white/5">
+          <Info className="h-4 w-4 text-royal-gold" />
+          <AlertDescription className="text-white/80">
+            <strong>Important:</strong> Poking is purely cosmetic! It only changes how a user's rank appears visually for 24 hours. 
+            It doesn't affect their actual rank calculation, which is always $1 = 1 rank point.
+          </AlertDescription>
+        </Alert>
+        
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {topUsers.map((targetUser) => (
             <Card 
@@ -195,11 +204,14 @@ const PokePartyTargets = () => {
                         <p className="text-sm text-white/70">
                           This will temporarily show {targetUser.username} as rank #{targetUser.rank + 1} instead of #{targetUser.rank} for 24 hours. This is purely visual and does not affect their actual standing.
                         </p>
-                        <div className="text-xs text-white/50 mt-2">
-                          After poking, you'll need to wait 24 hours before poking this user again.
+                        <div className="flex items-center gap-2 mt-2 bg-royal-gold/5 p-2 rounded border border-royal-gold/20">
+                          <DollarSign size={16} className="text-royal-gold shrink-0" />
+                          <p className="text-xs text-white/80">
+                            <strong>$1 = 1 Rank Guarantee:</strong> All users' actual ranks are always calculated based solely on total spending.
+                          </p>
                         </div>
-                        <div className="text-xs text-team-red mt-1">
-                          Note: All pokes are cosmetic only and don't affect the $1 = 1 rank calculation system.
+                        <div className="text-xs text-white/50 mt-1">
+                          After poking, you'll need to wait 24 hours before poking this user again.
                         </div>
                       </div>
                     </HoverCardContent>

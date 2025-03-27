@@ -3,7 +3,7 @@
 export const currentEvent = {
   id: 1,
   name: 'Poke Party',
-  description: 'Pay $0.50 to visually drop another user down one rank for 24 hours. This is purely cosmetic and doesn\'t affect actual rankings.',
+  description: 'Pay $0.50 to visually drop another user down one rank for 24 hours. This is purely cosmetic and doesn\'t affect actual rankings - your $1 = 1 rank is always preserved.',
   startDate: new Date(new Date().getTime() - 3 * 24 * 60 * 60 * 1000), // 3 days ago
   endDate: new Date(new Date().getTime() + 4 * 24 * 60 * 60 * 1000),   // 4 days from now
   progress: 65,
