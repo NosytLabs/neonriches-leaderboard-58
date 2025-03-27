@@ -1,8 +1,10 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Crown, Coins } from 'lucide-react';
+
 const Hero = () => {
-  return <section className="w-full min-h-[90vh] pt-32 pb-20 relative overflow-hidden throne-bg">
+  return (
+    <section className="w-full min-h-[90vh] pt-32 pb-20 relative overflow-hidden throne-bg">
       <div className="absolute inset-0 z-0">
         <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-royal-purple/20 via-royal-gold/10 to-royal-blue/20 opacity-20"></div>
         <div className="absolute top-1/3 -left-1/4 w-96 h-96 rounded-full bg-royal-purple/20 filter blur-[100px] animate-pulse-slow"></div>
@@ -25,28 +27,38 @@ const Hero = () => {
             </div>
           </div>
           
-          <div className="mb-4">
-            <Crown size={60} className="text-royal-gold animate-crown-glow" />
+          <div className="relative mb-4 animate-crown-glow">
+            <Crown size={80} className="text-royal-gold animate-royal-pulse" />
+            <div className="absolute -inset-4 bg-royal-gold/20 blur-xl rounded-full"></div>
           </div>
           
-          <h1 className="text-5xl md:text-7xl font-royal tracking-tighter mb-6">
-            <span className="block royal-gradient">Ascend the</span>
-            <span className="block royal-gradient">Throne</span>
+          <h1 className="relative text-6xl md:text-8xl font-royal tracking-tight mb-8 group">
+            <span className="block royal-gradient font-black drop-shadow-[0_4px_16px_rgba(255,215,0,0.3)]">
+              Ascend
+            </span>
+            <span className="block royal-gradient font-black drop-shadow-[0_4px_16px_rgba(255,215,0,0.3)]">
+              the Throne
+            </span>
+            <div className="absolute -inset-x-8 -inset-y-4 bg-royal-gold/10 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
           </h1>
           
-          <p className="text-lg md:text-xl text-white/70 max-w-3xl mb-10 font-serif">
+          <p className="text-xl md:text-2xl text-white/80 max-w-3xl mb-12 font-serif leading-relaxed">
             In the realm of digital nobility, your rank is determined by your contributions to the crown. 
             Spend more to ascend the royal hierarchy and claim your rightful place upon the throne.
           </p>
           
-          <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4 mb-16">
-            <Button className="bg-gradient-to-r from-royal-purple via-royal-gold to-royal-blue hover:opacity-90 text-white px-8 py-6 text-lg rounded-full w-full sm:w-auto font-royal">
-              <Coins size={20} className="mr-2" />
+          <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-6 mb-16">
+            <Button className="bg-gradient-to-r from-royal-purple via-royal-gold to-royal-blue hover:opacity-90 text-white px-8 py-7 text-lg rounded-full w-full sm:w-auto font-royal group relative overflow-hidden">
+              <div className="absolute inset-0 bg-white/20 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <Coins size={24} className="mr-2" />
               Fund Your Ascension
             </Button>
-            <Button variant="outline" className="glass-morphism border-white/10 text-white hover:bg-white/10 hover:text-white px-8 py-6 text-lg rounded-full w-full sm:w-auto">
-              View Royal Court
-              <ArrowRight size={18} className="ml-2" />
+            
+            <Button variant="outline" className="glass-morphism border-white/10 text-white hover:bg-white/10 hover:text-white px-8 py-7 text-lg rounded-full w-full sm:w-auto group">
+              <span className="relative z-10 flex items-center">
+                View Royal Court
+                <ArrowRight size={20} className="ml-2 group-hover:translate-x-1 transition-transform duration-200" />
+              </span>
             </Button>
           </div>
           
@@ -73,6 +85,8 @@ const Hero = () => {
           </div>
         </div>
       </div>
-    </section>;
+    </section>
+  );
 };
+
 export default Hero;
