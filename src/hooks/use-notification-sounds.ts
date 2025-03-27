@@ -102,10 +102,6 @@ const useNotificationSounds = (): UseNotificationSoundsReturn => {
       
       // Play the sound and handle errors
       sound.play()
-        .then(() => {
-          // Track active audio elements for potential pause
-          const activeAudioRef = audioElements;
-        })
         .catch(e => {
           // Most browsers require user interaction before playing audio
           console.log('Audio playback error (likely needs user interaction):', e);
