@@ -21,6 +21,7 @@ const Profile = lazy(() => import('./pages/Profile'));
 const Auth = lazy(() => import('./pages/Auth'));
 const Events = lazy(() => import('./pages/Events'));
 const Updates = lazy(() => import('./pages/Updates'));
+const Leaderboard = lazy(() => import('./pages/Leaderboard'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 
 function App() {
@@ -34,6 +35,7 @@ function App() {
           <Route path="/auth" element={<Auth />} />
           <Route path="/events" element={<Events />} />
           <Route path="/updates" element={<Updates />} />
+          <Route path="/leaderboard" element={<Leaderboard />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>

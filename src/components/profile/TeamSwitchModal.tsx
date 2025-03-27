@@ -1,105 +1,161 @@
 
 import React, { useState } from 'react';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Label } from '@/components/ui/label';
-import { useToast } from '@/hooks/use-toast';
-import { UserProfile } from '@/contexts/AuthContext';
+import { useAuth } from '@/contexts/AuthContext';
+import { TeamColor, teamData } from '@/types/teams';
+import { Users, Clock } from 'lucide-react';
+import { switchUserTeam } from '@/services/teamService';
 
 interface TeamSwitchModalProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  user: UserProfile;
-  onTeamChange: (team: 'red' | 'green' | 'blue') => Promise<void>;
+  trigger?: React.ReactNode;
+  onSuccess?: () => void;
 }
 
-const TeamSwitchModal = ({ open, onOpenChange, user, onTeamChange }: TeamSwitchModalProps) => {
-  const { toast } = useToast();
-  const [selectedTeam, setSelectedTeam] = useState<'red' | 'green' | 'blue'>(user.team || 'red');
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const handleTeamChange = async () => {
-    if (selectedTeam === user.team) {
-      toast({
-        title: "No change",
-        description: "You're already on this team.",
-      });
-      onOpenChange(false);
+const TeamSwitchModal: React.FC<TeamSwitchModalProps> = ({
+  trigger,
+  onSuccess
+}) => {
+  const { user, updateProfile } = useAuth();
+  const [selectedTeam, setSelectedTeam] = useState<TeamColor | null>(null);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [open, setOpen] = useState(false);
+  
+  const handleTeamSelect = (team: TeamColor) => {
+    setSelectedTeam(team);
+    setError(null);
+  };
+  
+  const handleJoinTeam = async () => {
+    if (!selectedTeam) {
+      setError('Please select a team to join');
       return;
     }
-
-    setIsSubmitting(true);
+    
+    setIsProcessing(true);
+    setError(null);
+    
     try {
-      await onTeamChange(selectedTeam);
-      toast({
-        title: "Team changed!",
-        description: `You've successfully joined Team ${selectedTeam.charAt(0).toUpperCase() + selectedTeam.slice(1)}!`,
-      });
-      onOpenChange(false);
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to change team. Please try again.",
-        variant: "destructive",
-      });
+      const result = await switchUserTeam(user, selectedTeam, updateProfile);
+      
+      if (result.success) {
+        if (onSuccess) {
+          onSuccess();
+        }
+        setOpen(false);
+      } else {
+        setError(result.message);
+      }
+    } catch (err) {
+      setError('Failed to join team. Please try again.');
     } finally {
-      setIsSubmitting(false);
+      setIsProcessing(false);
     }
   };
-
+  
+  // Get the time since last team switch
+  const getLastSwitchTime = () => {
+    const lastTeamSwitchTime = localStorage.getItem('lastTeamSwitch');
+    if (lastTeamSwitchTime) {
+      const lastSwitch = parseInt(lastTeamSwitchTime, 10);
+      const now = Date.now();
+      const daysSinceLastSwitch = Math.floor((now - lastSwitch) / (24 * 60 * 60 * 1000));
+      
+      if (daysSinceLastSwitch < 1) {
+        const hoursSinceLastSwitch = Math.floor((now - lastSwitch) / (60 * 60 * 1000));
+        return `Last switched ${hoursSinceLastSwitch} hours ago`;
+      } else if (daysSinceLastSwitch === 1) {
+        return 'Last switched yesterday';
+      } else {
+        return `Last switched ${daysSinceLastSwitch} days ago`;
+      }
+    }
+    
+    return null;
+  };
+  
+  const lastSwitchTime = getLastSwitchTime();
+  
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="glass-morphism border-white/10">
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        {trigger || (
+          <Button variant="outline" className="w-full glass-morphism border-white/10 hover:bg-white/10">
+            <Users className="mr-2 h-4 w-4" />
+            Switch Team
+          </Button>
+        )}
+      </DialogTrigger>
+      <DialogContent className="glass-morphism border-white/10 sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Switch Team</DialogTitle>
+          <DialogTitle>Join a Team</DialogTitle>
           <DialogDescription>
-            Choose a team to join. Your contributions will count toward your team's rank.
+            Select a team to join and compete for team prizes.
+            {lastSwitchTime && (
+              <div className="flex items-center mt-2 text-xs text-white/60">
+                <Clock className="h-3 w-3 mr-1" />
+                {lastSwitchTime}
+              </div>
+            )}
           </DialogDescription>
         </DialogHeader>
-
-        <div className="py-4">
-          <RadioGroup value={selectedTeam} onValueChange={(value) => setSelectedTeam(value as 'red' | 'green' | 'blue')}>
-            <div className="flex items-center space-x-2 mb-4">
-              <RadioGroupItem value="red" id="team-red" className="border-team-red text-team-red" />
-              <Label htmlFor="team-red" className="flex items-center cursor-pointer">
-                <div className="w-4 h-4 bg-team-red rounded-full mr-2"></div>
-                <span>Red Team (Neon Fire)</span>
-              </Label>
+        
+        <div className="grid grid-cols-1 gap-4 py-4">
+          {Object.values(teamData).map((team) => (
+            <div 
+              key={team.id}
+              className={`glass-morphism rounded-lg p-4 cursor-pointer transition-all hover:border-${team.id} ${
+                selectedTeam === team.id 
+                  ? `border-2 border-team-${team.id} bg-white/5` 
+                  : 'border border-white/10'
+              }`}
+              style={{ borderColor: selectedTeam === team.id ? team.color : undefined }}
+              onClick={() => handleTeamSelect(team.id)}
+            >
+              <div className="flex items-center">
+                <div 
+                  className="w-10 h-10 rounded-full flex items-center justify-center mr-3 text-xl"
+                  style={{ backgroundColor: team.bgColor }}
+                >
+                  {team.icon}
+                </div>
+                <div>
+                  <div className="font-medium" style={{ color: team.color }}>{team.name}</div>
+                  <div className="text-sm text-white/70">{team.description}</div>
+                </div>
+              </div>
+              
+              <div className="mt-2 grid grid-cols-2 gap-2 text-sm text-white/60">
+                <div>Members: {team.members}</div>
+                <div>Rank: #{team.rank}</div>
+              </div>
             </div>
-            <div className="flex items-center space-x-2 mb-4">
-              <RadioGroupItem value="green" id="team-green" className="border-team-green text-team-green" />
-              <Label htmlFor="team-green" className="flex items-center cursor-pointer">
-                <div className="w-4 h-4 bg-team-green rounded-full mr-2"></div>
-                <span>Green Team (Lime Zap)</span>
-              </Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="blue" id="team-blue" className="border-team-blue text-team-blue" />
-              <Label htmlFor="team-blue" className="flex items-center cursor-pointer">
-                <div className="w-4 h-4 bg-team-blue rounded-full mr-2"></div>
-                <span>Blue Team (Cool Pulse)</span>
-              </Label>
-            </div>
-          </RadioGroup>
+          ))}
         </div>
-
-        <DialogFooter>
-          <Button 
-            variant="outline" 
-            onClick={() => onOpenChange(false)} 
-            className="glass-morphism border-white/10 text-white hover:bg-white/10"
-          >
+        
+        {error && (
+          <div className="text-destructive text-sm mb-2">{error}</div>
+        )}
+        
+        <div className="flex justify-end">
+          <Button variant="outline" className="mr-2 glass-morphism border-white/10" onClick={() => setOpen(false)}>
             Cancel
           </Button>
           <Button 
-            onClick={handleTeamChange} 
-            className="bg-gradient-to-r from-team-red via-team-green to-team-blue hover:opacity-90 text-white"
-            disabled={isSubmitting}
+            onClick={handleJoinTeam}
+            disabled={!selectedTeam || isProcessing}
+            className={selectedTeam ? `bg-team-${selectedTeam} hover:bg-team-${selectedTeam}/90 text-white` : ''}
           >
-            {isSubmitting ? "Switching..." : "Confirm Team Change"}
+            {isProcessing ? (
+              <>
+                <span className="animate-spin mr-2">⚙️</span> Joining...
+              </>
+            ) : (
+              'Join Team'
+            )}
           </Button>
-        </DialogFooter>
+        </div>
       </DialogContent>
     </Dialog>
   );
