@@ -1,29 +1,32 @@
 
 import { useState, useEffect, RefObject } from 'react';
 
-export function useHeroVisibility(heroRef: RefObject<HTMLElement>) {
-  const [isVisible, setIsVisible] = useState(false);
-  
+export function useHeroVisibility(ref: RefObject<HTMLElement>) {
+  const [isVisible, setIsVisible] = useState(true);
+
   useEffect(() => {
-    if (!heroRef.current) return;
-    
+    if (!ref.current) return;
+
     const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting) {
-          setIsVisible(true);
-        }
+      ([entry]) => {
+        // Update state when visibility changes
+        setIsVisible(entry.isIntersecting);
       },
-      { threshold: 0.1 }
+      {
+        root: null, // viewport
+        rootMargin: '-10% 0px', // trigger when element is 10% outside viewport
+        threshold: 0.1 // trigger when at least 10% of element is visible
+      }
     );
-    
-    observer.observe(heroRef.current);
-    
+
+    observer.observe(ref.current);
+
     return () => {
-      if (heroRef.current) {
-        observer.unobserve(heroRef.current);
+      if (ref.current) {
+        observer.unobserve(ref.current);
       }
     };
-  }, [heroRef]);
+  }, [ref]);
 
   return isVisible;
 }

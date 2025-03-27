@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState, Suspense, lazy } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '@/components/Header';
@@ -89,24 +88,24 @@ const Index = () => {
           </Suspense>
           
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold royal-gradient mb-2 font-medieval">
-              A Hierarchy Built Purely on Wealth
+            <h2 className="text-3xl font-bold mb-2 font-medieval">
+              <span className="royal-gradient">A Hierarchy Built Purely on Wealth</span>
             </h2>
-            <p className="text-foreground/70 max-w-2xl mx-auto">
+            <p className="text-foreground/80 max-w-2xl mx-auto font-medieval-text">
               On P2W.FUN, your status is directly proportional to your spending. $1 = 1 unit of rank. 
               The leaderboard never resets, making your investment in status eternal.
             </p>
           </div>
           
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-16">
-            <div className="glass-morphism border-white/10 rounded-lg p-6 text-center shadow-lg transition-all duration-300 hover:shadow-royal-gold/10 hover:border-royal-gold/30">
+            <div className="bg-foreground/5 backdrop-blur-md border border-foreground/10 rounded-lg p-6 text-center shadow-lg transition-all duration-300 hover:shadow-royal-gold/10 hover:border-royal-gold/30 medieval-ornament">
               <div className="relative mb-4 inline-block">
                 <div className="absolute -inset-3 bg-royal-crimson/10 rounded-full blur-md opacity-60"></div>
                 <Crown className="h-12 w-12 text-royal-gold mx-auto animate-royal-pulse relative z-10" />
                 <Sparkles className="h-4 w-4 text-royal-gold absolute -top-1 -right-1 animate-sparkle" />
               </div>
-              <h3 className="text-xl font-bold mb-2 font-medieval">Dollar-Driven Rank</h3>
-              <p className="text-foreground/70 mb-4">
+              <h3 className="text-xl font-bold mb-2 font-medieval text-royal-gold">Dollar-Driven Rank</h3>
+              <p className="text-foreground/80 mb-4 font-medieval-text">
                 Your rank is determined solely by your spending. Top spenders get exclusive perks and recognition.
               </p>
               <Link to="/leaderboard">
@@ -122,14 +121,14 @@ const Index = () => {
               </Link>
             </div>
             
-            <div className="glass-morphism border-white/10 rounded-lg p-6 text-center shadow-lg transition-all duration-300 hover:shadow-royal-gold/10 hover:border-royal-gold/30">
+            <div className="bg-foreground/5 backdrop-blur-md border border-foreground/10 rounded-lg p-6 text-center shadow-lg transition-all duration-300 hover:shadow-royal-gold/10 hover:border-royal-gold/30 medieval-ornament">
               <div className="relative mb-4 inline-block">
                 <div className="absolute -inset-3 bg-royal-gold/10 rounded-full blur-md opacity-60"></div>
                 <Trophy className="h-12 w-12 text-royal-gold mx-auto animate-royal-pulse relative z-10" />
                 <Sparkles className="h-4 w-4 text-royal-gold absolute -top-1 -right-1 animate-sparkle" style={{ animationDelay: '0.5s' }}/>
               </div>
-              <h3 className="text-xl font-bold mb-2 font-medieval">Royal Events</h3>
-              <p className="text-foreground/70 mb-4">
+              <h3 className="text-xl font-bold mb-2 font-medieval text-royal-gold">Royal Events</h3>
+              <p className="text-foreground/80 mb-4 font-medieval-text">
                 Participate in weekly events like the Public Shaming Festival where you can pay to shame other nobles.
               </p>
               <Link to="/events">
@@ -145,14 +144,14 @@ const Index = () => {
               </Link>
             </div>
             
-            <div className="glass-morphism border-white/10 rounded-lg p-6 text-center shadow-lg transition-all duration-300 hover:shadow-royal-gold/10 hover:border-royal-gold/30">
+            <div className="bg-foreground/5 backdrop-blur-md border border-foreground/10 rounded-lg p-6 text-center shadow-lg transition-all duration-300 hover:shadow-royal-gold/10 hover:border-royal-gold/30 medieval-ornament">
               <div className="relative mb-4 inline-block">
                 <div className="absolute -inset-3 bg-royal-navy/10 rounded-full blur-md opacity-60"></div>
                 <Shield className="h-12 w-12 text-royal-gold mx-auto animate-royal-pulse relative z-10" />
                 <Sparkles className="h-4 w-4 text-royal-gold absolute -top-1 -right-1 animate-sparkle" style={{ animationDelay: '1s' }}/>
               </div>
-              <h3 className="text-xl font-bold mb-2 font-medieval">Noble Houses</h3>
-              <p className="text-foreground/70 mb-4">
+              <h3 className="text-xl font-bold mb-2 font-medieval text-royal-gold">Noble Houses</h3>
+              <p className="text-foreground/80 mb-4 font-medieval-text">
                 Join one of three noble houses and compete for house glory and additional royal benefits.
               </p>
               <Link to="/dashboard">
@@ -190,7 +189,7 @@ const Index = () => {
                     </span>
                   </Button>
                 </Link>
-                <p className="mt-3 text-foreground/60 text-sm italic">
+                <p className="mt-3 text-foreground/60 text-sm italic font-medieval-text">
                   Every dollar spent elevates your standing. Why earn respect when you can simply buy it?
                 </p>
               </div>

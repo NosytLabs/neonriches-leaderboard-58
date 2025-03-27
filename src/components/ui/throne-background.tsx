@@ -1,174 +1,142 @@
 
-import React, { useEffect, useRef, useState } from 'react';
-import { cn } from '@/lib/utils';
+import React, { useEffect, useRef } from 'react';
 
 interface ThroneBackgroundProps {
-  variant?: 'default' | 'royal' | 'dark' | 'light' | 'purple';
+  variant?: 'default' | 'dark' | 'light' | 'royal';
   density?: 'low' | 'medium' | 'high';
   animate?: boolean;
   particles?: boolean;
-  className?: string;
 }
 
 const ThroneBackground: React.FC<ThroneBackgroundProps> = ({
   variant = 'default',
   density = 'medium',
-  animate = false,
-  particles = false,
-  className
+  animate = true,
+  particles = true
 }) => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [isVisible, setIsVisible] = useState(false);
-  const [isLowEndDevice, setIsLowEndDevice] = useState(false);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   
-  // Detect low-end devices once on mount
   useEffect(() => {
-    const checkDeviceCapability = () => {
-      // Check if it's a low-end device
-      const isLow = window.navigator.hardwareConcurrency 
-        ? window.navigator.hardwareConcurrency <= 2
-        : false;
-      
-      setIsLowEndDevice(isLow);
+    if (!canvasRef.current || !particles) return;
+    
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    
+    // Set canvas size
+    const updateSize = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
     };
     
-    checkDeviceCapability();
-  }, []);
-  
-  // Add visibility detection using Intersection Observer
-  useEffect(() => {
-    if (!containerRef.current) return;
+    window.addEventListener('resize', updateSize);
+    updateSize();
     
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach(entry => {
-          setIsVisible(entry.isIntersecting);
-        });
+    // Particle settings based on density
+    const particleCount = density === 'low' ? 20 : density === 'medium' ? 40 : 60;
+    
+    // Color based on variant
+    const colorScheme = {
+      default: {
+        primary: '#D4AF37',
+        secondary: '#9B2335',
+        tertiary: '#1F4788',
       },
-      { threshold: 0.1 }
-    );
-    
-    observer.observe(containerRef.current);
-    
-    return () => {
-      if (containerRef.current) {
-        observer.unobserve(containerRef.current);
+      dark: {
+        primary: '#222222',
+        secondary: '#333333',
+        tertiary: '#444444',
+      },
+      light: {
+        primary: '#DDDDDD',
+        secondary: '#CCCCCC',
+        tertiary: '#BBBBBB',
+      },
+      royal: {
+        primary: '#D4AF37',
+        secondary: '#9B2335',
+        tertiary: '#7851A9',
       }
     };
-  }, []);
-  
-  // Create particles only when component is visible and if device can handle it
-  useEffect(() => {
-    // Only create particles if they're enabled and component is visible
-    if (!particles || !containerRef.current || !isVisible) return;
     
-    // Skip particles on low-end devices
-    if (isLowEndDevice && density !== 'low') return;
+    const colors = colorScheme[variant];
     
-    const container = containerRef.current;
+    // Create particles
+    const particles = Array.from({ length: particleCount }, () => ({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      radius: Math.random() * 2 + 1,
+      color: [colors.primary, colors.secondary, colors.tertiary][Math.floor(Math.random() * 3)],
+      speed: Math.random() * 0.5 + 0.1,
+      direction: Math.random() * Math.PI * 2,
+      opacity: Math.random() * 0.5 + 0.2,
+    }));
     
-    // Significantly reduce particle count
-    const particleCount = isLowEndDevice 
-      ? 3 
-      : (density === 'high' ? 8 : density === 'medium' ? 4 : 2);
+    let animationFrame: number;
     
-    // Create list of particle elements
-    const particleElements: HTMLDivElement[] = [];
-    
-    // Batch particle creation in a document fragment for better performance
-    const fragment = document.createDocumentFragment();
-    
-    for (let i = 0; i < particleCount; i++) {
-      const particle = document.createElement('div');
-      particle.className = 'floating-particle absolute rounded-full opacity-0 pointer-events-none';
+    const draw = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
       
-      // Create fewer, larger particles that are more visible
-      const size = Math.random() * 6 + 4;
-      particle.style.width = `${size}px`;
-      particle.style.height = `${size}px`;
-      
-      // Position randomly but avoid edges
-      particle.style.left = `${Math.random() * 80 + 10}%`;
-      particle.style.top = `${Math.random() * 80 + 10}%`;
-      
-      // Apply colors based on variant
-      if (variant === 'royal') {
-        const colors = ['#D4AF37', '#8B0000', '#000080'];
-        particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-      } else if (variant === 'dark') {
-        particle.style.backgroundColor = `rgba(255, 255, 255, ${Math.random() * 0.2 + 0.1})`;
-      } else if (variant === 'light') {
-        particle.style.backgroundColor = `rgba(0, 0, 0, ${Math.random() * 0.2 + 0.1})`;
-      } else if (variant === 'purple') {
-        const opacity = Math.random() * 0.2 + 0.1;
-        particle.style.backgroundColor = `rgba(128, 0, 128, ${opacity})`;
-      } else {
-        const opacity = Math.random() * 0.2 + 0.1;
-        if (Math.random() > 0.6) {
-          particle.style.backgroundColor = `rgba(212, 175, 55, ${opacity})`;
-        } else if (Math.random() > 0.3) {
-          particle.style.backgroundColor = `rgba(139, 0, 0, ${opacity})`;
-        } else {
-          particle.style.backgroundColor = `rgba(0, 0, 128, ${opacity})`;
-        }
-      }
-      
-      // Use transform and opacity instead of left/top for better performance
-      particle.style.willChange = 'transform, opacity';
-      
-      // Use longer animation duration to reduce CPU usage
-      const duration = Math.random() * 10 + 10;
-      particle.style.animation = `float ${duration}s ease-in forwards`;
-      
-      // Stagger animation starts to spread out the rendering load
-      particle.style.animationDelay = `${Math.random() * 10}s`;
-      
-      fragment.appendChild(particle);
-      particleElements.push(particle);
-    }
-    
-    container.appendChild(fragment);
-    
-    // Clean up particles when component unmounts or becomes invisible
-    return () => {
-      particleElements.forEach(particle => {
-        if (particle.parentNode === container) {
-          container.removeChild(particle);
+      // Draw particles
+      particles.forEach(particle => {
+        ctx.beginPath();
+        ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
+        ctx.fillStyle = particle.color + Math.floor(particle.opacity * 255).toString(16).padStart(2, '0');
+        ctx.fill();
+        
+        if (animate) {
+          // Move particles
+          particle.x += Math.cos(particle.direction) * particle.speed;
+          particle.y += Math.sin(particle.direction) * particle.speed;
+          
+          // Wrap around edges
+          if (particle.x < 0) particle.x = canvas.width;
+          if (particle.x > canvas.width) particle.x = 0;
+          if (particle.y < 0) particle.y = canvas.height;
+          if (particle.y > canvas.height) particle.y = 0;
         }
       });
+      
+      animationFrame = requestAnimationFrame(draw);
     };
-  }, [particles, density, variant, isVisible, isLowEndDevice]);
+    
+    animationFrame = requestAnimationFrame(draw);
+    
+    return () => {
+      window.removeEventListener('resize', updateSize);
+      cancelAnimationFrame(animationFrame);
+    };
+  }, [particles, animate, variant, density]);
   
-  const getVariantClasses = () => {
+  // Background gradient based on variant
+  const getBackgroundClass = () => {
     switch (variant) {
-      case 'royal':
-        return 'bg-gradient-to-b from-royal-crimson/5 via-royal-gold/5 to-royal-navy/5';
       case 'dark':
-        return 'bg-gradient-to-b from-black/20 via-black/10 to-transparent';
+        return 'from-[#0D0D20] via-[#141428] to-[#1D1E33]';
       case 'light':
-        return 'bg-gradient-to-b from-white/10 via-white/5 to-transparent';
-      case 'purple':
-        return 'bg-gradient-to-b from-royal-purple/10 via-royal-velvet/5 to-transparent';
+        return 'from-[#F5F5F8] via-[#EAEAEF] to-[#DEDEE8]';
+      case 'royal':
+        return 'from-[#2D1E30] via-[#1F2136] to-[#11121D]';
       default:
-        return 'throne-bg-enhanced';
+        return 'from-[#0D0D20] via-[#141428] to-[#1D1E33]';
     }
   };
   
   return (
-    <div 
-      ref={containerRef}
-      className={cn(
-        'absolute inset-0 w-full h-full overflow-hidden',
-        getVariantClasses(),
-        animate && isVisible && !isLowEndDevice && 'animate-pulse-slow',
-        className
+    <div className={`absolute inset-0 z-0 bg-gradient-to-b ${getBackgroundClass()}`}>
+      {particles && (
+        <canvas
+          ref={canvasRef}
+          className="absolute inset-0 z-0"
+          aria-hidden="true"
+        />
       )}
-    >
-      {/* Reduced number of gradient elements */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-64 h-64 rounded-full bg-royal-crimson/5 filter blur-[100px]"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 rounded-full bg-royal-gold/5 filter blur-[120px]"></div>
-      </div>
+      
+      {/* Medieval pattern overlay */}
+      <div 
+        className="absolute inset-0 z-0 opacity-5 bg-repeat" 
+        style={{ backgroundImage: 'url("/throne-assets/medieval-patterns.svg")', backgroundSize: '120px 120px' }}
+      ></div>
     </div>
   );
 };

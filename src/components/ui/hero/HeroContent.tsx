@@ -8,7 +8,7 @@ import HeroStatusTag from './HeroStatusTag';
 import HeroActionButtons from './HeroActionButtons';
 import HeroFooter from './HeroFooter';
 import HeroBackground from './HeroBackground';
-import useFloatingCoins from '@/hooks/use-floating-coins';
+import { createFloatingCoins } from '@/hooks/use-floating-coins';
 
 interface HeroContentProps {
   title?: string;
@@ -16,6 +16,8 @@ interface HeroContentProps {
   quote?: string;
   statusTag?: string;
   className?: string;
+  isVisible?: boolean;
+  heroRef?: React.RefObject<HTMLElement>;
 }
 
 const HeroContent: React.FC<HeroContentProps> = ({
@@ -23,18 +25,18 @@ const HeroContent: React.FC<HeroContentProps> = ({
   subtitle,
   quote,
   statusTag,
-  className = ''
+  className = '',
+  isVisible = true
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   
   // Setup floating coins effect
   useEffect(() => {
-    if (containerRef.current) {
+    if (containerRef.current && isVisible) {
       const triggerFloatingCoins = () => {
         const containerEl = containerRef.current;
         if (containerEl) {
-          useFloatingCoins({
-            containerRef: { current: containerEl as HTMLElement },
+          createFloatingCoins(containerEl, {
             frequency: 0.2,
             duration: 3000,
             minDelay: 100,
@@ -51,12 +53,12 @@ const HeroContent: React.FC<HeroContentProps> = ({
       
       return () => clearInterval(interval);
     }
-  }, []);
+  }, [isVisible]);
   
   return (
     <div className={`relative z-10 pt-32 pb-20 ${className}`} ref={containerRef}>
       {/* Background effects */}
-      <HeroBackground />
+      <HeroBackground isVisible={isVisible} />
       
       {/* Main content with animations */}
       <div className="container px-4 mx-auto text-center relative z-10">

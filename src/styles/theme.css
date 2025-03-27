@@ -1,6 +1,6 @@
 
 :root {
-  /* Royal colors */
+  /* Enhanced Royal colors with improved contrast and brightness */
   --royal-gold: #D4AF37;
   --royal-gold-bright: #F1C40F;
   --royal-gold-dark: #A67C00;
@@ -30,7 +30,7 @@
 
 /* Royal Gradients */
 .royal-gradient {
-  background: linear-gradient(to right, var(--royal-gold) 0%, #F1C40F 50%, var(--royal-gold) 100%);
+  background: linear-gradient(to right, var(--royal-crimson-bright) 0%, var(--royal-gold) 50%, var(--royal-navy-bright) 100%);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -53,7 +53,7 @@
 
 /* Team colors */
 .text-team-red {
-  color: var(--royal-crimson);
+  color: var(--royal-crimson-bright);
 }
 
 .text-team-green {
@@ -61,7 +61,7 @@
 }
 
 .text-team-blue {
-  color: var(--royal-navy);
+  color: var(--royal-navy-bright);
 }
 
 .bg-team-red {
@@ -167,7 +167,7 @@
     filter: drop-shadow(0 0 2px var(--royal-gold));
   }
   50% {
-    filter: drop-shadow(0 0 8px var(--royal-gold));
+    filter: drop-shadow(0 0 8px var(--royal-gold-bright));
   }
   100% {
     filter: drop-shadow(0 0 2px var(--royal-gold));
@@ -177,12 +177,15 @@
 @keyframes pulse-slow {
   0% {
     opacity: 0.7;
+    transform: scale(1);
   }
   50% {
     opacity: 1;
+    transform: scale(1.05);
   }
   100% {
     opacity: 0.7;
+    transform: scale(1);
   }
 }
 
@@ -250,6 +253,61 @@
   -webkit-backdrop-filter: blur(8px);
   border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+/* Medieval decorative elements */
+.medieval-ornament {
+  position: relative;
+}
+
+.medieval-ornament::before,
+.medieval-ornament::after {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  opacity: 0.8;
+}
+
+.medieval-ornament::before {
+  top: 0;
+  left: 0;
+  border-top: 2px solid var(--royal-gold);
+  border-left: 2px solid var(--royal-gold);
+}
+
+.medieval-ornament::after {
+  bottom: 0;
+  right: 0;
+  border-bottom: 2px solid var(--royal-gold);
+  border-right: 2px solid var(--royal-gold);
+}
+
+/* Enhanced section styles */
+.royal-section {
+  position: relative;
+  padding: 2rem 0;
+  overflow: hidden;
+}
+
+.royal-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--royal-gold-dark), transparent);
+}
+
+.royal-section::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--royal-gold-dark), transparent);
 }
 
 /* Shame Effects */

@@ -3,10 +3,10 @@ import React from 'react';
 import ThroneBackground from '@/components/ui/throne-background';
 
 interface HeroBackgroundProps {
-  isVisible: boolean;
+  isVisible?: boolean;
 }
 
-const HeroBackground: React.FC<HeroBackgroundProps> = ({ isVisible }) => {
+const HeroBackground: React.FC<HeroBackgroundProps> = ({ isVisible = true }) => {
   return (
     <>
       <div className="absolute inset-0 opacity-40">

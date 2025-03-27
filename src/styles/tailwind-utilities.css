@@ -11,6 +11,11 @@
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
   }
   
+  .glass-morphism-highlight {
+    @apply bg-foreground/10 backdrop-blur-md border border-royal-gold/20;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 15px rgba(212, 175, 55, 0.15);
+  }
+  
   /* Royal gradient */
   .royal-gradient {
     @apply bg-gradient-to-r from-royal-crimson via-royal-gold to-royal-navy text-transparent bg-clip-text;
@@ -82,5 +87,62 @@
   /* Background gradient */
   .bg-gradient-royal {
     @apply bg-gradient-to-r from-royal-crimson via-royal-gold to-royal-navy;
+  }
+  
+  /* Medieval background with patterns */
+  .bg-medieval-pattern {
+    background-color: rgba(13, 17, 23, 0.95);
+    background-image: url('/throne-assets/medieval-patterns.svg');
+    background-size: 100px 100px;
+    background-repeat: repeat;
+  }
+  
+  /* Parchment background */
+  .bg-parchment {
+    background-color: rgba(245, 222, 179, 0.05);
+    background-image: url('/throne-assets/parchment-texture.svg');
+    background-size: cover;
+  }
+  
+  /* Royal border with accent */
+  .royal-border {
+    @apply border border-royal-gold/30 relative;
+  }
+  
+  .royal-border::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    border: 1px solid rgba(212, 175, 55, 0.1);
+    pointer-events: none;
+    z-index: -1;
+  }
+  
+  /* Team colors with enhanced contrast */
+  .text-team-red {
+    @apply text-royal-crimson-bright;
+  }
+  
+  .text-team-green {
+    @apply text-royal-gold-bright;
+  }
+  
+  .text-team-blue {
+    @apply text-royal-navy-bright;
+  }
+  
+  .bg-team-red {
+    @apply bg-royal-crimson;
+  }
+  
+  .bg-team-green {
+    @apply bg-royal-gold;
+  }
+  
+  .bg-team-blue {
+    @apply bg-royal-navy;
   }
 }

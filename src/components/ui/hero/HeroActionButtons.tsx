@@ -1,32 +1,25 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { Crown, ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Crown, Shield } from 'lucide-react';
 
-export interface HeroActionButtonsProps {
-  onAscend?: () => void;
-}
-
-const HeroActionButtons: React.FC<HeroActionButtonsProps> = ({ onAscend }) => {
+const HeroActionButtons: React.FC = () => {
   return (
     <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
-      <Button 
-        size="lg" 
-        className="bg-gradient-to-r from-royal-purple to-royal-gold hover:opacity-90 text-white royal-button"
-        onClick={onAscend}
-      >
-        <Crown className="mr-2 h-5 w-5" />
-        <span className="relative z-10">Ascend to Nobility</span>
-      </Button>
+      <Link to="/dashboard">
+        <Button className="w-full sm:w-auto bg-gradient-to-r from-royal-purple to-royal-gold hover:opacity-90 text-white royal-button min-w-[180px]">
+          <Crown className="mr-2 h-4 w-4" />
+          <span className="relative z-10">Ascend Now</span>
+        </Button>
+      </Link>
       
-      <Button 
-        variant="outline" 
-        size="lg" 
-        className="glass-morphism border-white/10 hover:bg-white/10 text-white royal-button"
-      >
-        <span className="relative z-10">Learn More</span>
-        <ArrowRight className="ml-2 h-5 w-5" />
-      </Button>
+      <Link to="/leaderboard">
+        <Button variant="outline" className="w-full sm:w-auto bg-foreground/5 hover:bg-foreground/10 text-white border-white/10 hover:border-royal-gold/30 min-w-[180px]">
+          <Shield className="mr-2 h-4 w-4" />
+          <span>View Standings</span>
+        </Button>
+      </Link>
     </div>
   );
 };

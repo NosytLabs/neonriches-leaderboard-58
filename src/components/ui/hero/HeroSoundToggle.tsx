@@ -10,17 +10,19 @@ interface HeroSoundToggleProps {
 
 const HeroSoundToggle: React.FC<HeroSoundToggleProps> = ({ isMuted, toggleMute }) => {
   return (
-    <div className="absolute top-0 right-4 md:right-8">
-      <Button 
-        variant="ghost" 
-        size="sm" 
-        className="rounded-full p-2 text-white/60 hover:text-white/90 hover:bg-white/10"
-        onClick={toggleMute}
-        title={isMuted ? "Unmute sounds" : "Mute sounds"}
-      >
-        {isMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}
-      </Button>
-    </div>
+    <Button
+      variant="ghost"
+      size="icon"
+      className="absolute top-4 right-4 z-30 bg-foreground/5 backdrop-blur-md border border-foreground/10 rounded-full hover:bg-foreground/10 transition-all"
+      onClick={toggleMute}
+      aria-label={isMuted ? "Unmute" : "Mute"}
+    >
+      {isMuted ? (
+        <VolumeX className="h-5 w-5 text-white/70" />
+      ) : (
+        <Volume2 className="h-5 w-5 text-white/70" />
+      )}
+    </Button>
   );
 };
 
