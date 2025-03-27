@@ -1,13 +1,6 @@
 
 import { useState, useCallback, useEffect, useRef } from 'react';
-
-type SoundNames = 
-  | 'notification' 
-  | 'reward' 
-  | 'purchase' 
-  | 'royalAnnouncement' 
-  | 'pageTransition' 
-  | 'error';
+import { SoundNames, soundAssets, defaultVolumes } from './sounds/sound-assets';
 
 interface Sound {
   url: string;
@@ -15,31 +8,18 @@ interface Sound {
   audio?: HTMLAudioElement;
 }
 
-const soundMap: Record<SoundNames, Sound> = {
-  notification: {
-    url: '/sounds/notification.mp3',
-    volume: 0.5
-  },
-  reward: {
-    url: '/sounds/reward.mp3',
-    volume: 0.5
-  },
-  purchase: {
-    url: '/sounds/purchase.mp3',
-    volume: 0.5
-  },
-  royalAnnouncement: {
-    url: '/sounds/royal-announcement.mp3',
-    volume: 0.4
-  },
-  pageTransition: {
-    url: '/sounds/page-transition.mp3',
-    volume: 0.4
-  },
-  error: {
-    url: '/sounds/error.mp3',
-    volume: 0.5
-  }
+// Create a sound map based on the assets and volumes defined in sound-assets.ts
+const createSoundMap = (): Record<SoundNames, Sound> => {
+  const map: Record<SoundNames, Sound> = {} as Record<SoundNames, Sound>;
+  
+  (Object.keys(soundAssets) as SoundNames[]).forEach(key => {
+    map[key] = {
+      url: soundAssets[key],
+      volume: defaultVolumes[key]
+    };
+  });
+  
+  return map;
 };
 
 // Check for stored user preference or default to unmuted
@@ -51,7 +31,7 @@ const getInitialMuteState = (): boolean => {
 export default function useNotificationSounds() {
   const [isMuted, setIsMuted] = useState<boolean>(getInitialMuteState);
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
-  const soundsRef = useRef<Record<SoundNames, Sound>>(soundMap);
+  const soundsRef = useRef<Record<SoundNames, Sound>>(createSoundMap());
   
   // Load all sounds
   const preloadSounds = useCallback(() => {
