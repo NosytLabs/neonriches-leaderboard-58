@@ -10,17 +10,33 @@ import { switchUserTeam } from '@/services/teamService';
 interface TeamSwitchModalProps {
   trigger?: React.ReactNode;
   onSuccess?: () => void;
+  // Add support for controlled modal
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  user?: any;
+  onTeamChange?: (team: TeamColor) => Promise<void>;
 }
 
 const TeamSwitchModal: React.FC<TeamSwitchModalProps> = ({
   trigger,
-  onSuccess
+  onSuccess,
+  open: controlledOpen,
+  onOpenChange,
+  user: providedUser,
+  onTeamChange
 }) => {
-  const { user, updateProfile } = useAuth();
+  const { user: authUser, updateProfile } = useAuth();
   const [selectedTeam, setSelectedTeam] = useState<TeamColor | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [open, setOpen] = useState(false);
+  const [internalOpen, setInternalOpen] = useState(false);
+  
+  // Use either the provided user or the one from auth context
+  const user = providedUser || authUser;
+  
+  // Use controlled or uncontrolled open state
+  const open = controlledOpen !== undefined ? controlledOpen : internalOpen;
+  const setOpen = onOpenChange || setInternalOpen;
   
   const handleTeamSelect = (team: TeamColor) => {
     setSelectedTeam(team);
@@ -37,15 +53,25 @@ const TeamSwitchModal: React.FC<TeamSwitchModalProps> = ({
     setError(null);
     
     try {
-      const result = await switchUserTeam(user, selectedTeam, updateProfile);
-      
-      if (result.success) {
+      if (onTeamChange) {
+        // Use the provided onTeamChange callback
+        await onTeamChange(selectedTeam);
         if (onSuccess) {
           onSuccess();
         }
         setOpen(false);
       } else {
-        setError(result.message);
+        // Use the default implementation
+        const result = await switchUserTeam(user, selectedTeam, updateProfile);
+        
+        if (result.success) {
+          if (onSuccess) {
+            onSuccess();
+          }
+          setOpen(false);
+        } else {
+          setError(result.message);
+        }
       }
     } catch (err) {
       setError('Failed to join team. Please try again.');

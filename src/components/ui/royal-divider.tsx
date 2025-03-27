@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Crown, Sparkles, Shield, Trophy } from 'lucide-react';
 
@@ -6,7 +5,7 @@ interface RoyalDividerProps {
   variant?: 'crown' | 'sparkles' | 'shield' | 'trophy' | 'line';
   label?: string;
   className?: string;
-  color?: 'purple' | 'gold' | 'blue' | 'default';
+  color?: 'purple' | 'gold' | 'blue' | 'default' | 'royal';
 }
 
 const RoyalDivider = ({ 
@@ -20,6 +19,7 @@ const RoyalDivider = ({
       case 'purple': return 'from-purple-500/30 via-purple-500/50 to-purple-500/30';
       case 'gold': return 'from-amber-500/30 via-amber-500/50 to-amber-500/30';
       case 'blue': return 'from-blue-500/30 via-blue-500/50 to-blue-500/30';
+      case 'royal': return 'from-purple-500/30 via-amber-500/50 to-blue-500/30';
       default: return 'from-transparent via-amber-500/40 to-transparent';
     }
   };
@@ -29,6 +29,7 @@ const RoyalDivider = ({
       case 'purple': return 'text-purple-500';
       case 'gold': return 'text-amber-500';
       case 'blue': return 'text-blue-500';
+      case 'royal': return 'text-royal-gold';
       default: return 'text-amber-500';
     }
   };
