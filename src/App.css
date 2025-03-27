@@ -1,11 +1,11 @@
 
 /* Global Styles */
 .glass-morphism {
-  @apply bg-black/30 backdrop-blur-lg border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.3)];
+  @apply bg-black/40 backdrop-blur-lg border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.4)];
 }
 
 .glass-morphism-highlight {
-  @apply bg-black/40 backdrop-blur-lg border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.4)];
+  @apply bg-black/50 backdrop-blur-lg border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.5)];
 }
 
 .royal-gradient {
@@ -13,7 +13,7 @@
 }
 
 .royal-gradient-bg {
-  @apply bg-gradient-to-r from-royal-crimson/5 via-royal-gold/5 to-royal-navy/5;
+  @apply bg-gradient-to-r from-royal-crimson/10 via-royal-gold/10 to-royal-navy/10;
 }
 
 .animate-royal-pulse {
@@ -23,11 +23,11 @@
 @keyframes royal-pulse {
   0%, 100% {
     opacity: 1;
-    filter: drop-shadow(0 0 4px rgba(212, 175, 55, 0.5));
+    filter: drop-shadow(0 0 5px rgba(212, 175, 55, 0.6));
   }
   50% {
-    opacity: 0.7;
-    filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.8));
+    opacity: 0.8;
+    filter: drop-shadow(0 0 12px rgba(212, 175, 55, 0.9));
   }
 }
 
@@ -118,6 +118,10 @@
   color: #4B0082;
 }
 
+.text-royal-mahogany {
+  color: #C04000;
+}
+
 .bg-royal-gold {
   background-color: #D4AF37;
 }
@@ -134,6 +138,10 @@
   background-color: #4B0082;
 }
 
+.bg-royal-mahogany {
+  background-color: #C04000;
+}
+
 .border-royal-gold {
   border-color: #D4AF37;
 }
@@ -148,6 +156,10 @@
 
 .border-royal-purple {
   border-color: #4B0082;
+}
+
+.border-royal-mahogany {
+  border-color: #C04000;
 }
 
 /* Font classes */
@@ -172,35 +184,38 @@
 .animate-fade-in > *:nth-child(4) { animation-delay: 0.4s; }
 .animate-fade-in > *:nth-child(5) { animation-delay: 0.5s; }
 
-/* Royal Divider */
+/* Enhanced royal divider */
 .royal-divider {
   position: relative;
   display: flex;
   align-items: center;
   width: 100%;
-  margin: 2rem 0;
+  margin: 2.5rem 0;
 }
 
 .royal-divider::before,
 .royal-divider::after {
   content: '';
   flex: 1;
-  border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+  border-bottom: 2px solid rgba(212, 175, 55, 0.3);
+  box-shadow: 0 0 8px rgba(212, 175, 55, 0.2);
 }
 
 .royal-divider-label {
-  padding: 0 1rem;
+  padding: 0 1.5rem;
   color: #D4AF37;
   font-family: 'Cinzel', serif;
-  letter-spacing: 1px;
-  font-size: 0.8rem;
+  letter-spacing: 2px;
+  font-size: 0.85rem;
+  text-shadow: 0 0 5px rgba(212, 175, 55, 0.5);
 }
 
-/* Royal Button */
+/* Enhanced royal button */
 .royal-button {
   position: relative;
   overflow: hidden;
   transition: all 0.3s ease;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4), 0 0 5px rgba(212, 175, 55, 0.3);
 }
 
 .royal-button::before {
@@ -224,16 +239,81 @@
   left: 100%;
 }
 
-/* Royal Card */
+.royal-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5), 0 0 10px rgba(212, 175, 55, 0.4);
+}
+
+/* Enhanced royal card */
 .royal-card {
-  transition: all 0.3s ease;
+  transition: all 0.4s ease;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(13, 13, 32, 0.7);
+  background: rgba(10, 10, 25, 0.8);
   backdrop-filter: blur(12px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 }
 
 .royal-card:hover {
   border-color: rgba(212, 175, 55, 0.3);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 15px rgba(212, 175, 55, 0.2);
   transform: translateY(-5px);
+}
+
+/* Enhanced scrollbars for webkit browsers */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(
+    to bottom,
+    rgba(139, 0, 0, 0.5),
+    rgba(212, 175, 55, 0.5),
+    rgba(0, 0, 128, 0.5)
+  );
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(
+    to bottom,
+    rgba(139, 0, 0, 0.8),
+    rgba(212, 175, 55, 0.8),
+    rgba(0, 0, 128, 0.8)
+  );
+}
+
+/* Gold dust animation for special elements */
+.gold-dust {
+  position: relative;
+}
+
+.gold-dust::before,
+.gold-dust::after {
+  content: '';
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  background: rgba(212, 175, 55, 0.8);
+  border-radius: 50%;
+  filter: blur(1px);
+  opacity: 0;
+  animation: float 3s ease-in infinite;
+}
+
+.gold-dust::before {
+  left: 10%;
+  top: 50%;
+}
+
+.gold-dust::after {
+  left: 90%;
+  top: 50%;
+  animation-delay: 1.5s;
 }

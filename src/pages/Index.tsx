@@ -1,4 +1,3 @@
-
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '@/components/Header';
@@ -24,11 +23,9 @@ const Index = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   
-  // Preload all sound effects when the homepage loads
   useEffect(() => {
     preloadAllSounds();
     
-    // Play a subtle royal announcement when the page loads
     const timer = setTimeout(() => {
       playSound('royalAnnouncement', 0.1);
     }, 1000);
@@ -54,7 +51,6 @@ const Index = () => {
         <RoyalHero />
         
         <div className="container mx-auto px-4 py-12">
-          {/* Top Spender Showcase - Enhanced with more dramatic visuals */}
           <RoyalParchment 
             variant="gold" 
             className="mb-16 p-8 relative overflow-hidden"
@@ -84,7 +80,6 @@ const Index = () => {
                 <p className="text-white/70 text-sm">Royal Rank #1</p>
                 <p className="text-royal-gold font-bold mt-1">$56,780 spent</p>
                 
-                {/* New spending streak indicator */}
                 <div className="mt-2 inline-flex items-center px-2 py-1 rounded-full bg-royal-gold/10 border border-royal-gold/20">
                   <Trophy size={12} className="text-royal-gold mr-1" />
                   <span className="text-xs">14 week spending streak</span>
@@ -101,7 +96,6 @@ const Index = () => {
                   not earned through trivial matters like "merit" or "talent."
                 </p>
                 
-                {/* New royal decree box */}
                 <div className="mb-6 p-4 border border-royal-gold/20 rounded-lg bg-royal-gold/5 italic text-sm">
                   <div className="flex items-start">
                     <div className="mr-2 mt-1">
@@ -139,7 +133,6 @@ const Index = () => {
                   </Link>
                 </div>
                 
-                {/* New overthrow calculation */}
                 <div className="mt-6 bg-background/40 rounded-lg p-3 backdrop-blur-sm border border-white/10">
                   <div className="text-xs text-white/60 mb-1">Overthrow Calculator:</div>
                   <div className="flex items-center">
@@ -161,7 +154,6 @@ const Index = () => {
             </p>
           </div>
           
-          {/* Enhanced feature cards with more royal imagery */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-16">
             <div className="glass-morphism border-white/10 rounded-lg p-6 text-center shadow-lg transition-all duration-300 hover:shadow-royal-gold/10 hover:border-royal-gold/30">
               <div className="relative mb-4 inline-block">
@@ -229,7 +221,6 @@ const Index = () => {
           <div className="mb-16">
             <CombinedLeaderboard limit={5} compact={true} />
             
-            {/* New call to action below leaderboard */}
             <div className="mt-6 text-center">
               <Link to="/dashboard">
                 <Button 
@@ -250,7 +241,6 @@ const Index = () => {
           
           <RoyalFeatures />
           
-          {/* New spending tiers visual section */}
           <div className="mb-16">
             <RoyalDivider variant="crown" label="PATH TO NOBILITY" color="gold" className="mb-8" />
             
