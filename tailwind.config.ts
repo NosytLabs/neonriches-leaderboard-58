@@ -63,11 +63,19 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				// Team colors
+				// Royal team colors
 				team: {
-					red: '#FF0066',
-					green: '#00FF8B',
-					blue: '#00BFFF',
+					red: '#9B26AF',    // Royal Purple
+					green: '#FFD700',  // Royal Gold
+					blue: '#0055A4',   // Royal Blue
+				},
+				// Royal theme colors
+				royal: {
+					purple: '#9B26AF', // Royal Purple
+					gold: '#FFD700',   // Royal Gold
+					blue: '#0055A4',   // Royal Blue
+					crimson: '#DC143C',// Royal Crimson
+					emerald: '#50C878',// Royal Emerald
 				}
 			},
 			borderRadius: {
@@ -123,6 +131,14 @@ export default {
 				'shimmer': {
 					'0%': { backgroundPosition: '200% 0' },
 					'100%': { backgroundPosition: '-200% 0' }
+				},
+				'crown-glow': {
+					'0%, 100%': { filter: 'drop-shadow(0 0 5px rgba(255, 215, 0, 0.5))' },
+					'50%': { filter: 'drop-shadow(0 0 15px rgba(255, 215, 0, 0.8))' }
+				},
+				'royal-pulse': {
+					'0%, 100%': { transform: 'scale(1)' },
+					'50%': { transform: 'scale(1.05)' }
 				}
 			},
 			animation: {
@@ -137,11 +153,18 @@ export default {
 				'glow': 'glow 2s ease-in-out infinite',
 				'float': 'float 4s ease-in-out infinite',
 				'pulse-slow': 'pulse-slow 3s ease-in-out infinite',
-				'shimmer': 'shimmer 7s linear infinite'
+				'shimmer': 'shimmer 7s linear infinite',
+				'crown-glow': 'crown-glow 3s ease-in-out infinite',
+				'royal-pulse': 'royal-pulse 2s ease-in-out infinite'
 			},
 			backdropFilter: {
 				'none': 'none',
 				'blur': 'blur(20px)'
+			},
+			fontFamily: {
+				'serif': ['Playfair Display', 'Georgia', 'serif'],
+				'royal': ['Cinzel', 'serif'],
+				'sans': ['Inter', 'sans-serif']
 			}
 		}
 	},

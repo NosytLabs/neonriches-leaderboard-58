@@ -1,27 +1,45 @@
 
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Search, ArrowUp, ArrowDown, Filter } from 'lucide-react';
+import { Search, ArrowUp, ArrowDown, Filter, Crown, Award, Shield } from 'lucide-react';
 
 const mockLeaderboardData = [
-  { id: 1, username: 'NeonBoss', amountSpent: 1500, rank: 1, team: 'red', profileImage: 'https://i.pravatar.cc/150?img=1' },
-  { id: 2, username: 'DigitalWhale', amountSpent: 1200, rank: 2, team: 'blue', profileImage: 'https://i.pravatar.cc/150?img=2' },
-  { id: 3, username: 'CryptoKing', amountSpent: 950, rank: 3, team: 'green', profileImage: 'https://i.pravatar.cc/150?img=3' },
-  { id: 4, username: 'BlockchainQueen', amountSpent: 800, rank: 4, team: 'red', profileImage: 'https://i.pravatar.cc/150?img=4' },
-  { id: 5, username: 'MetaverseRuler', amountSpent: 750, rank: 5, team: 'blue', profileImage: 'https://i.pravatar.cc/150?img=5' },
-  { id: 6, username: 'TokenMaster', amountSpent: 600, rank: 6, team: 'green', profileImage: 'https://i.pravatar.cc/150?img=6' },
-  { id: 7, username: 'DeFiDiva', amountSpent: 550, rank: 7, team: 'red', profileImage: 'https://i.pravatar.cc/150?img=7' },
-  { id: 8, username: 'NFTCollector', amountSpent: 480, rank: 8, team: 'blue', profileImage: 'https://i.pravatar.cc/150?img=8' },
-  { id: 9, username: 'SatoshiFan', amountSpent: 420, rank: 9, team: 'green', profileImage: 'https://i.pravatar.cc/150?img=9' },
-  { id: 10, username: 'AltcoinAddict', amountSpent: 350, rank: 10, team: 'red', profileImage: 'https://i.pravatar.cc/150?img=10' },
+  { id: 1, username: 'SupremeOverlord', amountSpent: 1500, rank: 1, team: 'red', profileImage: 'https://i.pravatar.cc/150?img=1', title: 'High King' },
+  { id: 2, username: 'WealthyPatron', amountSpent: 1200, rank: 2, team: 'blue', profileImage: 'https://i.pravatar.cc/150?img=2', title: 'Grand Duke' },
+  { id: 3, username: 'RoyalBenefactor', amountSpent: 950, rank: 3, team: 'green', profileImage: 'https://i.pravatar.cc/150?img=3', title: 'Archduke' },
+  { id: 4, username: 'NobleQueen', amountSpent: 800, rank: 4, team: 'red', profileImage: 'https://i.pravatar.cc/150?img=4', title: 'Marquess' },
+  { id: 5, username: 'OpulentRuler', amountSpent: 750, rank: 5, team: 'blue', profileImage: 'https://i.pravatar.cc/150?img=5', title: 'Earl' },
+  { id: 6, username: 'CoffersMaster', amountSpent: 600, rank: 6, team: 'green', profileImage: 'https://i.pravatar.cc/150?img=6', title: 'Viscount' },
+  { id: 7, username: 'RegalPatroness', amountSpent: 550, rank: 7, team: 'red', profileImage: 'https://i.pravatar.cc/150?img=7', title: 'Baron' },
+  { id: 8, username: 'TreasureKeeper', amountSpent: 480, rank: 8, team: 'blue', profileImage: 'https://i.pravatar.cc/150?img=8', title: 'Baronet' },
+  { id: 9, username: 'CrownServant', amountSpent: 420, rank: 9, team: 'green', profileImage: 'https://i.pravatar.cc/150?img=9', title: 'Knight' },
+  { id: 10, username: 'RoyalMerchant', amountSpent: 350, rank: 10, team: 'red', profileImage: 'https://i.pravatar.cc/150?img=10', title: 'Squire' },
 ];
 
 const getTeamColor = (team: string) => {
   switch (team) {
-    case 'red': return 'team-red';
-    case 'green': return 'team-green';
-    case 'blue': return 'team-blue';
+    case 'red': return 'royal-purple';
+    case 'green': return 'royal-gold';
+    case 'blue': return 'royal-blue';
     default: return 'white';
+  }
+};
+
+const getTeamIcon = (team: string) => {
+  switch (team) {
+    case 'red': return <Crown size={14} className="mr-1.5" />;
+    case 'green': return <Award size={14} className="mr-1.5" />;
+    case 'blue': return <Shield size={14} className="mr-1.5" />;
+    default: return null;
+  }
+};
+
+const getTeamName = (team: string) => {
+  switch (team) {
+    case 'red': return 'Purple Dynasty';
+    case 'green': return 'Gold Dominion';
+    case 'blue': return 'Azure Order';
+    default: return '';
   }
 };
 
@@ -56,22 +74,25 @@ const Leaderboard = () => {
   };
   
   return (
-    <section id="leaderboard" className="w-full py-20 px-6">
+    <section id="leaderboard" className="w-full py-20 px-6 throne-bg">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold text-gradient mb-4">Global Leaderboard</h2>
-          <p className="text-white/70 max-w-2xl mx-auto">
-            The most honest reflection of status in the digital age. No skill, just capital.
+          <div className="inline-block mb-4">
+            <Crown size={50} className="text-royal-gold animate-crown-glow mx-auto" />
+          </div>
+          <h2 className="text-4xl font-royal royal-gradient mb-4">The Royal Court</h2>
+          <p className="text-white/70 max-w-2xl mx-auto font-serif">
+            Behold the noble hierarchy of our realm—where status is measured in gold, and contributions to the crown determine one's place in court.
           </p>
         </div>
         
-        <div className="glass-morphism rounded-xl overflow-hidden mb-8">
+        <div className="royal-card rounded-xl overflow-hidden mb-8">
           <div className="p-4 border-b border-white/10 flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <div className="relative w-full md:w-64">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/40" size={16} />
               <input 
                 type="text" 
-                placeholder="Search user..." 
+                placeholder="Search nobles..." 
                 className="w-full bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 py-2 text-sm text-white placeholder:text-white/40 focus:outline-none focus:ring-1 focus:ring-white/20"
               />
             </div>
@@ -83,34 +104,37 @@ const Leaderboard = () => {
                 className={`glass-morphism border-white/10 text-white hover:bg-white/10 hover:text-white ${activeFilter === null ? 'bg-white/10' : ''}`}
                 onClick={() => handleFilter(null)}
               >
-                All
+                All Courts
               </Button>
               <Button
                 variant="outline" 
                 size="sm" 
                 className={`glass-morphism border-white/10 hover:bg-white/10 ${activeFilter === 'red' ? 'bg-white/10' : ''}`}
-                style={{ color: '#FF0066' }}
+                style={{ color: '#9B26AF' }}
                 onClick={() => handleFilter('red')}
               >
-                Team Red
+                <Crown size={14} className="mr-1.5" />
+                Purple Dynasty
               </Button>
               <Button
                 variant="outline" 
                 size="sm" 
                 className={`glass-morphism border-white/10 hover:bg-white/10 ${activeFilter === 'green' ? 'bg-white/10' : ''}`}
-                style={{ color: '#00FF8B' }}
+                style={{ color: '#FFD700' }}
                 onClick={() => handleFilter('green')}
               >
-                Team Green
+                <Award size={14} className="mr-1.5" />
+                Gold Dominion
               </Button>
               <Button
                 variant="outline" 
                 size="sm" 
                 className={`glass-morphism border-white/10 hover:bg-white/10 ${activeFilter === 'blue' ? 'bg-white/10' : ''}`}
-                style={{ color: '#00BFFF' }}
+                style={{ color: '#0055A4' }}
                 onClick={() => handleFilter('blue')}
               >
-                Team Blue
+                <Shield size={14} className="mr-1.5" />
+                Azure Order
               </Button>
               
               <Button
@@ -132,11 +156,12 @@ const Leaderboard = () => {
           <div className="max-h-[600px] overflow-y-auto scrollbar-none">
             <table className="w-full">
               <thead className="bg-white/5">
-                <tr className="text-left text-white/50 text-sm">
+                <tr className="text-left text-white/50 text-sm font-royal uppercase tracking-wider">
                   <th className="py-4 px-6 font-medium">Rank</th>
-                  <th className="py-4 px-6 font-medium">User</th>
-                  <th className="py-4 px-6 font-medium">Team</th>
-                  <th className="py-4 px-6 font-medium text-right">Amount Spent</th>
+                  <th className="py-4 px-6 font-medium">Noble</th>
+                  <th className="py-4 px-6 font-medium">Title</th>
+                  <th className="py-4 px-6 font-medium">Dynasty</th>
+                  <th className="py-4 px-6 font-medium text-right">Royal Contribution</th>
                 </tr>
               </thead>
               <tbody>
@@ -149,6 +174,9 @@ const Leaderboard = () => {
                     <td className="py-4 px-6">
                       <div className="flex items-center">
                         <span className="font-mono text-xl font-bold text-white/70">#{user.rank}</span>
+                        {user.rank === 1 && (
+                          <Crown size={16} className="ml-2 text-royal-gold animate-crown-glow" />
+                        )}
                       </div>
                     </td>
                     <td className="py-4 px-6">
@@ -156,12 +184,16 @@ const Leaderboard = () => {
                         <div className={`w-10 h-10 rounded-full overflow-hidden border-2 border-${getTeamColor(user.team)} mr-3`}>
                           <img src={user.profileImage} alt={user.username} className="w-full h-full object-cover" />
                         </div>
-                        <span className="font-medium">{user.username}</span>
+                        <span className="font-medium font-royal">{user.username}</span>
                       </div>
                     </td>
                     <td className="py-4 px-6">
+                      <span className="font-serif text-white/90">{user.title}</span>
+                    </td>
+                    <td className="py-4 px-6">
                       <div className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-${getTeamColor(user.team)}/10 text-${getTeamColor(user.team)} border border-${getTeamColor(user.team)}/30`}>
-                        Team {user.team.charAt(0).toUpperCase() + user.team.slice(1)}
+                        {getTeamIcon(user.team)}
+                        {getTeamName(user.team)}
                       </div>
                     </td>
                     <td className="py-4 px-6 text-right">
@@ -175,8 +207,8 @@ const Leaderboard = () => {
         </div>
         
         <div className="text-center">
-          <Button variant="outline" className="glass-morphism border-white/10 text-white hover:bg-white/10 hover:text-white">
-            Load More
+          <Button variant="outline" className="glass-morphism border-white/10 text-white hover:bg-white/10 hover:text-white font-royal uppercase tracking-wider">
+            View More Nobles
           </Button>
         </div>
       </div>

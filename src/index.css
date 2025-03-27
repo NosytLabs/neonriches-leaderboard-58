@@ -1,4 +1,6 @@
 
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -48,6 +50,10 @@
   html {
     @apply scroll-smooth;
   }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-royal;
+  }
 }
 
 @layer utilities {
@@ -72,6 +78,10 @@
     @apply bg-gradient-to-br from-white via-white/90 to-white/70 bg-clip-text text-transparent;
   }
   
+  .royal-gradient {
+    @apply bg-gradient-to-br from-royal-gold via-royal-purple to-royal-blue bg-clip-text text-transparent;
+  }
+  
   .gradient-border {
     position: relative;
   }
@@ -84,9 +94,9 @@
     padding: 1px;
     background: linear-gradient(
       to right,
-      rgba(255, 0, 102, 0.5),
-      rgba(0, 255, 139, 0.5),
-      rgba(0, 191, 255, 0.5)
+      rgba(155, 38, 175, 0.5),
+      rgba(255, 215, 0, 0.5),
+      rgba(0, 85, 164, 0.5)
     );
     -webkit-mask: 
       linear-gradient(#fff 0 0) content-box, 
@@ -96,15 +106,15 @@
   }
   
   .team-red-glow {
-    box-shadow: 0 0 20px 0 rgba(255, 0, 102, 0.5);
+    box-shadow: 0 0 20px 0 rgba(155, 38, 175, 0.5);
   }
   
   .team-green-glow {
-    box-shadow: 0 0 20px 0 rgba(0, 255, 139, 0.5);
+    box-shadow: 0 0 20px 0 rgba(255, 215, 0, 0.5);
   }
   
   .team-blue-glow {
-    box-shadow: 0 0 20px 0 rgba(0, 191, 255, 0.5);
+    box-shadow: 0 0 20px 0 rgba(0, 85, 164, 0.5);
   }
   
   .shimmer-bg {
@@ -116,5 +126,48 @@
     );
     background-size: 200% 100%;
     animation: shimmer 3s infinite;
+  }
+  
+  .royal-card {
+    @apply glass-morphism border-royal-gold/30 relative overflow-hidden;
+  }
+  
+  .royal-card::before {
+    content: "";
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, rgba(155, 38, 175, 0.3), rgba(255, 215, 0, 0.3));
+    z-index: -1;
+    border-radius: inherit;
+    filter: blur(8px);
+    opacity: 0.7;
+  }
+  
+  .royal-button {
+    @apply bg-gradient-to-r from-royal-purple via-royal-gold to-royal-blue 
+           text-white font-royal uppercase tracking-wider shadow-lg hover:shadow-xl
+           transition-all duration-300 hover:scale-105;
+  }
+  
+  .throne-bg {
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.08'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+  
+  .crown-badge {
+    @apply inline-flex items-center justify-center;
+    position: relative;
+  }
+  
+  .crown-badge::before {
+    content: '👑';
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 1.2em;
+    animation: crown-glow 3s ease-in-out infinite;
   }
 }
