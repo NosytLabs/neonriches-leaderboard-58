@@ -9,22 +9,6 @@ export interface SoundAssets {
   [key: string]: SoundAsset;
 }
 
-export interface SoundInfo {
-  id: string;
-  url: string;
-  description: string;
-}
-
-export interface SoundMap {
-  [key: string]: {
-    src: string;
-    description: string;
-    volume: number;
-  };
-}
-
-export type SoundType = keyof typeof SoundCategoryEnum;
-
 export enum SoundCategoryEnum {
   notification = 'notification',
   purchase = 'purchase',
@@ -37,6 +21,22 @@ export enum SoundCategoryEnum {
   swordClash = 'swordClash',
   error = 'error',
   success = 'success'
+}
+
+export type SoundType = keyof typeof SoundCategoryEnum;
+
+export interface SoundInfo {
+  id: string;
+  url: string;
+  description: string;
+}
+
+export interface SoundMap {
+  [key: string]: {
+    src: string;
+    description: string;
+    volume: number;
+  };
 }
 
 export interface UseNotificationSoundsReturn {
