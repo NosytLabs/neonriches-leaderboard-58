@@ -5,15 +5,27 @@ import { Edit } from 'lucide-react';
 
 interface ProfileHeaderProps {
   title: string;
-  editMode: boolean;
+  subtitle?: string; // Added subtitle prop
+  editMode?: boolean;
+  showEditButton?: boolean; // Added showEditButton prop
   onEditToggle: () => void;
   onSave: () => void;
 }
 
-const ProfileHeader = ({ title, editMode, onEditToggle, onSave }: ProfileHeaderProps) => {
+const ProfileHeader = ({ 
+  title, 
+  subtitle,
+  editMode = false, 
+  showEditButton = true, 
+  onEditToggle, 
+  onSave 
+}: ProfileHeaderProps) => {
   return (
     <div className="flex justify-between items-center mb-6">
-      <h1 className="text-3xl font-bold text-gradient">{title}</h1>
+      <div>
+        <h1 className="text-3xl font-bold text-gradient">{title}</h1>
+        {subtitle && <p className="text-white/70 mt-1">{subtitle}</p>}
+      </div>
       
       {editMode ? (
         <div className="flex space-x-2">
@@ -32,13 +44,15 @@ const ProfileHeader = ({ title, editMode, onEditToggle, onSave }: ProfileHeaderP
           </Button>
         </div>
       ) : (
-        <Button 
-          className="bg-white/10 hover:bg-white/20 text-white"
-          onClick={onEditToggle}
-        >
-          <Edit size={16} className="mr-2" />
-          Edit Profile
-        </Button>
+        showEditButton && (
+          <Button 
+            className="bg-white/10 hover:bg-white/20 text-white"
+            onClick={onEditToggle}
+          >
+            <Edit size={16} className="mr-2" />
+            Edit Profile
+          </Button>
+        )
       )}
     </div>
   );

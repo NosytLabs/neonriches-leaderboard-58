@@ -11,6 +11,7 @@ interface PasswordInputProps {
   placeholder?: string;
   hasError?: boolean;
   isValid?: boolean;
+  disabled?: boolean; // Added the disabled prop
 }
 
 const PasswordInput = ({
@@ -21,6 +22,7 @@ const PasswordInput = ({
   placeholder = "••••••••",
   hasError = false,
   isValid = false,
+  disabled = false, // Set default value
 }: PasswordInputProps) => {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -38,11 +40,13 @@ const PasswordInput = ({
         className={`glass-morphism border-white/10 pl-10 pr-10 transition-all ${
           hasError ? 'border-destructive' : isValid ? 'border-green-500' : ''
         }`}
+        disabled={disabled}
       />
       <button 
         type="button" 
         onClick={togglePasswordVisibility}
         className="absolute right-3 top-3 text-white/40 hover:text-white transition-colors"
+        disabled={disabled}
       >
         {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
       </button>

@@ -1,9 +1,6 @@
-
-import { createClient } from '@supabase/supabase-js';
-import { env } from '@/lib/env';
 import { toast } from '@/hooks/use-toast';
 
-// Initialize Supabase client (mock implementation for now)
+// Mock Supabase client (simulated implementation)
 const supabase = {
   auth: {
     signInWithPassword: async ({ email, password }: { email: string; password: string }) => {
