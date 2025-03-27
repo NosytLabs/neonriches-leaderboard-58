@@ -5,7 +5,13 @@ import { Button } from '@/components/ui/button';
 import PaymentModal from '@/components/PaymentModal';
 import { Scroll } from 'lucide-react';
 import { ShameAction } from '../hooks/useShameEffect';
-import { getShameActionPrice, getShameActionTitle, getShameActionDescription, getShameActionIcon } from '../utils/shameUtils';
+import { 
+  getShameActionPrice, 
+  getShameActionTitle, 
+  getShameActionDescription, 
+  getShameActionIcon,
+  getShameActionColor
+} from '../utils/shameUtils';
 import useNotificationSounds from '@/hooks/use-notification-sounds';
 
 interface ShameModalProps {
@@ -28,6 +34,7 @@ const ShameModal: React.FC<ShameModalProps> = ({
   const actionPrice = getShameActionPrice(shameAction);
   const actionTitle = getShameActionTitle(shameAction);
   const actionDesc = getShameActionDescription(shameAction, targetUser.username);
+  const actionColors = getShameActionColor(shameAction);
   const { playSound } = useNotificationSounds();
 
   // Play shame-related sound when modal opens
@@ -47,7 +54,7 @@ const ShameModal: React.FC<ShameModalProps> = ({
 
   return (
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
-      <Card className="w-full max-w-md glass-morphism border-white/10">
+      <Card className={`w-full max-w-md glass-morphism ${actionColors.border}`}>
         <CardHeader>
           <CardTitle className="flex items-center">
             <span className="mr-2 text-xl">{getShameActionIcon(shameAction)}</span>
@@ -56,7 +63,7 @@ const ShameModal: React.FC<ShameModalProps> = ({
         </CardHeader>
         <CardContent>
           <div className="flex items-center mb-4">
-            <div className="w-12 h-12 rounded-full overflow-hidden mr-3 border border-white/20">
+            <div className={`w-12 h-12 rounded-full overflow-hidden mr-3 border ${actionColors.border}`}>
               <img 
                 src={targetUser.profileImage} 
                 alt={targetUser.username} 
@@ -68,8 +75,8 @@ const ShameModal: React.FC<ShameModalProps> = ({
                 {actionDesc}
               </p>
               <div className="text-sm text-white/60">
-                <span className="inline-flex items-center bg-white/10 px-2 py-1 rounded text-xs">
-                  <Scroll className="h-3 w-3 mr-1 text-amber-500" />
+                <span className={`inline-flex items-center ${actionColors.bg} px-2 py-1 rounded text-xs`}>
+                  <Scroll className={`h-3 w-3 mr-1 ${actionColors.text}`} />
                   Medieval Public Shaming
                 </span>
               </div>

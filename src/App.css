@@ -1,4 +1,3 @@
-
 /* Global Styles */
 .glass-morphism {
   @apply bg-black/30 backdrop-blur-lg;
@@ -9,7 +8,7 @@
 }
 
 .royal-gradient {
-  @apply bg-clip-text text-transparent bg-gradient-to-r from-royal-purple to-royal-gold;
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-royal-crimson via-royal-gold to-royal-navy;
 }
 
 .animate-royal-pulse {
@@ -19,74 +18,74 @@
 @keyframes royal-pulse {
   0%, 100% {
     opacity: 1;
-    filter: drop-shadow(0 0 4px rgba(255, 215, 0, 0.5));
+    filter: drop-shadow(0 0 4px rgba(207, 181, 59, 0.5));
   }
   50% {
     opacity: 0.7;
-    filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.8));
+    filter: drop-shadow(0 0 10px rgba(207, 181, 59, 0.8));
   }
 }
 
 /* Team-specific colors */
 .bg-team-red {
-  background-color: rgb(255, 85, 85);
+  background-color: #8B0000;
 }
 
 .bg-team-green {
-  background-color: rgb(85, 255, 85);
+  background-color: #CFB53B;
 }
 
 .bg-team-blue {
-  background-color: rgb(85, 85, 255);
+  background-color: #000080;
 }
 
 .text-team-red {
-  color: rgb(255, 85, 85);
+  color: #8B0000;
 }
 
 .text-team-green {
-  color: rgb(85, 255, 85);
+  color: #CFB53B;
 }
 
 .text-team-blue {
-  color: rgb(85, 85, 255);
+  color: #000080;
 }
 
 .border-team-red {
-  border-color: rgb(255, 85, 85);
+  border-color: #8B0000;
 }
 
 .border-team-green {
-  border-color: rgb(85, 255, 85);
+  border-color: #CFB53B;
 }
 
 .border-team-blue {
-  border-color: rgb(85, 85, 255);
+  border-color: #000080;
 }
 
 /* Royal colors */
 .text-royal-gold {
-  color: #FFD700;
+  color: #CFB53B;
 }
 
 .text-royal-purple {
-  color: #9370DB;
+  color: #4B0082;
 }
 
 .bg-royal-gold {
-  background-color: #FFD700;
+  background-color: #CFB53B;
 }
 
 .bg-royal-purple {
-  background-color: #9370DB;
+  background-color: #4B0082;
 }
 
 .border-royal-gold {
-  border-color: #FFD700;
+  border-color: #CFB53B;
 }
 
 .border-royal-purple {
-  border-color: #9370DB;
+  border-color: #4B0082;
 }
 
 /* Font classes */

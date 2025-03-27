@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -63,24 +62,19 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				// Enhanced Royal team colors with richer hues
 				team: {
-					red: '#B026FF',    // Deeper Royal Purple
-					green: '#FFD700',  // Brighter Royal Gold
-					blue: '#1E56A0',   // Deeper Royal Blue
+					red: '#8B0000',
+					green: '#CFB53B',
+					blue: '#000080',
 				},
-				// Enhanced Royal theme colors
 				royal: {
-					purple: '#B026FF', // Deeper Royal Purple
-					gold: '#FFD700',   // Brighter Royal Gold
-					blue: '#1E56A0',   // Deeper Royal Blue
-					crimson: '#E61C5D',// Brighter Royal Crimson
-					emerald: '#3CB371',// Richer Royal Emerald
-					amber: '#FFC000',  // Richer Royal Amber
-					silver: '#D9D9D9',  // Brighter Royal Silver
-					midnight: '#16213E', // New Royal Midnight
-					charcoal: '#1A1E2C', // New Royal Charcoal
-					pearl: '#F5F3F4',    // New Royal Pearl
+					crimson: '#8B0000',
+					gold: '#CFB53B',
+					navy: '#000080',
+					purple: '#4B0082',
+					bronze: '#CD7F32',
+					parchment: '#F5DEB3',
+					ink: '#1A1A1A',
 				}
 			},
 			borderRadius: {

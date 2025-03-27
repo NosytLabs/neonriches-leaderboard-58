@@ -99,7 +99,7 @@
 }
 
 .royal-gradient {
-  background: linear-gradient(90deg, #9D174D, #FFD700, #1E3A8A);
+  background: linear-gradient(90deg, #8B0000, #CFB53B, #000080);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -115,39 +115,39 @@
 }
 
 .border-royal-crimson {
-  border-color: #9D174D;
+  border-color: #8B0000;
 }
 
 .border-royal-gold {
-  border-color: #FFD700;
+  border-color: #CFB53B;
 }
 
 .border-royal-navy {
-  border-color: #1E3A8A;
+  border-color: #000080;
 }
 
 .text-royal-crimson {
-  color: #9D174D;
+  color: #8B0000;
 }
 
 .text-royal-gold {
-  color: #FFD700;
+  color: #CFB53B;
 }
 
 .text-royal-navy {
-  color: #1E3A8A;
+  color: #000080;
 }
 
 .bg-royal-crimson {
-  background-color: #9D174D;
+  background-color: #8B0000;
 }
 
 .bg-royal-gold {
-  background-color: #FFD700;
+  background-color: #CFB53B;
 }
 
 .bg-royal-navy {
-  background-color: #1E3A8A;
+  background-color: #000080;
 }
 
 .royal-card {

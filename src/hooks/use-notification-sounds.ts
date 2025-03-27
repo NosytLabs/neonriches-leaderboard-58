@@ -1,5 +1,5 @@
 
-// Define sound effect paths
+// Define sound effect paths with consistent medieval themes
 const SOUND_EFFECTS = {
   shame: 'https://assets.mixkit.co/active_storage/sfx/212/212-preview.mp3', // Medieval crowd laugh
   reward: 'https://assets.mixkit.co/active_storage/sfx/270/270-preview.mp3', // Coins dropping

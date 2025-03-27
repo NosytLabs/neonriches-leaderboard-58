@@ -1,4 +1,9 @@
 
+import React from 'react';
 import CombinedLeaderboard from './leaderboard/CombinedLeaderboard';
 
-export default CombinedLeaderboard;
+const Leaderboard = () => {
+  return <CombinedLeaderboard />;
+};
+
+export default Leaderboard;

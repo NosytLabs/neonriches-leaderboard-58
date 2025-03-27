@@ -21,19 +21,28 @@ export const mockLeaderboardData: LeaderboardUser[] = [
 
 export const getTeamColor = (team: string | null) => {
   switch (team) {
-    case 'red': return 'text-royal-purple';
+    case 'red': return 'text-royal-crimson';
     case 'green': return 'text-royal-gold';
-    case 'blue': return 'text-royal-blue';
+    case 'blue': return 'text-royal-navy';
     default: return 'text-white/70';
   }
 };
 
 export const getTeamBorderColor = (team: string | null) => {
   switch (team) {
-    case 'red': return 'border-royal-purple';
+    case 'red': return 'border-royal-crimson';
     case 'green': return 'border-royal-gold';
-    case 'blue': return 'border-royal-blue';
+    case 'blue': return 'border-royal-navy';
     default: return 'border-white/20';
+  }
+};
+
+export const getTeamName = (team: string | null) => {
+  switch (team) {
+    case 'red': return 'Crimson Court';
+    case 'green': return 'Golden Order';
+    case 'blue': return 'Royal Navy';
+    default: return 'Noble House';
   }
 };
 

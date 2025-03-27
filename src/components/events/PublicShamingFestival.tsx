@@ -12,8 +12,8 @@ const PublicShamingDescription = () => {
   return (
     <div className="flex flex-col md:flex-row justify-between items-center mb-6">
       <div>
-        <h2 className="text-2xl font-bold text-gradient mb-2 flex items-center">
-          <Scroll size={20} className="text-amber-500 mr-2 animate-pulse-slow" />
+        <h2 className="text-2xl font-bold royal-gradient mb-2 flex items-center">
+          <Scroll size={20} className="text-royal-gold mr-2 animate-pulse-slow" />
           Royal Public Shaming Festival
         </h2>
         <p className="text-white/70">
@@ -22,12 +22,12 @@ const PublicShamingDescription = () => {
       </div>
       
       <div className="flex items-center space-x-2 mt-4 md:mt-0">
-        <div className="glass-morphism border-white/10 rounded-full px-3 py-1.5 text-sm text-white/70 hover:border-purple-500/20 transition-all">
-          <Scroll size={14} className="inline-block mr-1.5 text-purple-400" />
+        <div className="glass-morphism border-white/10 rounded-full px-3 py-1.5 text-sm text-white/70 hover:border-royal-purple/20 transition-all">
+          <Scroll size={14} className="inline-block mr-1.5 text-royal-purple" />
           24h visual effect
         </div>
-        <div className="glass-morphism border-white/10 rounded-full px-3 py-1.5 text-sm text-white/70 hover:border-amber-500/20 transition-all">
-          <DollarSign size={14} className="inline-block mr-1.5 text-amber-400" />
+        <div className="glass-morphism border-white/10 rounded-full px-3 py-1.5 text-sm text-white/70 hover:border-royal-gold/20 transition-all">
+          <DollarSign size={14} className="inline-block mr-1.5 text-royal-gold" />
           $0.50 - $2.00
         </div>
       </div>
@@ -43,7 +43,7 @@ const PublicShamingFestival = () => {
   return (
     <TooltipProvider>
       <div className="mb-12 relative">
-        <div className="absolute -inset-1 bg-gradient-to-r from-purple-500/5 via-amber-500/5 to-blue-500/5 blur-lg -z-10 rounded-xl"></div>
+        <div className="absolute -inset-1 bg-gradient-to-r from-royal-crimson/5 via-royal-gold/5 to-royal-navy/5 blur-lg -z-10 rounded-xl"></div>
         
         <PublicShamingDescription />
         
@@ -54,33 +54,33 @@ const PublicShamingFestival = () => {
         />
         
         <div className="mb-6 p-4 glass-morphism border-white/10 rounded-lg">
-          <h3 className="font-medium text-gradient flex items-center mb-3">
+          <h3 className="font-medium royal-gradient flex items-center mb-3">
             <Scroll className="mr-2 h-4 w-4" /> Medieval Public Shaming Options
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="p-3 glass-morphism border-white/10 rounded-lg">
+            <div className="p-3 glass-morphism border-royal-crimson/20 rounded-lg">
               <div className="flex items-center mb-2">
                 <div className="text-xl mr-2">🍅</div>
                 <div className="font-medium">Throw Tomatoes</div>
-                <div className="ml-auto text-amber-500">$0.50</div>
+                <div className="ml-auto text-royal-gold">$0.50</div>
               </div>
               <p className="text-white/70 text-sm">Pelt your target with rotten tomatoes. A classic form of public ridicule.</p>
             </div>
             
-            <div className="p-3 glass-morphism border-white/10 rounded-lg">
+            <div className="p-3 glass-morphism border-royal-gold/20 rounded-lg">
               <div className="flex items-center mb-2">
                 <div className="text-xl mr-2">🥚</div>
                 <div className="font-medium">Throw Rotten Eggs</div>
-                <div className="ml-auto text-amber-500">$1.00</div>
+                <div className="ml-auto text-royal-gold">$1.00</div>
               </div>
               <p className="text-white/70 text-sm">Hurl rotten eggs at your target. The stench will follow them for a day.</p>
             </div>
             
-            <div className="p-3 glass-morphism border-white/10 rounded-lg">
+            <div className="p-3 glass-morphism border-royal-purple/20 rounded-lg">
               <div className="flex items-center mb-2">
                 <div className="text-xl mr-2">🪵</div>
                 <div className="font-medium">Place in Stocks</div>
-                <div className="ml-auto text-amber-500">$2.00</div>
+                <div className="ml-auto text-royal-gold">$2.00</div>
               </div>
               <p className="text-white/70 text-sm">Place your target in the public stocks. The ultimate medieval humiliation.</p>
             </div>
@@ -108,7 +108,7 @@ const PublicShamingFestival = () => {
         </div>
         
         <div className="mt-8 p-4 glass-morphism border-white/10 rounded-lg">
-          <h3 className="font-medium text-gradient flex items-center mb-3">
+          <h3 className="font-medium royal-gradient flex items-center mb-3">
             <Sparkles className="mr-2 h-4 w-4" /> Historical Context
           </h3>
           <p className="text-white/70 text-sm">

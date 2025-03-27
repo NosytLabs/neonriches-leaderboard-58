@@ -3,12 +3,16 @@ import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ShameAction } from '../hooks/useShameEffect';
-import { Scroll, Egg, Flame, Sparkles } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
 import OptimizedImage from '@/components/ui/optimized-image';
 import { getTeamBgColor, getTeamBorderColor, getTeamTextColor } from '../utils/teamUtils';
-import { getShameActionPrice, getShameActionTitle, getShameActionDescription, getShameActionIcon } from '../utils/shameUtils';
+import { 
+  getShameActionPrice, 
+  getShameActionTitle, 
+  getShameActionDescription, 
+  getShameActionIcon,
+  getShameActionColor
+} from '../utils/shameUtils';
 import ShameModal from './ShameModal';
 
 interface ShameUserCardProps {
@@ -57,29 +61,7 @@ const ShameUserCard: React.FC<ShameUserCardProps> = ({
   // Get visual effects for current shame status
   const getShameEffects = () => {
     if (!isShamed) return {};
-    
-    switch (isShamed) {
-      case 'tomatoes':
-        return {
-          border: 'border-red-500/50',
-          glow: 'animate-pulse-slow',
-          background: 'bg-red-500/10',
-        };
-      case 'eggs':
-        return {
-          border: 'border-yellow-500/50',
-          glow: 'animate-pulse-slow',
-          background: 'bg-yellow-500/10',
-        };
-      case 'stocks':
-        return {
-          border: 'border-purple-500/50',
-          glow: 'animate-crown-glow',
-          background: 'bg-purple-500/10',
-        };
-      default:
-        return {};
-    }
+    return getShameActionColor(isShamed);
   };
   
   const shameEffects = getShameEffects();
@@ -88,20 +70,18 @@ const ShameUserCard: React.FC<ShameUserCardProps> = ({
     <TooltipProvider>
       <Card 
         id={`user-card-${user.id}`}
-        className={`glass-morphism border-white/10 transition-all relative overflow-hidden hover:border-${user.team === 'red' ? 'purple' : user.team}-500/30 ${
-          isShamed ? `${shameEffects.border} ${shameEffects.glow}` : ''
+        className={`glass-morphism border-white/10 transition-all relative overflow-hidden hover:border-${user.team === 'red' ? 'royal-crimson' : user.team === 'green' ? 'royal-gold' : 'royal-navy'}/30 ${
+          isShamed ? `${shameEffects.border}` : ''
         }`}
       >
         {isShamed && (
-          <div className={`absolute -inset-0.5 ${shameEffects.background} animate-pulse-slow -z-10 rounded-md`}></div>
+          <div className={`absolute -inset-0.5 ${shameEffects.bg} animate-pulse-slow -z-10 rounded-md`}></div>
         )}
         
         <CardContent className="pt-6">
           <div className="flex justify-between items-center">
             <div className="flex items-center">
-              <div className={`w-12 h-12 rounded-full overflow-hidden border-2 ${getTeamBorderColor(user.team)} mr-3 ${
-                isShamed ? shameEffects.glow : ''
-              }`}>
+              <div className={`w-12 h-12 rounded-full overflow-hidden border-2 ${getTeamBorderColor(user.team)} mr-3`}>
                 <OptimizedImage 
                   src={user.profileImage} 
                   alt={user.username} 
@@ -117,13 +97,13 @@ const ShameUserCard: React.FC<ShameUserCardProps> = ({
                     Rank #{user.rank}
                   </span>
                   {shameCount > 0 && (
-                    <span className="ml-2 text-xs bg-red-500/20 px-2 py-0.5 rounded-full text-red-300 animate-fade-in">
+                    <span className="ml-2 text-xs bg-royal-crimson/20 px-2 py-0.5 rounded-full text-royal-crimson/90 animate-fade-in">
                       {shameCount} {shameCount === 1 ? 'shame' : 'shames'}
                     </span>
                   )}
                 </div>
                 <div className={`inline-flex items-center px-2 py-0.5 mt-1 rounded-full text-xs font-medium ${getTeamBgColor(user.team)}/10 ${getTeamTextColor(user.team)} border ${getTeamBorderColor(user.team)}/30`}>
-                  Team {user.team.charAt(0).toUpperCase() + user.team.slice(1)}
+                  {user.team === 'red' ? 'Crimson Court' : user.team === 'green' ? 'Golden Order' : 'Royal Navy'}
                 </div>
               </div>
             </div>
@@ -134,7 +114,7 @@ const ShameUserCard: React.FC<ShameUserCardProps> = ({
                   <Button 
                     variant="outline"
                     size="sm"
-                    className={`glass-morphism border-red-500/20 hover:bg-red-500/20 hover:text-white text-white text-xs px-2`}
+                    className="glass-morphism border-royal-crimson/20 hover:bg-royal-crimson/20 hover:text-white text-white text-xs px-2"
                     disabled={isOnCooldown}
                     onClick={() => handleOpenShameModal('tomatoes')}
                   >
@@ -151,7 +131,7 @@ const ShameUserCard: React.FC<ShameUserCardProps> = ({
                   <Button 
                     variant="outline"
                     size="sm"
-                    className={`glass-morphism border-yellow-500/20 hover:bg-yellow-500/20 hover:text-white text-white text-xs px-2`}
+                    className="glass-morphism border-royal-gold/20 hover:bg-royal-gold/20 hover:text-white text-white text-xs px-2"
                     disabled={isOnCooldown}
                     onClick={() => handleOpenShameModal('eggs')}
                   >
@@ -168,7 +148,7 @@ const ShameUserCard: React.FC<ShameUserCardProps> = ({
                   <Button 
                     variant="outline"
                     size="sm"
-                    className={`glass-morphism border-purple-500/20 hover:bg-purple-500/20 hover:text-white text-white text-xs px-2`}
+                    className="glass-morphism border-royal-purple/20 hover:bg-royal-purple/20 hover:text-white text-white text-xs px-2"
                     disabled={isOnCooldown}
                     onClick={() => handleOpenShameModal('stocks')}
                   >

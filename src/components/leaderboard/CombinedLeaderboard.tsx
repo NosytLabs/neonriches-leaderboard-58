@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
@@ -7,21 +8,17 @@ import { Badge } from '@/components/ui/badge';
 import { 
   Crown, 
   Trophy, 
-  DollarSign, 
-  TrendingUp, 
   Shield, 
   Scroll, 
   ArrowDown, 
   ArrowUp,
   Search,
-  Users
 } from 'lucide-react';
 import { mockLeaderboardData } from '@/components/dashboard/leaderboard/LeaderboardUtils';
 import { LeaderboardUser } from '@/components/dashboard/leaderboard/LeaderboardUtils';
-import RoyalDivider from '@/components/ui/royal-divider';
 import { useToast } from '@/hooks/use-toast';
 import { Link } from 'react-router-dom';
-import { getShameActionPrice, getShameActionTitle } from '@/components/events/utils/shameUtils';
+import { getShameActionPrice } from '@/components/events/utils/shameUtils';
 import { ShameAction } from '@/components/events/hooks/useShameEffect';
 import useNotificationSounds from '@/hooks/use-notification-sounds';
 import ShameModal from '../events/components/ShameModal';
@@ -31,7 +28,6 @@ const CombinedLeaderboard: React.FC<{
   limit?: number;
   compact?: boolean;
 }> = ({ className = '', limit = 10, compact = false }) => {
-  const [leaderboardData, setLeaderboardData] = useState<LeaderboardUser[]>(mockLeaderboardData);
   const [filteredData, setFilteredData] = useState<LeaderboardUser[]>(mockLeaderboardData);
   const [searchQuery, setSearchQuery] = useState('');
   const [teamFilter, setTeamFilter] = useState<'all' | 'red' | 'green' | 'blue'>('all');
@@ -92,16 +88,14 @@ const CombinedLeaderboard: React.FC<{
   };
 
   const handleProfileClick = (userId: string) => {
-    // In a production app, this would navigate to the profile page
     console.log(`Navigate to profile: ${userId}`);
     
     toast({
       title: "Royal Intelligence",
-      description: "You are now viewing another noble's profile. How delightfully scandalous!",
+      description: "You are now viewing another noble's profile.",
       duration: 3000,
     });
 
-    // Play notification sound
     playSound('notification');
   };
 
@@ -110,7 +104,6 @@ const CombinedLeaderboard: React.FC<{
     setShameAction(action);
     setShowShameModal(true);
     
-    // Play subtle medieval sound effect
     playSound('notification');
   };
 
@@ -123,14 +116,13 @@ const CombinedLeaderboard: React.FC<{
     setTimeout(() => {
       toast({
         title: "Royal Decree of Shame",
-        description: `You have spent $${amount} to ${getShameActionTitle(shameAction).toLowerCase()} ${selectedUser.username}. How delightfully medieval!`,
+        description: `You have spent $${amount} to shame ${selectedUser.username}.`,
         duration: 4000,
       });
       
       setShowShameModal(false);
       setSelectedUser(null);
       
-      // Play shame sound effect
       playSound('shame');
     }, 500);
   };
@@ -215,7 +207,7 @@ const CombinedLeaderboard: React.FC<{
                   onClick={() => handleTeamFilter('red')}
                 >
                   <Shield size={14} className="mr-1.5 text-royal-crimson" />
-                  Purple Dynasty
+                  Crimson Court
                 </Button>
                 <Button
                   size="sm"
@@ -224,7 +216,7 @@ const CombinedLeaderboard: React.FC<{
                   onClick={() => handleTeamFilter('green')}
                 >
                   <Crown size={14} className="mr-1.5 text-royal-gold" />
-                  Gold Dominion
+                  Golden Order
                 </Button>
                 <Button
                   size="sm"
@@ -233,7 +225,7 @@ const CombinedLeaderboard: React.FC<{
                   onClick={() => handleTeamFilter('blue')}
                 >
                   <Shield size={14} className="mr-1.5 text-royal-navy" />
-                  Azure Order
+                  Royal Navy
                 </Button>
               </div>
               
@@ -306,7 +298,7 @@ const CombinedLeaderboard: React.FC<{
                     <Button
                       variant="outline"
                       size="sm"
-                      className="glass-morphism border-red-500/20 hover:bg-red-500/20 text-white text-xs"
+                      className="glass-morphism border-royal-crimson/20 hover:bg-royal-crimson/20 text-white text-xs"
                       onClick={() => handleShameUser(user, 'tomatoes')}
                     >
                       🍅 ${getShameActionPrice('tomatoes')}
@@ -314,7 +306,7 @@ const CombinedLeaderboard: React.FC<{
                     <Button
                       variant="outline"
                       size="sm"
-                      className="glass-morphism border-yellow-500/20 hover:bg-yellow-500/20 text-white text-xs"
+                      className="glass-morphism border-royal-gold/20 hover:bg-royal-gold/20 text-white text-xs"
                       onClick={() => handleShameUser(user, 'eggs')}
                     >
                       🥚 ${getShameActionPrice('eggs')}
@@ -322,7 +314,7 @@ const CombinedLeaderboard: React.FC<{
                     <Button
                       variant="outline"
                       size="sm"
-                      className="glass-morphism border-purple-500/20 hover:bg-purple-500/20 text-white text-xs"
+                      className="glass-morphism border-royal-purple/20 hover:bg-royal-purple/20 text-white text-xs"
                       onClick={() => handleShameUser(user, 'stocks')}
                     >
                       🪵 ${getShameActionPrice('stocks')}

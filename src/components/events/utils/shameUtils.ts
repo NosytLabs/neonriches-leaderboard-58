@@ -41,6 +41,35 @@ export const getShameActionIcon = (action: ShameAction): string => {
   }
 };
 
+export const getShameActionColor = (action: ShameAction): {border: string, bg: string, text: string} => {
+  switch (action) {
+    case 'tomatoes': 
+      return {
+        border: 'border-royal-crimson/50',
+        bg: 'bg-royal-crimson/10',
+        text: 'text-royal-crimson'
+      };
+    case 'eggs': 
+      return {
+        border: 'border-royal-gold/50',
+        bg: 'bg-royal-gold/10',
+        text: 'text-royal-gold'
+      };
+    case 'stocks': 
+      return {
+        border: 'border-royal-purple/50',
+        bg: 'bg-royal-purple/10',
+        text: 'text-royal-purple'
+      };
+    default: 
+      return {
+        border: 'border-white/50',
+        bg: 'bg-white/10',
+        text: 'text-white'
+      };
+  }
+};
+
 export const getShameActionEffectDuration = (action: ShameAction): string => {
   switch (action) {
     case 'tomatoes': return '24 hours';

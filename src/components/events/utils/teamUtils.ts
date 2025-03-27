@@ -2,7 +2,7 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
-// Utility function combining clsx and twMerge (moved from lib/utils.ts to avoid duplication)
+// Utility function combining clsx and twMerge
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
@@ -40,13 +40,33 @@ export const getTeamTextColor = (team: string) => {
   }
 };
 
+// Get team names
+export const getTeamName = (team: string) => {
+  switch (team.toLowerCase()) {
+    case 'red': return 'Crimson Court';
+    case 'green': return 'Golden Order';
+    case 'blue': return 'Royal Navy';
+    default: return 'Noble House';
+  }
+};
+
+// Get team icon
+export const getTeamIcon = (team: string) => {
+  switch (team.toLowerCase()) {
+    case 'red': return '🛡️'; // Shield for Crimson Court
+    case 'green': return '👑'; // Crown for Golden Order
+    case 'blue': return '⚔️'; // Swords for Royal Navy
+    default: return '⚜️'; // Fleur-de-lis for default
+  }
+};
+
 // Get team glow color (for CSS variables)
 export const getTeamGlowColor = (team: string) => {
   switch (team.toLowerCase()) {
-    case 'red': return 'rgba(157, 23, 77, 0.5)';
-    case 'green': return 'rgba(245, 158, 11, 0.5)';
-    case 'blue': return 'rgba(30, 58, 138, 0.5)';
-    default: return 'rgba(245, 158, 11, 0.5)';
+    case 'red': return 'rgba(139, 0, 0, 0.5)';
+    case 'green': return 'rgba(207, 181, 59, 0.5)';
+    case 'blue': return 'rgba(0, 0, 128, 0.5)';
+    default: return 'rgba(207, 181, 59, 0.5)';
   }
 };
 
