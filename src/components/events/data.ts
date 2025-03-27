@@ -68,11 +68,11 @@ export const eventStats = {
   actionsPerformed: 243,
   topSpender: {
     username: 'GoldenKnight',
-    amount: 325,
+    amount: 325
   },
   mostPoked: {
     username: 'SilverBaron',
-    pokeCount: 17,
+    pokeCount: 17
   }
 };
 
