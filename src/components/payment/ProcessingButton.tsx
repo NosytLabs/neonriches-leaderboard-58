@@ -1,16 +1,14 @@
 
 import React from 'react';
-import { Button } from '@/components/ui/button';
+import { Button, ButtonProps } from '@/components/ui/button';
 import { LucideIcon } from 'lucide-react';
 
-interface ProcessingButtonProps {
+interface ProcessingButtonProps extends Omit<ButtonProps, 'children'> {
   text: string;
   processingText?: string;
   icon?: LucideIcon;
   isProcessing: boolean;
   onClick: () => void;
-  className?: string;
-  disabled?: boolean;
 }
 
 const ProcessingButton = ({ 
@@ -20,13 +18,14 @@ const ProcessingButton = ({
   isProcessing, 
   onClick, 
   className = "", 
-  disabled = false 
+  ...props
 }: ProcessingButtonProps) => {
   return (
     <Button 
       className={className}
       onClick={onClick}
-      disabled={isProcessing || disabled}
+      disabled={isProcessing || props.disabled}
+      {...props}
     >
       {isProcessing ? (
         <div className="flex items-center">

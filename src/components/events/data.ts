@@ -3,7 +3,7 @@
 export const currentEvent = {
   id: 1,
   name: 'Poke Party',
-  description: 'Pay $0.50 to drop another user down one rank for 24 hours',
+  description: 'Pay $0.50 to visually drop another user down one rank for 24 hours. This is purely cosmetic and doesn\'t affect actual rankings.',
   startDate: new Date(new Date().getTime() - 3 * 24 * 60 * 60 * 1000), // 3 days ago
   endDate: new Date(new Date().getTime() + 4 * 24 * 60 * 60 * 1000),   // 4 days from now
   progress: 65,
@@ -14,8 +14,8 @@ export const currentEvent = {
 export const upcomingEvents = [
   {
     id: 2,
-    name: 'Rank Multiplier',
-    description: 'All contributions count double towards rank for 24 hours',
+    name: 'Exclusive Titles',
+    description: 'Participate to unlock rare cosmetic titles for your profile. Earn titles like "Royal Jester" or "Court Wizard" to display on your profile.',
     startDate: new Date(new Date().getTime() + 5 * 24 * 60 * 60 * 1000),   // 5 days from now
     endDate: new Date(new Date().getTime() + 6 * 24 * 60 * 60 * 1000),     // 6 days from now
     image: 'https://picsum.photos/id/431/800/400',
@@ -23,8 +23,8 @@ export const upcomingEvents = [
   },
   {
     id: 3,
-    name: 'Team Takeover',
-    description: 'The team with the most contributions this week gets a special badge',
+    name: 'Team Badge Showcase',
+    description: 'The team with the most participants this week gets a special cosmetic badge. Show your team pride with unique profile flair.',
     startDate: new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000),   // 7 days from now
     endDate: new Date(new Date().getTime() + 14 * 24 * 60 * 60 * 1000),    // 14 days from now
     image: 'https://picsum.photos/id/452/800/400',
@@ -73,4 +73,3 @@ export const getTimeLeft = (targetDate: Date) => {
     seconds: Math.floor((difference / 1000) % 60)
   };
 };
-

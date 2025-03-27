@@ -35,7 +35,7 @@ const PokePartyTargets = () => {
     // In a real app, this would call an API endpoint
     toast({
       title: "Poke Successful!",
-      description: `You've knocked ${targetName} down one rank for 24 hours.`,
+      description: `You've visually knocked ${targetName} down one rank for 24 hours. This doesn't affect their actual rank calculation, just how it appears.`,
     });
     
     // Trigger visual effect
@@ -94,14 +94,14 @@ const PokePartyTargets = () => {
           <div>
             <h2 className="text-2xl font-bold text-gradient mb-2">Poke Party Targets</h2>
             <p className="text-white/70">
-              Pay $0.50 to knock someone down one rank for 24 hours. Choose your target wisely!
+              Pay $0.50 to visually knock someone down one rank for 24 hours. This is purely visual and doesn't affect their actual leaderboard position.
             </p>
           </div>
           
           <div className="flex items-center space-x-2 mt-4 md:mt-0">
             <div className="glass-morphism border-white/10 rounded-full px-3 py-1.5 text-sm text-white/70">
               <Clock size={14} className="inline-block mr-1.5" />
-              24h effect duration
+              24h visual effect
             </div>
             <div className="glass-morphism border-white/10 rounded-full px-3 py-1.5 text-sm text-white/70">
               <DollarSign size={14} className="inline-block mr-1.5" />
@@ -137,7 +137,7 @@ const PokePartyTargets = () => {
                         </span>
                         {pokeEffects[targetUser.id] && (
                           <span className="ml-2 text-xs bg-team-red/20 px-2 py-0.5 rounded-full text-team-red animate-fade-in">
-                            Rank #{targetUser.rank + 1}
+                            Visually #{targetUser.rank + 1}
                           </span>
                         )}
                       </div>
@@ -153,7 +153,7 @@ const PokePartyTargets = () => {
                         <PaymentModal
                           amount={0.5}
                           title="Poke a User"
-                          description={`Pay $0.50 to drop ${targetUser.username} down one rank for 24 hours.`}
+                          description={`Pay $0.50 to visually drop ${targetUser.username} down one rank for 24 hours. This is purely cosmetic and doesn't affect their actual position on the leaderboard.`}
                           onSuccess={() => handlePoke(targetUser.id, targetUser.username)}
                           trigger={
                             <Tooltip>
@@ -181,7 +181,7 @@ const PokePartyTargets = () => {
                               <TooltipContent>
                                 {pokeCooldown[targetUser.id] 
                                   ? 'You must wait before poking again' 
-                                  : 'Drop this user down one rank for 24 hours'
+                                  : 'Visually drop this user down one rank for 24 hours'
                                 }
                               </TooltipContent>
                             </Tooltip>
@@ -193,10 +193,13 @@ const PokePartyTargets = () => {
                       <div className="space-y-2">
                         <h4 className="text-sm font-medium">Poke Effect:</h4>
                         <p className="text-sm text-white/70">
-                          This will temporarily drop {targetUser.username} from rank #{targetUser.rank} to #{targetUser.rank + 1} for 24 hours.
+                          This will temporarily show {targetUser.username} as rank #{targetUser.rank + 1} instead of #{targetUser.rank} for 24 hours. This is purely visual and does not affect their actual standing.
                         </p>
                         <div className="text-xs text-white/50 mt-2">
                           After poking, you'll need to wait 24 hours before poking this user again.
+                        </div>
+                        <div className="text-xs text-team-red mt-1">
+                          Note: All pokes are cosmetic only and don't affect the $1 = 1 rank calculation system.
                         </div>
                       </div>
                     </HoverCardContent>
