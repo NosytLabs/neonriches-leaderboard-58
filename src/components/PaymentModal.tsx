@@ -7,6 +7,7 @@ import { useToast } from '@/hooks/use-toast';
 import { DollarSign } from 'lucide-react';
 import CreditCardForm from '@/components/payment/CreditCardForm';
 import CryptoForm from '@/components/payment/CryptoForm';
+import SatiricalPaymentSuccess from '@/components/payment/SatiricalPaymentSuccess';
 
 interface PaymentModalProps {
   title?: string;
@@ -27,6 +28,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
   const [isProcessing, setIsProcessing] = useState(false);
   const [open, setOpen] = useState(false);
   const [walletConnected, setWalletConnected] = useState(false);
+  const [showSuccessScreen, setShowSuccessScreen] = useState(false);
 
   const handleCreditCardPayment = () => {
     setIsProcessing(true);
@@ -55,15 +57,16 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
   };
 
   const handleSuccess = () => {
-    toast({
-      title: "Payment Successful!",
-      description: `You've contributed $${amount} to your status. Watch your rank soar!`,
-    });
+    // Show success screen instead of just closing
+    setShowSuccessScreen(true);
     
     if (onSuccess) {
       onSuccess(amount);
     }
-    
+  };
+  
+  const handleCloseSuccess = () => {
+    setShowSuccessScreen(false);
     setOpen(false);
     
     // Reset form state
@@ -76,43 +79,67 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
       Contribute ${amount}
     </Button>
   );
+  
+  const getSatiricalDescription = () => {
+    const descriptions = [
+      "Every dollar spent is another jewel in your digital crown!",
+      "Remember: in this kingdom, your worth is measured by your credit card limit.",
+      "Nobility wasn't earned in the past either - it was just bought differently!",
+      "Why earn respect when you can simply purchase status?",
+      "Skip the character development, go straight to the leaderboard!"
+    ];
+    
+    return descriptions[Math.floor(Math.random() * descriptions.length)];
+  };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        {trigger || defaultTrigger}
-      </DialogTrigger>
-      <DialogContent className="glass-morphism border-white/10 sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle>{title}</DialogTitle>
-          <DialogDescription>{description}</DialogDescription>
-        </DialogHeader>
-        
-        <Tabs defaultValue="card" className="w-full">
-          <TabsList className="grid grid-cols-2 glass-morphism border-white/10 mb-4">
-            <TabsTrigger value="card">Credit Card</TabsTrigger>
-            <TabsTrigger value="crypto">Crypto</TabsTrigger>
-          </TabsList>
+    <>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogTrigger asChild>
+          {trigger || defaultTrigger}
+        </DialogTrigger>
+        <DialogContent className="glass-morphism border-white/10 sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>{title}</DialogTitle>
+            <DialogDescription>
+              {description}
+              <p className="mt-2 text-white/60 italic text-sm">{getSatiricalDescription()}</p>
+            </DialogDescription>
+          </DialogHeader>
           
-          <TabsContent value="card">
-            <CreditCardForm 
-              amount={amount}
-              isProcessing={isProcessing}
-              onSubmit={handleCreditCardPayment}
-            />
-          </TabsContent>
-          
-          <TabsContent value="crypto">
-            <CryptoForm 
-              amount={amount}
-              isProcessing={isProcessing}
-              walletConnected={walletConnected}
-              onSubmit={handleCryptoPayment}
-            />
-          </TabsContent>
-        </Tabs>
-      </DialogContent>
-    </Dialog>
+          <Tabs defaultValue="card" className="w-full">
+            <TabsList className="grid grid-cols-2 glass-morphism border-white/10 mb-4">
+              <TabsTrigger value="card">Credit Card</TabsTrigger>
+              <TabsTrigger value="crypto">Crypto</TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="card">
+              <CreditCardForm 
+                amount={amount}
+                isProcessing={isProcessing}
+                onSubmit={handleCreditCardPayment}
+              />
+            </TabsContent>
+            
+            <TabsContent value="crypto">
+              <CryptoForm 
+                amount={amount}
+                isProcessing={isProcessing}
+                walletConnected={walletConnected}
+                onSubmit={handleCryptoPayment}
+              />
+            </TabsContent>
+          </Tabs>
+        </DialogContent>
+      </Dialog>
+      
+      {showSuccessScreen && (
+        <SatiricalPaymentSuccess 
+          amount={amount} 
+          onClose={handleCloseSuccess} 
+        />
+      )}
+    </>
   );
 };
 

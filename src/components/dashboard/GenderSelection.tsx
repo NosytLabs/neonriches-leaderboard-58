@@ -3,8 +3,9 @@ import React from 'react';
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Check, Crown, UserRound } from 'lucide-react';
+import { Check, Crown, UserRound, Trophy } from 'lucide-react';
 import { UserProfile } from '@/contexts/AuthContext';
+import { useToast } from '@/hooks/use-toast';
 
 interface GenderSelectionProps {
   userProfile: UserProfile;
@@ -12,9 +13,37 @@ interface GenderSelectionProps {
 }
 
 const GenderSelection: React.FC<GenderSelectionProps> = ({ userProfile, onGenderChange }) => {
+  const { toast } = useToast();
+
   const handleChange = async (value: string) => {
     const gender = value as 'king' | 'queen' | 'monarch' | null;
     await onGenderChange(gender);
+    
+    // Add satirical toast based on selection
+    const messages = {
+      'king': "His Majesty has decreed! All shall bow before the King of Digital Spending!",
+      'queen': "The Queen reigns supreme! May your royal purchases bring glory to the realm!",
+      'monarch': "The Monarch has spoken! Gender norms mean nothing when money talks!"
+    };
+    
+    toast({
+      title: "Identity Purchased",
+      description: messages[gender as keyof typeof messages] || "Your royal title has been updated.",
+      duration: 3000,
+    });
+  };
+  
+  const getRoyalTitle = (gender: string) => {
+    switch(gender) {
+      case 'king':
+        return "Behold the King, whose digital coffers overflow with virtual treasure.";
+      case 'queen':
+        return "The Queen rules with grace, elegance, and an unlimited credit line.";
+      case 'monarch':
+        return "The Monarch transcends traditional titles, united only by the power of spending.";
+      default:
+        return "";
+    }
   };
 
   return (
@@ -86,8 +115,14 @@ const GenderSelection: React.FC<GenderSelectionProps> = ({ userProfile, onGender
           </div>
         </RadioGroup>
         
+        <div className="mt-4 p-3 bg-white/5 rounded-lg border border-white/10">
+          <p className="text-sm text-white/80 italic">
+            {getRoyalTitle(userProfile.gender || 'monarch')}
+          </p>
+        </div>
+        
         <p className="text-xs text-white/50 mt-3 italic">
-          Choose how you wish to be addressed throughout the realm. Your royal title affects how nobles refer to Your Majesty.
+          Choose your royal identity. Don't worry - all titles cost the same, because in P2W.FUN, equality means everyone's money is equally welcome.
         </p>
       </CardContent>
     </Card>

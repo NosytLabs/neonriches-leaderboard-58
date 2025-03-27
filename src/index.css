@@ -1,315 +1,120 @@
 
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;900&family=Playfair+Display:wght@400;500;600;700&display=swap');
+/* Add this to your existing CSS */
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-@layer base {
-  :root {
-    --background: 240 10% 3.9%;
-    --foreground: 0 0% 98%;
-
-    --card: 240 10% 3.9%;
-    --card-foreground: 0 0% 98%;
-
-    --popover: 240 10% 3.9%;
-    --popover-foreground: 0 0% 98%;
-
-    --primary: 0 0% 98%;
-    --primary-foreground: 240 5.9% 10%;
-
-    --secondary: 240 3.7% 15.9%;
-    --secondary-foreground: 0 0% 98%;
-
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
-
-    --accent: 240 3.7% 15.9%;
-    --accent-foreground: 0 0% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 240 4.9% 83.9%;
-
-    --radius: 0.75rem;
+@keyframes float {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 0;
   }
-
-  * {
-    @apply border-border selection:bg-royal-gold/20 selection:text-white;
+  10% {
+    opacity: 0.7;
   }
-  
-  body {
-    @apply bg-background text-foreground antialiased overflow-x-hidden;
-    font-feature-settings: "ss01", "ss02", "cv01", "cv02", "cv03";
-    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.08'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  90% {
+    opacity: 0.7;
   }
-
-  html {
-    @apply scroll-smooth;
-  }
-  
-  h1, h2, h3, h4, h5, h6 {
-    @apply font-royal;
-  }
-
-  /* Custom scrollbar for the royal experience */
-  ::-webkit-scrollbar {
-    width: 10px;
-  }
-  
-  ::-webkit-scrollbar-track {
-    @apply bg-background;
-  }
-  
-  ::-webkit-scrollbar-thumb {
-    @apply bg-gradient-to-b from-royal-purple via-royal-gold to-royal-blue rounded-full;
+  100% {
+    transform: translateY(-100vh) rotate(360deg);
+    opacity: 0;
   }
 }
 
-@layer utilities {
-  .scrollbar-none {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
-  
-  .scrollbar-none::-webkit-scrollbar {
-    display: none;
-  }
-
-  .glass-morphism {
-    @apply backdrop-blur-xl bg-white/5 border border-white/10 shadow-[0_4px_12px_-2px_rgba(0,0,0,0.3)];
-  }
-  
-  .neo-blur {
-    @apply backdrop-blur-2xl bg-black/40 border border-white/10;
-  }
-  
-  .text-gradient {
-    @apply bg-gradient-to-br from-white via-white/90 to-white/70 bg-clip-text text-transparent;
-  }
-  
-  .royal-gradient {
-    @apply bg-gradient-to-br from-royal-gold via-royal-purple to-royal-blue bg-clip-text text-transparent;
-  }
-
-  .royal-gradient-bg {
-    @apply bg-gradient-to-br from-background via-royal-purple/5 to-background;
-  }
-  
-  .gradient-border {
-    position: relative;
-  }
-  
-  .gradient-border::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    padding: 1px;
-    background: linear-gradient(
-      to right,
-      rgba(155, 38, 175, 0.5),
-      rgba(255, 215, 0, 0.5),
-      rgba(0, 85, 164, 0.5)
-    );
-    -webkit-mask: 
-      linear-gradient(#fff 0 0) content-box, 
-      linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-  }
-  
-  .team-red-glow {
-    box-shadow: 0 0 20px 0 rgba(155, 38, 175, 0.5);
-  }
-  
-  .team-green-glow {
-    box-shadow: 0 0 20px 0 rgba(255, 215, 0, 0.5);
-  }
-  
-  .team-blue-glow {
-    box-shadow: 0 0 20px 0 rgba(0, 85, 164, 0.5);
-  }
-  
-  .shimmer-bg {
-    background: linear-gradient(
-      90deg,
-      rgba(255, 255, 255, 0) 0%,
-      rgba(255, 255, 255, 0.03) 50%,
-      rgba(255, 255, 255, 0) 100%
-    );
-    background-size: 200% 100%;
-    animation: shimmer 3s infinite;
-  }
-  
-  .royal-card {
-    @apply glass-morphism border-royal-gold/30 relative overflow-hidden;
-  }
-  
-  .royal-card::before {
-    content: "";
-    position: absolute;
-    top: -2px;
-    left: -2px;
-    right: -2px;
-    bottom: -2px;
-    background: linear-gradient(45deg, rgba(155, 38, 175, 0.3), rgba(255, 215, 0, 0.3));
-    z-index: -1;
-    border-radius: inherit;
-    filter: blur(8px);
-    opacity: 0.7;
-  }
-  
-  .royal-button {
-    @apply bg-gradient-to-r from-royal-purple via-royal-gold to-royal-blue 
-           text-white font-royal uppercase tracking-wider shadow-lg hover:shadow-xl
-           transition-all duration-300 hover:scale-105;
-  }
-  
-  .throne-bg {
-    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.08'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-  }
-  
-  .crown-badge {
-    @apply inline-flex items-center justify-center;
-    position: relative;
-  }
-  
-  .crown-badge::before {
-    content: '👑';
-    position: absolute;
-    top: -10px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 1.2em;
-    animation: crown-glow 3s ease-in-out infinite;
-  }
-
-  .royal-decoration::before,
-  .royal-decoration::after {
-    content: "❧";
-    @apply text-royal-gold/30 mx-2;
-  }
-
-  .royal-underline {
-    position: relative;
-  }
-
-  .royal-underline::after {
-    content: "";
-    position: absolute;
-    left: 25%;
-    bottom: -4px;
-    width: 50%;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.5), transparent);
-  }
-
-  /* Enhanced animations */
-  .animate-float {
-    animation: floating 6s ease-in-out infinite;
-  }
-  
-  .animate-pulse-slow {
-    animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-  }
-  
-  .animate-golden-shimmer {
-    background: linear-gradient(
-      90deg, 
-      rgba(255, 215, 0, 0.1) 0%, 
-      rgba(255, 215, 0, 0.3) 50%, 
-      rgba(255, 215, 0, 0.1) 100%
-    );
-    background-size: 200% 100%;
-    animation: shimmer 3s infinite;
-  }
-  
-  .animate-royal-bounce {
-    animation: royal-bounce 1s cubic-bezier(0.28, 0.84, 0.42, 1) infinite;
-  }
-  
-  .animate-royal-rotate {
-    animation: royal-rotate 10s linear infinite;
-  }
-  
-  .animate-royal-shake {
-    animation: royal-shake 0.82s cubic-bezier(.36,.07,.19,.97) infinite;
-    transform: translate3d(0, 0, 0);
-    backface-visibility: hidden;
-    perspective: 1000px;
-  }
-
-  /* Enhanced animations */
-  @keyframes shimmer {
-    0% { background-position: 200% 0; }
-    100% { background-position: -200% 0; }
-  }
-
-  @keyframes floating {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-8px); }
-  }
-
-  @keyframes royal-glow {
-    0%, 100% { text-shadow: 0 0 5px rgba(255, 215, 0, 0.5); }
-    50% { text-shadow: 0 0 15px rgba(255, 215, 0, 0.8), 0 0 20px rgba(155, 38, 175, 0.5); }
-  }
-  
-  @keyframes royal-bounce {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
-  }
-  
-  @keyframes royal-rotate {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-  }
-  
-  @keyframes royal-shake {
-    10%, 90% { transform: translate3d(-1px, 0, 0); }
-    20%, 80% { transform: translate3d(2px, 0, 0); }
-    30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
-    40%, 60% { transform: translate3d(4px, 0, 0); }
-  }
-  
-  @keyframes royal-pulse {
-    0%, 100% { transform: scale(1); opacity: 1; }
-    50% { transform: scale(1.05); opacity: 0.8; }
-  }
-
-  .animate-royal-glow {
-    animation: royal-glow 3s ease-in-out infinite;
-  }
-
-  .animate-floating {
-    animation: floating 6s ease-in-out infinite;
-  }
-  
-  .animate-royal-pulse {
-    animation: royal-pulse 2s ease-in-out infinite;
-  }
+.animate-float {
+  animation: float 5s ease-in forwards;
 }
 
 @keyframes crown-glow {
-  0%, 100% { filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.5)); }
-  50% { filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.8)); }
+  0%, 100% {
+    filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.5));
+  }
+  50% {
+    filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.8));
+  }
 }
 
-@keyframes royal-pulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.05); }
+.animate-crown-glow {
+  animation: crown-glow 2s ease-in-out infinite;
 }
 
-/* Royal cursor styles */
+@keyframes pulse-slow {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 3s ease-in-out infinite;
+}
+
+/* Custom cursors */
 .cursor-crown {
-  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 24 24' fill='none' stroke='%23FFD700' stroke-width='2'%3E%3Cpath d='m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7z'/%3E%3Cpath d='M3 16h18v4H3z'/%3E%3C/svg%3E"), auto;
+  cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 24 24' fill='none' stroke='gold' stroke-width='2'><path d='m20 16-4-4 4-4'/><path d='m4 8 4 4-4 4'/><path d='M16 4h4v4'/><path d='M8 4H4v4'/><path d='M4 16v4h4'/><path d='M16 20h4v-4'/></svg>"), auto;
 }
 
 .cursor-coin {
-  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 24 24' fill='%23FFD700' stroke='%23000' stroke-width='0.5'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M12 6v12M8 12h8'/%3E%3C/svg%3E"), auto;
+  cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 24 24' fill='none' stroke='gold' stroke-width='2'><circle cx='12' cy='12' r='8'/><path d='M8 14h8'/><path d='M12 10v8'/></svg>"), auto;
+}
+
+/* Royal gradient text */
+.royal-gradient {
+  background: linear-gradient(90deg, #9B26AF, #FFD700, #0055A4);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  display: inline-block;
+}
+
+/* Glass morphism effect */
+.glass-morphism {
+  background: rgba(30, 30, 46, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* Team colors */
+.border-royal-purple {
+  border-color: #9B26AF;
+}
+
+.border-royal-gold {
+  border-color: #FFD700;
+}
+
+.border-royal-blue {
+  border-color: #0055A4;
+}
+
+.text-royal-purple {
+  color: #9B26AF;
+}
+
+.text-royal-gold {
+  color: #FFD700;
+}
+
+.text-royal-blue {
+  color: #0055A4;
+}
+
+.bg-royal-purple {
+  background-color: #9B26AF;
+}
+
+.bg-royal-gold {
+  background-color: #FFD700;
+}
+
+.bg-royal-blue {
+  background-color: #0055A4;
+}
+
+/* Throne background */
+.throne-bg {
+  background-color: #1a1a2e;
+  background-image: 
+    radial-gradient(circle at 10% 20%, rgba(155, 38, 175, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 90% 50%, rgba(255, 215, 0, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 50% 80%, rgba(0, 85, 164, 0.05) 0%, transparent 50%);
 }

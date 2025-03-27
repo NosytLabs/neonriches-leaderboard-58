@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -19,7 +18,6 @@ interface LeaderboardUser {
   gender?: 'king' | 'queen' | 'monarch' | null;
 }
 
-// Mock data for now, would be replaced with real data from API
 const mockLeaderboardData: LeaderboardUser[] = [
   { id: '1', username: 'RoyalOverlord', amountSpent: 2500, rank: 1, team: 'red', profileImage: 'https://i.pravatar.cc/150?img=11', gender: 'king' },
   { id: '2', username: 'GoldenThrone', amountSpent: 2200, rank: 2, team: 'green', profileImage: 'https://i.pravatar.cc/150?img=12', gender: 'queen' },
@@ -37,12 +35,30 @@ const getTeamColor = (team: string | null) => {
   }
 };
 
+const getTeamBorderColor = (team: string | null) => {
+  switch (team) {
+    case 'red': return 'border-royal-purple';
+    case 'green': return 'border-royal-gold';
+    case 'blue': return 'border-royal-blue';
+    default: return 'border-white/20';
+  }
+};
+
 const getGenderTitle = (gender: string | null) => {
   switch (gender) {
     case 'king': return 'His Majesty';
     case 'queen': return 'Her Majesty';
     case 'monarch': return 'Their Majesty';
     default: return 'Noble';
+  }
+};
+
+const getGenderEmoji = (gender: string | null) => {
+  switch (gender) {
+    case 'king': return '👑';
+    case 'queen': return '👸';
+    case 'monarch': return '🏛️';
+    default: return '⚜️';
   }
 };
 
@@ -63,12 +79,22 @@ const InteractiveLeaderboard: React.FC = () => {
   const handleProfileClick = (userId: string) => {
     // In a real app, navigate to user profile
     console.log(`View profile of user ${userId}`);
+    toast({
+      title: "Royal Intelligence",
+      description: `You are now spying on another noble's profile. How delightfully scandalous!`,
+      duration: 2000,
+    });
     // navigate(`/profile/${userId}`);
   };
 
   const handlePokeUser = (user: LeaderboardUser) => {
     setSelectedUser(user);
     setShowPokeOptions(true);
+    
+    // Play subtle royal sound effect
+    const audio = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-fairy-arcade-sparkle-866.mp3');
+    audio.volume = 0.2;
+    audio.play().catch(e => console.log('Audio playback error:', e));
   };
 
   const confirmPoke = () => {
@@ -77,8 +103,8 @@ const InteractiveLeaderboard: React.FC = () => {
     // Simulate API call for poke action
     setTimeout(() => {
       toast({
-        title: "Poke Successful!",
-        description: `You poked ${selectedUser.username} for $${pokeAmount}. They've been pushed down the ranks!`,
+        title: "Royal Sabotage Complete!",
+        description: `You spent $${pokeAmount} to push ${selectedUser.username} down the ranks. How delightfully petty!`,
       });
       
       // Update the leaderboard to reflect changes
@@ -101,6 +127,11 @@ const InteractiveLeaderboard: React.FC = () => {
       // Set cooldown for poke action
       setTimeout(() => {
         setIsPokeCooldown(false);
+        toast({
+          title: "Royal Mischief Ready",
+          description: "Your ability to sabotage other nobles has been replenished!",
+          duration: 2000,
+        });
       }, 30000); // 30-second cooldown
     }, 1000);
   };
@@ -139,13 +170,16 @@ const InteractiveLeaderboard: React.FC = () => {
                 {getRankIcon(userData.rank)}
               </div>
               
-              <Avatar className={`border-2 ${userData.team ? `border-team-${userData.team}` : 'border-white/20'}`}>
+              <Avatar className={`border-2 ${userData.team ? getTeamBorderColor(userData.team) : 'border-white/20'}`}>
                 <AvatarImage src={userData.profileImage} alt={userData.username} />
                 <AvatarFallback>{getInitials(userData.username)}</AvatarFallback>
               </Avatar>
               
               <div>
-                <div className="font-medium">{userData.username}</div>
+                <div className="font-medium flex items-center">
+                  {userData.username}
+                  {index < 3 && <div className="ml-1.5">{getGenderEmoji(userData.gender)}</div>}
+                </div>
                 <div className={`text-xs ${getTeamColor(userData.team)}`}>
                   {getGenderTitle(userData.gender || null)}
                 </div>

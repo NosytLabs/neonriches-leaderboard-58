@@ -1,6 +1,7 @@
+
 import React from 'react';
-import { Crown } from 'lucide-react';
-import { getTeamColor, getTeamIcon, getTeamName } from './TeamUtils';
+import { Crown, DollarSign, TrendingUp, Star } from 'lucide-react';
+import { getTeamColor, getTeamIcon, getTeamName, getTeamBadge } from './TeamUtils';
 
 interface LeaderboardUser {
   id: number;
@@ -33,17 +34,25 @@ const LeaderboardTable = ({ leaderboardData }: LeaderboardTableProps) => {
           {leaderboardData.map((user, index) => (
             <tr 
               key={user.id} 
-              className="text-left border-t border-white/5 hover:bg-white/5 transition-colors animate-fade-in relative"
+              className={`text-left border-t border-white/5 hover:bg-white/5 transition-colors animate-fade-in relative ${index < 3 ? 'bg-white/5' : ''}`}
               style={{ animationDelay: `${index * 50}ms` }}
             >
               <td className="py-4 px-6">
                 <div className="flex items-center">
-                  <span className="font-mono text-xl font-bold text-white/70">#{user.rank}</span>
+                  <span className={`font-mono text-xl font-bold ${index === 0 ? 'text-royal-gold' : index === 1 ? 'text-[#C0C0C0]' : index === 2 ? 'text-[#CD7F32]' : 'text-white/70'}`}>
+                    #{user.rank}
+                  </span>
                   {user.rank === 1 && (
                     <div className="relative">
                       <Crown size={16} className="ml-2 text-royal-gold animate-pulse-slow" />
                       <div className="absolute -inset-2 bg-royal-gold/20 blur-sm rounded-full"></div>
                     </div>
+                  )}
+                  {user.rank === 2 && (
+                    <Star size={14} className="ml-2 text-[#C0C0C0]" />
+                  )}
+                  {user.rank === 3 && (
+                    <Star size={14} className="ml-2 text-[#CD7F32]" />
                   )}
                 </div>
               </td>
@@ -65,7 +74,13 @@ const LeaderboardTable = ({ leaderboardData }: LeaderboardTableProps) => {
                 </div>
               </td>
               <td className="py-4 px-6 text-right">
-                <span className="font-mono font-bold text-white">${user.amountSpent.toLocaleString()}</span>
+                <div className="flex items-center justify-end">
+                  <DollarSign size={14} className="text-royal-gold mr-1" />
+                  <span className="font-mono font-bold text-white">{user.amountSpent.toLocaleString()}</span>
+                  {index < 3 && (
+                    <TrendingUp size={14} className="ml-2 text-green-500" />
+                  )}
+                </div>
               </td>
             </tr>
           ))}
