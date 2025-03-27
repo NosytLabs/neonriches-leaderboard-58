@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
@@ -20,7 +21,10 @@ import { Link } from 'react-router-dom';
 import { getShameActionPrice } from '@/components/events/utils/shameUtils';
 import { ShameAction } from '@/components/events/hooks/useShameEffect';
 import useNotificationSounds from '@/hooks/use-notification-sounds';
+import { Dialog } from '@/components/ui/dialog';
 import ShameModal from '../events/components/ShameModal';
+import RoyalButton from '@/components/ui/royal-button';
+import { getTeamColors, getRankTextColorClass, getRankBadgeClass } from '@/lib/colors';
 
 export const mockUsers = [
   {
@@ -129,10 +133,10 @@ const CombinedLeaderboard: React.FC<{
     playSound('notification');
   };
 
-  const confirmShame = () => {
+  const confirmShame = (userId: string, type: ShameAction) => {
     if (!selectedUser) return;
     
-    const amount = getShameActionPrice(shameAction);
+    const amount = getShameActionPrice(type);
     
     setTimeout(() => {
       toast({
@@ -148,31 +152,20 @@ const CombinedLeaderboard: React.FC<{
     }, 500);
   };
 
+  // Enhanced styling functions
   const getTeamColor = (team: string | null) => {
-    switch (team) {
-      case 'red': return 'text-royal-crimson';
-      case 'green': return 'text-royal-gold';
-      case 'blue': return 'text-royal-navy';
-      default: return 'text-white/70';
-    }
+    const colors = getTeamColors(team);
+    return colors.text;
   };
 
   const getTeamBorderColor = (team: string | null) => {
-    switch (team) {
-      case 'red': return 'border-royal-crimson';
-      case 'green': return 'border-royal-gold';
-      case 'blue': return 'border-royal-navy';
-      default: return 'border-white/20';
-    }
+    const colors = getTeamColors(team);
+    return colors.border;
   };
 
   const getTeamBgColor = (team: string | null) => {
-    switch (team) {
-      case 'red': return 'bg-royal-crimson/20';
-      case 'green': return 'bg-royal-gold/20';
-      case 'blue': return 'bg-royal-navy/20';
-      default: return 'bg-white/10';
-    }
+    const colors = getTeamColors(team);
+    return colors.bg;
   };
 
   const getRankIcon = (rank: number) => {
@@ -273,9 +266,10 @@ const CombinedLeaderboard: React.FC<{
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-4">
-                  <div className="flex items-center justify-center w-8 h-8 rounded-full glass-morphism border-white/10">
+                  <div className={`flex items-center justify-center w-8 h-8 rounded-full glass-morphism border-white/10 
+                    ${index < 10 ? getRankBadgeClass(index + 1) : 'bg-white/5'}`}>
                     {getRankIcon(index + 1) || (
-                      <span className="text-sm font-bold">#{index + 1}</span>
+                      <span className={`text-sm font-bold ${getRankTextColorClass(index + 1)}`}>#{index + 1}</span>
                     )}
                   </div>
                   
@@ -284,7 +278,7 @@ const CombinedLeaderboard: React.FC<{
                       {user.profileImage ? (
                         <AvatarImage src={user.profileImage} alt={user.username} />
                       ) : (
-                        <AvatarFallback>
+                        <AvatarFallback className={`${getTeamBgColor(user.team)}`}>
                           {user.username.charAt(0).toUpperCase()}
                         </AvatarFallback>
                       )}
@@ -292,15 +286,26 @@ const CombinedLeaderboard: React.FC<{
                     
                     <div>
                       <div className="flex items-center space-x-2">
-                        <span className="font-medium hover:text-royal-gold cursor-pointer" onClick={() => handleProfileClick(user.id)}>
+                        <span 
+                          className={`font-medium hover:text-royal-gold cursor-pointer ${index < 3 ? getRankTextColorClass(index + 1) : ''}`} 
+                          onClick={() => handleProfileClick(user.id)}
+                        >
                           {user.username}
                         </span>
-                        <Badge variant="outline" className={`${getTeamColor(user.team)} border-${getTeamBorderColor(user.team)} text-xs`}>
-                          {user.team?.toUpperCase()}
-                        </Badge>
+                        {user.team && (
+                          <Badge 
+                            variant="outline" 
+                            className={`${getTeamColor(user.team)} border-${getTeamBorderColor(user.team)} text-xs`}
+                          >
+                            {user.team?.toUpperCase()}
+                          </Badge>
+                        )}
                       </div>
-                      <div className="text-sm text-white/60">
-                        ${user.amountSpent.toLocaleString()} contributed
+                      <div className="flex items-center text-sm text-white/60">
+                        <span className="flex items-center">
+                          <Crown size={12} className="mr-1 text-royal-gold/70" />
+                          ${user.amountSpent.toLocaleString()}
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -308,30 +313,33 @@ const CombinedLeaderboard: React.FC<{
                 
                 {!compact && (
                   <div className="flex items-center space-x-2">
-                    <Button
-                      variant="outline"
+                    <RoyalButton
+                      variant="glass"
                       size="sm"
-                      className="glass-morphism border-royal-crimson/20 hover:bg-royal-crimson/20 text-white text-xs"
+                      className="text-xs"
+                      icon={<span className="text-sm">🍅</span>}
                       onClick={() => handleShameUser(user, 'tomatoes')}
                     >
-                      🍅 ${getShameActionPrice('tomatoes')}
-                    </Button>
-                    <Button
-                      variant="outline"
+                      ${getShameActionPrice('tomatoes')}
+                    </RoyalButton>
+                    <RoyalButton
+                      variant="glass"
                       size="sm"
-                      className="glass-morphism border-royal-gold/20 hover:bg-royal-gold/20 text-white text-xs"
+                      className="text-xs"
+                      icon={<span className="text-sm">🥚</span>}
                       onClick={() => handleShameUser(user, 'eggs')}
                     >
-                      🥚 ${getShameActionPrice('eggs')}
-                    </Button>
-                    <Button
-                      variant="outline"
+                      ${getShameActionPrice('eggs')}
+                    </RoyalButton>
+                    <RoyalButton
+                      variant="glass"
                       size="sm"
-                      className="glass-morphism border-royal-purple/20 hover:bg-royal-purple/20 text-white text-xs"
+                      className="text-xs"
+                      icon={<span className="text-sm">🪵</span>}
                       onClick={() => handleShameUser(user, 'stocks')}
                     >
-                      🪵 ${getShameActionPrice('stocks')}
-                    </Button>
+                      ${getShameActionPrice('stocks')}
+                    </RoyalButton>
                   </div>
                 )}
               </div>
@@ -348,19 +356,21 @@ const CombinedLeaderboard: React.FC<{
       </CardContent>
 
       {showShameModal && selectedUser && (
-        <ShameModal
-          targetUser={{
-            id: parseInt(selectedUser.id),
-            username: selectedUser.username,
-            profileImage: selectedUser.profileImage || '/placeholder.svg',
-            amountSpent: selectedUser.amountSpent,
-            rank: selectedUser.rank,
-            team: selectedUser.team || 'red'
-          }}
-          shameAction={shameAction}
-          onClose={() => setShowShameModal(false)}
-          onConfirm={confirmShame}
-        />
+        <Dialog open={showShameModal} onOpenChange={setShowShameModal}>
+          <ShameModal
+            targetUser={{
+              userId: selectedUser.id.toString(),
+              username: selectedUser.username,
+              profileImage: selectedUser.profileImage || '/placeholder.svg',
+              totalSpent: selectedUser.amountSpent,
+              rank: selectedUser.rank,
+              team: selectedUser.team || null
+            }}
+            shameType={shameAction}
+            onConfirm={confirmShame}
+            onCancel={() => setShowShameModal(false)}
+          />
+        </Dialog>
       )}
     </Card>
   );

@@ -8,6 +8,7 @@ import { ShameAction } from '../hooks/useShameEffect';
 import { getShameActionTitle, getShameActionDescription, getShameActionPrice, getShameActionIcon, getShameActionColor } from '../utils/shameUtils';
 import RankingDisclaimer from '@/components/shared/RankingDisclaimer';
 import PaymentModal from '@/components/PaymentModal';
+import RoyalButton from '@/components/ui/royal-button';
 
 interface ShameModalProps {
   targetUser: UserRankData | null;
@@ -23,6 +24,7 @@ const ShameModal: React.FC<ShameModalProps> = ({
   onCancel 
 }) => {
   const [isProcessing, setIsProcessing] = useState(false);
+  const [showAnimation, setShowAnimation] = useState(false);
   
   if (!targetUser) return null;
   
@@ -34,20 +36,69 @@ const ShameModal: React.FC<ShameModalProps> = ({
   
   const handlePaymentSuccess = (amount: number) => {
     setIsProcessing(true);
+    setShowAnimation(true);
+    
+    // Create floating particles effect based on shame type
+    setTimeout(() => {
+      const modalElement = document.querySelector('.shame-modal-content');
+      if (modalElement) {
+        const getEmojis = (type: ShameAction) => {
+          switch(type) {
+            case 'tomatoes': return ['🍅', '🍎', '🥫', '💥'];
+            case 'eggs': return ['🥚', '🍳', '🧀', '🦴'];
+            case 'stocks': return ['🪵', '⛓️', '🔒', '📜'];
+          }
+        };
+        
+        const emojis = getEmojis(shameType);
+        
+        for (let i = 0; i < 12; i++) {
+          const particle = document.createElement('div');
+          particle.innerHTML = emojis[Math.floor(Math.random() * emojis.length)];
+          particle.classList.add('floating-shame-particle', 'text-xl');
+          
+          // Random position
+          const randomX = Math.random() * modalElement.clientWidth;
+          const randomY = Math.random() * modalElement.clientHeight / 2 + modalElement.clientHeight / 2;
+          
+          particle.style.left = `${randomX}px`;
+          particle.style.top = `${randomY}px`;
+          particle.style.animationDuration = `${2 + Math.random() * 2}s`;
+          
+          modalElement.appendChild(particle);
+          
+          // Remove particle after animation completes
+          setTimeout(() => {
+            if (modalElement.contains(particle)) {
+              modalElement.removeChild(particle);
+            }
+          }, 4000);
+        }
+      }
+    }, 100);
+    
+    // Complete the shame action
     setTimeout(() => {
       onConfirm(targetUser.userId, shameType);
       setIsProcessing(false);
-    }, 1000);
+      setShowAnimation(false);
+    }, 2000);
   };
   
   return (
-    <DialogContent className="glass-morphism border-white/10 sm:max-w-md">
+    <DialogContent className="glass-morphism border-white/10 sm:max-w-md shame-modal-content">
+      <div className={`absolute inset-0 rounded-lg transition-opacity duration-500 ${showAnimation ? 'opacity-10' : 'opacity-0'}`} style={{ 
+        background: shameType === 'tomatoes' ? '#ff0000' : 
+                   shameType === 'eggs' ? '#ffff00' : 
+                   '#a52a2a'
+      }}></div>
+      
       <DialogHeader>
         <div className="flex items-center">
-          <div className={`w-8 h-8 rounded-full flex items-center justify-center mr-2 ${colors.bg}`}>
-            <span className="text-lg">{icon}</span>
+          <div className={`w-10 h-10 rounded-full flex items-center justify-center mr-3 ${colors.bg} ${colors.border} border`}>
+            <span className="text-2xl">{icon}</span>
           </div>
-          <DialogTitle>{title}</DialogTitle>
+          <DialogTitle className="text-xl royal-text-shimmer">{title}</DialogTitle>
         </div>
         <DialogDescription>
           This will cost ${price.toFixed(2)} and publicly shame {targetUser.username} for 24 hours.
@@ -55,8 +106,11 @@ const ShameModal: React.FC<ShameModalProps> = ({
       </DialogHeader>
       
       <div className="space-y-4 my-2">
-        <div className={`p-4 rounded-lg ${colors.bg} ${colors.border} border`}>
-          <p className={`${colors.text}`}>{description}</p>
+        <div className={`p-4 rounded-lg ${colors.bg} ${colors.border} border relative overflow-hidden`}>
+          {showAnimation && (
+            <div className="absolute inset-0 bg-white/10 animate-pulse"></div>
+          )}
+          <p className={`${colors.text} relative z-10`}>{description}</p>
         </div>
         
         <div className="flex items-center space-x-4">
@@ -71,7 +125,9 @@ const ShameModal: React.FC<ShameModalProps> = ({
                   } />
                 </div>
               )}
-              <div className="w-12 h-12 rounded-full glass-morphism border-white/10 flex items-center justify-center">
+              <div className={`w-16 h-16 rounded-full glass-morphism ${targetUser.rank <= 3 ? 'royal-shine' : 'border-white/10'} flex items-center justify-center overflow-hidden ${
+                showAnimation ? `shame-active-${shameType}` : ''
+              }`}>
                 {targetUser.profileImage ? (
                   <img src={targetUser.profileImage} alt={targetUser.username} className="w-full h-full rounded-full object-cover" />
                 ) : (
@@ -82,10 +138,22 @@ const ShameModal: React.FC<ShameModalProps> = ({
           </div>
           
           <div>
-            <div className="font-semibold">{targetUser.username}</div>
+            <div className="font-semibold flex items-center">
+              {targetUser.username}
+              <span className="ml-2 bg-white/10 text-xs px-1.5 py-0.5 rounded-full flex items-center">
+                <Crown size={10} className="mr-1 text-royal-gold" /> #{targetUser.rank}
+              </span>
+            </div>
             <div className="text-sm text-white/60 flex items-center">
               <Scroll size={12} className="mr-1" />
-              Rank #{targetUser.rank} • ${targetUser.totalSpent.toLocaleString()}
+              ${targetUser.totalSpent.toLocaleString()} contributed
+            </div>
+            <div className="text-xs text-white/40 mt-1">
+              {targetUser.team && (
+                <span className={`inline-block px-2 py-0.5 rounded-full ${colors.bg}`}>
+                  {targetUser.team.toUpperCase()} COURT
+                </span>
+              )}
             </div>
           </div>
         </div>
@@ -95,36 +163,51 @@ const ShameModal: React.FC<ShameModalProps> = ({
           messagePrefix="Important:" 
           className="text-xs"
         />
+        
+        {showAnimation && (
+          <div className="p-3 border border-white/10 rounded-lg bg-white/5 animate-pulse">
+            <p className="text-center text-sm">Preparing medieval shame...</p>
+          </div>
+        )}
       </div>
       
       <DialogFooter className="flex-col sm:flex-col gap-2">
-        <PaymentModal 
-          amount={price} 
-          onSuccess={handlePaymentSuccess}
-          title={`Purchase ${title}`}
-          description={`Fund your public shaming of ${targetUser.username}`}
-          trigger={
+        {!isProcessing ? (
+          <>
+            <PaymentModal 
+              amount={price} 
+              onSuccess={handlePaymentSuccess}
+              title={`Purchase ${title}`}
+              description={`Fund your public shaming of ${targetUser.username}`}
+              trigger={
+                <RoyalButton 
+                  variant={
+                    shameType === 'tomatoes' ? 'royalCrimson' :
+                    shameType === 'eggs' ? 'royalGold' : 'royalNavy'
+                  }
+                  className="w-full"
+                  shimmer={true}
+                  glow={true}
+                  icon={<span className="mr-2">{icon}</span>}
+                >
+                  Pay ${price.toFixed(2)} to Shame
+                </RoyalButton>
+              }
+            />
+            
             <Button 
-              className={`w-full ${colors.bg} ${colors.border} border hover:opacity-90 ${colors.text}`}
-              disabled={isProcessing}
+              variant="outline" 
+              className="w-full glass-morphism border-white/10 hover:bg-white/10"
+              onClick={onCancel}
             >
-              {isProcessing ? (
-                <span className="animate-spin mr-2">⚙️</span>
-              ) : (
-                <span className="mr-2">{icon}</span>
-              )}
-              Pay ${price.toFixed(2)} to Shame
+              Cancel
             </Button>
-          }
-        />
-        
-        <Button 
-          variant="outline" 
-          className="w-full glass-morphism border-white/10 hover:bg-white/10"
-          onClick={onCancel}
-        >
-          Cancel
-        </Button>
+          </>
+        ) : (
+          <div className="w-full flex justify-center">
+            <div className="animate-spin text-2xl">⚙️</div>
+          </div>
+        )}
       </DialogFooter>
     </DialogContent>
   );

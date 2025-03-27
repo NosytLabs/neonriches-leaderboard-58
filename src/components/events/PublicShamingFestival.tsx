@@ -7,6 +7,20 @@ import ShameUserCard from './components/ShameUserCard';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import RankingDisclaimer from '@/components/shared/RankingDisclaimer';
 import RoyalDivider from '@/components/ui/royal-divider';
+import { Dialog } from '@/components/ui/dialog';
+import ShameModal from './components/ShameModal';
+import { ShameAction } from './hooks/useShameEffect';
+import useNotificationSounds from '@/hooks/use-notification-sounds';
+
+// Format user data for ShameUserCard
+const formatUserForShameCard = (user: any) => ({
+  id: user.id,
+  username: user.username,
+  profileImage: user.profileImage,
+  rank: user.rank,
+  team: user.team,
+  amountSpent: user.amountSpent
+});
 
 const PublicShamingDescription = () => {
   return (
@@ -36,9 +50,49 @@ const PublicShamingDescription = () => {
 };
 
 const PublicShamingFestival = () => {
+  const { playSound } = useNotificationSounds();
   const { shameCooldown, shameEffects, shameCount, getShameCount, handleShame } = useShameEffect({
     cooldownPeriod: 60000 * 60 * 24 // 24 hours cooldown
   });
+  const [showModal, setShowModal] = React.useState(false);
+  const [selectedUser, setSelectedUser] = React.useState<any>(null);
+  const [selectedAction, setSelectedAction] = React.useState<ShameAction>('tomatoes');
+  
+  const handleShameUser = (userId: number, username: string, type: ShameAction, amount: number) => {
+    // First, find the user
+    const user = topUsers.find(u => u.id === userId);
+    if (!user) return false;
+    
+    // Set selected user and action for the modal
+    setSelectedUser(user);
+    setSelectedAction(type);
+    setShowModal(true);
+    
+    playSound('notification');
+    return true;
+  };
+  
+  const confirmShame = (userId: string, action: ShameAction) => {
+    // Convert userId to number since our mock data uses numbers
+    const numericId = parseInt(userId, 10);
+    const user = topUsers.find(u => u.id === numericId);
+    
+    if (user) {
+      handleShame(numericId, user.username, action, getShameActionPrice(action));
+      playSound('shame', 0.3);
+    }
+    
+    setShowModal(false);
+  };
+  
+  // Helper function to get price based on shame type
+  const getShameActionPrice = (action: ShameAction): number => {
+    switch (action) {
+      case 'tomatoes': return 0.5;
+      case 'eggs': return 1.0;
+      case 'stocks': return 2.0;
+    }
+  };
 
   return (
     <TooltipProvider>
@@ -97,11 +151,11 @@ const PublicShamingFestival = () => {
               style={{ animationDelay: `${index * 150}ms` }}
             >
               <ShameUserCard
-                user={targetUser}
+                user={formatUserForShameCard(targetUser)}
                 isShamed={shameEffects[targetUser.id] || null}
                 isOnCooldown={shameCooldown[targetUser.id] || false}
                 shameCount={getShameCount(targetUser.id)}
-                onShame={handleShame}
+                onShame={handleShameUser}
               />
             </div>
           ))}
@@ -116,6 +170,25 @@ const PublicShamingFestival = () => {
             turning punishment into a communal entertainment. This feature is a satirical and harmless take on these historical practices.
           </p>
         </div>
+        
+        {/* Confirmation modal */}
+        <Dialog open={showModal} onOpenChange={setShowModal}>
+          {selectedUser && (
+            <ShameModal
+              targetUser={{
+                userId: selectedUser.id.toString(),
+                username: selectedUser.username,
+                profileImage: selectedUser.profileImage,
+                totalSpent: selectedUser.amountSpent,
+                rank: selectedUser.rank,
+                team: selectedUser.team
+              }}
+              shameType={selectedAction}
+              onConfirm={confirmShame}
+              onCancel={() => setShowModal(false)}
+            />
+          )}
+        </Dialog>
       </div>
     </TooltipProvider>
   );
