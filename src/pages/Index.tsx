@@ -27,7 +27,7 @@ const LoadingPlaceholder = () => (
 );
 
 const Index = () => {
-  const { preloadAllSounds, playSound } = useNotificationSounds();
+  const { preloadSounds, playSound } = useNotificationSounds();
   const { toast } = useToast();
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -37,12 +37,12 @@ const Index = () => {
   // Delay sound preloading until after initial render
   useEffect(() => {
     const timer = setTimeout(() => {
-      preloadAllSounds();
+      preloadSounds();
       setIsLoaded(true);
     }, 1500);
     
     return () => clearTimeout(timer);
-  }, [preloadAllSounds]);
+  }, [preloadSounds]);
   
   // Only play sounds after user has interacted with the page
   useEffect(() => {
