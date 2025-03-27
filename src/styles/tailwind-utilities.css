@@ -61,4 +61,20 @@
   .gold-border-glow {
     box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
   }
+  
+  /* Animate royal pulse effect */
+  .animate-royal-pulse {
+    animation: royal-pulse 2s ease-in-out infinite;
+  }
+  
+  @keyframes royal-pulse {
+    0%, 100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    50% {
+      transform: scale(1.05);
+      opacity: 0.9;
+    }
+  }
 }

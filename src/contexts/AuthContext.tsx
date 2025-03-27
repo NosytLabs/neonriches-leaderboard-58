@@ -1,4 +1,3 @@
-
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { UserSubscription } from '@/types/auth';
@@ -77,6 +76,9 @@ const mockUser: UserProfile = {
 };
 
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  
   const [user, setUser] = useState<UserProfile | null>(() => {
     try {
       const storedUser = localStorage.getItem('p2w_user');
@@ -87,8 +89,6 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   });
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
-  const location = useLocation();
 
   useEffect(() => {
     if (user) {
