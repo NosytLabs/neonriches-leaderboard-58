@@ -8,7 +8,7 @@ const UpgradePromotion = () => {
     <div className="mt-8 glass-morphism rounded-xl p-6 border border-white/10 bg-gradient-to-r from-team-red/10 via-team-green/10 to-team-blue/10">
       <h2 className="text-xl font-bold mb-2">Upgrade to Pro Tier</h2>
       <p className="text-white/70 mb-4">
-        Unlock premium features and enhance your profile with Pro Tier for just $25.
+        Unlock premium cosmetic features and enhance your profile with Pro Tier for just $25.
       </p>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

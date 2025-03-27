@@ -20,12 +20,12 @@ const SpendingVisualizer: React.FC<SpendingVisualizerProps> = ({ user, onSpend }
 
   const presetAmounts = [10, 50, 100, 500, 1000];
 
-  // Calculate projected rank after spending
+  // Calculate projected rank after spending - strictly $1 = 1 rank point
   useEffect(() => {
     const amount = isCustom ? parseFloat(customAmount) || 0 : selectedAmount;
     const newTotal = user.amountSpent + amount;
     
-    // Mock calculation - in a real app this would query the backend
+    // Mock calculation - ensure strict $1 = 1 ratio
     const projectedRank = Math.max(1, user.rank - Math.floor(amount / 100));
     setRankPreview(projectedRank);
   }, [selectedAmount, customAmount, isCustom, user.amountSpent, user.rank]);

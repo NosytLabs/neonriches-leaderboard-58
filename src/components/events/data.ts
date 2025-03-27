@@ -36,14 +36,14 @@ export const currentEvent: Event = {
 export const upcomingEvents: Event[] = [
   {
     id: 'golden-chest-v1',
-    name: 'Golden Chest Boost',
-    description: 'Every dollar spent during this event has a 10% chance to be doubled in rank value. No change to your actual contribution amount, but your rank might increase a bit more than expected!',
+    name: 'Golden Profile Boost',
+    description: 'Participate to earn a golden profile frame for one week. This is purely cosmetic and doesn\'t affect your rank in any way. Show off your participation with this exclusive visual enhancement!',
     startDate: new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000), // 7 days from now
     endDate: new Date(new Date().getTime() + 14 * 24 * 60 * 60 * 1000), // 14 days from now
     type: 'boost',
     image: 'https://images.unsplash.com/photo-1611203565424-a66e8fc5db9d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
     rewards: {
-      title: 'Chest Hunter',
+      title: 'Golden Profile',
       badge: 'Golden Discoverer'
     }
   },

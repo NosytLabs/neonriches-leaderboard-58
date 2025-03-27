@@ -79,8 +79,8 @@ const SpendToRankUp = ({ user, onPaymentSuccess }: SpendToRankUpProps) => {
             <div className="text-sm text-white/70">
               <div className="flex justify-between mb-1">
                 <span>{getStreakLabel()}</span>
-                <span className="text-xs text-white/50">Prize Multiplier: {
-                  user.spendStreak >= 12 ? '3x' : user.spendStreak >= 8 ? '2x' : user.spendStreak >= 4 ? '1.5x' : '1x'
+                <span className="text-xs text-white/50">Cosmetic Badge: {
+                  user.spendStreak >= 12 ? 'Legendary' : user.spendStreak >= 8 ? 'Epic' : user.spendStreak >= 4 ? 'Rare' : 'Basic'
                 }</span>
               </div>
               <div className="w-full h-2 bg-white/10 rounded-full mt-2 overflow-hidden">

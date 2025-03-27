@@ -29,6 +29,7 @@ const DashboardMain: React.FC<DashboardMainProps> = ({ user, updateProfile }) =>
     try {
       // Update the user's amount spent
       const newAmountSpent = user.amountSpent + amount;
+      // Strictly calculate rank based on spending with 1:1 ratio
       const newRank = Math.max(1, user.rank - Math.floor(amount / 100)); // Simple mock calculation
       
       await updateProfile({

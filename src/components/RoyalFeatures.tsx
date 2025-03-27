@@ -36,21 +36,21 @@ const RoyalFeatures = () => {
             </div>
             <h3 className="text-2xl font-royal mb-4">Royal Decrees</h3>
             <p className="text-white/70 font-serif mb-6">
-              Purchase special powers that affect the leaderboard. Issue edicts that temporarily boost your rank,
-              knock others down, or freeze the standings for a time.
+              Purchase special cosmetic powers that affect your profile appearance. Issue edicts that temporarily add visual flair,
+              special animations, or temporary exclusive profile enhancements.
             </p>
             <ul className="space-y-2 text-white/60 font-serif">
               <li className="flex items-center">
                 <span className="w-1.5 h-1.5 rounded-full bg-royal-purple mr-2"></span>
-                Force Abdication ($5) - Lower a rival's rank
+                Force Abdication ($5) - Visually poke a rival
               </li>
               <li className="flex items-center">
                 <span className="w-1.5 h-1.5 rounded-full bg-royal-purple mr-2"></span>
-                Royal Protection ($10) - Immunity from rank drops
+                Royal Protection ($10) - Special profile shield icon
               </li>
               <li className="flex items-center">
                 <span className="w-1.5 h-1.5 rounded-full bg-royal-purple mr-2"></span>
-                Grand Proclamation ($25) - Double rank points for 24h
+                Grand Proclamation ($25) - Animated profile effects for 24h
               </li>
             </ul>
           </div>
@@ -72,7 +72,7 @@ const RoyalFeatures = () => {
               </li>
               <li className="flex items-center">
                 <span className="w-1.5 h-1.5 rounded-full bg-royal-gold mr-2"></span>
-                Champion's Purse - Bonus rank points + exclusive badge
+                Champion's Purse - Exclusive profile badge
               </li>
               <li className="flex items-center">
                 <span className="w-1.5 h-1.5 rounded-full bg-royal-gold mr-2"></span>
@@ -88,8 +88,8 @@ const RoyalFeatures = () => {
             </div>
             <h3 className="text-2xl font-royal mb-4">Treasury Raids</h3>
             <p className="text-white/70 font-serif mb-6">
-              Special events where patrons can spend to capture portions of the prize pool. The more you spend
-              during a raid, the larger your share of the spoils.
+              Special events where patrons can spend to earn exclusive cosmetic rewards. The more you spend
+              during a raid, the more impressive your cosmetic rewards.
             </p>
             <ul className="space-y-2 text-white/60 font-serif">
               <li className="flex items-center">
@@ -98,7 +98,7 @@ const RoyalFeatures = () => {
               </li>
               <li className="flex items-center">
                 <span className="w-1.5 h-1.5 rounded-full bg-royal-blue mr-2"></span>
-                Raider's Share - Proportional to your spending
+                Raider's Rewards - Exclusive profile decorations
               </li>
               <li className="flex items-center">
                 <span className="w-1.5 h-1.5 rounded-full bg-royal-blue mr-2"></span>
@@ -120,7 +120,7 @@ const RoyalFeatures = () => {
               <h3 className="text-2xl font-royal royal-gradient mb-2">Limited Time: Founder's Pass</h3>
               <p className="text-white/70 font-serif mb-0">
                 For a limited time, secure your place in court history with the Founder's Pass. 
-                $100 grants you a permanent 1.5x multiplier on all future contributions.
+                $100 grants you exclusive permanent profile features, including animated borders, special titles, and unique visual effects.
               </p>
             </div>
           </div>

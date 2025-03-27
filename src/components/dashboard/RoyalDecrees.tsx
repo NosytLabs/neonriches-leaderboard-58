@@ -25,7 +25,7 @@ const RoyalDecrees = () => {
           <CardTitle>Royal Decrees</CardTitle>
         </div>
         <CardDescription>
-          Issue expensive edicts to assert your digital dominance
+          Issue expensive edicts to enhance your digital presence
         </CardDescription>
       </CardHeader>
       
@@ -37,20 +37,20 @@ const RoyalDecrees = () => {
                 <Crown size={20} className="text-royal-gold" />
               </div>
               <div>
-                <h3 className="font-medium">Royal Proclamation</h3>
+                <h3 className="font-medium">Royal Aura</h3>
                 <p className="text-xs text-white/60">$25.00</p>
               </div>
             </div>
             <p className="text-sm text-white/70 mb-3">
-              Double your rank points for 24 hours. Show everyone what money can buy!
+              Surround your profile with a majestic animated aura for 24 hours. Purely cosmetic.
             </p>
             <Button 
               size="sm" 
               className="w-full bg-gradient-to-r from-royal-purple to-royal-gold text-white"
-              onClick={() => handleDecreeClick("Royal Proclamation", 25)}
+              onClick={() => handleDecreeClick("Royal Aura", 25)}
             >
               <Sparkles size={16} className="mr-2" />
-              Proclaim Greatness
+              Enhance Presence
             </Button>
           </div>
           
@@ -60,20 +60,20 @@ const RoyalDecrees = () => {
                 <Swords size={20} className="text-royal-crimson" />
               </div>
               <div>
-                <h3 className="font-medium">Force Abdication</h3>
+                <h3 className="font-medium">Challenge Rival</h3>
                 <p className="text-xs text-white/60">$5.00</p>
               </div>
             </div>
             <p className="text-sm text-white/70 mb-3">
-              Push someone down the ranks. Assert dominance through the power of your wallet!
+              Send a cosmetic challenge notification to another user. They'll see a crossed swords icon by their name.
             </p>
             <Button 
               size="sm" 
               className="w-full bg-gradient-to-r from-royal-crimson to-royal-purple text-white"
-              onClick={() => handleDecreeClick("Force Abdication", 5)}
+              onClick={() => handleDecreeClick("Challenge Rival", 5)}
             >
               <Swords size={16} className="mr-2" />
-              Dethrone Rival
+              Issue Challenge
             </Button>
           </div>
           
@@ -83,20 +83,20 @@ const RoyalDecrees = () => {
                 <ShieldAlert size={20} className="text-royal-blue" />
               </div>
               <div>
-                <h3 className="font-medium">Royal Protection</h3>
+                <h3 className="font-medium">Royal Shield</h3>
                 <p className="text-xs text-white/60">$10.00</p>
               </div>
             </div>
             <p className="text-sm text-white/70 mb-3">
-              Immunity from rank drops for 12 hours. Money is the best shield!
+              Display a royal shield icon next to your name for 12 hours. Purely cosmetic effect.
             </p>
             <Button 
               size="sm" 
               className="w-full bg-gradient-to-r from-royal-blue to-royal-purple text-white"
-              onClick={() => handleDecreeClick("Royal Protection", 10)}
+              onClick={() => handleDecreeClick("Royal Shield", 10)}
             >
               <ShieldAlert size={16} className="mr-2" />
-              Buy Protection
+              Display Shield
             </Button>
           </div>
         </div>
