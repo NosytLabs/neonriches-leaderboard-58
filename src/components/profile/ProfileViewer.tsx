@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { Eye, Link as LinkIcon, ExternalLink, Shield, Trophy, Calendar, Heart } from 'lucide-react';
+import { Eye, Link as LinkIcon, ExternalLink, Shield, Trophy, Calendar, Heart, Crown } from 'lucide-react';
 import { UserProfile } from '@/contexts/AuthContext';
 import { getTeamBgColorClass, getTeamTextColorClass, getSpendingTier, getSpendingTierLabel } from '@/lib/colors';
 
