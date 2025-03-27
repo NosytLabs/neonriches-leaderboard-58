@@ -1,271 +1,96 @@
-import React, { useState, useEffect } from 'react';
-import RoyalTreasury from '@/components/dashboard/RoyalTreasury';
-import SpendingChart from '@/components/dashboard/SpendingChart';
-import TeamDistribution from '@/components/dashboard/TeamDistribution';
-import RankTrajectory from '@/components/dashboard/RankTrajectory';
-import GenderSelection from '@/components/dashboard/GenderSelection';
-import InteractiveLeaderboard from '@/components/dashboard/InteractiveLeaderboard';
-import CashThroneUpgrade from '@/components/dashboard/CashThroneUpgrade';
-import RoyalDecrees from '@/components/dashboard/RoyalDecrees';
-import BriberyBanner from '@/components/dashboard/BriberyBanner';
-import SpendingVisualizer from '@/components/dashboard/SpendingVisualizer';
-import UserWallet from '@/components/wallet/UserWallet';
-import AdvertisementBanner from '@/components/profile/AdvertisementBanner';
-import { mockSpendingData, mockTeamDistribution, mockRankHistory } from '@/components/dashboard/data';
-import RoyalDivider from '@/components/ui/royal-divider';
+
+import React from 'react';
 import { UserProfile } from '@/contexts/AuthContext';
-import RoyalThrone from '@/components/3d/RoyalThrone';
-import { useToast } from "@/hooks/use-toast";
-import { Coins, Trophy, InfoIcon } from 'lucide-react';
-import { addFundsToWallet } from '@/services/walletService';
-import { applyUserSpending } from '@/services/spendingService';
-import { useNavigate } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
+import InteractiveLeaderboard from '@/components/dashboard/InteractiveLeaderboard';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Coins, CrownIcon, Users, TrendingUp } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 interface DashboardMainProps {
-  user: UserProfile;
-  updateProfile: (data: Partial<UserProfile>) => Promise<void>;
+  user: UserProfile | null;
 }
 
-const DashboardMain: React.FC<DashboardMainProps> = ({ user, updateProfile }) => {
-  const [suggestedAmount, setSuggestedAmount] = useState(100);
-  const [showTermsPrompt, setShowTermsPrompt] = useState(false);
-  const { toast } = useToast();
-  const navigate = useNavigate();
-  
-  useEffect(() => {
-    const hasAcceptedTerms = user.acceptedTerms || localStorage.getItem('acceptedTerms') === 'true';
-    if (!hasAcceptedTerms) {
-      setShowTermsPrompt(true);
-      
-      toast({
-        title: "Royal Decree Required",
-        description: "You must accept the terms of service to fully participate in the kingdom.",
-        action: (
-          <Button 
-            variant="default" 
-            size="sm" 
-            onClick={() => navigate('/terms')}
-            className="bg-gradient-to-r from-royal-crimson via-royal-gold to-royal-navy"
-          >
-            View Terms
-          </Button>
-        ),
-        duration: 10000,
-      });
-    }
-  }, [user, navigate]);
-
-  const handlePaymentSuccess = async (amount: number) => {
-    try {
-      const newAmountSpent = user.amountSpent + amount;
-      const newRank = Math.max(1, user.rank - Math.floor(amount / 100));
-      
-      await updateProfile({
-        amountSpent: newAmountSpent,
-        rank: newRank,
-        lastSpendDate: new Date()
-      });
-      
-      await applyUserSpending(user, amount);
-      
-      let toastTitle = "Royal Treasury Expanded!";
-      let description = `Your tribute of $${amount} has been graciously accepted by the crown.`;
-      
-      if (amount >= 500) {
-        toastTitle = "MAGNIFICENT LARGESSE!";
-        description = `Your extravagant tribute of $${amount} has the royal accountants weeping with joy!`;
-      } else if (amount >= 250) {
-        toastTitle = "Exemplary Generosity!";
-        description = `Your tribute of $${amount} has earned you the Crown's distinguished favor!`;
-      } else if (amount >= 100) {
-        toastTitle = "Noble Contribution!";
-        description = `The royal coffers grow by $${amount}. Your loyalty shall be remembered!`;
-      }
-      
-      toast({
-        title: toastTitle,
-        description: description,
-        duration: 5000,
-      });
-      
-      return true;
-    } catch (error) {
-      console.error("Failed to update profile after payment:", error);
-      toast({
-        title: "Treasury Error",
-        description: "Your payment was processed but your profile couldn't be updated. Please refresh.",
-        variant: "destructive"
-      });
-      return false;
-    }
-  };
-
-  const handleFundWallet = async (amount: number) => {
-    try {
-      const success = await addFundsToWallet(user, amount);
-      
-      if (success) {
-        const newBalance = (user.walletBalance || 0) + amount;
-        await updateProfile({ walletBalance: newBalance });
-        return true;
-      }
-      
-      return false;
-    } catch (error) {
-      console.error("Failed to fund wallet:", error);
-      toast({
-        title: "Funding Error",
-        description: "Failed to add funds to your wallet. Please try again.",
-        variant: "destructive"
-      });
-      return false;
-    }
-  };
-
-  const handleGenderChange = async (gender: 'king' | 'queen' | 'jester' | null) => {
-    try {
-      await updateProfile({ gender });
-      
-      const genderText = gender === 'king' ? 'King' : 
-                        gender === 'queen' ? 'Queen' : 
-                        gender === 'jester' ? 'Jester' : 'Noble';
-      
-      toast({
-        title: "Royal Title Updated",
-        description: `You shall now be addressed as ${genderText} throughout the realm.`,
-        duration: 3000,
-      });
-    } catch (error) {
-      console.error("Failed to update gender preference:", error);
-      toast({
-        title: "Update Failed",
-        description: "Could not update your royal title preference.",
-        variant: "destructive",
-      });
-    }
-  };
-
-  const handleThroneClick = () => {
-    toast({
-      title: "The Throne Awaits",
-      description: "Continue your generous contributions to claim your rightful place upon the royal throne!",
-    });
-  };
-
-  const handleAdvertisementUpdate = () => {
-  };
-
+const DashboardMain: React.FC<DashboardMainProps> = ({ user }) => {
   return (
-    <>
-      <RoyalTreasury user={user} />
-      
-      {showTermsPrompt && (
-        <div className="mb-6 glass-morphism border border-royal-gold/30 rounded-lg p-4 animate-fade-in">
-          <div className="flex items-center space-x-3">
-            <div className="bg-royal-gold/20 p-2 rounded-full">
-              <InfoIcon className="h-6 w-6 text-royal-gold" />
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="lg:col-span-2 space-y-6">
+        <Card className="glass-morphism border-white/10">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-lg flex items-center">
+              <Coins className="mr-2 h-5 w-5 text-royal-gold" />
+              Royal Treasury
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="glass-morphism border-white/10 p-4 rounded-lg">
+                <div className="text-sm text-white/70 mb-1">Current Rank</div>
+                <div className="text-2xl font-bold flex items-center">
+                  <CrownIcon className="h-5 w-5 text-royal-gold mr-2" />
+                  #{user?.rank || '??'}
+                </div>
+              </div>
+              
+              <div className="glass-morphism border-white/10 p-4 rounded-lg">
+                <div className="text-sm text-white/70 mb-1">Total Spent</div>
+                <div className="text-2xl font-bold flex items-center">
+                  <Coins className="h-5 w-5 text-royal-gold mr-2" />
+                  ${user?.totalSpent?.toFixed(2) || '0.00'}
+                </div>
+              </div>
+              
+              <div className="glass-morphism border-white/10 p-4 rounded-lg">
+                <div className="text-sm text-white/70 mb-1">Team Rank</div>
+                <div className="text-2xl font-bold flex items-center">
+                  <Users className="h-5 w-5 text-royal-gold mr-2" />
+                  #{user?.teamRank || '??'}
+                </div>
+              </div>
             </div>
-            <div>
-              <h3 className="font-semibold text-white">Royal Decree Requires Your Attention</h3>
-              <p className="text-white/70 text-sm">Before fully participating in the kingdom's activities, you must acknowledge the royal terms of service.</p>
+            
+            <div className="mt-6">
+              <Tabs defaultValue="activity">
+                <TabsList className="w-full glass-morphism border-white/10 bg-transparent">
+                  <TabsTrigger value="activity" className="data-[state=active]:bg-white/10">Recent Activity</TabsTrigger>
+                  <TabsTrigger value="stats" className="data-[state=active]:bg-white/10">Kingdom Stats</TabsTrigger>
+                </TabsList>
+                <TabsContent value="activity" className="mt-4">
+                  <div className="space-y-3">
+                    {[1, 2, 3].map((i) => (
+                      <div key={i} className="flex items-center p-3 glass-morphism border-white/10 rounded-md">
+                        <TrendingUp className="h-4 w-4 text-green-400 mr-3" />
+                        <div>
+                          <div className="text-sm">You gained {i} rank positions</div>
+                          <div className="text-xs text-white/60">2 days ago</div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </TabsContent>
+                <TabsContent value="stats" className="mt-4">
+                  <div className="space-y-3">
+                    <div className="p-3 glass-morphism border-white/10 rounded-md">
+                      <div className="text-sm font-medium mb-1">Kingdom Total</div>
+                      <div className="text-2xl font-bold">$238,456.78</div>
+                      <div className="text-xs text-white/60">Total spent by all nobles</div>
+                    </div>
+                    <div className="p-3 glass-morphism border-white/10 rounded-md">
+                      <div className="text-sm font-medium mb-1">This Week</div>
+                      <div className="text-2xl font-bold">$12,345.67</div>
+                      <div className="text-xs text-white/60">Total spent this week</div>
+                    </div>
+                  </div>
+                </TabsContent>
+              </Tabs>
             </div>
-            <Button 
-              onClick={() => navigate('/terms')}
-              className="whitespace-nowrap bg-gradient-to-r from-royal-crimson via-royal-gold to-royal-navy"
-            >
-              View Terms
-            </Button>
-          </div>
-        </div>
-      )}
-      
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8 animate-fade-in" style={{ animationDelay: "100ms" }}>
-        <div className="lg:col-span-2">
-          <SpendingVisualizer 
-            user={user} 
-            onSpend={handlePaymentSuccess} 
-          />
-        </div>
-        <UserWallet 
-          user={user}
-          onFundWallet={handleFundWallet}
-        />
+          </CardContent>
+        </Card>
       </div>
       
-      <RoyalDivider variant="crown" label="FINANCIAL KINGDOM" />
-      
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8 animate-fade-in" style={{ animationDelay: "200ms" }}>
-        <div className="lg:col-span-2">
-          <SpendingChart data={mockSpendingData} />
-        </div>
-        <div className="glass-morphism rounded-lg border border-white/10 p-6 flex flex-col">
-          <h3 className="text-lg font-bold mb-4 royal-gradient">Your Royal Throne</h3>
-          <div className="flex-grow">
-            <RoyalThrone 
-              size="medium" 
-              color={user.team === 'red' ? '#9B26AF' : user.team === 'green' ? '#FFD700' : '#0055A4'} 
-              animate={true}
-              onThroneClick={handleThroneClick}
-            />
-          </div>
-          <p className="text-sm text-white/70 mt-3 italic text-center">
-            Behold your throne's magnificence, a reflection of your status in the realm.
-          </p>
-        </div>
+      <div className="lg:col-span-1">
+        <InteractiveLeaderboard />
       </div>
-      
-      <AdvertisementBanner 
-        user={user}
-        onUpdate={handleAdvertisementUpdate}
-      />
-      
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8 animate-fade-in" style={{ animationDelay: "300ms" }}>
-        <div className="lg:col-span-2">
-          <GenderSelection userProfile={user} onGenderChange={handleGenderChange} />
-        </div>
-        <TeamDistribution data={mockTeamDistribution} />
-      </div>
-      
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8 animate-fade-in" style={{ animationDelay: "300ms" }}>
-        <RankTrajectory data={mockRankHistory} />
-        <div className="lg:col-span-2">
-          <InteractiveLeaderboard />
-        </div>
-      </div>
-      
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8 animate-fade-in" style={{ animationDelay: "400ms" }}>
-        <CashThroneUpgrade 
-          user={user} 
-          onPaymentSuccess={handlePaymentSuccess} 
-        />
-        <div className="lg:col-span-2">
-          <RoyalDecrees />
-        </div>
-      </div>
-      
-      <div className="mb-8 animate-fade-in" style={{ animationDelay: "400ms" }}>
-        <BriberyBanner onPaymentSuccess={handlePaymentSuccess} />
-      </div>
-      
-      <div className="mt-8 glass-morphism border border-royal-gold/20 rounded-xl p-6 text-center animate-fade-in" style={{ animationDelay: "500ms" }}>
-        <div className="flex flex-col items-center space-y-3">
-          <div className="relative">
-            <Trophy size={28} className="text-royal-gold" />
-            <div className="absolute -inset-3 bg-royal-gold/10 rounded-full blur-md"></div>
-          </div>
-          <h3 className="text-lg font-royal royal-gradient">The Crown Reminds You</h3>
-          <p className="text-white/70 italic max-w-2xl">
-            "Every dollar spent is another jewel in your digital crown. The more you contribute, the more meaningless your impressive rank becomes! Remember, in this kingdom, your worth is measured not by your character, but by your credit card limit."
-          </p>
-          
-          <div className="flex items-center mt-2 text-xs text-white/50">
-            <Coins size={12} className="text-royal-gold mr-1" />
-            <span>Current Top Spender: Duke VanishingFunds — $12,450 this week</span>
-          </div>
-        </div>
-      </div>
-    </>
+    </div>
   );
 };
 

@@ -6,7 +6,7 @@ import { Sparkles } from 'lucide-react';
 
 interface RoyalButtonProps extends Omit<ButtonProps, 'variant'> {
   variant?: 'royal' | 'royalGold' | 'royalCrimson' | 'royalNavy' | 'glass' | 'outline' | 'mahogany';
-  size?: 'sm' | 'default' | 'lg' | 'xl' | 'xxl';
+  size?: 'sm' | 'default' | 'lg' | 'icon' | 'xl' | 'xxl';
   glow?: boolean;
   shimmer?: boolean;
   icon?: React.ReactNode;

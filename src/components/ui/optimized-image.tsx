@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { cn } from '@/lib/utils';
 
 interface OptimizedImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
@@ -7,77 +7,66 @@ interface OptimizedImageProps extends React.ImgHTMLAttributes<HTMLImageElement> 
   alt: string;
   width?: number;
   height?: number;
+  objectFit?: 'contain' | 'cover' | 'fill' | 'none' | 'scale-down';
   className?: string;
-  loadingStrategy?: 'lazy' | 'eager';
-  placeholderColor?: string;
-  onLoad?: () => void;
+  fallback?: string;
 }
 
-const OptimizedImage = ({
+const OptimizedImage: React.FC<OptimizedImageProps> = ({
   src,
   alt,
   width,
   height,
+  objectFit = 'cover',
   className,
-  loadingStrategy = 'lazy',
-  placeholderColor = '#1e1e2e',
-  onLoad,
+  fallback = '/placeholder.svg',
   ...props
-}: OptimizedImageProps) => {
-  const [loaded, setLoaded] = useState(false);
-  const [error, setError] = useState(false);
-
-  useEffect(() => {
-    // Reset states when src changes
-    setLoaded(false);
+}) => {
+  const [imgSrc, setImgSrc] = React.useState<string>(src);
+  const [isLoading, setIsLoading] = React.useState<boolean>(true);
+  const [error, setError] = React.useState<boolean>(false);
+  
+  React.useEffect(() => {
+    setImgSrc(src);
     setError(false);
+    setIsLoading(true);
   }, [src]);
-
-  const handleLoad = () => {
-    setLoaded(true);
-    if (onLoad) onLoad();
-  };
-
+  
   const handleError = () => {
     setError(true);
+    setImgSrc(fallback);
   };
-
+  
+  const handleLoad = () => {
+    setIsLoading(false);
+  };
+  
   return (
     <div 
-      className={cn("relative overflow-hidden", className)}
-      style={{ 
-        backgroundColor: placeholderColor, 
-        width: width ? `${width}px` : '100%',
-        height: height ? `${height}px` : 'auto',
-      }}
+      className={cn(
+        'relative overflow-hidden',
+        isLoading && 'animate-pulse bg-white/10',
+        className
+      )}
+      style={{ width: width ? `${width}px` : '100%', height: height ? `${height}px` : '100%' }}
     >
-      {!loaded && !error && (
-        <div 
-          className="absolute inset-0 animate-pulse"
-          style={{ backgroundColor: placeholderColor }}
-        />
-      )}
-      
-      {error ? (
-        <div className="absolute inset-0 flex items-center justify-center bg-background/10 text-white/50 text-sm">
-          Unable to load image
-        </div>
-      ) : (
-        <img
-          src={src}
-          alt={alt}
-          loading={loadingStrategy}
-          width={width}
-          height={height}
-          onLoad={handleLoad}
-          onError={handleError}
-          className={cn(
-            "w-full h-full object-cover transition-opacity duration-300",
-            loaded ? "opacity-100" : "opacity-0"
-          )}
-          {...props}
-        />
-      )}
+      <img
+        src={imgSrc}
+        alt={alt}
+        onError={handleError}
+        onLoad={handleLoad}
+        className={cn(
+          'transition-opacity duration-300',
+          isLoading ? 'opacity-0' : 'opacity-100',
+          objectFit === 'cover' && 'object-cover',
+          objectFit === 'contain' && 'object-contain',
+          objectFit === 'fill' && 'object-fill',
+          objectFit === 'none' && 'object-none',
+          objectFit === 'scale-down' && 'object-scale-down',
+          'w-full h-full'
+        )}
+        {...props}
+      />
     </div>
   );
 };

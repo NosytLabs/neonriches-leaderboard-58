@@ -8,7 +8,7 @@ import { useAuth } from '@/contexts/AuthContext';
 const Dashboard = () => {
   const { user } = useAuth();
   // State for background appearance
-  const [backgroundVariant, setBackgroundVariant] = useState<'default' | 'royal' | 'dark' | 'light'>('royal');
+  const [backgroundVariant, setBackgroundVariant] = useState<'default' | 'royal' | 'dark' | 'light' | 'purple'>('royal');
 
   // Effect to handle background change based on spending tier or other factors
   useEffect(() => {
@@ -18,17 +18,17 @@ const Dashboard = () => {
     if (userSpendingTier === 'whale' || userSpendingTier === 'shark') {
       setBackgroundVariant('royal');
     } else if (userSpendingTier === 'dolphin' || userSpendingTier === 'fish') {
-      setBackgroundVariant('dark');
+      setBackgroundVariant('purple');
     } else {
       setBackgroundVariant('default');
     }
   }, []);
 
   return (
-    <DashboardLayout>
+    <DashboardLayout user={user}>
       <div className="relative min-h-[calc(100vh-4rem)]">
         <ThroneBackground variant={backgroundVariant} particles density="medium" />
-        <DashboardMain user={user} updateProfile={useAuth().updateProfile} />
+        <DashboardMain user={user} />
       </div>
     </DashboardLayout>
   );

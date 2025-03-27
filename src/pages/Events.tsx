@@ -16,7 +16,7 @@ const Events = () => {
   const { user } = useAuth();
 
   return (
-    <DashboardLayout>
+    <DashboardLayout user={user}>
       <div className="relative min-h-screen">
         <ThroneBackground variant="royal" particles density="medium" />
         

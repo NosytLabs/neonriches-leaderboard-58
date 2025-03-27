@@ -2,12 +2,21 @@
 import React, { useState } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import RoyalButton from '@/components/ui/royal-button';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
-import { spendFromWallet } from '@/services/walletService';
 import { ShameAction } from '../hooks/useShameEffect';
-import { Scroll, Wallet } from 'lucide-react';
+import { Scroll, Wallet, X, Shield, Target, Crown } from 'lucide-react';
+import RoyalDivider from '@/components/ui/royal-divider';
+import { 
+  getShameActionPrice, 
+  getShameActionTitle, 
+  getShameActionDescription, 
+  getShameActionIcon,
+  getShameActionColor
+} from '../utils/shameUtils';
 import useNotificationSounds from '@/hooks/use-notification-sounds';
+import PaymentModal from '@/components/PaymentModal';
 
 interface ShameModalProps {
   targetUser: {
@@ -35,48 +44,27 @@ const ShameModal: React.FC<ShameModalProps> = ({
   const [isProcessing, setIsProcessing] = useState(false);
   
   // Get shame price based on type
-  const getShamePrice = () => {
-    switch (shameAction.toLowerCase()) {
-      case 'tomatoes': return 2;
-      case 'eggs': return 5;
-      case 'stocks': return 10;
-      default: return 5;
-    }
-  };
-  
-  const shamePrice = getShamePrice();
-  const hasWalletBalance = user?.walletBalance && user.walletBalance >= shamePrice;
+  const shamePrice = getShameActionPrice(shameAction);
   
   // Play shame-related sound when modal opens
   React.useEffect(() => {
     playSound('notification', 0.2);
-  }, []);
+  }, [playSound]);
 
-  // Get shame emoji based on type
-  const getShameEmoji = () => {
-    switch (shameAction.toLowerCase()) {
-      case 'tomatoes':
-        return '🍅';
-      case 'eggs':
-        return '🥚';
-      case 'stocks':
-        return '🪵';
-      default:
-        return '📜';
-    }
-  };
+  // Get shame emoji and icon
+  const shameEmoji = getShameActionIcon(shameAction);
   
-  // Get description based on type
-  const getShameDescription = () => {
+  // Get shame icon based on type
+  const getShameIcon = () => {
     switch (shameAction.toLowerCase()) {
       case 'tomatoes':
-        return `Pelt ${targetUser.username} with rotten tomatoes for all to see. A classic form of medieval public ridicule.`;
+        return <Target className="h-6 w-6 text-royal-crimson" />;
       case 'eggs':
-        return `Hurl rotten eggs at ${targetUser.username}, covering them in putrid yolk. The stench will follow them for a day.`;
+        return <Shield className="h-6 w-6 text-royal-gold" />;
       case 'stocks':
-        return `Place ${targetUser.username} in the public stocks for a day. The ultimate medieval humiliation.`;
+        return <Crown className="h-6 w-6 text-royal-navy" />;
       default:
-        return `Publicly shame ${targetUser.username} for all the kingdom to see.`;
+        return <Scroll className="h-6 w-6 text-white/60" />;
     }
   };
 
@@ -85,129 +73,77 @@ const ShameModal: React.FC<ShameModalProps> = ({
     onClose();
   };
 
-  const handleWalletPayment = async () => {
-    if (!user) {
-      toast({
-        title: "Authentication Required",
-        description: "You must be logged in to shame other nobles.",
-        variant: "destructive"
-      });
-      return;
-    }
-    
-    if (!hasWalletBalance) {
-      toast({
-        title: "Insufficient Funds",
-        description: "Your royal purse doesn't have enough gold for this shameful act.",
-        variant: "destructive"
-      });
-      return;
-    }
-    
-    setIsProcessing(true);
-    
-    try {
-      const success = await spendFromWallet(
-        user,
-        shamePrice,
-        'shame',
-        `Shamed ${targetUser.username} with ${shameAction}`,
-        { shameType: shameAction, targetId: targetUser.id.toString() }
-      );
-      
-      if (success) {
-        setIsProcessing(false);
-        playSound('shame', 0.3);
-        onConfirm();
-      } else {
-        throw new Error("Transaction failed");
-      }
-    } catch (error) {
-      setIsProcessing(false);
-      toast({
-        title: "Shaming Failed",
-        description: error.message || "Your shameful intentions could not be realized.",
-        variant: "destructive"
-      });
-    }
+  const handleConfirm = () => {
+    playSound('shame', 0.3);
+    onConfirm();
   };
 
   return (
-    <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
-      <Card className="w-full max-w-md glass-morphism border-white/10">
-        <CardHeader>
-          <CardTitle className="flex items-center">
-            <span className="mr-2">{getShameEmoji()}</span>
-            {shameAction}: {targetUser.username}
-          </CardTitle>
+    <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 backdrop-blur-sm">
+      <Card className="w-full max-w-md glass-morphism border-royal-gold/20 royal-shine">
+        <CardHeader className="pb-2">
+          <div className="flex items-center justify-between">
+            <CardTitle className="font-royal flex items-center">
+              <span className="mr-3 h-8 w-8 rounded-full bg-white/10 flex items-center justify-center">
+                {shameEmoji}
+              </span>
+              <span className="royal-text-shimmer">
+                {getShameActionTitle(shameAction)}: {targetUser.username}
+              </span>
+            </CardTitle>
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="h-8 w-8 rounded-full hover:bg-white/10"
+              onClick={handleClose}
+            >
+              <X size={16} />
+            </Button>
+          </div>
         </CardHeader>
+        
+        <RoyalDivider variant="line" className="my-2" />
+        
         <CardContent>
           <div className="flex items-center mb-4">
-            <div className="w-12 h-12 rounded-full overflow-hidden mr-3 border border-white/20">
+            <div className="w-12 h-12 rounded-full overflow-hidden mr-3 border border-royal-gold/30 gold-border-glow">
               <img 
                 src={targetUser.profileImage || '/placeholder.svg'} 
                 alt={targetUser.username} 
-                className="w-full h-full"
+                className="w-full h-full object-cover"
               />
             </div>
             <div>
               <p className="mb-4">
-                {getShameDescription()}
+                {getShameActionDescription(shameAction, targetUser.username)}
               </p>
             </div>
           </div>
           
           <div className="my-4 glass-morphism border-white/10 p-3 rounded">
             <div className="flex items-center">
-              <Scroll className="h-4 w-4 mr-2 text-white/60" />
-              <p className="text-sm text-white/80">
+              {getShameIcon()}
+              <p className="ml-3 text-sm text-white/80">
                 This is a satirical feature that has no effect on actual rankings. It's purely for entertainment.
               </p>
             </div>
           </div>
           
-          {user && (
-            <div className="my-4 glass-morphism border-white/10 p-3 rounded">
-              <div className="flex justify-between items-center mb-2">
-                <div className="flex items-center">
-                  <Wallet className="h-4 w-4 mr-2 text-royal-gold" />
-                  <span className="text-sm">Royal Purse Balance:</span>
-                </div>
-                <span className="text-royal-gold font-mono font-medium">${user.walletBalance || 0}</span>
-              </div>
-              
-              <div className="flex justify-between text-sm text-white/70">
-                <span>Cost for this shame:</span>
-                <span>${shamePrice}</span>
-              </div>
-            </div>
-          )}
-          
           <div className="space-y-4">
             <div className="flex justify-between">
               <Button 
-                variant="outline" 
-                className="glass-morphism border-white/10"
+                variant="glass" 
                 onClick={handleClose}
               >
                 Cancel
               </Button>
               
-              <Button
-                variant="default"
-                className="bg-gradient-to-r from-royal-crimson via-royal-gold to-royal-navy"
-                disabled={isProcessing || !hasWalletBalance}
-                onClick={handleWalletPayment}
-              >
-                {isProcessing ? (
-                  <div className="flex items-center">
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                    Processing...
-                  </div>
-                ) : (
-                  `Shame for $${shamePrice}`
-                )}
-              </Button>
+              <PaymentModal 
+                title={`${getShameActionTitle(shameAction)} ${targetUser.username}`}
+                description={getShameActionDescription(shameAction, targetUser.username)}
+                amount={shamePrice}
+                onSuccess={handleConfirm}
+              />
             </div>
           </div>
         </CardContent>

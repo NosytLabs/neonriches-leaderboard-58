@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef } from 'react';
 import { cn } from '@/lib/utils';
 
@@ -19,38 +18,31 @@ const ThroneBackground: React.FC<ThroneBackgroundProps> = ({
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   
-  // Generate particles 
   useEffect(() => {
     if (!particles || !containerRef.current) return;
     
     const container = containerRef.current;
     const particleCount = density === 'high' ? 40 : density === 'medium' ? 25 : 15;
     
-    // Clear existing particles
     const existingParticles = container.querySelectorAll('.floating-particle');
     existingParticles.forEach(particle => particle.remove());
     
-    // Create new particles
     for (let i = 0; i < particleCount; i++) {
       createParticle(container, variant);
     }
-    
   }, [particles, density, variant]);
   
   const createParticle = (container: HTMLDivElement, variant: string) => {
     const particle = document.createElement('div');
     particle.className = 'floating-particle absolute rounded-full opacity-0 pointer-events-none';
     
-    // Size between 2px and 6px
     const size = Math.random() * 4 + 2;
     particle.style.width = `${size}px`;
     particle.style.height = `${size}px`;
     
-    // Position randomly
     particle.style.left = `${Math.random() * 100}%`;
     particle.style.top = `${Math.random() * 100}%`;
     
-    // Set color based on variant
     if (variant === 'royal') {
       const colors = ['#D4AF37', '#8B0000', '#000080'];
       particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
@@ -60,23 +52,21 @@ const ThroneBackground: React.FC<ThroneBackgroundProps> = ({
       particle.style.backgroundColor = `rgba(0, 0, 0, ${Math.random() * 0.2 + 0.1})`;
     } else if (variant === 'purple') {
       const opacity = Math.random() * 0.2 + 0.1;
-      particle.style.backgroundColor = `rgba(128, 0, 128, ${opacity})`; // purple
-    } else { // default
+      particle.style.backgroundColor = `rgba(128, 0, 128, ${opacity})`;
+    } else {
       const opacity = Math.random() * 0.2 + 0.1;
       if (Math.random() > 0.6) {
-        particle.style.backgroundColor = `rgba(212, 175, 55, ${opacity})`; // gold
+        particle.style.backgroundColor = `rgba(212, 175, 55, ${opacity})`;
       } else if (Math.random() > 0.3) {
-        particle.style.backgroundColor = `rgba(139, 0, 0, ${opacity})`; // crimson
+        particle.style.backgroundColor = `rgba(139, 0, 0, ${opacity})`;
       } else {
-        particle.style.backgroundColor = `rgba(0, 0, 128, ${opacity})`; // navy
+        particle.style.backgroundColor = `rgba(0, 0, 128, ${opacity})`;
       }
     }
     
-    // Animation duration between 5s and 15s
     const duration = Math.random() * 10 + 5;
     particle.style.animation = `float ${duration}s ease-in forwards`;
     
-    // Random delay so they don't all move at once
     particle.style.animationDelay = `${Math.random() * 5}s`;
     
     container.appendChild(particle);
@@ -107,7 +97,6 @@ const ThroneBackground: React.FC<ThroneBackgroundProps> = ({
         className
       )}
     >
-      {/* Background gradients */}
       <div className="absolute inset-0">
         <div className="absolute top-1/4 left-1/4 w-64 h-64 rounded-full bg-royal-crimson/10 filter blur-[100px]"></div>
         <div className="absolute bottom-1/4 right-1/4 w-96 h-96 rounded-full bg-royal-gold/10 filter blur-[120px]"></div>

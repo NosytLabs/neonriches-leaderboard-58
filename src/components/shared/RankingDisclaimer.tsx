@@ -1,50 +1,50 @@
 
 import React from 'react';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { DollarSign, Info } from 'lucide-react';
+import { AlertCircle, Info, AlertTriangle } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
-export interface RankingDisclaimerProps {
-  variant?: 'default' | 'info' | 'gold';
+interface RankingDisclaimerProps {
   className?: string;
   messagePrefix?: string;
+  variant?: 'info' | 'warning' | 'neutral';
 }
 
-const RankingDisclaimer: React.FC<RankingDisclaimerProps> = ({ 
-  variant = 'default', 
-  className = '',
-  messagePrefix = 'Important:'
+const RankingDisclaimer: React.FC<RankingDisclaimerProps> = ({
+  className,
+  messagePrefix = 'Note:',
+  variant = 'neutral'
 }) => {
-  // Determine style based on variant
-  const getStyles = () => {
-    switch (variant) {
-      case 'gold':
-        return 'bg-royal-gold/5 border-royal-gold/20';
-      case 'info':
-        return 'bg-white/5 border-white/10';
-      default:
-        return 'border-white/10 bg-white/5';
-    }
-  };
-
-  // Determine icon based on variant
   const getIcon = () => {
     switch (variant) {
-      case 'gold':
-      case 'default':
-        return <DollarSign className="h-4 w-4 text-royal-gold" />;
-      case 'info':
-        return <Info className="h-4 w-4 text-white" />;
+      case 'info': return <Info size={16} className="text-blue-400" />;
+      case 'warning': return <AlertTriangle size={16} className="text-yellow-400" />;
+      default: return <AlertCircle size={16} className="text-white/60" />;
+    }
+  };
+  
+  const getBgColor = () => {
+    switch (variant) {
+      case 'info': return 'bg-blue-500/10 border-blue-500/20';
+      case 'warning': return 'bg-yellow-500/10 border-yellow-500/20';
+      default: return 'bg-white/5 border-white/10';
     }
   };
   
   return (
-    <Alert className={`${getStyles()} ${className}`}>
-      {getIcon()}
-      <AlertDescription className="text-white/80">
-        <strong>{messagePrefix}</strong> Your rank is always determined by your total spending. $1 = 1 rank point. 
-        All events offer purely cosmetic rewards and don't affect this calculation.
-      </AlertDescription>
-    </Alert>
+    <div className={cn(
+      'p-3 rounded-md flex items-start gap-3 text-sm',
+      getBgColor(),
+      className
+    )}>
+      <span className="mt-0.5">{getIcon()}</span>
+      <div>
+        <span className="font-medium">{messagePrefix} </span>
+        <span className="text-white/80">
+          Public shaming has no effect on actual rankings. It's purely for satirical entertainment 
+          and reflects the game's mockery of wealth-based status systems.
+        </span>
+      </div>
+    </div>
   );
 };
 
