@@ -12,6 +12,7 @@ interface OptimizedImageProps extends React.ImgHTMLAttributes<HTMLImageElement> 
   fallback?: string;
   loadingStrategy?: 'eager' | 'lazy';
   placeholderColor?: string;
+  skipPreload?: boolean;
 }
 
 const OptimizedImage: React.FC<OptimizedImageProps> = ({
@@ -24,6 +25,7 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
   fallback = '/placeholder.svg',
   loadingStrategy = 'lazy',
   placeholderColor,
+  skipPreload = false,
   ...props
 }) => {
   const [imgSrc, setImgSrc] = useState<string>(src);
@@ -41,43 +43,55 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
   
   // Preload the image
   useEffect(() => {
-    if (!src) return;
+    if (!src || skipPreload) return;
     
-    // Skip preloading for base64 images
-    if (src.startsWith('data:')) {
+    // Skip preloading for base64 images or SVGs - they're already fast
+    if (src.startsWith('data:') || src.endsWith('.svg')) {
       setIsLoading(false);
       setImgLoaded(true);
       return;
     }
     
-    const img = new Image();
+    // Use intersection observer to only preload when near viewport
+    const imgObserver = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        const img = new Image();
+        
+        img.onload = () => {
+          setIsLoading(false);
+          setImgLoaded(true);
+        };
+        
+        img.onerror = () => {
+          setError(true);
+          setImgSrc(fallback);
+          setIsLoading(false);
+        };
+        
+        img.src = src;
+        
+        // Cleanup
+        imgObserver.disconnect();
+      }
+    });
     
-    img.onload = () => {
-      setIsLoading(false);
-      setImgLoaded(true);
-    };
-    
-    img.onerror = () => {
-      setError(true);
-      setImgSrc(fallback);
-      setIsLoading(false);
-    };
-    
-    img.src = src;
+    // Create a temporary element to observe
+    const tempDiv = document.createElement('div');
+    imgObserver.observe(tempDiv);
     
     // Add timeout to prevent hanging on slow connections
     const timeout = setTimeout(() => {
       if (isLoading) {
         setIsLoading(false);
+        imgObserver.disconnect();
       }
-    }, 5000);
+    }, 3000);
     
     return () => {
-      img.onload = null;
-      img.onerror = null;
+      imgObserver.disconnect();
       clearTimeout(timeout);
     };
-  }, [src, fallback, isLoading]);
+  }, [src, fallback, isLoading, skipPreload]);
   
   const handleError = () => {
     setError(true);
@@ -87,6 +101,7 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
   
   const handleLoad = () => {
     setIsLoading(false);
+    setImgLoaded(true);
   };
   
   return (
@@ -102,7 +117,7 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
         backgroundColor: isLoading && placeholderColor ? placeholderColor : undefined 
       }}
     >
-      {/* Render image only when src is available */}
+      {/* Only render image once src is available */}
       {imgSrc && (
         <img
           src={imgSrc}

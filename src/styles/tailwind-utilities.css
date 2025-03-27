@@ -1,0 +1,59 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  /* Glass morphism utilities */
+  .glass-morphism {
+    @apply bg-white/5 backdrop-blur-md border border-white/10 shadow-sm;
+  }
+  
+  .glass-morphism-highlight {
+    @apply bg-white/10 backdrop-blur-lg border border-white/20 shadow-md;
+  }
+  
+  .glass-morphism-dark {
+    @apply bg-black/40 backdrop-blur-xl border border-white/5 shadow-lg;
+  }
+  
+  /* Royal card components */
+  .royal-card-enhanced {
+    @apply backdrop-blur-xl border border-white/10 p-6 relative overflow-hidden transition-all duration-300 bg-white/5;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), 0 0 10px rgba(212, 175, 55, 0.1);
+  }
+  
+  /* Royal button enhanced */
+  .royal-button-enhanced {
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3), 0 0 5px rgba(212, 175, 55, 0.2);
+  }
+  
+  .royal-button-enhanced::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.3),
+      transparent
+    );
+    transition: 0.5s;
+    z-index: -1;
+  }
+  
+  .royal-button-enhanced:hover {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), 0 0 10px rgba(212, 175, 55, 0.4);
+  }
+  
+  .royal-button-enhanced:hover::before {
+    left: 100%;
+  }
+}

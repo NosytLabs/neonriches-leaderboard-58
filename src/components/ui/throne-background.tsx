@@ -19,9 +19,24 @@ const ThroneBackground: React.FC<ThroneBackgroundProps> = ({
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
+  const [isLowEndDevice, setIsLowEndDevice] = useState(false);
   
+  // Detect low-end devices once on mount
   useEffect(() => {
-    // Add visibility detection to only animate when in viewport
+    const checkDeviceCapability = () => {
+      // Check if it's a low-end device
+      const isLow = window.navigator.hardwareConcurrency 
+        ? window.navigator.hardwareConcurrency <= 2
+        : false;
+      
+      setIsLowEndDevice(isLow);
+    };
+    
+    checkDeviceCapability();
+  }, []);
+  
+  // Add visibility detection using Intersection Observer
+  useEffect(() => {
     if (!containerRef.current) return;
     
     const observer = new IntersectionObserver(
@@ -42,48 +57,53 @@ const ThroneBackground: React.FC<ThroneBackgroundProps> = ({
     };
   }, []);
   
+  // Create particles only when component is visible and if device can handle it
   useEffect(() => {
+    // Only create particles if they're enabled and component is visible
     if (!particles || !containerRef.current || !isVisible) return;
     
-    const container = containerRef.current;
-    // Reduce particle count to improve performance
-    const particleCount = density === 'high' ? 20 : density === 'medium' ? 10 : 5;
+    // Skip particles on low-end devices
+    if (isLowEndDevice && density !== 'low') return;
     
+    const container = containerRef.current;
+    
+    // Significantly reduce particle count
+    const particleCount = isLowEndDevice 
+      ? 3 
+      : (density === 'high' ? 10 : density === 'medium' ? 5 : 3);
+    
+    // Clean up old particles
     const existingParticles = container.querySelectorAll('.floating-particle');
     existingParticles.forEach(particle => particle.remove());
     
-    // Limit particles or disable on low-end devices
-    const isLowEndDevice = window.navigator.hardwareConcurrency && window.navigator.hardwareConcurrency <= 2;
-    
-    if (isLowEndDevice && density === 'high') {
-      // Only create a few particles on low-end devices
-      for (let i = 0; i < 5; i++) {
-        createParticle(container, variant);
-      }
-    } else if (!isLowEndDevice) {
+    // Batch particle creation with requestAnimationFrame
+    requestAnimationFrame(() => {
       for (let i = 0; i < particleCount; i++) {
         createParticle(container, variant);
       }
-    }
+    });
     
-    // Clean up particles when component unmounts
+    // Clean up particles when component unmounts or becomes invisible
     return () => {
       const currentParticles = container.querySelectorAll('.floating-particle');
       currentParticles.forEach(particle => particle.remove());
     };
-  }, [particles, density, variant, isVisible]);
+  }, [particles, density, variant, isVisible, isLowEndDevice]);
   
   const createParticle = (container: HTMLDivElement, variant: string) => {
     const particle = document.createElement('div');
     particle.className = 'floating-particle absolute rounded-full opacity-0 pointer-events-none';
     
-    const size = Math.random() * 4 + 2;
+    // Create fewer, larger particles that are more visible
+    const size = Math.random() * 6 + 4;
     particle.style.width = `${size}px`;
     particle.style.height = `${size}px`;
     
-    particle.style.left = `${Math.random() * 100}%`;
-    particle.style.top = `${Math.random() * 100}%`;
+    // Position randomly but avoid edges
+    particle.style.left = `${Math.random() * 80 + 10}%`;
+    particle.style.top = `${Math.random() * 80 + 10}%`;
     
+    // Apply colors based on variant
     if (variant === 'royal') {
       const colors = ['#D4AF37', '#8B0000', '#000080'];
       particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
@@ -105,13 +125,15 @@ const ThroneBackground: React.FC<ThroneBackgroundProps> = ({
       }
     }
     
-    // Add will-change property for better performance
+    // Optimize rendering with will-change
     particle.style.willChange = 'transform, opacity';
     
-    const duration = Math.random() * 10 + 5;
+    // Use longer animation duration to reduce CPU usage
+    const duration = Math.random() * 10 + 10;
     particle.style.animation = `float ${duration}s ease-in forwards`;
     
-    particle.style.animationDelay = `${Math.random() * 5}s`;
+    // Stagger animation starts to spread out the rendering load
+    particle.style.animationDelay = `${Math.random() * 10}s`;
     
     container.appendChild(particle);
   };
@@ -137,14 +159,14 @@ const ThroneBackground: React.FC<ThroneBackgroundProps> = ({
       className={cn(
         'absolute inset-0 w-full h-full overflow-hidden',
         getVariantClasses(),
-        animate && isVisible && 'animate-pulse-slow',
+        animate && isVisible && !isLowEndDevice && 'animate-pulse-slow',
         className
       )}
     >
-      <div className="absolute inset-0">
-        <div className="absolute top-1/4 left-1/4 w-64 h-64 rounded-full bg-royal-crimson/10 filter blur-[100px]"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 rounded-full bg-royal-gold/10 filter blur-[120px]"></div>
-        <div className="absolute top-2/3 left-2/3 w-72 h-72 rounded-full bg-royal-navy/10 filter blur-[80px]"></div>
+      {/* Reduced number of gradient elements */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-1/4 left-1/4 w-64 h-64 rounded-full bg-royal-crimson/5 filter blur-[100px]"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 rounded-full bg-royal-gold/5 filter blur-[120px]"></div>
       </div>
     </div>
   );

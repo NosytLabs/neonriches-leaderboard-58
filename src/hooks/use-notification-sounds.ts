@@ -11,7 +11,22 @@ interface SoundMap {
   };
 }
 
+// Only include essential sounds to reduce initial load
 const soundsMap: SoundMap = {
+  notification: {
+    src: 'https://assets.mixkit.co/sfx/preview/mixkit-software-interface-start-2574.mp3',
+    description: 'Soft notification',
+    volume: 0.2
+  },
+  purchase: {
+    src: 'https://assets.mixkit.co/sfx/preview/mixkit-unlock-game-notification-253.mp3',
+    description: 'Purchase confirmation',
+    volume: 0.3
+  }
+};
+
+// Additional sounds that will be loaded on demand
+const additionalSounds: SoundMap = {
   shame: {
     src: 'https://assets.mixkit.co/sfx/preview/mixkit-cartoon-toy-whistle-616.mp3',
     description: 'Playful shame whistle',
@@ -21,11 +36,6 @@ const soundsMap: SoundMap = {
     src: 'https://assets.mixkit.co/sfx/preview/mixkit-coins-handling-1939.mp3',
     description: 'Coins dropping',
     volume: 0.3
-  },
-  notification: {
-    src: 'https://assets.mixkit.co/sfx/preview/mixkit-software-interface-start-2574.mp3',
-    description: 'Soft notification',
-    volume: 0.2
   },
   rankUp: {
     src: 'https://assets.mixkit.co/sfx/preview/mixkit-winning-chimes-2015.mp3',
@@ -51,21 +61,17 @@ const soundsMap: SoundMap = {
     src: 'https://assets.mixkit.co/sfx/preview/mixkit-fairy-arcade-sparkle-866.mp3',
     description: 'Royal announcement chime',
     volume: 0.2
-  },
-  purchase: {
-    src: 'https://assets.mixkit.co/sfx/preview/mixkit-unlock-game-notification-253.mp3',
-    description: 'Purchase confirmation',
-    volume: 0.3
   }
 };
 
 const useNotificationSounds = () => {
   const [audioElements, setAudioElements] = useState<{[key: string]: HTMLAudioElement}>({});
-  const [loaded, setLoaded] = useState(false);
+  const [loadedSounds, setLoadedSounds] = useState<string[]>([]);
+  const [initialLoadComplete, setInitialLoadComplete] = useState(false);
   const preloadAttempted = useRef(false);
   
-  // Preload all sounds
-  const preloadAllSounds = useCallback(() => {
+  // Preload only essential sounds on initial load
+  const preloadEssentialSounds = useCallback(() => {
     // Skip if already attempted to prevent multiple preload calls
     if (preloadAttempted.current) return;
     preloadAttempted.current = true;
@@ -81,8 +87,9 @@ const useNotificationSounds = () => {
         // Add load event to track when preloading is complete
         audio.addEventListener('canplaythrough', () => {
           loadedCount++;
+          setLoadedSounds(prev => [...prev, key]);
           if (loadedCount === totalSounds) {
-            setLoaded(true);
+            setInitialLoadComplete(true);
           }
         }, { once: true });
         
@@ -91,7 +98,7 @@ const useNotificationSounds = () => {
           console.warn(`Failed to preload sound "${key}":`, e);
           loadedCount++;
           if (loadedCount === totalSounds) {
-            setLoaded(true);
+            setInitialLoadComplete(true);
           }
         }, { once: true });
         
@@ -104,22 +111,65 @@ const useNotificationSounds = () => {
       
       // Fallback in case events don't fire
       setTimeout(() => {
-        if (!loaded) {
+        if (!initialLoadComplete) {
           console.warn('Sound preloading timed out, setting as loaded anyway');
-          setLoaded(true);
+          setInitialLoadComplete(true);
         }
-      }, 5000);
+      }, 3000);
     } catch (error) {
       console.error('Error initializing audio elements:', error);
-      setLoaded(true); // Set as loaded anyway to prevent blocking the app
+      setInitialLoadComplete(true); // Set as loaded anyway to prevent blocking the app
     }
-  }, [loaded]);
+  }, [initialLoadComplete]);
+  
+  // Lazily load a specific sound when needed
+  const loadSound = useCallback((type: SoundType) => {
+    // Skip if already loaded
+    if (audioElements[type]) return Promise.resolve();
+    
+    // Skip if sound doesn't exist in maps
+    if (!additionalSounds[type] && !soundsMap[type]) {
+      console.warn(`Sound "${type}" not defined`);
+      return Promise.resolve();
+    }
+    
+    return new Promise<void>((resolve) => {
+      try {
+        const soundInfo = additionalSounds[type] || soundsMap[type];
+        const audio = new Audio();
+        
+        audio.addEventListener('canplaythrough', () => {
+          setAudioElements(prev => ({ ...prev, [type]: audio }));
+          setLoadedSounds(prev => [...prev, type]);
+          resolve();
+        }, { once: true });
+        
+        audio.addEventListener('error', (e) => {
+          console.warn(`Failed to load sound "${type}":`, e);
+          resolve();
+        }, { once: true });
+        
+        audio.preload = 'auto';
+        audio.src = soundInfo.src;
+        
+        // Set a timeout in case the events don't fire
+        setTimeout(resolve, 2000);
+      } catch (error) {
+        console.error('Failed to load sound:', error);
+        resolve();
+      }
+    });
+  }, [audioElements]);
   
   // Play a specific sound with custom volume
-  const playSound = useCallback((type: SoundType, volumeMultiplier = 1) => {
-    // Skip if sound doesn't exist
+  const playSound = useCallback(async (type: SoundType, volumeMultiplier = 1) => {
+    // Load sound if not already loaded
     if (!audioElements[type]) {
-      console.warn(`Sound "${type}" not found`);
+      await loadSound(type);
+    }
+    
+    // Skip if sound doesn't exist after attempting to load
+    if (!audioElements[type]) {
       return;
     }
     
@@ -128,23 +178,24 @@ const useNotificationSounds = () => {
       const sound = audioElements[type].cloneNode() as HTMLAudioElement;
       
       // Set volume (capped at 1.0)
-      const baseVolume = soundsMap[type]?.volume || 0.3;
+      const baseVolume = (additionalSounds[type] || soundsMap[type])?.volume || 0.3;
       sound.volume = Math.min(baseVolume * volumeMultiplier, 1.0);
       
       // Play the sound
       sound.play().catch(e => {
         // Most browsers require user interaction before playing audio
-        console.log('Audio playback error:', e);
+        console.log('Audio playback error (likely needs user interaction):', e);
       });
     } catch (error) {
       console.error('Failed to play sound:', error);
     }
-  }, [audioElements]);
+  }, [audioElements, loadSound]);
   
   return {
     playSound,
-    preloadAllSounds,
-    soundsLoaded: loaded
+    preloadSounds: preloadEssentialSounds,
+    soundsLoaded: initialLoadComplete,
+    loadedSoundTypes: loadedSounds
   };
 };
 
