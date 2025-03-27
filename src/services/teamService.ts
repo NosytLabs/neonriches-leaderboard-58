@@ -1,6 +1,7 @@
 
 import { UserProfile } from '@/contexts/AuthContext';
 import { teamData } from '@/utils/teamUtils';
+import { TeamColor } from '@/types/teams';
 
 export interface TeamSwitchResult {
   success: boolean;
@@ -9,7 +10,7 @@ export interface TeamSwitchResult {
 
 export const switchUserTeam = async (
   user: UserProfile,
-  team: 'red' | 'green' | 'blue',
+  team: TeamColor,
   updateProfileFn: (data: Partial<UserProfile>) => Promise<void>
 ): Promise<TeamSwitchResult> => {
   try {
@@ -47,4 +48,4 @@ export const switchUserTeam = async (
 export { teamData };
 
 // Export TeamColor type for backward compatibility
-export type { TeamColor } from '@/types/teams';
+export type { TeamColor };

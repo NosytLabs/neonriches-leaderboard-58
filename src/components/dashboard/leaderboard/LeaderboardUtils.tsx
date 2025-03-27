@@ -6,9 +6,9 @@ import {
   getTeamName, 
   getGenderTitle, 
   getGenderEmoji, 
-  getInitials, 
-  getRankIcon 
+  getInitials 
 } from '@/utils/teamUtils';
+import React from 'react';
 
 export interface LeaderboardUser {
   id: string;
@@ -28,6 +28,14 @@ export const mockLeaderboardData: LeaderboardUser[] = [
   { id: '5', username: 'PurpleDuke', amountSpent: 1480, rank: 5, team: 'green', profileImage: 'https://i.pravatar.cc/150?img=15', gender: 'jester' },
 ];
 
+// Function to get rank icon as a React element - fixing the ReactNode issue
+export const getRankIcon = (rank: number): React.ReactNode => {
+  if (rank === 1) return <Crown className="h-4 w-4 text-royal-gold" />;
+  if (rank === 2) return <Award className="h-4 w-4 text-[#C0C0C0]" />;
+  if (rank === 3) return <Award className="h-4 w-4 text-[#CD7F32]" />;
+  return null;
+};
+
 // Re-export the utilities for backward compatibility and easier imports
 export { 
   getTeamColor, 
@@ -35,6 +43,5 @@ export {
   getTeamName, 
   getGenderTitle, 
   getGenderEmoji, 
-  getInitials, 
-  getRankIcon 
+  getInitials
 };
