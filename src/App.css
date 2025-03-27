@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -89,6 +90,7 @@ body {
 
 /* Import shame effects */
 @import './styles/shame-effects.css';
+@import './styles/medieval-animations.css';
 
 /* Additional Shame-related animations */
 .animate-crown-glow {
@@ -201,4 +203,41 @@ body {
   100% {
     background-position: 200% center;
   }
+}
+
+/* Medieval-themed tier badges */
+.tier-whale {
+  background-color: rgba(75, 0, 130, 0.2);
+  border: 1px solid rgba(75, 0, 130, 0.5);
+  color: rgb(75, 0, 130);
+}
+
+.tier-shark {
+  background-color: rgba(139, 0, 0, 0.2);
+  border: 1px solid rgba(139, 0, 0, 0.5);
+  color: rgb(139, 0, 0);
+}
+
+.tier-dolphin {
+  background-color: rgba(0, 0, 128, 0.2);
+  border: 1px solid rgba(0, 0, 128, 0.5);
+  color: rgb(0, 0, 128);
+}
+
+.tier-fish {
+  background-color: rgba(70, 130, 180, 0.2);
+  border: 1px solid rgba(70, 130, 180, 0.5);
+  color: rgb(70, 130, 180);
+}
+
+.tier-octopus {
+  background-color: rgba(128, 0, 128, 0.2);
+  border: 1px solid rgba(128, 0, 128, 0.5);
+  color: rgb(128, 0, 128);
+}
+
+.tier-crab {
+  background-color: rgba(205, 127, 50, 0.2);
+  border: 1px solid rgba(205, 127, 50, 0.5);
+  color: rgb(205, 127, 50);
 }

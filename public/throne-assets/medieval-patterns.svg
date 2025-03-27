@@ -1,0 +1,55 @@
+
+<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100" fill="none">
+  <g opacity="0.3">
+    <path d="M0 0H50V50H0V0Z" fill="none"/>
+    <path d="M10 10H20V20H10V10Z" stroke="#D4AF37" stroke-width="1"/>
+    <path d="M30 10H40V20H30V10Z" stroke="#D4AF37" stroke-width="1"/>
+    <path d="M10 30H20V40H10V30Z" stroke="#D4AF37" stroke-width="1"/>
+    <path d="M30 30H40V40H30V30Z" stroke="#D4AF37" stroke-width="1"/>
+    <path d="M20 20H30V30H20V20Z" stroke="#8B0000" stroke-width="1"/>
+    <path d="M20 0V10" stroke="#000080" stroke-width="1"/>
+    <path d="M20 40V50" stroke="#000080" stroke-width="1"/>
+    <path d="M0 20H10" stroke="#000080" stroke-width="1"/>
+    <path d="M40 20H50" stroke="#000080" stroke-width="1"/>
+    <circle cx="25" cy="25" r="2" stroke="#D4AF37" stroke-width="1"/>
+  </g>
+  <g opacity="0.3">
+    <path d="M50 0H100V50H50V0Z" fill="none"/>
+    <path d="M60 10H70V20H60V10Z" stroke="#D4AF37" stroke-width="1"/>
+    <path d="M80 10H90V20H80V10Z" stroke="#D4AF37" stroke-width="1"/>
+    <path d="M60 30H70V40H60V30Z" stroke="#D4AF37" stroke-width="1"/>
+    <path d="M80 30H90V40H80V30Z" stroke="#D4AF37" stroke-width="1"/>
+    <path d="M70 20H80V30H70V20Z" stroke="#8B0000" stroke-width="1"/>
+    <path d="M70 0V10" stroke="#000080" stroke-width="1"/>
+    <path d="M70 40V50" stroke="#000080" stroke-width="1"/>
+    <path d="M50 20H60" stroke="#000080" stroke-width="1"/>
+    <path d="M90 20H100" stroke="#000080" stroke-width="1"/>
+    <circle cx="75" cy="25" r="2" stroke="#D4AF37" stroke-width="1"/>
+  </g>
+  <g opacity="0.3">
+    <path d="M0 50H50V100H0V50Z" fill="none"/>
+    <path d="M10 60H20V70H10V60Z" stroke="#D4AF37" stroke-width="1"/>
+    <path d="M30 60H40V70H30V60Z" stroke="#D4AF37" stroke-width="1"/>
+    <path d="M10 80H20V90H10V80Z" stroke="#D4AF37" stroke-width="1"/>
+    <path d="M30 80H40V90H30V80Z" stroke="#D4AF37" stroke-width="1"/>
+    <path d="M20 70H30V80H20V70Z" stroke="#8B0000" stroke-width="1"/>
+    <path d="M20 50V60" stroke="#000080" stroke-width="1"/>
+    <path d="M20 90V100" stroke="#000080" stroke-width="1"/>
+    <path d="M0 70H10" stroke="#000080" stroke-width="1"/>
+    <path d="M40 70H50" stroke="#000080" stroke-width="1"/>
+    <circle cx="25" cy="75" r="2" stroke="#D4AF37" stroke-width="1"/>
+  </g>
+  <g opacity="0.3">
+    <path d="M50 50H100V100H50V50Z" fill="none"/>
+    <path d="M60 60H70V70H60V60Z" stroke="#D4AF37" stroke-width="1"/>
+    <path d="M80 60H90V70H80V60Z" stroke="#D4AF37" stroke-width="1"/>
+    <path d="M60 80H70V90H60V80Z" stroke="#D4AF37" stroke-width="1"/>
+    <path d="M80 80H90V90H80V80Z" stroke="#D4AF37" stroke-width="1"/>
+    <path d="M70 70H80V80H70V70Z" stroke="#8B0000" stroke-width="1"/>
+    <path d="M70 50V60" stroke="#000080" stroke-width="1"/>
+    <path d="M70 90V100" stroke="#000080" stroke-width="1"/>
+    <path d="M50 70H60" stroke="#000080" stroke-width="1"/>
+    <path d="M90 70H100" stroke="#000080" stroke-width="1"/>
+    <circle cx="75" cy="75" r="2" stroke="#D4AF37" stroke-width="1"/>
+  </g>
+</svg>
