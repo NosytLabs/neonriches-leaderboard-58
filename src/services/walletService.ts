@@ -1,167 +1,125 @@
 
-import { toast } from '@/hooks/use-toast';
 import { UserProfile } from '@/contexts/AuthContext';
+import { toast } from '@/hooks/use-toast';
 
-// Types for wallet-related operations
+export type TransactionType = 'shame' | 'deposit' | 'spend' | 'advertisement' | 'subscription' | 'cosmetic' | 'wish';
+
 export interface Transaction {
   id: string;
   userId: string;
-  type: 'deposit' | 'spend' | 'shame' | 'advertisement' | 'subscription';
   amount: number;
+  type: TransactionType;
+  date: Date;
   description: string;
-  timestamp: string;
-  metadata?: Record<string, any>;
+  metadata?: any;
 }
 
-// Mock transaction data (would be stored in a database in a real app)
-let transactions: Transaction[] = [];
-
-// Add funds to user wallet
-export const addFundsToWallet = async (
-  user: UserProfile,
-  amount: number
-): Promise<boolean> => {
-  try {
-    if (!user || !user.id) {
-      throw new Error('User not authenticated');
-    }
-    
-    if (amount <= 0) {
-      throw new Error('Amount must be greater than zero');
-    }
-    
-    // Create transaction record
-    const transaction: Transaction = {
-      id: Math.random().toString(36).substring(2, 9),
-      userId: user.id,
-      type: 'deposit',
-      amount: amount,
-      description: 'Added funds to royal purse',
-      timestamp: new Date().toISOString(),
-      metadata: { paymentMethod: 'credit_card' }
-    };
-    
-    // Add to transaction history
-    transactions.push(transaction);
-    
-    // Store in localStorage for persistence
-    const storedTransactions = localStorage.getItem('p2w_transactions') || '[]';
-    let parsedTransactions = JSON.parse(storedTransactions);
-    parsedTransactions.push(transaction);
-    localStorage.setItem('p2w_transactions', JSON.stringify(parsedTransactions));
-    
-    // Update wallet balance in local storage
-    const currentBalance = user.walletBalance || 0;
-    const newBalance = currentBalance + amount;
-    
-    // Store updated user data for persistence
-    const userData = {
-      ...user,
-      walletBalance: newBalance
-    };
-    localStorage.setItem('p2w_user', JSON.stringify(userData));
-    
-    return true;
-  } catch (error) {
-    console.error('Error adding funds to wallet:', error);
-    toast({
-      title: "Transaction Failed",
-      description: error.message || "Failed to add funds to your wallet.",
-      variant: "destructive"
-    });
-    return false;
-  }
-};
-
-// Spend from wallet
 export const spendFromWallet = async (
   user: UserProfile,
   amount: number,
-  type: Transaction['type'],
-  description: string,
-  metadata?: Record<string, any>
+  type: TransactionType,
+  description: string = 'General spending',
+  metadata?: any
 ): Promise<boolean> => {
+  // Check if user has enough balance
+  if (user.walletBalance < amount) {
+    toast({
+      title: "Insufficient Funds",
+      description: `You need $${amount} to complete this transaction.`,
+      variant: "destructive"
+    });
+    return false;
+  }
+  
   try {
-    if (!user || !user.id) {
-      throw new Error('User not authenticated');
-    }
-    
-    const currentBalance = user.walletBalance || 0;
-    
-    if (currentBalance < amount) {
-      throw new Error('Insufficient funds in royal purse');
-    }
+    // In a real app, this would be an API call
+    // For this demo, we'll simulate a successful transaction
     
     // Create transaction record
     const transaction: Transaction = {
-      id: Math.random().toString(36).substring(2, 9),
+      id: `txn_${Math.random().toString(36).substring(2, 9)}`,
       userId: user.id,
+      amount,
       type,
-      amount: -amount, // Negative amount for spending
+      date: new Date(),
       description,
-      timestamp: new Date().toISOString(),
       metadata
     };
     
-    // Add to transaction history
-    transactions.push(transaction);
+    // Store transaction history
+    const transactionHistory = JSON.parse(localStorage.getItem('p2w_transactions') || '[]');
+    transactionHistory.push(transaction);
+    localStorage.setItem('p2w_transactions', JSON.stringify(transactionHistory));
     
-    // Store in localStorage for persistence
-    const storedTransactions = localStorage.getItem('p2w_transactions') || '[]';
-    let parsedTransactions = JSON.parse(storedTransactions);
-    parsedTransactions.push(transaction);
-    localStorage.setItem('p2w_transactions', JSON.stringify(parsedTransactions));
-    
-    // Update wallet balance
-    const newBalance = currentBalance - amount;
-    
-    // Store updated user data for persistence
-    const userData = {
+    // Update user's wallet balance locally
+    const updatedUser = {
       ...user,
-      walletBalance: newBalance
+      walletBalance: user.walletBalance - amount,
+      amountSpent: user.amountSpent + amount
     };
-    localStorage.setItem('p2w_user', JSON.stringify(userData));
+    
+    // Update local storage
+    localStorage.setItem('p2w_user', JSON.stringify(updatedUser));
     
     return true;
   } catch (error) {
-    console.error('Error spending from wallet:', error);
+    console.error("Transaction failed:", error);
     toast({
       title: "Transaction Failed",
-      description: error.message || "Failed to process your transaction.",
+      description: "There was an error processing your payment.",
       variant: "destructive"
     });
     return false;
   }
 };
 
-// Get user transaction history
-export const getUserTransactions = async (
-  userId: string,
-  limit: number = 20
-): Promise<Transaction[]> => {
-  try {
-    // In a real app, fetch from database
-    // For demo, load from localStorage
-    const storedTransactions = localStorage.getItem('p2w_transactions') || '[]';
-    let parsedTransactions: Transaction[] = JSON.parse(storedTransactions);
-    
-    // Filter by user ID
-    const userTransactions = parsedTransactions
-      .filter(transaction => transaction.userId === userId)
-      .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
-      .slice(0, limit);
-    
-    return userTransactions;
-  } catch (error) {
-    console.error('Error fetching transactions:', error);
-    return [];
-  }
+export const getTransactionHistory = (userId: string): Transaction[] => {
+  const transactions = JSON.parse(localStorage.getItem('p2w_transactions') || '[]');
+  return transactions.filter((txn: Transaction) => txn.userId === userId);
 };
 
-// Get wallet balance
-export const getWalletBalance = (user: UserProfile): number => {
-  if (!user) return 0;
-  
-  // For demo, load from user object or localStorage
-  return user.walletBalance || 0;
+export const depositToWallet = async (
+  user: UserProfile,
+  amount: number,
+  description: string = 'Wallet deposit',
+  updateUserFn: (data: Partial<UserProfile>) => Promise<void>
+): Promise<boolean> => {
+  try {
+    // In a real app, this would be an API call
+    
+    // Create transaction record
+    const transaction: Transaction = {
+      id: `txn_${Math.random().toString(36).substring(2, 9)}`,
+      userId: user.id,
+      amount,
+      type: 'deposit',
+      date: new Date(),
+      description
+    };
+    
+    // Store transaction history
+    const transactionHistory = JSON.parse(localStorage.getItem('p2w_transactions') || '[]');
+    transactionHistory.push(transaction);
+    localStorage.setItem('p2w_transactions', JSON.stringify(transactionHistory));
+    
+    // Update user's wallet balance
+    await updateUserFn({
+      walletBalance: user.walletBalance + amount
+    });
+    
+    toast({
+      title: "Deposit Successful",
+      description: `$${amount} has been added to your wallet.`
+    });
+    
+    return true;
+  } catch (error) {
+    console.error("Deposit failed:", error);
+    toast({
+      title: "Deposit Failed",
+      description: "There was an error processing your deposit.",
+      variant: "destructive"
+    });
+    return false;
+  }
 };

@@ -12,12 +12,29 @@ export interface UserProfile {
   spendStreak: number;
   tier: string;
   team?: 'red' | 'green' | 'blue' | null;
+  gender?: 'king' | 'queen' | 'jester' | null;
   cosmetics?: {
     decorations?: string[];
     colors?: string[];
     fonts?: string[];
     emojis?: string[];
   };
+  subscription?: UserSubscription;
+  role?: string;
+}
+
+export interface UserSubscription {
+  id: string;
+  tier: string;
+  status: 'active' | 'canceled' | 'expired';
+  startDate: Date;
+  endDate: Date;
+  renewalDate?: Date;
+  paymentMethod: string;
+  autoRenew: boolean;
+  price: number;
+  interval: 'monthly' | 'quarterly' | 'annual';
+  features: string[];
 }
 
 interface AuthContextType {
@@ -27,6 +44,9 @@ interface AuthContextType {
   logout: () => Promise<void>;
   loading: boolean;
   updateUserProfile: (userData: Partial<UserProfile>) => Promise<void>;
+  subscription?: UserSubscription | null;
+  updateProfile: (userData: Partial<UserProfile>) => Promise<void>;
+  signOut: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType>({} as AuthContextType);
@@ -75,6 +95,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         spendStreak: 3,
         tier: 'octopus',
         team: 'blue',
+        gender: 'king',
         cosmetics: {
           decorations: ['royal-crown'],
           colors: ['royal-gold'],
@@ -111,6 +132,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         rank: 999,
         spendStreak: 0,
         tier: 'crab',
+        gender: 'jester',
         cosmetics: {
           decorations: [],
           colors: [],
@@ -155,9 +177,25 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  // Aliases for compatibility
+  const updateProfile = updateUserProfile;
+  const signOut = logout;
+
   return (
-    <AuthContext.Provider value={{ user, login, register, logout, loading, updateUserProfile }}>
+    <AuthContext.Provider value={{ 
+      user, 
+      login, 
+      register, 
+      logout, 
+      loading, 
+      updateUserProfile,
+      updateProfile,
+      signOut,
+      subscription: user?.subscription
+    }}>
       {children}
     </AuthContext.Provider>
   );
 };
+
+export default AuthProvider;

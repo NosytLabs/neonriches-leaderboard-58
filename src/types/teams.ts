@@ -1,50 +1,47 @@
 
+// Team types
 export type TeamColor = 'red' | 'green' | 'blue';
 
 export interface Team {
   id: TeamColor;
   name: string;
   description: string;
+  icon: string;
   color: string;
   bgColor: string;
   members: number;
-  totalSpent: number;
   rank: number;
-  icon: string;
 }
 
 export const teamData: Record<TeamColor, Team> = {
   red: {
     id: 'red',
-    name: 'Neon Fire',
-    description: 'Blazing spirits who spend with passion and intensity.',
-    color: '#FF5555',
-    bgColor: 'rgba(255, 85, 85, 0.2)',
-    members: 28,
-    totalSpent: 4250,
-    rank: 1,
-    icon: '🔥'
+    name: 'Red Team',
+    description: 'The fiery warriors of the neon flame',
+    icon: '🔥',
+    color: '#FF4560',
+    bgColor: 'rgba(255, 69, 96, 0.2)',
+    members: 1205,
+    rank: 2
   },
   green: {
     id: 'green',
-    name: 'Lime Zap',
-    description: 'Energetic spenders who electrify the leaderboard.',
-    color: '#55FF55',
-    bgColor: 'rgba(85, 255, 85, 0.2)',
-    members: 22,
-    totalSpent: 3800,
-    rank: 2,
-    icon: '⚡'
+    name: 'Green Team',
+    description: 'The electrifying force of the lime zap',
+    icon: '⚡',
+    color: '#00E396',
+    bgColor: 'rgba(0, 227, 150, 0.2)',
+    members: 983,
+    rank: 3
   },
   blue: {
     id: 'blue',
-    name: 'Cool Pulse',
-    description: 'Calculated and strategic spenders who rise with steady rhythm.',
-    color: '#5555FF',
-    bgColor: 'rgba(85, 85, 255, 0.2)',
-    members: 25,
-    totalSpent: 3500,
-    rank: 3,
-    icon: '❄️'
+    name: 'Blue Team',
+    description: 'The mesmerizing flow of the cool pulse',
+    icon: '💧',
+    color: '#008FFB',
+    bgColor: 'rgba(0, 143, 251, 0.2)',
+    members: 1347,
+    rank: 1
   }
 };
