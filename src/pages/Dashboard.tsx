@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import Header from '@/components/Header';
@@ -15,13 +15,33 @@ import RoyalDecrees from '@/components/dashboard/RoyalDecrees';
 import { mockSpendingData, mockTeamDistribution, mockRankHistory } from '@/components/dashboard/data';
 import ThroneBackground from '@/components/ui/throne-background';
 import RoyalDivider from '@/components/ui/royal-divider';
-import { Crown, ChevronsUp, TrendingUp } from 'lucide-react';
+import { Crown, ChevronsUp, TrendingUp, Trophy, Coins } from 'lucide-react';
 import { toast } from "@/hooks/use-toast";
 
 const Dashboard = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [suggestedAmount, setSuggestedAmount] = useState(100);
+  const [showRoyalWelcome, setShowRoyalWelcome] = useState(false);
+
+  useEffect(() => {
+    // Display a grand royal welcome after a short delay
+    const timer = setTimeout(() => {
+      setShowRoyalWelcome(true);
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    if (showRoyalWelcome) {
+      toast({
+        title: "Royal Presence Detected",
+        description: "Welcome back to your kingdom, noble spender. Your coffers await your generosity!",
+        duration: 5000,
+      });
+    }
+  }, [showRoyalWelcome]);
 
   if (!user) {
     // Redirect to login if not authenticated
@@ -32,9 +52,25 @@ const Dashboard = () => {
   const handlePaymentSuccess = (amount: number) => {
     // In a real app, this would update the user's state with the new amount spent
     console.log(`Royal Tribute of $${amount} successfully added to your coffers!`);
+    
+    // Determine what fancy title to give based on amount
+    let toastTitle = "Royal Treasury Expanded!";
+    let description = `Your tribute of $${amount} has been graciously accepted by the crown.`;
+    
+    if (amount >= 500) {
+      toastTitle = "MAGNIFICENT LARGESSE!";
+      description = `Your extravagant tribute of $${amount} has the royal accountants weeping with joy!`;
+    } else if (amount >= 250) {
+      toastTitle = "Exemplary Generosity!";
+      description = `Your tribute of $${amount} has earned you the Crown's distinguished favor!`;
+    } else if (amount >= 100) {
+      toastTitle = "Noble Contribution!";
+      description = `The royal coffers grow by $${amount}. Your loyalty shall be remembered!`;
+    }
+    
     toast({
-      title: "Royal Treasury Expanded!",
-      description: `Your tribute of $${amount} has been graciously accepted by the crown.`,
+      title: toastTitle,
+      description: description,
       duration: 5000,
     });
   };
@@ -51,11 +87,14 @@ const Dashboard = () => {
         <div className="max-w-7xl mx-auto">
           <div className="mb-8 animate-fade-in">
             <div className="flex items-center mb-2">
-              <Crown size={28} className="text-royal-gold mr-3 animate-crown-glow" />
-              <h1 className="text-3xl font-bold text-gradient">Your Royal Treasury</h1>
+              <div className="relative mr-3">
+                <Crown size={32} className="text-royal-gold animate-crown-glow" />
+                <div className="absolute -inset-2 bg-royal-gold/10 rounded-full blur-lg"></div>
+              </div>
+              <h1 className="text-3xl font-bold royal-gradient">Your Royal Treasury</h1>
             </div>
             <p className="text-white/70 italic ml-10">
-              "Where commoners' money transforms into digital nobility."
+              "Where commoners' money transforms into digital nobility, and wealth is measured in pixels."
             </p>
           </div>
           
@@ -85,16 +124,22 @@ const Dashboard = () => {
             <BriberyBanner onPaymentSuccess={handlePaymentSuccess} />
           </div>
           
+          {/* Royal Motivation */}
           <div className="mt-8 glass-morphism border border-royal-gold/20 rounded-xl p-6 text-center animate-fade-in" style={{ animationDelay: "500ms" }}>
-            <div className="flex flex-col items-center space-y-2">
+            <div className="flex flex-col items-center space-y-3">
               <div className="relative">
-                <ChevronsUp size={24} className="text-royal-gold" />
+                <Trophy size={28} className="text-royal-gold" />
                 <div className="absolute -inset-3 bg-royal-gold/10 rounded-full blur-md"></div>
               </div>
-              <h3 className="text-lg font-royal">Remember, Noble One</h3>
+              <h3 className="text-lg font-royal royal-gradient">The Crown Reminds You</h3>
               <p className="text-white/70 italic max-w-2xl">
-                "Every dollar paid is another step up the digital hierarchy. The more you spend, the more impressive your completely meaningless rank becomes!"
+                "Every dollar spent is another jewel in your digital crown. The more you contribute, the more meaningless your impressive rank becomes! Remember, in this kingdom, your worth is measured not by your character, but by your credit card limit."
               </p>
+              
+              <div className="flex items-center mt-2 text-xs text-white/50">
+                <Coins size={12} className="text-royal-gold mr-1" />
+                <span>Current Top Spender: Duke VanishingFunds — $12,450 this week</span>
+              </div>
             </div>
           </div>
         </div>
