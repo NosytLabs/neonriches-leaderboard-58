@@ -15,7 +15,7 @@ export const upcomingEvents = [
   {
     id: 2,
     name: 'Exclusive Titles',
-    description: 'Participate to unlock rare cosmetic titles for your profile. Earn titles like "Royal Jester" or "Court Wizard" to display on your profile.',
+    description: 'Participate to unlock rare cosmetic titles for your profile. Earn titles like "Royal Jester" or "Court Wizard" to display on your profile. Remember: these are cosmetic only and don\'t affect your rank.',
     startDate: new Date(new Date().getTime() + 5 * 24 * 60 * 60 * 1000),   // 5 days from now
     endDate: new Date(new Date().getTime() + 6 * 24 * 60 * 60 * 1000),     // 6 days from now
     image: 'https://picsum.photos/id/431/800/400',
@@ -24,7 +24,7 @@ export const upcomingEvents = [
   {
     id: 3,
     name: 'Team Badge Showcase',
-    description: 'The team with the most participants this week gets a special cosmetic badge. Show your team pride with unique profile flair.',
+    description: 'The team with the most participants this week gets a special cosmetic badge. Show your team pride with unique profile flair. All badges are purely cosmetic and don\'t alter the $1 = 1 rank system.',
     startDate: new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000),   // 7 days from now
     endDate: new Date(new Date().getTime() + 14 * 24 * 60 * 60 * 1000),    // 14 days from now
     image: 'https://picsum.photos/id/452/800/400',

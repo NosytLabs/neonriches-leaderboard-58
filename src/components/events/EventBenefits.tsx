@@ -1,6 +1,7 @@
 
 import React from 'react';
-import { Trophy, Award, Users } from 'lucide-react';
+import { Trophy, Award, Users, DollarSign } from 'lucide-react';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 
 const EventBenefits = () => {
   return (
@@ -11,6 +12,14 @@ const EventBenefits = () => {
           Participating in events offers unique cosmetic rewards to customize your profile. All events are just for fun and don't affect the $1 = 1 rank calculation.
         </p>
       </div>
+      
+      <Alert className="mb-6 border-white/10 bg-white/5">
+        <DollarSign className="h-4 w-4 text-royal-gold" />
+        <AlertDescription className="text-white/80">
+          <strong>Important:</strong> Your rank is always determined by your total spending. $1 = 1 rank point, with no exceptions.
+          Events only provide cosmetic rewards that don't modify this calculation.
+        </AlertDescription>
+      </Alert>
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="glass-morphism rounded-lg p-4 border border-white/10 text-center">
@@ -44,10 +53,11 @@ const EventBenefits = () => {
         </div>
       </div>
       
-      <div className="mt-6 bg-white/5 p-4 rounded-lg text-center">
-        <p className="text-sm text-white/70 italic">
-          Remember: Your leaderboard rank is always calculated based solely on your total spending ($1 = 1 unit of rank).
-          All event rewards are purely cosmetic and don't affect your rank calculation.
+      <div className="mt-6 bg-royal-gold/5 p-4 rounded-lg border border-royal-gold/20">
+        <h3 className="font-semibold mb-2 text-center text-royal-gold">$1 = 1 Rank Guarantee</h3>
+        <p className="text-sm text-white/80 text-center">
+          We guarantee that your leaderboard rank is always calculated based solely on your total spending ($1 = 1 unit of rank).
+          All event rewards are purely cosmetic and don't affect your rank calculation or give any numerical advantage.
         </p>
       </div>
     </div>
