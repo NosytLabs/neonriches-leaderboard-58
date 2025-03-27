@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -24,7 +25,7 @@ const TeamSwitchModal: React.FC<TeamSwitchModalProps> = ({
   user: providedUser,
   onTeamChange
 }) => {
-  const { user: authUser, updateProfile } = useAuth();
+  const { user: authUser, updateUserProfile } = useAuth();
   const [selectedTeam, setSelectedTeam] = useState<TeamColor | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -57,7 +58,7 @@ const TeamSwitchModal: React.FC<TeamSwitchModalProps> = ({
         }
         setOpen(false);
       } else {
-        const result = await switchUserTeam(user, selectedTeam, updateProfile);
+        const result = await switchUserTeam(user, selectedTeam, updateUserProfile);
         
         if (result.success) {
           if (onSuccess) {

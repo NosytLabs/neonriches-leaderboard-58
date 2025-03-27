@@ -35,7 +35,7 @@ const mockProfileData: ProfileData = {
 
 const Profile = () => {
   const navigate = useNavigate();
-  const { user, signOut, updateProfile, subscription } = useAuth();
+  const { user, logout, updateUserProfile, subscription } = useAuth();
   const { toast } = useToast();
   const isMobile = useIsMobile();
   
@@ -105,11 +105,11 @@ const Profile = () => {
                 <ProfileSidebar 
                   user={user} 
                   onLogout={() => {
-                    signOut();
+                    logout();
                     return Promise.resolve();
                   }}
                   onUpdateProfile={() => {
-                    updateProfile({}); // Fix: Pass an empty object to satisfy the parameter requirement
+                    updateUserProfile({}); 
                     return Promise.resolve();
                   }}
                 />

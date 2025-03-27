@@ -1,6 +1,6 @@
 
 // Define team color types for type safety
-export type TeamColor = 'red' | 'green' | 'blue';
+export type TeamColor = 'red' | 'green' | 'blue' | 'none';
 
 // Define team data structure
 export interface TeamData {

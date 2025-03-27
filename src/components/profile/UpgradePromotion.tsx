@@ -9,7 +9,7 @@ import { UserSubscription } from '@/types/auth';
 import { toast } from '@/hooks/use-toast';
 
 const UpgradePromotion = () => {
-  const { updateProfile } = useAuth();
+  const { updateUserProfile } = useAuth();
   const [showDialog, setShowDialog] = useState(false);
   
   const handlePaymentSuccess = async (amount: number) => {
@@ -38,7 +38,7 @@ const UpgradePromotion = () => {
         ]
       };
       
-      await updateProfile({ 
+      await updateUserProfile({ 
         subscription: newSubscription,
         tier: 'pro',
         role: 'premium'

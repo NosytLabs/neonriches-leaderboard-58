@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -76,7 +75,7 @@ const formatDate = (date: Date): string => {
 };
 
 const SubscriptionManagement: React.FC = () => {
-  const { user, subscription, updateProfile } = useAuth();
+  const { user, subscription, updateUserProfile } = useAuth();
   const [selectedPlan, setSelectedPlan] = useState<SubscriptionPlan | null>(null);
   const [showUpgradeDialog, setShowUpgradeDialog] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -100,7 +99,7 @@ const SubscriptionManagement: React.FC = () => {
           status: 'active'
         };
         
-        await updateProfile({ subscription: updatedSubscription });
+        await updateUserProfile({ subscription: updatedSubscription });
         
         toast({
           title: "Subscription Renewed",
@@ -131,7 +130,7 @@ const SubscriptionManagement: React.FC = () => {
           autoRenew: false
         };
         
-        await updateProfile({ subscription: updatedSubscription });
+        await updateUserProfile({ subscription: updatedSubscription });
         
         toast({
           title: "Subscription Cancelled",
@@ -170,7 +169,7 @@ const SubscriptionManagement: React.FC = () => {
         features: selectedPlan.features
       };
       
-      await updateProfile({ 
+      await updateUserProfile({ 
         subscription: newSubscription,
         tier: 'pro',
         role: 'premium'
@@ -201,7 +200,6 @@ const SubscriptionManagement: React.FC = () => {
     return `Save $${savings.toFixed(2)}`;
   };
   
-  // Render current subscription info if user has one
   if (subscription && subscription.status !== 'expired') {
     const isActive = subscription.status === 'active';
     const isCancelled = subscription.status === 'canceled';
@@ -342,7 +340,6 @@ const SubscriptionManagement: React.FC = () => {
     );
   }
   
-  // Render subscription plans for users without a subscription
   return (
     <>
       <Card className="glass-morphism border-white/10 overflow-hidden">
@@ -416,7 +413,6 @@ const SubscriptionManagement: React.FC = () => {
         </CardContent>
       </Card>
       
-      {/* Upgrade Dialog */}
       <Dialog open={showUpgradeDialog} onOpenChange={setShowUpgradeDialog}>
         <DialogContent className="glass-morphism border-white/10 sm:max-w-md">
           <DialogHeader>

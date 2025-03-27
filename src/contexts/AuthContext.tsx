@@ -1,9 +1,11 @@
+
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
+import { UserSubscription } from '@/types/auth';
 
-export type UserTier = 'free' | 'pro';
-export type TeamColor = 'red' | 'green' | 'blue' | null;
+export type UserTier = 'free' | 'pro' | 'octopus' | 'crab';
+export type TeamColor = 'red' | 'green' | 'blue' | 'none' | null;
 export type GenderType = 'king' | 'queen' | 'jester' | null;
 
 export interface UserProfile {
@@ -57,6 +59,7 @@ export interface UserProfile {
     engagement: number;
     conversionRate: number;
   };
+  subscription?: UserSubscription;
 }
 
 export interface Subscription {
@@ -74,6 +77,10 @@ interface AuthContextType {
   error: Error | null;
   updateUserProfile: (data: Partial<UserProfile>) => Promise<void>;
   logout: () => void;
+  // Add these properties to fix the TypeScript errors
+  updateProfile: (data: Partial<UserProfile>) => Promise<void>;
+  signOut: () => void;
+  subscription?: UserSubscription;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -166,7 +173,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         walletBalance: 100,
         rank: 42,
         spendStreak: 3,
-        tier: 'octopus',
+        tier: 'octopus', // This is now valid after updating UserTier
         team: 'blue',
         gender: 'king',
         cosmetics: {
@@ -218,7 +225,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         walletBalance: 50, // Welcome bonus
         rank: 999,
         spendStreak: 0,
-        tier: 'crab',
+        tier: 'crab', // This is now valid after updating UserTier
         gender: 'jester',
         cosmetics: {
           borders: ['gold-border', 'silver-border'],
@@ -286,8 +293,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       amountSpent: 0,
       walletBalance: 0,
       rank: 999,
-      tier: 'crab',
-      team: 'none',
+      tier: 'crab', // This is now valid after updating UserTier
+      team: 'none', // This is now valid after updating TeamColor
       profileViews: 0,
       profileClicks: 0,
       followers: 0,
@@ -295,12 +302,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
   };
 
+  // Extract user's subscription if it exists
+  const subscription = user?.subscription;
+
   const contextValue: AuthContextType = {
     user,
     isLoading,
     error,
     updateUserProfile,
     logout,
+    // Add these properties to match the updated interface
+    updateProfile,
+    signOut,
+    subscription,
   };
 
   return (

@@ -5,6 +5,7 @@ import { Users, Award, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { UserProfile } from '@/contexts/AuthContext';
 import { Badge } from '@/components/ui/badge';
+import TeamSwitchModal from '@/components/profile/TeamSwitchModal';
 
 interface TeamOverviewProps {
   user: UserProfile;
@@ -67,12 +68,16 @@ const TeamOverview: React.FC<TeamOverviewProps> = ({ user }) => {
             </ul>
           </div>
           
-          <Button 
-            variant="outline" 
-            className="w-full glass-morphism border-purple-400/20 hover:bg-purple-400/10"
-          >
-            Change Team
-          </Button>
+          <TeamSwitchModal 
+            trigger={
+              <Button 
+                variant="outline" 
+                className="w-full glass-morphism border-purple-400/20 hover:bg-purple-400/10"
+              >
+                Change Team
+              </Button>
+            }
+          />
         </div>
       </CardContent>
     </Card>
