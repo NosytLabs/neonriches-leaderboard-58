@@ -1,0 +1,152 @@
+
+/* Cosmetic items styling */
+.cosmetic-item {
+  @apply transition-all duration-300 hover:transform hover:scale-105 hover:shadow-royal-gold/20;
+}
+
+.cosmetic-preview {
+  @apply bg-black/40 backdrop-blur-sm rounded-lg p-4 flex items-center justify-center;
+}
+
+/* Premium fonts */
+.font-royal-script {
+  font-family: 'Playfair Display', serif;
+}
+
+.font-medieval-blackletter {
+  font-family: 'Cinzel', serif;
+}
+
+.font-majestic-serif {
+  font-family: 'Cormorant Garamond', serif;
+}
+
+.font-royal-modern {
+  font-family: 'Crimson Text', serif;
+}
+
+.font-noble-sans {
+  font-family: 'Spectral', serif;
+}
+
+.font-courtly-display {
+  font-family: 'Fredericka the Great', cursive;
+}
+
+/* Royal colors */
+.royal-purple-text {
+  color: #7851A9;
+  text-shadow: 0 0 5px rgba(120, 81, 169, 0.5);
+}
+
+.emerald-green-text {
+  color: #2C784A;
+  text-shadow: 0 0 5px rgba(44, 120, 74, 0.5);
+}
+
+.sapphire-blue-text {
+  color: #1F4788;
+  text-shadow: 0 0 5px rgba(31, 71, 136, 0.5);
+}
+
+.crimson-glory-text {
+  color: #9B2335;
+  text-shadow: 0 0 5px rgba(155, 35, 53, 0.5);
+}
+
+.royal-gold-text {
+  color: #D4AF37;
+  text-shadow: 0 0 5px rgba(212, 175, 55, 0.5);
+}
+
+.platinum-silver-text {
+  color: #C0C0C0;
+  text-shadow: 0 0 5px rgba(192, 192, 192, 0.5);
+}
+
+/* Wishing well animations */
+@keyframes coin-drop {
+  0% {
+    transform: translateY(-50px) rotate(0deg);
+    opacity: 1;
+  }
+  70% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(80px) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+.coin-drop {
+  animation: coin-drop 1.5s ease-in forwards;
+}
+
+@keyframes water-ripple {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(3);
+    opacity: 0;
+  }
+}
+
+.water-ripple {
+  animation: water-ripple 2s ease-out forwards;
+}
+
+/* Cosmetic decoration animations */
+@keyframes crown-float {
+  0%, 100% {
+    transform: translateY(-3px);
+  }
+  50% {
+    transform: translateY(0);
+  }
+}
+
+.crown-float {
+  animation: crown-float 2s ease-in-out infinite;
+}
+
+@keyframes name-sparkle {
+  0%, 100% {
+    text-shadow: 0 0 4px rgba(212, 175, 55, 0.7);
+  }
+  50% {
+    text-shadow: 0 0 8px rgba(212, 175, 55, 1);
+  }
+}
+
+.name-sparkle {
+  animation: name-sparkle 2s ease-in-out infinite;
+}
+
+/* Item rarity classes */
+.rarity-common {
+  @apply bg-gray-500/20 text-gray-300 border-gray-500/40;
+}
+
+.rarity-rare {
+  @apply bg-royal-blue/20 text-royal-blue border-royal-blue/40;
+}
+
+.rarity-legendary {
+  @apply bg-royal-gold/20 text-royal-gold border-royal-gold/40;
+}
+
+/* Royal rainbow animation for text */
+@keyframes royal-rainbow {
+  0% { color: #9B2335; }
+  25% { color: #D4AF37; }
+  50% { color: #1F4788; }
+  75% { color: #7851A9; }
+  100% { color: #9B2335; }
+}
+
+.royal-rainbow-text {
+  animation: royal-rainbow 6s linear infinite;
+}

@@ -1,224 +1,163 @@
-import React, { createContext, useState, useEffect, useContext } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { UserSubscription } from '@/types/auth';
+
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
 export interface UserProfile {
   id: string;
   username: string;
-  email?: string;
-  profileImage: string;
+  email: string;
+  profileImage?: string;
   amountSpent: number;
+  walletBalance: number;
   rank: number;
-  team: 'red' | 'green' | 'blue' | null;
-  tier: 'free' | 'pro';
-  gender?: 'king' | 'queen' | 'jester' | null;
-  lastSpendDate?: Date | null;
-  walletBalance?: number;
-  acceptedTerms?: boolean;
-  termsAcceptedDate?: string;
-  subscription?: UserSubscription;
-  spendStreak?: number;
-  role?: 'user' | 'premium' | 'moderator' | 'admin';
+  spendStreak: number;
+  tier: string;
+  team?: 'red' | 'green' | 'blue' | null;
+  cosmetics?: {
+    decorations?: string[];
+    colors?: string[];
+    fonts?: string[];
+    emojis?: string[];
+  };
 }
 
-export interface AuthContextType {
+interface AuthContextType {
   user: UserProfile | null;
-  signIn: (email: string, password: string) => Promise<void>;
-  signUp: (email: string, password: string, username: string) => Promise<void>;
-  signOut: () => void;
+  login: (email: string, password: string) => Promise<void>;
+  register: (email: string, password: string, username: string) => Promise<void>;
+  logout: () => Promise<void>;
   loading: boolean;
-  updateProfile: (data: Partial<UserProfile>) => Promise<void>;
-  subscription: UserSubscription | null;
+  updateUserProfile: (userData: Partial<UserProfile>) => Promise<void>;
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
-};
+export const useAuth = () => useContext(AuthContext);
 
-const mockUser: UserProfile = {
-  id: '1',
-  username: 'NeonBoss',
-  email: 'user@example.com',
-  profileImage: 'https://i.pravatar.cc/150?img=1',
-  amountSpent: 1500,
-  rank: 1,
-  team: 'red',
-  tier: 'pro',
-  walletBalance: 250,
-  acceptedTerms: false,
-  gender: 'king',
-  spendStreak: 3,
-  role: 'premium',
-  subscription: {
-    id: 'sub_123',
-    tier: 'pro',
-    status: 'active',
-    startDate: new Date(),
-    endDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-    renewalDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-    paymentMethod: 'credit_card',
-    autoRenew: true,
-    price: 25,
-    interval: 'monthly',
-    features: [
-      'Advanced profile customization',
-      'Reduced advertisement costs',
-      'Analytics dashboard',
-      'Custom RGB effects'
-    ]
-  }
-};
-
-const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const navigate = useNavigate();
-  const location = useLocation();
-  
-  const [user, setUser] = useState<UserProfile | null>(() => {
-    try {
-      const storedUser = localStorage.getItem('p2w_user');
-      return storedUser ? JSON.parse(storedUser) : mockUser;
-    } catch (error) {
-      console.error('Failed to load user from localStorage:', error);
-      return mockUser;
-    }
-  });
-  const [loading, setLoading] = useState(false);
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [user, setUser] = useState<UserProfile | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    if (user) {
+    // Check for existing session on component mount
+    const checkAuth = async () => {
       try {
-        localStorage.setItem('p2w_user', JSON.stringify(user));
-      } catch (error) {
-        console.error('Failed to save user to localStorage:', error);
-      }
-    } else {
-      try {
-        localStorage.removeItem('p2w_user');
-      } catch (error) {
-        console.error('Failed to remove user from localStorage:', error);
-      }
-    }
-  }, [user]);
-
-  const signIn = async (email: string, password: string) => {
-    setLoading(true);
-    return new Promise<void>((resolve) => {
-      setTimeout(() => {
-        try {
-          const mockAuth = email === 'user@example.com' && password === 'password';
-          if (mockAuth) {
-            setUser(mockUser);
-            navigate('/dashboard');
-          } else {
-            console.error('Invalid credentials');
-          }
-        } catch (error) {
-          console.error('Error during sign in:', error);
-        } finally {
-          setLoading(false);
-          resolve();
+        const storedUser = localStorage.getItem('p2w_user');
+        
+        if (storedUser) {
+          setUser(JSON.parse(storedUser));
         }
-      }, 1000);
-    });
-  };
+      } catch (error) {
+        console.error("Error checking authentication:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    checkAuth();
+  }, []);
 
-  const signUp = async (email: string, password: string, username: string) => {
+  const login = async (email: string, password: string) => {
     setLoading(true);
-    return new Promise<void>((resolve) => {
-      setTimeout(() => {
-        try {
-          const newUser: UserProfile = {
-            id: Math.random().toString(36).substring(2, 9),
-            username,
-            email,
-            profileImage: 'https://i.pravatar.cc/150?img=11',
-            amountSpent: 0,
-            rank: 100,
-            team: null,
-            tier: 'free',
-            walletBalance: 0,
-            acceptedTerms: false,
-            subscription: undefined
-          };
-          setUser(newUser);
-          navigate('/dashboard');
-        } catch (error) {
-          console.error('Error during sign up:', error);
-        } finally {
-          setLoading(false);
-          resolve();
-        }
-      }, 1500);
-    });
-  };
-
-  const signOut = () => {
+    
     try {
+      // Simulate API request
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // For demo purposes, create a mock user
+      const mockUser: UserProfile = {
+        id: '123456',
+        username: 'RoyalUser',
+        email: email,
+        profileImage: 'https://i.pravatar.cc/150?img=3',
+        amountSpent: 250,
+        walletBalance: 100,
+        rank: 42,
+        spendStreak: 3,
+        tier: 'octopus',
+        team: 'blue',
+        cosmetics: {
+          decorations: ['royal-crown'],
+          colors: ['royal-gold'],
+          fonts: [],
+          emojis: ['crown-emoji']
+        }
+      };
+      
+      setUser(mockUser);
+      localStorage.setItem('p2w_user', JSON.stringify(mockUser));
+    } catch (error) {
+      console.error("Login error:", error);
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const register = async (email: string, password: string, username: string) => {
+    setLoading(true);
+    
+    try {
+      // Simulate API request
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // For demo purposes, create a mock user
+      const mockUser: UserProfile = {
+        id: '123456',
+        username: username,
+        email: email,
+        profileImage: 'https://i.pravatar.cc/150?img=5',
+        amountSpent: 0,
+        walletBalance: 50, // Welcome bonus
+        rank: 999,
+        spendStreak: 0,
+        tier: 'crab',
+        cosmetics: {
+          decorations: [],
+          colors: [],
+          fonts: [],
+          emojis: []
+        }
+      };
+      
+      setUser(mockUser);
+      localStorage.setItem('p2w_user', JSON.stringify(mockUser));
+    } catch (error) {
+      console.error("Registration error:", error);
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const logout = async () => {
+    try {
+      // Clear user from state and storage
       setUser(null);
       localStorage.removeItem('p2w_user');
-      navigate('/auth');
     } catch (error) {
-      console.error('Error during sign out:', error);
+      console.error("Logout error:", error);
+      throw error;
     }
   };
 
-  const updateProfile = async (data: Partial<UserProfile>) => {
-    return new Promise<void>((resolve) => {
-      setTimeout(() => {
-        try {
-          if (user) {
-            const updatedUser = { ...user, ...data };
-            setUser(updatedUser);
-            localStorage.setItem('p2w_user', JSON.stringify(updatedUser));
-          }
-        } catch (error) {
-          console.error('Error updating profile:', error);
-        } finally {
-          resolve();
-        }
-      }, 500);
-    });
-  };
-
-  useEffect(() => {
-    if (user && !user.acceptedTerms) {
-      try {
-        const acceptedTerms = localStorage.getItem('acceptedTerms') === 'true';
-        const termsAcceptedDate = localStorage.getItem('termsAcceptedDate');
-        
-        if (acceptedTerms && termsAcceptedDate) {
-          updateProfile({ 
-            acceptedTerms: true,
-            termsAcceptedDate
-          });
-        }
-      } catch (error) {
-        console.error('Error checking terms acceptance:', error);
-      }
+  const updateUserProfile = async (userData: Partial<UserProfile>) => {
+    if (!user) throw new Error("No user logged in");
+    
+    try {
+      // Merge the existing user data with the updates
+      const updatedUser = { ...user, ...userData };
+      setUser(updatedUser);
+      localStorage.setItem('p2w_user', JSON.stringify(updatedUser));
+      return;
+    } catch (error) {
+      console.error("Update profile error:", error);
+      throw error;
     }
-  }, [user]);
-
-  const contextValue = {
-    user,
-    signIn,
-    signUp,
-    signOut,
-    loading,
-    updateProfile,
-    subscription: user?.subscription || null
   };
 
   return (
-    <AuthContext.Provider value={contextValue}>
+    <AuthContext.Provider value={{ user, login, register, logout, loading, updateUserProfile }}>
       {children}
     </AuthContext.Provider>
   );
 };
-
-export default AuthProvider;

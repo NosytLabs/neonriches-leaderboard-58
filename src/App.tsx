@@ -1,48 +1,69 @@
 
-import React, { Suspense, lazy } from 'react';
-import { Routes, Route } from 'react-router-dom';
-import './App.css';
+import React, { useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { AuthProvider } from '@/contexts/AuthContext';
+import { ThemeProvider } from './contexts/ThemeContext';
 import { Toaster } from '@/components/ui/toaster';
+import useNotificationSounds from '@/hooks/use-notification-sounds';
 
-// Loading component for Suspense fallback
-const LoadingFallback = () => (
-  <div className="h-screen w-screen flex items-center justify-center bg-background">
-    <div className="flex flex-col items-center gap-4">
-      <div className="h-16 w-16 animate-spin rounded-full border-4 border-royal-gold border-t-transparent"></div>
-      <p className="text-white/70 text-lg">Loading royal experience...</p>
-    </div>
-  </div>
-);
+// Pages
+import Index from '@/pages/Index';
+import Dashboard from '@/pages/Dashboard';
+import ProfilePage from '@/pages/ProfilePage';
+import EventsPage from '@/pages/EventsPage';
+import LeaderboardPage from '@/pages/LeaderboardPage';
+import RoyalPrestige from '@/pages/RoyalPrestige';
 
-// Lazy load pages
-const Index = lazy(() => import('./pages/Index'));
-const Dashboard = lazy(() => import('./pages/Dashboard'));
-const Profile = lazy(() => import('./pages/Profile'));
-const Auth = lazy(() => import('./pages/Auth'));
-const Events = lazy(() => import('./pages/Events'));
-const Updates = lazy(() => import('./pages/Updates'));
-const Leaderboard = lazy(() => import('./pages/Leaderboard'));
-const NotFound = lazy(() => import('./pages/NotFound'));
-const TermsOfService = lazy(() => import('./pages/TermsOfService'));
+// Import CSS files
+import './index.css';
+import './styles/tailwind-utilities.css';
+import './styles/medieval-animations.css';
+import './styles/cosmetics.css';
+
+// Import fonts
+const importFonts = () => {
+  const fontLinks = [
+    'https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap',
+    'https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap',
+    'https://fonts.googleapis.com/css2?family=Spectral:wght@400;500;600;700&display=swap',
+    'https://fonts.googleapis.com/css2?family=Fredericka+the+Great&display=swap',
+  ];
+  
+  fontLinks.forEach(href => {
+    const link = document.createElement('link');
+    link.href = href;
+    link.rel = 'stylesheet';
+    document.head.appendChild(link);
+  });
+};
 
 function App() {
+  const { preloadSounds } = useNotificationSounds();
+  
+  useEffect(() => {
+    // Preload sound assets when the app starts
+    preloadSounds();
+    
+    // Import additional fonts
+    importFonts();
+  }, [preloadSounds]);
+  
   return (
-    <>
-      <Suspense fallback={<LoadingFallback />}>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/profile/:username?" element={<Profile />} />
-          <Route path="/auth" element={<Auth />} />
-          <Route path="/events" element={<Events />} />
-          <Route path="/updates" element={<Updates />} />
-          <Route path="/leaderboard" element={<Leaderboard />} />
-          <Route path="/terms" element={<TermsOfService />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </Suspense>
-      <Toaster />
-    </>
+    <ThemeProvider>
+      <AuthProvider>
+        <Router>
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/events" element={<EventsPage />} />
+            <Route path="/leaderboard" element={<LeaderboardPage />} />
+            <Route path="/royal-prestige" element={<RoyalPrestige />} />
+          </Routes>
+          <Toaster />
+        </Router>
+      </AuthProvider>
+    </ThemeProvider>
   );
 }
 
