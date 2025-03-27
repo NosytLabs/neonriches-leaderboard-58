@@ -1,188 +1,132 @@
 
-import React, { useState } from 'react';
-import { Card, CardContent } from '@/components/ui/card';
+import React from 'react';
+import { UserRankData } from '@/services/spendingService';
+import { Crown, Coins } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ShameAction } from '../hooks/useShameEffect';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import OptimizedImage from '@/components/ui/optimized-image';
-import { getTeamBgColor, getTeamBorderColor, getTeamTextColor } from '../utils/teamUtils';
-import { 
-  getShameActionPrice, 
-  getShameActionTitle, 
-  getShameActionDescription, 
-  getShameActionIcon,
-  getShameActionColor
-} from '../utils/shameUtils';
-import ShameModal from './ShameModal';
+import { getShameActionIcon, getShameActionColor } from '../utils/shameUtils';
 
 interface ShameUserCardProps {
-  user: {
-    id: number;
-    username: string;
-    amountSpent: number;
-    rank: number;
-    team: string;
-    profileImage: string;
-  };
-  isShamed: ShameAction | null;
-  isOnCooldown: boolean;
+  userData: UserRankData;
   shameCount: number;
-  onShame: (userId: number, username: string, shameType: ShameAction, amount: number) => boolean;
+  isCurrentUser: boolean;
+  selectedShame: ShameAction | null;
+  onShameSelect: (action: ShameAction) => void;
+  onShameConfirm: () => void;
 }
 
-const ShameUserCard: React.FC<ShameUserCardProps> = ({ 
-  user, 
-  isShamed, 
-  isOnCooldown, 
+const ShameUserCard: React.FC<ShameUserCardProps> = ({
+  userData,
   shameCount,
-  onShame 
+  isCurrentUser,
+  selectedShame,
+  onShameSelect,
+  onShameConfirm
 }) => {
-  const [showShameModal, setShowShameModal] = useState(false);
-  const [selectedShameAction, setSelectedShameAction] = useState<ShameAction>('tomatoes');
-  
-  const handleOpenShameModal = (action: ShameAction) => {
-    setSelectedShameAction(action);
-    setShowShameModal(true);
-  };
-  
-  const handleConfirmShame = () => {
-    const success = onShame(
-      user.id, 
-      user.username, 
-      selectedShameAction, 
-      getShameActionPrice(selectedShameAction)
-    );
+  const getTeamColor = () => {
+    if (!userData.team) return 'bg-gray-500';
     
-    if (success) {
-      setShowShameModal(false);
+    switch(userData.team) {
+      case 'red': return 'bg-team-red';
+      case 'green': return 'bg-team-green';
+      case 'blue': return 'bg-team-blue';
+      default: return 'bg-gray-500';
     }
   };
   
-  // Get visual effects for current shame status
-  const getShameEffects = () => {
-    if (!isShamed) return { border: '', bg: '', text: '' }; // Provide default empty values
-    return getShameActionColor(isShamed);
-  };
-  
-  const shameEffects = getShameEffects();
-
   return (
-    <TooltipProvider>
-      <Card 
-        id={`user-card-${user.id}`}
-        className={`glass-morphism border-white/10 transition-all relative overflow-hidden hover:border-${user.team === 'red' ? 'royal-crimson' : user.team === 'green' ? 'royal-gold' : 'royal-navy'}/30 ${
-          isShamed ? `${shameEffects.border}` : ''
-        }`}
-      >
-        {isShamed && (
-          <div className={`absolute -inset-0.5 ${shameEffects.bg} animate-pulse-slow -z-10 rounded-md`}></div>
-        )}
+    <div 
+      id={`user-card-${userData.userId}`}
+      className={`glass-morphism border-white/10 p-4 rounded-lg relative overflow-hidden transition-all duration-300 hover:border-white/20 ${
+        isCurrentUser ? 'bg-white/5' : ''
+      }`}
+    >
+      {/* Crown for top 3 */}
+      {userData.rank <= 3 && (
+        <div className="absolute top-2 right-2">
+          <Crown 
+            size={16} 
+            className={`
+              ${userData.rank === 1 ? 'text-royal-gold' : ''}
+              ${userData.rank === 2 ? 'text-gray-300' : ''}
+              ${userData.rank === 3 ? 'text-amber-700' : ''}
+            `}
+          />
+        </div>
+      )}
+      
+      {/* User info */}
+      <div className="flex items-center mb-3">
+        <div className="relative mr-3">
+          <div className="w-12 h-12 rounded-full glass-morphism border-white/10 flex items-center justify-center">
+            {userData.profileImage ? (
+              <img src={userData.profileImage} alt={userData.username} className="w-full h-full rounded-full object-cover" />
+            ) : (
+              <span className="text-lg font-medium">{userData.username.charAt(0).toUpperCase()}</span>
+            )}
+          </div>
+          {userData.team && (
+            <div className={`absolute -bottom-1 -right-1 w-4 h-4 rounded-full ${getTeamColor()} border-2 border-background`}></div>
+          )}
+        </div>
         
-        <CardContent className="pt-6">
-          <div className="flex justify-between items-center">
-            <div className="flex items-center">
-              <div className={`w-12 h-12 rounded-full overflow-hidden border-2 ${getTeamBorderColor(user.team)} mr-3`}>
-                <OptimizedImage 
-                  src={user.profileImage} 
-                  alt={user.username} 
-                  className="w-full h-full" 
-                  width={48}
-                  height={48}
-                />
-              </div>
-              <div>
-                <div className="flex items-center">
-                  <h3 className="font-medium">{user.username}</h3>
-                  <span className="ml-2 text-xs bg-white/10 px-2 py-0.5 rounded-full text-white/70">
-                    Rank #{user.rank}
-                  </span>
-                  {shameCount > 0 && (
-                    <span className="ml-2 text-xs bg-royal-crimson/20 px-2 py-0.5 rounded-full text-royal-crimson/90 animate-fade-in">
-                      {shameCount} {shameCount === 1 ? 'shame' : 'shames'}
-                    </span>
-                  )}
-                </div>
-                <div className={`inline-flex items-center px-2 py-0.5 mt-1 rounded-full text-xs font-medium ${getTeamBgColor(user.team)}/10 ${getTeamTextColor(user.team)} border ${getTeamBorderColor(user.team)}/30`}>
-                  {user.team === 'red' ? 'Crimson Court' : user.team === 'green' ? 'Golden Order' : 'Royal Navy'}
-                </div>
-              </div>
-            </div>
-            
-            <div className="flex gap-2">
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button 
-                    variant="outline"
-                    size="sm"
-                    className="glass-morphism border-royal-crimson/20 hover:bg-royal-crimson/20 hover:text-white text-white text-xs px-2"
-                    disabled={isOnCooldown}
-                    onClick={() => handleOpenShameModal('tomatoes')}
-                  >
-                    🍅 ${getShameActionPrice('tomatoes')}
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Throw Tomatoes</p>
-                </TooltipContent>
-              </Tooltip>
+        <div>
+          <div className="flex items-center">
+            <span className="font-medium">{userData.username}</span>
+            <span className="ml-2 text-xs bg-white/10 px-1.5 py-0.5 rounded-full text-white/70">
+              #{userData.rank}
+            </span>
+            {shameCount > 0 && (
+              <span className="ml-2 text-xs bg-red-500/20 px-1.5 py-0.5 rounded-full text-red-300">
+                {shameCount} {shameCount === 1 ? 'shame' : 'shames'}
+              </span>
+            )}
+          </div>
+          <div className="text-white/60 text-xs flex items-center">
+            <Coins size={10} className="mr-1" />
+            ${userData.totalSpent.toLocaleString()}
+          </div>
+        </div>
+      </div>
+      
+      {/* Shame Actions */}
+      {!isCurrentUser && (
+        <>
+          <div className="text-xs text-white/60 mb-1">Select shaming method:</div>
+          <div className="flex space-x-2 mb-3">
+            {(['tomatoes', 'eggs', 'stocks'] as ShameAction[]).map((action) => {
+              const colors = getShameActionColor(action);
+              const isSelected = selectedShame === action;
               
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button 
-                    variant="outline"
-                    size="sm"
-                    className="glass-morphism border-royal-gold/20 hover:bg-royal-gold/20 hover:text-white text-white text-xs px-2"
-                    disabled={isOnCooldown}
-                    onClick={() => handleOpenShameModal('eggs')}
-                  >
-                    🥚 ${getShameActionPrice('eggs')}
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Throw Rotten Eggs</p>
-                </TooltipContent>
-              </Tooltip>
-              
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button 
-                    variant="outline"
-                    size="sm"
-                    className="glass-morphism border-royal-purple/20 hover:bg-royal-purple/20 hover:text-white text-white text-xs px-2"
-                    disabled={isOnCooldown}
-                    onClick={() => handleOpenShameModal('stocks')}
-                  >
-                    🪵 ${getShameActionPrice('stocks')}
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Place in Stocks</p>
-                </TooltipContent>
-              </Tooltip>
-            </div>
+              return (
+                <Button
+                  key={action}
+                  variant="outline"
+                  size="sm"
+                  className={`flex-1 h-8 ${
+                    isSelected 
+                      ? `${colors.bg} ${colors.border} border ${colors.text}` 
+                      : 'glass-morphism border-white/10'
+                  }`}
+                  onClick={() => onShameSelect(action)}
+                >
+                  <span className="mr-1">{getShameActionIcon(action)}</span>
+                  <span className="text-xs capitalize">{action}</span>
+                </Button>
+              );
+            })}
           </div>
           
-          {isShamed && (
-            <div className="mt-3 bg-white/5 rounded-md p-2 text-white/80 text-sm flex items-center border border-white/10">
-              <div className="mr-2 text-xl">{getShameActionIcon(isShamed)}</div>
-              <div>
-                <p>Currently being shamed with {getShameActionTitle(isShamed).toLowerCase()}</p>
-                <p className="text-white/60 text-xs">Effects will fade in a few hours</p>
-              </div>
-            </div>
-          )}
-        </CardContent>
-        
-        {showShameModal && (
-          <ShameModal
-            targetUser={user}
-            shameAction={selectedShameAction}
-            onClose={() => setShowShameModal(false)}
-            onConfirm={handleConfirmShame}
-          />
-        )}
-      </Card>
-    </TooltipProvider>
+          <Button
+            className="w-full bg-gradient-to-r from-royal-purple to-royal-gold hover:opacity-90 text-white h-8"
+            disabled={!selectedShame}
+            onClick={onShameConfirm}
+          >
+            Shame This Noble
+          </Button>
+        </>
+      )}
+    </div>
   );
 };
 

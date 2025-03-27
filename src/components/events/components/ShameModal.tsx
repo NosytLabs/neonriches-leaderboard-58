@@ -1,154 +1,132 @@
 
 import React, { useState } from 'react';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import RoyalButton from '@/components/ui/royal-button';
-import { useAuth } from '@/contexts/AuthContext';
-import { useToast } from '@/hooks/use-toast';
+import { Crown, Scroll, AlertTriangle } from 'lucide-react';
+import { UserRankData } from '@/services/spendingService';
 import { ShameAction } from '../hooks/useShameEffect';
-import { Scroll, Wallet, X, Shield, Target, Crown } from 'lucide-react';
-import RoyalDivider from '@/components/ui/royal-divider';
-import { 
-  getShameActionPrice, 
-  getShameActionTitle, 
-  getShameActionDescription, 
-  getShameActionIcon,
-  getShameActionColor
-} from '../utils/shameUtils';
-import useNotificationSounds from '@/hooks/use-notification-sounds';
+import { getShameActionTitle, getShameActionDescription, getShameActionPrice, getShameActionIcon, getShameActionColor } from '../utils/shameUtils';
+import RankingDisclaimer from '@/components/shared/RankingDisclaimer';
 import PaymentModal from '@/components/PaymentModal';
 
 interface ShameModalProps {
-  targetUser: {
-    id: number;
-    username: string;
-    amountSpent: number;
-    rank: number;
-    team: string;
-    profileImage: string;
-  };
-  shameAction: ShameAction;
-  onClose: () => void;
-  onConfirm: () => void;
+  targetUser: UserRankData | null;
+  shameType: ShameAction;
+  onConfirm: (userId: string, type: ShameAction) => void;
+  onCancel: () => void;
 }
 
 const ShameModal: React.FC<ShameModalProps> = ({ 
   targetUser, 
-  shameAction, 
-  onClose, 
-  onConfirm 
+  shameType, 
+  onConfirm, 
+  onCancel 
 }) => {
-  const { playSound } = useNotificationSounds();
-  const { user } = useAuth();
-  const { toast } = useToast();
   const [isProcessing, setIsProcessing] = useState(false);
   
-  // Get shame price based on type
-  const shamePrice = getShameActionPrice(shameAction);
+  if (!targetUser) return null;
   
-  // Play shame-related sound when modal opens
-  React.useEffect(() => {
-    playSound('notification', 0.2);
-  }, [playSound]);
-
-  // Get shame emoji and icon
-  const shameEmoji = getShameActionIcon(shameAction);
+  const price = getShameActionPrice(shameType);
+  const title = getShameActionTitle(shameType);
+  const description = getShameActionDescription(shameType, targetUser.username);
+  const icon = getShameActionIcon(shameType);
+  const colors = getShameActionColor(shameType);
   
-  // Get shame icon based on type
-  const getShameIcon = () => {
-    switch (shameAction.toLowerCase()) {
-      case 'tomatoes':
-        return <Target className="h-6 w-6 text-royal-crimson" />;
-      case 'eggs':
-        return <Shield className="h-6 w-6 text-royal-gold" />;
-      case 'stocks':
-        return <Crown className="h-6 w-6 text-royal-navy" />;
-      default:
-        return <Scroll className="h-6 w-6 text-white/60" />;
-    }
+  const handlePaymentSuccess = (amount: number) => {
+    setIsProcessing(true);
+    setTimeout(() => {
+      onConfirm(targetUser.userId, shameType);
+      setIsProcessing(false);
+    }, 1000);
   };
-
-  const handleClose = () => {
-    playSound('swordClash', 0.1);
-    onClose();
-  };
-
-  const handleConfirm = () => {
-    playSound('shame', 0.3);
-    onConfirm();
-  };
-
+  
   return (
-    <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 backdrop-blur-sm">
-      <Card className="w-full max-w-md glass-morphism border-royal-gold/20 royal-shine">
-        <CardHeader className="pb-2">
-          <div className="flex items-center justify-between">
-            <CardTitle className="font-royal flex items-center">
-              <span className="mr-3 h-8 w-8 rounded-full bg-white/10 flex items-center justify-center">
-                {shameEmoji}
-              </span>
-              <span className="royal-text-shimmer">
-                {getShameActionTitle(shameAction)}: {targetUser.username}
-              </span>
-            </CardTitle>
+    <DialogContent className="glass-morphism border-white/10 sm:max-w-md">
+      <DialogHeader>
+        <div className="flex items-center">
+          <div className={`w-8 h-8 rounded-full flex items-center justify-center mr-2 ${colors.bg}`}>
+            <span className="text-lg">{icon}</span>
+          </div>
+          <DialogTitle>{title}</DialogTitle>
+        </div>
+        <DialogDescription>
+          This will cost ${price.toFixed(2)} and publicly shame {targetUser.username} for 24 hours.
+        </DialogDescription>
+      </DialogHeader>
+      
+      <div className="space-y-4 my-2">
+        <div className={`p-4 rounded-lg ${colors.bg} ${colors.border} border`}>
+          <p className={`${colors.text}`}>{description}</p>
+        </div>
+        
+        <div className="flex items-center space-x-4">
+          <div className="flex-shrink-0">
+            <div className="relative">
+              {targetUser.rank <= 3 && (
+                <div className="absolute -top-1 -right-1 z-10">
+                  <Crown size={14} className={
+                    targetUser.rank === 1 ? "text-royal-gold" : 
+                    targetUser.rank === 2 ? "text-gray-300" : 
+                    "text-amber-700"
+                  } />
+                </div>
+              )}
+              <div className="w-12 h-12 rounded-full glass-morphism border-white/10 flex items-center justify-center">
+                {targetUser.profileImage ? (
+                  <img src={targetUser.profileImage} alt={targetUser.username} className="w-full h-full rounded-full object-cover" />
+                ) : (
+                  <span className="text-lg font-medium">{targetUser.username.charAt(0).toUpperCase()}</span>
+                )}
+              </div>
+            </div>
+          </div>
+          
+          <div>
+            <div className="font-semibold">{targetUser.username}</div>
+            <div className="text-sm text-white/60 flex items-center">
+              <Scroll size={12} className="mr-1" />
+              Rank #{targetUser.rank} • ${targetUser.totalSpent.toLocaleString()}
+            </div>
+          </div>
+        </div>
+        
+        <RankingDisclaimer 
+          variant="warning" 
+          messagePrefix="Important:" 
+          className="text-xs"
+        />
+      </div>
+      
+      <DialogFooter className="flex-col sm:flex-col gap-2">
+        <PaymentModal 
+          amount={price} 
+          onSuccess={handlePaymentSuccess}
+          title={`Purchase ${title}`}
+          description={`Fund your public shaming of ${targetUser.username}`}
+          trigger={
             <Button 
-              variant="ghost" 
-              size="icon" 
-              className="h-8 w-8 rounded-full hover:bg-white/10"
-              onClick={handleClose}
+              className={`w-full ${colors.bg} ${colors.border} border hover:opacity-90 ${colors.text}`}
+              disabled={isProcessing}
             >
-              <X size={16} />
+              {isProcessing ? (
+                <span className="animate-spin mr-2">⚙️</span>
+              ) : (
+                <span className="mr-2">{icon}</span>
+              )}
+              Pay ${price.toFixed(2)} to Shame
             </Button>
-          </div>
-        </CardHeader>
+          }
+        />
         
-        <RoyalDivider variant="line" className="my-2" />
-        
-        <CardContent>
-          <div className="flex items-center mb-4">
-            <div className="w-12 h-12 rounded-full overflow-hidden mr-3 border border-royal-gold/30 gold-border-glow">
-              <img 
-                src={targetUser.profileImage || '/placeholder.svg'} 
-                alt={targetUser.username} 
-                className="w-full h-full object-cover"
-              />
-            </div>
-            <div>
-              <p className="mb-4">
-                {getShameActionDescription(shameAction, targetUser.username)}
-              </p>
-            </div>
-          </div>
-          
-          <div className="my-4 glass-morphism border-white/10 p-3 rounded">
-            <div className="flex items-center">
-              {getShameIcon()}
-              <p className="ml-3 text-sm text-white/80">
-                This is a satirical feature that has no effect on actual rankings. It's purely for entertainment.
-              </p>
-            </div>
-          </div>
-          
-          <div className="space-y-4">
-            <div className="flex justify-between">
-              <Button 
-                variant="glass" 
-                onClick={handleClose}
-              >
-                Cancel
-              </Button>
-              
-              <PaymentModal 
-                title={`${getShameActionTitle(shameAction)} ${targetUser.username}`}
-                description={getShameActionDescription(shameAction, targetUser.username)}
-                amount={shamePrice}
-                onSuccess={handleConfirm}
-              />
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
+        <Button 
+          variant="outline" 
+          className="w-full glass-morphism border-white/10 hover:bg-white/10"
+          onClick={onCancel}
+        >
+          Cancel
+        </Button>
+      </DialogFooter>
+    </DialogContent>
   );
 };
 
