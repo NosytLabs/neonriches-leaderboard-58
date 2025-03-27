@@ -1,34 +1,34 @@
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 @layer components {
-  /* Glass morphism utilities */
+  /* Glass morphism effects */
   .glass-morphism {
-    @apply bg-white/5 backdrop-blur-md border border-white/10 shadow-sm;
-  }
-  
-  .glass-morphism-highlight {
-    @apply bg-white/10 backdrop-blur-lg border border-white/20 shadow-md;
+    @apply bg-black/20 backdrop-blur-md border border-white/10;
   }
   
   .glass-morphism-dark {
-    @apply bg-black/40 backdrop-blur-xl border border-white/5 shadow-lg;
+    @apply bg-black/40 backdrop-blur-md border border-white/10;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
   }
   
-  /* Royal card components */
+  /* Royal gradient */
+  .royal-gradient {
+    @apply bg-gradient-to-r from-royal-crimson via-royal-gold to-royal-navy text-transparent bg-clip-text;
+  }
+  
+  /* Royal card with enhanced shadow */
   .royal-card-enhanced {
-    @apply backdrop-blur-xl border border-white/10 p-6 relative overflow-hidden transition-all duration-300 bg-white/5;
+    @apply glass-morphism backdrop-blur-xl border border-white/10 p-6 relative overflow-hidden transition-all duration-300;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), 0 0 10px rgba(212, 175, 55, 0.1);
   }
   
-  /* Royal button enhanced */
+  /* Royal button */
+  .royal-button {
+    @apply relative overflow-hidden z-10;
+  }
+  
+  /* Enhanced button hover effect */
   .royal-button-enhanced {
-    position: relative;
-    overflow: hidden;
-    z-index: 1;
-    transition: all 0.3s ease;
+    @apply relative overflow-hidden z-10 transition-all duration-300;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3), 0 0 5px rgba(212, 175, 55, 0.2);
   }
   
@@ -56,20 +56,9 @@
   .royal-button-enhanced:hover::before {
     left: 100%;
   }
-  
-  /* Royal pulse animation */
-  .animate-royal-pulse {
-    animation: royal-pulse 2s ease-in-out infinite;
-  }
-  
-  @keyframes royal-pulse {
-    0%, 100% {
-      transform: scale(1);
-      opacity: 1;
-    }
-    50% {
-      transform: scale(1.05);
-      opacity: 0.9;
-    }
+
+  /* Gold border glow effect */
+  .gold-border-glow {
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
   }
 }

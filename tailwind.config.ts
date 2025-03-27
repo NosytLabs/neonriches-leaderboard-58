@@ -61,17 +61,17 @@ const config = {
         },
         // Royal color scheme
         royal: {
-          crimson: "rgb(var(--royal-crimson))",
-          gold: "rgb(var(--royal-gold))",
-          navy: "rgb(var(--royal-navy))",
-          purple: "rgb(var(--royal-purple))",
-          mahogany: "rgb(var(--royal-mahogany))",
-          velvet: "rgb(var(--royal-velvet))",
+          crimson: "rgb(var(--royal-crimson) / <alpha-value>)",
+          gold: "rgb(var(--royal-gold) / <alpha-value>)",
+          navy: "rgb(var(--royal-navy) / <alpha-value>)",
+          purple: "rgb(var(--royal-purple) / <alpha-value>)",
+          mahogany: "rgb(var(--royal-mahogany) / <alpha-value>)",
+          velvet: "rgb(var(--royal-velvet) / <alpha-value>)",
         },
         team: {
-          red: "rgb(var(--team-red))",
-          green: "rgb(var(--team-green))",
-          blue: "rgb(var(--team-blue))",
+          red: "rgb(var(--team-red) / <alpha-value>)",
+          green: "rgb(var(--team-green) / <alpha-value>)",
+          blue: "rgb(var(--team-blue) / <alpha-value>)",
         },
       },
       borderRadius: {
