@@ -14,7 +14,7 @@ export const useEventStatistics = () => {
 
   // Get prize pool from event stats, format with commas
   const prizePool = useMemo(() => {
-    return new Intl.NumberFormat('en-US').format(2487);
+    return new Intl.NumberFormat('en-US').format(eventStats.prizePool);
   }, []);
 
   // Get participant count
@@ -24,7 +24,7 @@ export const useEventStatistics = () => {
 
   // Get pokes used
   const pokesUsed = useMemo(() => {
-    return 317; // This would normally come from an API or calculated value
+    return eventStats.totalPokes; // Updated to use the property from eventStats
   }, []);
 
   // Calculate top pokers (most active participants)
@@ -56,3 +56,4 @@ export const useEventStatistics = () => {
     activeEvents: [currentEvent], // Would normally filter based on date
   };
 };
+

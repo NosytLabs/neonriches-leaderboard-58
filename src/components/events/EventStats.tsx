@@ -2,7 +2,6 @@
 import React from 'react';
 import { Card } from '@/components/ui/card';
 import { Trophy, Crown, Users, Zap } from 'lucide-react';
-import { eventStats } from './data';
 import { useEventStatistics } from './hooks/useEventStatistics';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
@@ -93,3 +92,4 @@ const EventStats = () => {
 };
 
 export default EventStats;
+

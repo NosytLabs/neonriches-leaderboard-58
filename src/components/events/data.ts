@@ -1,4 +1,3 @@
-
 // Add this import if it doesn't already exist
 import { ShameAction } from './hooks/useShameEffect';
 
@@ -9,6 +8,7 @@ export const currentEvent = {
   startDate: new Date(Date.now() - 86400000 * 2), // 2 days ago
   endDate: new Date(Date.now() + 86400000 * 5), // 5 days from now
   image: "/assets/events/public-shaming.jpg",
+  progress: 60, // Added missing progress property
   rewards: [
     { name: "Shame Badge", description: "Shows how many times you've publicly shamed others", tier: "Bronze" },
     { name: "Royal Jester Hat", description: "Special profile decoration", tier: "Silver" },
@@ -34,6 +34,17 @@ export const upcomingEvents = [
     image: "/assets/events/treasure-hunt.jpg"
   }
 ];
+
+// Adding the missing eventStats export
+export const eventStats = {
+  participantsCount: 219,
+  totalPokes: 317,
+  prizePool: 2487,
+  mostPoked: {
+    username: "SilverBaron",
+    pokeCount: 18
+  }
+};
 
 // Top users for shaming targets
 export const topUsers = [
