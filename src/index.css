@@ -3,6 +3,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Import custom utilities after Tailwind directives */
+@import './styles/tailwind-utilities.css';
+
 @layer base {
   :root {
     --background: 240 30% 5%;
@@ -35,6 +38,7 @@
   }
 }
 
+/* Keep all the keyframe animations */
 @keyframes float {
   0% {
     transform: translateY(0) rotate(0deg);
@@ -274,9 +278,6 @@
   border-color: #4B0082;
 }
 
-/* Import custom utilities */
-@import './styles/tailwind-utilities.css';
-
-/* Import shame effects */
+/* Import shame effects and medieval animations after Tailwind has processed everything */
 @import './styles/shame-effects.css';
 @import './styles/medieval-animations.css';
