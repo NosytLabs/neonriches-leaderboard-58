@@ -1,7 +1,7 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { UserSubscription } from '@/types/auth';
-// Include wallet-related properties in UserProfile
+
 export interface UserProfile {
   id: string;
   username: string;
@@ -17,6 +17,8 @@ export interface UserProfile {
   acceptedTerms?: boolean;
   termsAcceptedDate?: string;
   subscription?: UserSubscription;
+  spendStreak?: number;
+  role?: 'user' | 'premium' | 'moderator' | 'admin';
 }
 
 export interface AuthContextType {
@@ -39,7 +41,6 @@ export const useAuth = () => {
   return context;
 };
 
-// Update the mock user data to include wallet-related properties
 const mockUser: UserProfile = {
   id: '1',
   username: 'NeonBoss',
@@ -52,6 +53,8 @@ const mockUser: UserProfile = {
   walletBalance: 250,
   acceptedTerms: false,
   gender: 'king',
+  spendStreak: 3,
+  role: 'premium',
   subscription: {
     id: 'sub_123',
     tier: 'pro',
@@ -74,7 +77,6 @@ const mockUser: UserProfile = {
 
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<UserProfile | null>(() => {
-    // Get user from localStorage on initial load
     const storedUser = localStorage.getItem('p2w_user');
     return storedUser ? JSON.parse(storedUser) : mockUser;
   });
@@ -82,7 +84,6 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Persist user to localStorage whenever it changes
     if (user) {
       localStorage.setItem('p2w_user', JSON.stringify(user));
     } else {
@@ -93,7 +94,6 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const signIn = async (email: string, password: string) => {
     setLoading(true);
     return new Promise<void>((resolve) => {
-      // Simulate authentication
       setTimeout(() => {
         const mockAuth = email === 'user@example.com' && password === 'password';
         if (mockAuth) {
@@ -111,7 +111,6 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const signUp = async (email: string, password: string, username: string) => {
     setLoading(true);
     return new Promise<void>((resolve) => {
-      // Simulate registration
       setTimeout(() => {
         const newUser: UserProfile = {
           id: Math.random().toString(36).substring(2, 9),
@@ -142,13 +141,10 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const updateProfile = async (data: Partial<UserProfile>) => {
     return new Promise<void>((resolve) => {
-      // Simulate network delay
       setTimeout(() => {
         if (user) {
           const updatedUser = { ...user, ...data };
           setUser(updatedUser);
-          
-          // Store updated user in localStorage for persistence
           localStorage.setItem('p2w_user', JSON.stringify(updatedUser));
         }
         resolve();
@@ -156,7 +152,6 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     });
   };
 
-  // Check if user has accepted terms
   useEffect(() => {
     if (user && !user.acceptedTerms) {
       const acceptedTerms = localStorage.getItem('acceptedTerms') === 'true';

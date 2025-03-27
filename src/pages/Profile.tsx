@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
@@ -45,7 +44,7 @@ const Profile = () => {
     return null;
   }
 
-  const handleSaveProfile = (updatedData: ProfileData) => {
+  const handleSaveProfile = async (updatedData: ProfileData) => {
     setProfileData(updatedData);
     setEditMode(false);
     
@@ -53,6 +52,8 @@ const Profile = () => {
       title: "Success",
       description: "Profile updated successfully!",
     });
+    
+    return Promise.resolve(); // Return a Promise to match the expected type
   };
 
   const toggleEditMode = () => {

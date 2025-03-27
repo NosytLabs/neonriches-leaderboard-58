@@ -1,10 +1,9 @@
-
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App.tsx';
 import './index.css';
 import { initPerformanceMonitoring } from './utils/performanceMonitoring';
-import { AuthProvider } from './contexts/AuthContext';
+import AuthProvider from './contexts/AuthContext';
 
 // Error boundary for the entire application
 class ErrorBoundary extends React.Component<{ children: React.ReactNode }, { hasError: boolean }> {

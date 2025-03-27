@@ -1,10 +1,8 @@
-
-import React from 'react';
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Check, Crown, UserRound, Laugh } from 'lucide-react';
+import React, { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { UserProfile } from '@/contexts/AuthContext';
+import { Crown, Wand2, Sparkles } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 interface GenderSelectionProps {
@@ -13,117 +11,96 @@ interface GenderSelectionProps {
 }
 
 const GenderSelection: React.FC<GenderSelectionProps> = ({ userProfile, onGenderChange }) => {
+  const [selectedGender, setSelectedGender] = useState<'king' | 'queen' | 'jester' | null>(
+    userProfile.gender || null
+  );
+  const [isChanging, setIsChanging] = useState(false);
   const { toast } = useToast();
 
-  const handleChange = async (value: string) => {
-    const gender = value as 'king' | 'queen' | 'jester' | null;
-    await onGenderChange(gender);
+  const handleGenderSelect = async (gender: 'king' | 'queen' | 'jester' | null) => {
+    if (gender === selectedGender) return;
     
-    // Add satirical toast based on selection
-    const messages = {
-      'king': "His Majesty has decreed! All shall bow before the King of Digital Spending!",
-      'queen': "The Queen reigns supreme! May your royal purchases bring glory to the realm!",
-      'jester': "The Jester mocks convention! Watch as they laugh all the way to the bank!"
-    };
-    
-    toast({
-      title: "Identity Purchased",
-      description: messages[gender as keyof typeof messages] || "Your royal title has been updated.",
-      duration: 3000,
-    });
-  };
-  
-  const getRoyalTitle = (gender: string) => {
-    switch(gender) {
-      case 'king':
-        return "Behold the King, whose digital coffers overflow with virtual treasure.";
-      case 'queen':
-        return "The Queen rules with grace, elegance, and an unlimited credit line.";
-      case 'jester':
-        return "The Jester defies royal norms, spending money with gleeful abandon and rainbow-colored flair.";
-      default:
-        return "";
+    setIsChanging(true);
+    try {
+      await onGenderChange(gender);
+      setSelectedGender(gender);
+      
+      const genderText = gender === 'king' ? 'King' : 
+                        gender === 'queen' ? 'Queen' : 
+                        gender === 'jester' ? 'Royal Jester' : 'Noble';
+      
+      toast({
+        title: "Royal Title Updated",
+        description: `You shall now be addressed as ${genderText} throughout the realm.`,
+      });
+    } catch (error) {
+      toast({
+        title: "Title Change Failed",
+        description: "The royal scribe could not update your title. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsChanging(false);
     }
   };
 
   return (
     <Card className="glass-morphism border-white/10">
       <CardHeader className="pb-3">
-        <CardTitle className="text-md font-royal royal-gradient flex items-center">
-          <Crown size={16} className="text-royal-gold mr-2" />
-          Royal Title Preference
+        <CardTitle className="text-lg font-royal royal-gradient flex items-center">
+          <Crown className="h-5 w-5 mr-2 text-royal-gold" />
+          Royal Title Selection
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <RadioGroup 
-          defaultValue={userProfile.gender || 'jester'} 
-          className="grid grid-cols-3 gap-2"
-          onValueChange={handleChange}
-        >
-          <div className="relative">
-            <RadioGroupItem 
-              value="king" 
-              id="king" 
-              className="peer sr-only" 
-            />
-            <Label 
-              htmlFor="king" 
-              className="flex flex-col items-center justify-between rounded-md border-2 border-white/10 bg-white/5 p-4 hover:bg-white/10 hover:border-white/20 peer-data-[state=checked]:border-royal-gold/50 peer-data-[state=checked]:bg-royal-gold/10 [&:has([data-state=checked])]:border-royal-gold/50 cursor-pointer"
-            >
-              <UserRound className="mb-2 h-6 w-6 text-royal-gold" />
-              <span className="text-sm font-medium">King</span>
-              <div className="absolute top-2 right-2 opacity-0 peer-data-[state=checked]:opacity-100 [&:has([data-state=checked])]:opacity-100 text-royal-gold">
-                <Check size={14} />
-              </div>
-            </Label>
-          </div>
-          
-          <div className="relative">
-            <RadioGroupItem 
-              value="queen" 
-              id="queen" 
-              className="peer sr-only" 
-            />
-            <Label 
-              htmlFor="queen" 
-              className="flex flex-col items-center justify-between rounded-md border-2 border-white/10 bg-white/5 p-4 hover:bg-white/10 hover:border-white/20 peer-data-[state=checked]:border-royal-gold/50 peer-data-[state=checked]:bg-royal-gold/10 [&:has([data-state=checked])]:border-royal-gold/50 cursor-pointer"
-            >
-              <UserRound className="mb-2 h-6 w-6 text-royal-purple" />
-              <span className="text-sm font-medium">Queen</span>
-              <div className="absolute top-2 right-2 opacity-0 peer-data-[state=checked]:opacity-100 [&:has([data-state=checked])]:opacity-100 text-royal-gold">
-                <Check size={14} />
-              </div>
-            </Label>
-          </div>
-          
-          <div className="relative">
-            <RadioGroupItem 
-              value="jester" 
-              id="jester" 
-              className="peer sr-only" 
-            />
-            <Label 
-              htmlFor="jester" 
-              className="flex flex-col items-center justify-between rounded-md border-2 border-white/10 bg-white/5 p-4 hover:bg-white/10 hover:border-white/20 peer-data-[state=checked]:border-royal-gold/50 peer-data-[state=checked]:bg-royal-gold/10 [&:has([data-state=checked])]:border-royal-gold/50 cursor-pointer"
-            >
-              <Laugh className="mb-2 h-6 w-6 text-royal-blue" />
-              <span className="text-sm font-medium">Jester</span>
-              <div className="absolute top-2 right-2 opacity-0 peer-data-[state=checked]:opacity-100 [&:has([data-state=checked])]:opacity-100 text-royal-gold">
-                <Check size={14} />
-              </div>
-            </Label>
-          </div>
-        </RadioGroup>
+        <p className="text-white/70 mb-4">
+          Choose how you wish to be addressed throughout the kingdom. Your title affects how other nobles perceive you.
+        </p>
         
-        <div className="mt-4 p-3 bg-white/5 rounded-lg border border-white/10">
-          <p className="text-sm text-white/80 italic">
-            {getRoyalTitle(userProfile.gender || 'jester')}
-          </p>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <Button
+            variant={selectedGender === 'king' ? 'royal' : 'outline'}
+            className={`h-auto py-6 flex flex-col items-center ${
+              selectedGender === 'king' ? '' : 'glass-morphism border-white/10 hover:bg-white/5'
+            }`}
+            onClick={() => handleGenderSelect('king')}
+            disabled={isChanging}
+          >
+            <Crown className="h-8 w-8 mb-2" />
+            <span className="text-lg font-semibold">King</span>
+            <span className="text-xs text-white/70 mt-1">Rule with an iron fist</span>
+          </Button>
+          
+          <Button
+            variant={selectedGender === 'queen' ? 'royal' : 'outline'}
+            className={`h-auto py-6 flex flex-col items-center ${
+              selectedGender === 'queen' ? '' : 'glass-morphism border-white/10 hover:bg-white/5'
+            }`}
+            onClick={() => handleGenderSelect('queen')}
+            disabled={isChanging}
+          >
+            <Sparkles className="h-8 w-8 mb-2" />
+            <span className="text-lg font-semibold">Queen</span>
+            <span className="text-xs text-white/70 mt-1">Lead with grace and power</span>
+          </Button>
+          
+          <Button
+            variant={selectedGender === 'jester' ? 'royal' : 'outline'}
+            className={`h-auto py-6 flex flex-col items-center ${
+              selectedGender === 'jester' ? '' : 'glass-morphism border-white/10 hover:bg-white/5'
+            }`}
+            onClick={() => handleGenderSelect('jester')}
+            disabled={isChanging}
+          >
+            <Wand2 className="h-8 w-8 mb-2" />
+            <span className="text-lg font-semibold">Jester</span>
+            <span className="text-xs text-white/70 mt-1">Mock the royal system</span>
+          </Button>
         </div>
         
-        <p className="text-xs text-white/50 mt-3 italic">
-          Choose your royal identity. Don't worry - all titles cost the same, because in P2W.FUN, equality means everyone's money is equally welcome.
-        </p>
+        <div className="mt-4 text-center text-xs text-white/50">
+          <p>Your current rank: #{userProfile.rank} • Spend streak: {userProfile.spendStreak ?? 0} weeks</p>
+        </div>
       </CardContent>
     </Card>
   );

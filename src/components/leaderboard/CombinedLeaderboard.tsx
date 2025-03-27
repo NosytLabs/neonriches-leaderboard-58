@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
@@ -22,6 +21,33 @@ import { getShameActionPrice } from '@/components/events/utils/shameUtils';
 import { ShameAction } from '@/components/events/hooks/useShameEffect';
 import useNotificationSounds from '@/hooks/use-notification-sounds';
 import ShameModal from '../events/components/ShameModal';
+
+export const mockUsers = [
+  {
+    id: 1,
+    username: "NeonBoss",
+    amountSpent: 1500,
+    rank: 1,
+    team: "red",
+    profileImage: "https://i.pravatar.cc/150?img=1"
+  },
+  {
+    id: 2,
+    username: "CryptoKing",
+    amountSpent: 1200,
+    rank: 2,
+    team: "blue",
+    profileImage: "https://i.pravatar.cc/150?img=2"
+  },
+  {
+    id: 3,
+    username: "DigitalQueen",
+    amountSpent: 950,
+    rank: 3,
+    team: "green",
+    profileImage: "https://i.pravatar.cc/150?img=3"
+  }
+];
 
 const CombinedLeaderboard: React.FC<{
   className?: string;

@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -11,6 +10,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { spendFromWallet } from '@/services/walletService';
+import { Badge } from '@/components/ui/badge';
 
 interface AdvertisementBannerProps {
   user: UserProfile;
@@ -32,7 +32,6 @@ const AdvertisementBanner: React.FC<AdvertisementBannerProps> = ({ user, onUpdat
   const { toast } = useToast();
   const [showEditor, setShowEditor] = useState(false);
   
-  // Get advertisement data from localStorage or use default
   const getAdvertisementData = (): Advertisement | null => {
     try {
       const data = localStorage.getItem(`p2w_ad_${user.id}`);
@@ -53,7 +52,7 @@ const AdvertisementBanner: React.FC<AdvertisementBannerProps> = ({ user, onUpdat
     title: '',
     description: '',
     imageUrl: '',
-    bannerColor: '#4B0082', // Default royal purple
+    bannerColor: '#4B0082',
     linkUrl: '',
     isActive: true,
     viewCount: 0,
@@ -71,7 +70,6 @@ const AdvertisementBanner: React.FC<AdvertisementBannerProps> = ({ user, onUpdat
   
   const handleSave = async () => {
     try {
-      // Validate form
       if (!formData.title.trim()) {
         throw new Error('Advertisement title is required');
       }
@@ -80,10 +78,8 @@ const AdvertisementBanner: React.FC<AdvertisementBannerProps> = ({ user, onUpdat
         throw new Error('Advertisement description is required');
       }
       
-      // Calculate cost based on user tier
-      const cost = user.tier === 'pro' ? 10 : 25; // Pro users get discounted ad placement
+      const cost = user.tier === 'pro' ? 10 : 25;
       
-      // Process payment from wallet
       const success = await spendFromWallet(
         user,
         cost,
@@ -96,7 +92,6 @@ const AdvertisementBanner: React.FC<AdvertisementBannerProps> = ({ user, onUpdat
         throw new Error('Payment failed. Check your wallet balance.');
       }
       
-      // Save advertisement to localStorage
       localStorage.setItem(`p2w_ad_${user.id}`, JSON.stringify(formData));
       
       toast({
@@ -135,7 +130,6 @@ const AdvertisementBanner: React.FC<AdvertisementBannerProps> = ({ user, onUpdat
   };
   
   const showAdPreview = () => {
-    // Increment view count for analytics
     if (adData) {
       const updatedAd = {...adData, viewCount: adData.viewCount + 1};
       localStorage.setItem(`p2w_ad_${user.id}`, JSON.stringify(updatedAd));
@@ -143,19 +137,16 @@ const AdvertisementBanner: React.FC<AdvertisementBannerProps> = ({ user, onUpdat
   };
   
   const recordAdClick = () => {
-    // Increment click count for analytics
     if (adData) {
       const updatedAd = {...adData, clickCount: adData.clickCount + 1};
       localStorage.setItem(`p2w_ad_${user.id}`, JSON.stringify(updatedAd));
       
-      // Open link in new tab if provided
       if (adData.linkUrl) {
         window.open(adData.linkUrl, '_blank');
       }
     }
   };
   
-  // Show ad preview if it exists
   if (hasActiveAd && adData?.isActive) {
     showAdPreview();
     
@@ -211,7 +202,6 @@ const AdvertisementBanner: React.FC<AdvertisementBannerProps> = ({ user, onUpdat
     );
   }
   
-  // Show create button if no active ad
   return (
     <>
       <Card className="glass-morphism border-white/10">

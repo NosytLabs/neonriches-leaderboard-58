@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import RoyalTreasury from '@/components/dashboard/RoyalTreasury';
 import SpendingChart from '@/components/dashboard/SpendingChart';
@@ -21,6 +20,7 @@ import { Coins, Trophy, InfoIcon } from 'lucide-react';
 import { addFundsToWallet } from '@/services/walletService';
 import { applyUserSpending } from '@/services/spendingService';
 import { useNavigate } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
 
 interface DashboardMainProps {
   user: UserProfile;
@@ -33,7 +33,6 @@ const DashboardMain: React.FC<DashboardMainProps> = ({ user, updateProfile }) =>
   const { toast } = useToast();
   const navigate = useNavigate();
   
-  // Check if user has accepted terms
   useEffect(() => {
     const hasAcceptedTerms = user.acceptedTerms || localStorage.getItem('acceptedTerms') === 'true';
     if (!hasAcceptedTerms) {
@@ -59,10 +58,8 @@ const DashboardMain: React.FC<DashboardMainProps> = ({ user, updateProfile }) =>
 
   const handlePaymentSuccess = async (amount: number) => {
     try {
-      // Update the user's amount spent
       const newAmountSpent = user.amountSpent + amount;
-      // Strictly calculate rank based on spending with 1:1 ratio
-      const newRank = Math.max(1, user.rank - Math.floor(amount / 100)); // Simple mock calculation
+      const newRank = Math.max(1, user.rank - Math.floor(amount / 100));
       
       await updateProfile({
         amountSpent: newAmountSpent,
@@ -70,10 +67,8 @@ const DashboardMain: React.FC<DashboardMainProps> = ({ user, updateProfile }) =>
         lastSpendDate: new Date()
       });
       
-      // Add to spending service for leaderboard tracking
       await applyUserSpending(user, amount);
       
-      // Determine what fancy title to give based on amount
       let toastTitle = "Royal Treasury Expanded!";
       let description = `Your tribute of $${amount} has been graciously accepted by the crown.`;
       
@@ -111,7 +106,6 @@ const DashboardMain: React.FC<DashboardMainProps> = ({ user, updateProfile }) =>
       const success = await addFundsToWallet(user, amount);
       
       if (success) {
-        // Update user profile with new balance
         const newBalance = (user.walletBalance || 0) + amount;
         await updateProfile({ walletBalance: newBalance });
         return true;
@@ -160,7 +154,6 @@ const DashboardMain: React.FC<DashboardMainProps> = ({ user, updateProfile }) =>
   };
 
   const handleAdvertisementUpdate = () => {
-    // Refresh dashboard components if needed
   };
 
   return (
@@ -255,7 +248,6 @@ const DashboardMain: React.FC<DashboardMainProps> = ({ user, updateProfile }) =>
         <BriberyBanner onPaymentSuccess={handlePaymentSuccess} />
       </div>
       
-      {/* Royal Motivation */}
       <div className="mt-8 glass-morphism border border-royal-gold/20 rounded-xl p-6 text-center animate-fade-in" style={{ animationDelay: "500ms" }}>
         <div className="flex flex-col items-center space-y-3">
           <div className="relative">
