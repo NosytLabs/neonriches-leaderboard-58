@@ -12,6 +12,7 @@ export interface Event {
     badge?: string;
     currency?: number;
   };
+  progress?: number; // Adding this to fix potential reference
 }
 
 // Current event data
@@ -27,7 +28,8 @@ export const currentEvent: Event = {
     title: 'Royal Poker',
     badge: 'Poker Extraordinaire',
     currency: 0
-  }
+  },
+  progress: 0.6 // Adding sample progress
 };
 
 // Upcoming events data
@@ -74,10 +76,10 @@ export const eventStats = {
   }
 };
 
-// Mock poke targets
-export const pokeTargets = [
+// Mock poke targets - renamed from pokeTargets to topUsers
+export const topUsers = [
   {
-    id: '1',
+    id: 1,
     username: 'WealthWizard',
     rank: 2,
     amountSpent: 1200,
@@ -86,7 +88,7 @@ export const pokeTargets = [
     pokeCount: 3
   },
   {
-    id: '2',
+    id: 2,
     username: 'CashKing',
     rank: 3,
     amountSpent: 980,
@@ -95,7 +97,7 @@ export const pokeTargets = [
     pokeCount: 1
   },
   {
-    id: '3',
+    id: 3,
     username: 'MoneySage',
     rank: 4,
     amountSpent: 750,
@@ -104,7 +106,7 @@ export const pokeTargets = [
     pokeCount: 0
   },
   {
-    id: '4',
+    id: 4,
     username: 'RoyalSpender',
     rank: 5,
     amountSpent: 690,
@@ -113,7 +115,7 @@ export const pokeTargets = [
     pokeCount: 5
   },
   {
-    id: '5',
+    id: 5,
     username: 'GoldenPocket',
     rank: 6,
     amountSpent: 580,
@@ -122,7 +124,7 @@ export const pokeTargets = [
     pokeCount: 2
   },
   {
-    id: '6',
+    id: 6,
     username: 'DiamondWallet',
     rank: 7,
     amountSpent: 470,
@@ -131,3 +133,17 @@ export const pokeTargets = [
     pokeCount: 1
   }
 ];
+
+// Function to get team color
+export const getTeamColor = (team: string): string => {
+  switch (team.toLowerCase()) {
+    case 'red':
+      return 'team-red';
+    case 'green':
+      return 'team-green';
+    case 'blue':
+      return 'team-blue';
+    default:
+      return 'royal-gold';
+  }
+};
