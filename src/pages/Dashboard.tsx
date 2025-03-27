@@ -38,7 +38,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     if (showRoyalWelcome && user) {
-      const genderTitle = user.gender === 'king' ? 'King' : user.gender === 'queen' ? 'Queen' : 'Noble Monarch';
+      const genderTitle = user.gender === 'king' ? 'King' : user.gender === 'queen' ? 'Queen' : 'Noble Jester';
       
       toast({
         title: `Royal Presence Detected`,
@@ -80,13 +80,13 @@ const Dashboard = () => {
     });
   };
 
-  const handleGenderChange = async (gender: 'king' | 'queen' | 'monarch' | null) => {
+  const handleGenderChange = async (gender: 'king' | 'queen' | 'jester' | null) => {
     try {
       await updateProfile({ gender });
       
       const genderText = gender === 'king' ? 'King' : 
                         gender === 'queen' ? 'Queen' : 
-                        gender === 'monarch' ? 'Monarch' : 'Noble';
+                        gender === 'jester' ? 'Jester' : 'Noble';
       
       toast({
         title: "Royal Title Updated",
