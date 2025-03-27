@@ -11,36 +11,42 @@ import RoyalFAQ from '@/components/RoyalFAQ';
 import Footer from '@/components/Footer';
 import { Sparkles } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
+import ThroneBackground from '@/components/ui/throne-background';
 
 const Index = () => {
   const [showWelcomeToast, setShowWelcomeToast] = useState(true);
   const coinEffectsRef = useRef<HTMLDivElement>(null);
+  const sectionsRef = useRef<HTMLElement[]>([]);
   
   // Add smooth entrance animation for page elements
   useEffect(() => {
     try {
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              entry.target.classList.add('animate-fade-in');
-              observer.unobserve(entry.target);
-            }
-          });
-        },
-        { threshold: 0.1 }
-      );
-
       const sections = document.querySelectorAll('section');
-      if (sections.length > 0) {
-        sections.forEach((section) => {
-          observer.observe(section);
-        });
-      }
+      
+      if (typeof IntersectionObserver !== 'undefined' && sections.length > 0) {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting && entry.target instanceof HTMLElement) {
+                entry.target.classList.add('animate-fade-in');
+                observer.unobserve(entry.target);
+              }
+            });
+          },
+          { threshold: 0.1 }
+        );
 
-      return () => {
-        observer.disconnect();
-      };
+        sections.forEach((section) => {
+          if (section instanceof HTMLElement) {
+            sectionsRef.current.push(section);
+            observer.observe(section);
+          }
+        });
+
+        return () => {
+          observer.disconnect();
+        };
+      }
     } catch (error) {
       console.error('Error setting up IntersectionObserver:', error);
     }
@@ -98,9 +104,10 @@ const Index = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground overflow-x-hidden">
+      <ThroneBackground variant="default" density="medium" animate={true} />
       <Header />
       
-      <main>
+      <main className="mt-20 pt-4">
         <Hero />
         <Leaderboard />
         <TeamSection />

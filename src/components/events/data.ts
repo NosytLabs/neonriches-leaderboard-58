@@ -1,47 +1,133 @@
 
-// Mock events data
-import { getTeamColor as getTeamColorUtil } from '@/components/leaderboard/TeamUtils';
+export interface Event {
+  id: string;
+  name: string;
+  description: string;
+  startDate: Date;
+  endDate: Date;
+  type: 'poke' | 'boost' | 'team' | 'special';
+  image: string;
+  rewards: {
+    title?: string;
+    badge?: string;
+    currency?: number;
+  };
+}
 
-export const currentEvent = {
-  id: 1,
-  name: 'Poke Party',
-  description: 'Pay $0.50 to visually drop another user down one rank for 24 hours. This is purely cosmetic and doesn\'t affect actual rankings - your $1 = 1 rank is always preserved.',
+// Current event data
+export const currentEvent: Event = {
+  id: 'poke-party-v1',
+  name: 'Royal Poke Party',
+  description: 'Pay to temporarily drop someone down one rank for 24 hours. Purely a cosmetic change that does not affect their actual contribution rank. Participation fees go into next week\'s prize pool.',
   startDate: new Date(new Date().getTime() - 3 * 24 * 60 * 60 * 1000), // 3 days ago
-  endDate: new Date(new Date().getTime() + 4 * 24 * 60 * 60 * 1000),   // 4 days from now
-  progress: 65,
-  image: 'https://picsum.photos/id/430/800/400',
-  participantCount: 243
+  endDate: new Date(new Date().getTime() + 4 * 24 * 60 * 60 * 1000), // 4 days from now
+  type: 'poke',
+  image: 'https://images.unsplash.com/photo-1601901379446-8cebc3e1e8ea?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+  rewards: {
+    title: 'Royal Poker',
+    badge: 'Poker Extraordinaire',
+    currency: 0
+  }
 };
 
-export const upcomingEvents = [
+// Upcoming events data
+export const upcomingEvents: Event[] = [
   {
-    id: 2,
-    name: 'Exclusive Titles',
-    description: 'Participate to unlock rare cosmetic titles for your profile. Earn titles like "Royal Jester" or "Court Wizard" to display on your profile. Remember: these are cosmetic only and don\'t affect your rank.',
-    startDate: new Date(new Date().getTime() + 5 * 24 * 60 * 60 * 1000),   // 5 days from now
-    endDate: new Date(new Date().getTime() + 6 * 24 * 60 * 60 * 1000),     // 6 days from now
-    image: 'https://picsum.photos/id/431/800/400',
-    participantCount: 0
+    id: 'golden-chest-v1',
+    name: 'Golden Chest Boost',
+    description: 'Every dollar spent during this event has a 10% chance to be doubled in rank value. No change to your actual contribution amount, but your rank might increase a bit more than expected!',
+    startDate: new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000), // 7 days from now
+    endDate: new Date(new Date().getTime() + 14 * 24 * 60 * 60 * 1000), // 14 days from now
+    type: 'boost',
+    image: 'https://images.unsplash.com/photo-1611203565424-a66e8fc5db9d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+    rewards: {
+      title: 'Chest Hunter',
+      badge: 'Golden Discoverer'
+    }
   },
   {
-    id: 3,
-    name: 'Team Badge Showcase',
-    description: 'The team with the most participants this week gets a special cosmetic badge. Show your team pride with unique profile flair. All badges are purely cosmetic and don\'t alter the $1 = 1 rank system.',
-    startDate: new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000),   // 7 days from now
-    endDate: new Date(new Date().getTime() + 14 * 24 * 60 * 60 * 1000),    // 14 days from now
-    image: 'https://picsum.photos/id/452/800/400',
-    participantCount: 0
+    id: 'team-war-v1',
+    name: 'RGB Team War',
+    description: 'Teams compete to contribute the most during the event. The winning team's members all receive a special profile border for one week. No change to the 1:1 rank ratio.',
+    startDate: new Date(new Date().getTime() + 21 * 24 * 60 * 60 * 1000), // 21 days from now
+    endDate: new Date(new Date().getTime() + 28 * 24 * 60 * 60 * 1000), // 28 days from now
+    type: 'team',
+    image: 'https://images.unsplash.com/photo-1506634064465-7dab4de896ed?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+    rewards: {
+      title: 'War Champion',
+      badge: 'Team Warrior'
+    }
   }
 ];
 
-// Mock top users for the "Poke" target list
-export const topUsers = [
-  { id: 1, username: 'NeonBoss', amountSpent: 1500, rank: 1, team: 'red', profileImage: 'https://i.pravatar.cc/150?img=1' },
-  { id: 2, username: 'DigitalWhale', amountSpent: 1200, rank: 2, team: 'blue', profileImage: 'https://i.pravatar.cc/150?img=2' },
-  { id: 3, username: 'CryptoKing', amountSpent: 950, rank: 3, team: 'green', profileImage: 'https://i.pravatar.cc/150?img=3' },
-  { id: 4, username: 'BlockchainQueen', amountSpent: 800, rank: 4, team: 'red', profileImage: 'https://i.pravatar.cc/150?img=4' },
-  { id: 5, username: 'MetaverseRuler', amountSpent: 750, rank: 5, team: 'blue', profileImage: 'https://i.pravatar.cc/150?img=5' },
-];
+// Event stats
+export const eventStats = {
+  participantsCount: 78,
+  actionsPerformed: 243,
+  topSpender: {
+    username: 'GoldenKnight',
+    amount: 325,
+  },
+  mostPoked: {
+    username: 'SilverBaron',
+    pokeCount: 17,
+  }
+};
 
-// Use the utility from TeamUtils for consistency across the app
-export const getTeamColor = getTeamColorUtil;
+// Mock poke targets
+export const pokeTargets = [
+  {
+    id: '1',
+    username: 'WealthWizard',
+    rank: 2,
+    amountSpent: 1200,
+    team: 'red',
+    profileImage: 'https://i.pravatar.cc/150?img=1',
+    pokeCount: 3
+  },
+  {
+    id: '2',
+    username: 'CashKing',
+    rank: 3,
+    amountSpent: 980,
+    team: 'green',
+    profileImage: 'https://i.pravatar.cc/150?img=2',
+    pokeCount: 1
+  },
+  {
+    id: '3',
+    username: 'MoneySage',
+    rank: 4,
+    amountSpent: 750,
+    team: 'green',
+    profileImage: 'https://i.pravatar.cc/150?img=3',
+    pokeCount: 0
+  },
+  {
+    id: '4',
+    username: 'RoyalSpender',
+    rank: 5,
+    amountSpent: 690,
+    team: 'blue',
+    profileImage: 'https://i.pravatar.cc/150?img=4',
+    pokeCount: 5
+  },
+  {
+    id: '5',
+    username: 'GoldenPocket',
+    rank: 6,
+    amountSpent: 580,
+    team: 'red',
+    profileImage: 'https://i.pravatar.cc/150?img=5',
+    pokeCount: 2
+  },
+  {
+    id: '6',
+    username: 'DiamondWallet',
+    rank: 7,
+    amountSpent: 470,
+    team: 'blue',
+    profileImage: 'https://i.pravatar.cc/150?img=6',
+    pokeCount: 1
+  }
+];

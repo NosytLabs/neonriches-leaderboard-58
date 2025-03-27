@@ -1,37 +1,47 @@
 
-/**
- * Utility functions for handling time and date calculations
- */
+import { format, formatDistanceToNow, differenceInDays } from 'date-fns';
 
 /**
- * Calculate time left from now to a target date
- * @param targetDate The target date to calculate time remaining to
- * @returns Object containing days, hours, minutes, seconds remaining
+ * Format a date to a readable string
  */
-export const getTimeLeft = (targetDate: Date) => {
-  const difference = targetDate.getTime() - new Date().getTime();
-  
-  if (difference <= 0) {
-    return { days: 0, hours: 0, minutes: 0, seconds: 0 };
-  }
-  
-  return {
-    days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-    hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-    minutes: Math.floor((difference / 1000 / 60) % 60),
-    seconds: Math.floor((difference / 1000) % 60)
-  };
+export const formatDate = (date: Date | string): string => {
+  const dateObj = date instanceof Date ? date : new Date(date);
+  return format(dateObj, 'MMM d, yyyy');
 };
 
 /**
- * Format a date to a human-readable string
- * @param date The date to format
- * @returns Formatted date string
+ * Format a date as a relative time (e.g., "2 days ago")
  */
-export const formatDate = (date: Date) => {
-  return date.toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric'
-  });
+export const formatRelativeTime = (date: Date | string): string => {
+  const dateObj = date instanceof Date ? date : new Date(date);
+  return formatDistanceToNow(dateObj, { addSuffix: true });
+};
+
+/**
+ * Get days difference between two dates
+ */
+export const getDaysDifference = (dateA: Date | string, dateB: Date | string = new Date()): number => {
+  const dateObjA = dateA instanceof Date ? dateA : new Date(dateA);
+  const dateObjB = dateB instanceof Date ? dateB : new Date(dateB);
+  return Math.abs(differenceInDays(dateObjA, dateObjB));
+};
+
+/**
+ * Format currency amount
+ */
+export const formatCurrency = (amount: number): string => {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(amount);
+};
+
+/**
+ * Format timestamp for events
+ */
+export const formatEventTime = (date: Date | string): string => {
+  const dateObj = date instanceof Date ? date : new Date(date);
+  return format(dateObj, 'MMM d, yyyy h:mm a');
 };

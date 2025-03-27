@@ -1,28 +1,42 @@
 
 import React from 'react';
+import { Navigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
-import { useNavigate } from 'react-router-dom';
 import DashboardLayout from '@/components/dashboard/DashboardLayout';
 import DashboardMain from '@/components/dashboard/DashboardMain';
-import { useDashboardWelcome } from '@/components/dashboard/DashboardWelcome';
+import DashboardWelcome from '@/components/dashboard/DashboardWelcome';
+import ThroneBackground from '@/components/ui/throne-background';
 
 const Dashboard = () => {
-  const { user, updateProfile } = useAuth();
-  const navigate = useNavigate();
-  
-  // Use our custom welcome hook
-  useDashboardWelcome(user);
+  const { user, loading, updateProfile } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="h-screen w-screen flex items-center justify-center bg-background">
+        <div className="flex flex-col items-center gap-4">
+          <div className="h-16 w-16 animate-spin rounded-full border-4 border-royal-gold border-t-transparent"></div>
+          <p className="text-white/70 text-lg">Loading royal experience...</p>
+        </div>
+      </div>
+    );
+  }
 
   if (!user) {
-    // Redirect to login if not authenticated
-    navigate('/auth');
-    return null;
+    return <Navigate to="/auth" replace />;
   }
 
   return (
-    <DashboardLayout>
-      <DashboardMain user={user} updateProfile={updateProfile} />
-    </DashboardLayout>
+    <div className="min-h-screen bg-background text-foreground">
+      <ThroneBackground variant={user.team === 'red' ? 'purple' : user.team === 'green' ? 'gold' : 'blue'} density="medium" />
+      
+      <DashboardLayout user={user}>
+        <div className="mb-8">
+          <DashboardWelcome user={user} />
+        </div>
+        
+        <DashboardMain user={user} updateProfile={updateProfile} />
+      </DashboardLayout>
+    </div>
   );
 };
 
