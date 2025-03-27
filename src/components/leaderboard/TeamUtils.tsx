@@ -1,6 +1,6 @@
 
-import { Crown, Award, Shield } from 'lucide-react';
 import React from 'react';
+import { Crown, Award, Shield } from 'lucide-react';
 
 export const getTeamColor = (team: string) => {
   switch (team) {

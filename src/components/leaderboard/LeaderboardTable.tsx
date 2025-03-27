@@ -1,6 +1,6 @@
-
 import React from 'react';
 import { Crown } from 'lucide-react';
+import { getTeamColor, getTeamIcon, getTeamName } from './TeamUtils';
 
 interface LeaderboardUser {
   id: number;
@@ -15,33 +15,6 @@ interface LeaderboardUser {
 interface LeaderboardTableProps {
   leaderboardData: LeaderboardUser[];
 }
-
-const getTeamColor = (team: string) => {
-  switch (team) {
-    case 'red': return 'royal-purple';
-    case 'green': return 'royal-gold';
-    case 'blue': return 'royal-blue';
-    default: return 'white';
-  }
-};
-
-const getTeamIcon = (team: string) => {
-  switch (team) {
-    case 'red': return <Crown size={14} className="mr-1.5" />;
-    case 'green': return <Crown size={14} className="mr-1.5" />;
-    case 'blue': return <Crown size={14} className="mr-1.5" />;
-    default: return null;
-  }
-};
-
-const getTeamName = (team: string) => {
-  switch (team) {
-    case 'red': return 'Purple Dynasty';
-    case 'green': return 'Gold Dominion';
-    case 'blue': return 'Azure Order';
-    default: return '';
-  }
-};
 
 const LeaderboardTable = ({ leaderboardData }: LeaderboardTableProps) => {
   return (
