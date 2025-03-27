@@ -83,7 +83,7 @@ const Profile = () => {
                   return Promise.resolve();
                 }}
                 onUpdateProfile={() => {
-                  updateProfile();
+                  updateProfile({}); // Fix: Pass an empty object to satisfy the parameter requirement
                   return Promise.resolve();
                 }}
               />
