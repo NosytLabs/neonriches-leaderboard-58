@@ -174,8 +174,7 @@
   }
 }
 
-/* ... keep existing code (royal-gradient, glass-morphism, color definitions) */
-
+/* Animation classes */
 .animate-parchment-unfurl {
   animation: parchment-unfurl 0.8s ease-out forwards;
 }
@@ -196,8 +195,7 @@
   animation: gold-dust 2s ease-out forwards;
 }
 
-/* ... keep existing code (royal-ink-trail, gold-focus, etc.) */
-
+/* Text effects */
 .royal-text-shimmer {
   background: linear-gradient(
     90deg, 
@@ -233,6 +231,7 @@
   animation: gold-dust 2s ease-out forwards;
 }
 
+/* Background styles */
 .throne-bg {
   background-color: #0D0D20;
   background-image: 
@@ -241,7 +240,6 @@
     radial-gradient(circle at 50% 80%, rgba(0, 0, 128, 0.08) 0%, transparent 50%);
 }
 
-/* Enhanced throne background with more dramatic gradients */
 .throne-bg-enhanced {
   background-color: #0A0A18;
   background-image: 
@@ -251,7 +249,7 @@
     radial-gradient(circle at 20% 60%, rgba(75, 0, 130, 0.08) 0%, transparent 50%);
 }
 
-/* Deep mahogany accent color as requested */
+/* Color classes */
 .text-royal-mahogany {
   color: #C04000;
 }
@@ -264,16 +262,6 @@
   border-color: #C04000;
 }
 
-/* Enhanced glass morphism with darker backgrounds for better contrast */
-.glass-morphism-dark {
-  background: rgba(15, 15, 30, 0.8);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-}
-
-/* Purple team color */
 .text-royal-purple {
   color: #4B0082;
 }
@@ -286,46 +274,9 @@
   border-color: #4B0082;
 }
 
-/* ... keep existing code (animation classes, will-change properties, etc.) */
+/* Import custom utilities */
+@import './styles/tailwind-utilities.css';
 
-/* Royal card with enhanced shadow */
-.royal-card-enhanced {
-  @apply glass-morphism backdrop-blur-xl border border-white/10 p-6 relative overflow-hidden transition-all duration-300;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), 0 0 10px rgba(212, 175, 55, 0.1);
-}
-
-/* Enhanced button hover effect */
-.royal-button-enhanced {
-  position: relative;
-  overflow: hidden;
-  z-index: 1;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3), 0 0 5px rgba(212, 175, 55, 0.2);
-}
-
-.royal-button-enhanced::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.3),
-    transparent
-  );
-  transition: 0.5s;
-  z-index: -1;
-}
-
-.royal-button-enhanced:hover {
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), 0 0 10px rgba(212, 175, 55, 0.4);
-}
-
-.royal-button-enhanced:hover::before {
-  left: 100%;
-}
-
-/* ... keep existing code (rest of the CSS) */
+/* Import shame effects */
+@import './styles/shame-effects.css';
+@import './styles/medieval-animations.css';
