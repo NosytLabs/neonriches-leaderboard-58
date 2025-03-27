@@ -25,9 +25,17 @@ const Dashboard = () => {
     return <Navigate to="/auth" replace />;
   }
 
+  // Map team to appropriate background variant
+  const getBackgroundVariant = () => {
+    if (user.team === 'red') return 'purple';
+    if (user.team === 'green') return 'gold';
+    if (user.team === 'blue') return 'blue';
+    return 'default';
+  };
+
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <ThroneBackground variant={user.team === 'red' ? 'purple' : user.team === 'green' ? 'gold' : 'blue'} density="medium" />
+      <ThroneBackground variant={getBackgroundVariant()} density="medium" />
       
       <DashboardLayout user={user}>
         <div className="mb-8">

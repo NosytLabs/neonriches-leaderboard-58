@@ -2,7 +2,7 @@
 import React, { useEffect, useRef } from 'react';
 
 interface ThroneBackgroundProps {
-  variant?: 'default' | 'blue' | 'gold' | 'crimson' | 'royal';
+  variant?: 'default' | 'blue' | 'gold' | 'crimson' | 'royal' | 'purple';
   density?: 'low' | 'medium' | 'high';
   animate?: boolean;
   particles?: boolean;
@@ -57,6 +57,10 @@ const ThroneBackground: React.FC<ThroneBackgroundProps> = ({
         particleColors = ['#8B0000', '#D4AF37', '#000080', '#4B0082'];
         bgGradient = { start: '#0D0D20', mid: '#141428', end: '#0F0F1F' };
         break;
+      case 'purple':
+        particleColors = ['#8B5CF6', '#7E69AB', '#6E59A5', '#4B0082'];
+        bgGradient = { start: '#110D20', mid: '#1A1424', end: '#14101F' };
+        break;
       default:
         particleColors = ['#8B0000', '#D4AF37', '#000080', '#4B0082'];
         bgGradient = { start: '#0D0D20', mid: '#141428', end: '#0F0F1F' };
@@ -107,6 +111,9 @@ const ThroneBackground: React.FC<ThroneBackgroundProps> = ({
       } else if (variant === 'blue') {
         radialGradient1.addColorStop(0, 'rgba(0, 0, 128, 0.1)');
         radialGradient1.addColorStop(1, 'rgba(0, 0, 128, 0)');
+      } else if (variant === 'purple') {
+        radialGradient1.addColorStop(0, 'rgba(139, 0, 211, 0.1)');
+        radialGradient1.addColorStop(1, 'rgba(139, 0, 211, 0)');
       } else {
         radialGradient1.addColorStop(0, 'rgba(75, 0, 130, 0.1)');
         radialGradient1.addColorStop(1, 'rgba(75, 0, 130, 0)');
@@ -130,6 +137,9 @@ const ThroneBackground: React.FC<ThroneBackgroundProps> = ({
       } else if (variant === 'blue') {
         radialGradient2.addColorStop(0, 'rgba(52, 152, 219, 0.1)');
         radialGradient2.addColorStop(1, 'rgba(52, 152, 219, 0)');
+      } else if (variant === 'purple') {
+        radialGradient2.addColorStop(0, 'rgba(139, 0, 211, 0.1)');
+        radialGradient2.addColorStop(1, 'rgba(139, 0, 211, 0)');
       } else {
         radialGradient2.addColorStop(0, 'rgba(142, 68, 173, 0.1)');
         radialGradient2.addColorStop(1, 'rgba(142, 68, 173, 0)');
@@ -153,6 +163,9 @@ const ThroneBackground: React.FC<ThroneBackgroundProps> = ({
       } else if (variant === 'crimson') {
         radialGradient3.addColorStop(0, 'rgba(178, 34, 34, 0.1)');
         radialGradient3.addColorStop(1, 'rgba(178, 34, 34, 0)');
+      } else if (variant === 'purple') {
+        radialGradient3.addColorStop(0, 'rgba(75, 0, 130, 0.1)');
+        radialGradient3.addColorStop(1, 'rgba(75, 0, 130, 0)');
       } else {
         radialGradient3.addColorStop(0, 'rgba(74, 35, 90, 0.1)');
         radialGradient3.addColorStop(1, 'rgba(74, 35, 90, 0)');

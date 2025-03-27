@@ -28,6 +28,7 @@ export const gradientClasses = {
   crimson: 'bg-gradient-to-r from-royal-crimson/80 via-royal-crimson to-royal-crimson/80',
   navy: 'bg-gradient-to-r from-royal-navy/80 via-royal-navy to-royal-navy/80',
   velvet: 'bg-gradient-to-r from-royal-velvet/80 via-royal-purple to-royal-velvet/80',
+  purple: 'bg-gradient-to-r from-royal-purple/80 via-royal-purple to-royal-purple/80',
 };
 
 // Helper to get CSS gradient
@@ -43,6 +44,8 @@ export const getCSSGradient = (type: keyof typeof gradientClasses): string => {
       return 'linear-gradient(to right, rgba(0, 0, 128, 0.8), #000080, rgba(0, 0, 128, 0.8))';
     case 'velvet':
       return 'linear-gradient(to right, rgba(93, 0, 51, 0.8), #4B0082, rgba(93, 0, 51, 0.8))';
+    case 'purple':
+      return 'linear-gradient(to right, rgba(75, 0, 130, 0.8), #4B0082, rgba(75, 0, 130, 0.8))';
     default:
       return 'linear-gradient(to right, #8B0000, #D4AF37, #000080)';
   }
