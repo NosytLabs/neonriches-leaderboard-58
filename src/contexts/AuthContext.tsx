@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
@@ -71,11 +70,10 @@ export interface Subscription {
 
 interface AuthContextType {
   user: UserProfile | null;
-  subscription: Subscription | null;
-  signIn: (email: string, password: string) => Promise<void>;
-  signOut: () => void;
+  isLoading: boolean;
+  error: Error | null;
   updateUserProfile: (data: Partial<UserProfile>) => Promise<void>;
-  updateProfile: (data: Partial<UserProfile>) => Promise<void>;
+  logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -129,7 +127,8 @@ const mockSubscription: Subscription = {
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<UserProfile | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
     // Check for existing session on component mount
@@ -143,7 +142,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       } catch (error) {
         console.error("Error checking authentication:", error);
       } finally {
-        setLoading(false);
+        setIsLoading(false);
       }
     };
     
@@ -151,7 +150,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const login = async (email: string, password: string) => {
-    setLoading(true);
+    setIsLoading(true);
     
     try {
       // Simulate API request
@@ -171,25 +170,39 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         team: 'blue',
         gender: 'king',
         cosmetics: {
-          decorations: ['royal-crown'],
-          colors: ['royal-gold'],
-          fonts: [],
-          emojis: ['crown-emoji']
-        }
+          borders: ['gold-border', 'silver-border'],
+          colors: ['royal-purple'],
+          fonts: ['medieval-blackletter'],
+          emojis: ['crown-emoji', 'gem-emoji'],
+        },
+        activeCosmetics: {
+          border: 'gold-border',
+          color: 'royal-purple',
+          font: 'medieval-blackletter',
+          emoji: 'crown-emoji',
+        },
+        profileViews: 120,
+        profileClicks: 35,
+        followers: 12,
+        socialLinks: [
+          { platform: 'twitter', url: 'https://twitter.com/example', clicks: 15 },
+          { platform: 'instagram', url: 'https://instagram.com/example', clicks: 20 },
+        ],
       };
       
       setUser(mockUser);
       localStorage.setItem('p2w_user', JSON.stringify(mockUser));
     } catch (error) {
       console.error("Login error:", error);
+      setError(error);
       throw error;
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
   const register = async (email: string, password: string, username: string) => {
-    setLoading(true);
+    setIsLoading(true);
     
     try {
       // Simulate API request
@@ -208,32 +221,40 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         tier: 'crab',
         gender: 'jester',
         cosmetics: {
-          decorations: [],
-          colors: [],
-          fonts: [],
-          emojis: []
-        }
+          borders: ['gold-border', 'silver-border'],
+          colors: ['royal-purple'],
+          fonts: ['medieval-blackletter'],
+          emojis: ['crown-emoji', 'gem-emoji'],
+        },
+        activeCosmetics: {
+          border: 'gold-border',
+          color: 'royal-purple',
+          font: 'medieval-blackletter',
+          emoji: 'crown-emoji',
+        },
+        profileViews: 120,
+        profileClicks: 35,
+        followers: 12,
+        socialLinks: [
+          { platform: 'twitter', url: 'https://twitter.com/example', clicks: 15 },
+          { platform: 'instagram', url: 'https://instagram.com/example', clicks: 20 },
+        ],
       };
       
       setUser(mockUser);
       localStorage.setItem('p2w_user', JSON.stringify(mockUser));
     } catch (error) {
       console.error("Registration error:", error);
+      setError(error);
       throw error;
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
-  const logout = async () => {
-    try {
-      // Clear user from state and storage
-      setUser(null);
-      localStorage.removeItem('p2w_user');
-    } catch (error) {
-      console.error("Logout error:", error);
-      throw error;
-    }
+  const logout = () => {
+    setUser(null);
+    localStorage.removeItem('p2w_user');
   };
 
   const updateUserProfile = async (userData: Partial<UserProfile>) => {
@@ -255,18 +276,35 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const updateProfile = updateUserProfile;
   const signOut = logout;
 
+  const createDefaultUser = (id: string, username: string, email: string): UserProfile => {
+    return {
+      id,
+      username,
+      email,
+      displayName: username,
+      createdAt: new Date(),
+      amountSpent: 0,
+      walletBalance: 0,
+      rank: 999,
+      tier: 'crab',
+      team: 'none',
+      profileViews: 0,
+      profileClicks: 0,
+      followers: 0,
+      cosmetics: {},
+    };
+  };
+
+  const contextValue: AuthContextType = {
+    user,
+    isLoading,
+    error,
+    updateUserProfile,
+    logout,
+  };
+
   return (
-    <AuthContext.Provider value={{ 
-      user, 
-      login, 
-      register, 
-      logout, 
-      loading, 
-      updateUserProfile,
-      updateProfile,
-      signOut,
-      subscription: user?.subscription
-    }}>
+    <AuthContext.Provider value={contextValue}>
       {children}
     </AuthContext.Provider>
   );

@@ -33,7 +33,7 @@ const Dashboard = () => {
     setIsLoading(false);
     
     if (success) {
-      playSound('coins');
+      playSound('success');
     }
     
     return success;
