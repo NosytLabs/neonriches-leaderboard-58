@@ -65,7 +65,8 @@ const Profile = () => {
             <div className="lg:col-span-1">
               <ProfileSidebar 
                 user={user} 
-                onLogout={signOut} 
+                onLogout={signOut}
+                onUpdateProfile={updateProfile}
               />
             </div>
             

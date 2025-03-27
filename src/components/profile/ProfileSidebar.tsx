@@ -1,21 +1,28 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { UserCircle, CreditCard, Settings, LogOut } from 'lucide-react';
+import { UserCircle, CreditCard, Settings, LogOut, Users } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { UserProfile } from '@/contexts/AuthContext';
+import TeamSwitchModal from './TeamSwitchModal';
 
 interface ProfileSidebarProps {
   user: UserProfile;
   onLogout: () => Promise<void>;
+  onUpdateProfile: (profileData: Partial<UserProfile>) => Promise<void>;
 }
 
-const ProfileSidebar = ({ user, onLogout }: ProfileSidebarProps) => {
+const ProfileSidebar = ({ user, onLogout, onUpdateProfile }: ProfileSidebarProps) => {
   const navigate = useNavigate();
+  const [teamModalOpen, setTeamModalOpen] = useState(false);
 
   const handleLogout = async () => {
     await onLogout();
     navigate('/');
+  };
+
+  const handleTeamChange = async (team: 'red' | 'green' | 'blue') => {
+    await onUpdateProfile({ team });
   };
 
   return (
@@ -45,9 +52,23 @@ const ProfileSidebar = ({ user, onLogout }: ProfileSidebarProps) => {
         </div>
         <div className="flex justify-between items-center">
           <span className="text-white/70">Team</span>
-          <span className={`font-bold text-team-${user.team || 'red'}`}>
-            {user.team ? `${user.team.charAt(0).toUpperCase()}${user.team.slice(1)}` : 'None'}
-          </span>
+          <div className="flex items-center">
+            {user.team ? (
+              <span className={`font-bold text-team-${user.team || 'red'}`}>
+                {user.team.charAt(0).toUpperCase()}{user.team.slice(1)}
+              </span>
+            ) : (
+              <span className="text-white/50">None</span>
+            )}
+            <Button
+              variant="ghost"
+              size="sm"
+              className="ml-1 px-1.5 h-6 text-white/50 hover:text-white hover:bg-white/10"
+              onClick={() => setTeamModalOpen(true)}
+            >
+              Change
+            </Button>
+          </div>
         </div>
         <div className="flex justify-between items-center">
           <span className="text-white/70">Spend Streak</span>
@@ -59,6 +80,15 @@ const ProfileSidebar = ({ user, onLogout }: ProfileSidebarProps) => {
         <Button variant="outline" size="sm" className="w-full glass-morphism border-white/10 text-white hover:bg-white/10">
           <UserCircle size={14} className="mr-2" />
           Your Profile
+        </Button>
+        <Button 
+          variant="outline" 
+          size="sm" 
+          className="w-full glass-morphism border-white/10 text-white hover:bg-white/10"
+          onClick={() => setTeamModalOpen(true)}
+        >
+          <Users size={14} className="mr-2" />
+          Change Team
         </Button>
         <Button variant="outline" size="sm" className="w-full glass-morphism border-white/10 text-white hover:bg-white/10">
           <CreditCard size={14} className="mr-2" />
@@ -78,6 +108,13 @@ const ProfileSidebar = ({ user, onLogout }: ProfileSidebarProps) => {
           Sign Out
         </Button>
       </div>
+
+      <TeamSwitchModal 
+        open={teamModalOpen} 
+        onOpenChange={setTeamModalOpen} 
+        user={user} 
+        onTeamChange={handleTeamChange} 
+      />
     </div>
   );
 };
