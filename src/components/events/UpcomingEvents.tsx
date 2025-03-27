@@ -3,10 +3,11 @@ import React from 'react';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Calendar, Bell, Info } from 'lucide-react';
-import { upcomingEvents, formatDate } from './data';
+import { upcomingEvents } from './data';
 import CountdownTimer from './CountdownTimer';
 import { toast } from '@/hooks/use-toast';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { formatDate } from '@/utils/timeUtils';
 
 const UpcomingEvents = () => {
   const handleNotifyMe = (eventName: string) => {
