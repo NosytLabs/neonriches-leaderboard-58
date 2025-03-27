@@ -1,4 +1,4 @@
 
-import RoyalCourt from './leaderboard/RoyalCourt';
+import CombinedLeaderboard from './leaderboard/CombinedLeaderboard';
 
-export default RoyalCourt;
+export default CombinedLeaderboard;

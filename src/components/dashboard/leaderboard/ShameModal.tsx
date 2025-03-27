@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import PaymentModal from '@/components/PaymentModal';
 import { LeaderboardUser } from './LeaderboardUtils';
 import { Scroll } from 'lucide-react';
+import useNotificationSounds from '@/hooks/use-notification-sounds';
 
 interface ShameModalProps {
   selectedUser: LeaderboardUser;
@@ -21,6 +22,13 @@ const ShameModal: React.FC<ShameModalProps> = ({
   onClose, 
   onConfirm 
 }) => {
+  const { playSound } = useNotificationSounds();
+
+  // Play shame-related sound when modal opens
+  React.useEffect(() => {
+    playSound('notification', 0.2);
+  }, []);
+
   // Get shame emoji based on type
   const getShameEmoji = () => {
     switch (shameType.toLowerCase()) {
@@ -49,6 +57,16 @@ const ShameModal: React.FC<ShameModalProps> = ({
     }
   };
 
+  const handleClose = () => {
+    playSound('swordClash', 0.1);
+    onClose();
+  };
+
+  const handleConfirm = () => {
+    playSound('shame', 0.3);
+    onConfirm();
+  };
+
   return (
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
       <Card className="w-full max-w-md glass-morphism border-white/10">
@@ -59,9 +77,20 @@ const ShameModal: React.FC<ShameModalProps> = ({
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="mb-4">
-            {getShameDescription()}
-          </p>
+          <div className="flex items-center mb-4">
+            <div className="w-12 h-12 rounded-full overflow-hidden mr-3 border border-white/20">
+              <img 
+                src={selectedUser.profileImage || '/placeholder.svg'} 
+                alt={selectedUser.username} 
+                className="w-full h-full"
+              />
+            </div>
+            <div>
+              <p className="mb-4">
+                {getShameDescription()}
+              </p>
+            </div>
+          </div>
           
           <div className="my-4 glass-morphism border-white/10 p-3 rounded">
             <div className="flex items-center">
@@ -77,7 +106,7 @@ const ShameModal: React.FC<ShameModalProps> = ({
               <Button 
                 variant="outline" 
                 className="glass-morphism border-white/10"
-                onClick={onClose}
+                onClick={handleClose}
               >
                 Cancel
               </Button>
@@ -86,7 +115,7 @@ const ShameModal: React.FC<ShameModalProps> = ({
                 title={`${shameType} ${selectedUser.username}`}
                 description={getShameDescription()}
                 amount={shameAmount}
-                onSuccess={onConfirm}
+                onSuccess={handleConfirm}
               />
             </div>
           </div>

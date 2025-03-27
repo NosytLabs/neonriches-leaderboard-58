@@ -15,11 +15,18 @@ import { Crown, Trophy, Shield, Sparkles } from 'lucide-react';
 import useNotificationSounds from '@/hooks/use-notification-sounds';
 
 const Index = () => {
-  const { preloadAllSounds } = useNotificationSounds();
+  const { preloadAllSounds, playSound } = useNotificationSounds();
   
   // Preload all sound effects when the homepage loads
   useEffect(() => {
     preloadAllSounds();
+    
+    // Play a subtle royal announcement when the page loads
+    const timer = setTimeout(() => {
+      playSound('royalAnnouncement', 0.1);
+    }, 1000);
+    
+    return () => clearTimeout(timer);
   }, []);
   
   return (
@@ -48,7 +55,10 @@ const Index = () => {
                 Your rank is determined solely by your spending. Top spenders get exclusive perks and recognition.
               </p>
               <Link to="/leaderboard">
-                <Button className="bg-white/10 hover:bg-white/20 text-white">
+                <Button 
+                  className="bg-white/10 hover:bg-white/20 text-white"
+                  onClick={() => playSound('notification', 0.2)}
+                >
                   View Rankings
                 </Button>
               </Link>
@@ -61,7 +71,10 @@ const Index = () => {
                 Participate in weekly events like Public Shaming Festival where you can pay to shame other nobles.
               </p>
               <Link to="/events">
-                <Button className="bg-white/10 hover:bg-white/20 text-white">
+                <Button 
+                  className="bg-white/10 hover:bg-white/20 text-white"
+                  onClick={() => playSound('notification', 0.2)}
+                >
                   View Events
                 </Button>
               </Link>
@@ -74,7 +87,10 @@ const Index = () => {
                 Join one of three noble houses and compete for team glory and additional royal benefits.
               </p>
               <Link to="/dashboard">
-                <Button className="bg-white/10 hover:bg-white/20 text-white">
+                <Button 
+                  className="bg-white/10 hover:bg-white/20 text-white"
+                  onClick={() => playSound('notification', 0.2)}
+                >
                   Join a House
                 </Button>
               </Link>

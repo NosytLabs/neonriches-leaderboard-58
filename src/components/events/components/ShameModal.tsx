@@ -6,6 +6,7 @@ import PaymentModal from '@/components/PaymentModal';
 import { Scroll } from 'lucide-react';
 import { ShameAction } from '../hooks/useShameEffect';
 import { getShameActionPrice, getShameActionTitle, getShameActionDescription, getShameActionIcon } from '../utils/shameUtils';
+import useNotificationSounds from '@/hooks/use-notification-sounds';
 
 interface ShameModalProps {
   targetUser: {
@@ -27,6 +28,22 @@ const ShameModal: React.FC<ShameModalProps> = ({
   const actionPrice = getShameActionPrice(shameAction);
   const actionTitle = getShameActionTitle(shameAction);
   const actionDesc = getShameActionDescription(shameAction, targetUser.username);
+  const { playSound } = useNotificationSounds();
+
+  // Play shame-related sound when modal opens
+  React.useEffect(() => {
+    playSound('notification', 0.2);
+  }, []);
+
+  const handleClose = () => {
+    playSound('swordClash', 0.1);
+    onClose();
+  };
+
+  const handleConfirm = () => {
+    playSound('shame', 0.3);
+    onConfirm();
+  };
 
   return (
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
@@ -71,7 +88,7 @@ const ShameModal: React.FC<ShameModalProps> = ({
               <Button 
                 variant="outline" 
                 className="glass-morphism border-white/10"
-                onClick={onClose}
+                onClick={handleClose}
               >
                 Cancel
               </Button>
@@ -80,7 +97,7 @@ const ShameModal: React.FC<ShameModalProps> = ({
                 title={`${actionTitle}`}
                 description={actionDesc}
                 amount={actionPrice}
-                onSuccess={onConfirm}
+                onSuccess={handleConfirm}
               />
             </div>
           </div>

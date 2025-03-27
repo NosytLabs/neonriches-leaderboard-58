@@ -21,6 +21,8 @@ export const useNotificationSounds = () => {
   const preloadSound = (type: keyof typeof SOUND_EFFECTS) => {
     if (!soundCache[type]) {
       soundCache[type] = new Audio(SOUND_EFFECTS[type]);
+      // Start loading the audio file
+      soundCache[type].load();
     }
   };
 
@@ -34,7 +36,7 @@ export const useNotificationSounds = () => {
   // Play a sound effect
   const playSound = (type: keyof typeof SOUND_EFFECTS, volume = 0.3) => {
     if (!soundCache[type]) {
-      soundCache[type] = new Audio(SOUND_EFFECTS[type]);
+      preloadSound(type);
     }
     
     const audio = soundCache[type];
@@ -47,6 +49,7 @@ export const useNotificationSounds = () => {
       console.log('Audio playback error:', e);
       // If playback fails, try creating a new audio instance
       soundCache[type] = new Audio(SOUND_EFFECTS[type]);
+      soundCache[type].load();
     });
   };
 
