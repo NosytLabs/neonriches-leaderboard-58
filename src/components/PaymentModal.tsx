@@ -1,10 +1,12 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
-import { DollarSign } from 'lucide-react';
+import { DollarSign, Wallet } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
+import { spendFromWallet } from '@/services/walletService';
 import CreditCardForm from '@/components/payment/CreditCardForm';
 import CryptoForm from '@/components/payment/CryptoForm';
 import SatiricalPaymentSuccess from '@/components/payment/SatiricalPaymentSuccess';
@@ -25,10 +27,15 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
   trigger
 }) => {
   const { toast } = useToast();
+  const { user } = useAuth();
   const [isProcessing, setIsProcessing] = useState(false);
   const [open, setOpen] = useState(false);
   const [walletConnected, setWalletConnected] = useState(false);
   const [showSuccessScreen, setShowSuccessScreen] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState<'card' | 'crypto' | 'wallet'>('card');
+  
+  // Determine if user has enough wallet balance
+  const hasWalletBalance = user?.walletBalance && user.walletBalance >= amount;
 
   const handleCreditCardPayment = () => {
     setIsProcessing(true);
@@ -54,6 +61,52 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
       setIsProcessing(false);
       handleSuccess();
     }, 2000);
+  };
+  
+  const handleWalletPayment = async () => {
+    if (!user) {
+      toast({
+        title: "Authentication Required",
+        description: "You must be logged in to use your wallet.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    if (!hasWalletBalance) {
+      toast({
+        title: "Insufficient Funds",
+        description: "Your royal purse doesn't have enough gold for this transaction.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    setIsProcessing(true);
+    
+    try {
+      const success = await spendFromWallet(
+        user,
+        amount,
+        'spend',
+        title,
+        { description }
+      );
+      
+      if (success) {
+        setIsProcessing(false);
+        handleSuccess();
+      } else {
+        throw new Error("Transaction failed");
+      }
+    } catch (error) {
+      setIsProcessing(false);
+      toast({
+        title: "Payment Failed",
+        description: error.message || "Your payment could not be processed.",
+        variant: "destructive"
+      });
+    }
   };
 
   const handleSuccess = () => {
@@ -92,6 +145,13 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
     return descriptions[Math.floor(Math.random() * descriptions.length)];
   };
 
+  // Set wallet as default payment method if available
+  useEffect(() => {
+    if (hasWalletBalance) {
+      setPaymentMethod('wallet');
+    }
+  }, [hasWalletBalance]);
+
   return (
     <>
       <Dialog open={open} onOpenChange={setOpen}>
@@ -107,10 +167,11 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
             </DialogDescription>
           </DialogHeader>
           
-          <Tabs defaultValue="card" className="w-full">
-            <TabsList className="grid grid-cols-2 glass-morphism border-white/10 mb-4">
+          <Tabs defaultValue={paymentMethod} value={paymentMethod} onValueChange={(value) => setPaymentMethod(value as 'card' | 'crypto' | 'wallet')}>
+            <TabsList className="grid grid-cols-3 glass-morphism border-white/10 mb-4">
               <TabsTrigger value="card">Credit Card</TabsTrigger>
               <TabsTrigger value="crypto">Crypto</TabsTrigger>
+              <TabsTrigger value="wallet" disabled={!user}>Wallet</TabsTrigger>
             </TabsList>
             
             <TabsContent value="card">
@@ -128,6 +189,60 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
                 walletConnected={walletConnected}
                 onSubmit={handleCryptoPayment}
               />
+            </TabsContent>
+            
+            <TabsContent value="wallet">
+              <div className="space-y-6">
+                <div className="glass-morphism border-white/10 rounded-lg p-6 space-y-4">
+                  <div className="flex items-center justify-center">
+                    <Wallet size={48} className="text-royal-gold" />
+                  </div>
+                  
+                  <div className="text-center">
+                    <h3 className="text-lg font-medium mb-1">Royal Purse Balance</h3>
+                    <p className="text-2xl font-bold text-royal-gold">${user?.walletBalance || 0}</p>
+                    {!hasWalletBalance && (
+                      <p className="text-royal-crimson text-sm mt-2">
+                        Insufficient funds for this transaction.
+                      </p>
+                    )}
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <div className="flex justify-between text-sm">
+                      <span className="text-white/70">Transaction Amount:</span>
+                      <span className="font-medium">${amount}</span>
+                    </div>
+                    
+                    <div className="h-px bg-white/10 my-1"></div>
+                    
+                    <div className="flex justify-between text-sm">
+                      <span className="text-white/70">Remaining Balance:</span>
+                      <span className="font-medium">
+                        ${((user?.walletBalance || 0) - amount).toFixed(2)}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                
+                <Button 
+                  onClick={handleWalletPayment} 
+                  disabled={isProcessing || !hasWalletBalance}
+                  className="w-full bg-gradient-to-r from-royal-crimson via-royal-gold to-royal-navy"
+                >
+                  {isProcessing ? (
+                    <div className="flex items-center">
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                      Processing...
+                    </div>
+                  ) : (
+                    <>
+                      <Wallet size={16} className="mr-2" />
+                      Pay from Royal Purse
+                    </>
+                  )}
+                </Button>
+              </div>
             </TabsContent>
           </Tabs>
         </DialogContent>

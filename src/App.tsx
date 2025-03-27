@@ -23,6 +23,7 @@ const Events = lazy(() => import('./pages/Events'));
 const Updates = lazy(() => import('./pages/Updates'));
 const Leaderboard = lazy(() => import('./pages/Leaderboard'));
 const NotFound = lazy(() => import('./pages/NotFound'));
+const TermsOfService = lazy(() => import('./pages/TermsOfService'));
 
 function App() {
   return (
@@ -36,6 +37,7 @@ function App() {
           <Route path="/events" element={<Events />} />
           <Route path="/updates" element={<Updates />} />
           <Route path="/leaderboard" element={<Leaderboard />} />
+          <Route path="/terms" element={<TermsOfService />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>

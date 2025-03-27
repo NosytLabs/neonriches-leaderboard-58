@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import RoyalTreasury from '@/components/dashboard/RoyalTreasury';
 import SpendingChart from '@/components/dashboard/SpendingChart';
 import TeamDistribution from '@/components/dashboard/TeamDistribution';
@@ -10,12 +10,17 @@ import CashThroneUpgrade from '@/components/dashboard/CashThroneUpgrade';
 import RoyalDecrees from '@/components/dashboard/RoyalDecrees';
 import BriberyBanner from '@/components/dashboard/BriberyBanner';
 import SpendingVisualizer from '@/components/dashboard/SpendingVisualizer';
+import UserWallet from '@/components/wallet/UserWallet';
+import AdvertisementBanner from '@/components/profile/AdvertisementBanner';
 import { mockSpendingData, mockTeamDistribution, mockRankHistory } from '@/components/dashboard/data';
 import RoyalDivider from '@/components/ui/royal-divider';
 import { UserProfile } from '@/contexts/AuthContext';
 import RoyalThrone from '@/components/3d/RoyalThrone';
-import { toast } from "@/hooks/use-toast";
-import { Coins, Trophy } from 'lucide-react';
+import { useToast } from "@/hooks/use-toast";
+import { Coins, Trophy, InfoIcon } from 'lucide-react';
+import { addFundsToWallet } from '@/services/walletService';
+import { applyUserSpending } from '@/services/spendingService';
+import { useNavigate } from 'react-router-dom';
 
 interface DashboardMainProps {
   user: UserProfile;
@@ -24,6 +29,33 @@ interface DashboardMainProps {
 
 const DashboardMain: React.FC<DashboardMainProps> = ({ user, updateProfile }) => {
   const [suggestedAmount, setSuggestedAmount] = useState(100);
+  const [showTermsPrompt, setShowTermsPrompt] = useState(false);
+  const { toast } = useToast();
+  const navigate = useNavigate();
+  
+  // Check if user has accepted terms
+  useEffect(() => {
+    const hasAcceptedTerms = user.acceptedTerms || localStorage.getItem('acceptedTerms') === 'true';
+    if (!hasAcceptedTerms) {
+      setShowTermsPrompt(true);
+      
+      toast({
+        title: "Royal Decree Required",
+        description: "You must accept the terms of service to fully participate in the kingdom.",
+        action: (
+          <Button 
+            variant="default" 
+            size="sm" 
+            onClick={() => navigate('/terms')}
+            className="bg-gradient-to-r from-royal-crimson via-royal-gold to-royal-navy"
+          >
+            View Terms
+          </Button>
+        ),
+        duration: 10000,
+      });
+    }
+  }, [user, navigate]);
 
   const handlePaymentSuccess = async (amount: number) => {
     try {
@@ -37,6 +69,9 @@ const DashboardMain: React.FC<DashboardMainProps> = ({ user, updateProfile }) =>
         rank: newRank,
         lastSpendDate: new Date()
       });
+      
+      // Add to spending service for leaderboard tracking
+      await applyUserSpending(user, amount);
       
       // Determine what fancy title to give based on amount
       let toastTitle = "Royal Treasury Expanded!";
@@ -59,6 +94,7 @@ const DashboardMain: React.FC<DashboardMainProps> = ({ user, updateProfile }) =>
         duration: 5000,
       });
       
+      return true;
     } catch (error) {
       console.error("Failed to update profile after payment:", error);
       toast({
@@ -66,6 +102,30 @@ const DashboardMain: React.FC<DashboardMainProps> = ({ user, updateProfile }) =>
         description: "Your payment was processed but your profile couldn't be updated. Please refresh.",
         variant: "destructive"
       });
+      return false;
+    }
+  };
+
+  const handleFundWallet = async (amount: number) => {
+    try {
+      const success = await addFundsToWallet(user, amount);
+      
+      if (success) {
+        // Update user profile with new balance
+        const newBalance = (user.walletBalance || 0) + amount;
+        await updateProfile({ walletBalance: newBalance });
+        return true;
+      }
+      
+      return false;
+    } catch (error) {
+      console.error("Failed to fund wallet:", error);
+      toast({
+        title: "Funding Error",
+        description: "Failed to add funds to your wallet. Please try again.",
+        variant: "destructive"
+      });
+      return false;
     }
   };
 
@@ -99,13 +159,50 @@ const DashboardMain: React.FC<DashboardMainProps> = ({ user, updateProfile }) =>
     });
   };
 
+  const handleAdvertisementUpdate = () => {
+    // Refresh dashboard components if needed
+  };
+
   return (
     <>
       <RoyalTreasury user={user} />
       
-      <RoyalDivider variant="crown" label="FINANCIAL KINGDOM" />
+      {showTermsPrompt && (
+        <div className="mb-6 glass-morphism border border-royal-gold/30 rounded-lg p-4 animate-fade-in">
+          <div className="flex items-center space-x-3">
+            <div className="bg-royal-gold/20 p-2 rounded-full">
+              <InfoIcon className="h-6 w-6 text-royal-gold" />
+            </div>
+            <div>
+              <h3 className="font-semibold text-white">Royal Decree Requires Your Attention</h3>
+              <p className="text-white/70 text-sm">Before fully participating in the kingdom's activities, you must acknowledge the royal terms of service.</p>
+            </div>
+            <Button 
+              onClick={() => navigate('/terms')}
+              className="whitespace-nowrap bg-gradient-to-r from-royal-crimson via-royal-gold to-royal-navy"
+            >
+              View Terms
+            </Button>
+          </div>
+        </div>
+      )}
       
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8 animate-fade-in" style={{ animationDelay: "100ms" }}>
+        <div className="lg:col-span-2">
+          <SpendingVisualizer 
+            user={user} 
+            onSpend={handlePaymentSuccess} 
+          />
+        </div>
+        <UserWallet 
+          user={user}
+          onFundWallet={handleFundWallet}
+        />
+      </div>
+      
+      <RoyalDivider variant="crown" label="FINANCIAL KINGDOM" />
+      
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8 animate-fade-in" style={{ animationDelay: "200ms" }}>
         <div className="lg:col-span-2">
           <SpendingChart data={mockSpendingData} />
         </div>
@@ -125,30 +222,33 @@ const DashboardMain: React.FC<DashboardMainProps> = ({ user, updateProfile }) =>
         </div>
       </div>
       
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8 animate-fade-in" style={{ animationDelay: "200ms" }}>
+      <AdvertisementBanner 
+        user={user}
+        onUpdate={handleAdvertisementUpdate}
+      />
+      
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8 animate-fade-in" style={{ animationDelay: "300ms" }}>
         <div className="lg:col-span-2">
-          <SpendingVisualizer 
-            user={user} 
-            onSpend={handlePaymentSuccess} 
-          />
+          <GenderSelection userProfile={user} onGenderChange={handleGenderChange} />
         </div>
-        <GenderSelection userProfile={user} onGenderChange={handleGenderChange} />
+        <TeamDistribution data={mockTeamDistribution} />
       </div>
       
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8 animate-fade-in" style={{ animationDelay: "300ms" }}>
-        <TeamDistribution data={mockTeamDistribution} />
         <RankTrajectory data={mockRankHistory} />
+        <div className="lg:col-span-2">
+          <InteractiveLeaderboard />
+        </div>
+      </div>
+      
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8 animate-fade-in" style={{ animationDelay: "400ms" }}>
         <CashThroneUpgrade 
           user={user} 
           onPaymentSuccess={handlePaymentSuccess} 
         />
-      </div>
-      
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8 animate-fade-in" style={{ animationDelay: "300ms" }}>
         <div className="lg:col-span-2">
-          <InteractiveLeaderboard />
+          <RoyalDecrees />
         </div>
-        <RoyalDecrees />
       </div>
       
       <div className="mb-8 animate-fade-in" style={{ animationDelay: "400ms" }}>
