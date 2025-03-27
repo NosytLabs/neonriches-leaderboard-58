@@ -108,6 +108,52 @@
   }
 }
 
+@keyframes quill-write {
+  0%, 100% {
+    transform: translateX(0) rotate(0deg);
+  }
+  25% {
+    transform: translateX(10px) rotate(2deg);
+  }
+  50% {
+    transform: translateX(5px) rotate(-1deg);
+  }
+  75% {
+    transform: translateX(8px) rotate(1deg);
+  }
+}
+
+@keyframes parchment-unfurl {
+  0% {
+    opacity: 0;
+    transform: scale(0.9) translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes seal-stamp {
+  0% {
+    opacity: 0;
+    transform: scale(1.5) rotate(15deg);
+  }
+  50% {
+    opacity: 0.8;
+  }
+  60% {
+    transform: scale(0.9) rotate(-5deg);
+  }
+  70% {
+    transform: scale(1.1) rotate(3deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0);
+  }
+}
+
 .royal-gradient {
   background: linear-gradient(90deg, #8B0000, #D4AF37, #000080);
   -webkit-background-clip: text;
@@ -218,6 +264,61 @@
 .gold-border-glow {
   box-shadow: 0 0 15px rgba(212, 175, 55, 0.3), 
               inset 0 0 15px rgba(212, 175, 55, 0.3);
+}
+
+.animate-parchment-unfurl {
+  animation: parchment-unfurl 0.8s ease-out forwards;
+}
+
+.animate-seal-stamp {
+  animation: seal-stamp 0.6s ease-out forwards;
+}
+
+.animate-quill-write {
+  animation: quill-write 2s ease-in-out infinite;
+}
+
+.royal-ink-trail {
+  position: relative;
+}
+
+.royal-ink-trail::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(to right, transparent, #D4AF37, transparent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.8s ease-out;
+}
+
+.royal-ink-trail:hover::after {
+  transform: scaleX(1);
+}
+
+.gold-focus:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.5);
+}
+
+.royal-gradient-text {
+  background: linear-gradient(90deg, #8B0000, #D4AF37, #000080);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.bg-gradient-royal {
+  background: linear-gradient(to right, #8B0000, #D4AF37, #000080);
+}
+
+.border-gradient-royal {
+  border-width: 2px;
+  border-style: solid;
+  border-image: linear-gradient(to right, #8B0000, #D4AF37, #000080) 1;
 }
 
 :root {
@@ -355,4 +456,3 @@
     transform: translateY(0);
   }
 }
-

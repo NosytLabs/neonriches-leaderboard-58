@@ -1,57 +1,112 @@
 
 import React from 'react';
-import { Crown, Star, Shield, Gem } from 'lucide-react';
+import { Crown, ScrollText, Feather } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface RoyalDividerProps {
-  variant?: 'line' | 'crown' | 'stars' | 'shield' | 'gem';
+  variant?: 'line' | 'crown' | 'ornate' | 'scroll';
   label?: string;
-  color?: 'gold' | 'crimson' | 'navy' | 'royal';
   className?: string;
+  color?: 'royal' | 'gold' | 'crimson' | 'navy' | 'purple';
 }
 
 const RoyalDivider: React.FC<RoyalDividerProps> = ({
   variant = 'line',
   label,
-  color = 'gold',
-  className
+  className,
+  color = 'royal'
 }) => {
-  // Define color classes
-  const colorClasses = {
-    gold: 'text-royal-gold border-royal-gold/30',
-    crimson: 'text-royal-crimson border-royal-crimson/30',
-    navy: 'text-royal-navy border-royal-navy/30',
-    royal: 'royal-gradient border-white/20'
+  const colorMap = {
+    royal: 'royal-gradient',
+    gold: 'text-royal-gold',
+    crimson: 'text-royal-crimson',
+    navy: 'text-royal-navy',
+    purple: 'text-royal-purple'
   };
   
-  // Get the icon based on variant
-  const getIconComponent = () => {
-    switch (variant) {
-      case 'crown':
-        return <Crown size={18} className={color === 'royal' ? 'text-royal-gold' : ''} />;
-      case 'stars':
-        return <Star size={18} className={color === 'royal' ? 'text-royal-gold' : ''} />;
-      case 'shield':
-        return <Shield size={18} className={color === 'royal' ? 'text-royal-gold' : ''} />;
-      case 'gem':
-        return <Gem size={18} className={color === 'royal' ? 'text-royal-gold' : ''} />;
-      default:
-        return null;
+  const getLineColor = () => {
+    switch (color) {
+      case 'gold': return 'border-royal-gold/30';
+      case 'crimson': return 'border-royal-crimson/30';
+      case 'navy': return 'border-royal-navy/30';
+      case 'purple': return 'border-royal-purple/30';
+      default: return 'border-white/20';
     }
   };
-  
-  return (
-    <div className={cn('royal-divider flex items-center my-6', className)}>
-      <div className={`h-px flex-grow ${colorClasses[color].split(' ')[1]}`}></div>
-      {(label || variant !== 'line') && (
-        <div className={`flex items-center px-3 font-royal text-xs ${colorClasses[color].split(' ')[0]}`}>
-          {variant !== 'line' && getIconComponent()}
-          {label && <span className={variant !== 'line' ? 'ml-2' : ''}>{label}</span>}
-        </div>
-      )}
-      <div className={`h-px flex-grow ${colorClasses[color].split(' ')[1]}`}></div>
-    </div>
-  );
+
+  const renderDivider = () => {
+    switch (variant) {
+      case 'crown':
+        return (
+          <div className={cn('flex items-center w-full my-6', className)}>
+            <div className={cn('flex-grow border-t', getLineColor())}></div>
+            <div className="flex items-center mx-4">
+              {label && (
+                <span className={cn("text-xs font-royal tracking-widest mx-2", colorMap[color])}>
+                  {label}
+                </span>
+              )}
+              <Crown className={cn("h-4 w-4", colorMap[color])} />
+            </div>
+            <div className={cn('flex-grow border-t', getLineColor())}></div>
+          </div>
+        );
+        
+      case 'scroll':
+        return (
+          <div className={cn('flex items-center w-full my-6', className)}>
+            <div className={cn('flex-grow border-t', getLineColor())}></div>
+            <div className="flex items-center mx-4">
+              <ScrollText className={cn("h-4 w-4 mr-2", colorMap[color])} />
+              {label && (
+                <span className={cn("text-xs font-royal tracking-widest", colorMap[color])}>
+                  {label}
+                </span>
+              )}
+            </div>
+            <div className={cn('flex-grow border-t', getLineColor())}></div>
+          </div>
+        );
+        
+      case 'ornate':
+        return (
+          <div className={cn('flex items-center w-full my-6 relative', className)}>
+            <div className={cn('flex-grow h-px', getLineColor())}></div>
+            <div className="flex items-center mx-3">
+              {label && (
+                <span className={cn("text-xs font-royal tracking-widest bg-background px-3 relative z-10", colorMap[color])}>
+                  {label}
+                </span>
+              )}
+            </div>
+            <div className={cn('flex-grow h-px', getLineColor())}></div>
+            
+            {/* Ornate decorations */}
+            <div className="absolute left-1/4 -top-1 transform -translate-x-1/2">
+              <div className={cn("h-2 w-2 rotate-45", color === 'gold' ? 'bg-royal-gold/30' : color === 'crimson' ? 'bg-royal-crimson/30' : color === 'navy' ? 'bg-royal-navy/30' : color === 'purple' ? 'bg-royal-purple/30' : 'bg-white/20')}></div>
+            </div>
+            <div className="absolute right-1/4 -top-1 transform translate-x-1/2">
+              <div className={cn("h-2 w-2 rotate-45", color === 'gold' ? 'bg-royal-gold/30' : color === 'crimson' ? 'bg-royal-crimson/30' : color === 'navy' ? 'bg-royal-navy/30' : color === 'purple' ? 'bg-royal-purple/30' : 'bg-white/20')}></div>
+            </div>
+          </div>
+        );
+        
+      default: // line
+        return (
+          <div className={cn('flex items-center w-full my-6', className)}>
+            <div className={cn('flex-grow border-t', getLineColor())}></div>
+            {label && (
+              <span className={cn("text-xs font-royal tracking-widest mx-4", colorMap[color])}>
+                {label}
+              </span>
+            )}
+            <div className={cn('flex-grow border-t', getLineColor())}></div>
+          </div>
+        );
+    }
+  };
+
+  return renderDivider();
 };
 
 export default RoyalDivider;
