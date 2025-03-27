@@ -2,8 +2,9 @@
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
-import { Calendar, Clock } from 'lucide-react';
+import { Calendar } from 'lucide-react';
 import { currentEvent, formatDate } from './data';
+import CountdownTimer from './CountdownTimer';
 
 const CurrentEvent = () => {
   return (
@@ -35,19 +36,11 @@ const CurrentEvent = () => {
               {currentEvent.description}
             </p>
             
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center">
-                <Calendar size={16} className="mr-1.5 text-white/50" />
-                <span className="text-sm text-white/70">
-                  {formatDate(currentEvent.startDate)} - {formatDate(currentEvent.endDate)}
-                </span>
-              </div>
-              <div className="flex items-center">
-                <Clock size={16} className="mr-1.5 text-white/50" />
-                <span className="text-sm text-white/70">
-                  {Math.floor((currentEvent.endDate.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))} days left
-                </span>
-              </div>
+            <div className="flex items-center">
+              <Calendar size={16} className="mr-1.5 text-white/50" />
+              <span className="text-sm text-white/70">
+                {formatDate(currentEvent.startDate)} - {formatDate(currentEvent.endDate)}
+              </span>
             </div>
           </div>
           
@@ -57,6 +50,9 @@ const CurrentEvent = () => {
               <span className="text-sm font-medium">{currentEvent.progress}%</span>
             </div>
             <Progress value={currentEvent.progress} className="h-2 bg-white/10" indicatorClassName="bg-gradient-to-r from-team-red via-team-green to-team-blue" />
+            <div className="mt-3">
+              <CountdownTimer targetDate={currentEvent.endDate} variant="compact" />
+            </div>
           </div>
         </div>
       </CardContent>

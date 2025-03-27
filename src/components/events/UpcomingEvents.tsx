@@ -4,8 +4,18 @@ import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Calendar, Bell } from 'lucide-react';
 import { upcomingEvents, formatDate } from './data';
+import CountdownTimer from './CountdownTimer';
+import { toast } from '@/hooks/use-toast';
 
 const UpcomingEvents = () => {
+  const handleNotifyMe = (eventName: string) => {
+    toast({
+      title: "Notification Set",
+      description: `You'll be notified when ${eventName} begins.`,
+      duration: 3000,
+    });
+  };
+
   return (
     <div className="mb-12">
       <h2 className="text-2xl font-bold text-gradient mb-6">Upcoming Events</h2>
@@ -35,14 +45,25 @@ const UpcomingEvents = () => {
                 {event.description}
               </p>
               
-              <div className="flex items-center text-sm text-white/50">
-                <Calendar size={14} className="mr-1.5" />
-                {formatDate(event.startDate)} - {formatDate(event.endDate)}
+              <div className="flex flex-col space-y-2">
+                <div className="flex items-center text-sm text-white/50">
+                  <Calendar size={14} className="mr-1.5" />
+                  {formatDate(event.startDate)} - {formatDate(event.endDate)}
+                </div>
+                <CountdownTimer
+                  targetDate={event.startDate}
+                  variant="minimal"
+                  className="text-xs"
+                />
               </div>
             </CardContent>
             
             <CardFooter className="pt-0">
-              <Button variant="outline" className="w-full glass-morphism border-white/10 text-white hover:bg-white/10">
+              <Button 
+                variant="outline" 
+                className="w-full glass-morphism border-white/10 text-white hover:bg-white/10"
+                onClick={() => handleNotifyMe(event.name)}
+              >
                 <Bell size={16} className="mr-2" />
                 Get Notified
               </Button>

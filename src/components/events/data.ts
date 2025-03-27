@@ -4,10 +4,11 @@ export const currentEvent = {
   id: 1,
   name: 'Poke Party',
   description: 'Pay $0.50 to drop another user down one rank for 24 hours',
-  startDate: new Date('2023-09-01'),
-  endDate: new Date('2023-09-07'),
+  startDate: new Date(new Date().getTime() - 3 * 24 * 60 * 60 * 1000), // 3 days ago
+  endDate: new Date(new Date().getTime() + 4 * 24 * 60 * 60 * 1000),   // 4 days from now
   progress: 65,
-  image: 'https://picsum.photos/id/430/800/400'
+  image: 'https://picsum.photos/id/430/800/400',
+  participantCount: 243
 };
 
 export const upcomingEvents = [
@@ -15,17 +16,19 @@ export const upcomingEvents = [
     id: 2,
     name: 'Rank Multiplier',
     description: 'All contributions count double towards rank for 24 hours',
-    startDate: new Date('2023-09-10'),
-    endDate: new Date('2023-09-11'),
-    image: 'https://picsum.photos/id/431/800/400'
+    startDate: new Date(new Date().getTime() + 5 * 24 * 60 * 60 * 1000),   // 5 days from now
+    endDate: new Date(new Date().getTime() + 6 * 24 * 60 * 60 * 1000),     // 6 days from now
+    image: 'https://picsum.photos/id/431/800/400',
+    participantCount: 0
   },
   {
     id: 3,
     name: 'Team Takeover',
     description: 'The team with the most contributions this week gets a special badge',
-    startDate: new Date('2023-09-15'),
-    endDate: new Date('2023-09-22'),
-    image: 'https://picsum.photos/id/452/800/400'
+    startDate: new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000),   // 7 days from now
+    endDate: new Date(new Date().getTime() + 14 * 24 * 60 * 60 * 1000),    // 14 days from now
+    image: 'https://picsum.photos/id/452/800/400',
+    participantCount: 0
   }
 ];
 
@@ -54,3 +57,20 @@ export const getTeamColor = (team: string) => {
     default: return 'white';
   }
 };
+
+// Calculate time left from now to a target date
+export const getTimeLeft = (targetDate: Date) => {
+  const difference = targetDate.getTime() - new Date().getTime();
+  
+  if (difference <= 0) {
+    return { days: 0, hours: 0, minutes: 0, seconds: 0 };
+  }
+  
+  return {
+    days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+    hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+    minutes: Math.floor((difference / 1000 / 60) % 60),
+    seconds: Math.floor((difference / 1000) % 60)
+  };
+};
+
