@@ -1,90 +1,146 @@
 
 import React from 'react';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { Eye, Heart, Ban } from 'lucide-react';
-import { LeaderboardUser, getTeamBorderColor, getTeamColor, getGenderTitle, getGenderEmoji, getInitials, getRankIcon } from './LeaderboardUtils';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { User, Scroll } from 'lucide-react';
+import { LeaderboardUser, getTeamColor, getTeamBorderColor, getRankIcon, getInitials } from './LeaderboardUtils';
+import { ShameAction } from '@/components/events/hooks/useShameEffect';
 
 interface LeaderboardItemProps {
   userData: LeaderboardUser;
   index: number;
   currentUserId?: string;
-  isPokeCooldown: boolean;
+  isOnCooldown: boolean;
   onProfileClick: (userId: string) => void;
-  onPokeUser: (user: LeaderboardUser) => void;
+  onShameUser: (user: LeaderboardUser, type: ShameAction) => void;
 }
 
 const LeaderboardItem: React.FC<LeaderboardItemProps> = ({
   userData,
   index,
   currentUserId,
-  isPokeCooldown,
+  isOnCooldown,
   onProfileClick,
-  onPokeUser
+  onShameUser
 }) => {
+  const isCurrentUser = userData.id === currentUserId;
+  
+  // Get shame count
+  const getShameCount = () => {
+    const userShameKey = `user_shame_count_${userData.id}`;
+    return parseInt(localStorage.getItem(userShameKey) || '0');
+  };
+  
+  const shameCount = getShameCount();
+  
+  // Format amount with currency symbol
+  const formattedAmount = `$${userData.amountSpent.toLocaleString()}`;
+  
+  // Get classes based on user position
+  const getPositionClass = () => {
+    if (index === 0) return "border-l-royal-gold";
+    if (index === 1) return "border-l-[#C0C0C0]";
+    if (index === 2) return "border-l-[#CD7F32]";
+    return "border-l-transparent";
+  };
+  
   return (
-    <div 
-      className={`flex items-center justify-between p-3 rounded-lg mb-2 animate-fade-in ${
-        index % 2 === 0 ? 'bg-white/5' : ''
-      } hover:bg-white/10 transition-colors`}
-      style={{ animationDelay: `${index * 100}ms` }}
-    >
-      <div className="flex items-center space-x-3">
-        <div className="flex flex-col items-center justify-center w-8">
-          <span className="text-lg font-bold">{userData.rank}</span>
-          {getRankIcon(userData.rank)}
-        </div>
-        
-        <Avatar className={`border-2 ${userData.team ? getTeamBorderColor(userData.team) : 'border-white/20'}`}>
-          <AvatarImage src={userData.profileImage} alt={userData.username} />
-          <AvatarFallback>{getInitials(userData.username)}</AvatarFallback>
-        </Avatar>
-        
-        <div>
-          <div className="font-medium flex items-center">
-            {userData.username}
-            {index < 3 && <div className="ml-1.5">{getGenderEmoji(userData.gender)}</div>}
+    <TooltipProvider>
+      <div className={`flex items-center justify-between py-2 px-3 my-1 rounded-md hover:bg-white/5 transition-colors border-l-2 ${getPositionClass()} ${
+        isCurrentUser ? 'bg-white/5' : ''
+      }`}>
+        <div className="flex items-center">
+          <div className="flex items-center justify-center w-6 h-6 rounded-full glass-morphism border-white/10 mr-2 text-xs">
+            <span>#{userData.rank}</span>
           </div>
-          <div className={`text-xs ${getTeamColor(userData.team)}`}>
-            {getGenderTitle(userData.gender || null)}
+          
+          <div className="relative group">
+            <div 
+              className={`w-8 h-8 rounded-full glass-morphism ${getTeamBorderColor(userData.team)} flex items-center justify-center mr-2 cursor-pointer`}
+              onClick={() => onProfileClick(userData.id)}
+            >
+              {userData.profileImage ? (
+                <img src={userData.profileImage} alt={userData.username} className="w-full h-full rounded-full" />
+              ) : (
+                <span className={`text-sm font-medium ${getTeamColor(userData.team)}`}>
+                  {getInitials(userData.username)}
+                </span>
+              )}
+              
+              {/* Show rank badge for top 3 */}
+              {index < 3 && (
+                <div className="absolute -top-1 -right-1 bg-background rounded-full p-0.5">
+                  {getRankIcon(userData.rank)}
+                </div>
+              )}
+            </div>
+            
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <span></span>
+              </TooltipTrigger>
+              <TooltipContent side="right">
+                <p>View profile</p>
+              </TooltipContent>
+            </Tooltip>
           </div>
-        </div>
-      </div>
-      
-      <div className="flex items-center space-x-2">
-        <div className="text-right mr-4">
-          <div className="font-mono font-bold">${userData.amountSpent}</div>
-          <div className="text-xs text-white/50">Total Spent</div>
+          
+          <div>
+            <div className="flex items-center">
+              <span className={`font-medium text-sm ${isCurrentUser ? 'text-white' : ''}`}>
+                {userData.username}
+              </span>
+              {userData.team && (
+                <span className={`ml-2 h-2 w-2 rounded-full bg-team-${userData.team}`}></span>
+              )}
+              {shameCount > 0 && (
+                <span className="ml-2 text-xs bg-red-500/20 px-1.5 py-0.5 rounded-full text-red-300">
+                  {shameCount} {shameCount === 1 ? 'shame' : 'shames'}
+                </span>
+              )}
+            </div>
+            <div className="text-white/60 text-xs">{formattedAmount}</div>
+          </div>
         </div>
         
         <div className="flex space-x-1">
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            className="h-8 w-8 rounded-full bg-white/5 hover:bg-white/10"
-            onClick={() => onProfileClick(userData.id)}
-          >
-            <Eye size={14} />
-          </Button>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className="h-8 w-8 rounded-full hover:bg-white/10"
+                onClick={() => onProfileClick(userData.id)}
+              >
+                <User size={14} />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>View profile</p>
+            </TooltipContent>
+          </Tooltip>
           
-          {currentUserId !== userData.id && (
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              className="h-8 w-8 rounded-full bg-white/5 hover:bg-white/10"
-              onClick={() => onPokeUser(userData)}
-              disabled={isPokeCooldown}
-            >
-              {isPokeCooldown ? (
-                <Ban size={14} className="text-white/40" />
-              ) : (
-                <Heart size={14} className="text-team-red" />
-              )}
-            </Button>
+          {!isCurrentUser && (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="h-8 w-8 rounded-full hover:bg-white/10"
+                  onClick={() => onShameUser(userData, 'tomatoes')}
+                  disabled={isOnCooldown}
+                >
+                  <Scroll size={14} className={isOnCooldown ? 'text-white/30' : ''} />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>{isOnCooldown ? 'Shaming on cooldown' : 'Public Shame'}</p>
+              </TooltipContent>
+            </Tooltip>
           )}
         </div>
       </div>
-    </div>
+    </TooltipProvider>
   );
 };
 

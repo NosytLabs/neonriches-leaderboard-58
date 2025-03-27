@@ -6,13 +6,13 @@ import { Separator } from '@/components/ui/separator';
 import { Card, CardContent } from '@/components/ui/card';
 import CurrentEvent from '@/components/events/CurrentEvent';
 import EventStats from '@/components/events/EventStats';
-import PokePartyTargets from '@/components/events/PokePartyTargets';
+import PublicShamingFestival from '@/components/events/PublicShamingFestival';
 import UpcomingEvents from '@/components/events/UpcomingEvents';
 import EventBenefits from '@/components/events/EventBenefits';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from '@/hooks/use-toast';
-import { Calendar, DollarSign, Sparkles } from 'lucide-react';
+import { Calendar, DollarSign, Sparkles, Scroll } from 'lucide-react';
 import CountdownTimer from '@/components/events/CountdownTimer';
 import { currentEvent, upcomingEvents } from '@/components/events/data';
 import RankingDisclaimer from '@/components/shared/RankingDisclaimer';
@@ -50,7 +50,7 @@ const Events = () => {
         <div className="max-w-5xl mx-auto">
           <div className="mb-8 text-center">
             <div className="inline-block mb-4 relative">
-              <Sparkles size={32} className="text-purple-500 animate-crown-glow mx-auto" />
+              <Scroll size={32} className="text-purple-500 animate-crown-glow mx-auto" />
               <div className="absolute -inset-3 bg-purple-500/20 rounded-full blur-lg"></div>
             </div>
             <h1 className="text-5xl font-bold mb-2 text-gradient royal-text-glow">Royal Events</h1>
@@ -112,7 +112,7 @@ const Events = () => {
           
           <CurrentEvent />
           
-          <PokePartyTargets />
+          <PublicShamingFestival />
           
           <UpcomingEvents />
           
