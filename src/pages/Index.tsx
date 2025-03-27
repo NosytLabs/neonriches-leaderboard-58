@@ -1,18 +1,16 @@
-
 import React from 'react';
-import { Button } from '@/components/ui/button';
-import { Link } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Hero from '@/components/Hero';
-import Leaderboard from '@/components/Leaderboard';
 import RoyalFeatures from '@/components/RoyalFeatures';
 import RoyalFAQ from '@/components/RoyalFAQ';
 import RoyalBadges from '@/components/RoyalBadges';
 import TeamSection from '@/components/TeamSection';
-import PersistentLeaderboard from '@/components/leaderboard/PersistentLeaderboard';
-import { Crown, Trophy, Users, Sparkles } from 'lucide-react';
+import CombinedLeaderboard from '@/components/leaderboard/CombinedLeaderboard';
 import RoyalDivider from '@/components/ui/royal-divider';
+import { Button } from '@/components/ui/button';
+import { Link } from 'react-router-dom';
+import { Crown, Trophy, Users, Sparkles } from 'lucide-react';
 
 const Index = () => {
   return (
@@ -74,22 +72,12 @@ const Index = () => {
             </div>
           </div>
           
-          <RoyalDivider variant="line" label="LIVE LEADERBOARD" color="royal" className="mb-8" />
+          <RoyalDivider variant="line" label="ROYAL COURT" color="royal" className="mb-8" />
           
           <div className="mb-16">
-            <PersistentLeaderboard limit={5} compact={true} />
-            
-            <div className="text-center mt-6">
-              <Link to="/leaderboard">
-                <Button className="bg-gradient-to-r from-royal-purple to-royal-gold hover:opacity-90 text-white">
-                  <Sparkles className="mr-2 h-4 w-4" />
-                  View Full Leaderboard
-                </Button>
-              </Link>
-            </div>
+            <CombinedLeaderboard limit={5} compact={true} />
           </div>
           
-          <Leaderboard />
           <RoyalFeatures />
           <TeamSection />
           <RoyalBadges />
