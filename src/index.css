@@ -154,93 +154,49 @@
   }
 }
 
-.royal-gradient {
-  background: linear-gradient(90deg, #8B0000, #D4AF37, #000080);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  display: inline-block;
+@keyframes coin-flip {
+  0% {
+    transform: rotateY(0deg);
+  }
+  100% {
+    transform: rotateY(360deg);
+  }
 }
 
-.glass-morphism {
-  background: rgba(20, 20, 40, 0.7);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+@keyframes gold-dust {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(-20px) scale(0);
+    opacity: 0;
+  }
 }
 
-.border-royal-crimson {
-  border-color: #8B0000;
+/* ... keep existing code (royal-gradient, glass-morphism, color definitions) */
+
+.animate-parchment-unfurl {
+  animation: parchment-unfurl 0.8s ease-out forwards;
 }
 
-.border-royal-gold {
-  border-color: #D4AF37;
+.animate-seal-stamp {
+  animation: seal-stamp 0.6s ease-out forwards;
 }
 
-.border-royal-navy {
-  border-color: #000080;
+.animate-quill-write {
+  animation: quill-write 2s ease-in-out infinite;
 }
 
-.text-royal-crimson {
-  color: #8B0000;
+.animate-coin-flip {
+  animation: coin-flip 1.5s ease-in-out infinite;
 }
 
-.text-royal-gold {
-  color: #D4AF37;
+.animate-gold-dust {
+  animation: gold-dust 2s ease-out forwards;
 }
 
-.text-royal-navy {
-  color: #000080;
-}
-
-.bg-royal-crimson {
-  background-color: #8B0000;
-}
-
-.bg-royal-gold {
-  background-color: #D4AF37;
-}
-
-.bg-royal-navy {
-  background-color: #000080;
-}
-
-.royal-card {
-  @apply glass-morphism backdrop-blur-xl border border-white/10 p-6 relative overflow-hidden transition-all duration-300;
-}
-
-.throne-bg {
-  background-color: #0D0D20;
-  background-image: 
-    radial-gradient(circle at 10% 20%, rgba(139, 0, 0, 0.08) 0%, transparent 50%),
-    radial-gradient(circle at 90% 50%, rgba(212, 175, 55, 0.08) 0%, transparent 50%),
-    radial-gradient(circle at 50% 80%, rgba(0, 0, 128, 0.08) 0%, transparent 50%);
-}
-
-.royal-shine {
-  position: relative;
-  overflow: hidden;
-}
-
-.royal-shine::after {
-  content: '';
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: linear-gradient(
-    to bottom right,
-    rgba(255, 255, 255, 0) 0%,
-    rgba(255, 255, 255, 0) 40%,
-    rgba(255, 255, 255, 0.4) 50%,
-    rgba(255, 255, 255, 0) 60%,
-    rgba(255, 255, 255, 0) 100%
-  );
-  transform: rotate(30deg);
-  animation: shimmer 3.5s linear infinite;
-}
+/* ... keep existing code (royal-ink-trail, gold-focus, etc.) */
 
 .royal-text-shimmer {
   background: linear-gradient(
@@ -266,129 +222,88 @@
               inset 0 0 15px rgba(212, 175, 55, 0.3);
 }
 
-.animate-parchment-unfurl {
-  animation: parchment-unfurl 0.8s ease-out forwards;
-}
-
-.animate-seal-stamp {
-  animation: seal-stamp 0.6s ease-out forwards;
-}
-
-.animate-quill-write {
-  animation: quill-write 2s ease-in-out infinite;
-}
-
-.royal-ink-trail {
-  position: relative;
-}
-
-.royal-ink-trail::after {
+.gold-dust::before {
   content: '';
   position: absolute;
-  bottom: -2px;
-  left: 0;
-  width: 100%;
-  height: 1px;
-  background: linear-gradient(to right, transparent, #D4AF37, transparent);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.8s ease-out;
-}
-
-.royal-ink-trail:hover::after {
-  transform: scaleX(1);
-}
-
-.gold-focus:focus {
-  outline: none;
-  box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.5);
-}
-
-.royal-gradient-text {
-  background: linear-gradient(90deg, #8B0000, #D4AF37, #000080);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-.bg-gradient-royal {
-  background: linear-gradient(to right, #8B0000, #D4AF37, #000080);
-}
-
-.border-gradient-royal {
-  border-width: 2px;
-  border-style: solid;
-  border-image: linear-gradient(to right, #8B0000, #D4AF37, #000080) 1;
-}
-
-:root {
-  --api-url: attr(data-api-url);
-  --stripe-key: attr(data-stripe-key);
-}
-
-.content-security {
-  content-visibility: auto;
-}
-
-.overflow-protection {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.content-aligned {
-  max-width: 1200px;
-  margin-left: auto;
-  margin-right: auto;
-  padding-left: 1rem;
-  padding-right: 1rem;
-}
-
-@media (min-width: 768px) {
-  .content-aligned {
-    padding-left: 2rem;
-    padding-right: 2rem;
-  }
-}
-
-.will-change-opacity {
-  will-change: opacity;
-}
-
-.will-change-transform {
-  will-change: transform;
-}
-
-.focus-visible:focus-visible {
-  outline: 2px solid #FFD700;
-  outline-offset: 2px;
-}
-
-.royal-particles {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  z-index: 0;
-}
-
-.royal-particle {
-  position: absolute;
-  width: 6px;
-  height: 6px;
-  background-color: rgba(255, 215, 0, 0.6);
+  width: 4px;
+  height: 4px;
+  background: rgba(212, 175, 55, 0.8);
   border-radius: 50%;
-  animation: float 10s linear infinite;
+  filter: blur(1px);
+  animation: gold-dust 2s ease-out forwards;
 }
 
-.royal-button {
+.throne-bg {
+  background-color: #0D0D20;
+  background-image: 
+    radial-gradient(circle at 10% 20%, rgba(139, 0, 0, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 90% 50%, rgba(212, 175, 55, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 50% 80%, rgba(0, 0, 128, 0.08) 0%, transparent 50%);
+}
+
+/* Enhanced throne background with more dramatic gradients */
+.throne-bg-enhanced {
+  background-color: #0A0A18;
+  background-image: 
+    radial-gradient(circle at 10% 20%, rgba(139, 0, 0, 0.12) 0%, transparent 60%),
+    radial-gradient(circle at 90% 30%, rgba(212, 175, 55, 0.12) 0%, transparent 60%),
+    radial-gradient(circle at 50% 80%, rgba(0, 0, 128, 0.12) 0%, transparent 60%),
+    radial-gradient(circle at 20% 60%, rgba(75, 0, 130, 0.08) 0%, transparent 50%);
+}
+
+/* Deep mahogany accent color as requested */
+.text-royal-mahogany {
+  color: #C04000;
+}
+
+.bg-royal-mahogany {
+  background-color: #C04000;
+}
+
+.border-royal-mahogany {
+  border-color: #C04000;
+}
+
+/* Enhanced glass morphism with darker backgrounds for better contrast */
+.glass-morphism-dark {
+  background: rgba(15, 15, 30, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+/* Purple team color */
+.text-royal-purple {
+  color: #4B0082;
+}
+
+.bg-royal-purple {
+  background-color: #4B0082;
+}
+
+.border-royal-purple {
+  border-color: #4B0082;
+}
+
+/* ... keep existing code (animation classes, will-change properties, etc.) */
+
+/* Royal card with enhanced shadow */
+.royal-card-enhanced {
+  @apply glass-morphism backdrop-blur-xl border border-white/10 p-6 relative overflow-hidden transition-all duration-300;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), 0 0 10px rgba(212, 175, 55, 0.1);
+}
+
+/* Enhanced button hover effect */
+.royal-button-enhanced {
   position: relative;
   overflow: hidden;
   z-index: 1;
   transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3), 0 0 5px rgba(212, 175, 55, 0.2);
 }
 
-.royal-button::before {
+.royal-button-enhanced::before {
   content: '';
   position: absolute;
   top: 0;
@@ -398,61 +313,19 @@
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(255, 255, 255, 0.2),
+    rgba(255, 255, 255, 0.3),
     transparent
   );
   transition: 0.5s;
   z-index: -1;
 }
 
-.royal-button:hover::before {
+.royal-button-enhanced:hover {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), 0 0 10px rgba(212, 175, 55, 0.4);
+}
+
+.royal-button-enhanced:hover::before {
   left: 100%;
 }
 
-.animate-royal-pulse {
-  animation: royal-pulse 2s ease-in-out infinite;
-}
-
-@keyframes royal-pulse {
-  0%, 100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.08);
-  }
-}
-
-.animate-crown-glow {
-  animation: crown-glow 3s ease-in-out infinite;
-}
-
-.animate-sparkle {
-  animation: sparkle 2s ease-in-out infinite;
-}
-
-.animate-rotate-slow {
-  animation: rotate-slow 12s linear infinite;
-}
-
-.animate-bounce-subtle {
-  animation: bounce-subtle 3s ease-in-out infinite;
-}
-
-.animate-pulse-slow {
-  animation: pulse-slow 3s ease-in-out infinite;
-}
-
-.animate-fade-in {
-  animation: fade-in 0.4s ease-out;
-}
-
-@keyframes fade-in {
-  0% {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
+/* ... keep existing code (rest of the CSS) */

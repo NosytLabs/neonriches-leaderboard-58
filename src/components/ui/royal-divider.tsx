@@ -1,10 +1,10 @@
 
 import React from 'react';
-import { Crown, ScrollText, Feather } from 'lucide-react';
+import { Crown, ScrollText, Feather, TreasureMap } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface RoyalDividerProps {
-  variant?: 'line' | 'crown' | 'ornate' | 'scroll';
+  variant?: 'line' | 'crown' | 'ornate' | 'scroll' | 'quill' | 'treasure';
   label?: string;
   className?: string;
   color?: 'royal' | 'gold' | 'crimson' | 'navy' | 'purple';
@@ -65,6 +65,46 @@ const RoyalDivider: React.FC<RoyalDividerProps> = ({
               )}
             </div>
             <div className={cn('flex-grow border-t', getLineColor())}></div>
+          </div>
+        );
+      
+      case 'quill':
+        return (
+          <div className={cn('flex items-center w-full my-6 relative', className)}>
+            <div className={cn('flex-grow border-t', getLineColor())}></div>
+            <div className="flex items-center mx-4">
+              <Feather className={cn("h-4 w-4 mr-2 animate-quill-write", colorMap[color])} />
+              {label && (
+                <span className={cn("text-xs font-royal tracking-widest", colorMap[color])}>
+                  {label}
+                </span>
+              )}
+            </div>
+            <div className={cn('flex-grow border-t', getLineColor())}></div>
+          </div>
+        );
+        
+      case 'treasure':
+        return (
+          <div className={cn('flex items-center w-full my-6 relative', className)}>
+            <div className={cn('flex-grow h-px', getLineColor())}></div>
+            <div className="flex items-center mx-4 relative">
+              <div className="absolute -inset-3 bg-royal-gold/10 rounded-full blur-md"></div>
+              {label && (
+                <span className={cn("text-xs font-royal tracking-widest px-3 relative z-10", colorMap[color])}>
+                  {label}
+                </span>
+              )}
+            </div>
+            <div className={cn('flex-grow h-px', getLineColor())}></div>
+            
+            {/* Gold dust effect */}
+            <div className="absolute left-1/4 -top-1 transform -translate-x-1/2">
+              <div className={cn("h-2 w-2 rounded-full animate-sparkle", color === 'gold' ? 'bg-royal-gold/60' : color === 'crimson' ? 'bg-royal-crimson/60' : color === 'navy' ? 'bg-royal-navy/60' : color === 'purple' ? 'bg-royal-purple/60' : 'bg-white/40')}></div>
+            </div>
+            <div className="absolute right-1/4 -top-1 transform translate-x-1/2" style={{ animationDelay: '0.5s' }}>
+              <div className={cn("h-2 w-2 rounded-full animate-sparkle", color === 'gold' ? 'bg-royal-gold/60' : color === 'crimson' ? 'bg-royal-crimson/60' : color === 'navy' ? 'bg-royal-navy/60' : color === 'purple' ? 'bg-royal-purple/60' : 'bg-white/40')}></div>
+            </div>
           </div>
         );
         

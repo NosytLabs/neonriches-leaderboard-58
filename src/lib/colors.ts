@@ -29,6 +29,7 @@ export const gradientClasses = {
   navy: 'bg-gradient-to-r from-royal-navy/80 via-royal-navy to-royal-navy/80',
   velvet: 'bg-gradient-to-r from-royal-velvet/80 via-royal-purple to-royal-velvet/80',
   purple: 'bg-gradient-to-r from-royal-purple/80 via-royal-purple to-royal-purple/80',
+  mahogany: 'bg-gradient-to-r from-royal-mahogany/80 via-royal-mahogany to-royal-mahogany/80',
 };
 
 // Helper to get CSS gradient
@@ -46,6 +47,8 @@ export const getCSSGradient = (type: keyof typeof gradientClasses): string => {
       return 'linear-gradient(to right, rgba(93, 0, 51, 0.8), #4B0082, rgba(93, 0, 51, 0.8))';
     case 'purple':
       return 'linear-gradient(to right, rgba(75, 0, 130, 0.8), #4B0082, rgba(75, 0, 130, 0.8))';
+    case 'mahogany':
+      return 'linear-gradient(to right, rgba(192, 64, 0, 0.8), #C04000, rgba(192, 64, 0, 0.8))';
     default:
       return 'linear-gradient(to right, #8B0000, #D4AF37, #000080)';
   }
@@ -163,5 +166,18 @@ export const getSpendingTierColor = (tier: string) => {
     case 'octopus': return '#800080';
     case 'crab': return ROYAL_COLORS.bronze;
     default: return '#999999';
+  }
+};
+
+// Get spending tier badge class
+export const getSpendingTierBadgeClass = (tier: string) => {
+  switch (tier) {
+    case 'whale': return 'bg-royal-purple/20 text-royal-purple border-royal-purple/50';
+    case 'shark': return 'bg-royal-crimson/20 text-royal-crimson border-royal-crimson/50';
+    case 'dolphin': return 'bg-royal-navy/20 text-royal-navy border-royal-navy/50';
+    case 'fish': return 'bg-blue-500/20 text-blue-500 border-blue-500/50';
+    case 'octopus': return 'bg-purple-500/20 text-purple-500 border-purple-500/50';
+    case 'crab': return 'bg-amber-700/20 text-amber-700 border-amber-700/50';
+    default: return 'bg-gray-500/20 text-gray-500 border-gray-500/50';
   }
 };
