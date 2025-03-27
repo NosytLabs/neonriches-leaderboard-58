@@ -4,6 +4,7 @@ import { createRoot } from 'react-dom/client';
 import App from './App.tsx';
 import './index.css';
 import { initPerformanceMonitoring } from './utils/performanceMonitoring';
+import { AuthProvider } from './contexts/AuthContext';
 
 // Initialize performance monitoring
 if (process.env.NODE_ENV === 'production') {
@@ -21,4 +22,8 @@ document.addEventListener('DOMContentLoaded', () => {
   document.head.appendChild(linkElement);
 });
 
-root.render(<App />);
+root.render(
+  <AuthProvider>
+    <App />
+  </AuthProvider>
+);
