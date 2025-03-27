@@ -1,5 +1,7 @@
 
 // Mock events data
+import { getTeamColor as getTeamColorUtil } from '@/components/leaderboard/TeamUtils';
+
 export const currentEvent = {
   id: 1,
   name: 'Poke Party',
@@ -41,35 +43,5 @@ export const topUsers = [
   { id: 5, username: 'MetaverseRuler', amountSpent: 750, rank: 5, team: 'blue', profileImage: 'https://i.pravatar.cc/150?img=5' },
 ];
 
-export const formatDate = (date: Date) => {
-  return date.toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric'
-  });
-};
-
-export const getTeamColor = (team: string) => {
-  switch (team) {
-    case 'red': return 'team-red';
-    case 'green': return 'team-green';
-    case 'blue': return 'team-blue';
-    default: return 'white';
-  }
-};
-
-// Calculate time left from now to a target date
-export const getTimeLeft = (targetDate: Date) => {
-  const difference = targetDate.getTime() - new Date().getTime();
-  
-  if (difference <= 0) {
-    return { days: 0, hours: 0, minutes: 0, seconds: 0 };
-  }
-  
-  return {
-    days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-    hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-    minutes: Math.floor((difference / 1000 / 60) % 60),
-    seconds: Math.floor((difference / 1000) % 60)
-  };
-};
+// Use the utility from TeamUtils for consistency across the app
+export const getTeamColor = getTeamColorUtil;

@@ -12,10 +12,10 @@ import EventBenefits from '@/components/events/EventBenefits';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from '@/hooks/use-toast';
-import { Calendar, DollarSign, Info } from 'lucide-react';
+import { Calendar, DollarSign } from 'lucide-react';
 import CountdownTimer from '@/components/events/CountdownTimer';
 import { currentEvent, upcomingEvents } from '@/components/events/data';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import RankingDisclaimer from '@/components/shared/RankingDisclaimer';
 
 const Events = () => {
   const { user } = useAuth();
@@ -50,12 +50,11 @@ const Events = () => {
             Participate in exclusive events to earn cosmetic rewards and customize your profile.
           </p>
           
-          <Alert className="mb-8 border-white/10 bg-white/5">
-            <Info className="h-4 w-4 text-white" />
-            <AlertDescription className="text-white/80">
-              <strong>Important:</strong> All events provide only cosmetic rewards and profile customizations. Your rank on the leaderboard is always calculated solely based on your total spending, where $1 equals 1 unit of rank.
-            </AlertDescription>
-          </Alert>
+          <RankingDisclaimer 
+            variant="info" 
+            className="mb-8"
+            messagePrefix="Important:"
+          />
           
           {/* Weekly Schedule Overview */}
           <Card className="glass-morphism border-white/10 mb-8 p-6">

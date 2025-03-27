@@ -1,11 +1,11 @@
 
 import React from 'react';
-import { Clock, DollarSign, Info } from 'lucide-react';
+import { Clock, DollarSign } from 'lucide-react';
 import { topUsers } from './data';
 import { usePokeEffect } from './hooks/usePokeEffect';
 import PokeUserCard from './components/PokeUserCard';
 import { TooltipProvider } from '@/components/ui/tooltip';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import RankingDisclaimer from '@/components/shared/RankingDisclaimer';
 
 const PokePartyDescription = () => {
   return (
@@ -31,18 +31,6 @@ const PokePartyDescription = () => {
   );
 };
 
-const PokePartyDisclaimer = () => {
-  return (
-    <Alert className="mb-6 border-white/10 bg-white/5">
-      <Info className="h-4 w-4 text-royal-gold" />
-      <AlertDescription className="text-white/80">
-        <strong>Important:</strong> Poking is purely cosmetic! It only changes how a user's rank appears visually for 24 hours. 
-        It doesn't affect their actual rank calculation, which is always $1 = 1 rank point.
-      </AlertDescription>
-    </Alert>
-  );
-};
-
 const PokePartyTargets = () => {
   const { pokeCooldown, pokeEffects, handlePoke } = usePokeEffect();
 
@@ -50,7 +38,11 @@ const PokePartyTargets = () => {
     <TooltipProvider>
       <div className="mb-12">
         <PokePartyDescription />
-        <PokePartyDisclaimer />
+        <RankingDisclaimer 
+          className="mb-6" 
+          messagePrefix="Important:" 
+          variant="info" 
+        />
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {topUsers.map((targetUser) => (

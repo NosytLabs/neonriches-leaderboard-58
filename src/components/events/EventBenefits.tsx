@@ -1,7 +1,7 @@
 
 import React from 'react';
-import { Trophy, Award, Users, DollarSign } from 'lucide-react';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Trophy, Award, Users } from 'lucide-react';
+import RankingDisclaimer from '@/components/shared/RankingDisclaimer';
 
 const EventBenefits = () => {
   return (
@@ -13,13 +13,7 @@ const EventBenefits = () => {
         </p>
       </div>
       
-      <Alert className="mb-6 border-white/10 bg-white/5">
-        <DollarSign className="h-4 w-4 text-royal-gold" />
-        <AlertDescription className="text-white/80">
-          <strong>Important:</strong> Your rank is always determined by your total spending. $1 = 1 rank point, with no exceptions.
-          Events only provide cosmetic rewards that don't modify this calculation.
-        </AlertDescription>
-      </Alert>
+      <RankingDisclaimer className="mb-6" variant="info" />
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="glass-morphism rounded-lg p-4 border border-white/10 text-center">

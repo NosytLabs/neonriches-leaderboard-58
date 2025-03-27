@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Clock } from 'lucide-react';
+import { getTimeLeft } from '@/utils/timeUtils';
 
 interface CountdownTimerProps {
   targetDate: Date;
@@ -13,36 +14,26 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({
   variant = 'default',
   className = '' 
 }) => {
-  const [timeLeft, setTimeLeft] = useState<{
-    days: number;
-    hours: number;
-    minutes: number;
-    seconds: number;
-  }>({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-
+  const [timeLeft, setTimeLeft] = useState(getTimeLeft(targetDate));
   const [isActive, setIsActive] = useState(true);
 
   useEffect(() => {
-    const calculateTimeLeft = () => {
-      const difference = targetDate.getTime() - new Date().getTime();
-      
-      if (difference <= 0) {
-        setIsActive(false);
-        return { days: 0, hours: 0, minutes: 0, seconds: 0 };
-      }
-      
-      return {
-        days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-        hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-        minutes: Math.floor((difference / 1000 / 60) % 60),
-        seconds: Math.floor((difference / 1000) % 60)
-      };
-    };
-
-    setTimeLeft(calculateTimeLeft());
+    // Calculate time left on component mount
+    setTimeLeft(getTimeLeft(targetDate));
     
+    // Update every second
     const timer = setInterval(() => {
-      setTimeLeft(calculateTimeLeft());
+      const newTimeLeft = getTimeLeft(targetDate);
+      setTimeLeft(newTimeLeft);
+      
+      // Stop timer when we reach the target date
+      if (newTimeLeft.days === 0 && 
+          newTimeLeft.hours === 0 && 
+          newTimeLeft.minutes === 0 && 
+          newTimeLeft.seconds === 0) {
+        setIsActive(false);
+        clearInterval(timer);
+      }
     }, 1000);
 
     return () => clearInterval(timer);
