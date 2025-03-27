@@ -4,6 +4,7 @@ import Header from '@/components/Header';
 import Hero from '@/components/Hero';
 import Leaderboard from '@/components/Leaderboard';
 import TeamSection from '@/components/TeamSection';
+import RoyalFeatures from '@/components/RoyalFeatures';
 import ProfilePreview from '@/components/ProfilePreview';
 import Footer from '@/components/Footer';
 
@@ -38,6 +39,7 @@ const Index = () => {
         <Hero />
         <Leaderboard />
         <TeamSection />
+        <RoyalFeatures />
         <ProfilePreview />
       </main>
       <Footer />

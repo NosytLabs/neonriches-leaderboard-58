@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Search, ArrowUp, ArrowDown, Filter, Crown, Award, Shield } from 'lucide-react';
+import { Search, ArrowUp, ArrowDown, Filter, Crown, Award, Shield, Scroll } from 'lucide-react';
 
 const mockLeaderboardData = [
   { id: 1, username: 'SupremeOverlord', amountSpent: 1500, rank: 1, team: 'red', profileImage: 'https://i.pravatar.cc/150?img=1', title: 'High King' },
@@ -43,7 +43,7 @@ const getTeamName = (team: string) => {
   }
 };
 
-const Leaderboard = () => {
+const RoyalCourt = () => {
   const [leaderboardData, setLeaderboardData] = useState(mockLeaderboardData);
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
   const [activeFilter, setActiveFilter] = useState<string | null>(null);
@@ -77,8 +77,9 @@ const Leaderboard = () => {
     <section id="leaderboard" className="w-full py-20 px-6 throne-bg">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
-          <div className="inline-block mb-4">
-            <Crown size={50} className="text-royal-gold animate-crown-glow mx-auto" />
+          <div className="inline-block relative mb-4">
+            <Crown size={50} className="text-royal-gold animate-royal-pulse mx-auto" />
+            <div className="absolute -inset-4 bg-royal-gold/20 blur-xl rounded-full animate-pulse-slow"></div>
           </div>
           <h2 className="text-4xl font-royal royal-gradient mb-4">The Royal Court</h2>
           <p className="text-white/70 max-w-2xl mx-auto font-serif">
@@ -93,17 +94,18 @@ const Leaderboard = () => {
               <input 
                 type="text" 
                 placeholder="Search nobles..." 
-                className="w-full bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 py-2 text-sm text-white placeholder:text-white/40 focus:outline-none focus:ring-1 focus:ring-white/20"
+                className="w-full bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 py-2 text-sm text-white placeholder:text-white/40 focus:outline-none focus:ring-1 focus:ring-royal-gold/50"
               />
             </div>
             
-            <div className="flex items-center space-x-2">
+            <div className="flex flex-wrap gap-2 items-center">
               <Button
                 variant="outline" 
                 size="sm" 
                 className={`glass-morphism border-white/10 text-white hover:bg-white/10 hover:text-white ${activeFilter === null ? 'bg-white/10' : ''}`}
                 onClick={() => handleFilter(null)}
               >
+                <Scroll size={14} className="mr-1.5" />
                 All Courts
               </Button>
               <Button
@@ -155,33 +157,36 @@ const Leaderboard = () => {
           
           <div className="max-h-[600px] overflow-y-auto scrollbar-none">
             <table className="w-full">
-              <thead className="bg-white/5">
-                <tr className="text-left text-white/50 text-sm font-royal uppercase tracking-wider">
-                  <th className="py-4 px-6 font-medium">Rank</th>
+              <thead className="bg-gradient-to-r from-royal-purple/10 via-royal-gold/10 to-royal-blue/10">
+                <tr className="text-left text-white/70 text-sm font-royal uppercase tracking-wider">
+                  <th className="py-4 px-6 font-medium">Position</th>
                   <th className="py-4 px-6 font-medium">Noble</th>
                   <th className="py-4 px-6 font-medium">Title</th>
                   <th className="py-4 px-6 font-medium">Dynasty</th>
-                  <th className="py-4 px-6 font-medium text-right">Royal Contribution</th>
+                  <th className="py-4 px-6 font-medium text-right">Royal Tribute</th>
                 </tr>
               </thead>
               <tbody>
                 {leaderboardData.map((user, index) => (
                   <tr 
                     key={user.id} 
-                    className="text-left border-t border-white/5 hover:bg-white/5 transition-colors animate-fade-in"
+                    className="text-left border-t border-white/5 hover:bg-white/5 transition-colors animate-fade-in relative"
                     style={{ animationDelay: `${index * 50}ms` }}
                   >
                     <td className="py-4 px-6">
                       <div className="flex items-center">
                         <span className="font-mono text-xl font-bold text-white/70">#{user.rank}</span>
                         {user.rank === 1 && (
-                          <Crown size={16} className="ml-2 text-royal-gold animate-crown-glow" />
+                          <div className="relative">
+                            <Crown size={16} className="ml-2 text-royal-gold animate-pulse-slow" />
+                            <div className="absolute -inset-2 bg-royal-gold/20 blur-sm rounded-full"></div>
+                          </div>
                         )}
                       </div>
                     </td>
                     <td className="py-4 px-6">
                       <div className="flex items-center">
-                        <div className={`w-10 h-10 rounded-full overflow-hidden border-2 border-${getTeamColor(user.team)} mr-3`}>
+                        <div className={`w-10 h-10 rounded-full overflow-hidden border-2 border-${getTeamColor(user.team)} mr-3 ring-2 ring-${getTeamColor(user.team)}/20`}>
                           <img src={user.profileImage} alt={user.username} className="w-full h-full object-cover" />
                         </div>
                         <span className="font-medium font-royal">{user.username}</span>
@@ -207,8 +212,9 @@ const Leaderboard = () => {
         </div>
         
         <div className="text-center">
-          <Button variant="outline" className="glass-morphism border-white/10 text-white hover:bg-white/10 hover:text-white font-royal uppercase tracking-wider">
-            View More Nobles
+          <Button variant="outline" className="glass-morphism border-white/10 text-white hover:bg-white/10 hover:text-white font-royal uppercase tracking-wider group relative overflow-hidden">
+            <span className="relative z-10">View Full Court Registry</span>
+            <div className="absolute inset-0 bg-gradient-to-r from-royal-purple/30 via-royal-gold/30 to-royal-blue/30 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
           </Button>
         </div>
       </div>
@@ -216,4 +222,4 @@ const Leaderboard = () => {
   );
 };
 
-export default Leaderboard;
+export default RoyalCourt;

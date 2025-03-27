@@ -2,7 +2,7 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { DollarSign, User, Settings, Menu } from 'lucide-react';
+import { DollarSign, User, Crown, Menu } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import {
   DropdownMenu,
@@ -26,8 +26,9 @@ const Header = () => {
     <header className="w-full fixed top-0 z-50 glass-morphism py-4 px-6">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         <div className="flex items-center space-x-2">
-          <Link to="/" className="text-2xl font-bold tracking-tighter text-gradient">
-            P2W.FUN
+          <Link to="/" className="text-2xl font-bold tracking-tighter text-gradient group relative">
+            <span className="relative z-10">SpendThrone</span>
+            <div className="absolute -inset-x-2 -inset-y-1 bg-royal-gold/10 blur-md rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
           </Link>
           <span className="text-xs bg-white/10 px-2 py-0.5 rounded-full text-white/70">
             BETA
@@ -39,13 +40,13 @@ const Header = () => {
             Home
           </Link>
           <Link to="/dashboard" className="text-white/80 hover:text-white transition-colors">
-            Dashboard
+            Treasury
           </Link>
           <Link to="/events" className="text-white/80 hover:text-white transition-colors">
-            Events
+            Royal Events
           </Link>
           <Link to="/profile" className="text-white/80 hover:text-white transition-colors">
-            Profile
+            Noble Profile
           </Link>
         </div>
         
@@ -55,36 +56,37 @@ const Header = () => {
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="outline" size="sm" className="glass-morphism border-white/10 text-white hover:bg-white/10 hover:text-white">
-                    <User size={16} className="mr-2" />
+                    <Crown size={16} className="mr-2 text-royal-gold" />
                     {user.username}
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="glass-morphism border-white/10 bg-background/95 backdrop-blur-xl">
-                  <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                  <DropdownMenuLabel>My Royal Account</DropdownMenuLabel>
                   <DropdownMenuSeparator className="bg-white/10" />
                   <DropdownMenuItem onClick={() => navigate('/profile')}>
-                    Profile
+                    Noble Profile
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => navigate('/dashboard')}>
-                    Dashboard
+                    Royal Treasury
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => navigate('/events')}>
-                    Events
+                    Royal Events
                   </DropdownMenuItem>
                   <DropdownMenuSeparator className="bg-white/10" />
                   <DropdownMenuItem onClick={handleSignOut}>
-                    Sign Out
+                    Abdicate Throne
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
               
               <Button 
                 size="sm" 
-                className="bg-gradient-to-r from-team-red via-team-green to-team-blue hover:opacity-90 text-white"
+                className="bg-gradient-to-r from-royal-purple via-royal-gold to-royal-blue hover:opacity-90 text-white group relative overflow-hidden"
                 onClick={() => navigate('/dashboard')}
               >
-                <DollarSign size={16} className="mr-2" />
-                Get Rank
+                <div className="absolute inset-0 bg-white/20 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <Crown size={16} className="mr-2 text-white" />
+                Fund Ascension
               </Button>
             </>
           ) : (
@@ -96,15 +98,16 @@ const Header = () => {
                 onClick={() => navigate('/auth')}
               >
                 <User size={16} className="mr-2" />
-                Sign In
+                Enter Court
               </Button>
               <Button 
                 size="sm" 
-                className="bg-gradient-to-r from-team-red via-team-green to-team-blue hover:opacity-90 text-white"
+                className="bg-gradient-to-r from-royal-purple via-royal-gold to-royal-blue hover:opacity-90 text-white group relative overflow-hidden"
                 onClick={() => navigate('/auth')}
               >
-                <DollarSign size={16} className="mr-2" />
-                Get Rank
+                <div className="absolute inset-0 bg-white/20 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <Crown size={16} className="mr-2" />
+                Claim Nobility
               </Button>
             </>
           )}
@@ -121,13 +124,13 @@ const Header = () => {
                   Home
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => navigate('/dashboard')}>
-                  Dashboard
+                  Royal Treasury
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => navigate('/events')}>
-                  Events
+                  Royal Events
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => navigate('/profile')}>
-                  Profile
+                  Noble Profile
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
