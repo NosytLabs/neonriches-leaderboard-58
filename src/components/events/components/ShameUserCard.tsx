@@ -60,7 +60,7 @@ const ShameUserCard: React.FC<ShameUserCardProps> = ({
   
   // Get visual effects for current shame status
   const getShameEffects = () => {
-    if (!isShamed) return {};
+    if (!isShamed) return { border: '', bg: '', text: '' }; // Provide default empty values
     return getShameActionColor(isShamed);
   };
   

@@ -76,7 +76,7 @@ const Auth = () => {
             </Tabs>
           </Card>
           
-          <RoyalDivider variant="line" label="SECURE AUTHENTICATION" color="purple" className="mt-8 mb-4" />
+          <RoyalDivider variant="line" label="SECURE AUTHENTICATION" color="royal" className="mt-8 mb-4" />
           
           <div className="text-center mt-4 text-sm text-white/50 animate-fade-in" style={{ animationDelay: "200ms" }}>
             <p>By signing up, you agree to our satirical terms of service.<br/>Remember: In this kingdom, your worth is measured by your spending!</p>
