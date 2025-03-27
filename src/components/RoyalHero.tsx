@@ -1,7 +1,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Crown, Coins, Gem, Shield, DollarSign } from 'lucide-react';
+import { Crown, Coins, Gem, Shield, DollarSign, Volume2, VolumeX } from 'lucide-react';
 import ThroneBackground from '@/components/ui/throne-background';
 import { useToast } from "@/hooks/use-toast";
 import useNotificationSounds from '@/hooks/use-notification-sounds';
@@ -15,12 +15,14 @@ import HeroValueDisplay from '@/components/ui/hero/HeroValueDisplay';
 import HeroFeatureSection from '@/components/ui/hero/HeroFeatureSection';
 import HeroFooter from '@/components/ui/hero/HeroFooter';
 import useFloatingCoins from '@/hooks/use-floating-coins';
+import { Button } from '@/components/ui/button';
+import { SoundCategoryEnum } from '@/hooks/sounds/types';
 
 const RoyalHero = () => {
   const navigate = useNavigate();
   const heroRef = useRef<HTMLElement>(null);
   const { toast } = useToast();
-  const { playSound } = useNotificationSounds();
+  const { playSound, isMuted, toggleMute } = useNotificationSounds();
   const [isVisible, setIsVisible] = useState(false);
   const [hasInteracted, setHasInteracted] = useState(false);
   
@@ -57,7 +59,7 @@ const RoyalHero = () => {
   
   const handleCrownClick = () => {
     setHasInteracted(true);
-    playSound('royalAnnouncement', 0.2);
+    playSound(SoundCategoryEnum.royalAnnouncement, 0.2);
     toast({
       title: "Royal Decree",
       description: "The crown acknowledges your admiration. Now prove your worth with currency!",
@@ -89,7 +91,7 @@ const RoyalHero = () => {
   
   const handleQuickAscension = () => {
     setHasInteracted(true);
-    playSound('reward', 0.3);
+    playSound(SoundCategoryEnum.reward, 0.3);
     toast({
       title: "Nobility Beckons!",
       description: "Your journey to meaningless digital status begins now!",
@@ -164,6 +166,18 @@ const RoyalHero = () => {
       
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <div className="flex flex-col items-center text-center">
+          <div className="absolute top-0 right-4 md:right-8">
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="rounded-full p-2 text-white/60 hover:text-white/90 hover:bg-white/10"
+              onClick={toggleMute}
+              title={isMuted ? "Unmute sounds" : "Mute sounds"}
+            >
+              {isMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}
+            </Button>
+          </div>
+          
           <HeroStatusTag>
             <span className="text-sm text-white/80 flex items-center">
               <span className="inline-block w-2.5 h-2.5 rounded-full bg-royal-gold mr-2 animate-pulse"></span>
