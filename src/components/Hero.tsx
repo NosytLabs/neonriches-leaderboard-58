@@ -30,7 +30,7 @@ const Hero = () => {
           </div>
           
           <h1 className="text-5xl md:text-7xl font-royal tracking-tighter mb-6">
-            <span className="block royal-gradient">Ascend to the</span>
+            <span className="block royal-gradient">Ascend the</span>
             <span className="block royal-gradient">Throne</span>
           </h1>
           
