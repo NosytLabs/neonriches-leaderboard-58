@@ -1,5 +1,5 @@
 
-import { SoundMap, SoundInfo } from './types';
+import { SoundMap } from './types';
 
 // Core sounds that load immediately
 export const coreSounds: SoundMap = {

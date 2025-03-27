@@ -1,10 +1,12 @@
 
+export interface SoundAsset {
+  url: string;
+  volume: number;
+  description: string;
+}
+
 export interface SoundAssets {
-  [key: string]: {
-    url: string;
-    volume: number;
-    description: string;
-  };
+  [key: string]: SoundAsset;
 }
 
 export interface SoundInfo {
@@ -13,7 +15,6 @@ export interface SoundInfo {
   description: string;
 }
 
-// Add the missing types
 export interface SoundMap {
   [key: string]: {
     src: string;

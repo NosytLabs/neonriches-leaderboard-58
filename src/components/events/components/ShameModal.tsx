@@ -51,6 +51,7 @@ const ShameModal: React.FC<ShameModalProps> = ({
         };
         
         const emojis = getEmojis(shameType);
+        const fragment = document.createDocumentFragment();
         
         for (let i = 0; i < 12; i++) {
           const particle = document.createElement('div');
@@ -65,15 +66,18 @@ const ShameModal: React.FC<ShameModalProps> = ({
           particle.style.top = `${randomY}px`;
           particle.style.animationDuration = `${2 + Math.random() * 2}s`;
           
-          modalElement.appendChild(particle);
-          
-          // Remove particle after animation completes
-          setTimeout(() => {
-            if (modalElement.contains(particle)) {
-              modalElement.removeChild(particle);
-            }
-          }, 4000);
+          fragment.appendChild(particle);
         }
+        
+        modalElement.appendChild(fragment);
+        
+        // Remove particles after animation completes
+        setTimeout(() => {
+          const particles = modalElement.querySelectorAll('.floating-shame-particle');
+          particles.forEach(particle => {
+            particle.remove();
+          });
+        }, 4000);
       }
     }, 100);
     
@@ -195,18 +199,18 @@ const ShameModal: React.FC<ShameModalProps> = ({
               }
             />
             
-            <Button 
-              variant="outline" 
-              className="w-full glass-morphism border-white/10 hover:bg-white/10"
+            <Button
+              variant="outline"
+              className="w-full glass-morphism border-white/10"
               onClick={onCancel}
             >
               Cancel
             </Button>
           </>
         ) : (
-          <div className="w-full flex justify-center">
-            <div className="animate-spin text-2xl">⚙️</div>
-          </div>
+          <Button disabled className="w-full">
+            Processing...
+          </Button>
         )}
       </DialogFooter>
     </DialogContent>

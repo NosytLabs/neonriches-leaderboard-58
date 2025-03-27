@@ -21,12 +21,17 @@ const useFloatingCoins = ({
   minDelay = 2000, // Minimum delay between animations
   maxDelay = 5000, // Maximum delay between animations
 }: UseFloatingCoinsOptions) => {
+  const animationFrameId = useRef<number | null>(null);
+  const timeoutId = useRef<NodeJS.Timeout | null>(null);
   
   useEffect(() => {
     if (!containerRef.current || !enabled) return;
     
-    const interval = setInterval(() => {
+    const createCoin = () => {
       if (Math.random() > frequency && containerRef.current) {
+        // Create a document fragment for better performance
+        const fragment = document.createDocumentFragment();
+        
         const coin = document.createElement('div');
         coin.className = 'absolute';
         coin.innerHTML = `<div class="flex items-center justify-center w-8 h-8 rounded-full bg-royal-gold/20">
@@ -37,22 +42,40 @@ const useFloatingCoins = ({
           </svg>
         </div>`;
         
+        // Set styles before adding to DOM to avoid reflows
         coin.style.left = `${Math.random() * 80 + 10}%`;
         coin.style.top = `${Math.random() * 80 + 10}%`;
         coin.style.animation = `float ${duration / 1000}s ease-in forwards`;
         coin.style.willChange = 'transform, opacity';
         
-        containerRef.current.appendChild(coin);
+        fragment.appendChild(coin);
+        containerRef.current.appendChild(fragment);
         
+        // Remove coin after animation completes
         setTimeout(() => {
           if (coin.parentNode) {
             coin.remove();
           }
         }, duration);
       }
-    }, Math.floor(Math.random() * (maxDelay - minDelay) + minDelay));
+      
+      // Schedule next coin
+      timeoutId.current = setTimeout(createCoin, 
+        Math.floor(Math.random() * (maxDelay - minDelay) + minDelay));
+    };
     
-    return () => clearInterval(interval);
+    // Start the animation cycle
+    createCoin();
+    
+    return () => {
+      // Clean up properly
+      if (timeoutId.current) {
+        clearTimeout(timeoutId.current);
+      }
+      if (animationFrameId.current) {
+        cancelAnimationFrame(animationFrameId.current);
+      }
+    };
   }, [containerRef, enabled, frequency, duration, minDelay, maxDelay]);
 };
 
