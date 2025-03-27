@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 // User types
@@ -14,6 +13,7 @@ export interface UserProfile {
   profileImage?: string;
   spendStreak: number;
   lastSpendDate?: Date;
+  gender?: 'king' | 'queen' | 'monarch' | null;
 }
 
 interface AuthContextType {
@@ -39,7 +39,8 @@ const MOCK_USER: UserProfile = {
   tier: 'pro',
   profileImage: 'https://i.pravatar.cc/150?img=1',
   spendStreak: 4,
-  lastSpendDate: new Date()
+  lastSpendDate: new Date(),
+  gender: 'monarch'
 };
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {

@@ -17,9 +17,12 @@ import ThroneBackground from '@/components/ui/throne-background';
 import RoyalDivider from '@/components/ui/royal-divider';
 import { Crown, ChevronsUp, TrendingUp, Trophy, Coins } from 'lucide-react';
 import { toast } from "@/hooks/use-toast";
+import GenderSelection from '@/components/dashboard/GenderSelection';
+import InteractiveLeaderboard from '@/components/dashboard/InteractiveLeaderboard';
+import RoyalThrone from '@/components/3d/RoyalThrone';
 
 const Dashboard = () => {
-  const { user } = useAuth();
+  const { user, updateProfile } = useAuth();
   const navigate = useNavigate();
   const [suggestedAmount, setSuggestedAmount] = useState(100);
   const [showRoyalWelcome, setShowRoyalWelcome] = useState(false);
@@ -34,14 +37,16 @@ const Dashboard = () => {
   }, []);
 
   useEffect(() => {
-    if (showRoyalWelcome) {
+    if (showRoyalWelcome && user) {
+      const genderTitle = user.gender === 'king' ? 'King' : user.gender === 'queen' ? 'Queen' : 'Noble Monarch';
+      
       toast({
-        title: "Royal Presence Detected",
-        description: "Welcome back to your kingdom, noble spender. Your coffers await your generosity!",
+        title: `Royal Presence Detected`,
+        description: `Welcome back to your kingdom, ${genderTitle} ${user.username}. Your coffers await your generosity!`,
         duration: 5000,
       });
     }
-  }, [showRoyalWelcome]);
+  }, [showRoyalWelcome, user]);
 
   if (!user) {
     // Redirect to login if not authenticated
@@ -75,6 +80,36 @@ const Dashboard = () => {
     });
   };
 
+  const handleGenderChange = async (gender: 'king' | 'queen' | 'monarch' | null) => {
+    try {
+      await updateProfile({ gender });
+      
+      const genderText = gender === 'king' ? 'King' : 
+                        gender === 'queen' ? 'Queen' : 
+                        gender === 'monarch' ? 'Monarch' : 'Noble';
+      
+      toast({
+        title: "Royal Title Updated",
+        description: `You shall now be addressed as ${genderText} throughout the realm.`,
+        duration: 3000,
+      });
+    } catch (error) {
+      console.error("Failed to update gender preference:", error);
+      toast({
+        title: "Update Failed",
+        description: "Could not update your royal title preference.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleThroneClick = () => {
+    toast({
+      title: "The Throne Awaits",
+      description: "Continue your generous contributions to claim your rightful place upon the royal throne!",
+    });
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground">
       <Header />
@@ -103,13 +138,35 @@ const Dashboard = () => {
           <RoyalDivider variant="crown" label="FINANCIAL KINGDOM" />
           
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8 animate-fade-in" style={{ animationDelay: "100ms" }}>
-            <SpendingChart data={mockSpendingData} />
-            <PrizePool onBoostClick={setSuggestedAmount} />
+            <div className="lg:col-span-2">
+              <SpendingChart data={mockSpendingData} />
+            </div>
+            <div className="glass-morphism rounded-lg border border-white/10 p-6 flex flex-col">
+              <h3 className="text-lg font-bold mb-4 royal-gradient">Your Royal Throne</h3>
+              <div className="flex-grow">
+                <RoyalThrone 
+                  size="medium" 
+                  color={user.team === 'red' ? '#9B26AF' : user.team === 'green' ? '#FFD700' : '#0055A4'} 
+                  animate={true}
+                  onThroneClick={handleThroneClick}
+                />
+              </div>
+              <p className="text-sm text-white/70 mt-3 italic text-center">
+                Behold your throne's magnificence, a reflection of your status in the realm.
+              </p>
+            </div>
           </div>
           
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8 animate-fade-in" style={{ animationDelay: "200ms" }}>
             <TeamDistribution data={mockTeamDistribution} />
             <RankTrajectory data={mockRankHistory} />
+            <GenderSelection userProfile={user} onGenderChange={handleGenderChange} />
+          </div>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8 animate-fade-in" style={{ animationDelay: "300ms" }}>
+            <div className="lg:col-span-2">
+              <InteractiveLeaderboard />
+            </div>
             <CashThroneUpgrade 
               user={user} 
               onPaymentSuccess={handlePaymentSuccess} 
