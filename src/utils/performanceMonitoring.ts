@@ -90,8 +90,14 @@ class PerformanceMonitor {
     this.createObserver('layout-shift', (entries) => {
       let clsValue = 0;
       for (const entry of entries.getEntries()) {
-        if (!entry.hadRecentInput) {
-          clsValue += entry.value;
+        // Need to type-cast the entry to access specific properties
+        const layoutShiftEntry = entry as PerformanceEntry & {
+          hadRecentInput?: boolean;
+          value?: number;
+        };
+        
+        if (!layoutShiftEntry.hadRecentInput) {
+          clsValue += layoutShiftEntry.value || 0;
         }
       }
       const rating = this.getRating('CLS', clsValue);
