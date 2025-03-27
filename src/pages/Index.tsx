@@ -6,6 +6,8 @@ import Leaderboard from '@/components/Leaderboard';
 import TeamSection from '@/components/TeamSection';
 import RoyalFeatures from '@/components/RoyalFeatures';
 import ProfilePreview from '@/components/ProfilePreview';
+import RoyalBadges from '@/components/RoyalBadges';
+import RoyalFAQ from '@/components/RoyalFAQ';
 import Footer from '@/components/Footer';
 
 const Index = () => {
@@ -40,7 +42,9 @@ const Index = () => {
         <Leaderboard />
         <TeamSection />
         <RoyalFeatures />
+        <RoyalBadges />
         <ProfilePreview />
+        <RoyalFAQ />
       </main>
       <Footer />
     </div>

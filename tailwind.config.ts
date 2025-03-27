@@ -76,6 +76,8 @@ export default {
 					blue: '#0055A4',   // Royal Blue
 					crimson: '#DC143C',// Royal Crimson
 					emerald: '#50C878',// Royal Emerald
+					amber: '#FFBF00',  // Royal Amber
+					silver: '#C0C0C0',  // Royal Silver
 				}
 			},
 			borderRadius: {
