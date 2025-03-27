@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -63,18 +64,22 @@ export default {
 					ring: 'hsl(var(--sidebar-ring))'
 				},
 				team: {
-					red: '#8B0000',
-					green: '#CFB53B',
-					blue: '#000080',
+					red: '#8B0000',    // Deeper crimson
+					green: '#CFB53B',  // Royal gold
+					blue: '#000080',   // Navy blue
 				},
 				royal: {
-					crimson: '#8B0000',
-					gold: '#CFB53B',
-					navy: '#000080',
-					purple: '#4B0082',
-					bronze: '#CD7F32',
-					parchment: '#F5DEB3',
-					ink: '#1A1A1A',
+					crimson: '#8B0000',   // Deep red
+					gold: '#D4AF37',      // Richer gold
+					navy: '#000080',      // Navy blue
+					purple: '#4B0082',    // Royal purple
+					bronze: '#CD7F32',    // Bronze
+					silver: '#C0C0C0',    // Silver
+					parchment: '#F5DEB3', // Parchment
+					amber: '#FFBF00',     // Amber
+					mahogany: '#C04000',  // Mahogany
+					velvet: '#5D0033',    // Velvet
+					ink: '#1A1A1A',       // Ink black
 				}
 			},
 			borderRadius: {
@@ -132,8 +137,8 @@ export default {
 					'100%': { backgroundPosition: '-200% 0' }
 				},
 				'crown-glow': {
-					'0%, 100%': { filter: 'drop-shadow(0 0 8px rgba(255, 215, 0, 0.6))' },
-					'50%': { filter: 'drop-shadow(0 0 20px rgba(255, 215, 0, 1))' }
+					'0%, 100%': { filter: 'drop-shadow(0 0 8px rgba(212, 175, 55, 0.6))' },
+					'50%': { filter: 'drop-shadow(0 0 20px rgba(212, 175, 55, 1))' }
 				},
 				'royal-pulse': {
 					'0%, 100%': { transform: 'scale(1)' },
@@ -181,10 +186,11 @@ export default {
 				'sans': ['Inter', 'sans-serif']
 			},
 			backgroundImage: {
-				'gradient-royal': 'linear-gradient(135deg, #B026FF 0%, #FFD700 50%, #1E56A0 100%)',
-				'gradient-gold': 'linear-gradient(to right, #FFD700, #FFC000, #FFD700)',
-				'gradient-purple': 'linear-gradient(to right, #9B26AF, #B026FF, #9B26AF)',
-				'gradient-blue': 'linear-gradient(to right, #0055A4, #1E56A0, #0055A4)',
+				'gradient-royal': 'linear-gradient(135deg, #8B0000 0%, #D4AF37 50%, #000080 100%)',
+				'gradient-gold': 'linear-gradient(to right, #D4AF37, #FFBF00, #D4AF37)',
+				'gradient-crimson': 'linear-gradient(to right, #8B0000, #B22222, #8B0000)',
+				'gradient-navy': 'linear-gradient(to right, #000080, #191970, #000080)',
+				'gradient-velvet': 'linear-gradient(to right, #5D0033, #800020, #5D0033)',
 			}
 		}
 	},

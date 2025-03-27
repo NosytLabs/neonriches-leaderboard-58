@@ -1,36 +1,37 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    --background: 225 25% 7%;
+    --background: 240 30% 5%;
     --foreground: 0 0% 98%;
-    --card: 225 25% 7%;
+    --card: 240 30% 7%;
     --card-foreground: 0 0% 98%;
-    --popover: 225 25% 7%;
+    --popover: 240 30% 7%;
     --popover-foreground: 0 0% 98%;
     --primary: 0 0% 98%;
-    --primary-foreground: 225 20% 10%;
-    --secondary: 225 10% 18%;
+    --primary-foreground: 240 25% 10%;
+    --secondary: 240 15% 18%;
     --secondary-foreground: 0 0% 98%;
-    --muted: 225 10% 18%;
-    --muted-foreground: 225 10% 65%;
-    --accent: 225 10% 18%;
+    --muted: 240 15% 18%;
+    --muted-foreground: 240 15% 65%;
+    --accent: 240 15% 18%;
     --accent-foreground: 0 0% 98%;
-    --destructive: 0 63% 31%;
+    --destructive: 0 65% 30%;
     --destructive-foreground: 0 0% 98%;
-    --border: 225 10% 18%;
-    --input: 225 10% 18%;
-    --ring: 225 10% 84%;
-    --sidebar-background: 225 25% 7%;
+    --border: 240 15% 18%;
+    --input: 240 15% 18%;
+    --ring: 240 15% 84%;
+    --sidebar-background: 240 30% 5%;
     --sidebar-foreground: 0 0% 98%;
     --sidebar-primary: 0 0% 98%;
-    --sidebar-primary-foreground: 225 20% 10%;
-    --sidebar-accent: 225 10% 18%;
+    --sidebar-primary-foreground: 240 25% 10%;
+    --sidebar-accent: 240 15% 18%;
     --sidebar-accent-foreground: 0 0% 98%;
-    --sidebar-border: 225 10% 18%;
-    --sidebar-ring: 225 10% 84%;
+    --sidebar-border: 240 15% 18%;
+    --sidebar-ring: 240 15% 84%;
   }
 }
 
@@ -53,10 +54,10 @@
 
 @keyframes crown-glow {
   0%, 100% {
-    filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.6));
+    filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.6));
   }
   50% {
-    filter: drop-shadow(0 0 20px rgba(255, 215, 0, 1));
+    filter: drop-shadow(0 0 20px rgba(212, 175, 55, 1));
   }
 }
 
@@ -99,7 +100,7 @@
 }
 
 .royal-gradient {
-  background: linear-gradient(90deg, #8B0000, #CFB53B, #000080);
+  background: linear-gradient(90deg, #8B0000, #D4AF37, #000080);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -107,7 +108,7 @@
 }
 
 .glass-morphism {
-  background: rgba(26, 30, 44, 0.7);
+  background: rgba(20, 20, 40, 0.7);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -119,7 +120,7 @@
 }
 
 .border-royal-gold {
-  border-color: #CFB53B;
+  border-color: #D4AF37;
 }
 
 .border-royal-navy {
@@ -131,7 +132,7 @@
 }
 
 .text-royal-gold {
-  color: #CFB53B;
+  color: #D4AF37;
 }
 
 .text-royal-navy {
@@ -143,7 +144,7 @@
 }
 
 .bg-royal-gold {
-  background-color: #CFB53B;
+  background-color: #D4AF37;
 }
 
 .bg-royal-navy {
@@ -155,11 +156,11 @@
 }
 
 .throne-bg {
-  background-color: #16213E;
+  background-color: #0D0D20;
   background-image: 
-    radial-gradient(circle at 10% 20%, rgba(157, 23, 77, 0.08) 0%, transparent 50%),
-    radial-gradient(circle at 90% 50%, rgba(255, 215, 0, 0.08) 0%, transparent 50%),
-    radial-gradient(circle at 50% 80%, rgba(30, 58, 138, 0.08) 0%, transparent 50%);
+    radial-gradient(circle at 10% 20%, rgba(139, 0, 0, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 90% 50%, rgba(212, 175, 55, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 50% 80%, rgba(0, 0, 128, 0.08) 0%, transparent 50%);
 }
 
 .royal-shine {

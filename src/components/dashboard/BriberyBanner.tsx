@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { CreditCard, Crown, Sparkles, Star, DollarSign, Gem, Coins, Trophy, HandCoins } from 'lucide-react';
 import PaymentModal from '@/components/PaymentModal';
-import { toast } from "@/hooks/use-toast";
+import { useToast } from "@/hooks/use-toast";
 
 interface PromotionBannerProps {
   onPaymentSuccess: (amount: number) => void;
@@ -11,15 +11,16 @@ interface PromotionBannerProps {
 
 const BriberyBanner = ({ onPaymentSuccess }: PromotionBannerProps) => {
   const [hoveredAmount, setHoveredAmount] = useState<number | null>(null);
+  const { toast } = useToast();
 
   const handleQuickBribe = (amount: number) => {
     // Generate a royal-sounding title based on the amount
     const titles = {
       25: "Humble Squire",
       50: "Knight of the Realm",
-      100: "Baron of Expenditure",
-      250: "Duke of Disposable Income",
-      500: "Grand Marquis of Monetary Excess"
+      100: "Baron of Excess",
+      250: "Duke of Opulence",
+      500: "Grand Marquis of Extravagance"
     };
     
     const title = amount <= 25 ? titles[25] : 
@@ -43,7 +44,7 @@ const BriberyBanner = ({ onPaymentSuccess }: PromotionBannerProps) => {
   };
 
   return (
-    <div className="glass-morphism rounded-xl p-6 border border-white/10 bg-gradient-to-r from-team-red/10 via-team-gold/10 to-team-blue/10 relative overflow-hidden group transition-all duration-500 hover:border-royal-gold/30">
+    <div className="glass-morphism rounded-xl p-6 border border-white/10 bg-gradient-to-r from-royal-crimson/10 via-royal-gold/10 to-royal-navy/10 relative overflow-hidden group transition-all duration-500 hover:border-royal-gold/30">
       {/* Royal background element */}
       <div className="absolute -right-16 -bottom-16 opacity-5 group-hover:opacity-10 transition-opacity duration-500">
         <Crown size={200} className="text-royal-gold" />
@@ -53,7 +54,7 @@ const BriberyBanner = ({ onPaymentSuccess }: PromotionBannerProps) => {
       <div className="absolute inset-0 opacity-0 group-hover:opacity-50 transition-opacity duration-700">
         <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-royal-gold rounded-full animate-float" style={{ animationDelay: '0s', animationDuration: '3s' }}></div>
         <div className="absolute top-3/4 left-1/3 w-2 h-2 bg-royal-purple rounded-full animate-float" style={{ animationDelay: '0.5s', animationDuration: '4s' }}></div>
-        <div className="absolute top-1/2 left-2/3 w-2 h-2 bg-royal-blue rounded-full animate-float" style={{ animationDelay: '1s', animationDuration: '3.5s' }}></div>
+        <div className="absolute top-1/2 left-2/3 w-2 h-2 bg-royal-navy rounded-full animate-float" style={{ animationDelay: '1s', animationDuration: '3.5s' }}></div>
         <div className="absolute top-1/3 left-3/4 w-2 h-2 bg-royal-crimson rounded-full animate-float" style={{ animationDelay: '1.5s', animationDuration: '4.5s' }}></div>
       </div>
       
@@ -64,7 +65,7 @@ const BriberyBanner = ({ onPaymentSuccess }: PromotionBannerProps) => {
               <Crown size={24} className="text-royal-gold mr-2 animate-crown-glow" />
               <div className="absolute -inset-1 bg-royal-gold/10 rounded-full blur-md animate-pulse-slow"></div>
             </div>
-            <h2 className="text-xl font-bold royal-gradient">Royal Treasury Awaits Your Tribute</h2>
+            <h2 className="text-xl font-bold font-royal text-royal-gold">Royal Treasury Awaits Your Tribute</h2>
           </div>
           <p className="text-white/70 italic">
             "The Crown demands regular financial homage! Remember, noble one, your status in our digital kingdom is directly proportional to the weight of your tribute. Contribute generously, and watch as your meaningless digital rank soars!"
@@ -82,7 +83,7 @@ const BriberyBanner = ({ onPaymentSuccess }: PromotionBannerProps) => {
               onClick={() => handleQuickBribe(25)}
               onMouseEnter={() => setHoveredAmount(25)}
               onMouseLeave={() => setHoveredAmount(null)}
-              className={`relative overflow-hidden bg-gradient-to-r from-royal-purple/80 to-royal-purple text-white transition-all duration-300 hover:scale-105 min-w-24 group`}
+              className={`relative overflow-hidden bg-gradient-to-r from-royal-crimson/80 to-royal-crimson text-white transition-all duration-300 hover:scale-105 min-w-24 group`}
             >
               {hoveredAmount === 25 && (
                 <div className="absolute inset-0 bg-royal-gold/10 animate-pulse-slow"></div>
@@ -98,7 +99,7 @@ const BriberyBanner = ({ onPaymentSuccess }: PromotionBannerProps) => {
               onClick={() => handleQuickBribe(50)}
               onMouseEnter={() => setHoveredAmount(50)}
               onMouseLeave={() => setHoveredAmount(null)}
-              className={`relative overflow-hidden bg-gradient-to-r from-royal-blue/80 to-royal-blue text-white transition-all duration-300 hover:scale-105 min-w-24 group`}
+              className={`relative overflow-hidden bg-gradient-to-r from-royal-navy/80 to-royal-navy text-white transition-all duration-300 hover:scale-105 min-w-24 group`}
             >
               {hoveredAmount === 50 && (
                 <div className="absolute inset-0 bg-royal-gold/10 animate-pulse-slow"></div>
@@ -130,7 +131,7 @@ const BriberyBanner = ({ onPaymentSuccess }: PromotionBannerProps) => {
               onClick={() => handleQuickBribe(250)}
               onMouseEnter={() => setHoveredAmount(250)}
               onMouseLeave={() => setHoveredAmount(null)}
-              className={`relative overflow-hidden bg-gradient-to-r from-royal-crimson to-royal-purple text-white transition-all duration-300 hover:scale-105 min-w-24 group`}
+              className={`relative overflow-hidden bg-gradient-to-r from-royal-purple to-royal-velvet text-white transition-all duration-300 hover:scale-105 min-w-24 group`}
             >
               {hoveredAmount === 250 && (
                 <div className="absolute inset-0 bg-royal-gold/10 animate-pulse-slow"></div>
@@ -147,14 +148,14 @@ const BriberyBanner = ({ onPaymentSuccess }: PromotionBannerProps) => {
             amount={100}
             onSuccess={onPaymentSuccess}
             trigger={
-              <Button className="bg-gradient-to-r from-royal-purple via-royal-gold to-royal-blue text-white transition-all duration-300 hover:opacity-90 w-full relative group overflow-hidden">
+              <Button className="bg-gradient-to-r from-royal-crimson via-royal-gold to-royal-navy text-white transition-all duration-300 hover:opacity-90 w-full relative group overflow-hidden">
                 <span className="absolute inset-0 bg-white/5 group-hover:bg-transparent transition-colors duration-300"></span>
                 <div className="relative flex items-center">
                   <div className="mr-2 relative">
                     <Coins size={18} className="text-white animate-pulse-slow" />
                     <div className="absolute -inset-1 bg-royal-gold/20 rounded-full blur-sm"></div>
                   </div>
-                  <span>Custom Royal Tribute</span>
+                  <span>Custom Noble Tribute</span>
                 </div>
               </Button>
             }
@@ -170,7 +171,7 @@ const BriberyBanner = ({ onPaymentSuccess }: PromotionBannerProps) => {
         </div>
         <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden">
           <div 
-            className="h-full bg-gradient-to-r from-royal-purple via-royal-gold to-royal-crimson relative"
+            className="h-full bg-gradient-to-r from-royal-crimson via-royal-gold to-royal-navy relative"
             style={{ width: '50%' }}
           >
             <div className="absolute top-0 right-0 h-full w-4 bg-white/30 animate-shimmer"></div>
