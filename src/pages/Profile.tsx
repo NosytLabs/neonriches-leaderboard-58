@@ -5,6 +5,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 import ProfileSidebar from '@/components/profile/ProfileSidebar';
 import ProfileHeader from '@/components/profile/ProfileHeader';
@@ -14,7 +15,8 @@ import UpgradePromotion from '@/components/profile/UpgradePromotion';
 import SubscriptionManagement from '@/components/profile/SubscriptionManagement';
 import { ProfileData } from '@/types/profile';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { UserCog, CreditCard, ShieldAlert } from 'lucide-react';
+import { UserCog, CreditCard, ShieldAlert, ArrowLeft } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 // Mock profile data - would come from API/database in a real app
 const mockProfileData: ProfileData = {
@@ -35,10 +37,12 @@ const Profile = () => {
   const navigate = useNavigate();
   const { user, signOut, updateProfile, subscription } = useAuth();
   const { toast } = useToast();
+  const isMobile = useIsMobile();
   
   const [profileData, setProfileData] = useState<ProfileData>(mockProfileData);
   const [editMode, setEditMode] = useState(false);
   const [activeTab, setActiveTab] = useState('profile');
+  const [showSidebar, setShowSidebar] = useState(!isMobile);
 
   if (!user) {
     navigate('/auth');
@@ -62,45 +66,69 @@ const Profile = () => {
     return Promise.resolve(); // Return a Promise to match the expected type
   };
 
-  // Fix for line 75 - ensure all handlers return Promises
   const handleTabChange = (value: string) => {
     setActiveTab(value);
     return Promise.resolve(); // Return a Promise to match the expected type
+  };
+
+  const toggleSidebar = () => {
+    setShowSidebar(!showSidebar);
   };
 
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground">
       <Header />
       
-      <main className="flex-1 pt-24 pb-12 px-6">
+      <main className="flex-1 pt-24 pb-12 px-4 sm:px-6">
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-            <div className="lg:col-span-1">
-              <ProfileSidebar 
-                user={user} 
-                onLogout={() => {
-                  signOut();
-                  return Promise.resolve();
-                }}
-                onUpdateProfile={() => {
-                  updateProfile({}); // Fix: Pass an empty object to satisfy the parameter requirement
-                  return Promise.resolve();
-                }}
-              />
-            </div>
+          <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
+            {/* Mobile toggle sidebar button */}
+            {isMobile && (
+              <div className="flex justify-between items-center mb-4">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="glass-morphism border-white/10"
+                  onClick={toggleSidebar}
+                >
+                  {showSidebar ? <ArrowLeft size={16} /> : <UserCog size={16} />}
+                  <span className="ml-2">{showSidebar ? 'Back' : 'Profile Menu'}</span>
+                </Button>
+                
+                <h1 className="text-xl font-semibold">Your Profile</h1>
+              </div>
+            )}
             
-            <div className="lg:col-span-3">
+            {/* Sidebar */}
+            {(showSidebar || !isMobile) && (
+              <div className={`${isMobile ? 'w-full' : 'lg:w-1/4'} ${isMobile && showSidebar ? 'block' : ''} ${isMobile && !showSidebar ? 'hidden' : ''}`}>
+                <ProfileSidebar 
+                  user={user} 
+                  onLogout={() => {
+                    signOut();
+                    return Promise.resolve();
+                  }}
+                  onUpdateProfile={() => {
+                    updateProfile({}); // Fix: Pass an empty object to satisfy the parameter requirement
+                    return Promise.resolve();
+                  }}
+                />
+              </div>
+            )}
+            
+            {/* Main content */}
+            <div className={`${isMobile && showSidebar ? 'hidden' : 'block'} lg:flex-1`}>
               <Tabs value={activeTab} onValueChange={handleTabChange}>
-                <TabsList className="glass-morphism border-white/10 w-full">
-                  <TabsTrigger value="profile" className="flex-1">
+                <TabsList className="glass-morphism border-white/10 w-full grid grid-cols-3">
+                  <TabsTrigger value="profile" className="data-[state=active]:bg-white/10">
                     <UserCog className="h-4 w-4 mr-2" />
                     Profile
                   </TabsTrigger>
-                  <TabsTrigger value="subscription" className="flex-1">
+                  <TabsTrigger value="subscription" className="data-[state=active]:bg-white/10">
                     <CreditCard className="h-4 w-4 mr-2" />
                     Subscription
                   </TabsTrigger>
-                  <TabsTrigger value="security" className="flex-1">
+                  <TabsTrigger value="security" className="data-[state=active]:bg-white/10">
                     <ShieldAlert className="h-4 w-4 mr-2" />
                     Security
                   </TabsTrigger>
