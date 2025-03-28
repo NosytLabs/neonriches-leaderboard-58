@@ -1,9 +1,11 @@
 
-/* Import all utility styles */
+/* Core utilities */
 @import './transitions.css';
+@import './responsive.css';
+@import './loading.css';
+
+/* Visual effects */
 @import './decorative-effects.css';
 @import './hover-effects.css';
 @import './glass-effects.css';
 @import './royal-theme.css';
-@import './responsive.css';
-@import './loading.css';

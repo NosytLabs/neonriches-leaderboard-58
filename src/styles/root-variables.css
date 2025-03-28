@@ -1,11 +1,15 @@
 
+/* 
+  Root CSS Variables
+  These variables provide global theming basics
+  Note: Team colors and most theme variables are now in unified-theme.css
+*/
+
 :root {
+  /* Base colors - used for fallbacks */
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 255, 255, 255;
   --background-end-rgb: 255, 255, 255;
-
-  /* These variables are now duplicates and should be removed as they're in unified-theme.css */
-  /* Team colors are now defined in unified-theme.css */
 }
 
 @media (prefers-color-scheme: dark) {

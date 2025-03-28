@@ -1,5 +1,9 @@
 
-/* Enhanced gold dust animation - moved from App.css */
+/* Gold dust animation effect 
+   This animation creates a sparkling effect for royal elements
+   Used primarily on premium/royal tier elements
+*/
+
 .animate-gold-dust {
   position: relative;
 }

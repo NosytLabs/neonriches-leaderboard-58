@@ -1,11 +1,5 @@
 
-import { SocialLink } from './user';
-
-export interface ProfileImage {
-  id: number;
-  url: string;
-  caption?: string;
-}
+import { ProfileImage, SocialLink } from './user';
 
 export interface ProfileData {
   bio: string;

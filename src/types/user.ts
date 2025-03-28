@@ -33,7 +33,7 @@ export interface SocialLink {
 }
 
 export interface UserCosmetics {
-  borders: string[]; // Changed from Array<{id:string; name:string}> to string[]
+  borders: string[];
   colors: string[];
   fonts: string[];
   emojis: string[];
@@ -48,7 +48,7 @@ export interface UserCosmetics {
   activeEmoji?: string;
   activeTheme?: string;
   activeBadge?: string;
-  foundersPass?: boolean; // Added the foundersPass property
+  foundersPass?: boolean;
 }
 
 export interface UserSettings {
@@ -94,7 +94,7 @@ export interface ProfileBoost {
   id: string;
   effectId: string;
   startTime: string;
-  endTime: number; // Changed from duration to endTime to match the usage
+  endTime: number;
   type: string;
   strength: number;
   appliedBy: string;
@@ -127,7 +127,7 @@ export interface UserProfile {
   joinDate: string;
   lastActive?: string;
   isVerified?: boolean;
-  spendStreak?: number; // Matches the property name used in components
+  spendStreak?: number;
   profileViews?: number;
   profileClicks?: number;
   followers?: number;
@@ -138,6 +138,6 @@ export interface UserProfile {
   socialLinks?: SocialLink[];
   profileImages?: ProfileImage[];
   settings?: UserSettings;
-  badges?: string[]; // Added badges property
-  profileBoosts?: ProfileBoost[]; // Added profileBoosts property
+  badges?: string[];
+  profileBoosts?: ProfileBoost[];
 }
