@@ -1,79 +1,88 @@
 
 import React from 'react';
-import { useAuth } from '@/contexts/auth';  // Updated import path
-import { UserProfile } from '@/types/user';  // Updated import path
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { 
-  DropdownMenu, 
-  DropdownMenuContent, 
-  DropdownMenuItem, 
-  DropdownMenuSeparator, 
-  DropdownMenuTrigger 
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { LogOut, User, Settings, Crown, Shield } from 'lucide-react';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { LogOut, User, Settings, CreditCard, Crown, Bell, Shield, Wallet } from 'lucide-react';
+import { useAuth } from '@/contexts/auth';
+import { Badge } from '@/components/ui/badge';
+import SolanaWalletButton from '@/components/solana/SolanaWalletButton';
 
-interface UserMenuProps {
-  user: UserProfile;
-}
+const UserMenu = () => {
+  const { user, signOut } = useAuth();
 
-const UserMenu: React.FC<UserMenuProps> = ({ user }) => {
-  const { logout } = useAuth(); // Use logout instead of signOut
-  
-  const handleLogout = async () => {
-    await logout();
-  };
-  
+  if (!user) return null;
+
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="relative h-8 w-8 rounded-full" aria-label="User menu">
-          <img 
-            src={user.profileImage || "https://i.pravatar.cc/150?img=1"} 
-            alt={user.username} 
-            className="h-8 w-8 rounded-full object-cover border-2 border-background"
-          />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-56">
-        <div className="flex items-center justify-start gap-2 p-2">
-          <div className="flex flex-col space-y-0.5">
-            <p className="text-sm font-medium">{user.displayName || user.username}</p>
-            <p className="text-xs text-muted-foreground">Rank #{user.rank}</p>
-          </div>
-        </div>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem asChild>
-          <Link to={`/profile/${user.username}`} className="cursor-pointer">
-            <User className="mr-2 h-4 w-4" />
-            <span>Profile</span>
-          </Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem asChild>
-          <Link to="/dashboard" className="cursor-pointer">
-            <Crown className="mr-2 h-4 w-4" />
-            <span>Royal Court</span>
-          </Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem asChild>
-          <Link to="/teams" className="cursor-pointer">
-            <Shield className="mr-2 h-4 w-4" />
-            <span>My Team</span>
-          </Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem asChild>
-          <Link to="/settings" className="cursor-pointer">
-            <Settings className="mr-2 h-4 w-4" />
-            <span>Settings</span>
-          </Link>
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={handleLogout} className="cursor-pointer">
-          <LogOut className="mr-2 h-4 w-4" />
-          <span>Logout</span>
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <div className="flex items-center gap-2">
+      <SolanaWalletButton variant="outline" />
+      
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+            <Avatar>
+              <AvatarImage src={user.profileImage} alt={user.username} />
+              <AvatarFallback className="bg-royal-navy text-white">
+                {user.username?.charAt(0).toUpperCase() || 'U'}
+              </AvatarFallback>
+            </Avatar>
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className="w-56 glass-morphism border-white/10" align="end">
+          <DropdownMenuLabel className="font-normal">
+            <div className="flex flex-col space-y-1">
+              <p className="text-sm font-medium">{user.username}</p>
+              <p className="text-xs text-muted-foreground">{user.email}</p>
+            </div>
+          </DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuGroup>
+            <DropdownMenuItem>
+              <User className="mr-2 h-4 w-4" />
+              <Link to="/profile">Profile</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <Settings className="mr-2 h-4 w-4" />
+              <Link to="/settings">Settings</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <Crown className="mr-2 h-4 w-4 text-royal-gold" />
+              <Link to="/dashboard">Royal Dashboard</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <CreditCard className="mr-2 h-4 w-4" />
+              <Link to="/wallet">Wallet</Link>
+              <Badge variant="outline" className="ml-auto text-xs">
+                ${user.walletBalance?.toFixed(2) || '0.00'}
+              </Badge>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <Wallet className="mr-2 h-4 w-4" />
+              <Link to="/wallet">Solana Wallet</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <Bell className="mr-2 h-4 w-4" />
+              <Link to="/notifications">Notifications</Link>
+              <Badge className="ml-auto bg-royal-crimson text-white text-xs">3</Badge>
+            </DropdownMenuItem>
+          </DropdownMenuGroup>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem className="text-royal-crimson focus:text-royal-crimson" onClick={() => signOut()}>
+            <LogOut className="mr-2 h-4 w-4" />
+            <span>Log out</span>
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
   );
 };
 

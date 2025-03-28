@@ -3,11 +3,12 @@ import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { CreditCard, ChevronsUpDown, Copy, ExternalLink, Check, Wallet, DollarSign, ThumbsUp } from "lucide-react";
+import { CreditCard, ChevronsUpDown, Copy, ExternalLink, Check, Wallet, DollarSign, ThumbsUp, Coins } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { PaymentModalProps } from "./auth/types";
 import useNotificationSounds from '@/hooks/use-notification-sounds';
+import SolanaPaymentForm from './payment/SolanaPaymentForm';
 
 const PaymentModal: React.FC<PaymentModalProps> = ({
   amount,
@@ -86,6 +87,35 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
     setSelectedPaymentMethod('wallet');
     handlePay();
   };
+  
+  const handleSolanaPayment = async () => {
+    // This will be handled by the SolanaPaymentForm
+    setIsProcessing(true);
+    
+    // The actual payment is processed by the form component
+    // This just handles the success state
+    setPaymentSuccess(true);
+    playSound('success', 0.5);
+    
+    toast({
+      title: "Solana Payment Successful",
+      description: `You have successfully contributed $${amount.toFixed(2)} via Solana!`,
+    });
+    
+    // Notify parent component about success
+    setTimeout(() => {
+      onSuccess(amount);
+      if (onOpenChange) {
+        onOpenChange(false);
+      }
+      
+      // Reset state after modal is closed
+      setTimeout(() => {
+        setPaymentSuccess(false);
+        setIsProcessing(false);
+      }, 500);
+    }, 1500);
+  };
 
   const renderSuccess = () => (
     <div className="flex flex-col items-center justify-center py-6">
@@ -107,7 +137,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
 
   const renderPaymentMethods = () => (
     <Tabs defaultValue="card" className="w-full" onValueChange={setSelectedPaymentMethod}>
-      <TabsList className="grid w-full grid-cols-3">
+      <TabsList className="grid w-full grid-cols-4">
         <TabsTrigger value="card">
           <CreditCard className="h-4 w-4 mr-2" />
           Card
@@ -119,6 +149,10 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
         <TabsTrigger value="wallet">
           <Wallet className="h-4 w-4 mr-2" />
           Wallet
+        </TabsTrigger>
+        <TabsTrigger value="solana">
+          <Coins className="h-4 w-4 mr-2" />
+          Solana
         </TabsTrigger>
       </TabsList>
       
@@ -247,6 +281,14 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
             )}
           </Button>
         </div>
+      </TabsContent>
+      
+      <TabsContent value="solana" className="mt-4 space-y-4">
+        <SolanaPaymentForm 
+          amount={amount} 
+          isProcessing={isProcessing}
+          onSubmit={handleSolanaPayment}
+        />
       </TabsContent>
     </Tabs>
   );

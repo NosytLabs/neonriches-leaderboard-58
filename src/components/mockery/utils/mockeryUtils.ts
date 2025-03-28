@@ -1,6 +1,6 @@
 
 import { MockeryAction, MockeryTier } from '../hooks/useMockery';
-import { Shield, Egg, Tomato, BadgeMinus, Music, Sword, Crown, Skull, Trash2 } from 'lucide-react';
+import { Shield, BadgeMinus, Music, Sword, Crown, Skull, Trash2 } from 'lucide-react';
 import React from 'react';
 
 // Mockery Action Prices
@@ -87,9 +87,9 @@ export const getMockeryActionDescription = (action: MockeryAction, targetName: s
 export const getMockeryActionIcon = (action: MockeryAction) => {
   switch (action) {
     case 'tomatoes':
-      return React.createElement(Tomato, { className: "h-5 w-5 text-red-500 mr-1.5" });
+      return React.createElement('div', { className: "h-5 w-5 text-red-500 mr-1.5" }, '🍅');
     case 'eggs':
-      return React.createElement(Egg, { className: "h-5 w-5 text-yellow-300 mr-1.5" });
+      return React.createElement('div', { className: "h-5 w-5 text-yellow-300 mr-1.5" }, '🥚');
     case 'stocks':
       return React.createElement(BadgeMinus, { className: "h-5 w-5 text-amber-600 mr-1.5" });
     case 'silence':
@@ -97,7 +97,7 @@ export const getMockeryActionIcon = (action: MockeryAction) => {
     case 'courtJester':
       return React.createElement(Crown, { className: "h-5 w-5 text-purple-400 mr-1.5" });
     default:
-      return React.createElement(Tomato, { className: "h-5 w-5 text-red-500 mr-1.5" });
+      return React.createElement('div', { className: "h-5 w-5 text-red-500 mr-1.5" }, '🍅');
   }
 };
 
@@ -116,6 +116,34 @@ export const getMockeryActionColor = (action: MockeryAction): string => {
       return 'text-purple-400';
     default:
       return 'text-red-500';
+  }
+};
+
+// Get mockery tier color
+export const getMockeryTierColor = (tier: MockeryTier): string => {
+  switch (tier) {
+    case 'basic':
+      return 'text-gray-400';
+    case 'advanced':
+      return 'text-royal-crimson';
+    case 'royal':
+      return 'text-royal-gold';
+    default:
+      return 'text-gray-400';
+  }
+};
+
+// Get mockery tier label
+export const getMockeryTierLabel = (tier: MockeryTier): string => {
+  switch (tier) {
+    case 'basic':
+      return 'Basic';
+    case 'advanced':
+      return 'Advanced';
+    case 'royal':
+      return 'Royal';
+    default:
+      return 'Basic';
   }
 };
 
