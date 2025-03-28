@@ -1,0 +1,17 @@
+
+/* Theme styles index file */
+@import './royal-variables.css';
+@import './royal-gradients.css';
+@import './royal-team-colors.css';
+@import './royal-effects.css';
+@import './royal-text.css';
+@import './glass-effects.css';
+@import './rank-badges.css';
+@import './shame-effects.css';
+@import './scrollbar.css';
+
+/* Base body styles */
+body {
+  background-color: #0D0D20;
+  color: #FFFFFF;
+}

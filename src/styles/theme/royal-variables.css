@@ -1,0 +1,24 @@
+
+:root {
+  /* Royal Theme Colors */
+  --royal-gold: #FFD700;          /* Bright gold */
+  --royal-gold-bright: #FFDF00;   /* Slightly brighter gold */
+  --royal-gold-dark: #D4AF37;     /* Darker gold for contrast */
+  --royal-crimson: #9B2335;       /* Keep for contrast */
+  --royal-crimson-bright: #C41E3A;
+  --royal-crimson-dark: #800020;
+  --royal-navy: #000080;          /* Deep blue */
+  --royal-navy-bright: #000096;
+  --royal-navy-dark: #000064;
+  --royal-purple: #4B0082;        /* Royal purple, reduced emphasis */
+  --royal-purple-bright: #6A0DAD;
+  --royal-purple-dark: #38006b;
+  --royal-velvet: #430C5E;        /* Deep burgundy */
+  --royal-mahogany: #A65E44;      /* Keep for contrast */
+  --royal-emerald: #2C784A;       /* Keep for contrast */
+  --royal-parchment: #F5E6CA;
+  
+  /* Background gradients */
+  --bg-royal-gradient: linear-gradient(135deg, #0D0D20 0%, #141428 50%, #1E1A3A 100%);
+  --bg-royal-gradient-inverted: linear-gradient(315deg, #0D0D20 0%, #141428 50%, #1E1A3A 100%);
+}

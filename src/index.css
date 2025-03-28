@@ -15,6 +15,7 @@
 @import url('./styles/medieval-elements.css');
 @import url('./styles/marketing-elements.css');
 @import url('./styles/effects/gold-dust.css');
+@import url('./styles/theme/index.css');
 
 :root {
   /* Base theme variables */

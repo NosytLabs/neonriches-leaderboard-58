@@ -1,0 +1,50 @@
+
+/* Team colors */
+.text-team-red {
+  color: var(--royal-crimson-bright);
+}
+
+.text-team-green {
+  color: var(--royal-gold);
+}
+
+.text-team-blue {
+  color: var(--royal-navy-bright);
+}
+
+.bg-team-red {
+  background-color: var(--royal-crimson);
+}
+
+.bg-team-green {
+  background-color: var(--royal-gold);
+}
+
+.bg-team-blue {
+  background-color: var(--royal-navy);
+}
+
+/* Team effects */
+.team-red-glow {
+  box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+}
+
+.team-green-glow {
+  box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
+}
+
+.team-blue-glow {
+  box-shadow: 0 0 15px rgba(0, 0, 255, 0.5);
+}
+
+.border-team-red {
+  border-color: var(--royal-crimson);
+}
+
+.border-team-green {
+  border-color: var(--royal-gold);
+}
+
+.border-team-blue {
+  border-color: var(--royal-navy);
+}

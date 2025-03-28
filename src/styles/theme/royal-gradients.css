@@ -1,0 +1,23 @@
+
+/* Royal Gradients themed for gold/royal aesthetic */
+.royal-gradient {
+  background: linear-gradient(to right, var(--royal-gold-dark) 0%, var(--royal-gold) 50%, var(--royal-gold-bright) 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.royal-gradient-crimson {
+  background: linear-gradient(to right, var(--royal-crimson-bright) 0%, var(--royal-crimson) 50%, var(--royal-crimson-dark) 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.royal-gradient-navy {
+  background: linear-gradient(to right, var(--royal-navy-bright) 0%, var(--royal-navy) 50%, var(--royal-navy-dark) 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
