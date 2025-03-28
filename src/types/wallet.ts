@@ -26,6 +26,7 @@ export interface Transaction {
 
 export interface SpendOptions {
   targetUser?: string;
+  targetUsername?: string;
   mockeryType?: string;
   shameType?: string;
   cosmetic?: string;

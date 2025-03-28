@@ -1,230 +1,185 @@
 
-import { MockeryAction, ExtendedMockeryAction, MockeryTier } from '@/types/mockery';
+import { ExtendedMockeryAction, MockeryAction, MockeryTier } from '@/types/mockery';
 
-// Base prices for mockery actions
-const basePrices: Record<MockeryAction, number> = {
-  tomatoes: 0.5,
-  eggs: 1.5,
-  stocks: 3.0,
-  silence: 5.0,
-  courtJester: 10.0,
-  jester: 2.0,
-  dunce: 1.0,
-  roast: 2.0,
-  ridicule: 3.0,
-  taunt: 1.5,
-  drama: 4.0
-};
-
-// Weekly discount configuration (in a real app, would come from backend)
-const weeklyDiscountConfig = {
-  discountedAction: 'tomatoes' as MockeryAction,
-  discountPercentage: 50,
-  isFireSaleMonth: false,
-  fireSaleDiscountPercentage: 30,
-  fireSaleFeaturedCategories: ['tomatoes', 'eggs']
-};
-
-// Get mockery action icon
-export const getMockeryActionIcon = (action: MockeryAction | ExtendedMockeryAction): string => {
+// Helper function to get an appropriate icon based on mockery action
+export const getMockeryActionIcon = (action: MockeryAction): string => {
   switch (action) {
     case 'tomatoes': return '🍅';
     case 'eggs': return '🥚';
     case 'stocks': return '🪵';
     case 'silence': return '🔇';
     case 'courtJester': return '🃏';
+    case 'protected': return '🛡️';
+    case 'immune': return '👑';
     case 'jester': return '🎭';
     case 'dunce': return '📝';
     case 'roast': return '🔥';
     case 'ridicule': return '😂';
     case 'taunt': return '👋';
     case 'drama': return '🎭';
-    case 'protected': return '🛡️';
-    case 'immune': return '👑';
     default: return '❓';
   }
 };
 
-// Get mockery action title
+// Function to get mockery action title
 export const getMockeryActionTitle = (action: MockeryAction): string => {
   switch (action) {
-    case 'tomatoes': return 'Throw Tomatoes';
-    case 'eggs': return 'Throw Rotten Eggs';
-    case 'stocks': return 'Place in Stocks';
-    case 'silence': return 'Royal Silence';
+    case 'tomatoes': return 'Rotten Tomatoes';
+    case 'eggs': return 'Egg Pelting';
+    case 'stocks': return 'Public Stocks';
+    case 'silence': return 'Royal Silencing';
     case 'courtJester': return 'Court Jester';
-    case 'jester': return 'Jester Mockery';
+    case 'protected': return 'Royal Protection';
+    case 'immune': return 'Royal Immunity';
+    case 'jester': return 'Jester Hat';
     case 'dunce': return 'Dunce Cap';
     case 'roast': return 'Royal Roast';
     case 'ridicule': return 'Public Ridicule';
-    case 'taunt': return 'Noble Taunt';
-    case 'drama': return 'Drama Exposure';
-    default: return 'Mock User';
+    case 'taunt': return 'Royal Taunt';
+    case 'drama': return 'Drama Swirl';
+    default: return 'Unknown Action';
   }
 };
 
-// Get mockery action description
-export const getMockeryActionDescription = (action: MockeryAction, username: string = ''): string => {
+// Function to get mockery action description
+export const getMockeryActionDescription = (action: MockeryAction): string => {
+  switch (action) {
+    case 'tomatoes': return 'Cover the user\'s profile with splattered tomatoes for 24 hours.';
+    case 'eggs': return 'Pelt the user\'s profile with eggs for 24 hours.';
+    case 'stocks': return 'Place the user in the public stocks, visible on their profile for 48 hours.';
+    case 'silence': return 'Prevent the user from posting comments for 12 hours.';
+    case 'courtJester': return 'Force the user to wear a jester outfit on their profile for 72 hours.';
+    case 'protected': return 'Protect yourself from mockery for 24 hours.';
+    case 'immune': return 'Grant yourself immunity from all mockery for 1 week.';
+    case 'jester': return 'Add a jester hat to the user\'s profile picture for 48 hours.';
+    case 'dunce': return 'Make the user wear a dunce cap on their profile for 24 hours.';
+    case 'roast': return 'Display a witty roast message on the user\'s profile for 24 hours.';
+    case 'ridicule': return 'Add laugh emojis that follow the user\'s cursor on their profile for 48 hours.';
+    case 'taunt': return 'Display a taunting gesture animation on the user\'s profile for 24 hours.';
+    case 'drama': return 'Add dramatic swirls and effects to the user\'s profile for 72 hours.';
+    default: return 'This action has an unknown effect.';
+  }
+};
+
+// Function to get mockery action price
+export const getMockeryActionPrice = (action: MockeryAction): number => {
+  switch (action) {
+    case 'tomatoes': return 0.5;
+    case 'eggs': return 1;
+    case 'stocks': return 3;
+    case 'silence': return 5;
+    case 'courtJester': return 10;
+    case 'protected': return 15;
+    case 'immune': return 50;
+    case 'jester': return 2;
+    case 'dunce': return 2.5;
+    case 'roast': return 1.5;
+    case 'ridicule': return 2;
+    case 'taunt': return 1;
+    case 'drama': return 7.5;
+    default: return 1;
+  }
+};
+
+// Check if there's a discount on mockery actions
+export const hasWeeklyDiscount = (action: MockeryAction): boolean => {
+  // This would typically check against a database or config to see
+  // if there's a current weekly discount on this action
+  const featuredActions: MockeryAction[] = ['tomatoes', 'eggs', 'taunt'];
+  return featuredActions.includes(action);
+};
+
+// Get the discounted price of a mockery action
+export const getDiscountedMockeryPrice = (action: MockeryAction): number => {
+  if (!hasWeeklyDiscount(action)) return getMockeryActionPrice(action);
+  
+  const originalPrice = getMockeryActionPrice(action);
+  return Math.round((originalPrice * 0.7) * 100) / 100; // 30% discount, rounded to 2 decimal places
+};
+
+// Get the tier of a mockery action
+export const getMockeryTier = (action: MockeryAction): MockeryTier => {
   switch (action) {
     case 'tomatoes':
-      return `Show your disdain for ${username} by pelting them with ripe, juicy tomatoes! They'll appear tomato-splattered for 24 hours.`;
     case 'eggs':
-      return `Express your royal disapproval of ${username} with a barrage of rotten eggs! They'll appear egg-covered for 24 hours.`;
-    case 'stocks':
-      return `Put ${username} in the medieval stocks for all to see! They'll be displayed in stocks for 24 hours.`;
-    case 'silence':
-      return `Impose a royal silence on ${username}! Their comments will appear muted for 24 hours.`;
-    case 'courtJester':
-      return `Make ${username} the court jester! They will appear in full jester regalia for 24 hours.`;
-    case 'jester':
-      return `Turn ${username} into a laughing stock with this jester treatment!`;
-    case 'dunce':
-      return `Place a dunce cap on ${username} for all to see!`;
-    case 'roast':
-      return `Publicly roast ${username} with witty medieval insults!`;
-    case 'ridicule':
-      return `Subject ${username} to public ridicule in the town square!`;
     case 'taunt':
-      return `Taunt ${username} in noble fashion!`;
+      return 'common';
+    case 'jester':
+    case 'dunce':
+    case 'roast':
+    case 'ridicule':
+      return 'uncommon';
+    case 'stocks':
     case 'drama':
-      return `Expose ${username}'s court drama to the entire kingdom!`;
-    default:
-      return `Publicly shame ${username} for their misdeeds!`;
-  }
-};
-
-// Get mockery action price
-export const getMockeryActionPrice = (action: MockeryAction): number => {
-  return basePrices[action] || 0.5;
-};
-
-// Check if the action has weekly discount
-export const hasWeeklyDiscount = (action: MockeryAction): boolean => {
-  return action === weeklyDiscountConfig.discountedAction;
-};
-
-// Get discounted price
-export const getDiscountedMockeryPrice = (action: MockeryAction): number => {
-  const basePrice = getMockeryActionPrice(action);
-  const discount = weeklyDiscountConfig.discountPercentage / 100;
-  return basePrice * (1 - discount);
-};
-
-// Get weekly discounted action
-export const getWeeklyDiscountedAction = (): MockeryAction => {
-  return weeklyDiscountConfig.discountedAction;
-};
-
-// Get weekly discount percentage
-export const getWeeklyDiscountPercentage = (): number => {
-  return weeklyDiscountConfig.discountPercentage;
-};
-
-// Get mockery tier color
-export const getMockeryTierColor = (tier: string): { text: string, border: string, bg: string } => {
-  switch (tier) {
-    case 'tomatoes':
-    case 'common':
-      return {
-        text: 'text-red-500',
-        border: 'border-red-500/30',
-        bg: 'bg-red-500/10'
-      };
-    case 'eggs':
-    case 'uncommon':
-      return {
-        text: 'text-yellow-200',
-        border: 'border-yellow-200/30',
-        bg: 'bg-yellow-200/10'
-      };
-    case 'stocks':
-    case 'rare':
-      return {
-        text: 'text-amber-700',
-        border: 'border-amber-700/30',
-        bg: 'bg-amber-700/10'
-      };
+      return 'rare';
     case 'silence':
-    case 'epic':
-      return {
-        text: 'text-blue-500',
-        border: 'border-blue-500/30',
-        bg: 'bg-blue-500/10'
-      };
     case 'courtJester':
-    case 'legendary':
-      return {
-        text: 'text-emerald-500',
-        border: 'border-emerald-500/30',
-        bg: 'bg-emerald-500/10'
-      };
+      return 'epic';
+    case 'protected':
+    case 'immune':
+      return 'legendary';
     default:
-      return {
-        text: 'text-white/70',
-        border: 'border-white/10',
-        bg: 'bg-white/5'
-      };
+      return 'common';
   }
 };
 
-// Get mockery tier label
-export const getMockeryTierLabel = (tier: string): string => {
+// Get the tier color
+export const getMockeryTierColor = (tier: MockeryTier): string => {
   switch (tier) {
-    case 'tomatoes':
-    case 'common':
-      return 'Common';
-    case 'eggs':
-    case 'uncommon':
-      return 'Uncommon';
-    case 'stocks':
-    case 'rare':
-      return 'Rare';
-    case 'silence':
-    case 'epic':
-      return 'Epic';
-    case 'courtJester':
-    case 'legendary':
-      return 'Legendary';
-    default:
-      return 'Basic';
+    case 'common': return 'text-gray-300';
+    case 'uncommon': return 'text-green-400';
+    case 'rare': return 'text-blue-400';
+    case 'epic': return 'text-purple-400';
+    case 'legendary': return 'text-royal-gold';
+    default: return 'text-white';
   }
 };
 
-// Get mockery tier text
-export const getMockeryTierText = (tier: string): string => {
+// Get the tier label
+export const getMockeryTierLabel = (tier: MockeryTier): string => {
   switch (tier) {
-    case 'tomatoes':
-      return 'Tomato Mockery';
-    case 'eggs':
-      return 'Egg Assault';
-    case 'stocks':
-      return 'Stocks Punishment';
-    case 'silence':
-      return 'Royal Silence';
-    case 'courtJester':
-      return 'Court Jester';
-    default:
-      return 'Unknown Tier';
+    case 'common': return 'Common';
+    case 'uncommon': return 'Uncommon';
+    case 'rare': return 'Rare';
+    case 'epic': return 'Epic';
+    case 'legendary': return 'Legendary';
+    default: return 'Unknown';
   }
 };
 
-// Alias functions for shame modal compatibility
-export const getMockeryActionLabel = getMockeryActionTitle;
-export const getShameActionIcon = getMockeryActionIcon;
-export const getShameActionTitle = getMockeryActionTitle;
-export const getShameActionDescription = getMockeryActionDescription;
-export const getShameActionPrice = getMockeryActionPrice;
-export const getDiscountedShamePrice = getDiscountedMockeryPrice;
-export const getShameActionColor = getMockeryTierColor;
+// Get all mockery actions with their metadata
+export const getAllMockeryActions = (): ExtendedMockeryAction[] => {
+  const actions: MockeryAction[] = [
+    'tomatoes', 'eggs', 'stocks', 'silence', 'courtJester', 
+    'jester', 'dunce', 'roast', 'ridicule', 'taunt', 'drama',
+    'protected', 'immune'
+  ];
+  
+  return actions.map(action => ({
+    action,
+    tier: getMockeryTier(action),
+    price: getMockeryActionPrice(action),
+    duration: action === 'immune' ? 168 : action === 'courtJester' || action === 'drama' ? 72 : action === 'stocks' || action === 'jester' || action === 'ridicule' ? 48 : 24,
+    cooldown: action === 'immune' ? 336 : action === 'protected' ? 48 : 24,
+    text: action === 'roast' ? 'This user has been royally roasted!' : undefined,
+    border: action === 'courtJester' ? 'jester-border' : action === 'stocks' ? 'stocks-border' : undefined,
+    effect: action === 'ridicule' ? 'laugh-emojis' : action === 'drama' ? 'dramatic-swirls' : undefined
+  }));
+};
 
-export default {
-  getMockeryActionIcon,
-  getMockeryActionTitle,
-  getMockeryActionDescription,
-  getMockeryActionPrice,
-  hasWeeklyDiscount,
-  getDiscountedMockeryPrice,
-  getMockeryTierColor,
-  getMockeryTierLabel,
-  getMockeryTierText
+// Get action by name
+export const getMockeryActionByName = (actionName: MockeryAction): ExtendedMockeryAction | undefined => {
+  return getAllMockeryActions().find(a => a.action === actionName);
+};
+
+// Mock function to check if a user can be mocked
+export const canUserBeMocked = (userId: string): boolean => {
+  // In a real implementation, this would check against a database to see
+  // if the user has active protection or immunity
+  return true;
+};
+
+// Get mockery action label
+export const getMockeryActionLabel = (action: MockeryAction): string => {
+  return getMockeryActionTitle(action);
 };

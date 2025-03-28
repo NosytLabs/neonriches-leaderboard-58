@@ -1,101 +1,81 @@
 
-import { SolanaTreasuryInfo, OnChainLeaderboardEntry, SolanaTransaction } from '@/types/solana';
+import { SolanaTreasuryInfo, SolanaTransaction, OnChainLeaderboardEntry } from "@/types/solana";
 
-/**
- * Fetches the Solana treasury information
- */
+// Fetch treasury info
 export const fetchTreasuryInfo = async (): Promise<SolanaTreasuryInfo> => {
-  // This would normally call an API endpoint to get the treasury info
-  // For now, we'll just mock the response
+  // This would be an API call in a real application
   return {
-    address: "3Qij1V5xZe1cGVHG8oCxZZzmUgW4XiY9GBfYvvEXiuF8",
-    balance: 250.75,
-    totalDeposits: 500.25,
-    totalWithdrawals: 249.5,
+    address: "7DH8Fi52tFMNQNVGDsYrVXzpQvD4XmMhPP3eGwJwUaJb",
+    balance: 1250.75,
+    totalDeposits: 3500.0,
+    totalWithdrawals: 2249.25,
     lastUpdated: new Date().toISOString(),
-    usdValue: 12537.5
+    usdValue: 125075.0
   };
 };
 
-/**
- * Fetches recent treasury transactions
- */
-export const fetchTreasuryTransactions = async (): Promise<SolanaTransaction[]> => {
-  // This would normally call an API endpoint to get the transactions
-  // For now, we'll just mock the response
-  return [
+// Fetch recent treasury transactions
+export const fetchTreasuryTransactions = async (limit = 10): Promise<SolanaTransaction[]> => {
+  // This would be an API call in a real application
+  const mockTransactions: SolanaTransaction[] = [
     {
-      id: "1",
-      signature: "3AaPTWEJGUnJgwKK9xyjJu1d57yzmrGTwk4jrpvce45Tg3yPrVd7yzJwZ9cZQ4QF8TxMQeT8sHKiHqrA3quwUUEU",
-      timestamp: new Date().toISOString(),
+      id: "solana-tx-1",
+      signature: "5v54qzqHBQrA5dn1KFRwCKioVuGm7QD6UahLHFXvnTmrXm8fJK5rSaVqA7J8ZYnZMkP92UkDwPXJ9zKpWvQYpkMn",
+      timestamp: new Date(Date.now() - 1 * 60 * 60 * 1000).toISOString(),
       type: "deposit",
-      amount: 5.5,
-      sender: "8szGkuLTAux9XMgZ2vtY39jVSowEcpBfFfD8hXSEqdGC",
-      recipient: "3Qij1V5xZe1cGVHG8oCxZZzmUgW4XiY9GBfYvvEXiuF8",
+      amount: 25.5,
+      sender: "8xg7D4ESuJLRJQvnJPw9Mqq9YBJBBe9c8Xu7Lm68cRJ7",
+      recipient: "7DH8Fi52tFMNQNVGDsYrVXzpQvD4XmMhPP3eGwJwUaJb",
       status: "confirmed"
     },
     {
-      id: "2",
-      signature: "57Zr8drJ5iNSP6T9Z99bPmvUT8f91xRvEuw9L5MBDQcwRrzFLALZLnTXxJbx1P2SLhN2DNmNmQcmrJ4H7WGQCn",
-      timestamp: new Date(Date.now() - 86400000).toISOString(),
+      id: "solana-tx-2",
+      signature: "2vhFDtAfMN2A9MGHUFFAZXMZUWi9pLqY7UwDDz5ZhzUE97xYjgJZSS3QBYu1bwcgVLJb5KKd3pPivMC1jGHqAptP",
+      timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
       type: "withdrawal",
-      amount: 2.25,
-      sender: "3Qij1V5xZe1cGVHG8oCxZZzmUgW4XiY9GBfYvvEXiuF8",
-      recipient: "CFgFEjHwuTbcwm3xhzrQPg9BFpnVBvHwqafwU3TKuQ54",
+      amount: 10.0,
+      sender: "7DH8Fi52tFMNQNVGDsYrVXzpQvD4XmMhPP3eGwJwUaJb",
+      recipient: "BQj1qLExCzeEMtZ9a6YEQWhrQfG7BrAsfHG1kPuCNCsC",
       status: "confirmed"
     }
   ];
+  
+  return mockTransactions.slice(0, limit);
 };
 
-/**
- * Fetches the on-chain leaderboard
- */
+// Get on-chain leaderboard
 export const fetchOnChainLeaderboard = async (): Promise<OnChainLeaderboardEntry[]> => {
-  // Mock data
+  // This would be an API call in a real application
   return [
     {
-      id: "1",
-      publicKey: "3Qij1V5xZe1cGVHG8oCxZZzmUgW4XiY9GBfYvvEXiuF8",
-      username: "SolWhale",
+      id: "chain-1",
+      publicKey: "8xg7D4ESuJLRJQvnJPw9Mqq9YBJBBe9c8Xu7Lm68cRJ7",
+      username: "whale_on_chain",
       rank: 1,
       previousRank: 1,
-      amountSpent: 15000,
-      totalSpent: 15000,
-      lastTransaction: new Date().toISOString(),
+      amountSpent: 500,
+      totalSpent: 2500,
+      lastTransaction: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
       isVerified: true,
-      signature: "3AaPTWEJGUnJgwKK9xyjJu1d57yzmrGTwk4jrpvce45Tg3yPrVd7yzJwZ9cZQ4QF8TxMQeT8sHKiHqrA3quwUUEU"
+      signature: "5v54qzqHBQrA5dn1KFRwCKioVuGm7QD6UahLHFXvnTmrXm8fJK5rSaVqA7J8ZYnZMkP92UkDwPXJ9zKpWvQYpkMn"
     },
     {
-      id: "2",
-      publicKey: "8szGkuLTAux9XMgZ2vtY39jVSowEcpBfFfD8hXSEqdGC",
-      username: "BlockChain",
+      id: "chain-2",
+      publicKey: "BQj1qLExCzeEMtZ9a6YEQWhrQfG7BrAsfHG1kPuCNCsC",
+      username: "crypto_royalty",
       rank: 2,
       previousRank: 3,
-      amountSpent: 8000,
-      totalSpent: 8000,
-      lastTransaction: new Date(Date.now() - 86400000).toISOString(),
+      amountSpent: 300,
+      totalSpent: 1800,
+      lastTransaction: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
       isVerified: true,
-      signature: "57Zr8drJ5iNSP6T9Z99bPmvUT8f91xRvEuw9L5MBDQcwRrzFLALZLnTXxJbx1P2SLhN2DNmNmQcmrJ4H7WGQCn"
+      signature: "2vhFDtAfMN2A9MGHUFFAZXMZUWi9pLqY7UwDDz5ZhzUE97xYjgJZSS3QBYu1bwcgVLJb5KKd3pPivMC1jGHqAptP"
     }
   ];
-};
-
-/**
- * Formats a date for display
- */
-export const formatDate = (dateString: string): string => {
-  const date = new Date(dateString);
-  return new Intl.DateTimeFormat('en-US', {
-    month: 'short',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit'
-  }).format(date);
 };
 
 export default {
   fetchTreasuryInfo,
   fetchTreasuryTransactions,
-  fetchOnChainLeaderboard,
-  formatDate
+  fetchOnChainLeaderboard
 };

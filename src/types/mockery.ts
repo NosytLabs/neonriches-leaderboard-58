@@ -1,70 +1,71 @@
 
+// Mockery Action Types
 export type MockeryAction = 
   | 'tomatoes' 
   | 'eggs' 
   | 'stocks' 
   | 'silence' 
   | 'courtJester' 
-  | 'jester' 
-  | 'dunce' 
-  | 'roast' 
-  | 'ridicule' 
-  | 'taunt' 
-  | 'drama';
-
-export type ExtendedMockeryAction = MockeryAction;
+  | 'jester'
+  | 'dunce'
+  | 'roast'
+  | 'ridicule'
+  | 'taunt'
+  | 'drama'
+  | 'protected'
+  | 'immune';
 
 export type MockeryTier = 
-  | 'common' 
-  | 'uncommon' 
-  | 'rare' 
-  | 'epic' 
-  | 'legendary' 
-  | 'basic' 
-  | 'royal'
-  | 'advanced';
+  | 'common'
+  | 'uncommon'
+  | 'rare'
+  | 'epic'
+  | 'legendary';
+
+// Extended mockery action with additional metadata
+export interface ExtendedMockeryAction {
+  action: MockeryAction;
+  tier: MockeryTier;
+  price: number;
+  duration: number; // in hours
+  cooldown: number; // in hours
+  text?: string;
+  border?: string;
+  effect?: string;
+}
 
 export interface MockeryEvent {
   id: string;
-  userId: string;
+  action: MockeryAction;
+  sourceUserId: string;
+  sourceUsername: string;
+  targetUserId: string;
   targetUsername: string;
-  type: MockeryAction;
   timestamp: string;
-  price: number;
-  duration: number;
   expiresAt: string;
-  status: 'active' | 'expired' | 'canceled';
+  isActive: boolean;
 }
 
-export interface MockeryCardProps {
-  action: MockeryAction;
-  tier: MockeryTier;
+export interface UserMockeryStatus {
+  userId: string;
   username: string;
-  onSelect: (action: MockeryAction) => boolean;
-  className?: string;
-  as?: boolean;
-  MockeryTier?: boolean;
-}
-
-export interface ShameModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  username: string;
-  action: MockeryAction;
-  onConfirm: () => void;
-  price: number;
-}
-
-export interface MockeryUserCardProps {
-  user: {
-    id: string;
-    username: string;
-    rank: number;
-    profileImage?: string;
+  displayName?: string;
+  profileImage?: string;
+  activeMockeries: MockeryEvent[];
+  activeProtection?: {
+    until: string;
+    tier: string;
   };
-  isMocked: boolean;
-  isOnCooldown: boolean;
-  mockeryCount: number;
-  isProtected: boolean;
-  onMockery: (username: string, action: string, amount: number) => boolean;
+  lastMocked?: string;
+  mockedCount: number;
+}
+
+export interface MockeryPeriod {
+  id: string;
+  name: string;
+  startDate: string;
+  endDate: string;
+  discountPercentage: number;
+  featuredActions: MockeryAction[];
+  isActive: boolean;
 }
