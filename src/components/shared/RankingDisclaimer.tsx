@@ -7,12 +7,14 @@ interface RankingDisclaimerProps {
   className?: string;
   messagePrefix?: string;
   variant?: 'info' | 'warning' | 'neutral' | 'gold';
+  message?: string;
 }
 
 const RankingDisclaimer: React.FC<RankingDisclaimerProps> = ({
   className,
   messagePrefix = 'Note:',
-  variant = 'neutral'
+  variant = 'neutral',
+  message
 }) => {
   const getIcon = () => {
     switch (variant) {
@@ -42,8 +44,7 @@ const RankingDisclaimer: React.FC<RankingDisclaimerProps> = ({
       <div>
         <span className="font-medium">{messagePrefix} </span>
         <span className="text-white/80">
-          Public shaming has no effect on actual rankings. It's purely for satirical entertainment 
-          and reflects the game's mockery of wealth-based status systems.
+          {message || "Public shaming has no effect on actual rankings. It's purely for satirical entertainment and reflects the game's mockery of wealth-based status systems."}
         </span>
       </div>
     </div>
