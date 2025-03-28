@@ -1,6 +1,6 @@
 
 // This file is to maintain backward compatibility with existing imports
-import { useAuth } from './auth';
+import { useAuth } from './auth/AuthContext';
 import type { AuthContextType } from '@/types/auth-context';
 import type { UserProfile } from '@/types/user';
 

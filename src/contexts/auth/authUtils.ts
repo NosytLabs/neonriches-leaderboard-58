@@ -1,5 +1,5 @@
 
-import { UserProfile, ProfileBoost } from '@/types/user';
+import { UserProfile } from '@/types/user';
 import { UserCosmetics } from '@/types/cosmetics';
 
 // Helper to add a profile boost to a user
@@ -7,12 +7,12 @@ export function addProfileBoost(
   user: UserProfile, 
   days: number = 1, 
   level: number = 1
-): ProfileBoost[] {
+): any[] {
   const now = new Date();
   const endDate = new Date(now);
   endDate.setDate(endDate.getDate() + days);
   
-  const newBoost: ProfileBoost = {
+  const newBoost = {
     id: `boost_${Date.now()}`,
     startDate: now.toISOString(),
     endDate: endDate.toISOString(),
