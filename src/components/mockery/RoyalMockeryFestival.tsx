@@ -127,9 +127,9 @@ const RoyalMockeryFestival = () => {
     .map(user => ({
       username: user.username,
       displayName: user.username,
-      avatarUrl: user.profilePicture,
+      avatarUrl: user.profileImage, // Using the correct property name profileImage
       mockedReason: `Mocked with ${user.tier || 'unknown'} mockery`,
-      mockedTimestamp: user.lastMockery || new Date().toISOString(),
+      mockedTimestamp: user.lastMocked ? user.lastMocked.toISOString() : new Date().toISOString(), // Using lastMocked instead of lastMockery
       mockedBy: 'Unknown user',
       mockedTier: user.tier
     }));
