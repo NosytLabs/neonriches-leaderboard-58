@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Plus, Trash2, Link as LinkIcon } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { UserProfile } from '@/contexts/AuthContext';
+import { UserProfile } from '@/types/user';
 import { ProfileLink } from '@/types/profile';
 
 interface LinksEditorProps {
