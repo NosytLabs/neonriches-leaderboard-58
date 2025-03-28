@@ -1,3 +1,4 @@
+
 import { UserProfile } from '@/types/user';
 
 export type SpendingCategory = 
@@ -9,7 +10,9 @@ export type SpendingCategory =
   | 'founder' 
   | 'poke' 
   | 'shame' 
-  | 'wish';
+  | 'wish'
+  | 'spend'
+  | 'advertisement';
 
 export interface Transaction {
   id: string;

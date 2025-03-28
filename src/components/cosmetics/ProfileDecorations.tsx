@@ -17,9 +17,16 @@ interface DecorationItem {
 interface ProfileDecorationsProps {
   onPurchase: (name: string, price: number, category: string, itemId: string) => Promise<void>;
   user: UserProfile | null;
+  onSelectBorder?: (borderId: string | null) => Promise<void>;
+  activeBorder?: string | null;
 }
 
-const ProfileDecorations: React.FC<ProfileDecorationsProps> = ({ onPurchase, user }) => {
+const ProfileDecorations: React.FC<ProfileDecorationsProps> = ({ 
+  onPurchase, 
+  user, 
+  onSelectBorder,
+  activeBorder 
+}) => {
   const userDecorations = user?.cosmetics?.borders || [];
 
   const decorations: DecorationItem[] = [
@@ -94,6 +101,7 @@ const ProfileDecorations: React.FC<ProfileDecorationsProps> = ({ onPurchase, use
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
         {decorations.map((item) => {
           const isOwned = userDecorations.includes(item.id);
+          const isActive = activeBorder === item.id;
           
           return (
             <div key={item.id} className="glass-morphism border-white/10 rounded-lg p-4 transition-all duration-300 hover:border-purple-400/30">
@@ -124,15 +132,32 @@ const ProfileDecorations: React.FC<ProfileDecorationsProps> = ({ onPurchase, use
                 </div>
               </div>
               
-              <RoyalButton
-                variant={isOwned ? "outline" : "royalGold"}
-                size="sm"
-                className="w-full"
-                disabled={isOwned}
-                onClick={() => onPurchase(item.name, item.price, 'borders', item.id)}
-              >
-                {isOwned ? 'Already Owned' : `Purchase for $${item.price}`}
-              </RoyalButton>
+              <div className="flex flex-col space-y-2">
+                <RoyalButton
+                  variant={isOwned ? "outline" : "royalGold"}
+                  size="sm"
+                  className="w-full"
+                  disabled={isOwned && !onSelectBorder}
+                  onClick={() => isOwned && onSelectBorder ? 
+                    onSelectBorder(item.id) : 
+                    onPurchase(item.name, item.price, 'borders', item.id)}
+                >
+                  {isOwned ? 
+                    (onSelectBorder ? (isActive ? 'Selected' : 'Select Border') : 'Already Owned') : 
+                    `Purchase for $${item.price}`}
+                </RoyalButton>
+                
+                {isOwned && onSelectBorder && isActive && (
+                  <RoyalButton
+                    variant="outline"
+                    size="sm"
+                    className="w-full border-royal-gold/30"
+                    onClick={() => onSelectBorder(null)}
+                  >
+                    Remove Border
+                  </RoyalButton>
+                )}
+              </div>
             </div>
           );
         })}

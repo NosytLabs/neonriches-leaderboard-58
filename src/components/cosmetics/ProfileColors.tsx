@@ -17,9 +17,16 @@ interface ColorItem {
 interface ProfileColorsProps {
   onPurchase: (name: string, price: number, category: string, itemId: string) => Promise<void>;
   user: UserProfile | null;
+  onSelectColor?: (colorId: string | null) => Promise<void>;
+  activeColor?: string | null;
 }
 
-const ProfileColors: React.FC<ProfileColorsProps> = ({ onPurchase, user }) => {
+const ProfileColors: React.FC<ProfileColorsProps> = ({ 
+  onPurchase, 
+  user, 
+  onSelectColor, 
+  activeColor 
+}) => {
   const userColors = user?.cosmetics?.colors || [];
 
   const colors: ColorItem[] = [
@@ -97,6 +104,7 @@ const ProfileColors: React.FC<ProfileColorsProps> = ({ onPurchase, user }) => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
         {colors.map((item) => {
           const isOwned = userColors.includes(item.id);
+          const isActive = activeColor === item.id;
           
           return (
             <div key={item.id} className="glass-morphism border-white/10 rounded-lg p-4 transition-all duration-300 hover:border-royal-gold/30">
@@ -111,9 +119,14 @@ const ProfileColors: React.FC<ProfileColorsProps> = ({ onPurchase, user }) => {
                     <p className="text-xs text-white/60">${item.price}</p>
                   </div>
                 </div>
-                {isOwned && (
+                {isOwned && !onSelectColor && (
                   <Badge variant="outline" className="bg-royal-gold/20 border-royal-gold/40 text-royal-gold">
                     Owned
+                  </Badge>
+                )}
+                {isOwned && isActive && (
+                  <Badge variant="outline" className="bg-royal-gold/20 border-royal-gold/40 text-royal-gold">
+                    Active
                   </Badge>
                 )}
               </div>
@@ -131,15 +144,32 @@ const ProfileColors: React.FC<ProfileColorsProps> = ({ onPurchase, user }) => {
                 </span>
               </div>
               
-              <RoyalButton
-                variant={isOwned ? "outline" : "royalGold"}
-                size="sm"
-                className="w-full"
-                disabled={isOwned}
-                onClick={() => onPurchase(item.name, item.price, 'colors', item.id)}
-              >
-                {isOwned ? 'Already Owned' : `Purchase for $${item.price}`}
-              </RoyalButton>
+              <div className="flex flex-col space-y-2">
+                <RoyalButton
+                  variant={isOwned ? "outline" : "royalGold"}
+                  size="sm"
+                  className="w-full"
+                  disabled={isOwned && !onSelectColor}
+                  onClick={() => isOwned && onSelectColor ? 
+                    onSelectColor(item.id) : 
+                    onPurchase(item.name, item.price, 'colors', item.id)}
+                >
+                  {isOwned ? 
+                    (onSelectColor ? (isActive ? 'Selected' : 'Select Color') : 'Already Owned') : 
+                    `Purchase for $${item.price}`}
+                </RoyalButton>
+                
+                {isOwned && onSelectColor && isActive && (
+                  <RoyalButton
+                    variant="outline"
+                    size="sm"
+                    className="w-full border-royal-gold/30"
+                    onClick={() => onSelectColor(null)}
+                  >
+                    Remove Color
+                  </RoyalButton>
+                )}
+              </div>
             </div>
           );
         })}
