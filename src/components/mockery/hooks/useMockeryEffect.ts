@@ -9,7 +9,16 @@ export type MockeryAction =
   | 'dunce' 
   | 'roast' 
   | 'ridicule' 
-  | 'taunt';
+  | 'taunt'
+  | 'courtJester'
+  | 'dethroned'
+  | 'royalFool'
+  | 'pillory'
+  | 'dunkingChair'
+  | 'tarAndFeathers'
+  | 'memeGenerator'
+  | 'socialRoast'
+  | 'royalDecreeOfShame';
 
 interface MockeryEffectProps {
   onSuccess?: (targetId: number, targetName: string, mockeryType: MockeryAction) => void;
@@ -94,7 +103,7 @@ export const useMockeryEffect = ({
   
   // Helper function to check if a string is a valid MockeryAction
   const isValidMockeryAction = (value: string): value is MockeryAction => {
-    return ['tomatoes', 'eggs', 'stocks', 'jester', 'dunce', 'roast', 'ridicule', 'taunt'].includes(value);
+    return ['tomatoes', 'eggs', 'stocks', 'jester', 'dunce', 'roast', 'ridicule', 'taunt', 'courtJester', 'dethroned', 'royalFool', 'pillory', 'dunkingChair', 'tarAndFeathers', 'memeGenerator', 'socialRoast', 'royalDecreeOfShame'].includes(value);
   };
   
   // Show mockery effects for a short time to display animation
@@ -131,6 +140,15 @@ export const useMockeryEffect = ({
         case 'roast': return ['🔥', '🧨', '💯', '🔪'];
         case 'ridicule': return ['😂', '🤣', '😆', '😜'];
         case 'taunt': return ['🗯️', '💭', '👎', '😤'];
+        case 'courtJester': return ['👑', '👑', '👑', '👑'];
+        case 'dethroned': return ['👑', '👑', '👑', '👑'];
+        case 'royalFool': return ['👑', '👑', '👑', '👑'];
+        case 'pillory': return ['🪵', '⛓️', '🔒', '📜'];
+        case 'dunkingChair': return ['🪵', '⛓️', '🔒', '📜'];
+        case 'tarAndFeathers': return ['🪵', '⛓️', '🔒', '📜'];
+        case 'memeGenerator': return ['🤣', '🤣', '🤣', '🤣'];
+        case 'socialRoast': return ['🤣', '🤣', '🤣', '🤣'];
+        case 'royalDecreeOfShame': return ['🤣', '🤣', '🤣', '🤣'];
       }
     };
     
@@ -245,7 +263,16 @@ export const useMockeryEffect = ({
       dunce: `You've awarded ${targetName} the dunce cap! Their royal ignorance is now public for 24 hours.`,
       roast: `You've roasted ${targetName} royally! They're feeling the burn of mockery for 24 hours.`,
       ridicule: `You've publicly ridiculed ${targetName}! The kingdom laughs at their expense for 24 hours.`,
-      taunt: `You've taunted ${targetName} with medieval flair! They'll be haunted by your mockery for 24 hours.`
+      taunt: `You've taunted ${targetName} with medieval flair! They'll be haunted by your mockery for 24 hours.`,
+      courtJester: `You've crowned ${targetName} as the court jester! Their foolishness is on display for 24 hours.`,
+      dethroned: `You've dethroned ${targetName}! The kingdom will mock them for 24 hours.`,
+      royalFool: `You've awarded ${targetName} the royal fool! Their royal ignorance is now public for 24 hours.`,
+      pillory: `You've placed ${targetName} in the pillory! The whole kingdom will mock them for 24 hours.`,
+      dunkingChair: `You've placed ${targetName} in the dunking chair! The whole kingdom will mock them for 24 hours.`,
+      tarAndFeathers: `You've placed ${targetName} in the tar and feathers! The whole kingdom will mock them for 24 hours.`,
+      memeGenerator: `You've generated a meme about ${targetName}! The whole kingdom will laugh at their expense for 24 hours.`,
+      socialRoast: `You've social roasted ${targetName}! The whole kingdom will laugh at their expense for 24 hours.`,
+      royalDecreeOfShame: `You've issued a royal decree of shame against ${targetName}! The whole kingdom will mock them for 24 hours.`
     };
     
     addToast({

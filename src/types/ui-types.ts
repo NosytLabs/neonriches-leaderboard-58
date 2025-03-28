@@ -4,9 +4,9 @@ export interface RegalBadgeProps {
   size?: 'sm' | 'md' | 'lg';
   children?: React.ReactNode;
   className?: string;
-  label?: string; // Add this property
-  rarity?: string; // Add this property
-  tier?: string; // Add this property
+  label?: string;
+  rarity?: string;
+  tier?: string;
 }
 
 export interface RoyalButtonProps {
@@ -33,4 +33,5 @@ export interface ThroneBackgroundProps {
   animate?: boolean;
   opacity?: number;
   className?: string;
+  density?: 'low' | 'medium' | 'high';
 }

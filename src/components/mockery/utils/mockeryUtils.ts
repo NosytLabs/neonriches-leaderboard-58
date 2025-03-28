@@ -1,4 +1,3 @@
-
 import { MockeryAction, MockeryTier } from '../hooks/useMockery';
 
 // Get mockery action title
@@ -213,6 +212,26 @@ export const getMockeryActionColor = (action: MockeryAction) => {
   }
 };
 
+// Get mockery protection price (base price)
+export const getMockeryProtectionPrice = (): number => {
+  return 5.00; // $5.00 for 24-hour protection
+};
+
+// Get enhanced mockery protection price with duration discount
+export const getEnhancedMockeryProtectionPrice = (durationHours: number): number => {
+  const basePrice = getMockeryProtectionPrice();
+  const days = durationHours / 24;
+  
+  // Apply discount based on duration
+  if (days >= 30) {
+    return 100.00; // $100 for 30 days (33% discount per day compared to daily rate)
+  } else if (days >= 7) {
+    return 30.00; // $30 for 7 days (15% discount per day compared to daily rate)
+  } else {
+    return basePrice * days; // No discount for shorter durations
+  }
+};
+
 // Get mockery actions by tier
 export const getMockeryActionsByTier = (tier: MockeryTier) => {
   // In a real app this would be fetched from a database
@@ -271,4 +290,3 @@ export const getMockeryBundles = () => {
     }
   ];
 };
-

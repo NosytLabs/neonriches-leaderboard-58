@@ -1,34 +1,28 @@
 
 import React from 'react';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
+import { Shield, DollarSign, Info } from 'lucide-react';
 import { MockeryAction } from '../hooks/useMockery';
-import { 
-  getMockeryActionIcon, 
-  getMockeryActionTitle, 
-  getMockeryActionDescription,
-  getMockeryActionPrice,
-  hasWeeklyDiscount,
-  getDiscountedMockeryPrice
-} from '../utils/mockeryUtils';
-import RoyalDivider from '@/components/ui/royal-divider';
-import { Target, Crown, CreditCard } from 'lucide-react';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { getMockeryActionTitle, getMockeryActionDescription, getMockeryActionIcon, getMockeryActionPrice, getDiscountedMockeryPrice } from '../utils/mockeryUtils';
+
+interface TargetUser {
+  userId: string;
+  username: string;
+  profileImage?: string;
+  totalSpent: number;
+  rank: number;
+  team?: string;
+  spendStreak?: number;
+}
 
 interface MockeryModalProps {
-  targetUser: {
-    userId: string;
-    username: string;
-    profileImage?: string;
-    totalSpent: number;
-    rank: number;
-    team?: string | null;
-  };
+  targetUser: TargetUser;
   mockeryType: MockeryAction;
-  onConfirm: (userId: string, mockeryType: MockeryAction) => void;
+  onConfirm: (userId: string, action: MockeryAction) => void;
   onCancel: () => void;
   hasDiscount?: boolean;
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
 }
 
 const MockeryModal: React.FC<MockeryModalProps> = ({
@@ -36,109 +30,105 @@ const MockeryModal: React.FC<MockeryModalProps> = ({
   mockeryType,
   onConfirm,
   onCancel,
-  hasDiscount = false,
-  open,
-  onOpenChange
+  hasDiscount = false
 }) => {
   const regularPrice = getMockeryActionPrice(mockeryType);
-  const finalPrice = hasDiscount 
-    ? getDiscountedMockeryPrice(mockeryType) 
-    : regularPrice;
-  const discountPercentage = hasDiscount 
-    ? Math.round((1 - (finalPrice / regularPrice)) * 100) 
-    : 0;
-  
-  const handleConfirm = () => {
-    onConfirm(targetUser.userId, mockeryType);
-  };
+  const discountedPrice = hasDiscount ? getDiscountedMockeryPrice(mockeryType) : regularPrice;
+  const finalPrice = hasDiscount ? discountedPrice : regularPrice;
   
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="glass-morphism border-white/10 sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle className="flex items-center text-royal-gold">
-            <Crown className="mr-2 h-5 w-5" />
-            Confirm Royal Mockery
-          </DialogTitle>
-          <DialogDescription>
-            You are about to mock {targetUser.username} with {getMockeryActionTitle(mockeryType)}
-          </DialogDescription>
-        </DialogHeader>
-        
-        <div className="flex items-center space-x-4 my-4">
-          <div className="h-16 w-16 rounded-full overflow-hidden border border-white/20">
+    <DialogContent className="glass-morphism border-white/10 bg-black/70 backdrop-blur-md sm:max-w-md">
+      <DialogHeader>
+        <DialogTitle className="royal-gradient font-medieval flex items-center">
+          {getMockeryActionIcon(mockeryType)}
+          <span className="ml-2">{getMockeryActionTitle(mockeryType)}</span>
+        </DialogTitle>
+      </DialogHeader>
+      
+      <div className="space-y-4 my-4">
+        <div className="flex items-start gap-4">
+          <div className="w-12 h-12 rounded-full overflow-hidden bg-white/10 flex-shrink-0">
             {targetUser.profileImage ? (
               <img 
                 src={targetUser.profileImage} 
                 alt={targetUser.username} 
-                className="h-full w-full object-cover"
+                className="w-full h-full object-cover"
               />
             ) : (
-              <div className="h-full w-full bg-white/10 flex items-center justify-center text-xl font-bold">
+              <div className="w-full h-full flex items-center justify-center font-bold text-lg">
                 {targetUser.username[0]}
               </div>
             )}
           </div>
           
           <div>
-            <h3 className="font-bold">{targetUser.username}</h3>
-            <p className="text-sm text-white/70">
-              Rank #{targetUser.rank} • ${targetUser.totalSpent.toLocaleString()} spent
-            </p>
+            <h4 className="font-medium text-lg">{targetUser.username}</h4>
+            <div className="flex items-center text-white/60 text-sm">
+              <span className="mr-2">Rank #{targetUser.rank}</span>
+              <span>${targetUser.totalSpent.toLocaleString()} spent</span>
+            </div>
+            {targetUser.spendStreak && targetUser.spendStreak > 0 && (
+              <div className="text-royal-gold text-xs mt-1">
+                {targetUser.spendStreak} week spending streak
+              </div>
+            )}
           </div>
         </div>
         
-        <RoyalDivider variant="line" className="my-2" />
-        
-        <div className="space-y-4">
-          <div className="flex items-center space-x-3">
-            <div className="text-2xl">
-              {getMockeryActionIcon(mockeryType)}
-            </div>
-            <div>
-              <h4 className="font-bold">{getMockeryActionTitle(mockeryType)}</h4>
-              <p className="text-sm text-white/70">
-                {getMockeryActionDescription(mockeryType, targetUser.username)}
-              </p>
-            </div>
-          </div>
-          
-          <div className="bg-white/5 rounded-md p-3 text-sm text-white/70">
-            <p className="flex items-center">
-              <Target className="h-4 w-4 mr-2 text-royal-crimson" />
-              This mockery effect will be visible to all users for 24 hours.
-            </p>
-          </div>
-          
-          <div className="flex justify-between items-center">
-            <div className="text-sm text-white/70">Price:</div>
-            <div className="text-lg font-bold text-royal-gold">
-              {hasDiscount && (
-                <span className="text-sm line-through text-white/50 mr-2">
-                  ${regularPrice.toFixed(2)}
-                </span>
-              )}
-              ${finalPrice.toFixed(2)}
-              {hasDiscount && (
-                <span className="ml-2 text-xs bg-royal-gold/20 text-royal-gold px-2 py-0.5 rounded-full">
-                  {discountPercentage}% OFF
-                </span>
-              )}
-            </div>
-          </div>
+        <div className="glass-morphism border-white/10 p-4 rounded-lg text-sm">
+          <p className="text-white/80">
+            {getMockeryActionDescription(mockeryType, targetUser.username)}
+          </p>
         </div>
         
-        <DialogFooter className="mt-4">
-          <Button variant="outline" onClick={onCancel}>
-            Cancel
-          </Button>
-          <Button className="bg-royal-crimson hover:bg-royal-crimson/90" onClick={handleConfirm}>
-            <CreditCard className="mr-2 h-4 w-4" />
-            Confirm Mockery
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+        <div className="flex justify-between items-center">
+          <div className="text-sm text-white/70">
+            The effect lasts for 24 hours
+          </div>
+          
+          <div className="flex items-center">
+            <DollarSign className="h-4 w-4 text-royal-gold mr-1" />
+            {hasDiscount && (
+              <span className="line-through text-white/50 mr-2">${regularPrice.toFixed(2)}</span>
+            )}
+            <span className="font-bold text-royal-gold">${finalPrice.toFixed(2)}</span>
+          </div>
+        </div>
+      </div>
+      
+      <DialogFooter className="flex flex-col sm:flex-row gap-2 sm:justify-between">
+        <Button 
+          variant="outline" 
+          className="sm:flex-1"
+          onClick={onCancel}
+        >
+          Cancel
+        </Button>
+        
+        <Button 
+          className="sm:flex-1 bg-royal-crimson hover:bg-royal-crimson/90"
+          onClick={() => onConfirm(targetUser.userId, mockeryType)}
+        >
+          Confirm Mockery
+        </Button>
+      </DialogFooter>
+      
+      <div className="text-xs text-white/60 flex justify-center mt-2">
+        <Tooltip>
+          <TooltipTrigger className="flex items-center">
+            <Info className="h-3 w-3 mr-1" />
+            How does mockery work?
+          </TooltipTrigger>
+          <TooltipContent className="max-w-xs">
+            <p>
+              Mockery effects are purely visual and do not affect leaderboard rankings or status.
+              The target will display the mockery effect for 24 hours.
+              You can only mock a user once every 24 hours.
+            </p>
+          </TooltipContent>
+        </Tooltip>
+      </div>
+    </DialogContent>
   );
 };
 

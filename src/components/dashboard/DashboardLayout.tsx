@@ -34,7 +34,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
       
       <main className="flex-1 pt-24 pb-16 relative">
         <div className="absolute inset-0 -z-10">
-          <ThroneBackground variant="royal" density="high" animate={true} />
+          <ThroneBackground variant="royal" animate={true} particles={true} />
         </div>
         
         <div className="max-w-7xl mx-auto px-6">

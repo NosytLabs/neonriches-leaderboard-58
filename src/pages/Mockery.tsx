@@ -149,9 +149,9 @@ const MockeryPage = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {mockeryOptions.map(option => (
                   <MockeryCard 
-                    key={option.type}
-                    action={option.type}
-                    tier={option.tier}
+                    key={option.type as string}
+                    action={option.type as MockeryAction}
+                    tier={option.tier as MockeryTier}
                     username="Target Noble"
                     onSelect={handleSelectMockery}
                     selected={selectedMockery === option.type}
@@ -164,9 +164,9 @@ const MockeryPage = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {mockeryOptions.map(option => (
                   <MockeryCard 
-                    key={option.type}
-                    action={option.type}
-                    tier={option.tier}
+                    key={option.type as string}
+                    action={option.type as MockeryAction}
+                    tier={option.tier as MockeryTier}
                     username="Target Noble"
                     onSelect={handleSelectMockery}
                     selected={selectedMockery === option.type}
@@ -179,9 +179,9 @@ const MockeryPage = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {mockeryOptions.map(option => (
                   <MockeryCard 
-                    key={option.type}
-                    action={option.type}
-                    tier={option.tier}
+                    key={option.type as string}
+                    action={option.type as MockeryAction}
+                    tier={option.tier as MockeryTier}
                     username="Target Noble"
                     onSelect={handleSelectMockery}
                     selected={selectedMockery === option.type}
@@ -194,9 +194,9 @@ const MockeryPage = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {mockeryOptions.map(option => (
                   <MockeryCard 
-                    key={option.type}
-                    action={option.type}
-                    tier={option.tier}
+                    key={option.type as string}
+                    action={option.type as MockeryAction}
+                    tier={option.tier as MockeryTier}
                     username="Target Noble"
                     onSelect={handleSelectMockery}
                     selected={selectedMockery === option.type}
@@ -209,9 +209,9 @@ const MockeryPage = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {mockeryOptions.map(option => (
                   <MockeryCard 
-                    key={option.type}
-                    action={option.type}
-                    tier={option.tier}
+                    key={option.type as string}
+                    action={option.type as MockeryAction}
+                    tier={option.tier as MockeryTier}
                     username="Target Noble"
                     onSelect={handleSelectMockery}
                     selected={selectedMockery === option.type}
