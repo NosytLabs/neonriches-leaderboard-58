@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -12,7 +11,7 @@ import ParchmentTexture from '@/components/ui/parchment-texture';
 import MedievalFrame from '@/components/ui/medieval-frame';
 import RegalBadge from '@/components/ui/regal-badge';
 
-const iconExamples: MedievalIconName[] = ['crown', 'medal', 'gem', 'heart', 'shield', 'swords', 'scroll', 'castle', 'trophy', 'key', 'coins', 'wallet'];
+const iconExamples: MedievalIconName[] = ['crown', 'medal', 'gem', 'heart', 'shield', 'sword', 'scroll', 'castle', 'trophy', 'key', 'coins', 'wallet'];
 
 const StyleGuide: React.FC = () => {
   return (

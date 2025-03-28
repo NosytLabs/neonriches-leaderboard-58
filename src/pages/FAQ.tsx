@@ -2,7 +2,7 @@
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Card } from '@/components/ui/card';
-import { QuestionCircle, Info, Crown, Coins, Shield, Bell, Calendar, Search, Users, Gem } from 'lucide-react';
+import { HelpCircle, Info, Crown, Coins, Shield, Bell, Calendar, Search, Users, Gem } from 'lucide-react';
 import {
   Accordion,
   AccordionContent,

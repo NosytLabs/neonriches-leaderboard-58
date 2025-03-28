@@ -12,13 +12,13 @@ export interface ThroneBackgroundProps {
 }
 
 export interface RoyalDividerProps {
-  variant?: 'line' | 'crown' | 'sword' | 'shield' | 'scroll' | 'double' | 'quill' | 'treasure' | 'ornate';
+  variant?: 'line' | 'crown' | 'sword' | 'shield' | 'scroll' | 'double' | 'quill' | 'treasure' | 'ornate' | 'royal';
   color?: 'gold' | 'silver' | 'crimson' | 'navy';
   className?: string;
 }
 
 export interface RegalBadgeProps extends HTMLAttributes<HTMLDivElement> {
-  variant?: 'royal' | 'gold' | 'silver' | 'crimson' | 'navy';
+  variant?: 'royal' | 'gold' | 'silver' | 'bronze' | 'crimson' | 'navy';
   label?: string;
   rarity?: CosmeticRarity;
   tier?: string; // Add tier property to fix StyleGuide errors
