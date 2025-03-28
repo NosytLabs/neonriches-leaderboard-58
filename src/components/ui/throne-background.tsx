@@ -1,142 +1,195 @@
 
 import React, { useEffect, useRef } from 'react';
+import { motion } from 'framer-motion';
 
 interface ThroneBackgroundProps {
-  variant?: 'default' | 'dark' | 'light' | 'royal';
-  density?: 'low' | 'medium' | 'high';
-  animate?: boolean;
+  variant?: 'royal' | 'crimson' | 'navy' | 'purple';
   particles?: boolean;
+  animated?: boolean;
 }
 
-const ThroneBackground: React.FC<ThroneBackgroundProps> = ({
-  variant = 'default',
-  density = 'medium',
-  animate = true,
-  particles = true
+const ThroneBackground: React.FC<ThroneBackgroundProps> = ({ 
+  variant = 'royal', 
+  particles = false,
+  animated = true 
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   
+  // Get background colors based on variant
+  const getBackgroundStyles = () => {
+    switch (variant) {
+      case 'crimson':
+        return 'from-royal-crimson/40 via-black to-black';
+      case 'navy':
+        return 'from-royal-navy/40 via-black to-black';
+      case 'purple':
+        return 'from-purple-900/40 via-black to-black';
+      case 'royal':
+      default:
+        return 'from-royal-gold/20 via-black to-black';
+    }
+  };
+  
+  // Canvas particle animation effect
   useEffect(() => {
-    if (!canvasRef.current || !particles) return;
+    if (!particles || !canvasRef.current) return;
     
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
     
     // Set canvas size
-    const updateSize = () => {
+    const setCanvasSize = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
     };
     
-    window.addEventListener('resize', updateSize);
-    updateSize();
+    setCanvasSize();
+    window.addEventListener('resize', setCanvasSize);
     
-    // Particle settings based on density
-    const particleCount = density === 'low' ? 20 : density === 'medium' ? 40 : 60;
-    
-    // Color based on variant
-    const colorScheme = {
-      default: {
-        primary: '#D4AF37',
-        secondary: '#9B2335',
-        tertiary: '#1F4788',
-      },
-      dark: {
-        primary: '#222222',
-        secondary: '#333333',
-        tertiary: '#444444',
-      },
-      light: {
-        primary: '#DDDDDD',
-        secondary: '#CCCCCC',
-        tertiary: '#BBBBBB',
-      },
-      royal: {
-        primary: '#D4AF37',
-        secondary: '#9B2335',
-        tertiary: '#7851A9',
+    // Particle class
+    class Particle {
+      x: number;
+      y: number;
+      size: number;
+      speedX: number;
+      speedY: number;
+      color: string;
+      
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 3 + 0.5;
+        this.speedX = Math.random() * 0.5 - 0.25;
+        this.speedY = Math.random() * 0.5 - 0.25;
+        
+        // Set color based on variant
+        switch (variant) {
+          case 'crimson':
+            this.color = `rgba(220, 38, 38, ${Math.random() * 0.5 + 0.1})`;
+            break;
+          case 'navy':
+            this.color = `rgba(30, 58, 138, ${Math.random() * 0.5 + 0.1})`;
+            break;
+          case 'purple':
+            this.color = `rgba(126, 34, 206, ${Math.random() * 0.5 + 0.1})`;
+            break;
+          case 'royal':
+          default:
+            this.color = `rgba(212, 175, 55, ${Math.random() * 0.5 + 0.1})`;
+            break;
+        }
       }
-    };
+      
+      update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+        
+        // Bounce off edges
+        if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+        if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+      }
+      
+      draw() {
+        if (!ctx) return;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = this.color;
+        ctx.fill();
+      }
+    }
     
-    const colors = colorScheme[variant];
+    // Create particles
+    const particlesArray: Particle[] = [];
+    const particleCount = Math.min(Math.floor(window.innerWidth / 10), 100);
     
-    // Create particles array before using it
-    const particlesArray = Array.from({ length: particleCount }, () => ({
-      x: Math.random() * canvas.width,
-      y: Math.random() * canvas.height,
-      radius: Math.random() * 2 + 1,
-      color: [colors.primary, colors.secondary, colors.tertiary][Math.floor(Math.random() * 3)],
-      speed: Math.random() * 0.5 + 0.1,
-      direction: Math.random() * Math.PI * 2,
-      opacity: Math.random() * 0.5 + 0.2,
-    }));
+    for (let i = 0; i < particleCount; i++) {
+      particlesArray.push(new Particle());
+    }
     
-    let animationFrame: number;
-    
-    const draw = () => {
+    // Animation loop
+    const animate = () => {
+      if (!ctx) return;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       
-      // Draw particles
-      particlesArray.forEach(particle => {
-        ctx.beginPath();
-        ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
-        ctx.fillStyle = particle.color + Math.floor(particle.opacity * 255).toString(16).padStart(2, '0');
-        ctx.fill();
-        
-        if (animate) {
-          // Move particles
-          particle.x += Math.cos(particle.direction) * particle.speed;
-          particle.y += Math.sin(particle.direction) * particle.speed;
-          
-          // Wrap around edges
-          if (particle.x < 0) particle.x = canvas.width;
-          if (particle.x > canvas.width) particle.x = 0;
-          if (particle.y < 0) particle.y = canvas.height;
-          if (particle.y > canvas.height) particle.y = 0;
-        }
-      });
+      for (let i = 0; i < particlesArray.length; i++) {
+        particlesArray[i].update();
+        particlesArray[i].draw();
+      }
       
-      animationFrame = requestAnimationFrame(draw);
+      requestAnimationFrame(animate);
     };
     
-    animationFrame = requestAnimationFrame(draw);
+    animate();
     
     return () => {
-      window.removeEventListener('resize', updateSize);
-      cancelAnimationFrame(animationFrame);
+      window.removeEventListener('resize', setCanvasSize);
     };
-  }, [particles, animate, variant, density]);
-  
-  // Background gradient based on variant
-  const getBackgroundClass = () => {
-    switch (variant) {
-      case 'dark':
-        return 'from-[#0D0D20] via-[#141428] to-[#1D1E33]';
-      case 'light':
-        return 'from-[#F5F5F8] via-[#EAEAEF] to-[#DEDEE8]';
-      case 'royal':
-        return 'from-[#2D1E30] via-[#1F2136] to-[#11121D]';
-      default:
-        return 'from-[#0D0D20] via-[#141428] to-[#1D1E33]';
-    }
-  };
+  }, [particles, variant]);
   
   return (
-    <div className={`absolute inset-0 z-0 bg-gradient-to-b ${getBackgroundClass()}`}>
-      {particles && (
-        <canvas
-          ref={canvasRef}
-          className="absolute inset-0 z-0"
-          aria-hidden="true"
-        />
+    <div className="fixed inset-0 -z-10 overflow-hidden">
+      {/* Gradient background */}
+      <div className={`absolute inset-0 bg-gradient-to-b ${getBackgroundStyles()}`} />
+      
+      {/* Fancy pattern overlay */}
+      <div className="absolute inset-0 opacity-5 bg-repeat" style={{ backgroundImage: "url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgdmlld0JveD0iMCAwIDYwIDYwIj48cGF0aCBkPSJNNTAuNDkxIDQxLjczNWMtMS4zMjkgMC0yLjQtMS4wNzEtMi40LTIuNHMxLjA3MS0yLjQgMi40LTIuNCAyLjQgMS4wNzEgMi40IDIuNC0xLjA3MSAyLjQtMi40IDIuNHptMC05LjZjLTEuMzI5IDAtMi40LTEuMDcxLTIuNC0yLjRzMS4wNzEtMi40IDIuNC0yLjQgMi40IDEuMDcxIDIuNCAyLjQtMS4wNzEgMi40LTIuNCAyLjR6bTAgMTkuMmMtMS4zMjkgMC0yLjQtMS4wNzEtMi40LTIuNHMxLjA3MS0yLjQgMi40LTIuNCAyLjQgMS4wNzEgMi40IDIuNC0xLjA3MSAyLjQtMi40IDIuNHptLTkuNi05LjZjLTEuMzI5IDAtMi40LTEuMDcxLTIuNC0yLjRzMS4wNzEtMi40IDIuNC0yLjQgMi40IDEuMDcxIDIuNCAyLjQtMS4wNzEgMi40LTIuNCAyLjR6bS05LjYgMGMtMS4zMjkgMC0yLjQtMS4wNzEtMi40LTIuNHMxLjA3MS0yLjQgMi40LTIuNCAyLjQgMS4wNzEgMi40IDIuNC0xLjA3MSAyLjQtMi40IDIuNHptLTkuNiAwYy0xLjMyOSAwLTIuNC0xLjA3MS0yLjQtMi40czEuMDcxLTIuNCAyLjQtMi40IDIuNCAxLjA3MSAyLjQgMi40LTEuMDcxIDIuNC0yLjQgMi40eiIgZmlsbD0iI2ZmZmZmZiI+PC9wYXRoPjwvc3ZnPg==')" }}></div>
+      
+      {/* Animated elements */}
+      {animated && (
+        <>
+          <motion.div 
+            className="absolute -top-20 -left-20 w-64 h-64 rounded-full bg-royal-gold/5 filter blur-3xl"
+            animate={{ 
+              x: [0, 30, 0],
+              y: [0, 30, 0],
+              opacity: [0.3, 0.5, 0.3]
+            }}
+            transition={{ 
+              duration: 15, 
+              repeat: Infinity,
+              ease: "easeInOut" 
+            }}
+          />
+          
+          <motion.div 
+            className="absolute top-1/3 -right-20 w-80 h-80 rounded-full bg-royal-gold/5 filter blur-3xl"
+            animate={{ 
+              x: [0, -40, 0],
+              y: [0, 40, 0],
+              opacity: [0.2, 0.4, 0.2]
+            }}
+            transition={{ 
+              duration: 18, 
+              repeat: Infinity,
+              ease: "easeInOut" 
+            }}
+          />
+          
+          <motion.div 
+            className="absolute bottom-10 left-1/4 w-72 h-72 rounded-full bg-royal-gold/5 filter blur-3xl"
+            animate={{ 
+              x: [0, 50, 0],
+              y: [0, -30, 0],
+              opacity: [0.2, 0.5, 0.2]
+            }}
+            transition={{ 
+              duration: 12, 
+              repeat: Infinity,
+              ease: "easeInOut" 
+            }}
+          />
+        </>
       )}
       
-      {/* Medieval pattern overlay */}
-      <div 
-        className="absolute inset-0 z-0 opacity-5 bg-repeat" 
-        style={{ backgroundImage: 'url("/throne-assets/medieval-patterns.svg")', backgroundSize: '120px 120px' }}
-      ></div>
+      {/* Particles canvas */}
+      {particles && (
+        <canvas 
+          ref={canvasRef} 
+          className="absolute inset-0 z-0"
+          style={{ pointerEvents: 'none' }}
+        />
+      )}
     </div>
   );
 };

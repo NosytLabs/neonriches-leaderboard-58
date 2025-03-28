@@ -2,12 +2,14 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 import { RoyalDividerVariant } from '@/types/user';
+import { Crown, Sword, Shield, Scroll, Feather, Gem, Coins } from 'lucide-react';
 
-export interface RoyalDividerProps {
+interface RoyalDividerProps {
   variant?: RoyalDividerVariant;
-  color?: 'gold' | 'silver' | 'crimson' | 'navy' | 'royal';
   className?: string;
-  label?: string;
+  color?: 'gold' | 'silver' | 'crimson' | 'navy' | 'royal';
+  label?: string; // Added missing property
+  animated?: boolean;
 }
 
 const RoyalDivider: React.FC<RoyalDividerProps> = ({

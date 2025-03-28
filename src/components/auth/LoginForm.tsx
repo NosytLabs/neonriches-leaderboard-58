@@ -1,104 +1,119 @@
 
-import React from 'react';
-import { Button } from '@/components/ui/button';
+import React, { useState } from 'react';
 import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { useAuth } from '@/contexts/AuthContext';
-import { useToast } from '@/hooks/use-toast';
-import useNotificationSounds from '@/hooks/use-notification-sounds';
-import { LoginFormProps } from './types';
+import { Loader2, Mail, Lock, AlertCircle } from 'lucide-react';
+import { useAuth } from '@/contexts/auth';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { motion } from 'framer-motion';
 
-const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister, onSuccess }) => {
-  const [email, setEmail] = React.useState('');
-  const [password, setPassword] = React.useState('');
-  const [isLoading, setIsLoading] = React.useState(false);
-  const { toast } = useToast();
-  const { playSound } = useNotificationSounds();
-  const { user } = useAuth();
+interface LoginFormProps {
+  onSuccess: () => void;
+}
+
+const LoginForm: React.FC<LoginFormProps> = ({ onSuccess }) => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const { login } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErrorMessage(null);
     setIsLoading(true);
-    
+
     try {
-      // Login logic here
-      console.log('Login with', email, password);
-      
-      // Mock login success
-      setTimeout(() => {
-        playSound('success', 0.5);
-        toast({
-          title: "Login Successful",
-          description: "Welcome back to the royal courts!",
-        });
-        setIsLoading(false);
-        if (onSuccess) onSuccess();
-      }, 1000);
-    } catch (error) {
-      console.error('Login error:', error);
-      toast({
-        title: "Login Failed",
-        description: "Please check your credentials and try again.",
-        variant: "destructive",
-      });
+      await login(email, password);
+      onSuccess();
+    } catch (error: any) {
+      setErrorMessage(error.message || 'Failed to sign in');
+    } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="space-y-4">
-      <div className="space-y-2 text-center">
-        <h2 className="text-2xl font-bold">Sign In</h2>
-        <p className="text-sm text-white/70">Enter your email to sign in to your account</p>
-      </div>
-      
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+    >
       <form onSubmit={handleSubmit} className="space-y-4">
+        {errorMessage && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <Alert variant="destructive" className="bg-royal-crimson/20 border-royal-crimson/40">
+              <AlertCircle className="h-4 w-4" />
+              <AlertTitle>Authentication Failed</AlertTitle>
+              <AlertDescription>
+                {errorMessage}
+              </AlertDescription>
+            </Alert>
+          </motion.div>
+        )}
+
         <div className="space-y-2">
-          <Label htmlFor="email">Email</Label>
-          <Input 
-            id="email" 
-            type="email" 
-            placeholder="m@example.com" 
+          <Label htmlFor="email" className="flex items-center gap-2">
+            <Mail className="h-4 w-4 text-royal-gold" />
+            Royal Email
+          </Label>
+          <Input
+            id="email"
+            type="email"
+            placeholder="your.majesty@example.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            className="glass-morphism border-white/10 focus:border-royal-gold/50 focus:ring-royal-gold/20"
             required
-            className="glass-morphism border-white/10"
           />
         </div>
-        
+
         <div className="space-y-2">
-          <div className="flex items-center justify-between">
-            <Label htmlFor="password">Password</Label>
-            <a href="#" className="text-xs text-white/70 hover:text-white">Forgot password?</a>
-          </div>
-          <Input 
-            id="password" 
+          <Label htmlFor="password" className="flex items-center gap-2">
+            <Lock className="h-4 w-4 text-royal-gold" />
+            Royal Key
+          </Label>
+          <Input
+            id="password"
             type="password"
+            placeholder="••••••••"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            className="glass-morphism border-white/10 focus:border-royal-gold/50 focus:ring-royal-gold/20"
             required
-            className="glass-morphism border-white/10"
           />
         </div>
-        
-        <Button type="submit" className="w-full bg-royal-gold text-black hover:bg-royal-gold/90" disabled={isLoading}>
-          {isLoading ? "Signing In..." : "Sign In"}
+
+        <div className="flex justify-between items-center pt-2">
+          <a 
+            href="#" 
+            className="text-sm text-white/60 hover:text-royal-gold transition-colors"
+          >
+            Forgot your royal key?
+          </a>
+        </div>
+
+        <Button
+          type="submit"
+          className="w-full bg-gradient-to-r from-royal-gold via-amber-500 to-royal-gold text-black font-bold tracking-wide hover:opacity-90 transition-all royal-shadow"
+          disabled={isLoading}
+        >
+          {isLoading ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Authenticating...
+            </>
+          ) : (
+            'Enter the Court'
+          )}
         </Button>
       </form>
-      
-      <div className="text-center">
-        <p className="text-sm text-white/70">
-          Don't have an account?{" "}
-          <button 
-            type="button" 
-            className="underline text-royal-gold hover:text-white"
-            onClick={onSwitchToRegister}
-          >
-            Sign up
-          </button>
-        </p>
-      </div>
-    </div>
+    </motion.div>
   );
 };
 

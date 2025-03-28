@@ -1,85 +1,97 @@
 
-import { useEffect, useRef, useCallback, useState } from 'react';
-import type { SoundType } from './sounds/types';
-import { soundAssets, defaultVolumes } from './sounds/sound-assets';
+import { useState, useEffect, useCallback } from 'react';
 
+interface SoundEffects {
+  [key: string]: HTMLAudioElement;
+}
+
+/**
+ * Custom hook for managing notification sounds in the application
+ */
 const useNotificationSounds = () => {
-  const sounds = useRef<Record<string, HTMLAudioElement>>({});
-  const isMounted = useRef(true);
-  const [isMuted, setIsMuted] = useState(false);
+  const [sounds, setSounds] = useState<SoundEffects>({});
+  const [isMuted, setIsMuted] = useState<boolean>(
+    localStorage.getItem('soundEffectsMuted') === 'true'
+  );
 
-  // Initialize audio objects
+  // Initialize sounds
   useEffect(() => {
-    // Create audio objects for each sound
-    Object.entries(soundAssets).forEach(([key, path]) => {
-      try {
-        sounds.current[key] = new Audio(path);
-        sounds.current[key].preload = 'auto';
-      } catch (error) {
-        console.error(`Failed to load sound: ${key}`, error);
-      }
-    });
-
-    return () => {
-      // Clean up audio objects on unmount
-      isMounted.current = false;
-      Object.values(sounds.current).forEach(audio => {
-        audio.pause();
-        audio.src = '';
-      });
-      sounds.current = {};
+    const soundEffects: SoundEffects = {
+      notification: new Audio('/sounds/notification.mp3'),
+      success: new Audio('/sounds/success.mp3'),
+      error: new Audio('/sounds/error.mp3'),
+      click: new Audio('/sounds/click.mp3'),
+      purchase: new Audio('/sounds/purchase.mp3'),
+      coinDrop: new Audio('/sounds/coin-drop.mp3'),
+      levelUp: new Audio('/sounds/level-up.mp3'),
+      reward: new Audio('/sounds/reward.mp3'),
+      royalAnnouncement: new Audio('/sounds/royal-announcement.mp3'),
+      swordClash: new Audio('/sounds/sword-clash.mp3'),
+      trumpets: new Audio('/sounds/trumpets.mp3'),
+      shame: new Audio('/sounds/shame.mp3')
     };
+    
+    // Set default volume for all sounds
+    Object.values(soundEffects).forEach(sound => {
+      sound.volume = 0.5;
+    });
+    
+    setSounds(soundEffects);
   }, []);
 
-  const playSound = useCallback((type: SoundType, volume = 0.5) => {
-    if (isMuted) return;
-    
-    try {
-      if (isMounted.current && sounds.current[type]) {
-        const audio = sounds.current[type];
-        // Use default volume or override with provided volume
-        audio.volume = volume || defaultVolumes[type] || 0.5;
-        audio.currentTime = 0;
+  // Play a sound with customizable volume
+  const playSound = useCallback(
+    (soundName: string, customVolume?: number) => {
+      if (isMuted || !sounds[soundName]) return;
+      
+      try {
+        const sound = sounds[soundName];
         
-        // Some browsers require user interaction before playing audio
-        const playPromise = audio.play();
+        // Reset sound to beginning if it's already playing
+        sound.pause();
+        sound.currentTime = 0;
         
-        if (playPromise !== undefined) {
-          playPromise.catch(error => {
-            // Auto-play was prevented, this is normal on some browsers
-            console.log('Audio playback was prevented by the browser', error);
-          });
+        // Set custom volume if provided
+        if (customVolume !== undefined) {
+          sound.volume = Math.min(Math.max(customVolume, 0), 1);
         }
+        
+        // Play the sound
+        sound.play().catch(error => {
+          console.error(`Error playing sound ${soundName}:`, error);
+        });
+        
+        // Reset volume back to default after playing
+        if (customVolume !== undefined) {
+          sound.addEventListener('ended', () => {
+            sound.volume = 0.5;
+          }, { once: true });
+        }
+      } catch (error) {
+        console.error(`Error playing sound ${soundName}:`, error);
       }
-    } catch (error) {
-      console.error(`Error playing sound: ${type}`, error);
-    }
+    },
+    [sounds, isMuted]
+  );
+
+  // Toggle mute state
+  const toggleMute = useCallback(() => {
+    const newMuteState = !isMuted;
+    setIsMuted(newMuteState);
+    localStorage.setItem('soundEffectsMuted', newMuteState.toString());
   }, [isMuted]);
 
-  const toggleMute = useCallback(() => {
-    setIsMuted(prevMuted => !prevMuted);
-  }, []);
-
+  // Preload all sounds
   const preloadSounds = useCallback(() => {
-    console.log('Preloading sounds');
-    const commonSounds: SoundType[] = ['click', 'success', 'notification'];
-    
-    commonSounds.forEach(type => {
-      try {
-        if (sounds.current[type]) {
-          const audio = sounds.current[type];
-          audio.load();
-        }
-      } catch (error) {
-        console.error(`Error preloading sound ${type}:`, error);
-      }
+    Object.values(sounds).forEach(sound => {
+      sound.load();
     });
-  }, []);
+  }, [sounds]);
 
-  return { 
+  return {
     playSound,
-    isMuted,
     toggleMute,
+    isMuted,
     preloadSounds
   };
 };

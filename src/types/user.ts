@@ -22,7 +22,7 @@ export interface SocialLink {
   platform: string;
   url: string;
   icon?: string;
-  clicks?: number;
+  clicks?: number; // Added this property
 }
 
 export interface UserCosmetics {
