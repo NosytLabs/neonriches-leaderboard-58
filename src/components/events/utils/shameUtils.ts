@@ -1,48 +1,76 @@
 
 import { ShameAction } from '../hooks/useShameEffect';
 
-export const getShameActionIcon = (type: ShameAction): string => {
-  switch (type) {
+// Base prices for shame actions
+const basePrices: Record<ShameAction, number> = {
+  tomatoes: 0.5,
+  eggs: 1.5,
+  stocks: 3.0
+};
+
+// Weekly discount configuration (in a real app, would come from backend)
+const weeklyDiscountConfig = {
+  discountedAction: 'tomatoes' as ShameAction,
+  discountPercentage: 50,
+  isFireSaleMonth: false,
+  fireSaleDiscountPercentage: 30,
+  fireSaleFeaturedCategories: ['tomatoes', 'eggs']
+};
+
+// Get base price for shame action
+export const getShameActionPrice = (action: ShameAction): number => {
+  return basePrices[action] || 0.5;
+};
+
+// Check if the action has weekly discount
+export const hasWeeklyDiscount = (action: ShameAction): boolean => {
+  return action === weeklyDiscountConfig.discountedAction;
+};
+
+// Get discounted price
+export const getDiscountedShamePrice = (action: ShameAction): number => {
+  const basePrice = getShameActionPrice(action);
+  const discount = weeklyDiscountConfig.discountPercentage / 100;
+  return basePrice * (1 - discount);
+};
+
+// Get shame action title
+export const getShameActionTitle = (action: ShameAction): string => {
+  switch (action) {
+    case 'tomatoes': return 'Throw Tomatoes';
+    case 'eggs': return 'Throw Rotten Eggs';
+    case 'stocks': return 'Place in Stocks';
+    default: return 'Public Shaming';
+  }
+};
+
+// Get shame action description
+export const getShameActionDescription = (action: ShameAction, username: string): string => {
+  switch (action) {
+    case 'tomatoes':
+      return `Show your disdain for ${username} by pelting them with ripe, juicy tomatoes! They'll appear tomato-splattered for 24 hours.`;
+    case 'eggs':
+      return `Express your royal disapproval of ${username} with a barrage of rotten eggs! They'll appear egg-covered for 24 hours.`;
+    case 'stocks':
+      return `Put ${username} in the medieval stocks for all to see! They'll be displayed in stocks for 24 hours.`;
+    default:
+      return `Publicly shame ${username} for their misdeeds!`;
+  }
+};
+
+// Get shame action icon
+export const getShameActionIcon = (action: ShameAction): string => {
+  switch (action) {
     case 'tomatoes': return '🍅';
     case 'eggs': return '🥚';
     case 'stocks': return '🪵';
-    default: return '❓';
+    default: return '📜';
   }
 };
 
-export const getShameActionTitle = (type: ShameAction): string => {
-  switch (type) {
-    case 'tomatoes': return 'Pelt with Rotten Tomatoes';
-    case 'eggs': return 'Throw Rotten Eggs';
-    case 'stocks': return 'Place in Public Stocks';
-    default: return 'Unknown Shame';
-  }
-};
-
-export const getShameActionDescription = (type: ShameAction, username: string): string => {
-  switch (type) {
-    case 'tomatoes':
-      return `${username} will be pelted with rotten tomatoes and their profile will show the shameful marks for 24 hours. All visitors will know of their disgrace.`;
-    case 'eggs':
-      return `${username} will be doused with rotten eggs, creating a nauseating aroma that follows them for 24 hours. Their reputation will surely suffer.`;
-    case 'stocks':
-      return `${username} will be placed in the public stocks where all nobles can mock them. Their position in the court will be temporarily diminished.`;
-    default:
-      return `${username} will be shamed publicly.`;
-  }
-};
-
-export const getShameActionPrice = (type: ShameAction): number => {
-  switch (type) {
-    case 'tomatoes': return 0.50;
-    case 'eggs': return 1.00;
-    case 'stocks': return 2.00;
-    default: return 0.25;
-  }
-};
-
-export const getShameActionColor = (type: ShameAction): { bg: string; text: string; border: string } => {
-  switch (type) {
+// Get shame action color
+export const getShameActionColor = (action: ShameAction): { bg: string, text: string, border: string } => {
+  switch (action) {
     case 'tomatoes':
       return {
         bg: 'bg-red-500/20',
@@ -63,19 +91,34 @@ export const getShameActionColor = (type: ShameAction): { bg: string; text: stri
       };
     default:
       return {
-        bg: 'bg-gray-500/20',
-        text: 'text-gray-400',
-        border: 'border-gray-500/30'
+        bg: 'bg-white/10',
+        text: 'text-white/80',
+        border: 'border-white/20'
       };
   }
 };
 
-export const hasWeeklyDiscount = (type: ShameAction): boolean => {
-  // For demo purposes, tomatoes are always discounted
-  return type === 'tomatoes';
+// Get weekly discounted action
+export const getWeeklyDiscountedAction = (): ShameAction => {
+  return weeklyDiscountConfig.discountedAction;
 };
 
-export const getDiscountedShamePrice = (type: ShameAction): number => {
-  const originalPrice = getShameActionPrice(type);
-  return originalPrice * 0.5; // 50% discount
+// Get weekly discount percentage
+export const getWeeklyDiscountPercentage = (): number => {
+  return weeklyDiscountConfig.discountPercentage;
+};
+
+// Check if it's a fire sale month
+export const isFireSaleMonth = (): boolean => {
+  return weeklyDiscountConfig.isFireSaleMonth;
+};
+
+// Get fire sale discount percentage
+export const getFireSaleDiscountPercentage = (): number => {
+  return weeklyDiscountConfig.fireSaleDiscountPercentage;
+};
+
+// Get fire sale featured categories
+export const getFireSaleFeaturedCategories = (): string[] => {
+  return weeklyDiscountConfig.fireSaleFeaturedCategories;
 };

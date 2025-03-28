@@ -113,7 +113,7 @@ export const applyUserSpending = async (user: User, amount: number, title?: stri
 };
 
 // Get team totals for the leaderboard
-export const getTeamTotals = async (): Promise<{ red: number, green: number, blue: number }> => {
+export const getTeamTotals = (): { red: number, green: number, blue: number } => {
   try {
     // In a real app, this would be an API call
     const rankings = getUserRanking();
@@ -137,7 +137,7 @@ export const getTeamTotals = async (): Promise<{ red: number, green: number, blu
 };
 
 // Get the total pool for prize distribution
-export const getTotalPool = async (): Promise<number> => {
+export const getTotalPool = (): number => {
   try {
     // In a real app, this would be an API call
     const rankings = getUserRanking();

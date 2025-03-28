@@ -19,4 +19,5 @@ export interface PaymentModalProps {
   trigger?: React.ReactNode;
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
+  onCancel?: () => void;
 }

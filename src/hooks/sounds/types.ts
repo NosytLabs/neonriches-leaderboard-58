@@ -14,7 +14,8 @@ export type SoundType =
   | 'reward'
   | 'wish'
   | 'advertisement'
-  | 'levelUp';
+  | 'levelUp'
+  | 'shame';
 
 export interface SoundAsset {
   src: string;
@@ -45,6 +46,7 @@ export interface PremiumSoundPack {
   description: string;
   price: number;
   sounds: Record<SoundType, string>;
+  isPurchased?: boolean;
 }
 
 export interface PremiumSoundPackDetails {
@@ -54,6 +56,9 @@ export interface PremiumSoundPackDetails {
   price: number;
   preview?: string;
   features: string[];
+  sounds?: Record<SoundType, string>;
+  isPurchased?: boolean;
+  previewSound?: string;
 }
 
 export interface AudioLoaderReturn {

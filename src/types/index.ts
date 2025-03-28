@@ -64,7 +64,20 @@ export interface User {
     autoRenew: boolean;
     features: string[];
   };
+  badges?: string[];
+  socialLinks?: any[];
+  profileImages?: any[];
+  settings?: {
+    showRank: boolean;
+    showTeam: boolean;
+    showSpending: boolean;
+    publicProfile: boolean;
+    allowMessages: boolean;
+    emailNotifications: boolean;
+    darkMode: boolean;
+    soundEffects: boolean;
+  };
 }
 
-// Export UserProfile interface from user.ts
-export type { UserProfile, UserSubscription, UserCosmetics } from './user';
+// Export types using the correct TypeScript syntax for isolated modules
+export type { UserProfile, UserSubscription, UserCosmetics, RoyalButtonVariant, RoyalDividerVariant, UserGender, ProfileImage, SocialLink } from './user';
