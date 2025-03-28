@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { UserProfile } from '@/types/user';
 
-export type BoostEffectType = 'speed' | 'power' | 'prestige';
+export type BoostEffectType = 'speed' | 'power' | 'prestige' | 'crown' | 'sparkle' | 'glow';
 
 export interface ProfileBoost {
   id: string;
@@ -83,6 +83,27 @@ export const useProfileBoost = (user: UserProfile) => {
           description: "Your rank appears higher to others",
           bonusText: `+${(boost.multiplier * 100) - 100}% prestige`,
         };
+      case 'crown':
+        return {
+          id: boost.id,
+          name: "Royal Crown",
+          description: "Display a crown on your profile",
+          bonusText: "Premium Profile Effect",
+        };
+      case 'sparkle':
+        return {
+          id: boost.id,
+          name: "Royal Sparkle",
+          description: "Add sparkle effects to your profile",
+          bonusText: "Premium Profile Effect",
+        };
+      case 'glow':
+        return {
+          id: boost.id,
+          name: "Royal Glow",
+          description: "Make your profile glow",
+          bonusText: "Basic Profile Effect",
+        };
       default:
         return null;
     }
@@ -111,11 +132,53 @@ export const useProfileBoost = (user: UserProfile) => {
     }
   };
   
+  // Get CSS classes for active boosts
+  const getBoostClasses = (): string => {
+    if (!hasActiveBoosts()) return '';
+    
+    const classes: string[] = [];
+    
+    activeBoosts.forEach(boost => {
+      switch (boost.effectType) {
+        case 'speed':
+          classes.push('profile-boost-effect-shine');
+          break;
+        case 'power':
+          classes.push('profile-boost-pro');
+          break;
+        case 'prestige':
+          classes.push('profile-boost-border-gold');
+          break;
+        case 'crown':
+          classes.push('profile-boost-border-royal');
+          break;
+        case 'sparkle':
+          classes.push('profile-boost-effect-sparkle');
+          break;
+        case 'glow':
+          classes.push('profile-boost-effect-glow');
+          break;
+      }
+      
+      // Add other classes based on boost strength if needed
+      if (boost.multiplier >= 2) {
+        classes.push('profile-boost-whale');
+      } else if (boost.multiplier >= 1.5) {
+        classes.push('profile-boost-shark');
+      } else if (boost.multiplier >= 1.2) {
+        classes.push('profile-boost-dolphin');
+      }
+    });
+    
+    return classes.join(' ');
+  };
+  
   return {
     activeBoosts,
     hasActiveBoosts,
     getBoostEffect,
     getBoostTimeRemaining,
-    formatTimeRemaining
+    formatTimeRemaining,
+    getBoostClasses
   };
 };
