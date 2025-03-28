@@ -10,7 +10,8 @@ import { generateAnalysisReport } from './reportGenerator';
 import { AnalysisResult } from './types';
 
 // Export the main functionality and type definitions
-export { AnalysisResult, generateAnalysisReport, getAllFiles };
+export { getAllFiles, generateAnalysisReport };
+export type { AnalysisResult };
 
 // Main scanning function that coordinates the analysis
 export const scanCodebase = async (
