@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Wallet, LogOut, Loader2, ExternalLink } from 'lucide-react';
@@ -96,7 +95,7 @@ const SolanaWalletButton: React.FC<SolanaWalletButtonProps> = ({
         <DropdownMenuSeparator />
         <DropdownMenuItem className="flex justify-between">
           <span>Address:</span>
-          <span className="font-mono text-xs ml-2">{formatAddress(walletPubkey || '', 6)}</span>
+          <span className="font-mono text-xs ml-2">{formatAddress(walletPubkey || '')}</span>
         </DropdownMenuItem>
         <DropdownMenuItem className="flex justify-between">
           <span>Balance:</span>

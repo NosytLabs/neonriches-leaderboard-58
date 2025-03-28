@@ -1,9 +1,22 @@
 
-import { ExtendedMockeryAction, MockeryAction, MockeryTier } from '@/types/mockery';
+import { MockeryAction, MockeryTier } from '@/types/mockery';
+
+// Define extended mockery action type
+export interface ExtendedMockeryAction {
+  action: MockeryAction;
+  tier: MockeryTier;
+  price: number;
+  duration: number; // in hours
+  cooldown: number; // in hours
+  text?: string;
+  border?: string;
+  effect?: string;
+}
 
 // Helper function to get an appropriate icon based on mockery action
-export const getMockeryActionIcon = (action: MockeryAction): string => {
-  switch (action) {
+export const getMockeryActionIcon = (action: MockeryAction | ExtendedMockeryAction): string => {
+  const actionName = typeof action === 'string' ? action : action.action;
+  switch (actionName) {
     case 'tomatoes': return '🍅';
     case 'eggs': return '🥚';
     case 'stocks': return '🪵';
@@ -42,21 +55,23 @@ export const getMockeryActionTitle = (action: MockeryAction): string => {
 };
 
 // Function to get mockery action description
-export const getMockeryActionDescription = (action: MockeryAction): string => {
+export const getMockeryActionDescription = (action: MockeryAction, targetUsername?: string): string => {
+  const target = targetUsername ? targetUsername : 'the user';
+  
   switch (action) {
-    case 'tomatoes': return 'Cover the user\'s profile with splattered tomatoes for 24 hours.';
-    case 'eggs': return 'Pelt the user\'s profile with eggs for 24 hours.';
-    case 'stocks': return 'Place the user in the public stocks, visible on their profile for 48 hours.';
-    case 'silence': return 'Prevent the user from posting comments for 12 hours.';
-    case 'courtJester': return 'Force the user to wear a jester outfit on their profile for 72 hours.';
-    case 'protected': return 'Protect yourself from mockery for 24 hours.';
-    case 'immune': return 'Grant yourself immunity from all mockery for 1 week.';
-    case 'jester': return 'Add a jester hat to the user\'s profile picture for 48 hours.';
-    case 'dunce': return 'Make the user wear a dunce cap on their profile for 24 hours.';
-    case 'roast': return 'Display a witty roast message on the user\'s profile for 24 hours.';
-    case 'ridicule': return 'Add laugh emojis that follow the user\'s cursor on their profile for 48 hours.';
-    case 'taunt': return 'Display a taunting gesture animation on the user\'s profile for 24 hours.';
-    case 'drama': return 'Add dramatic swirls and effects to the user\'s profile for 72 hours.';
+    case 'tomatoes': return `Cover ${target}'s profile with splattered tomatoes for 24 hours.`;
+    case 'eggs': return `Pelt ${target}'s profile with eggs for 24 hours.`;
+    case 'stocks': return `Place ${target} in the public stocks, visible on their profile for 48 hours.`;
+    case 'silence': return `Prevent ${target} from posting comments for 12 hours.`;
+    case 'courtJester': return `Force ${target} to wear a jester outfit on their profile for 72 hours.`;
+    case 'protected': return `Protect yourself from mockery for 24 hours.`;
+    case 'immune': return `Grant yourself immunity from all mockery for 1 week.`;
+    case 'jester': return `Add a jester hat to ${target}'s profile picture for 48 hours.`;
+    case 'dunce': return `Make ${target} wear a dunce cap on their profile for 24 hours.`;
+    case 'roast': return `Display a witty roast message on ${target}'s profile for 24 hours.`;
+    case 'ridicule': return `Add laugh emojis that follow ${target}'s cursor on their profile for 48 hours.`;
+    case 'taunt': return `Display a taunting gesture animation on ${target}'s profile for 24 hours.`;
+    case 'drama': return `Add dramatic swirls and effects to ${target}'s profile for 72 hours.`;
     default: return 'This action has an unknown effect.';
   }
 };
@@ -123,15 +138,57 @@ export const getMockeryTier = (action: MockeryAction): MockeryTier => {
   }
 };
 
-// Get the tier color
-export const getMockeryTierColor = (tier: MockeryTier): string => {
+// Function for tier text display 
+export const getMockeryTierText = (tier: MockeryTier): string => {
   switch (tier) {
-    case 'common': return 'text-gray-300';
-    case 'uncommon': return 'text-green-400';
-    case 'rare': return 'text-blue-400';
-    case 'epic': return 'text-purple-400';
-    case 'legendary': return 'text-royal-gold';
-    default: return 'text-white';
+    case 'common': return 'Common';
+    case 'uncommon': return 'Uncommon';
+    case 'rare': return 'Rare';
+    case 'epic': return 'Epic';
+    case 'legendary': return 'Legendary';
+    default: return 'Common';
+  }
+};
+
+// Get the tier color
+export const getMockeryTierColor = (tier: MockeryTier): {text: string, bg: string, border: string} => {
+  switch (tier) {
+    case 'common': 
+      return {
+        text: 'text-gray-300',
+        bg: 'bg-gray-800/50',
+        border: 'border-gray-700'
+      };
+    case 'uncommon': 
+      return {
+        text: 'text-green-400',
+        bg: 'bg-green-900/30',
+        border: 'border-green-700/50'
+      };
+    case 'rare': 
+      return {
+        text: 'text-blue-400',
+        bg: 'bg-blue-900/30',
+        border: 'border-blue-700/50'
+      };
+    case 'epic': 
+      return {
+        text: 'text-purple-400',
+        bg: 'bg-purple-900/30',
+        border: 'border-purple-700/50'
+      };
+    case 'legendary': 
+      return {
+        text: 'text-royal-gold',
+        bg: 'bg-amber-900/30',
+        border: 'border-amber-700/50'
+      };
+    default: 
+      return {
+        text: 'text-white',
+        bg: 'bg-white/5',
+        border: 'border-white/10'
+      };
   }
 };
 

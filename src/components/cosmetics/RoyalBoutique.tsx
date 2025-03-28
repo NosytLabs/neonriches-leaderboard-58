@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Crown, Gem, Palette, Type, Sparkles, Award, ScrollText, X } from 'lucide-react';
-import RoyalButton from '@/components/ui/royal-button';
+import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import { spendFromWallet } from '@/services/walletService';
@@ -14,9 +14,8 @@ import ProfileFonts from './ProfileFonts';
 import ProfileEmojis from './ProfileEmojis';
 import ProfileTitles from './ProfileTitles';
 import FoundersPass from '../founder/FoundersPass';
-import { Button } from '../ui/button';
 import { UserCosmetics } from '@/types/user';
-import { adaptToUser, ensureUser } from '@/utils/userAdapter';
+import { ensureUser } from '@/utils/userAdapter';
 
 const RoyalBoutique = () => {
   const [activeTab, setActiveTab] = useState('decorations');
@@ -37,7 +36,7 @@ const RoyalBoutique = () => {
     const success = await spendFromWallet(
       ensureUser(user),
       price,
-      'cosmetic',
+      'purchase',
       `Purchased ${itemName}`,
       { itemId, category }
     );
@@ -196,7 +195,7 @@ const RoyalBoutique = () => {
     const success = await spendFromWallet(
       ensureUser(user),
       100,
-      'founder',
+      'purchase',
       'Purchased Founder\'s Pass',
       {}
     );

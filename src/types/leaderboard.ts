@@ -1,55 +1,43 @@
 
-import { UserTeam } from './user';
-
 export interface LeaderboardEntry {
   id: string;
+  userId: string;
   username: string;
   displayName?: string;
   rank: number;
   previousRank?: number;
   amountSpent: number;
-  profileImage?: string;
-  team?: UserTeam;
-  joinedAt: string;
-  lastActive?: string;
-  spendStreak?: number;
-  isMocked?: boolean;
-  mockedUntil?: string;
-  isProtected?: boolean;
-  protectedUntil?: string;
+  totalDeposited: number;
+  spendingStreak?: number;
+  joinDate: string;
+  avatarUrl?: string;
+  team?: string;
+  lastTransaction?: string;
+  onChain?: boolean;
+  isVerified?: boolean;
   badges?: string[];
   tier?: string;
 }
 
-export interface TeamStanding {
-  team: UserTeam;
-  totalSpent: number;
-  memberCount: number;
+export interface TeamLeaderboardEntry {
+  id: string;
+  name: string;
+  color: string;
   rank: number;
-  previousRank?: number;
-}
-
-export interface SpendingSummary {
-  totalSpent: number;
-  weeklySpent: number;
-  monthlySpent: number;
-  dailyAverage: number;
-  allTimeHighest: number;
-  allTimeHighestDate: string;
-}
-
-export interface RankChangeData {
-  userId: string;
-  username: string;
   previousRank: number;
-  currentRank: number;
-  rankChange: number;
-  timestamp: string;
+  memberCount: number;
+  totalSpent: number;
+  averageSpent: number;
+  topContributor?: {
+    userId: string;
+    username: string;
+    amount: number;
+  };
 }
 
-export interface LeaderboardFilters {
-  team?: UserTeam | null;
-  timeframe?: 'all' | 'week' | 'month' | 'day';
-  search?: string;
-  limit?: number;
+export interface LeaderboardFilter {
+  team?: string;
+  timeFrame?: 'all' | 'week' | 'month' | 'year';
+  sortBy?: 'rank' | 'amountSpent' | 'joinDate';
+  sortDirection?: 'asc' | 'desc';
 }

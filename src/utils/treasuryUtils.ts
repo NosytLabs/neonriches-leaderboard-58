@@ -1,38 +1,52 @@
 
-import { SolanaTreasuryInfo, SolanaTransaction } from '@/types/solana';
+import { SolanaTreasuryInfo, SolanaTransaction } from "@/types/solana";
 
-// Convert SolanaTreasuryInfo to SolanaTransaction for compatible display
-export const treasuryInfoToTransaction = (info: SolanaTreasuryInfo): SolanaTransaction => {
+/**
+ * Format a treasury transaction for display
+ */
+export const formatTreasuryTransaction = (tx: SolanaTransaction): {
+  type: string;
+  amount: string;
+  from: string;
+  to: string;
+  timeFormatted: string;
+  statusClass: string;
+} => {
   return {
-    signature: info.pubkey || 'unknown',
-    timestamp: info.lastUpdated,
-    amount: info.amount || 0,
-    type: 'deposit',
-    sender: info.sender || 'unknown',
-    recipient: info.address,
-    status: 'confirmed'
-  } as SolanaTransaction;
+    type: tx.type.charAt(0).toUpperCase() + tx.type.slice(1),
+    amount: `${tx.amount.toFixed(2)} SOL`,
+    from: tx.sender.slice(0, 4) + '...' + tx.sender.slice(-4),
+    to: tx.recipient.slice(0, 4) + '...' + tx.recipient.slice(-4),
+    timeFormatted: new Date(tx.timestamp).toLocaleString(),
+    statusClass: tx.status === 'confirmed' ? 'text-green-500' : 
+                 tx.status === 'pending' ? 'text-yellow-500' : 'text-red-500'
+  };
 };
 
-// Helper function for UI
-export const isTreasuryInfo = (transaction: any): transaction is SolanaTreasuryInfo => {
-  return transaction && 'balance' in transaction;
+/**
+ * Convert SOL amount to USD
+ */
+export const solToUsd = (solAmount: number, solPrice: number = 20): number => {
+  return solAmount * solPrice;
 };
 
-// Format dates to be consistent
-export const formatTreasuryDate = (dateString: string): string => {
-  const date = new Date(dateString);
-  return date.toLocaleDateString(undefined, {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit'
-  });
-};
-
-export default {
-  treasuryInfoToTransaction,
-  isTreasuryInfo,
-  formatTreasuryDate
+/**
+ * Format a treasury info object for display
+ */
+export const formatTreasuryInfo = (info: SolanaTreasuryInfo): {
+  address: string;
+  balanceFormatted: string;
+  totalDepositsFormatted: string;
+  totalWithdrawalsFormatted: string;
+  lastUpdatedFormatted: string;
+  usdValueFormatted: string;
+} => {
+  return {
+    address: info.address.slice(0, 4) + '...' + info.address.slice(-4),
+    balanceFormatted: `${info.balance.toFixed(4)} SOL`,
+    totalDepositsFormatted: `${info.totalDeposits.toFixed(2)} SOL`,
+    totalWithdrawalsFormatted: `${info.totalWithdrawals.toFixed(2)} SOL`,
+    lastUpdatedFormatted: new Date(info.lastUpdated).toLocaleString(),
+    usdValueFormatted: `$${info.usdValue.toLocaleString()}`
+  };
 };

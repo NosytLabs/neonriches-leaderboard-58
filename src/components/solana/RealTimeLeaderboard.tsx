@@ -1,150 +1,99 @@
 import React, { useState, useEffect } from 'react';
-import { OnChainLeaderboardEntry, SolanaTransaction } from '@/types/solana';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { useToast } from '@/hooks/use-toast';
+import { OnChainLeaderboardEntry } from '@/types/solana';
+import { fetchOnChainLeaderboard } from '@/services/treasuryService';
+import { formatDate } from '@/utils/dateUtils';
 import { formatAddress } from '@/utils/solanaUtils';
-import { fetchOnChainLeaderboard, formatDate } from '@/services/treasuryService';
-import { ArrowUp, ArrowDown, Minus, Crown, ChevronRight, Shield } from 'lucide-react';
+import { ExternalLink } from 'lucide-react';
 
-const RealTimeLeaderboard = () => {
+const RealTimeLeaderboard: React.FC = () => {
   const [leaderboard, setLeaderboard] = useState<OnChainLeaderboardEntry[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
-  const { toast } = useToast();
-  
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
   useEffect(() => {
-    const fetchData = async () => {
+    const loadLeaderboard = async () => {
+      setIsLoading(true);
+      setError(null);
       try {
-        setLoading(true);
-        // Fetch on-chain data
         const data = await fetchOnChainLeaderboard();
-        
-        // Update existing entries with previous rank data
-        const updatedData = data.map((entry) => {
-          const existingEntry = leaderboard.find((e) => e.id === entry.id);
-          return {
-            ...entry,
-            previousRank: existingEntry?.rank || entry.rank
-          };
-        });
-        
-        setLeaderboard(updatedData);
-        setError(null);
+        setLeaderboard(data);
       } catch (err) {
-        console.error("Error fetching data:", err);
-        setError(err as Error);
-        setLoading(false);
-        
-        toast({
-          title: "Error fetching leaderboard",
-          description: "Could not load the latest on-chain data.",
-          variant: "destructive"
-        });
+        setError('Failed to load leaderboard data.');
+        console.error(err);
       } finally {
-        setLoading(false);
+        setIsLoading(false);
       }
     };
-    
-    fetchData();
-    
-    // Set up polling interval
-    const interval = setInterval(fetchData, 60000); // Poll every minute
-    
-    return () => clearInterval(interval);
-  }, [toast]);
-  
-  const getRankChangeIcon = (current: number, previous?: number) => {
-    if (!previous || current === previous) {
-      return <Minus size={16} className="text-gray-400" />;
-    }
-    
-    if (current < previous) {
-      return <ArrowUp size={16} className="text-green-500" />;
-    }
-    
-    return <ArrowDown size={16} className="text-red-500" />;
-  };
-  
-  const getRankChangeText = (current: number, previous?: number) => {
-    if (!previous || current === previous) {
-      return "No change";
-    }
-    
-    if (current < previous) {
-      return `Moved up ${previous - current} rank${previous - current > 1 ? 's' : ''}`;
-    }
-    
-    return `Moved down ${current - previous} rank${current - previous > 1 ? 's' : ''}`;
-  };
-  
+
+    loadLeaderboard();
+  }, []);
+
+  if (isLoading) {
+    return (
+      <Card className="glass-morphism border-white/10">
+        <CardHeader>
+          <CardTitle>On-Chain Leaderboard</CardTitle>
+          <CardDescription>Top Solana contributors in real-time</CardDescription>
+        </CardHeader>
+        <CardContent>
+          Loading leaderboard data...
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (error) {
+    return (
+      <Card className="glass-morphism border-white/10">
+        <CardHeader>
+          <CardTitle>On-Chain Leaderboard</CardTitle>
+          <CardDescription>Top Solana contributors in real-time</CardDescription>
+        </CardHeader>
+        <CardContent>
+          Error: {error}
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
     <Card className="glass-morphism border-white/10">
       <CardHeader>
-        <CardTitle>Real-Time Leaderboard</CardTitle>
-        <CardDescription>
-          Live updates from on-chain transactions
-        </CardDescription>
+        <CardTitle>On-Chain Leaderboard</CardTitle>
+        <CardDescription>Top Solana contributors in real-time</CardDescription>
       </CardHeader>
+      
       <CardContent>
-        <div className="space-y-4">
-          {loading && <p className="text-center text-white/60">Loading on-chain data...</p>}
-          
-          {error && <p className="text-center text-red-400">
-            Failed to fetch on-chain data. Please try again later.
-          </p>}
-          
-          {!loading && !error && leaderboard.length === 0 && 
-            <p className="text-center text-white/60">No on-chain transactions recorded yet.</p>
-          }
-          
-          {leaderboard.map((entry, index) => (
-            <div key={entry.id} className="glass-morphism border-white/10 rounded-lg p-3 group hover:border-royal-gold/30 transition-colors">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-3">
-                  <div className="flex flex-col items-center justify-center w-10">
-                    <span className="text-lg font-bold text-white/90">#{entry.rank}</span>
-                    {getRankChangeIcon(entry.rank, entry.previousRank)}
-                  </div>
-                  
-                  <div className="flex-1 min-w-0">
-                    <h4 className="text-white font-medium truncate">
-                      {entry.username || formatAddress(entry.publicKey || '', 6)}
-                      {entry.isVerified && (
-                        <Badge variant="outline" className="ml-2 text-xs bg-royal-navy/30 border-royal-navy/50">
-                          Verified
-                        </Badge>
-                      )}
-                    </h4>
-                    <p className="text-xs text-white/60 truncate">
-                      {formatAddress(entry.publicKey || '', 10)}
-                    </p>
-                  </div>
-                </div>
-                
-                <div className="flex flex-col items-end">
-                  <span className="text-royal-gold font-bold text-right">
-                    {entry.totalSpent || entry.amountSpent} SOL
-                  </span>
-                  <div className="flex items-center text-xs text-white/60">
-                    <span className={`${entry.previousRank && entry.rank < entry.previousRank ? 'text-green-400' : ''} ${entry.previousRank && entry.rank > entry.previousRank ? 'text-red-400' : ''}`}>
-                      {getRankChangeText(entry.rank, entry.previousRank)}
-                    </span>
-                  </div>
+        <div className="space-y-3">
+          {leaderboard.map((entry) => (
+            <div key={entry.id} className="glass-morphism-subtle rounded-lg p-3 flex items-center justify-between relative overflow-hidden">
+              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-royal-purple to-royal-gold"></div>
+              
+              <div className="flex items-center">
+                <div className="text-sm font-semibold">{entry.username}</div>
+                <div className="text-xs text-white/60 ml-2">
+                  {formatAddress(entry.publicKey)}
                 </div>
               </div>
-            </div>
-          ))}
-          
-          {/* View More link */}
-          {leaderboard.length > 0 && (
-            <div className="text-center pt-2">
-              <a href="#" className="inline-flex items-center text-royal-gold/80 hover:text-royal-gold transition-colors text-sm">
-                View Complete Rankings
-                <ChevronRight size={16} className="ml-1" />
+              
+              <div className="text-right">
+                <div className="text-sm font-bold">${entry.totalSpent.toLocaleString()}</div>
+                <div className="text-xs text-white/60">
+                  Last transaction: {formatDate(entry.lastTransaction)}
+                </div>
+              </div>
+              
+              <a 
+                href={`https://explorer.solana.com/address/${entry.publicKey}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="absolute top-1 right-1 text-white/40 hover:text-white/70"
+              >
+                <ExternalLink size={12} />
               </a>
             </div>
-          )}
+          ))}
         </div>
       </CardContent>
     </Card>

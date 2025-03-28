@@ -10,7 +10,10 @@ export type TransactionType =
   | 'protection'
   | 'shame'
   | 'wish'
-  | 'advertisement';
+  | 'advertisement'
+  | 'cosmetic'  // Added for cosmetic purchases
+  | 'founder'   // Added for founder's pass
+  | 'royal';    // Added for royal features
 
 export interface Transaction {
   id: string;
@@ -33,6 +36,8 @@ export interface SpendOptions {
   feature?: string;
   wishAmount?: number;
   preferredCategory?: string;
+  itemId?: string; // Added for cosmetic identification 
+  category?: string; // Added for cosmetic category
 }
 
 export interface Wallet {

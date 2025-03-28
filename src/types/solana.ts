@@ -1,24 +1,4 @@
 
-import { TransactionType } from './wallet';
-
-export interface SolanaWallet {
-  publicKey: string;
-  balance: number;
-  lastUpdated: string;
-}
-
-export interface SolanaTransaction {
-  id: string;
-  signature: string;
-  timestamp: string;
-  type: TransactionType;
-  amount: number;
-  sender: string;
-  recipient: string;
-  status: 'confirmed' | 'pending' | 'failed';
-  message?: string;
-}
-
 export interface SolanaTreasuryInfo {
   address: string;
   balance: number;
@@ -26,6 +6,17 @@ export interface SolanaTreasuryInfo {
   totalWithdrawals: number;
   lastUpdated: string;
   usdValue: number;
+}
+
+export interface SolanaTransaction {
+  id: string;
+  signature: string;
+  timestamp: string;
+  type: 'deposit' | 'withdrawal';
+  amount: number;
+  sender: string;
+  recipient: string;
+  status: 'pending' | 'confirmed' | 'failed';
 }
 
 export interface OnChainLeaderboardEntry {
@@ -41,17 +32,22 @@ export interface OnChainLeaderboardEntry {
   signature: string;
 }
 
-export interface SolanaPayment {
-  amount: number;
-  reference: string;
-  label: string;
-  message: string;
-  memo?: string;
+export interface SolanaWallet {
+  publicKey: string;
+  balance: number;
+  isConnected: boolean;
+  lastActivity?: string;
+  transactions?: SolanaTransaction[];
 }
 
-export interface SolanaWithdrawal {
-  amount: number;
-  recipient: string;
-  fee: number;
-  memo?: string;
+export interface SolanaNftInfo {
+  mintAddress: string;
+  name: string;
+  symbol: string;
+  image: string;
+  attributes: {
+    trait_type: string;
+    value: string | number;
+  }[];
+  metadata: any;
 }

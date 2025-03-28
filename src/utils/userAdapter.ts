@@ -1,39 +1,37 @@
 
-import { User, UserProfile } from '@/types/user';
+import { User, UserProfile } from "@/types/user";
 
 /**
- * Adapts a UserProfile to a User object
+ * Ensures we have a full User object by filling in default values if needed
+ * @param user Partial user object
+ * @returns Complete User object with all required fields
  */
-export const adaptUserProfileToUser = (profile: UserProfile): User => {
+export const ensureUser = (user: UserProfile): User => {
   return {
-    ...profile,
+    ...user,
     isAuthenticated: true,
-    isAdmin: false,
-    isVerified: true,
-    lastLogin: new Date().toISOString()
+    isAdmin: user.role === 'admin',
+    isVerified: user.isVerified || false,
+    lastLogin: user.lastLoginDate || new Date().toISOString()
   };
 };
 
 /**
- * Alias for adaptUserProfileToUser for backward compatibility
+ * Adapts a user object to a UserProfile
+ * @param user User object
+ * @returns UserProfile object
  */
-export const adaptToUser = adaptUserProfileToUser;
-
-/**
- * Converts any boolean-like string to actual boolean
- * Used for fixing "string" is not assignable to type "boolean" errors
- */
-export const toBooleanSafe = (value: any): boolean => {
-  if (typeof value === 'boolean') return value;
-  if (typeof value === 'string') {
-    const normalized = value.toLowerCase().trim();
-    return normalized === 'true' || normalized === 'yes' || normalized === '1';
-  }
-  return Boolean(value);
+export const adaptToUser = (user: User): UserProfile => {
+  const { isAuthenticated, isAdmin, isVerified, lastLogin, ...profile } = user;
+  return {
+    ...profile,
+    role: isAdmin ? 'admin' : 'user',
+    isVerified,
+    lastLoginDate: lastLogin
+  };
 };
 
 export default {
-  adaptUserProfileToUser,
-  adaptToUser,
-  toBooleanSafe
+  ensureUser,
+  adaptToUser
 };

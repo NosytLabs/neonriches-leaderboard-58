@@ -5,8 +5,8 @@ import { Sparkles, TrendingUp } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import { formatCurrency } from '@/utils/formatters';
-import { adaptToUser, ensureUser } from '@/utils/userAdapter';
 import { spendFromWallet } from '@/services/walletService';
+import { ensureUser } from '@/utils/userAdapter';
 
 const AdvertisementBanner = () => {
   const { user, updateUserProfile } = useAuth();
@@ -37,7 +37,7 @@ const AdvertisementBanner = () => {
       const success = await spendFromWallet(
         ensureUser(user),
         2,
-        'purchase',
+        'advertisement',
         'Purchased advertisement boost for 24 hours',
         {}
       );

@@ -1,176 +1,136 @@
 
-import { LeaderboardEntry, LeaderboardFilters, RankChangeData, TeamStanding } from "@/types/leaderboard";
-import { UserTeam } from "@/types/user";
-import { OnChainLeaderboardEntry } from "@/types/solana";
+import { LeaderboardEntry } from "@/types/leaderboard";
 
-// Get leaderboard entries with filters
+// Mock leaderboard data
+const mockLeaderboardData: LeaderboardEntry[] = [
+  {
+    id: '1',
+    userId: 'user-1',
+    username: 'kingmidas',
+    displayName: 'Royal Patron',
+    rank: 1,
+    previousRank: 1,
+    amountSpent: 2500,
+    totalDeposited: 2500,
+    spendingStreak: 12,
+    joinDate: '2023-01-15T00:00:00Z',
+    avatarUrl: '/images/avatars/user1.jpg',
+    team: 'red',
+    lastTransaction: '2023-06-01T10:30:00Z'
+  },
+  {
+    id: '2',
+    userId: 'user-2',
+    username: 'queenOfPain',
+    displayName: 'Diamond Duchess',
+    rank: 2,
+    previousRank: 3,
+    amountSpent: 1800,
+    totalDeposited: 1800,
+    spendingStreak: 8,
+    joinDate: '2023-02-23T00:00:00Z',
+    avatarUrl: '/images/avatars/user2.jpg',
+    team: 'blue',
+    lastTransaction: '2023-05-30T15:45:00Z'
+  },
+  {
+    id: '3',
+    userId: 'user-3',
+    username: 'cryptoRoyalty',
+    displayName: 'Blockchain Baron',
+    rank: 3,
+    previousRank: 2,
+    amountSpent: 1500,
+    totalDeposited: 1500,
+    spendingStreak: 5,
+    joinDate: '2023-03-10T00:00:00Z',
+    avatarUrl: '/images/avatars/user3.jpg',
+    team: 'green',
+    lastTransaction: '2023-05-29T09:15:00Z'
+  },
+  {
+    id: '4',
+    userId: 'user-4',
+    username: 'goldenWhale',
+    displayName: 'Oceanic Overlord',
+    rank: 4,
+    previousRank: 4,
+    amountSpent: 1200,
+    totalDeposited: 1200,
+    spendingStreak: 3,
+    joinDate: '2023-04-05T00:00:00Z',
+    avatarUrl: '/images/avatars/user4.jpg',
+    team: 'red',
+    lastTransaction: '2023-05-28T22:10:00Z'
+  },
+  {
+    id: '5',
+    userId: 'user-5',
+    username: 'emeraldEmperor',
+    displayName: 'Jeweled Sovereign',
+    rank: 5,
+    previousRank: 7,
+    amountSpent: 950,
+    totalDeposited: 950,
+    spendingStreak: 4,
+    joinDate: '2023-02-18T00:00:00Z',
+    avatarUrl: '/images/avatars/user5.jpg',
+    team: 'green',
+    lastTransaction: '2023-05-28T14:30:00Z'
+  }
+];
+
+/**
+ * Get leaderboard entries with optional filtering
+ */
 export const getLeaderboardEntries = async (
-  filters?: LeaderboardFilters
+  limit: number = 100,
+  page: number = 1,
+  team?: string
 ): Promise<LeaderboardEntry[]> => {
-  // This would be an API call in a real application
-  // Mock data for now
-  const mockEntries: LeaderboardEntry[] = [
-    {
-      id: "user-1",
-      username: "kingmidas",
-      displayName: "Royal Patron",
-      rank: 1,
-      previousRank: 1,
-      amountSpent: 25000,
-      profileImage: "/images/avatars/user1.jpg",
-      team: "red",
-      joinedAt: new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString(),
-      spendStreak: 12,
-      tier: "whale"
-    },
-    {
-      id: "user-2",
-      username: "diamond_spender",
-      displayName: "Diamond Spender",
-      rank: 2,
-      previousRank: 3,
-      amountSpent: 15000,
-      profileImage: "/images/avatars/user2.jpg",
-      team: "blue",
-      joinedAt: new Date(Date.now() - 120 * 24 * 60 * 60 * 1000).toISOString(),
-      spendStreak: 8,
-      tier: "whale"
-    },
-    {
-      id: "user-3",
-      username: "platinum_benefactor",
-      displayName: "Platinum Benefactor",
-      rank: 3,
-      previousRank: 2,
-      amountSpent: 12000,
-      profileImage: "/images/avatars/user3.jpg",
-      team: "green",
-      joinedAt: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000).toISOString(),
-      spendStreak: 4,
-      tier: "whale"
-    }
-  ];
-
-  // Apply filters if provided
-  let filteredEntries = [...mockEntries];
+  // In a real app, this would be an API call
   
-  if (filters) {
-    if (filters.team) {
-      filteredEntries = filteredEntries.filter(entry => entry.team === filters.team);
-    }
-    
-    if (filters.search) {
-      const searchLower = filters.search.toLowerCase();
-      filteredEntries = filteredEntries.filter(entry => 
-        entry.username.toLowerCase().includes(searchLower) || 
-        (entry.displayName && entry.displayName.toLowerCase().includes(searchLower))
-      );
-    }
-    
-    if (filters.limit && filters.limit > 0) {
-      filteredEntries = filteredEntries.slice(0, filters.limit);
-    }
+  // Apply filters
+  let filteredEntries = [...mockLeaderboardData];
+  
+  if (team) {
+    filteredEntries = filteredEntries.filter(entry => entry.team === team);
   }
   
-  return filteredEntries;
+  // Sort by rank
+  filteredEntries.sort((a, b) => a.rank - b.rank);
+  
+  // Pagination
+  const startIndex = (page - 1) * limit;
+  const endIndex = startIndex + limit;
+  
+  return filteredEntries.slice(startIndex, endIndex);
 };
 
-// Get team standings
-export const getTeamStandings = async (): Promise<TeamStanding[]> => {
-  // This would be an API call in a real application
-  return [
-    {
-      team: "red",
-      totalSpent: 45000,
-      memberCount: 120,
-      rank: 1,
-      previousRank: 2
-    },
-    {
-      team: "green",
-      totalSpent: 38000,
-      memberCount: 90,
-      rank: 2,
-      previousRank: 1
-    },
-    {
-      team: "blue",
-      totalSpent: 32000,
-      memberCount: 105,
-      rank: 3,
-      previousRank: 3
-    }
-  ];
+/**
+ * Get a single leaderboard entry by user ID
+ */
+export const getLeaderboardEntry = async (
+  userId: string
+): Promise<LeaderboardEntry | null> => {
+  const entry = mockLeaderboardData.find(e => e.userId === userId);
+  return entry || null;
 };
 
-// Get rank changes
-export const getRankChanges = async (): Promise<RankChangeData[]> => {
-  // This would be an API call in a real application
-  return [
-    {
-      userId: "user-5",
-      username: "climber",
-      previousRank: 10,
-      currentRank: 5,
-      rankChange: 5,
-      timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString()
-    },
-    {
-      userId: "user-8",
-      username: "falling_star",
-      previousRank: 3,
-      currentRank: 7,
-      rankChange: -4,
-      timestamp: new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString()
-    }
-  ];
-};
-
-// Format date helper
-export const formatDate = (dateString: string): string => {
-  const date = new Date(dateString);
-  return date.toLocaleDateString(undefined, {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric'
-  });
-};
-
-// Get on-chain leaderboard
-export const getOnChainLeaderboard = async (): Promise<OnChainLeaderboardEntry[]> => {
-  // This would be an API call in a real application
-  return [
-    {
-      id: "chain-1",
-      publicKey: "8xg7D4ESuJLRJQvnJPw9Mqq9YBJBBe9c8Xu7Lm68cRJ7",
-      username: "whale_on_chain",
-      rank: 1,
-      previousRank: 1,
-      amountSpent: 500,
-      totalSpent: 2500,
-      lastTransaction: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
-      isVerified: true,
-      signature: "5v54qzqHBQrA5dn1KFRwCKioVuGm7QD6UahLHFXvnTmrXm8fJK5rSaVqA7J8ZYnZMkP92UkDwPXJ9zKpWvQYpkMn"
-    },
-    {
-      id: "chain-2",
-      publicKey: "BQj1qLExCzeEMtZ9a6YEQWhrQfG7BrAsfHG1kPuCNCsC",
-      username: "crypto_royalty",
-      rank: 2,
-      previousRank: 3,
-      amountSpent: 300,
-      totalSpent: 1800,
-      lastTransaction: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
-      isVerified: true,
-      signature: "2vhFDtAfMN2A9MGHUFFAZXMZUWi9pLqY7UwDDz5ZhzUE97xYjgJZSS3QBYu1bwcgVLJb5KKd3pPivMC1jGHqAptP"
-    }
-  ];
+/**
+ * Get on-chain leaderboard from Solana
+ */
+export const getOnChainLeaderboard = async (): Promise<LeaderboardEntry[]> => {
+  // This would typically fetch data from a Solana RPC node or indexer
+  // Return mock data for now
+  return mockLeaderboardData.slice(0, 3).map(entry => ({
+    ...entry,
+    onChain: true
+  }));
 };
 
 export default {
   getLeaderboardEntries,
-  getTeamStandings,
-  getRankChanges,
-  formatDate,
+  getLeaderboardEntry,
   getOnChainLeaderboard
 };

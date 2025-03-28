@@ -3,7 +3,8 @@ import React from 'react';
 import { Card } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { getMockeryTierText, getMockeryTierColor } from '../utils/mockeryUtils';
+import { getMockeryTierLabel, getMockeryTierColor } from '../utils/mockeryUtils';
+import { MockeryTier } from '@/types/mockery';
 
 interface MockUser {
   userId: string;
@@ -15,7 +16,7 @@ interface MockUser {
   isProtected: boolean;
   protectedUntil?: Date;
   lastMocked?: Date;
-  tier?: string;
+  tier?: MockeryTier; // Changed to proper MockeryTier type
 }
 
 interface HallOfShameProps {
@@ -34,12 +35,17 @@ const HallOfShame: React.FC<HallOfShameProps> = ({ mockedUsers }) => {
   return (
     <div className="space-y-4">
       {mockedUsers.map((user) => {
-        const tierColors = user.tier ? getMockeryTierColor(user.tier) : { text: '', bg: '', border: '' };
+        // Only get tier colors if tier is defined and is a valid MockeryTier
+        const tierColors = user.tier ? getMockeryTierColor(user.tier) : {
+          text: 'text-white/70',
+          bg: 'bg-white/5',
+          border: 'border-white/10'
+        };
         
         return (
           <Card 
             key={user.userId} 
-            className={`p-4 ${user.tier ? tierColors.bg : 'bg-white/5'} ${user.tier ? tierColors.border : 'border-white/10'} border`}
+            className={`p-4 ${tierColors.bg} ${tierColors.border} border`}
           >
             <div className="flex items-center gap-4">
               <Avatar className="h-12 w-12 border-2 border-white/20">
@@ -53,27 +59,24 @@ const HallOfShame: React.FC<HallOfShameProps> = ({ mockedUsers }) => {
               </Avatar>
               
               <div className="flex-1">
-                <div className="flex items-center gap-2">
-                  <h3 className="font-medium">{user.username}</h3>
+                <div className="flex items-center space-x-2">
+                  <div className="font-medium">{user.username}</div>
                   {user.tier && (
-                    <Badge 
-                      variant="outline" 
-                      className={tierColors.text}
-                    >
-                      {getMockeryTierText(user.tier)}
+                    <Badge variant="outline" className={`${tierColors.text} bg-black/20`}>
+                      {getMockeryTierLabel(user.tier)}
                     </Badge>
                   )}
                 </div>
-                
-                <div className="flex items-center text-sm text-white/60">
-                  <span>Mocked {user.mockeryCount} {user.mockeryCount === 1 ? 'time' : 'times'}</span>
-                  {user.lastMocked && (
-                    <span className="ml-2 text-xs">
-                      Last: {new Date(user.lastMocked).toLocaleDateString()}
-                    </span>
-                  )}
+                <div className="text-sm text-white/60">
+                  Mocked {user.mockeryCount} times
                 </div>
               </div>
+              
+              {user.isProtected && (
+                <Badge variant="outline" className="bg-green-500/10 text-green-400 border-green-500/30">
+                  Protected
+                </Badge>
+              )}
             </div>
           </Card>
         );

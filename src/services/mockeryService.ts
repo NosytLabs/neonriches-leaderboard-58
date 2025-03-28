@@ -107,8 +107,8 @@ export const useMockery = (currentUser?: User | null): UseMockeryResult => {
   };
 
   const canUserBeMocked = async (userId: string): Promise<boolean> => {
-    const protected = await isUserProtected(userId);
-    return !protected;
+    const isProtected = await isUserProtected(userId);
+    return !isProtected;
   };
 
   const getUserMockeryStatus = async (

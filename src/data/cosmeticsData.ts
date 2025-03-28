@@ -1,250 +1,287 @@
+
 import { CosmeticItem, CosmeticCategory, CosmeticType, CosmeticRarity } from '@/types/cosmetics';
 
-// This is a mock database of cosmetic items
-export const mockedCosmeticsData: CosmeticItem[] = [
+// Collection of cosmetic items for the Royal Boutique
+export const cosmeticsData: CosmeticItem[] = [
+  // Borders (Profile Decorations)
   {
-    id: 'border-001',
-    name: 'Royal Crest Border',
-    description: 'A border fit for royalty, displaying the royal crest.',
-    category: 'border' as CosmeticCategory,
-    type: 'profile',
-    rarity: 'rare' as CosmeticRarity,
+    id: 'border-royal-gold',
+    name: 'Royal Gold Border',
+    description: 'A shimmering gold border fit for royalty',
+    category: 'border',
+    type: 'gradient',
+    rarity: 'uncommon',
     cost: 5,
-    imageSrc: '/cosmetics/borders/royal-crest-border.png'
+    placement: 'profile',
+    imageSrc: '/images/cosmetics/borders/royal-gold.png'
   },
   {
-    id: 'border-002',
-    name: 'Knightly Armor Border',
-    description: 'A sturdy border resembling a knight\'s armor.',
-    category: 'border' as CosmeticCategory,
-    type: 'profile',
-    rarity: 'uncommon' as CosmeticRarity,
+    id: 'border-crimson-court',
+    name: 'Crimson Court Border',
+    description: 'A deep crimson border with ornate patterns',
+    category: 'border',
+    type: 'static',
+    rarity: 'rare',
+    cost: 10,
+    placement: 'profile',
+    imageSrc: '/images/cosmetics/borders/crimson-court.png'
+  },
+  {
+    id: 'border-emerald-throne',
+    name: 'Emerald Throne Border',
+    description: 'A vibrant emerald border with royal motifs',
+    category: 'border',
+    type: 'static',
+    rarity: 'rare',
+    cost: 10,
+    placement: 'profile',
+    imageSrc: '/images/cosmetics/borders/emerald-throne.png'
+  },
+  {
+    id: 'border-sapphire-crown',
+    name: 'Sapphire Crown Border',
+    description: 'A deep blue border adorned with crown insignias',
+    category: 'border',
+    type: 'static',
+    rarity: 'rare',
+    cost: 10,
+    placement: 'profile',
+    imageSrc: '/images/cosmetics/borders/sapphire-crown.png'
+  },
+  {
+    id: 'border-royal-rainbow',
+    name: 'Royal Rainbow Border',
+    description: 'A shimmering rainbow border that cycles through royal hues',
+    category: 'border',
+    type: 'rainbow',
+    rarity: 'epic',
+    cost: 25,
+    placement: 'profile',
+    imageSrc: '/images/cosmetics/borders/royal-rainbow.png'
+  },
+  
+  // Colors (Profile Color Schemes)
+  {
+    id: 'color-royal-purple',
+    name: 'Royal Purple',
+    description: 'Majestic purple color scheme for your profile',
+    category: 'color',
+    type: 'static',
+    rarity: 'common',
     cost: 3,
-    imageSrc: '/cosmetics/borders/knightly-armor-border.png'
+    placement: 'profile',
+    cssClass: 'royal-purple-scheme'
   },
   {
-    id: 'border-003',
-    name: 'Elven Vines Border',
-    description: 'An elegant border adorned with elven vines.',
-    category: 'border' as CosmeticCategory,
-    type: 'profile',
-    rarity: 'uncommon' as CosmeticRarity,
-    cost: 3,
-    imageSrc: '/cosmetics/borders/elven-vines-border.png'
-  },
-  {
-    id: 'border-004',
-    name: 'Oceanic Depths Border',
-    description: 'A mystical border inspired by the depths of the ocean.',
-    category: 'border' as CosmeticCategory,
-    type: 'profile',
-    rarity: 'rare' as CosmeticRarity,
+    id: 'color-golden-throne',
+    name: 'Golden Throne',
+    description: 'Luxurious gold and amber color scheme',
+    category: 'color',
+    type: 'static',
+    rarity: 'uncommon',
     cost: 5,
-    imageSrc: '/cosmetics/borders/oceanic-depths-border.png'
+    placement: 'profile',
+    cssClass: 'golden-throne-scheme'
   },
   {
-    id: 'border-005',
-    name: 'Fiery Flames Border',
-    description: 'A border engulfed in fiery flames.',
-    category: 'border' as CosmeticCategory,
-    type: 'profile',
-    rarity: 'epic' as CosmeticRarity,
-    cost: 8,
-    imageSrc: '/cosmetics/borders/fiery-flames-border.png'
+    id: 'color-emerald-court',
+    name: 'Emerald Court',
+    description: 'Rich green color scheme inspired by royal gardens',
+    category: 'color',
+    type: 'static',
+    rarity: 'uncommon',
+    cost: 5,
+    placement: 'profile',
+    cssClass: 'emerald-court-scheme'
   },
   {
-    id: 'color-001',
-    name: 'Midnight Majesty',
-    description: 'A color scheme of deep blues and purples, reminiscent of a midnight sky.',
-    category: 'color' as CosmeticCategory,
-    type: 'color',
-    rarity: 'rare' as CosmeticRarity,
-    cost: 6,
-    imageSrc: '/cosmetics/colors/midnight-majesty.png'
+    id: 'color-azure-dynasty',
+    name: 'Azure Dynasty',
+    description: 'Elegant blue color scheme representing royal lineage',
+    category: 'color',
+    type: 'static',
+    rarity: 'uncommon',
+    cost: 5,
+    placement: 'profile',
+    cssClass: 'azure-dynasty-scheme'
   },
   {
-    id: 'color-002',
-    name: 'Emerald Forest',
-    description: 'A vibrant green color scheme inspired by lush forests.',
-    category: 'color' as CosmeticCategory,
-    type: 'color',
-    rarity: 'uncommon' as CosmeticRarity,
-    cost: 4,
-    imageSrc: '/cosmetics/colors/emerald-forest.png'
+    id: 'color-crimson-kingdom',
+    name: 'Crimson Kingdom',
+    description: 'Bold red color scheme symbolizing power',
+    category: 'color',
+    type: 'static',
+    rarity: 'uncommon',
+    cost: 5,
+    placement: 'profile',
+    cssClass: 'crimson-kingdom-scheme'
   },
+  
+  // Fonts (Text Styles)
   {
-    id: 'color-003',
-    name: 'Crimson Sunset',
-    description: 'A warm color scheme of reds and oranges, like a setting sun.',
-    category: 'color' as CosmeticCategory,
-    type: 'color',
-    rarity: 'uncommon' as CosmeticRarity,
-    cost: 4,
-    imageSrc: '/cosmetics/colors/crimson-sunset.png'
-  },
-  {
-    id: 'color-004',
-    name: 'Icy Peaks',
-    description: 'A cool color scheme of blues and whites, inspired by snowy mountains.',
-    category: 'color' as CosmeticCategory,
-    type: 'color',
-    rarity: 'rare' as CosmeticRarity,
-    cost: 6,
-    imageSrc: '/cosmetics/colors/icy-peaks.png'
-  },
-  {
-    id: 'color-005',
-    name: 'Golden Sands',
-    description: 'A bright color scheme of golds and yellows, reminiscent of desert sands.',
-    category: 'color' as CosmeticCategory,
-    type: 'color',
-    rarity: 'epic' as CosmeticRarity,
-    cost: 9,
-    imageSrc: '/cosmetics/colors/golden-sands.png'
-  },
-  {
-    id: 'font-001',
+    id: 'font-royal-script',
     name: 'Royal Script',
-    description: 'An elegant, flowing script fit for royal decrees.',
-    category: 'font' as CosmeticCategory,
-    type: 'text',
-    rarity: 'rare' as CosmeticRarity,
-    cost: 7
+    description: 'Elegant script font for the true nobility',
+    category: 'font',
+    type: 'static',
+    rarity: 'uncommon',
+    cost: 5,
+    placement: 'profile',
+    cssClass: 'font-royal-script'
   },
   {
-    id: 'font-002',
-    name: 'Knightly Bold',
-    description: 'A strong, bold font inspired by knights and chivalry.',
-    category: 'font' as CosmeticCategory,
-    type: 'text',
-    rarity: 'uncommon' as CosmeticRarity,
-    cost: 5
+    id: 'font-noble-serif',
+    name: 'Noble Serif',
+    description: 'Sophisticated serif font for distinguished profiles',
+    category: 'font',
+    type: 'static',
+    rarity: 'common',
+    cost: 3,
+    placement: 'profile',
+    cssClass: 'font-noble-serif'
   },
   {
-    id: 'font-003',
-    name: 'Elven Calligraphy',
-    description: 'A delicate, flowing font reminiscent of elven script.',
-    category: 'font' as CosmeticCategory,
-    type: 'text',
-    rarity: 'uncommon' as CosmeticRarity,
-    cost: 5
+    id: 'font-kingdom-display',
+    name: 'Kingdom Display',
+    description: 'Bold display font fit for royal proclamations',
+    category: 'font',
+    type: 'static',
+    rarity: 'uncommon',
+    cost: 5,
+    placement: 'profile',
+    cssClass: 'font-kingdom-display'
   },
   {
-    id: 'font-004',
-    name: 'Oceanic Runes',
-    description: 'A mysterious, runic font inspired by the ocean depths.',
-    category: 'font' as CosmeticCategory,
-    type: 'text',
-    rarity: 'rare' as CosmeticRarity,
-    cost: 7
-  },
-  {
-    id: 'font-005',
-    name: 'Fiery Gothic',
-    description: 'A dramatic, gothic font engulfed in flames.',
-    category: 'font' as CosmeticCategory,
-    type: 'text',
-    rarity: 'epic' as CosmeticRarity,
-    cost: 10
-  },
-  {
-    id: 'emoji-001',
-    name: 'Royal Crown Emoji',
-    description: 'A sparkling emoji of a royal crown.',
-    category: 'emoji' as CosmeticCategory,
-    type: 'emoji',
-    rarity: 'rare' as CosmeticRarity,
+    id: 'font-court-hand',
+    name: 'Court Hand',
+    description: 'Artistic handwritten font used by royal scribes',
+    category: 'font',
+    type: 'static',
+    rarity: 'rare',
     cost: 8,
-    cssClass: 'text-royal-gold'
+    placement: 'profile',
+    cssClass: 'font-court-hand'
   },
   {
-    id: 'emoji-002',
-    name: 'Knight Shield Emoji',
-    description: 'A sturdy emoji of a knight\'s shield.',
-    category: 'emoji' as CosmeticCategory,
-    type: 'emoji',
-    rarity: 'uncommon' as CosmeticRarity,
-    cost: 6,
-    cssClass: 'text-gray-400'
+    id: 'font-sovereign-gothic',
+    name: 'Sovereign Gothic',
+    description: 'Medieval gothic font with royal flourishes',
+    category: 'font',
+    type: 'static',
+    rarity: 'epic',
+    cost: 15,
+    placement: 'profile',
+    cssClass: 'font-sovereign-gothic'
+  },
+  
+  // Titles (Displayed above username)
+  {
+    id: 'title-royal-patron',
+    name: 'Royal Patron',
+    description: 'A title bestowed upon generous contributors to the kingdom',
+    category: 'title',
+    type: 'static',
+    rarity: 'rare',
+    cost: 20,
+    placement: 'profile'
   },
   {
-    id: 'emoji-003',
-    name: 'Elven Leaf Emoji',
-    description: 'A delicate emoji of an elven leaf.',
-    category: 'emoji' as CosmeticCategory,
-    type: 'emoji',
-    rarity: 'uncommon' as CosmeticRarity,
-    cost: 6,
-    cssClass: 'text-green-400'
+    id: 'title-noble-benefactor',
+    name: 'Noble Benefactor',
+    description: 'A title for those who support the realm financially',
+    category: 'title',
+    type: 'static',
+    rarity: 'uncommon',
+    cost: 10,
+    placement: 'profile'
   },
   {
-    id: 'emoji-004',
-    name: 'Ocean Wave Emoji',
-    description: 'A swirling emoji of an ocean wave.',
-    category: 'emoji' as CosmeticCategory,
-    type: 'emoji',
-    rarity: 'rare' as CosmeticRarity,
-    cost: 8,
-    cssClass: 'text-blue-400'
+    id: 'title-court-jester',
+    name: 'Court Jester',
+    description: 'A humorous title for those who bring levity to the court',
+    category: 'title',
+    type: 'static',
+    rarity: 'common',
+    cost: 5,
+    placement: 'profile'
   },
   {
-    id: 'emoji-005',
-    name: 'Fireball Emoji',
-    description: 'A blazing emoji of a fiery fireball.',
-    category: 'emoji' as CosmeticCategory,
-    type: 'emoji',
-    rarity: 'epic' as CosmeticRarity,
-    cost: 11,
-    cssClass: 'text-red-500'
+    id: 'title-royal-guardian',
+    name: 'Royal Guardian',
+    description: 'A title for those who protect the realm',
+    category: 'title',
+    type: 'static',
+    rarity: 'epic',
+    cost: 30,
+    placement: 'profile'
   },
   {
-    id: 'title-001',
-    name: 'His Majesty',
-    description: 'A title of great respect and power.',
-    category: 'title' as CosmeticCategory,
-    type: 'text',
-    rarity: 'common' as CosmeticRarity,
-    cost: 2
+    id: 'title-sovereign-ruler',
+    name: 'Sovereign Ruler',
+    description: 'The highest title in the land, reserved for true royalty',
+    category: 'title',
+    type: 'static',
+    rarity: 'legendary',
+    cost: 50,
+    placement: 'profile'
+  },
+  
+  // Effects (Special visual effects)
+  {
+    id: 'effect-golden-aura',
+    name: 'Golden Aura',
+    description: 'Surrounds your profile elements with a golden aura',
+    category: 'effect',
+    type: 'glow',
+    rarity: 'rare',
+    cost: 15,
+    placement: 'profile',
+    cssClass: 'golden-aura-effect'
   },
   {
-    id: 'title-002',
-    name: 'Her Majesty',
-    description: 'A title of great respect and power.',
-    category: 'title' as CosmeticCategory,
-    type: 'text',
-    rarity: 'common' as CosmeticRarity,
-    cost: 2
+    id: 'effect-royal-sparkles',
+    name: 'Royal Sparkles',
+    description: 'Adds sparkling effects to your profile',
+    category: 'effect',
+    type: 'particle',
+    rarity: 'epic',
+    cost: 25,
+    placement: 'profile',
+    cssClass: 'royal-sparkles-effect'
   },
   {
-    id: 'title-003',
-    name: 'The Honorable',
-    description: 'A title of great respect and integrity.',
-    category: 'title' as CosmeticCategory,
-    type: 'text',
-    rarity: 'uncommon' as CosmeticRarity,
-    cost: 4
+    id: 'effect-crown-pulse',
+    name: 'Crown Pulse',
+    description: 'Adds a pulsing crown effect to your profile',
+    category: 'effect',
+    type: 'pulse',
+    rarity: 'rare',
+    cost: 20,
+    placement: 'profile',
+    cssClass: 'crown-pulse-effect'
   },
   {
-    id: 'title-004',
-    name: 'The Valiant',
-    description: 'A title of great courage and bravery.',
-    category: 'title' as CosmeticCategory,
-    type: 'text',
-    rarity: 'uncommon' as CosmeticRarity,
-    cost: 4
+    id: 'effect-gem-shimmer',
+    name: 'Gem Shimmer',
+    description: 'Adds shimmering gem effects to your profile elements',
+    category: 'effect',
+    type: 'shimmer',
+    rarity: 'epic',
+    cost: 30,
+    placement: 'profile',
+    cssClass: 'gem-shimmer-effect'
   },
   {
-    id: 'title-005',
-    name: 'The Wise',
-    description: 'A title of great knowledge and wisdom.',
-    category: 'title' as CosmeticCategory,
-    type: 'text',
-    rarity: 'rare' as CosmeticRarity,
-    cost: 6
+    id: 'effect-royal-presence',
+    name: 'Royal Presence',
+    description: 'A majestic effect that commands attention',
+    category: 'effect',
+    type: 'custom',
+    rarity: 'legendary',
+    cost: 50,
+    placement: 'profile',
+    cssClass: 'royal-presence-effect'
   }
-].map(item => ({
-  ...item,
-  placement: 'profile'
-}));
+];
 
-export default mockedCosmeticsData;
+export default cosmeticsData;
