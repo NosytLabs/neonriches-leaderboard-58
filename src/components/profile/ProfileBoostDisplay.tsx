@@ -11,7 +11,12 @@ interface ProfileBoostDisplayProps {
 }
 
 const ProfileBoostDisplay: React.FC<ProfileBoostDisplayProps> = ({ user }) => {
-  const { activeBoosts, getBoostEffect, getBoostTimeRemaining, formatTimeRemaining } = useProfileBoost(user);
+  const { 
+    activeBoosts, 
+    getBoostEffect, 
+    getBoostTimeRemaining, 
+    formatTimeRemaining 
+  } = useProfileBoost(user);
 
   if (!activeBoosts || activeBoosts.length === 0) {
     return null;
