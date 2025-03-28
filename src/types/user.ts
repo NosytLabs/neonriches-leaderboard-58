@@ -123,4 +123,16 @@ export interface UserProfile {
   settings?: UserSettings;
   socialLinks?: SocialLink[];
   badges?: string[];
+  
+  // New fields for NFT integration
+  certificateNFT?: {
+    mintAddress: string;
+    mintDate: string;
+    image: string;
+    verified: boolean;
+  };
+  
+  // On-chain verification
+  onChainVerified?: boolean;
+  solanaOnChainRank?: number;
 }

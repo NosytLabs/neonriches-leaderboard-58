@@ -1,22 +1,24 @@
 
-import { Connection, PublicKey, Transaction, SystemProgram, LAMPORTS_PER_SOL } from '@solana/web3.js';
+import { PublicKey } from '@solana/web3.js';
 
 /**
- * Format a Solana public key address for display
- * @param address Full Solana address
- * @param chars Number of characters to show on each end
- * @returns Shortened address with ellipsis in the middle
+ * Formats a Solana address to a shorter, more readable format
+ * @param address The Solana address to format
+ * @param length Number of characters to show at the beginning and end
+ * @returns Formatted address string
  */
-export const formatAddress = (address: string, chars: number = 4): string => {
+export const formatAddress = (address: string, length: number = 4): string => {
   if (!address) return '';
-  if (address.length <= chars * 2) return address;
-  return `${address.slice(0, chars)}...${address.slice(-chars)}`;
+  
+  if (address.length <= length * 2) return address;
+  
+  return `${address.slice(0, length)}...${address.slice(-length)}`;
 };
 
 /**
- * Validate a Solana address
+ * Validates a Solana address
  * @param address Address to validate
- * @returns True if address is valid
+ * @returns Boolean indicating if the address is valid
  */
 export const isValidSolanaAddress = (address: string): boolean => {
   try {
@@ -28,103 +30,43 @@ export const isValidSolanaAddress = (address: string): boolean => {
 };
 
 /**
- * Create a transfer transaction
- * @param connection Solana connection
- * @param from Sender public key
- * @param to Recipient public key
- * @param amount Amount in SOL
- * @returns Prepared transaction
+ * Generates a message for signing to authenticate with Solana wallet
+ * @param publicKey The user's public key
+ * @param nonce A random nonce for added security
+ * @returns A message string for signing
  */
-export const createTransferTransaction = async (
-  connection: Connection,
-  from: PublicKey,
-  to: PublicKey,
-  amount: number
-): Promise<Transaction> => {
-  const transaction = new Transaction().add(
-    SystemProgram.transfer({
-      fromPubkey: from,
-      toPubkey: to,
-      lamports: Math.floor(amount * LAMPORTS_PER_SOL),
-    })
-  );
-  
-  transaction.feePayer = from;
-  const { blockhash } = await connection.getLatestBlockhash();
-  transaction.recentBlockhash = blockhash;
-  
-  return transaction;
+export const generateSignatureMessage = (publicKey: string, nonce: string): string => {
+  return `Sign this message to authenticate with P2W.FUN\n\nThis signature will not trigger any blockchain transaction or cost any fee.\n\nWallet address: ${publicKey}\nNonce: ${nonce}\nTimestamp: ${new Date().toISOString()}`;
 };
 
 /**
- * Get SOL balance
- * @param connection Solana connection
- * @param publicKey Public key to check
- * @returns Balance in SOL
+ * Get shortened Solana explorer URL for a transaction or address
+ * @param type Type of entity (tx, address)
+ * @param hash Hash or address to link to
+ * @returns Shortened URL string
  */
-export const getSolBalance = async (
-  connection: Connection,
-  publicKey: PublicKey
-): Promise<number> => {
-  const balance = await connection.getBalance(publicKey);
-  return balance / LAMPORTS_PER_SOL;
+export const getExplorerUrl = (type: 'tx' | 'address', hash: string): string => {
+  return `https://explorer.solana.com/${type}/${hash}`;
 };
 
 /**
- * Convert SOL to lamports
- * @param sol Amount in SOL
- * @returns Amount in lamports
+ * Converts SOL amount to USD based on a fixed price
+ * This is simplified - in a real app you would use an oracle or price feed
+ * @param solAmount Amount in SOL
+ * @param solPrice Price of SOL in USD
+ * @returns Amount in USD
  */
-export const solToLamports = (sol: number): number => {
-  return Math.floor(sol * LAMPORTS_PER_SOL);
+export const solToUsd = (solAmount: number, solPrice: number = 20): number => {
+  return solAmount * solPrice;
 };
 
 /**
- * Convert lamports to SOL
- * @param lamports Amount in lamports
+ * Converts USD amount to SOL based on a fixed price
+ * This is simplified - in a real app you would use an oracle or price feed
+ * @param usdAmount Amount in USD
+ * @param solPrice Price of SOL in USD
  * @returns Amount in SOL
  */
-export const lamportsToSol = (lamports: number): number => {
-  return lamports / LAMPORTS_PER_SOL;
-};
-
-/**
- * Estimate transaction fee
- * @param connection Solana connection
- * @param transaction Transaction to estimate fee for
- * @returns Estimated fee in SOL
- */
-export const estimateFee = async (
-  connection: Connection,
-  transaction: Transaction
-): Promise<number> => {
-  const { feeCalculator } = await connection.getRecentBlockhash();
-  const fee = feeCalculator.lamportsPerSignature * transaction.signatures.length;
-  return lamportsToSol(fee);
-};
-
-/**
- * Check if Phantom wallet is installed
- * @returns True if Phantom is available
- */
-export const isPhantomInstalled = (): boolean => {
-  return 'phantom' in window || ('solana' in window && (window as any).solana?.isPhantom);
-};
-
-/**
- * Check if any Solana wallet is installed
- * @returns True if any wallet is available
- */
-export const isSolanaWalletInstalled = (): boolean => {
-  return 'solana' in window || 'phantom' in window || 'solflare' in window;
-};
-
-/**
- * Generate a message for signing to verify wallet ownership
- * @param address Wallet address
- * @param username Username to link with
- * @returns Message to sign
- */
-export const generateSignatureMessage = (address: string, username: string): string => {
-  return `I confirm that I am the owner of the wallet ${address} and I want to link it to my SpendThrone account ${username}. Timestamp: ${new Date().toISOString()}`;
+export const usdToSol = (usdAmount: number, solPrice: number = 20): number => {
+  return usdAmount / solPrice;
 };
