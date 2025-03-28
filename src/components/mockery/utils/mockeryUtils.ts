@@ -1,6 +1,7 @@
 
 import { MockeryAction, MockeryTier } from '../hooks/useMockery';
 import { Shield, Egg, Tomato, BadgeMinus, Music, Sword, Crown, Skull, Trash2 } from 'lucide-react';
+import React from 'react';
 
 // Mockery Action Prices
 export const getMockeryActionPrice = (action: MockeryAction): number => {
@@ -86,17 +87,17 @@ export const getMockeryActionDescription = (action: MockeryAction, targetName: s
 export const getMockeryActionIcon = (action: MockeryAction) => {
   switch (action) {
     case 'tomatoes':
-      return <Tomato className="h-5 w-5 text-red-500 mr-1.5" />;
+      return React.createElement(Tomato, { className: "h-5 w-5 text-red-500 mr-1.5" });
     case 'eggs':
-      return <Egg className="h-5 w-5 text-yellow-300 mr-1.5" />;
+      return React.createElement(Egg, { className: "h-5 w-5 text-yellow-300 mr-1.5" });
     case 'stocks':
-      return <BadgeMinus className="h-5 w-5 text-amber-600 mr-1.5" />;
+      return React.createElement(BadgeMinus, { className: "h-5 w-5 text-amber-600 mr-1.5" });
     case 'silence':
-      return <Music className="h-5 w-5 text-gray-400 mr-1.5" />;
+      return React.createElement(Music, { className: "h-5 w-5 text-gray-400 mr-1.5" });
     case 'courtJester':
-      return <Crown className="h-5 w-5 text-purple-400 mr-1.5" />;
+      return React.createElement(Crown, { className: "h-5 w-5 text-purple-400 mr-1.5" });
     default:
-      return <Tomato className="h-5 w-5 text-red-500 mr-1.5" />;
+      return React.createElement(Tomato, { className: "h-5 w-5 text-red-500 mr-1.5" });
   }
 };
 
@@ -143,7 +144,7 @@ export const getMockeryBundles = () => {
       actions: ['tomatoes', 'eggs'] as MockeryAction[],
       uses: 5,
       description: 'A simple collection of mockery tools for the common folk.',
-      icon: <Trash2 className="h-8 w-8 text-gray-400" />
+      icon: React.createElement(Trash2, { className: "h-8 w-8 text-gray-400" })
     },
     {
       id: 'advanced',
@@ -153,7 +154,7 @@ export const getMockeryBundles = () => {
       actions: ['tomatoes', 'eggs', 'stocks', 'silence'] as MockeryAction[],
       uses: 10,
       description: 'A refined selection of mockery options for the distinguished nobility.',
-      icon: <Sword className="h-8 w-8 text-royal-crimson" />
+      icon: React.createElement(Sword, { className: "h-8 w-8 text-royal-crimson" })
     },
     {
       id: 'royal',
@@ -163,7 +164,33 @@ export const getMockeryBundles = () => {
       actions: ['tomatoes', 'eggs', 'stocks', 'silence', 'courtJester'] as MockeryAction[],
       uses: 20,
       description: 'The ultimate arsenal of mockery fit for kings and queens.',
-      icon: <Crown className="h-8 w-8 text-royal-gold" />
+      icon: React.createElement(Crown, { className: "h-8 w-8 text-royal-gold" })
     }
   ];
+};
+
+// Additional mockery utilities for RoyalMockeryFestival
+export const getMockeryLeaderboardMessage = (): string => {
+  return "Mockery features are purely cosmetic and do not affect leaderboard rankings or gameplay advantages. They are satirical visual effects only.";
+};
+
+export const hasWeeklyDiscount = (action: MockeryAction): boolean => {
+  // Simulate a weekly discount feature - in a real app this would be dynamic
+  return action === 'tomatoes'; // Let's say tomatoes are on sale this week
+};
+
+export const getWeeklyDiscountedAction = (): MockeryAction => {
+  // In a real app, this would come from the backend/database
+  return 'tomatoes';
+};
+
+export const isFireSaleMonth = (): boolean => {
+  // Simulate a monthly fire sale event - in a real app this would be dynamic
+  const currentMonth = new Date().getMonth();
+  return currentMonth === 2; // March is fire sale month
+};
+
+export const getFireSaleFeaturedCategories = (): MockeryAction[] => {
+  // Featured mockery categories during fire sale
+  return ['tomatoes', 'courtJester', 'eggs'];
 };
