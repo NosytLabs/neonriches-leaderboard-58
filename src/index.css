@@ -7,26 +7,13 @@
 @import url('./styles/animations/index.css');
 @import url('./styles/medieval-animations.css');
 @import url('./styles/cosmetics.css');
-@import url('./styles/theme.css');
+@import url('./styles/unified-theme.css');
+@import url('./styles/consolidated-animations.css');
 @import url('./styles/fonts.css');
 @import url('./styles/profile-boost.css');
 
 :root {
-  /* Royal theme colors */
-  --royal-gold: #FFD700;
-  --royal-crimson: #DC143C;
-  --royal-purple: #800080;
-  --royal-navy: #000080;
-  --royal-forest: #228B22;
-  --royal-velvet: #614051;
-  --royal-parchment: #F5DEB3;
-  
-  /* Team colors */
-  --team-red: var(--royal-crimson);
-  --team-green: var(--royal-gold);
-  --team-blue: var(--royal-navy);
-  
-  /* Other variables */
+  /* Base theme variables */
   --background: #0d0d20;
   --foreground: #FFFFFF;
   
@@ -49,23 +36,4 @@ body {
 
 .font-medieval {
   font-family: 'Cinzel', 'Times New Roman', serif;
-}
-
-/* Scrollbar styling */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.2);
-}
-
-::-webkit-scrollbar-thumb {
-  background: rgba(255, 215, 0, 0.3);
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 215, 0, 0.5);
 }
