@@ -115,7 +115,7 @@ const MedievalShowcase = () => {
             </div>
           </div>
           
-          <RoyalDivider variant="treasure" label="ANIMATED EFFECTS" color="gold" className="my-8" />
+          <RoyalDivider variant="crown" label="ANIMATED EFFECTS" color="gold" className="my-8" />
           
           <div className="flex flex-wrap gap-4 justify-center">
             <div className="p-6 glass-morphism border border-royal-gold/30 royal-shine">

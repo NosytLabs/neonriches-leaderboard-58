@@ -41,9 +41,9 @@ const ComponentsShowcase: React.FC = () => {
             <h3 className="text-lg font-semibold mb-3">Royal Dividers</h3>
             <div className="space-y-6">
               <RoyalDivider variant="crown" label="ROYAL SECTION" color="gold" />
-              <RoyalDivider variant="scroll" label="ANCIENT KNOWLEDGE" color="crimson" />
-              <RoyalDivider variant="quill" label="NOBLE WRITINGS" color="navy" />
-              <RoyalDivider variant="treasure" label="PRECIOUS CONTENT" color="gold" />
+              <RoyalDivider variant="ornate" label="ANCIENT KNOWLEDGE" color="crimson" />
+              <RoyalDivider variant="line" label="NOBLE WRITINGS" color="navy" />
+              <RoyalDivider variant="crown" label="PRECIOUS CONTENT" color="gold" />
               <RoyalDivider variant="ornate" label="DISTINGUISHED AREA" color="crimson" />
             </div>
           </div>

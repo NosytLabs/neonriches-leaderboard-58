@@ -59,7 +59,7 @@ const RoyalButton: React.FC<RoyalButtonProps> = ({
   
   return (
     <Button className={buttonClasses} {...props}>
-      {icon}
+      {icon && <span className="mr-2">{icon}</span>}
       {children}
     </Button>
   );

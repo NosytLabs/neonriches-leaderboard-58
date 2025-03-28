@@ -6,16 +6,14 @@ interface ProfileDataResult {
   profileData: UserProfile | null;
   loading: boolean;
   error: Error | null;
-  profileUser?: UserProfile | null;
-  viewOnly?: boolean;
+  isOwnProfile?: boolean;
 }
 
 export const useProfileData = (userId: string, userContext?: UserProfile | null): ProfileDataResult => {
   const [profileData, setProfileData] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<Error | null>(null);
-  const [viewOnly, setViewOnly] = useState<boolean>(true);
-  const [profileUser, setProfileUser] = useState<UserProfile | null>(null);
+  const [isOwnProfile, setIsOwnProfile] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchProfileData = async () => {
@@ -30,8 +28,7 @@ export const useProfileData = (userId: string, userContext?: UserProfile | null)
         // If we already have the user data in context, use that instead of fetching
         if (userContext && userContext.id === userId) {
           setProfileData(userContext);
-          setProfileUser(userContext);
-          setViewOnly(false);
+          setIsOwnProfile(true);
           setLoading(false);
           return;
         }
@@ -42,6 +39,7 @@ export const useProfileData = (userId: string, userContext?: UserProfile | null)
           // Mock data for simulation
           const teamOptions: Team[] = ['red', 'green', 'blue', null];
           const randomTeamIndex = Math.floor(Math.random() * 3); // Only pick from first 3 options to avoid null
+          const selectedTeam = teamOptions[randomTeamIndex];
           
           const mockUserProfile: UserProfile = {
             id: userId,
@@ -54,7 +52,7 @@ export const useProfileData = (userId: string, userContext?: UserProfile | null)
             spentAmount: Math.floor(Math.random() * 5000),
             walletBalance: Math.floor(Math.random() * 1000),
             tier: Math.random() > 0.7 ? 'pro' : 'basic',
-            team: teamOptions[randomTeamIndex],
+            team: selectedTeam,
             joinDate: new Date(Date.now() - Math.random() * 10000000000).toISOString(),
             joinedAt: new Date(Date.now() - Math.random() * 10000000000).toISOString(),
             profileViews: Math.floor(Math.random() * 1000),
@@ -76,8 +74,7 @@ export const useProfileData = (userId: string, userContext?: UserProfile | null)
           };
 
           setProfileData(mockUserProfile);
-          setProfileUser(mockUserProfile);
-          setViewOnly(true);
+          setIsOwnProfile(false);
           setLoading(false);
         }, 800);
       } catch (err) {
@@ -89,5 +86,5 @@ export const useProfileData = (userId: string, userContext?: UserProfile | null)
     fetchProfileData();
   }, [userId, userContext]);
 
-  return { profileData, loading, error, profileUser, viewOnly };
+  return { profileData, loading, error, isOwnProfile };
 };

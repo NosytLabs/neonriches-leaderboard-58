@@ -33,7 +33,7 @@ const Dashboard = () => {
   // Get userId safely from user object
   const userId = user?.id || '';
   
-  const { profileData, loading: profileDataLoading } = useProfileData(userId, user);
+  const { profileData, loading: profileDataLoading } = useProfileData(userId);
   
   const handleFundWallet = async (amount: number): Promise<void> => {
     setIsLoading(true);
@@ -64,30 +64,28 @@ const Dashboard = () => {
       boostCost
     );
     
-    if (success) {
+    if (success && boostProfile) {
       // Apply profile boost
-      if (boostProfile) {
-        await boostProfile(1, 1); // Level 1 boost
-        
-        // Update user profile stats
-        const currentViews = user.profileViews || 0;
-        const currentClicks = user.profileClicks || 0;
-        const currentFollowers = user.followers || 0;
-        
-        await updateUserProfile({
-          ...user,
-          profileViews: currentViews + 50,
-          profileClicks: currentClicks + 10,
-          followers: currentFollowers + 5
-        });
-        
-        playSound('success');
-        
-        toast({
-          title: "Profile Boosted!",
-          description: "Your profile visibility has been enhanced.",
-        });
-      }
+      await boostProfile(1, 1); // Level 1 boost
+      
+      // Update user profile stats
+      const currentViews = user.profileViews || 0;
+      const currentClicks = user.profileClicks || 0;
+      const currentFollowers = user.followers || 0;
+      
+      await updateUserProfile({
+        ...user,
+        profileViews: currentViews + 50,
+        profileClicks: currentClicks + 10,
+        followers: currentFollowers + 5
+      });
+      
+      playSound('success');
+      
+      toast({
+        title: "Profile Boosted!",
+        description: "Your profile visibility has been enhanced.",
+      });
     }
   };
   

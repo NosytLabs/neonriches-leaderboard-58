@@ -1,3 +1,4 @@
+
 import { CosmeticItem, CosmeticRarity, CosmeticCategory } from '@/types/cosmetics';
 import { mockedCosmeticsData } from '@/data/cosmeticsData';
 import { UserProfile } from '@/types/user';
@@ -22,24 +23,17 @@ export function awardRandomCosmetic(
     
     const category = item.category as keyof typeof userCosmetics;
     
-    // Safely check if the array exists
-    const categoryItems = userCosmetics[category] || [];
+    // Safely check if the array exists and has valid type
+    const categoryItems = userCosmetics[category];
     
-    // Add type guard to check if it's actually an array
+    // Safety check if categoryItems is undefined
+    if (!categoryItems) return true;
+    
+    // Check if categoryItems is actually an array
     if (!Array.isArray(categoryItems)) return true;
     
-    // Type guard to check if includes method exists
-    if (typeof categoryItems.includes === 'function') {
-      return !categoryItems.includes(item.id);
-    }
-    
-    // Fallback to manual check for arrays without includes method
-    if (typeof categoryItems.some === 'function') {
-      return !categoryItems.some((id: string) => id === item.id);
-    }
-    
-    // Last resort if none of the array methods are available
-    return true;
+    // Now we know it's an array, check for the item id
+    return !categoryItems.includes(item.id);
   });
   
   if (availableCosmetics.length === 0) {

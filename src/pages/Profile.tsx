@@ -9,6 +9,7 @@ import { useProfileData } from '@/hooks/useProfileData';
 import { ProfileLoader, ProfileNotFound } from '@/components/profile/ProfilePageLoader';
 import ProfileTabNavigation, { ProfileTab } from '@/components/profile/ProfileTabNavigation';
 import ProfileContent from '@/components/profile/ProfileContent';
+import { UserProfile } from '@/types/user';
 
 const Profile = () => {
   const { username } = useParams<{ username: string }>();
@@ -16,7 +17,7 @@ const Profile = () => {
   const { toast } = useToast();
   const [tab, setTab] = useState<ProfileTab>('view');
   
-  const { loading, profileUser, viewOnly, profileData } = useProfileData(username || '', user);
+  const { profileData, loading, error, isOwnProfile } = useProfileData(username || '');
   
   const handleBoostProfile = () => {
     if (!user) {
@@ -28,7 +29,7 @@ const Profile = () => {
       return;
     }
     
-    if (!viewOnly) {
+    if (isOwnProfile) {
       setTab('boost');
       return;
     }
@@ -43,14 +44,22 @@ const Profile = () => {
     return <ProfileLoader />;
   }
   
-  if (!profileUser) {
+  if (!profileData) {
     return <ProfileNotFound />;
   }
+  
+  // Create profile content data for the ProfileContent component
+  const profileUser = profileData as UserProfile;
+  const viewOnly = !isOwnProfile;
   
   // Create profile data from user profile for the ProfileContent component
   const profileContentData = {
     bio: profileUser.bio || '',
-    images: profileUser.profileImages || [],
+    images: profileUser.profileImages?.map(img => ({
+      id: parseInt(img.id) || Math.random(), // Convert string id to number or use random as fallback
+      url: img.url,
+      caption: img.caption || ''
+    })) || [],
     links: profileUser.socialLinks?.map((link, index) => ({
       id: index,
       url: link.url,
@@ -71,14 +80,14 @@ const Profile = () => {
       
       <main className="container mx-auto px-4 py-8 pt-24">
         <ProfileTabNavigation 
-          viewOnly={viewOnly || false} 
+          viewOnly={viewOnly} 
           tab={tab} 
           setTab={setTab} 
         />
         
         <ProfileContent 
           tab={tab}
-          viewOnly={viewOnly || false}
+          viewOnly={viewOnly}
           user={user}
           profileUser={profileUser}
           profileData={profileContentData}

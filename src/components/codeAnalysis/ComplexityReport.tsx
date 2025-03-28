@@ -38,8 +38,8 @@ const ComplexityReport: React.FC = () => {
             >
               <div className="flex flex-wrap justify-between items-start mb-2">
                 <div>
-                  <h4 className="font-semibold mb-1">{func.function}</h4>
-                  <span className="file-path text-xs">{func.file}:{func.line}</span>
+                  <h4 className="font-semibold mb-1">{func.name}</h4>
+                  <span className="file-path text-xs">{func.file}</span>
                 </div>
                 
                 <div className={`text-sm px-2 py-1 rounded-full font-medium ${
@@ -53,7 +53,9 @@ const ComplexityReport: React.FC = () => {
                 </div>
               </div>
               
-              <p className="text-sm text-white/70 mt-2">{func.explanation}</p>
+              <p className="text-sm text-white/70 mt-2">
+                {func.issues.join('. ')}
+              </p>
               
               <div className="mt-3 text-sm">
                 <h5 className="font-medium text-white/80 mb-1">Refactoring suggestions:</h5>

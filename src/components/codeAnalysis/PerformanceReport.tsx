@@ -43,7 +43,7 @@ const PerformanceReport: React.FC = () => {
                     issue.severity === 'high' ? 'text-red-500' : 
                     issue.severity === 'medium' ? 'text-amber-500' : 'text-blue-500'
                   }`} />
-                  {issue.issue}
+                  {issue.description}
                 </h4>
                 <span className={`text-xs px-2 py-1 rounded-full ${
                   issue.severity === 'high' ? 'bg-red-500/20 text-red-500' : 
