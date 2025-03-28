@@ -1,47 +1,27 @@
 
-import { useEffect, useRef } from 'react';
-
-// Define sound types
-type SoundType = 'coinDrop' | 'reward' | 'purchase' | 'error' | 'levelUp' | 'unlock';
-
-// Map of sound URLs
-const SOUND_URLS: Record<SoundType, string> = {
-  coinDrop: 'https://assets.mixkit.co/sfx/preview/mixkit-coin-falling-on-surface-42.mp3',
-  reward: 'https://assets.mixkit.co/sfx/preview/mixkit-arcade-game-complete-or-approved-mission-205.mp3',
-  purchase: 'https://assets.mixkit.co/sfx/preview/mixkit-unlock-game-notification-253.mp3',
-  error: 'https://assets.mixkit.co/sfx/preview/mixkit-negative-answer-lose-2032.mp3',
-  levelUp: 'https://assets.mixkit.co/sfx/preview/mixkit-player-boost-in-video-game-2161.mp3',
-  unlock: 'https://assets.mixkit.co/sfx/preview/mixkit-magic-sweep-game-trophy-257.mp3'
-};
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { SoundType } from './sounds/types';
+import { soundAssets, defaultVolumes } from './sounds/sound-assets';
 
 // Hook for managing notification sounds
 export default function useNotificationSounds() {
+  const [isMuted, setIsMuted] = useState<boolean>(false);
+  const [soundsLoaded, setSoundsLoaded] = useState<boolean>(false);
+  const [loadedSoundTypes, setLoadedSoundTypes] = useState<string[]>([]);
+  
   // Using refs to store audio objects
-  const audioRefs = useRef<Record<SoundType, HTMLAudioElement | null>>({
-    coinDrop: null,
-    reward: null,
-    purchase: null,
-    error: null,
-    levelUp: null,
-    unlock: null
-  });
+  const audioRefs = useRef<Record<string, HTMLAudioElement | null>>({});
   
   // Initialize audio elements on mount
   useEffect(() => {
     // Create audio elements for each sound type
-    const audioElements: Record<SoundType, HTMLAudioElement> = {
-      coinDrop: new Audio(SOUND_URLS.coinDrop),
-      reward: new Audio(SOUND_URLS.reward),
-      purchase: new Audio(SOUND_URLS.purchase),
-      error: new Audio(SOUND_URLS.error),
-      levelUp: new Audio(SOUND_URLS.levelUp),
-      unlock: new Audio(SOUND_URLS.unlock)
-    };
+    const audioElements: Record<string, HTMLAudioElement> = {};
     
-    // Set common properties
-    Object.values(audioElements).forEach(audio => {
-      audio.preload = 'auto';
-      audio.volume = 0.5;
+    Object.entries(soundAssets).forEach(([type, url]) => {
+      audioElements[type] = new Audio(url);
+      // Set common properties
+      audioElements[type].preload = 'auto';
+      audioElements[type].volume = defaultVolumes[type as keyof typeof defaultVolumes] || 0.5;
     });
     
     // Store in refs
@@ -58,10 +38,13 @@ export default function useNotificationSounds() {
   }, []);
   
   // Function to play a specific sound
-  const playSound = (type: SoundType, volume: number = 0.5) => {
+  const playSound = useCallback((type: SoundType, volumeMultiplier: number = 1) => {
+    if (isMuted) return;
+    
     const audio = audioRefs.current[type];
     if (audio) {
-      audio.volume = volume;
+      const baseVolume = defaultVolumes[type as keyof typeof defaultVolumes] || 0.5;
+      audio.volume = baseVolume * volumeMultiplier;
       // Reset audio to beginning if already playing
       audio.currentTime = 0;
       audio.play().catch(err => {
@@ -69,7 +52,62 @@ export default function useNotificationSounds() {
         console.log('Audio playback blocked or error:', err);
       });
     }
-  };
+  }, [isMuted]);
   
-  return { playSound };
+  // Preload all sound assets
+  const preloadSounds = useCallback(() => {
+    const loadingPromises: Promise<void>[] = [];
+    const loadedTypes: string[] = [];
+    
+    Object.entries(soundAssets).forEach(([type, url]) => {
+      const audio = audioRefs.current[type];
+      if (audio) {
+        const loadPromise = new Promise<void>((resolve) => {
+          audio.addEventListener('canplaythrough', () => {
+            loadedTypes.push(type);
+            resolve();
+          }, { once: true });
+          
+          audio.addEventListener('error', () => {
+            console.error(`Failed to load sound: ${type}`);
+            resolve(); // Resolve anyway to not block other sounds
+          }, { once: true });
+          
+          // Force load
+          audio.load();
+        });
+        
+        loadingPromises.push(loadPromise);
+      }
+    });
+    
+    Promise.all(loadingPromises).then(() => {
+      setSoundsLoaded(true);
+      setLoadedSoundTypes(loadedTypes);
+    });
+  }, []);
+  
+  // Pause all sounds
+  const pauseAllSounds = useCallback(() => {
+    Object.values(audioRefs.current).forEach(audio => {
+      if (audio) {
+        audio.pause();
+      }
+    });
+  }, []);
+  
+  // Toggle mute state
+  const toggleMute = useCallback(() => {
+    setIsMuted(prev => !prev);
+  }, []);
+  
+  return { 
+    playSound, 
+    preloadSounds, 
+    pauseAllSounds, 
+    soundsLoaded, 
+    loadedSoundTypes,
+    isMuted,
+    toggleMute
+  };
 }

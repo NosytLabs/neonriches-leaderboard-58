@@ -1,116 +1,140 @@
 
-import { UserProfile } from '@/contexts/AuthContext';
+import { UserProfile } from '@/types/user';
 
-type SpendingCategory = 'upgrade' | 'cosmetic' | 'wish' | 'poke' | 'boost' | 'event';
+export type SpendingCategory = 'subscription' | 'cosmetic' | 'advertisement' | 'shame' | 'boost';
 
-interface SpendingMetadata {
-  itemId?: string;
-  category?: string;
-  targetUser?: string;
-  // Add any additional metadata needed
-  [key: string]: any;
-}
-
-// Track spending history
-export interface SpendingRecord {
+export interface Transaction {
   id: string;
+  userId: string;
   amount: number;
-  timestamp: Date;
-  category: SpendingCategory;
+  type: 'deposit' | 'spend' | 'withdrawal' | 'shame' | 'advertisement' | 'subscription';
   description: string;
-  metadata?: SpendingMetadata;
+  timestamp: Date;
+  metadata?: any;
 }
 
-// Function to spend from wallet and update user stats
+// Mock user transactions stored in localStorage
+const getUserTransactionsFromStorage = (userId: string): Transaction[] => {
+  const storageKey = `user_transactions_${userId}`;
+  const storedTransactions = localStorage.getItem(storageKey);
+  
+  if (storedTransactions) {
+    try {
+      const parsed = JSON.parse(storedTransactions);
+      return parsed.map((t: any) => ({
+        ...t,
+        timestamp: new Date(t.timestamp)
+      }));
+    } catch (error) {
+      console.error("Error parsing transactions:", error);
+    }
+  }
+  
+  return [];
+};
+
+// Save transactions to localStorage
+const saveTransactionsToStorage = (userId: string, transactions: Transaction[]) => {
+  const storageKey = `user_transactions_${userId}`;
+  localStorage.setItem(storageKey, JSON.stringify(transactions));
+};
+
+// Get user transactions
+export const getUserTransactions = async (userId: string, limit = 10): Promise<Transaction[]> => {
+  // In a real app, this would be an API call
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      const transactions = getUserTransactionsFromStorage(userId);
+      // Sort by timestamp, newest first
+      const sorted = transactions.sort((a, b) => 
+        new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+      );
+      
+      // Apply limit
+      const limited = sorted.slice(0, limit);
+      resolve(limited);
+    }, 500); // Simulate network delay
+  });
+};
+
+// Add funds to user wallet
+export const depositToWallet = async (
+  user: UserProfile,
+  amount: number
+): Promise<boolean> => {
+  // In a real app, this would call an API
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      try {
+        // Get existing transactions
+        const transactions = getUserTransactionsFromStorage(user.id);
+        
+        // Create new transaction
+        const newTransaction: Transaction = {
+          id: `dep_${Date.now()}`,
+          userId: user.id,
+          amount: amount,
+          type: 'deposit',
+          description: `Added $${amount.toFixed(2)} to wallet`,
+          timestamp: new Date()
+        };
+        
+        // Add to transactions
+        transactions.push(newTransaction);
+        
+        // Save transactions
+        saveTransactionsToStorage(user.id, transactions);
+        
+        // In a real app we would update the user's balance in the database
+        // For now, just return true to indicate success
+        resolve(true);
+      } catch (error) {
+        console.error("Error depositing to wallet:", error);
+        resolve(false);
+      }
+    }, 800); // Simulate network delay
+  });
+};
+
+// Spend from user wallet
 export const spendFromWallet = async (
   user: UserProfile,
   amount: number,
   category: SpendingCategory,
   description: string,
-  metadata?: SpendingMetadata
+  metadata?: any
 ): Promise<boolean> => {
-  // Check if user has enough funds
-  if (user.walletBalance < amount) {
-    console.error('Insufficient funds');
-    return false;
-  }
-  
-  try {
-    // Generate a unique ID for the transaction
-    const transactionId = `tx_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
-    
-    // Create spending record
-    const spendingRecord: SpendingRecord = {
-      id: transactionId,
-      amount,
-      timestamp: new Date(),
-      category,
-      description,
-      metadata
-    };
-    
-    // Call API to record spending (mocked for demo)
-    console.log('Recording spending:', spendingRecord);
-    
-    // For demo purposes, we'll just return true to indicate success
-    // In a real app, you would make an API call and wait for the response
-    
-    return true;
-  } catch (error) {
-    console.error('Error recording spending:', error);
-    return false;
-  }
-};
-
-// Function to add funds to wallet
-export const addFundsToWallet = async (
-  user: UserProfile,
-  amount: number
-): Promise<boolean> => {
-  try {
-    // Call API to add funds (mocked for demo)
-    console.log('Adding funds:', amount);
-    
-    // For demo purposes, we'll just return true to indicate success
-    return true;
-  } catch (error) {
-    console.error('Error adding funds:', error);
-    return false;
-  }
-};
-
-// Calculate spending tier based on amount spent
-export const getSpendingTier = (amountSpent: number): string => {
-  if (amountSpent >= 25000) return 'whale';
-  if (amountSpent >= 10000) return 'shark';
-  if (amountSpent >= 5000) return 'dolphin';
-  if (amountSpent >= 1000) return 'fish';
-  if (amountSpent >= 250) return 'octopus';
-  return 'crab';
-};
-
-// Function to get satirical spending title
-export const getSpendingTitle = (amountSpent: number): string => {
-  if (amountSpent >= 25000) return "Supreme Digital Monarch";
-  if (amountSpent >= 10000) return "Digital Oligarch";
-  if (amountSpent >= 5000) return "Prestigious Patron";
-  if (amountSpent >= 1000) return "Valued Contributor";
-  if (amountSpent >= 250) return "Aspiring Noble";
-  if (amountSpent >= 50) return "Recognized Member";
-  return "Digital Commoner";
-};
-
-// Satirical message based on spending amount
-export const getSpendingMessage = (amount: number): string => {
-  if (amount >= 1000) {
-    return "Congratulations! You've just purchased significant digital social status. Your wealth display has been noted by the algorithm.";
-  } else if (amount >= 500) {
-    return "A commendable contribution to your digital prestige. The higher-ups are beginning to notice you.";
-  } else if (amount >= 100) {
-    return "Your wallet has spoken, and our system is listening. Keep spending to rise further.";
-  } else if (amount >= 50) {
-    return "A modest investment in your digital social climbing. Every dollar counts on the path to prominence.";
-  } else {
-    return "Thank you for your contribution. Remember, in this world, your rank is directly proportional to your spending.";
-  }
+  // In a real app, this would call an API
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      try {
+        // Get existing transactions
+        const transactions = getUserTransactionsFromStorage(user.id);
+        
+        // Create new transaction
+        const newTransaction: Transaction = {
+          id: `spe_${Date.now()}`,
+          userId: user.id,
+          amount: amount,
+          type: 'spend',
+          description: description,
+          timestamp: new Date(),
+          metadata: metadata
+        };
+        
+        // Add to transactions
+        transactions.push(newTransaction);
+        
+        // Save transactions
+        saveTransactionsToStorage(user.id, transactions);
+        
+        // In a real app we would update the user's balance in the database
+        // For now, just return true to indicate success
+        resolve(true);
+      } catch (error) {
+        console.error("Error spending from wallet:", error);
+        resolve(false);
+      }
+    }, 800); // Simulate network delay
+  });
 };

@@ -10,9 +10,9 @@ export type SoundNames =
   | 'royalAnnouncement'
   | 'levelUp'
   | 'purchase'
-  | 'shame'       // Added missing sound name
-  | 'swordClash'  // Added missing sound name
-  | 'pageTransition'; // Added missing sound name
+  | 'shame'
+  | 'swordClash'
+  | 'pageTransition';
 
 // Sound asset paths
 export const soundAssets: Record<SoundNames, string> = {
@@ -25,9 +25,9 @@ export const soundAssets: Record<SoundNames, string> = {
   royalAnnouncement: '/sounds/royal-announcement.mp3',
   levelUp: '/sounds/level-up.mp3',
   purchase: '/sounds/purchase.mp3',
-  shame: '/sounds/shame.mp3',       // Added missing sound asset
-  swordClash: '/sounds/sword-clash.mp3', // Added missing sound asset
-  pageTransition: '/sounds/page-transition.mp3' // Added missing sound asset
+  shame: '/sounds/shame.mp3',
+  swordClash: '/sounds/sword-clash.mp3',
+  pageTransition: '/sounds/page-transition.mp3'
 };
 
 // Volume presets for sounds (0 to 1)
@@ -41,7 +41,7 @@ export const defaultVolumes: Record<SoundNames, number> = {
   royalAnnouncement: 0.3,
   levelUp: 0.4,
   purchase: 0.3,
-  shame: 0.3,       // Added missing volume preset
-  swordClash: 0.3,  // Added missing volume preset
-  pageTransition: 0.2 // Added missing volume preset
+  shame: 0.3,
+  swordClash: 0.3,
+  pageTransition: 0.2
 };

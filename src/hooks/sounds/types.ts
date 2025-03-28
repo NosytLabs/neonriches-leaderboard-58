@@ -20,7 +20,11 @@ export enum SoundCategoryEnum {
   potion = 'potion',
   swordClash = 'swordClash',
   error = 'error',
-  success = 'success'
+  success = 'success',
+  coinDrop = 'coinDrop',
+  click = 'click',
+  levelUp = 'levelUp',
+  pageTransition = 'pageTransition'
 }
 
 export type SoundType = keyof typeof SoundCategoryEnum;
