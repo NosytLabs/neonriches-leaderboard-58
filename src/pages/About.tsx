@@ -6,13 +6,31 @@ import Footer from '@/components/Footer';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
-import { Crown, Users, Scroll, Heart, Info, BookOpen, Code, Coffee, Sparkles, Download } from 'lucide-react';
+import { 
+  Crown, 
+  Users, 
+  Scroll, 
+  Heart, 
+  Info, 
+  BookOpen, 
+  Code, 
+  Coffee, 
+  Sparkles, 
+  Download,
+  ArrowRight,
+  Share2,
+  ExternalLink,
+  DollarSign,
+  Trophy,
+  Gem
+} from 'lucide-react';
 import RoyalDivider from '@/components/ui/royal-divider';
 import TeamSection from '@/components/TeamSection';
 import CertificateOfNobility from '@/components/certificates/CertificateOfNobility';
 import useNotificationSounds from '@/hooks/use-notification-sounds';
 import { useToastContext } from '@/contexts/ToastContext';
 import { UserProfile, UserTier } from '@/types/user';
+import { Link } from 'react-router-dom';
 
 const About = () => {
   const [certificateVisible, setCertificateVisible] = useState(false);
@@ -30,7 +48,7 @@ const About = () => {
     spentAmount: 5000,
     walletBalance: 1000,
     rank: 1,
-    tier: 'whale' as UserTier,
+    tier: 'pro' as UserTier,
     team: 'red',
     gender: 'king',
     joinDate: new Date().toISOString(),
@@ -94,7 +112,7 @@ const About = () => {
           </div>
           
           <Tabs defaultValue="concept" className="mb-12">
-            <TabsList className="grid grid-cols-3 mb-8">
+            <TabsList className="grid grid-cols-4 mb-8">
               <TabsTrigger value="concept" className="data-[state=active]:bg-royal-gold/20">
                 <BookOpen className="h-4 w-4 mr-2" />
                 The Concept
@@ -102,6 +120,10 @@ const About = () => {
               <TabsTrigger value="mechanics" className="data-[state=active]:bg-royal-gold/20">
                 <Code className="h-4 w-4 mr-2" />
                 How It Works
+              </TabsTrigger>
+              <TabsTrigger value="meme-economy" className="data-[state=active]:bg-royal-gold/20">
+                <Sparkles className="h-4 w-4 mr-2" />
+                Meme Economy
               </TabsTrigger>
               <TabsTrigger value="philosophy" className="data-[state=active]:bg-royal-gold/20">
                 <Coffee className="h-4 w-4 mr-2" />
@@ -220,10 +242,10 @@ const About = () => {
                     </div>
                     
                     <div className="bg-white/5 p-4 rounded-lg border border-white/10">
-                      <h3 className="font-bold mb-2">Cosmetic Rewards</h3>
+                      <h3 className="font-bold mb-2">Profile Enhancement</h3>
                       <p className="text-sm text-white/70">
-                        Unlock purely cosmetic profile enhancements as you spend more. 
-                        These have no functional value but look impressive to others.
+                        Unlock cosmetic profile enhancements as you spend more. All users start with basic text editing, 
+                        social links, and image uploads. Pro users gain access to advanced customization.
                       </p>
                     </div>
                     
@@ -231,7 +253,7 @@ const About = () => {
                       <h3 className="font-bold mb-2">Top Spender Perks</h3>
                       <p className="text-sm text-white/70">
                         The #1 ranked spender gets exclusive advertising space on the homepage and special privileges.
-                        These perks shift in real-time as rankings change.
+                        Use this space to promote your own content, websites, or social media.
                       </p>
                     </div>
                   </div>
@@ -244,6 +266,15 @@ const About = () => {
                       <Crown className="h-4 w-4 mr-2" />
                       View Sample Certificate of Nobility
                     </Button>
+                    <Link to="/features">
+                      <Button 
+                        variant="outline"
+                        className="ml-4 border-royal-gold/30 text-royal-gold hover:bg-royal-gold/10"
+                      >
+                        <Gem className="h-4 w-4 mr-2" />
+                        View All Features
+                      </Button>
+                    </Link>
                   </div>
                 </CardContent>
               </Card>
@@ -251,27 +282,30 @@ const About = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <Card className="glass-morphism border-white/10">
                   <CardHeader>
-                    <CardTitle className="text-base">Royal Events</CardTitle>
+                    <CardTitle className="text-base">Profile Features</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <div>
-                      <h3 className="font-bold text-sm">Weekly Events</h3>
+                      <h3 className="font-bold text-sm">Basic Profile (All Users)</h3>
                       <p className="text-sm text-white/70">
-                        Participate in weekly events like public shaming festivals where you can drop other users in rank.
+                        Every user can customize their profile with text, upload images, add social links,
+                        and create a personalized bio to showcase their digital persona.
                       </p>
                     </div>
                     
                     <div>
-                      <h3 className="font-bold text-sm">Fire Sales</h3>
+                      <h3 className="font-bold text-sm">Pro Features</h3>
                       <p className="text-sm text-white/70">
-                        Every third month, cosmetic items go on sale with 30-70% discounts. A perfect opportunity to enhance your nobility.
+                        Pro users unlock enhanced customization like animated RGB borders, custom gradients,
+                        advanced analytics, and more ways to make their profile stand out.
                       </p>
                     </div>
                     
                     <div>
-                      <h3 className="font-bold text-sm">Prize Pool</h3>
+                      <h3 className="font-bold text-sm">Certificate of Nobility</h3>
                       <p className="text-sm text-white/70">
-                        15% of all spending goes into a prize pool that rewards consistent spenders and top whales in our community.
+                        Generate your personalized Certificate of Nobility to share on social media,
+                        showcasing your rank and spending achievements.
                       </p>
                     </div>
                   </CardContent>
@@ -298,6 +332,93 @@ const About = () => {
                   </CardContent>
                 </Card>
               </div>
+            </TabsContent>
+            
+            <TabsContent value="meme-economy" className="space-y-6">
+              <Card className="glass-morphism border-white/10">
+                <CardHeader>
+                  <CardTitle className="flex items-center">
+                    <DollarSign className="h-5 w-5 mr-2 text-royal-gold" />
+                    The Meme Economy
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <p>
+                    SpendThrone is both a critique and a celebration of internet culture, where attention is currency and absurdity is content.
+                    It's a living meme that evolves through participation, a mirror reflecting our digital society's values back at itself.
+                  </p>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                    <div className="bg-white/5 p-4 rounded-lg border border-white/10">
+                      <h3 className="font-bold mb-2">Advertising as Status</h3>
+                      <p className="text-sm text-white/70">
+                        Your profile page becomes your own personal billboard. As you spend more, you gain the ability
+                        to customize it extensively and promote whatever you want. The top spender's advertisement even
+                        appears on our homepage.
+                      </p>
+                    </div>
+                    
+                    <div className="bg-white/5 p-4 rounded-lg border border-white/10">
+                      <h3 className="font-bold mb-2">Digital Prestige</h3>
+                      <p className="text-sm text-white/70">
+                        Badges, custom borders, animated effects - all these purely cosmetic features serve as
+                        visual indicators of your spending power. They have no functional value, but they look impressive
+                        to others.
+                      </p>
+                    </div>
+                    
+                    <div className="bg-white/5 p-4 rounded-lg border border-white/10">
+                      <h3 className="font-bold mb-2">Social Dynamics</h3>
+                      <p className="text-sm text-white/70">
+                        Watch as users form alliances, compete for status, and create narratives around their spending.
+                        The psychology of digital prestige unfolds in real-time.
+                      </p>
+                    </div>
+                    
+                    <div className="bg-white/5 p-4 rounded-lg border border-white/10">
+                      <h3 className="font-bold mb-2">Meme Value</h3>
+                      <p className="text-sm text-white/70">
+                        The true value is in the story you can tell. "I'm ranked #5 on a website where people pay real money for fake status"
+                        becomes its own form of social currency - albeit an ironic one.
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <div className="mt-6 bg-royal-gold/5 p-6 rounded-lg border border-royal-gold/20">
+                    <h3 className="text-xl font-bold royal-gradient mb-3 font-royal">The Founders Badge</h3>
+                    <p className="text-white/80 mb-4">
+                      Early supporters can obtain the exclusive Founders Badge - a permanent mark of distinction
+                      that identifies you as part of the original community. This limited-time offer includes:
+                    </p>
+                    <ul className="space-y-2">
+                      <li className="flex items-center">
+                        <Trophy className="h-4 w-4 mr-2 text-royal-gold" />
+                        <span>Permanent profile distinction</span>
+                      </li>
+                      <li className="flex items-center">
+                        <Trophy className="h-4 w-4 mr-2 text-royal-gold" />
+                        <span>All Pro features included</span>
+                      </li>
+                      <li className="flex items-center">
+                        <Trophy className="h-4 w-4 mr-2 text-royal-gold" />
+                        <span>Early access to new features</span>
+                      </li>
+                      <li className="flex items-center">
+                        <Trophy className="h-4 w-4 mr-2 text-royal-gold" />
+                        <span>Recognition in our "Hall of Founders"</span>
+                      </li>
+                    </ul>
+                    <div className="mt-4 text-center">
+                      <Link to="/founder">
+                        <Button className="bg-royal-gold text-black hover:bg-royal-gold/90">
+                          <Crown className="h-4 w-4 mr-2" />
+                          Become a Founder
+                        </Button>
+                      </Link>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
             </TabsContent>
             
             <TabsContent value="philosophy" className="space-y-6">
@@ -354,16 +475,123 @@ const About = () => {
           
           <RoyalDivider variant="ornate" className="my-12" />
           
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+            <Card className="glass-morphism border-white/10">
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <Gem className="h-5 w-5 mr-2 text-royal-gold" />
+                  Premium Features & Benefits
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <p className="text-white/80">
+                  Unlock advanced customization options and exclusive benefits by upgrading your account.
+                </p>
+                
+                <div className="space-y-3">
+                  <div className="flex items-center">
+                    <div className="h-8 w-8 rounded-full bg-royal-gold/10 flex items-center justify-center mr-3">
+                      <Sparkles className="h-4 w-4 text-royal-gold" />
+                    </div>
+                    <div>
+                      <h4 className="font-medium">Enhanced Profile Customization</h4>
+                      <p className="text-sm text-white/60">Animated borders, custom colors, and more</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center">
+                    <div className="h-8 w-8 rounded-full bg-royal-gold/10 flex items-center justify-center mr-3">
+                      <ExternalLink className="h-4 w-4 text-royal-gold" />
+                    </div>
+                    <div>
+                      <h4 className="font-medium">Advanced Link Tracking</h4>
+                      <p className="text-sm text-white/60">Analytics for profile visitors and clicks</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center">
+                    <div className="h-8 w-8 rounded-full bg-royal-gold/10 flex items-center justify-center mr-3">
+                      <Trophy className="h-4 w-4 text-royal-gold" />
+                    </div>
+                    <div>
+                      <h4 className="font-medium">Exclusive Badges</h4>
+                      <p className="text-sm text-white/60">Showcase your premium status</p>
+                    </div>
+                  </div>
+                </div>
+                
+                <Link to="/features">
+                  <Button className="w-full mt-4 bg-royal-gold/10 text-royal-gold hover:bg-royal-gold/20 border border-royal-gold/30">
+                    View All Premium Features
+                    <ArrowRight className="h-4 w-4 ml-2" />
+                  </Button>
+                </Link>
+              </CardContent>
+            </Card>
+            
+            <Card className="glass-morphism border-white/10">
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <Share2 className="h-5 w-5 mr-2 text-royal-gold" />
+                  Certificate of Nobility
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <p className="text-white/80">
+                  Each noble receives a personalized Certificate of Nobility displaying their rank, 
+                  spending amount, and achievements - perfect for sharing on social media.
+                </p>
+                
+                <div className="relative h-48 overflow-hidden rounded-lg glass-morphism border-white/10 flex items-center justify-center cursor-pointer" onClick={handleShowCertificate}>
+                  <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/40"></div>
+                  <img 
+                    src="https://source.unsplash.com/random/?parchment,scroll" 
+                    alt="Certificate Preview" 
+                    className="w-full h-full object-cover opacity-50"
+                  />
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <Button variant="ghost" className="bg-black/30 text-white hover:bg-black/50">
+                      <Crown className="h-4 w-4 mr-2 text-royal-gold" />
+                      Preview Certificate
+                    </Button>
+                  </div>
+                </div>
+                
+                <div className="text-center mt-2">
+                  <p className="text-sm text-white/60">
+                    Generate your own certificate to showcase your digital nobility status and share with friends
+                  </p>
+                  
+                  <Link to="/profile">
+                    <Button className="mt-4 bg-royal-gold/10 text-royal-gold hover:bg-royal-gold/20 border border-royal-gold/30">
+                      Generate Your Certificate
+                      <Download className="h-4 w-4 ml-2" />
+                    </Button>
+                  </Link>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+          
           <div className="text-center">
             <h2 className="text-2xl font-bold royal-gradient mb-4 font-royal">Join Our Royal Court</h2>
             <p className="text-white/70 max-w-2xl mx-auto mb-6">
               Ready to participate in our satirical social experiment? Join SpendThrone today and begin your ascent through the ranks of digital nobility.
             </p>
             
-            <Button className="bg-royal-gold text-black hover:bg-royal-gold/90">
-              <Crown className="h-4 w-4 mr-2" />
-              Begin Your Noble Journey
-            </Button>
+            <Link to="/leaderboard">
+              <Button className="bg-royal-gold text-black hover:bg-royal-gold/90 mr-4">
+                <Crown className="h-4 w-4 mr-2" />
+                View Current Rankings
+              </Button>
+            </Link>
+            
+            <Link to="/auth">
+              <Button className="bg-royal-gold text-black hover:bg-royal-gold/90">
+                <Crown className="h-4 w-4 mr-2" />
+                Begin Your Noble Journey
+              </Button>
+            </Link>
           </div>
         </div>
       </main>

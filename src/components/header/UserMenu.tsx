@@ -10,7 +10,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { LogOut, User, Settings, CreditCard, Crown } from 'lucide-react';
+import { LogOut, User, Settings, CreditCard, Crown, Gem, Shield } from 'lucide-react';
 import { useAuth } from '@/contexts/auth';
 import { UserProfile } from '@/types/user';
 import { useToastContext } from '@/contexts/ToastContext';
@@ -76,7 +76,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ user }) => {
         <Link to={`/profile/${user.username}`}>
           <DropdownMenuItem className="cursor-pointer">
             <User className="mr-2 h-4 w-4" />
-            <span>Profile</span>
+            <span>My Profile</span>
           </DropdownMenuItem>
         </Link>
         <Link to="/dashboard">
@@ -85,13 +85,27 @@ const UserMenu: React.FC<UserMenuProps> = ({ user }) => {
             <span>Dashboard</span>
           </DropdownMenuItem>
         </Link>
-        <Link to="/dashboard">
+        <Link to="/features">
+          <DropdownMenuItem className="cursor-pointer">
+            <Gem className="mr-2 h-4 w-4" />
+            <span>Features & Upgrades</span>
+          </DropdownMenuItem>
+        </Link>
+        {user.team && (
+          <Link to="/teams">
+            <DropdownMenuItem className="cursor-pointer">
+              <Shield className="mr-2 h-4 w-4" />
+              <span>My Team</span>
+            </DropdownMenuItem>
+          </Link>
+        )}
+        <Link to="/settings">
           <DropdownMenuItem className="cursor-pointer">
             <Settings className="mr-2 h-4 w-4" />
             <span>Settings</span>
           </DropdownMenuItem>
         </Link>
-        <Link to="/dashboard">
+        <Link to="/wallet">
           <DropdownMenuItem className="cursor-pointer">
             <CreditCard className="mr-2 h-4 w-4" />
             <span>Wallet</span>

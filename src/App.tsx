@@ -19,6 +19,7 @@ const NotFound = lazy(() => import('./pages/NotFound'));
 const AdminSettings = lazy(() => import('./pages/AdminSettings'));
 const Auth = lazy(() => import('./pages/Auth'));
 const Privacy = lazy(() => import('./pages/Privacy'));
+const Features = lazy(() => import('./pages/Features'));
 
 function App() {
   return (
@@ -40,6 +41,7 @@ function App() {
           <Route path="/auth" element={<Auth />} />
           <Route path="/admin/settings" element={<AdminSettings />} />
           <Route path="/privacy" element={<Privacy />} />
+          <Route path="/features" element={<Features />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>

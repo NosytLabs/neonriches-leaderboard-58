@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Crown, ExternalLink, Github, Shield, Twitter } from 'lucide-react';
+import { Crown, ExternalLink, Github, Shield, Twitter, Gem } from 'lucide-react';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -32,6 +32,9 @@ const Footer = () => {
                 </li>
                 <li>
                   <Link to="/events" className="hover:text-royal-gold transition-colors">Events</Link>
+                </li>
+                <li>
+                  <Link to="/features" className="hover:text-royal-gold transition-colors">Features</Link>
                 </li>
               </ul>
             </div>

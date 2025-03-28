@@ -58,20 +58,20 @@ const RoyalFAQ: React.FC = () => {
     },
     {
       id: 'faq-9',
-      question: 'What\'s the Prize Pool?',
-      answer: '15% of all spending goes into a weekly prize pool. Half rewards consistent spenders through multipliers based on spending streaks, while the other half is allocated by the top three spenders. It\'s a way for whales to exercise their purchased influence.',
+      question: 'What does the Pro account include?',
+      answer: 'Pro accounts unlock enhanced customization features for your profile including extended text limits (1000 characters), up to 5 social media links with tracking, up to 5 images, animated RGB borders, custom gradients, video embeds, hover effects, and advanced analytics.',
       icon: <Gift className="h-5 w-5 text-royal-purple" />
     },
     {
       id: 'faq-10',
-      question: 'Are there any spending milestones or tiers?',
-      answer: 'Yes! As you spend more, you progress through our aquatic-themed tiers: Crab ($0-$50), Octopus ($250+), Fish ($1,000+), Dolphin ($5,000+), Shark ($10,000+), and the prestigious Whale ($25,000+). Each tier comes with its own badge and cosmetic perks.',
+      question: 'Are there different account types?',
+      answer: 'Yes! We have Free accounts (basic customization), Pro accounts ($25 for enhanced features), and the exclusive Founders Badge ($100) that includes all Pro features plus permanent recognition in our Hall of Founders and early access to new features.',
       icon: <DollarSign className="h-5 w-5 text-royal-navy" />
     },
     {
       id: 'faq-11',
-      question: 'What is a spending streak?',
-      answer: 'A spending streak is counted when you spend money at least once per week. Maintaining a streak earns you multipliers on your prize pool rewards: 4+ weeks gives a 1.5x multiplier, 8+ weeks a 2x multiplier, and 12+ weeks an impressive 3x multiplier. Streaks also display on your profile as a badge of dedication.',
+      question: 'How can I use my profile as an advertisement?',
+      answer: 'Your profile page is essentially your own personal billboard. You can add text, images, links, and media to promote whatever you want - your social media, products, services, or just your own inflated ego. The #1 ranked spender even gets their profile featured on the homepage.',
       icon: <Clock className="h-5 w-5 text-royal-purple" />
     },
     {
