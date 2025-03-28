@@ -1,8 +1,8 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { Eye, Link as LinkIcon, ExternalLink, Shield, Trophy, Calendar, Heart, Crown } from 'lucide-react';
-import { UserProfile } from '@/contexts/AuthContext';
+import { Eye, Link as LinkIcon, ExternalLink, Shield, Trophy, Calendar, Heart, Crown, Instagram, Twitter, Facebook, Linkedin, Globe } from 'lucide-react';
+import { UserProfile, SocialLink } from '@/contexts/AuthContext';
 import { getTeamBgColorClass, getTeamTextColorClass, getSpendingTier, getSpendingTierLabel } from '@/lib/colors';
 import { getTitleById } from '@/types/medievalTitles';
 import MedievalIcon from '@/components/ui/medieval-icon';
@@ -47,6 +47,18 @@ const ProfileViewer = ({ user, profileData }: ProfileViewerProps) => {
   // Get user's active title if they have one
   const activeTitle = user.activeTitle ? getTitleById(user.activeTitle) : null;
   const isFounder = user.cosmetics?.foundersPass === true;
+
+  // Function to render social media icon
+  const getSocialIcon = (platform: string) => {
+    switch(platform) {
+      case 'instagram': return <Instagram size={16} className="text-pink-400" />;
+      case 'twitter': return <Twitter size={16} className="text-blue-400" />;
+      case 'facebook': return <Facebook size={16} className="text-blue-600" />;
+      case 'linkedin': return <Linkedin size={16} className="text-blue-700" />;
+      case 'website': return <Globe size={16} className="text-gray-400" />;
+      default: return <ExternalLink size={16} className="text-gray-400" />;
+    }
+  };
 
   return (
     <div className="royal-card-enhanced rounded-xl overflow-hidden">
@@ -161,6 +173,30 @@ const ProfileViewer = ({ user, profileData }: ProfileViewerProps) => {
             </div>
           </div>
           
+          {/* Social Links */}
+          {user.socialLinks && user.socialLinks.length > 0 && (
+            <div className="mb-6">
+              <h4 className="text-lg font-medieval mb-3">
+                <span className="royal-gradient">Royal Networks</span>
+              </h4>
+              <div className="grid grid-cols-2 gap-2">
+                {user.socialLinks.map((link, index) => (
+                  <a 
+                    key={index}
+                    href={link.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="glass-morphism rounded-lg p-3 flex items-center hover:bg-white/5 transition-colors"
+                  >
+                    {getSocialIcon(link.platform)}
+                    <span className="ml-2 text-sm">{link.platform.charAt(0).toUpperCase() + link.platform.slice(1)}</span>
+                    <ExternalLink size={12} className="ml-auto text-white/50" />
+                  </a>
+                ))}
+              </div>
+            </div>
+          )}
+          
           {/* Images gallery */}
           {profileData.images.length > 0 && (
             <div className="mb-6">
@@ -245,6 +281,21 @@ const ProfileViewer = ({ user, profileData }: ProfileViewerProps) => {
                   <p className="text-sm text-white/70">
                     As one of the founding patrons of our digital kingdom, {user.username} enjoys permanent enhanced 
                     profile customization and recognition throughout the realm.
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+          
+          {/* Shame counter if present */}
+          {user.shameCount && user.shameCount > 0 && (
+            <div className="mt-6 glass-morphism rounded-lg p-4 border border-red-500/20">
+              <div className="flex items-center">
+                <div className="text-xl mr-2">🍅</div>
+                <div>
+                  <h3 className="text-base font-medium text-red-400">Public Shame Count</h3>
+                  <p className="text-sm text-white/70">
+                    This noble has been publicly shamed {user.shameCount} times.
                   </p>
                 </div>
               </div>

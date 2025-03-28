@@ -17,11 +17,19 @@ export interface UserCosmetics {
   fonts: string[];
   emojis: string[];
   titles: string[];
+  backgrounds: string[];
+  effects: string[];
+  badges: string[];
+  themes: string[];
   foundersPass?: boolean;
   activeBorder?: string | null;
   activeColor?: string | null;
   activeFont?: string | null;
   activeTitle?: string | null;
+  activeBackground?: string | null;
+  activeEffect?: string | null;
+  activeBadge?: string | null;
+  activeTheme?: string | null;
 }
 
 export interface ProfileBoost {
@@ -69,6 +77,25 @@ export interface UserSubscription {
   features: string[];
 }
 
+export interface RoyaltyStatus {
+  isRoyalty: boolean;
+  royalTitle: string;
+  crownColor?: string;
+  specialEffects?: string[];
+  ceremonialDate: Date;
+  usurpedBy?: string;
+  usurpedDate?: Date;
+}
+
+export interface FounderBenefits {
+  isFounder: boolean;
+  joinDate: Date;
+  exclusiveThemes: string[];
+  permanentBoost: number;
+  lifetimeBadge: string;
+  specialTitle: string;
+}
+
 export interface UserProfile {
   id: string;
   username: string;
@@ -95,6 +122,10 @@ export interface UserProfile {
   activeTitle?: string;
   profileBoosts?: ProfileBoost[];
   analytics?: AnalyticsData;
+  royaltyStatus?: RoyaltyStatus;
+  founderBenefits?: FounderBenefits;
+  shameCount?: number;
+  lastActive?: Date;
 }
 
 export interface ProfileImage {

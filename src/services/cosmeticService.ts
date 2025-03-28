@@ -356,6 +356,150 @@ const COSMETIC_DATABASE: CosmeticItem[] = [
     price: 10.00,
     rarity: 'legendary',
     category: 'title'
+  },
+  
+  // NEW: Themes (complete profile themes)
+  {
+    id: 'theme-medieval-court',
+    name: 'Medieval Court',
+    description: 'Transform your profile into a royal medieval court',
+    price: 5.00,
+    rarity: 'rare',
+    category: 'theme'
+  },
+  {
+    id: 'theme-digital-kingdom',
+    name: 'Digital Kingdom',
+    description: 'A futuristic, neon-infused royal aesthetic',
+    price: 5.00,
+    rarity: 'rare',
+    category: 'theme'
+  },
+  {
+    id: 'theme-crypto-royalty',
+    name: 'Crypto Royalty',
+    description: 'Show off your blockchain kingdom',
+    price: 7.50,
+    rarity: 'epic',
+    category: 'theme'
+  },
+  {
+    id: 'theme-founders-hall',
+    name: "Founder's Hall",
+    description: 'Exclusive theme only for founding members',
+    price: 15.00,
+    rarity: 'legendary',
+    category: 'theme'
+  },
+  {
+    id: 'theme-marketing-guru',
+    name: 'Marketing Guru',
+    description: 'Professional theme optimized for marketing your presence',
+    price: 3.50,
+    rarity: 'uncommon',
+    category: 'theme'
+  },
+  
+  // NEW: Effects (animated effects for profiles)
+  {
+    id: 'effect-golden-shimmer',
+    name: 'Golden Shimmer',
+    description: 'Add a subtle golden shimmer to your profile',
+    price: 2.00,
+    rarity: 'uncommon',
+    category: 'effect'
+  },
+  {
+    id: 'effect-flame-border',
+    name: 'Flame Border',
+    description: 'Animated flames dance around your profile',
+    price: 4.50,
+    rarity: 'rare',
+    category: 'effect'
+  },
+  {
+    id: 'effect-royal-sparkle',
+    name: 'Royal Sparkle',
+    description: 'Sparkling effects that follow your profile interactions',
+    price: 6.00,
+    rarity: 'epic',
+    category: 'effect'
+  },
+  {
+    id: 'effect-crown-aura',
+    name: 'Crown Aura',
+    description: 'A majestic aura that shows your royal status',
+    price: 10.00,
+    rarity: 'legendary',
+    category: 'effect'
+  },
+  
+  // NEW: Backgrounds
+  {
+    id: 'background-castle',
+    name: 'Castle Interior',
+    description: 'The grand hall of a medieval castle',
+    price: 1.50,
+    rarity: 'uncommon',
+    category: 'background'
+  },
+  {
+    id: 'background-throne-room',
+    name: 'Throne Room',
+    description: 'A royal throne room fit for a king or queen',
+    price: 3.00,
+    rarity: 'rare',
+    category: 'background'
+  },
+  {
+    id: 'background-treasure-vault',
+    name: 'Treasure Vault',
+    description: 'A vault filled with gold and treasure',
+    price: 5.00,
+    rarity: 'epic',
+    category: 'background'
+  },
+  {
+    id: 'background-digital-realm',
+    name: 'Digital Realm',
+    description: 'A futuristic digital landscape',
+    price: 2.50,
+    rarity: 'rare',
+    category: 'background'
+  },
+  
+  // NEW: Marketing-focused badges
+  {
+    id: 'badge-influencer',
+    name: 'Influencer Badge',
+    description: 'Show your marketing prowess with this badge',
+    price: 3.00,
+    rarity: 'uncommon',
+    category: 'badge'
+  },
+  {
+    id: 'badge-trendsetter',
+    name: 'Trendsetter Badge',
+    description: 'Mark yourself as a trendsetter in the community',
+    price: 4.50,
+    rarity: 'rare',
+    category: 'badge'
+  },
+  {
+    id: 'badge-brand-ambassador',
+    name: 'Brand Ambassador',
+    description: 'Perfect for showcasing your promotional capabilities',
+    price: 6.00,
+    rarity: 'epic',
+    category: 'badge'
+  },
+  {
+    id: 'badge-founder',
+    name: 'Founder Badge',
+    description: 'Exclusive badge for founding members',
+    price: 15.00,
+    rarity: 'legendary',
+    category: 'badge'
   }
 ];
 
@@ -391,6 +535,13 @@ export const userOwnsCosmetic = (user: UserProfile, cosmeticId: string): boolean
   }
   
   return false;
+};
+
+// Get all cosmetic categories
+export const getCosmeticCategories = (): string[] => {
+  const categories = new Set<string>();
+  COSMETIC_DATABASE.forEach(item => categories.add(item.category));
+  return Array.from(categories);
 };
 
 // Calculate discount based on user tier/spending
@@ -449,4 +600,24 @@ export const awardRandomCosmetic = (
   // Pick a random item from the pool
   const randomIndex = Math.floor(Math.random() * itemPool.length);
   return { cosmeticItem: itemPool[randomIndex], rarity };
+};
+
+// Get Founder exclusive cosmetics
+export const getFounderExclusiveCosmetics = (): CosmeticItem[] => {
+  return COSMETIC_DATABASE.filter(item => 
+    item.id === 'theme-founders-hall' || 
+    item.id === 'badge-founder' || 
+    item.id === 'title-founder' ||
+    item.rarity === 'legendary'
+  );
+};
+
+// Get Marketing themed cosmetics
+export const getMarketingCosmetics = (): CosmeticItem[] => {
+  return COSMETIC_DATABASE.filter(item => 
+    item.id === 'theme-marketing-guru' || 
+    item.category === 'badge' || 
+    item.id.includes('influencer') ||
+    item.id.includes('marketing')
+  );
 };

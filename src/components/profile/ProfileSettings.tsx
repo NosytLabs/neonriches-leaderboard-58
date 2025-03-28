@@ -6,9 +6,11 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { Settings, User, Image, Link2, Crown } from 'lucide-react';
+import { Settings, User, Image, Link2, Crown, Instagram, Twitter } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { UserProfile } from '@/types/user';
+import { UserProfile, SocialLink } from '@/types/user';
+import LinksEditor from './editor/LinksEditor';
+import SocialMediaLinksEditor from './editor/SocialMediaLinksEditor';
 
 interface ProfileSettingsProps {
   user: UserProfile | null;
@@ -21,6 +23,8 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({ user }) => {
   const [bio, setBio] = useState(user?.bio || '');
   const [username, setUsername] = useState(user?.username || '');
   const [profileImage, setProfileImage] = useState(user?.profileImage || '');
+  const [socialLinks, setSocialLinks] = useState<SocialLink[]>(user?.socialLinks || []);
+  const [profileLinks, setProfileLinks] = useState(user?.profileLinks || []);
   
   // For demonstration purposes - would connect to actual APIs in production
   const handleSaveBasicInfo = () => {
@@ -67,9 +71,10 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({ user }) => {
       </CardHeader>
       <CardContent>
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid grid-cols-3 mb-4">
+          <TabsList className="grid grid-cols-4 mb-4">
             <TabsTrigger value="basic">Basic Info</TabsTrigger>
             <TabsTrigger value="appearance">Appearance</TabsTrigger>
+            <TabsTrigger value="social">Social</TabsTrigger>
             <TabsTrigger value="privacy">Privacy</TabsTrigger>
           </TabsList>
           
@@ -159,12 +164,12 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({ user }) => {
                   Profile Links
                 </h3>
                 <p className="text-sm text-white/70 mb-3">
-                  Add social links and custom URLs to your profile.
+                  Add links and custom URLs to your profile.
                 </p>
                 <Button 
                   variant="outline" 
                   className="w-full"
-                  onClick={() => setActiveTab('appearance')}
+                  onClick={() => setActiveTab('social')}
                 >
                   Manage Links
                 </Button>
@@ -172,6 +177,26 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({ user }) => {
               
               <Button onClick={handleSaveAppearance} className="w-full">
                 Save Appearance Settings
+              </Button>
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="social" className="space-y-4">
+            <div className="space-y-6">
+              <SocialMediaLinksEditor 
+                user={user}
+                socialLinks={socialLinks}
+                onLinksChange={setSocialLinks}
+              />
+              
+              <LinksEditor
+                user={user}
+                links={profileLinks}
+                onLinksChange={setProfileLinks}
+              />
+              
+              <Button onClick={handleSaveAppearance} className="w-full">
+                Save Social Links
               </Button>
             </div>
           </TabsContent>
