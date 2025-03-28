@@ -47,7 +47,7 @@ const SubscriptionManagement = () => {
     paymentMethod: 'credit_card',
     autoRenew: true,
     price: tierPrices[selectedTier],
-    interval: selectedBillingCycle === 'annual' ? 'yearly' : selectedBillingCycle,
+    interval: selectedBillingCycle,
     features: tierFeatures[selectedTier]
   };
 

@@ -40,8 +40,14 @@ const RoyalBoutique = () => {
     
     if (success) {
       // Update user profile with the purchased item
-      const cosmeticItems = user.cosmetics || {};
-      const categoryItems = cosmeticItems[category] || [];
+      const cosmeticItems = user.cosmetics || {
+        borders: [],
+        colors: [],
+        fonts: [],
+        emojis: []
+      };
+      
+      const categoryItems = cosmeticItems[category as keyof typeof cosmeticItems] || [];
       
       if (!categoryItems.includes(itemId)) {
         const updatedCosmetics = {
