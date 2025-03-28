@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import LeaderboardHeader from './LeaderboardHeader';
@@ -57,11 +56,7 @@ const RoyalCourt = () => {
   const containerRef = useRef<HTMLElement>(null);
   
   // Use our floating coins hook
-  const { createBurst, toggle: toggleCoins } = useFloatingCoins({
-    containerRef,
-    emojis: ['💰', '👑', '💎', '💵', '🏆', '✨', '🪙', '🔮', '🧙‍♂️', '🔱', '⚜️'],
-    enabled: false
-  });
+  const { createBurst, toggle: toggleCoins } = useFloatingCoins();
   
   // Satirical welcome toast
   useEffect(() => {

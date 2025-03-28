@@ -13,6 +13,12 @@ interface Coin {
   image?: string;
 }
 
+interface UseFloatingCoinsOptions {
+  containerRef?: React.RefObject<HTMLElement>;
+  enabled?: boolean;
+  emojis?: string[];
+}
+
 interface UseFloatingCoinsReturn {
   isActive: boolean;
   toggle: (state?: boolean) => void;
@@ -22,7 +28,7 @@ interface UseFloatingCoinsReturn {
 }
 
 // Custom hook for creating coin animations
-const useFloatingCoins = (): UseFloatingCoinsReturn => {
+const useFloatingCoins = (options?: UseFloatingCoinsOptions): UseFloatingCoinsReturn => {
   const [isActive, setIsActive] = useState(false);
   const [coins, setCoins] = useState<Coin[]>([]);
   const coinsRef = useRef<Coin[]>([]);

@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { format } from 'date-fns';
 import { UserProfile } from '@/types/user';
-import { Seal, CheckCircle, XCircle, QuestionMarkCircledIcon } from 'lucide-react';
+import { Award, CheckCircle, XCircle, HelpCircle, Medal } from 'lucide-react';
 import useNotificationSounds from '@/hooks/use-notification-sounds';
 import RoyalButton from '@/components/ui/royal-button';
 
@@ -93,7 +93,7 @@ const CertificateOfNobility: React.FC<CertificateProps> = ({
             <div className="mb-6 sm:mb-0">
               <div className="text-xs text-gray-600 mb-1">Kingdom Seal</div>
               <div className="relative">
-                <Seal size={60} className="text-royal-gold animate-pulse-slow" />
+                <Medal size={60} className="text-royal-gold animate-pulse-slow" />
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="text-[8px] text-center leading-tight">
                     <div>ROYAL</div>
@@ -127,7 +127,7 @@ const CertificateOfNobility: React.FC<CertificateProps> = ({
                 ) : isVerifying ? (
                   <div className="animate-spin h-4 w-4 border-2 border-white rounded-full border-t-transparent" />
                 ) : (
-                  <QuestionMarkCircledIcon size={18} />
+                  <HelpCircle size={18} />
                 )
               }
             >
@@ -150,7 +150,7 @@ const CertificateOfNobility: React.FC<CertificateProps> = ({
         </div>
       </motion.div>
       
-      <style jsx global>
+      <style>
         {`
           .certificate-parchment {
             background-color: #f9f2e0;

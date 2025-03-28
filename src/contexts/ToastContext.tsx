@@ -2,19 +2,14 @@
 import React, { createContext, useContext, useCallback } from 'react';
 import { toast } from '@/hooks/use-toast';
 import useNotificationSounds from '@/hooks/use-notification-sounds';
+import { ToastActionElement } from '@/components/ui/toast';
 
 type ToastVariant = 'default' | 'destructive' | 'success' | 'warning' | 'info' | 'royal';
-
-interface ToastActionElement {
-  altText?: string;
-  onClick: () => void;
-  children: React.ReactNode;
-}
 
 interface ToastOptions {
   title?: string;
   description?: string;
-  action?: React.ReactNode;
+  action?: ToastActionElement;
   variant?: ToastVariant;
   duration?: number;
   className?: string;
@@ -70,7 +65,7 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       toast({
         title,
         description,
-        action,
+        action: action as ToastActionElement,
         variant: toastVariant,
         duration,
         className: customClassName

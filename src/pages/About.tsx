@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import Header from '@/components/Header';
@@ -11,6 +12,7 @@ import TeamSection from '@/components/TeamSection';
 import CertificateOfNobility from '@/components/certificates/CertificateOfNobility';
 import useNotificationSounds from '@/hooks/use-notification-sounds';
 import { useToastContext } from '@/contexts/ToastContext';
+import { UserProfile, UserTier } from '@/types/user';
 
 const About = () => {
   const [certificateVisible, setCertificateVisible] = useState(false);
@@ -18,7 +20,7 @@ const About = () => {
   const { addToast } = useToastContext();
   
   // Demo user for certificate
-  const demoUser = {
+  const demoUser: UserProfile = {
     id: '1',
     username: 'LordMoneybags',
     displayName: 'Lord Moneybags',
@@ -28,7 +30,7 @@ const About = () => {
     spentAmount: 5000,
     walletBalance: 1000,
     rank: 1,
-    tier: 'whale',
+    tier: 'whale' as UserTier,
     team: 'red',
     gender: 'king',
     joinDate: '2023-05-15T00:00:00.000Z',
@@ -42,7 +44,7 @@ const About = () => {
       backgrounds: [],
       effects: [],
       badges: [],
-      themes: [] // Added themes array to fix the error
+      themes: []
     },
     socialLinks: []
   };
