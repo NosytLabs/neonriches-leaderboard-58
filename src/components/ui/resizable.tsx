@@ -31,13 +31,17 @@ const ResizablePanel = forwardRef<
 ));
 ResizablePanel.displayName = 'ResizablePanel';
 
-// Fix: We need to use the proper type definition that includes ref forwarding
-type ResizableHandleProps = ComponentProps<typeof ResizablePrimitive.PanelResizeHandle> & {
+// Define the ResizableHandleProps type properly
+interface ResizableHandleProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "id" | "onFocus" | "onBlur"> {
   withHandle?: boolean;
-};
+  className?: string;
+  id?: string;
+  onFocus?: ResizablePrimitive.FocusEventHandler;
+  onBlur?: ResizablePrimitive.FocusEventHandler;
+}
 
 const ResizableHandle = forwardRef<
-  ElementRef<typeof ResizablePrimitive.PanelResizeHandle>,
+  HTMLDivElement,
   ResizableHandleProps
 >(({ className, withHandle = false, ...props }, ref) => (
   <ResizablePrimitive.PanelResizeHandle
@@ -59,8 +63,8 @@ ResizableHandle.displayName = 'ResizableHandle';
 
 // Export a separate ResizableSeparator component for backwards compatibility
 const ResizableSeparator = forwardRef<
-  ElementRef<typeof ResizablePrimitive.PanelResizeHandle>,
-  ComponentProps<typeof ResizablePrimitive.PanelResizeHandle>
+  HTMLDivElement,
+  ResizableHandleProps
 >(({ className, ...props }, ref) => (
   <ResizableHandle ref={ref} className={className} {...props} withHandle />
 ));
