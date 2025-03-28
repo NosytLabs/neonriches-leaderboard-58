@@ -1,6 +1,5 @@
 
 import React from 'react';
-import { Helmet } from 'react-helmet-async';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { cn } from '@/lib/utils';
@@ -30,20 +29,12 @@ const Layout: React.FC<LayoutProps> = ({
   disablePadding = false,
 }) => {
   const siteName = 'SpendThrone';
-  const fullTitle = title ? `${title} | ${siteName}` : siteName;
   
   return (
     <div className={cn(
       'flex flex-col bg-background text-foreground',
       fullHeight ? 'min-h-screen' : ''
     )}>
-      {(title || description) && (
-        <Helmet>
-          {title && <title>{fullTitle}</title>}
-          {description && <meta name="description" content={description} />}
-        </Helmet>
-      )}
-      
       <Header transparent={transparentHeader} />
       
       <main className={cn(

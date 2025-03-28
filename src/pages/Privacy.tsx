@@ -2,7 +2,7 @@
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Crown, Shield, Lock, Eye, FileText, UserCheck, Bell, Database } from 'lucide-react';
+import { Shield, Lock, Eye, FileText, UserCheck, Bell, Database } from 'lucide-react';
 import Layout from '@/components/layouts/Layout';
 import RoyalDivider from '@/components/ui/royal-divider';
 import { Button } from '@/components/ui/button';
@@ -11,11 +11,12 @@ import RoyalDecoration from '@/components/ui/royal-decoration';
 
 const Privacy = () => {
   return (
-    <Layout
-      title="Privacy Policy"
-      description="Our royal decree on privacy and data protection at SpendThrone."
-      fullHeight
-    >
+    <Layout className="bg-background">
+      <Helmet>
+        <title>Privacy Policy | SpendThrone</title>
+        <meta name="description" content="Our royal decree on privacy and data protection at SpendThrone." />
+      </Helmet>
+      
       <div className="container mx-auto max-w-4xl relative">
         <RoyalDecoration variant="royal-insignia" position="top-left" className="-translate-x-16 -translate-y-12 opacity-30 hidden lg:block" />
         <RoyalDecoration variant="royal-insignia" position="top-right" className="translate-x-16 -translate-y-12 opacity-30 hidden lg:block" />
