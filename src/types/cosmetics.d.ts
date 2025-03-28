@@ -1,3 +1,4 @@
+
 export type CosmeticRarity = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
 
 export type CosmeticCategory = 'border' | 'color' | 'font' | 'emoji' | 'background' | 'effect' | 'title' | 'badge' | 'theme';
@@ -11,6 +12,7 @@ export interface CosmeticItem {
   rarity: CosmeticRarity;
   cost: number;
   price?: number;
+  placement: string;
   imageUrl?: string;
   imageSrc?: string;
   preview?: string;

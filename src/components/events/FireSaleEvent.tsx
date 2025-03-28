@@ -6,7 +6,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Flame, Tag, Sparkles, Crown, Clock } from 'lucide-react';
 import { formatCategoryName } from '@/utils/stringUtils';
 import { getCosmeticPreviewStyle, CosmeticItem, CosmeticCategory } from '@/types/cosmetics';
-import { getFireSaleFeaturedCategories } from './utils/shameUtils';
 import RoyalDivider from '@/components/ui/royal-divider';
 import { mockedCosmeticsData } from '@/data/cosmeticsData';
 import { useAuth } from '@/contexts/auth';
@@ -30,7 +29,7 @@ const FireSaleEvent: React.FC<FireSaleEventProps> = ({
 }) => {
   const { user } = useAuth();
   const { addToast } = useToastContext();
-  const [selectedCategory, setSelectedCategory] = useState<string>(featuredCategories[0] || 'borders');
+  const [selectedCategory, setSelectedCategory] = useState<string>(featuredCategories[0] || 'border');
   const [selectedItem, setSelectedItem] = useState<CosmeticItem | null>(null);
   
   const getEndOfMonthDate = (): string => {
@@ -41,7 +40,7 @@ const FireSaleEvent: React.FC<FireSaleEventProps> = ({
   };
   
   const filteredCosmetics = mockedCosmeticsData.filter(item => 
-    featuredCategories.includes(item.category)
+    featuredCategories.includes(item.category as string)
   );
   
   const getCosmeticsForCategory = (): CosmeticItem[] => {
@@ -53,23 +52,24 @@ const FireSaleEvent: React.FC<FireSaleEventProps> = ({
   };
   
   const getCosmeticPreviewStyleForRarity = (rarity: string) => {
-    const typedRarity = rarity as any;
+    const typedRarity = rarity as CosmeticRarity;
     
     const dummyItem: CosmeticItem = {
       id: 'dummy',
       name: 'Dummy Item',
       description: 'Dummy description',
-      category: 'borders' as CosmeticCategory,
+      category: 'border' as CosmeticCategory,
       type: 'profile',
       rarity: typedRarity,
-      cost: 0
+      cost: 0,
+      placement: 'profile'
     };
     
     return getCosmeticPreviewStyle(dummyItem);
   };
   
   const handlePurchase = (item: CosmeticItem) => {
-    const discountedPrice = getDiscountedPrice(item.cost);
+    const discountedPrice = getDiscountedPrice(item.cost || 0);
     
     addToast({
       title: "Cosmetic Purchased!",
@@ -137,7 +137,7 @@ const FireSaleEvent: React.FC<FireSaleEventProps> = ({
           <TabsContent key={category} value={category} className="animate-fade-in">
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 max-h-80 overflow-y-auto p-1">
               {getCosmeticsForCategory().map((item) => {
-                const discountedPrice = getDiscountedPrice(item.cost);
+                const discountedPrice = getDiscountedPrice(item.cost || 0);
                 
                 return (
                   <div 
@@ -167,11 +167,11 @@ const FireSaleEvent: React.FC<FireSaleEventProps> = ({
                         ) : (
                           <MedievalIcon 
                             name={
-                              item.category === 'borders' ? 'scroll' :
-                              item.category === 'backgrounds' ? 'castle' :
-                              item.category === 'badges' ? 'medal' :
-                              item.category === 'titles' ? 'crown' :
-                              item.category === 'effects' ? 'sparkles' :
+                              String(item.category) === 'border' ? 'scroll' :
+                              String(item.category) === 'background' ? 'castle' :
+                              String(item.category) === 'badge' ? 'medal' :
+                              String(item.category) === 'title' ? 'crown' :
+                              String(item.category) === 'effect' ? 'sparkles' :
                               'star'
                             } 
                             size="md"
@@ -196,7 +196,7 @@ const FireSaleEvent: React.FC<FireSaleEventProps> = ({
                         <p className="text-xs text-white/60 line-clamp-1">{item.description}</p>
                         <div className="mt-1 flex items-center justify-between">
                           <div className="flex items-center">
-                            <span className="text-xs line-through text-white/40">${item.cost.toFixed(2)}</span>
+                            <span className="text-xs line-through text-white/40">${(item.cost || 0).toFixed(2)}</span>
                             <span className="ml-2 text-sm font-bold text-royal-gold">${discountedPrice.toFixed(2)}</span>
                           </div>
                           <div className="text-xs px-1.5 py-0.5 rounded-full bg-white/10 capitalize">
@@ -220,14 +220,14 @@ const FireSaleEvent: React.FC<FireSaleEventProps> = ({
         
         {selectedItem && (
           <PaymentModal
-            amount={getDiscountedPrice(selectedItem.cost)}
+            amount={getDiscountedPrice(selectedItem.cost || 0)}
             onSuccess={() => handlePurchase(selectedItem)}
             title={`Purchase ${selectedItem.name}`}
             description={`Acquire this ${selectedItem.rarity} ${selectedItem.category} at ${discountPercentage}% off!`}
             trigger={
               <Button className="bg-gradient-to-r from-royal-crimson to-amber-600 hover:opacity-90 animate-pulse-slow">
                 <Flame className="mr-2 h-4 w-4" />
-                <span>Buy for ${getDiscountedPrice(selectedItem.cost).toFixed(2)}</span>
+                <span>Buy for ${getDiscountedPrice(selectedItem.cost || 0).toFixed(2)}</span>
               </Button>
             }
           />

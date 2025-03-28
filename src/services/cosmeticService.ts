@@ -1,19 +1,20 @@
 
-import { CosmeticItem, CosmeticRarity, CosmeticCategory, CosmeticType } from '@/types/cosmetics';
+import { CosmeticItem, CosmeticRarity, CosmeticCategory, CosmeticType, CosmeticPlacement } from '@/types/cosmetics';
 
 export const getCosmeticById = (id: string): CosmeticItem => {
   // Mock implementation
   return {
     id,
     name: `Cosmetic ${id}`,
-    category: 'borders' as CosmeticCategory,
+    category: 'border' as CosmeticCategory,
     type: 'profile' as CosmeticType,
     rarity: 'rare' as CosmeticRarity,
     description: 'A beautiful cosmetic item',
     imageUrl: '/assets/cosmetics/borders/rare.png',
     imageSrc: '/assets/cosmetics/borders/rare.png', // For backward compatibility
     cssClass: 'border-royal-gold', // For backward compatibility
-    cost: 0
+    cost: 0,
+    placement: 'profile' as CosmeticPlacement
   };
 };
 
@@ -24,7 +25,7 @@ export const awardRandomCosmetic = (
 ): { cosmeticItem: CosmeticItem, rarity: CosmeticRarity } => {
   // Mock implementation
   const rarities: CosmeticRarity[] = ['common', 'uncommon', 'rare', 'epic', 'legendary'];
-  const categories: CosmeticCategory[] = ['borders', 'colors', 'fonts', 'emojis', 'titles', 'backgrounds', 'effects'];
+  const categories: CosmeticCategory[] = ['border', 'color', 'font', 'emoji', 'title', 'background', 'effect'];
   
   // Determine rarity based on amount spent
   let rarityWeights = [
@@ -91,11 +92,12 @@ export const awardRandomCosmetic = (
     category: selectedCategory,
     type: 'profile' as CosmeticType,
     rarity: selectedRarity,
-    description: `A ${selectedRarity} ${selectedCategory.slice(0, -1)} effect.`,
-    imageUrl: `/assets/cosmetics/${selectedCategory}/${selectedRarity}.png`,
-    imageSrc: `/assets/cosmetics/${selectedCategory}/${selectedRarity}.png`, // For backward compatibility
-    cssClass: `${selectedRarity}-${selectedCategory.slice(0, -1)}`, // For backward compatibility
-    cost: 0
+    description: `A ${selectedRarity} ${selectedCategory} effect.`,
+    imageUrl: `/assets/cosmetics/${selectedCategory}s/${selectedRarity}.png`,
+    imageSrc: `/assets/cosmetics/${selectedCategory}s/${selectedRarity}.png`, // For backward compatibility
+    cssClass: `${selectedRarity}-${selectedCategory}`, // For backward compatibility
+    cost: 0,
+    placement: 'profile' as CosmeticPlacement
   };
   
   return { cosmeticItem, rarity: selectedRarity };

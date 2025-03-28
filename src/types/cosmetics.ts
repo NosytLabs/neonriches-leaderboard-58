@@ -53,6 +53,27 @@ export interface CosmeticItem {
   imageSrc?: string;
 }
 
+// User Cosmetics
+export interface UserCosmetics {
+  borders: string[];
+  colors: string[];
+  fonts: string[];
+  emojis: string[];
+  titles: string[];
+  backgrounds: string[];
+  effects: string[];
+  badges: string[];
+  themes: string[];
+  activeBorder?: string | null;
+  activeColor?: string | null;
+  activeFont?: string | null;
+  activeBackground?: string | null;
+  activeEffect?: string | null;
+  activeBadge?: string | null;
+  activeTheme?: string | null;
+  foundersPass?: boolean;
+}
+
 // Color utilities for rarities
 export const getRarityColor = (rarity: CosmeticRarity): string => {
   switch (rarity) {
@@ -107,6 +128,10 @@ export const getRarityBorderColor = (rarity: CosmeticRarity): string => {
 
 export const getCosmeticPreviewStyle = (item: CosmeticItem): React.CSSProperties => {
   return {};
+};
+
+export const formatCategoryName = (category: string): string => {
+  return category.charAt(0).toUpperCase() + category.slice(1);
 };
 
 export default CosmeticItem;

@@ -1,175 +1,150 @@
 
-import { MockeryTier } from '@/types/mockery';
+export type MockeryAction = 'tomatoes' | 'eggs' | 'stocks' | 'silence' | 'courtJester';
+export type ExtendedMockeryAction = MockeryAction | 'protected' | 'immune';
 
-// Tier color mapping utility
-export const getMockeryTierColor = (tier: MockeryTier): string => {
-  switch (tier) {
-    case 'common':
-      return 'text-gray-300';
-    case 'uncommon':
-      return 'text-green-400';
-    case 'rare':
-      return 'text-blue-400';
-    case 'epic':
-      return 'text-purple-400';
-    case 'legendary':
-      return 'text-royal-gold';
+export interface MockeryTier {
+  id: string;
+  name: string;
+  label: string;
+  cost: number;
+  color: string;
+  borderColor: string;
+  textColor: string;
+}
+
+export interface MockUser {
+  id: string;
+  username: string;
+  displayName?: string;
+  profileImage?: string;
+  mockedBy?: string[];
+  mockeryCount: number;
+  isShamed: boolean;
+  isProtected: boolean;
+  protectedUntil?: Date;
+  lastMocked?: Date;
+  tier?: string;
+}
+
+export const getMockeryActionIcon = (action: MockeryAction | ExtendedMockeryAction): string => {
+  switch (action) {
+    case 'tomatoes':
+      return 'tomato';
+    case 'eggs':
+      return 'egg';
+    case 'stocks':
+      return 'stocks';
+    case 'silence':
+      return 'message-square-off';
+    case 'courtJester':
+      return 'drama';
+    case 'protected':
+      return 'shield';
+    case 'immune':
+      return 'crown';
     default:
-      return 'text-white';
+      return 'alert-circle';
   }
 };
 
-// Tier label utility
-export const getMockeryTierLabel = (tier: MockeryTier): string => {
+export const getMockeryTierColor = (tier: string): string => {
   switch (tier) {
-    case 'common':
+    case 'tomatoes':
+      return 'text-red-500';
+    case 'eggs':
+      return 'text-yellow-200';
+    case 'stocks':
+      return 'text-amber-700';
+    case 'silence':
+      return 'text-blue-500';
+    case 'courtJester':
+      return 'text-emerald-500';
+    default:
+      return 'text-white/70';
+  }
+};
+
+export const getMockeryTierBorder = (tier: string): string => {
+  switch (tier) {
+    case 'tomatoes':
+      return 'border-red-500/30';
+    case 'eggs':
+      return 'border-yellow-200/30';
+    case 'stocks':
+      return 'border-amber-700/30';
+    case 'silence':
+      return 'border-blue-500/30';
+    case 'courtJester':
+      return 'border-emerald-500/30';
+    default:
+      return 'border-white/10';
+  }
+};
+
+export const getMockeryTierBg = (tier: string): string => {
+  switch (tier) {
+    case 'tomatoes':
+      return 'bg-red-500/10';
+    case 'eggs':
+      return 'bg-yellow-200/10';
+    case 'stocks':
+      return 'bg-amber-700/10';
+    case 'silence':
+      return 'bg-blue-500/10';
+    case 'courtJester':
+      return 'bg-emerald-500/10';
+    default:
+      return 'bg-white/5';
+  }
+};
+
+export const getMockeryTierText = (tier: string): string => {
+  switch (tier) {
+    case 'tomatoes':
+      return 'Tomato Mockery';
+    case 'eggs':
+      return 'Egg Assault';
+    case 'stocks':
+      return 'Stocks Punishment';
+    case 'silence':
+      return 'Royal Silence';
+    case 'courtJester':
+      return 'Court Jester';
+    default:
+      return 'Unknown Tier';
+  }
+};
+
+export const getMockeryTierLabel = (tier: string): string => {
+  switch (tier) {
+    case 'tomatoes':
       return 'Common';
-    case 'uncommon':
+    case 'eggs':
       return 'Uncommon';
-    case 'rare':
+    case 'stocks':
       return 'Rare';
-    case 'epic':
+    case 'silence':
       return 'Epic';
-    case 'legendary':
+    case 'courtJester':
       return 'Legendary';
     default:
       return 'Unknown';
   }
 };
 
-// Action types
-export type MockeryAction = 
-  | 'shame'
-  | 'mock'
-  | 'jester'
-  | 'crown'
-  | 'burn'
-  | 'frozen'
-  | 'slime'
-  | 'glitter';
-
-export interface ExtendedMockeryAction {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  icon: string;
-  tier: MockeryTier;
-  duration: number;
-  category: string;
-  effect: string;
-  cssEffects: {
-    border?: string;
-    text?: string;
-    background?: string;
-  };
-}
-
-// Mockery action utilities
-export const getMockeryActionIcon = (action: MockeryAction | string): string => {
-  switch (action) {
-    case 'shame':
-      return 'Flame';
-    case 'mock':
-      return 'Laugh';
-    case 'jester':
-      return 'Drama';
-    case 'crown':
-      return 'Crown';
-    case 'burn':
-      return 'Flame';
-    case 'frozen':
-      return 'Snowflake';
-    case 'slime':
-      return 'Droplets';
-    case 'glitter':
-      return 'Sparkles';
-    default:
-      return 'Laugh';
-  }
-};
-
-export const getMockeryActionTitle = (action: MockeryAction | string): string => {
-  switch (action) {
-    case 'shame':
-      return 'Public Shaming';
-    case 'mock':
-      return 'Royal Mockery';
-    case 'jester':
-      return 'Jester\'s Jest';
-    case 'crown':
-      return 'Fake Crown';
-    case 'burn':
-      return 'Royal Burn';
-    case 'frozen':
-      return 'Frozen Royalty';
-    case 'slime':
-      return 'Royal Slime';
-    case 'glitter':
-      return 'Gold Glitter';
-    default:
-      return 'Mockery';
-  }
-};
-
-export const getMockeryActionDescription = (action: MockeryAction | string): string => {
-  switch (action) {
-    case 'shame':
-      return 'Publicly shame this user for 24 hours with a flaming animation on their profile';
-    case 'mock':
-      return 'Add a mocking jester to this user\'s profile for 24 hours';
-    case 'jester':
-      return 'Turn this user into a jester for 24 hours';
-    case 'crown':
-      return 'Add a ridiculous fake crown to this user\'s profile for 24 hours';
-    case 'burn':
-      return 'Add burning effects to this user\'s profile for 24 hours';
-    case 'frozen':
-      return 'Freeze this user\'s profile for 24 hours';
-    case 'slime':
-      return 'Cover this user\'s profile in royal slime for 24 hours';
-    case 'glitter':
-      return 'Cover this user\'s profile in tacky gold glitter for 24 hours';
-    default:
-      return 'Apply a mockery effect to this user\'s profile for 24 hours';
-  }
-};
-
-export const getMockeryActionPrice = (action: MockeryAction | string): number => {
-  switch (action) {
-    case 'shame':
+export const getMockeryCost = (tier: MockeryAction): number => {
+  switch (tier) {
+    case 'tomatoes':
       return 0.5;
-    case 'mock':
-      return 0.5;
-    case 'jester':
-      return 1.0;
-    case 'crown':
-      return 1.0;
-    case 'burn':
-      return 2.0;
-    case 'frozen':
-      return 2.0;
-    case 'slime':
-      return 5.0;
-    case 'glitter':
-      return 5.0;
+    case 'eggs':
+      return 1;
+    case 'stocks':
+      return 2.5;
+    case 'silence':
+      return 5;
+    case 'courtJester':
+      return 10;
     default:
-      return 1.0;
+      return 0.5;
   }
-};
-
-export const hasWeeklyDiscount = (action: MockeryAction | string): boolean => {
-  // This would check if there's a weekly special discount
-  return ['mock', 'jester', 'crown'].includes(action as string);
-};
-
-export const getDiscountedMockeryPrice = (action: MockeryAction | string): number => {
-  if (hasWeeklyDiscount(action)) {
-    return getMockeryActionPrice(action) * 0.75; // 25% discount
-  }
-  return getMockeryActionPrice(action);
-};
-
-export const getMockeryActionLabel = (action: MockeryAction | string): string => {
-  return getMockeryActionTitle(action);
 };

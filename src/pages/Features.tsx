@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { 
@@ -30,6 +31,7 @@ import RoyalDivider from '@/components/ui/royal-divider';
 import { useToastContext } from '@/contexts/ToastContext';
 import { useAuth } from '@/contexts/auth';
 import { motion } from 'framer-motion';
+import { stringToBoolean } from '@/utils/booleanUtils';
 
 const Features = () => {
   const { addToast } = useToastContext();
@@ -226,16 +228,16 @@ const Features = () => {
     <Layout
       title="Features & Benefits"
       description="Explore the unique features of SpendThrone, where your status is determined solely by how much you spend."
-      fullHeight
-      transparentHeader
-      disablePadding
+      fullHeight={true}
+      transparentHeader={true}
+      disablePadding={true}
     >
       <HeroSection
         title="Royal Features"
         subtitle="Explore the unique mechanics and benefits of our satirical platform"
         background="gradient"
         fullHeight={false}
-        wave
+        wave={true}
         actions={
           <>
             <Link to={user ? "/dashboard" : "/auth"}>
@@ -365,7 +367,7 @@ const Features = () => {
       <RoyalSection className="py-16 bg-gradient-to-b from-bg-dark to-bg-dark-lighter">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
-            <MedievalIcon name="crown" size="lg" color="gold" animate="glow" className="mb-4 mx-auto" />
+            <MedievalIcon name="crown" size="lg" color="gold" animate={true} className="mb-4 mx-auto" />
             <h2 className="text-3xl font-bold royal-gradient mb-4 font-royal">
               Royal Tier System
             </h2>
@@ -493,7 +495,7 @@ const Features = () => {
                       index === 2 ? 'royalNavy' : 
                       'glass'
                     }
-                    shimmer
+                    shimmer={true}
                     className="w-full"
                     onClick={() => {
                       addToast({

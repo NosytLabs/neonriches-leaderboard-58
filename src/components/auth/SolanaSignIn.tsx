@@ -32,10 +32,7 @@ const SolanaSignIn: React.FC<SolanaSignInProps> = ({ onSuccess }) => {
       }
       
       // Generate a message to sign
-      const message = generateSignatureMessage(
-        publicKey.toString(),
-        'solana_user'
-      );
+      const message = generateSignatureMessage(publicKey.toString());
       
       // Ask user to sign the message
       const signature = await signMessage(message);

@@ -1,4 +1,4 @@
-import { CosmeticItem, CosmeticCategory, CosmeticRarity, CosmeticType } from '@/types/cosmetics';
+import { CosmeticItem, CosmeticCategory, CosmeticRarity, CosmeticType, CosmeticPlacement } from '@/types/cosmetics';
 
 // Mock cosmetics data
 export const allCosmetics: CosmeticItem[] = [
@@ -7,51 +7,56 @@ export const allCosmetics: CosmeticItem[] = [
     id: "border-royal-gold",
     name: "Royal Gold Border",
     description: "A luxurious gold border fit for royalty",
-    category: "borders" as CosmeticCategory,
+    category: "border" as CosmeticCategory,
     type: "profile" as CosmeticType,
     rarity: "legendary" as CosmeticRarity,
     cost: 10000,
-    cssClass: "border-royal-gold"
+    cssClass: "border-royal-gold",
+    placement: "profile" as CosmeticPlacement
   },
   {
     id: "border-royal-purple",
     name: "Royal Purple Border",
     description: "An elegant purple border with royal flair",
-    category: "borders" as CosmeticCategory,
+    category: "border" as CosmeticCategory,
     type: "profile" as CosmeticType,
     rarity: "epic" as CosmeticRarity,
     cost: 5000,
-    cssClass: "border-royal-purple"
+    cssClass: "border-royal-purple",
+    placement: "profile" as CosmeticPlacement
   },
   {
     id: "border-royal-navy",
     name: "Royal Navy Border",
     description: "A deep navy border with a royal touch",
-    category: "borders" as CosmeticCategory,
+    category: "border" as CosmeticCategory,
     type: "profile" as CosmeticType,
     rarity: "rare" as CosmeticRarity,
     cost: 2500,
-    cssClass: "border-royal-navy"
+    cssClass: "border-royal-navy",
+    placement: "profile" as CosmeticPlacement
   },
   {
     id: "border-emerald",
     name: "Emerald Border",
     description: "A vibrant emerald border with a royal touch",
-    category: "borders" as CosmeticCategory,
+    category: "border" as CosmeticCategory,
     type: "profile" as CosmeticType,
     rarity: "uncommon" as CosmeticRarity,
     cost: 1000,
-    cssClass: "border-emerald"
+    cssClass: "border-emerald",
+    placement: "profile" as CosmeticPlacement
   },
   {
     id: "border-silver",
     name: "Silver Border",
     description: "A sleek silver border to highlight your profile",
-    category: "borders" as CosmeticCategory,
+    category: "border" as CosmeticCategory,
     type: "profile" as CosmeticType,
     rarity: "common" as CosmeticRarity,
     cost: 500,
-    cssClass: "border-silver"
+    cssClass: "border-silver",
+    placement: "profile" as CosmeticPlacement
   },
   
   // COLORS
@@ -367,4 +372,7 @@ export const getCosmeticById = (id: string): CosmeticItem | undefined => {
 };
 
 // Mock data for Fire Sale event
-export const mockedCosmeticsData = allCosmetics.slice(0, 10);
+export const mockedCosmeticsData: CosmeticItem[] = allCosmetics.map(item => ({
+  ...item,
+  placement: item.placement || 'profile' as CosmeticPlacement
+})).slice(0, 10);
