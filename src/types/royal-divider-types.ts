@@ -7,7 +7,9 @@ export type RoyalDividerVariant =
   | 'dashed'
   | 'scroll'
   | 'quill'
-  | 'treasure';
+  | 'treasure'
+  | 'line'
+  | 'crown';
 
 export type RoyalButtonVariant = 
   | 'royal'

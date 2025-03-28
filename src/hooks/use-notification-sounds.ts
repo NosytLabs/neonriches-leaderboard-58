@@ -1,15 +1,11 @@
 
-import { useEffect, useRef } from 'react';
-
-type SoundType = 'notification' | 'success' | 'error' | 'shame' | 'purchase' | 'levelUp' | 'swordClash';
-
-interface SoundMap {
-  [key: string]: HTMLAudioElement;
-}
+import { useEffect, useRef, useCallback, useState } from 'react';
+import type { SoundType } from './sounds/types';
 
 const useNotificationSounds = () => {
-  const sounds = useRef<SoundMap>({});
+  const sounds = useRef<Record<string, HTMLAudioElement>>({});
   const isMounted = useRef(true);
+  const [isMuted, setIsMuted] = useState(false);
 
   // Initialize audio objects
   useEffect(() => {
@@ -21,7 +17,22 @@ const useNotificationSounds = () => {
       shame: '/sounds/shame.mp3',
       purchase: '/sounds/purchase.mp3',
       levelUp: '/sounds/level-up.mp3',
-      swordClash: '/sounds/sword-clash.mp3'
+      swordClash: '/sounds/sword-clash.mp3',
+      click: '/sounds/click.mp3',
+      hover: '/sounds/hover.mp3',
+      coinDrop: '/sounds/coin-drop.mp3',
+      pageTransition: '/sounds/page-transition.mp3',
+      parchmentUnfurl: '/sounds/parchment-unfurl.mp3',
+      seal: '/sounds/seal.mp3',
+      royalAnnouncement: '/sounds/royal-announcement.mp3',
+      reward: '/sounds/reward.mp3',
+      wish: '/sounds/wish.mp3',
+      advertisement: '/sounds/advertisement.mp3',
+      pageChange: '/sounds/page-change.mp3',
+      trumpet: '/sounds/trumpet.mp3',
+      medallion: '/sounds/medallion.mp3',
+      noblesLaugh: '/sounds/nobles-laugh.mp3',
+      inkScribble: '/sounds/ink-scribble.mp3'
     };
 
     // Create audio objects for each sound
@@ -45,7 +56,9 @@ const useNotificationSounds = () => {
     };
   }, []);
 
-  const playSound = (type: SoundType, volume = 0.5) => {
+  const playSound = useCallback((type: SoundType, volume = 0.5) => {
+    if (isMuted) return;
+    
     try {
       if (isMounted.current && sounds.current[type]) {
         const audio = sounds.current[type];
@@ -65,9 +78,34 @@ const useNotificationSounds = () => {
     } catch (error) {
       console.error(`Error playing sound: ${type}`, error);
     }
-  };
+  }, [isMuted]);
 
-  return { playSound };
+  const toggleMute = useCallback(() => {
+    setIsMuted(prevMuted => !prevMuted);
+  }, []);
+
+  const preloadSounds = useCallback(() => {
+    console.log('Preloading sounds');
+    const commonSounds: SoundType[] = ['click', 'success', 'notification'];
+    
+    commonSounds.forEach(type => {
+      try {
+        if (sounds.current[type]) {
+          const audio = sounds.current[type];
+          audio.load();
+        }
+      } catch (error) {
+        console.error(`Error preloading sound ${type}:`, error);
+      }
+    });
+  }, []);
+
+  return { 
+    playSound,
+    isMuted,
+    toggleMute,
+    preloadSounds
+  };
 };
 
 export default useNotificationSounds;

@@ -1,8 +1,11 @@
 
 import { useState, useEffect, createContext, useContext } from 'react';
-import { toast as toastFunction } from "@/components/ui/use-toast";
+import { toast as originalToastFunction } from "@/components/ui/use-toast";
 import { ExtendedToastProps, ToasterToast } from "@/types/toast-extended";
 import useNotificationSounds from './use-notification-sounds';
+
+// Create a mutable reference to the toast function that can be overridden
+let toastFunction = originalToastFunction;
 
 const ToastContext = createContext({
   toasts: [] as ToasterToast[],
@@ -29,7 +32,7 @@ export const useToast = () => {
           playSound('success', 0.5);
           break;
         case 'royal':
-          playSound('royalAnnouncement', 0.3);
+          playSound('notification', 0.3);
           break;
         default:
           playSound('notification', 0.5);
@@ -43,10 +46,10 @@ export const useToast = () => {
   return { ...context, toast };
 };
 
-export const setToastFunction = (fn: typeof toastFunction) => {
+export const setToastFunction = (fn: typeof originalToastFunction) => {
   // This is a helper function to set the toast function
   // It's used to override the default toast function in tests
   toastFunction = fn;
 };
 
-export { toast, toastFunction };
+export { toastFunction as toast };

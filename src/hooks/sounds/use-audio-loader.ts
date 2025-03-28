@@ -24,7 +24,9 @@ const SOUND_PATHS: Record<SoundType, string> = {
   seal: '/sounds/seal.mp3', 
   trumpet: '/sounds/trumpet.mp3',
   noblesLaugh: '/sounds/nobles-laugh.mp3',
-  inkScribble: '/sounds/ink-scribble.mp3'
+  inkScribble: '/sounds/ink-scribble.mp3',
+  hover: '/sounds/hover.mp3',
+  advertisement: '/sounds/advertisement.mp3'
 };
 
 // Sound categories for different user preferences
@@ -108,10 +110,24 @@ export const useAudioLoader = (
     };
   }, [soundsToPreload]);
   
+  const playSound = (type: SoundType, volumeMultiplier = 1) => {
+    if (audioElements[type]) {
+      try {
+        const audio = audioElements[type];
+        audio.volume = Math.min(1, volumeMultiplier);
+        audio.currentTime = 0;
+        audio.play().catch(e => console.error('Error playing sound:', e));
+      } catch (e) {
+        console.error('Error playing sound:', e);
+      }
+    }
+  };
+  
   return {
     loadedSounds,
     isLoading,
     error,
-    audioElements
+    audioElements,
+    playSound
   };
 };

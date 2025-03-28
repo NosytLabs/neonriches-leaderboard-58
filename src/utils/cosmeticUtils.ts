@@ -1,30 +1,5 @@
 
-export type CosmeticRarity = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
-export type CosmeticCategory = 'border' | 'color' | 'font' | 'emoji' | 'background' | 'effect' | 'title' | 'badge' | 'theme';
-
-export interface CosmeticItem {
-  id: string;
-  name: string;
-  description: string;
-  type: 'border' | 'color' | 'font' | 'emoji' | 'background' | 'effect' | 'title';
-  category?: CosmeticCategory; // For backward compatibility
-  rarity: CosmeticRarity;
-  cost: number;
-  price?: number; // For backward compatibility
-  imageUrl?: string;
-  imageSrc?: string;
-  preview?: string;
-}
-
-export interface CosmeticCollection {
-  borders: CosmeticItem[];
-  colors: CosmeticItem[];
-  fonts: CosmeticItem[];
-  emojis: CosmeticItem[];
-  backgrounds: CosmeticItem[];
-  effects: CosmeticItem[];
-  titles: CosmeticItem[];
-}
+import { CosmeticRarity, CosmeticCategory } from '@/types/cosmetics';
 
 export function getRarityColor(rarity: CosmeticRarity): string {
   switch (rarity) {
@@ -38,6 +13,8 @@ export function getRarityColor(rarity: CosmeticRarity): string {
       return 'text-purple-400';
     case 'legendary':
       return 'text-royal-gold';
+    default:
+      return 'text-gray-300';
   }
 }
 
@@ -53,6 +30,8 @@ export function getRarityBgColor(rarity: CosmeticRarity): string {
       return 'bg-purple-900/50';
     case 'legendary':
       return 'bg-amber-900/50';
+    default:
+      return 'bg-gray-800/50';
   }
 }
 
@@ -68,6 +47,8 @@ export function getRarityBorderColor(rarity: CosmeticRarity): string {
       return 'border-purple-500/50';
     case 'legendary':
       return 'border-royal-gold/50';
+    default:
+      return 'border-gray-500/50';
   }
 }
 
@@ -83,6 +64,8 @@ export function getCosmeticPreviewStyle(rarity: CosmeticRarity): string {
       return 'bg-purple-900/30 border border-purple-500/50';
     case 'legendary':
       return 'bg-amber-900/30 border border-royal-gold/50';
+    default:
+      return 'bg-gray-700/50 border border-gray-500/50';
   }
 }
 
@@ -99,5 +82,5 @@ export function formatCategoryName(category: CosmeticCategory): string {
     theme: 'Themes'
   };
   
-  return categoryMap[category] || category.charAt(0).toUpperCase() + category.slice(1);
+  return categoryMap[category] || (typeof category === 'string' ? category.charAt(0).toUpperCase() + category.slice(1) : 'Unknown');
 }

@@ -15,6 +15,13 @@ export const premiumSoundPacks: PremiumSoundPackDetails[] = [
       'parchmentUnfurl',
       'seal'
     ],
+    features: [
+      'Royal fanfare sounds',
+      'Trumpet announcements',
+      'Medal ceremonies',
+      'Parchment unfurling',
+      'Wax seal impressions'
+    ],
     previewSound: 'trumpet',
     isPurchased: false
   },
@@ -29,6 +36,12 @@ export const premiumSoundPacks: PremiumSoundPackDetails[] = [
       'noblesLaugh',
       'inkScribble'
     ],
+    features: [
+      'Sword clashing sounds',
+      'Page turning effects',
+      'Noble laughter',
+      'Ink scribbling on parchment'
+    ],
     previewSound: 'swordClash',
     isPurchased: false
   },
@@ -41,6 +54,12 @@ export const premiumSoundPacks: PremiumSoundPackDetails[] = [
       'noblesLaugh',
       'shame',
       'wish'
+    ],
+    features: [
+      'Jester bell sounds',
+      'Comedic interludes',
+      'Court laughter',
+      'Silly musical stings'
     ],
     previewSound: 'noblesLaugh',
     isPurchased: false
@@ -56,6 +75,12 @@ export const premiumSoundPacks: PremiumSoundPackDetails[] = [
       'inkScribble',
       'medallion'
     ],
+    features: [
+      'Delicate parchment sounds',
+      'Subtle ambience',
+      'Refined audio cues',
+      'Elegant notifications'
+    ],
     previewSound: 'parchmentUnfurl',
     isPurchased: false
   },
@@ -68,6 +93,12 @@ export const premiumSoundPacks: PremiumSoundPackDetails[] = [
       'wish',
       'levelUp',
       'purchase'
+    ],
+    features: [
+      'Magical chimes',
+      'Mystical elements',
+      'Enchanted sounds',
+      'Fantasy ambience'
     ],
     previewSound: 'wish',
     isPurchased: false
@@ -87,6 +118,8 @@ export const premiumSoundAssets: Record<SoundType, string> = {
   purchase: '/sounds/premium/purchase-premium.mp3',
   shame: '/sounds/premium/shame-premium.mp3',
   pageChange: '/sounds/premium/page-change-premium.mp3',
+  hover: '/sounds/premium/hover-premium.mp3',
+  advertisement: '/sounds/premium/advertisement-premium.mp3',
   
   // Royal pack sounds
   royalAnnouncement: '/sounds/premium/royal-announcement-premium.mp3',
@@ -130,5 +163,7 @@ export const premiumVolumePresets: Record<SoundType, number> = {
   seal: 0.4,
   trumpet: 0.6,
   noblesLaugh: 0.5,
-  inkScribble: 0.3
+  inkScribble: 0.3,
+  hover: 0.2,
+  advertisement: 0.4
 };

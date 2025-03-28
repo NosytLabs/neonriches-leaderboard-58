@@ -1,97 +1,86 @@
 
-import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
-import { getSpendingTierLabel, getSpendingTierBadgeClass } from "@/lib/colors";
-import { UserTier } from "@/types/user";
-import { Check, Crown, Shield, Award } from "lucide-react";
+import React from 'react';
+import { cn } from '@/lib/utils';
+
+type BadgeVariant = 'default' | 'outline' | 'success' | 'warning' | 'danger' | 'info' | 'royal';
+type BadgeSize = 'sm' | 'md' | 'lg';
 
 interface RegalBadgeProps {
-  tier: UserTier;
+  variant?: BadgeVariant;
+  size?: BadgeSize;
   className?: string;
-  size?: 'sm' | 'default' | 'lg';
-  showLabel?: boolean;
-  isVerified?: boolean;
-  isFounder?: boolean;
-  isVIP?: boolean;
+  children: React.ReactNode;
+  style?: React.CSSProperties;
+  data?: { [key: string]: string };
+  id?: string;
+  hidden?: boolean;
+  onClick?: () => void;
 }
 
-const RegalBadge = ({ 
-  tier, 
-  className, 
-  size = 'default', 
-  showLabel = true,
-  isVerified = false,
-  isFounder = false,
-  isVIP = false
-}: RegalBadgeProps) => {
-  const tierLabel = getSpendingTierLabel(tier);
-  const badgeClass = getSpendingTierBadgeClass(tier);
+const RegalBadge: React.FC<RegalBadgeProps> = ({
+  variant = 'default',
+  size = 'md',
+  className,
+  children,
+  style,
+  data,
+  id,
+  hidden,
+  onClick
+}) => {
+  // Convert string id to a number for numeric operations if needed
+  const parsedId = id ? parseInt(id) : undefined;
   
-  const sizeClass = size === 'sm' 
-    ? 'px-2 py-0.5 text-xs' 
-    : size === 'lg' 
-      ? 'px-4 py-1.5 text-base' 
-      : 'px-3 py-1 text-sm';
-
-  // Add icons based on special status
-  const renderIcon = () => {
-    if (isFounder) {
-      return (
-        <div className="mr-1.5 flex items-center justify-center">
-          <div className="relative">
-            <Crown size={size === 'sm' ? 12 : size === 'lg' ? 20 : 16} className="text-royal-gold" />
-            <div className="absolute inset-0 animate-pulse-slow opacity-60 text-royal-gold">
-              <Crown size={size === 'sm' ? 12 : size === 'lg' ? 20 : 16} />
-            </div>
-          </div>
-        </div>
-      );
-    }
-    
-    if (isVIP) {
-      return (
-        <div className="mr-1.5 flex items-center justify-center">
-          <Shield size={size === 'sm' ? 12 : size === 'lg' ? 20 : 16} className="text-royal-purple" />
-        </div>
-      );
-    }
-    
-    if (isVerified) {
-      return (
-        <div className="mr-1.5 flex items-center justify-center">
-          <div className="relative bg-royal-blue rounded-full p-0.5">
-            <Check size={size === 'sm' ? 8 : size === 'lg' ? 14 : 10} className="text-white" />
-          </div>
-        </div>
-      );
-    }
-    
-    return null;
+  // Size classes
+  const sizeClasses = {
+    sm: 'px-2 py-0.5 text-xs',
+    md: 'px-2.5 py-0.5 text-sm',
+    lg: 'px-3 py-1 text-base'
   };
-
+  
+  // Variant classes
+  const variantClasses = {
+    default: 'bg-white/10 text-white',
+    outline: 'bg-transparent border border-white/20 text-white',
+    success: 'bg-green-600/20 text-green-400 border border-green-500/30',
+    warning: 'bg-yellow-600/20 text-yellow-400 border border-yellow-500/30',
+    danger: 'bg-red-600/20 text-red-400 border border-red-500/30',
+    info: 'bg-blue-600/20 text-blue-400 border border-blue-500/30',
+    royal: 'bg-royal-gold/20 text-royal-gold border border-royal-gold/30'
+  };
+  
+  // Get the animation delay based on ID if provided
+  const getAnimationDelay = () => {
+    if (parsedId === undefined) return '0s';
+    return `${(parsedId % 5) * 0.1}s`;
+  };
+  
+  // Get the pulse duration based on ID if provided
+  const getPulseDuration = () => {
+    if (parsedId === undefined) return '2s';
+    return `${2 + (parsedId % 3) * 0.5}s`;
+  };
+  
   return (
-    <Badge 
+    <span
       className={cn(
-        badgeClass, 
-        sizeClass, 
-        "flex items-center", 
-        isFounder ? "animate-border-pulse-flame" : "",
+        'inline-flex items-center justify-center rounded-full font-medium transition-colors',
+        sizeClasses[size],
+        variantClasses[variant],
+        onClick && 'cursor-pointer hover:bg-opacity-80',
+        hidden && 'hidden',
         className
       )}
+      style={{
+        ...style,
+        animationDelay: getAnimationDelay(),
+        animationDuration: getPulseDuration()
+      }}
+      onClick={onClick}
+      {...data}
     >
-      {renderIcon()}
-      {showLabel ? tierLabel : tier.charAt(0).toUpperCase() + tier.slice(1)}
-      
-      {/* Gold seal for founder */}
-      {isFounder && (
-        <div className="ml-1.5 relative">
-          <Award 
-            size={size === 'sm' ? 12 : size === 'lg' ? 18 : 14} 
-            className="text-royal-gold animate-pulse-slow" 
-          />
-        </div>
-      )}
-    </Badge>
+      {children}
+    </span>
   );
 };
 

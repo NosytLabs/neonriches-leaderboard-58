@@ -1,5 +1,4 @@
 
-// Authentication form types
 export interface LoginFormProps {
   onSwitchToRegister?: () => void;
   onSuccess?: () => void;
@@ -10,10 +9,9 @@ export interface RegisterFormProps {
   onSuccess?: () => void;
 }
 
-// Payment Modal type
 export interface PaymentModalProps {
   amount: number;
-  onSuccess: (amount: number) => void | Promise<void>;
+  onSuccess: (amount: number) => void;
   title?: string;
   description?: string;
   trigger?: React.ReactNode;

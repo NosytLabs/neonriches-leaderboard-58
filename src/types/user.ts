@@ -107,6 +107,7 @@ export interface UserProfile {
       email: boolean;
       push: boolean;
       in_app: boolean;
+      rankChanges?: boolean;
     };
   };
 }
