@@ -43,7 +43,9 @@ const createDefaultUser = (): UserProfile => {
       impressions: 1250,
       clicks: 75,
       conversions: 5,
-      ctr: 6.0
+      ctr: 6.0,
+      sources: { 'direct': 800, 'social': 300, 'referral': 150 },
+      referrers: { 'twitter': 200, 'facebook': 100, 'instagram': 50 }
     },
     socialLinks: [
       { platform: 'Twitter', url: 'https://twitter.com/example', clicks: 12 },
@@ -77,7 +79,9 @@ const registerUser = (email: string, username: string, password: string): UserPr
       impressions: 0,
       clicks: 0,
       conversions: 0,
-      ctr: 0
+      ctr: 0,
+      sources: {},
+      referrers: {}
     },
     socialLinks: []
   };

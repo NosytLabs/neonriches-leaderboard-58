@@ -1,7 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Helmet } from 'react-helmet-async';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
@@ -9,12 +8,12 @@ import { Edit, User, ChevronLeft } from 'lucide-react';
 import ProfileViewer from '@/components/profile/ProfileViewer';
 import { Card, CardContent } from '@/components/ui/card';
 import { useAuth } from '@/contexts/AuthContext';
-import ProfileSettings from '@/components/profile/ProfileSettings';
 import { trackProfileInteraction } from '@/services/walletService';
 import ProfileBoost from '@/components/profile/ProfileBoost';
 import ProfileAnalytics from '@/components/profile/ProfileAnalytics';
 import MarketingProfile from '@/components/profile/MarketingProfile';
 import { useToast } from '@/hooks/use-toast';
+import ProfileSettings from '@/components/profile/ProfileSettings';
 
 interface ProfileImage {
   id: number;
@@ -226,9 +225,7 @@ const Profile = () => {
   
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <Helmet>
-        <title>{profileUser.username} | P2W.fun Profile</title>
-      </Helmet>
+      <title>{profileUser.username} | P2W.fun Profile</title>
       
       <Header />
       
