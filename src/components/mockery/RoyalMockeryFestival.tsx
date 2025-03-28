@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { ScrollText, DollarSign, Sparkles, Shield, TrendingUp, Crown } from 'lucide-react';
 import { topUsers } from '@/components/events/data';
@@ -365,7 +364,6 @@ const RoyalMockeryFestival = () => {
                 totalSpent: selectedUser.amountSpent,
                 rank: selectedUser.rank,
                 team: selectedUser.team,
-                tier: 'free',
                 spendStreak: 0
               }}
               mockeryType={selectedAction}

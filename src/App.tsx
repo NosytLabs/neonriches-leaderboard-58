@@ -1,5 +1,5 @@
 
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import Layout from './components/layout/Layout';
 import Home from './pages/Home';
 import Dashboard from './pages/Dashboard';
@@ -16,7 +16,6 @@ import Terms from './pages/Terms';
 import NotFound from './pages/NotFound';
 import { ToastProvider } from './contexts/ToastContext';
 import { AuthProvider } from './contexts/AuthContext';
-import { Analytics } from '@vercel/analytics/react';
 import { ThemeProvider } from './contexts/ThemeContext';
 
 function App() {
@@ -24,26 +23,23 @@ function App() {
     <ThemeProvider>
       <ToastProvider>
         <AuthProvider>
-          <Router>
-            <Routes>
-              <Route path="/" element={<Layout />}>
-                <Route index element={<Home />} />
-                <Route path="dashboard" element={<Dashboard />} />
-                <Route path="leaderboard" element={<Leaderboard />} />
-                <Route path="teams" element={<Teams />} />
-                <Route path="profile/:username" element={<Profile />} />
-                <Route path="features" element={<Features />} />
-                <Route path="settings" element={<Settings />} />
-                <Route path="events" element={<Events />} />
-                <Route path="mockery" element={<Mockery />} />
-                <Route path="help" element={<Help />} />
-                <Route path="privacy" element={<Privacy />} />
-                <Route path="terms" element={<Terms />} />
-                <Route path="*" element={<NotFound />} />
-              </Route>
-            </Routes>
-          </Router>
-          <Analytics />
+          <Routes>
+            <Route path="/" element={<Layout />}>
+              <Route index element={<Home />} />
+              <Route path="dashboard" element={<Dashboard />} />
+              <Route path="leaderboard" element={<Leaderboard />} />
+              <Route path="teams" element={<Teams />} />
+              <Route path="profile/:username" element={<Profile />} />
+              <Route path="features" element={<Features />} />
+              <Route path="settings" element={<Settings />} />
+              <Route path="events" element={<Events />} />
+              <Route path="mockery" element={<Mockery />} />
+              <Route path="help" element={<Help />} />
+              <Route path="privacy" element={<Privacy />} />
+              <Route path="terms" element={<Terms />} />
+              <Route path="*" element={<NotFound />} />
+            </Route>
+          </Routes>
         </AuthProvider>
       </ToastProvider>
     </ThemeProvider>
