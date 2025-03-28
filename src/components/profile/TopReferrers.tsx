@@ -15,7 +15,7 @@ const TopReferrers: React.FC<TopReferrersProps> = ({ data }) => {
           {data.map((referrer, index) => (
             <div key={index} className="flex justify-between items-center">
               <span className="text-sm text-white/70">{referrer.name}</span>
-              <span className="text-sm font-medium">{referrer.value}</span>
+              <span className="text-sm font-medium">{referrer.count}</span>
             </div>
           ))}
         </div>

@@ -1,7 +1,7 @@
 
 import { UserProfile } from '@/contexts/AuthContext';
 import { teamData } from '@/utils/teamUtils';
-import { TeamColor } from '@/types/teams';
+import { TeamColor, UserTeam } from '@/types/teams';
 
 export interface TeamSwitchResult {
   success: boolean;
@@ -48,4 +48,4 @@ export const switchUserTeam = async (
 export { teamData };
 
 // Export TeamColor type for backward compatibility
-export type { TeamColor };
+export type { TeamColor, UserTeam };

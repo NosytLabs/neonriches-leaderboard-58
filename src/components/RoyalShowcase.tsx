@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Link } from 'react-router-dom';
@@ -24,6 +23,7 @@ import ProfileBoostedContent from '@/components/ui/ProfileBoostedContent';
 import InteractiveRoyalCrown from '@/components/3d/InteractiveRoyalCrown';
 import useNotificationSounds from '@/hooks/use-notification-sounds';
 import { useToast } from '@/hooks/use-toast';
+import { UserProfile } from '@/types/user';
 
 interface RoyalShowcaseProps {
   topSpender: {
@@ -34,7 +34,7 @@ interface RoyalShowcaseProps {
     amountSpent: number;
     rank: number;
     team?: 'red' | 'green' | 'blue' | null;
-    spendingStreak?: number;
+    spendingStreak?: number; 
     gender?: 'king' | 'queen' | 'neutral';
     bio?: string;
     socialLinks?: Array<{
@@ -51,6 +51,9 @@ interface RoyalShowcaseProps {
       startTime: number;
       endTime: number;
     }>;
+    email: string;
+    spentAmount: number;
+    joinedAt: string;
   };
   onInspect?: () => void;
 }

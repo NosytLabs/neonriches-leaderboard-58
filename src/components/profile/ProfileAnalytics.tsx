@@ -18,13 +18,13 @@ interface ProfileAnalyticsProps {
 
 const ProfileAnalytics: React.FC<ProfileAnalyticsProps> = ({ user }) => {
   const {
-    analytics,
+    analyticsData,
     loading,
-    prepareViewsData,
-    prepareClicksData,
-    prepareSourcesData,
-    prepareReferrersData,
-    calculateCTR
+    getViewsData,
+    getClicksData,
+    getSourcesData,
+    getReferrersData,
+    error
   } = useProfileAnalytics(user.id);
   
   if (loading) {
@@ -39,7 +39,7 @@ const ProfileAnalytics: React.FC<ProfileAnalyticsProps> = ({ user }) => {
     );
   }
   
-  if (!analytics) {
+  if (!analyticsData) {
     return (
       <Card className="glass-morphism border-white/10">
         <CardContent className="py-6">
@@ -49,11 +49,13 @@ const ProfileAnalytics: React.FC<ProfileAnalyticsProps> = ({ user }) => {
     );
   }
   
-  const viewsData = prepareViewsData();
-  const clicksData = prepareClicksData();
-  const sourcesData = prepareSourcesData();
-  const referrersData = prepareReferrersData();
-  const ctr = calculateCTR();
+  const viewsData = getViewsData();
+  const clicksData = getClicksData();
+  const sourcesData = getSourcesData();
+  const referrersData = getReferrersData();
+  const ctr = analyticsData.clicks > 0 && analyticsData.views > 0 
+    ? (analyticsData.clicks / analyticsData.views * 100).toFixed(1) 
+    : "0.0";
   
   return (
     <Card className="glass-morphism border-white/10">
@@ -63,35 +65,43 @@ const ProfileAnalytics: React.FC<ProfileAnalyticsProps> = ({ user }) => {
           Profile Analytics
         </CardTitle>
         <CardDescription>
-          Track your profile's engagement and performance
+          Track your profile performance and engagement
         </CardDescription>
       </CardHeader>
+      
       <CardContent>
-        <AnalyticsMetricsOverview analytics={analytics} ctr={ctr} />
+        <AnalyticsMetricsOverview 
+          views={analyticsData.views}
+          clicks={analyticsData.clicks}
+          ctr={ctr}
+        />
         
-        <Tabs defaultValue="views">
+        <Tabs defaultValue="views" className="mt-6">
           <TabsList className="grid grid-cols-3 mb-4">
-            <TabsTrigger value="views">Views</TabsTrigger>
-            <TabsTrigger value="clicks">Clicks</TabsTrigger>
-            <TabsTrigger value="sources">Sources</TabsTrigger>
+            <TabsTrigger value="views" className="flex items-center gap-2">
+              <LineChart size={14} />
+              <span>Views</span>
+            </TabsTrigger>
+            <TabsTrigger value="clicks" className="flex items-center gap-2">
+              <BarChart size={14} />
+              <span>Clicks</span>
+            </TabsTrigger>
+            <TabsTrigger value="sources" className="flex items-center gap-2">
+              <PieChart size={14} />
+              <span>Sources</span>
+            </TabsTrigger>
           </TabsList>
           
           <TabsContent value="views">
-            <div className="h-72 glass-morphism rounded-lg p-4">
-              <ViewsChart data={viewsData} />
-            </div>
+            <ViewsChart data={viewsData} />
           </TabsContent>
           
           <TabsContent value="clicks">
-            <div className="h-72 glass-morphism rounded-lg p-4">
-              <ClicksChart data={clicksData} />
-            </div>
+            <ClicksChart data={clicksData} />
           </TabsContent>
           
           <TabsContent value="sources">
-            <div className="h-72 glass-morphism rounded-lg p-4">
-              <SourcesChart data={sourcesData} />
-            </div>
+            <SourcesChart data={sourcesData} />
           </TabsContent>
         </Tabs>
         

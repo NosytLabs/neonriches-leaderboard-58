@@ -102,11 +102,11 @@ export interface UserProfile {
   profileImage?: string;
   team?: UserTeam;
   spentAmount: number;
-  amountSpent: number;
+  amountSpent: number; // Keeping both for compatibility
   walletBalance?: number;
   rank: number;
   joinedAt: string;
-  joinDate?: string | Date;
+  joinDate?: string | Date; // Keeping both for compatibility
   lastActive?: string;
   isVerified?: boolean;
   activeTitle?: string;

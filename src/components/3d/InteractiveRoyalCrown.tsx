@@ -1,8 +1,9 @@
 
+// Updating just the floating coins import
 import React, { useRef, useEffect, useState } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import { useFloatingCoins } from '@/hooks/use-floating-coins';
+import useFloatingCoins from '@/hooks/use-floating-coins';
 import { Button } from '@/components/ui/button';
 import useNotificationSounds from '@/hooks/use-notification-sounds';
 import { useToast } from '@/hooks/use-toast';

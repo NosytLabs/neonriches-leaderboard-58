@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState, Suspense, lazy } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '@/components/Header';
@@ -34,12 +33,14 @@ const topSpender = {
   id: "top-1",
   username: "Moneybags",
   displayName: "Lord Moneybags",
+  email: "lordmoneybags@example.com",
   profileImage: "https://source.unsplash.com/random/?royal,portrait",
   amountSpent: 56780,
+  spentAmount: 56780,
   rank: 1,
-  team: "red",
+  team: "red" as const,
   spendingStreak: 14,
-  gender: "king",
+  gender: "king" as const,
   bio: "I've spent a small fortune for this meaningless digital crown. Worth every penny for the satirical royal status.",
   socialLinks: [
     {
@@ -58,7 +59,8 @@ const topSpender = {
       clicks: 45
     }
   ],
-  joinDate: "2023-05-15"
+  joinDate: "2023-05-15",
+  joinedAt: "2023-05-15T12:00:00Z"
 };
 
 const Index = () => {

@@ -108,7 +108,7 @@ const TopSpenderShowcase: React.FC<TopSpenderShowcaseProps> = ({ topSpender }) =
             
             <div className="flex flex-wrap gap-2 mb-4">
               {/* Team badge */}
-              {topSpender.team && topSpender.team !== 'none' && (
+              {topSpender.team && (
                 <Badge variant="outline" className={`bg-team-${topSpender.team}/20 text-team-${topSpender.team}`}>
                   <Shield size={10} className="mr-1" />
                   Team {topSpender.team.charAt(0).toUpperCase() + topSpender.team.slice(1)}
@@ -132,7 +132,7 @@ const TopSpenderShowcase: React.FC<TopSpenderShowcaseProps> = ({ topSpender }) =
               {/* Join date badge */}
               <Badge variant="outline" className="bg-purple-800/20 text-purple-300">
                 <Trophy size={10} className="mr-1" />
-                Member since {new Date(topSpender.joinDate).toLocaleDateString()}
+                Member since {new Date(topSpender.joinDate || topSpender.joinedAt).toLocaleDateString()}
               </Badge>
             </div>
             

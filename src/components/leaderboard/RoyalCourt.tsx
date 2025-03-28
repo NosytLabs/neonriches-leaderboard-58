@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import LeaderboardHeader from './LeaderboardHeader';
 import LeaderboardFilters from './LeaderboardFilters';
@@ -17,13 +18,15 @@ const RoyalCourt = () => {
     email: `${user.username.toLowerCase()}@example.com`,
     profileImage: user.profileImage,
     amountSpent: user.amountSpent,
+    spentAmount: user.amountSpent,
     walletBalance: 0,
     rank: user.rank,
     spendStreak: Math.floor(Math.random() * 10),
     tier: 'crab',
-    team: user.team as any || 'none',
+    team: user.team as any || null,
     gender: 'king',
     joinDate: new Date(),
+    joinedAt: new Date().toISOString(),
     cosmetics: {
       borders: [],
       colors: [],
