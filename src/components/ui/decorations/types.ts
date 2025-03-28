@@ -65,27 +65,30 @@ export const getColorClass = (color: DecorationColor, type: 'bg' | 'border' | 't
     case 'copper':
       return type === 'bg' ? 'bg-amber-600/20' : 
              type === 'border' ? 'border-amber-600' : 'text-amber-600';
-    case 'crimson':
+    case 'red':
       return type === 'bg' ? 'bg-royal-crimson/20' : 
              type === 'border' ? 'border-royal-crimson' : 'text-royal-crimson';
-    case 'navy':
-      return type === 'bg' ? 'bg-royal-navy/20' : 
-             type === 'border' ? 'border-royal-navy' : 'text-royal-navy';
-    case 'purple':
-      return type === 'bg' ? 'bg-purple-600/20' : 
-             type === 'border' ? 'border-purple-600' : 'text-purple-600';
-    case 'emerald':
-      return type === 'bg' ? 'bg-emerald-600/20' : 
-             type === 'border' ? 'border-emerald-600' : 'text-emerald-600';
-    case 'red':
+    case 'crimson':
       return type === 'bg' ? 'bg-royal-crimson/20' : 
              type === 'border' ? 'border-royal-crimson' : 'text-royal-crimson';
     case 'blue':
       return type === 'bg' ? 'bg-royal-navy/20' : 
              type === 'border' ? 'border-royal-navy' : 'text-royal-navy';
+    case 'navy':
+      return type === 'bg' ? 'bg-royal-navy/20' : 
+             type === 'border' ? 'border-royal-navy' : 'text-royal-navy';
     case 'green':
       return type === 'bg' ? 'bg-emerald-500/20' : 
              type === 'border' ? 'border-emerald-500' : 'text-emerald-500';
+    case 'emerald':
+      return type === 'bg' ? 'bg-emerald-500/20' : 
+             type === 'border' ? 'border-emerald-500' : 'text-emerald-500';
+    case 'purple':
+      return type === 'bg' ? 'bg-purple-600/20' : 
+             type === 'border' ? 'border-purple-600' : 'text-purple-600';
+    case 'amber':
+      return type === 'bg' ? 'bg-amber-500/20' : 
+             type === 'border' ? 'border-amber-500' : 'text-amber-500';
     case 'default':
       return type === 'bg' ? 'bg-gray-200/20' : 
              type === 'border' ? 'border-gray-200' : 'text-gray-200';

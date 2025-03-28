@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { ExtendedMockeryAction } from '@/types/mockery';
+import { ExtendedMockeryAction } from './utils/mockeryUtils';
 
 interface MockeryActionIconProps {
   action: ExtendedMockeryAction;
@@ -14,7 +14,7 @@ const MockeryActionIcon: React.FC<MockeryActionIconProps> = ({
   size = 16,
   className
 }) => {
-  const getIcon = (actionType: string): string => {
+  const getIcon = (actionType: ExtendedMockeryAction): string => {
     switch (actionType) {
       case 'tomatoes': return '🍅';
       case 'eggs': return '🥚';

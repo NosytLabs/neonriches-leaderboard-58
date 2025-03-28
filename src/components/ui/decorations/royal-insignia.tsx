@@ -2,7 +2,7 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 import MedievalIcon from '@/components/ui/medieval-icon';
-import { BaseDecorationProps, sizeClasses, toMedievalIconColor } from './types';
+import { BaseDecorationProps, sizeClasses, toMedievalIconColor, getColorClass } from './types';
 
 const RoyalInsignia: React.FC<BaseDecorationProps> = ({
   color = 'gold',
@@ -28,12 +28,7 @@ const RoyalInsignia: React.FC<BaseDecorationProps> = ({
         <div className={cn(
           'absolute rounded-full',
           sizeClasses[size].border,
-          color === 'gold' ? 'border-royal-gold' : 
-          color === 'silver' ? 'border-gray-400' :
-          color === 'bronze' ? 'border-amber-700' :
-          color === 'crimson' ? 'border-royal-crimson' :
-          color === 'navy' ? 'border-royal-navy' :
-          'border-white/40',
+          getColorClass(color, 'border'),
           'border-2'
         )}></div>
       </div>

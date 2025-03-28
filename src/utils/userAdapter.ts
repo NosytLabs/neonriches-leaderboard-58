@@ -6,14 +6,14 @@ import { User, UserProfile } from "@/types/user";
  * @param user Partial user object
  * @returns Complete User object with all required fields
  */
-export const ensureUser = (user: UserProfile): User => {
+export const ensureUser = (user: Partial<UserProfile>): User => {
   return {
     ...user,
     isAuthenticated: true,
     isAdmin: user.role === 'admin',
     isVerified: user.isVerified || false,
     lastLogin: user.lastLoginDate || new Date().toISOString()
-  };
+  } as User;
 };
 
 /**
@@ -28,10 +28,32 @@ export const adaptToUser = (user: User): UserProfile => {
     role: isAdmin ? 'admin' : 'user',
     isVerified,
     lastLoginDate: lastLogin
-  };
+  } as UserProfile;
+};
+
+/**
+ * Converts a UserProfile to a User object
+ * @param profile UserProfile object
+ * @returns User object
+ */
+export const adaptUserProfileToUser = (profile: UserProfile): User => {
+  return ensureUser(profile);
+};
+
+/**
+ * Safely converts a string to a boolean
+ * @param value String value to convert
+ * @param defaultValue Default value if conversion fails
+ * @returns Boolean value
+ */
+export const toBooleanSafe = (value: string | undefined | null, defaultValue = false): boolean => {
+  if (value === undefined || value === null) return defaultValue;
+  return value.toLowerCase() === 'true';
 };
 
 export default {
   ensureUser,
-  adaptToUser
+  adaptToUser,
+  adaptUserProfileToUser,
+  toBooleanSafe
 };

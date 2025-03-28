@@ -1,71 +1,51 @@
 
-// Mockery Action Types
-export type MockeryAction = 
-  | 'tomatoes' 
-  | 'eggs' 
-  | 'stocks' 
-  | 'silence' 
-  | 'courtJester' 
-  | 'jester'
-  | 'dunce'
-  | 'roast'
-  | 'ridicule'
-  | 'taunt'
-  | 'drama'
-  | 'protected'
-  | 'immune';
+import { User } from "./user";
 
-export type MockeryTier = 
-  | 'common'
-  | 'uncommon'
-  | 'rare'
-  | 'epic'
-  | 'legendary';
+export type MockeryAction = 'tomatoes' | 'eggs' | 'stocks' | 'silence' | 'courtJester';
+export type MockeryTier = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
+export type ShameAction = 'tomatoes' | 'eggs' | 'stocks';
 
-// Extended mockery action with additional metadata
-export interface ExtendedMockeryAction {
-  action: MockeryAction;
-  tier: MockeryTier;
-  price: number;
-  duration: number; // in hours
-  cooldown: number; // in hours
-  text?: string;
-  border?: string;
-  effect?: string;
-}
-
-export interface MockeryEvent {
-  id: string;
-  action: MockeryAction;
-  sourceUserId: string;
-  sourceUsername: string;
-  targetUserId: string;
-  targetUsername: string;
-  timestamp: string;
-  expiresAt: string;
-  isActive: boolean;
-}
-
-export interface UserMockeryStatus {
-  userId: string;
+export interface MockeryEffectData {
+  type: MockeryAction;
   username: string;
-  displayName?: string;
-  profileImage?: string;
-  activeMockeries: MockeryEvent[];
-  activeProtection?: {
-    until: string;
-    tier: string;
-  };
-  lastMocked?: string;
-  mockedCount: number;
+  timestamp: string;
+  expiryTime: string;
+  amount: number;
+  mockerId: string;
+  mockerName: string;
+  message?: string;
 }
 
-export interface MockeryPeriod {
-  id: string;
-  name: string;
-  startDate: string;
-  endDate: string;
-  discountPercentage: number;
-  featuredActions: MockeryAction[];
-  isActive: boolean;
+export interface PurchaseMockeryParams {
+  targetUser: string;
+  action: MockeryAction;
+  amount: number;
+  message?: string;
 }
+
+export interface ShameModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  targetUser: User | null;
+}
+
+export interface MockeryCardProps {
+  action: MockeryAction;
+  tier: string;
+  username?: string;
+  onSelect: (action: MockeryAction) => boolean;
+  selected: boolean;
+  className?: string;
+}
+
+export interface CountdownTimerProps {
+  endTime: string;
+  onComplete?: () => void;
+  className?: string;
+}
+
+export default {
+  MockeryAction,
+  MockeryTier,
+  ShameAction
+};
