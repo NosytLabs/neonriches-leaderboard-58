@@ -1,12 +1,22 @@
 
 {
   "short_name": "SpendThrone",
-  "name": "SpendThrone - Pay to Win, Literally",
+  "name": "SpendThrone - Where Your Wallet Determines Your Worth",
   "icons": [
     {
       "src": "favicon.ico",
       "sizes": "64x64",
       "type": "image/x-icon"
+    },
+    {
+      "src": "android-chrome-192x192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "android-chrome-512x512.png",
+      "type": "image/png",
+      "sizes": "512x512"
     }
   ],
   "start_url": ".",

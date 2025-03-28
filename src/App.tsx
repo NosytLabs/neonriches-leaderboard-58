@@ -13,8 +13,9 @@ const Profile = lazy(() => import('./pages/Profile'));
 const Updates = lazy(() => import('./pages/Updates'));
 const PaymentSuccess = lazy(() => import('./pages/PaymentSuccess'));
 const SubscriptionSuccess = lazy(() => import('./pages/SubscriptionSuccess'));
-const Terms = lazy(() => import('./pages/TermsOfService'));
+const Terms = lazy(() => import('./pages/Terms'));
 const NotFound = lazy(() => import('./pages/NotFound'));
+const AdminSettings = lazy(() => import('./pages/AdminSettings'));
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
             <Route path="/payment-success" element={<PaymentSuccess />} />
             <Route path="/subscription-success" element={<SubscriptionSuccess />} />
             <Route path="/terms" element={<Terms />} />
+            <Route path="/admin/settings" element={<AdminSettings />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>
