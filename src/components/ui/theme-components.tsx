@@ -104,7 +104,7 @@ export const RoyalBadge: React.FC<BadgeProps> = ({
     teamRed: 'bg-royal-crimson text-white',
     teamGreen: 'bg-emerald-500 text-white',
     teamBlue: 'bg-royal-navy text-white',
-		purple: 'bg-royal-purple text-white',
+    purple: 'bg-royal-purple text-white',
   };
   
   const sizeClasses = {
@@ -114,12 +114,12 @@ export const RoyalBadge: React.FC<BadgeProps> = ({
   };
   
   return (
-    <Badge 
-      variant={variant} 
-      className={cn("inline-flex items-center", sizeClasses[size], className)}
+    <div 
+      className={cn("inline-flex items-center rounded-full", variantClasses[variant], sizeClasses[size], className)}
+      {...props}
     >
       {children}
-    </Badge>
+    </div>
   );
 };
 

@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { 
@@ -529,7 +528,7 @@ const Features = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <div className="glass-morphism rounded-lg p-6 border border-white/10">
               <h3 className="text-xl font-bold mb-4 flex items-center">
-                <RoyalBadge variant="outline" className="mr-2">Free</RoyalBadge>
+                <RoyalBadge variant="outlineSilver" className="mr-2">Free</RoyalBadge>
                 Basic Profile
               </h3>
               

@@ -18,6 +18,8 @@ const badgeVariants = cva(
         outline: "text-foreground",
         royal:
           "border-transparent bg-gradient-to-r from-royal-crimson via-royal-gold to-royal-navy text-white hover:opacity-90",
+        purple:
+          "border-transparent bg-royal-purple text-white hover:bg-royal-purple/80",
       },
     },
     defaultVariants: {
