@@ -6,23 +6,11 @@ import { cn } from '@/lib/utils';
 import { getTeamColor, getTeamName } from './TeamUtils';
 import { useToast } from '@/hooks/use-toast';
 import useNotificationSounds from '@/hooks/use-notification-sounds';
-
-interface LeaderboardUser {
-  id: string;
-  rank: number;
-  username: string;
-  displayName: string;
-  amountSpent: number;
-  profileImage?: string;
-  previousRank: number;
-  team: 'red' | 'green' | 'blue';
-  isVIP?: boolean;
-  joinDate: string;
-}
+import { UserProfile } from '@/types/user';
 
 interface LeaderboardTableProps {
-  users: LeaderboardUser[];
-  currentFilter: string;
+  users: UserProfile[];
+  currentFilter?: string;
 }
 
 const LeaderboardTable: React.FC<LeaderboardTableProps> = ({ 
@@ -33,7 +21,7 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
   const { playSound } = useNotificationSounds();
   const { toast } = useToast();
 
-  const handleProfileClick = (user: LeaderboardUser) => {
+  const handleProfileClick = (user: UserProfile) => {
     // Navigate to the user's profile page
     playSound('click');
     navigate(`/profile/${user.username}`);
@@ -58,9 +46,9 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
         </thead>
         <tbody>
           {users.map((user, index) => {
-            const rankChange = user.previousRank - user.rank;
-            const teamColor = getTeamColor(user.team);
-            const teamName = getTeamName(user.team);
+            const rankChange = user.previousRank ? user.previousRank - user.rank : 0;
+            const teamColor = getTeamColor(user.team as string);
+            const teamName = getTeamName(user.team as string);
             
             return (
               <tr 
@@ -115,7 +103,7 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
                     </div>
                     <div>
                       <div className="font-medium">{user.displayName || user.username}</div>
-                      <div className="text-xs text-white/50">Joined {new Date(user.joinDate).toLocaleDateString()}</div>
+                      <div className="text-xs text-white/50">Joined {new Date(user.joinDate || user.joinedAt).toLocaleDateString()}</div>
                     </div>
                   </div>
                 </td>
@@ -137,7 +125,7 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
                 <td className="px-4 py-3 text-right">
                   <div className="flex items-center justify-end">
                     <DollarSign className="h-4 w-4 text-royal-gold mr-0.5" />
-                    <span className="font-mono">{user.amountSpent.toLocaleString()}</span>
+                    <span className="font-mono">{user.amountSpent?.toLocaleString() || user.spentAmount?.toLocaleString() || 0}</span>
                   </div>
                 </td>
                 

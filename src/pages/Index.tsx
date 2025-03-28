@@ -16,6 +16,8 @@ import { Button } from '@/components/ui/button';
 import RoyalDivider from '@/components/ui/royal-divider';
 import { Crown, ArrowRight } from 'lucide-react';
 import { useAuth } from '@/contexts/auth';
+import { mockLeaderboardData } from '@/components/leaderboard/LeaderboardData';
+import { UserProfile } from '@/types/user';
 
 const Index = () => {
   const navigate = useNavigate();
@@ -24,6 +26,42 @@ const Index = () => {
   const { toast } = useToast();
   const [hasCheckedTerms, setHasCheckedTerms] = useState(false);
   const [hasAcceptedTerms, setHasAcceptedTerms] = useState(false);
+  
+  // Create a mock topSpender for the showcase components
+  const mockTopSpender: UserProfile = {
+    id: '1',
+    username: 'LordMoneybags',
+    displayName: 'Lord Moneybags',
+    email: 'lordmoneybags@spendthrone.com',
+    profileImage: 'https://source.unsplash.com/random/?royal,portrait',
+    amountSpent: 25000,
+    spentAmount: 25000,
+    walletBalance: 1000,
+    rank: 1,
+    previousRank: 1,
+    spendStreak: 12,
+    tier: 'whale',
+    team: 'red',
+    gender: 'king',
+    joinDate: '2023-01-15T00:00:00.000Z',
+    joinedAt: '2023-01-15T00:00:00.000Z',
+    bio: "I've spent more on this meaningless digital status than most people spend on food. Behold my financial might!",
+    socialLinks: [
+      { platform: 'Twitter', url: 'https://twitter.com/lordmoneybags', clicks: 42 },
+      { platform: 'Instagram', url: 'https://instagram.com/lordmoneybags', clicks: 28 }
+    ],
+    cosmetics: {
+      borders: ['gold'],
+      colors: ['royal-purple'],
+      fonts: ['medieval'],
+      emojis: ['crown', 'money'],
+      titles: ['sovereign'],
+      backgrounds: ['castle'],
+      effects: ['sparkle'],
+      badges: ['Monarch of the Deep'],
+      themes: ['royal']
+    }
+  };
 
   useEffect(() => {
     // Load sounds for a better user experience
@@ -116,11 +154,11 @@ const Index = () => {
           
           <RoyalDivider variant="scroll" className="my-16" />
           
-          <RoyalShowcase />
+          <RoyalShowcase topSpender={mockTopSpender} />
           
           <TeamSection />
           
-          <TopSpenderShowcase />
+          <TopSpenderShowcase topSpender={mockTopSpender} />
           
           <div className="my-16">
             <RoyalFAQ />

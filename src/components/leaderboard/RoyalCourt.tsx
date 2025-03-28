@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import LeaderboardHeader from './LeaderboardHeader';
 import LeaderboardFilters from './LeaderboardFilters';
@@ -20,6 +21,7 @@ const RoyalCourt = () => {
     spentAmount: user.amountSpent,
     walletBalance: 0,
     rank: user.rank,
+    previousRank: user.previousRank || user.rank + 1, // Provide a default previousRank
     spendStreak: Math.floor(Math.random() * 10),
     tier: 'crab',
     team: user.team as any || null,
@@ -125,7 +127,7 @@ const RoyalCourt = () => {
             onSortChange={handleSort}
           />
           
-          <LeaderboardTable leaderboardData={leaderboardData} />
+          <LeaderboardTable users={leaderboardData} currentFilter={activeFilter} />
         </div>
         
         <LeaderboardFooter />
