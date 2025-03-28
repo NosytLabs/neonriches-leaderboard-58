@@ -1,27 +1,9 @@
 
 export type RoyalDividerVariant = 
-  | 'default'
-  | 'simple' 
-  | 'ornate' 
-  | 'double' 
-  | 'dotted' 
-  | 'dashed'
+  | 'simple'
+  | 'ornate'
+  | 'crown'
   | 'scroll'
   | 'quill'
   | 'treasure'
-  | 'line'
-  | 'crown'
-  | 'fancy';
-
-export type RoyalButtonVariant = 
-  | 'royal'
-  | 'royalGold'
-  | 'royalCrimson'
-  | 'royalNavy'
-  | 'royalPurple'
-  | 'glass'
-  | 'outline'
-  | 'goldOutline'
-  | 'crimsonOutline'
-  | 'navyOutline'
-  | 'mahogany';
+  | 'chalice';

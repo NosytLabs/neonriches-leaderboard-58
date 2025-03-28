@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -10,7 +10,6 @@ import {
   Crown, 
   Users, 
   Scroll, 
-  Heart, 
   Info, 
   BookOpen, 
   Code, 
@@ -19,17 +18,17 @@ import {
   Download,
   ArrowRight,
   Share2,
-  ExternalLink,
   DollarSign,
   Trophy,
-  Gem
+  Gem,
+  Heart
 } from 'lucide-react';
 import RoyalDivider from '@/components/ui/royal-divider';
 import TeamSection from '@/components/TeamSection';
 import CertificateOfNobility from '@/components/certificates/CertificateOfNobility';
 import useNotificationSounds from '@/hooks/use-notification-sounds';
 import { useToastContext } from '@/contexts/ToastContext';
-import { UserProfile, UserTier } from '@/types/user';
+import { UserProfile } from '@/types/user';
 import { Link } from 'react-router-dom';
 
 const About = () => {
@@ -48,7 +47,7 @@ const About = () => {
     spentAmount: 5000,
     walletBalance: 1000,
     rank: 1,
-    tier: 'pro' as UserTier,
+    tier: 'pro',
     team: 'red',
     gender: 'king',
     joinDate: new Date().toISOString(),
@@ -117,20 +116,21 @@ const About = () => {
                 <BookOpen className="h-4 w-4 mr-2" />
                 The Concept
               </TabsTrigger>
-              <TabsTrigger value="mechanics" className="data-[state=active]:bg-royal-gold/20">
+              <TabsTrigger value="how-it-works" className="data-[state=active]:bg-royal-gold/20">
                 <Code className="h-4 w-4 mr-2" />
                 How It Works
               </TabsTrigger>
-              <TabsTrigger value="meme-economy" className="data-[state=active]:bg-royal-gold/20">
+              <TabsTrigger value="community" className="data-[state=active]:bg-royal-gold/20">
                 <Sparkles className="h-4 w-4 mr-2" />
-                Meme Economy
+                Community & Culture
               </TabsTrigger>
-              <TabsTrigger value="philosophy" className="data-[state=active]:bg-royal-gold/20">
-                <Coffee className="h-4 w-4 mr-2" />
-                Our Philosophy
+              <TabsTrigger value="team" className="data-[state=active]:bg-royal-gold/20">
+                <Users className="h-4 w-4 mr-2" />
+                Our Team
               </TabsTrigger>
             </TabsList>
             
+            {/* Concept Tab */}
             <TabsContent value="concept" className="space-y-6">
               <Card className="glass-morphism border-white/10">
                 <CardHeader>
@@ -141,7 +141,7 @@ const About = () => {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <p>
-                    SpendThrone is a satirical social platform that parodies the relationship between wealth and status in modern society. 
+                    SpendThrone is a satirical social platform that parodies the relationship between wealth and status. 
                     We've created a digital kingdom where your rank is determined solely by how much money you spend.
                   </p>
                   <p>
@@ -211,7 +211,8 @@ const About = () => {
               </div>
             </TabsContent>
             
-            <TabsContent value="mechanics" className="space-y-6">
+            {/* How It Works Tab */}
+            <TabsContent value="how-it-works" className="space-y-6">
               <Card className="glass-morphism border-white/10">
                 <CardHeader>
                   <CardTitle className="flex items-center">
@@ -220,15 +221,16 @@ const About = () => {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <p>
-                    SpendThrone operates on a simple principle: your rank is directly proportional to how much money you've spent on the platform.
+                  <p className="text-white/80">
+                    SpendThrone operates on a simple principle: your rank is directly proportional to 
+                    how much money you've spent on the platform.
                   </p>
                   
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
                     <div className="bg-white/5 p-4 rounded-lg border border-white/10">
                       <h3 className="font-bold mb-2">Ranking System</h3>
                       <p className="text-sm text-white/70">
-                        $1 = 1 rank point. The more you spend, the higher your rank. It's that simple. 
+                        $1 = 1 rank point. The more you spend, the higher your rank. 
                         The leaderboard is sorted by total amount spent, with the highest spender at the top.
                       </p>
                     </div>
@@ -244,16 +246,16 @@ const About = () => {
                     <div className="bg-white/5 p-4 rounded-lg border border-white/10">
                       <h3 className="font-bold mb-2">Profile Enhancement</h3>
                       <p className="text-sm text-white/70">
-                        Unlock cosmetic profile enhancements as you spend more. All users start with basic text editing, 
-                        social links, and image uploads. Pro users gain access to advanced customization.
+                        Unlock cosmetic profile enhancements as you spend more. Basic users start with limited 
+                        features, while Pro users gain access to advanced customization options.
                       </p>
                     </div>
                     
                     <div className="bg-white/5 p-4 rounded-lg border border-white/10">
                       <h3 className="font-bold mb-2">Top Spender Perks</h3>
                       <p className="text-sm text-white/70">
-                        The #1 ranked spender gets exclusive advertising space on the homepage and special privileges.
-                        Use this space to promote your own content, websites, or social media.
+                        The #1 ranked spender gets exclusive advertising space on the homepage and special privileges
+                        to promote their own content, websites, or social media.
                       </p>
                     </div>
                   </div>
@@ -289,7 +291,7 @@ const About = () => {
                       <h3 className="font-bold text-sm">Basic Profile (All Users)</h3>
                       <p className="text-sm text-white/70">
                         Every user can customize their profile with text, upload images, add social links,
-                        and create a personalized bio to showcase their digital persona.
+                        and create a personalized bio.
                       </p>
                     </div>
                     
@@ -323,7 +325,8 @@ const About = () => {
                     
                     <p className="text-sm text-white/70">
                       We maintain complete transparency about the nature of the platform. 
-                      By participating, you acknowledge that you're spending real money for digital status as part of a social experiment.
+                      By participating, you acknowledge that you're spending real money for digital status 
+                      as part of a social experiment.
                     </p>
                     
                     <p className="text-sm text-white/70">
@@ -334,7 +337,8 @@ const About = () => {
               </div>
             </TabsContent>
             
-            <TabsContent value="meme-economy" className="space-y-6">
+            {/* Community & Culture Tab */}
+            <TabsContent value="community" className="space-y-6">
               <Card className="glass-morphism border-white/10">
                 <CardHeader>
                   <CardTitle className="flex items-center">
@@ -344,20 +348,12 @@ const About = () => {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <p>
-                    SpendThrone is both a critique and a celebration of internet culture, where attention is currency and absurdity is content.
-                    It's a living meme that evolves through participation, a mirror reflecting our digital society's values back at itself.
+                    SpendThrone is both a critique and a celebration of internet culture, where attention is currency 
+                    and absurdity is content. It's a living meme that evolves through participation, a mirror reflecting 
+                    our digital society's values back at itself.
                   </p>
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-                    <div className="bg-white/5 p-4 rounded-lg border border-white/10">
-                      <h3 className="font-bold mb-2">Advertising as Status</h3>
-                      <p className="text-sm text-white/70">
-                        Your profile page becomes your own personal billboard. As you spend more, you gain the ability
-                        to customize it extensively and promote whatever you want. The top spender's advertisement even
-                        appears on our homepage.
-                      </p>
-                    </div>
-                    
                     <div className="bg-white/5 p-4 rounded-lg border border-white/10">
                       <h3 className="font-bold mb-2">Digital Prestige</h3>
                       <p className="text-sm text-white/70">
@@ -372,6 +368,14 @@ const About = () => {
                       <p className="text-sm text-white/70">
                         Watch as users form alliances, compete for status, and create narratives around their spending.
                         The psychology of digital prestige unfolds in real-time.
+                      </p>
+                    </div>
+                    
+                    <div className="bg-white/5 p-4 rounded-lg border border-white/10">
+                      <h3 className="font-bold mb-2">Advertising as Status</h3>
+                      <p className="text-sm text-white/70">
+                        Your profile page becomes your own personal billboard. As you spend more, you gain the ability
+                        to customize it extensively and promote whatever you want.
                       </p>
                     </div>
                     
@@ -419,9 +423,7 @@ const About = () => {
                   </div>
                 </CardContent>
               </Card>
-            </TabsContent>
-            
-            <TabsContent value="philosophy" className="space-y-6">
+              
               <Card className="glass-morphism border-white/10">
                 <CardHeader>
                   <CardTitle className="flex items-center">
@@ -445,30 +447,16 @@ const About = () => {
                     What happens when status is explicitly purchasable? Who participates, and why?
                   </p>
                   
-                  <div className="bg-white/5 p-4 rounded-lg border border-white/10 mt-4">
-                    <h3 className="text-lg font-bold mb-2 flex items-center">
-                      <Info className="h-5 w-5 mr-2 text-royal-gold" />
-                      The Meme Economy
-                    </h3>
-                    <p>
-                      SpendThrone is both a critique and a celebration of internet culture, where attention is currency and absurdity is content.
-                      It's a living meme that evolves through participation, a mirror reflecting our digital society's values back at itself.
-                    </p>
-                  </div>
-                  
                   <p className="mt-4">
-                    Our team consists of developers, designers, and writers who are fascinated by the intersection of technology, 
-                    economics, and social dynamics. We've created this platform not just as satire, but as a genuine social experiment 
-                    that might reveal something meaningful about human behavior in digital spaces.
-                  </p>
-                  
-                  <p>
                     Whether you're participating ironically, genuinely seeking digital status, or just here to observe the spectacle,
                     you're contributing to a unique moment in internet culture history.
                   </p>
                 </CardContent>
               </Card>
-              
+            </TabsContent>
+            
+            {/* Team Tab */}
+            <TabsContent value="team" className="space-y-6">
               <TeamSection />
             </TabsContent>
           </Tabs>
@@ -501,7 +489,7 @@ const About = () => {
                   
                   <div className="flex items-center">
                     <div className="h-8 w-8 rounded-full bg-royal-gold/10 flex items-center justify-center mr-3">
-                      <ExternalLink className="h-4 w-4 text-royal-gold" />
+                      <Share2 className="h-4 w-4 text-royal-gold" />
                     </div>
                     <div>
                       <h4 className="font-medium">Advanced Link Tracking</h4>

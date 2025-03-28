@@ -1,121 +1,81 @@
 
 import { useState, useEffect } from 'react';
 import { UserProfile } from '@/types/user';
-import { trackProfileInteraction } from '@/services/walletService';
-import { ProfileData } from '@/components/profile/ProfileContent';
 
-export const useProfileData = (username: string | undefined, currentUser: UserProfile | null) => {
-  const [loading, setLoading] = useState(true);
-  const [profileUser, setProfileUser] = useState<UserProfile | null>(currentUser);
-  const [viewOnly, setViewOnly] = useState(false);
-  const [profileData, setProfileData] = useState<ProfileData>({
-    bio: "",
-    images: [],
-    links: [],
-    joinDate: "",
-    lastActive: "",
-    followers: 0,
-    following: 0,
-    views: 0
-  });
+interface ProfileDataResult {
+  profileData: UserProfile | null;
+  loading: boolean;
+  error: Error | null;
+}
+
+export const useProfileData = (userId: string, userContext?: UserProfile | null): ProfileDataResult => {
+  const [profileData, setProfileData] = useState<UserProfile | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
     const fetchProfileData = async () => {
-      setLoading(true);
-      
+      if (!userId) {
+        setLoading(false);
+        return;
+      }
+
       try {
-        if (username && username !== currentUser?.username) {
-          setViewOnly(true);
-          
-          setTimeout(() => {
-            const mockUser = {
-              id: "other-user-id",
-              username: username,
-              email: "",
-              profileImage: `https://source.unsplash.com/random/300x300?portrait&${username}`,
-              amountSpent: Math.floor(Math.random() * 5000),
-              walletBalance: 0,
-              rank: Math.floor(Math.random() * 100) + 1,
-              spendStreak: Math.floor(Math.random() * 10),
-              tier: "fish",
-              team: ["red", "green", "blue"][Math.floor(Math.random() * 3)],
-              gender: "noble",
-              joinDate: new Date(Date.now() - Math.random() * 10000000000),
-              cosmetics: {
-                borders: [],
-                colors: [],
-                fonts: [],
-                emojis: [],
-                titles: []
-              },
-              socialLinks: []
-            };
-            
-            setProfileUser(mockUser as any);
-            
-            const mockProfileData = {
-              bio: `This is ${username}'s profile. They are a noble member of the kingdom.`,
-              images: [
-                {
-                  id: 1,
-                  url: "https://source.unsplash.com/random/600x400?medieval",
-                  caption: "Royal Castle"
-                }
-              ],
-              links: [
-                {
-                  id: 1,
-                  url: "https://example.com",
-                  label: "My Website"
-                }
-              ],
-              joinDate: new Date(Date.now() - Math.random() * 10000000000).toLocaleDateString(),
-              lastActive: new Date().toLocaleDateString(),
-              followers: Math.floor(Math.random() * 100),
-              following: Math.floor(Math.random() * 50),
-              views: Math.floor(Math.random() * 500)
-            };
-            
-            setProfileData(mockProfileData);
-            setLoading(false);
-            
-            if (currentUser) {
-              trackProfileInteraction(mockUser.id);
-            }
-          }, 1000);
-        } else {
-          setViewOnly(false);
-          setProfileUser(currentUser);
-          
-          setTimeout(() => {
-            const ownProfileData = {
-              bio: currentUser?.bio || "Share your story with the kingdom...",
-              images: [],
-              links: [],
-              joinDate: currentUser?.joinDate ? new Date(currentUser.joinDate).toLocaleDateString() : new Date().toLocaleDateString(),
-              lastActive: new Date().toLocaleDateString(),
-              followers: Math.floor(Math.random() * 100),
-              following: Math.floor(Math.random() * 50),
-              views: currentUser?.profileViews || 0
-            };
-            
-            setProfileData(ownProfileData);
-            setLoading(false);
-          }, 800);
+        setLoading(true);
+        
+        // If we already have the user data in context, use that instead of fetching
+        if (userContext && userContext.id === userId) {
+          setProfileData(userContext);
+          setLoading(false);
+          return;
         }
-      } catch (error) {
-        console.error("Error fetching profile:", error);
+
+        // Simulate API call to fetch profile data
+        // In a real app, this would be an API call to get user profile data
+        setTimeout(() => {
+          // Mock data for simulation
+          const mockUserProfile: UserProfile = {
+            id: userId,
+            username: `user_${userId}`,
+            displayName: `Royal User ${userId}`,
+            email: `user${userId}@example.com`,
+            profileImage: `https://source.unsplash.com/random/?portrait&${userId}`,
+            rank: Math.floor(Math.random() * 100) + 1,
+            amountSpent: Math.floor(Math.random() * 5000),
+            spentAmount: Math.floor(Math.random() * 5000),
+            walletBalance: Math.floor(Math.random() * 1000),
+            tier: Math.random() > 0.7 ? 'pro' : 'basic',
+            team: ['red', 'green', 'blue'][Math.floor(Math.random() * 3)],
+            joinDate: new Date(Date.now() - Math.random() * 10000000000).toISOString(),
+            joinedAt: new Date(Date.now() - Math.random() * 10000000000).toISOString(),
+            profileViews: Math.floor(Math.random() * 1000),
+            profileClicks: Math.floor(Math.random() * 200),
+            followers: Math.floor(Math.random() * 50),
+            cosmetics: {
+              borders: [],
+              colors: [],
+              fonts: [],
+              emojis: [],
+              titles: [],
+              backgrounds: [],
+              effects: [],
+              badges: [],
+              themes: []
+            },
+            socialLinks: []
+          };
+
+          setProfileData(mockUserProfile);
+          setLoading(false);
+        }, 800);
+      } catch (err) {
+        setError(err instanceof Error ? err : new Error('Failed to fetch profile data'));
         setLoading(false);
       }
     };
-    
-    fetchProfileData();
-  }, [username, currentUser]);
 
-  return {
-    loading,
-    profileUser,
-    viewOnly,
-    profileData
-  };
+    fetchProfileData();
+  }, [userId, userContext]);
+
+  return { profileData, loading, error };
 };
