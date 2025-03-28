@@ -14,26 +14,26 @@ export type ExtendedMockeryAction =
   | 'taunt' 
   | 'drama';
 
-export const getMockeryTierColor = (tier: MockeryTier): string => {
+export const getMockeryTierColor = (tier: MockeryTier): { text: string, border: string } => {
   switch (tier) {
     case 'common':
-      return 'text-gray-300';
+      return { text: 'text-gray-300', border: 'border-gray-300/30' };
     case 'uncommon':
-      return 'text-green-400';
+      return { text: 'text-green-400', border: 'border-green-400/30' };
     case 'rare':
-      return 'text-blue-400';
+      return { text: 'text-blue-400', border: 'border-blue-400/30' };
     case 'epic':
-      return 'text-purple-400';
+      return { text: 'text-purple-400', border: 'border-purple-400/30' };
     case 'legendary':
-      return 'text-royal-gold';
+      return { text: 'text-royal-gold', border: 'border-royal-gold/30' };
     case 'basic':
-      return 'text-white';
+      return { text: 'text-white', border: 'border-white/30' };
     case 'royal':
-      return 'text-royal-crimson';
+      return { text: 'text-royal-crimson', border: 'border-royal-crimson/30' };
     case 'advanced':
-      return 'text-royal-navy';
+      return { text: 'text-royal-navy', border: 'border-royal-navy/30' };
     default:
-      return 'text-gray-300';
+      return { text: 'text-gray-300', border: 'border-gray-300/30' };
   }
 };
 
@@ -99,20 +99,20 @@ export const getMockeryActionTitle = (action: ExtendedMockeryAction): string => 
   }
 };
 
-export const getMockeryActionDescription = (action: ExtendedMockeryAction): string => {
+export const getMockeryActionDescription = (action: ExtendedMockeryAction, username: string = ''): string => {
   switch (action) {
     case 'tomatoes':
-      return 'Throw virtual tomatoes at this user, marking their profile with tomato stains for 1 day.';
+      return `Throw virtual tomatoes at ${username || 'this user'}, marking their profile with tomato stains for 1 day.`;
     case 'eggs':
-      return 'Throw virtual eggs at this user, leaving their profile with egg splatter for 2 days.';
+      return `Throw virtual eggs at ${username || 'this user'}, leaving their profile with egg splatter for 2 days.`;
     case 'stocks':
-      return 'Put this user in virtual stocks, displaying them on the town square for 3 days.';
+      return `Put ${username || 'this user'} in virtual stocks, displaying them on the town square for 3 days.`;
     case 'silence':
-      return 'Silence this user temporarily, preventing them from commenting for 12 hours.';
+      return `Silence ${username || 'this user'} temporarily, preventing them from commenting for 12 hours.`;
     case 'courtJester':
-      return 'Appoint this user as the Royal Court Jester for a week, with a special badge of shame.';
+      return `Appoint ${username || 'this user'} as the Royal Court Jester for a week, with a special badge of shame.`;
     default:
-      return 'Apply this mockery action to the selected user.';
+      return `Apply this mockery action to ${username || 'the selected user'}.`;
   }
 };
 

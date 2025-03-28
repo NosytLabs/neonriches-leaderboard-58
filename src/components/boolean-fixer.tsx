@@ -37,11 +37,30 @@ export const fixBooleanProps = <T extends Record<string, any>>(
   
   propNames.forEach(propName => {
     if (propName in props) {
-      result[propName] = convertPropToBool(props[propName]);
+      // Using type assertion to resolve the TypeScript error
+      result[propName] = convertPropToBool(props[propName]) as typeof props[typeof propName];
     }
   });
   
   return result;
+};
+
+// Export a utility function to fix boolean attributes in HTML strings
+export const fixBooleanAttributes = (html: string): string => {
+  const booleanAttributes = [
+    'checked', 'selected', 'disabled', 'readonly', 'multiple',
+    'ismap', 'defer', 'noresize', 'nowrap', 'noshade', 'compact'
+  ];
+  
+  let fixedHtml = html;
+  booleanAttributes.forEach(attr => {
+    // Replace attr="true" with just attr, and remove attr="false"
+    const truePattern = new RegExp(`${attr}="true"`, 'g');
+    const falsePattern = new RegExp(`${attr}="false"`, 'g');
+    fixedHtml = fixedHtml.replace(truePattern, attr).replace(falsePattern, '');
+  });
+  
+  return fixedHtml;
 };
 
 export default convertPropToBool;

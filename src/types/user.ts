@@ -1,12 +1,28 @@
 
 // User Gender
-export type UserGender = 'male' | 'female' | 'non-binary' | 'prefer-not-to-say' | 'king' | 'queen' | 'jester' | 'noble';
+export type UserGender = 
+  | 'male' 
+  | 'female' 
+  | 'non-binary' 
+  | 'prefer-not-to-say' 
+  | 'king' 
+  | 'queen' 
+  | 'jester' 
+  | 'noble' 
+  | 'neutral';
 
 // User Team
 export type UserTeam = 'red' | 'green' | 'blue' | null;
 
 // User Tier
-export type UserTier = 'free' | 'premium' | 'royal' | 'founder' | 'basic' | 'pro' | 'crab';
+export type UserTier = 
+  | 'free' 
+  | 'premium' 
+  | 'royal' 
+  | 'founder' 
+  | 'basic' 
+  | 'pro' 
+  | 'crab';
 
 // Profile Link
 export interface ProfileLink {
@@ -20,7 +36,7 @@ export interface ProfileLink {
 
 // Profile Image
 export interface ProfileImage {
-  id: string | number;
+  id?: string | number;
   url: string;
   alt?: string;
   caption?: string;
@@ -37,6 +53,7 @@ export interface SocialLink {
   url: string;
   username?: string;
   clicks?: number;
+  icon?: string;
 }
 
 // User Settings
@@ -48,7 +65,7 @@ export interface UserSettings {
   allowMessages: boolean;
   emailNotifications: boolean;
   darkMode: boolean;
-  soundEffects: boolean;
+  soundEffects?: boolean;
   language: string;
   profileVisibility?: boolean;
   allowProfileLinks?: boolean;
@@ -147,6 +164,17 @@ export interface User extends UserProfile {
   lastLogin: string;
   authToken?: string;
 }
+
+// UserProfile to User adapter
+export const adaptUserProfileToUser = (profile: UserProfile): User => {
+  return {
+    ...profile,
+    isAuthenticated: true,
+    isAdmin: false,
+    isVerified: true,
+    lastLogin: new Date().toISOString()
+  };
+};
 
 // Team export for helpers
 export type Team = 'red' | 'green' | 'blue' | null;
