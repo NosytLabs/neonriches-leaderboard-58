@@ -142,7 +142,7 @@ const ProfileAnalytics: React.FC<ProfileAnalyticsProps> = ({ user }) => {
   const sourcesData = prepareSourcesData();
   const referrersData = prepareReferrersData();
   
-  // This is the custom label render function for the pie chart with proper typing
+  // Custom label render function for the pie chart with proper typing
   const renderPieLabel = ({ name, percent }: PieLabelRenderProps) => {
     if (!name) return null;
     return `${name}: ${(Number(percent) * 100).toFixed(0)}%`;
