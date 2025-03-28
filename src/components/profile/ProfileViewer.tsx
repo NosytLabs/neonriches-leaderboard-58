@@ -19,11 +19,13 @@ const ProfileViewer: React.FC<ProfileViewerProps> = ({ user, profileData }) => {
   const { bio, images, links, joinDate, lastActive, views } = profileData;
   
   // Convert ProfileLink[] to SocialLink[] for compatibility with ProfileSocialLinks
+  // Fix: Add the 'label' property to each converted link item
   const convertedLinks = links ? links.map(link => ({
     id: typeof link.id === 'string' ? parseInt(link.id) : link.id,
     url: link.url,
-    platform: link.label,
-    icon: ''
+    platform: link.label, // Use label from the original link object
+    icon: '',
+    label: link.label    // Add the missing 'label' property
   })) : [];
   
   return (

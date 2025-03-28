@@ -6,7 +6,9 @@ import { Twitter, Instagram, Twitch, Youtube, Globe, Github, Linkedin, Facebook 
 export interface SocialLink {
   id: number;
   url: string;
-  label: string;
+  platform: string;
+  icon: string;
+  label: string; // This property is required according to the error message
 }
 
 interface ProfileSocialLinksProps {
