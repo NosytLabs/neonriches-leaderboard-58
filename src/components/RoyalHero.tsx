@@ -16,9 +16,9 @@ const RoyalHero = () => {
       
       <HeroContent 
         isVisible={isVisible}
-        title="P2W.FUN"
-        subtitle="Pay to win like never before"
-        quote="Where wealth equals worth, digitally."
+        title="SpendThrone.com"
+        subtitle="Digital nobility, purely cosmetic"
+        quote="Where wealth buys playful status, not power."
         statusTag="BETA"
       />
     </section>

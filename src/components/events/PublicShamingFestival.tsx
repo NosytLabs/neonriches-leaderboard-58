@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Scroll, DollarSign, Sparkles } from 'lucide-react';
 import { topUsers } from './data';
@@ -31,7 +30,7 @@ const PublicShamingDescription = () => {
           Royal Public Shaming Festival
         </h2>
         <p className="text-white/70">
-          Engage in medieval-style public shaming by pelting nobles with rotten tomatoes, eggs, or placing them in stocks. A satirical feature with purely visual effects.
+          Engage in medieval-style cosmetic shaming by visually pelting nobles with rotten tomatoes, eggs, or placing them in stocks. A satirical feature with <strong>purely visual effects</strong> that don't affect leaderboard ranks.
         </p>
       </div>
       
@@ -42,7 +41,7 @@ const PublicShamingDescription = () => {
         </div>
         <div className="glass-morphism border-white/10 rounded-full px-3 py-1.5 text-sm text-white/70 hover:border-royal-gold/20 transition-all">
           <DollarSign size={14} className="inline-block mr-1.5 text-royal-gold" />
-          $0.50 - $2.00
+          $0.25 - $1.00
         </div>
       </div>
     </div>
@@ -88,9 +87,9 @@ const PublicShamingFestival = () => {
   // Helper function to get price based on shame type
   const getShameActionPrice = (action: ShameAction): number => {
     switch (action) {
-      case 'tomatoes': return 0.5;
-      case 'eggs': return 1.0;
-      case 'stocks': return 2.0;
+      case 'tomatoes': return 0.25;
+      case 'eggs': return 0.50;
+      case 'stocks': return 1.00;
     }
   };
 
@@ -105,6 +104,7 @@ const PublicShamingFestival = () => {
           className="mb-6" 
           messagePrefix="Important:" 
           variant="info" 
+          message="All shaming effects are purely cosmetic and do not affect a user's actual rank or standing. These are visual entertainment features only."
         />
         
         <div className="mb-6 p-4 glass-morphism border-white/10 rounded-lg">
@@ -116,27 +116,27 @@ const PublicShamingFestival = () => {
               <div className="flex items-center mb-2">
                 <div className="text-xl mr-2">🍅</div>
                 <div className="font-medium">Throw Tomatoes</div>
-                <div className="ml-auto text-royal-gold">$0.50</div>
+                <div className="ml-auto text-royal-gold">$0.25</div>
               </div>
-              <p className="text-white/70 text-sm">Pelt your target with rotten tomatoes. A classic form of public ridicule.</p>
+              <p className="text-white/70 text-sm">Pelt your target with rotten tomatoes. A classic form of public ridicule (visual effect only).</p>
             </div>
             
             <div className="p-3 glass-morphism border-royal-gold/20 rounded-lg">
               <div className="flex items-center mb-2">
                 <div className="text-xl mr-2">🥚</div>
                 <div className="font-medium">Throw Rotten Eggs</div>
-                <div className="ml-auto text-royal-gold">$1.00</div>
+                <div className="ml-auto text-royal-gold">$0.50</div>
               </div>
-              <p className="text-white/70 text-sm">Hurl rotten eggs at your target. The stench will follow them for a day.</p>
+              <p className="text-white/70 text-sm">Hurl rotten eggs at your target. The visual stench will follow them for a day.</p>
             </div>
             
             <div className="p-3 glass-morphism border-royal-purple/20 rounded-lg">
               <div className="flex items-center mb-2">
                 <div className="text-xl mr-2">🪵</div>
                 <div className="font-medium">Place in Stocks</div>
-                <div className="ml-auto text-royal-gold">$2.00</div>
+                <div className="ml-auto text-royal-gold">$1.00</div>
               </div>
-              <p className="text-white/70 text-sm">Place your target in the public stocks. The ultimate medieval humiliation.</p>
+              <p className="text-white/70 text-sm">Place your target in the public stocks. The ultimate medieval visual humiliation.</p>
             </div>
           </div>
         </div>
@@ -167,7 +167,7 @@ const PublicShamingFestival = () => {
           </h3>
           <p className="text-white/70 text-sm">
             Public shaming was a common form of punishment in medieval societies. People would throw rotten food at those placed in the stocks or pillory, 
-            turning punishment into a communal entertainment. This feature is a satirical and harmless take on these historical practices.
+            turning punishment into a communal entertainment. This feature is a satirical and harmless take on these historical practices with <strong>purely visual effects</strong>.
           </p>
         </div>
         
@@ -182,8 +182,8 @@ const PublicShamingFestival = () => {
                 totalSpent: selectedUser.amountSpent,
                 rank: selectedUser.rank,
                 team: selectedUser.team,
-                tier: 'free', // Add missing property
-                spendStreak: 0 // Add missing property
+                tier: 'free',
+                spendStreak: 0
               }}
               shameType={selectedAction}
               onConfirm={confirmShame}

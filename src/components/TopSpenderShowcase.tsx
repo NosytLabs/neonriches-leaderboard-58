@@ -36,6 +36,12 @@ const TopSpenderShowcase: React.FC<TopSpenderShowcaseProps> = ({ topSpender }) =
           <span className="text-xs text-purple-100 font-semibold">CURRENT RULER</span>
         </div>
         
+        {/* Featured advertiser badge */}
+        <div className="absolute top-3 left-3 flex items-center gap-2 bg-royal-gold/80 backdrop-blur-sm px-3 py-1.5 rounded-full border border-royal-gold/50">
+          <Zap className="h-4 w-4 text-white animate-pulse" />
+          <span className="text-xs text-white font-semibold">FEATURED ADVERTISER</span>
+        </div>
+        
         {/* Spending amount badge */}
         <div className="absolute bottom-3 right-3 glass-morphism rounded-full px-3 py-1.5 text-sm font-bold">
           <DollarSign className="h-3.5 w-3.5 inline-block text-purple-300 mr-1" />
@@ -57,7 +63,7 @@ const TopSpenderShowcase: React.FC<TopSpenderShowcaseProps> = ({ topSpender }) =
             <div className="pt-10 pb-3">
               <h3 className="text-xl font-bold">{topSpender.username}</h3>
               <p className="text-white/70 text-sm italic mt-1">
-                "{topSpender.bio || "Pay-to-win champion and current ruler of the digital hierarchy"}"
+                "{topSpender.bio || "Currently the top spender with exclusive advertising privileges"}"
               </p>
             </div>
           </div>
@@ -67,7 +73,7 @@ const TopSpenderShowcase: React.FC<TopSpenderShowcaseProps> = ({ topSpender }) =
             <div className="mb-4">
               <h4 className="text-sm font-bold text-purple-300 mb-2 flex items-center">
                 <Zap className="h-4 w-4 mr-1.5" />
-                SPONSORED LINKS
+                PREMIUM ADVERTISING SPACE
               </h4>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 {(topSpender.socialLinks || []).map((link, index) => (
@@ -90,10 +96,10 @@ const TopSpenderShowcase: React.FC<TopSpenderShowcaseProps> = ({ topSpender }) =
                 {(!topSpender.socialLinks || topSpender.socialLinks.length === 0) && (
                   <>
                     <div className="glass-morphism border-purple-500/20 p-2 rounded-lg">
-                      <span className="text-sm text-white/30">No links provided</span>
+                      <span className="text-sm text-white/30">Exclusive ad space available</span>
                     </div>
                     <div className="glass-morphism border-purple-500/20 p-2 rounded-lg">
-                      <span className="text-sm text-white/30">No links provided</span>
+                      <span className="text-sm text-white/30">Premium promotion spot</span>
                     </div>
                   </>
                 )}
@@ -140,7 +146,7 @@ const TopSpenderShowcase: React.FC<TopSpenderShowcaseProps> = ({ topSpender }) =
         </div>
         
         <div className="mt-4 text-xs text-white/40 italic text-center">
-          "In our digital kingdom, money speaks. This user has paid the most to be at the top of our leaderboard."
+          "The top spender on SpendThrone.com receives this premium advertising space. All features are purely cosmetic."
         </div>
       </CardContent>
     </div>

@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState, Suspense, lazy } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '@/components/Header';
@@ -89,11 +90,11 @@ const Index = () => {
           
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold mb-2 font-medieval">
-              <span className="royal-gradient">A Hierarchy Built Purely on Wealth</span>
+              <span className="royal-gradient">A Satirical Hierarchy of Cosmetic Status</span>
             </h2>
             <p className="text-foreground/80 max-w-2xl mx-auto font-medieval-text">
-              On P2W.FUN, your status is directly proportional to your spending. $1 = 1 unit of rank. 
-              The leaderboard never resets, making your investment in status eternal.
+              On SpendThrone.com, your cosmetic status is directly proportional to your spending. $1 = 1 unit of rank. 
+              The leaderboard never resets, making your investment in digital prestige eternal.
             </p>
           </div>
           
@@ -104,9 +105,9 @@ const Index = () => {
                 <Crown className="h-12 w-12 text-royal-gold mx-auto animate-royal-pulse relative z-10" />
                 <Sparkles className="h-4 w-4 text-royal-gold absolute -top-1 -right-1 animate-sparkle" />
               </div>
-              <h3 className="text-xl font-bold mb-2 font-medieval text-royal-gold">Dollar-Driven Rank</h3>
+              <h3 className="text-xl font-bold mb-2 font-medieval text-royal-gold">Cosmetic Status Ranking</h3>
               <p className="text-foreground/80 mb-4 font-medieval-text">
-                Your rank is determined solely by your spending. Top spenders get exclusive perks and recognition.
+                Your rank is determined by your spending. Top spenders get exclusive cosmetic features and visual enhancements.
               </p>
               <Link to="/leaderboard">
                 <Button 
@@ -127,9 +128,9 @@ const Index = () => {
                 <Trophy className="h-12 w-12 text-royal-gold mx-auto animate-royal-pulse relative z-10" />
                 <Sparkles className="h-4 w-4 text-royal-gold absolute -top-1 -right-1 animate-sparkle" style={{ animationDelay: '0.5s' }}/>
               </div>
-              <h3 className="text-xl font-bold mb-2 font-medieval text-royal-gold">Royal Events</h3>
+              <h3 className="text-xl font-bold mb-2 font-medieval text-royal-gold">Visual Entertainment Events</h3>
               <p className="text-foreground/80 mb-4 font-medieval-text">
-                Participate in weekly events like the Public Shaming Festival where you can pay to shame other nobles.
+                Participate in weekly events like the Public Shaming Festival where you can pay for playful visual effects - all purely cosmetic.
               </p>
               <Link to="/events">
                 <Button 
@@ -150,9 +151,9 @@ const Index = () => {
                 <Shield className="h-12 w-12 text-royal-gold mx-auto animate-royal-pulse relative z-10" />
                 <Sparkles className="h-4 w-4 text-royal-gold absolute -top-1 -right-1 animate-sparkle" style={{ animationDelay: '1s' }}/>
               </div>
-              <h3 className="text-xl font-bold mb-2 font-medieval text-royal-gold">Noble Houses</h3>
+              <h3 className="text-xl font-bold mb-2 font-medieval text-royal-gold">Cosmetic Houses</h3>
               <p className="text-foreground/80 mb-4 font-medieval-text">
-                Join one of three noble houses and compete for house glory and additional royal benefits.
+                Join one of three houses and compete for visual glory and additional cosmetic benefits.
               </p>
               <Link to="/dashboard">
                 <Button 
@@ -190,7 +191,7 @@ const Index = () => {
                   </Button>
                 </Link>
                 <p className="mt-3 text-foreground/60 text-sm italic font-medieval-text">
-                  Every dollar spent elevates your standing. Why earn respect when you can simply buy it?
+                  Every dollar spent elevates your cosmetic standing. All purely visual without any actual power or advantages.
                 </p>
               </div>
             </div>
@@ -201,14 +202,14 @@ const Index = () => {
           </Suspense>
           
           <Suspense fallback={<LoadingPlaceholder />}>
-            <RoyalDivider variant="crown" label="PATH TO NOBILITY" color="gold" className="mb-8" />
+            <RoyalDivider variant="crown" label="PATH TO VISUAL NOBILITY" color="gold" className="mb-8" />
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <RoyalParchment variant="default" className="p-6">
-                <h3 className="text-xl font-bold mb-4 font-medieval royal-gradient">The Royal Spending Hierarchy</h3>
+                <h3 className="text-xl font-bold mb-4 font-medieval royal-gradient">The Royal Cosmetic Hierarchy</h3>
                 <p className="text-foreground/70 mb-6">
-                  Your journey from peasant to nobility is measured in dollars, not deeds. Ascend through our meticulously 
-                  designed spending tiers and watch as your digital social status rises with each transaction.
+                  Your journey from peasant to visual nobility is measured in dollars, not deeds. Ascend through our meticulously 
+                  designed cosmetic tiers and watch as your digital social status rises with each transaction.
                 </p>
                 
                 <div className="space-y-4">
@@ -240,21 +241,21 @@ const Index = () => {
                 <RoyalParchment variant="gold" className="p-6 flex-1">
                   <h3 className="text-xl font-bold mb-3 font-medieval">The Royal Promise</h3>
                   <p className="text-foreground/70 mb-4">
-                    We solemnly swear that your rank will always be determined by a pure mathematical formula:
+                    We solemnly swear that your cosmetic rank will always be determined by a pure mathematical formula:
                   </p>
                   <div className="p-4 bg-royal-gold/10 rounded-lg border border-royal-gold/20 text-center mb-4">
                     <p className="text-lg font-bold font-medieval">$1 Spent = 1 Rank Point</p>
                   </div>
                   <p className="text-foreground/70 italic">
-                    No hidden algorithms. No secret formulas. Just the elegant simplicity of wealth equaling worth.
+                    No hidden algorithms. No secret formulas. Just the elegant simplicity of a leaderboard based on spending.
                   </p>
                 </RoyalParchment>
                 
                 <RoyalParchment variant="crimson" className="p-6 flex-1">
                   <h3 className="text-xl font-bold mb-3 font-medieval">Weekly Crown Ceremonies</h3>
                   <p className="text-foreground/70 mb-2">
-                    Every Sunday at midnight, the week's top spender receives the coveted Digital Crown—a completely worthless 
-                    badge that somehow manages to inspire irrational competition.
+                    Every Sunday at midnight, the week's top spender receives the coveted Digital Crown—a purely cosmetic 
+                    badge that somehow manages to inspire playful competition.
                   </p>
                   <div className="text-center mt-4">
                     <Crown size={40} className="text-royal-gold inline-block animate-crown-glow" />

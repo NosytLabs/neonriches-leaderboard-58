@@ -80,14 +80,21 @@ const RoyalBoutique = () => {
       <CardHeader>
         <div className="flex items-center">
           <Crown className="mr-3 h-6 w-6 text-royal-gold" />
-          <CardTitle>Royal Boutique</CardTitle>
+          <CardTitle>SpendThrone Boutique</CardTitle>
         </div>
         <CardDescription>
-          Enhance your noble presence with exclusive cosmetic options
+          Enhance your profile with exclusive cosmetic options
         </CardDescription>
       </CardHeader>
       
       <CardContent>
+        <div className="p-3 bg-black/20 rounded-lg text-sm mb-4">
+          <p className="flex items-center text-white/70">
+            <Award size={16} className="text-royal-gold mr-2" />
+            <span>All items are purely cosmetic and provide visual enhancements only.</span>
+          </p>
+        </div>
+        
         <Tabs defaultValue="decorations" value={activeTab} onValueChange={setActiveTab}>
           <TabsList className="grid grid-cols-4 glass-morphism">
             <TabsTrigger value="decorations" className="flex items-center gap-2">

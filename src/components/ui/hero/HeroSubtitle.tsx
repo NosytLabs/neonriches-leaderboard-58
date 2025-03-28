@@ -8,7 +8,7 @@ interface HeroSubtitleProps {
 const HeroSubtitle: React.FC<HeroSubtitleProps> = ({ text }) => {
   return (
     <h2 className="text-xl md:text-2xl text-white/80 font-medieval-text">
-      {text || "Pay to win like never before"}
+      {text || "Digital nobility, purely cosmetic"}
     </h2>
   );
 };
