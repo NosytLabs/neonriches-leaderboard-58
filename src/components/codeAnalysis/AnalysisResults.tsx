@@ -1,8 +1,7 @@
-
 import React from 'react';
 import { FileSearch } from 'lucide-react';
 import AnalysisTabs from './AnalysisTabs';
-import { AnalysisResult } from '@/utils/codeAnalysis/analysisUtils';
+import { AnalysisResult } from '@/utils/codeAnalysis/types';
 
 type AnalysisTab = 'unused' | 'duplicate' | 'complexity' | 'performance' | 'overview';
 

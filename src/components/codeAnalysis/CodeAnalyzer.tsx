@@ -1,10 +1,9 @@
-
 import React, { useState } from 'react';
 import AnalysisSettings from './AnalysisSettings';
 import AnalysisResults from './AnalysisResults';
 import { Button } from '@/components/ui/button';
 import { FileSearch } from 'lucide-react';
-import { AnalysisResult } from '@/utils/codeAnalysis/analysisUtils';
+import { AnalysisResult } from '@/utils/codeAnalysis/types';
 
 const CodeAnalyzer: React.FC = () => {
   const [isAnalyzing, setIsAnalyzing] = useState(false);

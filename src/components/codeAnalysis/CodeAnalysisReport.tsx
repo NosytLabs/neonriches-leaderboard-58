@@ -1,5 +1,5 @@
 import React from 'react';
-import { AnalysisResult } from '@/utils/codeAnalysis/analysisUtils';
+import { AnalysisResult } from '@/utils/codeAnalysis/types';
 import { FileCode, AlertTriangle, Info } from 'lucide-react';
 import IssueSection from './shared/IssueSection';
 import IssueItem from './shared/IssueItem';

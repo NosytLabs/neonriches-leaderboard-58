@@ -1,11 +1,10 @@
-
 import React from 'react';
 import UnusedCodeReport from './UnusedCodeReport';
 import DuplicateCodeReport from './DuplicateCodeReport';
 import ComplexityReport from './ComplexityReport';
 import PerformanceReport from './PerformanceReport';
 import CodeAnalysisReport from './CodeAnalysisReport';
-import { AnalysisResult } from '@/utils/codeAnalysis/analysisUtils';
+import { AnalysisResult } from '@/utils/codeAnalysis/types';
 
 type AnalysisTab = 'unused' | 'duplicate' | 'complexity' | 'performance' | 'overview';
 
