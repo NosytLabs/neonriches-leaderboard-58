@@ -10,6 +10,7 @@ export interface ProfileBoostDisplayProps {
   user: UserProfile;
 }
 
+// Explicitly define component with its prop type
 const ProfileBoostDisplay = ({ user }: ProfileBoostDisplayProps) => {
   const { getActiveBoosts, boostEffects, getTimeRemaining } = useProfileBoost(user);
   const activeBoosts = getActiveBoosts();
