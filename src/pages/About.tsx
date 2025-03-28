@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import Header from '@/components/Header';
@@ -51,7 +50,7 @@ const About = () => {
   
   const handleShowCertificate = () => {
     setCertificateVisible(true);
-    playSound('parchmentUnfurl', 0.4);
+    playSound('parchmentUnfurl');
   };
   
   const handleCertificateVerify = () => {

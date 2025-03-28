@@ -3,6 +3,7 @@ import React, { createContext, useContext, useCallback } from 'react';
 import { toast } from '@/hooks/use-toast';
 import useNotificationSounds from '@/hooks/use-notification-sounds';
 import { ToastActionElement } from '@/components/ui/toast';
+import { SoundType } from '@/hooks/sounds/types';
 
 type ToastVariant = 'default' | 'destructive' | 'success' | 'warning' | 'info' | 'royal' | 'shame';
 
@@ -13,7 +14,7 @@ interface ToastOptions {
   variant?: ToastVariant;
   duration?: number;
   className?: string;
-  sound?: string;
+  sound?: SoundType;
   volume?: number;
 }
 
