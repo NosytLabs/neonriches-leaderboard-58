@@ -1,23 +1,21 @@
 
+// User profile types
 export type Team = 'red' | 'green' | 'blue' | null;
-export type UserTier = 'basic' | 'pro' | 'royal' | 'whale' | 'crab' | 'octopus' | 'fish' | 'dolphin' | 'shark' | 'free';
+export type UserTier = 'free' | 'pro' | 'royal' | 'founder';
 export type UserGender = 'king' | 'queen' | 'neutral' | 'jester' | 'noble';
-export type RoyalButtonVariant = 'royal' | 'royalGold' | 'royalCrimson' | 'royalNavy' | 'royalPurple' | 'outline' | 'glass' | 'goldOutline' | 'crimsonOutline' | 'navyOutline' | 'mahogany';
-export type RoyalDividerVariant = 'line' | 'ornate' | 'crown' | 'simple' | 'scroll' | 'quill' | 'treasure';
 
 export interface ProfileImage {
-  id: string;
+  id: string | number;
   url: string;
-  isPrimary: boolean;
   caption?: string;
+  isPrimary?: boolean;
 }
 
 export interface SocialLink {
-  id: string;
+  id: number;
   platform: string;
   url: string;
-  icon: string;
-  clicks?: number;
+  icon?: string;
 }
 
 export interface UserCosmetics {
@@ -49,33 +47,35 @@ export interface UserSubscription {
   features: string[];
 }
 
+// User profile data
 export interface UserProfile {
   id: string;
   username: string;
   email: string;
   displayName?: string;
   bio?: string;
-  profileImage?: string;
+  gender?: UserGender;
+  tier: UserTier;
+  team?: Team;
   rank: number;
   previousRank?: number;
   joinedAt: string;
   joinDate: string;
   amountSpent?: number;
   spentAmount?: number;
-  walletBalance?: number;
-  team?: Team;
-  tier?: UserTier;
   spendStreak?: number;
+  walletBalance?: number;
   isVerified?: boolean;
   isVIP?: boolean;
-  gender?: UserGender;
+  profileImage?: string;
+  profileImages?: ProfileImage[];
   profileViews?: number;
   profileClicks?: number;
+  socialLinks?: SocialLink[];
   followers?: number;
   following?: number;
   activeTitle?: string;
   cosmetics?: UserCosmetics;
-  subscription?: UserSubscription;
   profileBoosts?: Array<{
     id: string;
     effectId: string;
@@ -85,8 +85,7 @@ export interface UserProfile {
     strength: number;
     appliedBy: string;
   }>;
-  profileImages?: ProfileImage[];
-  socialLinks?: SocialLink[];
+  subscription?: UserSubscription;
   badges?: string[];
   settings?: {
     showRank: boolean;
@@ -97,25 +96,29 @@ export interface UserProfile {
     emailNotifications: boolean;
     darkMode: boolean;
     soundEffects: boolean;
-    profileVisibility?: boolean;
-    allowProfileLinks?: boolean;
-    showEmailOnProfile?: boolean;
-    rankChangeAlerts?: boolean;
-    shameAlerts?: boolean;
-    newFollowerAlerts?: boolean;
-    notifications?: {
-      email: boolean;
-      push: boolean;
-      in_app: boolean;
-      rankChanges?: boolean;
-    };
   };
 }
 
-export interface ProfileLink {
-  id: string;
-  label: string;
-  url: string;
-  icon?: string;
-  clicks?: number;
-}
+export type RoyalButtonVariant = 
+  | 'royal' 
+  | 'royalGold' 
+  | 'royalPurple' 
+  | 'royalNavy' 
+  | 'royalCrimson' 
+  | 'glass' 
+  | 'outline' 
+  | 'goldOutline' 
+  | 'crimsonOutline' 
+  | 'navyOutline'
+  | 'mahogany';
+
+export type RoyalDividerVariant = 
+  | 'line' 
+  | 'crown' 
+  | 'sword' 
+  | 'shield' 
+  | 'scroll' 
+  | 'double' 
+  | 'quill' 
+  | 'treasure';
+

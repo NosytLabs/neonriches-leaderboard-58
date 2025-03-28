@@ -8,9 +8,8 @@ import { useToast } from '@/hooks/use-toast';
 import { useProfileData } from '@/hooks/useProfileData';
 import { ProfileLoader, ProfileNotFound } from '@/components/profile/ProfilePageLoader';
 import ProfileTabNavigation, { ProfileTab } from '@/components/profile/ProfileTabNavigation';
-import ProfileContent from '@/components/profile/ProfileContent';
+import ProfileContent, { ProfileData } from '@/components/profile/ProfileContent';
 import { UserProfile } from '@/types/user';
-import { ProfileData, ProfileImage } from '@/types/profile';
 
 const Profile = () => {
   const { username } = useParams<{ username: string }>();
@@ -57,7 +56,7 @@ const Profile = () => {
   const profileContentData: ProfileData = {
     bio: profileUser.bio || '',
     images: profileUser.profileImages?.map(img => ({
-      id: typeof img.id === 'string' ? parseInt(img.id) || Math.random() : img.id,
+      id: img.id,
       url: img.url,
       caption: img.caption || ''
     })) || [],
@@ -68,9 +67,9 @@ const Profile = () => {
     })) || [],
     joinDate: profileUser.joinDate,
     lastActive: profileUser.joinedAt,
-    followers: profileUser.followers,
-    following: profileUser.following,
-    views: profileUser.profileViews
+    followers: profileUser.followers || 0,
+    following: profileUser.following || 0,
+    views: profileUser.profileViews || 0
   };
   
   return (

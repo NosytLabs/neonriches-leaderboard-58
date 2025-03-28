@@ -65,7 +65,7 @@ const ImagesEditor: React.FC<ImagesEditorProps> = ({ user, images, onImagesChang
     });
   };
 
-  const handleRemoveImage = (id: string) => {
+  const handleRemoveImage = (id: string | number) => {
     // Check if we're removing the primary image
     const imageToRemove = images.find(img => img.id === id);
     const updatedImages = images.filter(image => image.id !== id);
@@ -83,7 +83,7 @@ const ImagesEditor: React.FC<ImagesEditorProps> = ({ user, images, onImagesChang
     });
   };
 
-  const handleSetPrimary = (id: string) => {
+  const handleSetPrimary = (id: string | number) => {
     const updatedImages = images.map(image => ({
       ...image,
       isPrimary: image.id === id
@@ -104,7 +104,7 @@ const ImagesEditor: React.FC<ImagesEditorProps> = ({ user, images, onImagesChang
         
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
           {images.map((image) => (
-            <div key={image.id} className="glass-morphism rounded-lg p-3 border border-white/10">
+            <div key={String(image.id)} className="glass-morphism rounded-lg p-3 border border-white/10">
               <div className="aspect-square w-full rounded-md overflow-hidden mb-2">
                 <img 
                   src={image.url} 

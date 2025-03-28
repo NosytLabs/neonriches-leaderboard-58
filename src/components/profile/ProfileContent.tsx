@@ -11,7 +11,7 @@ export type ProfileTab = 'view' | 'edit' | 'settings' | 'boost' | 'analytics';
 
 export interface ProfileData {
   bio: string;
-  images: { id: number; url: string; caption: string; }[];
+  images: { id: number | string; url: string; caption?: string; }[];
   links: { id: number; url: string; label: string; }[];
   joinDate?: string;
   lastActive?: string;

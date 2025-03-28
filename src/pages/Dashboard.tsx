@@ -6,15 +6,17 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { useAuth } from '@/contexts/auth';
 import { Button } from '@/components/ui/button';
-import { toast } from '@/hooks/use-toast';
+import { useToast } from '@/hooks/use-toast';
 import { getUserRanking } from '@/services/spendingService';
 import { formatCurrency } from '@/lib/utils';
+import { RoyalActivity } from '@/types/activity';
+import { getMockActivities } from '@/components/dashboard/DashboardData';
+
+// Components we created
 import RoyalDashboardSummary from '@/components/dashboard/RoyalDashboardSummary';
 import PersonalStats from '@/components/dashboard/PersonalStats';
 import RecentActivity from '@/components/dashboard/RecentActivity';
 import NextRankCard from '@/components/dashboard/NextRankCard';
-import { RoyalActivity } from '@/types/activity';
-import { getMockActivities } from '@/components/dashboard/DashboardData';
 
 // Required to fix the TypeScript errors
 interface RankingData {
@@ -31,6 +33,7 @@ interface RankingData {
 const Dashboard = () => {
   const navigate = useNavigate();
   const { user, isAuthenticated } = useAuth();
+  const { toast } = useToast();
   const [userRank, setUserRank] = useState<RankingData | null>(null);
   const [recentActivities, setRecentActivities] = useState<RoyalActivity[]>([]);
   
@@ -50,7 +53,17 @@ const Dashboard = () => {
       if (user) {
         const currentUserRank = rankings.find(r => r.userId === user.id);
         if (currentUserRank) {
-          setUserRank(currentUserRank);
+          // Make sure all required fields exist with defaults if needed
+          setUserRank({
+            rank: currentUserRank.rank,
+            username: currentUserRank.username,
+            userId: currentUserRank.userId,
+            totalSpent: currentUserRank.totalSpent,
+            tier: currentUserRank.tier || 'free',
+            team: currentUserRank.team || 'none',
+            spendStreak: currentUserRank.spendStreak || 0,
+            profileImage: currentUserRank.profileImage
+          });
         }
       }
     };

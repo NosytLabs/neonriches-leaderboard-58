@@ -1,91 +1,184 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import CommunityVoting from '@/components/community/CommunityVoting';
-import { Users, Shield, Feather, MessageCircle } from 'lucide-react';
-import RoyalDivider from '@/components/ui/royal-divider';
+import { CommunityVoting } from '@/components/community/CommunityVoting';
+import { SuggestionForm } from '@/components/community/SuggestionForm';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { ScrollText, Crown, MessageSquare, Users, ThumbsUp, Gift } from 'lucide-react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import MedievalIcon from '@/components/ui/medieval-icon';
 import RoyalButton from '@/components/ui/royal-button';
 
 const RoyalCouncil = () => {
+  const [activeTab, setActiveTab] = useState('discussions');
+  
   return (
-    <div className="min-h-screen flex flex-col bg-background text-foreground">
+    <div className="min-h-screen bg-background text-foreground">
       <Helmet>
         <title>Royal Council | SpendThrone</title>
-        <meta 
-          name="description" 
-          content="Join the SpendThrone Royal Council, vote on royal decrees, and help shape the future of our satirical social experiment." 
-        />
+        <meta name="description" content="Join the Royal Council to suggest features, vote on proposals, and help shape the future of SpendThrone." />
       </Helmet>
       
       <Header />
       
-      <main className="flex-1 pt-24 pb-12 px-4 sm:px-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12">
-            <MedievalIcon name="crown" size="xl" color="gold" className="mx-auto mb-4 animate-crown-glow" />
-            <h1 className="text-3xl md:text-4xl font-bold royal-gradient mb-4 font-medieval">The Royal Council</h1>
-            <p className="text-white/70 max-w-2xl mx-auto">
-              Join our council of spendthrift nobles to vote on royal decrees, suggest ventures, and help shape the future of our satirical kingdom.
-            </p>
+      <main className="container mx-auto px-4 py-10 pt-24">
+        <div className="flex items-center mb-6">
+          <Crown className="h-8 w-8 text-royal-gold mr-3" />
+          <h1 className="text-3xl font-bold font-medieval">The Royal Council</h1>
+        </div>
+        
+        <div className="mb-8 max-w-3xl">
+          <p className="text-lg text-white/80">
+            Welcome to the Royal Council, where the nobles of SpendThrone gather to discuss matters of importance, suggest new features, and vote on the future direction of the realm.
+          </p>
+        </div>
+        
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+          <div className="lg:col-span-2">
+            <Tabs defaultValue={activeTab} onValueChange={setActiveTab}>
+              <TabsList className="glass-morphism bg-transparent border-white/10 w-full">
+                <TabsTrigger value="discussions" className="data-[state=active]:bg-white/10">
+                  <MessageSquare className="h-4 w-4 mr-2" />
+                  Discussions
+                </TabsTrigger>
+                <TabsTrigger value="voting" className="data-[state=active]:bg-white/10">
+                  <ThumbsUp className="h-4 w-4 mr-2" />
+                  Voting
+                </TabsTrigger>
+                <TabsTrigger value="suggestions" className="data-[state=active]:bg-white/10">
+                  <ScrollText className="h-4 w-4 mr-2" />
+                  Suggestions
+                </TabsTrigger>
+              </TabsList>
+              
+              <TabsContent value="discussions" className="mt-6">
+                <Card className="glass-morphism border-white/10">
+                  <CardHeader>
+                    <CardTitle>Royal Discussions</CardTitle>
+                    <CardDescription>
+                      Engage in conversations with other nobles about the SpendThrone kingdom.
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-center py-8">
+                      <MedievalIcon name="scroll" size="2xl" className="mx-auto mb-4" />
+                      <h3 className="text-xl font-bold mb-2">The Council Chambers Await</h3>
+                      <p className="text-white/70 mb-4">
+                        Discussions will be available once the royal scribe has prepared the chambers.
+                      </p>
+                      <Button variant="outline" className="glass-morphism border-white/10">
+                        Receive Notification When Ready
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+              
+              <TabsContent value="voting" className="mt-6">
+                <CommunityVoting />
+              </TabsContent>
+              
+              <TabsContent value="suggestions" className="mt-6">
+                <SuggestionForm />
+              </TabsContent>
+            </Tabs>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-            <div className="glass-morphism border-white/10 p-6 rounded-lg text-center">
-              <div className="w-12 h-12 rounded-full bg-royal-gold/20 flex items-center justify-center mx-auto mb-4">
-                <Shield className="h-6 w-6 text-royal-gold" />
-              </div>
-              <h3 className="text-xl font-bold mb-2 font-medieval">Council Votes</h3>
-              <p className="text-white/70">
-                Cast thy vote on which royal decrees shall be granted priority in our noble kingdom.
-              </p>
-            </div>
+          <div className="space-y-6">
+            <Card className="glass-morphism border-white/10">
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <Users className="h-5 w-5 mr-2 text-royal-gold" />
+                  Council Members
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-sm text-white/70 mb-4">
+                  <p>Active nobles with voting rights in the royal council.</p>
+                </div>
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between p-2 glass-morphism border-white/5 rounded-md">
+                    <div className="flex items-center">
+                      <div className="w-8 h-8 rounded-full bg-royal-gold/20 flex items-center justify-center mr-2">
+                        <MedievalIcon name="crown" size="sm" />
+                      </div>
+                      <span>KingSpender</span>
+                    </div>
+                    <div className="text-royal-gold text-xs">Founder</div>
+                  </div>
+                  <div className="flex items-center justify-between p-2 glass-morphism border-white/5 rounded-md">
+                    <div className="flex items-center">
+                      <div className="w-8 h-8 rounded-full bg-royal-gold/20 flex items-center justify-center mr-2">
+                        <MedievalIcon name="seal" size="sm" />
+                      </div>
+                      <span>GoldHoarder</span>
+                    </div>
+                    <div className="text-royal-gold text-xs">Royal</div>
+                  </div>
+                  <div className="flex items-center justify-between p-2 glass-morphism border-white/5 rounded-md">
+                    <div className="flex items-center">
+                      <div className="w-8 h-8 rounded-full bg-royal-navy/20 flex items-center justify-center mr-2">
+                        <MedievalIcon name="shield" size="sm" color="navy" />
+                      </div>
+                      <span>SpendQueen</span>
+                    </div>
+                    <div className="text-royal-navy text-xs">Pro</div>
+                  </div>
+                </div>
+                <div className="mt-4">
+                  <RoyalButton 
+                    variant="royalGold" 
+                    shimmer={true} 
+                    className="w-full"
+                    icon={<Gift size={16} />}
+                  >
+                    Upgrade to Join Council
+                  </RoyalButton>
+                </div>
+              </CardContent>
+            </Card>
             
-            <div className="glass-morphism border-white/10 p-6 rounded-lg text-center">
-              <div className="w-12 h-12 rounded-full bg-royal-purple/20 flex items-center justify-center mx-auto mb-4">
-                <Feather className="h-6 w-6 text-royal-purple" />
-              </div>
-              <h3 className="text-xl font-bold mb-2 font-medieval">Propose Decrees</h3>
-              <p className="text-white/70">
-                Hast thou a brilliant idea for the realm? Submit thy proposal for the council's consideration.
-              </p>
-            </div>
-            
-            <div className="glass-morphism border-white/10 p-6 rounded-lg text-center">
-              <div className="w-12 h-12 rounded-full bg-royal-navy/20 flex items-center justify-center mx-auto mb-4">
-                <MessageCircle className="h-6 w-6 text-royal-navy" />
-              </div>
-              <h3 className="text-xl font-bold mb-2 font-medieval">Noble Discourse</h3>
-              <p className="text-white/70">
-                Engage with fellow nobles in discourse to refine ideas for the betterment of the realm.
-              </p>
-            </div>
-          </div>
-          
-          <RoyalDivider variant="crown" label="COUNCIL MATTERS" color="gold" className="mb-8" />
-          
-          <CommunityVoting />
-          
-          <div className="glass-morphism border-white/10 p-6 rounded-lg mt-16 text-center max-w-3xl mx-auto">
-            <MedievalIcon name="seal" size="lg" color="gold" className="mx-auto mb-3" />
-            <h3 className="text-xl font-bold royal-gradient mb-2 font-medieval">Join The Royal Discord Assembly</h3>
-            <p className="text-white/70 mb-4">
-              For more indepth court discussions, royal decree suggestions, and to connect with other nobles, join our Discord assembly.
-            </p>
-            <RoyalButton 
-              variant="royalGold"
-              shimmer={true}
-              as="a" 
-              href="https://discord.gg" 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              className="inline-flex items-center justify-center px-6 py-3"
-              icon={<Users className="mr-2 h-4 w-4" />}
-            >
-              Join Royal Assembly
-            </RoyalButton>
+            <Card className="glass-morphism border-white/10">
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <MedievalIcon name="scroll" className="mr-2" />
+                  Council Rules
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ul className="space-y-2 text-sm">
+                  <li className="flex items-start">
+                    <span className="text-royal-gold mr-2">•</span>
+                    <span>Be respectful to fellow council members</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-royal-gold mr-2">•</span>
+                    <span>Only Pro tier and above can create proposals</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-royal-gold mr-2">•</span>
+                    <span>Royal tier members get weighted votes (3x)</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-royal-gold mr-2">•</span>
+                    <span>Founders get final veto power on all decisions</span>
+                  </li>
+                </ul>
+                <div className="mt-4">
+                  <a 
+                    href="https://docs.spendthrone.com/governance" 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="text-royal-gold text-sm hover:underline"
+                  >
+                    Read full governance documentation →
+                  </a>
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </main>

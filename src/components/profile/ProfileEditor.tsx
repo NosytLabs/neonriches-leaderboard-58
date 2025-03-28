@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { UserProfile, SocialLink } from '@/types/user';
+import { UserProfile, SocialLink, ProfileImage as UserProfileImage } from '@/types/user';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Crown, User, Image, Link as LinkIcon, Palette, Settings, Shield } from 'lucide-react';
@@ -11,7 +11,6 @@ import ImagesEditor from './editor/ImagesEditor';
 import SocialMediaLinksEditor from './editor/SocialMediaLinksEditor';
 import AppearanceEditor from './editor/AppearanceEditor';
 import TeamSelector from '@/components/teams/TeamSelector';
-import { ProfileImage } from '@/types/profile';
 
 interface ProfileEditorProps {
   user: UserProfile;
@@ -27,7 +26,7 @@ const ProfileEditor: React.FC<ProfileEditorProps> = ({ user, onProfileUpdate }) 
   const [bio, setBio] = useState(user.bio || '');
   const [gender, setGender] = useState<GenderType>((user.gender as GenderType) || 'neutral');
   const [socialLinks, setSocialLinks] = useState<SocialLink[]>(user.socialLinks || []);
-  const [profileImages, setProfileImages] = useState<ProfileImage[]>(
+  const [profileImages, setProfileImages] = useState<UserProfileImage[]>(
     user.profileImages || []
   );
   const [selectedTeam, setSelectedTeam] = useState<'red' | 'green' | 'blue' | null>(user.team || null);

@@ -1,38 +1,24 @@
 
-import { RoyalDividerVariant } from './royal-divider-types';
+import { CosmeticRarity } from './cosmetics';
 
-// UI Component Types
-export interface RegalBadgeProps {
-  children?: React.ReactNode;
-  tier?: string;
-  className?: string;
-  variant?: 'default' | 'outline' | 'success' | 'warning' | 'danger' | 'info' | 'royal';
-  size?: 'sm' | 'md' | 'lg';
-  style?: React.CSSProperties;
-  data?: { [key: string]: string };
-  id?: string;
-  hidden?: boolean;
-  onClick?: () => void;
-}
-
-// Toast variant type extensions
-export type ToastVariant = 'default' | 'destructive' | 'royal' | 'success';
-
-// Cosmetic item interface
 export interface CosmeticItem {
   id: string;
   name: string;
   description: string;
   category: string;
-  rarity: string;
+  rarity: CosmeticRarity;
   cost: number;
   type: string;
   imageSrc?: string;
   cssClass?: string;
 }
 
-// PremiumSoundPack type export
-export type PremiumSoundPack = string;
-
-// Export Royal Divider type
-export type { RoyalDividerVariant };
+export type RoyalDividerVariant = 
+  | 'line' 
+  | 'crown' 
+  | 'sword' 
+  | 'shield' 
+  | 'scroll' 
+  | 'double' 
+  | 'quill' 
+  | 'treasure';

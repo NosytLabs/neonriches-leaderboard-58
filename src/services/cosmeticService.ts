@@ -1,5 +1,6 @@
 
 import { CosmeticItem } from '@/types/ui-types';
+import { CosmeticRarity } from '@/types/cosmetics';
 
 // Mock cosmetic items
 const cosmeticItems: CosmeticItem[] = [
@@ -35,7 +36,7 @@ export const getAllCosmetics = (): CosmeticItem[] => {
 };
 
 export const getUserCosmetics = (): CosmeticItem[] => {
-  return cosmeticItems.filter(item => userCosmetics.includes(item.id));
+  return cosmeticItems.filter(item => userCosmetics && userCosmetics.includes(item.id));
 };
 
 export const isItemOwned = (itemId: string): boolean => {
@@ -52,7 +53,7 @@ export const isItemEquipped = (itemId: string, itemType: string): boolean => {
   }
   
   // This is a mock implementation that should be replaced with actual logic
-  const equippedItems = {
+  const equippedItems: Record<string, string> = {
     badge: "badge-royal-1",
     border: "border-gold-1"
   };
@@ -81,4 +82,73 @@ export const equipCosmetic = (itemId: string): { success: boolean; message: stri
   // Equip logic would go here
   
   return { success: true, message: "Item equipped successfully!" };
+};
+
+// Add missing functions needed by WishingWell component
+export const awardRandomCosmetic = (
+  user: any, 
+  amount: number, 
+  preferredCategory?: string
+): { cosmeticItem: CosmeticItem | null; rarity: CosmeticRarity } => {
+  // Mock implementation for random cosmetic award
+  const availableCosmetics = cosmeticItems.filter(
+    item => !isItemOwned(item.id) && 
+    (!preferredCategory || item.category === preferredCategory)
+  );
+  
+  if (availableCosmetics.length === 0) {
+    return { cosmeticItem: null, rarity: 'common' };
+  }
+  
+  // Determine rarity based on amount spent
+  let rarity: CosmeticRarity = 'common';
+  
+  const rarityRoll = Math.random() * 100;
+  
+  if (amount >= 10) {
+    // Higher amount, better chance for rare items
+    if (rarityRoll < 12) rarity = 'legendary';
+    else if (rarityRoll < 30) rarity = 'epic';
+    else if (rarityRoll < 55) rarity = 'rare';
+    else if (rarityRoll < 80) rarity = 'uncommon';
+    else rarity = 'common';
+  } else if (amount >= 5) {
+    // Medium amount
+    if (rarityRoll < 7) rarity = 'legendary';
+    else if (rarityRoll < 20) rarity = 'epic';
+    else if (rarityRoll < 45) rarity = 'rare';
+    else if (rarityRoll < 75) rarity = 'uncommon';
+    else rarity = 'common';
+  } else if (amount >= 2) {
+    // Lower amount
+    if (rarityRoll < 2) rarity = 'legendary';
+    else if (rarityRoll < 10) rarity = 'epic';
+    else if (rarityRoll < 30) rarity = 'rare';
+    else if (rarityRoll < 65) rarity = 'uncommon';
+    else rarity = 'common';
+  } else {
+    // Minimum amount
+    if (rarityRoll < 2) rarity = 'legendary';
+    else if (rarityRoll < 8) rarity = 'epic';
+    else if (rarityRoll < 20) rarity = 'rare';
+    else if (rarityRoll < 40) rarity = 'uncommon';
+    else rarity = 'common';
+  }
+  
+  // Filter items by rarity, or fall back to any rarity if none found
+  let matchingItems = availableCosmetics.filter(item => item.rarity === rarity);
+  
+  if (matchingItems.length === 0) {
+    matchingItems = availableCosmetics;
+  }
+  
+  // Pick a random item from the matching items
+  const randomIndex = Math.floor(Math.random() * matchingItems.length);
+  const selectedItem = matchingItems[randomIndex];
+  
+  return { cosmeticItem: selectedItem, rarity };
+};
+
+export const getCosmeticById = (id: string): CosmeticItem | null => {
+  return cosmeticItems.find(item => item.id === id) || null;
 };
