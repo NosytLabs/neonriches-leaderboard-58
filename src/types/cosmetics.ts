@@ -6,7 +6,7 @@ export interface CosmeticItem {
   id: string;
   name: string;
   description: string;
-  type: 'border' | 'color' | 'font' | 'emoji' | 'background' | 'effect' | 'title';
+  type: string;
   category?: CosmeticCategory; // For backward compatibility
   rarity: CosmeticRarity;
   cost: number;
@@ -14,6 +14,9 @@ export interface CosmeticItem {
   imageUrl?: string;
   imageSrc?: string;
   preview?: string;
+  previewUrl?: string;
+  cssClass?: string; // Add support for cssClass
+  metadata?: Record<string, any>;
 }
 
 export interface CosmeticCollection {

@@ -1,4 +1,3 @@
-
 import { UserProfile, UserGender } from '@/types/user';
 
 // Create a default user for development
@@ -90,5 +89,31 @@ export const createRandomUser = (index: number): UserProfile => {
       themes: []
     },
     socialLinks: []
+  };
+};
+
+// Create default user settings
+export const createDefaultSettings = () => {
+  return {
+    showRank: true,
+    showTeam: true,
+    showSpending: true,
+    publicProfile: true,
+    allowMessages: true,
+    emailNotifications: true,
+    darkMode: true,
+    soundEffects: true,
+    profileVisibility: true,
+    allowProfileLinks: true,
+    showEmailOnProfile: false,
+    rankChangeAlerts: true,
+    shameAlerts: true,
+    newFollowerAlerts: true,
+    notifications: {
+      email: true,
+      push: true,
+      in_app: true,
+      rankChanges: true
+    }
   };
 };

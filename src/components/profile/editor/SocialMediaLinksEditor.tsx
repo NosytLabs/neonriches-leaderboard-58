@@ -1,211 +1,206 @@
 
 import React, { useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Plus, Trash2, ExternalLink } from 'lucide-react';
-import { SocialLink, UserProfile } from '@/types/user';
 import { useToast } from '@/hooks/use-toast';
+import { SocialLink, UserProfile } from '@/types/user';
 
-type SocialPlatform = 
-  | 'twitter' 
-  | 'instagram' 
-  | 'facebook' 
-  | 'youtube' 
-  | 'twitch' 
-  | 'discord' 
-  | 'github' 
-  | 'linkedin'
-  | 'tiktok'
-  | 'custom';
+// Define social platform types
+type SocialPlatform = 'twitter' | 'instagram' | 'facebook' | 'linkedin' | 'github' | 'youtube' | 'twitch' | 'discord' | 'reddit' | 'tiktok' | 'other';
 
-const platformOptions: Array<{value: SocialPlatform, label: string, icon: string}> = [
-  { value: 'twitter', label: 'Twitter', icon: 'twitter' },
-  { value: 'instagram', label: 'Instagram', icon: 'instagram' },
-  { value: 'facebook', label: 'Facebook', icon: 'facebook' },
-  { value: 'youtube', label: 'YouTube', icon: 'youtube' },
-  { value: 'twitch', label: 'Twitch', icon: 'twitch' },
-  { value: 'discord', label: 'Discord', icon: 'discord' },
-  { value: 'github', label: 'GitHub', icon: 'github' },
-  { value: 'linkedin', label: 'LinkedIn', icon: 'linkedin' },
-  { value: 'tiktok', label: 'TikTok', icon: 'tiktok' },
-  { value: 'custom', label: 'Custom Link', icon: 'link' }
-];
-
-interface SocialMediaLinksEditorProps {
-  profile: UserProfile;
-  onSave: (links: SocialLink[]) => void;
+export interface SocialMediaLinksEditorProps {
+  user: UserProfile;
+  socialLinks: SocialLink[];
+  onLinksChange: (links: SocialLink[]) => void;
 }
 
-const SocialMediaLinksEditor: React.FC<SocialMediaLinksEditorProps> = ({ profile, onSave }) => {
+const SocialMediaLinksEditor: React.FC<SocialMediaLinksEditorProps> = ({ user, socialLinks, onLinksChange }) => {
   const { toast } = useToast();
-  const [links, setLinks] = useState<SocialLink[]>(profile.socialLinks || []);
-  const [newPlatform, setNewPlatform] = useState<SocialPlatform>('twitter');
-  const [newUrl, setNewUrl] = useState('');
-  const tierBasedLinkLimit = profile.tier === 'free' ? 1 : profile.tier === 'basic' ? 3 : 10;
-  
+  const [platform, setPlatform] = useState<SocialPlatform>('twitter');
+  const [url, setUrl] = useState('');
+
+  // Maximum number of social links based on tier
+  const getMaxLinks = () => {
+    if (user.tier === 'free') return 2;
+    if (user.tier === 'pro') return 5;
+    return 10; // royal or other higher tiers
+  };
+
+  // Get icon for a social platform
+  const getPlatformIcon = (platform: SocialPlatform): string => {
+    switch (platform) {
+      case 'twitter': return 'twitter';
+      case 'instagram': return 'instagram';
+      case 'facebook': return 'facebook';
+      case 'linkedin': return 'linkedin';
+      case 'github': return 'github';
+      case 'youtube': return 'youtube';
+      case 'twitch': return 'twitch';
+      case 'discord': return 'discord';
+      case 'reddit': return 'reddit';
+      case 'tiktok': return 'tiktok';
+      default: return 'link';
+    }
+  };
+
   const handleAddLink = () => {
-    if (links.length >= tierBasedLinkLimit) {
+    if (!url) {
       toast({
-        title: "Link Limit Reached",
-        description: profile.tier === 'free' ? "Upgrade to add more links." : "You've reached the maximum number of links for your tier.",
+        title: "Error",
+        description: "Please provide a URL for your social profile",
         variant: "destructive"
       });
       return;
     }
-    
-    if (!newUrl) {
+
+    // Validate URL format
+    try {
+      new URL(url);
+    } catch (error) {
       toast({
         title: "Invalid URL",
-        description: "Please enter a valid URL.",
+        description: "Please enter a valid URL (e.g. https://example.com)",
         variant: "destructive"
       });
       return;
     }
-    
-    const platformData = platformOptions.find(p => p.value === newPlatform);
-    
+
+    // Check if maximum links reached
+    if (socialLinks.length >= getMaxLinks()) {
+      toast({
+        title: "Limit Reached",
+        description: `${user.tier === 'free' ? 'Free' : 'Pro'} tier users can only add ${getMaxLinks()} social links. Upgrade for more!`,
+        variant: "destructive"
+      });
+      return;
+    }
+
+    // Create a new social link with the platform, URL, and icon
     const newLink: SocialLink = {
-      id: Date.now().toString(),
-      platform: newPlatform,
-      url: newUrl,
-      icon: platformData?.icon || 'link',
+      id: `social_${Date.now()}`,
+      platform,
+      url,
+      icon: getPlatformIcon(platform),
       clicks: 0
     };
-    
-    const updatedLinks = [...links, newLink];
-    setLinks(updatedLinks);
-    onSave(updatedLinks);
+
+    onLinksChange([...socialLinks, newLink]);
     
     // Reset form
-    setNewUrl('');
+    setUrl('');
     
     toast({
-      title: "Link Added",
-      description: "Your social link has been added.",
-      variant: "success"
+      title: "Social Link Added",
+      description: "Your social media link has been added to your profile",
     });
   };
-  
+
   const handleRemoveLink = (id: string) => {
-    const updatedLinks = links.filter(link => link.id !== id);
-    setLinks(updatedLinks);
-    onSave(updatedLinks);
+    const updatedLinks = socialLinks.filter(link => link.id !== id);
+    onLinksChange(updatedLinks);
     
     toast({
-      title: "Link Removed",
-      description: "Your social link has been removed.",
-      variant: "success"
+      title: "Social Link Removed",
+      description: "The social media link has been removed from your profile",
     });
   };
-  
+
+  // Platform display names
+  const platformNames: Record<SocialPlatform, string> = {
+    twitter: 'Twitter / X',
+    instagram: 'Instagram',
+    facebook: 'Facebook',
+    linkedin: 'LinkedIn',
+    github: 'GitHub',
+    youtube: 'YouTube',
+    twitch: 'Twitch',
+    discord: 'Discord',
+    reddit: 'Reddit',
+    tiktok: 'TikTok',
+    other: 'Other'
+  };
+
   return (
-    <Card className="glass-morphism border-white/10">
-      <CardHeader>
-        <CardTitle>Social Media Links</CardTitle>
-        <CardDescription>
-          {profile.tier === 'free' 
-            ? "Free accounts can have 1 social link. Upgrade for more." 
-            : `You can add up to ${tierBasedLinkLimit} links to your profile.`}
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-6">
-        <div className="space-y-4">
-          {links.map((link) => (
-            <div 
-              key={link.id} 
-              className="flex items-center justify-between p-3 bg-white/5 rounded-md"
-            >
-              <div className="flex items-center gap-2">
-                <div className="w-6 h-6 flex items-center justify-center">
-                  <i className={`fa fa-${link.icon}`} />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium truncate">{link.platform}</p>
-                  <p className="text-xs text-white/60 truncate">{link.url}</p>
+    <div className="space-y-6">
+      <div className="space-y-4">
+        <Label className="text-base font-medium">Social Media Links</Label>
+        
+        <div className="space-y-2">
+          {socialLinks.map((link) => (
+            <div key={link.id} className="glass-morphism rounded-lg p-3 border border-white/10 flex justify-between items-center">
+              <div className="flex items-center">
+                <ExternalLink size={16} className="text-royal-gold" />
+                <div className="ml-2">
+                  <p className="text-sm font-medium">{platformNames[link.platform as SocialPlatform] || link.platform}</p>
+                  <p className="text-xs text-white/50 truncate max-w-[200px]">{link.url}</p>
+                  {link.clicks !== undefined && (
+                    <p className="text-xs text-white/30">{link.clicks} clicks</p>
+                  )}
                 </div>
               </div>
-              
-              <div className="flex items-center gap-2">
-                {link.clicks !== undefined && (
-                  <span className="text-xs bg-white/10 px-2 py-0.5 rounded">
-                    {link.clicks} clicks
-                  </span>
-                )}
-                
-                <Button 
-                  variant="ghost" 
-                  size="icon" 
-                  className="h-7 w-7 text-white/60 hover:text-white"
-                  asChild
-                >
-                  <a href={link.url} target="_blank" rel="noopener noreferrer">
-                    <ExternalLink className="h-4 w-4" />
-                  </a>
-                </Button>
-                
-                <Button 
-                  variant="ghost" 
-                  size="icon" 
-                  className="h-7 w-7 text-white/60 hover:text-destructive"
-                  onClick={() => handleRemoveLink(link.id)}
-                >
-                  <Trash2 className="h-4 w-4" />
-                </Button>
-              </div>
+              <Button 
+                size="sm"
+                variant="ghost"
+                className="text-white/50 hover:text-white hover:bg-white/10"
+                onClick={() => handleRemoveLink(link.id)}
+              >
+                <Trash2 size={14} />
+              </Button>
             </div>
           ))}
         </div>
         
-        {links.length < tierBasedLinkLimit && (
-          <div className="space-y-4">
-            <div className="grid grid-cols-3 gap-4">
-              <div className="col-span-1">
-                <Select
-                  value={newPlatform}
-                  onValueChange={(value) => setNewPlatform(value as SocialPlatform)}
-                >
+        {socialLinks.length < getMaxLinks() && (
+          <div className="glass-morphism rounded-lg p-4 border border-white/10 mt-4">
+            <h3 className="text-base font-medium mb-2">Add Social Media</h3>
+            <div className="space-y-3">
+              <div>
+                <Label htmlFor="platform">Platform</Label>
+                <Select value={platform} onValueChange={(val) => setPlatform(val as SocialPlatform)}>
                   <SelectTrigger className="glass-morphism border-white/10">
-                    <SelectValue placeholder="Platform" />
+                    <SelectValue placeholder="Select platform" />
                   </SelectTrigger>
-                  <SelectContent>
-                    {platformOptions.map((platform) => (
-                      <SelectItem key={platform.value} value={platform.value}>
-                        {platform.label}
-                      </SelectItem>
+                  <SelectContent className="glass-morphism border-white/10">
+                    {Object.entries(platformNames).map(([key, name]) => (
+                      <SelectItem key={key} value={key}>{name}</SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
               </div>
-              
-              <div className="col-span-2 flex gap-2">
-                <Input
-                  value={newUrl}
-                  onChange={(e) => setNewUrl(e.target.value)}
-                  placeholder="https://example.com/profile"
-                  className="glass-morphism border-white/10 flex-1"
+              <div>
+                <Label htmlFor="socialUrl">Profile URL</Label>
+                <Input 
+                  id="socialUrl" 
+                  type="text" 
+                  placeholder="https://twitter.com/username" 
+                  value={url}
+                  onChange={(e) => setUrl(e.target.value)}
+                  className="glass-morphism border-white/10"
                 />
-                
-                <Button 
-                  size="icon" 
-                  onClick={handleAddLink}
-                  className="shrink-0"
-                >
-                  <Plus className="h-4 w-4" />
-                </Button>
               </div>
+              <Button 
+                className="w-full mt-2 glass-morphism border-white/10 hover:bg-white/10"
+                onClick={handleAddLink}
+              >
+                <Plus size={14} className="mr-2" />
+                Add Social Link
+              </Button>
             </div>
-            
-            {profile.tier === 'free' && (
-              <p className="text-xs text-white/60 italic">
-                Pro accounts can add up to 10 social links with click tracking.
-              </p>
-            )}
           </div>
         )}
-      </CardContent>
-    </Card>
+        
+        <div className="text-sm text-white/50">
+          {user.tier === 'free' 
+            ? `Free tier: ${socialLinks.length}/2 social links used. Upgrade for more!` 
+            : user.tier === 'pro' 
+              ? `Pro tier: ${socialLinks.length}/5 social links used.`
+              : `Royal tier: ${socialLinks.length}/10 social links used.`}
+        </div>
+      </div>
+    </div>
   );
 };
 

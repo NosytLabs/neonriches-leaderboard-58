@@ -40,7 +40,7 @@ const SubscriptionManagement = () => {
   };
 
   // Define Stripe price IDs for each tier and billing cycle
-  const stripePriceIds = {
+  const stripePriceIds: Record<string, Record<string, string>> = {
     pro: {
       monthly: 'price_monthly',   // Replace with actual Stripe price_id
       quarterly: 'price_quarterly', // Replace with actual Stripe price_id
@@ -89,7 +89,7 @@ const SubscriptionManagement = () => {
 
     try {
       // Get the appropriate price ID based on the selected tier and billing cycle
-      const priceId = stripePriceIds[selectedTier][selectedBillingCycle];
+      const priceId = stripePriceIds[selectedTier]?.[selectedBillingCycle];
       
       if (!priceId) {
         throw new Error("Invalid subscription selection");

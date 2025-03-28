@@ -15,6 +15,7 @@ interface RegalBadgeProps {
   id?: string;
   hidden?: boolean;
   onClick?: () => void;
+  tier?: string; // Add tier property
 }
 
 const RegalBadge: React.FC<RegalBadgeProps> = ({
@@ -26,10 +27,11 @@ const RegalBadge: React.FC<RegalBadgeProps> = ({
   data,
   id,
   hidden,
-  onClick
+  onClick,
+  tier
 }) => {
   // Convert string id to a number for numeric operations if needed
-  const parsedId = id ? parseInt(id) : undefined;
+  const parsedId = id ? parseInt(id, 10) : undefined;
   
   // Size classes
   const sizeClasses = {
@@ -61,12 +63,20 @@ const RegalBadge: React.FC<RegalBadgeProps> = ({
     return `${2 + (parsedId % 3) * 0.5}s`;
   };
   
+  // Use tier for additional styling if needed
+  const getTierClass = () => {
+    if (!tier) return '';
+    // You can implement custom styles based on tier
+    return '';
+  };
+  
   return (
     <span
       className={cn(
         'inline-flex items-center justify-center rounded-full font-medium transition-colors',
         sizeClasses[size],
         variantClasses[variant],
+        getTierClass(),
         onClick && 'cursor-pointer hover:bg-opacity-80',
         hidden && 'hidden',
         className

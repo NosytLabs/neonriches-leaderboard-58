@@ -1,4 +1,3 @@
-
 import { User, UserProfile } from '@/types';
 
 // Types for cosmetic items
@@ -165,3 +164,23 @@ export const getRarityBorderColor = (rarity: CosmeticRarity): string => {
     default: return 'border-gray-600';
   }
 };
+
+export function userHasCosmetic(user: any, cosmeticId: string): boolean {
+  if (!user || !user.cosmetics) return false;
+  
+  // Check if the cosmetic exists in any of the categories
+  const categories = [
+    'borders', 'colors', 'fonts', 'emojis', 
+    'backgrounds', 'effects', 'titles', 
+    'badges', 'themes'
+  ];
+  
+  for (const category of categories) {
+    const items = user.cosmetics[category];
+    if (Array.isArray(items) && items.includes(cosmeticId)) {
+      return true;
+    }
+  }
+  
+  return false;
+}

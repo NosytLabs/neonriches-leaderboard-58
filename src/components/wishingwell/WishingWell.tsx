@@ -226,7 +226,8 @@ const WishingWell = () => {
           if (awarded) {
             setWishResult('win');
             setResult(`Your wish comes true! You've been granted the "${cosmeticItem.name}" cosmetic item!`);
-            setRewardItem(cosmeticItem);
+            // Use setState with a function when updating with the object
+            setRewardItem(() => cosmeticItem);
             setRewardRarity(cosmeticItem.rarity);
             playSound('reward');
             

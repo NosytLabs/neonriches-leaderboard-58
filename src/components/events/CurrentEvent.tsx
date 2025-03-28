@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -33,6 +32,8 @@ const CurrentEvent = () => {
   const { stats } = useEventStatistics();
   const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [showFireSaleModal, setShowFireSaleModal] = useState(false);
+  const [isJoining, setIsJoining] = useState(false);
+  const [hasJoined, setHasJoined] = useState(false);
   
   // Get this week's featured discount
   const discountedAction = getWeeklyDiscountedAction();
@@ -46,6 +47,40 @@ const CurrentEvent = () => {
   const daysRemaining = getDaysUntilEndOfMonth();
   const featuredCategories = fireSaleActive ? getFireSaleFeaturedCategories() : [];
   
+  // Function to handle event joining
+  const handleJoinEvent = async () => {
+    if (!user) {
+      openAuthModal();
+      return;
+    }
+    
+    if (isJoining) return;
+    
+    setIsJoining(true);
+    
+    try {
+      const success = await joinEvent();
+      
+      if (success) {
+        setHasJoined(true);
+        toast({
+          title: "Event Joined",
+          description: `You have successfully joined the ${event.name}!`,
+          variant: "success"
+        });
+      }
+    } catch (error) {
+      console.error("Error joining event:", error);
+      toast({
+        title: "Error",
+        description: "Could not join the event. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsJoining(false);
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div className="glass-morphism border-royal-gold/20 overflow-hidden rounded-lg">

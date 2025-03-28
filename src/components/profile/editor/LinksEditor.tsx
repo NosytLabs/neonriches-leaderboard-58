@@ -55,7 +55,7 @@ const LinksEditor: React.FC<LinksEditorProps> = ({ user, links, onLinksChange })
 
     // Create a new link
     const newLink: ProfileLink = {
-      id: Date.now(),
+      id: `link_${Date.now()}`,
       url: newLinkUrl,
       label: newLinkLabel
     };
@@ -66,7 +66,7 @@ const LinksEditor: React.FC<LinksEditorProps> = ({ user, links, onLinksChange })
     setNewLinkLabel("");
   };
 
-  const handleRemoveLink = (id: number) => {
+  const handleRemoveLink = (id: string) => {
     const updatedLinks = links.filter(link => link.id !== id);
     onLinksChange(updatedLinks);
   };

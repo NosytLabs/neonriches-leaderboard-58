@@ -112,6 +112,10 @@ export interface UserProfile {
   };
 }
 
-export interface ProfileLink extends SocialLink {
+export interface ProfileLink {
+  id: string;
   label: string;
+  url: string;
+  icon?: string;
+  clicks?: number;
 }

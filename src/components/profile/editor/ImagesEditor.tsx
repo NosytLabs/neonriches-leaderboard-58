@@ -1,219 +1,191 @@
 
-import React, { useState, useCallback } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
-import { Image, Plus, X, CheckCircle } from 'lucide-react';
-import { ProfileImage, UserProfile } from '@/types/user';
+import { Label } from '@/components/ui/label';
+import { Upload, Trash2, LayoutGrid, Image } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { cn } from '@/lib/utils';
+import { UserProfile, ProfileImage } from '@/types/user';
 
-interface ImagesEditorProps {
-  profile: UserProfile;
-  onSave: (images: ProfileImage[]) => void;
+export interface ImagesEditorProps {
+  user: UserProfile;
+  images: ProfileImage[];
+  onImagesChange: (images: ProfileImage[]) => void;
 }
 
-const ImagesEditor: React.FC<ImagesEditorProps> = ({ profile, onSave }) => {
+const ImagesEditor: React.FC<ImagesEditorProps> = ({ user, images, onImagesChange }) => {
   const { toast } = useToast();
-  const [images, setImages] = useState<ProfileImage[]>(profile.profileImages || []);
-  const [isAdding, setIsAdding] = useState(false);
-  const [newImageUrl, setNewImageUrl] = useState('');
-  const [newImageCaption, setNewImageCaption] = useState('');
-  const tierBasedImageLimit = profile.tier === 'free' ? 1 : profile.tier === 'basic' ? 1 : 5;
-  
+  const [imageUrl, setImageUrl] = useState('');
+  const [caption, setCaption] = useState('');
+
+  const getMaxImages = () => {
+    if (user.tier === 'free') return 1;
+    if (user.tier === 'pro') return 5;
+    return 10; // royal or other higher tiers
+  };
+
   const handleAddImage = () => {
-    if (images.length >= tierBasedImageLimit) {
+    if (!imageUrl) {
       toast({
-        title: "Image Limit Reached",
-        description: profile.tier === 'free' ? "Upgrade to add more images." : "You've reached the maximum number of images for your tier.",
+        title: "Error",
+        description: "Please provide an image URL",
         variant: "destructive"
       });
       return;
     }
-    
-    if (!newImageUrl) {
+
+    // Check if the max number of images has been reached
+    const maxImages = getMaxImages();
+    if (images.length >= maxImages) {
       toast({
-        title: "Invalid Image",
-        description: "Please enter a valid image URL.",
+        title: "Limit Reached",
+        description: `${user.tier === 'free' ? 'Free' : 'Pro'} tier users can only add ${maxImages} images. Upgrade for more!`,
         variant: "destructive"
       });
       return;
     }
-    
+
+    // Create a new image
     const newImage: ProfileImage = {
-      id: Date.now().toString(),
-      url: newImageUrl,
-      isPrimary: images.length === 0,
-      caption: newImageCaption || undefined
+      id: `img_${Date.now()}`,
+      url: imageUrl,
+      isPrimary: images.length === 0, // Make it primary if it's the first image
+      caption: caption || undefined
     };
-    
-    const updatedImages = [...images, newImage];
-    setImages(updatedImages);
-    onSave(updatedImages);
+
+    onImagesChange([...images, newImage]);
     
     // Reset form
-    setNewImageUrl('');
-    setNewImageCaption('');
-    setIsAdding(false);
-    
+    setImageUrl('');
+    setCaption('');
+
     toast({
       title: "Image Added",
-      description: "Your profile image has been added.",
-      variant: "success"
+      description: "Your image has been added to your profile",
     });
   };
-  
+
   const handleRemoveImage = (id: string) => {
+    // Check if we're removing the primary image
     const imageToRemove = images.find(img => img.id === id);
-    const updatedImages = images.filter(img => img.id !== id);
+    const updatedImages = images.filter(image => image.id !== id);
     
-    // If we're removing the primary image, set a new one
+    // If we removed the primary image and there are other images, make the first one primary
     if (imageToRemove?.isPrimary && updatedImages.length > 0) {
       updatedImages[0].isPrimary = true;
     }
     
-    setImages(updatedImages);
-    onSave(updatedImages);
+    onImagesChange(updatedImages);
     
     toast({
       title: "Image Removed",
-      description: "Your profile image has been removed.",
-      variant: "success"
+      description: "The image has been removed from your profile",
     });
   };
-  
+
   const handleSetPrimary = (id: string) => {
-    const updatedImages = images.map(img => ({
-      ...img,
-      isPrimary: img.id === id
+    const updatedImages = images.map(image => ({
+      ...image,
+      isPrimary: image.id === id
     }));
     
-    setImages(updatedImages);
-    onSave(updatedImages);
+    onImagesChange(updatedImages);
     
     toast({
-      title: "Primary Image Updated",
-      description: "Your primary profile image has been updated.",
-      variant: "success"
+      title: "Primary Image Set",
+      description: "Your primary profile image has been updated",
     });
   };
-  
+
   return (
-    <Card className="glass-morphism border-white/10">
-      <CardHeader>
-        <CardTitle>Profile Images</CardTitle>
-        <CardDescription>
-          {profile.tier === 'free' 
-            ? "Free accounts can have 1 profile image. Upgrade for more." 
-            : `You can add up to ${tierBasedImageLimit} images to your profile.`}
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-4">
+    <div className="space-y-6">
+      <div className="space-y-4">
+        <Label className="text-base font-medium">Profile Images</Label>
+        
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
           {images.map((image) => (
-            <div 
-              key={image.id} 
-              className={cn(
-                "relative rounded-md overflow-hidden border border-white/10 aspect-square group",
-                image.isPrimary && "ring-2 ring-royal-gold ring-offset-2 ring-offset-background"
-              )}
-            >
-              <img 
-                src={image.url} 
-                alt={image.caption || "Profile image"} 
-                className="w-full h-full object-cover"
-              />
-              
-              <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-between p-2">
+            <div key={image.id} className="glass-morphism rounded-lg p-3 border border-white/10">
+              <div className="aspect-square w-full rounded-md overflow-hidden mb-2">
+                <img 
+                  src={image.url} 
+                  alt={image.caption || "Profile image"} 
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div className="space-y-2">
                 {image.caption && (
-                  <p className="text-xs text-white/80 line-clamp-2">{image.caption}</p>
+                  <p className="text-sm text-white/70 truncate">{image.caption}</p>
                 )}
-                
-                <div className="flex justify-between">
+                <div className="flex space-x-2">
                   <Button 
-                    variant="destructive" 
-                    size="icon" 
-                    className="h-7 w-7"
+                    size="sm"
+                    variant={image.isPrimary ? "default" : "outline"}
+                    className={image.isPrimary ? "bg-royal-gold hover:bg-royal-gold/90 text-black" : "glass-morphism border-white/10"}
+                    onClick={() => handleSetPrimary(image.id)}
+                    disabled={image.isPrimary}
+                  >
+                    {image.isPrimary ? 'Primary' : 'Set Primary'}
+                  </Button>
+                  <Button 
+                    size="sm"
+                    variant="ghost"
+                    className="text-white/50 hover:text-white hover:bg-white/10"
                     onClick={() => handleRemoveImage(image.id)}
                   >
-                    <X className="h-4 w-4" />
+                    <Trash2 size={14} />
                   </Button>
-                  
-                  {!image.isPrimary && (
-                    <Button 
-                      variant="outline" 
-                      size="icon" 
-                      className="h-7 w-7 bg-black/50"
-                      onClick={() => handleSetPrimary(image.id)}
-                    >
-                      <CheckCircle className="h-4 w-4" />
-                    </Button>
-                  )}
                 </div>
               </div>
-              
-              {image.isPrimary && (
-                <div className="absolute top-2 right-2 bg-royal-gold text-black text-xs px-2 py-0.5 rounded-full">
-                  Primary
-                </div>
-              )}
             </div>
           ))}
-          
-          {images.length < tierBasedImageLimit && !isAdding && (
-            <Button 
-              variant="outline" 
-              className="border-dashed border-white/20 h-full min-h-[200px] flex flex-col items-center justify-center gap-2"
-              onClick={() => setIsAdding(true)}
-            >
-              <Plus className="h-6 w-6" />
-              <span>Add Image</span>
-            </Button>
-          )}
         </div>
         
-        {isAdding && (
-          <div className="glass-morphism border-white/10 p-4 rounded-md space-y-4">
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Image URL</label>
-              <Input
-                value={newImageUrl}
-                onChange={(e) => setNewImageUrl(e.target.value)}
-                placeholder="https://example.com/image.jpg"
-                className="glass-morphism border-white/10"
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Caption (optional)</label>
-              <Textarea
-                value={newImageCaption}
-                onChange={(e) => setNewImageCaption(e.target.value)}
-                placeholder="Image caption"
-                className="glass-morphism border-white/10 resize-none"
-                rows={2}
-              />
-            </div>
-            
-            <div className="flex justify-end gap-2">
-              <Button variant="outline" onClick={() => setIsAdding(false)}>
-                Cancel
-              </Button>
-              <Button onClick={handleAddImage}>
+        {images.length < getMaxImages() && (
+          <div className="glass-morphism rounded-lg p-4 border border-white/10 mt-4">
+            <h3 className="text-base font-medium mb-2">Add Image</h3>
+            <div className="space-y-3">
+              <div>
+                <Label htmlFor="imageUrl">Image URL</Label>
+                <Input 
+                  id="imageUrl" 
+                  type="text" 
+                  placeholder="https://example.com/image.jpg" 
+                  value={imageUrl}
+                  onChange={(e) => setImageUrl(e.target.value)}
+                  className="glass-morphism border-white/10"
+                />
+              </div>
+              <div>
+                <Label htmlFor="caption">Caption (optional)</Label>
+                <Input 
+                  id="caption" 
+                  type="text" 
+                  placeholder="Caption for this image" 
+                  value={caption}
+                  onChange={(e) => setCaption(e.target.value)}
+                  className="glass-morphism border-white/10"
+                />
+              </div>
+              <Button 
+                className="w-full mt-2 glass-morphism border-white/10 hover:bg-white/10"
+                onClick={handleAddImage}
+              >
+                <Upload size={14} className="mr-2" />
                 Add Image
               </Button>
             </div>
           </div>
         )}
         
-        {profile.tier === 'free' && images.length < tierBasedImageLimit && (
-          <div className="text-center text-sm text-white/60 italic">
-            Upgrade your account to add multiple images and captions.
-          </div>
-        )}
-      </CardContent>
-    </Card>
+        <div className="text-sm text-white/50">
+          {user.tier === 'free' 
+            ? `Free tier: ${images.length}/1 images used. Upgrade for more!` 
+            : user.tier === 'pro' 
+              ? `Pro tier: ${images.length}/5 images used.`
+              : `Royal tier: ${images.length}/10 images used.`}
+        </div>
+      </div>
+    </div>
   );
 };
 
