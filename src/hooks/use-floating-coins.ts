@@ -1,166 +1,223 @@
 
-import { useEffect, useRef, useState } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 
-interface FloatingCoinsOptions {
+interface CoinParticle {
+  id: string;
+  x: number;
+  y: number;
+  size: number;
+  color: string;
+  velocity: {
+    x: number;
+    y: number;
+  };
+  rotation: number;
+  rotationSpeed: number;
+  emoji?: string;
+  element?: HTMLDivElement;
+}
+
+interface UseFloatingCoinsOptions {
   containerRef?: React.RefObject<HTMLElement>;
   count?: number;
   duration?: number;
-  size?: number;
-  glowIntensity?: number;
   emojis?: string[];
   enabled?: boolean;
 }
 
-interface PositionCoordinates {
-  x: number;
-  y: number;
-}
-
-const useFloatingCoins = (options: FloatingCoinsOptions = {}) => {
-  const {
-    containerRef,
-    count = 10,
-    duration = 5000,
-    size = 24,
-    glowIntensity = 0.5,
-    emojis = ['💰', '👑', '💎', '💵', '🏆', '✨'],
-    enabled = true
-  } = options;
-  
+export default function useFloatingCoins({
+  containerRef,
+  count = 20,
+  duration = 3000,
+  emojis = ['💰', '💎', '💵'],
+  enabled = true
+}: UseFloatingCoinsOptions = {}) {
   const [isActive, setIsActive] = useState(enabled);
-  const animationFrameId = useRef<number | null>(null);
-  const createdElements = useRef<HTMLElement[]>([]);
-  
-  // Cleanup function to remove all created elements
-  const cleanup = () => {
-    if (animationFrameId.current) {
-      cancelAnimationFrame(animationFrameId.current);
-      animationFrameId.current = null;
-    }
-    
-    createdElements.current.forEach(element => {
-      if (element.parentNode) {
-        element.parentNode.removeChild(element);
-      }
-    });
-    createdElements.current = [];
-  };
-  
-  // Create a single floating coin/emoji element
-  const createFloatingElement = (container: HTMLElement, position?: PositionCoordinates) => {
-    if (!container) return;
-    
-    const element = document.createElement('div');
-    const emoji = emojis[Math.floor(Math.random() * emojis.length)];
-    
-    // Use provided position or random position within container
+  const particlesRef = useRef<CoinParticle[]>([]);
+  const containerElementRef = useRef<HTMLElement | null>(null);
+  const animationFrameRef = useRef<number | null>(null);
+
+  const createCoin = useCallback((x?: number, y?: number): CoinParticle => {
+    const container = containerElementRef.current;
+    if (!container) return {} as CoinParticle;
+
     const containerRect = container.getBoundingClientRect();
-    const randomX = position ? position.x - containerRect.left : Math.random() * containerRect.width;
-    const randomY = position ? position.y - containerRect.top : Math.random() * containerRect.height;
     
-    // Set element styles
-    Object.assign(element.style, {
-      position: 'absolute',
-      left: `${randomX}px`,
-      top: `${randomY}px`,
-      fontSize: `${size}px`,
-      textShadow: `0 0 ${5 * glowIntensity}px rgba(212, 175, 55, ${glowIntensity})`,
-      pointerEvents: 'none',
-      zIndex: '100',
-      opacity: '0',
-      transform: 'translateY(0) rotate(0deg)',
-      animation: `float-up ${duration / 1000}s ease-out forwards`,
-    });
+    const startX = x ?? Math.random() * containerRect.width;
+    const startY = y ?? containerRect.height + 20;
     
-    element.textContent = emoji;
-    element.className = 'floating-coin';
+    return {
+      id: Math.random().toString(36).substring(2, 9),
+      x: startX,
+      y: startY,
+      size: Math.random() * 20 + 20,
+      color: `hsl(${Math.random() * 60 + 40}, 100%, 50%)`,
+      velocity: {
+        x: (Math.random() - 0.5) * 2,
+        y: -Math.random() * 5 - 2
+      },
+      rotation: Math.random() * 360,
+      rotationSpeed: (Math.random() - 0.5) * 10,
+      emoji: emojis[Math.floor(Math.random() * emojis.length)]
+    };
+  }, [emojis]);
+
+  const createBurst = useCallback((burstCount = 20) => {
+    const container = containerElementRef.current;
+    if (!container || !isActive) return;
+
+    const containerRect = container.getBoundingClientRect();
+    const centerX = containerRect.width / 2;
+    const centerY = containerRect.height / 2;
     
-    container.appendChild(element);
-    createdElements.current.push(element);
-    
-    // Remove element after animation completes
-    setTimeout(() => {
-      if (element.parentNode) {
-        element.parentNode.removeChild(element);
-        createdElements.current = createdElements.current.filter(el => el !== element);
-      }
-    }, duration);
-  };
-  
-  // Animation loop
-  const animate = () => {
-    if (!isActive || !containerRef?.current) return;
-    
-    const chance = Math.random();
-    
-    // Only create new element occasionally for a more natural effect
-    if (chance < 0.05 && createdElements.current.length < count) {
-      createFloatingElement(containerRef.current);
-    }
-    
-    animationFrameId.current = requestAnimationFrame(animate);
-  };
-  
-  // Toggle the animation on/off
-  const toggle = (state?: boolean) => {
-    setIsActive(prev => {
-      const newState = state !== undefined ? state : !prev;
-      
-      if (!newState) {
-        cleanup();
-      }
-      
-      return newState;
-    });
-  };
-  
-  // Create a burst of elements all at once
-  const createBurst = (burstCount = 15) => {
-    if (!containerRef?.current) return;
+    const newParticles: CoinParticle[] = [];
     
     for (let i = 0; i < burstCount; i++) {
-      setTimeout(() => {
-        createFloatingElement(containerRef.current!);
-      }, i * 100);
+      const angle = (i / burstCount) * Math.PI * 2;
+      const distance = Math.random() * 100 + 50;
+      
+      const x = centerX + Math.cos(angle) * distance;
+      const y = centerY + Math.sin(angle) * distance;
+      
+      const coin = createCoin(x, y);
+      coin.velocity = {
+        x: Math.cos(angle) * (Math.random() * 3 + 2),
+        y: Math.sin(angle) * (Math.random() * 3 + 2)
+      };
+      
+      newParticles.push(coin);
     }
-  };
-  
-  // Create multiple coins at a specific position
-  const createMultipleCoins = (numberOfCoins: number = 10, position?: PositionCoordinates) => {
-    if (!containerRef?.current) return;
     
-    for (let i = 0; i < numberOfCoins; i++) {
-      setTimeout(() => {
-        createFloatingElement(containerRef.current!, position);
-      }, i * 100);
+    particlesRef.current = [...particlesRef.current, ...newParticles];
+    renderCoins();
+  }, [createCoin, isActive]);
+
+  const toggle = useCallback((state?: boolean) => {
+    setIsActive(prev => typeof state !== 'undefined' ? state : !prev);
+  }, []);
+
+  const createCoinElement = useCallback((coin: CoinParticle) => {
+    const container = containerElementRef.current;
+    if (!container) return;
+
+    const element = document.createElement('div');
+    element.className = 'absolute pointer-events-none select-none';
+    element.style.left = `${coin.x}px`;
+    element.style.top = `${coin.y}px`;
+    element.style.transform = `rotate(${coin.rotation}deg)`;
+    element.style.width = `${coin.size}px`;
+    element.style.height = `${coin.size}px`;
+    element.style.fontSize = `${coin.size}px`;
+    element.style.display = 'flex';
+    element.style.alignItems = 'center';
+    element.style.justifyContent = 'center';
+    element.style.zIndex = '50';
+    element.textContent = coin.emoji;
+    
+    container.appendChild(element);
+    
+    return element;
+  }, []);
+
+  const updateCoin = useCallback((coin: CoinParticle) => {
+    if (!coin.element) return;
+    
+    coin.x += coin.velocity.x;
+    coin.y += coin.velocity.y;
+    coin.velocity.y += 0.1; // gravity
+    coin.rotation += coin.rotationSpeed;
+    
+    coin.element.style.left = `${coin.x}px`;
+    coin.element.style.top = `${coin.y}px`;
+    coin.element.style.transform = `rotate(${coin.rotation}deg)`;
+  }, []);
+
+  const renderCoins = useCallback(() => {
+    const container = containerElementRef.current;
+    if (!container) return;
+    
+    const containerRect = container.getBoundingClientRect();
+    
+    // Create elements for new particles
+    particlesRef.current.forEach(coin => {
+      if (!coin.element) {
+        coin.element = createCoinElement(coin);
+      }
+    });
+    
+    // Update positions
+    particlesRef.current.forEach(updateCoin);
+    
+    // Remove particles that are off screen
+    particlesRef.current = particlesRef.current.filter(coin => {
+      if (
+        coin.y > containerRect.height + 100 ||
+        coin.x < -100 ||
+        coin.x > containerRect.width + 100
+      ) {
+        if (coin.element) {
+          coin.element.remove();
+        }
+        return false;
+      }
+      return true;
+    });
+    
+    if (particlesRef.current.length > 0) {
+      animationFrameRef.current = requestAnimationFrame(renderCoins);
+    } else {
+      animationFrameRef.current = null;
     }
-  };
-  
-  // Start animation
+  }, [createCoinElement, updateCoin]);
+
+  // Initialize and setup
   useEffect(() => {
-    if (isActive && containerRef?.current) {
-      animationFrameId.current = requestAnimationFrame(animate);
+    if (containerRef?.current) {
+      containerElementRef.current = containerRef.current;
+    } else {
+      // If no container provided, use document.body
+      containerElementRef.current = document.body;
     }
     
-    return cleanup;
-  }, [isActive, containerRef?.current]);
-  
-  return {
-    isActive,
-    toggle,
-    createBurst,
-    createMultipleCoins,
-    cleanup
-  };
-};
+    return () => cleanup();
+  }, [containerRef]);
 
-// For backwards compatibility with files using the hook without options
-const useFloatingCoinsWithoutRef = () => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  return {
-    ...useFloatingCoins({ containerRef }),
-    containerRef
-  };
-};
+  // Handle active state changes
+  useEffect(() => {
+    if (isActive) {
+      const newParticles: CoinParticle[] = [];
+      for (let i = 0; i < count; i++) {
+        newParticles.push(createCoin());
+      }
+      particlesRef.current = [...particlesRef.current, ...newParticles];
+      
+      if (!animationFrameRef.current) {
+        animationFrameRef.current = requestAnimationFrame(renderCoins);
+      }
+      
+      // Auto-disable after duration
+      const timer = setTimeout(() => {
+        setIsActive(false);
+      }, duration);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [isActive, count, createCoin, duration, renderCoins]);
 
-export default useFloatingCoinsWithoutRef;
+  const cleanup = useCallback(() => {
+    if (animationFrameRef.current) {
+      cancelAnimationFrame(animationFrameRef.current);
+      animationFrameRef.current = null;
+    }
+    
+    particlesRef.current.forEach(coin => {
+      if (coin.element) {
+        coin.element.remove();
+      }
+    });
+    
+    particlesRef.current = [];
+  }, []);
+
+  return { isActive, toggle, createBurst, cleanup };
+}

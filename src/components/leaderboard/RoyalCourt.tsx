@@ -42,7 +42,8 @@ const RoyalCourt = () => {
       titles: [],
       backgrounds: [],
       effects: [],
-      badges: []
+      badges: [],
+      themes: []
     },
     socialLinks: []
   }));
@@ -105,7 +106,7 @@ const RoyalCourt = () => {
     }
     
     // Satirical toast based on team selection
-    const teamMessages = {
+    const teamMessages: Record<string, string> = {
       'red': "Ah, the Purple Dynasty! Where the wealthy flaunt their digital status with reckless abandon.",
       'green': "The Gold Dominion welcomes you! Remember, he who pays the most, shines the brightest.",
       'blue': "The Azure Order values loyalty... to spending money! Keep those contributions flowing!"
@@ -113,7 +114,7 @@ const RoyalCourt = () => {
     
     addToast({
       title: "Royal Attention",
-      description: teamMessages[team as keyof typeof teamMessages] || "Choose your allegiance wisely!",
+      description: team && teamMessages[team] ? teamMessages[team] : "Choose your allegiance wisely!",
       duration: 3000,
     });
     

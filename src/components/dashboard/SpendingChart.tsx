@@ -13,6 +13,9 @@ interface SpendingChartProps {
 }
 
 const SpendingChart = ({ data }: SpendingChartProps) => {
+  // Ensure data is an array
+  const chartData = Array.isArray(data) ? data : [];
+  
   return (
     <Card className="glass-morphism border-white/10 lg:col-span-2 transition-all duration-300 hover:border-royal-gold/20">
       <CardHeader>
@@ -39,7 +42,10 @@ const SpendingChart = ({ data }: SpendingChartProps) => {
       <CardContent>
         <div className="h-[300px] w-full">
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={data} margin={{ top: 20, right: 30, left: 5, bottom: 20 }}>
+            <BarChart 
+              data={chartData} 
+              margin={{ top: 20, right: 30, left: 5, bottom: 20 }}
+            >
               <XAxis dataKey="week" stroke="#ffffff70" />
               <YAxis stroke="#ffffff70" />
               <Tooltip 
@@ -52,28 +58,15 @@ const SpendingChart = ({ data }: SpendingChartProps) => {
                 radius={[4, 4, 0, 0]}
                 animationDuration={1500}
               >
-                {data.map((entry, index) => (
+                {chartData && chartData.map((entry, index) => (
                   <Cell 
-                    key={`cell-${index}`} 
-                    fill={index === data.length - 1 
-                      ? '#FFD700' // Royal gold for latest week
-                      : index === data.length - 2 
-                        ? '#9B26AF80' // Royal purple with transparency for previous week
-                        : '#9f9ea150' // Default color for older weeks
-                    }
+                    key={`cell-${index}`}
+                    fill={`rgba(${255 - (entry.amount / 10)}, ${Math.min(150 + (entry.amount / 5), 255)}, 100, 0.8)`}
                   />
                 ))}
               </Bar>
             </BarChart>
           </ResponsiveContainer>
-        </div>
-        
-        <div className="mt-4 text-center">
-          <p className="text-white/70 text-sm italic">
-            {data[data.length - 1].amount > data[data.length - 2].amount 
-              ? "Impressive growth! Your wallet must feel so honored to serve the crown." 
-              : "Your spending is declining. Are you questioning your loyalty to the throne?"}
-          </p>
         </div>
       </CardContent>
     </Card>

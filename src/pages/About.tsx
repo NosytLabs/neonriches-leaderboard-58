@@ -1,324 +1,350 @@
-
-import React, { useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { Crown, Scroll, Shield, Swords, Coins, BookOpen } from 'lucide-react';
-import useNotificationSounds from '@/hooks/use-notification-sounds';
-import RoyalButton from '@/components/ui/royal-button';
-import MedievalIcon from '@/components/ui/medieval-icon';
+import React, { useState, useEffect } from 'react';
+import { Helmet } from 'react-helmet-async';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Button } from '@/components/ui/button';
+import { Crown, Users, Scroll, Heart, Info, BookOpen, Code, Coffee, Sparkles } from 'lucide-react';
+import RoyalDivider from '@/components/ui/royal-divider';
+import TeamSection from '@/components/TeamSection';
 import CertificateOfNobility from '@/components/certificates/CertificateOfNobility';
-import ScrollOfShame from '@/components/scrolls/ScrollOfShame';
-import { useToast } from '@/hooks/use-toast';
-import { mockLeaderboardData } from '@/components/leaderboard/LeaderboardData';
-import { UserProfile } from '@/types/user';
+import useNotificationSounds from '@/hooks/use-notification-sounds';
+import { useToastContext } from '@/contexts/ToastContext';
 
-// Generate a mock user for preview purposes
-const mockUser: UserProfile = {
-  id: "mock-123",
-  username: "NobleVisitor",
-  email: "visitor@example.com",
-  profileImage: "https://i.pravatar.cc/150?img=33",
-  amountSpent: 750,
-  walletBalance: 0,
-  rank: 5,
-  previousRank: 6,
-  spendStreak: 4,
-  tier: 'fish',
-  team: 'blue',
-  gender: 'noble',
-  joinDate: new Date(2023, 5, 15).toISOString(),
-  joinedAt: new Date(2023, 5, 15).toISOString(),
-  cosmetics: {
-    borders: [],
-    colors: [],
-    fonts: [],
-    emojis: [],
-    titles: [],
-    backgrounds: [],
-    effects: [],
-    badges: []
-  },
-  isVIP: true,
-  socialLinks: []
-};
-
-// Mock shame records for preview
-const mockShameRecords = [
-  {
-    id: "shame-1",
-    targetUser: {
-      ...mockUser,
-      id: "user-2",
-      username: "PennyPincher",
-      rank: 7
-    },
-    reason: "Shamefully refused to increase their tribute to the Royal Treasury for three consecutive days!",
-    issuedOn: new Date(2023, 6, 12),
-    issuedBy: {
-      ...mockUser,
-      id: "user-1",
-      username: "MoneyBags",
-      rank: 1
-    },
-    shameType: 'tomatoes' as 'tomatoes'
-  },
-  {
-    id: "shame-2",
-    targetUser: {
-      ...mockUser,
-      id: "user-3",
-      username: "FrugalKnight",
-      rank: 9
-    },
-    reason: "Attempted to barter for position instead of paying the Royal fee. How uncouth!",
-    issuedOn: new Date(2023, 6, 15),
-    issuedBy: {
-      ...mockUser,
-      id: "user-4",
-      username: "WealthyWizard",
-      rank: 2
-    },
-    shameType: 'eggs' as 'eggs'
-  }
-];
-
-const AboutPage = () => {
-  const { toast } = useToast();
+const About = () => {
+  const [certificateVisible, setCertificateVisible] = useState(false);
   const { playSound } = useNotificationSounds();
+  const { addToast } = useToastContext();
   
-  useEffect(() => {
-    playSound('pageTransition', 0.3);
-    
-    // Welcome toast
-    setTimeout(() => {
-      toast({
-        title: "Royal Historian",
-        description: "Welcome to the chronicles of our noble kingdom, where money buys status and satire is our currency!",
-        duration: 5000,
-      });
-    }, 1000);
-  }, [toast, playSound]);
+  // Demo user for certificate
+  const demoUser = {
+    id: '1',
+    username: 'LordMoneybags',
+    displayName: 'Lord Moneybags',
+    profileImage: 'https://source.unsplash.com/random/?royal,portrait',
+    email: 'noble@example.com',
+    amountSpent: 5000,
+    spentAmount: 5000,
+    walletBalance: 1000,
+    rank: 1,
+    tier: 'whale',
+    team: 'red',
+    gender: 'king',
+    joinDate: '2023-05-15T00:00:00.000Z',
+    joinedAt: '2023-05-15T00:00:00.000Z',
+    cosmetics: {
+      borders: [],
+      colors: [],
+      fonts: [],
+      emojis: [],
+      titles: [],
+      backgrounds: [],
+      effects: [],
+      badges: [],
+      themes: [] // Added themes array to fix the error
+    },
+    socialLinks: []
+  };
+  
+  const handleShowCertificate = () => {
+    setCertificateVisible(true);
+    playSound('parchmentUnfurl', 0.4);
+  };
+  
+  const handleCertificateVerify = () => {
+    addToast({
+      title: "Certificate Verified",
+      description: "This certificate of nobility has been authenticated by the royal treasury.",
+      variant: "success",
+      duration: 5000
+    });
+  };
   
   return (
-    <div className="container mx-auto px-4 py-12">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="text-center mb-12"
-      >
-        <h1 className="text-4xl font-medieval royal-gradient mb-4">About Our Royal Domain</h1>
-        <p className="text-white/70 max-w-2xl mx-auto">
-          Welcome to the most satirical digital realm where your worth is measured not by your character, 
-          but by your tribute to our lavish treasury.
-        </p>
-      </motion.div>
+    <div className="min-h-screen flex flex-col bg-background text-foreground">
+      <Helmet>
+        <title>About SpendThrone | The Ultimate Pay-to-Win Social Experiment</title>
+        <meta 
+          name="description" 
+          content="Learn about SpendThrone, the satirical social platform where your rank is determined solely by how much money you spend."
+        />
+      </Helmet>
       
-      {/* Kingdom Overview */}
-      <section className="mb-16">
-        <div className="glass-morphism border-white/10 rounded-xl p-6 relative overflow-hidden">
-          <div className="absolute -right-10 -top-10 opacity-5">
-            <Crown size={160} />
+      <Header />
+      
+      <main className="flex-1 pt-24 pb-16 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-12">
+            <h1 className="text-3xl font-bold royal-gradient mb-4 font-royal">About SpendThrone</h1>
+            <p className="text-white/70 max-w-2xl mx-auto">
+              A satirical social platform that parodies the relationship between wealth and status in modern society.
+            </p>
           </div>
           
-          <h2 className="text-2xl font-medieval royal-gradient mb-6 flex items-center">
-            <BookOpen className="mr-2 h-6 w-6 text-royal-gold" />
-            The Royal Charter
-          </h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.2 }}
-            >
-              <h3 className="text-xl font-medieval mb-3 text-white/90">Our Noble Premise</h3>
-              <p className="text-white/70 mb-4">
-                In the grand tradition of medieval satire, we've created a digital fiefdom where status is 
-                purchased rather than earned. A testament to the absurdity of materialism, where nobles climb 
-                ranks by emptying their coffers.
-              </p>
-              <p className="text-white/70">
-                Our leaderboard never resets, creating a persistent nobility where one dollar equals one unit of prestige. 
-                The ultimate social experiment on the intersection of wealth and digital status.
-              </p>
-            </motion.div>
+          <Tabs defaultValue="concept" className="mb-12">
+            <TabsList className="grid grid-cols-3 mb-8">
+              <TabsTrigger value="concept" className="data-[state=active]:bg-royal-gold/20">
+                <BookOpen className="h-4 w-4 mr-2" />
+                The Concept
+              </TabsTrigger>
+              <TabsTrigger value="mechanics" className="data-[state=active]:bg-royal-gold/20">
+                <Code className="h-4 w-4 mr-2" />
+                How It Works
+              </TabsTrigger>
+              <TabsTrigger value="team" className="data-[state=active]:bg-royal-gold/20">
+                <Users className="h-4 w-4 mr-2" />
+                Our Team
+              </TabsTrigger>
+            </TabsList>
             
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.3 }}
-            >
-              <h3 className="text-xl font-medieval mb-3 text-white/90">Royal Values</h3>
-              <ul className="space-y-3 text-white/70">
-                <li className="flex items-start">
-                  <Shield className="h-5 w-5 text-royal-gold mr-2 mt-0.5 flex-shrink-0" />
-                  <span>We proudly embrace the satirical nature of our kingdom, using humor to critique the excess of modern materialism.</span>
-                </li>
-                <li className="flex items-start">
-                  <Shield className="h-5 w-5 text-royal-gold mr-2 mt-0.5 flex-shrink-0" />
-                  <span>We maintain a humorous, self-aware tone about the inherent ridiculousness of paying for digital status.</span>
-                </li>
-                <li className="flex items-start">
-                  <Shield className="h-5 w-5 text-royal-gold mr-2 mt-0.5 flex-shrink-0" />
-                  <span>We are transparent about transactions and treat our noble patrons with the appropriate level of medieval deference.</span>
-                </li>
-              </ul>
-            </motion.div>
+            <TabsContent value="concept" className="space-y-6">
+              <Card className="glass-morphism border-white/10">
+                <CardHeader>
+                  <CardTitle className="flex items-center">
+                    <Crown className="h-5 w-5 mr-2 text-royal-gold" />
+                    The Royal Satire
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <p>
+                    SpendThrone is a satirical social platform that parodies the relationship between wealth and status in modern society. 
+                    We've created a digital kingdom where your rank is determined solely by how much money you spend.
+                  </p>
+                  <p>
+                    $1 = 1 unit of rank. No skills required. No achievements necessary. Just pure, unadulterated spending.
+                  </p>
+                  <p>
+                    Our platform serves as a mirror to real-world dynamics where wealth often translates to influence and status, 
+                    but we've stripped away all pretense. Here, we're completely transparent about the transaction: 
+                    you give us money, we give you a higher rank and meaningless digital prestige.
+                  </p>
+                  
+                  <div className="bg-white/5 p-4 rounded-lg border border-white/10 mt-4">
+                    <h3 className="text-lg font-bold mb-2 flex items-center">
+                      <Info className="h-5 w-5 mr-2 text-royal-gold" />
+                      Our Mission
+                    </h3>
+                    <p>
+                      To create a thought-provoking social experiment that encourages reflection on how we assign value and status in society, 
+                      while providing entertainment through absurdist humor and community interaction.
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+              
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <Card className="glass-morphism border-white/10">
+                  <CardHeader>
+                    <CardTitle className="text-base flex items-center">
+                      <Sparkles className="h-5 w-5 mr-2 text-royal-gold" />
+                      Satire
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-white/70">
+                      We're poking fun at status games, conspicuous consumption, and the sometimes absurd relationship between wealth and social standing.
+                    </p>
+                  </CardContent>
+                </Card>
+                
+                <Card className="glass-morphism border-white/10">
+                  <CardHeader>
+                    <CardTitle className="text-base flex items-center">
+                      <Users className="h-5 w-5 mr-2 text-royal-gold" />
+                      Community
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-white/70">
+                      Despite the satirical premise, we're building a real community of people who appreciate the humor and enjoy the absurdity together.
+                    </p>
+                  </CardContent>
+                </Card>
+                
+                <Card className="glass-morphism border-white/10">
+                  <CardHeader>
+                    <CardTitle className="text-base flex items-center">
+                      <Heart className="h-5 w-5 mr-2 text-royal-gold" />
+                      Transparency
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-white/70">
+                      We're completely upfront about what you're getting: digital status with no practical value, in exchange for real money.
+                    </p>
+                  </CardContent>
+                </Card>
+              </div>
+            </TabsContent>
+            
+            <TabsContent value="mechanics" className="space-y-6">
+              <Card className="glass-morphism border-white/10">
+                <CardHeader>
+                  <CardTitle className="flex items-center">
+                    <Scroll className="h-5 w-5 mr-2 text-royal-gold" />
+                    The Royal Mechanics
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <p>
+                    SpendThrone operates on a simple principle: your rank is directly proportional to how much money you've spent on the platform.
+                  </p>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                    <div className="bg-white/5 p-4 rounded-lg border border-white/10">
+                      <h3 className="font-bold mb-2">Ranking System</h3>
+                      <p className="text-sm text-white/70">
+                        $1 = 1 rank point. The more you spend, the higher your rank. It's that simple. 
+                        The leaderboard is sorted by total amount spent, with the highest spender at the top.
+                      </p>
+                    </div>
+                    
+                    <div className="bg-white/5 p-4 rounded-lg border border-white/10">
+                      <h3 className="font-bold mb-2">Teams & Competition</h3>
+                      <p className="text-sm text-white/70">
+                        Join one of three royal houses and contribute to your team's standing. 
+                        Team rankings are determined by the collective spending of all members.
+                      </p>
+                    </div>
+                    
+                    <div className="bg-white/5 p-4 rounded-lg border border-white/10">
+                      <h3 className="font-bold mb-2">Cosmetic Rewards</h3>
+                      <p className="text-sm text-white/70">
+                        Unlock purely cosmetic profile enhancements as you spend more. 
+                        These have no functional value but look impressive to others.
+                      </p>
+                    </div>
+                    
+                    <div className="bg-white/5 p-4 rounded-lg border border-white/10">
+                      <h3 className="font-bold mb-2">Social Features</h3>
+                      <p className="text-sm text-white/70">
+                        Interact with other nobles, view profiles, and engage in friendly competition. 
+                        Higher-ranked members receive more visibility on the platform.
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <div className="mt-6 text-center">
+                    <Button 
+                      onClick={handleShowCertificate}
+                      className="bg-royal-gold text-black hover:bg-royal-gold/90"
+                    >
+                      <Crown className="h-4 w-4 mr-2" />
+                      View Sample Certificate of Nobility
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <Card className="glass-morphism border-white/10">
+                  <CardHeader>
+                    <CardTitle className="text-base">Frequently Asked Questions</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div>
+                      <h3 className="font-bold text-sm">Is this real?</h3>
+                      <p className="text-sm text-white/70">
+                        Yes, it's a real platform with real transactions, but it's designed as satire and social commentary.
+                      </p>
+                    </div>
+                    
+                    <div>
+                      <h3 className="font-bold text-sm">What do I get for my money?</h3>
+                      <p className="text-sm text-white/70">
+                        Digital status, a higher rank, cosmetic profile enhancements, and the satisfaction of participating in a unique social experiment.
+                      </p>
+                    </div>
+                    
+                    <div>
+                      <h3 className="font-bold text-sm">Is there any practical value?</h3>
+                      <p className="text-sm text-white/70">
+                        No. That's the point. We're satirizing the concept of spending money for status that has no practical utility.
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
+                
+                <Card className="glass-morphism border-white/10">
+                  <CardHeader>
+                    <CardTitle className="text-base">The Fine Print</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <p className="text-sm text-white/70">
+                      SpendThrone is a satirical platform. All transactions are final. 
+                      Your contributions purchase digital status with no practical value or utility.
+                    </p>
+                    
+                    <p className="text-sm text-white/70">
+                      We maintain complete transparency about the nature of the platform. 
+                      By participating, you acknowledge that you're spending real money for digital status as part of a social experiment.
+                    </p>
+                    
+                    <p className="text-sm text-white/70">
+                      A portion of proceeds goes to maintaining the platform, with the remainder donated to charitable causes.
+                    </p>
+                  </CardContent>
+                </Card>
+              </div>
+            </TabsContent>
+            
+            <TabsContent value="team">
+              <TeamSection />
+              
+              <Card className="glass-morphism border-white/10 mt-8">
+                <CardHeader>
+                  <CardTitle className="flex items-center">
+                    <Coffee className="h-5 w-5 mr-2 text-royal-gold" />
+                    Our Philosophy
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="mb-4">
+                    We're a team of developers, designers, and writers who are fascinated by the intersection of technology, 
+                    economics, and social dynamics. SpendThrone emerged from our discussions about status games, 
+                    conspicuous consumption, and the sometimes absurd relationship between wealth and social standing.
+                  </p>
+                  
+                  <p>
+                    By creating this platform, we hope to spark conversations about how we assign value in society, 
+                    while providing entertainment through absurdist humor and community interaction.
+                  </p>
+                </CardContent>
+              </Card>
+            </TabsContent>
+          </Tabs>
+          
+          <RoyalDivider variant="ornate" className="my-12" />
+          
+          <div className="text-center">
+            <h2 className="text-2xl font-bold royal-gradient mb-4 font-royal">Join Our Royal Court</h2>
+            <p className="text-white/70 max-w-2xl mx-auto mb-6">
+              Ready to participate in our satirical social experiment? Join SpendThrone today and begin your ascent through the ranks of digital nobility.
+            </p>
+            
+            <Button className="bg-royal-gold text-black hover:bg-royal-gold/90">
+              <Crown className="h-4 w-4 mr-2" />
+              Begin Your Noble Journey
+            </Button>
           </div>
         </div>
-      </section>
+      </main>
       
-      {/* Key Features */}
-      <section className="mb-16">
-        <h2 className="text-2xl font-medieval royal-gradient text-center mb-8">Royal Institutions</h2>
-        
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="glass-morphism border-white/10 rounded-xl p-5 relative overflow-hidden hover:border-royal-gold/30 transition-colors"
-          >
-            <div className="h-12 w-12 rounded-full bg-royal-gold/10 flex items-center justify-center mb-4">
-              <Crown className="h-6 w-6 text-royal-gold" />
-            </div>
-            <h3 className="text-lg font-medieval mb-2">The Royal Court</h3>
-            <p className="text-white/70 text-sm">
-              Our persistent leaderboard where nobles are ranked by their financial contributions. Climb the social ladder through the time-honored tradition of spending money!
-            </p>
-            <div className="absolute bottom-2 right-2 opacity-5">
-              <Crown size={60} />
-            </div>
-          </motion.div>
-          
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="glass-morphism border-white/10 rounded-xl p-5 relative overflow-hidden hover:border-royal-crimson/30 transition-colors"
-          >
-            <div className="h-12 w-12 rounded-full bg-royal-crimson/10 flex items-center justify-center mb-4">
-              <Scroll className="h-6 w-6 text-royal-crimson" />
-            </div>
-            <h3 className="text-lg font-medieval mb-2">The Royal Scrolls</h3>
-            <p className="text-white/70 text-sm">
-              Nobles can create customized profile pages with levels of opulence determined by their spending. More money means more elaborate decorations and self-expression.
-            </p>
-            <div className="absolute bottom-2 right-2 opacity-5">
-              <Scroll size={60} />
-            </div>
-          </motion.div>
-          
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="glass-morphism border-white/10 rounded-xl p-5 relative overflow-hidden hover:border-royal-navy/30 transition-colors"
-          >
-            <div className="h-12 w-12 rounded-full bg-royal-navy/10 flex items-center justify-center mb-4">
-              <Swords className="h-6 w-6 text-royal-navy" />
-            </div>
-            <h3 className="text-lg font-medieval mb-2">Royal Tournaments</h3>
-            <p className="text-white/70 text-sm">
-              Weekly events add twists to our usual order, from the "Poke Party" where users pay to drop others in rank, to team challenges that test collective spending power.
-            </p>
-            <div className="absolute bottom-2 right-2 opacity-5">
-              <Swords size={60} />
-            </div>
-          </motion.div>
+      {certificateVisible && (
+        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
+          <CertificateOfNobility
+            user={demoUser}
+            certificateId="NOB-12345-ABCDE"
+            onVerify={() => handleCertificateVerify()}
+            onDismiss={() => setCertificateVisible(false)}
+          />
         </div>
-      </section>
+      )}
       
-      {/* Certificate Preview */}
-      <section className="mb-16">
-        <h2 className="text-2xl font-medieval royal-gradient text-center mb-1">Certificate of Nobility</h2>
-        <p className="text-white/70 text-center mb-8">Behold, the parchment that validates your purchased prestige!</p>
-        
-        <CertificateOfNobility 
-          user={mockUser}
-          issuedOn={new Date(2023, 6, 20)}
-          rankAtIssuance={5}
-          amountSpentAtIssuance={750}
-          certificateId="ROYAL-5F7D3"
-          onVerify={() => {
-            toast({
-              title: "Certificate Verified",
-              description: "The Royal Scribes have authenticated this certificate of nobility.",
-              duration: 3000,
-            });
-          }}
-          onDismiss={() => {
-            toast({
-              title: "Certificate Dismissed",
-              description: "You have cast aside this recognition of purchased status.",
-              duration: 3000,
-            });
-          }}
-        />
-      </section>
-      
-      {/* Scroll of Shame Preview */}
-      <section className="mb-16">
-        <h2 className="text-2xl font-medieval royal-gradient text-center mb-1">Scroll of Shame</h2>
-        <p className="text-white/70 text-center mb-8">Public ridicule for those who fail to properly support the kingdom.</p>
-        
-        <ScrollOfShame 
-          shameRecords={mockShameRecords}
-          previewMode={true}
-          onView={(record) => {
-            console.log("Viewing shame record:", record);
-          }}
-          onHide={(record) => {
-            console.log("Hiding shame record:", record);
-          }}
-        />
-      </section>
-      
-      {/* Call to Action */}
-      <section className="text-center mt-12">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.4 }}
-          className="glass-morphism border-white/10 rounded-xl p-8 max-w-2xl mx-auto"
-        >
-          <MedievalIcon name="crown" size="xl" color="gold" className="mb-4" />
-          <h2 className="text-2xl font-medieval royal-gradient mb-4">Join Our Noble Ranks</h2>
-          <p className="text-white/70 mb-6">
-            Ready to trade your real money for completely meaningless digital status? Our kingdom awaits your contribution to our entirely arbitrary hierarchy!
-          </p>
-          <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
-            <RoyalButton
-              variant="royalGold"
-              icon={<Coins className="h-5 w-5" />}
-              onClick={() => {
-                playSound('coinDrop');
-                toast({
-                  title: "Royal Treasurer",
-                  description: "The Royal Treasury awaits your generous contribution!",
-                  duration: 3000,
-                });
-              }}
-            >
-              Contribute to the Treasury
-            </RoyalButton>
-            <RoyalButton
-              variant="glass"
-              icon={<Crown className="h-5 w-5" />}
-              onClick={() => {
-                playSound('pageTransition');
-                window.location.href = '/profile/create';
-              }}
-            >
-              Create Your Noble Profile
-            </RoyalButton>
-          </div>
-          <p className="text-white/50 text-xs mt-6 italic">
-            "Remember, in our kingdom, the size of your payment directly validates your self-worth!"
-          </p>
-        </motion.div>
-      </section>
+      <Footer />
     </div>
   );
 };
 
-export default AboutPage;
+export default About;

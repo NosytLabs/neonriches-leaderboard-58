@@ -1,145 +1,117 @@
 
-import { useState, useCallback, useRef, useEffect } from 'react';
-import { AudioLoaderReturn, SoundMap } from './types';
+import { useState, useEffect } from 'react';
+import { AudioLoaderReturn, SoundType } from './types';
 
-const useAudioLoader = (): AudioLoaderReturn => {
-  const [audioElements, setAudioElements] = useState<{[key: string]: HTMLAudioElement}>({});
+// Mapping of sound types to their file paths
+// We're using MP3s for better browser compatibility
+const SOUND_PATHS: Record<SoundType, string> = {
+  coinDrop: '/sounds/coin-drop.mp3',
+  reward: '/sounds/reward.mp3',
+  notification: '/sounds/notification.mp3',
+  click: '/sounds/click.mp3',
+  success: '/sounds/success.mp3',
+  error: '/sounds/error.mp3',
+  royalAnnouncement: '/sounds/royal-announcement.mp3',
+  levelUp: '/sounds/level-up.mp3',
+  purchase: '/sounds/purchase.mp3',
+  shame: '/sounds/shame.mp3', 
+  swordClash: '/sounds/sword-clash.mp3',
+  pageTransition: '/sounds/page-transition.mp3',
+  wish: '/sounds/wish.mp3',
+  pageChange: '/sounds/page-change.mp3',
+  parchmentUnfurl: '/sounds/parchment-unfurl.mp3',
+  medallion: '/sounds/medallion.mp3',
+  seal: '/sounds/seal.mp3', 
+  trumpet: '/sounds/trumpet.mp3',
+  noblesLaugh: '/sounds/nobles-laugh.mp3',
+  inkScribble: '/sounds/ink-scribble.mp3'
+};
+
+// Sound categories for different user preferences
+export const SOUND_CATEGORIES = {
+  UI: ['click', 'notification', 'pageTransition', 'pageChange'],
+  FEEDBACK: ['success', 'error', 'reward', 'levelUp', 'purchase'],
+  AMBIENT: ['coinDrop', 'royalAnnouncement', 'wish', 'trumpet'],
+  SPECIAL: ['swordClash', 'shame', 'parchmentUnfurl', 'medallion', 'seal', 'noblesLaugh', 'inkScribble']
+};
+
+/**
+ * Custom hook to preload and manage audio files
+ * @param soundsToPreload - Optional array of sound types to preload
+ * @returns The preloaded audio elements and loading state
+ */
+export const useAudioLoader = (
+  soundsToPreload?: SoundType[]
+): AudioLoaderReturn => {
   const [loadedSounds, setLoadedSounds] = useState<string[]>([]);
-  const [isInitialLoadComplete, setIsInitialLoadComplete] = useState(false);
-  const preloadAttempted = useRef(false);
-  const activeAudioElements = useRef<HTMLAudioElement[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
+  const [audioElements, setAudioElements] = useState<Record<string, HTMLAudioElement>>({});
   
-  // Clean up audio elements on unmount
+  // Load all sounds if no specific sounds are provided
   useEffect(() => {
+    const soundsToLoad = soundsToPreload || Object.keys(SOUND_PATHS) as SoundType[];
+    
+    if (soundsToLoad.length === 0) {
+      return;
+    }
+    
+    setIsLoading(true);
+    const loadedAudioElements: Record<string, HTMLAudioElement> = {};
+    const newLoadedSounds: string[] = [];
+    
+    Promise.all(
+      soundsToLoad.map((soundType) => {
+        return new Promise<void>((resolve, reject) => {
+          try {
+            const audio = new Audio();
+            audio.preload = 'auto';
+            
+            audio.addEventListener('canplaythrough', () => {
+              newLoadedSounds.push(soundType);
+              loadedAudioElements[soundType] = audio;
+              resolve();
+            }, { once: true });
+            
+            audio.addEventListener('error', (e) => {
+              console.error(`Error loading sound: ${soundType}`, e);
+              reject(new Error(`Failed to load ${soundType} sound`));
+            }, { once: true });
+            
+            audio.src = SOUND_PATHS[soundType];
+            audio.load();
+            
+          } catch (err) {
+            console.error(`Error creating audio element for ${soundType}:`, err);
+            reject(err);
+          }
+        });
+      })
+    )
+    .then(() => {
+      setLoadedSounds(newLoadedSounds);
+      setAudioElements(loadedAudioElements);
+      setIsLoading(false);
+    })
+    .catch((err) => {
+      console.error('Error loading audio files:', err);
+      setError(err instanceof Error ? err : new Error(String(err)));
+      setIsLoading(false);
+    });
+    
+    // Cleanup audio elements on unmount
     return () => {
-      pauseAllSounds();
-      
-      // Remove event listeners and nullify src to help GC
-      Object.values(audioElements).forEach(audio => {
-        audio.oncanplaythrough = null;
-        audio.onerror = null;
-        audio.onload = null;
+      Object.values(loadedAudioElements).forEach(audio => {
         audio.pause();
         audio.src = '';
       });
     };
-  }, []);
+  }, [soundsToPreload]);
   
-  // Function to pause all playing sounds
-  const pauseAllSounds = useCallback(() => {
-    activeAudioElements.current.forEach(audio => {
-      if (!audio.paused) {
-        audio.pause();
-      }
-    });
-    activeAudioElements.current = [];
-  }, []);
-  
-  // Preload core sounds on initial load
-  const preloadCoreSounds = useCallback((soundMap: SoundMap) => {
-    // Skip if already attempted to prevent multiple preload calls
-    if (preloadAttempted.current) return;
-    preloadAttempted.current = true;
-    
-    try {
-      const newAudioElements: {[key: string]: HTMLAudioElement} = {};
-      let loadedCount = 0;
-      const totalSounds = Object.keys(soundMap).length;
-      
-      // Track loading progress
-      const checkLoadCompletion = () => {
-        loadedCount++;
-        if (loadedCount >= totalSounds) {
-          setIsInitialLoadComplete(true);
-        }
-      };
-      
-      Object.entries(soundMap).forEach(([key, soundInfo]) => {
-        const audio = new Audio();
-        
-        // Add load event to track when preloading is complete
-        audio.addEventListener('canplaythrough', () => {
-          setLoadedSounds(prev => {
-            if (prev.includes(key)) return prev;
-            return [...prev, key];
-          });
-          checkLoadCompletion();
-        }, { once: true });
-        
-        // Add error handling
-        audio.addEventListener('error', (e) => {
-          console.warn(`Failed to preload sound "${key}":`, e);
-          checkLoadCompletion();
-        }, { once: true });
-        
-        audio.preload = 'auto';
-        audio.src = soundInfo.src;
-        newAudioElements[key] = audio;
-      });
-      
-      setAudioElements(prev => ({...prev, ...newAudioElements}));
-      
-      // Fallback in case events don't fire
-      setTimeout(() => {
-        if (!isInitialLoadComplete) {
-          console.warn('Sound preloading timed out, setting as loaded anyway');
-          setIsInitialLoadComplete(true);
-        }
-      }, 5000);
-    } catch (error) {
-      console.error('Error initializing audio elements:', error);
-      setIsInitialLoadComplete(true); // Set as loaded anyway to prevent blocking the app
-    }
-  }, [isInitialLoadComplete]);
-  
-  // Load a specific sound on demand with improved error handling
-  const loadSound = useCallback(async (type: string, soundInfo: SoundMap[string]): Promise<HTMLAudioElement | null> => {
-    // Return existing element if already loaded
-    if (audioElements[type]) return audioElements[type];
-    
-    return new Promise<HTMLAudioElement | null>((resolve) => {
-      try {
-        const audio = new Audio();
-        
-        audio.addEventListener('canplaythrough', () => {
-          setAudioElements(prev => ({ ...prev, [type]: audio }));
-          setLoadedSounds(prev => {
-            if (prev.includes(type)) return prev;
-            return [...prev, type];
-          });
-          resolve(audio);
-        }, { once: true });
-        
-        audio.addEventListener('error', (e) => {
-          console.warn(`Failed to load sound "${type}":`, e);
-          resolve(null); // Return null to indicate loading failed
-        }, { once: true });
-        
-        audio.preload = 'auto';
-        audio.src = soundInfo.src;
-        
-        // Set a timeout in case the events don't fire
-        setTimeout(() => {
-          if (!loadedSounds.includes(type)) {
-            console.warn(`Loading sound "${type}" timed out, continuing anyway`);
-            resolve(audio);
-          }
-        }, 3000);
-      } catch (error) {
-        console.error('Failed to load sound:', error);
-        resolve(null);
-      }
-    });
-  }, [audioElements, loadedSounds]);
-
   return {
-    audioElements,
     loadedSounds,
-    isInitialLoadComplete,
-    preloadCoreSounds,
-    loadSound,
-    pauseAllSounds
+    isLoading,
+    error,
+    audioElements
   };
 };
-
-export default useAudioLoader;

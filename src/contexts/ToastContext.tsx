@@ -14,7 +14,7 @@ interface ToastActionElement {
 interface ToastOptions {
   title?: string;
   description?: string;
-  action?: ToastActionElement;
+  action?: React.ReactNode;
   variant?: ToastVariant;
   duration?: number;
   className?: string;
@@ -60,11 +60,18 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         customClassName = 'border-blue-500/50 bg-blue-500/10';
       }
 
+      // Convert variant to supported variant
+      const toastVariant = variant === 'success' ? 'default' : 
+                          variant === 'warning' ? 'default' : 
+                          variant === 'info' ? 'default' : 
+                          variant === 'royal' ? 'default' : 
+                          variant;
+
       toast({
         title,
         description,
         action,
-        variant: (variant === 'success' || variant === 'destructive') ? variant : 'default',
+        variant: toastVariant,
         duration,
         className: customClassName
       });

@@ -1,4 +1,3 @@
-
 import React, { useState, useRef } from 'react';
 import { Crown } from 'lucide-react';
 import useFloatingCoins from '@/hooks/use-floating-coins';
@@ -22,6 +21,7 @@ const InteractiveRoyalCrown: React.FC<InteractiveRoyalCrownProps> = ({
   animated = true
 }) => {
   const [isHovered, setIsHovered] = useState(false);
+  const [isAnimating, setIsAnimating] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const { createBurst } = useFloatingCoins();
   
@@ -34,14 +34,17 @@ const InteractiveRoyalCrown: React.FC<InteractiveRoyalCrownProps> = ({
     sizes: [3, 4, 5]
   });
   
-  const handleClick = () => {
-    if (onCrownClick) {
-      onCrownClick();
-      
-      if (showCoins && containerRef.current) {
-        createBurst(10);
-      }
+  const handleCrownClick = () => {
+    setIsAnimating(true);
+    onCrownClick?.();
+    
+    if (showCoins) {
+      createBurst(20);
     }
+    
+    setTimeout(() => {
+      setIsAnimating(false);
+    }, 2000);
   };
   
   const getSizeClass = () => {
@@ -64,7 +67,7 @@ const InteractiveRoyalCrown: React.FC<InteractiveRoyalCrownProps> = ({
       }`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      onClick={handleClick}
+      onClick={handleCrownClick}
     >
       <div className={`absolute inset-0 bg-royal-gold/20 rounded-full filter blur-xl animate-pulse-slow ${getSizeClass()}`}></div>
       

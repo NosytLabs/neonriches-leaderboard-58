@@ -1,265 +1,220 @@
 
-import React from 'react';
-import { motion } from 'framer-motion';
-import { Check, X, Download, Crown } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { format } from 'date-fns';
 import { UserProfile } from '@/types/user';
+import { Seal, CheckCircle, XCircle, QuestionMarkCircledIcon } from 'lucide-react';
+import useNotificationSounds from '@/hooks/use-notification-sounds';
+import RoyalButton from '@/components/ui/royal-button';
 
-interface CertificateProps {
+export interface CertificateProps {
   user: UserProfile;
-  isOpen: boolean;
-  onClose: () => void;
+  certificateId: string;
   onVerify?: () => void;
+  onDismiss?: () => void;
 }
 
-const CertificateOfNobility: React.FC<CertificateProps> = ({ 
-  user, 
-  isOpen, 
-  onClose,
-  onVerify 
+const CertificateOfNobility: React.FC<CertificateProps> = ({
+  user,
+  certificateId,
+  onVerify,
+  onDismiss
 }) => {
-  if (!isOpen) return null;
-  
-  const formattedDate = new Date().toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  });
+  const [isVerified, setIsVerified] = useState(false);
+  const [isVerifying, setIsVerifying] = useState(false);
+  const { playSound } = useNotificationSounds();
   
   const handleVerify = () => {
-    if (onVerify) onVerify();
+    setIsVerifying(true);
+    playSound('seal', 0.5);
+    
+    // Simulate verification process
+    setTimeout(() => {
+      setIsVerified(true);
+      setIsVerifying(false);
+      playSound('success', 0.3);
+      if (onVerify) onVerify();
+    }, 2000);
   };
   
-  const handlePrint = () => {
-    window.print();
+  const handleDismiss = () => {
+    playSound('parchmentUnfurl', 0.3);
+    if (onDismiss) onDismiss();
   };
+  
+  const today = new Date();
   
   return (
-    <motion.div 
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm print:bg-transparent print:p-0"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-    >
-      <motion.div 
-        className="relative max-w-4xl w-full bg-parchment text-black rounded-lg shadow-2xl overflow-hidden certificate-container print:shadow-none"
-        initial={{ scale: 0.9, y: 20 }}
-        animate={{ scale: 1, y: 0 }}
-        transition={{ type: 'spring', damping: 25 }}
+    <div className="relative max-w-4xl mx-auto">
+      <motion.div
+        initial={{ scale: 0.9, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.9, opacity: 0 }}
+        transition={{ duration: 0.5, type: 'spring' }}
+        className="certificate-parchment"
       >
-        {/* Close button - hidden when printing */}
-        <button 
-          onClick={onClose}
-          className="absolute top-4 right-4 w-10 h-10 rounded-full bg-black/10 flex items-center justify-center transition-colors hover:bg-black/20 print:hidden"
-        >
-          <X className="w-5 h-5 text-black/70" />
-        </button>
-        
-        {/* Certificate content */}
-        <div className="p-8 md:p-12 certificate-content">
-          <div className="flex justify-center mb-6">
-            <div className="certificate-seal">
-              <Crown className="w-16 h-16 text-royal-gold" />
-            </div>
-          </div>
-          
+        <div className="p-8 sm:p-12 relative z-10">
           <div className="text-center mb-8">
-            <h1 className="certificate-title mb-2">Certificate of Nobility</h1>
-            <div className="certificate-subtitle">Royal Recognition of Digital Spending</div>
+            <h1 className="text-2xl sm:text-3xl font-medieval mb-2 royal-gradient">Certificate of Nobility</h1>
+            <div className="text-xs sm:text-sm text-gray-600 uppercase tracking-widest">Kingdom of SpendThrone</div>
           </div>
           
-          <div className="certificate-body mb-8 text-center">
-            <p className="mb-6">This document formally certifies that</p>
-            <h2 className="certificate-name mb-6">{user.displayName || user.username}</h2>
-            <p className="mb-2">has attained the exclusive status of</p>
-            <h3 className="certificate-rank mb-6">{getTierTitle(user.tier)}</h3>
-            <p className="mb-2">by contributing the princely sum of</p>
-            <h3 className="certificate-amount mb-8">${user.amountSpent?.toLocaleString() || '0'}</h3>
-            <p className="certificate-legal">
-              This sum represents actual currency exchanged for purely cosmetic digital status,
-              with absolutely no practical benefits beyond this decorative certificate.
+          <div className="mb-8 text-center">
+            <p className="text-lg sm:text-xl mb-4 font-medieval-text">By decree of the Royal Treasury, this document certifies that</p>
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-royal royal-gradient mb-4">
+              {user.displayName || user.username}
+            </h2>
+            <p className="text-base font-medieval-text">
+              has demonstrated exceptional financial dedication to the realm through generous contributions 
+              totaling <span className="font-semibold">${user.amountSpent?.toLocaleString()}</span>, 
+              thereby earning the illustrious rank of <span className="font-semibold">#{user.rank}</span> 
+              among all nobles in the kingdom.
             </p>
           </div>
           
-          <div className="certificate-footer flex justify-between items-center mt-12">
-            <div className="certificate-date">
-              Issued on the {formattedDate}
-            </div>
-            <div className="certificate-number">
-              Certificate ID: {generateCertificateId(user.id)}
+          <div className="mb-8">
+            <div className="border-t border-b border-gray-300 py-4 grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
+              <div>
+                <div className="text-sm text-gray-600">Date of Issuance</div>
+                <div className="font-medieval-text">{format(today, 'MMMM dd, yyyy')}</div>
+              </div>
+              <div>
+                <div className="text-sm text-gray-600">Certificate Number</div>
+                <div className="font-mono text-xs sm:text-sm">{certificateId}</div>
+              </div>
+              <div>
+                <div className="text-sm text-gray-600">Royal Rank</div>
+                <div className="font-medieval-text">#{user.rank}</div>
+              </div>
             </div>
           </div>
           
-          {/* Action buttons - hidden when printing */}
-          <div className="flex justify-center gap-4 mt-8 print:hidden">
-            <Button
-              variant="outline"
-              className="certificate-button border-royal-gold/50 text-royal-gold hover:bg-royal-gold/10"
-              onClick={handleVerify}
-            >
-              <Check className="mr-2 h-4 w-4" />
-              Verify Certificate
-            </Button>
+          <div className="flex flex-col sm:flex-row justify-between items-center mb-8">
+            <div className="mb-6 sm:mb-0">
+              <div className="text-xs text-gray-600 mb-1">Kingdom Seal</div>
+              <div className="relative">
+                <Seal size={60} className="text-royal-gold animate-pulse-slow" />
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="text-[8px] text-center leading-tight">
+                    <div>ROYAL</div>
+                    <div>TREASURY</div>
+                  </div>
+                </div>
+              </div>
+            </div>
             
-            <Button
-              variant="outline"
-              className="certificate-button border-black/30 text-black/70 hover:bg-black/5" 
-              onClick={handlePrint}
+            <div className="text-right">
+              <div className="text-xs text-gray-600 mb-1">Signature of the Royal Treasurer</div>
+              <div className="font-signature text-lg sm:text-xl text-royal-purple">Lord Moneybags</div>
+            </div>
+          </div>
+          
+          <div className="text-xs text-gray-500 text-center italic mb-6">
+            This certificate affirms nobility status in the digital realm, though it holds no legal value, 
+            authority, or meaning in the physical world. It is merely a testament to one's willingness 
+            to exchange actual currency for meaningless digital status.
+          </div>
+          
+          <div className="flex flex-col sm:flex-row justify-center sm:justify-between gap-4">
+            <RoyalButton
+              onClick={handleVerify}
+              disabled={isVerified || isVerifying}
+              variant="royalGold"
+              className="w-full sm:w-auto"
+              icon={
+                isVerified ? (
+                  <CheckCircle size={18} className="text-emerald-400" />
+                ) : isVerifying ? (
+                  <div className="animate-spin h-4 w-4 border-2 border-white rounded-full border-t-transparent" />
+                ) : (
+                  <QuestionMarkCircledIcon size={18} />
+                )
+              }
             >
-              <Download className="mr-2 h-4 w-4" />
-              Save Certificate
-            </Button>
+              {isVerified 
+                ? 'Verified Authentic' 
+                : isVerifying
+                  ? 'Verifying...'
+                  : 'Verify Authenticity'}
+            </RoyalButton>
+            
+            <RoyalButton
+              onClick={handleDismiss}
+              variant="outline"
+              className="w-full sm:w-auto"
+              icon={<XCircle size={18} />}
+            >
+              Dismiss Certificate
+            </RoyalButton>
           </div>
         </div>
-        
-        {/* Background decorations */}
-        <div className="certificate-background"></div>
-        <div className="certificate-border"></div>
       </motion.div>
       
-      <style>
+      <style jsx global>
         {`
-        @media print {
-          body * {
-            visibility: hidden;
+          .certificate-parchment {
+            background-color: #f9f2e0;
+            background-image: 
+              url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23d1b278' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E"),
+              linear-gradient(to bottom, rgba(249,242,224,1) 0%, rgba(239,227,200,1) 100%);
+            color: #442c1e;
+            border-radius: 0.5rem;
+            box-shadow: 
+              0 1px 3px rgba(0, 0, 0, 0.1),
+              0 20px 40px rgba(0, 0, 0, 0.2),
+              inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+            position: relative;
+            overflow: hidden;
           }
-          .certificate-container, .certificate-container * {
-            visibility: visible;
-          }
-          .certificate-container {
+          
+          .certificate-parchment::before,
+          .certificate-parchment::after {
+            content: '';
             position: absolute;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
+            pointer-events: none;
           }
-        }
-        
-        .certificate-container {
-          background-color: #f5e7c1;
-          background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23d0ba91' fill-opacity='0.2' fill-rule='evenodd'/%3E%3C/svg%3E");
-        }
-        
-        .certificate-seal {
-          position: relative;
-          width: 80px;
-          height: 80px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-        
-        .certificate-seal::before {
-          content: '';
-          position: absolute;
-          width: 100%;
-          height: 100%;
-          border-radius: 50%;
-          background: radial-gradient(circle, rgba(218,165,32,0.2) 0%, rgba(218,165,32,0) 70%);
-          animation: pulse 4s infinite;
-        }
-        
-        .certificate-title {
-          font-family: 'Cinzel', serif;
-          font-size: 2.5rem;
-          color: #8B5A2B;
-          text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
-        }
-        
-        .certificate-subtitle {
-          font-family: 'Cinzel', serif;
-          font-size: 1rem;
-          color: #8B5A2B;
-          letter-spacing: 0.1em;
-        }
-        
-        .certificate-name {
-          font-family: 'Tangerine', cursive;
-          font-size: 3.5rem;
-          color: #8B0000;
-          text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
-        }
-        
-        .certificate-rank {
-          font-family: 'Cinzel', serif;
-          font-size: 1.8rem;
-          color: #8B5A2B;
-          text-transform: uppercase;
-          letter-spacing: 0.05em;
-        }
-        
-        .certificate-amount {
-          font-family: 'Cinzel', serif;
-          font-size: 2rem;
-          color: #8B0000;
-        }
-        
-        .certificate-legal {
-          font-style: italic;
-          font-size: 0.9rem;
-          color: rgba(0,0,0,0.6);
-          max-width: 80%;
-          margin: 0 auto;
-        }
-        
-        .certificate-button {
-          transition: all 0.3s ease;
-        }
-        
-        .certificate-background {
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          width: 80%;
-          height: 80%;
-          background-image: url("data:image/svg+xml,%3Csvg width='52' height='26' viewBox='0 0 52 26' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23bd9d3c' fill-opacity='0.05'%3E%3Cpath d='M10 10c0-2.21-1.79-4-4-4-3.314 0-6-2.686-6-6h2c0 2.21 1.79 4 4 4 3.314 0 6 2.686 6 6 0 2.21 1.79 4 4 4 3.314 0 6 2.686 6 6 0 2.21 1.79 4 4 4 3.314 0 6 2.686 6 6h-2c0-2.21-1.79-4-4-4-3.314 0-6-2.686-6-6 0-2.21-1.79-4-4-4-3.314 0-6-2.686-6-6 0-2.21-1.79-4-4-4-3.314 0-6-2.686-6-6z' /%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-          z-index: -1;
-          pointer-events: none;
-        }
-        
-        .certificate-border {
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          border: 12px solid transparent;
-          border-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='75' height='75'%3E%3Cg fill='none' stroke='%23d4af37' stroke-width='2'%3E%3Cpath d='M1 1h73v73H1z'/%3E%3Cpath d='M8 8h59v59H8z'/%3E%3Cpath d='M8 8L1 1m7 66L1 74m59-66l7-7m0 73l-7-7'/%3E%3C/g%3E%3C/svg%3E") 25%;
-          pointer-events: none;
-        }
-        
-        @keyframes pulse {
-          0% { transform: scale(1); opacity: 1; }
-          50% { transform: scale(1.1); opacity: 0.7; }
-          100% { transform: scale(1); opacity: 1; }
-        }
+          
+          .certificate-parchment::before {
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 100px;
+            background: linear-gradient(to bottom, 
+              rgba(209, 178, 120, 0.2) 0%, 
+              rgba(209, 178, 120, 0) 100%);
+            z-index: 1;
+          }
+          
+          .certificate-parchment::after {
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 100px;
+            background: linear-gradient(to top, 
+              rgba(209, 178, 120, 0.2) 0%, 
+              rgba(209, 178, 120, 0) 100%);
+            z-index: 1;
+          }
+          
+          .royal-gradient {
+            background: linear-gradient(to right, #b8860b, #d4af37, #b8860b);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+          }
+          
+          @keyframes pulse-slow {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+          }
+          
+          .animate-pulse-slow {
+            animation: pulse-slow 3s ease-in-out infinite;
+          }
         `}
       </style>
-    </motion.div>
+    </div>
   );
 };
-
-// Helper functions
-function getTierTitle(tier: string): string {
-  const titles: Record<string, string> = {
-    'crab': 'Squire of the Shallow Depths',
-    'octopus': 'Knight of the Eight Arms',
-    'fish': 'Baron of the Silver Scales',
-    'dolphin': 'Count of the Swift Current',
-    'shark': 'Duke of the Hunting Grounds',
-    'whale': 'Prince of the Deep Abyss',
-    'royal': 'High Sovereign of the Endless Ocean',
-    'pro': 'Marquis of Premium Holdings',
-    'free': 'Commoner of the Shore'
-  };
-  
-  return titles[tier] || 'Noble of Unknown Rank';
-}
-
-function generateCertificateId(userId: string): string {
-  const randomCode = Math.floor(Math.random() * 100000).toString().padStart(5, '0');
-  return `NC-${randomCode}-${userId.substring(0, 5).toUpperCase()}`;
-}
 
 export default CertificateOfNobility;
