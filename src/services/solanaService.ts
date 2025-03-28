@@ -77,7 +77,17 @@ export const getTreasuryTransactions = async (limit: number = 10): Promise<Solan
       
       if (!txData || !txData.meta) continue;
       
-      const sender = txData.transaction.message.accountKeys[0].toString();
+      // Use getAccountKeys() for VersionedMessage
+      let senderAddress = TREASURY_ADDRESS;
+      if (txData.transaction.message) {
+        const accountKeys = txData.transaction.message.getAccountKeys 
+          ? txData.transaction.message.getAccountKeys() 
+          : { get: (index: number) => new PublicKey(TREASURY_ADDRESS) };
+        
+        senderAddress = accountKeys.get(0).toString();
+      }
+      
+      const sender = senderAddress;
       const receiver = TREASURY_ADDRESS;
       const amount = txData.meta.postBalances[0] - txData.meta.preBalances[0];
       
@@ -117,11 +127,11 @@ export const getOnChainLeaderboard = async (limit: number = 25): Promise<OnChain
     const transactions = await getTreasuryTransactions(100);
     
     // Group transactions by sender address and sum the amounts
-    const spenderMap: Record<string, { amount: number, lastTx: string }> = {};
+    const spenderMap: Record<string, { amount: number, lastTx: string, signature?: string }> = {};
     
     transactions.forEach(tx => {
       if (!spenderMap[tx.sender]) {
-        spenderMap[tx.sender] = { amount: 0, lastTx: tx.timestamp };
+        spenderMap[tx.sender] = { amount: 0, lastTx: tx.timestamp, signature: tx.signature };
       }
       
       spenderMap[tx.sender].amount += tx.amount;
@@ -131,6 +141,7 @@ export const getOnChainLeaderboard = async (limit: number = 25): Promise<OnChain
       const thisTx = new Date(tx.timestamp).getTime();
       if (thisTx > currentLastTx) {
         spenderMap[tx.sender].lastTx = tx.timestamp;
+        spenderMap[tx.sender].signature = tx.signature;
       }
     });
     
@@ -142,6 +153,7 @@ export const getOnChainLeaderboard = async (limit: number = 25): Promise<OnChain
         rank: 0, // Will be calculated after sorting
         amountSpent: data.amount,
         lastTransaction: data.lastTx,
+        signature: data.signature,
         isVerified: false
       }))
       .sort((a, b) => b.amountSpent - a.amountSpent);
@@ -210,7 +222,7 @@ export const generateCertificateMetadata = (user: any) => {
       },
       {
         trait_type: "Join Date",
-        value: new Date(user.joinDate).toISOString().split('T')[0]
+        value: new Date(user.joinDate || user.joined_at).toISOString().split('T')[0]
       },
       {
         trait_type: "Nobility Tier",
@@ -223,7 +235,7 @@ export const generateCertificateMetadata = (user: any) => {
     ],
     properties: {
       rank: user.rank,
-      joinDate: user.joinDate,
+      joinDate: user.joinDate || user.joined_at,
       amountSpent: user.amountSpent || 0,
       username: user.username,
       team: user.team,

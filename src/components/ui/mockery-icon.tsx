@@ -2,7 +2,7 @@
 import React from 'react';
 import { ExtendedMockeryAction, getMockeryActionIcon } from '@/components/mockery/utils/mockeryUtils';
 import { Egg, AlertCircle, Crown, Scroll, ShieldOff, MessageSquareOff, Theater } from 'lucide-react';
-import MedievalIcon from './medieval-icon';
+import MedievalIcon, { MedievalIconSize } from './medieval-icon';
 
 type IconSize = 'sm' | 'md' | 'lg' | number;
 
@@ -24,14 +24,14 @@ const getSizeValue = (size: IconSize): number => {
   }
 };
 
-const getMedievalSize = (size: IconSize): "sm" | "md" | "lg" => {
+const getMedievalSize = (size: IconSize): MedievalIconSize => {
   if (typeof size === 'number') {
     if (size <= 16) return "sm";
     if (size <= 24) return "md";
     return "lg";
   }
   
-  return size;
+  return size as MedievalIconSize;
 };
 
 const MockeryIcon: React.FC<MockeryIconProps> = ({ 

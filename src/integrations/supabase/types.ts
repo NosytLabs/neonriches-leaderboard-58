@@ -9,13 +9,281 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      certificates: {
+        Row: {
+          amount_spent: number
+          created_at: string
+          id: string
+          image_uri: string | null
+          is_minted: boolean | null
+          metadata_uri: string | null
+          mint_address: string | null
+          minted_at: string | null
+          rank: number
+          user_id: string
+        }
+        Insert: {
+          amount_spent: number
+          created_at?: string
+          id?: string
+          image_uri?: string | null
+          is_minted?: boolean | null
+          metadata_uri?: string | null
+          mint_address?: string | null
+          minted_at?: string | null
+          rank: number
+          user_id: string
+        }
+        Update: {
+          amount_spent?: number
+          created_at?: string
+          id?: string
+          image_uri?: string | null
+          is_minted?: boolean | null
+          metadata_uri?: string | null
+          mint_address?: string | null
+          minted_at?: string | null
+          rank?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "certificates_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "leaderboard"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "certificates_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      deposits: {
+        Row: {
+          amount: number
+          created_at: string
+          id: string
+          sol_price_usd: number | null
+          solana_amount: number | null
+          transaction_signature: string | null
+          user_id: string
+          verified: boolean | null
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          id?: string
+          sol_price_usd?: number | null
+          solana_amount?: number | null
+          transaction_signature?: string | null
+          user_id: string
+          verified?: boolean | null
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          id?: string
+          sol_price_usd?: number | null
+          solana_amount?: number | null
+          transaction_signature?: string | null
+          user_id?: string
+          verified?: boolean | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "deposits_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "leaderboard"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "deposits_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      leaderboard_snapshots: {
+        Row: {
+          amount_spent: number
+          created_at: string
+          id: string
+          rank: number
+          snapshot_date: string
+          user_id: string
+        }
+        Insert: {
+          amount_spent: number
+          created_at?: string
+          id?: string
+          rank: number
+          snapshot_date: string
+          user_id: string
+        }
+        Update: {
+          amount_spent?: number
+          created_at?: string
+          id?: string
+          rank?: number
+          snapshot_date?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "leaderboard_snapshots_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "leaderboard"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "leaderboard_snapshots_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      users: {
+        Row: {
+          bio: string | null
+          display_name: string | null
+          email: string | null
+          gender: string | null
+          id: string
+          joined_at: string
+          profile_image: string | null
+          team: string | null
+          tier: string
+          updated_at: string
+          username: string
+          wallet_address: string | null
+        }
+        Insert: {
+          bio?: string | null
+          display_name?: string | null
+          email?: string | null
+          gender?: string | null
+          id?: string
+          joined_at?: string
+          profile_image?: string | null
+          team?: string | null
+          tier?: string
+          updated_at?: string
+          username: string
+          wallet_address?: string | null
+        }
+        Update: {
+          bio?: string | null
+          display_name?: string | null
+          email?: string | null
+          gender?: string | null
+          id?: string
+          joined_at?: string
+          profile_image?: string | null
+          team?: string | null
+          tier?: string
+          updated_at?: string
+          username?: string
+          wallet_address?: string | null
+        }
+        Relationships: []
+      }
+      withdrawals: {
+        Row: {
+          amount: number
+          created_at: string
+          id: string
+          sol_price_usd: number | null
+          solana_amount: number | null
+          transaction_signature: string | null
+          user_id: string
+          verified: boolean | null
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          id?: string
+          sol_price_usd?: number | null
+          solana_amount?: number | null
+          transaction_signature?: string | null
+          user_id: string
+          verified?: boolean | null
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          id?: string
+          sol_price_usd?: number | null
+          solana_amount?: number | null
+          transaction_signature?: string | null
+          user_id?: string
+          verified?: boolean | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "withdrawals_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "leaderboard"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "withdrawals_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
-      [_ in never]: never
+      leaderboard: {
+        Row: {
+          current_balance: number | null
+          display_name: string | null
+          id: string | null
+          joined_at: string | null
+          profile_image: string | null
+          rank: number | null
+          recent_deposits_count: number | null
+          team: string | null
+          tier: string | null
+          total_deposited: number | null
+          username: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
-      [_ in never]: never
+      get_user_current_balance: {
+        Args: {
+          user_uuid: string
+        }
+        Returns: number
+      }
+      get_user_rank: {
+        Args: {
+          user_uuid: string
+        }
+        Returns: number
+      }
+      get_user_total_deposits: {
+        Args: {
+          user_uuid: string
+        }
+        Returns: number
+      }
     }
     Enums: {
       [_ in never]: never

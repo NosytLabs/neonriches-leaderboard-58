@@ -1,10 +1,10 @@
 
 // Re-export all types with export type for better compatibility
-export * from './button';
-export * from './command';
-export * from './dialog';
-export * from './utils';
-export * from './royal-divider-types';
+export type * from './button';
+export type * from './command';
+export type * from './dialog';
+export type * from './utils';
+export type * from './royal-divider-types';
 
 // User types
 export type { UserGender, UserTeam, UserTier, ProfileLink, ProfileImage, SocialLink, UserSettings, UserProfile, User } from './user';

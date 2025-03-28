@@ -1,4 +1,3 @@
-
 export type RoyalDividerVariant = 
   | 'simple'
   | 'ornate'
@@ -14,14 +13,14 @@ export type RoyalDividerVariant =
   | 'double';
 
 export type RoyalButtonVariant = 
-  | 'royal' 
-  | 'royalGold' 
-  | 'royalCrimson' 
-  | 'royalNavy' 
-  | 'royalPurple' 
-  | 'outline' 
-  | 'glass' 
-  | 'goldOutline' 
-  | 'crimsonOutline' 
-  | 'navyOutline' 
-  | 'mahogany';
+  'royal' | 
+  'royalGold' | 
+  'royalPurple' | 
+  'royalNavy' | 
+  'royalCrimson' | 
+  'glass' | 
+  'outline' | 
+  'goldOutline' | 
+  'crimsonOutline' | 
+  'navyOutline' | 
+  'mahogany';
