@@ -1,43 +1,12 @@
 
 import React from 'react';
 import { AlertTriangle, Brain } from 'lucide-react';
+import EmptyState from './shared/EmptyState';
+import { complexFunctionsMock } from '@/utils/codeAnalysis/mockData';
 
 const ComplexityReport: React.FC = () => {
-  // Mock data for complex code
-  const complexFunctions = [
-    {
-      id: 1,
-      file: 'src/utils/codeAnalysis/reactAnalysis.ts',
-      function: 'analyzeComplexity',
-      complexity: 15,
-      line: 213,
-      explanation: 'This function contains many nested conditionals and loops, making it hard to follow and test.'
-    },
-    {
-      id: 2,
-      file: 'src/utils/codeAnalysis/analysisUtils.ts',
-      function: 'analyzeCSSUsage',
-      complexity: 12,
-      line: 142,
-      explanation: 'Multiple nested loops and conditions increase cyclomatic complexity.'
-    },
-    {
-      id: 3,
-      file: 'src/components/profile/ProfileEditor.tsx',
-      function: 'handleSaveProfile',
-      complexity: 8,
-      line: 67,
-      explanation: 'Contains several conditional blocks and error handling branches.'
-    },
-    {
-      id: 4,
-      file: 'src/hooks/useProfileData.ts',
-      function: 'fetchProfileData',
-      complexity: 9,
-      line: 45,
-      explanation: 'Many different cases and conditions for handling different user types.'
-    }
-  ];
+  // Use centralized mock data
+  const complexFunctions = complexFunctionsMock;
 
   return (
     <div>
@@ -50,10 +19,10 @@ const ComplexityReport: React.FC = () => {
       </p>
       
       {complexFunctions.length === 0 ? (
-        <div className="text-center py-8">
-          <AlertTriangle className="h-12 w-12 mx-auto mb-3 text-white/20" />
-          <p className="text-white/60">No overly complex functions detected.</p>
-        </div>
+        <EmptyState
+          icon={AlertTriangle}
+          message="No overly complex functions detected."
+        />
       ) : (
         <div className="space-y-4">
           {complexFunctions.map((func) => (

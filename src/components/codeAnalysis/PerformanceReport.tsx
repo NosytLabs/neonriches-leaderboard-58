@@ -1,32 +1,12 @@
 
 import React from 'react';
 import { AlertTriangle, Zap, FileWarning } from 'lucide-react';
+import EmptyState from './shared/EmptyState';
+import { performanceIssuesMock } from '@/utils/codeAnalysis/mockData';
 
 const PerformanceReport: React.FC = () => {
-  // Mock data for performance issues
-  const performanceIssues = [
-    {
-      id: 1,
-      file: 'src/components/profile/ProfileViewer.tsx',
-      issue: 'Large component with multiple responsibilities',
-      recommendation: 'Split into smaller, focused components',
-      severity: 'medium',
-    },
-    {
-      id: 2,
-      file: 'src/hooks/useProfileData.ts',
-      issue: 'Inefficient data fetching pattern',
-      recommendation: 'Implement proper caching strategy',
-      severity: 'high',
-    },
-    {
-      id: 3,
-      file: 'src/components/TeamSection.tsx',
-      issue: 'Expensive calculations in render method',
-      recommendation: 'Move calculations to useMemo or useCallback hooks',
-      severity: 'medium',
-    }
-  ];
+  // Use centralized mock data
+  const performanceIssues = performanceIssuesMock;
 
   return (
     <div>
@@ -36,10 +16,10 @@ const PerformanceReport: React.FC = () => {
       </h3>
       
       {performanceIssues.length === 0 ? (
-        <div className="text-center py-8 text-white/60">
-          <FileWarning className="h-12 w-12 mx-auto mb-3 text-white/40" />
-          <p>No performance issues detected.</p>
-        </div>
+        <EmptyState
+          icon={FileWarning}
+          message="No performance issues detected."
+        />
       ) : (
         <div className="space-y-4">
           <p className="text-white/70 mb-4">

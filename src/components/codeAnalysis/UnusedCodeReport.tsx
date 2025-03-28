@@ -1,29 +1,20 @@
-
 import React from 'react';
 import { Code, AlertCircle, FileX, Trash2 } from 'lucide-react';
+import AnalysisTable from './shared/AnalysisTable';
+import EmptyState from './shared/EmptyState';
+import { 
+  unusedImportsMock, 
+  unusedVariablesMock, 
+  unusedFunctionsMock, 
+  unusedComponentsMock 
+} from '@/utils/codeAnalysis/mockData';
 
 const UnusedCodeReport: React.FC = () => {
-  // Mock data for unused code
-  const unusedImports = [
-    { file: 'src/components/Header.tsx', name: 'useState', line: 3 },
-    { file: 'src/pages/Profile.tsx', name: 'useEffect', line: 5 },
-    { file: 'src/components/TeamSection.tsx', name: 'Fragment', line: 2 },
-  ];
-  
-  const unusedVariables = [
-    { file: 'src/components/profile/ProfileEditor.tsx', name: 'isAdmin', line: 15 },
-    { file: 'src/hooks/useProfileData.ts', name: 'loadError', line: 22 },
-  ];
-  
-  const unusedFunctions = [
-    { file: 'src/utils/formatting.ts', name: 'capitalizeAllWords', line: 45 },
-    { file: 'src/hooks/useAnalytics.ts', name: 'trackUserClick', line: 78 },
-  ];
-  
-  const unusedComponents = [
-    { file: 'src/components/ui/ExtraBadge.tsx', line: 1 },
-    { file: 'src/components/marketing/OldPromoSection.tsx', line: 1 },
-  ];
+  // Use centralized mock data
+  const unusedImports = unusedImportsMock;
+  const unusedVariables = unusedVariablesMock;
+  const unusedFunctions = unusedFunctionsMock;
+  const unusedComponents = unusedComponentsMock;
 
   return (
     <div>
@@ -43,28 +34,20 @@ const UnusedCodeReport: React.FC = () => {
           </h4>
           
           {unusedImports.length > 0 ? (
-            <div className="overflow-x-auto">
-              <table className="analysis-table">
-                <thead>
-                  <tr>
-                    <th>File</th>
-                    <th>Import</th>
-                    <th>Line</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {unusedImports.map((item, index) => (
-                    <tr key={index}>
-                      <td><span className="file-path">{item.file}</span></td>
-                      <td><code>{item.name}</code></td>
-                      <td>{item.line}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+            <AnalysisTable headers={['File', 'Import', 'Line']}>
+              {unusedImports.map((item, index) => (
+                <tr key={index}>
+                  <td><span className="file-path">{item.file}</span></td>
+                  <td><code>{item.name}</code></td>
+                  <td>{item.line}</td>
+                </tr>
+              ))}
+            </AnalysisTable>
           ) : (
-            <p className="text-white/50 text-center py-3">No unused imports detected.</p>
+            <EmptyState 
+              icon={AlertCircle} 
+              message="No unused imports detected." 
+            />
           )}
         </div>
         
@@ -75,28 +58,20 @@ const UnusedCodeReport: React.FC = () => {
           </h4>
           
           {unusedVariables.length > 0 ? (
-            <div className="overflow-x-auto">
-              <table className="analysis-table">
-                <thead>
-                  <tr>
-                    <th>File</th>
-                    <th>Variable</th>
-                    <th>Line</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {unusedVariables.map((item, index) => (
-                    <tr key={index}>
-                      <td><span className="file-path">{item.file}</span></td>
-                      <td><code>{item.name}</code></td>
-                      <td>{item.line}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+            <AnalysisTable headers={['File', 'Variable', 'Line']}>
+              {unusedVariables.map((item, index) => (
+                <tr key={index}>
+                  <td><span className="file-path">{item.file}</span></td>
+                  <td><code>{item.name}</code></td>
+                  <td>{item.line}</td>
+                </tr>
+              ))}
+            </AnalysisTable>
           ) : (
-            <p className="text-white/50 text-center py-3">No unused variables detected.</p>
+            <EmptyState 
+              icon={AlertCircle} 
+              message="No unused variables detected." 
+            />
           )}
         </div>
         
@@ -107,28 +82,20 @@ const UnusedCodeReport: React.FC = () => {
           </h4>
           
           {unusedFunctions.length > 0 ? (
-            <div className="overflow-x-auto">
-              <table className="analysis-table">
-                <thead>
-                  <tr>
-                    <th>File</th>
-                    <th>Function</th>
-                    <th>Line</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {unusedFunctions.map((item, index) => (
-                    <tr key={index}>
-                      <td><span className="file-path">{item.file}</span></td>
-                      <td><code>{item.name}()</code></td>
-                      <td>{item.line}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+            <AnalysisTable headers={['File', 'Function', 'Line']}>
+              {unusedFunctions.map((item, index) => (
+                <tr key={index}>
+                  <td><span className="file-path">{item.file}</span></td>
+                  <td><code>{item.name}()</code></td>
+                  <td>{item.line}</td>
+                </tr>
+              ))}
+            </AnalysisTable>
           ) : (
-            <p className="text-white/50 text-center py-3">No unused functions detected.</p>
+            <EmptyState 
+              icon={AlertCircle} 
+              message="No unused functions detected." 
+            />
           )}
         </div>
         
@@ -139,26 +106,19 @@ const UnusedCodeReport: React.FC = () => {
           </h4>
           
           {unusedComponents.length > 0 ? (
-            <div className="overflow-x-auto">
-              <table className="analysis-table">
-                <thead>
-                  <tr>
-                    <th>File</th>
-                    <th>Line</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {unusedComponents.map((item, index) => (
-                    <tr key={index}>
-                      <td><span className="file-path">{item.file}</span></td>
-                      <td>{item.line}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+            <AnalysisTable headers={['File', 'Line']}>
+              {unusedComponents.map((item, index) => (
+                <tr key={index}>
+                  <td><span className="file-path">{item.file}</span></td>
+                  <td>{item.line}</td>
+                </tr>
+              ))}
+            </AnalysisTable>
           ) : (
-            <p className="text-white/50 text-center py-3">No unused components detected.</p>
+            <EmptyState 
+              icon={AlertCircle} 
+              message="No unused components detected." 
+            />
           )}
         </div>
       </div>

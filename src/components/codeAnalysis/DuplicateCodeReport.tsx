@@ -1,78 +1,13 @@
 
 import React from 'react';
 import { Copy, AlertCircle } from 'lucide-react';
+import EmptyState from './shared/EmptyState';
+import CodeSnippet from './shared/CodeSnippet';
+import { duplicateCodeMock } from '@/utils/codeAnalysis/mockData';
 
 const DuplicateCodeReport: React.FC = () => {
-  // Mock data for duplicate code
-  const duplicateCode = [
-    {
-      id: 1,
-      files: [
-        'src/components/profile/ProfileEditor.tsx',
-        'src/components/settings/SettingsForm.tsx'
-      ],
-      similarity: 0.85,
-      lines: 15,
-      codeSnippet: `const handleSaveProfile = async () => {
-  setIsSaving(true);
-  try {
-    // API call logic here
-    setTimeout(() => {
-      toast({
-        title: "Profile Updated",
-        description: "Your royal profile has been successfully updated.",
-      });
-      setIsSaving(false);
-    }, 1000);
-  } catch (error) {
-    toast({
-      title: "Update Failed",
-      description: "There was an error updating your profile.",
-      variant: "destructive"
-    });
-    setIsSaving(false);
-  }
-};`
-    },
-    {
-      id: 2,
-      files: [
-        'src/components/TeamSection.tsx',
-        'src/components/leaderboard/TeamLeaderboard.tsx'
-      ],
-      similarity: 0.92,
-      lines: 8,
-      codeSnippet: `// Calculate total spending across all teams
-const totalSpending = LUXURY_TEAMS.reduce((sum, team) => sum + team.totalSpent, 0);
-
-// Calculate percentage for each team
-const spendingPercentage = (team.totalSpent / totalSpending) * 100;`
-    },
-    {
-      id: 3,
-      files: [
-        'src/components/ui/decorations/coat-of-arms.tsx',
-        'src/components/ui/decorations/crown.tsx',
-        'src/components/ui/decorations/royal-seal.tsx'
-      ],
-      similarity: 0.75,
-      lines: 10,
-      codeSnippet: `return (
-  <div className={cn(
-    'relative',
-    sizeClasses[size].container,
-    className
-  )}>
-    <MedievalIcon 
-      name="..." 
-      size={sizeClasses[size].icon} 
-      color={toMedievalIconColor(color)} 
-      animate={animate} 
-    />
-  </div>
-);`
-    }
-  ];
+  // Use centralized mock data
+  const duplicateCode = duplicateCodeMock;
 
   return (
     <div>
@@ -85,10 +20,10 @@ const spendingPercentage = (team.totalSpent / totalSpending) * 100;`
       </p>
       
       {duplicateCode.length === 0 ? (
-        <div className="text-center py-8">
-          <AlertCircle className="h-12 w-12 mx-auto mb-3 text-white/20" />
-          <p className="text-white/60">No duplicate code patterns detected.</p>
-        </div>
+        <EmptyState
+          icon={AlertCircle}
+          message="No duplicate code patterns detected."
+        />
       ) : (
         <div className="space-y-8">
           {duplicateCode.map((item) => (
@@ -122,9 +57,7 @@ const spendingPercentage = (team.totalSpent / totalSpending) * 100;`
               
               <div>
                 <h5 className="text-sm font-medium mb-2">Code Snippet:</h5>
-                <div className="code-block text-xs">
-                  <pre>{item.codeSnippet}</pre>
-                </div>
+                <CodeSnippet code={item.codeSnippet} />
               </div>
             </div>
           ))}

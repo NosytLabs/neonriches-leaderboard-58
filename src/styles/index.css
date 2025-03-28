@@ -1,4 +1,3 @@
-
 /* Base styles */
 @import './fonts.css';
 
@@ -24,3 +23,6 @@
 
 /* Reset and defaults */
 @import './unified-theme.css';
+
+/* Code analysis */
+@import './code-analysis.css';
