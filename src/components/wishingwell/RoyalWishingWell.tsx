@@ -4,17 +4,30 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
 import { Sparkles, Gem, Coins } from 'lucide-react';
+import WishStats from './WishStats';
+import WishHistory from './WishHistory';
+
+interface RecentWish {
+  username: string;
+  amount: number;
+  result: string;
+  timestamp: string;
+}
 
 interface RoyalWishingWellProps {
   onWish?: (amount: number) => void;
   maxAmount?: number;
   disabled?: boolean;
+  currentPool?: number;
+  recentWishes?: RecentWish[];
 }
 
 const RoyalWishingWell: React.FC<RoyalWishingWellProps> = ({
   onWish,
   maxAmount = 10,
-  disabled = false
+  disabled = false,
+  currentPool = 1000,
+  recentWishes = []
 }) => {
   const [wishAmount, setWishAmount] = React.useState(1);
   
@@ -40,6 +53,8 @@ const RoyalWishingWell: React.FC<RoyalWishingWellProps> = ({
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
+        <WishStats currentPool={currentPool} />
+        
         <div>
           <div className="flex justify-between text-sm mb-2">
             <span>Wish Amount:</span>
@@ -110,6 +125,10 @@ const RoyalWishingWell: React.FC<RoyalWishingWellProps> = ({
             Higher wishes increase chances for rarer items
           </div>
         </div>
+        
+        {recentWishes && recentWishes.length > 0 && (
+          <WishHistory recentWishes={recentWishes} />
+        )}
       </CardContent>
     </Card>
   );

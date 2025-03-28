@@ -2,33 +2,63 @@
 import { useEffect, useState } from 'react';
 import { UserProfile, ProfileBoost } from '@/types/user';
 
-export type BoostEffect = 'glow' | 'sparkle' | 'crown' | 'pulse' | 'rainbow';
+export interface BoostEffectDetails {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  cssClass: string;
+  bonusText: string;
+  icon: React.ReactNode;
+}
 
-export const boostEffects: Record<BoostEffect, { name: string, description: string, price: number }> = {
+export type BoostEffectType = 'glow' | 'sparkle' | 'crown' | 'pulse' | 'rainbow';
+
+export const boostEffects: Record<BoostEffectType, BoostEffectDetails> = {
   glow: {
+    id: 'glow',
     name: 'Royal Glow',
     description: 'A subtle golden glow around your profile',
-    price: 10
+    price: 10,
+    cssClass: 'profile-boost-glow',
+    bonusText: '+10% Visibility',
+    icon: '✨'
   },
   sparkle: {
+    id: 'sparkle',
     name: 'Enchanted Sparkles',
     description: 'Magical sparkles that appear around your profile elements',
-    price: 20
+    price: 20,
+    cssClass: 'profile-boost-sparkle',
+    bonusText: '+15% Visibility',
+    icon: '⭐'
   },
   crown: {
+    id: 'crown',
     name: 'Crown Aura',
     description: 'A crown appears above your profile with a magical aura',
-    price: 40
+    price: 40,
+    cssClass: 'profile-boost-crown',
+    bonusText: '+30% Visibility',
+    icon: '👑'
   },
   pulse: {
+    id: 'pulse',
     name: 'Royal Pulse',
     description: 'Your profile elements pulse with royal energy',
-    price: 30
+    price: 30,
+    cssClass: 'profile-boost-pulse',
+    bonusText: '+20% Visibility',
+    icon: '💫'
   },
   rainbow: {
+    id: 'rainbow',
     name: 'Rainbow Royalty',
     description: 'A shifting rainbow glow surrounds your profile',
-    price: 50
+    price: 50,
+    cssClass: 'profile-boost-rainbow',
+    bonusText: '+40% Visibility',
+    icon: '🌈'
   }
 };
 
@@ -58,11 +88,8 @@ export const useProfileBoost = (user: UserProfile | null) => {
     return () => clearInterval(interval);
   }, [user]);
   
-  const getBoostEffect = (effectId: string): BoostEffect | undefined => {
-    if (Object.keys(boostEffects).includes(effectId)) {
-      return effectId as BoostEffect;
-    }
-    return undefined;
+  const getBoostEffect = (effectId: string): BoostEffectDetails | undefined => {
+    return boostEffects[effectId as BoostEffectType];
   };
   
   const getBoostTimeRemaining = (boost: ProfileBoost): number => {
@@ -84,11 +111,32 @@ export const useProfileBoost = (user: UserProfile | null) => {
       return `${minutes}m`;
     }
   };
+
+  // Helper function to get combined CSS classes for all active boosts
+  const getBoostClasses = (): string => {
+    if (!activeBoosts || activeBoosts.length === 0) return '';
+    
+    let classes = '';
+    activeBoosts.forEach(boost => {
+      const effect = getBoostEffect(boost.effectId);
+      if (effect && effect.cssClass) {
+        classes += ` ${effect.cssClass}`;
+      }
+    });
+    return classes.trim();
+  };
+  
+  // Helper to check if there are any active boosts
+  const hasActiveBoosts = (): boolean => {
+    return activeBoosts && activeBoosts.length > 0;
+  };
   
   return {
     activeBoosts,
     getBoostEffect,
     getBoostTimeRemaining,
-    formatTimeRemaining
+    formatTimeRemaining,
+    getBoostClasses,
+    hasActiveBoosts
   };
 };

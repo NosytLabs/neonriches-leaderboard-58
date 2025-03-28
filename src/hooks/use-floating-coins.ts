@@ -12,6 +12,8 @@ interface FloatingCoinsConfig {
   maxSize?: number;
   duration?: number; // in ms
   delay?: number; // in ms
+  minDelay?: number; // in ms
+  maxDelay?: number; // in ms
 }
 
 interface Coin {
@@ -34,7 +36,9 @@ export function useFloatingCoins({
   minSize = 10,
   maxSize = 30,
   duration = 3000,
-  delay = 0
+  delay = 0,
+  minDelay = 0,
+  maxDelay = 1000
 }: FloatingCoinsConfig) {
   const [isActive, setIsActive] = useState(autoStart);
   const [coins, setCoins] = useState<Coin[]>([]);
@@ -50,7 +54,9 @@ export function useFloatingCoins({
     const y = rect.height + size; // Start below the container
     const rotation = Math.random() * 360;
     const coinDuration = duration * (0.8 + Math.random() * 0.4); // Vary duration slightly
-    const coinDelay = delay + Math.random() * 500; // Add some random delay
+    const coinDelay = delay + (minDelay !== undefined && maxDelay !== undefined ? 
+      minDelay + Math.random() * (maxDelay - minDelay) : 
+      Math.random() * 500); // Add some random delay
     
     return {
       id: coinIdCounter.current++,
@@ -61,7 +67,7 @@ export function useFloatingCoins({
       duration: coinDuration,
       delay: coinDelay
     };
-  }, [containerRef, minSize, maxSize, duration, delay]);
+  }, [containerRef, minSize, maxSize, duration, delay, minDelay, maxDelay]);
 
   // Start generating coins
   const start = useCallback(() => {

@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
@@ -16,10 +16,50 @@ export interface Transaction {
 }
 
 interface TransactionHistoryProps {
-  transactions: Transaction[];
+  userId: string;
+  transactions?: Transaction[];
 }
 
-const TransactionHistory: React.FC<TransactionHistoryProps> = ({ transactions }) => {
+const TransactionHistory: React.FC<TransactionHistoryProps> = ({ userId, transactions: propTransactions }) => {
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  
+  useEffect(() => {
+    if (propTransactions) {
+      setTransactions(propTransactions);
+      return;
+    }
+    
+    // Mock transaction data if none provided
+    const mockTransactions: Transaction[] = [
+      {
+        id: 'txn_1',
+        userId,
+        amount: 50,
+        type: 'deposit',
+        description: 'Added funds to wallet',
+        timestamp: new Date(Date.now() - 3600000 * 2)
+      },
+      {
+        id: 'txn_2',
+        userId,
+        amount: 10,
+        type: 'spend',
+        description: 'Purchased Royal Border',
+        timestamp: new Date(Date.now() - 3600000 * 24)
+      },
+      {
+        id: 'txn_3',
+        userId,
+        amount: 5,
+        type: 'wish',
+        description: 'Made a wish at the Well',
+        timestamp: new Date(Date.now() - 3600000 * 48)
+      }
+    ];
+    
+    setTransactions(mockTransactions);
+  }, [userId, propTransactions]);
+  
   const formatDate = (date: Date) => {
     return formatDistance(date, new Date(), { addSuffix: true });
   };
@@ -90,7 +130,7 @@ const TransactionHistory: React.FC<TransactionHistoryProps> = ({ transactions })
                 >
                   <div>
                     <div className="flex items-center gap-2">
-                      <Badge variant="outline" className={`${getTransactionColorClass(transaction.type)} border-${getTransactionColorClass(transaction.type).replace('text-', '')}/50`}>
+                      <Badge variant="outline" className={`${getTransactionColorClass(transaction.type)}`}>
                         {getTransactionTypeLabel(transaction.type)}
                       </Badge>
                       <span className="text-sm text-white/70">

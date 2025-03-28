@@ -2,6 +2,27 @@
 import { useState, useEffect } from 'react';
 import { UserProfile, AnalyticsData } from '@/types/user';
 
+// Export types for use in other components
+export interface ViewData {
+  date: string;
+  count: number;
+}
+
+export interface ClickData {
+  date: string;
+  count: number;
+}
+
+export interface SourceData {
+  name: string;
+  value: number;
+}
+
+export interface ReferrerData {
+  name: string;
+  value: number;
+}
+
 // Mock function to get profile analytics
 const getProfileAnalytics = async (userId: string): Promise<AnalyticsData> => {
   // In a real app, this would be an API call
@@ -44,48 +65,80 @@ const getProfileAnalytics = async (userId: string): Promise<AnalyticsData> => {
   };
 };
 
-const useProfileAnalytics = (user: UserProfile) => {
-  const [analyticsData, setAnalyticsData] = useState<AnalyticsData>({
-    views: 0,
-    clicks: 0,
-    sources: {},
-    referrers: {},
-    history: []
-  });
+const useProfileAnalytics = (userId: string) => {
+  const [analytics, setAnalytics] = useState<AnalyticsData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
-  const fetchAnalytics = async () => {
-    if (!user) return;
+  useEffect(() => {
+    if (!userId) return;
     
     setLoading(true);
-    try {
-      const data = await getProfileAnalytics(user.id);
-      // Add the required properties to match AnalyticsData type
-      setAnalyticsData({
-        ...data,
-        sources: data.sources || {},
-        referrers: data.referrers || {},
-        history: data.history || []
-      });
-    } catch (err) {
-      setError(err instanceof Error ? err : new Error('Failed to fetch analytics'));
-    } finally {
-      setLoading(false);
-    }
+    const fetchAnalytics = async () => {
+      try {
+        const data = await getProfileAnalytics(userId);
+        setAnalytics({
+          ...data,
+          sources: data.sources || {},
+          referrers: data.referrers || {},
+          history: data.history || []
+        });
+      } catch (err) {
+        setError(err instanceof Error ? err : new Error('Failed to fetch analytics'));
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchAnalytics();
+  }, [userId]);
+
+  // Prepare data for charts
+  const prepareViewsData = (): ViewData[] => {
+    if (!analytics || !analytics.viewsOverTime) return [];
+    return analytics.viewsOverTime;
   };
 
-  useEffect(() => {
-    if (user?.id) {
-      fetchAnalytics();
-    }
-  }, [user?.id]);
+  const prepareClicksData = (): ClickData[] => {
+    if (!analytics || !analytics.viewsOverTime) return [];
+    // Transform view data to click data with slightly different numbers
+    return analytics.viewsOverTime.map(view => ({
+      date: view.date,
+      count: Math.floor(view.count * 0.4)
+    }));
+  };
+
+  const prepareSourcesData = (): SourceData[] => {
+    if (!analytics || !analytics.sources) return [];
+    return Object.entries(analytics.sources).map(([name, value]) => ({
+      name,
+      value
+    }));
+  };
+
+  const prepareReferrersData = (): ReferrerData[] => {
+    if (!analytics || !analytics.referrers) return [];
+    return Object.entries(analytics.referrers)
+      .map(([name, value]) => ({ name, value }))
+      .sort((a, b) => b.value - a.value)
+      .slice(0, 5);
+  };
+
+  const calculateCTR = (): string => {
+    if (!analytics || !analytics.views || analytics.views === 0) return '0%';
+    const ctr = (analytics.clicks / analytics.views) * 100;
+    return `${ctr.toFixed(1)}%`;
+  };
 
   return {
-    analyticsData,
+    analytics,
     loading,
     error,
-    refreshAnalytics: fetchAnalytics
+    prepareViewsData,
+    prepareClicksData,
+    prepareSourcesData,
+    prepareReferrersData,
+    calculateCTR
   };
 };
 

@@ -31,18 +31,20 @@ const ProfileBoostDisplay: React.FC<ProfileBoostDisplayProps> = ({ user }) => {
           const timeRemaining = getBoostTimeRemaining(boost);
           const formattedTime = formatTimeRemaining(timeRemaining);
           
+          if (!effect) return null;
+          
           return (
             <div key={boost.id} className="flex items-center justify-between p-2 rounded-lg bg-white/5">
               <div>
                 <div className="flex items-center">
-                  {effect?.icon && <span className="mr-2">{effect.icon}</span>}
-                  <span className="font-medium">{effect?.name || 'Unknown Boost'}</span>
+                  {effect.icon && <span className="mr-2">{effect.icon}</span>}
+                  <span className="font-medium">{effect.name}</span>
                 </div>
-                <div className="text-xs text-white/60">{effect?.description}</div>
+                <div className="text-xs text-white/60">{effect.description}</div>
               </div>
               <div className="text-right">
                 <Badge variant="outline" className="bg-white/10 text-royal-gold border-royal-gold/30">
-                  {effect?.bonusText}
+                  {effect.bonusText}
                 </Badge>
                 <div className="text-xs text-white/60 flex items-center mt-1">
                   <Clock size={12} className="mr-1" />
