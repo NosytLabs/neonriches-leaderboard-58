@@ -1,13 +1,13 @@
 
 import { UserProfile } from '@/types/user';
 
-export type SpendingCategory = 'subscription' | 'cosmetic' | 'advertisement' | 'shame' | 'boost';
+export type SpendingCategory = 'subscription' | 'cosmetic' | 'advertisement' | 'shame' | 'boost' | 'spend' | 'wish';
 
 export interface Transaction {
   id: string;
   userId: string;
   amount: number;
-  type: 'deposit' | 'spend' | 'withdrawal' | 'shame' | 'advertisement' | 'subscription';
+  type: 'deposit' | 'spend' | 'withdrawal' | 'shame' | 'advertisement' | 'subscription' | 'wish';
   description: string;
   timestamp: Date;
   metadata?: any;
@@ -60,7 +60,9 @@ export const getUserTransactions = async (userId: string, limit = 10): Promise<T
 // Add funds to user wallet
 export const depositToWallet = async (
   user: UserProfile,
-  amount: number
+  amount: number,
+  description = "Wallet deposit",
+  updateUserProfile?: (data: Partial<UserProfile>) => Promise<void>
 ): Promise<boolean> => {
   // In a real app, this would call an API
   return new Promise((resolve) => {
@@ -75,7 +77,7 @@ export const depositToWallet = async (
           userId: user.id,
           amount: amount,
           type: 'deposit',
-          description: `Added $${amount.toFixed(2)} to wallet`,
+          description: description || `Added $${amount.toFixed(2)} to wallet`,
           timestamp: new Date()
         };
         
@@ -85,8 +87,14 @@ export const depositToWallet = async (
         // Save transactions
         saveTransactionsToStorage(user.id, transactions);
         
-        // In a real app we would update the user's balance in the database
-        // For now, just return true to indicate success
+        // Update user balance if updateUserProfile function is provided
+        if (updateUserProfile) {
+          updateUserProfile({
+            ...user,
+            walletBalance: (user.walletBalance || 0) + amount
+          });
+        }
+        
         resolve(true);
       } catch (error) {
         console.error("Error depositing to wallet:", error);

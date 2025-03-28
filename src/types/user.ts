@@ -3,7 +3,7 @@ import { CosmeticRarity } from './cosmetics';
 
 export type UserGender = 'king' | 'queen' | 'jester' | 'noble';
 export type UserTeam = 'red' | 'green' | 'blue' | 'none';
-export type UserTier = 'crab' | 'octopus' | 'fish' | 'dolphin' | 'shark' | 'whale';
+export type UserTier = 'free' | 'pro' | 'crab' | 'octopus' | 'fish' | 'dolphin' | 'shark' | 'whale';
 
 export interface SocialLink {
   platform: string;
@@ -58,5 +58,22 @@ export interface UserProfile {
   marketingStats?: MarketingStats;
   subscription?: UserSubscription;
   socialLinks: SocialLink[];
-  role?: string; // Added for SubscriptionManagement and UpgradePromotion components
+  role?: string;
+  // Adding missing profile properties
+  profileViews?: number;
+  profileClicks?: number;
+  followers?: number;
+}
+
+// Define the ProfileImage and ProfileLink types for the editor components
+export interface ProfileImage {
+  id: number;
+  url: string;
+  caption: string;
+}
+
+export interface ProfileLink {
+  id: number;
+  url: string;
+  label: string;
 }

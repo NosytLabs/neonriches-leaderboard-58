@@ -24,10 +24,16 @@ export enum SoundCategoryEnum {
   coinDrop = 'coinDrop',
   click = 'click',
   levelUp = 'levelUp',
-  pageTransition = 'pageTransition'
+  pageTransition = 'pageTransition',
+  wish = 'wish'
 }
 
-export type SoundType = keyof typeof SoundCategoryEnum;
+// Update SoundType to allow all the string values used in the app
+export type SoundType = keyof typeof SoundCategoryEnum | 
+  'notification' | 'purchase' | 'royalAnnouncement' | 'shame' | 
+  'reward' | 'rankUp' | 'rankDown' | 'potion' | 'swordClash' | 
+  'error' | 'success' | 'coinDrop' | 'click' | 'levelUp' | 
+  'pageTransition' | 'wish';
 
 export interface SoundInfo {
   id: string;

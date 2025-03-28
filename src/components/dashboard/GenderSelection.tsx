@@ -1,23 +1,24 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { UserProfile } from '@/contexts/AuthContext';
+import { UserProfile, UserGender } from '@/types/user';
 import { Crown, Wand2, Sparkles } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 interface GenderSelectionProps {
   userProfile: UserProfile;
-  onGenderChange: (gender: 'king' | 'queen' | 'jester' | null) => Promise<void>;
+  onGenderChange: (gender: UserGender) => Promise<void>;
 }
 
 const GenderSelection: React.FC<GenderSelectionProps> = ({ userProfile, onGenderChange }) => {
-  const [selectedGender, setSelectedGender] = useState<'king' | 'queen' | 'jester' | null>(
-    userProfile.gender || null
+  const [selectedGender, setSelectedGender] = useState<UserGender>(
+    userProfile.gender || 'noble'
   );
   const [isChanging, setIsChanging] = useState(false);
   const { toast } = useToast();
 
-  const handleGenderSelect = async (gender: 'king' | 'queen' | 'jester' | null) => {
+  const handleGenderSelect = async (gender: UserGender) => {
     if (gender === selectedGender) return;
     
     setIsChanging(true);

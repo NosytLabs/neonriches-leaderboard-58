@@ -69,9 +69,9 @@ const Dashboard = () => {
       
       await updateUserProfile({
         ...user,
-        profileViews: currentViews + 50, // Add 50 views
-        profileClicks: currentClicks + 10, // Add 10 clicks
-        followers: currentFollowers + 5, // Add 5 followers
+        profileViews: currentViews + 50,
+        profileClicks: currentClicks + 10,
+        followers: currentFollowers + 5
       });
       
       playSound('success');

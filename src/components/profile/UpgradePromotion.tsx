@@ -5,7 +5,7 @@ import { CreditCard, Plus, Crown, CheckCircle } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import PaymentModal from '@/components/PaymentModal';
-import { UserSubscription } from '@/types/auth';
+import { UserSubscription, UserTier } from '@/types/user';
 import { toast } from '@/hooks/use-toast';
 
 const UpgradePromotion = () => {
@@ -40,7 +40,7 @@ const UpgradePromotion = () => {
       
       await updateUserProfile({ 
         subscription: newSubscription,
-        tier: 'pro',
+        tier: 'pro' as UserTier,
         role: 'premium' // This is now a valid property
       });
       
