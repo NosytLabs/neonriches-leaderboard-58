@@ -70,3 +70,68 @@ export const solToUsd = (solAmount: number, solPrice: number = 20): number => {
 export const usdToSol = (usdAmount: number, solPrice: number = 20): number => {
   return usdAmount / solPrice;
 };
+
+/**
+ * Track total deposits for a user, regardless of withdrawals
+ * This is the key function for ensuring leaderboard ranks are based on total deposits
+ * @param userId User ID
+ * @param amount Amount of the deposit
+ * @returns Updated total deposits
+ */
+export const trackUserDeposit = async (userId: string, amount: number): Promise<number> => {
+  try {
+    console.log(`Tracking deposit of ${amount} for user ${userId}`);
+    
+    // In a real implementation, this would interact with your Supabase database
+    // const { data, error } = await supabase
+    //   .from('user_deposits')
+    //   .select('total_deposited')
+    //   .eq('user_id', userId)
+    //   .single();
+    
+    // if (error && error.code !== 'PGRST116') {
+    //   console.error('Error fetching user deposit info:', error);
+    //   return 0;
+    // }
+    
+    // const currentTotal = data?.total_deposited || 0;
+    // const newTotal = currentTotal + amount;
+    
+    // await supabase
+    //   .from('user_deposits')
+    //   .upsert({
+    //     user_id: userId,
+    //     total_deposited: newTotal,
+    //     last_deposit_date: new Date().toISOString()
+    //   });
+    
+    // return newTotal;
+    
+    // Mock implementation for now
+    return 0;
+  } catch (error) {
+    console.error('Error tracking user deposit:', error);
+    return 0;
+  }
+};
+
+/**
+ * Verify a user's on-chain certificate NFT
+ * @param walletAddress Wallet address to check
+ * @param userId User ID to verify
+ * @returns Boolean indicating if the user has a valid certificate
+ */
+export const verifyUserCertificate = async (walletAddress: string, userId: string): Promise<boolean> => {
+  try {
+    console.log(`Verifying certificate for user ${userId} with wallet ${walletAddress}`);
+    
+    // In a real implementation, this would check the blockchain for the NFT
+    // and verify its metadata matches the user
+    
+    // Mock implementation for now
+    return true;
+  } catch (error) {
+    console.error('Error verifying user certificate:', error);
+    return false;
+  }
+};

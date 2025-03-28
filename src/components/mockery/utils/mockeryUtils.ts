@@ -1,184 +1,101 @@
 
-import { MockeryTier, MockeryAction } from '../hooks/useMockeryEffect';
+import { ShameAction } from '@/components/events/hooks/useShameEffect';
 import React from 'react';
 
-// Extended type for mockery tiers to include common, uncommon, etc.
-export type ExtendedMockeryTier = MockeryTier | 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
+// Combined ExtendedMockeryAction type that includes all possible shame/mockery actions
+export type ExtendedMockeryAction = ShameAction | 'public_shame' | 'royal_decree' | 'dishonor';
 
-// Extended type for mockery actions to include more actions
-export type ExtendedMockeryAction = MockeryAction | 'jester' | 'dunce' | 'roast' | 'ridicule' | 'taunt';
-
-// Map tiers to their display labels
-export const getMockeryTierLabel = (tier: ExtendedMockeryTier): string => {
-  const tierMap: Record<ExtendedMockeryTier, string> = {
-    basic: 'Basic',
-    advanced: 'Advanced',
-    royal: 'Royal',
-    common: 'Common',
-    uncommon: 'Uncommon',
-    rare: 'Rare',
-    epic: 'Epic',
-    legendary: 'Legendary'
-  };
-  
-  return tierMap[tier] || 'Unknown';
-};
-
-// Map tiers to their styling
-export const getMockeryTierStyles = (tier: ExtendedMockeryTier): { bg: string; border: string; text: string } => {
-  const styleMap: Record<ExtendedMockeryTier, { bg: string; border: string; text: string }> = {
-    basic: { bg: 'bg-gray-700/50', border: 'border-gray-600', text: 'text-gray-300' },
-    advanced: { bg: 'bg-blue-800/50', border: 'border-blue-700', text: 'text-blue-300' },
-    royal: { bg: 'bg-purple-800/50', border: 'border-purple-700', text: 'text-purple-300' },
-    common: { bg: 'bg-gray-700/50', border: 'border-gray-600', text: 'text-gray-300' },
-    uncommon: { bg: 'bg-green-800/50', border: 'border-green-700', text: 'text-green-300' },
-    rare: { bg: 'bg-blue-800/50', border: 'border-blue-700', text: 'text-blue-300' },
-    epic: { bg: 'bg-purple-800/50', border: 'border-purple-700', text: 'text-purple-300' },
-    legendary: { bg: 'bg-amber-800/50', border: 'border-amber-700', text: 'text-amber-300' }
-  };
-  
-  return styleMap[tier] || styleMap.basic;
-};
-
-// Get tier colors for UI display
-export const getMockeryTierColor = (tier: MockeryTier): { bg: string; border: string; text: string } => {
-  return getMockeryTierStyles(tier);
-};
-
-// Get action colors for UI display
-export const getMockeryActionColor = (action: ExtendedMockeryAction): { bg: string; border: string; text: string } => {
-  const actionMap: Record<ExtendedMockeryAction, { bg: string; border: string; text: string }> = {
-    tomatoes: { bg: 'bg-red-800/50', border: 'border-red-700', text: 'text-red-300' },
-    eggs: { bg: 'bg-yellow-800/50', border: 'border-yellow-700', text: 'text-yellow-300' },
-    stocks: { bg: 'bg-blue-800/50', border: 'border-blue-700', text: 'text-blue-300' },
-    silence: { bg: 'bg-gray-800/50', border: 'border-gray-700', text: 'text-gray-300' },
-    courtJester: { bg: 'bg-purple-800/50', border: 'border-purple-700', text: 'text-purple-300' },
-    jester: { bg: 'bg-purple-800/50', border: 'border-purple-700', text: 'text-purple-300' },
-    dunce: { bg: 'bg-blue-800/50', border: 'border-blue-700', text: 'text-blue-300' },
-    roast: { bg: 'bg-amber-800/50', border: 'border-amber-700', text: 'text-amber-300' },
-    ridicule: { bg: 'bg-red-800/50', border: 'border-red-700', text: 'text-red-300' },
-    taunt: { bg: 'bg-gray-800/50', border: 'border-gray-700', text: 'text-gray-300' }
-  };
-  
-  return actionMap[action] || actionMap.tomatoes;
-};
-
-// Get action icons for UI display
-export const getMockeryActionIcon = (action: ExtendedMockeryAction): JSX.Element => {
+export const getMockeryActionPrice = (action: ExtendedMockeryAction): number => {
   switch (action) {
-    case "tomatoes":
-      return <span>🍅</span>;
-    case "eggs":
-      return <span>🥚</span>;
-    case "stocks":
-      return <span>🔒</span>;
-    case "silence":
-      return <span>🤐</span>;
-    case "courtJester":
-    case "jester":
-      return <span>🃏</span>;
-    case "dunce":
-      return <span>🧢</span>;
-    case "roast":
-      return <span>🔥</span>;
-    case "ridicule":
-      return <span>😂</span>;
-    case "taunt":
-      return <span>👎</span>;
+    case 'tomatoes':
+      return 0.50;
+    case 'eggs':
+      return 1.00;
+    case 'stocks':
+      return 5.00;
+    case 'public_shame':
+      return 10.00;
+    case 'royal_decree':
+      return 25.00;
+    case 'dishonor':
+      return 50.00;
     default:
-      return <span>🍅</span>;
+      return 1.00;
   }
 };
 
-// Get action titles for UI display
-export const getMockeryActionTitle = (action: ExtendedMockeryAction): string => {
-  const titleMap: Record<ExtendedMockeryAction, string> = {
-    tomatoes: 'Throw Tomatoes',
-    eggs: 'Throw Eggs',
-    stocks: 'Put in Stocks',
-    silence: 'Silence',
-    courtJester: 'Court Jester',
-    jester: 'Court Jester',
-    dunce: 'Dunce Cap',
-    roast: 'Royal Roast',
-    ridicule: 'Public Ridicule',
-    taunt: 'Royal Taunt'
-  };
-  
-  return titleMap[action] || 'Unknown Action';
+export const getMockeryActionLabel = (action: ExtendedMockeryAction): string => {
+  switch (action) {
+    case 'tomatoes':
+      return 'Throw Tomatoes';
+    case 'eggs':
+      return 'Throw Rotten Eggs';
+    case 'stocks':
+      return 'Place in Stocks';
+    case 'public_shame':
+      return 'Public Shaming';
+    case 'royal_decree':
+      return 'Royal Decree of Shame';
+    case 'dishonor':
+      return 'Strip of Honors';
+    default:
+      return 'Shame';
+  }
 };
 
-// Get action descriptions for UI display
-export const getMockeryActionDescription = (action: ExtendedMockeryAction, username: string): string => {
-  const descMap: Record<ExtendedMockeryAction, string> = {
-    tomatoes: `Throw rotten tomatoes at ${username}`,
-    eggs: `Throw eggs at ${username}'s profile`,
-    stocks: `Put ${username} in the royal stocks for all to see`,
-    silence: `Silence ${username} for 24 hours`,
-    courtJester: `Make ${username} the court jester`,
-    jester: `Make ${username} the court jester`,
-    dunce: `Put a dunce cap on ${username}`,
-    roast: `Publicly roast ${username} with royal humor`,
-    ridicule: `Subject ${username} to public ridicule`,
-    taunt: `Taunt ${username} with royal insults`
-  };
-  
-  return descMap[action] || `Mock ${username}`;
+export const getMockeryActionIcon = (action: ExtendedMockeryAction): string => {
+  switch (action) {
+    case "tomatoes":
+      return "tomato";
+    case "eggs":
+      return "egg";
+    case "stocks":
+      return "stocks";
+    case "public_shame":
+      return "scroll";
+    case "royal_decree":
+      return "crown";
+    case "dishonor":
+      return "shield-off";
+    default:
+      return "alert-circle";
+  }
 };
 
-// Get action prices for UI display
-export const getMockeryActionPrice = (action: ExtendedMockeryAction): number => {
-  const priceMap: Record<ExtendedMockeryAction, number> = {
-    tomatoes: 10,
-    eggs: 15,
-    stocks: 20,
-    silence: 25,
-    courtJester: 30,
-    jester: 30,
-    dunce: 20,
-    roast: 15,
-    ridicule: 10,
-    taunt: 25
-  };
-  
-  return priceMap[action] || 10;
+export const getMockeryActionDescription = (action: ExtendedMockeryAction): string => {
+  switch (action) {
+    case 'tomatoes':
+      return 'Throw tomatoes at this user. Their profile will display a tomato for 24 hours.';
+    case 'eggs':
+      return 'Throw rotten eggs at this user. Their profile will show egg stains for 48 hours.';
+    case 'stocks':
+      return 'Place this user in the stocks. They will be unable to shame others for 72 hours.';
+    case 'public_shame':
+      return 'Publicly shame this user. All their posts will have a shame badge for 48 hours.';
+    case 'royal_decree':
+      return 'Issue a royal decree of shame. The entire kingdom will be notified of their misdeeds.';
+    case 'dishonor':
+      return 'Strip this user of all honors and titles for one week.';
+    default:
+      return 'Shame this user in public.';
+  }
 };
 
-// Check if action has a weekly discount
-export const hasWeeklyDiscount = (action: ExtendedMockeryAction): boolean => {
-  // For example, we could have discounts on certain actions each week
-  const discountedActions: ExtendedMockeryAction[] = ['tomatoes', 'jester', 'roast'];
-  return discountedActions.includes(action);
-};
-
-// Get discounted mockery price
-export const getDiscountedMockeryPrice = (action: ExtendedMockeryAction): number => {
-  const originalPrice = getMockeryActionPrice(action);
-  return originalPrice * 0.5; // 50% discount
-};
-
-// Fix the mockery action to be compatible with the extended type
-export const fixMockeryAction = (action: string): MockeryAction => {
-  const validActions: MockeryAction[] = ['tomatoes', 'eggs', 'stocks', 'silence', 'courtJester'];
-  return validActions.includes(action as MockeryAction) 
-    ? (action as MockeryAction) 
-    : 'tomatoes';
-};
-
-// Convert extended mockery action to basic action
-export const convertToBasicAction = (action: ExtendedMockeryAction): MockeryAction => {
-  const actionMap: Record<ExtendedMockeryAction, MockeryAction> = {
-    tomatoes: 'tomatoes',
-    eggs: 'eggs',
-    stocks: 'stocks',
-    silence: 'silence',
-    courtJester: 'courtJester',
-    jester: 'courtJester',
-    dunce: 'stocks',
-    roast: 'eggs',
-    ridicule: 'tomatoes',
-    taunt: 'silence'
-  };
-  
-  return actionMap[action] || 'tomatoes';
+export const getMockeryActionDuration = (action: ExtendedMockeryAction): number => {
+  switch (action) {
+    case 'tomatoes':
+      return 24;
+    case 'eggs':
+      return 48;
+    case 'stocks':
+      return 72;
+    case 'public_shame':
+      return 48;
+    case 'royal_decree':
+      return 96;
+    case 'dishonor':
+      return 168; // 1 week in hours
+    default:
+      return 24;
+  }
 };
