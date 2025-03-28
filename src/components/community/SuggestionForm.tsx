@@ -1,89 +1,100 @@
 
 import React, { useState } from 'react';
-import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useAuth } from '@/contexts/auth';
-import { useToast } from '@/hooks/use-toast';
-import { Crown, Send } from 'lucide-react';
+import { AlertCircle, CheckCircle, Loader2 } from 'lucide-react';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import useNotificationSounds from '@/hooks/use-notification-sounds';
 
 const SuggestionForm: React.FC = () => {
-  const { user } = useAuth();
-  const { toast } = useToast();
   const [title, setTitle] = useState('');
-  const [category, setCategory] = useState('feature');
   const [description, setDescription] = useState('');
+  const [category, setCategory] = useState('feature');
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [errorMessage, setErrorMessage] = useState('');
+  const { playSound } = useNotificationSounds();
+  
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (!user) {
-      toast({
-        title: "Authentication Required",
-        description: "You must be logged in to submit suggestions.",
-        variant: "destructive"
-      });
-      return;
-    }
-    
-    if (!title || !description) {
-      toast({
-        title: "Incomplete Submission",
-        description: "Please provide both a title and description for your suggestion.",
-        variant: "destructive"
-      });
-      return;
-    }
-    
     setIsSubmitting(true);
+    setStatus('idle');
     
-    // Simulate API call
-    setTimeout(() => {
-      toast({
-        title: "Suggestion Submitted",
-        description: "Your royal suggestion has been received and will be reviewed by the council.",
-      });
+    try {
+      // Validate inputs
+      if (title.trim().length < 5) {
+        throw new Error('Title must be at least 5 characters long');
+      }
       
-      // Reset form
+      if (description.trim().length < 20) {
+        throw new Error('Description must be at least 20 characters long');
+      }
+      
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      playSound('success');
+      setStatus('success');
       setTitle('');
-      setCategory('feature');
       setDescription('');
+      setCategory('feature');
+    } catch (error: any) {
+      playSound('error');
+      setStatus('error');
+      setErrorMessage(error.message || 'Failed to submit suggestion');
+    } finally {
       setIsSubmitting(false);
-    }, 1000);
+    }
   };
-
+  
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
+      {status === 'success' && (
+        <Alert className="bg-green-500/20 border-green-500/40">
+          <CheckCircle className="h-4 w-4 text-green-400" />
+          <AlertTitle>Suggestion Submitted</AlertTitle>
+          <AlertDescription>
+            Your suggestion has been successfully submitted for royal consideration.
+          </AlertDescription>
+        </Alert>
+      )}
+      
+      {status === 'error' && (
+        <Alert className="bg-royal-crimson/20 border-royal-crimson/40">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>Submission Failed</AlertTitle>
+          <AlertDescription>
+            {errorMessage}
+          </AlertDescription>
+        </Alert>
+      )}
+      
       <div className="space-y-2">
         <Label htmlFor="title">Suggestion Title</Label>
-        <Input 
-          id="title" 
-          value={title} 
-          onChange={(e) => setTitle(e.target.value)} 
-          className="glass-morphism border-white/10"
+        <Input
+          id="title"
           placeholder="Enter a concise title for your suggestion"
-          disabled={isSubmitting}
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          className="glass-morphism border-white/10"
+          required
         />
       </div>
       
       <div className="space-y-2">
         <Label htmlFor="category">Category</Label>
-        <Select 
-          value={category} 
-          onValueChange={setCategory}
-          disabled={isSubmitting}
-        >
-          <SelectTrigger id="category" className="glass-morphism border-white/10">
+        <Select value={category} onValueChange={setCategory}>
+          <SelectTrigger className="glass-morphism border-white/10">
             <SelectValue placeholder="Select a category" />
           </SelectTrigger>
           <SelectContent className="glass-morphism border-white/10">
             <SelectItem value="feature">New Feature</SelectItem>
             <SelectItem value="improvement">Improvement</SelectItem>
-            <SelectItem value="event">Event Idea</SelectItem>
-            <SelectItem value="cosmetic">Cosmetic Item</SelectItem>
+            <SelectItem value="cosmetic">Cosmetic Items</SelectItem>
+            <SelectItem value="event">Event Ideas</SelectItem>
             <SelectItem value="other">Other</SelectItem>
           </SelectContent>
         </Select>
@@ -91,42 +102,31 @@ const SuggestionForm: React.FC = () => {
       
       <div className="space-y-2">
         <Label htmlFor="description">Description</Label>
-        <Textarea 
-          id="description" 
-          value={description} 
-          onChange={(e) => setDescription(e.target.value)} 
-          className="glass-morphism border-white/10 min-h-[120px]"
+        <Textarea
+          id="description"
           placeholder="Describe your suggestion in detail..."
-          disabled={isSubmitting}
+          rows={4}
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          className="glass-morphism border-white/10 resize-none"
+          required
         />
       </div>
       
-      <div className="pt-2">
-        <Button 
-          type="submit" 
-          className="w-full glass-morphism bg-gradient-to-r from-royal-gold via-royal-gold/80 to-royal-gold text-black hover:opacity-90"
-          disabled={isSubmitting}
-        >
-          {isSubmitting ? (
-            <>
-              <span className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></span>
-              Submitting...
-            </>
-          ) : (
-            <>
-              <Send className="mr-2 h-4 w-4" />
-              Submit Suggestion
-            </>
-          )}
-        </Button>
-      </div>
-      
-      {!user && (
-        <div className="glass-morphism border-white/10 p-3 rounded-lg flex items-center text-sm text-white/70">
-          <Crown className="h-4 w-4 text-royal-gold mr-2" />
-          <span>Please sign in to submit your royal suggestion.</span>
-        </div>
-      )}
+      <Button 
+        type="submit" 
+        className="w-full bg-gradient-to-r from-royal-gold via-amber-500 to-royal-gold text-black font-bold hover:opacity-90"
+        disabled={isSubmitting}
+      >
+        {isSubmitting ? (
+          <>
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            Submitting...
+          </>
+        ) : (
+          'Submit for Royal Consideration'
+        )}
+      </Button>
     </form>
   );
 };

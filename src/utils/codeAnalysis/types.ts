@@ -1,86 +1,45 @@
 
-// Analysis Types
-
-// Type for a code location
-export interface CodeLocation {
+export interface ComplexityItem {
+  id: string;
+  name: string;
   file: string;
-  line: number;
-}
-
-// Type for an unused import
-export interface UnusedImport extends CodeLocation {
-  name: string;
-}
-
-// Type for an unused variable
-export interface UnusedVariable extends CodeLocation {
-  name: string;
-}
-
-// Type for an unused CSS selector
-export interface UnusedCssSelector extends CodeLocation {
-  selector: string;
-}
-
-// Type for a dead code path
-export interface DeadCodePath extends CodeLocation {
-  description: string;
-}
-
-// Type for duplicate code
-export interface DuplicateCode {
-  id?: number;
-  files: string[];
-  similarity: number;
-  lines: number;
-  impact?: string;
-  risk?: string;
-  codeSnippet?: string;
-}
-
-// Type for complex code
-export interface ComplexCode extends CodeLocation {
-  id?: number;
-  function: string;
   complexity: number;
-  impact?: string;
-  suggestion?: string;
+  linesOfCode: number;
+  parameters: number;
+  nestedLevel: number;
+  issues: string[];
+  functionName?: string;
+  line?: number;
   explanation?: string;
+  status?: string;
 }
 
-// Type for an unused function
-export interface UnusedFunction extends CodeLocation {
-  name: string;
-}
-
-// Project metrics
-export interface ProjectMetrics {
-  projectSize: number; // in KB
-  fileCount: number;
-  dependencyCount: number;
-}
-
-// Type for the complete analysis result
 export interface AnalysisResult {
-  unusedFiles: string[];
-  unusedImports: UnusedImport[];
-  unusedVariables: UnusedVariable[];
-  unusedCssSelectors: UnusedCssSelector[];
-  deadCodePaths: DeadCodePath[];
-  duplicateCode: DuplicateCode[];
-  complexCode: ComplexCode[];
-  unusedFunctions: UnusedFunction[];
-  unusedDependencies: string[];
-  metrics: {
-    beforeCleanup: ProjectMetrics;
-    afterCleanup: ProjectMetrics;
+  complexity: any[];
+  duplicates: any[];
+  unused: {
+    imports: any[];
+    variables: any[];
+    functions: any[];
+    components: any[];
   };
-}
-
-// Mock ESLint type for analysis
-export class MockESLint {
-  async lintFiles(files: string[]) {
-    // Simple mock implementation
-    return [];
-  }
+  summary: {
+    totalFiles: number;
+    totalComponents: number;
+    totalHooks: number;
+    totalUtilities: number;
+    complexityScore: number;
+    duplicateScore: number;
+    unusedCode: number;
+    overallHealth: number;
+  };
+  unusedFiles: any[];
+  unusedImports: any[];
+  unusedVariables: any[];
+  unusedCssSelectors: any[];
+  performanceIssues: any[];
+  accessibilityIssues: any[];
+  securityIssues: any[];
+  bestPracticeViolations: any[];
+  codeSmells: any[];
 }

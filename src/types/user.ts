@@ -1,7 +1,7 @@
 
 // User profile types
 export type Team = 'red' | 'green' | 'blue' | null;
-export type UserTier = 'free' | 'pro' | 'royal' | 'founder' | 'basic' | 'crab' | 'whale' | 'shark' | 'dolphin';
+export type UserTier = 'free' | 'pro' | 'royal' | 'founder' | 'basic' | 'crab' | 'whale' | 'shark' | 'dolphin' | 'octopus' | 'fish';
 export type UserGender = 'king' | 'queen' | 'neutral' | 'jester' | 'noble';
 
 export interface ProfileImage {
@@ -22,7 +22,7 @@ export interface SocialLink {
   platform: string;
   url: string;
   icon?: string;
-  clicks?: number; // Added this property
+  clicks?: number;
 }
 
 export interface UserCosmetics {

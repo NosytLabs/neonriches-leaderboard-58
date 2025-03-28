@@ -1,73 +1,116 @@
 
-import { UserProfile } from '@/types/user';
 import { CosmeticCategory } from '@/types/cosmetics';
 
-// Function to format usernames with proper capitalization
-export const formatUsername = (username: string): string => {
-  if (!username) return '';
-  return username.charAt(0).toUpperCase() + username.slice(1);
+/**
+ * Format a category name for display
+ */
+export const formatCategoryName = (category: string): string => {
+  // Capitalize first letter and add spaces
+  return category.charAt(0).toUpperCase() + category.slice(1)
+    .replace(/([A-Z])/g, ' $1') // Add spaces before capital letters
+    .trim();
 };
 
-// Function to generate a royal title based on user profile
-export const generateRoyalTitle = (user: UserProfile): string => {
-  const { gender, tier, rank } = user;
-  
-  let prefix = '';
-  
-  // Determine prefix based on gender
-  if (gender === 'king') prefix = 'His Majesty';
-  else if (gender === 'queen') prefix = 'Her Majesty';
-  else if (gender === 'neutral') prefix = 'Their Excellency';
-  else if (gender === 'jester') prefix = 'The Honorable Jester';
-  else prefix = 'Noble';
-  
-  // Add tier-specific title
-  let tierTitle = '';
-  if (tier === 'founder') tierTitle = 'Founding';
-  else if (tier === 'royal') tierTitle = 'Royal';
-  else if (tier === 'pro') tierTitle = 'Distinguished';
-  else tierTitle = '';
-  
-  // Add rank-specific suffix
-  let rankSuffix = '';
-  if (rank === 1) rankSuffix = 'the Sovereign';
-  else if (rank <= 5) rankSuffix = 'the Exalted';
-  else if (rank <= 20) rankSuffix = 'the Esteemed';
-  else if (rank <= 100) rankSuffix = 'the Respected';
-  else rankSuffix = '';
-  
-  return `${prefix} ${tierTitle} ${rankSuffix}`.trim().replace(/\s+/g, ' ');
+/**
+ * Format a number as currency
+ */
+export const formatCurrency = (amount: number): string => {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  }).format(amount);
 };
 
-// Function to truncate text with ellipsis
-export const truncateText = (text: string, maxLength: number): string => {
-  if (!text || text.length <= maxLength) return text;
-  return text.slice(0, maxLength) + '...';
+/**
+ * Format a large number with appropriate suffix (K, M, B)
+ */
+export const formatLargeNumber = (num: number): string => {
+  if (num >= 1_000_000_000) {
+    return (num / 1_000_000_000).toFixed(1) + 'B';
+  }
+  if (num >= 1_000_000) {
+    return (num / 1_000_000).toFixed(1) + 'M';
+  }
+  if (num >= 1_000) {
+    return (num / 1_000).toFixed(1) + 'K';
+  }
+  return num.toString();
 };
 
-// Function to format a date for display
-export const formatDate = (dateString: string): string => {
-  const date = new Date(dateString);
-  return date.toLocaleDateString('en-US', {
+/**
+ * Format a date or timestamp to a readable format
+ */
+export const formatDate = (date: string | Date): string => {
+  const d = typeof date === 'string' ? new Date(date) : date;
+  return d.toLocaleDateString('en-US', {
     year: 'numeric',
-    month: 'long',
+    month: 'short',
     day: 'numeric'
   });
 };
 
-// Function to get a readable name for a cosmetic category
-export const getCategoryReadableName = (category: CosmeticCategory): string => {
-  const names: Record<CosmeticCategory, string> = {
-    borders: 'Profile Borders',
-    colors: 'Text Colors',
-    fonts: 'Font Styles',
-    emojis: 'Special Emojis',
-    titles: 'Royal Titles',
-    backgrounds: 'Profile Backgrounds',
-    effects: 'Visual Effects',
-    badges: 'Achievement Badges',
-    themes: 'Profile Themes'
-  };
+/**
+ * Format a timestamp to "X time ago" format
+ */
+export const timeAgo = (timestamp: string | Date): string => {
+  const date = typeof timestamp === 'string' ? new Date(timestamp) : timestamp;
+  const now = new Date();
+  const secondsAgo = Math.floor((now.getTime() - date.getTime()) / 1000);
   
-  return names[category] || category;
+  if (secondsAgo < 60) {
+    return `${secondsAgo} second${secondsAgo !== 1 ? 's' : ''} ago`;
+  }
+  
+  const minutesAgo = Math.floor(secondsAgo / 60);
+  if (minutesAgo < 60) {
+    return `${minutesAgo} minute${minutesAgo !== 1 ? 's' : ''} ago`;
+  }
+  
+  const hoursAgo = Math.floor(minutesAgo / 60);
+  if (hoursAgo < 24) {
+    return `${hoursAgo} hour${hoursAgo !== 1 ? 's' : ''} ago`;
+  }
+  
+  const daysAgo = Math.floor(hoursAgo / 24);
+  if (daysAgo < 30) {
+    return `${daysAgo} day${daysAgo !== 1 ? 's' : ''} ago`;
+  }
+  
+  const monthsAgo = Math.floor(daysAgo / 30);
+  if (monthsAgo < 12) {
+    return `${monthsAgo} month${monthsAgo !== 1 ? 's' : ''} ago`;
+  }
+  
+  const yearsAgo = Math.floor(monthsAgo / 12);
+  return `${yearsAgo} year${yearsAgo !== 1 ? 's' : ''} ago`;
+};
+
+/**
+ * Generate a truncated version of text with ellipsis
+ */
+export const truncateText = (text: string, maxLength: number): string => {
+  if (text.length <= maxLength) return text;
+  return text.slice(0, maxLength) + '...';
+};
+
+/**
+ * Convert snake_case or kebab-case to camelCase
+ */
+export const toCamelCase = (str: string): string => {
+  return str.replace(/[-_]([a-z])/g, (_, letter) => letter.toUpperCase());
+};
+
+/**
+ * Generate a readable file size string
+ */
+export const formatFileSize = (bytes: number): string => {
+  if (bytes === 0) return '0 Bytes';
+  
+  const k = 1024;
+  const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
 };

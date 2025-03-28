@@ -1,168 +1,232 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Vote, ThumbsUp, ThumbsDown, Crown, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { CheckCircle, Clock, ThumbsUp, ThumbsDown, Vote } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Progress } from '@/components/ui/progress';
-import { useAuth } from '@/contexts/auth';
 import { useToast } from '@/hooks/use-toast';
+import useNotificationSounds from '@/hooks/use-notification-sounds';
+import { motion } from 'framer-motion';
+
+// Mock proposal data
+const mockProposals = [
+  {
+    id: 1,
+    title: "Add Seasonal Themed Events",
+    description: "Implement special events for holidays and seasons with unique rewards and challenges.",
+    status: "active",
+    votes: { up: 145, down: 32 },
+    author: "RoyalAdvisor",
+    created: "2023-10-15",
+    deadline: "2023-11-15",
+    category: "feature",
+    implemented: false
+  },
+  {
+    id: 2,
+    title: "Expand Team Competitions",
+    description: "Add more team-based weekly challenges with unique prizes for the winning faction.",
+    status: "active",
+    votes: { up: 98, down: 45 },
+    author: "StrategicKnight",
+    created: "2023-10-10",
+    deadline: "2023-11-10",
+    category: "feature",
+    implemented: false
+  },
+  {
+    id: 3,
+    title: "Royal Tournament System",
+    description: "Create monthly tournaments where nobles can compete for exclusive cosmetics and titles.",
+    status: "active",
+    votes: { up: 210, down: 25 },
+    author: "TourneyMaster",
+    created: "2023-10-05",
+    deadline: "2023-11-05",
+    category: "feature",
+    implemented: false
+  },
+  {
+    id: 4,
+    title: "Enhanced Profile Customization",
+    description: "Allow users to add animated backgrounds and custom layouts to their profile pages.",
+    status: "completed",
+    votes: { up: 178, down: 12 },
+    author: "RoyalDesigner",
+    created: "2023-09-15",
+    deadline: "2023-10-15",
+    category: "improvement",
+    implemented: true
+  },
+  {
+    id: 5,
+    title: "Public Wall of Shame",
+    description: "Implement a public wall that shows recent shame actions for added visibility.",
+    status: "completed",
+    votes: { up: 142, down: 67 },
+    author: "MischievousNoble",
+    created: "2023-09-10",
+    deadline: "2023-10-10",
+    category: "feature",
+    implemented: true
+  }
+];
 
 const CommunityVoting: React.FC = () => {
-  const { user } = useAuth();
+  const [activeTab, setActiveTab] = useState<string>("active");
+  const [userVotes, setUserVotes] = useState<Record<number, 'up' | 'down' | null>>({});
   const { toast } = useToast();
-
-  const handleVote = (proposalId: string, vote: 'up' | 'down') => {
-    if (!user) {
+  const { playSound } = useNotificationSounds();
+  
+  const handleVote = (proposalId: number, voteType: 'up' | 'down') => {
+    // Check if user already voted the same way
+    if (userVotes[proposalId] === voteType) {
+      // Remove vote
+      setUserVotes(prev => ({
+        ...prev,
+        [proposalId]: null
+      }));
+      
+      playSound('click');
       toast({
-        title: "Authentication Required",
-        description: "You must be logged in to vote on proposals.",
-        variant: "destructive"
+        title: "Vote Removed",
+        description: "Your vote has been removed from this proposal.",
       });
-      return;
+    } else {
+      // Set new vote
+      setUserVotes(prev => ({
+        ...prev,
+        [proposalId]: voteType
+      }));
+      
+      playSound(voteType === 'up' ? 'success' : 'error');
+      toast({
+        title: "Vote Recorded",
+        description: `You ${voteType === 'up' ? 'supported' : 'opposed'} this royal proposal.`,
+      });
     }
-
-    toast({
-      title: "Vote Recorded",
-      description: `Your ${vote === 'up' ? 'support' : 'opposition'} for this proposal has been recorded.`,
-    });
   };
-
+  
+  const getFilteredProposals = () => {
+    switch (activeTab) {
+      case "active":
+        return mockProposals.filter(p => p.status === "active");
+      case "completed":
+        return mockProposals.filter(p => p.status === "completed");
+      case "all":
+      default:
+        return mockProposals;
+    }
+  };
+  
   return (
-    <Card className="glass-morphism border-white/10">
-      <CardHeader>
-        <CardTitle className="flex items-center">
-          <Vote className="mr-2 h-5 w-5 text-royal-gold" />
-          Active Royal Proposals
-        </CardTitle>
-        <CardDescription>
-          Vote on proposals that will shape the future of our kingdom
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-6">
-        {/* Proposal 1 */}
-        <div className="glass-morphism border-white/10 rounded-lg p-6">
-          <div className="flex items-start justify-between mb-4">
-            <div>
-              <h3 className="text-lg font-medieval mb-1">Weekly Team Competitions</h3>
-              <p className="text-sm text-white/70 mb-2">
-                Implement weekly team-based challenges with special rewards for the winning house.
-              </p>
-              <div className="flex items-center text-sm text-white/50">
-                <Users className="h-3 w-3 mr-1" />
-                <span>Proposed by: RoyalAdvisor</span>
-                <span className="mx-2">•</span>
-                <span>3 days left</span>
-              </div>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Button 
-                size="sm" 
-                className="bg-green-600 hover:bg-green-700 rounded-full h-8 w-8 p-0" 
-                onClick={() => handleVote('prop1', 'up')}
-              >
-                <ThumbsUp className="h-4 w-4" />
-              </Button>
-              <Button 
-                size="sm" 
-                className="bg-red-600 hover:bg-red-700 rounded-full h-8 w-8 p-0" 
-                onClick={() => handleVote('prop1', 'down')}
-              >
-                <ThumbsDown className="h-4 w-4" />
-              </Button>
-            </div>
-          </div>
-          <div className="space-y-2">
-            <div className="flex justify-between text-sm">
-              <span>Current votes: 73% in favor</span>
-              <span>146 votes</span>
-            </div>
-            <Progress value={73} className="h-2 bg-white/10" />
-          </div>
-        </div>
-
-        {/* Proposal 2 */}
-        <div className="glass-morphism border-white/10 rounded-lg p-6">
-          <div className="flex items-start justify-between mb-4">
-            <div>
-              <h3 className="text-lg font-medieval mb-1">Royal Court Rankings</h3>
-              <p className="text-sm text-white/70 mb-2">
-                Create a separate leaderboard for users who contribute to community discussions.
-              </p>
-              <div className="flex items-center text-sm text-white/50">
-                <Users className="h-3 w-3 mr-1" />
-                <span>Proposed by: NobleWhale</span>
-                <span className="mx-2">•</span>
-                <span>5 days left</span>
-              </div>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Button 
-                size="sm" 
-                className="bg-green-600 hover:bg-green-700 rounded-full h-8 w-8 p-0" 
-                onClick={() => handleVote('prop2', 'up')}
-              >
-                <ThumbsUp className="h-4 w-4" />
-              </Button>
-              <Button 
-                size="sm" 
-                className="bg-red-600 hover:bg-red-700 rounded-full h-8 w-8 p-0" 
-                onClick={() => handleVote('prop2', 'down')}
-              >
-                <ThumbsDown className="h-4 w-4" />
-              </Button>
-            </div>
-          </div>
-          <div className="space-y-2">
-            <div className="flex justify-between text-sm">
-              <span>Current votes: 62% in favor</span>
-              <span>108 votes</span>
-            </div>
-            <Progress value={62} className="h-2 bg-white/10" />
-          </div>
-        </div>
-
-        {/* Proposal 3 */}
-        <div className="glass-morphism border-white/10 rounded-lg p-6">
-          <div className="flex items-start justify-between mb-4">
-            <div>
-              <h3 className="text-lg font-medieval mb-1">Royal Token System</h3>
-              <p className="text-sm text-white/70 mb-2">
-                Implement a token-based reward system for active community members.
-              </p>
-              <div className="flex items-center text-sm text-white/50">
-                <Crown className="h-3 w-3 mr-1 text-royal-gold" />
-                <span className="text-royal-gold">Official Proposal</span>
-                <span className="mx-2">•</span>
-                <span>7 days left</span>
-              </div>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Button 
-                size="sm" 
-                className="bg-green-600 hover:bg-green-700 rounded-full h-8 w-8 p-0" 
-                onClick={() => handleVote('prop3', 'up')}
-              >
-                <ThumbsUp className="h-4 w-4" />
-              </Button>
-              <Button 
-                size="sm" 
-                className="bg-red-600 hover:bg-red-700 rounded-full h-8 w-8 p-0" 
-                onClick={() => handleVote('prop3', 'down')}
-              >
-                <ThumbsDown className="h-4 w-4" />
-              </Button>
-            </div>
-          </div>
-          <div className="space-y-2">
-            <div className="flex justify-between text-sm">
-              <span>Current votes: 89% in favor</span>
-              <span>217 votes</span>
-            </div>
-            <Progress value={89} className="h-2 bg-white/10" />
-          </div>
-        </div>
-      </CardContent>
-    </Card>
+    <div className="space-y-6">
+      <Card className="glass-morphism border-white/10">
+        <CardHeader>
+          <CardTitle className="flex items-center">
+            <Vote className="mr-2 h-5 w-5 text-royal-gold" />
+            Royal Proposals
+          </CardTitle>
+          <CardDescription>
+            Vote on proposals to shape the future of our kingdom
+          </CardDescription>
+        </CardHeader>
+        
+        <CardContent>
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
+            <TabsList className="glass-morphism">
+              <TabsTrigger value="active">Active Proposals</TabsTrigger>
+              <TabsTrigger value="completed">Implemented</TabsTrigger>
+              <TabsTrigger value="all">All Proposals</TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value={activeTab} className="space-y-4">
+              {getFilteredProposals().map((proposal) => (
+                <motion.div 
+                  key={proposal.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <Card className="glass-morphism border-white/10">
+                    <CardHeader className="pb-2">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <CardTitle className="text-base md:text-lg">{proposal.title}</CardTitle>
+                          <div className="flex items-center mt-1">
+                            <Badge variant="outline" className="mr-2">
+                              {proposal.category}
+                            </Badge>
+                            {proposal.implemented ? (
+                              <Badge className="bg-green-500/20 text-green-400 border-green-500/40">
+                                <CheckCircle className="h-3 w-3 mr-1" />
+                                Implemented
+                              </Badge>
+                            ) : (
+                              <Badge className="bg-blue-500/20 text-blue-400 border-blue-500/40">
+                                <Clock className="h-3 w-3 mr-1" />
+                                In Review
+                              </Badge>
+                            )}
+                          </div>
+                        </div>
+                        
+                        <div className="flex items-center space-x-2">
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            className={`glass-morphism ${userVotes[proposal.id] === 'up' ? 'border-green-500 text-green-400' : 'border-white/10'}`}
+                            onClick={() => handleVote(proposal.id, 'up')}
+                            disabled={proposal.status === "completed"}
+                          >
+                            <ThumbsUp className="h-4 w-4 mr-1" />
+                            <span>{proposal.votes.up + (userVotes[proposal.id] === 'up' ? 1 : 0)}</span>
+                          </Button>
+                          
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            className={`glass-morphism ${userVotes[proposal.id] === 'down' ? 'border-red-500 text-red-400' : 'border-white/10'}`}
+                            onClick={() => handleVote(proposal.id, 'down')}
+                            disabled={proposal.status === "completed"}
+                          >
+                            <ThumbsDown className="h-4 w-4 mr-1" />
+                            <span>{proposal.votes.down + (userVotes[proposal.id] === 'down' ? 1 : 0)}</span>
+                          </Button>
+                        </div>
+                      </div>
+                    </CardHeader>
+                    
+                    <CardContent>
+                      <p className="text-white/70 text-sm mb-4">{proposal.description}</p>
+                      
+                      <div className="space-y-2">
+                        <div className="flex justify-between text-xs text-white/60">
+                          <span>Support Level</span>
+                          <span>
+                            {Math.round((proposal.votes.up / (proposal.votes.up + proposal.votes.down)) * 100)}%
+                          </span>
+                        </div>
+                        <Progress 
+                          value={Math.round((proposal.votes.up / (proposal.votes.up + proposal.votes.down)) * 100)} 
+                          className="h-2 bg-white/10"
+                        />
+                        <div className="flex justify-between text-xs text-white/60">
+                          <span>Proposed by {proposal.author}</span>
+                          <span>Deadline: {new Date(proposal.deadline).toLocaleDateString()}</span>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              ))}
+            </TabsContent>
+          </Tabs>
+        </CardContent>
+      </Card>
+    </div>
   );
 };
 

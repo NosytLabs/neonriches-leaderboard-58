@@ -10,9 +10,10 @@ import { motion } from 'framer-motion';
 
 interface LoginFormProps {
   onSuccess: () => void;
+  onSwitchToRegister?: () => void;
 }
 
-const LoginForm: React.FC<LoginFormProps> = ({ onSuccess }) => {
+const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onSwitchToRegister }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -112,6 +113,18 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess }) => {
             'Enter the Court'
           )}
         </Button>
+        
+        {onSwitchToRegister && (
+          <div className="text-center mt-4">
+            <button
+              type="button"
+              onClick={onSwitchToRegister}
+              className="text-sm text-white/70 hover:text-royal-gold transition-colors"
+            >
+              Don't have an account? Join the nobility
+            </button>
+          </div>
+        )}
       </form>
     </motion.div>
   );

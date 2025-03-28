@@ -1,90 +1,63 @@
 
-import React from 'react';
-import { cn } from '@/lib/utils';
-import type { RegalBadgeProps } from '@/types/ui-types';
-
-type BadgeVariant = 'default' | 'outline' | 'success' | 'warning' | 'danger' | 'info' | 'royal';
-type BadgeSize = 'sm' | 'md' | 'lg';
+import React from "react";
+import { cn } from "@/lib/utils";
+import { RegalBadgeProps } from "@/types/ui-types";
 
 const RegalBadge: React.FC<RegalBadgeProps> = ({
-  variant = 'default',
-  size = 'md',
+  variant = "royal",
+  label,
+  rarity,
   className,
   children,
-  style,
-  data,
-  id,
-  hidden,
-  onClick,
-  tier
+  ...props
 }) => {
-  // Convert string id to a number for numeric operations if needed
-  const parsedId = id ? parseInt(id, 10) : undefined;
-  
-  // Size classes
-  const sizeClasses = {
-    sm: 'px-2 py-0.5 text-xs',
-    md: 'px-2.5 py-0.5 text-sm',
-    lg: 'px-3 py-1 text-base'
+  // Get classes based on the variant
+  const getVariantClasses = () => {
+    switch (variant) {
+      case "gold":
+        return "bg-royal-gold/20 text-royal-gold border-royal-gold/40";
+      case "silver":
+        return "bg-slate-300/20 text-slate-300 border-slate-300/40";
+      case "crimson":
+        return "bg-royal-crimson/20 text-royal-crimson border-royal-crimson/40";
+      case "navy":
+        return "bg-royal-navy/20 text-royal-navy border-royal-navy/40";
+      case "royal":
+      default:
+        return "bg-gradient-to-r from-royal-crimson/20 via-royal-gold/20 to-royal-navy/20 text-white border-royal-gold/40";
+    }
   };
-  
-  // Variant classes
-  const variantClasses = {
-    default: 'bg-white/10 text-white',
-    outline: 'bg-transparent border border-white/20 text-white',
-    success: 'bg-green-600/20 text-green-400 border border-green-500/30',
-    warning: 'bg-yellow-600/20 text-yellow-400 border border-yellow-500/30',
-    danger: 'bg-red-600/20 text-red-400 border border-red-500/30',
-    info: 'bg-blue-600/20 text-blue-400 border border-blue-500/30',
-    royal: 'bg-royal-gold/20 text-royal-gold border border-royal-gold/30'
+
+  // Get classes based on rarity
+  const getRarityClasses = () => {
+    if (!rarity) return "";
+    
+    switch (rarity) {
+      case "legendary":
+        return "bg-royal-gold/20 text-royal-gold border-royal-gold/40";
+      case "epic":
+        return "bg-purple-500/20 text-purple-400 border-purple-500/40";
+      case "rare":
+        return "bg-blue-500/20 text-blue-400 border-blue-500/40";
+      case "uncommon":
+        return "bg-green-500/20 text-green-400 border-green-500/40";
+      case "common":
+        return "bg-gray-500/20 text-gray-300 border-gray-500/40";
+      default:
+        return "";
+    }
   };
-  
-  // Get the animation delay based on ID if provided
-  const getAnimationDelay = () => {
-    if (parsedId === undefined) return '0s';
-    return `${(parsedId % 5) * 0.1}s`;
-  };
-  
-  // Get the pulse duration based on ID if provided
-  const getPulseDuration = () => {
-    if (parsedId === undefined) return '2s';
-    return `${2 + (parsedId % 3) * 0.5}s`;
-  };
-  
-  // Use tier for additional styling if needed
-  const getTierClass = () => {
-    if (!tier) return '';
-    // You can implement custom styles based on tier
-    return '';
-  };
-  
-  // Generate default content based on tier if no children
-  const renderContent = () => {
-    if (children) return children;
-    if (tier) return tier.charAt(0).toUpperCase() + tier.slice(1);
-    return null;
-  };
-  
+
   return (
     <span
       className={cn(
-        'inline-flex items-center justify-center rounded-full font-medium transition-colors',
-        sizeClasses[size as BadgeSize],
-        variantClasses[variant as BadgeVariant],
-        getTierClass(),
-        onClick && 'cursor-pointer hover:bg-opacity-80',
-        hidden && 'hidden',
+        "inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
+        rarity ? getRarityClasses() : getVariantClasses(),
         className
       )}
-      style={{
-        ...style,
-        animationDelay: getAnimationDelay(),
-        animationDuration: getPulseDuration()
-      }}
-      onClick={onClick}
-      {...data}
+      {...props}
     >
-      {renderContent()}
+      {children || label}
     </span>
   );
 };

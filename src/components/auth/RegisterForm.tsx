@@ -3,24 +3,23 @@ import React, { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { Loader2, User, Mail, Lock, Shield, AlertCircle } from 'lucide-react';
+import { Loader2, Mail, Lock, User, AlertCircle, Crown } from 'lucide-react';
 import { useAuth } from '@/contexts/auth';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { motion } from 'framer-motion';
-import { Team, UserGender } from '@/types/user';
+import { Checkbox } from '@/components/ui/checkbox';
 
 interface RegisterFormProps {
   onSuccess: () => void;
+  onSwitchToLogin?: () => void;
 }
 
-const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess }) => {
+const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess, onSwitchToLogin }) => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [team, setTeam] = useState<Team>(null);
-  const [gender, setGender] = useState<UserGender | ''>('');
+  const [agreeToTerms, setAgreeToTerms] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const { register } = useAuth();
@@ -30,17 +29,22 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess }) => {
     setErrorMessage(null);
     
     if (password !== confirmPassword) {
-      setErrorMessage('Royal keys do not match. Please ensure both entries are identical.');
+      setErrorMessage('Royal decrees must match! Please ensure both passwords are identical.');
+      return;
+    }
+    
+    if (!agreeToTerms) {
+      setErrorMessage('You must pledge allegiance to our royal terms to proceed.');
       return;
     }
     
     setIsLoading(true);
 
     try {
-      await register(email, password, username, team, gender as UserGender);
+      await register(username, email, password);
       onSuccess();
     } catch (error: any) {
-      setErrorMessage(error.message || 'Failed to register. The royal scribe could not record your details.');
+      setErrorMessage(error.message || 'Failed to register your royal account');
     } finally {
       setIsLoading(false);
     }
@@ -72,11 +76,12 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess }) => {
         <div className="space-y-2">
           <Label htmlFor="username" className="flex items-center gap-2">
             <User className="h-4 w-4 text-royal-gold" />
-            Noble Name
+            Royal Title
           </Label>
           <Input
             id="username"
-            placeholder="LordGoldspender"
+            type="text"
+            placeholder="LordOfWealth"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             className="glass-morphism border-white/10 focus:border-royal-gold/50 focus:ring-royal-gold/20"
@@ -85,12 +90,12 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess }) => {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="email" className="flex items-center gap-2">
+          <Label htmlFor="register-email" className="flex items-center gap-2">
             <Mail className="h-4 w-4 text-royal-gold" />
             Royal Email
           </Label>
           <Input
-            id="email"
+            id="register-email"
             type="email"
             placeholder="your.majesty@example.com"
             value={email}
@@ -99,60 +104,14 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess }) => {
             required
           />
         </div>
-        
-        <div className="grid grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="team" className="flex items-center gap-2">
-              <Shield className="h-4 w-4 text-royal-gold" />
-              Royal Team
-            </Label>
-            <Select value={team || ""} onValueChange={(value) => setTeam(value as Team)}>
-              <SelectTrigger className="glass-morphism border-white/10">
-                <SelectValue placeholder="Select a team" />
-              </SelectTrigger>
-              <SelectContent className="glass-morphism border-white/10">
-                <SelectItem value="red" className="flex items-center">
-                  <span className="w-3 h-3 rounded-full bg-team-red mr-2"></span>
-                  Red Legion
-                </SelectItem>
-                <SelectItem value="green" className="flex items-center">
-                  <span className="w-3 h-3 rounded-full bg-team-green mr-2"></span>
-                  Green Dynasty
-                </SelectItem>
-                <SelectItem value="blue" className="flex items-center">
-                  <span className="w-3 h-3 rounded-full bg-team-blue mr-2"></span>
-                  Blue Covenant
-                </SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="gender" className="flex items-center gap-2">
-              <Crown className="h-4 w-4 text-royal-gold" />
-              Title
-            </Label>
-            <Select value={gender} onValueChange={(value) => setGender(value as UserGender)}>
-              <SelectTrigger className="glass-morphism border-white/10">
-                <SelectValue placeholder="Select title" />
-              </SelectTrigger>
-              <SelectContent className="glass-morphism border-white/10">
-                <SelectItem value="king">King</SelectItem>
-                <SelectItem value="queen">Queen</SelectItem>
-                <SelectItem value="noble">Noble</SelectItem>
-                <SelectItem value="jester">Jester</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
 
         <div className="space-y-2">
-          <Label htmlFor="password" className="flex items-center gap-2">
+          <Label htmlFor="register-password" className="flex items-center gap-2">
             <Lock className="h-4 w-4 text-royal-gold" />
-            Royal Key
+            Royal Password
           </Label>
           <Input
-            id="password"
+            id="register-password"
             type="password"
             placeholder="••••••••"
             value={password}
@@ -163,12 +122,12 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess }) => {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="confirmPassword" className="flex items-center gap-2">
+          <Label htmlFor="confirm-password" className="flex items-center gap-2">
             <Lock className="h-4 w-4 text-royal-gold" />
-            Confirm Royal Key
+            Confirm Royal Password
           </Label>
           <Input
-            id="confirmPassword"
+            id="confirm-password"
             type="password"
             placeholder="••••••••"
             value={confirmPassword}
@@ -178,25 +137,49 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess }) => {
           />
         </div>
 
-        <motion.div
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
+        <div className="pt-2">
+          <div className="flex items-center space-x-2">
+            <Checkbox 
+              id="terms" 
+              checked={agreeToTerms}
+              onCheckedChange={(checked) => setAgreeToTerms(checked === true)}
+              className="border-royal-gold/50 data-[state=checked]:bg-royal-gold data-[state=checked]:text-black"
+            />
+            <label
+              htmlFor="terms"
+              className="text-sm text-white/70 leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
+              I pledge allegiance to the royal terms and privacy policy
+            </label>
+          </div>
+        </div>
+
+        <Button
+          type="submit"
+          className="w-full bg-gradient-to-r from-royal-gold via-amber-500 to-royal-gold text-black font-bold tracking-wide hover:opacity-90 transition-all royal-shadow"
+          disabled={isLoading}
         >
-          <Button
-            type="submit"
-            className="w-full bg-gradient-to-r from-royal-gold via-amber-500 to-royal-gold text-black font-bold tracking-wide hover:opacity-90 royal-shadow"
-            disabled={isLoading}
-          >
-            {isLoading ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Establishing Nobility...
-              </>
-            ) : (
-              'Claim Your Throne'
-            )}
-          </Button>
-        </motion.div>
+          {isLoading ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Creating Royal Account...
+            </>
+          ) : (
+            'Claim Your Throne'
+          )}
+        </Button>
+        
+        {onSwitchToLogin && (
+          <div className="text-center mt-4">
+            <button
+              type="button"
+              onClick={onSwitchToLogin}
+              className="text-sm text-white/70 hover:text-royal-gold transition-colors"
+            >
+              Already nobility? Sign in to your account
+            </button>
+          </div>
+        )}
       </form>
     </motion.div>
   );

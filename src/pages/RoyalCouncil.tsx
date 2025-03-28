@@ -36,7 +36,7 @@ const RoyalCouncil = () => {
             </p>
           </div>
           
-          <RoyalDivider variant="crown" color="gold" className="mb-10" />
+          <RoyalDivider variant="crown" className="mb-10" />
           
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
             <div className="flex justify-center mb-4">

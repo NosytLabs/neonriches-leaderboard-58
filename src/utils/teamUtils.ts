@@ -1,120 +1,78 @@
 
-import { TeamColor } from '@/types/teams';
-
-export const teamData = {
-  red: {
-    id: 'red' as TeamColor,
-    name: 'House of Crimson',
-    description: 'The house of ambition and power, known for their fierce competitiveness.',
-    icon: '🔥',
-    color: '#e11d48',
-    bgColor: 'rgba(225, 29, 72, 0.2)',
-    members: 341,
-    rank: 2
-  },
-  green: {
-    id: 'green' as TeamColor,
-    name: 'House of Emerald',
-    description: 'The house of prosperity and growth, valuing creativity above all.',
-    icon: '⚡',
-    color: '#10b981',
-    bgColor: 'rgba(16, 185, 129, 0.2)',
-    members: 289,
-    rank: 3
-  },
-  blue: {
-    id: 'blue' as TeamColor,
-    name: 'House of Sapphire',
-    description: 'The house of wisdom and strategy, taking a calculated approach to success.',
-    icon: '🌊',
-    color: '#3b82f6',
-    bgColor: 'rgba(59, 130, 246, 0.2)',
-    members: 412,
-    rank: 1
-  }
-};
-
-export const getTeamColor = (team?: string | null): string => {
-  if (!team) return '';
-  
-  switch (team.toLowerCase()) {
+export const getTeamColor = (team: 'red' | 'green' | 'blue' | null): string => {
+  switch (team) {
     case 'red':
-      return 'text-team-red';
+      return 'text-red-500';
     case 'green':
-      return 'text-team-green';
+      return 'text-green-500';
     case 'blue':
-      return 'text-team-blue';
+      return 'text-blue-500';
     default:
-      return '';
+      return 'text-gray-400';
   }
 };
 
-export const getTeamBorderColor = (team?: string | null): string => {
-  if (!team) return 'border-white/10';
-  
-  switch (team.toLowerCase()) {
+export const getTeamBorderColor = (team: 'red' | 'green' | 'blue' | null): string => {
+  switch (team) {
     case 'red':
-      return 'border-team-red';
+      return 'border-red-500';
     case 'green':
-      return 'border-team-green';
+      return 'border-green-500';
     case 'blue':
-      return 'border-team-blue';
+      return 'border-blue-500';
     default:
-      return 'border-white/10';
+      return 'border-gray-400';
   }
 };
 
-export const getTeamName = (team?: string | null): string => {
-  if (!team) return 'No Team';
-  
-  switch (team.toLowerCase()) {
+export const getTeamName = (team: 'red' | 'green' | 'blue' | null): string => {
+  switch (team) {
     case 'red':
-      return 'House of Crimson';
+      return 'Red Team';
     case 'green':
-      return 'House of Emerald';
+      return 'Green Team';
     case 'blue':
-      return 'House of Sapphire';
+      return 'Blue Team';
     default:
-      return 'Unknown Team';
+      return 'No Team';
   }
 };
 
-export const getGenderTitle = (gender?: string | null): string => {
-  if (!gender) return '';
-  
-  switch (gender.toLowerCase()) {
+export const getGenderTitle = (gender: string | null | undefined): string => {
+  switch (gender) {
     case 'king':
-      return 'His Majesty';
+      return 'King';
     case 'queen':
-      return 'Her Majesty';
+      return 'Queen';
     case 'jester':
-      return 'Court Jester';
+      return 'Jester';
+    case 'noble':
+      return 'Noble';
     default:
-      return '';
+      return 'Citizen';
   }
 };
 
-export const getGenderEmoji = (gender?: string | null): string => {
-  if (!gender) return '';
-  
-  switch (gender.toLowerCase()) {
+export const getGenderEmoji = (gender: string | null | undefined): string => {
+  switch (gender) {
     case 'king':
       return '👑';
     case 'queen':
       return '👸';
     case 'jester':
       return '🃏';
+    case 'noble':
+      return '🏰';
     default:
-      return '';
+      return '👤';
   }
 };
 
 export const getInitials = (username: string): string => {
-  if (!username) return '';
-  
   return username
     .split(' ')
-    .map((part) => part.charAt(0).toUpperCase())
-    .slice(0, 2)
-    .join('');
+    .map(part => part.charAt(0))
+    .join('')
+    .toUpperCase()
+    .substring(0, 2);
 };

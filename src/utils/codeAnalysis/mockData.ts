@@ -72,27 +72,46 @@ const handleProfileClick = () => {
 ];
 
 export const unusedImportsMock = [
-  { file: "src/components/Dashboard.tsx", imports: ["useState", "useEffect", "useMemo"] },
-  { file: "src/utils/helpers.ts", imports: ["formatDate", "calculateTotal"] },
-  { file: "src/hooks/useAuth.ts", imports: ["AuthContext"] }
+  { file: "src/components/Dashboard.tsx", imports: ["useState", "useEffect", "useMemo"], line: 1, name: "useState" },
+  { file: "src/utils/helpers.ts", imports: ["formatDate", "calculateTotal"], line: 5, name: "formatDate" },
+  { file: "src/hooks/useAuth.ts", imports: ["AuthContext"], line: 3, name: "AuthContext" }
 ];
 
 export const unusedVariablesMock = [
-  { file: "src/components/UserProfile.tsx", variables: ["isAdmin", "userSettings"] },
-  { file: "src/utils/calculations.ts", variables: ["taxRate", "discountFactor"] },
-  { file: "src/contexts/ThemeContext.tsx", variables: ["defaultTheme"] }
+  { file: "src/components/UserProfile.tsx", variables: ["isAdmin", "userSettings"], line: 15, name: "isAdmin" },
+  { file: "src/utils/calculations.ts", variables: ["taxRate", "discountFactor"], line: 8, name: "taxRate" },
+  { file: "src/contexts/ThemeContext.tsx", variables: ["defaultTheme"], line: 12, name: "defaultTheme" }
 ];
 
 export const unusedFunctionsMock = [
-  { file: "src/utils/helpers.ts", functions: ["validateEmail", "formatPhoneNumber"] },
-  { file: "src/hooks/useData.ts", functions: ["fetchUserData"] },
-  { file: "src/components/Forms.tsx", functions: ["resetForm"] }
+  { file: "src/utils/helpers.ts", functions: ["validateEmail", "formatPhoneNumber"], line: 23, name: "validateEmail" },
+  { file: "src/hooks/useData.ts", functions: ["fetchUserData"], line: 45, name: "fetchUserData" },
+  { file: "src/components/Forms.tsx", functions: ["resetForm"], line: 67, name: "resetForm" }
 ];
 
 export const unusedComponentsMock = [
-  { component: "DebugPanel", file: "src/components/debug/DebugPanel.tsx" },
-  { component: "BetaFeatures", file: "src/components/beta/BetaFeatures.tsx" },
-  { component: "DeveloperTools", file: "src/components/dev/DeveloperTools.tsx" }
+  { component: "DebugPanel", file: "src/components/debug/DebugPanel.tsx", line: 5 },
+  { component: "BetaFeatures", file: "src/components/beta/BetaFeatures.tsx", line: 8 },
+  { component: "DeveloperTools", file: "src/components/dev/DeveloperTools.tsx", line: 12 }
+];
+
+export const performanceIssuesMock = [
+  {
+    id: "perf-1",
+    description: "Excessive re-renders in component",
+    file: "src/components/Dashboard.tsx",
+    lineNumber: 42,
+    severity: "high",
+    recommendation: "Use React.memo or useMemo to memoize expensive calculations or component rendering."
+  },
+  {
+    id: "perf-2", 
+    description: "Large bundle size due to unoptimized imports",
+    file: "src/pages/Profile.tsx",
+    lineNumber: 12,
+    severity: "medium",
+    recommendation: "Use dynamic imports or code-splitting to reduce initial bundle size."
+  }
 ];
 
 export const mockedAnalysisResults = {
@@ -113,5 +132,14 @@ export const mockedAnalysisResults = {
     duplicateScore: 15,
     unusedCode: 24,
     overallHealth: 75
-  }
+  },
+  unusedFiles: [],
+  unusedImports: unusedImportsMock,
+  unusedVariables: unusedVariablesMock,
+  unusedCssSelectors: [],
+  performanceIssues: performanceIssuesMock,
+  accessibilityIssues: [],
+  securityIssues: [],
+  bestPracticeViolations: [],
+  codeSmells: []
 };

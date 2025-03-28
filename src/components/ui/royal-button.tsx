@@ -2,13 +2,14 @@
 import React from 'react';
 import { Button, ButtonProps } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { RoyalButtonVariant } from '@/types/royal-divider-types';
+import { RoyalButtonVariant } from '@/types/user';
 
 interface RoyalButtonProps extends Omit<ButtonProps, 'variant'> {
   variant?: RoyalButtonVariant;
   shimmer?: boolean;
   glow?: boolean;
   icon?: React.ReactNode;
+  href?: string;
 }
 
 const RoyalButton: React.FC<RoyalButtonProps> = ({
@@ -18,6 +19,7 @@ const RoyalButton: React.FC<RoyalButtonProps> = ({
   icon,
   className,
   children,
+  href,
   ...props
 }) => {
   // Get classes based on the variant
@@ -57,10 +59,29 @@ const RoyalButton: React.FC<RoyalButtonProps> = ({
     className
   );
   
-  return (
-    <Button className={buttonClasses} {...props}>
+  const ButtonContent = () => (
+    <>
       {icon && <span className="mr-2">{icon}</span>}
       {children}
+    </>
+  );
+
+  // Return a link if href is provided, otherwise return a button
+  if (href) {
+    return (
+      <a 
+        className={cn("inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 px-4 py-2", buttonClasses)}
+        href={href}
+        {...props}
+      >
+        <ButtonContent />
+      </a>
+    );
+  }
+  
+  return (
+    <Button className={buttonClasses} {...props}>
+      <ButtonContent />
     </Button>
   );
 };
