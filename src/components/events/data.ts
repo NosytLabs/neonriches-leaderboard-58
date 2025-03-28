@@ -1,5 +1,5 @@
 
-import { Event, EventDetails, EventStats } from '@/types/events';
+import { Event, EventDetails, EventStats, EventType, EventStatus } from '@/types/events';
 
 // Mock user data for shame targets
 export const topUsers = [
@@ -57,21 +57,29 @@ export const topUsers = [
 export const upcomingEvents = [
   {
     id: "public-shaming",
-    name: "Public Shaming Festival",
+    title: "Public Shaming Festival",
+    name: "Public Shaming Festival", // For backward compatibility
     description: "Monthly medieval-style event where nobles can publicly shame others with tomatoes, eggs, or stocks. Discounted rates for all shaming actions!",
     image: "https://images.unsplash.com/photo-1472396961693-142e6e269027?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+    imageUrl: "https://images.unsplash.com/photo-1472396961693-142e6e269027?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
     startDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString(), // 14 days from now
     endDate: new Date(Date.now() + 17 * 24 * 60 * 60 * 1000).toISOString(), // 17 days from now
-    type: "shame"
+    type: "shame" as EventType,
+    status: "upcoming" as EventStatus,
+    createdAt: new Date().toISOString()
   },
   {
     id: "team-conquest",
-    name: "Team Conquest",
+    title: "Team Conquest",
+    name: "Team Conquest", // For backward compatibility
     description: "Join forces with your team to dominate the leaderboard and claim territories on the kingdom map. The winning team earns exclusive badges and bonuses.",
     image: "https://images.unsplash.com/photo-1466721591366-2d5fba72006d?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+    imageUrl: "https://images.unsplash.com/photo-1466721591366-2d5fba72006d?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
     startDate: new Date(Date.now() + 21 * 24 * 60 * 60 * 1000).toISOString(), // 21 days from now
     endDate: new Date(Date.now() + 28 * 24 * 60 * 60 * 1000).toISOString(), // 28 days from now
-    type: "team"
+    type: "team" as EventType,
+    status: "upcoming" as EventStatus,
+    createdAt: new Date().toISOString()
   }
 ];
 
@@ -139,10 +147,14 @@ export const eventStats: EventStats = {
 // Updated current event to Public Shaming instead of Treasure Hunt
 export const currentEvent: Event = {
   id: "public-shaming",
-  name: "Public Shaming Festival",
+  title: "Public Shaming Festival",
+  name: "Public Shaming Festival", // For backward compatibility
   description: "Monthly medieval-style event where nobles can publicly shame others. Discounted rates for all shaming actions!",
   image: "https://images.unsplash.com/photo-1472396961693-142e6e269027?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+  imageUrl: "https://images.unsplash.com/photo-1472396961693-142e6e269027?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
   startDate: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(), // 2 days ago
   endDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(), // 5 days from now
-  type: "shame"
+  type: "shame" as EventType,
+  status: "active" as EventStatus,
+  createdAt: new Date().toISOString()
 };

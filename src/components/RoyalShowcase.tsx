@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Link } from 'react-router-dom';
@@ -66,6 +67,7 @@ const DEFAULT_SPENDER: UserProfile = {
   gender: 'king',
   profileImage: "https://source.unsplash.com/random/300x300?portrait&royal",
   amountSpent: 1000,
+  walletBalance: 0, // Add the required walletBalance property
   team: "red",
   bio: "This space awaits a true royal spender. Will you claim the throne?",
   tier: 'royal'

@@ -1,50 +1,42 @@
 
 export interface SolanaTreasuryInfo {
-  address: string;
+  pubkey: string;
   balance: number;
-  totalReceived: number;
-  transactionCount: number;
+  usdValue: number;
   lastUpdated: string;
 }
 
 export interface SolanaTransaction {
   signature: string;
-  blockTime: number;
   timestamp: string;
-  slot: number;
-  fee: number;
   amount: number;
-  sender: string;
-  receiver: string;
-  status: 'confirmed' | 'processed' | 'failed';
-  type: 'pay' | 'token' | 'nft';
-  description: string;
+  usdValue: number;
+  type: 'deposit' | 'withdrawal' | 'transfer';
+  from: string;
+  to: string;
+  status: 'confirmed' | 'pending' | 'failed';
 }
 
 export interface OnChainLeaderboardEntry {
-  publicKey: string;
-  username: string;
+  address: string;
+  username?: string;
   rank: number;
-  amountSpent: number;
+  totalSpent: number;
   lastTransaction: string;
-  signature?: string;
-  isVerified: boolean;
-  previousRank?: number;
 }
 
 export interface SolanaWalletInfo {
   address: string;
   balance: number;
-  isConnected: boolean;
+  usdValue: number;
 }
 
 export interface SolanaNftInfo {
   mint: string;
   owner: string;
   metadataUri: string;
+  imageUri?: string;
   name: string;
   symbol: string;
-  image: string;
-  description: string;
-  attributes: { trait_type: string; value: string }[];
+  mintedAt: string;
 }

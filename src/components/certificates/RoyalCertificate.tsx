@@ -1,9 +1,9 @@
-
 import React, { useRef, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
-import { Crown, Award, Calendar, Shield, Download, Twitter, ExternalLink, Wallet } from 'lucide-react';
+import { Crown, Award, Calendar, Shield, Download, Twitter, ExternalLink, Wallet, Trophy, Coins } from 'lucide-react';
 import { UserProfile } from '@/types/user';
 import { generateCertificateMetadata } from '@/services/solanaService';
 import { useSolana } from '@/contexts/SolanaContext';
@@ -111,11 +111,9 @@ const RoyalCertificate: React.FC<RoyalCertificateProps> = ({
     setIsMinting(true);
     
     try {
-      // Generate metadata for the NFT
       const metadata = generateCertificateMetadata(user);
       console.log('NFT Metadata:', metadata);
       
-      // Mock minting process
       await new Promise(resolve => setTimeout(resolve, 2000));
       
       setMintSuccess(true);
@@ -124,12 +122,6 @@ const RoyalCertificate: React.FC<RoyalCertificateProps> = ({
         title: "NFT Minted Successfully",
         description: "Your Certificate of Nobility has been minted as an NFT on Solana.",
       });
-      
-      // In a real implementation, you would:
-      // 1. Upload the certificate image to Arweave or IPFS
-      // 2. Upload the metadata to Arweave or IPFS
-      // 3. Mint the NFT on Solana using the metadata URI
-      // 4. Update the user's profile with the NFT info
     } catch (error) {
       console.error('Error minting NFT:', error);
       toast({
@@ -150,17 +142,14 @@ const RoyalCertificate: React.FC<RoyalCertificateProps> = ({
   
   return (
     <div className="space-y-6">
-      {/* Certificate Display */}
       <div ref={certificateRef} className="rounded-lg overflow-hidden glass-morphism border-white/10 p-6 md:p-8 max-w-2xl mx-auto certificate-bg">
         <div className="relative">
-          {/* Certificate Header */}
           <div className="text-center mb-6 relative">
             <RoyalDecoration type="top" className="w-40 h-12 mx-auto mb-2" />
             <h2 className="text-2xl font-royal royal-gradient">Certificate of Nobility</h2>
             <div className="text-sm text-white/70 mt-1">Kingdom of SpendThrone</div>
           </div>
           
-          {/* Certificate Body */}
           <div className="space-y-6">
             <div className="text-center">
               <div className="text-lg font-medium">This certifies that</div>
@@ -190,7 +179,7 @@ const RoyalCertificate: React.FC<RoyalCertificateProps> = ({
                   <span className="text-sm text-white/70">Contribution</span>
                 </div>
                 <div className="text-xl font-bold">
-                  <SpendAmount amount={user.amountSpent} withIcon={false} />
+                  <SpendAmount amount={user.amountSpent} />
                 </div>
               </div>
               
@@ -222,7 +211,6 @@ const RoyalCertificate: React.FC<RoyalCertificateProps> = ({
             )}
           </div>
           
-          {/* Certificate Footer */}
           <div className="mt-8 flex items-center justify-between text-xs text-white/50">
             <div>Issued on {formatDate(new Date().toISOString())}</div>
             <div>Certificate #{user.id}</div>
@@ -232,7 +220,6 @@ const RoyalCertificate: React.FC<RoyalCertificateProps> = ({
         </div>
       </div>
       
-      {/* Action Buttons */}
       <div className="flex flex-wrap justify-center gap-3">
         <Button
           variant="outline"
@@ -280,7 +267,6 @@ const RoyalCertificate: React.FC<RoyalCertificateProps> = ({
         )}
       </div>
       
-      {/* Wallet Connection Required Message */}
       {!connected && !hasNFT && (
         <div className="text-center text-white/60 text-sm">
           <Wallet className="h-4 w-4 inline mr-1" />

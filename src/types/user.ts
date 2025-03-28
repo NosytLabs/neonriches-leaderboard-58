@@ -6,6 +6,7 @@ export type UserTier =
   'free' | 
   'basic' | 
   'pro' | 
+  'premium' | 
   'royal' | 
   'crab' | 
   'octopus' | 
@@ -70,6 +71,7 @@ export interface UserCosmetics {
   activeBackground?: string;
   activeEffect?: string;
   activeTheme?: string;
+  activeEmoji?: string;
   foundersPass?: boolean;
 }
 

@@ -1,28 +1,33 @@
 
 export type TransactionType = 
-  | 'deposit' 
-  | 'withdrawal' 
-  | 'transfer' 
-  | 'purchase' 
-  | 'refund' 
-  | 'reward' 
-  | 'fee' 
-  | 'mockery'
-  | 'mockery_protection'
-  | 'cosmetic'
-  | 'founder'
-  | 'subscription';
+  'deposit' | 
+  'withdrawal' | 
+  'purchase' | 
+  'refund' | 
+  'bonus' | 
+  'penalty' | 
+  'mockery' | 
+  'mockery_protection' | 
+  'cosmetic' | 
+  'profile_boost' | 
+  'gift' | 
+  'subscription';
 
-export type TransactionStatus = 'pending' | 'completed' | 'failed' | 'refunded';
+export type TransactionStatus = 
+  'pending' | 
+  'completed' | 
+  'failed' | 
+  'cancelled' | 
+  'refunded';
 
 export interface Transaction {
   id: string;
   userId: string;
-  amount: number;
   type: TransactionType;
+  amount: number;
   status: TransactionStatus;
-  description: string;
+  description?: string;
   metadata?: Record<string, any>;
   createdAt: string;
-  updatedAt?: string;
+  completedAt?: string;
 }

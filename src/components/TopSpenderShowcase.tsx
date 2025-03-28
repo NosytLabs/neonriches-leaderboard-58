@@ -87,6 +87,7 @@ const TopSpenderShowcase: React.FC<TopSpenderShowcaseProps> = ({
           spendStreak: top.spendStreak,
           joinDate: new Date().toISOString(),
           joinedAt: new Date().toISOString(),
+          walletBalance: 0 // Add the required walletBalance property
         };
         setCurrentTopSpender(topUserProfile);
       }
@@ -123,6 +124,7 @@ const TopSpenderShowcase: React.FC<TopSpenderShowcaseProps> = ({
             spendStreak: top.spendStreak,
             joinDate: new Date().toISOString(),
             joinedAt: new Date().toISOString(),
+            walletBalance: 0 // Add the required walletBalance property
           };
           setCurrentTopSpender(topUserProfile);
         }

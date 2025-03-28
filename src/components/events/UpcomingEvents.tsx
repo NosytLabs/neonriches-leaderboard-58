@@ -5,6 +5,7 @@ import { upcomingEvents } from './data';
 import EventDetailsModal from './components/EventDetailsModal';
 import EventCard from './EventCard';
 import { daysUntil } from '@/utils/dateUtils';
+import { Event } from '@/types/events';
 
 const UpcomingEvents = () => {
   const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
@@ -30,7 +31,7 @@ const UpcomingEvents = () => {
         {sortedEvents.map((event) => (
           <EventCard
             key={event.id}
-            event={event}
+            event={event as Event}
             onClick={() => handleEventClick(event.id)}
             className="animate-fade-in"
           />

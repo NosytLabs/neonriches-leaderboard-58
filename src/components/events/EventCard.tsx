@@ -25,6 +25,8 @@ const EventCard: React.FC<EventCardProps> = ({
   className
 }) => {
   const isActive = active || isEventActive(event.startDate, event.endDate);
+  const eventName = event.name || event.title;
+  const eventImage = event.image || event.imageUrl;
   
   return (
     <Card 
@@ -35,11 +37,11 @@ const EventCard: React.FC<EventCardProps> = ({
       )}
       onClick={onClick}
     >
-      {!compact && (
+      {!compact && eventImage && (
         <div className="relative h-40 w-full overflow-hidden">
           <OptimizedImage
-            src={event.image}
-            alt={event.name}
+            src={eventImage}
+            alt={eventName}
             className="w-full h-full"
           />
           {isActive && (
@@ -56,7 +58,7 @@ const EventCard: React.FC<EventCardProps> = ({
         <div className={compact ? "flex-1" : ""}>
           <h3 className="font-bold text-lg flex items-center">
             {getEventIcon(event.type)}
-            <span className="ml-2">{event.name}</span>
+            <span className="ml-2">{eventName}</span>
           </h3>
           
           {!compact && (
@@ -101,15 +103,14 @@ const EventCard: React.FC<EventCardProps> = ({
 
 // Helper function to get the appropriate icon based on event type
 function getEventIcon(type: EventType) {
-  switch (type) {
-    case 'treasure':
-      return <Trophy size={18} className="text-royal-gold" />;
-    case 'shame':
-      return <Users size={18} className="text-royal-crimson" />;
-    case 'team':
-      return <Trophy size={18} className="text-royal-navy" />;
-    default:
-      return <Calendar size={18} className="text-white/60" />;
+  if (type === 'treasure') {
+    return <Trophy size={18} className="text-royal-gold" />;
+  } else if (type === 'shame') {
+    return <Users size={18} className="text-royal-crimson" />;
+  } else if (type === 'team') {
+    return <Trophy size={18} className="text-royal-navy" />;
+  } else {
+    return <Calendar size={18} className="text-white/60" />;
   }
 }
 

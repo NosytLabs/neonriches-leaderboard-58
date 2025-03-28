@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import RoyalCertificate from '@/components/certificates/RoyalCertificate';
@@ -61,6 +60,56 @@ const sampleUser: UserProfile = {
     emailNotifications: true,
     darkMode: true,
     soundEffects: true
+  }
+};
+
+export const mockUser: UserProfile = {
+  id: "1",
+  username: "RoyalSpender",
+  email: "royal@example.com",
+  displayName: "Duke of Dollars",
+  profileImage: "https://i.pravatar.cc/300?img=8",
+  bio: "The more I spend, the more important I feel. Digital aristocracy at its finest!",
+  gender: "king",
+  team: "red",
+  tier: "royal",
+  rank: 3,
+  amountSpent: 15425,
+  walletBalance: 5000,
+  joinedAt: "2023-01-15T12:30:00Z",
+  joinDate: "2023-01-15T12:30:00Z",
+  spendStreak: 42,
+  profileViews: 1242,
+  profileClicks: 342,
+  followers: 124,
+  cosmetics: {
+    borders: ["royal", "gold", "crimson"],
+    colors: ["royal-gold", "royal-crimson", "royal-navy"],
+    fonts: ["medieval", "royal", "elegant"],
+    emojis: ["crown", "moneybag", "gem"],
+    titles: ["Duke", "Baron", "Lord"],
+    badges: ["BigSpender", "RoyalCourt", "Veteran"],
+    activeBorder: "royal",
+    activeColor: "royal-gold",
+    activeFont: "medieval",
+    activeEmoji: "crown"
+  },
+  activeTitle: "Duke of the Digital Realm",
+  settings: {
+    showRank: true,
+    showTeam: true,
+    showSpending: true,
+    publicProfile: true,
+    allowMessages: true,
+    emailNotifications: true,
+    darkMode: true,
+    soundEffects: true,
+    language: "en"
+  },
+  certificateNFT: {
+    mintAddress: "7FaQJNWKTXwNaBLK3TgHqubwJemL3pEix7jsjQqGnGvB",
+    metadataUri: "https://arweave.net/xyz",
+    mintedAt: "2023-09-10T15:42:00Z"
   }
 };
 

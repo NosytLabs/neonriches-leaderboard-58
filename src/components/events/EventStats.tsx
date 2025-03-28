@@ -3,6 +3,7 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useEventStatistics } from './hooks/useEventStatistics';
 import { Users, Trophy, Zap } from 'lucide-react';
+import { EventStats as EventStatsType } from '@/types/events';
 
 const EventStats: React.FC = () => {
   const { stats, isLoading } = useEventStatistics();
