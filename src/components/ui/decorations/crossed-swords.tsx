@@ -22,11 +22,11 @@ const CrossedSwords: React.FC<BaseDecorationProps> = ({
       className
     )}>
       <div className="absolute transform -rotate-45 -translate-x-1">
-        <MedievalIcon name="swords" size={size} color={color} />
+        <MedievalIcon name="sword" size={size} color={color} />
       </div>
       
       <div className="absolute transform rotate-45 translate-x-1">
-        <MedievalIcon name="swords" size={size} color={color} />
+        <MedievalIcon name="sword" size={size} color={color} />
       </div>
     </div>
   );

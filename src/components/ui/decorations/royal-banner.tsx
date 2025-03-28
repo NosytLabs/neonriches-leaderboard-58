@@ -17,7 +17,7 @@ const RoyalBanner: React.FC<BaseDecorationProps> = ({
   
   const bannerIcons = [
     { name: "crown" as const, position: 'top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2' },
-    { name: "swords" as const, position: 'bottom-1/4 left-1/4' },
+    { name: "sword" as const, position: 'bottom-1/4 left-1/4' },
     { name: "shield" as const, position: 'bottom-1/4 right-1/4' }
   ];
   

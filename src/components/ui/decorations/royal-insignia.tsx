@@ -29,10 +29,10 @@ const RoyalInsignia: React.FC<BaseDecorationProps> = ({
           'absolute rounded-full',
           sizeClasses[size].border,
           color === 'gold' ? 'border-royal-gold' : 
+          color === 'silver' ? 'border-gray-400' :
+          color === 'bronze' ? 'border-amber-700' :
           color === 'crimson' ? 'border-royal-crimson' :
           color === 'navy' ? 'border-royal-navy' :
-          color === 'bronze' ? 'border-amber-700' :
-          color === 'silver' ? 'border-gray-400' :
           'border-white/40',
           'border-2'
         )}></div>

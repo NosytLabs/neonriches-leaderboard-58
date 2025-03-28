@@ -7,7 +7,8 @@ export type RoyalDividerVariant =
   | 'quill'
   | 'treasure'
   | 'chalice'
-  | 'line';
+  | 'line'
+  | 'royal';
 
 export type RoyalButtonVariant = 
   | 'royal' 

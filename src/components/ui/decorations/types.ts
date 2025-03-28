@@ -59,6 +59,9 @@ export const getColorClass = (color: DecorationColor, type: 'bg' | 'border' | 't
     case 'silver':
       return type === 'bg' ? 'bg-gray-300/20' : 
              type === 'border' ? 'border-gray-300' : 'text-gray-300';
+    case 'bronze':
+      return type === 'bg' ? 'bg-amber-600/20' : 
+             type === 'border' ? 'border-amber-600' : 'text-amber-600';
     case 'copper':
       return type === 'bg' ? 'bg-amber-600/20' : 
              type === 'border' ? 'border-amber-600' : 'text-amber-600';
@@ -74,12 +77,21 @@ export const getColorClass = (color: DecorationColor, type: 'bg' | 'border' | 't
     case 'emerald':
       return type === 'bg' ? 'bg-emerald-600/20' : 
              type === 'border' ? 'border-emerald-600' : 'text-emerald-600';
-    case 'bronze':
-      return type === 'bg' ? 'bg-amber-700/20' : 
-             type === 'border' ? 'border-amber-700' : 'text-amber-700';
-    case 'mahogany':
-      return type === 'bg' ? 'bg-red-900/20' : 
-             type === 'border' ? 'border-red-900' : 'text-red-900';
+    case 'red':
+      return type === 'bg' ? 'bg-royal-crimson/20' : 
+             type === 'border' ? 'border-royal-crimson' : 'text-royal-crimson';
+    case 'blue':
+      return type === 'bg' ? 'bg-royal-navy/20' : 
+             type === 'border' ? 'border-royal-navy' : 'text-royal-navy';
+    case 'green':
+      return type === 'bg' ? 'bg-emerald-500/20' : 
+             type === 'border' ? 'border-emerald-500' : 'text-emerald-500';
+    case 'default':
+      return type === 'bg' ? 'bg-gray-200/20' : 
+             type === 'border' ? 'border-gray-200' : 'text-gray-200';
+    case 'white':
+      return type === 'bg' ? 'bg-white/20' : 
+             type === 'border' ? 'border-white' : 'text-white';
     default:
       return type === 'bg' ? 'bg-gray-200/20' : 
              type === 'border' ? 'border-gray-200' : 'text-gray-200';
