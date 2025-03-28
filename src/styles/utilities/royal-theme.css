@@ -1,0 +1,24 @@
+
+/* Royal styles */
+.royal-border {
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.1);
+}
+
+.royal-text {
+  color: #D4AF37;
+  text-shadow: 0 0 5px rgba(212, 175, 55, 0.5);
+}
+
+/* Team colors */
+.team-red-glow {
+  box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+}
+
+.team-green-glow {
+  box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
+}
+
+.team-blue-glow {
+  box-shadow: 0 0 15px rgba(0, 0, 255, 0.5);
+}

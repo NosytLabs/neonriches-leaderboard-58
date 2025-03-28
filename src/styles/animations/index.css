@@ -1,0 +1,6 @@
+
+/* Import all animation styles */
+@import './keyframes.css';
+@import './utility-classes.css';
+@import './floating-coins.css';
+@import './royal-elements.css';

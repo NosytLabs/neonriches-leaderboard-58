@@ -1,9 +1,9 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@import url('./styles/tailwind-utilities.css');
+@import url('./styles/utilities/index.css');
+@import url('./styles/animations/index.css');
 @import url('./styles/medieval-animations.css');
 @import url('./styles/cosmetics.css');
 @import url('./styles/theme.css');

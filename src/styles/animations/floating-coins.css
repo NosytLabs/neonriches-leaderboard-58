@@ -1,0 +1,31 @@
+
+/* Floating coin animations and effects */
+.floating-coin {
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  background-color: #FFD700;
+  border-radius: 50%;
+  opacity: 0.7;
+  pointer-events: none;
+  z-index: 100;
+  box-shadow: 0 0 10px #FFD700;
+  animation: float-coin 3s ease-out forwards;
+}
+
+.floating-coin::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.4) 0%,
+    rgba(255, 255, 255, 0) 50%,
+    rgba(255, 255, 255, 0.4) 100%
+  );
+  border-radius: 50%;
+  animation: shimmer 1s linear infinite;
+}

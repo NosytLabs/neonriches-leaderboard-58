@@ -1,0 +1,45 @@
+
+/* Animation utility classes */
+.animate-fade-in {
+  animation: fade-in 0.5s ease-out forwards;
+}
+
+.animate-fade-out {
+  animation: fade-out 0.5s ease-out forwards;
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 3s ease-in-out infinite;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-crown-glow {
+  animation: crown-glow 2s ease-in-out infinite;
+}
+
+.animate-royal-shimmer {
+  animation: royal-shimmer 7s linear infinite;
+}
+
+.animate-spin-slow {
+  animation: spin-slow 12s linear infinite;
+}
+
+.animate-royal-pulse {
+  animation: royal-pulse 2s ease-in-out infinite;
+}
+
+.animate-glow-pulse {
+  animation: glow-pulse 2s ease-in-out infinite;
+}
+
+.animate-border-pulse {
+  animation: border-pulse 2s ease-in-out infinite;
+}
+
+.animate-coin-flip {
+  animation: coin-flip 1.5s ease-in-out infinite;
+}
