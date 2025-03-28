@@ -1,87 +1,120 @@
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { getUserTransactions, Transaction } from '@/services/walletService';
-import { formatDistanceToNow } from 'date-fns';
+import { Badge } from '@/components/ui/badge';
+import { formatDistance } from 'date-fns';
 
-interface TransactionHistoryProps {
+export interface Transaction {
+  id: string;
   userId: string;
-  limit?: number;
+  amount: number;
+  type: 'spend' | 'deposit' | 'wish' | 'shame' | 'advertisement' | 'subscription' | 'cosmetic' | 'boost' | 'founder' | 'other';
+  description: string;
+  timestamp: Date;
+  metadata?: Record<string, any>;
 }
 
-const TransactionHistory: React.FC<TransactionHistoryProps> = ({ userId, limit = 10 }) => {
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+interface TransactionHistoryProps {
+  transactions: Transaction[];
+}
 
-  useEffect(() => {
-    const fetchTransactions = async () => {
-      setIsLoading(true);
-      try {
-        const transactionData = await getUserTransactions(userId, limit);
-        setTransactions(transactionData);
-      } catch (error) {
-        console.error('Error fetching transactions:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchTransactions();
-  }, [userId, limit]);
-
-  const getTransactionIcon = (type: Transaction['type']) => {
+const TransactionHistory: React.FC<TransactionHistoryProps> = ({ transactions }) => {
+  const formatDate = (date: Date) => {
+    return formatDistance(date, new Date(), { addSuffix: true });
+  };
+  
+  const getTransactionColorClass = (type: Transaction['type']) => {
     switch (type) {
-      case 'deposit': return '💰';
-      case 'spend': return '💸';
-      case 'shame': return '😈';
-      case 'advertisement': return '📢';
-      case 'subscription': return '👑';
-      default: return '🔄';
+      case 'spend':
+        return 'text-red-400';
+      case 'deposit':
+        return 'text-green-400';
+      case 'wish':
+        return 'text-purple-400';
+      case 'shame':
+        return 'text-amber-400';
+      case 'advertisement':
+        return 'text-blue-400';
+      case 'subscription':
+        return 'text-royal-gold';
+      case 'cosmetic':
+        return 'text-pink-400';
+      case 'boost':
+        return 'text-cyan-400';
+      case 'founder':
+        return 'text-royal-purple';
+      default:
+        return 'text-gray-400';
+    }
+  };
+  
+  const getTransactionTypeLabel = (type: Transaction['type']) => {
+    switch (type) {
+      case 'spend':
+        return 'Spend';
+      case 'deposit':
+        return 'Deposit';
+      case 'wish':
+        return 'Wish';
+      case 'shame':
+        return 'Shame';
+      case 'advertisement':
+        return 'Ad';
+      case 'subscription':
+        return 'Sub';
+      case 'cosmetic':
+        return 'Cosmetic';
+      case 'boost':
+        return 'Boost';
+      case 'founder':
+        return 'Founder';
+      default:
+        return 'Other';
     }
   };
 
   return (
-    <div className="w-full">
-      {isLoading ? (
-        <div className="flex justify-center py-8">
-          <div className="h-8 w-8 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
-        </div>
-      ) : transactions.length === 0 ? (
-        <div className="text-center py-8 text-white/60">
-          <p>No transactions found in your royal ledger.</p>
-        </div>
-      ) : (
-        <ScrollArea className="h-[300px]">
-          <div className="space-y-2">
-            {transactions.map((transaction) => (
-              <div 
-                key={transaction.id} 
-                className="flex items-center justify-between p-3 glass-morphism border-white/10 rounded-lg"
-              >
-                <div className="flex items-center">
-                  <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center mr-3">
-                    <span className="text-lg">{getTransactionIcon(transaction.type)}</span>
-                  </div>
+    <Card className="glass-morphism border-white/10">
+      <CardHeader>
+        <CardTitle className="text-lg">Transaction History</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <ScrollArea className="h-[300px] pr-4">
+          {transactions.length > 0 ? (
+            <div className="space-y-3">
+              {transactions.map((transaction) => (
+                <div 
+                  key={transaction.id} 
+                  className="p-3 rounded-lg glass-morphism border-white/10 flex justify-between items-center"
+                >
                   <div>
-                    <p className="font-medium">{transaction.description}</p>
-                    <p className="text-xs text-white/60">
-                      {formatDistanceToNow(new Date(transaction.timestamp), { addSuffix: true })}
-                    </p>
+                    <div className="flex items-center gap-2">
+                      <Badge variant="outline" className={`${getTransactionColorClass(transaction.type)} border-${getTransactionColorClass(transaction.type).replace('text-', '')}/50`}>
+                        {getTransactionTypeLabel(transaction.type)}
+                      </Badge>
+                      <span className="text-sm text-white/70">
+                        {transaction.description}
+                      </span>
+                    </div>
+                    <div className="text-xs text-white/50 mt-1">
+                      {formatDate(new Date(transaction.timestamp))}
+                    </div>
+                  </div>
+                  <div className={`font-bold ${transaction.type === 'deposit' ? 'text-green-400' : 'text-royal-crimson'}`}>
+                    {transaction.type === 'deposit' ? '+' : '-'}${Math.abs(transaction.amount).toFixed(2)}
                   </div>
                 </div>
-                <div className="text-right">
-                  <p className={`font-mono font-semibold ${
-                    transaction.type === 'deposit' ? 'text-green-400' : 'text-royal-gold'
-                  }`}>
-                    {transaction.type === 'deposit' ? '+' : '-'}${Math.abs(transaction.amount).toFixed(2)}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center text-white/50 p-4">
+              No transactions yet
+            </div>
+          )}
         </ScrollArea>
-      )}
-    </div>
+      </CardContent>
+    </Card>
   );
 };
 

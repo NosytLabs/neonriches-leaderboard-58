@@ -69,6 +69,19 @@ export const getTeamColorHex = (team: string | null): string => {
   }
 };
 
+export const getTeamBgColorClass = (team: string | null): string => {
+  switch (team?.toLowerCase()) {
+    case 'red':
+      return 'bg-royal-crimson/20';
+    case 'green':
+      return 'bg-royal-gold/20';
+    case 'blue':
+      return 'bg-royal-navy/20';
+    default:
+      return 'bg-white/10';
+  }
+};
+
 export const getRankTextColorClass = (rank: number): string => {
   if (rank === 1) return 'text-royal-gold';
   if (rank === 2) return 'text-gray-300';

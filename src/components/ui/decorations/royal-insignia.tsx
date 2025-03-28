@@ -2,7 +2,7 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 import MedievalIcon from '@/components/ui/medieval-icon';
-import { BaseDecorationProps, sizeClasses, getColorClass } from './types';
+import { BaseDecorationProps, sizeClasses, toMedievalIconColor } from './types';
 
 const RoyalInsignia: React.FC<BaseDecorationProps> = ({
   color = 'gold',
@@ -17,7 +17,12 @@ const RoyalInsignia: React.FC<BaseDecorationProps> = ({
       className
     )}>
       <div className="absolute inset-0 flex items-center justify-center">
-        <MedievalIcon name="crown" size={sizeClasses[size].icon} color={color} animate={animate} />
+        <MedievalIcon 
+          name="crown" 
+          size={sizeClasses[size].icon} 
+          color={toMedievalIconColor(color)} 
+          animate={animate} 
+        />
       </div>
       <div className="absolute inset-0 flex items-center justify-center opacity-30">
         <div className={cn(

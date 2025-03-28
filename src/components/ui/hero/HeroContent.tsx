@@ -1,127 +1,46 @@
 
-import React, { useRef, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import HeroTitle from './HeroTitle';
-import HeroSubtitle from './HeroSubtitle';
-import HeroQuote from './HeroQuote';
-import HeroStatusTag from './HeroStatusTag';
-import HeroActionButtons from './HeroActionButtons';
-import HeroFooter from './HeroFooter';
-import HeroBackground from './HeroBackground';
-import { createFloatingCoins } from '@/hooks/use-floating-coins';
+import React, { useRef } from 'react';
+import useFloatingCoins from '@/hooks/use-floating-coins';
 
 interface HeroContentProps {
-  title?: string;
-  subtitle?: string;
-  quote?: string;
-  statusTag?: string;
-  className?: string;
-  isVisible?: boolean;
-  heroRef?: React.RefObject<HTMLElement>;
+  children: React.ReactNode;
+  showCoins?: boolean;
 }
 
-const HeroContent: React.FC<HeroContentProps> = ({
-  title,
-  subtitle,
-  quote,
-  statusTag,
-  className = '',
-  isVisible = true
-}) => {
+const HeroContent: React.FC<HeroContentProps> = ({ children, showCoins = true }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   
-  // Setup floating coins effect
-  useEffect(() => {
-    if (containerRef.current && isVisible) {
-      const triggerFloatingCoins = () => {
-        const containerEl = containerRef.current;
-        if (containerEl) {
-          createFloatingCoins(containerEl, {
-            frequency: 0.2,
-            duration: 3000,
-            minDelay: 100,
-            maxDelay: 2000
-          });
-        }
-      };
-      
-      // Trigger once on mount
-      triggerFloatingCoins();
-      
-      // Set up interval to periodically create new coins
-      const interval = setInterval(triggerFloatingCoins, 5000);
-      
-      return () => clearInterval(interval);
-    }
-  }, [isVisible]);
+  const { coins, addCoins } = useFloatingCoins({
+    containerRef,
+    enabled: showCoins,
+    autoStart: true,
+    count: 5,
+    frequency: 0.3
+  });
   
   return (
-    <div className={`relative z-10 pt-32 pb-20 ${className}`} ref={containerRef}>
-      {/* Background effects */}
-      <HeroBackground isVisible={isVisible} />
+    <div ref={containerRef} className="relative overflow-hidden">
+      {children}
       
-      {/* Main content with animations */}
-      <div className="container px-4 mx-auto text-center relative z-10">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="space-y-6"
+      {showCoins && coins.map(coin => (
+        <div
+          key={coin.id}
+          className="absolute z-10 coin-floating pointer-events-none"
+          style={{
+            left: `${coin.x}px`,
+            top: `${coin.y}px`,
+            width: `${coin.size}px`,
+            height: `${coin.size}px`,
+            transform: `rotate(${coin.rotation}deg)`,
+            animationDuration: `${coin.duration}ms`,
+            animationDelay: `${coin.delay}ms`,
+          }}
         >
-          {statusTag && (
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.2, duration: 0.5 }}
-            >
-              <HeroStatusTag>{statusTag}</HeroStatusTag>
-            </motion.div>
-          )}
-          
-          <motion.div 
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ delay: 0.4, duration: 0.6 }}
-          >
-            <HeroTitle>{title}</HeroTitle>
-          </motion.div>
-          
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.6, duration: 0.6 }}
-          >
-            <HeroSubtitle text={subtitle} />
-          </motion.div>
-          
-          {quote && (
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.8, duration: 0.6 }}
-            >
-              <HeroQuote text={quote} />
-            </motion.div>
-          )}
-          
-          <motion.div 
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1, duration: 0.6 }}
-          >
-            <HeroActionButtons />
-          </motion.div>
-        </motion.div>
-        
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.2, duration: 0.6 }}
-          className="mt-32"
-        >
-          <HeroFooter />
-        </motion.div>
-      </div>
+          <span className="absolute inset-0 flex items-center justify-center text-royal-gold">
+            💰
+          </span>
+        </div>
+      ))}
     </div>
   );
 };

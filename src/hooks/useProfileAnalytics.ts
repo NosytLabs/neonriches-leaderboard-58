@@ -1,142 +1,92 @@
 
 import { useState, useEffect } from 'react';
-import { getProfileAnalytics } from '@/services/walletService';
-import { UserProfile } from '@/types/user';
+import { UserProfile, AnalyticsData } from '@/types/user';
 
-export interface AnalyticsData {
-  views: number;
-  clicks: number;
-  sources: Record<string, number>;
-  referrers: Record<string, number>;
-  history: AnalyticsEvent[];
-}
-
-export interface AnalyticsEvent {
-  type: 'view' | 'click';
-  source?: string;
-  referrer?: string;
-  timestamp: Date;
-}
-
-export interface ViewData {
-  date: string;
-  views: number;
-}
-
-export interface ClickData {
-  date: string;
-  clicks: number;
-}
-
-export interface SourceData {
-  name: string;
-  value: number;
-}
-
-export interface ReferrerData {
-  name: string;
-  value: number;
-}
-
-export const useProfileAnalytics = (userId: string) => {
-  const [analytics, setAnalytics] = useState<AnalyticsData | null>(null);
-  const [loading, setLoading] = useState(true);
-  
-  useEffect(() => {
-    const fetchAnalytics = async () => {
-      if (userId) {
-        setLoading(true);
-        try {
-          const data = await getProfileAnalytics(userId);
-          setAnalytics(data);
-        } catch (error) {
-          console.error("Error fetching profile analytics:", error);
-        } finally {
-          setLoading(false);
-        }
-      }
-    };
-    
-    fetchAnalytics();
-    
-    const interval = setInterval(fetchAnalytics, 5 * 60 * 1000);
-    
-    return () => clearInterval(interval);
-  }, [userId]);
-  
-  const prepareViewsData = (): ViewData[] => {
-    if (!analytics || !analytics.history) return [];
-    
-    const viewsByDay: Record<string, number> = {};
-    
-    analytics.history.forEach((item: any) => {
-      if (item.type === 'view') {
-        const date = new Date(item.timestamp);
-        const dayKey = date.toISOString().split('T')[0];
-        
-        viewsByDay[dayKey] = (viewsByDay[dayKey] || 0) + 1;
-      }
-    });
-    
-    return Object.entries(viewsByDay).map(([date, count]) => ({
-      date: date.split('-').slice(1).join('/'),
-      views: count
-    }));
-  };
-  
-  const prepareClicksData = (): ClickData[] => {
-    if (!analytics || !analytics.history) return [];
-    
-    const clicksByDay: Record<string, number> = {};
-    
-    analytics.history.forEach((item: any) => {
-      if (item.type === 'click') {
-        const date = new Date(item.timestamp);
-        const dayKey = date.toISOString().split('T')[0];
-        
-        clicksByDay[dayKey] = (clicksByDay[dayKey] || 0) + 1;
-      }
-    });
-    
-    return Object.entries(clicksByDay).map(([date, count]) => ({
-      date: date.split('-').slice(1).join('/'),
-      clicks: count
-    }));
-  };
-  
-  const prepareSourcesData = (): SourceData[] => {
-    if (!analytics || !analytics.sources) return [];
-    
-    return Object.entries(analytics.sources).map(([source, count]) => ({
-      name: source,
-      value: count
-    }));
-  };
-  
-  const prepareReferrersData = (): ReferrerData[] => {
-    if (!analytics || !analytics.referrers) return [];
-    
-    return Object.entries(analytics.referrers)
-      .map(([referrer, count]) => ({
-        name: referrer || 'Direct',
-        value: count
-      }))
-      .sort((a, b) => b.value - a.value)
-      .slice(0, 5);
-  };
-  
-  const calculateCTR = (): string => {
-    if (!analytics || analytics.views === 0) return '0%';
-    return `${Math.round((analytics.clicks / analytics.views) * 100)}%`;
-  };
+// Mock function to get profile analytics
+const getProfileAnalytics = async (userId: string): Promise<AnalyticsData> => {
+  // In a real app, this would be an API call
+  await new Promise(resolve => setTimeout(resolve, 800));
   
   return {
-    analytics,
-    loading,
-    prepareViewsData,
-    prepareClicksData,
-    prepareSourcesData,
-    prepareReferrersData,
-    calculateCTR
+    views: 230 + Math.floor(Math.random() * 100),
+    clicks: 45 + Math.floor(Math.random() * 30),
+    follows: 12 + Math.floor(Math.random() * 10),
+    shareCount: 5 + Math.floor(Math.random() * 8),
+    sources: {
+      'direct': 120,
+      'search': 45,
+      'social': 38,
+      'referral': 27
+    },
+    referrers: {
+      'twitter.com': 25,
+      'facebook.com': 13,
+      'instagram.com': 20,
+      'discord.com': 12,
+      'other': 18
+    },
+    history: [
+      { type: 'view', timestamp: new Date(Date.now() - 3600000 * 24 * 5), source: 'direct' },
+      { type: 'view', timestamp: new Date(Date.now() - 3600000 * 24 * 4), source: 'search' },
+      { type: 'click', timestamp: new Date(Date.now() - 3600000 * 24 * 3), referrer: 'twitter.com' },
+      { type: 'view', timestamp: new Date(Date.now() - 3600000 * 24 * 2), source: 'social' },
+      { type: 'click', timestamp: new Date(Date.now() - 3600000 * 24 * 1), referrer: 'discord.com' }
+    ],
+    viewsOverTime: [
+      { date: '2023-11-01', count: 15 },
+      { date: '2023-11-02', count: 22 },
+      { date: '2023-11-03', count: 18 },
+      { date: '2023-11-04', count: 25 },
+      { date: '2023-11-05', count: 30 },
+      { date: '2023-11-06', count: 28 },
+      { date: '2023-11-07', count: 35 }
+    ]
   };
 };
+
+const useProfileAnalytics = (user: UserProfile) => {
+  const [analyticsData, setAnalyticsData] = useState<AnalyticsData>({
+    views: 0,
+    clicks: 0,
+    sources: {},
+    referrers: {},
+    history: []
+  });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
+
+  const fetchAnalytics = async () => {
+    if (!user) return;
+    
+    setLoading(true);
+    try {
+      const data = await getProfileAnalytics(user.id);
+      // Add the required properties to match AnalyticsData type
+      setAnalyticsData({
+        ...data,
+        sources: data.sources || {},
+        referrers: data.referrers || {},
+        history: data.history || []
+      });
+    } catch (err) {
+      setError(err instanceof Error ? err : new Error('Failed to fetch analytics'));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (user?.id) {
+      fetchAnalytics();
+    }
+  }, [user?.id]);
+
+  return {
+    analyticsData,
+    loading,
+    error,
+    refreshAnalytics: fetchAnalytics
+  };
+};
+
+export default useProfileAnalytics;

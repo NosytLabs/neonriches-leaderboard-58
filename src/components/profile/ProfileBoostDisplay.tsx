@@ -1,59 +1,53 @@
 
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { UserProfile } from '@/types/user';
-import { useProfileBoost, BoostEffect } from '@/hooks/use-profile-boost';
-import { Sparkles, Clock } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Clock, Zap } from 'lucide-react';
+import { useProfileBoost } from '@/hooks/use-profile-boost';
+import { UserProfile, ProfileBoost } from '@/types/user';
 
-// Define props interface explicitly and export it
-export interface ProfileBoostDisplayProps {
+interface ProfileBoostDisplayProps {
   user: UserProfile;
 }
 
 const ProfileBoostDisplay: React.FC<ProfileBoostDisplayProps> = ({ user }) => {
-  const { getActiveBoosts, boostEffects, getTimeRemaining } = useProfileBoost(user);
-  const activeBoosts = getActiveBoosts();
-  
+  const { activeBoosts, getBoostEffect, getBoostTimeRemaining, formatTimeRemaining } = useProfileBoost(user);
+
   if (!activeBoosts || activeBoosts.length === 0) {
     return null;
   }
-  
+
   return (
     <Card className="glass-morphism border-white/10">
       <CardHeader>
-        <CardTitle className="text-lg flex items-center">
-          <Sparkles size={18} className="text-royal-gold mr-2" />
-          Active Profile Boosts
+        <CardTitle className="flex items-center text-lg">
+          <Zap className="h-5 w-5 mr-2 text-royal-gold" />
+          Active Boosts
         </CardTitle>
-        <CardDescription>
-          Special effects currently active on your profile
-        </CardDescription>
       </CardHeader>
       <CardContent className="space-y-3">
-        {activeBoosts.map(boost => {
-          // Safely cast the string effectId to the BoostEffect type
-          const effectId = boost.effectId as BoostEffect;
-          const effect = boostEffects[effectId];
-          if (!effect) return null;
+        {activeBoosts.map((boost: ProfileBoost) => {
+          const effect = getBoostEffect(boost.effectId);
+          const timeRemaining = getBoostTimeRemaining(boost);
+          const formattedTime = formatTimeRemaining(timeRemaining);
           
           return (
-            <div 
-              key={boost.id} 
-              className="glass-morphism p-3 rounded-lg flex items-center justify-between"
-            >
-              <div className="flex items-center">
-                <span className="text-xl mr-2">{effect.icon}</span>
-                <div>
-                  <p className="font-medium">{effect.name}</p>
-                  <p className="text-xs text-white/60">{effect.description}</p>
+            <div key={boost.id} className="flex items-center justify-between p-2 rounded-lg bg-white/5">
+              <div>
+                <div className="flex items-center">
+                  {effect?.icon && <span className="mr-2">{effect.icon}</span>}
+                  <span className="font-medium">{effect?.name || 'Unknown Boost'}</span>
                 </div>
+                <div className="text-xs text-white/60">{effect?.description}</div>
               </div>
-              <div className="text-xs text-white/70 flex items-center">
-                <Clock size={12} className="mr-1" />
-                {getTimeRemaining({
-                  ...boost,
-                  effectId: effectId // Ensure we pass the correctly typed effectId
-                })}
+              <div className="text-right">
+                <Badge variant="outline" className="bg-white/10 text-royal-gold border-royal-gold/30">
+                  {effect?.bonusText}
+                </Badge>
+                <div className="text-xs text-white/60 flex items-center mt-1">
+                  <Clock size={12} className="mr-1" />
+                  {formattedTime}
+                </div>
               </div>
             </div>
           );

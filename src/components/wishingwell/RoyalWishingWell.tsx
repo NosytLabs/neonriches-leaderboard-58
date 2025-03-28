@@ -1,125 +1,114 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Sparkles, CoinIcon, Gem, Clock } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
-
-interface Wish {
-  username: string;
-  amount: number;
-  result: string;
-  timestamp: string;
-}
+import { Slider } from '@/components/ui/slider';
+import { Sparkles, Gem, Coins } from 'lucide-react';
 
 interface RoyalWishingWellProps {
-  currentPool: number;
-  recentWishes: Wish[];
+  onWish?: (amount: number) => void;
+  maxAmount?: number;
+  disabled?: boolean;
 }
 
-const RoyalWishingWell: React.FC<RoyalWishingWellProps> = ({ currentPool, recentWishes }) => {
-  const [wishAmount, setWishAmount] = useState<number>(10);
-  const { toast } = useToast();
+const RoyalWishingWell: React.FC<RoyalWishingWellProps> = ({
+  onWish,
+  maxAmount = 10,
+  disabled = false
+}) => {
+  const [wishAmount, setWishAmount] = React.useState(1);
   
-  const handleWish = () => {
-    if (wishAmount < 1) {
-      toast({
-        title: "Invalid Amount",
-        description: "Please enter a valid amount to wish.",
-        variant: "destructive"
-      });
-      return;
-    }
-    
-    toast({
-      title: "Wish Granted!",
-      description: "Your royal wish has been cast into the wishing well.",
-    });
+  const handleSliderChange = (value: number[]) => {
+    setWishAmount(value[0]);
   };
   
-  const formatTimestamp = (timestamp: string) => {
-    const date = new Date(timestamp);
-    
-    // Get time difference in minutes
-    const minutesAgo = Math.floor((Date.now() - date.getTime()) / 60000);
-    
-    if (minutesAgo < 1) return 'just now';
-    if (minutesAgo < 60) return `${minutesAgo}m ago`;
-    
-    const hoursAgo = Math.floor(minutesAgo / 60);
-    if (hoursAgo < 24) return `${hoursAgo}h ago`;
-    
-    return date.toLocaleDateString();
+  const handleWish = () => {
+    if (onWish) {
+      onWish(wishAmount);
+    }
   };
   
   return (
     <Card className="glass-morphism border-royal-gold/20">
       <CardHeader>
-        <div className="flex items-center mb-1">
-          <Sparkles className="mr-3 h-6 w-6 text-royal-gold" />
-          <CardTitle>Royal Wishing Well</CardTitle>
-        </div>
+        <CardTitle className="flex items-center">
+          <Gem className="mr-2 h-5 w-5 text-royal-gold" />
+          Quick Wish
+        </CardTitle>
         <CardDescription>
-          Cast your coins and make a wish
+          Make a wish to receive cosmetic items
         </CardDescription>
       </CardHeader>
-      
-      <CardContent className="space-y-6">
-        <div className="glass-morphism rounded-xl p-6 flex flex-col items-center text-center border border-royal-gold/20">
-          <div className="text-2xl font-bold text-royal-gold mb-2">${currentPool.toLocaleString()}</div>
-          <p className="text-sm text-white/70">Current wishing well pool</p>
-          
-          <div className="mt-4 w-full">
-            <p className="text-sm text-white/70 mb-2">Make a wish:</p>
-            <div className="flex space-x-2">
-              <Input
-                type="number"
-                min="1"
-                value={wishAmount}
-                onChange={(e) => setWishAmount(parseInt(e.target.value) || 0)}
-                className="glass-morphism border-white/20"
-              />
-              <Button 
-                variant="default"
-                className="royal-button-gradient"
-                onClick={handleWish}
-              >
-                <CoinIcon size={16} className="mr-2" />
-                Wish
-              </Button>
-            </div>
-          </div>
-        </div>
-        
+      <CardContent className="space-y-4">
         <div>
-          <h3 className="text-sm font-medium text-white/80 mb-3 flex items-center">
-            <Clock size={14} className="mr-2 text-royal-gold" />
-            Recent Wishes
-          </h3>
-          
-          <div className="space-y-2 max-h-[200px] overflow-y-auto pr-2">
-            {recentWishes.map((wish, index) => (
-              <div key={index} className="glass-morphism border-white/10 rounded-lg p-3 flex justify-between items-center">
-                <div className="flex items-center">
-                  <Gem size={16} className="text-royal-gold" />
-                  <div className="ml-2">
-                    <p className="text-sm font-medium">{wish.username}</p>
-                    <p className="text-xs text-white/50">
-                      Wished ${wish.amount.toLocaleString()} - {wish.result}
-                    </p>
-                  </div>
-                </div>
-                <div className="text-xs text-white/40">
-                  {formatTimestamp(wish.timestamp)}
-                </div>
-              </div>
-            ))}
+          <div className="flex justify-between text-sm mb-2">
+            <span>Wish Amount:</span>
+            <span className="font-bold">${wishAmount.toFixed(2)}</span>
+          </div>
+          <Slider
+            value={[wishAmount]}
+            min={0.25}
+            max={maxAmount}
+            step={0.25}
+            onValueChange={handleSliderChange}
+          />
+        </div>
+        
+        <div className="grid grid-cols-4 gap-2">
+          {[0.5, 1, 2, 5].map(amount => (
+            <Button
+              key={amount}
+              variant="outline"
+              size="sm"
+              className={`glass-morphism ${
+                wishAmount === amount 
+                  ? 'border-royal-gold text-royal-gold' 
+                  : 'border-white/10 text-white/70'
+              }`}
+              onClick={() => setWishAmount(amount)}
+            >
+              ${amount}
+            </Button>
+          ))}
+        </div>
+        
+        <div className="text-xs space-y-1">
+          <div className="flex justify-between">
+            <span>Common:</span>
+            <span>40%</span>
+          </div>
+          <div className="flex justify-between">
+            <span>Uncommon:</span>
+            <span>30%</span>
+          </div>
+          <div className="flex justify-between">
+            <span>Rare:</span>
+            <span>20%</span>
+          </div>
+          <div className="flex justify-between">
+            <span>Epic:</span>
+            <span>8%</span>
+          </div>
+          <div className="flex justify-between">
+            <span>Legendary:</span>
+            <span>2%</span>
           </div>
         </div>
         
-        <div className="text-center text-xs text-white/50 italic">
-          "Fortune favors the bold, but the royal wishing well favors the wealthy."
+        <Button 
+          className="w-full glass-morphism border-royal-gold/30 hover:bg-royal-gold/20" 
+          onClick={handleWish}
+          disabled={disabled}
+        >
+          <Sparkles className="mr-2 h-4 w-4" />
+          Make a Wish
+        </Button>
+        
+        <div className="text-center text-xs text-white/50">
+          <div className="flex items-center justify-center">
+            <Coins className="mr-1 h-3 w-3" />
+            Higher wishes increase chances for rarer items
+          </div>
         </div>
       </CardContent>
     </Card>

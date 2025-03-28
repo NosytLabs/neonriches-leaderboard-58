@@ -2,7 +2,7 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 import MedievalIcon from '@/components/ui/medieval-icon';
-import { BaseDecorationProps, sizeClasses } from './types';
+import { BaseDecorationProps, sizeClasses, toMedievalIconColor } from './types';
 
 const CoatOfArms: React.FC<BaseDecorationProps> = ({
   color = 'gold',
@@ -16,7 +16,12 @@ const CoatOfArms: React.FC<BaseDecorationProps> = ({
       sizeClasses[size].container,
       className
     )}>
-      <MedievalIcon name="shield" size={sizeClasses[size].icon} color={color} animate={animate} />
+      <MedievalIcon 
+        name="shield" 
+        size={sizeClasses[size].icon} 
+        color={toMedievalIconColor(color)} 
+        animate={animate} 
+      />
     </div>
   );
 };

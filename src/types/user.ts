@@ -39,6 +39,19 @@ export interface ProfileBoost {
   endTime: number;
 }
 
+export interface UserSettings {
+  showRank: boolean;
+  showSpending: boolean;
+  showTeam: boolean;
+  profileVisibility: 'public' | 'private' | 'followers';
+  allowProfileLinks: boolean;
+  showEmailOnProfile: boolean;
+  emailNotifications: boolean;
+  rankChangeAlerts: boolean;
+  shameAlerts: boolean;
+  newFollowerAlerts: boolean;
+}
+
 export interface MarketingStats {
   impressions: number;
   clicks: number;
@@ -51,6 +64,9 @@ export interface MarketingStats {
 export interface AnalyticsData {
   views: number;
   clicks: number;
+  follows?: number;
+  shareCount?: number;
+  viewsOverTime?: { date: string; count: number; }[];
   sources: Record<string, number>;
   referrers: Record<string, number>;
   history: AnalyticsEvent[];
@@ -99,6 +115,7 @@ export interface FounderBenefits {
 export interface UserProfile {
   id: string;
   username: string;
+  displayName?: string;
   email: string;
   profileImage: string;
   amountSpent: number;
@@ -126,6 +143,7 @@ export interface UserProfile {
   founderBenefits?: FounderBenefits;
   shameCount?: number;
   lastActive?: Date;
+  settings?: UserSettings;
 }
 
 export interface ProfileImage {

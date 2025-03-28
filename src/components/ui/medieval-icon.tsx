@@ -2,9 +2,9 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 
-export type MedievalIconName = 'crown' | 'scroll' | 'coins' | 'seal' | 'sword' | 'shield' | 'castle' | 'goblet';
+export type MedievalIconName = 'crown' | 'scroll' | 'coins' | 'seal' | 'sword' | 'shield' | 'castle' | 'goblet' | 'pattern';
 export type MedievalIconSize = 'xs' | 'sm' | 'md' | 'lg' | '2xl';
-export type MedievalIconColor = 'default' | 'gold' | 'silver' | 'copper';
+export type MedievalIconColor = 'default' | 'gold' | 'silver' | 'copper' | 'crimson' | 'navy' | 'bronze';
 
 interface MedievalIconProps {
   name: MedievalIconName;
@@ -34,6 +34,9 @@ const MedievalIcon: React.FC<MedievalIconProps> = ({
     gold: 'text-royal-gold',
     silver: 'text-gray-300',
     copper: 'text-amber-700',
+    crimson: 'text-royal-crimson',
+    navy: 'text-royal-navy',
+    bronze: 'text-amber-800',
   };
 
   const animationClass = animate ? getAnimationClass(name) : '';
@@ -56,6 +59,8 @@ const MedievalIcon: React.FC<MedievalIconProps> = ({
         return '🏰';
       case 'goblet':
         return '🏆';
+      case 'pattern':
+        return '✳️';
       default:
         return '❓';
     }
@@ -78,6 +83,8 @@ function getAnimationClass(iconName: MedievalIconName): string {
       return 'animate-coin-flip';
     case 'seal':
       return 'animate-seal-stamp';
+    case 'pattern':
+      return 'animate-spin-slow';
     default:
       return '';
   }

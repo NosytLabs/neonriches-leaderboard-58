@@ -2,8 +2,8 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 import MedievalIcon from '@/components/ui/medieval-icon';
-import { BaseDecorationProps, sizeClasses, getColorClass } from './types';
-import { MedievalIconName } from '../medieval-icon';
+import { BaseDecorationProps, sizeClasses, getColorClass, toMedievalIconColor } from './types';
+import { MedievalIconName } from '@/components/ui/medieval-icon';
 
 const RoyalBanner: React.FC<BaseDecorationProps> = ({
   color = 'gold',
@@ -36,7 +36,7 @@ const RoyalBanner: React.FC<BaseDecorationProps> = ({
         <MedievalIcon 
           name={getIconName()} 
           size="sm" 
-          color={color} 
+          color={toMedievalIconColor(color)} 
           animate={animate} 
         />
       </div>

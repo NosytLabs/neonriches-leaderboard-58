@@ -20,15 +20,27 @@ const ProfileBoostedContent: React.FC<ProfileBoostedContentProps> = ({
   className = '',
   type = 'text'
 }) => {
-  const { getBoostClasses, hasActiveBoosts } = useProfileBoost(user);
+  const { activeBoosts, getBoostEffect } = useProfileBoost(user);
   
   // No wrapper needed if no boosts active
-  if (!hasActiveBoosts()) {
+  if (!activeBoosts || activeBoosts.length === 0) {
     return <>{children}</>;
   }
   
+  // Get classes based on active boost effects
+  const getBoostClasses = () => {
+    let classes = '';
+    activeBoosts.forEach(boost => {
+      const effect = getBoostEffect(boost.effectId);
+      if (effect && effect.cssClass) {
+        classes += ` ${effect.cssClass}`;
+      }
+    });
+    return classes;
+  };
+  
   // Get all boost classes and combine with any additional classes
-  const boostClasses = getBoostClasses(type);
+  const boostClasses = getBoostClasses();
   const finalClassName = `${boostClasses} ${className}`.trim();
   
   return (

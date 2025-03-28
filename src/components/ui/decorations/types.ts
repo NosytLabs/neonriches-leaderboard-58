@@ -1,5 +1,5 @@
 
-import { MedievalIconName } from '@/components/ui/medieval-icon';
+import { MedievalIconName, MedievalIconSize, MedievalIconColor } from '@/components/ui/medieval-icon';
 
 export type DecorationVariant = 
   | 'corner-flourish'
@@ -42,7 +42,7 @@ export const positionClasses: Record<DecorationPosition, string> = {
 
 export const sizeClasses: Record<DecorationSize, {
   container: string,
-  icon: "xs" | "sm" | "md" | "lg" | "xl" | "2xl",
+  icon: MedievalIconSize,
   border: string
 }> = {
   sm: {
@@ -77,5 +77,17 @@ export const getColorClass = (color: DecorationColor, element: 'border' | 'bg') 
           color === 'bronze' ? 'bg-amber-700/30' :
           color === 'silver' ? 'bg-gray-400/30' :
           'bg-white/20';
+  }
+};
+
+// Helper to convert decoration color to medieval icon color
+export const toMedievalIconColor = (color: DecorationColor): MedievalIconColor => {
+  switch (color) {
+    case 'gold': return 'gold';
+    case 'crimson': return 'crimson';
+    case 'navy': return 'navy';
+    case 'bronze': return 'bronze';
+    case 'silver': return 'silver';
+    default: return 'default';
   }
 };

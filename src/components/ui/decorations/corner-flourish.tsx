@@ -2,7 +2,7 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 import MedievalIcon from '@/components/ui/medieval-icon';
-import { BaseDecorationProps, sizeClasses, getColorClass } from './types';
+import { BaseDecorationProps, sizeClasses, getColorClass, toMedievalIconColor } from './types';
 
 const CornerFlourish: React.FC<BaseDecorationProps> = ({
   color = 'gold',
@@ -26,7 +26,11 @@ const CornerFlourish: React.FC<BaseDecorationProps> = ({
         sizeClasses[size].container,
         animate ? 'animate-pulse-slow' : ''
       )} style={{ transform: 'rotate(-45deg)', opacity: 0.2 }}>
-        <MedievalIcon name="pattern" size={sizeClasses[size].icon} color={color} />
+        <MedievalIcon 
+          name="scroll" 
+          size={sizeClasses[size].icon} 
+          color={toMedievalIconColor(color)} 
+        />
       </div>
     </div>
   );
