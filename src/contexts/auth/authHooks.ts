@@ -1,10 +1,14 @@
 
 import { useState } from 'react';
+import { Session } from '@supabase/supabase-js';
 import { UserProfile } from '@/types/user';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
 import { addProfileBoost, addCosmetic } from './authUtils';
 
 export const useAuthState = () => {
   const [user, setUser] = useState<UserProfile | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
@@ -12,6 +16,8 @@ export const useAuthState = () => {
   return {
     user,
     setUser,
+    session,
+    setSession,
     isLoading,
     setIsLoading,
     error,
@@ -27,53 +33,21 @@ export const useAuthMethods = (
   setIsLoading: (loading: boolean) => void,
   setError: (error: Error | null) => void
 ) => {
+  const { toast } = useToast();
+
   const login = async (email: string, password: string): Promise<void> => {
     try {
       setIsLoading(true);
       setError(null);
       
-      // Mock authentication success
-      const mockUser: UserProfile = {
-        id: '1',
-        username: 'royal_user',
+      const { error } = await supabase.auth.signInWithPassword({
         email,
-        walletBalance: 100,
-        team: 'red',
-        tier: 'basic',
-        spendStreak: 0,
-        rank: 50,
-        joinedAt: new Date().toISOString(),
-        joinDate: new Date().toISOString(),
-        amountSpent: 0,
-        spentAmount: 0,
-        cosmetics: {
-          borders: [],
-          colors: [],
-          fonts: [],
-          emojis: [],
-          titles: [],
-          backgrounds: [],
-          effects: [],
-          badges: [],
-          themes: [],
-        },
-        subscription: {
-          status: 'active',
-          tier: 'basic',
-          interval: 'monthly',
-          startDate: new Date().toISOString(),
-          endDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
-          autoRenew: true,
-          features: ['Basic Profile', 'Leaderboard Entry'],
-        },
-        profileViews: 0,
-        profileClicks: 0,
-        followers: 0,
-        profileBoosts: [],
-      };
-
-      setUser(mockUser);
-      localStorage.setItem('p2w_user', JSON.stringify(mockUser));
+        password
+      });
+      
+      if (error) throw error;
+      
+      // User data will be set by the auth state listener
     } catch (error) {
       console.error('Sign in error:', error);
       setError(error as Error);
@@ -88,48 +62,27 @@ export const useAuthMethods = (
       setIsLoading(true);
       setError(null);
       
-      // Mock registration success
-      const mockUser: UserProfile = {
-        id: '1',
-        username,
+      const { error } = await supabase.auth.signUp({
         email,
-        walletBalance: 10,
-        team: null,
-        tier: 'basic',
-        spendStreak: 0,
-        rank: 999,
-        joinedAt: new Date().toISOString(),
-        joinDate: new Date().toISOString(),
-        amountSpent: 0,
-        spentAmount: 0,
-        cosmetics: {
-          borders: [],
-          colors: [],
-          fonts: [],
-          emojis: [],
-          titles: [],
-          backgrounds: [],
-          effects: [],
-          badges: [],
-          themes: [],
-        },
-        subscription: {
-          status: 'active',
-          tier: 'basic',
-          interval: 'monthly',
-          startDate: new Date().toISOString(),
-          endDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
-          autoRenew: true,
-          features: ['Basic Profile', 'Leaderboard Entry'],
-        },
-        profileViews: 0,
-        profileClicks: 0,
-        followers: 0,
-        profileBoosts: [],
-      };
-
-      setUser(mockUser);
-      localStorage.setItem('p2w_user', JSON.stringify(mockUser));
+        password,
+        options: {
+          data: {
+            username,
+            tier: 'basic',
+            team: 'none',
+            gender: 'none',
+          },
+        }
+      });
+      
+      if (error) throw error;
+      
+      // User data will be set by the auth state listener
+      toast({
+        title: "Registration successful!",
+        description: "Welcome to SpendThrone",
+      });
+      
     } catch (error) {
       console.error('Sign up error:', error);
       setError(error as Error);
@@ -141,8 +94,10 @@ export const useAuthMethods = (
 
   const logout = async (): Promise<void> => {
     try {
-      setUser(null);
-      localStorage.removeItem('p2w_user');
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+      
+      // User data will be cleared by the auth state listener
     } catch (error) {
       console.error('Logout error:', error);
       setError(error as Error);
@@ -154,12 +109,54 @@ export const useAuthMethods = (
     try {
       if (!user) throw new Error('No user to update');
       
-      const newUser = { ...user, ...updatedUser };
+      // Update user metadata in Supabase Auth
+      const { error: authUpdateError } = await supabase.auth.updateUser({
+        data: {
+          username: updatedUser.username || user.username,
+          display_name: updatedUser.displayName,
+          avatar_url: updatedUser.profileImage,
+          team: updatedUser.team,
+          tier: updatedUser.tier,
+          gender: updatedUser.gender,
+        }
+      });
+      
+      if (authUpdateError) throw authUpdateError;
+      
+      // Update additional user data in the profiles table
+      const { error: profileUpdateError } = await supabase
+        .from('users')
+        .update({
+          username: updatedUser.username || user.username,
+          display_name: updatedUser.displayName,
+          profile_image: updatedUser.profileImage,
+          bio: updatedUser.bio,
+          team: updatedUser.team,
+          tier: updatedUser.tier,
+          gender: updatedUser.gender,
+        })
+        .eq('id', user.id);
+      
+      if (profileUpdateError) throw profileUpdateError;
+      
+      // Update local state
+      const newUser = { ...user, ...updatedUser, totalSpent: user.totalSpent || user.amountSpent || 0 };
       setUser(newUser);
-      localStorage.setItem('p2w_user', JSON.stringify(newUser));
+      
+      toast({
+        title: "Profile Updated",
+        description: "Your profile has been updated successfully",
+      });
     } catch (error) {
       console.error('Update profile error:', error);
       setError(error as Error);
+      
+      toast({
+        title: "Update Failed",
+        description: (error as Error).message || "Failed to update profile",
+        variant: "destructive"
+      });
+      
       throw error;
     }
   };
@@ -176,7 +173,21 @@ export const useAuthMethods = (
       };
       
       setUser(updatedUser);
-      localStorage.setItem('p2w_user', JSON.stringify(updatedUser));
+      
+      // Update profile boosts in database
+      const { error } = await supabase
+        .from('profile_boosts')
+        .insert({
+          user_id: user.id,
+          level,
+          start_date: new Date().toISOString(),
+          end_date: new Date(Date.now() + days * 24 * 60 * 60 * 1000).toISOString(),
+        });
+      
+      if (error) {
+        console.error('Error adding profile boost:', error);
+        return false;
+      }
       
       return true;
     } catch (error) {
@@ -203,7 +214,23 @@ export const useAuthMethods = (
       };
       
       setUser(updatedUser);
-      localStorage.setItem('p2w_user', JSON.stringify(updatedUser));
+      
+      // Record cosmetic award in database
+      const { error } = await supabase
+        .from('user_cosmetics')
+        .insert({
+          user_id: user.id,
+          cosmetic_id: cosmeticId,
+          category,
+          rarity,
+          source,
+          awarded_at: new Date().toISOString(),
+        });
+      
+      if (error) {
+        console.error('Error adding cosmetic:', error);
+        return false;
+      }
       
       return true;
     } catch (error) {

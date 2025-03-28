@@ -107,7 +107,7 @@ export interface UserProfile {
   walletBalance: number;
   amountSpent?: number;
   spentAmount?: number;
-  totalSpent: number;
+  totalSpent: number; // Required property
   spendStreak?: number;
   settings?: UserSettings;
   cosmetics?: UserCosmetics;

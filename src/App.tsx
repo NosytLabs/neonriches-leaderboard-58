@@ -14,6 +14,7 @@ import Help from './pages/Help';
 import Privacy from './pages/Privacy';
 import Terms from './pages/Terms';
 import NotFound from './pages/NotFound';
+import Chat from './pages/Chat';
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
         <Route path="settings" element={<Settings />} />
         <Route path="events" element={<Events />} />
         <Route path="mockery" element={<Mockery />} />
+        <Route path="chat" element={<Chat />} />
         <Route path="help" element={<Help />} />
         <Route path="privacy" element={<Privacy />} />
         <Route path="terms" element={<Terms />} />
