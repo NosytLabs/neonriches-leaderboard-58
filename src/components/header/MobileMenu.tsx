@@ -3,7 +3,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { LayoutList, DollarSign, Calendar, Info, ShieldQuestion, Shield, Crown, Scroll, Gift, MessageSquare } from 'lucide-react';
+import { LayoutList, Coins, Calendar, Scroll, ShieldQuestion, Shield, Crown, Feather, Gift, MessageSquare } from 'lucide-react';
 import AuthButton from '@/components/AuthButton';
 import { useAuth } from '@/contexts/auth';
 import MedievalIcon from '@/components/ui/medieval-icon';
@@ -71,42 +71,42 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
           className="md:hidden overflow-hidden border-t border-white/10 bg-background"
         >
           <div className="container px-4 mx-auto py-4 space-y-1">
-            <MenuItem to="/dashboard" icon={<LayoutList className="h-5 w-5" />}>
-              Dashboard
+            <MenuItem to="/dashboard" icon={<LayoutList className="h-5 w-5 text-royal-purple" />}>
+              Royal Court
             </MenuItem>
-            <MenuItem to="/leaderboard" icon={<DollarSign className="h-5 w-5" />}>
-              Leaderboard
+            <MenuItem to="/leaderboard" icon={<Coins className="h-5 w-5 text-royal-gold" />}>
+              Treasury
             </MenuItem>
-            <MenuItem to="/events" icon={<Calendar className="h-5 w-5" />}>
-              Events
+            <MenuItem to="/events" icon={<Calendar className="h-5 w-5 text-royal-crimson" />}>
+              Tournaments
             </MenuItem>
-            <MenuItem to="/features" icon={<Gift className="h-5 w-5" />}>
-              Features
+            <MenuItem to="/features" icon={<Gift className="h-5 w-5 text-royal-navy" />}>
+              Royal Decrees
             </MenuItem>
-            <MenuItem to="/community" icon={<MessageSquare className="h-5 w-5" />}>
-              Community
+            <MenuItem to="/royal-council" icon={<MessageSquare className="h-5 w-5 text-royal-navy" />}>
+              Royal Council
             </MenuItem>
-            <MenuItem to="/about" icon={<Info className="h-5 w-5" />}>
-              About
+            <MenuItem to="/about" icon={<Scroll className="h-5 w-5 text-royal-purple" />}>
+              Chronicles
             </MenuItem>
             
             <motion.div variants={itemVariants}>
               <div className="h-px bg-white/10 my-3"></div>
             </motion.div>
             
-            <MenuItem to="/faq" icon={<ShieldQuestion className="h-5 w-5" />}>
-              FAQ
+            <MenuItem to="/faq" icon={<ShieldQuestion className="h-5 w-5 text-royal-gold" />}>
+              Royal Archives
             </MenuItem>
             
             {user && (
               <>
-                <MenuItem to={`/profile/${user.username}`} icon={<Crown className="h-5 w-5" />}>
-                  My Profile
+                <MenuItem to={`/profile/${user.username}`} icon={<MedievalIcon name="crown" size="sm" color="gold" />}>
+                  My Realm
                 </MenuItem>
-                <MenuItem to="/teams" icon={<Shield className="h-5 w-5" />}>
-                  Teams
+                <MenuItem to="/teams" icon={<Shield className="h-5 w-5 text-royal-crimson" />}>
+                  Noble Houses
                 </MenuItem>
-                <MenuItem to="/certificate" icon={<Scroll className="h-5 w-5" />}>
+                <MenuItem to="/certificate" icon={<Feather className="h-5 w-5 text-royal-navy" />}>
                   Certificate of Nobility
                 </MenuItem>
               </>

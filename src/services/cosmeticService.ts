@@ -1,105 +1,84 @@
 
-import { CosmeticItem, CosmeticRarity, CosmeticCategory } from '@/types/cosmetics';
-import { mockedCosmeticsData } from '@/data/cosmeticsData';
-import { UserProfile } from '@/types/user';
+import { CosmeticItem } from '@/types/ui-types';
 
-// Function to simulate awarding a random cosmetic item
-export function awardRandomCosmetic(
-  user: UserProfile,
-  wishAmount: number,
-  preferredCategory?: string
-): { cosmeticItem: CosmeticItem | null; rarity: CosmeticRarity } {
-  // Filter cosmetics based on preferred category, if specified
-  let availableCosmetics = mockedCosmeticsData;
-  
-  if (preferredCategory) {
-    availableCosmetics = availableCosmetics.filter(item => item.category === preferredCategory);
+// Mock cosmetic items
+const cosmeticItems: CosmeticItem[] = [
+  {
+    id: "badge-royal-1",
+    name: "Royal Badge",
+    description: "A prestigious badge for loyal members",
+    category: "badges",
+    rarity: "rare",
+    cost: 100,
+    type: "badge",
+    imageSrc: "/throne-assets/badges/royal-badge.png",
+    cssClass: "badge-royal"
+  },
+  {
+    id: "border-gold-1",
+    name: "Golden Border",
+    description: "A luxurious golden border for your profile",
+    category: "borders",
+    rarity: "epic",
+    cost: 250,
+    type: "border",
+    cssClass: "border-gold"
   }
-  
-  // Filter out items the user already owns
-  const userCosmetics = user.cosmetics || {};
-  availableCosmetics = availableCosmetics.filter(item => {
-    if (!item.category) return true; // Always include if category is not defined
-    
-    const category = item.category as keyof typeof userCosmetics;
-    
-    // Safely check if the array exists and has valid type
-    const categoryItems = userCosmetics[category];
-    
-    // Safety check if categoryItems is undefined
-    if (!categoryItems) return true;
-    
-    // Check if categoryItems is actually an array
-    if (!Array.isArray(categoryItems)) return true;
-    
-    // Now we know it's an array, check for the item id
-    return !categoryItems.includes(item.id);
-  });
-  
-  if (availableCosmetics.length === 0) {
-    return { cosmeticItem: null, rarity: 'common' };
-  }
-  
-  // Adjust rarity chances based on wish amount
-  let rarity: CosmeticRarity;
-  const randomNumber = Math.random() * 100;
-  
-  // Define rarity thresholds
-  const legendaryThreshold = 2 + (wishAmount >= 10 ? 10 : wishAmount >= 5 ? 5 : 0);
-  const epicThreshold = legendaryThreshold + (8 + (wishAmount >= 10 ? 10 : wishAmount >= 5 ? 5 : wishAmount >= 2 ? 1 : 0));
-  const rareThreshold = epicThreshold + (20 + (wishAmount >= 10 ? 5 : wishAmount >= 5 ? 5 : wishAmount >= 2 ? 2 : 0));
-  const uncommonThreshold = rareThreshold + (30 + (wishAmount >= 10 ? -10 : wishAmount >= 5 ? -5 : wishAmount >= 2 ? 2 : 0));
-  
-  if (randomNumber < legendaryThreshold) {
-    rarity = 'legendary';
-  } else if (randomNumber < epicThreshold) {
-    rarity = 'epic';
-  } else if (randomNumber < rareThreshold) {
-    rarity = 'rare';
-  } else if (randomNumber < uncommonThreshold) {
-    rarity = 'uncommon';
-  } else {
-    rarity = 'common';
-  }
-  
-  // Filter available cosmetics by selected rarity
-  const cosmeticsOfRarity = availableCosmetics.filter(item => item.rarity === rarity);
-  
-  // If no items of selected rarity, default to common
-  if (cosmeticsOfRarity.length === 0) {
-    rarity = 'common';
-  }
-  
-  // Re-filter in case rarity was defaulted to common
-  const finalCosmetics = availableCosmetics.filter(item => item.rarity === rarity);
-  
-  // Select a random cosmetic item
-  const randomIndex = Math.floor(Math.random() * finalCosmetics.length);
-  const cosmeticItem = finalCosmetics[randomIndex];
-  
-  return { cosmeticItem: cosmeticItem || null, rarity };
-}
+];
 
-// Function to simulate retrieving a cosmetic item by ID
-export function getCosmeticById(id: string): CosmeticItem | undefined {
-  return mockedCosmeticsData.find(item => item.id === id);
-}
+// User's owned cosmetics (mock data)
+let userCosmetics: string[] = ["badge-royal-1"];
 
-// Function to simulate awarding a specific cosmetic item
-export function awardSpecificCosmetic(
-  user: UserProfile,
-  cosmeticId: string
-): CosmeticItem | null {
-  const cosmeticItem = getCosmeticById(cosmeticId);
-  
-  if (!cosmeticItem) {
-    console.warn(`Cosmetic item with ID ${cosmeticId} not found.`);
-    return null;
+// Service functions
+export const getAllCosmetics = (): CosmeticItem[] => {
+  return cosmeticItems;
+};
+
+export const getUserCosmetics = (): CosmeticItem[] => {
+  return cosmeticItems.filter(item => userCosmetics.includes(item.id));
+};
+
+export const isItemOwned = (itemId: string): boolean => {
+  if (!userCosmetics || !Array.isArray(userCosmetics)) {
+    return false;
+  }
+  return userCosmetics.includes(itemId);
+};
+
+export const isItemEquipped = (itemId: string, itemType: string): boolean => {
+  // Mock implementation for equipped items
+  if (!userCosmetics || !Array.isArray(userCosmetics)) {
+    return false;
   }
   
-  // Here you would typically add the cosmetic item to the user's profile
-  // and persist the changes to a database.
+  // This is a mock implementation that should be replaced with actual logic
+  const equippedItems = {
+    badge: "badge-royal-1",
+    border: "border-gold-1"
+  };
   
-  console.log(`Awarded cosmetic item ${cosmeticItem.name} to user ${user.username}`);
-  return cosmeticItem;
-}
+  return equippedItems[itemType] === itemId;
+};
+
+export const purchaseCosmetic = (itemId: string): { success: boolean; message: string } => {
+  // Mock purchase implementation
+  if (isItemOwned(itemId)) {
+    return { success: false, message: "You already own this item." };
+  }
+  
+  // Add to owned items
+  userCosmetics.push(itemId);
+  
+  return { success: true, message: "Item purchased successfully!" };
+};
+
+export const equipCosmetic = (itemId: string): { success: boolean; message: string } => {
+  // Mock equip implementation
+  if (!isItemOwned(itemId)) {
+    return { success: false, message: "You don't own this item." };
+  }
+  
+  // Equip logic would go here
+  
+  return { success: true, message: "Item equipped successfully!" };
+};

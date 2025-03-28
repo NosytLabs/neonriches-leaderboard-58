@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { 
   Crown, 
@@ -15,7 +16,9 @@ import {
   Sparkles,
   LucideIcon,
   Star,
-  Wallet 
+  Wallet,
+  Feather,
+  MessageSquare
 } from 'lucide-react';
 
 export type MedievalIconName = 
@@ -34,7 +37,13 @@ export type MedievalIconName =
   | 'sparkles'
   | 'star'
   | 'seal'
-  | 'wallet';
+  | 'wallet'
+  | 'quill'
+  | 'chalice'
+  | 'treasure'
+  | 'parchment'
+  | 'sword'
+  | 'torch';
 
 export type MedievalIconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 export type MedievalIconColor = 
@@ -64,8 +73,14 @@ const iconMap: Record<MedievalIconName, LucideIcon> = {
   skull: Skull,
   sparkles: Sparkles,
   star: Star,
-  seal: Medal, // Mapping seal to Medal for now, but could be a custom component
-  wallet: Wallet
+  seal: Medal, // Using Medal for seal
+  wallet: Wallet,
+  quill: Feather, // Using Feather for quill
+  chalice: Trophy, // Using Trophy for chalice
+  treasure: Gem, // Using Gem for treasure
+  parchment: Scroll, // Using Scroll for parchment
+  sword: Swords, // Using Swords for sword 
+  torch: Sparkles // Using Sparkles for torch
 };
 
 const sizeMap: Record<MedievalIconSize, string> = {

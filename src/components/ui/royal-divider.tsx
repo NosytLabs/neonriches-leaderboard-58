@@ -2,8 +2,8 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 import MedievalIcon from './medieval-icon';
+import { RoyalDividerVariant } from '@/types/royal-divider-types';
 
-type RoyalDividerVariant = 'line' | 'crown' | 'double' | 'ornate';
 type RoyalDividerColor = 'gold' | 'silver' | 'royal' | 'crimson' | 'navy' | 'purple';
 
 interface RoyalDividerProps {
@@ -63,6 +63,82 @@ const RoyalDivider: React.FC<RoyalDividerProps> = ({
           </div>
         );
         
+      case 'scroll':
+        return (
+          <div className={cn('flex items-center w-full', className)}>
+            <div className="h-px flex-1 bg-gradient-to-r from-transparent to-current opacity-30"></div>
+            {label ? (
+              <div className="mx-4 flex items-center">
+                <MedievalIcon name="scroll" size="sm" className="mr-2" />
+                <span className="text-xs font-bold tracking-wider">{label}</span>
+                <MedievalIcon name="scroll" size="sm" className="ml-2" />
+              </div>
+            ) : (
+              <div className="mx-4">
+                <MedievalIcon name="scroll" size="sm" />
+              </div>
+            )}
+            <div className="h-px flex-1 bg-gradient-to-l from-transparent to-current opacity-30"></div>
+          </div>
+        );
+        
+      case 'quill':
+        return (
+          <div className={cn('flex items-center w-full', className)}>
+            <div className="h-px flex-1 bg-gradient-to-r from-transparent to-current opacity-30"></div>
+            {label ? (
+              <div className="mx-4 flex items-center">
+                <MedievalIcon name="quill" size="sm" className="mr-2" />
+                <span className="text-xs font-bold tracking-wider">{label}</span>
+                <MedievalIcon name="quill" size="sm" className="ml-2" />
+              </div>
+            ) : (
+              <div className="mx-4">
+                <MedievalIcon name="quill" size="sm" />
+              </div>
+            )}
+            <div className="h-px flex-1 bg-gradient-to-l from-transparent to-current opacity-30"></div>
+          </div>
+        );
+        
+      case 'treasure':
+        return (
+          <div className={cn('flex items-center w-full', className)}>
+            <div className="h-px flex-1 bg-gradient-to-r from-transparent to-current opacity-30"></div>
+            {label ? (
+              <div className="mx-4 flex items-center">
+                <MedievalIcon name="gem" size="sm" className="mr-2" />
+                <span className="text-xs font-bold tracking-wider">{label}</span>
+                <MedievalIcon name="gem" size="sm" className="ml-2" />
+              </div>
+            ) : (
+              <div className="mx-4">
+                <MedievalIcon name="gem" size="sm" />
+              </div>
+            )}
+            <div className="h-px flex-1 bg-gradient-to-l from-transparent to-current opacity-30"></div>
+          </div>
+        );
+        
+      case 'chalice':
+        return (
+          <div className={cn('flex items-center w-full', className)}>
+            <div className="h-px flex-1 bg-gradient-to-r from-transparent to-current opacity-30"></div>
+            {label ? (
+              <div className="mx-4 flex items-center">
+                <MedievalIcon name="chalice" size="sm" className="mr-2" />
+                <span className="text-xs font-bold tracking-wider">{label}</span>
+                <MedievalIcon name="chalice" size="sm" className="ml-2" />
+              </div>
+            ) : (
+              <div className="mx-4">
+                <MedievalIcon name="chalice" size="sm" />
+              </div>
+            )}
+            <div className="h-px flex-1 bg-gradient-to-l from-transparent to-current opacity-30"></div>
+          </div>
+        );
+        
       case 'double':
         return (
           <div className={cn('relative py-4', className)}>
@@ -88,6 +164,7 @@ const RoyalDivider: React.FC<RoyalDividerProps> = ({
           </div>
         );
         
+      case 'simple':
       case 'line':
       default:
         return (

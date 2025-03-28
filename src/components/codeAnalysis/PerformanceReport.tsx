@@ -4,9 +4,20 @@ import { AlertTriangle, Zap, FileWarning } from 'lucide-react';
 import EmptyState from './shared/EmptyState';
 import { performanceIssuesMock } from '@/utils/codeAnalysis/mockData';
 
+// Define proper interface for performance issues
+interface PerformanceIssue {
+  id: string;
+  description: string;
+  file: string;
+  lineNumber: number;
+  severity: string;
+  recommendation: string;
+  issue?: string; // Add optional field that was reported as missing
+}
+
 const PerformanceReport: React.FC = () => {
-  // Use centralized mock data
-  const performanceIssues = performanceIssuesMock;
+  // Use centralized mock data with the correct type
+  const performanceIssues: PerformanceIssue[] = performanceIssuesMock;
 
   return (
     <div>

@@ -10,6 +10,7 @@ import { ProfileLoader, ProfileNotFound } from '@/components/profile/ProfilePage
 import ProfileTabNavigation, { ProfileTab } from '@/components/profile/ProfileTabNavigation';
 import ProfileContent from '@/components/profile/ProfileContent';
 import { UserProfile } from '@/types/user';
+import { ProfileData, ProfileImage } from '@/types/profile';
 
 const Profile = () => {
   const { username } = useParams<{ username: string }>();
@@ -53,10 +54,10 @@ const Profile = () => {
   const viewOnly = !isOwnProfile;
   
   // Create profile data from user profile for the ProfileContent component
-  const profileContentData = {
+  const profileContentData: ProfileData = {
     bio: profileUser.bio || '',
     images: profileUser.profileImages?.map(img => ({
-      id: parseInt(img.id) || Math.random(), // Convert string id to number or use random as fallback
+      id: typeof img.id === 'string' ? parseInt(img.id) || Math.random() : img.id,
       url: img.url,
       caption: img.caption || ''
     })) || [],
@@ -74,7 +75,7 @@ const Profile = () => {
   
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <title>{profileUser.username} | P2W.fun Profile</title>
+      <title>{profileUser.username} | SpendThrone Profile</title>
       
       <Header />
       

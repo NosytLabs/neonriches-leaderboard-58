@@ -1,133 +1,174 @@
 
-import React, { useState } from 'react';
-import { useAuth } from '@/contexts/AuthContext';
+import React, { useEffect, useState } from 'react';
+import { Helmet } from 'react-helmet-async';
+import { useNavigate } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import { UserWallet } from '@/components/wallet/UserWallet';
-import RankStatusCard from '@/components/dashboard/RankStatusCard';
-import MarketingProfile from '@/components/profile/MarketingProfile';
-import RoyalBoutique from '@/components/cosmetics/RoyalBoutique';
-import TeamOverview from '@/components/teams/TeamOverview';
-import UserStats from '@/components/dashboard/UserStats';
-import { depositToWallet, spendFromWallet } from '@/services/walletService';
-import { useNavigate } from 'react-router-dom';
-import { useToast } from '@/hooks/use-toast';
-import useNotificationSounds from '@/hooks/use-notification-sounds';
-import ProfileBoostDisplay from '@/components/profile/ProfileBoostDisplay';
-import DashboardStatsOverview from '@/components/dashboard/DashboardStatsOverview';
-import { useProfileData } from '@/hooks/useProfileData';
+import { useAuth } from '@/contexts/auth';
+import { Button } from '@/components/ui/button';
+import { toast } from '@/hooks/use-toast';
+import { getUserRanking } from '@/services/spendingService';
+import { formatCurrency } from '@/lib/utils';
+import RoyalDashboardSummary from '@/components/dashboard/RoyalDashboardSummary';
+import PersonalStats from '@/components/dashboard/PersonalStats';
+import RecentActivity from '@/components/dashboard/RecentActivity';
+import NextRankCard from '@/components/dashboard/NextRankCard';
+import { RoyalActivity } from '@/types/activity';
+import { getMockActivities } from '@/components/dashboard/DashboardData';
+
+// Required to fix the TypeScript errors
+interface RankingData {
+  rank: number;
+  username: string;
+  userId: string;
+  totalSpent: number;
+  tier: string;
+  team: string;
+  spendStreak: number; 
+  profileImage?: string;
+}
 
 const Dashboard = () => {
-  const { user, updateUserProfile, boostProfile } = useAuth();
   const navigate = useNavigate();
-  const { toast } = useToast();
-  const { playSound } = useNotificationSounds();
+  const { user, isAuthenticated } = useAuth();
+  const [userRank, setUserRank] = useState<RankingData | null>(null);
+  const [recentActivities, setRecentActivities] = useState<RoyalActivity[]>([]);
   
-  const [isLoading, setIsLoading] = useState(false);
-  
-  if (!user) {
-    navigate('/auth');
-    return null;
-  }
-  
-  // Get userId safely from user object
-  const userId = user?.id || '';
-  
-  const { profileData, loading: profileDataLoading } = useProfileData(userId);
-  
-  const handleFundWallet = async (amount: number): Promise<void> => {
-    setIsLoading(true);
-    const success = await depositToWallet(user, amount);
-    setIsLoading(false);
-    
-    if (success) {
-      playSound('success');
+  useEffect(() => {
+    // Redirect to login if not authenticated
+    if (isAuthenticated === false) {
+      navigate('/auth');
+      return;
     }
-  };
-  
-  const handleBoostProfile = async () => {
-    const boostCost = 15;
     
-    // Check if user has enough funds
-    if (user.walletBalance < boostCost) {
+    // Fetch user ranking
+    const fetchRanking = () => {
+      // Get all rankings
+      const rankings = getUserRanking();
+      
+      // Find current user in rankings
+      if (user) {
+        const currentUserRank = rankings.find(r => r.userId === user.id);
+        if (currentUserRank) {
+          setUserRank(currentUserRank);
+        }
+      }
+    };
+    
+    // Fetch recent activities
+    const fetchActivities = () => {
+      const activities = getMockActivities();
+      setRecentActivities(activities);
+    };
+    
+    fetchRanking();
+    fetchActivities();
+  }, [isAuthenticated, navigate, user]);
+  
+  const handleQuickBoost = (amount: string) => {
+    // Convert the amount string to a number
+    const numericAmount = parseFloat(amount);
+    
+    if (isNaN(numericAmount) || numericAmount <= 0) {
       toast({
-        title: "Insufficient Funds",
-        description: `You need $${boostCost} to boost your profile.`,
+        title: "Invalid Amount",
+        description: "Please enter a valid boost amount.",
         variant: "destructive"
       });
       return;
     }
     
-    // Process the transaction
-    const success = await spendFromWallet(
-      user,
-      boostCost
-    );
+    // Mock spend action
+    toast({
+      title: "Boost Successful!",
+      description: `You have spent ${formatCurrency(numericAmount)} to boost your rank.`,
+      variant: "default"
+    });
     
-    if (success && boostProfile) {
-      // Apply profile boost
-      await boostProfile(1, 1); // Level 1 boost
-      
-      // Update user profile stats
-      const currentViews = user.profileViews || 0;
-      const currentClicks = user.profileClicks || 0;
-      const currentFollowers = user.followers || 0;
-      
-      await updateUserProfile({
-        ...user,
-        profileViews: currentViews + 50,
-        profileClicks: currentClicks + 10,
-        followers: currentFollowers + 5
-      });
-      
-      playSound('success');
-      
-      toast({
-        title: "Profile Boosted!",
-        description: "Your profile visibility has been enhanced.",
+    // Update user rank (mock)
+    if (userRank) {
+      setUserRank({
+        ...userRank,
+        totalSpent: userRank.totalSpent + numericAmount,
+        rank: Math.max(1, userRank.rank - 1) // Simplistic rank improvement
       });
     }
   };
   
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground">
+      <Helmet>
+        <title>Royal Court | SpendThrone</title>
+        <meta name="description" content="View your spending stats, recent activity, and current rank in the SpendThrone hierarchy." />
+      </Helmet>
+      
       <Header />
       
-      <main className="flex-1 pt-24 pb-16 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <h1 className="text-3xl font-bold font-medieval royal-gradient mb-8">Royal Dashboard</h1>
-          
-          <DashboardStatsOverview user={user} />
-          
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 mt-6">
-            {/* Left Column */}
-            <div className="md:col-span-8 space-y-6">
-              <RankStatusCard user={user} />
+      <main className="flex-1 py-8 pt-24">
+        <div className="container mx-auto px-4">
+          {user && userRank ? (
+            <>
+              <RoyalDashboardSummary 
+                username={user.username}
+                rank={userRank.rank}
+                totalSpent={userRank.totalSpent}
+                tier={userRank.tier}
+                team={userRank.team}
+              />
               
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <UserWallet 
-                  user={user} 
-                  onFundWallet={handleFundWallet} 
-                />
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-8">
+                <div className="lg:col-span-2 space-y-6">
+                  <PersonalStats 
+                    spendStreak={userRank.spendStreak} 
+                    rank={userRank.rank}
+                    totalSpent={userRank.totalSpent}
+                  />
+                  
+                  <RecentActivity activities={recentActivities} />
+                </div>
                 
-                <MarketingProfile 
-                  user={user}
-                  onBoostProfile={handleBoostProfile}
-                />
+                <div className="space-y-6">
+                  <NextRankCard 
+                    currentRank={userRank.rank}
+                    targetRank={Math.max(1, userRank.rank - 1)}
+                    requiredSpend={100} // Mock value
+                    onQuickBoost={handleQuickBoost}
+                  />
+                  
+                  <div className="p-6 rounded-lg glass-morphism border-white/10">
+                    <h3 className="text-lg font-bold mb-3">Quick Actions</h3>
+                    <div className="space-y-2">
+                      <Button 
+                        variant="outline" 
+                        className="w-full justify-start" 
+                        onClick={() => navigate(`/profile/${user.username}`)}
+                      >
+                        View My Profile
+                      </Button>
+                      <Button 
+                        variant="outline" 
+                        className="w-full justify-start"
+                        onClick={() => navigate('/teams')}
+                      >
+                        Manage Team Membership
+                      </Button>
+                      <Button 
+                        variant="outline" 
+                        className="w-full justify-start"
+                        onClick={() => navigate('/certificate')}
+                      >
+                        View Certificate of Nobility
+                      </Button>
+                    </div>
+                  </div>
+                </div>
               </div>
-              
-              <UserStats user={user} />
+            </>
+          ) : (
+            <div className="text-center py-12">
+              <p className="text-2xl">Loading your royal status...</p>
             </div>
-            
-            {/* Right Column */}
-            <div className="md:col-span-4 space-y-6">
-              <TeamOverview user={user} />
-              {user.profileBoosts && user.profileBoosts.length > 0 && (
-                <ProfileBoostDisplay user={user} />
-              )}
-              <RoyalBoutique />
-            </div>
-          </div>
+          )}
         </div>
       </main>
       

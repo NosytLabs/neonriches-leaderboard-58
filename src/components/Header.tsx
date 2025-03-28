@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { AlignJustify, X, Crown, DollarSign, Wallet, ChevronDown, Bell, LayoutList, Calendar, Info, Shield, MessageSquare } from 'lucide-react';
+import { AlignJustify, X, Crown, Coins, Scroll, Bell, LayoutList, Calendar, Feather, Shield, MessageSquare } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import MobileMenu from './header/MobileMenu';
 import { useAuth } from '@/contexts/auth';
@@ -63,7 +63,7 @@ const Header: React.FC<HeaderProps> = ({ transparent = false }) => {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center">
-            <Crown className="h-6 w-6 text-royal-gold mr-2" />
+            <MedievalIcon name="crown" color="gold" size="md" className="mr-2 animate-crown-glow" />
             <span className={cn(
               "text-xl font-bold transition-colors",
               showTransparent ? "text-white" : "royal-gradient"
@@ -82,27 +82,27 @@ const Header: React.FC<HeaderProps> = ({ transparent = false }) => {
           <nav className="hidden md:flex items-center space-x-1">
             <NavLink to="/dashboard">
               <LayoutList className="h-4 w-4 mr-1.5" />
-              Dashboard
+              Royal Court
             </NavLink>
             <NavLink to="/leaderboard">
-              <DollarSign className="h-4 w-4 mr-1.5" />
-              Leaderboard
+              <Coins className="h-4 w-4 mr-1.5 text-royal-gold" />
+              Treasury
             </NavLink>
             <NavLink to="/events">
-              <Calendar className="h-4 w-4 mr-1.5" />
-              Events
+              <Calendar className="h-4 w-4 mr-1.5 text-royal-crimson" />
+              Tournaments
             </NavLink>
             <NavLink to="/features">
-              <MedievalIcon name="crown" size="sm" className="mr-1.5" />
-              Features
+              <MedievalIcon name="crown" size="xs" className="mr-1.5" color="gold" />
+              Royal Decrees
             </NavLink>
-            <NavLink to="/community">
-              <MessageSquare className="h-4 w-4 mr-1.5" />
-              Community
+            <NavLink to="/royal-council">
+              <MessageSquare className="h-4 w-4 mr-1.5 text-royal-navy" />
+              Royal Council
             </NavLink>
             <NavLink to="/about">
-              <Info className="h-4 w-4 mr-1.5" />
-              About
+              <Scroll className="h-4 w-4 mr-1.5 text-royal-purple" />
+              Chronicles
             </NavLink>
           </nav>
           
@@ -118,16 +118,16 @@ const Header: React.FC<HeaderProps> = ({ transparent = false }) => {
                         size="sm"
                         className="relative"
                         onClick={() => addToast({
-                          title: "Wallet",
-                          description: "Wallet feature coming soon!",
+                          title: "Royal Treasury",
+                          description: "Treasury feature coming soon!",
                           variant: "default"
                         })}
                       >
-                        <Wallet className="h-5 w-5" />
+                        <MedievalIcon name="coins" color="gold" size="md" />
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent>
-                      <p>Wallet</p>
+                      <p>Treasury</p>
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
