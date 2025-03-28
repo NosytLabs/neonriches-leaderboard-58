@@ -30,7 +30,7 @@ export function useToast() {
 
   const addToast = useCallback(
     (props: Omit<ToasterToast, "id">) => {
-      const id = props.id || generateId();
+      const id = props.hasOwnProperty('id') ? (props as any).id : generateId();
 
       const newToast = {
         ...props,

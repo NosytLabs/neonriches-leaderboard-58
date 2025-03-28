@@ -1,107 +1,31 @@
-
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Scroll, Sparkles, Crown, Swords, ShieldAlert } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { toast } from "@/hooks/use-toast";
+import { Scroll } from 'lucide-react';
+import { useToastContext } from '@/contexts/ToastContext';
 
 const RoyalDecrees = () => {
-  const handleDecreeClick = (name: string, cost: number) => {
-    toast({
-      title: "Royal Decree Activated!",
-      description: `Your ${name} decree has been issued at a cost of $${cost}.`,
-      duration: 5000,
-    });
-  };
+  const { addToast } = useToastContext();
+  
+  const decrees = [
+    "A Royal Decree has been issued: All citizens must spend at least $10 today to maintain their digital status.",
+    "By order of the Crown: Increase your spending by 20% or face digital exile!",
+    "The Royal Treasury demands tribute! Spend generously to climb the ranks of nobility.",
+    "New cosmetic items available in the Royal Boutique! Spend now to customize your profile.",
+    "The Public Shaming Festival is now active! Humiliate your rivals with rotten tomatoes and eggs."
+  ];
 
   return (
-    <Card className="glass-morphism border-royal-gold/20 overflow-hidden">
-      <div className="absolute top-0 right-0 w-32 h-32 bg-royal-gold/5 rounded-full blur-3xl"></div>
-      <div className="absolute bottom-0 left-0 w-32 h-32 bg-royal-purple/5 rounded-full blur-3xl"></div>
-      
-      <CardHeader>
-        <div className="flex items-center">
-          <Scroll className="mr-2 h-6 w-6 text-royal-gold" />
-          <CardTitle>Royal Decrees</CardTitle>
-        </div>
-        <CardDescription>
-          Issue expensive edicts to enhance your digital presence
-        </CardDescription>
-      </CardHeader>
-      
-      <CardContent>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="glass-morphism border-white/10 rounded-lg p-4 transition-all duration-300 hover:border-royal-gold/30 hover:-translate-y-1">
-            <div className="flex items-center mb-3">
-              <div className="w-10 h-10 rounded-full flex items-center justify-center bg-royal-purple/20 mr-3">
-                <Crown size={20} className="text-royal-gold" />
-              </div>
-              <div>
-                <h3 className="font-medium">Royal Aura</h3>
-                <p className="text-xs text-white/60">$25.00</p>
-              </div>
-            </div>
-            <p className="text-sm text-white/70 mb-3">
-              Surround your profile with a majestic animated aura for 24 hours. Purely cosmetic.
-            </p>
-            <Button 
-              size="sm" 
-              className="w-full bg-gradient-to-r from-royal-purple to-royal-gold text-white"
-              onClick={() => handleDecreeClick("Royal Aura", 25)}
-            >
-              <Sparkles size={16} className="mr-2" />
-              Enhance Presence
-            </Button>
-          </div>
-          
-          <div className="glass-morphism border-white/10 rounded-lg p-4 transition-all duration-300 hover:border-royal-gold/30 hover:-translate-y-1">
-            <div className="flex items-center mb-3">
-              <div className="w-10 h-10 rounded-full flex items-center justify-center bg-royal-crimson/20 mr-3">
-                <Swords size={20} className="text-royal-crimson" />
-              </div>
-              <div>
-                <h3 className="font-medium">Challenge Rival</h3>
-                <p className="text-xs text-white/60">$5.00</p>
-              </div>
-            </div>
-            <p className="text-sm text-white/70 mb-3">
-              Send a cosmetic challenge notification to another user. They'll see a crossed swords icon by their name.
-            </p>
-            <Button 
-              size="sm" 
-              className="w-full bg-gradient-to-r from-royal-crimson to-royal-purple text-white"
-              onClick={() => handleDecreeClick("Challenge Rival", 5)}
-            >
-              <Swords size={16} className="mr-2" />
-              Issue Challenge
-            </Button>
-          </div>
-          
-          <div className="glass-morphism border-white/10 rounded-lg p-4 transition-all duration-300 hover:border-royal-gold/30 hover:-translate-y-1">
-            <div className="flex items-center mb-3">
-              <div className="w-10 h-10 rounded-full flex items-center justify-center bg-royal-blue/20 mr-3">
-                <ShieldAlert size={20} className="text-royal-blue" />
-              </div>
-              <div>
-                <h3 className="font-medium">Royal Shield</h3>
-                <p className="text-xs text-white/60">$10.00</p>
-              </div>
-            </div>
-            <p className="text-sm text-white/70 mb-3">
-              Display a royal shield icon next to your name for 12 hours. Purely cosmetic effect.
-            </p>
-            <Button 
-              size="sm" 
-              className="w-full bg-gradient-to-r from-royal-blue to-royal-purple text-white"
-              onClick={() => handleDecreeClick("Royal Shield", 10)}
-            >
-              <ShieldAlert size={16} className="mr-2" />
-              Display Shield
-            </Button>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
+    <div className="glass-morphism p-4 rounded-lg border border-white/10">
+      <h3 className="font-medium royal-gradient flex items-center mb-3">
+        <Scroll className="mr-2 h-4 w-4" /> Royal Decrees
+      </h3>
+      <ul className="space-y-2">
+        {decrees.map((decree, index) => (
+          <li key={index} className="text-sm text-white/70 italic">
+            {decree}
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 };
 

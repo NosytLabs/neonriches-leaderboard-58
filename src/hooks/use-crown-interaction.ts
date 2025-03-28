@@ -2,10 +2,10 @@
 import { useState } from 'react';
 import { SoundCategoryEnum } from '@/hooks/sounds/types';
 import useNotificationSounds from '@/hooks/use-notification-sounds';
-import { useToast } from "@/hooks/use-toast";
+import { useToastContext } from "@/contexts/ToastContext";
 
 export function useCrownInteraction() {
-  const { toast } = useToast();
+  const { addToast } = useToastContext();
   const { playSound } = useNotificationSounds();
   const [hasInteracted, setHasInteracted] = useState(false);
 
@@ -13,7 +13,7 @@ export function useCrownInteraction() {
     setHasInteracted(true);
     playSound(SoundCategoryEnum.royalAnnouncement, 0.2);
     
-    toast({
+    addToast({
       title: "Royal Decree",
       description: "The crown acknowledges your admiration. Now prove your worth with currency!",
       duration: 3000,

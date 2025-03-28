@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { CreditCard, Crown, Sparkles, Star, DollarSign, Gem, Coins, Trophy, HandCoins } from 'lucide-react';
 import PaymentModal from '@/components/PaymentModal';
-import { useToast } from "@/hooks/use-toast";
+import { useToastContext } from "@/contexts/ToastContext";
 
 interface PromotionBannerProps {
   onPaymentSuccess: (amount: number) => void;
@@ -11,7 +11,7 @@ interface PromotionBannerProps {
 
 const BriberyBanner = ({ onPaymentSuccess }: PromotionBannerProps) => {
   const [hoveredAmount, setHoveredAmount] = useState<number | null>(null);
-  const { toast } = useToast();
+  const { addToast } = useToastContext();
 
   const handleQuickBribe = (amount: number) => {
     // Generate a royal-sounding title based on the amount
@@ -28,7 +28,7 @@ const BriberyBanner = ({ onPaymentSuccess }: PromotionBannerProps) => {
                  amount <= 100 ? titles[100] :
                  amount <= 250 ? titles[250] : titles[500];
     
-    toast({
+    addToast({
       title: `${title} Status Achieved!`,
       description: `Your tribute of $${amount} has been graciously accepted. The royal coffers grow heavier with your sacrifice.`,
       duration: 5000,

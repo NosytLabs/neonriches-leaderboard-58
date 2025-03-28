@@ -1,6 +1,6 @@
 
 import { useState, useCallback } from 'react';
-import { useToast } from '@/hooks/use-toast';
+import { useToastContext } from '@/contexts/ToastContext';
 
 export type ShameAction = 'tomatoes' | 'eggs' | 'stocks';
 
@@ -13,7 +13,7 @@ export const useShameEffect = ({
   onSuccess,
   cooldownPeriod = 60000 * 60 * 24 // 24 hours default cooldown
 }: ShameEffectProps = {}) => {
-  const { toast } = useToast();
+  const { addToast } = useToastContext();
   const [shameCooldown, setShameCooldown] = useState<Record<number, boolean>>({});
   const [shameEffects, setShameEffects] = useState<Record<number, ShameAction | null>>({});
   const [shameCount, setShameCount] = useState<Record<number, number>>({});
@@ -87,7 +87,7 @@ export const useShameEffect = ({
   // Handle the shame action
   const handleShame = useCallback((targetId: number, targetName: string, shameType: ShameAction, amount: number) => {
     if (shameCooldown[targetId]) {
-      toast({
+      addToast({
         title: "Cooldown Active",
         description: `You've recently shamed ${targetName}. The stocks are still being prepared for next use.`,
         variant: "destructive"
@@ -102,7 +102,7 @@ export const useShameEffect = ({
       stocks: `You've placed ${targetName} in the public stocks! The whole kingdom will mock them for 24 hours.`
     };
     
-    toast({
+    addToast({
       title: "Public Shaming Successful!",
       description: messages[shameType],
     });
@@ -134,7 +134,7 @@ export const useShameEffect = ({
     }
     
     return true;
-  }, [shameCooldown, toast, triggerShameEffect, createShameParticles, cooldownPeriod, onSuccess]);
+  }, [shameCooldown, addToast, triggerShameEffect, createShameParticles, cooldownPeriod, onSuccess]);
 
   return {
     shameCooldown,
