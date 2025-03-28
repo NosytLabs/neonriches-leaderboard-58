@@ -1,4 +1,3 @@
-
 import * as path from 'path';
 import { parseCSS } from './cssAnalysis';
 import { analyzeDependencies } from './dependencyAnalysis';
@@ -200,7 +199,7 @@ export const scanCodebase = async (
     result.deadCodePaths = deadCodeResults;
     
     // Calculate metrics after potential cleanup
-    result.metrics.afterCleanup = await calculateProjectMetrics(projectRoot, result);
+    result.metrics.afterCleanup = await calculateProjectMetrics(projectRoot);
     
     return result;
   } catch (error) {
