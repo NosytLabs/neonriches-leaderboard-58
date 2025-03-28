@@ -16,6 +16,7 @@ import ProfileEmojis from './ProfileEmojis';
 import ProfileTitles from './ProfileTitles';
 import FoundersPass from '../founder/FoundersPass';
 import { Button } from '../ui/button';
+import { UserCosmetics } from '@/types/user';
 
 const RoyalBoutique = () => {
   const [activeTab, setActiveTab] = useState('decorations');
@@ -43,12 +44,16 @@ const RoyalBoutique = () => {
     
     if (success) {
       // Update user profile with the purchased item
-      const cosmeticItems = user.cosmetics || {
+      const cosmeticItems: UserCosmetics = user.cosmetics || {
         borders: [],
         colors: [],
         fonts: [],
         emojis: [],
-        titles: []
+        titles: [],
+        backgrounds: [],
+        effects: [],
+        badges: [],
+        themes: []
       };
       
       const categoryItems = cosmeticItems[category as keyof typeof cosmeticItems] || [];

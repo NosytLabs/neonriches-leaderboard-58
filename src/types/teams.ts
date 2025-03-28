@@ -2,6 +2,9 @@
 // Define team color types for type safety
 export type TeamColor = 'red' | 'green' | 'blue' | null;
 
+// Re-export UserTeam type to avoid duplicate declarations
+export type UserTeam = 'red' | 'green' | 'blue' | null;
+
 // Define team data structure
 export interface TeamData {
   id: TeamColor;

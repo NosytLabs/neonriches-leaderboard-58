@@ -47,5 +47,5 @@ export const switchUserTeam = async (
 // Re-export team data for backward compatibility
 export { teamData };
 
-// Export TeamColor type for backward compatibility
+// Export TeamColor and UserTeam types for backward compatibility
 export type { TeamColor, UserTeam };
