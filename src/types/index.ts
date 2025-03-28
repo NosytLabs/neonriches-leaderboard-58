@@ -1,4 +1,3 @@
-
 // Re-export all types with export type for better compatibility
 export type * from './button';
 export type * from './command';
@@ -16,7 +15,7 @@ export type { AppRoute, NavItem, MenuItem, Notification, AppState, AppAction } f
 export type { ThemeColor, ThemeMode, ThemeVariant, ThemeSize, ThemeSpacing, ThemeEffect } from './theme';
 
 // Event types
-export type { EventType, EventStatus, EventParticipant, Event, EventReward } from './events';
+export type { EventType, EventStats as EventStatus, Event } from './events';
 
 // Transaction types
 export type { TransactionType, TransactionStatus, Transaction } from './transactions';
@@ -28,7 +27,19 @@ export type { NFTMetadata, NFTAttributes, NFTRarity, NFT } from './nft';
 export type { CertificateType, CertificateStyle, Certificate } from './certificates';
 
 // Cosmetic types
-export type { CosmeticType, CosmeticRarity, CosmeticCategory, Cosmetic } from './cosmetics';
+export type { CosmeticCategory, CosmeticRarity, CosmeticItem } from './cosmetics';
 
 // Component types
-export type { ModalType, ModalProps, ToastType, ToastProps } from './components';
+export type { ModalType, ToastType, ModalProps, ToastProps } from './components';
+
+// Mockery types
+export type { MockeryAction, ExtendedMockeryAction, MockeryTier, MockeryEvent, MockeryCardProps, ShameModalProps } from './mockery';
+
+// Solana types
+export type { SolanaTreasuryInfo, SolanaTransaction, OnChainLeaderboardEntry, SolanaWalletInfo, SolanaNftInfo } from './solana';
+
+// UserCosmetics (fix for imports)
+export type { UserCosmetics } from './user';
+
+// Other exports
+export type { SpendAmountProps } from './royal-divider-types';

@@ -29,6 +29,7 @@ export interface OnChainLeaderboardEntry {
   lastTransaction: string;
   signature?: string;
   isVerified: boolean;
+  previousRank?: number;
 }
 
 export interface SolanaWalletInfo {

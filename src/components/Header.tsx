@@ -93,7 +93,7 @@ const Header: React.FC<HeaderProps> = ({ transparent = false }) => {
               Tournaments
             </NavLink>
             <NavLink to="/features">
-              <MedievalIcon name="crown" size="xs" className="mr-1.5" color="gold" />
+              <MedievalIcon name="crown" size="sm" className="mr-1.5" color="gold" />
               Royal Decrees
             </NavLink>
             <NavLink to="/royal-council">

@@ -30,7 +30,7 @@ export interface BaseDecorationProps {
   className?: string;
 }
 
-export const sizeClasses: Record<DecorationSize, { container: string, icon: MedievalIconSize, border: string }> = {
+export const sizeClasses: Record<MedievalIconSize, { container: string, icon: MedievalIconSize, border: string }> = {
   'xs': { container: 'h-4 w-4', icon: 'xs', border: 'border-2' },
   'sm': { container: 'h-6 w-6', icon: 'sm', border: 'border-2' },
   'md': { container: 'h-8 w-8', icon: 'md', border: 'border-2' },

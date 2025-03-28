@@ -6,6 +6,7 @@ import RoyalBanner from './decorations/royal-banner';
 import CrossedSwords from './decorations/crossed-swords';
 import RoyalInsignia from './decorations/royal-insignia';
 import { MedievalIconColor, MedievalIconSize } from './medieval-icon';
+import { RoyalDecorationType } from '@/types/royal-divider-types';
 
 export type DecorationVariant = 
   'corner-flourish' | 
@@ -39,8 +40,9 @@ export const positionClasses: Record<DecorationPosition, string> = {
 };
 
 interface RoyalDecorationProps {
-  variant: DecorationVariant;
-  position: DecorationPosition;
+  variant?: DecorationVariant;
+  position?: DecorationPosition;
+  type?: RoyalDecorationType;
   color?: MedievalIconColor;
   size?: MedievalIconSize;
   animate?: boolean;
@@ -48,14 +50,37 @@ interface RoyalDecorationProps {
 }
 
 const RoyalDecoration: React.FC<RoyalDecorationProps> = ({
-  variant,
-  position,
+  variant = 'royal-insignia',
+  position = 'top-center',
+  type,
   color = 'gold',
   size = 'md',
   animate = false,
   className
 }) => {
-  const positionClass = positionClasses[position];
+  // Handle type prop which is a simplified position setting
+  let actualPosition = position;
+  if (type) {
+    switch (type) {
+      case 'top':
+        actualPosition = 'top-center';
+        break;
+      case 'bottom':
+        actualPosition = 'bottom-center';
+        break;
+      case 'left':
+        actualPosition = 'center-left';
+        break;
+      case 'right':
+        actualPosition = 'center-right';
+        break;
+      case 'corner':
+        actualPosition = 'top-left';
+        break;
+    }
+  }
+  
+  const positionClass = positionClasses[actualPosition];
   
   const renderDecoration = () => {
     switch (variant) {

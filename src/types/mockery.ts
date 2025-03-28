@@ -1,8 +1,8 @@
 
 // Mockery action types
-export type MockeryAction = 'tomatoes' | 'eggs' | 'stocks' | 'silence' | 'drama' | 'courtJester';
+export type MockeryAction = 'tomatoes' | 'eggs' | 'stocks' | 'silence' | 'drama' | 'courtJester' | 'jester' | 'dunce' | 'roast' | 'ridicule' | 'taunt';
 export type ExtendedMockeryAction = MockeryAction | 'crown' | 'scroll' | 'shield-off' | 'message-square-off';
-export type MockeryTier = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
+export type MockeryTier = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary' | 'basic';
 
 export interface MockeryEvent {
   id: string;
@@ -18,6 +18,7 @@ export interface MockeryCardProps {
   action: MockeryAction;
   description: string;
   price: number;
+  name?: string;
   onMockery: (action: MockeryAction) => void;
 }
 
@@ -36,4 +37,10 @@ export interface ShameModalProps {
   onConfirm: (userId: string, action: MockeryAction) => void;
   onCancel: () => void;
   hasDiscount?: boolean;
+}
+
+export interface MockeryActionColor {
+  text: string;
+  bg: string;
+  border: string;
 }
