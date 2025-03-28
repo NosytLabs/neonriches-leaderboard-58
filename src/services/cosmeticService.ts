@@ -1,6 +1,6 @@
 
-import { CosmeticItem, CosmeticRarity, getRandomCosmetic } from '@/types/cosmetics';
-import { UserProfile } from '@/contexts/AuthContext';
+import { CosmeticItem, CosmeticRarity, CosmeticCategory, getRandomCosmetic } from '@/types/cosmetics';
+import { UserProfile } from '@/types/user';
 
 // Simplified database of cosmetic items with lower prices and medieval themes
 const COSMETIC_DATABASE: CosmeticItem[] = [
@@ -9,7 +9,7 @@ const COSMETIC_DATABASE: CosmeticItem[] = [
     id: 'border-parchment',
     name: 'Parchment Border',
     description: 'A simple yet elegant parchment-style border',
-    price: 0.50,
+    cost: 0.50,
     rarity: 'common',
     category: 'border'
   },
@@ -17,7 +17,7 @@ const COSMETIC_DATABASE: CosmeticItem[] = [
     id: 'border-royal-frame',
     name: 'Royal Frame',
     description: 'An ornate golden frame fit for nobility',
-    price: 1.00,
+    cost: 1.00,
     rarity: 'uncommon',
     category: 'border'
   },
@@ -25,7 +25,7 @@ const COSMETIC_DATABASE: CosmeticItem[] = [
     id: 'border-dragon-scales',
     name: 'Dragon Scales',
     description: 'A border of shimmering dragon scales',
-    price: 2.50,
+    cost: 2.50,
     rarity: 'rare',
     category: 'border'
   },
@@ -33,7 +33,7 @@ const COSMETIC_DATABASE: CosmeticItem[] = [
     id: 'border-arcane-runes',
     name: 'Arcane Runes',
     description: 'Mysterious glowing runes encircle your profile',
-    price: 4.00,
+    cost: 4.00,
     rarity: 'epic',
     category: 'border'
   },
@@ -41,7 +41,7 @@ const COSMETIC_DATABASE: CosmeticItem[] = [
     id: 'border-kings-decree',
     name: "King's Decree",
     description: 'The ultimate border reserved for those of true royal blood',
-    price: 7.50,
+    cost: 7.50,
     rarity: 'legendary',
     category: 'border'
   },
@@ -49,7 +49,7 @@ const COSMETIC_DATABASE: CosmeticItem[] = [
     id: 'border-modern-minimalist',
     name: 'Modern Minimalist',
     description: 'A sleek, modern border with clean lines',
-    price: 0.75,
+    cost: 0.75,
     rarity: 'common',
     category: 'border'
   },
@@ -57,7 +57,7 @@ const COSMETIC_DATABASE: CosmeticItem[] = [
     id: 'border-neon-pulse',
     name: 'Neon Pulse',
     description: 'A contemporary border with pulsing neon effects',
-    price: 1.50,
+    cost: 1.50,
     rarity: 'uncommon',
     category: 'border'
   },
@@ -65,7 +65,7 @@ const COSMETIC_DATABASE: CosmeticItem[] = [
     id: 'border-digital-circuit',
     name: 'Digital Circuit',
     description: 'A border styled like a futuristic circuit board',
-    price: 3.00,
+    cost: 3.00,
     rarity: 'rare',
     category: 'border'
   },
@@ -75,73 +75,73 @@ const COSMETIC_DATABASE: CosmeticItem[] = [
     id: 'color-peasant-brown',
     name: 'Peasant Brown',
     description: 'The humble color of the common folk',
-    price: 0.25,
+    cost: 0.25,
     rarity: 'common',
-    category: 'color'
+    category: 'color' as CosmeticCategory
   },
   {
     id: 'color-royal-purple',
     name: 'Royal Purple',
     description: 'The classic color of nobility',
-    price: 0.75,
+    cost: 0.75,
     rarity: 'common',
-    category: 'color'
+    category: 'color' as CosmeticCategory
   },
   {
     id: 'color-golden-hue',
     name: 'Golden Hue',
     description: 'A rich gold tone that speaks of wealth',
-    price: 1.00,
+    cost: 1.00,
     rarity: 'uncommon',
-    category: 'color'
+    category: 'color' as CosmeticCategory
   },
   {
     id: 'color-crusader-crimson',
     name: 'Crusader Crimson',
     description: 'The bold red of medieval knights',
-    price: 1.50,
+    cost: 1.50,
     rarity: 'rare',
-    category: 'color'
+    category: 'color' as CosmeticCategory
   },
   {
     id: 'color-alchemist-azure',
     name: 'Alchemist Azure',
     description: 'The mystical blue of medieval scholars',
-    price: 2.00,
+    cost: 2.00,
     rarity: 'epic',
-    category: 'color'
+    category: 'color' as CosmeticCategory
   },
   {
     id: 'color-dragon-emerald',
     name: 'Dragon Emerald',
     description: 'A shimmering green like a dragon\'s eye',
-    price: 3.00,
+    cost: 3.00,
     rarity: 'legendary',
-    category: 'color'
+    category: 'color' as CosmeticCategory
   },
   {
     id: 'color-neon-pink',
     name: 'Neon Pink',
     description: 'A vibrant and modern neon pink',
-    price: 0.50,
+    cost: 0.50,
     rarity: 'common',
-    category: 'color'
+    category: 'color' as CosmeticCategory
   },
   {
     id: 'color-cyber-blue',
     name: 'Cyber Blue',
     description: 'A futuristic blue with digital flair',
-    price: 1.25,
+    cost: 1.25,
     rarity: 'uncommon',
-    category: 'color'
+    category: 'color' as CosmeticCategory
   },
   {
     id: 'color-sunset-orange',
     name: 'Sunset Orange',
     description: 'A warm, contemporary orange hue',
-    price: 1.75,
+    cost: 1.75,
     rarity: 'rare',
-    category: 'color'
+    category: 'color' as CosmeticCategory
   },
   
   // Fonts
@@ -149,65 +149,65 @@ const COSMETIC_DATABASE: CosmeticItem[] = [
     id: 'font-scribe',
     name: 'Scribe Script',
     description: 'The careful handwriting of a medieval scribe',
-    price: 0.50,
+    cost: 0.50,
     rarity: 'common',
-    category: 'font'
+    category: 'font' as CosmeticCategory
   },
   {
     id: 'font-gothic-script',
     name: 'Gothic Script',
     description: 'A medieval-inspired gothic font',
-    price: 1.00,
+    cost: 1.00,
     rarity: 'uncommon',
-    category: 'font'
+    category: 'font' as CosmeticCategory
   },
   {
     id: 'font-calligraphy',
     name: 'Royal Calligraphy',
     description: 'Elegant flowing script for the elite',
-    price: 1.50,
+    cost: 1.50,
     rarity: 'rare',
-    category: 'font'
+    category: 'font' as CosmeticCategory
   },
   {
     id: 'font-mystic-runes',
     name: 'Mystic Runes',
     description: 'A font inspired by ancient magical runes',
-    price: 2.50,
+    cost: 2.50,
     rarity: 'epic',
-    category: 'font'
+    category: 'font' as CosmeticCategory
   },
   {
     id: 'font-sovereign-decree',
     name: 'Sovereign Decree',
     description: 'The font used by digital royalty',
-    price: 5.00,
+    cost: 5.00,
     rarity: 'legendary',
-    category: 'font'
+    category: 'font' as CosmeticCategory
   },
   {
     id: 'font-modern-sans',
     name: 'Modern Sans',
     description: 'A clean, contemporary sans-serif font',
-    price: 0.75,
+    cost: 0.75,
     rarity: 'common',
-    category: 'font'
+    category: 'font' as CosmeticCategory
   },
   {
     id: 'font-tech-mono',
     name: 'Tech Mono',
     description: 'A modern monospace font with a digital feel',
-    price: 1.25,
+    cost: 1.25,
     rarity: 'uncommon',
-    category: 'font'
+    category: 'font' as CosmeticCategory
   },
   {
     id: 'font-geometric-display',
     name: 'Geometric Display',
     description: 'A bold, geometric font with modern styling',
-    price: 2.00,
+    cost: 2.00,
     rarity: 'rare',
-    category: 'font'
+    category: 'font' as CosmeticCategory
   },
   
   // Emojis
@@ -215,65 +215,65 @@ const COSMETIC_DATABASE: CosmeticItem[] = [
     id: 'emoji-jester',
     name: 'Jester',
     description: 'A medieval court jester emoji',
-    price: 0.25,
+    cost: 0.25,
     rarity: 'common',
-    category: 'emoji'
+    category: 'emoji' as CosmeticCategory
   },
   {
     id: 'emoji-goblet',
     name: 'Royal Goblet',
     description: 'A golden goblet fit for a feast',
-    price: 0.75,
+    cost: 0.75,
     rarity: 'uncommon',
-    category: 'emoji'
+    category: 'emoji' as CosmeticCategory
   },
   {
     id: 'emoji-dragon',
     name: 'Dragon',
     description: 'A fearsome dragon emoji',
-    price: 1.50,
+    cost: 1.50,
     rarity: 'rare',
-    category: 'emoji'
+    category: 'emoji' as CosmeticCategory
   },
   {
     id: 'emoji-castle',
     name: 'Castle',
     description: 'A grand medieval castle emoji',
-    price: 2.00,
+    cost: 2.00,
     rarity: 'epic',
-    category: 'emoji'
+    category: 'emoji' as CosmeticCategory
   },
   {
     id: 'emoji-crown-jewel',
     name: 'Crown Jewel',
     description: 'The ultimate symbol of your royal status',
-    price: 4.00,
+    cost: 4.00,
     rarity: 'legendary',
-    category: 'emoji'
+    category: 'emoji' as CosmeticCategory
   },
   {
     id: 'emoji-moneybag',
     name: 'Money Bag',
     description: 'Show off your wealth with this emoji',
-    price: 0.50,
+    cost: 0.50,
     rarity: 'common',
-    category: 'emoji'
+    category: 'emoji' as CosmeticCategory
   },
   {
     id: 'emoji-diamond',
     name: 'Diamond',
     description: 'A sparkling diamond emoji',
-    price: 1.00,
+    cost: 1.00,
     rarity: 'uncommon',
-    category: 'emoji'
+    category: 'emoji' as CosmeticCategory
   },
   {
     id: 'emoji-rocket',
     name: 'Rocket',
     description: 'To the moon!',
-    price: 1.75,
+    cost: 1.75,
     rarity: 'rare',
-    category: 'emoji'
+    category: 'emoji' as CosmeticCategory
   },
   
   // Titles
@@ -281,7 +281,7 @@ const COSMETIC_DATABASE: CosmeticItem[] = [
     id: 'title-peasant',
     name: 'Peasant',
     description: 'A humble beginning',
-    price: 0.25,
+    cost: 0.25,
     rarity: 'common',
     category: 'title'
   },
@@ -289,7 +289,7 @@ const COSMETIC_DATABASE: CosmeticItem[] = [
     id: 'title-squire',
     name: 'Squire',
     description: 'An apprentice to knighthood',
-    price: 0.75,
+    cost: 0.75,
     rarity: 'common',
     category: 'title'
   },
@@ -297,7 +297,7 @@ const COSMETIC_DATABASE: CosmeticItem[] = [
     id: 'title-knight',
     name: 'Knight',
     description: 'A noble warrior',
-    price: 1.50,
+    cost: 1.50,
     rarity: 'uncommon',
     category: 'title'
   },
@@ -305,7 +305,7 @@ const COSMETIC_DATABASE: CosmeticItem[] = [
     id: 'title-baron',
     name: 'Baron',
     description: 'A lord of the realm',
-    price: 2.50,
+    cost: 2.50,
     rarity: 'rare',
     category: 'title'
   },
@@ -313,7 +313,7 @@ const COSMETIC_DATABASE: CosmeticItem[] = [
     id: 'title-duke',
     name: 'Duke',
     description: 'A high-ranking noble',
-    price: 4.00,
+    cost: 4.00,
     rarity: 'epic',
     category: 'title'
   },
@@ -321,7 +321,7 @@ const COSMETIC_DATABASE: CosmeticItem[] = [
     id: 'title-sovereign',
     name: 'Sovereign',
     description: 'The ruler of all',
-    price: 7.50,
+    cost: 7.50,
     rarity: 'legendary',
     category: 'title'
   },
@@ -329,7 +329,7 @@ const COSMETIC_DATABASE: CosmeticItem[] = [
     id: 'title-ceo',
     name: 'CEO',
     description: 'Chief Executive Officer',
-    price: 1.00,
+    cost: 1.00,
     rarity: 'uncommon',
     category: 'title'
   },
@@ -337,7 +337,7 @@ const COSMETIC_DATABASE: CosmeticItem[] = [
     id: 'title-influencer',
     name: 'Influencer',
     description: 'A modern nobility',
-    price: 1.75,
+    cost: 1.75,
     rarity: 'rare',
     category: 'title'
   },
@@ -345,7 +345,7 @@ const COSMETIC_DATABASE: CosmeticItem[] = [
     id: 'title-crypto-whale',
     name: 'Crypto Whale',
     description: 'A big player in the digital seas',
-    price: 3.50,
+    cost: 3.50,
     rarity: 'epic',
     category: 'title'
   },
@@ -353,7 +353,7 @@ const COSMETIC_DATABASE: CosmeticItem[] = [
     id: 'title-founder',
     name: 'Founder',
     description: 'One of the first to join',
-    price: 10.00,
+    cost: 10.00,
     rarity: 'legendary',
     category: 'title'
   },
@@ -363,41 +363,41 @@ const COSMETIC_DATABASE: CosmeticItem[] = [
     id: 'theme-medieval-court',
     name: 'Medieval Court',
     description: 'Transform your profile into a royal medieval court',
-    price: 5.00,
+    cost: 5.00,
     rarity: 'rare',
-    category: 'theme'
+    category: 'theme' as CosmeticCategory
   },
   {
     id: 'theme-digital-kingdom',
     name: 'Digital Kingdom',
     description: 'A futuristic, neon-infused royal aesthetic',
-    price: 5.00,
+    cost: 5.00,
     rarity: 'rare',
-    category: 'theme'
+    category: 'theme' as CosmeticCategory
   },
   {
     id: 'theme-crypto-royalty',
     name: 'Crypto Royalty',
     description: 'Show off your blockchain kingdom',
-    price: 7.50,
+    cost: 7.50,
     rarity: 'epic',
-    category: 'theme'
+    category: 'theme' as CosmeticCategory
   },
   {
     id: 'theme-founders-hall',
     name: "Founder's Hall",
     description: 'Exclusive theme only for founding members',
-    price: 15.00,
+    cost: 15.00,
     rarity: 'legendary',
-    category: 'theme'
+    category: 'theme' as CosmeticCategory
   },
   {
     id: 'theme-marketing-guru',
     name: 'Marketing Guru',
     description: 'Professional theme optimized for marketing your presence',
-    price: 3.50,
+    cost: 3.50,
     rarity: 'uncommon',
-    category: 'theme'
+    category: 'theme' as CosmeticCategory
   },
   
   // NEW: Effects (animated effects for profiles)
@@ -405,7 +405,7 @@ const COSMETIC_DATABASE: CosmeticItem[] = [
     id: 'effect-golden-shimmer',
     name: 'Golden Shimmer',
     description: 'Add a subtle golden shimmer to your profile',
-    price: 2.00,
+    cost: 2.00,
     rarity: 'uncommon',
     category: 'effect'
   },
@@ -413,7 +413,7 @@ const COSMETIC_DATABASE: CosmeticItem[] = [
     id: 'effect-flame-border',
     name: 'Flame Border',
     description: 'Animated flames dance around your profile',
-    price: 4.50,
+    cost: 4.50,
     rarity: 'rare',
     category: 'effect'
   },
@@ -421,7 +421,7 @@ const COSMETIC_DATABASE: CosmeticItem[] = [
     id: 'effect-royal-sparkle',
     name: 'Royal Sparkle',
     description: 'Sparkling effects that follow your profile interactions',
-    price: 6.00,
+    cost: 6.00,
     rarity: 'epic',
     category: 'effect'
   },
@@ -429,7 +429,7 @@ const COSMETIC_DATABASE: CosmeticItem[] = [
     id: 'effect-crown-aura',
     name: 'Crown Aura',
     description: 'A majestic aura that shows your royal status',
-    price: 10.00,
+    cost: 10.00,
     rarity: 'legendary',
     category: 'effect'
   },
@@ -439,7 +439,7 @@ const COSMETIC_DATABASE: CosmeticItem[] = [
     id: 'background-castle',
     name: 'Castle Interior',
     description: 'The grand hall of a medieval castle',
-    price: 1.50,
+    cost: 1.50,
     rarity: 'uncommon',
     category: 'background'
   },
@@ -447,7 +447,7 @@ const COSMETIC_DATABASE: CosmeticItem[] = [
     id: 'background-throne-room',
     name: 'Throne Room',
     description: 'A royal throne room fit for a king or queen',
-    price: 3.00,
+    cost: 3.00,
     rarity: 'rare',
     category: 'background'
   },
@@ -455,7 +455,7 @@ const COSMETIC_DATABASE: CosmeticItem[] = [
     id: 'background-treasure-vault',
     name: 'Treasure Vault',
     description: 'A vault filled with gold and treasure',
-    price: 5.00,
+    cost: 5.00,
     rarity: 'epic',
     category: 'background'
   },
@@ -463,7 +463,7 @@ const COSMETIC_DATABASE: CosmeticItem[] = [
     id: 'background-digital-realm',
     name: 'Digital Realm',
     description: 'A futuristic digital landscape',
-    price: 2.50,
+    cost: 2.50,
     rarity: 'rare',
     category: 'background'
   },
@@ -473,7 +473,7 @@ const COSMETIC_DATABASE: CosmeticItem[] = [
     id: 'badge-influencer',
     name: 'Influencer Badge',
     description: 'Show your marketing prowess with this badge',
-    price: 3.00,
+    cost: 3.00,
     rarity: 'uncommon',
     category: 'badge'
   },
@@ -481,7 +481,7 @@ const COSMETIC_DATABASE: CosmeticItem[] = [
     id: 'badge-trendsetter',
     name: 'Trendsetter Badge',
     description: 'Mark yourself as a trendsetter in the community',
-    price: 4.50,
+    cost: 4.50,
     rarity: 'rare',
     category: 'badge'
   },
@@ -489,7 +489,7 @@ const COSMETIC_DATABASE: CosmeticItem[] = [
     id: 'badge-brand-ambassador',
     name: 'Brand Ambassador',
     description: 'Perfect for showcasing your promotional capabilities',
-    price: 6.00,
+    cost: 6.00,
     rarity: 'epic',
     category: 'badge'
   },
@@ -497,11 +497,18 @@ const COSMETIC_DATABASE: CosmeticItem[] = [
     id: 'badge-founder',
     name: 'Founder Badge',
     description: 'Exclusive badge for founding members',
-    price: 15.00,
+    cost: 15.00,
     rarity: 'legendary',
     category: 'badge'
   }
 ];
+
+// For backward compatibility - map cost to price
+COSMETIC_DATABASE.forEach(item => {
+  if (!item.price) {
+    (item as any).price = item.cost;
+  }
+});
 
 // Get all cosmetic items
 export const getAllCosmetics = (): CosmeticItem[] => {

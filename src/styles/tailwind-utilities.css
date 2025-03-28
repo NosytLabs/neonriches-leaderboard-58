@@ -44,3 +44,40 @@
 .water-ripple {
   animation: ripple 2s ease-out forwards;
 }
+
+/* Crown glow animation */
+@keyframes crown-glow {
+  0% {
+    filter: drop-shadow(0 0 2px rgba(212, 175, 55, 0.5));
+  }
+  50% {
+    filter: drop-shadow(0 0 6px rgba(212, 175, 55, 0.8));
+  }
+  100% {
+    filter: drop-shadow(0 0 2px rgba(212, 175, 55, 0.5));
+  }
+}
+
+.animate-crown-glow {
+  animation: crown-glow 2s ease-in-out infinite;
+}
+
+/* Slow pulse animation */
+@keyframes pulse-slow {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 3s ease-in-out infinite;
+}

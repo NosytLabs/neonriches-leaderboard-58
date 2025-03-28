@@ -9,9 +9,10 @@ export interface UserProfile {
   spentAmount: number;
   rank: number;
   walletBalance?: number;
-  tier: 'free' | 'pro' | 'royal';
+  tier: 'free' | 'pro' | 'royal' | 'crab' | 'whale' | 'shark' | 'dolphin';
   team?: 'red' | 'green' | 'blue' | null;
   spendingStreak?: number;
+  spendStreak?: number; // Alias for backward compatibility
   gender?: 'king' | 'queen' | 'neutral' | 'jester' | 'noble';
   bio?: string;
   joinDate?: string;
@@ -24,6 +25,47 @@ export interface UserProfile {
     startTime: number;
     endTime: number;
   }>;
+  cosmetics?: UserCosmetics;
+  activeTitle?: string;
+  socialLinks?: SocialLink[];
+  profileImages?: ProfileImage[];
+  profileViews?: number;
+  profileClicks?: number;
+  followers?: number;
+  settings?: UserSettings;
+  subscription?: UserSubscription;
+}
+
+export interface UserSettings {
+  notifications: {
+    email: boolean;
+    push: boolean;
+    rankChanges: boolean;
+  };
+  privacy: {
+    showSpending: boolean;
+    showStats: boolean;
+    publicProfile: boolean;
+  };
+  display: {
+    darkMode: boolean;
+    animations: boolean;
+    showRankInProfile: boolean;
+    compactView: boolean;
+  };
+}
+
+export type UserGender = 'king' | 'queen' | 'neutral' | 'jester' | 'noble';
+
+export type UserTier = 'free' | 'pro' | 'royal' | 'crab' | 'whale' | 'shark' | 'dolphin';
+
+export interface UserSubscription {
+  plan: 'free' | 'basic' | 'premium' | 'royal';
+  startDate: string;
+  endDate: string;
+  autoRenew: boolean;
+  status: 'active' | 'canceled' | 'pending' | 'expired';
+  features: string[];
 }
 
 export interface SocialLink {
@@ -55,4 +97,35 @@ export interface UserStats {
   pokesSent: number;
   pokesReceived: number;
   teamContributions: number;
+}
+
+export interface ProfileBoost {
+  id: string;
+  effectId: string;
+  startTime: number;
+  endTime: number;
+  type: 'visibility' | 'rank' | 'appearance';
+  strength: number;
+  appliedBy: string;
+}
+
+export interface UserCosmetics {
+  borders?: string[];
+  colors?: string[];
+  fonts?: string[];
+  emojis?: string[];
+  titles?: string[];
+  backgrounds?: string[];
+  effects?: string[];
+  badges?: string[];
+  themes?: string[];
+  foundersPass?: boolean;
+  activeBorder?: string;
+  activeColor?: string;
+  activeFont?: string;
+  activeEmoji?: string;
+  activeBackground?: string;
+  activeEffect?: string;
+  activeBadge?: string;
+  activeTheme?: string;
 }

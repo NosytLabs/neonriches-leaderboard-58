@@ -1,6 +1,6 @@
 
 export type CosmeticRarity = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
-export type CosmeticCategory = 'border' | 'background' | 'badge' | 'title' | 'effect' | 'emote';
+export type CosmeticCategory = 'border' | 'background' | 'badge' | 'title' | 'effect' | 'emote' | 'color' | 'font' | 'emoji' | 'theme';
 
 export interface CosmeticItem {
   id: string;
@@ -9,6 +9,7 @@ export interface CosmeticItem {
   category: CosmeticCategory;
   rarity: CosmeticRarity;
   cost: number;
+  price?: number; // Backward compatibility with existing code
   imageSrc?: string;
   animationData?: any;
   colors?: string[];
@@ -63,5 +64,73 @@ export const getRarityBorderColor = (rarity: CosmeticRarity): string => {
       return 'border-royal-gold/30';
     default:
       return 'border-white/10';
+  }
+};
+
+// This is the missing function that's causing the error
+export const getRandomCosmetic = (
+  amount: number,
+  preferredCategory?: string
+): CosmeticRarity => {
+  // Base probabilities
+  let commonChance = 40;   // 40%
+  let uncommonChance = 30; // 30%
+  let rareChance = 20;     // 20%
+  let epicChance = 8;      // 8% 
+  let legendaryChance = 2; // 2%
+  
+  // Adjust probabilities based on amount spent
+  if (amount >= 10) {
+    // Higher amount, better chances for rare items
+    commonChance -= 15;
+    uncommonChance -= 10;
+    rareChance += 5;
+    epicChance += 10;
+    legendaryChance += 10;
+  } else if (amount >= 5) {
+    // Medium amount
+    commonChance -= 10;
+    uncommonChance -= 5;
+    rareChance += 5;
+    epicChance += 5;
+    legendaryChance += 5;
+  } else if (amount >= 2) {
+    // Low-medium amount
+    commonChance -= 5;
+    uncommonChance += 2;
+    rareChance += 2;
+    epicChance += 1;
+    legendaryChance = Math.max(2, legendaryChance);
+  }
+  
+  // Ensure probabilities make sense
+  commonChance = Math.max(25, commonChance);
+  uncommonChance = Math.max(20, uncommonChance);
+  rareChance = Math.max(15, rareChance);
+  epicChance = Math.max(5, epicChance);
+  legendaryChance = Math.max(1, legendaryChance);
+  
+  // Normalize to ensure they sum to 100
+  const total = commonChance + uncommonChance + rareChance + epicChance + legendaryChance;
+  commonChance = Math.floor((commonChance / total) * 100);
+  uncommonChance = Math.floor((uncommonChance / total) * 100);
+  rareChance = Math.floor((rareChance / total) * 100);
+  epicChance = Math.floor((epicChance / total) * 100);
+  legendaryChance = 100 - commonChance - uncommonChance - rareChance - epicChance;
+  
+  // Random roll from 1-100
+  const roll = Math.floor(Math.random() * 100) + 1;
+  
+  // Determine rarity based on roll
+  if (roll <= legendaryChance) {
+    return 'legendary';
+  } else if (roll <= legendaryChance + epicChance) {
+    return 'epic';
+  } else if (roll <= legendaryChance + epicChance + rareChance) {
+    return 'rare';
+  } else if (roll <= legendaryChance + epicChance + rareChance + uncommonChance) {
+    return 'uncommon';
+  } else {
+    return 'common';
   }
 };

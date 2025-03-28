@@ -1,5 +1,5 @@
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export interface FloatingCoin {
   id: number;
@@ -7,122 +7,69 @@ export interface FloatingCoin {
   y: number;
   size: number;
   rotation: number;
-  duration: number;
+  speed: number;
+  opacity: number;
 }
 
-interface UseFloatingCoinsOptions {
-  containerRef?: React.RefObject<HTMLElement>;
-  frequency?: number;
-  duration?: number;
-  minDelay?: number;
-  maxDelay?: number;
-}
-
-/**
- * A hook that creates floating coin animations
- */
-const useFloatingCoins = (options?: UseFloatingCoinsOptions) => {
+const useFloatingCoins = () => {
   const [coins, setCoins] = useState<FloatingCoin[]>([]);
-  const coinIdRef = useRef(0);
 
-  // Clear a specific coin after its animation
-  const removeCoin = useCallback((id: number) => {
-    setCoins(prevCoins => prevCoins.filter(coin => coin.id !== id));
-  }, []);
+  // Create a single floating coin
+  const createFloatingCoin = (x: number = window.innerWidth / 2, y: number = window.innerHeight / 2): FloatingCoin => {
+    const id = Date.now() + Math.floor(Math.random() * 1000);
+    const size = 20 + Math.random() * 20;
+    const speed = 1 + Math.random() * 2;
+    const rotation = Math.random() * 360;
+    const opacity = 0.7 + Math.random() * 0.3;
 
-  // Create a new floating coin animation
-  const createFloatingCoin = useCallback((x?: number, y?: number) => {
-    const screenWidth = window.innerWidth;
-    const screenHeight = window.innerHeight;
-    
-    // Use provided coordinates or random position
-    const coinX = x ?? Math.random() * screenWidth;
-    const coinY = y ?? Math.random() * (screenHeight / 2);
-    
-    const newCoin: FloatingCoin = {
-      id: coinIdRef.current++,
-      x: coinX,
-      y: coinY,
-      size: 10 + Math.random() * 10,
-      rotation: Math.random() * 360,
-      duration: 2000 + Math.random() * 1000,
+    const coin: FloatingCoin = {
+      id,
+      x,
+      y,
+      size,
+      rotation,
+      speed,
+      opacity
     };
+
+    setCoins(prev => [...prev, coin]);
     
-    setCoins(prevCoins => [...prevCoins, newCoin]);
-    
-    // Clean up this coin after animation completes
+    // Remove coin after animation
     setTimeout(() => {
-      removeCoin(newCoin.id);
-    }, newCoin.duration);
-    
-    return newCoin;
-  }, [removeCoin]);
+      setCoins(prev => prev.filter(c => c.id !== id));
+    }, 3000);
 
-  // Create multiple floating coins
-  const createMultipleCoins = useCallback((count: number = 10, origin?: { x: number, y: number }) => {
+    return coin;
+  };
+
+  // Create multiple coins at once
+  const createMultipleCoins = (count: number = 10, origin?: { x: number, y: number }) => {
+    const originX = origin?.x || window.innerWidth / 2;
+    const originY = origin?.y || window.innerHeight / 2;
+    
+    const spread = 100;
+
     for (let i = 0; i < count; i++) {
-      // If origin is provided, create coins in that area with some spread
-      if (origin) {
-        const spread = 100; // pixels of random spread
-        const x = origin.x + (Math.random() * spread - spread/2);
-        const y = origin.y + (Math.random() * spread - spread/2);
-        createFloatingCoin(x, y);
-      } else {
-        createFloatingCoin();
-      }
-    }
-  }, [createFloatingCoin]);
-
-  // Add coins at random intervals if containerRef is provided
-  useEffect(() => {
-    if (!options?.containerRef) return;
-    
-    const frequency = options.frequency || 0.5; // 50% chance by default
-    const minDelay = options.minDelay || 5000; // 5 seconds by default
-    const maxDelay = options.maxDelay || 10000; // 10 seconds by default
-    
-    const addRandomCoin = () => {
-      if (Math.random() < frequency && options.containerRef?.current) {
-        const rect = options.containerRef.current.getBoundingClientRect();
-        createFloatingCoin(
-          rect.left + Math.random() * rect.width,
-          rect.top + Math.random() * rect.height
-        );
-      }
+      // Add some randomness to the origin
+      const x = originX + (Math.random() - 0.5) * spread;
+      const y = originY + (Math.random() - 0.5) * spread;
       
-      const nextDelay = minDelay + Math.random() * (maxDelay - minDelay);
-      setTimeout(addRandomCoin, nextDelay);
-    };
-    
-    const initialDelay = minDelay + Math.random() * (maxDelay - minDelay);
-    const timer = setTimeout(addRandomCoin, initialDelay);
-    
-    return () => clearTimeout(timer);
-  }, [options, createFloatingCoin]);
-
-  // Add coins method for components to use
-  const addCoins = useCallback(({ container, count = 3, size = 'sm' }: {
-    container: HTMLElement;
-    count?: number;
-    size?: 'sm' | 'md' | 'lg';
-  }) => {
-    if (!container) return;
-    
-    const rect = container.getBoundingClientRect();
-    
-    for (let i = 0; i < count; i++) {
-      const x = rect.left + Math.random() * rect.width;
-      const y = rect.top + Math.random() * rect.height;
-      createFloatingCoin(x, y);
+      setTimeout(() => {
+        createFloatingCoin(x, y);
+      }, i * 50); // Stagger the creation
     }
-  }, [createFloatingCoin]);
+  };
+
+  // Remove a specific coin
+  const removeCoin = (id: number) => {
+    setCoins(prev => prev.filter(coin => coin.id !== id));
+  };
 
   return {
     coins,
     createFloatingCoin,
     createMultipleCoins,
-    removeCoin,
-    addCoins
+    removeCoin
   };
 };
 
