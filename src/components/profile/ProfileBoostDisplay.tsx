@@ -10,7 +10,7 @@ export interface ProfileBoostDisplayProps {
   user: UserProfile;
 }
 
-const ProfileBoostDisplay: React.FC<ProfileBoostDisplayProps> = ({ user }) => {
+const ProfileBoostDisplay = ({ user }: ProfileBoostDisplayProps) => {
   const { getActiveBoosts, boostEffects, getTimeRemaining } = useProfileBoost(user);
   const activeBoosts = getActiveBoosts();
   
