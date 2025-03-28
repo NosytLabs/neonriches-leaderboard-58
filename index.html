@@ -32,16 +32,88 @@
     <meta property="twitter:description" content="A satirical pay-to-win social experiment where your rank is determined solely by how much you spend. Climb the leaderboard with your wallet!" />
     <meta property="twitter:image" content="/og-image.jpg" />
     
-    <!-- Fonts -->
+    <!-- Preload critical assets -->
+    <link rel="preload" href="/throne-assets/crown-icon.svg" as="image" type="image/svg+xml">
+    <link rel="preload" href="/styles.css" as="style">
+    <link rel="preload" href="/main.js" as="script">
+    
+    <!-- Fonts - with display swap for better performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&family=Cinzel:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&family=Cinzel:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    
+    <!-- Preconnect to required domains -->
+    <link rel="preconnect" href="https://cdn.gpteng.co">
+    
+    <!-- Inline critical CSS -->
+    <style>
+      /* Critical CSS to ensure the page displays properly before full CSS loads */
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: #0d0d20;
+        color: #fff;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      }
+      
+      #root {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+      
+      .loading-indicator {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #0d0d20;
+        z-index: 9999;
+      }
+      
+      .spinner {
+        width: 40px;
+        height: 40px;
+        border: 3px solid rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        border-top-color: #d4af37;
+        animation: spin 1s ease-in-out infinite;
+      }
+      
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
+    </style>
     
     <title>SpendThrone - Where Your Wallet Determines Your Worth</title>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <!-- Initial loading state that will be replaced by React -->
+      <div class="loading-indicator">
+        <div class="spinner"></div>
+      </div>
+    </div>
     <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
     <script type="module" src="/src/main.tsx"></script>
+    
+    <!-- Register service worker for offline support -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/service-worker.js')
+            .then(registration => {
+              console.log('ServiceWorker registration successful');
+            })
+            .catch(error => {
+              console.error('ServiceWorker registration failed:', error);
+            });
+        });
+      }
+    </script>
   </body>
 </html>

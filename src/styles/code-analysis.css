@@ -1,0 +1,84 @@
+
+/* Code Analysis Styles */
+.code-analysis-container {
+  @apply container mx-auto px-4 py-8;
+}
+
+.file-path {
+  @apply font-mono text-xs opacity-70;
+}
+
+.code-block {
+  @apply bg-black/30 p-4 rounded-md overflow-x-auto my-2;
+}
+
+.code-line {
+  @apply font-mono text-xs leading-relaxed;
+}
+
+.metrics-card {
+  @apply glass-morphism border-white/10 p-4 rounded-lg;
+}
+
+.metrics-value {
+  @apply text-2xl font-bold;
+}
+
+.metrics-label {
+  @apply text-xs text-white/70;
+}
+
+.analysis-divider {
+  @apply border-t border-white/10 my-8;
+}
+
+.severity-high {
+  @apply text-red-500;
+}
+
+.severity-medium {
+  @apply text-amber-500;
+}
+
+.severity-low {
+  @apply text-blue-500;
+}
+
+/* Optimized for readability */
+pre code {
+  @apply font-mono text-sm leading-relaxed whitespace-pre-wrap break-all;
+}
+
+/* Syntax highlighting */
+.token.comment {
+  @apply text-gray-500;
+}
+
+.token.string {
+  @apply text-green-400;
+}
+
+.token.number {
+  @apply text-blue-400;
+}
+
+.token.keyword {
+  @apply text-purple-400;
+}
+
+.token.function {
+  @apply text-yellow-400;
+}
+
+.token.operator {
+  @apply text-red-400;
+}
+
+/* Transitions and animations */
+.analysis-item {
+  @apply transition-all duration-200;
+}
+
+.analysis-item:hover {
+  @apply bg-white/5;
+}

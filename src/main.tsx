@@ -9,6 +9,10 @@ import { AuthProvider } from './contexts/AuthContext';
 import { ToastProvider } from './contexts/ToastContext';
 import { EventProvider } from './contexts/EventContext';
 import { HelmetProvider } from 'react-helmet-async';
+import { initPerformanceMonitoring } from './utils/performanceMonitoring';
+
+// Initialize performance monitoring
+initPerformanceMonitoring();
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>

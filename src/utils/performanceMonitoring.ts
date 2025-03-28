@@ -40,6 +40,9 @@ interface LayoutShiftEntry extends PerformanceEntry {
 class PerformanceMonitor {
   private metrics: Record<string, any> = {};
   private observers: PerformanceObserver[] = [];
+  private clsValue = 0;
+  private clsEntries: LayoutShiftEntry[] = [];
+  private sessionID = crypto.randomUUID();
 
   /**
    * Initialize the performance monitoring
@@ -51,8 +54,16 @@ class PerformanceMonitor {
         return;
       }
 
+      // Generate session ID for grouping metrics
+      this.sessionID = crypto.randomUUID();
+      
       this.trackTimeToFirstByte();
       this.initPerformanceObservers();
+      this.trackResources();
+      this.trackNavigation();
+      
+      // Set up periodic reporting
+      this.scheduleMetricsReport();
     } catch (error) {
       console.error('Error initializing performance monitoring:', error);
     }
@@ -70,7 +81,7 @@ class PerformanceMonitor {
             const value = entry.startTime;
             const rating = this.getRating('FCP', value);
             this.metrics.FCP = { value, rating };
-            console.info(`[Performance] FCP: ${value.toFixed(2)}ms`);
+            console.info(`[Performance] FCP: ${value.toFixed(2)}ms (${rating})`);
           }
         }
       });
@@ -82,7 +93,7 @@ class PerformanceMonitor {
           const value = entry.startTime;
           const rating = this.getRating('LCP', value);
           this.metrics.LCP = { value, rating };
-          console.info(`[Performance] LCP: ${value.toFixed(2)}ms`);
+          console.info(`[Performance] LCP: ${value.toFixed(2)}ms (${rating})`);
         }
       });
 
@@ -93,27 +104,173 @@ class PerformanceMonitor {
           const value = entry.duration;
           const rating = this.getRating('FID', value);
           this.metrics.FID = { value, rating };
-          console.info(`[Performance] FID: ${value.toFixed(2)}ms`);
+          console.info(`[Performance] FID: ${value.toFixed(2)}ms (${rating})`);
         }
       });
 
       // Cumulative Layout Shift (CLS)
       this.createObserver('layout-shift', (entries) => {
-        let clsValue = 0;
         for (const entry of entries.getEntries()) {
           // Type-cast the entry to access specific properties
           const layoutShiftEntry = entry as LayoutShiftEntry;
           
           if (layoutShiftEntry && !layoutShiftEntry.hadRecentInput) {
-            clsValue += layoutShiftEntry.value || 0;
+            this.clsEntries.push(layoutShiftEntry);
+            this.clsValue += layoutShiftEntry.value || 0;
           }
         }
-        const rating = this.getRating('CLS', clsValue);
-        this.metrics.CLS = { value: clsValue, rating };
-        console.info(`[Performance] CLS: ${clsValue.toFixed(3)}`);
+        
+        const rating = this.getRating('CLS', this.clsValue);
+        this.metrics.CLS = { value: this.clsValue, rating };
+        console.info(`[Performance] CLS: ${this.clsValue.toFixed(3)} (${rating})`);
       });
+      
+      // Long Tasks
+      if ('PerformanceObserver' in window && PerformanceObserver.supportedEntryTypes.includes('longtask')) {
+        this.createObserver('longtask', (entries) => {
+          const tasks = entries.getEntries();
+          const longTasksCount = tasks.length;
+          const totalBlockingTime = tasks.reduce((sum, task) => sum + task.duration - 50, 0);
+          
+          this.metrics.longTasks = {
+            count: longTasksCount,
+            totalBlockingTime
+          };
+          
+          console.info(`[Performance] Long Tasks: ${longTasksCount}, TBT: ${totalBlockingTime.toFixed(2)}ms`);
+        });
+      }
     } catch (error) {
       console.error('Error initializing performance observers:', error);
+    }
+  }
+
+  /**
+   * Track resource loading performance
+   */
+  private trackResources() {
+    try {
+      // Resource Timing
+      this.createObserver('resource', (entries) => {
+        const resources = entries.getEntries();
+        
+        // Group resources by type
+        const resourceStats: Record<string, { count: number, totalSize: number, avgDuration: number }> = {};
+        
+        resources.forEach(resource => {
+          const url = resource.name;
+          const fileExtension = url.split('.').pop()?.split('?')[0]?.toLowerCase();
+          
+          let type = 'other';
+          if (fileExtension) {
+            if (['png', 'jpg', 'jpeg', 'gif', 'webp', 'svg', 'avif'].includes(fileExtension)) {
+              type = 'image';
+            } else if (['js'].includes(fileExtension)) {
+              type = 'script';
+            } else if (['css'].includes(fileExtension)) {
+              type = 'style';
+            } else if (['woff', 'woff2', 'ttf', 'otf'].includes(fileExtension)) {
+              type = 'font';
+            }
+          }
+          
+          if (!resourceStats[type]) {
+            resourceStats[type] = { count: 0, totalSize: 0, avgDuration: 0 };
+          }
+          
+          resourceStats[type].count += 1;
+          resourceStats[type].avgDuration = (resourceStats[type].avgDuration * (resourceStats[type].count - 1) + resource.duration) / resourceStats[type].count;
+          
+          // Try to get transfer size if available
+          if ('transferSize' in resource) {
+            resourceStats[type].totalSize += (resource as any).transferSize || 0;
+          }
+        });
+        
+        this.metrics.resources = resourceStats;
+      });
+    } catch (error) {
+      console.error('Error tracking resources:', error);
+    }
+  }
+  
+  /**
+   * Track navigation performance
+   */
+  private trackNavigation() {
+    try {
+      if ('PerformanceNavigationTiming' in window) {
+        this.createObserver('navigation', (entries) => {
+          const navigationEntry = entries.getEntries()[0] as PerformanceNavigationTiming;
+          
+          if (navigationEntry) {
+            const dnsTime = navigationEntry.domainLookupEnd - navigationEntry.domainLookupStart;
+            const connectTime = navigationEntry.connectEnd - navigationEntry.connectStart;
+            const ttfb = navigationEntry.responseStart - navigationEntry.requestStart;
+            const domContentLoaded = navigationEntry.domContentLoadedEventEnd - navigationEntry.fetchStart;
+            const windowLoad = navigationEntry.loadEventEnd - navigationEntry.fetchStart;
+            
+            this.metrics.navigation = {
+              dnsTime,
+              connectTime,
+              ttfb,
+              domContentLoaded,
+              windowLoad
+            };
+            
+            console.info(`[Performance] Page load: ${windowLoad.toFixed(2)}ms, DOM ready: ${domContentLoaded.toFixed(2)}ms`);
+          }
+        });
+      }
+    } catch (error) {
+      console.error('Error tracking navigation:', error);
+    }
+  }
+  
+  /**
+   * Schedule periodic metrics reporting
+   */
+  private scheduleMetricsReport() {
+    // Report metrics when page is about to unload
+    if (typeof window !== 'undefined') {
+      window.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'hidden') {
+          // Use sendBeacon API for reliable delivery when page is unloading
+          this.reportMetrics();
+        }
+      });
+      
+      // Also report metrics after 10 seconds to capture early performance data
+      setTimeout(() => {
+        this.reportMetrics();
+      }, 10000);
+    }
+  }
+  
+  /**
+   * Report collected metrics to analytics service
+   */
+  private reportMetrics() {
+    try {
+      const metricsPayload = {
+        timestamp: new Date().toISOString(),
+        sessionID: this.sessionID,
+        url: window.location.href,
+        metrics: this.metrics,
+        userAgent: navigator.userAgent
+      };
+      
+      // For this implementation, we're just logging to console
+      // In a real app, you would send this to your analytics service
+      console.debug('[Performance] Metrics report:', metricsPayload);
+      
+      // Example of using navigator.sendBeacon for reliable delivery
+      if (navigator.sendBeacon) {
+        const blob = new Blob([JSON.stringify(metricsPayload)], { type: 'application/json' });
+        // navigator.sendBeacon('/api/performance-metrics', blob);
+      }
+    } catch (error) {
+      console.error('Error reporting metrics:', error);
     }
   }
 
@@ -143,7 +300,7 @@ class PerformanceMonitor {
             const ttfb = navEntry.responseStart;
             const rating = this.getRating('TTFB', ttfb);
             this.metrics.TTFB = { value: ttfb, rating };
-            console.info(`[Performance] TTFB: ${ttfb.toFixed(2)}ms`);
+            console.info(`[Performance] TTFB: ${ttfb.toFixed(2)}ms (${rating})`);
           }
         }
       }

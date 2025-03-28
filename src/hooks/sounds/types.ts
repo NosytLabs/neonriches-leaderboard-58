@@ -35,3 +35,21 @@ export interface SoundSettings {
   volume: number;
   pack: PremiumSoundPack;
 }
+
+// Premium sound pack details
+export interface PremiumSoundPackDetails {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  preview?: string;
+}
+
+// Audio loader return type
+export interface AudioLoaderReturn {
+  loading: boolean;
+  loaded: boolean;
+  error: Error | null;
+  sounds: Record<string, HTMLAudioElement>;
+  play: (sound: string) => void;
+}

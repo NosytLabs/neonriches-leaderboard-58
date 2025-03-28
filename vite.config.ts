@@ -27,6 +27,14 @@ export default defineConfig(({ mode }) => ({
     // Improve chunk size and caching
     cssCodeSplit: true,
     chunkSizeWarningLimit: 500,
+    sourcemap: mode === 'development',
+    minify: mode === 'production' ? 'terser' : false,
+    terserOptions: {
+      compress: {
+        drop_console: mode === 'production',
+        drop_debugger: mode === 'production',
+      },
+    },
     rollupOptions: {
       output: {
         manualChunks: {
@@ -42,12 +50,18 @@ export default defineConfig(({ mode }) => ({
             '@radix-ui/react-tooltip',
           ],
           'icons': ['lucide-react'],
-          'charts': ['recharts']
+          'charts': ['recharts'],
+          'forms': [
+            'react-hook-form',
+            '@hookform/resolvers',
+            'zod'
+          ],
+          'animations': [
+            'framer-motion'
+          ]
         },
       },
     },
-    // Enable source maps for production builds to help with debugging
-    sourcemap: mode === 'development',
   },
   optimizeDeps: {
     // Include dependencies that need to be pre-bundled
@@ -57,6 +71,19 @@ export default defineConfig(({ mode }) => ({
       'react-router-dom',
       'lucide-react',
       '@radix-ui/react-toast',
+      'framer-motion',
+      'recharts',
     ],
+    // Exclude dependencies that should not be bundled
+    exclude: [
+      // Add any packages that cause issues when pre-bundled
+    ],
+  },
+  // Automatically prefetch modules during development
+  // This helps to reduce any loading flickering
+  define: {
+    // Any global constants to define for the application
+    __APP_VERSION__: JSON.stringify(process.env.npm_package_version),
+    __MODE__: JSON.stringify(mode),
   },
 }));

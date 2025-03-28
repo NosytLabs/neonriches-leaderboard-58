@@ -1,61 +1,63 @@
 
-import { useState, useEffect, createContext, useContext } from 'react';
-import { ExtendedToastProps, ToasterToast } from "@/types/toast-extended";
-import useNotificationSounds from './use-notification-sounds';
+import * as React from "react";
+import { ToasterToast, ExtendedToastProps } from "@/types/toast-extended";
 
-// Create a placeholder toast function that will be replaced later
-let toastFunction: any = () => {};
+// Create a placeholder function that we'll replace later
+let internalToastFunction = (props: ExtendedToastProps) => {
+  // Default initial implementation
+  return { id: crypto.randomUUID(), ...props };
+};
 
-const ToastContext = createContext({
-  toasts: [] as ToasterToast[],
-  toast: toastFunction,
-  dismissToast: (id: string) => {},
-  dismiss: (id: string) => {},
-});
+// Define the function to set the toast function
+export const setToastFunction = (fn: typeof internalToastFunction) => {
+  internalToastFunction = fn;
+};
 
-// Import the original toast function after the context is created to avoid circular references
-// This avoids the "Cannot access originalToastFunction before initialization" error
-import { toast as originalToastFunction } from "@/components/ui/use-toast";
+// Export the placeholder toast function that uses the internal one
+export const toast = (props: ExtendedToastProps) => {
+  return internalToastFunction(props);
+};
 
-// Now we can safely update the toast function
-toastFunction = originalToastFunction;
-
+// Define the useToast hook
 export const useToast = () => {
-  const context = useContext(ToastContext);
-  const { playSound } = useNotificationSounds();
+  const [toasts, setToasts] = React.useState<ToasterToast[]>([]);
 
-  const toast = (props: ExtendedToastProps) => {
-    // Play sound effect if specified
-    if (props.sound) {
-      playSound(props.sound as any, 0.5);
-    } else {
-      // Play default sound based on variant
-      switch (props.variant) {
-        case 'destructive':
-          playSound('error', 0.5);
-          break;
-        case 'success':
-          playSound('success', 0.5);
-          break;
-        case 'royal':
-          playSound('notification', 0.3);
-          break;
-        default:
-          playSound('notification', 0.5);
-          break;
+  const addToast = React.useCallback((props: ExtendedToastProps) => {
+    const toast = internalToastFunction(props);
+    
+    setToasts((prev) => {
+      // If there's a toast with the same ID, remove it before adding the new one
+      if (prev.find((t) => t.id === toast.id)) {
+        return [...prev.filter((t) => t.id !== toast.id), toast];
       }
+      return [...prev, toast];
+    });
+
+    // Play sound if specified
+    if (props.sound) {
+      const audio = new Audio(`/sounds/${props.sound}.mp3`);
+      audio.volume = 0.6; // Set to 60% volume for better user experience
+      audio.play().catch(e => console.error("Error playing sound:", e));
     }
 
-    return context.toast(props as any);
+    return toast.id;
+  }, []);
+
+  const dismissToast = React.useCallback((toastId: string) => {
+    setToasts((prev) => prev.filter((toast) => toast.id !== toastId));
+  }, []);
+
+  const dismiss = React.useCallback((toastId?: string) => {
+    if (toastId) {
+      dismissToast(toastId);
+    } else {
+      setToasts([]);
+    }
+  }, [dismissToast]);
+
+  return {
+    toasts,
+    toast: addToast,
+    dismiss,
   };
-
-  return { ...context, toast };
 };
-
-export const setToastFunction = (fn: typeof originalToastFunction) => {
-  // This is a helper function to set the toast function
-  // It's used to override the default toast function in tests
-  toastFunction = fn;
-};
-
-export { toastFunction as toast };
