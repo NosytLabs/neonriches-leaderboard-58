@@ -18,4 +18,5 @@ export interface AuthContextType {
   awardCosmetic?: (cosmeticId: string, category: string, rarity: string, source: string) => Promise<boolean>;
 }
 
-export { UserProfile } from '@/types/user';
+// Change from export { UserProfile } to export type { UserProfile }
+export type { UserProfile } from '@/types/user';

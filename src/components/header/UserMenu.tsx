@@ -1,7 +1,7 @@
 
 import React from 'react';
-import { useAuth } from '@/contexts/auth';
-import { UserProfile } from '@/contexts/AuthContext';
+import { useAuth } from '@/contexts/auth';  // Updated import path
+import { UserProfile } from '@/contexts/auth';  // Updated import path
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { 

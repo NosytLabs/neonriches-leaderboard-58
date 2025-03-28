@@ -9,8 +9,8 @@ export interface CosmeticItem {
   category: string;
   type: string;
   rarity: CosmeticRarity;
-  imageUrl: string;
   cost: number;
+  imageUrl?: string;  // Make imageUrl optional
   cssClass?: string;
   imageSrc?: string;
 }

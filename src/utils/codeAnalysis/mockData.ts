@@ -1,4 +1,3 @@
-
 import { AnalysisResult, ComplexityItem } from "./types";
 
 // Create ComplexityItem for mocked data
@@ -11,7 +10,7 @@ const mockComplexityItem: ComplexityItem = {
   parameters: 3,
   nestedLevel: 3,
   issues: ["Too many nested conditions", "Complex logic"],
-  function: "handleSubmit"
+  function: "handleSubmit"  // Required function field
 };
 
 // Mock analysis results for development and testing
