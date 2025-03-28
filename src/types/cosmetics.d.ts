@@ -1,4 +1,3 @@
-
 export type CosmeticRarity = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
 
 export type CosmeticCategory = 'border' | 'color' | 'font' | 'emoji' | 'background' | 'effect' | 'title' | 'badge' | 'theme';
@@ -8,7 +7,7 @@ export interface CosmeticItem {
   name: string;
   description: string;
   type: string;
-  category?: CosmeticCategory;
+  category?: string | CosmeticCategory;
   rarity: CosmeticRarity;
   cost: number;
   price?: number;
@@ -17,6 +16,7 @@ export interface CosmeticItem {
   preview?: string;
   previewUrl?: string;
   metadata?: Record<string, any>;
+  cssClass?: string;
 }
 
 export interface UserCosmetics {
@@ -44,5 +44,5 @@ export interface UserCosmetics {
 export function getRarityColor(rarity: CosmeticRarity): string;
 export function getRarityBgColor(rarity: CosmeticRarity): string;
 export function getRarityBorderColor(rarity: CosmeticRarity): string;
-export function getCosmeticPreviewStyle(rarity: CosmeticRarity): string;
-export function formatCategoryName(category: CosmeticCategory): string;
+export function getCosmeticPreviewStyle(item: CosmeticItem): string;
+export function formatCategoryName(category: string): string;

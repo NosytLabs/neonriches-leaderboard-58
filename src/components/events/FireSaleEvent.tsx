@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -33,7 +32,6 @@ const FireSaleEvent: React.FC<FireSaleEventProps> = ({
   const [selectedCategory, setSelectedCategory] = useState<string>(featuredCategories[0] || 'border');
   const [selectedItem, setSelectedItem] = useState<CosmeticItem | null>(null);
   
-  // Get the end of the month date for countdown
   const getEndOfMonthDate = (): string => {
     const today = new Date();
     const lastDay = new Date(today.getFullYear(), today.getMonth() + 1, 0);
@@ -41,27 +39,21 @@ const FireSaleEvent: React.FC<FireSaleEventProps> = ({
     return lastDay.toISOString();
   };
   
-  // Filter cosmetics that belong to featured categories
   const filteredCosmetics = mockedCosmeticsData.filter(item => 
     featuredCategories.includes(item.category)
   );
   
-  // Get cosmetics for the currently selected category
   const getCosmeticsForCategory = (): CosmeticItem[] => {
     return filteredCosmetics.filter(item => item.category === selectedCategory);
   };
   
-  // Calculate discounted price
   const getDiscountedPrice = (originalPrice: number): number => {
     return Number((originalPrice * (1 - discountPercentage / 100)).toFixed(2));
   };
   
-  // Helper function to get rarity style
   const getCosmeticPreviewStyleForRarity = (rarity: string) => {
-    // Converting string rarity to CosmeticRarity type
     const typedRarity = rarity as CosmeticRarity;
     
-    // Create a dummy cosmetic item with the rarity
     const dummyItem: CosmeticItem = {
       id: 'dummy',
       name: 'Dummy Item',
@@ -75,9 +67,7 @@ const FireSaleEvent: React.FC<FireSaleEventProps> = ({
     return getCosmeticPreviewStyle(dummyItem);
   };
   
-  // Handle purchase
   const handlePurchase = (item: CosmeticItem) => {
-    // This would typically call a real purchase API
     const discountedPrice = getDiscountedPrice(item.cost);
     
     addToast({
@@ -87,7 +77,6 @@ const FireSaleEvent: React.FC<FireSaleEventProps> = ({
       sound: "success"
     });
     
-    // Close the modal after purchase
     setTimeout(() => {
       onClose();
     }, 1500);
@@ -95,7 +84,6 @@ const FireSaleEvent: React.FC<FireSaleEventProps> = ({
   
   return (
     <DialogContent className="glass-morphism border-royal-crimson/30 sm:max-w-3xl relative overflow-hidden">
-      {/* Animated flame effect background */}
       <div className="absolute inset-0 bg-gradient-to-t from-royal-crimson/10 to-transparent opacity-40 pointer-events-none"></div>
       <div className="absolute inset-0 bg-[url('/assets/patterns/flames.svg')] opacity-5 animate-flame-flicker pointer-events-none"></div>
       
@@ -127,7 +115,7 @@ const FireSaleEvent: React.FC<FireSaleEventProps> = ({
           {featuredCategories.map(category => (
             <div key={category} className="flex items-center glass-morphism border-white/10 px-2 py-1 rounded-full text-sm">
               <Sparkles className="h-3 w-3 mr-1 text-royal-gold" />
-              <span>{formatCategoryName(category as CosmeticCategory)}</span>
+              <span>{formatCategoryName(category)}</span>
             </div>
           ))}
         </div>
@@ -139,7 +127,7 @@ const FireSaleEvent: React.FC<FireSaleEventProps> = ({
         <TabsList className="glass-morphism border-white/10 grid" style={{ gridTemplateColumns: `repeat(${featuredCategories.length}, 1fr)` }}>
           {featuredCategories.map(category => (
             <TabsTrigger key={category} value={category}>
-              {formatCategoryName(category as CosmeticCategory)}
+              {formatCategoryName(category)}
             </TabsTrigger>
           ))}
         </TabsList>

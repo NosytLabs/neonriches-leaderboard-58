@@ -8,10 +8,10 @@ export type SubscriptionTier = 'basic' | 'premium' | 'royal';
 export type SubscriptionInterval = 'monthly' | 'quarterly' | 'annual';
 
 export interface ProfileBoost {
+  id?: string;
   startDate: string;
   endDate: string;
   level: number;
-  id?: string;
   effectId?: string;
   startTime?: string;
   endTime?: number;
