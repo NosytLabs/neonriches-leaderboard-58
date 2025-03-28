@@ -2,13 +2,15 @@
 /**
  * Format a date string into a readable format
  */
-export const formatDate = (dateString: string): string => {
+export const formatDate = (dateString: string, options?: Intl.DateTimeFormatOptions): string => {
   const date = new Date(dateString);
-  return new Intl.DateTimeFormat('en-US', {
+  const defaultOptions: Intl.DateTimeFormatOptions = {
     month: 'short',
     day: 'numeric',
     year: 'numeric',
-  }).format(date);
+  };
+  
+  return new Intl.DateTimeFormat('en-US', options || defaultOptions).format(date);
 };
 
 /**
@@ -76,4 +78,39 @@ export const formatTimeRemaining = (totalSeconds: number): string => {
   } else {
     return `${minutes}m`;
   }
+};
+
+/**
+ * Check if an event is currently active
+ */
+export const isEventActive = (startDate: string, endDate: string): boolean => {
+  const now = new Date();
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+  
+  return now >= start && now <= end;
+};
+
+/**
+ * Get the number of days until a target date
+ */
+export const daysUntil = (targetDate: string): number => {
+  const target = new Date(targetDate);
+  const today = new Date();
+  
+  // Reset time portion for accurate day calculation
+  target.setHours(0, 0, 0, 0);
+  today.setHours(0, 0, 0, 0);
+  
+  const diffTime = target.getTime() - today.getTime();
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  
+  return Math.max(0, diffDays);
+};
+
+/**
+ * Parse a date string or Date object into a Date object
+ */
+export const parseDate = (date: Date | string): Date => {
+  return typeof date === 'string' ? new Date(date) : date;
 };

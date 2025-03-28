@@ -76,7 +76,7 @@ const EventsPage = () => {
                 </div>
                 <ul className="space-y-2 text-white/70">
                   <li className="flex items-start">
-                    <MedievalIcon name="flame" size="sm" color="crimson" className="mt-1 mr-2 flex-shrink-0" />
+                    <MedievalIcon name="sparkles" size="sm" color="crimson" className="mt-1 mr-2 flex-shrink-0" />
                     <span>Royal Fire Sale: 30-70% off selected cosmetic categories every third month (March, June, September, December)</span>
                   </li>
                   <li className="flex items-start">

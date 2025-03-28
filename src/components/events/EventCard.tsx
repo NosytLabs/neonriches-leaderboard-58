@@ -68,7 +68,7 @@ const EventCard: React.FC<EventCardProps> = ({
           <div className="mt-2 flex items-center gap-4 text-xs text-white/60">
             <div className="flex items-center">
               <Calendar size={12} className="mr-1" />
-              <span>{formatDate(event.startDate, { month: 'short', day: 'numeric' })}</span>
+              <span>{formatDate(event.startDate)}</span>
             </div>
             
             {compact ? null : (
@@ -76,8 +76,7 @@ const EventCard: React.FC<EventCardProps> = ({
                 <Clock size={12} className="mr-1" />
                 <span>
                   {isActive ? 'Ends' : 'Starts'}: {formatDate(
-                    isActive ? event.endDate : event.startDate, 
-                    { month: 'short', day: 'numeric', weekday: undefined }
+                    isActive ? event.endDate : event.startDate
                   )}
                 </span>
               </div>
