@@ -10,7 +10,8 @@ export type TransactionType =
   | 'event'
   | 'protection'
   | 'mockery_protection'
-  | 'founder';
+  | 'founder'
+  | 'wish';
 
 export type TransactionStatus = 
   | 'pending'

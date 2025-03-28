@@ -11,8 +11,7 @@ export interface SolanaTreasuryInfo {
   totalDeposits: number;
   totalWithdrawals: number;
   lastUpdated: string;
-  sender?: string;
-  amount?: number;
+  pubkey?: string;
 }
 
 export interface SolanaTransaction {
@@ -23,7 +22,6 @@ export interface SolanaTransaction {
   sender: string;
   recipient: string;
   status: 'confirmed' | 'pending' | 'failed';
-  sender?: string;
 }
 
 export interface OnChainLeaderboardEntry {
@@ -35,6 +33,7 @@ export interface OnChainLeaderboardEntry {
   amountSpent: number;
   lastTransaction?: string;
   isVerified?: boolean;
+  signature?: string;
 }
 
 export interface SolanaNftInfo {

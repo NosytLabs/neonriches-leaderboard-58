@@ -1,6 +1,6 @@
 
 export interface RoyalDividerProps {
-  variant?: 'line' | 'ornate' | 'simple' | 'elegant';
+  variant?: RoyalDividerVariant;
   color?: 'gold' | 'crimson' | 'navy' | 'emerald' | 'silver';
   label?: string;
   className?: string;
@@ -23,7 +23,16 @@ export type RoyalButtonVariant =
   | 'crimson' 
   | 'outline' 
   | 'ghost'
-  | 'link';
+  | 'link'
+  | 'royalGold'
+  | 'royalPurple'
+  | 'royalNavy'
+  | 'royalCrimson'
+  | 'glass'
+  | 'goldOutline'
+  | 'crimsonOutline'
+  | 'navyOutline'
+  | 'mahogany';
 
 export type RoyalDecorationType = 
   | 'royal-insignia' 
@@ -31,7 +40,12 @@ export type RoyalDecorationType =
   | 'scroll' 
   | 'shield' 
   | 'sword' 
-  | 'coins';
+  | 'coins'
+  | 'top'
+  | 'bottom'
+  | 'left'
+  | 'right'
+  | 'corner';
 
 export type RoyalDividerVariant = 
   | 'line' 
@@ -41,4 +55,8 @@ export type RoyalDividerVariant =
   | 'scroll'
   | 'quill'
   | 'treasure'
-  | 'crown';
+  | 'crown'
+  | 'sword'
+  | 'shield'
+  | 'double'
+  | 'royal';
