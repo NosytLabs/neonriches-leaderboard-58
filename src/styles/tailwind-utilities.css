@@ -1,122 +1,46 @@
 
-@layer components {
-  .glass-morphism {
-    @apply bg-black/20 backdrop-blur-md border border-white/10 shadow-md;
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+    transform: translateY(5px);
   }
-  
-  /* Royal button with shimmer effect */
-  .btn-royal {
-    @apply relative overflow-hidden bg-gradient-to-r from-royal-crimson via-royal-gold to-royal-navy 
-    text-white font-bold py-2 px-4 rounded shadow-lg hover:shadow-xl transition-all duration-300;
-  }
-  
-  .btn-royal::after {
-    @apply content-[''] absolute top-0 -left-[100%] w-full h-full bg-white/20 skew-x-[-20deg] transition-all duration-1000;
-  }
-  
-  .btn-royal:hover::after {
-    @apply left-[100%];
-  }
-  
-  /* Medieval-themed inputs */
-  .input-royal {
-    @apply bg-black/20 border border-royal-gold/30 rounded-md px-4 py-2 text-white
-    focus:outline-none focus:ring-2 focus:ring-royal-gold/50 focus:border-royal-gold/50
-    placeholder:text-white/50;
-  }
-  
-  /* Gradient text for royal elements */
-  .royal-text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-royal-gold via-royal-crimson to-royal-navy;
-  }
-  
-  /* Animated border for premium elements */
-  .royal-border-animated {
-    @apply relative;
-  }
-  
-  .royal-border-animated::before {
-    @apply content-[''] absolute -inset-[2px] rounded-lg bg-gradient-to-r from-royal-gold via-royal-crimson to-royal-navy
-    animate-slow-spin opacity-70 blur-[2px] -z-10;
-  }
-  
-  /* Medieval-themed cards */
-  .card-medieval {
-    @apply bg-black/40 border border-royal-gold/20 rounded-lg p-6
-    backdrop-blur-md shadow-xl transition-all duration-300
-    hover:border-royal-gold/40 hover:shadow-royal-gold/10;
-  }
-  
-  /* Parchment-style container */
-  .parchment {
-    @apply bg-royal-parchment/10 border border-royal-gold/20 rounded-md p-6
-    bg-[url('/throne-assets/parchment-texture.png')] bg-cover bg-center
-    text-white/90 shadow-inner;
-  }
-  
-  /* Team color variations */
-  .team-red-bg {
-    @apply bg-gradient-to-br from-royal-crimson/20 to-royal-velvet/20 border-royal-crimson/30;
-  }
-  
-  .team-green-bg {
-    @apply bg-gradient-to-br from-royal-gold/20 to-royal-forest/20 border-royal-gold/30;
-  }
-  
-  .team-blue-bg {
-    @apply bg-gradient-to-br from-royal-navy/20 to-royal-purple/20 border-royal-navy/30;
-  }
-  
-  /* Animate utility classes */
-  .animate-slow-spin {
-    animation: spin 12s linear infinite;
-  }
-  
-  .animate-float {
-    animation: float 3s ease-in-out infinite;
-  }
-  
-  .animate-pulse-slow {
-    animation: pulse 4s ease-in-out infinite;
-  }
-  
-  /* Decorative elements */
-  .medieval-corner-ornament {
-    @apply relative;
-  }
-  
-  .medieval-corner-ornament::before {
-    @apply content-[''] absolute top-2 left-2 w-4 h-4 border-t border-l border-royal-gold/60;
-  }
-  
-  .medieval-corner-ornament::after {
-    @apply content-[''] absolute bottom-2 right-2 w-4 h-4 border-b border-r border-royal-gold/60;
-  }
-}
-
-@keyframes float {
-  0%, 100% {
+  100% {
+    opacity: 1;
     transform: translateY(0);
   }
-  50% {
-    transform: translateY(-10px);
+}
+
+@keyframes fade-out {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(5px);
   }
 }
 
-@keyframes pulse {
-  0%, 100% {
-    opacity: 0.7;
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out forwards;
+}
+
+.animate-fade-out {
+  animation: fade-out 0.3s ease-out forwards;
+}
+
+/* Water ripple effect for the wishing well */
+@keyframes ripple {
+  0% {
+    transform: translate(-50%, -50%) scale(0.1);
+    opacity: 0.6;
   }
-  50% {
-    opacity: 0.3;
+  100% {
+    transform: translate(-50%, -50%) scale(2);
+    opacity: 0;
   }
 }
 
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.water-ripple {
+  animation: ripple 2s ease-out forwards;
 }

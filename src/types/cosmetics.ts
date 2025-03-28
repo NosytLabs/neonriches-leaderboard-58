@@ -1,72 +1,20 @@
 
 export type CosmeticRarity = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
+export type CosmeticCategory = 'border' | 'background' | 'badge' | 'title' | 'effect' | 'emote';
 
 export interface CosmeticItem {
   id: string;
   name: string;
   description: string;
-  price: number;
+  category: CosmeticCategory;
   rarity: CosmeticRarity;
-  category: string;
-  image?: string;
+  cost: number;
+  imageSrc?: string;
+  animationData?: any;
+  colors?: string[];
+  cssClass?: string;
 }
 
-// Get rarity based on the wish amount
-export const getRandomCosmetic = (
-  amount: number,
-  preferredCategory?: string
-): CosmeticRarity => {
-  // Base chances for each rarity tier
-  let commonChance = 40;
-  let uncommonChance = 30;
-  let rareChance = 20;
-  let epicChance = 8;
-  let legendaryChance = 2;
-  
-  // Adjust chances based on amount spent
-  if (amount >= 2) {
-    commonChance -= 5;
-    uncommonChance += 2;
-    rareChance += 2;
-    epicChance += 1;
-  }
-  
-  if (amount >= 5) {
-    commonChance -= 10;
-    uncommonChance -= 5;
-    rareChance += 5;
-    epicChance += 5;
-    legendaryChance += 5;
-  }
-  
-  if (amount >= 10) {
-    commonChance -= 15;
-    uncommonChance -= 10;
-    rareChance += 5;
-    epicChance += 10;
-    legendaryChance += 10;
-  }
-  
-  // Roll for rarity
-  const roll = Math.random() * 100;
-  let currentThreshold = 0;
-  
-  currentThreshold += commonChance;
-  if (roll < currentThreshold) return 'common';
-  
-  currentThreshold += uncommonChance;
-  if (roll < currentThreshold) return 'uncommon';
-  
-  currentThreshold += rareChance;
-  if (roll < currentThreshold) return 'rare';
-  
-  currentThreshold += epicChance;
-  if (roll < currentThreshold) return 'epic';
-  
-  return 'legendary';
-};
-
-// Rarity colors
 export const getRarityColor = (rarity: CosmeticRarity): string => {
   switch (rarity) {
     case 'common':
@@ -84,38 +32,36 @@ export const getRarityColor = (rarity: CosmeticRarity): string => {
   }
 };
 
-// Rarity background colors
 export const getRarityBgColor = (rarity: CosmeticRarity): string => {
   switch (rarity) {
     case 'common':
-      return 'bg-gray-700/50';
+      return 'bg-gray-600/30';
     case 'uncommon':
-      return 'bg-green-900/50';
+      return 'bg-green-900/30';
     case 'rare':
-      return 'bg-blue-900/50';
+      return 'bg-blue-900/30';
     case 'epic':
-      return 'bg-purple-900/50';
+      return 'bg-purple-900/30';
     case 'legendary':
-      return 'bg-yellow-900/50';
+      return 'bg-amber-900/30';
     default:
-      return 'bg-gray-800/50';
+      return 'bg-gray-800/30';
   }
 };
 
-// Rarity border colors
 export const getRarityBorderColor = (rarity: CosmeticRarity): string => {
   switch (rarity) {
     case 'common':
-      return 'border-gray-500';
+      return 'border-gray-400/30';
     case 'uncommon':
-      return 'border-green-500';
+      return 'border-green-400/30';
     case 'rare':
-      return 'border-blue-500';
+      return 'border-blue-400/30';
     case 'epic':
-      return 'border-purple-500';
+      return 'border-purple-400/30';
     case 'legendary':
-      return 'border-royal-gold';
+      return 'border-royal-gold/30';
     default:
-      return 'border-gray-500';
+      return 'border-white/10';
   }
 };

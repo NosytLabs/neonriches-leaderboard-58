@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -17,6 +16,7 @@ import RegisterModal from './auth/RegisterModal';
 import { Sheet, SheetContent, SheetTrigger } from './ui/sheet';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import { Badge } from './ui/badge';
+import NotificationCenter from './notifications/NotificationCenter';
 
 const Header = () => {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
@@ -26,7 +26,6 @@ const Header = () => {
   const location = useLocation();
   const { user, logout } = useAuth();
 
-  // Monitor scroll position for header styling
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 10);
@@ -52,7 +51,6 @@ const Header = () => {
     }
   };
 
-  // Navigation links for desktop and mobile
   const navLinks = [
     { title: 'Home', path: '/', icon: <Crown size={16} className="mr-2" /> },
     { title: 'Dashboard', path: '/dashboard', icon: <DollarSign size={16} className="mr-2" /> },
@@ -68,13 +66,11 @@ const Header = () => {
   return (
     <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'glass-morphism border-b border-royal-gold/10 py-1' : 'py-2'}`}>
       <div className="container mx-auto px-4 flex justify-between items-center">
-        {/* Logo */}
         <Link to="/" className="flex items-center space-x-2">
           <Crown className={`h-5 w-5 transition-colors ${scrolled ? 'text-royal-gold' : 'text-white'}`} />
           <span className={`font-bold text-lg font-medieval transition-colors ${scrolled ? 'royal-gradient' : 'text-white'}`}>P2W.FUN</span>
         </Link>
 
-        {/* Desktop Navigation */}
         <nav className="hidden md:flex space-x-1">
           {navLinks.map((link) => (
             <Link key={link.path} to={link.path}>
@@ -90,8 +86,8 @@ const Header = () => {
           ))}
         </nav>
 
-        {/* Auth Buttons / User Menu */}
         <div className="hidden md:flex items-center space-x-2">
+          {user && <NotificationCenter />}
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -152,13 +148,15 @@ const Header = () => {
           )}
         </div>
 
-        {/* Mobile menu button */}
         <Sheet open={showMobileMenu} onOpenChange={setShowMobileMenu}>
-          <SheetTrigger asChild>
-            <Button variant="ghost" size="icon" className="md:hidden">
-              <Menu className="h-5 w-5 text-white" />
-            </Button>
-          </SheetTrigger>
+          <div className="flex items-center md:hidden">
+            {user && <NotificationCenter />}
+            <SheetTrigger asChild>
+              <Button variant="ghost" size="icon" className="ml-2">
+                <Menu className="h-5 w-5 text-white" />
+              </Button>
+            </SheetTrigger>
+          </div>
           <SheetContent side="right" className="glass-morphism border-royal-gold/10 w-64">
             <div className="flex flex-col h-full">
               <div className="flex justify-between items-center mb-4">
@@ -260,7 +258,6 @@ const Header = () => {
         </Sheet>
       </div>
 
-      {/* Auth modals */}
       {showLoginModal && <LoginModal isOpen={showLoginModal} onClose={() => setShowLoginModal(false)} />}
       {showRegisterModal && <RegisterModal isOpen={showRegisterModal} onClose={() => setShowRegisterModal(false)} />}
     </header>

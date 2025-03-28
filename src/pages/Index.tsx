@@ -10,6 +10,7 @@ import useNotificationSounds from '@/hooks/use-notification-sounds';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import RoyalShowcase from '@/components/RoyalShowcase';
+import AnnouncementTicker from '@/components/ui/announcements/AnnouncementTicker';
 
 // Lazy load heavy components
 const RoyalHero = lazy(() => import('@/components/RoyalHero'));
@@ -103,6 +104,11 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <Header />
+      
+      {/* Add Announcement Ticker below Header */}
+      <div className="pt-16">
+        <AnnouncementTicker />
+      </div>
       
       <main>
         <Suspense fallback={<LoadingPlaceholder />}>

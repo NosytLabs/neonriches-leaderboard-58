@@ -1,160 +1,122 @@
-import { useEffect, useState, useRef } from 'react';
 
-interface FloatingEffectsOptions {
+import { useCallback, useEffect, useState, useRef } from 'react';
+
+interface FloatingEffect {
+  id: number;
+  x: number;
+  y: number;
+  size: number;
+  color: string;
+  opacity: number;
+  duration: number;
+}
+
+interface UseFloatingEffectsOptions {
   containerRef: React.RefObject<HTMLElement>;
   enabled?: boolean;
   frequency?: number;
   density?: 'low' | 'medium' | 'high';
-  duration?: number;
-  minDelay?: number;
-  maxDelay?: number;
+  animation?: 'float' | 'pulse' | 'fade';
   colors?: string[];
   sizes?: number[];
-  animation?: 'float' | 'sparkle' | 'dust' | 'gold-dust';
+  duration?: number;
 }
 
-export function useFloatingEffects({
-  containerRef,
-  enabled = true,
-  frequency = 0.5,
-  density = 'medium',
-  duration = 5000,
-  minDelay = 1000,
-  maxDelay = 3000,
-  colors = ['#D4AF37', '#8B0000', '#000080'], // Default royal colors
-  sizes = [4, 6, 8], // Default sizes in pixels
-  animation = 'float'
-}: FloatingEffectsOptions) {
+const useFloatingEffects = (options: UseFloatingEffectsOptions) => {
+  const [effects, setEffects] = useState<FloatingEffect[]>([]);
   const [isVisible, setIsVisible] = useState(false);
-  const particlesRef = useRef<HTMLDivElement[]>([]);
-  const animationFrameRef = useRef<number | null>(null);
+  const effectIdRef = useRef(0);
+  const requestRef = useRef<number>();
+  const previousTimeRef = useRef<number>();
   
-  // Detect when component is visible
+  const getRandomColor = useCallback(() => {
+    const colors = options.colors || ['#ffffff', '#f0f0f0', '#e0e0e0'];
+    return colors[Math.floor(Math.random() * colors.length)];
+  }, [options.colors]);
+  
+  const getRandomSize = useCallback(() => {
+    const sizes = options.sizes || [3, 5, 8];
+    return sizes[Math.floor(Math.random() * sizes.length)];
+  }, [options.sizes]);
+  
+  const createEffect = useCallback(() => {
+    if (!options.containerRef.current) return null;
+    
+    const rect = options.containerRef.current.getBoundingClientRect();
+    const x = Math.random() * rect.width;
+    const y = Math.random() * rect.height;
+    
+    const newEffect: FloatingEffect = {
+      id: effectIdRef.current++,
+      x,
+      y,
+      size: getRandomSize(),
+      color: getRandomColor(),
+      opacity: 0.1 + Math.random() * 0.5,
+      duration: options.duration || 3000 + Math.random() * 2000,
+    };
+    
+    setEffects(prev => [...prev, newEffect]);
+    
+    // Remove effect after duration
+    setTimeout(() => {
+      setEffects(prev => prev.filter(effect => effect.id !== newEffect.id));
+    }, newEffect.duration);
+    
+    return newEffect;
+  }, [getRandomColor, getRandomSize, options.containerRef, options.duration]);
+  
+  // Create multiple effects based on density
+  const createEffects = useCallback((count: number) => {
+    for (let i = 0; i < count; i++) {
+      createEffect();
+    }
+  }, [createEffect]);
+  
+  // Handle visibility detection
   useEffect(() => {
-    if (!containerRef.current || !enabled) return;
+    if (!options.containerRef.current || options.enabled === false) return;
     
     const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach(entry => {
-          setIsVisible(entry.isIntersecting);
-        });
+      ([entry]) => {
+        setIsVisible(entry.isIntersecting);
       },
       { threshold: 0.1 }
     );
     
-    observer.observe(containerRef.current);
+    observer.observe(options.containerRef.current);
     
     return () => {
-      if (containerRef.current) {
-        observer.unobserve(containerRef.current);
+      if (options.containerRef.current) {
+        observer.unobserve(options.containerRef.current);
       }
     };
-  }, [containerRef, enabled]);
-
-  // Create floating particles
+  }, [options.containerRef, options.enabled]);
+  
+  // Regular effect generation based on visibility
   useEffect(() => {
-    if (!containerRef.current || !isVisible || !enabled) return;
+    if (!isVisible || options.enabled === false) return;
     
-    // Generate particle count based on density
-    const particleCount = density === 'high' ? 15 : density === 'medium' ? 8 : 4;
+    const frequency = options.frequency || 0.5; // Default 50% chance
+    const densityFactor = 
+      options.density === 'high' ? 5 :
+      options.density === 'medium' ? 3 : 1;
     
-    // Function to create a single particle
-    const createParticle = () => {
-      if (!containerRef.current) return;
-      
-      const particle = document.createElement('div');
-      particle.className = `floating-particle absolute rounded-full pointer-events-none`;
-      
-      // Set random size
-      const size = sizes[Math.floor(Math.random() * sizes.length)];
-      particle.style.width = `${size}px`;
-      particle.style.height = `${size}px`;
-      
-      // Set random position
-      const containerWidth = containerRef.current.clientWidth;
-      const containerHeight = containerRef.current.clientHeight;
-      particle.style.left = `${Math.random() * containerWidth}px`;
-      particle.style.bottom = `0px`;
-      
-      // Set random color
-      const color = colors[Math.floor(Math.random() * colors.length)];
-      particle.style.backgroundColor = color;
-      
-      // Set animation
-      const actualDuration = duration + (Math.random() * 2000);
-      const delay = Math.random() * (maxDelay - minDelay) + minDelay;
-      
-      switch (animation) {
-        case 'float':
-          particle.style.animation = `float ${actualDuration / 1000}s ease-in-out ${delay / 1000}s forwards`;
-          break;
-        case 'sparkle':
-          particle.style.animation = `sparkle ${actualDuration / 1000}s ease-in-out ${delay / 1000}s forwards`;
-          break;
-        case 'dust':
-          particle.style.animation = `gold-dust ${actualDuration / 1000}s ease-in-out ${delay / 1000}s forwards`;
-          break;
-        case 'gold-dust':
-          particle.style.animation = `gold-dust ${actualDuration / 1000}s ease-in-out ${delay / 1000}s forwards`;
-          particle.style.backgroundColor = '#D4AF37';
-          break;
-      }
-      
-      // Add to document and keep reference
-      containerRef.current.appendChild(particle);
-      particlesRef.current.push(particle);
-      
-      // Remove particle after animation
-      setTimeout(() => {
-        if (particle.parentNode) {
-          particle.parentNode.removeChild(particle);
-          particlesRef.current = particlesRef.current.filter(p => p !== particle);
-        }
-      }, actualDuration + delay);
-    };
-    
-    // Create initial batch of particles
-    for (let i = 0; i < particleCount / 3; i++) {
-      createParticle();
-    }
-    
-    // Create new particles at regular intervals
-    const particleInterval = setInterval(() => {
+    const genInterval = setInterval(() => {
       if (Math.random() < frequency) {
-        createParticle();
+        createEffects(densityFactor);
       }
-    }, 1000);
+    }, 500);
     
-    return () => {
-      clearInterval(particleInterval);
-      if (animationFrameRef.current) {
-        cancelAnimationFrame(animationFrameRef.current);
-      }
-      
-      // Clean up all particles
-      particlesRef.current.forEach(particle => {
-        if (particle.parentNode) {
-          particle.parentNode.removeChild(particle);
-        }
-      });
-      particlesRef.current = [];
-    };
-  }, [isVisible, enabled, animation, colors, sizes, density, duration, frequency, minDelay, maxDelay]);
+    return () => clearInterval(genInterval);
+  }, [createEffects, isVisible, options.density, options.enabled, options.frequency]);
   
   return {
+    effects,
     isVisible,
-    stopEffects: () => {
-      if (animationFrameRef.current) {
-        cancelAnimationFrame(animationFrameRef.current);
-      }
-      particlesRef.current.forEach(particle => {
-        if (particle.parentNode) {
-          particle.parentNode.removeChild(particle);
-        }
-      });
-      particlesRef.current = [];
-    }
+    createEffect,
+    createEffects
   };
-}
+};
 
 export default useFloatingEffects;

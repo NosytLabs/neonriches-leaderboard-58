@@ -127,4 +127,3 @@ const useFloatingCoins = (options?: UseFloatingCoinsOptions) => {
 };
 
 export default useFloatingCoins;
-export { useFloatingCoins };

@@ -1,111 +1,57 @@
 
-import React, { useState } from 'react';
-import { Shield, Crown, Zap, Flame } from 'lucide-react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import React from 'react';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
-import { Button } from '@/components/ui/button';
-import { useToast } from '@/hooks/use-toast';
+import { Shield } from 'lucide-react';
 
 interface TeamSelectorProps {
-  currentTeam: string | null;
-  onTeamChange?: (team: string) => void;
+  team: 'red' | 'green' | 'blue' | null;
+  onTeamChange: (team: 'red' | 'green' | 'blue') => void;
 }
 
-const TEAMS = [
-  {
-    id: 'red',
-    name: 'House Crimson Dynasty',
-    description: 'Masters of opulent displays and lavish investments',
-    color: 'text-red-500',
-    bgColor: 'bg-red-500/20',
-    borderColor: 'border-red-500/30',
-    icon: Flame
-  },
-  {
-    id: 'green',
-    name: 'Emerald Empire Collective',
-    description: 'Architects of wealth and strategic spending',
-    color: 'text-emerald-500',
-    bgColor: 'bg-emerald-500/20',
-    borderColor: 'border-emerald-500/30',
-    icon: Zap
-  },
-  {
-    id: 'blue',
-    name: 'Sapphire Sovereign Alliance',
-    description: 'Nobility through calculated financial dominance',
-    color: 'text-blue-500',
-    bgColor: 'bg-blue-500/20',
-    borderColor: 'border-blue-500/30',
-    icon: Crown
-  }
-];
-
-const TeamSelector: React.FC<TeamSelectorProps> = ({ currentTeam, onTeamChange }) => {
-  const [selectedTeam, setSelectedTeam] = useState<string>(currentTeam || '');
-  const { toast } = useToast();
-
-  const handleTeamChange = (value: string) => {
-    setSelectedTeam(value);
-  };
-
-  const handleSaveTeam = () => {
-    if (onTeamChange && selectedTeam) {
-      onTeamChange(selectedTeam);
-    }
-    
-    const teamName = TEAMS.find(team => team.id === selectedTeam)?.name;
-    
-    toast({
-      title: "Royal House Updated",
-      description: `You have aligned with ${teamName || 'a new royal house'}!`,
-    });
-  };
-
+const TeamSelector: React.FC<TeamSelectorProps> = ({ team, onTeamChange }) => {
   return (
-    <Card className="glass-morphism border-white/10">
-      <CardHeader>
-        <CardTitle className="flex items-center">
-          <Shield className="mr-2 h-5 w-5 text-royal-gold" />
-          Choose Your Royal House
-        </CardTitle>
-        <CardDescription>
-          Align with a royal house to boost your standing in the kingdom
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <RadioGroup value={selectedTeam} onValueChange={handleTeamChange} className="space-y-6">
-          {TEAMS.map(team => (
-            <div 
-              key={team.id}
-              className={`flex items-start space-x-4 p-4 rounded-lg ${team.bgColor} ${team.borderColor} border transition-colors duration-300 hover:bg-opacity-30`}
-            >
-              <RadioGroupItem value={team.id} id={team.id} className="mt-1" />
-              <div className="flex-1">
-                <Label 
-                  htmlFor={team.id} 
-                  className={`flex items-center text-base font-medium ${team.color} cursor-pointer`}
-                >
-                  <team.icon className="mr-2 h-5 w-5" />
-                  {team.name}
-                </Label>
-                <p className="text-sm text-white/70 mt-1">
-                  {team.description}
-                </p>
-              </div>
-            </div>
-          ))}
-        </RadioGroup>
-
-        <div className="mt-6 flex justify-end">
-          <Button onClick={handleSaveTeam} className={`${selectedTeam ? TEAMS.find(t => t.id === selectedTeam)?.bgColor : 'bg-royal-gold/20'} hover:opacity-90`}>
-            <Shield className="mr-2 h-4 w-4" />
-            Pledge Allegiance
-          </Button>
+    <div className="space-y-3">
+      <h3 className="text-lg font-semibold">Choose Your Royal House</h3>
+      <p className="text-white/60 text-sm">
+        Align yourself with one of the three royal houses to participate in team competitions and events.
+      </p>
+      
+      <RadioGroup value={team || ''} onValueChange={(value) => onTeamChange(value as 'red' | 'green' | 'blue')} className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+        <div className={`relative rounded-lg border p-4 cursor-pointer hover:bg-red-500/10 hover:border-red-500/30 transition-colors ${team === 'red' ? 'bg-red-500/20 border-red-500/50' : 'border-white/10 bg-white/5'}`}>
+          <RadioGroupItem value="red" id="team-red" className="absolute right-4 top-4" />
+          <div className="mb-5">
+            <Shield className="h-10 w-10 text-red-500" />
+          </div>
+          <div>
+            <Label htmlFor="team-red" className="text-base font-bold text-red-400">House Crimson Dynasty</Label>
+            <p className="text-xs text-white/70 mt-1">Masters of opulent displays and lavish investments</p>
+          </div>
         </div>
-      </CardContent>
-    </Card>
+        
+        <div className={`relative rounded-lg border p-4 cursor-pointer hover:bg-emerald-500/10 hover:border-emerald-500/30 transition-colors ${team === 'green' ? 'bg-emerald-500/20 border-emerald-500/50' : 'border-white/10 bg-white/5'}`}>
+          <RadioGroupItem value="green" id="team-green" className="absolute right-4 top-4" />
+          <div className="mb-5">
+            <Shield className="h-10 w-10 text-emerald-500" />
+          </div>
+          <div>
+            <Label htmlFor="team-green" className="text-base font-bold text-emerald-400">Emerald Empire Collective</Label>
+            <p className="text-xs text-white/70 mt-1">Architects of wealth and strategic spending</p>
+          </div>
+        </div>
+        
+        <div className={`relative rounded-lg border p-4 cursor-pointer hover:bg-blue-500/10 hover:border-blue-500/30 transition-colors ${team === 'blue' ? 'bg-blue-500/20 border-blue-500/50' : 'border-white/10 bg-white/5'}`}>
+          <RadioGroupItem value="blue" id="team-blue" className="absolute right-4 top-4" />
+          <div className="mb-5">
+            <Shield className="h-10 w-10 text-blue-500" />
+          </div>
+          <div>
+            <Label htmlFor="team-blue" className="text-base font-bold text-blue-400">Sapphire Sovereign Alliance</Label>
+            <p className="text-xs text-white/70 mt-1">Nobility through calculated financial dominance</p>
+          </div>
+        </div>
+      </RadioGroup>
+    </div>
   );
 };
 
