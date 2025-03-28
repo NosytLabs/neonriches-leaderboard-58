@@ -2,22 +2,15 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Crown, Menu, X, LogIn, UserPlus, DollarSign, Trophy, Bell, UserCircle, Sparkles, Gem, Wallet } from 'lucide-react';
-import { 
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+import { Crown, LogIn, UserPlus, DollarSign, Trophy, Bell, Sparkles, Wallet } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import LoginModal from './auth/LoginModal';
 import RegisterModal from './auth/RegisterModal';
-import { Sheet, SheetContent, SheetTrigger } from './ui/sheet';
-import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
-import { Badge } from './ui/badge';
 import NotificationCenter from './notifications/NotificationCenter';
+import UserMenu from './header/UserMenu';
+import MobileMenu from './header/MobileMenu';
+import { NavLink } from './header/NavLink';
+import AuthButtons from './header/AuthButtons';
 
 const Header = () => {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
@@ -74,16 +67,9 @@ const Header = () => {
 
         <nav className="hidden md:flex space-x-1">
           {navLinks.map((link) => (
-            <Link key={link.path} to={link.path}>
-              <Button 
-                variant="ghost" 
-                size="sm"
-                className={`${isActive(link.path) ? 'bg-white/10 text-white' : 'text-white/70 hover:text-white hover:bg-white/10'}`}
-              >
-                {link.icon}
-                {link.title}
-              </Button>
-            </Link>
+            <NavLink key={link.path} to={link.path} isActive={isActive(link.path)} icon={link.icon}>
+              {link.title}
+            </NavLink>
           ))}
         </nav>
 
@@ -96,184 +82,22 @@ const Header = () => {
           )}
           {user && <NotificationCenter />}
           {user ? (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="relative flex items-center gap-2 px-2">
-                  <Avatar className="h-7 w-7 border border-royal-gold/20">
-                    <AvatarImage src={user.profileImage} />
-                    <AvatarFallback className="bg-royal-navy text-white">
-                      {user.username.substring(0, 2).toUpperCase()}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="flex flex-col items-start text-left">
-                    <span className="text-xs font-medium">{user.username}</span>
-                    <span className="text-xs text-white/60">Rank #{user.rank}</span>
-                  </div>
-                  <Badge className="absolute -top-1 -right-1 text-xs px-1.5 py-0.5 bg-royal-gold/20 border-royal-gold/40 text-royal-gold">
-                    ${user.amountSpent}
-                  </Badge>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="glass-morphism border-royal-gold/10 w-56">
-                <DropdownMenuLabel className="text-white/70">My Account</DropdownMenuLabel>
-                <DropdownMenuSeparator className="bg-white/10" />
-                <Link to="/profile">
-                  <DropdownMenuItem className="flex cursor-pointer text-white hover:bg-white/10">
-                    <UserCircle className="mr-2 h-4 w-4" />
-                    <span>Profile</span>
-                  </DropdownMenuItem>
-                </Link>
-                <Link to="/dashboard">
-                  <DropdownMenuItem className="flex cursor-pointer text-white hover:bg-white/10">
-                    <DollarSign className="mr-2 h-4 w-4" />
-                    <span>Dashboard</span>
-                  </DropdownMenuItem>
-                </Link>
-                <Link to="/royal-prestige">
-                  <DropdownMenuItem className="flex cursor-pointer text-white hover:bg-white/10">
-                    <Gem className="mr-2 h-4 w-4" />
-                    <span>Royal Boutique</span>
-                  </DropdownMenuItem>
-                </Link>
-                <DropdownMenuSeparator className="bg-white/10" />
-                <DropdownMenuItem onClick={handleLogout} className="flex cursor-pointer text-white hover:bg-white/10">
-                  Logout
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <UserMenu user={user} handleLogout={handleLogout} />
           ) : (
-            <>
-              <Button size="sm" variant="outline" className="text-white border-white/20 hover:bg-white/10" onClick={handleLogin}>
-                <LogIn className="mr-2 h-4 w-4" />
-                Login
-              </Button>
-              <Button size="sm" className="bg-royal-gold hover:bg-royal-gold/90 text-black" onClick={handleRegister}>
-                <UserPlus className="mr-2 h-4 w-4" />
-                Register
-              </Button>
-            </>
+            <AuthButtons handleLogin={handleLogin} handleRegister={handleRegister} />
           )}
         </div>
 
-        <Sheet open={showMobileMenu} onOpenChange={setShowMobileMenu}>
-          <div className="flex items-center md:hidden">
-            {user && (
-              <div className="flex items-center mr-2 glass-morphism rounded-lg px-2 py-1 border border-royal-gold/20">
-                <Wallet size={14} className="text-royal-gold mr-1" />
-                <span className="text-white text-xs font-mono font-medium">${user.walletBalance || 0}</span>
-              </div>
-            )}
-            {user && <NotificationCenter />}
-            <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="ml-2">
-                <Menu className="h-5 w-5 text-white" />
-              </Button>
-            </SheetTrigger>
-          </div>
-          <SheetContent side="right" className="glass-morphism border-royal-gold/10 w-64">
-            <div className="flex flex-col h-full">
-              <div className="flex justify-between items-center mb-4">
-                <div className="flex items-center gap-2">
-                  <Crown className="h-5 w-5 text-royal-gold" />
-                  <span className="font-bold text-lg royal-gradient">P2W.FUN</span>
-                </div>
-                <Button variant="ghost" size="icon" onClick={() => setShowMobileMenu(false)}>
-                  <X className="h-5 w-5 text-white" />
-                </Button>
-              </div>
-
-              {user && (
-                <div className="mb-4 p-3 glass-morphism rounded-lg">
-                  <div className="flex items-center gap-3">
-                    <Avatar className="h-10 w-10 border border-royal-gold/20">
-                      <AvatarImage src={user.profileImage} />
-                      <AvatarFallback className="bg-royal-navy text-white">
-                        {user.username.substring(0, 2).toUpperCase()}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div>
-                      <div className="font-medium text-sm">{user.username}</div>
-                      <div className="text-xs text-white/60">Rank #{user.rank}</div>
-                      <div className="flex items-center text-xs text-royal-gold">
-                        <DollarSign className="h-3 w-3 mr-0.5" />
-                        <span>{user.amountSpent} spent</span>
-                      </div>
-                      <div className="flex items-center text-xs text-white/70 mt-1">
-                        <Wallet className="h-3 w-3 mr-0.5 text-purple-400" />
-                        <span>{user.walletBalance || 0} balance</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              <nav className="space-y-1 mb-4">
-                {navLinks.map((link) => (
-                  <Link 
-                    key={link.path} 
-                    to={link.path}
-                    onClick={() => setShowMobileMenu(false)}
-                  >
-                    <Button 
-                      variant="ghost" 
-                      size="sm"
-                      className={`w-full justify-start ${
-                        isActive(link.path) 
-                          ? 'bg-white/10 text-white' 
-                          : 'text-white/70 hover:text-white hover:bg-white/10'
-                      }`}
-                    >
-                      {link.icon}
-                      {link.title}
-                    </Button>
-                  </Link>
-                ))}
-              </nav>
-
-              <div className="mt-auto space-y-2">
-                {user ? (
-                  <Button 
-                    variant="outline" 
-                    size="sm"
-                    className="w-full text-white border-white/20 hover:bg-white/10"
-                    onClick={() => {
-                      handleLogout();
-                      setShowMobileMenu(false);
-                    }}
-                  >
-                    Logout
-                  </Button>
-                ) : (
-                  <>
-                    <Button 
-                      variant="outline" 
-                      size="sm"
-                      className="w-full text-white border-white/20 hover:bg-white/10"
-                      onClick={() => {
-                        setShowMobileMenu(false);
-                        handleLogin();
-                      }}
-                    >
-                      <LogIn className="mr-2 h-4 w-4" />
-                      Login
-                    </Button>
-                    <Button 
-                      size="sm"
-                      className="w-full bg-royal-gold hover:bg-royal-gold/90 text-black"
-                      onClick={() => {
-                        setShowMobileMenu(false);
-                        handleRegister();
-                      }}
-                    >
-                      <UserPlus className="mr-2 h-4 w-4" />
-                      Register
-                    </Button>
-                  </>
-                )}
-              </div>
-            </div>
-          </SheetContent>
-        </Sheet>
+        <MobileMenu 
+          user={user}
+          navLinks={navLinks}
+          showMobileMenu={showMobileMenu}
+          setShowMobileMenu={setShowMobileMenu}
+          handleLogin={handleLogin}
+          handleRegister={handleRegister}
+          handleLogout={handleLogout}
+          isActive={isActive}
+        />
       </div>
 
       {showLoginModal && <LoginModal isOpen={showLoginModal} onClose={() => setShowLoginModal(false)} />}
