@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Users, Award, ArrowRight } from 'lucide-react';
@@ -33,13 +32,11 @@ const TeamOverview: React.FC<TeamOverviewProps> = ({ user }) => {
     none: 'No Team'
   };
 
-  const handleTeamChange = async (team: TeamColor) => {
+  const handleTeamChange = async (team: TeamColor): Promise<void> => {
     try {
       await updateUserProfile({ team });
-      return true;
     } catch (error) {
       console.error("Error updating team:", error);
-      return false;
     }
   };
   

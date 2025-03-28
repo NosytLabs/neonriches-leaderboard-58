@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -24,7 +23,7 @@ const Teams = () => {
     }
   }, [user?.team]);
   
-  const handleTeamSelect = async (team: TeamColor) => {
+  const handleTeamSelect = async (team: TeamColor): Promise<boolean> => {
     try {
       await updateUserProfile({ team });
       toast({
@@ -77,7 +76,7 @@ const Teams = () => {
                 </TabsContent>
                 
                 <TabsContent value="selection">
-                  <TeamSelection onTeamSelect={handleTeamSelect} />
+                  {user && <TeamSelection user={user} onTeamSelect={handleTeamSelect} />}
                 </TabsContent>
                 
                 <TabsContent value="leaderboard">

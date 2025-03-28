@@ -13,7 +13,7 @@ export interface ComplexityItem {
   explanation?: string;
   status?: string;
   path?: string;
-  function?: string;
+  function: string; // Added as required property
   functions?: { name: string; complexity: number; status: string; }[];
 }
 
@@ -67,7 +67,6 @@ export interface AnalysisResult {
   securityIssues: any[];
   bestPracticeViolations: any[];
   codeSmells: any[];
-  // Add missing properties
   deadCodePaths: any[];
   duplicateCode: DuplicateCode[];
   complexCode: ComplexityItem[];
