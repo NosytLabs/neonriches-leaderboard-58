@@ -1,214 +1,154 @@
 
 import React from 'react';
-import { 
-  DialogContent, 
-  DialogHeader, 
-  DialogTitle,
-  DialogDescription
-} from '@/components/ui/dialog';
+import { DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Badge } from '@/components/ui/badge';
-import { Calendar, Clock, Users, Trophy, Sparkles, ShieldCheck } from 'lucide-react';
+import { Separator } from '@/components/ui/separator';
+import { Check, Calendar, Info, ScrollText, Shield } from 'lucide-react';
 import { eventDetailsData } from '../data';
-import CountdownTimer from '../CountdownTimer';
-import { formatDate, isEventActive } from '@/utils/dateUtils';
+import { formatDate } from '@/utils/dateUtils';
 import OptimizedImage from '@/components/ui/optimized-image';
-import { EventDetails } from '@/types/events';
 
-interface EventDetailsModalProps {
+export interface EventDetailsModalProps {
   eventId: string;
-  onClose: () => void;
+  onClose?: () => void;
 }
 
-const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ 
-  eventId, 
-  onClose 
-}) => {
+const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ eventId, onClose }) => {
   const eventDetails = eventDetailsData[eventId];
   
   if (!eventDetails) {
     return (
-      <DialogContent className="glass-morphism border-white/10 sm:max-w-md">
+      <DialogContent className="glass-morphism border-white/10">
         <DialogHeader>
           <DialogTitle>Event Not Found</DialogTitle>
           <DialogDescription>
-            The event details could not be found.
+            Sorry, we couldn't find details for this event.
           </DialogDescription>
         </DialogHeader>
+        <DialogFooter>
+          <Button onClick={onClose}>Close</Button>
+        </DialogFooter>
       </DialogContent>
     );
   }
-  
-  const isActive = isEventActive(eventDetails.startDate, eventDetails.endDate);
-  
+
   return (
-    <DialogContent className="glass-morphism border-white/10 sm:max-w-3xl">
+    <DialogContent className="glass-morphism border-white/10 max-w-3xl min-h-[50vh] max-h-[85vh]">
       <DialogHeader>
-        <DialogTitle className="text-2xl royal-gradient flex items-center">
-          {getEventTypeIcon(eventDetails.type)}
-          <span className="ml-2">{eventDetails.name}</span>
-        </DialogTitle>
+        <OptimizedImage
+          src={eventDetails.image}
+          alt={eventDetails.name}
+          className="w-full h-40 object-cover rounded-t-lg -mt-6 -mx-6"
+          imgClassName="object-cover"
+        />
+        <div className="pt-4">
+          <DialogTitle className="text-2xl font-royal">{eventDetails.name}</DialogTitle>
+          <DialogDescription className="text-white/70">
+            {eventDetails.description}
+          </DialogDescription>
+        </div>
       </DialogHeader>
       
-      <ScrollArea className="max-h-[70vh]">
-        <div className="relative h-52 w-full mb-6 overflow-hidden rounded-md">
-          <OptimizedImage 
-            src={eventDetails.image}
-            alt={eventDetails.name}
-            className="w-full h-full object-cover"
-          />
-          
-          <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
-            <div className="p-4 w-full">
-              <div className="flex justify-between items-end">
-                <div>
-                  <Badge 
-                    variant="outline" 
-                    className={isActive 
-                      ? "bg-royal-gold/20 border-royal-gold text-royal-gold" 
-                      : "bg-white/10 border-white/20"
-                    }
-                  >
-                    {isActive ? "Active Now" : "Upcoming Event"}
-                  </Badge>
-                </div>
-                
-                <div>
-                  <CountdownTimer 
-                    targetDate={isActive ? eventDetails.endDate : eventDetails.startDate} 
-                    variant="compact" 
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        
+      <ScrollArea className="pr-4 max-h-[50vh]">
         <div className="space-y-6">
+          <div className="flex flex-wrap gap-4">
+            <InfoCard
+              title="Event Dates"
+              icon={<Calendar className="h-5 w-5 text-royal-gold" />}
+              content={
+                <div className="space-y-1">
+                  <p><span className="text-white/60">Starts:</span> {formatDate(eventDetails.startDate)}</p>
+                  <p><span className="text-white/60">Ends:</span> {formatDate(eventDetails.endDate)}</p>
+                </div>
+              }
+            />
+            
+            <InfoCard
+              title="Rewards"
+              icon={<Info className="h-5 w-5 text-royal-navy" />}
+              content={
+                <div className="flex flex-wrap gap-2">
+                  {eventDetails.rewardTypes.map((reward, i) => (
+                    <span 
+                      key={i} 
+                      className="px-2 py-1 bg-white/5 rounded text-xs font-medium"
+                    >
+                      {reward}
+                    </span>
+                  ))}
+                </div>
+              }
+            />
+          </div>
+          
+          <Separator className="border-white/10" />
+          
           <div>
-            <h3 className="font-bold royal-gradient text-lg mb-2">About the Event</h3>
-            <p className="text-white/80">{eventDetails.description}</p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="glass-morphism border-white/10 p-4 rounded-lg">
-              <h4 className="font-medium mb-3 flex items-center">
-                <Calendar className="h-4 w-4 mr-2 text-royal-gold" />
-                Event Schedule
-              </h4>
-              
-              <div className="space-y-2">
-                <div className="flex justify-between">
-                  <span className="text-white/70">Starts:</span>
-                  <span>{formatDate(eventDetails.startDate, { weekday: 'short', month: 'short', day: 'numeric' })}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-white/70">Ends:</span>
-                  <span>{formatDate(eventDetails.endDate, { weekday: 'short', month: 'short', day: 'numeric' })}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-white/70">Duration:</span>
-                  <span>{getDurationText(eventDetails)}</span>
-                </div>
-              </div>
-            </div>
-            
-            <div className="glass-morphism border-white/10 p-4 rounded-lg">
-              <h4 className="font-medium mb-3 flex items-center">
-                <Trophy className="h-4 w-4 mr-2 text-royal-gold" />
-                Rewards
-              </h4>
-              
-              <div className="flex flex-wrap gap-2">
-                {eventDetails.rewardTypes.map((reward, index) => (
-                  <Badge 
-                    key={index} 
-                    variant="outline" 
-                    className="bg-royal-gold/10 border-royal-gold/30"
-                  >
-                    {reward}
-                  </Badge>
-                ))}
-              </div>
-            </div>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="glass-morphism border-white/10 p-4 rounded-lg">
-              <h4 className="font-medium mb-3 flex items-center">
-                <Users className="h-4 w-4 mr-2 text-royal-purple" />
-                Eligibility
-              </h4>
-              <p className="text-white/80">{eventDetails.eligibility}</p>
-            </div>
-            
-            <div className="glass-morphism border-white/10 p-4 rounded-lg">
-              <h4 className="font-medium mb-3 flex items-center">
-                <ShieldCheck className="h-4 w-4 mr-2 text-royal-navy" />
-                Special Rules
-              </h4>
-              <ul className="space-y-1 text-sm text-white/80">
-                {eventDetails.specialRules.map((rule, index) => (
-                  <li key={index} className="flex items-start">
-                    <span className="text-royal-gold mr-2">•</span> 
-                    <span>{rule}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-          
-          <div className="glass-morphism border-white/10 p-4 rounded-lg">
-            <h4 className="font-medium mb-3 flex items-center">
-              <Sparkles className="h-4 w-4 mr-2 text-royal-gold" />
+            <h3 className="text-lg font-bold mb-2 flex items-center">
+              <ScrollText className="h-5 w-5 mr-2 text-royal-gold" />
               Participation Requirements
-            </h4>
-            <ul className="space-y-1 text-sm text-white/80">
-              {eventDetails.participationRequirements.map((req, index) => (
-                <li key={index} className="flex items-start">
-                  <span className="text-royal-gold mr-2">•</span> 
-                  <span>{req}</span>
+            </h3>
+            <p className="text-white/70 text-sm mb-3">{eventDetails.eligibility}</p>
+            <ul className="space-y-2">
+              {eventDetails.participationRequirements.map((req, i) => (
+                <li key={i} className="flex items-start">
+                  <Check className="h-4 w-4 mr-2 text-team-green mt-1 flex-shrink-0" />
+                  <span className="text-sm text-white/80">{req}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+          
+          <Separator className="border-white/10" />
+          
+          <div>
+            <h3 className="text-lg font-bold mb-2 flex items-center">
+              <Shield className="h-5 w-5 mr-2 text-royal-gold" />
+              Special Rules
+            </h3>
+            <ul className="space-y-2">
+              {eventDetails.specialRules.map((rule, i) => (
+                <li key={i} className="flex items-start">
+                  <div className="h-1.5 w-1.5 rounded-full bg-royal-gold mt-1.5 mr-2 flex-shrink-0" />
+                  <span className="text-sm text-white/80">{rule}</span>
                 </li>
               ))}
             </ul>
           </div>
         </div>
       </ScrollArea>
+      
+      <DialogFooter className="mt-6">
+        <Button variant="outline" onClick={onClose}>
+          Close
+        </Button>
+        <Button 
+          className="bg-gradient-to-r from-team-blue to-royal-gold text-black font-medium"
+        >
+          Join Event
+        </Button>
+      </DialogFooter>
     </DialogContent>
   );
 };
 
-// Helper function to get event type icon
-function getEventTypeIcon(type: string) {
-  switch (type) {
-    case 'treasure':
-      return <Trophy className="h-6 w-6 text-royal-gold" />;
-    case 'shame':
-      return <Users className="h-6 w-6 text-royal-crimson" />;
-    case 'team':
-      return <Trophy className="h-6 w-6 text-royal-navy" />;
-    default:
-      return <Calendar className="h-6 w-6 text-royal-gold" />;
-  }
+interface InfoCardProps {
+  title: string;
+  icon: React.ReactNode;
+  content: React.ReactNode;
 }
 
-// Helper function to calculate event duration
-function getDurationText(event: EventDetails): string {
-  const startDate = new Date(event.startDate);
-  const endDate = new Date(event.endDate);
-  
-  const diffTime = Math.abs(endDate.getTime() - startDate.getTime());
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-  
-  if (diffDays === 1) return "1 day";
-  if (diffDays < 7) return `${diffDays} days`;
-  if (diffDays === 7) return "1 week";
-  
-  const weeks = Math.floor(diffDays / 7);
-  const remainingDays = diffDays % 7;
-  
-  if (remainingDays === 0) return `${weeks} week${weeks > 1 ? 's' : ''}`;
-  return `${weeks} week${weeks > 1 ? 's' : ''} and ${remainingDays} day${remainingDays > 1 ? 's' : ''}`;
-}
+const InfoCard: React.FC<InfoCardProps> = ({ title, icon, content }) => {
+  return (
+    <div className="glass-morphism border-white/10 p-4 rounded-lg flex-1 min-w-[200px]">
+      <h3 className="text-sm font-medium text-white/70 flex items-center mb-2">
+        {icon}
+        <span className="ml-2">{title}</span>
+      </h3>
+      {content}
+    </div>
+  );
+};
 
 export default EventDetailsModal;

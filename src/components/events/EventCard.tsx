@@ -4,7 +4,7 @@ import { Calendar, Clock, Users, Trophy } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Event } from '@/types/events';
+import { Event, EventType } from '@/types/events';
 import { formatDate, isEventActive } from '@/utils/dateUtils';
 import OptimizedImage from '@/components/ui/optimized-image';
 import { cn } from '@/lib/utils';

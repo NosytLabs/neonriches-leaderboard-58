@@ -7,6 +7,7 @@ import useNotificationSounds from '@/hooks/use-notification-sounds';
 import Index from '@/pages/Index';
 import Dashboard from '@/pages/Dashboard';
 import Profile from '@/pages/Profile';
+import Events from '@/pages/Events';
 import EventsPage from '@/pages/EventsPage';
 import LeaderboardPage from '@/pages/LeaderboardPage';
 import RoyalPrestige from '@/pages/RoyalPrestige';
@@ -51,7 +52,8 @@ function App() {
       <Route path="/" element={<Index />} />
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/profile" element={<Profile />} />
-      <Route path="/events" element={<EventsPage />} />
+      <Route path="/events" element={<Events />} />
+      <Route path="/events-page" element={<EventsPage />} />
       <Route path="/leaderboard" element={<LeaderboardPage />} />
       <Route path="/royal-prestige" element={<RoyalPrestige />} />
       <Route path="/auth" element={<Auth />} />

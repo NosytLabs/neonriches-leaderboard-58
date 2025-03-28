@@ -1,5 +1,5 @@
 
-import { EventDetails } from './components/EventDetailsModal';
+import { Event, EventDetails, EventStats } from '@/types/events';
 
 // Mock user data for shame targets
 export const topUsers = [
@@ -93,6 +93,7 @@ export const eventDetailsData: Record<string, EventDetails> = {
     image: "https://images.unsplash.com/photo-1551732998-9573f695fdbb?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
     startDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(),
     endDate: new Date(Date.now() + 12 * 24 * 60 * 60 * 1000).toISOString(),
+    type: "treasure",
     rewardTypes: ["Exclusive Badges", "Profile Cosmetics", "Bonus Rank Points", "Special Titles"],
     eligibility: "All registered users can participate",
     participationRequirements: [
@@ -115,6 +116,7 @@ export const eventDetailsData: Record<string, EventDetails> = {
     image: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
     startDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString(),
     endDate: new Date(Date.now() + 17 * 24 * 60 * 60 * 1000).toISOString(),
+    type: "shame",
     rewardTypes: ["Shame Trophies", "Special Effects", "Humiliator Badges"],
     eligibility: "Users who have spent at least $1 can participate",
     participationRequirements: [
@@ -137,6 +139,7 @@ export const eventDetailsData: Record<string, EventDetails> = {
     image: "https://images.unsplash.com/photo-1473177104440-ffee2f376098?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
     startDate: new Date(Date.now() + 21 * 24 * 60 * 60 * 1000).toISOString(),
     endDate: new Date(Date.now() + 28 * 24 * 60 * 60 * 1000).toISOString(),
+    type: "team",
     rewardTypes: ["Team Territories", "Conquest Badges", "Team Bonuses", "Individual Rewards"],
     eligibility: "All users who have joined a team",
     participationRequirements: [
@@ -155,7 +158,7 @@ export const eventDetailsData: Record<string, EventDetails> = {
 };
 
 // Add the missing exports for eventStats and currentEvent
-export const eventStats = {
+export const eventStats: EventStats = {
   prizePool: 24750,
   participantsCount: 487,
   totalPokes: 1253,
@@ -165,7 +168,7 @@ export const eventStats = {
   }
 };
 
-export const currentEvent = {
+export const currentEvent: Event = {
   id: "treasure-hunt",
   name: "Royal Treasure Hunt",
   description: "Solve riddles and follow clues to find valuable treasures hidden throughout the site.",
