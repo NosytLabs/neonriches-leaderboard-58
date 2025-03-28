@@ -1,4 +1,3 @@
-
 import { useState, useCallback, useEffect } from 'react';
 import { useToastContext } from '@/contexts/ToastContext';
 
@@ -65,7 +64,7 @@ export const useMockeryEffect = ({
         
         if (hoursSinceLast < 24) {
           mockeryCooldowns[userId] = true;
-          if (effectType && Object.values(MockeryAction).includes(effectType as MockeryAction)) {
+          if (effectType && isValidMockeryAction(effectType)) {
             activeEffects[userId] = effectType as MockeryAction;
           }
           
@@ -92,6 +91,11 @@ export const useMockeryEffect = ({
     setMockeryEffects(activeEffects);
     setMockeryCooldown(mockeryCooldowns);
   }, []);
+  
+  // Helper function to check if a string is a valid MockeryAction
+  const isValidMockeryAction = (value: string): value is MockeryAction => {
+    return ['tomatoes', 'eggs', 'stocks', 'jester', 'dunce', 'roast', 'ridicule', 'taunt'].includes(value);
+  };
   
   // Show mockery effects for a short time to display animation
   const triggerMockeryEffect = useCallback((targetId: number, mockeryType: MockeryAction) => {

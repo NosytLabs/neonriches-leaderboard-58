@@ -1,9 +1,15 @@
-
 import React from 'react';
 import { Crown, Coins, Tag, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { MockeryAction } from '../hooks/useMockeryEffect';
-import { getMockeryActionIcon, getMockeryActionColor, hasWeeklyDiscount, getMockeryActionPrice, getDiscountedMockeryPrice } from '../utils/mockeryUtils';
+import { 
+  getMockeryActionIcon, 
+  getMockeryActionColor, 
+  hasWeeklyDiscount, 
+  getMockeryActionPrice, 
+  getDiscountedMockeryPrice,
+  getMockeryActionTitle 
+} from '../utils/mockeryUtils';
 import RoyalButton from '@/components/ui/royal-button';
 import { getTeamColor } from '@/lib/colors';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
@@ -44,7 +50,6 @@ const MockeryUserCard: React.FC<MockeryUserCardProps> = ({
   
   const handleMockeryConfirm = () => {
     if (selectedMockery) {
-      // Apply discount if this is the weekly featured action
       const mockeryAmount = hasWeeklyDiscount(selectedMockery) 
         ? getDiscountedMockeryPrice(selectedMockery) 
         : getMockeryActionPrice(selectedMockery);
@@ -54,21 +59,17 @@ const MockeryUserCard: React.FC<MockeryUserCardProps> = ({
     }
   };
   
-  // Determine the mockery actions to display
   const mockeryActions: MockeryAction[] = [
     'tomatoes', 'eggs', 'stocks', 'jester', 'dunce', 'roast', 'ridicule', 'taunt'
   ];
   
-  // Visual effects for mocked users
   React.useEffect(() => {
     if (isMocked) {
       const targetElement = document.getElementById(`user-card-${user.id}`);
       if (!targetElement) return;
       
-      // Add a mockery-specific animation class
       targetElement.classList.add(`mockery-effect-${isMocked}`);
       
-      // Remove after animation completes
       setTimeout(() => {
         targetElement.classList.remove(`mockery-effect-${isMocked}`);
       }, 5000);
@@ -83,7 +84,6 @@ const MockeryUserCard: React.FC<MockeryUserCardProps> = ({
         ${isOnCooldown ? 'opacity-70' : ''}
         ${isProtected ? 'border-royal-purple/30 shadow-royal-protection' : ''}`}
     >
-      {/* Visual mockery effect overlays */}
       {isMocked === 'tomatoes' && (
         <div className="absolute inset-0 pointer-events-none tomato-overlay"></div>
       )}
@@ -109,7 +109,6 @@ const MockeryUserCard: React.FC<MockeryUserCardProps> = ({
         <div className="absolute inset-0 pointer-events-none taunt-overlay"></div>
       )}
       
-      {/* Protection indicator */}
       {isProtected && (
         <div className="absolute top-2 right-2 z-10">
           <Tooltip>
@@ -125,7 +124,6 @@ const MockeryUserCard: React.FC<MockeryUserCardProps> = ({
         </div>
       )}
       
-      {/* Crown for top 3 */}
       {user.rank <= 3 && (
         <div className="absolute top-2 left-2">
           <MedievalIcon 
@@ -137,7 +135,6 @@ const MockeryUserCard: React.FC<MockeryUserCardProps> = ({
         </div>
       )}
       
-      {/* User info */}
       <div className="flex items-center mb-3">
         <div className="relative mr-3">
           <div className="w-12 h-12 rounded-full glass-morphism border-white/10 flex items-center justify-center overflow-hidden">
@@ -171,7 +168,6 @@ const MockeryUserCard: React.FC<MockeryUserCardProps> = ({
         </div>
       </div>
       
-      {/* Mockery Actions */}
       {!isProtected && !isOnCooldown && (
         <>
           <div className="text-xs text-white/60 mb-1">Select mockery method:</div>
