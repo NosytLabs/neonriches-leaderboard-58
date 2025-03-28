@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { BarChart, LineChart, PieChart } from 'lucide-react';
@@ -48,7 +47,6 @@ const ProfileAnalytics: React.FC<ProfileAnalyticsProps> = ({ user }) => {
     
     fetchAnalytics();
     
-    // Refresh analytics every 5 minutes
     const interval = setInterval(fetchAnalytics, 5 * 60 * 1000);
     
     return () => clearInterval(interval);
@@ -57,7 +55,6 @@ const ProfileAnalytics: React.FC<ProfileAnalyticsProps> = ({ user }) => {
   const prepareViewsData = () => {
     if (!analytics || !analytics.history) return [];
     
-    // Group views by day
     const viewsByDay: Record<string, number> = {};
     
     analytics.history.forEach((item: any) => {
@@ -69,9 +66,8 @@ const ProfileAnalytics: React.FC<ProfileAnalyticsProps> = ({ user }) => {
       }
     });
     
-    // Convert to array for chart
     return Object.entries(viewsByDay).map(([date, count]) => ({
-      date: date.split('-').slice(1).join('/'), // Format as MM/DD
+      date: date.split('-').slice(1).join('/'),
       views: count
     }));
   };
@@ -79,7 +75,6 @@ const ProfileAnalytics: React.FC<ProfileAnalyticsProps> = ({ user }) => {
   const prepareClicksData = () => {
     if (!analytics || !analytics.history) return [];
     
-    // Group clicks by day
     const clicksByDay: Record<string, number> = {};
     
     analytics.history.forEach((item: any) => {
@@ -91,9 +86,8 @@ const ProfileAnalytics: React.FC<ProfileAnalyticsProps> = ({ user }) => {
       }
     });
     
-    // Convert to array for chart
     return Object.entries(clicksByDay).map(([date, count]) => ({
-      date: date.split('-').slice(1).join('/'), // Format as MM/DD
+      date: date.split('-').slice(1).join('/'),
       clicks: count
     }));
   };
@@ -116,7 +110,7 @@ const ProfileAnalytics: React.FC<ProfileAnalyticsProps> = ({ user }) => {
         value: count
       }))
       .sort((a, b) => (b.value as number) - (a.value as number))
-      .slice(0, 5); // Top 5 referrers
+      .slice(0, 5);
   };
   
   if (loading) {
@@ -255,7 +249,7 @@ const ProfileAnalytics: React.FC<ProfileAnalyticsProps> = ({ user }) => {
                       outerRadius={80}
                       fill="#8884d8"
                       dataKey="value"
-                      label={({ name, percent }): string => `${name}: ${(percent * 100).toFixed(0)}%`}
+                      label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
                     >
                       {sourcesData.map((entry, index) => (
                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
