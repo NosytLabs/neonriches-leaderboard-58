@@ -1,6 +1,4 @@
 
-import { parseDate } from "./dateUtils";
-
 /**
  * Format a timespan into a readable duration string
  * @param seconds Number of seconds
@@ -23,6 +21,15 @@ export const formatDuration = (seconds: number): string => {
   
   const days = Math.floor(hours / 24);
   return `${days}d ${hours % 24}h`;
+};
+
+/**
+ * Parse a date string or Date object to a Date
+ * @param date Date string or Date object
+ * @returns Parsed Date object
+ */
+export const parseDate = (date: string | Date): Date => {
+  return typeof date === 'string' ? new Date(date) : date;
 };
 
 /**
@@ -64,7 +71,56 @@ export const formatTimeFromNow = (timestamp: string | Date): string => {
   return `${diffYears} year${diffYears === 1 ? '' : 's'} ago`;
 };
 
+/**
+ * Get the time left until a date
+ * @param endTime End time as string or Date
+ * @returns Object with days, hours, minutes, seconds left
+ */
+export const getTimeLeft = (endTime: string | Date) => {
+  const endDate = parseDate(endTime);
+  const now = new Date();
+  
+  // If the end time is in the past, return zeros
+  if (endDate <= now) {
+    return {
+      days: 0,
+      hours: 0,
+      minutes: 0,
+      seconds: 0,
+      total: 0,
+      isComplete: true
+    };
+  }
+  
+  const total = endDate.getTime() - now.getTime();
+  const seconds = Math.floor((total / 1000) % 60);
+  const minutes = Math.floor((total / 1000 / 60) % 60);
+  const hours = Math.floor((total / (1000 * 60 * 60)) % 24);
+  const days = Math.floor(total / (1000 * 60 * 60 * 24));
+  
+  return {
+    days,
+    hours,
+    minutes,
+    seconds,
+    total,
+    isComplete: false
+  };
+};
+
+/**
+ * Format a date for structured data (Schema.org)
+ * @param date Date to format
+ * @returns ISO formatted date string
+ */
+export const formatDateForSchema = (date: string | Date): string => {
+  return parseDate(date).toISOString();
+};
+
 export default {
   formatDuration,
-  formatTimeFromNow
+  formatTimeFromNow,
+  parseDate,
+  getTimeLeft,
+  formatDateForSchema
 };

@@ -1,12 +1,19 @@
 
 /**
  * Format a date as a time ago string (e.g. "3 days ago")
+ * Optimized for SEO with appropriate time element usage
+ * 
  * @param date The date to format
  * @returns Formatted time ago string
  */
 export const formatTimeAgo = (date: string | Date): string => {
   const now = new Date();
   const parsedDate = typeof date === 'string' ? new Date(date) : date;
+  
+  // Invalid date check
+  if (isNaN(parsedDate.getTime())) {
+    return 'Invalid date';
+  }
   
   const seconds = Math.floor((now.getTime() - parsedDate.getTime()) / 1000);
   
@@ -48,6 +55,33 @@ export const formatTimeAgo = (date: string | Date): string => {
   // A year or more
   const years = Math.floor(days / 365);
   return `${years} ${years === 1 ? 'year' : 'years'} ago`;
+};
+
+/**
+ * Format a date with time element for better SEO 
+ * This returns a JSX element with proper datetime attribute
+ */
+export const formatTimeElement = (date: string | Date, formatString?: string): {
+  dateTime: string;
+  formattedDate: string;
+} => {
+  const parsedDate = typeof date === 'string' ? new Date(date) : date;
+  
+  // ISO string for datetime attribute
+  const dateTime = parsedDate.toISOString();
+  
+  // Human-readable format
+  let formattedDate = formatTimeAgo(parsedDate);
+  
+  if (formatString) {
+    try {
+      formattedDate = new Intl.DateTimeFormat('en-US', JSON.parse(formatString)).format(parsedDate);
+    } catch (error) {
+      console.error('Invalid date format string:', error);
+    }
+  }
+  
+  return { dateTime, formattedDate };
 };
 
 export default formatTimeAgo;

@@ -1,6 +1,5 @@
 
 import React, { useState, useEffect } from 'react';
-import { Helmet } from 'react-helmet-async';
 import { useNavigate } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -19,6 +18,7 @@ import { mockLeaderboardData } from '@/components/leaderboard/LeaderboardData';
 import { UserProfile } from '@/types/user';
 import { ToastProvider } from '@/contexts/ToastContext';
 import { getUserRanking } from '@/services/spendingService';
+import SEO from '@/components/seo/SEO';
 
 const Index = () => {
   const navigate = useNavigate();
@@ -106,21 +106,27 @@ const Index = () => {
     }
   };
 
+  // SEO keywords for the homepage
+  const seoKeywords = [
+    'pay to win', 
+    'social experiment', 
+    'digital nobility', 
+    'online status', 
+    'throne game', 
+    'spending competition', 
+    'satirical platform',
+    'digital status',
+    'web3 parody'
+  ];
+
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground">
-      <Helmet>
-        <title>SpendThrone | The Ultimate Pay-to-Win Social Experiment</title>
-        <meta 
-          name="description" 
-          content="Join SpendThrone, the satirical social platform where your rank is determined solely by how much money you spend. $1 = 1 unit of rank. No skills required."
-        />
-        <meta property="og:title" content="SpendThrone | The Ultimate Pay-to-Win Social Experiment" />
-        <meta 
-          property="og:description" 
-          content="A satirical social platform where your rank is determined solely by how much money you spend. $1 = 1 unit of rank. No skills required."
-        />
-        <meta property="og:type" content="website" />
-      </Helmet>
+      <SEO 
+        title="SpendThrone | The Ultimate Pay-to-Win Social Experiment"
+        description="Join SpendThrone, the satirical social platform where your rank is determined solely by how much money you spend. $1 = 1 unit of rank. No skills required."
+        keywords={seoKeywords}
+        ogType="website"
+      />
       
       <Header />
       
@@ -136,11 +142,11 @@ const Index = () => {
         <div className="container mx-auto px-4 py-16">
           <div className="text-center mb-14">
             <div className="inline-block mb-3">
-              <Crown className="h-12 w-12 text-royal-gold animate-crown-glow" />
+              <Crown className="h-12 w-12 text-royal-gold animate-crown-glow" aria-hidden="true" />
             </div>
-            <h2 className="text-3xl font-bold royal-gradient mb-4 font-royal">
+            <h1 className="text-3xl font-bold royal-gradient mb-4 font-royal">
               Welcome to the Royal Court of Conspicuous Consumption
-            </h2>
+            </h1>
             <p className="text-white/70 max-w-2xl mx-auto">
               Where you pay real money for fake status in a blatant parody of how actual status works.
               Who needs talent, hard work, or social contribution when you can just throw cash at the leaderboard?
@@ -153,7 +159,7 @@ const Index = () => {
                 className="royal-button bg-royal-gold text-black hover:bg-royal-gold/90"
               >
                 Begin Your Noble Ascent
-                <ArrowRight className="ml-2 h-4 w-4" />
+                <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
               </Button>
               <p className="text-xs mt-3 text-white/50 italic">
                 *No refunds for your questionable financial decisions
@@ -180,7 +186,7 @@ const Index = () => {
               className="border-royal-gold/30 text-royal-gold hover:bg-royal-gold/10 mr-4"
             >
               About SpendThrone
-              <ArrowRight className="ml-2 h-4 w-4" />
+              <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
             </Button>
             
             <Button 
@@ -189,7 +195,7 @@ const Index = () => {
               className="border-royal-gold/30 text-royal-gold hover:bg-royal-gold/10"
             >
               View Royal FAQs
-              <ArrowRight className="ml-2 h-4 w-4" />
+              <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
             </Button>
           </div>
         </div>
