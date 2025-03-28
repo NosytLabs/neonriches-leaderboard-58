@@ -1,13 +1,8 @@
 
-import { createContext, useContext } from 'react';
+// This file now re-exports from the correct location
+import { AuthContext, useAuth } from './auth/AuthContext';
 import { AuthContextType } from '@/types/auth-context';
+import { UserProfile } from '@/types/user';
 
-export const AuthContext = createContext<AuthContextType | null>(null);
-
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (context === null) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
-};
+export { AuthContext, useAuth };
+export type { AuthContextType, UserProfile };
