@@ -1,3 +1,4 @@
+
 import { Config } from "tailwindcss";
 import { fontFamily } from "tailwindcss/defaultTheme";
 
@@ -110,6 +111,10 @@ const config = {
           "0%, 100%": { opacity: "0.4", transform: "scale(0.8)" },
           "50%": { opacity: "1", transform: "scale(1.2)" },
         },
+        "border-pulse": {
+          "0%, 100%": { borderColor: "rgba(212, 175, 55, 0.7)" },
+          "50%": { borderColor: "rgba(212, 175, 55, 0.3)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -119,6 +124,7 @@ const config = {
         "pulse-slow": "pulse-slow 3s ease-in-out infinite",
         "crown-glow": "crown-glow 2s ease-in-out infinite",
         "sparkle": "sparkle 1.5s ease-in-out infinite",
+        "border-pulse": "border-pulse 2s ease-in-out infinite",
       },
     },
   },

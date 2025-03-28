@@ -1,4 +1,3 @@
-
 /* Cosmetic items styling */
 .cosmetic-item {
   @apply transition-all duration-300 hover:transform hover:scale-105 hover:shadow-royal-gold/20;
