@@ -134,7 +134,7 @@ const RoyalBoutique = () => {
           </p>
         </div>
         
-        {!user?.cosmetics?.foundersPass && (
+        {user && user.cosmetics && user.cosmetics.foundersPass !== true && (
           <div className="mb-6">
             <FoundersPass onPurchase={handleFoundersPurchase} user={user} />
           </div>

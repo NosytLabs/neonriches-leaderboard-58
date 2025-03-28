@@ -1,4 +1,3 @@
-
 import { CosmeticRarity } from './cosmetics';
 
 export type UserGender = 'king' | 'queen' | 'jester' | 'noble';
@@ -61,14 +60,12 @@ export interface UserProfile {
   subscription?: UserSubscription;
   socialLinks: SocialLink[];
   role?: string;
-  // Adding missing profile properties
   profileViews?: number;
   profileClicks?: number;
   followers?: number;
-  activeTitle?: string; // The currently selected title to display
+  activeTitle?: string;
 }
 
-// Define the ProfileImage and ProfileLink types for the editor components
 export interface ProfileImage {
   id: number;
   url: string;

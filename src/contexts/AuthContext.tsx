@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { UserProfile, UserSubscription } from '@/types/user';
 import { CosmeticRarity } from '@/types/cosmetics';
@@ -9,19 +8,15 @@ interface AuthContextType {
   error: Error | null;
   updateUserProfile: (data: Partial<UserProfile>) => Promise<void>;
   logout: () => void;
-  // Add these properties to fix the TypeScript errors
   updateProfile: (data: Partial<UserProfile>) => Promise<void>;
   signOut: () => void;
   subscription?: UserSubscription;
-  // New functions
   awardCosmetic?: (cosmeticId: string, category: string, rarity: CosmeticRarity, source: string) => Promise<boolean>;
   boostProfile?: (days?: number, level?: number) => Promise<boolean>;
 }
 
-// Create the auth context
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Create the initial user
 const createDefaultUser = (): UserProfile => {
   return {
     id: '1',
@@ -40,7 +35,8 @@ const createDefaultUser = (): UserProfile => {
       borders: ['gold-border'],
       colors: ['royal-purple'],
       fonts: ['medieval'],
-      emojis: ['crown', 'gem']
+      emojis: ['crown', 'gem'],
+      titles: []
     },
     bio: 'A noble testing the royal features of this fine kingdom.',
     marketingStats: {
@@ -56,7 +52,6 @@ const createDefaultUser = (): UserProfile => {
   };
 };
 
-// Create a mocked register user
 const registerUser = (email: string, username: string, password: string): UserProfile => {
   return {
     id: 'user_' + Date.now(),
@@ -75,7 +70,8 @@ const registerUser = (email: string, username: string, password: string): UserPr
       borders: [],
       colors: [],
       fonts: [],
-      emojis: []
+      emojis: [],
+      titles: []
     },
     marketingStats: {
       impressions: 0,
@@ -87,35 +83,22 @@ const registerUser = (email: string, username: string, password: string): UserPr
   };
 };
 
-// Provider component
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<UserProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
   
-  // Check for saved auth state on mount
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        // In a real app, this would check for a valid token in localStorage or cookies
-        // and make an API call to fetch the user data
-        
-        // For demo purposes, let's use localStorage to simulate persistence
         const savedUser = localStorage.getItem('authUser');
         
         if (savedUser) {
-          // Parse and set the user
           const userData = JSON.parse(savedUser);
-          // Handle date conversion for joinDate
           userData.joinDate = new Date(userData.joinDate);
           
           setUser(userData);
         } else {
-          // For demo purposes, immediately "log in" with a default user
-          // In a real app, you would set user to null here
-          // setUser(null);
-          
-          // Use default user
           const defaultUser = createDefaultUser();
           setUser(defaultUser);
           localStorage.setItem('authUser', JSON.stringify(defaultUser));
@@ -130,19 +113,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     checkAuth();
   }, []);
   
-  // Update user profile
   const updateUserProfile = async (data: Partial<UserProfile>): Promise<void> => {
     try {
       if (!user) {
         throw new Error('No user is currently authenticated');
       }
       
-      // Merge the current user data with the updated data
       const updatedUser = { ...user, ...data };
       
-      // In a real app, this would make an API call to update the user data
-      
-      // Update state and localStorage
       setUser(updatedUser);
       localStorage.setItem('authUser', JSON.stringify(updatedUser));
     } catch (err) {
@@ -151,15 +129,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
   
-  // Alias for updateUserProfile to match expected function name
   const updateProfile = updateUserProfile;
   
-  // Logout function
   const logout = async (): Promise<void> => {
     try {
-      // In a real app, this would make an API call to invalidate the token
-      
-      // Clear user state and localStorage
       setUser(null);
       localStorage.removeItem('authUser');
     } catch (err) {
@@ -168,10 +141,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
   
-  // Alias for logout to match expected function name
   const signOut = logout;
   
-  // Award cosmetic to user
   const awardCosmetic = async (
     cosmeticId: string, 
     category: string, 
@@ -181,21 +152,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       if (!user) return false;
       
-      // Check if user already has this cosmetic
-      const userCosmetics = user.cosmetics || { borders: [], colors: [], fonts: [], emojis: [] };
+      const userCosmetics = user.cosmetics || { borders: [], colors: [], fonts: [], emojis: [], titles: [] };
       const categoryItems = userCosmetics[category as keyof typeof userCosmetics] || [];
       
       if (Array.isArray(categoryItems) && categoryItems.includes(cosmeticId)) {
-        return false; // Already owned
+        return false;
       }
       
-      // Add cosmetic to user
       const updatedCosmetics = {
         ...userCosmetics,
         [category]: Array.isArray(categoryItems) ? [...categoryItems, cosmeticId] : [cosmeticId]
       };
       
-      // Update user profile
       await updateUserProfile({
         cosmetics: updatedCosmetics
       });
@@ -207,13 +175,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
   
-  // Boost user profile
   const boostProfile = async (days: number = 7, level: number = 1): Promise<boolean> => {
     try {
       if (!user) return false;
       
-      // In a real app, we would store boost info in the user profile
-      // For now, we'll just simulate success
       return true;
     } catch (error) {
       console.error("Error boosting profile:", error);
@@ -240,7 +205,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   );
 };
 
-// Hook for easy context use
 export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
   if (context === undefined) {
@@ -249,5 +213,4 @@ export const useAuth = (): AuthContextType => {
   return context;
 };
 
-// Export the types
 export type { UserProfile, UserSubscription };

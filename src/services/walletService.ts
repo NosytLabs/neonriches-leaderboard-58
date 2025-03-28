@@ -1,7 +1,15 @@
-
 import { UserProfile } from '@/types/user';
 
-export type SpendingCategory = 'subscription' | 'cosmetic' | 'advertisement' | 'shame' | 'boost' | 'spend' | 'wish';
+export type SpendingCategory = 
+  | 'rank_boost' 
+  | 'team_contribution' 
+  | 'profile_upgrade' 
+  | 'event' 
+  | 'cosmetic' 
+  | 'founder' 
+  | 'poke' 
+  | 'shame' 
+  | 'wish';
 
 export interface Transaction {
   id: string;
