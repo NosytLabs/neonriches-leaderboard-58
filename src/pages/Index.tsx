@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState, Suspense, lazy } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '@/components/Header';
@@ -42,6 +41,7 @@ const topSpender = {
   rank: 1,
   team: "red" as const,
   spendingStreak: 14,
+  spendStreak: 14, // Add for backward compatibility
   gender: "king" as const,
   bio: "I've spent a small fortune for this meaningless digital crown. Worth every penny for the satirical royal status.",
   socialLinks: [
@@ -62,7 +62,8 @@ const topSpender = {
     }
   ],
   joinDate: "2023-05-15",
-  joinedAt: "2023-05-15T12:00:00Z"
+  joinedAt: "2023-05-15T12:00:00Z",
+  tier: "whale" as const  // Add the required tier property
 };
 
 const Index = () => {

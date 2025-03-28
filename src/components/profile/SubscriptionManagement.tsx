@@ -13,8 +13,9 @@ import { useToast } from '@/hooks/use-toast';
 const SubscriptionManagement = () => {
   const { user, updateUserProfile } = useAuth();
   const { hasActiveSubscription, isLoading } = useFeatureAccess();
+  // Fix: remove 'royal' from the type to match useState's expected type
   const [selectedTier, setSelectedTier] = useState<'free' | 'pro'>(
-    user?.subscription?.tier || 'free'
+    (user?.subscription?.tier === 'pro') ? 'pro' : 'free'
   );
   const [selectedBillingCycle, setSelectedBillingCycle] = useState<'monthly' | 'quarterly' | 'yearly'>(
     (user?.subscription?.interval as 'monthly' | 'quarterly' | 'yearly') || 'monthly'
@@ -24,7 +25,8 @@ const SubscriptionManagement = () => {
   // Update selected tier based on user data
   useEffect(() => {
     if (user?.subscription?.tier) {
-      setSelectedTier(user.subscription.tier);
+      // Only set to 'pro' if the tier is 'pro', otherwise set to 'free'
+      setSelectedTier(user.subscription.tier === 'pro' ? 'pro' : 'free');
     } else if (hasActiveSubscription) {
       setSelectedTier('pro');
     }

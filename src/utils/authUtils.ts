@@ -22,7 +22,6 @@ export const createDefaultUser = (): UserProfile => {
     displayName: 'Test User',
     bio: 'This is a test user account for development.',
     profileImage: 'https://source.unsplash.com/random/300x300?portrait',
-    banner: 'https://source.unsplash.com/random/1200x400?landscape',
     amountSpent: 0,
     spentAmount: 0,
     walletBalance: 100,
@@ -55,17 +54,7 @@ export const createDefaultUser = (): UserProfile => {
         animations: true,
         showRankInProfile: true,
         compactView: false
-      },
-      showRank: true,
-      showSpending: true,
-      showTeam: true,
-      profileVisibility: 'public',
-      allowProfileLinks: true,
-      showEmailOnProfile: false,
-      emailNotifications: true,
-      rankChangeAlerts: true,
-      shameAlerts: false,
-      newFollowerAlerts: true
+      }
     }
   };
 };

@@ -2,11 +2,15 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 
+// Define a Feature type to use in the FeatureAccessCard component
+export type Feature = string;
+
 export interface FeatureAccessHook {
   hasActiveSubscription: boolean;
   isLoading: boolean;
   canAccessFeature: (featureName: string) => boolean;
   requiredTierForFeature: (featureName: string) => string;
+  hasAccess: (featureName: Feature) => boolean; // Added missing method
 }
 
 // This hook checks if the user has access to specific features
@@ -87,10 +91,16 @@ export function useFeatureAccess(): FeatureAccessHook {
     return featureToTierMap[featureName] || 'pro';
   };
 
+  // Add the hasAccess method as an alias to canAccessFeature for consistency
+  const hasAccess = (featureName: Feature): boolean => {
+    return canAccessFeature(featureName);
+  };
+
   return {
     hasActiveSubscription,
     isLoading,
     canAccessFeature,
-    requiredTierForFeature
+    requiredTierForFeature,
+    hasAccess
   };
 }

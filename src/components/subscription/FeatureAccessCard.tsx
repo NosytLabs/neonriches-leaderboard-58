@@ -24,9 +24,10 @@ const FeatureAccessCard: React.FC<FeatureAccessCardProps> = ({
   upgradeButtonText = "Upgrade to Access",
   children
 }) => {
-  const { hasAccess, isLoading } = useFeatureAccess();
+  const { canAccessFeature, isLoading } = useFeatureAccess();
   const { toast } = useToast();
-  const hasFeatureAccess = hasAccess(feature);
+  // Fix: Use canAccessFeature instead of hasAccess
+  const hasFeatureAccess = canAccessFeature(feature);
   
   const handleUpgrade = async () => {
     if (!upgradePriceId) {

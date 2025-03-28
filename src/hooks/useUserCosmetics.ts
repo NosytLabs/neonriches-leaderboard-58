@@ -85,12 +85,15 @@ export const useUserCosmetics = (
           break;
       }
       
-      // Create the boost object
+      // Create the boost object with required properties for ProfileBoost type
       const newBoost = {
         id: boostId,
         effectId: effectId,
         startTime: currentTime,
-        endTime: endTime
+        endTime: endTime,
+        type: 'visibility' as const,  // add missing properties
+        strength: level,
+        appliedBy: user.id
       };
       
       // Get existing boosts or initialize empty array
