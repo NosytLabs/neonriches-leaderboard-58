@@ -1,0 +1,31 @@
+
+/* Marketing specific styles from App.css */
+
+/* Marketing-specific styles */
+.marketing-badge {
+  background-color: rgba(255, 215, 0, 0.2);
+  border: 1px solid rgba(255, 215, 0, 0.4);
+  color: #FFD700;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.profile-highlight {
+  border: 2px solid rgba(255, 215, 0, 0.6);
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+  transition: all 0.3s ease;
+}
+
+.profile-highlight:hover {
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.7);
+  transform: translateY(-2px);
+}
+
+.marketing-banner {
+  background: linear-gradient(to right, rgba(13, 13, 32, 0.8), rgba(30, 26, 58, 0.8));
+  padding: 1rem;
+  border-radius: 0.5rem;
+  border-left: 4px solid #FFD700;
+}

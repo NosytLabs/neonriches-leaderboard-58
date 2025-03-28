@@ -1,0 +1,35 @@
+
+/* Enhanced gold dust animation - moved from App.css */
+.animate-gold-dust {
+  position: relative;
+}
+
+.animate-gold-dust::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: radial-gradient(
+    circle,
+    rgba(212, 175, 55, 0.7) 1px,
+    transparent 1px
+  );
+  background-size: 8px 8px;
+  animation: gold-dust 3.5s ease-out infinite;
+  pointer-events: none;
+}
+
+@keyframes gold-dust {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-25px);
+  }
+}
