@@ -1,0 +1,130 @@
+
+:root {
+  /* Core Royal Colors */
+  --royal-gold: rgb(212, 175, 55);
+  --royal-gold-bright: rgb(255, 215, 0);
+  --royal-gold-dark: rgb(184, 134, 11);
+  
+  --royal-crimson: rgb(155, 35, 53);
+  --royal-crimson-bright: rgb(196, 30, 58);
+  --royal-crimson-dark: rgb(128, 0, 32);
+  
+  --royal-navy: rgb(31, 71, 136);
+  --royal-navy-bright: rgb(42, 94, 161);
+  --royal-navy-dark: rgb(13, 43, 84);
+  
+  --royal-purple: rgb(106, 13, 173);
+  --royal-purple-bright: rgb(138, 43, 226);
+  --royal-purple-dark: rgb(75, 0, 130);
+  
+  /* Background Colors */
+  --bg-dark: rgb(13, 13, 32);
+  --bg-dark-lighter: rgb(20, 20, 40);
+  --bg-dark-lightest: rgb(30, 30, 60);
+  
+  /* Text Colors */
+  --text-primary: rgb(255, 255, 255);
+  --text-secondary: rgba(255, 255, 255, 0.7);
+  --text-muted: rgba(255, 255, 255, 0.5);
+  
+  /* Team Colors */
+  --team-red: var(--royal-crimson);
+  --team-green: var(--royal-gold);
+  --team-blue: var(--royal-navy);
+  
+  /* Tier Colors */
+  --tier-whale: var(--royal-purple);
+  --tier-shark: var(--royal-crimson);
+  --tier-dolphin: var(--royal-navy);
+  --tier-fish: rgb(70, 130, 180);
+  --tier-octopus: rgb(128, 0, 128);
+  --tier-crab: rgb(205, 127, 50);
+  
+  /* Gradients */
+  --gradient-royal-gold: linear-gradient(
+    to right,
+    var(--royal-gold-dark) 0%,
+    var(--royal-gold) 50%,
+    var(--royal-gold-bright) 100%
+  );
+  
+  --gradient-royal-crimson: linear-gradient(
+    to right,
+    var(--royal-crimson-dark) 0%,
+    var(--royal-crimson) 50%,
+    var(--royal-crimson-bright) 100%
+  );
+  
+  --gradient-royal-navy: linear-gradient(
+    to right,
+    var(--royal-navy-dark) 0%,
+    var(--royal-navy) 50%,
+    var(--royal-navy-bright) 100%
+  );
+  
+  --gradient-royal-purple: linear-gradient(
+    to right,
+    var(--royal-purple-dark) 0%,
+    var(--royal-purple) 50%,
+    var(--royal-purple-bright) 100%
+  );
+  
+  --gradient-bg: linear-gradient(
+    135deg,
+    var(--bg-dark) 0%,
+    var(--bg-dark-lighter) 50%,
+    var(--bg-dark-lightest) 100%
+  );
+  
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-gold: 0 0 15px rgba(212, 175, 55, 0.3);
+  
+  /* Glass Effects */
+  --glass-bg: rgba(20, 20, 40, 0.6);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-blur: 8px;
+  
+  /* Animations */
+  --transition-fast: 150ms;
+  --transition-normal: 300ms;
+  --transition-slow: 500ms;
+  
+  /* Z-indices */
+  --z-dropdown: 10;
+  --z-sticky: 20;
+  --z-fixed: 30;
+  --z-modal: 40;
+  --z-popover: 50;
+  --z-tooltip: 60;
+  
+  /* Border Radius */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-full: 9999px;
+}
+
+/* Dark mode (default) */
+.dark, :root {
+  color-scheme: dark;
+  --bg-body: var(--bg-dark);
+  --text-body: var(--text-primary);
+}
+
+/* Light mode */
+.light {
+  color-scheme: light;
+  --bg-body: rgb(248, 250, 252);
+  --text-body: rgb(15, 23, 42);
+  --text-muted: rgba(15, 23, 42, 0.65);
+  --glass-bg: rgba(255, 255, 255, 0.7);
+}
+
+body {
+  background-color: var(--bg-body);
+  color: var(--text-body);
+}
