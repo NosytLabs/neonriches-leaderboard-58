@@ -3,9 +3,15 @@ import React from 'react';
 import { DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Shield, DollarSign, Info } from 'lucide-react';
-import { MockeryAction } from '../hooks/useMockery';
+import { MockeryAction } from '@/types/mockery';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { getMockeryActionTitle, getMockeryActionDescription, getMockeryActionIcon, getMockeryActionPrice, getDiscountedMockeryPrice } from '../utils/mockeryUtils';
+import { 
+  getMockeryActionTitle, 
+  getMockeryActionDescription, 
+  getMockeryActionIcon, 
+  getMockeryActionPrice, 
+  getDiscountedMockeryPrice 
+} from '../utils/mockeryUtils';
 
 interface TargetUser {
   userId: string;
@@ -40,7 +46,7 @@ const MockeryModal: React.FC<MockeryModalProps> = ({
     <DialogContent className="glass-morphism border-white/10 bg-black/70 backdrop-blur-md sm:max-w-md">
       <DialogHeader>
         <DialogTitle className="royal-gradient font-medieval flex items-center">
-          {getMockeryActionIcon(mockeryType)}
+          <span className="mr-2">{getMockeryActionIcon(mockeryType)}</span>
           <span className="ml-2">{getMockeryActionTitle(mockeryType)}</span>
         </DialogTitle>
       </DialogHeader>

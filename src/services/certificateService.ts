@@ -1,6 +1,6 @@
 
-import { User, UserProfile } from '@/types/user';
-import { adaptToUser } from '@/utils/userAdapter';
+import { User } from '@/types/user';
+import { adaptUserProfileToUser } from '@/utils/userAdapter';
 
 /**
  * Generates a certificate of nobility for the user
@@ -18,10 +18,7 @@ export const generateCertificate = async (userId: string): Promise<{ certificate
 /**
  * Claims a certificate of nobility for the user
  */
-export const claimCertificate = async (userProfile: UserProfile): Promise<boolean> => {
-  // Convert UserProfile to User if needed
-  const user = adaptToUser(userProfile);
-  
+export const claimCertificate = async (userProfile: User): Promise<boolean> => {
   // This would normally call an API endpoint to claim the certificate
   // For now, we'll just mock the response
   

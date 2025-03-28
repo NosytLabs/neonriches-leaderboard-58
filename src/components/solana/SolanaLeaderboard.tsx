@@ -1,12 +1,12 @@
 
 import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { getOnChainLeaderboard } from '@/services/leaderboardService';
 import { Badge } from '@/components/ui/badge';
-import { formatDate } from '@/services/leaderboardService';
-import { OnChainLeaderboardEntry } from '@/types/solana';
 import { ChevronUp, ChevronDown, Minus, ExternalLink } from 'lucide-react';
+import { OnChainLeaderboardEntry } from '@/types/solana';
 import { formatAddress } from '@/utils/solanaUtils';
+import { fetchOnChainLeaderboard } from '@/services/treasuryService';
+import { formatDate } from '@/services/treasuryService';
 
 const SolanaLeaderboard = () => {
   const [leaderboard, setLeaderboard] = useState<OnChainLeaderboardEntry[]>([]);
@@ -15,7 +15,7 @@ const SolanaLeaderboard = () => {
   useEffect(() => {
     const fetchLeaderboard = async () => {
       try {
-        const data = await getOnChainLeaderboard();
+        const data = await fetchOnChainLeaderboard();
         setLeaderboard(data);
       } catch (error) {
         console.error("Error fetching on-chain leaderboard:", error);

@@ -4,28 +4,52 @@ import { UserTeam } from './user';
 export interface LeaderboardEntry {
   id: string;
   username: string;
+  displayName?: string;
   rank: number;
-  totalDeposited?: number;
-  currentBalance?: number;
-  team: UserTeam;
+  previousRank?: number;
+  amountSpent: number;
   profileImage?: string;
-  lastDepositDate: string;
-  joinDate: string;
-  tier: string;
+  team?: UserTeam;
+  joinedAt: string;
+  lastActive?: string;
+  spendStreak?: number;
+  isMocked?: boolean;
+  mockedUntil?: string;
+  isProtected?: boolean;
+  protectedUntil?: string;
+  badges?: string[];
+  tier?: string;
 }
 
-export interface LeaderboardState {
-  entries: LeaderboardEntry[];
-  isLoading: boolean;
-  error: string | null;
-  lastUpdated: string;
+export interface TeamStanding {
+  team: UserTeam;
+  totalSpent: number;
+  memberCount: number;
+  rank: number;
+  previousRank?: number;
 }
 
-export interface LeaderboardFilter {
-  timeRange: 'all' | 'week' | 'month' | 'year';
-  team: UserTeam | 'all';
-  tier: string | 'all';
-  sortBy: 'rank' | 'spending' | 'recent';
+export interface SpendingSummary {
+  totalSpent: number;
+  weeklySpent: number;
+  monthlySpent: number;
+  dailyAverage: number;
+  allTimeHighest: number;
+  allTimeHighestDate: string;
 }
 
-export default LeaderboardEntry;
+export interface RankChangeData {
+  userId: string;
+  username: string;
+  previousRank: number;
+  currentRank: number;
+  rankChange: number;
+  timestamp: string;
+}
+
+export interface LeaderboardFilters {
+  team?: UserTeam | null;
+  timeframe?: 'all' | 'week' | 'month' | 'day';
+  search?: string;
+  limit?: number;
+}

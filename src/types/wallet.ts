@@ -1,18 +1,16 @@
 
-import { UserProfile } from './user';
-
 export type TransactionType = 
   | 'deposit' 
   | 'withdrawal' 
   | 'purchase' 
   | 'reward' 
-  | 'bonus' 
-  | 'refund'
+  | 'tip' 
+  | 'referral' 
   | 'mockery'
   | 'protection'
-  | 'cosmetic'
+  | 'shame'
   | 'wish'
-  | 'founder';
+  | 'advertisement';
 
 export interface Transaction {
   id: string;
@@ -21,36 +19,28 @@ export interface Transaction {
   type: TransactionType;
   description: string;
   timestamp: string;
-  metadata?: Record<string, any>;
-  status: 'pending' | 'completed' | 'failed';
-}
-
-export interface UserWallet {
-  balance: number;
-  totalDeposited: number;
-  totalWithdrawn: number;
-  lockedBalance: number;
-  transactions: Transaction[];
-}
-
-export interface WalletHistoryEntry {
-  id: string;
-  date: string;
-  amount: number;
-  type: TransactionType;
-  description: string;
-  isDeposit: boolean;
-  status: string;
+  status: 'pending' | 'completed' | 'failed' | 'refunded';
+  targetUser?: string;
+  targetItem?: string;
 }
 
 export interface SpendOptions {
-  targetUser?: UserProfile;
-  itemId?: string;
-  category?: string;
-  subscriptionId?: string;
-  duration?: number;
+  targetUser?: string;
+  mockeryType?: string;
+  shameType?: string;
+  cosmetic?: string;
+  feature?: string;
   wishAmount?: number;
   preferredCategory?: string;
 }
 
-export default Transaction;
+export interface Wallet {
+  id: string;
+  userId: string;
+  balance: number;
+  address?: string;
+  depositTransactions: Transaction[];
+  withdrawalTransactions: Transaction[];
+  purchaseTransactions: Transaction[];
+  rewardTransactions: Transaction[];
+}

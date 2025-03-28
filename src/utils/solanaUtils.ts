@@ -1,39 +1,59 @@
 
 /**
- * Formats a Solana address for display by shortening it
- * @param address The full Solana address
- * @param length The number of characters to show at the beginning and end
- * @returns The formatted address (e.g. "Jup2Y...Ks9vJ")
+ * Formats a Solana wallet address for display
  */
-export const formatAddress = (address: string, length: number = 4): string => {
+export const formatAddress = (address: string): string => {
   if (!address) return '';
-  if (address.length <= length * 2) return address;
   
-  return `${address.substring(0, length)}...${address.substring(address.length - length)}`;
+  return `${address.substring(0, 4)}...${address.substring(address.length - 4)}`;
 };
 
 /**
- * Generates a signature message for Solana wallet authentication
- * @param nonce A unique nonce for this authentication attempt
- * @returns A message to be signed by the wallet
- */
-export const generateSignatureMessage = (nonce: string): string => {
-  return `Sign this message to authenticate with P2W.FUN\nNonce: ${nonce}\nTimestamp: ${Date.now()}`;
-};
-
-/**
- * Validates a Solana address format
- * @param address The address to validate
- * @returns True if the address appears to be a valid Solana address
+ * Validates a Solana wallet address
  */
 export const isValidSolanaAddress = (address: string): boolean => {
-  // Basic validation - Solana addresses are 44 characters long and base58 encoded
-  // Full validation would require the @solana/web3.js library
-  return /^[1-9A-HJ-NP-Za-km-z]{43,44}$/.test(address);
+  // A very basic validation - Solana addresses are 32-44 characters long
+  return address && address.length >= 32 && address.length <= 44;
+};
+
+/**
+ * Formats SOL amount with the proper decimals
+ */
+export const formatSolAmount = (amount: number): string => {
+  return amount.toLocaleString(undefined, {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 9
+  });
+};
+
+/**
+ * Converts SOL to USD based on the current exchange rate
+ */
+export const solToUsd = (solAmount: number, exchangeRate: number): number => {
+  return solAmount * exchangeRate;
+};
+
+/**
+ * Converts USD to SOL based on the current exchange rate
+ */
+export const usdToSol = (usdAmount: number, exchangeRate: number): number => {
+  return usdAmount / exchangeRate;
+};
+
+/**
+ * Shortens a transaction signature for display
+ */
+export const shortenTxSignature = (signature: string): string => {
+  if (!signature) return '';
+  
+  return `${signature.substring(0, 6)}...${signature.substring(signature.length - 4)}`;
 };
 
 export default {
   formatAddress,
-  generateSignatureMessage,
-  isValidSolanaAddress
+  isValidSolanaAddress,
+  formatSolAmount,
+  solToUsd,
+  usdToSol,
+  shortenTxSignature
 };

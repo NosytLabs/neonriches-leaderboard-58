@@ -6,6 +6,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import { formatCurrency } from '@/utils/formatters';
 import { adaptToUser, ensureUser } from '@/utils/userAdapter';
+import { spendFromWallet } from '@/services/walletService';
 
 const AdvertisementBanner = () => {
   const { user, updateUserProfile } = useAuth();

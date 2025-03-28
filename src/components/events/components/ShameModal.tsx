@@ -4,8 +4,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { ShameAction } from '../hooks/useShameEffect';
-import { getMockeryActionLabel, getMockeryActionPrice, getMockeryActionDescription } from '@/components/mockery/utils/mockeryUtils';
-import MockeryActionIcon from '@/components/mockery/MockeryActionIcon';
+import { getShameActionIcon, getShameActionTitle, getShameActionPrice, getShameActionDescription } from '@/components/events/utils/shameUtils';
 import { Crown, ArrowRight } from 'lucide-react';
 import { getTeamColor } from '@/utils/teamUtils';
 import RoyalButton from '@/components/ui/royal-button';
@@ -36,9 +35,9 @@ const ShameModal: React.FC<ShameModalProps> = ({
   onCancel,
   hasDiscount = false
 }) => {
-  const shameAmount = getMockeryActionPrice(shameType);
-  const shameLabel = getMockeryActionLabel(shameType);
-  const shameDescription = getMockeryActionDescription(shameType);
+  const shameAmount = getShameActionPrice(shameType);
+  const shameLabel = getShameActionTitle(shameType);
+  const shameDescription = getShameActionDescription(shameType, targetUser.username);
   const finalPrice = hasDiscount ? shameAmount * 0.8 : shameAmount; // 20% discount if hasDiscount is true
   
   const getInitials = (name: string) => {
@@ -49,7 +48,7 @@ const ShameModal: React.FC<ShameModalProps> = ({
     <DialogContent className="glass-morphism border-white/10 sm:max-w-md">
       <DialogHeader>
         <DialogTitle className="flex items-center">
-          <MockeryActionIcon action={shameType} size={18} className="mr-2" />
+          <span className="mr-2">{getShameActionIcon(shameType)}</span>
           {shameLabel}
         </DialogTitle>
         <DialogDescription>

@@ -1,11 +1,10 @@
-
 import React, { useState, useEffect } from 'react';
 import { OnChainLeaderboardEntry, SolanaTransaction } from '@/types/solana';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { formatAddress } from '@/utils/solanaUtils';
-import { fetchOnChainLeaderboard } from '@/services/treasuryService';
+import { fetchOnChainLeaderboard, formatDate } from '@/services/treasuryService';
 import { ArrowUp, ArrowDown, Minus, Crown, ChevronRight, Shield } from 'lucide-react';
 
 const RealTimeLeaderboard = () => {
@@ -33,34 +32,15 @@ const RealTimeLeaderboard = () => {
         setLeaderboard(updatedData);
         setError(null);
       } catch (err) {
-        console.error("Error fetching on-chain leaderboard:", err);
-        setError(err instanceof Error ? err : new Error('Failed to fetch data'));
+        console.error("Error fetching data:", err);
+        setError(err as Error);
+        setLoading(false);
         
-        // Add mock data for development
-        if (leaderboard.length === 0) {
-          setLeaderboard([
-            {
-              id: "1",
-              publicKey: "8YLKoCu5knFvCTSdSXe3xVQxA8xndGpAbqNWCtK9XkS9",
-              username: "RoyalWhale",
-              rank: 1,
-              previousRank: 1,
-              totalSpent: 5000,
-              lastTransaction: new Date().toISOString(),
-              isVerified: true
-            },
-            {
-              id: "2",
-              publicKey: "5yKLcpRxZU2S7uLkHRFNQZnSoNMm9ZUHsyVaaDXJHnEW",
-              username: "CrownCollector",
-              rank: 2,
-              previousRank: 2,
-              totalSpent: 3750,
-              lastTransaction: new Date().toISOString(),
-              isVerified: true
-            }
-          ]);
-        }
+        toast({
+          title: "Error fetching leaderboard",
+          description: "Could not load the latest on-chain data.",
+          variant: "destructive"
+        });
       } finally {
         setLoading(false);
       }
@@ -68,48 +48,11 @@ const RealTimeLeaderboard = () => {
     
     fetchData();
     
-    // Set up polling for real-time updates
-    const pollingInterval = setInterval(fetchData, 30000); // Poll every 30 seconds
+    // Set up polling interval
+    const interval = setInterval(fetchData, 60000); // Poll every minute
     
-    // Set up WebSocket listener for real-time transactions
-    const setupWebSocket = () => {
-      const ws = new WebSocket('wss://api.mainnet-beta.solana.com');
-      
-      ws.onmessage = (event) => {
-        const txData = JSON.parse(event.data);
-        if (txData && txData.method === 'signatureNotification') {
-          const solTx: SolanaTransaction = {
-            signature: txData.params.result.value.signature,
-            timestamp: new Date().toISOString(),
-            amount: Math.random() * 10, // Would be parsed from actual transaction
-            type: 'deposit',
-            sender: txData.params.result.value.accountId || 'unknown',
-            recipient: 'treasury',
-            status: 'confirmed'
-          };
-          
-          // Show notification for new transaction
-          toast({
-            title: "New On-Chain Transaction",
-            description: `Transaction received for ${solTx.amount.toFixed(2)} SOL!`,
-            variant: "default"
-          });
-          
-          // Trigger refresh
-          fetchData();
-        }
-      };
-      
-      return ws;
-    };
-    
-    // const ws = setupWebSocket();
-    
-    return () => {
-      clearInterval(pollingInterval);
-      // ws.close();
-    };
-  }, []);
+    return () => clearInterval(interval);
+  }, [toast]);
   
   const getRankChangeIcon = (current: number, previous?: number) => {
     if (!previous || current === previous) {
@@ -136,14 +79,11 @@ const RealTimeLeaderboard = () => {
   };
   
   return (
-    <Card className="glass-morphism border-royal-gold/20">
+    <Card className="glass-morphism border-white/10">
       <CardHeader>
-        <CardTitle className="flex items-center">
-          <Crown className="h-5 w-5 mr-2 text-royal-gold" />
-          On-Chain Leaderboard
-        </CardTitle>
+        <CardTitle>Real-Time Leaderboard</CardTitle>
         <CardDescription>
-          Real-time blockchain nobility ranks
+          Live updates from on-chain transactions
         </CardDescription>
       </CardHeader>
       <CardContent>

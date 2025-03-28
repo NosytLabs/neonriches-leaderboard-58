@@ -1,8 +1,22 @@
 
-export interface SolanaWalletInfo {
+import { TransactionType } from './wallet';
+
+export interface SolanaWallet {
   publicKey: string;
   balance: number;
-  isConnected: boolean;
+  lastUpdated: string;
+}
+
+export interface SolanaTransaction {
+  id: string;
+  signature: string;
+  timestamp: string;
+  type: TransactionType;
+  amount: number;
+  sender: string;
+  recipient: string;
+  status: 'confirmed' | 'pending' | 'failed';
+  message?: string;
 }
 
 export interface SolanaTreasuryInfo {
@@ -11,41 +25,33 @@ export interface SolanaTreasuryInfo {
   totalDeposits: number;
   totalWithdrawals: number;
   lastUpdated: string;
-  pubkey?: string;
-  usdValue?: number;
-  amount?: number;  // For compatibility
-  sender?: string;  // For compatibility
-}
-
-export interface SolanaTransaction {
-  signature: string;
-  timestamp: string;
-  amount: number;
-  type: 'deposit' | 'withdrawal' | 'transfer';
-  sender: string;
-  recipient: string;
-  status: 'confirmed' | 'pending' | 'failed';
+  usdValue: number;
 }
 
 export interface OnChainLeaderboardEntry {
   id: string;
-  username?: string;
+  publicKey: string;
+  username: string;
   rank: number;
+  previousRank: number;
+  amountSpent: number;
   totalSpent: number;
-  previousRank?: number;
-  signature?: string;
-  amountSpent?: number;
-  lastTransaction?: string;
-  isVerified?: boolean;
-  publicKey?: string;
+  lastTransaction: string;
+  isVerified: boolean;
+  signature: string;
 }
 
-export interface SolanaNftInfo {
-  mintAddress: string;
-  name: string;
-  description?: string;
-  image?: string;
-  attributes?: Record<string, any>;
-  owner?: string;
-  mintedAt?: string;
+export interface SolanaPayment {
+  amount: number;
+  reference: string;
+  label: string;
+  message: string;
+  memo?: string;
+}
+
+export interface SolanaWithdrawal {
+  amount: number;
+  recipient: string;
+  fee: number;
+  memo?: string;
 }

@@ -122,3 +122,18 @@ export const getFireSaleDiscountPercentage = (): number => {
 export const getFireSaleFeaturedCategories = (): string[] => {
   return weeklyDiscountConfig.fireSaleFeaturedCategories;
 };
+
+export default {
+  getShameActionPrice,
+  hasWeeklyDiscount,
+  getDiscountedShamePrice,
+  getShameActionTitle,
+  getShameActionDescription,
+  getShameActionIcon,
+  getShameActionColor,
+  getWeeklyDiscountedAction,
+  getWeeklyDiscountPercentage,
+  isFireSaleMonth,
+  getFireSaleDiscountPercentage,
+  getFireSaleFeaturedCategories
+};

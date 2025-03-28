@@ -60,7 +60,7 @@ const MockeryCard: React.FC<MockeryCardProps> = ({
       <CardHeader className="pb-2">
         <div className="flex justify-between items-start">
           <Badge 
-            variant={selected ? "purple" : "outline"} 
+            variant="outline" 
             className={cn(tierColors.text, "px-2 py-0.5")}
           >
             {getMockeryTierLabel(tier)}

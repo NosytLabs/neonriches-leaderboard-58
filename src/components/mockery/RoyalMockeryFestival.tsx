@@ -12,7 +12,7 @@ import MockeryProtectionCard from '@/components/mockery/components/MockeryProtec
 import HallOfShame from '@/components/mockery/components/HallOfShame';
 import MockeryCard from '@/components/mockery/components/MockeryCard';
 import MockeryUserCard from '@/components/mockery/components/MockeryUserCard';
-import { adaptUserProfileToUser } from '@/types/user';
+import { adaptUserProfileToUser } from '@/utils/userAdapter';
 import { spendFromWallet } from '@/services/walletService';
 
 const RoyalMockeryFestival = () => {
@@ -61,9 +61,9 @@ const RoyalMockeryFestival = () => {
     const success = spendFromWallet(
       fullUser,
       amount,
-      'mockery',
+      'mockery' as any,
       `${action} mockery of ${username}`,
-      { targetUsername: username, mockeryType: action }
+      { targetUser: username, mockeryType: action }
     );
     
     if (success) {
@@ -99,7 +99,7 @@ const RoyalMockeryFestival = () => {
     const success = spendFromWallet(
       fullUser,
       protectionCost,
-      'protection',
+      'protection' as any,
       'Purchased mockery protection',
       {}
     );
@@ -220,7 +220,7 @@ const RoyalMockeryFestival = () => {
           </TabsContent>
           
           <TabsContent value="hall" className="mt-4">
-            <HallOfShame shameRecords={mockUsers.filter(user => isUserShamed(user.username))} />
+            <HallOfShame mockedUsers={mockUsers.filter(user => isUserShamed(user.username))} />
           </TabsContent>
         </Tabs>
       </CardContent>

@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { 
@@ -32,6 +31,7 @@ import { useToastContext } from '@/contexts/ToastContext';
 import { useAuth } from '@/contexts/auth';
 import { motion } from 'framer-motion';
 import { stringToBoolean } from '@/utils/booleanUtils';
+import { toBooleanSafe } from '@/utils/userAdapter';
 
 const Features = () => {
   const { addToast } = useToastContext();
@@ -495,7 +495,8 @@ const Features = () => {
                       index === 2 ? 'royalNavy' : 
                       'glass'
                     }
-                    shimmer={true}
+                    shimmer={toBooleanSafe("true")}
+                    glow={toBooleanSafe("true")}
                     className="w-full"
                     onClick={() => {
                       addToast({

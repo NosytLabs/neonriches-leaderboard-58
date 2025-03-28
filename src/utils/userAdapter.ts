@@ -1,11 +1,10 @@
+
 import { User, UserProfile } from '@/types/user';
 
 /**
- * Adapts a UserProfile to a User object with authentication properties
+ * Adapts a UserProfile to a User object
  */
-export const adaptToUser = (profile: UserProfile | null | undefined): User | null => {
-  if (!profile) return null;
-  
+export const adaptUserProfileToUser = (profile: UserProfile): User => {
   return {
     ...profile,
     isAuthenticated: true,
@@ -16,19 +15,25 @@ export const adaptToUser = (profile: UserProfile | null | undefined): User | nul
 };
 
 /**
- * Utility for safely using a UserProfile in places that expect a User
- * This should eventually be refactored to properly use User objects
+ * Alias for adaptUserProfileToUser for backward compatibility
  */
-export const ensureUser = (profileOrUser: UserProfile | User | null | undefined): User | null => {
-  if (!profileOrUser) return null;
-  
-  // Check if it's already a User
-  if ('isAuthenticated' in profileOrUser) {
-    return profileOrUser;
+export const adaptToUser = adaptUserProfileToUser;
+
+/**
+ * Converts any boolean-like string to actual boolean
+ * Used for fixing "string" is not assignable to type "boolean" errors
+ */
+export const toBooleanSafe = (value: any): boolean => {
+  if (typeof value === 'boolean') return value;
+  if (typeof value === 'string') {
+    const normalized = value.toLowerCase().trim();
+    return normalized === 'true' || normalized === 'yes' || normalized === '1';
   }
-  
-  // Otherwise adapt it
-  return adaptToUser(profileOrUser);
+  return Boolean(value);
 };
 
-export default adaptToUser;
+export default {
+  adaptUserProfileToUser,
+  adaptToUser,
+  toBooleanSafe
+};

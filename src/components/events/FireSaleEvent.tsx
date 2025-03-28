@@ -1,11 +1,17 @@
-
 import React, { useState, useEffect } from 'react';
 import { DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Flame, Tag, Sparkles, Crown, Clock } from 'lucide-react';
 import { formatCategoryName } from '@/utils/stringUtils';
-import { getCosmeticPreviewStyle, CosmeticItem, CosmeticCategory } from '@/types/cosmetics';
+import { 
+  CosmeticItem, 
+  CosmeticCategory, 
+  CosmeticRarity, 
+  getRarityColor, 
+  getRarityBgColor, 
+  getRarityBorderColor 
+} from '@/types/cosmetics';
 import RoyalDivider from '@/components/ui/royal-divider';
 import { mockedCosmeticsData } from '@/data/cosmeticsData';
 import { useAuth } from '@/contexts/auth';
@@ -65,7 +71,7 @@ const FireSaleEvent: React.FC<FireSaleEventProps> = ({
       placement: 'profile'
     };
     
-    return getCosmeticPreviewStyle(dummyItem);
+    return {};
   };
   
   const handlePurchase = (item: CosmeticItem) => {
@@ -81,6 +87,15 @@ const FireSaleEvent: React.FC<FireSaleEventProps> = ({
     setTimeout(() => {
       onClose();
     }, 1500);
+  };
+  
+  const getCategoryIcon = (category: string): string => {
+    if (category === "border") return 'scroll';
+    if (category === "background") return 'castle';
+    if (category === "badge") return 'medal';
+    if (category === "title") return 'crown';
+    if (category === "effect") return 'sparkles';
+    return 'star';
   };
   
   return (
@@ -166,14 +181,7 @@ const FireSaleEvent: React.FC<FireSaleEventProps> = ({
                           />
                         ) : (
                           <MedievalIcon 
-                            name={
-                              String(item.category) === 'border' ? 'scroll' :
-                              String(item.category) === 'background' ? 'castle' :
-                              String(item.category) === 'badge' ? 'medal' :
-                              String(item.category) === 'title' ? 'crown' :
-                              String(item.category) === 'effect' ? 'sparkles' :
-                              'star'
-                            } 
+                            name={getCategoryIcon(item.category)} 
                             size="md"
                             color={
                               item.rarity === 'legendary' ? 'gold' :
