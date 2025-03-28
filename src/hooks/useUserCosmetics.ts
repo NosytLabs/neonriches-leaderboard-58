@@ -1,6 +1,7 @@
 
 import { UserProfile } from '@/types/user';
 import { CosmeticRarity } from '@/types/cosmetics';
+import { BoostEffect, boostEffects } from '@/hooks/use-profile-boost';
 
 /**
  * Hook for handling user cosmetics operations
@@ -57,6 +58,47 @@ export const useUserCosmetics = (
   const boostProfile = async (days: number = 7, level: number = 1): Promise<boolean> => {
     try {
       if (!user) return false;
+      
+      // Calculate end time for the boost effect
+      const currentTime = Date.now();
+      const endTime = currentTime + (days * 24 * 60 * 60 * 1000); // Convert days to milliseconds
+      
+      // Generate a unique ID for this boost
+      const boostId = `boost_${Date.now()}`;
+      
+      // Select a boost effect based on the level
+      let effectId: BoostEffect;
+      switch (level) {
+        case 3:
+          effectId = 'crown';
+          break;
+        case 2:
+          effectId = 'sparkle';
+          break;
+        case 1:
+        default:
+          effectId = 'glow';
+          break;
+      }
+      
+      // Create the boost object
+      const newBoost = {
+        id: boostId,
+        effectId: effectId,
+        startTime: currentTime,
+        endTime: endTime
+      };
+      
+      // Get existing boosts or initialize empty array
+      const currentBoosts = user.profileBoosts || [];
+      
+      // Add the new boost
+      const updatedBoosts = [...currentBoosts, newBoost];
+      
+      // Update user profile
+      await updateUserProfile({
+        profileBoosts: updatedBoosts
+      });
       
       return true;
     } catch (error) {

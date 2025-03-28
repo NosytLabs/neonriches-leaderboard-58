@@ -13,9 +13,11 @@ import { depositToWallet, spendFromWallet } from '@/services/walletService';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import useNotificationSounds from '@/hooks/use-notification-sounds';
+import ProfileBoostDisplay from '@/components/profile/ProfileBoostDisplay';
+import DashboardStatsOverview from '@/components/dashboard/DashboardStatsOverview';
 
 const Dashboard = () => {
-  const { user, updateUserProfile } = useAuth();
+  const { user, updateUserProfile, boostProfile } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
   const { playSound } = useNotificationSounds();
@@ -62,6 +64,11 @@ const Dashboard = () => {
     );
     
     if (success) {
+      // Apply profile boost
+      if (boostProfile) {
+        await boostProfile(7, 1); // 7 days, level 1 boost
+      }
+      
       // Update user profile stats
       const currentViews = user.profileViews || 0;
       const currentClicks = user.profileClicks || 0;
@@ -91,7 +98,9 @@ const Dashboard = () => {
         <div className="max-w-7xl mx-auto">
           <h1 className="text-3xl font-bold font-medieval royal-gradient mb-8">Royal Dashboard</h1>
           
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+          <DashboardStatsOverview user={user} />
+          
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 mt-6">
             {/* Left Column */}
             <div className="md:col-span-8 space-y-6">
               <RankStatusCard user={user} />
@@ -114,6 +123,9 @@ const Dashboard = () => {
             {/* Right Column */}
             <div className="md:col-span-4 space-y-6">
               <TeamOverview user={user} />
+              {user.profileBoosts && user.profileBoosts.length > 0 && (
+                <ProfileBoostDisplay user={user} />
+              )}
               <RoyalBoutique />
             </div>
           </div>
