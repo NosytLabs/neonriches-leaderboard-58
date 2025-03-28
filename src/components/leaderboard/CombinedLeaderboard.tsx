@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
@@ -23,7 +24,7 @@ import useNotificationSounds from '@/hooks/use-notification-sounds';
 import { Dialog } from '@/components/ui/dialog';
 import ShameModal from '../events/components/ShameModal';
 import RoyalButton from '@/components/ui/royal-button';
-import { getTeamColors, getRankTextColorClass, getRankBadgeClass } from '@/lib/colors';
+import { getTeamColor, getTeamTextColorClass, getRankTextColorClass } from '@/lib/colors';
 
 export const mockUsers = [
   {
@@ -51,6 +52,16 @@ export const mockUsers = [
     profileImage: "https://i.pravatar.cc/150?img=3"
   }
 ];
+
+// Helper function to get rank badge class
+const getRankBadgeClass = (rank: number): string => {
+  if (rank === 1) return 'bg-royal-gold/20 border-royal-gold/40';
+  if (rank === 2) return 'bg-gray-300/20 border-gray-300/40';
+  if (rank === 3) return 'bg-amber-700/20 border-amber-700/40';
+  if (rank <= 10) return 'bg-purple-500/20 border-purple-500/40';
+  if (rank <= 25) return 'bg-blue-500/20 border-blue-500/40';
+  return 'bg-white/10 border-white/20';
+};
 
 const CombinedLeaderboard: React.FC<{
   className?: string;
@@ -152,19 +163,30 @@ const CombinedLeaderboard: React.FC<{
   };
 
   // Enhanced styling functions
-  const getTeamColor = (team: string | null) => {
-    const colors = getTeamColors(team);
-    return colors.text;
-  };
-
   const getTeamBorderColor = (team: string | null) => {
-    const colors = getTeamColors(team);
-    return colors.border;
+    switch (team?.toLowerCase()) {
+      case 'red':
+        return 'border-royal-crimson/50';
+      case 'green':
+        return 'border-royal-gold/50';
+      case 'blue':
+        return 'border-royal-navy/50';
+      default:
+        return 'border-white/20';
+    }
   };
 
   const getTeamBgColor = (team: string | null) => {
-    const colors = getTeamColors(team);
-    return colors.bg;
+    switch (team?.toLowerCase()) {
+      case 'red':
+        return 'bg-royal-crimson/20';
+      case 'green':
+        return 'bg-royal-gold/20';
+      case 'blue':
+        return 'bg-royal-navy/20';
+      default:
+        return 'bg-white/5';
+    }
   };
 
   const getRankIcon = (rank: number) => {
@@ -313,7 +335,7 @@ const CombinedLeaderboard: React.FC<{
                 {!compact && (
                   <div className="flex items-center space-x-2">
                     <RoyalButton
-                      variant="glass"
+                      variant="royalPurple"
                       size="sm"
                       className="text-xs"
                       icon={<span className="text-sm">🍅</span>}
@@ -322,7 +344,7 @@ const CombinedLeaderboard: React.FC<{
                       ${getShameActionPrice('tomatoes')}
                     </RoyalButton>
                     <RoyalButton
-                      variant="glass"
+                      variant="royalGold"
                       size="sm"
                       className="text-xs"
                       icon={<span className="text-sm">🥚</span>}
@@ -331,7 +353,7 @@ const CombinedLeaderboard: React.FC<{
                       ${getShameActionPrice('eggs')}
                     </RoyalButton>
                     <RoyalButton
-                      variant="glass"
+                      variant="royalPurple"
                       size="sm"
                       className="text-xs"
                       icon={<span className="text-sm">🪵</span>}

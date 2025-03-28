@@ -46,8 +46,8 @@ const MedievalShowcase = () => {
             <div className="flex flex-wrap gap-4 justify-center">
               <MedievalIcon name="crown" color="default" />
               <MedievalIcon name="crown" color="gold" />
-              <MedievalIcon name="crown" color="crimson" />
-              <MedievalIcon name="crown" color="navy" />
+              <MedievalIcon name="crown" color="silver" />
+              <MedievalIcon name="crown" color="copper" />
             </div>
           </CardContent>
         </Card>
@@ -137,7 +137,12 @@ const MedievalShowcase = () => {
       
       <div className="text-center">
         <p className="text-white/70 mb-4">These medieval design assets can be used throughout the SpendThrone application to enhance the royal theme.</p>
-        <RoyalButton variant="royal" size="lg" className="royal-button-enhanced" icon={<Crown size={16} />}>
+        <RoyalButton 
+          variant="royal" 
+          size="lg" 
+          className="royal-button-enhanced"
+          icon={<Crown size={16} />}
+        >
           Explore the Royal Kingdom
         </RoyalButton>
       </div>

@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { ShameAction } from '../hooks/useShameEffect';
 import { getShameActionIcon, getShameActionColor } from '../utils/shameUtils';
 import RoyalButton from '@/components/ui/royal-button';
-import { getTeamColors } from '@/lib/colors';
+import { getTeamColor } from '@/lib/colors';
 
 interface ShameUserCardProps {
   user: {
@@ -30,7 +30,7 @@ const ShameUserCard: React.FC<ShameUserCardProps> = ({
   onShame
 }) => {
   const [selectedShame, setSelectedShame] = React.useState<ShameAction | null>(null);
-  const teamColors = getTeamColors(user.team);
+  const teamColor = user.team ? getTeamColor(user.team) : '';
   
   const handleShameSelect = (action: ShameAction) => {
     setSelectedShame(action);
@@ -104,7 +104,7 @@ const ShameUserCard: React.FC<ShameUserCardProps> = ({
             )}
           </div>
           {user.team && (
-            <div className={`absolute -bottom-1 -right-1 w-4 h-4 rounded-full ${teamColors.bg} border-2 border-background`}></div>
+            <div className={`absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-white/20 border-2 border-background ${teamColor}`}></div>
           )}
         </div>
         

@@ -89,6 +89,16 @@ const ShameModal: React.FC<ShameModalProps> = ({
     }, 2000);
   };
   
+  // Determine which royal variant to use
+  const getButtonVariant = () => {
+    switch(shameType) {
+      case 'tomatoes': return 'royalPurple'; // Use royalPurple for tomatoes instead of royalCrimson
+      case 'eggs': return 'royalGold';
+      case 'stocks': return 'royalPurple'; // Use royalPurple for stocks instead of royalNavy
+      default: return 'royal';
+    }
+  };
+  
   return (
     <DialogContent className="glass-morphism border-white/10 sm:max-w-md shame-modal-content">
       <div className={`absolute inset-0 rounded-lg transition-opacity duration-500 ${showAnimation ? 'opacity-10' : 'opacity-0'}`} style={{ 
@@ -185,10 +195,7 @@ const ShameModal: React.FC<ShameModalProps> = ({
               description={`Fund your public shaming of ${targetUser.username}`}
               trigger={
                 <RoyalButton 
-                  variant={
-                    shameType === 'tomatoes' ? 'royalCrimson' :
-                    shameType === 'eggs' ? 'royalGold' : 'royalNavy'
-                  }
+                  variant={getButtonVariant()}
                   className="w-full"
                   shimmer={true}
                   glow={true}

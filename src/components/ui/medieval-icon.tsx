@@ -1,64 +1,86 @@
 
 import React from 'react';
-import { Crown, Award, Shield, Book, Sword, Scroll, ThumbsUp } from 'lucide-react';
+import { cn } from '@/lib/utils';
+
+export type MedievalIconName = 'crown' | 'scroll' | 'coins' | 'seal' | 'sword' | 'shield' | 'castle' | 'goblet';
+export type MedievalIconSize = 'xs' | 'sm' | 'md' | 'lg' | '2xl';
+export type MedievalIconColor = 'default' | 'gold' | 'silver' | 'copper';
 
 interface MedievalIconProps {
-  name: string;
-  size?: 'xs' | 'sm' | 'md' | 'lg';
-  color?: 'gold' | 'silver' | 'copper' | 'default';
+  name: MedievalIconName;
+  size?: MedievalIconSize;
+  color?: MedievalIconColor;
   animate?: boolean;
   className?: string;
 }
 
-const MedievalIcon: React.FC<MedievalIconProps> = ({ 
-  name, 
-  size = 'md', 
+const MedievalIcon: React.FC<MedievalIconProps> = ({
+  name,
+  size = 'md',
   color = 'default',
   animate = false,
-  className = ''
+  className,
 }) => {
-  const getSize = (): number => {
-    switch (size) {
-      case 'xs': return 14;
-      case 'sm': return 18;
-      case 'md': return 24;
-      case 'lg': return 32;
-      default: return 24;
+  const sizeClasses = {
+    xs: 'text-sm',
+    sm: 'text-base',
+    md: 'text-xl',
+    lg: 'text-2xl',
+    '2xl': 'text-4xl',
+  };
+
+  const colorClasses = {
+    default: 'text-white',
+    gold: 'text-royal-gold',
+    silver: 'text-gray-300',
+    copper: 'text-amber-700',
+  };
+
+  const animationClass = animate ? getAnimationClass(name) : '';
+
+  const renderIcon = () => {
+    switch (name) {
+      case 'crown':
+        return '👑';
+      case 'scroll':
+        return '📜';
+      case 'coins':
+        return '💰';
+      case 'seal':
+        return '🔰';
+      case 'sword':
+        return '⚔️';
+      case 'shield':
+        return '🛡️';
+      case 'castle':
+        return '🏰';
+      case 'goblet':
+        return '🏆';
+      default:
+        return '❓';
     }
   };
-  
-  const getColor = (): string => {
-    switch (color) {
-      case 'gold': return '#D4AF37';
-      case 'silver': return '#C0C0C0';
-      case 'copper': return '#B87333';
-      default: return 'currentColor';
-    }
-  };
-  
-  const animationClass = animate ? 'animate-pulse-slow' : '';
-  const combinedClassName = `${animationClass} ${className}`;
-  const iconSize = getSize();
-  const iconColor = getColor();
-  
-  switch (name.toLowerCase()) {
-    case 'crown':
-      return <Crown size={iconSize} color={iconColor} className={combinedClassName} />;
-    case 'award':
-      return <Award size={iconSize} color={iconColor} className={combinedClassName} />;
-    case 'shield':
-      return <Shield size={iconSize} color={iconColor} className={combinedClassName} />;
-    case 'book':
-      return <Book size={iconSize} color={iconColor} className={combinedClassName} />;
-    case 'sword':
-      return <Sword size={iconSize} color={iconColor} className={combinedClassName} />;
-    case 'scroll':
-      return <Scroll size={iconSize} color={iconColor} className={combinedClassName} />;
-    case 'seal':
-      return <Award size={iconSize} color={iconColor} className={combinedClassName} />;
-    default:
-      return <ThumbsUp size={iconSize} color={iconColor} className={combinedClassName} />;
-  }
+
+  return (
+    <span className={cn(sizeClasses[size], colorClasses[color], animationClass, className)}>
+      {renderIcon()}
+    </span>
+  );
 };
+
+function getAnimationClass(iconName: MedievalIconName): string {
+  switch (iconName) {
+    case 'crown':
+      return 'animate-crown-glow';
+    case 'scroll':
+      return 'animate-quill-write';
+    case 'coins':
+      return 'animate-coin-flip';
+    case 'seal':
+      return 'animate-seal-stamp';
+    default:
+      return '';
+  }
+}
 
 export default MedievalIcon;

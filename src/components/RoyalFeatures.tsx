@@ -37,7 +37,7 @@ const RoyalFeatures = () => {
           <div className="flex flex-col md:flex-row items-center">
             <div className="mb-6 md:mb-0 md:mr-8">
               <div className="relative">
-                <MedievalIcon name="seal" size="2xl" color="gold" animate />
+                <MedievalIcon name="seal" size="lg" color="gold" animate />
               </div>
             </div>
             <div className="text-center md:text-left">
