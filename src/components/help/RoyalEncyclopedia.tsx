@@ -1,12 +1,10 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ScrollText, Crown, Shield, Coins, Target, Users, Info, Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import RoyalDivider from '@/components/ui/royal-divider';
-import { MockeryTier } from '@/components/mockery/hooks/useMockery';
-import { getMockeryTierColor, getMockeryTierLabel } from '@/components/mockery/utils/mockeryUtils';
+import { MockeryTier } from '@/types/mockery';
 import { cn } from '@/lib/utils';
 
 // Article interfaces
@@ -38,8 +36,10 @@ const tags: ArticleTag[] = [
 
 // Article content components
 const MockeryTiersContent = () => {
-  const tiers: MockeryTier[] = ['common', 'uncommon', 'rare', 'epic', 'legendary'];
-  
+  const rarityTiers = [
+    'common', 'uncommon', 'rare', 'epic', 'legendary'
+  ] as MockeryTier[];
+
   return (
     <div className="space-y-6">
       <p>
@@ -48,23 +48,23 @@ const MockeryTiersContent = () => {
       </p>
       
       <div className="space-y-4">
-        {tiers.map(tier => {
-          const colors = getMockeryTierColor(tier);
+        {rarityTiers.map(tier => {
+          const tierColors = getMockeryTierColor(tier as MockeryTier);
           return (
             <div key={tier} className={cn(
               "p-4 rounded-lg border",
-              colors.border,
-              colors.bg
+              tierColors.border,
+              tierColors.bg
             )}>
-              <h4 className={cn("text-lg font-bold mb-1", colors.text)}>
+              <h4 className={cn("text-lg font-bold mb-1", tierColors.text)}>
                 {getMockeryTierLabel(tier)} Tier
               </h4>
               <p className="text-white/80 text-sm">
-                {tier === 'common' && "Basic visual effects with a 24-hour duration. Affordable options for everyday mockery."}
-                {tier === 'uncommon' && "Enhanced visual effects with a 48-hour duration. Better value for those seeking extended mockery."}
-                {tier === 'rare' && "Premium visual effects with a 72-hour duration. These are notable mockeries that stand out."}
-                {tier === 'epic' && "Site-wide announcement effects with a 5-day duration. Makes a significant statement."}
-                {tier === 'legendary' && "Transformative effects with a full week duration. The ultimate mockery experience."}
+                {tier === ('common' as MockeryTier) && "Basic visual effects with a 24-hour duration. Affordable options for everyday mockery."}
+                {tier === ('uncommon' as MockeryTier) && "Enhanced visual effects with a 48-hour duration. Better value for those seeking extended mockery."}
+                {tier === ('rare' as MockeryTier) && "Premium visual effects with a 72-hour duration. These are notable mockeries that stand out."}
+                {tier === ('epic' as MockeryTier) && "Site-wide announcement effects with a 5-day duration. Makes a significant statement."}
+                {tier === ('legendary' as MockeryTier) && "Transformative effects with a full week duration. The ultimate mockery experience."}
               </p>
             </div>
           );

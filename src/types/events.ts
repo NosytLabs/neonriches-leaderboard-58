@@ -1,31 +1,40 @@
 
-export type EventType = 'tournament' | 'sale' | 'promotion' | 'challenge' | 'mockery' | 'leaderboard' | 'treasure' | 'shame' | 'team';
-export type EventStatus = 'active' | 'upcoming' | 'completed' | 'cancelled';
+export type EventType = 
+  | 'shame' 
+  | 'team' 
+  | 'treasure'
+  | 'poke'
+  | 'boost'
+  | 'sale';
 
-export interface Event {
-  id: string;
-  title: string;
-  description: string;
-  type: EventType;
-  status: EventStatus;
-  startDate: string;
-  endDate: string;
-  imageUrl?: string;
-  image?: string; // For backward compatibility
-  name?: string; // For backward compatibility
-  participants?: string[];
-  createdBy?: string;
-  createdAt: string;
-}
+export type EventStatus = 
+  | 'upcoming' 
+  | 'active' 
+  | 'completed' 
+  | 'cancelled';
 
 export interface EventStats {
   prizePool: number;
   participantsCount: number;
   totalPokes: number;
-  mostPoked?: {
+  mostPoked: {
     username: string;
     pokeCount: number;
   };
+}
+
+export interface Event {
+  id: string;
+  title: string;
+  name?: string; // For backward compatibility
+  description: string;
+  image?: string;
+  imageUrl?: string;
+  startDate: string;
+  endDate: string;
+  type: EventType;
+  status: EventStatus;
+  createdAt: string;
 }
 
 export interface EventDetails extends Event {

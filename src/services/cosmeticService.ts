@@ -1,13 +1,13 @@
 
-import { CosmeticItem, CosmeticRarity } from '@/types/cosmetics';
+import { CosmeticItem, CosmeticRarity, CosmeticCategory, CosmeticType } from '@/types/cosmetics';
 
 export const getCosmeticById = (id: string): CosmeticItem => {
   // Mock implementation
   return {
     id,
     name: `Cosmetic ${id}`,
-    category: 'borders',
-    type: 'decoration',
+    category: 'borders' as CosmeticCategory,
+    type: 'profile' as CosmeticType,
     rarity: 'rare' as CosmeticRarity,
     description: 'A beautiful cosmetic item',
     imageUrl: '/assets/cosmetics/borders/rare.png',
@@ -24,7 +24,7 @@ export const awardRandomCosmetic = (
 ): { cosmeticItem: CosmeticItem, rarity: CosmeticRarity } => {
   // Mock implementation
   const rarities: CosmeticRarity[] = ['common', 'uncommon', 'rare', 'epic', 'legendary'];
-  const categories = ['borders', 'colors', 'fonts', 'emojis', 'titles', 'backgrounds', 'effects'];
+  const categories: CosmeticCategory[] = ['borders', 'colors', 'fonts', 'emojis', 'titles', 'backgrounds', 'effects'];
   
   // Determine rarity based on amount spent
   let rarityWeights = [
@@ -76,7 +76,7 @@ export const awardRandomCosmetic = (
   }
   
   // Select category (respect preferred if provided)
-  const selectedCategory = preferredCategory || categories[Math.floor(Math.random() * categories.length)];
+  const selectedCategory = (preferredCategory as CosmeticCategory) || categories[Math.floor(Math.random() * categories.length)];
   
   // Generate a random cosmetic item
   const cosmeticId = `cosmetic_${Date.now()}`;
@@ -89,7 +89,7 @@ export const awardRandomCosmetic = (
     id: cosmeticId,
     name: randomNames[Math.floor(Math.random() * randomNames.length)],
     category: selectedCategory,
-    type: selectedCategory.slice(0, -1),
+    type: 'profile' as CosmeticType,
     rarity: selectedRarity,
     description: `A ${selectedRarity} ${selectedCategory.slice(0, -1)} effect.`,
     imageUrl: `/assets/cosmetics/${selectedCategory}/${selectedRarity}.png`,

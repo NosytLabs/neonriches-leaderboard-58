@@ -54,7 +54,7 @@ export const topUsers = [
 ];
 
 // Upcoming events data with updated images
-export const upcomingEvents = [
+export const upcomingEvents: Event[] = [
   {
     id: "public-shaming",
     title: "Public Shaming Festival",
@@ -88,11 +88,14 @@ export const eventDetailsData: Record<string, EventDetails> = {
   "public-shaming": {
     id: "public-shaming",
     name: "Public Shaming Festival",
+    title: "Public Shaming Festival",
     description: "Monthly medieval-style event where nobles can publicly shame others with tomatoes, eggs, or stocks. Discounted rates for all shaming actions!",
     image: "https://images.unsplash.com/photo-1472396961693-142e6e269027?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
     startDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString(),
     endDate: new Date(Date.now() + 17 * 24 * 60 * 60 * 1000).toISOString(),
-    type: "shame",
+    type: "shame" as EventType,
+    status: "upcoming" as EventStatus,
+    createdAt: new Date().toISOString(),
     rewardTypes: ["Shame Trophies", "Special Effects", "Humiliator Badges"],
     eligibility: "Users who have spent at least $1 can participate",
     participationRequirements: [
@@ -111,11 +114,14 @@ export const eventDetailsData: Record<string, EventDetails> = {
   "team-conquest": {
     id: "team-conquest",
     name: "Team Conquest",
+    title: "Team Conquest",
     description: "Join forces with your team to dominate the leaderboard and claim territories on the kingdom map. The winning team earns exclusive badges and bonuses.",
     image: "https://images.unsplash.com/photo-1466721591366-2d5fba72006d?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
     startDate: new Date(Date.now() + 21 * 24 * 60 * 60 * 1000).toISOString(),
     endDate: new Date(Date.now() + 28 * 24 * 60 * 60 * 1000).toISOString(),
-    type: "team",
+    type: "team" as EventType,
+    status: "upcoming" as EventStatus,
+    createdAt: new Date().toISOString(),
     rewardTypes: ["Team Territories", "Conquest Badges", "Team Bonuses", "Individual Rewards"],
     eligibility: "All users who have joined a team",
     participationRequirements: [

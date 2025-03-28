@@ -1,10 +1,11 @@
+
 import React, { useState, useEffect } from 'react';
 import { DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Flame, Tag, Sparkles, Crown, Clock } from 'lucide-react';
 import { formatCategoryName } from '@/utils/stringUtils';
-import { getCosmeticPreviewStyle, CosmeticItem, CosmeticCategory, CosmeticRarity } from '@/types/cosmetics';
+import { getCosmeticPreviewStyle, CosmeticItem, CosmeticCategory } from '@/types/cosmetics';
 import { getFireSaleFeaturedCategories } from './utils/shameUtils';
 import RoyalDivider from '@/components/ui/royal-divider';
 import { mockedCosmeticsData } from '@/data/cosmeticsData';
@@ -29,7 +30,7 @@ const FireSaleEvent: React.FC<FireSaleEventProps> = ({
 }) => {
   const { user } = useAuth();
   const { addToast } = useToastContext();
-  const [selectedCategory, setSelectedCategory] = useState<string>(featuredCategories[0] || 'border');
+  const [selectedCategory, setSelectedCategory] = useState<string>(featuredCategories[0] || 'borders');
   const [selectedItem, setSelectedItem] = useState<CosmeticItem | null>(null);
   
   const getEndOfMonthDate = (): string => {
@@ -52,13 +53,13 @@ const FireSaleEvent: React.FC<FireSaleEventProps> = ({
   };
   
   const getCosmeticPreviewStyleForRarity = (rarity: string) => {
-    const typedRarity = rarity as CosmeticRarity;
+    const typedRarity = rarity as any;
     
     const dummyItem: CosmeticItem = {
       id: 'dummy',
       name: 'Dummy Item',
       description: 'Dummy description',
-      category: 'border',
+      category: 'borders' as CosmeticCategory,
       type: 'profile',
       rarity: typedRarity,
       cost: 0
@@ -166,11 +167,11 @@ const FireSaleEvent: React.FC<FireSaleEventProps> = ({
                         ) : (
                           <MedievalIcon 
                             name={
-                              item.category === 'border' ? 'scroll' :
-                              item.category === 'background' ? 'castle' :
-                              item.category === 'badge' ? 'medal' :
-                              item.category === 'title' ? 'crown' :
-                              item.category === 'effect' ? 'sparkles' :
+                              item.category === 'borders' ? 'scroll' :
+                              item.category === 'backgrounds' ? 'castle' :
+                              item.category === 'badges' ? 'medal' :
+                              item.category === 'titles' ? 'crown' :
+                              item.category === 'effects' ? 'sparkles' :
                               'star'
                             } 
                             size="md"

@@ -1,4 +1,3 @@
-
 import { supabase } from '@/integrations/supabase/client';
 import { DbDeposit, DbLeaderboardEntry, DbUser, DbWithdrawal, UserProfile } from '@/types/user';
 import { OnChainLeaderboardEntry } from '@/types/solana';
@@ -42,10 +41,10 @@ export const getLeaderboard = async (limit: number = 10): Promise<LeaderboardEnt
       rank: entry.rank,
       totalDeposited: entry.total_deposited,
       currentBalance: entry.current_balance,
-      team: entry.team,
+      team: entry.team as 'red' | 'green' | 'blue' | null,
       profileImage: entry.profile_image,
-      lastDepositDate: getLastDepositDate(entry.id),
-      joinDate: entry.joined_at,
+      lastDepositDate: await getLastDepositDate(entry.id),
+      joinDate: formatDate(entry.joined_at),
       tier: entry.tier
     }));
   } catch (error) {

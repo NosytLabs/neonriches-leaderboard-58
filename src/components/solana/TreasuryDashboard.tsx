@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -12,7 +11,6 @@ import MedievalIcon from '@/components/ui/medieval-icon';
 import { useToast } from '@/hooks/use-toast';
 import { motion } from 'framer-motion';
 
-// Internal Shadow Treasury Info type
 interface ShadowTreasuryInfo {
   totalDeposited: number;
   currentBalance: number;
@@ -35,11 +33,10 @@ const TreasuryDashboard: React.FC = () => {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const { toast } = useToast();
 
-  // Mock shadow treasury data for demonstration
   const mockShadowTreasury = () => {
     return {
-      totalDeposited: 1250, // Total all-time deposits in SOL
-      currentBalance: treasuryInfo?.balance || 0, // Current balance in SOL (matching on-chain)
+      totalDeposited: 1250,
+      currentBalance: treasuryInfo?.balance || 0,
       depositCount: 86,
       withdrawalCount: 12,
       lastUpdated: new Date().toISOString()
@@ -57,10 +54,7 @@ const TreasuryDashboard: React.FC = () => {
       setTreasuryInfo(info);
       setTransactions(txs);
       
-      // Update shadow treasury data 
-      // In a real implementation, this would come from your Supabase database
       setShadowInfo(mockShadowTreasury());
-      
     } catch (error) {
       console.error('Error fetching treasury data:', error);
       toast({
@@ -77,27 +71,24 @@ const TreasuryDashboard: React.FC = () => {
   useEffect(() => {
     fetchTreasuryData();
     
-    // Set up subscription for real-time updates
     const unsubscribe = subscribeToTreasuryUpdates((transaction) => {
-      // Update transactions list with the new transaction
-      setTransactions(prev => [transaction, ...prev.slice(0, 4)]);
+      setTransactions(prev => [...prev, transaction as SolanaTransaction]);
       
-      // Refresh treasury info
       getTreasuryInfo().then(info => {
         setTreasuryInfo(info);
-        // Update shadow treasury after a transaction
+        
+        const amount = transaction.amount || 0;
+        
         setShadowInfo(prev => {
-          // If amount is positive, it's a deposit
-          if (transaction.amount > 0) {
+          if (amount > 0) {
             return {
               ...prev,
-              totalDeposited: prev.totalDeposited + transaction.amount,
+              totalDeposited: prev.totalDeposited + amount,
               currentBalance: (info?.balance || 0),
               depositCount: prev.depositCount + 1,
               lastUpdated: new Date().toISOString()
             };
           } else {
-            // If amount is negative, it's a withdrawal
             return {
               ...prev,
               currentBalance: (info?.balance || 0),
@@ -108,7 +99,6 @@ const TreasuryDashboard: React.FC = () => {
         });
       });
       
-      // Show notification
       toast({
         title: "New Treasury Transaction",
         description: `Received ${transaction.amount.toFixed(2)} SOL from ${formatAddress(transaction.sender)}`,
@@ -126,7 +116,6 @@ const TreasuryDashboard: React.FC = () => {
     return value.toFixed(4);
   };
 
-  // Convert SOL to USD using a fixed exchange rate for demonstration
   const solToUsd = (solAmount: number, solPrice: number = 20): number => {
     return solAmount * solPrice;
   };
@@ -155,7 +144,6 @@ const TreasuryDashboard: React.FC = () => {
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-            {/* Current Treasury Balance */}
             <Card className="bg-white/5 border-white/10">
               <CardContent className="p-4">
                 <div className="flex items-center justify-between">
@@ -178,7 +166,6 @@ const TreasuryDashboard: React.FC = () => {
               </CardContent>
             </Card>
             
-            {/* Total Deposits (Shadow Treasury) */}
             <Card className="bg-white/5 border-white/10">
               <CardContent className="p-4">
                 <div className="flex items-center justify-between">
@@ -201,7 +188,6 @@ const TreasuryDashboard: React.FC = () => {
               </CardContent>
             </Card>
             
-            {/* USD Shadow Treasury (for tracking spend rank) */}
             <Card className="bg-gradient-to-br from-royal-purple/20 to-royal-gold/10 border-white/10">
               <CardContent className="p-4">
                 <div className="flex items-center justify-between">
@@ -225,7 +211,6 @@ const TreasuryDashboard: React.FC = () => {
             </Card>
           </div>
           
-          {/* Recent Transactions */}
           <div>
             <div className="flex items-center mb-3">
               <History className="h-4 w-4 text-white/60 mr-2" />
@@ -295,7 +280,6 @@ const TreasuryDashboard: React.FC = () => {
             </div>
           </div>
           
-          {/* Treasury Info Block */}
           <Card className="mt-6 bg-white/5 border-white/10 p-4">
             <div className="text-sm text-white/80 flex items-center mb-2">
               <MedievalIcon name="scroll" color="gold" size="sm" className="mr-2" />

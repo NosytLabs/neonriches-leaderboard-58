@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -11,6 +12,7 @@ import MockeryUserCard from './components/MockeryUserCard';
 import MockeryProtectionCard from './components/MockeryProtectionCard';
 import { spendFromWallet } from '@/services/walletService';
 import { convertToBasicAction } from './utils/mockeryUtils';
+import { MockeryTier } from '@/types/mockery';
 
 interface MockeryActionProps {
   userId: number;
@@ -74,7 +76,7 @@ const RoyalMockeryFestival: React.FC = () => {
     const success = await spendFromWallet(
       user,
       5,
-      'mockery_protection',
+      'protection',
       'Purchased Mockery Protection',
       {}
     );
@@ -90,21 +92,23 @@ const RoyalMockeryFestival: React.FC = () => {
     }
   };
   
-  const handleMockeryAction = (userId: number, username: string, action: string, amount: number) => {
+  const handleMockeryAction = (userId: number, username: string, action: string, amount: number): boolean => {
     const basicAction = convertToBasicAction(action as any);
-    const success = mockeryEffect.handleMockery(userId, username, basicAction, amount);
+    const success = mockeryEffect.handleMockery(userId, username, basicAction, Number(userId));
     
     if (success) {
       toast({
         title: "Mockery Action Sent",
         description: `You have successfully performed ${action} on ${username}.`,
       });
+      return true;
     } else {
       toast({
         title: "User is Protected",
         description: `${username} is protected from mockery.`,
         variant: "destructive"
       });
+      return false;
     }
   };
   
@@ -130,39 +134,39 @@ const RoyalMockeryFestival: React.FC = () => {
         </CardHeader>
         <CardContent className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           <MockeryCard
-            name="Tomatoes"
-            description="Throw rotten tomatoes at the user"
-            price={10}
             action="tomatoes"
-            onMockery={(username) => handleMockeryAction(Number(user.id), username, 'tomatoes', 10)}
+            tier="common" as MockeryTier
+            username="User"
+            onSelect={(action) => handleMockeryAction(Number(user.id), "User", action, 10)}
+            className="border-red-500/20"
           />
           <MockeryCard
-            name="Eggs"
-            description="Throw eggs at the user"
-            price={15}
             action="eggs"
-            onMockery={(username) => handleMockeryAction(Number(user.id), username, 'eggs', 15)}
+            tier="uncommon" as MockeryTier
+            username="User"
+            onSelect={(action) => handleMockeryAction(Number(user.id), "User", action, 15)}
+            className="border-yellow-500/20"
           />
           <MockeryCard
-            name="Stocks"
-            description="Put the user in the stocks"
-            price={20}
             action="stocks"
-            onMockery={(username) => handleMockeryAction(Number(user.id), username, 'stocks', 20)}
+            tier="rare" as MockeryTier
+            username="User"
+            onSelect={(action) => handleMockeryAction(Number(user.id), "User", action, 20)}
+            className="border-blue-500/20"
           />
           <MockeryCard
-            name="Silence"
-            description="Silence the user for a day"
-            price={25}
             action="silence"
-            onMockery={(username) => handleMockeryAction(Number(user.id), username, 'silence', 25)}
+            tier="epic" as MockeryTier
+            username="User"
+            onSelect={(action) => handleMockeryAction(Number(user.id), "User", action, 25)}
+            className="border-purple-500/20"
           />
           <MockeryCard
-            name="Court Jester"
-            description="Make the user the court jester"
-            price={30}
             action="courtJester"
-            onMockery={(username) => handleMockeryAction(Number(user.id), username, 'courtJester', 30)}
+            tier="legendary" as MockeryTier
+            username="User"
+            onSelect={(action) => handleMockeryAction(Number(user.id), "User", action, 30)}
+            className="border-royal-gold/20"
           />
         </CardContent>
       </Card>

@@ -1,9 +1,8 @@
-
 import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Crown, Coins, Users, Scroll, ArrowRight, Flame, Sparkles } from 'lucide-react';
+import { Crown, Coins, Users, Scroll, ArrowRight, Flame, Sparkles, TrendingUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -48,6 +47,12 @@ const Home = () => {
       title: 'Royal Mockery',
       description: 'Spend to mock other users with visual effects on their profiles. The ultimate form of medieval ridicule.',
       icon: <Flame className="h-5 w-5 text-royal-gold" />,
+    },
+    {
+      title: 'Pay to Win',
+      description: 'The more you spend, the higher you rank. It\'s that simple.',
+      icon: <TrendingUp className="h-8 w-8 text-royal-gold" />,
+      reversed: true,
     },
   ];
   
