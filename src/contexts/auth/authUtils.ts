@@ -1,6 +1,6 @@
 
-import { UserProfile } from '@/types/user';
-import { UserCosmetics } from '@/types/cosmetics';
+import { UserProfile } from "@/types/user";
+import { UserCosmetics } from "@/types/user";
 
 // Helper to add a profile boost to a user
 export function addProfileBoost(
@@ -36,17 +36,19 @@ export function addCosmetic(
   cosmeticId: string,
   category: string
 ): UserCosmetics {
-  const cosmetics = user.cosmetics || {
-    borders: [],
-    colors: [],
-    fonts: [],
-    emojis: [],
-    titles: [],
-    backgrounds: [],
-    effects: [],
-    badges: [],
-    themes: [],
-  };
+  const cosmetics: UserCosmetics = (user.cosmetics && typeof user.cosmetics !== 'string' && !Array.isArray(user.cosmetics)) ? 
+    user.cosmetics as UserCosmetics : 
+    {
+      borders: [],
+      colors: [],
+      fonts: [],
+      emojis: [],
+      titles: [],
+      backgrounds: [],
+      effects: [],
+      badges: [],
+      themes: [],
+    };
   
   // Handle each category
   switch (category) {

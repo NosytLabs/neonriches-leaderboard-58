@@ -1,6 +1,6 @@
 
-export type CosmeticType = 'border' | 'color' | 'font' | 'emoji' | 'title' | 'background' | 'effect' | 'badge' | 'theme';
-export type CosmeticCategory = 'appearance' | 'profile' | 'interaction' | 'special';
+export type CosmeticType = 'border' | 'color' | 'font' | 'emoji' | 'title' | 'background' | 'effect' | 'badge' | 'theme' | 'profile';
+export type CosmeticCategory = 'appearance' | 'profile' | 'interaction' | 'special' | 'border' | 'color' | 'font' | 'emoji' | 'title' | 'background' | 'effect';
 export type CosmeticRarity = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
 export type CosmeticPlacement = 'profile' | 'chat' | 'leaderboard' | 'global';
 
@@ -15,6 +15,7 @@ export interface CosmeticItem {
   imageSrc?: string;
   cssClass?: string;
   placement?: CosmeticPlacement;
+  imageUrl?: string; // Adding this to be compatible with existing code
 }
 
 export interface UserCosmeticItem extends CosmeticItem {

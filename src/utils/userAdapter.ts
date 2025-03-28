@@ -15,7 +15,7 @@ export const ensureUser = (user: Partial<UserProfile>): User => {
     lastLogin: user.lastLoginDate || new Date().toISOString(),
     id: user.id || '',
     username: user.username || '',
-    totalSpent: user.totalSpent || user.amountSpent || 0,
+    totalSpent: user.totalSpent || user.amountSpent || user.spentAmount || 0,
     walletBalance: user.walletBalance || 0,
     tier: user.tier || 'basic',
     joinDate: user.joinDate || user.joinedAt || new Date().toISOString()

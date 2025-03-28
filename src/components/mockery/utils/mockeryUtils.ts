@@ -96,6 +96,52 @@ export const getMockeryTierLabel = (tier: MockeryTier): string => {
   }
 };
 
+// Additional helper functions needed based on errors
+export const getMockeryActionTitle = (action: MockeryAction): string => {
+  switch (action) {
+    case 'tomatoes': return 'Throw Tomatoes';
+    case 'eggs': return 'Throw Eggs';
+    case 'stocks': return 'Put in Stocks';
+    case 'silence': return 'Royal Silence';
+    case 'courtJester': return 'Court Jester';
+    default: return 'Unknown Mockery';
+  }
+};
+
+export const getMockeryActionDescription = (action: MockeryAction): string => {
+  switch (action) {
+    case 'tomatoes': return 'Throw virtual tomatoes at this user';
+    case 'eggs': return 'Throw virtual eggs at this user';
+    case 'stocks': return 'Place this user in virtual stocks for public ridicule';
+    case 'silence': return 'Temporarily silence this user in public chats';
+    case 'courtJester': return 'Make this user the court jester for a day';
+    default: return 'Apply a mockery effect to this user';
+  }
+};
+
+export const getMockeryActionPrice = (action: MockeryAction): number => {
+  switch (action) {
+    case 'tomatoes': return 0.5;
+    case 'eggs': return 1;
+    case 'stocks': return 2;
+    case 'silence': return 5;
+    case 'courtJester': return 10;
+    default: return 1;
+  }
+};
+
+export const hasWeeklyDiscount = (action: MockeryAction): boolean => {
+  // Sample implementation, replace with actual logic
+  return ['tomatoes', 'eggs'].includes(action);
+};
+
+export const getDiscountedMockeryPrice = (action: MockeryAction, discount: number = 25): number => {
+  const basePrice = getMockeryActionPrice(action);
+  return hasWeeklyDiscount(action) ? 
+    basePrice * (1 - discount / 100) : 
+    basePrice;
+};
+
 export interface MockUser {
   id: string;
   username: string;
@@ -112,5 +158,10 @@ export default {
   getMockeryTier,
   getMockeryTierText,
   getMockeryTierColor,
-  getMockeryTierLabel
+  getMockeryTierLabel,
+  getMockeryActionTitle,
+  getMockeryActionDescription,
+  getMockeryActionPrice,
+  hasWeeklyDiscount,
+  getDiscountedMockeryPrice
 };

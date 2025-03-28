@@ -1,106 +1,126 @@
 
-import { MedievalIconColor, MedievalIconName, MedievalIconSize } from '@/components/ui/medieval-icon';
+// Defining the allowed icon names
+export type MedievalIconName = 
+  'crown' | 
+  'scroll' | 
+  'shield' | 
+  'sword' | 
+  'coin' | 
+  'coins' | 
+  'chalice' | 
+  'castle' | 
+  'dragon' | 
+  'knight' | 
+  'throne' |
+  'seal' |
+  'medal' |
+  'heart' |
+  'trophy' |
+  'key' |
+  'wallet' |
+  'user' |
+  'message' |
+  'gem' |
+  'sparkles' |
+  'flame' |
+  'sunburst' |
+  'water';
 
-export type DecorationSize = MedievalIconSize;
-export type DecorationColor = MedievalIconColor;
+// Defining the allowed icon sizes
+export type MedievalIconSize = 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'xs';
 
-export type DecorationVariant = 
-  'corner-flourish' | 
-  'border-pattern' | 
-  'royal-banner' | 
-  'coat-of-arms' | 
-  'crossed-swords' | 
-  'royal-insignia';
+// Defining the allowed colors
+export type MedievalIconColor = 
+  'gold' | 
+  'silver' | 
+  'bronze' |
+  'red' | 
+  'blue' | 
+  'green' | 
+  'purple' | 
+  'amber' |
+  'copper' |
+  'crimson' |
+  'navy' |
+  'emerald' |
+  'default' |
+  'white';
 
-export type DecorationPosition = 
-  'top-left' | 
-  'top-right' | 
-  'bottom-left' | 
-  'bottom-right' | 
-  'top-center' | 
-  'bottom-center' |
-  'center-left' |
-  'center-right' |
-  'center';
-
-export interface BaseDecorationProps {
-  color?: DecorationColor;
-  size?: DecorationSize;
-  animate?: boolean;
+// Props interface for the MedievalIcon component
+export interface MedievalIconProps {
+  name: MedievalIconName;
+  size?: MedievalIconSize;
+  color?: MedievalIconColor;
   className?: string;
+  animate?: boolean;
 }
 
-export const sizeClasses: Record<MedievalIconSize, { container: string, icon: MedievalIconSize, border: string }> = {
-  'xs': { container: 'h-4 w-4', icon: 'xs', border: 'border-2' },
-  'sm': { container: 'h-6 w-6', icon: 'sm', border: 'border-2' },
-  'md': { container: 'h-8 w-8', icon: 'md', border: 'border-2' },
-  'lg': { container: 'h-10 w-10', icon: 'lg', border: 'border-3' },
-  'xl': { container: 'h-12 w-12', icon: 'xl', border: 'border-3' },
-  '2xl': { container: 'h-16 w-16', icon: '2xl', border: 'border-4' }
-};
-
-export const positionClasses: Record<DecorationPosition, string> = {
-  'top-left': 'absolute top-0 left-0',
-  'top-right': 'absolute top-0 right-0',
-  'bottom-left': 'absolute bottom-0 left-0',
-  'bottom-right': 'absolute bottom-0 right-0',
-  'top-center': 'absolute top-0 left-1/2 transform -translate-x-1/2',
-  'bottom-center': 'absolute bottom-0 left-1/2 transform -translate-x-1/2',
-  'center-left': 'absolute top-1/2 left-0 transform -translate-y-1/2',
-  'center-right': 'absolute top-1/2 right-0 transform -translate-y-1/2',
-  'center': 'absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2'
-};
-
-export const getColorClass = (color: DecorationColor, type: 'bg' | 'border' | 'text'): string => {
-  switch (color) {
-    case 'gold':
-      return type === 'bg' ? 'bg-royal-gold/20' : 
-             type === 'border' ? 'border-royal-gold' : 'text-royal-gold';
-    case 'silver':
-      return type === 'bg' ? 'bg-gray-300/20' : 
-             type === 'border' ? 'border-gray-300' : 'text-gray-300';
-    case 'bronze':
-      return type === 'bg' ? 'bg-amber-600/20' : 
-             type === 'border' ? 'border-amber-600' : 'text-amber-600';
-    case 'copper':
-      return type === 'bg' ? 'bg-amber-600/20' : 
-             type === 'border' ? 'border-amber-600' : 'text-amber-600';
-    case 'red':
-      return type === 'bg' ? 'bg-royal-crimson/20' : 
-             type === 'border' ? 'border-royal-crimson' : 'text-royal-crimson';
-    case 'crimson':
-      return type === 'bg' ? 'bg-royal-crimson/20' : 
-             type === 'border' ? 'border-royal-crimson' : 'text-royal-crimson';
-    case 'blue':
-      return type === 'bg' ? 'bg-royal-navy/20' : 
-             type === 'border' ? 'border-royal-navy' : 'text-royal-navy';
-    case 'navy':
-      return type === 'bg' ? 'bg-royal-navy/20' : 
-             type === 'border' ? 'border-royal-navy' : 'text-royal-navy';
-    case 'green':
-      return type === 'bg' ? 'bg-emerald-500/20' : 
-             type === 'border' ? 'border-emerald-500' : 'text-emerald-500';
-    case 'emerald':
-      return type === 'bg' ? 'bg-emerald-500/20' : 
-             type === 'border' ? 'border-emerald-500' : 'text-emerald-500';
-    case 'purple':
-      return type === 'bg' ? 'bg-purple-600/20' : 
-             type === 'border' ? 'border-purple-600' : 'text-purple-600';
-    case 'amber':
-      return type === 'bg' ? 'bg-amber-500/20' : 
-             type === 'border' ? 'border-amber-500' : 'text-amber-500';
-    case 'default':
-      return type === 'bg' ? 'bg-gray-200/20' : 
-             type === 'border' ? 'border-gray-200' : 'text-gray-200';
-    case 'white':
-      return type === 'bg' ? 'bg-white/20' : 
-             type === 'border' ? 'border-white' : 'text-white';
-    default:
-      return type === 'bg' ? 'bg-gray-200/20' : 
-             type === 'border' ? 'border-gray-200' : 'text-gray-200';
+// Mapping sizes to CSS classes for consistent sizing
+export const MEDIEVAL_ICON_SIZES: Record<MedievalIconSize, { container: string; icon: MedievalIconSize; border: string; }> = {
+  'xs': {
+    container: 'w-4 h-4',
+    icon: 'sm', // xs maps to sm since we don't have an actual xs size
+    border: 'border-[1px]'
+  },
+  'sm': {
+    container: 'w-6 h-6',
+    icon: 'sm',
+    border: 'border-[1px]'
+  },
+  'md': {
+    container: 'w-8 h-8',
+    icon: 'md',
+    border: 'border-2'
+  },
+  'lg': {
+    container: 'w-12 h-12',
+    icon: 'lg',
+    border: 'border-2'
+  },
+  'xl': {
+    container: 'w-16 h-16',
+    icon: 'xl',
+    border: 'border-3'
+  },
+  '2xl': {
+    container: 'w-24 h-24',
+    icon: '2xl',
+    border: 'border-4'
   }
 };
 
-export const toMedievalIconColor = (color: DecorationColor): MedievalIconColor => {
-  return color;
+// Mapping colors to CSS classes for the icon
+export const MEDIEVAL_ICON_COLORS: Record<MedievalIconColor, string> = {
+  'gold': 'text-royal-gold',
+  'silver': 'text-silver-gray',
+  'bronze': 'text-amber-600',
+  'copper': 'text-amber-700',
+  'crimson': 'text-royal-crimson',
+  'navy': 'text-royal-navy',
+  'emerald': 'text-emerald-500',
+  'red': 'text-red-500',
+  'blue': 'text-blue-500',
+  'green': 'text-green-500',
+  'purple': 'text-purple-500',
+  'amber': 'text-amber-500',
+  'default': 'text-white',
+  'white': 'text-white'
+};
+
+// Mapping colors to CSS classes for the border/background
+export const MEDIEVAL_ICON_BG_COLORS: Record<MedievalIconColor, string> = {
+  'gold': 'from-royal-gold/20 to-royal-gold/10 border-royal-gold/30',
+  'silver': 'from-gray-400/20 to-gray-300/10 border-gray-400/30',
+  'bronze': 'from-amber-600/20 to-amber-700/10 border-amber-600/30',
+  'copper': 'from-amber-700/20 to-amber-800/10 border-amber-700/30',
+  'crimson': 'from-royal-crimson/20 to-royal-crimson/10 border-royal-crimson/30',
+  'navy': 'from-royal-navy/20 to-royal-navy/10 border-royal-navy/30',
+  'emerald': 'from-emerald-500/20 to-emerald-600/10 border-emerald-500/30',
+  'red': 'from-red-500/20 to-red-600/10 border-red-500/30',
+  'blue': 'from-blue-500/20 to-blue-600/10 border-blue-500/30',
+  'green': 'from-green-500/20 to-green-600/10 border-green-500/30',
+  'purple': 'from-purple-500/20 to-purple-600/10 border-purple-500/30',
+  'amber': 'from-amber-500/20 to-amber-600/10 border-amber-500/30',
+  'default': 'from-white/10 to-white/5 border-white/20',
+  'white': 'from-white/20 to-white/10 border-white/30'
 };

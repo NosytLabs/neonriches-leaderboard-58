@@ -4,6 +4,7 @@ import { User } from "./user";
 export type MockeryAction = 'tomatoes' | 'eggs' | 'stocks' | 'silence' | 'courtJester';
 export type MockeryTier = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
 export type ShameAction = 'tomatoes' | 'eggs' | 'stocks';
+export type ExtendedMockeryAction = MockeryAction | 'protected' | 'immune' | 'jester' | 'dunce' | 'roast' | 'ridicule' | 'taunt' | 'drama';
 
 export interface MockeryEffectData {
   type: MockeryAction;
@@ -53,6 +54,7 @@ export interface MockeryEvent {
   featured: boolean;
   discountedActions: MockeryAction[];
   discountPercentage: number;
+  action?: string; // Adding this for compatibility
 }
 
 export interface UserMockeryStatus {
@@ -61,11 +63,27 @@ export interface UserMockeryStatus {
   immunityUntil?: string;
   totalReceivedMockeries: number;
   totalSentMockeries: number;
+  username?: string; // Adding this for compatibility
+  activeProtection?: string; // Adding this for compatibility
+  activeMockeries?: MockeryEffectData[]; // Adding this for compatibility
 }
 
-// Default export as object with types for usage
-export default {
-  MockeryAction,
-  MockeryTier,
-  ShameAction
+export interface MockUser {
+  id: string;
+  username: string;
+  profilePicture: string;
+  tier: string | MockeryTier;
+  lastMockery: string;
+  mockeryCount: number;
+  isProtected: boolean;
+  onlineStatus: boolean;
+}
+
+// Create an actual value export for use with default exports
+const mockeryTypes = {
+  MockeryAction: 'MockeryAction type',
+  MockeryTier: 'MockeryTier type',
+  ShameAction: 'ShameAction type'
 };
+
+export default mockeryTypes;

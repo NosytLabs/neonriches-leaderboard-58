@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Link } from 'react-router-dom';
@@ -24,7 +23,7 @@ import ProfileBoostedContent from '@/components/ui/ProfileBoostedContent';
 import InteractiveRoyalCrown from '@/components/3d/InteractiveRoyalCrown';
 import useNotificationSounds from '@/hooks/use-notification-sounds';
 import { useToastContext } from '@/contexts/ToastContext';
-import { UserProfile } from '@/types/user';
+import { UserProfile, SocialLink } from '@/types/user';
 import { getUserRanking } from '@/services/spendingService';
 
 interface TopSpenderShowcaseProps {
@@ -67,13 +66,11 @@ const TopSpenderShowcase: React.FC<TopSpenderShowcaseProps> = ({
   const { playSound } = useNotificationSounds();
   const { addToast } = useToastContext();
   
-  // If no top spender is provided, fetch the current #1 ranked user
   useEffect(() => {
     if (!topSpender) {
       const rankings = getUserRanking();
       if (rankings && rankings.length > 0) {
         const top = rankings[0];
-        // Convert UserRankData to UserProfile
         const topUserProfile: UserProfile = {
           id: top.userId,
           username: top.username,
@@ -87,7 +84,8 @@ const TopSpenderShowcase: React.FC<TopSpenderShowcaseProps> = ({
           spendStreak: top.spendStreak,
           joinDate: new Date().toISOString(),
           joinedAt: new Date().toISOString(),
-          walletBalance: 0 // Add the required walletBalance property
+          walletBalance: 0,
+          totalSpent: top.totalSpent
         };
         setCurrentTopSpender(topUserProfile);
       }
@@ -96,21 +94,18 @@ const TopSpenderShowcase: React.FC<TopSpenderShowcaseProps> = ({
     }
   }, [topSpender]);
   
-  // Poll for updates to check if top spender has changed
   useEffect(() => {
     const checkTopSpender = () => {
       const rankings = getUserRanking();
       if (rankings && rankings.length > 0 && currentTopSpender) {
         const top = rankings[0];
         if (top.userId !== currentTopSpender.id) {
-          // Top spender has changed
           addToast({
             title: "New Ruler Crowned!",
             description: `${top.username} has become the new top spender with $${top.totalSpent.toLocaleString()}`,
             variant: "default",
           });
           
-          // Convert UserRankData to UserProfile
           const topUserProfile: UserProfile = {
             id: top.userId,
             username: top.username,
@@ -124,14 +119,14 @@ const TopSpenderShowcase: React.FC<TopSpenderShowcaseProps> = ({
             spendStreak: top.spendStreak,
             joinDate: new Date().toISOString(),
             joinedAt: new Date().toISOString(),
-            walletBalance: 0 // Add the required walletBalance property
+            walletBalance: 0,
+            totalSpent: top.totalSpent
           };
           setCurrentTopSpender(topUserProfile);
         }
       }
     };
     
-    // Check every 30 seconds
     const interval = setInterval(checkTopSpender, 30000);
     return () => clearInterval(interval);
   }, [currentTopSpender, addToast]);
@@ -140,7 +135,46 @@ const TopSpenderShowcase: React.FC<TopSpenderShowcaseProps> = ({
     return null;
   }
   
-  // Fallback if no gender is specified
+  const getSocialLinks = () => {
+    if (!currentTopSpender.socialLinks) return [];
+    
+    if (Array.isArray(currentTopSpender.socialLinks)) {
+      return currentTopSpender.socialLinks;
+    }
+    
+    const links: SocialLink[] = [];
+    const socialObj = currentTopSpender.socialLinks as { twitter?: string; discord?: string; website?: string; };
+    
+    if (socialObj.twitter) {
+      links.push({
+        id: 'twitter',
+        platform: 'Twitter',
+        url: socialObj.twitter,
+        clicks: 0
+      });
+    }
+    
+    if (socialObj.discord) {
+      links.push({
+        id: 'discord',
+        platform: 'Discord',
+        url: socialObj.discord,
+        clicks: 0
+      });
+    }
+    
+    if (socialObj.website) {
+      links.push({
+        id: 'website',
+        platform: 'Website',
+        url: socialObj.website,
+        clicks: 0
+      });
+    }
+    
+    return links;
+  };
+  
   const royalTitle = currentTopSpender.gender === 'queen' ? 'Queen' : 'King';
   
   const handleCrownClick = () => {
@@ -156,7 +190,6 @@ const TopSpenderShowcase: React.FC<TopSpenderShowcaseProps> = ({
     setTimeout(() => setIsAnimating(false), 3000);
   };
   
-  // Get team details with fallback
   const getTeamDetails = () => {
     if (!currentTopSpender.team || !LUXURY_TEAMS[currentTopSpender.team]) {
       return {
@@ -172,10 +205,11 @@ const TopSpenderShowcase: React.FC<TopSpenderShowcaseProps> = ({
   
   const teamDetails = getTeamDetails();
   
-  // Don't render if we want to highlight only the top rank and this user isn't rank 1
   if (highlightTop && currentTopSpender.rank !== 1) {
     return null;
   }
+  
+  const socialLinks = getSocialLinks();
   
   return (
     <div className="relative">
@@ -191,7 +225,6 @@ const TopSpenderShowcase: React.FC<TopSpenderShowcaseProps> = ({
       </div>
       
       <div className="grid grid-cols-1 lg:grid-cols-7 gap-6 items-stretch">
-        {/* 3D Crown - 2 column span */}
         <div className="hidden lg:block lg:col-span-2 h-full">
           <MedievalFrame variant="royal" cornerDecoration className="h-full p-4">
             <Card className="h-full bg-transparent border-0 flex items-center justify-center">
@@ -204,7 +237,6 @@ const TopSpenderShowcase: React.FC<TopSpenderShowcaseProps> = ({
           </MedievalFrame>
         </div>
         
-        {/* Royal Profile - 3 column span */}
         <div className="lg:col-span-3">
           <MedievalFrame 
             variant="royal" 
@@ -307,7 +339,6 @@ const TopSpenderShowcase: React.FC<TopSpenderShowcaseProps> = ({
           </MedievalFrame>
         </div>
         
-        {/* Royal Marketing Section - 2 column span */}
         <div className="lg:col-span-2">
           <MedievalFrame variant="noble" className="h-full">
             <div className="absolute top-2 left-2 z-10">
@@ -325,8 +356,8 @@ const TopSpenderShowcase: React.FC<TopSpenderShowcaseProps> = ({
                 </h3>
                 
                 <div className="grid grid-cols-1 gap-3 mb-6">
-                  {(currentTopSpender.socialLinks && currentTopSpender.socialLinks.length > 0) ? (
-                    currentTopSpender.socialLinks.map((link, index) => (
+                  {socialLinks.length > 0 ? (
+                    socialLinks.map((link, index) => (
                       <a 
                         key={index}
                         href={link.url}

@@ -1,59 +1,44 @@
 
 export interface SolanaWallet {
   publicKey: string;
-  isConnected: boolean;
   balance: number;
+  connected: boolean;
+  provider?: any;
 }
 
 export interface SolanaTreasuryInfo {
-  pubkey: string;
-  balance: number;
-  owner: string;
-  transactions: SolanaTransaction[];
-  totalContributions: number;
+  totalDeposited: number;
+  totalWithdrawn: number;
+  currentBalance: number;
   lastUpdated: string;
-  amount: number;
-  sender: string;
+  updatedAt?: string;
+  address?: string;
 }
 
 export interface SolanaTransaction {
+  id?: string;
   signature: string;
-  timestamp: string;
   amount: number;
+  timestamp: string;
   sender: string;
   receiver: string;
-  type: 'deposit' | 'withdrawal' | 'transfer' | 'other';
-  status: 'confirmed' | 'processing' | 'failed';
+  type: 'deposit' | 'withdrawal' | 'transfer';
+  status: 'confirmed' | 'pending' | 'failed';
+  message?: string;
 }
 
-export interface SolanaNftInfo {
-  mintAddress: string;
-  tokenAccount: string;
-  name: string;
-  symbol: string;
-  image: string;
-  description: string;
-  attributes: {
-    trait_type: string;
-    value: string;
-  }[];
+export interface OnChainLeaderboardEntry {
+  address: string;
+  username: string;
+  amount: number;
+  rank: number;
+  transaction: string;
+  timestamp: string;
 }
 
-export interface SolanaCollectionInfo {
-  name: string;
-  symbol: string;
-  description: string;
-  image: string;
-  size: number;
-  floorPrice: number;
-  volume: number;
-}
-
-export interface SolanaStats {
-  price: number;
-  change24h: number;
-  volume24h: number;
-  marketCap: number;
-}
-
-export type TransactionType = 'deposit' | 'withdrawal' | 'purchase' | 'mockery' | 'boost' | 'event' | 'cosmetic' | 'certificate' | 'founder' | 'advertisement';
+export default {
+  SolanaWallet,
+  SolanaTreasuryInfo,
+  SolanaTransaction,
+  OnChainLeaderboardEntry
+};

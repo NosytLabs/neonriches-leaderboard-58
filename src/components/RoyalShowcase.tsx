@@ -1,5 +1,4 @@
-
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Link } from 'react-router-dom';
 import { 
@@ -24,7 +23,7 @@ import ProfileBoostedContent from '@/components/ui/ProfileBoostedContent';
 import InteractiveRoyalCrown from '@/components/3d/InteractiveRoyalCrown';
 import useNotificationSounds from '@/hooks/use-notification-sounds';
 import { useToastContext } from '@/contexts/ToastContext';
-import { UserProfile } from '@/types/user';
+import { UserProfile, SocialLink } from '@/types/user';
 
 interface RoyalShowcaseProps {
   topSpender?: UserProfile;
@@ -55,22 +54,21 @@ const LUXURY_TEAMS = {
   }
 };
 
-// Default spender data for when no topSpender is provided
 const DEFAULT_SPENDER: UserProfile = {
   id: "default",
   username: "NobleStranger",
   email: "",
   rank: 1,
-  joinedAt: new Date().toISOString(),
   joinDate: new Date().toISOString(),
   displayName: "Unknown Noble",
   gender: 'king',
   profileImage: "https://source.unsplash.com/random/300x300?portrait&royal",
   amountSpent: 1000,
-  walletBalance: 0, // Add the required walletBalance property
+  walletBalance: 0,
   team: "red",
   bio: "This space awaits a true royal spender. Will you claim the throne?",
-  tier: 'royal'
+  tier: 'royal',
+  totalSpent: 1000
 };
 
 const RoyalShowcase: React.FC<RoyalShowcaseProps> = ({ 
@@ -81,10 +79,8 @@ const RoyalShowcase: React.FC<RoyalShowcaseProps> = ({
   const { playSound } = useNotificationSounds();
   const { addToast } = useToastContext();
   
-  // Use the provided topSpender or fall back to the default
   const spender = topSpender || DEFAULT_SPENDER;
   
-  // Fallback if no gender is specified
   const royalTitle = spender.gender === 'queen' ? 'Queen' : 'King';
   
   const handleCrownClick = () => {
@@ -100,7 +96,6 @@ const RoyalShowcase: React.FC<RoyalShowcaseProps> = ({
     setTimeout(() => setIsAnimating(false), 3000);
   };
   
-  // Get team details with fallback
   const getTeamDetails = () => {
     if (!spender.team || !LUXURY_TEAMS[spender.team]) {
       return {
@@ -116,6 +111,48 @@ const RoyalShowcase: React.FC<RoyalShowcaseProps> = ({
   
   const teamDetails = getTeamDetails();
   
+  const getSocialLinks = () => {
+    if (!spender.socialLinks) return [];
+    
+    if (Array.isArray(spender.socialLinks)) {
+      return spender.socialLinks;
+    }
+    
+    const links: SocialLink[] = [];
+    const socialObj = spender.socialLinks as { twitter?: string; discord?: string; website?: string; };
+    
+    if (socialObj.twitter) {
+      links.push({
+        id: 'twitter',
+        platform: 'Twitter',
+        url: socialObj.twitter,
+        clicks: 0
+      });
+    }
+    
+    if (socialObj.discord) {
+      links.push({
+        id: 'discord',
+        platform: 'Discord',
+        url: socialObj.discord,
+        clicks: 0
+      });
+    }
+    
+    if (socialObj.website) {
+      links.push({
+        id: 'website',
+        platform: 'Website',
+        url: socialObj.website,
+        clicks: 0
+      });
+    }
+    
+    return links;
+  };
+
+  const socialLinks = getSocialLinks();
+  
   return (
     <div className="relative">
       <div className="mx-auto text-center mb-8">
@@ -130,7 +167,6 @@ const RoyalShowcase: React.FC<RoyalShowcaseProps> = ({
       </div>
       
       <div className="grid grid-cols-1 lg:grid-cols-7 gap-6 items-stretch">
-        {/* 3D Crown - 2 column span */}
         <div className="hidden lg:block lg:col-span-2 h-full">
           <MedievalFrame variant="royal" cornerDecoration className="h-full p-4">
             <Card className="h-full bg-transparent border-0 flex items-center justify-center">
@@ -143,7 +179,6 @@ const RoyalShowcase: React.FC<RoyalShowcaseProps> = ({
           </MedievalFrame>
         </div>
         
-        {/* Royal Profile - 3 column span */}
         <div className="lg:col-span-3">
           <MedievalFrame 
             variant="royal" 
@@ -246,7 +281,6 @@ const RoyalShowcase: React.FC<RoyalShowcaseProps> = ({
           </MedievalFrame>
         </div>
         
-        {/* Royal Marketing Section - 2 column span */}
         <div className="lg:col-span-2">
           <MedievalFrame variant="noble" className="h-full">
             <div className="absolute top-2 left-2 z-10">
@@ -263,8 +297,8 @@ const RoyalShowcase: React.FC<RoyalShowcaseProps> = ({
               </h3>
               
               <div className="space-y-4 mb-6">
-                {spender.socialLinks && spender.socialLinks.length > 0 ? (
-                  spender.socialLinks.map((link, idx) => (
+                {socialLinks.length > 0 ? (
+                  socialLinks.map((link, idx) => (
                     <a 
                       key={idx}
                       href={link.url}

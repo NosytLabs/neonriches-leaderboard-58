@@ -30,6 +30,12 @@ export interface UserSettings {
   darkMode: boolean;
   language: string;
   soundEffects?: boolean;
+  profileVisibility?: boolean;
+  allowProfileLinks?: boolean;
+  showEmailOnProfile?: boolean;
+  rankChangeAlerts?: boolean;
+  shameAlerts?: boolean;
+  newFollowerAlerts?: boolean;
 }
 
 export interface SocialLink {
@@ -83,7 +89,8 @@ export interface UserCosmetics {
   activeEmoji?: string;
   activeTheme?: string;
   activeBadge?: string;
-  foundersPass?: string[];
+  activeBackground?: string;
+  foundersPass?: boolean | string[];
 }
 
 export interface UserProfile {
@@ -93,7 +100,7 @@ export interface UserProfile {
   email?: string;
   avatarUrl?: string;
   bio?: string;
-  socialLinks?: {
+  socialLinks?: SocialLink[] | {
     twitter?: string;
     discord?: string;
     website?: string;
