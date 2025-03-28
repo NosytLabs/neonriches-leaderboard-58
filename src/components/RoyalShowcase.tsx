@@ -23,7 +23,7 @@ import MedievalFrame from '@/components/ui/medieval-frame';
 import ProfileBoostedContent from '@/components/ui/ProfileBoostedContent';
 import InteractiveRoyalCrown from '@/components/3d/InteractiveRoyalCrown';
 import useNotificationSounds from '@/hooks/use-notification-sounds';
-import { useToast } from '@/hooks/use-toast';
+import { useToastContext } from '@/contexts/ToastContext';
 import { UserProfile } from '@/types/user';
 
 interface RoyalShowcaseProps {
@@ -58,7 +58,7 @@ const LUXURY_TEAMS = {
 const RoyalShowcase: React.FC<RoyalShowcaseProps> = ({ topSpender, onInspect }) => {
   const [isAnimating, setIsAnimating] = useState(false);
   const { playSound } = useNotificationSounds();
-  const { toast } = useToast();
+  const { addToast } = useToastContext();
   
   // Fallback if no gender is specified
   const royalTitle = topSpender.gender === 'queen' ? 'Queen' : 'King';
@@ -67,7 +67,7 @@ const RoyalShowcase: React.FC<RoyalShowcaseProps> = ({ topSpender, onInspect }) 
     setIsAnimating(true);
     playSound('royalAnnouncement', 0.2);
     
-    toast({
+    addToast({
       title: `${royalTitle} of Spending`,
       description: `All hail ${topSpender.displayName || topSpender.username}, who has contributed $${topSpender.amountSpent?.toLocaleString()} to their meaningless digital status!`,
       duration: 5000,

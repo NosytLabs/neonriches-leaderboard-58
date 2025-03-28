@@ -4,7 +4,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import RoyalDivider from '@/components/ui/royal-divider';
 import { useAuth } from '@/contexts/AuthContext';
-import { useToast } from '@/hooks/use-toast';
+import { useToastContext } from '@/contexts/ToastContext';
 import { Crown, Gem, Shield, ArrowRight, Users, Trophy } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -61,11 +61,11 @@ const LUXURY_TEAMS = [
 
 const TeamSection = () => {
   const { user } = useAuth();
-  const { toast } = useToast();
+  const { addToast } = useToastContext();
   
   const handleJoinTeam = (teamId: string) => {
     if (!user) {
-      toast({
+      addToast({
         title: "Authentication Required",
         description: "You must be logged in to join a team.",
         variant: "destructive"
@@ -73,7 +73,7 @@ const TeamSection = () => {
       return;
     }
     
-    toast({
+    addToast({
       title: `Team Joined!`,
       description: `You have joined the ${LUXURY_TEAMS.find(t => t.id === teamId)?.name}. Your spending will now contribute to their standings.`,
     });

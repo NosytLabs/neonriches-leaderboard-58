@@ -1,6 +1,6 @@
 
 import React, { useEffect } from 'react';
-import { toast } from "@/hooks/use-toast";
+import { useToastContext } from '@/contexts/ToastContext';
 import { UserProfile } from '@/contexts/AuthContext';
 
 interface DashboardWelcomeProps {
@@ -9,6 +9,7 @@ interface DashboardWelcomeProps {
 
 export const DashboardWelcome: React.FC<DashboardWelcomeProps> = ({ user }) => {
   const [showRoyalWelcome, setShowRoyalWelcome] = React.useState(false);
+  const { addToast } = useToastContext();
 
   useEffect(() => {
     // Display a grand royal welcome after a short delay
@@ -23,13 +24,13 @@ export const DashboardWelcome: React.FC<DashboardWelcomeProps> = ({ user }) => {
     if (showRoyalWelcome && user) {
       const genderTitle = user.gender === 'king' ? 'King' : user.gender === 'queen' ? 'Queen' : 'Noble Jester';
       
-      toast({
+      addToast({
         title: `Royal Presence Detected`,
         description: `Welcome back to your kingdom, ${genderTitle} ${user.username}. Your coffers await your generosity!`,
         duration: 5000,
       });
     }
-  }, [showRoyalWelcome, user]);
+  }, [showRoyalWelcome, user, addToast]);
 
   return (
     <div className="animate-fade-in">
@@ -44,6 +45,7 @@ export const DashboardWelcome: React.FC<DashboardWelcomeProps> = ({ user }) => {
 // For backward compatibility, also export the hook
 export function useDashboardWelcome(user: UserProfile | null) {
   const [showRoyalWelcome, setShowRoyalWelcome] = React.useState(false);
+  const { addToast } = useToastContext();
 
   useEffect(() => {
     // Display a grand royal welcome after a short delay
@@ -58,13 +60,13 @@ export function useDashboardWelcome(user: UserProfile | null) {
     if (showRoyalWelcome && user) {
       const genderTitle = user.gender === 'king' ? 'King' : user.gender === 'queen' ? 'Queen' : 'Noble Jester';
       
-      toast({
+      addToast({
         title: `Royal Presence Detected`,
         description: `Welcome back to your kingdom, ${genderTitle} ${user.username}. Your coffers await your generosity!`,
         duration: 5000,
       });
     }
-  }, [showRoyalWelcome, user]);
+  }, [showRoyalWelcome, user, addToast]);
 
   return showRoyalWelcome;
 }

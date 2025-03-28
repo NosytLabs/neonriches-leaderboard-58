@@ -9,10 +9,14 @@ const ToastContext = createContext<ToastContextType | undefined>(undefined);
 export function ToastProvider({ children }: { children: React.ReactNode }) {
   const toastMethods = useToast();
   
-  // Register the addToast function globally
+  // Register the toast functions globally
   useEffect(() => {
-    setToastFunction(toastMethods.addToast);
-  }, [toastMethods.addToast]);
+    setToastFunction(
+      toastMethods.addToast,
+      toastMethods.success,
+      toastMethods.error
+    );
+  }, [toastMethods.addToast, toastMethods.success, toastMethods.error]);
   
   return (
     <ToastContext.Provider value={toastMethods}>

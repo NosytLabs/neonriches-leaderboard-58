@@ -29,7 +29,7 @@ export function useToast() {
   const [toasts, setToasts] = useState<ToasterToast[]>([]);
 
   const addToast = useCallback(
-    (props: Omit<ToasterToast, 'id'>) => {
+    (props: Omit<ToasterToast, "id">) => {
       const id = props.id || generateId();
 
       const newToast = {
@@ -79,46 +79,59 @@ export function useToast() {
     [setToasts]
   );
 
+  // Create success and error convenience methods
+  const success = useCallback(
+    (props: Omit<ToasterToast, "id" | "variant">) => {
+      return addToast({ ...props, variant: 'default' });
+    },
+    [addToast]
+  );
+
+  const error = useCallback(
+    (props: Omit<ToasterToast, "id" | "variant">) => {
+      return addToast({ ...props, variant: 'destructive' });
+    },
+    [addToast]
+  );
+
   return {
     toasts,
     addToast,
     dismissToast,
     updateToast,
-    // Add the toast property to make both approaches work
-    toast: {
-      addToast,
-      dismissToast,
-      updateToast,
-      // Convenience methods
-      success: (props: Omit<ToasterToast, 'id'>) => {
-        return addToast({ ...props, variant: 'default' });
-      },
-      error: (props: Omit<ToasterToast, 'id'>) => {
-        return addToast({ ...props, variant: 'destructive' });
-      }
-    }
+    success,
+    error,
   };
 }
 
 // Create a singleton version of the toast function for non-hook components
-let addToastFn: (props: Omit<ToasterToast, 'id'>) => string = () => "";
+let addToastFn: (props: Omit<ToasterToast, "id">) => string = () => "";
+let successToastFn: (props: Omit<ToasterToast, "id" | "variant">) => string = () => "";
+let errorToastFn: (props: Omit<ToasterToast, "id" | "variant">) => string = () => "";
 
-export const setToastFunction = (fn: (props: Omit<ToasterToast, 'id'>) => string) => {
-  addToastFn = fn;
+export const setToastFunction = (
+  add: (props: Omit<ToasterToast, "id">) => string,
+  success: (props: Omit<ToasterToast, "id" | "variant">) => string,
+  error: (props: Omit<ToasterToast, "id" | "variant">) => string
+) => {
+  addToastFn = add;
+  successToastFn = success;
+  errorToastFn = error;
 };
 
 // Standalone toast object for use in non-hook contexts
 export const toast = {
-  // Generic methods
-  addToast: (props: Omit<ToasterToast, 'id'>) => {
+  // Direct access to addToast
+  addToast: (props: Omit<ToasterToast, "id">) => {
     return addToastFn(props);
   },
   
   // Convenience methods
-  success: (props: Omit<ToasterToast, 'id'>) => {
-    return addToastFn({ ...props, variant: 'default' });
+  success: (props: Omit<ToasterToast, "id" | "variant">) => {
+    return successToastFn(props);
   },
-  error: (props: Omit<ToasterToast, 'id'>) => {
-    return addToastFn({ ...props, variant: 'destructive' });
+  
+  error: (props: Omit<ToasterToast, "id" | "variant">) => {
+    return errorToastFn(props);
   }
 };
