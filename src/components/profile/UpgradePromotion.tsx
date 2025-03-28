@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -22,12 +23,13 @@ const UpgradePromotion: React.FC = () => {
       // In a real app, this would connect to a payment processor
       // For now, we'll just update the user's subscription status
       const subscription: UserSubscription = {
-        id: 'sub_' + Math.random().toString(36).substring(2, 15),
         status: 'active',
         tier: 'pro',
         interval: 'monthly',
-        currentPeriodEnd: Date.now() + 30 * 24 * 60 * 60 * 1000, // 30 days from now
-        cancelAtPeriodEnd: false
+        startDate: new Date().toISOString(),
+        endDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(), // 30 days from now
+        autoRenew: false,
+        features: ['ad-free', 'priority-support', 'exclusive-cosmetics']
       };
       
       await updateUserProfile({

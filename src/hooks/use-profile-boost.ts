@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import { UserProfile, ProfileBoost } from '@/types/user';
 import { Crown, Sparkle, Flame, Star, Lightbulb } from 'lucide-react';
@@ -77,7 +76,7 @@ export const useProfileBoost = (user: UserProfile | null) => {
     const currentTime = Date.now();
     const currentActiveBoosts = user.profileBoosts.filter(
       boost => boost.endTime > currentTime
-    );
+    ) as ProfileBoost[];
     
     setActiveBoosts(currentActiveBoosts);
     

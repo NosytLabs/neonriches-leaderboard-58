@@ -30,10 +30,15 @@ const ProfileEditor: React.FC<ProfileEditorProps> = ({ user }) => {
   const [profileImages, setProfileImages] = useState<ProfileImage[]>(
     user.profileImages || []
   );
+  const [selectedTeam, setSelectedTeam] = useState<'red' | 'green' | 'blue' | null>(user.team || null);
   const [isSaving, setIsSaving] = useState(false);
   
   const handleGenderChange = (value: GenderType) => {
     setGender(value);
+  };
+  
+  const handleTeamChange = (team: 'red' | 'green' | 'blue' | null) => {
+    setSelectedTeam(team);
   };
   
   const handleSaveProfile = async () => {
@@ -126,7 +131,10 @@ const ProfileEditor: React.FC<ProfileEditorProps> = ({ user }) => {
           </TabsContent>
           
           <TabsContent value="team" className="space-y-4">
-            <TeamSelector currentTeam={user.team} />
+            <TeamSelector 
+              team={selectedTeam} 
+              onTeamChange={handleTeamChange} 
+            />
           </TabsContent>
         </Tabs>
         

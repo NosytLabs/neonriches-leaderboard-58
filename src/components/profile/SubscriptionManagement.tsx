@@ -13,7 +13,9 @@ import { useToast } from '@/hooks/use-toast';
 const SubscriptionManagement = () => {
   const { user, updateUserProfile } = useAuth();
   const { hasActiveSubscription, isLoading } = useFeatureAccess();
-  const [selectedTier, setSelectedTier] = useState<'free' | 'pro'>(user?.subscription?.tier || 'free');
+  const [selectedTier, setSelectedTier] = useState<'free' | 'pro'>(
+    user?.subscription?.tier || 'free'
+  );
   const [selectedBillingCycle, setSelectedBillingCycle] = useState<'monthly' | 'quarterly' | 'yearly'>(
     (user?.subscription?.interval as 'monthly' | 'quarterly' | 'yearly') || 'monthly'
   );

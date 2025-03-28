@@ -67,7 +67,7 @@ export const getRarityBorderColor = (rarity: CosmeticRarity): string => {
   }
 };
 
-// This is the function that was missing proper export
+// Properly export getRandomCosmetic function
 export const getRandomCosmetic = (
   amount: number,
   preferredCategory?: string

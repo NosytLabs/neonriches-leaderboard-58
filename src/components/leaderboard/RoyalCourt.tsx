@@ -24,7 +24,7 @@ const RoyalCourt = () => {
     tier: 'crab',
     team: user.team as any || null,
     gender: 'king',
-    joinDate: new Date(),
+    joinDate: new Date().toISOString(),
     joinedAt: new Date().toISOString(),
     cosmetics: {
       borders: [],
@@ -48,11 +48,7 @@ const RoyalCourt = () => {
   
   // Use our new hook for floating coins
   useFloatingCoins({
-    containerRef,
-    frequency: 0.8, // Fewer coins (20% chance)
-    duration: 5000,
-    minDelay: 15000, // Longer delay between coins
-    maxDelay: 20000
+    containerRef
   });
   
   // Satirical welcome toast

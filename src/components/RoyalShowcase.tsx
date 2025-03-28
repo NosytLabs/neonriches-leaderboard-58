@@ -26,35 +26,7 @@ import { useToast } from '@/hooks/use-toast';
 import { UserProfile } from '@/types/user';
 
 interface RoyalShowcaseProps {
-  topSpender: {
-    id: string;
-    username: string;
-    displayName?: string;
-    profileImage: string;
-    amountSpent: number;
-    rank: number;
-    team?: 'red' | 'green' | 'blue' | null;
-    spendingStreak?: number; 
-    gender?: 'king' | 'queen' | 'neutral';
-    bio?: string;
-    socialLinks?: Array<{
-      platform: string;
-      url: string;
-      clicks?: number;
-    }>;
-    joinDate?: string;
-    lastActive?: string;
-    badges?: string[];
-    profileBoosts?: Array<{
-      id: string;
-      effectId: string;
-      startTime: number;
-      endTime: number;
-    }>;
-    email: string;
-    spentAmount: number;
-    joinedAt: string;
-  };
+  topSpender: UserProfile;
   onInspect?: () => void;
 }
 

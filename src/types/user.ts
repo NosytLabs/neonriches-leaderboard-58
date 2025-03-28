@@ -1,4 +1,3 @@
-
 export interface UserProfile {
   id: string;
   username: string;
@@ -9,7 +8,7 @@ export interface UserProfile {
   spentAmount: number;
   rank: number;
   walletBalance?: number;
-  tier: 'free' | 'pro' | 'royal' | 'crab' | 'whale' | 'shark' | 'dolphin';
+  tier: 'free' | 'pro' | 'royal' | 'crab' | 'whale' | 'shark' | 'dolphin' | 'fish' | 'octopus';
   team?: 'red' | 'green' | 'blue' | null;
   spendingStreak?: number;
   spendStreak?: number; // Alias for backward compatibility
@@ -24,6 +23,9 @@ export interface UserProfile {
     effectId: string;
     startTime: number;
     endTime: number;
+    type: 'visibility' | 'rank' | 'appearance';
+    strength: number;
+    appliedBy: string;
   }>;
   cosmetics?: UserCosmetics;
   activeTitle?: string;
@@ -53,14 +55,27 @@ export interface UserSettings {
     showRankInProfile: boolean;
     compactView: boolean;
   };
+  showRank?: boolean;
+  showSpending?: boolean;
+  showTeam?: boolean;
+  profileVisibility?: 'public' | 'private' | 'friends';
+  allowProfileLinks?: boolean;
+  showEmailOnProfile?: boolean;
+  emailNotifications?: boolean;
+  rankChangeAlerts?: boolean;
+  shameAlerts?: boolean;
+  newFollowerAlerts?: boolean;
 }
 
 export type UserGender = 'king' | 'queen' | 'neutral' | 'jester' | 'noble';
 
-export type UserTier = 'free' | 'pro' | 'royal' | 'crab' | 'whale' | 'shark' | 'dolphin';
+export type UserTier = 'free' | 'pro' | 'royal' | 'crab' | 'whale' | 'shark' | 'dolphin' | 'fish' | 'octopus';
 
 export interface UserSubscription {
-  plan: 'free' | 'basic' | 'premium' | 'royal';
+  id?: string;
+  plan?: 'free' | 'basic' | 'premium' | 'royal';
+  tier?: 'free' | 'pro' | 'royal';
+  interval?: 'monthly' | 'quarterly' | 'yearly';
   startDate: string;
   endDate: string;
   autoRenew: boolean;

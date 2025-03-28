@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -19,7 +18,7 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({ user }) => {
   const [activeTab, setActiveTab] = useState("basic");
   const [isLoading, setIsLoading] = useState(false);
   
-  // Form states
+  // Form states with defaults from user settings or sensible fallbacks
   const [basicInfo, setBasicInfo] = useState({
     displayName: user.displayName || user.username,
     bio: user.bio || '',
@@ -41,7 +40,7 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({ user }) => {
   const [notifications, setNotifications] = useState({
     emailNotifications: user.settings?.emailNotifications !== false,
     rankChangeAlerts: user.settings?.rankChangeAlerts !== false,
-    shameAlerts: user.settings?.shameAlerts !== false,
+    shameAlerts: user.settings?.shameAlerts || false,
     newFollowerAlerts: user.settings?.newFollowerAlerts !== false
   });
   

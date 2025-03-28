@@ -1,75 +1,126 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useCallback, RefObject, useEffect } from 'react';
 
-export interface FloatingCoin {
-  id: number;
-  x: number;
-  y: number;
-  size: number;
-  rotation: number;
-  speed: number;
-  opacity: number;
+interface FloatingCoinsOptions {
+  containerRef?: RefObject<HTMLElement>;
+  frequency?: number;
+  duration?: number;
+  minDelay?: number;
+  maxDelay?: number;
+  coinCount?: number;
+  coinSize?: 'small' | 'medium' | 'large';
 }
 
-const useFloatingCoins = () => {
-  const [coins, setCoins] = useState<FloatingCoin[]>([]);
+interface CoinPosition {
+  id: string;
+  x: number;
+  y: number;
+  value: number;
+  size: 'small' | 'medium' | 'large';
+  color?: string;
+}
 
-  // Create a single floating coin
-  const createFloatingCoin = (x: number = window.innerWidth / 2, y: number = window.innerHeight / 2): FloatingCoin => {
-    const id = Date.now() + Math.floor(Math.random() * 1000);
-    const size = 20 + Math.random() * 20;
-    const speed = 1 + Math.random() * 2;
-    const rotation = Math.random() * 360;
-    const opacity = 0.7 + Math.random() * 0.3;
+const useFloatingCoins = (options: FloatingCoinsOptions = {}) => {
+  const {
+    containerRef,
+    frequency = 0.3,
+    duration = 3000,
+    minDelay = 5000,
+    maxDelay = 10000,
+    coinCount = 5
+  } = options;
+  
+  const [coins, setCoins] = useState<CoinPosition[]>([]);
 
-    const coin: FloatingCoin = {
-      id,
-      x,
-      y,
-      size,
-      rotation,
-      speed,
-      opacity
-    };
-
-    setCoins(prev => [...prev, coin]);
+  const createCoin = useCallback((x?: number, y?: number, value?: number) => {
+    if (!containerRef?.current) return null;
     
-    // Remove coin after animation
-    setTimeout(() => {
-      setCoins(prev => prev.filter(c => c.id !== id));
-    }, 3000);
-
-    return coin;
-  };
-
-  // Create multiple coins at once
-  const createMultipleCoins = (count: number = 10, origin?: { x: number, y: number }) => {
-    const originX = origin?.x || window.innerWidth / 2;
-    const originY = origin?.y || window.innerHeight / 2;
+    const container = containerRef.current;
+    const rect = container.getBoundingClientRect();
     
-    const spread = 100;
-
-    for (let i = 0; i < count; i++) {
-      // Add some randomness to the origin
-      const x = originX + (Math.random() - 0.5) * spread;
-      const y = originY + (Math.random() - 0.5) * spread;
-      
-      setTimeout(() => {
-        createFloatingCoin(x, y);
-      }, i * 50); // Stagger the creation
+    // Use provided coordinates or generate random ones
+    const coinX = x ?? Math.random() * rect.width;
+    const coinY = y ?? Math.random() * rect.height;
+    const coinValue = value ?? Math.floor(Math.random() * 5) + 1;
+    
+    // Generate sizes with a bias towards smaller coins
+    const sizes: Array<'small' | 'medium' | 'large'> = ['small', 'small', 'medium', 'medium', 'large'];
+    const coinSize = sizes[Math.floor(Math.random() * sizes.length)];
+    
+    // Generate coin colors based on value
+    let coinColor;
+    if (coinValue >= 10) {
+      coinColor = 'linear-gradient(45deg, #D4AF37, #FFD700)'; // Gold
+    } else if (coinValue >= 5) {
+      coinColor = 'linear-gradient(45deg, #C0C0C0, #E5E4E2)'; // Silver
+    } else if (coinValue >= 2) {
+      coinColor = 'linear-gradient(45deg, #B87333, #CD7F32)'; // Bronze
     }
-  };
-
-  // Remove a specific coin
-  const removeCoin = (id: number) => {
-    setCoins(prev => prev.filter(coin => coin.id !== id));
-  };
-
+    
+    const newCoin: CoinPosition = {
+      id: `coin-${Date.now()}-${Math.random()}`,
+      x: coinX,
+      y: coinY,
+      value: coinValue,
+      size: coinSize,
+      color: coinColor
+    };
+    
+    setCoins(prev => [...prev, newCoin]);
+    
+    // Remove the coin after animation duration
+    setTimeout(() => {
+      setCoins(prev => prev.filter(coin => coin.id !== newCoin.id));
+    }, duration);
+    
+    return newCoin;
+  }, [containerRef, duration]);
+  
+  const createMultipleCoins = useCallback((count: number, position?: { x: number, y: number }) => {
+    const createdCoins = [];
+    
+    for (let i = 0; i < count; i++) {
+      // Add some random offset if position is provided
+      const offsetX = position ? position.x + (Math.random() * 100 - 50) : undefined;
+      const offsetY = position ? position.y + (Math.random() * 100 - 50) : undefined;
+      
+      // Stagger coin creation
+      setTimeout(() => {
+        const coin = createCoin(offsetX, offsetY);
+        if (coin) createdCoins.push(coin);
+      }, Math.random() * 500);
+    }
+    
+    return createdCoins;
+  }, [createCoin]);
+  
+  // Optional automatic coin creation
+  useEffect(() => {
+    if (!containerRef?.current || frequency <= 0) return;
+    
+    const createRandomCoin = () => {
+      // Only create a coin if random number is less than frequency (0-1)
+      if (Math.random() < frequency) {
+        createCoin();
+      }
+      
+      // Schedule next coin check
+      const nextDelay = Math.random() * (maxDelay - minDelay) + minDelay;
+      timeout = setTimeout(createRandomCoin, nextDelay);
+    };
+    
+    // Initial coin creation after a delay
+    let timeout = setTimeout(createRandomCoin, minDelay);
+    
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [containerRef, createCoin, frequency, maxDelay, minDelay]);
+  
   return {
     coins,
-    createFloatingCoin,
-    createMultipleCoins,
-    removeCoin
+    createCoin,
+    createMultipleCoins
   };
 };
 

@@ -40,13 +40,22 @@ export const createDefaultUser = (): UserProfile => {
     profileClicks: 0,
     followers: 0,
     settings: {
-      theme: 'dark',
-      notifications: true,
-      visibility: 'public',
-      marketingConsent: false,
-      accountVisibility: 'public',
-      linkSharing: true,
-      analyticsSharing: true,
+      notifications: {
+        email: true,
+        push: true,
+        rankChanges: true
+      },
+      privacy: {
+        showSpending: true,
+        showStats: true,
+        publicProfile: true
+      },
+      display: {
+        darkMode: true,
+        animations: true,
+        showRankInProfile: true,
+        compactView: false
+      },
       showRank: true,
       showSpending: true,
       showTeam: true,
@@ -75,6 +84,7 @@ export const createRandomUser = (index: number): UserProfile => {
     spentAmount: Math.floor(Math.random() * 1000),
     walletBalance: Math.floor(Math.random() * 500),
     rank: index + 1,
+    tier: 'crab',
     team: teams[Math.floor(Math.random() * teams.length)],
     gender: genders[Math.floor(Math.random() * genders.length)],
     joinedAt: new Date().toISOString(),

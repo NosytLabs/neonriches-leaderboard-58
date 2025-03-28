@@ -1,4 +1,3 @@
-
 import { UserTier } from '@/types/user';
 
 export const getTeamColor = (team: string | null): string => {
@@ -98,7 +97,7 @@ export const getRankBadgeClass = (rank: number): string => {
   return 'bg-white/10 border-white/20';
 };
 
-export const getSpendingTierLabel = (tier: UserTier): string => {
+export const getSpendingTierLabel = (tier: string): string => {
   switch (tier) {
     case 'crab':
       return 'Crab Tier';
@@ -112,26 +111,36 @@ export const getSpendingTierLabel = (tier: UserTier): string => {
       return 'Shark Tier';
     case 'whale':
       return 'Whale Tier';
+    case 'pro':
+      return 'Pro Tier';
+    case 'royal':
+      return 'Royal Tier';
+    case 'free':
     default:
-      return 'Commoner';
+      return 'Free Tier';
   }
 };
 
-export const getSpendingTierBadgeClass = (tier: UserTier): string => {
+export const getSpendingTierBadgeClass = (tier: string): string => {
   switch (tier) {
     case 'crab':
-      return 'bg-green-500/20 border-green-500/40 text-green-500';
+      return 'bg-red-900/30 text-red-300 border-red-500/30';
     case 'octopus':
-      return 'bg-indigo-500/20 border-indigo-500/40 text-indigo-500';
+      return 'bg-purple-900/30 text-purple-300 border-purple-500/30';
     case 'fish':
-      return 'bg-cyan-500/20 border-cyan-500/40 text-cyan-500';
+      return 'bg-blue-900/30 text-blue-300 border-blue-500/30';
     case 'dolphin':
-      return 'bg-blue-500/20 border-blue-500/40 text-blue-500';
+      return 'bg-cyan-900/30 text-cyan-300 border-cyan-500/30';
     case 'shark':
-      return 'bg-purple-500/20 border-purple-500/40 text-purple-500';
+      return 'bg-emerald-900/30 text-emerald-300 border-emerald-500/30';
     case 'whale':
-      return 'bg-royal-gold/20 border-royal-gold/40 text-royal-gold';
+      return 'bg-amber-900/30 text-amber-300 border-amber-500/30';
+    case 'pro':
+      return 'bg-royal-navy/30 text-royal-navy-light border-royal-navy/30';
+    case 'royal':
+      return 'bg-royal-gold/30 text-royal-gold border-royal-gold/30';
+    case 'free':
     default:
-      return 'bg-gray-500/20 border-gray-500/40 text-gray-500';
+      return 'bg-gray-800/30 text-gray-300 border-gray-500/30';
   }
 };
