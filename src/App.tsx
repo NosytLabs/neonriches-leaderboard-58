@@ -18,6 +18,8 @@ import Auth from '@/pages/Auth';
 import NotFound from '@/pages/NotFound';
 import Terms from '@/pages/Terms';
 import TermsOfService from '@/pages/TermsOfService';
+import Privacy from '@/pages/Privacy';
+import FAQ from '@/pages/FAQ';
 
 // Import styles
 import './styles/main.css';
@@ -58,6 +60,8 @@ function App() {
               <Route path="/auth" element={<Auth />} />
               <Route path="/terms" element={<Terms />} />
               <Route path="/terms-of-service" element={<TermsOfService />} />
+              <Route path="/privacy" element={<Privacy />} />
+              <Route path="/faq" element={<FAQ />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </AuthProvider>
