@@ -35,18 +35,18 @@ export const getMockeryActionDescription = (action: MockeryAction, username?: st
 };
 
 // Get mockery action icon emoji
-export const getMockeryActionIcon = (action: MockeryAction): JSX.Element => {
+export const getMockeryActionIcon = (action: MockeryAction): string => {
   switch (action) {
     case 'tomatoes':
-      return <span>🍅</span>;
+      return '🍅';
     case 'jester':
-      return <span>🃏</span>;
+      return '🃏';
     case 'roast':
-      return <span>🔥</span>;
+      return '🔥';
     case 'stocks':
-      return <span>🪵</span>;
+      return '🪵';
     default:
-      return <span>❓</span>;
+      return '❓';
   }
 };
 
@@ -176,3 +176,99 @@ export const getMockeryTierLabel = (tier: MockeryTier): string => {
 export const getMockeryLeaderboardMessage = (): string => {
   return "Mockery effects are purely cosmetic and visual. They do not affect leaderboard rankings or user status. Spend money on mockery simply for the fun of publicly ridiculing other users.";
 };
+
+// Get mockery action color classes
+export const getMockeryActionColor = (action: MockeryAction) => {
+  switch (action) {
+    case 'tomatoes':
+      return {
+        bg: 'bg-red-500/10',
+        border: 'border-red-500/30',
+        text: 'text-red-500'
+      };
+    case 'jester':
+      return {
+        bg: 'bg-purple-500/10',
+        border: 'border-purple-500/30',
+        text: 'text-purple-500'
+      };
+    case 'roast':
+      return {
+        bg: 'bg-orange-500/10',
+        border: 'border-orange-500/30',
+        text: 'text-orange-500'
+      };
+    case 'stocks':
+      return {
+        bg: 'bg-amber-800/10',
+        border: 'border-amber-800/30',
+        text: 'text-amber-800'
+      };
+    default:
+      return {
+        bg: 'bg-white/10',
+        border: 'border-white/30',
+        text: 'text-white'
+      };
+  }
+};
+
+// Get mockery actions by tier
+export const getMockeryActionsByTier = (tier: MockeryTier) => {
+  // In a real app this would be fetched from a database
+  const mockeryOptions = [
+    // Common tier
+    { type: 'tomatoes', tier: 'common', price: 0.50, emoji: '🍅', description: 'Pelt with rotten tomatoes' },
+    { type: 'eggs', tier: 'common', price: 0.75, emoji: '🥚', description: 'Throw rotten eggs' },
+    
+    // Uncommon tier
+    { type: 'jester', tier: 'uncommon', price: 1.00, emoji: '🃏', description: 'Crown as court jester' },
+    { type: 'dunce', tier: 'uncommon', price: 1.25, emoji: '🎓', description: 'Award a dunce cap' },
+    
+    // Rare tier
+    { type: 'stocks', tier: 'rare', price: 2.00, emoji: '🪵', description: 'Place in the stocks' },
+    { type: 'roast', tier: 'rare', price: 2.50, emoji: '🔥', description: 'Royal roasting' },
+    
+    // Epic tier
+    { type: 'ridicule', tier: 'epic', price: 5.00, emoji: '😂', description: 'Public ridicule' },
+    { type: 'taunt', tier: 'epic', price: 7.50, emoji: '🗯️', description: 'Medieval taunt' },
+    
+    // Legendary tier
+    { type: 'royalDecreeOfShame', tier: 'legendary', price: 15.00, emoji: '📜', description: 'Royal Decree of Shame' },
+    { type: 'tarAndFeathers', tier: 'legendary', price: 20.00, emoji: '🪶', description: 'Tar and feathers' }
+  ];
+  
+  return mockeryOptions.filter(option => option.tier === tier);
+};
+
+// Get mockery bundles
+export const getMockeryBundles = () => {
+  // In a real app this would be fetched from a database
+  return [
+    {
+      id: 'bundle1',
+      name: 'Shame Pack',
+      actions: ['tomatoes', 'eggs', 'jester'],
+      originalPrice: 2.25,
+      bundlePrice: 1.50,
+      description: 'A bundle of classic mockery options'
+    },
+    {
+      id: 'bundle2',
+      name: 'Royal Humiliation',
+      actions: ['jester', 'roast', 'stocks'],
+      originalPrice: 5.50,
+      bundlePrice: 3.75,
+      description: 'Premium mockery for serious shaming'
+    },
+    {
+      id: 'bundle3',
+      name: 'Ultimate Shame',
+      actions: ['stocks', 'ridicule', 'taunt', 'royalDecreeOfShame'],
+      originalPrice: 14.50,
+      bundlePrice: 9.99,
+      description: 'The ultimate mockery experience'
+    }
+  ];
+};
+
