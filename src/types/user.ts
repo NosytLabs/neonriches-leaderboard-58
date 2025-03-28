@@ -5,7 +5,7 @@ export type UserRole = 'admin' | 'moderator' | 'user';
 export type UserStatus = 'active' | 'inactive' | 'banned' | 'pending';
 export type TeamType = 'red' | 'green' | 'blue' | 'none';
 export type UserTier = 'free' | 'basic' | 'premium' | 'pro' | 'royal' | 'legendary' | 'crab' | 'octopus' | 'fish' | 'dolphin' | 'shark' | 'whale';
-export type UserGender = 'king' | 'queen' | 'royal' | 'none';
+export type UserGender = 'king' | 'queen' | 'royal' | 'none' | 'jester' | 'noble';
 
 export interface SocialLink {
   id?: string | number;
@@ -15,6 +15,8 @@ export interface SocialLink {
   icon?: string;
   clicks?: number;
 }
+
+export type ProfileLink = SocialLink;
 
 export interface ProfileImage {
   id: string;
@@ -30,6 +32,7 @@ export interface CertificateNFT {
   description: string;
   imageUrl: string;
   mintedAt: string;
+  mintAddress?: string;
   attributes: {
     trait_type: string;
     value: string;
@@ -50,9 +53,9 @@ export interface ProfileBoost {
 }
 
 export interface UserSubscription {
-  status: 'active' | 'canceled' | 'expired' | 'trial';
+  status: 'active' | 'canceled' | 'expired' | 'trial' | 'past_due' | 'trialing' | 'unpaid' | 'incomplete';
   tier: UserTier;
-  interval: 'monthly' | 'yearly';
+  interval: 'monthly' | 'yearly' | 'quarterly' | 'annual';
   startDate: string;
   endDate: string;
   autoRenew: boolean;
@@ -73,6 +76,10 @@ export interface UserSettings {
   showRank?: boolean;
   showSpending?: boolean;
   showTeam?: boolean;
+  publicProfile?: boolean;
+  allowMessages?: boolean;
+  darkMode?: boolean;
+  language?: string;
 }
 
 export interface UserProfile {
@@ -110,6 +117,7 @@ export interface UserProfile {
   profileClicks?: number;
   subscription?: UserSubscription;
   certificates?: CertificateNFT[];
+  certificateNFT?: CertificateNFT; // Added for backward compatibility
   isVIP?: boolean;
   badges?: string[];
   activeTitle?: string;
@@ -124,5 +132,6 @@ export interface User extends Omit<UserProfile, 'role' | 'isVerified' | 'lastLog
 }
 
 export type Team = 'red' | 'green' | 'blue';
+export type UserTeam = TeamType;
 
-export { UserCosmetics };
+export type { UserCosmetics };

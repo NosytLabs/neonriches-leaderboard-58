@@ -1,5 +1,6 @@
 
-export type TransactionType = 'deposit' | 'withdrawal' | 'purchase' | 'transfer' | 'mockery' | 'cosmetic' | 'subscription' | 'boost' | 'wish' | 'advertisement';
+
+export type TransactionType = 'deposit' | 'withdrawal' | 'purchase' | 'transfer' | 'mockery' | 'cosmetic' | 'subscription' | 'boost' | 'wish' | 'advertisement' | 'protection';
 
 export interface Transaction {
   id: string;
@@ -22,6 +23,7 @@ export interface SpendOptions {
   preferredCategory?: string;
   mockeryType?: string;
   itemId?: string;
+  category?: string; // Added for backward compatibility
 }
 
 export interface WalletBalance {
@@ -31,3 +33,4 @@ export interface WalletBalance {
   pendingWithdrawals: number;
   lastUpdated: string;
 }
+

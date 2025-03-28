@@ -1,4 +1,5 @@
 
+
 export type TransactionType = 'deposit' | 'withdrawal' | 'purchase' | 'transfer' | 'mockery' | 'cosmetic' | 'subscription' | 'boost' | 'wish';
 
 export interface SolanaWallet {
@@ -6,6 +7,7 @@ export interface SolanaWallet {
   balance: number;
   connected: boolean;
   provider?: any;
+  isConnected?: boolean; // Added for backward compatibility
 }
 
 export interface SolanaTreasuryInfo {
@@ -17,6 +19,10 @@ export interface SolanaTreasuryInfo {
   address?: string;
   balance?: number;
   pubkey?: string;
+  amount?: number; // Added for compatibility
+  sender?: string; // Added for compatibility
+  owner?: string; // Added for compatibility
+  totalDeposits?: number; // Added for compatibility
 }
 
 export interface SolanaTransaction {
@@ -26,10 +32,10 @@ export interface SolanaTransaction {
   timestamp: string;
   sender: string;
   receiver: string;
+  recipient?: string; // Added for compatibility
   type: 'deposit' | 'withdrawal' | 'transfer';
   status: 'confirmed' | 'pending' | 'failed';
   message?: string;
-  recipient?: string;
 }
 
 export interface OnChainLeaderboardEntry {
@@ -42,4 +48,17 @@ export interface OnChainLeaderboardEntry {
   id?: string;
   publicKey?: string;
   totalSpent?: number;
+  previousRank?: number; // Added for compatibility
+  lastTransaction?: string; // Added for compatibility
 }
+
+export interface SolanaNftInfo {
+  mintAddress: string;
+  ownerAddress: string;
+  metadataUri: string;
+  name: string;
+  symbol: string;
+  image: string;
+  attributes: any[];
+}
+

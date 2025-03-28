@@ -1,6 +1,7 @@
 
 import { UserProfile } from "@/types/user";
 import { supabase } from "@/integrations/supabase/client";
+import { OnChainLeaderboardEntry } from "@/types/solana";
 
 export interface LeaderboardEntry {
   id: string;
@@ -120,9 +121,18 @@ export const transformLeaderboardEntryToUserProfile = (entry: LeaderboardEntry):
   };
 };
 
+/**
+ * Get on-chain leaderboard entries
+ * Mock implementation to fix build errors
+ */
+export const getOnChainLeaderboard = async (): Promise<OnChainLeaderboardEntry[]> => {
+  return [];
+};
+
 export default {
   getLeaderboardEntries,
   getLeaderboardCount,
   getUserRank,
-  transformLeaderboardEntryToUserProfile
+  transformLeaderboardEntryToUserProfile,
+  getOnChainLeaderboard
 };

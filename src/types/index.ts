@@ -1,8 +1,5 @@
 // Core app types
-export type { AppTheme, ThemeColor } from './theme';
-export type { Command, CommandGroup } from './command';
-export type { ButtonSize, ButtonVariant } from './button';
-export type { DialogSize, DialogVariant } from './dialog';
+export type { ThemeColor } from './theme';
 
 // UI types
 export type { 
@@ -11,8 +8,11 @@ export type {
   MedievalIconColor,
   MedievalDecorationType,
   MedievalDecorationSize,
-  MedievalDecorationColor
-} from './ui-types';
+  MedievalDecorationColor,
+  BaseDecorationProps,
+  RoyalDividerProps,
+  RoyalDividerVariant
+} from './ui/decorations/types';
 
 // User related types
 export type {
@@ -23,6 +23,7 @@ export type {
   UserTier,
   UserGender,
   TeamType,
+  UserTeam,
   SocialLink,
   ProfileImage,
   ProfileBoost,
@@ -36,26 +37,14 @@ export type {
   CosmeticRarity,
   CosmeticItem,
   UserCosmeticItem,
-  UserCosmetics
+  UserCosmetics,
+  CosmeticType,
+  CosmeticPlacement
 } from './cosmetics';
 
 // Other domain types
 export type { 
-  ActivityEvent,
-  ActivityEventType,
-  ActivityFilter 
-} from './activity';
-
-export type {
-  AnalyticsDataPoint,
-  ProfileAnalytics,
-  ViewSource,
-  ClickType
-} from './analytics';
-
-export type {
   Certificate,
-  CertificateAttribute,
   CertificateType
 } from './certificates';
 
@@ -63,7 +52,6 @@ export type {
   Event,
   EventStatus,
   EventType,
-  EventParticipant
 } from './events';
 
 export type {
@@ -73,12 +61,12 @@ export type {
   MockeryEffectData,
   UserMockeryStatus,
   MockUser,
-  ShameAction
+  ShameAction,
+  ExtendedMockeryAction
 } from './mockery';
 
 export type {
   NFTMetadata,
-  NFTAttribute
 } from './nft';
 
 export type {
@@ -93,14 +81,13 @@ export type {
   SolanaWallet,
   SolanaTreasuryInfo,
   SolanaTransaction,
-  OnChainLeaderboardEntry
+  OnChainLeaderboardEntry,
+  SolanaNftInfo
 } from './solana';
 
-// Royal UI types
-export type {
-  RoyalDividerProps,
-  RoyalDividerVariant
-} from './royal-divider-types';
-
-// Export functions
-export { getRarityColor, getRarityBgColor, getRarityBorderColor };
+// Export functions from cosmetics
+export { 
+  getRarityColor, 
+  getRarityBgColor, 
+  getRarityBorderColor 
+} from './cosmetics';
