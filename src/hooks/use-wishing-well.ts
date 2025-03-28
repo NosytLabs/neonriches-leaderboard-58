@@ -1,11 +1,9 @@
-
 import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '@/contexts/auth';
 import { spendFromWallet } from '@/services/walletService';
 import { useToast } from '@/hooks/use-toast';
 import useNotificationSounds from '@/hooks/use-notification-sounds';
 import { CosmeticItem, CosmeticRarity } from '@/types/cosmetics';
-import { awardRandomCosmetic } from '@/services/cosmeticService';
 import { User } from '@/types/user';
 import { ensureUser } from '@/utils/userAdapter';
 
@@ -64,7 +62,6 @@ const useWishingWell = ({ initialAmount = 1 }: UseWishingWellProps = {}): UseWis
   
   const predefinedAmounts = [0.25, 0.5, 1, 2, 5, 10];
   
-  // Load previous wishes from localStorage
   useEffect(() => {
     if (user) {
       const storedWishes = localStorage.getItem(`wishes_${user.id}`);
@@ -82,7 +79,6 @@ const useWishingWell = ({ initialAmount = 1 }: UseWishingWellProps = {}): UseWis
     }
   }, [user]);
 
-  // Clear result after a period of time
   useEffect(() => {
     if (result) {
       const timer = setTimeout(() => {
@@ -107,14 +103,13 @@ const useWishingWell = ({ initialAmount = 1 }: UseWishingWellProps = {}): UseWis
     const centerX = wellRect.width / 2;
     const centerY = wellRect.height / 2;
     
-    // Create multiple coins with different angles for a more natural look
-    const numCoins = Math.floor(Math.random() * 3) + 1; // 1-3 coins
+    const numCoins = Math.floor(Math.random() * 3) + 1;
     
     for (let i = 0; i < numCoins; i++) {
       const angle = Math.random() * Math.PI * 2;
       const distance = Math.random() * 30;
       const x = centerX + Math.cos(angle) * distance;
-      const y = centerY - 10 + Math.sin(angle) * distance; // Start slightly above center
+      const y = centerY - 10 + Math.sin(angle) * distance;
       
       const newCoin = { id: Date.now() + i, x, y };
       setCoins(prev => [...prev, newCoin]);
@@ -124,7 +119,6 @@ const useWishingWell = ({ initialAmount = 1 }: UseWishingWellProps = {}): UseWis
       }, 2000);
     }
     
-    // Create water ripple effect
     if (wellRef.current) {
       const ripple = document.createElement('div');
       ripple.className = 'absolute w-16 h-16 rounded-full bg-royal-gold/10 water-ripple';
@@ -142,7 +136,7 @@ const useWishingWell = ({ initialAmount = 1 }: UseWishingWellProps = {}): UseWis
   };
 
   const saveWish = (newWish: Wish) => {
-    const updatedWishes = [newWish, ...wishes.slice(0, 9)]; // Keep only 10 most recent wishes
+    const updatedWishes = [newWish, ...wishes.slice(0, 9)];
     setWishes(updatedWishes);
     
     if (user) {
@@ -175,7 +169,6 @@ const useWishingWell = ({ initialAmount = 1 }: UseWishingWellProps = {}): UseWis
     playSound('coinDrop');
     
     try {
-      // Use ensureUser to convert UserProfile to User type
       const userForTransaction: User = ensureUser(user);
       
       const success = await spendFromWallet(
@@ -190,7 +183,6 @@ const useWishingWell = ({ initialAmount = 1 }: UseWishingWellProps = {}): UseWis
         throw new Error("Transaction failed");
       }
       
-      // Update user balance (in a real app, this would be done by the backend)
       await updateUserProfile({
         ...user,
         walletBalance: user.walletBalance - wishAmount
@@ -198,12 +190,10 @@ const useWishingWell = ({ initialAmount = 1 }: UseWishingWellProps = {}): UseWis
       
       await new Promise(resolve => setTimeout(resolve, 1500));
       
-      // Base chance to get nothing is 35%
-      const nothingChance = Math.max(35 - wishAmount * 3, 15); // Higher wishes reduce chance of nothing, minimum 15%
+      const nothingChance = Math.max(35 - wishAmount * 3, 15);
       const noReward = Math.random() * 100 < nothingChance;
       
       if (noReward) {
-        // No reward
         setWishResult('lose');
         setResult("Your wish fades into the ether. Perhaps fortune will favor you next time...");
         playSound('error', 0.3);
@@ -218,11 +208,9 @@ const useWishingWell = ({ initialAmount = 1 }: UseWishingWellProps = {}): UseWis
         
         saveWish(newWish);
       } else {
-        // Award a random cosmetic
-        const { cosmeticItem, rarity } = awardRandomCosmetic(user, wishAmount, preferredCategory);
+        const { cosmeticItem, rarity } = await awardRandomCosmetic(user, wishAmount, preferredCategory);
         
         if (!cosmeticItem) {
-          // User already owns all possible items
           setWishResult('lose');
           setResult("The well shows you items you already own. Try wishing for something new!");
           playSound('error', 0.3);
@@ -240,7 +228,6 @@ const useWishingWell = ({ initialAmount = 1 }: UseWishingWellProps = {}): UseWis
           return;
         }
         
-        // Add the cosmetic to the user's collection
         if (awardCosmetic) {
           const awarded = await awardCosmetic(
             cosmeticItem.id,
@@ -285,7 +272,6 @@ const useWishingWell = ({ initialAmount = 1 }: UseWishingWellProps = {}): UseWis
     }
   };
 
-  // Format dates to be more readable
   const formatDate = (date: Date): string => {
     return new Intl.DateTimeFormat('en-US', {
       month: 'short',
@@ -316,6 +302,33 @@ const useWishingWell = ({ initialAmount = 1 }: UseWishingWellProps = {}): UseWis
     formatDate,
     predefinedAmounts
   };
+};
+
+const awardRandomCosmetic = async (user: any, amount: number, category?: string) => {
+  const rarities: CosmeticRarity[] = ['common', 'uncommon', 'rare', 'epic', 'legendary', 'royal'];
+  const categories: string[] = ['borders', 'colors', 'fonts', 'emojis', 'titles', 'backgrounds', 'effects', 'badges', 'themes'];
+  
+  let rarityIndex = 0;
+  if (amount >= 0.5) rarityIndex = 1;
+  if (amount >= 2) rarityIndex = 2;
+  if (amount >= 5) rarityIndex = 3;
+  if (amount >= 10) rarityIndex = 4;
+  if (amount >= 25) rarityIndex = 5;
+  
+  const selectedRarity = rarities[rarityIndex];
+  const selectedCategory = category || categories[Math.floor(Math.random() * categories.length)];
+  
+  const cosmeticItem: CosmeticItem = {
+    id: `cosmetic_${Date.now()}`,
+    name: `${selectedRarity.charAt(0).toUpperCase() + selectedRarity.slice(1)} ${selectedCategory.slice(0, -1)}`,
+    description: `A ${selectedRarity} ${selectedCategory.slice(0, -1)} for your profile`,
+    category: selectedCategory as any,
+    rarity: selectedRarity,
+    price: amount * 2,
+    image: `https://placekitten.com/200/200?random=${Date.now()}`
+  };
+  
+  return { cosmeticItem, rarity: selectedRarity };
 };
 
 export default useWishingWell;

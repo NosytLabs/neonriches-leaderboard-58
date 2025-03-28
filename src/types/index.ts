@@ -1,93 +1,106 @@
+// Core app types
+export type { AppTheme, ThemeColor } from './theme';
+export type { Command, CommandGroup } from './command';
+export type { ButtonSize, ButtonVariant } from './button';
+export type { DialogSize, DialogVariant } from './dialog';
 
-// Reexporting all types for easy access
-import { 
-  UserProfile, 
+// UI types
+export type { 
+  MedievalIconName, 
+  MedievalIconSize, 
+  MedievalIconColor,
+  MedievalDecorationType,
+  MedievalDecorationSize,
+  MedievalDecorationColor
+} from './ui-types';
+
+// User related types
+export type {
   User, 
-  UserRole, 
-  UserStatus, 
-  TeamType, 
-  UserTier, 
-  ProfileBoost,
-  UserSettings,
+  UserProfile, 
+  UserRole,
+  UserStatus,
+  UserTier,
   UserGender,
+  TeamType,
   SocialLink,
   ProfileImage,
-  CertificateNFT,
+  ProfileBoost,
   UserSubscription,
-  UserCosmetics
+  UserSettings
 } from './user';
 
-import {
-  CosmeticItem,
-  CosmeticType,
+// Cosmetics
+export type {
   CosmeticCategory,
   CosmeticRarity,
-  CosmeticPlacement,
+  CosmeticItem,
   UserCosmeticItem,
-  CosmeticPurchaseResponse,
-  getRarityColor,
-  getRarityBgColor,
-  getRarityBorderColor
+  UserCosmetics
 } from './cosmetics';
 
-import {
+// Other domain types
+export type { 
+  ActivityEvent,
+  ActivityEventType,
+  ActivityFilter 
+} from './activity';
+
+export type {
+  AnalyticsDataPoint,
+  ProfileAnalytics,
+  ViewSource,
+  ClickType
+} from './analytics';
+
+export type {
+  Certificate,
+  CertificateAttribute,
+  CertificateType
+} from './certificates';
+
+export type {
+  Event,
+  EventStatus,
+  EventType,
+  EventParticipant
+} from './events';
+
+export type {
   MockeryAction,
   MockeryTier,
-  ShameAction,
-  MockeryEffectData,
-  PurchaseMockeryParams,
   MockeryEvent,
+  MockeryEffectData,
   UserMockeryStatus,
-  MockeryCardProps,
-  ShameModalProps,
-  ExtendedMockeryAction
+  MockUser,
+  ShameAction
 } from './mockery';
 
-import {
+export type {
+  NFTMetadata,
+  NFTAttribute
+} from './nft';
+
+export type {
+  Transaction,
+  TransactionType,
+  WalletBalance,
+  SpendOptions
+} from './wallet';
+
+// Solana specific types
+export type {
   SolanaWallet,
   SolanaTreasuryInfo,
   SolanaTransaction,
   OnChainLeaderboardEntry
 } from './solana';
 
-// For easy imports elsewhere
-// Using export type for type re-exports
-export type { UserProfile };
-export type { User };
-export type { UserRole };
-export type { UserStatus };
-export type { TeamType };
-export type { UserTier };
-export type { UserGender };
-export type { SocialLink };
-export type { ProfileImage };
-export type { ProfileBoost };
-export type { UserSettings };
-export type { CertificateNFT };
-export type { UserSubscription };
-export type { UserCosmetics };
-
-export type { CosmeticItem };
-export type { CosmeticType };
-export type { CosmeticCategory };
-export type { CosmeticRarity };
-export type { CosmeticPlacement };
-export type { UserCosmeticItem };
-export type { CosmeticPurchaseResponse };
-
-export type { MockeryAction };
-export type { MockeryTier };
-export type { ShameAction };
-export type { MockeryEffectData };
-export type { PurchaseMockeryParams };
-export type { MockeryEvent };
-export type { UserMockeryStatus };
-export type { ExtendedMockeryAction };
-
-export type { SolanaWallet };
-export type { SolanaTreasuryInfo };
-export type { SolanaTransaction };
-export type { OnChainLeaderboardEntry };
+// Royal UI types
+export type {
+  RoyalDividerProps,
+  RoyalDividerVariant
+} from './royal-divider-types';
 
 // Export functions
 export { getRarityColor, getRarityBgColor, getRarityBorderColor };

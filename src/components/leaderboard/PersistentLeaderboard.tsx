@@ -29,8 +29,15 @@ const PersistentLeaderboard: React.FC<PersistentLeaderboardProps> = ({ limit = 1
     const loadLeaderboardData = async () => {
       setLoading(true);
       try {
-        const entries = await getLeaderboardEntries(filters, limit);
-        setLeaderboardData(entries);
+        const options = {
+          limit,
+          filter: filters.timeFrame !== 'all' ? filters.timeFrame : undefined,
+          sort: filters.sortBy,
+          direction: filters.sortDirection
+        };
+        
+        const entries = await getLeaderboardEntries(options);
+        setLeaderboardData(entries as unknown as LeaderboardEntry[]);
       } catch (error) {
         console.error('Failed to load leaderboard data:', error);
       } finally {
@@ -43,7 +50,6 @@ const PersistentLeaderboard: React.FC<PersistentLeaderboardProps> = ({ limit = 1
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    // Search would be implemented by backend in real application
     console.log('Searching for:', searchQuery);
   };
 
@@ -58,13 +64,11 @@ const PersistentLeaderboard: React.FC<PersistentLeaderboardProps> = ({ limit = 1
     }));
   };
 
-  // Find the user's rank if they're logged in
   const userRank = user ? leaderboardData.findIndex(entry => entry.username === user.username) + 1 : -1;
 
   return (
     <div className="space-y-4">
       <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
-        {/* Search */}
         <form onSubmit={handleSearch} className="relative w-full sm:w-auto">
           <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-white/50" />
           <Input
@@ -75,7 +79,6 @@ const PersistentLeaderboard: React.FC<PersistentLeaderboardProps> = ({ limit = 1
           />
         </form>
 
-        {/* Filters */}
         <div className="flex flex-wrap gap-2 items-center">
           <div className="flex items-center gap-2">
             <Filter className="h-4 w-4 text-white/50" />
@@ -127,7 +130,6 @@ const PersistentLeaderboard: React.FC<PersistentLeaderboardProps> = ({ limit = 1
         </div>
       </div>
 
-      {/* Leaderboard */}
       <div className="rounded-lg overflow-hidden">
         <div className="bg-black/20 p-3 grid grid-cols-12 gap-2 text-sm font-medium text-white/70">
           <div className="col-span-1">Rank</div>

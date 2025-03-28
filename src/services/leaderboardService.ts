@@ -1,6 +1,6 @@
 
 import { UserProfile } from "@/types/user";
-import { supabase } from "@/lib/supabase";
+import { supabase } from "@/integrations/supabase/client";
 
 export interface LeaderboardEntry {
   id: string;
@@ -114,6 +114,9 @@ export const transformLeaderboardEntryToUserProfile = (entry: LeaderboardEntry):
     profileImage: entry.profile_image,
     joinDate: entry.joined_at,
     walletBalance: 0, // Default value
+    email: "", // Required by UserProfile type
+    socialLinks: [],
+    profileBoosts: [],
   };
 };
 

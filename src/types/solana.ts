@@ -1,4 +1,6 @@
 
+export type TransactionType = 'deposit' | 'withdrawal' | 'purchase' | 'transfer' | 'mockery' | 'cosmetic' | 'subscription' | 'boost' | 'wish';
+
 export interface SolanaWallet {
   publicKey: string;
   balance: number;
@@ -13,6 +15,8 @@ export interface SolanaTreasuryInfo {
   lastUpdated: string;
   updatedAt?: string;
   address?: string;
+  balance?: number;
+  pubkey?: string;
 }
 
 export interface SolanaTransaction {
@@ -25,6 +29,7 @@ export interface SolanaTransaction {
   type: 'deposit' | 'withdrawal' | 'transfer';
   status: 'confirmed' | 'pending' | 'failed';
   message?: string;
+  recipient?: string;
 }
 
 export interface OnChainLeaderboardEntry {
@@ -34,11 +39,7 @@ export interface OnChainLeaderboardEntry {
   rank: number;
   transaction: string;
   timestamp: string;
+  id?: string;
+  publicKey?: string;
+  totalSpent?: number;
 }
-
-export default {
-  SolanaWallet,
-  SolanaTreasuryInfo,
-  SolanaTransaction,
-  OnChainLeaderboardEntry
-};

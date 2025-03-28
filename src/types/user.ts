@@ -13,6 +13,7 @@ export interface SocialLink {
   url: string;
   label?: string;
   icon?: string;
+  clicks?: number;
 }
 
 export interface ProfileImage {
@@ -69,6 +70,9 @@ export interface UserSettings {
   rankChangeAlerts: boolean;
   shameAlerts: boolean;
   newFollowerAlerts: boolean;
+  showRank?: boolean;
+  showSpending?: boolean;
+  showTeam?: boolean;
 }
 
 export interface UserProfile {
@@ -106,6 +110,10 @@ export interface UserProfile {
   profileClicks?: number;
   subscription?: UserSubscription;
   certificates?: CertificateNFT[];
+  isVIP?: boolean;
+  badges?: string[];
+  activeTitle?: string;
+  walletAddress?: string;
 }
 
 export interface User extends Omit<UserProfile, 'role' | 'isVerified' | 'lastLoginDate'> {
@@ -116,3 +124,5 @@ export interface User extends Omit<UserProfile, 'role' | 'isVerified' | 'lastLog
 }
 
 export type Team = 'red' | 'green' | 'blue';
+
+export { UserCosmetics };
