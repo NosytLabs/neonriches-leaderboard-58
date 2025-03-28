@@ -89,8 +89,9 @@ export const useUserCosmetics = (
       const newBoost = {
         id: boostId,
         effectId: effectId,
-        startTime: new Date().toISOString(),
-        endTime: endTime,
+        startDate: new Date().toISOString(),
+        endDate: new Date(endTime).toISOString(),
+        level,
         type: 'visibility',
         strength: level,
         appliedBy: user.id

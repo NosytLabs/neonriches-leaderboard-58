@@ -1,160 +1,129 @@
 
-import { MockeryAction, MockeryEvent, UserMockeryStatus } from "@/types/mockery";
-import { User } from "@/types/user";
+import { MockeryEvent, MockeryEffectData, UserMockeryStatus, MockUser, MockeryAction } from '@/types/mockery';
 
-export interface UseMockeryResult {
-  mockUsers: (userId: string, action: MockeryAction, message?: string) => Promise<boolean>;
-  protectUser: (userId: string, duration: number) => Promise<boolean>;
-  isUserProtected: (userId: string) => Promise<boolean>;
-  isUserShamed: (userId: string) => Promise<boolean>;
-  canUserBeMocked: (userId: string) => Promise<boolean>;
-  getUserMockeryStatus: (userId: string) => Promise<UserMockeryStatus | null>;
-  getActiveMockeries: () => Promise<MockeryEvent[]>;
-  mockUser: (targetId: string, action: MockeryAction, options?: { message?: string }) => Promise<boolean>;
-}
-
-// Mock user mockery statuses
-const mockUserStatuses: Record<string, UserMockeryStatus> = {
-  "user-1": {
-    userId: "user-1",
-    username: "kingmidas",
-    displayName: "Royal Patron",
-    profileImage: "/images/avatars/user1.jpg",
-    activeMockeries: [],
-    mockedCount: 0,
-    activeProtection: {
-      until: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
-      tier: "legendary"
+// Mock user data for the mockery system
+export const getMockUsers = (): MockUser[] => {
+  return [
+    {
+      id: 'user1',
+      username: 'WhaleLord',
+      profilePicture: '/assets/avatars/1.jpg',
+      tier: 'legendary',
+      lastMockery: new Date().toISOString(),
+      mockeryCount: 5,
+      isProtected: false,
+      onlineStatus: true
+    },
+    {
+      id: 'user2',
+      username: 'CryptoNoble',
+      profilePicture: '/assets/avatars/2.jpg',
+      tier: 'rare',
+      lastMockery: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+      mockeryCount: 2,
+      isProtected: true,
+      onlineStatus: false
     }
-  },
-  "user-2": {
-    userId: "user-2",
-    username: "jester_victim",
-    displayName: "Court Fool",
-    profileImage: "/images/avatars/user2.jpg",
-    activeMockeries: [
+  ];
+};
+
+// Check if a user has active protection
+export const getUserProtection = (username: string): MockeryEffectData | null => {
+  // For demo purposes, just check if the username contains 'protected'
+  if (username === 'CryptoNoble') {
+    return {
+      type: 'protected',
+      until: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+      tier: 'legendary'
+    };
+  }
+  
+  return null;
+};
+
+// Get all active mockeries for a user
+export const getUserMockeries = (username: string): MockeryEffectData[] => {
+  if (username === 'WhaleLord') {
+    return [
       {
-        id: "mockery-1",
-        action: "courtJester",
-        sourceUserId: "user-3",
-        sourceUsername: "mockery_master",
-        targetUserId: "user-2",
-        targetUsername: "jester_victim",
-        timestamp: new Date(Date.now() - 12 * 60 * 60 * 1000).toISOString(),
-        expiresAt: new Date(Date.now() + 60 * 60 * 1000).toISOString(),
-        isActive: true
+        id: 'mock1',
+        type: 'eggs',
+        until: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000).toISOString(),
+        tier: 'rare',
+        duration: 24,
+        strength: 1,
+        appliedBy: 'user3',
       }
-    ],
-    mockedCount: 5,
-    lastMocked: new Date(Date.now() - 12 * 60 * 60 * 1000).toISOString()
+    ];
   }
+  
+  return [];
 };
 
-// Mock active mockeries
-const mockActiveMockeries: MockeryEvent[] = [
-  {
-    id: "mockery-1",
-    action: "courtJester",
-    sourceUserId: "user-3",
-    sourceUsername: "mockery_master",
-    targetUserId: "user-2",
-    targetUsername: "jester_victim",
-    timestamp: new Date(Date.now() - 12 * 60 * 60 * 1000).toISOString(),
-    expiresAt: new Date(Date.now() + 60 * 60 * 1000).toISOString(),
-    isActive: true
-  },
-  {
-    id: "mockery-2",
-    action: "tomatoes",
-    sourceUserId: "user-4",
-    sourceUsername: "tomato_thrower",
-    targetUserId: "user-5",
-    targetUsername: "tomato_victim",
-    timestamp: new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString(),
-    expiresAt: new Date(Date.now() + 18 * 60 * 60 * 1000).toISOString(),
-    isActive: true
-  }
-];
-
-// Mock implementation
-export const useMockery = (currentUser?: User | null): UseMockeryResult => {
-  // Mock user for tests
-  const mockUsers = async (
-    userId: string,
-    action: MockeryAction,
-    message?: string
-  ): Promise<boolean> => {
-    console.log(`Mocking user ${userId} with action ${action}`);
-    return true;
+// Add a new mockery event
+export const addMockeryEvent = (
+  targetUsername: string, 
+  sourceUsername: string,
+  mockeryType: MockeryAction
+): MockeryEvent => {
+  const mockeryEvent: MockeryEvent = {
+    id: `mockery_${Date.now()}`,
+    targetUserId: `user_${targetUsername}`,
+    sourceUserId: `user_${sourceUsername}`,
+    timestamp: new Date().toISOString(),
+    mockeryType,
+    duration: 24, // 24 hours
+    active: true,
+    sourceUsername // Added for compatibility
   };
+  
+  // Here you would typically persist this to a database
+  
+  return mockeryEvent;
+};
 
-  const protectUser = async (
-    userId: string,
-    duration: number
-  ): Promise<boolean> => {
-    console.log(`Protecting user ${userId} for ${duration} hours`);
-    return true;
+// Apply protection to a user
+export const applyProtectionToUser = (username: string): MockeryEvent => {
+  const protectionEvent: MockeryEvent = {
+    id: `protection_${Date.now()}`,
+    targetUserId: `user_${username}`,
+    sourceUserId: `user_${username}`,
+    timestamp: new Date().toISOString(),
+    mockeryType: 'protected',
+    duration: 7 * 24, // 7 days in hours
+    active: true,
+    sourceUsername: username // Added for compatibility
   };
+  
+  // Here you would typically persist this to a database
+  
+  return protectionEvent;
+};
 
-  const isUserProtected = async (userId: string): Promise<boolean> => {
-    const userStatus = mockUserStatuses[userId];
-    return Boolean(userStatus?.activeProtection);
-  };
-
-  const isUserShamed = async (userId: string): Promise<boolean> => {
-    const userStatus = mockUserStatuses[userId];
-    return userStatus?.activeMockeries.length > 0;
-  };
-
-  const canUserBeMocked = async (userId: string): Promise<boolean> => {
-    const isProtected = await isUserProtected(userId);
-    return !isProtected;
-  };
-
-  const getUserMockeryStatus = async (
-    userId: string
-  ): Promise<UserMockeryStatus | null> => {
-    return mockUserStatuses[userId] || null;
-  };
-
-  const getActiveMockeries = async (): Promise<MockeryEvent[]> => {
-    return mockActiveMockeries;
-  };
-
-  const mockUser = async (
-    targetId: string,
-    action: MockeryAction,
-    options?: { message?: string }
-  ): Promise<boolean> => {
-    if (!currentUser) {
-      console.error("Cannot mock: No current user");
-      return false;
-    }
-
-    const canBeMocked = await canUserBeMocked(targetId);
-    if (!canBeMocked) {
-      console.error("Cannot mock: User is protected");
-      return false;
-    }
-
-    // This would be an API call in a real application
-    console.log(
-      `User ${currentUser.id} mocking ${targetId} with ${action}`,
-      options
-    );
-    return true;
-  };
-
+// Get mockery status for a user
+export const getUserMockeryStatus = (username: string): UserMockeryStatus => {
+  const protection = getUserProtection(username);
+  const mockeries = getUserMockeries(username);
+  
   return {
-    mockUsers,
-    protectUser,
-    isUserProtected,
-    isUserShamed,
-    canUserBeMocked,
-    getUserMockeryStatus,
-    getActiveMockeries,
-    mockUser
+    username,
+    userId: `user_${username}`,
+    protectedUntil: protection ? protection.until : null,
+    activeProtection: protection,
+    activeMockeries: mockeries,
+    mockeryCount: mockeries.length,
+    lastMockedAt: mockeries.length > 0 ? new Date().toISOString() : null
   };
 };
 
-export default useMockery;
+// Check if a user is currently protected from mockery
+export const isUserProtected = (username: string): boolean => {
+  const protection = getUserProtection(username);
+  return !!protection && new Date(protection.until) > new Date();
+};
+
+// Check if a user is currently being mocked
+export const isUserMocked = (username: string): boolean => {
+  const mockeries = getUserMockeries(username);
+  return mockeries.length > 0 && mockeries.some(m => new Date(m.until) > new Date());
+};

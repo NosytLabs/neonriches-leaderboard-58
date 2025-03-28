@@ -10,6 +10,7 @@ export const cosmeticsData: CosmeticItem[] = [
     type: "border",
     rarity: "legendary",
     cost: 100,
+    price: 100, // Added required price field
     imageSrc: "/assets/cosmetics/borders/royal-gold.png",
     cssClass: "border-royal-gold animate-border-shine"
   },
@@ -21,6 +22,7 @@ export const cosmeticsData: CosmeticItem[] = [
     type: "color",
     rarity: "epic",
     cost: 75,
+    price: 75, // Added required price field
     cssClass: "text-royal-purple"
   },
   {
@@ -31,6 +33,7 @@ export const cosmeticsData: CosmeticItem[] = [
     type: "font",
     rarity: "rare",
     cost: 50,
+    price: 50, // Added required price field
     cssClass: "font-medieval"
   },
   {
@@ -40,7 +43,8 @@ export const cosmeticsData: CosmeticItem[] = [
     category: "profile",
     type: "title",
     rarity: "epic",
-    cost: 200
+    cost: 200,
+    price: 200 // Added required price field
   },
   {
     id: "title_lady",
@@ -49,7 +53,8 @@ export const cosmeticsData: CosmeticItem[] = [
     category: "profile",
     type: "title",
     rarity: "epic",
-    cost: 200
+    cost: 200,
+    price: 200 // Added required price field
   },
   {
     id: "emoji_diamond",
@@ -58,7 +63,8 @@ export const cosmeticsData: CosmeticItem[] = [
     category: "interaction",
     type: "emoji",
     rarity: "uncommon",
-    cost: 25
+    cost: 25,
+    price: 25 // Added required price field
   },
   {
     id: "border_flame",
@@ -68,6 +74,7 @@ export const cosmeticsData: CosmeticItem[] = [
     type: "border",
     rarity: "rare",
     cost: 80,
+    price: 80, // Added required price field
     cssClass: "border-gradient-fire"
   },
   {
@@ -78,6 +85,7 @@ export const cosmeticsData: CosmeticItem[] = [
     type: "effect",
     rarity: "uncommon",
     cost: 60,
+    price: 60, // Added required price field
     cssClass: "animate-sparkle"
   },
   {
@@ -88,6 +96,7 @@ export const cosmeticsData: CosmeticItem[] = [
     type: "badge",
     rarity: "legendary",
     cost: 500,
+    price: 500, // Added required price field
     imageSrc: "/assets/cosmetics/badges/whale.png"
   },
   {
@@ -98,6 +107,7 @@ export const cosmeticsData: CosmeticItem[] = [
     type: "background",
     rarity: "epic",
     cost: 300,
+    price: 300, // Added required price field
     imageSrc: "/assets/cosmetics/backgrounds/throne-room.png"
   }
 ];

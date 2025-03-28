@@ -1,3 +1,4 @@
+
 export type TransactionType = 'deposit' | 'withdrawal' | 'purchase' | 'transfer' | 'mockery' | 'cosmetic' | 'subscription' | 'boost' | 'wish';
 
 export interface SolanaWallet {
@@ -21,6 +22,9 @@ export interface SolanaTreasuryInfo {
   sender?: string; // Added for compatibility
   owner?: string; // Added for compatibility
   totalDeposits?: number; // Added for compatibility
+  signature?: string; // Added for compatibility
+  netBalance?: number; // Added for compatibility
+  transactions?: number; // Added for compatibility
 }
 
 export interface SolanaTransaction {
@@ -50,6 +54,8 @@ export interface OnChainLeaderboardEntry {
   userId?: string;
   totalDeposited?: number;
   joinDate?: string;
+  id?: string; // Added for compatibility
+  totalSpent?: number; // Added for compatibility
 }
 
 export interface LeaderboardEntry {

@@ -108,7 +108,7 @@ export interface UserProfile {
   walletBalance: number;
   amountSpent?: number;
   spentAmount?: number;
-  totalSpent?: number; // Made optional instead of required
+  totalSpent?: number;
   spendStreak?: number;
   settings?: UserSettings;
   cosmetics?: UserCosmetics;
@@ -118,7 +118,7 @@ export interface UserProfile {
   profileClicks?: number;
   subscription?: UserSubscription;
   certificates?: CertificateNFT[];
-  certificateNFT?: CertificateNFT; // Added for backward compatibility
+  certificateNFT?: CertificateNFT;
   isVIP?: boolean;
   badges?: string[];
   activeTitle?: string;

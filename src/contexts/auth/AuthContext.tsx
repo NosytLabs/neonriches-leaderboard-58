@@ -1,232 +1,205 @@
-import React, { createContext, useState, useEffect, ReactNode } from 'react';
-import { User, Session } from '@supabase/supabase-js';
-import { supabase } from '@/integrations/supabase/client';
-import { UserProfile } from '@/types/user';
-import { useToast } from '@/hooks/use-toast';
-import { useAuthState, useAuthMethods } from './authHooks';
-import { AuthContextType } from '@/types/auth-context';
 
-// Create the context
+import React, { createContext, useState, useEffect, useContext, ReactNode } from 'react';
+import { User, UserProfile } from '@/types/user';
+import { adaptUserProfileToUser } from '@/utils/userAdapter';
+
+// Define the shape of our auth context
+interface AuthContextType {
+  user: UserProfile | null;
+  setUser: (user: UserProfile | null) => void;
+  isLoading: boolean;
+  isAuthenticated: boolean;
+  login: (email: string, password: string) => Promise<boolean>;
+  logout: () => Promise<void>;
+  signup: (email: string, password: string, username: string) => Promise<boolean>;
+  updateProfile: (data: Partial<UserProfile>) => Promise<void>;
+  updateUserProfile: (data: Partial<UserProfile>) => Promise<void>;
+  forgotPassword: (email: string) => Promise<void>;
+  resetPassword: (code: string, newPassword: string) => Promise<void>;
+  getToken: () => Promise<string | null>;
+  refreshToken: () => Promise<boolean>;
+}
+
+// Create the context with a default value
 export const AuthContext = createContext<AuthContextType | null>(null);
 
-// Create the provider component
+// The provider component that will wrap the app
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const { 
-    user, 
-    setUser, 
-    isLoading, 
-    setIsLoading, 
-    error, 
-    setError,
-    isAuthModalOpen,
-    setIsAuthModalOpen,
-    session,
-    setSession
-  } = useAuthState();
+  const [user, setUser] = useState<UserProfile | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  const { toast } = useToast();
-
-  const {
-    login,
-    register,
-    logout,
-    updateUserProfile,
-    boostProfile,
-    awardCosmetic
-  } = useAuthMethods(user, setUser, setIsLoading, setError);
-
-  // Initialize auth state
+  // Check for existing session on mount
   useEffect(() => {
-    // First set up the auth state listener
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, newSession) => {
-        console.log('Auth state changed:', event);
-        setSession(newSession);
-        setUser(newSession?.user ? mapUserData(newSession.user) : null);
-        
-        // For sign out events, ensure we clean up properly
-        if (event === 'SIGNED_OUT') {
-          setUser(null);
-          localStorage.removeItem('p2w_user');
-        }
-      }
-    );
-
-    // Then check for existing session
-    const initializeAuth = async () => {
-      setIsLoading(true);
+    const checkSession = async () => {
       try {
-        const { data: { session: currentSession } } = await supabase.auth.getSession();
-        setSession(currentSession);
-        
-        if (currentSession?.user) {
-          setUser(mapUserData(currentSession.user));
+        // This would normally check with your backend/auth provider
+        const storedUser = localStorage.getItem('user');
+        if (storedUser) {
+          setUser(JSON.parse(storedUser));
         }
-      } catch (err) {
-        console.error('Error initializing auth:', err);
-        setError(err as Error);
+      } catch (error) {
+        console.error('Failed to restore session:', error);
       } finally {
         setIsLoading(false);
       }
     };
 
-    initializeAuth();
-
-    // Clean up subscription on unmount
-    return () => {
-      subscription.unsubscribe();
-    };
+    checkSession();
   }, []);
 
-  // Map Supabase user to our app's user format
-  const mapUserData = (supabaseUser: User): UserProfile => {
-    // In a real implementation, you would fetch additional user data
-    // from a profiles table here
-    return {
-      id: supabaseUser.id,
-      username: supabaseUser.user_metadata?.username || 'Anonymous User',
-      email: supabaseUser.email || '',
-      displayName: supabaseUser.user_metadata?.display_name,
-      profileImage: supabaseUser.user_metadata?.avatar_url,
-      role: supabaseUser.user_metadata?.role || 'user',
-      status: 'active',
-      walletBalance: 0,
-      totalSpent: 0, // Ensure required property is added
-      joinDate: supabaseUser.created_at || new Date().toISOString(),
-      team: supabaseUser.user_metadata?.team || 'none',
-      tier: supabaseUser.user_metadata?.tier || 'basic',
-      rank: 0, // Will be updated from leaderboard data
-      cosmetics: {
-        borders: [],
-        colors: [],
-        fonts: [],
-        emojis: [],
-        titles: [],
-        backgrounds: [],
-        effects: [],
-        badges: [],
-        themes: []
-      },
-      profileViews: 0,
-      profileClicks: 0,
-      followers: 0,
-      subscription: {
-        status: 'active',
-        tier: 'basic',
-        interval: 'monthly',
-        startDate: new Date().toISOString(),
-        endDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
-        autoRenew: true,
-        features: ['Basic Profile', 'Leaderboard Entry'],
-      },
-      profileBoosts: []
-    };
-  };
+  // Helper to save user to local storage whenever it changes
+  useEffect(() => {
+    if (user) {
+      localStorage.setItem('user', JSON.stringify(user));
+    } else {
+      localStorage.removeItem('user');
+    }
+  }, [user]);
 
-  // Create the auth context value
-  const authContextValue: AuthContextType = {
-    user,
-    isLoading,
-    isAuthenticated: !!user,
-    error,
-    updateUserProfile,
-    login,
-    register,
-    logout,
-    // Keep signOut as an alias for logout for backward compatibility
-    signOut: logout,
-    openAuthModal: () => setIsAuthModalOpen(true),
-    closeAuthModal: () => setIsAuthModalOpen(false),
-    boostProfile,
-    awardCosmetic,
-    refreshUser: async () => {
-      // Fetch updated user data from database
-      if (user?.id) {
-        try {
-          const { data, error } = await supabase
-            .from('users')
-            .select('*')
-            .eq('id', user.id)
-            .single();
-          
-          if (error) {
-            console.error('Error refreshing user:', error);
-            return;
-          }
-          
-          if (data) {
-            setUser({
-              ...user,
-              ...data,
-              totalSpent: data.amountSpent || data.spentAmount || 0 // Ensure required property is included
-            });
-          }
-        } catch (err) {
-          console.error('Error refreshing user profile:', err);
-        }
-      }
-    },
-    sendPasswordResetEmail: async (email: string) => {
-      try {
-        const { error } = await supabase.auth.resetPasswordForEmail(email, {
-          redirectTo: `${window.location.origin}/reset-password`
-        });
-        
-        if (error) throw error;
-        
-        toast({
-          title: "Password Reset Link Sent",
-          description: "Check your email for password reset instructions",
-        });
-        
-        return true;
-      } catch (error: any) {
-        toast({
-          title: "Error",
-          description: error.message || "Failed to send password reset email",
-          variant: "destructive"
-        });
-        
-        return false;
-      }
-    },
-    confirmPasswordReset: async (token: string, newPassword: string) => {
-      try {
-        const { error } = await supabase.auth.updateUser({
-          password: newPassword
-        });
-        
-        if (error) throw error;
-        
-        toast({
-          title: "Password Updated",
-          description: "Your password has been reset successfully",
-        });
-        
-        return true;
-      } catch (error: any) {
-        toast({
-          title: "Error",
-          description: error.message || "Failed to reset password",
-          variant: "destructive"
-        });
-        
-        return false;
-      }
+  // Login function
+  const login = async (email: string, password: string): Promise<boolean> => {
+    setIsLoading(true);
+    try {
+      // This would call your auth API
+      // For demo purposes, we're just setting a mock user
+      const mockUser: UserProfile = {
+        id: 'user123',
+        username: email.split('@')[0],
+        email,
+        displayName: email.split('@')[0],
+        role: 'user',
+        walletBalance: 1000,
+        totalSpent: 0,
+        joinDate: new Date().toISOString(),
+        rank: 100,
+      };
+      
+      setUser(mockUser);
+      return true;
+    } catch (error) {
+      console.error('Login failed:', error);
+      return false;
+    } finally {
+      setIsLoading(false);
     }
   };
 
+  // Logout function
+  const logout = async (): Promise<void> => {
+    setIsLoading(true);
+    try {
+      // Call logout API if needed
+      setUser(null);
+    } catch (error) {
+      console.error('Logout failed:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Signup function
+  const signup = async (email: string, password: string, username: string): Promise<boolean> => {
+    setIsLoading(true);
+    try {
+      // This would call your signup API
+      const mockUser: UserProfile = {
+        id: `user_${Date.now()}`,
+        username,
+        email,
+        displayName: username,
+        role: 'user',
+        walletBalance: 100, // Starting balance
+        totalSpent: 0,
+        joinDate: new Date().toISOString(),
+        rank: 999, // Starting rank
+      };
+      
+      setUser(mockUser);
+      return true;
+    } catch (error) {
+      console.error('Signup failed:', error);
+      return false;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Update profile function
+  const updateProfile = async (data: Partial<UserProfile>): Promise<void> => {
+    if (!user) return;
+    
+    try {
+      // This would call your update profile API
+      setUser({...user, ...data});
+    } catch (error) {
+      console.error('Update profile failed:', error);
+    }
+  };
+
+  // Alias for updateProfile to maintain consistency with prop names in components
+  const updateUserProfile = updateProfile;
+
+  // Password reset request
+  const forgotPassword = async (email: string): Promise<void> => {
+    try {
+      // This would call your password reset API
+      console.log(`Password reset requested for: ${email}`);
+    } catch (error) {
+      console.error('Forgot password request failed:', error);
+      throw error;
+    }
+  };
+
+  // Password reset with code
+  const resetPassword = async (code: string, newPassword: string): Promise<void> => {
+    try {
+      // This would call your password reset confirmation API
+      console.log(`Resetting password with code: ${code}`);
+    } catch (error) {
+      console.error('Password reset failed:', error);
+      throw error;
+    }
+  };
+
+  // Get authentication token
+  const getToken = async (): Promise<string | null> => {
+    // This would normally get token from secure storage or refresh if needed
+    return user ? 'mock-jwt-token' : null;
+  };
+
+  // Refresh auth token
+  const refreshToken = async (): Promise<boolean> => {
+    // This would normally call your token refresh API
+    return !!user;
+  };
+
   return (
-    <AuthContext.Provider value={authContextValue}>
+    <AuthContext.Provider
+      value={{
+        user,
+        setUser,
+        isLoading,
+        isAuthenticated: !!user,
+        login,
+        logout,
+        signup,
+        updateProfile,
+        updateUserProfile,
+        forgotPassword,
+        resetPassword,
+        getToken,
+        refreshToken,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
 };
 
-// Create a hook to use the auth context
+// Custom hook to use the auth context
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (context === null) {
+  if (!context) {
     throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;

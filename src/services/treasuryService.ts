@@ -1,81 +1,82 @@
 
-import { SolanaTreasuryInfo, SolanaTransaction, OnChainLeaderboardEntry } from "@/types/solana";
+import { SolanaTreasuryInfo, SolanaTransaction, OnChainLeaderboardEntry } from '@/types/solana';
 
-// Fetch treasury info
-export const fetchTreasuryInfo = async (): Promise<SolanaTreasuryInfo> => {
-  // This would be an API call in a real application
+export const getTreasuryInfo = (): SolanaTreasuryInfo => {
   return {
-    address: "7DH8Fi52tFMNQNVGDsYrVXzpQvD4XmMhPP3eGwJwUaJb",
-    balance: 1250.75,
-    totalDeposits: 3500.0,
-    totalWithdrawals: 2249.25,
+    totalDeposited: 125000,
+    totalWithdrawn: 25000,
+    currentBalance: 100000,
     lastUpdated: new Date().toISOString(),
-    usdValue: 125075.0
+    balance: 100000,
+    netBalance: 100000,
+    transactions: 1250,
+    signature: 'mock-signature'
   };
 };
 
-// Fetch recent treasury transactions
-export const fetchTreasuryTransactions = async (limit = 10): Promise<SolanaTransaction[]> => {
-  // This would be an API call in a real application
-  const mockTransactions: SolanaTransaction[] = [
-    {
-      id: "solana-tx-1",
-      signature: "5v54qzqHBQrA5dn1KFRwCKioVuGm7QD6UahLHFXvnTmrXm8fJK5rSaVqA7J8ZYnZMkP92UkDwPXJ9zKpWvQYpkMn",
-      timestamp: new Date(Date.now() - 1 * 60 * 60 * 1000).toISOString(),
-      type: "deposit",
-      amount: 25.5,
-      sender: "8xg7D4ESuJLRJQvnJPw9Mqq9YBJBBe9c8Xu7Lm68cRJ7",
-      recipient: "7DH8Fi52tFMNQNVGDsYrVXzpQvD4XmMhPP3eGwJwUaJb",
-      status: "confirmed"
-    },
-    {
-      id: "solana-tx-2",
-      signature: "2vhFDtAfMN2A9MGHUFFAZXMZUWi9pLqY7UwDDz5ZhzUE97xYjgJZSS3QBYu1bwcgVLJb5KKd3pPivMC1jGHqAptP",
-      timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
-      type: "withdrawal",
-      amount: 10.0,
-      sender: "7DH8Fi52tFMNQNVGDsYrVXzpQvD4XmMhPP3eGwJwUaJb",
-      recipient: "BQj1qLExCzeEMtZ9a6YEQWhrQfG7BrAsfHG1kPuCNCsC",
-      status: "confirmed"
-    }
-  ];
+export const getRecentTransactions = (): SolanaTransaction[] => {
+  const depositTransaction: SolanaTransaction = {
+    id: 'tx_deposit_1',
+    signature: '5VERLGg1P7ZwQPS1uRjZHcFrNDbxpN2Ak6YmSLZ9QhzjM2u5wZV7DMQ2A75ZxzpBpSiC5fhsXJUrHftcYvU5P7Gh',
+    timestamp: new Date().toISOString(),
+    type: 'deposit',
+    amount: 1000,
+    sender: 'user_wallet_123',
+    receiver: 'treasury_wallet',
+    recipient: 'treasury_wallet',
+    status: 'confirmed'
+  };
   
-  return mockTransactions.slice(0, limit);
+  const withdrawalTransaction: SolanaTransaction = {
+    id: 'tx_withdrawal_1',
+    signature: 'TY3YdxzWvh9YrGMfqbWQHMP2YRuEcVAMzXATKPeK6LAiVNKKJFT8mTYe9bpP2PbK9y5SKoMj1V1P1LJdJ5mKyts',
+    timestamp: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+    type: 'withdrawal',
+    amount: 250,
+    sender: 'treasury_wallet',
+    receiver: 'user_wallet_456',
+    recipient: 'user_wallet_456',
+    status: 'confirmed'
+  };
+  
+  return [depositTransaction, withdrawalTransaction];
 };
 
-// Get on-chain leaderboard
-export const fetchOnChainLeaderboard = async (): Promise<OnChainLeaderboardEntry[]> => {
-  // This would be an API call in a real application
+export const getLeaderboardData = (): OnChainLeaderboardEntry[] => {
   return [
     {
-      id: "chain-1",
-      publicKey: "8xg7D4ESuJLRJQvnJPw9Mqq9YBJBBe9c8Xu7Lm68cRJ7",
-      username: "whale_on_chain",
+      id: 'user1',
+      address: 'GKot5hBsd81kMepLXh1XMuxiTwtCec6xxvKMRsWoz1wm',
+      publicKey: 'GKot5hBsd81kMepLXh1XMuxiTwtCec6xxvKMRsWoz1wm',
+      username: 'whale_king',
+      spentAmount: 12500,
+      amountSpent: 12500,
+      totalSpent: 12500,
       rank: 1,
       previousRank: 1,
-      amountSpent: 500,
-      totalSpent: 2500,
-      lastTransaction: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
-      isVerified: true,
-      signature: "5v54qzqHBQrA5dn1KFRwCKioVuGm7QD6UahLHFXvnTmrXm8fJK5rSaVqA7J8ZYnZMkP92UkDwPXJ9zKpWvQYpkMn"
+      timestamp: new Date().toISOString(),
+      transaction: 'tx_12345',
+      lastTransaction: 'tx_12345',
+      userId: 'user1',
+      totalDeposited: 15000,
+      joinDate: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000).toISOString()
     },
     {
-      id: "chain-2",
-      publicKey: "BQj1qLExCzeEMtZ9a6YEQWhrQfG7BrAsfHG1kPuCNCsC",
-      username: "crypto_royalty",
+      id: 'user2',
+      address: 'H7ATJQkJqK5f6gQK88Hj5Uyw1Kga6eSwhkqsJi9K28Lr',
+      publicKey: 'H7ATJQkJqK5f6gQK88Hj5Uyw1Kga6eSwhkqsJi9K28Lr',
+      username: 'crypto_noble',
+      spentAmount: 10000,
+      amountSpent: 10000,
+      totalSpent: 10000,
       rank: 2,
       previousRank: 3,
-      amountSpent: 300,
-      totalSpent: 1800,
-      lastTransaction: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
-      isVerified: true,
-      signature: "2vhFDtAfMN2A9MGHUFFAZXMZUWi9pLqY7UwDDz5ZhzUE97xYjgJZSS3QBYu1bwcgVLJb5KKd3pPivMC1jGHqAptP"
+      timestamp: new Date().toISOString(),
+      transaction: 'tx_23456',
+      lastTransaction: 'tx_23456',
+      userId: 'user2',
+      totalDeposited: 12000,
+      joinDate: new Date(Date.now() - 45 * 24 * 60 * 60 * 1000).toISOString()
     }
   ];
-};
-
-export default {
-  fetchTreasuryInfo,
-  fetchTreasuryTransactions,
-  fetchOnChainLeaderboard
 };

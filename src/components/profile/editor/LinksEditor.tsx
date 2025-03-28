@@ -53,12 +53,13 @@ const LinksEditor: React.FC<LinksEditorProps> = ({ user, links, onLinksChange })
       return;
     }
 
-    // Create a new link
+    // Create a new link with required platform property
     const newLink: ProfileLink = {
       id: `link_${Date.now()}`,
       url: newLinkUrl,
-      title: newLinkLabel, // Using title as required by ProfileLink
-      label: newLinkLabel  // Also storing as label for display
+      platform: 'website', // Default platform
+      title: newLinkLabel,
+      label: newLinkLabel
     };
 
     onLinksChange([...links, newLink]);

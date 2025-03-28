@@ -1,5 +1,5 @@
 
-export type MockeryTier = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
+export type MockeryTier = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary' | string;
 export type MockeryAction = 'tomatoes' | 'eggs' | 'stocks' | 'silence' | 'courtJester' | 'jester' | 'protected' | 'immune' | 'dunce' | 'roast' | 'ridicule' | 'taunt' | 'drama';
 export type ExtendedMockeryAction = MockeryAction;
 export type ShameAction = MockeryAction;
@@ -13,6 +13,7 @@ export interface MockeryEvent {
   action?: string;
   duration: number;
   active: boolean;
+  sourceUsername?: string; // Added for compatibility
 }
 
 export interface MockeryEffectData {
@@ -23,6 +24,7 @@ export interface MockeryEffectData {
   strength?: number;
   appliedBy?: string;
   id?: string;
+  action?: string; // Added for compatibility
 }
 
 export interface UserMockeryStatus {

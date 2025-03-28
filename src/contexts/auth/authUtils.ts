@@ -50,7 +50,7 @@ export function addCosmetic(
       themes: [],
     };
   
-  // Handle each category
+  // Handle each category - we're only storing string IDs now, not UserCosmeticItem objects
   switch (category) {
     case 'borders':
       if (!cosmetics.borders.includes(cosmeticId)) {

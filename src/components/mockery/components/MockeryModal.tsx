@@ -1,139 +1,125 @@
-import React from 'react';
-import { DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Shield, DollarSign, Info } from 'lucide-react';
-import { MockeryAction } from '@/types/mockery';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { 
-  getMockeryActionIcon, 
-  getMockeryActionTitle, 
-  getMockeryActionDescription, 
-  getMockeryActionPrice,
-  getDiscountedMockeryPrice
-} from '../utils/mockeryUtils';
 
-interface TargetUser {
-  userId: string;
-  username: string;
-  profileImage?: string;
-  totalSpent: number;
-  rank: number;
-  team?: string;
-  spendStreak?: number;
-}
+import React, { useState } from 'react';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { MockeryAction } from '@/types/mockery';
+import { getMockeryText, getMockeryDescription, getMockeryIcon, getMockeryColor, getMockeryCost } from '../utils/mockeryUtils';
+import { Trophy } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
 interface MockeryModalProps {
-  targetUser: TargetUser;
+  isOpen: boolean;
+  onClose: () => void;
   mockeryType: MockeryAction;
-  onConfirm: (userId: string, action: MockeryAction) => void;
-  onCancel: () => void;
-  hasDiscount?: boolean;
+  targetUser: string;
+  onConfirm: (targetUser: string, action: string, amount: number) => boolean;
 }
 
 const MockeryModal: React.FC<MockeryModalProps> = ({
-  targetUser,
+  isOpen,
+  onClose,
   mockeryType,
-  onConfirm,
-  onCancel,
-  hasDiscount = false
+  targetUser,
+  onConfirm
 }) => {
-  const regularPrice = getMockeryActionPrice(mockeryType);
-  const discountedPrice = hasDiscount ? getDiscountedMockeryPrice(mockeryType) : regularPrice;
-  const finalPrice = hasDiscount ? discountedPrice : regularPrice;
+  const { toast } = useToast();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  // Custom styling based on mockery type
+  const getHeaderStyle = () => {
+    const color = getMockeryColor(mockeryType);
+    return {
+      borderBottom: `2px solid ${color}`,
+      background: `linear-gradient(to right, ${color}15, transparent)`
+    };
+  };
+  
+  const handleConfirm = () => {
+    setIsSubmitting(true);
+    
+    try {
+      // Determine cost of mockery type
+      const amount = getMockeryCost(mockeryType);
+      
+      // Pass to parent component to handle the transaction
+      const success = onConfirm(targetUser, mockeryType, amount);
+      
+      if (success) {
+        // Show success toast
+        toast({
+          title: "Mockery Successful",
+          description: `You have successfully mocked ${targetUser} with ${getMockeryText(mockeryType)}!`,
+          variant: "default"
+        });
+        onClose();
+      } else {
+        // Show failure toast - this should be handled by the parent component
+        toast({
+          title: "Mockery Failed",
+          description: "There was an error processing your mockery.",
+          variant: "destructive"
+        });
+      }
+    } catch (error) {
+      console.error("Error in mockery:", error);
+      toast({
+        title: "Error",
+        description: "An unexpected error occurred.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+  
+  const Icon = getMockeryIcon(mockeryType);
   
   return (
-    <DialogContent className="glass-morphism border-white/10 bg-black/70 backdrop-blur-md sm:max-w-md">
-      <DialogHeader>
-        <DialogTitle className="royal-gradient font-medieval flex items-center">
-          <span className="mr-2">{getMockeryActionIcon(mockeryType)}</span>
-          <span className="ml-2">{getMockeryActionTitle(mockeryType)}</span>
-        </DialogTitle>
-      </DialogHeader>
-      
-      <div className="space-y-4 my-4">
-        <div className="flex items-start gap-4">
-          <div className="w-12 h-12 rounded-full overflow-hidden bg-white/10 flex-shrink-0">
-            {targetUser.profileImage ? (
-              <img 
-                src={targetUser.profileImage} 
-                alt={targetUser.username} 
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <div className="w-full h-full flex items-center justify-center font-bold text-lg">
-                {targetUser.username[0]}
-              </div>
-            )}
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="glass-morphism border-white/10">
+        <DialogHeader style={getHeaderStyle()} className="pb-2">
+          <DialogTitle className="flex items-center gap-2">
+            {Icon && <Icon size={20} className="text-royal-crimson" />}
+            <span>Confirm {getMockeryText(mockeryType)} Mockery</span>
+          </DialogTitle>
+          <DialogDescription>
+            Are you sure you want to mock {targetUser}?
+          </DialogDescription>
+        </DialogHeader>
+        
+        <div className="py-4">
+          <div className="bg-black/20 p-4 rounded-lg mb-4">
+            <p className="text-sm text-white/70">{getMockeryDescription(mockeryType)}</p>
           </div>
           
-          <div>
-            <h4 className="font-medium text-lg">{targetUser.username}</h4>
-            <div className="flex items-center text-white/60 text-sm">
-              <span className="mr-2">Rank #{targetUser.rank}</span>
-              <span>${targetUser.totalSpent.toLocaleString()} spent</span>
+          <div className="flex items-center justify-between p-3 border border-white/10 rounded-lg bg-black/10">
+            <div className="flex items-center gap-2">
+              <Trophy size={18} className="text-royal-gold" />
+              <span className="text-sm font-medium">Target:</span>
             </div>
-            {targetUser.spendStreak && targetUser.spendStreak > 0 && (
-              <div className="text-royal-gold text-xs mt-1">
-                {targetUser.spendStreak} week spending streak
-              </div>
-            )}
-          </div>
-        </div>
-        
-        <div className="glass-morphism border-white/10 p-4 rounded-lg text-sm">
-          <p className="text-white/80">
-            {getMockeryActionDescription(mockeryType, targetUser.username)}
-          </p>
-        </div>
-        
-        <div className="flex justify-between items-center">
-          <div className="text-sm text-white/70">
-            The effect lasts for 24 hours
+            <span className="font-medium text-white">{targetUser}</span>
           </div>
           
-          <div className="flex items-center">
-            <DollarSign className="h-4 w-4 text-royal-gold mr-1" />
-            {hasDiscount && (
-              <span className="line-through text-white/50 mr-2">${regularPrice.toFixed(2)}</span>
-            )}
-            <span className="font-bold text-royal-gold">${finalPrice.toFixed(2)}</span>
+          <div className="mt-4 p-3 border border-white/10 rounded-lg bg-black/10 flex justify-between items-center">
+            <span className="text-sm">Cost:</span>
+            <span className="font-bold text-royal-gold">${getMockeryCost(mockeryType)}</span>
           </div>
         </div>
-      </div>
-      
-      <DialogFooter className="flex flex-col sm:flex-row gap-2 sm:justify-between">
-        <Button 
-          variant="outline" 
-          className="sm:flex-1"
-          onClick={onCancel}
-        >
-          Cancel
-        </Button>
         
-        <Button 
-          className="sm:flex-1 bg-royal-crimson hover:bg-royal-crimson/90"
-          onClick={() => onConfirm(targetUser.userId, mockeryType)}
-        >
-          Confirm Mockery
-        </Button>
-      </DialogFooter>
-      
-      <div className="text-xs text-white/60 flex justify-center mt-2">
-        <Tooltip>
-          <TooltipTrigger className="flex items-center">
-            <Info className="h-3 w-3 mr-1" />
-            How does mockery work?
-          </TooltipTrigger>
-          <TooltipContent className="max-w-xs">
-            <p>
-              Mockery effects are purely visual and do not affect leaderboard rankings or status.
-              The target will display the mockery effect for 24 hours.
-              You can only mock a user once every 24 hours.
-            </p>
-          </TooltipContent>
-        </Tooltip>
-      </div>
-    </DialogContent>
+        <DialogFooter>
+          <Button variant="outline" onClick={onClose} disabled={isSubmitting}>
+            Cancel
+          </Button>
+          <Button 
+            onClick={handleConfirm} 
+            className="bg-royal-crimson hover:bg-royal-crimson/90" 
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? "Processing..." : "Confirm Mockery"}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 };
 
