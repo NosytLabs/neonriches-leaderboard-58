@@ -31,12 +31,14 @@ const ResizablePanel = forwardRef<
 ));
 ResizablePanel.displayName = 'ResizablePanel';
 
+type ResizableHandleProps = {
+  withHandle?: boolean;
+  className?: string;
+} & Omit<ComponentProps<typeof ResizablePrimitive.PanelResizeHandle>, 'children'>;
+
 const ResizableHandle = forwardRef<
   ElementRef<typeof ResizablePrimitive.PanelResizeHandle>,
-  Omit<ComponentProps<typeof ResizablePrimitive.PanelResizeHandle>, 'children'> & {
-    withHandle?: boolean
-    className?: string
-  }
+  ResizableHandleProps
 >(({ className, withHandle = false, ...props }, ref) => (
   <ResizablePrimitive.PanelResizeHandle
     ref={ref}

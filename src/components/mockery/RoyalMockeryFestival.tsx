@@ -120,6 +120,19 @@ const RoyalMockeryFestival = () => {
       });
     }
   };
+
+  // Transform the mockUsers to match the MockedUser interface
+  const mockedUsers = mockUsers
+    .filter(user => isUserShamed(user.username))
+    .map(user => ({
+      username: user.username,
+      displayName: user.username,
+      avatarUrl: user.profilePicture,
+      mockedReason: `Mocked with ${user.tier || 'unknown'} mockery`,
+      mockedTimestamp: user.lastMockery || new Date().toISOString(),
+      mockedBy: 'Unknown user',
+      mockedTier: user.tier
+    }));
   
   return (
     <Card className="glass-morphism border-royal-crimson/20">
@@ -220,7 +233,7 @@ const RoyalMockeryFestival = () => {
           </TabsContent>
           
           <TabsContent value="hall" className="mt-4">
-            <HallOfShame mockedUsers={mockUsers.filter(user => isUserShamed(user.username))} />
+            <HallOfShame mockedUsers={mockedUsers} />
           </TabsContent>
         </Tabs>
       </CardContent>
