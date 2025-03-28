@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Crown, Gem, Palette, Type, Sparkles, Award } from 'lucide-react';
+import { Crown, Gem, Palette, Type, Sparkles, Award, ScrollText } from 'lucide-react';
 import RoyalButton from '@/components/ui/royal-button';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
@@ -13,6 +13,8 @@ import ProfileDecorations from './ProfileDecorations';
 import ProfileColors from './ProfileColors';
 import ProfileFonts from './ProfileFonts';
 import ProfileEmojis from './ProfileEmojis';
+import ProfileTitles from './ProfileTitles';
+import FoundersPass from '../founder/FoundersPass';
 
 const RoyalBoutique = () => {
   const [activeTab, setActiveTab] = useState('decorations');
@@ -44,7 +46,8 @@ const RoyalBoutique = () => {
         borders: [],
         colors: [],
         fonts: [],
-        emojis: []
+        emojis: [],
+        titles: []
       };
       
       const categoryItems = cosmeticItems[category as keyof typeof cosmeticItems] || [];
@@ -75,6 +78,42 @@ const RoyalBoutique = () => {
     }
   };
 
+  const handleSelectTitle = async (titleId: string) => {
+    if (!user) return;
+    
+    await updateUserProfile({
+      ...user,
+      activeTitle: titleId
+    });
+  };
+
+  const handleFoundersPurchase = async () => {
+    if (!user) return;
+    
+    const success = await spendFromWallet(
+      user,
+      100,
+      'founder',
+      'Purchased Founder\'s Pass',
+      {}
+    );
+    
+    if (success) {
+      const updatedCosmetics = {
+        ...user.cosmetics,
+        foundersPass: true,
+        titles: [...(user.cosmetics?.titles || []), 'founder']
+      };
+      
+      await updateUserProfile({
+        ...user,
+        cosmetics: updatedCosmetics,
+      });
+      
+      playSound('purchase');
+    }
+  };
+
   return (
     <Card className="glass-morphism border-royal-gold/20">
       <CardHeader>
@@ -95,8 +134,14 @@ const RoyalBoutique = () => {
           </p>
         </div>
         
+        {!user?.cosmetics?.foundersPass && (
+          <div className="mb-6">
+            <FoundersPass onPurchase={handleFoundersPurchase} user={user} />
+          </div>
+        )}
+        
         <Tabs defaultValue="decorations" value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid grid-cols-4 glass-morphism">
+          <TabsList className="grid grid-cols-5 glass-morphism">
             <TabsTrigger value="decorations" className="flex items-center gap-2">
               <Award size={16} />
               <span className="hidden sm:inline">Decorations</span>
@@ -113,6 +158,10 @@ const RoyalBoutique = () => {
               <Sparkles size={16} />
               <span className="hidden sm:inline">Emojis</span>
             </TabsTrigger>
+            <TabsTrigger value="titles" className="flex items-center gap-2">
+              <ScrollText size={16} />
+              <span className="hidden sm:inline">Titles</span>
+            </TabsTrigger>
           </TabsList>
           
           <div className="mt-4">
@@ -128,6 +177,9 @@ const RoyalBoutique = () => {
               </TabsContent>
               <TabsContent value="emojis">
                 <ProfileEmojis onPurchase={handlePurchase} user={user} />
+              </TabsContent>
+              <TabsContent value="titles">
+                <ProfileTitles onPurchase={handlePurchase} user={user} onSelectTitle={handleSelectTitle} />
               </TabsContent>
             </ScrollArea>
           </div>

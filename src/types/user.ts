@@ -16,6 +16,8 @@ export interface UserCosmetics {
   colors: string[];
   fonts: string[];
   emojis: string[];
+  titles: string[];
+  foundersPass?: boolean;
 }
 
 export interface MarketingStats {
@@ -35,7 +37,7 @@ export interface UserSubscription {
   paymentMethod: 'credit_card' | 'paypal' | 'crypto';
   autoRenew: boolean;
   price: number;
-  interval: 'monthly' | 'yearly' | 'quarterly';
+  interval: 'monthly' | 'quarterly' | 'yearly';
   features: string[];
 }
 
@@ -63,6 +65,7 @@ export interface UserProfile {
   profileViews?: number;
   profileClicks?: number;
   followers?: number;
+  activeTitle?: string; // The currently selected title to display
 }
 
 // Define the ProfileImage and ProfileLink types for the editor components

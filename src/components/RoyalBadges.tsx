@@ -1,60 +1,61 @@
 
 import React from 'react';
-import { Crown, Award, Shield, Gem, Trophy, Swords } from 'lucide-react';
+import { Crown, Award, Shield, Gem, Trophy, Swords, Scroll, User, Coins } from 'lucide-react';
 import RoyalDivider from '@/components/ui/royal-divider';
+import MedievalIcon from '@/components/ui/medieval-icon';
 
 const badges = [
   {
-    name: "Crab's Riches",
-    tier: "Crab Tier",
+    name: "Peasant's Pittance",
+    tier: "Peasant Tier",
+    icon: <User size={32} className="text-gray-400" />,
+    amount: "$0 - $5",
+    description: "The humble commoner, contributing what little they have to the royal treasury.",
+    color: "gray-400",
+    glow: false
+  },
+  {
+    name: "Merchant's Contribution",
+    tier: "Merchant Tier",
+    icon: <Coins size={32} className="text-amber-700" />,
+    amount: "$5 - $15",
+    description: "A respectable trader making modest contributions to gain standing in the court.",
+    color: "amber-700", 
+    glow: false
+  },
+  {
+    name: "Knight's Honor",
+    tier: "Knight Tier",
+    icon: <Swords size={32} className="text-blue-500" />,
+    amount: "$15 - $30",
+    description: "A loyal servant of the crown, sworn to uphold the royal status.",
+    color: "blue-500",
+    glow: false
+  },
+  {
+    name: "Baron's Patronage",
+    tier: "Baron Tier",
     icon: <Shield size={32} className="text-royal-purple" />,
-    amount: "$0 - $50",
-    description: "The first step into nobility. A modest tribute to the crown.",
-    color: "royal-purple",
-    glow: false
-  },
-  {
-    name: "Kraken's Ink",
-    tier: "Octopus Tier",
-    icon: <Swords size={32} className="text-royal-gold" />,
-    amount: "$250+",
-    description: "The resourceful noble, extending influence through cunning strategy.",
-    color: "royal-gold", 
-    glow: false
-  },
-  {
-    name: "Abyssal Light",
-    tier: "Fish Tier",
-    icon: <Gem size={32} className="text-royal-blue" />,
-    amount: "$1,000+",
-    description: "A beacon of dedication. Your contribution illuminates the royal treasury.",
-    color: "royal-blue",
-    glow: false
-  },
-  {
-    name: "Speed of the Current",
-    tier: "Dolphin Tier",
-    icon: <Award size={32} className="text-royal-purple" />,
-    amount: "$5,000+",
-    description: "Swift and respected. Your generous patronage carries significant weight at court.",
+    amount: "$30 - $75",
+    description: "A noble with land and title, regularly contributing to royal projects.",
     color: "royal-purple",
     glow: true
   },
   {
-    name: "Apex Predator",
-    tier: "Shark Tier",
-    icon: <Trophy size={32} className="text-royal-gold" />,
-    amount: "$10,000+",
-    description: "A fearsome presence in the royal court. Your influence shapes the realm's destiny.",
+    name: "Duke's Fortune",
+    tier: "Duke Tier",
+    icon: <Gem size={32} className="text-royal-gold" />,
+    amount: "$75 - $150",
+    description: "A powerful noble, second only to the royal family in wealth and influence.",
     color: "royal-gold",
     glow: true
   },
   {
-    name: "Monarch of the Deep",
-    tier: "Whale Tier",
+    name: "Royal Benefactor",
+    tier: "Royal Tier",
     icon: <Crown size={32} className="text-royal-blue" />,
-    amount: "$25,000+",
-    description: "The true power behind the throne. Your magnificent patronage commands universal respect.",
+    amount: "$150+",
+    description: "A true royal patron whose exceptional contributions sustain the entire kingdom.",
     color: "royal-blue",
     glow: true
   }
@@ -75,14 +76,14 @@ const RoyalBadges = () => {
         <div className="text-center mb-16">
           <div className="inline-block mb-4">
             <div className="relative">
-              <Award size={40} className="text-royal-gold mx-auto" />
+              <MedievalIcon name="crown" size="md" color="gold" animate />
               <div className="absolute -inset-4 bg-royal-gold/20 blur-xl rounded-full"></div>
             </div>
           </div>
           <h2 className="text-4xl font-royal royal-gradient mb-4">Royal Insignias</h2>
           <p className="text-white/70 max-w-2xl mx-auto font-serif">
-            Display your status with prestigious badges that reflect your contributions to the crown.
-            Each tier unlocks new privileges and honors within the royal court.
+            Your contributions to the royal treasury determine your standing in court.
+            Each tier of patronage grants cosmetic distinctions reflecting your status.
           </p>
         </div>
         
@@ -113,6 +114,26 @@ const RoyalBadges = () => {
               <p className="text-white/70 font-serif">{badge.description}</p>
             </div>
           ))}
+        </div>
+
+        <div className="mt-16 glass-morphism rounded-xl p-8 border border-royal-gold/30">
+          <div className="flex flex-col md:flex-row items-center">
+            <div className="mb-6 md:mb-0 md:mr-8">
+              <div className="relative">
+                <MedievalIcon name="seal" size="lg" color="gold" animate />
+              </div>
+            </div>
+            <div className="text-center md:text-left">
+              <h3 className="text-2xl font-royal royal-gradient mb-2">Founder's Pass - Limited Time Offer</h3>
+              <p className="text-white/70 font-serif mb-4">
+                For a limited time, secure your place in court history with the Founder's Pass. 
+                $100 grants you exclusive permanent profile features, including the prestigious "Founder" title, animated borders, and extended profile customization.
+              </p>
+              <div className="text-sm text-white/50 italic">
+                "All cosmetic enhancements are purely ornamental and have no effect on gameplay mechanics."
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>

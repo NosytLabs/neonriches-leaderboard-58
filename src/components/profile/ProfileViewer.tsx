@@ -4,6 +4,8 @@ import { Button } from '@/components/ui/button';
 import { Eye, Link as LinkIcon, ExternalLink, Shield, Trophy, Calendar, Heart, Crown } from 'lucide-react';
 import { UserProfile } from '@/contexts/AuthContext';
 import { getTeamBgColorClass, getTeamTextColorClass, getSpendingTier, getSpendingTierLabel } from '@/lib/colors';
+import { getTitleById } from '@/types/medievalTitles';
+import MedievalIcon from '@/components/ui/medieval-icon';
 
 interface ProfileImage {
   id: number;
@@ -42,6 +44,10 @@ const ProfileViewer = ({ user, profileData }: ProfileViewerProps) => {
   // Calculate if this is the #1 spender (king)
   const isKing = user.rank === 1;
   
+  // Get user's active title if they have one
+  const activeTitle = user.activeTitle ? getTitleById(user.activeTitle) : null;
+  const isFounder = user.cosmetics?.foundersPass === true;
+
   return (
     <div className="royal-card-enhanced rounded-xl overflow-hidden">
       {/* Hero banner */}
@@ -62,6 +68,14 @@ const ProfileViewer = ({ user, profileData }: ProfileViewerProps) => {
           <div className="absolute top-4 right-4 flex items-center gap-2 royal-card animate-crown-glow px-3 py-1 rounded-full">
             <Crown className="h-4 w-4 text-royal-gold" />
             <span className="text-xs font-bold text-royal-gold">Current Ruler</span>
+          </div>
+        )}
+        
+        {/* Founder badge */}
+        {isFounder && (
+          <div className="absolute top-4 right-20 flex items-center gap-2 royal-card-enhanced px-3 py-1 rounded-full">
+            <MedievalIcon name="seal" size="xs" color="gold" animate />
+            <span className="text-xs font-bold text-royal-gold">Founder</span>
           </div>
         )}
         
@@ -91,7 +105,13 @@ const ProfileViewer = ({ user, profileData }: ProfileViewerProps) => {
         <div className="pt-16">
           <div className="flex items-start justify-between mb-4">
             <div>
-              <h3 className="text-2xl font-bold">{user.username}</h3>
+              {/* Username with possible title prefix */}
+              <h3 className="text-2xl font-bold">
+                {activeTitle && (
+                  <span className="font-medieval text-royal-gold mr-2">{activeTitle.name}</span>
+                )}
+                {user.username}
+              </h3>
               <div className="flex items-center flex-wrap gap-2 mt-1">
                 {user.team && (
                   <div className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${teamBg} ${teamText} border border-${teamText}/30`}>
@@ -211,6 +231,22 @@ const ProfileViewer = ({ user, profileData }: ProfileViewerProps) => {
                   <Heart size={14} className="mr-1.5" />
                   Show Respect
                 </Button>
+              </div>
+            </div>
+          )}
+          
+          {/* Founder treatment */}
+          {isFounder && !isKing && (
+            <div className="mt-6 royal-card-enhanced border-royal-gold/20 rounded-lg animate-pulse-slow">
+              <div className="flex items-start">
+                <MedievalIcon name="seal" size="sm" color="gold" animate className="mr-3 mt-1" />
+                <div>
+                  <h3 className="text-lg font-medieval text-royal-gold mb-1">Founder's Privileges</h3>
+                  <p className="text-sm text-white/70">
+                    As one of the founding patrons of our digital kingdom, {user.username} enjoys permanent enhanced 
+                    profile customization and recognition throughout the realm.
+                  </p>
+                </div>
               </div>
             </div>
           )}

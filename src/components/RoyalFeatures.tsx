@@ -1,8 +1,13 @@
 
 import React from 'react';
 import { Crown, Trophy, Shield, Scroll, Coins, Sparkles } from 'lucide-react';
+import MedievalIcon from '@/components/ui/medieval-icon';
+import { Button } from '@/components/ui/button';
+import { useNavigate } from 'react-router-dom';
 
 const RoyalFeatures = () => {
+  const navigate = useNavigate();
+  
   return (
     <section className="w-full py-20 px-6 relative overflow-hidden throne-bg">
       <div className="absolute inset-0 z-0">
@@ -17,7 +22,7 @@ const RoyalFeatures = () => {
         <div className="text-center mb-16">
           <div className="inline-block mb-4">
             <div className="relative">
-              <Crown size={40} className="text-royal-gold mx-auto" />
+              <MedievalIcon name="crown" size="md" color="gold" animate />
               <div className="absolute -inset-4 bg-royal-gold/20 blur-xl rounded-full"></div>
             </div>
           </div>
@@ -28,101 +33,111 @@ const RoyalFeatures = () => {
           </p>
         </div>
         
+        <div className="mb-16 glass-morphism rounded-xl p-8 border border-royal-gold/30">
+          <div className="flex flex-col md:flex-row items-center">
+            <div className="mb-6 md:mb-0 md:mr-8">
+              <div className="relative">
+                <MedievalIcon name="seal" size="2xl" color="gold" animate />
+              </div>
+            </div>
+            <div className="text-center md:text-left">
+              <h3 className="text-2xl font-royal royal-gradient mb-4">Founder's Pass - Limited Time Offer</h3>
+              <p className="text-white/70 font-serif mb-6">
+                Secure your permanent place in royal history with the Founder's Pass.
+                For $100, you'll receive exclusive permanent benefits including the prestigious "Founder" title,
+                royal coat of arms, extended profile customization, and permanent Pro tier features.
+              </p>
+              <Button 
+                onClick={() => navigate('/cosmetics')}
+                className="bg-gradient-to-r from-royal-gold via-amber-600 to-royal-gold text-black font-medieval text-lg py-6 px-8"
+              >
+                <MedievalIcon name="crown" size="sm" color="default" className="mr-2" />
+                Claim Your Founder's Status
+              </Button>
+              <p className="text-sm text-white/50 italic mt-4">
+                "All cosmetic enhancements are purely ornamental and have no effect on gameplay mechanics."
+              </p>
+            </div>
+          </div>
+        </div>
+        
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {/* Feature 1: Royal Decrees */}
+          {/* Feature 1: Royal Titles */}
           <div className="royal-card rounded-2xl p-8 transform transition-all duration-500 hover:scale-[1.02]">
             <div className="w-14 h-14 rounded-full flex items-center justify-center mb-6 bg-royal-purple/20 border border-royal-purple/30">
               <Scroll size={28} className="text-royal-purple" />
             </div>
-            <h3 className="text-2xl font-royal mb-4">Royal Decrees</h3>
+            <h3 className="text-2xl font-royal mb-4">Royal Titles</h3>
             <p className="text-white/70 font-serif mb-6">
-              Purchase special cosmetic powers that affect your profile appearance. Issue edicts that temporarily add visual flair,
-              special animations, or temporary exclusive profile enhancements.
+              Purchase prestigious titles that appear alongside your name on your profile and in the leaderboard.
+              From humble Squire to the magnificent Duke.
             </p>
             <ul className="space-y-2 text-white/60 font-serif">
               <li className="flex items-center">
                 <span className="w-1.5 h-1.5 rounded-full bg-royal-purple mr-2"></span>
-                Force Abdication ($5) - Visually poke a rival
+                Basic Titles ($0.50-$5) - Squire, Yeoman, Jester
               </li>
               <li className="flex items-center">
                 <span className="w-1.5 h-1.5 rounded-full bg-royal-purple mr-2"></span>
-                Royal Protection ($10) - Special profile shield icon
+                Noble Titles ($5-$25) - Knight, Baron, Earl
               </li>
               <li className="flex items-center">
                 <span className="w-1.5 h-1.5 rounded-full bg-royal-purple mr-2"></span>
-                Grand Proclamation ($25) - Animated profile effects for 24h
+                Royal Titles ($25+) - Duke, Prince, King
               </li>
             </ul>
           </div>
           
-          {/* Feature 2: Royal Tournaments */}
+          {/* Feature 2: Profile Decorations */}
           <div className="royal-card rounded-2xl p-8 transform transition-all duration-500 hover:scale-[1.02]">
             <div className="w-14 h-14 rounded-full flex items-center justify-center mb-6 bg-royal-gold/20 border border-royal-gold/30">
               <Trophy size={28} className="text-royal-gold" />
             </div>
-            <h3 className="text-2xl font-royal mb-4">Royal Tournaments</h3>
+            <h3 className="text-2xl font-royal mb-4">Profile Decorations</h3>
             <p className="text-white/70 font-serif mb-6">
-              Regular competitions where patrons can compete for exclusive titles, special privileges, and unique
-              profile enhancements only available to tournament victors.
+              Enhance your profile with medieval-themed decorative elements, borders, and visual effects
+              that showcase your royal status.
             </p>
             <ul className="space-y-2 text-white/60 font-serif">
               <li className="flex items-center">
                 <span className="w-1.5 h-1.5 rounded-full bg-royal-gold mr-2"></span>
-                Entry Fee ($15) - Required to participate
+                Parchment Borders ($0.99) - Simple elegance
               </li>
               <li className="flex items-center">
                 <span className="w-1.5 h-1.5 rounded-full bg-royal-gold mr-2"></span>
-                Champion's Purse - Exclusive profile badge
+                Dragon Scale Frames ($5.00) - Rare grandeur
               </li>
               <li className="flex items-center">
                 <span className="w-1.5 h-1.5 rounded-full bg-royal-gold mr-2"></span>
-                Tournament Alliances - Form temporary teams
+                Royal Insignias ($8+) - Elite status symbols
               </li>
             </ul>
           </div>
           
-          {/* Feature 3: Treasury Raids */}
+          {/* Feature 3: Fonts & Colors */}
           <div className="royal-card rounded-2xl p-8 transform transition-all duration-500 hover:scale-[1.02]">
             <div className="w-14 h-14 rounded-full flex items-center justify-center mb-6 bg-royal-blue/20 border border-royal-blue/30">
               <Coins size={28} className="text-royal-blue" />
             </div>
-            <h3 className="text-2xl font-royal mb-4">Treasury Raids</h3>
+            <h3 className="text-2xl font-royal mb-4">Fonts & Colors</h3>
             <p className="text-white/70 font-serif mb-6">
-              Special events where patrons can spend to earn exclusive cosmetic rewards. The more you spend
-              during a raid, the more impressive your cosmetic rewards.
+              Customize your profile with medieval-inspired typography and royal color schemes
+              from affordable commoner styles to luxurious royal palettes.
             </p>
             <ul className="space-y-2 text-white/60 font-serif">
               <li className="flex items-center">
                 <span className="w-1.5 h-1.5 rounded-full bg-royal-blue mr-2"></span>
-                Raid Entry ($5) - Minimum contribution to participate
+                Scribe Script ($0.75) - Simple medieval text
               </li>
               <li className="flex items-center">
                 <span className="w-1.5 h-1.5 rounded-full bg-royal-blue mr-2"></span>
-                Raider's Rewards - Exclusive profile decorations
+                Royal Purple ($1.50) - The color of nobility
               </li>
               <li className="flex items-center">
                 <span className="w-1.5 h-1.5 rounded-full bg-royal-blue mr-2"></span>
-                Strategic Timing - Raids occur at random intervals
+                Illuminated Text ($5+) - Ornate manuscripts
               </li>
             </ul>
-          </div>
-        </div>
-        
-        <div className="mt-16 glass-morphism rounded-xl p-8 border border-royal-gold/30">
-          <div className="flex flex-col md:flex-row items-center">
-            <div className="mb-6 md:mb-0 md:mr-8">
-              <div className="relative">
-                <Sparkles size={40} className="text-royal-gold" />
-                <div className="absolute -inset-4 bg-royal-gold/20 blur-xl rounded-full"></div>
-              </div>
-            </div>
-            <div className="text-center md:text-left">
-              <h3 className="text-2xl font-royal royal-gradient mb-2">Limited Time: Founder's Pass</h3>
-              <p className="text-white/70 font-serif mb-0">
-                For a limited time, secure your place in court history with the Founder's Pass. 
-                $100 grants you exclusive permanent profile features, including animated borders, special titles, and unique visual effects.
-              </p>
-            </div>
           </div>
         </div>
       </div>

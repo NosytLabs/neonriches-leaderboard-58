@@ -4,6 +4,7 @@ import { UserProfile } from '@/contexts/AuthContext';
 import { Type } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import RoyalButton from '@/components/ui/royal-button';
+import { getDiscountedPrice } from '@/services/cosmeticService';
 
 interface FontItem {
   id: string;
@@ -11,7 +12,7 @@ interface FontItem {
   description: string;
   price: number;
   fontFamily: string;
-  sampleText: string;
+  rarity: 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
 }
 
 interface ProfileFontsProps {
@@ -24,74 +25,100 @@ const ProfileFonts: React.FC<ProfileFontsProps> = ({ onPurchase, user }) => {
 
   const fonts: FontItem[] = [
     {
-      id: 'royal-script',
-      name: 'Royal Script',
-      description: 'An elegant, flowing script fit for nobility',
-      price: 30,
-      fontFamily: "'Playfair Display', serif",
-      sampleText: 'Your Noble Username'
+      id: 'scribe-font',
+      name: 'Scribe Script',
+      description: 'The simple handwriting of a medieval scribe',
+      price: 0.75,
+      fontFamily: "'Times New Roman', serif",
+      rarity: 'common'
     },
     {
-      id: 'medieval-blackletter',
-      name: 'Medieval Blackletter',
-      description: 'A traditional gothic style from ancient scrolls',
-      price: 40,
-      fontFamily: "'Cinzel', serif",
-      sampleText: 'Your Noble Username'
+      id: 'monastic-font',
+      name: 'Monastic Text',
+      description: 'The careful lettering of monastery manuscripts',
+      price: 1.25,
+      fontFamily: "'Georgia', serif",
+      rarity: 'common'
     },
     {
-      id: 'majestic-serif',
-      name: 'Majestic Serif',
-      description: 'A distinguished serif font with regal flourishes',
-      price: 35,
-      fontFamily: "'Cormorant Garamond', serif",
-      sampleText: 'Your Noble Username'
+      id: 'gothic-font',
+      name: 'Gothic Script',
+      description: 'Bold, angular medieval lettering',
+      price: 2.50,
+      fontFamily: "'Copperplate Gothic', 'Copperplate', serif",
+      rarity: 'uncommon'
     },
     {
-      id: 'royal-modern',
-      name: 'Royal Modern',
-      description: 'A contemporary font with classic royal influences',
-      price: 25,
-      fontFamily: "'Crimson Text', serif",
-      sampleText: 'Your Noble Username'
+      id: 'chancellery-font',
+      name: 'Chancellery Script',
+      description: 'The elegant handwriting of royal courts',
+      price: 3.75,
+      fontFamily: "'Snell Roundhand', 'Brush Script MT', cursive",
+      rarity: 'rare'
     },
     {
-      id: 'noble-sans',
-      name: 'Noble Sans',
-      description: 'A clean, distinguished sans-serif with noble proportions',
-      price: 25,
-      fontFamily: "'Spectral', serif",
-      sampleText: 'Your Noble Username'
+      id: 'illuminated-font',
+      name: 'Illuminated Manuscript',
+      description: 'Ornate text from decorated manuscripts',
+      price: 5.00,
+      fontFamily: "'Luminari', 'Fantasy', fantasy",
+      rarity: 'epic'
     },
     {
-      id: 'courtly-display',
-      name: 'Courtly Display',
-      description: 'An ornate display font for making a grand impression',
-      price: 45,
-      fontFamily: "'Fredericka the Great', cursive",
-      sampleText: 'Your Noble Username'
+      id: 'royal-decree-font',
+      name: 'Royal Decree',
+      description: 'The official font of royal proclamations',
+      price: 8.50,
+      fontFamily: "'Trajan Pro', 'Cinzel', serif",
+      rarity: 'legendary'
+    },
+    {
+      id: 'runic-font',
+      name: 'Ancient Runes',
+      description: 'Mysterious runic characters of forgotten kingdoms',
+      price: 10.00,
+      fontFamily: "'Runic', 'Old English Text MT', fantasy",
+      rarity: 'legendary'
     }
   ];
 
+  const getRarityClass = (rarity: string) => {
+    switch (rarity) {
+      case 'common':
+        return 'bg-gray-500/20 text-gray-300 border-gray-500/40';
+      case 'uncommon':
+        return 'bg-green-500/20 text-green-400 border-green-500/40';
+      case 'rare':
+        return 'bg-blue-500/20 text-blue-400 border-blue-500/40';
+      case 'epic':
+        return 'bg-purple-400/20 text-purple-400 border-purple-400/40';
+      case 'legendary':
+        return 'bg-royal-gold/20 text-royal-gold border-royal-gold/40';
+      default:
+        return 'bg-gray-500/20 text-gray-300 border-gray-500/40';
+    }
+  };
+
   return (
     <div className="space-y-4">
-      <h3 className="text-lg font-bold royal-gradient font-medieval">Noble Typefaces</h3>
-      <p className="text-white/70">Distinguished fonts to display your royal status throughout the kingdom.</p>
+      <h3 className="text-lg font-bold royal-gradient font-medieval">Royal Typography</h3>
+      <p className="text-white/70">Display your status with prestigious fonts for your profile.</p>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
         {fonts.map((item) => {
           const isOwned = userFonts.includes(item.id);
+          const discountedPrice = user ? getDiscountedPrice(item.price, user.amountSpent) : item.price;
           
           return (
             <div key={item.id} className="glass-morphism border-white/10 rounded-lg p-4 transition-all duration-300 hover:border-royal-gold/30">
               <div className="flex justify-between items-start mb-3">
                 <div className="flex items-center">
-                  <div className="w-10 h-10 rounded-full flex items-center justify-center bg-royal-gold/10 mr-3">
-                    <Type className="h-5 w-5 text-royal-gold" />
+                  <div className="w-10 h-10 rounded-full flex items-center justify-center mr-3 bg-white/10 border border-white/20">
+                    <Type className="h-5 w-5 text-white" />
                   </div>
                   <div>
                     <h4 className="font-medium">{item.name}</h4>
-                    <p className="text-xs text-white/60">${item.price}</p>
+                    <p className="text-xs text-white/60">${discountedPrice.toFixed(2)}</p>
                   </div>
                 </div>
                 {isOwned && (
@@ -99,15 +126,19 @@ const ProfileFonts: React.FC<ProfileFontsProps> = ({ onPurchase, user }) => {
                     Owned
                   </Badge>
                 )}
+                <Badge className={getRarityClass(item.rarity)}>
+                  {item.rarity.charAt(0).toUpperCase() + item.rarity.slice(1)}
+                </Badge>
               </div>
               
               <p className="text-sm text-white/70 mb-4">
                 {item.description}
               </p>
               
-              <div className="bg-black/30 rounded-lg p-6 mb-4 flex items-center justify-center">
-                <span style={{ fontFamily: item.fontFamily, fontSize: '1.5rem', color: 'white' }}>
-                  {item.sampleText}
+              <div className="bg-black/30 rounded-lg p-3 mb-4 flex flex-col items-center justify-center">
+                <p className="text-sm mb-2">Font Preview:</p>
+                <span style={{ fontFamily: item.fontFamily }} className="text-xl text-white">
+                  {user?.username || 'Your Royal Name'}
                 </span>
               </div>
               
@@ -116,9 +147,9 @@ const ProfileFonts: React.FC<ProfileFontsProps> = ({ onPurchase, user }) => {
                 size="sm"
                 className="w-full"
                 disabled={isOwned}
-                onClick={() => onPurchase(item.name, item.price, 'fonts', item.id)}
+                onClick={() => onPurchase(item.name, discountedPrice, 'fonts', item.id)}
               >
-                {isOwned ? 'Already Owned' : `Purchase for $${item.price}`}
+                {isOwned ? 'Already Owned' : `Purchase for $${discountedPrice.toFixed(2)}`}
               </RoyalButton>
             </div>
           );
