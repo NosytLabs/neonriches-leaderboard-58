@@ -6,7 +6,7 @@ import ProfileSettings from '@/components/profile/ProfileSettings';
 import ProfileAnalytics from '@/components/profile/ProfileAnalytics';
 import ProfileBoost from '@/components/profile/ProfileBoost';
 import MarketingProfile from '@/components/profile/MarketingProfile';
-import ProfileBoostDisplay, { ProfileBoostDisplayProps } from '@/components/profile/ProfileBoostDisplay';
+import ProfileBoostDisplay from '@/components/profile/ProfileBoostDisplay';
 import { ProfileTab } from './ProfileTabNavigation';
 
 export interface ProfileData {
