@@ -1,0 +1,284 @@
+
+/* Mockery Effect Animations */
+@keyframes tomato-splat {
+  0% { transform: scale(0); opacity: 0; }
+  50% { transform: scale(1.2); opacity: 0.8; }
+  100% { transform: scale(1); opacity: 0.5; }
+}
+
+@keyframes egg-crack {
+  0% { transform: translateY(-10px); opacity: 0; }
+  50% { transform: translateY(0); opacity: 1; }
+  75% { transform: scale(1.2); }
+  100% { transform: scale(1); opacity: 0.7; }
+}
+
+@keyframes stocks-lock {
+  0% { transform: translateY(20px); opacity: 0; }
+  50% { transform: translateY(0); opacity: 0.8; }
+  75% { transform: rotate(-3deg); }
+  100% { transform: rotate(0deg); opacity: 0.7; }
+}
+
+@keyframes jester-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px) rotate(3deg); }
+}
+
+@keyframes dunce-spin {
+  0% { transform: rotate(0deg); }
+  25% { transform: rotate(10deg); }
+  75% { transform: rotate(-10deg); }
+  100% { transform: rotate(0deg); }
+}
+
+@keyframes roast-burn {
+  0% { opacity: 0.3; }
+  50% { opacity: 0.8; }
+  100% { opacity: 0.3; }
+}
+
+@keyframes ridicule-laugh {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+@keyframes taunt-shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-2px); }
+  20%, 40%, 60%, 80% { transform: translateX(2px); }
+}
+
+@keyframes mockery-shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-2px); }
+  40%, 80% { transform: translateX(2px); }
+}
+
+@keyframes mockery-glow {
+  0%, 100% { box-shadow: 0 0 5px rgba(255, 0, 0, 0.5); }
+  50% { box-shadow: 0 0 15px rgba(255, 0, 0, 0.8); }
+}
+
+/* Mockery Effect Classes */
+.mockery-effect-tomatoes {
+  animation: mockery-shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+}
+
+.mockery-effect-eggs {
+  animation: mockery-shake 0.6s cubic-bezier(.36,.07,.19,.97) both;
+}
+
+.mockery-effect-stocks {
+  animation: mockery-shake 0.7s cubic-bezier(.36,.07,.19,.97) both;
+}
+
+.mockery-effect-jester {
+  animation: jester-bounce 0.8s ease-in-out both;
+}
+
+.mockery-effect-dunce {
+  animation: dunce-spin 1s ease-in-out both;
+}
+
+.mockery-effect-roast {
+  animation: roast-burn 0.8s ease-in-out both;
+}
+
+.mockery-effect-ridicule {
+  animation: ridicule-laugh 0.7s ease-in-out both;
+}
+
+.mockery-effect-taunt {
+  animation: taunt-shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+}
+
+.mockery-active-tomatoes {
+  position: relative;
+  box-shadow: 0 0 10px rgba(255, 0, 0, 0.3);
+}
+
+.mockery-active-tomatoes::before {
+  content: '🍅';
+  position: absolute;
+  top: -5px;
+  right: -3px;
+  font-size: 16px;
+  z-index: 10;
+  transform: rotate(15deg);
+}
+
+.mockery-active-eggs {
+  position: relative;
+  box-shadow: 0 0 10px rgba(255, 255, 0, 0.3);
+}
+
+.mockery-active-eggs::before {
+  content: '🥚';
+  position: absolute;
+  top: -5px;
+  right: -3px;
+  font-size: 16px;
+  z-index: 10;
+  transform: rotate(-10deg);
+}
+
+.mockery-active-stocks {
+  position: relative;
+  box-shadow: 0 0 10px rgba(139, 69, 19, 0.3);
+}
+
+.mockery-active-stocks::before {
+  content: '🪵';
+  position: absolute;
+  top: -5px;
+  right: -3px;
+  font-size: 16px;
+  z-index: 10;
+}
+
+.mockery-active-jester {
+  position: relative;
+  box-shadow: 0 0 10px rgba(128, 0, 128, 0.3);
+}
+
+.mockery-active-jester::before {
+  content: '🃏';
+  position: absolute;
+  top: -5px;
+  right: -3px;
+  font-size: 16px;
+  z-index: 10;
+  transform: rotate(15deg);
+}
+
+.mockery-active-dunce {
+  position: relative;
+  box-shadow: 0 0 10px rgba(0, 0, 255, 0.3);
+}
+
+.mockery-active-dunce::before {
+  content: '🎓';
+  position: absolute;
+  top: -5px;
+  right: -3px;
+  font-size: 16px;
+  z-index: 10;
+  transform: rotate(-10deg);
+}
+
+.mockery-active-roast {
+  position: relative;
+  box-shadow: 0 0 10px rgba(255, 165, 0, 0.5);
+}
+
+.mockery-active-roast::before {
+  content: '🔥';
+  position: absolute;
+  top: -5px;
+  right: -3px;
+  font-size: 16px;
+  z-index: 10;
+}
+
+.mockery-active-ridicule {
+  position: relative;
+  box-shadow: 0 0 10px rgba(255, 105, 180, 0.3);
+}
+
+.mockery-active-ridicule::before {
+  content: '😂';
+  position: absolute;
+  top: -5px;
+  right: -3px;
+  font-size: 16px;
+  z-index: 10;
+}
+
+.mockery-active-taunt {
+  position: relative;
+  box-shadow: 0 0 10px rgba(46, 139, 87, 0.3);
+}
+
+.mockery-active-taunt::before {
+  content: '🗯️';
+  position: absolute;
+  top: -5px;
+  right: -3px;
+  font-size: 16px;
+  z-index: 10;
+}
+
+/* Overlay Effects */
+.tomato-overlay {
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ff0000' fill-opacity='0.1' fill-rule='evenodd'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/svg%3E");
+  opacity: 0.15;
+}
+
+.egg-overlay {
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffff00' fill-opacity='0.1' fill-rule='evenodd'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/svg%3E");
+  opacity: 0.15;
+}
+
+.stocks-overlay {
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23a52a2a' fill-opacity='0.1' fill-rule='evenodd'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/svg%3E");
+  opacity: 0.15;
+}
+
+.jester-overlay {
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23800080' fill-opacity='0.1' fill-rule='evenodd'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/svg%3E");
+  opacity: 0.15;
+}
+
+.dunce-overlay {
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%230000ff' fill-opacity='0.1' fill-rule='evenodd'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/svg%3E");
+  opacity: 0.15;
+}
+
+.roast-overlay {
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffa500' fill-opacity='0.1' fill-rule='evenodd'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/svg%3E");
+  opacity: 0.15;
+}
+
+.ridicule-overlay {
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ff69b4' fill-opacity='0.1' fill-rule='evenodd'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/svg%3E");
+  opacity: 0.15;
+}
+
+.taunt-overlay {
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%232e8b57' fill-opacity='0.1' fill-rule='evenodd'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/svg%3E");
+  opacity: 0.15;
+}
+
+/* Floating particles for mockery animations */
+@keyframes float-up {
+  0% { transform: translateY(0) rotate(0deg); opacity: 0.8; }
+  100% { transform: translateY(-100px) rotate(20deg); opacity: 0; }
+}
+
+.floating-mockery-particle {
+  position: absolute;
+  animation: float-up 3s ease-out forwards;
+  pointer-events: none;
+  z-index: 100;
+}
+
+/* Royal protection effect */
+.shadow-royal-protection {
+  box-shadow: 0 0 0 1px rgba(123, 31, 162, 0.3), 0 0 15px rgba(123, 31, 162, 0.2);
+}
+
+/* Gold shadow effect for discounted items */
+.shadow-gold {
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
+}
+
+/* Gold sale tag animation */
+@keyframes sale-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+.sale-tag {
+  animation: sale-pulse 2s ease-in-out infinite;
+}

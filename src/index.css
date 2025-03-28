@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -336,6 +337,6 @@
 
 /* Import specific effect stylesheets */
 @import './styles/medieval-animations.css';
-@import './styles/shame-effects.css';
+@import './styles/mockery-effects.css';
 @import './styles/fire-sale-effects.css';
 @import './styles/animations/enhanced-animations.css';
