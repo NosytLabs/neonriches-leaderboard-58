@@ -21,6 +21,7 @@ interface AnalysisSettingsProps {
     includePerformanceIssues: boolean;
   };
   onSettingChange: (settingName: string, value: boolean | number) => void;
+  onStartAnalysis?: () => void;
 }
 
 const AnalysisSettings: React.FC<AnalysisSettingsProps> = ({ settings, onSettingChange }) => {

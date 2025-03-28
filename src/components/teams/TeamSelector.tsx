@@ -21,7 +21,15 @@ const TeamSelector: React.FC<TeamSelectorProps> = ({ team, onTeamChange, current
         Align yourself with one of the three royal houses to participate in team competitions and events.
       </p>
       
-      <RadioGroup value={activeTeam || ''} onValueChange={(value) => onTeamChange(value as 'red' | 'green' | 'blue')} className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+      <RadioGroup 
+        value={activeTeam || undefined} 
+        onValueChange={(value) => {
+          if (value === 'red' || value === 'green' || value === 'blue') {
+            onTeamChange(value);
+          }
+        }} 
+        className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4"
+      >
         <div className={`relative rounded-lg border p-4 cursor-pointer hover:bg-red-500/10 hover:border-red-500/30 transition-colors ${activeTeam === 'red' ? 'bg-red-500/20 border-red-500/50' : 'border-white/10 bg-white/5'}`}>
           <RadioGroupItem value="red" id="team-red" className="absolute right-4 top-4" />
           <div className="mb-5">

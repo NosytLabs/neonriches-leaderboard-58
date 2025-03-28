@@ -4,6 +4,9 @@ import AnalysisSettings from './AnalysisSettings';
 import UnusedCodeReport from './UnusedCodeReport';
 import DuplicateCodeReport from './DuplicateCodeReport';
 import ComplexityReport from './ComplexityReport';
+import PerformanceReport from './PerformanceReport';
+import { Button } from '@/components/ui/button';
+import { AlertCircle, Code, FileSearch } from 'lucide-react';
 
 type AnalysisTab = 'unused' | 'duplicate' | 'complexity' | 'performance';
 
@@ -11,6 +14,27 @@ const CodeAnalyzer: React.FC = () => {
   const [activeTab, setActiveTab] = useState<AnalysisTab>('unused');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisComplete, setAnalysisComplete] = useState(false);
+  const [settings, setSettings] = useState({
+    includeNodeModules: false,
+    includeTests: true,
+    complexityThreshold: 10,
+    duplicateLineThreshold: 5,
+    includeUnusedImports: true,
+    includeUnusedVariables: true,
+    includeUnusedFunctions: true,
+    includeUnusedComponents: true,
+    includeComplexFunctions: true,
+    includeDuplicateCode: true,
+    includeUnusedCSSSelectors: true,
+    includePerformanceIssues: true,
+  });
+
+  const handleSettingChange = (settingName: string, value: boolean | number) => {
+    setSettings(prev => ({
+      ...prev,
+      [settingName]: value
+    }));
+  };
 
   const handleStartAnalysis = () => {
     setIsAnalyzing(true);
@@ -24,14 +48,34 @@ const CodeAnalyzer: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <AnalysisSettings 
-        onStartAnalysis={handleStartAnalysis} 
-        isAnalyzing={isAnalyzing} 
-      />
+      <div className="glass-morphism border-white/10 p-6 rounded-lg">
+        <div className="flex items-center mb-4">
+          <FileSearch className="h-5 w-5 mr-2 text-royal-gold" />
+          <h2 className="text-xl font-semibold">Royal Code Analysis</h2>
+        </div>
+        <p className="text-white/70 mb-6">
+          Analyze your codebase to identify opportunities for optimization and cleanup.
+        </p>
+
+        <AnalysisSettings 
+          settings={settings}
+          onSettingChange={handleSettingChange}
+        />
+        
+        <div className="mt-6 flex justify-end">
+          <Button
+            onClick={handleStartAnalysis}
+            disabled={isAnalyzing}
+            className="bg-royal-gold hover:bg-royal-gold/90 text-black"
+          >
+            {isAnalyzing ? "Analyzing..." : "Start Analysis"}
+          </Button>
+        </div>
+      </div>
       
       {analysisComplete && (
         <div className="space-y-6">
-          <div className="analysis-card rounded-md overflow-hidden">
+          <div className="analysis-card rounded-md overflow-hidden glass-morphism border-white/10">
             <div className="p-4 border-b border-white/10 flex">
               <nav className="flex space-x-4">
                 <button
@@ -65,15 +109,7 @@ const CodeAnalyzer: React.FC = () => {
               {activeTab === 'unused' && <UnusedCodeReport />}
               {activeTab === 'duplicate' && <DuplicateCodeReport />}
               {activeTab === 'complexity' && <ComplexityReport />}
-              {activeTab === 'performance' && (
-                <div>
-                  <h3 className="text-xl font-semibold mb-4">Performance Issues</h3>
-                  <p className="text-white/70">Analyzing performance issues in your codebase...</p>
-                  <div className="my-6 p-4 border border-dashed border-white/20 rounded-md">
-                    <p className="text-center text-white/60">Performance analysis will appear here</p>
-                  </div>
-                </div>
-              )}
+              {activeTab === 'performance' && <PerformanceReport />}
             </div>
           </div>
         </div>

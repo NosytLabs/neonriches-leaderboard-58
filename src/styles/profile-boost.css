@@ -1,313 +1,150 @@
 
-/* Profile Boost Effects
-   Organized by effect type and functionality
-*/
-
-/* ======= CORE ANIMATIONS KEYFRAMES ======= */
-@keyframes pulse-glow {
-  0%, 100% {
-    opacity: 0.4;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.7;
-    transform: scale(1.05);
-  }
+/* Base boost effects */
+.profile-boost-pro {
+  position: relative;
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
 }
 
-@keyframes rainbow-animation {
-  to {
-    background-position: 200% center;
-  }
+.profile-boost-whale {
+  position: relative;
+  box-shadow: 0 0 20px rgba(65, 105, 225, 0.3);
 }
 
-@keyframes pulse-border {
-  0%, 100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.5;
-    transform: scale(1.03);
-  }
+.profile-boost-shark {
+  position: relative;
+  box-shadow: 0 0 15px rgba(0, 191, 255, 0.2);
 }
 
-@keyframes sparkle {
-  0%, 100% {
-    opacity: 0;
-    transform: scale(0.5);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.2);
-  }
+.profile-boost-dolphin {
+  position: relative;
+  box-shadow: 0 0 15px rgba(127, 255, 212, 0.2);
 }
 
-@keyframes crown-bounce {
-  0%, 100% {
-    transform: translateY(-50%);
-  }
-  50% {
-    transform: translateY(-60%);
-  }
+/* Team-specific boost effects */
+.profile-boost-team-red {
+  border-color: rgba(155, 35, 53, 0.4);
 }
 
-@keyframes shimmer {
-  0% {
-    transform: rotate(30deg) translateX(-100%);
-  }
-  100% {
-    transform: rotate(30deg) translateX(100%);
-  }
+.profile-boost-team-green {
+  border-color: rgba(46, 139, 87, 0.4);
 }
 
-@keyframes flame-flicker {
-  0%, 100% {
-    transform: scaleX(1) scaleY(1);
-    opacity: 0.7;
-  }
-  25% {
-    transform: scaleX(1.1) scaleY(0.9);
-    opacity: 0.8;
-  }
-  50% {
-    transform: scaleX(0.9) scaleY(1.1);
-    opacity: 0.9;
-  }
-  75% {
-    transform: scaleX(1.05) scaleY(0.95);
-    opacity: 0.8;
-  }
+.profile-boost-team-blue {
+  border-color: rgba(0, 0, 128, 0.4);
 }
 
-@keyframes banner-wave {
-  0%, 100% {
-    transform: skewX(0deg);
-  }
-  25% {
-    transform: skewX(3deg);
-  }
-  75% {
-    transform: skewX(-3deg);
-  }
+/* Border boost effects */
+.profile-boost-border-gold {
+  border: 2px solid rgba(255, 215, 0, 0.6);
 }
 
-@keyframes card-glow-pulse {
-  0%, 100% {
-    opacity: 0.3;
-  }
-  50% {
-    opacity: 0.6;
-  }
+.profile-boost-border-royal {
+  border: 2px solid rgba(75, 0, 130, 0.6);
 }
 
-/* ======= BASE BOOST EFFECTS ======= */
-
-/* Royal Glow Effect */
-.royal-glow {
-  text-shadow: 0 0 5px rgba(212, 175, 55, 0.5),
-               0 0 10px rgba(212, 175, 55, 0.3),
-               0 0 15px rgba(212, 175, 55, 0.2);
+.profile-boost-border-neon {
+  border: 2px solid transparent;
+  background-clip: padding-box;
   position: relative;
 }
 
-.royal-glow::before {
-  content: "";
+.profile-boost-border-neon::before {
+  content: '';
   position: absolute;
-  top: -5px;
-  left: -5px;
-  right: -5px;
-  bottom: -5px;
-  border-radius: 5px;
-  background: radial-gradient(closest-side, rgba(212, 175, 55, 0.2), transparent);
-  z-index: -1;
-  animation: pulse-glow 2s ease-in-out infinite;
-}
-
-/* Rainbow Text Effect */
-.royal-rainbow-text {
-  background-image: linear-gradient(
-    90deg,
-    #D4AF37 0%,
-    #DC143C 20%,
-    #800080 40%,
-    #000080 60%,
-    #228B22 80%,
-    #D4AF37 100%
-  );
-  background-size: 200% auto;
-  color: transparent;
-  -webkit-background-clip: text;
-  background-clip: text;
-  animation: rainbow-animation 6s linear infinite;
-}
-
-/* Pulsing Aura Effect */
-.royal-pulse {
-  position: relative;
-}
-
-.royal-pulse::after {
-  content: "";
-  position: absolute;
-  inset: -5px;
-  border-radius: inherit;
-  border: 1px solid rgba(212, 175, 55, 0.3);
-  animation: pulse-border 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-  pointer-events: none;
-}
-
-/* Sparkling Effect */
-.royal-sparkle {
-  position: relative;
-}
-
-.royal-sparkle::before,
-.royal-sparkle::after {
-  content: "✦";
-  position: absolute;
-  color: #D4AF37;
-  font-size: 10px;
-  opacity: 0;
-  pointer-events: none;
-}
-
-.royal-sparkle::before {
-  top: -5px;
-  left: -10px;
-  animation: sparkle 3s ease-in-out infinite;
-}
-
-.royal-sparkle::after {
-  top: -5px;
-  right: -10px;
-  animation: sparkle 3s ease-in-out 1s infinite;
-}
-
-/* Crown Display Effect */
-.royal-crown {
-  position: relative;
-  padding-left: 22px;
-}
-
-.royal-crown::before {
-  content: "👑";
-  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
   left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 16px;
-  animation: crown-bounce 1.5s ease-in-out infinite;
+  z-index: -1;
+  margin: -2px;
+  border-radius: inherit;
+  background: linear-gradient(45deg, #ff00ff, #00ffff, #ffff00);
+  animation: border-rotate 3s linear infinite;
 }
 
-/* Gold Shimmer Effect */
-.royal-shimmer {
+/* Background boost effects */
+.profile-boost-bg-gradient {
+  background: linear-gradient(135deg, rgba(10, 10, 40, 0.7) 0%, rgba(30, 30, 70, 0.7) 100%);
+}
+
+.profile-boost-bg-stars {
   position: relative;
   overflow: hidden;
 }
 
-.royal-shimmer::after {
-  content: "";
+.profile-boost-bg-stars::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: radial-gradient(white 1px, transparent 1px);
+  background-size: 30px 30px;
+  opacity: 0.1;
+}
+
+/* Special effect boosts */
+.profile-boost-effect-glow {
+  animation: glow-pulse 3s infinite alternate;
+}
+
+.profile-boost-effect-sparkle::after {
+  content: '';
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+  filter: blur(2px);
+  opacity: 0;
+  pointer-events: none;
+  animation: sparkle-float 4s infinite;
+}
+
+.profile-boost-effect-shine {
+  position: relative;
+  overflow: hidden;
+}
+
+.profile-boost-effect-shine::after {
+  content: '';
   position: absolute;
   top: -50%;
   left: -50%;
   width: 200%;
   height: 200%;
   background: linear-gradient(
-    to right,
+    to bottom right,
     rgba(255, 255, 255, 0) 0%,
-    rgba(255, 255, 255, 0.1) 50%,
+    rgba(255, 255, 255, 0) 40%,
+    rgba(255, 255, 255, 0.3) 50%,
+    rgba(255, 255, 255, 0) 60%,
     rgba(255, 255, 255, 0) 100%
   );
-  transform: rotate(30deg);
-  animation: shimmer 4s linear infinite;
-  z-index: 1;
+  transform: rotate(45deg);
+  animation: shine-sweep 6s infinite;
 }
 
-/* Royal Flames Effect */
-.royal-flames {
-  position: relative;
+/* Animations */
+@keyframes border-rotate {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
 }
 
-.royal-flames::before {
-  content: "";
-  position: absolute;
-  bottom: -10px;
-  left: -5px;
-  right: -5px;
-  height: 20px;
-  background-image: 
-    radial-gradient(
-      ellipse at center bottom, 
-      rgba(220, 20, 60, 0.7) 0%, 
-      rgba(255, 165, 0, 0.5) 50%, 
-      rgba(212, 175, 55, 0.3) 100%
-    );
-  border-radius: 50% 50% 0 0 / 100% 100% 0 0;
-  filter: blur(2px);
-  transform-origin: center bottom;
-  animation: flame-flicker 3s ease-out infinite;
-  z-index: -1;
+@keyframes glow-pulse {
+  0% { box-shadow: 0 0 10px rgba(255, 215, 0, 0.2); }
+  100% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.5); }
 }
 
-/* Royal Banner Effect */
-.royal-banner {
-  position: relative;
-  padding: 0 5px;
+@keyframes sparkle-float {
+  0%, 100% { opacity: 0; }
+  5%, 15% { opacity: 1; }
+  0% { transform: translate(0, 0) scale(0.5); }
+  100% { transform: translate(20px, -20px) scale(0.1); }
 }
 
-.royal-banner::before {
-  content: "";
-  position: absolute;
-  inset: -5px;
-  background-color: rgba(155, 35, 53, 0.15);
-  border-left: 3px solid rgba(212, 175, 55, 0.6);
-  border-right: 3px solid rgba(212, 175, 55, 0.6);
-  z-index: -1;
-  animation: banner-wave 3s ease-in-out infinite;
-}
-
-/* ======= CONTAINER CLASSES ======= */
-
-/* Base container styles */
-.profile-boost-container {
-  position: relative;
-}
-
-/* Glowing card effect for boosted profiles */
-.boosted-profile-card {
-  position: relative;
-  overflow: hidden;
-}
-
-.boosted-profile-card::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
-  opacity: 0;
-  animation: card-glow-pulse 4s ease-in-out infinite;
-}
-
-/* ======= STATUS EFFECTS ======= */
-
-/* Premium rank display effect */
-.premium-rank {
-  background: linear-gradient(90deg, #D4AF37, #FFC125);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  position: relative;
-  font-weight: bold;
-}
-
-.premium-rank::after {
-  content: "";
-  position: absolute;
-  bottom: -2px;
-  left: 0;
-  width: 100%;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, #D4AF37, transparent);
+@keyframes shine-sweep {
+  0% { transform: rotate(45deg) translateY(-100%); }
+  30%, 100% { transform: rotate(45deg) translateY(100%); }
 }

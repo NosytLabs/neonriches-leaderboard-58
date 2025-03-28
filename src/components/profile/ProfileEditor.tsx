@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+
+import React, { useState, useEffect } from 'react';
 import { UserProfile, SocialLink } from '@/types/user';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -14,11 +15,12 @@ import { ProfileImage } from '@/types/profile';
 
 interface ProfileEditorProps {
   user: UserProfile;
+  onProfileUpdate?: (updatedProfile: Partial<UserProfile>) => void;
 }
 
 type GenderType = 'king' | 'queen' | 'neutral' | 'jester' | 'noble';
 
-const ProfileEditor: React.FC<ProfileEditorProps> = ({ user }) => {
+const ProfileEditor: React.FC<ProfileEditorProps> = ({ user, onProfileUpdate }) => {
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState("basic-info");
   const [displayName, setDisplayName] = useState(user.displayName || '');
@@ -31,18 +33,43 @@ const ProfileEditor: React.FC<ProfileEditorProps> = ({ user }) => {
   const [selectedTeam, setSelectedTeam] = useState<'red' | 'green' | 'blue' | null>(user.team || null);
   const [isSaving, setIsSaving] = useState(false);
   
+  // Update local state when user prop changes
+  useEffect(() => {
+    setDisplayName(user.displayName || '');
+    setBio(user.bio || '');
+    setGender((user.gender as GenderType) || 'neutral');
+    setSocialLinks(user.socialLinks || []);
+    setProfileImages(user.profileImages || []);
+    setSelectedTeam(user.team || null);
+  }, [user]);
+  
   const handleGenderChange = (value: GenderType) => {
     setGender(value);
   };
   
-  const handleTeamChange = (team: 'red' | 'green' | 'blue' | null) => {
+  const handleTeamChange = (team: 'red' | 'green' | 'blue') => {
     setSelectedTeam(team);
   };
   
   const handleSaveProfile = async () => {
     setIsSaving(true);
     try {
-      // In a real app, this would make an API call
+      // Prepare updated profile data
+      const updatedProfile: Partial<UserProfile> = {
+        displayName,
+        bio,
+        gender,
+        socialLinks,
+        profileImages,
+        team: selectedTeam,
+      };
+      
+      // If there's an update callback, use it
+      if (onProfileUpdate) {
+        onProfileUpdate(updatedProfile);
+      }
+      
+      // Simulate API call
       setTimeout(() => {
         toast({
           title: "Profile Updated",
@@ -59,6 +86,15 @@ const ProfileEditor: React.FC<ProfileEditorProps> = ({ user }) => {
       setIsSaving(false);
     }
   };
+
+  // Check if there are any changes to save
+  const hasChanges = 
+    displayName !== user.displayName ||
+    bio !== user.bio ||
+    gender !== user.gender ||
+    JSON.stringify(socialLinks) !== JSON.stringify(user.socialLinks) ||
+    JSON.stringify(profileImages) !== JSON.stringify(user.profileImages) ||
+    selectedTeam !== user.team;
 
   return (
     <Card className="glass-morphism border-white/10">
@@ -140,9 +176,9 @@ const ProfileEditor: React.FC<ProfileEditorProps> = ({ user }) => {
           <Button 
             onClick={handleSaveProfile}
             className="bg-royal-gold hover:bg-royal-gold/90 text-black"
-            disabled={isSaving}
+            disabled={isSaving || !hasChanges}
           >
-            {isSaving ? "Saving..." : "Save Royal Profile"}
+            {isSaving ? "Saving..." : hasChanges ? "Save Royal Profile" : "No Changes to Save"}
           </Button>
         </div>
       </CardContent>

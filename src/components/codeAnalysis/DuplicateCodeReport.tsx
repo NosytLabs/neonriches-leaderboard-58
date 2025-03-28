@@ -1,137 +1,134 @@
 
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Copy, AlertTriangle } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
+import { Copy, AlertCircle } from 'lucide-react';
 
-interface DuplicateCodeReportProps {
-  duplicateCode: Array<{ files: string[]; lineCount: number; similarity: number }>;
-}
+const DuplicateCodeReport: React.FC = () => {
+  // Mock data for duplicate code
+  const duplicateCode = [
+    {
+      id: 1,
+      files: [
+        'src/components/profile/ProfileEditor.tsx',
+        'src/components/settings/SettingsForm.tsx'
+      ],
+      similarity: 0.85,
+      lines: 15,
+      codeSnippet: `const handleSaveProfile = async () => {
+  setIsSaving(true);
+  try {
+    // API call logic here
+    setTimeout(() => {
+      toast({
+        title: "Profile Updated",
+        description: "Your royal profile has been successfully updated.",
+      });
+      setIsSaving(false);
+    }, 1000);
+  } catch (error) {
+    toast({
+      title: "Update Failed",
+      description: "There was an error updating your profile.",
+      variant: "destructive"
+    });
+    setIsSaving(false);
+  }
+};`
+    },
+    {
+      id: 2,
+      files: [
+        'src/components/TeamSection.tsx',
+        'src/components/leaderboard/TeamLeaderboard.tsx'
+      ],
+      similarity: 0.92,
+      lines: 8,
+      codeSnippet: `// Calculate total spending across all teams
+const totalSpending = LUXURY_TEAMS.reduce((sum, team) => sum + team.totalSpent, 0);
 
-const DuplicateCodeReport: React.FC<DuplicateCodeReportProps> = ({ duplicateCode }) => {
-  // Sort duplicates by line count (descending)
-  const sortedDuplicates = [...duplicateCode].sort((a, b) => b.lineCount - a.lineCount);
-  
+// Calculate percentage for each team
+const spendingPercentage = (team.totalSpent / totalSpending) * 100;`
+    },
+    {
+      id: 3,
+      files: [
+        'src/components/ui/decorations/coat-of-arms.tsx',
+        'src/components/ui/decorations/crown.tsx',
+        'src/components/ui/decorations/royal-seal.tsx'
+      ],
+      similarity: 0.75,
+      lines: 10,
+      codeSnippet: `return (
+  <div className={cn(
+    'relative',
+    sizeClasses[size].container,
+    className
+  )}>
+    <MedievalIcon 
+      name="..." 
+      size={sizeClasses[size].icon} 
+      color={toMedievalIconColor(color)} 
+      animate={animate} 
+    />
+  </div>
+);`
+    }
+  ];
+
   return (
-    <div className="space-y-4">
+    <div>
+      <h3 className="text-xl font-semibold mb-4 flex items-center">
+        <Copy className="h-5 w-5 mr-2 text-blue-500" />
+        Duplicate Code Analysis
+      </h3>
+      <p className="text-white/70 mb-6">
+        The following duplicate code patterns were detected in your codebase. Consider refactoring these sections into reusable components or utility functions.
+      </p>
+      
       {duplicateCode.length === 0 ? (
-        <div className="bg-muted/20 p-4 rounded-md text-center">
-          <p className="text-sm text-muted-foreground">No duplicate code patterns detected.</p>
+        <div className="text-center py-8">
+          <AlertCircle className="h-12 w-12 mx-auto mb-3 text-white/20" />
+          <p className="text-white/60">No duplicate code patterns detected.</p>
         </div>
       ) : (
-        <>
-          <div className="bg-amber-500/10 border border-amber-500/20 p-3 rounded-md flex items-start">
-            <AlertTriangle className="h-5 w-5 text-amber-500 mr-2 mt-0.5 flex-shrink-0" />
-            <div>
-              <p className="text-sm font-medium text-amber-600">Duplicate Code Detected</p>
-              <p className="text-sm text-muted-foreground mt-1">
-                Found {duplicateCode.length} instances of code duplication across your codebase. 
-                Consider refactoring these into shared functions or components.
-              </p>
-            </div>
-          </div>
-          
-          {sortedDuplicates.map((duplicate, index) => (
-            <Card key={index} className="overflow-hidden">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-base font-medium flex justify-between items-center">
+        <div className="space-y-8">
+          {duplicateCode.map((item) => (
+            <div key={item.id} className="glass-morphism border-white/10 p-4 rounded-lg">
+              <div className="flex flex-wrap justify-between items-start mb-4">
+                <div>
+                  <h4 className="font-semibold mb-1">Duplicate Pattern #{item.id}</h4>
                   <div className="flex items-center">
-                    <Copy className="h-4 w-4 mr-2" />
-                    <span>Duplicate Code Block</span>
-                  </div>
-                  <div className="flex space-x-2">
-                    <Badge variant="outline" className="bg-amber-500/10 text-amber-500 border-amber-500/20">
-                      {duplicate.lineCount} lines
-                    </Badge>
-                    <Badge variant="outline" className="bg-blue-500/10 text-blue-500 border-blue-500/20">
-                      {Math.round(duplicate.similarity * 100)}% similarity
-                    </Badge>
-                  </div>
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  <div>
-                    <p className="text-sm font-medium mb-1">Files containing duplication:</p>
-                    <ul className="list-disc list-inside space-y-1">
-                      {duplicate.files.map((file, fileIndex) => (
-                        <li key={fileIndex} className="text-sm text-muted-foreground">
-                          {file}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  
-                  <div className="text-sm">
-                    <p className="font-medium mb-1">Impact:</p>
-                    <ul className="list-disc list-inside space-y-1 text-muted-foreground">
-                      <li>Increased maintenance burden - changes need to be made in multiple places</li>
-                      <li>Higher risk of bugs when one instance is updated but not others</li>
-                      <li>Slightly larger bundle size due to repeated code</li>
-                    </ul>
-                  </div>
-                  
-                  <div className="text-sm">
-                    <p className="font-medium mb-1">Suggested fix:</p>
-                    <p className="text-muted-foreground">
-                      Extract the duplicate code into a shared function, utility, or component and import it in both locations.
-                    </p>
-                    
-                    <div className="mt-2 font-medium">Example refactoring:</div>
-                    <div className="grid grid-cols-1 gap-3 mt-1 lg:grid-cols-2">
-                      <div className="bg-muted/20 p-2 rounded text-xs">
-                        <p className="font-medium text-muted-foreground mb-1">Before:</p>
-                        <pre className="whitespace-pre-wrap">
-{`// In file1.js
-function processData(data) {
-  // 30+ lines of duplicate logic
-  const result = /* complex calculations */;
-  return result;
-}
-
-// In file2.js
-function handleData(data) {
-  // Same 30+ lines of duplicate logic
-  const result = /* complex calculations */;
-  return result;
-}`}
-                        </pre>
-                      </div>
-                      
-                      <div className="bg-muted/20 p-2 rounded text-xs">
-                        <p className="font-medium text-muted-foreground mb-1">After:</p>
-                        <pre className="whitespace-pre-wrap">
-{`// In shared-utils.js
-export function processData(data) {
-  // Centralized logic
-  const result = /* complex calculations */;
-  return result;
-}
-
-// In file1.js
-import { processData } from './shared-utils';
-
-// In file2.js
-import { processData } from './shared-utils';`}
-                        </pre>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="text-sm">
-                    <p className="font-medium mb-1">Verification steps:</p>
-                    <ol className="list-decimal list-inside space-y-1 text-muted-foreground">
-                      <li>Extract the common code into a shared function/component</li>
-                      <li>Import and use it in both locations</li>
-                      <li>Run tests to ensure behavior is preserved</li>
-                      <li>Verify the application works correctly in all affected areas</li>
-                    </ol>
+                    <span className="text-xs bg-blue-500/20 text-blue-400 px-2 py-0.5 rounded-full mr-2">
+                      {item.lines} lines
+                    </span>
+                    <span className="text-xs bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded-full">
+                      {Math.round(item.similarity * 100)}% similar
+                    </span>
                   </div>
                 </div>
-              </CardContent>
-            </Card>
+                
+                <div className="text-right text-sm text-white/70">
+                  <p>Found in {item.files.length} files</p>
+                </div>
+              </div>
+              
+              <div className="mb-4">
+                <h5 className="text-sm font-medium mb-2">Files:</h5>
+                <ul className="space-y-1 text-sm text-white/70">
+                  {item.files.map((file, index) => (
+                    <li key={index} className="file-path">{file}</li>
+                  ))}
+                </ul>
+              </div>
+              
+              <div>
+                <h5 className="text-sm font-medium mb-2">Code Snippet:</h5>
+                <div className="code-block text-xs">
+                  <pre>{item.codeSnippet}</pre>
+                </div>
+              </div>
+            </div>
           ))}
-        </>
+        </div>
       )}
     </div>
   );

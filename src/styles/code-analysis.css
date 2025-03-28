@@ -1,68 +1,125 @@
 
-/* Code Analysis Tool Styles */
-
-.code-block {
-  font-family: 'Consolas', 'Monaco', 'Andale Mono', monospace;
-  background-color: rgba(10, 10, 25, 0.7);
-  border-radius: 0.25rem;
-  padding: 1rem;
-  overflow-x: auto;
-  line-height: 1.5;
-}
-
-.code-highlight {
-  background-color: rgba(255, 215, 0, 0.1);
-  border-left: 2px solid var(--royal-gold);
-  padding-left: 0.5rem;
-}
-
+/* Code analysis specific styling */
 .analysis-card {
-  background: rgba(13, 13, 32, 0.5);
+  background: rgba(15, 15, 35, 0.5);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  transition: all 0.3s ease;
 }
 
-.analysis-card:hover {
-  box-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
-  transform: translateY(-2px);
+.code-block {
+  font-family: 'Fira Code', 'Consolas', monospace;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 6px;
+  padding: 1rem;
+  overflow-x: auto;
+  position: relative;
 }
 
-.analysis-metric {
-  display: flex;
+.code-block pre {
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+.code-line {
+  display: block;
+  position: relative;
+  padding-left: 3rem;
+  counter-increment: line;
+}
+
+.code-line::before {
+  content: counter(line);
+  position: absolute;
+  left: 0;
+  width: 2.5rem;
+  text-align: right;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.code-issue-marker {
+  background: rgba(255, 0, 0, 0.15);
+  border-left: 2px solid #ff6b6b;
+}
+
+.code-suggestion {
+  background: rgba(0, 255, 0, 0.1);
+  border-left: 2px solid #4caf50;
+}
+
+/* Analysis result counters */
+.analysis-counter {
+  display: inline-flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 0.5rem 1rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.analysis-metric:last-child {
-  border-bottom: none;
-}
-
-.issue-tag {
-  border-radius: 9999px;
-  padding: 0.125rem 0.5rem;
+  justify-content: center;
+  min-width: 1.5rem;
+  height: 1.5rem;
+  padding: 0 0.5rem;
   font-size: 0.75rem;
+  font-weight: bold;
+  border-radius: 1rem;
+}
+
+.analysis-counter-error {
+  background: rgba(255, 59, 48, 0.2);
+  color: #ff3b30;
+}
+
+.analysis-counter-warning {
+  background: rgba(255, 204, 0, 0.2);
+  color: #ffcc00;
+}
+
+.analysis-counter-info {
+  background: rgba(0, 122, 255, 0.2);
+  color: #007aff;
+}
+
+/* Result tables */
+.analysis-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.analysis-table th,
+.analysis-table td {
+  padding: 0.5rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.analysis-table th {
+  background: rgba(0, 0, 0, 0.2);
   font-weight: 500;
+  color: rgba(255, 255, 255, 0.7);
 }
 
-.issue-tag-unused {
-  background-color: rgba(245, 158, 11, 0.1);
-  color: rgb(245, 158, 11);
+.analysis-table tr:hover {
+  background: rgba(255, 255, 255, 0.05);
 }
 
-.issue-tag-duplicate {
-  background-color: rgba(59, 130, 246, 0.1);
-  color: rgb(59, 130, 246);
+/* Severity indicators */
+.severity-high {
+  color: #ff3b30;
 }
 
-.issue-tag-complex {
-  background-color: rgba(239, 68, 68, 0.1);
-  color: rgb(239, 68, 68);
+.severity-medium {
+  color: #ffcc00;
 }
 
-.issue-tag-performance {
-  background-color: rgba(16, 185, 129, 0.1);
-  color: rgb(16, 185, 129);
+.severity-low {
+  color: #34c759;
+}
+
+/* File path pill */
+.file-path {
+  display: inline-block;
+  font-family: monospace;
+  font-size: 0.85em;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+  padding: 0.15em 0.5em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
 }
