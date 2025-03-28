@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useNavigate } from 'react-router-dom';
@@ -54,6 +55,31 @@ const Index = () => {
         spendStreak: top.spendStreak,
         joinDate: new Date().toISOString(),
         joinedAt: new Date().toISOString(),
+        walletBalance: 0,
+        cosmetics: {
+          borders: [],
+          colors: [],
+          fonts: [],
+          emojis: [],
+          titles: [],
+          backgrounds: [],
+          effects: [],
+          badges: [],
+          themes: []
+        },
+        profileViews: 0,
+        profileClicks: 0,
+        followers: 0,
+        subscription: {
+          status: 'active',
+          tier: 'basic',
+          interval: 'monthly',
+          startDate: new Date().toISOString(),
+          endDate: new Date().toISOString(),
+          autoRenew: false,
+          features: []
+        },
+        profileBoosts: []
       };
       setTopSpender(topUserProfile);
     }

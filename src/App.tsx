@@ -1,7 +1,6 @@
 
 import React, { Suspense, useEffect } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
-import { HelmetProvider } from 'react-helmet-async';
 import { Toaster } from '@/components/ui/toaster';
 import { ToastProvider } from '@/contexts/ToastContext';
 import Loading from '@/components/Loading';
@@ -21,6 +20,8 @@ const Certificate = React.lazy(() => import('@/pages/Certificate'));
 const NotFound = React.lazy(() => import('@/pages/NotFound'));
 // Updated import: RoyalCouncil instead of Community
 const RoyalCouncil = React.lazy(() => import('@/pages/RoyalCouncil'));
+const TermsOfService = React.lazy(() => import('@/pages/TermsOfService'));
+const Terms = React.lazy(() => import('@/pages/Terms'));
 
 // Error Boundary
 const ErrorFallback = React.lazy(() => import('@/components/ErrorFallback'));
@@ -49,6 +50,8 @@ function App() {
         <Route path="/certificate" element={<Certificate />} />
         {/* Updated route: /royal-council instead of /community */}
         <Route path="/royal-council" element={<RoyalCouncil />} />
+        <Route path="/terms-of-service" element={<TermsOfService />} />
+        <Route path="/terms" element={<Terms />} />
         
         {/* 404 Page */}
         <Route path="*" element={<NotFound />} />
