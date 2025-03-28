@@ -8,6 +8,7 @@
 @import url('./styles/cosmetics.css');
 @import url('./styles/theme.css');
 @import url('./styles/fonts.css');
+@import url('./styles/profile-boost.css');
 
 :root {
   /* Royal theme colors */

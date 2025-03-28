@@ -24,11 +24,35 @@ export interface UserCosmetics {
   activeTitle?: string | null;
 }
 
+export interface ProfileBoost {
+  id: string;
+  effectId: string;
+  startTime: number;
+  endTime: number;
+}
+
 export interface MarketingStats {
   impressions: number;
   clicks: number;
   conversions: number;
   ctr: number;
+  sources: Record<string, number>;
+  referrers: Record<string, number>;
+}
+
+export interface AnalyticsData {
+  views: number;
+  clicks: number;
+  sources: Record<string, number>;
+  referrers: Record<string, number>;
+  history: AnalyticsEvent[];
+}
+
+export interface AnalyticsEvent {
+  type: 'view' | 'click';
+  source?: string;
+  referrer?: string;
+  timestamp: Date;
 }
 
 export interface UserSubscription {
@@ -69,6 +93,8 @@ export interface UserProfile {
   profileClicks?: number;
   followers?: number;
   activeTitle?: string;
+  profileBoosts?: ProfileBoost[];
+  analytics?: AnalyticsData;
 }
 
 export interface ProfileImage {

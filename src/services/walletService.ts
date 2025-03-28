@@ -9,16 +9,17 @@ export type SpendingCategory =
   | 'cosmetic' 
   | 'founder' 
   | 'poke' 
-  | 'shame' 
+  | 'shame'
   | 'wish'
   | 'spend'
-  | 'advertisement';
+  | 'advertisement'
+  | 'profile_boost';
 
 export interface Transaction {
   id: string;
   userId: string;
   amount: number;
-  type: 'deposit' | 'spend' | 'withdrawal' | 'shame' | 'advertisement' | 'subscription' | 'wish';
+  type: 'deposit' | 'spend' | 'withdrawal' | 'shame' | 'advertisement' | 'subscription' | 'wish' | 'profile_boost';
   description: string;
   timestamp: Date;
   metadata?: any;
@@ -155,5 +156,104 @@ export const spendFromWallet = async (
         resolve(false);
       }
     }, 800); // Simulate network delay
+  });
+};
+
+// Track profile analytics
+export const trackProfileInteraction = async (
+  profileId: string,
+  interactionType: 'view' | 'click',
+  source: string,
+  referrer?: string
+): Promise<boolean> => {
+  // In a real app, this would call an API to track the interaction
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      try {
+        // Get storage key for analytics
+        const storageKey = `profile_analytics_${profileId}`;
+        
+        // Get existing analytics
+        const existingAnalytics = localStorage.getItem(storageKey);
+        let analytics = existingAnalytics ? JSON.parse(existingAnalytics) : {
+          views: 0,
+          clicks: 0,
+          sources: {},
+          referrers: {},
+          history: []
+        };
+        
+        // Update analytics
+        if (interactionType === 'view') {
+          analytics.views += 1;
+        } else if (interactionType === 'click') {
+          analytics.clicks += 1;
+        }
+        
+        // Track source
+        if (source) {
+          analytics.sources[source] = (analytics.sources[source] || 0) + 1;
+        }
+        
+        // Track referrer
+        if (referrer) {
+          analytics.referrers[referrer] = (analytics.referrers[referrer] || 0) + 1;
+        }
+        
+        // Add to history
+        analytics.history.push({
+          type: interactionType,
+          source,
+          referrer,
+          timestamp: new Date()
+        });
+        
+        // Limit history size
+        if (analytics.history.length > 100) {
+          analytics.history = analytics.history.slice(-100);
+        }
+        
+        // Save updated analytics
+        localStorage.setItem(storageKey, JSON.stringify(analytics));
+        
+        resolve(true);
+      } catch (error) {
+        console.error("Error tracking profile interaction:", error);
+        resolve(false);
+      }
+    }, 300); // Simulate network delay
+  });
+};
+
+// Get profile analytics
+export const getProfileAnalytics = async (profileId: string): Promise<any> => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      try {
+        // Get storage key for analytics
+        const storageKey = `profile_analytics_${profileId}`;
+        
+        // Get existing analytics
+        const existingAnalytics = localStorage.getItem(storageKey);
+        const analytics = existingAnalytics ? JSON.parse(existingAnalytics) : {
+          views: 0,
+          clicks: 0,
+          sources: {},
+          referrers: {},
+          history: []
+        };
+        
+        resolve(analytics);
+      } catch (error) {
+        console.error("Error getting profile analytics:", error);
+        resolve({
+          views: 0,
+          clicks: 0,
+          sources: {},
+          referrers: {},
+          history: []
+        });
+      }
+    }, 500); // Simulate network delay
   });
 };

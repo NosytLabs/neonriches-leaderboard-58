@@ -12,6 +12,7 @@ import { useToast } from '@/hooks/use-toast';
 import useNotificationSounds from '@/hooks/use-notification-sounds';
 import { CosmeticItem, CosmeticRarity, getRarityBgColor, getRarityBorderColor, getRarityColor } from '@/types/cosmetics';
 import { awardRandomCosmetic, getCosmeticById } from '@/services/cosmeticService';
+import useFloatingEffects from '@/hooks/use-floating-effects';
 
 interface Wish {
   id: string;
@@ -37,6 +38,20 @@ const WishingWell = () => {
   const [preferredCategory, setPreferredCategory] = useState<string | undefined>(undefined);
   const wellRef = useRef<HTMLDivElement>(null);
   const [coins, setCoins] = useState<Array<{ id: number, x: number, y: number }>>([]);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const wellEffectsRef = useRef<HTMLDivElement>(null);
+
+  // Use floating effects for ambient well particles
+  const { isVisible: isEffectsVisible } = useFloatingEffects({
+    containerRef: wellEffectsRef,
+    enabled: true,
+    frequency: 0.3,
+    density: 'low',
+    animation: 'float',
+    colors: ['#D4AF37', '#FFD700', '#FFC125'],
+    sizes: [3, 4, 5],
+    duration: 4000
+  });
 
   const predefinedAmounts = [0.25, 0.5, 1, 2, 5, 10];
   
@@ -69,17 +84,38 @@ const WishingWell = () => {
     const centerX = wellRect.width / 2;
     const centerY = wellRect.height / 2;
     
-    const angle = Math.random() * Math.PI * 2;
-    const distance = Math.random() * 40;
-    const x = centerX + Math.cos(angle) * distance;
-    const y = centerY + Math.sin(angle) * distance;
+    // Create multiple coins with different angles for a more natural look
+    const numCoins = Math.floor(Math.random() * 3) + 1; // 1-3 coins
     
-    const newCoin = { id: Date.now(), x, y };
-    setCoins(prev => [...prev, newCoin]);
+    for (let i = 0; i < numCoins; i++) {
+      const angle = Math.random() * Math.PI * 2;
+      const distance = Math.random() * 30;
+      const x = centerX + Math.cos(angle) * distance;
+      const y = centerY - 10 + Math.sin(angle) * distance; // Start slightly above center
+      
+      const newCoin = { id: Date.now() + i, x, y };
+      setCoins(prev => [...prev, newCoin]);
+      
+      setTimeout(() => {
+        setCoins(prev => prev.filter(coin => coin.id !== newCoin.id));
+      }, 2000);
+    }
     
-    setTimeout(() => {
-      setCoins(prev => prev.filter(coin => coin.id !== newCoin.id));
-    }, 2000);
+    // Create water ripple effect
+    const ripple = document.createElement('div');
+    ripple.className = 'absolute w-16 h-16 rounded-full bg-royal-gold/10 water-ripple';
+    ripple.style.left = `${centerX}px`;
+    ripple.style.top = `${centerY + 20}px`;
+    ripple.style.transform = 'translate(-50%, -50%)';
+    
+    if (wellRef.current) {
+      wellRef.current.appendChild(ripple);
+      setTimeout(() => {
+        if (ripple.parentNode) {
+          ripple.parentNode.removeChild(ripple);
+        }
+      }, 2000);
+    }
   };
 
   const saveWish = (newWish: Wish) => {
@@ -250,7 +286,7 @@ const WishingWell = () => {
     <Card className="glass-morphism border-royal-gold/20">
       <CardHeader>
         <div className="flex items-center">
-          <Gem className="mr-3 h-6 w-6 text-royal-gold" />
+          <Gem className="mr-3 h-6 w-6 text-royal-gold animate-pulse-slow" />
           <CardTitle>Royal Wishing Well</CardTitle>
         </div>
         <CardDescription>
@@ -271,95 +307,155 @@ const WishingWell = () => {
           }).length}</span>
         </div>
         
-        <div className="relative h-64 flex items-center justify-center">
+        <div className="relative h-68" ref={containerRef}>
           <div 
-            ref={wellRef}
-            className="relative w-56 h-56 rounded-full border-4 border-royal-gold/30 bg-gradient-to-b from-black to-royal-navy/30 flex items-center justify-center overflow-hidden"
-          >
-            <div className="absolute inset-0 bg-royal-navy/20 backdrop-blur-sm" style={{ top: '15%' }}>
-              <div className="absolute inset-0 bg-gradient-to-b from-royal-gold/10 to-royal-navy/20"></div>
-            </div>
-            
-            <div className="absolute inset-0 overflow-hidden">
-              {[...Array(8)].map((_, i) => (
-                <Sparkles
-                  key={i}
-                  size={12}
-                  className="absolute text-royal-gold animate-pulse-slow"
-                  style={{
-                    top: `${30 + Math.random() * 50}%`,
-                    left: `${10 + Math.random() * 80}%`,
-                    opacity: 0.6 + Math.random() * 0.4,
-                    animationDelay: `${i * 0.2}s`
-                  }}
-                />
-              ))}
-            </div>
-            
-            {coins.map(coin => (
-              <div
-                key={coin.id}
-                className="absolute w-5 h-5 rounded-full bg-royal-gold animate-bounce"
-                style={{
-                  left: `${coin.x}px`,
-                  top: `${coin.y}px`,
-                  transform: 'translate(-50%, -50%)',
-                  boxShadow: '0 0 10px rgba(255, 215, 0, 0.7)'
-                }}
+            ref={wellEffectsRef}
+            className="absolute inset-0 overflow-hidden pointer-events-none"
+          ></div>
+          
+          <div className="flex items-center justify-center h-full">
+            {/* Medieval stone well design */}
+            <div className="relative">
+              {/* Stone well structure */}
+              <div 
+                ref={wellRef}
+                className="relative w-64 h-64 rounded-full border-8 border-stone-700/80 bg-gradient-to-b from-stone-800 to-stone-900 flex items-center justify-center overflow-hidden shadow-lg"
               >
-                <div className="absolute inset-1 rounded-full bg-royal-gold-bright"></div>
-              </div>
-            ))}
-            
-            {result && (
-              <div className="absolute inset-0 flex items-center justify-center z-10">
-                <div 
-                  className={`p-3 rounded-lg text-center max-w-[90%] backdrop-blur-md border transition-all duration-500 ${
-                    wishResult === 'win' 
-                      ? `${getRarityBgColor(rewardRarity || 'common')} ${getRarityBorderColor(rewardRarity || 'common')} text-white` 
-                      : 'bg-black/50 border-white/20 text-white/90'
-                  }`}
-                >
-                  <p>{result}</p>
-                  {wishResult === 'win' && rewardItem && (
-                    <Badge className={`mt-2 ${getRarityBgColor(rewardRarity || 'common')} border ${getRarityBorderColor(rewardRarity || 'common')}`}>
-                      <span className={getRarityColor(rewardRarity || 'common')}>
-                        {rewardRarity?.charAt(0).toUpperCase()}{rewardRarity?.slice(1)} Item
-                      </span>
-                    </Badge>
-                  )}
+                {/* Stone texture overlay */}
+                <div className="absolute inset-0 opacity-30 mix-blend-overlay" 
+                  style={{backgroundImage: "url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1IiBoZWlnaHQ9IjUiPgo8cmVjdCB3aWR0aD0iNSIgaGVpZ2h0PSI1IiBmaWxsPSIjOWU5ZTllIj48L3JlY3Q+CjxwYXRoIGQ9Ik0wIDVMNSAwWk02IDRMNCA2Wk0tMSAxTDEgLTFaIiBzdHJva2U9IiM4ODgiIHN0cm9rZS13aWR0aD0iMSI+PC9wYXRoPgo8L3N2Zz4=')"}}
+                ></div>
+                
+                {/* Well rim stones */}
+                {[...Array(12)].map((_, i) => (
+                  <div 
+                    key={i} 
+                    className="absolute w-16 h-10 bg-stone-700 rounded-sm transform -translate-x-1/2 -translate-y-1/2"
+                    style={{
+                      top: '50%',
+                      left: '50%',
+                      transform: `rotate(${i * 30}deg) translateY(-120px) rotate(${90}deg)`
+                    }}
+                  >
+                    <div className="w-full h-full bg-stone-600/50 rounded-sm border-t border-stone-500/30"></div>
+                  </div>
+                ))}
+                
+                {/* Water surface */}
+                <div className="absolute inset-0 bg-royal-navy/30 backdrop-blur-sm" style={{ top: '35%' }}>
+                  <div className="absolute inset-0 bg-gradient-to-b from-royal-gold/10 to-royal-navy/40"></div>
+                  
+                  {/* Water ripple animation */}
+                  <div className="absolute inset-0 overflow-hidden">
+                    <div className="absolute w-full h-full border-t border-royal-gold/10 rounded-full transform scale-90 animate-pulse-slow" style={{ animationDuration: '4s' }}></div>
+                    <div className="absolute w-full h-full border-t border-royal-gold/10 rounded-full transform scale-80 animate-pulse-slow" style={{ animationDuration: '5s', animationDelay: '0.5s' }}></div>
+                    <div className="absolute w-full h-full border-t border-royal-gold/10 rounded-full transform scale-70 animate-pulse-slow" style={{ animationDuration: '6s', animationDelay: '1s' }}></div>
+                  </div>
                 </div>
+                
+                {/* Magic sparkles in the water */}
+                <div className="absolute inset-0 overflow-hidden" style={{ top: '35%' }}>
+                  {[...Array(8)].map((_, i) => (
+                    <Sparkles
+                      key={i}
+                      size={12}
+                      className="absolute text-royal-gold animate-pulse-slow"
+                      style={{
+                        top: `${30 + Math.random() * 50}%`,
+                        left: `${10 + Math.random() * 80}%`,
+                        opacity: 0.6 + Math.random() * 0.4,
+                        animationDelay: `${i * 0.2}s`
+                      }}
+                    />
+                  ))}
+                </div>
+                
+                {/* Medieval wooden bucket and pulley system */}
+                <div className="absolute top-0 left-1/2 transform -translate-x-1/2 z-10 w-24 h-64 pointer-events-none">
+                  {/* Wooden beam across top */}
+                  <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-32 h-6 bg-amber-900 rounded-lg"></div>
+                  
+                  {/* Rope */}
+                  <div className="absolute top-6 left-1/2 transform -translate-x-1/2 w-1 h-20 bg-amber-700"></div>
+                  
+                  {/* Wooden pulley wheel */}
+                  <div className="absolute top-0 left-1/2 transform -translate-x-1/2 mt-3 w-8 h-8 bg-amber-800 rounded-full border-2 border-amber-950 flex items-center justify-center">
+                    <div className="w-4 h-4 bg-amber-950 rounded-full"></div>
+                  </div>
+                </div>
+                
+                {/* Coins in the well animation */}
+                {coins.map(coin => (
+                  <div
+                    key={coin.id}
+                    className="coin-drop absolute z-10"
+                    style={{
+                      left: `${coin.x}px`,
+                      top: `${coin.y}px`,
+                      width: '20px',
+                      height: '20px',
+                      borderRadius: '50%',
+                      background: 'linear-gradient(45deg, #9B87F5, #B8A5FF)',
+                      boxShadow: '0 0 10px rgba(155, 135, 245, 0.8)',
+                    }}
+                  >
+                    <div className="absolute inset-0 flex items-center justify-center text-xs font-bold text-white">
+                      $
+                    </div>
+                  </div>
+                ))}
+                
+                {result && (
+                  <div className="absolute inset-0 flex items-center justify-center z-10">
+                    <div 
+                      className={`p-3 rounded-lg text-center max-w-[90%] backdrop-blur-md border transition-all duration-500 ${
+                        wishResult === 'win' 
+                          ? `${getRarityBgColor(rewardRarity || 'common')} ${getRarityBorderColor(rewardRarity || 'common')} text-white` 
+                          : 'bg-black/50 border-white/20 text-white/90'
+                      }`}
+                    >
+                      <p>{result}</p>
+                      {wishResult === 'win' && rewardItem && (
+                        <Badge className={`mt-2 ${getRarityBgColor(rewardRarity || 'common')} border ${getRarityBorderColor(rewardRarity || 'common')}`}>
+                          <span className={getRarityColor(rewardRarity || 'common')}>
+                            {rewardRarity?.charAt(0).toUpperCase()}{rewardRarity?.slice(1)} Item
+                          </span>
+                        </Badge>
+                      )}
+                    </div>
+                  </div>
+                )}
+                
+                <div className="absolute w-20 h-20 rounded-full bg-royal-gold/10 filter blur-xl animate-pulse-slow"></div>
+                
+                <ArrowDownCircle 
+                  size={48} 
+                  className={`absolute -top-6 text-royal-gold animate-bounce ${isWishing ? 'opacity-0' : 'opacity-80'}`} 
+                />
               </div>
-            )}
-            
-            <div className="absolute w-20 h-20 rounded-full bg-royal-gold/10 filter blur-xl animate-pulse-slow"></div>
-            
-            <ArrowDownCircle 
-              size={48} 
-              className={`absolute -top-6 text-royal-gold animate-bounce ${isWishing ? 'opacity-0' : 'opacity-80'}`} 
-            />
+              
+              {!isWishing && !result && (
+                <div className="absolute -bottom-5 left-0 right-0 flex justify-center">
+                  <Button
+                    className="bg-royal-gold hover:bg-royal-gold/90 text-black royal-button shadow-lg"
+                    onClick={handleWish}
+                    disabled={!user || user.walletBalance < wishAmount}
+                  >
+                    <Sparkles className="mr-2 h-4 w-4" />
+                    Make a Wish
+                  </Button>
+                </div>
+              )}
+              
+              {isWishing && (
+                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                  <div className="h-16 w-16 rounded-full bg-black/50 flex items-center justify-center backdrop-blur-sm">
+                    <div className="h-8 w-8 border-4 border-t-transparent border-royal-gold rounded-full animate-spin"></div>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
-          
-          {!isWishing && !result && (
-            <div className="absolute bottom-0 left-0 right-0 flex justify-center">
-              <Button
-                className="bg-royal-gold hover:bg-royal-gold/90 text-black royal-button shadow-lg"
-                onClick={handleWish}
-                disabled={!user || user.walletBalance < wishAmount}
-              >
-                <Sparkles className="mr-2 h-4 w-4" />
-                Make a Wish
-              </Button>
-            </div>
-          )}
-          
-          {isWishing && (
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              <div className="h-16 w-16 rounded-full bg-black/50 flex items-center justify-center backdrop-blur-sm">
-                <div className="h-8 w-8 border-4 border-t-transparent border-royal-gold rounded-full animate-spin"></div>
-              </div>
-            </div>
-          )}
         </div>
         
         <div className="space-y-4">
