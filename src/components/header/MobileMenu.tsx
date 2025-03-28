@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -6,7 +7,7 @@ import { LayoutList, Coins, Calendar, Scroll, ShieldQuestion, Shield, Crown, Fea
 import AuthButton from '@/components/AuthButton';
 import { useAuth } from '@/contexts/auth';
 import MedievalIcon from '@/components/ui/medieval-icon';
-import Separator from '@/components/ui/separator';
+import { Separator } from '@/components/ui/separator';
 
 interface MobileMenuProps {
   isOpen: boolean;
@@ -112,7 +113,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
             
             {!user && (
               <motion.div variants={itemVariants} className="py-3 px-4">
-                <AuthButton fullWidth />
+                <AuthButton />
               </motion.div>
             )}
           </div>

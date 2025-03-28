@@ -1,28 +1,27 @@
 
-// This is a temporary file to provide the missing auth context
-// In a real application, this would be a fully implemented authentication system
-
 import { createContext, useContext } from 'react';
-import { UserProfile } from '@/types/user';
+import { UserProfile } from './AuthContext';
 
 export interface AuthContextType {
   user: UserProfile | null;
-  login: (email: string, password: string) => Promise<void>;
-  register: (username: string, email: string, password: string) => Promise<void>;
-  logout: () => Promise<void>;
   isAuthenticated: boolean;
   isLoading: boolean;
+  login: (email: string, password: string) => Promise<void>;
+  register: (email: string, username: string, password: string) => Promise<void>;
+  logout: () => Promise<void>;
+  openAuthModal: () => void;
+  closeAuthModal: () => void;
 }
 
-// Create a default auth context with empty functions
-export const AuthContext = createContext<AuthContextType>({
-  user: null,
-  login: async () => {},
-  register: async () => {},
-  logout: async () => {},
-  isAuthenticated: false,
-  isLoading: false,
-});
+export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Hook to use auth context
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
+};
+
+// Re-export AuthProvider from the main context file
+export { AuthProvider } from './AuthContext';

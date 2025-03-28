@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { UserCircle, CreditCard, Settings, LogOut, Users } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { UserProfile } from '@/contexts/AuthContext';
-import TeamSwitchModal from './TeamSwitchModal';
+import TeamSwitchModal, { TeamColor } from './TeamSwitchModal';
 
 interface ProfileSidebarProps {
   user: UserProfile;
@@ -21,7 +21,7 @@ const ProfileSidebar = ({ user, onLogout, onUpdateProfile }: ProfileSidebarProps
     navigate('/');
   };
 
-  const handleTeamChange = async (team: 'red' | 'green' | 'blue') => {
+  const handleTeamChange = async (team: TeamColor) => {
     await onUpdateProfile({ team });
   };
 

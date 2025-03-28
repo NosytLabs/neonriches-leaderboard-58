@@ -1,99 +1,158 @@
+
 import React, { useState } from 'react';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Shield, Info, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
-import { Shield, Users, Trophy, ArrowRight } from 'lucide-react';
-import { Team } from '@/types/user';
-import { teamData } from '@/utils/teamUtils';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import { useAuth } from '@/contexts/auth';
+import { UserProfile } from '@/contexts/AuthContext';
+import { Separator } from '@/components/ui/separator';
 
-// Define a TeamColor type
-type TeamColor = 'red' | 'green' | 'blue';
+// Define team color type
+export type TeamColor = 'red' | 'green' | 'blue';
 
-interface TeamSwitchModalProps {
+// Define team data
+const teamData = [
+  {
+    id: 'red',
+    name: 'House Crimson',
+    color: 'text-team-red',
+    bgColor: 'bg-team-red/10',
+    icon: <Shield className="h-5 w-5 text-team-red" />,
+    description: 'Warriors of flame and passion, House Crimson values boldness and courage above all else.',
+    members: 423,
+    rank: 1
+  },
+  {
+    id: 'green',
+    name: 'House Emerald',
+    color: 'text-team-green',
+    bgColor: 'bg-team-green/10',
+    icon: <Shield className="h-5 w-5 text-team-green" />,
+    description: 'Strategists and scholars, House Emerald values wisdom and growth as their highest virtues.',
+    members: 387,
+    rank: 2
+  },
+  {
+    id: 'blue',
+    name: 'House Sapphire',
+    color: 'text-team-blue',
+    bgColor: 'bg-team-blue/10',
+    icon: <Shield className="h-5 w-5 text-team-blue" />,
+    description: 'Masters of transformation and innovation, House Sapphire values creativity and intellect.',
+    members: 341,
+    rank: 3
+  }
+];
+
+export interface TeamSwitchModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  currentTeam: Team;
-  onTeamSwitch: (team: Team) => void;
+  user: UserProfile;
+  onTeamChange: (team: TeamColor) => Promise<void>;
+  trigger?: React.ReactNode;
 }
 
-const TeamSwitchModal: React.FC<TeamSwitchModalProps> = ({ open, onOpenChange, currentTeam, onTeamSwitch }) => {
-  const [selectedTeam, setSelectedTeam] = useState<Team>(currentTeam);
-  const [isSwitching, setIsSwitching] = useState(false);
-
-  const handleTeamSelect = (team: Team) => {
-    setSelectedTeam(team);
+const TeamSwitchModal: React.FC<TeamSwitchModalProps> = ({ 
+  open, 
+  onOpenChange,
+  user,
+  onTeamChange,
+  trigger
+}) => {
+  const [selectedTeam, setSelectedTeam] = useState<TeamColor | null>(user?.team as TeamColor || null);
+  const [isChanging, setIsChanging] = useState(false);
+  
+  const handleTeamSelect = (teamId: TeamColor) => {
+    setSelectedTeam(teamId);
   };
-
-  const handleTeamSwitch = async () => {
-    setIsSwitching(true);
-    // Simulate team switch delay
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    onTeamSwitch(selectedTeam);
-    setIsSwitching(false);
-    onOpenChange(false); // Close the modal after switching
+  
+  const handleTeamChange = async () => {
+    if (!selectedTeam || selectedTeam === user?.team) return;
+    
+    setIsChanging(true);
+    try {
+      await onTeamChange(selectedTeam);
+      onOpenChange(false);
+    } catch (error) {
+      console.error('Error changing team:', error);
+    } finally {
+      setIsChanging(false);
+    }
   };
-
+  
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="glass-morphism sm:max-w-[425px] border-royal-gold/30">
+      {trigger && <div onClick={() => onOpenChange(true)}>{trigger}</div>}
+      <DialogContent className="sm:max-w-[500px] glass-morphism">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <Shield className="h-6 w-6 text-blue-500" />
-            Switch Allegiance
-          </DialogTitle>
+          <DialogTitle className="text-xl font-bold">Choose Your Noble House</DialogTitle>
           <DialogDescription>
-            Choose your team wisely. Your allegiance determines your destiny.
+            Select the house that represents your values and aspirations. Your choice influences team rankings and special events.
           </DialogDescription>
         </DialogHeader>
-
-        <div className="grid gap-4 py-4">
-          <div className="space-y-2">
-            <h4 className="font-medium leading-none">Select Your Team</h4>
-            <p className="text-sm text-muted-foreground">
-              Choose the team that best represents your values and aspirations.
-            </p>
-          </div>
-
-          <RadioGroup defaultValue={currentTeam || undefined} className="grid gap-2" onValueChange={handleTeamSelect}>
-            {teamData.map((team) => (
-              <div key={team.id} className="flex items-center space-x-2">
-                <RadioGroupItem value={team.id} id={team.id} className="border-2 rounded-full" />
-                <Label htmlFor={team.id} className="flex justify-between w-full p-4 rounded-lg glass-morphism cursor-pointer">
-                  <div className="flex items-center space-x-4">
-                    <span className="text-2xl">{team.icon}</span>
-                    <div>
-                      <h4 className="font-semibold">{team.name}</h4>
-                      <p className="text-sm text-muted-foreground">{team.description}</p>
-                    </div>
+        
+        <div className="space-y-4 my-4">
+          {teamData.map((team) => (
+            <div 
+              key={team.id} 
+              className={`rounded-lg p-4 border transition-all cursor-pointer ${
+                selectedTeam === team.id 
+                  ? `border-${team.id} ${team.bgColor}` 
+                  : 'border-white/10 hover:border-white/20'
+              }`}
+              onClick={() => handleTeamSelect(team.id as TeamColor)}
+            >
+              <div className="flex items-start">
+                <div className="mr-3 mt-0.5">
+                  {team.icon}
+                </div>
+                <div className="flex-1">
+                  <h3 className={`font-bold ${team.color}`}>{team.name}</h3>
+                  <p className="text-sm text-white/70 mt-1">{team.description}</p>
+                </div>
+                {selectedTeam === team.id && (
+                  <div className="ml-2">
+                    <Check className={`h-5 w-5 ${team.color}`} />
                   </div>
-                  <div className="flex flex-col items-end justify-center">
-                    <div className="flex items-center space-x-1">
-                      <Users className="h-4 w-4 text-muted-foreground" />
-                      <span className="text-sm text-muted-foreground">{team.members}</span>
-                    </div>
-                    <div className="flex items-center space-x-1">
-                      <Trophy className="h-4 w-4 text-yellow-500" />
-                      <span className="text-sm text-yellow-500">Rank {team.rank}</span>
-                    </div>
-                  </div>
-                </Label>
+                )}
               </div>
-            ))}
-          </RadioGroup>
+              
+              <div className="flex justify-between mt-3 text-xs text-white/50">
+                <span>Members: {team.members}</span>
+                <span>Rank: #{team.rank}</span>
+              </div>
+            </div>
+          ))}
         </div>
-
-        <div className="flex justify-end">
-          <Button type="submit" onClick={handleTeamSwitch} disabled={isSwitching || selectedTeam === currentTeam}>
-            {isSwitching ? (
-              <>Switching... </>
-            ) : (
-              <>
-                Switch Team <ArrowRight className="ml-2 h-4 w-4" />
-              </>
-            )}
+        
+        <Separator className="my-2" />
+        
+        <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-3 text-sm flex items-start">
+          <Info className="h-4 w-4 text-blue-400 mr-2 mt-0.5" />
+          <p className="text-white/80">
+            You can change your team at any time, but all contributions will stay with your previous team.
+          </p>
+        </div>
+        
+        <DialogFooter className="mt-4">
+          <Button variant="outline" onClick={() => onOpenChange(false)}>
+            Cancel
           </Button>
-        </div>
+          <Button 
+            onClick={handleTeamChange}
+            disabled={!selectedTeam || selectedTeam === user?.team || isChanging}
+            className={selectedTeam ? `bg-team-${selectedTeam} hover:bg-team-${selectedTeam}/80` : ''}
+          >
+            {isChanging ? 'Changing...' : 'Confirm Selection'}
+          </Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );
