@@ -17,15 +17,16 @@ module.exports = {
       },
     },
     extend: {
-      fontFamily: {
-        medieval: ['Cinzel', 'serif'],
-        'medieval-text': ['Cormorant Garamond', 'serif'],
-        'royal-script': ['Playfair Display', 'serif'],
-        'royal-modern': ['Crimson Text', 'serif'],
-        'noble-sans': ['Spectral', 'serif'],
-        'courtly-display': ['Fredericka the Great', 'cursive'],
-      },
       colors: {
+        'royal-gold': '#D4AF37',
+        'royal-gold-bright': '#FFC125',
+        'royal-purple': '#7851A9',
+        'royal-navy': '#1F4788',
+        'royal-blue': '#3B82F6',
+        'royal-red': '#9B2335',
+        'team-red': '#9B2335',
+        'team-green': '#2C784A',
+        'team-blue': '#1F4788',
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -59,22 +60,6 @@ module.exports = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        
-        // Royal colors updated with gold theme
-        'royal-gold': '#FFD700',
-        'royal-crimson': '#9B2335',
-        'royal-navy': '#000080',
-        'royal-purple': '#4B0082',
-        'royal-velvet': '#430C5E',
-        'royal-forest': '#2C784A',
-        'royal-mahogany': '#A65E44',
-        'royal-parchment': '#F5E6CA',
-        'royal-blue': '#000080',
-        
-        // Team colors
-        'team-red': '#9B2335',
-        'team-green': '#FFD700', // now gold
-        'team-blue': '#000080', // deep blue
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -90,33 +75,36 @@ module.exports = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: 0 },
         },
-        "fade-in": {
-          from: { opacity: 0, transform: "translateY(10px)" },
-          to: { opacity: 1, transform: "translateY(0)" },
+        "crown-glow": {
+          "0%, 100%": { filter: "drop-shadow(0 0 3px rgba(212, 175, 55, 0.7))" },
+          "50%": { filter: "drop-shadow(0 0 8px rgba(212, 175, 55, 1))" }
         },
         "pulse-slow": {
-          "0%, 100%": { opacity: 0.7 },
-          "50%": { opacity: 0.3 },
+          "0%, 100%": { opacity: 0.5 },
+          "50%": { opacity: 1 }
         },
-        "royal-pulse": {
-          "0%, 100%": { transform: "scale(1)", opacity: 1 },
-          "50%": { transform: "scale(1.05)", opacity: 0.9 },
+        "royal-shine": {
+          "0%": { "background-position": "0% 50%" },
+          "50%": { "background-position": "100% 50%" },
+          "100%": { "background-position": "0% 50%" }
         },
-        "sparkle": {
-          "0%, 100%": { opacity: 0, transform: "scale(0.8)" },
-          "50%": { opacity: 1, transform: "scale(1.2)" },
+        "float": {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-5px)" }
         },
+        "border-pulse-flame": {
+          "0%, 100%": { "background-position": "0% 50%" },
+          "50%": { "background-position": "100% 50%" }
+        }
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        "fade-in": "fade-in 0.5s ease-out",
-        "pulse-slow": "pulse-slow 4s ease-in-out infinite",
-        "royal-pulse": "royal-pulse 2s ease-in-out infinite",
-        "sparkle": "sparkle 1.5s ease-in-out infinite",
-      },
-      backgroundImage: {
-        'gradient-royal': 'linear-gradient(to right, var(--royal-crimson), var(--royal-gold), var(--royal-navy))',
+        "crown-glow": "crown-glow 2s ease-in-out infinite",
+        "pulse-slow": "pulse-slow 3s ease-in-out infinite",
+        "royal-shine": "royal-shine 3s linear infinite",
+        "float": "float 3s ease-in-out infinite",
+        "border-pulse-flame": "border-pulse-flame 3s ease-in-out infinite"
       },
     },
   },

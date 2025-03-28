@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import LeaderboardHeader from './LeaderboardHeader';
 import LeaderboardFilters from './LeaderboardFilters';
@@ -7,7 +6,7 @@ import LeaderboardFooter from './LeaderboardFooter';
 import { mockLeaderboardData } from './LeaderboardData';
 import { useToast } from '@/hooks/use-toast';
 import { Crown, Coins } from 'lucide-react';
-import { useFloatingCoins } from '@/hooks/use-floating-coins';
+import useFloatingCoins from '@/hooks/use-floating-coins';
 import { UserProfile } from '@/types/user';
 
 const RoyalCourt = () => {

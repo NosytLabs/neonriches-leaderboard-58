@@ -6,14 +6,16 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 
+type GenderType = 'king' | 'queen' | 'neutral' | 'jester' | 'noble';
+
 interface BasicInfoEditorProps {
   user: UserProfile;
   displayName: string;
   bio: string;
-  gender: string;
+  gender: GenderType;
   onDisplayNameChange: (value: string) => void;
   onBioChange: (value: string) => void;
-  onGenderChange: (value: string) => void;
+  onGenderChange: (value: GenderType) => void;
 }
 
 const BasicInfoEditor: React.FC<BasicInfoEditorProps> = ({

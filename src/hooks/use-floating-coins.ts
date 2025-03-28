@@ -10,10 +10,18 @@ export interface FloatingCoin {
   duration: number;
 }
 
+interface UseFloatingCoinsOptions {
+  containerRef?: React.RefObject<HTMLElement>;
+  frequency?: number;
+  duration?: number;
+  minDelay?: number;
+  maxDelay?: number;
+}
+
 /**
  * A hook that creates floating coin animations
  */
-const useFloatingCoins = () => {
+const useFloatingCoins = (options?: UseFloatingCoinsOptions) => {
   const [coins, setCoins] = useState<FloatingCoin[]>([]);
   const coinIdRef = useRef(0);
 
@@ -65,12 +73,58 @@ const useFloatingCoins = () => {
     }
   }, [createFloatingCoin]);
 
+  // Add coins at random intervals if containerRef is provided
+  useEffect(() => {
+    if (!options?.containerRef) return;
+    
+    const frequency = options.frequency || 0.5; // 50% chance by default
+    const minDelay = options.minDelay || 5000; // 5 seconds by default
+    const maxDelay = options.maxDelay || 10000; // 10 seconds by default
+    
+    const addRandomCoin = () => {
+      if (Math.random() < frequency && options.containerRef?.current) {
+        const rect = options.containerRef.current.getBoundingClientRect();
+        createFloatingCoin(
+          rect.left + Math.random() * rect.width,
+          rect.top + Math.random() * rect.height
+        );
+      }
+      
+      const nextDelay = minDelay + Math.random() * (maxDelay - minDelay);
+      setTimeout(addRandomCoin, nextDelay);
+    };
+    
+    const initialDelay = minDelay + Math.random() * (maxDelay - minDelay);
+    const timer = setTimeout(addRandomCoin, initialDelay);
+    
+    return () => clearTimeout(timer);
+  }, [options, createFloatingCoin]);
+
+  // Add coins method for components to use
+  const addCoins = useCallback(({ container, count = 3, size = 'sm' }: {
+    container: HTMLElement;
+    count?: number;
+    size?: 'sm' | 'md' | 'lg';
+  }) => {
+    if (!container) return;
+    
+    const rect = container.getBoundingClientRect();
+    
+    for (let i = 0; i < count; i++) {
+      const x = rect.left + Math.random() * rect.width;
+      const y = rect.top + Math.random() * rect.height;
+      createFloatingCoin(x, y);
+    }
+  }, [createFloatingCoin]);
+
   return {
     coins,
     createFloatingCoin,
     createMultipleCoins,
     removeCoin,
+    addCoins
   };
 };
 
 export default useFloatingCoins;
+export { useFloatingCoins };

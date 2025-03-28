@@ -1,6 +1,17 @@
 
 import { useState, useEffect } from 'react';
-import { AnalyticsData } from '@/types/user';
+
+// Define AnalyticsData interface for use across components
+export interface AnalyticsData {
+  views: number;
+  clicks: number;
+  follows: number;
+  shareCount: number;
+  sources: Record<string, number>;
+  referrers: Record<string, number>;
+  history: any[];
+  viewsOverTime: ViewData[];
+}
 
 // Define chart data interfaces
 export interface ViewData {

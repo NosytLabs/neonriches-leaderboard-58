@@ -2,7 +2,8 @@
 import React from 'react';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { User, Edit, Settings, Sparkles, BarChart3 } from 'lucide-react';
-import { ProfileTab } from './ProfileContent';
+
+export type ProfileTab = 'view' | 'edit' | 'settings' | 'boost' | 'analytics';
 
 interface ProfileTabNavigationProps {
   tab: ProfileTab;

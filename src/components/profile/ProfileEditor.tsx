@@ -18,17 +18,23 @@ interface ProfileEditorProps {
   user: UserProfile;
 }
 
+type GenderType = 'king' | 'queen' | 'neutral' | 'jester' | 'noble';
+
 const ProfileEditor: React.FC<ProfileEditorProps> = ({ user }) => {
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState("basic-info");
   const [displayName, setDisplayName] = useState(user.displayName || '');
   const [bio, setBio] = useState(user.bio || '');
-  const [gender, setGender] = useState(user.gender || 'neutral');
+  const [gender, setGender] = useState<GenderType>((user.gender as GenderType) || 'neutral');
   const [socialLinks, setSocialLinks] = useState<SocialLink[]>(user.socialLinks || []);
   const [profileImages, setProfileImages] = useState<ProfileImage[]>(
     user.profileImages || []
   );
   const [isSaving, setIsSaving] = useState(false);
+  
+  const handleGenderChange = (value: GenderType) => {
+    setGender(value);
+  };
   
   const handleSaveProfile = async () => {
     setIsSaving(true);
@@ -95,7 +101,7 @@ const ProfileEditor: React.FC<ProfileEditorProps> = ({ user }) => {
               gender={gender}
               onDisplayNameChange={setDisplayName}
               onBioChange={setBio}
-              onGenderChange={setGender}
+              onGenderChange={handleGenderChange}
             />
           </TabsContent>
           

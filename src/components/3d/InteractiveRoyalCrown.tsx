@@ -5,8 +5,13 @@ import { useGLTF, OrbitControls, PerspectiveCamera } from '@react-three/drei';
 import useFloatingCoins from '@/hooks/use-floating-coins';
 import { Crown } from 'lucide-react';
 
-const CrownModel = ({ rotationSpeed = 0.003, onClick }) => {
-  const crownRef = useRef();
+interface CrownModelProps {
+  rotationSpeed?: number;
+  onClick: () => void;
+}
+
+const CrownModel: React.FC<CrownModelProps> = ({ rotationSpeed = 0.003, onClick }) => {
+  const crownRef = useRef<THREE.Group>(null);
   const { scene } = useGLTF('/throne-assets/crown.glb');
   
   useFrame(() => {
@@ -26,17 +31,35 @@ const CrownModel = ({ rotationSpeed = 0.003, onClick }) => {
   );
 };
 
-const InteractiveRoyalCrown = () => {
+interface InteractiveRoyalCrownProps {
+  onCrownClick?: () => void;
+  showCoins?: boolean;
+  size?: 'small' | 'medium' | 'large';
+}
+
+const InteractiveRoyalCrown: React.FC<InteractiveRoyalCrownProps> = ({ 
+  onCrownClick,
+  showCoins = false,
+  size = 'medium'
+}) => {
   const { createMultipleCoins, coins } = useFloatingCoins();
   const [clickCount, setClickCount] = useState(0);
   
   const handleCrownClick = useCallback(() => {
     setClickCount(prev => prev + 1);
     createMultipleCoins(5, { x: window.innerWidth/2, y: window.innerHeight/2 });
-  }, [createMultipleCoins]);
+    
+    if (onCrownClick) {
+      onCrownClick();
+    }
+  }, [createMultipleCoins, onCrownClick]);
   
   return (
-    <div className="w-full h-[300px] relative">
+    <div className={`w-full relative ${
+      size === 'small' ? 'h-[200px]' : 
+      size === 'large' ? 'h-[400px]' : 
+      'h-[300px]'
+    }`}>
       {/* Render floating coins */}
       {coins.map((coin) => (
         <div
@@ -62,11 +85,11 @@ const InteractiveRoyalCrown = () => {
       </div>
       
       <Canvas>
-        <PerspectiveCamera makeDefault position={[0, 0, 5]} />
         <ambientLight intensity={0.5} />
         <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} />
         <pointLight position={[-10, -10, -10]} />
         <CrownModel onClick={handleCrownClick} />
+        <PerspectiveCamera makeDefault position={[0, 0, 5]} />
         <OrbitControls enableZoom={false} enablePan={false} />
       </Canvas>
       
