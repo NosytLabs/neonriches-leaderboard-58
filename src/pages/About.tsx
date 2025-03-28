@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import Header from '@/components/Header';
@@ -5,7 +6,7 @@ import Footer from '@/components/Footer';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
-import { Crown, Users, Scroll, Heart, Info, BookOpen, Code, Coffee, Sparkles } from 'lucide-react';
+import { Crown, Users, Scroll, Heart, Info, BookOpen, Code, Coffee, Sparkles, Download } from 'lucide-react';
 import RoyalDivider from '@/components/ui/royal-divider';
 import TeamSection from '@/components/TeamSection';
 import CertificateOfNobility from '@/components/certificates/CertificateOfNobility';
@@ -32,8 +33,8 @@ const About = () => {
     tier: 'whale' as UserTier,
     team: 'red',
     gender: 'king',
-    joinDate: '2023-05-15T00:00:00.000Z',
-    joinedAt: '2023-05-15T00:00:00.000Z',
+    joinDate: new Date().toISOString(),
+    joinedAt: new Date().toISOString(),
     cosmetics: {
       borders: [],
       colors: [],
@@ -61,6 +62,15 @@ const About = () => {
       duration: 5000
     });
   };
+
+  const handleCertificateDownload = () => {
+    addToast({
+      title: "Certificate Downloaded",
+      description: "Your certificate of nobility has been saved to your royal archives.",
+      variant: "success",
+      duration: 5000
+    });
+  };
   
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground">
@@ -79,7 +89,7 @@ const About = () => {
           <div className="text-center mb-12">
             <h1 className="text-3xl font-bold royal-gradient mb-4 font-royal">About SpendThrone</h1>
             <p className="text-white/70 max-w-2xl mx-auto">
-              A satirical social platform that parodies the relationship between wealth and status in modern society.
+              A satirical social experiment where status is purchased, not earned
             </p>
           </div>
           
@@ -93,9 +103,9 @@ const About = () => {
                 <Code className="h-4 w-4 mr-2" />
                 How It Works
               </TabsTrigger>
-              <TabsTrigger value="team" className="data-[state=active]:bg-royal-gold/20">
-                <Users className="h-4 w-4 mr-2" />
-                Our Team
+              <TabsTrigger value="philosophy" className="data-[state=active]:bg-royal-gold/20">
+                <Coffee className="h-4 w-4 mr-2" />
+                Our Philosophy
               </TabsTrigger>
             </TabsList>
             
@@ -218,10 +228,10 @@ const About = () => {
                     </div>
                     
                     <div className="bg-white/5 p-4 rounded-lg border border-white/10">
-                      <h3 className="font-bold mb-2">Social Features</h3>
+                      <h3 className="font-bold mb-2">Top Spender Perks</h3>
                       <p className="text-sm text-white/70">
-                        Interact with other nobles, view profiles, and engage in friendly competition. 
-                        Higher-ranked members receive more visibility on the platform.
+                        The #1 ranked spender gets exclusive advertising space on the homepage and special privileges.
+                        These perks shift in real-time as rankings change.
                       </p>
                     </div>
                   </div>
@@ -241,27 +251,27 @@ const About = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <Card className="glass-morphism border-white/10">
                   <CardHeader>
-                    <CardTitle className="text-base">Frequently Asked Questions</CardTitle>
+                    <CardTitle className="text-base">Royal Events</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <div>
-                      <h3 className="font-bold text-sm">Is this real?</h3>
+                      <h3 className="font-bold text-sm">Weekly Events</h3>
                       <p className="text-sm text-white/70">
-                        Yes, it's a real platform with real transactions, but it's designed as satire and social commentary.
+                        Participate in weekly events like public shaming festivals where you can drop other users in rank.
                       </p>
                     </div>
                     
                     <div>
-                      <h3 className="font-bold text-sm">What do I get for my money?</h3>
+                      <h3 className="font-bold text-sm">Fire Sales</h3>
                       <p className="text-sm text-white/70">
-                        Digital status, a higher rank, cosmetic profile enhancements, and the satisfaction of participating in a unique social experiment.
+                        Every third month, cosmetic items go on sale with 30-70% discounts. A perfect opportunity to enhance your nobility.
                       </p>
                     </div>
                     
                     <div>
-                      <h3 className="font-bold text-sm">Is there any practical value?</h3>
+                      <h3 className="font-bold text-sm">Prize Pool</h3>
                       <p className="text-sm text-white/70">
-                        No. That's the point. We're satirizing the concept of spending money for status that has no practical utility.
+                        15% of all spending goes into a prize pool that rewards consistent spenders and top whales in our community.
                       </p>
                     </div>
                   </CardContent>
@@ -269,7 +279,7 @@ const About = () => {
                 
                 <Card className="glass-morphism border-white/10">
                   <CardHeader>
-                    <CardTitle className="text-base">The Fine Print</CardTitle>
+                    <CardTitle className="text-base">Understanding Your Investment</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <p className="text-sm text-white/70">
@@ -290,29 +300,55 @@ const About = () => {
               </div>
             </TabsContent>
             
-            <TabsContent value="team">
-              <TeamSection />
-              
-              <Card className="glass-morphism border-white/10 mt-8">
+            <TabsContent value="philosophy" className="space-y-6">
+              <Card className="glass-morphism border-white/10">
                 <CardHeader>
                   <CardTitle className="flex items-center">
                     <Coffee className="h-5 w-5 mr-2 text-royal-gold" />
-                    Our Philosophy
+                    The SpendThrone Philosophy
                   </CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <p className="mb-4">
-                    We're a team of developers, designers, and writers who are fascinated by the intersection of technology, 
-                    economics, and social dynamics. SpendThrone emerged from our discussions about status games, 
-                    conspicuous consumption, and the sometimes absurd relationship between wealth and social standing.
+                <CardContent className="space-y-4">
+                  <p>
+                    SpendThrone emerged from a simple question: What if we created a social hierarchy based entirely on money spent, 
+                    with absolutely no pretense about skill, merit, or contribution?
                   </p>
                   
                   <p>
-                    By creating this platform, we hope to spark conversations about how we assign value in society, 
-                    while providing entertainment through absurdist humor and community interaction.
+                    In the real world, wealth often confers status, but this relationship is obscured by various justifications and complexities. 
+                    We've stripped away these layers to create a pure, distilled version of pay-to-win status dynamics.
+                  </p>
+                  
+                  <p>
+                    Our experiment asks: How do people behave when the rules are completely transparent? 
+                    What happens when status is explicitly purchasable? Who participates, and why?
+                  </p>
+                  
+                  <div className="bg-white/5 p-4 rounded-lg border border-white/10 mt-4">
+                    <h3 className="text-lg font-bold mb-2 flex items-center">
+                      <Info className="h-5 w-5 mr-2 text-royal-gold" />
+                      The Meme Economy
+                    </h3>
+                    <p>
+                      SpendThrone is both a critique and a celebration of internet culture, where attention is currency and absurdity is content.
+                      It's a living meme that evolves through participation, a mirror reflecting our digital society's values back at itself.
+                    </p>
+                  </div>
+                  
+                  <p className="mt-4">
+                    Our team consists of developers, designers, and writers who are fascinated by the intersection of technology, 
+                    economics, and social dynamics. We've created this platform not just as satire, but as a genuine social experiment 
+                    that might reveal something meaningful about human behavior in digital spaces.
+                  </p>
+                  
+                  <p>
+                    Whether you're participating ironically, genuinely seeking digital status, or just here to observe the spectacle,
+                    you're contributing to a unique moment in internet culture history.
                   </p>
                 </CardContent>
               </Card>
+              
+              <TeamSection />
             </TabsContent>
           </Tabs>
           
@@ -339,6 +375,7 @@ const About = () => {
             certificateId="NOB-12345-ABCDE"
             onVerify={() => handleCertificateVerify()}
             onDismiss={() => setCertificateVisible(false)}
+            onDownload={() => handleCertificateDownload()}
           />
         </div>
       )}

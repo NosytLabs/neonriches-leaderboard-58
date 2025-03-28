@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { Crown, MessageCircle, CreditCard, ShieldQuestion, Users, Scroll } from 'lucide-react';
+import { Crown, MessageCircle, CreditCard, ShieldQuestion, Users, Scroll, Clock, Trophy, Zap, Gift, DollarSign, Star } from 'lucide-react';
 import RoyalDivider from '@/components/ui/royal-divider';
 
 const RoyalFAQ: React.FC = () => {
@@ -10,8 +10,8 @@ const RoyalFAQ: React.FC = () => {
   const faqItems = [
     {
       id: 'faq-1',
-      question: 'What exactly is P2W.FUN?',
-      answer: 'P2W.FUN is a satirical social experiment exploring the relationship between wealth and status. It\'s a persistent leaderboard where your rank is determined solely by how much money you\'ve spent. $1 = 1 unit of rank. It never resets, making your investment in meaningless digital prestige eternal.',
+      question: 'What exactly is SpendThrone?',
+      answer: 'SpendThrone is a satirical social experiment exploring the relationship between wealth and status. It\'s a persistent leaderboard where your rank is determined solely by how much money you\'ve spent. $1 = 1 unit of rank. It never resets, making your investment in meaningless digital prestige eternal.',
       icon: <Crown className="h-5 w-5 text-royal-gold" />
     },
     {
@@ -29,7 +29,7 @@ const RoyalFAQ: React.FC = () => {
     {
       id: 'faq-4',
       question: 'What are the weekly events?',
-      answer: 'Each week features different events to keep things interesting. For example, during the Poke Party event, you can pay $0.50 to drop another user down one rank for 24 hours. These events add a temporary twist to the standard leaderboard mechanics.',
+      answer: 'Each week features different events to keep things interesting. For example, during the Poke Party event, you can pay $0.50 to drop another user down one rank for 24 hours. We also have randomized discounts on public shaming methods and special Fire Sales every third month with 30-70% off cosmetic items.',
       icon: <Scroll className="h-5 w-5 text-royal-purple" />
     },
     {
@@ -43,6 +43,42 @@ const RoyalFAQ: React.FC = () => {
       question: 'What payment methods do you accept?',
       answer: 'We accept both fiat currency (via credit card, PayPal) and cryptocurrency (via Solana wallet integration). We value your financial contributions regardless of their form!',
       icon: <CreditCard className="h-5 w-5 text-royal-emerald" />
+    },
+    {
+      id: 'faq-7',
+      question: 'What happens if I become the top spender?',
+      answer: 'The #1 ranked spender receives special privileges including exclusive advertising space on the homepage, a special profile badge, and the ability to sign Certificates of Nobility. All these perks transfer immediately if someone outspends you.',
+      icon: <Trophy className="h-5 w-5 text-royal-gold" />
+    },
+    {
+      id: 'faq-8',
+      question: 'What is the Certificate of Nobility?',
+      answer: 'Each noble receives a personalized Certificate of Nobility displaying their rank, spending amount, and the date of issuance. This purely cosmetic document serves as proof of your questionable financial decisions and can be shared with friends or colleagues who might question your judgment.',
+      icon: <Scroll className="h-5 w-5 text-royal-mahogany" />
+    },
+    {
+      id: 'faq-9',
+      question: 'What\'s the Prize Pool?',
+      answer: '15% of all spending goes into a weekly prize pool. Half rewards consistent spenders through multipliers based on spending streaks, while the other half is allocated by the top three spenders. It\'s a way for whales to exercise their purchased influence.',
+      icon: <Gift className="h-5 w-5 text-royal-purple" />
+    },
+    {
+      id: 'faq-10',
+      question: 'Are there any spending milestones or tiers?',
+      answer: 'Yes! As you spend more, you progress through our aquatic-themed tiers: Crab ($0-$50), Octopus ($250+), Fish ($1,000+), Dolphin ($5,000+), Shark ($10,000+), and the prestigious Whale ($25,000+). Each tier comes with its own badge and cosmetic perks.',
+      icon: <DollarSign className="h-5 w-5 text-royal-navy" />
+    },
+    {
+      id: 'faq-11',
+      question: 'What is a spending streak?',
+      answer: 'A spending streak is counted when you spend money at least once per week. Maintaining a streak earns you multipliers on your prize pool rewards: 4+ weeks gives a 1.5x multiplier, 8+ weeks a 2x multiplier, and 12+ weeks an impressive 3x multiplier. Streaks also display on your profile as a badge of dedication.',
+      icon: <Clock className="h-5 w-5 text-royal-purple" />
+    },
+    {
+      id: 'faq-12',
+      question: 'Is this all just a joke?',
+      answer: 'Yes and no. SpendThrone is definitely satirical, but it\'s also a genuine social experiment exploring how people behave when status is explicitly purchasable. The platform itself is real, the transactions are real, and the community dynamics that emerge are fascinating to observe.',
+      icon: <Star className="h-5 w-5 text-royal-gold" />
     }
   ];
 
@@ -52,19 +88,10 @@ const RoyalFAQ: React.FC = () => {
 
   return (
     <div className="my-16">
-      <div className="text-center mb-10">
-        <h2 className="text-3xl font-bold royal-gradient mb-2 font-medieval">Royal Inquiries</h2>
-        <p className="text-foreground/70 max-w-2xl mx-auto">
-          Common questions from the commoners about our noble enterprise
-        </p>
-      </div>
-      
-      <RoyalDivider variant="scroll" className="mb-8" />
-      
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <div className="glass-morphism border-white/10 p-6 rounded-xl">
           <Accordion type="single" collapsible className="space-y-4">
-            {faqItems.slice(0, 3).map((item) => (
+            {faqItems.slice(0, 6).map((item) => (
               <AccordionItem 
                 key={item.id} 
                 value={item.id} 
@@ -91,7 +118,7 @@ const RoyalFAQ: React.FC = () => {
         
         <div className="glass-morphism border-white/10 p-6 rounded-xl">
           <Accordion type="single" collapsible className="space-y-4">
-            {faqItems.slice(3).map((item) => (
+            {faqItems.slice(6).map((item) => (
               <AccordionItem 
                 key={item.id} 
                 value={item.id} 

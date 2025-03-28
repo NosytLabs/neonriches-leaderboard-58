@@ -7,7 +7,6 @@ import Footer from '@/components/Footer';
 import RoyalHero from '@/components/RoyalHero';
 import RoyalFeatures from '@/components/RoyalFeatures';
 import RoyalShowcase from '@/components/RoyalShowcase';
-import RoyalFAQ from '@/components/RoyalFAQ';
 import TeamSection from '@/components/TeamSection';
 import TopSpenderShowcase from '@/components/TopSpenderShowcase';
 import useNotificationSounds from '@/hooks/use-notification-sounds';
@@ -19,6 +18,7 @@ import { useAuth } from '@/contexts/auth';
 import { mockLeaderboardData } from '@/components/leaderboard/LeaderboardData';
 import { UserProfile } from '@/types/user';
 import { ToastProvider } from '@/contexts/ToastContext';
+import { getUserRanking } from '@/services/spendingService';
 
 const Index = () => {
   const navigate = useNavigate();
@@ -27,43 +27,8 @@ const Index = () => {
   const { toast } = useToast();
   const [hasCheckedTerms, setHasCheckedTerms] = useState(false);
   const [hasAcceptedTerms, setHasAcceptedTerms] = useState(false);
+  const [topSpender, setTopSpender] = useState<UserProfile | null>(null);
   
-  // Create a mock topSpender for the showcase components
-  const mockTopSpender: UserProfile = {
-    id: '1',
-    username: 'LordMoneybags',
-    displayName: 'Lord Moneybags',
-    email: 'lordmoneybags@spendthrone.com',
-    profileImage: 'https://source.unsplash.com/random/?royal,portrait',
-    amountSpent: 25000,
-    spentAmount: 25000,
-    walletBalance: 1000,
-    rank: 1,
-    // Using optional previousRank now that we've updated the type
-    spendStreak: 12,
-    tier: 'whale',
-    team: 'red',
-    gender: 'king',
-    joinDate: '2023-01-15T00:00:00.000Z',
-    joinedAt: '2023-01-15T00:00:00.000Z',
-    bio: "I've spent more on this meaningless digital status than most people spend on food. Behold my financial might!",
-    socialLinks: [
-      { platform: 'Twitter', url: 'https://twitter.com/lordmoneybags', clicks: 42 },
-      { platform: 'Instagram', url: 'https://instagram.com/lordmoneybags', clicks: 28 }
-    ],
-    cosmetics: {
-      borders: ['gold'],
-      colors: ['royal-purple'],
-      fonts: ['medieval'],
-      emojis: ['crown', 'money'],
-      titles: ['sovereign'],
-      backgrounds: ['castle'],
-      effects: ['sparkle'],
-      badges: ['Monarch of the Deep'],
-      themes: ['royal']
-    }
-  };
-
   useEffect(() => {
     // Load sounds for a better user experience
     preloadSounds();
@@ -75,6 +40,28 @@ const Index = () => {
     }
     
     setHasCheckedTerms(true);
+    
+    // Get top spender
+    const rankings = getUserRanking();
+    if (rankings && rankings.length > 0) {
+      const top = rankings[0];
+      // Convert UserRankData to UserProfile for the showcase
+      const topUserProfile: UserProfile = {
+        id: top.userId,
+        username: top.username,
+        email: "",
+        rank: top.rank,
+        tier: top.tier as any,
+        team: top.team as any,
+        profileImage: top.profileImage,
+        amountSpent: top.totalSpent,
+        spentAmount: top.totalSpent,
+        spendStreak: top.spendStreak,
+        joinDate: new Date().toISOString(),
+        joinedAt: new Date().toISOString(),
+      };
+      setTopSpender(topUserProfile);
+    }
   }, [preloadSounds]);
 
   const handleGetStarted = () => {
@@ -119,6 +106,13 @@ const Index = () => {
       <Header />
       
       <main className="flex-1">
+        {/* Top Spender Showcase - Only visible when there is a top spender */}
+        <div className="container mx-auto px-4 pt-24 pb-8">
+          <ToastProvider>
+            <TopSpenderShowcase highlightTop={true} />
+          </ToastProvider>
+        </div>
+        
         <RoyalHero />
         
         <div className="container mx-auto px-4 py-16">
@@ -156,26 +150,20 @@ const Index = () => {
           <RoyalDivider variant="scroll" className="my-16" />
           
           <ToastProvider>
-            <RoyalShowcase topSpender={mockTopSpender} />
+            <RoyalShowcase topSpender={topSpender || undefined} />
           </ToastProvider>
           
           <TeamSection />
           
-          <TopSpenderShowcase topSpender={mockTopSpender} />
-          
-          <div className="my-16">
-            <RoyalFAQ />
-            
-            <div className="text-center mt-10">
-              <Button 
-                onClick={() => navigate('/faq')}
-                variant="outline"
-                className="border-royal-gold/30 text-royal-gold hover:bg-royal-gold/10"
-              >
-                View All FAQs
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            </div>
+          <div className="text-center mt-16">
+            <Button 
+              onClick={() => navigate('/faq')}
+              variant="outline"
+              className="border-royal-gold/30 text-royal-gold hover:bg-royal-gold/10"
+            >
+              View Royal FAQs
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
           </div>
         </div>
       </main>
