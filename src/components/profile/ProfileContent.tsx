@@ -64,7 +64,7 @@ const ProfileContent: React.FC<ProfileContentProps> = ({
         )}
         
         {tab === 'boost' && !viewOnly && (
-          <ProfileBoost user={user} />
+          <ProfileBoost />
         )}
         
         {tab === 'marketing' && !viewOnly && (
