@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import useMockeryEffect from './hooks/useMockeryEffect';
-import { Shield, Crown, Target, X, AlertTriangle } from 'lucide-react';
+import useMockeryEffect, { MockeryAction } from './hooks/useMockeryEffect';
+import { Shield, Crown, Target, AlertTriangle } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/auth';
@@ -181,7 +181,12 @@ const RoyalMockeryFestival: React.FC = () => {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <MockeryUserCard onMockery={(username, action, amount) => handleMockeryAction(Number(user.id), username, action, amount)} />
+          <MockeryUserCard 
+            onMockery={(username, action, amount) => {
+              const basicAction = convertToBasicAction(action as any);
+              return handleMockeryAction(Number(user.id), username, basicAction, amount);
+            }} 
+          />
         </CardContent>
       </Card>
     </div>

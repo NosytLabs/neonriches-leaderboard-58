@@ -1,5 +1,5 @@
 
-import { Team, UserTier } from './user';
+import { UserTier, UserTeam } from './user';
 
 export interface User {
   id: string;
@@ -7,8 +7,8 @@ export interface User {
   email: string;
   profileImage?: string;
   walletBalance?: number;
-  team?: Team;
-  tier: UserTier; // Change from optional to required
+  team?: UserTeam;
+  tier: UserTier;
   spendStreak?: number;
   
   // Added properties to match UserProfile
@@ -86,4 +86,16 @@ export interface User {
 }
 
 // Export types using the correct TypeScript syntax for isolated modules
-export type { UserProfile, UserSubscription, UserCosmetics, RoyalButtonVariant, RoyalDividerVariant, UserGender, ProfileImage, SocialLink, ProfileLink } from './user';
+export { 
+  UserProfile, 
+  UserSubscription, 
+  UserCosmetics, 
+  RoyalButtonVariant, 
+  RoyalDividerVariant, 
+  UserGender, 
+  ProfileImage, 
+  SocialLink, 
+  ProfileLink, 
+  UserTier,
+  Team 
+} from './user';

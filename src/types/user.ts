@@ -6,6 +6,7 @@ export type SubscriptionStatus = 'active' | 'canceled' | 'past_due' | 'trialing'
 export type SubscriptionInterval = 'monthly' | 'quarterly' | 'annual' | 'yearly';
 export type RoyalButtonVariant = 'default' | 'royal' | 'crimson' | 'navy' | 'gold' | 'purple' | 'green' | 'red' | 'blue';
 export type RoyalDividerVariant = 'default' | 'royal' | 'crimson' | 'navy' | 'gold' | 'purple';
+export type Team = 'red' | 'green' | 'blue' | null;
 
 export interface ProfileBoost {
   id?: string;
@@ -98,8 +99,8 @@ export interface UserProfile {
   team: UserTeam;
   profileImage?: string;
   profileImages?: ProfileImage[];
-  walletBalance: number;
   walletAddress?: string;
+  walletBalance: number;
   activeTitle?: string;
   amountSpent: number;
   spentAmount?: number;

@@ -1,4 +1,3 @@
-
 import React, { FC, ReactNode, useMemo, useState, useEffect, createContext, useContext } from 'react';
 import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
 import { ConnectionProvider, WalletProvider, useWallet, useConnection } from '@solana/wallet-adapter-react';
@@ -235,43 +234,6 @@ const SolanaContextProvider: FC<{ children: ReactNode }> = ({ children }) => {
     }
   };
 
-  // Link wallet to account
-  const linkWalletToAccount = async (): Promise<boolean> => {
-    try {
-      if (!wallet.publicKey || !user) {
-        return false;
-      }
-      
-      // Sign a message to verify wallet ownership
-      const message = `Linking wallet ${wallet.publicKey.toString()} to SpendThrone account ${user.username} at ${new Date().toISOString()}`;
-      const signature = await signMessage(message);
-      
-      if (!signature) {
-        return false;
-      }
-      
-      // Update user profile with wallet address
-      await updateUserProfile({
-        ...user,
-        walletAddress: wallet.publicKey.toString(),
-      });
-      
-      toast({
-        title: "Wallet Linked",
-        description: "Your wallet has been linked to your account",
-      });
-      
-      return true;
-    } catch (error: any) {
-      toast({
-        title: "Link Failed",
-        description: error.message || "Failed to link wallet to account",
-        variant: "destructive",
-      });
-      return false;
-    }
-  };
-
   // Context value
   const contextValue: SolanaContextType = {
     connected: wallet.connected,
@@ -282,7 +244,41 @@ const SolanaContextProvider: FC<{ children: ReactNode }> = ({ children }) => {
     signMessage,
     sendSol,
     signTransaction,
-    linkWalletToAccount,
+    linkWalletToAccount: async (): Promise<boolean> => {
+      try {
+        if (!wallet.publicKey || !user) {
+          return false;
+        }
+        
+        // Sign a message to verify wallet ownership
+        const message = `Linking wallet ${wallet.publicKey.toString()} to SpendThrone account ${user.username} at ${new Date().toISOString()}`;
+        const signature = await signMessage(message);
+        
+        if (!signature) {
+          return false;
+        }
+        
+        // Update user profile with wallet address
+        await updateUserProfile({
+          ...user,
+          walletAddress: wallet.publicKey.toString(),
+        });
+        
+        toast({
+          title: "Wallet Linked",
+          description: "Your wallet has been linked to your account",
+        });
+        
+        return true;
+      } catch (error: any) {
+        toast({
+          title: "Link Failed",
+          description: error.message || "Failed to link wallet to account",
+          variant: "destructive",
+        });
+        return false;
+      }
+    },
     isConnecting,
     hasWallet,
     walletPubkey: wallet.publicKey?.toString() || null,
