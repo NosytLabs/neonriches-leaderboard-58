@@ -1,3 +1,4 @@
+
 import { CosmeticItem, CosmeticRarity, CosmeticCategory } from '@/types/cosmetics';
 import { mockedCosmeticsData } from '@/data/cosmeticsData';
 import { UserProfile } from '@/types/user';
@@ -18,14 +19,15 @@ export function awardRandomCosmetic(
   // Filter out items the user already owns
   const userCosmetics = user.cosmetics || {};
   availableCosmetics = availableCosmetics.filter(item => {
+    if (!item.category) return true; // Always include if category is not defined
+    
     const category = item.category as keyof typeof userCosmetics;
-    if (!category) return true; // Always include if category is not defined
     
     // Safely check if the array exists and includes the item
     const categoryItems = userCosmetics[category] || [];
-    const userHasItem = Array.isArray(categoryItems) && categoryItems.includes(item.id);
+    if (!Array.isArray(categoryItems)) return true; // Skip check if not an array
     
-    return !userHasItem;
+    return !categoryItems.includes(item.id);
   });
   
   if (availableCosmetics.length === 0) {

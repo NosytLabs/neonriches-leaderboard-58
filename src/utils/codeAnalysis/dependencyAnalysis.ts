@@ -33,18 +33,24 @@ export const analyzeDependencies = async (
         // Check for ES imports
         const importMatches = content.match(/from ['"]([^'"]+)['"]/g) || [];
         importMatches.forEach(match => {
-          const packageName = match.replace(/from ['"]/, '').replace(/['"]$/, '').split('/')[0];
-          if (dependencies[packageName]) {
-            usedDependencies.add(packageName);
+          const importStatement = match;
+          if (importStatement) {
+            const packageName = importStatement.replace(/from ['"]/, '').replace(/['"]$/, '').split('/')[0];
+            if (dependencies[packageName]) {
+              usedDependencies.add(packageName);
+            }
           }
         });
         
         // Check for require statements
         const requireMatches = content.match(/require\(['"]([^'"]+)['"]\)/g) || [];
         requireMatches.forEach(match => {
-          const packageName = match.replace(/require\(['"]/, '').replace(/['"]\)$/, '').split('/')[0];
-          if (dependencies[packageName]) {
-            usedDependencies.add(packageName);
+          const requireStatement = match;
+          if (requireStatement) {
+            const packageName = requireStatement.replace(/require\(['"]/, '').replace(/['"]\)$/, '').split('/')[0];
+            if (dependencies[packageName]) {
+              usedDependencies.add(packageName);
+            }
           }
         });
       } catch (error) {

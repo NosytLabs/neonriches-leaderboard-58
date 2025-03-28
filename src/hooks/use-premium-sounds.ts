@@ -1,166 +1,189 @@
 
-import { useState, useCallback, useEffect } from 'react';
-import { useToast } from '@/hooks/use-toast';
-import { PremiumSoundPack, PremiumSoundPackDetails, SoundType } from './sounds/types';
+import { useState, useEffect } from 'react';
 import { premiumSoundPacks, premiumSoundAssets, premiumVolumePresets } from './sounds/premium-sound-assets';
-import useNotificationSounds from './use-notification-sounds';
+import { PremiumSoundPackDetails, SoundType } from './sounds/types';
+import { useToast } from './use-toast';
 
-interface PremiumSoundsState {
-  activePack: PremiumSoundPack | null;
-  ownedPacks: PremiumSoundPack[];
-  availablePacks: PremiumSoundPackDetails[];
-  isPremiumActive: boolean;
-}
+// Create a safe cast function to convert string to SoundType when needed
+const asSoundType = (sound: string): SoundType => {
+  // This cast is safe because we control the values in the premium sound packs
+  return sound as SoundType;
+};
 
-const usePremiumSounds = () => {
+export const usePremiumSounds = () => {
+  const [soundPacks, setSoundPacks] = useState<PremiumSoundPackDetails[]>(premiumSoundPacks);
+  const [purchasedPacks, setPurchasedPacks] = useState<string[]>([]);
+  const [audioElements, setAudioElements] = useState<Record<string, HTMLAudioElement>>({});
+  const [loading, setLoading] = useState(true);
   const { toast } = useToast();
-  const { playSound, preloadSounds } = useNotificationSounds();
-  const [premiumState, setPremiumState] = useState<PremiumSoundsState>({
-    activePack: null,
-    ownedPacks: [],
-    availablePacks: premiumSoundPacks,
-    isPremiumActive: false
-  });
-  
-  // Load saved premium sound state
+
+  // Load premium sound packs from localStorage on mount
   useEffect(() => {
-    try {
-      const savedState = localStorage.getItem('premium-sound-state');
-      if (savedState) {
-        setPremiumState(JSON.parse(savedState));
+    const loadPurchasedPacks = () => {
+      try {
+        const savedPacks = localStorage.getItem('purchased_sound_packs');
+        if (savedPacks) {
+          const parsedPacks = JSON.parse(savedPacks);
+          setPurchasedPacks(parsedPacks);
+          
+          // Update the isPurchased flag for each pack
+          const updatedPacks = premiumSoundPacks.map(pack => ({
+            ...pack,
+            isPurchased: parsedPacks.includes(pack.id)
+          }));
+          
+          setSoundPacks(updatedPacks);
+        }
+      } catch (error) {
+        console.error('Error loading purchased sound packs:', error);
       }
-    } catch (error) {
-      console.error("Failed to load premium sound state:", error);
-    }
+      
+      setLoading(false);
+    };
+    
+    loadPurchasedPacks();
   }, []);
-  
-  // Save state when it changes
+
+  // Preload sound files for purchased packs
   useEffect(() => {
+    const preloadSounds = async () => {
+      const newAudioElements: Record<string, HTMLAudioElement> = {};
+      
+      for (const packId of purchasedPacks) {
+        const pack = soundPacks.find(p => p.id === packId);
+        if (pack && pack.sounds) {
+          for (const soundName of pack.sounds) {
+            const assetKey = `${packId}.${soundName}`;
+            const assetPath = premiumSoundAssets[assetKey];
+            
+            if (assetPath) {
+              const audio = new Audio(assetPath);
+              await audio.load();
+              newAudioElements[assetKey] = audio;
+            }
+          }
+        }
+      }
+      
+      setAudioElements(newAudioElements);
+    };
+    
+    if (purchasedPacks.length > 0) {
+      preloadSounds();
+    }
+  }, [purchasedPacks, soundPacks]);
+
+  // Play a premium sound if available
+  const playPremiumSound = (sound: SoundType, packId?: string) => {
     try {
-      localStorage.setItem('premium-sound-state', JSON.stringify(premiumState));
+      // If packId is provided, try to play from that pack
+      if (packId && purchasedPacks.includes(packId)) {
+        const assetKey = `${packId}.${sound}`;
+        const audio = audioElements[assetKey];
+        
+        if (audio) {
+          // Set volume based on presets or default
+          const volume = premiumVolumePresets[asSoundType(sound)] || 0.5;
+          audio.volume = volume;
+          
+          // Reset and play
+          audio.currentTime = 0;
+          return audio.play();
+        }
+      }
+      
+      // If packId not provided or sound not found, try all purchased packs
+      for (const id of purchasedPacks) {
+        const assetKey = `${id}.${sound}`;
+        const audio = audioElements[assetKey];
+        
+        if (audio) {
+          // Set volume based on presets or default
+          const volume = premiumVolumePresets[asSoundType(sound)] || 0.5;
+          audio.volume = volume;
+          
+          // Reset and play
+          audio.currentTime = 0;
+          return audio.play();
+        }
+      }
+      
+      return Promise.resolve(); // Return resolved promise if no sound played
     } catch (error) {
-      console.error("Failed to save premium sound state:", error);
+      console.error('Error playing premium sound:', error);
+      return Promise.resolve(); // Return resolved promise on error
     }
-  }, [premiumState]);
-  
+  };
+
   // Purchase a sound pack
-  const purchaseSoundPack = useCallback((packId: PremiumSoundPack) => {
-    // In a real app, this would initiate a payment flow
-    setPremiumState(prev => {
-      const packIndex = prev.availablePacks.findIndex(pack => pack.id === packId);
-      if (packIndex === -1) return prev;
-      
-      // Create a new array with the updated pack
-      const updatedPacks = [...prev.availablePacks];
-      updatedPacks[packIndex] = {
-        ...updatedPacks[packIndex],
-        isPurchased: true
-      };
-      
-      // Add to owned packs if not already owned
-      const ownedPacks = prev.ownedPacks.includes(packId) 
-        ? prev.ownedPacks 
-        : [...prev.ownedPacks, packId];
-      
-      return {
-        ...prev,
-        ownedPacks,
-        availablePacks: updatedPacks,
-        activePack: prev.activePack || packId,
-        isPremiumActive: true
-      };
-    });
-    
-    // Show purchase confirmation
-    toast({
-      title: "Sound Pack Purchased",
-      description: `You now own the ${packId.charAt(0).toUpperCase() + packId.slice(1)} sound pack!`,
-      duration: 3000,
-    });
-    
-    // Play a success sound
-    playSound('success', 0.5);
-    
-    return true;
-  }, [toast, playSound]);
-  
-  // Activate a sound pack
-  const activateSoundPack = useCallback((packId: PremiumSoundPack | null) => {
-    setPremiumState(prev => {
-      // Check if pack is owned
-      if (packId && !prev.ownedPacks.includes(packId)) {
+  const purchaseSoundPack = (packId: string): boolean => {
+    try {
+      if (purchasedPacks.indexOf(packId) !== -1) {
         toast({
-          title: "Sound Pack Not Owned",
-          description: "You need to purchase this sound pack before activating it.",
-          variant: "destructive",
-          duration: 3000,
+          title: "Already Purchased",
+          description: "You already own this sound pack.",
+          variant: "default"
         });
-        return prev;
+        return false;
       }
       
-      return {
-        ...prev,
-        activePack: packId,
-        isPremiumActive: !!packId
-      };
-    });
-    
-    // Play the pack's preview sound if activating
-    if (packId) {
-      const pack = premiumSoundPacks.find(p => p.id === packId);
-      if (pack && pack.previewSound) {
-        const soundToPlay = pack.previewSound as SoundType;
-        playSound(soundToPlay, 0.4);
-      }
+      // Add to purchased packs
+      const newPurchasedPacks = [...purchasedPacks, packId];
+      setPurchasedPacks(newPurchasedPacks);
+      
+      // Update localStorage
+      localStorage.setItem('purchased_sound_packs', JSON.stringify(newPurchasedPacks));
+      
+      // Update the packs state
+      const updatedPacks = soundPacks.map(pack => ({
+        ...pack,
+        isPurchased: newPurchasedPacks.includes(pack.id)
+      }));
+      
+      setSoundPacks(updatedPacks);
+      
+      toast({
+        title: "Purchase Successful",
+        description: "Your new sound pack is ready to use!",
+        variant: "success"
+      });
+      
+      return true;
+    } catch (error) {
+      console.error('Error purchasing sound pack:', error);
+      
+      toast({
+        title: "Purchase Failed",
+        description: "There was an error processing your purchase.",
+        variant: "destructive"
+      });
+      
+      return false;
     }
-    
-    return true;
-  }, [toast, playSound]);
-  
+  };
+
   // Preview a sound from a pack
-  const previewPackSound = useCallback((packId: PremiumSoundPack, soundType?: SoundType) => {
-    const pack = premiumSoundPacks.find(p => p.id === packId);
-    if (!pack) return;
-    
-    // Play either the specified sound or the pack's default preview sound
-    if (soundType) {
-      playSound(soundType, 0.4);
-    } else if (pack.previewSound) {
-      playSound(pack.previewSound as SoundType, 0.4);
-    }
-  }, [playSound]);
-  
-  // Play a premium sound (will use active pack if available)
-  const playPremiumSound = useCallback((soundType: SoundType, volumeMultiplier = 1.0) => {
-    // If premium is not active, fall back to regular sounds
-    if (!premiumState.isPremiumActive) {
-      playSound(soundType, volumeMultiplier);
-      return;
-    }
-    
-    // Check if the active pack has this sound
-    const activePack = premiumState.activePack;
-    if (activePack) {
-      const packDetails = premiumSoundPacks.find(p => p.id === activePack);
-      if (packDetails && packDetails.sounds && packDetails.sounds.some(sound => sound === soundType)) {
-        // This is where we'd play the premium version of the sound
-        // For now, we'll just use the regular sound library with a volume boost
-        const premiumVolume = (premiumVolumePresets[soundType] || 0.5) * volumeMultiplier;
-        playSound(soundType, premiumVolume);
-        return;
+  const previewSoundPack = (packId: string) => {
+    const pack = soundPacks.find(p => p.id === packId);
+    if (pack && pack.previewSound) {
+      const assetKey = `${packId}.${pack.previewSound}`;
+      const assetPath = premiumSoundAssets[assetKey];
+      
+      if (assetPath) {
+        const audio = new Audio(assetPath);
+        audio.volume = 0.5;
+        audio.play();
       }
     }
-    
-    // Fall back to regular sound if not in the active pack
-    playSound(soundType, volumeMultiplier);
-  }, [premiumState, playSound]);
+  };
 
   return {
-    premiumState,
+    soundPacks,
+    purchasedPacks,
+    loading,
+    playPremiumSound,
     purchaseSoundPack,
-    activateSoundPack,
-    previewPackSound,
-    playPremiumSound
+    previewSoundPack
   };
 };
 

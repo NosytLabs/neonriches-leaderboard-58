@@ -1,200 +1,106 @@
 
-import { AnalysisResult, ComplexCode, DuplicateCode, UnusedCssSelector, UnusedImport, UnusedVariable, DeadCodePath, UnusedFunction } from './types';
-
-// Mock data for performance issues
-export const performanceIssuesMock = [
-  {
-    id: 1,
-    file: 'src/components/Dashboard.jsx',
-    issue: 'Expensive operation in render method',
-    severity: 'high',
-    recommendation: 'Move the expensive calculation to useMemo or a separate useEffect'
-  },
-  {
-    id: 2,
-    file: 'src/hooks/useDataFetching.js',
-    issue: 'Multiple unnecessary re-renders',
-    severity: 'medium',
-    recommendation: 'Add proper dependency arrays to useEffect calls'
-  },
-  {
-    id: 3,
-    file: 'src/utils/formatters.js',
-    issue: 'Inefficient string concatenation in loop',
-    severity: 'low',
-    recommendation: 'Use array join instead of string concatenation in loops'
-  }
-];
+import { UnusedImport, UnusedVariable, UnusedFunction, DuplicateCode, ComplexCode } from './types';
 
 // Mock data for unused imports
 export const unusedImportsMock: UnusedImport[] = [
-  {
-    file: 'src/components/Header.tsx',
-    name: 'Button',
-    line: 5
-  },
-  {
-    file: 'src/pages/Dashboard.tsx',
-    name: 'useEffect',
-    line: 2
-  },
-  {
-    file: 'src/hooks/useAuth.ts',
-    name: 'useState',
-    line: 3
-  }
+  { file: 'src/components/Header.tsx', name: 'useState', line: 12 },
+  { file: 'src/pages/Dashboard.tsx', name: 'useEffect', line: 8 },
+  { file: 'src/components/Footer.tsx', name: 'Link', line: 5 }
 ];
 
 // Mock data for unused variables
 export const unusedVariablesMock: UnusedVariable[] = [
-  {
-    file: 'src/components/Profile.tsx',
-    name: 'isLoading',
-    line: 12
-  },
-  {
-    file: 'src/components/Form.tsx',
-    name: 'formData',
-    line: 8
-  }
+  { file: 'src/components/UserProfile.tsx', name: 'isLoading', line: 24 },
+  { file: 'src/hooks/useAuth.ts', name: 'errorMessage', line: 45 },
+  { file: 'src/context/ThemeContext.tsx', name: 'isDarkMode', line: 18 }
 ];
 
 // Mock data for unused functions
 export const unusedFunctionsMock: UnusedFunction[] = [
-  {
-    file: 'src/utils/helpers.ts',
-    name: 'formatDate',
-    line: 15
-  },
-  {
-    file: 'src/components/Sidebar.tsx',
-    name: 'handleToggle',
-    line: 42
-  }
+  { file: 'src/utils/formatters.ts', name: 'formatCurrency', line: 32 },
+  { file: 'src/utils/validation.ts', name: 'validateEmail', line: 15 },
+  { file: 'src/hooks/useWindowSize.ts', name: 'getDimensions', line: 28 }
 ];
 
-// Mock data for unused components
-export const unusedComponentsMock: string[] = [
-  'src/components/unused/FeatureBanner.tsx',
-  'src/components/experimental/NewChart.tsx'
+// Mock data for unused components - match the UnusedComponent interface
+export const unusedComponentsMock = [
+  { file: 'src/components/unused/DeprecatedButton.tsx', line: 1 },
+  { file: 'src/components/unused/OldNavigation.tsx', line: 1 },
+  { file: 'src/components/temp/TestComponent.tsx', line: 1 }
 ];
 
-// Mock data for complex functions
-export const complexFunctionsMock: ComplexCode[] = [
-  {
-    file: 'src/components/Cart.tsx',
-    function: 'calculateDiscount',
-    complexity: 15,
-    line: 78,
-    explanation: 'This function has multiple nested conditionals and loops, making it difficult to understand and maintain.'
-  },
-  {
-    file: 'src/utils/tax-calculator.ts',
-    function: 'applyTaxRules',
-    complexity: 12,
-    line: 45,
-    explanation: 'This function contains complex business logic with many edge cases and conditions.'
-  },
-  {
-    file: 'src/hooks/useProductData.ts',
-    function: 'transformProductData',
-    complexity: 9,
-    line: 112,
-    explanation: 'This function has several nested loops and transformations that could be simplified.'
-  }
-];
-
-// Mock data for duplicate code - adding a fileGroup property for identification
+// Mock data for duplicate code
 export const duplicateCodeMock: DuplicateCode[] = [
-  {
-    files: ['src/components/UserProfile.tsx', 'src/components/AdminProfile.tsx'],
-    similarity: 0.85,
+  { 
+    id: 1,
+    files: ['src/components/UserForm.tsx', 'src/components/AdminForm.tsx'],
+    similarity: 85,
     lines: 32,
-    codeSnippet: `
-const Profile = ({ user }) => {
-  const [isEditing, setIsEditing] = useState(false);
-  const [formData, setFormData] = useState({
-    name: user.name,
-    email: user.email,
-    bio: user.bio
-  });
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
-
-  // More duplicate code...
-}`
+    impact: 'Medium',
+    risk: 'Code duplication increases maintenance burden'
   },
   {
-    files: ['src/utils/formatters.ts', 'src/helpers/display-helpers.ts'],
-    similarity: 0.92,
-    lines: 15,
-    codeSnippet: `
-export const formatCurrency = (amount, currency = 'USD') => {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency,
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2
-  }).format(amount);
-};`
+    id: 2,
+    files: ['src/utils/formatDate.ts', 'src/helpers/dateHelper.ts'],
+    similarity: 92,
+    lines: 18,
+    impact: 'Low',
+    risk: 'Similar date formatting utilities in different locations'
   }
 ];
 
-// Complete mocked analysis results
-export const mockedAnalysisResults: AnalysisResult = {
+// Mock data for complex code
+export const complexCodeMock: ComplexCode[] = [
+  {
+    id: 1,
+    file: 'src/components/LeaderboardCalculator.tsx',
+    line: 45,
+    function: 'calculateRankings',
+    complexity: 24,
+    impact: 'High',
+    suggestion: 'Break down into smaller functions with single responsibilities'
+  },
+  {
+    id: 2,
+    file: 'src/utils/dataTransformers.ts',
+    line: 87,
+    function: 'transformUserData',
+    complexity: 18,
+    impact: 'Medium',
+    suggestion: 'Use map/reduce instead of nested loops'
+  }
+];
+
+// Mock analysis results
+export const mockedAnalysisResults = {
   unusedFiles: [
-    'src/components/unused/FeatureBanner.tsx',
-    'src/components/experimental/NewChart.tsx',
-    'src/pages/deprecated/OldDashboard.tsx'
+    'src/components/unused/OldNavbar.tsx',
+    'src/styles/deprecated.css',
+    'src/utils/legacyHelpers.ts'
   ],
   unusedImports: unusedImportsMock,
   unusedVariables: unusedVariablesMock,
   unusedFunctions: unusedFunctionsMock,
   unusedCssSelectors: [
-    {
-      file: 'src/styles/components.css',
-      selector: 'unused-class',
-      line: 42
-    },
-    {
-      file: 'src/styles/pages.css',
-      selector: 'old-container',
-      line: 78
-    }
+    { file: 'src/styles/main.css', selector: '.unused-class', line: 145 },
+    { file: 'src/styles/buttons.css', selector: '.btn-legacy', line: 67 }
   ],
   deadCodePaths: [
-    {
-      file: 'src/components/FeatureToggle.tsx',
-      description: 'Unreachable code after return statement',
-      line: 45
-    },
-    {
-      file: 'src/utils/helpers.ts',
-      description: 'Condition always evaluates to false',
-      line: 112
-    }
+    { file: 'src/components/UserActions.tsx', description: 'Unreachable code after return statement', line: 78 },
+    { file: 'src/utils/validation.ts', description: 'Dead else branch (condition always true)', line: 23 }
   ],
   duplicateCode: duplicateCodeMock,
-  complexCode: complexFunctionsMock,
-  unusedDependencies: [
-    'unused-package',
-    'legacy-component-library'
-  ],
+  complexCode: complexCodeMock,
+  unusedDependencies: ['lodash-es', 'moment', 'chart.js'],
   metrics: {
     beforeCleanup: {
-      projectSize: 12580,
-      fileCount: 158,
+      projectSize: 4582, // KB
+      fileCount: 187,
       dependencyCount: 42
     },
     afterCleanup: {
-      projectSize: 10240,
-      fileCount: 145,
+      projectSize: 4128, // KB
+      fileCount: 172,
       dependencyCount: 38
     }
   }
