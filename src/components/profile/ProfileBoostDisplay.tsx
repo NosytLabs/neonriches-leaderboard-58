@@ -10,7 +10,7 @@ export interface ProfileBoostDisplayProps {
   user: UserProfile;
 }
 
-// Properly type the component as React.FC with the props interface
+// Explicitly type the component as React.FC with the props interface
 const ProfileBoostDisplay: React.FC<ProfileBoostDisplayProps> = ({ user }) => {
   const { getActiveBoosts, boostEffects, getTimeRemaining } = useProfileBoost(user);
   const activeBoosts = getActiveBoosts();
