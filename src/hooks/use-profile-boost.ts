@@ -24,7 +24,7 @@ export const boostEffects: Record<BoostEffectType, BoostEffectDetails> = {
     price: 10,
     cssClass: 'profile-boost-glow',
     bonusText: '+10% Visibility',
-    icon: <Lightbulb size={16} className="text-royal-gold" />
+    icon: React.createElement(Lightbulb, { size: 16, className: "text-royal-gold" })
   },
   sparkle: {
     id: 'sparkle',
@@ -33,7 +33,7 @@ export const boostEffects: Record<BoostEffectType, BoostEffectDetails> = {
     price: 20,
     cssClass: 'profile-boost-sparkle',
     bonusText: '+15% Visibility',
-    icon: <Sparkle size={16} className="text-royal-gold" />
+    icon: React.createElement(Sparkle, { size: 16, className: "text-royal-gold" })
   },
   crown: {
     id: 'crown',
@@ -42,7 +42,7 @@ export const boostEffects: Record<BoostEffectType, BoostEffectDetails> = {
     price: 40,
     cssClass: 'profile-boost-crown',
     bonusText: '+30% Visibility',
-    icon: <Crown size={16} className="text-royal-gold" />
+    icon: React.createElement(Crown, { size: 16, className: "text-royal-gold" })
   },
   pulse: {
     id: 'pulse',
@@ -51,7 +51,7 @@ export const boostEffects: Record<BoostEffectType, BoostEffectDetails> = {
     price: 30,
     cssClass: 'profile-boost-pulse',
     bonusText: '+20% Visibility',
-    icon: <Star size={16} className="text-royal-gold" />
+    icon: React.createElement(Star, { size: 16, className: "text-royal-gold" })
   },
   rainbow: {
     id: 'rainbow',
@@ -60,7 +60,7 @@ export const boostEffects: Record<BoostEffectType, BoostEffectDetails> = {
     price: 50,
     cssClass: 'profile-boost-rainbow',
     bonusText: '+40% Visibility',
-    icon: <Flame size={16} className="text-royal-gold" />
+    icon: React.createElement(Flame, { size: 16, className: "text-royal-gold" })
   }
 };
 
