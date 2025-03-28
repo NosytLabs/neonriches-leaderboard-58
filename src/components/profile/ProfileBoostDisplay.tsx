@@ -10,7 +10,6 @@ export interface ProfileBoostDisplayProps {
   user: UserProfile;
 }
 
-// Define the component with explicit type annotation and use the ProfileBoostDisplayProps interface
 const ProfileBoostDisplay: React.FC<ProfileBoostDisplayProps> = ({ user }) => {
   const { getActiveBoosts, boostEffects, getTimeRemaining } = useProfileBoost(user);
   const activeBoosts = getActiveBoosts();

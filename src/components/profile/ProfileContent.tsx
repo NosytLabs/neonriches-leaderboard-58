@@ -83,7 +83,9 @@ const ProfileContent: React.FC<ProfileContentProps> = ({
           />
           
           {user && user.profileBoosts && user.profileBoosts.length > 0 && (
-            <ProfileBoostDisplay user={user} />
+            <ProfileBoostDisplay 
+              user={user} 
+            />
           )}
         </div>
       )}
