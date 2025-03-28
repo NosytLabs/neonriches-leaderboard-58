@@ -8,7 +8,6 @@ import CountdownTimer from './CountdownTimer';
 import EventDetailsModal from './components/EventDetailsModal';
 import { useEventStatistics } from './hooks/useEventStatistics';
 import { currentEvent } from './data';
-import TreasureHuntEvent from './TreasureHuntEvent';
 import PublicShamingFestival from './PublicShamingFestival';
 import OptimizedImage from '@/components/ui/optimized-image';
 import { formatDate } from '@/utils/dateUtils';
@@ -20,8 +19,6 @@ const CurrentEvent = () => {
   // Render appropriate event component based on type
   const renderEventComponent = () => {
     switch (currentEvent.type) {
-      case 'treasure':
-        return <TreasureHuntEvent />;
       case 'shame':
         return <PublicShamingFestival />;
       default:

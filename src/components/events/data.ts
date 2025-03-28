@@ -53,22 +53,13 @@ export const topUsers = [
   }
 ];
 
-// Upcoming events data
+// Upcoming events data with updated images
 export const upcomingEvents = [
-  {
-    id: "treasure-hunt",
-    name: "Royal Treasure Hunt",
-    description: "Solve riddles and follow clues to find valuable treasures hidden throughout the site. Discover all treasures to claim special rewards and badges.",
-    image: "https://images.unsplash.com/photo-1551732998-9573f695fdbb?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
-    startDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(), // 5 days from now
-    endDate: new Date(Date.now() + 12 * 24 * 60 * 60 * 1000).toISOString(), // 12 days from now
-    type: "treasure"
-  },
   {
     id: "public-shaming",
     name: "Public Shaming Festival",
     description: "Monthly medieval-style event where nobles can publicly shame others with tomatoes, eggs, or stocks. Discounted rates for all shaming actions!",
-    image: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+    image: "https://images.unsplash.com/photo-1472396961693-142e6e269027?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
     startDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString(), // 14 days from now
     endDate: new Date(Date.now() + 17 * 24 * 60 * 60 * 1000).toISOString(), // 17 days from now
     type: "shame"
@@ -77,43 +68,20 @@ export const upcomingEvents = [
     id: "team-conquest",
     name: "Team Conquest",
     description: "Join forces with your team to dominate the leaderboard and claim territories on the kingdom map. The winning team earns exclusive badges and bonuses.",
-    image: "https://images.unsplash.com/photo-1473177104440-ffee2f376098?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+    image: "https://images.unsplash.com/photo-1466721591366-2d5fba72006d?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
     startDate: new Date(Date.now() + 21 * 24 * 60 * 60 * 1000).toISOString(), // 21 days from now
     endDate: new Date(Date.now() + 28 * 24 * 60 * 60 * 1000).toISOString(), // 28 days from now
     type: "team"
   }
 ];
 
-// Event details data
+// Event details data - removing Treasure Hunt
 export const eventDetailsData: Record<string, EventDetails> = {
-  "treasure-hunt": {
-    id: "treasure-hunt",
-    name: "Royal Treasure Hunt",
-    description: "Solve riddles and follow clues to find valuable treasures hidden throughout the site. Discover all treasures to claim special rewards and badges.",
-    image: "https://images.unsplash.com/photo-1551732998-9573f695fdbb?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
-    startDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(),
-    endDate: new Date(Date.now() + 12 * 24 * 60 * 60 * 1000).toISOString(),
-    type: "treasure",
-    rewardTypes: ["Exclusive Badges", "Profile Cosmetics", "Bonus Rank Points", "Special Titles"],
-    eligibility: "All registered users can participate",
-    participationRequirements: [
-      "Navigate the site to find hidden treasures",
-      "Solve riddles to uncover treasure locations",
-      "Collect all treasures for bonus rewards",
-      "Login at least once during the event period"
-    ],
-    specialRules: [
-      "Hints can be purchased for difficult treasures",
-      "Treasures are purely cosmetic and don't affect actual rank",
-      "Progress is saved throughout the event",
-      "Share clues with team members for team-based bonuses"
-    ]
-  },
   "public-shaming": {
     id: "public-shaming",
     name: "Public Shaming Festival",
     description: "Monthly medieval-style event where nobles can publicly shame others with tomatoes, eggs, or stocks. Discounted rates for all shaming actions!",
-    image: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+    image: "https://images.unsplash.com/photo-1472396961693-142e6e269027?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
     startDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString(),
     endDate: new Date(Date.now() + 17 * 24 * 60 * 60 * 1000).toISOString(),
     type: "shame",
@@ -136,7 +104,7 @@ export const eventDetailsData: Record<string, EventDetails> = {
     id: "team-conquest",
     name: "Team Conquest",
     description: "Join forces with your team to dominate the leaderboard and claim territories on the kingdom map. The winning team earns exclusive badges and bonuses.",
-    image: "https://images.unsplash.com/photo-1473177104440-ffee2f376098?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+    image: "https://images.unsplash.com/photo-1466721591366-2d5fba72006d?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
     startDate: new Date(Date.now() + 21 * 24 * 60 * 60 * 1000).toISOString(),
     endDate: new Date(Date.now() + 28 * 24 * 60 * 60 * 1000).toISOString(),
     type: "team",
@@ -157,7 +125,7 @@ export const eventDetailsData: Record<string, EventDetails> = {
   }
 };
 
-// Add the missing exports for eventStats and currentEvent
+// Update EventStats data
 export const eventStats: EventStats = {
   prizePool: 24750,
   participantsCount: 487,
@@ -168,12 +136,13 @@ export const eventStats: EventStats = {
   }
 };
 
+// Updated current event to Public Shaming instead of Treasure Hunt
 export const currentEvent: Event = {
-  id: "treasure-hunt",
-  name: "Royal Treasure Hunt",
-  description: "Solve riddles and follow clues to find valuable treasures hidden throughout the site.",
-  image: "https://images.unsplash.com/photo-1551732998-9573f695fdbb?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+  id: "public-shaming",
+  name: "Public Shaming Festival",
+  description: "Monthly medieval-style event where nobles can publicly shame others. Discounted rates for all shaming actions!",
+  image: "https://images.unsplash.com/photo-1472396961693-142e6e269027?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
   startDate: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(), // 2 days ago
   endDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(), // 5 days from now
-  type: "treasure"
+  type: "shame"
 };
