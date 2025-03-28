@@ -1,3 +1,4 @@
+
 import * as path from 'path';
 import { parseCSS } from './cssAnalysis';
 import { analyzeDependencies } from './dependencyAnalysis';
@@ -199,6 +200,7 @@ export const scanCodebase = async (
     result.deadCodePaths = deadCodeResults;
     
     // Calculate metrics after potential cleanup
+    // Fix: Remove the second argument, as calculateProjectMetrics only expects one
     result.metrics.afterCleanup = await calculateProjectMetrics(projectRoot);
     
     return result;
