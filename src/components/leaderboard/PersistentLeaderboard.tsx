@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
@@ -9,7 +8,7 @@ import { useAuth } from '@/contexts/auth';
 import { LeaderboardEntry, LeaderboardFilter } from '@/types/leaderboard';
 import { formatCurrency } from '@/lib/utils';
 import { ensureUser } from '@/utils/userAdapter';
-import { fetchLeaderboardEntries } from '@/services/leaderboardService';
+import { getLeaderboardEntries } from '@/services/leaderboardService';
 
 interface PersistentLeaderboardProps {
   limit?: number;
@@ -30,7 +29,7 @@ const PersistentLeaderboard: React.FC<PersistentLeaderboardProps> = ({ limit = 1
     const loadLeaderboardData = async () => {
       setLoading(true);
       try {
-        const entries = await fetchLeaderboardEntries(filters, limit);
+        const entries = await getLeaderboardEntries(filters, limit);
         setLeaderboardData(entries);
       } catch (error) {
         console.error('Failed to load leaderboard data:', error);

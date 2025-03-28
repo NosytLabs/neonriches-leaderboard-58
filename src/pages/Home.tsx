@@ -150,7 +150,13 @@ const Home = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
             >
-              <MedievalIcon name="crown" size="xl" color="gold" animate="glow" className="mx-auto mb-6" />
+              <MedievalIcon 
+                name="crown" 
+                size="xl" 
+                color="gold" 
+                animate={true} 
+                className="mb-4"
+              />
               
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-royal royal-gradient mb-4">
                 Where Your Wallet <br />Determines Your Worth
@@ -323,7 +329,13 @@ const Home = () => {
               >
                 <div className="glass-morphism border-royal-crimson/30 rounded-lg p-6 text-center hover:shadow-[0_0_15px_rgba(155,35,53,0.3)] transition-shadow duration-300">
                   <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-royal-crimson/20 flex items-center justify-center">
-                    <MedievalIcon name="flame" size="lg" color="red" />
+                    <MedievalIcon 
+                      name="flame" 
+                      size="lg" 
+                      color="red" 
+                      animate={true} 
+                      className="mr-3"
+                    />
                   </div>
                   <h3 className="text-xl font-bold mb-2 text-royal-crimson-bright">House Crimson</h3>
                   <p className="text-white/70 mb-4">
@@ -341,7 +353,13 @@ const Home = () => {
               >
                 <div className="glass-morphism border-royal-gold/30 rounded-lg p-6 text-center hover:shadow-[0_0_15px_rgba(212,175,55,0.3)] transition-shadow duration-300">
                   <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-royal-gold/20 flex items-center justify-center">
-                    <MedievalIcon name="sunburst" size="lg" color="gold" />
+                    <MedievalIcon 
+                      name="sunburst" 
+                      size="lg" 
+                      color="gold" 
+                      animate={true} 
+                      className="mr-3"
+                    />
                   </div>
                   <h3 className="text-xl font-bold mb-2 text-royal-gold">House Gold</h3>
                   <p className="text-white/70 mb-4">
@@ -359,7 +377,13 @@ const Home = () => {
               >
                 <div className="glass-morphism border-royal-navy/30 rounded-lg p-6 text-center hover:shadow-[0_0_15px_rgba(31,71,136,0.3)] transition-shadow duration-300">
                   <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-royal-navy/20 flex items-center justify-center">
-                    <MedievalIcon name="water" size="lg" color="blue" />
+                    <MedievalIcon 
+                      name="water" 
+                      size="lg" 
+                      color="blue" 
+                      animate={true} 
+                      className="mr-3"
+                    />
                   </div>
                   <h3 className="text-xl font-bold mb-2 text-royal-navy-bright">House Azure</h3>
                   <p className="text-white/70 mb-4">
@@ -439,7 +463,13 @@ const Home = () => {
               transition={{ duration: 0.5 }}
               viewport={{ once: true }}
             >
-              <MedievalIcon name="crown" size="lg" color="gold" animate="glow" className="mx-auto mb-6" />
+              <MedievalIcon 
+                name="crown" 
+                size="lg" 
+                color="gold" 
+                animate={true} 
+                className="mr-3"
+              />
               
               <h2 className="text-3xl md:text-4xl font-royal royal-gradient mb-6">
                 Ready to Ascend the Ranks?

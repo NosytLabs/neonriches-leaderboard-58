@@ -1,119 +1,191 @@
 
-import { SolanaTreasuryInfo, SolanaTransaction, OnChainLeaderboardEntry, SolanaNftInfo } from "@/types/solana";
-import { UserProfile } from "@/types/user";
+import { UserProfile } from '@/types/user';
+import { SolanaWallet, SolanaNftInfo, SolanaTreasuryInfo, SolanaTransaction } from '@/types/solana';
 
-// Get basic treasury info
-export const getTreasuryInfo = async (): Promise<SolanaTreasuryInfo> => {
-  // This would be an API call in a real application
-  return {
-    address: "7DH8Fi52tFMNQNVGDsYrVXzpQvD4XmMhPP3eGwJwUaJb",
-    balance: 1250.75,
-    totalDeposits: 3500.0,
-    totalWithdrawals: 2249.25,
-    lastUpdated: new Date().toISOString(),
-    usdValue: 125075.0
-  };
-};
-
-// Get recent treasury transactions
-export const getTreasuryTransactions = async (limit = 10): Promise<SolanaTransaction[]> => {
-  // This would be an API call in a real application
-  const mockTransactions: SolanaTransaction[] = [
-    {
-      id: "solana-tx-1",
-      signature: "5v54qzqHBQrA5dn1KFRwCKioVuGm7QD6UahLHFXvnTmrXm8fJK5rSaVqA7J8ZYnZMkP92UkDwPXJ9zKpWvQYpkMn",
-      timestamp: new Date(Date.now() - 1 * 60 * 60 * 1000).toISOString(),
-      type: "deposit",
-      amount: 25.5,
-      sender: "8xg7D4ESuJLRJQvnJPw9Mqq9YBJBBe9c8Xu7Lm68cRJ7",
-      recipient: "7DH8Fi52tFMNQNVGDsYrVXzpQvD4XmMhPP3eGwJwUaJb",
-      status: "confirmed"
-    },
-    {
-      id: "solana-tx-2",
-      signature: "2vhFDtAfMN2A9MGHUFFAZXMZUWi9pLqY7UwDDz5ZhzUE97xYjgJZSS3QBYu1bwcgVLJb5KKd3pPivMC1jGHqAptP",
-      timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
-      type: "withdrawal",
-      amount: 10.0,
-      sender: "7DH8Fi52tFMNQNVGDsYrVXzpQvD4XmMhPP3eGwJwUaJb",
-      recipient: "BQj1qLExCzeEMtZ9a6YEQWhrQfG7BrAsfHG1kPuCNCsC",
-      status: "confirmed"
-    }
-  ];
-  
-  return mockTransactions.slice(0, limit);
-};
-
-// Subscribe to real-time treasury updates
-export const subscribeToTreasuryUpdates = (callback: (transaction: SolanaTransaction) => void): (() => void) => {
-  // In a real app, this would set up a websocket or polling mechanism
-  // For demo purposes, simulate updates every 30 seconds
-  const interval = setInterval(() => {
-    const randomTx: SolanaTransaction = {
-      id: `solana-tx-${Date.now()}`,
-      signature: `${Math.random().toString(36).substring(2, 15)}${Math.random().toString(36).substring(2, 15)}`,
-      timestamp: new Date().toISOString(),
-      type: Math.random() > 0.2 ? "deposit" : "withdrawal",
-      amount: parseFloat((Math.random() * 20 + 0.5).toFixed(2)),
-      sender: Math.random() > 0.2 
-        ? `${Math.random().toString(36).substring(2, 15)}${Math.random().toString(36).substring(2, 15)}`
-        : "7DH8Fi52tFMNQNVGDsYrVXzpQvD4XmMhPP3eGwJwUaJb",
-      recipient: Math.random() > 0.8
-        ? `${Math.random().toString(36).substring(2, 15)}${Math.random().toString(36).substring(2, 15)}`
-        : "7DH8Fi52tFMNQNVGDsYrVXzpQvD4XmMhPP3eGwJwUaJb",
-      status: "confirmed"
-    };
+/**
+ * Connect to a Solana wallet
+ * @returns Promise with wallet info
+ */
+export const connectWallet = async (): Promise<SolanaWallet | null> => {
+  try {
+    // Mock implementation - in a real app, this would use @solana/wallet-adapter
+    console.log('Connecting to Solana wallet...');
+    await new Promise(resolve => setTimeout(resolve, 1000));
     
-    callback(randomTx);
-  }, 30000);
-  
-  return () => clearInterval(interval);
+    return {
+      publicKey: 'GodT6f4FTU24yhFjwzVtAVaDSZ2MYQ7J62vVe1iwQrwN',
+      isConnected: true,
+      balance: 1.253
+    };
+  } catch (error) {
+    console.error('Error connecting to wallet:', error);
+    return null;
+  }
 };
 
-// Generate NFT certificate metadata
-export const generateCertificateMetadata = (user: UserProfile): any => {
+/**
+ * Disconnect from a Solana wallet
+ * @returns Promise with success status
+ */
+export const disconnectWallet = async (): Promise<boolean> => {
+  try {
+    // Mock implementation
+    console.log('Disconnecting from Solana wallet...');
+    await new Promise(resolve => setTimeout(resolve, 500));
+    
+    return true;
+  } catch (error) {
+    console.error('Error disconnecting wallet:', error);
+    return false;
+  }
+};
+
+/**
+ * Get a Solana wallet's balance
+ * @param publicKey Wallet public key
+ * @returns Promise with balance in SOL
+ */
+export const getWalletBalance = async (publicKey: string): Promise<number> => {
+  try {
+    // Mock implementation
+    console.log(`Getting balance for wallet ${publicKey}...`);
+    await new Promise(resolve => setTimeout(resolve, 500));
+    
+    return 1.253;
+  } catch (error) {
+    console.error('Error getting wallet balance:', error);
+    return 0;
+  }
+};
+
+/**
+ * Send SOL from one wallet to another
+ * @param sender Sender wallet
+ * @param recipient Recipient public key
+ * @param amount Amount to send in SOL
+ * @returns Promise with transaction signature
+ */
+export const sendSol = async (
+  sender: SolanaWallet,
+  recipient: string,
+  amount: number
+): Promise<string | null> => {
+  try {
+    // Mock implementation
+    console.log(`Sending ${amount} SOL from ${sender.publicKey} to ${recipient}...`);
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    
+    const signature = 'mock-tx-signature-' + Math.random().toString(36).substring(2, 15);
+    return signature;
+  } catch (error) {
+    console.error('Error sending SOL:', error);
+    return null;
+  }
+};
+
+/**
+ * Generate metadata for a certificate NFT
+ * @param user User profile to create certificate for
+ * @returns NFT metadata
+ */
+export const generateCertificateMetadata = (user: UserProfile) => {
   return {
-    name: `Certificate of Nobility - ${user.username}`,
-    symbol: "P2WCERT",
-    description: `This certificate confirms that ${user.username} has achieved rank #${user.rank} in the P2W.FUN Royal Court.`,
-    seller_fee_basis_points: 500,
-    image: "https://example.com/certificate-image.png",
-    external_url: "https://p2w.fun/certificate/" + user.id,
+    name: `${user.username}'s Certificate of Nobility`,
+    description: `This certificate acknowledges ${user.displayName || user.username}'s contributions of $${user.totalSpent || user.amountSpent || 0}, achieving a rank of #${user.rank} in the Pay-to-Win hierarchy.`,
+    image: 'https://example.com/certificate.png', // Placeholder URL
     attributes: [
       {
-        trait_type: "Rank",
-        value: user.rank
+        trait_type: 'Rank',
+        value: user.rank || 0
       },
       {
-        trait_type: "Team",
-        value: user.team || "Unaligned"
+        trait_type: 'Contributions',
+        value: user.totalSpent || user.amountSpent || 0
       },
       {
-        trait_type: "Total Spent",
-        value: user.amountSpent || 0
+        trait_type: 'Tier',
+        value: user.tier
       },
       {
-        trait_type: "Join Date",
-        value: new Date(user.joinDate || Date.now()).toISOString().split('T')[0]
-      },
-      {
-        trait_type: "Tier",
-        value: user.tier || "basic"
+        trait_type: 'Join Date',
+        value: user.joinDate
       }
-    ],
-    properties: {
-      files: [
-        {
-          uri: "https://example.com/certificate-image.png",
-          type: "image/png"
-        }
-      ],
-      creators: [
-        {
-          address: "7DH8Fi52tFMNQNVGDsYrVXzpQvD4XmMhPP3eGwJwUaJb",
-          share: 100
-        }
-      ]
-    }
+    ]
   };
+};
+
+/**
+ * Mint a certificate as an NFT
+ * @param user User to mint certificate for
+ * @returns Promise with success status and NFT info
+ */
+export const mintCertificateNFT = async (user: UserProfile): Promise<{
+  success: boolean;
+  nftInfo?: SolanaNftInfo;
+  error?: string;
+}> => {
+  try {
+    // Mock implementation
+    console.log(`Minting certificate NFT for ${user.username}...`);
+    await new Promise(resolve => setTimeout(resolve, 3000));
+    
+    const metadata = generateCertificateMetadata(user);
+    
+    const nftInfo: SolanaNftInfo = {
+      mintAddress: 'mock-nft-' + Math.random().toString(36).substring(2, 15),
+      tokenAccount: 'mock-token-account-' + Math.random().toString(36).substring(2, 15),
+      name: metadata.name,
+      symbol: 'CERT',
+      image: metadata.image,
+      description: metadata.description,
+      attributes: metadata.attributes
+    };
+    
+    return { success: true, nftInfo };
+  } catch (error) {
+    console.error('Error minting certificate NFT:', error);
+    return { success: false, error: 'Failed to mint NFT' };
+  }
+};
+
+/**
+ * Subscribe to treasury updates
+ * @param callback Callback function to handle updates
+ * @returns Unsubscribe function
+ */
+export const subscribeToTreasuryUpdates = (
+  callback: (treasuryInfo: SolanaTreasuryInfo) => void
+) => {
+  console.log('Subscribing to treasury updates...');
+  
+  // Mock implementation - simulate periodic updates
+  const interval = setInterval(() => {
+    const mockTreasuryInfo: SolanaTreasuryInfo = {
+      pubkey: 'Treasury1111111111111111111111111111111',
+      balance: Math.random() * 1000,
+      owner: 'Governance111111111111111111111111111111',
+      transactions: [],
+      totalContributions: Math.random() * 10000,
+      lastUpdated: new Date().toISOString(),
+      amount: Math.random() * 1000,
+      sender: 'User111111111111111111111111111111111111'
+    };
+    
+    callback(mockTreasuryInfo);
+  }, 10000);
+  
+  return () => {
+    console.log('Unsubscribing from treasury updates...');
+    clearInterval(interval);
+  };
+};
+
+export default {
+  connectWallet,
+  disconnectWallet,
+  getWalletBalance,
+  sendSol,
+  generateCertificateMetadata,
+  mintCertificateNFT,
+  subscribeToTreasuryUpdates
 };

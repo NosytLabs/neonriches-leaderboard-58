@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -6,11 +5,11 @@ import { Shield, DollarSign, Info } from 'lucide-react';
 import { MockeryAction } from '@/types/mockery';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { 
+  getMockeryActionIcon, 
   getMockeryActionTitle, 
   getMockeryActionDescription, 
-  getMockeryActionIcon, 
-  getMockeryActionPrice, 
-  getDiscountedMockeryPrice 
+  getMockeryActionPrice,
+  getDiscountedMockeryPrice
 } from '../utils/mockeryUtils';
 
 interface TargetUser {

@@ -1,53 +1,59 @@
 
-export interface SolanaTreasuryInfo {
-  address: string;
+export interface SolanaWallet {
+  publicKey: string;
+  isConnected: boolean;
   balance: number;
-  totalDeposits: number;
-  totalWithdrawals: number;
+}
+
+export interface SolanaTreasuryInfo {
+  pubkey: string;
+  balance: number;
+  owner: string;
+  transactions: SolanaTransaction[];
+  totalContributions: number;
   lastUpdated: string;
-  usdValue: number;
+  amount: number;
+  sender: string;
 }
 
 export interface SolanaTransaction {
-  id: string;
   signature: string;
   timestamp: string;
-  type: 'deposit' | 'withdrawal';
   amount: number;
   sender: string;
-  recipient: string;
-  status: 'pending' | 'confirmed' | 'failed';
-}
-
-export interface OnChainLeaderboardEntry {
-  id: string;
-  publicKey: string;
-  username: string;
-  rank: number;
-  previousRank: number;
-  amountSpent: number;
-  totalSpent: number;
-  lastTransaction: string;
-  isVerified: boolean;
-  signature: string;
-}
-
-export interface SolanaWallet {
-  publicKey: string;
-  balance: number;
-  isConnected: boolean;
-  lastActivity?: string;
-  transactions?: SolanaTransaction[];
+  receiver: string;
+  type: 'deposit' | 'withdrawal' | 'transfer' | 'other';
+  status: 'confirmed' | 'processing' | 'failed';
 }
 
 export interface SolanaNftInfo {
   mintAddress: string;
+  tokenAccount: string;
   name: string;
   symbol: string;
   image: string;
+  description: string;
   attributes: {
     trait_type: string;
-    value: string | number;
+    value: string;
   }[];
-  metadata: any;
 }
+
+export interface SolanaCollectionInfo {
+  name: string;
+  symbol: string;
+  description: string;
+  image: string;
+  size: number;
+  floorPrice: number;
+  volume: number;
+}
+
+export interface SolanaStats {
+  price: number;
+  change24h: number;
+  volume24h: number;
+  marketCap: number;
+}
+
+export type TransactionType = 'deposit' | 'withdrawal' | 'purchase' | 'mockery' | 'boost' | 'event' | 'cosmetic' | 'certificate' | 'founder' | 'advertisement';

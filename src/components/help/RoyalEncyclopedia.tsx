@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import RoyalDivider from '@/components/ui/royal-divider';
 import { MockeryTier } from '@/types/mockery';
 import { cn } from '@/lib/utils';
+import { getMockeryTierColor, getMockeryTierLabel } from '@/utils/mockeryUtils';
 
 // Article interfaces
 interface ArticleTag {

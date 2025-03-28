@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { 
@@ -605,7 +604,13 @@ const Features = () => {
       <RoyalSection className="py-16 bg-gradient-to-b from-bg-dark to-bg-dark-lighter">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
-            <MedievalIcon name="crown" size="lg" color="gold" animate={true} className="mb-4 mx-auto" />
+            <MedievalIcon 
+              name="crown" 
+              size="lg" 
+              color="gold" 
+              animate={true} 
+              className="mr-3"
+            />
             <h2 className="text-3xl font-bold royal-gradient mb-4 font-royal">
               Royal Tier System
             </h2>
@@ -757,7 +762,13 @@ const Features = () => {
       <RoyalSection className="py-16">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
-            <MedievalIcon name="message" size="lg" color="gold" animate="glow" className="mb-4 mx-auto" />
+            <MedievalIcon 
+              name="message" 
+              size="lg" 
+              color="gold" 
+              animate="glow" 
+              className="mb-4 mx-auto"
+            />
             <h2 className="text-3xl font-bold royal-gradient mb-4 font-royal">
               Team Communication
             </h2>
@@ -774,7 +785,13 @@ const Features = () => {
       <RoyalSection className="py-16 bg-gradient-to-b from-bg-dark to-bg-dark-lighter">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
-            <MedievalIcon name="crown" size="lg" color="gold" animate="pulse" className="mb-4 mx-auto" />
+            <MedievalIcon 
+              name="crown" 
+              size="lg" 
+              color="gold" 
+              animate="pulse" 
+              className="mb-4 mx-auto"
+            />
             <h2 className="text-3xl font-bold royal-gradient mb-4 font-royal">
               Royal Kingmaker
             </h2>
@@ -791,7 +808,13 @@ const Features = () => {
       <RoyalSection className="py-16">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
-            <MedievalIcon name="scroll" size="lg" color="gold" animate="glow" className="mb-4 mx-auto" />
+            <MedievalIcon 
+              name="scroll" 
+              size="lg" 
+              color="gold" 
+              animate="glow" 
+              className="mb-4 mx-auto"
+            />
             <h2 className="text-3xl font-bold royal-gradient mb-4 font-royal">
               Royal Council Forums
             </h2>
@@ -808,7 +831,13 @@ const Features = () => {
       <RoyalSection className="py-16 bg-gradient-to-b from-bg-dark to-bg-dark-lighter">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12">
-            <MedievalIcon name="user" size="lg" color="gold" animate="glow" className="mb-4 mx-auto" />
+            <MedievalIcon 
+              name="user" 
+              size="lg" 
+              color="gold" 
+              animate="glow" 
+              className="mb-4 mx-auto"
+            />
             <h2 className="text-3xl font-bold royal-gradient mb-4 font-royal">
               Royal Profile Customization
             </h2>

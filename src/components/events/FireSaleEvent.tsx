@@ -1,247 +1,246 @@
+
 import React, { useState, useEffect } from 'react';
-import { DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Flame, Tag, Sparkles, Crown, Clock } from 'lucide-react';
-import { formatCategoryName } from '@/utils/stringUtils';
+import { Flame, Tag, Clock, Coins } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
+import MedievalIcon from '@/components/ui/medieval-icon';
 import { 
   CosmeticItem, 
-  CosmeticCategory, 
-  CosmeticRarity, 
+  CosmeticRarity,
   getRarityColor, 
   getRarityBgColor, 
   getRarityBorderColor 
 } from '@/types/cosmetics';
-import RoyalDivider from '@/components/ui/royal-divider';
-import { mockedCosmeticsData } from '@/data/cosmeticsData';
+import { cosmeticsData } from '@/data/cosmeticsData';
+import { formatCurrency } from '@/utils/formatters';
 import { useAuth } from '@/contexts/auth';
-import { useToastContext } from '@/contexts/ToastContext';
-import PaymentModal from '@/components/PaymentModal';
-import CountdownTimer from './CountdownTimer';
-import MedievalIcon from '@/components/ui/medieval-icon';
+import { ensureUser } from '@/utils/userAdapter';
+import { spendFromWallet } from '@/services/walletService';
 
 interface FireSaleEventProps {
-  onClose: () => void;
-  discountPercentage: number;
-  featuredCategories: string[];
-  daysRemaining: number;
+  eventId: string;
+  startDate: string;
+  endDate: string;
 }
 
-const FireSaleEvent: React.FC<FireSaleEventProps> = ({
-  onClose,
-  discountPercentage,
-  featuredCategories,
-  daysRemaining
-}) => {
-  const { user } = useAuth();
-  const { addToast } = useToastContext();
-  const [selectedCategory, setSelectedCategory] = useState<string>(featuredCategories[0] || 'border');
-  const [selectedItem, setSelectedItem] = useState<CosmeticItem | null>(null);
+const FireSaleEvent = ({ eventId, startDate, endDate }: FireSaleEventProps) => {
+  const [saleItems, setSaleItems] = useState<CosmeticItem[]>([]);
+  const [timeLeft, setTimeLeft] = useState('');
+  const { toast } = useToast();
+  const { user, updateUserProfile } = useAuth();
   
-  const getEndOfMonthDate = (): string => {
-    const today = new Date();
-    const lastDay = new Date(today.getFullYear(), today.getMonth() + 1, 0);
-    lastDay.setHours(23, 59, 59, 999);
-    return lastDay.toISOString();
-  };
-  
-  const filteredCosmetics = mockedCosmeticsData.filter(item => 
-    featuredCategories.includes(item.category as string)
-  );
-  
-  const getCosmeticsForCategory = (): CosmeticItem[] => {
-    return filteredCosmetics.filter(item => item.category === selectedCategory);
-  };
-  
-  const getDiscountedPrice = (originalPrice: number): number => {
-    return Number((originalPrice * (1 - discountPercentage / 100)).toFixed(2));
-  };
-  
-  const getCosmeticPreviewStyleForRarity = (rarity: string) => {
-    const typedRarity = rarity as CosmeticRarity;
-    
-    const dummyItem: CosmeticItem = {
-      id: 'dummy',
-      name: 'Dummy Item',
-      description: 'Dummy description',
-      category: 'border' as CosmeticCategory,
-      type: 'profile',
-      rarity: typedRarity,
-      cost: 0,
-      placement: 'profile'
+  useEffect(() => {
+    // Simulate getting sale items - in a real app, you would fetch this from your backend
+    const getDiscountedItems = () => {
+      // For demo purposes, just pick a few random items from the cosmetics data
+      const randomItems = [...cosmeticsData]
+        .sort(() => 0.5 - Math.random())
+        .slice(0, 4);
+      
+      // Apply "sale" prices
+      const discountedItems = randomItems.map(item => ({
+        ...item,
+        originalCost: item.cost,
+        cost: Math.floor(item.cost * 0.7) // 30% discount
+      }));
+      
+      setSaleItems(discountedItems);
     };
     
-    return {};
+    getDiscountedItems();
+  }, [eventId]);
+  
+  useEffect(() => {
+    const calculateTimeLeft = () => {
+      const endDateTime = new Date(endDate);
+      const now = new Date();
+      
+      if (now > endDateTime) {
+        setTimeLeft('Event ended');
+        return;
+      }
+      
+      const diff = endDateTime.getTime() - now.getTime();
+      
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      
+      if (days > 0) {
+        setTimeLeft(`${days}d ${hours}h ${minutes}m`);
+      } else if (hours > 0) {
+        setTimeLeft(`${hours}h ${minutes}m`);
+      } else {
+        setTimeLeft(`${minutes}m`);
+      }
+    };
+    
+    calculateTimeLeft();
+    const timer = setInterval(calculateTimeLeft, 60000);
+    
+    return () => clearInterval(timer);
+  }, [endDate]);
+  
+  const handlePurchase = async (item: CosmeticItem) => {
+    if (!user) {
+      toast({
+        title: "Authentication Required",
+        description: "You must be logged in to purchase items.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    if (user.walletBalance < item.cost) {
+      toast({
+        title: "Insufficient Funds",
+        description: `You need ${formatCurrency(item.cost)} to purchase this item.`,
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    try {
+      const success = await spendFromWallet(
+        ensureUser(user),
+        item.cost,
+        'cosmetic',
+        `Purchased ${item.name} cosmetic item`
+      );
+      
+      if (success) {
+        // Update user's cosmetics collection
+        const userCosmetics = user.cosmetics || {
+          borders: [],
+          colors: [],
+          fonts: [],
+          emojis: [],
+          titles: [],
+          backgrounds: [],
+          effects: [],
+          badges: [],
+          themes: []
+        };
+        
+        // Add the item to the appropriate collection based on its type
+        const updatedCosmetics = { ...userCosmetics };
+        if (Array.isArray(updatedCosmetics[item.type as keyof typeof updatedCosmetics])) {
+          (updatedCosmetics[item.type as keyof typeof updatedCosmetics] as string[]).push(item.id);
+        }
+        
+        await updateUserProfile({
+          ...user,
+          cosmetics: updatedCosmetics,
+          walletBalance: user.walletBalance - item.cost
+        });
+        
+        toast({
+          title: "Purchase Successful",
+          description: `You've acquired the ${item.name}!`,
+        });
+      } else {
+        toast({
+          title: "Purchase Failed",
+          description: "There was an error processing your purchase.",
+          variant: "destructive"
+        });
+      }
+    } catch (error) {
+      console.error("Error purchasing item:", error);
+      toast({
+        title: "Purchase Failed",
+        description: "There was an error processing your purchase.",
+        variant: "destructive"
+      });
+    }
   };
   
-  const handlePurchase = (item: CosmeticItem) => {
-    const discountedPrice = getDiscountedPrice(item.cost || 0);
-    
-    addToast({
-      title: "Cosmetic Purchased!",
-      description: `You've acquired "${item.name}" for $${discountedPrice.toFixed(2)}!`,
-      variant: "royal",
-      sound: "success"
-    });
-    
-    setTimeout(() => {
-      onClose();
-    }, 1500);
-  };
-  
-  const getCategoryIcon = (category: string): string => {
-    if (category === "border") return 'scroll';
-    if (category === "background") return 'castle';
-    if (category === "badge") return 'medal';
-    if (category === "title") return 'crown';
-    if (category === "effect") return 'sparkles';
-    return 'star';
+  const getRarityIcon = (rarity: CosmeticRarity) => {
+    switch (rarity) {
+      case 'common':
+        return <MedievalIcon name="shield" size="sm" color="silver" />;
+      case 'uncommon':
+        return <MedievalIcon name="shield" size="sm" color="silver" />;
+      case 'rare':
+        return <MedievalIcon name="shield" size="sm" color="gold" />;
+      case 'epic':
+        return <MedievalIcon name="crown" size="sm" color="purple" />;
+      case 'legendary':
+        return <MedievalIcon name="crown" size="sm" color="gold" />;
+      default:
+        return <MedievalIcon name="shield" size="sm" color="silver" />;
+    }
   };
   
   return (
-    <DialogContent className="glass-morphism border-royal-crimson/30 sm:max-w-3xl relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-t from-royal-crimson/10 to-transparent opacity-40 pointer-events-none"></div>
-      <div className="absolute inset-0 bg-[url('/assets/patterns/flames.svg')] opacity-5 animate-flame-flicker pointer-events-none"></div>
-      
-      <DialogHeader className="relative z-10">
-        <div className="flex items-center gap-2">
-          <Flame className="h-6 w-6 text-royal-crimson animate-flame-flicker" />
-          <DialogTitle className="text-xl bg-gradient-to-r from-yellow-500 via-royal-crimson to-amber-500 text-transparent bg-clip-text">
-            Royal Fire Sale: {discountPercentage}% Off!
-          </DialogTitle>
-        </div>
-        <DialogDescription className="flex items-center justify-between">
-          <span>Limited time discount on select royal cosmetics</span>
-          <div className="flex items-center text-royal-crimson font-medium">
-            <Clock className="h-4 w-4 mr-2" />
-            <CountdownTimer 
-              targetDate={getEndOfMonthDate()} 
-              variant="compact" 
-              className="text-sm"
-            />
+    <Card className="glass-morphism border-royal-gold/20">
+      <CardHeader className="pb-3">
+        <div className="flex justify-between items-center">
+          <div>
+            <CardTitle className="text-xl font-royal flex items-center">
+              <Flame className="mr-2 h-5 w-5 text-royal-crimson" />
+              Royal Fire Sale
+            </CardTitle>
+            <CardDescription>
+              Limited-time discounts on premium cosmetics
+            </CardDescription>
           </div>
-        </DialogDescription>
-      </DialogHeader>
-      
-      <div className="relative z-10 bg-black/30 border border-white/5 p-3 rounded-lg shadow-inner">
-        <p className="text-white/70 mb-2">
-          By royal decree, these prestigious cosmetic categories have been marked down to celebrate our kingdom's prosperity:
-        </p>
-        <div className="flex flex-wrap gap-2">
-          {featuredCategories.map(category => (
-            <div key={category} className="flex items-center glass-morphism border-white/10 px-2 py-1 rounded-full text-sm">
-              <Sparkles className="h-3 w-3 mr-1 text-royal-gold" />
-              <span>{formatCategoryName(category)}</span>
-            </div>
+          <div className="flex items-center text-royal-gold">
+            <Clock className="h-4 w-4 mr-1" />
+            <span className="text-sm font-mono">{timeLeft}</span>
+          </div>
+        </div>
+      </CardHeader>
+      <CardContent>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {saleItems.map((item) => (
+            <Card key={item.id} className={`glass-morphism border ${getRarityBorderColor(item.rarity)}`}>
+              <CardHeader className={`pb-2 ${getRarityBgColor(item.rarity)}`}>
+                <div className="flex justify-between items-center">
+                  <CardTitle className="text-base flex items-center">
+                    {getRarityIcon(item.rarity)}
+                    <span className="ml-2">{item.name}</span>
+                  </CardTitle>
+                  <Badge variant="outline" className={getRarityColor(item.rarity)}>
+                    {item.rarity.charAt(0).toUpperCase() + item.rarity.slice(1)}
+                  </Badge>
+                </div>
+              </CardHeader>
+              <CardContent className="py-3">
+                <p className="text-sm text-white/70 mb-3">{item.description}</p>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center">
+                    <Tag className="h-4 w-4 text-royal-gold mr-1" />
+                    <span className="text-sm line-through text-white/50 mr-2">
+                      ${(item as any).originalCost?.toFixed(2) || item.cost.toFixed(2)}
+                    </span>
+                    <span className="text-lg font-bold text-royal-gold">
+                      ${item.cost.toFixed(2)}
+                    </span>
+                  </div>
+                  <Button 
+                    size="sm" 
+                    onClick={() => handlePurchase(item)}
+                    disabled={!user || user.walletBalance < item.cost}
+                    className="bg-royal-gold hover:bg-royal-gold/90 text-black"
+                  >
+                    <Coins className="h-3 w-3 mr-1" />
+                    Buy Now
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
           ))}
         </div>
-      </div>
-      
-      <RoyalDivider variant="line" label="ROYAL OFFERINGS" color="crimson" className="my-4" />
-      
-      <Tabs defaultValue={selectedCategory} onValueChange={setSelectedCategory} className="w-full">
-        <TabsList className="glass-morphism border-white/10 grid" style={{ gridTemplateColumns: `repeat(${featuredCategories.length}, 1fr)` }}>
-          {featuredCategories.map(category => (
-            <TabsTrigger key={category} value={category}>
-              {formatCategoryName(category)}
-            </TabsTrigger>
-          ))}
-        </TabsList>
-        
-        {featuredCategories.map(category => (
-          <TabsContent key={category} value={category} className="animate-fade-in">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 max-h-80 overflow-y-auto p-1">
-              {getCosmeticsForCategory().map((item) => {
-                const discountedPrice = getDiscountedPrice(item.cost || 0);
-                
-                return (
-                  <div 
-                    key={item.id}
-                    className={`glass-morphism rounded-lg p-3 transition-all cursor-pointer relative overflow-hidden ${
-                      selectedItem?.id === item.id 
-                        ? 'border-royal-crimson/50 bg-royal-crimson/5' 
-                        : 'border-white/10 hover:border-royal-crimson/30'
-                    }`}
-                    onClick={() => setSelectedItem(item)}
-                  >
-                    <div className="absolute top-0 right-0">
-                      <div className="bg-royal-crimson text-white text-xs px-2 py-0.5 rounded-bl-lg flex items-center">
-                        <Tag size={10} className="mr-1" />
-                        {discountPercentage}% OFF
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-start gap-3">
-                      <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${getCosmeticPreviewStyleForRarity(item.rarity)}`}>
-                        {item.imageSrc ? (
-                          <img 
-                            src={item.imageSrc} 
-                            alt={item.name} 
-                            className="w-10 h-10 object-contain" 
-                          />
-                        ) : (
-                          <MedievalIcon 
-                            name={getCategoryIcon(item.category)} 
-                            size="md"
-                            color={
-                              item.rarity === 'legendary' ? 'gold' :
-                              item.rarity === 'epic' ? 'purple' :
-                              item.rarity === 'rare' ? 'navy' :
-                              item.rarity === 'uncommon' ? 'emerald' :
-                              'silver'
-                            }
-                          />
-                        )}
-                      </div>
-                      
-                      <div className="flex-1">
-                        <div className="flex items-center">
-                          <h4 className="font-medium text-sm">{item.name}</h4>
-                          {item.rarity === 'legendary' && (
-                            <Crown className="ml-1 h-3 w-3 text-royal-gold" />
-                          )}
-                        </div>
-                        <p className="text-xs text-white/60 line-clamp-1">{item.description}</p>
-                        <div className="mt-1 flex items-center justify-between">
-                          <div className="flex items-center">
-                            <span className="text-xs line-through text-white/40">${(item.cost || 0).toFixed(2)}</span>
-                            <span className="ml-2 text-sm font-bold text-royal-gold">${discountedPrice.toFixed(2)}</span>
-                          </div>
-                          <div className="text-xs px-1.5 py-0.5 rounded-full bg-white/10 capitalize">
-                            {item.rarity}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </TabsContent>
-        ))}
-      </Tabs>
-      
-      <div className="flex justify-between mt-4">
-        <Button variant="outline" className="glass-morphism border-white/10" onClick={onClose}>
-          Close
-        </Button>
-        
-        {selectedItem && (
-          <PaymentModal
-            amount={getDiscountedPrice(selectedItem.cost || 0)}
-            onSuccess={() => handlePurchase(selectedItem)}
-            title={`Purchase ${selectedItem.name}`}
-            description={`Acquire this ${selectedItem.rarity} ${selectedItem.category} at ${discountPercentage}% off!`}
-            trigger={
-              <Button className="bg-gradient-to-r from-royal-crimson to-amber-600 hover:opacity-90 animate-pulse-slow">
-                <Flame className="mr-2 h-4 w-4" />
-                <span>Buy for ${getDiscountedPrice(selectedItem.cost || 0).toFixed(2)}</span>
-              </Button>
-            }
-          />
-        )}
-      </div>
-    </DialogContent>
+      </CardContent>
+      <CardFooter className="pt-0">
+        <p className="text-xs text-white/50 italic">
+          *All sales are final. Items purchased during the Fire Sale are non-refundable.
+        </p>
+      </CardFooter>
+    </Card>
   );
 };
 

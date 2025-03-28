@@ -22,6 +22,10 @@ export const getTierBadgeColor = (tier: string): string => {
       return 'bg-blue-500/20 text-blue-400';
     case 'epic':
       return 'bg-purple-500/20 text-purple-300';
+    case 'pro':
+      return 'bg-royal-gold/10 text-royal-gold';
+    case 'free':
+      return 'bg-gray-500/20 text-gray-300';  
     default:
       return 'bg-white/10 text-white/80';
   }
@@ -50,6 +54,10 @@ export const getTierName = (tier: string): string => {
       return 'Knight';
     case 'epic':
       return 'Duke/Duchess';
+    case 'pro':
+      return 'Professional';
+    case 'free':
+      return 'Peasant';
     default:
       return 'Commoner';
   }

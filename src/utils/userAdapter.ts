@@ -1,5 +1,5 @@
 
-import { User, UserProfile } from "@/types/user";
+import { User, UserProfile, UserCosmetics } from "@/types/user";
 
 /**
  * Ensures we have a full User object by filling in default values if needed
@@ -12,7 +12,13 @@ export const ensureUser = (user: Partial<UserProfile>): User => {
     isAuthenticated: true,
     isAdmin: user.role === 'admin',
     isVerified: user.isVerified || false,
-    lastLogin: user.lastLoginDate || new Date().toISOString()
+    lastLogin: user.lastLoginDate || new Date().toISOString(),
+    id: user.id || '',
+    username: user.username || '',
+    totalSpent: user.totalSpent || user.amountSpent || 0,
+    walletBalance: user.walletBalance || 0,
+    tier: user.tier || 'basic',
+    joinDate: user.joinDate || user.joinedAt || new Date().toISOString()
   } as User;
 };
 

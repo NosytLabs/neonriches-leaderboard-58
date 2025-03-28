@@ -1,54 +1,70 @@
 
-import { parseDate } from './dateUtils';
-
-interface TimeLeft {
-  days: number;
-  hours: number;
-  minutes: number;
-  seconds: number;
-  total: number;
-}
+import { parseDate } from "./dateUtils";
 
 /**
- * Calculate time left until a target date
+ * Format a timespan into a readable duration string
+ * @param seconds Number of seconds
+ * @returns Formatted duration string
  */
-export function getTimeLeft(targetDate: Date | string): TimeLeft {
-  const total = parseDate(targetDate).getTime() - Date.now();
+export const formatDuration = (seconds: number): string => {
+  if (seconds < 60) {
+    return `${seconds}s`;
+  }
   
-  // Ensure we don't show negative time
-  const adjustedTotal = Math.max(0, total);
+  const minutes = Math.floor(seconds / 60);
+  if (minutes < 60) {
+    return `${minutes}m ${seconds % 60}s`;
+  }
   
-  const seconds = Math.floor((adjustedTotal / 1000) % 60);
-  const minutes = Math.floor((adjustedTotal / (1000 * 60)) % 60);
-  const hours = Math.floor((adjustedTotal / (1000 * 60 * 60)) % 24);
-  const days = Math.floor(adjustedTotal / (1000 * 60 * 60 * 24));
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) {
+    return `${hours}h ${minutes % 60}m`;
+  }
   
-  return {
-    total: adjustedTotal,
-    days,
-    hours,
-    minutes,
-    seconds
-  };
-}
+  const days = Math.floor(hours / 24);
+  return `${days}d ${hours % 24}h`;
+};
 
 /**
- * Format milliseconds into a human-readable duration string
+ * Format a date as a time ago string (e.g. "3 days ago")
+ * @param timestamp The timestamp to format
+ * @returns Formatted time ago string
  */
-export function formatDuration(ms: number): string {
-  if (ms <= 0) return "0s";
+export const formatTimeFromNow = (timestamp: string | Date): string => {
+  const date = parseDate(timestamp);
+  const now = new Date();
+  const diffMs = now.getTime() - date.getTime();
+  const diffSeconds = Math.floor(diffMs / 1000);
   
-  const seconds = Math.floor((ms / 1000) % 60);
-  const minutes = Math.floor((ms / (1000 * 60)) % 60);
-  const hours = Math.floor((ms / (1000 * 60 * 60)) % 24);
-  const days = Math.floor(ms / (1000 * 60 * 60 * 24));
+  if (diffSeconds < 60) {
+    return `${diffSeconds} seconds ago`;
+  }
   
-  const parts = [];
+  const diffMinutes = Math.floor(diffSeconds / 60);
+  if (diffMinutes < 60) {
+    return `${diffMinutes} minute${diffMinutes === 1 ? '' : 's'} ago`;
+  }
   
-  if (days > 0) parts.push(`${days}d`);
-  if (hours > 0) parts.push(`${hours}h`);
-  if (minutes > 0) parts.push(`${minutes}m`);
-  if (seconds > 0) parts.push(`${seconds}s`);
+  const diffHours = Math.floor(diffMinutes / 60);
+  if (diffHours < 24) {
+    return `${diffHours} hour${diffHours === 1 ? '' : 's'} ago`;
+  }
   
-  return parts.join(' ');
-}
+  const diffDays = Math.floor(diffHours / 24);
+  if (diffDays < 30) {
+    return `${diffDays} day${diffDays === 1 ? '' : 's'} ago`;
+  }
+  
+  const diffMonths = Math.floor(diffDays / 30);
+  if (diffMonths < 12) {
+    return `${diffMonths} month${diffMonths === 1 ? '' : 's'} ago`;
+  }
+  
+  const diffYears = Math.floor(diffMonths / 12);
+  return `${diffYears} year${diffYears === 1 ? '' : 's'} ago`;
+};
+
+export default {
+  formatDuration,
+  formatTimeFromNow
+};

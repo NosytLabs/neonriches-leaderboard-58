@@ -1,97 +1,73 @@
 
 /**
- * Format a date string to a more readable format
- * @param dateString ISO date string
+ * Parse a date string or Date object to a Date object
+ * @param date Date string or Date object
+ * @returns Date object
+ */
+export const parseDate = (date: string | Date): Date => {
+  if (date instanceof Date) {
+    return date;
+  }
+  return new Date(date);
+};
+
+/**
+ * Format a date in a readable format
+ * @param date Date to format
  * @returns Formatted date string
  */
-export const formatDate = (dateString: string): string => {
-  const date = new Date(dateString);
-  return date.toLocaleDateString('en-US', {
+export const formatDate = (date: string | Date): string => {
+  const parsedDate = parseDate(date);
+  return parsedDate.toLocaleDateString('en-US', {
     year: 'numeric',
-    month: 'short', 
+    month: 'long',
     day: 'numeric'
   });
 };
 
 /**
- * Format a date as a relative time string (e.g. "2 hours ago")
- * @param dateString ISO date string
- * @returns Relative time string
+ * Get the number of days until a specific date
+ * @param targetDate The target date
+ * @returns Number of days until the date
  */
-export const formatTimeAgo = (dateString: string): string => {
-  const date = new Date(dateString);
+export const daysUntil = (targetDate: string | Date): number => {
   const now = new Date();
-  const diffMs = now.getTime() - date.getTime();
-  const diffSec = Math.floor(diffMs / 1000);
-  const diffMin = Math.floor(diffSec / 60);
-  const diffHours = Math.floor(diffMin / 60);
-  const diffDays = Math.floor(diffHours / 24);
-  const diffWeeks = Math.floor(diffDays / 7);
-  const diffMonths = Math.floor(diffDays / 30);
-  const diffYears = Math.floor(diffDays / 365);
+  const target = parseDate(targetDate);
   
-  if (diffSec < 60) return `${diffSec} second${diffSec !== 1 ? 's' : ''} ago`;
-  if (diffMin < 60) return `${diffMin} minute${diffMin !== 1 ? 's' : ''} ago`;
-  if (diffHours < 24) return `${diffHours} hour${diffHours !== 1 ? 's' : ''} ago`;
-  if (diffDays < 7) return `${diffDays} day${diffDays !== 1 ? 's' : ''} ago`;
-  if (diffWeeks < 4) return `${diffWeeks} week${diffWeeks !== 1 ? 's' : ''} ago`;
-  if (diffMonths < 12) return `${diffMonths} month${diffMonths !== 1 ? 's' : ''} ago`;
-  return `${diffYears} year${diffYears !== 1 ? 's' : ''} ago`;
+  // Reset time components for accurate day calculation
+  now.setHours(0, 0, 0, 0);
+  target.setHours(0, 0, 0, 0);
+  
+  const diffTime = target.getTime() - now.getTime();
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  
+  return diffDays;
 };
 
 /**
- * Parse a date string to a Date object
- * @param dateString Date string
- * @returns Date object
+ * Determine if an event is currently active
+ * @param startDate Event start date
+ * @param endDate Event end date
+ * @returns Boolean indicating if the event is active
  */
-export const parseDate = (dateString: string): Date => {
-  return new Date(dateString);
-};
-
-/**
- * Check if an event is currently active
- * @param startDate Start date of the event
- * @param endDate End date of the event
- * @returns boolean indicating if the event is active
- */
-export const isEventActive = (startDate: string, endDate: string): boolean => {
+export const isEventActive = (startDate: string | Date, endDate: string | Date): boolean => {
   const now = new Date();
-  const start = new Date(startDate);
-  const end = new Date(endDate);
+  const start = parseDate(startDate);
+  const end = parseDate(endDate);
   
   return now >= start && now <= end;
 };
 
 /**
- * Get days until a specific date
- * @param targetDate Target date
- * @returns Number of days until the target date
- */
-export const daysUntil = (targetDate: string | Date): number => {
-  const now = new Date();
-  const target = new Date(targetDate);
-  const diffTime = target.getTime() - now.getTime();
-  return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-};
-
-/**
- * Get days until the end of the current month
- * @returns Number of days until the end of the month
- */
-export const getDaysUntilEndOfMonth = (): number => {
-  const now = new Date();
-  const lastDayOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-  return daysUntil(lastDayOfMonth);
-};
-
-/**
- * Get the date of the next Monday
+ * Get the next Monday's date
  * @returns Date object for next Monday
  */
 export const getNextMondayDate = (): Date => {
   const now = new Date();
   const dayOfWeek = now.getDay(); // 0 = Sunday, 1 = Monday, etc.
-  const daysUntilNextMonday = dayOfWeek === 0 ? 1 : 8 - dayOfWeek;
+  
+  // Calculate days until next Monday (if today is Monday, go to next week)
+  const daysUntilNextMonday = dayOfWeek === 1 ? 7 : (8 - dayOfWeek) % 7;
   
   const nextMonday = new Date(now);
   nextMonday.setDate(now.getDate() + daysUntilNextMonday);
@@ -100,12 +76,28 @@ export const getNextMondayDate = (): Date => {
   return nextMonday;
 };
 
+/**
+ * Calculate the number of days until the end of the current month
+ * @returns Number of days until the end of the month
+ */
+export const getDaysUntilEndOfMonth = (): number => {
+  const now = new Date();
+  const lastDayOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+  
+  // Reset time components for accurate day calculation
+  now.setHours(0, 0, 0, 0);
+  
+  const diffTime = lastDayOfMonth.getTime() - now.getTime();
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  
+  return diffDays;
+};
+
 export default {
-  formatDate,
-  formatTimeAgo,
   parseDate,
-  isEventActive,
+  formatDate,
   daysUntil,
-  getDaysUntilEndOfMonth,
-  getNextMondayDate
+  isEventActive,
+  getNextMondayDate,
+  getDaysUntilEndOfMonth
 };

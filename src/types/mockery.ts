@@ -44,6 +44,26 @@ export interface CountdownTimerProps {
   className?: string;
 }
 
+export interface MockeryEvent {
+  id: string;
+  name: string;
+  description: string;
+  startDate: string;
+  endDate: string;
+  featured: boolean;
+  discountedActions: MockeryAction[];
+  discountPercentage: number;
+}
+
+export interface UserMockeryStatus {
+  userId: string;
+  activeEffects: MockeryEffectData[];
+  immunityUntil?: string;
+  totalReceivedMockeries: number;
+  totalSentMockeries: number;
+}
+
+// Default export as object with types for usage
 export default {
   MockeryAction,
   MockeryTier,
