@@ -1,67 +1,70 @@
 
 export type MockeryAction = 
-  | 'tomatoes'
-  | 'eggs'
-  | 'stocks'
-  | 'silence'
-  | 'courtJester'
-  | 'jester'
-  | 'dunce'
-  | 'roast'
-  | 'ridicule'
-  | 'taunt'
+  | 'tomatoes' 
+  | 'eggs' 
+  | 'stocks' 
+  | 'silence' 
+  | 'courtJester' 
+  | 'jester' 
+  | 'dunce' 
+  | 'roast' 
+  | 'ridicule' 
+  | 'taunt' 
   | 'drama';
 
-export type ExtendedMockeryAction = 
-  | MockeryAction
-  | 'crown' 
-  | 'scroll'
-  | 'shield-off'
-  | 'message-square-off';
+export type ExtendedMockeryAction = MockeryAction;
 
 export type MockeryTier = 
-  | 'common'
-  | 'uncommon'
-  | 'rare'
-  | 'epic'
-  | 'legendary'
-  | 'basic'
+  | 'common' 
+  | 'uncommon' 
+  | 'rare' 
+  | 'epic' 
+  | 'legendary' 
+  | 'basic' 
   | 'royal'
   | 'advanced';
 
-export interface MockeryActionColor {
-  text: string;
-  bg: string;
-  border: string;
-}
-
 export interface MockeryEvent {
   id: string;
-  userId: number;
-  targetId: number;
+  userId: string;
   targetUsername: string;
-  action: MockeryAction;
+  type: MockeryAction;
   timestamp: string;
+  price: number;
+  duration: number;
   expiresAt: string;
-  isActive: boolean;
+  status: 'active' | 'expired' | 'canceled';
 }
 
 export interface MockeryCardProps {
   action: MockeryAction;
   tier: MockeryTier;
   username: string;
-  onSelect: (action: MockeryAction) => void;
-  selected?: boolean;
+  onSelect: (action: MockeryAction) => boolean;
   className?: string;
+  as?: boolean;
+  MockeryTier?: boolean;
 }
 
 export interface ShameModalProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  user: any;
-  target?: {
-    id: number;
+  isOpen: boolean;
+  onClose: () => void;
+  username: string;
+  action: MockeryAction;
+  onConfirm: () => void;
+  price: number;
+}
+
+export interface MockeryUserCardProps {
+  user: {
+    id: string;
     username: string;
-    rank?: number;
-  }
+    rank: number;
+    profileImage?: string;
+  };
+  isMocked: boolean;
+  isOnCooldown: boolean;
+  mockeryCount: number;
+  isProtected: boolean;
+  onMockery: (username: string, action: string, amount: number) => boolean;
 }

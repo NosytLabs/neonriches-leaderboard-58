@@ -1,7 +1,50 @@
-
-import { DbLeaderboardEntry, LeaderboardEntry } from '@/types/transactions';
 import { OnChainLeaderboardEntry } from '@/types/solana';
-import { formatDate } from '@/utils/solanaUtils';
+
+// Add function to fetch on-chain leaderboard data
+export const fetchOnChainLeaderboard = async (): Promise<OnChainLeaderboardEntry[]> => {
+  // This would normally call an API endpoint that queries blockchain data
+  // For now, return mock data
+  const mockData: OnChainLeaderboardEntry[] = [
+    {
+      id: "1",
+      publicKey: "8YLKoCu5knFvCTSdSXe3xVQxA8xndGpAbqNWCtK9XkS9",
+      username: "RoyalWhale",
+      rank: 1,
+      previousRank: 1,
+      totalSpent: 5000,
+      signature: "5xh7KFnGDnE1WxvunRwmsbKNdVw91WFLjT9S23tbzm5x5V8bK3dEzZvJdV2YyjgeUv2YdzeiB6UU4pwxbX59pqg5",
+      lastTransaction: new Date().toISOString(),
+      isVerified: true
+    },
+    {
+      id: "2",
+      publicKey: "5yKLcpRxZU2S7uLkHRFNQZnSoNMm9ZUHsyVaaDXJHnEW",
+      username: "CrownCollector",
+      rank: 2,
+      previousRank: 3,
+      totalSpent: 3750,
+      signature: "3gvCLqRvwx9DZVNvKWMvdvKSZYUz9mxUUBzMD7AMLNFFuqGBVyZoY4zNLBo5fzPp1XqVzFjHe9QwgcpTJhUwNjZ5",
+      lastTransaction: new Date().toISOString(),
+      isVerified: true
+    },
+    {
+      id: "3",
+      publicKey: "GWz7VWVK6xLwhKnrP5oBgwcVHvNqUGvJ8Yo2RQg1Y8cV",
+      username: "NobleSpender",
+      rank: 3,
+      previousRank: 2,
+      totalSpent: 2500,
+      signature: "4iFCTxRYxE82JyVKHQDzFXmQKsUUh5c7SZXiRtQDBJMsJchUzvYQ3yCcUWF8AG5APPCoYfdGQZ2oxFxU3mL8HGEA",
+      lastTransaction: new Date().toISOString(),
+      isVerified: false
+    }
+  ];
+  
+  // Simulate API delay
+  await new Promise(resolve => setTimeout(resolve, 1000));
+  
+  return mockData;
+};
 
 // Mock function to get leaderboard data
 export const getLeaderboard = async (limit = 10): Promise<LeaderboardEntry[]> => {

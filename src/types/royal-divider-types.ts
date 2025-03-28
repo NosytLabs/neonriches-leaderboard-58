@@ -32,7 +32,8 @@ export type RoyalButtonVariant =
   | 'goldOutline'
   | 'crimsonOutline'
   | 'navyOutline'
-  | 'mahogany';
+  | 'mahogany'
+  | 'purple';
 
 export type RoyalDecorationType = 
   | 'royal-insignia' 

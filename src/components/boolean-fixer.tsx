@@ -28,4 +28,20 @@ export const withBooleanProps = <P extends object>(
   };
 };
 
+// Helper for components that need to use the converter directly
+export const fixBooleanProps = <T extends Record<string, any>>(
+  props: T, 
+  propNames: (keyof T)[]
+): T => {
+  const result = { ...props };
+  
+  propNames.forEach(propName => {
+    if (propName in props) {
+      result[propName] = convertPropToBool(props[propName]);
+    }
+  });
+  
+  return result;
+};
+
 export default convertPropToBool;

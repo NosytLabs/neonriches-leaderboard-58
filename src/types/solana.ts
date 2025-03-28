@@ -12,6 +12,9 @@ export interface SolanaTreasuryInfo {
   totalWithdrawals: number;
   lastUpdated: string;
   pubkey?: string;
+  usdValue?: number;
+  amount?: number;  // For compatibility
+  sender?: string;  // For compatibility
 }
 
 export interface SolanaTransaction {
@@ -26,14 +29,15 @@ export interface SolanaTransaction {
 
 export interface OnChainLeaderboardEntry {
   id: string;
-  publicKey: string;
   username?: string;
   rank: number;
+  totalSpent: number;
   previousRank?: number;
-  amountSpent: number;
+  signature?: string;
+  amountSpent?: number;
   lastTransaction?: string;
   isVerified?: boolean;
-  signature?: string;
+  publicKey?: string;
 }
 
 export interface SolanaNftInfo {

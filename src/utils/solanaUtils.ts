@@ -37,3 +37,14 @@ export const solToUsd = (sol: number, solPrice = 20): number => {
 export const formatSol = (sol: number, decimals = 4): string => {
   return sol.toFixed(decimals);
 };
+
+// Validate Solana address
+export const isValidSolanaAddress = (address: string): boolean => {
+  // Basic validation - Solana addresses are 32-44 characters long and base58 encoded
+  return /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(address);
+};
+
+// Generate a message for signing
+export const generateSignatureMessage = (nonce: string, userId: string): string => {
+  return `Sign this message to verify your Solana wallet ownership for SpendThrone. Nonce: ${nonce}. User ID: ${userId}. This signature will not trigger any on-chain transactions.`;
+};
