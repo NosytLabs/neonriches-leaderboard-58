@@ -1,11 +1,14 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { BrowserRouter } from 'react-router-dom';
 import SolanaApp from './SolanaApp';
 import './index.css';
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-    <SolanaApp />
+    <BrowserRouter>
+      <SolanaApp />
+    </BrowserRouter>
   </React.StrictMode>
 );

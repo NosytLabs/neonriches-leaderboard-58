@@ -1,3 +1,4 @@
+
 import React, { FC, ReactNode, useMemo, useState, useEffect, createContext, useContext } from 'react';
 import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
 import { ConnectionProvider, WalletProvider, useWallet, useConnection } from '@solana/wallet-adapter-react';
@@ -12,6 +13,7 @@ import {
 import { clusterApiUrl, Connection, PublicKey, Transaction, SystemProgram, LAMPORTS_PER_SOL } from '@solana/web3.js';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/auth';
+import { UserProfile } from '@/types/user';
 
 // Import wallet adapter CSS
 import '@solana/wallet-adapter-react-ui/styles.css';
@@ -68,7 +70,19 @@ const SolanaContextProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const { connection } = useConnection();
   const wallet = useWallet();
   const { toast } = useToast();
-  const { user, updateUserProfile } = useAuth();
+  
+  // Use a try-catch for useAuth since it might not be available initially
+  let auth = { user: null, updateUserProfile: null };
+  try {
+    auth = useAuth();
+  } catch (error) {
+    console.warn("Auth context not available yet");
+  }
+  
+  const { user, updateUserProfile } = auth as { 
+    user: UserProfile | null, 
+    updateUserProfile: ((updates: Partial<UserProfile>) => Promise<void>) | null 
+  };
   
   const [walletBalance, setWalletBalance] = useState<number>(0);
   const [isConnecting, setIsConnecting] = useState<boolean>(false);
@@ -246,7 +260,7 @@ const SolanaContextProvider: FC<{ children: ReactNode }> = ({ children }) => {
     signTransaction,
     linkWalletToAccount: async (): Promise<boolean> => {
       try {
-        if (!wallet.publicKey || !user) {
+        if (!wallet.publicKey || !user || !updateUserProfile) {
           return false;
         }
         
