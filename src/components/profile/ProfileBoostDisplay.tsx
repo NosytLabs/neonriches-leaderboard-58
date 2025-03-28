@@ -2,7 +2,7 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { UserProfile } from '@/types/user';
-import { useProfileBoost } from '@/hooks/use-profile-boost';
+import { useProfileBoost, BoostEffect } from '@/hooks/use-profile-boost';
 import { Sparkles, Clock } from 'lucide-react';
 
 interface ProfileBoostDisplayProps {
@@ -30,7 +30,9 @@ const ProfileBoostDisplay: React.FC<ProfileBoostDisplayProps> = ({ user }) => {
       </CardHeader>
       <CardContent className="space-y-3">
         {activeBoosts.map(boost => {
-          const effect = boostEffects[boost.effectId];
+          // Safely cast the string effectId to the BoostEffect type
+          const effectId = boost.effectId as BoostEffect;
+          const effect = boostEffects[effectId];
           if (!effect) return null;
           
           return (
@@ -47,7 +49,10 @@ const ProfileBoostDisplay: React.FC<ProfileBoostDisplayProps> = ({ user }) => {
               </div>
               <div className="text-xs text-white/70 flex items-center">
                 <Clock size={12} className="mr-1" />
-                {getTimeRemaining(boost)}
+                {getTimeRemaining({
+                  ...boost,
+                  effectId: effectId // Ensure we pass the correctly typed effectId
+                })}
               </div>
             </div>
           );
