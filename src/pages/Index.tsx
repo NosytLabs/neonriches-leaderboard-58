@@ -18,6 +18,7 @@ import { Crown, ArrowRight } from 'lucide-react';
 import { useAuth } from '@/contexts/auth';
 import { mockLeaderboardData } from '@/components/leaderboard/LeaderboardData';
 import { UserProfile } from '@/types/user';
+import { ToastProvider } from '@/contexts/ToastContext';
 
 const Index = () => {
   const navigate = useNavigate();
@@ -154,7 +155,9 @@ const Index = () => {
           
           <RoyalDivider variant="scroll" className="my-16" />
           
-          <RoyalShowcase topSpender={mockTopSpender} />
+          <ToastProvider>
+            <RoyalShowcase topSpender={mockTopSpender} />
+          </ToastProvider>
           
           <TeamSection />
           
