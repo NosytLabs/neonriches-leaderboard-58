@@ -2,33 +2,37 @@
 import React, { useState } from 'react';
 import { DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Crown, Scroll, AlertTriangle } from 'lucide-react';
+import { Crown, Scroll, Tag } from 'lucide-react';
 import { UserRankData } from '@/services/spendingService';
 import { ShameAction } from '../hooks/useShameEffect';
-import { getShameActionTitle, getShameActionDescription, getShameActionPrice, getShameActionIcon, getShameActionColor } from '../utils/shameUtils';
+import { getShameActionTitle, getShameActionDescription, getShameActionPrice, getShameActionIcon, getShameActionColor, getDiscountedShamePrice } from '../utils/shameUtils';
 import RankingDisclaimer from '@/components/shared/RankingDisclaimer';
 import PaymentModal from '@/components/PaymentModal';
 import RoyalButton from '@/components/ui/royal-button';
+import MedievalIcon from '@/components/ui/medieval-icon';
 
 interface ShameModalProps {
   targetUser: UserRankData | null;
   shameType: ShameAction;
   onConfirm: (userId: string, type: ShameAction) => void;
   onCancel: () => void;
+  hasDiscount?: boolean;
 }
 
 const ShameModal: React.FC<ShameModalProps> = ({ 
   targetUser, 
   shameType, 
   onConfirm, 
-  onCancel 
+  onCancel,
+  hasDiscount = false
 }) => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [showAnimation, setShowAnimation] = useState(false);
   
   if (!targetUser) return null;
   
-  const price = getShameActionPrice(shameType);
+  const regularPrice = getShameActionPrice(shameType);
+  const price = hasDiscount ? getDiscountedShamePrice(shameType) : regularPrice;
   const title = getShameActionTitle(shameType);
   const description = getShameActionDescription(shameType, targetUser.username);
   const icon = getShameActionIcon(shameType);
@@ -115,7 +119,17 @@ const ShameModal: React.FC<ShameModalProps> = ({
           <DialogTitle className="text-xl royal-text-shimmer">{title}</DialogTitle>
         </div>
         <DialogDescription>
-          This will cost ${price.toFixed(2)} and publicly shame {targetUser.username} for 24 hours.
+          {hasDiscount ? (
+            <div className="flex items-center">
+              <span className="mr-2">Royal discount: $<span className="line-through text-white/60">{regularPrice.toFixed(2)}</span> ${price.toFixed(2)}</span>
+              <span className="bg-royal-gold text-black text-xs px-1.5 py-0.5 rounded-full flex items-center">
+                <Tag size={10} className="mr-0.5" />
+                50% OFF
+              </span>
+            </div>
+          ) : (
+            <span>This will cost ${price.toFixed(2)} and publicly shame {targetUser.username} for 24 hours.</span>
+          )}
         </DialogDescription>
       </DialogHeader>
       
@@ -132,11 +146,15 @@ const ShameModal: React.FC<ShameModalProps> = ({
             <div className="relative">
               {targetUser.rank <= 3 && (
                 <div className="absolute -top-1 -right-1 z-10">
-                  <Crown size={14} className={
-                    targetUser.rank === 1 ? "text-royal-gold" : 
-                    targetUser.rank === 2 ? "text-gray-300" : 
-                    "text-amber-700"
-                  } />
+                  <MedievalIcon
+                    name="crown"
+                    size="xs"
+                    color={
+                      targetUser.rank === 1 ? 'gold' : 
+                      targetUser.rank === 2 ? 'silver' : 
+                      'bronze'
+                    }
+                  />
                 </div>
               )}
               <div className={`w-16 h-16 rounded-full glass-morphism ${targetUser.rank <= 3 ? 'royal-shine' : 'border-white/10'} flex items-center justify-center overflow-hidden ${
@@ -155,11 +173,11 @@ const ShameModal: React.FC<ShameModalProps> = ({
             <div className="font-semibold flex items-center">
               {targetUser.username}
               <span className="ml-2 bg-white/10 text-xs px-1.5 py-0.5 rounded-full flex items-center">
-                <Crown size={10} className="mr-1 text-royal-gold" /> #{targetUser.rank}
+                <MedievalIcon name="crown" size="xs" className="mr-1 text-royal-gold" /> #{targetUser.rank}
               </span>
             </div>
             <div className="text-sm text-white/60 flex items-center">
-              <Scroll size={12} className="mr-1" />
+              <MedievalIcon name="scroll" size="xs" className="mr-1" />
               ${targetUser.totalSpent.toLocaleString()} contributed
             </div>
             <div className="text-xs text-white/40 mt-1">
@@ -201,7 +219,11 @@ const ShameModal: React.FC<ShameModalProps> = ({
                   glow={true}
                   icon={<span className="mr-2">{icon}</span>}
                 >
-                  Pay ${price.toFixed(2)} to Shame
+                  {hasDiscount ? (
+                    <>Pay ${price.toFixed(2)} to Shame (50% OFF!)</>
+                  ) : (
+                    <>Pay ${price.toFixed(2)} to Shame</>
+                  )}
                 </RoyalButton>
               }
             />

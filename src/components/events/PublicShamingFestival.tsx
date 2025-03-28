@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Scroll, DollarSign, Sparkles } from 'lucide-react';
 import { topUsers } from './data';
@@ -10,6 +11,8 @@ import { Dialog } from '@/components/ui/dialog';
 import ShameModal from './components/ShameModal';
 import { ShameAction } from './hooks/useShameEffect';
 import useNotificationSounds from '@/hooks/use-notification-sounds';
+import { hasWeeklyDiscount, getWeeklyDiscountedAction, getShameActionPrice, getDiscountedShamePrice } from './utils/shameUtils';
+import MedievalIcon from '@/components/ui/medieval-icon';
 
 // Format user data for ShameUserCard
 const formatUserForShameCard = (user: any) => ({
@@ -22,15 +25,21 @@ const formatUserForShameCard = (user: any) => ({
 });
 
 const PublicShamingDescription = () => {
+  // Get this week's featured discount
+  const discountedAction = getWeeklyDiscountedAction();
+  const regularPrice = getShameActionPrice(discountedAction);
+  const discountedPrice = getDiscountedShamePrice(discountedAction);
+  const discountPercentage = Math.round((1 - (discountedPrice / regularPrice)) * 100);
+  
   return (
     <div className="flex flex-col md:flex-row justify-between items-center mb-6">
       <div>
         <h2 className="text-2xl font-bold royal-gradient mb-2 flex items-center">
-          <Scroll size={20} className="text-royal-gold mr-2 animate-pulse-slow" />
+          <MedievalIcon name="scroll" color="gold" className="mr-2 animate-pulse-slow" />
           Royal Public Shaming Festival
         </h2>
         <p className="text-white/70">
-          Engage in medieval-style cosmetic shaming by visually pelting nobles with rotten tomatoes, eggs, or placing them in stocks. A satirical feature with <strong>purely visual effects</strong> that don't affect leaderboard ranks.
+          Engage in medieval-style cosmetic shaming by visually marking nobles with rotten tomatoes, eggs, or placing them in stocks. A satirical feature with <strong>purely visual effects</strong> that don't affect leaderboard ranks.
         </p>
       </div>
       
@@ -57,6 +66,9 @@ const PublicShamingFestival = () => {
   const [selectedUser, setSelectedUser] = React.useState<any>(null);
   const [selectedAction, setSelectedAction] = React.useState<ShameAction>('tomatoes');
   
+  // Get the discounted action for this week
+  const discountedAction = getWeeklyDiscountedAction();
+  
   const handleShameUser = (userId: number, username: string, type: ShameAction, amount: number) => {
     // First, find the user
     const user = topUsers.find(u => u.id === userId);
@@ -77,20 +89,16 @@ const PublicShamingFestival = () => {
     const user = topUsers.find(u => u.id === numericId);
     
     if (user) {
-      handleShame(numericId, user.username, action, getShameActionPrice(action));
+      // Apply discount if this is the weekly featured action
+      const finalPrice = hasWeeklyDiscount(action) 
+        ? getDiscountedShamePrice(action) 
+        : getShameActionPrice(action);
+        
+      handleShame(numericId, user.username, action, finalPrice);
       playSound('shame', 0.3);
     }
     
     setShowModal(false);
-  };
-  
-  // Helper function to get price based on shame type
-  const getShameActionPrice = (action: ShameAction): number => {
-    switch (action) {
-      case 'tomatoes': return 0.25;
-      case 'eggs': return 0.50;
-      case 'stocks': return 1.00;
-    }
   };
 
   return (
@@ -109,32 +117,74 @@ const PublicShamingFestival = () => {
         
         <div className="mb-6 p-4 glass-morphism border-white/10 rounded-lg">
           <h3 className="font-medium royal-gradient flex items-center mb-3">
-            <Scroll className="mr-2 h-4 w-4" /> Medieval Public Shaming Options
+            <MedievalIcon name="scroll" className="mr-2" /> Medieval Public Shaming Options
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="p-3 glass-morphism border-royal-crimson/20 rounded-lg">
+            <div className={`p-3 glass-morphism ${hasWeeklyDiscount('tomatoes') ? 'border-royal-gold/40 shadow-gold' : 'border-royal-crimson/20'} rounded-lg relative overflow-hidden`}>
+              {hasWeeklyDiscount('tomatoes') && (
+                <div className="absolute -right-6 -top-1 transform rotate-45 bg-royal-gold text-black px-6 py-1 text-xs font-bold shadow-md">
+                  50% OFF
+                </div>
+              )}
               <div className="flex items-center mb-2">
                 <div className="text-xl mr-2">🍅</div>
                 <div className="font-medium">Throw Tomatoes</div>
-                <div className="ml-auto text-royal-gold">$0.25</div>
+                <div className="ml-auto text-royal-gold">
+                  {hasWeeklyDiscount('tomatoes') ? (
+                    <span className="flex flex-col items-end">
+                      <span className="text-xs line-through text-white/50">${getShameActionPrice('tomatoes').toFixed(2)}</span>
+                      <span>${getDiscountedShamePrice('tomatoes').toFixed(2)}</span>
+                    </span>
+                  ) : (
+                    <span>${getShameActionPrice('tomatoes').toFixed(2)}</span>
+                  )}
+                </div>
               </div>
               <p className="text-white/70 text-sm">Pelt your target with rotten tomatoes. A classic form of public ridicule (visual effect only).</p>
             </div>
             
-            <div className="p-3 glass-morphism border-royal-gold/20 rounded-lg">
+            <div className={`p-3 glass-morphism ${hasWeeklyDiscount('eggs') ? 'border-royal-gold/40 shadow-gold' : 'border-royal-gold/20'} rounded-lg relative overflow-hidden`}>
+              {hasWeeklyDiscount('eggs') && (
+                <div className="absolute -right-6 -top-1 transform rotate-45 bg-royal-gold text-black px-6 py-1 text-xs font-bold shadow-md">
+                  50% OFF
+                </div>
+              )}
               <div className="flex items-center mb-2">
                 <div className="text-xl mr-2">🥚</div>
                 <div className="font-medium">Throw Rotten Eggs</div>
-                <div className="ml-auto text-royal-gold">$0.50</div>
+                <div className="ml-auto text-royal-gold">
+                  {hasWeeklyDiscount('eggs') ? (
+                    <span className="flex flex-col items-end">
+                      <span className="text-xs line-through text-white/50">${getShameActionPrice('eggs').toFixed(2)}</span>
+                      <span>${getDiscountedShamePrice('eggs').toFixed(2)}</span>
+                    </span>
+                  ) : (
+                    <span>${getShameActionPrice('eggs').toFixed(2)}</span>
+                  )}
+                </div>
               </div>
               <p className="text-white/70 text-sm">Hurl rotten eggs at your target. The visual stench will follow them for a day.</p>
             </div>
             
-            <div className="p-3 glass-morphism border-royal-purple/20 rounded-lg">
+            <div className={`p-3 glass-morphism ${hasWeeklyDiscount('stocks') ? 'border-royal-gold/40 shadow-gold' : 'border-royal-purple/20'} rounded-lg relative overflow-hidden`}>
+              {hasWeeklyDiscount('stocks') && (
+                <div className="absolute -right-6 -top-1 transform rotate-45 bg-royal-gold text-black px-6 py-1 text-xs font-bold shadow-md">
+                  50% OFF
+                </div>
+              )}
               <div className="flex items-center mb-2">
                 <div className="text-xl mr-2">🪵</div>
                 <div className="font-medium">Place in Stocks</div>
-                <div className="ml-auto text-royal-gold">$1.00</div>
+                <div className="ml-auto text-royal-gold">
+                  {hasWeeklyDiscount('stocks') ? (
+                    <span className="flex flex-col items-end">
+                      <span className="text-xs line-through text-white/50">${getShameActionPrice('stocks').toFixed(2)}</span>
+                      <span>${getDiscountedShamePrice('stocks').toFixed(2)}</span>
+                    </span>
+                  ) : (
+                    <span>${getShameActionPrice('stocks').toFixed(2)}</span>
+                  )}
+                </div>
               </div>
               <p className="text-white/70 text-sm">Place your target in the public stocks. The ultimate medieval visual humiliation.</p>
             </div>
@@ -156,6 +206,7 @@ const PublicShamingFestival = () => {
                 isOnCooldown={shameCooldown[targetUser.id] || false}
                 shameCount={getShameCount(targetUser.id)}
                 onShame={handleShameUser}
+                featuredAction={discountedAction}
               />
             </div>
           ))}
@@ -188,6 +239,7 @@ const PublicShamingFestival = () => {
               shameType={selectedAction}
               onConfirm={confirmShame}
               onCancel={() => setShowModal(false)}
+              hasDiscount={hasWeeklyDiscount(selectedAction)}
             />
           )}
         </Dialog>

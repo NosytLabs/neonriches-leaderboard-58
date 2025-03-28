@@ -56,7 +56,7 @@ const useFloatingCoins = (options?: UseFloatingCoinsOptions): UseFloatingCoinsRe
       x: x ?? Math.random() * screenWidth,
       y: y ?? Math.random() * screenHeight,
       rotation: Math.random() * 360,
-      scale: 0.5 + Math.random() * 1,
+      scale: 0.5 + Math.random() * 0.8, // Slightly smaller coins
       opacity: 0.8 + Math.random() * 0.2,
       speed: 2 + Math.random() * 2,
       image: coinImages[Math.floor(Math.random() * coinImages.length)]
@@ -75,7 +75,7 @@ const useFloatingCoins = (options?: UseFloatingCoinsOptions): UseFloatingCoinsRe
     const bottomY = window.innerHeight - 100;
     
     setIsActive(true);
-    playSound('coinDrop', 0.4);
+    playSound('coinDrop', 0.35); // Lower volume for a more subtle effect
     
     // Create coins with a small delay between each
     for (let i = 0; i < count; i++) {
@@ -84,7 +84,7 @@ const useFloatingCoins = (options?: UseFloatingCoinsOptions): UseFloatingCoinsRe
           centerX + (Math.random() * 200 - 100), 
           bottomY + (Math.random() * 50)
         );
-      }, i * 50);
+      }, i * 40); // Slightly faster appearance
     }
   };
 
@@ -94,19 +94,19 @@ const useFloatingCoins = (options?: UseFloatingCoinsOptions): UseFloatingCoinsRe
     const centerY = window.innerHeight / 2;
     
     setIsActive(true);
-    playSound('coinDrop', 0.4);
+    playSound('coinDrop', 0.35);
     
     // Create coins in a circular burst pattern
     for (let i = 0; i < burstCount; i++) {
       const angle = Math.random() * Math.PI * 2;
-      const distance = 20 + Math.random() * 100;
+      const distance = 20 + Math.random() * 80; // Slightly smaller spread
       
       setTimeout(() => {
         createCoin(
           centerX + Math.cos(angle) * distance,
           centerY + Math.sin(angle) * distance
         );
-      }, i * 30);
+      }, i * 25); // Faster appearance
     }
   };
 
@@ -116,7 +116,7 @@ const useFloatingCoins = (options?: UseFloatingCoinsOptions): UseFloatingCoinsRe
     setIsActive(newState);
     
     if (newState) {
-      createMultipleCoins(15);
+      createMultipleCoins(12); // Slightly fewer coins for better performance
     }
   };
 

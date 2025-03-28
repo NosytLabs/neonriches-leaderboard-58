@@ -4,7 +4,7 @@ import { toast } from '@/hooks/use-toast';
 import useNotificationSounds from '@/hooks/use-notification-sounds';
 import { ToastActionElement } from '@/components/ui/toast';
 
-type ToastVariant = 'default' | 'destructive' | 'success' | 'warning' | 'info' | 'royal';
+type ToastVariant = 'default' | 'destructive' | 'success' | 'warning' | 'info' | 'royal' | 'shame';
 
 interface ToastOptions {
   title?: string;
@@ -13,6 +13,8 @@ interface ToastOptions {
   variant?: ToastVariant;
   duration?: number;
   className?: string;
+  sound?: string;
+  volume?: number;
 }
 
 interface ToastContextType {
@@ -25,23 +27,40 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const { playSound } = useNotificationSounds();
 
   const addToast = useCallback(
-    ({ title, description, action, variant = 'default', duration = 3000, className }: ToastOptions) => {
-      // Play sound based on variant
-      switch (variant) {
-        case 'success':
-          playSound('success', 0.4);
-          break;
-        case 'destructive':
-          playSound('error', 0.4);
-          break;
-        case 'warning':
-          playSound('notification', 0.4);
-          break;
-        case 'royal':
-          playSound('royalAnnouncement', 0.5);
-          break;
-        default:
-          playSound('notification', 0.3);
+    ({ 
+      title, 
+      description, 
+      action, 
+      variant = 'default', 
+      duration = 3000, 
+      className,
+      sound,
+      volume = 0.4
+    }: ToastOptions) => {
+      // Play specific sound if provided
+      if (sound) {
+        playSound(sound, volume);
+      } else {
+        // Play sound based on variant
+        switch (variant) {
+          case 'success':
+            playSound('success', 0.4);
+            break;
+          case 'destructive':
+            playSound('error', 0.4);
+            break;
+          case 'warning':
+            playSound('notification', 0.4);
+            break;
+          case 'royal':
+            playSound('royalAnnouncement', 0.5);
+            break;
+          case 'shame':
+            playSound('shame', 0.5);
+            break;
+          default:
+            playSound('notification', 0.3);
+        }
       }
 
       // Custom styling for variants
@@ -53,6 +72,8 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         customClassName = 'border-amber-500/50 bg-amber-500/10';
       } else if (variant === 'info') {
         customClassName = 'border-blue-500/50 bg-blue-500/10';
+      } else if (variant === 'shame') {
+        customClassName = 'border-red-500/50 bg-red-500/10';
       }
 
       // Convert variant to supported variant
@@ -60,12 +81,13 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
                           variant === 'warning' ? 'default' : 
                           variant === 'info' ? 'default' : 
                           variant === 'royal' ? 'default' : 
+                          variant === 'shame' ? 'default' : 
                           variant;
 
       toast({
         title,
         description,
-        action: action as ToastActionElement,
+        action,
         variant: toastVariant,
         duration,
         className: customClassName

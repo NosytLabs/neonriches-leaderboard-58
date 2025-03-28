@@ -1,11 +1,13 @@
 
 import React from 'react';
-import { Crown, Coins } from 'lucide-react';
+import { Crown, Coins, Tag } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ShameAction } from '../hooks/useShameEffect';
-import { getShameActionIcon, getShameActionColor } from '../utils/shameUtils';
+import { getShameActionIcon, getShameActionColor, hasWeeklyDiscount, getShameActionPrice, getDiscountedShamePrice } from '../utils/shameUtils';
 import RoyalButton from '@/components/ui/royal-button';
 import { getTeamColor } from '@/lib/colors';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import MedievalIcon from '@/components/ui/medieval-icon';
 
 interface ShameUserCardProps {
   user: {
@@ -20,6 +22,7 @@ interface ShameUserCardProps {
   isOnCooldown: boolean;
   shameCount: number;
   onShame: (userId: number, username: string, type: ShameAction, amount: number) => boolean;
+  featuredAction?: ShameAction;
 }
 
 const ShameUserCard: React.FC<ShameUserCardProps> = ({
@@ -27,7 +30,8 @@ const ShameUserCard: React.FC<ShameUserCardProps> = ({
   isShamed,
   isOnCooldown,
   shameCount,
-  onShame
+  onShame,
+  featuredAction
 }) => {
   const [selectedShame, setSelectedShame] = React.useState<ShameAction | null>(null);
   const teamColor = user.team ? getTeamColor(user.team) : '';
@@ -38,8 +42,11 @@ const ShameUserCard: React.FC<ShameUserCardProps> = ({
   
   const handleShameConfirm = () => {
     if (selectedShame) {
-      const shameAmount = selectedShame === 'tomatoes' ? 0.50 : 
-                          selectedShame === 'eggs' ? 1.00 : 2.00;
+      // Apply discount if this is the weekly featured action
+      const shameAmount = hasWeeklyDiscount(selectedShame) 
+        ? getDiscountedShamePrice(selectedShame) 
+        : getShameActionPrice(selectedShame);
+        
       onShame(user.id, user.username, selectedShame, shameAmount);
       setSelectedShame(null);
     }
@@ -82,13 +89,11 @@ const ShameUserCard: React.FC<ShameUserCardProps> = ({
       {/* Crown for top 3 */}
       {user.rank <= 3 && (
         <div className="absolute top-2 right-2">
-          <Crown 
-            size={16} 
-            className={`
-              ${user.rank === 1 ? 'text-royal-gold animate-crown-glow' : ''}
-              ${user.rank === 2 ? 'text-gray-300' : ''}
-              ${user.rank === 3 ? 'text-amber-700' : ''}
-            `}
+          <MedievalIcon 
+            name="crown" 
+            size="sm"
+            color={user.rank === 1 ? 'gold' : user.rank === 2 ? 'silver' : 'bronze'}
+            className={user.rank === 1 ? 'animate-crown-glow' : ''}
           />
         </div>
       )}
@@ -135,22 +140,44 @@ const ShameUserCard: React.FC<ShameUserCardProps> = ({
             {(['tomatoes', 'eggs', 'stocks'] as ShameAction[]).map((action) => {
               const colors = getShameActionColor(action);
               const isSelected = selectedShame === action;
+              const isDiscounted = hasWeeklyDiscount(action);
               
               return (
-                <Button
-                  key={action}
-                  variant="outline"
-                  size="sm"
-                  className={`flex-1 h-8 ${
-                    isSelected 
-                      ? `${colors.bg} ${colors.border} border ${colors.text}` 
-                      : 'glass-morphism border-white/10'
-                  }`}
-                  onClick={() => handleShameSelect(action)}
-                >
-                  <span className="mr-1">{getShameActionIcon(action)}</span>
-                  <span className="text-xs capitalize">{action}</span>
-                </Button>
+                <Tooltip key={action}>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className={`flex-1 h-8 relative ${
+                        isSelected 
+                          ? `${colors.bg} ${colors.border} border ${colors.text}` 
+                          : 'glass-morphism border-white/10'
+                      } ${isDiscounted ? 'ring-1 ring-royal-gold' : ''}`}
+                      onClick={() => handleShameSelect(action)}
+                    >
+                      <span className="mr-1">{getShameActionIcon(action)}</span>
+                      <span className="text-xs capitalize">{action}</span>
+                      
+                      {isDiscounted && (
+                        <span className="absolute -top-2 -right-2 bg-royal-gold text-black text-xs px-1 rounded-full flex items-center justify-center">
+                          <Tag size={10} className="mr-0.5" />
+                          50%
+                        </span>
+                      )}
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent side="top" className="text-xs px-2 py-1">
+                    {isDiscounted ? (
+                      <div className="flex flex-col items-center">
+                        <span className="text-royal-gold font-bold">Weekly Special!</span>
+                        <span className="line-through text-white/50">${getShameActionPrice(action).toFixed(2)}</span>
+                        <span className="text-royal-gold">${getDiscountedShamePrice(action).toFixed(2)}</span>
+                      </div>
+                    ) : (
+                      <span>${getShameActionPrice(action).toFixed(2)}</span>
+                    )}
+                  </TooltipContent>
+                </Tooltip>
               );
             })}
           </div>
@@ -164,7 +191,11 @@ const ShameUserCard: React.FC<ShameUserCardProps> = ({
             disabled={!selectedShame}
             onClick={handleShameConfirm}
           >
-            Shame This Noble
+            {selectedShame && hasWeeklyDiscount(selectedShame) ? (
+              <>Shame at 50% Off</>
+            ) : (
+              <>Shame This Noble</>
+            )}
           </RoyalButton>
         </>
       )}

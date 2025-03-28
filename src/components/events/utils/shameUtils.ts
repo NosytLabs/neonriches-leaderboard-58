@@ -52,19 +52,19 @@ export const getShameActionColor = (action: ShameAction): {bg: string, border: s
       return {
         bg: 'bg-red-500/10',
         border: 'border-red-500/30',
-        text: 'text-red-500'
+        text: 'text-red-400'
       };
     case 'eggs':
       return {
         bg: 'bg-yellow-500/10',
         border: 'border-yellow-500/30',
-        text: 'text-yellow-500'
+        text: 'text-yellow-400'
       };
     case 'stocks':
       return {
         bg: 'bg-amber-800/10',
         border: 'border-amber-800/30',
-        text: 'text-amber-800'
+        text: 'text-amber-600'
       };
     default:
       return {
@@ -75,16 +75,51 @@ export const getShameActionColor = (action: ShameAction): {bg: string, border: s
   }
 };
 
-// Get discounted price for monthly festival
+// Get discounted price for weekly festival
 export const getDiscountedShamePrice = (action: ShameAction): number => {
+  // Get the current week number to determine which shame action has a discount
+  const currentDate = new Date();
+  const startDate = new Date(currentDate.getFullYear(), 0, 1);
+  const days = Math.floor((currentDate.getTime() - startDate.getTime()) / (24 * 60 * 60 * 1000));
+  const weekNumber = Math.ceil(days / 7);
+  
+  // Each week, rotate which action gets a discount
+  const discountedAction = weekNumber % 3 === 0 ? 'tomatoes' : 
+                           weekNumber % 3 === 1 ? 'eggs' : 
+                           'stocks';
+                           
   const regularPrice = getShameActionPrice(action);
-  // 25% discount during the festival
-  return regularPrice * 0.75;
+  
+  // Apply 50% discount to this week's featured action
+  if (action === discountedAction) {
+    return regularPrice * 0.5;
+  }
+  
+  return regularPrice;
 };
 
-// Check if the public shaming festival is active
-export const isPublicShamingFestivalActive = (): boolean => {
-  const now = new Date();
-  // Active on the first Monday of each month
-  return now.getDate() <= 7 && now.getDay() === 1;
+// Check if an action has a discount this week
+export const hasWeeklyDiscount = (action: ShameAction): boolean => {
+  const currentDate = new Date();
+  const startDate = new Date(currentDate.getFullYear(), 0, 1);
+  const days = Math.floor((currentDate.getTime() - startDate.getTime()) / (24 * 60 * 60 * 1000));
+  const weekNumber = Math.ceil(days / 7);
+  
+  const discountedAction = weekNumber % 3 === 0 ? 'tomatoes' : 
+                           weekNumber % 3 === 1 ? 'eggs' : 
+                           'stocks';
+                           
+  return action === discountedAction;
+};
+
+// Get this week's discounted action
+export const getWeeklyDiscountedAction = (): ShameAction => {
+  const currentDate = new Date();
+  const startDate = new Date(currentDate.getFullYear(), 0, 1);
+  const days = Math.floor((currentDate.getTime() - startDate.getTime()) / (24 * 60 * 60 * 1000));
+  const weekNumber = Math.ceil(days / 7);
+  
+  return weekNumber % 3 === 0 ? 'tomatoes' : 
+         weekNumber % 3 === 1 ? 'eggs' : 
+         'stocks';
 };
