@@ -9,6 +9,7 @@ interface ProfileBoostDisplayProps {
   user: UserProfile;
 }
 
+// Make sure the component explicitly accepts ProfileBoostDisplayProps
 const ProfileBoostDisplay: React.FC<ProfileBoostDisplayProps> = ({ user }) => {
   const { getActiveBoosts, boostEffects, getTimeRemaining } = useProfileBoost(user);
   const activeBoosts = getActiveBoosts();
