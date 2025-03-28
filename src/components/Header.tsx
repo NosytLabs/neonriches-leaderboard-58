@@ -1,7 +1,8 @@
+
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Crown, Menu, X, LogIn, UserPlus, DollarSign, Trophy, Bell, UserCircle, Sparkles, Gem } from 'lucide-react';
+import { Crown, Menu, X, LogIn, UserPlus, DollarSign, Trophy, Bell, UserCircle, Sparkles, Gem, Wallet } from 'lucide-react';
 import { 
   DropdownMenu,
   DropdownMenuContent,
@@ -87,6 +88,12 @@ const Header = () => {
         </nav>
 
         <div className="hidden md:flex items-center space-x-2">
+          {user && (
+            <div className="flex items-center mr-2 glass-morphism rounded-lg px-2 py-1 border border-royal-gold/20">
+              <Wallet size={16} className="text-royal-gold mr-1.5" />
+              <span className="text-white font-mono font-medium">${user.walletBalance || 0}</span>
+            </div>
+          )}
           {user && <NotificationCenter />}
           {user ? (
             <DropdownMenu>
@@ -150,6 +157,12 @@ const Header = () => {
 
         <Sheet open={showMobileMenu} onOpenChange={setShowMobileMenu}>
           <div className="flex items-center md:hidden">
+            {user && (
+              <div className="flex items-center mr-2 glass-morphism rounded-lg px-2 py-1 border border-royal-gold/20">
+                <Wallet size={14} className="text-royal-gold mr-1" />
+                <span className="text-white text-xs font-mono font-medium">${user.walletBalance || 0}</span>
+              </div>
+            )}
             {user && <NotificationCenter />}
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon" className="ml-2">
@@ -181,8 +194,13 @@ const Header = () => {
                     <div>
                       <div className="font-medium text-sm">{user.username}</div>
                       <div className="text-xs text-white/60">Rank #{user.rank}</div>
-                      <div className="text-xs text-royal-gold">
-                        ${user.amountSpent} spent
+                      <div className="flex items-center text-xs text-royal-gold">
+                        <DollarSign className="h-3 w-3 mr-0.5" />
+                        <span>{user.amountSpent} spent</span>
+                      </div>
+                      <div className="flex items-center text-xs text-white/70 mt-1">
+                        <Wallet className="h-3 w-3 mr-0.5 text-purple-400" />
+                        <span>{user.walletBalance || 0} balance</span>
                       </div>
                     </div>
                   </div>

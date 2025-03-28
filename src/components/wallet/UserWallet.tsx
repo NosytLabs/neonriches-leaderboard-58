@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Coins, Plus, History, ArrowUp, CreditCard } from 'lucide-react';
+import { Wallet, Plus, History, ArrowUp, CreditCard } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { UserProfile } from '@/contexts/AuthContext';
@@ -36,7 +36,7 @@ const UserWallet: React.FC<UserWalletProps> = ({ user, onFundWallet }) => {
     <Card className="glass-morphism border-white/10">
       <CardHeader className="pb-3">
         <CardTitle className="text-lg font-royal royal-gradient flex items-center">
-          <Coins size={18} className="text-purple-400 mr-2" />
+          <Wallet size={18} className="text-purple-400 mr-2" />
           Your Balance
         </CardTitle>
       </CardHeader>

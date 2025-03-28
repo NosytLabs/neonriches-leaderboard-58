@@ -25,7 +25,7 @@ export const spendFromWallet = async (
   metadata: Record<string, any> = {}
 ): Promise<boolean> => {
   // Check if user has enough balance
-  if (user.walletBalance < amount) {
+  if ((user.walletBalance || 0) < amount) {
     console.error('Not enough balance to spend', { user, amount });
     return false;
   }
