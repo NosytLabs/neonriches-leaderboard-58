@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -48,73 +49,6 @@ body {
 
 .font-medieval {
   font-family: 'Cinzel', 'Times New Roman', serif;
-}
-
-.royal-gradient {
-  background: linear-gradient(to right, var(--royal-crimson), var(--royal-gold), var(--royal-purple));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  background-size: 200% auto;
-  animation: shine 10s linear infinite;
-}
-
-@keyframes shine {
-  to {
-    background-position: 200% center;
-  }
-}
-
-/* Glass morphism effects */
-.glass-morphism {
-  background-color: rgba(0, 0, 0, 0.2);
-  backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.glass-morphism-highlight {
-  background-color: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  box-shadow: 0 4px 15px rgba(255, 215, 0, 0.1);
-}
-
-/* Team colors */
-.bg-team-red {
-  background-color: var(--team-red);
-}
-
-.bg-team-green {
-  background-color: var(--team-green);
-}
-
-.bg-team-blue {
-  background-color: var(--team-blue);
-}
-
-.text-team-red {
-  color: var(--team-red);
-}
-
-.text-team-green {
-  color: var(--team-green);
-}
-
-.text-team-blue {
-  color: var(--team-blue);
-}
-
-.border-team-red {
-  border-color: var(--team-red);
-}
-
-.border-team-green {
-  border-color: var(--team-green);
-}
-
-.border-team-blue {
-  border-color: var(--team-blue);
 }
 
 /* Scrollbar styling */

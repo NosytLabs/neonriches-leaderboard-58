@@ -1,5 +1,5 @@
 
-/* Floating coin animations and effects */
+/* Floating coins animation */
 .floating-coin {
   position: absolute;
   width: 15px;
@@ -13,6 +13,7 @@
   animation: float-coin 3s ease-out forwards;
 }
 
+/* Add a shimmer effect to the coins */
 .floating-coin::after {
   content: "";
   position: absolute;
@@ -28,4 +29,26 @@
   );
   border-radius: 50%;
   animation: shimmer 1s linear infinite;
+}
+
+/* Coin value indicators */
+.coin-value-1 {
+  background-color: #B87333; /* Bronze for $1 */
+}
+
+.coin-value-5 {
+  background-color: #C0C0C0; /* Silver for $5 */
+}
+
+.coin-value-10 {
+  background-color: #FFD700; /* Gold for $10 */
+}
+
+.coin-value-50 {
+  background-color: #9B87F5; /* Purple for $50+ */
+}
+
+.coin-value-100 {
+  background-color: #E5097F; /* Pink for $100+ */
+  box-shadow: 0 0 15px #E5097F;
 }

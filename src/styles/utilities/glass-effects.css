@@ -10,3 +10,36 @@
 .glass-card {
   @apply glass-morphism rounded-lg p-4;
 }
+
+/* Rich glass morphism effect */
+.glass-morphism-rich {
+  background: rgba(13, 13, 32, 0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 215, 0, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+/* Glass card with royal styling */
+.glass-card-royal {
+  backdrop-filter: blur(12px);
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  border-radius: 0.5rem;
+  padding: 1.25rem;
+  transition: all 300ms;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2), 0 0 8px rgba(212, 175, 55, 0.1);
+}
+
+.glass-card-royal:hover {
+  border-color: rgba(212, 175, 55, 0.3);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3), 0 0 15px rgba(212, 175, 55, 0.2);
+}
+
+/* Glass card with highlight */
+.glass-morphism-highlight {
+  background-color: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 4px 15px rgba(255, 215, 0, 0.1);
+}

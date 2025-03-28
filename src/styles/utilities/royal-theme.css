@@ -10,6 +10,67 @@
   text-shadow: 0 0 5px rgba(212, 175, 55, 0.5);
 }
 
+/* Royal card styling */
+.royal-card {
+  background-color: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2), 0 0 8px rgba(212, 175, 55, 0.1);
+  backdrop-filter: blur(12px);
+  transition: all 300ms;
+}
+
+.royal-card:hover {
+  border-color: rgba(212, 175, 55, 0.3);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3), 0 0 15px rgba(212, 175, 55, 0.2);
+  transform: translateY(-2px);
+}
+
+/* Royal ornamental styling */
+.royal-corner-ornament {
+  position: relative;
+}
+
+.royal-corner-ornament::before {
+  content: '';
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border-top: 2px solid rgba(212, 175, 55, 0.7);
+  border-left: 2px solid rgba(212, 175, 55, 0.7);
+  top: 5px;
+  left: 5px;
+}
+
+.royal-corner-ornament::after {
+  content: '';
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border-bottom: 2px solid rgba(212, 175, 55, 0.7);
+  border-right: 2px solid rgba(212, 175, 55, 0.7);
+  bottom: 5px;
+  right: 5px;
+}
+
+/* Royal button style */
+.royal-button-enhanced {
+  position: relative;
+  overflow: hidden;
+  z-index: 10;
+  transition: all 300ms;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35), 0 0 8px rgba(212, 175, 55, 0.25);
+}
+
+.royal-button-enhanced:hover {
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.45), 0 0 15px rgba(212, 175, 55, 0.45);
+  transform: translateY(-3px);
+}
+
+.royal-button-enhanced:active {
+  transform: translateY(1px);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.4), 0 0 5px rgba(212, 175, 55, 0.35);
+}
+
 /* Team colors */
 .team-red-glow {
   box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
@@ -21,4 +82,41 @@
 
 .team-blue-glow {
   box-shadow: 0 0 15px rgba(0, 0, 255, 0.5);
+}
+
+/* Team color classes */
+.bg-team-red {
+  background-color: var(--royal-crimson);
+}
+
+.bg-team-green {
+  background-color: var(--royal-gold);
+}
+
+.bg-team-blue {
+  background-color: var(--royal-navy);
+}
+
+.text-team-red {
+  color: var(--royal-crimson-bright);
+}
+
+.text-team-green {
+  color: var(--royal-gold);
+}
+
+.text-team-blue {
+  color: var(--royal-navy-bright);
+}
+
+.border-team-red {
+  border-color: var(--royal-crimson);
+}
+
+.border-team-green {
+  border-color: var(--royal-gold);
+}
+
+.border-team-blue {
+  border-color: var(--royal-navy);
 }
