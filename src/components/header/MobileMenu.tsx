@@ -1,152 +1,126 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Menu, X, DollarSign, Wallet } from 'lucide-react';
-import { NavLink } from '@/components/header/NavLink';
-import { UserProfile } from '@/contexts/AuthContext';
-import NotificationCenter from '@/components/notifications/NotificationCenter';
+import { LayoutList, DollarSign, Calendar, Info, ShieldQuestion, Shield, Crown, Scroll, Gift, MessageSquare } from 'lucide-react';
+import AuthButton from '@/components/AuthButton';
+import { useAuth } from '@/contexts/auth';
+import MedievalIcon from '@/components/ui/medieval-icon';
 
 interface MobileMenuProps {
-  user: UserProfile | null;
-  navLinks: Array<{ title: string; path: string; icon: React.ReactNode }>;
-  showMobileMenu: boolean;
-  setShowMobileMenu: (show: boolean) => void;
-  handleLogin: () => void;
-  handleRegister: () => void;
-  handleLogout: () => void;
-  isActive: (path: string) => boolean;
+  isOpen: boolean;
+  onClose: () => void;
 }
 
-const MobileMenu: React.FC<MobileMenuProps> = ({
-  user,
-  navLinks,
-  showMobileMenu,
-  setShowMobileMenu,
-  handleLogin,
-  handleRegister,
-  handleLogout,
-  isActive
-}) => {
+const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
+  const { user } = useAuth();
+  
+  const menuVariants = {
+    closed: {
+      opacity: 0,
+      height: 0,
+      transition: {
+        duration: 0.3,
+        when: "afterChildren",
+      },
+    },
+    open: {
+      opacity: 1,
+      height: "auto",
+      transition: {
+        duration: 0.3,
+        when: "beforeChildren",
+        staggerChildren: 0.05,
+      },
+    },
+  };
+  
+  const itemVariants = {
+    closed: {
+      opacity: 0,
+      y: -5,
+    },
+    open: {
+      opacity: 1,
+      y: 0,
+    },
+  };
+  
+  const MenuItem = ({ to, icon, children }) => (
+    <motion.div variants={itemVariants}>
+      <Link 
+        to={to}
+        className="flex items-center py-3 px-4 hover:bg-white/5 rounded-lg glass-morphism border-transparent hover:border-white/10 transition-colors"
+        onClick={onClose}
+      >
+        <span className="text-white/70 mr-3">{icon}</span>
+        <span>{children}</span>
+      </Link>
+    </motion.div>
+  );
+  
   return (
-    <Sheet open={showMobileMenu} onOpenChange={setShowMobileMenu}>
-      <div className="flex items-center md:hidden">
-        {user && (
-          <div className="flex items-center mr-2 glass-morphism rounded-lg px-2 py-1 border border-royal-gold/20">
-            <Wallet size={14} className="text-royal-gold mr-1" />
-            <span className="text-white text-xs font-mono font-medium">${user.walletBalance || 0}</span>
-          </div>
-        )}
-        {user && <NotificationCenter />}
-        <SheetTrigger asChild>
-          <Button variant="ghost" size="icon" className="ml-2">
-            <Menu className="h-5 w-5 text-white" />
-          </Button>
-        </SheetTrigger>
-      </div>
-      <SheetContent side="right" className="glass-morphism border-royal-gold/10 w-64">
-        <div className="flex flex-col h-full">
-          <div className="flex justify-between items-center mb-4">
-            <div className="flex items-center gap-2">
-              <span className="font-bold text-lg royal-gradient">P2W.FUN</span>
-            </div>
-            <Button variant="ghost" size="icon" onClick={() => setShowMobileMenu(false)}>
-              <X className="h-5 w-5 text-white" />
-            </Button>
-          </div>
-
-          {user && (
-            <div className="mb-4 p-3 glass-morphism rounded-lg">
-              <div className="flex items-center gap-3">
-                <Avatar className="h-10 w-10 border border-royal-gold/20">
-                  <AvatarImage src={user.profileImage} />
-                  <AvatarFallback className="bg-royal-navy text-white">
-                    {user.username.substring(0, 2).toUpperCase()}
-                  </AvatarFallback>
-                </Avatar>
-                <div>
-                  <div className="font-medium text-sm">{user.username}</div>
-                  <div className="text-xs text-white/60">Rank #{user.rank}</div>
-                  <div className="flex items-center text-xs text-royal-gold">
-                    <DollarSign className="h-3 w-3 mr-0.5" />
-                    <span>{user.amountSpent} spent</span>
-                  </div>
-                  <div className="flex items-center text-xs text-white/70 mt-1">
-                    <Wallet className="h-3 w-3 mr-0.5 text-purple-400" />
-                    <span>{user.walletBalance || 0} balance</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          <nav className="space-y-1 mb-4">
-            {navLinks.map((link) => (
-              <Link 
-                key={link.path} 
-                to={link.path}
-                onClick={() => setShowMobileMenu(false)}
-              >
-                <Button 
-                  variant="ghost" 
-                  size="sm"
-                  className={`w-full justify-start ${
-                    isActive(link.path) 
-                      ? 'bg-white/10 text-white' 
-                      : 'text-white/70 hover:text-white hover:bg-white/10'
-                  }`}
-                >
-                  {link.icon}
-                  {link.title}
-                </Button>
-              </Link>
-            ))}
-          </nav>
-
-          <div className="mt-auto space-y-2">
-            {user ? (
-              <Button 
-                variant="outline" 
-                size="sm"
-                className="w-full text-white border-white/20 hover:bg-white/10"
-                onClick={() => {
-                  handleLogout();
-                  setShowMobileMenu(false);
-                }}
-              >
-                Logout
-              </Button>
-            ) : (
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div
+          initial="closed"
+          animate="open"
+          exit="closed"
+          variants={menuVariants}
+          className="md:hidden overflow-hidden border-t border-white/10 bg-background"
+        >
+          <div className="container px-4 mx-auto py-4 space-y-1">
+            <MenuItem to="/dashboard" icon={<LayoutList className="h-5 w-5" />}>
+              Dashboard
+            </MenuItem>
+            <MenuItem to="/leaderboard" icon={<DollarSign className="h-5 w-5" />}>
+              Leaderboard
+            </MenuItem>
+            <MenuItem to="/events" icon={<Calendar className="h-5 w-5" />}>
+              Events
+            </MenuItem>
+            <MenuItem to="/features" icon={<Gift className="h-5 w-5" />}>
+              Features
+            </MenuItem>
+            <MenuItem to="/community" icon={<MessageSquare className="h-5 w-5" />}>
+              Community
+            </MenuItem>
+            <MenuItem to="/about" icon={<Info className="h-5 w-5" />}>
+              About
+            </MenuItem>
+            
+            <motion.div variants={itemVariants}>
+              <div className="h-px bg-white/10 my-3"></div>
+            </motion.div>
+            
+            <MenuItem to="/faq" icon={<ShieldQuestion className="h-5 w-5" />}>
+              FAQ
+            </MenuItem>
+            
+            {user && (
               <>
-                <Button 
-                  variant="outline" 
-                  size="sm"
-                  className="w-full text-white border-white/20 hover:bg-white/10"
-                  onClick={() => {
-                    setShowMobileMenu(false);
-                    handleLogin();
-                  }}
-                >
-                  Login
-                </Button>
-                <Button 
-                  size="sm"
-                  className="w-full bg-royal-gold hover:bg-royal-gold/90 text-black"
-                  onClick={() => {
-                    setShowMobileMenu(false);
-                    handleRegister();
-                  }}
-                >
-                  Register
-                </Button>
+                <MenuItem to={`/profile/${user.username}`} icon={<Crown className="h-5 w-5" />}>
+                  My Profile
+                </MenuItem>
+                <MenuItem to="/teams" icon={<Shield className="h-5 w-5" />}>
+                  Teams
+                </MenuItem>
+                <MenuItem to="/certificate" icon={<Scroll className="h-5 w-5" />}>
+                  Certificate of Nobility
+                </MenuItem>
               </>
             )}
+            
+            {!user && (
+              <motion.div variants={itemVariants} className="py-3 px-4">
+                <AuthButton fullWidth />
+              </motion.div>
+            )}
           </div>
-        </div>
-      </SheetContent>
-    </Sheet>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 };
 

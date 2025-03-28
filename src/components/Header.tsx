@@ -2,202 +2,168 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Crown, Menu, X, LogIn, Info, HelpCircle, Trophy, Calendar } from 'lucide-react';
+import { AlignJustify, X, Crown, DollarSign, Wallet, ChevronDown, Bell, LayoutList, Calendar, Info, Shield, MessageSquare } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import MobileMenu from './header/MobileMenu';
 import { useAuth } from '@/contexts/auth';
-import UserMenu from '@/components/header/UserMenu';
-import AuthModal from '@/components/auth/AuthModal';
+import UserMenu from './header/UserMenu';
+import AuthButton from './AuthButton';
+import NavLink from './header/NavLink';
+import NotificationsDropdown from './header/NotificationsDropdown';
+import { Badge } from '@/components/ui/badge';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { useToastContext } from '@/contexts/ToastContext';
+import MedievalIcon from './ui/medieval-icon';
 
-const Header = () => {
+interface HeaderProps {
+  transparent?: boolean;
+}
+
+const Header: React.FC<HeaderProps> = ({ transparent = false }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const { user } = useAuth();
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [authModalOpen, setAuthModalOpen] = useState(false);
-  const [authModalTab, setAuthModalTab] = useState<'login' | 'register'>('login');
+  const { addToast } = useToastContext();
   const location = useLocation();
-
-  // Handle scroll effect
+  
+  // Check if the header should be transparent (only on homepage)
+  const isHomepage = location.pathname === '/';
+  const showTransparent = transparent && isHomepage && !scrolled;
+  
+  // Handle scroll event to make header solid on scroll
   useEffect(() => {
     const handleScroll = () => {
-      const scrollPosition = window.scrollY;
-      setIsScrolled(scrollPosition > 10);
+      if (window.scrollY > 10) {
+        setScrolled(true);
+      } else {
+        setScrolled(false);
+      }
     };
-
+    
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, []);
-
-  // Close mobile menu when route changes
+  
+  // Close mobile menu when changing routes
   useEffect(() => {
-    setIsMobileMenuOpen(false);
-  }, [location]);
-
-  const handleLogin = () => {
-    setAuthModalTab('login');
-    setAuthModalOpen(true);
-  };
-
-  const handleRegister = () => {
-    setAuthModalTab('register');
-    setAuthModalOpen(true);
-  };
-
+    setIsOpen(false);
+  }, [location.pathname]);
+  
   return (
-    <>
-      <header
-        className={cn(
-          'fixed top-0 left-0 right-0 z-50 transition-all duration-300',
-          isScrolled 
-            ? 'bg-background/80 backdrop-blur-md py-2 shadow-md' 
-            : 'bg-transparent py-4'
-        )}
-      >
-        <div className="container mx-auto px-4">
-          <div className="flex justify-between items-center">
-            <Link to="/" className="flex items-center">
-              <Crown className="h-6 w-6 text-royal-gold mr-2" />
-              <span className="text-xl font-bold">SpendThrone</span>
-            </Link>
-            
-            {/* Desktop Navigation */}
-            <nav className="hidden md:flex items-center space-x-1">
-              <Link to="/leaderboard" className="px-3 py-2 text-sm hover:text-royal-gold transition-colors">
-                <Trophy className="h-4 w-4 inline mr-1" />
-                Leaderboard
-              </Link>
-              <Link to="/events" className="px-3 py-2 text-sm hover:text-royal-gold transition-colors">
-                <Calendar className="h-4 w-4 inline mr-1" />
-                Events
-              </Link>
-              <Link to="/about" className="px-3 py-2 text-sm hover:text-royal-gold transition-colors">
-                <Info className="h-4 w-4 inline mr-1" />
-                About
-              </Link>
-              <Link to="/faq" className="px-3 py-2 text-sm hover:text-royal-gold transition-colors">
-                <HelpCircle className="h-4 w-4 inline mr-1" />
-                FAQ
-              </Link>
-              {user && (
-                <>
-                  <Link to="/dashboard" className="px-3 py-2 text-sm hover:text-royal-gold transition-colors">
-                    Dashboard
-                  </Link>
-                </>
-              )}
-              <div className="ml-4 flex items-center space-x-2">
-                {user ? (
-                  <UserMenu user={user} />
-                ) : (
-                  <>
-                    <Button size="sm" variant="outline" className="border-white/20 hover:bg-white/10" onClick={handleLogin}>
-                      <LogIn className="mr-2 h-4 w-4" />
-                      Login
-                    </Button>
-                    <Button size="sm" className="bg-royal-gold hover:bg-royal-gold/90 text-black" onClick={handleRegister}>
-                      Register
-                    </Button>
-                  </>
-                )}
-              </div>
-            </nav>
-            
-            {/* Mobile Menu Button */}
-            <button 
-              className="md:hidden text-white hover:text-royal-gold transition-colors"
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+    <header
+      className={cn(
+        'fixed top-0 left-0 right-0 z-50 transition-colors duration-300',
+        showTransparent ? 'bg-transparent' : 'bg-background/80 backdrop-blur-lg border-b border-white/10'
+      )}
+    >
+      <div className="container px-4 mx-auto">
+        <div className="flex items-center justify-between h-16">
+          {/* Logo */}
+          <Link to="/" className="flex items-center">
+            <Crown className="h-6 w-6 text-royal-gold mr-2" />
+            <span className={cn(
+              "text-xl font-bold transition-colors",
+              showTransparent ? "text-white" : "royal-gradient"
+            )}>
+              SpendThrone
+            </span>
+            <Badge 
+              variant="outline" 
+              className="ml-2 px-1.5 text-[10px] py-0 bg-white/5 border-white/10 hidden sm:block"
             >
-              {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
-          </div>
-        </div>
-      </header>
-      
-      {/* Mobile Menu */}
-      {isMobileMenuOpen && (
-        <div className="fixed inset-0 z-40 bg-background/95 backdrop-blur-lg md:hidden pt-20">
-          <nav className="container mx-auto px-4 py-8 flex flex-col space-y-4">
-            <Link to="/leaderboard" className="px-4 py-3 text-lg border-b border-white/10 hover:text-royal-gold">
-              <Trophy className="h-5 w-5 inline mr-2" />
+              v1.0
+            </Badge>
+          </Link>
+          
+          {/* Desktop navigation */}
+          <nav className="hidden md:flex items-center space-x-1">
+            <NavLink to="/dashboard">
+              <LayoutList className="h-4 w-4 mr-1.5" />
+              Dashboard
+            </NavLink>
+            <NavLink to="/leaderboard">
+              <DollarSign className="h-4 w-4 mr-1.5" />
               Leaderboard
-            </Link>
-            <Link to="/events" className="px-4 py-3 text-lg border-b border-white/10 hover:text-royal-gold">
-              <Calendar className="h-5 w-5 inline mr-2" />
+            </NavLink>
+            <NavLink to="/events">
+              <Calendar className="h-4 w-4 mr-1.5" />
               Events
-            </Link>
-            <Link to="/about" className="px-4 py-3 text-lg border-b border-white/10 hover:text-royal-gold">
-              <Info className="h-5 w-5 inline mr-2" />
+            </NavLink>
+            <NavLink to="/features">
+              <MedievalIcon name="crown" size="sm" className="mr-1.5" />
+              Features
+            </NavLink>
+            <NavLink to="/community">
+              <MessageSquare className="h-4 w-4 mr-1.5" />
+              Community
+            </NavLink>
+            <NavLink to="/about">
+              <Info className="h-4 w-4 mr-1.5" />
               About
-            </Link>
-            <Link to="/faq" className="px-4 py-3 text-lg border-b border-white/10 hover:text-royal-gold">
-              <HelpCircle className="h-5 w-5 inline mr-2" />
-              FAQ
-            </Link>
-            {user && (
+            </NavLink>
+          </nav>
+          
+          {/* User actions section */}
+          <div className="hidden md:flex items-center space-x-2">
+            {user ? (
               <>
-                <Link to="/dashboard" className="px-4 py-3 text-lg border-b border-white/10 hover:text-royal-gold">
-                  Dashboard
-                </Link>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button 
+                        variant="ghost" 
+                        size="sm"
+                        className="relative"
+                        onClick={() => addToast({
+                          title: "Wallet",
+                          description: "Wallet feature coming soon!",
+                          variant: "default"
+                        })}
+                      >
+                        <Wallet className="h-5 w-5" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Wallet</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+                
+                <NotificationsDropdown />
+                <UserMenu user={user} />
               </>
+            ) : (
+              <AuthButton />
+            )}
+          </div>
+          
+          {/* Mobile menu button */}
+          <div className="md:hidden flex items-center">
+            {user && (
+              <div className="flex items-center mr-2">
+                <NotificationsDropdown />
+                <UserMenu user={user} />
+              </div>
             )}
             
-            <div className="pt-4 flex flex-col space-y-3">
-              {user ? (
-                <div className="flex flex-col space-y-3">
-                  <div className="flex items-center space-x-3 px-4 py-3">
-                    <div className="h-10 w-10 rounded-full bg-white/10 flex items-center justify-center">
-                      {user.profileImage ? (
-                        <img src={user.profileImage} alt={user.username} className="h-full w-full rounded-full object-cover" />
-                      ) : (
-                        <span className="text-lg font-bold">{user.username.charAt(0).toUpperCase()}</span>
-                      )}
-                    </div>
-                    <div>
-                      <div className="font-medium">{user.displayName || user.username}</div>
-                      <div className="text-sm text-white/70">#{user.rank}</div>
-                    </div>
-                  </div>
-                  <Link to="/dashboard" className="px-4 py-3 bg-royal-gold/10 rounded-md text-center text-royal-gold">
-                    Dashboard
-                  </Link>
-                  <Button 
-                    variant="outline"
-                    className="w-full border-white/20"
-                    onClick={() => {
-                      setIsMobileMenuOpen(false);
-                      // Add logout functionality here
-                    }}
-                  >
-                    Sign Out
-                  </Button>
-                </div>
-              ) : (
-                <>
-                  <Button className="w-full bg-royal-gold hover:bg-royal-gold/90 text-black" onClick={() => {
-                    setIsMobileMenuOpen(false);
-                    handleRegister();
-                  }}>
-                    Register
-                  </Button>
-                  <Button variant="outline" className="w-full border-white/20" onClick={() => {
-                    setIsMobileMenuOpen(false);
-                    handleLogin();
-                  }}>
-                    Login
-                  </Button>
-                </>
-              )}
-            </div>
-          </nav>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setIsOpen(!isOpen)}
+              aria-label="Toggle menu"
+            >
+              {isOpen ? <X className="h-6 w-6" /> : <AlignJustify className="h-6 w-6" />}
+            </Button>
+          </div>
         </div>
-      )}
-
-      {/* Auth Modal */}
-      <AuthModal
-        isOpen={authModalOpen}
-        onClose={() => setAuthModalOpen(false)}
-        defaultTab={authModalTab}
-      />
-    </>
+      </div>
+      
+      {/* Mobile menu */}
+      <MobileMenu isOpen={isOpen} onClose={() => setIsOpen(false)} />
+    </header>
   );
 };
 

@@ -23,7 +23,7 @@ const RoyalFAQ: React.FC = () => {
     {
       id: 'faq-3',
       question: 'How do teams work?',
-      answer: 'You can join one of three noble houses: the Crimson Court (Red), the Golden Order (Green), or the Royal Navy (Blue). Your spending contributes to your team\'s total, creating a collective competition alongside individual rankings. Teams participate in weekly challenges for additional benefits.',
+      answer: 'You can join one of three royal houses: the Crimson Dynasty (Red), the Emerald Empire Collective (Green), or the Sapphire Sovereign Alliance (Blue). Your spending contributes to your team\'s total, creating a collective competition alongside individual rankings. Teams participate in weekly challenges for additional benefits.',
       icon: <Users className="h-5 w-5 text-royal-navy" />
     },
     {

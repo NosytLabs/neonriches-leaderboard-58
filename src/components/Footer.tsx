@@ -79,7 +79,7 @@ const Footer = () => {
         
         <div className="pt-6 border-t border-white/10 flex flex-col md:flex-row justify-between items-center">
           <p className="text-xs text-foreground/60">
-            &copy; {currentYear} SpendThrone — A satirical social experiment.
+            &copy; {currentYear} SpendThrone — A satirical social experiment by <a href="https://www.nosytlabs.com" target="_blank" rel="noopener noreferrer" className="hover:text-royal-gold transition-colors inline-flex items-center">Nosyt Labs <ExternalLink size={10} className="ml-1" /></a>
           </p>
           <p className="text-xs text-foreground/60 flex items-center mt-3 md:mt-0">
             Built with <span className="px-1">❤️</span> and <span className="px-1">💰</span>
