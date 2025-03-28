@@ -1,35 +1,30 @@
-// Add the missing function
-export const getCertificateById = async (id: string) => {
-  // In a real implementation, this would fetch certificate data from an API
+
+import { User, UserProfile } from '@/types/user';
+
+/**
+ * Generates a certificate of nobility for the user
+ */
+export const generateCertificate = async (userId: string): Promise<{ certificateId: string; imageUrl: string }> => {
+  // This would normally call an API endpoint to generate the certificate
+  // For now, we'll just mock the response
+
   return {
-    id,
-    title: "Certificate of Nobility",
-    recipientName: "Royal User",
-    issuedDate: new Date().toISOString(),
-    expiryDate: new Date(Date.now() + 1000 * 60 * 60 * 24 * 365).toISOString(), // 1 year
-    tier: "gold",
-    signatures: ["Royal Treasurer", "King of P2W"],
-    achievements: ["Top Spender", "Team Champion"],
-    imageUrl: "/certificates/nobility.jpg"
+    certificateId: `cert-${Date.now()}`,
+    imageUrl: '/images/certificates/certificate-template.png'
   };
 };
 
-// Keep existing code for mapUserFromDb
-const mapUserFromDb = (dbUser: any): UserProfile => {
-  return {
-    id: dbUser.id,
-    username: dbUser.username,
-    email: dbUser.email,
-    displayName: dbUser.display_name,
-    profileImage: dbUser.profile_image,
-    gender: dbUser.gender,
-    team: dbUser.team,
-    tier: dbUser.tier,
-    rank: 0, // Default value
-    amountSpent: 0, // Default value
-    walletBalance: 0, // Default value
-    bio: dbUser.bio,
-    joinedAt: dbUser.joined_at,
-    walletAddress: dbUser.wallet_address
-  };
+/**
+ * Claims a certificate of nobility for the user
+ */
+export const claimCertificate = async (user: UserProfile): Promise<boolean> => {
+  // This would normally call an API endpoint to claim the certificate
+  // For now, we'll just mock the response
+  
+  return true;
+};
+
+export default {
+  generateCertificate,
+  claimCertificate
 };

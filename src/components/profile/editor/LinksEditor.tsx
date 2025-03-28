@@ -57,7 +57,8 @@ const LinksEditor: React.FC<LinksEditorProps> = ({ user, links, onLinksChange })
     const newLink: ProfileLink = {
       id: `link_${Date.now()}`,
       url: newLinkUrl,
-      label: newLinkLabel
+      title: newLinkLabel, // Using title as required by ProfileLink
+      label: newLinkLabel  // Also storing as label for display
     };
 
     onLinksChange([...links, newLink]);
@@ -67,7 +68,7 @@ const LinksEditor: React.FC<LinksEditorProps> = ({ user, links, onLinksChange })
   };
 
   const handleRemoveLink = (id: string) => {
-    const updatedLinks = links.filter(link => link.id !== id);
+    const updatedLinks = links.filter(link => String(link.id) !== id);
     onLinksChange(updatedLinks);
   };
 
@@ -78,11 +79,11 @@ const LinksEditor: React.FC<LinksEditorProps> = ({ user, links, onLinksChange })
         
         <div className="space-y-2">
           {links.map((link) => (
-            <div key={link.id} className="glass-morphism rounded-lg p-3 border border-white/10 flex justify-between items-center">
+            <div key={String(link.id)} className="glass-morphism rounded-lg p-3 border border-white/10 flex justify-between items-center">
               <div className="flex items-center">
                 <Link size={16} className="text-royal-gold" />
                 <div className="ml-2">
-                  <p className="text-sm font-medium">{link.label}</p>
+                  <p className="text-sm font-medium">{link.label || link.title}</p>
                   <p className="text-xs text-white/50 truncate max-w-[200px]">{link.url}</p>
                 </div>
               </div>
@@ -90,7 +91,7 @@ const LinksEditor: React.FC<LinksEditorProps> = ({ user, links, onLinksChange })
                 size="sm"
                 variant="ghost"
                 className="text-white/50 hover:text-white hover:bg-white/10"
-                onClick={() => handleRemoveLink(link.id)}
+                onClick={() => handleRemoveLink(String(link.id))}
               >
                 <Trash2 size={14} />
               </Button>

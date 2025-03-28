@@ -1,80 +1,76 @@
 
-import * as fs from 'fs';
-import * as path from 'path';
+interface DependencyNode {
+  name: string;
+  dependencies: string[];
+}
 
-// Analyze project dependencies
-export const analyzeDependencies = async (
-  projectRoot: string, 
-  jsFiles: string[]
-): Promise<{
-  unusedDependencies: string[],
-  outdatedDependencies: Record<string, { current: string, latest: string }>
-}> => {
-  try {
-    const packageJsonPath = path.join(projectRoot, 'package.json');
-    if (!fs.existsSync(packageJsonPath)) {
-      return { 
-        unusedDependencies: [],
-        outdatedDependencies: {}
-      };
+interface DependencyGraph {
+  [key: string]: string[];
+}
+
+/**
+ * Analyzes dependencies between components and identifies circular dependencies
+ */
+export const analyzeDependencies = (dependencies: DependencyNode[]): {
+  graph: DependencyGraph;
+  circularDependencies: string[][];
+} => {
+  // Build dependency graph
+  const graph: DependencyGraph = {};
+  
+  dependencies.forEach(node => {
+    graph[node.name] = node.dependencies;
+  });
+  
+  // Detect circular dependencies
+  const circularDependencies: string[][] = [];
+  const visited = new Set<string>();
+  const path: string[] = [];
+  
+  const dfs = (node: string): void => {
+    if (path.includes(node)) {
+      // Found circular dependency
+      const cycle = path.slice(path.indexOf(node));
+      cycle.push(node);
+      circularDependencies.push(cycle);
+      return;
     }
     
-    const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf-8'));
-    const dependencies = { ...packageJson.dependencies, ...packageJson.devDependencies };
+    if (visited.has(node)) {
+      return;
+    }
     
-    // Track which dependencies are used
-    const usedDependencies = new Set<string>();
+    visited.add(node);
+    path.push(node);
     
-    // Check all files for import statements
-    for (const file of jsFiles) {
-      try {
-        const content = fs.readFileSync(file, 'utf-8');
-        
-        // Check for ES imports
-        const importMatches = content.match(/from ['"]([^'"]+)['"]/g) || [];
-        importMatches.forEach(match => {
-          if (match) {
-            const importName = match.replace(/from ['"]/, '').replace(/['"]$/, '').split('/')[0];
-            if (dependencies[importName]) {
-              usedDependencies.add(importName);
-            }
-          }
-        });
-        
-        // Check for require statements
-        const requireMatches = content.match(/require\(['"]([^'"]+)['"]\)/g) || [];
-        requireMatches.forEach(match => {
-          if (match) {
-            const requireName = match.replace(/require\(['"]/, '').replace(/['"]\)$/, '').split('/')[0];
-            if (dependencies[requireName]) {
-              usedDependencies.add(requireName);
-            }
-          }
-        });
-      } catch (error) {
-        console.error(`Error analyzing file ${file}:`, error);
+    const dependencies = graph[node] || [];
+    dependencies.forEach(dep => {
+      if (typeof dep === 'string') {
+        dfs(dep);
       }
-    }
+    });
     
-    // Find unused dependencies
-    const unusedDependencies = Object.keys(dependencies).filter(
-      dep => !usedDependencies.has(dep) && 
-      !dep.startsWith('@types/') && 
-      !['typescript', 'eslint', 'prettier', 'webpack', 'babel'].includes(dep)
-    );
-    
-    // Mock for outdated dependencies (in a real tool, this would use npm outdated)
-    const outdatedDependencies: Record<string, { current: string, latest: string }> = {};
-    
-    return {
-      unusedDependencies,
-      outdatedDependencies
-    };
-  } catch (error) {
-    console.error('Error analyzing dependencies:', error);
-    return {
-      unusedDependencies: [],
-      outdatedDependencies: {}
-    };
-  }
+    path.pop();
+  };
+  
+  Object.keys(graph).forEach(node => {
+    dfs(node);
+  });
+  
+  return {
+    graph,
+    circularDependencies
+  };
+};
+
+/**
+ * Formats dependency paths for display
+ */
+export const formatDependencyPath = (path: string[]): string => {
+  return path.map(p => typeof p === 'string' ? p : 'unknown').join(' → ');
+};
+
+export default {
+  analyzeDependencies,
+  formatDependencyPath
 };

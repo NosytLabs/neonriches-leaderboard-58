@@ -1,4 +1,6 @@
 
+import React from 'react';
+
 /**
  * Converts a string value to a boolean
  * Used for props that should be boolean but are passed as strings
@@ -19,7 +21,7 @@ export const withStringBooleanProps = <P extends Record<string, any>>(
   propNames: (keyof P)[]
 ): React.FC<P> => {
   return (props: P) => {
-    const fixedProps = { ...props };
+    const fixedProps = { ...props } as P;
     
     propNames.forEach(propName => {
       if (propName in props) {

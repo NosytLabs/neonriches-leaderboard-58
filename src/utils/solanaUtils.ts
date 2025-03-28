@@ -1,92 +1,39 @@
 
-import { PublicKey } from '@solana/web3.js';
-import { OnChainLeaderboardEntry, SolanaTreasuryInfo, SolanaTransaction } from '@/types/solana';
-
-// Generate a signature message for Solana login
-export const generateSignatureMessage = (address: string, nonce: string): string => {
-  return `Sign this message to authenticate with P2W.FUN: ${nonce}`;
+/**
+ * Formats a Solana address for display by shortening it
+ * @param address The full Solana address
+ * @param length The number of characters to show at the beginning and end
+ * @returns The formatted address (e.g. "Jup2Y...Ks9vJ")
+ */
+export const formatAddress = (address: string, length: number = 4): string => {
+  if (!address) return '';
+  if (address.length <= length * 2) return address;
+  
+  return `${address.substring(0, length)}...${address.substring(address.length - length)}`;
 };
 
-// Check if a string is a valid Solana address
+/**
+ * Generates a signature message for Solana wallet authentication
+ * @param nonce A unique nonce for this authentication attempt
+ * @returns A message to be signed by the wallet
+ */
+export const generateSignatureMessage = (nonce: string): string => {
+  return `Sign this message to authenticate with P2W.FUN\nNonce: ${nonce}\nTimestamp: ${Date.now()}`;
+};
+
+/**
+ * Validates a Solana address format
+ * @param address The address to validate
+ * @returns True if the address appears to be a valid Solana address
+ */
 export const isValidSolanaAddress = (address: string): boolean => {
-  try {
-    new PublicKey(address);
-    return true;
-  } catch (error) {
-    return false;
-  }
-};
-
-// Format SOL amount for display
-export const formatSolAmount = (lamports: number): string => {
-  const sol = lamports / 1_000_000_000;
-  return sol.toLocaleString(undefined, { 
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 9 
-  });
-};
-
-// Mock function for getting on-chain leaderboard data
-export const getOnChainLeaderboard = async (): Promise<OnChainLeaderboardEntry[]> => {
-  // Mock data for development
-  return [
-    {
-      id: '1',
-      username: 'SolanaWhale',
-      rank: 1,
-      totalSpent: 5000.0,
-      previousRank: 2,
-      signature: '5xGWfNFZ1XEw9CaLsEJVLLxWNPvPcxinGT1nK6ahLSe8AbitXkGJKDSc2gNB1gK4MwcZJvVqX5gB4DNT8PjRtqP9',
-      amountSpent: 500.0,
-      lastTransaction: new Date().toISOString(),
-      isVerified: true,
-      publicKey: 'HN7cABqLq46Es1jh92dQQpzJgV3EHS4PvgMsW9Nq3ZNJ'
-    },
-    {
-      id: '2',
-      username: 'CryptoRoyal',
-      rank: 2,
-      totalSpent: 4500.0,
-      previousRank: 1,
-      signature: '2vn9UnwmUVWGTcmm3gXU9jFjoK4D4oxFHN6pmgBgAsP1T6ebtYVzM5tmTyDqxgdLbvb5jTKnZzmVLPJbMN1mNvBF',
-      amountSpent: 200.0,
-      lastTransaction: new Date().toISOString(),
-      isVerified: true,
-      publicKey: '5JKqemx9KJW9qWNUsp9DqRPXRyUQj2K9T6rkTMGZMJr7'
-    }
-  ];
-};
-
-// Format date for Solana transactions
-export const formatSolanaDate = (dateString: string): string => {
-  const date = new Date(dateString);
-  return date.toLocaleDateString(undefined, {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit'
-  });
-};
-
-// Convert treasury info to transaction format for display
-export const treasuryInfoToTransaction = (info: SolanaTreasuryInfo): SolanaTransaction => {
-  return {
-    signature: info.pubkey || 'unknown',
-    timestamp: info.lastUpdated,
-    amount: info.amount || 0,
-    type: 'deposit',
-    sender: info.sender || 'unknown',
-    recipient: info.address,
-    status: 'confirmed'
-  };
+  // Basic validation - Solana addresses are 44 characters long and base58 encoded
+  // Full validation would require the @solana/web3.js library
+  return /^[1-9A-HJ-NP-Za-km-z]{43,44}$/.test(address);
 };
 
 export default {
+  formatAddress,
   generateSignatureMessage,
-  isValidSolanaAddress,
-  formatSolAmount,
-  getOnChainLeaderboard,
-  formatSolanaDate,
-  treasuryInfoToTransaction
+  isValidSolanaAddress
 };

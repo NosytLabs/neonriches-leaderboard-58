@@ -1,122 +1,119 @@
-import { OnChainLeaderboardEntry } from '@/types/solana';
 
-// Add function to fetch on-chain leaderboard data
-export const fetchOnChainLeaderboard = async (): Promise<OnChainLeaderboardEntry[]> => {
-  // This would normally call an API endpoint that queries blockchain data
-  // For now, return mock data
-  const mockData: OnChainLeaderboardEntry[] = [
-    {
-      id: "1",
-      publicKey: "8YLKoCu5knFvCTSdSXe3xVQxA8xndGpAbqNWCtK9XkS9",
-      username: "RoyalWhale",
-      rank: 1,
-      previousRank: 1,
-      totalSpent: 5000,
-      signature: "5xh7KFnGDnE1WxvunRwmsbKNdVw91WFLjT9S23tbzm5x5V8bK3dEzZvJdV2YyjgeUv2YdzeiB6UU4pwxbX59pqg5",
-      lastTransaction: new Date().toISOString(),
-      isVerified: true
-    },
-    {
-      id: "2",
-      publicKey: "5yKLcpRxZU2S7uLkHRFNQZnSoNMm9ZUHsyVaaDXJHnEW",
-      username: "CrownCollector",
-      rank: 2,
-      previousRank: 3,
-      totalSpent: 3750,
-      signature: "3gvCLqRvwx9DZVNvKWMvdvKSZYUz9mxUUBzMD7AMLNFFuqGBVyZoY4zNLBo5fzPp1XqVzFjHe9QwgcpTJhUwNjZ5",
-      lastTransaction: new Date().toISOString(),
-      isVerified: true
-    },
-    {
-      id: "3",
-      publicKey: "GWz7VWVK6xLwhKnrP5oBgwcVHvNqUGvJ8Yo2RQg1Y8cV",
-      username: "NobleSpender",
-      rank: 3,
-      previousRank: 2,
-      totalSpent: 2500,
-      signature: "4iFCTxRYxE82JyVKHQDzFXmQKsUUh5c7SZXiRtQDBJMsJchUzvYQ3yCcUWF8AG5APPCoYfdGQZ2oxFxU3mL8HGEA",
-      lastTransaction: new Date().toISOString(),
-      isVerified: false
+import { SolanaTransaction, OnChainLeaderboardEntry, SolanaTreasuryInfo } from '@/types/solana';
+
+/**
+ * Format dates to be more readable
+ */
+export const formatDate = (dateString: string): string => {
+  const date = new Date(dateString);
+  return date.toLocaleDateString(undefined, {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+};
+
+// Mock treasury data
+export const getTreasuryOverview = async (): Promise<{
+  balance: number;
+  transactions: SolanaTransaction[];
+  info: SolanaTreasuryInfo;
+}> => {
+  // This would normally fetch from an API
+  return {
+    balance: 25000,
+    transactions: getMockTreasuryTransactions(),
+    info: {
+      pubkey: 'DtzSVnR9fzxBj3oPhNxyjD4MyRx5ojcv6Z6xbGZECuye',
+      balance: 25000,
+      address: 'DtzSVnR9fzxBj3oPhNxyjD4MyRx5ojcv6Z6xbGZECuye',
+      lastUpdated: new Date().toISOString(),
+      totalDeposits: 30000,
+      totalWithdrawals: 5000
     }
-  ];
-  
-  // Simulate API delay
-  await new Promise(resolve => setTimeout(resolve, 1000));
-  
-  return mockData;
+  };
 };
 
-// Mock function to get leaderboard data
-export const getLeaderboard = async (limit = 10): Promise<LeaderboardEntry[]> => {
-  // This would fetch data from an API in a real implementation
-  
-  // Simulate API response
-  const leaderboardData = [
-    // Mock data here
-  ];
-  
-  // Transform data
-  return leaderboardData.map((entry: any) => ({
-    id: entry.id,
-    username: entry.username,
-    rank: entry.rank,
-    totalDeposited: entry.total_deposited,
-    currentBalance: entry.current_balance,
-    team: entry.team,
-    profileImage: entry.profile_image,
-    lastDepositDate: formatDate(entry.last_deposit_date || new Date()),
-    joinDate: entry.joined_at,
-    tier: entry.tier
-  }));
-};
-
-// Mock function to get on-chain leaderboard data
-export const getOnChainLeaderboard = async (): Promise<OnChainLeaderboardEntry[]> => {
-  // This would fetch data from Solana in a real implementation
-  
-  // Simulate blockchain data
+// Mock transaction data for the treasury
+export const getMockTreasuryTransactions = (): SolanaTransaction[] => {
   return [
     {
-      id: "1",
-      publicKey: "8YLKoCu5knFvCTSdSXe3xVQxA8xndGpAbqNWCtK9XkS9",
-      username: "RoyalWhale",
-      rank: 1,
-      previousRank: 1,
-      amountSpent: 5000,
-      lastTransaction: new Date().toISOString(),
-      isVerified: true,
-      signature: "3Hw5GbNmY6y1rvbT9y9U2KzaQRC1x9WxrgsvLpJZhTeLkbzpWZhUW9M4dNSY6ciFJpS3Nn"
+      signature: '5xGWfNFZ1XEw9CaLsEJVLLxWNPvPcxinGT1nK6ahLSe8AbitXkGJKDSc2gNB1gK4MwcZJvVqX5gB4DNT8PjRtqP9',
+      timestamp: new Date().toISOString(),
+      amount: 150,
+      type: 'deposit',
+      sender: 'HN7cABqLq46Es1jh92dQQpzJgV3EHS4PvgMsW9Nq3ZNJ',
+      recipient: 'DtzSVnR9fzxBj3oPhNxyjD4MyRx5ojcv6Z6xbGZECuye',
+      status: 'confirmed'
     },
     {
-      id: "2",
-      publicKey: "5yKLcpRxZU2S7uLkHRFNQZnSoNMm9ZUHsyVaaDXJHnEW",
-      username: "CrownCollector",
-      rank: 2,
-      previousRank: 2,
-      amountSpent: 3750,
-      lastTransaction: new Date().toISOString(),
-      isVerified: true,
-      signature: "4yKLcpRxZU2S7uLkHRFNQZnSoNMm9ZUHsyVaaDXJHnEX"
+      signature: '2vn9UnwmUVWGTcmm3gXU9jFjoK4D4oxFHN6pmgBgAsP1T6ebtYVzM5tmTyDqxgdLbvb5jTKnZzmVLPJbMN1mNvBF',
+      timestamp: new Date(Date.now() - 3600000).toISOString(), // 1 hour ago
+      amount: 50,
+      type: 'deposit',
+      sender: '5JKqemx9KJW9qWNUsp9DqRPXRyUQj2K9T6rkTMGZMJr7',
+      recipient: 'DtzSVnR9fzxBj3oPhNxyjD4MyRx5ojcv6Z6xbGZECuye',
+      status: 'confirmed'
+    },
+    {
+      signature: '4xMZG6XeLtVrRvpDFS9JNBZAmmY7c4AYwWxToV5KbQYEY5RiDbkHdWjmnBCMZqKJrXGTMgGFjugbvu4p5zA9JHGQ',
+      timestamp: new Date(Date.now() - 86400000).toISOString(), // 1 day ago
+      amount: 25,
+      type: 'withdrawal',
+      sender: 'DtzSVnR9fzxBj3oPhNxyjD4MyRx5ojcv6Z6xbGZECuye',
+      recipient: 'BjYyEq9QiMuxZnUkYzNVKopVVsYcZTZ7GAu5za6iMkaf',
+      status: 'confirmed'
     }
   ];
 };
 
-// Get user rank from transaction history
-export const getUserRankFromTransactions = async (userId: string): Promise<number> => {
-  // This would calculate based on transaction data in a real implementation
-  return Math.floor(Math.random() * 100) + 1;
+// Get leaderboard from mock transactions
+export const getLeaderboardFromTransactions = (): OnChainLeaderboardEntry[] => {
+  return [
+    {
+      id: '1',
+      username: 'SolanaWhale',
+      rank: 1,
+      totalSpent: 5000,
+      previousRank: 2,
+      signature: '5xGWfNFZ1XEw9CaLsEJVLLxWNPvPcxinGT1nK6ahLSe8AbitXkGJKDSc2gNB1gK4MwcZJvVqX5gB4DNT8PjRtqP9',
+      amountSpent: 500,
+      lastTransaction: new Date().toISOString(),
+      isVerified: true,
+      publicKey: 'HN7cABqLq46Es1jh92dQQpzJgV3EHS4PvgMsW9Nq3ZNJ'
+    },
+    {
+      id: '2',
+      username: 'CryptoRoyal',
+      rank: 2,
+      totalSpent: 4500,
+      previousRank: 1,
+      signature: '2vn9UnwmUVWGTcmm3gXU9jFjoK4D4oxFHN6pmgBgAsP1T6ebtYVzM5tmTyDqxgdLbvb5jTKnZzmVLPJbMN1mNvBF',
+      amountSpent: 200,
+      lastTransaction: new Date().toISOString(),
+      isVerified: true,
+      publicKey: '5JKqemx9KJW9qWNUsp9DqRPXRyUQj2K9T6rkTMGZMJr7'
+    },
+    {
+      id: '3',
+      username: 'BlockchainBaron',
+      rank: 3,
+      totalSpent: 3000,
+      previousRank: 3,
+      signature: '4xMZG6XeLtVrRvpDFS9JNBZAmmY7c4AYwWxToV5KbQYEY5RiDbkHdWjmnBCMZqKJrXGTMgGFjugbvu4p5zA9JHGQ',
+      amountSpent: 150,
+      lastTransaction: new Date().toISOString(),
+      isVerified: true,
+      publicKey: 'BjYyEq9QiMuxZnUkYzNVKopVVsYcZTZ7GAu5za6iMkaf'
+    }
+  ];
 };
 
-// Get user transaction history
-export const getUserTransactions = async (userId: string, limit = 10): Promise<any[]> => {
-  // This would fetch transaction data in a real implementation
-  return [];
-};
-
-// Convert team string to enum
-export const getTeamFromString = (team: string): "red" | "green" | "blue" | null => {
-  if (team === "red" || team === "green" || team === "blue") {
-    return team;
-  }
-  return null;
+export default {
+  getTreasuryOverview,
+  getMockTreasuryTransactions,
+  getLeaderboardFromTransactions,
+  formatDate
 };

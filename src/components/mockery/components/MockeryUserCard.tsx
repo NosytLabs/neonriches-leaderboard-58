@@ -1,10 +1,10 @@
-
 import React, { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Search, Target, Shield } from 'lucide-react';
 import { MockeryAction } from '@/types/mockery';
 import { User } from '@/types/user';
+import { Badge } from '@/components/ui/badge';
 
 export interface MockeryUserCardProps {
   user: User;

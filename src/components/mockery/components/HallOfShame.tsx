@@ -1,120 +1,97 @@
 
 import React from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { ScrollText, Crown, Target, Users } from 'lucide-react';
-import { MockeryAction } from '../hooks/useMockery';
-import { getMockeryActionIcon } from '../utils/mockeryUtils';
-import RoyalDivider from '@/components/ui/royal-divider';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { formatDistance } from 'date-fns';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Flame } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { getMockeryTierColor } from '@/components/mockery/utils/mockeryUtils';
+import { formatDistanceToNow } from 'date-fns';
 
-interface MockeryHistoryEntry {
-  id: number;
-  targetId: number;
-  targetName: string;
-  actionType: MockeryAction;
-  price: number;
-  timestamp: number;
-  purchaserId?: number;
+export interface ShameRecord {
+  id: string;
+  targetUser: {
+    id: string;
+    username: string;
+    profileImage?: string;
+  };
+  appliedBy: {
+    id: string;
+    username: string;
+    profileImage?: string;
+  };
+  mockeryType: string;
+  tier: string;
+  timestamp: string;
+  expiresAt: string;
 }
 
-interface HallOfShameProps {
-  mostMockedUsers: Array<{ id: number, count: number, name: string }>;
-  recentMockeries: MockeryHistoryEntry[];
-  className?: string;
+export interface HallOfShameProps {
+  shameRecords: ShameRecord[];
 }
 
-const HallOfShame: React.FC<HallOfShameProps> = ({
-  mostMockedUsers,
-  recentMockeries,
-  className
-}) => {
+const HallOfShame: React.FC<HallOfShameProps> = ({ shameRecords }) => {
+  if (shameRecords.length === 0) {
+    return (
+      <Card className="glass-morphism border-white/10">
+        <CardHeader>
+          <CardTitle className="text-base flex items-center">
+            <Flame className="h-5 w-5 text-royal-crimson/80 mr-2" />
+            Hall of Shame
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="text-center text-white/60 italic p-4">
+            No mockeries are currently active. The hall of shame is empty.
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
-    <Card className={className}>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Crown className="h-5 w-5 text-royal-crimson" />
+    <Card className="glass-morphism border-white/10">
+      <CardHeader className="pb-3">
+        <CardTitle className="text-base flex items-center">
+          <Flame className="h-5 w-5 text-royal-crimson/80 mr-2" />
           Hall of Shame
         </CardTitle>
-        <CardDescription>
-          The kingdom's most mocked nobles and recent acts of mockery
-        </CardDescription>
       </CardHeader>
-      
-      <CardContent className="space-y-6">
-        <div>
-          <h3 className="text-sm font-medium flex items-center mb-3">
-            <Target className="h-4 w-4 mr-2 text-royal-crimson" />
-            Most Mocked Nobles
-          </h3>
-          
+      <CardContent className="px-3 pt-0">
+        <ScrollArea className="h-[200px] pr-4">
           <div className="space-y-2">
-            {mostMockedUsers.length > 0 ? (
-              mostMockedUsers.map((user, index) => (
-                <div 
-                  key={user.id}
-                  className="flex items-center justify-between p-2 glass-morphism border-white/10 rounded-md"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="w-6 h-6 flex items-center justify-center rounded-full bg-white/10 text-xs font-bold">
-                      {index + 1}
+            {shameRecords.map((record) => (
+              <div key={record.id} className="glass-morphism-subtle rounded-lg p-2 flex items-center justify-between">
+                <div className="flex items-center">
+                  {record.targetUser.profileImage ? (
+                    <div className="w-8 h-8 rounded-full overflow-hidden border border-white/10 flex-shrink-0">
+                      <img 
+                        src={record.targetUser.profileImage} 
+                        alt={record.targetUser.username}
+                        className="w-full h-full object-cover"
+                      />
                     </div>
-                    <span className="font-medium">{user.name}</span>
-                  </div>
-                  <div className="text-royal-crimson font-bold">
-                    {user.count} {user.count === 1 ? 'mockery' : 'mockeries'}
-                  </div>
-                </div>
-              ))
-            ) : (
-              <div className="text-center text-white/60 py-4">
-                No mockeries recorded yet
-              </div>
-            )}
-          </div>
-        </div>
-        
-        <RoyalDivider variant="line" />
-        
-        <div>
-          <h3 className="text-sm font-medium flex items-center mb-3">
-            <ScrollText className="h-4 w-4 mr-2 text-royal-gold" />
-            Recent Mockeries
-          </h3>
-          
-          <div className="space-y-2 max-h-[300px] overflow-y-auto pr-2">
-            {recentMockeries.length > 0 ? (
-              recentMockeries.map((mockery) => (
-                <div 
-                  key={mockery.id}
-                  className="p-2 glass-morphism border-white/10 rounded-md"
-                >
-                  <div className="flex items-center gap-2">
-                    <div className="text-lg">
-                      {getMockeryActionIcon(mockery.actionType)}
-                    </div>
-                    <div className="flex-1">
-                      <p className="text-sm">
-                        <strong>{mockery.targetName}</strong> was mocked with{' '}
-                        <span className="text-royal-gold">{getMockeryActionIcon(mockery.actionType)}</span>
-                      </p>
-                      <p className="text-xs text-white/60">
-                        {formatDistance(mockery.timestamp, new Date(), { addSuffix: true })}
-                      </p>
-                    </div>
-                    <div className="text-royal-gold text-sm font-medium">
-                      ${mockery.price.toFixed(2)}
+                  ) : (
+                    <div className="w-8 h-8 rounded-full bg-white/10 flex-shrink-0" />
+                  )}
+                  <div className="ml-2">
+                    <div className="text-sm font-medium">{record.targetUser.username}</div>
+                    <div className="text-xs text-white/60 flex items-center">
+                      <Badge variant="outline" className="text-[10px] py-0 h-4 px-1">
+                        {record.mockeryType}
+                      </Badge>
+                      <span className="ml-1">
+                        by {record.appliedBy.username}
+                      </span>
                     </div>
                   </div>
                 </div>
-              ))
-            ) : (
-              <div className="text-center text-white/60 py-4">
-                No recent mockeries
+                <div className="text-xs text-white/60">
+                  {formatDistanceToNow(new Date(record.timestamp), { addSuffix: true })}
+                </div>
               </div>
-            )}
+            ))}
           </div>
-        </div>
+        </ScrollArea>
       </CardContent>
     </Card>
   );

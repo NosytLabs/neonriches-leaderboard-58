@@ -1,89 +1,112 @@
 
+// Cosmetic Types
 export type CosmeticCategory = 
-  | 'borders' 
-  | 'colors' 
-  | 'fonts' 
-  | 'emojis' 
-  | 'titles' 
-  | 'backgrounds' 
-  | 'effects' 
-  | 'badges' 
-  | 'themes';
+  | 'border'
+  | 'color'
+  | 'font'
+  | 'emoji'
+  | 'title'
+  | 'background'
+  | 'effect'
+  | 'badge'
+  | 'theme';
 
-export type CosmeticType = 'profile' | 'feed' | 'global';
+export type CosmeticType = 
+  | 'animation'
+  | 'static'
+  | 'color'
+  | 'text'
+  | 'badge'
+  | 'emoji'
+  | 'profile'
+  | 'border'
+  | 'background';
 
 export type CosmeticRarity = 
-  | 'common' 
-  | 'uncommon' 
-  | 'rare' 
-  | 'epic' 
+  | 'common'
+  | 'uncommon'
+  | 'rare'
+  | 'epic'
   | 'legendary';
 
-export type CosmeticPlacement = 'border' | 'background' | 'overlay' | 'badge' | 'text';
+export type CosmeticPlacement =
+  | 'profile'
+  | 'post'
+  | 'comment'
+  | 'avatar'
+  | 'background'
+  | 'name';
 
+// Cosmetic item structure
 export interface CosmeticItem {
   id: string;
   name: string;
   description: string;
   category: CosmeticCategory;
-  type?: CosmeticType;
   rarity: CosmeticRarity;
+  cost?: number;
   price?: number;
-  cost?: number; // Legacy property, use price instead
-  placement?: CosmeticPlacement;
+  placement: CosmeticPlacement;
   cssClass?: string;
-  imageSrc?: string;
+  type?: CosmeticType;
   imageUrl?: string;
+  imageSrc?: string;
 }
 
-// Color helpers for cosmetic display
+// Color utilities for rarities
 export const getRarityColor = (rarity: CosmeticRarity): string => {
   switch (rarity) {
-    case 'common': return 'text-gray-300';
-    case 'uncommon': return 'text-green-400';
-    case 'rare': return 'text-blue-400';
-    case 'epic': return 'text-purple-400';
-    case 'legendary': return 'text-royal-gold';
-    default: return 'text-gray-300';
+    case 'common':
+      return 'text-gray-300';
+    case 'uncommon':
+      return 'text-green-400';
+    case 'rare':
+      return 'text-blue-400';
+    case 'epic':
+      return 'text-purple-400';
+    case 'legendary':
+      return 'text-royal-gold';
+    default:
+      return 'text-white';
   }
 };
 
 export const getRarityBgColor = (rarity: CosmeticRarity): string => {
   switch (rarity) {
-    case 'common': return 'bg-gray-800';
-    case 'uncommon': return 'bg-green-900';
-    case 'rare': return 'bg-blue-900';
-    case 'epic': return 'bg-purple-900';
-    case 'legendary': return 'bg-amber-900';
-    default: return 'bg-gray-800';
+    case 'common':
+      return 'bg-gray-800/50';
+    case 'uncommon':
+      return 'bg-green-900/50';
+    case 'rare':
+      return 'bg-blue-900/50';
+    case 'epic':
+      return 'bg-purple-900/50';
+    case 'legendary':
+      return 'bg-amber-900/50';
+    default:
+      return 'bg-gray-800/50';
   }
 };
 
 export const getRarityBorderColor = (rarity: CosmeticRarity): string => {
   switch (rarity) {
-    case 'common': return 'border-gray-600';
-    case 'uncommon': return 'border-green-500';
-    case 'rare': return 'border-blue-500';
-    case 'epic': return 'border-purple-500';
-    case 'legendary': return 'border-royal-gold';
-    default: return 'border-gray-600';
+    case 'common':
+      return 'border-gray-600';
+    case 'uncommon':
+      return 'border-green-600';
+    case 'rare':
+      return 'border-blue-600';
+    case 'epic':
+      return 'border-purple-600';
+    case 'legendary':
+      return 'border-royal-gold';
+    default:
+      return 'border-gray-600';
   }
 };
 
-// Preview style helper
-export const getCosmeticPreviewStyle = (item: CosmeticItem): string => {
-  switch (item.rarity) {
-    case 'common':
-      return 'bg-gray-800 border border-gray-600';
-    case 'uncommon':
-      return 'bg-green-900/30 border border-green-500/50';
-    case 'rare':
-      return 'bg-blue-900/30 border border-blue-500/50';
-    case 'epic':
-      return 'bg-purple-900/30 border border-purple-500/50';
-    case 'legendary':
-      return 'bg-amber-900/30 border border-royal-gold/50';
-    default:
-      return 'bg-gray-800 border border-gray-600';
-  }
+export const getCosmeticPreviewStyle = (item: CosmeticItem): React.CSSProperties => {
+  return {};
 };
+
+export default CosmeticItem;

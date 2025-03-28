@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -17,6 +16,7 @@ import ProfileTitles from './ProfileTitles';
 import FoundersPass from '../founder/FoundersPass';
 import { Button } from '../ui/button';
 import { UserCosmetics } from '@/types/user';
+import { adaptToUser, ensureUser } from '@/utils/userAdapter';
 
 const RoyalBoutique = () => {
   const [activeTab, setActiveTab] = useState('decorations');
@@ -35,7 +35,7 @@ const RoyalBoutique = () => {
     }
     
     const success = await spendFromWallet(
-      user,
+      ensureUser(user),
       price,
       'cosmetic',
       `Purchased ${itemName}`,
@@ -43,7 +43,6 @@ const RoyalBoutique = () => {
     );
     
     if (success) {
-      // Update user profile with the purchased item
       const cosmeticItems: UserCosmetics = user.cosmetics || {
         borders: [],
         colors: [],
@@ -195,7 +194,7 @@ const RoyalBoutique = () => {
     if (!user) return;
     
     const success = await spendFromWallet(
-      user,
+      ensureUser(user),
       100,
       'founder',
       'Purchased Founder\'s Pass',

@@ -162,7 +162,6 @@ export interface User extends UserProfile {
   isAdmin: boolean;
   isVerified: boolean;
   lastLogin: string;
-  authToken?: string;
 }
 
 // UserProfile to User adapter
