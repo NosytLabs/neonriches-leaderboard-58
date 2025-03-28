@@ -1,71 +1,57 @@
 
 import React from 'react';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { UserProfile } from '@/types/user';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Sparkles, Clock, Crown, Zap } from 'lucide-react';
-import { useProfileBoost, BoostEffect } from '@/hooks/use-profile-boost';
-import '../../styles/profile-boost.css';
+import { useProfileBoost } from '@/hooks/use-profile-boost';
+import { Sparkles, Clock } from 'lucide-react';
 
 interface ProfileBoostDisplayProps {
   user: UserProfile;
 }
 
 const ProfileBoostDisplay: React.FC<ProfileBoostDisplayProps> = ({ user }) => {
-  const { getActiveBoosts, getTimeRemaining, boostEffects } = useProfileBoost(user);
+  const { getActiveBoosts, boostEffects, getTimeRemaining } = useProfileBoost(user);
   const activeBoosts = getActiveBoosts();
   
-  if (activeBoosts.length === 0) {
+  if (!activeBoosts || activeBoosts.length === 0) {
     return null;
   }
   
-  // Get icon for effect type
-  const getEffectIcon = (effectId: string) => {
-    switch (effectId) {
-      case 'glow':
-        return <Zap className="h-4 w-4 text-royal-gold" />;
-      case 'crown':
-        return <Crown className="h-4 w-4 text-royal-gold" />;
-      case 'sparkle':
-      default:
-        return <Sparkles className="h-4 w-4 text-royal-gold" />;
-    }
-  };
-  
   return (
-    <Card className="glass-morphism border-royal-gold/20">
-      <CardHeader className="pb-2">
-        <CardTitle className="text-sm flex items-center">
-          <Sparkles className="mr-2 h-4 w-4 text-royal-gold" />
+    <Card className="glass-morphism border-white/10">
+      <CardHeader>
+        <CardTitle className="text-lg flex items-center">
+          <Sparkles size={18} className="text-royal-gold mr-2" />
           Active Profile Boosts
         </CardTitle>
+        <CardDescription>
+          Special effects currently active on your profile
+        </CardDescription>
       </CardHeader>
-      <CardContent>
-        <div className="space-y-3">
-          {activeBoosts.map((boost) => {
-            // Ensure effectId is cast to BoostEffect for type safety
-            const effectId = boost.effectId as BoostEffect;
-            const effect = boostEffects[effectId] || { name: 'Unknown Effect', cssClass: '' };
-            
-            return (
-              <div key={boost.id} className="flex items-center justify-between glass-morphism border-white/10 p-2 rounded-lg">
-                <div className="flex items-center">
-                  {getEffectIcon(boost.effectId)}
-                  <span className={`ml-2 text-sm ${effect.cssClass}`}>{effect.name}</span>
+      <CardContent className="space-y-3">
+        {activeBoosts.map(boost => {
+          const effect = boostEffects[boost.effectId];
+          if (!effect) return null;
+          
+          return (
+            <div 
+              key={boost.id} 
+              className="glass-morphism p-3 rounded-lg flex items-center justify-between"
+            >
+              <div className="flex items-center">
+                <span className="text-xl mr-2">{effect.icon}</span>
+                <div>
+                  <p className="font-medium">{effect.name}</p>
+                  <p className="text-xs text-white/60">{effect.description}</p>
                 </div>
-                <Badge variant="outline" className="bg-black/20 text-xs flex items-center">
-                  <Clock className="h-3 w-3 mr-1" />
-                  {getTimeRemaining({
-                    id: boost.id,
-                    effectId: effectId,
-                    startTime: boost.startTime,
-                    endTime: boost.endTime
-                  })}
-                </Badge>
               </div>
-            );
-          })}
-        </div>
+              <div className="text-xs text-white/70 flex items-center">
+                <Clock size={12} className="mr-1" />
+                {getTimeRemaining(boost)}
+              </div>
+            </div>
+          );
+        })}
       </CardContent>
     </Card>
   );
