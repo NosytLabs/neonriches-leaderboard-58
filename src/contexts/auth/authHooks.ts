@@ -1,6 +1,6 @@
 
 import { useState } from 'react';
-import { UserProfile } from '@/types/user';
+import { UserProfile, ProfileBoost } from '@/types/user';
 import { addProfileBoost, addCosmetic } from './authUtils';
 
 export const useAuthState = () => {

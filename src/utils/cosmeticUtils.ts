@@ -1,9 +1,8 @@
 
 import { CosmeticItem } from '@/types/cosmetics';
-import { CosmeticCategory } from '@/types/cosmetics';
 
 // Helper function to get cosmetic items by category
-export const getCosmeticsByCategory = (items: CosmeticItem[], category: CosmeticCategory): CosmeticItem[] => {
+export const getCosmeticsByCategory = (items: CosmeticItem[], category: string): CosmeticItem[] => {
   return items.filter(item => item.category === category);
 };
 
@@ -35,7 +34,7 @@ export const getCosmeticPreviewStyle = (item: CosmeticItem): string => {
 export const awardRandomCosmetic = (
   allCosmetics: CosmeticItem[], 
   userCosmetics: string[] = [], 
-  categoryFilter?: CosmeticCategory,
+  categoryFilter?: string,
   rarityFilter?: string[]
 ): CosmeticItem | null => {
   // Filter cosmetics based on criteria

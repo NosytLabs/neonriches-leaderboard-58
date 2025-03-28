@@ -7,15 +7,23 @@ export function addProfileBoost(
   user: UserProfile, 
   days: number = 1, 
   level: number = 1
-): { startDate: string; endDate: string; level: number }[] {
+): ProfileBoost[] {
   const now = new Date();
   const endDate = new Date(now);
   endDate.setDate(endDate.getDate() + days);
   
   const newBoost = {
+    id: `boost_${Date.now()}`,
     startDate: now.toISOString(),
     endDate: endDate.toISOString(),
-    level
+    level,
+    // Add additional fields for compatibility
+    effectId: level === 3 ? 'crown' : level === 2 ? 'sparkle' : 'glow',
+    startTime: now.toISOString(),
+    endTime: endDate.getTime(),
+    type: 'visibility',
+    strength: level,
+    appliedBy: user.id
   };
   
   const currentBoosts = user.profileBoosts || [];
