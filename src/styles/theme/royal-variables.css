@@ -1,24 +1,35 @@
 
 :root {
-  /* Royal Theme Colors */
+  /* Royal Theme Colors - Enhanced */
   --royal-gold: #FFD700;          /* Bright gold */
   --royal-gold-bright: #FFDF00;   /* Slightly brighter gold */
   --royal-gold-dark: #D4AF37;     /* Darker gold for contrast */
-  --royal-crimson: #9B2335;       /* Keep for contrast */
-  --royal-crimson-bright: #C41E3A;
-  --royal-crimson-dark: #800020;
-  --royal-navy: #000080;          /* Deep blue */
-  --royal-navy-bright: #000096;
-  --royal-navy-dark: #000064;
-  --royal-purple: #4B0082;        /* Royal purple, reduced emphasis */
-  --royal-purple-bright: #6A0DAD;
-  --royal-purple-dark: #38006b;
+  --royal-crimson: #C41E3A;       /* Brighter crimson for better visibility */
+  --royal-crimson-bright: #E63946; /* Even brighter crimson for highlights */
+  --royal-crimson-dark: #9B2335;  /* Darker crimson for depth */
+  --royal-navy: #1F4788;          /* Richer navy blue */
+  --royal-navy-bright: #2A5EA1;   /* Brighter navy for highlights */
+  --royal-navy-dark: #0D2B54;     /* Darker navy for depth */
+  --royal-purple: #6A0DAD;        /* More vibrant royal purple */
+  --royal-purple-bright: #8A2BE2; /* Brighter purple for highlights */
+  --royal-purple-dark: #4B0082;   /* Deeper purple for contrast */
   --royal-velvet: #430C5E;        /* Deep burgundy */
   --royal-mahogany: #A65E44;      /* Keep for contrast */
   --royal-emerald: #2C784A;       /* Keep for contrast */
   --royal-parchment: #F5E6CA;
   
-  /* Background gradients */
-  --bg-royal-gradient: linear-gradient(135deg, #0D0D20 0%, #141428 50%, #1E1A3A 100%);
-  --bg-royal-gradient-inverted: linear-gradient(315deg, #0D0D20 0%, #141428 50%, #1E1A3A 100%);
+  /* Team colors (keeping for backward compatibility) */
+  --team-red: var(--royal-crimson);
+  --team-green: var(--royal-gold);
+  --team-blue: var(--royal-navy);
+  
+  /* Background gradients - Enhanced */
+  --bg-royal-gradient: linear-gradient(135deg, #0D0D20 0%, #141428 50%, #201E3A 100%);
+  --bg-royal-gradient-inverted: linear-gradient(315deg, #0D0D20 0%, #141428 50%, #201E3A 100%);
+  
+  /* Marketing-specific colors */
+  --marketing-highlight: rgba(255, 215, 0, 0.6);
+  --marketing-glow: rgba(255, 215, 0, 0.4);
+  --marketing-accent: #E63946;
+  --marketing-success: #43AA8B;
 }

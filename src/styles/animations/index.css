@@ -2,9 +2,10 @@
 /* Animation core */
 @import './keyframes.css';
 @import './utility-classes.css';
+@import './enhanced-animations.css';
 
 /* Specific animations */
 @import './floating-coins.css';
 @import './royal-elements.css';
 
-/* Note: Many animations have been consolidated in /src/styles/consolidated-animations.css */
+/* Note: Many animations have been consolidated in enhanced-animations.css */

@@ -1,0 +1,111 @@
+
+/* Enhanced Animations for SpendThrone */
+
+/* Smooth entrance animations */
+@keyframes royal-entrance {
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* Profile hover effect */
+@keyframes profile-pulse {
+  0%, 100% { box-shadow: 0 0 15px rgba(255, 215, 0, 0.4); }
+  50% { box-shadow: 0 0 25px rgba(255, 215, 0, 0.7); }
+}
+
+/* Text shimmer effect */
+@keyframes text-shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+/* Gold coin toss animation */
+@keyframes coin-toss {
+  0% { transform: translateY(0) rotate(0); }
+  50% { transform: translateY(-50px) rotate(360deg); }
+  100% { transform: translateY(0) rotate(720deg); }
+}
+
+/* Badge pop animation */
+@keyframes badge-pop {
+  0% { transform: scale(0.8); opacity: 0.7; }
+  50% { transform: scale(1.1); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* Marketing spotlight effect */
+@keyframes spotlight-sweep {
+  0% { background-position: -100% center; opacity: 0.5; }
+  100% { background-position: 200% center; opacity: 0.8; }
+}
+
+/* Float animation for elements */
+@keyframes royal-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+/* Border glow pulse */
+@keyframes border-glow-pulse {
+  0%, 100% { box-shadow: 0 0 5px rgba(255, 215, 0, 0.5); border-color: rgba(255, 215, 0, 0.5); }
+  50% { box-shadow: 0 0 15px rgba(255, 215, 0, 0.8); border-color: rgba(255, 215, 0, 0.8); }
+}
+
+/* Animation utility classes */
+.animate-royal-entrance {
+  animation: royal-entrance 0.8s ease-out forwards;
+}
+
+.animate-profile-pulse {
+  animation: profile-pulse 3s infinite;
+}
+
+.animate-text-shimmer {
+  background: linear-gradient(to right, var(--royal-gold-dark), var(--royal-gold), var(--royal-gold-bright), var(--royal-gold), var(--royal-gold-dark));
+  background-size: 200% auto;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: text-shimmer 3s linear infinite;
+}
+
+.animate-coin-toss {
+  animation: coin-toss 1.5s ease-in-out;
+}
+
+.animate-badge-pop {
+  animation: badge-pop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+.animate-spotlight {
+  position: relative;
+  overflow: hidden;
+}
+
+.animate-spotlight::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  background-size: 200% 100%;
+  animation: spotlight-sweep 3s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.animate-royal-float {
+  animation: royal-float 3s ease-in-out infinite;
+}
+
+.animate-border-glow {
+  animation: border-glow-pulse 2s infinite;
+}
+
+/* Delay utility classes */
+.animation-delay-100 { animation-delay: 100ms; }
+.animation-delay-200 { animation-delay: 200ms; }
+.animation-delay-300 { animation-delay: 300ms; }
+.animation-delay-400 { animation-delay: 400ms; }
+.animation-delay-500 { animation-delay: 500ms; }

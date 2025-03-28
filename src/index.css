@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -134,10 +133,21 @@
   font-family: 'Cinzel', serif;
 }
 
-/* Royal text shimmer effect */
+/* Royal text shimmer effect - Enhanced */
 .royal-text-shimmer {
-  @apply royal-gradient;
+  background: linear-gradient(
+    to right,
+    var(--royal-gold-color) 0%,
+    #f5e27a 20%,
+    var(--royal-gold-color) 40%,
+    #f5e27a 60%,
+    var(--royal-gold-color) 80%,
+    #f5e27a 100%
+  );
   background-size: 200% auto;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
   animation: shimmer 3s linear infinite;
 }
 
@@ -147,10 +157,17 @@
   }
 }
 
-/* Gold border glow effect */
+/* Gold border glow effect - Enhanced */
 .royal-border {
+  position: relative;
   border: 1px solid rgba(212, 175, 55, 0.5);
   box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+  transition: all 0.3s ease;
+}
+
+.royal-border:hover {
+  border-color: rgba(212, 175, 55, 0.8);
+  box-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
 }
 
 /* Animation for crown icons */
@@ -192,12 +209,18 @@
   background: linear-gradient(135deg, rgba(87, 131, 255, 0.1), rgba(87, 131, 255, 0.01));
 }
 
-/* Glass morphism effect */
+/* Glass morphism effect - Enhanced */
 .glass-morphism {
   background: rgba(0, 0, 0, 0.3);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.glass-morphism:hover {
+  background: rgba(0, 0, 0, 0.35);
+  border-color: rgba(255, 255, 255, 0.15);
 }
 
 .glass-morphism-highlight {
@@ -205,39 +228,114 @@
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.2);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
 }
 
-/* Slide-in animation */
-@keyframes slide-in {
-  from {
-    transform: translateY(20px);
+.glass-morphism-highlight:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* Marketing specific utility classes */
+.marketing-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  border-radius: 9999px;
+  background-color: rgba(255, 215, 0, 0.2);
+  border: 1px solid rgba(255, 215, 0, 0.4);
+  color: #FFD700;
+  transition: all 0.3s ease;
+}
+
+.marketing-badge:hover {
+  background-color: rgba(255, 215, 0, 0.3);
+}
+
+.profile-highlight {
+  position: relative;
+  border: 2px solid rgba(255, 215, 0, 0.6);
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.profile-highlight:hover {
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.7);
+  transform: translateY(-2px);
+}
+
+.profile-highlight::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    to bottom right,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0) 40%,
+    rgba(255, 255, 255, 0.3) 50%,
+    rgba(255, 255, 255, 0) 60%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: rotate(45deg);
+  animation: profile-shine 3.5s ease-in-out infinite;
+}
+
+@keyframes profile-shine {
+  0% {
+    top: -50%;
+    left: -50%;
     opacity: 0;
   }
-  to {
-    transform: translateY(0);
-    opacity: 1;
+  25% {
+    opacity: 0.3;
   }
-}
-
-.animate-slide-in {
-  animation: slide-in 0.3s ease-out forwards;
-}
-
-/* Fade-in animation */
-@keyframes fade-in {
-  from {
+  100% {
+    top: 150%;
+    left: 150%;
     opacity: 0;
   }
-  to {
-    opacity: 1;
-  }
 }
 
-.animate-fade-in {
-  animation: fade-in 0.5s ease-out forwards;
+.marketing-banner {
+  background: linear-gradient(to right, rgba(13, 13, 32, 0.8), rgba(30, 26, 58, 0.8));
+  padding: 1rem;
+  border-radius: 0.5rem;
+  border-left: 4px solid #FFD700;
+  margin: 1rem 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.marketing-banner::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg, 
+    transparent 0%, 
+    rgba(255, 215, 0, 0.1) 50%, 
+    transparent 100%
+  );
+  transform: translateX(-100%);
+  animation: banner-shine 3s infinite;
+}
+
+@keyframes banner-shine {
+  100% {
+    transform: translateX(100%);
+  }
 }
 
 /* Import specific effect stylesheets */
 @import './styles/medieval-animations.css';
 @import './styles/shame-effects.css';
 @import './styles/fire-sale-effects.css';
+@import './styles/animations/enhanced-animations.css';

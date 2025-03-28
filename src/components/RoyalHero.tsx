@@ -1,114 +1,102 @@
 
-import React, { useRef } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import useNotificationSounds from '@/hooks/use-notification-sounds';
-import { useHeroVisibility } from '@/hooks/use-hero-visibility';
-import HeroContent from '@/components/ui/hero/HeroContent';
-import HeroSoundToggle from '@/components/ui/hero/HeroSoundToggle';
-import { Button } from './ui/button';
-import { ArrowRight, Crown, Sparkles } from 'lucide-react';
+import { Crown, ArrowRight, DollarSign, Users, Award, Sparkles } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { useAuth } from '@/contexts/auth';
+import '../styles/animations/enhanced-animations.css';
 
 const RoyalHero = () => {
-  const heroRef = useRef<HTMLElement>(null);
-  const { isMuted, toggleMute, playSound } = useNotificationSounds();
-  const isVisible = useHeroVisibility(heroRef);
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
   
-  const handleAscend = () => {
-    playSound('reward', 0.3);
-    navigate('/dashboard');
+  const handleGetStarted = () => {
+    if (isAuthenticated) {
+      navigate('/dashboard');
+    } else {
+      navigate('/auth');
+    }
   };
   
   return (
-    <section 
-      ref={heroRef} 
-      className="w-full min-h-[80vh] pt-20 pb-12 relative overflow-hidden bg-gradient-to-b from-[#0D0D20] via-[#141428] to-[#141428]"
-    >
-      <HeroSoundToggle isMuted={isMuted} toggleMute={toggleMute} />
-      
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_center,rgba(255,215,0,0.05)_0,transparent_70%)]"></div>
+    <div className="relative overflow-hidden py-20 bg-gradient-to-b from-black to-background">
+      {/* Animated elements */}
+      <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+        <div className="absolute top-10 left-[10%] w-40 h-40 bg-royal-crimson/5 rounded-full blur-3xl animate-royal-float"></div>
+        <div className="absolute bottom-10 right-[5%] w-56 h-56 bg-royal-navy/5 rounded-full blur-3xl animate-royal-float animation-delay-200"></div>
+        <div className="absolute top-1/2 left-1/3 w-64 h-64 bg-royal-purple/5 rounded-full blur-3xl animate-royal-float animation-delay-300"></div>
         
-        {/* Floating particles */}
-        {[...Array(15)].map((_, i) => (
-          <div
+        {/* Floating coins */}
+        {[...Array(5)].map((_, i) => (
+          <div 
             key={i}
-            className="absolute rounded-full bg-royal-gold/30 animate-float"
+            className="absolute w-7 h-7 rounded-full bg-royal-gold/30 animate-royal-float"
             style={{
-              width: `${Math.random() * 8 + 2}px`,
-              height: `${Math.random() * 8 + 2}px`,
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animationDuration: `${Math.random() * 10 + 5}s`,
-              animationDelay: `${Math.random() * 5}s`,
+              top: `${10 + Math.random() * 80}%`,
+              left: `${10 + Math.random() * 80}%`,
+              animationDelay: `${i * 0.7}s`,
+              animationDuration: `${3 + Math.random() * 2}s`
             }}
-          ></div>
+          >
+            <DollarSign className="w-4 h-4 text-royal-gold" />
+          </div>
         ))}
       </div>
       
       <div className="container mx-auto px-4 relative z-10">
-        <div className="max-w-5xl mx-auto text-center">
-          <div className="mb-2 inline-flex items-center rounded-full bg-royal-gold/10 px-3 py-1 text-sm font-medium text-royal-gold">
-            <Crown size={14} className="mr-1" />
-            <span>BETA</span>
+        <div className="flex flex-col items-center text-center max-w-4xl mx-auto animate-royal-entrance">
+          <div className="rounded-full bg-royal-gold/10 p-4 mb-6">
+            <Crown className="h-12 w-12 text-royal-gold animate-crown-glow" />
           </div>
           
-          <h1 className="text-5xl md:text-7xl font-bold font-medieval mb-4 tracking-tight">
-            <span className="royal-gradient">SpendThrone</span>
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 font-royal">
+            <span className="royal-gradient">The Ultimate Pay-to-Win</span>
+            <br />
+            <span className="royal-gradient">Social Experience</span>
           </h1>
           
-          <p className="text-xl md:text-2xl text-white/80 font-medieval-text mb-6">
-            Where digital nobility is purely cosmetic, and wealth buys status, not power.
+          <p className="text-white/80 max-w-3xl mb-8 text-lg md:text-xl leading-relaxed">
+            Welcome to the realm where your <span className="text-royal-gold">wealth</span> determines your <span className="text-royal-gold">worth</span>. 
+            Spend real money to climb the ranks in this satirical social experiment where $1 = 1 unit of rank.
           </p>
           
-          <p className="italic text-white/60 mb-10 max-w-md mx-auto">
-            "Every dollar spent is a step up the royal ladder, with no actual advantages."
-          </p>
-          
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button 
-              onClick={handleAscend}
-              size="lg"
-              className="bg-royal-gold hover:bg-royal-gold/90 text-black font-medieval font-semibold text-lg px-8 royal-button"
-            >
-              <Crown className="mr-2 h-5 w-5" />
-              Ascend Now
-              <ArrowRight className="ml-2 h-5 w-5" />
-            </Button>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10 w-full">
+            <div className="glass-morphism rounded-lg p-5 flex flex-col items-center">
+              <DollarSign className="h-8 w-8 text-royal-gold mb-3" />
+              <h3 className="font-bold text-xl mb-2">Pay to Rank</h3>
+              <p className="text-white/70 text-sm text-center">Your rank is exactly equal to how much you've spent. Simple as that.</p>
+            </div>
             
-            <Button 
-              variant="outline" 
-              size="lg"
-              className="border-royal-gold/30 text-white hover:bg-royal-gold/10 font-medieval font-semibold text-lg px-8"
-              onClick={() => navigate('/leaderboard')}
-            >
-              <Sparkles className="mr-2 h-5 w-5 text-royal-gold" />
-              View Rankings
-            </Button>
+            <div className="glass-morphism rounded-lg p-5 flex flex-col items-center">
+              <Users className="h-8 w-8 text-royal-gold mb-3" />
+              <h3 className="font-bold text-xl mb-2">Join a Team</h3>
+              <p className="text-white/70 text-sm text-center">Choose Red, Green, or Blue and compete for team dominance.</p>
+            </div>
+            
+            <div className="glass-morphism rounded-lg p-5 flex flex-col items-center">
+              <Award className="h-8 w-8 text-royal-gold mb-3" />
+              <h3 className="font-bold text-xl mb-2">Win Prizes</h3>
+              <p className="text-white/70 text-sm text-center">Top spenders receive rewards from the Affluent Assembly prize pool.</p>
+            </div>
           </div>
-        </div>
-        
-        {/* Stats banner */}
-        <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
-          <div className="bg-black/30 border border-royal-gold/10 rounded-lg p-4 text-center">
-            <p className="text-royal-gold text-2xl md:text-3xl font-bold">23,560</p>
-            <p className="text-white/60 text-sm">Total Spent</p>
-          </div>
-          <div className="bg-black/30 border border-royal-gold/10 rounded-lg p-4 text-center">
-            <p className="text-royal-gold text-2xl md:text-3xl font-bold">412</p>
-            <p className="text-white/60 text-sm">Nobles</p>
-          </div>
-          <div className="bg-black/30 border border-royal-gold/10 rounded-lg p-4 text-center">
-            <p className="text-royal-gold text-2xl md:text-3xl font-bold">$5,240</p>
-            <p className="text-white/60 text-sm">Weekly Pool</p>
-          </div>
-          <div className="bg-black/30 border border-royal-gold/10 rounded-lg p-4 text-center">
-            <p className="text-royal-gold text-2xl md:text-3xl font-bold">7</p>
-            <p className="text-white/60 text-sm">Days to Crown</p>
-          </div>
+          
+          <Button
+            onClick={handleGetStarted}
+            className="text-black bg-gradient-to-r from-royal-gold-dark via-royal-gold to-royal-gold-bright hover:opacity-90 text-lg px-8 py-6 h-auto group"
+          >
+            <span>Begin Your Noble Journey</span>
+            <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+          </Button>
+          
+          <p className="mt-4 text-white/50 text-sm flex items-center">
+            <Sparkles className="h-4 w-4 mr-1 text-royal-gold/70" />
+            <span>
+              No skills required. Money is the only qualification.
+            </span>
+          </p>
         </div>
       </div>
-    </section>
+    </div>
   );
 };
 
