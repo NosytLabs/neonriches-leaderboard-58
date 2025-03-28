@@ -40,7 +40,7 @@ const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ eventId, onClose 
           src={eventDetails.image}
           alt={eventDetails.name}
           className="w-full h-40 object-cover rounded-t-lg -mt-6 -mx-6"
-          imgClassName="object-cover"
+          objectFit="cover"
         />
         <div className="pt-4">
           <DialogTitle className="text-2xl font-royal">{eventDetails.name}</DialogTitle>
