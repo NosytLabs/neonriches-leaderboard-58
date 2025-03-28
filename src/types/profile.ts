@@ -1,6 +1,8 @@
 
 import { ProfileImage, SocialLink } from './user';
 
+export type { ProfileImage, SocialLink };
+
 export interface ProfileData {
   bio: string;
   images: ProfileImage[];

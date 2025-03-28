@@ -1,6 +1,5 @@
-
 import React, { useState } from 'react';
-import { UserProfile } from '@/types/user';
+import { UserProfile, SocialLink } from '@/types/user';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Crown, User, Image, Link as LinkIcon, Palette, Settings, Shield } from 'lucide-react';
@@ -11,7 +10,6 @@ import ImagesEditor from './editor/ImagesEditor';
 import SocialMediaLinksEditor from './editor/SocialMediaLinksEditor';
 import AppearanceEditor from './editor/AppearanceEditor';
 import TeamSelector from '@/components/teams/TeamSelector';
-import { SocialLink } from '@/types/user';
 import { ProfileImage } from '@/types/profile';
 
 interface ProfileEditorProps {
