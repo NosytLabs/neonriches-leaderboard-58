@@ -3,7 +3,7 @@ import React from 'react';
 import { cn } from '@/lib/utils';
 import { Crown, Scroll, Shield, Swords } from 'lucide-react';
 
-type DividerVariant = 'line' | 'ornate' | 'double' | 'dotted' | 'scrollwork';
+type DividerVariant = 'line' | 'ornate' | 'double' | 'dotted' | 'scrollwork' | 'crown' | 'scroll' | 'quill' | 'treasure';
 type DividerColor = 'gold' | 'crimson' | 'navy' | 'purple' | 'royal';
 type DividerIcon = 'crown' | 'scroll' | 'shield' | 'swords' | 'none';
 
@@ -58,6 +58,14 @@ const RoyalDivider: React.FC<RoyalDividerProps> = ({
         return `h-[1px] border-dotted border-t-2 border-${color === 'royal' ? 'royal-gold' : `royal-${color}`}/30`;
       case 'scrollwork':
         return `h-[1px] bg-gradient-to-r ${colorMap[color]} relative before:content-['❧'] before:absolute before:text-${color === 'royal' ? 'royal-gold' : `royal-${color}`} before:-top-[10px] before:left-1/4 before:text-sm after:content-['❧'] after:absolute after:text-${color === 'royal' ? 'royal-gold' : `royal-${color}`} after:-top-[10px] after:right-1/4 after:transform after:scale-x-[-1] after:text-sm`;
+      case 'crown':
+        return `h-[1px] bg-gradient-to-r ${colorMap[color]} relative before:content-['👑'] before:absolute before:text-${color === 'royal' ? 'royal-gold' : `royal-${color}`} before:-top-[10px] before:left-1/2 before:transform before:-translate-x-1/2 before:text-sm`;
+      case 'scroll':
+        return `h-[1px] bg-gradient-to-r ${colorMap[color]} relative before:content-['📜'] before:absolute before:text-${color === 'royal' ? 'royal-gold' : `royal-${color}`} before:-top-[10px] before:left-1/2 before:transform before:-translate-x-1/2 before:text-sm`;
+      case 'quill':
+        return `h-[1px] bg-gradient-to-r ${colorMap[color]} relative before:content-['✒️'] before:absolute before:text-${color === 'royal' ? 'royal-gold' : `royal-${color}`} before:-top-[10px] before:left-1/2 before:transform before:-translate-x-1/2 before:text-sm`;
+      case 'treasure':
+        return `h-[1px] bg-gradient-to-r ${colorMap[color]} relative before:content-['💰'] before:absolute before:text-${color === 'royal' ? 'royal-gold' : `royal-${color}`} before:-top-[10px] before:left-1/2 before:transform before:-translate-x-1/2 before:text-sm`;
       case 'line':
       default:
         return `h-[1px] bg-gradient-to-r ${colorMap[color]}`;

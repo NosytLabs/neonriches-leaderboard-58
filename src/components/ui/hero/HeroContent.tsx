@@ -6,14 +6,11 @@ import { DollarSign } from 'lucide-react';
 
 const HeroContent: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const { createMultipleCoins } = useFloatingCoins();
+  const { createBurst } = useFloatingCoins();
   
   const handleSparkleClick = () => {
     if (containerRef.current) {
-      createMultipleCoins(5, { 
-        x: window.innerWidth/2, 
-        y: window.innerHeight/2 
-      });
+      createBurst(5);
     }
   };
   

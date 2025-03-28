@@ -32,6 +32,7 @@ export interface AudioLoaderReturn {
   loadedSounds: string[];
   isLoading: boolean;
   error: Error | null;
+  audioElements?: Record<string, HTMLAudioElement>;
 }
 
 // Premium sound pack options
@@ -50,4 +51,28 @@ export interface PremiumSoundPackDetails {
   sounds: SoundType[];
   previewSound: SoundType;
   isPurchased: boolean;
+}
+
+// Enum for sound categories for better TypeScript support
+export enum SoundCategoryEnum {
+  coinDrop = 'coinDrop',
+  reward = 'reward',
+  notification = 'notification',
+  click = 'click',
+  success = 'success',
+  error = 'error',
+  royalAnnouncement = 'royalAnnouncement',
+  levelUp = 'levelUp',
+  purchase = 'purchase',
+  shame = 'shame',
+  swordClash = 'swordClash',
+  pageTransition = 'pageTransition',
+  wish = 'wish',
+  pageChange = 'pageChange',
+  parchmentUnfurl = 'parchmentUnfurl',
+  medallion = 'medallion',
+  seal = 'seal',
+  trumpet = 'trumpet',
+  noblesLaugh = 'noblesLaugh',
+  inkScribble = 'inkScribble'
 }

@@ -1,9 +1,15 @@
 
 import React, { createContext, useContext, useCallback } from 'react';
-import { toast, ToastActionElement, ToastProps } from '@/components/ui/use-toast';
+import { toast } from '@/hooks/use-toast';
 import useNotificationSounds from '@/hooks/use-notification-sounds';
 
 type ToastVariant = 'default' | 'destructive' | 'success' | 'warning' | 'info' | 'royal';
+
+interface ToastActionElement {
+  altText?: string;
+  onClick: () => void;
+  children: React.ReactNode;
+}
 
 interface ToastOptions {
   title?: string;
@@ -11,6 +17,7 @@ interface ToastOptions {
   action?: ToastActionElement;
   variant?: ToastVariant;
   duration?: number;
+  className?: string;
 }
 
 interface ToastContextType {
@@ -23,7 +30,7 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const { playSound } = useNotificationSounds();
 
   const addToast = useCallback(
-    ({ title, description, action, variant = 'default', duration = 3000 }: ToastOptions) => {
+    ({ title, description, action, variant = 'default', duration = 3000, className }: ToastOptions) => {
       // Play sound based on variant
       switch (variant) {
         case 'success':
@@ -42,29 +49,24 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
           playSound('notification', 0.3);
       }
 
-      // Map our custom variants to the toast component variants
-      let toastVariant: ToastProps['variant'] = 'default';
+      // Custom styling for variants
+      let customClassName = className;
       
-      if (variant === 'success' || variant === 'destructive') {
-        toastVariant = variant;
+      if (variant === 'royal') {
+        customClassName = 'border-royal-gold/50 bg-gradient-to-r from-background to-royal-purple/10';
+      } else if (variant === 'warning') {
+        customClassName = 'border-amber-500/50 bg-amber-500/10';
+      } else if (variant === 'info') {
+        customClassName = 'border-blue-500/50 bg-blue-500/10';
       }
-      
-      // Custom styling for royal variant
-      const className = variant === 'royal' 
-        ? 'border-royal-gold/50 bg-gradient-to-r from-background to-royal-purple/10'
-        : variant === 'warning'
-        ? 'border-amber-500/50 bg-amber-500/10'
-        : variant === 'info'
-        ? 'border-blue-500/50 bg-blue-500/10'
-        : undefined;
 
       toast({
         title,
         description,
         action,
-        variant: toastVariant,
+        variant: (variant === 'success' || variant === 'destructive') ? variant : 'default',
         duration,
-        className
+        className: customClassName
       });
     },
     [playSound]

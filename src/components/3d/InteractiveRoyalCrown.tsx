@@ -22,8 +22,8 @@ const InteractiveRoyalCrown: React.FC<InteractiveRoyalCrownProps> = ({
   animated = true
 }) => {
   const [isHovered, setIsHovered] = useState(false);
-  const { createMultipleCoins } = useFloatingCoins();
   const containerRef = useRef<HTMLDivElement>(null);
+  const { createBurst } = useFloatingCoins();
   
   const { effects } = useFloatingEffects({
     containerRef,
@@ -38,11 +38,8 @@ const InteractiveRoyalCrown: React.FC<InteractiveRoyalCrownProps> = ({
     if (onCrownClick) {
       onCrownClick();
       
-      if (showCoins) {
-        createMultipleCoins(10, { 
-          x: window.innerWidth/2, 
-          y: window.innerHeight/2 
-        });
+      if (showCoins && containerRef.current) {
+        createBurst(10);
       }
     }
   };

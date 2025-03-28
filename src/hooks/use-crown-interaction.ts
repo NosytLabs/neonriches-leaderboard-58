@@ -1,6 +1,6 @@
 
 import { useState } from 'react';
-import { SoundCategoryEnum } from '@/hooks/sounds/types';
+import { SoundType } from '@/hooks/sounds/types';
 import useNotificationSounds from '@/hooks/use-notification-sounds';
 import { useToastContext } from "@/contexts/ToastContext";
 
@@ -11,7 +11,7 @@ export function useCrownInteraction() {
 
   const handleCrownClick = (containerRef: React.RefObject<HTMLElement>) => {
     setHasInteracted(true);
-    playSound(SoundCategoryEnum.royalAnnouncement, 0.2);
+    playSound('royalAnnouncement', 0.2);
     
     addToast({
       title: "Royal Decree",

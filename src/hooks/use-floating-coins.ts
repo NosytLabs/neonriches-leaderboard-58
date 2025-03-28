@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from 'react';
 
 interface FloatingCoinsOptions {
-  containerRef: React.RefObject<HTMLElement>;
+  containerRef?: React.RefObject<HTMLElement>;
   count?: number;
   duration?: number;
   size?: number;
@@ -11,15 +11,22 @@ interface FloatingCoinsOptions {
   enabled?: boolean;
 }
 
-const useFloatingCoins = ({
-  containerRef,
-  count = 10,
-  duration = 5000,
-  size = 24,
-  glowIntensity = 0.5,
-  emojis = ['💰', '👑', '💎', '💵', '🏆', '✨'],
-  enabled = true
-}: FloatingCoinsOptions) => {
+interface PositionCoordinates {
+  x: number;
+  y: number;
+}
+
+const useFloatingCoins = (options: FloatingCoinsOptions = {}) => {
+  const {
+    containerRef,
+    count = 10,
+    duration = 5000,
+    size = 24,
+    glowIntensity = 0.5,
+    emojis = ['💰', '👑', '💎', '💵', '🏆', '✨'],
+    enabled = true
+  } = options;
+  
   const [isActive, setIsActive] = useState(enabled);
   const animationFrameId = useRef<number | null>(null);
   const createdElements = useRef<HTMLElement[]>([]);
@@ -40,16 +47,16 @@ const useFloatingCoins = ({
   };
   
   // Create a single floating coin/emoji element
-  const createFloatingElement = () => {
-    if (!containerRef.current) return;
+  const createFloatingElement = (container: HTMLElement, position?: PositionCoordinates) => {
+    if (!container) return;
     
     const element = document.createElement('div');
     const emoji = emojis[Math.floor(Math.random() * emojis.length)];
     
-    // Random position within container
-    const containerRect = containerRef.current.getBoundingClientRect();
-    const randomX = Math.random() * containerRect.width;
-    const randomY = Math.random() * containerRect.height;
+    // Use provided position or random position within container
+    const containerRect = container.getBoundingClientRect();
+    const randomX = position ? position.x - containerRect.left : Math.random() * containerRect.width;
+    const randomY = position ? position.y - containerRect.top : Math.random() * containerRect.height;
     
     // Set element styles
     Object.assign(element.style, {
@@ -68,7 +75,7 @@ const useFloatingCoins = ({
     element.textContent = emoji;
     element.className = 'floating-coin';
     
-    containerRef.current.appendChild(element);
+    container.appendChild(element);
     createdElements.current.push(element);
     
     // Remove element after animation completes
@@ -82,13 +89,13 @@ const useFloatingCoins = ({
   
   // Animation loop
   const animate = () => {
-    if (!isActive || !containerRef.current) return;
+    if (!isActive || !containerRef?.current) return;
     
     const chance = Math.random();
     
     // Only create new element occasionally for a more natural effect
     if (chance < 0.05 && createdElements.current.length < count) {
-      createFloatingElement();
+      createFloatingElement(containerRef.current);
     }
     
     animationFrameId.current = requestAnimationFrame(animate);
@@ -109,30 +116,51 @@ const useFloatingCoins = ({
   
   // Create a burst of elements all at once
   const createBurst = (burstCount = 15) => {
-    if (!containerRef.current) return;
+    if (!containerRef?.current) return;
     
     for (let i = 0; i < burstCount; i++) {
       setTimeout(() => {
-        createFloatingElement();
+        createFloatingElement(containerRef.current!);
+      }, i * 100);
+    }
+  };
+  
+  // Create multiple coins at a specific position
+  const createMultipleCoins = (numberOfCoins: number = 10, position?: PositionCoordinates) => {
+    if (!containerRef?.current) return;
+    
+    for (let i = 0; i < numberOfCoins; i++) {
+      setTimeout(() => {
+        createFloatingElement(containerRef.current!, position);
       }, i * 100);
     }
   };
   
   // Start animation
   useEffect(() => {
-    if (isActive && containerRef.current) {
+    if (isActive && containerRef?.current) {
       animationFrameId.current = requestAnimationFrame(animate);
     }
     
     return cleanup;
-  }, [isActive, containerRef.current]);
+  }, [isActive, containerRef?.current]);
   
   return {
     isActive,
     toggle,
     createBurst,
+    createMultipleCoins,
     cleanup
   };
 };
 
-export default useFloatingCoins;
+// For backwards compatibility with files using the hook without options
+const useFloatingCoinsWithoutRef = () => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  return {
+    ...useFloatingCoins({ containerRef }),
+    containerRef
+  };
+};
+
+export default useFloatingCoinsWithoutRef;
