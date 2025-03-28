@@ -3,6 +3,7 @@ import React from 'react';
 import { cn } from '@/lib/utils';
 import MedievalIcon from '@/components/ui/medieval-icon';
 import { BaseDecorationProps, sizeClasses, toMedievalIconColor } from '@/types/ui/decorations/types';
+import { adaptIconSize, adaptIconColor } from '@/utils/iconTypeAdapter';
 
 const CoatOfArms: React.FC<BaseDecorationProps> = ({
   color = 'gold',
@@ -10,16 +11,18 @@ const CoatOfArms: React.FC<BaseDecorationProps> = ({
   animate = false,
   className
 }) => {
+  const sizeClass = sizeClasses[size];
+  
   return (
     <div className={cn(
       'relative',
-      sizeClasses[size].container,
+      typeof sizeClass === 'string' ? sizeClass : sizeClass.container,
       className
     )}>
       <MedievalIcon 
         name="shield" 
-        size={sizeClasses[size].icon} 
-        color={toMedievalIconColor(color)} 
+        size={adaptIconSize(typeof sizeClass === 'string' ? 'md' : sizeClass.icon)} 
+        color={adaptIconColor(color)} 
         animate={animate} 
       />
     </div>

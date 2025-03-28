@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { MockeryAction } from '@/types/mockery';
+import { MockeryAction, MockeryTier } from '@/types/mockery';
 import { Trophy } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { 
@@ -33,7 +33,7 @@ const MockeryModal: React.FC<MockeryModalProps> = ({
   
   // Custom styling based on mockery type
   const getHeaderStyle = () => {
-    const colorObj = getMockeryColor(mockeryType);
+    const colorObj = getMockeryColor(mockeryType as MockeryTier);
     const color = typeof colorObj === 'object' ? colorObj.text.replace('text-', '') : '';
     return {
       borderBottom: `2px solid ${color}`,
@@ -46,7 +46,7 @@ const MockeryModal: React.FC<MockeryModalProps> = ({
     
     try {
       // Determine cost of mockery type
-      const amount = getMockeryCost(mockeryType);
+      const amount = getMockeryCost(mockeryType as MockeryTier);
       
       // Pass to parent component to handle the transaction
       const success = onConfirm(targetUser, mockeryType, amount);
@@ -55,7 +55,7 @@ const MockeryModal: React.FC<MockeryModalProps> = ({
         // Show success toast
         toast({
           title: "Mockery Successful",
-          description: `You have successfully mocked ${targetUser} with ${getMockeryText(mockeryType)}!`,
+          description: `You have successfully mocked ${targetUser} with ${getMockeryText(mockeryType as MockeryTier)}!`,
           variant: "default"
         });
         onClose();
@@ -79,15 +79,19 @@ const MockeryModal: React.FC<MockeryModalProps> = ({
     }
   };
   
-  const IconComponent = getMockeryIcon(mockeryType);
+  const IconComponent = getMockeryIcon(mockeryType as MockeryTier);
   
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="glass-morphism border-white/10">
         <DialogHeader style={getHeaderStyle()} className="pb-2">
           <DialogTitle className="flex items-center gap-2">
-            {IconComponent && typeof IconComponent !== 'string' && <IconComponent className="text-royal-crimson h-5 w-5" />}
-            <span>Confirm {getMockeryText(mockeryType)} Mockery</span>
+            {IconComponent && React.isValidElement(IconComponent) ? 
+              IconComponent : 
+              (typeof IconComponent === 'function' ? 
+                <IconComponent className="text-royal-crimson h-5 w-5" /> : 
+                null)}
+            <span>Confirm {getMockeryText(mockeryType as MockeryTier)} Mockery</span>
           </DialogTitle>
           <DialogDescription>
             Are you sure you want to mock {targetUser}?
@@ -96,7 +100,7 @@ const MockeryModal: React.FC<MockeryModalProps> = ({
         
         <div className="py-4">
           <div className="bg-black/20 p-4 rounded-lg mb-4">
-            <p className="text-sm text-white/70">{getMockeryDescription(mockeryType)}</p>
+            <p className="text-sm text-white/70">{getMockeryDescription(mockeryType as MockeryTier)}</p>
           </div>
           
           <div className="flex items-center justify-between p-3 border border-white/10 rounded-lg bg-black/10">
@@ -109,7 +113,7 @@ const MockeryModal: React.FC<MockeryModalProps> = ({
           
           <div className="mt-4 p-3 border border-white/10 rounded-lg bg-black/10 flex justify-between items-center">
             <span className="text-sm">Cost:</span>
-            <span className="font-bold text-royal-gold">${getMockeryCost(mockeryType)}</span>
+            <span className="font-bold text-royal-gold">${getMockeryCost(mockeryType as MockeryTier)}</span>
           </div>
         </div>
         

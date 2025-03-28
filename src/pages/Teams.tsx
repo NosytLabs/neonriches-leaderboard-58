@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -76,7 +77,12 @@ const Teams = () => {
                 </TabsContent>
                 
                 <TabsContent value="selection">
-                  {user && <TeamSelection user={user} onTeamSelect={handleTeamSelect} />}
+                  {user && (
+                    <TeamSelection 
+                      user={user}
+                      onTeamSelect={handleTeamSelect}
+                    />
+                  )}
                 </TabsContent>
                 
                 <TabsContent value="leaderboard">

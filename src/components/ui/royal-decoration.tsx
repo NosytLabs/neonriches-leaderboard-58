@@ -5,8 +5,11 @@ import CornerFlourish from './decorations/corner-flourish';
 import RoyalBanner from './decorations/royal-banner';
 import CrossedSwords from './decorations/crossed-swords';
 import RoyalInsignia from './decorations/royal-insignia';
-import { MedievalIconColor, MedievalIconSize } from './medieval-icon';
+import { MedievalIconColor } from '@/components/ui/medieval-icon';
+import CoatOfArms from './decorations/coat-of-arms';
 import { RoyalDecorationType } from '@/types/royal-divider-types';
+import { adaptIconColor } from '@/utils/iconTypeAdapter';
+import { MedievalIconColor as TypesMedievalIconColor, MedievalDecorationSize } from '@/types/ui/decorations/types';
 
 export type DecorationVariant = 
   'corner-flourish' | 
@@ -43,8 +46,8 @@ interface RoyalDecorationProps {
   variant?: DecorationVariant;
   position?: DecorationPosition;
   type?: RoyalDecorationType;
-  color?: MedievalIconColor;
-  size?: MedievalIconSize;
+  color?: TypesMedievalIconColor;
+  size?: MedievalDecorationSize;
   animate?: boolean;
   className?: string;
 }
@@ -90,6 +93,8 @@ const RoyalDecoration: React.FC<RoyalDecorationProps> = ({
         return <RoyalBanner color={color} size={size} animate={animate} />;
       case 'crossed-swords':
         return <CrossedSwords color={color} size={size} animate={animate} />;
+      case 'coat-of-arms':
+        return <CoatOfArms color={color} size={size} animate={animate} />;
       case 'royal-insignia':
         return <RoyalInsignia color={color} size={size} animate={animate} />;
       default:

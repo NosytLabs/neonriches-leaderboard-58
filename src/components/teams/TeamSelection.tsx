@@ -6,14 +6,14 @@ import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/auth';
 import { useToast } from '@/hooks/use-toast';
 import { useResponsive } from '@/hooks/use-responsive';
-import { TeamColor } from '@/types/teams';
+import { TeamColor, TeamSelectionProps } from '@/types/teams';
 
-export const TeamSelection = () => {
-  const { user, updateUserProfile } = useAuth();
+const TeamSelection: React.FC<TeamSelectionProps> = ({ user, onTeamSelect }) => {
+  const { updateUserProfile } = useAuth();
   const { toast } = useToast();
   const { isMobile } = useResponsive();
   const [selectedTeam, setSelectedTeam] = useState<TeamColor>(
-    user?.team === 'none' ? null : (user?.team as TeamColor || 'red')
+    (user?.team as TeamColor) || 'red'
   );
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -29,7 +29,15 @@ export const TeamSelection = () => {
 
     setIsSubmitting(true);
     try {
-      await updateUserProfile({ ...user, team: selectedTeam || 'none' });
+      if (onTeamSelect) {
+        const success = await onTeamSelect(selectedTeam);
+        if (!success) {
+          throw new Error("Failed to update team");
+        }
+      } else {
+        await updateUserProfile({ ...user, team: selectedTeam });
+      }
+      
       toast({
         title: "Team Updated",
         description: `You've joined the ${selectedTeam} team!`,

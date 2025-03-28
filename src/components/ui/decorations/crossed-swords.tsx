@@ -3,6 +3,7 @@ import React from 'react';
 import { cn } from '@/lib/utils';
 import MedievalIcon from '@/components/ui/medieval-icon';
 import { BaseDecorationProps, sizeClasses } from '@/types/ui/decorations/types';
+import { adaptIconSize, adaptIconColor } from '@/utils/iconTypeAdapter';
 
 const CrossedSwords: React.FC<BaseDecorationProps> = ({
   color = 'gold',
@@ -10,7 +11,8 @@ const CrossedSwords: React.FC<BaseDecorationProps> = ({
   animate = false,
   className = ''
 }) => {
-  const containerSize = sizeClasses[size].container;
+  const sizeClass = sizeClasses[size];
+  const containerSize = typeof sizeClass === 'string' ? sizeClass : sizeClass.container;
   const animationClass = animate ? 'animate-pulse-slow' : '';
   
   return (
@@ -21,11 +23,19 @@ const CrossedSwords: React.FC<BaseDecorationProps> = ({
       className
     )}>
       <div className="absolute transform -rotate-45 -translate-x-1">
-        <MedievalIcon name="sword" size={sizeClasses[size].icon} color={color} />
+        <MedievalIcon 
+          name="sword" 
+          size={adaptIconSize(typeof sizeClass === 'string' ? 'md' : sizeClass.icon)} 
+          color={adaptIconColor(color)} 
+        />
       </div>
       
       <div className="absolute transform rotate-45 translate-x-1">
-        <MedievalIcon name="sword" size={sizeClasses[size].icon} color={color} />
+        <MedievalIcon 
+          name="sword" 
+          size={adaptIconSize(typeof sizeClass === 'string' ? 'md' : sizeClass.icon)} 
+          color={adaptIconColor(color)} 
+        />
       </div>
     </div>
   );
