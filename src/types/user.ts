@@ -5,7 +5,7 @@ export type UserRole = 'admin' | 'moderator' | 'user';
 export type UserStatus = 'active' | 'inactive' | 'banned' | 'pending';
 export type TeamType = 'red' | 'green' | 'blue' | 'none';
 export type UserTier = 'free' | 'basic' | 'premium' | 'pro' | 'royal' | 'legendary' | 'crab' | 'octopus' | 'fish' | 'dolphin' | 'shark' | 'whale';
-export type UserGender = 'king' | 'queen' | 'royal' | 'none' | 'jester' | 'noble';
+export type UserGender = 'king' | 'queen' | 'royal' | 'none' | 'jester' | 'noble' | 'neutral'; // Added 'neutral'
 
 export interface SocialLink {
   id?: string | number;
@@ -14,6 +14,7 @@ export interface SocialLink {
   label?: string;
   icon?: string;
   clicks?: number;
+  title?: string; // Added title property
 }
 
 export type ProfileLink = SocialLink;
@@ -107,7 +108,7 @@ export interface UserProfile {
   walletBalance: number;
   amountSpent?: number;
   spentAmount?: number;
-  totalSpent: number; // Required property
+  totalSpent?: number; // Made optional instead of required
   spendStreak?: number;
   settings?: UserSettings;
   cosmetics?: UserCosmetics;

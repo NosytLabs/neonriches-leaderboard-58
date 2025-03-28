@@ -1,84 +1,99 @@
+// Import the necessary dependencies
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { getOnChainLeaderboard } from '@/services/leaderboardService';
-import { LeaderboardEntry } from '@/types/leaderboard';
-import { formatDate } from '@/utils/dateUtils';
-import { formatAddress } from '@/utils/solanaUtils';
-import { ArrowDown, ArrowUp, ExternalLink } from 'lucide-react';
+import { getOnChainLeaderboard } from '@/services/solanaService';
+import { OnChainLeaderboardEntry, LeaderboardEntry } from '@/types/solana';
 
-const SolanaLeaderboard: React.FC = () => {
-  const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
+const SolanaLeaderboard = () => {
+  const [leaderboardData, setLeaderboardData] = useState<LeaderboardEntry[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  
+  // Adapter function to convert OnChainLeaderboardEntry to LeaderboardEntry
+  const adaptOnChainToLeaderboardEntry = (entries: OnChainLeaderboardEntry[]) => {
+    return entries.map(entry => ({
+      userId: entry.userId || entry.address,
+      username: entry.username,
+      publicKey: entry.publicKey,
+      amountSpent: entry.spentAmount || entry.amountSpent || 0,
+      totalDeposited: entry.totalDeposited || 0,
+      rank: entry.rank,
+      joinDate: entry.timestamp
+    }));
+  };
 
   useEffect(() => {
-    const fetchLeaderboard = async () => {
+    const fetchAndSetLeaderboard = async () => {
       setIsLoading(true);
+      setError(null);
       try {
         const entries = await getOnChainLeaderboard();
-        setLeaderboard(entries);
-      } catch (error) {
-        console.error("Error fetching on-chain leaderboard:", error);
+        setLeaderboardData(adaptOnChainToLeaderboardEntry(entries));
+      } catch (error: any) {
+        console.error("Error fetching leaderboard:", error);
+        setError(error.message || "Failed to fetch leaderboard data.");
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchLeaderboard();
+    fetchAndSetLeaderboard();
   }, []);
-
-  const getRankChangeIcon = (rankChange: number) => {
-    if (rankChange > 0) {
-      return <ArrowUp className="text-green-500 w-4 h-4" />;
-    } else if (rankChange < 0) {
-      return <ArrowDown className="text-red-500 w-4 h-4" />;
-    } else {
-      return null;
-    }
-  };
 
   return (
     <Card className="glass-morphism border-white/10">
       <CardHeader>
         <CardTitle>Solana On-Chain Leaderboard</CardTitle>
-        <CardDescription>See who's leading the kingdom on the blockchain</CardDescription>
+        <CardDescription>
+          Real-time leaderboard data from the Solana blockchain.
+        </CardDescription>
       </CardHeader>
-      
       <CardContent>
-        <ScrollArea className="h-[350px] pr-4">
-          <div className="space-y-3">
-            {leaderboard.map((entry) => (
-              <div key={entry.id} className="glass-morphism-subtle rounded-lg p-3 relative">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center">
-                    <span className="font-mono text-sm mr-4">#{entry.rank}</span>
-                    <div className="flex items-center">
-                      {getRankChangeIcon((entry.previousRank || entry.rank) - entry.rank)}
-                      <span className="ml-1">{entry.username}</span>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <span className="text-sm text-white/60">${entry.totalDeposited?.toLocaleString()}</span>
-                  </div>
-                </div>
-                
-                <div className="flex items-center mt-2 text-xs text-white/60">
-                  <span className="mr-3">Last transaction: {formatDate(entry.lastTransaction || '')}</span>
-                  {entry.onChain && (
-                    <a 
-                      href={`https://explorer.solana.com/address/${entry.userId}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center text-royal-gold/70 hover:text-royal-gold"
-                    >
-                      Verified on-chain <ExternalLink size={10} className="ml-1" />
-                    </a>
-                  )}
-                </div>
-              </div>
-            ))}
+        {isLoading && <p>Loading leaderboard data...</p>}
+        {error && <p className="text-red-500">Error: {error}</p>}
+        {!isLoading && !error && leaderboardData.length === 0 && (
+          <p>No leaderboard data available.</p>
+        )}
+        {!isLoading && !error && leaderboardData.length > 0 && (
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-white/20">
+              <thead>
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
+                    Rank
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
+                    Username
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
+                    Amount Spent
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
+                    Join Date
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-white/10">
+                {leaderboardData.map((entry) => (
+                  <tr key={entry.userId}>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-white">
+                      {entry.rank}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-white">
+                      {entry.username}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-white">
+                      {entry.amountSpent}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-white">
+                      {entry.joinDate}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
-        </ScrollArea>
+        )}
       </CardContent>
     </Card>
   );

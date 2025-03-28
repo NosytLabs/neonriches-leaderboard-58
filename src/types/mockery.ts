@@ -1,49 +1,47 @@
 
-
 export type MockeryTier = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
-export type MockeryAction = 'tomatoes' | 'eggs' | 'stocks' | 'silence' | 'courtJester' | 'protected' | 'immune' | 'jester' | 'dunce' | 'roast' | 'ridicule' | 'taunt' | 'drama';
+export type MockeryAction = 'tomatoes' | 'eggs' | 'stocks' | 'silence' | 'courtJester' | 'jester' | 'protected' | 'immune' | 'dunce' | 'roast' | 'ridicule' | 'taunt' | 'drama';
 export type ExtendedMockeryAction = MockeryAction;
+export type ShameAction = MockeryAction;
 
 export interface MockeryEvent {
   id: string;
   targetUserId: string;
-  actionType: MockeryAction;
+  sourceUserId: string;
   timestamp: string;
-  expiresAt: string;
-  sourceUserId?: string; // Added for compatibility
+  mockeryType: MockeryAction;
+  action?: string;
+  duration: number;
+  active: boolean;
 }
 
 export interface MockeryEffectData {
   type: MockeryAction;
-  strength: number;
-  duration: number;
-  id?: string; // Added for compatibility
+  until: string;
+  tier: MockeryTier;
+  duration?: number;
+  strength?: number;
+  appliedBy?: string;
+  id?: string;
 }
 
 export interface UserMockeryStatus {
-  isProtected: boolean;
-  protectionUntil: string | { until: string; tier: string; };
-  activeEffects: MockeryEffectData[];
+  username: string;
+  userId?: string;
+  protectedUntil: string | null;
+  activeProtection?: MockeryEffectData | null;
+  activeMockeries?: MockeryEffectData[];
   mockeryCount: number;
+  lastMockedAt: string | null;
 }
 
 export interface MockUser {
   id: string;
   username: string;
   profilePicture: string;
-  tier: MockeryTier | string; // Modified for compatibility
+  tier: MockeryTier;
   lastMockery: string;
   mockeryCount: number;
   isProtected: boolean;
   onlineStatus: boolean;
 }
-
-export interface ShameAction {
-  id: string;
-  targetId: string;
-  sourceId: string;
-  actionType: MockeryAction;
-  timestamp: string;
-  strength: number;
-}
-

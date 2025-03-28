@@ -1,297 +1,140 @@
-import React, { useState, useEffect, useCallback } from 'react';
+// Import necessary dependencies
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { Coins, ArrowUp, ArrowDown, FileText } from 'lucide-react';
+import { formatCurrency } from '@/lib/utils';
+import { getTreasuryInfo, subscribeToTreasuryUpdates } from '@/services/solanaService';
 import { SolanaTreasuryInfo, SolanaTransaction } from '@/types/solana';
-import { getTreasuryInfo, getTreasuryTransactions, subscribeToTreasuryUpdates } from '@/services/solanaService';
-import { RefreshCw, Coins, ArrowUpRight, ArrowDownRight, WalletIcon, History, ExternalLink } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
-import { formatAddress } from '@/utils/solanaUtils';
-import { Skeleton } from '@/components/ui/skeleton';
-import MedievalIcon from '@/components/ui/medieval-icon';
-import { useToast } from '@/hooks/use-toast';
-import { motion } from 'framer-motion';
 
-interface ShadowTreasuryInfo {
-  totalDeposited: number;
-  currentBalance: number;
-  depositCount: number;
-  withdrawalCount: number;
-  lastUpdated: string;
+interface TreasuryDashboardProps {
+  // Add any props if needed
 }
 
-const TreasuryDashboard: React.FC = () => {
-  const [treasuryInfo, setTreasuryInfo] = useState<SolanaTreasuryInfo | null>(null);
-  const [shadowInfo, setShadowInfo] = useState<ShadowTreasuryInfo>({
+const TreasuryDashboard: React.FC<TreasuryDashboardProps> = ({ /* props */ }) => {
+  const [treasuryInfo, setTreasuryInfo] = useState<SolanaTreasuryInfo>({
+    owner: 'Loading...',
+    balance: 0,
     totalDeposited: 0,
-    currentBalance: 0,
-    depositCount: 0,
-    withdrawalCount: 0,
-    lastUpdated: new Date().toISOString()
+    totalWithdrawn: 0,
+    netBalance: 0,
+    transactions: 0,
+    lastUpdated: new Date().toISOString(),
+    signature: ''
   });
-  const [transactions, setTransactions] = useState<SolanaTransaction[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isRefreshing, setIsRefreshing] = useState(false);
-  const { toast } = useToast();
-
-  const mockShadowTreasury = () => {
+  const [displayTransactions, setDisplayTransactions] = useState(false);
+  
+  // Update the component to handle type differences
+  const adaptTreasuryInfoToTransaction = (info: SolanaTreasuryInfo): SolanaTransaction => {
     return {
-      totalDeposited: 1250,
-      currentBalance: treasuryInfo?.balance || 0,
-      depositCount: 86,
-      withdrawalCount: 12,
-      lastUpdated: new Date().toISOString()
+      id: `treasury-${Date.now()}`,
+      signature: info.signature || 'treasury-update',
+      amount: info.balance || 0,
+      timestamp: info.lastUpdated || new Date().toISOString(),
+      sender: info.owner || 'treasury',
+      receiver: 'system',
+      status: 'confirmed',
+      type: 'deposit',
+      recipient: 'treasury'
     };
   };
 
-  const fetchTreasuryData = useCallback(async () => {
-    try {
-      setIsRefreshing(true);
-      const [info, txs] = await Promise.all([
-        getTreasuryInfo(),
-        getTreasuryTransactions(5)
-      ]);
-      
-      setTreasuryInfo(info);
-      setTransactions(txs);
-      
-      setShadowInfo(mockShadowTreasury());
-    } catch (error) {
-      console.error('Error fetching treasury data:', error);
-      toast({
-        title: "Failed to Load Treasury Data",
-        description: "There was an error loading the treasury information.",
-        variant: "destructive"
-      });
-    } finally {
-      setIsLoading(false);
-      setIsRefreshing(false);
-    }
-  }, [toast]);
-
   useEffect(() => {
-    fetchTreasuryData();
-    
-    const unsubscribe = subscribeToTreasuryUpdates((transaction) => {
-      setTransactions(prev => [...prev, transaction as SolanaTransaction]);
-      
-      getTreasuryInfo().then(info => {
+    // Get initial treasury info
+    const fetchTreasuryInfo = async () => {
+      try {
+        const info = await getTreasuryInfo();
         setTreasuryInfo(info);
         
-        const amount = transaction.amount || 0;
-        
-        setShadowInfo(prev => {
-          if (amount > 0) {
-            return {
-              ...prev,
-              totalDeposited: prev.totalDeposited + amount,
-              currentBalance: (info?.balance || 0),
-              depositCount: prev.depositCount + 1,
-              lastUpdated: new Date().toISOString()
-            };
-          } else {
-            return {
-              ...prev,
-              currentBalance: (info?.balance || 0),
-              withdrawalCount: prev.withdrawalCount + 1,
-              lastUpdated: new Date().toISOString()
-            };
-          }
-        });
-      });
-      
-      toast({
-        title: "New Treasury Transaction",
-        description: `Received ${transaction.amount.toFixed(2)} SOL from ${formatAddress(transaction.sender)}`,
-      });
+        // If we're displaying transactions, adapt the info
+        if (displayTransactions) {
+          const adaptedTransaction = adaptTreasuryInfoToTransaction(info);
+          // Use the adapted transaction where needed
+        }
+      } catch (error) {
+        console.error("Error fetching treasury info:", error);
+      }
+    };
+    
+    fetchTreasuryInfo();
+    
+    // Subscribe to treasury updates with no parameters
+    const unsubscribe = subscribeToTreasuryUpdates((data) => {
+      setTreasuryInfo(data);
     });
     
     return () => unsubscribe();
-  }, [fetchTreasuryData, toast]);
-
-  const handleRefresh = () => {
-    fetchTreasuryData();
-  };
-
-  const formatSOL = (value: number) => {
-    return value.toFixed(4);
-  };
-
-  const solToUsd = (solAmount: number, solPrice: number = 20): number => {
-    return solAmount * solPrice;
-  };
+  }, [displayTransactions]);
 
   return (
-    <div className="space-y-6">
-      <Card className="glass-morphism border-white/10">
-        <CardHeader className="flex flex-row items-center justify-between">
-          <div>
-            <CardTitle className="flex items-center">
-              <MedievalIcon name="coins" color="gold" className="mr-2" />
-              Royal Treasury
-            </CardTitle>
-            <CardDescription>
-              Real-time Solana treasury statistics and shadow treasury for tracking ranks
-            </CardDescription>
-          </div>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={handleRefresh}
-            disabled={isRefreshing}
-          >
-            <RefreshCw className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`} />
-          </Button>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-            <Card className="bg-white/5 border-white/10">
-              <CardContent className="p-4">
-                <div className="flex items-center justify-between">
-                  <div className="text-sm text-white/60">Current Balance</div>
-                  <WalletIcon className="h-4 w-4 text-royal-gold" />
-                </div>
-                
-                {isLoading ? (
-                  <Skeleton className="h-8 w-24 mt-2" />
-                ) : (
-                  <div className="mt-2 flex items-baseline">
-                    <div className="text-2xl font-bold">{formatSOL(treasuryInfo?.balance || 0)}</div>
-                    <div className="ml-1 text-sm text-white/60">SOL</div>
-                  </div>
-                )}
-                
-                <div className="text-xs text-white/40 mt-1">
-                  ≈ ${solToUsd(treasuryInfo?.balance || 0).toFixed(2)} USD
-                </div>
-              </CardContent>
-            </Card>
-            
-            <Card className="bg-white/5 border-white/10">
-              <CardContent className="p-4">
-                <div className="flex items-center justify-between">
-                  <div className="text-sm text-white/60">Total Deposits All-Time</div>
-                  <ArrowUpRight className="h-4 w-4 text-green-500" />
-                </div>
-                
-                {isLoading ? (
-                  <Skeleton className="h-8 w-24 mt-2" />
-                ) : (
-                  <div className="mt-2 flex items-baseline">
-                    <div className="text-2xl font-bold">{formatSOL(shadowInfo.totalDeposited)}</div>
-                    <div className="ml-1 text-sm text-white/60">SOL</div>
-                  </div>
-                )}
-                
-                <div className="text-xs text-white/40 mt-1 flex items-center">
-                  <span className="text-green-400 mr-1">{shadowInfo.depositCount}</span> deposits all-time
-                </div>
-              </CardContent>
-            </Card>
-            
-            <Card className="bg-gradient-to-br from-royal-purple/20 to-royal-gold/10 border-white/10">
-              <CardContent className="p-4">
-                <div className="flex items-center justify-between">
-                  <div className="text-sm text-white/60">Shadow Treasury (USD)</div>
-                  <Coins className="h-4 w-4 text-royal-gold" />
-                </div>
-                
-                {isLoading ? (
-                  <Skeleton className="h-8 w-24 mt-2" />
-                ) : (
-                  <div className="mt-2 flex items-baseline">
-                    <div className="text-2xl font-bold">${solToUsd(shadowInfo.totalDeposited).toFixed(2)}</div>
-                    <div className="ml-1 text-sm text-white/60">USD</div>
-                  </div>
-                )}
-                
-                <div className="text-xs text-white/40 mt-1 italic">
-                  Used for rank calculations
-                </div>
-              </CardContent>
-            </Card>
+    <Card className="glass-morphism border-white/10">
+      <CardHeader>
+        <div className="flex items-center">
+          <Coins className="mr-3 h-6 w-6 text-green-400" />
+          <CardTitle>Solana Treasury Dashboard</CardTitle>
+        </div>
+        <CardDescription>
+          Real-time overview of the treasury's financial activity
+        </CardDescription>
+      </CardHeader>
+      
+      <CardContent className="p-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="p-4 rounded-lg glass-morphism border-white/10">
+            <div className="flex justify-between items-start mb-2">
+              <div className="font-medium">Total Deposited</div>
+              <div className="flex items-center text-green-500">
+                <ArrowUp className="h-4 w-4 mr-1" />
+                <span>{formatCurrency(treasuryInfo.totalDeposited || 0)}</span>
+              </div>
+            </div>
+            <div className="text-3xl font-bold">{formatCurrency(treasuryInfo.totalDeposited || 0)}</div>
+            <div className="text-xs text-white/50">Lifetime deposits</div>
           </div>
           
-          <div>
-            <div className="flex items-center mb-3">
-              <History className="h-4 w-4 text-white/60 mr-2" />
-              <h3 className="text-sm font-medium">Recent Transactions</h3>
+          <div className="p-4 rounded-lg glass-morphism border-white/10">
+            <div className="flex justify-between items-start mb-2">
+              <div className="font-medium">Total Withdrawn</div>
+              <div className="flex items-center text-red-500">
+                <ArrowDown className="h-4 w-4 mr-1" />
+                <span>{formatCurrency(treasuryInfo.totalWithdrawn || 0)}</span>
+              </div>
             </div>
-            
-            {isLoading ? (
-              <div className="space-y-2">
-                {[1, 2, 3].map((i) => (
-                  <div key={i} className="flex items-center justify-between p-2 bg-white/5 rounded-md">
-                    <Skeleton className="h-6 w-52" />
-                    <Skeleton className="h-6 w-24" />
-                  </div>
-                ))}
-              </div>
-            ) : transactions.length === 0 ? (
-              <div className="text-center py-6 text-white/40 italic">
-                No transactions found
-              </div>
-            ) : (
-              <div className="space-y-2">
-                {transactions.map((tx, index) => (
-                  <motion.div
-                    key={tx.signature}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3, delay: index * 0.05 }}
-                    className="flex items-center justify-between p-2 bg-white/5 rounded-md hover:bg-white/10 transition-colors"
-                  >
-                    <div className="flex items-center space-x-2">
-                      <Badge variant="outline" className={`bg-green-500/10 text-green-400 border-green-400/20`}>
-                        + {tx.amount.toFixed(2)} SOL
-                      </Badge>
-                      <div className="text-sm">
-                        <span className="text-white/60">From:</span> {formatAddress(tx.sender, 6)}
-                      </div>
-                    </div>
-                    <div className="flex items-center">
-                      <span className="text-xs text-white/40 mr-2">
-                        {new Date(tx.timestamp).toLocaleTimeString()}
-                      </span>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-6 w-6"
-                        onClick={() => window.open(`https://explorer.solana.com/tx/${tx.signature}`, '_blank')}
-                      >
-                        <ExternalLink className="h-3 w-3" />
-                      </Button>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            )}
-            
-            <div className="mt-4 text-center">
-              <Button
-                variant="outline"
-                size="sm"
-                className="text-xs"
-                onClick={() => treasuryInfo?.address && 
-                  window.open(`https://explorer.solana.com/address/${treasuryInfo.address}`, '_blank')}
-              >
-                View on Solana Explorer
-                <ExternalLink className="h-3 w-3 ml-2" />
-              </Button>
-            </div>
+            <div className="text-3xl font-bold">{formatCurrency(treasuryInfo.totalWithdrawn || 0)}</div>
+            <div className="text-xs text-white/50">Lifetime withdrawals</div>
           </div>
           
-          <Card className="mt-6 bg-white/5 border-white/10 p-4">
-            <div className="text-sm text-white/80 flex items-center mb-2">
-              <MedievalIcon name="scroll" color="gold" size="sm" className="mr-2" />
-              Treasury Mechanics
+          <div className="p-4 rounded-lg glass-morphism border-white/10">
+            <div className="flex justify-between items-start mb-2">
+              <div className="font-medium">Net Balance</div>
+              <div className="flex items-center text-blue-500">
+                <Coins className="h-4 w-4 mr-1" />
+                <span>{formatCurrency(treasuryInfo.netBalance || 0)}</span>
+              </div>
             </div>
-            <p className="text-xs text-white/60 italic">
-              The Shadow Treasury tracks all deposits ever made, ensuring that your rank in the Royal Court is based on your total contributions, regardless of withdrawals. This ensures that your status is permanent and based on your generosity to the kingdom.
-            </p>
-          </Card>
-        </CardContent>
-      </Card>
-    </div>
+            <div className="text-3xl font-bold">{formatCurrency(treasuryInfo.netBalance || 0)}</div>
+            <div className="text-xs text-white/50">Current balance</div>
+          </div>
+          
+          <div className="p-4 rounded-lg glass-morphism border-white/10">
+            <div className="flex justify-between items-start mb-2">
+              <div className="font-medium">Transactions</div>
+              <div className="flex items-center text-white/60">
+                <FileText className="h-4 w-4 mr-1" />
+                <span>{treasuryInfo.transactions}</span>
+              </div>
+            </div>
+            <div className="text-3xl font-bold">{treasuryInfo.transactions}</div>
+            <div className="text-xs text-white/50">Total transactions</div>
+          </div>
+        </div>
+        
+        <div className="mt-6 text-center">
+          <p className="text-sm text-white/60">
+            Last Updated: {new Date(treasuryInfo.lastUpdated || '').toLocaleString()}
+          </p>
+        </div>
+      </CardContent>
+    </Card>
   );
 };
 

@@ -1,5 +1,3 @@
-
-
 export type TransactionType = 'deposit' | 'withdrawal' | 'purchase' | 'transfer' | 'mockery' | 'cosmetic' | 'subscription' | 'boost' | 'wish';
 
 export interface SolanaWallet {
@@ -40,16 +38,28 @@ export interface SolanaTransaction {
 
 export interface OnChainLeaderboardEntry {
   address: string;
+  publicKey: string;
   username: string;
-  amount: number;
+  spentAmount: number;
+  amountSpent?: number;
   rank: number;
-  transaction: string;
+  previousRank?: number;
   timestamp: string;
-  id?: string;
-  publicKey?: string;
-  totalSpent?: number;
-  previousRank?: number; // Added for compatibility
-  lastTransaction?: string; // Added for compatibility
+  transaction: string;
+  lastTransaction?: string;
+  userId?: string;
+  totalDeposited?: number;
+  joinDate?: string;
+}
+
+export interface LeaderboardEntry {
+  userId: string;
+  username: string;
+  publicKey: string;
+  amountSpent: number;
+  totalDeposited: number;
+  rank: number;
+  joinDate: string;
 }
 
 export interface SolanaNftInfo {
@@ -61,4 +71,3 @@ export interface SolanaNftInfo {
   image: string;
   attributes: any[];
 }
-

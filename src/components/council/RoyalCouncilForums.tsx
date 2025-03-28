@@ -8,6 +8,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/auth';
 import { formatTimeFromNow } from '@/utils/timeUtils';
 import { getTierBadgeColor } from '@/utils/tierUtils';
+import { Badge } from '@/components/ui/badge';
 import {
   MessageSquare,
   Send,
@@ -158,7 +159,6 @@ const RoyalCouncilForums = () => {
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        {/* Create New Post Section */}
         {user && (
           <div className="glass-morphism border-white/10 p-4 rounded-lg space-y-3">
             <h3 className="text-lg font-medium">Create New Post</h3>
@@ -181,7 +181,6 @@ const RoyalCouncilForums = () => {
           </div>
         )}
         
-        {/* Forum Posts List */}
         <div className="space-y-6">
           {posts.map((post) => (
             <Card key={post.id} className="glass-morphism border-white/10">

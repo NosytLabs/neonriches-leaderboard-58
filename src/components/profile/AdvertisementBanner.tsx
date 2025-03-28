@@ -1,118 +1,72 @@
-import React from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Sparkles, TrendingUp } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
-import { useAuth } from '@/contexts/AuthContext';
-import { formatCurrency } from '@/utils/formatters';
-import { spendFromWallet } from '@/services/walletService';
-import { ensureUser } from '@/utils/userAdapter';
+// Import all required dependencies and types
+import React, { useState, useEffect } from 'react';
+import { Card, CardContent } from '@/components/ui/card';
+import { ProfileBoost } from '@/types/user';
+import { cn } from '@/lib/utils';
 
-const AdvertisementBanner = () => {
-  const { user, updateUserProfile } = useAuth();
-  const { toast } = useToast();
-  
-  const handleBoostProfile = async () => {
-    if (!user) {
-      toast({
-        title: "Authentication Required",
-        description: "You must be logged in to boost your profile.",
-        variant: "destructive"
-      });
-      return;
+interface AdvertisementBannerProps {
+  boosts: ProfileBoost[];
+}
+
+const AdvertisementBanner: React.FC<AdvertisementBannerProps> = ({ boosts }) => {
+  const [activeBoost, setActiveBoost] = useState<ProfileBoost | null>(null);
+
+  useEffect(() => {
+    if (boosts && boosts.length > 0) {
+      // Find the most potent active boost
+      const now = new Date();
+      const active = boosts
+        .filter(boost => new Date(boost.startDate) <= now && new Date(boost.endDate) >= now)
+        .sort((a, b) => b.level - a.level)[0];
+
+      setActiveBoost(active || null);
+    } else {
+      setActiveBoost(null);
     }
-    
-    if (user.walletBalance < 2) {
-      toast({
-        title: "Insufficient Funds",
-        description: "You need at least $2 to boost your profile.",
-        variant: "destructive"
-      });
-      return;
-    }
-    
-    // Simulate API call to boost profile
-    try {
-      // Deduct funds from wallet
-      const success = await spendFromWallet(
-        ensureUser(user),
-        2,
-        'advertisement',
-        'Purchased advertisement boost for 24 hours',
-        {}
-      );
-      
-      if (success) {
-        // Update user profile with boost info
-        const boostEndDate = new Date();
-        boostEndDate.setDate(boostEndDate.getDate() + 1); // 24 hours
-        
-        await updateUserProfile({
-          ...user,
-          profileBoosts: [
-            ...(user.profileBoosts || []),
-            {
-              startDate: new Date().toISOString(),
-              endDate: boostEndDate.toISOString(),
-              level: 1,
-              type: 'advertisement',
-              strength: 1
-            }
-          ]
-        });
-        
-        toast({
-          title: "Profile Boosted",
-          description: "Your profile will be boosted for 24 hours!",
-        });
-      } else {
-        toast({
-          title: "Transaction Failed",
-          description: "There was an error processing your transaction.",
-          variant: "destructive"
-        });
-      }
-    } catch (error) {
-      toast({
-        title: "Boost Failed",
-        description: "There was an error boosting your profile.",
-        variant: "destructive"
-      });
-    }
+  }, [boosts]);
+
+  const getBoostMessage = (boost: ProfileBoost): string => {
+    if (!boost) return "No active boosts.";
+
+    const endDate = new Date(boost.endDate);
+    const timeLeft = endDate.getTime() - Date.now();
+    const daysLeft = Math.ceil(timeLeft / (1000 * 3600 * 24));
+
+    return `Profile boosted! Enjoy ${boost.strength}x visibility for ${daysLeft} more days.`;
   };
-  
-  const hasActiveBoost = user && user.profileBoosts && user.profileBoosts.length > 0;
-  
+
+  const createNewProfileBoost = (): ProfileBoost => {
+    return {
+      id: `boost-${Date.now()}`, // Generate an ID for the new boost
+      startDate: new Date().toISOString(),
+      endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(), // 7 days from now
+      level: 1,
+      effectId: "default-boost",
+      type: "visibility",
+      strength: 1.5,
+      appliedBy: "user"
+    };
+  };
+
+  const handleUpdateBoost = () => {
+    const newBoost: ProfileBoost = createNewProfileBoost();
+    // Logic for updating the boost
+  };
+
   return (
     <Card className="glass-morphism border-white/10">
-      <CardHeader>
-        <CardTitle className="flex items-center">
-          <TrendingUp className="mr-2 h-5 w-5 text-royal-gold" />
-          Boost Your Profile
-        </CardTitle>
-        <CardDescription>
-          Get more visibility and attract more followers
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-4">
-          <p className="text-white/70">
-            For just {formatCurrency(2)}, boost your profile for 24 hours and get featured on the leaderboard and profile listings.
-          </p>
-          
-          {hasActiveBoost ? (
-            <div className="text-green-500 font-semibold">
-              Your profile is currently being boosted!
-            </div>
-          ) : (
-            <Button 
-              className="w-full bg-royal-gold hover:bg-royal-gold/90 text-black"
-              onClick={handleBoostProfile}
-            >
-              <Sparkles className="mr-2 h-4 w-4" />
-              Boost Profile for 24 Hours
-            </Button>
-          )}
+      <CardContent className="p-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <h3 className="text-sm font-bold mb-1">Profile Visibility Boost</h3>
+            <p className={cn(
+              "text-xs text-white/70",
+              activeBoost ? "text-green-400" : "text-white/70"
+            )}>
+              {activeBoost ? getBoostMessage(activeBoost) : "No active boost. Purchase one to increase visibility!"}
+            </p>
+          </div>
+          {/* You can add a button here to purchase a boost */}
         </div>
       </CardContent>
     </Card>

@@ -2,7 +2,7 @@
 import React from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { Crown, MessageSquare, Bell, Award, Coins } from 'lucide-react';
+import { Crown, MessageSquare, Bell, Award, Coins, Zap, Scroll, Target, Users } from 'lucide-react'; // Added missing icons
 import { cn } from '@/lib/utils';
 
 export type NotificationType = 

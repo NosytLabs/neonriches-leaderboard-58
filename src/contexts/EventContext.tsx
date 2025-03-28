@@ -1,121 +1,329 @@
-
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { getWeeklyDiscountedAction, getWeeklyDiscountPercentage, isFireSaleMonth, getFireSaleDiscountPercentage, getFireSaleFeaturedCategories } from '@/components/events/utils/shameUtils';
-import { getDaysUntilEndOfMonth, getNextMondayDate } from '@/utils/dateUtils';
-import { ShameAction } from '@/components/events/hooks/useShameEffect';
-import { useAuth } from '@/contexts/AuthContext';
-import { useToast } from '@/hooks/use-toast';
-
-interface Event {
-  id: string;
-  name: string;
-  description: string;
-  startDate: string;
-  endDate: string;
-}
+// Import the necessary dependencies
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { Event, EventStatus, EventType } from '@/types/events';
 
 interface EventContextType {
-  currentDiscountedAction: ShameAction;
-  discountPercentage: number;
-  isFireSaleActive: boolean;
-  fireSaleDiscount: number;
-  fireSaleFeaturedCategories: string[];
-  daysUntilNextMonday: number;
-  daysRemainingInFireSale: number;
-  nextMondayDate: string;
-  refreshEventData: () => void;
-  joinEvent: () => Promise<boolean>;
-  hasJoinedEvent: (eventId: string) => boolean;
+  events: Event[];
+  currentEvent: Event | null;
+  upcomingEvents: Event[];
+  pastEvents: Event[];
+  loading: boolean;
+  error: string | null;
+  startDate: string;
+  endDate: string;
+  setStartDate: (date: Date | string) => void;
+  setEndDate: (date: Date | string) => void;
+  createEvent: (event: Omit<Event, 'id'>) => Promise<Event>;
+  updateEvent: (id: string, event: Partial<Event>) => Promise<Event>;
+  deleteEvent: (id: string) => Promise<boolean>;
+  getEventById: (id: string) => Event | null;
+  registerForEvent: (eventId: string, userId: string) => Promise<boolean>;
+  unregisterFromEvent: (eventId: string, userId: string) => Promise<boolean>;
 }
 
-const EventContext = createContext<EventContextType | undefined>(undefined);
+const EventContext = createContext<EventContextType | null>(null);
 
-export const EventProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { user } = useAuth();
-  const { toast } = useToast();
-  const [currentDiscountedAction, setCurrentDiscountedAction] = useState<ShameAction>(getWeeklyDiscountedAction());
-  const [discountPercentage, setDiscountPercentage] = useState<number>(getWeeklyDiscountPercentage());
-  const [isFireSaleActive, setIsFireSaleActive] = useState<boolean>(isFireSaleMonth());
-  const [fireSaleDiscount, setFireSaleDiscount] = useState<number>(getFireSaleDiscountPercentage());
-  const [fireSaleFeaturedCategories, setFireSaleFeaturedCategories] = useState<string[]>(getFireSaleFeaturedCategories());
-  const [daysUntilNextMonday, setDaysUntilNextMonday] = useState<number>(0);
-  const [daysRemainingInFireSale, setDaysRemainingInFireSale] = useState<number>(getDaysUntilEndOfMonth());
-  const [nextMondayDate, setNextMondayDate] = useState<string>(getNextMondayDate());
-  const [joinedEvents, setJoinedEvents] = useState<string[]>([]);
+// Convert Date objects to ISO strings where needed
+const handleDateParams = (date: Date | string) => {
+  return typeof date === 'object' ? date.toISOString() : date;
+};
+
+export const EventProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+  const [events, setEvents] = useState<Event[]>([]);
   const [currentEvent, setCurrentEvent] = useState<Event | null>(null);
+  const [upcomingEvents, setUpcomingEvents] = useState<Event[]>([]);
+  const [pastEvents, setPastEvents] = useState<Event[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const [startDate, setStartDateState] = useState<string>(new Date().toISOString());
+  const [endDate, setEndDateState] = useState<string>(new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString());
 
-  const joinEvent = async () => {
-    if (!user || !currentEvent) return false;
-    
-    try {
-      // In a real app, you would make an API call to join the event
-      console.log(`User ${user.username} is joining event: ${currentEvent.name}`);
-      
-      // For demo, we'll simulate a successful join
-      setJoinedEvents([...joinedEvents, currentEvent.id]);
-      
-      // Update localStorage
-      localStorage.setItem(`joinedEvents_${user.id}`, JSON.stringify([...joinedEvents, currentEvent.id]));
-      
-      return true;
-    } catch (error) {
-      console.error("Error joining event:", error);
-      return false;
-    }
+  const setStartDate = (date: Date | string) => {
+    const formattedDate = handleDateParams(date);
+    setStartDateState(formattedDate);
   };
 
-  const hasJoinedEvent = (eventId: string) => {
-    if (!joinedEvents) return false;
-    return joinedEvents.includes(eventId);
-  };
-
-  const calculateDaysUntilNextMonday = (): number => {
-    const today = new Date();
-    const day = today.getDay(); // 0 is Sunday, 1 is Monday
-    return day === 1 ? 7 : (8 - day) % 7; // If today is Monday, get next Monday
-  };
-
-  const refreshEventData = () => {
-    const action = getWeeklyDiscountedAction();
-    setCurrentDiscountedAction(action);
-    setDiscountPercentage(getWeeklyDiscountPercentage());
-    setIsFireSaleActive(isFireSaleMonth());
-    setFireSaleDiscount(getFireSaleDiscountPercentage());
-    setFireSaleFeaturedCategories(getFireSaleFeaturedCategories());
-    setDaysUntilNextMonday(calculateDaysUntilNextMonday());
-    setDaysRemainingInFireSale(getDaysUntilEndOfMonth());
-    setNextMondayDate(getNextMondayDate());
+  const setEndDate = (date: Date | string) => {
+    const formattedDate = handleDateParams(date);
+    setEndDateState(formattedDate);
   };
 
   useEffect(() => {
-    refreshEventData();
-    setDaysUntilNextMonday(calculateDaysUntilNextMonday());
+    // Convert Date to string before setting state
+    const now = new Date();
+    const startDateStr = now.toISOString();
+    const endDateStr = new Date(now.getTime() + 86400000).toISOString(); // Add one day
     
-    // Refresh data at midnight
-    const intervalId = setInterval(() => {
-      const now = new Date();
-      if (now.getHours() === 0 && now.getMinutes() === 0) {
-        refreshEventData();
+    // Fetch events on component mount
+    const fetchEvents = async () => {
+      try {
+        setLoading(true);
+        // Mock API call - replace with actual API call
+        const response = await fetch('/api/events');
+        const data = await response.json();
+        setEvents(data);
+        
+        // Categorize events
+        const now = new Date();
+        const current = data.find((event: Event) => {
+          const start = new Date(event.startDate);
+          const end = new Date(event.endDate);
+          return start <= now && end >= now;
+        }) || null;
+        
+        const upcoming = data.filter((event: Event) => {
+          return new Date(event.startDate) > now;
+        });
+        
+        const past = data.filter((event: Event) => {
+          return new Date(event.endDate) < now;
+        });
+        
+        setCurrentEvent(current);
+        setUpcomingEvents(upcoming);
+        setPastEvents(past);
+      } catch (err) {
+        setError('Failed to fetch events');
+        console.error(err);
+      } finally {
+        setLoading(false);
       }
-    }, 60000); // Check every minute
+    };
     
-    return () => clearInterval(intervalId);
+    fetchEvents();
   }, []);
+
+  const createEvent = async (event: Omit<Event, 'id'>): Promise<Event> => {
+    try {
+      setLoading(true);
+      // Mock API call - replace with actual API call
+      const response = await fetch('/api/events', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(event),
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to create event');
+      }
+      
+      const newEvent = await response.json();
+      setEvents(prev => [...prev, newEvent]);
+      
+      // Update categorized events
+      const now = new Date();
+      if (new Date(newEvent.startDate) <= now && new Date(newEvent.endDate) >= now) {
+        setCurrentEvent(newEvent);
+      } else if (new Date(newEvent.startDate) > now) {
+        setUpcomingEvents(prev => [...prev, newEvent]);
+      }
+      
+      return newEvent;
+    } catch (err) {
+      setError('Failed to create event');
+      console.error(err);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const updateEvent = async (id: string, eventUpdate: Partial<Event>): Promise<Event> => {
+    try {
+      setLoading(true);
+      // Mock API call - replace with actual API call
+      const response = await fetch(`/api/events/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(eventUpdate),
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to update event');
+      }
+      
+      const updatedEvent = await response.json();
+      
+      // Update events state
+      setEvents(prev => prev.map(event => event.id === id ? updatedEvent : event));
+      
+      // Update categorized events
+      const now = new Date();
+      if (new Date(updatedEvent.startDate) <= now && new Date(updatedEvent.endDate) >= now) {
+        setCurrentEvent(updatedEvent);
+        setUpcomingEvents(prev => prev.filter(event => event.id !== id));
+        setPastEvents(prev => prev.filter(event => event.id !== id));
+      } else if (new Date(updatedEvent.startDate) > now) {
+        if (currentEvent?.id === id) setCurrentEvent(null);
+        setUpcomingEvents(prev => {
+          const exists = prev.some(event => event.id === id);
+          if (exists) {
+            return prev.map(event => event.id === id ? updatedEvent : event);
+          } else {
+            return [...prev, updatedEvent];
+          }
+        });
+        setPastEvents(prev => prev.filter(event => event.id !== id));
+      } else {
+        if (currentEvent?.id === id) setCurrentEvent(null);
+        setPastEvents(prev => {
+          const exists = prev.some(event => event.id === id);
+          if (exists) {
+            return prev.map(event => event.id === id ? updatedEvent : event);
+          } else {
+            return [...prev, updatedEvent];
+          }
+        });
+        setUpcomingEvents(prev => prev.filter(event => event.id !== id));
+      }
+      
+      return updatedEvent;
+    } catch (err) {
+      setError('Failed to update event');
+      console.error(err);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const deleteEvent = async (id: string): Promise<boolean> => {
+    try {
+      setLoading(true);
+      // Mock API call - replace with actual API call
+      const response = await fetch(`/api/events/${id}`, {
+        method: 'DELETE',
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to delete event');
+      }
+      
+      // Update events state
+      setEvents(prev => prev.filter(event => event.id !== id));
+      
+      // Update categorized events
+      if (currentEvent?.id === id) setCurrentEvent(null);
+      setUpcomingEvents(prev => prev.filter(event => event.id !== id));
+      setPastEvents(prev => prev.filter(event => event.id !== id));
+      
+      return true;
+    } catch (err) {
+      setError('Failed to delete event');
+      console.error(err);
+      return false;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getEventById = (id: string): Event | null => {
+    return events.find(event => event.id === id) || null;
+  };
+
+  const registerForEvent = async (eventId: string, userId: string): Promise<boolean> => {
+    try {
+      setLoading(true);
+      // Mock API call - replace with actual API call
+      const response = await fetch(`/api/events/${eventId}/register`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ userId }),
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to register for event');
+      }
+      
+      // Update event with new participant
+      const updatedEvent = await response.json();
+      setEvents(prev => prev.map(event => event.id === eventId ? updatedEvent : event));
+      
+      // Update categorized events
+      const now = new Date();
+      if (new Date(updatedEvent.startDate) <= now && new Date(updatedEvent.endDate) >= now) {
+        setCurrentEvent(updatedEvent);
+      } else if (new Date(updatedEvent.startDate) > now) {
+        setUpcomingEvents(prev => prev.map(event => event.id === eventId ? updatedEvent : event));
+      } else {
+        setPastEvents(prev => prev.map(event => event.id === eventId ? updatedEvent : event));
+      }
+      
+      return true;
+    } catch (err) {
+      setError('Failed to register for event');
+      console.error(err);
+      return false;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const unregisterFromEvent = async (eventId: string, userId: string): Promise<boolean> => {
+    try {
+      setLoading(true);
+      // Mock API call - replace with actual API call
+      const response = await fetch(`/api/events/${eventId}/unregister`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ userId }),
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to unregister from event');
+      }
+      
+      // Update event with removed participant
+      const updatedEvent = await response.json();
+      setEvents(prev => prev.map(event => event.id === eventId ? updatedEvent : event));
+      
+      // Update categorized events
+      const now = new Date();
+      if (new Date(updatedEvent.startDate) <= now && new Date(updatedEvent.endDate) >= now) {
+        setCurrentEvent(updatedEvent);
+      } else if (new Date(updatedEvent.startDate) > now) {
+        setUpcomingEvents(prev => prev.map(event => event.id === eventId ? updatedEvent : event));
+      } else {
+        setPastEvents(prev => prev.map(event => event.id === eventId ? updatedEvent : event));
+      }
+      
+      return true;
+    } catch (err) {
+      setError('Failed to unregister from event');
+      console.error(err);
+      return false;
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <EventContext.Provider
       value={{
-        currentDiscountedAction,
-        discountPercentage,
-        isFireSaleActive,
-        fireSaleDiscount,
-        fireSaleFeaturedCategories,
-        daysUntilNextMonday,
-        daysRemainingInFireSale,
-        nextMondayDate,
-        refreshEventData,
-        joinEvent,
-        hasJoinedEvent
+        events,
+        currentEvent,
+        upcomingEvents,
+        pastEvents,
+        loading,
+        error,
+        startDate,
+        endDate,
+        setStartDate,
+        setEndDate,
+        createEvent,
+        updateEvent,
+        deleteEvent,
+        getEventById,
+        registerForEvent,
+        unregisterFromEvent,
       }}
     >
       {children}
@@ -123,12 +331,10 @@ export const EventProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   );
 };
 
-export const useEventContext = () => {
+export const useEvents = () => {
   const context = useContext(EventContext);
-  
-  if (context === undefined) {
-    throw new Error('useEventContext must be used within an EventProvider');
+  if (!context) {
+    throw new Error('useEvents must be used within an EventProvider');
   }
-  
   return context;
 };

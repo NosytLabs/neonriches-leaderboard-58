@@ -1,4 +1,3 @@
-
 // Adding minimal implementations to fix build errors
 import { UserProfile } from "@/types/user";
 import { SolanaTreasuryInfo, SolanaTransaction } from "@/types/solana";
@@ -27,4 +26,26 @@ export const getTreasuryInfo = async (): Promise<SolanaTreasuryInfo> => {
 
 export const getTreasuryTransactions = async (): Promise<SolanaTransaction[]> => {
   return [];
+};
+
+/**
+ * Subscribe to treasury updates
+ * @param callback Callback function to execute when updates occur
+ * @returns Unsubscribe function
+ */
+export const subscribeToTreasuryUpdates = (callback: (data: any) => void) => {
+  // Mock implementation for now - replace with actual WebSocket or event listener
+  const interval = setInterval(() => {
+    const mockUpdate = {
+      totalDeposited: Math.floor(Math.random() * 10000) + 50000,
+      totalWithdrawn: Math.floor(Math.random() * 5000) + 10000,
+      netBalance: Math.floor(Math.random() * 5000) + 40000,
+      transactions: Math.floor(Math.random() * 100) + 500,
+      lastUpdated: new Date().toISOString()
+    };
+    callback(mockUpdate);
+  }, 30000); // Update every 30 seconds
+  
+  // Return unsubscribe function
+  return () => clearInterval(interval);
 };

@@ -1,7 +1,6 @@
-
 export type MockeryTier = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
-export type MockeryAction = 'tomatoes' | 'eggs' | 'stocks' | 'silence' | 'courtJester';
-export type ExtendedMockeryAction = MockeryAction | 'protected' | 'immune' | 'jester' | 'dunce' | 'roast' | 'ridicule' | 'taunt' | 'drama';
+export type MockeryAction = 'tomatoes' | 'eggs' | 'stocks' | 'silence' | 'courtJester' | 'jester' | 'protected' | 'immune' | 'dunce' | 'roast' | 'ridicule' | 'taunt' | 'drama';
+export type ExtendedMockeryAction = MockeryAction;
 
 export const getMockeryActionIcon = (action: ExtendedMockeryAction): string => {
   switch (action) {
@@ -96,7 +95,6 @@ export const getMockeryTierLabel = (tier: MockeryTier): string => {
   }
 };
 
-// Additional helper functions needed based on errors
 export const getMockeryActionTitle = (action: MockeryAction): string => {
   switch (action) {
     case 'tomatoes': return 'Throw Tomatoes';
@@ -104,6 +102,14 @@ export const getMockeryActionTitle = (action: MockeryAction): string => {
     case 'stocks': return 'Put in Stocks';
     case 'silence': return 'Royal Silence';
     case 'courtJester': return 'Court Jester';
+    case 'jester': return 'Make a Jester';
+    case 'protected': return 'Protected';
+    case 'immune': return 'Immunity';
+    case 'dunce': return 'Dunce Cap';
+    case 'roast': return 'Royal Roast';
+    case 'ridicule': return 'Public Ridicule';
+    case 'taunt': return 'Royal Taunt';
+    case 'drama': return 'Create Drama';
     default: return 'Unknown Mockery';
   }
 };
@@ -115,6 +121,14 @@ export const getMockeryActionDescription = (action: MockeryAction): string => {
     case 'stocks': return 'Place this user in virtual stocks for public ridicule';
     case 'silence': return 'Temporarily silence this user in public chats';
     case 'courtJester': return 'Make this user the court jester for a day';
+    case 'jester': return 'Make this user a jester for everyone to laugh at';
+    case 'protected': return 'This user is protected from mockery';
+    case 'immune': return 'This user has royal immunity from mockery';
+    case 'dunce': return 'Make this user wear a dunce cap';
+    case 'roast': return 'Publicly roast this user in the royal court';
+    case 'ridicule': return 'Subject this user to public ridicule';
+    case 'taunt': return 'Taunt this user with royal privileges';
+    case 'drama': return 'Create drama involving this user in the royal court';
     default: return 'Apply a mockery effect to this user';
   }
 };
@@ -126,12 +140,19 @@ export const getMockeryActionPrice = (action: MockeryAction): number => {
     case 'stocks': return 2;
     case 'silence': return 5;
     case 'courtJester': return 10;
+    case 'jester': return 8;
+    case 'protected': return 15;
+    case 'immune': return 25;
+    case 'dunce': return 3;
+    case 'roast': return 7;
+    case 'ridicule': return 4;
+    case 'taunt': return 6;
+    case 'drama': return 9;
     default: return 1;
   }
 };
 
 export const hasWeeklyDiscount = (action: MockeryAction): boolean => {
-  // Sample implementation, replace with actual logic
   return ['tomatoes', 'eggs'].includes(action);
 };
 

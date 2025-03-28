@@ -55,6 +55,14 @@ export interface MedievalIconProps {
   animate?: boolean;
 }
 
+// Base decoration props that include animate property
+export interface BaseDecorationProps {
+  size?: MedievalDecorationSize;
+  color?: MedievalDecorationColor;
+  className?: string;
+  animate?: boolean;
+}
+
 // Mapping sizes to CSS classes for consistent sizing
 export const MEDIEVAL_ICON_SIZES: Record<MedievalIconSize, { container: string; icon: MedievalIconSize; border: string; }> = {
   'xs': {
@@ -127,20 +135,15 @@ export const MEDIEVAL_ICON_BG_COLORS: Record<MedievalIconColor, string> = {
 
 // Helper functions for using medieval decorations
 export type MedievalDecorationType = 'top' | 'bottom' | 'left' | 'right' | 'corner' | 'center';
-export type MedievalDecorationSize = 'sm' | 'md' | 'lg' | 'xl';
+export type MedievalDecorationSize = 'sm' | 'md' | 'lg' | 'xl' | '2xl'; // Added '2xl'
 export type MedievalDecorationColor = MedievalIconColor;
-
-export interface BaseDecorationProps {
-  size?: MedievalDecorationSize;
-  color?: MedievalDecorationColor;
-  className?: string;
-}
 
 export const sizeClasses: Record<MedievalDecorationSize, string> = {
   'sm': 'w-16 h-16',
   'md': 'w-24 h-24',
   'lg': 'w-32 h-32',
-  'xl': 'w-48 h-48'
+  'xl': 'w-48 h-48',
+  '2xl': 'w-64 h-64' // Added 2xl
 };
 
 export const getColorClass = (color: MedievalDecorationColor = 'gold'): string => {

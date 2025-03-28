@@ -7,14 +7,14 @@ export type MedievalIconName =
   'castle' | 'dragon' | 'goblet' | 'potion' | 'map' | 
   'key' | 'wallet' | 'medal' | 'heart' | 'trophy' | 
   'seal' | 'sparkles' | 'flame' | 'sunburst' | 'water' |
-  'user' | 'message';
+  'user' | 'message' | 'gem'; // Added 'gem'
 
 export type MedievalIconSize = 
-  'sm' | 'md' | 'lg' | 'xl' | '2xl';
+  'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl'; // Added 'xs'
 
 export type MedievalIconColor = 
   'gold' | 'silver' | 'purple' | 'red' | 'blue' | 'green' | 
-  'amber' | 'crimson' | 'navy' | 'copper' | 'emerald' | 'default' | 'white';
+  'amber' | 'crimson' | 'navy' | 'copper' | 'emerald' | 'default' | 'white' | 'bronze'; // Added 'bronze'
 
 export interface MedievalIconProps {
   name: MedievalIconName;
