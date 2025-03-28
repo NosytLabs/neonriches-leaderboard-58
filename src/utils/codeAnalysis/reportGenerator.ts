@@ -41,8 +41,9 @@ export const generateAnalysisReport = (analysis: AnalysisResult): string => {
   
   if (analysis.complexCode.length > 0) {
     report += '## Complex Code\n\n';
-    analysis.complexCode.forEach(({file, function: funcName, complexity, line}) => {
-      report += `- ${file}:${line} - \`${funcName}\` (complexity: ${complexity})\n`;
+    analysis.complexCode.forEach((item) => {
+      const funcName = item.function || item.name || 'Unknown function';
+      report += `- ${item.file}:${item.line || 0} - \`${funcName}\` (complexity: ${item.complexity})\n`;
     });
     report += '\n';
   }
@@ -50,7 +51,8 @@ export const generateAnalysisReport = (analysis: AnalysisResult): string => {
   if (analysis.duplicateCode.length > 0) {
     report += '## Duplicate Code\n\n';
     analysis.duplicateCode.forEach(({files, similarity, lines}) => {
-      report += `- Similar code found in: ${files.join(', ')} (${Math.round(similarity * 100)}% similar, ${lines} lines)\n`;
+      const fileList = files.map(f => f.path).join(', ');
+      report += `- Similar code found in: ${fileList} (${Math.round(similarity * 100)}% similar, ${lines || files.length * 5} lines)\n`;
     });
     report += '\n';
   }

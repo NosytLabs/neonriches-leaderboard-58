@@ -13,6 +13,7 @@ export interface ComplexityItem {
   explanation?: string;
   status?: string;
   path?: string;
+  function?: string;
   functions?: { name: string; complexity: number; status: string; }[];
 }
 
@@ -25,7 +26,6 @@ export interface DuplicateCode {
   lines?: number;
 }
 
-// Add definition for ComplexCode
 export interface ComplexCode {
   id: string;
   name: string;
@@ -35,7 +35,7 @@ export interface ComplexCode {
   parameters: number;
   nestedLevel: number;
   issues: string[];
-  function: string; // This is the missing property
+  function: string;
   path?: string;
 }
 
@@ -67,7 +67,7 @@ export interface AnalysisResult {
   securityIssues: any[];
   bestPracticeViolations: any[];
   codeSmells: any[];
-  // Add missing properties for CodeAnalysis pages
+  // Add missing properties
   deadCodePaths: any[];
   duplicateCode: DuplicateCode[];
   complexCode: ComplexityItem[];

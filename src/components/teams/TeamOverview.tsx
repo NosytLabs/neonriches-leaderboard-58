@@ -1,17 +1,20 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Users, Award, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { UserProfile } from '@/contexts/AuthContext';
 import { Badge } from '@/components/ui/badge';
-import TeamSwitchModal from '@/components/profile/TeamSwitchModal';
+import TeamSwitchModal, { TeamColor } from '@/components/profile/TeamSwitchModal';
+import { useAuth } from '@/contexts/auth';
 
 interface TeamOverviewProps {
   user: UserProfile;
 }
 
 const TeamOverview: React.FC<TeamOverviewProps> = ({ user }) => {
+  const { updateUserProfile } = useAuth();
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const userTeam = user?.team || 'none';
   
   // Define team colors
@@ -28,6 +31,16 @@ const TeamOverview: React.FC<TeamOverviewProps> = ({ user }) => {
     green: 'Team Emerald',
     blue: 'Team Sapphire',
     none: 'No Team'
+  };
+
+  const handleTeamChange = async (team: TeamColor) => {
+    try {
+      await updateUserProfile({ team });
+      return true;
+    } catch (error) {
+      console.error("Error updating team:", error);
+      return false;
+    }
   };
   
   return (
@@ -68,15 +81,19 @@ const TeamOverview: React.FC<TeamOverviewProps> = ({ user }) => {
             </ul>
           </div>
           
+          <Button 
+            variant="outline" 
+            className="w-full glass-morphism border-purple-400/20 hover:bg-purple-400/10"
+            onClick={() => setIsModalOpen(true)}
+          >
+            Change Team
+          </Button>
+          
           <TeamSwitchModal 
-            trigger={
-              <Button 
-                variant="outline" 
-                className="w-full glass-morphism border-purple-400/20 hover:bg-purple-400/10"
-              >
-                Change Team
-              </Button>
-            }
+            open={isModalOpen}
+            onOpenChange={setIsModalOpen}
+            user={user}
+            onTeamChange={handleTeamChange}
           />
         </div>
       </CardContent>

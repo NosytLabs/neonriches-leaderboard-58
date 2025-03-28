@@ -113,7 +113,7 @@ const CodeAnalysis: React.FC = () => {
             <UnusedDependenciesSection unusedDependencies={analysisResult.unusedDependencies} />
             <DeadCodePathsSection deadCodePaths={analysisResult.deadCodePaths} />
             <DuplicateCodeSection duplicateCode={analysisResult.duplicateCode} />
-            <ComplexCodeSection complexCode={analysisResult.complexCode} />
+            <ComplexCodeSection complexCode={analysisResult.complexCode as any} />
           </AnalysisLayout>
         </TabsContent>
         

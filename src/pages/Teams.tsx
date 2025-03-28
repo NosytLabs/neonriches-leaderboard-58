@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -8,9 +9,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
 import Loading from '@/components/Loading';
+import { TeamColor } from '@/types/teams';
 
 const Teams = () => {
-  const { user, isLoading } = useAuth();
+  const { user, isLoading, updateUserProfile } = useAuth();
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState(user?.team ? 'overview' : 'selection');
   
@@ -22,12 +24,24 @@ const Teams = () => {
     }
   }, [user?.team]);
   
-  const handleTeamSelect = (team: 'red' | 'green' | 'blue') => {
-    toast({
-      title: "Team Joined!",
-      description: `You've successfully joined Team ${team.charAt(0).toUpperCase() + team.slice(1)}!`,
-    });
-    setActiveTab('overview');
+  const handleTeamSelect = async (team: TeamColor) => {
+    try {
+      await updateUserProfile({ team });
+      toast({
+        title: "Team Joined!",
+        description: `You've successfully joined Team ${team.charAt(0).toUpperCase() + team.slice(1)}!`,
+      });
+      setActiveTab('overview');
+      return true;
+    } catch (error) {
+      console.error("Error updating team:", error);
+      toast({
+        title: "Failed to join team",
+        description: "There was an error joining the team. Please try again.",
+        variant: "destructive"
+      });
+      return false;
+    }
   };
   
   if (isLoading) {
@@ -63,7 +77,7 @@ const Teams = () => {
                 </TabsContent>
                 
                 <TabsContent value="selection">
-                  <TeamSelection onTeamSelect={(team) => handleTeamSelect(team)} />
+                  <TeamSelection onTeamSelect={handleTeamSelect} />
                 </TabsContent>
                 
                 <TabsContent value="leaderboard">
