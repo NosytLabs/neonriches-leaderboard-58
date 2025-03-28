@@ -1,9 +1,10 @@
 
-import { Theater, Egg, AlertCircle, UserRound, Music, Meh } from 'lucide-react';
+import { Theater, Egg, AlertCircle, Meh, Music } from 'lucide-react';
 import { ExtendedMockeryAction, MockeryAction, MockeryActionColor, MockeryTier } from '@/types/mockery';
+import React from 'react';
 
-// Export these functions to be used by other components
-export { ExtendedMockeryAction };
+// Export ExtendedMockeryAction type
+export type { ExtendedMockeryAction };
 
 // Get icon for mockery action
 export const getMockeryActionIcon = (action: ExtendedMockeryAction): React.ReactNode => {
