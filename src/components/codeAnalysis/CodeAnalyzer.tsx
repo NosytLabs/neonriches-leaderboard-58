@@ -5,15 +5,18 @@ import UnusedCodeReport from './UnusedCodeReport';
 import DuplicateCodeReport from './DuplicateCodeReport';
 import ComplexityReport from './ComplexityReport';
 import PerformanceReport from './PerformanceReport';
+import CodeAnalysisReport from './CodeAnalysisReport';
 import { Button } from '@/components/ui/button';
 import { AlertCircle, Code, FileSearch } from 'lucide-react';
+import { AnalysisResult, scanCodebase } from '@/utils/codeAnalysis/analysisUtils';
 
-type AnalysisTab = 'unused' | 'duplicate' | 'complexity' | 'performance';
+type AnalysisTab = 'unused' | 'duplicate' | 'complexity' | 'performance' | 'overview';
 
 const CodeAnalyzer: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<AnalysisTab>('unused');
+  const [activeTab, setActiveTab] = useState<AnalysisTab>('overview');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisComplete, setAnalysisComplete] = useState(false);
+  const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
   const [settings, setSettings] = useState({
     includeNodeModules: false,
     includeTests: true,
@@ -36,14 +39,56 @@ const CodeAnalyzer: React.FC = () => {
     }));
   };
 
-  const handleStartAnalysis = () => {
+  const handleStartAnalysis = async () => {
     setIsAnalyzing(true);
     
-    // Simulate analysis process
-    setTimeout(() => {
+    try {
+      // In a real application, we would call the actual analysis function
+      // For now, we'll simulate it with a timeout and mock data
+      setTimeout(() => {
+        const mockResult: AnalysisResult = {
+          unusedFiles: [
+            'src/components/legacy/OldComponent.tsx',
+            'src/utils/deprecated/helperFunctions.ts'
+          ],
+          unusedFunctions: [
+            { file: 'src/utils/helpers.ts', name: 'formatLegacyDate', line: 42 },
+            { file: 'src/components/common/Button.tsx', name: 'handleLegacyClick', line: 67 }
+          ],
+          unusedImports: [
+            { file: 'src/components/Dashboard.tsx', name: 'useState', line: 3 },
+            { file: 'src/utils/api.ts', name: 'axios', line: 1 }
+          ],
+          unusedVariables: [
+            { file: 'src/context/AuthContext.tsx', name: 'loading', line: 12 },
+            { file: 'src/hooks/useData.ts', name: 'error', line: 8 }
+          ],
+          unusedCssSelectors: [
+            { file: 'src/styles/main.css', selector: 'legacy-button', line: 156 },
+            { file: 'src/styles/components.css', selector: 'unused-container', line: 78 }
+          ],
+          deadCodePaths: [
+            { file: 'src/utils/api.ts', description: 'Unreachable code after return statement', line: 45 },
+            { file: 'src/components/User.tsx', description: 'Condition always evaluates to false', line: 92 }
+          ],
+          duplicateCode: [
+            { files: ['src/utils/formatters.ts', 'src/utils/helpers.ts'], similarity: 0.95, lines: 12 },
+            { files: ['src/components/Button.tsx', 'src/components/IconButton.tsx'], similarity: 0.85, lines: 8 }
+          ],
+          complexCode: [
+            { file: 'src/utils/dataProcessing.ts', function: 'transformData', complexity: 15, line: 37 },
+            { file: 'src/components/Table.tsx', function: 'renderRows', complexity: 12, line: 124 }
+          ]
+        };
+        
+        setAnalysisResult(mockResult);
+        setIsAnalyzing(false);
+        setAnalysisComplete(true);
+      }, 2000);
+    } catch (error) {
+      console.error('Error during analysis:', error);
       setIsAnalyzing(false);
-      setAnalysisComplete(true);
-    }, 2000);
+    }
   };
 
   return (
@@ -73,11 +118,17 @@ const CodeAnalyzer: React.FC = () => {
         </div>
       </div>
       
-      {analysisComplete && (
+      {analysisComplete && analysisResult && (
         <div className="space-y-6">
           <div className="analysis-card rounded-md overflow-hidden glass-morphism border-white/10">
             <div className="p-4 border-b border-white/10 flex">
-              <nav className="flex space-x-4">
+              <nav className="flex flex-wrap gap-2">
+                <button
+                  onClick={() => setActiveTab('overview')}
+                  className={`px-3 py-1.5 rounded-md text-sm font-medium ${activeTab === 'overview' ? 'bg-royal-gold/10 text-royal-gold' : 'text-white/70 hover:text-white/90'}`}
+                >
+                  Overview
+                </button>
                 <button
                   onClick={() => setActiveTab('unused')}
                   className={`px-3 py-1.5 rounded-md text-sm font-medium ${activeTab === 'unused' ? 'bg-royal-gold/10 text-royal-gold' : 'text-white/70 hover:text-white/90'}`}
@@ -106,6 +157,7 @@ const CodeAnalyzer: React.FC = () => {
             </div>
             
             <div className="p-6">
+              {activeTab === 'overview' && <CodeAnalysisReport analysis={analysisResult} />}
               {activeTab === 'unused' && <UnusedCodeReport />}
               {activeTab === 'duplicate' && <DuplicateCodeReport />}
               {activeTab === 'complexity' && <ComplexityReport />}
