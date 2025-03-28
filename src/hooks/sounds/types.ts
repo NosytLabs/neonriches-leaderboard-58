@@ -15,7 +15,13 @@ export type SoundType =
   | 'wish'
   | 'advertisement'
   | 'levelUp'
-  | 'shame';
+  | 'shame'
+  | 'swordClash'
+  | 'pageChange'
+  | 'trumpet'
+  | 'medallion'
+  | 'noblesLaugh'
+  | 'inkScribble';
 
 export interface SoundAsset {
   src: string;
@@ -42,11 +48,13 @@ export interface Sound {
 }
 
 export interface PremiumSoundPack {
+  id: string;
   name: string;
   description: string;
   price: number;
-  sounds: Record<SoundType, string>;
+  sounds: SoundType[];
   isPurchased?: boolean;
+  previewSound?: SoundType;
 }
 
 export interface PremiumSoundPackDetails {
@@ -56,14 +64,16 @@ export interface PremiumSoundPackDetails {
   price: number;
   preview?: string;
   features: string[];
-  sounds?: Record<SoundType, string>;
+  sounds?: SoundType[];
   isPurchased?: boolean;
-  previewSound?: string;
+  previewSound?: SoundType;
 }
 
 export interface AudioLoaderReturn {
-  loadedSounds: Record<SoundType, HTMLAudioElement | null>;
+  loadedSounds: Record<string, HTMLAudioElement | null>;
   isLoading: boolean;
-  loadSound: (type: SoundType) => Promise<HTMLAudioElement | null>;
-  playSound: (type: SoundType, options?: SoundOptions) => void;
+  error?: Error | null;
+  audioElements?: Record<string, HTMLAudioElement>;
+  loadSound?: (type: SoundType) => Promise<HTMLAudioElement | null>;
+  playSound: (type: SoundType, volumeMultiplier?: number) => void;
 }

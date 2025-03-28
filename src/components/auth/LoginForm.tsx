@@ -5,13 +5,10 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
-import { useNotificationSounds } from '@/hooks/use-notification-sounds';
+import useNotificationSounds from '@/hooks/use-notification-sounds';
+import { LoginFormProps } from './types';
 
-export interface LoginFormProps {
-  onSwitchToRegister: () => void;
-}
-
-const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
+const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister, onSuccess }) => {
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [isLoading, setIsLoading] = React.useState(false);
@@ -35,6 +32,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
           description: "Welcome back to the royal courts!",
         });
         setIsLoading(false);
+        if (onSuccess) onSuccess();
       }, 1000);
     } catch (error) {
       console.error('Login error:', error);

@@ -1,6 +1,6 @@
 
 export type Team = 'red' | 'green' | 'blue' | null;
-export type UserTier = 'basic' | 'pro' | 'royal' | 'whale' | 'crab' | 'octopus' | 'fish' | 'dolphin' | 'shark';
+export type UserTier = 'basic' | 'pro' | 'royal' | 'whale' | 'crab' | 'octopus' | 'fish' | 'dolphin' | 'shark' | 'free';
 export type UserGender = 'king' | 'queen' | 'neutral' | 'jester' | 'noble';
 export type RoyalButtonVariant = 'royal' | 'royalGold' | 'royalCrimson' | 'royalNavy' | 'royalPurple' | 'outline' | 'glass' | 'goldOutline' | 'crimsonOutline' | 'navyOutline' | 'mahogany';
 export type RoyalDividerVariant = 'line' | 'ornate' | 'crown' | 'simple' | 'scroll' | 'quill' | 'treasure';
@@ -9,6 +9,7 @@ export interface ProfileImage {
   id: string;
   url: string;
   isPrimary: boolean;
+  caption?: string;
 }
 
 export interface SocialLink {
@@ -16,6 +17,7 @@ export interface SocialLink {
   platform: string;
   url: string;
   icon: string;
+  clicks?: number;
 }
 
 export interface UserCosmetics {
@@ -95,5 +97,20 @@ export interface UserProfile {
     emailNotifications: boolean;
     darkMode: boolean;
     soundEffects: boolean;
+    profileVisibility?: boolean;
+    allowProfileLinks?: boolean;
+    showEmailOnProfile?: boolean;
+    rankChangeAlerts?: boolean;
+    shameAlerts?: boolean;
+    newFollowerAlerts?: boolean;
+    notifications?: {
+      email: boolean;
+      push: boolean;
+      in_app: boolean;
+    };
   };
+}
+
+export interface ProfileLink extends SocialLink {
+  label: string;
 }

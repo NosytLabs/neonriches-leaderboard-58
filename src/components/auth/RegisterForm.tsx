@@ -5,13 +5,10 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
-import { useNotificationSounds } from '@/hooks/use-notification-sounds';
+import useNotificationSounds from '@/hooks/use-notification-sounds';
+import { RegisterFormProps } from './types';
 
-export interface RegisterFormProps {
-  onSwitchToLogin: () => void;
-}
-
-const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchToLogin }) => {
+const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchToLogin, onSuccess }) => {
   const [username, setUsername] = React.useState('');
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
@@ -36,7 +33,11 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchToLogin }) => {
           description: "Welcome to the royal courts!",
         });
         setIsLoading(false);
-        onSwitchToLogin(); // Switch back to login after successful registration
+        if (onSuccess) {
+          onSuccess();
+        } else if (onSwitchToLogin) {
+          onSwitchToLogin(); // Switch back to login after successful registration
+        }
       }, 1000);
     } catch (error) {
       console.error('Registration error:', error);
