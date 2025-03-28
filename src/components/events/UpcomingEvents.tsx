@@ -2,16 +2,22 @@
 import React from 'react';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Calendar, Bell, Info } from 'lucide-react';
+import { Calendar, Bell, Info, Eye } from 'lucide-react';
 import { upcomingEvents } from './data';
 import CountdownTimer from './CountdownTimer';
-import { toast } from '@/hooks/use-toast';
+import { useToast } from '@/hooks/use-toast';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { formatDate } from '@/utils/timeUtils';
 import RankingDisclaimer from '@/components/shared/RankingDisclaimer';
 import OptimizedImage from '@/components/ui/optimized-image';
 
-const UpcomingEvents = () => {
+interface UpcomingEventsProps {
+  onViewDetails?: (eventId: string) => void;
+}
+
+const UpcomingEvents: React.FC<UpcomingEventsProps> = ({ onViewDetails }) => {
+  const { toast } = useToast();
+
   const handleNotifyMe = (eventName: string) => {
     toast({
       title: "Notification Set",
@@ -54,7 +60,7 @@ const UpcomingEvents = () => {
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {upcomingEvents.map((event) => (
-            <Card key={event.id} className="glass-morphism border-white/10 overflow-hidden">
+            <Card key={event.id} className="glass-morphism border-white/10 overflow-hidden hover:border-white/20 transition-all duration-300">
               <div className="relative h-40">
                 <OptimizedImage 
                   src={event.image} 
@@ -95,14 +101,23 @@ const UpcomingEvents = () => {
                 </div>
               </CardContent>
               
-              <CardFooter className="pt-0">
+              <CardFooter className="pt-0 flex justify-between gap-2">
                 <Button 
                   variant="outline" 
-                  className="w-full glass-morphism border-white/10 text-white hover:bg-white/10"
+                  className="flex-1 glass-morphism border-white/10 text-white hover:bg-white/10"
                   onClick={() => handleNotifyMe(event.name)}
                 >
                   <Bell size={16} className="mr-2" />
                   Get Notified
+                </Button>
+                
+                <Button 
+                  variant="outline" 
+                  className="flex-1 glass-morphism border-royal-gold/20 text-royal-gold hover:bg-royal-gold/10"
+                  onClick={() => onViewDetails && onViewDetails(event.id)}
+                >
+                  <Eye size={16} className="mr-2" />
+                  View Details
                 </Button>
               </CardFooter>
             </Card>

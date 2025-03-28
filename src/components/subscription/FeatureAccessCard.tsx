@@ -26,7 +26,7 @@ const FeatureAccessCard: React.FC<FeatureAccessCardProps> = ({
 }) => {
   const { canAccessFeature, isLoading } = useFeatureAccess();
   const { toast } = useToast();
-  // Fix: Use canAccessFeature instead of hasAccess
+  // Use canAccessFeature instead of hasAccess
   const hasFeatureAccess = canAccessFeature(feature);
   
   const handleUpgrade = async () => {

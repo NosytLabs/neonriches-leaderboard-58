@@ -1,21 +1,30 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import DashboardLayout from '@/components/dashboard/DashboardLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Crown, Calendar, Trophy, Users, Flame, Clock, Lightbulb, Zap, ScrollText, Award, Star, Shield } from 'lucide-react';
+import { Crown, Calendar, Trophy, Users, Flame, Clock, Lightbulb, Zap, ScrollText, Award, Star, Shield, Map } from 'lucide-react';
 import CurrentEvent from '@/components/events/CurrentEvent';
 import UpcomingEvents from '@/components/events/UpcomingEvents';
 import PublicShamingFestival from '@/components/events/PublicShamingFestival';
+import TreasureHuntEvent from '@/components/events/TreasureHuntEvent';
 import EventStats from '@/components/events/EventStats';
 import EventBenefits from '@/components/events/EventBenefits';
 import ThroneBackground from '@/components/ui/throne-background';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import RoyalDivider from '@/components/ui/royal-divider';
+import { eventDetailsData } from '@/components/events/data';
+import EventDetailsModal from '@/components/events/components/EventDetailsModal';
 
 const Events = () => {
   const { user } = useAuth();
+  const [activeTab, setActiveTab] = useState("upcoming");
+  const [selectedEvent, setSelectedEvent] = useState<string | null>(null);
+
+  const handleViewEventDetails = (eventId: string) => {
+    setSelectedEvent(eventId);
+  };
 
   return (
     <DashboardLayout user={user}>
@@ -73,8 +82,8 @@ const Events = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <Tabs defaultValue="upcoming" className="w-full">
-                  <TabsList className="w-full bg-transparent grid grid-cols-3 glass-morphism border-white/10 mb-6">
+                <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+                  <TabsList className="w-full bg-transparent grid grid-cols-4 glass-morphism border-white/10 mb-6">
                     <TabsTrigger value="upcoming" className="data-[state=active]:bg-royal-gold/10 data-[state=active]:text-royal-gold">
                       <Clock className="h-4 w-4 mr-2" />
                       Upcoming
@@ -83,16 +92,23 @@ const Events = () => {
                       <Zap className="h-4 w-4 mr-2" />
                       Public Shaming
                     </TabsTrigger>
+                    <TabsTrigger value="treasure" className="data-[state=active]:bg-royal-purple/10 data-[state=active]:text-royal-purple">
+                      <Map className="h-4 w-4 mr-2" />
+                      Treasure Hunt
+                    </TabsTrigger>
                     <TabsTrigger value="ideas" className="data-[state=active]:bg-royal-navy/10 data-[state=active]:text-royal-navy">
                       <Lightbulb className="h-4 w-4 mr-2" />
                       Event Proposals
                     </TabsTrigger>
                   </TabsList>
                   <TabsContent value="upcoming" className="animate-fade-in">
-                    <UpcomingEvents />
+                    <UpcomingEvents onViewDetails={handleViewEventDetails} />
                   </TabsContent>
                   <TabsContent value="shame" className="animate-fade-in">
                     <PublicShamingFestival />
+                  </TabsContent>
+                  <TabsContent value="treasure" className="animate-fade-in">
+                    <TreasureHuntEvent />
                   </TabsContent>
                   <TabsContent value="ideas" className="animate-fade-in">
                     <div className="space-y-4">
@@ -167,9 +183,12 @@ const Events = () => {
                   </div>
                 </div>
                 
-                <Button className="royal-button-enhanced mt-6 w-full bg-gradient-to-r from-royal-crimson via-royal-gold to-royal-navy text-white">
-                  <Shield className="h-4 w-4 mr-2" />
-                  View Your Event Benefits
+                <Button 
+                  className="royal-button-enhanced mt-6 w-full bg-gradient-to-r from-royal-crimson via-royal-gold to-royal-navy text-white"
+                  onClick={() => setActiveTab("treasure")}
+                >
+                  <Map className="h-4 w-4 mr-2" />
+                  Join Treasure Hunt
                 </Button>
               </CardContent>
             </Card>
@@ -180,29 +199,32 @@ const Events = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10 animate-parchment-unfurl" style={{animationDelay: '0.5s'}}>
             {[
               {
+                id: "public-shaming",
                 title: "Public Shaming Festival",
                 description: "Pay to drop other users down in rank temporarily",
                 icon: <Zap className="h-6 w-6 text-royal-crimson" />,
-                day: "Monday",
+                day: "First Monday of Every Month",
                 color: "royal-crimson"
               },
               {
-                title: "Royal Tournament",
-                description: "Compete against other nobles for glory and rewards",
-                icon: <Trophy className="h-6 w-6 text-royal-gold" />,
-                day: "Wednesday",
+                id: "treasure-hunt",
+                title: "Royal Treasure Hunt",
+                description: "Solve riddles to find hidden treasures throughout the site",
+                icon: <Map className="h-6 w-6 text-royal-gold" />,
+                day: "Every Second Week",
                 color: "royal-gold"
               },
               {
+                id: "team-conquest",
                 title: "Team Conquest",
                 description: "Join forces with your team to dominate the leaderboard",
                 icon: <Shield className="h-6 w-6 text-royal-navy" />,
-                day: "Saturday",
+                day: "Last Week of Every Month",
                 color: "royal-navy"
               }
-            ].map((event, index) => (
+            ].map((event) => (
               <div 
-                key={index} 
+                key={event.id} 
                 className="glass-card-royal group hover:transform hover:scale-105 transition-all duration-300"
               >
                 <div className={`flex items-center justify-center w-12 h-12 rounded-full bg-${event.color}/20 mb-4 mx-auto`}>
@@ -212,10 +234,14 @@ const Events = () => {
                 <p className="text-white/70 text-center text-sm mb-4">{event.description}</p>
                 <div className="flex items-center justify-center gap-2 text-white/50 text-sm">
                   <Calendar className="h-4 w-4" />
-                  <span>Every {event.day}</span>
+                  <span>{event.day}</span>
                 </div>
                 <div className="mt-4 text-center">
-                  <Button variant="outline" className="royal-button border-white/20 text-white/90">
+                  <Button 
+                    variant="outline" 
+                    className="royal-button border-white/20 text-white/90"
+                    onClick={() => handleViewEventDetails(event.id)}
+                  >
                     Learn More
                   </Button>
                 </div>
@@ -224,6 +250,15 @@ const Events = () => {
           </div>
         </div>
       </div>
+      
+      {/* Event details modal */}
+      <EventDetailsModal 
+        event={selectedEvent ? eventDetailsData[selectedEvent] : null}
+        open={!!selectedEvent}
+        onOpenChange={(open) => {
+          if (!open) setSelectedEvent(null);
+        }}
+      />
     </DashboardLayout>
   );
 };

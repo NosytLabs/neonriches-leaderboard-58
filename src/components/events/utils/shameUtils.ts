@@ -1,71 +1,90 @@
 
 import { ShameAction } from '../hooks/useShameEffect';
 
-export const getShameActionPrice = (action: ShameAction): number => {
-  switch (action) {
-    case 'tomatoes': return 0.5;
-    case 'eggs': return 1.0;
-    case 'stocks': return 2.0;
-    default: return 0.5;
-  }
-};
-
-export const getShameActionTitle = (action: ShameAction): string => {
-  switch (action) {
-    case 'tomatoes': return 'Throw Tomatoes';
-    case 'eggs': return 'Throw Rotten Eggs';
-    case 'stocks': return 'Place in Stocks';
-    default: return 'Public Shaming';
-  }
-};
-
-export const getShameActionDescription = (action: ShameAction, username: string = 'noble'): string => {
-  switch (action) {
-    case 'tomatoes':
-      return `Pelt ${username} with rotten tomatoes for all to see. A classic form of medieval public ridicule.`;
-    case 'eggs':
-      return `Hurl rotten eggs at ${username}, covering them in putrid yolk. The stench will follow them for a day.`;
-    case 'stocks':
-      return `Place ${username} in the public stocks for a day. The ultimate medieval humiliation.`;
-    default:
-      return `Publicly shame ${username} for all the kingdom to see.`;
-  }
-};
-
+// Get shame action icon
 export const getShameActionIcon = (action: ShameAction): string => {
   switch (action) {
     case 'tomatoes': return '🍅';
     case 'eggs': return '🥚';
     case 'stocks': return '🪵';
-    default: return '📜';
+    default: return '⚠️';
   }
 };
 
-export const getShameActionColor = (action: ShameAction): { border: string, bg: string, text: string } => {
+// Get shame action title
+export const getShameActionTitle = (action: ShameAction): string => {
+  switch (action) {
+    case 'tomatoes': return 'Tomato Pelting';
+    case 'eggs': return 'Rotten Egg Barrage';
+    case 'stocks': return 'Public Stocks Sentence';
+    default: return 'Public Shaming';
+  }
+};
+
+// Get shame action description
+export const getShameActionDescription = (action: ShameAction, username: string): string => {
+  switch (action) {
+    case 'tomatoes':
+      return `You've pelted ${username} with rotten tomatoes! Their public profile will bear this shame for 24 hours.`;
+    case 'eggs':
+      return `You've hurled rotten eggs at ${username}! The stench will follow them on the leaderboard for a full day.`;
+    case 'stocks':
+      return `You've placed ${username} in the public stocks! All nobles will see them humiliated for 24 hours.`;
+    default:
+      return `You've publicly shamed ${username}!`;
+  }
+};
+
+// Get shame action price
+export const getShameActionPrice = (action: ShameAction): number => {
+  switch (action) {
+    case 'tomatoes': return 0.25;
+    case 'eggs': return 0.50;
+    case 'stocks': return 1.00;
+    default: return 0.25;
+  }
+};
+
+// Get shame action colors
+export const getShameActionColor = (action: ShameAction): {bg: string, border: string, text: string} => {
   switch (action) {
     case 'tomatoes':
       return {
-        border: 'border-royal-crimson/40',
-        bg: 'bg-royal-crimson/10',
-        text: 'text-royal-crimson'
+        bg: 'bg-red-500/10',
+        border: 'border-red-500/30',
+        text: 'text-red-500'
       };
     case 'eggs':
       return {
-        border: 'border-royal-gold/40',
-        bg: 'bg-royal-gold/10',
-        text: 'text-royal-gold'
+        bg: 'bg-yellow-500/10',
+        border: 'border-yellow-500/30',
+        text: 'text-yellow-500'
       };
     case 'stocks':
       return {
-        border: 'border-royal-purple/40',
-        bg: 'bg-royal-purple/10',
-        text: 'text-royal-purple'
+        bg: 'bg-amber-800/10',
+        border: 'border-amber-800/30',
+        text: 'text-amber-800'
       };
     default:
       return {
-        border: 'border-white/20',
-        bg: 'bg-white/5',
+        bg: 'bg-white/10',
+        border: 'border-white/30',
         text: 'text-white'
       };
   }
+};
+
+// Get discounted price for monthly festival
+export const getDiscountedShamePrice = (action: ShameAction): number => {
+  const regularPrice = getShameActionPrice(action);
+  // 25% discount during the festival
+  return regularPrice * 0.75;
+};
+
+// Check if the public shaming festival is active
+export const isPublicShamingFestivalActive = (): boolean => {
+  const now = new Date();
+  // Active on the first Monday of each month
+  return now.getDate() <= 7 && now.getDay() === 1;
 };

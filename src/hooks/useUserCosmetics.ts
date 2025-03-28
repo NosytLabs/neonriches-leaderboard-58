@@ -1,7 +1,7 @@
 
 import { UserProfile } from '@/types/user';
 import { CosmeticRarity } from '@/types/cosmetics';
-import { BoostEffectType } from '@/hooks/use-profile-boost';
+import { BoostEffectType, ProfileBoost } from '@/hooks/use-profile-boost';
 
 /**
  * Hook for handling user cosmetics operations
@@ -86,12 +86,12 @@ export const useUserCosmetics = (
       }
       
       // Create the boost object with required properties for ProfileBoost type
-      const newBoost = {
+      const newBoost: ProfileBoost = {
         id: boostId,
         effectId: effectId,
         startTime: currentTime,
         endTime: endTime,
-        type: 'visibility' as const,  // add missing properties
+        type: 'visibility',
         strength: level,
         appliedBy: user.id
       };

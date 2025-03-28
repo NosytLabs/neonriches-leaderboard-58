@@ -40,10 +40,10 @@ export const getTeamShadowColor = (team: string | null): string => {
 
 export const getTeamName = (team: string | null): string => {
   switch (team?.toLowerCase()) {
-    case 'red': return 'Crimson Court';
-    case 'green': return 'Golden Order';
-    case 'blue': return 'Royal Navy';
-    default: return 'Noble House';
+    case 'red': return 'House Crimson Dynasty';
+    case 'green': return 'Emerald Empire Collective';
+    case 'blue': return 'Sapphire Sovereign Alliance';
+    default: return 'Unaffiliated Noble';
   }
 };
 
@@ -51,8 +51,8 @@ export const getTeamName = (team: string | null): string => {
 export const teamData = {
   red: {
     id: 'red' as TeamColor,
-    name: 'Red Team',
-    description: 'The fiery warriors of the neon flame',
+    name: 'House Crimson Dynasty',
+    description: 'Masters of opulent displays and lavish investments',
     icon: '🔥',
     color: '#FF4560',
     bgColor: 'rgba(255, 69, 96, 0.2)',
@@ -61,8 +61,8 @@ export const teamData = {
   },
   green: {
     id: 'green' as TeamColor,
-    name: 'Green Team',
-    description: 'The electrifying force of the lime zap',
+    name: 'Emerald Empire Collective',
+    description: 'Architects of wealth and strategic spending',
     icon: '⚡',
     color: '#00E396',
     bgColor: 'rgba(0, 227, 150, 0.2)',
@@ -71,8 +71,8 @@ export const teamData = {
   },
   blue: {
     id: 'blue' as TeamColor,
-    name: 'Blue Team',
-    description: 'The mesmerizing flow of the cool pulse',
+    name: 'Sapphire Sovereign Alliance',
+    description: 'Nobility through calculated financial dominance',
     icon: '💧',
     color: '#008FFB',
     bgColor: 'rgba(0, 143, 251, 0.2)',
