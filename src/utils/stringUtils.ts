@@ -1,49 +1,73 @@
 
+import { UserProfile } from '@/types/user';
 import { CosmeticCategory } from '@/types/cosmetics';
 
-// Format category names for display
-export function formatCategoryName(category: CosmeticCategory): string {
-  const categoryMap: Record<CosmeticCategory, string> = {
-    border: 'Borders',
-    color: 'Colors',
-    font: 'Fonts',
-    emoji: 'Emojis',
-    background: 'Backgrounds',
-    effect: 'Effects',
-    title: 'Titles',
-    badge: 'Badges',
-    theme: 'Themes'
+// Function to format usernames with proper capitalization
+export const formatUsername = (username: string): string => {
+  if (!username) return '';
+  return username.charAt(0).toUpperCase() + username.slice(1);
+};
+
+// Function to generate a royal title based on user profile
+export const generateRoyalTitle = (user: UserProfile): string => {
+  const { gender, tier, rank } = user;
+  
+  let prefix = '';
+  
+  // Determine prefix based on gender
+  if (gender === 'king') prefix = 'His Majesty';
+  else if (gender === 'queen') prefix = 'Her Majesty';
+  else if (gender === 'neutral') prefix = 'Their Excellency';
+  else if (gender === 'jester') prefix = 'The Honorable Jester';
+  else prefix = 'Noble';
+  
+  // Add tier-specific title
+  let tierTitle = '';
+  if (tier === 'founder') tierTitle = 'Founding';
+  else if (tier === 'royal') tierTitle = 'Royal';
+  else if (tier === 'pro') tierTitle = 'Distinguished';
+  else tierTitle = '';
+  
+  // Add rank-specific suffix
+  let rankSuffix = '';
+  if (rank === 1) rankSuffix = 'the Sovereign';
+  else if (rank <= 5) rankSuffix = 'the Exalted';
+  else if (rank <= 20) rankSuffix = 'the Esteemed';
+  else if (rank <= 100) rankSuffix = 'the Respected';
+  else rankSuffix = '';
+  
+  return `${prefix} ${tierTitle} ${rankSuffix}`.trim().replace(/\s+/g, ' ');
+};
+
+// Function to truncate text with ellipsis
+export const truncateText = (text: string, maxLength: number): string => {
+  if (!text || text.length <= maxLength) return text;
+  return text.slice(0, maxLength) + '...';
+};
+
+// Function to format a date for display
+export const formatDate = (dateString: string): string => {
+  const date = new Date(dateString);
+  return date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+};
+
+// Function to get a readable name for a cosmetic category
+export const getCategoryReadableName = (category: CosmeticCategory): string => {
+  const names: Record<CosmeticCategory, string> = {
+    borders: 'Profile Borders',
+    colors: 'Text Colors',
+    fonts: 'Font Styles',
+    emojis: 'Special Emojis',
+    titles: 'Royal Titles',
+    backgrounds: 'Profile Backgrounds',
+    effects: 'Visual Effects',
+    badges: 'Achievement Badges',
+    themes: 'Profile Themes'
   };
   
-  return categoryMap[category] || category.charAt(0).toUpperCase() + category.slice(1);
-}
-
-// Truncate text with ellipsis
-export function truncateText(text: string, maxLength: number): string {
-  if (text.length <= maxLength) return text;
-  return text.slice(0, maxLength) + '...';
-}
-
-// Format username for display
-export function formatUsername(username: string): string {
-  if (!username) return 'Anonymous';
-  return username.length > 15 ? username.slice(0, 12) + '...' : username;
-}
-
-// Create a slug from a string
-export function createSlug(text: string): string {
-  return text
-    .toLowerCase()
-    .replace(/[^\w ]+/g, '')
-    .replace(/ +/g, '-');
-}
-
-// Format price with commas
-export function formatPrice(price: number): string {
-  return price.toLocaleString('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2
-  });
-}
+  return names[category] || category;
+};

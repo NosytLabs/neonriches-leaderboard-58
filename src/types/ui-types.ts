@@ -21,4 +21,13 @@ export type RoyalDividerVariant =
   | 'scroll' 
   | 'double' 
   | 'quill' 
-  | 'treasure';
+  | 'treasure'
+  | 'ornate';
+
+export interface RegalBadgeProps {
+  variant?: 'primary' | 'secondary' | 'success' | 'danger' | 'warning' | 'info';
+  size?: 'sm' | 'md' | 'lg';
+  glow?: boolean;
+  children: React.ReactNode;
+  className?: string;
+}

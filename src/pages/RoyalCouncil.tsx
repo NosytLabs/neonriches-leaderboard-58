@@ -1,185 +1,180 @@
 
 import React, { useState } from 'react';
-import { Helmet } from 'react-helmet-async';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import { CommunityVoting } from '@/components/community/CommunityVoting';
-import { SuggestionForm } from '@/components/community/SuggestionForm';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ScrollText, Crown, MessageSquare, Users, ThumbsUp, Gift } from 'lucide-react';
+import RoyalDivider from '@/components/ui/royal-divider';
+import CommunityVoting from '@/components/community/CommunityVoting';
+import SuggestionForm from '@/components/community/SuggestionForm';
+import { Crown, MessageSquare, ShieldCheck, Sparkles, Users, Vote } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import MedievalIcon from '@/components/ui/medieval-icon';
+import { useAuth } from '@/contexts/auth';
 import RoyalButton from '@/components/ui/royal-button';
 
 const RoyalCouncil = () => {
   const [activeTab, setActiveTab] = useState('discussions');
+  const { user } = useAuth();
   
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <Helmet>
-        <title>Royal Council | SpendThrone</title>
-        <meta name="description" content="Join the Royal Council to suggest features, vote on proposals, and help shape the future of SpendThrone." />
-      </Helmet>
+      <title>Royal Council | SpendThrone</title>
       
       <Header />
       
       <main className="container mx-auto px-4 py-10 pt-24">
-        <div className="flex items-center mb-6">
-          <Crown className="h-8 w-8 text-royal-gold mr-3" />
-          <h1 className="text-3xl font-bold font-medieval">The Royal Council</h1>
-        </div>
-        
-        <div className="mb-8 max-w-3xl">
-          <p className="text-lg text-white/80">
-            Welcome to the Royal Council, where the nobles of SpendThrone gather to discuss matters of importance, suggest new features, and vote on the future direction of the realm.
-          </p>
-        </div>
-        
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-          <div className="lg:col-span-2">
-            <Tabs defaultValue={activeTab} onValueChange={setActiveTab}>
-              <TabsList className="glass-morphism bg-transparent border-white/10 w-full">
-                <TabsTrigger value="discussions" className="data-[state=active]:bg-white/10">
+        <div className="max-w-6xl mx-auto">
+          <div className="mb-10 text-center">
+            <h1 className="text-3xl md:text-4xl font-medieval mb-3 royal-gradient">
+              <span className="inline-block mr-3">👑</span>
+              The Royal Council
+              <span className="inline-block ml-3">👑</span>
+            </h1>
+            <p className="text-white/70 max-w-2xl mx-auto">
+              The sacred halls of decree and discourse, where nobles gather to share wisdom, 
+              vote on proposals, and shape the future of our digital kingdom.
+            </p>
+          </div>
+          
+          <RoyalDivider variant="crown" color="gold" className="mb-10" />
+          
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+            <div className="flex justify-center mb-4">
+              <TabsList className="glass-morphism">
+                <TabsTrigger value="discussions" className="min-w-[120px]">
                   <MessageSquare className="h-4 w-4 mr-2" />
-                  Discussions
+                  <span>Discussions</span>
                 </TabsTrigger>
-                <TabsTrigger value="voting" className="data-[state=active]:bg-white/10">
-                  <ThumbsUp className="h-4 w-4 mr-2" />
-                  Voting
+                <TabsTrigger value="proposals" className="min-w-[120px]">
+                  <Vote className="h-4 w-4 mr-2" />
+                  <span>Proposals</span>
                 </TabsTrigger>
-                <TabsTrigger value="suggestions" className="data-[state=active]:bg-white/10">
-                  <ScrollText className="h-4 w-4 mr-2" />
-                  Suggestions
+                <TabsTrigger value="community" className="min-w-[120px]">
+                  <Users className="h-4 w-4 mr-2" />
+                  <span>Community</span>
                 </TabsTrigger>
               </TabsList>
-              
-              <TabsContent value="discussions" className="mt-6">
+            </div>
+            
+            <TabsContent value="discussions">
+              <Card className="glass-morphism border-white/10">
+                <CardHeader>
+                  <CardTitle className="flex items-center">
+                    <MessageSquare className="mr-2 h-5 w-5 text-royal-gold" />
+                    Royal Discussions
+                  </CardTitle>
+                  <CardDescription>
+                    Share your thoughts and engage with other nobles in the kingdom
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="bg-black/20 rounded-lg p-6 text-center space-y-4">
+                    <Sparkles className="h-8 w-8 text-royal-gold mx-auto" />
+                    <h3 className="text-xl font-medieval">Coming Soon</h3>
+                    <p className="text-white/70 max-w-lg mx-auto">
+                      The royal scribes are preparing the discussion halls. 
+                      Return soon to engage in noble discourse with your fellow aristocrats.
+                    </p>
+                    
+                    <div className="pt-4">
+                      <RoyalButton 
+                        variant="royalGold"
+                        href="https://discord.gg/spendthrone"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="mx-auto"
+                        icon={<Crown className="mr-2 h-4 w-4" />}
+                        shimmer
+                      >
+                        Join Our Discord
+                      </RoyalButton>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+            
+            <TabsContent value="proposals">
+              <CommunityVoting />
+            </TabsContent>
+            
+            <TabsContent value="community">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <Card className="glass-morphism border-white/10">
                   <CardHeader>
-                    <CardTitle>Royal Discussions</CardTitle>
+                    <CardTitle className="flex items-center">
+                      <ShieldCheck className="mr-2 h-5 w-5 text-royal-gold" />
+                      Suggest a Feature
+                    </CardTitle>
                     <CardDescription>
-                      Engage in conversations with other nobles about the SpendThrone kingdom.
+                      Submit your ideas for royal consideration
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <div className="text-center py-8">
-                      <MedievalIcon name="scroll" size="2xl" className="mx-auto mb-4" />
-                      <h3 className="text-xl font-bold mb-2">The Council Chambers Await</h3>
-                      <p className="text-white/70 mb-4">
-                        Discussions will be available once the royal scribe has prepared the chambers.
-                      </p>
-                      <Button variant="outline" className="glass-morphism border-white/10">
-                        Receive Notification When Ready
+                    <SuggestionForm />
+                  </CardContent>
+                </Card>
+                
+                <Card className="glass-morphism border-white/10">
+                  <CardHeader>
+                    <CardTitle className="flex items-center">
+                      <Users className="mr-2 h-5 w-5 text-royal-gold" />
+                      Community Links
+                    </CardTitle>
+                    <CardDescription>
+                      Connect with the SpendThrone community
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="glass-morphism border-white/10 rounded-lg p-4 flex items-center space-x-4">
+                      <div className="bg-royal-gold/10 p-3 rounded-full">
+                        <Crown className="h-6 w-6 text-royal-gold" />
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="font-medium">Official Discord</h3>
+                        <p className="text-sm text-white/60">Join our royal court on Discord</p>
+                      </div>
+                      <Button variant="outline" size="sm" className="glass-morphism border-white/10 hover:bg-white/10" asChild>
+                        <a href="https://discord.gg/spendthrone" target="_blank" rel="noopener noreferrer">
+                          Join
+                        </a>
+                      </Button>
+                    </div>
+                    
+                    <div className="glass-morphism border-white/10 rounded-lg p-4 flex items-center space-x-4">
+                      <div className="bg-royal-gold/10 p-3 rounded-full">
+                        <MessageSquare className="h-6 w-6 text-royal-gold" />
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="font-medium">Twitter Community</h3>
+                        <p className="text-sm text-white/60">Follow our royal decrees on Twitter</p>
+                      </div>
+                      <Button variant="outline" size="sm" className="glass-morphism border-white/10 hover:bg-white/10" asChild>
+                        <a href="https://twitter.com/spendthrone" target="_blank" rel="noopener noreferrer">
+                          Follow
+                        </a>
+                      </Button>
+                    </div>
+                    
+                    <div className="glass-morphism border-white/10 rounded-lg p-4 flex items-center space-x-4">
+                      <div className="bg-royal-gold/10 p-3 rounded-full">
+                        <Users className="h-6 w-6 text-royal-gold" />
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="font-medium">Subreddit</h3>
+                        <p className="text-sm text-white/60">Discuss strategies and share stories</p>
+                      </div>
+                      <Button variant="outline" size="sm" className="glass-morphism border-white/10 hover:bg-white/10" asChild>
+                        <a href="https://reddit.com/r/spendthrone" target="_blank" rel="noopener noreferrer">
+                          Explore
+                        </a>
                       </Button>
                     </div>
                   </CardContent>
                 </Card>
-              </TabsContent>
-              
-              <TabsContent value="voting" className="mt-6">
-                <CommunityVoting />
-              </TabsContent>
-              
-              <TabsContent value="suggestions" className="mt-6">
-                <SuggestionForm />
-              </TabsContent>
-            </Tabs>
-          </div>
-          
-          <div className="space-y-6">
-            <Card className="glass-morphism border-white/10">
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <Users className="h-5 w-5 mr-2 text-royal-gold" />
-                  Council Members
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-sm text-white/70 mb-4">
-                  <p>Active nobles with voting rights in the royal council.</p>
-                </div>
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between p-2 glass-morphism border-white/5 rounded-md">
-                    <div className="flex items-center">
-                      <div className="w-8 h-8 rounded-full bg-royal-gold/20 flex items-center justify-center mr-2">
-                        <MedievalIcon name="crown" size="sm" />
-                      </div>
-                      <span>KingSpender</span>
-                    </div>
-                    <div className="text-royal-gold text-xs">Founder</div>
-                  </div>
-                  <div className="flex items-center justify-between p-2 glass-morphism border-white/5 rounded-md">
-                    <div className="flex items-center">
-                      <div className="w-8 h-8 rounded-full bg-royal-gold/20 flex items-center justify-center mr-2">
-                        <MedievalIcon name="seal" size="sm" />
-                      </div>
-                      <span>GoldHoarder</span>
-                    </div>
-                    <div className="text-royal-gold text-xs">Royal</div>
-                  </div>
-                  <div className="flex items-center justify-between p-2 glass-morphism border-white/5 rounded-md">
-                    <div className="flex items-center">
-                      <div className="w-8 h-8 rounded-full bg-royal-navy/20 flex items-center justify-center mr-2">
-                        <MedievalIcon name="shield" size="sm" color="navy" />
-                      </div>
-                      <span>SpendQueen</span>
-                    </div>
-                    <div className="text-royal-navy text-xs">Pro</div>
-                  </div>
-                </div>
-                <div className="mt-4">
-                  <RoyalButton 
-                    variant="royalGold" 
-                    shimmer={true} 
-                    className="w-full"
-                    icon={<Gift size={16} />}
-                  >
-                    Upgrade to Join Council
-                  </RoyalButton>
-                </div>
-              </CardContent>
-            </Card>
-            
-            <Card className="glass-morphism border-white/10">
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <MedievalIcon name="scroll" className="mr-2" />
-                  Council Rules
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <ul className="space-y-2 text-sm">
-                  <li className="flex items-start">
-                    <span className="text-royal-gold mr-2">•</span>
-                    <span>Be respectful to fellow council members</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-royal-gold mr-2">•</span>
-                    <span>Only Pro tier and above can create proposals</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-royal-gold mr-2">•</span>
-                    <span>Royal tier members get weighted votes (3x)</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-royal-gold mr-2">•</span>
-                    <span>Founders get final veto power on all decisions</span>
-                  </li>
-                </ul>
-                <div className="mt-4">
-                  <a 
-                    href="https://docs.spendthrone.com/governance" 
-                    target="_blank" 
-                    rel="noopener noreferrer" 
-                    className="text-royal-gold text-sm hover:underline"
-                  >
-                    Read full governance documentation →
-                  </a>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+              </div>
+            </TabsContent>
+          </Tabs>
         </div>
       </main>
       

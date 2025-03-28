@@ -80,11 +80,11 @@ const SocialMediaLinksEditor: React.FC<SocialMediaLinksEditorProps> = ({ user, s
 
     // Create a new social link with the platform, URL, and icon
     const newLink: SocialLink = {
-      id: `social_${Date.now()}`,
+      id: Date.now(), // Use a number for the ID
       platform,
       url,
       icon: getPlatformIcon(platform),
-      clicks: 0
+      clicks: 0 // Initialize clicks to 0
     };
 
     onLinksChange([...socialLinks, newLink]);
@@ -98,7 +98,7 @@ const SocialMediaLinksEditor: React.FC<SocialMediaLinksEditorProps> = ({ user, s
     });
   };
 
-  const handleRemoveLink = (id: string) => {
+  const handleRemoveLink = (id: string | number) => {
     const updatedLinks = socialLinks.filter(link => link.id !== id);
     onLinksChange(updatedLinks);
     
@@ -130,7 +130,7 @@ const SocialMediaLinksEditor: React.FC<SocialMediaLinksEditorProps> = ({ user, s
         
         <div className="space-y-2">
           {socialLinks.map((link) => (
-            <div key={link.id} className="glass-morphism rounded-lg p-3 border border-white/10 flex justify-between items-center">
+            <div key={String(link.id)} className="glass-morphism rounded-lg p-3 border border-white/10 flex justify-between items-center">
               <div className="flex items-center">
                 <ExternalLink size={16} className="text-royal-gold" />
                 <div className="ml-2">

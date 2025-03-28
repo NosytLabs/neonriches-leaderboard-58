@@ -1,7 +1,7 @@
 
 // User profile types
 export type Team = 'red' | 'green' | 'blue' | null;
-export type UserTier = 'free' | 'pro' | 'royal' | 'founder';
+export type UserTier = 'free' | 'pro' | 'royal' | 'founder' | 'basic' | 'crab' | 'whale' | 'shark' | 'dolphin';
 export type UserGender = 'king' | 'queen' | 'neutral' | 'jester' | 'noble';
 
 export interface ProfileImage {
@@ -11,11 +11,18 @@ export interface ProfileImage {
   isPrimary?: boolean;
 }
 
+export interface ProfileLink {
+  id: string;
+  url: string;
+  label: string;
+}
+
 export interface SocialLink {
-  id: number;
+  id: number | string;
   platform: string;
   url: string;
   icon?: string;
+  clicks?: number;
 }
 
 export interface UserCosmetics {
@@ -96,6 +103,12 @@ export interface UserProfile {
     emailNotifications: boolean;
     darkMode: boolean;
     soundEffects: boolean;
+    profileVisibility?: boolean;
+    allowProfileLinks?: boolean;
+    showEmailOnProfile?: boolean;
+    rankChangeAlerts?: boolean;
+    shameAlerts?: boolean;
+    newFollowerAlerts?: boolean;
   };
 }
 
@@ -120,5 +133,5 @@ export type RoyalDividerVariant =
   | 'scroll' 
   | 'double' 
   | 'quill' 
-  | 'treasure';
-
+  | 'treasure'
+  | 'ornate';

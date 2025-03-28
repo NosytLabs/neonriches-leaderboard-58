@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { UserProfile } from '@/types/user';
 import { Label } from '@/components/ui/label';
@@ -33,7 +32,8 @@ const AppearanceEditor: React.FC<AppearanceEditorProps> = ({ user }) => {
     activeBadge: undefined
   };
   
-  const isPro = user.tier === 'pro' || user.tier === 'whale' || user.tier === 'shark' || user.tier === 'dolphin';
+  // Check if user is on the Pro tier or higher
+  const isPro = ['pro', 'royal', 'founder', 'whale', 'shark', 'dolphin'].includes(user.tier);
   
   const handleUnlockFeature = () => {
     toast({

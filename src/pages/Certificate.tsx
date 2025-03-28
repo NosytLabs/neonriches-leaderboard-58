@@ -4,6 +4,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { useAuth } from '@/contexts/auth';
 import CertificateOfNobility from '@/components/certificates/CertificateOfNobility';
+import { UserProfile } from '@/types/user';
 
 const Certificate: React.FC = () => {
   const { user } = useAuth();
@@ -16,7 +17,7 @@ const Certificate: React.FC = () => {
       
       <main className="container mx-auto px-4 py-10 pt-24">
         {user ? (
-          <CertificateOfNobility user={user} />
+          <CertificateOfNobility user={user as UserProfile} />
         ) : (
           <div className="text-center py-10">
             <h2 className="text-2xl font-bold mb-4">Please log in to view your certificate</h2>

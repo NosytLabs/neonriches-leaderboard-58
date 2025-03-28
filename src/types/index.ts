@@ -8,7 +8,7 @@ export interface User {
   profileImage?: string;
   walletBalance?: number;
   team?: Team;
-  tier?: UserTier;
+  tier: UserTier; // Change from optional to required
   spendStreak?: number;
   
   // Added properties to match UserProfile
@@ -76,8 +76,14 @@ export interface User {
     emailNotifications: boolean;
     darkMode: boolean;
     soundEffects: boolean;
+    profileVisibility?: boolean;
+    allowProfileLinks?: boolean;
+    showEmailOnProfile?: boolean;
+    rankChangeAlerts?: boolean;
+    shameAlerts?: boolean;
+    newFollowerAlerts?: boolean;
   };
 }
 
 // Export types using the correct TypeScript syntax for isolated modules
-export type { UserProfile, UserSubscription, UserCosmetics, RoyalButtonVariant, RoyalDividerVariant, UserGender, ProfileImage, SocialLink } from './user';
+export type { UserProfile, UserSubscription, UserCosmetics, RoyalButtonVariant, RoyalDividerVariant, UserGender, ProfileImage, SocialLink, ProfileLink } from './user';

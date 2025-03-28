@@ -1,5 +1,6 @@
 
 export type CosmeticRarity = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
+export type CosmeticCategory = 'borders' | 'colors' | 'fonts' | 'emojis' | 'titles' | 'backgrounds' | 'effects' | 'badges' | 'themes';
 
 export interface CosmeticItem {
   id: string;
@@ -62,4 +63,12 @@ export const getRarityBorderColor = (rarity: CosmeticRarity): string => {
     default:
       return 'border-gray-600';
   }
+};
+
+export const getCosmeticPreviewStyle = (item: CosmeticItem) => {
+  // Return appropriate styles based on the cosmetic item
+  if (item.cssClass) {
+    return item.cssClass;
+  }
+  return '';
 };

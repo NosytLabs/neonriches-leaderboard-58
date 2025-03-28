@@ -1,86 +1,62 @@
 
-import { CosmeticRarity, CosmeticCategory } from '@/types/cosmetics';
+import { CosmeticItem } from '@/types/cosmetics';
+import { CosmeticCategory } from '@/types/cosmetics';
 
-export function getRarityColor(rarity: CosmeticRarity): string {
-  switch (rarity) {
-    case 'common':
-      return 'text-gray-300';
-    case 'uncommon':
-      return 'text-green-400';
-    case 'rare':
-      return 'text-blue-400';
-    case 'epic':
-      return 'text-purple-400';
-    case 'legendary':
-      return 'text-royal-gold';
-    default:
-      return 'text-gray-300';
+// Helper function to get cosmetic items by category
+export const getCosmeticsByCategory = (items: CosmeticItem[], category: CosmeticCategory): CosmeticItem[] => {
+  return items.filter(item => item.category === category);
+};
+
+// Helper function to get a cosmetic item by ID
+export const getCosmeticById = (items: CosmeticItem[], id: string): CosmeticItem | undefined => {
+  return items.find(item => item.id === id);
+};
+
+// Function to format cosmetic price
+export const formatCosmeticPrice = (price: number): string => {
+  return `$${price.toFixed(2)}`;
+};
+
+// Function to check if user owns a cosmetic
+export const userOwnsCosmetic = (userCosmetics: string[] | undefined, cosmeticId: string): boolean => {
+  if (!userCosmetics) return false;
+  return userCosmetics.includes(cosmeticId);
+};
+
+// Function to get style class for a cosmetic preview
+export const getCosmeticPreviewStyle = (item: CosmeticItem): string => {
+  if (item.cssClass) {
+    return item.cssClass;
   }
-}
+  return '';
+};
 
-export function getRarityBgColor(rarity: CosmeticRarity): string {
-  switch (rarity) {
-    case 'common':
-      return 'bg-gray-800/50';
-    case 'uncommon':
-      return 'bg-green-900/50';
-    case 'rare':
-      return 'bg-blue-900/50';
-    case 'epic':
-      return 'bg-purple-900/50';
-    case 'legendary':
-      return 'bg-amber-900/50';
-    default:
-      return 'bg-gray-800/50';
-  }
-}
-
-export function getRarityBorderColor(rarity: CosmeticRarity): string {
-  switch (rarity) {
-    case 'common':
-      return 'border-gray-500/50';
-    case 'uncommon':
-      return 'border-green-500/50';
-    case 'rare':
-      return 'border-blue-500/50';
-    case 'epic':
-      return 'border-purple-500/50';
-    case 'legendary':
-      return 'border-royal-gold/50';
-    default:
-      return 'border-gray-500/50';
-  }
-}
-
-export function getCosmeticPreviewStyle(rarity: CosmeticRarity): string {
-  switch (rarity) {
-    case 'common':
-      return 'bg-gray-700/50 border border-gray-500/50';
-    case 'uncommon':
-      return 'bg-green-900/30 border border-green-500/50';
-    case 'rare':
-      return 'bg-blue-900/30 border border-blue-500/50';
-    case 'epic':
-      return 'bg-purple-900/30 border border-purple-500/50';
-    case 'legendary':
-      return 'bg-amber-900/30 border border-royal-gold/50';
-    default:
-      return 'bg-gray-700/50 border border-gray-500/50';
-  }
-}
-
-export function formatCategoryName(category: CosmeticCategory): string {
-  const categoryMap: Record<CosmeticCategory, string> = {
-    border: 'Borders',
-    color: 'Colors',
-    font: 'Fonts',
-    emoji: 'Emojis',
-    background: 'Backgrounds',
-    effect: 'Effects',
-    title: 'Titles',
-    badge: 'Badges',
-    theme: 'Themes'
-  };
+// Award a random cosmetic to a user
+export const awardRandomCosmetic = (
+  allCosmetics: CosmeticItem[], 
+  userCosmetics: string[] = [], 
+  categoryFilter?: CosmeticCategory,
+  rarityFilter?: string[]
+): CosmeticItem | null => {
+  // Filter cosmetics based on criteria
+  let availableCosmetics = allCosmetics.filter(item => !userCosmetics.includes(item.id));
   
-  return categoryMap[category] || (typeof category === 'string' ? category.charAt(0).toUpperCase() + category.slice(1) : 'Unknown');
-}
+  // Apply category filter if provided
+  if (categoryFilter) {
+    availableCosmetics = availableCosmetics.filter(item => item.category === categoryFilter);
+  }
+  
+  // Apply rarity filter if provided
+  if (rarityFilter && rarityFilter.length > 0) {
+    availableCosmetics = availableCosmetics.filter(item => rarityFilter.includes(item.rarity));
+  }
+  
+  // If no cosmetics available after filtering, return null
+  if (availableCosmetics.length === 0) {
+    return null;
+  }
+  
+  // Return a random cosmetic from the filtered list
+  const randomIndex = Math.floor(Math.random() * availableCosmetics.length);
+  return availableCosmetics[randomIndex];
+};
