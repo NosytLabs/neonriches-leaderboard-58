@@ -1,128 +1,104 @@
 
-// Define the types for profile boosts
-export type BoostEffectType = "glow" | "sparkle" | "crown" | string;
+import { useState, useEffect } from 'react';
+import { UserProfile, ProfileBoost } from '@/types/user';
 
-export interface ProfileBoost {
-  id: string;
-  effectId: BoostEffectType;
-  startTime: number;
-  endTime: number;
-  type: "visibility" | "rank" | "appearance";
-  strength: number;
-  appliedBy: string;
-}
+export type BoostEffectType = 'glow' | 'sparkle' | 'crown' | 'shine' | 'pulse';
 
-// Define the boost effect interface
-export interface BoostEffect {
-  id: BoostEffectType;
-  name: string;
-  description: string;
-  icon?: string;
-  bonusText: string;
-  cssClass: string;
-}
-
-// Available boost effects
-const boostEffects: Record<string, BoostEffect> = {
+// Common boost effects and their CSS classes
+const BOOST_EFFECTS = {
   glow: {
-    id: "glow",
-    name: "Golden Glow",
-    description: "A subtle golden glow surrounds your profile",
-    icon: "✨",
-    bonusText: "+10% Visibility",
-    cssClass: "profile-boost-glow"
+    name: 'Subtle Glow',
+    cssClass: 'boost-effect-glow',
+    bonusText: '+10% visibility'
   },
   sparkle: {
-    id: "sparkle",
-    name: "Royal Sparkle",
-    description: "Sparkling effects add prestige to your profile",
-    icon: "💫",
-    bonusText: "+25% Visibility",
-    cssClass: "profile-boost-sparkle"
+    name: 'Sparkle Effect',
+    cssClass: 'boost-effect-sparkle',
+    bonusText: '+25% visibility'
   },
   crown: {
-    id: "crown",
-    name: "Crown Aura",
-    description: "A majestic crown aura appears above your profile",
-    icon: "👑",
-    bonusText: "+50% Visibility",
-    cssClass: "profile-boost-crown"
+    name: 'Royal Crown',
+    cssClass: 'boost-effect-crown',
+    bonusText: '+50% visibility'
+  },
+  shine: {
+    name: 'Golden Shine',
+    cssClass: 'boost-effect-shine',
+    bonusText: '+15% visibility'
+  },
+  pulse: {
+    name: 'Royal Pulse',
+    cssClass: 'boost-effect-pulse',
+    bonusText: '+20% visibility'
   }
 };
 
-export function useProfileBoost(user?: any) {
-  // Get all active boosts for a user
-  const getActiveBoosts = () => {
-    if (!user || !user.profileBoosts) return [];
-    const now = Date.now();
-    return user.profileBoosts.filter((boost: ProfileBoost) => 
-      boost.startTime <= now && boost.endTime >= now
+export const useProfileBoost = (user: UserProfile | null) => {
+  const [activeBoosts, setActiveBoosts] = useState<ProfileBoost[]>([]);
+  
+  useEffect(() => {
+    if (!user || !user.profileBoosts) return;
+    
+    // Filter for active boosts only
+    const currentTime = Date.now();
+    const active = user.profileBoosts.filter(boost => 
+      boost.startTime && boost.endTime && 
+      new Date(boost.startTime).getTime() <= currentTime && 
+      boost.endTime >= currentTime
+    );
+    
+    setActiveBoosts(active);
+  }, [user, user?.profileBoosts]);
+  
+  /**
+   * Check if the user has any active boosts
+   */
+  const hasActiveBoosts = (): boolean => {
+    return activeBoosts.length > 0;
+  };
+  
+  /**
+   * Get CSS classes for all active boosts
+   */
+  const getBoostClasses = (): string => {
+    if (!hasActiveBoosts()) return '';
+    
+    return activeBoosts.map(boost => {
+      const effect = BOOST_EFFECTS[boost.effectId as BoostEffectType];
+      return effect ? effect.cssClass : '';
+    }).join(' ');
+  };
+  
+  /**
+   * Get the strongest active boost
+   */
+  const getStrongestBoost = (): ProfileBoost | null => {
+    if (!hasActiveBoosts()) return null;
+    
+    return activeBoosts.reduce((strongest, current) => 
+      (current.strength > strongest.strength) ? current : strongest, 
+      activeBoosts[0]
     );
   };
-
-  // Check if a boost is active
-  const isBoostActive = (boost: ProfileBoost): boolean => {
-    const now = Date.now();
-    return boost.startTime <= now && boost.endTime >= now;
-  };
-
-  // Get time remaining for a boost
-  const getBoostTimeRemaining = (boost: ProfileBoost): number => {
-    const now = Date.now();
-    if (boost.endTime <= now) return 0;
-    return boost.endTime - now;
-  };
-
-  // Format time remaining as a string
-  const formatBoostTimeRemaining = (timeMs: number): string => {
-    if (timeMs <= 0) return "Expired";
+  
+  /**
+   * Get description text for active boosts
+   */
+  const getBoostDescription = (): string => {
+    if (!hasActiveBoosts()) return '';
     
-    const seconds = Math.floor(timeMs / 1000);
-    const minutes = Math.floor(seconds / 60);
-    const hours = Math.floor(minutes / 60);
-    const days = Math.floor(hours / 24);
+    const boost = getStrongestBoost();
+    if (!boost) return '';
     
-    if (days > 0) return `${days}d ${hours % 24}h`;
-    if (hours > 0) return `${hours}h ${minutes % 60}m`;
-    if (minutes > 0) return `${minutes}m ${seconds % 60}s`;
-    return `${seconds}s`;
+    const effect = BOOST_EFFECTS[boost.effectId as BoostEffectType];
+    return effect ? effect.bonusText : '';
   };
-
-  // Get boost effect details by ID
-  const getBoostEffect = (effectId: BoostEffectType): BoostEffect | null => {
-    return boostEffects[effectId] || null;
-  };
-
-  // Format time remaining in a user-friendly format
-  const formatTimeRemaining = (timeMs: number): string => {
-    return formatBoostTimeRemaining(timeMs);
-  };
-
-  // Check if user has any active boosts
-  const hasActiveBoosts = (): boolean => {
-    return getActiveBoosts().length > 0;
-  };
-
-  // Get CSS classes for active boosts
-  const getBoostClasses = (): string => {
-    const activeBoosts = getActiveBoosts();
-    if (activeBoosts.length === 0) return '';
-    
-    return activeBoosts
-      .map(boost => boostEffects[boost.effectId]?.cssClass || '')
-      .filter(Boolean)
-      .join(' ');
-  };
-
+  
   return {
-    isBoostActive,
-    getBoostTimeRemaining,
-    formatBoostTimeRemaining,
-    getActiveBoosts,
-    activeBoosts: getActiveBoosts(),
-    getBoostEffect,
-    formatTimeRemaining,
+    activeBoosts,
     hasActiveBoosts,
-    getBoostClasses
+    getBoostClasses,
+    getStrongestBoost,
+    getBoostDescription
   };
-}
+};

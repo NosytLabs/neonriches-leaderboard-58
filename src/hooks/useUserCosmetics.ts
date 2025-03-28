@@ -1,7 +1,7 @@
 
 import { UserProfile } from '@/types/user';
 import { CosmeticRarity } from '@/types/cosmetics';
-import { BoostEffectType, ProfileBoost } from '@/hooks/use-profile-boost';
+import { BoostEffectType } from '@/hooks/use-profile-boost';
 
 /**
  * Hook for handling user cosmetics operations
@@ -86,10 +86,10 @@ export const useUserCosmetics = (
       }
       
       // Create the boost object with required properties for ProfileBoost type
-      const newBoost: ProfileBoost = {
+      const newBoost = {
         id: boostId,
         effectId: effectId,
-        startTime: currentTime,
+        startTime: new Date().toISOString(),
         endTime: endTime,
         type: 'visibility',
         strength: level,
@@ -105,7 +105,7 @@ export const useUserCosmetics = (
       // Update user profile
       await updateUserProfile({
         profileBoosts: updatedBoosts
-      });
+      } as Partial<UserProfile>); // Using type assertion to fix the error
       
       return true;
     } catch (error) {

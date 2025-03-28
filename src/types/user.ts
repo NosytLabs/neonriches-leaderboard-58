@@ -33,21 +33,22 @@ export interface SocialLink {
 }
 
 export interface UserCosmetics {
-  borders: Array<{ id: string; name: string; }>;
-  colors: Array<{ id: string; name: string; }>;
-  fonts: Array<{ id: string; name: string; }>;
-  emojis: Array<{ id: string; name: string; }>;
-  titles: Array<{ id: string; name: string; }>;
-  backgrounds: Array<{ id: string; name: string; }>;
-  effects: Array<{ id: string; name: string; }>;
-  badges: Array<{ id: string; name: string; }>;
-  themes: Array<{ id: string; name: string; }>;
+  borders: string[]; // Changed from Array<{id:string; name:string}> to string[]
+  colors: string[];
+  fonts: string[];
+  emojis: string[];
+  titles: string[];
+  backgrounds: string[];
+  effects: string[];
+  badges: string[];
+  themes: string[];
   activeBorder?: string;
   activeColor?: string;
   activeFont?: string;
   activeEmoji?: string;
   activeTheme?: string;
   activeBadge?: string;
+  foundersPass?: boolean; // Added the foundersPass property
 }
 
 export interface UserSettings {
@@ -89,6 +90,25 @@ export interface UserSubscription {
   features: string[];
 }
 
+export interface ProfileBoost {
+  id: string;
+  effectId: string;
+  startTime: string;
+  endTime: number; // Changed from duration to endTime to match the usage
+  type: string;
+  strength: number;
+  appliedBy: string;
+}
+
+export interface BoostEffect {
+  id: string;
+  name: string;
+  description: string;
+  icon?: React.ReactNode;
+  bonusText: string;
+  cssClass: string;
+}
+
 export interface UserProfile {
   id: string;
   username: string;
@@ -107,7 +127,7 @@ export interface UserProfile {
   joinDate: string;
   lastActive?: string;
   isVerified?: boolean;
-  spendStreak?: number;
+  spendStreak?: number; // Matches the property name used in components
   profileViews?: number;
   profileClicks?: number;
   followers?: number;
@@ -118,22 +138,6 @@ export interface UserProfile {
   socialLinks?: SocialLink[];
   profileImages?: ProfileImage[];
   settings?: UserSettings;
-}
-
-export interface ProfileBoost {
-  id: string;
-  effectId: string;
-  startTime: string;
-  duration: number; // in seconds
-  level: number;
-  active: boolean;
-}
-
-export interface BoostEffect {
-  id: string;
-  name: string;
-  description: string;
-  icon?: React.ReactNode;
-  bonusText: string;
-  cssClass: string;
+  badges?: string[]; // Added badges property
+  profileBoosts?: ProfileBoost[]; // Added profileBoosts property
 }

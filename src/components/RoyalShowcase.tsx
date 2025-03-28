@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Link } from 'react-router-dom';
@@ -68,7 +69,7 @@ const RoyalShowcase: React.FC<RoyalShowcaseProps> = ({ topSpender, onInspect }) 
     
     toast({
       title: `${royalTitle} of Spending`,
-      description: `All hail ${topSpender.displayName || topSpender.username}, who has contributed $${topSpender.amountSpent.toLocaleString()} to their meaningless digital status!`,
+      description: `All hail ${topSpender.displayName || topSpender.username}, who has contributed $${topSpender.amountSpent?.toLocaleString()} to their meaningless digital status!`,
       duration: 5000,
     });
     
@@ -171,7 +172,7 @@ const RoyalShowcase: React.FC<RoyalShowcaseProps> = ({ topSpender, onInspect }) 
                       <DollarSign className="h-4 w-4 mr-1.5 text-royal-gold" />
                       Royal Treasury
                     </span>
-                    <span className="font-mono text-royal-gold font-bold text-lg">${topSpender.amountSpent.toLocaleString()}</span>
+                    <span className="font-mono text-royal-gold font-bold text-lg">${topSpender.amountSpent?.toLocaleString()}</span>
                   </div>
                   
                   <div className="glass-morphism border-royal-gold/20 p-3 rounded-lg flex justify-between items-center hover:border-royal-gold/50 transition-colors duration-300">
@@ -190,13 +191,13 @@ const RoyalShowcase: React.FC<RoyalShowcaseProps> = ({ topSpender, onInspect }) 
                     <span className="font-mono font-bold" style={{color: teamDetails.color}}>{teamDetails.name}</span>
                   </div>
                   
-                  {topSpender.spendingStreak && topSpender.spendingStreak > 0 && (
+                  {topSpender.spendStreak && topSpender.spendStreak > 0 && (
                     <div className="glass-morphism border-royal-gold/20 p-3 rounded-lg flex justify-between items-center hover:border-royal-gold/50 transition-colors duration-300">
                       <span className="text-white/80 flex items-center">
                         <Clock className="h-4 w-4 mr-1.5 text-royal-gold" />
                         Spending Streak
                       </span>
-                      <span className="font-mono text-royal-gold-bright font-bold">{topSpender.spendingStreak} weeks</span>
+                      <span className="font-mono text-royal-gold-bright font-bold">{topSpender.spendStreak} weeks</span>
                     </div>
                   )}
                   
