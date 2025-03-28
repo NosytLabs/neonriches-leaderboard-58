@@ -8,6 +8,7 @@ import AuthButton from '@/components/AuthButton';
 import { useAuth } from '@/contexts/auth';
 import MedievalIcon from '@/components/ui/medieval-icon';
 import { Separator } from '@/components/ui/separator';
+import { useResponsive } from '@/hooks/use-responsive';
 
 interface MobileMenuProps {
   isOpen: boolean;
@@ -16,6 +17,7 @@ interface MobileMenuProps {
 
 const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
   const { user } = useAuth();
+  const { isMobile } = useResponsive();
   
   const menuVariants = {
     closed: {
@@ -52,11 +54,11 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
     <motion.div variants={itemVariants}>
       <Link 
         to={to}
-        className="flex items-center py-3 px-4 hover:bg-white/5 rounded-lg glass-morphism border-transparent hover:border-white/10 transition-colors"
+        className="flex items-center py-4 px-4 hover:bg-white/5 rounded-lg glass-morphism border-transparent hover:border-white/10 transition-colors"
         onClick={onClose}
       >
         <span className="text-white/70 mr-3">{icon}</span>
-        <span>{children}</span>
+        <span className="text-base">{children}</span>
       </Link>
     </motion.div>
   );
@@ -69,9 +71,9 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
           animate="open"
           exit="closed"
           variants={menuVariants}
-          className="md:hidden overflow-hidden border-t border-white/10 bg-background"
+          className="overflow-hidden border-t border-white/10 bg-background fixed top-16 left-0 right-0 z-50 max-h-[calc(100vh-4rem)] overflow-y-auto"
         >
-          <div className="container px-4 mx-auto py-4 space-y-1">
+          <div className="container px-4 mx-auto py-4 space-y-2">
             <MenuItem to="/dashboard" icon={<LayoutList className="h-5 w-5 text-royal-purple" />}>
               Royal Court
             </MenuItem>
@@ -112,10 +114,20 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
             )}
             
             {!user && (
-              <motion.div variants={itemVariants} className="py-3 px-4">
+              <motion.div variants={itemVariants} className="py-4 px-4">
                 <AuthButton />
               </motion.div>
             )}
+          </div>
+          
+          <div className="p-4 flex justify-center">
+            <Button 
+              variant="outline" 
+              className="w-full text-white/70"
+              onClick={onClose}
+            >
+              Close Menu
+            </Button>
           </div>
         </motion.div>
       )}

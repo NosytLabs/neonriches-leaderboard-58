@@ -3,6 +3,7 @@
 @import './transitions.css';
 @import './responsive.css';
 @import './loading.css';
+@import './mobile.css';
 
 /* Visual effects */
 @import './decorative-effects.css';

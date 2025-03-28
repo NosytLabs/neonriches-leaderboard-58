@@ -1,0 +1,101 @@
+
+/* Mobile-optimized utilities */
+
+/* Improved touch targets */
+.touch-target {
+  min-width: 44px;
+  min-height: 44px;
+}
+
+/* Mobile-friendly containers */
+.mobile-container {
+  padding-left: 1rem;
+  padding-right: 1rem;
+  width: 100%;
+}
+
+/* Fix for iOS Safari 100vh issue */
+.mobile-full-height {
+  height: 100vh;
+  height: -webkit-fill-available;
+  height: fill-available;
+}
+
+/* Optimized scrolling */
+.mobile-scroll {
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  scrollbar-width: none; /* Firefox */
+}
+
+.mobile-scroll::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Edge */
+}
+
+/* Bottom safe area padding for notched devices */
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0.5rem);
+}
+
+/* Text size adjustments */
+.mobile-text-adjust {
+  -webkit-text-size-adjust: 100%;
+}
+
+/* Prevent text selection while swiping */
+.no-select {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Mobile-optimized fixed positioning */
+.mobile-fixed-bottom {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 40;
+  padding-bottom: env(safe-area-inset-bottom, 0.5rem);
+}
+
+/* Fix cards for mobile */
+.mobile-card {
+  width: 100%;
+  max-width: calc(100vw - 2rem);
+}
+
+/* Mobile grid adjustments */
+.mobile-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+/* For handling content that needs to be visible above the fold */
+.above-fold {
+  min-height: 50vh;
+}
+
+/* Overscroll behavior to prevent page bouncing */
+.prevent-overscroll {
+  overscroll-behavior: contain;
+}
+
+/* Fix for mobile hover states */
+@media (hover: none) {
+  .mobile-hover-fix:hover {
+    background-color: inherit !important;
+    color: inherit !important;
+  }
+}
+
+/* Mobile friendly shadows */
+.mobile-shadow {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+}
+
+/* Fix for mobile toolbars hiding fixed content */
+.toolbar-spacer {
+  padding-bottom: 80px;
+}

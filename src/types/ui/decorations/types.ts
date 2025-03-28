@@ -44,15 +44,8 @@ export type MedievalDecorationType =
   'royal-banner' | 
   'royal-insignia';
 
-export type MedievalDecorationSize = 
-  'xs' | 
-  'sm' | 
-  'md' | 
-  'lg' | 
-  'xl' | 
-  '2xl' | 
-  '3xl' |
-  '4xl';
+// Make MedievalDecorationSize match MedievalIconSize for consistency
+export type MedievalDecorationSize = MedievalIconSize;
 
 export type MedievalDecorationColor = MedievalIconColor;
 

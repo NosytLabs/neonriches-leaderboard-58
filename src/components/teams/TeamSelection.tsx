@@ -1,112 +1,130 @@
 
 import React, { useState } from 'react';
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Crown, Shield, Flame, Zap, Droplets } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/auth';
-import { Flame, Zap, Snowflake } from 'lucide-react';
-import { TeamType } from '@/types/user';
+import { useToast } from '@/hooks/use-toast';
+import { useResponsive } from '@/hooks/use-responsive';
+import { TeamColor } from '@/types/teams';
 
-const TeamSelection = () => {
+export const TeamSelection = () => {
   const { user, updateUserProfile } = useAuth();
-  // In case user.team includes 'none', default to 'red'
-  const initialTeam = (user?.team === 'red' || user?.team === 'green' || user?.team === 'blue') 
-    ? user.team 
-    : 'red';
-  
-  const [selectedTeam, setSelectedTeam] = useState<'red' | 'green' | 'blue'>(initialTeam as 'red' | 'green' | 'blue');
+  const { toast } = useToast();
+  const { isMobile } = useResponsive();
+  const [selectedTeam, setSelectedTeam] = useState<TeamColor>(user?.team || 'red');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleTeamSelect = (value: 'red' | 'green' | 'blue') => {
-    setSelectedTeam(value);
-  };
+  const handleTeamSelection = async () => {
+    if (!user) {
+      toast({
+        title: "Authentication Required",
+        description: "You must be logged in to join a team",
+        variant: "destructive"
+      });
+      return;
+    }
 
-  const handleSubmit = async () => {
-    if (isSubmitting) return;
     setIsSubmitting(true);
-    
     try {
-      await updateUserProfile({ team: selectedTeam });
-      // Success notification could go here
+      await updateUserProfile({ ...user, team: selectedTeam });
+      toast({
+        title: "Team Updated",
+        description: `You've joined the ${selectedTeam} team!`,
+        variant: "default"
+      });
     } catch (error) {
-      console.error('Failed to update team:', error);
-      // Error notification could go here
+      toast({
+        title: "Error",
+        description: "Failed to update team selection",
+        variant: "destructive"
+      });
     } finally {
       setIsSubmitting(false);
     }
   };
 
+  const teamDescription = {
+    red: "The Red Dragon team embraces fire and passion. Members of this team are known for their bold strategies and aggressive spending to climb the ranks.",
+    green: "The Green Serpent team channels growth and prosperity. They focus on consistent, strategic investments to ensure steady progression.",
+    blue: "The Blue Phoenix team values wisdom and patience. They are calculated in their approach, often waiting for the perfect moment to strike."
+  };
+
   return (
-    <Card className="glass-morphism border-white/10">
-      <CardHeader className="pb-2">
-        <CardTitle className="text-xl">Choose Your Team</CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <p className="text-sm text-white/70">
-          Select your team to join forces with like-minded nobles and compete for glory.
-        </p>
-        
-        <RadioGroup 
-          value={selectedTeam} 
-          onValueChange={handleTeamSelect as (value: string) => void}
-          className="grid grid-cols-1 gap-4 mt-4"
+    <div className="glass-morphism border-white/10 p-4 md:p-6 rounded-lg">
+      <h2 className="text-xl md:text-2xl font-bold mb-2 md:mb-4">Choose Your Royal House</h2>
+      <p className="text-white/70 mb-4 md:mb-6 text-sm md:text-base">
+        Align yourself with one of the three royal houses to compete for glory and rewards.
+      </p>
+
+      <Tabs defaultValue={selectedTeam} onValueChange={(value) => setSelectedTeam(value as TeamColor)} className="w-full">
+        <TabsList className={`grid w-full grid-cols-3 ${isMobile ? 'h-14' : 'h-12'}`}>
+          <TabsTrigger value="red" className="flex items-center justify-center gap-2 data-[state=active]:bg-red-500/20">
+            <Flame className={`${isMobile ? 'w-4 h-4' : 'w-5 h-5'} text-red-400`} />
+            <span className={isMobile ? "hidden sm:inline" : ""}>Red Dragon</span>
+          </TabsTrigger>
+          <TabsTrigger value="green" className="flex items-center justify-center gap-2 data-[state=active]:bg-green-500/20">
+            <Zap className={`${isMobile ? 'w-4 h-4' : 'w-5 h-5'} text-green-400`} />
+            <span className={isMobile ? "hidden sm:inline" : ""}>Green Serpent</span>
+          </TabsTrigger>
+          <TabsTrigger value="blue" className="flex items-center justify-center gap-2 data-[state=active]:bg-blue-500/20">
+            <Droplets className={`${isMobile ? 'w-4 h-4' : 'w-5 h-5'} text-blue-400`} />
+            <span className={isMobile ? "hidden sm:inline" : ""}>Blue Phoenix</span>
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="red" className="mt-4 space-y-4">
+          <div className="flex flex-col md:flex-row items-center gap-4 p-4 rounded-lg bg-red-500/10 border border-red-500/20">
+            <div className="w-16 h-16 rounded-full bg-red-500/20 flex items-center justify-center">
+              <Crown className="h-8 w-8 text-red-400" />
+            </div>
+            <div className="flex-1 text-center md:text-left">
+              <h3 className="font-bold text-lg mb-1">House of the Red Dragon</h3>
+              <p className="text-white/70 text-sm">{teamDescription.red}</p>
+            </div>
+          </div>
+        </TabsContent>
+
+        <TabsContent value="green" className="mt-4 space-y-4">
+          <div className="flex flex-col md:flex-row items-center gap-4 p-4 rounded-lg bg-green-500/10 border border-green-500/20">
+            <div className="w-16 h-16 rounded-full bg-green-500/20 flex items-center justify-center">
+              <Crown className="h-8 w-8 text-green-400" />
+            </div>
+            <div className="flex-1 text-center md:text-left">
+              <h3 className="font-bold text-lg mb-1">House of the Green Serpent</h3>
+              <p className="text-white/70 text-sm">{teamDescription.green}</p>
+            </div>
+          </div>
+        </TabsContent>
+
+        <TabsContent value="blue" className="mt-4 space-y-4">
+          <div className="flex flex-col md:flex-row items-center gap-4 p-4 rounded-lg bg-blue-500/10 border border-blue-500/20">
+            <div className="w-16 h-16 rounded-full bg-blue-500/20 flex items-center justify-center">
+              <Crown className="h-8 w-8 text-blue-400" />
+            </div>
+            <div className="flex-1 text-center md:text-left">
+              <h3 className="font-bold text-lg mb-1">House of the Blue Phoenix</h3>
+              <p className="text-white/70 text-sm">{teamDescription.blue}</p>
+            </div>
+          </div>
+        </TabsContent>
+      </Tabs>
+
+      <div className="mt-6 flex justify-center">
+        <Button
+          onClick={handleTeamSelection}
+          disabled={isSubmitting || !user}
+          className={`w-full sm:w-auto ${
+            selectedTeam === 'red' ? 'bg-red-600 hover:bg-red-700' :
+            selectedTeam === 'green' ? 'bg-green-600 hover:bg-green-700' :
+            'bg-blue-600 hover:bg-blue-700'
+          }`}
         >
-          <div className={`flex items-start space-x-3 p-3 rounded-md ${
-            selectedTeam === 'red' ? 'bg-red-950/30 border border-red-500/30' : 'bg-black/20'
-          }`}>
-            <RadioGroupItem value="red" id="team-red" className="mt-1" />
-            <div className="flex-1">
-              <Label htmlFor="team-red" className="flex items-center">
-                <Flame className="mr-2 h-5 w-5 text-red-500" />
-                <span className="text-lg font-semibold text-red-400">Red Team</span>
-              </Label>
-              <p className="text-sm text-white/70 mt-1 ml-7">
-                The team of passion and ambition. Red nobles are driven by the desire to reach the top at all costs.
-              </p>
-            </div>
-          </div>
-          
-          <div className={`flex items-start space-x-3 p-3 rounded-md ${
-            selectedTeam === 'green' ? 'bg-green-950/30 border border-green-500/30' : 'bg-black/20'
-          }`}>
-            <RadioGroupItem value="green" id="team-green" className="mt-1" />
-            <div className="flex-1">
-              <Label htmlFor="team-green" className="flex items-center">
-                <Zap className="mr-2 h-5 w-5 text-green-500" />
-                <span className="text-lg font-semibold text-green-400">Green Team</span>
-              </Label>
-              <p className="text-sm text-white/70 mt-1 ml-7">
-                The team of prosperity and growth. Green nobles focus on steady progress and sustainable spending.
-              </p>
-            </div>
-          </div>
-          
-          <div className={`flex items-start space-x-3 p-3 rounded-md ${
-            selectedTeam === 'blue' ? 'bg-blue-950/30 border border-blue-500/30' : 'bg-black/20'
-          }`}>
-            <RadioGroupItem value="blue" id="team-blue" className="mt-1" />
-            <div className="flex-1">
-              <Label htmlFor="team-blue" className="flex items-center">
-                <Snowflake className="mr-2 h-5 w-5 text-blue-500" />
-                <span className="text-lg font-semibold text-blue-400">Blue Team</span>
-              </Label>
-              <p className="text-sm text-white/70 mt-1 ml-7">
-                The team of intellect and strategy. Blue nobles are calculated in their spending, focused on maximum efficiency.
-              </p>
-            </div>
-          </div>
-        </RadioGroup>
-        
-        <Button 
-          onClick={handleSubmit} 
-          className="w-full" 
-          disabled={isSubmitting || (user?.team === selectedTeam)}
-        >
-          {isSubmitting ? 'Saving...' : user?.team === selectedTeam ? 'Current Team' : 'Join Team'}
+          <Shield className="w-4 h-4 mr-2" />
+          {user?.team === selectedTeam ? 'Confirm Allegiance' : 'Join This House'}
         </Button>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 };
 
