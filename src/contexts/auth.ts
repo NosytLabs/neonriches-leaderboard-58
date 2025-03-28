@@ -11,6 +11,3 @@ export const useAuth = () => {
   }
   return context;
 };
-
-// Export the AuthProvider from AuthContext.tsx
-export { AuthProvider } from '@/contexts/AuthContext';
