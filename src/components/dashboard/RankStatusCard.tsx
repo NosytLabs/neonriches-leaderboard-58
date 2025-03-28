@@ -10,6 +10,15 @@ interface RankStatusCardProps {
 }
 
 const RankStatusCard: React.FC<RankStatusCardProps> = ({ user }) => {
+  // Calculate next rank cost based on current spending
+  const nextRankCost = (user?.amountSpent || 0) + 10;
+  
+  // Calculate progress percentage toward next rank
+  const progressPercentage = Math.min(
+    65, // Default progress for demo purposes
+    ((user?.amountSpent || 0) / nextRankCost) * 100
+  );
+  
   return (
     <Card className="glass-morphism border-purple-400/20">
       <CardHeader className="pb-3">
@@ -51,12 +60,12 @@ const RankStatusCard: React.FC<RankStatusCardProps> = ({ user }) => {
           <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden">
             <div 
               className="h-full bg-gradient-to-r from-purple-600 to-purple-400" 
-              style={{ width: '65%' }}
+              style={{ width: `${progressPercentage}%` }}
             ></div>
           </div>
           <div className="mt-2 text-xs text-white/70 flex justify-between">
             <span>Current: ${user?.amountSpent?.toFixed(2) || '0.00'}</span>
-            <span>Next Rank: ${((user?.amountSpent || 0) + 10).toFixed(2)}</span>
+            <span>Next Rank: ${nextRankCost.toFixed(2)}</span>
           </div>
         </div>
       </CardContent>

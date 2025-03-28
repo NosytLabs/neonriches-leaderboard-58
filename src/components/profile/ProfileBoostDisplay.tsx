@@ -4,7 +4,7 @@ import { UserProfile } from '@/types/user';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Sparkles, Clock, Crown, Zap } from 'lucide-react';
-import { boostEffects } from '@/hooks/use-profile-boost';
+import { useProfileBoost } from '@/hooks/use-profile-boost';
 import '../../styles/profile-boost.css';
 
 interface ProfileBoostDisplayProps {
@@ -12,28 +12,12 @@ interface ProfileBoostDisplayProps {
 }
 
 const ProfileBoostDisplay: React.FC<ProfileBoostDisplayProps> = ({ user }) => {
-  const profileBoosts = user.profileBoosts || [];
-  const currentTime = Date.now();
-  
-  // Filter for active boosts only
-  const activeBoosts = profileBoosts.filter(boost => boost.endTime > currentTime);
+  const { getActiveBoosts, getTimeRemaining, boostEffects } = useProfileBoost(user);
+  const activeBoosts = getActiveBoosts();
   
   if (activeBoosts.length === 0) {
     return null;
   }
-  
-  // Calculate time remaining for each boost
-  const getTimeRemaining = (endTime: number) => {
-    const timeRemaining = endTime - currentTime;
-    const hours = Math.floor(timeRemaining / (1000 * 60 * 60));
-    
-    if (hours < 24) {
-      return `${hours} hours remaining`;
-    } else {
-      const days = Math.floor(hours / 24);
-      return `${days} days remaining`;
-    }
-  };
   
   // Get icon for effect type
   const getEffectIcon = (effectId: string) => {
@@ -69,7 +53,7 @@ const ProfileBoostDisplay: React.FC<ProfileBoostDisplayProps> = ({ user }) => {
                 </div>
                 <Badge variant="outline" className="bg-black/20 text-xs flex items-center">
                   <Clock className="h-3 w-3 mr-1" />
-                  {getTimeRemaining(boost.endTime)}
+                  {getTimeRemaining(boost)}
                 </Badge>
               </div>
             );
