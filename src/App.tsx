@@ -1,4 +1,3 @@
-
 import React, { useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import useNotificationSounds from '@/hooks/use-notification-sounds';
@@ -6,7 +5,7 @@ import useNotificationSounds from '@/hooks/use-notification-sounds';
 // Pages
 import Index from '@/pages/Index';
 import Dashboard from '@/pages/Dashboard';
-import ProfilePage from '@/pages/ProfilePage';
+import Profile from '@/pages/Profile';
 import EventsPage from '@/pages/EventsPage';
 import LeaderboardPage from '@/pages/LeaderboardPage';
 import RoyalPrestige from '@/pages/RoyalPrestige';
@@ -49,7 +48,7 @@ function App() {
     <Routes>
       <Route path="/" element={<Index />} />
       <Route path="/dashboard" element={<Dashboard />} />
-      <Route path="/profile" element={<ProfilePage />} />
+      <Route path="/profile" element={<Profile />} />
       <Route path="/events" element={<EventsPage />} />
       <Route path="/leaderboard" element={<LeaderboardPage />} />
       <Route path="/royal-prestige" element={<RoyalPrestige />} />
