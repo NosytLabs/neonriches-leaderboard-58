@@ -1,319 +1,178 @@
-import React from 'react';
-import { useState } from 'react';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+
+import React, { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { ShieldQuestion, Crown, UserX } from 'lucide-react';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { ArrowDown, Search, Scroll } from 'lucide-react';
-import { ShameAction } from '@/components/events/hooks/useShameEffect';
-import { useAuth } from '@/contexts/AuthContext';
-import { UserRankData, getUserRanking, applyUserSpending } from '@/services/spendingService';
-import { useToastContext } from '@/contexts/ToastContext';
-import { getShameActionPrice, getShameActionTitle, getShameActionDescription, getShameActionIcon } from '@/components/events/utils/shameUtils';
+import { useToast } from '@/hooks/use-toast';
+import { UserProfile } from '@/types/user';
+import { adaptUserProfileToUser } from '@/utils/userAdapter';
+
+// Mock users for demonstration
+const mockUsers = [
+  {
+    id: '1',
+    username: 'LuxuryLover',
+    profileImage: 'https://api.dicebear.com/7.x/personas/svg?seed=Felix',
+    lastActive: '2023-09-15T14:30:00',
+    tier: 'premium'
+  },
+  {
+    id: '2',
+    username: 'MoneyMonarch',
+    profileImage: 'https://api.dicebear.com/7.x/personas/svg?seed=Aneka',
+    lastActive: '2023-09-14T11:20:00',
+    tier: 'pro'
+  },
+  {
+    id: '3',
+    username: 'RoyalSpender',
+    profileImage: 'https://api.dicebear.com/7.x/personas/svg?seed=Mimi',
+    lastActive: '2023-09-13T09:45:00',
+    tier: 'royal'
+  }
+];
 
 interface PublicShamingFeatureProps {
-  onSuccess?: () => void;
-  trigger?: React.ReactNode;
+  isEnabled?: boolean;
 }
 
-const PublicShamingFeature: React.FC<PublicShamingFeatureProps> = ({ 
-  onSuccess,
-  trigger 
-}) => {
-  const { user } = useAuth();
-  const { addToast } = useToastContext();
-  const [searchQuery, setSearchQuery] = useState('');
-  const [users, setUsers] = useState<UserRankData[]>([]);
-  const [selectedUser, setSelectedUser] = useState<UserRankData | null>(null);
-  const [selectedAction, setSelectedAction] = useState<ShameAction>('tomatoes');
-  const [isProcessing, setIsProcessing] = useState(false);
-  const [open, setOpen] = useState(false);
-  
-  const handleSearch = () => {
-    if (!searchQuery.trim()) return;
-    
-    const allUsers = getUserRanking();
-    
-    const filteredUsers = allUsers.filter(u => 
-      u.username.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-    
-    const results = filteredUsers.filter(u => u.userId !== user?.id);
-    
-    setUsers(results);
-  };
-  
+const PublicShamingFeature: React.FC<PublicShamingFeatureProps> = ({ isEnabled = true }) => {
+  const [selectedUser, setSelectedUser] = useState<UserProfile | null>(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isShaming, setIsShaming] = useState(false);
+  const { toast } = useToast();
+
   const handleShameUser = async () => {
-    if (!selectedUser || !user) return;
+    if (!selectedUser) return;
     
-    setIsProcessing(true);
+    setIsShaming(true);
     
-    try {
-      const amount = getShameActionPrice(selectedAction);
-      const actionTitle = getShameActionTitle(selectedAction);
-      
-      const success = await applyUserSpending(
-        user,
-        amount,
-        `${actionTitle} on ${selectedUser.username}`
-      );
-      
-      if (success) {
-        const userShameKey = `user_shame_count_${selectedUser.userId}`;
-        const currentCount = parseInt(localStorage.getItem(userShameKey) || '0');
-        localStorage.setItem(userShameKey, (currentCount + 1).toString());
-        
-        localStorage.setItem(`lastShame_${selectedUser.userId}`, Date.now().toString());
-        
-        addToast({
-          title: 'Public Shaming Successful!',
-          description: getShameActionDescription(selectedAction, selectedUser.username),
-        });
-        
-        if (onSuccess) {
-          onSuccess();
-        }
-        
-        setOpen(false);
-      }
-    } catch (error) {
-      addToast({
-        title: 'Shaming Failed',
-        description: 'Could not shame the user. Try again later.',
-        variant: 'destructive'
+    // Simulate API call
+    setTimeout(() => {
+      toast({
+        title: "Public Shaming Initiated",
+        description: `${selectedUser.username} has been publicly shamed!`,
       });
-    } finally {
-      setIsProcessing(false);
-    }
-  };
-  
-  const canShame = (targetUser: UserRankData): boolean => {
-    const lastShameTime = localStorage.getItem(`lastShame_${targetUser.userId}`);
-    if (lastShameTime) {
-      const shameTime = parseInt(lastShameTime, 10);
-      const now = Date.now();
-      const hoursSinceLastShame = (now - shameTime) / (60 * 60 * 1000);
       
-      if (hoursSinceLastShame < 24) {
-        return false;
-      }
-    }
+      setIsShaming(false);
+      setIsDialogOpen(false);
+      setSelectedUser(null);
+    }, 1500);
+  };
+
+  const openShameDialog = (user: any) => {
+    // Convert to full UserProfile and then to User
+    const userProfile: UserProfile = {
+      id: user.id,
+      username: user.username,
+      email: `${user.username.toLowerCase()}@example.com`,
+      profileImage: user.profileImage,
+      lastActive: user.lastActive,
+      tier: user.tier,
+      walletBalance: 0,
+      joinDate: '2023-01-01T00:00:00Z'
+    };
     
-    return true;
+    setSelectedUser(userProfile);
+    setIsDialogOpen(true);
   };
-  
-  const getShameTimeRemaining = (targetUser: UserRankData): string => {
-    const lastShameTime = localStorage.getItem(`lastShame_${targetUser.userId}`);
-    if (lastShameTime) {
-      const shameTime = parseInt(lastShameTime, 10);
-      const now = Date.now();
-      const hoursSinceLastShame = (now - shameTime) / (60 * 60 * 1000);
-      
-      if (hoursSinceLastShame < 24) {
-        const hoursRemaining = Math.ceil(24 - hoursSinceLastShame);
-        return `${hoursRemaining}h remaining`;
-      }
-    }
-    
-    return '';
-  };
-  
-  const getShameCount = (targetUser: UserRankData): number => {
-    const userShameKey = `user_shame_count_${targetUser.userId}`;
-    return parseInt(localStorage.getItem(userShameKey) || '0');
-  };
-  
+
+  if (!isEnabled) {
+    return null;
+  }
+
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        {trigger || (
-          <Button variant="outline" className="glass-morphism border-white/10 hover:bg-white/10">
-            <Scroll className="mr-2 h-4 w-4" />
-            Public Shaming
-          </Button>
-        )}
-      </DialogTrigger>
-      <DialogContent className="glass-morphism border-white/10 sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle>Medieval Public Shaming</DialogTitle>
-          <DialogDescription>
-            Shame another noble publicly in medieval style. Select a target and a form of public ridicule.
-          </DialogDescription>
-        </DialogHeader>
+    <Card className="glass-morphism border-royal-crimson/30">
+      <CardHeader className="pb-2">
+        <CardTitle className="flex items-center text-lg">
+          <ShieldQuestion className="mr-2 h-5 w-5 text-royal-crimson" />
+          Public Shaming
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <p className="text-sm text-white/70">
+          Shame users who haven't been active or contributed to the community recently.
+        </p>
         
-        <div className="space-y-4 py-4">
-          <div className="space-y-2">
-            <Label htmlFor="search">Find noble by username</Label>
-            <div className="flex gap-2">
-              <div className="relative flex-1">
-                <Search className="absolute left-2 top-2.5 h-4 w-4 text-white/40" />
-                <Input
-                  id="search"
-                  placeholder="Search username..."
-                  className="pl-8 glass-morphism border-white/10"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-                />
+        {mockUsers.map((user) => (
+          <div key={user.id} className="flex justify-between items-center p-2 rounded-md glass-morphism-subtle">
+            <div className="flex items-center">
+              <Avatar className="h-8 w-8 mr-2">
+                <AvatarImage src={user.profileImage} alt={user.username} />
+                <AvatarFallback>{user.username.substring(0, 2)}</AvatarFallback>
+              </Avatar>
+              <div>
+                <div className="text-sm font-medium">{user.username}</div>
+                <div className="text-xs text-white/60">Last active: {new Date(user.lastActive).toLocaleDateString()}</div>
               </div>
-              <Button onClick={handleSearch}>Search</Button>
             </div>
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="h-8 text-royal-crimson hover:text-royal-crimson/80 hover:bg-royal-crimson/20"
+              onClick={() => openShameDialog(user)}
+            >
+              <UserX className="h-4 w-4 mr-1" />
+              Shame
+            </Button>
           </div>
-          
-          {users.length > 0 ? (
-            <div className="space-y-2 max-h-60 overflow-y-auto pr-1">
-              {users.map((user) => (
-                <div 
-                  key={user.userId}
-                  className={`flex items-center justify-between p-2 rounded-lg transition-colors cursor-pointer ${
-                    selectedUser?.userId === user.userId 
-                      ? 'glass-morphism-highlight border border-white/20 bg-white/5' 
-                      : 'hover:bg-white/5'
-                  }`}
-                  onClick={() => setSelectedUser(user)}
-                >
-                  <div className="flex items-center">
-                    <div className="flex items-center justify-center w-7 h-7 rounded-full glass-morphism border-white/10 mr-2">
-                      <span className="text-xs font-bold">#{user.rank}</span>
-                    </div>
-                    
-                    <Avatar className="h-8 w-8 mr-2">
-                      {user.profileImage ? (
-                        <AvatarImage src={user.profileImage} alt={user.username} />
-                      ) : (
-                        <AvatarFallback className="bg-gradient-to-br from-royal-purple to-royal-gold">
-                          {user.username.charAt(0).toUpperCase()}
-                        </AvatarFallback>
-                      )}
-                    </Avatar>
-                    
-                    <div>
-                      <div className="font-medium text-sm">{user.username}</div>
-                      <div className="flex items-center text-xs text-white/60">
-                        <span>${user.totalSpent}</span>
-                        {getShameCount(user) > 0 && (
-                          <span className="ml-2 bg-red-500/20 px-1.5 py-0.5 rounded-full text-red-300 text-xs">
-                            {getShameCount(user)} {getShameCount(user) === 1 ? 'shame' : 'shames'}
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                  
-                  {canShame(user) ? (
-                    <Button 
-                      variant="outline" 
-                      size="sm"
-                      className="text-xs h-7"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setSelectedUser(user);
-                      }}
-                    >
-                      <Scroll className="h-3 w-3 mr-1" />
-                      Shame
-                    </Button>
-                  ) : (
-                    <span className="text-xs text-white/40">
-                      {getShameTimeRemaining(user)}
-                    </span>
-                  )}
-                </div>
-              ))}
-            </div>
-          ) : searchQuery ? (
-            <div className="text-center py-4 text-white/50">
-              No users found matching "{searchQuery}"
-            </div>
-          ) : null}
-          
-          {selectedUser && (
-            <>
-              <div className="glass-morphism border-white/10 rounded-lg p-4">
-                <div className="text-sm font-medium mb-2">Confirm Target</div>
-                <div className="flex items-center">
-                  <Avatar className="h-10 w-10 mr-3">
-                    {selectedUser.profileImage ? (
-                      <AvatarImage src={selectedUser.profileImage} alt={selectedUser.username} />
-                    ) : (
-                      <AvatarFallback className="bg-gradient-to-br from-royal-purple to-royal-gold">
-                        {selectedUser.username.charAt(0).toUpperCase()}
-                      </AvatarFallback>
-                    )}
+        ))}
+        
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <DialogContent className="sm:max-w-md glass-morphism border-royal-crimson/30">
+            <DialogHeader>
+              <DialogTitle className="flex items-center">
+                <Crown className="mr-2 h-5 w-5 text-royal-crimson" />
+                Public Shaming
+              </DialogTitle>
+              <DialogDescription>
+                Shame this user for their inactivity or lack of contribution.
+              </DialogDescription>
+            </DialogHeader>
+            
+            {selectedUser && (
+              <div className="space-y-4">
+                <div className="flex items-center space-x-4">
+                  <Avatar className="h-12 w-12">
+                    <AvatarImage src={selectedUser.profileImage} alt={selectedUser.username} />
+                    <AvatarFallback>{selectedUser.username.substring(0, 2)}</AvatarFallback>
                   </Avatar>
                   <div>
-                    <div className="font-medium">{selectedUser.username}</div>
-                    <div className="text-sm text-white/70">Rank #{selectedUser.rank}</div>
+                    <h3 className="text-lg font-semibold">{selectedUser.username}</h3>
+                    <p className="text-sm text-white/60">
+                      Tier: {selectedUser.tier}
+                    </p>
                   </div>
                 </div>
-              </div>
-              
-              <div className="space-y-2">
-                <Label>Select Shaming Method</Label>
-                <div className="grid grid-cols-3 gap-2">
+                
+                <p className="text-sm">
+                  By shaming {selectedUser.username}, they will be publicly displayed on the shame board for 24 hours.
+                </p>
+                
+                <div className="flex justify-end space-x-2">
                   <Button 
                     variant="outline" 
-                    className={`flex flex-col p-2 h-auto ${selectedAction === 'tomatoes' ? 'bg-white/10 border-red-500/30' : ''}`}
-                    onClick={() => setSelectedAction('tomatoes')}
+                    onClick={() => setIsDialogOpen(false)}
                   >
-                    <span className="text-2xl mb-1">🍅</span>
-                    <span className="text-xs">Tomatoes</span>
-                    <span className="text-xs text-amber-500 mt-1">$0.50</span>
+                    Cancel
                   </Button>
-                  
                   <Button 
-                    variant="outline" 
-                    className={`flex flex-col p-2 h-auto ${selectedAction === 'eggs' ? 'bg-white/10 border-yellow-500/30' : ''}`}
-                    onClick={() => setSelectedAction('eggs')}
+                    variant="destructive"
+                    className="bg-royal-crimson hover:bg-royal-crimson/90"
+                    onClick={handleShameUser}
+                    disabled={isShaming}
                   >
-                    <span className="text-2xl mb-1">🥚</span>
-                    <span className="text-xs">Rotten Eggs</span>
-                    <span className="text-xs text-amber-500 mt-1">$1.00</span>
-                  </Button>
-                  
-                  <Button 
-                    variant="outline" 
-                    className={`flex flex-col p-2 h-auto ${selectedAction === 'stocks' ? 'bg-white/10 border-purple-500/30' : ''}`}
-                    onClick={() => setSelectedAction('stocks')}
-                  >
-                    <span className="text-2xl mb-1">🪵</span>
-                    <span className="text-xs">Stocks</span>
-                    <span className="text-xs text-amber-500 mt-1">$2.00</span>
+                    {isShaming ? 'Shaming...' : 'Confirm Shaming'}
                   </Button>
                 </div>
               </div>
-              
-              <div className="mt-3 text-sm text-white/70 bg-white/5 p-3 rounded border border-white/10">
-                {getShameActionDescription(selectedAction, selectedUser.username)}
-              </div>
-            </>
-          )}
-        </div>
-        
-        <div className="flex justify-end gap-2">
-          <Button variant="outline" className="glass-morphism border-white/10" onClick={() => setOpen(false)}>
-            Cancel
-          </Button>
-          <Button 
-            onClick={handleShameUser}
-            disabled={!selectedUser || isProcessing || (selectedUser && !canShame(selectedUser))}
-            className="bg-gradient-to-r from-team-red via-team-green to-team-blue hover:opacity-90 text-white"
-          >
-            {isProcessing ? (
-              <>
-                <span className="animate-spin mr-2">⚙️</span> Processing...
-              </>
-            ) : (
-              <>
-                <Scroll className="mr-2 h-4 w-4" />
-                {getShameActionTitle(selectedAction)} for ${getShameActionPrice(selectedAction)}
-              </>
             )}
-          </Button>
-        </div>
-      </DialogContent>
-    </Dialog>
+          </DialogContent>
+        </Dialog>
+      </CardContent>
+    </Card>
   );
 };
 

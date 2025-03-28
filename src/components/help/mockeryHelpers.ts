@@ -1,9 +1,58 @@
 
-import { getMockeryTierColor, getMockeryTierLabel } from '@/components/mockery/utils/mockeryUtils';
 import { MockeryTier } from '@/types/mockery';
 
-// Re-export for easy access
-export { getMockeryTierColor, getMockeryTierLabel };
+// Helper functions for working with mockery tiers
+export const getMockeryTierColor = (tier: MockeryTier): { text: string, bg: string, border: string } => {
+  switch (tier) {
+    case 'common':
+      return {
+        text: 'text-white/80',
+        bg: 'bg-white/10',
+        border: 'border-white/20'
+      };
+    case 'uncommon':
+      return {
+        text: 'text-green-400',
+        bg: 'bg-green-500/20',
+        border: 'border-green-500/30'
+      };
+    case 'rare':
+      return {
+        text: 'text-blue-400',
+        bg: 'bg-blue-500/20',
+        border: 'border-blue-500/30'
+      };
+    case 'epic':
+      return {
+        text: 'text-purple-400',
+        bg: 'bg-purple-500/20',
+        border: 'border-purple-500/30'
+      };
+    case 'legendary':
+      return {
+        text: 'text-royal-gold',
+        bg: 'bg-royal-gold/20',
+        border: 'border-royal-gold/30'
+      };
+    default:
+      return {
+        text: 'text-white/80',
+        bg: 'bg-white/10',
+        border: 'border-white/20'
+      };
+  }
+};
+
+export const getMockeryTierLabel = (tier: MockeryTier): string => {
+  switch (tier) {
+    case 'common': return 'Common Mockery';
+    case 'uncommon': return 'Uncommon Mockery';
+    case 'rare': return 'Rare Mockery';
+    case 'epic': return 'Epic Mockery';
+    case 'legendary': return 'Legendary Mockery';
+    default: return 'Common Mockery';
+  }
+};
 
 // Simple explanation function for encyclopedia
 export const getMockeryTierDescription = (tier: MockeryTier): string => {

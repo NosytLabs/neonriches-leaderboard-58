@@ -1,5 +1,5 @@
 
-import { SolanaTreasuryInfo, SolanaTransaction, OnChainLeaderboardEntry } from '@/types/solana';
+import { SolanaTreasuryInfo, SolanaTransaction, OnChainLeaderboardEntry, LeaderboardEntry } from '@/types/solana';
 
 export const getTreasuryInfo = (): SolanaTreasuryInfo => {
   return {
@@ -80,3 +80,5 @@ export const getLeaderboardData = (): OnChainLeaderboardEntry[] => {
     }
   ];
 };
+
+export const fetchOnChainLeaderboard = getLeaderboardData;

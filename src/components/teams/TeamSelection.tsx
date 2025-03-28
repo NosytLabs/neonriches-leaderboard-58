@@ -1,160 +1,110 @@
+
 import React, { useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { UserProfile } from '@/types/user';
-import { useToast } from '@/hooks/use-toast';
-import { Shield, Flame, Zap, Waves } from 'lucide-react';
-import useNotificationSounds from '@/hooks/use-notification-sounds';
-import { motion } from 'framer-motion';
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useAuth } from '@/contexts/auth';
+import { Flame, Zap, Snowflake } from 'lucide-react';
+import { TeamType } from '@/types/user';
 
-interface TeamSelectionProps {
-  user: UserProfile;
-  onTeamSelect: (team: 'red' | 'green' | 'blue') => Promise<boolean>;
-}
-
-const TeamSelection: React.FC<TeamSelectionProps> = ({ user, onTeamSelect }) => {
-  const [selectedTeam, setSelectedTeam] = useState<'red' | 'green' | 'blue' | null>(user.team);
-  const [isChanging, setIsChanging] = useState(false);
-  const { toast } = useToast();
-  const { playSound } = useNotificationSounds();
+const TeamSelection = () => {
+  const { user, updateUserProfile } = useAuth();
+  // In case user.team includes 'none', default to 'red'
+  const initialTeam = (user?.team === 'red' || user?.team === 'green' || user?.team === 'blue') 
+    ? user.team 
+    : 'red';
   
-  const handleTeamSelect = async (team: 'red' | 'green' | 'blue') => {
-    // If user already selected this team, deselect it
-    if (selectedTeam === team) {
-      setSelectedTeam(null);
-      return;
-    }
-    
-    // Otherwise, select the new team
-    setSelectedTeam(team);
+  const [selectedTeam, setSelectedTeam] = useState<'red' | 'green' | 'blue'>(initialTeam as 'red' | 'green' | 'blue');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleTeamSelect = (value: 'red' | 'green' | 'blue') => {
+    setSelectedTeam(value);
   };
-  
-  const handleConfirm = async () => {
-    if (!selectedTeam) {
-      toast({
-        title: "No Team Selected",
-        description: "Please select a team to join.",
-        variant: "destructive"
-      });
-      return;
-    }
+
+  const handleSubmit = async () => {
+    if (isSubmitting) return;
+    setIsSubmitting(true);
     
-    if (selectedTeam === user.team) {
-      toast({
-        title: "Already in Team",
-        description: `You are already a member of the ${getTeamName(selectedTeam)}.`,
-      });
-      return;
-    }
-    
-    setIsChanging(true);
     try {
-      const success = await onTeamSelect(selectedTeam);
-      
-      if (success) {
-        playSound('success');
-        toast({
-          title: "Team Changed",
-          description: `You are now a member of the ${getTeamName(selectedTeam)}.`,
-        });
-      } else {
-        throw new Error("Failed to change team");
-      }
+      await updateUserProfile({ team: selectedTeam });
+      // Success notification could go here
     } catch (error) {
-      playSound('error');
-      toast({
-        title: "Team Change Failed",
-        description: "There was an error changing your team. Please try again.",
-        variant: "destructive"
-      });
+      console.error('Failed to update team:', error);
+      // Error notification could go here
     } finally {
-      setIsChanging(false);
+      setIsSubmitting(false);
     }
   };
-  
-  const getTeamName = (team: 'red' | 'green' | 'blue'): string => {
-    switch (team) {
-      case 'red': return "Red Flames";
-      case 'green': return "Green Lightning";
-      case 'blue': return "Blue Waves";
-      default: return "";
-    }
-  };
-  
-  const getTeamDescription = (team: 'red' | 'green' | 'blue'): string => {
-    switch (team) {
-      case 'red':
-        return "The fierce Red Flames, known for their aggressive spending and competitive nature.";
-      case 'green':
-        return "The tactical Green Lightning, masters of strategic spending and calculated investments.";
-      case 'blue':
-        return "The composed Blue Waves, specialists in steady growth and consistent contributions.";
-      default:
-        return "";
-    }
-  };
-  
-  const getTeamIcon = (team: 'red' | 'green' | 'blue') => {
-    switch (team) {
-      case 'red': return <Flame className="h-6 w-6 text-red-500" />;
-      case 'green': return <Zap className="h-6 w-6 text-green-500" />;
-      case 'blue': return <Waves className="h-6 w-6 text-blue-500" />;
-      default: return null;
-    }
-  };
-  
+
   return (
     <Card className="glass-morphism border-white/10">
-      <CardHeader>
-        <div className="flex items-center">
-          <Shield className="mr-3 h-6 w-6 text-royal-gold" />
-          <CardTitle>Choose Your Team</CardTitle>
-        </div>
-        <CardDescription>
-          Select a faction to join in the battle for the throne
-        </CardDescription>
+      <CardHeader className="pb-2">
+        <CardTitle className="text-xl">Choose Your Team</CardTitle>
       </CardHeader>
-      
-      <CardContent className="space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {(['red', 'green', 'blue'] as const).map(team => (
-            <motion.div
-              key={team}
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.98 }}
-              className={`cursor-pointer relative rounded-lg p-4 border-2 ${
-                selectedTeam === team 
-                  ? `border-${team}-500 bg-${team}-500/20` 
-                  : 'border-white/10 glass-morphism hover:border-white/30'
-              }`}
-              onClick={() => handleTeamSelect(team)}
-            >
-              <div className="flex items-center mb-3">
-                {getTeamIcon(team)}
-                <span className={`ml-2 font-bold text-${team}-500`}>
-                  {getTeamName(team)}
-                </span>
-              </div>
-              <p className="text-sm text-white/70">
-                {getTeamDescription(team)}
-              </p>
-              {user.team === team && (
-                <div className="absolute top-2 right-2 bg-white/10 rounded-full px-2 py-0.5 text-xs">
-                  Current
-                </div>
-              )}
-            </motion.div>
-          ))}
-        </div>
+      <CardContent className="space-y-4">
+        <p className="text-sm text-white/70">
+          Select your team to join forces with like-minded nobles and compete for glory.
+        </p>
         
-        <div className="flex justify-end">
-          <Button
-            onClick={handleConfirm}
-            disabled={!selectedTeam || isChanging || selectedTeam === user.team}
-          >
-            {isChanging ? "Changing..." : "Confirm Team"}
-          </Button>
-        </div>
+        <RadioGroup 
+          value={selectedTeam} 
+          onValueChange={handleTeamSelect as (value: string) => void}
+          className="grid grid-cols-1 gap-4 mt-4"
+        >
+          <div className={`flex items-start space-x-3 p-3 rounded-md ${
+            selectedTeam === 'red' ? 'bg-red-950/30 border border-red-500/30' : 'bg-black/20'
+          }`}>
+            <RadioGroupItem value="red" id="team-red" className="mt-1" />
+            <div className="flex-1">
+              <Label htmlFor="team-red" className="flex items-center">
+                <Flame className="mr-2 h-5 w-5 text-red-500" />
+                <span className="text-lg font-semibold text-red-400">Red Team</span>
+              </Label>
+              <p className="text-sm text-white/70 mt-1 ml-7">
+                The team of passion and ambition. Red nobles are driven by the desire to reach the top at all costs.
+              </p>
+            </div>
+          </div>
+          
+          <div className={`flex items-start space-x-3 p-3 rounded-md ${
+            selectedTeam === 'green' ? 'bg-green-950/30 border border-green-500/30' : 'bg-black/20'
+          }`}>
+            <RadioGroupItem value="green" id="team-green" className="mt-1" />
+            <div className="flex-1">
+              <Label htmlFor="team-green" className="flex items-center">
+                <Zap className="mr-2 h-5 w-5 text-green-500" />
+                <span className="text-lg font-semibold text-green-400">Green Team</span>
+              </Label>
+              <p className="text-sm text-white/70 mt-1 ml-7">
+                The team of prosperity and growth. Green nobles focus on steady progress and sustainable spending.
+              </p>
+            </div>
+          </div>
+          
+          <div className={`flex items-start space-x-3 p-3 rounded-md ${
+            selectedTeam === 'blue' ? 'bg-blue-950/30 border border-blue-500/30' : 'bg-black/20'
+          }`}>
+            <RadioGroupItem value="blue" id="team-blue" className="mt-1" />
+            <div className="flex-1">
+              <Label htmlFor="team-blue" className="flex items-center">
+                <Snowflake className="mr-2 h-5 w-5 text-blue-500" />
+                <span className="text-lg font-semibold text-blue-400">Blue Team</span>
+              </Label>
+              <p className="text-sm text-white/70 mt-1 ml-7">
+                The team of intellect and strategy. Blue nobles are calculated in their spending, focused on maximum efficiency.
+              </p>
+            </div>
+          </div>
+        </RadioGroup>
+        
+        <Button 
+          onClick={handleSubmit} 
+          className="w-full" 
+          disabled={isSubmitting || (user?.team === selectedTeam)}
+        >
+          {isSubmitting ? 'Saving...' : user?.team === selectedTeam ? 'Current Team' : 'Join Team'}
+        </Button>
       </CardContent>
     </Card>
   );

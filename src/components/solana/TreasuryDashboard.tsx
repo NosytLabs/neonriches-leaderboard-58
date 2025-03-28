@@ -1,138 +1,152 @@
-// Import necessary dependencies
+
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Coins, ArrowUp, ArrowDown, FileText } from 'lucide-react';
-import { formatCurrency } from '@/lib/utils';
-import { getTreasuryInfo, subscribeToTreasuryUpdates } from '@/services/solanaService';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { getTreasuryInfo, getRecentTransactions } from '@/services/treasuryService';
 import { SolanaTreasuryInfo, SolanaTransaction } from '@/types/solana';
+import { formatCurrency, formatDate } from '@/lib/utils';
+import { Badge } from '@/components/ui/badge';
+import { ArrowUpRight, ArrowDownRight, ExternalLink } from 'lucide-react';
 
-interface TreasuryDashboardProps {
-  // Add any props if needed
-}
-
-const TreasuryDashboard: React.FC<TreasuryDashboardProps> = ({ /* props */ }) => {
+const TreasuryDashboard: React.FC = () => {
   const [treasuryInfo, setTreasuryInfo] = useState<SolanaTreasuryInfo>({
-    owner: 'Loading...',
-    balance: 0,
     totalDeposited: 0,
     totalWithdrawn: 0,
+    currentBalance: 0,
+    lastUpdated: new Date().toISOString(),
+    address: "",
+    balance: 0,
     netBalance: 0,
     transactions: 0,
-    lastUpdated: new Date().toISOString(),
-    signature: ''
+    signature: ""
   });
-  const [displayTransactions, setDisplayTransactions] = useState(false);
   
-  // Update the component to handle type differences
-  const adaptTreasuryInfoToTransaction = (info: SolanaTreasuryInfo): SolanaTransaction => {
-    return {
-      id: `treasury-${Date.now()}`,
-      signature: info.signature || 'treasury-update',
-      amount: info.balance || 0,
-      timestamp: info.lastUpdated || new Date().toISOString(),
-      sender: info.owner || 'treasury',
-      receiver: 'system',
-      status: 'confirmed',
-      type: 'deposit',
-      recipient: 'treasury'
-    };
-  };
+  const [recentTransactions, setRecentTransactions] = useState<SolanaTransaction[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
+  // Load treasury data on component mount
   useEffect(() => {
-    // Get initial treasury info
-    const fetchTreasuryInfo = async () => {
+    const loadTreasuryData = () => {
       try {
-        const info = await getTreasuryInfo();
-        setTreasuryInfo(info);
+        const info = getTreasuryInfo();
+        const transactions = getRecentTransactions();
         
-        // If we're displaying transactions, adapt the info
-        if (displayTransactions) {
-          const adaptedTransaction = adaptTreasuryInfoToTransaction(info);
-          // Use the adapted transaction where needed
-        }
+        setTreasuryInfo(info);
+        setRecentTransactions(transactions);
       } catch (error) {
-        console.error("Error fetching treasury info:", error);
+        console.error("Error loading treasury data:", error);
+      } finally {
+        setIsLoading(false);
       }
     };
     
-    fetchTreasuryInfo();
+    loadTreasuryData();
     
-    // Subscribe to treasury updates with no parameters
-    const unsubscribe = subscribeToTreasuryUpdates((data) => {
-      setTreasuryInfo(data);
-    });
+    // Simulate updates every 20 seconds
+    const interval = setInterval(loadTreasuryData, 20000);
     
-    return () => unsubscribe();
-  }, [displayTransactions]);
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
 
   return (
     <Card className="glass-morphism border-white/10">
-      <CardHeader>
-        <div className="flex items-center">
-          <Coins className="mr-3 h-6 w-6 text-green-400" />
-          <CardTitle>Solana Treasury Dashboard</CardTitle>
-        </div>
-        <CardDescription>
-          Real-time overview of the treasury's financial activity
-        </CardDescription>
+      <CardHeader className="pb-2">
+        <CardTitle className="flex items-center space-x-2">
+          <span>Royal Treasury</span>
+          {!isLoading && (
+            <Badge variant="outline" className="ml-2 text-xs bg-black/20">
+              {formatDate(treasuryInfo.lastUpdated)}
+            </Badge>
+          )}
+        </CardTitle>
       </CardHeader>
       
-      <CardContent className="p-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="p-4 rounded-lg glass-morphism border-white/10">
-            <div className="flex justify-between items-start mb-2">
-              <div className="font-medium">Total Deposited</div>
-              <div className="flex items-center text-green-500">
-                <ArrowUp className="h-4 w-4 mr-1" />
-                <span>{formatCurrency(treasuryInfo.totalDeposited || 0)}</span>
+      <CardContent className="space-y-4">
+        {isLoading ? (
+          <div className="flex items-center justify-center h-40">
+            <div className="w-12 h-12 border-4 border-t-transparent border-royal-gold rounded-full animate-spin"></div>
+          </div>
+        ) : (
+          <>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="glass-morphism-subtle p-3 rounded-lg">
+                <div className="text-xs text-white/70 mb-1">Total Balance</div>
+                <div className="text-lg font-bold text-royal-gold">
+                  ${treasuryInfo.currentBalance.toLocaleString()}
+                </div>
+              </div>
+              
+              <div className="glass-morphism-subtle p-3 rounded-lg">
+                <div className="text-xs text-white/70 mb-1">Total Deposits</div>
+                <div className="flex items-center">
+                  <ArrowUpRight className="text-green-500 w-4 h-4 mr-1" />
+                  <span className="text-lg font-bold text-green-400">
+                    ${treasuryInfo.totalDeposited.toLocaleString()}
+                  </span>
+                </div>
+              </div>
+              
+              <div className="glass-morphism-subtle p-3 rounded-lg">
+                <div className="text-xs text-white/70 mb-1">Total Withdrawals</div>
+                <div className="flex items-center">
+                  <ArrowDownRight className="text-red-500 w-4 h-4 mr-1" />
+                  <span className="text-lg font-bold text-red-400">
+                    ${treasuryInfo.totalWithdrawn.toLocaleString()}
+                  </span>
+                </div>
+              </div>
+              
+              <div className="glass-morphism-subtle p-3 rounded-lg">
+                <div className="text-xs text-white/70 mb-1">Transactions</div>
+                <div className="text-lg font-bold text-white">
+                  {treasuryInfo.transactions?.toLocaleString() || "0"}
+                </div>
               </div>
             </div>
-            <div className="text-3xl font-bold">{formatCurrency(treasuryInfo.totalDeposited || 0)}</div>
-            <div className="text-xs text-white/50">Lifetime deposits</div>
-          </div>
-          
-          <div className="p-4 rounded-lg glass-morphism border-white/10">
-            <div className="flex justify-between items-start mb-2">
-              <div className="font-medium">Total Withdrawn</div>
-              <div className="flex items-center text-red-500">
-                <ArrowDown className="h-4 w-4 mr-1" />
-                <span>{formatCurrency(treasuryInfo.totalWithdrawn || 0)}</span>
+            
+            <div className="mt-6">
+              <h3 className="text-sm font-medium text-white/80 mb-3">Recent Transactions</h3>
+              <div className="space-y-2 max-h-60 overflow-y-auto pr-2">
+                {recentTransactions.map((tx) => (
+                  <div key={tx.id} className="glass-morphism-subtle p-3 rounded-lg flex justify-between items-center">
+                    <div>
+                      <div className="flex items-center">
+                        {tx.type === 'deposit' ? (
+                          <ArrowUpRight className="text-green-500 w-4 h-4 mr-1" />
+                        ) : (
+                          <ArrowDownRight className="text-red-500 w-4 h-4 mr-1" />
+                        )}
+                        <span className="text-sm font-medium">
+                          {tx.type === 'deposit' ? 'Deposit' : 'Withdrawal'}
+                        </span>
+                      </div>
+                      <div className="text-xs text-white/60 mt-1">
+                        {formatDate(tx.timestamp)}
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <div className={`text-sm font-bold ${
+                        tx.type === 'deposit' ? 'text-green-400' : 'text-red-400'
+                      }`}>
+                        {tx.type === 'deposit' ? '+' : '-'}${tx.amount.toLocaleString()}
+                      </div>
+                      <a 
+                        href={`https://explorer.solana.com/tx/${tx.signature}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center justify-end text-xs text-white/40 hover:text-white/70 transition-colors"
+                      >
+                        <span className="hidden md:inline mr-1">View</span>
+                        <ExternalLink size={12} />
+                      </a>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
-            <div className="text-3xl font-bold">{formatCurrency(treasuryInfo.totalWithdrawn || 0)}</div>
-            <div className="text-xs text-white/50">Lifetime withdrawals</div>
-          </div>
-          
-          <div className="p-4 rounded-lg glass-morphism border-white/10">
-            <div className="flex justify-between items-start mb-2">
-              <div className="font-medium">Net Balance</div>
-              <div className="flex items-center text-blue-500">
-                <Coins className="h-4 w-4 mr-1" />
-                <span>{formatCurrency(treasuryInfo.netBalance || 0)}</span>
-              </div>
-            </div>
-            <div className="text-3xl font-bold">{formatCurrency(treasuryInfo.netBalance || 0)}</div>
-            <div className="text-xs text-white/50">Current balance</div>
-          </div>
-          
-          <div className="p-4 rounded-lg glass-morphism border-white/10">
-            <div className="flex justify-between items-start mb-2">
-              <div className="font-medium">Transactions</div>
-              <div className="flex items-center text-white/60">
-                <FileText className="h-4 w-4 mr-1" />
-                <span>{treasuryInfo.transactions}</span>
-              </div>
-            </div>
-            <div className="text-3xl font-bold">{treasuryInfo.transactions}</div>
-            <div className="text-xs text-white/50">Total transactions</div>
-          </div>
-        </div>
-        
-        <div className="mt-6 text-center">
-          <p className="text-sm text-white/60">
-            Last Updated: {new Date(treasuryInfo.lastUpdated || '').toLocaleString()}
-          </p>
-        </div>
+          </>
+        )}
       </CardContent>
     </Card>
   );

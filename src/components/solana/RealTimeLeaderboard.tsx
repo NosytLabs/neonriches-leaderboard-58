@@ -1,10 +1,15 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { OnChainLeaderboardEntry } from '@/types/solana';
-import { fetchOnChainLeaderboard } from '@/services/treasuryService';
-import { formatDate } from '@/utils/dateUtils';
-import { formatAddress } from '@/utils/solanaUtils';
+import { getLeaderboardData } from '@/services/treasuryService';
+import { formatDate } from '@/lib/utils';
 import { ExternalLink } from 'lucide-react';
+
+const formatAddress = (address: string): string => {
+  if (!address) return '';
+  return `${address.substring(0, 4)}...${address.substring(address.length - 4)}`;
+};
 
 const RealTimeLeaderboard: React.FC = () => {
   const [leaderboard, setLeaderboard] = useState<OnChainLeaderboardEntry[]>([]);
@@ -16,7 +21,7 @@ const RealTimeLeaderboard: React.FC = () => {
       setIsLoading(true);
       setError(null);
       try {
-        const data = await fetchOnChainLeaderboard();
+        const data = getLeaderboardData();
         setLeaderboard(data);
       } catch (err) {
         setError('Failed to load leaderboard data.');
@@ -67,7 +72,7 @@ const RealTimeLeaderboard: React.FC = () => {
       <CardContent>
         <div className="space-y-3">
           {leaderboard.map((entry) => (
-            <div key={entry.id} className="glass-morphism-subtle rounded-lg p-3 flex items-center justify-between relative overflow-hidden">
+            <div key={entry.userId} className="glass-morphism-subtle rounded-lg p-3 flex items-center justify-between relative overflow-hidden">
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-royal-purple to-royal-gold"></div>
               
               <div className="flex items-center">
@@ -78,9 +83,9 @@ const RealTimeLeaderboard: React.FC = () => {
               </div>
               
               <div className="text-right">
-                <div className="text-sm font-bold">${entry.totalSpent.toLocaleString()}</div>
+                <div className="text-sm font-bold">${entry.totalSpent?.toLocaleString() || entry.spentAmount.toLocaleString()}</div>
                 <div className="text-xs text-white/60">
-                  Last transaction: {formatDate(entry.lastTransaction)}
+                  Last transaction: {formatDate(entry.lastTransaction || entry.timestamp)}
                 </div>
               </div>
               

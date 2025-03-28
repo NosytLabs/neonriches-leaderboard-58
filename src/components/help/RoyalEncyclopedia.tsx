@@ -1,10 +1,14 @@
+
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { getMockeryTierColor, getMockeryTierLabel } from '@/components/mockery/utils/mockeryUtils';
+import { getMockeryTierColor, getMockeryTierLabel } from './mockeryHelpers';
 import { MockeryTier } from '@/types/mockery';
 
 const RoyalEncyclopedia = () => {
+  // Map of valid MockeryTier values
+  const mockeryTiers: MockeryTier[] = ['common', 'uncommon', 'rare', 'epic', 'legendary'];
+  
   return (
     <Card className="glass-morphism border-white/10">
       <CardHeader>
@@ -22,7 +26,7 @@ const RoyalEncyclopedia = () => {
                 Mockery tiers represent the rarity and potency of a mockery action.
               </p>
               <div className="space-y-3">
-                {['common', 'uncommon', 'rare', 'epic', 'legendary'].map((tier) => {
+                {mockeryTiers.map((tier) => {
                   // Helper function to safely access properties from possibly nested objects
                   const safeAccess = (obj: any, property: string, defaultValue: any = '') => {
                     if (!obj) return defaultValue;
@@ -33,14 +37,14 @@ const RoyalEncyclopedia = () => {
                   };
 
                   // When using getMockeryTierColor, use safeAccess:
-                  const tierColors = getMockeryTierColor(tier as MockeryTier);
+                  const tierColors = getMockeryTierColor(tier);
                   return (
                     <div 
                       key={tier}
                       className={`p-3 rounded-lg ${safeAccess(tierColors, 'bg', 'bg-gray-800/60')} ${safeAccess(tierColors, 'border', 'border-gray-600')} border`}
                     >
                       <span className={`font-semibold ${safeAccess(tierColors, 'text', 'text-white/80')}`}>
-                        {getMockeryTierLabel(tier as MockeryTier)}
+                        {getMockeryTierLabel(tier)}
                       </span>
                     </div>
                   );

@@ -9,15 +9,21 @@ interface AuthContextType {
   setUser: (user: UserProfile | null) => void;
   isLoading: boolean;
   isAuthenticated: boolean;
-  login: (email: string, password: string) => Promise<boolean>;
+  login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
-  signup: (email: string, password: string, username: string) => Promise<boolean>;
+  signup: (email: string, password: string, username: string) => Promise<void>;
   updateProfile: (data: Partial<UserProfile>) => Promise<void>;
   updateUserProfile: (data: Partial<UserProfile>) => Promise<void>;
   forgotPassword: (email: string) => Promise<void>;
   resetPassword: (code: string, newPassword: string) => Promise<void>;
   getToken: () => Promise<string | null>;
   refreshToken: () => Promise<boolean>;
+  register: (username: string, email: string, password: string) => Promise<void>;
+  signOut: () => Promise<void>;
+  openAuthModal: () => void;
+  closeAuthModal: () => void;
+  boostProfile: (days: number, level: number) => Promise<boolean>;
+  awardCosmetic: (id: string, category: string, rarity: string, source: string) => Promise<boolean>;
 }
 
 // Create the context with a default value
@@ -27,6 +33,7 @@ export const AuthContext = createContext<AuthContextType | null>(null);
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<UserProfile | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
 
   // Check for existing session on mount
   useEffect(() => {
@@ -57,7 +64,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   }, [user]);
 
   // Login function
-  const login = async (email: string, password: string): Promise<boolean> => {
+  const login = async (email: string, password: string): Promise<void> => {
     setIsLoading(true);
     try {
       // This would call your auth API
@@ -75,10 +82,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       };
       
       setUser(mockUser);
-      return true;
     } catch (error) {
       console.error('Login failed:', error);
-      return false;
+      throw error;
     } finally {
       setIsLoading(false);
     }
@@ -92,13 +98,17 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       setUser(null);
     } catch (error) {
       console.error('Logout failed:', error);
+      throw error;
     } finally {
       setIsLoading(false);
     }
   };
 
+  // Alias for logout
+  const signOut = logout;
+
   // Signup function
-  const signup = async (email: string, password: string, username: string): Promise<boolean> => {
+  const signup = async (email: string, password: string, username: string): Promise<void> => {
     setIsLoading(true);
     try {
       // This would call your signup API
@@ -115,13 +125,17 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       };
       
       setUser(mockUser);
-      return true;
     } catch (error) {
       console.error('Signup failed:', error);
-      return false;
+      throw error;
     } finally {
       setIsLoading(false);
     }
+  };
+
+  // Alias for signup with different parameter order
+  const register = async (username: string, email: string, password: string): Promise<void> => {
+    return signup(email, password, username);
   };
 
   // Update profile function
@@ -133,6 +147,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       setUser({...user, ...data});
     } catch (error) {
       console.error('Update profile failed:', error);
+      throw error;
     }
   };
 
@@ -173,6 +188,92 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     return !!user;
   };
 
+  // Open auth modal
+  const openAuthModal = () => {
+    setIsAuthModalOpen(true);
+  };
+
+  // Close auth modal
+  const closeAuthModal = () => {
+    setIsAuthModalOpen(false);
+  };
+
+  // Boost profile
+  const boostProfile = async (days: number = 1, level: number = 1): Promise<boolean> => {
+    try {
+      if (!user) return false;
+      
+      const now = new Date();
+      const endDate = new Date(now);
+      endDate.setDate(endDate.getDate() + days);
+      
+      const newBoost = {
+        id: `boost_${Date.now()}`,
+        startDate: now.toISOString(),
+        endDate: endDate.toISOString(),
+        level,
+        effectId: level === 3 ? 'crown' : level === 2 ? 'sparkle' : 'glow',
+        type: 'visibility',
+        strength: level,
+        appliedBy: user.id
+      };
+      
+      const currentBoosts = user.profileBoosts || [];
+      const updatedBoosts = [...currentBoosts, newBoost];
+      
+      await updateUserProfile({
+        profileBoosts: updatedBoosts
+      });
+      
+      return true;
+    } catch (error) {
+      console.error('Boost profile error:', error);
+      return false;
+    }
+  };
+
+  // Award cosmetic
+  const awardCosmetic = async (
+    cosmeticId: string, 
+    category: string, 
+    rarity: string, 
+    source: string
+  ): Promise<boolean> => {
+    try {
+      if (!user) return false;
+      
+      // Get current cosmetics
+      const cosmetics = user.cosmetics || {
+        borders: [],
+        colors: [],
+        fonts: [],
+        emojis: [],
+        titles: [],
+        backgrounds: [],
+        effects: [],
+        badges: [],
+        themes: [],
+      };
+      
+      // Add cosmetic to the appropriate category
+      // @ts-ignore - We're using dynamic property access
+      if (!cosmetics[category].includes(cosmeticId)) {
+        // @ts-ignore - We're using dynamic property access
+        cosmetics[category] = [...cosmetics[category], cosmeticId];
+      }
+      
+      // Update user profile
+      await updateUserProfile({
+        cosmetics
+      });
+      
+      return true;
+    } catch (error) {
+      console.error('Award cosmetic error:', error);
+      return false;
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -189,6 +290,12 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         resetPassword,
         getToken,
         refreshToken,
+        register,
+        signOut,
+        openAuthModal,
+        closeAuthModal,
+        boostProfile,
+        awardCosmetic,
       }}
     >
       {children}

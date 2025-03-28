@@ -130,6 +130,7 @@ export interface User extends Omit<UserProfile, 'role' | 'isVerified' | 'lastLog
   isAdmin: boolean;
   isVerified: boolean;
   lastLogin: string;
+  totalSpent: number; // Ensuring this is always present in User
 }
 
 export type Team = 'red' | 'green' | 'blue';

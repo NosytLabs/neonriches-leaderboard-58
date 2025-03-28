@@ -1,395 +1,432 @@
-
-import React, { useState } from 'react';
-import { useAuth } from '@/contexts/AuthContext';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import PersistentLeaderboard from '@/components/leaderboard/PersistentLeaderboard';
-import { getTeamTotals, getTotalPool } from '@/services/spendingService';
-import { Button } from '@/components/ui/button';
-import { Crown, DollarSign, Trophy, Users, PieChart, LineChart, Filter, Clock } from 'lucide-react';
-import RankingDisclaimer from '@/components/shared/RankingDisclaimer';
+import React, { useState, useEffect } from 'react';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import TeamSection from '@/components/TeamSection';
-import { Separator } from '@/components/ui/separator';
-import RoyalDivider from '@/components/ui/royal-divider';
-import PaymentModal from '@/components/PaymentModal';
-import { applyUserSpending } from '@/services/spendingService';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Trophy, Search, ArrowUp, ArrowDown, Crown, Shield, Zap, Flame, Snowflake, UserMinus } from 'lucide-react';
+import { useAuth } from '@/contexts/auth';
+import { useToast } from '@/hooks/use-toast';
+import { UserProfile } from '@/types/user';
+import { adaptUserProfileToUser } from '@/utils/userAdapter';
+import PublicShamingFeature from '@/components/leaderboard/PublicShamingFeature';
+import MockeryModal from '@/components/mockery/components/MockeryModal';
+import { formatCurrency } from '@/lib/utils';
 
-const LeaderboardPage: React.FC = () => {
+// Mock data for leaderboard
+const mockLeaderboardData = [
+  {
+    id: 'user1',
+    username: 'RoyalWhale',
+    displayName: 'Royal Whale',
+    profileImage: 'https://api.dicebear.com/7.x/personas/svg?seed=Felix',
+    rank: 1,
+    previousRank: 2,
+    amountSpent: 25000,
+    walletBalance: 5000,
+    joinDate: '2023-01-15T00:00:00Z',
+    team: 'red',
+    tier: 'whale',
+    email: 'whale@example.com'
+  },
+  {
+    id: 'user2',
+    username: 'CrownCollector',
+    displayName: 'Crown Collector',
+    profileImage: 'https://api.dicebear.com/7.x/personas/svg?seed=Aneka',
+    rank: 2,
+    previousRank: 1,
+    amountSpent: 22500,
+    walletBalance: 3000,
+    joinDate: '2023-02-10T00:00:00Z',
+    team: 'green',
+    tier: 'shark',
+    email: 'crown@example.com'
+  },
+  {
+    id: 'user3',
+    username: 'LuxuryLord',
+    displayName: 'Luxury Lord',
+    profileImage: 'https://api.dicebear.com/7.x/personas/svg?seed=Mimi',
+    rank: 3,
+    previousRank: 3,
+    amountSpent: 18000,
+    walletBalance: 2000,
+    joinDate: '2023-03-05T00:00:00Z',
+    team: 'blue',
+    tier: 'dolphin',
+    email: 'luxury@example.com'
+  },
+  {
+    id: 'user4',
+    username: 'SpendingDuke',
+    displayName: 'Spending Duke',
+    profileImage: 'https://api.dicebear.com/7.x/personas/svg?seed=Bailey',
+    rank: 4,
+    previousRank: 5,
+    amountSpent: 15000,
+    walletBalance: 1500,
+    joinDate: '2023-04-20T00:00:00Z',
+    team: 'red',
+    tier: 'fish',
+    email: 'duke@example.com'
+  },
+  {
+    id: 'user5',
+    username: 'RoyalSpender',
+    displayName: 'Royal Spender',
+    profileImage: 'https://api.dicebear.com/7.x/personas/svg?seed=Dusty',
+    rank: 5,
+    previousRank: 4,
+    amountSpent: 12500,
+    walletBalance: 1000,
+    joinDate: '2023-05-15T00:00:00Z',
+    team: 'green',
+    tier: 'crab',
+    email: 'royal@example.com'
+  }
+];
+
+// Team data
+const teams = [
+  { id: 'red', name: 'Red Team', icon: <Flame className="h-4 w-4 text-red-500" />, color: 'text-red-500', members: 120, totalSpent: 250000 },
+  { id: 'green', name: 'Green Team', icon: <Zap className="h-4 w-4 text-green-500" />, color: 'text-green-500', members: 150, totalSpent: 300000 },
+  { id: 'blue', name: 'Blue Team', icon: <Snowflake className="h-4 w-4 text-blue-500" />, color: 'text-blue-500', members: 100, totalSpent: 200000 }
+];
+
+const Leaderboard = () => {
   const { user } = useAuth();
-  const [view, setView] = useState<'personal' | 'team'>('personal');
-  const [timeframe, setTimeframe] = useState<'all-time' | 'weekly' | 'monthly'>('all-time');
-  
-  // This would be calculated from real data in a production app
-  const teamTotals = getTeamTotals();
-  const winningTeam = Object.entries(teamTotals).reduce((a, b) => 
-    b[1] > a[1] ? b : a
-  , ['red', 0])[0] as 'red' | 'green' | 'blue';
-  
-  const teamColors = {
-    red: 'text-team-red',
-    green: 'text-team-green',
-    blue: 'text-team-blue'
-  };
-  
-  const teamNames = {
-    red: 'Red Neon Fire',
-    green: 'Green Lime Zap',
-    blue: 'Blue Cool Pulse'
-  };
-  
-  const prizePool = getTotalPool();
-  
-  const handleContributionSuccess = async (amount: number) => {
-    if (user) {
-      await applyUserSpending(user, amount, "Leaderboard contribution");
-      // The leaderboard component will automatically refresh
+  const { toast } = useToast();
+  const [leaderboardData, setLeaderboardData] = useState<UserProfile[]>(mockLeaderboardData as UserProfile[]);
+  const [filteredData, setFilteredData] = useState<UserProfile[]>(mockLeaderboardData as UserProfile[]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [sortBy, setSortBy] = useState<'rank' | 'amountSpent' | 'joinDate'>('rank');
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
+  const [teamFilter, setTeamFilter] = useState<string | undefined>(undefined);
+  const [selectedUser, setSelectedUser] = useState<UserProfile | null>(null);
+  const [mockeryModalOpen, setMockeryModalOpen] = useState(false);
+  const [mockeryType, setMockeryType] = useState<'tomatoes' | 'eggs' | 'stocks' | 'silence' | 'courtJester'>('tomatoes');
+
+  // Filter and sort leaderboard data
+  useEffect(() => {
+    let filtered = [...leaderboardData];
+    
+    // Apply search filter
+    if (searchQuery) {
+      filtered = filtered.filter(user => 
+        user.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (user.displayName && user.displayName.toLowerCase().includes(searchQuery.toLowerCase()))
+      );
     }
+    
+    // Apply team filter
+    if (teamFilter) {
+      filtered = filtered.filter(user => user.team === teamFilter);
+    }
+    
+    // Apply sorting
+    filtered.sort((a, b) => {
+      let comparison = 0;
+      
+      if (sortBy === 'rank') {
+        comparison = (a.rank || 999) - (b.rank || 999);
+      } else if (sortBy === 'amountSpent') {
+        comparison = (b.amountSpent || 0) - (a.amountSpent || 0);
+      } else if (sortBy === 'joinDate') {
+        comparison = new Date(a.joinDate).getTime() - new Date(b.joinDate).getTime();
+      }
+      
+      return sortOrder === 'asc' ? comparison : -comparison;
+    });
+    
+    setFilteredData(filtered);
+  }, [leaderboardData, searchQuery, sortBy, sortOrder, teamFilter]);
+
+  const handleMockUser = (user: UserProfile) => {
+    setSelectedUser(adaptUserProfileToUser(user));
+    setMockeryModalOpen(true);
   };
-  
+
+  const handleMockeryConfirm = (targetUser: string, action: string, amount: number) => {
+    // In a real app, this would call an API to apply the mockery
+    toast({
+      title: "Mockery Applied",
+      description: `You have applied ${action} mockery to ${targetUser} for $${amount}`,
+    });
+    
+    setMockeryModalOpen(false);
+    return true;
+  };
+
+  const toggleSortOrder = () => {
+    setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+  };
+
+  const getTeamIcon = (teamId: string | undefined) => {
+    const team = teams.find(t => t.id === teamId);
+    return team ? team.icon : null;
+  };
+
+  const getTeamColor = (teamId: string | undefined) => {
+    const team = teams.find(t => t.id === teamId);
+    return team ? team.color : 'text-white/70';
+  };
+
+  const getRankChangeIcon = (current: number, previous: number | undefined) => {
+    if (!previous || current === previous) {
+      return <span className="text-white/50">-</span>;
+    }
+    
+    return current < previous ? (
+      <ArrowUp className="h-4 w-4 text-green-500" />
+    ) : (
+      <ArrowDown className="h-4 w-4 text-red-500" />
+    );
+  };
+
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <div className="absolute inset-0 -z-10">
-        <div className="absolute inset-0 bg-black opacity-60"></div>
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-background"></div>
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(50,50,50,0.8)_0%,transparent_65%)]"></div>
+    <div className="container mx-auto py-6 space-y-6">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">Royal Leaderboard</h1>
+          <p className="text-white/70">
+            The most prestigious nobles in the kingdom, ranked by their contributions
+          </p>
+        </div>
+        
+        <div className="flex items-center space-x-2">
+          <Select value={sortBy} onValueChange={(value) => setSortBy(value as any)}>
+            <SelectTrigger className="w-[180px] glass-morphism border-white/10">
+              <SelectValue placeholder="Sort by" />
+            </SelectTrigger>
+            <SelectContent className="glass-morphism border-white/10">
+              <SelectItem value="rank">Rank</SelectItem>
+              <SelectItem value="amountSpent">Amount Spent</SelectItem>
+              <SelectItem value="joinDate">Join Date</SelectItem>
+            </SelectContent>
+          </Select>
+          
+          <Button variant="outline" size="icon" onClick={toggleSortOrder} className="glass-morphism border-white/10">
+            {sortOrder === 'asc' ? <ArrowUp className="h-4 w-4" /> : <ArrowDown className="h-4 w-4" />}
+          </Button>
+        </div>
       </div>
       
-      <div className="container max-w-7xl mx-auto p-4">
-        <header className="py-10 text-center">
-          <h1 className="text-5xl font-bold font-royal royal-gradient mb-3">Global Rankings</h1>
-          <p className="text-xl text-white/70 max-w-2xl mx-auto">
-            The P2W.FUN leaderboard never resets. Your status is eternal. $1 = 1 unit of rank.
-          </p>
-        </header>
+      <Tabs defaultValue="individual" className="space-y-6">
+        <TabsList className="glass-morphism border-white/10">
+          <TabsTrigger value="individual" className="data-[state=active]:bg-white/10">
+            <Trophy className="h-4 w-4 mr-2" />
+            Individual
+          </TabsTrigger>
+          <TabsTrigger value="teams" className="data-[state=active]:bg-white/10">
+            <Shield className="h-4 w-4 mr-2" />
+            Teams
+          </TabsTrigger>
+        </TabsList>
         
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-10">
-          {/* Prize Pool Card */}
-          <Card className="glass-morphism border-white/10 overflow-hidden lg:col-span-1">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-royal-purple/20 to-royal-gold/10 rounded-bl-full blur-xl"></div>
+        <TabsContent value="individual" className="space-y-6">
+          <div className="flex flex-col md:flex-row gap-4">
+            <div className="w-full md:w-3/4">
+              <Card className="glass-morphism border-white/10">
+                <CardHeader className="pb-2">
+                  <div className="flex justify-between items-center">
+                    <CardTitle>Noble Rankings</CardTitle>
+                    <div className="relative w-64">
+                      <Search className="absolute left-2 top-2.5 h-4 w-4 text-white/50" />
+                      <Input
+                        placeholder="Search nobles..."
+                        className="pl-8 glass-morphism border-white/10"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                      />
+                    </div>
+                  </div>
+                  <CardDescription>
+                    Nobles ranked by their spending and contributions
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-2">
+                    <div className="grid grid-cols-12 gap-4 py-2 px-4 text-xs text-white/50 font-medium">
+                      <div className="col-span-1">Rank</div>
+                      <div className="col-span-5">Noble</div>
+                      <div className="col-span-2 text-right">Team</div>
+                      <div className="col-span-2 text-right">Spent</div>
+                      <div className="col-span-2 text-right">Actions</div>
+                    </div>
+                    
+                    {filteredData.length > 0 ? (
+                      filteredData.map((noble) => (
+                        <div 
+                          key={noble.id} 
+                          className={`grid grid-cols-12 gap-4 p-4 rounded-lg items-center ${
+                            noble.id === user?.id ? 'bg-royal-gold/10 border border-royal-gold/30' : 'glass-morphism-subtle'
+                          }`}
+                        >
+                          <div className="col-span-1 flex items-center gap-1">
+                            <span className="font-bold">{noble.rank}</span>
+                            {getRankChangeIcon(noble.rank || 0, noble.previousRank)}
+                          </div>
+                          
+                          <div className="col-span-5 flex items-center gap-3">
+                            <Avatar className="h-10 w-10 border-2 border-white/10">
+                              <AvatarImage src={noble.profileImage} alt={noble.username} />
+                              <AvatarFallback>{noble.username.substring(0, 2)}</AvatarFallback>
+                            </Avatar>
+                            <div>
+                              <div className="font-medium">{noble.displayName || noble.username}</div>
+                              <div className="text-sm text-white/60">@{noble.username}</div>
+                            </div>
+                          </div>
+                          
+                          <div className="col-span-2 text-right">
+                            <div className={`flex items-center justify-end gap-1 ${getTeamColor(noble.team)}`}>
+                              {getTeamIcon(noble.team)}
+                              <span className="capitalize">{noble.team}</span>
+                            </div>
+                          </div>
+                          
+                          <div className="col-span-2 text-right">
+                            <div className="font-bold text-royal-gold">
+                              {formatCurrency(noble.amountSpent || 0)}
+                            </div>
+                          </div>
+                          
+                          <div className="col-span-2 flex justify-end gap-2">
+                            {noble.id !== user?.id && (
+                              <Button 
+                                variant="outline" 
+                                size="sm" 
+                                className="h-8 glass-morphism border-white/10 hover:bg-white/5"
+                                onClick={() => handleMockUser(noble)}
+                              >
+                                <UserMinus className="h-4 w-4 mr-1 text-royal-crimson" />
+                                Mock
+                              </Button>
+                            )}
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <div className="text-center py-8 text-white/50">
+                        No nobles found matching your search criteria
+                      </div>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
             
+            <div className="w-full md:w-1/4 space-y-4">
+              <PublicShamingFeature />
+              
+              <Card className="glass-morphism border-white/10">
+                <CardHeader className="pb-2">
+                  <CardTitle className="flex items-center text-lg">
+                    <Crown className="mr-2 h-5 w-5 text-royal-gold" />
+                    Team Filter
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="space-y-2">
+                    <Button
+                      variant="outline"
+                      className={`w-full justify-start glass-morphism ${!teamFilter ? 'border-royal-gold text-royal-gold' : 'border-white/10'}`}
+                      onClick={() => setTeamFilter(undefined)}
+                    >
+                      <Shield className="mr-2 h-4 w-4" />
+                      All Teams
+                    </Button>
+                    
+                    {teams.map((team) => (
+                      <Button
+                        key={team.id}
+                        variant="outline"
+                        className={`w-full justify-start glass-morphism ${teamFilter === team.id ? `border-${team.id}-500 ${team.color}` : 'border-white/10'}`}
+                        onClick={() => setTeamFilter(team.id)}
+                      >
+                        {team.icon}
+                        <span className="ml-2">{team.name}</span>
+                        <Badge variant="outline" className="ml-auto">
+                          {team.members}
+                        </Badge>
+                      </Button>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </TabsContent>
+        
+        <TabsContent value="teams" className="space-y-6">
+          <Card className="glass-morphism border-white/10">
             <CardHeader>
-              <div className="flex items-center">
-                <Trophy className="mr-2 h-6 w-6 text-royal-gold" />
-                <CardTitle>Current Prize Pool</CardTitle>
-              </div>
+              <CardTitle>Team Leaderboard</CardTitle>
               <CardDescription>
-                15% of all spending goes to the prize pool
+                Teams ranked by their collective spending and contributions
               </CardDescription>
             </CardHeader>
-            
-            <CardContent className="space-y-4">
-              <div className="text-center">
-                <div className="text-4xl font-bold royal-gradient">${prizePool.toLocaleString()}</div>
-                <p className="text-white/70 text-sm mt-1">Total accumulated</p>
-              </div>
-              
-              <div className="glass-morphism border-white/10 rounded-lg p-4">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm text-white/70">Sustenance Fund</span>
-                  <span className="text-sm font-medium">${(prizePool * 0.5).toLocaleString()}</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-white/70">Whale Endowment</span>
-                  <span className="text-sm font-medium">${(prizePool * 0.5).toLocaleString()}</span>
-                </div>
-              </div>
-              
-              <div className="text-center">
-                <PaymentModal 
-                  amount={25} 
-                  onSuccess={handleContributionSuccess}
-                  title="Contribute to Leaderboard"
-                  description="Every dollar spent pushes you up the rankings. 15% goes to prize pool."
-                  trigger={
-                    <Button className="bg-gradient-to-r from-royal-purple to-royal-gold hover:opacity-90 text-white">
-                      <DollarSign size={16} className="mr-2" />
-                      Contribute $25
-                    </Button>
-                  }
-                />
-                <p className="text-white/50 text-xs mt-2">See your rank rise in real-time</p>
+            <CardContent>
+              <div className="space-y-4">
+                {teams.sort((a, b) => b.totalSpent - a.totalSpent).map((team, index) => (
+                  <div key={team.id} className="glass-morphism-subtle p-4 rounded-lg">
+                    <div className="flex justify-between items-center">
+                      <div className="flex items-center gap-3">
+                        <div className={`flex items-center justify-center w-8 h-8 rounded-full bg-${team.id}-500/20 ${team.color}`}>
+                          {index === 0 ? (
+                            <Crown className="h-5 w-5" />
+                          ) : (
+                            <span className="font-bold">{index + 1}</span>
+                          )}
+                        </div>
+                        <div>
+                          <div className="flex items-center gap-2">
+                            {team.icon}
+                            <span className="font-bold text-lg">{team.name}</span>
+                          </div>
+                          <div className="text-sm text-white/60">
+                            {team.members} members
+                          </div>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-xl font-bold text-royal-gold">
+                          {formatCurrency(team.totalSpent)}
+                        </div>
+                        <div className="text-sm text-white/60">
+                          Total Spent
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="mt-4 h-2 bg-white/10 rounded-full overflow-hidden">
+                      <div 
+                        className={`h-full bg-${team.id}-500`}
+                        style={{ width: `${(team.totalSpent / 300000) * 100}%` }}
+                      ></div>
+                    </div>
+                  </div>
+                ))}
               </div>
             </CardContent>
           </Card>
-          
-          {/* Leaderboard Card */}
-          <div className="lg:col-span-2">
-            <PersistentLeaderboard limit={10} />
-          </div>
-        </div>
-        
-        <RoyalDivider variant="line" label="TEAM RANKINGS" color="royal" className="my-8" />
-        
-        <div className="mb-10">
-          <Tabs defaultValue="rankings" className="w-full">
-            <TabsList className="glass-morphism border-white/10 mb-4 w-full grid grid-cols-3">
-              <TabsTrigger value="rankings">Rankings</TabsTrigger>
-              <TabsTrigger value="distribution">Team Distribution</TabsTrigger>
-              <TabsTrigger value="join">Join a Team</TabsTrigger>
-            </TabsList>
-            
-            <TabsContent value="rankings">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <Card className="glass-morphism border-white/10 overflow-hidden">
-                  <CardHeader className="bg-team-red/30">
-                    <CardTitle className="text-team-red flex items-center">
-                      <div className="w-3 h-3 rounded-full bg-team-red mr-2"></div>
-                      Red Team
-                    </CardTitle>
-                    <CardDescription>Neon Fire</CardDescription>
-                  </CardHeader>
-                  <CardContent className="pt-4">
-                    <div className="text-3xl font-bold mb-2">${teamTotals.red.toLocaleString()}</div>
-                    <div className="text-sm text-white/70 mb-4">Total Spent</div>
-                    
-                    <div className="glass-morphism border-white/10 rounded-lg p-3">
-                      <div className="flex items-center justify-between mb-1">
-                        <span className="text-sm text-white/70">Rank</span>
-                        <span className="text-sm font-medium">
-                          {teamTotals.red >= teamTotals.green && teamTotals.red >= teamTotals.blue ? '1st' : 
-                           teamTotals.red >= teamTotals.green || teamTotals.red >= teamTotals.blue ? '2nd' : '3rd'}
-                        </span>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm text-white/70">Members</span>
-                        <span className="text-sm font-medium">
-                          {/* This would come from real data */}
-                          {Math.floor(Math.random() * 20) + 10}
-                        </span>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-                
-                <Card className="glass-morphism border-white/10 overflow-hidden">
-                  <CardHeader className="bg-team-green/30">
-                    <CardTitle className="text-team-green flex items-center">
-                      <div className="w-3 h-3 rounded-full bg-team-green mr-2"></div>
-                      Green Team
-                    </CardTitle>
-                    <CardDescription>Lime Zap</CardDescription>
-                  </CardHeader>
-                  <CardContent className="pt-4">
-                    <div className="text-3xl font-bold mb-2">${teamTotals.green.toLocaleString()}</div>
-                    <div className="text-sm text-white/70 mb-4">Total Spent</div>
-                    
-                    <div className="glass-morphism border-white/10 rounded-lg p-3">
-                      <div className="flex items-center justify-between mb-1">
-                        <span className="text-sm text-white/70">Rank</span>
-                        <span className="text-sm font-medium">
-                          {teamTotals.green >= teamTotals.red && teamTotals.green >= teamTotals.blue ? '1st' : 
-                           teamTotals.green >= teamTotals.red || teamTotals.green >= teamTotals.blue ? '2nd' : '3rd'}
-                        </span>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm text-white/70">Members</span>
-                        <span className="text-sm font-medium">
-                          {/* This would come from real data */}
-                          {Math.floor(Math.random() * 20) + 10}
-                        </span>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-                
-                <Card className="glass-morphism border-white/10 overflow-hidden">
-                  <CardHeader className="bg-team-blue/30">
-                    <CardTitle className="text-team-blue flex items-center">
-                      <div className="w-3 h-3 rounded-full bg-team-blue mr-2"></div>
-                      Blue Team
-                    </CardTitle>
-                    <CardDescription>Cool Pulse</CardDescription>
-                  </CardHeader>
-                  <CardContent className="pt-4">
-                    <div className="text-3xl font-bold mb-2">${teamTotals.blue.toLocaleString()}</div>
-                    <div className="text-sm text-white/70 mb-4">Total Spent</div>
-                    
-                    <div className="glass-morphism border-white/10 rounded-lg p-3">
-                      <div className="flex items-center justify-between mb-1">
-                        <span className="text-sm text-white/70">Rank</span>
-                        <span className="text-sm font-medium">
-                          {teamTotals.blue >= teamTotals.red && teamTotals.blue >= teamTotals.green ? '1st' : 
-                           teamTotals.blue >= teamTotals.red || teamTotals.blue >= teamTotals.green ? '2nd' : '3rd'}
-                        </span>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm text-white/70">Members</span>
-                        <span className="text-sm font-medium">
-                          {/* This would come from real data */}
-                          {Math.floor(Math.random() * 20) + 10}
-                        </span>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-            </TabsContent>
-            
-            <TabsContent value="distribution">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <Card className="glass-morphism border-white/10">
-                    <CardHeader>
-                      <CardTitle>Team Distribution</CardTitle>
-                      <CardDescription>
-                        Contribution breakdown between teams
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="p-4 flex items-center justify-center">
-                        {/* In a real app, this would be a chart component */}
-                        <div className="relative w-40 h-40">
-                          <div className="absolute inset-0 flex items-center justify-center">
-                            <span className="text-sm font-medium">Team Split</span>
-                          </div>
-                          <svg viewBox="0 0 36 36" className="block">
-                            <path
-                              d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                              fill="none"
-                              stroke="rgba(255, 80, 80, 0.7)"
-                              strokeWidth="6"
-                              strokeDasharray={`${(teamTotals.red / (teamTotals.red + teamTotals.green + teamTotals.blue)) * 100}, 100`}
-                            />
-                            <path
-                              d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                              fill="none"
-                              stroke="rgba(80, 255, 80, 0.7)"
-                              strokeWidth="6"
-                              strokeDasharray={`${(teamTotals.green / (teamTotals.red + teamTotals.green + teamTotals.blue)) * 100}, 100`}
-                              strokeDashoffset={`${-(teamTotals.red / (teamTotals.red + teamTotals.green + teamTotals.blue)) * 100}`}
-                            />
-                            <path
-                              d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                              fill="none"
-                              stroke="rgba(80, 80, 255, 0.7)"
-                              strokeWidth="6"
-                              strokeDasharray={`${(teamTotals.blue / (teamTotals.red + teamTotals.green + teamTotals.blue)) * 100}, 100`}
-                              strokeDashoffset={`${-((teamTotals.red + teamTotals.green) / (teamTotals.red + teamTotals.green + teamTotals.blue)) * 100}`}
-                            />
-                          </svg>
-                        </div>
-                      </div>
-                      
-                      <div className="space-y-2 mt-2">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center">
-                            <div className="w-3 h-3 rounded-full bg-team-red mr-2"></div>
-                            <span className="text-sm">Red Team</span>
-                          </div>
-                          <span className="text-sm font-medium">
-                            {((teamTotals.red / (teamTotals.red + teamTotals.green + teamTotals.blue)) * 100).toFixed(1)}%
-                          </span>
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center">
-                            <div className="w-3 h-3 rounded-full bg-team-green mr-2"></div>
-                            <span className="text-sm">Green Team</span>
-                          </div>
-                          <span className="text-sm font-medium">
-                            {((teamTotals.green / (teamTotals.red + teamTotals.green + teamTotals.blue)) * 100).toFixed(1)}%
-                          </span>
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center">
-                            <div className="w-3 h-3 rounded-full bg-team-blue mr-2"></div>
-                            <span className="text-sm">Blue Team</span>
-                          </div>
-                          <span className="text-sm font-medium">
-                            {((teamTotals.blue / (teamTotals.red + teamTotals.green + teamTotals.blue)) * 100).toFixed(1)}%
-                          </span>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
-                
-                <div>
-                  <Card className="glass-morphism border-white/10">
-                    <CardHeader>
-                      <CardTitle>Weekly Team Challenge</CardTitle>
-                      <CardDescription>
-                        The winning team gets bonus rank points
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="glass-morphism border-white/10 rounded-lg p-4 mb-4">
-                        <div className="flex items-center">
-                          <Clock className="h-5 w-5 text-white/70 mr-2" />
-                          <div className="text-sm">
-                            Challenge ends in <span className="font-bold">2 days, 14 hours</span>
-                          </div>
-                        </div>
-                      </div>
-                      
-                      <div className="text-center mb-4">
-                        <div className="text-sm text-white/70 mb-1">Current Leader</div>
-                        <div className={`text-xl font-bold ${teamColors[winningTeam]}`}>
-                          {teamNames[winningTeam]}
-                        </div>
-                        <div className="text-sm text-white/70 mt-1">
-                          With ${teamTotals[winningTeam].toLocaleString()} spent
-                        </div>
-                      </div>
-                      
-                      <div className="glass-morphism border-white/10 rounded-lg p-4">
-                        <div className="text-sm font-medium mb-2">Prize Distribution</div>
-                        <div className="text-sm text-white/70 space-y-1">
-                          <div className="flex items-center justify-between">
-                            <span>Winning Team Members</span>
-                            <span>+10% Rank Boost</span>
-                          </div>
-                          <div className="flex items-center justify-between">
-                            <span>Top Contributor</span>
-                            <span>+5% Prize Pool Share</span>
-                          </div>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
-              </div>
-            </TabsContent>
-            
-            <TabsContent value="join">
-              <TeamSection />
-            </TabsContent>
-          </Tabs>
-        </div>
-        
-        <RoyalDivider variant="line" label="HOW IT WORKS" color="royal" className="my-8" />
-        
-        <div className="mb-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="glass-morphism border-white/10 rounded-lg p-6 text-center">
-              <DollarSign className="h-10 w-10 text-royal-gold mx-auto mb-4" />
-              <h3 className="text-xl font-bold mb-2">Spend to Ascend</h3>
-              <p className="text-white/70">
-                Your rank is directly proportional to your spending. $1 = 1 unit of rank.
-              </p>
-            </div>
-            
-            <div className="glass-morphism border-white/10 rounded-lg p-6 text-center">
-              <Trophy className="h-10 w-10 text-royal-gold mx-auto mb-4" />
-              <h3 className="text-xl font-bold mb-2">Prize Pool</h3>
-              <p className="text-white/70">
-                15% of all spending goes to the prize pool, distributed to top spenders.
-              </p>
-            </div>
-            
-            <div className="glass-morphism border-white/10 rounded-lg p-6 text-center">
-              <Users className="h-10 w-10 text-royal-gold mx-auto mb-4" />
-              <h3 className="text-xl font-bold mb-2">Team Competition</h3>
-              <p className="text-white/70">
-                Join a team and compete for weekly rewards and team glory.
-              </p>
-            </div>
-          </div>
-        </div>
-        
-        <RankingDisclaimer />
-      </div>
+        </TabsContent>
+      </Tabs>
+      
+      {selectedUser && (
+        <MockeryModal
+          isOpen={mockeryModalOpen}
+          onClose={() => setMockeryModalOpen(false)}
+          mockeryType={mockeryType}
+          targetUser={selectedUser.username}
+          onConfirm={handleMockeryConfirm}
+        />
+      )}
     </div>
   );
 };
 
-export default LeaderboardPage;
+export default Leaderboard;

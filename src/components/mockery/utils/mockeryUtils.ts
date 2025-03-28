@@ -1,3 +1,4 @@
+
 export type MockeryTier = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
 export type MockeryAction = 'tomatoes' | 'eggs' | 'stocks' | 'silence' | 'courtJester' | 'jester' | 'protected' | 'immune' | 'dunce' | 'roast' | 'ridicule' | 'taunt' | 'drama';
 export type ExtendedMockeryAction = MockeryAction;
@@ -21,6 +22,8 @@ export const getMockeryActionIcon = (action: ExtendedMockeryAction): string => {
   }
 };
 
+export const getMockeryIcon = getMockeryActionIcon; // Alias for compatibility
+
 export const getMockeryTier = (action: MockeryAction): MockeryTier => {
   switch (action) {
     case 'tomatoes': return 'common';
@@ -42,6 +45,8 @@ export const getMockeryTierText = (tier: MockeryTier): string => {
     default: return 'Common';
   }
 };
+
+export const getMockeryText = getMockeryTierText; // Alias for compatibility
 
 export const getMockeryTierColor = (tier: MockeryTier): { text: string, bg: string, border: string } => {
   switch (tier) {
@@ -83,6 +88,8 @@ export const getMockeryTierColor = (tier: MockeryTier): { text: string, bg: stri
       };
   }
 };
+
+export const getMockeryColor = getMockeryTierColor; // Alias for compatibility
 
 export const getMockeryTierLabel = (tier: MockeryTier): string => {
   switch (tier) {
@@ -133,6 +140,8 @@ export const getMockeryActionDescription = (action: MockeryAction): string => {
   }
 };
 
+export const getMockeryDescription = getMockeryActionDescription; // Alias for compatibility
+
 export const getMockeryActionPrice = (action: MockeryAction): number => {
   switch (action) {
     case 'tomatoes': return 0.5;
@@ -151,6 +160,8 @@ export const getMockeryActionPrice = (action: MockeryAction): number => {
     default: return 1;
   }
 };
+
+export const getMockeryCost = getMockeryActionPrice; // Alias for compatibility
 
 export const hasWeeklyDiscount = (action: MockeryAction): boolean => {
   return ['tomatoes', 'eggs'].includes(action);
@@ -176,13 +187,18 @@ export interface MockUser {
 
 export default {
   getMockeryActionIcon,
+  getMockeryIcon,
   getMockeryTier,
   getMockeryTierText,
+  getMockeryText,
   getMockeryTierColor,
+  getMockeryColor,
   getMockeryTierLabel,
   getMockeryActionTitle,
   getMockeryActionDescription,
+  getMockeryDescription,
   getMockeryActionPrice,
+  getMockeryCost,
   hasWeeklyDiscount,
   getDiscountedMockeryPrice
 };

@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { getCertificateById } from '@/services/certificateService';
@@ -54,23 +55,25 @@ const CertificatePage = () => {
       effects: [],
       badges: [],
       themes: [],
-      activeBorder: certificate.user.cosmetics?.activeBorder,
-      activeColor: certificate.user.cosmetics?.activeColor,
-      activeFont: certificate.user.cosmetics?.activeFont,
-      activeBackground: certificate.user.cosmetics?.activeBackground,
-      activeEffect: certificate.user.cosmetics?.activeEffect,
-      activeTheme: certificate.user.cosmetics?.activeTheme,
     },
     settings: {
+      theme: 'dark',
+      notifications: true,
+      emailNotifications: true,
+      soundEffects: true,
+      profileVisibility: 'public',
+      allowProfileLinks: true,
+      showEmailOnProfile: false,
+      rankChangeAlerts: true,
+      shameAlerts: true,
+      newFollowerAlerts: true,
       showRank: true,
       showTeam: true,
       showSpending: true,
       publicProfile: true,
       allowMessages: true,
-      emailNotifications: true,
       darkMode: true,
-      soundEffects: true,
-      language: "en" // This was missing
+      language: "en"
     },
     gender: certificate.user.gender,
     profileImage: certificate.user.profileImage,
