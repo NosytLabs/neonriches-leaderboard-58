@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Header from '@/components/Header';
@@ -14,6 +13,7 @@ import ProfileAnalytics from '@/components/profile/ProfileAnalytics';
 import MarketingProfile from '@/components/profile/MarketingProfile';
 import { useToast } from '@/hooks/use-toast';
 import ProfileSettings from '@/components/profile/ProfileSettings';
+import ProfileBoostDisplay from '@/components/profile/ProfileBoostDisplay';
 
 interface ProfileImage {
   id: number;
@@ -48,7 +48,6 @@ const Profile = () => {
   const [profileUser, setProfileUser] = useState(user);
   const [viewOnly, setViewOnly] = useState(false);
   
-  // Mock profile data
   const [profileData, setProfileData] = useState<ProfileData>({
     bio: "",
     images: [],
@@ -60,18 +59,14 @@ const Profile = () => {
     views: 0
   });
   
-  // Fetch profile data - in a real app, this would be an API call
   useEffect(() => {
     const fetchProfileData = async () => {
       setLoading(true);
       
       try {
         if (username && username !== user?.username) {
-          // Viewing someone else's profile
           setViewOnly(true);
           
-          // Mock fetching another user's data
-          // In a real app, this would call an API
           setTimeout(() => {
             const mockUser = {
               id: "other-user-id",
@@ -124,17 +119,14 @@ const Profile = () => {
             setProfileData(mockProfileData);
             setLoading(false);
             
-            // Track this profile view
             if (user) {
               trackProfileInteraction(mockUser.id, 'view', 'profile_page');
             }
           }, 1000);
         } else {
-          // Viewing own profile
           setViewOnly(false);
           setProfileUser(user);
           
-          // Mock loading own profile data
           setTimeout(() => {
             const ownProfileData = {
               bio: user?.bio || "Share your story with the kingdom...",
@@ -170,13 +162,11 @@ const Profile = () => {
       return;
     }
     
-    // Switch to boost tab if it's your own profile
     if (!viewOnly) {
       setTab('boost');
       return;
     }
     
-    // Implement boosting another user's profile
     toast({
       title: "Coming Soon",
       description: "Boosting other users' profiles will be available in a future update!",
@@ -197,7 +187,6 @@ const Profile = () => {
     );
   }
   
-  // If profile doesn't exist or user isn't found
   if (!profileUser) {
     return (
       <div className="min-h-screen bg-background text-foreground">
@@ -321,6 +310,10 @@ const Profile = () => {
                 user={user} 
                 onBoostProfile={handleBoostProfile} 
               />
+              
+              {user && user.profileBoosts && user.profileBoosts.length > 0 && (
+                <ProfileBoostDisplay user={user} />
+              )}
             </div>
           )}
         </div>
