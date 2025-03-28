@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useNavigate } from 'react-router-dom';
@@ -30,10 +29,8 @@ const Index = () => {
   const [topSpender, setTopSpender] = useState<UserProfile | null>(null);
   
   useEffect(() => {
-    // Load sounds for a better user experience
     preloadSounds();
     
-    // Check if user has already accepted terms
     const acceptedTerms = localStorage.getItem('acceptedTerms');
     if (acceptedTerms === 'true') {
       setHasAcceptedTerms(true);
@@ -41,11 +38,9 @@ const Index = () => {
     
     setHasCheckedTerms(true);
     
-    // Get top spender
     const rankings = getUserRanking();
     if (rankings && rankings.length > 0) {
       const top = rankings[0];
-      // Convert UserRankData to UserProfile for the showcase
       const topUserProfile: UserProfile = {
         id: top.userId,
         username: top.username,
@@ -74,7 +69,6 @@ const Index = () => {
         variant: "default"
       });
       
-      // Navigate to terms of service
       navigate('/terms-of-service');
       return;
     }
@@ -82,7 +76,6 @@ const Index = () => {
     if (user) {
       navigate('/dashboard');
     } else {
-      // Open registration modal or navigate to registration page
       navigate('/auth');
     }
   };
@@ -106,7 +99,6 @@ const Index = () => {
       <Header />
       
       <main className="flex-1">
-        {/* Top Spender Showcase - Only visible when there is a top spender */}
         <div className="container mx-auto px-4 pt-24 pb-8">
           <ToastProvider>
             <TopSpenderShowcase highlightTop={true} />
@@ -147,7 +139,7 @@ const Index = () => {
           
           <RoyalFeatures />
           
-          <RoyalDivider variant="scroll" className="my-16" />
+          <RoyalDivider variant="ornate" className="my-16" />
           
           <ToastProvider>
             <RoyalShowcase topSpender={topSpender || undefined} />

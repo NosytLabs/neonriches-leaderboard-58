@@ -80,7 +80,7 @@ export const useProfileData = (username: string | undefined, currentUser: UserPr
             setLoading(false);
             
             if (currentUser) {
-              trackProfileInteraction(mockUser.id, 'view', 'profile_page');
+              trackProfileInteraction(mockUser.id, 'view');
             }
           }, 1000);
         } else {

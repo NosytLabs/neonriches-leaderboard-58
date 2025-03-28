@@ -20,7 +20,11 @@ export function awardRandomCosmetic(
   availableCosmetics = availableCosmetics.filter(item => {
     const category = item.category as keyof typeof userCosmetics;
     if (!category) return true; // Always include if category is not defined
-    const userHasItem = userCosmetics[category]?.includes(item.id);
+    
+    // Safely check if the array exists and includes the item
+    const categoryItems = userCosmetics[category] || [];
+    const userHasItem = Array.isArray(categoryItems) && categoryItems.includes(item.id);
+    
     return !userHasItem;
   });
   

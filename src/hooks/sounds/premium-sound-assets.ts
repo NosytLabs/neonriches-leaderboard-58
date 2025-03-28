@@ -8,7 +8,7 @@ export const premiumSoundPacks = [
     name: 'Royal Court',
     description: 'Elegant sounds fit for nobility',
     price: 5.99,
-    previewSound: 'royalAnnouncement',
+    previewSound: 'royalAnnouncement' as SoundType,
     sounds: ['royalAnnouncement', 'trumpet', 'medallion', 'seal'] as SoundType[],
     features: ['4 premium sounds', 'High quality audio', 'Exclusive to nobility']
   },
@@ -17,7 +17,7 @@ export const premiumSoundPacks = [
     name: 'Medieval Tavern',
     description: 'Rustic sounds from a bygone era',
     price: 3.99,
-    previewSound: 'coinDrop',
+    previewSound: 'coinDrop' as SoundType,
     sounds: ['coinDrop', 'swordClash', 'noblesLaugh'] as SoundType[],
     features: ['3 premium sounds', 'Ambient background options', 'Authentic medieval feel']
   }

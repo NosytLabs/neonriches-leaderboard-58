@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Code, AlertCircle, FileX, Trash2 } from 'lucide-react';
 import AnalysisTable from './shared/AnalysisTable';
@@ -20,6 +19,7 @@ const UnusedCodeReport: React.FC = () => {
   const unusedImports = unusedImportsMock;
   const unusedVariables = unusedVariablesMock;
   const unusedFunctions = unusedFunctionsMock;
+  // Cast the mockdata to the correct type
   const unusedComponents = unusedComponentsMock as UnusedComponent[];
 
   return (

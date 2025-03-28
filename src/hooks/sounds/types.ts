@@ -43,7 +43,7 @@ export interface PremiumSoundPackDetails {
   description: string;
   price: number;
   preview?: string;
-  previewSound?: SoundType;
+  previewSound?: SoundType | string;
   sounds?: SoundType[];
   features?: string[];
   isPurchased?: boolean;

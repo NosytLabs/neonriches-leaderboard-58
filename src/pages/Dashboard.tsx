@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import Header from '@/components/Header';
@@ -34,7 +33,7 @@ const Dashboard = () => {
   // Get userId safely from user object
   const userId = user?.id || '';
   
-  const { profileData, isLoading: profileDataLoading } = useProfileData(userId);
+  const { profileData, isLoading: profileDataLoading } = useProfileData(userId, user);
   trackDashboardVisit(userId);
   
   const handleFundWallet = async (amount: number): Promise<void> => {

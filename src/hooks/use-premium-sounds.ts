@@ -109,7 +109,8 @@ const usePremiumSounds = () => {
     if (packId) {
       const pack = premiumSoundPacks.find(p => p.id === packId);
       if (pack && pack.previewSound) {
-        playSound(pack.previewSound, 0.4);
+        const soundToPlay = pack.previewSound as SoundType;
+        playSound(soundToPlay, 0.4);
       }
     }
     
@@ -122,9 +123,10 @@ const usePremiumSounds = () => {
     if (!pack) return;
     
     // Play either the specified sound or the pack's default preview sound
-    const soundToPlay = soundType || (pack.previewSound as SoundType);
-    if (soundToPlay) {
-      playSound(soundToPlay, 0.4);
+    if (soundType) {
+      playSound(soundType, 0.4);
+    } else if (pack.previewSound) {
+      playSound(pack.previewSound as SoundType, 0.4);
     }
   }, [playSound]);
   

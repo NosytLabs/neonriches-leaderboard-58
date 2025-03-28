@@ -35,4 +35,4 @@ export interface CosmeticItem {
 export type PremiumSoundPack = string;
 
 // Export Royal Divider type
-export { RoyalDividerVariant };
+export type { RoyalDividerVariant };
