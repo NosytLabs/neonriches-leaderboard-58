@@ -4,7 +4,7 @@ import { Routes, Route, useLocation } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { Toaster } from '@/components/ui/toaster';
 import { ToastProvider } from '@/contexts/ToastContext';
-import { AuthProvider } from '@/contexts/auth';
+import { AuthProvider } from '@/contexts/AuthContext';
 import Loading from '@/components/Loading';
 
 // Lazy-loaded pages

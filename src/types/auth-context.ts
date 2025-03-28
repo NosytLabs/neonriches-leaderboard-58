@@ -9,7 +9,7 @@ export interface AuthContextType {
   updateUserProfile: (data: Partial<UserProfile>) => Promise<void>;
   logout: () => void;
   updateProfile: (data: Partial<UserProfile>) => Promise<void>;
-  signOut: () => void;
+  signOut: () => void; // Add signOut method
   subscription?: UserSubscription;
   awardCosmetic?: (cosmeticId: string, category: string, rarity: CosmeticRarity, source: string) => Promise<boolean>;
   boostProfile?: (days?: number, level?: number) => Promise<boolean>;

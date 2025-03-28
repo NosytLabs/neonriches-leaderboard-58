@@ -12,10 +12,21 @@ export interface ComplexityItem {
   line?: number;
   explanation?: string;
   status?: string;
+  path?: string;
+  functions?: { name: string; complexity: number; status: string; }[];
+}
+
+export interface DuplicateCode {
+  id: string | number;
+  similarity: number;
+  files: { path: string; lines: string; }[];
+  snippet: string;
+  codeSnippet?: string;
+  lines?: number;
 }
 
 export interface AnalysisResult {
-  complexity: any[];
+  complexity: ComplexityItem[];
   duplicates: any[];
   unused: {
     imports: any[];
@@ -42,4 +53,26 @@ export interface AnalysisResult {
   securityIssues: any[];
   bestPracticeViolations: any[];
   codeSmells: any[];
+  // Add missing properties for CodeAnalysis pages
+  deadCodePaths: any[];
+  duplicateCode: DuplicateCode[];
+  complexCode: ComplexityItem[];
+  unusedDependencies: any[];
+  unusedFunctions: any[];
+  metrics: {
+    beforeCleanup: {
+      projectSize: number;
+      fileCount: number;
+      dependencyCount: number;
+    };
+    afterCleanup: {
+      projectSize: number;
+      fileCount: number;
+      dependencyCount: number;
+    };
+  };
+}
+
+export interface MockESLint {
+  lintFiles: (patterns: string[]) => Promise<any[]>;
 }

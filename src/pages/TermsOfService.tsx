@@ -46,7 +46,7 @@ const TermsOfService = () => {
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground">
       <div className="absolute inset-0 -z-10">
-        <ThroneBackground variant="royal" density="medium" animate={true} particles={true} />
+        <ThroneBackground variant="royal" animate={true} particles={true} />
       </div>
       
       <Header />

@@ -1,129 +1,117 @@
 
 import React from 'react';
-import DashboardLayout from '@/components/dashboard/DashboardLayout';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Scroll, Crown, Trophy, BookOpen, Calendar, BarChart4 } from 'lucide-react';
+import { Helmet } from 'react-helmet-async';
+import { Sparkles, ArrowRight, Calendar } from 'lucide-react';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
+import RoyalDivider from '@/components/ui/royal-divider';
 import ThroneBackground from '@/components/ui/throne-background';
-import { useAuth } from '@/contexts/AuthContext';
+
+const updateItems = [
+  {
+    version: "1.2.0",
+    date: "May 15, 2023",
+    title: "The Royal Expansion",
+    description: "Introducing royal titles, cosmetic upgrades, and the Crown Jewels Collection.",
+    highlights: [
+      "Added 15 new royal titles for purchase",
+      "Introduced the Crown Jewels Collection - limited edition profile borders",
+      "Improved leaderboard performance and sorting options",
+      "Added team performance statistics"
+    ]
+  },
+  {
+    version: "1.1.5",
+    date: "April 3, 2023",
+    title: "The Shame Update",
+    description: "Public shaming features and spending streak rewards.",
+    highlights: [
+      "New Public Shaming Festival event",
+      "Implemented spending streak rewards",
+      "Added notification system",
+      "Fixed various profile page bugs"
+    ]
+  },
+  {
+    version: "1.0.0",
+    date: "March 1, 2023",
+    title: "Royal Launch",
+    description: "Official launch of SpendThrone with core features.",
+    highlights: [
+      "Persistent leaderboard system",
+      "Basic profile customization",
+      "Team selection feature",
+      "Payment processing system"
+    ]
+  }
+];
 
 const Updates = () => {
-  const { user } = useAuth();
-  
-  const updates = [
-    {
-      title: "Public Shaming Festival",
-      date: "June 15, 2023",
-      description: "Introducing medieval-style public shaming! Pelt your rivals with rotten tomatoes or place them in the stocks for all to mock.",
-      icon: <Scroll className="h-6 w-6 text-royal-gold" />,
-      category: "Feature"
-    },
-    {
-      title: "Royal Court Standings",
-      date: "June 10, 2023",
-      description: "The leaderboard now shows more detailed information about your noble peers, including their team affiliations and spending history.",
-      icon: <Crown className="h-6 w-6 text-royal-purple" />,
-      category: "Enhancement"
-    },
-    {
-      title: "Weekly Tournament",
-      date: "June 5, 2023",
-      description: "Compete in weekly spending tournaments! The noble who contributes the most to the royal treasury will receive exclusive privileges.",
-      icon: <Trophy className="h-6 w-6 text-royal-crimson" />,
-      category: "Event"
-    },
-    {
-      title: "Noble Chronicles",
-      date: "May 28, 2023",
-      description: "Explore the history of our digital kingdom through the newly added Noble Chronicles section.",
-      icon: <BookOpen className="h-6 w-6 text-royal-navy" />,
-      category: "Content"
-    },
-    {
-      title: "Spring Festival of Wealth",
-      date: "May 20, 2023",
-      description: "Join us for a season of extravagant spending! Special rewards for the most generous nobles.",
-      icon: <Calendar className="h-6 w-6 text-royal-gold" />,
-      category: "Event"
-    },
-    {
-      title: "Spending Analytics",
-      date: "May 15, 2023",
-      description: "Nobles can now view detailed analytics of their contributions to the kingdom treasury.",
-      icon: <BarChart4 className="h-6 w-6 text-royal-navy" />,
-      category: "Feature"
-    }
-  ];
-
   return (
-    <DashboardLayout user={user}>
-      <div className="relative min-h-screen py-8">
-        <ThroneBackground variant="royal" density="medium" />
-        
-        <div className="max-w-5xl mx-auto">
-          <div className="mb-8 flex items-center">
-            <div className="relative mr-3">
-              <Scroll size={32} className="text-royal-gold animate-pulse-slow" />
-              <div className="absolute -inset-2 bg-royal-gold/10 rounded-full blur-lg"></div>
-            </div>
-            <div>
-              <h1 className="text-3xl font-bold royal-gradient">Royal Decrees & Updates</h1>
-              <p className="text-white/70">Stay informed of the latest royal proclamations and kingdom developments</p>
-            </div>
+    <div className="min-h-screen flex flex-col bg-background text-foreground">
+      <Helmet>
+        <title>Royal Updates | SpendThrone</title>
+      </Helmet>
+      
+      <div className="absolute inset-0 -z-10">
+        <ThroneBackground variant="royal" />
+      </div>
+      
+      <Header />
+      
+      <main className="flex-1 container mx-auto px-4 pt-24 pb-16">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-12">
+            <h1 className="text-4xl md:text-5xl font-royal font-bold royal-gradient mb-4">
+              Royal Decrees & Updates
+            </h1>
+            <p className="text-white/70 text-lg">
+              Chronicles of our kingdom's evolution and expansion
+            </p>
           </div>
           
-          <div className="space-y-6">
-            <Card className="glass-morphism border-royal-gold/20">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-lg flex items-center">
-                  <Crown className="mr-2 h-5 w-5 text-royal-gold" />
-                  Latest Royal Proclamations
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-6">
-                  {updates.map((update, index) => (
-                    <div 
-                      key={index} 
-                      className="relative pl-8 pr-4 py-4 glass-morphism border-white/10 rounded-lg animate-fade-in"
-                      style={{ animationDelay: `${index * 150}ms` }}
-                    >
-                      <div className="absolute left-0 top-0 bottom-0 w-2 bg-gradient-to-b from-royal-gold/30 via-royal-crimson/30 to-royal-navy/30 rounded-l-lg"></div>
-                      <div className="absolute left-4 top-4">
-                        {update.icon}
-                      </div>
-                      <div className="ml-8">
-                        <div className="flex items-center justify-between mb-2">
-                          <h3 className="text-lg font-medium">{update.title}</h3>
-                          <span className="text-xs px-2 py-1 bg-white/10 rounded-full text-white/70">{update.category}</span>
-                        </div>
-                        <p className="text-white/80 mb-2">{update.description}</p>
-                        <p className="text-sm text-white/60">{update.date}</p>
-                      </div>
+          <div className="space-y-12">
+            {updateItems.map((update, index) => (
+              <div key={index} className="glass-morphism border-white/10 p-6 rounded-lg">
+                <div className="flex flex-col md:flex-row md:items-start justify-between mb-4 gap-4">
+                  <div>
+                    <div className="flex items-center mb-2">
+                      <Sparkles className="h-5 w-5 text-royal-gold mr-2" />
+                      <h2 className="text-2xl font-bold royal-gradient">{update.title}</h2>
                     </div>
-                  ))}
+                    <p className="text-white/80">{update.description}</p>
+                  </div>
+                  
+                  <div className="flex flex-col items-end">
+                    <div className="text-lg font-royal text-royal-gold">v{update.version}</div>
+                    <div className="flex items-center text-sm text-white/60">
+                      <Calendar className="h-3 w-3 mr-1" />
+                      {update.date}
+                    </div>
+                  </div>
                 </div>
-              </CardContent>
-            </Card>
-            
-            <Card className="glass-morphism border-royal-crimson/20">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-lg flex items-center">
-                  <Calendar className="mr-2 h-5 w-5 text-royal-crimson" />
-                  Upcoming Royal Events
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="p-4 glass-morphism border-white/10 rounded-lg text-center">
-                  <p className="text-white/70 italic">
-                    "Stay tuned for new festivities where you can spend more of your wealth for meaningless digital prestige!"
-                  </p>
+                
+                <RoyalDivider variant="line" className="my-4" />
+                
+                <div>
+                  <h3 className="text-lg font-semibold mb-3">Royal Highlights:</h3>
+                  <ul className="space-y-2">
+                    {update.highlights.map((highlight, idx) => (
+                      <li key={idx} className="flex items-start">
+                        <ArrowRight className="h-4 w-4 text-royal-gold mt-1 mr-2 flex-shrink-0" />
+                        <span className="text-white/80">{highlight}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            ))}
           </div>
         </div>
-      </div>
-    </DashboardLayout>
+      </main>
+      
+      <Footer />
+    </div>
   );
 };
 

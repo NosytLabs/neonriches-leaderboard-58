@@ -4,10 +4,11 @@ import { Copy, AlertCircle } from 'lucide-react';
 import EmptyState from './shared/EmptyState';
 import CodeSnippet from './shared/CodeSnippet';
 import { duplicateCodeMock } from '@/utils/codeAnalysis/mockData';
+import { DuplicateCode } from '@/utils/codeAnalysis/types';
 
 const DuplicateCodeReport: React.FC = () => {
   // Use centralized mock data
-  const duplicateCode = duplicateCodeMock;
+  const duplicateCode = duplicateCodeMock as DuplicateCode[];
 
   return (
     <div>
@@ -33,7 +34,7 @@ const DuplicateCodeReport: React.FC = () => {
                   <h4 className="font-semibold mb-1">Duplicate Pattern #{item.id}</h4>
                   <div className="flex items-center">
                     <span className="text-xs bg-blue-500/20 text-blue-400 px-2 py-0.5 rounded-full mr-2">
-                      {item.lines} lines
+                      {item.lines || item.files.length * 5} lines
                     </span>
                     <span className="text-xs bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded-full">
                       {Math.round(item.similarity * 100)}% similar
@@ -50,14 +51,14 @@ const DuplicateCodeReport: React.FC = () => {
                 <h5 className="text-sm font-medium mb-2">Files:</h5>
                 <ul className="space-y-1 text-sm text-white/70">
                   {item.files.map((file, index) => (
-                    <li key={index} className="file-path">{file}</li>
+                    <li key={index} className="file-path">{file.path}</li>
                   ))}
                 </ul>
               </div>
               
               <div>
                 <h5 className="text-sm font-medium mb-2">Code Snippet:</h5>
-                <CodeSnippet code={item.codeSnippet} />
+                <CodeSnippet code={item.codeSnippet || item.snippet} />
               </div>
             </div>
           ))}

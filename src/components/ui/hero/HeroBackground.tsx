@@ -15,7 +15,7 @@ const HeroBackground: React.FC<HeroBackgroundProps> = ({ isVisible = true }) => 
         <div className="absolute top-2/3 left-2/3 w-72 h-72 rounded-full bg-royal-navy/10 filter blur-[80px]"></div>
       </div>
       
-      <ThroneBackground variant="default" density="low" animate={isVisible} particles={isVisible} />
+      <ThroneBackground variant="royal" density="low" animate={isVisible} particles={isVisible} />
       
       <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-background to-transparent"></div>
     </>

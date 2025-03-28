@@ -56,6 +56,25 @@ const FireSaleEvent: React.FC<FireSaleEventProps> = ({
     return Number((originalPrice * (1 - discountPercentage / 100)).toFixed(2));
   };
   
+  // Helper function to get rarity style
+  const getCosmeticPreviewStyleForRarity = (rarity: string) => {
+    // Converting string rarity to CosmeticRarity type
+    const typedRarity = rarity as CosmeticRarity;
+    
+    // Create a dummy cosmetic item with the rarity
+    const dummyItem: CosmeticItem = {
+      id: 'dummy',
+      name: 'Dummy Item',
+      description: 'Dummy description',
+      category: 'border',
+      type: 'profile',
+      rarity: typedRarity,
+      cost: 0
+    };
+    
+    return getCosmeticPreviewStyle(dummyItem);
+  };
+  
   // Handle purchase
   const handlePurchase = (item: CosmeticItem) => {
     // This would typically call a real purchase API
@@ -149,7 +168,7 @@ const FireSaleEvent: React.FC<FireSaleEventProps> = ({
                     </div>
                     
                     <div className="flex items-start gap-3">
-                      <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${getCosmeticPreviewStyle(item.rarity)}`}>
+                      <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${getCosmeticPreviewStyleForRarity(item.rarity)}`}>
                         {item.imageSrc ? (
                           <img 
                             src={item.imageSrc} 

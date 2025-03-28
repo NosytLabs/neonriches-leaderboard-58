@@ -3,25 +3,23 @@ import React from 'react';
 import { AlertCircle, Code } from 'lucide-react';
 import EmptyState from './shared/EmptyState';
 import { complexityReportMock } from '@/utils/codeAnalysis/mockData';
-
-// Define proper type for the complexity item
-interface ComplexityItem {
-  id: string;
-  name: string;
-  file: string;
-  complexity: number;
-  linesOfCode: number;
-  parameters: number;
-  nestedLevel: number;
-  issues: string[];
-  functionName?: string;  // Add optional fields reported as missing
-  line?: number;
-  explanation?: string;
-}
+import { ComplexityItem } from '@/utils/codeAnalysis/types';
 
 const ComplexityReport: React.FC = () => {
-  // Use centralized mock data with the correct type
-  const complexityItems: ComplexityItem[] = complexityReportMock;
+  // Transform the mock data to match the ComplexityItem type
+  const transformedMockData: ComplexityItem[] = complexityReportMock.map((item: any, index) => ({
+    id: `complexity-${index}`,
+    name: item.functions?.[0]?.name || `Function-${index}`,
+    file: item.path || '',
+    complexity: item.complexity || 0,
+    linesOfCode: 0,
+    parameters: 0,
+    nestedLevel: 0,
+    issues: [],
+    path: item.path,
+    functions: item.functions,
+    status: item.status
+  }));
 
   return (
     <div>
@@ -30,7 +28,7 @@ const ComplexityReport: React.FC = () => {
         Code Complexity Analysis
       </h3>
       
-      {complexityItems.length === 0 ? (
+      {transformedMockData.length === 0 ? (
         <EmptyState
           icon={AlertCircle}
           message="No complexity issues detected."
@@ -41,7 +39,7 @@ const ComplexityReport: React.FC = () => {
             The following functions have been identified as potentially complex. Consider refactoring these to improve maintainability.
           </p>
           
-          {complexityItems.map((item) => (
+          {transformedMockData.map((item) => (
             <div 
               key={item.id} 
               className="p-4 rounded-md glass-morphism border-white/10"
@@ -69,19 +67,19 @@ const ComplexityReport: React.FC = () => {
               <div className="grid grid-cols-3 gap-2 mt-3 text-xs">
                 <div className="bg-black/20 p-2 rounded">
                   <p className="text-white/50">Lines of Code</p>
-                  <p className="text-white font-medium">{item.linesOfCode}</p>
+                  <p className="text-white font-medium">{item.linesOfCode || 'N/A'}</p>
                 </div>
                 <div className="bg-black/20 p-2 rounded">
                   <p className="text-white/50">Parameters</p>
-                  <p className="text-white font-medium">{item.parameters}</p>
+                  <p className="text-white font-medium">{item.parameters || 'N/A'}</p>
                 </div>
                 <div className="bg-black/20 p-2 rounded">
                   <p className="text-white/50">Nesting Level</p>
-                  <p className="text-white font-medium">{item.nestedLevel}</p>
+                  <p className="text-white font-medium">{item.nestedLevel || 'N/A'}</p>
                 </div>
               </div>
               
-              {item.issues.length > 0 && (
+              {item.issues && item.issues.length > 0 && (
                 <div className="mt-3">
                   <p className="text-sm font-medium mb-1">Issues:</p>
                   <ul className="list-disc pl-5 text-xs text-white/70 space-y-1">

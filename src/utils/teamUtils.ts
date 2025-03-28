@@ -76,3 +76,37 @@ export const getInitials = (username: string): string => {
     .toUpperCase()
     .substring(0, 2);
 };
+
+// Add team data for TeamSwitchModal
+export const teamData = [
+  {
+    id: 'red',
+    name: 'Red Team',
+    description: 'The fiery warriors of passion and power',
+    color: 'text-red-500',
+    bgColor: 'bg-red-500/20',
+    icon: '🔥',
+    members: 324,
+    rank: 2
+  },
+  {
+    id: 'green',
+    name: 'Green Team',
+    description: 'The prosperous cultivators of wealth and fortune',
+    color: 'text-green-500',
+    bgColor: 'bg-green-500/20',
+    icon: '💰',
+    members: 286,
+    rank: 3
+  },
+  {
+    id: 'blue',
+    name: 'Blue Team',
+    description: 'The calculated strategists of wisdom and foresight',
+    color: 'text-blue-500',
+    bgColor: 'bg-blue-500/20',
+    icon: '❄️',
+    members: 412,
+    rank: 1
+  }
+];
