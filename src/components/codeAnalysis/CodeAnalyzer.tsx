@@ -1,19 +1,12 @@
 
 import React, { useState } from 'react';
 import AnalysisSettings from './AnalysisSettings';
-import UnusedCodeReport from './UnusedCodeReport';
-import DuplicateCodeReport from './DuplicateCodeReport';
-import ComplexityReport from './ComplexityReport';
-import PerformanceReport from './PerformanceReport';
-import CodeAnalysisReport from './CodeAnalysisReport';
+import AnalysisResults from './AnalysisResults';
 import { Button } from '@/components/ui/button';
-import { AlertCircle, Code, FileSearch } from 'lucide-react';
-import { AnalysisResult, scanCodebase } from '@/utils/codeAnalysis/analysisUtils';
-
-type AnalysisTab = 'unused' | 'duplicate' | 'complexity' | 'performance' | 'overview';
+import { FileSearch } from 'lucide-react';
+import { AnalysisResult } from '@/utils/codeAnalysis/analysisUtils';
 
 const CodeAnalyzer: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<AnalysisTab>('overview');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisComplete, setAnalysisComplete] = useState(false);
   const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
@@ -118,54 +111,11 @@ const CodeAnalyzer: React.FC = () => {
         </div>
       </div>
       
-      {analysisComplete && analysisResult && (
-        <div className="space-y-6">
-          <div className="analysis-card rounded-md overflow-hidden glass-morphism border-white/10">
-            <div className="p-4 border-b border-white/10 flex">
-              <nav className="flex flex-wrap gap-2">
-                <button
-                  onClick={() => setActiveTab('overview')}
-                  className={`px-3 py-1.5 rounded-md text-sm font-medium ${activeTab === 'overview' ? 'bg-royal-gold/10 text-royal-gold' : 'text-white/70 hover:text-white/90'}`}
-                >
-                  Overview
-                </button>
-                <button
-                  onClick={() => setActiveTab('unused')}
-                  className={`px-3 py-1.5 rounded-md text-sm font-medium ${activeTab === 'unused' ? 'bg-royal-gold/10 text-royal-gold' : 'text-white/70 hover:text-white/90'}`}
-                >
-                  Unused Code
-                </button>
-                <button
-                  onClick={() => setActiveTab('duplicate')}
-                  className={`px-3 py-1.5 rounded-md text-sm font-medium ${activeTab === 'duplicate' ? 'bg-royal-gold/10 text-royal-gold' : 'text-white/70 hover:text-white/90'}`}
-                >
-                  Duplicate Code
-                </button>
-                <button
-                  onClick={() => setActiveTab('complexity')}
-                  className={`px-3 py-1.5 rounded-md text-sm font-medium ${activeTab === 'complexity' ? 'bg-royal-gold/10 text-royal-gold' : 'text-white/70 hover:text-white/90'}`}
-                >
-                  Complexity
-                </button>
-                <button
-                  onClick={() => setActiveTab('performance')}
-                  className={`px-3 py-1.5 rounded-md text-sm font-medium ${activeTab === 'performance' ? 'bg-royal-gold/10 text-royal-gold' : 'text-white/70 hover:text-white/90'}`}
-                >
-                  Performance
-                </button>
-              </nav>
-            </div>
-            
-            <div className="p-6">
-              {activeTab === 'overview' && <CodeAnalysisReport analysis={analysisResult} />}
-              {activeTab === 'unused' && <UnusedCodeReport />}
-              {activeTab === 'duplicate' && <DuplicateCodeReport />}
-              {activeTab === 'complexity' && <ComplexityReport />}
-              {activeTab === 'performance' && <PerformanceReport />}
-            </div>
-          </div>
-        </div>
-      )}
+      <AnalysisResults 
+        analysisComplete={analysisComplete}
+        analysisResult={analysisResult}
+        isAnalyzing={isAnalyzing}
+      />
     </div>
   );
 };

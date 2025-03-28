@@ -1,148 +1,121 @@
 
-import { useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { UserProfile } from '@/types/user';
 
-// Define the boost effect types
-export type BoostEffectType = 'border' | 'background' | 'effect';
+export type BoostEffectType = 'speed' | 'power' | 'prestige';
 
-// Define the boost structure
 export interface ProfileBoost {
   id: string;
-  type: BoostEffectType;
-  style: string;
-  expiresAt?: string;
+  effectType: BoostEffectType;
+  multiplier: number;
+  expiresAt: number; // Unix timestamp
+  acquiredAt: number; // Unix timestamp
+  active: boolean;
 }
 
-// Define a boost effect (for display purposes)
-export interface BoostEffect {
+interface BoostEffect {
   id: string;
   name: string;
   description: string;
-  icon?: React.ReactNode;
   bonusText: string;
+  icon?: React.ReactNode;
 }
 
-// Extended UserProfile type with boosts
-interface UserProfileWithBoosts extends UserProfile {
-  boosts?: ProfileBoost[];
-}
+export const useProfileBoost = (user: UserProfile) => {
+  const [activeBoosts, setActiveBoosts] = useState<ProfileBoost[]>([]);
 
-export function useProfileBoost(user: UserProfileWithBoosts) {
-  // Check if user has any active boosts
-  const hasActiveBoosts = useCallback(() => {
-    if (!user) return false;
-    
-    return !!(
-      user.tier === 'pro' || 
-      user.tier === 'whale' || 
-      user.tier === 'shark' || 
-      user.tier === 'dolphin' ||
-      (user.boosts && user.boosts.length > 0)
-    );
-  }, [user]);
-
-  // Generate CSS classes based on active boosts
-  const getBoostClasses = useCallback(() => {
-    if (!user) return '';
-    
-    let classes: string[] = [];
-    
-    // Apply tier-based boosts
-    if (user.tier === 'pro') {
-      classes.push('profile-boost-pro');
-    } else if (user.tier === 'whale') {
-      classes.push('profile-boost-whale');
-    } else if (user.tier === 'shark') {
-      classes.push('profile-boost-shark');
-    } else if (user.tier === 'dolphin') {
-      classes.push('profile-boost-dolphin');
-    }
-    
-    // Apply specific boosts if available
-    if (user.boosts) {
-      user.boosts.forEach(boost => {
-        if (boost.type === 'border') {
-          classes.push(`profile-boost-border-${boost.style}`);
-        } else if (boost.type === 'effect') {
-          classes.push(`profile-boost-effect-${boost.style}`);
-        } else if (boost.type === 'background') {
-          classes.push(`profile-boost-bg-${boost.style}`);
+  // Mock active boosts for testing
+  useEffect(() => {
+    if (user) {
+      const mockBoosts: ProfileBoost[] = [
+        {
+          id: 'boost-1',
+          effectType: 'speed',
+          multiplier: 1.5,
+          expiresAt: Date.now() + 1000 * 60 * 60 * 24, // 24 hours
+          acquiredAt: Date.now() - 1000 * 60 * 60, // 1 hour ago
+          active: true
+        },
+        {
+          id: 'boost-2',
+          effectType: 'power',
+          multiplier: 2,
+          expiresAt: Date.now() + 1000 * 60 * 60 * 2, // 2 hours
+          acquiredAt: Date.now() - 1000 * 60 * 30, // 30 minutes ago
+          active: true
         }
-      });
+      ];
+      
+      setActiveBoosts(mockBoosts);
     }
+  }, [user]);
+  
+  // Check if a user has any active boosts
+  const hasActiveBoosts = () => {
+    return activeBoosts && activeBoosts.length > 0;
+  };
+  
+  // Get the effect details of a boost by ID
+  const getBoostEffect = (boostId: string): BoostEffect | null => {
+    const boost = activeBoosts.find(b => b.id === boostId);
+    if (!boost) return null;
     
-    // Apply team-specific boost
-    if (user.team === 'red') {
-      classes.push('profile-boost-team-red');
-    } else if (user.team === 'green') {
-      classes.push('profile-boost-team-green');
-    } else if (user.team === 'blue') {
-      classes.push('profile-boost-team-blue');
+    // Map effect types to their details
+    switch (boost.effectType) {
+      case 'speed':
+        return {
+          id: boost.id,
+          name: "Royal Speed",
+          description: "Your profile loads faster for visitors",
+          bonusText: `+${(boost.multiplier * 100) - 100}% speed`,
+        };
+      case 'power':
+        return {
+          id: boost.id,
+          name: "Royal Power",
+          description: "Your actions have more impact",
+          bonusText: `+${(boost.multiplier * 100) - 100}% power`,
+        };
+      case 'prestige':
+        return {
+          id: boost.id,
+          name: "Royal Prestige",
+          description: "Your rank appears higher to others",
+          bonusText: `+${(boost.multiplier * 100) - 100}% prestige`,
+        };
+      default:
+        return null;
     }
+  };
+  
+  // Calculate time remaining for a boost
+  const getBoostTimeRemaining = (boost: ProfileBoost): number => {
+    const now = Date.now();
+    return Math.max(0, boost.expiresAt - now);
+  };
+  
+  // Format time remaining in a human-readable format
+  const formatTimeRemaining = (milliseconds: number): string => {
+    if (milliseconds <= 0) return "Expired";
     
-    return classes.join(' ');
-  }, [user]);
-
-  // Get active boosts for the user
-  const getActiveBoosts = useCallback(() => {
-    if (!user || !user.boosts) return [];
-    return user.boosts;
-  }, [user]);
-
-  // Get the effect details for a given boost
-  const getBoostEffect = useCallback((boostId: string): BoostEffect | null => {
-    // This would typically come from a database or config
-    // Mock implementation for now
-    const boostEffects: Record<string, BoostEffect> = {
-      'gold-border': {
-        id: 'gold-border',
-        name: 'Gold Border',
-        description: 'A luxurious gold border for your profile',
-        bonusText: '+5% Visibility'
-      },
-      'royal-glow': {
-        id: 'royal-glow',
-        name: 'Royal Glow',
-        description: 'A radiant glow effect around your profile',
-        bonusText: '+10% Presence'
-      }
-    };
-    
-    return boostEffects[boostId] || null;
-  }, []);
-
-  // Calculate remaining time for boost
-  const getBoostTimeRemaining = useCallback((boost: ProfileBoost): number => {
-    if (!boost.expiresAt) return Infinity;
-    
-    const expiryDate = new Date(boost.expiresAt);
-    const currentDate = new Date();
-    
-    return Math.max(0, expiryDate.getTime() - currentDate.getTime());
-  }, []);
-
-  // Format time remaining into human-readable string
-  const formatTimeRemaining = useCallback((timeMs: number): string => {
-    if (timeMs === Infinity) return 'Permanent';
-    if (timeMs <= 0) return 'Expired';
-    
-    const seconds = Math.floor(timeMs / 1000);
+    const seconds = Math.floor(milliseconds / 1000);
     const minutes = Math.floor(seconds / 60);
     const hours = Math.floor(minutes / 60);
-    const days = Math.floor(hours / 24);
     
-    if (days > 0) return `${days} days remaining`;
-    if (hours > 0) return `${hours} hours remaining`;
-    if (minutes > 0) return `${minutes} minutes remaining`;
-    return `${seconds} seconds remaining`;
-  }, []);
-
-  return { 
-    hasActiveBoosts, 
-    getBoostClasses,
-    activeBoosts: getActiveBoosts(),
+    if (hours > 0) {
+      return `${hours}h ${minutes % 60}m remaining`;
+    } else if (minutes > 0) {
+      return `${minutes}m ${seconds % 60}s remaining`;
+    } else {
+      return `${seconds}s remaining`;
+    }
+  };
+  
+  return {
+    activeBoosts,
+    hasActiveBoosts,
     getBoostEffect,
     getBoostTimeRemaining,
     formatTimeRemaining
   };
-}
+};
