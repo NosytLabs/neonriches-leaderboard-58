@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 import './index.css';
-import { AuthProvider } from '@/contexts/auth'; // Update import
+import { AuthProvider } from '@/contexts/auth'; // Import from the new path
 import { ToastProvider } from '@/contexts/ToastContext';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
