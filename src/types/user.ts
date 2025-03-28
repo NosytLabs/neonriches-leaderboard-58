@@ -1,3 +1,4 @@
+
 export interface UserProfile {
   id: string;
   username: string;
@@ -18,6 +19,7 @@ export interface UserProfile {
   joinedAt: string;
   lastActive?: string;
   badges?: string[];
+  isVerified?: boolean; // Added the isVerified property
   profileBoosts?: Array<{
     id: string;
     effectId: string;
