@@ -47,8 +47,49 @@ export interface AnalyticsData {
 }
 
 export type UserTeam = 'red' | 'green' | 'blue' | null;
-export type UserTier = 'crab' | 'octopus' | 'fish' | 'dolphin' | 'shark' | 'whale';
-export type UserGender = 'king' | 'queen' | 'neutral';
+export type UserTier = 'crab' | 'octopus' | 'fish' | 'dolphin' | 'shark' | 'whale' | 'free' | 'pro';
+export type UserGender = 'king' | 'queen' | 'neutral' | 'jester' | 'noble';
+
+export interface SocialLink {
+  platform: string;
+  url: string;
+  clicks?: number;
+}
+
+export interface UserSettings {
+  theme: 'dark' | 'light' | 'system';
+  notifications: boolean;
+  visibility: 'public' | 'private' | 'friends';
+  marketingConsent: boolean;
+  accountVisibility: 'public' | 'anonymous';
+  linkSharing: boolean;
+  analyticsSharing: boolean;
+  showRank?: boolean;
+  showSpending?: boolean;
+  showTeam?: boolean;
+  profileVisibility?: 'public' | 'private' | 'friends';
+  allowProfileLinks?: boolean;
+  showEmailOnProfile?: boolean;
+  emailNotifications?: boolean;
+  rankChangeAlerts?: boolean;
+  shameAlerts?: boolean;
+  newFollowerAlerts?: boolean;
+}
+
+export interface UserSubscription {
+  id: string;
+  status: 'active' | 'canceled' | 'past_due' | 'trialing';
+  tier: 'free' | 'pro';
+  interval: 'monthly' | 'quarterly' | 'yearly';
+  currentPeriodEnd: number;
+  cancelAtPeriodEnd: boolean;
+}
+
+export interface ProfileLink {
+  id: number;
+  url: string;
+  label: string;
+}
 
 export interface UserProfile {
   id: string;
@@ -62,29 +103,23 @@ export interface UserProfile {
   team?: UserTeam;
   spentAmount: number;
   amountSpent: number;
+  walletBalance?: number;
   rank: number;
   joinedAt: string;
-  joinDate?: string;
+  joinDate?: string | Date;
   lastActive?: string;
   isVerified?: boolean;
   activeTitle?: string;
   gender?: UserGender;
   tier?: UserTier;
+  role?: string;
   spendStreak?: number;
   profileBoosts?: ProfileBoost[];
   cosmetics?: UserCosmetics;
-  socialLinks?: Array<{
-    platform: string;
-    url: string;
-    clicks?: number;
-  }>;
-  settings?: {
-    theme: 'dark' | 'light' | 'system';
-    notifications: boolean;
-    visibility: 'public' | 'private' | 'friends';
-    marketingConsent: boolean;
-    accountVisibility: 'public' | 'anonymous';
-    linkSharing: boolean;
-    analyticsSharing: boolean;
-  };
+  socialLinks?: SocialLink[];
+  settings?: UserSettings;
+  subscription?: UserSubscription;
+  profileViews?: number;
+  profileClicks?: number;
+  followers?: number;
 }

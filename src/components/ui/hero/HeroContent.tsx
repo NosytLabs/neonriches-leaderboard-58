@@ -1,46 +1,48 @@
 
 import React, { useRef } from 'react';
 import useFloatingCoins from '@/hooks/use-floating-coins';
+import { Button } from '@/components/ui/button';
+import { DollarSign } from 'lucide-react';
 
-interface HeroContentProps {
-  children: React.ReactNode;
-  showCoins?: boolean;
-}
-
-const HeroContent: React.FC<HeroContentProps> = ({ children, showCoins = true }) => {
+const HeroContent: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   
-  const { coins, addCoins } = useFloatingCoins({
-    containerRef,
-    enabled: showCoins,
-    autoStart: true,
-    count: 5,
-    frequency: 0.3
-  });
+  // Create a simplified version with proper error handling
+  const { addCoins } = useFloatingCoins() || { addCoins: () => {} };
+  
+  const handleSparkleClick = () => {
+    if (containerRef.current && addCoins) {
+      addCoins({
+        container: containerRef.current,
+        count: 5,
+        size: 'md'
+      });
+    }
+  };
   
   return (
-    <div ref={containerRef} className="relative overflow-hidden">
-      {children}
+    <div ref={containerRef} className="relative flex flex-col items-center justify-center min-h-[60vh] text-center py-16 px-4 overflow-hidden">
+      {/* Hero content */}
+      <h1 className="text-4xl md:text-6xl font-bold royal-gradient mb-4 font-royal">
+        The Pay-to-Win <br /> Leaderboard Experience
+      </h1>
       
-      {showCoins && coins.map(coin => (
-        <div
-          key={coin.id}
-          className="absolute z-10 coin-floating pointer-events-none"
-          style={{
-            left: `${coin.x}px`,
-            top: `${coin.y}px`,
-            width: `${coin.size}px`,
-            height: `${coin.size}px`,
-            transform: `rotate(${coin.rotation}deg)`,
-            animationDuration: `${coin.duration}ms`,
-            animationDelay: `${coin.delay}ms`,
-          }}
-        >
-          <span className="absolute inset-0 flex items-center justify-center text-royal-gold">
-            💰
-          </span>
-        </div>
-      ))}
+      <p className="text-lg md:text-xl text-white/70 max-w-2xl mb-8">
+        In our satire of wealth and status, your rank is directly proportional to your spending.
+        $1 = 1 unit of rank. The leaderboard never resets.
+      </p>
+      
+      <Button 
+        className="animate-royal-shine bg-gradient-to-r from-royal-gold via-amber-600 to-royal-gold text-black font-semibold py-6 px-8 rounded-lg"
+        onClick={handleSparkleClick}
+      >
+        <DollarSign size={18} className="mr-2" />
+        Contribute to Your Status
+      </Button>
+      
+      <p className="text-sm text-white/50 mt-4 italic max-w-md">
+        "Every contribution inflates your digital ego while deflating your actual wealth."
+      </p>
     </div>
   );
 };

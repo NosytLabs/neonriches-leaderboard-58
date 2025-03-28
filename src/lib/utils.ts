@@ -1,38 +1,24 @@
 
-import { clsx, type ClassValue } from "clsx"
-import { twMerge } from "tailwind-merge"
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
+  return twMerge(clsx(inputs));
 }
 
-export const validatePassword = (password: string): {
-  isValid: boolean;
-  message?: string;
-} => {
-  if (!password) {
-    return { isValid: false, message: "Password is required" };
-  }
-  
-  if (password.length < 6) {
-    return { isValid: false, message: "Password must be at least 6 characters" };
-  }
-  
-  return { isValid: true };
-};
+export function formatCurrency(amount: number, currency: string = 'USD'): string {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency,
+    minimumFractionDigits: 2
+  }).format(amount);
+}
 
-export const validateEmail = (email: string): {
-  isValid: boolean;
-  message?: string;
-} => {
-  if (!email) {
-    return { isValid: false, message: "Email is required" };
-  }
-  
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(email)) {
-    return { isValid: false, message: "Please enter a valid email address" };
-  }
-  
-  return { isValid: true };
-};
+export function formatDate(date: Date | string | number): string {
+  const dateObj = date instanceof Date ? date : new Date(date);
+  return new Intl.DateTimeFormat('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric'
+  }).format(dateObj);
+}

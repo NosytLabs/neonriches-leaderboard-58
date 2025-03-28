@@ -1,45 +1,49 @@
 
 import React from 'react';
 import { cn } from '@/lib/utils';
-import MedievalIcon from '@/components/ui/medieval-icon';
-import { BaseDecorationProps, sizeClasses, getColorClass, toMedievalIconColor } from './types';
-import { MedievalIconName } from '@/components/ui/medieval-icon';
+import MedievalIcon, { MedievalIconColor, MedievalIconSize } from '@/components/ui/medieval-icon';
+import { BaseDecorationProps, sizeClasses, getColorClass } from './types';
 
 const RoyalBanner: React.FC<BaseDecorationProps> = ({
   color = 'gold',
   size = 'md',
   animate = false,
-  className
+  className = ''
 }) => {
-  const getIconName = (): MedievalIconName => {
-    if (color === 'gold') return 'crown';
-    if (color === 'crimson') return 'sword';
-    if (color === 'navy') return 'shield';
-    return 'seal';
-  };
-
+  const containerSize = sizeClasses[size].container;
+  const bgColor = getColorClass(color, 'bg');
+  const borderColor = getColorClass(color, 'border');
+  const animateClass = animate ? 'animate-pulse-slow' : '';
+  
+  const bannerIcons = [
+    { name: "crown" as const, position: 'top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2' },
+    { name: "swords" as const, position: 'bottom-1/4 left-1/4' },
+    { name: "shield" as const, position: 'bottom-1/4 right-1/4' }
+  ];
+  
   return (
     <div className={cn(
       'relative flex items-center justify-center',
-      sizeClasses[size].container,
+      containerSize,
+      animateClass,
       className
     )}>
       <div className={cn(
-        'absolute w-full h-1/3',
-        getColorClass(color, 'bg')
-      )}>
-        {animate && (
-          <div className="absolute inset-0 royal-shine"></div>
-        )}
-      </div>
-      <div className="absolute z-10">
-        <MedievalIcon 
-          name={getIconName()} 
-          size="sm" 
-          color={toMedievalIconColor(color)} 
-          animate={animate} 
-        />
-      </div>
+        'absolute inset-0 rounded-sm',
+        bgColor,
+        borderColor,
+        'border'
+      )} />
+      
+      {bannerIcons.map((icon, index) => (
+        <div key={index} className={cn('absolute', icon.position)}>
+          <MedievalIcon
+            name={icon.name}
+            size="sm"
+            color={color}
+          />
+        </div>
+      ))}
     </div>
   );
 };

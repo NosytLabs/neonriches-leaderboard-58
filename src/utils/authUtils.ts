@@ -1,67 +1,84 @@
 
-import { UserProfile } from '@/types/user';
+import { UserProfile, UserGender } from '@/types/user';
 
-/**
- * Creates a default user profile for testing and development
- */
+// Create a default user for development
 export const createDefaultUser = (): UserProfile => {
+  const defaultCosmetics = {
+    borders: [],
+    colors: [],
+    fonts: [],
+    emojis: [],
+    titles: [],
+    backgrounds: [],
+    effects: [],
+    badges: [],
+    themes: []
+  };
+
   return {
-    id: '1',
-    username: 'NobleTester',
+    id: 'test-user-id',
+    username: 'TestUser',
     email: 'test@example.com',
-    profileImage: 'https://source.unsplash.com/random/200x200/?portrait',
-    amountSpent: 25,
+    displayName: 'Test User',
+    bio: 'This is a test user account for development.',
+    profileImage: 'https://source.unsplash.com/random/300x300?portrait',
+    banner: 'https://source.unsplash.com/random/1200x400?landscape',
+    amountSpent: 0,
+    spentAmount: 0,
     walletBalance: 100,
-    rank: 5,
-    spendStreak: 2,
-    tier: 'octopus',
-    team: 'blue',
-    gender: 'king',
-    joinDate: new Date('2023-01-15'),
-    cosmetics: {
-      borders: ['gold-border'],
-      colors: ['royal-purple'],
-      fonts: ['medieval'],
-      emojis: ['crown', 'gem'],
-      titles: [],
-      backgrounds: [],
-      effects: [],
-      badges: [],
-      themes: []
-    },
-    bio: 'A noble testing the royal features of this fine kingdom.',
-    marketingStats: {
-      impressions: 1250,
-      clicks: 75,
-      conversions: 5,
-      ctr: 6.0,
-      sources: { 'direct': 800, 'social': 300, 'referral': 150 },
-      referrers: { 'twitter': 200, 'facebook': 100, 'instagram': 50 }
-    },
-    socialLinks: [
-      { platform: 'Twitter', url: 'https://twitter.com/example', clicks: 12 },
-      { platform: 'Website', url: 'https://example.com', clicks: 25 }
-    ]
+    rank: 999,
+    joinedAt: new Date().toISOString(),
+    joinDate: new Date().toISOString(),
+    lastActive: new Date().toISOString(),
+    isVerified: true,
+    gender: 'neutral',
+    tier: 'crab',
+    spendStreak: 0,
+    cosmetics: defaultCosmetics,
+    socialLinks: [],
+    profileViews: 0,
+    profileClicks: 0,
+    followers: 0,
+    settings: {
+      theme: 'dark',
+      notifications: true,
+      visibility: 'public',
+      marketingConsent: false,
+      accountVisibility: 'public',
+      linkSharing: true,
+      analyticsSharing: true,
+      showRank: true,
+      showSpending: true,
+      showTeam: true,
+      profileVisibility: 'public',
+      allowProfileLinks: true,
+      showEmailOnProfile: false,
+      emailNotifications: true,
+      rankChangeAlerts: true,
+      shameAlerts: false,
+      newFollowerAlerts: true
+    }
   };
 };
 
-/**
- * Creates a new user profile based on registration data
- */
-export const registerUser = (email: string, username: string, password: string): UserProfile => {
+export const createRandomUser = (index: number): UserProfile => {
+  const teams: Array<'red' | 'green' | 'blue'> = ['red', 'green', 'blue'];
+  const genders: UserGender[] = ['king', 'queen', 'neutral', 'noble'];
+  
   return {
-    id: 'user_' + Date.now(),
-    username,
-    email,
-    profileImage: 'https://source.unsplash.com/random/200x200/?silhouette',
-    amountSpent: 0,
-    walletBalance: 25, // Starting balance
-    rank: 999, // Start at the bottom
-    spendStreak: 0,
-    tier: 'crab',
-    team: 'red', // Default team
-    gender: 'jester', // Default gender
-    joinDate: new Date(),
+    id: `random-user-${index}`,
+    username: `Noble${index}`,
+    email: `noble${index}@example.com`,
+    displayName: `Noble User ${index}`,
+    profileImage: `https://source.unsplash.com/random/300x300?portrait&${index}`,
+    amountSpent: Math.floor(Math.random() * 1000),
+    spentAmount: Math.floor(Math.random() * 1000),
+    walletBalance: Math.floor(Math.random() * 500),
+    rank: index + 1,
+    team: teams[Math.floor(Math.random() * teams.length)],
+    gender: genders[Math.floor(Math.random() * genders.length)],
+    joinedAt: new Date().toISOString(),
+    joinDate: new Date().toISOString(),
     cosmetics: {
       borders: [],
       colors: [],
@@ -72,14 +89,6 @@ export const registerUser = (email: string, username: string, password: string):
       effects: [],
       badges: [],
       themes: []
-    },
-    marketingStats: {
-      impressions: 0,
-      clicks: 0,
-      conversions: 0,
-      ctr: 0,
-      sources: {},
-      referrers: {}
     },
     socialLinks: []
   };

@@ -45,7 +45,8 @@ export type MedievalIconColor =
   | 'purple' 
   | 'emerald'
   | 'bronze'
-  | 'mahogany';
+  | 'mahogany'
+  | 'default';
 
 const iconMap: Record<MedievalIconName, LucideIcon> = {
   crown: Crown,
@@ -83,7 +84,8 @@ const colorMap: Record<MedievalIconColor, string> = {
   purple: 'text-purple-600',
   emerald: 'text-emerald-600',
   bronze: 'text-amber-700',
-  mahogany: 'text-red-900'
+  mahogany: 'text-red-900',
+  default: 'text-current'
 };
 
 interface MedievalIconProps {
@@ -91,20 +93,24 @@ interface MedievalIconProps {
   size?: MedievalIconSize;
   color?: MedievalIconColor;
   className?: string;
+  animate?: boolean;
 }
 
 const MedievalIcon: React.FC<MedievalIconProps> = ({
   name,
   size = 'md',
   color = 'gold',
-  className = ''
+  className = '',
+  animate = false
 }) => {
   const IconComponent = iconMap[name];
   const sizeClass = sizeMap[size];
   const colorClass = colorMap[color];
   
+  const animationClass = animate ? 'animate-pulse-slow' : '';
+  
   return (
-    <IconComponent className={`${sizeClass} ${colorClass} ${className}`} />
+    <IconComponent className={`${sizeClass} ${colorClass} ${animationClass} ${className}`} />
   );
 };
 
