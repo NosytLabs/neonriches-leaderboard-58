@@ -93,3 +93,8 @@ export function parseIdToNumber(id: string | number): number {
   if (typeof id === 'number') return id;
   return parseInt(id, 10) || 0;
 }
+
+// Convert number to string for IDs
+export function formatIdToString(id: number | string): string {
+  return String(id);
+}

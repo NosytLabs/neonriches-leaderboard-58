@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Sparkles, Gem, Coins, Gift, ArrowDownCircle, ChevronDown } from 'lucide-react';
@@ -227,7 +226,7 @@ const WishingWell = () => {
             setWishResult('win');
             setResult(`Your wish comes true! You've been granted the "${cosmeticItem.name}" cosmetic item!`);
             // Use setState with a function when updating with the object
-            setRewardItem(() => cosmeticItem);
+            setRewardItem(cosmeticItem as CosmeticItem);
             setRewardRarity(cosmeticItem.rarity);
             playSound('reward');
             
@@ -236,7 +235,7 @@ const WishingWell = () => {
               username: user.username,
               amount: wishAmount,
               result: `Received ${cosmeticItem.name}`,
-              cosmetic: cosmeticItem,
+              cosmetic: cosmeticItem as CosmeticItem,
               rarity: cosmeticItem.rarity,
               timestamp: new Date()
             };

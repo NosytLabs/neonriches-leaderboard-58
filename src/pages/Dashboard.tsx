@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import Header from '@/components/Header';
@@ -15,6 +14,8 @@ import { useToast } from '@/hooks/use-toast';
 import useNotificationSounds from '@/hooks/use-notification-sounds';
 import ProfileBoostDisplay from '@/components/profile/ProfileBoostDisplay';
 import DashboardStatsOverview from '@/components/dashboard/DashboardStatsOverview';
+import { useProfileData } from '@/hooks/use-profile-data';
+import { trackDashboardVisit } from '@/hooks/use-dashboard-tracking';
 
 const Dashboard = () => {
   const { user, updateUserProfile, boostProfile } = useAuth();
@@ -29,7 +30,10 @@ const Dashboard = () => {
     return null;
   }
   
-  const handleFundWallet = async (amount: number) => {
+  const { profileData, isLoading: profileDataLoading } = useProfileData(userId);
+  trackDashboardVisit(userId);
+  
+  const handleFundWallet = async (amount: number): Promise<void> => {
     setIsLoading(true);
     const success = await depositToWallet(user, amount, "Wallet deposit", updateUserProfile);
     setIsLoading(false);
@@ -37,8 +41,6 @@ const Dashboard = () => {
     if (success) {
       playSound('success');
     }
-    
-    return success;
   };
   
   const handleBoostProfile = async () => {

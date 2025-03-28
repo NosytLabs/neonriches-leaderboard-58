@@ -1,7 +1,18 @@
+
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { getWeeklyDiscountedAction, getWeeklyDiscountPercentage, isFireSaleMonth, getFireSaleDiscountPercentage, getFireSaleFeaturedCategories } from '@/components/events/utils/shameUtils';
 import { getDaysUntilEndOfMonth, getNextMondayDate } from '@/utils/dateUtils';
 import { ShameAction } from '@/components/events/hooks/useShameEffect';
+import { useAuth } from '@/contexts/AuthContext';
+import { useToast } from '@/hooks/use-toast';
+
+interface Event {
+  id: string;
+  name: string;
+  description: string;
+  startDate: string;
+  endDate: string;
+}
 
 interface EventContextType {
   currentDiscountedAction: ShameAction;
@@ -20,8 +31,10 @@ interface EventContextType {
 const EventContext = createContext<EventContextType | undefined>(undefined);
 
 export const EventProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { user } = useAuth();
+  const { toast } = useToast();
   const [currentDiscountedAction, setCurrentDiscountedAction] = useState<ShameAction>(getWeeklyDiscountedAction());
-  const [discountPercentage, setDiscountPercentage] = useState<number>(getWeeklyDiscountPercentage(currentDiscountedAction));
+  const [discountPercentage, setDiscountPercentage] = useState<number>(getWeeklyDiscountPercentage());
   const [isFireSaleActive, setIsFireSaleActive] = useState<boolean>(isFireSaleMonth());
   const [fireSaleDiscount, setFireSaleDiscount] = useState<number>(getFireSaleDiscountPercentage());
   const [fireSaleFeaturedCategories, setFireSaleFeaturedCategories] = useState<string[]>(getFireSaleFeaturedCategories());
@@ -29,19 +42,20 @@ export const EventProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [daysRemainingInFireSale, setDaysRemainingInFireSale] = useState<number>(getDaysUntilEndOfMonth());
   const [nextMondayDate, setNextMondayDate] = useState<string>(getNextMondayDate());
   const [joinedEvents, setJoinedEvents] = useState<string[]>([]);
+  const [currentEvent, setCurrentEvent] = useState<Event | null>(null);
 
   const joinEvent = async () => {
-    if (!currentUser || !currentEvent) return false;
+    if (!user || !currentEvent) return false;
     
     try {
       // In a real app, you would make an API call to join the event
-      console.log(`User ${currentUser.username} is joining event: ${currentEvent.name}`);
+      console.log(`User ${user.username} is joining event: ${currentEvent.name}`);
       
       // For demo, we'll simulate a successful join
       setJoinedEvents([...joinedEvents, currentEvent.id]);
       
       // Update localStorage
-      localStorage.setItem(`joinedEvents_${currentUser.id}`, JSON.stringify([...joinedEvents, currentEvent.id]));
+      localStorage.setItem(`joinedEvents_${user.id}`, JSON.stringify([...joinedEvents, currentEvent.id]));
       
       return true;
     } catch (error) {
@@ -64,7 +78,7 @@ export const EventProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const refreshEventData = () => {
     const action = getWeeklyDiscountedAction();
     setCurrentDiscountedAction(action);
-    setDiscountPercentage(getWeeklyDiscountPercentage(action));
+    setDiscountPercentage(getWeeklyDiscountPercentage());
     setIsFireSaleActive(isFireSaleMonth());
     setFireSaleDiscount(getFireSaleDiscountPercentage());
     setFireSaleFeaturedCategories(getFireSaleFeaturedCategories());

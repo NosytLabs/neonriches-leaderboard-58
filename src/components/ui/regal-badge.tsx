@@ -5,11 +5,11 @@ import { cn } from '@/lib/utils';
 type BadgeVariant = 'default' | 'outline' | 'success' | 'warning' | 'danger' | 'info' | 'royal';
 type BadgeSize = 'sm' | 'md' | 'lg';
 
-interface RegalBadgeProps {
+export interface RegalBadgeProps {
   variant?: BadgeVariant;
   size?: BadgeSize;
   className?: string;
-  children: React.ReactNode;
+  children?: React.ReactNode;
   style?: React.CSSProperties;
   data?: { [key: string]: string };
   id?: string;
@@ -70,6 +70,13 @@ const RegalBadge: React.FC<RegalBadgeProps> = ({
     return '';
   };
   
+  // Generate default content based on tier if no children
+  const renderContent = () => {
+    if (children) return children;
+    if (tier) return tier.charAt(0).toUpperCase() + tier.slice(1);
+    return null;
+  };
+  
   return (
     <span
       className={cn(
@@ -89,7 +96,7 @@ const RegalBadge: React.FC<RegalBadgeProps> = ({
       onClick={onClick}
       {...data}
     >
-      {children}
+      {renderContent()}
     </span>
   );
 };
