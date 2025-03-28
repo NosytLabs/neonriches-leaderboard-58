@@ -6,14 +6,15 @@ import { Button } from '@/components/ui/button';
 import { Edit, User, ChevronLeft } from 'lucide-react';
 import ProfileViewer from '@/components/profile/ProfileViewer';
 import { Card, CardContent } from '@/components/ui/card';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/contexts/auth';
 import { trackProfileInteraction } from '@/services/walletService';
 import ProfileBoost from '@/components/profile/ProfileBoost';
 import ProfileAnalytics from '@/components/profile/ProfileAnalytics';
 import MarketingProfile from '@/components/profile/MarketingProfile';
 import { useToast } from '@/hooks/use-toast';
 import ProfileSettings from '@/components/profile/ProfileSettings';
-import ProfileBoostDisplay from '@/components/profile/ProfileBoostDisplay';
+import ProfileBoostDisplay, { ProfileBoostDisplayProps } from '@/components/profile/ProfileBoostDisplay';
+import { UserProfile } from '@/types/user';
 
 interface ProfileImage {
   id: number;
@@ -312,7 +313,7 @@ const Profile = () => {
               />
               
               {user && user.profileBoosts && user.profileBoosts.length > 0 && (
-                <ProfileBoostDisplay user={user} />
+                <ProfileBoostDisplay user={user as UserProfile} />
               )}
             </div>
           )}
