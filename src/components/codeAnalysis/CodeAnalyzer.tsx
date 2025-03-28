@@ -1,9 +1,11 @@
+
 import React, { useState } from 'react';
 import AnalysisSettings from './AnalysisSettings';
 import AnalysisResults from './AnalysisResults';
 import { Button } from '@/components/ui/button';
 import { FileSearch } from 'lucide-react';
 import { AnalysisResult } from '@/utils/codeAnalysis/types';
+import { generateMockAnalysisResult } from '@/utils/codeAnalysis/mockData';
 
 const CodeAnalyzer: React.FC = () => {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -38,40 +40,7 @@ const CodeAnalyzer: React.FC = () => {
       // In a real application, we would call the actual analysis function
       // For now, we'll simulate it with a timeout and mock data
       setTimeout(() => {
-        const mockResult: AnalysisResult = {
-          unusedFiles: [
-            'src/components/legacy/OldComponent.tsx',
-            'src/utils/deprecated/helperFunctions.ts'
-          ],
-          unusedFunctions: [
-            { file: 'src/utils/helpers.ts', name: 'formatLegacyDate', line: 42 },
-            { file: 'src/components/common/Button.tsx', name: 'handleLegacyClick', line: 67 }
-          ],
-          unusedImports: [
-            { file: 'src/components/Dashboard.tsx', name: 'useState', line: 3 },
-            { file: 'src/utils/api.ts', name: 'axios', line: 1 }
-          ],
-          unusedVariables: [
-            { file: 'src/context/AuthContext.tsx', name: 'loading', line: 12 },
-            { file: 'src/hooks/useData.ts', name: 'error', line: 8 }
-          ],
-          unusedCssSelectors: [
-            { file: 'src/styles/main.css', selector: 'legacy-button', line: 156 },
-            { file: 'src/styles/components.css', selector: 'unused-container', line: 78 }
-          ],
-          deadCodePaths: [
-            { file: 'src/utils/api.ts', description: 'Unreachable code after return statement', line: 45 },
-            { file: 'src/components/User.tsx', description: 'Condition always evaluates to false', line: 92 }
-          ],
-          duplicateCode: [
-            { files: ['src/utils/formatters.ts', 'src/utils/helpers.ts'], similarity: 0.95, lines: 12 },
-            { files: ['src/components/Button.tsx', 'src/components/IconButton.tsx'], similarity: 0.85, lines: 8 }
-          ],
-          complexCode: [
-            { file: 'src/utils/dataProcessing.ts', function: 'transformData', complexity: 15, line: 37 },
-            { file: 'src/components/Table.tsx', function: 'renderRows', complexity: 12, line: 124 }
-          ]
-        };
+        const mockResult = generateMockAnalysisResult();
         
         setAnalysisResult(mockResult);
         setIsAnalyzing(false);
@@ -92,6 +61,7 @@ const CodeAnalyzer: React.FC = () => {
         </div>
         <p className="text-white/70 mb-6">
           Analyze your codebase to identify opportunities for optimization and cleanup.
+          This tool helps you find unused code, duplicated logic, and complexity issues.
         </p>
 
         <AnalysisSettings 

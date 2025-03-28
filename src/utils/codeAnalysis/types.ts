@@ -31,13 +31,39 @@ export interface AnalysisResult {
     files: string[];
     similarity: number;
     lines: number;
+    impact: string;
+    risk: string;
   }>;
   complexCode: Array<{
     file: string;
     function: string;
     complexity: number;
     line: number;
+    impact: string;
+    suggestion: string;
   }>;
+  unusedDependencies: string[];
+  metrics: {
+    beforeCleanup: {
+      projectSize: number;
+      fileCount: number;
+      dependencyCount: number;
+    };
+    afterCleanup: {
+      projectSize: number;
+      fileCount: number;
+      dependencyCount: number;
+    };
+  };
+}
+
+// Analysis safety checklist
+export interface SafetyCheckResult {
+  hasRuntimeDependencies: boolean;
+  hasDynamicReferences: boolean;
+  hasBuildDependencies: boolean;
+  hasTestDependencies: boolean;
+  hasDocReferences: boolean;
 }
 
 // Mock ESLint interface for type safety
@@ -60,4 +86,12 @@ export class MockESLint {
       messages: []
     }));
   }
+}
+
+// Project structure analysis
+export interface ProjectStructure {
+  languages: Record<string, number>;
+  frameworks: string[];
+  buildTools: string[];
+  directoryStructure: Record<string, number>;
 }
