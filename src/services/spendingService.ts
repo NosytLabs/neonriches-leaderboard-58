@@ -1,73 +1,152 @@
+
+import { User } from '@/types';
+import { Team } from '@/types/user';
+
 export interface UserRankData {
   userId: string;
   username: string;
   profileImage?: string;
-  totalSpent: number;
   rank: number;
-  team?: string | null;
-  tier: 'free' | 'pro';
+  totalSpent: number;
   spendStreak: number;
+  team?: Team;
+  tier?: string;
 }
 
-// Mock leaderboard data
-const mockUsers: UserRankData[] = [
-  { userId: '1', username: 'RoyalOverlord', profileImage: 'https://i.pravatar.cc/150?img=11', totalSpent: 2500, rank: 1, team: 'red', tier: 'pro', spendStreak: 8 },
-  { userId: '2', username: 'GoldenThrone', profileImage: 'https://i.pravatar.cc/150?img=12', totalSpent: 2200, rank: 2, team: 'green', tier: 'pro', spendStreak: 12 },
-  { userId: '3', username: 'WealthyNoble', profileImage: 'https://i.pravatar.cc/150?img=13', totalSpent: 1900, rank: 3, team: 'blue', tier: 'pro', spendStreak: 6 },
-  { userId: '4', username: 'RegalSpender', profileImage: 'https://i.pravatar.cc/150?img=14', totalSpent: 1650, rank: 4, team: 'red', tier: 'free', spendStreak: 4 },
-  { userId: '5', username: 'PurpleDuke', profileImage: 'https://i.pravatar.cc/150?img=15', totalSpent: 1480, rank: 5, team: 'green', tier: 'free', spendStreak: 2 },
-  { userId: '6', username: 'RoyalJester', profileImage: 'https://i.pravatar.cc/150?img=16', totalSpent: 1350, rank: 6, team: 'blue', tier: 'free', spendStreak: 1 },
-  { userId: '7', username: 'EmeraldQueen', profileImage: 'https://i.pravatar.cc/150?img=17', totalSpent: 1200, rank: 7, team: 'green', tier: 'free', spendStreak: 3 },
-  { userId: '8', username: 'SapphireKing', profileImage: 'https://i.pravatar.cc/150?img=18', totalSpent: 1100, rank: 8, team: 'blue', tier: 'free', spendStreak: 2 },
-  { userId: '9', username: 'RubyBaroness', profileImage: 'https://i.pravatar.cc/150?img=19', totalSpent: 950, rank: 9, team: 'red', tier: 'free', spendStreak: 0 },
-  { userId: '10', username: 'PearlPrince', profileImage: 'https://i.pravatar.cc/150?img=20', totalSpent: 820, rank: 10, team: null, tier: 'free', spendStreak: 0 },
+// Mock data for development
+const mockRankingData: UserRankData[] = [
+  {
+    userId: '1',
+    username: 'RoyalWhale',
+    profileImage: 'https://i.pravatar.cc/150?img=1',
+    rank: 1,
+    totalSpent: 25000,
+    spendStreak: 12,
+    team: 'red',
+    tier: 'royal'
+  },
+  {
+    userId: '2',
+    username: 'GoldenSpender',
+    profileImage: 'https://i.pravatar.cc/150?img=2',
+    rank: 2,
+    totalSpent: 15000,
+    spendStreak: 8,
+    team: 'blue',
+    tier: 'pro'
+  },
+  {
+    userId: '3',
+    username: 'NobleElite',
+    profileImage: 'https://i.pravatar.cc/150?img=3',
+    rank: 3,
+    totalSpent: 12000,
+    spendStreak: 5,
+    team: 'green',
+    tier: 'pro'
+  },
+  {
+    userId: '4',
+    username: 'RoyalJester',
+    profileImage: 'https://i.pravatar.cc/150?img=4',
+    rank: 4,
+    totalSpent: 9000,
+    spendStreak: 3,
+    team: 'red',
+    tier: 'basic'
+  },
+  {
+    userId: '5',
+    username: 'CrownSeeker',
+    profileImage: 'https://i.pravatar.cc/150?img=5',
+    rank: 5,
+    totalSpent: 7500,
+    spendStreak: 0,
+    team: 'green',
+    tier: 'basic'
+  },
+  // Add more mock data as needed
 ];
 
-export const getUserRanking = (userId?: string): UserRankData[] => {
-  if (userId) {
-    return mockUsers.filter(user => user.userId === userId);
-  }
-  return mockUsers;
+// Get user ranking data
+export const getUserRanking = (): UserRankData[] => {
+  // In a real app, this would be an API call
+  return mockRankingData;
 };
 
-export const getUserRank = (userId: string): UserRankData | null => {
-  const user = mockUsers.find(user => user.userId === userId);
-  return user || null;
-};
-
-export const applyUserSpending = async (
-  user: any,
-  amount: number,
-  reason: string
-): Promise<boolean> => {
-  if (!user) return false;
-  
+// Apply spending to a user
+export const applyUserSpending = async (user: User, amount: number, title?: string): Promise<boolean> => {
   try {
-    // In a real app, this would make an API call to process the spending
-    console.log('Processing user spending', {
-      userId: user.id,
-      amount,
-      reason
-    });
+    // In a real app, this would make an API call to update the user's spending
+    console.log(`User ${user.username} spent $${amount}`);
     
-    // Mock successful transaction
+    // For this mock implementation, we'll update localStorage
+    if (user) {
+      // Update wallet balance
+      if (user.walletBalance !== undefined) {
+        user.walletBalance -= amount;
+      }
+      
+      // Update amount spent
+      if (user.amountSpent !== undefined) {
+        user.amountSpent += amount;
+      } else {
+        user.amountSpent = amount;
+      }
+      
+      // Update spend streak (simplified for mock)
+      if (user.spendStreak !== undefined) {
+        user.spendStreak += 1;
+      } else {
+        user.spendStreak = 1;
+      }
+      
+      // Save to localStorage
+      localStorage.setItem('p2w_user', JSON.stringify(user));
+    }
+    
     return true;
   } catch (error) {
-    console.error('User spending failed', error);
+    console.error('Error applying spending:', error);
     return false;
   }
 };
 
-export const getTeamTotals = async (): Promise<any> => {
-  // Mock implementation
-  return {
-    red: { total: 25000, members: 500 },
-    green: { total: 18000, members: 450 },
-    blue: { total: 22000, members: 480 }
-  };
+// Get team totals for the leaderboard
+export const getTeamTotals = async (): Promise<{ red: number, green: number, blue: number }> => {
+  try {
+    // In a real app, this would be an API call
+    const rankings = getUserRanking();
+    
+    const totals = rankings.reduce((acc, user) => {
+      if (user.team === 'red') {
+        acc.red += user.totalSpent;
+      } else if (user.team === 'green') {
+        acc.green += user.totalSpent;
+      } else if (user.team === 'blue') {
+        acc.blue += user.totalSpent;
+      }
+      return acc;
+    }, { red: 0, green: 0, blue: 0 });
+    
+    return totals;
+  } catch (error) {
+    console.error('Error getting team totals:', error);
+    return { red: 0, green: 0, blue: 0 };
+  }
 };
 
+// Get the total pool for prize distribution
 export const getTotalPool = async (): Promise<number> => {
-  // Mock implementation
-  return 65000;
+  try {
+    // In a real app, this would be an API call
+    const rankings = getUserRanking();
+    const totalSpent = rankings.reduce((acc, user) => acc + user.totalSpent, 0);
+    
+    // Assume 15% of total spending goes to the prize pool
+    return totalSpent * 0.15;
+  } catch (error) {
+    console.error('Error getting total pool:', error);
+    return 0;
+  }
 };

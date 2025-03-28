@@ -1,141 +1,283 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { User, UserProfile } from '@/types';
 
-interface User {
-  id: string;
-  username: string;
-  email: string;
-  profileImage?: string;
-  walletBalance?: number;
-  team?: string;
-  tier?: 'free' | 'pro';
-  spendStreak?: number;
-}
-
-interface AuthContextType {
+export interface AuthContextType {
   user: User | null;
   isLoading: boolean;
-  login: (email: string, password: string) => Promise<{ success: boolean; message?: string }>;
-  register: (email: string, username: string, password: string) => Promise<{ success: boolean; message?: string }>;
-  logout: () => void;
-  updateUserProfile: (updates: Partial<User>) => Promise<boolean>;
+  isAuthenticated: boolean;
+  signIn: (email: string, password: string) => Promise<boolean>;
+  signUp: (email: string, username: string, password: string) => Promise<boolean>;
+  signOut: () => void;
+  updateUserProfile: (updatedUser: Partial<User>) => Promise<boolean>;
+  boostProfile?: (type: string, duration: number) => Promise<boolean>;
+  awardCosmetic?: (id: string, category: string, rarity: string, source: string) => Promise<boolean>;
+  // Add other auth-related functions here
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+// Create the context with a default value
+const AuthContext = createContext<AuthContextType>({
+  user: null,
+  isLoading: true,
+  isAuthenticated: false,
+  signIn: async () => false,
+  signUp: async () => false,
+  signOut: () => {},
+  updateUserProfile: async () => false,
+});
 
-// Mock user data for demonstration
-const MOCK_USER: User = {
-  id: 'user-1',
-  username: 'RoyalSpender',
-  email: 'royal@example.com',
-  profileImage: 'https://i.pravatar.cc/150?img=11',
-  walletBalance: 100,
-  team: 'red',
-  tier: 'free',
-  spendStreak: 3
-};
+export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  // Mock authentication for development
   useEffect(() => {
-    // Check for saved user in localStorage
-    const savedUser = localStorage.getItem('spendthrone_user');
-    if (savedUser) {
-      try {
-        setUser(JSON.parse(savedUser));
-      } catch (error) {
-        console.error('Failed to parse user from localStorage', error);
+    // Simulate loading auth state
+    const timer = setTimeout(() => {
+      // Check if there's a user in localStorage
+      const storedUser = localStorage.getItem('p2w_user');
+      if (storedUser) {
+        try {
+          setUser(JSON.parse(storedUser));
+        } catch (error) {
+          console.error('Failed to parse stored user:', error);
+        }
       }
-    }
-    
-    // Demo: Auto-login with mock user for development
-    if (process.env.NODE_ENV === 'development' && !savedUser) {
-      setUser(MOCK_USER);
-      localStorage.setItem('spendthrone_user', JSON.stringify(MOCK_USER));
-    }
-    
-    setIsLoading(false);
+      setIsLoading(false);
+    }, 1000);
+
+    return () => clearTimeout(timer);
   }, []);
 
-  const login = async (email: string, password: string) => {
+  const signIn = async (email: string, password: string): Promise<boolean> => {
     try {
-      // This would be a real API call in a production app
-      console.log('Login attempt', { email, password });
+      setIsLoading(true);
       
-      // Mock successful login for demo
-      setUser(MOCK_USER);
-      localStorage.setItem('spendthrone_user', JSON.stringify(MOCK_USER));
-      
-      return { success: true };
-    } catch (error) {
-      console.error('Login failed', error);
-      return { 
-        success: false, 
-        message: 'Login failed. Please check your credentials and try again.' 
+      // Mock authentication success
+      const mockUser: User = {
+        id: '1',
+        username: 'royal_user',
+        email,
+        walletBalance: 100,
+        team: 'red',
+        tier: 'basic',
+        spendStreak: 0,
+        rank: 50,
+        joinedAt: new Date().toISOString(),
+        joinDate: new Date().toISOString(),
+        amountSpent: 0,
+        cosmetics: {
+          borders: [],
+          colors: [],
+          fonts: [],
+          emojis: [],
+          titles: [],
+          backgrounds: [],
+          effects: [],
+          badges: [],
+          themes: [],
+        },
+        subscription: {
+          status: 'active',
+          tier: 'basic',
+          interval: 'monthly',
+          startDate: new Date().toISOString(),
+          endDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+          autoRenew: true,
+          features: ['Basic Profile', 'Leaderboard Entry'],
+        },
+        profileViews: 0,
+        profileClicks: 0,
+        followers: 0,
+        profileBoosts: [],
       };
-    }
-  };
 
-  const register = async (email: string, username: string, password: string) => {
-    try {
-      // This would be a real API call in a production app
-      console.log('Register attempt', { email, username, password });
-      
-      // Mock successful registration for demo
-      const newUser = { ...MOCK_USER, email, username };
-      setUser(newUser);
-      localStorage.setItem('spendthrone_user', JSON.stringify(newUser));
-      
-      return { success: true };
-    } catch (error) {
-      console.error('Registration failed', error);
-      return { 
-        success: false, 
-        message: 'Registration failed. Please try again later.' 
-      };
-    }
-  };
-
-  const logout = () => {
-    setUser(null);
-    localStorage.removeItem('spendthrone_user');
-  };
-
-  const updateUserProfile = async (updates: Partial<User>) => {
-    try {
-      if (!user) return false;
-      
-      // This would be a real API call in a production app
-      console.log('Updating user profile', updates);
-      
-      // Update user locally
-      const updatedUser = { ...user, ...updates };
-      setUser(updatedUser);
-      localStorage.setItem('spendthrone_user', JSON.stringify(updatedUser));
+      setUser(mockUser);
+      localStorage.setItem('p2w_user', JSON.stringify(mockUser));
       
       return true;
     } catch (error) {
-      console.error('Failed to update user profile', error);
+      console.error('Sign in error:', error);
+      return false;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const signUp = async (email: string, username: string, password: string): Promise<boolean> => {
+    try {
+      setIsLoading(true);
+      
+      // Mock registration success
+      const mockUser: User = {
+        id: '1',
+        username,
+        email,
+        walletBalance: 10,
+        team: null,
+        tier: 'basic',
+        spendStreak: 0,
+        rank: 999,
+        joinedAt: new Date().toISOString(),
+        joinDate: new Date().toISOString(),
+        amountSpent: 0,
+        cosmetics: {
+          borders: [],
+          colors: [],
+          fonts: [],
+          emojis: [],
+          titles: [],
+          backgrounds: [],
+          effects: [],
+          badges: [],
+          themes: [],
+        },
+        subscription: {
+          status: 'active',
+          tier: 'basic',
+          interval: 'monthly',
+          startDate: new Date().toISOString(),
+          endDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+          autoRenew: true,
+          features: ['Basic Profile', 'Leaderboard Entry'],
+        },
+        profileViews: 0,
+        profileClicks: 0,
+        followers: 0,
+        profileBoosts: [],
+      };
+
+      setUser(mockUser);
+      localStorage.setItem('p2w_user', JSON.stringify(mockUser));
+      
+      return true;
+    } catch (error) {
+      console.error('Sign up error:', error);
+      return false;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const signOut = () => {
+    setUser(null);
+    localStorage.removeItem('p2w_user');
+  };
+
+  const updateUserProfile = async (updatedUser: Partial<User>): Promise<boolean> => {
+    try {
+      if (!user) return false;
+      
+      const newUser = { ...user, ...updatedUser };
+      setUser(newUser);
+      localStorage.setItem('p2w_user', JSON.stringify(newUser));
+      
+      return true;
+    } catch (error) {
+      console.error('Update profile error:', error);
+      return false;
+    }
+  };
+
+  const boostProfile = async (type: string, duration: number): Promise<boolean> => {
+    try {
+      if (!user) return false;
+      
+      const boostId = `boost_${Date.now()}`;
+      const boost = {
+        id: boostId,
+        effectId: type,
+        startTime: new Date().toISOString(),
+        endTime: Date.now() + duration * 60 * 60 * 1000, // Convert hours to ms
+        type,
+        strength: 1,
+        appliedBy: user.id,
+      };
+      
+      const currentBoosts = user.profileBoosts || [];
+      const newBoosts = [...currentBoosts, boost];
+      
+      const updatedUser = {
+        ...user,
+        profileBoosts: newBoosts,
+      };
+      
+      setUser(updatedUser);
+      localStorage.setItem('p2w_user', JSON.stringify(updatedUser));
+      
+      return true;
+    } catch (error) {
+      console.error('Boost profile error:', error);
+      return false;
+    }
+  };
+
+  const awardCosmetic = async (
+    id: string, 
+    category: string, 
+    rarity: string, 
+    source: string
+  ): Promise<boolean> => {
+    try {
+      if (!user) return false;
+      
+      const cosmetics = user.cosmetics || {
+        borders: [],
+        colors: [],
+        fonts: [],
+        emojis: [],
+        titles: [],
+        backgrounds: [],
+        effects: [],
+        badges: [],
+        themes: [],
+      };
+      
+      const categoryItems = cosmetics[category as keyof typeof cosmetics] || [];
+      
+      if (Array.isArray(categoryItems) && !categoryItems.includes(id)) {
+        const updatedCosmetics = {
+          ...cosmetics,
+          [category]: [...categoryItems, id],
+        };
+        
+        const updatedUser = {
+          ...user,
+          cosmetics: updatedCosmetics,
+        };
+        
+        setUser(updatedUser);
+        localStorage.setItem('p2w_user', JSON.stringify(updatedUser));
+        
+        return true;
+      }
+      
+      return false;
+    } catch (error) {
+      console.error('Award cosmetic error:', error);
       return false;
     }
   };
 
   return (
-    <AuthContext.Provider value={{ user, isLoading, login, register, logout, updateUserProfile }}>
+    <AuthContext.Provider 
+      value={{ 
+        user, 
+        isLoading, 
+        isAuthenticated: !!user, 
+        signIn, 
+        signUp, 
+        signOut,
+        updateUserProfile,
+        boostProfile,
+        awardCosmetic
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
 };
 
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
-};
-
-// For compatibility with existing code
-export { AuthContext };
+export type { UserProfile };

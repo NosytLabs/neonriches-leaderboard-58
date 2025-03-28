@@ -67,4 +67,4 @@ export interface User {
 }
 
 // Export UserProfile interface from user.ts
-export { UserProfile, UserSubscription, UserCosmetics } from './user';
+export type { UserProfile, UserSubscription, UserCosmetics } from './user';

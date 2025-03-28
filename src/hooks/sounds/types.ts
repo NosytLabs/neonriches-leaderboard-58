@@ -13,7 +13,8 @@ export type SoundType =
   | 'royalAnnouncement'
   | 'reward'
   | 'wish'
-  | 'advertisement';
+  | 'advertisement'
+  | 'levelUp';
 
 export interface SoundAsset {
   src: string;
@@ -37,4 +38,27 @@ export interface Sound {
   key: SoundType;
   asset: SoundAsset;
   state: AudioState;
+}
+
+export interface PremiumSoundPack {
+  name: string;
+  description: string;
+  price: number;
+  sounds: Record<SoundType, string>;
+}
+
+export interface PremiumSoundPackDetails {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  preview?: string;
+  features: string[];
+}
+
+export interface AudioLoaderReturn {
+  loadedSounds: Record<SoundType, HTMLAudioElement | null>;
+  isLoading: boolean;
+  loadSound: (type: SoundType) => Promise<HTMLAudioElement | null>;
+  playSound: (type: SoundType, options?: SoundOptions) => void;
 }

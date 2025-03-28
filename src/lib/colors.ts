@@ -1,107 +1,86 @@
-// Helper functions for team colors
-export const getTeamBgColor = (team: string | null | undefined): string => {
+
+// Team Colors
+export const getTeamBgColor = (team: string | null): string => {
+  if (!team) return 'bg-gray-500';
+  
   switch (team) {
-    case 'red':
-      return 'bg-team-red';
-    case 'green':
-      return 'bg-team-green';
-    case 'blue':
-      return 'bg-team-blue';
-    default:
-      return 'bg-gray-700';
+    case 'red': return 'bg-team-red';
+    case 'green': return 'bg-team-green';
+    case 'blue': return 'bg-team-blue';
+    default: return 'bg-gray-500';
   }
 };
 
-export const getTeamTextColor = (team: string | null | undefined): string => {
+export const getTeamTextColor = (team: string | null): string => {
+  if (!team) return 'text-gray-500';
+  
   switch (team) {
-    case 'red':
-      return 'text-team-red';
-    case 'green':
-      return 'text-team-green';
-    case 'blue':
-      return 'text-team-blue';
-    default:
-      return 'text-gray-400';
+    case 'red': return 'text-team-red';
+    case 'green': return 'text-team-green';
+    case 'blue': return 'text-team-blue';
+    default: return 'text-gray-500';
   }
 };
 
-// Add these missing functions
+export const getTeamBorderColor = (team: string | null): string => {
+  if (!team) return 'border-gray-500';
+  
+  switch (team) {
+    case 'red': return 'border-team-red';
+    case 'green': return 'border-team-green';
+    case 'blue': return 'border-team-blue';
+    default: return 'border-gray-500';
+  }
+};
+
+// Compatibility function for existing code that uses getTeamColor
+export const getTeamColor = getTeamBgColor;
+
+// Rank colors
+export const getRankBgColor = (rank: number): string => {
+  if (rank === 1) return 'bg-royal-gold';
+  if (rank === 2) return 'bg-silver-400';
+  if (rank === 3) return 'bg-bronze-400';
+  if (rank <= 10) return 'bg-royal-purple/70';
+  return 'bg-gray-500/50';
+};
+
+export const getRankTextColor = (rank: number): string => {
+  if (rank === 1) return 'text-royal-gold';
+  if (rank === 2) return 'text-silver-400';
+  if (rank === 3) return 'text-bronze-400';
+  if (rank <= 10) return 'text-royal-purple';
+  return 'text-gray-400';
+};
+
+export const getRankBorderColor = (rank: number): string => {
+  if (rank === 1) return 'border-royal-gold';
+  if (rank === 2) return 'border-silver-400';
+  if (rank === 3) return 'border-bronze-400';
+  if (rank <= 10) return 'border-royal-purple/50';
+  return 'border-gray-500/30';
+};
+
+// For backward compatibility
+export const getRankTextColorClass = getRankTextColor;
 export const getTeamBgColorClass = getTeamBgColor;
 export const getTeamTextColorClass = getTeamTextColor;
 
-export const getRankTextColorClass = (rank: number): string => {
-  if (rank === 1) return 'text-royal-gold';
-  if (rank === 2) return 'text-royal-silver';
-  if (rank === 3) return 'text-royal-bronze';
-  if (rank <= 10) return 'text-royal-purple';
-  if (rank <= 50) return 'text-royal-blue';
-  if (rank <= 100) return 'text-royal-crimson';
-  return 'text-white/70';
+// Spending tier functions
+export const getSpendingTierLabel = (spent: number): string => {
+  if (spent >= 25000) return 'Whale';
+  if (spent >= 10000) return 'Shark';
+  if (spent >= 5000) return 'Dolphin';
+  if (spent >= 1000) return 'Fish';
+  if (spent >= 250) return 'Octopus';
+  return 'Crab';
 };
 
-export const getSpendingTierLabel = (tier: string): string => {
-  switch (tier) {
-    case 'crab':
-      return 'Crab Tier';
-    case 'octopus':
-      return 'Octopus Tier';
-    case 'fish':
-      return 'Fish Tier';
-    case 'dolphin':
-      return 'Dolphin Tier';
-    case 'shark':
-      return 'Shark Tier';
-    case 'whale':
-      return 'Whale Tier';
-    case 'royal':
-      return 'Royal Tier';
-    case 'pro':
-      return 'Pro Tier';
-    case 'free':
-    default:
-      return 'Free Tier';
-  }
-};
-
-export const getSpendingTierBadgeClass = (tier: string): string => {
-  switch (tier) {
-    case 'crab':
-      return 'bg-gray-700/50 text-gray-300 border border-gray-600/50';
-    case 'octopus':
-      return 'bg-pink-900/50 text-pink-300 border border-pink-600/50';
-    case 'fish':
-      return 'bg-blue-900/50 text-blue-300 border border-blue-600/50';
-    case 'dolphin':
-      return 'bg-cyan-900/50 text-cyan-300 border border-cyan-600/50';
-    case 'shark':
-      return 'bg-purple-900/50 text-purple-300 border border-purple-600/50';
-    case 'whale':
-      return 'bg-amber-900/50 text-amber-300 border border-amber-600/50';
-    case 'royal':
-      return 'bg-gradient-to-r from-royal-purple/50 to-royal-gold/50 text-white border border-royal-gold/50';
-    case 'pro':
-      return 'bg-gradient-to-r from-royal-blue/50 to-royal-purple/50 text-white border border-royal-purple/50';
-    case 'free':
-    default:
-      return 'bg-gray-800/50 text-gray-300 border border-gray-700/50';
-  }
-};
-
-// Add utility functions for the User type
-export const formatCurrency = (amount?: number): string => {
-  if (amount === undefined) return '$0.00';
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 2
-  }).format(amount);
-};
-
-export const formatDate = (date?: string): string => {
-  if (!date) return '';
-  return new Date(date).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric'
-  });
+export const getSpendingTierBadgeClass = (spent: number): string => {
+  if (spent >= 25000) return 'bg-royal-purple text-white';
+  if (spent >= 10000) return 'bg-royal-navy text-white';
+  if (spent >= 5000) return 'bg-blue-500 text-white';
+  if (spent >= 1000) return 'bg-green-500 text-white';
+  if (spent >= 250) return 'bg-amber-500 text-white';
+  return 'bg-gray-500 text-white';
 };

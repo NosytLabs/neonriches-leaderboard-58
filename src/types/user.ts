@@ -1,36 +1,6 @@
 
-export type UserTier = 
-  | 'crab' 
-  | 'octopus' 
-  | 'fish' 
-  | 'dolphin' 
-  | 'shark' 
-  | 'whale'
-  | 'pro'
-  | 'royal'
-  | 'free';
-
-export type UserGender = 'king' | 'queen' | 'neutral' | 'noble' | 'jester';
-
 export type Team = 'red' | 'green' | 'blue' | null;
-
-export interface ProfileImage {
-  id: number;
-  url: string;
-  caption?: string;
-}
-
-export interface ProfileLink {
-  id: number;
-  url: string;
-  label: string;
-}
-
-export interface SocialLink {
-  platform: string;
-  url: string;
-  clicks: number;
-}
+export type UserTier = 'basic' | 'pro' | 'royal' | 'whale';
 
 export interface UserCosmetics {
   borders: string[];
@@ -42,42 +12,13 @@ export interface UserCosmetics {
   effects: string[];
   badges: string[];
   themes: string[];
+  foundersPass?: boolean;
   activeBorder?: string;
   activeColor?: string;
   activeFont?: string;
   activeEmoji?: string;
   activeTheme?: string;
   activeBadge?: string;
-  foundersPass?: boolean;
-}
-
-export interface UserSettings {
-  notifications?: {
-    email?: boolean;
-    push?: boolean;
-    rankChanges?: boolean;
-  };
-  privacy?: {
-    showSpending?: boolean;
-    showStats?: boolean;
-    publicProfile?: boolean;
-  };
-  display?: {
-    darkMode?: boolean;
-    animations?: boolean;
-    showRankInProfile?: boolean;
-    compactView?: boolean;
-  };
-  profileVisibility?: 'public' | 'private' | 'followers';
-  allowProfileLinks?: boolean;
-  showEmailOnProfile?: boolean;
-  emailNotifications?: boolean;
-  rankChangeAlerts?: boolean;
-  shameAlerts?: boolean;
-  newFollowerAlerts?: boolean;
-  showRank?: boolean;
-  showSpending?: boolean;
-  showTeam?: boolean;
 }
 
 export interface UserSubscription {
@@ -90,25 +31,6 @@ export interface UserSubscription {
   features: string[];
 }
 
-export interface ProfileBoost {
-  id: string;
-  effectId: string;
-  startTime: string;
-  endTime: number;
-  type: string;
-  strength: number;
-  appliedBy: string;
-}
-
-export interface BoostEffect {
-  id: string;
-  name: string;
-  description: string;
-  icon?: React.ReactNode;
-  bonusText: string;
-  cssClass: string;
-}
-
 export interface UserProfile {
   id: string;
   username: string;
@@ -116,30 +38,33 @@ export interface UserProfile {
   displayName?: string;
   bio?: string;
   profileImage?: string;
+  rank: number;
+  previousRank?: number;
+  joinedAt: string;
+  joinDate: string;
   amountSpent?: number;
   spentAmount?: number;
   walletBalance?: number;
-  rank: number;
-  previousRank?: number; // Added this property
-  tier: UserTier;
-  team?: 'red' | 'green' | 'blue';
-  gender?: UserGender;
-  joinedAt: string;
-  joinDate: string;
-  lastActive?: string;
-  isVerified?: boolean;
-  isVIP?: boolean; // Added this property
+  team?: Team;
+  tier?: UserTier;
   spendStreak?: number;
+  isVerified?: boolean;
+  isVIP?: boolean;
+  gender?: 'king' | 'queen' | 'neutral' | 'jester' | 'noble';
   profileViews?: number;
   profileClicks?: number;
   followers?: number;
   following?: number;
   activeTitle?: string;
-  subscription?: UserSubscription;
   cosmetics?: UserCosmetics;
-  socialLinks?: SocialLink[];
-  profileImages?: ProfileImage[];
-  settings?: UserSettings;
-  badges?: string[];
-  profileBoosts?: ProfileBoost[];
+  subscription?: UserSubscription;
+  profileBoosts?: Array<{
+    id: string;
+    effectId: string;
+    startTime: string;
+    endTime: number;
+    type: string;
+    strength: number;
+    appliedBy: string;
+  }>;
 }
