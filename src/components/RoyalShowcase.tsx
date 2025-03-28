@@ -27,7 +27,7 @@ import { useToastContext } from '@/contexts/ToastContext';
 import { UserProfile } from '@/types/user';
 
 interface RoyalShowcaseProps {
-  topSpender: UserProfile;
+  topSpender?: UserProfile;
   onInspect?: () => void;
 }
 
@@ -55,13 +55,35 @@ const LUXURY_TEAMS = {
   }
 };
 
-const RoyalShowcase: React.FC<RoyalShowcaseProps> = ({ topSpender, onInspect }) => {
+// Default spender data for when no topSpender is provided
+const DEFAULT_SPENDER: UserProfile = {
+  id: "default",
+  username: "NobleStranger",
+  email: "",
+  rank: 1,
+  joinedAt: new Date().toISOString(),
+  joinDate: new Date().toISOString(),
+  displayName: "Unknown Noble",
+  gender: 'king',
+  profileImage: "https://source.unsplash.com/random/300x300?portrait&royal",
+  amountSpent: 1000,
+  team: "red",
+  bio: "This space awaits a true royal spender. Will you claim the throne?"
+};
+
+const RoyalShowcase: React.FC<RoyalShowcaseProps> = ({ 
+  topSpender, 
+  onInspect 
+}) => {
   const [isAnimating, setIsAnimating] = useState(false);
   const { playSound } = useNotificationSounds();
   const { addToast } = useToastContext();
   
+  // Use the provided topSpender or fall back to the default
+  const spender = topSpender || DEFAULT_SPENDER;
+  
   // Fallback if no gender is specified
-  const royalTitle = topSpender.gender === 'queen' ? 'Queen' : 'King';
+  const royalTitle = spender.gender === 'queen' ? 'Queen' : 'King';
   
   const handleCrownClick = () => {
     setIsAnimating(true);
@@ -69,7 +91,7 @@ const RoyalShowcase: React.FC<RoyalShowcaseProps> = ({ topSpender, onInspect }) 
     
     addToast({
       title: `${royalTitle} of Spending`,
-      description: `All hail ${topSpender.displayName || topSpender.username}, who has contributed $${topSpender.amountSpent?.toLocaleString()} to their meaningless digital status!`,
+      description: `All hail ${spender.displayName || spender.username}, who has contributed $${spender.amountSpent?.toLocaleString()} to their meaningless digital status!`,
       duration: 5000,
     });
     
@@ -78,7 +100,7 @@ const RoyalShowcase: React.FC<RoyalShowcaseProps> = ({ topSpender, onInspect }) 
   
   // Get team details with fallback
   const getTeamDetails = () => {
-    if (!topSpender.team || !LUXURY_TEAMS[topSpender.team]) {
+    if (!spender.team || !LUXURY_TEAMS[spender.team]) {
       return {
         name: "Unaligned", 
         description: "Not affiliated with any royal house",
@@ -87,7 +109,7 @@ const RoyalShowcase: React.FC<RoyalShowcaseProps> = ({ topSpender, onInspect }) 
         border: "border-gray-500/20"
       };
     }
-    return LUXURY_TEAMS[topSpender.team];
+    return LUXURY_TEAMS[spender.team];
   };
   
   const teamDetails = getTeamDetails();
@@ -141,8 +163,8 @@ const RoyalShowcase: React.FC<RoyalShowcaseProps> = ({ topSpender, onInspect }) 
                   <div className="absolute -inset-1 rounded-full bg-royal-gold/30 animate-pulse-slow"></div>
                   <div className="relative w-28 h-28 rounded-full overflow-hidden border-4 border-royal-gold">
                     <img 
-                      src={topSpender.profileImage} 
-                      alt={topSpender.username} 
+                      src={spender.profileImage} 
+                      alt={spender.username} 
                       className="w-full h-full object-cover"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
@@ -152,14 +174,14 @@ const RoyalShowcase: React.FC<RoyalShowcaseProps> = ({ topSpender, onInspect }) 
                   </div>
                 </div>
                 
-                <ProfileBoostedContent user={topSpender}>
+                <ProfileBoostedContent user={spender}>
                   <h3 className="text-2xl font-bold royal-gradient font-medieval">
-                    {topSpender.displayName || topSpender.username}
+                    {spender.displayName || spender.username}
                   </h3>
                 </ProfileBoostedContent>
                 
                 <div className="flex flex-wrap justify-center gap-2 mt-2">
-                  {topSpender.badges && topSpender.badges.map((badge, idx) => (
+                  {spender.badges && spender.badges.map((badge, idx) => (
                     <Badge key={idx} variant="outline" className="bg-royal-gold/10 text-royal-gold">
                       {badge}
                     </Badge>
@@ -172,7 +194,7 @@ const RoyalShowcase: React.FC<RoyalShowcaseProps> = ({ topSpender, onInspect }) 
                       <DollarSign className="h-4 w-4 mr-1.5 text-royal-gold" />
                       Royal Treasury
                     </span>
-                    <span className="font-mono text-royal-gold font-bold text-lg">${topSpender.amountSpent?.toLocaleString()}</span>
+                    <span className="font-mono text-royal-gold font-bold text-lg">${spender.amountSpent?.toLocaleString()}</span>
                   </div>
                   
                   <div className="glass-morphism border-royal-gold/20 p-3 rounded-lg flex justify-between items-center hover:border-royal-gold/50 transition-colors duration-300">
@@ -180,7 +202,7 @@ const RoyalShowcase: React.FC<RoyalShowcaseProps> = ({ topSpender, onInspect }) 
                       <Crown className="h-4 w-4 mr-1.5 text-royal-gold" />
                       Court Rank
                     </span>
-                    <span className="font-mono text-royal-gold-bright font-bold">#{topSpender.rank}</span>
+                    <span className="font-mono text-royal-gold-bright font-bold">#{spender.rank}</span>
                   </div>
                   
                   <div className="glass-morphism border-royal-gold/20 p-3 rounded-lg flex justify-between items-center hover:border-royal-gold/50 transition-colors duration-300">
@@ -191,30 +213,30 @@ const RoyalShowcase: React.FC<RoyalShowcaseProps> = ({ topSpender, onInspect }) 
                     <span className="font-mono font-bold" style={{color: teamDetails.color}}>{teamDetails.name}</span>
                   </div>
                   
-                  {topSpender.spendStreak && topSpender.spendStreak > 0 && (
+                  {spender.spendStreak && spender.spendStreak > 0 && (
                     <div className="glass-morphism border-royal-gold/20 p-3 rounded-lg flex justify-between items-center hover:border-royal-gold/50 transition-colors duration-300">
                       <span className="text-white/80 flex items-center">
                         <Clock className="h-4 w-4 mr-1.5 text-royal-gold" />
                         Spending Streak
                       </span>
-                      <span className="font-mono text-royal-gold-bright font-bold">{topSpender.spendStreak} weeks</span>
+                      <span className="font-mono text-royal-gold-bright font-bold">{spender.spendStreak} weeks</span>
                     </div>
                   )}
                   
-                  {topSpender.joinDate && (
+                  {spender.joinDate && (
                     <div className="glass-morphism border-royal-gold/20 p-3 rounded-lg flex justify-between items-center hover:border-royal-gold/50 transition-colors duration-300">
                       <span className="text-white/80 flex items-center">
                         <Trophy className="h-4 w-4 mr-1.5 text-royal-gold" />
                         Court Member Since
                       </span>
-                      <span className="font-mono text-royal-gold-bright font-bold">{new Date(topSpender.joinDate).toLocaleDateString()}</span>
+                      <span className="font-mono text-royal-gold-bright font-bold">{new Date(spender.joinDate).toLocaleDateString()}</span>
                     </div>
                   )}
                 </div>
                 
                 <div className="mt-6 glass-morphism border-royal-gold/10 px-4 py-3 rounded-lg w-full">
                   <p className="text-sm text-white/80 italic font-medieval-text text-center">
-                    "{topSpender.bio || "A noble achievement that cost real money for digital prestige with absolutely no practical benefits."}"
+                    "{spender.bio || "A noble achievement that cost real money for digital prestige with absolutely no practical benefits."}"
                   </p>
                 </div>
               </div>
@@ -239,8 +261,8 @@ const RoyalShowcase: React.FC<RoyalShowcaseProps> = ({ topSpender, onInspect }) 
               </h3>
               
               <div className="space-y-4 mb-6">
-                {topSpender.socialLinks && topSpender.socialLinks.length > 0 ? (
-                  topSpender.socialLinks.map((link, idx) => (
+                {spender.socialLinks && spender.socialLinks.length > 0 ? (
+                  spender.socialLinks.map((link, idx) => (
                     <a 
                       key={idx}
                       href={link.url}
@@ -263,7 +285,7 @@ const RoyalShowcase: React.FC<RoyalShowcaseProps> = ({ topSpender, onInspect }) 
                   <div className="glass-morphism border-purple-500/20 p-4 rounded-lg text-center">
                     <Sparkles className="h-5 w-5 text-royal-gold mx-auto mb-2" />
                     <p className="text-sm text-white/70">
-                      This space could showcase <strong>{royalTitle} {topSpender.displayName || topSpender.username}'s</strong> promotion, blog, products, or social media.
+                      This space could showcase <strong>{royalTitle} {spender.displayName || spender.username}'s</strong> promotion, blog, products, or social media.
                     </p>
                   </div>
                 )}
@@ -283,7 +305,7 @@ const RoyalShowcase: React.FC<RoyalShowcaseProps> = ({ topSpender, onInspect }) 
                 </div>
               </div>
               
-              <Link to={`/profile/${topSpender.username}`}>
+              <Link to={`/profile/${spender.username}`}>
                 <Button variant="secondary" size="sm" className="w-full bg-royal-gold/10 hover:bg-royal-gold/20 text-royal-gold border border-royal-gold/30">
                   <Award className="h-4 w-4 mr-1.5" />
                   Visit {royalTitle}'s Full Profile

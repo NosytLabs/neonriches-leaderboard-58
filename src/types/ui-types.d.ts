@@ -8,18 +8,8 @@ declare type RoyalDividerVariant =
   | 'scroll'
   | 'quill'
   | 'treasure'
-  | 'crown';
-
-declare type ButtonVariant = 
-  | 'default'
-  | 'destructive'
-  | 'outline'
-  | 'secondary'
-  | 'ghost'
-  | 'link'
-  | 'royal'
-  | 'success'
-  | 'glass';
+  | 'crown'
+  | 'line';
 
 declare interface RegalBadgeProps {
   children?: React.ReactNode;
@@ -42,3 +32,6 @@ declare interface CosmeticItem {
   imageSrc?: string;
   cssClass?: string;
 }
+
+// Define PremiumSoundPack as string for type safety
+declare type PremiumSoundPack = string;

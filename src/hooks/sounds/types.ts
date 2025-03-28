@@ -43,6 +43,9 @@ export interface PremiumSoundPackDetails {
   description: string;
   price: number;
   preview?: string;
+  previewSound?: string;
+  sounds?: Record<string, string>;
+  isPurchased?: boolean;
 }
 
 // Audio loader return type
@@ -52,4 +55,5 @@ export interface AudioLoaderReturn {
   error: Error | null;
   sounds: Record<string, HTMLAudioElement>;
   play: (sound: string) => void;
+  loadedSounds?: string[];
 }

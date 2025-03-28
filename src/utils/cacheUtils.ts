@@ -1,382 +1,237 @@
 
+import React from 'react';
+
 /**
- * Enhanced cache utility with storage options, TTL, and versioning
+ * Utility functions for caching and memoization
  */
 
-type StorageType = 'memory' | 'local' | 'session';
-
-interface CacheItem<T> {
-  data: T;
-  expiry: number;
-  version: string;
-}
-
-interface CacheOptions {
-  expiry?: number; // milliseconds
-  storage?: StorageType;
-  version?: string;
-}
-
-// Default cache settings
-const DEFAULT_CACHE_OPTIONS: CacheOptions = {
-  expiry: 5 * 60 * 1000, // 5 minutes
-  storage: 'memory',
-  version: '1.0.0',
+export const CACHE_DURATION = {
+  SHORT: 1000 * 60 * 5, // 5 minutes
+  MEDIUM: 1000 * 60 * 30, // 30 minutes
+  LONG: 1000 * 60 * 60 * 24, // 24 hours
 };
 
-// App-wide cache version, increment when data structure changes
-const APP_CACHE_VERSION = '1.0.0';
+// Local storage cache implementation
+export const localStorageCache = {
+  get: <T>(key: string): T | null => {
+    try {
+      const item = localStorage.getItem(key);
+      if (!item) return null;
+      
+      const { value, expiry } = JSON.parse(item);
+      
+      // Check if item has expired
+      if (expiry && expiry < Date.now()) {
+        localStorage.removeItem(key);
+        return null;
+      }
+      
+      return value as T;
+    } catch (error) {
+      console.error('Error retrieving from cache:', error);
+      return null;
+    }
+  },
+  
+  set: <T>(key: string, value: T, ttl?: number): void => {
+    try {
+      const item = {
+        value,
+        expiry: ttl ? Date.now() + ttl : null
+      };
+      
+      localStorage.setItem(key, JSON.stringify(item));
+    } catch (error) {
+      console.error('Error setting cache:', error);
+    }
+  },
+  
+  remove: (key: string): void => {
+    try {
+      localStorage.removeItem(key);
+    } catch (error) {
+      console.error('Error removing from cache:', error);
+    }
+  },
+  
+  clear: (): void => {
+    try {
+      localStorage.clear();
+    } catch (error) {
+      console.error('Error clearing cache:', error);
+    }
+  }
+};
 
-class EnhancedCacheManager {
-  private memoryCache: Map<string, CacheItem<any>> = new Map();
+// Memory cache implementation
+class MemoryCache {
+  private cache: Map<string, { value: any; expiry: number | null }> = new Map();
   
-  /**
-   * Set an item in the cache
-   */
-  set<T>(key: string, data: T, options?: CacheOptions): void {
-    const { expiry, storage, version } = { ...DEFAULT_CACHE_OPTIONS, ...options };
-    const now = Date.now();
-    const expiryTime = now + (expiry as number);
-    const cacheVersion = version as string;
+  get<T>(key: string): T | null {
+    const item = this.cache.get(key);
     
-    const cacheItem: CacheItem<T> = {
-      data,
-      expiry: expiryTime,
-      version: cacheVersion,
-    };
+    if (!item) return null;
     
-    // Store based on the specified storage type
-    switch (storage) {
-      case 'local':
-        try {
-          localStorage.setItem(key, JSON.stringify(cacheItem));
-        } catch (e) {
-          console.warn('Failed to set item in localStorage:', e);
-          // Fallback to memory cache
-          this.memoryCache.set(key, cacheItem);
-        }
-        break;
-        
-      case 'session':
-        try {
-          sessionStorage.setItem(key, JSON.stringify(cacheItem));
-        } catch (e) {
-          console.warn('Failed to set item in sessionStorage:', e);
-          // Fallback to memory cache
-          this.memoryCache.set(key, cacheItem);
-        }
-        break;
-        
-      case 'memory':
-      default:
-        this.memoryCache.set(key, cacheItem);
-        break;
-    }
-  }
-  
-  /**
-   * Get an item from the cache
-   */
-  get<T>(key: string, options?: CacheOptions): T | null {
-    const { storage, version } = { ...DEFAULT_CACHE_OPTIONS, ...options };
-    const now = Date.now();
-    const expectedVersion = version as string;
-    
-    let cacheItem: CacheItem<T> | null = null;
-    
-    // Retrieve based on the specified storage type
-    switch (storage) {
-      case 'local':
-        try {
-          const item = localStorage.getItem(key);
-          if (item) {
-            cacheItem = JSON.parse(item) as CacheItem<T>;
-          }
-        } catch (e) {
-          console.warn('Failed to get item from localStorage:', e);
-        }
-        break;
-        
-      case 'session':
-        try {
-          const item = sessionStorage.getItem(key);
-          if (item) {
-            cacheItem = JSON.parse(item) as CacheItem<T>;
-          }
-        } catch (e) {
-          console.warn('Failed to get item from sessionStorage:', e);
-        }
-        break;
-        
-      case 'memory':
-      default:
-        cacheItem = this.memoryCache.get(key) || null;
-        break;
-    }
-    
-    // Return null if no cache item exists
-    if (!cacheItem) return null;
-    
-    // Check if cache item has expired
-    if (now > cacheItem.expiry) {
-      this.remove(key, options);
+    // Check if item has expired
+    if (item.expiry && item.expiry < Date.now()) {
+      this.cache.delete(key);
       return null;
     }
     
-    // Check if versions match
-    if (cacheItem.version !== expectedVersion) {
-      this.remove(key, options);
-      return null;
-    }
-    
-    return cacheItem.data;
+    return item.value as T;
   }
   
-  /**
-   * Remove an item from the cache
-   */
-  remove(key: string, options?: CacheOptions): void {
-    const { storage } = { ...DEFAULT_CACHE_OPTIONS, ...options };
-    
-    switch (storage) {
-      case 'local':
-        try {
-          localStorage.removeItem(key);
-        } catch (e) {
-          console.warn('Failed to remove item from localStorage:', e);
-        }
-        break;
-        
-      case 'session':
-        try {
-          sessionStorage.removeItem(key);
-        } catch (e) {
-          console.warn('Failed to remove item from sessionStorage:', e);
-        }
-        break;
-        
-      case 'memory':
-      default:
-        this.memoryCache.delete(key);
-        break;
-    }
-  }
-  
-  /**
-   * Clear all items from a specific storage or all storages
-   */
-  clear(options?: { storage?: StorageType }): void {
-    const { storage } = { ...DEFAULT_CACHE_OPTIONS, ...options };
-    
-    switch (storage) {
-      case 'local':
-        try {
-          localStorage.clear();
-        } catch (e) {
-          console.warn('Failed to clear localStorage:', e);
-        }
-        break;
-        
-      case 'session':
-        try {
-          sessionStorage.clear();
-        } catch (e) {
-          console.warn('Failed to clear sessionStorage:', e);
-        }
-        break;
-        
-      case 'memory':
-        this.memoryCache.clear();
-        break;
-        
-      default:
-        // Clear all storages
-        this.memoryCache.clear();
-        try {
-          localStorage.clear();
-          sessionStorage.clear();
-        } catch (e) {
-          console.warn('Failed to clear web storage:', e);
-        }
-        break;
-    }
-  }
-  
-  /**
-   * Check if cache has a specific key
-   */
-  has(key: string, options?: CacheOptions): boolean {
-    return this.get(key, options) !== null;
-  }
-  
-  /**
-   * Get all keys from the cache
-   */
-  keys(options?: CacheOptions): string[] {
-    const { storage } = { ...DEFAULT_CACHE_OPTIONS, ...options };
-    
-    switch (storage) {
-      case 'local':
-        try {
-          return Object.keys(localStorage);
-        } catch (e) {
-          console.warn('Failed to get keys from localStorage:', e);
-          return [];
-        }
-        
-      case 'session':
-        try {
-          return Object.keys(sessionStorage);
-        } catch (e) {
-          console.warn('Failed to get keys from sessionStorage:', e);
-          return [];
-        }
-        
-      case 'memory':
-      default:
-        return Array.from(this.memoryCache.keys());
-    }
-  }
-  
-  /**
-   * Get cache stats
-   */
-  getStats(): { memoryItemCount: number, memorySize: number } {
-    // Calculate memory cache size (approximate)
-    let size = 0;
-    
-    this.memoryCache.forEach((value, key) => {
-      size += JSON.stringify(key).length + JSON.stringify(value).length;
-    });
-    
-    return {
-      memoryItemCount: this.memoryCache.size,
-      memorySize: size,
+  set<T>(key: string, value: T, ttl?: number): void {
+    const item = {
+      value,
+      expiry: ttl ? Date.now() + ttl : null
     };
+    
+    this.cache.set(key, item);
+  }
+  
+  remove(key: string): void {
+    this.cache.delete(key);
+  }
+  
+  clear(): void {
+    this.cache.clear();
   }
 }
 
-// Create and export a singleton instance
-export const cacheManager = new EnhancedCacheManager();
+export const memoryCache = new MemoryCache();
 
-/**
- * Wraps an async function with caching capability
- */
-export function withCache<T, Args extends any[]>(
-  fn: (...args: Args) => Promise<T>,
-  keyFn: (...args: Args) => string,
-  options?: CacheOptions
-): (...args: Args) => Promise<T> {
-  return async (...args: Args): Promise<T> => {
-    const cacheKey = keyFn(...args);
-    const cachedResult = cacheManager.get<T>(cacheKey, options);
+// Cache decorator for async functions
+export function withCache<T>(
+  fn: (...args: any[]) => Promise<T>,
+  options: {
+    key: string;
+    ttl?: number;
+    storage?: 'local' | 'memory';
+  }
+): (...args: any[]) => Promise<T> {
+  const { key, ttl, storage = 'memory' } = options;
+  const cache = storage === 'local' ? localStorageCache : memoryCache;
+  
+  return async (...args: any[]): Promise<T> => {
+    // Create a unique key based on function arguments
+    const uniqueKey = `${key}-${JSON.stringify(args)}`;
     
+    // Check cache first
+    const cachedResult = cache.get<T>(uniqueKey);
     if (cachedResult !== null) {
       return cachedResult;
     }
     
+    // If not in cache, call the original function
     const result = await fn(...args);
-    cacheManager.set(cacheKey, result, options);
+    
+    // Store result in cache
+    cache.set<T>(uniqueKey, result, ttl);
+    
     return result;
   };
 }
 
-/**
- * React hook to use cached data with automatic refreshing
- */
-export function useCachedData<T, Args extends any[]>(
-  fetchFn: (...args: Args) => Promise<T>,
-  args: Args,
-  options?: CacheOptions & {
-    cacheKey?: string;
-    staleTime?: number; // Time in ms before refreshing in background
-    onSuccess?: (data: T) => void;
-    onError?: (error: Error) => void;
-  }
-): { data: T | null; isLoading: boolean; error: Error | null; refresh: () => Promise<void> } {
-  const mergedOptions = { ...DEFAULT_CACHE_OPTIONS, ...options };
-  const {
-    cacheKey: optionsCacheKey,
-    staleTime = 0,
-    onSuccess,
-    onError,
-    ...cacheOptions
-  } = mergedOptions;
+// Memoize function results with optional TTL
+export function memoize<T>(
+  fn: (...args: any[]) => T,
+  options: {
+    ttl?: number;
+    maxSize?: number;
+  } = {}
+): (...args: any[]) => T {
+  const { ttl, maxSize = 100 } = options;
+  const cache = new Map<string, { value: T; timestamp: number }>();
   
-  const [state, setState] = React.useState<{
-    data: T | null;
-    isLoading: boolean;
-    error: Error | null;
-  }>({
-    data: null,
-    isLoading: true,
-    error: null,
-  });
-  
-  const cacheKey = optionsCacheKey || `react-cache:${JSON.stringify(args)}`;
-  const lastFetchRef = React.useRef<number>(0);
-  
-  const fetchData = React.useCallback(async (skipCache = false) => {
-    const fetchTime = Date.now();
-    lastFetchRef.current = fetchTime;
+  return (...args: any[]): T => {
+    const key = JSON.stringify(args);
     
-    if (!skipCache) {
-      const cached = cacheManager.get<T>(cacheKey, cacheOptions);
-      if (cached !== null) {
-        setState(prev => ({ ...prev, data: cached, isLoading: false }));
-        
-        // If data is stale, refresh in background
-        if (staleTime && Date.now() - (cacheManager.get<number>(`${cacheKey}:timestamp`) || 0) > staleTime) {
-          fetchData(true).catch(console.error);
-        }
-        
+    // Check if result is in cache and not expired
+    const cached = cache.get(key);
+    if (cached && (!ttl || Date.now() - cached.timestamp < ttl)) {
+      return cached.value;
+    }
+    
+    // Calculate new result
+    const result = fn(...args);
+    
+    // Manage cache size
+    if (maxSize && cache.size >= maxSize) {
+      // Remove oldest entry
+      const oldestKey = cache.keys().next().value;
+      cache.delete(oldestKey);
+    }
+    
+    // Store in cache
+    cache.set(key, { value: result, timestamp: Date.now() });
+    
+    return result;
+  };
+}
+
+// Generic data fetching hook with caching
+export function useCachedFetch<T>(
+  url: string,
+  options?: {
+    fetchOptions?: RequestInit;
+    ttl?: number;
+    key?: string;
+    storage?: 'local' | 'memory';
+    initialData?: T;
+    dependencies?: any[];
+  }
+) {
+  const {
+    fetchOptions,
+    ttl = CACHE_DURATION.MEDIUM,
+    key = url,
+    storage = 'memory',
+    initialData,
+    dependencies = []
+  } = options || {};
+  
+  const [data, setData] = React.useState<T | undefined>(initialData);
+  const [loading, setLoading] = React.useState<boolean>(true);
+  const [error, setError] = React.useState<Error | null>(null);
+  
+  React.useEffect(() => {
+    const cache = storage === 'local' ? localStorageCache : memoryCache;
+    const cacheKey = `fetch-${key}`;
+    
+    const fetchData = async () => {
+      // Check cache first
+      const cachedData = cache.get<T>(cacheKey);
+      if (cachedData !== null) {
+        setData(cachedData);
+        setLoading(false);
         return;
       }
-    }
-    
-    setState(prev => ({ ...prev, isLoading: true, error: null }));
-    
-    try {
-      const result = await fetchFn(...args);
       
-      // Only update state if this is still the latest fetch
-      if (lastFetchRef.current === fetchTime) {
-        setState({ data: result, isLoading: false, error: null });
-        cacheManager.set(cacheKey, result, cacheOptions);
-        cacheManager.set(`${cacheKey}:timestamp`, Date.now(), {
-          ...cacheOptions,
-          expiry: (cacheOptions.expiry || DEFAULT_CACHE_OPTIONS.expiry) * 2
-        });
+      try {
+        setLoading(true);
+        const response = await fetch(url, fetchOptions);
         
-        if (onSuccess) {
-          onSuccess(result);
+        if (!response.ok) {
+          throw new Error(`Network response was not ok: ${response.status}`);
         }
-      }
-    } catch (error) {
-      // Only update state if this is still the latest fetch
-      if (lastFetchRef.current === fetchTime) {
-        setState({ data: null, isLoading: false, error: error as Error });
         
-        if (onError) {
-          onError(error as Error);
-        }
+        const result = await response.json();
+        
+        // Store in cache
+        cache.set<T>(cacheKey, result, ttl);
+        
+        setData(result);
+        setError(null);
+      } catch (err) {
+        setError(err instanceof Error ? err : new Error('An unknown error occurred'));
+      } finally {
+        setLoading(false);
       }
-    }
-  }, [cacheKey, fetchFn, args, cacheOptions, staleTime, onSuccess, onError]);
-  
-  const refresh = React.useCallback(async () => {
-    await fetchData(true);
-  }, [fetchData]);
-  
-  // Initial data fetch
-  React.useEffect(() => {
-    fetchData().catch(console.error);
-    
-    // Clean up
-    return () => {
-      lastFetchRef.current = 0;
     };
-  }, [fetchData]);
+    
+    fetchData();
+  }, [url, ...dependencies]);
   
-  return { ...state, refresh };
+  return { data, loading, error };
 }

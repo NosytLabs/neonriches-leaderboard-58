@@ -29,6 +29,7 @@ export interface DeadCodePath extends CodeLocation {
 
 // Type for duplicate code
 export interface DuplicateCode {
+  id?: number;
   files: string[];
   similarity: number;
   lines: number;
@@ -39,6 +40,7 @@ export interface DuplicateCode {
 
 // Type for complex code
 export interface ComplexCode extends CodeLocation {
+  id?: number;
   function: string;
   complexity: number;
   impact?: string;
