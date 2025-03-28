@@ -1,30 +1,24 @@
 
+import { SocialLink } from './user';
+
 export interface ProfileImage {
   id: number;
   url: string;
-  caption: string;
+  caption?: string;
 }
 
-export interface ProfileCustomization {
-  theme?: string;
-  font?: string;
-  borderStyle?: string;
-  colorScheme?: string;
-  backgroundImage?: string;
-  effects?: string[];
-}
-
-export interface ProfileStats {
-  views: number;
-  clicks: number;
-  followers: number;
-  following: number;
-  shareCount: number;
-}
-
-export interface ProfileAnalytics {
-  viewsOverTime: Array<{ date: string; count: number }>;
-  clicksOverTime: Array<{ date: string; count: number }>;
-  sources: Record<string, number>;
-  referrers: Record<string, number>;
+export interface ProfileData {
+  bio: string;
+  images: ProfileImage[];
+  links: {
+    id: number;
+    url: string;
+    label: string;
+  }[];
+  socialLinks?: SocialLink[];
+  joinDate?: string;
+  lastActive?: string;
+  followers?: number;
+  following?: number;
+  views?: number;
 }
