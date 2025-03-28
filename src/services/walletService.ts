@@ -1,167 +1,116 @@
+
 import { UserProfile } from '@/contexts/AuthContext';
-import { toast } from '@/hooks/use-toast';
 
-export type TransactionType = 'shame' | 'deposit' | 'spend' | 'advertisement' | 'subscription' | 'cosmetic' | 'profile' | 'marketing' | 'wish';
+type SpendingCategory = 'upgrade' | 'cosmetic' | 'wish' | 'poke' | 'boost' | 'event';
 
-export interface Transaction {
-  id: string;
-  userId: string;
-  amount: number;
-  type: TransactionType;
-  date: Date;
-  timestamp: Date;
-  description: string;
-  metadata?: any;
+interface SpendingMetadata {
+  itemId?: string;
+  category?: string;
+  targetUser?: string;
+  // Add any additional metadata needed
+  [key: string]: any;
 }
 
-// Helper function to generate transaction ID
-const generateTransactionId = (): string => {
-  return `txn_${Math.random().toString(36).substring(2, 9)}`;
-};
+// Track spending history
+export interface SpendingRecord {
+  id: string;
+  amount: number;
+  timestamp: Date;
+  category: SpendingCategory;
+  description: string;
+  metadata?: SpendingMetadata;
+}
 
-// Helper function to create a transaction record
-const createTransactionRecord = (
-  userId: string, 
-  amount: number, 
-  type: TransactionType, 
-  description: string,
-  metadata?: any
-): Transaction => {
-  const now = new Date();
-  return {
-    id: generateTransactionId(),
-    userId,
-    amount,
-    type,
-    date: now,
-    timestamp: now,
-    description,
-    metadata
-  };
-};
-
-// Helper function to save transaction to storage
-const saveTransaction = (transaction: Transaction): void => {
-  const transactionHistory = JSON.parse(localStorage.getItem('p2w_transactions') || '[]');
-  transactionHistory.push(transaction);
-  localStorage.setItem('p2w_transactions', JSON.stringify(transactionHistory));
-};
-
+// Function to spend from wallet and update user stats
 export const spendFromWallet = async (
   user: UserProfile,
   amount: number,
-  type: TransactionType,
-  description: string = 'General spending',
-  metadata?: any
+  category: SpendingCategory,
+  description: string,
+  metadata?: SpendingMetadata
 ): Promise<boolean> => {
-  // Check if user has enough balance
+  // Check if user has enough funds
   if (user.walletBalance < amount) {
-    toast({
-      title: "Insufficient Funds",
-      description: `You need $${amount} to complete this transaction.`,
-      variant: "destructive"
-    });
+    console.error('Insufficient funds');
     return false;
   }
   
   try {
-    // Create transaction record
-    const transaction = createTransactionRecord(
-      user.id,
+    // Generate a unique ID for the transaction
+    const transactionId = `tx_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
+    
+    // Create spending record
+    const spendingRecord: SpendingRecord = {
+      id: transactionId,
       amount,
-      type,
+      timestamp: new Date(),
+      category,
       description,
       metadata
-    );
-    
-    // Save transaction
-    saveTransaction(transaction);
-    
-    // Update user's wallet balance locally
-    const updatedUser = {
-      ...user,
-      walletBalance: user.walletBalance - amount,
-      amountSpent: user.amountSpent + amount
     };
     
-    // Update local storage
-    localStorage.setItem('p2w_user', JSON.stringify(updatedUser));
+    // Call API to record spending (mocked for demo)
+    console.log('Recording spending:', spendingRecord);
+    
+    // For demo purposes, we'll just return true to indicate success
+    // In a real app, you would make an API call and wait for the response
     
     return true;
   } catch (error) {
-    console.error("Transaction failed:", error);
-    toast({
-      title: "Transaction Failed",
-      description: "There was an error processing your payment.",
-      variant: "destructive"
-    });
+    console.error('Error recording spending:', error);
     return false;
   }
 };
 
-export const getTransactionHistory = (userId: string): Transaction[] => {
-  const transactions = JSON.parse(localStorage.getItem('p2w_transactions') || '[]');
-  return transactions.filter((txn: Transaction) => txn.userId === userId);
-};
-
-export const depositToWallet = async (
+// Function to add funds to wallet
+export const addFundsToWallet = async (
   user: UserProfile,
-  amount: number,
-  description: string = 'Wallet deposit',
-  updateUserFn: (data: Partial<UserProfile>) => Promise<void>
+  amount: number
 ): Promise<boolean> => {
   try {
-    // Create transaction record
-    const transaction = createTransactionRecord(
-      user.id,
-      amount,
-      'deposit',
-      description
-    );
+    // Call API to add funds (mocked for demo)
+    console.log('Adding funds:', amount);
     
-    // Save transaction
-    saveTransaction(transaction);
-    
-    // Update user's wallet balance
-    await updateUserFn({
-      walletBalance: user.walletBalance + amount
-    });
-    
-    toast({
-      title: "Deposit Successful",
-      description: `$${amount} has been added to your wallet.`
-    });
-    
+    // For demo purposes, we'll just return true to indicate success
     return true;
   } catch (error) {
-    console.error("Deposit failed:", error);
-    toast({
-      title: "Deposit Failed",
-      description: "There was an error processing your deposit.",
-      variant: "destructive"
-    });
+    console.error('Error adding funds:', error);
     return false;
   }
 };
 
-export const getUserTransactions = async (userId: string, limit: number = 10): Promise<Transaction[]> => {
-  try {
-    const transactionHistory = JSON.parse(localStorage.getItem('p2w_transactions') || '[]');
-    const userTransactions = transactionHistory
-      .filter((txn: Transaction) => txn.userId === userId)
-      .map((txn: Transaction) => ({
-        ...txn,
-        timestamp: txn.timestamp || txn.date, // Ensure timestamp exists
-        date: new Date(txn.date)
-      }))
-      .sort((a: Transaction, b: Transaction) => 
-        new Date(b.date).getTime() - new Date(a.date).getTime()
-      )
-      .slice(0, limit);
-    
-    return userTransactions;
-  } catch (error) {
-    console.error("Error fetching transactions:", error);
-    return [];
+// Calculate spending tier based on amount spent
+export const getSpendingTier = (amountSpent: number): string => {
+  if (amountSpent >= 25000) return 'whale';
+  if (amountSpent >= 10000) return 'shark';
+  if (amountSpent >= 5000) return 'dolphin';
+  if (amountSpent >= 1000) return 'fish';
+  if (amountSpent >= 250) return 'octopus';
+  return 'crab';
+};
+
+// Function to get satirical spending title
+export const getSpendingTitle = (amountSpent: number): string => {
+  if (amountSpent >= 25000) return "Supreme Digital Monarch";
+  if (amountSpent >= 10000) return "Digital Oligarch";
+  if (amountSpent >= 5000) return "Prestigious Patron";
+  if (amountSpent >= 1000) return "Valued Contributor";
+  if (amountSpent >= 250) return "Aspiring Noble";
+  if (amountSpent >= 50) return "Recognized Member";
+  return "Digital Commoner";
+};
+
+// Satirical message based on spending amount
+export const getSpendingMessage = (amount: number): string => {
+  if (amount >= 1000) {
+    return "Congratulations! You've just purchased significant digital social status. Your wealth display has been noted by the algorithm.";
+  } else if (amount >= 500) {
+    return "A commendable contribution to your digital prestige. The higher-ups are beginning to notice you.";
+  } else if (amount >= 100) {
+    return "Your wallet has spoken, and our system is listening. Keep spending to rise further.";
+  } else if (amount >= 50) {
+    return "A modest investment in your digital social climbing. Every dollar counts on the path to prominence.";
+  } else {
+    return "Thank you for your contribution. Remember, in this world, your rank is directly proportional to your spending.";
   }
 };

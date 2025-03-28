@@ -1,95 +1,75 @@
 
-import { useState, useCallback, useEffect, useRef } from 'react';
-import { SoundNames, soundAssets, defaultVolumes } from './sounds/sound-assets';
+import { useEffect, useRef } from 'react';
 
-interface Sound {
-  url: string;
-  volume: number;
-  audio?: HTMLAudioElement;
-}
+// Define sound types
+type SoundType = 'coinDrop' | 'reward' | 'purchase' | 'error' | 'levelUp' | 'unlock';
 
-// Create a sound map based on the assets and volumes defined in sound-assets.ts
-const createSoundMap = (): Record<SoundNames, Sound> => {
-  const map: Record<SoundNames, Sound> = {} as Record<SoundNames, Sound>;
-  
-  (Object.keys(soundAssets) as SoundNames[]).forEach(key => {
-    map[key] = {
-      url: soundAssets[key],
-      volume: defaultVolumes[key]
-    };
+// Map of sound URLs
+const SOUND_URLS: Record<SoundType, string> = {
+  coinDrop: 'https://assets.mixkit.co/sfx/preview/mixkit-coin-falling-on-surface-42.mp3',
+  reward: 'https://assets.mixkit.co/sfx/preview/mixkit-arcade-game-complete-or-approved-mission-205.mp3',
+  purchase: 'https://assets.mixkit.co/sfx/preview/mixkit-unlock-game-notification-253.mp3',
+  error: 'https://assets.mixkit.co/sfx/preview/mixkit-negative-answer-lose-2032.mp3',
+  levelUp: 'https://assets.mixkit.co/sfx/preview/mixkit-player-boost-in-video-game-2161.mp3',
+  unlock: 'https://assets.mixkit.co/sfx/preview/mixkit-magic-sweep-game-trophy-257.mp3'
+};
+
+// Hook for managing notification sounds
+export default function useNotificationSounds() {
+  // Using refs to store audio objects
+  const audioRefs = useRef<Record<SoundType, HTMLAudioElement | null>>({
+    coinDrop: null,
+    reward: null,
+    purchase: null,
+    error: null,
+    levelUp: null,
+    unlock: null
   });
   
-  return map;
-};
-
-// Check for stored user preference or default to unmuted
-const getInitialMuteState = (): boolean => {
-  const stored = localStorage.getItem('p2w-sounds-muted');
-  return stored ? JSON.parse(stored) : false;
-};
-
-export default function useNotificationSounds() {
-  const [isMuted, setIsMuted] = useState<boolean>(getInitialMuteState);
-  const [isLoaded, setIsLoaded] = useState<boolean>(false);
-  const soundsRef = useRef<Record<SoundNames, Sound>>(createSoundMap());
-  
-  // Load all sounds
-  const preloadSounds = useCallback(() => {
-    Object.keys(soundsRef.current).forEach((key) => {
-      const soundName = key as SoundNames;
-      const sound = soundsRef.current[soundName];
-      
-      if (!sound.audio) {
-        sound.audio = new Audio(sound.url);
-        sound.audio.volume = sound.volume;
-        sound.audio.preload = 'auto';
-      }
+  // Initialize audio elements on mount
+  useEffect(() => {
+    // Create audio elements for each sound type
+    const audioElements: Record<SoundType, HTMLAudioElement> = {
+      coinDrop: new Audio(SOUND_URLS.coinDrop),
+      reward: new Audio(SOUND_URLS.reward),
+      purchase: new Audio(SOUND_URLS.purchase),
+      error: new Audio(SOUND_URLS.error),
+      levelUp: new Audio(SOUND_URLS.levelUp),
+      unlock: new Audio(SOUND_URLS.unlock)
+    };
+    
+    // Set common properties
+    Object.values(audioElements).forEach(audio => {
+      audio.preload = 'auto';
+      audio.volume = 0.5;
     });
     
-    setIsLoaded(true);
-  }, []);
-  
-  // Save mute preference to localStorage
-  useEffect(() => {
-    localStorage.setItem('p2w-sounds-muted', JSON.stringify(isMuted));
-  }, [isMuted]);
-  
-  // Toggle mute state
-  const toggleMute = useCallback(() => {
-    setIsMuted(prev => !prev);
-  }, []);
-  
-  // Play a sound if not muted
-  const playSound = useCallback((name: SoundNames, volumeMultiplier: number = 1) => {
-    if (isMuted || !isLoaded) return;
+    // Store in refs
+    audioRefs.current = audioElements;
     
-    const sound = soundsRef.current[name];
-    if (sound && sound.audio) {
-      try {
-        // Reset audio to start and adjust volume
-        sound.audio.currentTime = 0;
-        sound.audio.volume = sound.volume * volumeMultiplier;
-        
-        // Play the sound
-        const playPromise = sound.audio.play();
-        
-        // Handle play promise (might reject if user hasn't interacted with the page)
-        if (playPromise !== undefined) {
-          playPromise.catch(error => {
-            console.warn(`Sound playback prevented: ${error}`);
-          });
-        }
-      } catch (error) {
-        console.error(`Error playing sound ${name}:`, error);
-      }
-    }
-  }, [isMuted, isLoaded]);
+    // Cleanup function
+    return () => {
+      // Pause and nullify all audio elements
+      Object.values(audioElements).forEach(audio => {
+        audio.pause();
+        audio.src = '';
+      });
+    };
+  }, []);
   
-  return {
-    playSound,
-    toggleMute,
-    isMuted,
-    preloadSounds,
-    isLoaded
+  // Function to play a specific sound
+  const playSound = (type: SoundType, volume: number = 0.5) => {
+    const audio = audioRefs.current[type];
+    if (audio) {
+      audio.volume = volume;
+      // Reset audio to beginning if already playing
+      audio.currentTime = 0;
+      audio.play().catch(err => {
+        // Browser might block autoplay, handle gracefully
+        console.log('Audio playback blocked or error:', err);
+      });
+    }
   };
+  
+  return { playSound };
 }
