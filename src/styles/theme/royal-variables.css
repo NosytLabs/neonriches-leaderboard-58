@@ -1,26 +1,26 @@
 
 :root {
-  /* Royal Theme Colors - Enhanced with more muted tones */
-  --royal-gold: #D4AF37;          /* Muted gold */
-  --royal-gold-bright: #FFD700;   /* Bright gold for accents only */
-  --royal-gold-dark: #B8860B;     /* Darker gold for contrast */
+  /* Royal Theme Colors - Refined palette with flat design approach */
+  --royal-gold: #D4AF37;          /* Rich gold */
+  --royal-gold-bright: #F5CC5D;   /* Bright gold for accents */
+  --royal-gold-dark: #B08A23;     /* Darker gold for contrast */
   
-  --royal-crimson: #9B2335;       /* Deep crimson */
-  --royal-crimson-bright: #C41E3A; /* Bright crimson for accents */
-  --royal-crimson-dark: #800020;  /* Dark crimson for depth */
+  --royal-crimson: #DC143C;       /* Primary crimson */
+  --royal-crimson-bright: #FF2E57; /* Bright crimson for accents */
+  --royal-crimson-dark: #9B0A26;  /* Dark crimson for depth */
   
-  --royal-navy: #1F4788;          /* Rich navy blue */
-  --royal-navy-bright: #2A5EA1;   /* Brighter navy for highlights */
-  --royal-navy-dark: #0D2B54;     /* Darker navy for depth */
+  --royal-navy: #000080;          /* Rich navy blue */
+  --royal-navy-bright: #1B1B95;   /* Brighter navy for highlights */
+  --royal-navy-dark: #00004D;     /* Darker navy for depth */
   
-  --royal-purple: #4B0082;        /* Deep royal purple */
-  --royal-purple-bright: #6A0DAD; /* Brighter purple for highlights */
-  --royal-purple-dark: #38006B;   /* Deeper purple for contrast */
+  --royal-purple: #4A148C;        /* Primary royal purple */
+  --royal-purple-bright: #7526D3; /* Brighter purple for highlights */
+  --royal-purple-dark: #320D6D;   /* Deeper purple for contrast */
   
   --royal-velvet: #430C5E;        /* Deep burgundy */
-  --royal-mahogany: #8B2323;      /* Richer mahogany */
-  --royal-emerald: #2C784A;       /* Keep for contrast */
-  --royal-parchment: #F5E6CA;
+  --royal-mahogany: #420D09;      /* Rich mahogany */
+  --royal-emerald: #046307;       /* Deep emerald */
+  --royal-parchment: #F5E6CA;     /* Parchment color for contrast */
   
   /* Team colors */
   --team-red: var(--royal-crimson);
@@ -28,22 +28,29 @@
   --team-blue: var(--royal-navy);
   
   /* Background colors - More solid, less gradient */
-  --bg-dark: #0D0D20;             /* Dark base */
-  --bg-dark-lighter: #14142C;     /* Slightly lighter */
-  --bg-dark-lightest: #1E1E3C;    /* Lightest variant */
+  --bg-dark: #0F0F1A;             /* Dark base */
+  --bg-dark-lighter: #1A1A2E;     /* Slightly lighter */
+  --bg-dark-lightest: #25253A;    /* Lightest variant */
   
   /* Text colors */
   --text-primary: #FFFFFF;
-  --text-secondary: rgba(255, 255, 255, 0.7);
-  --text-muted: rgba(255, 255, 255, 0.5);
+  --text-secondary: rgba(255, 255, 255, 0.8);
+  --text-muted: rgba(255, 255, 255, 0.6);
   
   /* Background gradients - Reduced usage, more subtle */
-  --bg-royal-gradient: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-dark-lighter) 50%, var(--bg-dark-lightest) 100%);
-  --bg-royal-gradient-inverted: linear-gradient(315deg, var(--bg-dark) 0%, var(--bg-dark-lighter) 50%, var(--bg-dark-lightest) 100%);
+  --bg-royal-gradient: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-dark-lighter) 80%, var(--bg-dark-lightest) 100%);
+  --bg-royal-gradient-inverted: linear-gradient(315deg, var(--bg-dark) 0%, var(--bg-dark-lighter) 80%, var(--bg-dark-lightest) 100%);
   
   /* Marketing-specific colors */
-  --marketing-highlight: rgba(212, 175, 55, 0.6);
-  --marketing-glow: rgba(212, 175, 55, 0.4);
-  --marketing-accent: #9B2335;
-  --marketing-success: #2C784A;
+  --marketing-highlight: rgba(212, 175, 55, 0.7);
+  --marketing-glow: rgba(212, 175, 55, 0.5);
+  --marketing-accent: #DC143C;
+  --marketing-success: #046307;
+  
+  /* Tier-specific colors for mockery/rarity */
+  --tier-common: #8E9196;         /* Gray for common tier */
+  --tier-uncommon: #4CCC56;       /* Green for uncommon tier */
+  --tier-rare: #307AFF;           /* Blue for rare tier */
+  --tier-epic: #A347FF;           /* Purple for epic tier */
+  --tier-legendary: #FFB000;      /* Gold for legendary tier */
 }

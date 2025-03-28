@@ -1,43 +1,25 @@
 
-import { HTMLAttributes } from "react";
-import { CosmeticRarity } from "./cosmetics";
-
-export interface ThroneBackgroundProps {
-  variant?: 'royal' | 'crimson' | 'navy' | 'purple' | 'default';
-  particles?: boolean;
-  animate?: boolean;
-  opacity?: number;
+export interface RegalBadgeProps {
+  variant?: 'gold' | 'silver' | 'bronze' | 'outlineGold' | 'outlineSilver' | 'outlineBronze' | 'teamRed' | 'teamGreen' | 'teamBlue' | 'default' | 'purple';
+  size?: 'sm' | 'md' | 'lg';
+  children?: React.ReactNode;
   className?: string;
-  density?: string; // Add the missing density property
-}
-
-export interface RoyalDividerProps {
-  variant?: 'line' | 'crown' | 'sword' | 'shield' | 'scroll' | 'double' | 'quill' | 'treasure' | 'ornate' | 'royal';
-  color?: 'gold' | 'silver' | 'crimson' | 'navy';
-  className?: string;
-}
-
-export interface RegalBadgeProps extends HTMLAttributes<HTMLDivElement> {
-  variant?: 'royal' | 'gold' | 'silver' | 'bronze' | 'crimson' | 'navy';
-  label?: string;
-  rarity?: CosmeticRarity;
-  tier?: string; // Add tier property to fix StyleGuide errors
 }
 
 export interface RoyalButtonProps {
-  children: React.ReactNode;
-  variant?: string;
+  variant?: 'royal' | 'royalGold' | 'royalCrimson' | 'royalNavy' | 'royalPurple' | 'outline' | 'glass' | 'goldOutline' | 'crimsonOutline' | 'navyOutline' | 'mahogany';
+  size?: 'sm' | 'md' | 'lg';
+  children?: React.ReactNode;
   className?: string;
-  disabled?: boolean;
-  icon?: React.ReactNode;
   shimmer?: boolean;
-  href?: string;
-  target?: string; // Add target property
-  rel?: string; // Add rel property
+  glow?: boolean;
+  disabled?: boolean;
   onClick?: () => void;
 }
 
-export interface TeamSelectionProps {
-  onTeamSelect?: (team: 'red' | 'green' | 'blue') => void;
-  onTeamSelected?: (team: 'red' | 'green' | 'blue') => void; // Add alias property
+export interface RoyalCardProps {
+  variant?: 'default' | 'gold' | 'silver' | 'bronze';
+  hover?: 'scale' | 'glow' | 'shadow' | 'none';
+  children?: React.ReactNode;
+  className?: string;
 }

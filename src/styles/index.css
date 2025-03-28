@@ -1,28 +1,44 @@
-/* Base styles */
-@import './fonts.css';
 
-/* Theme */
-@import './theme/index.css';
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+/* Theme Variables */
+@import './theme/royal-variables.css';
 
 /* Animations */
-@import './animations/index.css';
-@import './consolidated-animations.css';
+@import './animations/enhanced-animations.css';
+@import './animations/mockery-animations.css';
 
 /* Utilities */
-@import './utilities/index.css';
+@import './utilities/royal-theme.css';
+@import './utilities/glass-morphism.css';
 
-/* Features */
-@import './cosmetics.css';
-@import './profile-boost.css';
-@import './shame-effects.css';
+/* Custom Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
-/* Specific elements */
-@import './marketing-elements.css';
-@import './medieval-elements.css';
-@import './medieval-animations.css';
+@layer base {
+  :root {
+    --font-royal: 'Cinzel', serif;
+    --font-sans: 'Inter', sans-serif;
+  }
 
-/* Reset and defaults */
-@import './unified-theme.css';
+  html {
+    @apply scroll-smooth;
+  }
 
-/* Code analysis */
-@import './code-analysis.css';
+  body {
+    @apply bg-bg-dark text-text-primary;
+    font-family: var(--font-sans);
+    height: 100vh;
+  }
+
+  .font-royal {
+    font-family: var(--font-royal);
+  }
+
+  .font-medieval {
+    font-family: var(--font-royal);
+  }
+}

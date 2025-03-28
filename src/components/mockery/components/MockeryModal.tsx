@@ -1,44 +1,34 @@
 
 import React from 'react';
-import { 
-  DialogContent, 
-  DialogHeader, 
-  DialogTitle, 
-  DialogDescription,
-  DialogFooter
-} from '@/components/ui/dialog';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Crown, Shield, DollarSign, AlertTriangle, Check } from 'lucide-react';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import RoyalButton from '@/components/ui/royal-button';
-import { MockeryAction } from '../hooks/useMockeryEffect';
+import { MockeryAction } from '../hooks/useMockery';
 import { 
-  getMockeryActionTitle, 
-  getMockeryActionDescription, 
   getMockeryActionIcon, 
-  getMockeryActionPrice, 
-  getDiscountedMockeryPrice 
+  getMockeryActionTitle, 
+  getMockeryActionDescription,
+  getMockeryActionPrice,
+  hasWeeklyDiscount,
+  getDiscountedMockeryPrice
 } from '../utils/mockeryUtils';
-import { getTeamColor } from '@/lib/colors';
-import { Badge } from '@/components/ui/badge';
-
-interface TargetUser {
-  userId: string;
-  username: string;
-  profileImage?: string;
-  totalSpent: number;
-  rank: number;
-  team?: string;
-  tier?: string;
-  spendStreak?: number;
-}
+import RoyalDivider from '@/components/ui/royal-divider';
+import { Target, Crown, CreditCard } from 'lucide-react';
 
 interface MockeryModalProps {
-  targetUser: TargetUser;
+  targetUser: {
+    userId: string;
+    username: string;
+    profileImage?: string;
+    totalSpent: number;
+    rank: number;
+    team?: string | null;
+  };
   mockeryType: MockeryAction;
   onConfirm: (userId: string, mockeryType: MockeryAction) => void;
   onCancel: () => void;
-  hasDiscount: boolean;
+  hasDiscount?: boolean;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
 }
 
 const MockeryModal: React.FC<MockeryModalProps> = ({
@@ -46,138 +36,109 @@ const MockeryModal: React.FC<MockeryModalProps> = ({
   mockeryType,
   onConfirm,
   onCancel,
-  hasDiscount
+  hasDiscount = false,
+  open,
+  onOpenChange
 }) => {
-  const [isProcessing, setIsProcessing] = React.useState(false);
-  const basePrice = getMockeryActionPrice(mockeryType);
-  const discountedPrice = hasDiscount ? getDiscountedMockeryPrice(mockeryType) : basePrice;
-  const finalPrice = discountedPrice;
-  const teamColor = targetUser.team ? getTeamColor(targetUser.team) : '';
+  const regularPrice = getMockeryActionPrice(mockeryType);
+  const finalPrice = hasDiscount 
+    ? getDiscountedMockeryPrice(mockeryType) 
+    : regularPrice;
+  const discountPercentage = hasDiscount 
+    ? Math.round((1 - (finalPrice / regularPrice)) * 100) 
+    : 0;
   
   const handleConfirm = () => {
-    setIsProcessing(true);
-    
-    // Simulate processing delay
-    setTimeout(() => {
-      onConfirm(targetUser.userId, mockeryType);
-      setIsProcessing(false);
-    }, 1500);
+    onConfirm(targetUser.userId, mockeryType);
   };
   
-  const actionTitle = getMockeryActionTitle(mockeryType);
-  const actionDescription = getMockeryActionDescription(mockeryType, targetUser.username);
-  const actionIcon = getMockeryActionIcon(mockeryType);
-  
   return (
-    <DialogContent className="glass-morphism border-white/10 sm:max-w-md">
-      <DialogHeader>
-        <DialogTitle className="flex items-center gap-2">
-          <span className="text-2xl">{actionIcon}</span>
-          <span>{actionTitle}</span>
-        </DialogTitle>
-        <DialogDescription>
-          {actionDescription}
-        </DialogDescription>
-      </DialogHeader>
-      
-      <div className="flex items-center gap-4 my-4 p-3 glass-morphism border-white/10 rounded-lg">
-        <Avatar className="h-12 w-12">
-          {targetUser.profileImage ? (
-            <AvatarImage src={targetUser.profileImage} alt={targetUser.username} />
-          ) : (
-            <AvatarFallback className="bg-gradient-to-br from-royal-purple to-royal-navy">
-              {targetUser.username.charAt(0).toUpperCase()}
-            </AvatarFallback>
-          )}
-        </Avatar>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="glass-morphism border-white/10 sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle className="flex items-center text-royal-gold">
+            <Crown className="mr-2 h-5 w-5" />
+            Confirm Royal Mockery
+          </DialogTitle>
+          <DialogDescription>
+            You are about to mock {targetUser.username} with {getMockeryActionTitle(mockeryType)}
+          </DialogDescription>
+        </DialogHeader>
         
-        <div>
-          <div className="font-medium">{targetUser.username}</div>
-          <div className="flex items-center gap-2 text-sm">
-            <Badge variant="outline" className="font-medium text-xs">
-              <Crown size={10} className="mr-1" /> Rank #{targetUser.rank}
-            </Badge>
-            
-            {targetUser.team && (
-              <Badge 
-                variant="outline" 
-                className={`text-xs ${teamColor}`}
-              >
-                {targetUser.team.toUpperCase()}
-              </Badge>
-            )}
-          </div>
-        </div>
-      </div>
-      
-      <div className="space-y-4">
-        <div className="p-3 glass-morphism border-white/10 rounded-lg">
-          <div className="text-sm font-medium mb-1">Mockery Details</div>
-          <div className="text-sm text-white/70 flex flex-col gap-1">
-            <div className="flex justify-between">
-              <span>Effect Type:</span>
-              <span className="font-medium">{actionTitle}</span>
-            </div>
-            <div className="flex justify-between">
-              <span>Duration:</span>
-              <span className="font-medium">24 hours</span>
-            </div>
-            <div className="flex justify-between">
-              <span>Base Price:</span>
-              <span className={hasDiscount ? 'line-through text-white/50' : 'font-medium'}>
-                ${basePrice.toFixed(2)}
-              </span>
-            </div>
-            {hasDiscount && (
-              <div className="flex justify-between text-royal-gold">
-                <span>Discounted Price:</span>
-                <span className="font-medium">${discountedPrice.toFixed(2)}</span>
+        <div className="flex items-center space-x-4 my-4">
+          <div className="h-16 w-16 rounded-full overflow-hidden border border-white/20">
+            {targetUser.profileImage ? (
+              <img 
+                src={targetUser.profileImage} 
+                alt={targetUser.username} 
+                className="h-full w-full object-cover"
+              />
+            ) : (
+              <div className="h-full w-full bg-white/10 flex items-center justify-center text-xl font-bold">
+                {targetUser.username[0]}
               </div>
             )}
-            <div className="border-t border-white/10 mt-1 pt-1 flex justify-between font-medium">
-              <span>Total:</span>
-              <span className="text-royal-gold">${finalPrice.toFixed(2)}</span>
+          </div>
+          
+          <div>
+            <h3 className="font-bold">{targetUser.username}</h3>
+            <p className="text-sm text-white/70">
+              Rank #{targetUser.rank} • ${targetUser.totalSpent.toLocaleString()} spent
+            </p>
+          </div>
+        </div>
+        
+        <RoyalDivider variant="line" className="my-2" />
+        
+        <div className="space-y-4">
+          <div className="flex items-center space-x-3">
+            <div className="text-2xl">
+              {getMockeryActionIcon(mockeryType)}
+            </div>
+            <div>
+              <h4 className="font-bold">{getMockeryActionTitle(mockeryType)}</h4>
+              <p className="text-sm text-white/70">
+                {getMockeryActionDescription(mockeryType, targetUser.username)}
+              </p>
+            </div>
+          </div>
+          
+          <div className="bg-white/5 rounded-md p-3 text-sm text-white/70">
+            <p className="flex items-center">
+              <Target className="h-4 w-4 mr-2 text-royal-crimson" />
+              This mockery effect will be visible to all users for 24 hours.
+            </p>
+          </div>
+          
+          <div className="flex justify-between items-center">
+            <div className="text-sm text-white/70">Price:</div>
+            <div className="text-lg font-bold text-royal-gold">
+              {hasDiscount && (
+                <span className="text-sm line-through text-white/50 mr-2">
+                  ${regularPrice.toFixed(2)}
+                </span>
+              )}
+              ${finalPrice.toFixed(2)}
+              {hasDiscount && (
+                <span className="ml-2 text-xs bg-royal-gold/20 text-royal-gold px-2 py-0.5 rounded-full">
+                  {discountPercentage}% OFF
+                </span>
+              )}
             </div>
           </div>
         </div>
         
-        <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5 text-sm text-white/70">
-          <AlertTriangle className="h-4 w-4 text-amber-400" />
-          <p>Mockery is purely visual and does not affect leaderboard rankings.</p>
-        </div>
-      </div>
-      
-      <DialogFooter className="flex flex-col sm:flex-row gap-2 sm:gap-0">
-        <Button 
-          variant="outline" 
-          onClick={onCancel}
-          disabled={isProcessing}
-          className="glass-morphism border-white/10"
-        >
-          Cancel
-        </Button>
-        
-        <RoyalButton
-          variant="royal"
-          onClick={handleConfirm}
-          disabled={isProcessing}
-          className="relative"
-          shimmer={!isProcessing}
-          glow={!isProcessing}
-        >
-          {isProcessing ? (
-            <span className="flex items-center">
-              <span className="animate-spin mr-2">⟳</span> Processing...
-            </span>
-          ) : (
-            <span className="flex items-center">
-              <DollarSign className="mr-2 h-4 w-4" /> 
-              Confirm Mockery (${finalPrice.toFixed(2)})
-            </span>
-          )}
-        </RoyalButton>
-      </DialogFooter>
-    </DialogContent>
+        <DialogFooter className="mt-4">
+          <Button variant="outline" onClick={onCancel}>
+            Cancel
+          </Button>
+          <Button className="bg-royal-crimson hover:bg-royal-crimson/90" onClick={handleConfirm}>
+            <CreditCard className="mr-2 h-4 w-4" />
+            Confirm Mockery
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 };
 
