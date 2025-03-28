@@ -16,11 +16,14 @@ import { LogOut, User, Settings, CreditCard, Crown, Bell, Shield, Wallet } from 
 import { useAuth } from '@/contexts/auth';
 import { Badge } from '@/components/ui/badge';
 import SolanaWalletButton from '@/components/solana/SolanaWalletButton';
+import { UserProfile } from '@/types/user';
 
-const UserMenu = () => {
-  const { user, signOut } = useAuth();
+interface UserMenuProps {
+  user: UserProfile;
+}
 
-  if (!user) return null;
+const UserMenu: React.FC<UserMenuProps> = ({ user }) => {
+  const { signOut } = useAuth();
 
   return (
     <div className="flex items-center gap-2">
