@@ -16,6 +16,7 @@ const ComplexityReport: React.FC = () => {
     parameters: 0,
     nestedLevel: 0,
     issues: [],
+    function: item.functions?.[0]?.name || `function-${index}`, // Add the function field
     path: item.path,
     functions: item.functions,
     status: item.status
