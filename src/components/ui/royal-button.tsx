@@ -2,7 +2,7 @@
 import React from 'react';
 import { Button, ButtonProps } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { RoyalButtonVariant } from '@/types/user';
+import { RoyalButtonVariant } from '@/types/royal-divider-types';
 
 interface RoyalButtonProps extends Omit<ButtonProps, 'variant'> {
   variant?: RoyalButtonVariant;

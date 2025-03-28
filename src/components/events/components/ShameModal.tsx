@@ -26,17 +26,20 @@ interface ShameModalProps {
   shameType: ShameAction;
   onConfirm: (userId: string, type: ShameAction) => void;
   onCancel: () => void;
+  hasDiscount?: boolean;
 }
 
 const ShameModal: React.FC<ShameModalProps> = ({
   targetUser,
   shameType,
   onConfirm,
-  onCancel
+  onCancel,
+  hasDiscount = false
 }) => {
   const shameAmount = getMockeryActionPrice(shameType);
   const shameLabel = getMockeryActionLabel(shameType);
   const shameDescription = getMockeryActionDescription(shameType);
+  const finalPrice = hasDiscount ? shameAmount * 0.8 : shameAmount; // 20% discount if hasDiscount is true
   
   const getInitials = (name: string) => {
     return name.charAt(0).toUpperCase();
@@ -79,8 +82,14 @@ const ShameModal: React.FC<ShameModalProps> = ({
       <div className="space-y-2">
         <div className="flex justify-between items-center p-2 bg-white/5 rounded">
           <span>Cost to shame:</span>
-          <span className="font-bold">${shameAmount.toFixed(2)}</span>
+          <span className="font-bold">${finalPrice.toFixed(2)}</span>
         </div>
+        
+        {hasDiscount && (
+          <div className="p-2 bg-green-500/10 border border-green-500/20 rounded text-center text-sm">
+            <span className="text-green-400 font-medium">20% Festival Discount Applied!</span>
+          </div>
+        )}
         
         <div className="p-3 bg-gradient-to-r from-royal-crimson/20 to-royal-purple/20 rounded text-center text-sm italic">
           "In the royal court, shame is merely a commodity to be bought and sold."
@@ -92,11 +101,11 @@ const ShameModal: React.FC<ShameModalProps> = ({
           Cancel
         </Button>
         <RoyalButton 
-          variant="royalCrimson" 
+          variant="royal" 
           onClick={() => onConfirm(targetUser.userId, shameType)}
           icon={<ArrowRight className="h-4 w-4" />}
         >
-          Confirm Shame (${shameAmount.toFixed(2)})
+          Confirm Shame (${finalPrice.toFixed(2)})
         </RoyalButton>
       </DialogFooter>
     </DialogContent>
