@@ -13,7 +13,8 @@ export type SoundNames =
   | 'shame'
   | 'swordClash'
   | 'pageTransition'
-  | 'wish';
+  | 'wish'
+  | 'pageChange';
 
 // Sound asset paths
 export const soundAssets: Record<SoundNames, string> = {
@@ -29,7 +30,8 @@ export const soundAssets: Record<SoundNames, string> = {
   shame: '/sounds/shame.mp3',
   swordClash: '/sounds/sword-clash.mp3',
   pageTransition: '/sounds/page-transition.mp3',
-  wish: '/sounds/wish.mp3'
+  wish: '/sounds/wish.mp3',
+  pageChange: '/sounds/page-transition.mp3' // Using page-transition for pageChange
 };
 
 // Volume presets for sounds (0 to 1)
@@ -46,5 +48,6 @@ export const defaultVolumes: Record<SoundNames, number> = {
   shame: 0.3,
   swordClash: 0.3,
   pageTransition: 0.2,
-  wish: 0.3
+  wish: 0.3,
+  pageChange: 0.2
 };

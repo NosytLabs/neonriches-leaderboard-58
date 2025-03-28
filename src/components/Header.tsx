@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Crown, Menu, X, LogIn } from 'lucide-react';
+import { Crown, Menu, X, LogIn, Info, HelpCircle, Trophy, Calendar } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/contexts/auth';
 import UserMenu from '@/components/header/UserMenu';
@@ -56,16 +56,26 @@ const Header = () => {
           <div className="flex justify-between items-center">
             <Link to="/" className="flex items-center">
               <Crown className="h-6 w-6 text-royal-gold mr-2" />
-              <span className="text-xl font-bold">P2W.fun</span>
+              <span className="text-xl font-bold">SpendThrone</span>
             </Link>
             
             {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center space-x-1">
               <Link to="/leaderboard" className="px-3 py-2 text-sm hover:text-royal-gold transition-colors">
+                <Trophy className="h-4 w-4 inline mr-1" />
                 Leaderboard
               </Link>
               <Link to="/events" className="px-3 py-2 text-sm hover:text-royal-gold transition-colors">
+                <Calendar className="h-4 w-4 inline mr-1" />
                 Events
+              </Link>
+              <Link to="/about" className="px-3 py-2 text-sm hover:text-royal-gold transition-colors">
+                <Info className="h-4 w-4 inline mr-1" />
+                About
+              </Link>
+              <Link to="/faq" className="px-3 py-2 text-sm hover:text-royal-gold transition-colors">
+                <HelpCircle className="h-4 w-4 inline mr-1" />
+                FAQ
               </Link>
               {user && (
                 <>
@@ -110,10 +120,20 @@ const Header = () => {
         <div className="fixed inset-0 z-40 bg-background/95 backdrop-blur-lg md:hidden pt-20">
           <nav className="container mx-auto px-4 py-8 flex flex-col space-y-4">
             <Link to="/leaderboard" className="px-4 py-3 text-lg border-b border-white/10 hover:text-royal-gold">
+              <Trophy className="h-5 w-5 inline mr-2" />
               Leaderboard
             </Link>
             <Link to="/events" className="px-4 py-3 text-lg border-b border-white/10 hover:text-royal-gold">
+              <Calendar className="h-5 w-5 inline mr-2" />
               Events
+            </Link>
+            <Link to="/about" className="px-4 py-3 text-lg border-b border-white/10 hover:text-royal-gold">
+              <Info className="h-5 w-5 inline mr-2" />
+              About
+            </Link>
+            <Link to="/faq" className="px-4 py-3 text-lg border-b border-white/10 hover:text-royal-gold">
+              <HelpCircle className="h-5 w-5 inline mr-2" />
+              FAQ
             </Link>
             {user && (
               <>

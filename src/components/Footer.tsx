@@ -13,7 +13,7 @@ const Footer = () => {
           <div className="mb-6 md:mb-0">
             <Link to="/" className="flex items-center">
               <Crown className="h-6 w-6 text-royal-gold mr-2" />
-              <span className="text-xl font-bold royal-gradient">P2W.FUN</span>
+              <span className="text-xl font-bold royal-gradient">SpendThrone</span>
             </Link>
             <p className="text-sm mt-2 max-w-xs text-foreground/60 italic">
               "Where your wallet determines your worth and status is just a transaction away."
@@ -79,7 +79,7 @@ const Footer = () => {
         
         <div className="pt-6 border-t border-white/10 flex flex-col md:flex-row justify-between items-center">
           <p className="text-xs text-foreground/60">
-            &copy; {currentYear} P2W.FUN — A satirical social experiment.
+            &copy; {currentYear} SpendThrone — A satirical social experiment.
           </p>
           <p className="text-xs text-foreground/60 flex items-center mt-3 md:mt-0">
             Built with <span className="px-1">❤️</span> and <span className="px-1">💰</span>
