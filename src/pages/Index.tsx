@@ -9,7 +9,7 @@ import { Crown, DollarSign, ArrowRight, Trophy, Shield, Sparkles, Gem, Coins } f
 import useNotificationSounds from '@/hooks/use-notification-sounds';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
-import HeroSpotlight from '@/components/hero/HeroSpotlight';
+import RoyalShowcase from '@/components/RoyalShowcase';
 
 // Lazy load heavy components
 const RoyalHero = lazy(() => import('@/components/RoyalHero'));
@@ -31,12 +31,34 @@ const LoadingPlaceholder = () => (
 
 // Mock top spender data - in real app, this would come from API
 const topSpender = {
+  id: "top-1",
   username: "Moneybags",
+  displayName: "Lord Moneybags",
   profileImage: "https://source.unsplash.com/random/?royal,portrait",
   amountSpent: 56780,
   rank: 1,
-  team: "gold",
-  spendingStreak: 14
+  team: "red",
+  spendingStreak: 14,
+  gender: "king",
+  bio: "I've spent a small fortune for this meaningless digital crown. Worth every penny for the satirical royal status.",
+  socialLinks: [
+    {
+      platform: "Twitter",
+      url: "https://twitter.com/example",
+      clicks: 123
+    },
+    {
+      platform: "My Blog",
+      url: "https://example.com/blog",
+      clicks: 87
+    },
+    {
+      platform: "YouTube",
+      url: "https://youtube.com/example",
+      clicks: 45
+    }
+  ],
+  joinDate: "2023-05-15"
 };
 
 const Index = () => {
@@ -86,7 +108,7 @@ const Index = () => {
         
         <div className="container mx-auto px-4 py-8">
           <Suspense fallback={<LoadingPlaceholder />}>
-            <HeroSpotlight topSpender={topSpender} currentUserAmount={user?.amountSpent || 0} />
+            <RoyalShowcase topSpender={topSpender} />
           </Suspense>
           
           <Suspense fallback={<LoadingPlaceholder />}>

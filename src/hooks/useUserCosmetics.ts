@@ -1,7 +1,7 @@
 
 import { UserProfile } from '@/types/user';
 import { CosmeticRarity } from '@/types/cosmetics';
-import { BoostEffect, boostEffects } from '@/hooks/use-profile-boost';
+import { BoostEffectType } from '@/hooks/use-profile-boost';
 
 /**
  * Hook for handling user cosmetics operations
@@ -71,7 +71,7 @@ export const useUserCosmetics = (
       const boostId = `boost_${Date.now()}`;
       
       // Select a boost effect based on the level
-      let effectId: BoostEffect;
+      let effectId: BoostEffectType;
       switch (level) {
         case 3:
           effectId = 'crown';
@@ -116,3 +116,5 @@ export const useUserCosmetics = (
     boostProfile
   };
 };
+
+export default useUserCosmetics;

@@ -1,0 +1,142 @@
+
+/* Floating coins animation */
+@keyframes float-coin {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100vh) rotate(var(--rotation, 360deg));
+    opacity: 0;
+  }
+}
+
+.floating-coin {
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  background-color: #FFD700;
+  border-radius: 50%;
+  opacity: 0.7;
+  pointer-events: none;
+  z-index: 100;
+  box-shadow: 0 0 10px #FFD700;
+  animation: float-coin 3s ease-out forwards;
+}
+
+/* Add a shimmer effect to the coins */
+.floating-coin::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.4) 0%,
+    rgba(255, 255, 255, 0) 50%,
+    rgba(255, 255, 255, 0.4) 100%
+  );
+  border-radius: 50%;
+  animation: shimmer 1s linear infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Crown glow animation */
+@keyframes crown-glow {
+  0%, 100% {
+    filter: drop-shadow(0 0 3px rgba(212, 175, 55, 0.7));
+  }
+  50% {
+    filter: drop-shadow(0 0 8px rgba(212, 175, 55, 1));
+  }
+}
+
+.animate-crown-glow {
+  animation: crown-glow 2s ease-in-out infinite;
+}
+
+/* Slow pulse animation */
+@keyframes pulse-slow {
+  0%, 100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 3s ease-in-out infinite;
+}
+
+/* Royal gradient text */
+.royal-gradient {
+  background: linear-gradient(to right, #D4AF37, #FFC125);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Royal button animation */
+.royal-button {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.royal-button::after {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.3) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: rotate(30deg);
+  animation: royal-button-shine 6s ease-in-out infinite;
+  z-index: 1;
+  pointer-events: none;
+}
+
+@keyframes royal-button-shine {
+  0% {
+    left: -100%;
+    opacity: 0;
+  }
+  10% {
+    left: -100%;
+    opacity: 1;
+  }
+  40% {
+    left: 100%;
+    opacity: 1;
+  }
+  50% {
+    left: 100%;
+    opacity: 0;
+  }
+  100% {
+    left: 100%;
+    opacity: 0;
+  }
+}
+
+/* Rich glass morphism effect */
+.glass-morphism {
+  @apply backdrop-blur-sm bg-white/5 rounded-lg border;
+}

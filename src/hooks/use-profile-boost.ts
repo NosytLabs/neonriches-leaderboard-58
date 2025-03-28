@@ -1,9 +1,13 @@
 
 import { useEffect, useState } from 'react';
 import { UserProfile, ProfileBoost } from '@/types/user';
+import { Crown, Sparkle, Flame, Star, Lightbulb } from 'lucide-react';
+import React from 'react';
+
+export type BoostEffectType = 'glow' | 'sparkle' | 'crown' | 'pulse' | 'rainbow';
 
 export interface BoostEffectDetails {
-  id: string;
+  id: BoostEffectType;
   name: string;
   description: string;
   price: number;
@@ -12,9 +16,7 @@ export interface BoostEffectDetails {
   icon: React.ReactNode;
 }
 
-export type BoostEffect = 'glow' | 'sparkle' | 'crown' | 'pulse' | 'rainbow';
-
-export const boostEffects: Record<BoostEffect, BoostEffectDetails> = {
+export const boostEffects: Record<BoostEffectType, BoostEffectDetails> = {
   glow: {
     id: 'glow',
     name: 'Royal Glow',
@@ -22,7 +24,7 @@ export const boostEffects: Record<BoostEffect, BoostEffectDetails> = {
     price: 10,
     cssClass: 'profile-boost-glow',
     bonusText: '+10% Visibility',
-    icon: '✨'
+    icon: <Lightbulb size={16} className="text-royal-gold" />
   },
   sparkle: {
     id: 'sparkle',
@@ -31,7 +33,7 @@ export const boostEffects: Record<BoostEffect, BoostEffectDetails> = {
     price: 20,
     cssClass: 'profile-boost-sparkle',
     bonusText: '+15% Visibility',
-    icon: '⭐'
+    icon: <Sparkle size={16} className="text-royal-gold" />
   },
   crown: {
     id: 'crown',
@@ -40,7 +42,7 @@ export const boostEffects: Record<BoostEffect, BoostEffectDetails> = {
     price: 40,
     cssClass: 'profile-boost-crown',
     bonusText: '+30% Visibility',
-    icon: '👑'
+    icon: <Crown size={16} className="text-royal-gold" />
   },
   pulse: {
     id: 'pulse',
@@ -49,7 +51,7 @@ export const boostEffects: Record<BoostEffect, BoostEffectDetails> = {
     price: 30,
     cssClass: 'profile-boost-pulse',
     bonusText: '+20% Visibility',
-    icon: '💫'
+    icon: <Star size={16} className="text-royal-gold" />
   },
   rainbow: {
     id: 'rainbow',
@@ -58,7 +60,7 @@ export const boostEffects: Record<BoostEffect, BoostEffectDetails> = {
     price: 50,
     cssClass: 'profile-boost-rainbow',
     bonusText: '+40% Visibility',
-    icon: '🌈'
+    icon: <Flame size={16} className="text-royal-gold" />
   }
 };
 
@@ -89,7 +91,7 @@ export const useProfileBoost = (user: UserProfile | null) => {
   }, [user]);
   
   const getBoostEffect = (effectId: string): BoostEffectDetails | undefined => {
-    return boostEffects[effectId as BoostEffect];
+    return boostEffects[effectId as BoostEffectType];
   };
   
   const getBoostTimeRemaining = (boost: ProfileBoost): number => {
@@ -140,3 +142,5 @@ export const useProfileBoost = (user: UserProfile | null) => {
     hasActiveBoosts
   };
 };
+
+export default useProfileBoost;

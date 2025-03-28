@@ -1,8 +1,25 @@
 
 import { useState, useEffect } from 'react';
-import { AnalyticsData } from '@/types/user';
 
-// Export types for use in other components
+export interface AnalyticsData {
+  views: number;
+  clicks: number;
+  follows: number;
+  shareCount: number;
+  sources: Record<string, number>;
+  referrers: Record<string, number>;
+  history: Array<{
+    type: string;
+    timestamp: Date;
+    source?: string;
+    referrer?: string;
+  }>;
+  viewsOverTime: Array<{
+    date: string;
+    count: number;
+  }>;
+}
+
 export interface ViewData {
   date: string;
   count: number;
@@ -20,122 +37,127 @@ export interface SourceData {
 
 export interface ReferrerData {
   name: string;
-  value: number;
+  visits: number;
+  percentage: number;
 }
 
-export { AnalyticsData };
-
-// Mock function to get profile analytics
-const getProfileAnalytics = async (userId: string): Promise<AnalyticsData> => {
-  // In a real app, this would be an API call
-  await new Promise(resolve => setTimeout(resolve, 800));
-  
-  return {
-    views: 230 + Math.floor(Math.random() * 100),
-    clicks: 45 + Math.floor(Math.random() * 30),
-    follows: 12 + Math.floor(Math.random() * 10),
-    shareCount: 5 + Math.floor(Math.random() * 8),
-    sources: {
-      'direct': 120,
-      'search': 45,
-      'social': 38,
-      'referral': 27
-    },
-    referrers: {
-      'twitter.com': 25,
-      'facebook.com': 13,
-      'instagram.com': 20,
-      'discord.com': 12,
-      'other': 18
-    },
-    history: [
-      { type: 'view', timestamp: new Date(Date.now() - 3600000 * 24 * 5), source: 'direct' },
-      { type: 'view', timestamp: new Date(Date.now() - 3600000 * 24 * 4), source: 'search' },
-      { type: 'click', timestamp: new Date(Date.now() - 3600000 * 24 * 3), referrer: 'twitter.com' },
-      { type: 'view', timestamp: new Date(Date.now() - 3600000 * 24 * 2), source: 'social' },
-      { type: 'click', timestamp: new Date(Date.now() - 3600000 * 24 * 1), referrer: 'discord.com' }
-    ],
-    viewsOverTime: [
-      { date: '2023-11-01', count: 15 },
-      { date: '2023-11-02', count: 22 },
-      { date: '2023-11-03', count: 18 },
-      { date: '2023-11-04', count: 25 },
-      { date: '2023-11-05', count: 30 },
-      { date: '2023-11-06', count: 28 },
-      { date: '2023-11-07', count: 35 }
-    ]
-  };
-};
-
-const useProfileAnalytics = (userId: string) => {
-  const [analytics, setAnalytics] = useState<AnalyticsData | null>(null);
+export const useProfileAnalytics = (userId: string) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
+  const [analyticsData, setAnalyticsData] = useState<AnalyticsData | null>(null);
 
   useEffect(() => {
-    if (!userId) return;
-    
-    setLoading(true);
     const fetchAnalytics = async () => {
       try {
-        const data = await getProfileAnalytics(userId);
-        setAnalytics(data);
+        setLoading(true);
+        // In a real app, this would be an API call
+        // For now, we'll mock the data
+        await new Promise(resolve => setTimeout(resolve, 500)); // Simulate API delay
+        
+        // Mock data
+        const mockData: AnalyticsData = {
+          views: 1254,
+          clicks: 326,
+          follows: 87,
+          shareCount: 42,
+          sources: {
+            'direct': 456,
+            'google': 312,
+            'twitter': 198,
+            'instagram': 143,
+            'facebook': 98,
+            'reddit': 47
+          },
+          referrers: {
+            'twitter.com': 198,
+            'instagram.com': 143,
+            'facebook.com': 98,
+            'reddit.com': 47,
+            't.co': 28,
+            'linkedin.com': 19
+          },
+          history: [
+            { type: 'view', timestamp: new Date(Date.now() - 86400000 * 1), source: 'direct' },
+            { type: 'click', timestamp: new Date(Date.now() - 86400000 * 1.5), referrer: 'twitter.com' },
+            { type: 'view', timestamp: new Date(Date.now() - 86400000 * 2), source: 'google' },
+            { type: 'follow', timestamp: new Date(Date.now() - 86400000 * 3), source: 'direct' },
+            { type: 'share', timestamp: new Date(Date.now() - 86400000 * 4), referrer: 'facebook.com' }
+          ],
+          viewsOverTime: [
+            { date: '2023-09-20', count: 45 },
+            { date: '2023-09-21', count: 52 },
+            { date: '2023-09-22', count: 49 },
+            { date: '2023-09-23', count: 68 },
+            { date: '2023-09-24', count: 75 },
+            { date: '2023-09-25', count: 89 },
+            { date: '2023-09-26', count: 95 }
+          ]
+        };
+        
+        setAnalyticsData(mockData);
+        setError(null);
       } catch (err) {
         setError(err instanceof Error ? err : new Error('Failed to fetch analytics'));
       } finally {
         setLoading(false);
       }
     };
-    
-    fetchAnalytics();
+
+    if (userId) {
+      fetchAnalytics();
+    }
   }, [userId]);
 
-  // Prepare data for charts
-  const prepareViewsData = (): ViewData[] => {
-    if (!analytics || !analytics.viewsOverTime) return [];
-    return analytics.viewsOverTime;
+  // Helper function to get formatted view data for charts
+  const getViewsData = (): ViewData[] => {
+    return analyticsData?.viewsOverTime || [];
   };
 
-  const prepareClicksData = (): ClickData[] => {
-    if (!analytics || !analytics.viewsOverTime) return [];
-    // Transform view data to click data with slightly different numbers
-    return analytics.viewsOverTime.map(view => ({
-      date: view.date,
-      count: Math.floor(view.count * 0.4)
+  // Helper function to get formatted click data for charts
+  const getClicksData = (): ClickData[] => {
+    // In a real app, you would have clicks over time
+    // For now, we'll generate some mock data based on the views
+    if (!analyticsData?.viewsOverTime) return [];
+    
+    return analyticsData.viewsOverTime.map(item => ({
+      date: item.date,
+      count: Math.floor(item.count * 0.3) // Assume 30% of views result in clicks
     }));
   };
 
-  const prepareSourcesData = (): SourceData[] => {
-    if (!analytics || !analytics.sources) return [];
-    return Object.entries(analytics.sources).map(([name, value]) => ({
+  // Helper function to get formatted source data for charts
+  const getSourcesData = (): SourceData[] => {
+    if (!analyticsData?.sources) return [];
+    
+    return Object.entries(analyticsData.sources).map(([name, value]) => ({
       name,
       value
     }));
   };
 
-  const prepareReferrersData = (): ReferrerData[] => {
-    if (!analytics || !analytics.referrers) return [];
-    return Object.entries(analytics.referrers)
-      .map(([name, value]) => ({ name, value }))
-      .sort((a, b) => b.value - a.value)
-      .slice(0, 5);
-  };
-
-  const calculateCTR = (): string => {
-    if (!analytics || !analytics.views || analytics.views === 0) return '0%';
-    const ctr = (analytics.clicks / analytics.views) * 100;
-    return `${ctr.toFixed(1)}%`;
+  // Helper function to get formatted referrer data
+  const getReferrersData = (): ReferrerData[] => {
+    if (!analyticsData?.referrers) return [];
+    
+    const total = Object.values(analyticsData.referrers).reduce((sum, val) => sum + val, 0);
+    
+    return Object.entries(analyticsData.referrers)
+      .map(([name, visits]) => ({
+        name,
+        visits,
+        percentage: (visits / total) * 100
+      }))
+      .sort((a, b) => b.visits - a.visits);
   };
 
   return {
-    analytics,
     loading,
     error,
-    prepareViewsData,
-    prepareClicksData,
-    prepareSourcesData,
-    prepareReferrersData,
-    calculateCTR
+    analyticsData,
+    getViewsData,
+    getClicksData,
+    getSourcesData,
+    getReferrersData
   };
 };
 

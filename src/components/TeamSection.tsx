@@ -1,110 +1,177 @@
 
 import React from 'react';
+import { Card, CardContent } from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
+import RoyalDivider from '@/components/ui/royal-divider';
+import { useAuth } from '@/contexts/AuthContext';
+import { useToast } from '@/hooks/use-toast';
+import { Crown, Gem, Shield, ArrowRight, Users, Trophy } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Crown, Shield, Trophy } from 'lucide-react';
+
+const LUXURY_TEAMS = [
+  {
+    id: 'red',
+    name: 'House Crimson Dynasty',
+    description: 'Masters of opulent displays and lavish investments',
+    icon: <Crown className="h-5 w-5 text-red-500" />,
+    color: 'text-red-500',
+    bgColor: 'bg-red-900/30',
+    borderColor: 'border-red-500/30',
+    members: 187,
+    totalSpent: 32450,
+    benefits: [
+      'Royal Crimson profile effects',
+      'Dynasty badges and titles',
+      'Opulence-themed cosmetics'
+    ]
+  },
+  {
+    id: 'green',
+    name: 'Emerald Empire Collective',
+    description: 'Architects of wealth and strategic spending',
+    icon: <Gem className="h-5 w-5 text-emerald-500" />,
+    color: 'text-emerald-500',
+    bgColor: 'bg-emerald-900/30',
+    borderColor: 'border-emerald-500/30',
+    members: 142,
+    totalSpent: 28970,
+    benefits: [
+      'Emerald Empire profile effects',
+      'Wealth architect badges',
+      'Prosperity-themed cosmetics'
+    ]
+  },
+  {
+    id: 'blue',
+    name: 'Sapphire Sovereign Alliance',
+    description: 'Nobility through calculated financial dominance',
+    icon: <Shield className="h-5 w-5 text-blue-500" />,
+    color: 'text-blue-500',
+    bgColor: 'bg-blue-900/30',
+    borderColor: 'border-blue-500/30',
+    members: 164,
+    totalSpent: 30125,
+    benefits: [
+      'Sapphire Sovereign profile effects',
+      'Alliance nobility badges',
+      'Dominance-themed cosmetics'
+    ]
+  }
+];
 
 const TeamSection = () => {
+  const { user } = useAuth();
+  const { toast } = useToast();
+  
+  const handleJoinTeam = (teamId: string) => {
+    if (!user) {
+      toast({
+        title: "Authentication Required",
+        description: "You must be logged in to join a team.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    toast({
+      title: `Team Joined!`,
+      description: `You have joined the ${LUXURY_TEAMS.find(t => t.id === teamId)?.name}. Your spending will now contribute to their standings.`,
+    });
+  };
+  
+  // Calculate total spending across all teams
+  const totalSpending = LUXURY_TEAMS.reduce((sum, team) => sum + team.totalSpent, 0);
+  
   return (
-    <section id="teams" className="w-full py-20 px-6 relative overflow-hidden throne-bg">
-      <div className="absolute inset-0 z-0">
-        <div className="absolute -top-1/4 -left-1/4 w-96 h-96 rounded-full bg-royal-purple/20 filter blur-[100px] animate-pulse-slow"></div>
-        <div className="absolute -bottom-1/4 -right-1/4 w-96 h-96 rounded-full bg-royal-blue/20 filter blur-[100px] animate-pulse-slow"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 rounded-full bg-royal-gold/20 filter blur-[100px] animate-pulse-slow"></div>
-      </div>
+    <div className="mb-16">
+      <RoyalDivider variant="crown" label="LUXURY SPENDING FACTIONS" color="gold" className="mb-8" />
       
-      <div className="max-w-7xl mx-auto relative z-10">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl font-royal royal-gradient mb-4">Choose Your Dynasty</h2>
-          <p className="text-white/70 max-w-2xl mx-auto font-serif">
-            Pledge your allegiance to one of three royal houses and contribute to your dynasty's collective influence.
-            Each dynasty's power is measured by the combined patronage of all its noble members.
-          </p>
-        </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {[
-            {
-              name: 'Purple Dynasty',
-              color: 'royal-purple',
-              icon: Crown,
-              description: 'The ancient House of Wisdom and Magic. Known for their mystical influence and visionary leadership across the digital realm.',
-              members: 245,
-              totalSpent: 24500,
-              rank: 2
-            },
-            {
-              name: 'Gold Dominion',
-              color: 'royal-gold',
-              icon: Trophy, // Changed from Scepter to Trophy since Scepter isn't available
-              description: 'The opulent House of Wealth and Prosperity. Their golden touch turns influence into power through strategic investments and alliances.',
-              members: 278,
-              totalSpent: 28900,
-              rank: 1
-            },
-            {
-              name: 'Azure Order',
-              color: 'royal-blue',
-              icon: Shield,
-              description: 'The noble House of Honor and Diplomacy. Their calculated approach to power relies on loyalty and deep tradition.',
-              members: 203,
-              totalSpent: 19800,
-              rank: 3
-            }
-          ].map((team, index) => (
-            <div 
-              key={index} 
-              className={`royal-card rounded-2xl p-8 border border-${team.color}/30 relative group overflow-hidden transition-all duration-500 hover:transform hover:scale-[1.02]`}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        {LUXURY_TEAMS.map((team) => {
+          const spendingPercentage = (team.totalSpent / totalSpending) * 100;
+          
+          return (
+            <Card 
+              key={team.id} 
+              className={`backdrop-blur-md border ${team.borderColor} overflow-hidden relative`}
             >
-              <div className={`absolute -inset-1.5 bg-gradient-to-r from-${team.color}/0 via-${team.color}/50 to-${team.color}/0 opacity-20 group-hover:opacity-100 transition-opacity duration-700 blur-xl`}></div>
-              <div className="absolute -top-10 -right-10 w-40 h-40 rounded-full bg-gradient-to-br from-white/5 to-transparent"></div>
+              <div className={`absolute inset-0 ${team.bgColor} opacity-20`}></div>
               
-              <div className="relative">
-                <div className="flex justify-between items-start mb-6">
-                  <div>
-                    <div className={`w-12 h-12 rounded-full flex items-center justify-center mb-4 bg-${team.color}/10 border border-${team.color}/30`}>
-                      <span className={`w-6 h-6 rounded-full bg-${team.color} animate-pulse-slow`}></span>
-                    </div>
-                    <h3 className={`text-2xl font-royal text-${team.color} mb-1`}>{team.name}</h3>
-                    <div className="flex items-center">
-                      <span className="text-xs bg-white/10 px-2 py-0.5 rounded-full text-white/70">
-                        Rank #{team.rank}
-                      </span>
-                    </div>
+              <CardContent className="p-6 relative z-10">
+                <div className="flex items-center space-x-3 mb-4">
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center ${team.bgColor} border ${team.borderColor}`}>
+                    {team.icon}
                   </div>
-                  
-                  <div className={`font-mono text-${team.color} text-right`}>
-                    <div className="text-3xl font-bold">${team.totalSpent.toLocaleString()}</div>
-                    <div className="text-sm text-white/50">Royal Treasury</div>
+                  <div>
+                    <h3 className={`font-bold text-lg ${team.color}`}>{team.name}</h3>
+                    <p className="text-white/70 text-sm">{team.description}</p>
                   </div>
                 </div>
                 
-                <p className="text-white/70 mb-6 font-serif">
-                  {team.description}
-                </p>
-                
-                <div className="flex items-center justify-between mb-6">
-                  <div>
-                    <div className="text-2xl font-bold">{team.members}</div>
-                    <div className="text-sm text-white/50">Noble Members</div>
+                <div className="space-y-4 mb-6">
+                  <div className="flex justify-between items-center">
+                    <span className="text-white/70 flex items-center">
+                      <Trophy className="h-4 w-4 mr-1.5" />
+                      Wealth Pool
+                    </span>
+                    <span className={`font-mono font-bold ${team.color}`}>${team.totalSpent.toLocaleString()}</span>
                   </div>
                   
-                  <div>
-                    <div className="text-2xl font-bold">${(team.totalSpent / team.members).toFixed(2)}</div>
-                    <div className="text-sm text-white/50">Avg. Contribution</div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-white/70 flex items-center">
+                      <Users className="h-4 w-4 mr-1.5" />
+                      Members
+                    </span>
+                    <span className={`font-mono font-bold ${team.color}`}>{team.members}</span>
                   </div>
+                  
+                  <div className="space-y-1">
+                    <div className="flex justify-between text-xs">
+                      <span className="text-white/70">Faction Standing</span>
+                      <span className={team.color}>{Math.round(spendingPercentage)}%</span>
+                    </div>
+                    <Progress 
+                      value={spendingPercentage} 
+                      className="h-2 bg-white/10" 
+                      indicatorClassName={team.bgColor.replace('bg-', 'bg-')}
+                    />
+                  </div>
+                </div>
+                
+                <div className="space-y-2 mb-6">
+                  <h4 className={`text-sm font-medium ${team.color} flex items-center`}>
+                    <Gem className="h-4 w-4 mr-1.5" />
+                    Exclusive Benefits
+                  </h4>
+                  <ul className="space-y-1">
+                    {team.benefits.map((benefit, index) => (
+                      <li key={index} className="text-sm text-white/70 flex items-start">
+                        <span className="text-xs mr-1.5 mt-1">•</span>
+                        {benefit}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
                 
                 <Button 
-                  className={`w-full bg-${team.color}/20 hover:bg-${team.color}/30 text-${team.color} border border-${team.color}/30 font-royal uppercase tracking-wide`}
+                  variant="outline" 
+                  className={`w-full border ${team.borderColor} ${team.color} bg-black/30 hover:bg-black/50`}
+                  onClick={() => handleJoinTeam(team.id)}
                 >
+                  <Shield className="h-4 w-4 mr-1.5" />
                   Pledge Allegiance
+                  <ArrowRight className="h-4 w-4 ml-1.5" />
                 </Button>
-              </div>
-            </div>
-          ))}
-        </div>
+              </CardContent>
+            </Card>
+          );
+        })}
       </div>
-    </section>
+      
+      <div className="text-center text-white/60 text-sm italic">
+        "Join a luxury spending faction to demonstrate your allegiance to a specific aesthetic of meaningless digital wealth."
+      </div>
+    </div>
   );
 };
 

@@ -46,6 +46,10 @@ export interface AnalyticsData {
   }>;
 }
 
+export type UserTeam = 'red' | 'green' | 'blue' | null;
+export type UserTier = 'crab' | 'octopus' | 'fish' | 'dolphin' | 'shark' | 'whale';
+export type UserGender = 'king' | 'queen' | 'neutral';
+
 export interface UserProfile {
   id: string;
   username: string;
@@ -54,15 +58,26 @@ export interface UserProfile {
   bio?: string;
   avatar?: string;
   banner?: string;
-  team?: 'red' | 'green' | 'blue' | null;
+  profileImage?: string;
+  team?: UserTeam;
   spentAmount: number;
+  amountSpent: number;
   rank: number;
   joinedAt: string;
+  joinDate?: string;
   lastActive?: string;
   isVerified?: boolean;
   activeTitle?: string;
+  gender?: UserGender;
+  tier?: UserTier;
+  spendStreak?: number;
   profileBoosts?: ProfileBoost[];
   cosmetics?: UserCosmetics;
+  socialLinks?: Array<{
+    platform: string;
+    url: string;
+    clicks?: number;
+  }>;
   settings?: {
     theme: 'dark' | 'light' | 'system';
     notifications: boolean;
