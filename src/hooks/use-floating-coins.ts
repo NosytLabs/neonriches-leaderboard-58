@@ -1,7 +1,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-interface FloatingCoin {
+export interface FloatingCoin {
   id: number;
   x: number;
   y: number;

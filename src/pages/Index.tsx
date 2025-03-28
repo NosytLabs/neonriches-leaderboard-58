@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState, Suspense, lazy } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '@/components/Header';
@@ -108,11 +109,40 @@ const Index = () => {
           <RoyalHero />
         </Suspense>
         
+        {/* Featured Current Monarch Section - Prominently displayed below header */}
+        <div className="bg-gradient-to-b from-[#141428] to-[#0D0D20] py-12">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-6">
+              <h2 className="text-3xl md:text-4xl font-bold font-medieval royal-gradient">
+                <Crown className="inline-block mr-2 text-royal-gold" />
+                Current Reigning Monarch
+              </h2>
+              <p className="text-white/70 max-w-2xl mx-auto mt-2">
+                Behold the highest paying member of our digital court, with purely cosmetic privileges and absolutely no real power.
+              </p>
+            </div>
+            
+            <Suspense fallback={<LoadingPlaceholder />}>
+              <RoyalShowcase topSpender={topSpender} />
+            </Suspense>
+            
+            <div className="text-center mt-8">
+              <Button
+                onClick={handleQuickAscension}
+                className="bg-royal-gold hover:bg-royal-gold/90 text-black royal-button text-lg px-8 py-6"
+              >
+                <DollarSign className="mr-2 h-5 w-5" />
+                Ascend the Throne
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+              <p className="mt-3 text-white/50 italic max-w-md mx-auto">
+                Every dollar spent raises your cosmetic rank. No actual benefits or advantages.
+              </p>
+            </div>
+          </div>
+        </div>
+        
         <div className="container mx-auto px-4 py-8">
-          <Suspense fallback={<LoadingPlaceholder />}>
-            <RoyalShowcase topSpender={topSpender} />
-          </Suspense>
-          
           <Suspense fallback={<LoadingPlaceholder />}>
             <RoyalDivider variant="crown" label="ROYAL COURT STANDINGS" color="gold" className="mb-8 mt-12" />
             

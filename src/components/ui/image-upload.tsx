@@ -3,56 +3,35 @@ import React, { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import OptimizedImage from '@/components/ui/optimized-image';
-import { cn } from '@/lib/utils';
-import { Upload, X, Link, Image as ImageIcon } from 'lucide-react';
+import { Camera, Upload, X, Image as ImageIcon, Link } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
-export interface ImageUploadProps {
-  initialImageUrl?: string;
+interface ImageUploadProps {
+  initialImageUrl: string;
   onImageChange: (url: string) => void;
   caption?: string;
   onCaptionChange?: (caption: string) => void;
   maxSizeKB?: number;
-  className?: string;
   showCaption?: boolean;
   placeholderText?: string;
 }
 
 const ImageUpload: React.FC<ImageUploadProps> = ({
-  initialImageUrl = '',
+  initialImageUrl,
   onImageChange,
   caption = '',
   onCaptionChange,
-  maxSizeKB = 500,
-  className,
+  maxSizeKB = 1024, // Default 1MB
   showCaption = true,
-  placeholderText = 'Upload an image or enter URL'
+  placeholderText = 'Upload an image'
 }) => {
-  const [imageUrl, setImageUrl] = useState<string>(initialImageUrl);
-  const [imageCaption, setImageCaption] = useState<string>(caption);
-  const [uploadType, setUploadType] = useState<'url' | 'file'>('url');
-  const [isDragging, setIsDragging] = useState<boolean>(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
-
-  // Handle image URL input
-  const handleUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const url = e.target.value;
-    setImageUrl(url);
-    onImageChange(url);
-  };
+  const [imageUrl, setImageUrl] = useState(initialImageUrl);
+  const [isUploading, setIsUploading] = useState(false);
+  const [urlInput, setUrlInput] = useState('');
+  const [showUrlInput, setShowUrlInput] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   
-  // Handle caption changes
-  const handleCaptionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newCaption = e.target.value;
-    setImageCaption(newCaption);
-    if (onCaptionChange) {
-      onCaptionChange(newCaption);
-    }
-  };
-
-  // Handle file uploads and convert to data URL
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -60,58 +39,38 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
     // Check file size
     if (file.size > maxSizeKB * 1024) {
       toast({
-        title: "File too large",
-        description: `Please upload an image smaller than ${maxSizeKB}KB.`,
-        variant: "destructive"
+        title: 'File too large',
+        description: `The maximum file size is ${maxSizeKB}KB`,
+        variant: 'destructive'
       });
       return;
     }
     
+    // Mock upload - in a real app, you would upload to a server/CDN
+    setIsUploading(true);
+    
+    // Read file as data URL
     const reader = new FileReader();
     reader.onload = (event) => {
-      const dataUrl = event.target?.result as string;
-      setImageUrl(dataUrl);
-      onImageChange(dataUrl);
+      if (event.target?.result) {
+        const imageDataUrl = event.target.result as string;
+        setImageUrl(imageDataUrl);
+        onImageChange(imageDataUrl);
+        setIsUploading(false);
+      }
     };
-    reader.readAsDataURL(file);
-  };
-
-  // Handle drag and drop
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragging(true);
-  };
-  
-  const handleDragLeave = () => {
-    setIsDragging(false);
-  };
-  
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragging(false);
-    
-    const file = e.dataTransfer.files?.[0];
-    if (!file) return;
-    
-    if (file.size > maxSizeKB * 1024) {
+    reader.onerror = () => {
       toast({
-        title: "File too large",
-        description: `Please upload an image smaller than ${maxSizeKB}KB.`,
-        variant: "destructive"
+        title: 'Upload failed',
+        description: 'There was an error uploading your image',
+        variant: 'destructive'
       });
-      return;
-    }
-    
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      const dataUrl = event.target?.result as string;
-      setImageUrl(dataUrl);
-      onImageChange(dataUrl);
+      setIsUploading(false);
     };
     reader.readAsDataURL(file);
   };
-
-  const clearImage = () => {
+  
+  const handleRemoveImage = () => {
     setImageUrl('');
     onImageChange('');
     if (fileInputRef.current) {
@@ -119,129 +78,136 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
     }
   };
   
+  const handleUrlSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!urlInput) return;
+    
+    try {
+      // Validate URL
+      new URL(urlInput);
+      setImageUrl(urlInput);
+      onImageChange(urlInput);
+      setShowUrlInput(false);
+    } catch (error) {
+      toast({
+        title: 'Invalid URL',
+        description: 'Please enter a valid image URL',
+        variant: 'destructive'
+      });
+    }
+  };
+
   return (
-    <div className={cn("space-y-3", className)}>
-      <div className="flex items-center justify-between">
-        <div className="space-x-2">
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={() => setUploadType('url')}
-            className={cn(
-              "glass-morphism border-white/10",
-              uploadType === 'url' && "bg-white/10"
-            )}
-          >
-            <Link size={14} className="mr-1" />
-            URL
-          </Button>
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={() => setUploadType('file')}
-            className={cn(
-              "glass-morphism border-white/10",
-              uploadType === 'file' && "bg-white/10"
-            )}
-          >
-            <Upload size={14} className="mr-1" />
-            Upload
-          </Button>
-        </div>
-        
-        {imageUrl && (
-          <Button
-            type="button"
-            size="sm"
-            variant="outline"
-            className="text-destructive glass-morphism border-white/10 hover:bg-destructive/10"
-            onClick={clearImage}
-          >
-            <X size={14} className="mr-1" />
-            Clear
-          </Button>
-        )}
-      </div>
-      
-      {uploadType === 'url' ? (
-        <div className="space-y-2">
-          <Label htmlFor="image-url">Image URL</Label>
-          <div className="relative">
-            <ImageIcon className="absolute left-3 top-3 h-4 w-4 text-white/40" />
-            <Input
-              id="image-url"
-              type="text"
-              placeholder="https://example.com/image.jpg"
-              className="pl-10 glass-morphism border-white/10"
-              value={imageUrl}
-              onChange={handleUrlChange}
+    <div className="space-y-4">
+      {imageUrl ? (
+        <div className="relative">
+          <div className="aspect-video rounded-md overflow-hidden">
+            <img 
+              src={imageUrl} 
+              alt={caption || 'Uploaded image'} 
+              className="w-full h-full object-cover"
             />
           </div>
+          <Button 
+            size="icon"
+            variant="destructive"
+            className="absolute top-2 right-2 h-7 w-7"
+            onClick={handleRemoveImage}
+          >
+            <X size={14} />
+          </Button>
         </div>
       ) : (
-        <div
-          className={cn(
-            "glass-morphism border-2 border-dashed rounded-lg p-4 transition-colors",
-            isDragging ? "border-primary/70 bg-primary/5" : "border-white/10",
-            "text-center cursor-pointer"
-          )}
-          onDragOver={handleDragOver}
-          onDragLeave={handleDragLeave}
-          onDrop={handleDrop}
-          onClick={() => fileInputRef.current?.click()}
-        >
-          <input
-            ref={fileInputRef}
-            type="file"
-            className="hidden"
-            accept="image/*"
-            onChange={handleFileChange}
-          />
-          <div className="flex flex-col items-center space-y-2 py-4">
-            <Upload className="h-10 w-10 text-white/40" />
-            {imageUrl ? (
-              <p className="text-sm text-white/70">
-                Click or drag to replace image
+        <div className="glass-morphism border-white/10 rounded-md p-6">
+          {showUrlInput ? (
+            <form onSubmit={handleUrlSubmit} className="space-y-3">
+              <div className="flex flex-col space-y-2">
+                <Label htmlFor="imageUrl">Image URL</Label>
+                <div className="flex space-x-2">
+                  <Input 
+                    id="imageUrl"
+                    type="text"
+                    value={urlInput}
+                    onChange={(e) => setUrlInput(e.target.value)}
+                    placeholder="https://example.com/image.jpg"
+                    className="glass-morphism border-white/10"
+                  />
+                  <Button 
+                    type="submit" 
+                    size="icon"
+                    className="glass-morphism border-white/10 hover:bg-white/10"
+                  >
+                    <Link size={16} />
+                  </Button>
+                  <Button 
+                    type="button" 
+                    size="icon"
+                    variant="outline"
+                    className="glass-morphism border-white/10 hover:bg-white/10"
+                    onClick={() => setShowUrlInput(false)}
+                  >
+                    <X size={16} />
+                  </Button>
+                </div>
+              </div>
+            </form>
+          ) : (
+            <div className="flex flex-col items-center justify-center">
+              <div className="mb-4">
+                <ImageIcon size={40} className="text-white/40" />
+              </div>
+              <p className="text-white/60 text-sm mb-4">{placeholderText}</p>
+              <div className="flex space-x-3">
+                <Button 
+                  variant="outline"
+                  className="glass-morphism border-white/10 hover:bg-white/10"
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={isUploading}
+                >
+                  <Upload size={16} className="mr-2" />
+                  {isUploading ? 'Uploading...' : 'Upload'}
+                </Button>
+                <Button 
+                  variant="outline"
+                  className="glass-morphism border-white/10 hover:bg-white/10"
+                  onClick={() => setShowUrlInput(true)}
+                >
+                  <Link size={16} className="mr-2" />
+                  URL
+                </Button>
+                <Button 
+                  variant="outline"
+                  className="glass-morphism border-white/10 hover:bg-white/10"
+                >
+                  <Camera size={16} className="mr-2" />
+                  Camera
+                </Button>
+              </div>
+              <input 
+                type="file" 
+                ref={fileInputRef}
+                onChange={handleFileChange}
+                accept="image/*"
+                className="hidden"
+              />
+              <p className="text-xs text-white/40 mt-4">
+                Max size: {maxSizeKB}KB. Supported formats: JPG, PNG, GIF.
               </p>
-            ) : (
-              <>
-                <p className="text-base text-white/70">
-                  {placeholderText}
-                </p>
-                <p className="text-xs text-white/50">
-                  Max file size: {maxSizeKB}KB
-                </p>
-              </>
-            )}
-          </div>
+            </div>
+          )}
         </div>
       )}
       
-      {imageUrl && (
-        <div className="mt-4 rounded-lg overflow-hidden">
-          <OptimizedImage
-            src={imageUrl}
-            alt={imageCaption || "Uploaded image"}
-            className="w-full max-h-48 object-contain rounded-lg bg-white/5"
-            width={400}
-            height={300}
-            fallback="/placeholder.svg"
-          />
-        </div>
-      )}
-      
-      {showCaption && (
-        <div className="space-y-1 mt-3">
-          <Label htmlFor="image-caption">Caption</Label>
-          <Input
-            id="image-caption"
-            type="text"
-            placeholder="Image description"
+      {showCaption && onCaptionChange && (
+        <div className="space-y-2">
+          <Label htmlFor="imageCaption">Caption</Label>
+          <Input 
+            id="imageCaption"
+            value={caption}
+            onChange={(e) => onCaptionChange(e.target.value)}
+            placeholder="Add a caption for this image"
             className="glass-morphism border-white/10"
-            value={imageCaption}
-            onChange={handleCaptionChange}
           />
         </div>
       )}

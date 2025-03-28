@@ -5,8 +5,9 @@ import ProfileViewer from './ProfileViewer';
 import ProfileSettings from './ProfileSettings';
 import ProfileBoost from './ProfileBoost';
 import ProfileEditor from './ProfileEditor';
+import ProfileAnalytics from './ProfileAnalytics';
 
-export type ProfileTab = 'view' | 'edit' | 'settings' | 'boost';
+export type ProfileTab = 'view' | 'edit' | 'settings' | 'boost' | 'analytics';
 
 export interface ProfileData {
   bio: string;
@@ -44,6 +45,8 @@ const ProfileContent: React.FC<ProfileContentProps> = ({
       return <ProfileSettings user={profileUser} />;
     case 'boost':
       return <ProfileBoost />;
+    case 'analytics':
+      return <ProfileAnalytics profileId={profileUser.id} />;
     case 'view':
     default:
       return <ProfileViewer user={profileUser} profileData={profileData} />;

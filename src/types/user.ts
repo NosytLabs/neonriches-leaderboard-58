@@ -100,6 +100,7 @@ export interface UserProfile {
   avatar?: string;
   banner?: string;
   profileImage?: string;
+  profileImages?: Array<{ id: number; url: string; caption: string; }>;
   team?: UserTeam;
   spentAmount: number;
   amountSpent: number; // Keeping both for compatibility
