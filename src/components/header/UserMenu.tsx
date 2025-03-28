@@ -85,13 +85,13 @@ const UserMenu: React.FC<UserMenuProps> = ({ user }) => {
             <span>Dashboard</span>
           </DropdownMenuItem>
         </Link>
-        <Link to="/settings">
+        <Link to="/dashboard">
           <DropdownMenuItem className="cursor-pointer">
             <Settings className="mr-2 h-4 w-4" />
             <span>Settings</span>
           </DropdownMenuItem>
         </Link>
-        <Link to="/wallet">
+        <Link to="/dashboard">
           <DropdownMenuItem className="cursor-pointer">
             <CreditCard className="mr-2 h-4 w-4" />
             <span>Wallet</span>

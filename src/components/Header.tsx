@@ -82,9 +82,6 @@ const Header = () => {
                   <Link to="/dashboard" className="px-3 py-2 text-sm hover:text-royal-gold transition-colors">
                     Dashboard
                   </Link>
-                  <Link to={`/profile/${user.username}`} className="px-3 py-2 text-sm hover:text-royal-gold transition-colors">
-                    My Profile
-                  </Link>
                 </>
               )}
               <div className="ml-4 flex items-center space-x-2">
@@ -139,9 +136,6 @@ const Header = () => {
               <>
                 <Link to="/dashboard" className="px-4 py-3 text-lg border-b border-white/10 hover:text-royal-gold">
                   Dashboard
-                </Link>
-                <Link to={`/profile/${user.username}`} className="px-4 py-3 text-lg border-b border-white/10 hover:text-royal-gold">
-                  My Profile
                 </Link>
               </>
             )}

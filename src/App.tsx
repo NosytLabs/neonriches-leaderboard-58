@@ -18,6 +18,7 @@ const FAQ = lazy(() => import('./pages/FAQ'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 const AdminSettings = lazy(() => import('./pages/AdminSettings'));
 const Auth = lazy(() => import('./pages/Auth'));
+const Privacy = lazy(() => import('./pages/Privacy'));
 
 function App() {
   return (
@@ -38,6 +39,7 @@ function App() {
           <Route path="/faq" element={<FAQ />} />
           <Route path="/auth" element={<Auth />} />
           <Route path="/admin/settings" element={<AdminSettings />} />
+          <Route path="/privacy" element={<Privacy />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>

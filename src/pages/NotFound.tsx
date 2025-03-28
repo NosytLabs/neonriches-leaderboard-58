@@ -1,6 +1,6 @@
 
 import React from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
 
@@ -26,13 +26,14 @@ const NotFound = () => {
           The requested path <span className="font-mono bg-white/5 px-2 py-0.5 rounded text-white">{location.pathname}</span> could not be found. Perhaps you need to pay more to unlock this content?
         </p>
         
-        <Button 
-          className="bg-gradient-to-r from-team-red via-team-green to-team-blue hover:opacity-90 text-white w-full"
-          onClick={() => window.location.href = '/'}
-        >
-          <ArrowLeft size={16} className="mr-2" />
-          Back to Leaderboard
-        </Button>
+        <Link to="/">
+          <Button 
+            className="bg-gradient-to-r from-team-red via-team-green to-team-blue hover:opacity-90 text-white w-full"
+          >
+            <ArrowLeft size={16} className="mr-2" />
+            Back to Home
+          </Button>
+        </Link>
       </div>
     </div>
   );

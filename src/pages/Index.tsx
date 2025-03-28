@@ -75,7 +75,7 @@ const Index = () => {
       });
       
       // Navigate to terms of service
-      navigate('/terms');
+      navigate('/terms-of-service');
       return;
     }
     
@@ -83,7 +83,7 @@ const Index = () => {
       navigate('/dashboard');
     } else {
       // Open registration modal or navigate to registration page
-      navigate('/dashboard');
+      navigate('/auth');
     }
   };
 
@@ -156,6 +156,15 @@ const Index = () => {
           <TeamSection />
           
           <div className="text-center mt-16">
+            <Button 
+              onClick={() => navigate('/about')}
+              variant="outline"
+              className="border-royal-gold/30 text-royal-gold hover:bg-royal-gold/10 mr-4"
+            >
+              About SpendThrone
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
+            
             <Button 
               onClick={() => navigate('/faq')}
               variant="outline"
