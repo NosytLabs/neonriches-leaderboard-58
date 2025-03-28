@@ -1,24 +1,8 @@
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect } from 'react';
 import { AuthContextType } from '@/types/auth-context';
-import { UserProfile, UserSubscription } from '@/types/user';
-
-// Create the context with a default value
-const AuthContext = createContext<AuthContextType>({
-  user: null,
-  isLoading: true,
-  isAuthenticated: false,
-  error: null,
-  login: async () => {},
-  register: async () => {},
-  logout: async () => {},
-  signOut: () => {},
-  updateUserProfile: async () => {},
-  openAuthModal: () => {},
-  closeAuthModal: () => {},
-});
-
-export const useAuth = () => useContext(AuthContext);
+import { UserProfile } from '@/types/user';
+import { AuthContext } from './auth';
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<UserProfile | null>(null);
@@ -102,7 +86,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const register = async (email: string, username: string, password: string): Promise<void> => {
+  const register = async (username: string, email: string, password: string): Promise<void> => {
     try {
       setIsLoading(true);
       setError(null);
@@ -278,27 +262,25 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setIsAuthModalOpen(false);
   };
 
+  const value: AuthContextType = {
+    user, 
+    isLoading, 
+    isAuthenticated: !!user, 
+    error,
+    login, 
+    register, 
+    logout,
+    signOut,
+    updateUserProfile,
+    boostProfile,
+    awardCosmetic,
+    openAuthModal,
+    closeAuthModal
+  };
+
   return (
-    <AuthContext.Provider 
-      value={{ 
-        user, 
-        isLoading, 
-        isAuthenticated: !!user, 
-        error,
-        login, 
-        register, 
-        logout,
-        signOut,
-        updateUserProfile,
-        boostProfile,
-        awardCosmetic,
-        openAuthModal,
-        closeAuthModal
-      }}
-    >
+    <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
   );
 };
-
-export type { UserProfile };

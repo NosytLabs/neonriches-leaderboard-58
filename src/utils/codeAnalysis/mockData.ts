@@ -1,21 +1,22 @@
 
-import { AnalysisResult } from "./types";
+import { AnalysisResult, ComplexityItem } from "./types";
+
+// Create ComplexityItem for mocked data
+const mockComplexityItem: ComplexityItem = {
+  id: "1",
+  name: "handleSubmit",
+  file: "src/components/ContactForm.tsx",
+  complexity: 12,
+  linesOfCode: 45,
+  parameters: 3,
+  nestedLevel: 3,
+  issues: ["Too many nested conditions", "Complex logic"],
+  function: "handleSubmit"
+};
 
 // Mock analysis results for development and testing
 export const mockedAnalysisResults: AnalysisResult = {
-  complexity: [
-    {
-      id: "1",
-      name: "handleSubmit",
-      file: "src/components/ContactForm.tsx",
-      complexity: 12,
-      linesOfCode: 45,
-      parameters: 3,
-      nestedLevel: 3,
-      issues: ["Too many nested conditions", "Complex logic"],
-      function: "handleSubmit"
-    }
-  ],
+  complexity: [mockComplexityItem],
   duplicates: [],
   unused: {
     imports: [],
@@ -44,19 +45,7 @@ export const mockedAnalysisResults: AnalysisResult = {
   codeSmells: [],
   deadCodePaths: [],
   duplicateCode: [],
-  complexCode: [
-    {
-      id: "1",
-      name: "handleSubmit",
-      file: "src/components/ContactForm.tsx",
-      complexity: 12,
-      linesOfCode: 45,
-      parameters: 3,
-      nestedLevel: 3,
-      issues: ["Too many nested conditions", "Complex logic"],
-      function: "handleSubmit"
-    }
-  ],
+  complexCode: [mockComplexityItem],
   unusedDependencies: [],
   unusedFunctions: [],
   metrics: {

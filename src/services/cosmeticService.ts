@@ -11,6 +11,8 @@ export const getCosmeticById = (id: string): CosmeticItem => {
     rarity: 'rare' as CosmeticRarity,
     description: 'A beautiful cosmetic item',
     imageUrl: '/assets/cosmetics/borders/rare.png',
+    imageSrc: '/assets/cosmetics/borders/rare.png', // For backward compatibility
+    cssClass: 'border-royal-gold', // For backward compatibility
     cost: 0
   };
 };
@@ -91,6 +93,8 @@ export const awardRandomCosmetic = (
     rarity: selectedRarity,
     description: `A ${selectedRarity} ${selectedCategory.slice(0, -1)} effect.`,
     imageUrl: `/assets/cosmetics/${selectedCategory}/${selectedRarity}.png`,
+    imageSrc: `/assets/cosmetics/${selectedCategory}/${selectedRarity}.png`, // For backward compatibility
+    cssClass: `${selectedRarity}-${selectedCategory.slice(0, -1)}`, // For backward compatibility
     cost: 0
   };
   
