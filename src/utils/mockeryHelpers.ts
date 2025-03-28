@@ -30,7 +30,7 @@ export const getMockeryDescription = (mockeryType: MockeryTier): string => {
     case 'epic':
       return 'Impose a royal decree of silence. This user\'s comments will be hidden from public view for 48 hours.';
     case 'legendary':
-      return 'Appoint this user as the Court Jester. Their profile will display the jester's hat for 7 days, and they must speak in rhymes in the chat.';
+      return "Appoint this user as the Court Jester. Their profile will display the jester's hat for 7 days, and they must speak in rhymes in the chat.";
     default:
       return 'Unknown mockery type';
   }
