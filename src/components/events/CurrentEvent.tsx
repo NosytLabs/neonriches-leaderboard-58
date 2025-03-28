@@ -1,8 +1,8 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, CalendarDays, Clock, Trophy, Users, Scroll, Sparkles } from 'lucide-react';
+import { ArrowRight, CalendarDays, Clock, Trophy, Users, Scroll, Sparkles, Flame } from 'lucide-react';
 import { Dialog } from '@/components/ui/dialog';
 import CountdownTimer from './CountdownTimer';
 import EventDetailsModal from './components/EventDetailsModal';
@@ -10,20 +10,41 @@ import { useEventStatistics } from './hooks/useEventStatistics';
 import { currentEvent } from './data';
 import PublicShamingFestival from './PublicShamingFestival';
 import OptimizedImage from '@/components/ui/optimized-image';
-import { formatDate } from '@/utils/dateUtils';
-import { getWeeklyDiscountedAction, getShameActionIcon, getDiscountedShamePrice, getShameActionPrice } from './utils/shameUtils';
+import { 
+  formatDate, 
+  getNextMondayDate, 
+  getDaysUntilEndOfMonth 
+} from '@/utils/dateUtils';
+import { 
+  getWeeklyDiscountedAction, 
+  getShameActionIcon, 
+  getDiscountedShamePrice, 
+  getShameActionPrice,
+  getWeeklyDiscountPercentage,
+  isFireSaleMonth,
+  getFireSaleDiscountPercentage,
+  getFireSaleFeaturedCategories
+} from './utils/shameUtils';
 import RoyalDivider from '@/components/ui/royal-divider';
 import MedievalIcon from '@/components/ui/medieval-icon';
+import FireSaleEvent from './FireSaleEvent';
 
 const CurrentEvent = () => {
   const { stats } = useEventStatistics();
   const [showDetailsModal, setShowDetailsModal] = useState(false);
+  const [showFireSaleModal, setShowFireSaleModal] = useState(false);
   
   // Get this week's featured discount
   const discountedAction = getWeeklyDiscountedAction();
   const regularPrice = getShameActionPrice(discountedAction);
   const discountedPrice = getDiscountedShamePrice(discountedAction);
-  const discountPercentage = Math.round((1 - (discountedPrice / regularPrice)) * 100);
+  const discountPercentage = getWeeklyDiscountPercentage(discountedAction);
+  
+  // Check if it's a Fire Sale month
+  const fireSaleActive = isFireSaleMonth();
+  const fireSaleDiscount = getFireSaleDiscountPercentage();
+  const daysRemaining = getDaysUntilEndOfMonth();
+  const featuredCategories = fireSaleActive ? getFireSaleFeaturedCategories() : [];
   
   return (
     <div className="space-y-6">
@@ -131,6 +152,37 @@ const CurrentEvent = () => {
         </div>
       </div>
       
+      {/* Fire Sale Banner (only shown during Fire Sale months) */}
+      {fireSaleActive && (
+        <div className="glass-morphism border-royal-crimson/30 p-4 rounded-lg relative overflow-hidden animate-pulse-slow">
+          {/* Animated flame background */}
+          <div className="absolute inset-0 bg-gradient-to-t from-royal-crimson/10 to-transparent opacity-40"></div>
+          <div className="absolute inset-0 bg-[url('/assets/patterns/flames.svg')] opacity-5 animate-flame-flicker"></div>
+          
+          <div className="flex items-center relative z-10">
+            <div className="mr-4 p-3 rounded-full bg-royal-crimson/20 border border-royal-crimson/40">
+              <Flame className="h-8 w-8 text-royal-crimson animate-flame-flicker" />
+            </div>
+            <div className="flex-1">
+              <h3 className="font-bold text-xl bg-gradient-to-r from-yellow-500 via-royal-crimson to-amber-500 text-transparent bg-clip-text mb-1">
+                Royal Fire Sale: {fireSaleDiscount}% Off Selected Cosmetics!
+              </h3>
+              <p className="text-white/70">
+                The royal treasury is being emptied! This month only, get massive discounts on {featuredCategories.join(', ')} cosmetics.
+                {daysRemaining > 0 && ` Only ${daysRemaining} days remaining!`}
+              </p>
+            </div>
+            <Button 
+              className="bg-gradient-to-r from-royal-crimson to-amber-600 hover:opacity-90 animate-royal-pulse"
+              onClick={() => setShowFireSaleModal(true)}
+            >
+              <Flame className="mr-2 h-4 w-4" />
+              <span>View Fire Sale</span>
+            </Button>
+          </div>
+        </div>
+      )}
+      
       <RoyalDivider variant="ornate" color="royal" className="my-6" />
       
       <PublicShamingFestival />
@@ -141,21 +193,19 @@ const CurrentEvent = () => {
           onClose={() => setShowDetailsModal(false)} 
         />
       </Dialog>
+      
+      {fireSaleActive && (
+        <Dialog open={showFireSaleModal} onOpenChange={setShowFireSaleModal}>
+          <FireSaleEvent 
+            onClose={() => setShowFireSaleModal(false)}
+            discountPercentage={fireSaleDiscount}
+            featuredCategories={featuredCategories}
+            daysRemaining={daysRemaining}
+          />
+        </Dialog>
+      )}
     </div>
   );
 };
-
-// Helper function to get next Monday's date
-function getNextMondayDate(): string {
-  const today = new Date();
-  const day = today.getDay(); // 0 is Sunday, 1 is Monday
-  const daysUntilNextMonday = day === 1 ? 7 : (8 - day) % 7; // If today is Monday, get next Monday
-  
-  const nextMonday = new Date(today);
-  nextMonday.setDate(today.getDate() + daysUntilNextMonday);
-  nextMonday.setHours(0, 0, 0, 0);
-  
-  return nextMonday.toISOString();
-}
 
 export default CurrentEvent;

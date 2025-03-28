@@ -1,0 +1,204 @@
+
+/* Fire Sale Animations */
+@keyframes flame-flicker {
+  0%, 100% {
+    opacity: 0.8;
+    transform: scale(1) rotate(0deg);
+  }
+  25% {
+    opacity: 1;
+    transform: scale(1.05) rotate(1deg);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(0.95) rotate(-1deg);
+  }
+  75% {
+    opacity: 1;
+    transform: scale(1.02) rotate(0.5deg);
+  }
+}
+
+@keyframes ember-float {
+  0% {
+    transform: translateY(0) translateX(0) scale(1);
+    opacity: 0.7;
+  }
+  100% {
+    transform: translateY(-100px) translateX(10px) scale(0);
+    opacity: 0;
+  }
+}
+
+@keyframes heat-haze {
+  0%, 100% {
+    transform: translateX(0) scale(1);
+    opacity: 0.2;
+  }
+  50% {
+    transform: translateX(5px) scale(1.02);
+    opacity: 0.3;
+  }
+}
+
+@keyframes sales-pulse {
+  0%, 100% {
+    box-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(255, 100, 0, 0.8);
+  }
+}
+
+/* Fire Sale Effect Classes */
+.flame-flicker {
+  animation: flame-flicker 2s ease-in-out infinite;
+}
+
+.ember-particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background-color: rgba(255, 100, 0, 0.8);
+  animation: ember-float 3s ease-out forwards;
+  pointer-events: none;
+}
+
+.heat-haze-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to top, rgba(255, 100, 0, 0.05), transparent);
+  animation: heat-haze 4s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.fire-sale-item {
+  position: relative;
+  overflow: hidden;
+  animation: sales-pulse 2s infinite;
+}
+
+.fire-sale-item::before {
+  content: "";
+  position: absolute;
+  bottom: -10px;
+  left: 0;
+  right: 0;
+  height: 20px;
+  background: linear-gradient(to top, rgba(255, 50, 0, 0.2), transparent);
+  z-index: 1;
+}
+
+.fire-sale-tag {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: linear-gradient(135deg, #ff3d00, #ff9500);
+  color: white;
+  padding: 2px 6px;
+  font-size: 0.75rem;
+  font-weight: bold;
+  transform: rotate(5deg);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  z-index: 10;
+}
+
+.fire-sale-banner {
+  background: linear-gradient(to right, rgba(255, 50, 0, 0.1), rgba(255, 150, 0, 0.1));
+  border: 1px solid rgba(255, 100, 0, 0.3);
+  animation: sales-pulse 3s infinite;
+}
+
+/* Fire effects for background */
+.fire-background {
+  position: relative;
+  overflow: hidden;
+}
+
+.fire-background::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: linear-gradient(to top, rgba(255, 50, 0, 0.2), transparent);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.fire-background::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4' viewBox='0 0 4 4'%3E%3Cpath fill='%23ff6600' fill-opacity='0.1' d='M1 3h1v1H1V3zm2-2h1v1H3V1z'%3E%3C/path%3E%3C/svg%3E");
+  opacity: 0.2;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Gold sparkle effect for discounted items */
+.sparkle-gold {
+  position: relative;
+}
+
+.sparkle-gold::before {
+  content: "";
+  position: absolute;
+  top: -10%;
+  left: -10%;
+  right: -10%;
+  bottom: -10%;
+  background: radial-gradient(circle, rgba(255, 215, 0, 0.2) 0%, transparent 70%);
+  opacity: 0;
+  animation: sparkle-pulse 2s infinite;
+}
+
+@keyframes sparkle-pulse {
+  0%, 100% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+}
+
+/* Fire Sale countdown styling */
+.fire-sale-countdown {
+  font-family: monospace;
+  font-weight: bold;
+  color: #ff6600;
+  text-shadow: 0 0 5px rgba(255, 100, 0, 0.5);
+}
+
+/* Fire sale price tag */
+.fire-sale-price {
+  position: relative;
+  display: inline-block;
+}
+
+.fire-sale-price::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 2px;
+  background-color: rgba(255, 0, 0, 0.7);
+  transform: rotate(-5deg);
+}
+
+/* Add to main.css */
+.animate-flame-flicker {
+  animation: flame-flicker 3s ease-in-out infinite;
+}

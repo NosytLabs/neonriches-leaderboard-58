@@ -7,6 +7,7 @@ import './index.css';
 import { Toaster } from './components/ui/toaster';
 import { AuthProvider } from './contexts/AuthContext';
 import { ToastProvider } from './contexts/ToastContext';
+import { EventProvider } from './contexts/EventContext';
 import { HelmetProvider } from 'react-helmet-async';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
@@ -15,8 +16,10 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
       <BrowserRouter>
         <AuthProvider>
           <ToastProvider>
-            <App />
-            <Toaster />
+            <EventProvider>
+              <App />
+              <Toaster />
+            </EventProvider>
           </ToastProvider>
         </AuthProvider>
       </BrowserRouter>

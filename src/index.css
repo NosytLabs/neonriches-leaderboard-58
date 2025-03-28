@@ -2,96 +2,242 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+ 
+@layer base {
+  :root {
+    --background: 0 0% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 249 71% 65%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 0 0% 14.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 14.9%;
+    --muted-foreground: 0 0% 63.9%;
+    --accent: 0 0% 14.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 14.9%;
+    --input: 0 0% 14.9%;
+    --ring: 249 71% 65%;
+    --radius: 0.5rem;
+    
+    --royal-gold: 45 100% 52%;
+    --royal-gold-foreground: 0 0% 10%;
+    --royal-purple: 275 70% 57%;
+    --royal-crimson: 347 77% 50%;
+    --royal-navy: 240 64% 27%;
+  }
+ 
+  .dark {
+    --background: 0 0% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 249 71% 65%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 0 0% 14.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 14.9%;
+    --muted-foreground: 0 0% 63.9%;
+    --accent: 0 0% 14.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 14.9%;
+    --input: 0 0% 14.9%;
+    --ring: 249 71% 65%;
+  }
+}
 
-@import url('./styles/utilities/index.css');
-@import url('./styles/animations/index.css');
-@import url('./styles/medieval-animations.css');
-@import url('./styles/cosmetics.css');
-@import url('./styles/unified-theme.css');
-@import url('./styles/consolidated-animations.css');
-@import url('./styles/fonts.css');
-@import url('./styles/profile-boost.css');
-@import url('./styles/root-variables.css');
-@import url('./styles/medieval-elements.css');
-@import url('./styles/marketing-elements.css');
-@import url('./styles/effects/gold-dust.css');
-@import url('./styles/theme/index.css');
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
 
+/* Custom CSS for Pay-to-Win elements */
 :root {
-  /* Base theme variables */
-  --background: #0d0d20;
-  --foreground: #FFFFFF;
+  --team-red: #ff5757;
+  --team-green: #57ff8f;
+  --team-blue: #5783ff;
   
-  /* Royal theme colors */
-  --royal-gold: #FFD700;
-  --royal-gold-bright: #FFDF00;
-  --royal-gold-dark: #D4AF37;
-  --royal-crimson: #9B2335;
-  --royal-navy: #000080;
-  --royal-purple: #4B0082;
-  
-  /* Team colors */
-  --team-red: var(--royal-crimson);
-  --team-green: var(--royal-emerald);
-  --team-blue: var(--royal-navy);
-  
-  /* Animation durations */
-  --animation-slow: 3s;
-  --animation-medium: 1.5s;
-  --animation-fast: 0.5s;
+  --royal-gold-color: #d4af37;
+  --royal-purple-color: #7e22ce;
+  --royal-crimson-color: #dc2626;
+  --royal-navy-color: #1e3a8a;
 }
 
-body {
-  font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: var(--background);
-  color: var(--foreground);
-  line-height: 1.5;
+/* Team Colors */
+.text-team-red {
+  color: var(--team-red);
+}
+.text-team-green {
+  color: var(--team-green);
+}
+.text-team-blue {
+  color: var(--team-blue);
+}
+.bg-team-red {
+  background-color: var(--team-red);
+}
+.bg-team-green {
+  background-color: var(--team-green);
+}
+.bg-team-blue {
+  background-color: var(--team-blue);
 }
 
+/* Royal Colors */
+.text-royal-gold {
+  color: var(--royal-gold-color);
+}
+.text-royal-purple {
+  color: var(--royal-purple-color);
+}
+.text-royal-crimson {
+  color: var(--royal-crimson-color);
+}
+.text-royal-navy {
+  color: var(--royal-navy-color);
+}
+.bg-royal-gold {
+  background-color: var(--royal-gold-color);
+}
+.bg-royal-purple {
+  background-color: var(--royal-purple-color);
+}
+.bg-royal-crimson {
+  background-color: var(--royal-crimson-color);
+}
+.bg-royal-navy {
+  background-color: var(--royal-navy-color);
+}
+
+/* Royal Gradient Text */
+.royal-gradient {
+  @apply bg-gradient-to-r from-royal-gold via-royal-purple to-amber-300 text-transparent bg-clip-text;
+}
+
+/* Font for royal themes */
 .font-royal {
-  font-family: 'Playfair Display', 'Times New Roman', serif;
+  font-family: 'Cinzel', serif;
 }
 
-.font-medieval {
-  font-family: 'Cinzel', 'Times New Roman', serif;
+/* Royal text shimmer effect */
+.royal-text-shimmer {
+  @apply royal-gradient;
+  background-size: 200% auto;
+  animation: shimmer 3s linear infinite;
 }
 
-/* Glass Morphism */
+@keyframes shimmer {
+  to {
+    background-position: 200% center;
+  }
+}
+
+/* Gold border glow effect */
+.royal-border {
+  border: 1px solid rgba(212, 175, 55, 0.5);
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+}
+
+/* Animation for crown icons */
+@keyframes crown-float {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-5px) rotate(5deg);
+  }
+}
+
+.crown-float {
+  animation: crown-float 3s ease-in-out infinite;
+}
+
+/* Slow pulse animation */
+@keyframes pulse-slow {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 3s ease-in-out infinite;
+}
+
+/* Team background gradients */
+.bg-team-red-gradient {
+  background: linear-gradient(135deg, rgba(255, 87, 87, 0.1), rgba(255, 87, 87, 0.01));
+}
+.bg-team-green-gradient {
+  background: linear-gradient(135deg, rgba(87, 255, 143, 0.1), rgba(87, 255, 143, 0.01));
+}
+.bg-team-blue-gradient {
+  background: linear-gradient(135deg, rgba(87, 131, 255, 0.1), rgba(87, 131, 255, 0.01));
+}
+
+/* Glass morphism effect */
 .glass-morphism {
-  background: rgba(13, 13, 32, 0.6);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 215, 0, 0.1);
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
 }
 
-/* Royal Button Effect */
-.royal-button {
-  position: relative;
-  overflow: hidden;
-  transition: all 0.3s ease;
+.glass-morphism-highlight {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
 }
 
-.royal-button::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(to right, transparent 0%, rgba(255, 215, 0, 0.2) 50%, transparent 100%);
-  transition: left 0.5s ease;
+/* Slide-in animation */
+@keyframes slide-in {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
-.royal-button:hover::before {
-  left: 100%;
+.animate-slide-in {
+  animation: slide-in 0.3s ease-out forwards;
 }
 
-/* Text effects */
-.royal-gradient {
-  background: linear-gradient(to right, var(--royal-gold-dark) 0%, var(--royal-gold) 50%, var(--royal-gold-bright) 100%);
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.3);
+/* Fade-in animation */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
+
+.animate-fade-in {
+  animation: fade-in 0.5s ease-out forwards;
+}
+
+/* Import specific effect stylesheets */
+@import './styles/medieval-animations.css';
+@import './styles/shame-effects.css';
+@import './styles/fire-sale-effects.css';
