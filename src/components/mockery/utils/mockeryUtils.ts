@@ -1,5 +1,6 @@
 
 import { MockeryTier, MockeryAction } from '../hooks/useMockeryEffect';
+import React from 'react';
 
 // Extended type for mockery tiers to include common, uncommon, etc.
 export type ExtendedMockeryTier = MockeryTier | 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
@@ -65,24 +66,24 @@ export const getMockeryActionColor = (action: ExtendedMockeryAction): { bg: stri
 // Get action icons for UI display
 export const getMockeryActionIcon = (action: ExtendedMockeryAction): JSX.Element => {
   switch (action) {
-    case 'tomatoes':
+    case "tomatoes":
       return <span>🍅</span>;
-    case 'eggs':
+    case "eggs":
       return <span>🥚</span>;
-    case 'stocks':
+    case "stocks":
       return <span>🔒</span>;
-    case 'silence':
+    case "silence":
       return <span>🤐</span>;
-    case 'courtJester':
-    case 'jester':
+    case "courtJester":
+    case "jester":
       return <span>🃏</span>;
-    case 'dunce':
+    case "dunce":
       return <span>🧢</span>;
-    case 'roast':
+    case "roast":
       return <span>🔥</span>;
-    case 'ridicule':
+    case "ridicule":
       return <span>😂</span>;
-    case 'taunt':
+    case "taunt":
       return <span>👎</span>;
     default:
       return <span>🍅</span>;
