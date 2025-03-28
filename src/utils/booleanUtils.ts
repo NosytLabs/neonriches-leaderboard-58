@@ -30,7 +30,7 @@ export const withStringBooleanProps = <P extends Record<string, any>>(
       }
     });
     
-    return <Component {...fixedProps} />;
+    return React.createElement(Component, fixedProps);
   };
 };
 
