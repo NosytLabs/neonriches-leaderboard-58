@@ -34,11 +34,15 @@ const mockUsers = [
   }
 ];
 
-interface PublicShamingFeatureProps {
+export interface PublicShamingFeatureProps {
   isEnabled?: boolean;
+  children?: React.ReactNode;
 }
 
-const PublicShamingFeature: React.FC<PublicShamingFeatureProps> = ({ isEnabled = true }) => {
+const PublicShamingFeature: React.FC<PublicShamingFeatureProps> = ({ 
+  isEnabled = true,
+  children
+}) => {
   const [selectedUser, setSelectedUser] = useState<UserProfile | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isShaming, setIsShaming] = useState(false);
@@ -63,7 +67,7 @@ const PublicShamingFeature: React.FC<PublicShamingFeatureProps> = ({ isEnabled =
   };
 
   const openShameDialog = (user: any) => {
-    // Convert to full UserProfile and then to User
+    // Convert to full UserProfile
     const userProfile: UserProfile = {
       id: user.id,
       username: user.username,
@@ -83,57 +87,57 @@ const PublicShamingFeature: React.FC<PublicShamingFeatureProps> = ({ isEnabled =
     return null;
   }
 
+  const handleOpenDialog = () => {
+    setIsDialogOpen(true);
+  };
+
   return (
-    <Card className="glass-morphism border-royal-crimson/30">
-      <CardHeader className="pb-2">
-        <CardTitle className="flex items-center text-lg">
-          <ShieldQuestion className="mr-2 h-5 w-5 text-royal-crimson" />
-          Public Shaming
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <p className="text-sm text-white/70">
-          Shame users who haven't been active or contributed to the community recently.
-        </p>
-        
-        {mockUsers.map((user) => (
-          <div key={user.id} className="flex justify-between items-center p-2 rounded-md glass-morphism-subtle">
-            <div className="flex items-center">
-              <Avatar className="h-8 w-8 mr-2">
-                <AvatarImage src={user.profileImage} alt={user.username} />
-                <AvatarFallback>{user.username.substring(0, 2)}</AvatarFallback>
-              </Avatar>
-              <div>
-                <div className="text-sm font-medium">{user.username}</div>
-                <div className="text-xs text-white/60">Last active: {new Date(user.lastActive).toLocaleDateString()}</div>
+    <>
+      {children && (
+        <div onClick={handleOpenDialog}>
+          {children}
+        </div>
+      )}
+      
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent className="glass-morphism border-royal-crimson/30">
+          <DialogHeader>
+            <DialogTitle className="flex items-center text-lg">
+              <ShieldQuestion className="mr-2 h-5 w-5 text-royal-crimson" />
+              Public Shaming
+            </DialogTitle>
+            <DialogDescription>
+              Shame users who haven't been active or contributed to the community recently.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-4">
+            {mockUsers.map((user) => (
+              <div key={user.id} className="flex justify-between items-center p-2 rounded-md glass-morphism-subtle">
+                <div className="flex items-center">
+                  <Avatar className="h-8 w-8 mr-2">
+                    <AvatarImage src={user.profileImage} alt={user.username} />
+                    <AvatarFallback>{user.username.substring(0, 2)}</AvatarFallback>
+                  </Avatar>
+                  <div>
+                    <div className="text-sm font-medium">{user.username}</div>
+                    <div className="text-xs text-white/60">Last active: {new Date(user.lastActive).toLocaleDateString()}</div>
+                  </div>
+                </div>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="h-8 text-royal-crimson hover:text-royal-crimson/80 hover:bg-royal-crimson/20"
+                  onClick={() => openShameDialog(user)}
+                >
+                  <UserX className="h-4 w-4 mr-1" />
+                  Shame
+                </Button>
               </div>
-            </div>
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              className="h-8 text-royal-crimson hover:text-royal-crimson/80 hover:bg-royal-crimson/20"
-              onClick={() => openShameDialog(user)}
-            >
-              <UserX className="h-4 w-4 mr-1" />
-              Shame
-            </Button>
-          </div>
-        ))}
-        
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogContent className="sm:max-w-md glass-morphism border-royal-crimson/30">
-            <DialogHeader>
-              <DialogTitle className="flex items-center">
-                <Crown className="mr-2 h-5 w-5 text-royal-crimson" />
-                Public Shaming
-              </DialogTitle>
-              <DialogDescription>
-                Shame this user for their inactivity or lack of contribution.
-              </DialogDescription>
-            </DialogHeader>
+            ))}
             
             {selectedUser && (
-              <div className="space-y-4">
+              <div className="mt-4">
                 <div className="flex items-center space-x-4">
                   <Avatar className="h-12 w-12">
                     <AvatarImage src={selectedUser.profileImage} alt={selectedUser.username} />
@@ -147,11 +151,11 @@ const PublicShamingFeature: React.FC<PublicShamingFeatureProps> = ({ isEnabled =
                   </div>
                 </div>
                 
-                <p className="text-sm">
+                <p className="text-sm mt-4">
                   By shaming {selectedUser.username}, they will be publicly displayed on the shame board for 24 hours.
                 </p>
                 
-                <div className="flex justify-end space-x-2">
+                <div className="flex justify-end space-x-2 mt-4">
                   <Button 
                     variant="outline" 
                     onClick={() => setIsDialogOpen(false)}
@@ -169,10 +173,10 @@ const PublicShamingFeature: React.FC<PublicShamingFeatureProps> = ({ isEnabled =
                 </div>
               </div>
             )}
-          </DialogContent>
-        </Dialog>
-      </CardContent>
-    </Card>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 };
 

@@ -30,14 +30,12 @@ const LeaderboardActions: React.FC = () => {
           Refresh
         </Button>
         
-        <PublicShamingFeature 
-          trigger={
-            <Button variant="outline" size="sm" className="glass-morphism border-white/10 hover:bg-white/10">
-              <Scroll className="mr-2 h-3 w-3" />
-              Public Shaming
-            </Button>
-          }
-        />
+        <PublicShamingFeature>
+          <Button variant="outline" size="sm" className="glass-morphism border-white/10 hover:bg-white/10">
+            <Scroll className="mr-2 h-3 w-3" />
+            Public Shaming
+          </Button>
+        </PublicShamingFeature>
       </div>
     </div>
   );

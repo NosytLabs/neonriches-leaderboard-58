@@ -13,3 +13,8 @@ export interface TeamData {
   bgColor: string;
   borderColor: string;
 }
+
+export interface TeamSelectionProps {
+  user?: any;
+  onTeamSelect?: (team: TeamColor) => Promise<boolean>;
+}

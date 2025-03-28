@@ -3,7 +3,7 @@ import React from 'react';
 import { Card } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { getMockeryTierLabel, getMockeryTierColor } from '../utils/mockeryUtils';
+import { safeMockeryTierLabel, safeMockeryTierColor } from '@/utils/mockeryHelpers';
 import { MockeryTier } from '@/types/mockery';
 
 interface MockUser {
@@ -16,7 +16,7 @@ interface MockUser {
   isProtected: boolean;
   protectedUntil?: Date;
   lastMocked?: Date;
-  tier?: MockeryTier; // Changed to proper MockeryTier type
+  tier?: string; // Changed to string type for flexibility
 }
 
 interface HallOfShameProps {
@@ -35,8 +35,8 @@ const HallOfShame: React.FC<HallOfShameProps> = ({ mockedUsers }) => {
   return (
     <div className="space-y-4">
       {mockedUsers.map((user) => {
-        // Only get tier colors if tier is defined and is a valid MockeryTier
-        const tierColors = user.tier ? getMockeryTierColor(user.tier) : {
+        // Only get tier colors if tier is defined
+        const tierColors = user.tier ? safeMockeryTierColor(user.tier) : {
           text: 'text-white/70',
           bg: 'bg-white/5',
           border: 'border-white/10'
@@ -63,7 +63,7 @@ const HallOfShame: React.FC<HallOfShameProps> = ({ mockedUsers }) => {
                   <div className="font-medium">{user.username}</div>
                   {user.tier && (
                     <Badge variant="outline" className={`${tierColors.text} bg-black/20`}>
-                      {getMockeryTierLabel(user.tier)}
+                      {safeMockeryTierLabel(user.tier)}
                     </Badge>
                   )}
                 </div>

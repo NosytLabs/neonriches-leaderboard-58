@@ -1,8 +1,8 @@
 
 import React from 'react';
 import { cn } from '@/lib/utils';
-import MedievalIcon, { MedievalIconColor, MedievalIconSize } from '@/components/ui/medieval-icon';
-import { BaseDecorationProps, sizeClasses, getColorClass } from './types';
+import MedievalIcon from '@/components/ui/medieval-icon';
+import { BaseDecorationProps, sizeClasses } from '@/types/ui/decorations/types';
 
 const CrossedSwords: React.FC<BaseDecorationProps> = ({
   color = 'gold',
@@ -11,7 +11,6 @@ const CrossedSwords: React.FC<BaseDecorationProps> = ({
   className = ''
 }) => {
   const containerSize = sizeClasses[size].container;
-  const borderColor = getColorClass(color, 'border');
   const animationClass = animate ? 'animate-pulse-slow' : '';
   
   return (
@@ -22,11 +21,11 @@ const CrossedSwords: React.FC<BaseDecorationProps> = ({
       className
     )}>
       <div className="absolute transform -rotate-45 -translate-x-1">
-        <MedievalIcon name="sword" size={size} color={color} />
+        <MedievalIcon name="sword" size={sizeClasses[size].icon} color={color} />
       </div>
       
       <div className="absolute transform rotate-45 translate-x-1">
-        <MedievalIcon name="sword" size={size} color={color} />
+        <MedievalIcon name="sword" size={sizeClasses[size].icon} color={color} />
       </div>
     </div>
   );

@@ -3,9 +3,15 @@ import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { MockeryAction } from '@/types/mockery';
-import { getMockeryText, getMockeryDescription, getMockeryIcon, getMockeryColor, getMockeryCost } from '../utils/mockeryUtils';
 import { Trophy } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { 
+  getMockeryText, 
+  getMockeryDescription, 
+  getMockeryIcon, 
+  getMockeryColor, 
+  getMockeryCost 
+} from '@/utils/mockeryHelpers';
 
 interface MockeryModalProps {
   isOpen: boolean;
@@ -27,7 +33,8 @@ const MockeryModal: React.FC<MockeryModalProps> = ({
   
   // Custom styling based on mockery type
   const getHeaderStyle = () => {
-    const color = getMockeryColor(mockeryType);
+    const colorObj = getMockeryColor(mockeryType);
+    const color = typeof colorObj === 'object' ? colorObj.text.replace('text-', '') : '';
     return {
       borderBottom: `2px solid ${color}`,
       background: `linear-gradient(to right, ${color}15, transparent)`
@@ -72,14 +79,14 @@ const MockeryModal: React.FC<MockeryModalProps> = ({
     }
   };
   
-  const Icon = getMockeryIcon(mockeryType);
+  const IconComponent = getMockeryIcon(mockeryType);
   
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="glass-morphism border-white/10">
         <DialogHeader style={getHeaderStyle()} className="pb-2">
           <DialogTitle className="flex items-center gap-2">
-            {Icon && <Icon size={20} className="text-royal-crimson" />}
+            {IconComponent && typeof IconComponent !== 'string' && <IconComponent className="text-royal-crimson h-5 w-5" />}
             <span>Confirm {getMockeryText(mockeryType)} Mockery</span>
           </DialogTitle>
           <DialogDescription>

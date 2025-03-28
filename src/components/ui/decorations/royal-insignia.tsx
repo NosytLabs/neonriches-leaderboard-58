@@ -2,7 +2,7 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 import MedievalIcon from '@/components/ui/medieval-icon';
-import { BaseDecorationProps, sizeClasses, toMedievalIconColor, getColorClass } from './types';
+import { BaseDecorationProps, sizeClasses, toMedievalIconColor, getColorClass } from '@/types/ui/decorations/types';
 
 const RoyalInsignia: React.FC<BaseDecorationProps> = ({
   color = 'gold',

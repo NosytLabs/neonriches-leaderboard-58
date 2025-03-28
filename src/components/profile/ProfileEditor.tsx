@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { UserProfile, SocialLink, ProfileImage as UserProfileImage } from '@/types/user';
+import { UserProfile, SocialLink, ProfileImage as UserProfileImage, TeamType } from '@/types/user';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Crown, User, Image, Link as LinkIcon, Palette, Settings, Shield } from 'lucide-react';
@@ -29,7 +29,9 @@ const ProfileEditor: React.FC<ProfileEditorProps> = ({ user, onProfileUpdate }) 
   const [profileImages, setProfileImages] = useState<UserProfileImage[]>(
     user.profileImages || []
   );
-  const [selectedTeam, setSelectedTeam] = useState<'red' | 'green' | 'blue' | null>(user.team || null);
+  const [selectedTeam, setSelectedTeam] = useState<'red' | 'green' | 'blue' | null>(
+    user.team === 'none' ? null : (user.team as 'red' | 'green' | 'blue' | null)
+  );
   const [isSaving, setIsSaving] = useState(false);
   
   // Update local state when user prop changes
@@ -39,7 +41,7 @@ const ProfileEditor: React.FC<ProfileEditorProps> = ({ user, onProfileUpdate }) 
     setGender((user.gender as GenderType) || 'neutral');
     setSocialLinks(user.socialLinks || []);
     setProfileImages(user.profileImages || []);
-    setSelectedTeam(user.team || null);
+    setSelectedTeam(user.team === 'none' ? null : (user.team as 'red' | 'green' | 'blue' | null));
   }, [user]);
   
   const handleGenderChange = (value: GenderType) => {
@@ -60,7 +62,7 @@ const ProfileEditor: React.FC<ProfileEditorProps> = ({ user, onProfileUpdate }) 
         gender,
         socialLinks,
         profileImages,
-        team: selectedTeam,
+        team: selectedTeam || 'none', // Convert null to 'none' for TeamType compatibility
       };
       
       // If there's an update callback, use it
@@ -93,7 +95,7 @@ const ProfileEditor: React.FC<ProfileEditorProps> = ({ user, onProfileUpdate }) 
     gender !== user.gender ||
     JSON.stringify(socialLinks) !== JSON.stringify(user.socialLinks) ||
     JSON.stringify(profileImages) !== JSON.stringify(user.profileImages) ||
-    selectedTeam !== user.team;
+    selectedTeam !== (user.team === 'none' ? null : user.team);
 
   return (
     <Card className="glass-morphism border-white/10">

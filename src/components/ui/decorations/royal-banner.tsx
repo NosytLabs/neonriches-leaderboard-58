@@ -1,8 +1,8 @@
 
 import React from 'react';
 import { cn } from '@/lib/utils';
-import MedievalIcon, { MedievalIconColor, MedievalIconSize } from '@/components/ui/medieval-icon';
-import { BaseDecorationProps, sizeClasses, getColorClass } from './types';
+import MedievalIcon from '@/components/ui/medieval-icon';
+import { BaseDecorationProps, sizeClasses, getColorClass } from '@/types/ui/decorations/types';
 
 const RoyalBanner: React.FC<BaseDecorationProps> = ({
   color = 'gold',
@@ -11,7 +11,7 @@ const RoyalBanner: React.FC<BaseDecorationProps> = ({
   className = ''
 }) => {
   const containerSize = sizeClasses[size].container;
-  const bgColor = getColorClass(color, 'bg');
+  const bgColor = getColorClass(color, 'text');
   const borderColor = getColorClass(color, 'border');
   const animateClass = animate ? 'animate-pulse-slow' : '';
   
@@ -30,7 +30,7 @@ const RoyalBanner: React.FC<BaseDecorationProps> = ({
     )}>
       <div className={cn(
         'absolute inset-0 rounded-sm',
-        bgColor,
+        'bg-opacity-20',
         borderColor,
         'border'
       )} />
@@ -39,7 +39,7 @@ const RoyalBanner: React.FC<BaseDecorationProps> = ({
         <div key={index} className={cn('absolute', icon.position)}>
           <MedievalIcon
             name={icon.name}
-            size="sm"
+            size={sizeClasses[size].icon}
             color={color}
           />
         </div>

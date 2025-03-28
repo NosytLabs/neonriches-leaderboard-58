@@ -12,7 +12,9 @@ export const TeamSelection = () => {
   const { user, updateUserProfile } = useAuth();
   const { toast } = useToast();
   const { isMobile } = useResponsive();
-  const [selectedTeam, setSelectedTeam] = useState<TeamColor>(user?.team || 'red');
+  const [selectedTeam, setSelectedTeam] = useState<TeamColor>(
+    user?.team === 'none' ? null : (user?.team as TeamColor || 'red')
+  );
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleTeamSelection = async () => {
@@ -27,7 +29,7 @@ export const TeamSelection = () => {
 
     setIsSubmitting(true);
     try {
-      await updateUserProfile({ ...user, team: selectedTeam });
+      await updateUserProfile({ ...user, team: selectedTeam || 'none' });
       toast({
         title: "Team Updated",
         description: `You've joined the ${selectedTeam} team!`,
@@ -57,7 +59,7 @@ export const TeamSelection = () => {
         Align yourself with one of the three royal houses to compete for glory and rewards.
       </p>
 
-      <Tabs defaultValue={selectedTeam} onValueChange={(value) => setSelectedTeam(value as TeamColor)} className="w-full">
+      <Tabs defaultValue={selectedTeam || 'red'} onValueChange={(value) => setSelectedTeam(value as TeamColor)} className="w-full">
         <TabsList className={`grid w-full grid-cols-3 ${isMobile ? 'h-14' : 'h-12'}`}>
           <TabsTrigger value="red" className="flex items-center justify-center gap-2 data-[state=active]:bg-red-500/20">
             <Flame className={`${isMobile ? 'w-4 h-4' : 'w-5 h-5'} text-red-400`} />

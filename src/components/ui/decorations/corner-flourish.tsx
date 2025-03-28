@@ -2,7 +2,7 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 import MedievalIcon from '@/components/ui/medieval-icon';
-import { BaseDecorationProps, sizeClasses, getColorClass, toMedievalIconColor } from './types';
+import { BaseDecorationProps, sizeClasses, getColorClass, toMedievalIconColor } from '@/types/ui/decorations/types';
 
 const CornerFlourish: React.FC<BaseDecorationProps> = ({
   color = 'gold',
