@@ -1,111 +1,32 @@
 
-import React, { createContext, useContext, useCallback } from 'react';
-import { toast } from '@/hooks/use-toast';
-import useNotificationSounds from '@/hooks/use-notification-sounds';
-import { ToastActionElement } from '@/components/ui/toast';
-import { SoundType } from '@/hooks/sounds/types';
+import React, { createContext, useContext } from 'react';
+import { useToast } from '@/components/ui/use-toast';
+import { ToastProps } from '@/components/ui/toast';
 
-type ToastVariant = 'default' | 'destructive' | 'success' | 'warning' | 'info' | 'royal' | 'shame';
-
-interface ToastOptions {
-  title?: string;
-  description?: string;
-  action?: ToastActionElement;
-  variant?: ToastVariant;
-  duration?: number;
-  className?: string;
-  sound?: SoundType;
-  volume?: number;
+interface ToastContextProps {
+  addToast: (props: ToastProps) => void;
 }
 
-interface ToastContextType {
-  addToast: (options: ToastOptions) => void;
-}
-
-const ToastContext = createContext<ToastContextType | undefined>(undefined);
+const ToastContext = createContext<ToastContextProps | undefined>(undefined);
 
 export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { playSound } = useNotificationSounds();
+  const { toast } = useToast();
 
-  const addToast = useCallback(
-    ({ 
-      title, 
-      description, 
-      action, 
-      variant = 'default', 
-      duration = 3000, 
-      className,
-      sound,
-      volume = 0.4
-    }: ToastOptions) => {
-      // Play specific sound if provided
-      if (sound) {
-        playSound(sound, volume);
-      } else {
-        // Play sound based on variant
-        switch (variant) {
-          case 'success':
-            playSound('success', 0.4);
-            break;
-          case 'destructive':
-            playSound('error', 0.4);
-            break;
-          case 'warning':
-            playSound('notification', 0.4);
-            break;
-          case 'royal':
-            playSound('royalAnnouncement', 0.5);
-            break;
-          case 'shame':
-            playSound('shame', 0.5);
-            break;
-          default:
-            playSound('notification', 0.3);
-        }
-      }
+  const addToast = (props: ToastProps) => {
+    toast(props);
+  };
 
-      // Custom styling for variants
-      let customClassName = className;
-      
-      if (variant === 'royal') {
-        customClassName = 'border-royal-gold/50 bg-gradient-to-r from-background to-royal-purple/10';
-      } else if (variant === 'warning') {
-        customClassName = 'border-amber-500/50 bg-amber-500/10';
-      } else if (variant === 'info') {
-        customClassName = 'border-blue-500/50 bg-blue-500/10';
-      } else if (variant === 'shame') {
-        customClassName = 'border-red-500/50 bg-red-500/10';
-      }
-
-      // Convert variant to supported variant
-      const toastVariant = variant === 'success' ? 'default' : 
-                          variant === 'warning' ? 'default' : 
-                          variant === 'info' ? 'default' : 
-                          variant === 'royal' ? 'default' : 
-                          variant === 'shame' ? 'default' : 
-                          variant;
-
-      toast({
-        title,
-        description,
-        action,
-        variant: toastVariant,
-        duration,
-        className: customClassName
-      });
-    },
-    [playSound]
+  return (
+    <ToastContext.Provider value={{ addToast }}>
+      {children}
+    </ToastContext.Provider>
   );
-
-  return <ToastContext.Provider value={{ addToast }}>{children}</ToastContext.Provider>;
 };
 
-export const useToastContext = () => {
+export const useToastContext = (): ToastContextProps => {
   const context = useContext(ToastContext);
-  
-  if (context === undefined) {
+  if (!context) {
     throw new Error('useToastContext must be used within a ToastProvider');
   }
-  
   return context;
 };

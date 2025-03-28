@@ -1,51 +1,47 @@
 
-import { UserProfile } from '@/contexts/AuthContext';
-import { teamData } from '@/utils/teamUtils';
-import { TeamColor, UserTeam } from '@/types/teams';
-
-export interface TeamSwitchResult {
-  success: boolean;
-  message: string;
-}
+import { TeamColor } from '@/types/teams';
 
 export const switchUserTeam = async (
-  user: UserProfile,
+  user: any,
   team: TeamColor,
-  updateProfileFn: (data: Partial<UserProfile>) => Promise<void>
-): Promise<TeamSwitchResult> => {
+  updateUserProfile: (updates: any) => Promise<boolean>
+): Promise<{ success: boolean; message?: string }> => {
   try {
-    // Check if user is already on this team
-    if (user.team === team) {
-      return {
-        success: false,
-        message: "You are already a member of this team."
-      };
+    if (!user) {
+      return { success: false, message: 'You must be logged in to join a team' };
     }
     
-    // In a real app, you'd make an API call here
-    // For now, we'll simulate the team switch
+    // Check if this is a first-time team join (free) or a team switch ($1 fee)
+    const isFirstTeamSelection = !user.team;
     
-    // Record time of team switch
-    localStorage.setItem('lastTeamSwitch', Date.now().toString());
+    if (!isFirstTeamSelection) {
+      // Record the time of the team switch for cooldown purposes
+      localStorage.setItem('lastTeamSwitch', Date.now().toString());
+    }
     
-    // Update user profile
-    await updateProfileFn({ team });
+    // Update the user's team
+    const success = await updateUserProfile({ team });
     
-    return {
-      success: true,
-      message: "Team switched successfully!"
-    };
+    if (success) {
+      return { success: true };
+    } else {
+      throw new Error('Failed to update user profile');
+    }
   } catch (error) {
-    console.error("Team switch failed:", error);
-    return {
-      success: false,
-      message: "Failed to switch teams. Please try again."
+    console.error('Team switch failed', error);
+    return { 
+      success: false, 
+      message: error instanceof Error ? error.message : 'Failed to join team' 
     };
   }
 };
 
-// Re-export team data for backward compatibility
-export { teamData };
-
-// Export TeamColor and UserTeam types for backward compatibility
-export type { TeamColor, UserTeam };
+export const getTeamStats = async (team: TeamColor): Promise<any> => {
+  // In a real app, this would fetch team stats from an API
+  return {
+    members: Math.floor(Math.random() * 1000) + 100,
+    totalSpent: Math.floor(Math.random() * 100000) + 10000,
+    rank: Math.floor(Math.random() * 3) + 1,
+    weeklyChange: Math.floor(Math.random() * 20) - 10,
+  };
+};

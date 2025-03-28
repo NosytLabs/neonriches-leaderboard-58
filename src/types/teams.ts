@@ -1,11 +1,6 @@
 
-// Define team color types for type safety
-export type TeamColor = 'red' | 'green' | 'blue' | null;
+export type TeamColor = 'red' | 'green' | 'blue';
 
-// Re-export UserTeam type to avoid duplicate declarations
-export type UserTeam = 'red' | 'green' | 'blue' | null;
-
-// Define team data structure
 export interface TeamData {
   id: TeamColor;
   name: string;
@@ -15,18 +10,4 @@ export interface TeamData {
   bgColor: string;
   members: number;
   rank: number;
-}
-
-// Define team-related utility function return types
-export interface TeamColorStyles {
-  textColor: string;
-  bgColor: string;
-  borderColor: string;
-  shadowColor: string;
-}
-
-// Define team ranks icon type
-export interface TeamRankIcon {
-  icon: React.ReactNode;
-  color: string;
 }

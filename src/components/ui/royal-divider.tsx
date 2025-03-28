@@ -1,96 +1,110 @@
 
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { Crown, Scroll, Shield, Swords } from 'lucide-react';
+import MedievalIcon from './medieval-icon';
 
-type DividerVariant = 'line' | 'ornate' | 'double' | 'dotted' | 'scrollwork' | 'crown' | 'scroll' | 'quill' | 'treasure';
-type DividerColor = 'gold' | 'crimson' | 'navy' | 'purple' | 'royal';
-type DividerIcon = 'crown' | 'scroll' | 'shield' | 'swords' | 'none';
+type RoyalDividerVariant = 'line' | 'crown' | 'double' | 'ornate';
+type RoyalDividerColor = 'gold' | 'silver' | 'royal' | 'crimson' | 'navy' | 'purple';
 
 interface RoyalDividerProps {
-  variant?: DividerVariant;
-  color?: DividerColor;
+  variant?: RoyalDividerVariant;
   label?: string;
-  icon?: DividerIcon;
+  color?: RoyalDividerColor;
   className?: string;
 }
 
 const RoyalDivider: React.FC<RoyalDividerProps> = ({
   variant = 'line',
-  color = 'gold',
   label,
-  icon = 'none',
-  className
+  color = 'gold',
+  className,
 }) => {
-  // Color classes
-  const colorMap: Record<DividerColor, string> = {
-    gold: 'from-transparent via-royal-gold/30 to-transparent',
-    crimson: 'from-transparent via-royal-crimson/30 to-transparent',
-    navy: 'from-transparent via-royal-navy/30 to-transparent',
-    purple: 'from-transparent via-royal-purple/30 to-transparent',
-    royal: 'from-royal-gold/10 via-royal-purple/30 to-royal-gold/10'
-  };
-
-  // Icon components
-  const IconComponent = () => {
-    switch (icon) {
-      case 'crown':
-        return <Crown className="h-4 w-4" />;
-      case 'scroll':
-        return <Scroll className="h-4 w-4" />;
-      case 'shield':
-        return <Shield className="h-4 w-4" />;
-      case 'swords':
-        return <Swords className="h-4 w-4" />;
+  // Get color classes based on the color prop
+  const getColorClasses = (color: RoyalDividerColor) => {
+    switch (color) {
+      case 'gold':
+        return 'text-royal-gold border-royal-gold/30';
+      case 'silver':
+        return 'text-gray-300 border-gray-300/30';
+      case 'royal':
+        return 'royal-gradient border-white/20';
+      case 'crimson':
+        return 'text-royal-crimson border-royal-crimson/30';
+      case 'navy':
+        return 'text-royal-navy border-royal-navy/30';
+      case 'purple':
+        return 'text-royal-purple border-royal-purple/30';
       default:
-        return null;
+        return 'text-royal-gold border-royal-gold/30';
     }
   };
-
-  // Variant styles
-  const getVariantClass = () => {
+  
+  const colorClasses = getColorClasses(color);
+  
+  // Render different divider variants
+  const renderDivider = () => {
     switch (variant) {
-      case 'ornate':
-        return `h-[3px] bg-gradient-to-r ${colorMap[color]} relative before:content-[''] before:absolute before:w-2 before:h-2 before:rounded-full before:bg-${color === 'royal' ? 'royal-gold' : `royal-${color}`}/50 before:-top-[3px] before:left-1/4 after:content-[''] after:absolute after:w-2 after:h-2 after:rounded-full after:bg-${color === 'royal' ? 'royal-gold' : `royal-${color}`}/50 after:-top-[3px] after:right-1/4`;
-      case 'double':
-        return `h-[5px] bg-transparent border-t border-b border-${color === 'royal' ? 'royal-gold' : `royal-${color}`}/30`;
-      case 'dotted':
-        return `h-[1px] border-dotted border-t-2 border-${color === 'royal' ? 'royal-gold' : `royal-${color}`}/30`;
-      case 'scrollwork':
-        return `h-[1px] bg-gradient-to-r ${colorMap[color]} relative before:content-['❧'] before:absolute before:text-${color === 'royal' ? 'royal-gold' : `royal-${color}`} before:-top-[10px] before:left-1/4 before:text-sm after:content-['❧'] after:absolute after:text-${color === 'royal' ? 'royal-gold' : `royal-${color}`} after:-top-[10px] after:right-1/4 after:transform after:scale-x-[-1] after:text-sm`;
       case 'crown':
-        return `h-[1px] bg-gradient-to-r ${colorMap[color]} relative before:content-['👑'] before:absolute before:text-${color === 'royal' ? 'royal-gold' : `royal-${color}`} before:-top-[10px] before:left-1/2 before:transform before:-translate-x-1/2 before:text-sm`;
-      case 'scroll':
-        return `h-[1px] bg-gradient-to-r ${colorMap[color]} relative before:content-['📜'] before:absolute before:text-${color === 'royal' ? 'royal-gold' : `royal-${color}`} before:-top-[10px] before:left-1/2 before:transform before:-translate-x-1/2 before:text-sm`;
-      case 'quill':
-        return `h-[1px] bg-gradient-to-r ${colorMap[color]} relative before:content-['✒️'] before:absolute before:text-${color === 'royal' ? 'royal-gold' : `royal-${color}`} before:-top-[10px] before:left-1/2 before:transform before:-translate-x-1/2 before:text-sm`;
-      case 'treasure':
-        return `h-[1px] bg-gradient-to-r ${colorMap[color]} relative before:content-['💰'] before:absolute before:text-${color === 'royal' ? 'royal-gold' : `royal-${color}`} before:-top-[10px] before:left-1/2 before:transform before:-translate-x-1/2 before:text-sm`;
+        return (
+          <div className={cn('flex items-center w-full', className)}>
+            <div className="h-px flex-1 bg-gradient-to-r from-transparent to-current opacity-30"></div>
+            {label ? (
+              <div className="mx-4 flex items-center">
+                <MedievalIcon name="crown" size="sm" className="mr-2" />
+                <span className="text-xs font-bold tracking-wider">{label}</span>
+                <MedievalIcon name="crown" size="sm" className="ml-2" />
+              </div>
+            ) : (
+              <div className="mx-4">
+                <MedievalIcon name="crown" size="sm" />
+              </div>
+            )}
+            <div className="h-px flex-1 bg-gradient-to-l from-transparent to-current opacity-30"></div>
+          </div>
+        );
+        
+      case 'double':
+        return (
+          <div className={cn('relative py-4', className)}>
+            <div className="absolute inset-0 flex items-center">
+              <div className="h-[2px] w-full border-t border-b border-current opacity-30"></div>
+            </div>
+            {label && (
+              <div className="relative flex justify-center">
+                <span className="bg-background px-4 text-xs font-medium">{label}</span>
+              </div>
+            )}
+          </div>
+        );
+        
+      case 'ornate':
+        return (
+          <div className={cn('flex items-center w-full', className)}>
+            <div className="h-px flex-1 bg-current opacity-30"></div>
+            <div className="mx-2 opacity-50">❦</div>
+            {label && <div className="px-2 text-xs font-medium">{label}</div>}
+            <div className="mx-2 opacity-50">❦</div>
+            <div className="h-px flex-1 bg-current opacity-30"></div>
+          </div>
+        );
+        
       case 'line':
       default:
-        return `h-[1px] bg-gradient-to-r ${colorMap[color]}`;
+        return (
+          <div className={cn('flex items-center w-full', className)}>
+            <div className="h-px flex-1 bg-current opacity-30"></div>
+            {label && (
+              <div className="mx-2 text-xs font-bold tracking-wider">{label}</div>
+            )}
+            <div className="h-px flex-1 bg-current opacity-30"></div>
+          </div>
+        );
     }
   };
-
+  
   return (
-    <div className={cn("w-full flex items-center gap-3", className)}>
-      <div className={cn("flex-grow", getVariantClass())} />
-      
-      {label && (
-        <div className={cn(
-          "px-3 flex items-center gap-2 whitespace-nowrap text-xs uppercase tracking-wider font-medium",
-          `text-${color === 'royal' ? 'royal-gold' : `royal-${color}`}`
-        )}>
-          {icon !== 'none' && (
-            <span className={`text-${color === 'royal' ? 'royal-gold' : `royal-${color}`}`}>
-              <IconComponent />
-            </span>
-          )}
-          {label}
-        </div>
-      )}
-      
-      <div className={cn("flex-grow", getVariantClass())} />
+    <div className={cn(colorClasses, 'w-full')}>
+      {renderDivider()}
     </div>
   );
 };

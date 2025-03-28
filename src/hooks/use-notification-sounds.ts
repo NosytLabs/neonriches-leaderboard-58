@@ -1,111 +1,73 @@
 
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { soundAssets, defaultVolumes, SoundNames } from './sounds/sound-assets';
-import { SoundType } from './sounds/types';
+import { useEffect, useRef } from 'react';
+
+type SoundType = 'notification' | 'success' | 'error' | 'shame' | 'purchase' | 'levelUp' | 'swordClash';
+
+interface SoundMap {
+  [key: string]: HTMLAudioElement;
+}
 
 const useNotificationSounds = () => {
-  const audioRefs = useRef<{[key: string]: HTMLAudioElement}>({});
-  const [isMuted, setIsMuted] = useState<boolean>(false);
-  const [soundsLoaded, setSoundsLoaded] = useState<boolean>(false);
-  const [loadedSoundTypes, setLoadedSoundTypes] = useState<string[]>([]);
-  
-  // Initialize audio elements
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    
-    // Check if user has muted sounds previously
-    const savedMuteState = localStorage.getItem('soundMuted');
-    if (savedMuteState === 'true') {
-      setIsMuted(true);
-    }
+  const sounds = useRef<SoundMap>({});
+  const isMounted = useRef(true);
 
-    Object.keys(soundAssets).forEach(soundKey => {
+  // Initialize audio objects
+  useEffect(() => {
+    // Sound paths - in a real app, these would be actual sound files
+    const soundPaths: Record<SoundType, string> = {
+      notification: '/sounds/notification.mp3',
+      success: '/sounds/success.mp3',
+      error: '/sounds/error.mp3',
+      shame: '/sounds/shame.mp3',
+      purchase: '/sounds/purchase.mp3',
+      levelUp: '/sounds/level-up.mp3',
+      swordClash: '/sounds/sword-clash.mp3'
+    };
+
+    // Create audio objects for each sound
+    Object.entries(soundPaths).forEach(([key, path]) => {
       try {
-        const audio = new Audio(soundAssets[soundKey as SoundNames]);
-        audio.preload = 'auto';
-        audioRefs.current[soundKey] = audio;
-      } catch (err) {
-        console.error(`Failed to load sound: ${soundKey}`, err);
+        sounds.current[key] = new Audio(path);
+        sounds.current[key].preload = 'auto';
+      } catch (error) {
+        console.error(`Failed to load sound: ${key}`, error);
       }
     });
-    
+
     return () => {
-      // Cleanup
-      Object.values(audioRefs.current).forEach(audio => {
+      // Clean up audio objects on unmount
+      isMounted.current = false;
+      Object.values(sounds.current).forEach(audio => {
         audio.pause();
         audio.src = '';
       });
-      audioRefs.current = {};
+      sounds.current = {};
     };
   }, []);
-  
-  const preloadSounds = useCallback(() => {
-    const loadedTypes: string[] = [];
-    
-    Object.keys(soundAssets).forEach(soundKey => {
-      const audio = audioRefs.current[soundKey];
-      if (audio) {
-        audio.load();
-        loadedTypes.push(soundKey);
+
+  const playSound = (type: SoundType, volume = 0.5) => {
+    try {
+      if (isMounted.current && sounds.current[type]) {
+        const audio = sounds.current[type];
+        audio.volume = volume;
+        audio.currentTime = 0;
+        
+        // Some browsers require user interaction before playing audio
+        const playPromise = audio.play();
+        
+        if (playPromise !== undefined) {
+          playPromise.catch(error => {
+            // Auto-play was prevented, this is normal on some browsers
+            console.log('Audio playback was prevented by the browser', error);
+          });
+        }
       }
-    });
-    
-    setLoadedSoundTypes(loadedTypes);
-    setSoundsLoaded(true);
-  }, []);
-  
-  const playSound = useCallback((soundType: SoundType, volumeMultiplier = 1.0) => {
-    if (isMuted) return;
-    
-    const audio = audioRefs.current[soundType];
-    
-    if (!audio) {
-      console.warn(`Sound ${soundType} not found`);
-      return;
+    } catch (error) {
+      console.error(`Error playing sound: ${type}`, error);
     }
-    
-    // Reset the audio to the beginning if it's already playing
-    audio.pause();
-    audio.currentTime = 0;
-    
-    // Get the base volume for this sound type or use a default
-    const baseVolume = defaultVolumes[soundType as SoundNames] || 0.3;
-    
-    // Apply the volume multiplier
-    const finalVolume = Math.min(Math.max(baseVolume * volumeMultiplier, 0), 1);
-    audio.volume = finalVolume;
-    
-    // Play the sound
-    audio.play().catch(err => {
-      console.error(`Error playing sound ${soundType}:`, err);
-    });
-  }, [isMuted]);
-  
-  const toggleMute = useCallback(() => {
-    setIsMuted(prev => {
-      const newState = !prev;
-      // Save mute state to localStorage
-      localStorage.setItem('soundMuted', String(newState));
-      return newState;
-    });
-  }, []);
-  
-  const pauseAllSounds = useCallback(() => {
-    Object.values(audioRefs.current).forEach(audio => {
-      audio.pause();
-      audio.currentTime = 0;
-    });
-  }, []);
-  
-  return { 
-    playSound, 
-    preloadSounds, 
-    pauseAllSounds, 
-    soundsLoaded, 
-    loadedSoundTypes, 
-    isMuted, 
-    toggleMute 
   };
+
+  return { playSound };
 };
 
 export default useNotificationSounds;

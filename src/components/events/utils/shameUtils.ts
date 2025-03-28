@@ -67,6 +67,60 @@ export const getShameActionIcon = (action: ShameAction): string => {
   }
 };
 
+// Get color classes for shame action
+export const getShameActionColor = (action: ShameAction): { bg: string, border: string, text: string } => {
+  switch (action) {
+    case 'tomatoes':
+      return {
+        bg: 'bg-red-500/10',
+        border: 'border-red-500/30',
+        text: 'text-red-400'
+      };
+    case 'eggs':
+      return {
+        bg: 'bg-yellow-500/10',
+        border: 'border-yellow-500/30',
+        text: 'text-yellow-400'
+      };
+    case 'stocks':
+      return {
+        bg: 'bg-purple-500/10',
+        border: 'border-purple-500/30',
+        text: 'text-purple-400'
+      };
+    default:
+      return {
+        bg: 'bg-white/10',
+        border: 'border-white/30',
+        text: 'text-white'
+      };
+  }
+};
+
+// Get title for a shame action
+export const getShameActionTitle = (action: ShameAction): string => {
+  switch (action) {
+    case 'tomatoes': return 'Throw Tomatoes';
+    case 'eggs': return 'Throw Rotten Eggs';
+    case 'stocks': return 'Place in Stocks';
+    default: return 'Public Shame';
+  }
+};
+
+// Get description for a shame action
+export const getShameActionDescription = (action: ShameAction, username: string): string => {
+  switch (action) {
+    case 'tomatoes':
+      return `Pelt ${username} with rotten tomatoes for all to see. A classic form of medieval public ridicule.`;
+    case 'eggs':
+      return `Hurl rotten eggs at ${username}, covering them in putrid yolk. The stench will follow them for a day.`;
+    case 'stocks':
+      return `Place ${username} in the public stocks for a day. The ultimate medieval humiliation.`;
+    default:
+      return `Publicly shame ${username} for all the kingdom to see.`;
+  }
+};
+
 // Check if it's a Fire Sale month (quarterly: March, June, September, December)
 export const isFireSaleMonth = (): boolean => {
   const month = getCurrentMonth();

@@ -1,113 +1,120 @@
 
 import { TeamColor } from '@/types/teams';
 
-// Team color utilities
-export const getTeamColor = (team: string | null): string => {
-  switch (team?.toLowerCase()) {
-    case 'red': return 'text-team-red text-royal-crimson';
-    case 'green': return 'text-team-green text-royal-gold';
-    case 'blue': return 'text-team-blue text-royal-navy';
-    default: return 'text-white/70';
-  }
-};
-
-export const getTeamBgColor = (team: string | null): string => {
-  switch (team?.toLowerCase()) {
-    case 'red': return 'bg-team-red bg-royal-crimson/20';
-    case 'green': return 'bg-team-green bg-royal-gold/20';
-    case 'blue': return 'bg-team-blue bg-royal-navy/20';
-    default: return 'bg-white/10';
-  }
-};
-
-export const getTeamBorderColor = (team: string | null): string => {
-  switch (team?.toLowerCase()) {
-    case 'red': return 'border-team-red border-royal-crimson';
-    case 'green': return 'border-team-green border-royal-gold';
-    case 'blue': return 'border-team-blue border-royal-navy';
-    default: return 'border-white/20';
-  }
-};
-
-export const getTeamShadowColor = (team: string | null): string => {
-  switch (team?.toLowerCase()) {
-    case 'red': return 'shadow-team-red/20 shadow-royal-crimson/20';
-    case 'green': return 'shadow-team-green/20 shadow-royal-gold/20';
-    case 'blue': return 'shadow-team-blue/20 shadow-royal-navy/20';
-    default: return 'shadow-white/20';
-  }
-};
-
-export const getTeamName = (team: string | null): string => {
-  switch (team?.toLowerCase()) {
-    case 'red': return 'House Crimson Dynasty';
-    case 'green': return 'Emerald Empire Collective';
-    case 'blue': return 'Sapphire Sovereign Alliance';
-    default: return 'Unaffiliated Noble';
-  }
-};
-
-// Team data constant
 export const teamData = {
   red: {
     id: 'red' as TeamColor,
-    name: 'House Crimson Dynasty',
-    description: 'Masters of opulent displays and lavish investments',
+    name: 'House of Crimson',
+    description: 'The house of ambition and power, known for their fierce competitiveness.',
     icon: '🔥',
-    color: '#FF4560',
-    bgColor: 'rgba(255, 69, 96, 0.2)',
-    members: 1205,
+    color: '#e11d48',
+    bgColor: 'rgba(225, 29, 72, 0.2)',
+    members: 341,
     rank: 2
   },
   green: {
     id: 'green' as TeamColor,
-    name: 'Emerald Empire Collective',
-    description: 'Architects of wealth and strategic spending',
+    name: 'House of Emerald',
+    description: 'The house of prosperity and growth, valuing creativity above all.',
     icon: '⚡',
-    color: '#00E396',
-    bgColor: 'rgba(0, 227, 150, 0.2)',
-    members: 983,
+    color: '#10b981',
+    bgColor: 'rgba(16, 185, 129, 0.2)',
+    members: 289,
     rank: 3
   },
   blue: {
     id: 'blue' as TeamColor,
-    name: 'Sapphire Sovereign Alliance',
-    description: 'Nobility through calculated financial dominance',
-    icon: '💧',
-    color: '#008FFB',
-    bgColor: 'rgba(0, 143, 251, 0.2)',
-    members: 1347,
+    name: 'House of Sapphire',
+    description: 'The house of wisdom and strategy, taking a calculated approach to success.',
+    icon: '🌊',
+    color: '#3b82f6',
+    bgColor: 'rgba(59, 130, 246, 0.2)',
+    members: 412,
     rank: 1
   }
 };
 
-// Gender/rank title utilities
-export const getGenderTitle = (gender: string | null): string => {
-  switch (gender) {
-    case 'king': return 'His Majesty';
-    case 'queen': return 'Her Majesty';
-    case 'jester': return 'Court Jester';
-    default: return 'Noble';
+export const getTeamColor = (team?: string | null): string => {
+  if (!team) return '';
+  
+  switch (team.toLowerCase()) {
+    case 'red':
+      return 'text-team-red';
+    case 'green':
+      return 'text-team-green';
+    case 'blue':
+      return 'text-team-blue';
+    default:
+      return '';
   }
 };
 
-export const getGenderEmoji = (gender: string | null): string => {
-  switch (gender) {
-    case 'king': return '👑';
-    case 'queen': return '👸';
-    case 'jester': return '🃏';
-    default: return '⚜️';
+export const getTeamBorderColor = (team?: string | null): string => {
+  if (!team) return 'border-white/10';
+  
+  switch (team.toLowerCase()) {
+    case 'red':
+      return 'border-team-red';
+    case 'green':
+      return 'border-team-green';
+    case 'blue':
+      return 'border-team-blue';
+    default:
+      return 'border-white/10';
   }
 };
 
-export const getInitials = (name: string): string => {
-  return name.slice(0, 2).toUpperCase();
+export const getTeamName = (team?: string | null): string => {
+  if (!team) return 'No Team';
+  
+  switch (team.toLowerCase()) {
+    case 'red':
+      return 'House of Crimson';
+    case 'green':
+      return 'House of Emerald';
+    case 'blue':
+      return 'House of Sapphire';
+    default:
+      return 'Unknown Team';
+  }
 };
 
-// Rank utilities
-export const getRankIcon = (rank: number) => {
-  if (rank === 1) return { icon: 'crown', color: 'text-royal-gold' };
-  if (rank === 2) return { icon: 'award', color: 'text-[#C0C0C0]' };
-  if (rank === 3) return { icon: 'award', color: 'text-[#CD7F32]' };
-  return null;
+export const getGenderTitle = (gender?: string | null): string => {
+  if (!gender) return '';
+  
+  switch (gender.toLowerCase()) {
+    case 'king':
+      return 'His Majesty';
+    case 'queen':
+      return 'Her Majesty';
+    case 'jester':
+      return 'Court Jester';
+    default:
+      return '';
+  }
+};
+
+export const getGenderEmoji = (gender?: string | null): string => {
+  if (!gender) return '';
+  
+  switch (gender.toLowerCase()) {
+    case 'king':
+      return '👑';
+    case 'queen':
+      return '👸';
+    case 'jester':
+      return '🃏';
+    default:
+      return '';
+  }
+};
+
+export const getInitials = (username: string): string => {
+  if (!username) return '';
+  
+  return username
+    .split(' ')
+    .map((part) => part.charAt(0).toUpperCase())
+    .slice(0, 2)
+    .join('');
 };
