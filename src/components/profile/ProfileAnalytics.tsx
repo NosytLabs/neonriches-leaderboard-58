@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { BarChart, LineChart, PieChart } from 'lucide-react';
@@ -17,7 +18,8 @@ import {
   Bar,
   PieChart as RePieChart,
   Pie,
-  Cell
+  Cell,
+  PieLabelRenderProps
 } from 'recharts';
 
 interface ProfileAnalyticsProps {
@@ -140,6 +142,12 @@ const ProfileAnalytics: React.FC<ProfileAnalyticsProps> = ({ user }) => {
   const sourcesData = prepareSourcesData();
   const referrersData = prepareReferrersData();
   
+  // This is the custom label render function for the pie chart with proper typing
+  const renderPieLabel = ({ name, percent }: PieLabelRenderProps) => {
+    if (!name) return null;
+    return `${name}: ${(Number(percent) * 100).toFixed(0)}%`;
+  };
+  
   return (
     <Card className="glass-morphism border-white/10">
       <CardHeader>
@@ -249,7 +257,7 @@ const ProfileAnalytics: React.FC<ProfileAnalyticsProps> = ({ user }) => {
                       outerRadius={80}
                       fill="#8884d8"
                       dataKey="value"
-                      label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                      label={renderPieLabel}
                     >
                       {sourcesData.map((entry, index) => (
                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
