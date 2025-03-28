@@ -1,0 +1,17 @@
+
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" fill="none">
+  <!-- Throne Base -->
+  <path d="M12 36H36V42H12V36Z" fill="#9B2335" stroke="#D4AF37" stroke-width="1.5"/>
+  <!-- Throne Back -->
+  <path d="M14 20H34V36H14V20Z" fill="#9B2335" stroke="#D4AF37" stroke-width="1.5"/>
+  <!-- Throne Ornaments -->
+  <path d="M16 22H20V26H16V22Z" fill="#D4AF37"/>
+  <path d="M28 22H32V26H28V22Z" fill="#D4AF37"/>
+  <path d="M20 30H28V34H20V30Z" fill="#D4AF37"/>
+  <!-- Crown on throne -->
+  <path d="M24 14L20 18L19 17L24 14L29 17L28 18L24 14Z" fill="#D4AF37" stroke="#9B2335" stroke-width="0.5"/>
+  <path d="M20 18H28V20H20V18Z" fill="#D4AF37" stroke="#9B2335" stroke-width="0.5"/>
+  <!-- Coins -->
+  <circle cx="12" cy="38" r="2" fill="#D4AF37"/>
+  <circle cx="36" cy="38" r="2" fill="#D4AF37"/>
+</svg>

@@ -1,12 +1,13 @@
 
 <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" fill="none">
-  <path d="M24 6L8 16L14 38H34L40 16L24 6Z" fill="#D4AF37" stroke="#8B0000" stroke-width="2"/>
-  <path d="M14 18L8 16L14 38" stroke="#8B0000" stroke-width="2"/>
-  <path d="M24 6L14 18L24 34" stroke="#8B0000" stroke-width="2"/>
-  <path d="M24 6L34 18L24 34" stroke="#8B0000" stroke-width="2"/>
-  <path d="M34 18L40 16L34 38" stroke="#8B0000" stroke-width="2"/>
-  <circle cx="24" cy="14" r="2" fill="#D4AF37" stroke="#8B0000" stroke-width="1.5"/>
-  <circle cx="16" cy="18" r="2" fill="#D4AF37" stroke="#8B0000" stroke-width="1.5"/>
-  <circle cx="32" cy="18" r="2" fill="#D4AF37" stroke="#8B0000" stroke-width="1.5"/>
-  <path d="M18 30H30" stroke="#8B0000" stroke-width="2"/>
+  <!-- Crown -->
+  <path d="M24 6L8 16L14 38H34L40 16L24 6Z" fill="#D4AF37" stroke="#9B2335" stroke-width="2"/>
+  <path d="M14 18L8 16L14 38" stroke="#9B2335" stroke-width="2"/>
+  <path d="M24 6L14 18L24 34" stroke="#9B2335" stroke-width="2"/>
+  <path d="M24 6L34 18L24 34" stroke="#9B2335" stroke-width="2"/>
+  <path d="M34 18L40 16L34 38" stroke="#9B2335" stroke-width="2"/>
+  <circle cx="24" cy="14" r="2" fill="#D4AF37" stroke="#9B2335" stroke-width="1.5"/>
+  <circle cx="16" cy="18" r="2" fill="#D4AF37" stroke="#9B2335" stroke-width="1.5"/>
+  <circle cx="32" cy="18" r="2" fill="#D4AF37" stroke="#9B2335" stroke-width="1.5"/>
+  <path d="M18 30H30" stroke="#9B2335" stroke-width="2"/>
 </svg>

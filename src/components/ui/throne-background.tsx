@@ -9,6 +9,7 @@ const ThroneBackground: React.FC<ThroneBackgroundProps> = ({
   animate = true,
   opacity = 0.1,
   className = '',
+  density = 'medium',
 }) => {
   // Get background gradient based on variant
   const getBackgroundGradient = () => {
@@ -25,6 +26,19 @@ const ThroneBackground: React.FC<ThroneBackgroundProps> = ({
     }
   };
 
+  // Determine the number of particles based on density
+  const getParticleCount = () => {
+    switch (density) {
+      case 'low':
+        return 10;
+      case 'high':
+        return 25;
+      case 'medium':
+      default:
+        return 15;
+    }
+  };
+
   return (
     <div className={`fixed inset-0 -z-10 ${getBackgroundGradient()} ${className}`}>
       {/* Decorative background elements */}
@@ -38,10 +52,30 @@ const ThroneBackground: React.FC<ThroneBackgroundProps> = ({
           }}
         />
         
+        {/* Throne silhouette */}
+        {animate && (
+          <motion.div 
+            className="absolute bottom-0 left-1/2 transform -translate-x-1/2 opacity-5"
+            initial={{ y: 10 }}
+            animate={{ y: [10, 0, 10] }}
+            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <svg width="120" height="160" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 36H36V42H12V36Z" fill="currentColor" strokeWidth="1"/>
+              <path d="M14 20H34V36H14V20Z" fill="currentColor" strokeWidth="1"/>
+              <path d="M16 22H20V26H16V22Z" fill="currentColor"/>
+              <path d="M28 22H32V26H28V22Z" fill="currentColor"/>
+              <path d="M20 30H28V34H20V30Z" fill="currentColor"/>
+              <path d="M24 8L18 14L16 12L24 6L32 12L30 14L24 8Z" fill="currentColor" strokeWidth="0.5"/>
+              <path d="M18 14H30V18H18V14Z" fill="currentColor" strokeWidth="0.5"/>
+            </svg>
+          </motion.div>
+        )}
+
         {/* Royal crown silhouette */}
         {animate && (
           <motion.div 
-            className="absolute top-10 right-10 opacity-5 text-royal-gold"
+            className={`absolute top-10 right-10 opacity-5 text-${variant === 'royal' ? 'royal-gold' : variant}`}
             initial={{ rotate: 0 }}
             animate={{ rotate: [0, 2, 0, -2, 0] }}
             transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
@@ -63,7 +97,7 @@ const ThroneBackground: React.FC<ThroneBackgroundProps> = ({
         )}
 
         {/* Background particles */}
-        {particles && Array.from({ length: 15 }).map((_, i) => (
+        {particles && Array.from({ length: getParticleCount() }).map((_, i) => (
           <motion.div
             key={i}
             className={`absolute rounded-full bg-${variant === 'royal' ? 'royal-gold' : variant}-500/30`}
@@ -85,6 +119,34 @@ const ThroneBackground: React.FC<ThroneBackgroundProps> = ({
               delay: Math.random() * 5,
             }}
           />
+        ))}
+        
+        {/* Floating coins */}
+        {particles && variant === 'royal' && Array.from({ length: Math.floor(getParticleCount() / 3) }).map((_, i) => (
+          <motion.div
+            key={`coin-${i}`}
+            className="absolute"
+            style={{
+              left: `${Math.random() * 100}%`,
+              bottom: '-20px',
+            }}
+            initial={{ opacity: 0, y: 0 }}
+            animate={{ 
+              opacity: [0, 0.8, 0],
+              y: [0, -100 - (Math.random() * 100)],
+              rotate: Math.random() * 360,
+            }}
+            transition={{
+              duration: 5 + Math.random() * 5,
+              repeat: Infinity,
+              delay: Math.random() * 10,
+            }}
+          >
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="8" cy="8" r="7" fill="#D4AF37" opacity="0.7" />
+              <text x="8" y="11" fontFamily="Arial" fontSize="8" fill="#9B2335" textAnchor="middle">$</text>
+            </svg>
+          </motion.div>
         ))}
       </div>
     </div>

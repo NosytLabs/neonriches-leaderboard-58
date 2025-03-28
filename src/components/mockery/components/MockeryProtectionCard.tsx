@@ -1,145 +1,137 @@
 
 import React from 'react';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Shield, Clock, Check, Info } from 'lucide-react';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { 
-  getMockeryProtectionPrice,
-  getEnhancedMockeryProtectionPrice
-} from '../utils/mockeryUtils';
-import RoyalDivider from '@/components/ui/royal-divider';
+import { Shield, Check, ChevronRight } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { MockeryTier } from '../hooks/useMockery';
+import { getMockeryProtectionPrice, getEnhancedMockeryProtectionPrice } from '../utils/mockeryUtils';
+import MedievalIcon from '@/components/ui/medieval-icon';
 
 interface MockeryProtectionCardProps {
-  isProtected: boolean;
-  timeRemaining?: number; // in hours
-  onPurchaseProtection: (duration: number) => void;
-  className?: string;
+  tier: MockeryTier;
+  name: string;
+  description: string;
+  features: string[];
+  active?: boolean;
+  enhanced?: boolean;
+  onActivate?: () => void;
+  onUpgrade?: () => void;
 }
 
 const MockeryProtectionCard: React.FC<MockeryProtectionCardProps> = ({
-  isProtected,
-  timeRemaining = 0,
-  onPurchaseProtection,
-  className
+  tier,
+  name,
+  description,
+  features,
+  active = false,
+  enhanced = false,
+  onActivate,
+  onUpgrade
 }) => {
+  const basePrice = getMockeryProtectionPrice(tier);
+  const enhancedPrice = getEnhancedMockeryProtectionPrice(tier);
+  const price = enhanced ? enhancedPrice : basePrice;
+  
+  const getColorClass = () => {
+    switch (tier) {
+      case 'basic':
+        return 'border-gray-400 bg-gray-900/40';
+      case 'advanced':
+        return 'border-amber-600 bg-amber-950/40';
+      case 'royal':
+        return 'border-royal-gold bg-royal-gold/5';
+      default:
+        return 'border-gray-400 bg-gray-900/40';
+    }
+  };
+  
+  const getIconColor = () => {
+    switch (tier) {
+      case 'basic':
+        return 'silver';
+      case 'advanced':
+        return 'bronze';
+      case 'royal':
+        return 'gold';
+      default:
+        return 'silver';
+    }
+  };
+  
   return (
-    <Card className={className}>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Shield className="h-5 w-5 text-royal-purple" />
-          Royal Mockery Protection
-        </CardTitle>
-        <CardDescription>
-          Shield yourself from the kingdom's mockery
-        </CardDescription>
-      </CardHeader>
-      
-      <CardContent className="space-y-4">
-        {isProtected ? (
-          <div className="glass-morphism border-royal-purple/30 p-4 rounded-lg bg-royal-purple/10">
-            <div className="flex items-center justify-between mb-2">
-              <h3 className="font-bold text-royal-purple flex items-center">
-                <Check className="h-4 w-4 mr-2" />
-                Active Protection
-              </h3>
-            </div>
-            <p className="text-sm text-white/80 mb-4">
-              You are currently protected from all mockery effects.
-            </p>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center text-white/70 text-sm">
-                <Clock className="h-4 w-4 mr-2" />
-                Time remaining:
-              </div>
-              <div className="font-bold text-royal-purple">
-                {timeRemaining} {timeRemaining === 1 ? 'hour' : 'hours'}
-              </div>
-            </div>
+    <div className={cn(
+      'rounded-lg border p-6 transition-all hover:shadow-md',
+      getColorClass(),
+      active && 'ring-2 ring-offset-2 ring-offset-background',
+      active && tier === 'basic' ? 'ring-gray-400' : '',
+      active && tier === 'advanced' ? 'ring-amber-600' : '',
+      active && tier === 'royal' ? 'ring-royal-gold' : ''
+    )}>
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center">
+          <div className="mr-3">
+            <MedievalIcon 
+              name="shield" 
+              size="md" 
+              color={getIconColor()} 
+              animate={tier === 'royal' ? 'glow' : false}
+            />
           </div>
-        ) : (
-          <>
-            <div className="glass-morphism border-white/10 p-4 rounded-lg">
-              <p className="text-sm text-white/80 mb-4">
-                Purchase royal immunity to shield yourself from mockery effects for a set duration.
-                While protected, no one can apply mockery effects to your profile.
-              </p>
-              
-              <div className="flex items-center justify-between">
-                <div className="text-sm text-white/70 flex items-center">
-                  <Info className="h-4 w-4 mr-2" />
-                  Protection Status:
-                </div>
-                <div className="text-royal-crimson font-bold">
-                  Not Protected
-                </div>
-              </div>
-            </div>
-            
-            <RoyalDivider variant="line" label="PROTECTION PACKAGES" className="my-4" />
-            
-            <div className="space-y-4">
-              <div className="glass-morphism border-royal-purple/30 p-4 rounded-lg bg-royal-purple/10">
-                <h3 className="font-bold text-royal-purple mb-2">24-Hour Protection</h3>
-                <p className="text-sm text-white/80 mb-3">
-                  Secure royal immunity from all mockery effects for 24 hours.
-                </p>
-                <Button 
-                  className="w-full bg-royal-purple hover:bg-royal-purple/90"
-                  onClick={() => onPurchaseProtection(24)}
-                >
-                  Purchase for ${getMockeryProtectionPrice().toFixed(2)}
-                </Button>
-              </div>
-              
-              <div className="glass-morphism border-white/10 p-4 rounded-lg">
-                <h3 className="font-bold mb-2">7-Day Protection</h3>
-                <p className="text-sm text-white/80 mb-3">
-                  Extended royal protection for a full week at a discounted rate.
-                </p>
-                <Button 
-                  variant="outline" 
-                  className="w-full"
-                  onClick={() => onPurchaseProtection(24 * 7)}
-                >
-                  Purchase for ${getEnhancedMockeryProtectionPrice(24 * 7).toFixed(2)}
-                </Button>
-              </div>
-              
-              <div className="glass-morphism border-white/10 p-4 rounded-lg">
-                <h3 className="font-bold mb-2">30-Day Protection</h3>
-                <p className="text-sm text-white/80 mb-3">
-                  Premium royal protection for a full month, our best value.
-                </p>
-                <Button 
-                  variant="outline" 
-                  className="w-full"
-                  onClick={() => onPurchaseProtection(24 * 30)}
-                >
-                  Purchase for ${getEnhancedMockeryProtectionPrice(24 * 30).toFixed(2)}
-                </Button>
-              </div>
-            </div>
-          </>
+          <div>
+            <h3 className="font-bold text-lg">{name}</h3>
+            <p className="text-sm text-muted-foreground">{tier} protection</p>
+          </div>
+        </div>
+        {active && (
+          <div className="bg-green-500/20 text-green-400 text-xs font-medium px-2 py-1 rounded-full">
+            Active
+          </div>
         )}
-      </CardContent>
+      </div>
       
-      <CardFooter className="text-xs text-white/60 flex justify-center">
-        <Tooltip>
-          <TooltipTrigger className="flex items-center">
-            <Info className="h-3 w-3 mr-1" />
-            How does protection work?
-          </TooltipTrigger>
-          <TooltipContent className="max-w-xs">
-            <p>
-              Royal Protection shields your profile from all mockery effects for the duration purchased.
-              Users attempting to mock you will be informed that you are under royal protection.
-              Protection does not affect your leaderboard rank or any other functionality.
-            </p>
-          </TooltipContent>
-        </Tooltip>
-      </CardFooter>
-    </Card>
+      <p className="text-sm text-white/70 mb-4">{description}</p>
+      
+      <div className="space-y-2 mb-6">
+        {features.map((feature, index) => (
+          <div key={index} className="flex items-start text-sm">
+            <Check className="h-4 w-4 text-green-400 mr-2 mt-0.5 flex-shrink-0" />
+            <span className="text-white/80">{feature}</span>
+          </div>
+        ))}
+      </div>
+      
+      <div className="flex items-baseline justify-between mb-6">
+        <div>
+          <span className="text-2xl font-bold">${price.toFixed(2)}</span>
+          <span className="text-white/60 text-sm ml-1">/ month</span>
+        </div>
+      </div>
+      
+      {active ? (
+        <Button 
+          variant="outline" 
+          className="w-full"
+          onClick={onUpgrade}
+          disabled={enhanced || tier === 'royal'}
+        >
+          {enhanced || tier === 'royal' ? 'Maximum Protection' : 'Upgrade Protection'}
+          <ChevronRight className="h-4 w-4 ml-1" />
+        </Button>
+      ) : (
+        <Button 
+          className={cn(
+            "w-full",
+            tier === 'basic' ? 'bg-gray-700 hover:bg-gray-600' : '',
+            tier === 'advanced' ? 'bg-amber-800 hover:bg-amber-700' : '',
+            tier === 'royal' ? 'bg-gradient-to-r from-royal-gold-dark to-royal-gold hover:opacity-90' : ''
+          )}
+          onClick={onActivate}
+        >
+          Activate Protection
+          <Shield className="h-4 w-4 ml-1" />
+        </Button>
+      )}
+    </div>
   );
 };
 

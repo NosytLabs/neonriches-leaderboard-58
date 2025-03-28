@@ -1,407 +1,447 @@
 
 import React, { useState } from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ScrollText, Crown, Target, Shield, Package, History } from 'lucide-react';
-import { useMockery, MockeryAction, MockeryTier } from '@/components/mockery/hooks/useMockery';
-import { 
-  getMockeryActionsByTier, 
-  getMockeryBundles,
-  getMockeryLeaderboardMessage
-} from '@/components/mockery/utils/mockeryUtils';
-import RankingDisclaimer from '@/components/shared/RankingDisclaimer';
-import RoyalDivider from '@/components/ui/royal-divider';
-import MockeryCard from '@/components/mockery/components/MockeryCard';
-import HallOfShame from '@/components/mockery/components/HallOfShame';
-import { useToastContext } from '@/contexts/ToastContext';
-import useNotificationSounds from '@/hooks/use-notification-sounds';
+import DashboardLayout from '@/components/dashboard/DashboardLayout';
+import { Helmet } from 'react-helmet-async';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Shield, User, Users, Crown, Scroll, Tomato, Egg, BadgeMinus, Music } from 'lucide-react';
+import { MockeryAction, MockeryTier } from '@/components/mockery/hooks/useMockery';
+import MedievalIcon from '@/components/ui/medieval-icon';
 
-// Mock user data for development
-const mockUsers = [
-  { id: 1, username: 'RoyalSpender', profileImage: '/avatars/user1.jpg', rank: 1, team: 'red', amountSpent: 25000 },
-  { id: 2, username: 'GoldKnight', profileImage: '/avatars/user2.jpg', rank: 2, team: 'blue', amountSpent: 18500 },
-  { id: 3, username: 'CrownSeeker', profileImage: '/avatars/user3.jpg', rank: 3, team: 'green', amountSpent: 15000 },
-  { id: 4, username: 'MedievalMagnate', profileImage: '/avatars/user4.jpg', rank: 4, team: 'red', amountSpent: 12000 },
-  { id: 5, username: 'DungeonMaster', profileImage: '/avatars/user5.jpg', rank: 5, team: 'blue', amountSpent: 9500 },
-  { id: 6, username: 'RoyalJester', profileImage: '/avatars/user6.jpg', rank: 6, team: 'green', amountSpent: 7000 },
-  { id: 7, username: 'KingdomBuilder', profileImage: '/avatars/user7.jpg', rank: 7, team: 'red', amountSpent: 5500 },
-  { id: 8, username: 'ThroneWarrior', profileImage: '/avatars/user8.jpg', rank: 8, team: 'blue', amountSpent: 4000 },
-];
+const MockeryPage: React.FC = () => {
+  const [selectedTab, setSelectedTab] = useState('actions');
 
-const MockeryDescription = () => {
   return (
-    <div className="flex flex-col md:flex-row justify-between items-center mb-6">
-      <div>
-        <h1 className="text-3xl font-bold font-royal royal-gradient mb-2 flex items-center">
-          <Crown className="mr-2 h-7 w-7 text-royal-gold" />
-          Royal Mockery Hall
-        </h1>
-        <p className="text-white/70">
-          Welcome to the Royal Mockery Hall, where you can engage in medieval-style satirical mockery 
-          with purely cosmetic effects. Choose from a variety of mockery options across different tiers.
-        </p>
-      </div>
-    </div>
-  );
-};
+    <DashboardLayout
+      title="Royal Mockery"
+      subtitle="Where the peasants pay to make fun of their betters, and the betters pay even more to make fun of their peers."
+      icon={<Tomato size={32} className="text-royal-crimson" />}
+    >
+      <Helmet>
+        <title>Royal Mockery Festival | SpendThrone</title>
+      </Helmet>
 
-const MockeryPage = () => {
-  const { addToast } = useToastContext();
-  const { playSound } = useNotificationSounds();
-  const [currentTier, setCurrentTier] = useState<MockeryTier>('common');
-  const [selectedMockery, setSelectedMockery] = useState<MockeryAction | null>(null);
-  const [selectedTarget, setSelectedTarget] = useState<number | null>(null);
-  
-  const { 
-    handleMockery, 
-    mockeryCooldown, 
-    mockeryEffects, 
-    getMockeryCount, 
-    isUserProtected,
-    purchaseHistory,
-    getMostMockedUsers
-  } = useMockery();
-  
-  // Get mockery options for current tier
-  const mockeryOptions = getMockeryActionsByTier(currentTier);
-  
-  // Get mockery bundles
-  const mockeryBundles = getMockeryBundles();
-  
-  // Get most mocked users
-  const mostMockedUsers = getMostMockedUsers(5);
-  
-  // Handle mockery selection
-  const handleSelectMockery = (action: MockeryAction) => {
-    setSelectedMockery(action);
-    playSound('click', 0.2);
-  };
-  
-  // Handle target selection
-  const handleSelectTarget = (userId: number) => {
-    setSelectedTarget(userId);
-    playSound('click', 0.2);
-  };
-  
-  // Handle mockery submission
-  const handleSubmitMockery = () => {
-    if (!selectedMockery || selectedTarget === null) {
-      addToast({
-        title: "Selection Required",
-        description: "Please select both a mockery type and a target.",
-        variant: "destructive"
-      });
-      return;
-    }
-    
-    const targetUser = mockUsers.find(user => user.id === selectedTarget);
-    if (!targetUser) return;
-    
-    const success = handleMockery(selectedTarget, targetUser.username, selectedMockery, 0);
-    
-    if (success) {
-      playSound('purchase', 0.3);
-      addToast({
-        title: "Mockery Applied!",
-        description: `You have successfully mocked ${targetUser.username} with ${selectedMockery}.`,
-      });
-      setSelectedMockery(null);
-      setSelectedTarget(null);
-    }
-  };
-  
-  // Handle bundle purchase
-  const handleBundlePurchase = (bundleId: string) => {
-    const bundle = mockeryBundles.find(b => b.id === bundleId);
-    if (!bundle) return;
-    
-    playSound('purchase', 0.3);
-    addToast({
-      title: "Bundle Purchased!",
-      description: `You have purchased the ${bundle.name} for $${bundle.bundlePrice.toFixed(2)}.`,
-    });
-  };
-  
-  return (
-    <div className="container mx-auto px-4 py-8">
-      <MockeryDescription />
-      
-      <RankingDisclaimer 
-        className="mb-8" 
-        messagePrefix="Important:" 
-        variant="info" 
-        message={getMockeryLeaderboardMessage()}
-      />
-      
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2 space-y-8">
-          <Tabs defaultValue="common" value={currentTier} onValueChange={(value) => setCurrentTier(value as MockeryTier)}>
-            <TabsList className="w-full mb-6">
-              <TabsTrigger value="common" className="flex-1">Common</TabsTrigger>
-              <TabsTrigger value="uncommon" className="flex-1">Uncommon</TabsTrigger>
-              <TabsTrigger value="rare" className="flex-1">Rare</TabsTrigger>
-              <TabsTrigger value="epic" className="flex-1">Epic</TabsTrigger>
-              <TabsTrigger value="legendary" className="flex-1">Legendary</TabsTrigger>
+      <div className="mb-6">
+        <Tabs defaultValue="actions" onValueChange={setSelectedTab}>
+          <div className="border-b border-white/10 mb-6">
+            <TabsList className="justify-start -mb-px">
+              <TabsTrigger value="actions" className="data-[state=active]:border-royal-crimson">
+                <Tomato className="h-4 w-4 mr-2" />
+                Mockery Actions
+              </TabsTrigger>
+              <TabsTrigger value="protection" className="data-[state=active]:border-royal-gold">
+                <Shield className="h-4 w-4 mr-2" />
+                Protection Plans
+              </TabsTrigger>
+              <TabsTrigger value="history" className="data-[state=active]:border-royal-navy">
+                <Scroll className="h-4 w-4 mr-2" />
+                Mockery History
+              </TabsTrigger>
+              <TabsTrigger value="effects" className="data-[state=active]:border-royal-purple">
+                <Crown className="h-4 w-4 mr-2" />
+                Active Effects
+              </TabsTrigger>
             </TabsList>
-            
-            <TabsContent value="common" className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {mockeryOptions.map(option => (
-                  <MockeryCard 
-                    key={option.type as string}
-                    action={option.type as MockeryAction}
-                    tier={option.tier as MockeryTier}
-                    username="Target Noble"
-                    onSelect={handleSelectMockery}
-                    selected={selectedMockery === option.type}
-                  />
-                ))}
-              </div>
-            </TabsContent>
-            
-            <TabsContent value="uncommon" className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {mockeryOptions.map(option => (
-                  <MockeryCard 
-                    key={option.type as string}
-                    action={option.type as MockeryAction}
-                    tier={option.tier as MockeryTier}
-                    username="Target Noble"
-                    onSelect={handleSelectMockery}
-                    selected={selectedMockery === option.type}
-                  />
-                ))}
-              </div>
-            </TabsContent>
-            
-            <TabsContent value="rare" className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {mockeryOptions.map(option => (
-                  <MockeryCard 
-                    key={option.type as string}
-                    action={option.type as MockeryAction}
-                    tier={option.tier as MockeryTier}
-                    username="Target Noble"
-                    onSelect={handleSelectMockery}
-                    selected={selectedMockery === option.type}
-                  />
-                ))}
-              </div>
-            </TabsContent>
-            
-            <TabsContent value="epic" className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {mockeryOptions.map(option => (
-                  <MockeryCard 
-                    key={option.type as string}
-                    action={option.type as MockeryAction}
-                    tier={option.tier as MockeryTier}
-                    username="Target Noble"
-                    onSelect={handleSelectMockery}
-                    selected={selectedMockery === option.type}
-                  />
-                ))}
-              </div>
-            </TabsContent>
-            
-            <TabsContent value="legendary" className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {mockeryOptions.map(option => (
-                  <MockeryCard 
-                    key={option.type as string}
-                    action={option.type as MockeryAction}
-                    tier={option.tier as MockeryTier}
-                    username="Target Noble"
-                    onSelect={handleSelectMockery}
-                    selected={selectedMockery === option.type}
-                  />
-                ))}
-              </div>
-            </TabsContent>
-          </Tabs>
-          
-          <RoyalDivider variant="line" label="SELECT TARGET" className="my-6" />
-          
-          <div className="space-y-4">
-            <h3 className="font-medium flex items-center text-lg">
-              <Target className="mr-2 h-5 w-5 text-royal-crimson" />
-              Choose a Noble to Mock
-            </h3>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {mockUsers.map(user => (
-                <div
-                  key={user.id}
-                  className={`glass-morphism border p-4 rounded-lg cursor-pointer transition-all ${
-                    selectedTarget === user.id 
-                      ? 'border-royal-crimson' 
-                      : 'border-white/10 hover:border-white/30'
-                  }`}
-                  onClick={() => handleSelectTarget(user.id)}
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-full overflow-hidden bg-white/10">
-                      {user.profileImage ? (
-                        <img 
-                          src={user.profileImage} 
-                          alt={user.username} 
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center font-bold text-lg">
-                          {user.username[0]}
-                        </div>
-                      )}
-                    </div>
-                    
-                    <div>
-                      <div className="flex items-center">
-                        <h4 className="font-medium">{user.username}</h4>
-                        <span className="ml-2 text-xs bg-white/10 px-1.5 py-0.5 rounded-full text-white/70">
-                          #{user.rank}
-                        </span>
-                      </div>
-                      <p className="text-sm text-white/60">
-                        ${user.amountSpent.toLocaleString()} spent
-                      </p>
-                    </div>
-                    
-                    {isUserProtected(user.id) && (
-                      <div className="ml-auto text-royal-purple">
-                        <Shield className="h-5 w-5" />
-                      </div>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-            
-            <div className="flex justify-end mt-6">
-              <Button 
-                size="lg"
-                className={`${
-                  selectedMockery && selectedTarget !== null
-                    ? 'bg-royal-crimson hover:bg-royal-crimson/90'
-                    : 'bg-gray-500 hover:bg-gray-500/90 cursor-not-allowed'
-                }`}
-                disabled={!selectedMockery || selectedTarget === null}
-                onClick={handleSubmitMockery}
-              >
-                Apply Mockery
-              </Button>
-            </div>
           </div>
-        </div>
-        
-        <div className="space-y-8">
-          <HallOfShame 
-            mostMockedUsers={mostMockedUsers}
-            recentMockeries={purchaseHistory.slice(0, 10)}
-          />
-          
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Package className="h-5 w-5 text-royal-gold" />
-                Mockery Bundles
-              </CardTitle>
-              <CardDescription>
-                Save on mockery options with these bundles
-              </CardDescription>
-            </CardHeader>
-            
-            <CardContent className="space-y-4">
-              {mockeryBundles.map(bundle => (
-                <div 
-                  key={bundle.id}
-                  className="glass-morphism border-white/10 p-4 rounded-lg"
-                >
-                  <div className="flex justify-between items-start mb-2">
-                    <h4 className="font-bold text-royal-gold">{bundle.name}</h4>
-                    <div className="text-right">
-                      <div className="text-xs line-through text-white/50">
-                        ${bundle.originalPrice.toFixed(2)}
+
+          <TabsContent value="actions" className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {/* Tomatoes Card */}
+              <Card className="glass-morphism border-white/10 hover:border-royal-crimson/30 transition-all">
+                <CardHeader>
+                  <div className="flex items-center space-x-2">
+                    <Tomato className="h-5 w-5 text-red-500" />
+                    <CardTitle>Throw Tomatoes</CardTitle>
+                  </div>
+                  <CardDescription>$0.50 per use</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-muted-foreground">
+                    Splatter someone's profile with tomatoes for 24 hours, showing the world your disapproval of their rank.
+                  </p>
+                </CardContent>
+                <CardFooter>
+                  <Button variant="default" className="w-full bg-red-800 hover:bg-red-700">
+                    Choose Target
+                  </Button>
+                </CardFooter>
+              </Card>
+
+              {/* Eggs Card */}
+              <Card className="glass-morphism border-white/10 hover:border-yellow-500/30 transition-all">
+                <CardHeader>
+                  <div className="flex items-center space-x-2">
+                    <Egg className="h-5 w-5 text-yellow-400" />
+                    <CardTitle>Throw Eggs</CardTitle>
+                  </div>
+                  <CardDescription>$0.75 per use</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-muted-foreground">
+                    Shower someone's profile with eggs for 24 hours. It's messy, it's humiliating, it's perfect.
+                  </p>
+                </CardContent>
+                <CardFooter>
+                  <Button variant="default" className="w-full bg-yellow-800 hover:bg-yellow-700">
+                    Choose Target
+                  </Button>
+                </CardFooter>
+              </Card>
+
+              {/* Stocks Card */}
+              <Card className="glass-morphism border-white/10 hover:border-amber-500/30 transition-all">
+                <CardHeader>
+                  <div className="flex items-center space-x-2">
+                    <BadgeMinus className="h-5 w-5 text-amber-500" />
+                    <CardTitle>Put in Stocks</CardTitle>
+                  </div>
+                  <CardDescription>$1.00 per use</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-muted-foreground">
+                    Lock someone in the medieval stocks for all to see. Nothing says "I paid money to shame you" quite like this classic.
+                  </p>
+                </CardContent>
+                <CardFooter>
+                  <Button variant="default" className="w-full bg-amber-800 hover:bg-amber-700">
+                    Choose Target
+                  </Button>
+                </CardFooter>
+              </Card>
+
+              {/* Silence Card */}
+              <Card className="glass-morphism border-white/10 hover:border-gray-400/30 transition-all">
+                <CardHeader>
+                  <div className="flex items-center space-x-2">
+                    <Music className="h-5 w-5 text-gray-400" />
+                    <CardTitle>Royal Silence</CardTitle>
+                  </div>
+                  <CardDescription>$2.00 per use</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-muted-foreground">
+                    Impose royal silence on someone for 24 hours. They'll be unable to comment while they contemplate their inadequacy.
+                  </p>
+                </CardContent>
+                <CardFooter>
+                  <Button variant="default" className="w-full bg-gray-700 hover:bg-gray-600">
+                    Choose Target
+                  </Button>
+                </CardFooter>
+              </Card>
+
+              {/* Court Jester Card */}
+              <Card className="glass-morphism border-white/10 hover:border-purple-500/30 transition-all">
+                <CardHeader>
+                  <div className="flex items-center space-x-2">
+                    <Crown className="h-5 w-5 text-purple-400" />
+                    <CardTitle>Court Jester</CardTitle>
+                  </div>
+                  <CardDescription>$3.00 per use</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-muted-foreground">
+                    Turn someone into the royal court's laughingstock for 24 hours. They'll be displayed with a jester hat and bells.
+                  </p>
+                </CardContent>
+                <CardFooter>
+                  <Button variant="default" className="w-full bg-purple-800 hover:bg-purple-700">
+                    Choose Target
+                  </Button>
+                </CardFooter>
+              </Card>
+            </div>
+
+            <div className="mt-6">
+              <h3 className="text-xl font-bold mb-4 royal-gradient">Mockery Bundles</h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {/* Peasant's Bundle */}
+                <Card className="glass-morphism border-white/10 border-l-4 border-l-gray-400">
+                  <CardHeader>
+                    <CardTitle className="flex items-center">
+                      <MedievalIcon name="shield" size="sm" color="bronze" className="mr-2" />
+                      Peasant's Bundle
+                    </CardTitle>
+                    <CardDescription>
+                      <span className="text-lg font-bold">$2.50</span>
+                      <span className="text-muted-foreground ml-1">/ 5 uses</span>
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      A simple collection of mockery tools for the common folk.
+                    </p>
+                    <div className="flex items-center space-x-2 mb-2">
+                      <Tomato className="h-4 w-4 text-red-500" />
+                      <span className="text-sm">Throw Tomatoes</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Egg className="h-4 w-4 text-yellow-400" />
+                      <span className="text-sm">Throw Eggs</span>
+                    </div>
+                  </CardContent>
+                  <CardFooter>
+                    <Button variant="default" className="w-full bg-gray-700 hover:bg-gray-600">
+                      Purchase Bundle
+                    </Button>
+                  </CardFooter>
+                </Card>
+
+                {/* Noble's Arsenal */}
+                <Card className="glass-morphism border-white/10 border-l-4 border-l-amber-600">
+                  <CardHeader>
+                    <CardTitle className="flex items-center">
+                      <MedievalIcon name="sword" size="sm" color="bronze" className="mr-2" />
+                      Noble's Arsenal
+                    </CardTitle>
+                    <CardDescription>
+                      <span className="text-lg font-bold">$7.50</span>
+                      <span className="text-muted-foreground ml-1">/ 10 uses</span>
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      A refined selection of mockery options for the distinguished nobility.
+                    </p>
+                    <div className="grid grid-cols-2 gap-2">
+                      <div className="flex items-center space-x-2">
+                        <Tomato className="h-4 w-4 text-red-500" />
+                        <span className="text-sm">Tomatoes</span>
                       </div>
-                      <div className="font-bold text-royal-gold">
-                        ${bundle.bundlePrice.toFixed(2)}
+                      <div className="flex items-center space-x-2">
+                        <Egg className="h-4 w-4 text-yellow-400" />
+                        <span className="text-sm">Eggs</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <BadgeMinus className="h-4 w-4 text-amber-500" />
+                        <span className="text-sm">Stocks</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Music className="h-4 w-4 text-gray-400" />
+                        <span className="text-sm">Silence</span>
                       </div>
                     </div>
-                  </div>
-                  
-                  <div className="flex gap-2 mb-3">
-                    {bundle.actions.map(action => (
-                      <div 
-                        key={action}
-                        className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center"
-                      >
-                        {mockeryOptions.find(opt => opt.type === action)?.emoji || '📜'}
+                  </CardContent>
+                  <CardFooter>
+                    <Button variant="default" className="w-full bg-amber-800 hover:bg-amber-700">
+                      Purchase Bundle
+                    </Button>
+                  </CardFooter>
+                </Card>
+
+                {/* Royal Humiliation */}
+                <Card className="glass-morphism border-white/10 border-l-4 border-l-royal-gold">
+                  <CardHeader>
+                    <CardTitle className="flex items-center">
+                      <MedievalIcon name="crown" size="sm" color="gold" animate="glow" className="mr-2" />
+                      Royal Humiliation
+                    </CardTitle>
+                    <CardDescription>
+                      <span className="text-lg font-bold">$20.00</span>
+                      <span className="text-muted-foreground ml-1">/ 20 uses</span>
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      The ultimate arsenal of mockery fit for kings and queens.
+                    </p>
+                    <div className="grid grid-cols-2 gap-2">
+                      <div className="flex items-center space-x-2">
+                        <Tomato className="h-4 w-4 text-red-500" />
+                        <span className="text-sm">Tomatoes</span>
                       </div>
-                    ))}
+                      <div className="flex items-center space-x-2">
+                        <Egg className="h-4 w-4 text-yellow-400" />
+                        <span className="text-sm">Eggs</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <BadgeMinus className="h-4 w-4 text-amber-500" />
+                        <span className="text-sm">Stocks</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Music className="h-4 w-4 text-gray-400" />
+                        <span className="text-sm">Silence</span>
+                      </div>
+                      <div className="flex items-center space-x-2 col-span-2">
+                        <Crown className="h-4 w-4 text-purple-400" />
+                        <span className="text-sm">Court Jester</span>
+                      </div>
+                    </div>
+                  </CardContent>
+                  <CardFooter>
+                    <Button variant="default" className="w-full bg-gradient-to-r from-royal-gold-dark to-royal-gold text-black hover:opacity-90">
+                      Purchase Bundle
+                    </Button>
+                  </CardFooter>
+                </Card>
+              </div>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="protection" className="space-y-6">
+            <p className="text-lg text-white/70 mb-6">
+              Shield yourself from mockery with our royal protection plans. The higher your protection tier, the more mockery types you'll be immune to.
+            </p>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {/* Basic Protection */}
+              <Card className="glass-morphism border-white/10 border-t-4 border-t-gray-400">
+                <CardHeader>
+                  <div className="flex items-center space-x-2">
+                    <Shield className="h-5 w-5 text-gray-400" />
+                    <CardTitle>Basic Protection</CardTitle>
                   </div>
-                  
-                  <div className="text-sm text-white/70 mb-3">
-                    Save {((1 - (bundle.bundlePrice / bundle.originalPrice)) * 100).toFixed(0)}% with this bundle!
+                  <CardDescription>
+                    <span className="text-lg font-bold">$2.00</span>
+                    <span className="text-muted-foreground ml-1">/ month</span>
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-2">
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Basic protection for the commoners who wish to avoid the most basic forms of ridicule.
+                  </p>
+                  <div className="flex items-center space-x-2">
+                    <Shield className="h-4 w-4 text-green-500" />
+                    <span className="text-sm">Protection from Tomatoes</span>
                   </div>
-                  
-                  <Button 
-                    variant="outline" 
-                    className="w-full"
-                    onClick={() => handleBundlePurchase(bundle.id)}
-                  >
-                    Purchase Bundle
+                  <div className="flex items-center space-x-2">
+                    <Shield className="h-4 w-4 text-red-500" />
+                    <span className="text-sm text-muted-foreground line-through">No protection from Eggs</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Shield className="h-4 w-4 text-red-500" />
+                    <span className="text-sm text-muted-foreground line-through">No protection from Stocks</span>
+                  </div>
+                </CardContent>
+                <CardFooter>
+                  <Button variant="default" className="w-full bg-gray-700 hover:bg-gray-600">
+                    Activate Protection
                   </Button>
-                </div>
-              ))}
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Shield className="h-5 w-5 text-royal-purple" />
-                Royal Protection
-              </CardTitle>
-              <CardDescription>
-                Shield yourself from mockery
-              </CardDescription>
-            </CardHeader>
-            
-            <CardContent className="space-y-4">
-              <div className="glass-morphism border-royal-purple/30 p-4 rounded-lg bg-royal-purple/10">
-                <h4 className="font-bold text-royal-purple mb-2">24-Hour Protection</h4>
-                <p className="text-sm text-white/80 mb-3">
-                  Secure royal immunity from all mockery effects for 24 hours.
+                </CardFooter>
+              </Card>
+
+              {/* Advanced Protection */}
+              <Card className="glass-morphism border-white/10 border-t-4 border-t-amber-600">
+                <CardHeader>
+                  <div className="flex items-center space-x-2">
+                    <Shield className="h-5 w-5 text-amber-500" />
+                    <CardTitle>Advanced Protection</CardTitle>
+                  </div>
+                  <CardDescription>
+                    <span className="text-lg font-bold">$5.00</span>
+                    <span className="text-muted-foreground ml-1">/ month</span>
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-2">
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Enhanced protection for nobles who deserve respect and wish to maintain their dignity.
+                  </p>
+                  <div className="flex items-center space-x-2">
+                    <Shield className="h-4 w-4 text-green-500" />
+                    <span className="text-sm">Protection from Tomatoes</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Shield className="h-4 w-4 text-green-500" />
+                    <span className="text-sm">Protection from Eggs</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Shield className="h-4 w-4 text-green-500" />
+                    <span className="text-sm">Protection from Stocks</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Shield className="h-4 w-4 text-red-500" />
+                    <span className="text-sm text-muted-foreground line-through">No protection from Silence</span>
+                  </div>
+                </CardContent>
+                <CardFooter>
+                  <Button variant="default" className="w-full bg-amber-800 hover:bg-amber-700">
+                    Activate Protection
+                  </Button>
+                </CardFooter>
+              </Card>
+
+              {/* Royal Protection */}
+              <Card className="glass-morphism border-white/10 border-t-4 border-t-royal-gold relative overflow-hidden">
+                <div className="absolute -right-6 -top-6 w-20 h-20 bg-royal-gold/20 rounded-full blur-xl"></div>
+                <CardHeader>
+                  <div className="flex items-center space-x-2">
+                    <Shield className="h-5 w-5 text-royal-gold animate-pulse-slow" />
+                    <CardTitle>Royal Protection</CardTitle>
+                  </div>
+                  <CardDescription>
+                    <span className="text-lg font-bold">$10.00</span>
+                    <span className="text-muted-foreground ml-1">/ month</span>
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-2">
+                  <p className="text-sm text-muted-foreground mb-4">
+                    The ultimate protection, fit for royalty. No peasant shall dare mock you again.
+                  </p>
+                  <div className="flex items-center space-x-2">
+                    <Shield className="h-4 w-4 text-green-500" />
+                    <span className="text-sm">Protection from Tomatoes</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Shield className="h-4 w-4 text-green-500" />
+                    <span className="text-sm">Protection from Eggs</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Shield className="h-4 w-4 text-green-500" />
+                    <span className="text-sm">Protection from Stocks</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Shield className="h-4 w-4 text-green-500" />
+                    <span className="text-sm">Protection from Silence</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Shield className="h-4 w-4 text-green-500" />
+                    <span className="text-sm">Protection from Court Jester</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Crown className="h-4 w-4 text-royal-gold" />
+                    <span className="text-sm font-medium text-royal-gold">Royal Status Indicator</span>
+                  </div>
+                </CardContent>
+                <CardFooter>
+                  <Button variant="default" className="w-full bg-gradient-to-r from-royal-gold-dark to-royal-gold text-black hover:opacity-90">
+                    Activate Protection
+                  </Button>
+                </CardFooter>
+              </Card>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="history">
+            <Card className="glass-morphism border-white/10">
+              <CardHeader>
+                <CardTitle>Mockery History</CardTitle>
+                <CardDescription>A record of your mockery activities and those who dared mock you.</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <p className="text-center text-muted-foreground py-12">
+                  Your mockery history will appear here once you've participated in the Royal Mockery Festival.
                 </p>
-                <Button className="w-full bg-royal-purple hover:bg-royal-purple/90">
-                  Purchase for $5.00
-                </Button>
-              </div>
-              
-              <div className="glass-morphism border-white/10 p-4 rounded-lg">
-                <h4 className="font-bold mb-2">7-Day Protection</h4>
-                <p className="text-sm text-white/80 mb-3">
-                  Extended royal protection for a full week at a discounted rate.
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="effects">
+            <Card className="glass-morphism border-white/10">
+              <CardHeader>
+                <CardTitle>Active Effects</CardTitle>
+                <CardDescription>Current mockery effects applied to you and by you.</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <p className="text-center text-muted-foreground py-12">
+                  You don't have any active mockery effects at the moment.
                 </p>
-                <Button variant="outline" className="w-full">
-                  Purchase for $30.00
-                </Button>
-              </div>
-              
-              <div className="glass-morphism border-white/10 p-4 rounded-lg">
-                <h4 className="font-bold mb-2">30-Day Protection</h4>
-                <p className="text-sm text-white/80 mb-3">
-                  Premium royal protection for a full month, our best value.
-                </p>
-                <Button variant="outline" className="w-full">
-                  Purchase for $100.00
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
       </div>
-    </div>
+    </DashboardLayout>
   );
 };
 

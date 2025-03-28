@@ -1,16 +1,16 @@
 
 <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" fill="none">
-  <ellipse cx="24" cy="12" rx="16" ry="6" fill="#D4AF37" stroke="#8B0000" stroke-width="1.5"/>
-  <path d="M40 20C40 23.3137 32.8366 26 24 26C15.1634 26 8 23.3137 8 20" stroke="#8B0000" stroke-width="1.5"/>
-  <path d="M40 28C40 31.3137 32.8366 34 24 34C15.1634 34 8 31.3137 8 28" stroke="#8B0000" stroke-width="1.5"/>
-  <path d="M40 12V36C40 39.3137 32.8366 42 24 42C15.1634 42 8 39.3137 8 36V12" stroke="#8B0000" stroke-width="1.5"/>
-  <path d="M24 18V22" stroke="#8B0000" stroke-width="1.5"/>
-  <path d="M18 16V20" stroke="#8B0000" stroke-width="1.5"/>
-  <path d="M30 16V20" stroke="#8B0000" stroke-width="1.5"/>
-  <path d="M24 26V30" stroke="#8B0000" stroke-width="1.5"/>
-  <path d="M18 24V28" stroke="#8B0000" stroke-width="1.5"/>
-  <path d="M30 24V28" stroke="#8B0000" stroke-width="1.5"/>
-  <path d="M24 34V38" stroke="#8B0000" stroke-width="1.5"/>
-  <path d="M18 32V36" stroke="#8B0000" stroke-width="1.5"/>
-  <path d="M30 32V36" stroke="#8B0000" stroke-width="1.5"/>
+  <ellipse cx="24" cy="12" rx="16" ry="6" fill="#D4AF37" stroke="#9B2335" stroke-width="1.5"/>
+  <path d="M40 20C40 23.3137 32.8366 26 24 26C15.1634 26 8 23.3137 8 20" stroke="#9B2335" stroke-width="1.5"/>
+  <path d="M40 28C40 31.3137 32.8366 34 24 34C15.1634 34 8 31.3137 8 28" stroke="#9B2335" stroke-width="1.5"/>
+  <path d="M40 12V36C40 39.3137 32.8366 42 24 42C15.1634 42 8 39.3137 8 36V12" stroke="#9B2335" stroke-width="1.5"/>
+  <path d="M24 18V22" stroke="#9B2335" stroke-width="1.5"/>
+  <path d="M18 16V20" stroke="#9B2335" stroke-width="1.5"/>
+  <path d="M30 16V20" stroke="#9B2335" stroke-width="1.5"/>
+  <path d="M24 26V30" stroke="#9B2335" stroke-width="1.5"/>
+  <path d="M18 24V28" stroke="#9B2335" stroke-width="1.5"/>
+  <path d="M30 24V28" stroke="#9B2335" stroke-width="1.5"/>
+  <path d="M24 34V38" stroke="#9B2335" stroke-width="1.5"/>
+  <path d="M18 32V36" stroke="#9B2335" stroke-width="1.5"/>
+  <path d="M30 32V36" stroke="#9B2335" stroke-width="1.5"/>
 </svg>
