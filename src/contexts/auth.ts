@@ -12,5 +12,5 @@ export const useAuth = () => {
   return context;
 };
 
-// Re-export AuthProvider from the main context file
+// Export the AuthProvider from AuthContext.tsx
 export { AuthProvider } from '@/contexts/AuthContext';

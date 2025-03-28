@@ -10,7 +10,7 @@ export const getCosmeticById = (id: string): CosmeticItem => {
     type: 'decoration',
     rarity: 'rare' as CosmeticRarity,
     description: 'A beautiful cosmetic item',
-    previewUrl: '/assets/cosmetics/borders/rare.png',
+    imageUrl: '/assets/cosmetics/borders/rare.png',
     cost: 0
   };
 };
@@ -90,7 +90,7 @@ export const awardRandomCosmetic = (
     type: selectedCategory.slice(0, -1),
     rarity: selectedRarity,
     description: `A ${selectedRarity} ${selectedCategory.slice(0, -1)} effect.`,
-    previewUrl: `/assets/cosmetics/${selectedCategory}/${selectedRarity}.png`,
+    imageUrl: `/assets/cosmetics/${selectedCategory}/${selectedRarity}.png`,
     cost: 0
   };
   

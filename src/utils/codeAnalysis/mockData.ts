@@ -12,7 +12,8 @@ export const mockedAnalysisResults: AnalysisResult = {
       linesOfCode: 45,
       parameters: 3,
       nestedLevel: 3,
-      issues: ["Too many nested conditions", "Complex logic"]
+      issues: ["Too many nested conditions", "Complex logic"],
+      function: "handleSubmit"
     }
   ],
   duplicates: [],
@@ -41,21 +42,23 @@ export const mockedAnalysisResults: AnalysisResult = {
   securityIssues: [],
   bestPracticeViolations: [],
   codeSmells: [],
-  deadCodePaths: [], // Added missing properties
-  duplicateCode: [], // Added missing properties
-  complexCode: [{ // Added missing properties with proper structure
-    id: "1",
-    name: "handleSubmit",
-    file: "src/components/ContactForm.tsx",
-    complexity: 12,
-    linesOfCode: 45,
-    parameters: 3,
-    nestedLevel: 3,
-    issues: ["Too many nested conditions", "Complex logic"],
-    function: "handleSubmit"
-  }],
-  unusedDependencies: [], // Added missing properties
-  unusedFunctions: [], // Added missing properties
+  deadCodePaths: [],
+  duplicateCode: [],
+  complexCode: [
+    {
+      id: "1",
+      name: "handleSubmit",
+      file: "src/components/ContactForm.tsx",
+      complexity: 12,
+      linesOfCode: 45,
+      parameters: 3,
+      nestedLevel: 3,
+      issues: ["Too many nested conditions", "Complex logic"],
+      function: "handleSubmit"
+    }
+  ],
+  unusedDependencies: [],
+  unusedFunctions: [],
   metrics: {
     beforeCleanup: {
       projectSize: 12500,
@@ -69,3 +72,12 @@ export const mockedAnalysisResults: AnalysisResult = {
     }
   }
 };
+
+// Export additional mock data for report components
+export const complexityReportMock = mockedAnalysisResults.complexity;
+export const duplicateCodeMock = mockedAnalysisResults.duplicateCode;
+export const performanceIssuesMock = mockedAnalysisResults.performanceIssues;
+export const unusedImportsMock = mockedAnalysisResults.unusedImports;
+export const unusedVariablesMock = mockedAnalysisResults.unusedVariables;
+export const unusedFunctionsMock = mockedAnalysisResults.unusedFunctions;
+export const unusedComponentsMock = mockedAnalysisResults.unused.components;
