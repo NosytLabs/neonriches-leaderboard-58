@@ -15,6 +15,9 @@ interface OptimizedImageProps extends React.ImgHTMLAttributes<HTMLImageElement> 
   skipPreload?: boolean;
 }
 
+/**
+ * Optimized image component with preloading, lazy loading and fallback
+ */
 const OptimizedImage: React.FC<OptimizedImageProps> = ({
   src,
   alt,

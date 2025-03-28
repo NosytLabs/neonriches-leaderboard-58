@@ -1,191 +1,214 @@
 
 import React from 'react';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
+import { 
+  DialogContent, 
+  DialogHeader, 
   DialogTitle,
-  DialogFooter
+  DialogDescription
 } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Calendar, Clock, Trophy, Users, Info, Bell } from 'lucide-react';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
-import RoyalDivider from '@/components/ui/royal-divider';
-import { formatDate } from '@/utils/timeUtils';
-import { useToast } from '@/hooks/use-toast';
-import CountdownTimer from '@/components/events/CountdownTimer';
+import { Calendar, Clock, Users, Trophy, Sparkles, ShieldCheck } from 'lucide-react';
+import { eventDetailsData } from '../data';
+import CountdownTimer from '../CountdownTimer';
+import { formatDate, isEventActive } from '@/utils/dateUtils';
 import OptimizedImage from '@/components/ui/optimized-image';
-
-export interface EventDetails {
-  id: string;
-  name: string;
-  description: string;
-  image: string;
-  startDate: string;
-  endDate: string;
-  rewardTypes: string[];
-  eligibility: string;
-  participationRequirements: string[];
-  specialRules: string[];
-}
+import { EventDetails } from '@/types/events';
 
 interface EventDetailsModalProps {
-  event: EventDetails | null;
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
+  eventId: string;
+  onClose: () => void;
 }
 
-const EventDetailsModal: React.FC<EventDetailsModalProps> = ({
-  event,
-  open,
-  onOpenChange
+const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ 
+  eventId, 
+  onClose 
 }) => {
-  const { toast } = useToast();
+  const eventDetails = eventDetailsData[eventId];
   
-  if (!event) return null;
-  
-  const handleRemindMe = () => {
-    toast({
-      title: "Reminder Set",
-      description: `You'll be notified when ${event.name} begins.`
-    });
-  };
-  
-  const isEventActive = new Date(event.startDate) <= new Date() && new Date(event.endDate) >= new Date();
-  
-  return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="glass-morphism border-white/10 sm:max-w-md md:max-w-2xl">
-        <div className="relative h-48 overflow-hidden -mt-6 -mx-6 rounded-t-lg">
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent z-10"></div>
-          
-          <OptimizedImage 
-            src={event.image} 
-            alt={event.name}
-            className="w-full h-full object-cover"
-            loadingStrategy="eager"
-            placeholderColor="#1a1a2a"
-          />
-          
-          <div className="absolute top-4 left-4 z-20">
-            <Badge variant="outline" className="bg-black/40 text-white border-white/20">
-              {isEventActive ? 'ACTIVE EVENT' : 'UPCOMING EVENT'}
-            </Badge>
-          </div>
-        </div>
-        
-        <DialogHeader className="relative -mt-16 z-20 text-white">
-          <DialogTitle className="text-2xl font-bold royal-gradient">
-            {event.name}
-          </DialogTitle>
-          <DialogDescription className="text-white/80">
-            {event.description}
+  if (!eventDetails) {
+    return (
+      <DialogContent className="glass-morphism border-white/10 sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle>Event Not Found</DialogTitle>
+          <DialogDescription>
+            The event details could not be found.
           </DialogDescription>
         </DialogHeader>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-4">
-          <div className="space-y-3">
-            <div className="flex items-center text-sm text-white/70">
-              <Calendar className="h-4 w-4 mr-2 text-royal-gold" />
-              <div>
-                {formatDate(event.startDate)} - {formatDate(event.endDate)}
-              </div>
-            </div>
-            
-            <div className="flex items-center text-sm text-white/70">
-              <Clock className="h-4 w-4 mr-2 text-royal-gold" />
-              <div>
-                {isEventActive ? (
-                  <span>Event ends in: <CountdownTimer targetDate={event.endDate} variant="minimal" /></span>
-                ) : (
-                  <span>Event begins in: <CountdownTimer targetDate={event.startDate} variant="minimal" /></span>
-                )}
-              </div>
-            </div>
-            
-            <div className="flex items-center text-sm text-white/70">
-              <Users className="h-4 w-4 mr-2 text-royal-gold" />
-              <div>{event.eligibility}</div>
-            </div>
-          </div>
+      </DialogContent>
+    );
+  }
+  
+  const isActive = isEventActive(eventDetails.startDate, eventDetails.endDate);
+  
+  return (
+    <DialogContent className="glass-morphism border-white/10 sm:max-w-3xl">
+      <DialogHeader>
+        <DialogTitle className="text-2xl royal-gradient flex items-center">
+          {getEventTypeIcon(eventDetails.type)}
+          <span className="ml-2">{eventDetails.name}</span>
+        </DialogTitle>
+      </DialogHeader>
+      
+      <ScrollArea className="max-h-[70vh]">
+        <div className="relative h-52 w-full mb-6 overflow-hidden rounded-md">
+          <OptimizedImage 
+            src={eventDetails.image}
+            alt={eventDetails.name}
+            className="w-full h-full object-cover"
+          />
           
-          <div className="space-y-3">
-            <div className="text-sm font-medium">Reward Types:</div>
-            <div className="flex flex-wrap gap-2">
-              {event.rewardTypes.map((reward, index) => (
-                <Badge 
-                  key={index} 
-                  className="bg-royal-gold/10 text-royal-gold hover:bg-royal-gold/20 border-royal-gold/30"
-                >
-                  <Trophy className="h-3 w-3 mr-1" />
-                  {reward}
-                </Badge>
-              ))}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
+            <div className="p-4 w-full">
+              <div className="flex justify-between items-end">
+                <div>
+                  <Badge 
+                    variant="outline" 
+                    className={isActive 
+                      ? "bg-royal-gold/20 border-royal-gold text-royal-gold" 
+                      : "bg-white/10 border-white/20"
+                    }
+                  >
+                    {isActive ? "Active Now" : "Upcoming Event"}
+                  </Badge>
+                </div>
+                
+                <div>
+                  <CountdownTimer 
+                    targetDate={isActive ? eventDetails.endDate : eventDetails.startDate} 
+                    variant="compact" 
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </div>
         
-        <RoyalDivider variant="line" label="EVENT DETAILS" color="gold" className="my-4" />
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+        <div className="space-y-6">
           <div>
-            <h4 className="text-sm font-medium text-white mb-2 flex items-center">
-              <Info className="h-4 w-4 mr-1 text-royal-purple" />
+            <h3 className="font-bold royal-gradient text-lg mb-2">About the Event</h3>
+            <p className="text-white/80">{eventDetails.description}</p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="glass-morphism border-white/10 p-4 rounded-lg">
+              <h4 className="font-medium mb-3 flex items-center">
+                <Calendar className="h-4 w-4 mr-2 text-royal-gold" />
+                Event Schedule
+              </h4>
+              
+              <div className="space-y-2">
+                <div className="flex justify-between">
+                  <span className="text-white/70">Starts:</span>
+                  <span>{formatDate(eventDetails.startDate, { weekday: 'short', month: 'short', day: 'numeric' })}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-white/70">Ends:</span>
+                  <span>{formatDate(eventDetails.endDate, { weekday: 'short', month: 'short', day: 'numeric' })}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-white/70">Duration:</span>
+                  <span>{getDurationText(eventDetails)}</span>
+                </div>
+              </div>
+            </div>
+            
+            <div className="glass-morphism border-white/10 p-4 rounded-lg">
+              <h4 className="font-medium mb-3 flex items-center">
+                <Trophy className="h-4 w-4 mr-2 text-royal-gold" />
+                Rewards
+              </h4>
+              
+              <div className="flex flex-wrap gap-2">
+                {eventDetails.rewardTypes.map((reward, index) => (
+                  <Badge 
+                    key={index} 
+                    variant="outline" 
+                    className="bg-royal-gold/10 border-royal-gold/30"
+                  >
+                    {reward}
+                  </Badge>
+                ))}
+              </div>
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="glass-morphism border-white/10 p-4 rounded-lg">
+              <h4 className="font-medium mb-3 flex items-center">
+                <Users className="h-4 w-4 mr-2 text-royal-purple" />
+                Eligibility
+              </h4>
+              <p className="text-white/80">{eventDetails.eligibility}</p>
+            </div>
+            
+            <div className="glass-morphism border-white/10 p-4 rounded-lg">
+              <h4 className="font-medium mb-3 flex items-center">
+                <ShieldCheck className="h-4 w-4 mr-2 text-royal-navy" />
+                Special Rules
+              </h4>
+              <ul className="space-y-1 text-sm text-white/80">
+                {eventDetails.specialRules.map((rule, index) => (
+                  <li key={index} className="flex items-start">
+                    <span className="text-royal-gold mr-2">•</span> 
+                    <span>{rule}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+          
+          <div className="glass-morphism border-white/10 p-4 rounded-lg">
+            <h4 className="font-medium mb-3 flex items-center">
+              <Sparkles className="h-4 w-4 mr-2 text-royal-gold" />
               Participation Requirements
             </h4>
-            <ul className="space-y-1 text-sm text-white/70">
-              {event.participationRequirements.map((req, index) => (
+            <ul className="space-y-1 text-sm text-white/80">
+              {eventDetails.participationRequirements.map((req, index) => (
                 <li key={index} className="flex items-start">
-                  <span className="text-royal-gold mr-1.5">•</span>
-                  {req}
-                </li>
-              ))}
-            </ul>
-          </div>
-          
-          <div>
-            <h4 className="text-sm font-medium text-white mb-2 flex items-center">
-              <Info className="h-4 w-4 mr-1 text-royal-crimson" />
-              Special Rules
-            </h4>
-            <ul className="space-y-1 text-sm text-white/70">
-              {event.specialRules.map((rule, index) => (
-                <li key={index} className="flex items-start">
-                  <span className="text-royal-gold mr-1.5">•</span>
-                  {rule}
+                  <span className="text-royal-gold mr-2">•</span> 
+                  <span>{req}</span>
                 </li>
               ))}
             </ul>
           </div>
         </div>
-        
-        <DialogFooter className="flex flex-col sm:flex-row gap-2 mt-4">
-          {!isEventActive && (
-            <Button 
-              variant="outline" 
-              className="w-full sm:w-auto glass-morphism border-white/10 hover:bg-white/10"
-              onClick={handleRemindMe}
-            >
-              <Bell className="mr-2 h-4 w-4" />
-              Remind Me
-            </Button>
-          )}
-          
-          <Button 
-            className={`w-full sm:w-auto ${
-              isEventActive
-                ? 'bg-gradient-to-r from-royal-crimson via-royal-gold to-royal-navy text-white'
-                : 'glass-morphism border-white/10 hover:bg-white/10'
-            }`}
-          >
-            <Trophy className="mr-2 h-4 w-4" />
-            {isEventActive ? 'Participate Now' : 'Learn More'}
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+      </ScrollArea>
+    </DialogContent>
   );
 };
+
+// Helper function to get event type icon
+function getEventTypeIcon(type: string) {
+  switch (type) {
+    case 'treasure':
+      return <Trophy className="h-6 w-6 text-royal-gold" />;
+    case 'shame':
+      return <Users className="h-6 w-6 text-royal-crimson" />;
+    case 'team':
+      return <Trophy className="h-6 w-6 text-royal-navy" />;
+    default:
+      return <Calendar className="h-6 w-6 text-royal-gold" />;
+  }
+}
+
+// Helper function to calculate event duration
+function getDurationText(event: EventDetails): string {
+  const startDate = new Date(event.startDate);
+  const endDate = new Date(event.endDate);
+  
+  const diffTime = Math.abs(endDate.getTime() - startDate.getTime());
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  
+  if (diffDays === 1) return "1 day";
+  if (diffDays < 7) return `${diffDays} days`;
+  if (diffDays === 7) return "1 week";
+  
+  const weeks = Math.floor(diffDays / 7);
+  const remainingDays = diffDays % 7;
+  
+  if (remainingDays === 0) return `${weeks} week${weeks > 1 ? 's' : ''}`;
+  return `${weeks} week${weeks > 1 ? 's' : ''} and ${remainingDays} day${remainingDays > 1 ? 's' : ''}`;
+}
 
 export default EventDetailsModal;

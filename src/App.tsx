@@ -1,3 +1,4 @@
+
 import React, { useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import useNotificationSounds from '@/hooks/use-notification-sounds';
@@ -13,8 +14,9 @@ import Auth from '@/pages/Auth';
 
 // Import CSS files
 import './index.css';
-import './styles/medieval-animations.css';
-import './styles/cosmetics.css';
+import './styles/animations.css'; // Consolidated animations
+import './styles/profile-boost.css';
+import './styles/shame-effects.css';
 
 // Import fonts
 const importFonts = () => {

@@ -1,59 +1,37 @@
 
-import { useMemo } from 'react';
-import { eventStats, currentEvent, upcomingEvents } from '../data';
+import { useState, useEffect } from 'react';
+import { eventStats, currentEvent } from '../data';
+import { EventStats } from '@/types/events';
 
-export const useEventStatistics = () => {
-  // Count active events
-  const totalEvents = useMemo(() => {
-    // Current + any other active events
-    return 1 + upcomingEvents.filter(event => 
-      new Date(event.startDate) <= new Date() && 
-      new Date(event.endDate) >= new Date()
-    ).length;
+export function useEventStatistics() {
+  const [stats, setStats] = useState<EventStats>(eventStats);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
+  
+  // In a real app, this would fetch from an API
+  useEffect(() => {
+    // Simulate API loading
+    setIsLoading(true);
+    
+    // Simulate API call delay
+    const timer = setTimeout(() => {
+      try {
+        // In a real app, this would be an API call
+        setStats(eventStats);
+        setIsLoading(false);
+      } catch (err) {
+        setError(err instanceof Error ? err : new Error('Failed to load event statistics'));
+        setIsLoading(false);
+      }
+    }, 500);
+    
+    return () => clearTimeout(timer);
   }, []);
-
-  // Get prize pool from event stats, format with commas
-  const prizePool = useMemo(() => {
-    return new Intl.NumberFormat('en-US').format(eventStats.prizePool);
-  }, []);
-
-  // Get participant count
-  const participantsCount = useMemo(() => {
-    return eventStats.participantsCount;
-  }, []);
-
-  // Get pokes used
-  const pokesUsed = useMemo(() => {
-    return eventStats.totalPokes; // Updated to use the property from eventStats
-  }, []);
-
-  // Calculate top pokers (most active participants)
-  const topPokers = useMemo(() => {
-    return [
-      { username: 'WealthWizard', count: 32 },
-      { username: 'DiamondWallet', count: 27 },
-      { username: 'GoldenPocket', count: 24 }
-    ];
-  }, []);
-
-  // Calculate most poked users
-  const mostPokedUsers = useMemo(() => {
-    return [
-      { username: 'SilverBaron', count: eventStats.mostPoked.pokeCount },
-      { username: 'RegalSpender', count: 12 },
-      { username: 'GoldenKnight', count: 8 }
-    ];
-  }, []);
-
+  
   return {
-    totalEvents,
-    prizePool,
-    participantsCount,
-    pokesUsed,
-    topPokers,
-    mostPokedUsers,
+    stats,
     currentEvent,
-    activeEvents: [currentEvent], // Would normally filter based on date
+    isLoading,
+    error
   };
-};
-
+}
