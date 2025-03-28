@@ -1,259 +1,50 @@
 
 import { UserProfile } from '@/types/user';
 
-export type SpendingCategory = 
-  | 'rank_boost' 
-  | 'team_contribution' 
-  | 'profile_upgrade' 
-  | 'event' 
-  | 'cosmetic' 
-  | 'founder' 
-  | 'poke' 
-  | 'shame'
-  | 'wish'
-  | 'spend'
-  | 'advertisement'
-  | 'profile_boost';
-
-export interface Transaction {
-  id: string;
-  userId: string;
-  amount: number;
-  type: 'deposit' | 'spend' | 'withdrawal' | 'shame' | 'advertisement' | 'subscription' | 'wish' | 'profile_boost';
-  description: string;
-  timestamp: Date;
-  metadata?: any;
-}
-
-// Mock user transactions stored in localStorage
-const getUserTransactionsFromStorage = (userId: string): Transaction[] => {
-  const storageKey = `user_transactions_${userId}`;
-  const storedTransactions = localStorage.getItem(storageKey);
-  
-  if (storedTransactions) {
-    try {
-      const parsed = JSON.parse(storedTransactions);
-      return parsed.map((t: any) => ({
-        ...t,
-        timestamp: new Date(t.timestamp)
-      }));
-    } catch (error) {
-      console.error("Error parsing transactions:", error);
-    }
-  }
-  
-  return [];
-};
-
-// Save transactions to localStorage
-const saveTransactionsToStorage = (userId: string, transactions: Transaction[]) => {
-  const storageKey = `user_transactions_${userId}`;
-  localStorage.setItem(storageKey, JSON.stringify(transactions));
-};
-
-// Get user transactions
-export const getUserTransactions = async (userId: string, limit = 10): Promise<Transaction[]> => {
-  // In a real app, this would be an API call
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      const transactions = getUserTransactionsFromStorage(userId);
-      // Sort by timestamp, newest first
-      const sorted = transactions.sort((a, b) => 
-        new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
-      );
-      
-      // Apply limit
-      const limited = sorted.slice(0, limit);
-      resolve(limited);
-    }, 500); // Simulate network delay
-  });
-};
-
-// Add funds to user wallet
-export const depositToWallet = async (
-  user: UserProfile,
-  amount: number,
-  description = "Wallet deposit",
-  updateUserProfile?: (data: Partial<UserProfile>) => Promise<void>
-): Promise<boolean> => {
-  // In a real app, this would call an API
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      try {
-        // Get existing transactions
-        const transactions = getUserTransactionsFromStorage(user.id);
-        
-        // Create new transaction
-        const newTransaction: Transaction = {
-          id: `dep_${Date.now()}`,
-          userId: user.id,
-          amount: amount,
-          type: 'deposit',
-          description: description || `Added $${amount.toFixed(2)} to wallet`,
-          timestamp: new Date()
-        };
-        
-        // Add to transactions
-        transactions.push(newTransaction);
-        
-        // Save transactions
-        saveTransactionsToStorage(user.id, transactions);
-        
-        // Update user balance if updateUserProfile function is provided
-        if (updateUserProfile) {
-          updateUserProfile({
-            ...user,
-            walletBalance: (user.walletBalance || 0) + amount
-          });
-        }
-        
-        resolve(true);
-      } catch (error) {
-        console.error("Error depositing to wallet:", error);
-        resolve(false);
-      }
-    }, 800); // Simulate network delay
-  });
-};
-
-// Spend from user wallet
+/**
+ * Updates a user's wallet balance by spending money
+ */
 export const spendFromWallet = async (
   user: UserProfile,
   amount: number,
-  category: SpendingCategory,
+  category: 'cosmetic' | 'boost' | 'founder' | 'other',
   description: string,
-  metadata?: any
+  metadata: Record<string, any> = {}
 ): Promise<boolean> => {
-  // In a real app, this would call an API
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      try {
-        // Get existing transactions
-        const transactions = getUserTransactionsFromStorage(user.id);
-        
-        // Create new transaction
-        const newTransaction: Transaction = {
-          id: `spe_${Date.now()}`,
-          userId: user.id,
-          amount: amount,
-          type: 'spend',
-          description: description,
-          timestamp: new Date(),
-          metadata: metadata
-        };
-        
-        // Add to transactions
-        transactions.push(newTransaction);
-        
-        // Save transactions
-        saveTransactionsToStorage(user.id, transactions);
-        
-        // In a real app we would update the user's balance in the database
-        // For now, just return true to indicate success
-        resolve(true);
-      } catch (error) {
-        console.error("Error spending from wallet:", error);
-        resolve(false);
-      }
-    }, 800); // Simulate network delay
-  });
+  // Check if user has enough balance
+  if (user.walletBalance < amount) {
+    console.error('Not enough balance to spend', { user, amount });
+    return false;
+  }
+  
+  try {
+    // In a real app, this would be an API call
+    console.log('Spending from wallet', { user, amount, category, description, metadata });
+    
+    // For this mock implementation, we'll just return true
+    return true;
+  } catch (error) {
+    console.error('Error spending from wallet', error);
+    return false;
+  }
 };
 
-// Track profile analytics
+/**
+ * Tracks a profile interaction for analytics
+ */
 export const trackProfileInteraction = async (
   profileId: string,
-  interactionType: 'view' | 'click',
-  source: string,
-  referrer?: string
+  interactionType: 'view' | 'click' | 'follow' | 'share',
+  source: string
 ): Promise<boolean> => {
-  // In a real app, this would call an API to track the interaction
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      try {
-        // Get storage key for analytics
-        const storageKey = `profile_analytics_${profileId}`;
-        
-        // Get existing analytics
-        const existingAnalytics = localStorage.getItem(storageKey);
-        let analytics = existingAnalytics ? JSON.parse(existingAnalytics) : {
-          views: 0,
-          clicks: 0,
-          sources: {},
-          referrers: {},
-          history: []
-        };
-        
-        // Update analytics
-        if (interactionType === 'view') {
-          analytics.views += 1;
-        } else if (interactionType === 'click') {
-          analytics.clicks += 1;
-        }
-        
-        // Track source
-        if (source) {
-          analytics.sources[source] = (analytics.sources[source] || 0) + 1;
-        }
-        
-        // Track referrer
-        if (referrer) {
-          analytics.referrers[referrer] = (analytics.referrers[referrer] || 0) + 1;
-        }
-        
-        // Add to history
-        analytics.history.push({
-          type: interactionType,
-          source,
-          referrer,
-          timestamp: new Date()
-        });
-        
-        // Limit history size
-        if (analytics.history.length > 100) {
-          analytics.history = analytics.history.slice(-100);
-        }
-        
-        // Save updated analytics
-        localStorage.setItem(storageKey, JSON.stringify(analytics));
-        
-        resolve(true);
-      } catch (error) {
-        console.error("Error tracking profile interaction:", error);
-        resolve(false);
-      }
-    }, 300); // Simulate network delay
-  });
-};
-
-// Get profile analytics
-export const getProfileAnalytics = async (profileId: string): Promise<any> => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      try {
-        // Get storage key for analytics
-        const storageKey = `profile_analytics_${profileId}`;
-        
-        // Get existing analytics
-        const existingAnalytics = localStorage.getItem(storageKey);
-        const analytics = existingAnalytics ? JSON.parse(existingAnalytics) : {
-          views: 0,
-          clicks: 0,
-          sources: {},
-          referrers: {},
-          history: []
-        };
-        
-        resolve(analytics);
-      } catch (error) {
-        console.error("Error getting profile analytics:", error);
-        resolve({
-          views: 0,
-          clicks: 0,
-          sources: {},
-          referrers: {},
-          history: []
-        });
-      }
-    }, 500); // Simulate network delay
-  });
+  try {
+    // In a real app, this would be an API call
+    console.log('Tracking profile interaction', { profileId, interactionType, source });
+    
+    // For this mock implementation, we'll just return true
+    return true;
+  } catch (error) {
+    console.error('Error tracking profile interaction', error);
+    return false;
+  }
 };

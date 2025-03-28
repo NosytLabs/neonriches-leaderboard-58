@@ -1,157 +1,94 @@
 
-import { UserProfile } from '@/types/user';
+import { useEffect, useState } from 'react';
+import { UserProfile, ProfileBoost } from '@/types/user';
 
-export type BoostEffect = 'glow' | 'rainbow' | 'pulse' | 'sparkle' | 'crown' | 'shimmer' | 'flames' | 'banner';
+export type BoostEffect = 'glow' | 'sparkle' | 'crown' | 'pulse' | 'rainbow';
 
-export interface ProfileBoost {
-  id: string;
-  effectId: BoostEffect;
-  startTime: number;
-  endTime: number;
-}
-
-export interface BoostEffectDetails {
-  name: string;
-  cssClass: string;
-  description: string;
-  icon: string;
-  rarity: 'common' | 'uncommon' | 'rare' | 'legendary';
-}
-
-// All available boost effects with their details
-export const boostEffects: Record<BoostEffect, BoostEffectDetails> = {
+export const boostEffects: Record<BoostEffect, { name: string, description: string, price: number }> = {
   glow: {
     name: 'Royal Glow',
-    cssClass: 'royal-glow',
-    description: 'A subtle golden glow surrounds your profile elements',
-    icon: '✨',
-    rarity: 'common'
+    description: 'A subtle golden glow around your profile',
+    price: 10
   },
-  rainbow: {
-    name: 'Rainbow Text',
-    cssClass: 'royal-rainbow-text',
-    description: 'Your text shimmers with rainbow colors',
-    icon: '🌈',
-    rarity: 'uncommon'
+  sparkle: {
+    name: 'Enchanted Sparkles',
+    description: 'Magical sparkles that appear around your profile elements',
+    price: 20
+  },
+  crown: {
+    name: 'Crown Aura',
+    description: 'A crown appears above your profile with a magical aura',
+    price: 40
   },
   pulse: {
     name: 'Royal Pulse',
-    cssClass: 'royal-pulse',
     description: 'Your profile elements pulse with royal energy',
-    icon: '💫',
-    rarity: 'uncommon'
+    price: 30
   },
-  sparkle: {
-    name: 'Royal Sparkle',
-    cssClass: 'royal-sparkle',
-    description: 'Sparkling effects adorn your profile elements',
-    icon: '⭐',
-    rarity: 'rare'
-  },
-  crown: {
-    name: 'Crown Effect',
-    cssClass: 'royal-crown',
-    description: 'A majestic crown effect appears on your profile',
-    icon: '👑',
-    rarity: 'rare'
-  },
-  shimmer: {
-    name: 'Gold Shimmer',
-    cssClass: 'royal-shimmer',
-    description: 'Your profile shimmers with gold accents',
-    icon: '✨',
-    rarity: 'rare'
-  },
-  flames: {
-    name: 'Royal Flames',
-    cssClass: 'royal-flames',
-    description: 'Magical flames surround your profile elements',
-    icon: '🔥',
-    rarity: 'legendary'
-  },
-  banner: {
-    name: 'Royal Banner',
-    cssClass: 'royal-banner',
-    description: 'A royal banner decorates your profile',
-    icon: '🏰',
-    rarity: 'legendary'
+  rainbow: {
+    name: 'Rainbow Royalty',
+    description: 'A shifting rainbow glow surrounds your profile',
+    price: 50
   }
 };
 
-/**
- * Hook for handling profile boost effects
- */
-export const useProfileBoost = (user?: UserProfile | null) => {
-  /**
-   * Get all active boost effects for a user
-   */
-  const getActiveBoosts = () => {
-    if (!user?.profileBoosts || !Array.isArray(user.profileBoosts)) {
-      return [];
+export const useProfileBoost = (user: UserProfile | null) => {
+  const [activeBoosts, setActiveBoosts] = useState<ProfileBoost[]>([]);
+  
+  useEffect(() => {
+    if (!user || !user.profileBoosts) {
+      setActiveBoosts([]);
+      return;
     }
     
+    // Filter only active boosts
     const currentTime = Date.now();
-    return user.profileBoosts.filter(boost => boost.endTime > currentTime);
-  };
-
-  /**
-   * Get CSS classes for active boost effects
-   */
-  const getBoostClasses = (type: 'text' | 'card' | 'container' = 'text'): string => {
-    const activeBoosts = getActiveBoosts();
+    const currentActiveBoosts = user.profileBoosts.filter(
+      boost => boost.endTime > currentTime
+    );
     
-    if (activeBoosts.length === 0) {
-      return '';
+    setActiveBoosts(currentActiveBoosts);
+    
+    // Set up interval to check for expired boosts
+    const interval = setInterval(() => {
+      const now = Date.now();
+      setActiveBoosts(prev => prev.filter(boost => boost.endTime > now));
+    }, 60000); // Check every minute
+    
+    return () => clearInterval(interval);
+  }, [user]);
+  
+  const getBoostEffect = (effectId: string): BoostEffect | undefined => {
+    if (Object.keys(boostEffects).includes(effectId)) {
+      return effectId as BoostEffect;
     }
-    
-    // Get container class based on type
-    const containerClass = (() => {
-      switch (type) {
-        case 'card':
-          return 'boosted-profile-card';
-        case 'container':
-          return 'profile-boost-container';
-        default:
-          return '';
-      }
-    })();
-    
-    // Get effect classes
-    const effectClasses = activeBoosts
-      .map(boost => boostEffects[boost.effectId as BoostEffect]?.cssClass || '')
-      .filter(className => className)
-      .join(' ');
-    
-    return `${containerClass} ${effectClasses}`.trim();
+    return undefined;
   };
-
-  /**
-   * Check if a user has any active boosts
-   */
-  const hasActiveBoosts = (): boolean => {
-    return getActiveBoosts().length > 0;
+  
+  const getBoostTimeRemaining = (boost: ProfileBoost): number => {
+    const now = Date.now();
+    return Math.max(0, boost.endTime - now);
   };
-
-  /**
-   * Get time remaining for a boost
-   */
-  const getTimeRemaining = (boost: ProfileBoost): string => {
-    const timeRemaining = boost.endTime - Date.now();
-    const hours = Math.floor(timeRemaining / (1000 * 60 * 60));
+  
+  const formatTimeRemaining = (milliseconds: number): string => {
+    const seconds = Math.floor(milliseconds / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
     
-    if (hours < 24) {
-      return `${hours} hours remaining`;
+    if (days > 0) {
+      return `${days}d ${hours % 24}h`;
+    } else if (hours > 0) {
+      return `${hours}h ${minutes % 60}m`;
     } else {
-      const days = Math.floor(hours / 24);
-      return `${days} days remaining`;
+      return `${minutes}m`;
     }
   };
-
+  
   return {
-    getActiveBoosts,
-    getBoostClasses,
-    hasActiveBoosts,
-    getTimeRemaining,
-    boostEffects
+    activeBoosts,
+    getBoostEffect,
+    getBoostTimeRemaining,
+    formatTimeRemaining
   };
 };

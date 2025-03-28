@@ -3,10 +3,9 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Plus, Trash2, Link as LinkIcon } from 'lucide-react';
+import { Plus, Trash2, Link, ExternalLink } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { UserProfile } from '@/types/user';
-import { ProfileLink } from '@/types/profile';
+import { UserProfile, ProfileLink } from '@/types/user';
 
 interface LinksEditorProps {
   user: UserProfile;
@@ -14,7 +13,7 @@ interface LinksEditorProps {
   onLinksChange: (links: ProfileLink[]) => void;
 }
 
-const LinksEditor = ({ user, links, onLinksChange }: LinksEditorProps) => {
+const LinksEditor: React.FC<LinksEditorProps> = ({ user, links, onLinksChange }) => {
   const { toast } = useToast();
   const [newLinkUrl, setNewLinkUrl] = useState("");
   const [newLinkLabel, setNewLinkLabel] = useState("");
@@ -29,52 +28,60 @@ const LinksEditor = ({ user, links, onLinksChange }: LinksEditorProps) => {
       return;
     }
 
-    if (user.tier === 'free' && links.length >= 1) {
+    // Validate URL format
+    try {
+      new URL(newLinkUrl);
+    } catch (error) {
       toast({
-        title: "Limit Reached",
-        description: "Free tier users can only add 1 link. Upgrade to Pro for more!",
+        title: "Invalid URL",
+        description: "Please enter a valid URL (e.g. https://example.com)",
         variant: "destructive"
       });
       return;
     }
 
-    if (user.tier === 'pro' && links.length >= 5) {
+    // Check limits based on user tier
+    const maxLinks = user.tier === 'free' ? 1 : 
+                    user.tier === 'pro' ? 5 : 10;
+
+    if (links.length >= maxLinks) {
       toast({
         title: "Limit Reached",
-        description: "You've reached the maximum of 5 links.",
+        description: `${user.tier === 'free' ? 'Free' : 'Pro'} tier users can only add ${maxLinks} links. Upgrade for more!`,
         variant: "destructive"
       });
       return;
     }
 
-    onLinksChange([
-      ...links,
-      {
-        id: Date.now(),
-        url: newLinkUrl,
-        label: newLinkLabel
-      }
-    ]);
+    // Create a new link
+    const newLink: ProfileLink = {
+      id: Date.now(),
+      url: newLinkUrl,
+      label: newLinkLabel
+    };
+
+    onLinksChange([...links, newLink]);
     
     setNewLinkUrl("");
     setNewLinkLabel("");
   };
 
   const handleRemoveLink = (id: number) => {
-    onLinksChange(links.filter(link => link.id !== id));
+    const updatedLinks = links.filter(link => link.id !== id);
+    onLinksChange(updatedLinks);
   };
 
   return (
     <div className="space-y-6">
       <div className="space-y-4">
-        <Label className="text-base font-medium">Current Links</Label>
+        <Label className="text-base font-medium">Profile Links</Label>
         
         <div className="space-y-2">
-          {links.map(link => (
+          {links.map((link) => (
             <div key={link.id} className="glass-morphism rounded-lg p-3 border border-white/10 flex justify-between items-center">
               <div className="flex items-center">
-                <LinkIcon size={14} className="mr-2 text-white/50" />
-                <div>
+                <Link size={16} className="text-royal-gold" />
+                <div className="ml-2">
                   <p className="text-sm font-medium">{link.label}</p>
                   <p className="text-xs text-white/50 truncate max-w-[200px]">{link.url}</p>
                 </div>
@@ -91,21 +98,10 @@ const LinksEditor = ({ user, links, onLinksChange }: LinksEditorProps) => {
           ))}
         </div>
         
-        {((user.tier === 'free' && links.length < 1) || (user.tier === 'pro' && links.length < 5)) && (
+        {links.length < (user.tier === 'free' ? 1 : user.tier === 'pro' ? 5 : 10) && (
           <div className="glass-morphism rounded-lg p-4 border border-white/10 mt-4">
-            <h3 className="text-base font-medium mb-2">Add New Link</h3>
-            <div className="space-y-2">
-              <div>
-                <Label htmlFor="linkUrl">URL</Label>
-                <Input 
-                  id="linkUrl" 
-                  type="text" 
-                  placeholder="https://example.com" 
-                  value={newLinkUrl}
-                  onChange={(e) => setNewLinkUrl(e.target.value)}
-                  className="glass-morphism border-white/10"
-                />
-              </div>
+            <h3 className="text-base font-medium mb-2">Add Link</h3>
+            <div className="space-y-3">
               <div>
                 <Label htmlFor="linkLabel">Label</Label>
                 <Input 
@@ -114,6 +110,17 @@ const LinksEditor = ({ user, links, onLinksChange }: LinksEditorProps) => {
                   placeholder="My Website" 
                   value={newLinkLabel}
                   onChange={(e) => setNewLinkLabel(e.target.value)}
+                  className="glass-morphism border-white/10"
+                />
+              </div>
+              <div>
+                <Label htmlFor="linkUrl">URL</Label>
+                <Input 
+                  id="linkUrl" 
+                  type="text" 
+                  placeholder="https://example.com" 
+                  value={newLinkUrl}
+                  onChange={(e) => setNewLinkUrl(e.target.value)}
                   className="glass-morphism border-white/10"
                 />
               </div>
@@ -130,8 +137,10 @@ const LinksEditor = ({ user, links, onLinksChange }: LinksEditorProps) => {
         
         <div className="text-sm text-white/50">
           {user.tier === 'free' 
-            ? `Free tier: ${links.length}/1 links used. Upgrade to Pro for up to 5 links!` 
-            : `Pro tier: ${links.length}/5 links used.`}
+            ? `Free tier: ${links.length}/1 links used. Upgrade for more!` 
+            : user.tier === 'pro' 
+              ? `Pro tier: ${links.length}/5 links used.`
+              : `Royal tier: ${links.length}/10 links used.`}
         </div>
       </div>
     </div>

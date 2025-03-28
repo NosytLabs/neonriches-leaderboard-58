@@ -23,7 +23,11 @@ export const createDefaultUser = (): UserProfile => {
       colors: ['royal-purple'],
       fonts: ['medieval'],
       emojis: ['crown', 'gem'],
-      titles: []
+      titles: [],
+      backgrounds: [],
+      effects: [],
+      badges: [],
+      themes: []
     },
     bio: 'A noble testing the royal features of this fine kingdom.',
     marketingStats: {
@@ -63,7 +67,11 @@ export const registerUser = (email: string, username: string, password: string):
       colors: [],
       fonts: [],
       emojis: [],
-      titles: []
+      titles: [],
+      backgrounds: [],
+      effects: [],
+      badges: [],
+      themes: []
     },
     marketingStats: {
       impressions: 0,

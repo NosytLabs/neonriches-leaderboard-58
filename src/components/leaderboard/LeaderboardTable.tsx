@@ -19,7 +19,7 @@ import {
   Egg
 } from 'lucide-react';
 import { UserProfile } from '@/types/user';
-import { getTeamColorHex } from '@/lib/colors';
+import { getTeamColor } from '@/lib/colors';
 import { Button } from '../ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
@@ -48,7 +48,7 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
 
   const getTeamIcon = (team?: string) => {
     if (!team) return null;
-    const color = getTeamColorHex(team);
+    const color = getTeamColor(team);
     return <Shield size={14} style={{ color }} />;
   };
 

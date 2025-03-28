@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import LeaderboardHeader from './LeaderboardHeader';
 import LeaderboardFilters from './LeaderboardFilters';
@@ -8,9 +7,38 @@ import { mockLeaderboardData } from './LeaderboardData';
 import { useToast } from '@/hooks/use-toast';
 import { Crown, Coins } from 'lucide-react';
 import { useFloatingCoins } from '@/hooks/use-floating-coins';
+import { UserProfile } from '@/types/user';
 
 const RoyalCourt = () => {
-  const [leaderboardData, setLeaderboardData] = useState(mockLeaderboardData);
+  // Convert mock leaderboard data to UserProfile format
+  const convertedLeaderboardData: UserProfile[] = mockLeaderboardData.map(user => ({
+    id: user.id.toString(),
+    username: user.username,
+    email: `${user.username.toLowerCase()}@example.com`,
+    profileImage: user.profileImage,
+    amountSpent: user.amountSpent,
+    walletBalance: 0,
+    rank: user.rank,
+    spendStreak: Math.floor(Math.random() * 10),
+    tier: 'crab',
+    team: user.team as any || 'none',
+    gender: 'king',
+    joinDate: new Date(),
+    cosmetics: {
+      borders: [],
+      colors: [],
+      fonts: [],
+      emojis: [],
+      titles: [],
+      backgrounds: [],
+      effects: [],
+      badges: [],
+      themes: []
+    },
+    socialLinks: []
+  }));
+  
+  const [leaderboardData, setLeaderboardData] = useState<UserProfile[]>(convertedLeaderboardData);
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
   const [activeFilter, setActiveFilter] = useState<string | null>(null);
   const { toast } = useToast();
@@ -55,11 +83,11 @@ const RoyalCourt = () => {
     setActiveFilter(team);
     
     if (team === null) {
-      setLeaderboardData(mockLeaderboardData);
+      setLeaderboardData(convertedLeaderboardData);
       return;
     }
     
-    const filteredData = mockLeaderboardData.filter(user => user.team === team);
+    const filteredData = convertedLeaderboardData.filter(user => user.team === team);
     setLeaderboardData(filteredData);
     
     // Satirical toast based on team selection

@@ -1,114 +1,64 @@
 
 import React from 'react';
-import { cn } from '@/lib/utils';
-
-export type MedievalIconName = 
-  | 'crown' 
-  | 'scroll' 
-  | 'seal' 
-  | 'coins' 
-  | 'pattern'
-  | 'sword'
-  | 'parchment'
-  | 'treasure'
-  | 'chalice'
-  | 'key'
-  | 'shield'
-  | 'quill'
-  | 'torch';
+import { Crown, Award, Shield, Book, Sword, Scroll, ThumbsUp } from 'lucide-react';
 
 interface MedievalIconProps {
-  name: MedievalIconName;
-  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
-  className?: string;
+  name: string;
+  size?: 'xs' | 'sm' | 'md' | 'lg';
+  color?: 'gold' | 'silver' | 'copper' | 'default';
   animate?: boolean;
-  color?: 'gold' | 'crimson' | 'navy' | 'default' | 'bronze' | 'silver' | 'mahogany';
+  className?: string;
 }
 
-const MedievalIcon: React.FC<MedievalIconProps> = ({
-  name,
-  size = 'md',
-  className,
+const MedievalIcon: React.FC<MedievalIconProps> = ({ 
+  name, 
+  size = 'md', 
+  color = 'default',
   animate = false,
-  color = 'default'
+  className = ''
 }) => {
-  const sizesMap = {
-    xs: 'w-4 h-4',
-    sm: 'w-5 h-5',
-    md: 'w-8 h-8',
-    lg: 'w-12 h-12',
-    xl: 'w-16 h-16',
-    '2xl': 'w-24 h-24'
-  };
-  
-  const animationClass = animate 
-    ? name === 'crown' ? 'animate-crown-glow'
-    : name === 'scroll' || name === 'parchment' ? 'animate-quill-write'
-    : name === 'seal' ? 'animate-seal-stamp'
-    : name === 'coins' || name === 'treasure' ? 'animate-coin-flip'
-    : name === 'sword' ? 'animate-bounce-subtle'
-    : name === 'quill' ? 'animate-quill-write'
-    : name === 'torch' ? 'animate-flame-flicker'
-    : ''
-    : '';
-  
-  const colorFilter = 
-    color === 'gold' ? 'brightness-110 sepia(0.3) hue-rotate(5deg) saturate(1.5)'
-    : color === 'crimson' ? 'brightness-90 sepia(0.3) hue-rotate(300deg) saturate(1.5)'
-    : color === 'navy' ? 'brightness-90 sepia(0.3) hue-rotate(180deg) saturate(1.5)'
-    : color === 'bronze' ? 'brightness-90 sepia(0.3) hue-rotate(30deg) saturate(1.2)'
-    : color === 'silver' ? 'brightness-110 saturate(0) hue-rotate(10deg)'
-    : color === 'mahogany' ? 'brightness-90 sepia(0.4) hue-rotate(350deg) saturate(1.7)'
-    : '';
-    
-  const getIconPath = (): string => {
-    switch (name) {
-      case 'crown':
-        return '/throne-assets/crown-icon.svg';
-      case 'scroll':
-        return '/throne-assets/scroll-icon.svg';
-      case 'seal':
-        return '/throne-assets/royal-seal.svg';
-      case 'coins':
-        return '/throne-assets/coin-stack.svg';
-      case 'pattern':
-        return '/throne-assets/medieval-patterns.svg';
-      case 'sword':
-        return '/throne-assets/medieval-sword.svg';
-      case 'parchment':
-        return '/throne-assets/parchment-scroll.svg';
-      case 'treasure':
-        return '/throne-assets/treasure-chest.svg';
-      case 'chalice':
-        return '/throne-assets/chalice.svg';
-      case 'key':
-        return '/throne-assets/royal-key.svg';
-      case 'shield':
-        return '/throne-assets/shield-emblem.svg';
-      case 'quill':
-        return '/throne-assets/quill-pen.svg';
-      case 'torch':
-        return '/throne-assets/medieval-torch.svg';
-      default:
-        return '/throne-assets/crown-icon.svg';
+  const getSize = (): number => {
+    switch (size) {
+      case 'xs': return 14;
+      case 'sm': return 18;
+      case 'md': return 24;
+      case 'lg': return 32;
+      default: return 24;
     }
   };
-
-  return (
-    <div className={cn(
-      sizesMap[size],
-      animationClass,
-      colorFilter,
-      'relative inline-block',
-      className
-    )}>
-      <img 
-        src={getIconPath()} 
-        alt={`${name} icon`} 
-        className="w-full h-full object-contain"
-      />
-    </div>
-  );
+  
+  const getColor = (): string => {
+    switch (color) {
+      case 'gold': return '#D4AF37';
+      case 'silver': return '#C0C0C0';
+      case 'copper': return '#B87333';
+      default: return 'currentColor';
+    }
+  };
+  
+  const animationClass = animate ? 'animate-pulse-slow' : '';
+  const combinedClassName = `${animationClass} ${className}`;
+  const iconSize = getSize();
+  const iconColor = getColor();
+  
+  switch (name.toLowerCase()) {
+    case 'crown':
+      return <Crown size={iconSize} color={iconColor} className={combinedClassName} />;
+    case 'award':
+      return <Award size={iconSize} color={iconColor} className={combinedClassName} />;
+    case 'shield':
+      return <Shield size={iconSize} color={iconColor} className={combinedClassName} />;
+    case 'book':
+      return <Book size={iconSize} color={iconColor} className={combinedClassName} />;
+    case 'sword':
+      return <Sword size={iconSize} color={iconColor} className={combinedClassName} />;
+    case 'scroll':
+      return <Scroll size={iconSize} color={iconColor} className={combinedClassName} />;
+    case 'seal':
+      return <Award size={iconSize} color={iconColor} className={combinedClassName} />;
+    default:
+      return <ThumbsUp size={iconSize} color={iconColor} className={combinedClassName} />;
+  }
 };
 
 export default MedievalIcon;

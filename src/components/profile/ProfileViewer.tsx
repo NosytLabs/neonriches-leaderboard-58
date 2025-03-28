@@ -2,7 +2,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Eye, Link as LinkIcon, ExternalLink, Shield, Trophy, Calendar, Heart, Crown, Instagram, Twitter, Facebook, Linkedin, Globe } from 'lucide-react';
-import { UserProfile, SocialLink } from '@/contexts/AuthContext';
+import { UserProfile, SocialLink } from '@/types/user';
 import { getTeamBgColorClass, getTeamTextColorClass, getSpendingTier, getSpendingTierLabel } from '@/lib/colors';
 import { getTitleById } from '@/types/medievalTitles';
 import MedievalIcon from '@/components/ui/medieval-icon';

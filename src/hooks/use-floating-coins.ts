@@ -1,126 +1,85 @@
 
-import { useRef, useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
-interface FloatingCoinOptions {
-  frequency?: number;
-  duration?: number;
-  minDelay?: number;
-  maxDelay?: number;
-  minSize?: number;
-  maxSize?: number;
+interface FloatingCoinsOptions {
+  containerRef: React.RefObject<HTMLElement>;
+  frequency?: number; // 0-1 probability of coin appearing
+  duration?: number; // Animation duration in ms
+  minDelay?: number; // Minimum delay between coins
+  maxDelay?: number; // Maximum delay between coins
 }
 
-// Hook version for component use
-export function useFloatingCoins({
+export const useFloatingCoins = ({
   containerRef,
-  frequency = 0.5,
+  frequency = 0.3,
   duration = 3000,
-  minDelay = 0,
-  maxDelay = 1000,
-  minSize = 15,
-  maxSize = 30
-}: {
-  containerRef: React.RefObject<HTMLElement>;
-  frequency?: number;
-  duration?: number;
-  minDelay?: number;
-  maxDelay?: number;
-  minSize?: number;
-  maxSize?: number;
-}) {
-  const intervalRef = useRef<number | null>(null);
+  minDelay = 2000,
+  maxDelay = 10000
+}: FloatingCoinsOptions) => {
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   
   useEffect(() => {
-    if (!containerRef.current) return;
-    
-    const container = containerRef.current;
-    const createCoins = () => {
-      if (Math.random() < frequency) {
-        createCoin(container, { duration, minSize, maxSize });
+    const createCoin = () => {
+      if (!containerRef.current) return;
+      
+      // Random chance to create a coin based on frequency
+      if (Math.random() > frequency) {
+        scheduleNextCoin();
+        return;
       }
+      
+      const containerRect = containerRef.current.getBoundingClientRect();
+      
+      // Create coin element
+      const coin = document.createElement('div');
+      coin.className = 'absolute text-royal-gold transition-all duration-500 pointer-events-none z-10';
+      coin.textContent = '💰';
+      coin.style.opacity = '0';
+      coin.style.transform = 'scale(0.5)';
+      
+      // Position randomly within the container
+      const xPos = Math.random() * (containerRect.width - 40);
+      coin.style.left = `${xPos}px`;
+      coin.style.bottom = '-20px';
+      
+      // Append to container
+      containerRef.current.appendChild(coin);
+      
+      // Start animation after a small delay
+      setTimeout(() => {
+        coin.style.opacity = '1';
+        coin.style.transform = 'scale(1)';
+        
+        const finalYPos = containerRect.height * (0.3 + Math.random() * 0.5);
+        coin.style.bottom = `${finalYPos}px`;
+      }, 10);
+      
+      // Remove coin after animation completes
+      setTimeout(() => {
+        coin.style.opacity = '0';
+        setTimeout(() => {
+          coin.remove();
+        }, 500);
+      }, duration);
+      
+      scheduleNextCoin();
     };
     
-    // Initial creation
-    createCoins();
+    const scheduleNextCoin = () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+      
+      const nextDelay = minDelay + Math.random() * (maxDelay - minDelay);
+      timeoutRef.current = setTimeout(createCoin, nextDelay);
+    };
     
-    // Setup interval
-    intervalRef.current = window.setInterval(createCoins, 
-      Math.floor(Math.random() * (maxDelay - minDelay)) + minDelay
-    );
+    scheduleNextCoin();
     
     return () => {
-      if (intervalRef.current) {
-        window.clearInterval(intervalRef.current);
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
       }
     };
-  }, [containerRef, frequency, duration, minDelay, maxDelay, minSize, maxSize]);
-}
-
-// Function version for imperative use
-export function createFloatingCoins(
-  container: HTMLElement, 
-  options: FloatingCoinOptions = {}
-) {
-  const {
-    frequency = 0.8,
-    duration = 3000,
-    minSize = 15,
-    maxSize = 30
-  } = options;
-  
-  // Create multiple coins based on frequency
-  for (let i = 0; i < 5; i++) {
-    if (Math.random() < frequency) {
-      createCoin(container, { duration, minSize, maxSize });
-    }
-  }
-}
-
-// Helper function to create a single coin
-function createCoin(
-  container: HTMLElement, 
-  { duration = 3000, minSize = 15, maxSize = 30 }: Partial<FloatingCoinOptions> = {}
-) {
-  const coin = document.createElement('div');
-  const size = Math.floor(Math.random() * (maxSize - minSize)) + minSize;
-  
-  // Position randomly at the bottom of the container
-  const containerRect = container.getBoundingClientRect();
-  const startX = Math.random() * containerRect.width;
-  
-  // Apply styles
-  Object.assign(coin.style, {
-    position: 'absolute',
-    width: `${size}px`,
-    height: `${size}px`,
-    bottom: '0px',
-    left: `${startX}px`,
-    backgroundImage: 'url("/throne-assets/coin-gold.svg")',
-    backgroundSize: 'contain',
-    backgroundRepeat: 'no-repeat',
-    zIndex: '10',
-    opacity: '0.8',
-    pointerEvents: 'none'
-  });
-  
-  coin.classList.add('floating-particle');
-  
-  // Apply animation
-  coin.animate(
-    [
-      { transform: 'translateY(0) rotate(0deg)', opacity: 0.8 },
-      { transform: `translateY(-${containerRect.height * 0.6}px) rotate(${Math.random() * 360}deg)`, opacity: 0 }
-    ],
-    {
-      duration,
-      easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)',
-      fill: 'forwards'
-    }
-  );
-  
-  // Add to container and remove after animation
-  container.appendChild(coin);
-  setTimeout(() => {
-    container.removeChild(coin);
-  }, duration + 100);
-}
+  }, [containerRef, frequency, duration, minDelay, maxDelay]);
+};

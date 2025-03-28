@@ -1,10 +1,9 @@
 
 import React from 'react';
-import { Button } from '@/components/ui/button';
-import { ChevronLeft, Edit } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Eye, Edit, Settings, Sparkles } from 'lucide-react';
 
-export type ProfileTab = 'view' | 'settings' | 'analytics' | 'marketing' | 'boost';
+export type ProfileTab = 'view' | 'edit' | 'settings' | 'boost';
 
 interface ProfileTabNavigationProps {
   viewOnly: boolean;
@@ -17,63 +16,35 @@ const ProfileTabNavigation: React.FC<ProfileTabNavigationProps> = ({
   tab, 
   setTab 
 }) => {
-  const navigate = useNavigate();
-
   return (
-    <div className="flex justify-between items-center mb-6">
-      <Button
-        variant="outline"
-        className="glass-morphism border-white/10"
-        onClick={() => navigate(-1)}
-      >
-        <ChevronLeft size={16} className="mr-1" />
-        Back
-      </Button>
-      
-      {!viewOnly && (
-        <div className="space-x-3">
-          <Button 
-            variant={tab === 'view' ? "default" : "outline"}
-            className={tab === 'view' ? 'bg-royal-gold text-black' : 'glass-morphism border-white/10'}
-            onClick={() => setTab('view')}
-          >
-            Profile
-          </Button>
+    <div className="mb-6">
+      <Tabs value={tab} onValueChange={(value) => setTab(value as ProfileTab)}>
+        <TabsList className="grid grid-cols-2 md:grid-cols-4">
+          <TabsTrigger value="view" className="flex items-center gap-2">
+            <Eye size={16} />
+            <span>View</span>
+          </TabsTrigger>
           
-          <Button 
-            variant={tab === 'settings' ? "default" : "outline"}
-            className={tab === 'settings' ? 'bg-royal-gold text-black' : 'glass-morphism border-white/10'}
-            onClick={() => setTab('settings')}
-          >
-            <Edit size={16} className="mr-1" />
-            Edit
-          </Button>
-          
-          <Button 
-            variant={tab === 'analytics' ? "default" : "outline"}
-            className={tab === 'analytics' ? 'bg-royal-gold text-black' : 'glass-morphism border-white/10'}
-            onClick={() => setTab('analytics')}
-          >
-            Analytics
-          </Button>
-          
-          <Button 
-            variant={tab === 'boost' ? "default" : "outline"}
-            className={tab === 'boost' ? 'bg-royal-gold text-black' : 'glass-morphism border-white/10'}
-            onClick={() => setTab('boost')}
-          >
-            Boost
-          </Button>
-          
-          <Button 
-            variant={tab === 'marketing' ? "default" : "outline"}
-            className={tab === 'marketing' ? 'bg-royal-gold text-black' : 'glass-morphism border-white/10'}
-            onClick={() => setTab('marketing')}
-          >
-            Marketing
-          </Button>
-        </div>
-      )}
+          {!viewOnly && (
+            <>
+              <TabsTrigger value="edit" className="flex items-center gap-2">
+                <Edit size={16} />
+                <span>Edit</span>
+              </TabsTrigger>
+              
+              <TabsTrigger value="settings" className="flex items-center gap-2">
+                <Settings size={16} />
+                <span>Settings</span>
+              </TabsTrigger>
+              
+              <TabsTrigger value="boost" className="flex items-center gap-2">
+                <Sparkles size={16} />
+                <span>Boost</span>
+              </TabsTrigger>
+            </>
+          )}
+        </TabsList>
+      </Tabs>
     </div>
   );
 };

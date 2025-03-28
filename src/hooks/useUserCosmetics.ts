@@ -27,7 +27,11 @@ export const useUserCosmetics = (
         colors: [], 
         fonts: [], 
         emojis: [], 
-        titles: [] 
+        titles: [],
+        backgrounds: [],
+        effects: [],
+        badges: [],
+        themes: []
       };
       
       const categoryItems = userCosmetics[category as keyof typeof userCosmetics] || [];

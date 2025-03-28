@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -8,7 +7,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Settings, User, Image, Link2, Crown, Instagram, Twitter } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { UserProfile, SocialLink } from '@/types/user';
+import { UserProfile, SocialLink, ProfileLink } from '@/types/user';
 import LinksEditor from './editor/LinksEditor';
 import SocialMediaLinksEditor from './editor/SocialMediaLinksEditor';
 
@@ -24,29 +23,7 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({ user }) => {
   const [username, setUsername] = useState(user?.username || '');
   const [profileImage, setProfileImage] = useState(user?.profileImage || '');
   const [socialLinks, setSocialLinks] = useState<SocialLink[]>(user?.socialLinks || []);
-  const [profileLinks, setProfileLinks] = useState(user?.profileLinks || []);
-  
-  // For demonstration purposes - would connect to actual APIs in production
-  const handleSaveBasicInfo = () => {
-    toast({
-      title: "Profile Updated",
-      description: "Your basic information has been saved."
-    });
-  };
-  
-  const handleSaveAppearance = () => {
-    toast({
-      title: "Appearance Updated",
-      description: "Your profile appearance settings have been saved."
-    });
-  };
-  
-  const handleSavePrivacy = () => {
-    toast({
-      title: "Privacy Settings Updated",
-      description: "Your privacy settings have been saved."
-    });
-  };
+  const [profileLinks, setProfileLinks] = useState<ProfileLink[]>([]);
   
   if (!user) {
     return (
