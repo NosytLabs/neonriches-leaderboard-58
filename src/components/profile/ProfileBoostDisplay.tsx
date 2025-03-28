@@ -10,8 +10,7 @@ export interface ProfileBoostDisplayProps {
   user: UserProfile;
 }
 
-// Use React.FC with the interface to be explicit about component typing
-const ProfileBoostDisplay: React.FC<ProfileBoostDisplayProps> = ({ user }) => {
+const ProfileBoostDisplay = ({ user }: ProfileBoostDisplayProps) => {
   const { getActiveBoosts, boostEffects, getTimeRemaining } = useProfileBoost(user);
   const activeBoosts = getActiveBoosts();
   
