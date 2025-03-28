@@ -41,7 +41,7 @@ const UpgradePromotion = () => {
       await updateUserProfile({ 
         subscription: newSubscription,
         tier: 'pro',
-        role: 'premium'
+        role: 'premium' // This is now a valid property
       });
       
       toast({

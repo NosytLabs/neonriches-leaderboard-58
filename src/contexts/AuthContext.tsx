@@ -23,6 +23,7 @@ export interface UserProfile {
   joinDate: Date;
   spendStreak?: number;
   lastSpend?: Date;
+  role?: string; // Added role property
   cosmetics?: {
     borders?: string[];
     colors?: string[];
@@ -101,6 +102,7 @@ const mockUserData: UserProfile = {
   joinDate: new Date('2023-01-15'),
   spendStreak: 3,
   lastSpend: new Date(),
+  role: 'user',
   cosmetics: {
     borders: ['gold-border', 'silver-border'],
     colors: ['royal-purple'],
@@ -176,6 +178,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         tier: 'octopus', // This is now valid after updating UserTier
         team: 'blue',
         gender: 'king',
+        joinDate: new Date(), // Adding required joinDate
+        role: 'user',
         cosmetics: {
           borders: ['gold-border', 'silver-border'],
           colors: ['royal-purple'],
@@ -227,6 +231,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         spendStreak: 0,
         tier: 'crab', // This is now valid after updating UserTier
         gender: 'jester',
+        team: 'none', // Adding required team property
+        joinDate: new Date(), // Adding required joinDate
+        role: 'user',
         cosmetics: {
           borders: ['gold-border', 'silver-border'],
           colors: ['royal-purple'],
@@ -288,8 +295,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       id,
       username,
       email,
-      displayName: username,
-      createdAt: new Date(),
       amountSpent: 0,
       walletBalance: 0,
       rank: 999,
@@ -298,6 +303,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       profileViews: 0,
       profileClicks: 0,
       followers: 0,
+      joinDate: new Date(), // Adding required joinDate
+      role: 'user',
       cosmetics: {},
     };
   };
