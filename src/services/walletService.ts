@@ -1,4 +1,3 @@
-
 import { User } from '@/types';
 
 export const spendFromWallet = async (
@@ -60,6 +59,40 @@ export const addToWallet = async (
     return true;
   } catch (error) {
     console.error('Wallet deposit failed', error);
+    return false;
+  }
+};
+
+export const trackProfileInteraction = async (
+  profileId: string,
+  interactionType: 'view' | 'click',
+  user?: any
+): Promise<boolean> => {
+  try {
+    // In a real app, this would be an API call to track the interaction
+    console.log(`Tracking ${interactionType} for profile ${profileId} by ${user?.id || 'anonymous'}`);
+    
+    // Mock success
+    return true;
+  } catch (error) {
+    console.error('Profile interaction tracking failed:', error);
+    return false;
+  }
+};
+
+export const depositToWallet = async (
+  user: any,
+  amount: number,
+  source: string
+): Promise<boolean> => {
+  try {
+    // In a real app, this would be an API call to update the wallet balance
+    console.log(`Depositing ${amount} to ${user.id} from ${source}`);
+    
+    // Mock success
+    return true;
+  } catch (error) {
+    console.error('Wallet deposit failed:', error);
     return false;
   }
 };

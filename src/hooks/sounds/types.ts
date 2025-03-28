@@ -1,78 +1,40 @@
 
-// Sound types
 export type SoundType = 
-  | 'coinDrop'
-  | 'reward'
-  | 'notification'
   | 'click'
+  | 'hover'
   | 'success'
   | 'error'
-  | 'royalAnnouncement'
-  | 'levelUp'
+  | 'notification'
   | 'purchase'
-  | 'shame'
-  | 'swordClash'
+  | 'coinDrop'
   | 'pageTransition'
-  | 'wish'
-  | 'pageChange'
   | 'parchmentUnfurl'
-  | 'medallion'
   | 'seal'
-  | 'trumpet'
-  | 'noblesLaugh'
-  | 'inkScribble';
+  | 'royalAnnouncement'
+  | 'reward'
+  | 'wish'
+  | 'advertisement';
 
-// Sound map type
-export interface SoundMap {
-  [key: string]: HTMLAudioElement;
+export interface SoundAsset {
+  src: string;
+  preload?: boolean;
 }
 
-// Audio loader return type
-export interface AudioLoaderReturn {
-  loadedSounds: string[];
-  isLoading: boolean;
-  error: Error | null;
-  audioElements?: Record<string, HTMLAudioElement>;
+export interface SoundOptions {
+  volume?: number;
+  loop?: boolean;
+  playbackRate?: number;
 }
 
-// Premium sound pack options
-export type PremiumSoundPack = 
-  | 'royal'
-  | 'medieval'
-  | 'fantasy'
-  | 'comedy'
-  | 'elegant';
-
-export interface PremiumSoundPackDetails {
-  id: PremiumSoundPack;
-  name: string;
-  description: string;
-  price: number;
-  sounds: SoundType[];
-  previewSound: SoundType;
-  isPurchased: boolean;
+export interface AudioState {
+  audio: HTMLAudioElement | null;
+  isPlaying: boolean;
+  isLoaded: boolean;
+  volume: number;
 }
 
-// Enum for sound categories for better TypeScript support
-export enum SoundCategoryEnum {
-  coinDrop = 'coinDrop',
-  reward = 'reward',
-  notification = 'notification',
-  click = 'click',
-  success = 'success',
-  error = 'error',
-  royalAnnouncement = 'royalAnnouncement',
-  levelUp = 'levelUp',
-  purchase = 'purchase',
-  shame = 'shame',
-  swordClash = 'swordClash',
-  pageTransition = 'pageTransition',
-  wish = 'wish',
-  pageChange = 'pageChange',
-  parchmentUnfurl = 'parchmentUnfurl',
-  medallion = 'medallion',
-  seal = 'seal',
-  trumpet = 'trumpet',
-  noblesLaugh = 'noblesLaugh',
-  inkScribble = 'inkScribble'
+export interface Sound {
+  key: SoundType;
+  asset: SoundAsset;
+  state: AudioState;
 }

@@ -1,4 +1,3 @@
-
 export interface UserRankData {
   userId: string;
   username: string;
@@ -57,4 +56,18 @@ export const applyUserSpending = async (
     console.error('User spending failed', error);
     return false;
   }
+};
+
+export const getTeamTotals = async (): Promise<any> => {
+  // Mock implementation
+  return {
+    red: { total: 25000, members: 500 },
+    green: { total: 18000, members: 450 },
+    blue: { total: 22000, members: 480 }
+  };
+};
+
+export const getTotalPool = async (): Promise<number> => {
+  // Mock implementation
+  return 65000;
 };

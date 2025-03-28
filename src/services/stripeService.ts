@@ -43,3 +43,21 @@ export const verifyPaymentIntent = async (paymentIntentId: string): Promise<bool
   // Mock success
   return true;
 };
+
+// Add missing function
+export const createSubscription = async (
+  plan: string,
+  interval: 'monthly' | 'yearly' = 'monthly'
+): Promise<CheckoutSessionResponse> => {
+  // In a real app, this would create a subscription with Stripe
+  console.log(`Creating subscription for plan ${plan} with interval ${interval}`);
+  
+  // Mock API delay
+  await new Promise(resolve => setTimeout(resolve, 800));
+  
+  // Return mock URL
+  return {
+    id: `sub_${Math.random().toString(36).substring(2, 15)}`,
+    url: `/subscription-success?plan=${encodeURIComponent(plan)}&interval=${interval}`
+  };
+};

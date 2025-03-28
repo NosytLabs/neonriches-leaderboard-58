@@ -1,142 +1,108 @@
 
 import React, { useState } from 'react';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogTitle, DialogHeader, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { DollarSign, Wallet } from 'lucide-react';
-import { useAuth } from '@/contexts/AuthContext';
-import { spendFromWallet } from '@/services/walletService';
 import { createCheckoutSession } from '@/services/stripeService';
-import { useToastContext } from '@/contexts/ToastContext';
+import { Coins, CreditCard } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useToast } from '@/hooks/use-toast';
+import CreditCardForm from './payment/CreditCardForm';
+import CryptoForm from './payment/CryptoForm';
+import ProcessingButton from './payment/ProcessingButton';
 
-interface PaymentModalProps {
-  title?: string;
-  description?: string;
+export interface PaymentModalProps {
+  title: string;
+  description: string;
   amount: number;
-  onSuccess?: (amount: number) => void;
-  trigger?: React.ReactNode;
-  featureType?: 'wallet' | 'boost' | 'cosmetic' | 'general';
-  productId?: string;
+  onSuccess: () => Promise<void>;
+  onCancel?: () => void;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
 }
 
 const PaymentModal: React.FC<PaymentModalProps> = ({
-  title = "Contribute to Your Status",
-  description = "Your rank is directly proportional to your spending. $1 = 1 unit of rank.",
+  title,
+  description,
   amount,
   onSuccess,
-  trigger,
-  featureType = 'general',
-  productId
+  onCancel,
+  open,
+  onOpenChange
 }) => {
-  const { user } = useAuth();
+  const [paymentMethod, setPaymentMethod] = useState<'card' | 'crypto'>('card');
   const [isProcessing, setIsProcessing] = useState(false);
-  const [open, setOpen] = useState(false);
-  const { addToast } = useToastContext();
-  
-  // Determine if user has enough wallet balance
-  const hasWalletBalance = user?.walletBalance && user.walletBalance >= amount;
+  const { toast } = useToast();
 
-  const handleStripePayment = async () => {
-    setIsProcessing(true);
-    
-    try {
-      // Create a Stripe checkout session
-      const checkoutData = await createCheckoutSession(
-        amount,
-        title,
-        featureType,
-        productId
-      );
-      
-      if (!checkoutData?.url) {
-        throw new Error("Failed to create checkout session");
-      }
-      
-      // Close the modal before redirecting
-      setOpen(false);
-      
-      // Redirect to Stripe checkout
-      window.location.href = checkoutData.url;
-      
-      // Since we're redirecting, we won't be able to call onSuccess here
-      // It will need to be handled when the user returns from Stripe
-    } catch (error) {
-      console.error('Error processing payment:', error);
-      addToast({
-        title: "Payment Error",
-        description: "Could not process your payment. Please try again.",
-        variant: "destructive"
-      });
-      setIsProcessing(false);
+  const handleCancelPayment = () => {
+    if (onCancel) {
+      onCancel();
     }
+    onOpenChange(false);
   };
-  
-  const handleWalletPayment = async () => {
-    if (!user) {
-      addToast({
-        title: "Authentication Required",
-        description: "You must be logged in to use your wallet.",
-        variant: "destructive"
-      });
-      return;
-    }
-    
-    if (!hasWalletBalance) {
-      addToast({
-        title: "Insufficient Funds",
-        description: "Your royal purse doesn't have enough gold for this transaction.",
-        variant: "destructive"
-      });
-      return;
-    }
-    
+
+  const handleCheckout = async () => {
     setIsProcessing(true);
     
     try {
-      const success = await spendFromWallet(
-        user,
+      // Create checkout session
+      const response = await createCheckoutSession(
         amount,
-        'spend',
         title,
-        { description }
+        'payment',
       );
       
-      if (success) {
-        setIsProcessing(false);
-        setOpen(false);
-        
-        if (onSuccess) {
-          onSuccess(amount);
-        }
-        
-        addToast({
-          title: "Payment Successful",
-          description: `You've successfully contributed $${amount}.`,
+      if (response.error) {
+        toast({
+          title: "Payment Error",
+          description: response.error,
+          variant: "destructive",
         });
-      } else {
-        throw new Error("Transaction failed");
+        setIsProcessing(false);
+        return;
       }
-    } catch (error) {
-      setIsProcessing(false);
-      addToast({
-        title: "Payment Failed",
-        description: error.message || "Your payment could not be processed.",
-        variant: "destructive"
+      
+      // Simulate successful payment processing
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      // Mock successful payment
+      toast({
+        title: "Payment Successful",
+        description: `You have spent $${amount.toFixed(2)} to ${title}!`,
       });
+      
+      // Execute success callback
+      await onSuccess();
+      onOpenChange(false);
+    } catch (error) {
+      console.error('Payment error:', error);
+      toast({
+        title: "Payment Failed",
+        description: "There was an error processing your payment.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsProcessing(false);
     }
   };
 
-  const defaultTrigger = (
-    <Button className="bg-gradient-to-r from-team-red via-team-green to-team-blue hover:opacity-90 text-white">
-      <DollarSign size={16} className="mr-2" />
-      Contribute ${amount}
-    </Button>
-  );
+  const handleSubmitCard = async (cardData: any) => {
+    toast({
+      title: "Processing Payment",
+      description: "Please wait while we process your payment...",
+    });
+    await handleCheckout();
+  };
+
+  const handleSubmitCrypto = async (cryptoData: any) => {
+    toast({
+      title: "Processing Crypto Payment",
+      description: "Please wait while we process your crypto payment...",
+    });
+    await handleCheckout();
+  };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        {trigger || defaultTrigger}
-      </DialogTrigger>
+    <Dialog open={open} onOpenChange={!isProcessing ? onOpenChange : undefined}>
       <DialogContent className="glass-morphism border-white/10 sm:max-w-md">
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
@@ -145,37 +111,47 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
           </DialogDescription>
         </DialogHeader>
         
-        <div className="space-y-4">
+        <div className="py-4">
+          <div className="mb-3 p-4 rounded-md bg-black/20 flex items-center justify-between">
+            <div className="font-bold">Total:</div>
+            <div className="text-xl font-bold text-royal-gold">${amount.toFixed(2)}</div>
+          </div>
+          
+          <Tabs defaultValue="card" value={paymentMethod} onValueChange={(v) => setPaymentMethod(v as 'card' | 'crypto')}>
+            <TabsList className="grid grid-cols-2 glass-morphism">
+              <TabsTrigger value="card">Credit Card</TabsTrigger>
+              <TabsTrigger value="crypto">Crypto</TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="card">
+              <CreditCardForm onSubmit={handleSubmitCard} isProcessing={isProcessing} />
+            </TabsContent>
+            
+            <TabsContent value="crypto">
+              <CryptoForm onSubmit={handleSubmitCrypto} isProcessing={isProcessing} amount={amount} />
+            </TabsContent>
+          </Tabs>
+        </div>
+        
+        <DialogFooter className="flex flex-col sm:flex-row gap-2 sm:justify-between">
           <Button 
-            className="w-full bg-gradient-to-r from-royal-crimson via-royal-gold to-royal-navy hover:opacity-90"
-            onClick={handleStripePayment}
+            variant="outline" 
+            onClick={handleCancelPayment}
             disabled={isProcessing}
+            className="glass-morphism hover:bg-white/10"
           >
-            {isProcessing ? (
-              <div className="flex items-center">
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                Processing...
-              </div>
-            ) : (
-              <>
-                <DollarSign className="h-4 w-4 mr-2" />
-                Pay with Card or Crypto
-              </>
-            )}
+            Cancel
           </Button>
           
-          {user && hasWalletBalance && (
-            <Button 
-              variant="outline" 
-              className="w-full glass-morphism border-white/10 hover:bg-white/10"
-              onClick={handleWalletPayment}
-              disabled={isProcessing}
-            >
-              <Wallet className="h-4 w-4 mr-2" />
-              Use Wallet Balance (${user.walletBalance.toFixed(2)})
-            </Button>
-          )}
-        </div>
+          <ProcessingButton 
+            isProcessing={isProcessing}
+            onClick={paymentMethod === 'card' ? handleSubmitCard : handleSubmitCrypto}
+            className="bg-royal-gold hover:bg-royal-gold/90 text-black"
+            icon={paymentMethod === 'card' ? <CreditCard size={16} /> : <Coins size={16} />}
+          >
+            Pay ${amount.toFixed(2)}
+          </ProcessingButton>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );
