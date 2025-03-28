@@ -31,10 +31,10 @@ const ResizablePanel = forwardRef<
 ));
 ResizablePanel.displayName = 'ResizablePanel';
 
-// Define a type that properly extends the PanelResizeHandle props
-interface ResizableHandleProps extends ComponentProps<typeof ResizablePrimitive.PanelResizeHandle> {
+// Define a specialized type for our handle that extends the base props
+type ResizableHandleProps = ComponentProps<typeof ResizablePrimitive.PanelResizeHandle> & {
   withHandle?: boolean;
-}
+};
 
 const ResizableHandle = forwardRef<
   ElementRef<typeof ResizablePrimitive.PanelResizeHandle>,
