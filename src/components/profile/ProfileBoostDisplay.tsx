@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Clock, Zap } from 'lucide-react';
 import { useProfileBoost } from '@/hooks/use-profile-boost';
-import { UserProfile, ProfileBoost } from '@/types/user';
+import { UserProfile } from '@/types/user';
 
 interface ProfileBoostDisplayProps {
   user: UserProfile;
@@ -26,7 +26,7 @@ const ProfileBoostDisplay: React.FC<ProfileBoostDisplayProps> = ({ user }) => {
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-3">
-        {activeBoosts.map((boost: ProfileBoost) => {
+        {activeBoosts.map((boost) => {
           const effect = getBoostEffect(boost.effectId);
           const timeRemaining = getBoostTimeRemaining(boost);
           const formattedTime = formatTimeRemaining(timeRemaining);

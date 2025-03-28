@@ -12,7 +12,54 @@ export interface ProfileBoost {
   appliedBy: string;
 }
 
-export function useProfileBoost() {
+// Define the boost effect interface
+export interface BoostEffect {
+  id: BoostEffectType;
+  name: string;
+  description: string;
+  icon?: string;
+  bonusText: string;
+  cssClass: string;
+}
+
+// Available boost effects
+const boostEffects: Record<string, BoostEffect> = {
+  glow: {
+    id: "glow",
+    name: "Golden Glow",
+    description: "A subtle golden glow surrounds your profile",
+    icon: "✨",
+    bonusText: "+10% Visibility",
+    cssClass: "profile-boost-glow"
+  },
+  sparkle: {
+    id: "sparkle",
+    name: "Royal Sparkle",
+    description: "Sparkling effects add prestige to your profile",
+    icon: "💫",
+    bonusText: "+25% Visibility",
+    cssClass: "profile-boost-sparkle"
+  },
+  crown: {
+    id: "crown",
+    name: "Crown Aura",
+    description: "A majestic crown aura appears above your profile",
+    icon: "👑",
+    bonusText: "+50% Visibility",
+    cssClass: "profile-boost-crown"
+  }
+};
+
+export function useProfileBoost(user?: any) {
+  // Get all active boosts for a user
+  const getActiveBoosts = () => {
+    if (!user || !user.profileBoosts) return [];
+    const now = Date.now();
+    return user.profileBoosts.filter((boost: ProfileBoost) => 
+      boost.startTime <= now && boost.endTime >= now
+    );
+  };
+
   // Check if a boost is active
   const isBoostActive = (boost: ProfileBoost): boolean => {
     const now = Date.now();
@@ -41,9 +88,41 @@ export function useProfileBoost() {
     return `${seconds}s`;
   };
 
+  // Get boost effect details by ID
+  const getBoostEffect = (effectId: BoostEffectType): BoostEffect | null => {
+    return boostEffects[effectId] || null;
+  };
+
+  // Format time remaining in a user-friendly format
+  const formatTimeRemaining = (timeMs: number): string => {
+    return formatBoostTimeRemaining(timeMs);
+  };
+
+  // Check if user has any active boosts
+  const hasActiveBoosts = (): boolean => {
+    return getActiveBoosts().length > 0;
+  };
+
+  // Get CSS classes for active boosts
+  const getBoostClasses = (): string => {
+    const activeBoosts = getActiveBoosts();
+    if (activeBoosts.length === 0) return '';
+    
+    return activeBoosts
+      .map(boost => boostEffects[boost.effectId]?.cssClass || '')
+      .filter(Boolean)
+      .join(' ');
+  };
+
   return {
     isBoostActive,
     getBoostTimeRemaining,
-    formatBoostTimeRemaining
+    formatBoostTimeRemaining,
+    getActiveBoosts,
+    activeBoosts: getActiveBoosts(),
+    getBoostEffect,
+    formatTimeRemaining,
+    hasActiveBoosts,
+    getBoostClasses
   };
 }

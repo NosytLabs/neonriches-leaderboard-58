@@ -153,3 +153,24 @@ export const eventDetailsData: Record<string, EventDetails> = {
     ]
   }
 };
+
+// Add the missing exports for eventStats and currentEvent
+export const eventStats = {
+  prizePool: 24750,
+  participantsCount: 487,
+  totalPokes: 1253,
+  mostPoked: {
+    username: 'SilverBaron',
+    pokeCount: 15
+  }
+};
+
+export const currentEvent = {
+  id: "treasure-hunt",
+  name: "Royal Treasure Hunt",
+  description: "Solve riddles and follow clues to find valuable treasures hidden throughout the site.",
+  image: "https://images.unsplash.com/photo-1551732998-9573f695fdbb?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+  startDate: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(), // 2 days ago
+  endDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(), // 5 days from now
+  type: "treasure"
+};

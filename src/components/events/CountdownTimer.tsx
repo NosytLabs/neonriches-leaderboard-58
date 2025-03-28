@@ -4,7 +4,7 @@ import { Clock } from 'lucide-react';
 import { getTimeLeft } from '@/utils/timeUtils';
 
 interface CountdownTimerProps {
-  targetDate: Date;
+  targetDate: Date | string;
   variant?: 'default' | 'compact' | 'minimal';
   className?: string;
 }
