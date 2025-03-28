@@ -18,6 +18,14 @@ interface ProfileViewerProps {
 const ProfileViewer: React.FC<ProfileViewerProps> = ({ user, profileData }) => {
   const { bio, images, links, joinDate, lastActive, views } = profileData;
   
+  // Convert ProfileLink[] to SocialLink[] for compatibility with ProfileSocialLinks
+  const convertedLinks = links ? links.map(link => ({
+    id: typeof link.id === 'string' ? parseInt(link.id) : link.id,
+    url: link.url,
+    platform: link.label,
+    icon: ''
+  })) : [];
+  
   return (
     <div className="space-y-6">
       <Card className="glass-morphism border-white/10">
@@ -119,7 +127,7 @@ const ProfileViewer: React.FC<ProfileViewerProps> = ({ user, profileData }) => {
               <h3 className="text-lg font-semibold">Links</h3>
             </div>
             
-            <ProfileSocialLinks links={links} />
+            <ProfileSocialLinks links={convertedLinks} />
           </CardContent>
         </Card>
       )}

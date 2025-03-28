@@ -12,7 +12,7 @@ import SocialMediaLinksEditor from './editor/SocialMediaLinksEditor';
 import AppearanceEditor from './editor/AppearanceEditor';
 import TeamSelector from '@/components/teams/TeamSelector';
 
-interface ProfileEditorProps {
+export interface ProfileEditorProps {
   user: UserProfile;
   onProfileUpdate?: (updatedProfile: Partial<UserProfile>) => void;
 }

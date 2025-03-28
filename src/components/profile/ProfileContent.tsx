@@ -56,9 +56,8 @@ const ProfileContent: React.FC<ProfileContentProps> = ({
       case 'edit':
         return (
           <ProfileEditor 
-            user={user} 
-            profileUser={profileUser} 
-            profileData={profileData} 
+            user={profileUser}
+            onProfileUpdate={() => {}}
           />
         );
       case 'stats':
