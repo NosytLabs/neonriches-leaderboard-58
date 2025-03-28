@@ -35,7 +35,7 @@ export const getMockeryActionIcon = (action: ExtendedMockeryAction): React.React
     case 'taunt':
       return <Meh className="text-orange-400" size={16} />;
     case 'roast':
-      return <Mic className="text-red-400" size={16} />;
+      return <Music className="text-red-400" size={16} />;
     case 'ridicule':
       return <Music className="text-purple-400" size={16} />;
     default:
