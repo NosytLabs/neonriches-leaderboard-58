@@ -1,253 +1,313 @@
 
 import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Sparkles, Zap, Clock, CreditCard, Shield } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
-import { UserProfile } from '@/types/user';
-import { spendFromWallet } from '@/services/walletService';
-import useProfileBoost, { boostEffects, BoostEffect } from '@/hooks/use-profile-boost';
+import { Gem, Sparkles, Clock, Crown, Zap, ShieldCheck } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
+import { useToast } from '@/hooks/use-toast';
+import { spendFromWallet } from '@/services/walletService';
+import { useProfileBoost } from '@/hooks/use-profile-boost';
+import useNotificationSounds from '@/hooks/use-notification-sounds';
+import RoyalButton from '@/components/ui/royal-button';
+import ProcessingButton from '@/components/payment/ProcessingButton';
+import { UserProfile } from '@/types/user';
+import { BoostEffect, BoostEffectDetails } from '@/hooks/use-profile-boost';
 
-interface ProfileBoostProps {
-  user: UserProfile;
+// Define boost pricing info separately
+interface BoostPricingInfo {
+  effectId: BoostEffect;
+  price: number;
+  duration: number; // in hours
+  exclusive: boolean;
 }
 
-const ProfileBoost: React.FC<ProfileBoostProps> = ({ user }) => {
+const boostPricing: BoostPricingInfo[] = [
+  {
+    effectId: 'glow',
+    price: 2.99,
+    duration: 48, // 48 hours
+    exclusive: false
+  },
+  {
+    effectId: 'rainbow',
+    price: 4.99,
+    duration: 72, // 72 hours
+    exclusive: false
+  },
+  {
+    effectId: 'pulse',
+    price: 3.99,
+    duration: 48, // 48 hours
+    exclusive: false
+  },
+  {
+    effectId: 'sparkle',
+    price: 7.99,
+    duration: 96, // 96 hours (4 days)
+    exclusive: false
+  },
+  {
+    effectId: 'crown',
+    price: 9.99,
+    duration: 120, // 120 hours (5 days)
+    exclusive: true
+  },
+  {
+    effectId: 'shimmer',
+    price: 6.99,
+    duration: 72, // 72 hours (3 days)
+    exclusive: false
+  },
+  {
+    effectId: 'flames',
+    price: 14.99,
+    duration: 168, // 168 hours (7 days)
+    exclusive: true
+  },
+  {
+    effectId: 'banner',
+    price: 19.99,
+    duration: 240, // 240 hours (10 days)
+    exclusive: true
+  }
+];
+
+const ProfileBoost: React.FC = () => {
+  const { user } = useAuth();
   const { toast } = useToast();
-  const { updateUserProfile } = useAuth();
-  const { activeBoosts, addBoost, removeBoost, hasActiveBoost, getBoostRemaining } = useProfileBoost(user);
-  const [isPurchasing, setIsPurchasing] = useState<string | null>(null);
+  const { playSound } = useNotificationSounds();
+  const { 
+    getActiveBoosts, 
+    boostEffects 
+  } = useProfileBoost(user);
+  const [isProcessing, setIsProcessing] = useState<string | null>(null);
   
-  const handlePurchaseBoost = async (boostId: string) => {
-    if (!user) {
-      toast({
-        title: "Authentication Required",
-        description: "You must be logged in to purchase a boost.",
-        variant: "destructive"
-      });
-      return;
-    }
-    
-    const effect = boostEffects[boostId];
-    
-    if (!effect) {
-      toast({
-        title: "Invalid Boost",
-        description: "The selected boost is not available.",
-        variant: "destructive"
-      });
-      return;
-    }
-    
-    if (user.walletBalance < effect.price) {
-      toast({
-        title: "Insufficient Funds",
-        description: `You need $${effect.price} to purchase this boost.`,
-        variant: "destructive"
-      });
-      return;
-    }
-    
-    setIsPurchasing(boostId);
+  if (!user) {
+    return null;
+  }
+  
+  const activeBoosts = getActiveBoosts();
+  
+  const handleBoostPurchase = async (boostInfo: BoostPricingInfo) => {
+    setIsProcessing(boostInfo.effectId);
     
     try {
-      const success = await spendFromWallet(
+      const boostEffect = boostEffects[boostInfo.effectId];
+      
+      // Check if the user already has this boost active
+      const hasActiveBoost = activeBoosts.some(boost => boost.effectId === boostInfo.effectId);
+      if (hasActiveBoost) {
+        toast({
+          title: "Boost Already Active",
+          description: `You already have the ${boostEffect.name} effect active.`,
+          variant: "destructive"
+        });
+        return;
+      }
+      
+      // Check if user has enough balance
+      if (user.walletBalance < boostInfo.price) {
+        toast({
+          title: "Insufficient Funds",
+          description: `You need $${boostInfo.price.toFixed(2)} to purchase this boost.`,
+          variant: "destructive"
+        });
+        return;
+      }
+      
+      // Check if boost is exclusive and user already has another exclusive boost
+      if (boostInfo.exclusive) {
+        const hasExclusiveBoost = activeBoosts.some(boost => {
+          const boostDetails = boostPricing.find(bp => bp.effectId === boost.effectId);
+          return boostDetails?.exclusive;
+        });
+        
+        if (hasExclusiveBoost) {
+          toast({
+            title: "Exclusive Boost Conflict",
+            description: "You already have an exclusive boost active. Only one can be active at a time.",
+            variant: "destructive"
+          });
+          return;
+        }
+      }
+      
+      // Process the purchase
+      const purchaseSuccess = await spendFromWallet(
         user,
-        effect.price,
+        boostInfo.price,
         'profile_boost',
-        `Purchased the ${effect.name} boost`,
-        { boostId, duration: effect.duration }
+        `Purchased ${boostEffect.name} profile boost`,
+        { 
+          boostEffect: boostInfo.effectId,
+          duration: boostInfo.duration 
+        }
       );
       
-      if (!success) {
-        throw new Error("Transaction failed");
-      }
-      
-      // Update user wallet balance
-      if (updateUserProfile) {
-        await updateUserProfile({
-          ...user,
-          walletBalance: user.walletBalance - effect.price
-        });
-      }
-      
-      // Add the boost to active boosts
-      const boostAdded = await addBoost(boostId);
-      
-      if (boostAdded) {
+      if (purchaseSuccess) {
+        // Create the new boost
+        const newBoost = {
+          id: `boost_${Date.now()}`,
+          effectId: boostInfo.effectId,
+          startTime: Date.now(),
+          endTime: Date.now() + (boostInfo.duration * 60 * 60 * 1000)
+        };
+        
+        // Add the boost to the user's profile boosts
+        const updatedBoosts = [...(user.profileBoosts || []), newBoost];
+        
+        // In a real app, this would be an API call to update the user profile
+        // For now, we'll just update the local state
+        user.profileBoosts = updatedBoosts;
+        
+        playSound('reward');
         toast({
-          title: "Boost Activated",
-          description: `Your profile now has the ${effect.name} effect for ${effect.duration} hours!`,
+          title: "Boost Purchased!",
+          description: `Your profile now has the ${boostEffect.name} effect for ${boostInfo.duration / 24} days.`,
+          variant: "default"
         });
       } else {
-        throw new Error("Failed to activate boost");
+        throw new Error("Transaction failed");
       }
     } catch (error) {
-      console.error("Boost purchase failed:", error);
       toast({
-        title: "Boost Purchase Failed",
-        description: "There was an error purchasing the boost.",
+        title: "Purchase Failed",
+        description: "There was an error processing your purchase.",
         variant: "destructive"
       });
     } finally {
-      setIsPurchasing(null);
+      setIsProcessing(null);
     }
   };
   
-  const formatRemainingTime = (hours: number): string => {
-    if (hours < 1) return "Less than 1 hour";
-    if (hours < 24) return `${hours} hour${hours > 1 ? 's' : ''}`;
-    const days = Math.floor(hours / 24);
-    const remainingHours = hours % 24;
-    return `${days} day${days > 1 ? 's' : ''} ${remainingHours > 0 ? `and ${remainingHours} hour${remainingHours > 1 ? 's' : ''}` : ''}`;
+  // Group boosts by rarity
+  const boostsByRarity: Record<string, BoostPricingInfo[]> = {
+    common: [],
+    uncommon: [],
+    rare: [],
+    legendary: []
   };
   
-  const boostCategories = {
-    essential: ['glow', 'pulse', 'sparkle', 'crown'],
-    premium: ['rainbow', 'shimmer', 'flames', 'banner']
+  boostPricing.forEach(boost => {
+    const rarity = boostEffects[boost.effectId].rarity;
+    boostsByRarity[rarity].push(boost);
+  });
+  
+  // Render the boost card
+  const renderBoostCard = (boost: BoostPricingInfo) => {
+    const isActive = activeBoosts.some(activeBoost => activeBoost.effectId === boost.effectId);
+    const boostDetails = boostEffects[boost.effectId];
+    
+    return (
+      <div key={boost.effectId} className="relative glass-morphism border-white/10 p-3 rounded-lg">
+        {isActive && (
+          <Badge className="absolute top-2 right-2 bg-green-600">Active</Badge>
+        )}
+        
+        {boost.exclusive && (
+          <Badge className="absolute top-2 left-2 bg-purple-700 text-xs">Exclusive</Badge>
+        )}
+        
+        <div className={`flex items-center mb-2 ${boostDetails.cssClass}`}>
+          <span className="text-lg mr-2">{boostDetails.icon}</span>
+          <h3 className="font-semibold">{boostDetails.name}</h3>
+        </div>
+        
+        <p className="text-xs text-white/70 mb-3">{boostDetails.description}</p>
+        
+        <div className="flex justify-between items-center mt-2">
+          <Badge variant="outline" className={`text-xs ${
+            boostDetails.rarity === 'legendary' ? 'border-purple-500 text-purple-400' :
+            boostDetails.rarity === 'rare' ? 'border-blue-500 text-blue-400' :
+            boostDetails.rarity === 'uncommon' ? 'border-green-500 text-green-400' :
+            'border-gray-500 text-gray-400'
+          }`}>
+            {boostDetails.rarity.charAt(0).toUpperCase() + boostDetails.rarity.slice(1)}
+          </Badge>
+          
+          <Badge variant="outline" className="text-xs flex items-center">
+            <Clock className="h-3 w-3 mr-1" />
+            {boost.duration / 24} days
+          </Badge>
+        </div>
+        
+        <div className="mt-3">
+          <ProcessingButton
+            text={`$${boost.price.toFixed(2)} - Boost`}
+            processingText="Processing..."
+            isProcessing={isProcessing === boost.effectId}
+            onClick={() => handleBoostPurchase(boost)}
+            disabled={isActive || isProcessing !== null}
+            className={`w-full text-xs h-8 ${
+              isActive ? 'bg-gray-700 cursor-not-allowed' : 'bg-gradient-to-r from-purple-700 to-indigo-700'
+            }`}
+            icon={Sparkles}
+          />
+        </div>
+      </div>
+    );
   };
   
   return (
     <Card className="glass-morphism border-purple-400/20">
       <CardHeader>
-        <CardTitle className="text-lg flex items-center">
-          <Zap size={18} className="text-purple-400 mr-2" />
-          Profile Boost
-        </CardTitle>
+        <div className="flex items-center">
+          <Sparkles className="mr-3 h-6 w-6 text-purple-400" />
+          <CardTitle>Profile Boosts</CardTitle>
+        </div>
         <CardDescription>
-          Stand out with exclusive visual effects for your profile
+          Enhance your royal presence with visual effects
         </CardDescription>
       </CardHeader>
-      <CardContent>
-        <Tabs defaultValue="essential">
-          <TabsList className="grid grid-cols-2 mb-4">
-            <TabsTrigger value="essential">Essential Boosts</TabsTrigger>
-            <TabsTrigger value="premium">Premium Boosts</TabsTrigger>
-          </TabsList>
-          
-          <TabsContent value="essential">
-            <div className="grid grid-cols-1 gap-3">
-              {boostCategories.essential.map(boostId => {
-                const boost = boostEffects[boostId as BoostEffect];
-                const isActive = hasActiveBoost(boostId);
-                const remainingHours = getBoostRemaining(boostId);
+      
+      <CardContent className="space-y-6">
+        {activeBoosts.length > 0 && (
+          <div className="glass-morphism border-white/10 p-3 rounded-lg mb-4">
+            <div className="flex items-center mb-2">
+              <Crown className="h-4 w-4 text-royal-gold mr-2" />
+              <h3 className="text-sm font-semibold">Active Boosts</h3>
+            </div>
+            <div className="space-y-2">
+              {activeBoosts.map(boost => {
+                const effect = boostEffects[boost.effectId as BoostEffect];
+                const boostPricingInfo = boostPricing.find(bp => bp.effectId === boost.effectId);
                 
                 return (
-                  <div 
-                    key={boostId} 
-                    className={`glass-morphism rounded-lg p-3 border ${isActive ? 'border-purple-400/40' : 'border-white/10'} flex justify-between items-center`}
-                  >
-                    <div className="flex items-start gap-3">
-                      <div className={`w-10 h-10 rounded-full flex items-center justify-center ${isActive ? 'bg-purple-500/20' : 'bg-white/10'}`}>
-                        <Sparkles size={20} className={isActive ? 'text-purple-400' : 'text-white/60'} />
-                      </div>
-                      <div>
-                        <h4 className="font-medium flex items-center">
-                          {boost.name}
-                          {isActive && <Shield size={14} className="text-green-400 ml-2" />}
-                        </h4>
-                        <p className="text-xs text-white/60">
-                          {boost.description}
-                        </p>
-                        {isActive && (
-                          <div className="flex items-center mt-1 text-xs text-purple-300">
-                            <Clock size={12} className="mr-1" />
-                            {formatRemainingTime(remainingHours)} remaining
-                          </div>
-                        )}
-                      </div>
+                  <div key={boost.id} className="flex items-center justify-between text-xs">
+                    <div className="flex items-center">
+                      <span className="mr-1">{effect.icon}</span>
+                      <span className={effect.cssClass}>{effect.name}</span>
                     </div>
-                    
-                    <Button
-                      variant={isActive ? "outline" : "default"}
-                      size="sm"
-                      className={isActive ? "border-purple-400/30 text-purple-300" : "bg-purple-500 hover:bg-purple-600"}
-                      disabled={isPurchasing === boostId || (isActive && remainingHours > 0)}
-                      onClick={() => !isActive && handlePurchaseBoost(boostId)}
-                    >
-                      {isPurchasing === boostId ? (
-                        <div className="h-4 w-4 border-2 border-t-transparent border-current rounded-full animate-spin mr-1"></div>
-                      ) : isActive ? (
-                        'Active'
-                      ) : (
-                        <>
-                          <CreditCard size={14} className="mr-1.5" />
-                          ${boost.price}
-                        </>
-                      )}
-                    </Button>
+                    <Badge variant="outline" className="text-xs">
+                      {Math.ceil((boost.endTime - Date.now()) / (1000 * 60 * 60 * 24))} days left
+                    </Badge>
                   </div>
                 );
               })}
             </div>
-          </TabsContent>
-          
-          <TabsContent value="premium">
-            <div className="grid grid-cols-1 gap-3">
-              {boostCategories.premium.map(boostId => {
-                const boost = boostEffects[boostId as BoostEffect];
-                const isActive = hasActiveBoost(boostId);
-                const remainingHours = getBoostRemaining(boostId);
-                
-                return (
-                  <div 
-                    key={boostId} 
-                    className={`glass-morphism rounded-lg p-3 border ${isActive ? 'border-royal-gold/40' : 'border-white/10'} flex justify-between items-center`}
-                  >
-                    <div className="flex items-start gap-3">
-                      <div className={`w-10 h-10 rounded-full flex items-center justify-center ${isActive ? 'bg-royal-gold/20' : 'bg-white/10'}`}>
-                        <Sparkles size={20} className={isActive ? 'text-royal-gold' : 'text-white/60'} />
-                      </div>
-                      <div>
-                        <h4 className="font-medium flex items-center">
-                          {boost.name}
-                          {isActive && <Shield size={14} className="text-green-400 ml-2" />}
-                        </h4>
-                        <p className="text-xs text-white/60">
-                          {boost.description}
-                        </p>
-                        <p className="text-xs text-white/60 mt-0.5">
-                          {boost.exclusive && "Exclusive: replaces other exclusive effects"}
-                        </p>
-                        {isActive && (
-                          <div className="flex items-center mt-1 text-xs text-royal-gold">
-                            <Clock size={12} className="mr-1" />
-                            {formatRemainingTime(remainingHours)} remaining
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                    
-                    <Button
-                      variant={isActive ? "outline" : "default"}
-                      size="sm"
-                      className={isActive ? "border-royal-gold/30 text-royal-gold" : "bg-gradient-to-r from-purple-600 to-royal-gold text-white"}
-                      disabled={isPurchasing === boostId || (isActive && remainingHours > 0)}
-                      onClick={() => !isActive && handlePurchaseBoost(boostId)}
-                    >
-                      {isPurchasing === boostId ? (
-                        <div className="h-4 w-4 border-2 border-t-transparent border-current rounded-full animate-spin mr-1"></div>
-                      ) : isActive ? (
-                        'Active'
-                      ) : (
-                        <>
-                          <CreditCard size={14} className="mr-1.5" />
-                          ${boost.price}
-                        </>
-                      )}
-                    </Button>
-                  </div>
-                );
-              })}
-            </div>
-          </TabsContent>
-        </Tabs>
+          </div>
+        )}
         
-        <div className="mt-4 p-3 bg-black/20 rounded-lg">
-          <p className="text-sm text-white/70">
-            <span className="text-purple-300 font-semibold">Note:</span> Boosts are visual effects only and don't affect your rank or position on the leaderboard. They're purely cosmetic to make your profile stand out.
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          {boostPricing.filter(boost => boostEffects[boost.effectId].rarity === 'legendary').map(renderBoostCard)}
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+          {boostPricing.filter(boost => boostEffects[boost.effectId].rarity === 'rare').map(renderBoostCard)}
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+          {boostPricing.filter(boost => 
+            boostEffects[boost.effectId].rarity === 'uncommon' || 
+            boostEffects[boost.effectId].rarity === 'common'
+          ).map(renderBoostCard)}
+        </div>
+        
+        <div className="p-3 bg-black/20 rounded-lg text-sm">
+          <p className="flex items-center text-white/70 mb-2">
+            <ShieldCheck size={16} className="text-royal-gold mr-2" />
+            <span>Profile boosts are purely cosmetic and do not affect your rank.</span>
           </p>
         </div>
       </CardContent>

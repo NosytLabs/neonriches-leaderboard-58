@@ -1,17 +1,13 @@
-import React, { useState, useEffect, useRef } from 'react';
+
+import React, { useRef } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Sparkles, Gem, Coins, Gift, ArrowDownCircle } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Slider } from '@/components/ui/slider';
-import { Badge } from '@/components/ui/badge';
-import RoyalButton from '@/components/ui/royal-button';
-import { UserProfile } from '@/contexts/AuthContext';
+import { Gem } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
-import { spendFromWallet } from '@/services/walletService';
-import { useToast } from '@/hooks/use-toast';
-import useNotificationSounds from '@/hooks/use-notification-sounds';
+import WishStats from './WishStats';
 import WishHistory from './WishHistory';
-import WishingCoin from './WishingCoin';
+import WishingWellDisplay from './WishingWellDisplay';
+import WishAmountSelector from './WishAmountSelector';
+import { useWishingWell } from '@/hooks/use-wishing-well';
 
 interface RoyalWishingWellProps {
   currentPool: number;
@@ -28,116 +24,21 @@ const RoyalWishingWell: React.FC<RoyalWishingWellProps> = ({
   recentWishes = []
 }) => {
   const { user } = useAuth();
-  const { toast } = useToast();
-  const { playSound } = useNotificationSounds();
-  const [wishAmount, setWishAmount] = useState<number>(1);
-  const [isWishing, setIsWishing] = useState<boolean>(false);
-  const [result, setResult] = useState<string | null>(null);
-  const [wishResult, setWishResult] = useState<'pending' | 'win' | 'lose' | null>(null);
-  const [reward, setReward] = useState<number>(0);
   const wellRef = useRef<HTMLDivElement>(null);
-  const [coins, setCoins] = useState<Array<{ id: number, x: number, y: number }>>([]);
+  const {
+    wishAmount,
+    setWishAmount,
+    isWishing,
+    result,
+    wishResult,
+    coins,
+    handleSliderChange,
+    handleWish
+  } = useWishingWell();
 
-  const predefinedAmounts = [0.25, 0.5, 1, 2, 5, 10];
-
-  const handleSliderChange = (value: number[]) => {
-    setWishAmount(value[0]);
+  const onWishClick = () => {
+    handleWish(user, wellRef);
   };
-
-  const addCoin = () => {
-    if (!wellRef.current) return;
-    
-    const wellRect = wellRef.current.getBoundingClientRect();
-    const centerX = wellRect.width / 2;
-    const centerY = wellRect.height / 2;
-    
-    const angle = Math.random() * Math.PI * 2;
-    const distance = Math.random() * 40;
-    const x = centerX + Math.cos(angle) * distance;
-    const y = centerY + Math.sin(angle) * distance;
-    
-    setCoins(prev => [...prev, { id: Date.now(), x, y }]);
-    
-    setTimeout(() => {
-      setCoins(prev => prev.filter(coin => coin.id !== Date.now()));
-    }, 2000);
-  };
-
-  const handleWish = async () => {
-    if (!user) {
-      toast({
-        title: "Authentication Required",
-        description: "You must be logged in to make a wish.",
-        variant: "destructive"
-      });
-      return;
-    }
-    
-    setIsWishing(true);
-    setWishResult('pending');
-    addCoin();
-    playSound('coinDrop');
-    
-    try {
-      const success = await spendFromWallet(
-        user,
-        wishAmount,
-        'wish',
-        `Made a wish of $${wishAmount}`,
-        { wishAmount }
-      );
-      
-      if (!success) {
-        throw new Error("Transaction failed");
-      }
-      
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      const baseChance = 0.15;
-      const amountBonus = Math.min(0.25, wishAmount * 0.01);
-      const winChance = baseChance + amountBonus;
-      
-      const isWin = Math.random() < winChance;
-      
-      if (isWin) {
-        const cosmeticRewards = [
-          "Royal Purple Border", "Crown Icon", "Gold Text Effect", 
-          "Animated Background", "Special Emoji Pack", "Noble Title"
-        ];
-        const rewardName = cosmeticRewards[Math.floor(Math.random() * cosmeticRewards.length)];
-        
-        setWishResult('win');
-        setResult(`Your wish comes true! You've been granted the "${rewardName}" cosmetic item!`);
-        playSound('reward');
-        setReward(0);
-      } else {
-        setWishResult('lose');
-        setResult("Your wish fades into the ether. Perhaps fortune will favor you next time...");
-        playSound('error', 0.3);
-      }
-    } catch (error) {
-      console.error("Wish failed:", error);
-      toast({
-        title: "Wish Failed",
-        description: "There was an error processing your wish.",
-        variant: "destructive"
-      });
-      setWishResult(null);
-    } finally {
-      setIsWishing(false);
-    }
-  };
-
-  useEffect(() => {
-    if (result) {
-      const timer = setTimeout(() => {
-        setResult(null);
-        setWishResult(null);
-      }, 5000);
-      
-      return () => clearTimeout(timer);
-    }
-  }, [result]);
 
   return (
     <Card className="glass-morphism border-royal-gold/20">
@@ -152,137 +53,23 @@ const RoyalWishingWell: React.FC<RoyalWishingWellProps> = ({
       </CardHeader>
       
       <CardContent className="space-y-6">
-        <div className="flex justify-between items-center p-3 bg-black/20 rounded-lg">
-          <div className="flex items-center">
-            <Coins className="h-5 w-5 text-royal-gold mr-2" />
-            <span className="text-sm text-white/70">Current Pool</span>
-          </div>
-          <span className="text-xl font-bold text-royal-gold font-mono">${currentPool.toLocaleString()}</span>
-        </div>
+        <WishStats currentPool={currentPool} />
         
-        <div className="relative h-80 flex items-center justify-center">
-          <div 
-            ref={wellRef}
-            className="relative w-64 h-64 rounded-full border-4 border-royal-gold/30 bg-gradient-to-b from-black to-royal-navy/30 flex items-center justify-center overflow-hidden"
-          >
-            <div className="absolute inset-0 bg-royal-navy/20 backdrop-blur-sm" style={{ top: '15%' }}>
-              <div className="absolute inset-0 bg-gradient-to-b from-royal-gold/10 to-royal-navy/20"></div>
-            </div>
-            
-            <div className="absolute inset-0 overflow-hidden">
-              {[...Array(8)].map((_, i) => (
-                <Sparkles
-                  key={i}
-                  size={12}
-                  className="absolute text-royal-gold animate-pulse-slow"
-                  style={{
-                    top: `${30 + Math.random() * 50}%`,
-                    left: `${10 + Math.random() * 80}%`,
-                    opacity: 0.6 + Math.random() * 0.4,
-                    animationDelay: `${i * 0.2}s`
-                  }}
-                />
-              ))}
-            </div>
-            
-            {coins.map(coin => (
-              <WishingCoin key={coin.id} x={coin.x} y={coin.y} />
-            ))}
-            
-            {result && (
-              <div className="absolute inset-0 flex items-center justify-center z-10">
-                <div 
-                  className={`p-3 rounded-lg text-center max-w-[90%] backdrop-blur-md border transition-all duration-500 ${
-                    wishResult === 'win' 
-                      ? 'bg-royal-gold/20 border-royal-gold text-white' 
-                      : 'bg-black/50 border-white/20 text-white/90'
-                  }`}
-                >
-                  <p>{result}</p>
-                  {wishResult === 'win' && (
-                    <Badge className="mt-2 bg-royal-gold text-black">
-                      Cosmetic Reward
-                    </Badge>
-                  )}
-                </div>
-              </div>
-            )}
-            
-            <div className="absolute w-20 h-20 rounded-full bg-royal-gold/10 filter blur-xl animate-pulse-slow"></div>
-            
-            <ArrowDownCircle 
-              size={48} 
-              className={`absolute -top-6 text-royal-gold animate-bounce ${isWishing ? 'opacity-0' : 'opacity-80'}`} 
-            />
-          </div>
-          
-          {!isWishing && !result && (
-            <div className="absolute bottom-0 left-0 right-0 flex justify-center">
-              <RoyalButton
-                variant="royalGold"
-                size="lg"
-                className="shadow-lg"
-                onClick={handleWish}
-                disabled={!user || user.walletBalance < wishAmount}
-              >
-                <Sparkles className="mr-2 h-4 w-4" />
-                Make a Wish
-              </RoyalButton>
-            </div>
-          )}
-          
-          {isWishing && (
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              <div className="h-16 w-16 rounded-full bg-black/50 flex items-center justify-center backdrop-blur-sm">
-                <div className="h-8 w-8 border-4 border-t-transparent border-royal-gold rounded-full animate-spin"></div>
-              </div>
-            </div>
-          )}
-        </div>
+        <WishingWellDisplay 
+          coins={coins}
+          isWishing={isWishing}
+          result={result}
+          wishResult={wishResult}
+          handleWish={onWishClick}
+          user={user}
+          wishAmount={wishAmount}
+        />
         
-        <div className="space-y-4">
-          <div>
-            <div className="flex justify-between mb-2">
-              <span className="text-sm text-white/70">Wish Amount:</span>
-              <span className="text-sm font-bold">${wishAmount}</span>
-            </div>
-            <Slider 
-              value={[wishAmount]} 
-              min={0.25} 
-              max={10} 
-              step={0.25} 
-              onValueChange={handleSliderChange} 
-              className="my-4"
-            />
-            <div className="grid grid-cols-6 gap-2 mt-3">
-              {predefinedAmounts.map(amount => (
-                <Button
-                  key={amount}
-                  variant="outline"
-                  size="sm"
-                  className={`glass-morphism ${
-                    wishAmount === amount 
-                      ? 'border-royal-gold text-royal-gold' 
-                      : 'border-white/10 text-white/70'
-                  }`}
-                  onClick={() => setWishAmount(amount)}
-                >
-                  ${amount}
-                </Button>
-              ))}
-            </div>
-          </div>
-          
-          <div className="p-3 bg-black/20 rounded-lg text-sm">
-            <p className="flex items-center text-white/70 mb-2">
-              <Gift size={16} className="text-royal-gold mr-2" />
-              <span>Higher wishes may increase your chances of receiving cosmetic rewards!</span>
-            </p>
-            <p className="text-white/50">
-              All rewards are purely cosmetic and do not affect your rank or give gameplay advantages.
-            </p>
-          </div>
-        </div>
+        <WishAmountSelector 
+          wishAmount={wishAmount}
+          handleSliderChange={handleSliderChange}
+          setWishAmount={setWishAmount}
+        />
         
         <WishHistory recentWishes={recentWishes} />
       </CardContent>

@@ -4,7 +4,7 @@ import { UserProfile } from '@/types/user';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Sparkles, Clock, Crown, Zap } from 'lucide-react';
-import { useProfileBoost } from '@/hooks/use-profile-boost';
+import { useProfileBoost, BoostEffect } from '@/hooks/use-profile-boost';
 import '../../styles/profile-boost.css';
 
 interface ProfileBoostDisplayProps {
@@ -43,7 +43,9 @@ const ProfileBoostDisplay: React.FC<ProfileBoostDisplayProps> = ({ user }) => {
       <CardContent>
         <div className="space-y-3">
           {activeBoosts.map((boost) => {
-            const effect = boostEffects[boost.effectId] || { name: 'Unknown Effect', cssClass: '' };
+            // Ensure effectId is cast to BoostEffect for type safety
+            const effectId = boost.effectId as BoostEffect;
+            const effect = boostEffects[effectId] || { name: 'Unknown Effect', cssClass: '' };
             
             return (
               <div key={boost.id} className="flex items-center justify-between glass-morphism border-white/10 p-2 rounded-lg">
@@ -53,7 +55,12 @@ const ProfileBoostDisplay: React.FC<ProfileBoostDisplayProps> = ({ user }) => {
                 </div>
                 <Badge variant="outline" className="bg-black/20 text-xs flex items-center">
                   <Clock className="h-3 w-3 mr-1" />
-                  {getTimeRemaining(boost)}
+                  {getTimeRemaining({
+                    id: boost.id,
+                    effectId: effectId,
+                    startTime: boost.startTime,
+                    endTime: boost.endTime
+                  })}
                 </Badge>
               </div>
             );
