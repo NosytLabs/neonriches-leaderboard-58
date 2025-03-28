@@ -1,45 +1,37 @@
-import React, { useState, useEffect, useRef } from 'react';
+
+import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Sparkles, Gem, Coins, Gift, ArrowDownCircle, ChevronDown } from 'lucide-react';
+import { Sparkles, Gem, Coins, Gift, ArrowDownCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useAuth } from '@/contexts/AuthContext';
-import { spendFromWallet } from '@/services/walletService';
-import { useToast } from '@/hooks/use-toast';
-import useNotificationSounds from '@/hooks/use-notification-sounds';
-import { CosmeticItem, CosmeticRarity, getRarityBgColor, getRarityBorderColor, getRarityColor } from '@/types/cosmetics';
-import { awardRandomCosmetic, getCosmeticById } from '@/services/cosmeticService';
+import useWishingWell from '@/hooks/use-wishing-well';
 import useFloatingEffects from '@/hooks/use-floating-effects';
-
-interface Wish {
-  id: string;
-  username: string;
-  amount: number;
-  result: string;
-  cosmetic?: CosmeticItem;
-  rarity?: CosmeticRarity;
-  timestamp: Date;
-}
+import { getRarityBgColor, getRarityBorderColor, getRarityColor } from '@/types/cosmetics';
 
 const WishingWell = () => {
-  const { user, updateUserProfile, awardCosmetic } = useAuth();
-  const { toast } = useToast();
-  const { playSound } = useNotificationSounds();
-  const [wishAmount, setWishAmount] = useState<number>(1);
-  const [isWishing, setIsWishing] = useState<boolean>(false);
-  const [result, setResult] = useState<string | null>(null);
-  const [wishResult, setWishResult] = useState<'pending' | 'win' | 'lose' | null>(null);
-  const [rewardItem, setRewardItem] = useState<CosmeticItem | null>(null);
-  const [rewardRarity, setRewardRarity] = useState<CosmeticRarity | null>(null);
-  const [wishes, setWishes] = useState<Wish[]>([]);
-  const [preferredCategory, setPreferredCategory] = useState<string | undefined>(undefined);
-  const wellRef = useRef<HTMLDivElement>(null);
-  const [coins, setCoins] = useState<Array<{ id: number, x: number, y: number }>>([]);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const wellEffectsRef = useRef<HTMLDivElement>(null);
-
+  const {
+    wishAmount,
+    setWishAmount,
+    isWishing,
+    result,
+    wishResult,
+    rewardItem,
+    rewardRarity,
+    wishes,
+    preferredCategory,
+    setPreferredCategory,
+    wellRef,
+    coins,
+    containerRef,
+    wellEffectsRef,
+    handleSliderChange,
+    handleWish,
+    formatDate,
+    predefinedAmounts
+  } = useWishingWell();
+  
   // Use floating effects for ambient well particles
   const { isVisible: isEffectsVisible } = useFloatingEffects({
     containerRef: wellEffectsRef,
@@ -51,236 +43,6 @@ const WishingWell = () => {
     sizes: [3, 4, 5],
     duration: 4000
   });
-
-  const predefinedAmounts = [0.25, 0.5, 1, 2, 5, 10];
-  
-  // Load previous wishes from localStorage
-  useEffect(() => {
-    if (user) {
-      const storedWishes = localStorage.getItem(`wishes_${user.id}`);
-      if (storedWishes) {
-        try {
-          const parsedWishes = JSON.parse(storedWishes);
-          setWishes(parsedWishes.map((w: any) => ({
-            ...w,
-            timestamp: new Date(w.timestamp)
-          })));
-        } catch (error) {
-          console.error("Error parsing wishes:", error);
-        }
-      }
-    }
-  }, [user]);
-
-  const handleSliderChange = (value: number[]) => {
-    setWishAmount(value[0]);
-  };
-
-  const addCoin = () => {
-    if (!wellRef.current) return;
-    
-    const wellRect = wellRef.current.getBoundingClientRect();
-    const centerX = wellRect.width / 2;
-    const centerY = wellRect.height / 2;
-    
-    // Create multiple coins with different angles for a more natural look
-    const numCoins = Math.floor(Math.random() * 3) + 1; // 1-3 coins
-    
-    for (let i = 0; i < numCoins; i++) {
-      const angle = Math.random() * Math.PI * 2;
-      const distance = Math.random() * 30;
-      const x = centerX + Math.cos(angle) * distance;
-      const y = centerY - 10 + Math.sin(angle) * distance; // Start slightly above center
-      
-      const newCoin = { id: Date.now() + i, x, y };
-      setCoins(prev => [...prev, newCoin]);
-      
-      setTimeout(() => {
-        setCoins(prev => prev.filter(coin => coin.id !== newCoin.id));
-      }, 2000);
-    }
-    
-    // Create water ripple effect
-    const ripple = document.createElement('div');
-    ripple.className = 'absolute w-16 h-16 rounded-full bg-royal-gold/10 water-ripple';
-    ripple.style.left = `${centerX}px`;
-    ripple.style.top = `${centerY + 20}px`;
-    ripple.style.transform = 'translate(-50%, -50%)';
-    
-    if (wellRef.current) {
-      wellRef.current.appendChild(ripple);
-      setTimeout(() => {
-        if (ripple.parentNode) {
-          ripple.parentNode.removeChild(ripple);
-        }
-      }, 2000);
-    }
-  };
-
-  const saveWish = (newWish: Wish) => {
-    const updatedWishes = [newWish, ...wishes.slice(0, 9)]; // Keep only 10 most recent wishes
-    setWishes(updatedWishes);
-    
-    if (user) {
-      localStorage.setItem(`wishes_${user.id}`, JSON.stringify(updatedWishes));
-    }
-  };
-
-  const handleWish = async () => {
-    if (!user) {
-      toast({
-        title: "Authentication Required",
-        description: "You must be logged in to make a wish.",
-        variant: "destructive"
-      });
-      return;
-    }
-    
-    if (user.walletBalance < wishAmount) {
-      toast({
-        title: "Insufficient Funds",
-        description: "You don't have enough coins for this wish.",
-        variant: "destructive"
-      });
-      return;
-    }
-    
-    setIsWishing(true);
-    setWishResult('pending');
-    addCoin();
-    playSound('coinDrop');
-    
-    try {
-      const success = await spendFromWallet(
-        user,
-        wishAmount,
-        'wish',
-        `Made a wish of $${wishAmount.toFixed(2)}`,
-        { wishAmount, preferredCategory }
-      );
-      
-      if (!success) {
-        throw new Error("Transaction failed");
-      }
-      
-      // Update user balance (in a real app, this would be done by the backend)
-      await updateUserProfile({
-        ...user,
-        walletBalance: user.walletBalance - wishAmount
-      });
-      
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // Base chance to get nothing is 35%
-      const nothingChance = Math.max(35 - wishAmount * 3, 15); // Higher wishes reduce chance of nothing, minimum 15%
-      const noReward = Math.random() * 100 < nothingChance;
-      
-      if (noReward) {
-        // No reward
-        setWishResult('lose');
-        setResult("Your wish fades into the ether. Perhaps fortune will favor you next time...");
-        playSound('error', 0.3);
-        
-        const newWish: Wish = {
-          id: `wish_${Date.now()}`,
-          username: user.username,
-          amount: wishAmount,
-          result: "No reward",
-          timestamp: new Date()
-        };
-        
-        saveWish(newWish);
-      } else {
-        // Award a random cosmetic
-        const { cosmeticItem, rarity } = awardRandomCosmetic(user, wishAmount, preferredCategory);
-        
-        if (!cosmeticItem) {
-          // User already owns all possible items
-          setWishResult('lose');
-          setResult("The well shows you items you already own. Try wishing for something new!");
-          playSound('error', 0.3);
-          
-          const newWish: Wish = {
-            id: `wish_${Date.now()}`,
-            username: user.username,
-            amount: wishAmount,
-            result: "Already owns all items",
-            rarity,
-            timestamp: new Date()
-          };
-          
-          saveWish(newWish);
-          return;
-        }
-        
-        // Add the cosmetic to the user's collection
-        if (awardCosmetic) {
-          const awarded = await awardCosmetic(
-            cosmeticItem.id,
-            cosmeticItem.category,
-            cosmeticItem.rarity,
-            'wish'
-          );
-          
-          if (awarded) {
-            setWishResult('win');
-            setResult(`Your wish comes true! You've been granted the "${cosmeticItem.name}" cosmetic item!`);
-            // Use setState with a function when updating with the object
-            setRewardItem(cosmeticItem as CosmeticItem);
-            setRewardRarity(cosmeticItem.rarity);
-            playSound('reward');
-            
-            const newWish: Wish = {
-              id: `wish_${Date.now()}`,
-              username: user.username,
-              amount: wishAmount,
-              result: `Received ${cosmeticItem.name}`,
-              cosmetic: cosmeticItem as CosmeticItem,
-              rarity: cosmeticItem.rarity,
-              timestamp: new Date()
-            };
-            
-            saveWish(newWish);
-          } else {
-            throw new Error("Failed to award cosmetic");
-          }
-        }
-      }
-    } catch (error) {
-      console.error("Wish failed:", error);
-      toast({
-        title: "Wish Failed",
-        description: "There was an error processing your wish.",
-        variant: "destructive"
-      });
-      setWishResult(null);
-    } finally {
-      setIsWishing(false);
-    }
-  };
-
-  useEffect(() => {
-    if (result) {
-      const timer = setTimeout(() => {
-        setResult(null);
-        setWishResult(null);
-        setRewardItem(null);
-        setRewardRarity(null);
-      }, 5000);
-      
-      return () => clearTimeout(timer);
-    }
-  }, [result]);
-
-  // Format dates to be more readable
-  const formatDate = (date: Date): string => {
-    return new Intl.DateTimeFormat('en-US', {
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    }).format(date);
-  };
 
   return (
     <Card className="glass-morphism border-royal-gold/20">
@@ -439,7 +201,7 @@ const WishingWell = () => {
                   <Button
                     className="bg-royal-gold hover:bg-royal-gold/90 text-black royal-button shadow-lg"
                     onClick={handleWish}
-                    disabled={!user || user.walletBalance < wishAmount}
+                    disabled={isWishing}
                   >
                     <Sparkles className="mr-2 h-4 w-4" />
                     Make a Wish

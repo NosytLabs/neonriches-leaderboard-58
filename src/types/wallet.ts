@@ -1,19 +1,5 @@
 
-export type TransactionType = 
-  | 'deposit' 
-  | 'withdrawal' 
-  | 'purchase' 
-  | 'reward' 
-  | 'tip' 
-  | 'referral' 
-  | 'mockery'
-  | 'protection'
-  | 'shame'
-  | 'wish'
-  | 'advertisement'
-  | 'cosmetic'  // Added for cosmetic purchases
-  | 'founder'   // Added for founder's pass
-  | 'royal';    // Added for royal features
+export type TransactionType = 'deposit' | 'withdrawal' | 'purchase' | 'transfer' | 'mockery' | 'cosmetic' | 'subscription' | 'boost' | 'wish';
 
 export interface Transaction {
   id: string;
@@ -25,28 +11,21 @@ export interface Transaction {
   status: 'pending' | 'completed' | 'failed' | 'refunded';
   targetUser?: string;
   targetItem?: string;
+  metadata?: Record<string, any>;
 }
 
 export interface SpendOptions {
   targetUser?: string;
-  targetUsername?: string;
-  mockeryType?: string;
-  shameType?: string;
   cosmetic?: string;
   feature?: string;
   wishAmount?: number;
   preferredCategory?: string;
-  itemId?: string; // Added for cosmetic identification 
-  category?: string; // Added for cosmetic category
 }
 
-export interface Wallet {
-  id: string;
+export interface WalletBalance {
   userId: string;
   balance: number;
-  address?: string;
-  depositTransactions: Transaction[];
-  withdrawalTransactions: Transaction[];
-  purchaseTransactions: Transaction[];
-  rewardTransactions: Transaction[];
+  pendingDeposits: number;
+  pendingWithdrawals: number;
+  lastUpdated: string;
 }

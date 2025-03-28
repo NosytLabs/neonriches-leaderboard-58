@@ -1,162 +1,118 @@
 
-import { CosmeticItem } from "./cosmetics";
+import { UserCosmetics } from "./cosmetics";
 
-export type UserRole = 'user' | 'admin' | 'moderator';
-export type UserStatus = 'active' | 'suspended' | 'banned';
+export type UserRole = 'admin' | 'moderator' | 'user';
+export type UserStatus = 'active' | 'inactive' | 'banned' | 'pending';
 export type TeamType = 'red' | 'green' | 'blue' | 'none';
-export type UserTier = 'basic' | 'premium' | 'royal' | 'legendary' | 'pro' | 'free';
-export type UserGender = 'male' | 'female' | 'non-binary' | 'prefer-not-to-say' | 'king' | 'queen' | 'neutral' | 'jester' | 'noble';
+export type UserTier = 'free' | 'basic' | 'premium' | 'pro' | 'royal' | 'legendary' | 'crab' | 'octopus' | 'fish' | 'dolphin' | 'shark' | 'whale';
+export type UserGender = 'king' | 'queen' | 'royal' | 'none';
+
+export interface SocialLink {
+  id?: string | number;
+  platform: string;
+  url: string;
+  label?: string;
+  icon?: string;
+}
+
+export interface ProfileImage {
+  id: string;
+  url: string;
+  caption?: string;
+  isPrimary?: boolean;
+  uploadedAt?: string;
+}
+
+export interface CertificateNFT {
+  id: string;
+  name: string;
+  description: string;
+  imageUrl: string;
+  mintedAt: string;
+  attributes: {
+    trait_type: string;
+    value: string;
+  }[];
+}
 
 export interface ProfileBoost {
-  id?: string;
+  id: string;
   startDate: string;
   endDate: string;
   level: number;
   effectId?: string;
   startTime?: string;
-  endTime?: number;
+  endTime?: string | number;
   type?: string;
   strength?: number;
   appliedBy?: string;
 }
 
-export interface UserSettings {
-  showRank: boolean;
-  showTeam: boolean;
-  showSpending: boolean;
-  publicProfile: boolean;
-  allowMessages: boolean;
-  emailNotifications: boolean;
-  darkMode: boolean;
-  language: string;
-  soundEffects?: boolean;
-  profileVisibility?: boolean;
-  allowProfileLinks?: boolean;
-  showEmailOnProfile?: boolean;
-  rankChangeAlerts?: boolean;
-  shameAlerts?: boolean;
-  newFollowerAlerts?: boolean;
-}
-
-export interface SocialLink {
-  id: string | number;
-  platform: string;
-  url: string;
-  icon?: string;
-  title?: string;
-  label?: string;
-  clicks?: number;
-}
-
-export interface ProfileImage {
-  id: string | number;
-  url: string;
-  caption?: string;
-  isPrimary?: boolean;
-}
-
-export interface CertificateNFT {
-  mintAddress: string;
-  tokenId: string;
-  imageUri?: string;
-  metadataUri?: string;
-  mintedAt?: string;
-}
-
 export interface UserSubscription {
-  status: string;
-  tier: string;
-  interval: string;
+  status: 'active' | 'canceled' | 'expired' | 'trial';
+  tier: UserTier;
+  interval: 'monthly' | 'yearly';
   startDate: string;
   endDate: string;
   autoRenew: boolean;
   features: string[];
 }
 
-export interface UserCosmetics {
-  borders: string[];
-  colors: string[];
-  fonts: string[];
-  emojis: string[];
-  titles: string[];
-  backgrounds: string[];
-  effects: string[];
-  badges: string[];
-  themes: string[];
-  activeBorder?: string;
-  activeColor?: string;
-  activeFont?: string;
-  activeEmoji?: string;
-  activeTheme?: string;
-  activeBadge?: string;
-  activeBackground?: string;
-  foundersPass?: boolean | string[];
+export interface UserSettings {
+  theme: 'dark' | 'light' | 'system';
+  notifications: boolean;
+  emailNotifications: boolean;
+  soundEffects: boolean;
+  profileVisibility: 'public' | 'private' | 'followers';
+  allowProfileLinks: boolean;
+  showEmailOnProfile: boolean;
+  rankChangeAlerts: boolean;
+  shameAlerts: boolean;
+  newFollowerAlerts: boolean;
 }
 
 export interface UserProfile {
   id: string;
   username: string;
+  email: string;
   displayName?: string;
-  email?: string;
-  avatarUrl?: string;
+  gender?: UserGender;
+  role?: UserRole;
+  status?: UserStatus;
   bio?: string;
-  socialLinks?: SocialLink[] | {
-    twitter?: string;
-    discord?: string;
-    website?: string;
-  };
-  walletBalance: number;
-  totalSpent: number;
-  amountSpent?: number;
-  spentAmount?: number;
-  teamId?: string;
-  tier: UserTier;
+  profileImage?: string;
+  profileImages?: ProfileImage[];
+  socialLinks?: SocialLink[];
+  team?: TeamType;
+  tier?: UserTier;
   rank?: number;
   previousRank?: number;
   joinDate: string;
   joinedAt?: string;
-  spendingStreak?: number;
-  spendStreak?: number;
-  badges?: string[];
-  team?: TeamType;
-  cosmetics?: UserCosmetics | string[];
-  equippedCosmetics?: Record<string, string>;
-  lastActive?: string;
-  role?: UserRole;
   isVerified?: boolean;
   lastLoginDate?: string;
-  status?: UserStatus;
-  profileImage?: string;
-  profileImages?: ProfileImage[];
-  settings?: UserSettings;
-  gender?: UserGender;
-  activeTitle?: string;
-  profileViews?: number;
-  profileClicks?: number;
   followers?: number;
   following?: number;
+  walletBalance: number;
+  amountSpent?: number;
+  spentAmount?: number;
+  totalSpent: number;
+  spendStreak?: number;
+  settings?: UserSettings;
+  cosmetics?: UserCosmetics;
   profileBoosts?: ProfileBoost[];
+  lastActive?: string;
+  profileViews?: number;
+  profileClicks?: number;
   subscription?: UserSubscription;
-  walletAddress?: string;
-  isVIP?: boolean;
-  certificateNFT?: CertificateNFT;
+  certificates?: CertificateNFT[];
 }
 
-export interface User extends UserProfile {
+export interface User extends Omit<UserProfile, 'role' | 'isVerified' | 'lastLoginDate'> {
   isAuthenticated: boolean;
   isAdmin: boolean;
   isVerified: boolean;
   lastLogin: string;
 }
 
-export interface Notification {
-  id: string;
-  userId: string;
-  type: 'system' | 'rank' | 'team' | 'mockery' | 'transaction' | 'mention';
-  title: string;
-  message: string;
-  read: boolean;
-  createdAt: string;
-  link?: string;
-  data?: Record<string, any>;
-}
+export type Team = 'red' | 'green' | 'blue';
