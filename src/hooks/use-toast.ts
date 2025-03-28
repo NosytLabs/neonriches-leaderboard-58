@@ -84,17 +84,41 @@ export function useToast() {
     addToast,
     dismissToast,
     updateToast,
+    // Add the toast property to make both approaches work
+    toast: {
+      addToast,
+      dismissToast,
+      updateToast,
+      // Convenience methods
+      success: (props: Omit<ToasterToast, 'id'>) => {
+        return addToast({ ...props, variant: 'default' });
+      },
+      error: (props: Omit<ToasterToast, 'id'>) => {
+        return addToast({ ...props, variant: 'destructive' });
+      }
+    }
   };
 }
 
-// Convenience function for components that don't need the full hook
+// Create a singleton version of the toast function for non-hook components
+let addToastFn: (props: Omit<ToasterToast, 'id'>) => string = () => "";
+
+export const setToastFunction = (fn: (props: Omit<ToasterToast, 'id'>) => string) => {
+  addToastFn = fn;
+};
+
+// Standalone toast object for use in non-hook contexts
 export const toast = {
+  // Generic methods
+  addToast: (props: Omit<ToasterToast, 'id'>) => {
+    return addToastFn(props);
+  },
+  
+  // Convenience methods
   success: (props: Omit<ToasterToast, 'id'>) => {
-    const { addToast } = useToast();
-    return addToast({ ...props, variant: 'default' });
+    return addToastFn({ ...props, variant: 'default' });
   },
   error: (props: Omit<ToasterToast, 'id'>) => {
-    const { addToast } = useToast();
-    return addToast({ ...props, variant: 'destructive' });
-  },
+    return addToastFn({ ...props, variant: 'destructive' });
+  }
 };

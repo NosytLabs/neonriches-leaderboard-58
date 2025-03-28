@@ -83,7 +83,7 @@ const TermsOfService = () => {
                   <li>We collect information necessary to maintain your account.</li>
                 </ul>
 
-                <RoyalDivider variant="simple" className="my-4" />
+                <RoyalDivider variant="line" className="my-4" />
                 
                 <div className="flex items-start space-x-3">
                   <Checkbox 

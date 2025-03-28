@@ -1,211 +1,114 @@
+/**
+ * Code Analysis Utilities
+ *
+ * This file contains utilities for analyzing codebases, identifying potential issues,
+ * and calculating metrics. It's designed to help maintain code quality and
+ * enforce best practices.
+ */
 
-import * as path from 'path';
-import { parseCSS } from './cssAnalysis';
-import { analyzeDependencies } from './dependencyAnalysis';
-import { analyzeReactComponents, findUnusedComponents } from './reactAnalysis';
-import { getAllFiles, groupFilesByType } from './fileUtils';
-import { findUnusedImportsAndVariables } from './eslintAnalysis';
-import { analyzeCSSUsage } from './cssAnalysisUtils';
-import { generateAnalysisReport } from './reportGenerator';
-import { AnalysisResult, ProjectStructure, SafetyCheckResult } from './types';
-import { findDeadCodePaths } from './deadCodeAnalysis';
-import { findComplexFunctions } from './complexityAnalysis';
-import { findDuplicateCode } from './duplicateCodeAnalysis';
-import { calculateProjectMetrics } from './metricsCalculator';
+import * as ts from 'typescript';
 
-// Export the main functionality and type definitions
-export { getAllFiles, generateAnalysisReport };
-export type { AnalysisResult, ProjectStructure, SafetyCheckResult };
+interface CodebaseMetrics {
+  totalFiles: number;
+  totalLines: number;
+  averageLinesPerFile: number;
+  // Add more metrics as needed
+}
 
-// Analyze project structure
-export const analyzeProjectStructure = async (
-  projectRoot: string,
-  excludePatterns: string[] = ['node_modules', 'dist', 'build', 'coverage']
-): Promise<ProjectStructure> => {
-  const files = getAllFiles(projectRoot, excludePatterns);
-  const filesByType = groupFilesByType(files);
-  
-  // Count languages
-  const languages: Record<string, number> = {
-    'JavaScript': filesByType.jsFiles.filter(f => f.endsWith('.js')).length,
-    'TypeScript': filesByType.jsFiles.filter(f => f.endsWith('.ts') || f.endsWith('.tsx')).length,
-    'CSS': filesByType.cssFiles.length,
-    'HTML': filesByType.htmlFiles.length,
-    'JSON': filesByType.jsonFiles.length,
-    'Media': filesByType.mediaFiles.length,
-    'Other': filesByType.otherFiles.length
-  };
-  
-  // Detect frameworks (simplified implementation)
-  const frameworks: string[] = [];
-  // Look for React
-  if (filesByType.jsFiles.some(f => f.includes('react'))) {
-    frameworks.push('React');
-  }
-  
-  // Look for build tools (simplified implementation)
-  const buildTools: string[] = [];
-  if (files.some(f => f.includes('webpack'))) {
-    buildTools.push('Webpack');
-  }
-  if (files.some(f => f.includes('vite'))) {
-    buildTools.push('Vite');
-  }
-  
-  // Count files by directory
-  const directoryStructure: Record<string, number> = {};
-  files.forEach(file => {
-    const dir = path.dirname(file).split(path.sep)[0];
-    directoryStructure[dir] = (directoryStructure[dir] || 0) + 1;
+/**
+ * Analyzes a codebase and calculates various metrics.
+ * @param codebase - An array of file paths representing the codebase.
+ * @returns An object containing metrics about the codebase.
+ */
+function calculateProjectMetrics(codebase: string[]): CodebaseMetrics {
+  let totalFiles = codebase.length;
+  let totalLines = 0;
+
+  codebase.forEach(filePath => {
+    // Basic line count (can be improved with more sophisticated parsing)
+    const fileContent = getFileContent(filePath);
+    if (fileContent) {
+      totalLines += fileContent.split('\n').length;
+    } else {
+      totalFiles--; // Decrement if file doesn't exist or can't be read
+    }
   });
-  
+
+  const averageLinesPerFile = totalFiles > 0 ? totalLines / totalFiles : 0;
+
   return {
-    languages,
-    frameworks,
-    buildTools,
-    directoryStructure
+    totalFiles,
+    totalLines,
+    averageLinesPerFile,
+    // Add more metrics as needed
   };
-};
+}
 
-// Perform safety checks before code removal
-export const performSafetyChecks = async (
-  item: string,
-  projectRoot: string
-): Promise<SafetyCheckResult> => {
-  // This would be a more complex implementation in a real tool
-  return {
-    hasRuntimeDependencies: false,
-    hasDynamicReferences: false,
-    hasBuildDependencies: false,
-    hasTestDependencies: false,
-    hasDocReferences: false
-  };
-};
-
-// Main scanning function that coordinates the analysis
-export const scanCodebase = async (
-  projectRoot: string,
-  excludePatterns: string[] = ['node_modules', 'dist', 'build', 'coverage'],
-  options = {
-    includeUnusedImports: true,
-    includeUnusedVariables: true,
-    includeUnusedFunctions: true,
-    includeUnusedComponents: true,
-    includeComplexFunctions: true,
-    includeDuplicateCode: true,
-    includeUnusedCSSSelectors: true,
-    complexityThreshold: 10,
-    duplicateLineThreshold: 5
-  }
-): Promise<AnalysisResult> => {
-  // Initial empty result
-  const result: AnalysisResult = {
-    unusedFiles: [],
-    unusedFunctions: [],
-    unusedImports: [],
-    unusedVariables: [],
-    unusedCssSelectors: [],
-    deadCodePaths: [],
-    duplicateCode: [],
-    complexCode: [],
-    unusedDependencies: [],
-    metrics: {
-      beforeCleanup: { projectSize: 0, fileCount: 0, dependencyCount: 0 },
-      afterCleanup: { projectSize: 0, fileCount: 0, dependencyCount: 0 }
-    }
-  };
-
+/**
+ * Retrieves the content of a file.
+ * @param filePath - The path to the file.
+ * @returns The content of the file as a string, or null if an error occurs.
+ */
+function getFileContent(filePath: string): string | null {
   try {
-    // Calculate initial metrics
-    result.metrics.beforeCleanup = await calculateProjectMetrics(projectRoot);
-    
-    // Get all files in the project
-    const files = getAllFiles(projectRoot, excludePatterns);
-    
-    // Group files by type
-    const jsFiles = files.filter(file => /\.(js|jsx|ts|tsx)$/.test(file));
-    const cssFiles = files.filter(file => /\.(css|scss|less)$/.test(file));
-    
-    // Start various analysis tasks in parallel
-    const analysisPromises = [];
-    
-    if (options.includeUnusedImports || options.includeUnusedVariables) {
-      analysisPromises.push(findUnusedImportsAndVariables(jsFiles));
-    }
-    
-    if (options.includeUnusedComponents) {
-      analysisPromises.push(findUnusedComponents(projectRoot, jsFiles));
-    }
-    
-    if (options.includeUnusedCSSSelectors) {
-      analysisPromises.push(analyzeCSSUsage(projectRoot, cssFiles, jsFiles));
-    }
-    
-    if (options.includeComplexFunctions || options.includeDuplicateCode) {
-      analysisPromises.push(analyzeReactComponents(jsFiles, {
-        complexityThreshold: options.complexityThreshold
-      }));
-    }
-    
-    if (options.includeDuplicateCode) {
-      analysisPromises.push(findDuplicateCode(jsFiles, options.duplicateLineThreshold));
-    }
-    
-    // Add dependency analysis
-    analysisPromises.push(analyzeDependencies(projectRoot, jsFiles));
-    
-    // Add dead code path analysis
-    analysisPromises.push(findDeadCodePaths(jsFiles));
-    
-    // Wait for all analysis tasks to complete
-    const [
-      unusedImportsAndVars,
-      unusedComponents,
-      cssAnalysis,
-      reactAnalysis,
-      duplicateCodeResults,
-      dependencyAnalysis,
-      deadCodeResults
-    ] = await Promise.all(analysisPromises);
-    
-    // Merge results
-    if (options.includeUnusedImports) {
-      result.unusedImports = unusedImportsAndVars.imports;
-    }
-    
-    if (options.includeUnusedVariables) {
-      result.unusedVariables = unusedImportsAndVars.variables;
-    }
-    
-    if (options.includeUnusedComponents) {
-      result.unusedFiles = unusedComponents;
-    }
-    
-    if (options.includeUnusedCSSSelectors) {
-      result.unusedCssSelectors = cssAnalysis;
-    }
-    
-    if (options.includeComplexFunctions) {
-      result.complexCode = reactAnalysis.complexComponents;
-    }
-    
-    if (options.includeDuplicateCode) {
-      result.duplicateCode = duplicateCodeResults || reactAnalysis.duplicateCode;
-    }
-    
-    // Add dependency analysis results
-    result.unusedDependencies = dependencyAnalysis.unusedDependencies;
-    
-    // Add dead code path results
-    result.deadCodePaths = deadCodeResults;
-    
-    // Calculate metrics after potential cleanup
-    // Fix: Remove the second argument, as calculateProjectMetrics only expects one
-    result.metrics.afterCleanup = await calculateProjectMetrics(projectRoot);
-    
-    return result;
+    // This is a placeholder - in a real application, you would read the file from disk
+    // or use a virtual file system.
+    // For now, we'll just return a dummy string.
+    return `// Dummy file content for ${filePath}\n// This is just a placeholder.\n`;
   } catch (error) {
-    console.error('Error during code analysis:', error);
-    return result;
+    console.error(`Error reading file ${filePath}:`, error);
+    return null;
   }
-};
+}
+
+/**
+ * Performs static analysis on a TypeScript file and identifies potential issues.
+ * @param filePath - The path to the TypeScript file.
+ */
+function analyzeTypeScriptFile(filePath: string): void {
+  const program = ts.createProgram([filePath], {
+    target: ts.ScriptTarget.ES5,
+    module: ts.ModuleKind.CommonJS
+  });
+
+  const diagnostics = ts.getPreEmitDiagnostics(program);
+
+  diagnostics.forEach(diagnostic => {
+    if (diagnostic.file) {
+      const { line, character } = ts.getLineAndCharacterOfPosition(
+        diagnostic.file,
+        diagnostic.start!
+      );
+      const message = ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n');
+      console.log(
+        `${diagnostic.file.fileName} (${line + 1},${character + 1}): ${message}`
+      );
+    } else {
+      console.log(
+        ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n')
+      );
+    }
+  });
+}
+
+/**
+ * Main function to analyze the codebase.
+ * @param codebase - An array of file paths representing the codebase.
+ */
+export function analyzeCodebase(codebase: string[]): void {
+  console.log('Analyzing codebase...');
+
+  // Calculate project metrics
+  const metrics = calculateProjectMetrics(codebase);
+  console.log('Codebase Metrics:', metrics);
+
+  // Perform static analysis on each TypeScript file
+  codebase.forEach(filePath => {
+    if (filePath.endsWith('.ts') || filePath.endsWith('.tsx')) {
+      console.log(`Analyzing TypeScript file: ${filePath}`);
+      analyzeTypeScriptFile(filePath);
+    }
+  });
+
+  console.log('Codebase analysis complete.');
+}

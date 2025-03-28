@@ -1,6 +1,6 @@
 
-import React, { createContext, useContext } from "react";
-import { useToast } from "@/hooks/use-toast";
+import React, { createContext, useContext, useEffect } from "react";
+import { useToast, setToastFunction } from "@/hooks/use-toast";
 
 type ToastContextType = ReturnType<typeof useToast>;
 
@@ -8,6 +8,11 @@ const ToastContext = createContext<ToastContextType | undefined>(undefined);
 
 export function ToastProvider({ children }: { children: React.ReactNode }) {
   const toastMethods = useToast();
+  
+  // Register the addToast function globally
+  useEffect(() => {
+    setToastFunction(toastMethods.addToast);
+  }, [toastMethods.addToast]);
   
   return (
     <ToastContext.Provider value={toastMethods}>

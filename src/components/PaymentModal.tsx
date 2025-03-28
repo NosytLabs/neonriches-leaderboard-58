@@ -6,7 +6,7 @@ import { DollarSign, Wallet } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { spendFromWallet } from '@/services/walletService';
 import { createCheckoutSession } from '@/services/stripeService';
-import { toast } from '@/hooks/use-toast';
+import { useToastContext } from '@/contexts/ToastContext';
 
 interface PaymentModalProps {
   title?: string;
@@ -30,6 +30,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
   const { user } = useAuth();
   const [isProcessing, setIsProcessing] = useState(false);
   const [open, setOpen] = useState(false);
+  const { addToast } = useToastContext();
   
   // Determine if user has enough wallet balance
   const hasWalletBalance = user?.walletBalance && user.walletBalance >= amount;
@@ -60,7 +61,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
       // It will need to be handled when the user returns from Stripe
     } catch (error) {
       console.error('Error processing payment:', error);
-      toast({
+      addToast({
         title: "Payment Error",
         description: "Could not process your payment. Please try again.",
         variant: "destructive"
@@ -71,7 +72,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
   
   const handleWalletPayment = async () => {
     if (!user) {
-      toast({
+      addToast({
         title: "Authentication Required",
         description: "You must be logged in to use your wallet.",
         variant: "destructive"
@@ -80,7 +81,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
     }
     
     if (!hasWalletBalance) {
-      toast({
+      addToast({
         title: "Insufficient Funds",
         description: "Your royal purse doesn't have enough gold for this transaction.",
         variant: "destructive"
@@ -107,7 +108,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
           onSuccess(amount);
         }
         
-        toast({
+        addToast({
           title: "Payment Successful",
           description: `You've successfully contributed $${amount}.`,
         });
@@ -116,7 +117,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
       }
     } catch (error) {
       setIsProcessing(false);
-      toast({
+      addToast({
         title: "Payment Failed",
         description: error.message || "Your payment could not be processed.",
         variant: "destructive"
