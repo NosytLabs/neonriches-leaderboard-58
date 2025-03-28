@@ -1,5 +1,5 @@
 
-import { Theater, Egg, AlertCircle, UserRound, Music, Mic, Meh } from 'lucide-react';
+import { Theater, Egg, AlertCircle, UserRound, Music, Meh } from 'lucide-react';
 import { ExtendedMockeryAction, MockeryAction, MockeryActionColor, MockeryTier } from '@/types/mockery';
 
 // Export these functions to be used by other components
@@ -193,6 +193,64 @@ export const getMockeryActionTitle = (action: MockeryAction): string => {
   }
 };
 
+// Get mockery action description for a user
+export const getMockeryActionDescription = (action: MockeryAction, username: string = 'noble'): string => {
+  switch (action) {
+    case 'tomatoes':
+      return `Throw rotten tomatoes at ${username}. A classic form of public ridicule.`;
+    case 'eggs':
+      return `Throw rotten eggs at ${username}. The smell will linger for a day.`;
+    case 'stocks':
+      return `Place ${username} in the public stocks for all to mock.`;
+    case 'silence':
+      return `Prevent ${username} from speaking in the royal court for a day.`;
+    case 'drama':
+      return `Start dramatic court gossip about ${username}.`;
+    case 'courtJester':
+    case 'jester':
+      return `Force ${username} to wear the court jester's outfit for a day.`;
+    case 'dunce':
+      return `Make ${username} wear a dunce cap for all to see.`;
+    case 'roast':
+      return `Publicly roast ${username} with witty barbs.`;
+    case 'ridicule':
+      return `Subject ${username} to elaborate public ridicule.`;
+    case 'taunt':
+      return `Taunt ${username} with royal proclamations of inadequacy.`;
+    default:
+      return `Mock ${username} in the royal court.`;
+  }
+};
+
+// Get mockery action label (simplified title)
+export const getMockeryActionLabel = (action: MockeryAction): string => {
+  switch (action) {
+    case 'tomatoes':
+      return 'Tomato Pelting';
+    case 'eggs':
+      return 'Egg Throwing';
+    case 'stocks':
+      return 'Public Stocks';
+    case 'silence':
+      return 'Royal Silence';
+    case 'drama':
+      return 'Court Drama';
+    case 'courtJester':
+    case 'jester':
+      return 'Court Jester';
+    case 'dunce':
+      return 'Dunce Cap';
+    case 'roast':
+      return 'Royal Roast';
+    case 'ridicule':
+      return 'Public Ridicule';
+    case 'taunt':
+      return 'Royal Taunt';
+    default:
+      return 'Mockery';
+  }
+};
+
 // Get mockery action tier color
 export const getMockeryTierColor = (tier: MockeryTier): MockeryActionColor => {
   switch (tier) {
@@ -241,6 +299,26 @@ export const getMockeryTierColor = (tier: MockeryTier): MockeryActionColor => {
   }
 };
 
+// Get mockery tier label
+export const getMockeryTierLabel = (tier: MockeryTier): string => {
+  switch (tier) {
+    case 'common':
+      return 'Common';
+    case 'uncommon':
+      return 'Uncommon';
+    case 'rare':
+      return 'Rare';
+    case 'epic':
+      return 'Epic';
+    case 'legendary':
+      return 'Legendary';
+    case 'basic':
+      return 'Basic';
+    default:
+      return 'Common';
+  }
+};
+
 // Get mockery cooldown in hours
 export const getMockeryCooldown = (action: MockeryAction): number => {
   switch (action) {
@@ -269,4 +347,12 @@ export const getMockeryCooldown = (action: MockeryAction): number => {
     default:
       return 12; // 12 hours
   }
+};
+
+// Convert between action types if needed
+export const convertToBasicAction = (action: ExtendedMockeryAction): MockeryAction => {
+  if (action === 'crown' || action === 'scroll' || action === 'shield-off' || action === 'message-square-off') {
+    return 'jester'; // Default fallback
+  }
+  return action;
 };
