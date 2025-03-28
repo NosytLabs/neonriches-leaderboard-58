@@ -6,12 +6,10 @@ import { DollarSign } from 'lucide-react';
 
 const HeroContent: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
-  
-  // Create a simplified version with proper error handling
-  const { addCoins } = useFloatingCoins() || { addCoins: () => {} };
+  const { addCoins } = useFloatingCoins();
   
   const handleSparkleClick = () => {
-    if (containerRef.current && addCoins) {
+    if (containerRef.current) {
       addCoins({
         container: containerRef.current,
         count: 5,

@@ -115,3 +115,4 @@ const MedievalIcon: React.FC<MedievalIconProps> = ({
 };
 
 export default MedievalIcon;
+export type { MedievalIconProps };
