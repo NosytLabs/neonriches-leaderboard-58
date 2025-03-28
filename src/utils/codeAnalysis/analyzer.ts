@@ -14,15 +14,38 @@ export const analyzeProject = async (
     console.error('Error analyzing project:', error);
     // Return empty results on error
     return {
+      complexity: [],
+      duplicates: [],
+      unused: {
+        imports: [],
+        variables: [],
+        functions: [],
+        components: []
+      },
+      summary: {
+        totalFiles: 0,
+        totalComponents: 0,
+        totalHooks: 0,
+        totalUtilities: 0,
+        complexityScore: 0,
+        duplicateScore: 0,
+        unusedCode: 0,
+        overallHealth: 0
+      },
       unusedFiles: [],
       unusedImports: [],
       unusedVariables: [],
       unusedCssSelectors: [],
+      performanceIssues: [],
+      accessibilityIssues: [],
+      securityIssues: [],
+      bestPracticeViolations: [],
+      codeSmells: [],
       deadCodePaths: [],
       duplicateCode: [],
       complexCode: [],
-      unusedFunctions: [],
       unusedDependencies: [],
+      unusedFunctions: [],
       metrics: {
         beforeCleanup: {
           projectSize: 0,

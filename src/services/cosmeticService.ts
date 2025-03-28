@@ -1,5 +1,6 @@
 
-import { CosmeticItem } from '@/types/cosmetics';
+import { CosmeticItem, CosmeticRarity } from '@/types/cosmetics';
+import { UserProfile } from '@/types/user';
 
 // Mock cosmetic items database
 const cosmeticItems: CosmeticItem[] = [
@@ -74,6 +75,95 @@ export const getCosmeticsByRarity = (rarity: string): CosmeticItem[] => {
   return cosmeticItems.filter(item => item.rarity === rarity);
 };
 
+// Award a random cosmetic
+export const awardRandomCosmetic = (
+  user: UserProfile,
+  amount: number,
+  preferredCategory?: string
+): { cosmeticItem: CosmeticItem | null; rarity: CosmeticRarity } => {
+  // Calculate rarity based on the amount spent
+  let rarityChances = {
+    common: Math.max(40 - (amount >= 10 ? 15 : amount >= 5 ? 10 : amount >= 2 ? 5 : 0), 25),
+    uncommon: 30 + (amount >= 10 ? -10 : amount >= 5 ? -5 : amount >= 2 ? 2 : 0),
+    rare: 20 + (amount >= 10 ? 5 : amount >= 5 ? 5 : amount >= 2 ? 2 : 0),
+    epic: 8 + (amount >= 10 ? 10 : amount >= 5 ? 5 : amount >= 2 ? 1 : 0),
+    legendary: 2 + (amount >= 10 ? 10 : amount >= 5 ? 5 : 0)
+  };
+  
+  // Normalize chances
+  const total = Object.values(rarityChances).reduce((acc, val) => acc + val, 0);
+  Object.keys(rarityChances).forEach((key) => {
+    rarityChances[key as CosmeticRarity] = rarityChances[key as CosmeticRarity] / total * 100;
+  });
+  
+  // Determine rarity based on weighted random
+  const rand = Math.random() * 100;
+  let cumulativeChance = 0;
+  let selectedRarity: CosmeticRarity = 'common';
+  
+  for (const [rarity, chance] of Object.entries(rarityChances)) {
+    cumulativeChance += chance;
+    if (rand <= cumulativeChance) {
+      selectedRarity = rarity as CosmeticRarity;
+      break;
+    }
+  }
+  
+  // Filter eligible cosmetics by rarity and optional category
+  let eligibleItems = cosmeticItems.filter(item => 
+    item.rarity === selectedRarity && 
+    (!preferredCategory || item.category === preferredCategory)
+  );
+  
+  // Check if user already has all items of this rarity
+  const userCosmetics = user.cosmetics || {
+    borders: [], colors: [], fonts: [], emojis: [], titles: [], backgrounds: [], effects: [], badges: [], themes: []
+  };
+  
+  const userCosmeticIds = [
+    ...userCosmetics.borders,
+    ...userCosmetics.colors,
+    ...userCosmetics.fonts,
+    ...userCosmetics.emojis,
+    ...userCosmetics.titles,
+    ...userCosmetics.backgrounds,
+    ...userCosmetics.effects,
+    ...userCosmetics.badges,
+    ...userCosmetics.themes
+  ];
+  
+  eligibleItems = eligibleItems.filter(item => !userCosmeticIds.includes(item.id));
+  
+  // If no eligible items, try a lower rarity
+  if (eligibleItems.length === 0) {
+    const rarities: CosmeticRarity[] = ['legendary', 'epic', 'rare', 'uncommon', 'common'];
+    const currentRarityIndex = rarities.indexOf(selectedRarity);
+    
+    for (let i = currentRarityIndex + 1; i < rarities.length; i++) {
+      const fallbackRarity = rarities[i];
+      eligibleItems = cosmeticItems.filter(item => 
+        item.rarity === fallbackRarity && 
+        (!preferredCategory || item.category === preferredCategory) &&
+        !userCosmeticIds.includes(item.id)
+      );
+      
+      if (eligibleItems.length > 0) {
+        selectedRarity = fallbackRarity;
+        break;
+      }
+    }
+  }
+  
+  // If still no eligible items, return null
+  if (eligibleItems.length === 0) {
+    return { cosmeticItem: null, rarity: selectedRarity };
+  }
+  
+  // Pick a random item from the eligible ones
+  const randomIndex = Math.floor(Math.random() * eligibleItems.length);
+  return { cosmeticItem: eligibleItems[randomIndex], rarity: selectedRarity };
+};
+
 // Purchase a cosmetic (mock function)
 export const purchaseCosmetic = async (
   userId: string,
@@ -101,5 +191,6 @@ export default {
   getCosmeticsByCategory,
   getCosmeticById,
   getCosmeticsByRarity,
-  purchaseCosmetic
+  purchaseCosmetic,
+  awardRandomCosmetic
 };

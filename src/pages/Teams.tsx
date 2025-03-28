@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -15,7 +14,6 @@ const Teams = () => {
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState(user?.team ? 'overview' : 'selection');
   
-  // Update active tab when user team changes
   useEffect(() => {
     if (user?.team) {
       setActiveTab('overview');
@@ -24,8 +22,7 @@ const Teams = () => {
     }
   }, [user?.team]);
   
-  // Handle team selection success
-  const handleTeamSelection = (team: 'red' | 'green' | 'blue') => {
+  const handleTeamSelect = (team: 'red' | 'green' | 'blue') => {
     toast({
       title: "Team Joined!",
       description: `You've successfully joined Team ${team.charAt(0).toUpperCase() + team.slice(1)}!`,
@@ -66,7 +63,7 @@ const Teams = () => {
                 </TabsContent>
                 
                 <TabsContent value="selection">
-                  <TeamSelection onTeamSelected={handleTeamSelection} />
+                  <TeamSelection onTeamSelect={(team) => handleTeamSelect(team)} />
                 </TabsContent>
                 
                 <TabsContent value="leaderboard">

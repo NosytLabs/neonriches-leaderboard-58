@@ -25,6 +25,20 @@ export interface DuplicateCode {
   lines?: number;
 }
 
+// Add definition for ComplexCode
+export interface ComplexCode {
+  id: string;
+  name: string;
+  file: string;
+  complexity: number;
+  linesOfCode: number;
+  parameters: number;
+  nestedLevel: number;
+  issues: string[];
+  function: string; // This is the missing property
+  path?: string;
+}
+
 export interface AnalysisResult {
   complexity: ComplexityItem[];
   duplicates: any[];

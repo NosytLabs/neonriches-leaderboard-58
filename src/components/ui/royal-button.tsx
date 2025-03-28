@@ -10,6 +10,8 @@ interface RoyalButtonProps extends Omit<ButtonProps, 'variant'> {
   glow?: boolean;
   icon?: React.ReactNode;
   href?: string;
+  target?: string;
+  rel?: string;
 }
 
 const RoyalButton: React.FC<RoyalButtonProps> = ({
@@ -20,6 +22,8 @@ const RoyalButton: React.FC<RoyalButtonProps> = ({
   className,
   children,
   href,
+  target,
+  rel,
   ...props
 }) => {
   // Get classes based on the variant
@@ -38,50 +42,45 @@ const RoyalButton: React.FC<RoyalButtonProps> = ({
       case 'outline':
         return 'bg-transparent border border-white/20 hover:bg-white/10 text-white';
       case 'goldOutline':
-        return 'bg-transparent border border-royal-gold/40 hover:bg-royal-gold/10 text-royal-gold';
+        return 'bg-transparent border border-yellow-500/50 hover:bg-yellow-500/10 text-yellow-500';
       case 'crimsonOutline':
-        return 'bg-transparent border border-royal-crimson/40 hover:bg-royal-crimson/10 text-royal-crimson';
+        return 'bg-transparent border border-red-500/50 hover:bg-red-500/10 text-red-500';
       case 'navyOutline':
-        return 'bg-transparent border border-royal-navy/40 hover:bg-royal-navy/10 text-royal-navy';
+        return 'bg-transparent border border-blue-500/50 hover:bg-blue-500/10 text-blue-500';
       case 'mahogany':
-        return 'bg-gradient-to-r from-red-900 via-red-800 to-red-700 hover:opacity-90 text-white';
-      case 'royal':
-      default:
-        return 'bg-gradient-to-r from-royal-crimson via-royal-gold to-royal-navy hover:opacity-90 text-white';
+        return 'bg-gradient-to-r from-red-800 via-red-900 to-red-950 hover:opacity-90 text-white';
+      default: // royal
+        return 'bg-gradient-to-r from-purple-800 via-purple-700 to-purple-900 hover:opacity-90 text-white';
     }
   };
-  
-  // Construct the class string
+
   const buttonClasses = cn(
+    'font-medium transition-all focus:outline-none focus:ring-2 focus:ring-white/20 focus:ring-offset-2 focus:ring-offset-black',
     getVariantClasses(),
-    shimmer && 'royal-text-shimmer',
-    glow && 'royal-shadow',
+    shimmer && 'animate-shimmer bg-[length:200%_100%]',
+    glow && 'shadow-glow',
     className
   );
-  
-  const ButtonContent = () => (
-    <>
-      {icon && <span className="mr-2">{icon}</span>}
-      {children}
-    </>
-  );
 
-  // Return a link if href is provided, otherwise return a button
+  // Render as a link or button
   if (href) {
     return (
-      <a 
-        className={cn("inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 px-4 py-2", buttonClasses)}
+      <a
         href={href}
-        {...props}
+        target={target}
+        rel={rel}
+        className={cn('inline-flex items-center justify-center rounded-md px-4 py-2 text-sm', buttonClasses)}
       >
-        <ButtonContent />
+        {icon && <span className="mr-2">{icon}</span>}
+        {children}
       </a>
     );
   }
-  
+
   return (
     <Button className={buttonClasses} {...props}>
-      <ButtonContent />
+      {icon && <span className="mr-2">{icon}</span>}
+      {children}
     </Button>
   );
 };

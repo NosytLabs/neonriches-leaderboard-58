@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Flame, Tag, Sparkles, Crown, Clock } from 'lucide-react';
 import { formatCategoryName } from '@/utils/stringUtils';
-import { getCosmeticPreviewStyle, CosmeticItem, CosmeticCategory } from '@/types/cosmetics';
+import { getCosmeticPreviewStyle, CosmeticItem, CosmeticCategory, CosmeticRarity } from '@/types/cosmetics';
 import { getFireSaleFeaturedCategories } from './utils/shameUtils';
 import RoyalDivider from '@/components/ui/royal-divider';
 import { mockedCosmeticsData } from '@/data/cosmeticsData';

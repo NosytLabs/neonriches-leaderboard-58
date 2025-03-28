@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -7,6 +6,7 @@ import { LayoutList, Coins, Calendar, Scroll, ShieldQuestion, Shield, Crown, Fea
 import AuthButton from '@/components/AuthButton';
 import { useAuth } from '@/contexts/auth';
 import MedievalIcon from '@/components/ui/medieval-icon';
+import Separator from '@/components/ui/separator';
 
 interface MobileMenuProps {
   isOpen: boolean;
@@ -90,9 +90,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
               Chronicles
             </MenuItem>
             
-            <motion.div variants={itemVariants}>
-              <div className="h-px bg-white/10 my-3"></div>
-            </motion.div>
+            <Separator className="my-4" />
             
             <MenuItem to="/faq" icon={<ShieldQuestion className="h-5 w-5 text-royal-gold" />}>
               Royal Archives

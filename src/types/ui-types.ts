@@ -8,7 +8,7 @@ export interface ThroneBackgroundProps {
   animate?: boolean;
   opacity?: number;
   className?: string;
-  density?: string;
+  density?: string; // Add the missing density property
 }
 
 export interface RoyalDividerProps {
