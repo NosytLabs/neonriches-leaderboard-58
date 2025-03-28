@@ -1,63 +1,49 @@
 
-import React, { useEffect } from 'react';
-import { Routes, Route } from 'react-router-dom';
-import useNotificationSounds from '@/hooks/use-notification-sounds';
+import React, { Suspense, lazy } from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Header from './components/Header';
+import Footer from './components/Footer';
 
-// Pages
-import Index from '@/pages/Index';
-import Dashboard from '@/pages/Dashboard';
-import Profile from '@/pages/Profile';
-import Events from '@/pages/Events';
-import EventsPage from '@/pages/EventsPage';
-import LeaderboardPage from '@/pages/LeaderboardPage';
-import RoyalPrestige from '@/pages/RoyalPrestige';
-import Auth from '@/pages/Auth';
-
-// Import CSS files
-import './index.css';
-import './styles/animations.css'; // Consolidated animations
-import './styles/profile-boost.css';
-import './styles/shame-effects.css';
-
-// Import fonts
-const importFonts = () => {
-  const fontLinks = [
-    'https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap',
-    'https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap',
-    'https://fonts.googleapis.com/css2?family=Spectral:wght@400;500;600;700&display=swap',
-    'https://fonts.googleapis.com/css2?family=Fredericka+the+Great&display=swap',
-  ];
-  
-  fontLinks.forEach(href => {
-    const link = document.createElement('link');
-    link.href = href;
-    link.rel = 'stylesheet';
-    document.head.appendChild(link);
-  });
-};
+// Lazy loaded components for better performance
+const Index = lazy(() => import('./pages/Index'));
+const Dashboard = lazy(() => import('./pages/Dashboard'));
+const Leaderboard = lazy(() => import('./pages/LeaderboardPage'));
+const Events = lazy(() => import('./pages/EventsPage'));
+const StyleGuide = lazy(() => import('./routes/StyleGuidePage'));
+const Profile = lazy(() => import('./pages/Profile'));
+const Updates = lazy(() => import('./pages/Updates'));
+const PaymentSuccess = lazy(() => import('./pages/PaymentSuccess'));
+const SubscriptionSuccess = lazy(() => import('./pages/SubscriptionSuccess'));
+const Terms = lazy(() => import('./pages/TermsOfService'));
+const NotFound = lazy(() => import('./pages/NotFound'));
+const CodeAnalysisPage = lazy(() => import('./pages/CodeAnalysisPage'));
 
 function App() {
-  const { preloadSounds } = useNotificationSounds();
-  
-  useEffect(() => {
-    // Preload sound assets when the app starts
-    preloadSounds();
-    
-    // Import additional fonts
-    importFonts();
-  }, [preloadSounds]);
-  
   return (
-    <Routes>
-      <Route path="/" element={<Index />} />
-      <Route path="/dashboard" element={<Dashboard />} />
-      <Route path="/profile" element={<Profile />} />
-      <Route path="/events" element={<Events />} />
-      <Route path="/events-page" element={<EventsPage />} />
-      <Route path="/leaderboard" element={<LeaderboardPage />} />
-      <Route path="/royal-prestige" element={<RoyalPrestige />} />
-      <Route path="/auth" element={<Auth />} />
-    </Routes>
+    <Router>
+      <div className="flex flex-col min-h-screen">
+        <Header />
+        <main className="flex-grow">
+          <Suspense fallback={<div className="p-8 text-center">Loading...</div>}>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/leaderboard" element={<Leaderboard />} />
+              <Route path="/events" element={<Events />} />
+              <Route path="/style-guide" element={<StyleGuide />} />
+              <Route path="/profile/:userId" element={<Profile />} />
+              <Route path="/updates" element={<Updates />} />
+              <Route path="/payment-success" element={<PaymentSuccess />} />
+              <Route path="/subscription-success" element={<SubscriptionSuccess />} />
+              <Route path="/terms" element={<Terms />} />
+              <Route path="/code-analysis" element={<CodeAnalysisPage />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </Suspense>
+        </main>
+        <Footer />
+      </div>
+    </Router>
   );
 }
 

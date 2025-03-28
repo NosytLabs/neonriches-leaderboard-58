@@ -1,0 +1,68 @@
+
+/* Code Analysis Tool Styles */
+
+.code-block {
+  font-family: 'Consolas', 'Monaco', 'Andale Mono', monospace;
+  background-color: rgba(10, 10, 25, 0.7);
+  border-radius: 0.25rem;
+  padding: 1rem;
+  overflow-x: auto;
+  line-height: 1.5;
+}
+
+.code-highlight {
+  background-color: rgba(255, 215, 0, 0.1);
+  border-left: 2px solid var(--royal-gold);
+  padding-left: 0.5rem;
+}
+
+.analysis-card {
+  background: rgba(13, 13, 32, 0.5);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+.analysis-card:hover {
+  box-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
+  transform: translateY(-2px);
+}
+
+.analysis-metric {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.analysis-metric:last-child {
+  border-bottom: none;
+}
+
+.issue-tag {
+  border-radius: 9999px;
+  padding: 0.125rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.issue-tag-unused {
+  background-color: rgba(245, 158, 11, 0.1);
+  color: rgb(245, 158, 11);
+}
+
+.issue-tag-duplicate {
+  background-color: rgba(59, 130, 246, 0.1);
+  color: rgb(59, 130, 246);
+}
+
+.issue-tag-complex {
+  background-color: rgba(239, 68, 68, 0.1);
+  color: rgb(239, 68, 68);
+}
+
+.issue-tag-performance {
+  background-color: rgba(16, 185, 129, 0.1);
+  color: rgb(16, 185, 129);
+}
