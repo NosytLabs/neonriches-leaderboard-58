@@ -20,7 +20,7 @@ const ProfileBoostedContent: React.FC<ProfileBoostedContentProps> = ({
   className = '',
   type = 'text'
 }) => {
-  const { activeBoosts, getBoostEffect, getBoostClasses, hasActiveBoosts } = useProfileBoost(user);
+  const { getBoostClasses, hasActiveBoosts } = useProfileBoost(user);
   
   // No wrapper needed if no boosts active
   if (!hasActiveBoosts()) {

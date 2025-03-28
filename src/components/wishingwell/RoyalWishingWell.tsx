@@ -1,135 +1,146 @@
-
-import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import React, { useState } from 'react';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Slider } from '@/components/ui/slider';
-import { Sparkles, Gem, Coins } from 'lucide-react';
-import WishStats from './WishStats';
-import WishHistory from './WishHistory';
+import { Input } from '@/components/ui/input';
+import { Sparkles, History, Coins } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { useToast } from '@/hooks/use-toast';
+import { formatCurrency } from '@/lib/utils';
+import { useAuth } from '@/contexts/AuthContext';
 
-interface RecentWish {
-  username: string;
-  amount: number;
-  result: string;
-  timestamp: string;
+export interface RoyalWishingWellProps {
+  currentPool: number;
+  recentWishes: Array<{
+    username: string;
+    amount: number;
+    result: string;
+    timestamp: string;
+  }>;
 }
 
-interface RoyalWishingWellProps {
-  onWish?: (amount: number) => void;
-  maxAmount?: number;
-  disabled?: boolean;
-  currentPool?: number;
-  recentWishes?: RecentWish[];
-}
-
-const RoyalWishingWell: React.FC<RoyalWishingWellProps> = ({
-  onWish,
-  maxAmount = 10,
-  disabled = false,
-  currentPool = 1000,
-  recentWishes = []
-}) => {
-  const [wishAmount, setWishAmount] = React.useState(1);
+const RoyalWishingWell: React.FC<RoyalWishingWellProps> = ({ currentPool, recentWishes }) => {
+  const [wishAmount, setWishAmount] = useState('');
+  const [isWishing, setIsWishing] = useState(false);
+  const { toast } = useToast();
+  const { user } = useAuth();
   
-  const handleSliderChange = (value: number[]) => {
-    setWishAmount(value[0]);
-  };
-  
-  const handleWish = () => {
-    if (onWish) {
-      onWish(wishAmount);
+  const handleWish = async () => {
+    if (!user) {
+      toast({
+        title: "Authentication Required",
+        description: "You must be logged in to make a wish.",
+        variant: "destructive"
+      });
+      return;
     }
+    
+    const amount = parseFloat(wishAmount);
+    
+    if (isNaN(amount) || amount <= 0) {
+      toast({
+        title: "Invalid Wish Amount",
+        description: "Please enter a valid amount greater than zero.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    if (amount > 100) {
+      toast({
+        title: "Wish Amount Exceeded",
+        description: "The maximum wish amount is 100.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    setIsWishing(true);
+    
+    // Simulate wish processing
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    
+    const success = Math.random() > 0.5; // 50% chance of success
+    
+    if (success) {
+      const winnings = amount * (1 + Math.random()); // Win more than you wished
+      toast({
+        title: "Your Wish Came True!",
+        description: `You wished ${formatCurrency(amount)} and won ${formatCurrency(winnings)}!`,
+      });
+    } else {
+      toast({
+        title: "Alas, Your Wish Was Not Granted",
+        description: `You wished ${formatCurrency(amount)} but the well demands a greater sacrifice.`,
+        variant: "destructive"
+      });
+    }
+    
+    setIsWishing(false);
+    setWishAmount('');
   };
-  
+
   return (
     <Card className="glass-morphism border-royal-gold/20">
       <CardHeader>
-        <CardTitle className="flex items-center">
-          <Gem className="mr-2 h-5 w-5 text-royal-gold" />
-          Quick Wish
-        </CardTitle>
+        <div className="flex items-center">
+          <Sparkles className="mr-3 h-6 w-6 text-royal-gold" />
+          <CardTitle>Royal Wishing Well</CardTitle>
+        </div>
         <CardDescription>
-          Make a wish to receive cosmetic items
+          Cast your desires into the mystical well
         </CardDescription>
       </CardHeader>
+      
       <CardContent className="space-y-4">
-        <WishStats currentPool={currentPool} />
+        <div className="flex items-center justify-between">
+          <p className="text-sm text-white/70">Current Pool:</p>
+          <span className="font-medium text-royal-gold">{formatCurrency(currentPool)}</span>
+        </div>
         
-        <div>
-          <div className="flex justify-between text-sm mb-2">
-            <span>Wish Amount:</span>
-            <span className="font-bold">${wishAmount.toFixed(2)}</span>
-          </div>
-          <Slider
-            value={[wishAmount]}
-            min={0.25}
-            max={maxAmount}
-            step={0.25}
-            onValueChange={handleSliderChange}
+        <div className="flex space-x-2">
+          <Input 
+            type="number" 
+            placeholder="Enter wish amount (max 100)" 
+            value={wishAmount}
+            onChange={(e) => setWishAmount(e.target.value)}
+            disabled={isWishing}
           />
+          <Button onClick={handleWish} disabled={isWishing}>
+            {isWishing ? (
+              <motion.div
+                className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white"
+                animate={{ rotate: 360 }}
+                transition={{ loop: Infinity, duration: 1 }}
+              />
+            ) : "Make a Wish"}
+          </Button>
         </div>
-        
-        <div className="grid grid-cols-4 gap-2">
-          {[0.5, 1, 2, 5].map(amount => (
-            <Button
-              key={amount}
-              variant="outline"
-              size="sm"
-              className={`glass-morphism ${
-                wishAmount === amount 
-                  ? 'border-royal-gold text-royal-gold' 
-                  : 'border-white/10 text-white/70'
-              }`}
-              onClick={() => setWishAmount(amount)}
-            >
-              ${amount}
-            </Button>
-          ))}
-        </div>
-        
-        <div className="text-xs space-y-1">
-          <div className="flex justify-between">
-            <span>Common:</span>
-            <span>40%</span>
-          </div>
-          <div className="flex justify-between">
-            <span>Uncommon:</span>
-            <span>30%</span>
-          </div>
-          <div className="flex justify-between">
-            <span>Rare:</span>
-            <span>20%</span>
-          </div>
-          <div className="flex justify-between">
-            <span>Epic:</span>
-            <span>8%</span>
-          </div>
-          <div className="flex justify-between">
-            <span>Legendary:</span>
-            <span>2%</span>
-          </div>
-        </div>
-        
-        <Button 
-          className="w-full glass-morphism border-royal-gold/30 hover:bg-royal-gold/20" 
-          onClick={handleWish}
-          disabled={disabled}
-        >
-          <Sparkles className="mr-2 h-4 w-4" />
-          Make a Wish
-        </Button>
-        
-        <div className="text-center text-xs text-white/50">
-          <div className="flex items-center justify-center">
-            <Coins className="mr-1 h-3 w-3" />
-            Higher wishes increase chances for rarer items
-          </div>
-        </div>
-        
-        {recentWishes && recentWishes.length > 0 && (
-          <WishHistory recentWishes={recentWishes} />
-        )}
       </CardContent>
+      
+      <CardFooter>
+        <div className="w-full">
+          <h4 className="mb-2 flex items-center text-sm font-medium">
+            <History className="mr-2 h-4 w-4" />
+            Recent Wishes
+          </h4>
+          
+          <ul className="space-y-2">
+            {recentWishes.map((wish, index) => (
+              <li key={index} className="flex items-center justify-between text-xs">
+                <div className="flex items-center">
+                  <Coins className="mr-2 h-3 w-3 text-yellow-500" />
+                  <span className="font-medium">{wish.username}</span>
+                </div>
+                
+                <div className="text-right">
+                  <span className="text-white/60">{formatCurrency(wish.amount)}</span>
+                  <span className="ml-1 text-green-500">{wish.result}</span>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </CardFooter>
     </Card>
   );
 };

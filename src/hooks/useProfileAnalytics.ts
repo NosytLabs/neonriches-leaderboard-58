@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import { UserProfile, AnalyticsData } from '@/types/user';
+import { AnalyticsData } from '@/types/user';
 
 // Export types for use in other components
 export interface ViewData {
@@ -22,6 +22,8 @@ export interface ReferrerData {
   name: string;
   value: number;
 }
+
+export { AnalyticsData };
 
 // Mock function to get profile analytics
 const getProfileAnalytics = async (userId: string): Promise<AnalyticsData> => {
@@ -77,12 +79,7 @@ const useProfileAnalytics = (userId: string) => {
     const fetchAnalytics = async () => {
       try {
         const data = await getProfileAnalytics(userId);
-        setAnalytics({
-          ...data,
-          sources: data.sources || {},
-          referrers: data.referrers || {},
-          history: data.history || []
-        });
+        setAnalytics(data);
       } catch (err) {
         setError(err instanceof Error ? err : new Error('Failed to fetch analytics'));
       } finally {

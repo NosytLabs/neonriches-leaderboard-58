@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { cn } from '@/lib/utils';
 
@@ -14,7 +13,15 @@ export type MedievalIconName =
   'banner' | 
   'coat' | 
   'flourish' | 
-  'insignia';
+  'insignia' |
+  'seal' |
+  'coins' |
+  'chalice' |
+  'key' |
+  'quill' |
+  'torch' |
+  'parchment' |
+  'treasure';
 
 export type MedievalIconSize = 
   'xs' | 
@@ -32,7 +39,9 @@ export type MedievalIconColor =
   'crimson' | 
   'navy' | 
   'purple' | 
-  'emerald';
+  'emerald' |
+  'bronze' |
+  'mahogany';
 
 interface MedievalIconProps {
   name: MedievalIconName;
@@ -59,7 +68,9 @@ const colorClasses: Record<MedievalIconColor, string> = {
   'crimson': 'text-royal-crimson',
   'navy': 'text-royal-navy',
   'purple': 'text-purple-600',
-  'emerald': 'text-emerald-600'
+  'emerald': 'text-emerald-600',
+  'bronze': 'text-bronze',
+  'mahogany': 'text-mahogany'
 };
 
 const MedievalIcon: React.FC<MedievalIconProps> = ({
@@ -165,6 +176,67 @@ const MedievalIcon: React.FC<MedievalIconProps> = ({
             <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
             <path d="M12 18C15.3137 18 18 15.3137 18 12C18 8.68629 15.3137 6 12 6C8.68629 6 6 8.68629 6 12C6 15.3137 8.68629 18 12 18Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
             <path d="M12 14C13.1046 14 14 13.1046 14 12C14 10.8954 13.1046 10 12 10C10.8954 10 10 10.8954 10 12C10 13.1046 10.8954 14 12 14Z" fill="currentColor" />
+          </svg>
+        );
+      case 'seal':
+        return (
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" />
+            <path d="M12 7V17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+            <path d="M7 12H17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+            <path d="M8.5 8.5L15.5 15.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+            <path d="M15.5 8.5L8.5 15.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+          </svg>
+        );
+      case 'coins':
+        return (
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="8" cy="8" r="6" stroke="currentColor" strokeWidth="2" />
+            <circle cx="16" cy="16" r="6" stroke="currentColor" strokeWidth="2" />
+            <circle cx="8" cy="8" r="2" fill="currentColor" />
+            <circle cx="16" cy="16" r="2" fill="currentColor" />
+          </svg>
+        );
+      case 'chalice':
+        return (
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M7 3H17L16 13C16 15.2091 14.2091 17 12 17C9.79086 17 8 15.2091 8 13L7 3Z" stroke="currentColor" strokeWidth="2" />
+            <path d="M5 3H19" stroke="currentColor" strokeWidth="2" />
+            <path d="M12 17V21" stroke="currentColor" strokeWidth="2" />
+            <path d="M8 21H16" stroke="currentColor" strokeWidth="2" />
+          </svg>
+        );
+      case 'key':
+        return (
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M15 9H15.01M9 15L3 21M11 12C11 14.2091 9.20914 16 7 16C4.79086 16 3 14.2091 3 12C3 9.79086 4.79086 8 7 8C9.20914 8 11 9.79086 11 12ZM11 12H21V16M21 12V8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        );
+      case 'quill':
+        return (
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20 4L8.5 15.5M8.5 15.5L10 20L6 16L8.5 15.5ZM8.5 15.5L4 20" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        );
+      case 'torch':
+        return (
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2V4M12 20V22M12 4C14 6 16 8 16 10C16 12 14 14 12 14C10 14 8 12 8 10C8 8 10 6 12 4ZM12 14V20" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        );
+      case 'parchment':
+        return (
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M6 6C6 3.79086 7.79086 2 10 2H16C18.2091 2 20 3.79086 20 6V18C20 20.2091 18.2091 22 16 22H10C7.79086 22 6 20.2091 6 18V6Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M9 6H17" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+            <path d="M9 10H17" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+            <path d="M9 14H14" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+          </svg>
+        );
+      case 'treasure':
+        return (
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4 7H20M4 7V18C4 19.1046 4.89543 20 6 20H18C19.1046 20 20 19.1046 20 18V7M4 7L6 3H18L20 7M12 11C10.8954 11 10 11.8954 10 13C10 14.1046 10.8954 15 12 15C13.1046 15 14 14.1046 14 13C14 11.8954 13.1046 11 12 11Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
         );
       default:

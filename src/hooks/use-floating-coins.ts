@@ -1,155 +1,75 @@
+import { useEffect, useRef } from 'react';
 
-import { useState, useEffect, useRef, useCallback } from 'react';
-
-interface FloatingCoinsConfig {
-  containerRef: React.RefObject<HTMLElement>;
-  enabled?: boolean;
-  autoStart?: boolean;
+export interface FloatingCoinsConfig {
   count?: number;
-  frequency?: number; // 0-1, how often coins appear
-  maxCoins?: number;
-  minSize?: number;
+  duration?: number;
   maxSize?: number;
-  duration?: number; // in ms
-  delay?: number; // in ms
-  minDelay?: number; // in ms
-  maxDelay?: number; // in ms
+  minSize?: number;
+  maxDelay?: number;
+  container?: HTMLElement | null;
 }
 
-interface Coin {
-  id: number;
-  x: number;
-  y: number;
-  size: number;
-  rotation: number;
-  duration: number;
-  delay: number;
-}
+export const useFloatingCoins = (config: FloatingCoinsConfig = {}) => {
+  const {
+    count = 15,
+    duration = 2000,
+    maxSize = 20,
+    minSize = 8,
+    maxDelay = 500,
+    container = document.body,
+  } = config;
 
-export function useFloatingCoins({
-  containerRef,
-  enabled = true,
-  autoStart = true,
-  count = 10,
-  frequency = 0.5,
-  maxCoins = 50,
-  minSize = 10,
-  maxSize = 30,
-  duration = 3000,
-  delay = 0,
-  minDelay = 0,
-  maxDelay = 1000
-}: FloatingCoinsConfig) {
-  const [isActive, setIsActive] = useState(autoStart);
-  const [coins, setCoins] = useState<Coin[]>([]);
-  const intervalRef = useRef<number | null>(null);
-  const coinIdCounter = useRef(0);
+  const animationFrame = useRef(0);
 
-  const createCoin = useCallback(() => {
-    if (!containerRef.current) return null;
-    
-    const rect = containerRef.current.getBoundingClientRect();
-    const size = minSize + Math.random() * (maxSize - minSize);
-    const x = Math.random() * (rect.width - size);
-    const y = rect.height + size; // Start below the container
-    const rotation = Math.random() * 360;
-    const coinDuration = duration * (0.8 + Math.random() * 0.4); // Vary duration slightly
-    const coinDelay = delay + (minDelay !== undefined && maxDelay !== undefined ? 
-      minDelay + Math.random() * (maxDelay - minDelay) : 
-      Math.random() * 500); // Add some random delay
-    
-    return {
-      id: coinIdCounter.current++,
-      x,
-      y,
-      size,
-      rotation,
-      duration: coinDuration,
-      delay: coinDelay
-    };
-  }, [containerRef, minSize, maxSize, duration, delay, minDelay, maxDelay]);
-
-  // Start generating coins
-  const start = useCallback(() => {
-    if (!enabled) return;
-    setIsActive(true);
-  }, [enabled]);
-
-  // Stop generating coins
-  const stop = useCallback(() => {
-    setIsActive(false);
-  }, []);
-
-  // Manually add a batch of coins
-  const addCoins = useCallback((amount: number = count) => {
-    if (!containerRef.current || !enabled) return;
-    
-    const newCoins: Coin[] = [];
-    for (let i = 0; i < amount; i++) {
-      const coin = createCoin();
-      if (coin) newCoins.push(coin);
-    }
-    
-    setCoins(prevCoins => {
-      const combinedCoins = [...prevCoins, ...newCoins];
-      // Limit the total number of coins to avoid performance issues
-      return combinedCoins.slice(-maxCoins);
-    });
-  }, [containerRef, enabled, count, createCoin, maxCoins]);
-
-  // Clear all coins
-  const clearCoins = useCallback(() => {
-    setCoins([]);
-  }, []);
-
-  // Randomly add coins based on frequency
   useEffect(() => {
-    if (!isActive || !enabled || !containerRef.current) return;
-    
-    const addRandomCoins = () => {
-      if (Math.random() < frequency) {
-        const coin = createCoin();
-        if (coin) {
-          setCoins(prevCoins => {
-            const newCoins = [...prevCoins, coin];
-            return newCoins.slice(-maxCoins);
-          });
+    const createCoin = () => {
+      if (!container) return;
+
+      const coin = document.createElement('div');
+      coin.className = 'floating-coin';
+      container.appendChild(coin);
+
+      const size = Math.random() * (maxSize - minSize) + minSize;
+      coin.style.width = `${size}px`;
+      coin.style.height = `${size}px`;
+
+      const startX = Math.random() * container.clientWidth;
+      const startY = container.clientHeight;
+
+      coin.style.left = `${startX}px`;
+      coin.style.top = `${startY}px`;
+
+      const delay = Math.random() * maxDelay;
+      coin.style.animationDelay = `-${delay}ms`;
+
+      const animationDuration = duration + delay;
+      coin.style.animationDuration = `${animationDuration}ms`;
+
+      const endX = startX + (Math.random() * 100 - 50);
+      coin.style.setProperty('--end-x', `${endX}px`);
+
+      coin.addEventListener('animationend', () => {
+        if (container && coin.parentNode === container) {
+          container.removeChild(coin);
         }
-      }
+      });
     };
-    
-    intervalRef.current = window.setInterval(addRandomCoins, 200);
-    
-    return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
-    };
-  }, [isActive, enabled, containerRef, frequency, createCoin, maxCoins]);
 
-  // Remove coins after they've completed their animation
-  useEffect(() => {
-    if (coins.length === 0) return;
-    
-    const timers = coins.map(coin => {
-      return setTimeout(() => {
-        setCoins(prevCoins => prevCoins.filter(c => c.id !== coin.id));
-      }, coin.duration + coin.delay + 100); // Add a little buffer to the timer
-    });
-    
-    return () => {
-      timers.forEach(timer => clearTimeout(timer));
+    const animate = () => {
+      for (let i = 0; i < count; i++) {
+        createCoin();
+      }
+      animationFrame.current = requestAnimationFrame(animate);
     };
-  }, [coins]);
 
-  return {
-    coins,
-    isActive,
-    start,
-    stop,
-    addCoins,
-    clearCoins
-  };
-}
+    animationFrame.current = requestAnimationFrame(animate);
+
+    return () => {
+      cancelAnimationFrame(animationFrame.current);
+      const coins = document.querySelectorAll('.floating-coin');
+      coins.forEach(coin => coin.remove());
+    };
+  }, [count, duration, maxSize, minSize, maxDelay, container]);
+};
 
 export default useFloatingCoins;

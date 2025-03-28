@@ -12,9 +12,9 @@ export interface BoostEffectDetails {
   icon: React.ReactNode;
 }
 
-export type BoostEffectType = 'glow' | 'sparkle' | 'crown' | 'pulse' | 'rainbow';
+export type BoostEffect = 'glow' | 'sparkle' | 'crown' | 'pulse' | 'rainbow';
 
-export const boostEffects: Record<BoostEffectType, BoostEffectDetails> = {
+export const boostEffects: Record<BoostEffect, BoostEffectDetails> = {
   glow: {
     id: 'glow',
     name: 'Royal Glow',
@@ -89,7 +89,7 @@ export const useProfileBoost = (user: UserProfile | null) => {
   }, [user]);
   
   const getBoostEffect = (effectId: string): BoostEffectDetails | undefined => {
-    return boostEffects[effectId as BoostEffectType];
+    return boostEffects[effectId as BoostEffect];
   };
   
   const getBoostTimeRemaining = (boost: ProfileBoost): number => {
