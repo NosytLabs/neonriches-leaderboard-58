@@ -71,6 +71,51 @@ export const complexCodeMock: ComplexCode[] = [
   }
 ];
 
+// Adding complex functions mock for ComplexityReport
+export const complexFunctionsMock = [
+  {
+    id: 1,
+    file: 'src/components/DataProcessor.tsx',
+    line: 32,
+    function: 'processUserData',
+    complexity: 15,
+    explanation: 'Contains too many nested conditionals and loops'
+  },
+  {
+    id: 2,
+    file: 'src/utils/formatters.ts',
+    line: 64,
+    function: 'formatComplexData',
+    complexity: 12,
+    explanation: 'Uses multiple switch statements and transformations'
+  }
+];
+
+// Adding performance issues mock for PerformanceReport
+export const performanceIssuesMock = [
+  {
+    id: 1,
+    file: 'src/components/ImageGallery.tsx',
+    issue: 'Unoptimized image loading',
+    severity: 'high',
+    recommendation: 'Implement lazy loading and proper image sizing'
+  },
+  {
+    id: 2,
+    file: 'src/hooks/useDataFetching.ts',
+    issue: 'Excessive re-renders',
+    severity: 'medium',
+    recommendation: 'Implement memoization and avoid unnecessary state updates'
+  },
+  {
+    id: 3,
+    file: 'src/utils/animations.ts',
+    issue: 'Expensive calculations on main thread',
+    severity: 'medium',
+    recommendation: 'Move calculations to Web Worker or optimize algorithm'
+  }
+];
+
 // Mock analysis results
 export const mockedAnalysisResults = {
   unusedFiles: [

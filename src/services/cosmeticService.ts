@@ -27,7 +27,12 @@ export function awardRandomCosmetic(
     const categoryItems = userCosmetics[category] || [];
     if (!Array.isArray(categoryItems)) return true; // Skip check if not an array
     
-    return !categoryItems.includes(item.id);
+    // Safe includes check with type guard
+    if (typeof categoryItems.includes === 'function') {
+      return !categoryItems.includes(item.id);
+    }
+    // Fallback to manual check if includes is not available
+    return !categoryItems.some((id: string) => id === item.id);
   });
   
   if (availableCosmetics.length === 0) {

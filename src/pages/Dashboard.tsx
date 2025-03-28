@@ -67,7 +67,7 @@ const Dashboard = () => {
     if (success) {
       // Apply profile boost
       if (boostProfile) {
-        await boostProfile(1, 1); // Level 1 boost
+        const result = await boostProfile(1, 1); // Level 1 boost
         
         // Update user profile stats
         const currentViews = user.profileViews || 0;

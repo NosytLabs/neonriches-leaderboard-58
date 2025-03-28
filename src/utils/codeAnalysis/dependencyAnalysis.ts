@@ -33,11 +33,10 @@ export const analyzeDependencies = async (
         // Check for ES imports
         const importMatches = content.match(/from ['"]([^'"]+)['"]/g) || [];
         importMatches.forEach(match => {
-          const importStatement = match;
-          if (importStatement) {
-            const packageName = importStatement.replace(/from ['"]/, '').replace(/['"]$/, '').split('/')[0];
-            if (dependencies[packageName]) {
-              usedDependencies.add(packageName);
+          if (match) {
+            const importName = match.replace(/from ['"]/, '').replace(/['"]$/, '').split('/')[0];
+            if (dependencies[importName]) {
+              usedDependencies.add(importName);
             }
           }
         });
@@ -45,11 +44,10 @@ export const analyzeDependencies = async (
         // Check for require statements
         const requireMatches = content.match(/require\(['"]([^'"]+)['"]\)/g) || [];
         requireMatches.forEach(match => {
-          const requireStatement = match;
-          if (requireStatement) {
-            const packageName = requireStatement.replace(/require\(['"]/, '').replace(/['"]\)$/, '').split('/')[0];
-            if (dependencies[packageName]) {
-              usedDependencies.add(packageName);
+          if (match) {
+            const requireName = match.replace(/require\(['"]/, '').replace(/['"]\)$/, '').split('/')[0];
+            if (dependencies[requireName]) {
+              usedDependencies.add(requireName);
             }
           }
         });
