@@ -115,6 +115,11 @@ const config = {
           "0%, 100%": { borderColor: "rgba(212, 175, 55, 0.7)" },
           "50%": { borderColor: "rgba(212, 175, 55, 0.3)" },
         },
+        "border-pulse-flame": {
+          "0%": { backgroundPosition: "0% 50%" },
+          "50%": { backgroundPosition: "100% 50%" },
+          "100%": { backgroundPosition: "0% 50%" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -125,6 +130,7 @@ const config = {
         "crown-glow": "crown-glow 2s ease-in-out infinite",
         "sparkle": "sparkle 1.5s ease-in-out infinite",
         "border-pulse": "border-pulse 2s ease-in-out infinite",
+        "border-pulse-flame": "border-pulse-flame 3s ease-in-out infinite",
       },
     },
   },

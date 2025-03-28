@@ -1,66 +1,82 @@
 
 import { useCallback } from 'react';
 
-type CoinSize = 'sm' | 'md' | 'lg';
-
 export interface FloatingCoinsConfig {
   container: HTMLElement;
   count?: number;
-  size?: CoinSize;
+  size?: 'sm' | 'md' | 'lg';
   duration?: number;
+  color?: 'gold' | 'silver' | 'copper';
 }
 
 const useFloatingCoins = () => {
-  const addCoins = useCallback((config: FloatingCoinsConfig) => {
-    const { 
-      container, 
-      count = 5, 
-      size = 'md',
-      duration = 2000 
-    } = config;
-    
-    // Size values in pixels
-    const sizeValues = {
-      sm: 20,
-      md: 30,
-      lg: 40
+  const addCoins = useCallback(({ 
+    container, 
+    count = 3, 
+    size = 'md', 
+    duration = 3000,
+    color = 'gold'
+  }: FloatingCoinsConfig) => {
+    const sizeMap = {
+      sm: { width: '20px', height: '20px' },
+      md: { width: '30px', height: '30px' },
+      lg: { width: '40px', height: '40px' },
     };
     
-    const coinSize = sizeValues[size];
+    const colorMap = {
+      gold: '#FFD700',
+      silver: '#C0C0C0',
+      copper: '#B87333',
+    };
+    
+    const containerRect = container.getBoundingClientRect();
     
     for (let i = 0; i < count; i++) {
-      setTimeout(() => {
-        const coin = document.createElement('div');
-        
-        // Set coin styles
-        coin.style.position = 'absolute';
-        coin.style.width = `${coinSize}px`;
-        coin.style.height = `${coinSize}px`;
-        coin.style.borderRadius = '50%';
-        coin.style.backgroundColor = '#D4AF37';
-        coin.style.boxShadow = '0 0 10px rgba(212, 175, 55, 0.7)';
-        coin.style.zIndex = '10';
-        
-        // Set random starting position at the bottom of the container
-        const containerWidth = container.offsetWidth;
-        const randomX = Math.random() * (containerWidth - coinSize);
-        
-        coin.style.left = `${randomX}px`;
-        coin.style.bottom = '0';
-        
-        // Add animation
-        coin.style.animation = `coin-float ${duration}ms ease-out forwards`;
-        
-        // Add to container
-        container.appendChild(coin);
-        
-        // Remove after animation completes
-        setTimeout(() => {
-          if (container.contains(coin)) {
-            container.removeChild(coin);
-          }
-        }, duration + 100);
-      }, i * 150);
+      // Create a new coin element
+      const coin = document.createElement('div');
+      coin.className = 'coin-float';
+      
+      // Set styling
+      coin.style.position = 'absolute';
+      coin.style.width = sizeMap[size].width;
+      coin.style.height = sizeMap[size].height;
+      coin.style.backgroundColor = colorMap[color];
+      coin.style.borderRadius = '50%';
+      coin.style.opacity = '0.8';
+      coin.style.boxShadow = `0 0 10px ${colorMap[color]}`;
+      coin.style.zIndex = '1000';
+      
+      // Set initial position (random within container)
+      const startX = Math.random() * containerRect.width;
+      const startY = Math.random() * containerRect.height;
+      coin.style.left = `${startX}px`;
+      coin.style.top = `${startY}px`;
+      
+      // Add to container
+      container.appendChild(coin);
+      
+      // Animate
+      const keyframes = [
+        { 
+          transform: `translate(0, 0) rotate(0deg)`,
+          opacity: 0.8,
+        },
+        { 
+          transform: `translate(${Math.random() * 100 - 50}px, -${100 + Math.random() * 100}px) rotate(${Math.random() * 360}deg)`,
+          opacity: 0,
+        }
+      ];
+      
+      const animation = coin.animate(keyframes, {
+        duration,
+        easing: 'ease-out',
+        fill: 'forwards'
+      });
+      
+      // Clean up after animation
+      animation.onfinish = () => {
+        container.removeChild(coin);
+      };
     }
   }, []);
   

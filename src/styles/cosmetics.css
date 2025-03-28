@@ -118,7 +118,7 @@
 }
 
 .effect-flame-border {
-  @apply animate-border-pulse;
+  @apply animate-border-pulse-flame;
   background: linear-gradient(
     90deg,
     rgba(255, 0, 0, 0.2),
