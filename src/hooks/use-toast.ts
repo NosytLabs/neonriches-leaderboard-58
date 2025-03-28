@@ -35,6 +35,7 @@ export function useToast() {
       const newToast = {
         ...props,
         id,
+        open: true,
       };
 
       setToasts((prevToasts) => {
@@ -46,7 +47,7 @@ export function useToast() {
 
       setTimeout(() => {
         dismissToast(id);
-      }, TOAST_REMOVE_DELAY);
+      }, props.duration || TOAST_REMOVE_DELAY);
 
       return id;
     },
@@ -94,6 +95,13 @@ export function useToast() {
     [addToast]
   );
 
+  const toast = useCallback(
+    (props: Omit<ToasterToast, "id">) => {
+      return addToast(props);
+    },
+    [addToast]
+  );
+
   return {
     toasts,
     addToast,
@@ -101,6 +109,7 @@ export function useToast() {
     updateToast,
     success,
     error,
+    toast, // Add this to fix the toast property missing issue
   };
 }
 
@@ -108,30 +117,34 @@ export function useToast() {
 let addToastFn: (props: Omit<ToasterToast, "id">) => string = () => "";
 let successToastFn: (props: Omit<ToasterToast, "id" | "variant">) => string = () => "";
 let errorToastFn: (props: Omit<ToasterToast, "id" | "variant">) => string = () => "";
+let toastFn: (props: Omit<ToasterToast, "id">) => string = () => "";
 
 export const setToastFunction = (
   add: (props: Omit<ToasterToast, "id">) => string,
   success: (props: Omit<ToasterToast, "id" | "variant">) => string,
-  error: (props: Omit<ToasterToast, "id" | "variant">) => string
+  error: (props: Omit<ToasterToast, "id" | "variant">) => string,
+  toast: (props: Omit<ToasterToast, "id">) => string
 ) => {
   addToastFn = add;
   successToastFn = success;
   errorToastFn = error;
+  toastFn = toast;
 };
 
 // Standalone toast object for use in non-hook contexts
-export const toast = {
-  // Direct access to addToast
-  addToast: (props: Omit<ToasterToast, "id">) => {
-    return addToastFn(props);
-  },
-  
-  // Convenience methods
-  success: (props: Omit<ToasterToast, "id" | "variant">) => {
-    return successToastFn(props);
-  },
-  
-  error: (props: Omit<ToasterToast, "id" | "variant">) => {
-    return errorToastFn(props);
-  }
+export const toast = (props: Omit<ToasterToast, "id">) => {
+  return toastFn(props);
+};
+
+// Append methods to the toast function
+toast.addToast = (props: Omit<ToasterToast, "id">) => {
+  return addToastFn(props);
+};
+
+toast.success = (props: Omit<ToasterToast, "id" | "variant">) => {
+  return successToastFn(props);
+};
+
+toast.error = (props: Omit<ToasterToast, "id" | "variant">) => {
+  return errorToastFn(props);
 };

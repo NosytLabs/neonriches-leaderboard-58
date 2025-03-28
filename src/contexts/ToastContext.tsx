@@ -14,9 +14,10 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
     setToastFunction(
       toastMethods.addToast,
       toastMethods.success,
-      toastMethods.error
+      toastMethods.error,
+      toastMethods.toast // Also register the toast method
     );
-  }, [toastMethods.addToast, toastMethods.success, toastMethods.error]);
+  }, [toastMethods.addToast, toastMethods.success, toastMethods.error, toastMethods.toast]);
   
   return (
     <ToastContext.Provider value={toastMethods}>
