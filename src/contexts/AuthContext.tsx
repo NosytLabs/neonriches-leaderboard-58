@@ -152,7 +152,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       if (!user) return false;
       
-      const userCosmetics = user.cosmetics || { borders: [], colors: [], fonts: [], emojis: [], titles: [] };
+      const userCosmetics = user.cosmetics || { 
+        borders: [], 
+        colors: [], 
+        fonts: [], 
+        emojis: [], 
+        titles: [] 
+      };
+      
       const categoryItems = userCosmetics[category as keyof typeof userCosmetics] || [];
       
       if (Array.isArray(categoryItems) && categoryItems.includes(cosmeticId)) {

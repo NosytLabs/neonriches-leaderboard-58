@@ -9,7 +9,7 @@ const COSMETIC_DATABASE: CosmeticItem[] = [
     id: 'border-parchment',
     name: 'Parchment Border',
     description: 'A simple yet elegant parchment-style border',
-    price: 0.99,
+    price: 0.50,
     rarity: 'common',
     category: 'border'
   },
@@ -17,7 +17,7 @@ const COSMETIC_DATABASE: CosmeticItem[] = [
     id: 'border-royal-frame',
     name: 'Royal Frame',
     description: 'An ornate golden frame fit for nobility',
-    price: 2.50,
+    price: 1.00,
     rarity: 'uncommon',
     category: 'border'
   },
@@ -25,7 +25,7 @@ const COSMETIC_DATABASE: CosmeticItem[] = [
     id: 'border-dragon-scales',
     name: 'Dragon Scales',
     description: 'A border of shimmering dragon scales',
-    price: 5.00,
+    price: 2.50,
     rarity: 'rare',
     category: 'border'
   },
@@ -33,7 +33,7 @@ const COSMETIC_DATABASE: CosmeticItem[] = [
     id: 'border-arcane-runes',
     name: 'Arcane Runes',
     description: 'Mysterious glowing runes encircle your profile',
-    price: 8.50,
+    price: 4.00,
     rarity: 'epic',
     category: 'border'
   },
@@ -41,8 +41,32 @@ const COSMETIC_DATABASE: CosmeticItem[] = [
     id: 'border-kings-decree',
     name: "King's Decree",
     description: 'The ultimate border reserved for those of true royal blood',
-    price: 15.00,
+    price: 7.50,
     rarity: 'legendary',
+    category: 'border'
+  },
+  {
+    id: 'border-modern-minimalist',
+    name: 'Modern Minimalist',
+    description: 'A sleek, modern border with clean lines',
+    price: 0.75,
+    rarity: 'common',
+    category: 'border'
+  },
+  {
+    id: 'border-neon-pulse',
+    name: 'Neon Pulse',
+    description: 'A contemporary border with pulsing neon effects',
+    price: 1.50,
+    rarity: 'uncommon',
+    category: 'border'
+  },
+  {
+    id: 'border-digital-circuit',
+    name: 'Digital Circuit',
+    description: 'A border styled like a futuristic circuit board',
+    price: 3.00,
+    rarity: 'rare',
     category: 'border'
   },
   
@@ -51,7 +75,7 @@ const COSMETIC_DATABASE: CosmeticItem[] = [
     id: 'color-peasant-brown',
     name: 'Peasant Brown',
     description: 'The humble color of the common folk',
-    price: 0.50,
+    price: 0.25,
     rarity: 'common',
     category: 'color'
   },
@@ -59,7 +83,7 @@ const COSMETIC_DATABASE: CosmeticItem[] = [
     id: 'color-royal-purple',
     name: 'Royal Purple',
     description: 'The classic color of nobility',
-    price: 1.50,
+    price: 0.75,
     rarity: 'common',
     category: 'color'
   },
@@ -67,7 +91,7 @@ const COSMETIC_DATABASE: CosmeticItem[] = [
     id: 'color-golden-hue',
     name: 'Golden Hue',
     description: 'A rich gold tone that speaks of wealth',
-    price: 2.50,
+    price: 1.00,
     rarity: 'uncommon',
     category: 'color'
   },
@@ -75,7 +99,7 @@ const COSMETIC_DATABASE: CosmeticItem[] = [
     id: 'color-crusader-crimson',
     name: 'Crusader Crimson',
     description: 'The bold red of medieval knights',
-    price: 3.50,
+    price: 1.50,
     rarity: 'rare',
     category: 'color'
   },
@@ -83,7 +107,7 @@ const COSMETIC_DATABASE: CosmeticItem[] = [
     id: 'color-alchemist-azure',
     name: 'Alchemist Azure',
     description: 'The mystical blue of medieval scholars',
-    price: 5.00,
+    price: 2.00,
     rarity: 'epic',
     category: 'color'
   },
@@ -91,8 +115,32 @@ const COSMETIC_DATABASE: CosmeticItem[] = [
     id: 'color-dragon-emerald',
     name: 'Dragon Emerald',
     description: 'A shimmering green like a dragon\'s eye',
-    price: 7.50,
+    price: 3.00,
     rarity: 'legendary',
+    category: 'color'
+  },
+  {
+    id: 'color-neon-pink',
+    name: 'Neon Pink',
+    description: 'A vibrant and modern neon pink',
+    price: 0.50,
+    rarity: 'common',
+    category: 'color'
+  },
+  {
+    id: 'color-cyber-blue',
+    name: 'Cyber Blue',
+    description: 'A futuristic blue with digital flair',
+    price: 1.25,
+    rarity: 'uncommon',
+    category: 'color'
+  },
+  {
+    id: 'color-sunset-orange',
+    name: 'Sunset Orange',
+    description: 'A warm, contemporary orange hue',
+    price: 1.75,
+    rarity: 'rare',
     category: 'color'
   },
   
@@ -101,7 +149,7 @@ const COSMETIC_DATABASE: CosmeticItem[] = [
     id: 'font-scribe',
     name: 'Scribe Script',
     description: 'The careful handwriting of a medieval scribe',
-    price: 0.75,
+    price: 0.50,
     rarity: 'common',
     category: 'font'
   },
@@ -109,7 +157,7 @@ const COSMETIC_DATABASE: CosmeticItem[] = [
     id: 'font-gothic-script',
     name: 'Gothic Script',
     description: 'A medieval-inspired gothic font',
-    price: 1.99,
+    price: 1.00,
     rarity: 'uncommon',
     category: 'font'
   },
@@ -117,7 +165,7 @@ const COSMETIC_DATABASE: CosmeticItem[] = [
     id: 'font-calligraphy',
     name: 'Royal Calligraphy',
     description: 'Elegant flowing script for the elite',
-    price: 3.50,
+    price: 1.50,
     rarity: 'rare',
     category: 'font'
   },
@@ -125,7 +173,7 @@ const COSMETIC_DATABASE: CosmeticItem[] = [
     id: 'font-mystic-runes',
     name: 'Mystic Runes',
     description: 'A font inspired by ancient magical runes',
-    price: 6.00,
+    price: 2.50,
     rarity: 'epic',
     category: 'font'
   },
@@ -133,8 +181,32 @@ const COSMETIC_DATABASE: CosmeticItem[] = [
     id: 'font-sovereign-decree',
     name: 'Sovereign Decree',
     description: 'The font used by digital royalty',
-    price: 10.00,
+    price: 5.00,
     rarity: 'legendary',
+    category: 'font'
+  },
+  {
+    id: 'font-modern-sans',
+    name: 'Modern Sans',
+    description: 'A clean, contemporary sans-serif font',
+    price: 0.75,
+    rarity: 'common',
+    category: 'font'
+  },
+  {
+    id: 'font-tech-mono',
+    name: 'Tech Mono',
+    description: 'A modern monospace font with a digital feel',
+    price: 1.25,
+    rarity: 'uncommon',
+    category: 'font'
+  },
+  {
+    id: 'font-geometric-display',
+    name: 'Geometric Display',
+    description: 'A bold, geometric font with modern styling',
+    price: 2.00,
+    rarity: 'rare',
     category: 'font'
   },
   
@@ -143,7 +215,7 @@ const COSMETIC_DATABASE: CosmeticItem[] = [
     id: 'emoji-jester',
     name: 'Jester',
     description: 'A medieval court jester emoji',
-    price: 0.50,
+    price: 0.25,
     rarity: 'common',
     category: 'emoji'
   },
@@ -151,7 +223,7 @@ const COSMETIC_DATABASE: CosmeticItem[] = [
     id: 'emoji-goblet',
     name: 'Royal Goblet',
     description: 'A golden goblet fit for a feast',
-    price: 1.50,
+    price: 0.75,
     rarity: 'uncommon',
     category: 'emoji'
   },
@@ -159,7 +231,7 @@ const COSMETIC_DATABASE: CosmeticItem[] = [
     id: 'emoji-dragon',
     name: 'Dragon',
     description: 'A fearsome dragon emoji',
-    price: 2.99,
+    price: 1.50,
     rarity: 'rare',
     category: 'emoji'
   },
@@ -167,7 +239,7 @@ const COSMETIC_DATABASE: CosmeticItem[] = [
     id: 'emoji-castle',
     name: 'Castle',
     description: 'A grand medieval castle emoji',
-    price: 4.50,
+    price: 2.00,
     rarity: 'epic',
     category: 'emoji'
   },
@@ -175,9 +247,115 @@ const COSMETIC_DATABASE: CosmeticItem[] = [
     id: 'emoji-crown-jewel',
     name: 'Crown Jewel',
     description: 'The ultimate symbol of your royal status',
-    price: 8.00,
+    price: 4.00,
     rarity: 'legendary',
     category: 'emoji'
+  },
+  {
+    id: 'emoji-moneybag',
+    name: 'Money Bag',
+    description: 'Show off your wealth with this emoji',
+    price: 0.50,
+    rarity: 'common',
+    category: 'emoji'
+  },
+  {
+    id: 'emoji-diamond',
+    name: 'Diamond',
+    description: 'A sparkling diamond emoji',
+    price: 1.00,
+    rarity: 'uncommon',
+    category: 'emoji'
+  },
+  {
+    id: 'emoji-rocket',
+    name: 'Rocket',
+    description: 'To the moon!',
+    price: 1.75,
+    rarity: 'rare',
+    category: 'emoji'
+  },
+  
+  // Titles
+  {
+    id: 'title-peasant',
+    name: 'Peasant',
+    description: 'A humble beginning',
+    price: 0.25,
+    rarity: 'common',
+    category: 'title'
+  },
+  {
+    id: 'title-squire',
+    name: 'Squire',
+    description: 'An apprentice to knighthood',
+    price: 0.75,
+    rarity: 'common',
+    category: 'title'
+  },
+  {
+    id: 'title-knight',
+    name: 'Knight',
+    description: 'A noble warrior',
+    price: 1.50,
+    rarity: 'uncommon',
+    category: 'title'
+  },
+  {
+    id: 'title-baron',
+    name: 'Baron',
+    description: 'A lord of the realm',
+    price: 2.50,
+    rarity: 'rare',
+    category: 'title'
+  },
+  {
+    id: 'title-duke',
+    name: 'Duke',
+    description: 'A high-ranking noble',
+    price: 4.00,
+    rarity: 'epic',
+    category: 'title'
+  },
+  {
+    id: 'title-sovereign',
+    name: 'Sovereign',
+    description: 'The ruler of all',
+    price: 7.50,
+    rarity: 'legendary',
+    category: 'title'
+  },
+  {
+    id: 'title-ceo',
+    name: 'CEO',
+    description: 'Chief Executive Officer',
+    price: 1.00,
+    rarity: 'uncommon',
+    category: 'title'
+  },
+  {
+    id: 'title-influencer',
+    name: 'Influencer',
+    description: 'A modern nobility',
+    price: 1.75,
+    rarity: 'rare',
+    category: 'title'
+  },
+  {
+    id: 'title-crypto-whale',
+    name: 'Crypto Whale',
+    description: 'A big player in the digital seas',
+    price: 3.50,
+    rarity: 'epic',
+    category: 'title'
+  },
+  {
+    id: 'title-founder',
+    name: 'Founder',
+    description: 'One of the first to join',
+    price: 10.00,
+    rarity: 'legendary',
+    category: 'title'
   }
 ];
 
@@ -220,18 +398,18 @@ export const getDiscountedPrice = (basePrice: number, amountSpent: number): numb
   // Higher spenders get better discounts
   let discount = 0;
   
-  if (amountSpent >= 100) {
+  if (amountSpent >= 50) {
     discount = 0.30; // 30% off for whales
-  } else if (amountSpent >= 50) {
-    discount = 0.20; // 20% off for high spenders
   } else if (amountSpent >= 25) {
-    discount = 0.15; // 15% off for medium spenders
+    discount = 0.20; // 20% off for high spenders
   } else if (amountSpent >= 10) {
+    discount = 0.15; // 15% off for medium spenders
+  } else if (amountSpent >= 5) {
     discount = 0.10; // 10% off for low spenders
   }
   
   // Calculate discounted price, round to 2 decimal places
-  return Math.max(0.50, parseFloat((basePrice * (1 - discount)).toFixed(2)));
+  return Math.max(0.25, parseFloat((basePrice * (1 - discount)).toFixed(2)));
 };
 
 // Award a random cosmetic based on wish amount

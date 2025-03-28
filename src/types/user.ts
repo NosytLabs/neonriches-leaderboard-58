@@ -1,3 +1,4 @@
+
 import { CosmeticRarity } from './cosmetics';
 
 export type UserGender = 'king' | 'queen' | 'jester' | 'noble';
@@ -17,6 +18,10 @@ export interface UserCosmetics {
   emojis: string[];
   titles: string[];
   foundersPass?: boolean;
+  activeBorder?: string | null;
+  activeColor?: string | null;
+  activeFont?: string | null;
+  activeTitle?: string | null;
 }
 
 export interface MarketingStats {

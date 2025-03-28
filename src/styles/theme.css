@@ -1,30 +1,20 @@
 :root {
-  /* Purple Marketing Theme Colors */
-  --purple-primary: #8B5CF6;
-  --purple-primary-bright: #A78BFA;
-  --purple-primary-dark: #7C3AED;
-  --purple-secondary: #C4B5FD;
-  --purple-secondary-light: #DDD6FE;
-  --purple-accent: #EDE9FE;
-  --purple-deep: #4C1D95;
-  --purple-muted: #9F7AEA;
-  
-  /* Legacy royal colors - repurposed with purple tones */
-  --royal-gold: #9B87F5;      /* Repurposed as purple-gold */
-  --royal-gold-bright: #B8A5FF;
-  --royal-gold-dark: #7E69AB;
-  --royal-crimson: #9B2335;   /* Keep for contrast */
+  /* Royal Theme Colors */
+  --royal-gold: #FFD700;          /* Bright gold */
+  --royal-gold-bright: #FFDF00;   /* Slightly brighter gold */
+  --royal-gold-dark: #D4AF37;     /* Darker gold for contrast */
+  --royal-crimson: #9B2335;       /* Keep for contrast */
   --royal-crimson-bright: #C41E3A;
   --royal-crimson-dark: #800020;
-  --royal-navy: #4C1D95;      /* Repurposed as deep purple */
-  --royal-navy-bright: #6D28D9;
-  --royal-navy-dark: #3B0764;
-  --royal-purple: #7851A9;    /* Already purple */
-  --royal-purple-bright: #9B59B6;
-  --royal-purple-dark: #5B3256;
-  --royal-velvet: #6E59A5;    /* Already purple-ish */
-  --royal-mahogany: #A65E44;  /* Keep for contrast */
-  --royal-emerald: #2C784A;   /* Keep for contrast */
+  --royal-navy: #000080;          /* Deep blue */
+  --royal-navy-bright: #000096;
+  --royal-navy-dark: #000064;
+  --royal-purple: #4B0082;        /* Royal purple, reduced emphasis */
+  --royal-purple-bright: #6A0DAD;
+  --royal-purple-dark: #38006b;
+  --royal-velvet: #430C5E;        /* Deep burgundy */
+  --royal-mahogany: #A65E44;      /* Keep for contrast */
+  --royal-emerald: #2C784A;       /* Keep for contrast */
   --royal-parchment: #F5E6CA;
   
   /* Team colors (keeping for backward compatibility) */
@@ -33,13 +23,13 @@
   --team-blue: var(--royal-navy);
   
   /* Background gradients */
-  --bg-purple-gradient: linear-gradient(135deg, #1D1933 0%, #2D2252 50%, #3D2B75 100%);
-  --bg-purple-gradient-inverted: linear-gradient(315deg, #1D1933 0%, #2D2252 50%, #3D2B75 100%);
+  --bg-royal-gradient: linear-gradient(135deg, #0D0D20 0%, #141428 50%, #1E1A3A 100%);
+  --bg-royal-gradient-inverted: linear-gradient(315deg, #0D0D20 0%, #141428 50%, #1E1A3A 100%);
 }
 
-/* Royal Gradients repurposed for marketing */
+/* Royal Gradients themed for gold/royal aesthetic */
 .royal-gradient {
-  background: linear-gradient(to right, var(--purple-primary-dark) 0%, var(--purple-primary) 50%, var(--purple-muted) 100%);
+  background: linear-gradient(to right, var(--royal-gold-dark) 0%, var(--royal-gold) 50%, var(--royal-gold-bright) 100%);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -66,7 +56,7 @@
 }
 
 .text-team-green {
-  color: var(--purple-primary);
+  color: var(--royal-gold);
 }
 
 .text-team-blue {
@@ -78,7 +68,7 @@
 }
 
 .bg-team-green {
-  background-color: var(--purple-primary);
+  background-color: var(--royal-gold);
 }
 
 .bg-team-blue {
@@ -106,7 +96,7 @@
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(to right, transparent 0%, rgba(255, 255, 255, 0.2) 50%, transparent 100%);
+  background: linear-gradient(to right, transparent 0%, rgba(255, 215, 0, 0.2) 50%, transparent 100%);
   transition: left 0.5s ease;
 }
 
@@ -246,10 +236,10 @@
 
 /* Glassmorphism effects */
 .glass-morphism {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(13, 13, 32, 0.6);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 215, 0, 0.1);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
 }
 
@@ -357,15 +347,15 @@
 }
 
 body {
-  background-color: #1A1A2E;
+  background-color: #0D0D20;
   color: #FFFFFF;
 }
 
-/* Marketing specific styles */
+/* Marketing specific styles updated for gold theme */
 .marketing-badge {
-  background-color: rgba(139, 92, 246, 0.2);
-  border: 1px solid rgba(139, 92, 246, 0.4);
-  color: #A78BFA;
+  background-color: rgba(255, 215, 0, 0.2);
+  border: 1px solid rgba(255, 215, 0, 0.4);
+  color: #FFD700;
   padding: 0.25rem 0.5rem;
   border-radius: 0.25rem;
   font-size: 0.75rem;
@@ -373,19 +363,19 @@ body {
 }
 
 .profile-highlight {
-  border: 2px solid rgba(139, 92, 246, 0.6);
-  box-shadow: 0 0 15px rgba(139, 92, 246, 0.4);
+  border: 2px solid rgba(255, 215, 0, 0.6);
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
   transition: all 0.3s ease;
 }
 
 .profile-highlight:hover {
-  box-shadow: 0 0 20px rgba(139, 92, 246, 0.7);
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.7);
   transform: translateY(-2px);
 }
 
 .marketing-banner {
-  background: linear-gradient(to right, rgba(76, 29, 149, 0.8), rgba(139, 92, 246, 0.8));
+  background: linear-gradient(to right, rgba(13, 13, 32, 0.8), rgba(30, 26, 58, 0.8));
   padding: 1rem;
   border-radius: 0.5rem;
-  border-left: 4px solid #A78BFA;
+  border-left: 4px solid #FFD700;
 }

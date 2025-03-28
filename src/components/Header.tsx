@@ -66,12 +66,12 @@ const Header = () => {
   };
 
   return (
-    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'glass-morphism border-b border-white/10 py-2' : 'py-4'}`}>
+    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'glass-morphism border-b border-royal-gold/10 py-1' : 'py-2'}`}>
       <div className="container mx-auto px-4 flex justify-between items-center">
         {/* Logo */}
         <Link to="/" className="flex items-center space-x-2">
-          <Crown className={`h-6 w-6 transition-colors ${scrolled ? 'text-royal-gold' : 'text-white'}`} />
-          <span className={`font-bold text-xl font-medieval transition-colors ${scrolled ? 'royal-gradient' : 'text-white'}`}>P2W.FUN</span>
+          <Crown className={`h-5 w-5 transition-colors ${scrolled ? 'text-royal-gold' : 'text-white'}`} />
+          <span className={`font-bold text-lg font-medieval transition-colors ${scrolled ? 'royal-gradient' : 'text-white'}`}>P2W.FUN</span>
         </Link>
 
         {/* Desktop Navigation */}
@@ -80,6 +80,7 @@ const Header = () => {
             <Link key={link.path} to={link.path}>
               <Button 
                 variant="ghost" 
+                size="sm"
                 className={`${isActive(link.path) ? 'bg-white/10 text-white' : 'text-white/70 hover:text-white hover:bg-white/10'}`}
               >
                 {link.icon}
@@ -94,15 +95,15 @@ const Header = () => {
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="relative flex items-center gap-2 px-2">
-                  <Avatar className="h-8 w-8 border border-white/20">
+                <Button variant="ghost" size="sm" className="relative flex items-center gap-2 px-2">
+                  <Avatar className="h-7 w-7 border border-royal-gold/20">
                     <AvatarImage src={user.profileImage} />
-                    <AvatarFallback className="bg-royal-purple text-white">
+                    <AvatarFallback className="bg-royal-navy text-white">
                       {user.username.substring(0, 2).toUpperCase()}
                     </AvatarFallback>
                   </Avatar>
                   <div className="flex flex-col items-start text-left">
-                    <span className="text-sm font-medium">{user.username}</span>
+                    <span className="text-xs font-medium">{user.username}</span>
                     <span className="text-xs text-white/60">Rank #{user.rank}</span>
                   </div>
                   <Badge className="absolute -top-1 -right-1 text-xs px-1.5 py-0.5 bg-royal-gold/20 border-royal-gold/40 text-royal-gold">
@@ -110,7 +111,7 @@ const Header = () => {
                   </Badge>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="glass-morphism border-white/10 w-56">
+              <DropdownMenuContent align="end" className="glass-morphism border-royal-gold/10 w-56">
                 <DropdownMenuLabel className="text-white/70">My Account</DropdownMenuLabel>
                 <DropdownMenuSeparator className="bg-white/10" />
                 <Link to="/profile">
@@ -139,11 +140,11 @@ const Header = () => {
             </DropdownMenu>
           ) : (
             <>
-              <Button variant="outline" className="text-white border-white/20 hover:bg-white/10" onClick={handleLogin}>
+              <Button size="sm" variant="outline" className="text-white border-white/20 hover:bg-white/10" onClick={handleLogin}>
                 <LogIn className="mr-2 h-4 w-4" />
                 Login
               </Button>
-              <Button className="bg-royal-gold hover:bg-royal-gold/90 text-black" onClick={handleRegister}>
+              <Button size="sm" className="bg-royal-gold hover:bg-royal-gold/90 text-black" onClick={handleRegister}>
                 <UserPlus className="mr-2 h-4 w-4" />
                 Register
               </Button>
@@ -155,12 +156,12 @@ const Header = () => {
         <Sheet open={showMobileMenu} onOpenChange={setShowMobileMenu}>
           <SheetTrigger asChild>
             <Button variant="ghost" size="icon" className="md:hidden">
-              <Menu className="h-6 w-6 text-white" />
+              <Menu className="h-5 w-5 text-white" />
             </Button>
           </SheetTrigger>
-          <SheetContent side="right" className="glass-morphism border-white/10 w-64">
+          <SheetContent side="right" className="glass-morphism border-royal-gold/10 w-64">
             <div className="flex flex-col h-full">
-              <div className="flex justify-between items-center mb-6">
+              <div className="flex justify-between items-center mb-4">
                 <div className="flex items-center gap-2">
                   <Crown className="h-5 w-5 text-royal-gold" />
                   <span className="font-bold text-lg royal-gradient">P2W.FUN</span>
@@ -171,17 +172,17 @@ const Header = () => {
               </div>
 
               {user && (
-                <div className="mb-6 p-4 glass-morphism rounded-lg">
+                <div className="mb-4 p-3 glass-morphism rounded-lg">
                   <div className="flex items-center gap-3">
-                    <Avatar className="h-12 w-12 border-2 border-royal-gold/20">
+                    <Avatar className="h-10 w-10 border border-royal-gold/20">
                       <AvatarImage src={user.profileImage} />
-                      <AvatarFallback className="bg-royal-purple text-white">
+                      <AvatarFallback className="bg-royal-navy text-white">
                         {user.username.substring(0, 2).toUpperCase()}
                       </AvatarFallback>
                     </Avatar>
                     <div>
-                      <div className="font-medium">{user.username}</div>
-                      <div className="text-sm text-white/60">Rank #{user.rank}</div>
+                      <div className="font-medium text-sm">{user.username}</div>
+                      <div className="text-xs text-white/60">Rank #{user.rank}</div>
                       <div className="text-xs text-royal-gold">
                         ${user.amountSpent} spent
                       </div>
@@ -190,7 +191,7 @@ const Header = () => {
                 </div>
               )}
 
-              <nav className="space-y-2 mb-6">
+              <nav className="space-y-1 mb-4">
                 {navLinks.map((link) => (
                   <Link 
                     key={link.path} 
@@ -199,6 +200,7 @@ const Header = () => {
                   >
                     <Button 
                       variant="ghost" 
+                      size="sm"
                       className={`w-full justify-start ${
                         isActive(link.path) 
                           ? 'bg-white/10 text-white' 
@@ -216,6 +218,7 @@ const Header = () => {
                 {user ? (
                   <Button 
                     variant="outline" 
+                    size="sm"
                     className="w-full text-white border-white/20 hover:bg-white/10"
                     onClick={() => {
                       handleLogout();
@@ -228,6 +231,7 @@ const Header = () => {
                   <>
                     <Button 
                       variant="outline" 
+                      size="sm"
                       className="w-full text-white border-white/20 hover:bg-white/10"
                       onClick={() => {
                         setShowMobileMenu(false);
@@ -238,6 +242,7 @@ const Header = () => {
                       Login
                     </Button>
                     <Button 
+                      size="sm"
                       className="w-full bg-royal-gold hover:bg-royal-gold/90 text-black"
                       onClick={() => {
                         setShowMobileMenu(false);
@@ -256,8 +261,8 @@ const Header = () => {
       </div>
 
       {/* Auth modals */}
-      <LoginModal isOpen={showLoginModal} onClose={() => setShowLoginModal(false)} />
-      <RegisterModal isOpen={showRegisterModal} onClose={() => setShowRegisterModal(false)} />
+      {showLoginModal && <LoginModal isOpen={showLoginModal} onClose={() => setShowLoginModal(false)} />}
+      {showRegisterModal && <RegisterModal isOpen={showRegisterModal} onClose={() => setShowRegisterModal(false)} />}
     </header>
   );
 };

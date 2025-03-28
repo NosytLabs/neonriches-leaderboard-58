@@ -20,6 +20,7 @@ const RoyalFeatures = lazy(() => import('@/components/RoyalFeatures'));
 const RoyalFAQ = lazy(() => import('@/components/RoyalFAQ'));
 const RoyalBadges = lazy(() => import('@/components/RoyalBadges'));
 const TeamSection = lazy(() => import('@/components/TeamSection'));
+const WishingWell = lazy(() => import('@/components/wishingwell/WishingWell'));
 
 // Simple loading fallback
 const LoadingPlaceholder = () => (
@@ -83,102 +84,21 @@ const Index = () => {
           <RoyalHero />
         </Suspense>
         
-        <div className="container mx-auto px-4 py-12">
+        <div className="container mx-auto px-4 py-8">
           <Suspense fallback={<LoadingPlaceholder />}>
             <HeroSpotlight topSpender={topSpender} currentUserAmount={user?.amountSpent || 0} />
           </Suspense>
           
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-2 font-medieval">
-              <span className="royal-gradient">A Satirical Hierarchy of Cosmetic Status</span>
-            </h2>
-            <p className="text-foreground/80 max-w-2xl mx-auto font-medieval-text">
-              On SpendThrone.com, your cosmetic status is directly proportional to your spending. $1 = 1 unit of rank. 
-              The leaderboard never resets, making your investment in digital prestige eternal.
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-16">
-            <div className="bg-foreground/5 backdrop-blur-md border border-foreground/10 rounded-lg p-6 text-center shadow-lg transition-all duration-300 hover:shadow-royal-gold/10 hover:border-royal-gold/30 medieval-ornament">
-              <div className="relative mb-4 inline-block">
-                <div className="absolute -inset-3 bg-royal-crimson/10 rounded-full blur-md opacity-60"></div>
-                <Crown className="h-12 w-12 text-royal-gold mx-auto animate-royal-pulse relative z-10" />
-                <Sparkles className="h-4 w-4 text-royal-gold absolute -top-1 -right-1 animate-sparkle" />
-              </div>
-              <h3 className="text-xl font-bold mb-2 font-medieval text-royal-gold">Cosmetic Status Ranking</h3>
-              <p className="text-foreground/80 mb-4 font-medieval-text">
-                Your rank is determined by your spending. Top spenders get exclusive cosmetic features and visual enhancements.
-              </p>
-              <Link to="/leaderboard">
-                <Button 
-                  className="bg-foreground/10 hover:bg-foreground/20 text-foreground royal-button"
-                  onClick={() => {
-                    setHasInteracted(true);
-                    playSound('notification', 0.2);
-                  }}
-                >
-                  <span className="relative z-10">View Court Rankings</span>
-                </Button>
-              </Link>
-            </div>
-            
-            <div className="bg-foreground/5 backdrop-blur-md border border-foreground/10 rounded-lg p-6 text-center shadow-lg transition-all duration-300 hover:shadow-royal-gold/10 hover:border-royal-gold/30 medieval-ornament">
-              <div className="relative mb-4 inline-block">
-                <div className="absolute -inset-3 bg-royal-gold/10 rounded-full blur-md opacity-60"></div>
-                <Trophy className="h-12 w-12 text-royal-gold mx-auto animate-royal-pulse relative z-10" />
-                <Sparkles className="h-4 w-4 text-royal-gold absolute -top-1 -right-1 animate-sparkle" style={{ animationDelay: '0.5s' }}/>
-              </div>
-              <h3 className="text-xl font-bold mb-2 font-medieval text-royal-gold">Visual Entertainment Events</h3>
-              <p className="text-foreground/80 mb-4 font-medieval-text">
-                Participate in weekly events like the Public Shaming Festival where you can pay for playful visual effects - all purely cosmetic.
-              </p>
-              <Link to="/events">
-                <Button 
-                  className="bg-foreground/10 hover:bg-foreground/20 text-foreground royal-button"
-                  onClick={() => {
-                    setHasInteracted(true);
-                    playSound('notification', 0.2);
-                  }}
-                >
-                  <span className="relative z-10">View Royal Events</span>
-                </Button>
-              </Link>
-            </div>
-            
-            <div className="bg-foreground/5 backdrop-blur-md border border-foreground/10 rounded-lg p-6 text-center shadow-lg transition-all duration-300 hover:shadow-royal-gold/10 hover:border-royal-gold/30 medieval-ornament">
-              <div className="relative mb-4 inline-block">
-                <div className="absolute -inset-3 bg-royal-navy/10 rounded-full blur-md opacity-60"></div>
-                <Shield className="h-12 w-12 text-royal-gold mx-auto animate-royal-pulse relative z-10" />
-                <Sparkles className="h-4 w-4 text-royal-gold absolute -top-1 -right-1 animate-sparkle" style={{ animationDelay: '1s' }}/>
-              </div>
-              <h3 className="text-xl font-bold mb-2 font-medieval text-royal-gold">Cosmetic Houses</h3>
-              <p className="text-foreground/80 mb-4 font-medieval-text">
-                Join one of three houses and compete for visual glory and additional cosmetic benefits.
-              </p>
-              <Link to="/dashboard">
-                <Button 
-                  className="bg-foreground/10 hover:bg-foreground/20 text-foreground royal-button"
-                  onClick={() => {
-                    setHasInteracted(true);
-                    playSound('notification', 0.2);
-                  }}
-                >
-                  <span className="relative z-10">Join a Noble House</span>
-                </Button>
-              </Link>
-            </div>
-          </div>
-          
           <Suspense fallback={<LoadingPlaceholder />}>
-            <RoyalDivider variant="treasure" label="ROYAL COURT STANDINGS" color="gold" className="mb-8" />
+            <RoyalDivider variant="crown" label="ROYAL COURT STANDINGS" color="gold" className="mb-8 mt-12" />
             
-            <div className="mb-16">
+            <div className="mb-12">
               <CombinedLeaderboard limit={5} compact={true} />
               
               <div className="mt-6 text-center">
                 <Link to="/dashboard">
                   <Button 
-                    className="royal-button bg-gradient-to-r from-royal-purple to-royal-gold hover:opacity-90 text-white px-6 py-2 rounded-full"
+                    className="royal-button bg-gradient-to-r from-royal-crimson to-royal-gold hover:opacity-90 text-white px-6 py-2 rounded-full"
                     onClick={() => {
                       setHasInteracted(true);
                       playSound('notification', 0.2);
@@ -197,14 +117,23 @@ const Index = () => {
             </div>
           </Suspense>
           
-          <Suspense fallback={<LoadingPlaceholder />}>
-            <RoyalFeatures />
-          </Suspense>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+            <div className="col-span-2">
+              <Suspense fallback={<LoadingPlaceholder />}>
+                <RoyalFeatures />
+              </Suspense>
+            </div>
+            <div>
+              <Suspense fallback={<LoadingPlaceholder />}>
+                <WishingWell />
+              </Suspense>
+            </div>
+          </div>
           
           <Suspense fallback={<LoadingPlaceholder />}>
             <RoyalDivider variant="crown" label="PATH TO VISUAL NOBILITY" color="gold" className="mb-8" />
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
               <RoyalParchment variant="default" className="p-6">
                 <h3 className="text-xl font-bold mb-4 font-medieval royal-gradient">The Royal Cosmetic Hierarchy</h3>
                 <p className="text-foreground/70 mb-6">
