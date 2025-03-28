@@ -5,7 +5,7 @@ import { UserProfile } from '@/types/user';
 import { useProfileBoost, BoostEffect } from '@/hooks/use-profile-boost';
 import { Sparkles, Clock } from 'lucide-react';
 
-// Define props interface explicitly
+// Define props interface explicitly and export it
 export interface ProfileBoostDisplayProps {
   user: UserProfile;
 }
