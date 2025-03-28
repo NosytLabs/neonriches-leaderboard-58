@@ -38,7 +38,7 @@ const Index = () => {
     spentAmount: 25000,
     walletBalance: 1000,
     rank: 1,
-    previousRank: 1,
+    // Using optional previousRank now that we've updated the type
     spendStreak: 12,
     tier: 'whale',
     team: 'red',

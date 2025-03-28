@@ -10,7 +10,7 @@ import { UserProfile } from '@/types/user';
 
 interface LeaderboardTableProps {
   users: UserProfile[];
-  currentFilter?: string;
+  currentFilter?: string | null;
 }
 
 const LeaderboardTable: React.FC<LeaderboardTableProps> = ({ 

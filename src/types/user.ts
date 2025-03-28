@@ -120,6 +120,7 @@ export interface UserProfile {
   spentAmount?: number;
   walletBalance?: number;
   rank: number;
+  previousRank?: number; // Added this property
   tier: UserTier;
   team?: 'red' | 'green' | 'blue';
   gender?: UserGender;
@@ -127,6 +128,7 @@ export interface UserProfile {
   joinDate: string;
   lastActive?: string;
   isVerified?: boolean;
+  isVIP?: boolean; // Added this property
   spendStreak?: number;
   profileViews?: number;
   profileClicks?: number;

@@ -21,7 +21,7 @@ const RoyalCourt = () => {
     spentAmount: user.amountSpent,
     walletBalance: 0,
     rank: user.rank,
-    previousRank: user.previousRank || user.rank + 1, // Provide a default previousRank
+    previousRank: user.previousRank,
     spendStreak: Math.floor(Math.random() * 10),
     tier: 'crab',
     team: user.team as any || null,
@@ -72,8 +72,8 @@ const RoyalCourt = () => {
     
     const sortedData = [...leaderboardData].sort((a, b) => {
       return newDirection === 'desc' 
-        ? b.amountSpent - a.amountSpent 
-        : a.amountSpent - b.amountSpent;
+        ? b.amountSpent! - a.amountSpent! 
+        : a.amountSpent! - b.amountSpent!;
     });
     
     setLeaderboardData(sortedData);
