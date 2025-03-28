@@ -1,196 +1,91 @@
-
-import { CosmeticItem, CosmeticRarity } from '@/types/cosmetics';
-import { UserProfile } from '@/types/user';
-
-// Mock cosmetic items database
-const cosmeticItems: CosmeticItem[] = [
-  {
-    id: 'border-1',
-    name: 'Royal Gold Border',
-    description: 'A luxurious gold border fit for royalty',
-    category: 'border',
-    type: 'profile',
-    rarity: 'legendary',
-    cost: 25.00,
-    cssClass: 'border-royal-gold animate-border-glow'
-  },
-  {
-    id: 'border-2',
-    name: 'Crimson Flame Border',
-    description: 'A border that flickers with the passion of crimson flames',
-    category: 'border',
-    type: 'profile',
-    rarity: 'epic',
-    cost: 15.00,
-    cssClass: 'border-royal-crimson animate-border-flicker'
-  },
-  {
-    id: 'bg-1',
-    name: 'Royal Throne Background',
-    description: 'Show your status with an opulent throne room background',
-    category: 'background',
-    type: 'profile',
-    rarity: 'legendary',
-    cost: 50.00,
-    imageSrc: '/throne-assets/royal-throne-bg.jpg'
-  },
-  {
-    id: 'title-1',
-    name: 'Sovereign',
-    description: 'The highest title in the realm, reserved for true royalty',
-    category: 'title',
-    type: 'prefix',
-    rarity: 'legendary',
-    cost: 100.00
-  },
-  {
-    id: 'effect-1',
-    name: 'Golden Aura',
-    description: 'Surround your profile with a shimmering golden aura',
-    category: 'effect',
-    type: 'profile',
-    rarity: 'legendary',
-    cost: 75.00,
-    cssClass: 'golden-aura-effect'
-  }
-];
-
-// Get all cosmetic items
-export const getAllCosmetics = (): CosmeticItem[] => {
-  return cosmeticItems;
+export const getCosmeticById = (id: string) => {
+  // Mock implementation
+  return {
+    id,
+    name: `Cosmetic ${id}`,
+    category: 'borders',
+    rarity: 'rare',
+    description: 'A beautiful cosmetic item',
+    previewUrl: '/assets/cosmetics/borders/rare.png'
+  };
 };
 
-// Get cosmetics by category
-export const getCosmeticsByCategory = (category: string): CosmeticItem[] => {
-  return cosmeticItems.filter(item => item.category === category);
-};
-
-// Get cosmetic by ID
-export const getCosmeticById = (id: string): CosmeticItem | undefined => {
-  return cosmeticItems.find(item => item.id === id);
-};
-
-// Get cosmetics by rarity
-export const getCosmeticsByRarity = (rarity: string): CosmeticItem[] => {
-  return cosmeticItems.filter(item => item.rarity === rarity);
-};
-
-// Award a random cosmetic
 export const awardRandomCosmetic = (
-  user: UserProfile,
-  amount: number,
+  user: any, 
+  spentAmount: number,
   preferredCategory?: string
-): { cosmeticItem: CosmeticItem | null; rarity: CosmeticRarity } => {
-  // Calculate rarity based on the amount spent
-  let rarityChances = {
-    common: Math.max(40 - (amount >= 10 ? 15 : amount >= 5 ? 10 : amount >= 2 ? 5 : 0), 25),
-    uncommon: 30 + (amount >= 10 ? -10 : amount >= 5 ? -5 : amount >= 2 ? 2 : 0),
-    rare: 20 + (amount >= 10 ? 5 : amount >= 5 ? 5 : amount >= 2 ? 2 : 0),
-    epic: 8 + (amount >= 10 ? 10 : amount >= 5 ? 5 : amount >= 2 ? 1 : 0),
-    legendary: 2 + (amount >= 10 ? 10 : amount >= 5 ? 5 : 0)
-  };
+) => {
+  // Mock implementation
+  const rarities = ['common', 'uncommon', 'rare', 'epic', 'legendary'];
+  const categories = ['borders', 'colors', 'fonts', 'emojis', 'titles', 'backgrounds', 'effects'];
   
-  // Normalize chances
-  const total = Object.values(rarityChances).reduce((acc, val) => acc + val, 0);
-  Object.keys(rarityChances).forEach((key) => {
-    rarityChances[key as CosmeticRarity] = rarityChances[key as CosmeticRarity] / total * 100;
-  });
-  
-  // Determine rarity based on weighted random
-  const rand = Math.random() * 100;
-  let cumulativeChance = 0;
-  let selectedRarity: CosmeticRarity = 'common';
-  
-  for (const [rarity, chance] of Object.entries(rarityChances)) {
-    cumulativeChance += chance;
-    if (rand <= cumulativeChance) {
-      selectedRarity = rarity as CosmeticRarity;
-      break;
-    }
-  }
-  
-  // Filter eligible cosmetics by rarity and optional category
-  let eligibleItems = cosmeticItems.filter(item => 
-    item.rarity === selectedRarity && 
-    (!preferredCategory || item.category === preferredCategory)
-  );
-  
-  // Check if user already has all items of this rarity
-  const userCosmetics = user.cosmetics || {
-    borders: [], colors: [], fonts: [], emojis: [], titles: [], backgrounds: [], effects: [], badges: [], themes: []
-  };
-  
-  const userCosmeticIds = [
-    ...userCosmetics.borders,
-    ...userCosmetics.colors,
-    ...userCosmetics.fonts,
-    ...userCosmetics.emojis,
-    ...userCosmetics.titles,
-    ...userCosmetics.backgrounds,
-    ...userCosmetics.effects,
-    ...userCosmetics.badges,
-    ...userCosmetics.themes
+  // Determine rarity based on amount spent
+  let rarityWeights = [
+    { rarity: 'common', chance: 40 }, 
+    { rarity: 'uncommon', chance: 30 },
+    { rarity: 'rare', chance: 20 },
+    { rarity: 'epic', chance: 8 },
+    { rarity: 'legendary', chance: 2 }
   ];
   
-  eligibleItems = eligibleItems.filter(item => !userCosmeticIds.includes(item.id));
+  // Adjust chances based on spent amount
+  if (spentAmount >= 10) {
+    rarityWeights = [
+      { rarity: 'common', chance: 25 }, 
+      { rarity: 'uncommon', chance: 20 },
+      { rarity: 'rare', chance: 25 },
+      { rarity: 'epic', chance: 18 },
+      { rarity: 'legendary', chance: 12 }
+    ];
+  } else if (spentAmount >= 5) {
+    rarityWeights = [
+      { rarity: 'common', chance: 30 }, 
+      { rarity: 'uncommon', chance: 25 },
+      { rarity: 'rare', chance: 25 },
+      { rarity: 'epic', chance: 13 },
+      { rarity: 'legendary', chance: 7 }
+    ];
+  } else if (spentAmount >= 2) {
+    rarityWeights = [
+      { rarity: 'common', chance: 35 }, 
+      { rarity: 'uncommon', chance: 32 },
+      { rarity: 'rare', chance: 22 },
+      { rarity: 'epic', chance: 9 },
+      { rarity: 'legendary', chance: 2 }
+    ];
+  }
   
-  // If no eligible items, try a lower rarity
-  if (eligibleItems.length === 0) {
-    const rarities: CosmeticRarity[] = ['legendary', 'epic', 'rare', 'uncommon', 'common'];
-    const currentRarityIndex = rarities.indexOf(selectedRarity);
-    
-    for (let i = currentRarityIndex + 1; i < rarities.length; i++) {
-      const fallbackRarity = rarities[i];
-      eligibleItems = cosmeticItems.filter(item => 
-        item.rarity === fallbackRarity && 
-        (!preferredCategory || item.category === preferredCategory) &&
-        !userCosmeticIds.includes(item.id)
-      );
-      
-      if (eligibleItems.length > 0) {
-        selectedRarity = fallbackRarity;
-        break;
-      }
+  // Randomly select rarity based on weights
+  const totalWeight = rarityWeights.reduce((sum, item) => sum + item.chance, 0);
+  let random = Math.random() * totalWeight;
+  let selectedRarity = 'common';
+  
+  for (const item of rarityWeights) {
+    if (random <= item.chance) {
+      selectedRarity = item.rarity;
+      break;
     }
+    random -= item.chance;
   }
   
-  // If still no eligible items, return null
-  if (eligibleItems.length === 0) {
-    return { cosmeticItem: null, rarity: selectedRarity };
-  }
+  // Select category (respect preferred if provided)
+  const selectedCategory = preferredCategory || categories[Math.floor(Math.random() * categories.length)];
   
-  // Pick a random item from the eligible ones
-  const randomIndex = Math.floor(Math.random() * eligibleItems.length);
-  return { cosmeticItem: eligibleItems[randomIndex], rarity: selectedRarity };
-};
-
-// Purchase a cosmetic (mock function)
-export const purchaseCosmetic = async (
-  userId: string,
-  cosmeticId: string
-): Promise<{ success: boolean; message: string }> => {
-  // In a real app, this would interact with a backend
-  const cosmetic = getCosmeticById(cosmeticId);
+  // Generate a random cosmetic item
+  const cosmeticId = `cosmetic_${Date.now()}`;
+  const randomNames = [
+    'Royal Glory', 'Golden Crown', 'Emerald Shine', 'Ruby Sparkle', 'Sapphire Glow',
+    'Diamond Edge', 'Platinum Aura', 'Crimson Flame', 'Azure Mist', 'Violet Haze'
+  ];
   
-  if (!cosmetic) {
-    return {
-      success: false,
-      message: 'Cosmetic not found'
-    };
-  }
-  
-  // Simulate a successful purchase
-  return {
-    success: true,
-    message: `Successfully purchased ${cosmetic.name}`
+  const cosmeticItem = {
+    id: cosmeticId,
+    name: randomNames[Math.floor(Math.random() * randomNames.length)],
+    category: selectedCategory,
+    rarity: selectedRarity,
+    description: `A ${selectedRarity} ${selectedCategory.slice(0, -1)} effect.`,
+    previewUrl: `/assets/cosmetics/${selectedCategory}/${selectedRarity}.png`
   };
-};
-
-export default {
-  getAllCosmetics,
-  getCosmeticsByCategory,
-  getCosmeticById,
-  getCosmeticsByRarity,
-  purchaseCosmetic,
-  awardRandomCosmetic
+  
+  return { cosmeticItem, rarity: selectedRarity };
 };

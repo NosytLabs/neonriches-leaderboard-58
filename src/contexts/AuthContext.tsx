@@ -1,36 +1,30 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { User, UserProfile } from '@/types';
-
-export interface AuthContextType {
-  user: User | null;
-  isLoading: boolean;
-  isAuthenticated: boolean;
-  signIn: (email: string, password: string) => Promise<boolean>;
-  signUp: (email: string, username: string, password: string) => Promise<boolean>;
-  signOut: () => void;
-  updateUserProfile: (updatedUser: Partial<User>) => Promise<boolean>;
-  boostProfile?: (type: string, duration: number) => Promise<boolean>;
-  awardCosmetic?: (id: string, category: string, rarity: string, source: string) => Promise<boolean>;
-  // Add other auth-related functions here
-}
+import { AuthContextType } from '@/types/auth-context';
+import { UserProfile, UserSubscription } from '@/types/user';
 
 // Create the context with a default value
 const AuthContext = createContext<AuthContextType>({
   user: null,
   isLoading: true,
   isAuthenticated: false,
-  signIn: async () => false,
-  signUp: async () => false,
+  error: null,
+  login: async () => {},
+  register: async () => {},
+  logout: async () => {},
   signOut: () => {},
-  updateUserProfile: async () => false,
+  updateUserProfile: async () => {},
+  openAuthModal: () => {},
+  closeAuthModal: () => {},
 });
 
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<UserProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
   // Mock authentication for development
   useEffect(() => {
@@ -43,6 +37,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           setUser(JSON.parse(storedUser));
         } catch (error) {
           console.error('Failed to parse stored user:', error);
+          setError(new Error('Failed to parse stored user'));
         }
       }
       setIsLoading(false);
@@ -51,12 +46,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return () => clearTimeout(timer);
   }, []);
 
-  const signIn = async (email: string, password: string): Promise<boolean> => {
+  const login = async (email: string, password: string): Promise<void> => {
     try {
       setIsLoading(true);
+      setError(null);
       
       // Mock authentication success
-      const mockUser: User = {
+      const mockUser: UserProfile = {
         id: '1',
         username: 'royal_user',
         email,
@@ -68,6 +64,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         joinedAt: new Date().toISOString(),
         joinDate: new Date().toISOString(),
         amountSpent: 0,
+        spentAmount: 0,
         cosmetics: {
           borders: [],
           colors: [],
@@ -96,22 +93,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       setUser(mockUser);
       localStorage.setItem('p2w_user', JSON.stringify(mockUser));
-      
-      return true;
     } catch (error) {
       console.error('Sign in error:', error);
-      return false;
+      setError(error as Error);
+      throw error;
     } finally {
       setIsLoading(false);
     }
   };
 
-  const signUp = async (email: string, username: string, password: string): Promise<boolean> => {
+  const register = async (email: string, username: string, password: string): Promise<void> => {
     try {
       setIsLoading(true);
+      setError(null);
       
       // Mock registration success
-      const mockUser: User = {
+      const mockUser: UserProfile = {
         id: '1',
         username,
         email,
@@ -123,6 +120,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         joinedAt: new Date().toISOString(),
         joinDate: new Date().toISOString(),
         amountSpent: 0,
+        spentAmount: 0,
         cosmetics: {
           borders: [],
           colors: [],
@@ -151,48 +149,57 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       setUser(mockUser);
       localStorage.setItem('p2w_user', JSON.stringify(mockUser));
-      
-      return true;
     } catch (error) {
       console.error('Sign up error:', error);
-      return false;
+      setError(error as Error);
+      throw error;
     } finally {
       setIsLoading(false);
     }
   };
 
-  const signOut = () => {
-    setUser(null);
-    localStorage.removeItem('p2w_user');
+  const logout = async (): Promise<void> => {
+    try {
+      setUser(null);
+      localStorage.removeItem('p2w_user');
+    } catch (error) {
+      console.error('Logout error:', error);
+      setError(error as Error);
+      throw error;
+    }
   };
 
-  const updateUserProfile = async (updatedUser: Partial<User>): Promise<boolean> => {
+  // Alias for logout for compatibility
+  const signOut = () => {
+    logout().catch(err => console.error('Error during signOut:', err));
+  };
+
+  const updateUserProfile = async (updatedUser: Partial<UserProfile>): Promise<void> => {
     try {
-      if (!user) return false;
+      if (!user) throw new Error('No user to update');
       
       const newUser = { ...user, ...updatedUser };
       setUser(newUser);
       localStorage.setItem('p2w_user', JSON.stringify(newUser));
-      
-      return true;
     } catch (error) {
       console.error('Update profile error:', error);
-      return false;
+      setError(error as Error);
+      throw error;
     }
   };
 
-  const boostProfile = async (type: string, duration: number): Promise<boolean> => {
+  const boostProfile = async (days: number = 1, level: number = 1): Promise<boolean> => {
     try {
       if (!user) return false;
       
       const boostId = `boost_${Date.now()}`;
       const boost = {
         id: boostId,
-        effectId: type,
+        effectId: `boost_level_${level}`,
         startTime: new Date().toISOString(),
-        endTime: Date.now() + duration * 60 * 60 * 1000, // Convert hours to ms
-        type,
-        strength: 1,
+        endTime: Date.now() + days * 24 * 60 * 60 * 1000, // Convert days to ms
+        type: 'profile_boost',
+        strength: level,
         appliedBy: user.id,
       };
       
@@ -210,12 +217,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return true;
     } catch (error) {
       console.error('Boost profile error:', error);
+      setError(error as Error);
       return false;
     }
   };
 
   const awardCosmetic = async (
-    id: string, 
+    cosmeticId: string, 
     category: string, 
     rarity: string, 
     source: string
@@ -237,10 +245,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       
       const categoryItems = cosmetics[category as keyof typeof cosmetics] || [];
       
-      if (Array.isArray(categoryItems) && !categoryItems.includes(id)) {
+      if (Array.isArray(categoryItems) && !categoryItems.includes(cosmeticId)) {
         const updatedCosmetics = {
           ...cosmetics,
-          [category]: [...categoryItems, id],
+          [category]: [...categoryItems, cosmeticId],
         };
         
         const updatedUser = {
@@ -257,8 +265,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return false;
     } catch (error) {
       console.error('Award cosmetic error:', error);
+      setError(error as Error);
       return false;
     }
+  };
+
+  const openAuthModal = () => {
+    setIsAuthModalOpen(true);
+  };
+
+  const closeAuthModal = () => {
+    setIsAuthModalOpen(false);
   };
 
   return (
@@ -267,12 +284,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         user, 
         isLoading, 
         isAuthenticated: !!user, 
-        signIn, 
-        signUp, 
+        error,
+        login, 
+        register, 
+        logout,
         signOut,
         updateUserProfile,
         boostProfile,
-        awardCosmetic
+        awardCosmetic,
+        openAuthModal,
+        closeAuthModal
       }}
     >
       {children}

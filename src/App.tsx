@@ -4,7 +4,6 @@ import { Routes, Route, useLocation } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { Toaster } from '@/components/ui/toaster';
 import { ToastProvider } from '@/contexts/ToastContext';
-import { AuthProvider } from '@/contexts/AuthContext';
 import Loading from '@/components/Loading';
 
 // Lazy-loaded pages
@@ -35,34 +34,28 @@ function App() {
   }, [location.pathname]);
   
   return (
-    <HelmetProvider>
-      <AuthProvider>
-        <ToastProvider>
-          <Suspense fallback={<Loading />}>
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/leaderboard" element={<Leaderboard />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/events" element={<Events />} />
-              <Route path="/faq" element={<FAQ />} />
-              <Route path="/features" element={<Features />} />
-              <Route path="/profile/:username" element={<Profile />} />
-              <Route path="/auth" element={<Auth />} />
-              <Route path="/teams" element={<Teams />} />
-              <Route path="/certificate" element={<Certificate />} />
-              {/* Updated route: /royal-council instead of /community */}
-              <Route path="/royal-council" element={<RoyalCouncil />} />
-              
-              {/* 404 Page */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </Suspense>
-          
-          <Toaster />
-        </ToastProvider>
-      </AuthProvider>
-    </HelmetProvider>
+    <Suspense fallback={<Loading />}>
+      <Routes>
+        <Route path="/" element={<Index />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/leaderboard" element={<Leaderboard />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/events" element={<Events />} />
+        <Route path="/faq" element={<FAQ />} />
+        <Route path="/features" element={<Features />} />
+        <Route path="/profile/:username" element={<Profile />} />
+        <Route path="/auth" element={<Auth />} />
+        <Route path="/teams" element={<Teams />} />
+        <Route path="/certificate" element={<Certificate />} />
+        {/* Updated route: /royal-council instead of /community */}
+        <Route path="/royal-council" element={<RoyalCouncil />} />
+        
+        {/* 404 Page */}
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+      
+      <Toaster />
+    </Suspense>
   );
 }
 

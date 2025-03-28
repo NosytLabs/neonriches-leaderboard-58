@@ -1,4 +1,4 @@
 
-// Re-export auth components from AuthContext instead of ../auth
-export { AuthProvider, useAuth } from '../AuthContext';
+// Re-export auth components from AuthContext
+export { AuthProvider, useAuth } from '@/contexts/auth';
 export type { AuthContextType } from '@/types/auth-context';
