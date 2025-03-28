@@ -46,7 +46,8 @@ export const useAudioLoader = (
   soundsToPreload?: SoundType[]
 ): AudioLoaderReturn => {
   const [loadedSounds, setLoadedSounds] = useState<string[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState<Error | null>(null);
   const [audioElements, setAudioElements] = useState<Record<string, HTMLAudioElement>>({});
   
@@ -58,7 +59,7 @@ export const useAudioLoader = (
       return;
     }
     
-    setIsLoading(true);
+    setLoading(true);
     const loadedAudioElements: Record<string, HTMLAudioElement> = {};
     const newLoadedSounds: string[] = [];
     
@@ -93,12 +94,13 @@ export const useAudioLoader = (
     .then(() => {
       setLoadedSounds(newLoadedSounds);
       setAudioElements(loadedAudioElements);
-      setIsLoading(false);
+      setLoading(false);
+      setLoaded(true);
     })
     .catch((err) => {
       console.error('Error loading audio files:', err);
       setError(err instanceof Error ? err : new Error(String(err)));
-      setIsLoading(false);
+      setLoading(false);
     });
     
     // Cleanup audio elements on unmount
@@ -124,10 +126,12 @@ export const useAudioLoader = (
   };
   
   return {
-    loadedSounds,
-    isLoading,
+    loading,
+    loaded,
     error,
+    sounds: audioElements,
     audioElements,
-    playSound
+    loadedSounds,
+    play: playSound
   };
 };

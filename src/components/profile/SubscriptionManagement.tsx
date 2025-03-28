@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { UserProfile, UserTier } from '@/types/user';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -52,7 +53,7 @@ const SubscriptionManagement: React.FC<SubscriptionManagementProps> = ({ user })
       toast({
         title: "Subscription Cancelled",
         description: "Your subscription has been cancelled. You will retain access until the end of your current billing cycle.",
-        variant: "success"
+        variant: "default"
       });
     } catch (error) {
       toast({
@@ -75,7 +76,7 @@ const SubscriptionManagement: React.FC<SubscriptionManagementProps> = ({ user })
       toast({
         title: "Subscription Reactivated",
         description: "Your subscription has been reactivated.",
-        variant: "success"
+        variant: "default"
       });
     } catch (error) {
       toast({
@@ -100,7 +101,7 @@ const SubscriptionManagement: React.FC<SubscriptionManagementProps> = ({ user })
       toast({
         title: "Profile Updated",
         description: "Your profile has been updated successfully.",
-        variant: "success"
+        variant: "default"
       });
       
       setIsEditing(false);
@@ -147,7 +148,7 @@ const SubscriptionManagement: React.FC<SubscriptionManagementProps> = ({ user })
                     <h3 className="text-sm font-medium text-white/80">
                       Subscription Details
                     </h3>
-                    <Badge variant="success">Active</Badge>
+                    <Badge variant="outline">Active</Badge>
                   </div>
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
@@ -177,7 +178,7 @@ const SubscriptionManagement: React.FC<SubscriptionManagementProps> = ({ user })
                           toast({
                             title: "Auto Renew Updated",
                             description: `Auto renew has been ${checked ? 'enabled' : 'disabled'}.`,
-                            variant: "success"
+                            variant: "default"
                           });
                         }}
                       />

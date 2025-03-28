@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import UserWallet from '@/components/wallet/UserWallet';
+import { UserWallet } from '@/components/wallet/UserWallet';
 import RankStatusCard from '@/components/dashboard/RankStatusCard';
 import MarketingProfile from '@/components/profile/MarketingProfile';
 import RoyalBoutique from '@/components/cosmetics/RoyalBoutique';
@@ -39,7 +39,7 @@ const Dashboard = () => {
   
   const handleFundWallet = async (amount: number): Promise<void> => {
     setIsLoading(true);
-    const success = await depositToWallet(user, amount, "Wallet deposit", updateUserProfile);
+    const success = await depositToWallet(user, amount, "Wallet deposit");
     setIsLoading(false);
     
     if (success) {
@@ -72,27 +72,30 @@ const Dashboard = () => {
     if (success) {
       // Apply profile boost
       if (boostProfile) {
-        await boostProfile(7, 1); // 7 days, level 1 boost
+        const result = await boostProfile("7", 1); // 7 days, level 1 boost
+        
+        // Only proceed if boost was successfully applied
+        if (result) {
+          // Update user profile stats
+          const currentViews = user.profileViews || 0;
+          const currentClicks = user.profileClicks || 0;
+          const currentFollowers = user.followers || 0;
+          
+          await updateUserProfile({
+            ...user,
+            profileViews: currentViews + 50,
+            profileClicks: currentClicks + 10,
+            followers: currentFollowers + 5
+          });
+          
+          playSound('success');
+          
+          toast({
+            title: "Profile Boosted!",
+            description: "Your profile visibility has been enhanced.",
+          });
+        }
       }
-      
-      // Update user profile stats
-      const currentViews = user.profileViews || 0;
-      const currentClicks = user.profileClicks || 0;
-      const currentFollowers = user.followers || 0;
-      
-      await updateUserProfile({
-        ...user,
-        profileViews: currentViews + 50,
-        profileClicks: currentClicks + 10,
-        followers: currentFollowers + 5
-      });
-      
-      playSound('success');
-      
-      toast({
-        title: "Profile Boosted!",
-        description: "Your profile visibility has been enhanced.",
-      });
     }
   };
   

@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Code, AlertCircle, FileX, Trash2 } from 'lucide-react';
 import AnalysisTable from './shared/AnalysisTable';
@@ -9,12 +10,17 @@ import {
   unusedComponentsMock 
 } from '@/utils/codeAnalysis/mockData';
 
+interface UnusedComponent {
+  file: string;
+  line: number;
+}
+
 const UnusedCodeReport: React.FC = () => {
   // Use centralized mock data
   const unusedImports = unusedImportsMock;
   const unusedVariables = unusedVariablesMock;
   const unusedFunctions = unusedFunctionsMock;
-  const unusedComponents = unusedComponentsMock;
+  const unusedComponents = unusedComponentsMock as UnusedComponent[];
 
   return (
     <div>

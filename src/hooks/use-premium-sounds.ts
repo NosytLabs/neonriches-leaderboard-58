@@ -108,7 +108,7 @@ const usePremiumSounds = () => {
     // Play the pack's preview sound if activating
     if (packId) {
       const pack = premiumSoundPacks.find(p => p.id === packId);
-      if (pack) {
+      if (pack && pack.previewSound) {
         playSound(pack.previewSound, 0.4);
       }
     }
@@ -122,8 +122,10 @@ const usePremiumSounds = () => {
     if (!pack) return;
     
     // Play either the specified sound or the pack's default preview sound
-    const soundToPlay = soundType || pack.previewSound;
-    playSound(soundToPlay, 0.4);
+    const soundToPlay = soundType || (pack.previewSound as SoundType);
+    if (soundToPlay) {
+      playSound(soundToPlay, 0.4);
+    }
   }, [playSound]);
   
   // Play a premium sound (will use active pack if available)
@@ -138,7 +140,7 @@ const usePremiumSounds = () => {
     const activePack = premiumState.activePack;
     if (activePack) {
       const packDetails = premiumSoundPacks.find(p => p.id === activePack);
-      if (packDetails && packDetails.sounds.includes(soundType)) {
+      if (packDetails && packDetails.sounds && packDetails.sounds.some(sound => sound === soundType)) {
         // This is where we'd play the premium version of the sound
         // For now, we'll just use the regular sound library with a volume boost
         const premiumVolume = (premiumVolumePresets[soundType] || 0.5) * volumeMultiplier;

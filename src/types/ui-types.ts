@@ -2,7 +2,7 @@
 import { RoyalDividerVariant } from './royal-divider-types';
 
 // UI Component Types
-declare type RegalBadgeProps = {
+export interface RegalBadgeProps {
   children?: React.ReactNode;
   tier?: string;
   className?: string;
@@ -13,13 +13,13 @@ declare type RegalBadgeProps = {
   id?: string;
   hidden?: boolean;
   onClick?: () => void;
-};
+}
 
 // Toast variant type extensions
-declare type ToastVariant = 'default' | 'destructive' | 'royal' | 'success';
+export type ToastVariant = 'default' | 'destructive' | 'royal' | 'success';
 
 // Cosmetic item interface
-declare interface CosmeticItem {
+export interface CosmeticItem {
   id: string;
   name: string;
   description: string;
@@ -32,8 +32,7 @@ declare interface CosmeticItem {
 }
 
 // PremiumSoundPack type export
-declare type PremiumSoundPack = string;
+export type PremiumSoundPack = string;
 
 // Export Royal Divider type
 export { RoyalDividerVariant };
-
