@@ -6,4 +6,18 @@ export type RoyalDividerVariant =
   | 'scroll'
   | 'quill'
   | 'treasure'
-  | 'chalice';
+  | 'chalice'
+  | 'line';
+
+export type RoyalButtonVariant = 
+  | 'royal' 
+  | 'royalGold' 
+  | 'royalCrimson' 
+  | 'royalNavy' 
+  | 'royalPurple' 
+  | 'outline' 
+  | 'glass' 
+  | 'goldOutline' 
+  | 'crimsonOutline' 
+  | 'navyOutline' 
+  | 'mahogany';

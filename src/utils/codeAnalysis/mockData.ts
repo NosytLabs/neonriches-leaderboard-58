@@ -1,4 +1,3 @@
-
 import { UnusedImport, UnusedVariable, UnusedFunction, DuplicateCode, ComplexCode } from './types';
 
 // Mock data for unused imports
@@ -74,45 +73,80 @@ export const complexCodeMock: ComplexCode[] = [
 // Adding complex functions mock for ComplexityReport
 export const complexFunctionsMock = [
   {
-    id: 1,
-    file: 'src/components/DataProcessor.tsx',
-    line: 32,
-    function: 'processUserData',
-    complexity: 15,
-    explanation: 'Contains too many nested conditionals and loops'
+    id: "comp_1",
+    name: "processUserData",
+    file: "src/utils/userProcessor.js",
+    complexity: 42,
+    linesOfCode: 156,
+    parameters: 8,
+    nestedLevel: 5,
+    issues: [
+      "High cyclomatic complexity",
+      "Too many parameters",
+      "Deep nesting"
+    ]
   },
   {
-    id: 2,
-    file: 'src/utils/formatters.ts',
-    line: 64,
-    function: 'formatComplexData',
-    complexity: 12,
-    explanation: 'Uses multiple switch statements and transformations'
+    id: "comp_2",
+    name: "calculateRewards",
+    file: "src/services/rewardCalculator.js",
+    complexity: 35,
+    linesOfCode: 127,
+    parameters: 6,
+    nestedLevel: 4,
+    issues: [
+      "Complex conditional logic",
+      "Multiple responsibilities"
+    ]
+  },
+  {
+    id: "comp_3",
+    name: "renderDashboard",
+    file: "src/components/Dashboard.jsx",
+    complexity: 28,
+    linesOfCode: 218,
+    parameters: 12,
+    nestedLevel: 3,
+    issues: [
+      "Component too large",
+      "Too many props"
+    ]
   }
 ];
 
 // Adding performance issues mock for PerformanceReport
 export const performanceIssuesMock = [
   {
-    id: 1,
-    file: 'src/components/ImageGallery.tsx',
-    issue: 'Unoptimized image loading',
-    severity: 'high',
-    recommendation: 'Implement lazy loading and proper image sizing'
+    id: "perf_1",
+    description: "Excessive DOM mutations in carousel component",
+    file: "src/components/Carousel.jsx",
+    lineNumber: 87,
+    severity: "high",
+    recommendation: "Use React.memo and optimize rendering with keys"
   },
   {
-    id: 2,
-    file: 'src/hooks/useDataFetching.ts',
-    issue: 'Excessive re-renders',
-    severity: 'medium',
-    recommendation: 'Implement memoization and avoid unnecessary state updates'
+    id: "perf_2",
+    description: "Large unoptimized image loading",
+    file: "src/components/HeroSection.jsx",
+    lineNumber: 42,
+    severity: "medium",
+    recommendation: "Use responsive images and lazy loading"
   },
   {
-    id: 3,
-    file: 'src/utils/animations.ts',
-    issue: 'Expensive calculations on main thread',
-    severity: 'medium',
-    recommendation: 'Move calculations to Web Worker or optimize algorithm'
+    id: "perf_3",
+    description: "Inefficient rendering of leaderboard items",
+    file: "src/components/Leaderboard.jsx",
+    lineNumber: 123,
+    severity: "medium",
+    recommendation: "Implement windowing for long lists with react-window"
+  },
+  {
+    id: "perf_4",
+    description: "Expensive calculation in render method",
+    file: "src/components/Dashboard/Analytics.jsx",
+    lineNumber: 56,
+    severity: "high",
+    recommendation: "Move to useMemo hook or use React.memo"
   }
 ];
 

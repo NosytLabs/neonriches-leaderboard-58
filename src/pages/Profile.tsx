@@ -16,7 +16,7 @@ const Profile = () => {
   const { toast } = useToast();
   const [tab, setTab] = useState<ProfileTab>('view');
   
-  const { loading, profileUser, viewOnly, profileData } = useProfileData(username, user);
+  const { loading, profileUser, viewOnly, profileData } = useProfileData(username || '', user);
   
   const handleBoostProfile = () => {
     if (!user) {
@@ -47,6 +47,22 @@ const Profile = () => {
     return <ProfileNotFound />;
   }
   
+  // Create profile data from user profile for the ProfileContent component
+  const profileContentData = {
+    bio: profileUser.bio || '',
+    images: profileUser.profileImages || [],
+    links: profileUser.socialLinks?.map((link, index) => ({
+      id: index,
+      url: link.url,
+      label: link.platform
+    })) || [],
+    joinDate: profileUser.joinDate,
+    lastActive: profileUser.joinedAt,
+    followers: profileUser.followers,
+    following: profileUser.following,
+    views: profileUser.profileViews
+  };
+  
   return (
     <div className="min-h-screen bg-background text-foreground">
       <title>{profileUser.username} | P2W.fun Profile</title>
@@ -55,17 +71,17 @@ const Profile = () => {
       
       <main className="container mx-auto px-4 py-8 pt-24">
         <ProfileTabNavigation 
-          viewOnly={viewOnly} 
+          viewOnly={viewOnly || false} 
           tab={tab} 
           setTab={setTab} 
         />
         
         <ProfileContent 
           tab={tab}
-          viewOnly={viewOnly}
+          viewOnly={viewOnly || false}
           user={user}
           profileUser={profileUser}
-          profileData={profileData}
+          profileData={profileContentData}
           handleBoostProfile={handleBoostProfile}
         />
       </main>
