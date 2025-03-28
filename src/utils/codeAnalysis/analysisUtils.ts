@@ -1,278 +1,284 @@
 
-import { readFileSync, readdirSync, statSync } from 'fs';
-import { join, extname } from 'path';
-import * as ts from 'typescript';
-import * as parser from '@typescript-eslint/parser';
 import { ESLint } from 'eslint';
+import * as fs from 'fs';
+import * as path from 'path';
+import { parseCSS } from './cssAnalysis';
+import { analyzeDependencies } from './dependencyAnalysis';
+import { analyzeReactComponents, findUnusedComponents } from './reactAnalysis';
 
-// File extension types to analyze
-const VALID_EXTENSIONS = [
-  '.js', '.jsx', '.ts', '.tsx', '.vue', '.css', '.scss', '.less'
-];
+export interface AnalysisResult {
+  unusedFiles: string[];
+  unusedFunctions: Array<{
+    file: string;
+    name: string;
+    line: number;
+  }>;
+  unusedImports: Array<{
+    file: string;
+    name: string;
+    line: number;
+  }>;
+  unusedVariables: Array<{
+    file: string;
+    name: string;
+    line: number;
+  }>;
+  unusedCssSelectors: Array<{
+    file: string;
+    selector: string;
+    line: number;
+  }>;
+  deadCodePaths: Array<{
+    file: string;
+    description: string;
+    line: number;
+  }>;
+  duplicateCode: Array<{
+    files: string[];
+    similarity: number;
+    lines: number;
+  }>;
+  complexCode: Array<{
+    file: string;
+    function: string;
+    complexity: number;
+    line: number;
+  }>;
+}
 
-// Traverses a directory recursively to find all files
-export const getAllFiles = (dirPath: string, arrayOfFiles: string[] = []): string[] => {
-  const files = readdirSync(dirPath);
+export const scanCodebase = async (
+  projectRoot: string,
+  excludePatterns: string[] = ['node_modules', 'dist', 'build', 'coverage']
+): Promise<AnalysisResult> => {
+  // Initial empty result
+  const result: AnalysisResult = {
+    unusedFiles: [],
+    unusedFunctions: [],
+    unusedImports: [],
+    unusedVariables: [],
+    unusedCssSelectors: [],
+    deadCodePaths: [],
+    duplicateCode: [],
+    complexCode: []
+  };
 
-  files.forEach(file => {
-    const filePath = join(dirPath, file);
-    
-    if (statSync(filePath).isDirectory()) {
-      arrayOfFiles = getAllFiles(filePath, arrayOfFiles);
-    } else {
-      const ext = extname(filePath);
-      if (VALID_EXTENSIONS.includes(ext)) {
-        arrayOfFiles.push(filePath);
-      }
-    }
-  });
-
-  return arrayOfFiles;
-};
-
-// Parses a file and returns its AST (Abstract Syntax Tree)
-export const parseFileToAST = (filePath: string): ts.SourceFile | null => {
   try {
-    const fileContent = readFileSync(filePath, 'utf8');
-    return ts.createSourceFile(
-      filePath,
-      fileContent,
-      ts.ScriptTarget.ESNext,
-      true
-    );
+    // Get all files in the project
+    const files = getAllFiles(projectRoot, excludePatterns);
+    
+    // Group files by type
+    const jsFiles = files.filter(file => /\.(js|jsx|ts|tsx)$/.test(file));
+    const cssFiles = files.filter(file => /\.(css|scss|less)$/.test(file));
+    
+    // Start various analysis tasks in parallel
+    const [
+      unusedImportsAndVars,
+      unusedComponents,
+      cssAnalysis,
+      reactAnalysis,
+      dependencyAnalysis
+    ] = await Promise.all([
+      findUnusedImportsAndVariables(jsFiles),
+      findUnusedComponents(projectRoot, jsFiles),
+      analyzeCSSUsage(projectRoot, cssFiles, jsFiles),
+      analyzeReactComponents(jsFiles),
+      analyzeDependencies(projectRoot, jsFiles)
+    ]);
+    
+    // Merge results
+    result.unusedImports = unusedImportsAndVars.imports;
+    result.unusedVariables = unusedImportsAndVars.variables;
+    result.unusedFiles = unusedComponents;
+    result.unusedCssSelectors = cssAnalysis;
+    result.complexCode = reactAnalysis.complexComponents;
+    result.duplicateCode = reactAnalysis.duplicateCode;
+    
+    // Add dependency analysis results
+    // This would populate unused dependencies info
+    
+    return result;
   } catch (error) {
-    console.error(`Error parsing file ${filePath}:`, error);
-    return null;
+    console.error('Error during code analysis:', error);
+    return result;
   }
 };
 
-// Analyzes imports to find unused ones
-export const findUnusedImports = (ast: ts.SourceFile): string[] => {
-  const unusedImports: string[] = [];
-  const importedSymbols: Map<string, boolean> = new Map();
+// Function to get all files in a directory recursively
+export const getAllFiles = (
+  dirPath: string, 
+  excludePatterns: string[] = []
+): string[] => {
+  let files: string[] = [];
   
-  // Find all import declarations
-  const importVisitor = (node: ts.Node) => {
-    if (ts.isImportDeclaration(node)) {
-      const importClause = node.importClause;
-      if (importClause && importClause.name) {
-        importedSymbols.set(importClause.name.text, false);
+  try {
+    const entries = fs.readdirSync(dirPath, { withFileTypes: true });
+    
+    for (const entry of entries) {
+      const fullPath = path.join(dirPath, entry.name);
+      
+      // Skip excluded paths
+      if (excludePatterns.some(pattern => fullPath.includes(pattern))) {
+        continue;
       }
       
-      if (importClause && importClause.namedBindings) {
-        if (ts.isNamedImports(importClause.namedBindings)) {
-          importClause.namedBindings.elements.forEach(element => {
-            importedSymbols.set(element.name.text, false);
+      if (entry.isDirectory()) {
+        files = [...files, ...getAllFiles(fullPath, excludePatterns)];
+      } else {
+        files.push(fullPath);
+      }
+    }
+  } catch (error) {
+    console.error(`Error reading directory ${dirPath}:`, error);
+  }
+  
+  return files;
+};
+
+// Function to find unused imports and variables
+const findUnusedImportsAndVariables = async (
+  files: string[]
+): Promise<{ 
+  imports: Array<{ file: string; name: string; line: number }>;
+  variables: Array<{ file: string; name: string; line: number }>;
+}> => {
+  const result = {
+    imports: [],
+    variables: []
+  };
+  
+  try {
+    // Initialize ESLint with unused vars and imports rules
+    const eslint = new ESLint({
+      overrideConfig: {
+        plugins: ['unused-imports'],
+        rules: {
+          'no-unused-vars': 'warn',
+          'unused-imports/no-unused-imports': 'warn'
+        },
+        // We're not using .eslintrc file
+        useEslintRC: false
+      }
+    });
+    
+    // Run ESLint on files
+    for (const file of files) {
+      const lintResults = await eslint.lintFiles([file]);
+      
+      for (const result of lintResults) {
+        for (const message of result.messages) {
+          if (message.ruleId === 'no-unused-vars') {
+            const varName = message.message.match(/'([^']+)'/)?.[1] || '';
+            result.variables.push({
+              file: result.filePath,
+              name: varName,
+              line: message.line
+            });
+          } else if (message.ruleId === 'unused-imports/no-unused-imports') {
+            const importName = message.message.match(/'([^']+)'/)?.[1] || '';
+            result.imports.push({
+              file: result.filePath,
+              name: importName,
+              line: message.line
+            });
+          }
+        }
+      }
+    }
+  } catch (error) {
+    console.error('Error finding unused imports and variables:', error);
+  }
+  
+  return result;
+};
+
+// Function to analyze CSS usage
+const analyzeCSSUsage = async (
+  projectRoot: string,
+  cssFiles: string[],
+  jsFiles: string[]
+): Promise<Array<{ file: string; selector: string; line: number }>> => {
+  const result: Array<{ file: string; selector: string; line: number }> = [];
+  
+  try {
+    // Extract all CSS selectors
+    const allSelectors: Record<string, { file: string; line: number }[]> = {};
+    
+    for (const cssFile of cssFiles) {
+      const content = fs.readFileSync(cssFile, 'utf-8');
+      const selectors = parseCSS(content);
+      
+      selectors.forEach(selector => {
+        if (!allSelectors[selector.name]) {
+          allSelectors[selector.name] = [];
+        }
+        
+        allSelectors[selector.name].push({
+          file: cssFile,
+          line: selector.line
+        });
+      });
+    }
+    
+    // Check for selector usage in JS/TSX files
+    const usedSelectors = new Set<string>();
+    
+    for (const jsFile of jsFiles) {
+      const content = fs.readFileSync(jsFile, 'utf-8');
+      
+      // Look for className usages
+      Object.keys(allSelectors).forEach(selector => {
+        // Simple check - could be improved with AST parsing
+        if (content.includes(`className="${selector}"`) || 
+            content.includes(`className='${selector}'`) ||
+            content.includes(`className={\`${selector}\`}`) ||
+            content.includes(`'${selector}'`) || 
+            content.includes(`"${selector}"`)) {
+          usedSelectors.add(selector);
+        }
+      });
+    }
+    
+    // Identify unused selectors
+    Object.keys(allSelectors).forEach(selector => {
+      if (!usedSelectors.has(selector)) {
+        allSelectors[selector].forEach(occurrence => {
+          result.push({
+            file: occurrence.file,
+            selector,
+            line: occurrence.line
           });
-        }
-      }
-    }
-    ts.forEachChild(node, importVisitor);
-  };
-  
-  // Find all identifiers and mark them as used
-  const identifierVisitor = (node: ts.Node) => {
-    if (ts.isIdentifier(node) && importedSymbols.has(node.text)) {
-      importedSymbols.set(node.text, true);
-    }
-    ts.forEachChild(node, identifierVisitor);
-  };
-  
-  // Traverse the AST
-  importVisitor(ast);
-  identifierVisitor(ast);
-  
-  // Collect unused imports
-  importedSymbols.forEach((used, symbol) => {
-    if (!used) {
-      unusedImports.push(symbol);
-    }
-  });
-  
-  return unusedImports;
-};
-
-// Calculate cyclomatic complexity of a function
-export const calculateCyclomaticComplexity = (node: ts.Node): number => {
-  let complexity = 1; // Start with 1 for the function itself
-  
-  const complexityVisitor = (node: ts.Node) => {
-    if (
-      ts.isIfStatement(node) ||
-      ts.isConditionalExpression(node) ||
-      ts.isCaseClause(node) ||
-      ts.isForStatement(node) ||
-      ts.isForInStatement(node) ||
-      ts.isForOfStatement(node) ||
-      ts.isWhileStatement(node) ||
-      ts.isDoStatement(node)
-    ) {
-      complexity++;
-    }
-    
-    if (ts.isBinaryExpression(node)) {
-      if (
-        node.operatorToken.kind === ts.SyntaxKind.AmpersandAmpersandToken ||
-        node.operatorToken.kind === ts.SyntaxKind.BarBarToken
-      ) {
-        complexity++;
-      }
-    }
-    
-    ts.forEachChild(node, complexityVisitor);
-  };
-  
-  complexityVisitor(node);
-  return complexity;
-};
-
-// Find functions with high cyclomatic complexity
-export const findComplexFunctions = (
-  ast: ts.SourceFile, 
-  threshold = 10
-): Array<{ name: string; complexity: number; location: ts.LineAndCharacter }> => {
-  const complexFunctions: Array<{ name: string; complexity: number; location: ts.LineAndCharacter }> = [];
-  
-  const functionVisitor = (node: ts.Node) => {
-    if (
-      ts.isFunctionDeclaration(node) || 
-      ts.isMethodDeclaration(node) ||
-      ts.isFunctionExpression(node) ||
-      ts.isArrowFunction(node)
-    ) {
-      const complexity = calculateCyclomaticComplexity(node);
-      
-      if (complexity > threshold) {
-        let name = 'anonymous';
-        
-        if (ts.isFunctionDeclaration(node) && node.name) {
-          name = node.name.text;
-        } else if (ts.isMethodDeclaration(node) && node.name) {
-          name = node.name.getText();
-        } else if (ts.isFunctionExpression(node) && node.name) {
-          name = node.name.text;
-        }
-        
-        const location = ts.getLineAndCharacterOfPosition(ast, node.getStart());
-        complexFunctions.push({ name, complexity, location });
-      }
-    }
-    
-    ts.forEachChild(node, functionVisitor);
-  };
-  
-  ts.forEachChild(ast, functionVisitor);
-  return complexFunctions;
-};
-
-// Find unused variables
-export const findUnusedVariables = (ast: ts.SourceFile): Array<{ name: string; location: ts.LineAndCharacter }> => {
-  const variables: Map<string, { used: boolean; location: ts.LineAndCharacter }> = new Map();
-  
-  // Find all variable declarations
-  const declarationVisitor = (node: ts.Node) => {
-    if (ts.isVariableDeclaration(node) && ts.isIdentifier(node.name)) {
-      const location = ts.getLineAndCharacterOfPosition(ast, node.name.getStart());
-      variables.set(node.name.text, { used: false, location });
-    }
-    ts.forEachChild(node, declarationVisitor);
-  };
-  
-  // Find all identifiers and mark them as used
-  const identifierVisitor = (node: ts.Node) => {
-    if (ts.isIdentifier(node) && variables.has(node.text) && node.parent && !ts.isVariableDeclaration(node.parent)) {
-      variables.set(node.text, { ...variables.get(node.text)!, used: true });
-    }
-    ts.forEachChild(node, identifierVisitor);
-  };
-  
-  // Traverse the AST
-  declarationVisitor(ast);
-  identifierVisitor(ast);
-  
-  // Collect unused variables
-  const unusedVariables: Array<{ name: string; location: ts.LineAndCharacter }> = [];
-  variables.forEach((value, key) => {
-    if (!value.used) {
-      unusedVariables.push({ name: key, location: value.location });
-    }
-  });
-  
-  return unusedVariables;
-};
-
-// Detect duplicate code
-export const findDuplicateCode = (files: string[]): Array<{ files: string[]; lineCount: number; similarity: number }> => {
-  const duplicates: Array<{ files: string[]; lineCount: number; similarity: number }> = [];
-  const fileContents: Map<string, string[]> = new Map();
-  
-  // Load all file contents
-  files.forEach(file => {
-    try {
-      const content = readFileSync(file, 'utf8');
-      const lines = content.split('\n').map(line => line.trim());
-      fileContents.set(file, lines);
-    } catch (error) {
-      console.error(`Error reading file ${file}:`, error);
-    }
-  });
-  
-  // Compare files pairwise for duplicate code blocks
-  const threshold = 5; // Minimum number of consecutive lines to consider a duplicate
-  
-  for (let i = 0; i < files.length; i++) {
-    for (let j = i + 1; j < files.length; j++) {
-      const file1 = files[i];
-      const file2 = files[j];
-      
-      const lines1 = fileContents.get(file1) || [];
-      const lines2 = fileContents.get(file2) || [];
-      
-      let maxDuplicateLines = 0;
-      
-      for (let line1 = 0; line1 < lines1.length; line1++) {
-        for (let line2 = 0; line2 < lines2.length; line2++) {
-          let consecutiveLines = 0;
-          
-          while (
-            line1 + consecutiveLines < lines1.length &&
-            line2 + consecutiveLines < lines2.length &&
-            lines1[line1 + consecutiveLines] === lines2[line2 + consecutiveLines] &&
-            lines1[line1 + consecutiveLines].trim().length > 0 // Ignore empty lines
-          ) {
-            consecutiveLines++;
-          }
-          
-          if (consecutiveLines >= threshold) {
-            maxDuplicateLines = Math.max(maxDuplicateLines, consecutiveLines);
-          }
-        }
-      }
-      
-      if (maxDuplicateLines >= threshold) {
-        const similarity = (maxDuplicateLines * 2) / (lines1.length + lines2.length);
-        duplicates.push({
-          files: [file1, file2],
-          lineCount: maxDuplicateLines,
-          similarity
         });
       }
-    }
+    });
+  } catch (error) {
+    console.error('Error analyzing CSS usage:', error);
   }
   
-  return duplicates;
+  return result;
 };
 
-// Run eslint to find linting issues
-export const runEslintAnalysis = async (filePath: string): Promise<ESLint.LintResult[]> => {
-  const eslint = new ESLint({
-    useEslintrc: true
-  });
+// Export other utility functions
+export const generateAnalysisReport = (analysis: AnalysisResult): string => {
+  let report = '# Code Cleanup Analysis Report\n\n';
   
-  try {
-    return await eslint.lintFiles([filePath]);
-  } catch (error) {
-    console.error(`Error running ESLint on ${filePath}:`, error);
-    return [];
+  // Add sections for each type of issue
+  if (analysis.unusedFiles.length > 0) {
+    report += '## Unused Files\n\n';
+    analysis.unusedFiles.forEach(file => {
+      report += `- ${file}\n`;
+    });
+    report += '\n';
   }
+  
+  if (analysis.unusedImports.length > 0) {
+    report += '## Unused Imports\n\n';
+    analysis.unusedImports.forEach(({file, name, line}) => {
+      report += `- ${file}:${line} - \`${name}\`\n`;
+    });
+    report += '\n';
+  }
+  
+  // Add more sections for other types of issues
+  
+  return report;
 };

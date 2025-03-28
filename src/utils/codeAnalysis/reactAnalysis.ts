@@ -1,250 +1,356 @@
 
+import * as fs from 'fs';
+import * as path from 'path';
 import * as ts from 'typescript';
-import { calculateCyclomaticComplexity } from './analysisUtils';
 
-// Find unused React components
-export const findUnusedComponents = (
-  ast: ts.SourceFile, 
-  projectFiles: string[]
-): Array<{ name: string; location: ts.LineAndCharacter }> => {
-  const exportedComponents: Array<{ name: string; location: ts.LineAndCharacter }> = [];
-  const usedComponents = new Set<string>();
-  
-  // First pass: find all exported components
-  const exportVisitor = (node: ts.Node) => {
-    if (
-      (ts.isExportAssignment(node) || 
-       ts.isExportDeclaration(node) ||
-       (ts.isFunctionDeclaration(node) && node.modifiers?.some(m => m.kind === ts.SyntaxKind.ExportKeyword))) &&
-      node.name && ts.isIdentifier(node.name)
-    ) {
-      const location = ts.getLineAndCharacterOfPosition(ast, node.name.getStart());
-      exportedComponents.push({ name: node.name.text, location });
-    }
-    
-    // Handle default exports
-    if (ts.isExportAssignment(node) && node.expression && ts.isIdentifier(node.expression)) {
-      const location = ts.getLineAndCharacterOfPosition(ast, node.expression.getStart());
-      exportedComponents.push({ name: node.expression.text, location });
-    }
-    
-    ts.forEachChild(node, exportVisitor);
+interface Component {
+  name: string;
+  file: string;
+  complexity: number;
+  imports: string[];
+  exports: string[];
+}
+
+export const analyzeReactComponents = (
+  fileList: string[]
+): { 
+  complexComponents: Array<{
+    file: string;
+    function: string;
+    complexity: number;
+    line: number;
+  }>;
+  duplicateCode: Array<{
+    files: string[];
+    similarity: number;
+    lines: number;
+  }>;
+} => {
+  const result = {
+    complexComponents: [],
+    duplicateCode: []
   };
   
-  // Second pass: scan all files to find component usage
-  projectFiles.forEach(file => {
-    const fileAst = ts.createSourceFile(
-      file,
-      require('fs').readFileSync(file, 'utf8'),
-      ts.ScriptTarget.ESNext,
-      true
-    );
+  try {
+    const jsxFiles = fileList.filter(file => /\.(jsx|tsx)$/.test(file));
     
-    const usageVisitor = (node: ts.Node) => {
-      if (ts.isJsxElement(node) && node.openingElement) {
-        const tagName = node.openingElement.tagName.getText();
-        // React components start with uppercase letter
-        if (tagName[0] === tagName[0].toUpperCase()) {
-          usedComponents.add(tagName);
-        }
-      } else if (ts.isJsxSelfClosingElement(node)) {
-        const tagName = node.tagName.getText();
-        if (tagName[0] === tagName[0].toUpperCase()) {
-          usedComponents.add(tagName);
-        }
-      }
-      
-      ts.forEachChild(node, usageVisitor);
-    };
+    // Analyze each file
+    for (const file of jsxFiles) {
+      const complexity = analyzeComplexity(file);
+      result.complexComponents.push(...complexity);
+    }
     
-    ts.forEachChild(fileAst, usageVisitor);
-  });
+    // Find duplicate code patterns (simplified implementation)
+    result.duplicateCode = findDuplicateCode(jsxFiles);
+    
+  } catch (error) {
+    console.error('Error analyzing React components:', error);
+  }
   
-  // Find components that are exported but not used
-  return exportedComponents.filter(component => !usedComponents.has(component.name));
+  return result;
 };
 
-// Find React components with excessive props
-export const findComponentsWithExcessiveProps = (
-  ast: ts.SourceFile, 
-  threshold = 10
-): Array<{ name: string; propCount: number; location: ts.LineAndCharacter }> => {
-  const componentsWithTooManyProps: Array<{ name: string; propCount: number; location: ts.LineAndCharacter }> = [];
+// Function to find unused components in React codebase
+export const findUnusedComponents = (
+  projectRoot: string,
+  fileList: string[]
+): string[] => {
+  const unusedFiles: string[] = [];
   
-  const visitor = (node: ts.Node) => {
-    // Find function component declarations
-    if (ts.isFunctionDeclaration(node) && node.name) {
-      const params = node.parameters;
-      if (params.length > 0 && ts.isObjectBindingPattern(params[0].name)) {
-        const bindingPattern = params[0].name;
-        const propCount = bindingPattern.elements.length;
+  try {
+    const reactFiles = fileList.filter(file => /\.(jsx|tsx)$/.test(file));
+    const components: Record<string, Component> = {};
+    
+    // Extract all component definitions and their exports
+    for (const file of reactFiles) {
+      const sourceFile = ts.createSourceFile(
+        file,
+        fs.readFileSync(file, 'utf-8'),
+        ts.ScriptTarget.Latest,
+        true
+      );
+      
+      // Simplified extraction - in a real implementation, would use proper traversal
+      const componentNames = extractComponentNames(sourceFile);
+      const fileImports = extractImports(sourceFile);
+      
+      componentNames.forEach(component => {
+        components[component] = {
+          name: component,
+          file,
+          complexity: 1, // placeholder
+          imports: fileImports,
+          exports: [] // will be filled later
+        };
+      });
+    }
+    
+    // Map out component usage
+    const usedComponents = new Set<string>();
+    
+    for (const file of reactFiles) {
+      const content = fs.readFileSync(file, 'utf-8');
+      
+      // Check for imports and JSX usage
+      Object.keys(components).forEach(componentName => {
+        // Skip checking the file where the component is defined
+        if (components[componentName].file === file) return;
         
-        if (propCount > threshold) {
-          const location = ts.getLineAndCharacterOfPosition(ast, node.name.getStart());
-          componentsWithTooManyProps.push({
-            name: node.name.text,
-            propCount,
-            location
+        // Look for import statements or JSX usage
+        if (content.includes(`import ${componentName}`) || 
+            content.includes(`<${componentName}`) || 
+            content.includes(`from '${componentName}'`)) {
+          usedComponents.add(componentName);
+        }
+      });
+    }
+    
+    // Find files with unused components only
+    // If no component in a file is used, mark the file as unused
+    const fileComponentMap: Record<string, string[]> = {};
+    
+    Object.values(components).forEach(component => {
+      if (!fileComponentMap[component.file]) {
+        fileComponentMap[component.file] = [];
+      }
+      
+      fileComponentMap[component.file].push(component.name);
+    });
+    
+    for (const [file, componentList] of Object.entries(fileComponentMap)) {
+      const allUnused = componentList.every(component => !usedComponents.has(component));
+      
+      if (allUnused && componentList.length > 0) {
+        // Only mark as unused if it's not an entry point or layout component
+        const relativePath = path.relative(projectRoot, file);
+        if (!relativePath.includes('pages') && 
+            !relativePath.includes('layouts') &&
+            !relativePath.includes('App.tsx') &&
+            !relativePath.includes('index.')) {
+          unusedFiles.push(file);
+        }
+      }
+    }
+  } catch (error) {
+    console.error('Error finding unused components:', error);
+  }
+  
+  return unusedFiles;
+};
+
+// Helper functions
+const extractComponentNames = (sourceFile: ts.SourceFile): string[] => {
+  const components: string[] = [];
+  
+  // This is a simplified version - a real implementation would use AST traversal
+  function visit(node: ts.Node) {
+    // Look for function declarations or variable declarations that might be components
+    if (ts.isFunctionDeclaration(node) && node.name) {
+      components.push(node.name.text);
+    } else if (ts.isVariableDeclaration(node) && 
+               node.name && 
+               ts.isIdentifier(node.name) &&
+               node.initializer &&
+               (ts.isArrowFunction(node.initializer) || ts.isFunctionExpression(node.initializer))) {
+      components.push(node.name.text);
+    } else if (ts.isJsxElement(node) && ts.isIdentifier(node.openingElement.tagName)) {
+      // Extract custom component usage - note this is a simplified check
+      const tagName = node.openingElement.tagName.getText(sourceFile);
+      if (tagName[0] === tagName[0].toUpperCase()) {
+        components.push(tagName);
+      }
+    }
+    
+    ts.forEachChild(node, visit);
+  }
+  
+  visit(sourceFile);
+  return components;
+};
+
+const extractImports = (sourceFile: ts.SourceFile): string[] => {
+  const imports: string[] = [];
+  
+  function visit(node: ts.Node) {
+    if (ts.isImportDeclaration(node)) {
+      const importClause = node.importClause;
+      if (importClause && importClause.name) {
+        imports.push(importClause.name.text);
+      }
+      
+      if (importClause && importClause.namedBindings) {
+        if (ts.isNamedImports(importClause.namedBindings)) {
+          importClause.namedBindings.elements.forEach(element => {
+            imports.push(element.name.text);
           });
         }
       }
     }
     
-    // Find functional components defined as variable declarations (arrow functions)
-    if (ts.isVariableStatement(node)) {
-      node.declarationList.declarations.forEach(declaration => {
-        if (
-          declaration.initializer && 
-          (ts.isArrowFunction(declaration.initializer) || ts.isFunctionExpression(declaration.initializer)) &&
-          declaration.name && 
-          ts.isIdentifier(declaration.name)
-        ) {
-          const arrowFunction = declaration.initializer;
-          const params = arrowFunction.parameters;
-          
-          if (params.length > 0 && ts.isObjectBindingPattern(params[0].name)) {
-            const bindingPattern = params[0].name;
-            const propCount = bindingPattern.elements.length;
-            
-            if (propCount > threshold) {
-              const location = ts.getLineAndCharacterOfPosition(ast, declaration.name.getStart());
-              componentsWithTooManyProps.push({
-                name: declaration.name.text,
-                propCount,
-                location
-              });
-            }
+    ts.forEachChild(node, visit);
+  }
+  
+  visit(sourceFile);
+  return imports;
+};
+
+const analyzeComplexity = (filePath: string): Array<{
+  file: string;
+  function: string;
+  complexity: number;
+  line: number;
+}> => {
+  const result: Array<{
+    file: string;
+    function: string;
+    complexity: number;
+    line: number;
+  }> = [];
+  
+  try {
+    const content = fs.readFileSync(filePath, 'utf-8');
+    const sourceFile = ts.createSourceFile(
+      filePath,
+      content,
+      ts.ScriptTarget.Latest,
+      true
+    );
+    
+    // Traverse AST to find functions and calculate complexity
+    function visit(node: ts.Node) {
+      let complexity = 0;
+      let nodeName = '';
+      
+      // Calculate complexity based on control flow structures
+      if (ts.isFunctionDeclaration(node) || ts.isMethodDeclaration(node) || ts.isArrowFunction(node)) {
+        // Get function name
+        if (ts.isFunctionDeclaration(node) && node.name) {
+          nodeName = node.name.text;
+        } else if (ts.isMethodDeclaration(node) && node.name) {
+          if (ts.isIdentifier(node.name)) {
+            nodeName = node.name.text;
+          } else {
+            nodeName = '<method>';
           }
+        } else {
+          nodeName = '<anonymous>';
         }
-      });
+        
+        // Count control flow statements
+        let functionComplexity = 1; // Base complexity
+        
+        // Count if statements, loops, etc.
+        function countComplexity(innerNode: ts.Node) {
+          if (ts.isIfStatement(innerNode) || 
+              ts.isForStatement(innerNode) || 
+              ts.isWhileStatement(innerNode) || 
+              ts.isConditionalExpression(innerNode) ||
+              ts.isSwitchStatement(innerNode)) {
+            functionComplexity++;
+          }
+          
+          // Also count logical expressions as complexity points
+          if (ts.isBinaryExpression(innerNode) && 
+             (innerNode.operatorToken.kind === ts.SyntaxKind.AmpersandAmpersandToken || 
+              innerNode.operatorToken.kind === ts.SyntaxKind.BarBarToken)) {
+            functionComplexity++;
+          }
+          
+          ts.forEachChild(innerNode, countComplexity);
+        }
+        
+        countComplexity(node);
+        
+        if (functionComplexity > 5) { // Report only complex functions
+          result.push({
+            file: filePath,
+            function: nodeName,
+            complexity: functionComplexity,
+            line: sourceFile.getLineAndCharacterOfPosition(node.getStart()).line + 1
+          });
+        }
+      }
+      
+      ts.forEachChild(node, visit);
     }
     
-    // Check class components
-    if (
-      ts.isClassDeclaration(node) && 
-      node.name &&
-      node.heritageClauses?.some(clause => 
-        clause.token === ts.SyntaxKind.ExtendsKeyword &&
-        clause.types.some(type => type.expression.getText().includes('React.Component'))
-      )
-    ) {
-      // Find the propTypes static property
-      let propCount = 0;
-      node.members.forEach(member => {
-        if (
-          ts.isPropertyDeclaration(member) && 
-          member.name && 
-          member.name.getText() === 'propTypes' &&
-          member.initializer &&
-          ts.isObjectLiteralExpression(member.initializer)
-        ) {
-          propCount = member.initializer.properties.length;
-        }
-      });
+    visit(sourceFile);
+    
+  } catch (error) {
+    console.error(`Error analyzing complexity in ${filePath}:`, error);
+  }
+  
+  return result;
+};
+
+const findDuplicateCode = (filePaths: string[]): Array<{
+  files: string[];
+  similarity: number;
+  lines: number;
+}> => {
+  const result: Array<{
+    files: string[];
+    similarity: number;
+    lines: number;
+  }> = [];
+  
+  try {
+    // This is a simplified implementation
+    // Real duplicate detection would use more advanced algorithms
+    
+    // Create a map of content hashes or signatures to detect similarity
+    const contentMap: Record<string, Array<{ file: string; lines: number }>> = {};
+    
+    for (const file of filePaths) {
+      const content = fs.readFileSync(file, 'utf-8');
+      const lines = content.split('\n');
       
-      if (propCount > threshold) {
-        const location = ts.getLineAndCharacterOfPosition(ast, node.name.getStart());
-        componentsWithTooManyProps.push({
-          name: node.name.text,
-          propCount,
-          location
+      // Process file in chunks of 5 lines (simplistic approach)
+      for (let i = 0; i < lines.length - 5; i += 5) {
+        const chunk = lines.slice(i, i + 5).join('\n').trim();
+        
+        if (chunk.length > 100) { // Only consider substantial chunks
+          const hash = simpleHash(chunk);
+          
+          if (!contentMap[hash]) {
+            contentMap[hash] = [];
+          }
+          
+          contentMap[hash].push({
+            file,
+            lines: i + 1
+          });
+        }
+      }
+    }
+    
+    // Find duplicates
+    for (const [hash, occurrences] of Object.entries(contentMap)) {
+      if (occurrences.length > 1) {
+        result.push({
+          files: occurrences.map(o => o.file),
+          similarity: 1.0, // 100% similarity (this is simplified)
+          lines: 5 // We're using 5-line chunks
         });
       }
     }
     
-    ts.forEachChild(node, visitor);
-  };
+  } catch (error) {
+    console.error('Error finding duplicate code:', error);
+  }
   
-  ts.forEachChild(ast, visitor);
-  return componentsWithTooManyProps;
+  return result;
 };
 
-// Find components that might have performance issues
-export const findPotentialPerformanceIssues = (ast: ts.SourceFile): Array<{ 
-  type: 'inline-function' | 'expensive-operation' | 'missing-memo' | 'missing-key'; 
-  location: ts.LineAndCharacter;
-  description: string;
-}> => {
-  const issues: Array<{ 
-    type: 'inline-function' | 'expensive-operation' | 'missing-memo' | 'missing-key'; 
-    location: ts.LineAndCharacter;
-    description: string;
-  }> = [];
+// Simple string hashing function
+const simpleHash = (str: string): string => {
+  let hash = 0;
   
-  const visitor = (node: ts.Node) => {
-    // Check for inline function creation in JSX (potential for excessive re-renders)
-    if (
-      (ts.isJsxAttribute(node) && 
-       node.initializer && 
-       (ts.isArrowFunction(node.initializer) || ts.isFunctionExpression(node.initializer))) ||
-      (ts.isJsxAttribute(node) && 
-       node.initializer && 
-       ts.isJsxExpression(node.initializer) && 
-       node.initializer.expression && 
-       (ts.isArrowFunction(node.initializer.expression) || ts.isFunctionExpression(node.initializer.expression)))
-    ) {
-      const location = ts.getLineAndCharacterOfPosition(ast, node.getStart());
-      issues.push({
-        type: 'inline-function',
-        location,
-        description: `Inline function in JSX prop '${node.name.text}' could cause unnecessary re-renders`
-      });
-    }
-    
-    // Check for potentially expensive operations in render
-    if (
-      ts.isJsxExpression(node) && 
-      node.expression && 
-      (node.expression.getText().includes('.filter') || 
-       node.expression.getText().includes('.map') || 
-       node.expression.getText().includes('.reduce') || 
-       node.expression.getText().includes('.sort'))
-    ) {
-      const location = ts.getLineAndCharacterOfPosition(ast, node.getStart());
-      issues.push({
-        type: 'expensive-operation',
-        location,
-        description: `Potentially expensive operation in JSX: ${node.expression.getText()}`
-      });
-    }
-    
-    // Check for potentially missing React.memo
-    if (
-      ts.isFunctionDeclaration(node) && 
-      node.name && 
-      node.name.text[0] === node.name.text[0].toUpperCase() && // Component name starts with uppercase
-      calculateCyclomaticComplexity(node) > 5 // Non-trivial component
-    ) {
-      const location = ts.getLineAndCharacterOfPosition(ast, node.getStart());
-      issues.push({
-        type: 'missing-memo',
-        location,
-        description: `Consider using React.memo for component '${node.name.text}' to prevent unnecessary re-renders`
-      });
-    }
-    
-    // Check for missing key in list rendering
-    if (
-      ts.isJsxElement(node) && 
-      node.parent && 
-      ts.isJsxExpression(node.parent) && 
-      node.parent.parent && 
-      ts.isJsxElement(node.parent.parent) &&
-      !node.openingElement.attributes.some(attr => 
-        attr.name && attr.name.getText() === 'key'
-      )
-    ) {
-      const location = ts.getLineAndCharacterOfPosition(ast, node.getStart());
-      issues.push({
-        type: 'missing-key',
-        location,
-        description: `JSX element inside what appears to be a list is missing a 'key' prop`
-      });
-    }
-    
-    ts.forEachChild(node, visitor);
-  };
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash; // Convert to 32bit integer
+  }
   
-  ts.forEachChild(ast, visitor);
-  return issues;
+  return hash.toString(16);
 };
