@@ -13,7 +13,7 @@ import ProfileAnalytics from '@/components/profile/ProfileAnalytics';
 import MarketingProfile from '@/components/profile/MarketingProfile';
 import { useToast } from '@/hooks/use-toast';
 import ProfileSettings from '@/components/profile/ProfileSettings';
-import ProfileBoostDisplay, { ProfileBoostDisplayProps } from '@/components/profile/ProfileBoostDisplay';
+import ProfileBoostDisplay from '@/components/profile/ProfileBoostDisplay';
 import { UserProfile } from '@/types/user';
 
 interface ProfileImage {

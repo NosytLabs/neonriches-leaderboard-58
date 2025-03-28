@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Eye, Zap, Award, Link as LinkIcon, Users } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { UserProfile } from '@/contexts/AuthContext';
+import { UserProfile } from '@/types/user';
 
 interface MarketingProfileProps {
   user: UserProfile;
