@@ -15,8 +15,14 @@ export function Toaster() {
   return (
     <ToastProvider>
       {toasts?.map(function ({ id, title, description, action, ...props }) {
+        // Use type assertion to tell TypeScript this is valid
+        const validProps = {
+          ...props,
+          variant: props.variant as "default" | "destructive" | "royal" | "success"
+        };
+        
         return (
-          <Toast key={id} {...props}>
+          <Toast key={id} {...validProps}>
             <div className="grid gap-1">
               {title && <ToastTitle>{title}</ToastTitle>}
               {description && (

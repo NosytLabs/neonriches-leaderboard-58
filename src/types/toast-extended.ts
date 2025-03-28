@@ -1,21 +1,21 @@
 
-import { ToastProps } from "@/components/ui/toast";
-import React from "react";
+import { ReactNode } from 'react';
+import { ToastActionElement, ToastProps } from '@/components/ui/toast';
 
 // Define ToasterToast to match the structure expected
-export interface ToasterToast extends Omit<ToastProps, "ref"> {
+export interface ToasterToast extends Omit<ToastProps, 'title'> {
   id: string;
-  title?: React.ReactNode;
-  description?: React.ReactNode;
-  action?: React.ReactNode;
-  variant?: "default" | "destructive" | "success" | "royal";
+  title?: ReactNode;
+  description?: ReactNode;
+  action?: ToastActionElement;
+  variant?: 'default' | 'destructive' | 'royal' | 'success';
 }
 
 // Extend the default toast props to include our custom variant types
 export interface ExtendedToastProps extends Omit<ToasterToast, "id"> {
-  title?: React.ReactNode;
-  description?: React.ReactNode;
-  variant?: 'default' | 'destructive' | 'success' | 'royal';
-  action?: React.ReactNode;
+  title?: ReactNode;
+  description?: ReactNode;
+  variant?: 'default' | 'destructive' | 'royal' | 'success';
+  action?: ToastActionElement;
   sound?: string;
 }

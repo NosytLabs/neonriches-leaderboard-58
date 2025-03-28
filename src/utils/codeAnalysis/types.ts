@@ -1,97 +1,84 @@
 
-// Core analysis result interface
-export interface AnalysisResult {
-  unusedFiles: string[];
-  unusedFunctions: Array<{
-    file: string;
-    name: string;
-    line: number;
-  }>;
-  unusedImports: Array<{
-    file: string;
-    name: string;
-    line: number;
-  }>;
-  unusedVariables: Array<{
-    file: string;
-    name: string;
-    line: number;
-  }>;
-  unusedCssSelectors: Array<{
-    file: string;
-    selector: string;
-    line: number;
-  }>;
-  deadCodePaths: Array<{
-    file: string;
-    description: string;
-    line: number;
-  }>;
-  duplicateCode: Array<{
-    files: string[];
-    similarity: number;
-    lines: number;
-    impact: string;
-    risk: string;
-  }>;
-  complexCode: Array<{
-    file: string;
-    function: string;
-    complexity: number;
-    line: number;
-    impact: string;
-    suggestion: string;
-  }>;
-  unusedDependencies: string[];
-  metrics: {
-    beforeCleanup: {
-      projectSize: number;
-      fileCount: number;
-      dependencyCount: number;
-    };
-    afterCleanup: {
-      projectSize: number;
-      fileCount: number;
-      dependencyCount: number;
-    };
-  };
-}
+// Analysis Types
 
-// Analysis safety checklist
-export interface SafetyCheckResult {
-  hasRuntimeDependencies: boolean;
-  hasDynamicReferences: boolean;
-  hasBuildDependencies: boolean;
-  hasTestDependencies: boolean;
-  hasDocReferences: boolean;
-}
-
-// Mock ESLint interface for type safety
-export interface ESLintMessage {
-  ruleId: string | null;
-  message: string;
+// Type for a code location
+export interface CodeLocation {
+  file: string;
   line: number;
 }
 
-export interface ESLintResult {
-  filePath: string;
-  messages: ESLintMessage[];
+// Type for an unused import
+export interface UnusedImport extends CodeLocation {
+  name: string;
 }
 
+// Type for an unused variable
+export interface UnusedVariable extends CodeLocation {
+  name: string;
+}
+
+// Type for an unused CSS selector
+export interface UnusedCssSelector extends CodeLocation {
+  selector: string;
+}
+
+// Type for a dead code path
+export interface DeadCodePath extends CodeLocation {
+  description: string;
+}
+
+// Type for duplicate code
+export interface DuplicateCode {
+  files: string[];
+  similarity: number;
+  lines: number;
+  impact?: string;
+  risk?: string;
+  codeSnippet?: string;
+}
+
+// Type for complex code
+export interface ComplexCode extends CodeLocation {
+  function: string;
+  complexity: number;
+  impact?: string;
+  suggestion?: string;
+  explanation?: string;
+}
+
+// Type for an unused function
+export interface UnusedFunction extends CodeLocation {
+  name: string;
+}
+
+// Mock ESLint type for analysis
 export class MockESLint {
-  async lintFiles(files: string[]): Promise<ESLintResult[]> {
-    // This is a mock implementation
-    return files.map(file => ({
-      filePath: file,
-      messages: []
-    }));
+  async lintFiles(files: string[]) {
+    // Simple mock implementation
+    return [];
   }
 }
 
-// Project structure analysis
-export interface ProjectStructure {
-  languages: Record<string, number>;
-  frameworks: string[];
-  buildTools: string[];
-  directoryStructure: Record<string, number>;
+// Project metrics
+export interface ProjectMetrics {
+  projectSize: number; // in KB
+  fileCount: number;
+  dependencyCount: number;
+}
+
+// Type for the complete analysis result
+export interface AnalysisResult {
+  unusedFiles: string[];
+  unusedImports: UnusedImport[];
+  unusedVariables: UnusedVariable[];
+  unusedCssSelectors: UnusedCssSelector[];
+  deadCodePaths: DeadCodePath[];
+  duplicateCode: DuplicateCode[];
+  complexCode: ComplexCode[];
+  unusedFunctions: UnusedFunction[];
+  unusedDependencies: string[];
+  metrics: {
+    beforeCleanup: ProjectMetrics;
+    afterCleanup: ProjectMetrics;
+  };
 }

@@ -1,5 +1,5 @@
 
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext } from 'react';
 import { useToast as useShadcnToast } from '@/hooks/use-toast';
 import { ExtendedToastProps } from '@/types/toast-extended';
 

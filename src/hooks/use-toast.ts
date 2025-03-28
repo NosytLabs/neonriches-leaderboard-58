@@ -1,11 +1,10 @@
 
 import { useState, useEffect, createContext, useContext } from 'react';
-import { toast as originalToastFunction } from "@/components/ui/use-toast";
 import { ExtendedToastProps, ToasterToast } from "@/types/toast-extended";
 import useNotificationSounds from './use-notification-sounds';
 
-// Create a mutable reference to the toast function that can be overridden
-let toastFunction = originalToastFunction;
+// Create a placeholder toast function that will be replaced later
+let toastFunction: any = () => {};
 
 const ToastContext = createContext({
   toasts: [] as ToasterToast[],
@@ -13,6 +12,13 @@ const ToastContext = createContext({
   dismissToast: (id: string) => {},
   dismiss: (id: string) => {},
 });
+
+// Import the original toast function after the context is created to avoid circular references
+// This avoids the "Cannot access originalToastFunction before initialization" error
+import { toast as originalToastFunction } from "@/components/ui/use-toast";
+
+// Now we can safely update the toast function
+toastFunction = originalToastFunction;
 
 export const useToast = () => {
   const context = useContext(ToastContext);

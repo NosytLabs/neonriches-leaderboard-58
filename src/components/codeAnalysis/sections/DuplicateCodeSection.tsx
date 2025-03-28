@@ -2,15 +2,8 @@
 import React from 'react';
 import { Copy } from 'lucide-react';
 import IssueSection from '../shared/IssueSection';
-import IssueItem from '../shared/IssueItem';
-
-interface DuplicateCode {
-  files: string[];
-  similarity: number;
-  lines: number;
-  impact?: string;
-  risk?: string;
-}
+import CodeSnippet from '../shared/CodeSnippet';
+import { DuplicateCode } from '@/utils/codeAnalysis/types';
 
 interface DuplicateCodeSectionProps {
   duplicateCode: DuplicateCode[];
@@ -25,32 +18,45 @@ const DuplicateCodeSection: React.FC<DuplicateCodeSectionProps> = ({ duplicateCo
     <IssueSection 
       title="Duplicate Code" 
       count={duplicateCode.length}
-      description="These code segments appear in multiple places and could be refactored."
+      description="These code patterns appear in multiple locations and could be refactored into shared functions or components."
     >
-      <div className="space-y-2 mt-4">
-        {duplicateCode.map((issue, index) => (
-          <IssueItem
-            key={index}
-            file={issue.files.join(', ')}
-            description={
+      <div className="space-y-4 mt-4">
+        {duplicateCode.map((item, index) => (
+          <div key={index} className="glass-morphism border-white/10 p-4 rounded-lg">
+            <div className="flex flex-wrap justify-between items-start mb-2">
               <div>
-                <p className="text-sm text-white/70">
-                  {issue.lines} lines with {Math.round(issue.similarity * 100)}% similarity
-                </p>
-                {issue.impact && (
-                  <p className="text-sm mt-1">
-                    <span className="font-medium">Impact:</span> {issue.impact}
-                  </p>
-                )}
-                {issue.risk && (
-                  <p className="text-sm mt-1">
-                    <span className="font-medium">Risk:</span> {issue.risk}
-                  </p>
-                )}
+                <h4 className="font-semibold mb-1">Duplicate Pattern #{index + 1}</h4>
+                <div className="flex items-center">
+                  <span className="text-xs bg-blue-500/20 text-blue-400 px-2 py-0.5 rounded-full mr-2">
+                    {item.lines} lines
+                  </span>
+                  <span className="text-xs bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded-full">
+                    {Math.round(item.similarity * 100)}% similar
+                  </span>
+                </div>
               </div>
-            }
-            icon={<Copy size={16} className="text-amber-500" />}
-          />
+              
+              <div className="text-right text-sm text-white/70">
+                <p>Found in {item.files.length} files</p>
+              </div>
+            </div>
+            
+            <div className="mb-4">
+              <h5 className="text-sm font-medium mb-2">Files:</h5>
+              <ul className="space-y-1 text-sm text-white/70">
+                {item.files.map((file, fileIndex) => (
+                  <li key={fileIndex} className="file-path">{file}</li>
+                ))}
+              </ul>
+            </div>
+            
+            {item.codeSnippet && (
+              <div>
+                <h5 className="text-sm font-medium mb-2">Code Snippet:</h5>
+                <CodeSnippet code={item.codeSnippet} />
+              </div>
+            )}
+          </div>
         ))}
       </div>
     </IssueSection>

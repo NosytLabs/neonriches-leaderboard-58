@@ -1,11 +1,12 @@
 
-import React from 'react';
+import React, { ReactNode } from 'react';
+import { Folder } from 'lucide-react';
 
 interface IssueSectionProps {
   title: string;
   count: number;
-  description: string;
-  children: React.ReactNode;
+  description?: string;
+  children: ReactNode;
   className?: string;
 }
 
@@ -14,20 +15,25 @@ const IssueSection: React.FC<IssueSectionProps> = ({
   count, 
   description, 
   children,
-  className = ''
+  className = "" 
 }) => {
   return (
-    <div className={`border border-white/10 rounded-md overflow-hidden ${className}`}>
-      <div className="bg-white/5 p-4 border-b border-white/10">
-        <div className="flex items-center justify-between">
-          <h3 className="font-medium">{title}</h3>
-          <span className="analysis-counter analysis-counter-warning">{count}</span>
-        </div>
-        <p className="text-sm text-white/70 mt-1">{description}</p>
+    <div className={`mb-8 ${className}`}>
+      <div className="flex items-center justify-between mb-2">
+        <h3 className="text-xl font-semibold flex items-center">
+          <Folder className="h-5 w-5 mr-2 text-white/70" />
+          {title}
+          <span className="ml-2 text-sm py-0.5 px-2 bg-white/10 rounded-full text-white/70">
+            {count}
+          </span>
+        </h3>
       </div>
-      <div className="p-4">
-        {children}
-      </div>
+      
+      {description && (
+        <p className="text-white/70 mb-4">{description}</p>
+      )}
+      
+      {children}
     </div>
   );
 };
