@@ -1,107 +1,88 @@
 
 import React from 'react';
-import { Crown, Scroll, Feather, Map, Trophy, Shield } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Crown, Scroll, Shield, Swords } from 'lucide-react';
+
+type DividerVariant = 'line' | 'ornate' | 'double' | 'dotted' | 'scrollwork';
+type DividerColor = 'gold' | 'crimson' | 'navy' | 'purple' | 'royal';
+type DividerIcon = 'crown' | 'scroll' | 'shield' | 'swords' | 'none';
 
 interface RoyalDividerProps {
-  variant?: 'line' | 'crown' | 'ornate' | 'scroll' | 'quill' | 'treasure' | 'trophy' | 'shield';
+  variant?: DividerVariant;
+  color?: DividerColor;
   label?: string;
+  icon?: DividerIcon;
   className?: string;
-  color?: 'royal' | 'gold' | 'crimson' | 'navy' | 'purple';
-  animate?: boolean;
 }
 
 const RoyalDivider: React.FC<RoyalDividerProps> = ({
   variant = 'line',
+  color = 'gold',
   label,
-  className,
-  color = 'royal',
-  animate = false
+  icon = 'none',
+  className
 }) => {
-  const colorMap = {
-    royal: 'royal-gradient',
-    gold: 'text-royal-gold',
-    crimson: 'text-royal-crimson',
-    navy: 'text-royal-navy',
-    purple: 'text-royal-purple'
-  };
-  
-  const getLineColor = () => {
-    switch (color) {
-      case 'gold': return 'border-royal-gold/30';
-      case 'crimson': return 'border-royal-crimson/30';
-      case 'navy': return 'border-royal-navy/30';
-      case 'purple': return 'border-royal-purple/30';
-      default: return 'border-white/20';
-    }
+  // Color classes
+  const colorMap: Record<DividerColor, string> = {
+    gold: 'from-transparent via-royal-gold/30 to-transparent',
+    crimson: 'from-transparent via-royal-crimson/30 to-transparent',
+    navy: 'from-transparent via-royal-navy/30 to-transparent',
+    purple: 'from-transparent via-royal-purple/30 to-transparent',
+    royal: 'from-royal-gold/10 via-royal-purple/30 to-royal-gold/10'
   };
 
-  const getIcon = () => {
-    switch (variant) {
+  // Icon components
+  const IconComponent = () => {
+    switch (icon) {
       case 'crown':
-        return <Crown className={cn("h-5 w-5", colorMap[color], animate && "animate-crown-glow")} />;
+        return <Crown className="h-4 w-4" />;
       case 'scroll':
-        return <Scroll className={cn("h-5 w-5", colorMap[color], animate && "animate-quill-write")} />;
-      case 'quill':
-        return <Feather className={cn("h-5 w-5", colorMap[color], animate && "animate-quill-write")} />;
-      case 'treasure':
-        return <Map className={cn("h-5 w-5", colorMap[color], animate && "animate-sparkle")} />;
-      case 'trophy':
-        return <Trophy className={cn("h-5 w-5", colorMap[color], animate && "animate-sparkle")} />;
+        return <Scroll className="h-4 w-4" />;
       case 'shield':
-        return <Shield className={cn("h-5 w-5", colorMap[color], animate && "animate-bounce-subtle")} />;
+        return <Shield className="h-4 w-4" />;
+      case 'swords':
+        return <Swords className="h-4 w-4" />;
       default:
         return null;
     }
   };
 
+  // Variant styles
+  const getVariantClass = () => {
+    switch (variant) {
+      case 'ornate':
+        return `h-[3px] bg-gradient-to-r ${colorMap[color]} relative before:content-[''] before:absolute before:w-2 before:h-2 before:rounded-full before:bg-${color === 'royal' ? 'royal-gold' : `royal-${color}`}/50 before:-top-[3px] before:left-1/4 after:content-[''] after:absolute after:w-2 after:h-2 after:rounded-full after:bg-${color === 'royal' ? 'royal-gold' : `royal-${color}`}/50 after:-top-[3px] after:right-1/4`;
+      case 'double':
+        return `h-[5px] bg-transparent border-t border-b border-${color === 'royal' ? 'royal-gold' : `royal-${color}`}/30`;
+      case 'dotted':
+        return `h-[1px] border-dotted border-t-2 border-${color === 'royal' ? 'royal-gold' : `royal-${color}`}/30`;
+      case 'scrollwork':
+        return `h-[1px] bg-gradient-to-r ${colorMap[color]} relative before:content-['❧'] before:absolute before:text-${color === 'royal' ? 'royal-gold' : `royal-${color}`} before:-top-[10px] before:left-1/4 before:text-sm after:content-['❧'] after:absolute after:text-${color === 'royal' ? 'royal-gold' : `royal-${color}`} after:-top-[10px] after:right-1/4 after:transform after:scale-x-[-1] after:text-sm`;
+      case 'line':
+      default:
+        return `h-[1px] bg-gradient-to-r ${colorMap[color]}`;
+    }
+  };
+
   return (
-    <div className={cn('flex items-center w-full my-8', className)}>
-      <div className={cn('flex-grow h-px', getLineColor())}></div>
+    <div className={cn("w-full flex items-center gap-3", className)}>
+      <div className={cn("flex-grow", getVariantClass())} />
       
-      {variant !== 'line' && (
-        <div className="flex items-center mx-4 relative">
-          <div className="absolute -inset-3 bg-royal-gold/10 rounded-full blur-md"></div>
-          {getIcon()}
-          {label && (
-            <span className={cn("text-xs font-medieval tracking-widest mx-3 uppercase", colorMap[color])}>
-              {label}
+      {label && (
+        <div className={cn(
+          "px-3 flex items-center gap-2 whitespace-nowrap text-xs uppercase tracking-wider font-medium",
+          `text-${color === 'royal' ? 'royal-gold' : `royal-${color}`}`
+        )}>
+          {icon !== 'none' && (
+            <span className={`text-${color === 'royal' ? 'royal-gold' : `royal-${color}`}`}>
+              <IconComponent />
             </span>
           )}
+          {label}
         </div>
       )}
       
-      {variant === 'line' && label && (
-        <div className="mx-4">
-          <span className={cn("text-xs font-medieval tracking-widest px-4 py-1 rounded-full bg-foreground/5", colorMap[color])}>
-            {label}
-          </span>
-        </div>
-      )}
-      
-      <div className={cn('flex-grow h-px', getLineColor())}></div>
-      
-      {/* Gold dust effect */}
-      {animate && (
-        <>
-          <div className="absolute left-1/4 -top-1 transform -translate-x-1/2">
-            <div className={cn("h-2 w-2 rounded-full animate-sparkle", 
-              color === 'gold' ? 'bg-royal-gold/60' : 
-              color === 'crimson' ? 'bg-royal-crimson/60' : 
-              color === 'navy' ? 'bg-royal-navy/60' : 
-              color === 'purple' ? 'bg-royal-purple/60' : 'bg-white/40')}>
-            </div>
-          </div>
-          <div className="absolute right-1/4 -top-1 transform translate-x-1/2" style={{ animationDelay: '0.5s' }}>
-            <div className={cn("h-2 w-2 rounded-full animate-sparkle", 
-              color === 'gold' ? 'bg-royal-gold/60' : 
-              color === 'crimson' ? 'bg-royal-crimson/60' : 
-              color === 'navy' ? 'bg-royal-navy/60' : 
-              color === 'purple' ? 'bg-royal-purple/60' : 'bg-white/40')}>
-            </div>
-          </div>
-        </>
-      )}
+      <div className={cn("flex-grow", getVariantClass())} />
     </div>
   );
 };

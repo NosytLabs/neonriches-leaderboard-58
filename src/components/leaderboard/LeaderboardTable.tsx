@@ -1,12 +1,13 @@
 
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Trophy, Users, ArrowUp, ArrowDown, DollarSign, Crown } from 'lucide-react';
+import { Trophy, Users, ArrowUp, ArrowDown, DollarSign, Crown, Scroll } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { getTeamColor, getTeamName } from './TeamUtils';
-import { useToast } from '@/hooks/use-toast';
+import { useToastContext } from '@/contexts/ToastContext';
 import useNotificationSounds from '@/hooks/use-notification-sounds';
 import { UserProfile } from '@/types/user';
+import { motion } from 'framer-motion';
 
 interface LeaderboardTableProps {
   users: UserProfile[];
@@ -19,17 +20,25 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
 }) => {
   const navigate = useNavigate();
   const { playSound } = useNotificationSounds();
-  const { toast } = useToast();
+  const { addToast } = useToastContext();
 
   const handleProfileClick = (user: UserProfile) => {
     // Navigate to the user's profile page
     playSound('click');
     navigate(`/profile/${user.username}`);
-    toast({
+    addToast({
       title: "Royal Intelligence",
       description: `Spying on the noble ${user.displayName || user.username}'s profile. How scandalous!`,
       duration: 3000,
     });
+  };
+  
+  const getRankChangeText = (change: number) => {
+    if (change > 5) return "Rapidly ascending the social ladder!";
+    if (change > 0) return "Moving up in court society.";
+    if (change < -5) return "Plummeting through the ranks!";
+    if (change < 0) return "Losing favor with the Crown.";
+    return "Maintaining their position.";
   };
 
   return (
@@ -51,8 +60,11 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
             const teamName = getTeamName(user.team as string);
             
             return (
-              <tr 
+              <motion.tr 
                 key={user.id}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.05 }}
                 className={cn(
                   "border-b border-white/5 hover:bg-white/5 transition-colors cursor-pointer",
                   index < 3 ? "hover:bg-royal-gold/10" : ""
@@ -76,17 +88,24 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
                     </span>
                     
                     {rankChange !== 0 && (
-                      <span className={cn(
-                        "ml-2 text-xs flex items-center",
-                        rankChange > 0 ? "text-green-500" : "text-red-500"
-                      )}>
-                        {rankChange > 0 ? (
-                          <ArrowUp className="h-3 w-3 mr-0.5" />
-                        ) : (
-                          <ArrowDown className="h-3 w-3 mr-0.5" />
-                        )}
-                        {Math.abs(rankChange)}
-                      </span>
+                      <div className="group relative ml-2">
+                        <span className={cn(
+                          "text-xs flex items-center",
+                          rankChange > 0 ? "text-green-500" : "text-red-500"
+                        )}>
+                          {rankChange > 0 ? (
+                            <ArrowUp className="h-3 w-3 mr-0.5" />
+                          ) : (
+                            <ArrowDown className="h-3 w-3 mr-0.5" />
+                          )}
+                          {Math.abs(rankChange)}
+                        </span>
+                        
+                        {/* Tooltip */}
+                        <div className="absolute left-0 -bottom-12 w-40 bg-black/80 text-white text-xs p-2 rounded opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
+                          {getRankChangeText(rankChange)}
+                        </div>
+                      </div>
                     )}
                   </div>
                 </td>
@@ -94,7 +113,10 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
                 {/* User Column */}
                 <td className="px-4 py-3 text-left">
                   <div className="flex items-center">
-                    <div className="h-8 w-8 rounded-full bg-white/10 mr-2 overflow-hidden flex items-center justify-center border-2 border-transparent" style={{ borderColor: user.isVIP ? '#FFD700' : 'transparent' }}>
+                    <div className={cn(
+                      "h-8 w-8 rounded-full bg-white/10 mr-2 overflow-hidden flex items-center justify-center",
+                      user.isVIP ? "border-2 border-royal-gold" : "border-2 border-transparent"
+                    )}>
                       {user.profileImage ? (
                         <img src={user.profileImage} alt={user.username} className="h-full w-full object-cover" />
                       ) : (
@@ -102,8 +124,20 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
                       )}
                     </div>
                     <div>
-                      <div className="font-medium">{user.displayName || user.username}</div>
-                      <div className="text-xs text-white/50">Joined {new Date(user.joinDate || user.joinedAt).toLocaleDateString()}</div>
+                      <div className="font-medium group relative">
+                        {user.displayName || user.username}
+                        
+                        {/* VIP badge */}
+                        {user.isVIP && (
+                          <span className="ml-2 inline-flex items-center">
+                            <span className="inline-block h-3 w-3 bg-royal-gold rounded-full animate-pulse-slow"></span>
+                          </span>
+                        )}
+                      </div>
+                      <div className="text-xs text-white/50 flex items-center">
+                        <Scroll className="h-3 w-3 mr-1 text-white/40" />
+                        Joined {new Date(user.joinDate || user.joinedAt).toLocaleDateString()}
+                      </div>
                     </div>
                   </div>
                 </td>
@@ -131,13 +165,33 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
                 
                 {/* Status Column */}
                 <td className="px-4 py-3 text-right">
-                  {index === 0 && <span className="text-xs bg-royal-gold/20 text-royal-gold px-2 py-1 rounded">Sovereign</span>}
-                  {index === 1 && <span className="text-xs bg-white/10 text-white/90 px-2 py-1 rounded">Regent</span>}
-                  {index === 2 && <span className="text-xs bg-white/10 text-white/80 px-2 py-1 rounded">Duke</span>}
-                  {index >= 3 && index < 10 && <span className="text-xs bg-white/10 text-white/70 px-2 py-1 rounded">Noble</span>}
-                  {index >= 10 && <span className="text-xs bg-white/5 text-white/60 px-2 py-1 rounded">Commoner</span>}
+                  {index === 0 && (
+                    <span className="text-xs bg-royal-gold/20 text-royal-gold px-2 py-1 rounded royal-shine">
+                      Sovereign
+                    </span>
+                  )}
+                  {index === 1 && (
+                    <span className="text-xs bg-white/10 text-white/90 px-2 py-1 rounded">
+                      Regent
+                    </span>
+                  )}
+                  {index === 2 && (
+                    <span className="text-xs bg-white/10 text-white/80 px-2 py-1 rounded">
+                      Duke
+                    </span>
+                  )}
+                  {index >= 3 && index < 10 && (
+                    <span className="text-xs bg-white/10 text-white/70 px-2 py-1 rounded">
+                      Noble
+                    </span>
+                  )}
+                  {index >= 10 && (
+                    <span className="text-xs bg-white/5 text-white/60 px-2 py-1 rounded">
+                      Commoner
+                    </span>
+                  )}
                 </td>
-              </tr>
+              </motion.tr>
             );
           })}
         </tbody>

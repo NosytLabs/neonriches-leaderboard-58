@@ -1,126 +1,137 @@
 
-import { useState, useCallback, RefObject, useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface FloatingCoinsOptions {
-  containerRef?: RefObject<HTMLElement>;
-  frequency?: number;
+  containerRef: React.RefObject<HTMLElement>;
+  count?: number;
   duration?: number;
-  minDelay?: number;
-  maxDelay?: number;
-  coinCount?: number;
-  coinSize?: 'small' | 'medium' | 'large';
+  size?: number;
+  glowIntensity?: number;
+  emojis?: string[];
+  enabled?: boolean;
 }
 
-interface CoinPosition {
-  id: string;
-  x: number;
-  y: number;
-  value: number;
-  size: 'small' | 'medium' | 'large';
-  color?: string;
-}
-
-const useFloatingCoins = (options: FloatingCoinsOptions = {}) => {
-  const {
-    containerRef,
-    frequency = 0.3,
-    duration = 3000,
-    minDelay = 5000,
-    maxDelay = 10000,
-    coinCount = 5
-  } = options;
+const useFloatingCoins = ({
+  containerRef,
+  count = 10,
+  duration = 5000,
+  size = 24,
+  glowIntensity = 0.5,
+  emojis = ['💰', '👑', '💎', '💵', '🏆', '✨'],
+  enabled = true
+}: FloatingCoinsOptions) => {
+  const [isActive, setIsActive] = useState(enabled);
+  const animationFrameId = useRef<number | null>(null);
+  const createdElements = useRef<HTMLElement[]>([]);
   
-  const [coins, setCoins] = useState<CoinPosition[]>([]);
-
-  const createCoin = useCallback((x?: number, y?: number, value?: number) => {
-    if (!containerRef?.current) return null;
-    
-    const container = containerRef.current;
-    const rect = container.getBoundingClientRect();
-    
-    // Use provided coordinates or generate random ones
-    const coinX = x ?? Math.random() * rect.width;
-    const coinY = y ?? Math.random() * rect.height;
-    const coinValue = value ?? Math.floor(Math.random() * 5) + 1;
-    
-    // Generate sizes with a bias towards smaller coins
-    const sizes: Array<'small' | 'medium' | 'large'> = ['small', 'small', 'medium', 'medium', 'large'];
-    const coinSize = sizes[Math.floor(Math.random() * sizes.length)];
-    
-    // Generate coin colors based on value
-    let coinColor;
-    if (coinValue >= 10) {
-      coinColor = 'linear-gradient(45deg, #D4AF37, #FFD700)'; // Gold
-    } else if (coinValue >= 5) {
-      coinColor = 'linear-gradient(45deg, #C0C0C0, #E5E4E2)'; // Silver
-    } else if (coinValue >= 2) {
-      coinColor = 'linear-gradient(45deg, #B87333, #CD7F32)'; // Bronze
+  // Cleanup function to remove all created elements
+  const cleanup = () => {
+    if (animationFrameId.current) {
+      cancelAnimationFrame(animationFrameId.current);
+      animationFrameId.current = null;
     }
     
-    const newCoin: CoinPosition = {
-      id: `coin-${Date.now()}-${Math.random()}`,
-      x: coinX,
-      y: coinY,
-      value: coinValue,
-      size: coinSize,
-      color: coinColor
-    };
+    createdElements.current.forEach(element => {
+      if (element.parentNode) {
+        element.parentNode.removeChild(element);
+      }
+    });
+    createdElements.current = [];
+  };
+  
+  // Create a single floating coin/emoji element
+  const createFloatingElement = () => {
+    if (!containerRef.current) return;
     
-    setCoins(prev => [...prev, newCoin]);
+    const element = document.createElement('div');
+    const emoji = emojis[Math.floor(Math.random() * emojis.length)];
     
-    // Remove the coin after animation duration
+    // Random position within container
+    const containerRect = containerRef.current.getBoundingClientRect();
+    const randomX = Math.random() * containerRect.width;
+    const randomY = Math.random() * containerRect.height;
+    
+    // Set element styles
+    Object.assign(element.style, {
+      position: 'absolute',
+      left: `${randomX}px`,
+      top: `${randomY}px`,
+      fontSize: `${size}px`,
+      textShadow: `0 0 ${5 * glowIntensity}px rgba(212, 175, 55, ${glowIntensity})`,
+      pointerEvents: 'none',
+      zIndex: '100',
+      opacity: '0',
+      transform: 'translateY(0) rotate(0deg)',
+      animation: `float-up ${duration / 1000}s ease-out forwards`,
+    });
+    
+    element.textContent = emoji;
+    element.className = 'floating-coin';
+    
+    containerRef.current.appendChild(element);
+    createdElements.current.push(element);
+    
+    // Remove element after animation completes
     setTimeout(() => {
-      setCoins(prev => prev.filter(coin => coin.id !== newCoin.id));
+      if (element.parentNode) {
+        element.parentNode.removeChild(element);
+        createdElements.current = createdElements.current.filter(el => el !== element);
+      }
     }, duration);
-    
-    return newCoin;
-  }, [containerRef, duration]);
+  };
   
-  const createMultipleCoins = useCallback((count: number, position?: { x: number, y: number }) => {
-    const createdCoins = [];
+  // Animation loop
+  const animate = () => {
+    if (!isActive || !containerRef.current) return;
     
-    for (let i = 0; i < count; i++) {
-      // Add some random offset if position is provided
-      const offsetX = position ? position.x + (Math.random() * 100 - 50) : undefined;
-      const offsetY = position ? position.y + (Math.random() * 100 - 50) : undefined;
-      
-      // Stagger coin creation
-      setTimeout(() => {
-        const coin = createCoin(offsetX, offsetY);
-        if (coin) createdCoins.push(coin);
-      }, Math.random() * 500);
+    const chance = Math.random();
+    
+    // Only create new element occasionally for a more natural effect
+    if (chance < 0.05 && createdElements.current.length < count) {
+      createFloatingElement();
     }
     
-    return createdCoins;
-  }, [createCoin]);
+    animationFrameId.current = requestAnimationFrame(animate);
+  };
   
-  // Optional automatic coin creation
-  useEffect(() => {
-    if (!containerRef?.current || frequency <= 0) return;
-    
-    const createRandomCoin = () => {
-      // Only create a coin if random number is less than frequency (0-1)
-      if (Math.random() < frequency) {
-        createCoin();
+  // Toggle the animation on/off
+  const toggle = (state?: boolean) => {
+    setIsActive(prev => {
+      const newState = state !== undefined ? state : !prev;
+      
+      if (!newState) {
+        cleanup();
       }
       
-      // Schedule next coin check
-      const nextDelay = Math.random() * (maxDelay - minDelay) + minDelay;
-      timeout = setTimeout(createRandomCoin, nextDelay);
-    };
+      return newState;
+    });
+  };
+  
+  // Create a burst of elements all at once
+  const createBurst = (burstCount = 15) => {
+    if (!containerRef.current) return;
     
-    // Initial coin creation after a delay
-    let timeout = setTimeout(createRandomCoin, minDelay);
+    for (let i = 0; i < burstCount; i++) {
+      setTimeout(() => {
+        createFloatingElement();
+      }, i * 100);
+    }
+  };
+  
+  // Start animation
+  useEffect(() => {
+    if (isActive && containerRef.current) {
+      animationFrameId.current = requestAnimationFrame(animate);
+    }
     
-    return () => {
-      clearTimeout(timeout);
-    };
-  }, [containerRef, createCoin, frequency, maxDelay, minDelay]);
+    return cleanup;
+  }, [isActive, containerRef.current]);
   
   return {
-    coins,
-    createCoin,
-    createMultipleCoins
+    isActive,
+    toggle,
+    createBurst,
+    cleanup
   };
 };
 

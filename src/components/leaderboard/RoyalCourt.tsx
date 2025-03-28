@@ -1,14 +1,19 @@
 
 import React, { useState, useEffect, useRef } from 'react';
+import { motion } from 'framer-motion';
 import LeaderboardHeader from './LeaderboardHeader';
 import LeaderboardFilters from './LeaderboardFilters';
 import LeaderboardTable from './LeaderboardTable';
 import LeaderboardFooter from './LeaderboardFooter';
 import { mockLeaderboardData } from './LeaderboardData';
-import { useToast } from '@/hooks/use-toast';
-import { Crown, Coins } from 'lucide-react';
+import { useToastContext } from '@/contexts/ToastContext';
+import { Crown, Coins, Scroll } from 'lucide-react';
 import useFloatingCoins from '@/hooks/use-floating-coins';
 import { UserProfile } from '@/types/user';
+import RoyalButton from '@/components/ui/royal-button';
+import useNotificationSounds from '@/hooks/use-notification-sounds';
+import RoyalDivider from '@/components/ui/royal-divider';
+import RoyalDecrees from '@/components/dashboard/RoyalDecrees';
 
 const RoyalCourt = () => {
   // Convert mock leaderboard data to UserProfile format
@@ -28,6 +33,7 @@ const RoyalCourt = () => {
     gender: 'king',
     joinDate: new Date().toISOString(),
     joinedAt: new Date().toISOString(),
+    isVIP: user.rank <= 3,
     cosmetics: {
       borders: [],
       colors: [],
@@ -36,8 +42,7 @@ const RoyalCourt = () => {
       titles: [],
       backgrounds: [],
       effects: [],
-      badges: [],
-      themes: []
+      badges: []
     },
     socialLinks: []
   }));
@@ -45,26 +50,34 @@ const RoyalCourt = () => {
   const [leaderboardData, setLeaderboardData] = useState<UserProfile[]>(convertedLeaderboardData);
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
   const [activeFilter, setActiveFilter] = useState<string | null>(null);
-  const { toast } = useToast();
+  const [showDecrees, setShowDecrees] = useState<boolean>(false);
+  const { addToast } = useToastContext();
+  const { playSound } = useNotificationSounds();
   const containerRef = useRef<HTMLElement>(null);
   
-  // Use our new hook for floating coins
-  useFloatingCoins({
-    containerRef
+  // Use our floating coins hook
+  const { createBurst, toggle: toggleCoins } = useFloatingCoins({
+    containerRef,
+    emojis: ['💰', '👑', '💎', '💵', '🏆', '✨', '🪙', '🔮', '🧙‍♂️', '🔱', '⚜️'],
+    enabled: false
   });
   
   // Satirical welcome toast
   useEffect(() => {
     const timer = setTimeout(() => {
-      toast({
+      addToast({
         title: "Royal Decree",
         description: "Welcome to the Royal Court, where your worth is measured not by your character, but by your credit card limit!",
         duration: 5000,
+        variant: "royal"
       });
+      
+      // Play royal sound
+      playSound('royalAnnouncement', 0.5);
     }, 1500);
     
     return () => clearTimeout(timer);
-  }, [toast]);
+  }, [addToast, playSound]);
   
   const handleSort = () => {
     const newDirection = sortDirection === 'desc' ? 'asc' : 'desc';
@@ -77,6 +90,8 @@ const RoyalCourt = () => {
     });
     
     setLeaderboardData(sortedData);
+    
+    playSound('click', 0.2);
   };
   
   const handleFilter = (team: string | null) => {
@@ -84,11 +99,10 @@ const RoyalCourt = () => {
     
     if (team === null) {
       setLeaderboardData(convertedLeaderboardData);
-      return;
+    } else {
+      const filteredData = convertedLeaderboardData.filter(user => user.team === team);
+      setLeaderboardData(filteredData);
     }
-    
-    const filteredData = convertedLeaderboardData.filter(user => user.team === team);
-    setLeaderboardData(filteredData);
     
     // Satirical toast based on team selection
     const teamMessages = {
@@ -97,11 +111,36 @@ const RoyalCourt = () => {
       'blue': "The Azure Order values loyalty... to spending money! Keep those contributions flowing!"
     };
     
-    toast({
+    addToast({
       title: "Royal Attention",
       description: teamMessages[team as keyof typeof teamMessages] || "Choose your allegiance wisely!",
       duration: 3000,
     });
+    
+    playSound('pageTransition', 0.3);
+  };
+  
+  const handleCoinBurst = () => {
+    createBurst(20);
+    toggleCoins(true);
+    
+    setTimeout(() => {
+      toggleCoins(false);
+    }, 5000);
+    
+    playSound('coinDrop', 0.6);
+    
+    addToast({
+      title: "Royal Treasury",
+      description: "The kingdom's coffers overflow with the contributions of our loyal subjects!",
+      duration: 3000,
+      variant: "royal"
+    });
+  };
+  
+  const toggleRoyalDecrees = () => {
+    setShowDecrees(prev => !prev);
+    playSound(showDecrees ? 'click' : 'parchmentUnfurl', 0.4);
   };
   
   return (
@@ -119,6 +158,39 @@ const RoyalCourt = () => {
         
         <LeaderboardHeader />
         
+        <div className="flex justify-between items-center mb-6">
+          <RoyalButton
+            variant="royalPurple"
+            size="sm"
+            icon={<Scroll className="h-4 w-4" />}
+            onClick={toggleRoyalDecrees}
+          >
+            {showDecrees ? "Hide Royal Decrees" : "View Royal Decrees"}
+          </RoyalButton>
+          
+          <RoyalButton
+            variant="royalGold"
+            size="sm"
+            icon={<Coins className="h-4 w-4" />}
+            onClick={handleCoinBurst}
+          >
+            Shower with Riches
+          </RoyalButton>
+        </div>
+        
+        {/* Royal Decrees */}
+        <motion.div
+          initial={{ height: 0, opacity: 0 }}
+          animate={{ 
+            height: showDecrees ? "auto" : 0,
+            opacity: showDecrees ? 1 : 0
+          }}
+          transition={{ duration: 0.3 }}
+          className="overflow-hidden mb-6"
+        >
+          {showDecrees && <RoyalDecrees />}
+        </motion.div>
+        
         <div className="royal-card rounded-xl overflow-hidden mb-8 glass-morphism border-white/10">
           <LeaderboardFilters 
             activeFilter={activeFilter}
@@ -132,7 +204,9 @@ const RoyalCourt = () => {
         
         <LeaderboardFooter />
         
-        <div className="mt-12 text-center glass-morphism border border-white/10 rounded-lg p-6 max-w-3xl mx-auto">
+        <RoyalDivider variant="ornate" color="royal" className="my-8" />
+        
+        <div className="mt-8 text-center glass-morphism border border-white/10 rounded-lg p-6 max-w-3xl mx-auto">
           <div className="flex justify-center mb-3">
             <div className="relative">
               <Crown size={24} className="text-royal-gold" />

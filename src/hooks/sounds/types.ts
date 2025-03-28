@@ -1,39 +1,53 @@
 
-import { SoundNames } from "./sound-assets";
+// Sound types
+export type SoundType = 
+  | 'coinDrop'
+  | 'reward'
+  | 'notification'
+  | 'click'
+  | 'success'
+  | 'error'
+  | 'royalAnnouncement'
+  | 'levelUp'
+  | 'purchase'
+  | 'shame'
+  | 'swordClash'
+  | 'pageTransition'
+  | 'wish'
+  | 'pageChange'
+  | 'parchmentUnfurl'
+  | 'medallion'
+  | 'seal'
+  | 'trumpet'
+  | 'noblesLaugh'
+  | 'inkScribble';
 
-export type SoundType = SoundNames;
-
-export enum SoundCategoryEnum {
-  coinDrop = 'coinDrop',
-  reward = 'reward',
-  notification = 'notification',
-  click = 'click',
-  success = 'success',
-  error = 'error',
-  royalAnnouncement = 'royalAnnouncement',
-  levelUp = 'levelUp',
-  purchase = 'purchase',
-  shame = 'shame',
-  swordClash = 'swordClash',
-  pageTransition = 'pageTransition',
-  wish = 'wish',
-  pageChange = 'pageChange'
-}
-
-// Define the SoundMap type for use in the audio loader
+// Sound map type
 export interface SoundMap {
-  [key: string]: {
-    src: string;
-    volume?: number;
-  };
+  [key: string]: HTMLAudioElement;
 }
 
-// Define the AudioLoaderReturn interface
+// Audio loader return type
 export interface AudioLoaderReturn {
-  audioElements: {[key: string]: HTMLAudioElement};
   loadedSounds: string[];
-  isInitialLoadComplete: boolean;
-  preloadCoreSounds: (soundMap: SoundMap) => void;
-  loadSound: (type: string, soundInfo: SoundMap[string]) => Promise<HTMLAudioElement | null>;
-  pauseAllSounds: () => void;
+  isLoading: boolean;
+  error: Error | null;
+}
+
+// Premium sound pack options
+export type PremiumSoundPack = 
+  | 'royal'
+  | 'medieval'
+  | 'fantasy'
+  | 'comedy'
+  | 'elegant';
+
+export interface PremiumSoundPackDetails {
+  id: PremiumSoundPack;
+  name: string;
+  description: string;
+  price: number;
+  sounds: SoundType[];
+  previewSound: SoundType;
+  isPurchased: boolean;
 }

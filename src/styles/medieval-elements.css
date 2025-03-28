@@ -1,66 +1,299 @@
 
-/* Medieval-themed tier badges with enhanced styling - moved from App.css */
-/* These are unique and not duplicated in unified-theme.css */
+/* Medieval Elements and Royal Styling */
 
-/* Enhanced medieval ornamental styling */
-.medieval-border {
+/* Parchment Background */
+.parchment-bg {
+  background-color: #F5E6CA;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cfilter id='n' x='0' y='0'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23n)' opacity='0.3'/%3E%3C/svg%3E");
+  color: #333;
   position: relative;
-  padding: 1.25rem;
-  background-color: rgba(0, 0, 0, 0.25);
-  border-radius: 0.375rem;
 }
 
-.medieval-border::before {
+/* Certificate Background */
+.certificate-bg {
+  background-color: #F5E6CA;
+  border: 8px double #D4AF37;
+  color: #333;
+  position: relative;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Scroll Background */
+.scroll-bg {
+  background-color: #F5E6CA;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cfilter id='n' x='0' y='0'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23n)' opacity='0.1'/%3E%3C/svg%3E");
+  border-top: 20px solid #D4AF37;
+  border-bottom: 20px solid #D4AF37;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  position: relative;
+  padding: 30px;
+  color: #333;
+}
+
+/* Royal Seal */
+.royal-seal {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  background: #9B2335;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.royal-seal::before {
   content: '';
   position: absolute;
-  top: 0.5rem;
-  left: 0.5rem;
-  right: 0.5rem;
-  bottom: 0.5rem;
-  border: 1px solid rgba(212, 175, 55, 0.3);
+  width: 70px;
+  height: 70px;
+  border: 2px solid #D4AF37;
+  border-radius: 50%;
+}
+
+.royal-seal::after {
+  content: '';
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  background-image: url('/throne-assets/royal-seal.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+/* Medieval Ribbons */
+.ribbon-decoration {
+  position: absolute;
+  width: 120px;
+  height: 30px;
+  background: linear-gradient(to right, #9B2335 0%, #9B2335 100%);
+  transform: rotate(-45deg);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+}
+
+.ribbon-gold {
+  background: linear-gradient(to right, #D4AF37 0%, #FFD700 100%);
+}
+
+.ribbon-blue {
+  background: linear-gradient(to right, #000080 0%, #1a1a7a 100%);
+}
+
+.ribbon-purple {
+  background: linear-gradient(to right, #4B0082 0%, #6a0dad 100%);
+}
+
+/* Medieval Dividers */
+.medieval-divider {
+  height: 5px;
+  background: linear-gradient(to right, transparent, #D4AF37, transparent);
+  margin: 30px 0;
+  position: relative;
+}
+
+.medieval-divider::before {
+  content: '✦';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #D4AF37;
+  background: #0D0D20;
+  padding: 0 10px;
+}
+
+/* Ornamental Corners */
+.ornamental-corner {
+  position: relative;
+}
+
+.ornamental-corner::before,
+.ornamental-corner::after {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+}
+
+.ornamental-corner::before {
+  top: 0;
+  left: 0;
+  border-top: 3px solid #D4AF37;
+  border-left: 3px solid #D4AF37;
+}
+
+.ornamental-corner::after {
+  bottom: 0;
+  right: 0;
+  border-bottom: 3px solid #D4AF37;
+  border-right: 3px solid #D4AF37;
+}
+
+/* Certificate Title */
+.certificate-title {
+  font-family: 'Playfair Display', serif;
+  font-weight: bold;
+  text-align: center;
+  color: #9B2335;
+  font-size: 28px;
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+}
+
+/* Certificate Body Text */
+.certificate-text {
+  font-family: 'Crimson Text', serif;
+  color: #333;
+  line-height: 1.6;
+  text-align: center;
+}
+
+/* Certificate Signature */
+.certificate-signature {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 20px;
+  margin-top: 20px;
+  text-align: center;
+  color: #333;
+}
+
+/* Medieval Font Styles */
+.font-medieval-title {
+  font-family: 'Playfair Display', 'Times New Roman', serif;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+.font-medieval-body {
+  font-family: 'Crimson Text', 'Georgia', serif;
+  line-height: 1.6;
+}
+
+.font-medieval-script {
+  font-family: 'Playfair Display', 'Times New Roman', serif;
+  font-style: italic;
+}
+
+/* Medieval UI Elements */
+.medieval-button {
+  background: linear-gradient(to bottom, #D4AF37 0%, #AA8C2C 100%);
+  border: 2px solid #8B0000;
+  color: #000;
+  font-family: 'Playfair Display', serif;
+  padding: 10px 20px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.medieval-button:hover {
+  background: linear-gradient(to bottom, #FFD700 0%, #D4AF37 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.medieval-button:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Decorative Frames */
+.medieval-frame {
+  border: 8px double #D4AF37;
+  padding: 20px;
+  background: rgba(245, 230, 202, 0.1);
+  position: relative;
+}
+
+.medieval-frame::before {
+  content: '';
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  right: 5px;
+  bottom: 5px;
+  border: 1px solid #D4AF3777;
   pointer-events: none;
 }
 
-.royal-corner-ornament {
+/* Animations for medieval elements */
+@keyframes seal-stamp {
+  0% { transform: scale(0.8) rotate(-10deg); opacity: 0; }
+  70% { transform: scale(1.1) rotate(5deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0); opacity: 1; }
+}
+
+.animate-seal-stamp {
+  animation: seal-stamp 1s forwards;
+}
+
+@keyframes scroll-unfurl {
+  0% { transform: scaleY(0.1); }
+  100% { transform: scaleY(1); }
+}
+
+.animate-scroll-unfurl {
+  animation: scroll-unfurl 0.8s ease-out forwards;
+  transform-origin: top center;
+}
+
+@keyframes wax-drip {
+  0% { height: 0; }
+  100% { height: 15px; }
+}
+
+.animate-wax-drip {
+  animation: wax-drip 2s ease-out forwards;
+}
+
+/* Medieval Ink Effects */
+.ink-spill {
   position: relative;
 }
 
-.royal-corner-ornament::before {
+.ink-spill::before {
   content: '';
   position: absolute;
-  width: 18px;
-  height: 18px;
-  border-top: 2px solid rgba(212, 175, 55, 0.7);
-  border-left: 2px solid rgba(212, 175, 55, 0.7);
-  top: 5px;
-  left: 5px;
+  bottom: -5px;
+  right: -10px;
+  width: 20px;
+  height: 20px;
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 50% 60% 40% 50%;
+  transform: rotate(30deg);
+  opacity: 0.2;
 }
 
-.royal-corner-ornament::after {
-  content: '';
+/* Scrollwork Decorations */
+.scrollwork {
+  position: relative;
+}
+
+.scrollwork::before,
+.scrollwork::after {
+  content: '❧';
+  font-size: 24px;
+  color: #D4AF37;
   position: absolute;
-  width: 18px;
-  height: 18px;
-  border-bottom: 2px solid rgba(212, 175, 55, 0.7);
-  border-right: 2px solid rgba(212, 175, 55, 0.7);
-  bottom: 5px;
-  right: 5px;
+  top: 10px;
 }
 
-/* Font styles for medieval theme */
-.font-medieval {
-  font-family: 'Cinzel', 'Georgia', serif;
-  font-weight: 600;
-  letter-spacing: 0.5px;
+.scrollwork::before {
+  left: 10px;
 }
 
-/* Enhanced background style for medieval themes */
+.scrollwork::after {
+  right: 10px;
+  transform: scaleX(-1);
+}
+
+/* Throne background */
 .throne-bg {
-  position: relative;
-  background-color: #0D1117;
-  background-image: 
-    radial-gradient(rgba(212, 175, 55, 0.12) 1px, transparent 1px),
-    radial-gradient(rgba(212, 175, 55, 0.08) 1px, transparent 1px);
-  background-size: 20px 20px;
-  background-position: 0 0, 10px 10px;
+  background-color: var(--background);
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23D4AF37' fill-opacity='0.03' fill-rule='evenodd'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/svg%3E");
 }
