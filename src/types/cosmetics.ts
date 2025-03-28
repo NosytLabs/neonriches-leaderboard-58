@@ -67,7 +67,7 @@ export const getRarityBorderColor = (rarity: CosmeticRarity): string => {
   }
 };
 
-// This is the missing function that's causing the error
+// This is the function that was missing proper export
 export const getRandomCosmetic = (
   amount: number,
   preferredCategory?: string
@@ -133,4 +133,50 @@ export const getRandomCosmetic = (
   } else {
     return 'common';
   }
+};
+
+// Add new utility functions for better animation and effects
+export const getCosmeticPreviewStyle = (
+  rarity: CosmeticRarity,
+  animate: boolean = true
+): string => {
+  const baseClasses = getRarityBgColor(rarity) + ' ' + getRarityBorderColor(rarity);
+  
+  if (!animate) return baseClasses;
+  
+  switch (rarity) {
+    case 'legendary':
+      return `${baseClasses} animate-pulse-slow`;
+    case 'epic':
+      return `${baseClasses} animate-border-pulse-flame`;
+    case 'rare':
+      return `${baseClasses} animate-royal-pulse`;
+    default:
+      return baseClasses;
+  }
+};
+
+export const getCosmeticDisplayName = (cosmetic: CosmeticItem): string => {
+  if (!cosmetic) return '';
+  
+  let prefix = '';
+  
+  switch (cosmetic.rarity) {
+    case 'legendary':
+      prefix = '★ Legendary';
+      break;
+    case 'epic':
+      prefix = '✦ Epic';
+      break;
+    case 'rare':
+      prefix = '♦ Rare';
+      break;
+    case 'uncommon':
+      prefix = '◆ Uncommon';
+      break;
+    default:
+      prefix = 'Common';
+  }
+  
+  return `${prefix} ${cosmetic.name}`;
 };
