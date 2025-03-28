@@ -1,46 +1,45 @@
 
 import { Theater, Egg, AlertCircle, Meh, Music } from 'lucide-react';
 import { ExtendedMockeryAction, MockeryAction, MockeryActionColor, MockeryTier } from '@/types/mockery';
-import React from 'react';
 
 // Export ExtendedMockeryAction type
 export type { ExtendedMockeryAction };
 
 // Get icon for mockery action
-export const getMockeryActionIcon = (action: ExtendedMockeryAction): React.ReactNode => {
+export const getMockeryActionIcon = (action: ExtendedMockeryAction): string => {
   switch (action) {
     case 'tomatoes':
-      return <div className="text-red-500">🍅</div>;
+      return 'tomato';
     case 'eggs':
-      return <Egg className="text-yellow-200" size={16} />;
+      return 'egg';
     case 'stocks':
-      return <div className="text-amber-700">🔒</div>;
+      return 'stocks';
     case 'silence':
-      return <div className="text-gray-400">🤐</div>;
+      return 'silence';
     case 'drama':
-      return <Theater className="text-emerald-400" size={16} />;
+      return 'drama';
     case 'courtJester':
-      return <div className="text-purple-400">🃏</div>;
+      return 'jester';
     case 'jester':
-      return <div className="text-purple-400">🃏</div>;
+      return 'jester';
     case 'dunce':
-      return <div className="text-amber-400">👑</div>;
+      return 'dunce';
     case 'crown':
-      return <div className="text-amber-400">👑</div>;
+      return 'crown';
     case 'scroll':
-      return <div className="text-gray-400">📜</div>;
+      return 'scroll';
     case 'shield-off':
-      return <div className="text-red-500">🛡️</div>;
+      return 'shield-off';
     case 'message-square-off':
-      return <div className="text-blue-500">💬</div>;
+      return 'message-square-off';
     case 'taunt':
-      return <Meh className="text-orange-400" size={16} />;
+      return 'taunt';
     case 'roast':
-      return <Music className="text-red-400" size={16} />;
+      return 'roast';
     case 'ridicule':
-      return <Music className="text-purple-400" size={16} />;
+      return 'ridicule';
     default:
-      return <AlertCircle className="text-gray-400" size={16} />;
+      return 'default';
   }
 };
 
