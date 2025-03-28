@@ -5,12 +5,13 @@ import { UserProfile } from '@/types/user';
 import { useProfileBoost, BoostEffect } from '@/hooks/use-profile-boost';
 import { Sparkles, Clock } from 'lucide-react';
 
-interface ProfileBoostDisplayProps {
+// Define props interface explicitly
+export interface ProfileBoostDisplayProps {
   user: UserProfile;
 }
 
-// Explicitly defining component with proper props interface
-const ProfileBoostDisplay = ({ user }: ProfileBoostDisplayProps) => {
+// Use React.FC with the interface to be explicit about component typing
+const ProfileBoostDisplay: React.FC<ProfileBoostDisplayProps> = ({ user }) => {
   const { getActiveBoosts, boostEffects, getTimeRemaining } = useProfileBoost(user);
   const activeBoosts = getActiveBoosts();
   
