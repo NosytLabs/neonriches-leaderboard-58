@@ -52,4 +52,5 @@ export interface TeamMember {
   contribution: number;
   rank: number;
   joinDate: string;
+  team?: TeamColor;
 }

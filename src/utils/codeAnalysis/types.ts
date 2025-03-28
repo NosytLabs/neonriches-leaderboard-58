@@ -53,14 +53,6 @@ export interface UnusedFunction extends CodeLocation {
   name: string;
 }
 
-// Mock ESLint type for analysis
-export class MockESLint {
-  async lintFiles(files: string[]) {
-    // Simple mock implementation
-    return [];
-  }
-}
-
 // Project metrics
 export interface ProjectMetrics {
   projectSize: number; // in KB
@@ -83,4 +75,12 @@ export interface AnalysisResult {
     beforeCleanup: ProjectMetrics;
     afterCleanup: ProjectMetrics;
   };
+}
+
+// Mock ESLint type for analysis
+export class MockESLint {
+  async lintFiles(files: string[]) {
+    // Simple mock implementation
+    return [];
+  }
 }

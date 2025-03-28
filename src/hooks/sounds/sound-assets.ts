@@ -1,23 +1,8 @@
 
-// Define the sound types available in the app
-export type SoundNames = 
-  | 'coinDrop'
-  | 'reward'
-  | 'notification'
-  | 'click'
-  | 'success'
-  | 'error'
-  | 'royalAnnouncement'
-  | 'levelUp'
-  | 'purchase'
-  | 'shame'
-  | 'swordClash'
-  | 'pageTransition'
-  | 'wish'
-  | 'pageChange';
+import { SoundType } from './types';
 
 // Sound asset paths
-export const soundAssets: Record<SoundNames, string> = {
+export const soundAssets: Record<SoundType, string> = {
   coinDrop: '/sounds/coin-drop.mp3',
   reward: '/sounds/reward.mp3',
   notification: '/sounds/notification.mp3',
@@ -31,11 +16,19 @@ export const soundAssets: Record<SoundNames, string> = {
   swordClash: '/sounds/sword-clash.mp3',
   pageTransition: '/sounds/page-transition.mp3',
   wish: '/sounds/wish.mp3',
-  pageChange: '/sounds/page-transition.mp3' // Using page-transition for pageChange
+  pageChange: '/sounds/page-transition.mp3', // Using page-transition for pageChange
+  parchmentUnfurl: '/sounds/parchment-unfurl.mp3',
+  seal: '/sounds/seal.mp3',
+  medallion: '/sounds/medallion.mp3',
+  trumpet: '/sounds/trumpet.mp3',
+  noblesLaugh: '/sounds/nobles-laugh.mp3',
+  inkScribble: '/sounds/ink-scribble.mp3',
+  hover: '/sounds/hover.mp3',
+  advertisement: '/sounds/advertisement.mp3'
 };
 
 // Volume presets for sounds (0 to 1)
-export const defaultVolumes: Record<SoundNames, number> = {
+export const defaultVolumes: Record<SoundType, number> = {
   coinDrop: 0.4,
   reward: 0.3,
   notification: 0.2,
@@ -49,5 +42,13 @@ export const defaultVolumes: Record<SoundNames, number> = {
   swordClash: 0.3,
   pageTransition: 0.2,
   wish: 0.3,
-  pageChange: 0.2
+  pageChange: 0.2,
+  parchmentUnfurl: 0.4,
+  seal: 0.4,
+  medallion: 0.5,
+  trumpet: 0.6,
+  noblesLaugh: 0.5,
+  inkScribble: 0.3,
+  hover: 0.2,
+  advertisement: 0.4
 };

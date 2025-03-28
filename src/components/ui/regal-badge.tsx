@@ -1,22 +1,10 @@
 
 import React from 'react';
 import { cn } from '@/lib/utils';
+import type { RegalBadgeProps } from '@/types/ui-types';
 
 type BadgeVariant = 'default' | 'outline' | 'success' | 'warning' | 'danger' | 'info' | 'royal';
 type BadgeSize = 'sm' | 'md' | 'lg';
-
-export interface RegalBadgeProps {
-  variant?: BadgeVariant;
-  size?: BadgeSize;
-  className?: string;
-  children?: React.ReactNode;
-  style?: React.CSSProperties;
-  data?: { [key: string]: string };
-  id?: string;
-  hidden?: boolean;
-  onClick?: () => void;
-  tier?: string; // Add tier property
-}
 
 const RegalBadge: React.FC<RegalBadgeProps> = ({
   variant = 'default',
@@ -81,8 +69,8 @@ const RegalBadge: React.FC<RegalBadgeProps> = ({
     <span
       className={cn(
         'inline-flex items-center justify-center rounded-full font-medium transition-colors',
-        sizeClasses[size],
-        variantClasses[variant],
+        sizeClasses[size as BadgeSize],
+        variantClasses[variant as BadgeVariant],
         getTierClass(),
         onClick && 'cursor-pointer hover:bg-opacity-80',
         hidden && 'hidden',

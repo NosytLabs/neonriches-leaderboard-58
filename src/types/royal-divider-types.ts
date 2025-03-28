@@ -1,5 +1,6 @@
 
 export type RoyalDividerVariant = 
+  | 'default'
   | 'simple' 
   | 'ornate' 
   | 'double' 
@@ -9,7 +10,8 @@ export type RoyalDividerVariant =
   | 'quill'
   | 'treasure'
   | 'line'
-  | 'crown';
+  | 'crown'
+  | 'fancy';
 
 export type RoyalButtonVariant = 
   | 'royal'

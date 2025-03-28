@@ -1,6 +1,7 @@
 
 import { useEffect, useRef, useCallback, useState } from 'react';
 import type { SoundType } from './sounds/types';
+import { soundAssets, defaultVolumes } from './sounds/sound-assets';
 
 const useNotificationSounds = () => {
   const sounds = useRef<Record<string, HTMLAudioElement>>({});
@@ -9,34 +10,8 @@ const useNotificationSounds = () => {
 
   // Initialize audio objects
   useEffect(() => {
-    // Sound paths - in a real app, these would be actual sound files
-    const soundPaths: Record<SoundType, string> = {
-      notification: '/sounds/notification.mp3',
-      success: '/sounds/success.mp3',
-      error: '/sounds/error.mp3',
-      shame: '/sounds/shame.mp3',
-      purchase: '/sounds/purchase.mp3',
-      levelUp: '/sounds/level-up.mp3',
-      swordClash: '/sounds/sword-clash.mp3',
-      click: '/sounds/click.mp3',
-      hover: '/sounds/hover.mp3',
-      coinDrop: '/sounds/coin-drop.mp3',
-      pageTransition: '/sounds/page-transition.mp3',
-      parchmentUnfurl: '/sounds/parchment-unfurl.mp3',
-      seal: '/sounds/seal.mp3',
-      royalAnnouncement: '/sounds/royal-announcement.mp3',
-      reward: '/sounds/reward.mp3',
-      wish: '/sounds/wish.mp3',
-      advertisement: '/sounds/advertisement.mp3',
-      pageChange: '/sounds/page-change.mp3',
-      trumpet: '/sounds/trumpet.mp3',
-      medallion: '/sounds/medallion.mp3',
-      noblesLaugh: '/sounds/nobles-laugh.mp3',
-      inkScribble: '/sounds/ink-scribble.mp3'
-    };
-
     // Create audio objects for each sound
-    Object.entries(soundPaths).forEach(([key, path]) => {
+    Object.entries(soundAssets).forEach(([key, path]) => {
       try {
         sounds.current[key] = new Audio(path);
         sounds.current[key].preload = 'auto';
@@ -62,7 +37,8 @@ const useNotificationSounds = () => {
     try {
       if (isMounted.current && sounds.current[type]) {
         const audio = sounds.current[type];
-        audio.volume = volume;
+        // Use default volume or override with provided volume
+        audio.volume = volume || defaultVolumes[type] || 0.5;
         audio.currentTime = 0;
         
         // Some browsers require user interaction before playing audio

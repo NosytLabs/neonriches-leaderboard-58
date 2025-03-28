@@ -8,13 +8,7 @@ export const premiumSoundPacks: PremiumSoundPackDetails[] = [
     name: 'Royal Grandeur',
     description: 'Elevate your noble experience with majestic trumpets, elegant harps, and regal fanfares.',
     price: 4.99,
-    sounds: [
-      'trumpet', 
-      'medallion', 
-      'royalAnnouncement',
-      'parchmentUnfurl',
-      'seal'
-    ],
+    sounds: ['trumpet', 'medallion', 'royalAnnouncement', 'parchmentUnfurl', 'seal'],
     features: [
       'Royal fanfare sounds',
       'Trumpet announcements',
@@ -30,12 +24,7 @@ export const premiumSoundPacks: PremiumSoundPackDetails[] = [
     name: 'Medieval Ambience',
     description: 'Transport yourself to the medieval times with authentic castle sounds, swords, and market ambience.',
     price: 3.99,
-    sounds: [
-      'swordClash',
-      'pageTransition',
-      'noblesLaugh',
-      'inkScribble'
-    ],
+    sounds: ['swordClash', 'pageTransition', 'noblesLaugh', 'inkScribble'],
     features: [
       'Sword clashing sounds',
       'Page turning effects',
@@ -50,11 +39,7 @@ export const premiumSoundPacks: PremiumSoundPackDetails[] = [
     name: 'Court Jester',
     description: 'Add humor to your royal experience with comedic sound effects fit for a satirical realm.',
     price: 2.99,
-    sounds: [
-      'noblesLaugh',
-      'shame',
-      'wish'
-    ],
+    sounds: ['noblesLaugh', 'shame', 'wish'],
     features: [
       'Jester bell sounds',
       'Comedic interludes',
@@ -69,12 +54,7 @@ export const premiumSoundPacks: PremiumSoundPackDetails[] = [
     name: 'Elegant Nobility',
     description: 'Subtle, sophisticated sound effects for the discerning noble.',
     price: 5.99,
-    sounds: [
-      'parchmentUnfurl',
-      'seal',
-      'inkScribble',
-      'medallion'
-    ],
+    sounds: ['parchmentUnfurl', 'seal', 'inkScribble', 'medallion'],
     features: [
       'Delicate parchment sounds',
       'Subtle ambience',
@@ -89,11 +69,7 @@ export const premiumSoundPacks: PremiumSoundPackDetails[] = [
     name: 'Mystic Kingdom',
     description: 'Enchanted sound effects that bring magic to your noble journey.',
     price: 4.99,
-    sounds: [
-      'wish',
-      'levelUp',
-      'purchase'
-    ],
+    sounds: ['wish', 'levelUp', 'purchase'],
     features: [
       'Magical chimes',
       'Mystical elements',

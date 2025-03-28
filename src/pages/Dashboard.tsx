@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import Header from '@/components/Header';
@@ -29,6 +30,9 @@ const Dashboard = () => {
     navigate('/auth');
     return null;
   }
+  
+  // Get userId safely from user object
+  const userId = user?.id || '';
   
   const { profileData, isLoading: profileDataLoading } = useProfileData(userId);
   trackDashboardVisit(userId);
