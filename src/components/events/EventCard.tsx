@@ -6,8 +6,9 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Event, EventType } from '@/types/events';
 import { formatDate, isEventActive } from '@/utils/dateUtils';
-import OptimizedImage from '@/components/ui/optimized-image';
+import { Image } from '@/components/ui/image';
 import { cn } from '@/lib/utils';
+import { useIntersectionObserver } from '@/hooks/use-intersection-observer';
 
 interface EventCardProps {
   event: Event;
@@ -24,12 +25,19 @@ const EventCard: React.FC<EventCardProps> = ({
   active = false,
   className
 }) => {
+  const [ref, isVisible] = useIntersectionObserver<HTMLDivElement>({
+    threshold: 0.1,
+    rootMargin: '100px',
+    once: true
+  });
+  
   const isActive = active || isEventActive(event.startDate, event.endDate);
   const eventName = event.name || event.title;
   const eventImage = event.image || event.imageUrl;
   
   return (
     <Card 
+      ref={ref}
       className={cn(
         "glass-morphism overflow-hidden border-white/10 transition-all duration-300 hover:border-royal-gold/30",
         isActive && "border-l-royal-gold border-l-2",
@@ -37,9 +45,9 @@ const EventCard: React.FC<EventCardProps> = ({
       )}
       onClick={onClick}
     >
-      {!compact && eventImage && (
+      {!compact && eventImage && isVisible && (
         <div className="relative h-40 w-full overflow-hidden">
-          <OptimizedImage
+          <Image
             src={eventImage}
             alt={eventName}
             className="w-full h-full"

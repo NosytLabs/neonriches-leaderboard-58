@@ -1,39 +1,105 @@
 
+import React, { Suspense, lazy } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Layout from './components/layout/Layout';
-import Home from './pages/Home';
-import Dashboard from './pages/Dashboard';
-import Leaderboard from './pages/Leaderboard';
-import Teams from './pages/Teams';
-import Profile from './pages/Profile';
-import Features from './pages/Features';
-import Settings from './pages/Settings';
-import Events from './pages/Events';
-import Mockery from './pages/Mockery';
-import Help from './pages/Help';
-import Privacy from './pages/Privacy';
-import Terms from './pages/Terms';
-import NotFound from './pages/NotFound';
-import Chat from './pages/Chat';
+
+// Replace static imports with lazy-loaded components
+const Home = lazy(() => import('./pages/Home'));
+const Dashboard = lazy(() => import('./pages/Dashboard'));
+const Leaderboard = lazy(() => import('./pages/Leaderboard'));
+const Teams = lazy(() => import('./pages/Teams'));
+const Profile = lazy(() => import('./pages/Profile'));
+const Features = lazy(() => import('./pages/Features'));
+const Settings = lazy(() => import('./pages/Settings'));
+const Events = lazy(() => import('./pages/Events'));
+const Mockery = lazy(() => import('./pages/Mockery'));
+const Help = lazy(() => import('./pages/Help'));
+const Privacy = lazy(() => import('./pages/Privacy'));
+const Terms = lazy(() => import('./pages/Terms'));
+const NotFound = lazy(() => import('./pages/NotFound'));
+const Chat = lazy(() => import('./pages/Chat'));
+
+// Loading fallback
+const PageLoader = () => (
+  <div className="flex items-center justify-center min-h-[50vh]">
+    <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-royal-gold"></div>
+  </div>
+);
 
 function App() {
   return (
     <Routes>
       <Route path="/" element={<Layout />}>
-        <Route index element={<Home />} />
-        <Route path="dashboard" element={<Dashboard />} />
-        <Route path="leaderboard" element={<Leaderboard />} />
-        <Route path="teams" element={<Teams />} />
-        <Route path="profile/:username" element={<Profile />} />
-        <Route path="features" element={<Features />} />
-        <Route path="settings" element={<Settings />} />
-        <Route path="events" element={<Events />} />
-        <Route path="mockery" element={<Mockery />} />
-        <Route path="chat" element={<Chat />} />
-        <Route path="help" element={<Help />} />
-        <Route path="privacy" element={<Privacy />} />
-        <Route path="terms" element={<Terms />} />
-        <Route path="*" element={<NotFound />} />
+        <Route index element={
+          <Suspense fallback={<PageLoader />}>
+            <Home />
+          </Suspense>
+        } />
+        <Route path="dashboard" element={
+          <Suspense fallback={<PageLoader />}>
+            <Dashboard />
+          </Suspense>
+        } />
+        <Route path="leaderboard" element={
+          <Suspense fallback={<PageLoader />}>
+            <Leaderboard />
+          </Suspense>
+        } />
+        <Route path="teams" element={
+          <Suspense fallback={<PageLoader />}>
+            <Teams />
+          </Suspense>
+        } />
+        <Route path="profile/:username" element={
+          <Suspense fallback={<PageLoader />}>
+            <Profile />
+          </Suspense>
+        } />
+        <Route path="features" element={
+          <Suspense fallback={<PageLoader />}>
+            <Features />
+          </Suspense>
+        } />
+        <Route path="settings" element={
+          <Suspense fallback={<PageLoader />}>
+            <Settings />
+          </Suspense>
+        } />
+        <Route path="events" element={
+          <Suspense fallback={<PageLoader />}>
+            <Events />
+          </Suspense>
+        } />
+        <Route path="mockery" element={
+          <Suspense fallback={<PageLoader />}>
+            <Mockery />
+          </Suspense>
+        } />
+        <Route path="chat" element={
+          <Suspense fallback={<PageLoader />}>
+            <Chat />
+          </Suspense>
+        } />
+        <Route path="help" element={
+          <Suspense fallback={<PageLoader />}>
+            <Help />
+          </Suspense>
+        } />
+        <Route path="privacy" element={
+          <Suspense fallback={<PageLoader />}>
+            <Privacy />
+          </Suspense>
+        } />
+        <Route path="terms" element={
+          <Suspense fallback={<PageLoader />}>
+            <Terms />
+          </Suspense>
+        } />
+        <Route path="*" element={
+          <Suspense fallback={<PageLoader />}>
+            <NotFound />
+          </Suspense>
+        } />
       </Route>
     </Routes>
   );
