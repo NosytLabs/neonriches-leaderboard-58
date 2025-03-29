@@ -1,43 +1,37 @@
 
 export type MockeryAction = 'tomatoes' | 'eggs' | 'stocks' | 'silence' | 'courtJester';
-export type MockeryTier = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
-export type ShameAction = 'tomatoes' | 'eggs' | 'stocks';
-export type ExtendedMockeryAction = MockeryAction | 'protection' | 'removal';
 
 export interface MockeryEvent {
   id: string;
-  sourceUserId: string;
-  targetUserId: string;
+  sourceUser: string;
+  targetUser: string;
   action: MockeryAction;
   timestamp: string;
-  expiresAt: string;
-  cost: number;
+  amount: number;
 }
 
-export interface MockeryEffectData {
-  id: string;
-  action: MockeryAction;
-  timestamp: string;
-  expiresAt: string;
-  appliedBy: string;
-}
-
-export interface UserMockeryStatus {
-  username: string;
-  isProtected: boolean;
-  protectionExpiresAt?: string;
-  activeEffects: MockeryEffectData[];
-  mockeryHistory: MockeryEvent[];
-}
-
-export interface MockUser {
-  id: string;
+export interface MockedUser {
   username: string;
   displayName: string;
-  profileImage?: string;
-  tier?: string;
-  lastMocked?: Date;
-  mockeryCount?: number;
-  isProtected?: boolean;
-  protectedUntil?: Date;
+  avatarUrl?: string;
+  mockedTimestamp: string;
+  mockedReason: string;
+  mockedBy: string;
+  mockedTier?: string;
+}
+
+export interface MockeryStats {
+  totalMockery: number;
+  targetedUsers: number;
+  mostUsedAction: MockeryAction;
+  highestMockerUsername: string;
+  mostMockedUsername: string;
+}
+
+export interface MockeryProtection {
+  userId: string;
+  username: string;
+  startDate: string;
+  endDate: string;
+  isActive: boolean;
 }
