@@ -1,79 +1,75 @@
 
 /**
- * Formats a number as a currency string
- * @param amount The amount to format
- * @param currency The currency code (default: USD)
- * @returns A formatted currency string
+ * Format a number in compact form (e.g., 1.2k instead of 1,234)
  */
-export const formatCurrency = (amount: number, currency = 'USD'): string => {
+export const formatCompactNumber = (num: number): string => {
+  if (num < 1000) {
+    return num.toString();
+  } else if (num < 1000000) {
+    return (num / 1000).toFixed(1) + 'k';
+  } else if (num < 1000000000) {
+    return (num / 1000000).toFixed(1) + 'M';
+  } else {
+    return (num / 1000000000).toFixed(1) + 'B';
+  }
+};
+
+/**
+ * Format a dollar amount with $ symbol and appropriate decimals
+ */
+export const formatDollarAmount = (amount: number): string => {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
-    currency,
-    minimumFractionDigits: 2,
+    currency: 'USD',
+    minimumFractionDigits: amount % 1 === 0 ? 0 : 2,
     maximumFractionDigits: 2
   }).format(amount);
 };
 
 /**
- * Formats a file size in bytes to a readable string
- * @param bytes The size in bytes
- * @returns A formatted file size string
+ * Format a date in a relative time format (e.g., "2 days ago")
  */
-export const formatFileSize = (bytes: number): string => {
-  if (bytes === 0) return '0 Bytes';
+export const formatRelativeTime = (dateString: string): string => {
+  const date = new Date(dateString);
+  const now = new Date();
+  const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
   
-  const k = 1024;
-  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  if (diffInSeconds < 60) {
+    return `${diffInSeconds} second${diffInSeconds !== 1 ? 's' : ''} ago`;
+  }
   
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  const diffInMinutes = Math.floor(diffInSeconds / 60);
+  if (diffInMinutes < 60) {
+    return `${diffInMinutes} minute${diffInMinutes !== 1 ? 's' : ''} ago`;
+  }
+  
+  const diffInHours = Math.floor(diffInMinutes / 60);
+  if (diffInHours < 24) {
+    return `${diffInHours} hour${diffInHours !== 1 ? 's' : ''} ago`;
+  }
+  
+  const diffInDays = Math.floor(diffInHours / 24);
+  if (diffInDays < 30) {
+    return `${diffInDays} day${diffInDays !== 1 ? 's' : ''} ago`;
+  }
+  
+  const diffInMonths = Math.floor(diffInDays / 30);
+  if (diffInMonths < 12) {
+    return `${diffInMonths} month${diffInMonths !== 1 ? 's' : ''} ago`;
+  }
+  
+  const diffInYears = Math.floor(diffInMonths / 12);
+  return `${diffInYears} year${diffInYears !== 1 ? 's' : ''} ago`;
 };
 
 /**
- * Formats a number with commas
- * @param num The number to format
- * @returns A number with commas
+ * Format a date in a human-readable format (e.g., "Jan 1, 2023")
  */
-export const formatNumber = (num: number): string => {
-  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-};
-
-/**
- * Formats a date to a localized string
- * @param date The date to format
- * @param options Intl.DateTimeFormatOptions
- * @returns A formatted date string
- */
-export const formatDate = (date: string | Date, options?: Intl.DateTimeFormatOptions): string => {
-  const dateObj = typeof date === 'string' ? new Date(date) : date;
-  
-  return dateObj.toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
+export const formatDate = (dateString: string): string => {
+  const date = new Date(dateString);
+  return date.toLocaleDateString('en-US', {
+    month: 'short',
     day: 'numeric',
-    ...options
+    year: 'numeric'
   });
-};
-
-/**
- * Truncates a string to a specified length
- * @param str The string to truncate
- * @param length The maximum length
- * @returns A truncated string
- */
-export const truncateString = (str: string, length = 50): string => {
-  if (!str) return '';
-  if (str.length <= length) return str;
-  
-  return str.substring(0, length) + '...';
-};
-
-/**
- * Formats a number as a percentage
- * @param value The value (0-1)
- * @param decimals The number of decimal places
- * @returns A formatted percentage string
- */
-export const formatPercentage = (value: number, decimals = 0): string => {
-  return (value * 100).toFixed(decimals) + '%';
 };

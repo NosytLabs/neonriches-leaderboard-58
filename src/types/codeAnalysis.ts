@@ -66,12 +66,12 @@ export interface PerformanceIssue {
 }
 
 export interface ProjectMetrics {
-  beforeCleanup?: {
+  beforeCleanup: {
     projectSize: number;
     fileCount: number;
     dependencyCount: number;
   };
-  afterCleanup?: {
+  afterCleanup: {
     projectSize: number;
     fileCount: number;
     dependencyCount: number;

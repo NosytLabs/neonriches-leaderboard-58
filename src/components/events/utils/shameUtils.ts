@@ -1,20 +1,9 @@
 
 import { User } from '@/types/user';
+import { MockeryAction } from '@/types/mockery';
+import { Crown, Egg, MessageSquare, Music, VolumeX, User as UserIcon, Flame, Star, Award, AlertTriangle, Skull, ThumbsDown, CloudLightning } from 'lucide-react';
 
-export type ShameAction = 
-  | 'tomatoes'
-  | 'eggs'
-  | 'stocks'
-  | 'silence'
-  | 'courtJester'
-  | 'jester'
-  | 'protected'
-  | 'immune'
-  | 'dunce'
-  | 'roast'
-  | 'ridicule'
-  | 'taunt'
-  | 'drama';
+export type ShameAction = MockeryAction;
 
 export interface ShameEvent {
   id: string;
@@ -43,6 +32,29 @@ export const getShameActionName = (action: ShameAction): string => {
     case 'taunt': return 'Royal Taunt';
     case 'drama': return 'Court Drama';
     default: return 'Unknown';
+  }
+};
+
+export const getShameActionTitle = (action: ShameAction): string => {
+  return getShameActionName(action);
+};
+
+export const getShameActionIcon = (action: ShameAction) => {
+  switch (action) {
+    case 'tomatoes': return Egg;
+    case 'eggs': return Egg;
+    case 'stocks': return AlertTriangle;
+    case 'silence': return VolumeX;
+    case 'courtJester': return Crown;
+    case 'jester': return Crown;
+    case 'protected': return Shield;
+    case 'immune': return Star;
+    case 'dunce': return UserIcon;
+    case 'roast': return Flame;
+    case 'ridicule': return ThumbsDown;
+    case 'taunt': return MessageSquare;
+    case 'drama': return CloudLightning;
+    default: return Crown;
   }
 };
 
@@ -133,3 +145,59 @@ export const isUserProtected = (user: User): boolean => {
     new Date(boost.endDate) > now
   );
 };
+
+// Additional functions needed by components
+export const hasWeeklyDiscount = (action: ShameAction): boolean => {
+  // Example implementation: discounts on weekends
+  const now = new Date();
+  const dayOfWeek = now.getDay(); // 0 is Sunday, 6 is Saturday
+  
+  return dayOfWeek === 0 || dayOfWeek === 6;
+};
+
+export const getWeeklyDiscountedAction = (): ShameAction => {
+  // Return a random action that's discounted this week
+  const actions: ShameAction[] = ['tomatoes', 'eggs', 'dunce'];
+  return actions[Math.floor(Math.random() * actions.length)];
+};
+
+export const getDiscountedShamePrice = (action: ShameAction): number => {
+  const basePrice = getShameActionPrice(action);
+  
+  if (hasWeeklyDiscount(action)) {
+    return basePrice * 0.7; // 30% discount
+  }
+  
+  return basePrice;
+};
+
+export const getMockeryColor = (action: ShameAction): string => {
+  switch (action) {
+    case 'tomatoes': return 'text-red-500';
+    case 'eggs': return 'text-yellow-300';
+    case 'stocks': return 'text-amber-700';
+    case 'silence': return 'text-gray-400';
+    case 'courtJester': return 'text-purple-400';
+    case 'jester': return 'text-indigo-400';
+    case 'protected': return 'text-blue-400';
+    case 'immune': return 'text-royal-gold';
+    case 'dunce': return 'text-gray-400';
+    case 'roast': return 'text-orange-500';
+    case 'ridicule': return 'text-pink-400';
+    case 'taunt': return 'text-green-400';
+    case 'drama': return 'text-violet-400';
+    default: return 'text-gray-400';
+  }
+};
+
+export const getMockeryText = (action: ShameAction): string => {
+  return getShameActionDescription(action);
+};
+
+export const getMockeryCost = (action: ShameAction): number => {
+  return getShameActionPrice(action);
+};
+
+// Import and re-export missing Shield component
+import { Shield } from 'lucide-react';
+export { Shield };

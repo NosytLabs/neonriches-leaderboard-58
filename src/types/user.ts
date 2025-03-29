@@ -18,6 +18,10 @@ export interface User {
   profileBoosts?: ProfileBoost[];
   cosmetics?: UserCosmetics;
   activeTitle?: string | null;
+  walletAddress?: string;
+  subscription?: UserSubscription;
+  spentAmount?: number;
+  spendStreak?: number;
   
   // Additional properties needed by components
   rank?: number;
@@ -26,8 +30,6 @@ export interface User {
   joinedAt?: string;
   socialLinks?: SocialLink[];
   profileImages?: ProfileImage[];
-  spendStreak?: number;
-  spentAmount?: number;
   badges?: string[];
   profileViews?: number;
   profileClicks?: number;
@@ -40,8 +42,6 @@ export interface User {
     image: string;
   };
   settings?: UserSettings;
-  subscription?: UserSubscription;
-  walletAddress?: string;
   role?: UserRole;
   isVerified?: boolean;
   lastLoginDate?: string;

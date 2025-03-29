@@ -55,12 +55,45 @@ export const addCosmeticByCategoryString = (
   };
   
   // Check if category exists in cosmetics
-  if (category in currentCosmetics) {
+  const validCategories = [
+    'borders', 'colors', 'fonts', 'emojis', 'titles', 
+    'backgrounds', 'effects', 'badges', 'themes'
+  ];
+  
+  if (validCategories.includes(category)) {
     const updatedCosmetics = { ...currentCosmetics };
-    const categoryItems = updatedCosmetics[category as keyof UserCosmetics] as string[];
     
-    if (!categoryItems.includes(cosmeticId)) {
-      updatedCosmetics[category as keyof UserCosmetics] = [...categoryItems, cosmeticId] as any;
+    // Safely handle the category
+    switch (category) {
+      case 'borders':
+        updatedCosmetics.borders = [...updatedCosmetics.borders, cosmeticId];
+        break;
+      case 'colors':
+        updatedCosmetics.colors = [...updatedCosmetics.colors, cosmeticId];
+        break;
+      case 'fonts':
+        updatedCosmetics.fonts = [...updatedCosmetics.fonts, cosmeticId];
+        break;
+      case 'emojis':
+        updatedCosmetics.emojis = [...updatedCosmetics.emojis, cosmeticId];
+        break;
+      case 'titles':
+        updatedCosmetics.titles = [...updatedCosmetics.titles, cosmeticId];
+        break;
+      case 'backgrounds':
+        updatedCosmetics.backgrounds = [...updatedCosmetics.backgrounds, cosmeticId];
+        break;
+      case 'effects':
+        updatedCosmetics.effects = [...updatedCosmetics.effects, cosmeticId];
+        break;
+      case 'badges':
+        updatedCosmetics.badges = [...updatedCosmetics.badges, cosmeticId];
+        break;
+      case 'themes':
+        updatedCosmetics.themes = [...updatedCosmetics.themes, cosmeticId];
+        break;
+      default:
+        break;
     }
     
     return updatedCosmetics;
@@ -100,15 +133,17 @@ export const activateCosmetic = (
   };
   
   const propertyToUpdate = mappings[category];
+  const updatedCosmetics = { ...currentCosmetics };
   
-  if (propertyToUpdate) {
-    return {
-      ...currentCosmetics,
-      [propertyToUpdate]: cosmeticId
-    };
+  if (propertyToUpdate === 'activeBorder') {
+    updatedCosmetics.activeBorder = cosmeticId;
+  } else if (propertyToUpdate === 'activeColor') {
+    updatedCosmetics.activeColor = cosmeticId;
+  } else if (propertyToUpdate === 'activeFont') {
+    updatedCosmetics.activeFont = cosmeticId;
   }
   
-  return currentCosmetics;
+  return updatedCosmetics;
 };
 
 /**

@@ -25,6 +25,8 @@ export interface MockeryEvent {
   expiresAt: string;
   message?: string;
   isActive: boolean;
+  timestamp?: string; // Added for backward compatibility
+  username?: string; // Added for backward compatibility
 }
 
 export interface MockeryHistoryItem {
@@ -43,6 +45,7 @@ export interface UserMockeryStatus {
   activeEffects: MockeryEvent[];
   lastMockedAt?: string;
   lastMockedBy?: string;
+  username?: string; // Added for backward compatibility
 }
 
 export const mockeryActionsByTier: Record<MockeryTier, MockeryAction[]> = {
@@ -55,3 +58,25 @@ export const mockeryActionsByTier: Record<MockeryTier, MockeryAction[]> = {
 
 // Alias type for compatibility
 export type ShameAction = MockeryAction;
+
+// Additional types needed by components
+export interface MockeryEffectData {
+  id: string;
+  name: string;
+  description: string;
+  tier: MockeryTier;
+  icon: string;
+  duration: number;
+  price: number;
+  color: string;
+}
+
+export interface MockUser {
+  id: string;
+  username: string;
+  displayName?: string;
+  profileImage?: string;
+  rank?: number;
+}
+
+export type ExtendedMockeryAction = MockeryAction;
