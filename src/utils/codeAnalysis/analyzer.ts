@@ -14,7 +14,10 @@ export const analyzeCodebase = async (): Promise<AnalysisResult> => {
   // 4. Calculate metrics
   
   // For now, we'll use mocked data
-  return Promise.resolve(mockedAnalysisResults);
+  return Promise.resolve({
+    ...mockedAnalysisResults,
+    deadCodePaths: mockedAnalysisResults.deadCode // Ensure deadCodePaths exists for compatibility
+  });
 };
 
 /**
@@ -45,7 +48,17 @@ export const getProjectMetrics = async (): Promise<ProjectMetrics> => {
     largestFiles: [
       { filePath: 'src/assets/images/background.jpg', size: 1240 },
       { filePath: 'src/components/DataGrid.tsx', size: 256 },
-    ]
+    ],
+    beforeCleanup: {
+      projectSize: 8560,
+      fileCount: 342,
+      dependencyCount: 45
+    },
+    afterCleanup: {
+      projectSize: 7250,
+      fileCount: 324,
+      dependencyCount: 38
+    }
   };
 };
 
@@ -67,6 +80,16 @@ export const getProjectedMetrics = async (): Promise<ProjectMetrics> => {
     largestFiles: [
       { filePath: 'src/assets/images/background.jpg', size: 1240 },
       { filePath: 'src/components/DataGrid.tsx', size: 215 },
-    ]
+    ],
+    beforeCleanup: {
+      projectSize: 8560,
+      fileCount: 342,
+      dependencyCount: 45
+    },
+    afterCleanup: {
+      projectSize: 7250,
+      fileCount: 324,
+      dependencyCount: 38
+    }
   };
 };

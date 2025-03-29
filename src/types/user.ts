@@ -46,6 +46,7 @@ export interface User {
   isVerified?: boolean;
   lastLoginDate?: string;
   isAuthenticated?: boolean;
+  lastLogin?: string;
 }
 
 export interface ProfileBoost {
@@ -91,12 +92,12 @@ export interface ProfileImage {
   isPrimary?: boolean;
 }
 
-export type UserGender = 'male' | 'female' | 'non-binary' | 'prefer-not-to-say' | 'king' | 'queen';
+export type UserGender = 'male' | 'female' | 'non-binary' | 'prefer-not-to-say' | 'king' | 'queen' | 'jester';
 export type UserTeam = 'red' | 'green' | 'blue' | null;
-export type TeamType = 'red' | 'green' | 'blue';
+export type TeamType = 'red' | 'green' | 'blue' | 'all';
 export type UserRole = 'user' | 'admin' | 'moderator';
 export type UserStatus = 'active' | 'suspended' | 'banned';
-export type UserTier = 'basic' | 'premium' | 'royal' | 'crab' | 'fish' | 'dolphin' | 'shark' | 'whale';
+export type UserTier = 'basic' | 'premium' | 'royal' | 'crab' | 'fish' | 'dolphin' | 'shark' | 'whale' | 'free' | 'pro' | 'legendary';
 
 export type SubscriptionStatus = 'active' | 'canceled' | 'past_due' | 'trialing' | 'unpaid' | 'incomplete';
 export type SubscriptionTier = 'basic' | 'premium' | 'royal';
@@ -132,5 +133,17 @@ export interface UserSubscription {
   features: string[];
 }
 
+// Also define ProfileLink for LinksEditor
+export interface ProfileLink {
+  id: string | number;
+  title: string;
+  url: string;
+  clicks?: number;
+}
+
 // For backward compatibility with existing code
 export type UserProfile = User;
+
+// Alias Team type for backward compatibility
+export type Team = UserTeam;
+
