@@ -37,7 +37,8 @@ const ThreeDBoostShowcase: React.FC = () => {
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setSize(containerRef.current.clientWidth, containerRef.current.clientHeight);
     renderer.setPixelRatio(window.devicePixelRatio);
-    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    // Use compatible color space setting
+    renderer.outputEncoding = THREE.sRGBEncoding;
     rendererRef.current = renderer;
     containerRef.current.appendChild(renderer.domElement);
     

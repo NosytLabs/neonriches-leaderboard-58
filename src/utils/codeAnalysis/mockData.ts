@@ -1,158 +1,217 @@
 
-import { AnalysisResult } from './types';
+// Mock analysis results for development and testing purposes
 
-export const duplicateCodeMock = [
-  {
-    id: '1',
-    similarity: 0.85,
-    files: [{ path: 'src/components/ProfileCard.tsx' }, { path: 'src/components/UserCard.tsx' }],
-    lines: 12,
-    codeSnippet: `const renderUserInfo = (user) => {
-  return (
-    <div className="user-info">
-      <Avatar src={user.profileImage} alt={user.displayName} />
-      <div className="user-details">
-        <h3>{user.displayName}</h3>
-        <p className="user-role">{user.role}</p>
-      </div>
-    </div>
-  );
-};`,
-    recommendation: 'Extract to a shared UserInfo component'
-  },
-  {
-    id: '2',
-    similarity: 0.92,
-    files: [{ path: 'src/services/userService.ts' }, { path: 'src/services/profileService.ts' }],
-    lines: 15,
-    codeSnippet: `const handleApiError = (error) => {
-  if (error.response) {
-    // The request was made and the server responded with an error status
-    console.error('API Error:', error.response.data);
-    return {
-      success: false,
-      message: error.response.data.message || 'Server error',
-      status: error.response.status
-    };
-  } else if (error.request) {
-    // The request was made but no response was received
-    console.error('Network Error:', error.request);
-    return { success: false, message: 'Network error', status: 0 };
-  } else {
-    // Something happened in setting up the request
-    console.error('Request Error:', error.message);
-    return { success: false, message: error.message, status: 0 };
-  }
-};`,
-    recommendation: 'Create a shared API error handling utility'
-  }
+import { ImportInfo, VariableInfo, DuplicateCodeInfo, ComplexityItem, PerformanceIssue } from '@/types/codeAnalysis/types';
+
+// Mock unused imports
+export const mockedImports: ImportInfo[] = [
+  { name: 'useState', file: 'src/components/Header.tsx', line: 2, path: 'react' },
+  { name: 'useEffect', file: 'src/pages/Dashboard.tsx', line: 3, path: 'react' },
+  { name: 'Button', file: 'src/components/Modal.tsx', line: 5, path: '@/components/ui/button' },
 ];
 
-export const complexityReportMock = [
-  {
-    id: '1',
-    file: 'src/components/RoyalMockeryFestival.tsx',
-    name: 'handleMockery',
-    complexity: 15,
-    line: 78,
-    lines: 40,
-    issues: [
-      'Contains nested conditionals',
-      'Multiple responsibilities',
-      'Too many parameters'
-    ],
-    explanation: 'This function handles the mockery action, validates input, processes payment, and shows user feedback.'
-  },
-  {
-    id: '2',
-    file: 'src/services/leaderboardService.ts',
-    name: 'calculateRanks',
-    complexity: 12,
-    line: 124,
-    lines: 35,
-    issues: [
-      'Complex sorting algorithm',
-      'Multiple nested loops',
-      'Handles multiple team types'
-    ],
-    explanation: 'This function calculates user ranks based on spending, team contribution, and other factors.'
-  }
+// Mock unused variables
+export const mockedVariables: VariableInfo[] = [
+  { name: 'isLoading', file: 'src/pages/Profile.tsx', line: 12, type: 'boolean' },
+  { name: 'userData', file: 'src/components/UserCard.tsx', line: 15, type: 'object' },
+  { name: 'count', file: 'src/hooks/useCounter.ts', line: 8, type: 'number' },
 ];
 
-export const performanceIssuesMock = [
+// Mock unused functions
+export const mockedFunctions: VariableInfo[] = [
+  { name: 'formatDate', file: 'src/utils/formatters.ts', line: 45, type: 'function' },
+  { name: 'calculateTotal', file: 'src/utils/calculations.ts', line: 23, type: 'function' },
+  { name: 'validateEmail', file: 'src/utils/validation.ts', line: 12, type: 'function' },
+];
+
+// Mock unused CSS selectors
+export const mockedCssSelectors: VariableInfo[] = [
+  { name: '.unused-class', file: 'src/styles/globals.css', line: 156 },
+  { name: '#unique-id', file: 'src/styles/components.css', line: 78 },
+  { name: '.header-menu-item', file: 'src/styles/header.css', line: 34 },
+];
+
+// Mock unused files
+export const mockedUnusedFiles: string[] = [
+  'src/components/deprecated/OldComponent.tsx',
+  'src/utils/unused-util.ts',
+  'src/styles/unused.css',
+];
+
+// Mock unused dependencies
+export const mockedDependencies: string[] = [
+  'unused-package',
+  'deprecated-library',
+  'test-utils',
+];
+
+// Mock duplicate code findings
+export const duplicateCodeMock: DuplicateCodeInfo[] = [
   {
     id: '1',
-    description: 'Inefficient list rendering without key prop',
-    file: 'src/components/leaderboard/LeaderboardList.tsx',
-    line: 42,
-    lineNumber: 42,
+    similarity: 90,
+    files: [
+      { path: 'src/components/UserProfile.tsx' },
+      { path: 'src/components/AdminProfile.tsx' }
+    ],
+    lines: 24,
+    codeSnippet: `const fetchUserData = async (userId) => {
+  setLoading(true);
+  try {
+    const response = await fetch(\`/api/users/\${userId}\`);
+    const data = await response.json();
+    if (data.error) {
+      setError(data.error);
+      return null;
+    }
+    return data;
+  } catch (error) {
+    setError(error.message);
+    return null;
+  } finally {
+    setLoading(false);
+  }
+};`,
+    recommendation: 'Extract this fetch logic into a common utility function',
+    pattern: 'Duplicate Fetch Logic',
+    title: 'Duplicate API Fetching Logic',
+    description: 'The same API fetching pattern is used in multiple files',
     severity: 'medium',
-    recommendation: 'Add a unique key prop to each list item for better React reconciliation',
-    issue: 'Missing key prop',
-    status: 'open'
+    impact: 'Increased maintenance burden',
+    solution: 'Extract into a reusable hook or utility function'
   },
   {
     id: '2',
-    description: 'Expensive operation in render function',
-    file: 'src/components/dashboard/Dashboard.tsx',
-    line: 87,
-    lineNumber: 87,
-    severity: 'high',
-    recommendation: 'Move expensive calculations to useMemo or outside the render path',
-    issue: 'Expensive render calculation',
-    status: 'open'
+    similarity: 85,
+    files: [
+      { path: 'src/components/Dashboard.tsx' },
+      { path: 'src/components/Analytics.tsx' },
+      { path: 'src/components/Reports.tsx' }
+    ],
+    lines: 15,
+    codeSnippet: `const formatData = (rawData) => {
+  return rawData.map(item => ({
+    label: item.name,
+    value: item.count,
+    color: getColorForItem(item.type),
+    id: item.id
+  }));
+};`,
+    recommendation: 'Move this formatting logic to a shared utility',
+    pattern: 'Duplicate Data Formatting',
+    title: 'Duplicate Data Transformation Logic',
+    description: 'Similar data formatting appears in multiple components',
+    severity: 'low',
+    impact: 'Code duplication and potential inconsistency',
+    solution: 'Create a shared formatter utility function'
   }
 ];
 
-export const mockedAnalysisResults: AnalysisResult = {
-  unusedImports: [
-    { name: 'useState', source: 'react', file: 'src/components/StaticComponent.tsx', line: 1, impact: 'low' },
-    { name: 'useEffect', source: 'react', file: 'src/components/PureComponent.tsx', line: 1, impact: 'low' },
-    { name: 'Button', source: '@/components/ui/button', file: 'src/pages/UnusedButtonPage.tsx', line: 3, impact: 'low' }
-  ],
-  unusedVariables: [
-    { name: 'unusedState', file: 'src/components/ProfileEditor.tsx', line: 12, impact: 'low' },
-    { name: 'tempData', file: 'src/hooks/useDataFetching.ts', line: 24, impact: 'low' },
-    { name: 'debugMode', file: 'src/utils/logger.ts', line: 5, impact: 'medium' }
-  ],
-  unusedFunctions: [
-    { name: 'formatUserData', file: 'src/utils/formatters.ts', line: 45, impact: 'medium' },
-    { name: 'calculateBonus', file: 'src/utils/calculations.ts', line: 78, impact: 'medium' },
-    { name: 'debugLog', file: 'src/utils/logger.ts', line: 23, impact: 'low' }
-  ],
-  unusedCssSelectors: [
-    { selector: '.unused-card', file: 'src/styles/cards.css', line: 67, impact: 'low' },
-    { selector: '.legacy-button', file: 'src/styles/buttons.css', line: 112, impact: 'low' },
-    { selector: '.debug-outline', file: 'src/styles/debug.css', line: 14, impact: 'low' }
-  ],
-  unusedFiles: [
-    'src/components/deprecated/OldNavbar.tsx',
-    'src/styles/unused.css',
-    'src/utils/oldHelpers.ts'
-  ],
-  unusedSelectors: [
-    { selector: '.legacy-layout', file: 'src/styles/layouts.css', line: 88 },
-    { selector: '.debug-grid', file: 'src/styles/debug.css', line: 22 },
-    { selector: '.old-theme', file: 'src/styles/themes.css', line: 155 }
-  ],
-  unusedDependencies: [
-    'lodash-es',
-    'moment',
-    'react-spring'
-  ],
+// Mock complexity findings
+export const complexityReportMock: ComplexityItem[] = [
+  {
+    id: '1',
+    name: 'calculateUserMetrics',
+    file: 'src/utils/metricCalculations.ts',
+    complexity: 15,
+    line: 45,
+    lines: 85,
+    nestedLevel: 4,
+    issues: [
+      'Contains 4 levels of nesting',
+      'Multiple conditionals in a single function',
+      'Function has more than 80 lines'
+    ],
+    explanation: 'This function handles too many responsibilities and contains deeply nested logic',
+    cyclomaticComplexity: 12,
+    parameters: 6,
+    function: 'calculateUserMetrics',
+    path: 'src/utils/metricCalculations.ts',
+    status: 'critical',
+    title: 'Highly Complex Calculation Function',
+    description: 'This function has excessive complexity and nesting',
+    severity: 'high',
+    impact: 'Difficult to maintain and test',
+    solution: 'Split into smaller, focused functions'
+  },
+  {
+    id: '2',
+    name: 'handleFormSubmission',
+    file: 'src/components/RegistrationForm.tsx',
+    complexity: 10,
+    line: 87,
+    lines: 60,
+    nestedLevel: 3,
+    issues: [
+      'Contains 3 levels of nesting',
+      'Multiple state updates in single function',
+      'Handles multiple responsibilities'
+    ],
+    explanation: 'This function does too much: validation, API calls, state updates, and navigation',
+    cyclomaticComplexity: 8,
+    parameters: 1,
+    function: 'handleFormSubmission',
+    path: 'src/components/RegistrationForm.tsx',
+    status: 'warning',
+    title: 'Complex Form Submission Handler',
+    description: 'Event handler with too many responsibilities',
+    severity: 'medium',
+    impact: 'Difficult to debug and maintain',
+    solution: 'Split into smaller functions with single responsibilities'
+  }
+];
+
+// Mock performance issues
+export const performanceIssuesMock: PerformanceIssue[] = [
+  {
+    id: '1',
+    issue: 'Expensive operation in render',
+    description: 'Array.map is called on every render without memoization',
+    file: 'src/components/DataTable.tsx',
+    lineNumber: 42,
+    severity: 'high',
+    recommendation: 'Use useMemo to cache the mapped results'
+  },
+  {
+    id: '2',
+    issue: 'Inefficient dependency array',
+    description: 'Complex object used in useEffect dependency array',
+    file: 'src/hooks/useDataFetching.ts',
+    lineNumber: 28,
+    severity: 'medium',
+    recommendation: 'Extract primitive values or use object.id as dependency'
+  },
+  {
+    id: '3',
+    issue: 'Missing key prop in list',
+    description: 'List items are rendered without unique key props',
+    file: 'src/components/UserList.tsx',
+    lineNumber: 55,
+    severity: 'low',
+    recommendation: 'Add a unique key prop to each list item'
+  }
+];
+
+// Full analysis results
+export const mockedAnalysisResults = {
+  unusedImports: mockedImports,
+  unusedVariables: mockedVariables,
+  unusedFunctions: mockedFunctions,
+  unusedCssSelectors: mockedCssSelectors,
+  unusedFiles: mockedUnusedFiles,
+  unusedDependencies: mockedDependencies,
   duplicateCode: duplicateCodeMock,
   complexCode: complexityReportMock,
   performanceIssues: performanceIssuesMock,
   summary: {
-    totalIssues: 29,
-    severity: {
-      high: 5,
-      medium: 12,
-      low: 12
-    },
-    potentialSavings: {
-      bundle: '~56 KB',
-      maintenance: 'High'
+    totalIssues: 18,
+    criticalIssues: 3,
+    warningIssues: 7,
+    infoIssues: 8,
+    estimatedSavings: {
+      fileCount: 3,
+      dependencyCount: 3,
+      sizeReduction: '45KB'
     }
   }
 };

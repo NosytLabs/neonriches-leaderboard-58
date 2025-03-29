@@ -9,6 +9,12 @@ export interface SolanaContextValue {
   hasWallet: boolean;
   walletPubkey: string | null;
   walletBalance: number;
+  connected?: boolean;
+  publicKey?: any;
+  connect?: () => Promise<void>;
+  disconnect?: () => Promise<void>;
+  signMessage?: (message: Uint8Array) => Promise<Uint8Array>;
+  sendTransaction?: (transaction: any) => Promise<string>;
   connectWallet: () => Promise<boolean>;
   disconnectWallet: () => void;
   sendSol: (to: string, amount: number) => Promise<boolean>;
@@ -208,7 +214,8 @@ export const SolanaProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     connectWallet,
     disconnectWallet,
     sendSol,
-    linkWalletToAccount
+    linkWalletToAccount,
+    connected: isConnected,
   };
 
   return (

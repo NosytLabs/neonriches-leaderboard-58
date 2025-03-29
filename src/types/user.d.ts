@@ -71,6 +71,7 @@ export interface SocialLink {
   label?: string;
   clicks?: number;
   icon?: string;
+  twitter?: string;
 }
 
 export interface ProfileLink {
@@ -126,6 +127,8 @@ export interface UserProfile extends Omit<User, 'createdAt'> {
   totalSpent: number;
   avatarUrl?: string; // Added avatarUrl property
   lastActive?: string; // Added lastActive property
+  isAuthenticated?: boolean;
+  role?: UserRole;
 }
 
 export interface LeaderboardUser {

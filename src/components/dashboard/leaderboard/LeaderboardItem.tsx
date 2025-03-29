@@ -6,8 +6,8 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Badge } from '@/components/ui/badge';
-import { User } from '@/types/user';
-import { formatCurrency, formatCompactNumber } from '@/utils/formatters';
+import { User, UserTier } from '@/types/user';
+import { formatCurrency } from '@/utils/formatters';
 import { getTeamColor } from '@/utils/teamUtils';
 import { getTierBadge } from '@/utils/tierUtils';
 
@@ -25,6 +25,7 @@ export interface LeaderboardUser {
   spentAmount?: number;
   isVerified?: boolean;
   isProtected?: boolean;
+  avatarUrl?: string;
 }
 
 export interface LeaderboardItemProps {
@@ -59,7 +60,8 @@ const LeaderboardItem: React.FC<LeaderboardItemProps> = ({
     tier,
     totalSpent = 0,
     amountSpent = 0,
-    spentAmount = 0
+    spentAmount = 0,
+    avatarUrl
   } = userData;
   
   const teamColor = getTeamColor(team);
@@ -95,6 +97,9 @@ const LeaderboardItem: React.FC<LeaderboardItemProps> = ({
   const formatRank = (rank: number) => {
     return `#${rank.toLocaleString()}`;
   };
+
+  // The userTier is safely converted here to ensure TypeScript validation
+  const userTier = tier as UserTier | undefined;
   
   return (
     <motion.div
@@ -154,7 +159,7 @@ const LeaderboardItem: React.FC<LeaderboardItemProps> = ({
           className="h-12 w-12 border-2 border-white/10 cursor-pointer hover:border-royal-gold/50 transition-colors"
           onClick={handleProfileClick}
         >
-          <AvatarImage src={profileImage} alt={displayName || username} />
+          <AvatarImage src={avatarUrl || profileImage} alt={displayName || username} />
           <AvatarFallback className="bg-gradient-to-br from-gray-800 to-gray-900">
             {getInitials()}
           </AvatarFallback>
@@ -196,10 +201,10 @@ const LeaderboardItem: React.FC<LeaderboardItemProps> = ({
               </>
             )}
             
-            {tier && (
+            {userTier && (
               <>
                 <span className="mx-1">•</span>
-                <span>{getTierBadge(tier)}</span>
+                <span>{getTierBadge(userTier)}</span>
               </>
             )}
           </div>

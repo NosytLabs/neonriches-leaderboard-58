@@ -12,4 +12,17 @@ export type TransactionType =
   | 'bonus' 
   | 'other'
   | 'mockery'
-  | 'protection';
+  | 'protection'
+  | 'cosmetic'
+  | 'wish';
+
+export interface Transaction {
+  id: string;
+  userId: string;
+  amount: number;
+  type: TransactionType;
+  description: string;
+  createdAt: string;
+  status: 'pending' | 'completed' | 'failed';
+  metadata?: Record<string, any>;
+}

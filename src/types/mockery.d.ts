@@ -41,7 +41,9 @@ export type ShameAction =
   | 'stocks'
   | 'ridicule'
   | 'shame'
-  | 'silence'; // Added silence as a ShameAction
+  | 'silence' // Added silence as a ShameAction
+  | 'courtJester'
+  | 'jester';
 
 export interface MockeryEffect {
   id: string;
@@ -78,3 +80,35 @@ export interface MockeryStats {
   mostUsed: MockeryAction;
   favoriteTarget?: string;
 }
+
+export interface MockeryEvent {
+  id: string;
+  timestamp: number;
+  action: MockeryAction;
+  targetUserId: string;
+  sourceUserId: string;
+  expiry: number;
+}
+
+export interface MockeryEffectData {
+  username: string;
+  action: MockeryAction;
+}
+
+export interface UserMockeryStatus {
+  isMocked: boolean;
+  isProtected: boolean;
+  mockeries: MockeryEffect[];
+  protection?: MockeryProtection;
+}
+
+export interface MockUser {
+  id: string;
+  username: string;
+  displayName?: string;
+  profileImage?: string;
+  tier?: string;
+  lastMocked?: number;
+}
+
+export type ExtendedMockeryAction = MockeryAction | ShameAction;

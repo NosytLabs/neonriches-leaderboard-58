@@ -1,5 +1,5 @@
 
-import { AnalysisResult } from '@/utils/codeAnalysis/types';
+import { AnalysisResult } from '@/types/codeAnalysis/types';
 import { mockedAnalysisResults, duplicateCodeMock, complexityReportMock, performanceIssuesMock } from '@/utils/codeAnalysis/mockData';
 
 /**
@@ -10,10 +10,10 @@ export const analyzeProject = async (): Promise<AnalysisResult> => {
   return {
     unusedImports: mockedAnalysisResults.unusedImports,
     unusedVariables: mockedAnalysisResults.unusedVariables,
-    unusedCssSelectors: mockedAnalysisResults.unusedCssSelectors,
-    unusedFunctions: mockedAnalysisResults.unusedFunctions,
     unusedFiles: mockedAnalysisResults.unusedFiles,
+    unusedSelectors: mockedAnalysisResults.unusedCssSelectors,
     unusedDependencies: mockedAnalysisResults.unusedDependencies,
+    unusedFunctions: mockedAnalysisResults.unusedFunctions,
     duplicateCode: duplicateCodeMock,
     complexCode: complexityReportMock,
     performanceIssues: performanceIssuesMock,
