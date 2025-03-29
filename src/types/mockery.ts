@@ -1,11 +1,47 @@
 
 export type MockeryTier = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary' | 'basic' | 'premium' | 'elite';
 
-export type MockeryAction = 'tomatoes' | 'eggs' | 'stocks' | 'silence' | 'courtJester' | 'jester' | 'protection' | 'immune' | 'dunce' | 'drama' | 'taunt';
+export type MockeryAction = 
+  | 'tomatoes' 
+  | 'eggs' 
+  | 'stocks' 
+  | 'silence' 
+  | 'courtJester' 
+  | 'jester' 
+  | 'protection' 
+  | 'immune' 
+  | 'dunce' 
+  | 'drama' 
+  | 'taunt'
+  | 'removal';
 
-export type ShameAction = 'tomatoes' | 'eggs' | 'silence' | 'roast' | 'ridicule' | 'stocks' | 'courtJester' | 'jester' | 'shame' | 'dunce';
+export type ShameAction = 
+  | 'tomatoes' 
+  | 'eggs' 
+  | 'silence' 
+  | 'roast' 
+  | 'ridicule' 
+  | 'stocks' 
+  | 'courtJester' 
+  | 'jester' 
+  | 'shame' 
+  | 'dunce';
 
-export type ExtendedMockeryAction = MockeryAction | 'protected' | 'immune' | 'jester' | 'dunce' | 'roast' | 'ridicule' | 'taunt' | 'drama';
+export type ExtendedMockeryAction = 
+  | MockeryAction 
+  | 'protected' 
+  | 'immune' 
+  | 'jester' 
+  | 'dunce' 
+  | 'roast' 
+  | 'ridicule' 
+  | 'taunt' 
+  | 'drama'
+  | 'common'
+  | 'uncommon'
+  | 'rare'
+  | 'epic'
+  | 'legendary';
 
 export interface MockeryEffect {
   id: string;
@@ -26,6 +62,9 @@ export interface MockeryEvent {
   appliedTo: string;
   timestamp: Date;
   message?: string;
+  sourceUser?: string;
+  targetUser?: string;
+  action?: MockeryAction;
 }
 
 export interface MockeryEffectData {

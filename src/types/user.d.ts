@@ -1,8 +1,8 @@
-
 import { ProfileBoost } from './boost';
 import { UserCosmetics } from './cosmetics';
 
 export type UserRole = 'admin' | 'moderator' | 'user' | 'vip';
+
 export type UserGender = 
   | 'king'
   | 'queen'
@@ -18,17 +18,17 @@ export type UserGender =
   | 'noble';
 
 export type UserTier = 
-  | 'bronze'
-  | 'silver'
-  | 'gold'
-  | 'platinum'
-  | 'diamond'
   | 'royal'
   | 'basic'
   | 'premium'
   | 'pro'
   | 'elite'
-  | 'free';
+  | 'free'
+  | 'bronze'
+  | 'silver'
+  | 'gold'
+  | 'platinum'
+  | 'diamond';
 
 export type UserTeam = 'red' | 'green' | 'blue' | 'none' | null;
 export type TeamType = 'red' | 'green' | 'blue' | 'none' | null;
@@ -104,13 +104,13 @@ export interface User {
   rank: number;
   previousRank?: number;
   walletBalance: number;
+  amountSpent: number;
   totalSpent: number;
   spentAmount?: number;
-  amountSpent?: number;
-  joinDate?: string;
+  joinedAt: string;
   createdAt?: string;
-  joinedAt?: string;
   joined: Date;
+  joinDate?: string;
   isVerified?: boolean;
   isAuthenticated?: boolean;
   gender?: UserGender;
@@ -136,12 +136,10 @@ export interface User {
     tokenId: string;
     imageUrl: string;
   };
+  spentTotal: number;
 }
 
-export interface UserProfile extends User {
-  joinedAt: string;
-  totalSpent: number;
-}
+export type UserProfile = User;
 
 export interface LeaderboardUser {
   id: string;

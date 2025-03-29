@@ -1,161 +1,140 @@
 
-import { MockeryAction, MockeryTier } from "@/types/mockery";
-import { Target, Shield, Crown, Egg, Music, VolumeX, BadgeAlert } from 'lucide-react';
-import { ElementType } from 'react';
+import { ExtendedMockeryAction, MockeryAction, MockeryTier } from '@/types/mockery';
 
-export type ExtendedMockeryAction = MockeryAction | 'protected' | 'immune' | 'jester' | 'dunce' | 'roast' | 'ridicule' | 'taunt' | 'drama';
+/**
+ * Map of mockery actions to their cooldown periods in milliseconds
+ */
+export const MOCKERY_COOLDOWNS: Record<ExtendedMockeryAction, number> = {
+  tomatoes: 1800000, // 30 minutes
+  eggs: 3600000, // 1 hour
+  stocks: 7200000, // 2 hours
+  silence: 14400000, // 4 hours
+  courtJester: 86400000, // 24 hours
+  protected: 86400000, // 24 hours
+  immune: 172800000, // 48 hours
+  jester: 43200000, // 12 hours
+  dunce: 28800000, // 8 hours
+  roast: 3600000, // 1 hour
+  ridicule: 1800000, // 30 minutes
+  taunt: 3600000, // 1 hour
+  drama: 7200000, // 2 hours
+  protection: 86400000, // 24 hours
+  removal: 3600000, // 1 hour
+} as Record<ExtendedMockeryAction, number>;
 
-// Price for each mockery action in USD
-export const mockeryPrices: Record<ExtendedMockeryAction, number> = {
-  tomatoes: 1,
-  eggs: 2.5,
-  stocks: 5,
-  silence: 10,
-  courtJester: 25,
-  protected: 10,
-  immune: 20,
-  jester: 15,
-  dunce: 5,
-  roast: 7.5,
-  ridicule: 3,
-  taunt: 2,
-  drama: 8
-};
+/**
+ * Map of mockery actions to their costs
+ */
+export const MOCKERY_COSTS: Record<ExtendedMockeryAction, number> = {
+  tomatoes: 5,
+  eggs: 10,
+  stocks: 25,
+  silence: 50,
+  courtJester: 100,
+  protected: 50,
+  immune: 200,
+  jester: 75,
+  dunce: 25,
+  roast: 15,
+  ridicule: 5,
+  taunt: 10,
+  drama: 30,
+  protection: 50,
+  removal: 25,
+} as Record<ExtendedMockeryAction, number>;
 
-// Display titles for mockery actions
-export const mockeryActionTitles: Record<ExtendedMockeryAction, string> = {
-  tomatoes: 'Throw Tomatoes',
-  eggs: 'Throw Rotten Eggs',
-  stocks: 'Place in Stocks',
-  silence: 'Royal Silence',
-  courtJester: 'Make Court Jester',
-  protected: 'Royal Protection',
-  immune: 'Royal Immunity',
-  jester: 'Jester Crown',
-  dunce: 'Dunce Cap',
-  roast: 'Royal Roast',
-  ridicule: 'Public Ridicule',
-  taunt: 'Noble Taunt',
-  drama: 'Court Drama'
-};
+/**
+ * Map of mockery actions to their display names
+ */
+export const MOCKERY_NAMES: Record<ExtendedMockeryAction, string> = {
+  tomatoes: "Throw Tomatoes",
+  eggs: "Hurl Eggs",
+  stocks: "Put in Stocks",
+  silence: "Silence",
+  courtJester: "Court Jester",
+  protected: "Protected",
+  immune: "Immunity",
+  jester: "Jester",
+  dunce: "Dunce Cap",
+  roast: "Royal Roast",
+  ridicule: "Public Ridicule",
+  taunt: "Royal Taunt",
+  drama: "Court Drama",
+  protection: "Protection",
+  removal: "Removal",
+  common: "Common",
+  uncommon: "Uncommon",
+  rare: "Rare", 
+  epic: "Epic",
+  legendary: "Legendary"
+} as Record<ExtendedMockeryAction, string>;
 
-// Descriptions for mockery actions
-export const mockeryActionDescriptions: Record<ExtendedMockeryAction, string> = {
-  tomatoes: 'Cover their profile in splattered tomatoes',
-  eggs: 'Adorn their profile with rotten eggs',
-  stocks: 'Lock them in the town stocks for public ridicule',
-  silence: 'Forbid them from posting for 24 hours',
-  courtJester: 'Force them to wear the jester\'s outfit for a week',
-  protected: 'Protect yourself from mockery for 48 hours',
-  immune: 'Gain complete immunity from all mockery for a week',
-  jester: 'Make them wear a jester crown for 3 days',
-  dunce: 'Add a dunce cap to their profile picture',
-  roast: 'Post a witty roast on their profile',
-  ridicule: 'Add laughing emojis to float around their avatar',
-  taunt: 'Send them a custom taunting message',
-  drama: 'Start court drama involving multiple users'
-};
+/**
+ * Map of mockery actions to their rarity levels
+ */
+export const MOCKERY_RARITY: Record<ExtendedMockeryAction, MockeryTier> = {
+  tomatoes: "common",
+  eggs: "uncommon",
+  stocks: "rare",
+  silence: "epic",
+  courtJester: "legendary",
+  protected: "rare",
+  immune: "legendary",
+  jester: "epic",
+  dunce: "common",
+  roast: "uncommon",
+  ridicule: "common",
+  taunt: "common",
+  drama: "rare",
+  protection: "rare",
+} as Record<ExtendedMockeryAction, MockeryTier>;
 
-// Tiers for each mockery action
-export const mockeryActionTiers: Record<ExtendedMockeryAction, MockeryTier> = {
-  tomatoes: 'common',
-  eggs: 'uncommon',
-  stocks: 'rare',
-  silence: 'epic',
-  courtJester: 'legendary',
-  protected: 'rare',
-  immune: 'legendary',
-  jester: 'epic',
-  dunce: 'common',
-  roast: 'uncommon',
-  ridicule: 'common',
-  taunt: 'common',
-  drama: 'rare'
-};
-
-// Action icons
-export const getMockeryActionIcon = (action: ExtendedMockeryAction): ElementType => {
+/**
+ * Get icon name for mockery action
+ */
+export function getMockeryIcon(action: ExtendedMockeryAction): string {
   switch (action) {
-    case 'eggs':
-      return Egg;
-    case 'stocks':
-      return Target;
-    case 'courtJester':
-      return Crown;
-    case 'silence':
-      return VolumeX;
-    case 'protected':
-      return Shield;
-    case 'immune':
-      return Shield;
-    case 'jester':
-      return Music;
-    case 'dunce':
-      return BadgeAlert;
     case 'tomatoes':
+      return 'Vegetable';
+    case 'eggs':
+      return 'Egg';
+    case 'stocks':
+      return 'Lock';
+    case 'silence':
+      return 'MessageSquareOff';
+    case 'courtJester':
+      return 'Crown';
+    case 'protected':
+      return 'ShieldCheck';
+    case 'immune':
+      return 'Shield';
+    case 'jester':
+      return 'ThumbsUp';
+    case 'dunce':
+      return 'MousePointerClick';
+    case 'roast':
+      return 'Flame';
+    case 'ridicule':
+      return 'ThumbsDown';
+    case 'taunt':
+      return 'MessageCircle';
+    case 'drama':
+      return 'Theater';
     default:
-      return Target;
+      return 'Skull';
   }
-};
+}
 
-// Helper function to get mockery action title
-export const getMockeryActionTitle = (action: ExtendedMockeryAction): string => {
-  return mockeryActionTitles[action] || 'Unknown Action';
-};
+/**
+ * Is the action a shame action
+ */
+export function isShameAction(action: MockeryAction): boolean {
+  return ['tomatoes', 'eggs', 'stocks', 'silence', 'courtJester', 'jester', 'dunce', 'roast', 'ridicule'].includes(action as string);
+}
 
-// Helper function to get mockery action description
-export const getMockeryActionDescription = (action: ExtendedMockeryAction): string => {
-  return mockeryActionDescriptions[action] || 'No description available';
-};
-
-// Helper function to get mockery action price
-export const getMockeryActionPrice = (action: ExtendedMockeryAction): number => {
-  return mockeryPrices[action] || 0;
-};
-
-// Convert a mockery tier to a human-readable string
-export const getMockeryTier = (tier: MockeryTier): string => {
-  switch (tier) {
-    case 'common':
-      return 'Common';
-    case 'uncommon':
-      return 'Uncommon';
-    case 'rare':
-      return 'Rare';
-    case 'epic':
-      return 'Epic';
-    case 'legendary':
-      return 'Legendary';
-    case 'basic':
-      return 'Basic';
-    case 'premium':
-      return 'Premium';
-    case 'elite':
-      return 'Elite';
-    default:
-      return 'Unknown';
-  }
-};
-
-// Helper function to format mockery prices with currency symbol
-export const formatMockeryPrice = (price: number): string => {
-  return `$${price.toFixed(2)}`;
-};
-
-// Helper function to get visual indicator class based on mockery tier
-export const getMockeryTierClass = (tier: MockeryTier): string => {
-  switch (tier) {
-    case 'common':
-      return 'text-gray-300';
-    case 'uncommon':
-      return 'text-green-400';
-    case 'rare':
-      return 'text-blue-400';
-    case 'epic':
-      return 'text-purple-400';
-    case 'legendary':
-      return 'text-royal-gold';
-    default:
-      return '';
-  }
-};
+/**
+ * Is the action a protection action
+ */
+export function isProtectionAction(action: MockeryAction): boolean {
+  return ['protection', 'immune'].includes(action as string);
+}

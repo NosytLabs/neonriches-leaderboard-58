@@ -1,3 +1,4 @@
 
 export { AuthProvider, useAuth } from './AuthContext';
-export type { AuthContextType, UserProfile } from './types';
+export type { AuthContextType } from '@/types/auth-context';
+export type { UserProfile } from '@/types/user';

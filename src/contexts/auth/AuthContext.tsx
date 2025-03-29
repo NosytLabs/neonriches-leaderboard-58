@@ -2,15 +2,8 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import { signInWithEmail, signUpWithEmail, signOut } from '@/services/authService';
 import { UserProfile } from '@/types/user';
-
-export interface AuthContextType {
-  user: UserProfile | null;
-  isLoading: boolean;
-  isAuthenticated: boolean;
-  login: (email: string, password: string) => Promise<void>;
-  register: (username: string, email: string, password: string) => Promise<void>;
-  logout: () => Promise<void>;
-}
+import { AuthContextType } from '@/types/auth-context';
+import { adaptUserProfileToUser, adaptUserToUserProfile } from '@/utils/userAdapter';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -24,7 +17,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     
     if (storedUser) {
       try {
-        setUser(JSON.parse(storedUser));
+        const parsedUser = JSON.parse(storedUser);
+        setUser(adaptUserToUserProfile(parsedUser));
       } catch (error) {
         console.error('Failed to parse stored user data:', error);
         localStorage.removeItem('spendthrone_user');
@@ -51,9 +45,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           rank: Math.floor(Math.random() * 100) + 1,
           team: Math.random() > 0.5 ? (Math.random() > 0.5 ? 'red' : 'green') : 'blue',
           joined: new Date(),
+          joinedAt: new Date().toISOString(),
           spentTotal: 0,
+          totalSpent: 0,
           amountSpent: Math.floor(Math.random() * 1000),
-          tier: 'basic'
+          tier: 'basic',
+          role: 'user'
         };
         
         setUser(mockUser);
@@ -85,9 +82,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           walletBalance: 50, // New users get starting balance
           rank: Math.floor(Math.random() * 1000) + 100, // Initial rank
           joined: new Date(),
+          joinedAt: new Date().toISOString(),
           spentTotal: 0,
+          totalSpent: 0,
           amountSpent: 0,
-          tier: 'basic'
+          tier: 'basic',
+          role: 'user',
+          team: 'none'
         };
         
         setUser(mockUser);
@@ -118,6 +119,77 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const updateUserProfile = async (updatedProfile: Partial<UserProfile>) => {
+    if (!user) return;
+
+    try {
+      // Create updated user by merging current user with updates
+      const updatedUser = {
+        ...user,
+        ...updatedProfile,
+      };
+
+      // Update the state and localStorage
+      setUser(updatedUser);
+      localStorage.setItem('spendthrone_user', JSON.stringify(updatedUser));
+    } catch (error) {
+      console.error('Error updating user profile:', error);
+      throw error;
+    }
+  };
+
+  const updateUser = async (userData: Partial<UserProfile>): Promise<boolean> => {
+    if (!user) return false;
+
+    try {
+      // Create updated user by merging current user with updates
+      const updatedUser = {
+        ...user,
+        ...userData,
+      };
+
+      // Update the state and localStorage
+      setUser(updatedUser);
+      localStorage.setItem('spendthrone_user', JSON.stringify(updatedUser));
+      return true;
+    } catch (error) {
+      console.error('Error updating user:', error);
+      return false;
+    }
+  };
+
+  const awardCosmetic = async (cosmeticId: string, category: string): Promise<boolean> => {
+    if (!user) return false;
+
+    try {
+      // Deep clone the current user's cosmetics
+      const currentCosmetics = user.cosmetics ? JSON.parse(JSON.stringify(user.cosmetics)) : {};
+      
+      // Add the new cosmetic to the appropriate category
+      if (!currentCosmetics[category]) {
+        currentCosmetics[category] = [];
+      }
+      
+      // Avoid duplicates
+      if (!currentCosmetics[category].includes(cosmeticId)) {
+        currentCosmetics[category].push(cosmeticId);
+      }
+      
+      // Update the user with the new cosmetics
+      const updatedUser = {
+        ...user,
+        cosmetics: currentCosmetics
+      };
+      
+      setUser(updatedUser);
+      localStorage.setItem('spendthrone_user', JSON.stringify(updatedUser));
+      return true;
+    } catch (error) {
+      console.error('Error awarding cosmetic:', error);
+      return false;
+    }
+  };
+
   return (
     <AuthContext.Provider value={{ 
       user, 
@@ -125,7 +197,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       isAuthenticated: !!user, 
       login, 
       register, 
-      logout 
+      logout,
+      signIn: login,
+      signOut: logout,
+      updateUserProfile,
+      updateUser,
+      awardCosmetic
     }}>
       {children}
     </AuthContext.Provider>

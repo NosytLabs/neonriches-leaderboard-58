@@ -10,6 +10,7 @@ import SpendThroneLogo from '@/components/brand/SpendThroneLogo';
 import UserMenu from '@/components/header/UserMenu';
 import { SolanaWalletButton } from '@/components/solana/SolanaWalletButton';
 import MoneyDisplay from '@/components/ui/money-display';
+import { adaptUserProfileToUser } from '@/utils/userAdapter';
 
 interface HeaderProps {
   transparent?: boolean;
@@ -18,6 +19,9 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ transparent = false, className }) => {
   const { user, isAuthenticated, isLoading } = useAuth();
+  
+  // Use adapter to ensure we have consistent user properties
+  const adaptedUser = user ? adaptUserProfileToUser(user) : null;
   
   return (
     <header
@@ -38,20 +42,20 @@ const Header: React.FC<HeaderProps> = ({ transparent = false, className }) => {
         <MainNav className="mx-4" />
         
         <div className="ml-auto flex items-center space-x-3">
-          {isAuthenticated && !isLoading && (
+          {isAuthenticated && !isLoading && adaptedUser && (
             <>
               <SolanaWalletButton />
               
               <div className="hidden md:flex">
                 <MoneyDisplay
-                  amount={user?.amountSpent || 0}
+                  amount={adaptedUser.totalSpent || 0}
                   size="sm"
                   animated
                   variant="gradient"
                 />
               </div>
               
-              <UserMenu user={user} />
+              <UserMenu user={adaptedUser} />
             </>
           )}
           

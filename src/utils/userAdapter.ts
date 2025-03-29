@@ -1,86 +1,59 @@
 
-import { TeamType, UserProfile } from '@/types/user';
-import { UserProfile as AuthUserProfile } from '@/contexts/auth/types';
+import { User, UserProfile, TeamType } from '@/types/user';
 
 /**
- * Ensures a UserProfile object has a valid rank value
+ * Converts a UserProfile to a User object
+ * This helps bridge the gap between different user representations in the system
  */
-export const ensureRank = (user: UserProfile | Partial<UserProfile>): UserProfile => {
+export function adaptUserProfileToUser(profile: UserProfile): User {
   return {
-    ...user,
-    rank: user.rank || 0
-  } as UserProfile;
-};
+    ...profile,
+    // Ensure all required fields are present
+    spentTotal: profile.totalSpent || profile.amountSpent || 0,
+    totalSpent: profile.totalSpent || profile.amountSpent || 0,
+    amountSpent: profile.amountSpent || profile.totalSpent || 0,
+    joinedAt: profile.joinedAt || (profile.joined ? new Date(profile.joined).toISOString() : new Date().toISOString()),
+    joined: profile.joined || new Date(profile.joinedAt || new Date())
+  };
+}
 
 /**
- * Converts a UserProfile to an AuthUserProfile
+ * Converts a User to a UserProfile object
  */
-export const convertToAuthUserProfile = (user: UserProfile): AuthUserProfile => {
-  // Ensure the team is compatible with AuthUserProfile's TeamType
-  let team: 'red' | 'green' | 'blue' | 'none' = 'none';
-  
-  if (user.team === 'red' || user.team === 'green' || user.team === 'blue') {
-    team = user.team;
-  }
-  
+export function adaptUserToUserProfile(user: User): UserProfile {
   return {
     ...user,
-    team,
-    // Add any missing required properties
-    badges: user.badges || []
-  } as AuthUserProfile;
-};
+    // Ensure all required fields are present
+    totalSpent: user.totalSpent || user.amountSpent || user.spentTotal || 0,
+    spentTotal: user.spentTotal || user.totalSpent || user.amountSpent || 0, 
+    amountSpent: user.amountSpent || user.totalSpent || user.spentTotal || 0,
+    joinedAt: user.joinedAt || (user.joined ? new Date(user.joined).toISOString() : new Date().toISOString()),
+    joined: user.joined || new Date(user.joinedAt || new Date())
+  };
+}
 
 /**
- * Converts an AuthUserProfile to a UserProfile
+ * Creates a leaderboard user from a standard user
  */
-export const convertToUserProfile = (user: AuthUserProfile): UserProfile => {
-  // Ensure the team is compatible with UserProfile's TeamType
-  let team: TeamType | null = null;
-  
-  if (user.team === 'red' || user.team === 'green' || user.team === 'blue') {
-    team = user.team;
-  }
-  
-  // Fix any avatarUrl and lastActive fields
-  const avatarUrl = user.avatarUrl || user.profileImage;
-  const lastActive = user.lastActive || new Date().toISOString();
-  
+export function createLeaderboardUser(user: Partial<User>) {
   return {
-    ...user,
-    team,
-    avatarUrl,
-    lastActive,
-    // Ensure required fields are present
-    rank: user.rank || 0,
-    joinedAt: user.joinedAt || new Date().toISOString()
-  } as UserProfile;
-};
-
-/**
- * Ensures a user object is a valid UserProfile
- */
-export const ensureUser = (user: Partial<UserProfile> | AuthUserProfile): UserProfile => {
-  // Check if this is likely an AuthUserProfile
-  if ('role' in user && typeof user.role === 'string') {
-    return convertToUserProfile(user as AuthUserProfile);
-  }
-  
-  return {
-    ...user,
-    // Ensure required fields
     id: user.id || '',
     username: user.username || '',
-    displayName: user.displayName || '',
-    totalSpent: user.totalSpent || 0,
+    displayName: user.displayName || user.username || '',
+    profileImage: user.profileImage || '',
+    tier: user.tier || 'basic',
+    team: user.team || null,
     rank: user.rank || 0,
-    joinedAt: user.joinedAt || new Date().toISOString(),
-  } as UserProfile;
-};
+    previousRank: user.previousRank || 0,
+    amountSpent: user.amountSpent || user.totalSpent || user.spentTotal || 0,
+    avatarUrl: user.avatarUrl || user.profileImage || '',
+    isVerified: user.isVerified || false,
+    isProtected: false
+  };
+}
 
 export default {
-  ensureRank,
-  convertToAuthUserProfile,
-  convertToUserProfile,
-  ensureUser
+  adaptUserProfileToUser,
+  adaptUserToUserProfile,
+  createLeaderboardUser
 };
