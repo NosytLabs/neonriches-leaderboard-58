@@ -22,8 +22,8 @@ export interface User {
   walletBalance: number;
   walletAddress?: string;
   totalSpent: number;
-  spentAmount: number;
   amountSpent: number;
+  spentAmount?: number;
   joinDate?: string;
   joinedAt?: string;
   createdAt: string;
@@ -43,6 +43,7 @@ export interface User {
   isVIP?: boolean;
   settings?: UserSettings;
   profileBoosts?: ProfileBoost[];
+  profileImages?: ProfileImage[];
   certificateNFT?: any;
 }
 
@@ -129,16 +130,3 @@ export interface UserSettings {
 }
 
 export type UserProfile = User;
-
-export interface UserCosmetics {
-  borders: string[];
-  colors: string[];
-  fonts: string[];
-  emojis: string[];
-  banners: string[];
-  themes: string[];
-  effects: string[];
-  titles: string[];
-}
-
-export type Team = UserTeam;
