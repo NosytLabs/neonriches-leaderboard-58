@@ -12,7 +12,14 @@ export type MockeryAction =
   | 'royalPie'
   | 'glitterBomb'
   | 'jokeCrown'
-  | 'memeFrame';
+  | 'memeFrame'
+  | 'eggs'
+  | 'common'
+  | 'uncommon'
+  | 'rare'
+  | 'epic'
+  | 'legendary'
+  | 'immune';
 
 export type ShameAction = 
   | 'tomatoes'
@@ -27,9 +34,12 @@ export type ShameAction =
   | 'royalPie'
   | 'glitterBomb'
   | 'jokeCrown'
-  | 'memeFrame';
+  | 'memeFrame'
+  | 'eggs'
+  | 'ridicule'
+  | 'shame';
 
-export type MockeryTier = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
+export type MockeryTier = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary' | 'premium';
 
 export interface MockeryEffect {
   action: MockeryAction;
@@ -56,3 +66,20 @@ export interface MockeryStats {
     duration: number;
   };
 }
+
+export interface MockeryEvent {
+  id: string;
+  sourceUserId: string;
+  targetUserId: string;
+  action: MockeryAction;
+  timestamp: number;
+  expiresAt: number;
+}
+
+export interface MockUser {
+  id: string;
+  username: string;
+  tier?: UserTier;
+}
+
+export type ExtendedMockeryAction = MockeryAction | string;

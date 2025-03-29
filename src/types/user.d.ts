@@ -1,7 +1,7 @@
 
-export type UserTier = 'royal' | 'premium' | 'standard' | 'free';
+export type UserTier = 'royal' | 'premium' | 'standard' | 'free' | 'basic' | 'pro' | 'silver' | 'gold' | 'platinum' | 'bronze';
 export type RoyalTitle = 'king' | 'queen' | 'jester' | 'noble';
-export type UserTeam = 'red' | 'blue' | 'green';
+export type UserTeam = 'red' | 'blue' | 'green' | string;
 
 export interface User {
   id: string;
@@ -13,10 +13,11 @@ export interface User {
   walletBalance: number;
   amountSpent: number;
   spentAmount?: number; // alias for amountSpent
+  totalSpent?: number; // alias for amountSpent
   rank: number;
   previousRank?: number;
   tier: UserTier;
-  team?: UserTeam | string;
+  team?: UserTeam;
   gender?: RoyalTitle;
   createdAt: string;
   joinedAt?: string;
@@ -33,7 +34,6 @@ export interface User {
   following?: number;
   profileViews?: number;
   profileClicks?: number;
-  totalSpent?: number; // alias for amountSpent for backward compatibility
   cosmetics?: UserCosmetics;
   settings?: UserSettings;
   profileBoosts?: ProfileBoost[];
@@ -45,6 +45,8 @@ export interface User {
   };
   purchasedFeatures?: string[];
   subscription?: string;
+  profileImages?: ProfileImage[];
+  avatarUrl?: string;
 }
 
 export interface UserProfile {
@@ -58,7 +60,7 @@ export interface UserProfile {
   walletBalance: number;
   profileImage?: string;
   bio?: string;
-  team?: UserTeam | string;
+  team?: UserTeam;
   tier: UserTier;
   gender?: RoyalTitle;
   spendStreak?: number;
@@ -66,6 +68,15 @@ export interface UserProfile {
   spentAmount?: number; // alias for amountSpent
   followers?: number;
   following?: number;
+  lastMocked?: number;
+  lastActive?: Date;
+}
+
+export interface ProfileImage {
+  url: string;
+  id: string;
+  isPrimary?: boolean;
+  caption?: string;
 }
 
 export interface SocialLink {
@@ -73,6 +84,7 @@ export interface SocialLink {
   url: string;
   label?: string;
   clicks?: number;
+  id?: string;
 }
 
 export interface UserSettings {
@@ -96,6 +108,7 @@ export interface UserSettings {
   rankChangeAlerts?: boolean;
   shameAlerts?: boolean;
   newFollowerAlerts?: boolean;
+  emailNotifications?: boolean;
 }
 
 export interface CertificateInfo {
@@ -116,6 +129,7 @@ export interface UserCosmetics {
   effect?: string;
   badge?: string;
   theme?: string;
+  activeTitle?: string;
 }
 
 export interface ProfileBoost {
@@ -137,4 +151,16 @@ export interface BoostEffect {
   minTier?: UserTier;
   cssClass?: string;
   allowStacking?: boolean;
+}
+
+export interface ProfileData {
+  tab: string;
+  viewOnly: boolean;
+  user: User;
+}
+
+export interface ProfileTab {
+  id: string;
+  label: string;
+  icon: React.ReactNode;
 }

@@ -1,69 +1,196 @@
 
-import { TeamType, UserGender, UserTeam } from '@/types/user';
+import { UserTeam } from '@/types/user';
+import { Shield, Zap, Flame, Snowflake } from 'lucide-react';
+import React from 'react';
 
-export const getTeamColor = (team: string): string => {
+/**
+ * Get the color associated with a team
+ */
+export const getTeamColor = (team?: UserTeam): string => {
   switch (team) {
     case 'red':
-      return 'bg-red-500 text-white';
-    case 'blue':
-      return 'bg-blue-500 text-white';
+      return 'text-red-500';
     case 'green':
-      return 'bg-green-500 text-white';
+      return 'text-green-500';
+    case 'blue':
+      return 'text-blue-500';
     default:
-      return 'bg-gray-500 text-white';
+      return 'text-gray-400';
   }
 };
 
-export const getTeamName = (team: string): string => {
+/**
+ * Get the border color associated with a team
+ */
+export const getTeamBorderColor = (team?: UserTeam): string => {
   switch (team) {
     case 'red':
-      return 'Purple Dynasty';
-    case 'blue':
-      return 'Azure Order';
+      return 'border-red-500';
     case 'green':
-      return 'Gold Dominion';
+      return 'border-green-500';
+    case 'blue':
+      return 'border-blue-500';
     default:
-      return 'Unaffiliated';
+      return 'border-gray-400';
   }
 };
 
-export const getGenderTitle = (gender: UserGender): string => {
+/**
+ * Get the icon associated with a team
+ */
+export const getTeamIcon = (team?: UserTeam): React.ReactNode => {
+  switch (team) {
+    case 'red':
+      return <Flame className="h-4 w-4 text-red-500" />;
+    case 'green':
+      return <Zap className="h-4 w-4 text-green-500" />;
+    case 'blue':
+      return <Snowflake className="h-4 w-4 text-blue-500" />;
+    default:
+      return <Shield className="h-4 w-4 text-gray-400" />;
+  }
+};
+
+/**
+ * Get a motto for a team
+ */
+export const getTeamMotto = (team?: UserTeam): string => {
+  switch (team) {
+    case 'red':
+      return "Burning through the ranks with fiery determination!";
+    case 'green':
+      return "Electrifying the competition with every contribution!";
+    case 'blue':
+      return "Freezing the competition in their tracks!";
+    default:
+      return "Join a team and show your loyalty!";
+  }
+};
+
+/**
+ * Get a benefit for a team
+ */
+export const getTeamBenefit = (team?: UserTeam): string => {
+  switch (team) {
+    case 'red':
+      return "5% bonus on Mockery effects against non-Red members";
+    case 'green':
+      return "10% discount on profile boost purchases";
+    case 'blue':
+      return "25% longer duration on profile visibility effects";
+    default:
+      return "Join a team to unlock team benefits!";
+  }
+};
+
+/**
+ * Get a humorous absurd statistic for a team
+ */
+export const getTeamAbsurdStat = (team?: UserTeam): string => {
+  switch (team) {
+    case 'red':
+      return "Red team members have collectively spent enough to buy 3,721 medieval castles";
+    case 'green':
+      return "Green team's spending could power the entire internet for 24 minutes";
+    case 'blue':
+      return "Blue team members have collectively clicked 'deposit' enough times to wear out 42 mice";
+    default:
+      return "Teams have collectively spent enough to buy a small island nation";
+  }
+};
+
+/**
+ * Get a made-up historical note about a team
+ */
+export const getTeamHistoricalNote = (team?: UserTeam): string => {
+  switch (team) {
+    case 'red':
+      return "Founded by the legendary Sir Spendsalot in the first crypto winter";
+    case 'green':
+      return "Originally formed by a group of tech billionaires hiding their pocket change";
+    case 'blue':
+      return "Rumored to be secretly backed by an anonymous whale from the ancient NFT boom";
+    default:
+      return "Each team traces its lineage to the great spending wars of 2023";
+  }
+};
+
+/**
+ * Get a joke about NFTs related to a team
+ */
+export const getTeamNFTJoke = (team?: UserTeam): string => {
+  switch (team) {
+    case 'red':
+      return "Red team's NFT collection is so hot it needs its own fire insurance";
+    case 'green':
+      return "Green team is still waiting for their JPEGs to moon any day now";
+    case 'blue':
+      return "Blue team holds more frozen assets than Antarctica";
+    default:
+      return "Team NFTs: Because regular JPEGs weren't expensive enough";
+  }
+};
+
+/**
+ * Get a satirical security guarantee for a team
+ */
+export const getTeamSecurityGuarantee = (team?: UserTeam): string => {
+  switch (team) {
+    case 'red':
+      return "Red team security: protected by dragons and at least two blockchain buzzwords";
+    case 'green':
+      return "Green team guarantees your data is safe-ish, most of the time";
+    case 'blue':
+      return "Blue team security is so cold even hackers don't want to touch it";
+    default:
+      return "Our security is like a medieval castle, if the castle was made of JavaScript";
+  }
+};
+
+/**
+ * Get a satirical crypto roast for a team
+ */
+export const getTeamCryptoRoast = (team?: UserTeam): string => {
+  switch (team) {
+    case 'red':
+      return "Red team thinks 'proof of burn' means setting money on fire";
+    case 'green':
+      return "Green team's blockchain strategy: have you tried turning it off and on again?";
+    case 'blue':
+      return "Blue team's crypto strategy is still in cold storage... from 2017";
+    default:
+      return "Our crypto strategy is about as stable as the markets";
+  }
+};
+
+/**
+ * Get emoji representation for gender/royal title
+ */
+export const getGenderEmoji = (gender?: string): string => {
   switch (gender) {
     case 'king':
-      return 'His Majesty';
+      return '👑';
     case 'queen':
-      return 'Her Majesty';
+      return '👸';
+    case 'jester':
+      return '🃏';
+    case 'noble':
+      return '⚜️';
     default:
-      return 'Their Excellency';
+      return '👤';
   }
 };
 
-export const mockTeams: UserTeam[] = [
-  {
-    id: 'red',
-    name: 'Purple Dynasty',
-    description: 'The prestigious Purple Dynasty values tradition, wealth, and status above all else.',
-    color: 'purple',
-    members: 342,
-    totalSpent: 78500,
-    rank: 1
-  },
-  {
-    id: 'blue',
-    name: 'Azure Order',
-    description: 'The Azure Order believes in cold, calculated spending to demonstrate true power.',
-    color: 'blue',
-    members: 286,
-    totalSpent: 65200,
-    rank: 2
-  },
-  {
-    id: 'green',
-    name: 'Gold Dominion',
-    description: 'The Gold Dominion promotes financial abundance and ostentatious displays of wealth.',
-    color: 'amber',
-    members: 198,
-    totalSpent: 43800,
-    rank: 3
+/**
+ * Get initials from username or display name
+ */
+export const getInitials = (name?: string): string => {
+  if (!name) return '??';
+  
+  const parts = name.split(' ');
+  if (parts.length === 1) {
+    return name.substring(0, 2).toUpperCase();
   }
-];
+  
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+};
