@@ -4,11 +4,11 @@ import { Copy, AlertCircle } from 'lucide-react';
 import EmptyState from './shared/EmptyState';
 import CodeSnippet from './shared/CodeSnippet';
 import { duplicateCodeMock } from '@/utils/codeAnalysis/mockData';
-import { DuplicateCode } from '@/utils/codeAnalysis/types';
+import { DuplicateCodeInfo } from '@/utils/codeAnalysis/types';
 
 const DuplicateCodeReport: React.FC = () => {
   // Use centralized mock data
-  const duplicateCode = duplicateCodeMock as DuplicateCode[];
+  const duplicateCode = duplicateCodeMock as DuplicateCodeInfo[];
 
   return (
     <div>
@@ -58,7 +58,7 @@ const DuplicateCodeReport: React.FC = () => {
               
               <div>
                 <h5 className="text-sm font-medium mb-2">Code Snippet:</h5>
-                <CodeSnippet code={item.codeSnippet || item.snippet} />
+                <CodeSnippet code={item.codeSnippet || item.snippet || item.code || ''} />
               </div>
             </div>
           ))}

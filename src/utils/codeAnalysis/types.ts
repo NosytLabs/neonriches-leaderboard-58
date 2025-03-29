@@ -1,9 +1,9 @@
 
 export interface FileInfo {
   path: string;
+  filePath?: string;
   size: number;
   lines: number;
-  filePath?: string;
   impact?: string;
 }
 
@@ -45,6 +45,7 @@ export interface DependencyInfo {
   alternatives?: string[];
   recommendation?: string;
   impact?: string;
+  size?: number;
 }
 
 export interface DeadCodeInfo {
@@ -53,6 +54,7 @@ export interface DeadCodeInfo {
   location: string;
   line?: number;
   file?: string;
+  path?: string;
   function?: string;
   description?: string;
 }
@@ -74,6 +76,7 @@ export interface UnusedVariable {
 export interface UnusedComponent {
   name: string;
   file: string;
+  line?: number;
   used: boolean;
 }
 
@@ -110,7 +113,7 @@ export interface PerformanceIssue {
   recommendation: string;
   severity: string;
   lineNumber: number;
-  type: string;
+  type?: string;
   impact: string;
 }
 
@@ -120,6 +123,7 @@ export interface ComplexityItem {
   function: string;
   file: string;
   cyclomaticComplexity: number;
+  complexity?: number;
   lines: number;
   linesOfCode?: number;
   parameters?: number;
@@ -130,6 +134,7 @@ export interface ComplexityItem {
   status?: string;
   line?: number;
   explanation?: string;
+  functionName?: string;
 }
 
 export interface DuplicateCodeInfo {
@@ -139,10 +144,14 @@ export interface DuplicateCodeInfo {
   files: { path: string }[];
   codeSnippet?: string;
   snippet?: string;
-  occurrences: number | any[];
-  code?: string;
+  occurrences?: number | any[];
   instances?: any[];
+  code?: string;
+  lines?: number;
 }
+
+// Adding DuplicateCode as an alias for backward compatibility
+export type DuplicateCode = DuplicateCodeInfo;
 
 export interface ProjectMetrics {
   totalFiles?: number;
@@ -151,6 +160,11 @@ export interface ProjectMetrics {
   averageComplexity?: number;
   duplicateCode?: number;
   unusedCode?: number;
+  projectSize?: number;
+  fileCount?: number;
+  dependencyCount?: number;
+  averageFileSize?: number;
+  largestFiles?: {filePath: string, size: number}[];
   beforeCleanup?: {
     projectSize: number;
     fileCount: number;
@@ -164,17 +178,21 @@ export interface ProjectMetrics {
 }
 
 export interface AnalysisResult {
-  files: FileInfo[];
+  files?: FileInfo[];
+  unusedFiles?: FileInfo[];
   unusedImports: ImportInfo[];
   unusedVariables: VariableInfo[];
   unusedSelectors: CssSelectorInfo[];
+  unusedCssSelectors?: CssSelectorInfo[];
   unusedDependencies: DependencyInfo[];
   deadCode: DeadCodeInfo[];
+  deadCodePaths?: DeadCodeInfo[];
   duplicateCode: DuplicateCodeInfo[];
   performanceIssues: PerformanceIssue[];
   complexCode: ComplexityItem[];
-  eslintIssues: EslintIssue[];
+  eslintIssues?: EslintIssue[];
   metrics?: ProjectMetrics;
   recommendations?: string[];
   unusedFunctions?: UnusedComponent[];
+  timestamp?: string;
 }

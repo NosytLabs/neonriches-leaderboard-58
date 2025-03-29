@@ -30,7 +30,7 @@ const ProfileEditor: React.FC<ProfileEditorProps> = ({ user, onProfileUpdate }) 
     user.profileImages || []
   );
   const [selectedTeam, setSelectedTeam] = useState<'red' | 'green' | 'blue' | null>(
-    user.team === 'none' ? null : (user.team as 'red' | 'green' | 'blue' | null)
+    user.team === null ? null : (user.team as 'red' | 'green' | 'blue' | null)
   );
   const [isSaving, setIsSaving] = useState(false);
   
@@ -41,7 +41,7 @@ const ProfileEditor: React.FC<ProfileEditorProps> = ({ user, onProfileUpdate }) 
     setGender((user.gender as GenderType) || 'neutral');
     setSocialLinks(user.socialLinks || []);
     setProfileImages(user.profileImages || []);
-    setSelectedTeam(user.team === 'none' ? null : (user.team as 'red' | 'green' | 'blue' | null));
+    setSelectedTeam(user.team === null ? null : (user.team as 'red' | 'green' | 'blue' | null));
   }, [user]);
   
   const handleGenderChange = (value: GenderType) => {
@@ -62,7 +62,7 @@ const ProfileEditor: React.FC<ProfileEditorProps> = ({ user, onProfileUpdate }) 
         gender,
         socialLinks,
         profileImages,
-        team: selectedTeam || 'none', // Convert null to 'none' for TeamType compatibility
+        team: selectedTeam, // Can be null or a team color
       };
       
       // If there's an update callback, use it
@@ -95,7 +95,7 @@ const ProfileEditor: React.FC<ProfileEditorProps> = ({ user, onProfileUpdate }) 
     gender !== user.gender ||
     JSON.stringify(socialLinks) !== JSON.stringify(user.socialLinks) ||
     JSON.stringify(profileImages) !== JSON.stringify(user.profileImages) ||
-    selectedTeam !== (user.team === 'none' ? null : user.team);
+    selectedTeam !== user.team;
 
   return (
     <Card className="glass-morphism border-white/10">

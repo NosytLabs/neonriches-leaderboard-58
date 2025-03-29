@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { ArrowLeft, Code, AlertTriangle } from 'lucide-react';
 import AnalysisLayout from '@/components/codeAnalysis/shared/AnalysisLayout';
@@ -13,23 +14,20 @@ import ComplexCodeSection from '@/components/codeAnalysis/sections/ComplexCodeSe
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { getAnalysisResults } from '@/components/codeAnalysis/runAnalysis';
-import { AnalysisResult } from '@/utils/codeAnalysis/types';
+import { AnalysisResult, FileInfo, ImportInfo, VariableInfo, CssSelectorInfo, DependencyInfo, DeadCodeInfo } from '@/utils/codeAnalysis/types';
 import { useToast } from '@/hooks/use-toast';
 import { generateAnalysisReport } from '@/utils/codeAnalysis/reportGenerator';
 import { Link } from 'react-router-dom';
 
 const CodeAnalysis: React.FC = () => {
   const [analysis, setAnalysis] = useState<AnalysisResult>({
-    timestamp: "",
-    unusedFiles: [],
     unusedImports: [],
     unusedVariables: [],
-    unusedCssSelectors: [],
+    unusedSelectors: [],
     unusedDependencies: [],
     deadCode: [],
-    deadCodePaths: [],
-    complexCode: [],
     duplicateCode: [],
+    complexCode: [],
     performanceIssues: []
   });
   const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -42,22 +40,15 @@ const CodeAnalysis: React.FC = () => {
       const results = await getAnalysisResults();
       setAnalysis({
         ...results,
-        unusedFiles: results.unusedFiles as any as FileInfo[],
-        unusedImports: results.unusedImports as any as ImportInfo[],
-        unusedVariables: results.unusedVariables as any as VariableInfo[],
-        unusedCssSelectors: results.unusedCssSelectors as any as CssSelectorInfo[],
-        unusedDependencies: results.unusedDependencies as any as DependencyInfo[],
-        deadCode: results.deadCode as any as DeadCodeInfo[],
-        deadCodePaths: results.deadCodePaths as any as DeadCodeInfo[],
       });
       toast({
         title: 'Analysis Complete',
         description: `Found ${
-          results.unusedFiles.length + 
+          (results.unusedFiles?.length || 0) + 
           results.unusedImports.length + 
           results.unusedVariables.length +
-          results.unusedCssSelectors.length +
-          results.deadCodePaths.length +
+          (results.unusedSelectors?.length || 0) +
+          (results.deadCodePaths?.length || 0) +
           results.duplicateCode.length +
           results.complexCode.length +
           results.unusedDependencies.length
@@ -124,16 +115,19 @@ const CodeAnalysis: React.FC = () => {
           <AnalysisLayout
             title="Code Cleanup Analysis"
             description="This report identifies potential issues in the codebase that could be improved or removed."
-            metrics={analysis.metrics}
+            metrics={analysis.metrics || {
+              beforeCleanup: { projectSize: 0, fileCount: 0, dependencyCount: 0 },
+              afterCleanup: { projectSize: 0, fileCount: 0, dependencyCount: 0 }
+            }}
           >
-            <UnusedFilesSection unusedFiles={analysis.unusedFiles} />
+            <UnusedFilesSection unusedFiles={analysis.unusedFiles || []} />
             <UnusedImportsSection unusedImports={analysis.unusedImports} />
             <UnusedVariablesSection unusedVariables={analysis.unusedVariables} />
-            <UnusedCssSelectorsSection unusedCssSelectors={analysis.unusedCssSelectors} />
+            <UnusedCssSelectorsSection unusedCssSelectors={analysis.unusedSelectors} />
             <UnusedDependenciesSection unusedDependencies={analysis.unusedDependencies} />
-            <DeadCodePathsSection deadCodePaths={analysis.deadCodePaths} />
+            <DeadCodePathsSection deadCodePaths={analysis.deadCodePaths || analysis.deadCode} />
             <DuplicateCodeSection duplicateCode={analysis.duplicateCode} />
-            <ComplexCodeSection complexCode={analysis.complexCode as any} />
+            <ComplexCodeSection complexCode={analysis.complexCode} />
           </AnalysisLayout>
         </TabsContent>
         

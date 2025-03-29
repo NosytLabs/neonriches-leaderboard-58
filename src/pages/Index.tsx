@@ -11,6 +11,7 @@ import { ArrowRight, Crown, Trophy, Users, Heart } from 'lucide-react';
 import RoyalDivider from '@/components/ui/decorations/RoyalDivider';
 import { formatNumber, formatCurrency } from '@/lib/utils';
 import { User } from '@/types/user';
+import { ensureUser } from '@/utils/userAdapter';
 
 const Index = () => {
   const { user, isLoading } = useAuth();
@@ -27,7 +28,7 @@ const Index = () => {
         setTotalUsers(12345);
         
         // Mock top giver data
-        const mockTopGiver: User = {
+        const mockTopGiver = ensureUser({
           id: "user-7891",
           username: "whale_supreme",
           email: "whale@example.com",
@@ -55,9 +56,8 @@ const Index = () => {
             badges: ["top-donor"],
             themes: ["royal"]
           },
-          profileBoosts: [],
-          createdAt: new Date(Date.now() - 15000000000).toISOString() // Ensure createdAt is not missing
-        };
+          profileBoosts: []
+        });
         
         setTopGiver(mockTopGiver);
       }, 1000);
@@ -71,8 +71,8 @@ const Index = () => {
       <div className="flex flex-col gap-8">
         <Banner 
           title="P2W.FUN" 
-          subtitle="Where your wallet determines your worth" 
-          callToAction={
+          description="Where your wallet determines your worth" 
+          action={
             user ? (
               <Link to="/dashboard">
                 <Button className="bg-royal-gold text-black hover:bg-royal-gold/90">
@@ -148,17 +148,16 @@ const Index = () => {
           </Card>
         </div>
         
-        <RoyalDivider variant="center" />
+        <RoyalDivider variant="double" />
         
         <div className="text-center max-w-3xl mx-auto">
-          <HeadingText className="mb-4" size="xl">
-            <Crown className="inline-block mr-2 h-6 w-6 text-royal-gold" />
-            The Ultimate Pay-to-Win Experience
-          </HeadingText>
-          <p className="text-white/70 mb-6">
-            Welcome to P2W.FUN, where your rank is determined solely by how much you spend. No skill required, just a willingness to part with your money for digital prestige. Join a team, customize your profile, and climb the ranks to become digital royalty.
-          </p>
-          <div className="flex justify-center gap-4">
+          <HeadingText 
+            title="The Ultimate Pay-to-Win Experience"
+            description="Welcome to P2W.FUN, where your rank is determined solely by how much you spend. No skill required, just a willingness to part with your money for digital prestige. Join a team, customize your profile, and climb the ranks to become digital royalty."
+            className="mb-4"
+            withIcon={true}
+          />
+          <div className="flex justify-center gap-4 mt-6">
             <Link to="/how-it-works">
               <Button variant="outline" className="glass-morphism border-white/10 hover:bg-white/10">
                 How It Works

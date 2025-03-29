@@ -11,15 +11,19 @@ const ComplexityReport: React.FC = () => {
     id: `complexity-${index}`,
     name: item.functions?.[0]?.name || `Function-${index}`,
     file: item.path || '',
-    complexity: item.complexity || 0,
-    linesOfCode: 0,
-    parameters: 0,
-    nestedLevel: 0,
-    issues: [],
-    function: item.functions?.[0]?.name || `function-${index}`, // Add the function field
+    cyclomaticComplexity: item.complexity || 0,
+    complexity: item.complexity || 0, // Add compatibility property
+    lines: item.linesOfCode || 0,
+    linesOfCode: item.linesOfCode || 0,
+    parameters: item.parameters || 0,
+    nestedLevel: item.nestedLevel || 0,
+    issues: item.issues || [],
+    function: item.functions?.[0]?.name || `function-${index}`,
     path: item.path,
     functions: item.functions,
-    status: item.status
+    status: item.status,
+    line: item.line || 0,
+    explanation: item.explanation || ''
   }));
 
   return (
@@ -47,16 +51,16 @@ const ComplexityReport: React.FC = () => {
             >
               <div className="flex items-center justify-between mb-2">
                 <h4 className="font-medium text-lg text-royal-gold">
-                  {item.functionName || item.name}
+                  {item.function || item.name}
                 </h4>
                 <span className={`px-2 py-1 text-xs rounded-full ${
-                  item.complexity > 15 
+                  item.cyclomaticComplexity > 15 || item.complexity > 15
                     ? 'bg-red-500/20 text-red-500' 
-                    : item.complexity > 10
+                    : item.cyclomaticComplexity > 10 || item.complexity > 10
                       ? 'bg-amber-500/20 text-amber-500'
                       : 'bg-blue-500/20 text-blue-500'
                 }`}>
-                  Complexity: {item.complexity}
+                  Complexity: {item.cyclomaticComplexity || item.complexity}
                 </span>
               </div>
               
@@ -68,7 +72,7 @@ const ComplexityReport: React.FC = () => {
               <div className="grid grid-cols-3 gap-2 mt-3 text-xs">
                 <div className="bg-black/20 p-2 rounded">
                   <p className="text-white/50">Lines of Code</p>
-                  <p className="text-white font-medium">{item.linesOfCode || 'N/A'}</p>
+                  <p className="text-white font-medium">{item.linesOfCode || item.lines || 'N/A'}</p>
                 </div>
                 <div className="bg-black/20 p-2 rounded">
                   <p className="text-white/50">Parameters</p>

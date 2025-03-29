@@ -30,7 +30,7 @@ const ComplexCodeSection: React.FC<ComplexCodeSectionProps> = ({ complexCode }) 
                 <p className="text-sm text-white/70">
                   Line {issue.line || 0}: <code className="bg-white/10 px-1 py-0.5 rounded">{issue.function || issue.name}</code>
                   <span className="ml-2 px-1.5 py-0.5 rounded bg-red-500/20 text-red-300">
-                    Complexity: {issue.complexity}
+                    Complexity: {issue.cyclomaticComplexity || issue.complexity}
                   </span>
                 </p>
                 {issue.explanation && (

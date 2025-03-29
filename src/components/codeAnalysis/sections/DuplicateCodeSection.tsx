@@ -4,10 +4,10 @@ import { Copy } from 'lucide-react';
 import IssueSection from '../shared/IssueSection';
 import IssueItem from '../shared/IssueItem';
 import CodeSnippet from '../shared/CodeSnippet';
-import { DuplicateCode } from '@/utils/codeAnalysis/types';
+import { DuplicateCodeInfo } from '@/utils/codeAnalysis/types';
 
 interface DuplicateCodeSectionProps {
-  duplicateCode: DuplicateCode[];
+  duplicateCode: DuplicateCodeInfo[];
 }
 
 const DuplicateCodeSection: React.FC<DuplicateCodeSectionProps> = ({ duplicateCode }) => {
@@ -53,7 +53,7 @@ const DuplicateCodeSection: React.FC<DuplicateCodeSectionProps> = ({ duplicateCo
             
             <div>
               <h5 className="text-sm font-medium mb-2">Code Snippet:</h5>
-              <CodeSnippet code={item.codeSnippet || item.snippet} />
+              <CodeSnippet code={item.codeSnippet || item.snippet || item.code || ''} />
             </div>
           </div>
         ))}

@@ -58,34 +58,39 @@ const CodeAnalysisReport: React.FC = () => {
     );
   }
 
-  const {
-    unusedFiles,
-    unusedImports,
-    unusedVariables,
-    unusedFunctions,
-    unusedCssSelectors,
-    deadCodePaths,
-    duplicateCode,
-    complexCode,
-    unusedDependencies,
-    metrics
-  } = analysisResult;
+  const metrics = analysisResult.metrics || {
+    beforeCleanup: { projectSize: 0, fileCount: 0, dependencyCount: 0 },
+    afterCleanup: { projectSize: 0, fileCount: 0, dependencyCount: 0 }
+  };
+  
+  // Get counts with fallbacks
+  const unusedFilesCount = analysisResult.unusedFiles?.length || 0;
+  const unusedImportsCount = analysisResult.unusedImports?.length || 0;
+  const unusedVariablesCount = analysisResult.unusedVariables?.length || 0;
+  const unusedFunctionsCount = analysisResult.unusedFunctions?.length || 0;
+  const unusedSelectorsCount = analysisResult.unusedSelectors?.length || 0;
+  const deadCodeCount = analysisResult.deadCode?.length || 0;
+  const duplicateCodeCount = analysisResult.duplicateCode?.length || 0;
+  const complexCodeCount = analysisResult.complexCode?.length || 0;
+  const unusedDependenciesCount = analysisResult.unusedDependencies?.length || 0;
 
   // Calculate potential savings
-  const sizeReduction = metrics.beforeCleanup.projectSize - metrics.afterCleanup.projectSize;
-  const percentReduction = ((sizeReduction / metrics.beforeCleanup.projectSize) * 100).toFixed(1);
+  const projectSize = metrics.beforeCleanup.projectSize || 0;
+  const afterSize = metrics.afterCleanup.projectSize || 0;
+  const sizeReduction = projectSize - afterSize;
+  const percentReduction = projectSize > 0 ? ((sizeReduction / projectSize) * 100).toFixed(1) : "0.0";
   
   // Calculate total issues found
   const totalIssues = 
-    unusedFiles.length +
-    unusedImports.length +
-    unusedVariables.length +
-    unusedFunctions.length +
-    unusedCssSelectors.length +
-    deadCodePaths.length +
-    duplicateCode.length +
-    complexCode.length +
-    unusedDependencies.length;
+    unusedFilesCount +
+    unusedImportsCount +
+    unusedVariablesCount +
+    unusedFunctionsCount +
+    unusedSelectorsCount +
+    deadCodeCount +
+    duplicateCodeCount +
+    complexCodeCount +
+    unusedDependenciesCount;
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -119,7 +124,7 @@ const CodeAnalysisReport: React.FC = () => {
           </div>
           
           <div className="glass-morphism border-white/10 p-4 rounded-lg">
-            <div className="text-2xl font-bold mb-1">{formatFileSize(metrics.beforeCleanup.projectSize * 1024)}</div>
+            <div className="text-2xl font-bold mb-1">{formatFileSize((metrics.beforeCleanup?.projectSize || 0) * 1024)}</div>
             <div className="text-sm text-white/70">Current Project Size</div>
           </div>
           
@@ -136,8 +141,8 @@ const CodeAnalysisReport: React.FC = () => {
             <div>
               <p className="font-medium">Unused Code</p>
               <p className="text-sm text-white/70">
-                Found {unusedFiles.length} unused files, {unusedImports.length} unused imports, 
-                {unusedVariables.length} unused variables, and {unusedFunctions.length} unused functions.
+                Found {unusedFilesCount} unused files, {unusedImportsCount} unused imports, 
+                {unusedVariablesCount} unused variables, and {unusedFunctionsCount} unused functions.
                 These can be safely removed to reduce bundle size.
               </p>
             </div>
@@ -148,7 +153,7 @@ const CodeAnalysisReport: React.FC = () => {
             <div>
               <p className="font-medium">Code Duplication</p>
               <p className="text-sm text-white/70">
-                Identified {duplicateCode.length} instances of duplicated code patterns.
+                Identified {duplicateCodeCount} instances of duplicated code patterns.
                 Refactoring these into shared utilities would improve maintainability.
               </p>
             </div>
@@ -159,7 +164,7 @@ const CodeAnalysisReport: React.FC = () => {
             <div>
               <p className="font-medium">Complex Code</p>
               <p className="text-sm text-white/70">
-                Found {complexCode.length} functions with high complexity scores.
+                Found {complexCodeCount} functions with high complexity scores.
                 Breaking these down would improve readability and testability.
               </p>
             </div>
@@ -170,7 +175,7 @@ const CodeAnalysisReport: React.FC = () => {
             <div>
               <p className="font-medium">CSS & Dependencies</p>
               <p className="text-sm text-white/70">
-                Detected {unusedCssSelectors.length} unused CSS selectors and {unusedDependencies.length} unused dependencies.
+                Detected {unusedSelectorsCount} unused CSS selectors and {unusedDependenciesCount} unused dependencies.
                 Removing these would reduce bundle size and improve load times.
               </p>
             </div>
@@ -192,18 +197,18 @@ const CodeAnalysisReport: React.FC = () => {
           <div>
             <h3 className="text-lg font-medium mb-3">Current Metrics</h3>
             <ul className="space-y-2 text-white/80">
-              <li>Project Size: {formatFileSize(metrics.beforeCleanup.projectSize * 1024)}</li>
-              <li>File Count: {metrics.beforeCleanup.fileCount}</li>
-              <li>Dependencies: {metrics.beforeCleanup.dependencyCount}</li>
+              <li>Project Size: {formatFileSize((metrics.beforeCleanup?.projectSize || 0) * 1024)}</li>
+              <li>File Count: {metrics.beforeCleanup?.fileCount || 0}</li>
+              <li>Dependencies: {metrics.beforeCleanup?.dependencyCount || 0}</li>
             </ul>
           </div>
           
           <div>
             <h3 className="text-lg font-medium mb-3">After Cleanup (Estimated)</h3>
             <ul className="space-y-2 text-white/80">
-              <li>Project Size: {formatFileSize(metrics.afterCleanup.projectSize * 1024)}</li>
-              <li>File Count: {metrics.afterCleanup.fileCount}</li>
-              <li>Dependencies: {metrics.afterCleanup.dependencyCount}</li>
+              <li>Project Size: {formatFileSize((metrics.afterCleanup?.projectSize || 0) * 1024)}</li>
+              <li>File Count: {metrics.afterCleanup?.fileCount || 0}</li>
+              <li>Dependencies: {metrics.afterCleanup?.dependencyCount || 0}</li>
             </ul>
           </div>
         </div>

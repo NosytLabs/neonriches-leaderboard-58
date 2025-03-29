@@ -15,6 +15,8 @@ interface HeadingTextProps {
   withIcon?: boolean;
   iconVariant?: 'default' | 'minimal' | 'fancy';
   iconPosition?: 'left' | 'top';
+  children?: React.ReactNode;
+  size?: string;
 }
 
 export function HeadingText({
@@ -29,6 +31,8 @@ export function HeadingText({
   withIcon = false,
   iconVariant = 'default',
   iconPosition = 'left',
+  children,
+  size,
 }: HeadingTextProps) {
   const alignmentClasses = {
     left: 'text-left',
@@ -39,6 +43,9 @@ export function HeadingText({
   const gradientClass = gradient ? 'royal-gradient' : '';
   
   const Heading = as;
+
+  // If size is provided and children exists, we're likely using the old API
+  const isLegacyMode = !!size && !!children;
 
   return (
     <div className={cn(alignmentClasses[align], className)}>
@@ -65,19 +72,37 @@ export function HeadingText({
           />
         )}
         
-        <Heading 
-          className={cn(
-            "font-bold",
-            as === 'h1' && "text-3xl md:text-4xl",
-            as === 'h2' && "text-2xl md:text-3xl",
-            as === 'h3' && "text-xl md:text-2xl",
-            as === 'h4' && "text-lg md:text-xl",
-            gradientClass,
-            titleClassName
-          )}
-        >
-          {title}
-        </Heading>
+        {isLegacyMode ? (
+          // Render with children for backward compatibility
+          <Heading 
+            className={cn(
+              "font-bold",
+              as === 'h1' && "text-3xl md:text-4xl",
+              as === 'h2' && "text-2xl md:text-3xl",
+              as === 'h3' && "text-xl md:text-2xl",
+              as === 'h4' && "text-lg md:text-xl",
+              gradientClass,
+              titleClassName
+            )}
+          >
+            {children}
+          </Heading>
+        ) : (
+          // Render with title
+          <Heading 
+            className={cn(
+              "font-bold",
+              as === 'h1' && "text-3xl md:text-4xl",
+              as === 'h2' && "text-2xl md:text-3xl",
+              as === 'h3' && "text-xl md:text-2xl",
+              as === 'h4' && "text-lg md:text-xl",
+              gradientClass,
+              titleClassName
+            )}
+          >
+            {title}
+          </Heading>
+        )}
       </div>
       
       {description && (

@@ -52,9 +52,19 @@ export const adaptUserProfileToUser = (profile: any): User => {
     gender: gender,
     lastActive: profile.lastActive,
     profileBoosts: profile.profileBoosts || [],
-    cosmetics: profile.cosmetics,
+    cosmetics: profile.cosmetics || {
+      borders: [],
+      colors: [],
+      fonts: [],
+      emojis: [],
+      titles: [],
+      backgrounds: [],
+      effects: [],
+      badges: [],
+      themes: []
+    },
     activeTitle: profile.activeTitle,
-    rank: profile.rank,
+    rank: profile.rank || 0,
     previousRank: profile.previousRank,
     joinDate: profile.joinDate || createdAt,
     joinedAt: profile.joinedAt || createdAt,
@@ -89,4 +99,22 @@ export const adaptUserProfileToUser = (profile: any): User => {
  */
 export const completeUserObject = (partialUser: Partial<User>): User => {
   return adaptUserProfileToUser(partialUser);
+};
+
+/**
+ * Ensure a user object has all required fields
+ * @param userOrProfile User or profile object that might be incomplete
+ * @returns Complete User object
+ */
+export const ensureUser = (userOrProfile: any): User => {
+  if (!userOrProfile) {
+    return adaptUserProfileToUser({});
+  }
+  
+  if (userOrProfile.createdAt) {
+    // Probably already a valid user
+    return userOrProfile as User;
+  }
+  
+  return adaptUserProfileToUser(userOrProfile);
 };

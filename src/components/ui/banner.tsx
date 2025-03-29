@@ -7,22 +7,29 @@ import BrandIcon from './brand-icon';
 interface BannerProps {
   title: string;
   description?: string;
+  subtitle?: string; // Add subtitle property
   variant?: 'default' | 'success' | 'warning' | 'royal' | 'announcement' | 'throne';
   className?: string;
   icon?: React.ReactNode;
   action?: React.ReactNode;
+  callToAction?: React.ReactNode; // Add alias for action for compatibility
   iconVariant?: 'default' | 'minimal' | 'fancy';
 }
 
 export function Banner({
   title,
   description,
+  subtitle, // Add subtitle handling
   variant = 'default',
   className,
   icon,
   action,
+  callToAction, // Add alias for action
   iconVariant = 'minimal'
 }: BannerProps) {
+  // Use callToAction if action is not provided
+  const actionContent = action || callToAction;
+
   const variantStyles = {
     default: 'bg-white/5 border-white/10',
     success: 'bg-green-500/10 border-green-500/20',
@@ -57,6 +64,14 @@ export function Banner({
         )}>
           {title}
         </h3>
+        {subtitle && (
+          <p className={cn(
+            "text-sm text-white/80 mt-0.5",
+            variant === 'throne' && "text-white/90"
+          )}>
+            {subtitle}
+          </p>
+        )}
         {description && (
           <p className={cn(
             "text-sm text-white/70 mt-1",
@@ -66,9 +81,9 @@ export function Banner({
           </p>
         )}
       </div>
-      {action && (
+      {actionContent && (
         <div className="flex-shrink-0">
-          {action}
+          {actionContent}
         </div>
       )}
     </div>
