@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { User } from '@/types/user';
-import { MockeryAction, MockeryEvent, MockedUser } from '@/types/mockery';
+import { MockeryAction, MockeryEvent, MockUser } from '@/types/mockery';
 import { 
   mockUser, 
   protectUser, 
@@ -13,6 +13,10 @@ import {
   isUserOnMockeryCooldown,
   getUserMockeryCount
 } from '@/services/mockeryService';
+
+interface MockedUser extends MockUser {
+  // Add any additional properties needed
+}
 
 const useMockery = () => {
   const [mockedUsers, setMockedUsers] = useState<MockedUser[]>([]);

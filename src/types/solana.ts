@@ -1,67 +1,44 @@
 
-export type TransactionType = 'deposit' | 'withdrawal' | 'purchase' | 'transfer' | 'mockery' | 'cosmetic' | 'subscription' | 'boost' | 'wish';
-
 export interface SolanaWallet {
-  publicKey: string;
+  address: string;
   balance: number;
-  connected: boolean;
-  provider?: any;
-  isConnected?: boolean; // Added for backward compatibility
+  publicKey: string;
 }
 
 export interface SolanaTreasuryInfo {
-  totalDeposited: number;
-  totalWithdrawn: number;
-  currentBalance: number;
-  lastUpdated: string;
-  updatedAt?: string;
-  address?: string;
-  balance?: number;
-  pubkey?: string;
-  amount?: number; // Added for compatibility
-  sender?: string; // Added for compatibility
-  owner?: string; // Added for compatibility
-  totalDeposits?: number; // Added for compatibility
-  signature?: string; // Added for compatibility
-  netBalance?: number; // Added for compatibility
-  transactions?: number; // Added for compatibility
+  address: string;
+  totalBalance: number;
+  depositCount: number;
+  withdrawalCount: number;
 }
 
 export interface SolanaTransaction {
-  id?: string;
   signature: string;
+  blockTime: number;
+  slot: number;
+  status: 'confirmed' | 'finalized' | 'processed' | 'failed';
   amount: number;
-  timestamp: string;
   sender: string;
-  receiver: string;
-  recipient?: string; // Added for compatibility
+  recipient: string;
   type: 'deposit' | 'withdrawal' | 'transfer';
-  status: 'confirmed' | 'pending' | 'failed';
-  message?: string;
 }
 
 export interface OnChainLeaderboardEntry {
+  userId: string;
+  username: string;
   address: string;
   publicKey: string;
-  username: string;
-  spentAmount: number;
-  amountSpent?: number;
   rank: number;
-  previousRank?: number;
+  spentAmount?: number;
+  amountSpent?: number;
+  totalDeposited: number;
   timestamp: string;
-  transaction: string;
-  lastTransaction?: string;
-  userId?: string;
-  totalDeposited?: number;
-  joinDate?: string;
-  id?: string; // Added for compatibility
-  totalSpent?: number; // Added for compatibility
 }
 
 export interface LeaderboardEntry {
   userId: string;
   username: string;
-  publicKey: string;
+  publicKey?: string;
   amountSpent: number;
   totalDeposited: number;
   rank: number;
@@ -69,11 +46,28 @@ export interface LeaderboardEntry {
 }
 
 export interface SolanaNftInfo {
-  mintAddress: string;
-  ownerAddress: string;
-  metadataUri: string;
-  name: string;
-  symbol: string;
-  image: string;
-  attributes: any[];
+  mint: string;
+  owner: string;
+  metadata: {
+    name: string;
+    symbol: string;
+    uri: string;
+    sellerFeeBasisPoints: number;
+    creators: Array<{
+      address: string;
+      verified: boolean;
+      share: number;
+    }>;
+  };
+  arweaveMetadata?: {
+    name: string;
+    symbol: string;
+    description: string;
+    image: string;
+    external_url?: string;
+    attributes?: Array<{
+      trait_type: string;
+      value: string | number;
+    }>;
+  };
 }

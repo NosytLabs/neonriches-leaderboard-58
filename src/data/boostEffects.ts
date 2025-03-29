@@ -1,142 +1,66 @@
 
 import { BoostEffect, BoostEffectType } from '@/types/boost';
-import { UserTier } from '@/types/user';
 
 export const profileBoostEffects: BoostEffect[] = [
   {
-    id: 'gold-aura',
-    name: 'Gold Aura',
-    description: 'Surrounds your profile with a radiant golden aura',
-    type: 'appearance',
-    rarity: 'rare',
-    cost: 100,
-    duration: 168, // 7 days in hours
-    durationDays: 7,
-    allowStacking: false,
-    minTier: 'basic',
-    cssClass: 'gold-aura-effect',
-    tier: 'basic'
-  },
-  {
-    id: 'rainbow-name',
-    name: 'Rainbow Name',
-    description: 'Makes your name shine with rainbow colors',
-    type: 'appearance',
-    rarity: 'epic',
-    cost: 150,
-    duration: 168,
-    durationDays: 7,
-    allowStacking: false,
-    minTier: 'pro',
-    cssClass: 'rainbow-name-effect',
-    tier: 'pro'
-  },
-  {
-    id: 'royal-glow',
+    id: 'glow',
     name: 'Royal Glow',
-    description: 'Adds a pulsing royal purple glow to your profile',
-    type: 'effect',
-    rarity: 'legendary',
-    cost: 200,
-    duration: 168,
-    durationDays: 7,
-    allowStacking: false,
-    minTier: 'pro',
-    cssClass: 'royal-glow-effect',
-    tier: 'royal'
-  },
-  {
-    id: 'sparkling-border',
-    name: 'Sparkling Border',
-    description: 'Adds twinkling stars around your profile border',
-    type: 'effect',
-    rarity: 'rare',
-    cost: 100,
-    duration: 168,
-    durationDays: 7,
-    allowStacking: false,
+    description: 'Adds a subtle glow effect to your profile',
     minTier: 'basic',
-    cssClass: 'sparkling-border-effect',
-    tier: 'basic'
-  },
-  {
-    id: 'floating-crown',
-    name: 'Floating Crown',
-    description: 'Displays a floating crown above your profile',
-    type: 'effect',
-    rarity: 'epic',
-    cost: 150,
-    duration: 168,
-    durationDays: 7,
+    duration: 24, // 24 hours
+    strength: 1,
+    cssClass: 'profile-boost-glow',
     allowStacking: false,
-    minTier: 'pro',
-    cssClass: 'floating-crown-effect',
-    tier: 'pro'
+    iconName: 'sun'
   },
   {
-    id: 'visibility-boost',
-    name: 'Visibility Boost',
-    description: 'Increases your profile visibility by 50%',
-    type: 'visibility',
-    rarity: 'uncommon',
-    cost: 50,
-    duration: 72,
-    durationDays: 3,
+    id: 'sparkle',
+    name: 'Noble Sparkle',
+    description: 'Adds sparkling effects to your profile',
+    minTier: 'silver',
+    duration: 48, // 48 hours
+    strength: 2,
+    cssClass: 'profile-boost-sparkle',
+    allowStacking: false,
+    iconName: 'star'
+  },
+  {
+    id: 'crown',
+    name: 'Royal Crown',
+    description: 'Displays a crown on your profile',
+    minTier: 'gold',
+    duration: 72, // 72 hours
+    strength: 3,
+    cssClass: 'profile-boost-crown',
+    allowStacking: false,
+    iconName: 'crown'
+  },
+  {
+    id: 'shine',
+    name: 'Golden Shine',
+    description: 'Makes your profile shine with a golden effect',
+    minTier: 'pro',
+    duration: 48,
+    strength: 2,
+    cssClass: 'profile-boost-shine',
     allowStacking: true,
-    minTier: 'basic',
-    cssClass: 'visibility-boost-effect',
-    tier: 'basic'
+    iconName: 'sun'
   },
   {
-    id: 'attention-pulse',
-    name: 'Attention Pulse',
-    description: 'Makes your profile pulse to draw attention',
-    type: 'animation',
-    rarity: 'rare',
-    cost: 100,
-    duration: 168,
-    durationDays: 7,
+    id: 'aura',
+    name: 'Mystic Aura',
+    description: 'Surrounds your profile with a mystic aura',
+    minTier: 'premium',
+    duration: 96, // 96 hours
+    strength: 3,
+    cssClass: 'profile-boost-aura',
     allowStacking: false,
-    minTier: 'basic',
-    cssClass: 'attention-pulse-effect',
-    tier: 'basic'
-  },
-  {
-    id: 'royal-banner',
-    name: 'Royal Banner',
-    description: 'Displays a prestigious banner behind your profile',
-    type: 'appearance',
-    rarity: 'legendary',
-    cost: 200,
-    duration: 336,
-    durationDays: 14,
-    allowStacking: false,
-    minTier: 'royal',
-    cssClass: 'royal-banner-effect',
-    tier: 'royal'
-  },
-  {
-    id: 'golden-frame',
-    name: 'Golden Frame',
-    description: 'Surrounds your profile with an ornate golden frame',
-    type: 'appearance',
-    rarity: 'epic',
-    cost: 150,
-    duration: 168,
-    durationDays: 7,
-    allowStacking: false,
-    minTier: 'pro',
-    cssClass: 'golden-frame-effect',
-    tier: 'pro'
+    iconName: 'flame'
   }
 ];
 
-export const getBoostById = (id: string): BoostEffect | undefined => {
-  return profileBoostEffects.find(boost => boost.id === id);
-};
-
-export const getBoostsByType = (type: string): BoostEffect[] => {
-  return profileBoostEffects.filter(boost => boost.type === type);
+export const getBoostById = (boostId: string): BoostEffect | undefined => {
+  return profileBoostEffects.find(boost => boost.id === boostId);
 };
 
 export default profileBoostEffects;

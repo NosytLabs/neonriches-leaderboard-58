@@ -1,7 +1,4 @@
 
-import { ProfileBoost } from './boost';
-import { UserCosmetics } from './cosmetics';
-
 export type UserRole = 'admin' | 'moderator' | 'user' | 'vip';
 
 export type UserGender = 
@@ -92,6 +89,19 @@ export interface ProfileImage {
   isPrimary: boolean;
 }
 
+export interface ProfileBoost {
+  id: string;
+  type?: string;
+  effectId?: string;
+  name?: string;
+  startDate: string;
+  endDate: string;
+  active?: boolean;
+  level?: number;
+  strength?: number;
+  appliedBy?: string;
+}
+
 export interface User {
   id: string;
   username: string;
@@ -108,6 +118,7 @@ export interface User {
   amountSpent: number;
   totalSpent: number;
   spentTotal: number;
+  spentAmount?: number;
   joinedAt: string;
   createdAt?: string;
   joined: Date;
@@ -132,6 +143,7 @@ export interface User {
   lastActive?: string;
   avatarUrl?: string;
   activeTitle?: string;
+  updatedAt?: string;
   certificateNFT?: {
     mintAddress: string;
     tokenId: string;
@@ -168,4 +180,23 @@ export interface Feature {
 
 export interface FeatureInfo extends Feature {
   category: string;
+}
+
+export interface UserCosmetics {
+  borders?: string[];
+  colors?: string[];
+  fonts?: string[];
+  emojis?: string[];
+  titles?: string[];
+  backgrounds?: string[];
+  effects?: string[];
+  badges?: string[];
+  themes?: string[];
+  banners?: string[];
+  activeBorder?: string;
+  activeColor?: string;
+  activeFont?: string;
+  foundersPass?: boolean;
+  activeEmoji?: string;
+  socialLinks?: any;
 }

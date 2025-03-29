@@ -9,16 +9,17 @@ export function adaptUserProfileToUser(profile: UserProfile): User {
   return {
     ...profile,
     // Ensure all required fields are present
-    spentTotal: profile.totalSpent || profile.amountSpent || 0,
-    totalSpent: profile.totalSpent || profile.amountSpent || 0,
-    amountSpent: profile.amountSpent || profile.totalSpent || 0,
+    spentTotal: profile.totalSpent || profile.amountSpent || profile.spentTotal || 0,
+    totalSpent: profile.totalSpent || profile.amountSpent || profile.spentTotal || 0,
+    amountSpent: profile.amountSpent || profile.totalSpent || profile.spentTotal || 0,
     joinedAt: profile.joinedAt || (profile.joined ? new Date(profile.joined).toISOString() : new Date().toISOString()),
     joined: profile.joined || new Date(profile.joinedAt || new Date()),
     // Set defaults for other core properties if missing
     walletBalance: profile.walletBalance || 0,
     rank: profile.rank || 0,
     tier: profile.tier || 'basic',
-    role: profile.role || 'user'
+    role: profile.role || 'user',
+    team: profile.team || null
   };
 }
 
@@ -38,7 +39,8 @@ export function adaptUserToUserProfile(user: User): UserProfile {
     walletBalance: user.walletBalance || 0,
     rank: user.rank || 0,
     tier: user.tier || 'basic',
-    role: user.role || 'user'
+    role: user.role || 'user',
+    team: user.team || null
   };
 }
 

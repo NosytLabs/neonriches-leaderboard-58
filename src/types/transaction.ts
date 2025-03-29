@@ -1,20 +1,16 @@
 
 export type TransactionType = 
-  | 'deposit' 
-  | 'withdraw' 
-  | 'transfer' 
-  | 'refund' 
-  | 'purchase' 
-  | 'subscription' 
-  | 'boost' 
-  | 'fee' 
-  | 'reward' 
-  | 'bonus' 
-  | 'other'
+  | 'spend'
+  | 'purchase'
+  | 'deposit'
+  | 'withdrawal'
+  | 'refund'
+  | 'gift'
+  | 'team'
   | 'mockery'
-  | 'protection'
   | 'cosmetic'
-  | 'wish';
+  | 'rank'
+  | 'fee';
 
 export interface Transaction {
   id: string;
@@ -22,7 +18,9 @@ export interface Transaction {
   amount: number;
   type: TransactionType;
   description: string;
-  createdAt: string;
-  status: 'pending' | 'completed' | 'failed';
   metadata?: Record<string, any>;
+  timestamp: string;
+  status?: 'pending' | 'completed' | 'failed' | 'refunded';
+  currency?: string;
+  paymentMethod?: string;
 }
