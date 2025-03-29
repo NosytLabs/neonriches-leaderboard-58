@@ -31,15 +31,16 @@ const ResizablePanel = forwardRef<
 ));
 ResizablePanel.displayName = 'ResizablePanel';
 
-// Define proper interfaces for our components
-interface ResizableHandleProps extends Omit<ComponentProps<typeof ResizablePrimitive.PanelResizeHandle>, 'children'> {
+// Define a proper interface for the ResizableHandle component that correctly handles ref forwarding
+interface ResizableHandleProps {
   withHandle?: boolean;
-  children?: React.ReactNode;
+  className?: string;
+  // Add any other custom props here
 }
 
 const ResizableHandle = forwardRef<
   ElementRef<typeof ResizablePrimitive.PanelResizeHandle>,
-  ResizableHandleProps
+  ResizableHandleProps & ComponentProps<typeof ResizablePrimitive.PanelResizeHandle>
 >(({ className, withHandle = false, ...props }, ref) => (
   <ResizablePrimitive.PanelResizeHandle
     ref={ref}
@@ -61,7 +62,7 @@ ResizableHandle.displayName = 'ResizableHandle';
 // Export a separate ResizableSeparator component for backwards compatibility
 const ResizableSeparator = forwardRef<
   ElementRef<typeof ResizablePrimitive.PanelResizeHandle>,
-  ResizableHandleProps
+  ResizableHandleProps & ComponentProps<typeof ResizablePrimitive.PanelResizeHandle>
 >(({ className, ...props }, ref) => (
   <ResizableHandle ref={ref} className={className} {...props} withHandle />
 ));
