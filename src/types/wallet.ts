@@ -10,10 +10,6 @@ export type TransactionType =
   | 'boost' 
   | 'wish' 
   | 'advertisement' 
-  | 'protection'
-  | 'deposit'
-  | 'purchase'
-  | 'mockery'
   | 'protection';
 
 export interface Transaction {

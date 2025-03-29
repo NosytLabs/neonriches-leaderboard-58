@@ -17,7 +17,9 @@ export type MockeryAction =
   | 'epic' 
   | 'legendary' 
   | 'protected' 
-  | 'immune';
+  | 'immune'
+  | 'protection'
+  | 'removal';
 
 export interface MockeryEvent {
   id: string;
@@ -28,6 +30,8 @@ export interface MockeryEvent {
   action: MockeryAction;
   timestamp: number;
   expiresAt: number;
+  sourceUser?: string;
+  targetUser?: string;
 }
 
 export interface MockedUser {
@@ -37,6 +41,13 @@ export interface MockedUser {
   mockery: MockeryEvent | null;
   isProtected: boolean;
   protectionExpiresAt: number | null;
+  tier?: string;
+  lastMocked?: number;
+  mockedTimestamp?: number;
+  mockedReason?: string;
+  mockedBy?: string;
+  mockedTier?: MockeryTier;
+  displayName?: string;
 }
 
 export interface MockeryStats {
@@ -67,3 +78,14 @@ export interface MockeryEffectData {
 
 export type UserMockeryStatus = 'active' | 'expired' | 'protected';
 export type MockUser = MockedUser;
+export type MockeryProtection = {
+  userId: string;
+  expiresAt: number;
+  level: number;
+};
+
+export interface ShameEffect {
+  action: ShameAction;
+  timestamp: number;
+  until: number;
+}

@@ -12,13 +12,13 @@ export interface UserProfile {
   spentAmount?: number;
   rank: number;
   previousRank?: number;
-  team?: 'red' | 'green' | 'blue' | null;
+  team?: TeamType | null;
   joinedAt: string;
   joinDate?: string;
   createdAt?: string;
   walletBalance?: number;
-  tier?: string;
-  gender?: 'king' | 'queen' | 'neutral' | 'jester' | 'noble';
+  tier?: UserTier;
+  gender?: UserGender;
   profileViews?: number;
   profileClicks?: number;
   followers?: number;
@@ -33,6 +33,9 @@ export interface UserProfile {
   settings?: UserSettings;
   isVIP?: boolean;
   certificateNFT?: any;
+  subscription?: UserSubscription;
+  boosts?: ProfileBoost[];
+  walletAddress?: string;
 }
 
 export interface UserCosmetics {
@@ -45,15 +48,21 @@ export interface UserCosmetics {
   effects?: string[];
   badges?: string[];
   themes?: string[];
+  banners?: string[];
+  activeBorder?: string;
+  activeColor?: string;
+  activeFont?: string;
+  foundersPass?: boolean;
 }
 
 export interface SocialLink {
-  id: string;
+  id: string | number;
   platform?: string;
   url: string;
   title?: string;
   label?: string;
   clicks?: number;
+  icon?: string;
 }
 
 export interface ProfileImage {
@@ -74,6 +83,7 @@ export interface ProfileBoost {
   type?: string;
   strength?: number;
   appliedBy?: string;
+  boostId?: string;
 }
 
 export interface UserSettings {
@@ -85,14 +95,23 @@ export interface UserSettings {
   emailNotifications: boolean;
   darkMode: boolean;
   language: string;
+  profileVisibility?: boolean;
+  allowProfileLinks?: boolean;
+  showEmailOnProfile?: boolean;
+  rankChangeAlerts?: boolean;
+  shameAlerts?: boolean;
+  newFollowerAlerts?: boolean;
+  theme?: string;
 }
 
 export interface ProfileLink {
-  id: string;
+  id: string | number;
   url: string;
   title: string;
   icon?: string;
   clicks: number;
+  label?: string;
+  platform?: string;
 }
 
 export interface LeaderboardEntry {
@@ -102,15 +121,27 @@ export interface LeaderboardEntry {
   profileImage?: string;
   totalSpent: number;
   rank: number;
-  team?: 'red' | 'green' | 'blue';
+  team?: TeamType;
   hasRoyalStatus: boolean;
+}
+
+export interface UserSubscription {
+  status: SubscriptionStatus;
+  tier: UserTier;
+  interval: SubscriptionInterval;
+  startDate: string;
+  endDate: string;
+  autoRenew: boolean;
+  features: string[];
 }
 
 export type User = UserProfile;
 export type UserTeam = 'red' | 'green' | 'blue' | null;
 export type Team = UserTeam;
+export type TeamType = 'red' | 'green' | 'blue';
 export type UserGender = 'king' | 'queen' | 'neutral' | 'jester' | 'noble';
 export type UserRole = 'admin' | 'moderator' | 'user';
 export type UserStatus = 'active' | 'inactive' | 'banned';
-export type UserTier = 'free' | 'pro' | 'royal';
-export type TeamType = 'red' | 'green' | 'blue';
+export type UserTier = 'free' | 'pro' | 'royal' | 'bronze' | 'silver' | 'gold' | 'platinum';
+export type SubscriptionStatus = 'active' | 'canceled' | 'past_due' | 'trialing' | 'unpaid' | 'incomplete';
+export type SubscriptionInterval = 'monthly' | 'quarterly' | 'annual';

@@ -1,4 +1,3 @@
-
 import React, { useRef, useEffect } from 'react';
 import p5 from 'p5';
 
@@ -202,11 +201,11 @@ const EnhancedCrownEffect: React.FC<EnhancedCrownEffectProps> = ({
         
         // Mouse interaction
         const mousePos = p.createVector(p.mouseX, p.mouseY);
-        const mouseIsOver = p.mouseX > 0 && p.mouseX < width && p.mouseY > 0 && p.mouseY < height;
+        const isMouseOver = p.mouseX > 0 && p.mouseX < width && p.mouseY > 0 && p.mouseY < height;
         
         // Update and display crowns
         for (const crown of crowns) {
-          if (mouseIsOver && interactive) {
+          if (isMouseOver && interactive) {
             crown.follow(mousePos);
           }
           
@@ -257,7 +256,7 @@ const EnhancedCrownEffect: React.FC<EnhancedCrownEffectProps> = ({
       
       // Add mouse click interaction
       p.mousePressed = () => {
-        if (mouseIsOver && interactive) {
+        if (isMouseOver && interactive) {
           const mousePos = p.createVector(p.mouseX, p.mouseY);
           
           // Create a burst of particles

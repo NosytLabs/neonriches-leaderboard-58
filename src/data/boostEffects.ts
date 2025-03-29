@@ -1,5 +1,19 @@
 
-import { BoostEffect } from '@/types/boostEffects';
+import { CosmeticCategory } from '@/types/cosmetics';
+
+export interface BoostEffect {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  tier: 'basic' | 'premium' | 'royal';
+  type: 'appearance' | 'animation' | 'visibility' | 'effect';
+  durationDays: number;
+  previewImage: string;
+  cssClass?: string;
+}
+
+export type BoostEffectType = 'gold-aura' | 'crown-effect' | 'neon-pulse' | 'rainbow-flow' | 'royal-sparkle';
 
 const profileBoostEffects: BoostEffect[] = [
   {
@@ -10,7 +24,8 @@ const profileBoostEffects: BoostEffect[] = [
     tier: 'basic',
     type: 'effect',
     durationDays: 7,
-    previewImage: '/assets/boost-previews/gold-aura.png'
+    previewImage: '/assets/boost-previews/gold-aura.png',
+    cssClass: 'gold-aura-effect'
   },
   {
     id: 'crown-effect',
@@ -20,7 +35,8 @@ const profileBoostEffects: BoostEffect[] = [
     tier: 'premium',
     type: 'appearance',
     durationDays: 14,
-    previewImage: '/assets/boost-previews/crown-effect.png'
+    previewImage: '/assets/boost-previews/crown-effect.png',
+    cssClass: 'crown-effect'
   },
   {
     id: 'neon-pulse',
@@ -30,7 +46,8 @@ const profileBoostEffects: BoostEffect[] = [
     tier: 'basic',
     type: 'animation',
     durationDays: 7,
-    previewImage: '/assets/boost-previews/neon-pulse.png'
+    previewImage: '/assets/boost-previews/neon-pulse.png',
+    cssClass: 'neon-pulse-effect'
   },
   {
     id: 'rainbow-flow',
@@ -40,7 +57,8 @@ const profileBoostEffects: BoostEffect[] = [
     tier: 'premium',
     type: 'animation',
     durationDays: 14,
-    previewImage: '/assets/boost-previews/rainbow-flow.png'
+    previewImage: '/assets/boost-previews/rainbow-flow.png',
+    cssClass: 'rainbow-flow-effect'
   },
   {
     id: 'royal-sparkle',
@@ -50,7 +68,8 @@ const profileBoostEffects: BoostEffect[] = [
     tier: 'royal',
     type: 'effect',
     durationDays: 30,
-    previewImage: '/assets/boost-previews/royal-sparkle.png'
+    previewImage: '/assets/boost-previews/royal-sparkle.png',
+    cssClass: 'royal-sparkle-effect'
   },
   {
     id: 'animated-border',
@@ -60,8 +79,50 @@ const profileBoostEffects: BoostEffect[] = [
     tier: 'premium',
     type: 'appearance',
     durationDays: 21,
-    previewImage: '/assets/boost-previews/animated-border.png'
+    previewImage: '/assets/boost-previews/animated-border.png',
+    cssClass: 'animated-border-effect'
+  },
+  {
+    id: 'visibility-boost',
+    name: 'Visibility Boost',
+    description: 'Increase your profile visibility in search results and leaderboards.',
+    price: 15,
+    tier: 'basic',
+    type: 'visibility',
+    durationDays: 14,
+    previewImage: '/assets/boost-previews/visibility-boost.png',
+    cssClass: 'visibility-boost-effect'
+  },
+  {
+    id: 'leaderboard-highlight',
+    name: 'Leaderboard Highlight',
+    description: 'Make your name stand out with a special highlight effect on leaderboards.',
+    price: 25,
+    tier: 'premium',
+    type: 'visibility',
+    durationDays: 21,
+    previewImage: '/assets/boost-previews/leaderboard-highlight.png',
+    cssClass: 'leaderboard-highlight-effect'
+  },
+  {
+    id: 'royal-presence',
+    name: 'Royal Presence',
+    description: 'The ultimate visibility package, ensuring your profile gets maximum exposure.',
+    price: 50,
+    tier: 'royal',
+    type: 'visibility',
+    durationDays: 30,
+    previewImage: '/assets/boost-previews/royal-presence.png',
+    cssClass: 'royal-presence-effect'
   }
 ];
+
+export const getBoostById = (id: string): BoostEffect | undefined => {
+  return profileBoostEffects.find(boost => boost.id === id);
+};
+
+export const getBoostsByType = (type: 'appearance' | 'animation' | 'visibility' | 'effect'): BoostEffect[] => {
+  return profileBoostEffects.filter(boost => boost.type === type);
+};
 
 export default profileBoostEffects;

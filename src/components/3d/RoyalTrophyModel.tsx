@@ -2,6 +2,8 @@
 import React, { useRef, useEffect } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
+import { Font, FontLoader } from 'three/examples/jsm/loaders/FontLoader';
 
 interface RoyalTrophyModelProps {
   width?: number;
@@ -128,23 +130,10 @@ const RoyalTrophyModel: React.FC<RoyalTrophyModelProps> = ({
     cupTop.castShadow = true;
     trophyGroup.add(cupTop);
     
-    // Add rank text
-    const rankGeometry = new THREE.TextGeometry(`#${rank}`, {
-      font: new THREE.Font({}), // This will be replaced with actual font in the animation loop
-      size: 0.5,
-      height: 0.1,
-      curveSegments: 12,
-      bevelEnabled: true,
-      bevelThickness: 0.03,
-      bevelSize: 0.02,
-      bevelOffset: 0,
-      bevelSegments: 5
-    });
-    
-    // Attempt to load a font
-    const fontLoader = new THREE.FontLoader();
+    // Attempt to load a font and add rank text
+    const fontLoader = new FontLoader();
     fontLoader.load('/fonts/helvetiker_regular.typeface.json', (font) => {
-      const rankGeometry = new THREE.TextGeometry(`#${rank}`, {
+      const rankGeometry = new TextGeometry(`#${rank}`, {
         font: font,
         size: 0.5,
         height: 0.1,
@@ -177,16 +166,16 @@ const RoyalTrophyModel: React.FC<RoyalTrophyModelProps> = ({
     // Add particles for a sparkling effect
     const particlesGeometry = new THREE.BufferGeometry();
     const particlesCount = 100;
-    const positions = new Float32Array(particlesCount * 3);
+    const positionsArray = new Float32Array(particlesCount * 3);
     
     for (let i = 0; i < particlesCount; i++) {
       const i3 = i * 3;
-      positions[i3] = (Math.random() - 0.5) * 5;
-      positions[i3 + 1] = Math.random() * 5 - 2;
-      positions[i3 + 2] = (Math.random() - 0.5) * 5;
+      positionsArray[i3] = (Math.random() - 0.5) * 5;
+      positionsArray[i3 + 1] = Math.random() * 5 - 2;
+      positionsArray[i3 + 2] = (Math.random() - 0.5) * 5;
     }
     
-    particlesGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    particlesGeometry.setAttribute('position', new THREE.BufferAttribute(positionsArray, 3));
     
     const particlesMaterial = new THREE.PointsMaterial({
       color: 0xD4AF37,
@@ -209,19 +198,21 @@ const RoyalTrophyModel: React.FC<RoyalTrophyModelProps> = ({
       
       if (particles) {
         // Animate particles
-        const positions = particles.geometry.attributes.position.array;
+        const positions = particles.geometry.attributes.position;
+        const positionsArr = positions.array as Float32Array;
+        
         for (let i = 0; i < particlesCount; i++) {
           const i3 = i * 3;
-          positions[i3 + 1] -= 0.01; // Falling effect
+          positionsArr[i3 + 1] -= 0.01; // Falling effect
           
           // Reset particle position if it falls below the scene
-          if (positions[i3 + 1] < -3) {
-            positions[i3] = (Math.random() - 0.5) * 5;
-            positions[i3 + 1] = 3;
-            positions[i3 + 2] = (Math.random() - 0.5) * 5;
+          if (positionsArr[i3 + 1] < -3) {
+            positionsArr[i3] = (Math.random() - 0.5) * 5;
+            positionsArr[i3 + 1] = 3;
+            positionsArr[i3 + 2] = (Math.random() - 0.5) * 5;
           }
         }
-        particles.geometry.attributes.position.needsUpdate = true;
+        positions.needsUpdate = true;
       }
       
       if (trophyRef.current) {

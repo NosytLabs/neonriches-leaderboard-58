@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Search } from 'lucide-react';
-import { faqItems, FaqItem } from '@/data/faqItems';
+import { faqItems, FAQItem } from '@/data/faqItems';
 
 interface FaqComponentProps {
   title?: string;
@@ -25,7 +25,7 @@ const FaqComponent: React.FC<FaqComponentProps> = ({
   const [activeCategory, setActiveCategory] = useState(initialCategory);
   
   // Get unique categories
-  const categories = ['all', ...new Set(faqItems.map(item => item.category))];
+  const categories = ['all', ...new Set(faqItems.map(item => item.category || 'other'))];
   
   // Filter items by category and search query
   const filteredItems = faqItems.filter(item => {
@@ -78,12 +78,12 @@ const FaqComponent: React.FC<FaqComponentProps> = ({
           <TabsContent value={activeCategory} forceMount>
             <Accordion type="single" collapsible className="w-full">
               {filteredItems.length > 0 ? (
-                filteredItems.map((item, index) => (
+                filteredItems.map((item) => (
                   <AccordionItem key={item.id} value={item.id} className="border-white/10">
                     <AccordionTrigger className="text-left hover:no-underline">
                       <div className="flex items-start">
                         {item.icon && (
-                          <div className="mr-2 mt-0.5 text-royal-gold">{React.cloneElement(item.icon as React.ReactElement, { size: 16 })}</div>
+                          <div className="mr-2 mt-0.5 text-royal-gold">{item.icon}</div>
                         )}
                         <span>{item.question}</span>
                       </div>
