@@ -25,7 +25,7 @@ const RoyalFeatures = () => {
           </p>
         </Link>
         
-        <Link to="/profile/royalty" className="glass-morphism p-6 rounded-lg transition-all duration-300 hover:border-royal-crimson/30 group">
+        <Link to="/features" className="glass-morphism p-6 rounded-lg transition-all duration-300 hover:border-royal-crimson/30 group">
           <div className="w-12 h-12 rounded-full bg-royal-crimson/10 flex items-center justify-center mb-4 group-hover:bg-royal-crimson/20 transition-colors">
             <Scroll className="h-8 w-8 text-royal-crimson group-hover:animate-pulse-slow" />
           </div>
@@ -35,7 +35,7 @@ const RoyalFeatures = () => {
           </p>
         </Link>
         
-        <Link to="/teams" className="glass-morphism p-6 rounded-lg transition-all duration-300 hover:border-royal-navy/30 group">
+        <Link to="/features" className="glass-morphism p-6 rounded-lg transition-all duration-300 hover:border-royal-navy/30 group">
           <div className="w-12 h-12 rounded-full bg-royal-navy/10 flex items-center justify-center mb-4 group-hover:bg-royal-navy/20 transition-colors">
             <Shield className="h-8 w-8 text-royal-navy group-hover:animate-pulse-slow" />
           </div>
@@ -45,13 +45,13 @@ const RoyalFeatures = () => {
           </p>
         </Link>
         
-        <Link to="/events" className="glass-morphism p-6 rounded-lg transition-all duration-300 hover:border-royal-purple/30 group">
+        <Link to="/features#mockery-section" className="glass-morphism p-6 rounded-lg transition-all duration-300 hover:border-royal-purple/30 group">
           <div className="w-12 h-12 rounded-full bg-royal-purple/10 flex items-center justify-center mb-4 group-hover:bg-royal-purple/20 transition-colors">
             <Trophy className="h-8 w-8 text-purple-500 group-hover:animate-pulse-slow" />
           </div>
-          <h3 className="text-xl font-bold mb-2">Royal Tournaments</h3>
+          <h3 className="text-xl font-bold mb-2">Royal Mockery</h3>
           <p className="text-white/70">
-            Participate in weekly events like "Poke Party" where you can pay to temporarily affect others' rankings in playful competition.
+            Apply satirical visual effects to other profiles with our Royal Mockery Festival - a playful take on medieval public mockery.
           </p>
         </Link>
         
@@ -65,7 +65,7 @@ const RoyalFeatures = () => {
           </p>
         </Link>
         
-        <Link to="/royal-council" className="glass-morphism p-6 rounded-lg transition-all duration-300 hover:border-royal-navy/30 group">
+        <Link to="/features" className="glass-morphism p-6 rounded-lg transition-all duration-300 hover:border-royal-navy/30 group">
           <div className="w-12 h-12 rounded-full bg-royal-navy/10 flex items-center justify-center mb-4 group-hover:bg-royal-navy/20 transition-colors">
             <Crown className="h-8 w-8 text-royal-navy group-hover:animate-pulse-slow" />
           </div>

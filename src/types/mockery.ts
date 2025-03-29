@@ -1,7 +1,7 @@
 
-export type MockeryAction = 'jester' | 'roast' | 'duel' | 'shame' | 'crown';
+export type MockeryAction = 'tomatoes' | 'putridEggs' | 'stocks' | 'silence' | 'courtJester' | 'jester' | 'dunce' | 'smokeBomb' | 'royalPie' | 'glitterBomb' | 'jokeCrown' | 'memeFrame' | 'protection' | 'immune' | 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
 export type ShameAction = 'jester' | 'roast' | 'duel' | 'shame' | 'crown' | 'eggs';
-export type MockeryTier = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
+export type MockeryTier = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary' | 'basic' | 'premium' | 'elite';
 
 export interface MockeryEffect {
   id: string;

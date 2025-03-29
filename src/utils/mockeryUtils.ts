@@ -1,262 +1,105 @@
-import { ExtendedMockeryAction, MockeryAction, MockeryTier } from '@/types/mockery';
-import { Egg, Flame, Crown, Shield, Megaphone, Ban, Award, Meh, Cake, Sparkles, Theater, Laugh } from 'lucide-react';
 
-/**
- * Map of mockery actions to their cooldown periods in milliseconds
- */
-export const MOCKERY_COOLDOWNS: Record<ExtendedMockeryAction, number> = {
-  tomatoes: 1800000, // 30 minutes
-  putridEggs: 3600000, // 1 hour (renamed from eggs)
-  stocks: 7200000, // 2 hours
-  silence: 14400000, // 4 hours
-  courtJester: 86400000, // 24 hours
-  protected: 86400000, // 24 hours
-  immune: 172800000, // 48 hours
-  jester: 43200000, // 12 hours
-  dunce: 28800000, // 8 hours
-  roast: 3600000, // 1 hour
-  ridicule: 1800000, // 30 minutes
-  taunt: 3600000, // 1 hour
-  drama: 7200000, // 2 hours
-  protection: 86400000, // 24 hours
-  removal: 3600000, // 1 hour
-  smokeBomb: 28800000, // 8 hours
-  royalPie: 3600000,   // 1 hour
-  glitterBomb: 7200000, // 2 hours
-  jokeCrown: 14400000,  // 4 hours
-  memeFrame: 5400000,   // 1.5 hours
-} as Record<ExtendedMockeryAction, number>;
+import { MockeryAction, ShameAction } from '@/types/mockery';
 
-/**
- * Map of mockery actions to their costs
- */
-export const MOCKERY_COSTS: Record<ExtendedMockeryAction, number> = {
-  tomatoes: 5,
-  putridEggs: 10, // renamed from eggs
-  stocks: 25,
-  silence: 50,
-  courtJester: 100,
-  protected: 50,
-  immune: 200,
-  jester: 75,
-  dunce: 25,
-  roast: 15,
-  ridicule: 5,
-  taunt: 10,
-  drama: 30,
-  protection: 50,
-  removal: 25,
-  smokeBomb: 1000, // Expensive smoke bomb effect - updated to $1000
-  royalPie: 250,   // Pie in the face
-  glitterBomb: 500, // Glitter bomb
-  jokeCrown: 350,  // Joke crown
-  memeFrame: 400,  // Meme frame
-} as Record<ExtendedMockeryAction, number>;
+export const MOCKERY_NAMES: Record<string, string> = {
+  tomatoes: 'Rotten Tomatoes',
+  putridEggs: 'Putrid Eggs',
+  stocks: 'Public Stocks',
+  silence: 'Royal Silencing',
+  courtJester: 'Court Jester',
+  jester: 'Court Jester',
+  dunce: 'Dunce Cap',
+  protection: 'Royal Protection',
+  smokeBomb: 'Smoke Bomb',
+  royalPie: 'Royal Pie',
+  glitterBomb: 'Glitter Bomb',
+  jokeCrown: 'Joke Crown',
+  memeFrame: 'Meme Frame'
+};
 
-/**
- * Map of mockery actions to their display names
- */
-export const MOCKERY_NAMES: Record<ExtendedMockeryAction, string> = {
-  tomatoes: "Throw Tomatoes",
-  putridEggs: "Hurl Putrid Eggs", // renamed from eggs
-  stocks: "Put in Stocks",
-  silence: "Silence",
-  courtJester: "Court Jester",
-  protected: "Protected",
-  immune: "Immunity",
-  jester: "Jester",
-  dunce: "Dunce Cap",
-  roast: "Royal Roast",
-  ridicule: "Public Ridicule",
-  taunt: "Royal Taunt",
-  drama: "Court Drama",
-  protection: "Protection",
-  removal: "Removal",
-  smokeBomb: "Royal Smoke Bomb",
-  royalPie: "Royal Pie Attack",
-  glitterBomb: "Glitter Explosion",
-  jokeCrown: "Jester's Jingling Crown",
-  memeFrame: "Viral Meme Frame",
-} as Record<ExtendedMockeryAction, string>;
+export const MOCKERY_COSTS: Record<string, number> = {
+  tomatoes: 25,
+  putridEggs: 50,
+  stocks: 100,
+  silence: 150,
+  jester: 200,
+  courtJester: 250,
+  dunce: 75,
+  protection: 200,
+  smokeBomb: 300,
+  royalPie: 60,
+  glitterBomb: 175,
+  jokeCrown: 125,
+  memeFrame: 180
+};
 
-/**
- * Map of mockery actions to their descriptions
- */
-export const MOCKERY_DESCRIPTIONS: Record<ExtendedMockeryAction, string> = {
-  tomatoes: "Pelt your target with rotten tomatoes. Their profile will be stained with tomato splatters for 24 hours. A medieval classic!",
-  putridEggs: "Hurl putrid eggs that have been rotting for weeks. Covers the target's profile with foul yolk for 48 hours. The virtual stench is unbearable!",
-  stocks: "Place your target in the public stocks for all to see. Their profile will show wooden restraints for 72 hours. The ultimate medieval humiliation!",
-  silence: "Temporarily silence your target with a royal decree. Their profile will show a silenced indicator for 48 hours. They can still post, but everyone knows they've been silenced!",
-  courtJester: "Elevate your target to the royal court jester. Their profile will show a jester's hat for a full week. The kingdom's entertainment at their expense!",
-  protected: "User is protected from mockery by royal guards.",
-  immune: "User has royal immunity from all mockery effects.",
-  jester: "Appoint your target as a common jester. Their profile will display a jester's symbol for 96 hours. Not quite royal court status, but still amusing!",
-  dunce: "Place a dunce cap on your target. Their profile will show a dunce cap for 48 hours. Everyone will know of their foolishness!",
-  roast: "Deliver a royal roast to your target. Their profile will show flames around it for 24 hours. A sophisticated form of mockery!",
-  ridicule: "Subject your target to public ridicule. Their profile will show laughing emojis for 24 hours. A light form of mockery!",
-  taunt: "Taunt your target with royal insults. Their profile will show taunting symbols for 24 hours. A playful jest!",
-  drama: "Create court drama involving your target. Their profile will show dramatic symbols for 48 hours. The court gossips will be busy!",
-  protection: "Grant royal protection from mockery.",
-  removal: "Remove active mockery effects.",
-  smokeBomb: "Deploy a royal smoke bomb that completely covers the target's profile in thick, dramatic smoke for 8 hours. Their profile is still accessible, but visitors must peer through the royal fog to see it!",
-  royalPie: "Slam an extravagant cream pie right in your target's face! Their profile will be covered in whipped cream for 24 hours. The most humiliating dessert service in the kingdom!",
-  glitterBomb: "Explode a magnificent glitter bomb on your target! Their profile will sparkle with annoying glitter for 48 hours. Good luck cleaning that up - it gets EVERYWHERE!",
-  jokeCrown: "Place a ridiculous jingling crown on your target's profile for 72 hours. It makes absurd sound effects whenever someone views their profile!",
-  memeFrame: "Surround your target's profile with the kingdom's most embarrassing animated memes for 36 hours. Internet fame at its most cringeworthy!",
-} as Record<ExtendedMockeryAction, string>;
+export const MOCKERY_DESCRIPTIONS: Record<string, string> = {
+  tomatoes: 'Pelt the user with virtual rotten tomatoes for 24 hours, adding splatters to their profile.',
+  putridEggs: 'Throw virtual eggs at the user for 48 hours, covering their profile with egg splats.',
+  stocks: 'Place the user in the public stocks for 72 hours, restricting their profile in a wooden restraint frame.',
+  silence: 'Apply a silent treatment effect to the user\'s profile for 48 hours, adding a muzzle graphic to their avatar.',
+  courtJester: 'Elevate the user to Court Jester for a full 7 days, adding a jester\'s hat and bells to their profile.',
+  jester: 'Force the user to wear the jester\'s hat for 96 hours, adding a colorful fool\'s cap to their profile.',
+  dunce: 'Place a dunce cap on the user for 48 hours, displaying their folly to all visitors.',
+  protection: 'Protect yourself from all mockery attempts for 7 days with royal immunity.',
+  smokeBomb: 'Deploy a smoke bomb on the user\'s profile for 8 hours, obscuring their content with thick smoke effects.',
+  royalPie: 'Launch a royal cream pie at the user\'s profile for 36 hours, adding splattered cream to their avatar.',
+  glitterBomb: 'Explode a glitter bomb on the user\'s profile for 48 hours, covering everything in sparkly residue.',
+  jokeCrown: 'Add a ridiculous oversized crown to the user\'s profile for 72 hours, mocking their royal aspirations.',
+  memeFrame: 'Frame the user\'s profile in animated memes for 60 hours, surrounding their content with internet humor.'
+};
 
-/**
- * Map of mockery actions to their rarity levels
- */
-export const MOCKERY_RARITY: Record<ExtendedMockeryAction, MockeryTier> = {
-  tomatoes: "common",
-  putridEggs: "uncommon", // renamed from eggs
-  stocks: "rare",
-  silence: "epic",
-  courtJester: "legendary",
-  protected: "rare",
-  immune: "legendary",
-  jester: "epic",
-  dunce: "common",
-  roast: "uncommon",
-  ridicule: "common",
-  taunt: "common",
-  drama: "rare",
-  protection: "rare",
-  smokeBomb: "legendary",
-  royalPie: "uncommon",
-  glitterBomb: "epic",
-  jokeCrown: "rare",
-  memeFrame: "epic",
-} as Record<ExtendedMockeryAction, MockeryTier>;
+export const mockeryActions: MockeryAction[] = [
+  'tomatoes',
+  'putridEggs',
+  'stocks',
+  'silence', 
+  'jester',
+  'courtJester',
+  'dunce',
+  'smokeBomb',
+  'royalPie',
+  'glitterBomb',
+  'jokeCrown',
+  'memeFrame'
+];
 
-/**
- * Get icon name for mockery action
- */
-export function getMockeryIcon(action: ExtendedMockeryAction): string {
-  switch (action) {
-    case 'tomatoes':
-      return 'Vegetable';
-    case 'putridEggs': // renamed from eggs
-      return 'Egg';
-    case 'stocks':
-      return 'Lock';
-    case 'silence':
-      return 'MessageSquareOff';
-    case 'courtJester':
-      return 'Crown';
-    case 'protected':
-      return 'ShieldCheck';
-    case 'immune':
-      return 'Shield';
-    case 'jester':
-      return 'ThumbsUp';
-    case 'dunce':
-      return 'MousePointerClick';
-    case 'roast':
-      return 'Flame';
-    case 'ridicule':
-      return 'ThumbsDown';
-    case 'taunt':
-      return 'MessageCircle';
-    case 'drama':
-      return 'Theater';
-    case 'smokeBomb':
-      return 'CloudFog';
-    case 'royalPie':
-      return 'Cake';
-    case 'glitterBomb':
-      return 'Sparkles';
-    case 'jokeCrown':
-      return 'Crown';
-    case 'memeFrame':
-      return 'Theater';
-    default:
-      return 'Skull';
-  }
-}
+export const getMockeryDescription = (action: MockeryAction, username: string): string => {
+  const descriptions: Record<string, string> = {
+    tomatoes: `Pelt ${username} with virtual rotten tomatoes for 24 hours.`,
+    putridEggs: `Throw virtual eggs at ${username} for 48 hours.`,
+    stocks: `Place ${username} in the public stocks for 72 hours.`,
+    silence: `Silence ${username} from all public communication for 48 hours.`,
+    jester: `Force ${username} to wear the jester's hat for 96 hours.`,
+    courtJester: `Elevate ${username} to the position of Court Jester for a full 7 days.`,
+    dunce: `Place a dunce cap on ${username} for 48 hours.`,
+    protection: `Protect ${username} from all mockery attempts for 7 days.`,
+    smokeBomb: `Deploy a smoke bomb on ${username}'s profile for 8 hours.`,
+    royalPie: `Launch a royal cream pie at ${username}'s profile for 36 hours.`,
+    glitterBomb: `Explode a glitter bomb on ${username}'s profile for 48 hours.`,
+    jokeCrown: `Add a ridiculous crown to ${username}'s profile for 72 hours.`,
+    memeFrame: `Frame ${username}'s profile in animated memes for 60 hours.`
+  };
+  
+  return descriptions[action] || `Mock ${username} publicly.`;
+};
 
-/**
- * Is the action a shame action
- */
-export function isShameAction(action: MockeryAction): boolean {
-  return ['tomatoes', 'putridEggs', 'stocks', 'silence', 'courtJester', 'jester', 'dunce', 'roast', 'ridicule', 'smokeBomb'].includes(action as string);
-}
-
-/**
- * Is the action a protection action
- */
-export function isProtectionAction(action: MockeryAction): boolean {
-  return ['protection', 'immune'].includes(action as string);
-}
-
-/**
- * Get the mockery description for a given action and username
- */
-export function getMockeryDescription(action: MockeryAction, username: string): string {
-  const baseDescription = MOCKERY_DESCRIPTIONS[action] || `Mock ${username} publicly.`;
-  return baseDescription.replace(/your target|the target/gi, username);
-}
-
-/**
- * Get CSS class for mockery effect
- */
-export function getMockeryEffectClass(action: MockeryAction): string {
-  return `mockery-effect-${action}`;
-}
-
-/**
- * Get CSS class for active mockery
- */
-export function getActiveMockeryClass(action: MockeryAction): string {
-  return `mockery-active-${action}`;
-}
-
-/**
- * Get CSS class for mockery overlay
- */
-export function getMockeryOverlayClass(action: MockeryAction): string {
-  return `${action}-overlay`;
-}
-
-/**
- * Get the mockery action icon component
- */
-export const getMockeryActionIcon = (action: MockeryAction) => {
-  switch (action) {
-    case 'tomatoes':
-      return Flame;
-    case 'putridEggs':
-      return Egg;
-    case 'stocks':
-      return Ban;
-    case 'silence':
-      return Megaphone;
-    case 'courtJester':
-    case 'jester':
-      return Crown;
-    case 'common':
-      return Meh;
-    case 'uncommon':
-      return Egg;
-    case 'rare':
-      return Shield;
-    case 'epic':
-      return Crown;
-    case 'legendary':
-      return Award;
-    case 'protection':
-    case 'immune':
-      return Shield;
-    case 'royalPie':
-      return Cake;
-    case 'glitterBomb':
-      return Sparkles;
-    case 'jokeCrown':
-      return Crown;
-    case 'memeFrame':
-      return Theater;
-    default:
-      return Flame;
-  }
+export const getMockeryDuration = (action: MockeryAction): number => {
+  const durations: Record<string, number> = {
+    tomatoes: 24,
+    putridEggs: 48,
+    stocks: 72,
+    silence: 48,
+    jester: 96,
+    courtJester: 168, // 7 days
+    dunce: 48,
+    protection: 168, // 7 days
+    smokeBomb: 8,
+    royalPie: 36,
+    glitterBomb: 48,
+    jokeCrown: 72,
+    memeFrame: 60
+  };
+  
+  return durations[action] || 24;
 };

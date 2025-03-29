@@ -178,6 +178,7 @@ const RoyalMockeryFestival = () => {
               <Bell className="h-4 w-4 text-royal-crimson mr-2 mt-0.5 flex-shrink-0" />
               <span>
                 <strong>Important:</strong> Mockery effects are purely visual and have no impact on rankings or functionality. They're designed as a satirical take on digital status.
+                <Link to="/features#mockery-section" className="ml-1 text-royal-gold hover:underline">Learn more</Link>
               </span>
             </p>
           </div>
@@ -353,7 +354,18 @@ const RoyalMockeryFestival = () => {
             </TabsContent>
             
             <TabsContent value="howto" className="mt-4">
-              <MockeryHowItWorks />
+              <div className="text-center p-6 glass-morphism border-white/10 rounded-lg">
+                <h3 className="text-xl font-bold mb-4">How the Royal Mockery Festival Works</h3>
+                <p className="text-white/70 mb-6">
+                  The Royal Mockery Festival allows you to apply purely cosmetic effects to other users' profiles.
+                  These effects are entirely visual and have no impact on rankings or functionality.
+                </p>
+                <Link to="/features#mockery-section">
+                  <Button className="bg-royal-purple hover:bg-royal-purple/90">
+                    View Complete Mockery Guide
+                  </Button>
+                </Link>
+              </div>
             </TabsContent>
           </Tabs>
         </CardContent>
