@@ -1,4 +1,3 @@
-
 import { User, ProfileBoost, UserCosmetics, UserProfile } from '@/types/user';
 
 /**
@@ -60,7 +59,8 @@ export const addCosmetic = (user: User, type: keyof UserCosmetics, itemId: strin
       backgrounds: [],
       effects: [],
       badges: [],
-      themes: []
+      themes: [],
+      socialLinks: []
     };
   }
   
@@ -94,7 +94,8 @@ export const addCosmeticByCategoryString = (user: User, cosmeticId: string, cate
       backgrounds: [],
       effects: [],
       badges: [],
-      themes: []
+      themes: [],
+      socialLinks: []
     };
   }
 

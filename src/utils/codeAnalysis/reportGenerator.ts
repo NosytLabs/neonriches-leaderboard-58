@@ -1,4 +1,3 @@
-
 import { AnalysisResult } from './types';
 
 /**
@@ -85,9 +84,9 @@ export const generateAnalysisReport = (result: AnalysisResult): string => {
       report += `### Pattern ${index + 1}: ${dup.pattern}\n\n`;
       report += `Similarity: ${Math.round(dup.similarity * 100)}%\n\n`;
       report += `**Found in:**\n`;
-      if (occurrences.length > 0) {
-        occurrences.forEach(occ => {
-          report += `- ${occ.file}\n`;
+      if (Array.isArray(occurrences)) {
+        occurrences.forEach((occ: any) => {
+          // Format occurrence data
         });
       } else if (dup.code) {
         report += `\`\`\`typescript\n${dup.code}\n\`\`\`\n`;

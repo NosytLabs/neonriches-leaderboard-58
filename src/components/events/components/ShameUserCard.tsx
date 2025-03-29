@@ -1,24 +1,25 @@
 
-import React from 'react';
-import { Crown, Coins, Tag } from 'lucide-react';
+import React, { useState } from 'react';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
+import { getTeamColor } from '@/utils/teamUtils';
+import { formatCurrency, formatNumber } from '@/lib/utils';
+import { getShameActionIcon, getShameActionPrice, hasWeeklyDiscount, getDiscountedShamePrice } from '../utils/shameUtils';
 import { ShameAction } from '../hooks/useShameEffect';
-import { getShameActionIcon, getShameActionColor, hasWeeklyDiscount, getShameActionPrice, getDiscountedShamePrice } from '../utils/shameUtils';
-import RoyalButton from '@/components/ui/royal-button';
-import { getTeamColor } from '@/lib/colors';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import MedievalIcon from '@/components/ui/medieval-icon';
+import { Trophy, Crown, ShieldOff, Clock } from 'lucide-react';
 
 interface ShameUserCardProps {
   user: {
-    id: number;
+    id: string | number;
     username: string;
     profileImage?: string;
     rank: number;
-    team?: string | null;
+    team: 'red' | 'green' | 'blue' | null;
     amountSpent: number;
   };
-  isShamed: ShameAction | null;
+  isShamed: { action: ShameAction; timestamp: number; until: number } | null;
   isOnCooldown: boolean;
   shameCount: number;
   onShame: (userId: number, username: string, type: ShameAction, amount: number) => boolean;
@@ -33,180 +34,247 @@ const ShameUserCard: React.FC<ShameUserCardProps> = ({
   onShame,
   featuredAction
 }) => {
-  const [selectedShame, setSelectedShame] = React.useState<ShameAction | null>(null);
-  const teamColor = user.team ? getTeamColor(user.team) : '';
+  const [selectedAction, setSelectedAction] = useState<ShameAction | null>(null);
+  const [isShaming, setIsShaming] = useState(false);
   
-  const handleShameSelect = (action: ShameAction) => {
-    setSelectedShame(action);
+  const handleActionSelect = (action: ShameAction) => {
+    setSelectedAction(action);
   };
   
-  const handleShameConfirm = () => {
-    if (selectedShame) {
-      // Apply discount if this is the weekly featured action
-      const shameAmount = hasWeeklyDiscount(selectedShame) 
-        ? getDiscountedShamePrice(selectedShame) 
-        : getShameActionPrice(selectedShame);
+  const handleShame = () => {
+    if (!selectedAction || isShaming) return;
+    
+    setIsShaming(true);
+    
+    const userId = typeof user.id === 'string' ? parseInt(user.id, 10) : user.id;
+    const amount = hasWeeklyDiscount(selectedAction) 
+      ? getDiscountedShamePrice(selectedAction) 
+      : getShameActionPrice(selectedAction);
+    
+    const success = onShame(userId, user.username, selectedAction, amount);
+    
+    if (success) {
+      // Shake animation for successful shaming
+      const userCard = document.getElementById(`shame-user-${user.id}`);
+      if (userCard) {
+        userCard.classList.add(`shame-effect-${selectedAction}`);
         
-      onShame(user.id, user.username, selectedShame, shameAmount);
-      setSelectedShame(null);
+        setTimeout(() => {
+          userCard.classList.remove(`shame-effect-${selectedAction}`);
+        }, 1000);
+      }
     }
+    
+    setIsShaming(false);
   };
   
-  // Visual effects for shamed users
-  React.useEffect(() => {
-    if (isShamed) {
-      const targetElement = document.getElementById(`user-card-${user.id}`);
-      if (!targetElement) return;
-      
-      // Add a shame-specific animation class
-      targetElement.classList.add(`shame-effect-${isShamed}`);
-      
-      // Remove after animation completes
-      setTimeout(() => {
-        targetElement.classList.remove(`shame-effect-${isShamed}`);
-      }, 5000);
-    }
-  }, [isShamed, user.id]);
+  const getInitials = (name: string) => {
+    return name.substring(0, 2).toUpperCase();
+  };
+  
+  // Calculate time remaining for shame effect
+  const getTimeRemaining = () => {
+    if (!isShamed) return '';
+    
+    const now = Date.now();
+    const remaining = isShamed.until - now;
+    
+    if (remaining <= 0) return 'Expired';
+    
+    const hours = Math.floor(remaining / (1000 * 60 * 60));
+    const minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
+    
+    return `${hours}h ${minutes}m remaining`;
+  };
+  
+  const isFeaturedAction = (action: ShameAction) => {
+    return action === featuredAction;
+  };
   
   return (
-    <div 
-      id={`user-card-${user.id}`}
-      className={`glass-morphism border-white/10 p-4 rounded-lg relative overflow-hidden transition-all duration-300 hover:border-white/20 
-        ${isShamed ? `shame-active-${isShamed}` : ''}
-        ${isOnCooldown ? 'opacity-70' : ''}`}
+    <Card 
+      id={`shame-user-${user.id}`}
+      className={`glass-morphism border-white/10 overflow-hidden transition-colors ${
+        isShamed ? `shame-active-${isShamed.action}` : ''
+      }`}
     >
-      {/* Visual shame effect containers */}
-      {isShamed === 'tomatoes' && (
-        <div className="absolute inset-0 pointer-events-none tomato-overlay"></div>
-      )}
-      {isShamed === 'eggs' && (
-        <div className="absolute inset-0 pointer-events-none egg-overlay"></div>
-      )}
-      {isShamed === 'stocks' && (
-        <div className="absolute inset-0 pointer-events-none stocks-overlay"></div>
-      )}
-      
-      {/* Crown for top 3 */}
-      {user.rank <= 3 && (
-        <div className="absolute top-2 right-2">
-          <MedievalIcon 
-            name="crown" 
-            size="sm"
-            color={user.rank === 1 ? 'gold' : user.rank === 2 ? 'silver' : 'bronze'}
-            className={user.rank === 1 ? 'animate-crown-glow' : ''}
-          />
-        </div>
-      )}
-      
-      {/* User info */}
-      <div className="flex items-center mb-3">
-        <div className="relative mr-3">
-          <div className="w-12 h-12 rounded-full glass-morphism border-white/10 flex items-center justify-center overflow-hidden">
-            {user.profileImage ? (
-              <img src={user.profileImage} alt={user.username} className="w-full h-full rounded-full object-cover" />
-            ) : (
-              <span className="text-lg font-medium">{user.username.charAt(0).toUpperCase()}</span>
-            )}
-          </div>
-          {user.team && (
-            <div className={`absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-white/20 border-2 border-background ${teamColor}`}></div>
-          )}
-        </div>
-        
-        <div>
+      <CardContent className="p-4">
+        <div className="flex items-center justify-between">
+          {/* User Information */}
           <div className="flex items-center">
-            <span className="font-medium">{user.username}</span>
-            <span className="ml-2 text-xs bg-white/10 px-1.5 py-0.5 rounded-full text-white/70">
-              #{user.rank}
-            </span>
-            {shameCount > 0 && (
-              <span className="ml-2 text-xs bg-red-500/20 px-1.5 py-0.5 rounded-full text-red-300">
-                {shameCount} {shameCount === 1 ? 'shame' : 'shames'}
-              </span>
-            )}
-          </div>
-          <div className="text-white/60 text-xs flex items-center">
-            <Coins size={10} className="mr-1" />
-            ${user.amountSpent.toLocaleString()}
-          </div>
-        </div>
-      </div>
-      
-      {/* Shame Actions */}
-      {!isOnCooldown && (
-        <>
-          <div className="text-xs text-white/60 mb-1">Select shaming method:</div>
-          <div className="flex space-x-2 mb-3">
-            {(['tomatoes', 'eggs', 'stocks'] as ShameAction[]).map((action) => {
-              const colors = getShameActionColor(action);
-              const isSelected = selectedShame === action;
-              const isDiscounted = hasWeeklyDiscount(action);
+            <Avatar className={`h-10 w-10 mr-3 ${isShamed ? `ring-2 ring-${isShamed.action === 'tomatoes' ? 'red' : isShamed.action === 'eggs' ? 'yellow' : 'amber'}-500/50` : ''}`}>
+              <AvatarImage src={user.profileImage} alt={user.username} />
+              <AvatarFallback className={user.team ? getTeamColor(user.team) : ''}>
+                {getInitials(user.username)}
+              </AvatarFallback>
+            </Avatar>
+            
+            <div>
+              <div className="flex items-center">
+                <span className="font-medium">{user.username}</span>
+                {user.rank <= 3 && (
+                  <Trophy className="ml-1.5 h-3.5 w-3.5 text-royal-gold" />
+                )}
+              </div>
               
-              return (
-                <Tooltip key={action}>
-                  <TooltipTrigger asChild>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className={`flex-1 h-8 relative ${
-                        isSelected 
-                          ? `${colors.bg} ${colors.border} border ${colors.text}` 
-                          : 'glass-morphism border-white/10'
-                      } ${isDiscounted ? 'ring-1 ring-royal-gold' : ''}`}
-                      onClick={() => handleShameSelect(action)}
-                    >
-                      <span className="mr-1">{getShameActionIcon(action)}</span>
-                      <span className="text-xs capitalize">{action}</span>
-                      
-                      {isDiscounted && (
-                        <span className="absolute -top-2 -right-2 bg-royal-gold text-black text-xs px-1 rounded-full flex items-center justify-center">
-                          <Tag size={10} className="mr-0.5" />
-                          50%
-                        </span>
-                      )}
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent side="top" className="text-xs px-2 py-1">
-                    {isDiscounted ? (
-                      <div className="flex flex-col items-center">
-                        <span className="text-royal-gold font-bold">Weekly Special!</span>
-                        <span className="line-through text-white/50">${getShameActionPrice(action).toFixed(2)}</span>
-                        <span className="text-royal-gold">${getDiscountedShamePrice(action).toFixed(2)}</span>
-                      </div>
-                    ) : (
-                      <span>${getShameActionPrice(action).toFixed(2)}</span>
-                    )}
-                  </TooltipContent>
-                </Tooltip>
-              );
-            })}
+              <div className="flex items-center space-x-2 mt-1">
+                <Badge variant="outline" className="text-xs py-0 px-1.5 h-5 bg-background/50">
+                  #{user.rank}
+                </Badge>
+                
+                {user.team && (
+                  <Badge className={`text-xs py-0 px-1.5 h-5 ${getTeamColor(user.team)}`}>
+                    {user.team.charAt(0).toUpperCase() + user.team.slice(1)}
+                  </Badge>
+                )}
+                
+                <span className="text-xs text-white/60">
+                  {formatCurrency(user.amountSpent)}
+                </span>
+              </div>
+            </div>
           </div>
           
-          <RoyalButton
-            variant="royal"
-            size="sm"
-            className="w-full h-8"
-            shimmer={!!selectedShame}
-            glow={!!selectedShame}
-            disabled={!selectedShame}
-            onClick={handleShameConfirm}
-          >
-            {selectedShame && hasWeeklyDiscount(selectedShame) ? (
-              <>Shame at 50% Off</>
-            ) : (
-              <>Shame This Noble</>
+          {/* Status badges */}
+          <div>
+            {isShamed && (
+              <div className="flex flex-col items-end">
+                <Badge className="mb-1 bg-amber-500/20 text-amber-400 border-amber-500/30">
+                  {isShamed.action.charAt(0).toUpperCase() + isShamed.action.slice(1)}
+                </Badge>
+                
+                <div className="text-xs text-white/60 flex items-center">
+                  <Clock className="mr-1 h-3 w-3" />
+                  {getTimeRemaining()}
+                </div>
+              </div>
             )}
-          </RoyalButton>
-        </>
-      )}
-      
-      {isOnCooldown && (
-        <div className="text-center text-sm text-white/60 mt-2 p-2 glass-morphism border-white/10 rounded">
-          <span className="text-xs">Cooldown Active</span>
-          <p className="text-xs">The stocks are being prepared for the next noble.</p>
+            
+            {!isShamed && isOnCooldown && (
+              <Badge className="bg-blue-500/20 text-blue-400 border-blue-500/30">
+                <Clock className="mr-1 h-3 w-3" />
+                Cooldown
+              </Badge>
+            )}
+            
+            {!isShamed && !isOnCooldown && shameCount > 0 && (
+              <Badge className="bg-purple-500/20 text-purple-400 border-purple-500/30">
+                {shameCount}x Shamed
+              </Badge>
+            )}
+          </div>
         </div>
-      )}
-    </div>
+        
+        {/* Mockery Actions */}
+        {!isShamed && !isOnCooldown && (
+          <div className="mt-4">
+            <div className="text-xs text-white/60 mb-2">Select a mockery type:</div>
+            
+            <div className="grid grid-cols-3 gap-2">
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={() => handleActionSelect('tomatoes')}
+                className={`h-auto py-1.5 ${
+                  selectedAction === 'tomatoes' ? 'bg-red-500/20 border-red-500/30' : 'bg-white/5'
+                } ${isFeaturedAction('tomatoes') ? 'border-royal-gold/50' : 'border-white/10'}`}
+              >
+                <div className="flex flex-col items-center">
+                  <span className="text-lg mb-1">🍅</span>
+                  <span className="text-xs">
+                    {isFeaturedAction('tomatoes') ? (
+                      <span className="flex flex-col">
+                        <span className="line-through text-white/40">${getShameActionPrice('tomatoes').toFixed(2)}</span>
+                        <span className="text-royal-gold">${getDiscountedShamePrice('tomatoes').toFixed(2)}</span>
+                      </span>
+                    ) : (
+                      <span>${getShameActionPrice('tomatoes').toFixed(2)}</span>
+                    )}
+                  </span>
+                </div>
+              </Button>
+              
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={() => handleActionSelect('eggs')}
+                className={`h-auto py-1.5 ${
+                  selectedAction === 'eggs' ? 'bg-yellow-500/20 border-yellow-500/30' : 'bg-white/5'
+                } ${isFeaturedAction('eggs') ? 'border-royal-gold/50' : 'border-white/10'}`}
+              >
+                <div className="flex flex-col items-center">
+                  <span className="text-lg mb-1">🥚</span>
+                  <span className="text-xs">
+                    {isFeaturedAction('eggs') ? (
+                      <span className="flex flex-col">
+                        <span className="line-through text-white/40">${getShameActionPrice('eggs').toFixed(2)}</span>
+                        <span className="text-royal-gold">${getDiscountedShamePrice('eggs').toFixed(2)}</span>
+                      </span>
+                    ) : (
+                      <span>${getShameActionPrice('eggs').toFixed(2)}</span>
+                    )}
+                  </span>
+                </div>
+              </Button>
+              
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={() => handleActionSelect('stocks')}
+                className={`h-auto py-1.5 ${
+                  selectedAction === 'stocks' ? 'bg-amber-500/20 border-amber-500/30' : 'bg-white/5'
+                } ${isFeaturedAction('stocks') ? 'border-royal-gold/50' : 'border-white/10'}`}
+              >
+                <div className="flex flex-col items-center">
+                  <span className="text-lg mb-1">🪵</span>
+                  <span className="text-xs">
+                    {isFeaturedAction('stocks') ? (
+                      <span className="flex flex-col">
+                        <span className="line-through text-white/40">${getShameActionPrice('stocks').toFixed(2)}</span>
+                        <span className="text-royal-gold">${getDiscountedShamePrice('stocks').toFixed(2)}</span>
+                      </span>
+                    ) : (
+                      <span>${getShameActionPrice('stocks').toFixed(2)}</span>
+                    )}
+                  </span>
+                </div>
+              </Button>
+            </div>
+            
+            <Button
+              className="w-full mt-2 bg-royal-crimson hover:bg-royal-crimson/90"
+              size="sm"
+              disabled={!selectedAction || isShaming}
+              onClick={handleShame}
+            >
+              {isShaming ? (
+                <div className="flex items-center">
+                  <div className="h-3 w-3 rounded-full border-2 border-t-transparent border-white animate-spin mr-2"></div>
+                  Shaming...
+                </div>
+              ) : (
+                <div className="flex items-center">
+                  <ShieldOff className="mr-1.5 h-3.5 w-3.5" />
+                  {selectedAction ? `Shame with ${selectedAction}` : 'Select to shame'}
+                </div>
+              )}
+            </Button>
+          </div>
+        )}
+        
+        {/* Display mockery effect info */}
+        {isShamed && (
+          <div className="mt-3 p-2 bg-black/20 rounded-md">
+            <div className="flex items-center text-sm">
+              <span className="mr-2">{getShameActionIcon(isShamed.action)}</span>
+              <span className="text-white/70 italic">
+                {user.username} has been {isShamed.action === 'tomatoes' ? 'pelted with tomatoes' : isShamed.action === 'eggs' ? 'egged' : 'placed in the stocks'}.
+              </span>
+            </div>
+          </div>
+        )}
+      </CardContent>
+    </Card>
   );
 };
 

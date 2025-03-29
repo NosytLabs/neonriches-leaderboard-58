@@ -1,149 +1,140 @@
 
 import React from 'react';
-import { Helmet } from 'react-helmet-async';
-import { Scroll, ShieldAlert, Crown, Coins, Feather, Scale } from 'lucide-react';
+import { Shell } from '@/components/ui/shell';
+import { HeadingText } from '@/components/ui/heading-text';
+import { Scroll, AlertCircle, DollarSign, Crown, Target } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import Layout from '@/components/layouts/Layout';
-import RoyalDivider from '@/components/ui/royal-divider';
-import { Button } from '@/components/ui/button';
-import { Link } from 'react-router-dom';
+import RoyalDivider from '@/components/ui/decorations/RoyalDivider';
 
 const Terms = () => {
   return (
-    <Layout 
-      title="Terms of Service" 
-      description="Royal Decree: The official terms of service for SpendThrone - the satirical pay-to-win social experiment where money equals status."
-      fullHeight
-    >
-      <div className="max-w-4xl mx-auto">
-        <div className="text-center mb-8">
-          <Scroll className="h-12 w-12 text-royal-gold mx-auto mb-4 animate-crown-glow" />
-          <h1 className="text-3xl font-bold royal-gradient mb-2 font-royal">Royal Decree: Terms of Service</h1>
-          <p className="text-white/70 italic">
-            (Or: "How We Legally Take Your Money for Absolutely Nothing of Value")
-          </p>
+    <Shell>
+      <div className="flex flex-col gap-6">
+        <div className="text-center">
+          <div className="inline-flex items-center justify-center mb-4">
+            <Scroll size={40} className="text-royal-gold" />
+          </div>
+          <HeadingText 
+            title="Royal Decree & Terms of Service" 
+            description="The laws of our lavish digital kingdom"
+            gradient={true}
+            align="center"
+            as="h1"
+          />
         </div>
         
-        <RoyalDivider variant="ornate" className="mb-10" />
-        
-        <div className="glass-morphism border-white/10 p-6 rounded-lg space-y-8">
-          <section>
-            <h2 className="text-xl font-semibold mb-4 flex items-center">
-              <Crown className="text-royal-gold mr-2 h-5 w-5" />
-              <span className="royal-gradient">1. The Noble Introduction</span>
-            </h2>
-            <Card className="glass-morphism border-white/10">
-              <CardContent className="pt-6">
-                <p className="text-white/80">
-                  Welcome to SpendThrone, a satirical pay-to-win social experiment where your status is determined solely by how much money you give us. By accessing our platform, you agree to be bound by these absurd yet legally binding Terms of Service. We rule this digital kingdom with an iron fist and a golden money counter.
-                </p>
-              </CardContent>
-            </Card>
-          </section>
-          
-          <section>
-            <h2 className="text-xl font-semibold mb-4 flex items-center">
-              <Coins className="text-royal-gold mr-2 h-5 w-5" />
-              <span className="royal-gradient">2. The Royal Joke</span>
-            </h2>
-            <Card className="glass-morphism border-white/10">
-              <CardContent className="pt-6">
-                <p className="text-white/80">
-                  SpendThrone is a satirical platform that parodies pay-to-win mechanics and society's obsession with wealth as a status symbol. While real money can (and should) be spent here, no actual value or services (beyond the entertainment value of watching numbers go up) are provided in exchange. That's the joke. You're literally paying for nothing but status, just like that $15,000 handbag that holds things exactly as well as a $50 one.
-                </p>
-              </CardContent>
-            </Card>
-          </section>
-          
-          <section>
-            <h2 className="text-xl font-semibold mb-4 flex items-center">
-              <Scale className="text-royal-gold mr-2 h-5 w-5" />
-              <span className="royal-gradient">3. The Treasury's Policies</span>
-            </h2>
-            <Card className="glass-morphism border-white/10">
-              <CardContent className="pt-6">
-                <p className="text-white/80">
-                  All payments made to SpendThrone are final and non-refundable. By making a payment, you acknowledge that you are spending money purely for the satirical purpose of increasing your rank on a meaningless leaderboard. We will treat your money with the same respect you show it—we'll watch it disappear. The royal coffers thank you for your contribution.
-                </p>
-                <div className="mt-4 p-3 bg-royal-gold/5 border border-royal-gold/10 rounded-md">
-                  <p className="text-sm text-white/70 italic">
-                    "Much like real nobility, we excel at taking your money and providing very little in return. At least we're honest about it."
+        <Card className="glass-morphism border-royal-gold/10">
+          <CardHeader>
+            <CardTitle className="flex items-center">
+              <Crown className="mr-2 h-5 w-5 text-royal-gold" />
+              The Royal Charter
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="prose prose-invert max-w-none">
+            <p className="text-white/80 font-bold text-center italic">
+              By entering the kingdom of SpendThrone, you hereby acknowledge these truths to be self-evident:
+            </p>
+            
+            <RoyalDivider variant="line" color="gold" className="my-4" />
+            
+            <div className="space-y-6">
+              <div className="flex gap-4">
+                <div className="flex-shrink-0 mt-1">
+                  <DollarSign className="h-6 w-6 text-royal-gold" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-medieval mb-2">Article I: The Nature of Our Kingdom</h3>
+                  <p className="text-white/70">
+                    SpendThrone is a <strong>satirical</strong> social platform that parodies and comments on consumer culture, materialism, and status-seeking behavior. All transactions are real, but the prestige is as hollow as a chocolate crown.
+                  </p>
+                  <p className="text-white/70">
+                    By participating, you acknowledge that you understand the satirical nature of this service and that your purchases are effectively donations to a piece of performance art about wealth and status.
                   </p>
                 </div>
-              </CardContent>
-            </Card>
-          </section>
-          
-          <section>
-            <h2 className="text-xl font-semibold mb-4 flex items-center">
-              <Feather className="text-royal-gold mr-2 h-5 w-5" />
-              <span className="royal-gradient">4. Noble Conduct</span>
-            </h2>
-            <Card className="glass-morphism border-white/10">
-              <CardContent className="pt-6">
-                <p className="text-white/80">
-                  Even in our kingdom of absurdity, users are expected to maintain appropriate conduct. We reserve the right to moderate or remove content and banish users who engage in harmful, abusive, or illegal behavior. Our satire has standards—aim higher than the aristocracy of old.
-                </p>
-              </CardContent>
-            </Card>
-          </section>
-          
-          <section>
-            <h2 className="text-xl font-semibold mb-4 flex items-center">
-              <Crown className="text-royal-gold mr-2 h-5 w-5" />
-              <span className="royal-gradient">5. Royal Ownership</span>
-            </h2>
-            <Card className="glass-morphism border-white/10">
-              <CardContent className="pt-6">
-                <p className="text-white/80">
-                  You retain ownership of content you create on SpendThrone, but grant us a license to use, display, and distribute that content as part of the platform. Unlike real aristocracy, we won't claim your creative outputs as our birthright—just the money you give us.
-                </p>
-              </CardContent>
-            </Card>
-          </section>
-          
-          <section>
-            <h2 className="text-xl font-semibold mb-4 flex items-center">
-              <Crown className="text-royal-gold mr-2 h-5 w-5" />
-              <span className="royal-gradient">6. The Royal Disclaimer</span>
-            </h2>
-            <Card className="glass-morphism border-white/10">
-              <CardContent className="pt-6">
-                <p className="text-white/80">
-                  SpendThrone is provided "as is" without warranties of any kind. We do not guarantee that the platform will be uninterrupted, secure, or error-free. Much like real status symbols, your investment may occasionally fail to impress anyone at all.
-                </p>
-              </CardContent>
-            </Card>
-          </section>
-          
-          <div className="p-4 bg-royal-gold/5 border border-royal-gold/20 rounded-md mt-8">
-            <h3 className="flex items-center text-royal-gold mb-2">
-              <ShieldAlert className="mr-2 h-5 w-5" />
-              Legal Reality Check
-            </h3>
-            <p className="text-sm text-white/70">
-              Despite our satirical tone, these terms constitute a legally binding agreement. SpendThrone is a social commentary on wealth and status, and all payments are genuinely non-refundable. By using this site, you acknowledge that you are spending money on digital status with no tangible value. If this concerns you, perhaps consider how this reflects other status purchases in your life.
-            </p>
-          </div>
-        </div>
+              </div>
+              
+              <div className="flex gap-4">
+                <div className="flex-shrink-0 mt-1">
+                  <AlertCircle className="h-6 w-6 text-royal-crimson" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-medieval mb-2">Article II: The Treasury's Terms</h3>
+                  <p className="text-white/70">
+                    All payments to SpendThrone are <strong>FINAL and NON-REFUNDABLE</strong>. When you pay for rank, you're buying just that: pixels on a screen showing how much money you've spent. No refunds will be provided, regardless of whether you experience buyer's remorse or suddenly realize the existential implications of your purchase.
+                  </p>
+                  <p className="text-white/70">
+                    You acknowledge that the digital status you purchase has no real-world value beyond what importance you and others arbitrarily assign to it, much like designer logos, limited edition sneakers, and luxury water bottles.
+                  </p>
+                </div>
+              </div>
+              
+              <div className="flex gap-4">
+                <div className="flex-shrink-0 mt-1">
+                  <Target className="h-6 w-6 text-royal-purple" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-medieval mb-2">Article III: The Code of Conduct</h3>
+                  <p className="text-white/70">
+                    While we celebrate the absurdity of status-seeking, we do not tolerate harassment, hate speech, or illegal content. Your profile, comments, and interactions must comply with basic human decency.
+                  </p>
+                  <p className="text-white/70">
+                    SpendThrone reserves the right to remove content and ban users who violate these terms, even if they've paid thousands for their rank. Money can't buy you immunity from the rules, just like it can't buy happiness (though it can buy a pretty convincing facsimile).
+                  </p>
+                </div>
+              </div>
+              
+              <div className="flex gap-4">
+                <div className="flex-shrink-0 mt-1">
+                  <Crown className="h-6 w-6 text-royal-gold" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-medieval mb-2">Article IV: The Royal Decrees</h3>
+                  <p className="text-white/70">
+                    SpendThrone may modify these terms at any time. We'll notify users of significant changes, but it's your responsibility to check for updates. Continued use of SpendThrone after changes indicates your acceptance of the new terms.
+                  </p>
+                  <p className="text-white/70">
+                    You acknowledge that SpendThrone is an evolving platform and that features, visuals, and functionality may change. The only constant is that your rank will always be determined by how much you've spent. That's our golden rule.
+                  </p>
+                </div>
+              </div>
+            </div>
+            
+            <RoyalDivider variant="line" color="gold" className="my-6" />
+            
+            <div className="p-4 bg-black/20 rounded-lg text-center">
+              <p className="text-white/80 mb-2">
+                By using SpendThrone, you acknowledge that you have read, understood, and agreed to these terms.
+              </p>
+              <p className="text-white/60 text-sm">
+                If the idea of spending money for purely digital status bothers you, perhaps consider why so many other forms of status-seeking consumption don't.
+              </p>
+            </div>
+          </CardContent>
+        </Card>
         
-        <div className="mt-8 flex flex-col sm:flex-row justify-between items-center">
-          <div className="text-white/60 text-sm">
-            <p>Last updated: {new Date().toLocaleDateString()}</p>
-            <p className="mt-1 italic">Signed and sealed with the Royal Wax of Absurdity</p>
-          </div>
-          
-          <div className="mt-4 sm:mt-0">
-            <Button variant="outline" asChild>
-              <Link to="/privacy" className="flex items-center">
-                <ShieldAlert className="mr-2 h-4 w-4" />
-                <span>View Privacy Policy</span>
-              </Link>
-            </Button>
-          </div>
-        </div>
+        <Card className="glass-morphism border-white/10">
+          <CardHeader>
+            <CardTitle className="text-center">The Fine Print</CardTitle>
+          </CardHeader>
+          <CardContent className="prose prose-invert max-w-none">
+            <div className="text-white/60 text-sm space-y-4">
+              <p>
+                SpendThrone collects minimal user information necessary to maintain your account and rank. We don't sell your data because, frankly, your willingness to pay for digital status is all we're interested in.
+              </p>
+              <p>
+                We use standard security measures to protect your information, but no system is perfectly secure. Your SpendThrone rank, however, is secured by blockchain technology, making it as immutable as your decision to spend money on digital prestige.
+              </p>
+              <p>
+                SpendThrone is intended for adults. If you're under 18, please get permission from a parent or guardian, who will hopefully use this as a teaching moment about the value of money.
+              </p>
+              <p>
+                Copyright © {new Date().getFullYear()} SpendThrone. All rights reserved. The concept of paying for meaningless status, however, is as old as civilization itself.
+              </p>
+            </div>
+          </CardContent>
+        </Card>
       </div>
-    </Layout>
+    </Shell>
   );
 };
 

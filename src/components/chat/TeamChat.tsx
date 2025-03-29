@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -52,7 +51,6 @@ const TeamChat: React.FC<TeamChatProps> = ({ user, limit = 50 }) => {
   const { toast } = useToast();
   const { playSound } = useNotificationSounds();
   
-  // Mock data for initial messages
   useEffect(() => {
     const mockMessages: Record<string, ChatMessage[]> = {
       red: [
@@ -167,7 +165,6 @@ const TeamChat: React.FC<TeamChatProps> = ({ user, limit = 50 }) => {
     
     setMessages(mockMessages);
     
-    // Mock online users
     setOnlineUsers({
       red: 23,
       green: 17,
@@ -175,7 +172,6 @@ const TeamChat: React.FC<TeamChatProps> = ({ user, limit = 50 }) => {
       top: 8
     });
     
-    // Auto-join chat after a delay
     const timer = setTimeout(() => {
       setIsJoined(true);
     }, 500);
@@ -183,14 +179,11 @@ const TeamChat: React.FC<TeamChatProps> = ({ user, limit = 50 }) => {
     return () => clearTimeout(timer);
   }, []);
   
-  // Auto-scroll to bottom when messages change
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, activeTab]);
   
-  // Check if user is in top 50
   const isUserInTop50 = () => {
-    // This would normally check the user's actual rank
     return user && user.rank <= 50;
   };
   
@@ -199,7 +192,6 @@ const TeamChat: React.FC<TeamChatProps> = ({ user, limit = 50 }) => {
     
     setIsLoading(true);
     
-    // Simulate API call
     setTimeout(() => {
       const newMessage: ChatMessage = {
         id: `msg-${Date.now()}`,
@@ -239,16 +231,14 @@ const TeamChat: React.FC<TeamChatProps> = ({ user, limit = 50 }) => {
       return isUserInTop50();
     }
     
-    // For team channels, only members of that team can access
     if (channel === 'red' || channel === 'green' || channel === 'blue') {
       if (!user || !user.team) return false;
-      return user.team === channel || user.amountSpent > 1000; // High spenders can access all team chats
+      return user.team === channel || user.amountSpent > 1000;
     }
     
     return false;
   };
   
-  // Handle tab change
   const handleTabChange = (value: string) => {
     if (value === 'top' && !isUserInTop50()) {
       toast({
@@ -302,12 +292,10 @@ const TeamChat: React.FC<TeamChatProps> = ({ user, limit = 50 }) => {
     
     setIsLoading(true);
     
-    // Simulate API call
     setTimeout(() => {
       setIsJoined(true);
       setIsLoading(false);
       
-      // Add system message
       const joinMessage: ChatMessage = {
         id: `join-${Date.now()}`,
         text: `${user.displayName || user.username} has joined the chat.`,

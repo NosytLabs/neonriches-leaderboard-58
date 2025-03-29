@@ -1,5 +1,5 @@
 
-import { User } from '@/types/user';
+import { User, UserTeam, UserTier } from '@/types/user';
 
 /**
  * Generates a random integer between min and max (inclusive)
@@ -14,6 +14,24 @@ const getRandomInt = (min: number, max: number): number => {
 };
 
 /**
+ * Gets a random team
+ * @returns Random team
+ */
+const getRandomTeam = (): UserTeam => {
+  const teams: UserTeam[] = ['red', 'green', 'blue', null];
+  return teams[Math.floor(Math.random() * teams.length)];
+};
+
+/**
+ * Gets a random tier
+ * @returns Random tier
+ */
+const getRandomTier = (): UserTier => {
+  const tiers: UserTier[] = ['basic', 'premium', 'royal'];
+  return tiers[Math.floor(Math.random() * tiers.length)];
+};
+
+/**
  * Generates a mock leaderboard
  * @param count The number of users to generate
  * @returns An array of mock users
@@ -22,8 +40,8 @@ export const generateMockLeaderboard = (count: number = 50): User[] => {
   const leaderboard: User[] = [];
   
   for (let i = 0; i < count; i++) {
-    const userTeam = ['red', 'green', 'blue', null][Math.floor(Math.random() * 4)] as any;
-    const userTier = ['basic', 'premium', 'royal'][Math.floor(Math.random() * 3)];
+    const userTeam = getRandomTeam();
+    const userTier = getRandomTier();
     const totalSpent = getRandomInt(10, 5000);
     const joinDate = new Date(Date.now() - Math.random() * 10000000000).toISOString();
     
@@ -44,7 +62,7 @@ export const generateMockLeaderboard = (count: number = 50): User[] => {
       email: `user${i + 1}@example.com`,
       socialLinks: [],
       profileBoosts: [],
-      createdAt: joinDate // Add createdAt to fix the error
+      createdAt: joinDate
     });
   }
   
@@ -88,7 +106,7 @@ export const getLeaderboardEntries = (options: {
       cutoff.setFullYear(now.getFullYear() - 1);
     }
     
-    entries = entries.filter(entry => new Date(entry.joinDate) >= cutoff);
+    entries = entries.filter(entry => new Date(entry.joinDate || entry.createdAt) >= cutoff);
   }
   
   // Apply sorting

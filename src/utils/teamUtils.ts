@@ -1,31 +1,48 @@
 
-export const getTeamColor = (team: 'red' | 'green' | 'blue' | null): string => {
+import { UserTeam } from '@/types/user';
+
+/**
+ * Gets the color class for a team
+ * @param team Team
+ * @returns CSS class for team color
+ */
+export const getTeamColor = (team: UserTeam): string => {
   switch (team) {
     case 'red':
-      return 'text-red-500';
+      return 'text-red-500 bg-red-500/20';
     case 'green':
-      return 'text-green-500';
+      return 'text-green-500 bg-green-500/20';
     case 'blue':
-      return 'text-blue-500';
+      return 'text-blue-500 bg-blue-500/20';
     default:
-      return 'text-gray-400';
+      return 'text-white/70 bg-white/10';
   }
 };
 
-export const getTeamBorderColor = (team: 'red' | 'green' | 'blue' | null): string => {
+/**
+ * Gets the gradient class for a team
+ * @param team Team
+ * @returns CSS class for team gradient
+ */
+export const getTeamGradient = (team: UserTeam): string => {
   switch (team) {
     case 'red':
-      return 'border-red-500';
+      return 'bg-gradient-to-r from-red-700/30 to-red-500/10';
     case 'green':
-      return 'border-green-500';
+      return 'bg-gradient-to-r from-green-700/30 to-green-500/10';
     case 'blue':
-      return 'border-blue-500';
+      return 'bg-gradient-to-r from-blue-700/30 to-blue-500/10';
     default:
-      return 'border-gray-400';
+      return 'bg-gradient-to-r from-white/10 to-transparent';
   }
 };
 
-export const getTeamName = (team: 'red' | 'green' | 'blue' | null): string => {
+/**
+ * Gets the name of a team
+ * @param team Team
+ * @returns Team name
+ */
+export const getTeamName = (team: UserTeam): string => {
   switch (team) {
     case 'red':
       return 'Red Team';
@@ -38,75 +55,38 @@ export const getTeamName = (team: 'red' | 'green' | 'blue' | null): string => {
   }
 };
 
-export const getGenderTitle = (gender: string | null | undefined): string => {
-  switch (gender) {
-    case 'king':
-      return 'King';
-    case 'queen':
-      return 'Queen';
-    case 'jester':
-      return 'Jester';
-    case 'noble':
-      return 'Noble';
+/**
+ * Gets the description of a team
+ * @param team Team
+ * @returns Team description
+ */
+export const getTeamDescription = (team: UserTeam): string => {
+  switch (team) {
+    case 'red':
+      return 'The Flamboyant - Red Team nobles are known for their extravagant displays of wealth and status.';
+    case 'green':
+      return 'The Status Seekers - Green Team nobles are focused on climbing the social ladder through strategic spending.';
+    case 'blue':
+      return 'The Collectors - Blue Team nobles collect digital prestige like limited edition NFTs.';
     default:
-      return 'Citizen';
+      return 'Unaffiliated nobles have yet to pledge allegiance to a team.';
   }
 };
 
-export const getGenderEmoji = (gender: string | null | undefined): string => {
-  switch (gender) {
-    case 'king':
-      return '👑';
-    case 'queen':
-      return '👸';
-    case 'jester':
-      return '🃏';
-    case 'noble':
-      return '🏰';
+/**
+ * Gets the team motto
+ * @param team Team
+ * @returns Team motto
+ */
+export const getTeamMotto = (team: UserTeam): string => {
+  switch (team) {
+    case 'red':
+      return '"If they can\'t see your wealth from space, you\'re not trying hard enough."';
+    case 'green':
+      return '"It\'s not how much you spend, but who sees you spending it."';
+    case 'blue':
+      return '"Every profile is a gallery, every purchase a masterpiece."';
     default:
-      return '👤';
+      return '"Choose a side, or remain in obscurity."';
   }
 };
-
-export const getInitials = (username: string): string => {
-  return username
-    .split(' ')
-    .map(part => part.charAt(0))
-    .join('')
-    .toUpperCase()
-    .substring(0, 2);
-};
-
-// Add team data for TeamSwitchModal
-export const teamData = [
-  {
-    id: 'red',
-    name: 'Red Team',
-    description: 'The fiery warriors of passion and power',
-    color: 'text-red-500',
-    bgColor: 'bg-red-500/20',
-    icon: '🔥',
-    members: 324,
-    rank: 2
-  },
-  {
-    id: 'green',
-    name: 'Green Team',
-    description: 'The prosperous cultivators of wealth and fortune',
-    color: 'text-green-500',
-    bgColor: 'bg-green-500/20',
-    icon: '💰',
-    members: 286,
-    rank: 3
-  },
-  {
-    id: 'blue',
-    name: 'Blue Team',
-    description: 'The calculated strategists of wisdom and foresight',
-    color: 'text-blue-500',
-    bgColor: 'bg-blue-500/20',
-    icon: '❄️',
-    members: 412,
-    rank: 1
-  }
-];

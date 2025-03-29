@@ -1,146 +1,178 @@
 
-import { useState, useCallback } from 'react';
-import { useToastContext } from '@/contexts/ToastContext';
+import { useState, useCallback, useEffect } from 'react';
 
 export type ShameAction = 'tomatoes' | 'eggs' | 'stocks';
 
-interface ShameEffectProps {
-  onSuccess?: (targetId: number, targetName: string, shameType: ShameAction) => void;
-  cooldownPeriod?: number; // in milliseconds
+interface ShameEffect {
+  action: ShameAction;
+  timestamp: number;
+  until: number;
 }
 
-export const useShameEffect = ({ 
-  onSuccess,
-  cooldownPeriod = 60000 * 60 * 24 // 24 hours default cooldown
-}: ShameEffectProps = {}) => {
-  const { addToast } = useToastContext();
+interface UseShameEffectOptions {
+  cooldownPeriod?: number; // milliseconds
+}
+
+interface UseShameEffectResult {
+  shameCooldown: Record<number, boolean>;
+  shameEffects: Record<number, ShameEffect | null>;
+  shameCount: Record<number, number>;
+  handleShame: (userId: number, username: string, action: ShameAction, amount: number) => boolean;
+  isUserShamed: (userId: number) => boolean;
+  getShameCount: (userId: number) => number;
+  getShameEffect: (userId: number) => ShameEffect | null;
+}
+
+export const useShameEffect = (options: UseShameEffectOptions = {}): UseShameEffectResult => {
+  const { cooldownPeriod = 3600000 } = options; // Default: 1 hour
+  
   const [shameCooldown, setShameCooldown] = useState<Record<number, boolean>>({});
-  const [shameEffects, setShameEffects] = useState<Record<number, ShameAction | null>>({});
+  const [shameEffects, setShameEffects] = useState<Record<number, ShameEffect | null>>({});
   const [shameCount, setShameCount] = useState<Record<number, number>>({});
   
-  // Show shame effects for a short time to display animation
-  const triggerShameEffect = useCallback((targetId: number, shameType: ShameAction) => {
-    setShameEffects(prev => ({ ...prev, [targetId]: shameType }));
-    
-    // Update shame count
-    setShameCount(prev => ({
-      ...prev,
-      [targetId]: (prev[targetId] || 0) + 1
-    }));
-    
-    // Store shame count in localStorage for persistence
-    const userShameKey = `user_shame_count_${targetId}`;
-    const currentCount = parseInt(localStorage.getItem(userShameKey) || '0');
-    localStorage.setItem(userShameKey, (currentCount + 1).toString());
-    
-    // Reset the visual effect after a while
-    setTimeout(() => {
-      setShameEffects(prev => ({ ...prev, [targetId]: null }));
-    }, 5000);
-  }, []);
-
-  // Create floating particles effect based on shame type
-  const createShameParticles = useCallback((targetId: number, shameType: ShameAction) => {
-    const targetElement = document.getElementById(`user-card-${targetId}`);
-    if (!targetElement) return;
-    
-    const getEmojis = (type: ShameAction) => {
-      switch(type) {
-        case 'tomatoes': return ['🍅', '🍎', '🥫', '💥'];
-        case 'eggs': return ['🥚', '🍳', '🧀', '🦴'];
-        case 'stocks': return ['🪵', '⛓️', '🔒', '📜'];
-      }
-    };
-    
-    const emojis = getEmojis(shameType);
-    
-    for (let i = 0; i < 8; i++) {
-      const particle = document.createElement('div');
-      particle.innerHTML = emojis[Math.floor(Math.random() * emojis.length)];
-      particle.classList.add('absolute', 'text-xl', 'animate-float', 'pointer-events-none', 'z-10');
+  // Load shame data from localStorage on mount
+  useEffect(() => {
+    try {
+      const storedEffects = localStorage.getItem('shameEffects');
+      const storedCooldowns = localStorage.getItem('shameCooldowns');
+      const storedCounts = localStorage.getItem('shameCounts');
       
-      // Random position around the target user card
-      const rect = targetElement.getBoundingClientRect();
-      const randomX = Math.random() * rect.width;
-      const randomY = rect.height / 2;
-      
-      particle.style.left = `${randomX}px`;
-      particle.style.top = `${randomY}px`;
-      
-      targetElement.appendChild(particle);
-      
-      // Remove particle after animation completes
-      setTimeout(() => {
-        if (targetElement.contains(particle)) {
-          targetElement.removeChild(particle);
-        }
-      }, 5000);
+      if (storedEffects) setShameEffects(JSON.parse(storedEffects));
+      if (storedCooldowns) setShameCooldown(JSON.parse(storedCooldowns));
+      if (storedCounts) setShameCount(JSON.parse(storedCounts));
+    } catch (error) {
+      console.error('Error loading shame data:', error);
     }
   }, []);
-
-  // Get shame count for a user
-  const getShameCount = useCallback((targetId: number) => {
-    const userShameKey = `user_shame_count_${targetId}`;
-    return parseInt(localStorage.getItem(userShameKey) || '0');
-  }, []);
-
-  // Handle the shame action
-  const handleShame = useCallback((targetId: number, targetName: string, shameType: ShameAction, amount: number) => {
-    if (shameCooldown[targetId]) {
-      addToast({
-        title: "Cooldown Active",
-        description: `You've recently shamed ${targetName}. The stocks are still being prepared for next use.`,
-        variant: "destructive"
+  
+  // Save shame data to localStorage whenever it changes
+  useEffect(() => {
+    try {
+      localStorage.setItem('shameEffects', JSON.stringify(shameEffects));
+      localStorage.setItem('shameCooldowns', JSON.stringify(shameCooldown));
+      localStorage.setItem('shameCounts', JSON.stringify(shameCount));
+    } catch (error) {
+      console.error('Error saving shame data:', error);
+    }
+  }, [shameEffects, shameCooldown, shameCount]);
+  
+  // Clean up expired effects and cooldowns
+  useEffect(() => {
+    const cleanupInterval = setInterval(() => {
+      const now = Date.now();
+      
+      // Clean up expired effects
+      const newEffects = { ...shameEffects };
+      let effectsChanged = false;
+      
+      Object.keys(newEffects).forEach(key => {
+        const userId = Number(key);
+        const effect = newEffects[userId];
+        
+        if (effect && effect.until < now) {
+          newEffects[userId] = null;
+          effectsChanged = true;
+        }
       });
+      
+      if (effectsChanged) {
+        setShameEffects(newEffects);
+      }
+      
+      // Clean up expired cooldowns
+      const newCooldowns = { ...shameCooldown };
+      let cooldownsChanged = false;
+      
+      Object.keys(newCooldowns).forEach(key => {
+        const userId = Number(key);
+        const effect = shameEffects[userId];
+        
+        // If there's no effect and the cooldown should be expired, remove it
+        if (!effect && newCooldowns[userId]) {
+          newCooldowns[userId] = false;
+          cooldownsChanged = true;
+        }
+      });
+      
+      if (cooldownsChanged) {
+        setShameCooldown(newCooldowns);
+      }
+    }, 60000); // Check every minute
+    
+    return () => clearInterval(cleanupInterval);
+  }, [shameEffects, shameCooldown]);
+  
+  const handleShame = useCallback((userId: number, username: string, action: ShameAction, amount: number): boolean => {
+    // Check if user is already shamed
+    if (shameEffects[userId]) {
       return false;
     }
     
-    // In a real app, this would call an API endpoint
-    const messages = {
-      tomatoes: `You've pelted ${targetName} with rotten tomatoes! The shame is visible to all.`,
-      eggs: `You've hurled rotten eggs at ${targetName}! What a stench they'll have for 24 hours.`,
-      stocks: `You've placed ${targetName} in the public stocks! The whole kingdom will mock them for 24 hours.`
-    };
-    
-    addToast({
-      title: "Public Shaming Successful!",
-      description: messages[shameType],
-    });
-    
-    // Trigger visual effects
-    triggerShameEffect(targetId, shameType);
-    createShameParticles(targetId, shameType);
-    
-    // Set cooldown
-    setShameCooldown(prev => ({
-      ...prev,
-      [targetId]: true
-    }));
-    
-    // Store last shame time in localStorage
-    localStorage.setItem(`lastShame_${targetId}`, Date.now().toString());
-    
-    // Clear cooldown after specified period
-    setTimeout(() => {
-      setShameCooldown(prevState => ({
-        ...prevState,
-        [targetId]: false
-      }));
-    }, cooldownPeriod);
-    
-    // Call onSuccess callback if provided
-    if (onSuccess) {
-      onSuccess(targetId, targetName, shameType);
+    // Get duration based on action
+    let duration = 0;
+    switch (action) {
+      case 'tomatoes':
+        duration = 24 * 60 * 60 * 1000; // 24 hours
+        break;
+      case 'eggs':
+        duration = 48 * 60 * 60 * 1000; // 48 hours
+        break;
+      case 'stocks':
+        duration = 72 * 60 * 60 * 1000; // 72 hours
+        break;
+      default:
+        duration = 24 * 60 * 60 * 1000; // Default: 24 hours
     }
     
+    const now = Date.now();
+    
+    // Apply shame effect
+    setShameEffects(prev => ({
+      ...prev,
+      [userId]: {
+        action,
+        timestamp: now,
+        until: now + duration
+      }
+    }));
+    
+    // Apply cooldown
+    setShameCooldown(prev => ({
+      ...prev,
+      [userId]: true
+    }));
+    
+    // Increment shame count
+    setShameCount(prev => ({
+      ...prev,
+      [userId]: (prev[userId] || 0) + 1
+    }));
+    
+    // Log shame action
+    console.log(`${username} has been shamed with ${action} for ${duration / (60 * 60 * 1000)} hours`);
+    
     return true;
-  }, [shameCooldown, addToast, triggerShameEffect, createShameParticles, cooldownPeriod, onSuccess]);
-
+  }, [shameEffects]);
+  
+  const isUserShamed = useCallback((userId: number): boolean => {
+    return !!shameEffects[userId];
+  }, [shameEffects]);
+  
+  const getShameCount = useCallback((userId: number): number => {
+    return shameCount[userId] || 0;
+  }, [shameCount]);
+  
+  const getShameEffect = useCallback((userId: number): ShameEffect | null => {
+    return shameEffects[userId] || null;
+  }, [shameEffects]);
+  
   return {
     shameCooldown,
     shameEffects,
     shameCount,
+    handleShame,
+    isUserShamed,
     getShameCount,
-    handleShame
+    getShameEffect
   };
 };

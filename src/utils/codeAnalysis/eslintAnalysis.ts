@@ -1,29 +1,28 @@
 
-import { AnalysisResult } from './types';
+import { EslintIssue } from './types';
 
-// Mock implementation for ESLint analysis
-export const runEslintAnalysis = async (
-  projectRoot: string
-): Promise<AnalysisResult['bestPracticeViolations']> => {
-  // In a real implementation, this would use ESLint to analyze the codebase
-  // For demo purposes, we'll return mock data
-  return [
+// Mock function to analyze ESLint issues
+export const analyzeEslintIssues = (): EslintIssue[] => {
+  const issues: EslintIssue[] = [
     {
-      file: 'src/components/SomeComponent.tsx',
-      rule: 'react-hooks/exhaustive-deps',
-      line: 24,
-      message: 'React Hook useEffect has a missing dependency: \'props.id\'',
-      severity: 'warning'
+      id: "eslint-1",
+      rule: "no-unused-vars",
+      file: "src/components/Button.tsx",
+      line: 5,
+      column: 10,
+      message: "Variable 'props' is defined but never used",
+      severity: "warning"
     },
     {
-      file: 'src/utils/helpers.ts',
-      rule: 'no-unused-vars',
+      id: "eslint-2",
+      rule: "react-hooks/exhaustive-deps",
+      file: "src/hooks/useCounter.ts",
       line: 12,
-      message: '\'config\' is defined but never used',
-      severity: 'warning'
+      column: 8,
+      message: "React Hook useEffect has a missing dependency: 'count'",
+      severity: "warning"
     }
   ];
+  
+  return issues;
 };
-
-// Export the analysis function for use in the application
-export default runEslintAnalysis;

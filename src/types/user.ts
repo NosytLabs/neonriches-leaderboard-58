@@ -1,4 +1,3 @@
-
 export interface User {
   id: string;
   email: string;
@@ -93,7 +92,7 @@ export interface ProfileImage {
   isPrimary?: boolean;
 }
 
-export type UserGender = 'male' | 'female' | 'non-binary' | 'prefer-not-to-say' | 'king' | 'queen' | 'jester' | 'noble';
+export type UserGender = 'male' | 'female' | 'non-binary' | 'prefer-not-to-say' | 'king' | 'queen' | 'jester' | 'noble' | 'neutral';
 export type UserTeam = 'red' | 'green' | 'blue' | null;
 export type TeamType = 'red' | 'green' | 'blue' | 'all';
 export type UserRole = 'user' | 'admin' | 'moderator';
