@@ -90,3 +90,27 @@ export const getFireSaleDiscountPercentage = (): number => {
   }
   return 0;
 };
+
+// Determine if an action has a weekly discount
+export const hasWeeklyDiscount = (action: ShameAction): boolean => {
+  // Get a discount action based on the current date
+  const discountedAction = getWeeklyDiscountedAction();
+  return action === discountedAction;
+};
+
+// Get the weekly featured discounted action
+export const getWeeklyDiscountedAction = (): ShameAction => {
+  const now = new Date();
+  const weekNumber = Math.floor(now.getDate() / 7);
+  
+  // Rotate between different actions each week
+  const weeklyActions: ShameAction[] = ['tomatoes', 'eggs', 'stocks', 'jester', 'ridicule'];
+  return weeklyActions[weekNumber % weeklyActions.length];
+};
+
+// Get the discounted price for an action
+export const getDiscountedShamePrice = (action: ShameAction): number => {
+  const originalPrice = getShameActionPrice(action);
+  return Math.max(1, Math.round(originalPrice * 0.5)); // 50% discount
+};
+
