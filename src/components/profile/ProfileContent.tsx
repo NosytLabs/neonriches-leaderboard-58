@@ -3,7 +3,7 @@ import React from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { User, Settings, UserProfile, CreditCard, Clock, Wallet, Award, Grape } from 'lucide-react';
+import { User, Settings, CreditCard, Clock, Wallet, Award, HelpCircle } from 'lucide-react';
 import ProfileOverview from '@/components/profile/ProfileOverview';
 import ProfileSettings from '@/components/profile/ProfileSettings';
 import ProfileSubscription from '@/components/profile/ProfileSubscription';
@@ -11,6 +11,7 @@ import ProfileActivity from '@/components/profile/ProfileActivity';
 import ProfileWalletView from '@/components/profile/ProfileWalletView';
 import ProfileAchievements from '@/components/profile/ProfileAchievements';
 import ProfileFAQ from '@/components/profile/ProfileFAQ';
+import { UserProfile } from '@/types/user';
 
 // Import your FAQ items or define them here
 const profileFAQItems = [
@@ -95,7 +96,7 @@ const ProfileContent: React.FC<ProfileContentProps> = ({
         </TabsTrigger>
         
         <TabsTrigger value="faq" className="flex items-center gap-1.5">
-          <Grape className="h-4 w-4" />
+          <HelpCircle className="h-4 w-4" />
           <span className="hidden sm:inline">FAQ</span>
         </TabsTrigger>
       </TabsList>

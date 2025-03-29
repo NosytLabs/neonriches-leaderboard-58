@@ -1,12 +1,14 @@
+
 import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Switch } from '@/components/ui/switch';
-import { Label } from '@/components/ui/label';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { Crown, User, Eye, Bell, Link } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Switch } from '@/components/ui/switch';
 import { UserProfile } from '@/types/user';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { UserCog, Shield, Bell, Palette, Monitor } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 interface ProfileSettingsProps {
@@ -15,359 +17,312 @@ interface ProfileSettingsProps {
 
 const ProfileSettings: React.FC<ProfileSettingsProps> = ({ user }) => {
   const { toast } = useToast();
-  const [activeTab, setActiveTab] = useState("basic");
-  const [isLoading, setIsLoading] = useState(false);
+  const [displayName, setDisplayName] = useState(user.displayName || '');
+  const [bio, setBio] = useState(user.bio || '');
+  const [email, setEmail] = useState(user.email || '');
   
-  // Form states with defaults from user settings or sensible fallbacks
-  const [basicInfo, setBasicInfo] = useState({
-    displayName: user.displayName || user.username,
-    bio: user.bio || '',
-    email: user.email
+  // Privacy settings with defaults
+  const [privacySettings, setPrivacySettings] = useState({
+    showProfile: true,
+    showRank: true,
+    showSpending: false,
+    allowMockery: true
   });
   
-  const [appearance, setAppearance] = useState({
-    showRank: user.settings?.showRank !== false,
-    showSpending: user.settings?.showSpending !== false,
-    showTeam: user.settings?.showTeam !== false
+  // Notification settings with defaults
+  const [notificationSettings, setNotificationSettings] = useState({
+    emailNotifications: true,
+    rankChangeAlerts: true,
+    teamUpdates: true,
+    marketingEmails: false
   });
   
-  const [privacy, setPrivacy] = useState({
-    profileVisibility: user.settings?.profileVisibility || 'public',
-    allowProfileLinks: user.settings?.allowProfileLinks !== false,
-    showEmailOnProfile: user.settings?.showEmailOnProfile || false
+  // Display settings with defaults
+  const [displaySettings, setDisplaySettings] = useState({
+    theme: 'dark',
+    animations: true,
+    showEffects: true
   });
   
-  const [notifications, setNotifications] = useState({
-    emailNotifications: user.settings?.emailNotifications !== false,
-    rankChangeAlerts: user.settings?.rankChangeAlerts !== false,
-    shameAlerts: user.settings?.shameAlerts || false,
-    newFollowerAlerts: user.settings?.newFollowerAlerts !== false
-  });
-  
-  // Handle input changes for basic info
-  const handleBasicInfoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setBasicInfo(prev => ({ ...prev, [name]: value }));
+  const handleSaveProfile = () => {
+    // In a real app, this would update the profile via an API
+    toast({
+      title: "Profile Updated",
+      description: "Your profile changes have been saved successfully.",
+    });
   };
   
-  // Handle changes for appearance toggles
-  const handleAppearanceChange = (field: string, value: boolean) => {
-    setAppearance(prev => ({ ...prev, [field]: value }));
+  const handleSavePrivacy = () => {
+    toast({
+      title: "Privacy Settings Updated",
+      description: "Your privacy preferences have been saved.",
+    });
   };
   
-  // Handle changes for privacy toggles
-  const handlePrivacyChange = (field: string, value: boolean | string) => {
-    setPrivacy(prev => ({ ...prev, [field]: value }));
+  const handleSaveNotifications = () => {
+    toast({
+      title: "Notification Settings Updated",
+      description: "Your notification preferences have been saved.",
+    });
   };
   
-  // Handle changes for notification toggles
-  const handleNotificationChange = (field: string, value: boolean) => {
-    setNotifications(prev => ({ ...prev, [field]: value }));
+  const handleSaveDisplay = () => {
+    toast({
+      title: "Display Settings Updated",
+      description: "Your display preferences have been saved.",
+    });
   };
   
-  // Save basic info
-  const handleSaveBasicInfo = async () => {
-    setIsLoading(true);
-    try {
-      // Simulating an API call
-      await new Promise(resolve => setTimeout(resolve, 800));
-      
-      toast({
-        title: "Settings Updated",
-        description: "Your basic information has been updated.",
-      });
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to update settings. Please try again.",
-        variant: "destructive"
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
-  
-  // Save appearance settings
-  const handleSaveAppearance = async () => {
-    setIsLoading(true);
-    try {
-      // Simulating an API call
-      await new Promise(resolve => setTimeout(resolve, 800));
-      
-      toast({
-        title: "Appearance Updated",
-        description: "Your profile appearance settings have been updated.",
-      });
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to update appearance settings. Please try again.",
-        variant: "destructive"
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
-  
-  // Save privacy settings
-  const handleSavePrivacy = async () => {
-    setIsLoading(true);
-    try {
-      // Simulating an API call
-      await new Promise(resolve => setTimeout(resolve, 800));
-      
-      toast({
-        title: "Privacy Settings Updated",
-        description: "Your privacy settings have been updated.",
-      });
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to update privacy settings. Please try again.",
-        variant: "destructive"
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
-  
-  // Save notification settings
-  const handleSaveNotifications = async () => {
-    setIsLoading(true);
-    try {
-      // Simulating an API call
-      await new Promise(resolve => setTimeout(resolve, 800));
-      
-      toast({
-        title: "Notification Settings Updated",
-        description: "Your notification preferences have been updated.",
-      });
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to update notification settings. Please try again.",
-        variant: "destructive"
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   return (
-    <Card className="glass-morphism border-white/10">
-      <CardHeader>
-        <CardTitle className="flex items-center">
-          <Crown className="mr-2 h-5 w-5 text-royal-gold" />
-          Profile Settings
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <Tabs defaultValue="basic" value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid grid-cols-4 mb-6">
-            <TabsTrigger value="basic" className="flex items-center gap-2">
-              <User size={14} />
-              <span>Basic</span>
-            </TabsTrigger>
-            <TabsTrigger value="appearance" className="flex items-center gap-2">
-              <Eye size={14} />
-              <span>Appearance</span>
-            </TabsTrigger>
-            <TabsTrigger value="privacy" className="flex items-center gap-2">
-              <Link size={14} />
-              <span>Links & Privacy</span>
-            </TabsTrigger>
-            <TabsTrigger value="notifications" className="flex items-center gap-2">
-              <Bell size={14} />
-              <span>Notifications</span>
-            </TabsTrigger>
-          </TabsList>
-          
-          <TabsContent value="basic" className="space-y-4">
+    <Tabs defaultValue="profile" className="space-y-4">
+      <TabsList className="grid grid-cols-4 glass-morphism">
+        <TabsTrigger value="profile" className="flex items-center gap-1.5">
+          <UserCog className="h-4 w-4" />
+          <span className="hidden sm:inline">Profile</span>
+        </TabsTrigger>
+        <TabsTrigger value="privacy" className="flex items-center gap-1.5">
+          <Shield className="h-4 w-4" />
+          <span className="hidden sm:inline">Privacy</span>
+        </TabsTrigger>
+        <TabsTrigger value="notifications" className="flex items-center gap-1.5">
+          <Bell className="h-4 w-4" />
+          <span className="hidden sm:inline">Notifications</span>
+        </TabsTrigger>
+        <TabsTrigger value="display" className="flex items-center gap-1.5">
+          <Palette className="h-4 w-4" />
+          <span className="hidden sm:inline">Display</span>
+        </TabsTrigger>
+      </TabsList>
+      
+      <TabsContent value="profile">
+        <Card className="glass-morphism border-white/10">
+          <CardHeader>
+            <CardTitle>Profile Information</CardTitle>
+            <CardDescription>Update your profile details and how others see you</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="displayName">Display Name</Label>
-              <Input 
-                id="displayName" 
-                name="displayName"
-                placeholder="Your display name" 
-                value={basicInfo.displayName}
-                onChange={handleBasicInfoChange}
-                className="glass-morphism border-white/10"
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="bio">Bio</Label>
-              <Input 
-                id="bio" 
-                name="bio"
-                placeholder="A short bio about yourself" 
-                value={basicInfo.bio}
-                onChange={handleBasicInfoChange}
-                className="glass-morphism border-white/10"
+              <Input
+                id="displayName"
+                value={displayName}
+                onChange={(e) => setDisplayName(e.target.value)}
+                placeholder="Your display name"
               />
             </div>
             
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
-              <Input 
-                id="email" 
-                name="email"
-                placeholder="your@email.com" 
-                value={basicInfo.email}
-                onChange={handleBasicInfoChange}
-                className="glass-morphism border-white/10"
+              <Input
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="your@email.com"
               />
             </div>
             
-            <Button 
-              className="mt-4 w-full" 
-              disabled={isLoading}
-              onClick={handleSaveBasicInfo}
-            >
-              {isLoading ? "Saving..." : "Save Basic Info"}
+            <div className="space-y-2">
+              <Label htmlFor="bio">Bio</Label>
+              <Textarea
+                id="bio"
+                value={bio}
+                onChange={(e) => setBio(e.target.value)}
+                placeholder="Tell others about yourself"
+                rows={4}
+              />
+            </div>
+          </CardContent>
+          <CardFooter>
+            <Button onClick={handleSaveProfile} className="bg-royal-gold hover:bg-royal-gold/90 text-black">
+              Save Changes
             </Button>
-          </TabsContent>
-          
-          <TabsContent value="appearance" className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <Label htmlFor="showRank">Show Rank</Label>
-                <p className="text-sm text-white/60">Display your rank on your profile</p>
-              </div>
-              <Switch 
-                id="showRank" 
-                checked={appearance.showRank}
-                onCheckedChange={(checked) => handleAppearanceChange('showRank', checked)}
+          </CardFooter>
+        </Card>
+      </TabsContent>
+      
+      <TabsContent value="privacy">
+        <Card className="glass-morphism border-white/10">
+          <CardHeader>
+            <CardTitle>Privacy Settings</CardTitle>
+            <CardDescription>Manage what information is visible to others</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex items-center justify-between space-x-2">
+              <Label htmlFor="show-profile" className="flex-1">
+                Show my profile to other users
+              </Label>
+              <Switch
+                id="show-profile"
+                checked={privacySettings.showProfile}
+                onCheckedChange={(checked) => setPrivacySettings({ ...privacySettings, showProfile: checked })}
               />
             </div>
             
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <Label htmlFor="showSpending">Show Spending</Label>
-                <p className="text-sm text-white/60">Display your total spending on your profile</p>
-              </div>
-              <Switch 
-                id="showSpending" 
-                checked={appearance.showSpending}
-                onCheckedChange={(checked) => handleAppearanceChange('showSpending', checked)}
+            <div className="flex items-center justify-between space-x-2">
+              <Label htmlFor="show-rank" className="flex-1">
+                Show my rank on the leaderboard
+              </Label>
+              <Switch
+                id="show-rank"
+                checked={privacySettings.showRank}
+                onCheckedChange={(checked) => setPrivacySettings({ ...privacySettings, showRank: checked })}
               />
             </div>
             
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <Label htmlFor="showTeam">Show Team</Label>
-                <p className="text-sm text-white/60">Display your team affiliation on your profile</p>
-              </div>
-              <Switch 
-                id="showTeam" 
-                checked={appearance.showTeam}
-                onCheckedChange={(checked) => handleAppearanceChange('showTeam', checked)}
+            <div className="flex items-center justify-between space-x-2">
+              <Label htmlFor="show-spending" className="flex-1">
+                Show my spending amount publicly
+              </Label>
+              <Switch
+                id="show-spending"
+                checked={privacySettings.showSpending}
+                onCheckedChange={(checked) => setPrivacySettings({ ...privacySettings, showSpending: checked })}
               />
             </div>
             
-            <Button 
-              className="mt-4 w-full" 
-              disabled={isLoading}
-              onClick={handleSaveAppearance}
-            >
-              {isLoading ? "Saving..." : "Save Appearance Settings"}
+            <div className="flex items-center justify-between space-x-2">
+              <Label htmlFor="allow-mockery" className="flex-1">
+                Allow mockery interactions
+              </Label>
+              <Switch
+                id="allow-mockery"
+                checked={privacySettings.allowMockery}
+                onCheckedChange={(checked) => setPrivacySettings({ ...privacySettings, allowMockery: checked })}
+              />
+            </div>
+          </CardContent>
+          <CardFooter>
+            <Button onClick={handleSavePrivacy} className="bg-royal-gold hover:bg-royal-gold/90 text-black">
+              Save Privacy Settings
             </Button>
-          </TabsContent>
-          
-          <TabsContent value="privacy" className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <Label htmlFor="allowProfileLinks">Allow Social Links</Label>
-                <p className="text-sm text-white/60">Allow social media links on your profile</p>
-              </div>
-              <Switch 
-                id="allowProfileLinks" 
-                checked={privacy.allowProfileLinks}
-                onCheckedChange={(checked) => handlePrivacyChange('allowProfileLinks', checked)}
+          </CardFooter>
+        </Card>
+      </TabsContent>
+      
+      <TabsContent value="notifications">
+        <Card className="glass-morphism border-white/10">
+          <CardHeader>
+            <CardTitle>Notification Preferences</CardTitle>
+            <CardDescription>Control how you receive notifications</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex items-center justify-between space-x-2">
+              <Label htmlFor="email-notifications" className="flex-1">
+                Receive email notifications
+              </Label>
+              <Switch
+                id="email-notifications"
+                checked={notificationSettings.emailNotifications}
+                onCheckedChange={(checked) => setNotificationSettings({ ...notificationSettings, emailNotifications: checked })}
               />
             </div>
             
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <Label htmlFor="showEmailOnProfile">Show Email</Label>
-                <p className="text-sm text-white/60">Show your email address on your profile</p>
-              </div>
-              <Switch 
-                id="showEmailOnProfile" 
-                checked={privacy.showEmailOnProfile}
-                onCheckedChange={(checked) => handlePrivacyChange('showEmailOnProfile', checked)}
+            <div className="flex items-center justify-between space-x-2">
+              <Label htmlFor="rank-alerts" className="flex-1">
+                Rank change alerts
+              </Label>
+              <Switch
+                id="rank-alerts"
+                checked={notificationSettings.rankChangeAlerts}
+                onCheckedChange={(checked) => setNotificationSettings({ ...notificationSettings, rankChangeAlerts: checked })}
               />
             </div>
             
-            <Button 
-              className="mt-4 w-full" 
-              disabled={isLoading}
-              onClick={handleSavePrivacy}
-            >
-              {isLoading ? "Saving..." : "Save Privacy Settings"}
+            <div className="flex items-center justify-between space-x-2">
+              <Label htmlFor="team-updates" className="flex-1">
+                Team updates and events
+              </Label>
+              <Switch
+                id="team-updates"
+                checked={notificationSettings.teamUpdates}
+                onCheckedChange={(checked) => setNotificationSettings({ ...notificationSettings, teamUpdates: checked })}
+              />
+            </div>
+            
+            <div className="flex items-center justify-between space-x-2">
+              <Label htmlFor="marketing-emails" className="flex-1">
+                Marketing emails
+              </Label>
+              <Switch
+                id="marketing-emails"
+                checked={notificationSettings.marketingEmails}
+                onCheckedChange={(checked) => setNotificationSettings({ ...notificationSettings, marketingEmails: checked })}
+              />
+            </div>
+          </CardContent>
+          <CardFooter>
+            <Button onClick={handleSaveNotifications} className="bg-royal-gold hover:bg-royal-gold/90 text-black">
+              Save Notification Settings
             </Button>
-          </TabsContent>
-          
-          <TabsContent value="notifications" className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <Label htmlFor="emailNotifications">Email Notifications</Label>
-                <p className="text-sm text-white/60">Receive important updates via email</p>
+          </CardFooter>
+        </Card>
+      </TabsContent>
+      
+      <TabsContent value="display">
+        <Card className="glass-morphism border-white/10">
+          <CardHeader>
+            <CardTitle>Display Settings</CardTitle>
+            <CardDescription>Customize your visual experience</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="theme">Theme</Label>
+              <div className="flex gap-3">
+                <Button
+                  variant={displaySettings.theme === 'dark' ? 'default' : 'outline'}
+                  onClick={() => setDisplaySettings({ ...displaySettings, theme: 'dark' })}
+                >
+                  <Monitor className="h-4 w-4 mr-2" />
+                  Dark
+                </Button>
+                <Button
+                  variant={displaySettings.theme === 'light' ? 'default' : 'outline'}
+                  onClick={() => setDisplaySettings({ ...displaySettings, theme: 'light' })}
+                >
+                  <Monitor className="h-4 w-4 mr-2" />
+                  Light
+                </Button>
+                <Button
+                  variant={displaySettings.theme === 'system' ? 'default' : 'outline'}
+                  onClick={() => setDisplaySettings({ ...displaySettings, theme: 'system' })}
+                >
+                  <Monitor className="h-4 w-4 mr-2" />
+                  System
+                </Button>
               </div>
-              <Switch 
-                id="emailNotifications" 
-                checked={notifications.emailNotifications}
-                onCheckedChange={(checked) => handleNotificationChange('emailNotifications', checked)}
+            </div>
+            
+            <div className="flex items-center justify-between space-x-2">
+              <Label htmlFor="animations" className="flex-1">
+                Enable animations
+              </Label>
+              <Switch
+                id="animations"
+                checked={displaySettings.animations}
+                onCheckedChange={(checked) => setDisplaySettings({ ...displaySettings, animations: checked })}
               />
             </div>
             
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <Label htmlFor="rankChangeAlerts">Rank Change Alerts</Label>
-                <p className="text-sm text-white/60">Get notified when your rank changes</p>
-              </div>
-              <Switch 
-                id="rankChangeAlerts" 
-                checked={notifications.rankChangeAlerts}
-                onCheckedChange={(checked) => handleNotificationChange('rankChangeAlerts', checked)}
+            <div className="flex items-center justify-between space-x-2">
+              <Label htmlFor="show-effects" className="flex-1">
+                Show visual effects
+              </Label>
+              <Switch
+                id="show-effects"
+                checked={displaySettings.showEffects}
+                onCheckedChange={(checked) => setDisplaySettings({ ...displaySettings, showEffects: checked })}
               />
             </div>
-            
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <Label htmlFor="shameAlerts">Shame Alerts</Label>
-                <p className="text-sm text-white/60">Get notified when someone shames you</p>
-              </div>
-              <Switch 
-                id="shameAlerts" 
-                checked={notifications.shameAlerts}
-                onCheckedChange={(checked) => handleNotificationChange('shameAlerts', checked)}
-              />
-            </div>
-            
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <Label htmlFor="newFollowerAlerts">New Follower Alerts</Label>
-                <p className="text-sm text-white/60">Get notified when someone follows you</p>
-              </div>
-              <Switch 
-                id="newFollowerAlerts" 
-                checked={notifications.newFollowerAlerts}
-                onCheckedChange={(checked) => handleNotificationChange('newFollowerAlerts', checked)}
-              />
-            </div>
-            
-            <Button 
-              className="mt-4 w-full" 
-              disabled={isLoading}
-              onClick={handleSaveNotifications}
-            >
-              {isLoading ? "Saving..." : "Save Notification Settings"}
+          </CardContent>
+          <CardFooter>
+            <Button onClick={handleSaveDisplay} className="bg-royal-gold hover:bg-royal-gold/90 text-black">
+              Save Display Settings
             </Button>
-          </TabsContent>
-        </Tabs>
-      </CardContent>
-    </Card>
+          </CardFooter>
+        </Card>
+      </TabsContent>
+    </Tabs>
   );
 };
 
