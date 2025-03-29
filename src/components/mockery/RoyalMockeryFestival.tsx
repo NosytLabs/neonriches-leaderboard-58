@@ -12,6 +12,7 @@ import MockeryProtectionCard from '@/components/mockery/components/MockeryProtec
 import HallOfShame from '@/components/mockery/components/HallOfShame';
 import MockeryCard from '@/components/mockery/components/MockeryCard';
 import MockeryUserCard from '@/components/mockery/components/MockeryUserCard';
+import MockeryEffect from '@/components/mockery/MockeryEffect';
 import { adaptUserProfileToUser } from '@/utils/userAdapter';
 import { spendFromWallet } from '@/services/walletService';
 
@@ -21,6 +22,12 @@ const RoyalMockeryFestival = () => {
   const [activeTab, setActiveTab] = useState('mockery');
   const [selectedAction, setSelectedAction] = useState<MockeryAction | null>(null);
   const [targetUser, setTargetUser] = useState<string>('');
+  const [showMockeryEffect, setShowMockeryEffect] = useState(false);
+  const [mockeryEffectData, setMockeryEffectData] = useState({
+    username: '',
+    action: 'tomatoes' as MockeryAction
+  });
+  
   const { 
     mockUsers, 
     isUserProtected, 
@@ -70,11 +77,12 @@ const RoyalMockeryFestival = () => {
       // Mockery successful
       mockUser(username, action as MockeryAction, amount);
       
-      toast({
-        title: "Mockery Successful",
-        description: `You have successfully subjected ${username} to ${action}! Your digital moat of superiority grows deeper.`,
-        variant: "default"
+      // Show mockery effect
+      setMockeryEffectData({
+        username,
+        action: action as MockeryAction
       });
+      setShowMockeryEffect(true);
       
       return true;
     } else {
@@ -120,6 +128,16 @@ const RoyalMockeryFestival = () => {
       });
     }
   };
+  
+  const handleEffectComplete = () => {
+    setShowMockeryEffect(false);
+    
+    toast({
+      title: "Mockery Successful",
+      description: `You have successfully subjected ${mockeryEffectData.username} to ${mockeryEffectData.action}! Your digital moat of superiority grows deeper.`,
+      variant: "default"
+    });
+  };
 
   // Transform the mockUsers to match the MockedUser interface
   const mockedUsers = mockUsers
@@ -135,109 +153,121 @@ const RoyalMockeryFestival = () => {
     }));
   
   return (
-    <Card className="glass-morphism border-royal-crimson/20">
-      <CardHeader>
-        <div className="flex items-center">
-          <Target className="mr-3 h-6 w-6 text-royal-crimson" />
-          <CardTitle>Digital Mockery Arena</CardTitle>
-        </div>
-        <CardDescription>
-          Pay to apply cosmetic mockery effects to other users - purely visual satire with no functional impact
-        </CardDescription>
-      </CardHeader>
-      
-      <CardContent>
-        <Tabs defaultValue="mockery" value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="glass-morphism border-white/10 grid grid-cols-3">
-            <TabsTrigger value="mockery" className="flex items-center gap-2">
-              <Target size={16} />
-              <span>Mock Others</span>
-            </TabsTrigger>
-            <TabsTrigger value="protection" className="flex items-center gap-2">
-              <Shield size={16} />
-              <span>Protection</span>
-            </TabsTrigger>
-            <TabsTrigger value="hall" className="flex items-center gap-2">
-              <Crown size={16} />
-              <span>Hall of Shame</span>
-            </TabsTrigger>
-          </TabsList>
-          
-          <TabsContent value="mockery" className="space-y-4 mt-4">
-            <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-              <MockeryCard 
-                action="tomatoes" 
-                tier="common"
-                username={targetUser}
-                onSelect={handleSelectAction} 
-                selected={selectedAction === 'tomatoes'}
-                className="md:col-span-1"
-              />
-              
-              <MockeryCard 
-                action="eggs" 
-                tier="uncommon"
-                username={targetUser}
-                onSelect={handleSelectAction}
-                selected={selectedAction === 'eggs'}
-                className="md:col-span-1"
-              />
-              
-              <MockeryCard 
-                action="stocks" 
-                tier="rare"
-                username={targetUser}
-                onSelect={handleSelectAction}
-                selected={selectedAction === 'stocks'}
-                className="md:col-span-1"
-              />
-              
-              <MockeryCard 
-                action="silence" 
-                tier="epic"
-                username={targetUser}
-                onSelect={handleSelectAction}
-                selected={selectedAction === 'silence'}
-                className="md:col-span-1"
-              />
-              
-              <MockeryCard 
-                action="courtJester" 
-                tier="legendary"
-                username={targetUser}
-                onSelect={handleSelectAction}
-                selected={selectedAction === 'courtJester'}
-                className="md:col-span-1"
-              />
-            </div>
+    <>
+      <Card className="glass-morphism border-royal-crimson/20">
+        <CardHeader>
+          <div className="flex items-center">
+            <Target className="mr-3 h-6 w-6 text-royal-crimson" />
+            <CardTitle>Digital Mockery Arena</CardTitle>
+          </div>
+          <CardDescription>
+            Pay to apply cosmetic mockery effects to other users - purely visual satire with no functional impact
+          </CardDescription>
+        </CardHeader>
+        
+        <CardContent>
+          <Tabs defaultValue="mockery" value={activeTab} onValueChange={setActiveTab}>
+            <TabsList className="glass-morphism border-white/10 grid grid-cols-3">
+              <TabsTrigger value="mockery" className="flex items-center gap-2">
+                <Target size={16} />
+                <span>Mock Others</span>
+              </TabsTrigger>
+              <TabsTrigger value="protection" className="flex items-center gap-2">
+                <Shield size={16} />
+                <span>Protection</span>
+              </TabsTrigger>
+              <TabsTrigger value="hall" className="flex items-center gap-2">
+                <Crown size={16} />
+                <span>Hall of Shame</span>
+              </TabsTrigger>
+            </TabsList>
             
-            <div className="mt-6">
-              {user && (
-                <MockeryUserCard 
-                  user={adaptUserProfileToUser(user)}
-                  isMocked={false}
-                  isOnCooldown={false}
-                  mockeryCount={0}
-                  isProtected={false}
-                  onMockery={(username, action, amount) => handleMockery(username, action, Number(amount))}
+            <TabsContent value="mockery" className="space-y-4 mt-4">
+              <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+                <MockeryCard 
+                  action="tomatoes" 
+                  tier="common"
+                  username={targetUser}
+                  onSelect={handleSelectAction} 
+                  selected={selectedAction === 'tomatoes'}
+                  className="md:col-span-1"
                 />
-              )}
-            </div>
-          </TabsContent>
-          
-          <TabsContent value="protection" className="mt-4">
-            <MockeryProtectionCard 
-              isProtected={user ? isUserProtected(user.username) : false}
-              onPurchase={handleBuyProtection}
-            />
-          </TabsContent>
-          
-          <TabsContent value="hall" className="mt-4">
-            <HallOfShame mockedUsers={mockedUsers} />
-          </TabsContent>
-        </Tabs>
-      </CardContent>
-    </Card>
+                
+                <MockeryCard 
+                  action="eggs" 
+                  tier="uncommon"
+                  username={targetUser}
+                  onSelect={handleSelectAction}
+                  selected={selectedAction === 'eggs'}
+                  className="md:col-span-1"
+                />
+                
+                <MockeryCard 
+                  action="stocks" 
+                  tier="rare"
+                  username={targetUser}
+                  onSelect={handleSelectAction}
+                  selected={selectedAction === 'stocks'}
+                  className="md:col-span-1"
+                />
+                
+                <MockeryCard 
+                  action="silence" 
+                  tier="epic"
+                  username={targetUser}
+                  onSelect={handleSelectAction}
+                  selected={selectedAction === 'silence'}
+                  className="md:col-span-1"
+                />
+                
+                <MockeryCard 
+                  action="courtJester" 
+                  tier="legendary"
+                  username={targetUser}
+                  onSelect={handleSelectAction}
+                  selected={selectedAction === 'courtJester'}
+                  className="md:col-span-1"
+                />
+              </div>
+              
+              <div className="mt-6">
+                {user && (
+                  <MockeryUserCard 
+                    user={adaptUserProfileToUser(user)}
+                    isMocked={false}
+                    isOnCooldown={false}
+                    mockeryCount={0}
+                    isProtected={false}
+                    onMockery={(username, action, amount) => {
+                      setTargetUser(username);
+                      return handleMockery(username, action, Number(amount));
+                    }}
+                  />
+                )}
+              </div>
+            </TabsContent>
+            
+            <TabsContent value="protection" className="mt-4">
+              <MockeryProtectionCard 
+                isProtected={user ? isUserProtected(user.username) : false}
+                onPurchase={handleBuyProtection}
+              />
+            </TabsContent>
+            
+            <TabsContent value="hall" className="mt-4">
+              <HallOfShame mockedUsers={mockedUsers} />
+            </TabsContent>
+          </Tabs>
+        </CardContent>
+      </Card>
+      
+      <MockeryEffect 
+        username={mockeryEffectData.username}
+        action={mockeryEffectData.action}
+        isActive={showMockeryEffect}
+        onComplete={handleEffectComplete}
+      />
+    </>
   );
 };
 
