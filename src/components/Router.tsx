@@ -22,6 +22,7 @@ import EventsPage from '@/pages/EventsPage';
 import BrandKitPage from '@/pages/BrandKitPage';
 import Certificate from '@/pages/Certificate';
 import Contact from '@/pages/Contact';
+import Terms from '@/pages/Terms';
 
 // Protected pages
 import Dashboard from '@/pages/Dashboard';
@@ -63,6 +64,7 @@ const Router: React.FC = () => {
         <Route path="/profile/:username" element={<Profile />} />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         <Route path="/terms-of-service" element={<TermsOfService />} />
+        <Route path="/terms" element={<Terms />} />
         <Route path="/faq" element={<FAQ />} />
         <Route path="/features" element={<Features />} />
         <Route path="/royal-prestige" element={<RoyalPrestige />} />
