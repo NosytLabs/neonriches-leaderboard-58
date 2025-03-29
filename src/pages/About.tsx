@@ -1,185 +1,316 @@
 
-import React, { useState } from 'react';
-import { Shell } from '@/components/ui/shell';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { useAuth } from '@/contexts/auth';
-import { Button } from '@/components/ui/button';
-import { HeadingText } from '@/components/ui/heading-text';
-import { Banner } from '@/components/ui/banner';
-import { Plus, Info, Users, Sparkles, DollarSign, Crown, Star } from 'lucide-react';
+import React from 'react';
+import { Container } from '@/components/ui/container';
+import PageSEO from '@/components/common/PageSEO';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Link } from 'react-router-dom';
-import { User } from '@/types/user';
+import { Button } from '@/components/ui/button';
+import { 
+  Info, 
+  ShieldCheck, 
+  Lightbulb, 
+  Flame, 
+  ArrowRight, 
+  ThumbsUp, 
+  Coffee, 
+  History,
+  BookOpen
+} from 'lucide-react';
 
 const About = () => {
-  const { user } = useAuth();
-  const [isUpdating, setIsUpdating] = useState(false);
-
-  const handleAddSpending = async () => {
-    if (!user) return;
-    
-    setIsUpdating(true);
-    
-    try {
-      // Simulate API call to update user's spending
-      setTimeout(() => {
-        if (!user) return;
-        
-        // Ensure that createdAt is included, as required by the User type
-        const mockUpdatedUser: User = {
-          ...user,
-          amountSpent: (user.amountSpent || 0) + 100,
-          spentAmount: (user.spentAmount || 0) + 100,
-          totalSpent: (user.totalSpent || 0) + 100,
-          createdAt: user.createdAt || new Date().toISOString()
-        };
-        
-        // Update the user in state (if you have this functionality)
-        console.log('User updated:', mockUpdatedUser);
-        setIsUpdating(false);
-      }, 800);
-    } catch (error) {
-      console.error('Error updating user:', error);
-      setIsUpdating(false);
-    }
-  };
-
   return (
-    <Shell>
-      <div className="flex flex-col gap-6">
-        <HeadingText 
-          title="About SpendThrone" 
-          description="Where your worth is measured in dollars, not sense"
-          gradient={true}
-          as="h1"
-        />
+    <>
+      <PageSEO 
+        title="About SpendThrone" 
+        description="Learn about SpendThrone, the social experiment exploring digital status, wealth, and competition."
+        canonicalUrl="/about"
+      />
+      
+      <Container className="py-10">
+        <h1 className="text-4xl font-bold mb-2 royal-gradient text-center">About SpendThrone</h1>
+        <p className="text-white/70 text-center mb-8 max-w-3xl mx-auto">
+          SpendThrone is a satirical exploration of digital status economics. We examine how wealth and competition manifest in the digital realm.
+        </p>
         
-        <Banner 
-          variant="royal"
-          title="Embrace the Absurdity"
-          description="SpendThrone is a satirical social experiment exploring the relationship between wealth, status, and digital identity."
-          icon={<Crown className="h-5 w-5 text-royal-gold" />}
-        />
-        
-        {user && (
-          <div className="flex justify-end">
-            <Button
-              onClick={handleAddSpending}
-              disabled={isUpdating}
-              className="bg-royal-gold text-black hover:bg-royal-gold/90"
-            >
-              <Plus className="mr-2 h-4 w-4" />
-              {isUpdating ? 'Adding...' : 'Add $100 to Your Total'}
-            </Button>
-          </div>
-        )}
-        
-        <Card className="glass-morphism border-white/10">
-          <CardContent className="p-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div>
-                <h2 className="text-xl font-semibold mb-4 flex items-center">
-                  <Info className="h-5 w-5 mr-2 text-royal-gold" />
-                  What is SpendThrone?
-                </h2>
-                <p className="text-white/70 mb-4">
-                  SpendThrone is a satirical social experiment that explores the dynamics of wealth, prestige, and digital status. It's a persistent leaderboard where your rank is determined solely by the amount of money you've spent.
-                </p>
-                <p className="text-white/70 mb-4">
-                  Unlike traditional games where skill determines your ranking, SpendThrone embraces the "pay-to-win" concept with self-aware humor, creating a mirror that reflects our complicated relationship with money and status.
-                </p>
-                <p className="text-white/70 mb-4">
-                  The leaderboard never resets. Your spending is permanent, your rank eternal (or at least until someone outspends you). We've created the ultimate digital status symbol – one that requires no talent, just a willingness to part with your cash.
-                </p>
-                <div className="flex items-center mt-6 p-3 bg-white/5 rounded-lg">
-                  <DollarSign className="h-6 w-6 text-royal-gold mr-3" />
-                  <div>
-                    <h3 className="font-medium">The Golden Rule</h3>
-                    <p className="text-sm text-white/70">$1 spent = 1 unit of rank. It's that simple.</p>
-                  </div>
-                </div>
-              </div>
-              
-              <div>
-                <h2 className="text-xl font-semibold mb-4 flex items-center">
-                  <Users className="h-5 w-5 mr-2 text-royal-gold" />
-                  The Community
-                </h2>
-                <p className="text-white/70 mb-4">
-                  SpendThrone has attracted a diverse community of nobles, from those who spend a dollar to secure their place on the leaderboard to "whales" who invest thousands to claim top positions.
-                </p>
-                <p className="text-white/70 mb-4">
-                  Teams add another dimension to the experience. Join the Red, Green, or Blue team and contribute to your team's overall rank. It's like a medieval battle, but fought with credit cards instead of swords.
-                </p>
-                <p className="text-white/70 mb-4">
-                  Weekly events like "Poke Party" where you can pay to drop another user down the ranks add interactive elements to the purely spending-based progression.
+        <Tabs defaultValue="concept" className="w-full">
+          <TabsList className="grid grid-cols-4 max-w-2xl mx-auto mb-6">
+            <TabsTrigger value="concept">Concept</TabsTrigger>
+            <TabsTrigger value="features">Features</TabsTrigger>
+            <TabsTrigger value="philosophy">Philosophy</TabsTrigger>
+            <TabsTrigger value="faq">FAQ</TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="concept">
+            <Card className="glass-morphism border-white/10 mb-6">
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <Lightbulb className="mr-2 h-5 w-5 text-royal-gold" />
+                  Core Concept
+                </CardTitle>
+                <CardDescription>
+                  The fundamental premise behind SpendThrone
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <p>
+                  SpendThrone is a persistent, ranked leaderboard where your position is determined solely by financial contribution. 
+                  $1 spent equals 1 unit of rank. The leaderboard never resets, creating a perpetual status economy.
                 </p>
                 
-                <div className="space-y-4 mt-6">
-                  <div className="flex items-center p-3 bg-white/5 rounded-lg">
-                    <Sparkles className="h-5 w-5 text-red-400 mr-3" />
-                    <div>
-                      <h3 className="font-medium">Red Team: The Flamboyant</h3>
-                      <p className="text-sm text-white/70">Flashy spenders who love to show off their luxury.</p>
-                    </div>
+                <div className="flex flex-col sm:flex-row gap-4 mt-6">
+                  <Card className="flex-1 glass-morphism border-white/10">
+                    <CardHeader className="pb-2">
+                      <CardTitle className="text-base flex items-center">
+                        <Flame className="mr-2 h-4 w-4 text-royal-crimson" />
+                        Satirical Experiment
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="text-sm text-white/70">
+                      SpendThrone embraces the "pay-to-win" concept with self-awareness, creating a satire of status-seeking behavior in digital economies.
+                    </CardContent>
+                  </Card>
+                  
+                  <Card className="flex-1 glass-morphism border-white/10">
+                    <CardHeader className="pb-2">
+                      <CardTitle className="text-base flex items-center">
+                        <History className="mr-2 h-4 w-4 text-royal-gold" />
+                        Historical Reflection
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="text-sm text-white/70">
+                      Throughout history, wealth has been used to display status. SpendThrone simply makes this relationship explicit in the digital realm.
+                    </CardContent>
+                  </Card>
+                  
+                  <Card className="flex-1 glass-morphism border-white/10">
+                    <CardHeader className="pb-2">
+                      <CardTitle className="text-base flex items-center">
+                        <Coffee className="mr-2 h-4 w-4 text-royal-navy" />
+                        Social Dynamics
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="text-sm text-white/70">
+                      Users form teams, create alliances, and engage in friendly competition, forming complex social hierarchies.
+                    </CardContent>
+                  </Card>
+                </div>
+                
+                <Alert className="bg-royal-crimson/10 border-royal-crimson/20">
+                  <Info className="h-4 w-4" />
+                  <AlertTitle>Interested in historical status symbols?</AlertTitle>
+                  <AlertDescription>
+                    Learn how SpendThrone reflects status displays throughout human history in our 
+                    <Link to="/status-history" className="ml-1 text-royal-gold hover:text-royal-gold/80 underline">
+                      Status Through History
+                    </Link> section.
+                  </AlertDescription>
+                </Alert>
+              </CardContent>
+            </Card>
+          </TabsContent>
+          
+          <TabsContent value="features">
+            <Card className="glass-morphism border-white/10 mb-6">
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <ThumbsUp className="mr-2 h-5 w-5 text-royal-gold" />
+                  Key Features
+                </CardTitle>
+                <CardDescription>
+                  What makes SpendThrone unique
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <h3 className="text-lg font-medium flex items-center">
+                      <span className="text-royal-gold mr-2">01</span>
+                      Dollar-Driven Rank
+                    </h3>
+                    <p className="text-white/70 text-sm">
+                      A transparent leaderboard where rank is directly determined by spending. Filter by teams, individuals, or time periods.
+                    </p>
                   </div>
                   
-                  <div className="flex items-center p-3 bg-white/5 rounded-lg">
-                    <Sparkles className="h-5 w-5 text-green-400 mr-3" />
-                    <div>
-                      <h3 className="font-medium">Green Team: The Status Seekers</h3>
-                      <p className="text-sm text-white/70">Always climbing the social ladder, one dollar at a time.</p>
-                    </div>
+                  <div className="space-y-2">
+                    <h3 className="text-lg font-medium flex items-center">
+                      <span className="text-royal-gold mr-2">02</span>
+                      Customizable Profiles
+                    </h3>
+                    <p className="text-white/70 text-sm">
+                      Two-tiered profiles based on spending level. Higher spenders unlock more customization options and profile features.
+                    </p>
                   </div>
                   
-                  <div className="flex items-center p-3 bg-white/5 rounded-lg">
-                    <Sparkles className="h-5 w-5 text-blue-400 mr-3" />
-                    <div>
-                      <h3 className="font-medium">Blue Team: The Collectors</h3>
-                      <p className="text-sm text-white/70">Accumulating digital prestige like limited edition NFTs.</p>
-                    </div>
+                  <div className="space-y-2">
+                    <h3 className="text-lg font-medium flex items-center">
+                      <span className="text-royal-gold mr-2">03</span>
+                      Team Competition
+                    </h3>
+                    <p className="text-white/70 text-sm">
+                      Join teams and compete collectively. Team rankings are determined by the total spending of all members.
+                    </p>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <h3 className="text-lg font-medium flex items-center">
+                      <span className="text-royal-gold mr-2">04</span>
+                      Royal Mockery
+                    </h3>
+                    <p className="text-white/70 text-sm">
+                      Use spending power to apply cosmetic mockery effects to other profiles, creating a playful status dynamic.
+                    </p>
                   </div>
                 </div>
                 
-                <div className="flex justify-center mt-6">
-                  <Link to="/leaderboard">
-                    <Button variant="outline" className="glass-morphism border-white/10 hover:bg-white/10">
-                      <Crown className="mr-2 h-4 w-4 text-royal-gold" />
-                      View the Royal Leaderboard
+                <Alert className="bg-royal-navy/10 border-royal-navy/20">
+                  <ShieldCheck className="h-4 w-4" />
+                  <AlertTitle>Learn More About Mockery</AlertTitle>
+                  <AlertDescription className="flex flex-col sm:flex-row sm:items-center gap-2">
+                    <span>Explore the detailed mockery options in our comprehensive guide.</span>
+                    <Button asChild variant="outline" size="sm" className="whitespace-nowrap">
+                      <Link to="/mockery-guide">
+                        Mockery Guide
+                        <ArrowRight className="ml-2 h-4 w-4" />
+                      </Link>
                     </Button>
-                  </Link>
+                  </AlertDescription>
+                </Alert>
+              </CardContent>
+            </Card>
+          </TabsContent>
+          
+          <TabsContent value="philosophy">
+            <Card className="glass-morphism border-white/10 mb-6">
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <BookOpen className="mr-2 h-5 w-5 text-royal-gold" />
+                  Our Philosophy
+                </CardTitle>
+                <CardDescription>
+                  The thinking behind SpendThrone
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <p>
+                  SpendThrone exists as a mirror to contemporary digital status economies. By making the relationship between spending and status explicit, 
+                  we invite users to reflect on how wealth and prestige operate in both digital and physical realms.
+                </p>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                  <Card className="glass-morphism border-white/10">
+                    <CardHeader className="pb-2">
+                      <CardTitle className="text-base">Self-Aware Satire</CardTitle>
+                    </CardHeader>
+                    <CardContent className="text-sm text-white/70">
+                      <p>
+                        We approach the concept of "pay-to-win" with deliberate self-awareness. SpendThrone does not hide its mechanics 
+                        behind elaborate systems - it is transparent about the direct relationship between spending and status.
+                      </p>
+                    </CardContent>
+                  </Card>
+                  
+                  <Card className="glass-morphism border-white/10">
+                    <CardHeader className="pb-2">
+                      <CardTitle className="text-base">Digital Anthropology</CardTitle>
+                    </CardHeader>
+                    <CardContent className="text-sm text-white/70">
+                      <p>
+                        SpendThrone functions as a living experiment in digital anthropology, examining how humans create status hierarchies
+                        in virtual spaces when given explicit mechanisms to do so.
+                      </p>
+                    </CardContent>
+                  </Card>
+                  
+                  <Card className="glass-morphism border-white/10">
+                    <CardHeader className="pb-2">
+                      <CardTitle className="text-base">Voluntary Participation</CardTitle>
+                    </CardHeader>
+                    <CardContent className="text-sm text-white/70">
+                      <p>
+                        All participation in SpendThrone is entirely voluntary. We believe in creating a transparent system where users
+                        can choose their level of engagement with full knowledge of the mechanics.
+                      </p>
+                    </CardContent>
+                  </Card>
+                  
+                  <Card className="glass-morphism border-white/10">
+                    <CardHeader className="pb-2">
+                      <CardTitle className="text-base">Meaningful Play</CardTitle>
+                    </CardHeader>
+                    <CardContent className="text-sm text-white/70">
+                      <p>
+                        Despite its satirical nature, SpendThrone creates meaningful social interactions. The team dynamics, rivalries,
+                        and friendships that form are authentic social experiences.
+                      </p>
+                    </CardContent>
+                  </Card>
                 </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card className="glass-morphism border-white/10">
-          <CardHeader>
-            <CardTitle className="flex items-center">
-              <Star className="h-5 w-5 mr-2 text-royal-gold" />
-              Our Satirical Philosophy
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="prose prose-invert max-w-none">
-            <p>
-              In a world where expensive water bottles are status symbols and people wait in line for hours to buy limited-edition sneakers, we thought: why not take consumer culture to its logical extreme?
-            </p>
-            <p>
-              SpendThrone is a mirror reflecting our society's obsession with status, wealth, and digital clout. We've stripped away all pretense and created a transparent economy of prestige: your rank is directly proportional to your spending.
-            </p>
-            <p>
-              Think of it as a social experiment wrapped in a game, wrapped in satire, wrapped in a medieval aesthetic, because why not add crowns and kingdoms to the mix? After all, aren't we all just trying to be royalty in our own digital castles?
-            </p>
-            <blockquote className="border-l-4 border-royal-gold/50 pl-4 italic">
-              "In SpendThrone, we don't ask what your talents are or what you've achieved. We only care about one thing: how much are you willing to spend to see your name in lights?"
-            </blockquote>
-            <p>
-              So go ahead, claim your throne. Your wallet is your weapon, your credit card your crown. In this kingdom, the only ceiling is your credit limit.
-            </p>
-          </CardContent>
-        </Card>
-      </div>
-    </Shell>
+              </CardContent>
+            </Card>
+          </TabsContent>
+          
+          <TabsContent value="faq">
+            <Card className="glass-morphism border-white/10 mb-6">
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <Info className="mr-2 h-5 w-5 text-royal-gold" />
+                  Frequently Asked Questions
+                </CardTitle>
+                <CardDescription>
+                  Common questions about SpendThrone
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <h3 className="text-lg font-medium">Is this serious?</h3>
+                    <p className="text-white/70">
+                      SpendThrone is a satirical social experiment that examines the relationship between spending and status. 
+                      We approach the concept with self-awareness and a sense of humor.
+                    </p>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <h3 className="text-lg font-medium">How does mockery work?</h3>
+                    <p className="text-white/70">
+                      Mockery allows users to spend money to apply purely cosmetic effects to other users' profiles. These effects are temporary
+                      and do not affect functionality. It's a playful feature that adds an element of humor and social dynamics to the platform.
+                    </p>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <h3 className="text-lg font-medium">Do mockery effects impact leaderboard position?</h3>
+                    <p className="text-white/70">
+                      No, mockery effects are purely cosmetic and have no impact on a user's leaderboard position. In fact, money spent on 
+                      mockery still counts toward your total rank.
+                    </p>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <h3 className="text-lg font-medium">What happens to my rank if I stop spending?</h3>
+                    <p className="text-white/70">
+                      Your rank is based on your total spending, which never resets. If you stop spending, your position may decrease as others 
+                      continue to spend, but your total spending amount remains.
+                    </p>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <h3 className="text-lg font-medium">Can I protect myself from mockery?</h3>
+                    <p className="text-white/70">
+                      Yes, you can purchase mockery immunity shields from the Royal Shop that protect your profile from mockery effects for a 
+                      set period of time.
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
+      </Container>
+    </>
   );
 };
 

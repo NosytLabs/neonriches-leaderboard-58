@@ -1,5 +1,5 @@
-
 import { ExtendedMockeryAction, MockeryAction, MockeryTier } from '@/types/mockery';
+import { Egg, Flame, Crown, Shield, Megaphone, Ban, Award, Meh, Cake, Sparkles, Theater, Laugh } from 'lucide-react';
 
 /**
  * Map of mockery actions to their cooldown periods in milliseconds
@@ -20,7 +20,11 @@ export const MOCKERY_COOLDOWNS: Record<ExtendedMockeryAction, number> = {
   drama: 7200000, // 2 hours
   protection: 86400000, // 24 hours
   removal: 3600000, // 1 hour
-  smokeBomb: 28800000, // 8 hours (new smoke bomb effect)
+  smokeBomb: 28800000, // 8 hours
+  royalPie: 3600000,   // 1 hour
+  glitterBomb: 7200000, // 2 hours
+  jokeCrown: 14400000,  // 4 hours
+  memeFrame: 5400000,   // 1.5 hours
 } as Record<ExtendedMockeryAction, number>;
 
 /**
@@ -42,7 +46,11 @@ export const MOCKERY_COSTS: Record<ExtendedMockeryAction, number> = {
   drama: 30,
   protection: 50,
   removal: 25,
-  smokeBomb: 150, // expensive smoke bomb effect
+  smokeBomb: 1000, // Expensive smoke bomb effect - updated to $1000
+  royalPie: 250,   // Pie in the face
+  glitterBomb: 500, // Glitter bomb
+  jokeCrown: 350,  // Joke crown
+  memeFrame: 400,  // Meme frame
 } as Record<ExtendedMockeryAction, number>;
 
 /**
@@ -64,12 +72,11 @@ export const MOCKERY_NAMES: Record<ExtendedMockeryAction, string> = {
   drama: "Court Drama",
   protection: "Protection",
   removal: "Removal",
-  smokeBomb: "Royal Smoke Bomb", // new smoke bomb effect
-  common: "Common",
-  uncommon: "Uncommon",
-  rare: "Rare", 
-  epic: "Epic",
-  legendary: "Legendary"
+  smokeBomb: "Royal Smoke Bomb",
+  royalPie: "Royal Pie Attack",
+  glitterBomb: "Glitter Explosion",
+  jokeCrown: "Jester's Jingling Crown",
+  memeFrame: "Viral Meme Frame",
 } as Record<ExtendedMockeryAction, string>;
 
 /**
@@ -91,7 +98,11 @@ export const MOCKERY_DESCRIPTIONS: Record<ExtendedMockeryAction, string> = {
   drama: "Create court drama involving your target. Their profile will show dramatic symbols for 48 hours. The court gossips will be busy!",
   protection: "Grant royal protection from mockery.",
   removal: "Remove active mockery effects.",
-  smokeBomb: "Deploy a royal smoke bomb that completely covers the target's profile in thick, dramatic smoke for 8 hours. Their profile is still accessible, but visitors must peer through the royal fog to see it!", // new smoke bomb effect
+  smokeBomb: "Deploy a royal smoke bomb that completely covers the target's profile in thick, dramatic smoke for 8 hours. Their profile is still accessible, but visitors must peer through the royal fog to see it!",
+  royalPie: "Slam an extravagant cream pie right in your target's face! Their profile will be covered in whipped cream for 24 hours. The most humiliating dessert service in the kingdom!",
+  glitterBomb: "Explode a magnificent glitter bomb on your target! Their profile will sparkle with annoying glitter for 48 hours. Good luck cleaning that up - it gets EVERYWHERE!",
+  jokeCrown: "Place a ridiculous jingling crown on your target's profile for 72 hours. It makes absurd sound effects whenever someone views their profile!",
+  memeFrame: "Surround your target's profile with the kingdom's most embarrassing animated memes for 36 hours. Internet fame at its most cringeworthy!",
 } as Record<ExtendedMockeryAction, string>;
 
 /**
@@ -112,7 +123,11 @@ export const MOCKERY_RARITY: Record<ExtendedMockeryAction, MockeryTier> = {
   taunt: "common",
   drama: "rare",
   protection: "rare",
-  smokeBomb: "legendary", // new smoke bomb effect
+  smokeBomb: "legendary",
+  royalPie: "uncommon",
+  glitterBomb: "epic",
+  jokeCrown: "rare",
+  memeFrame: "epic",
 } as Record<ExtendedMockeryAction, MockeryTier>;
 
 /**
@@ -147,7 +162,15 @@ export function getMockeryIcon(action: ExtendedMockeryAction): string {
     case 'drama':
       return 'Theater';
     case 'smokeBomb':
-      return 'CloudFog'; // new smoke bomb effect
+      return 'CloudFog';
+    case 'royalPie':
+      return 'Cake';
+    case 'glitterBomb':
+      return 'Sparkles';
+    case 'jokeCrown':
+      return 'Crown';
+    case 'memeFrame':
+      return 'Theater';
     default:
       return 'Skull';
   }
@@ -195,3 +218,45 @@ export function getActiveMockeryClass(action: MockeryAction): string {
 export function getMockeryOverlayClass(action: MockeryAction): string {
   return `${action}-overlay`;
 }
+
+/**
+ * Get the mockery action icon component
+ */
+export const getMockeryActionIcon = (action: MockeryAction) => {
+  switch (action) {
+    case 'tomatoes':
+      return Flame;
+    case 'putridEggs':
+      return Egg;
+    case 'stocks':
+      return Ban;
+    case 'silence':
+      return Megaphone;
+    case 'courtJester':
+    case 'jester':
+      return Crown;
+    case 'common':
+      return Meh;
+    case 'uncommon':
+      return Egg;
+    case 'rare':
+      return Shield;
+    case 'epic':
+      return Crown;
+    case 'legendary':
+      return Award;
+    case 'protection':
+    case 'immune':
+      return Shield;
+    case 'royalPie':
+      return Cake;
+    case 'glitterBomb':
+      return Sparkles;
+    case 'jokeCrown':
+      return Crown;
+    case 'memeFrame':
+      return Theater;
+    default:
+      return Flame;
+  }
+};

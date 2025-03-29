@@ -3,7 +3,7 @@ export type MockeryTier = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary' 
 
 export type MockeryAction = 
   | 'tomatoes' 
-  | 'putridEggs' // Renamed from 'eggs'
+  | 'putridEggs' 
   | 'stocks' 
   | 'silence' 
   | 'courtJester' 
@@ -14,11 +14,15 @@ export type MockeryAction =
   | 'drama' 
   | 'taunt'
   | 'removal'
-  | 'smokeBomb'; // Added new smoke bomb effect
+  | 'smokeBomb'
+  | 'royalPie'        // New: Pie in the face
+  | 'glitterBomb'     // New: Cover with glitter
+  | 'jokeCrown'       // New: Joke crown that makes silly sounds
+  | 'memeFrame';      // New: Frames profile in animated memes
 
 export type ShameAction = 
   | 'tomatoes' 
-  | 'putridEggs' // Renamed from 'eggs'
+  | 'putridEggs'
   | 'silence' 
   | 'roast' 
   | 'ridicule' 
@@ -27,7 +31,11 @@ export type ShameAction =
   | 'jester' 
   | 'shame' 
   | 'dunce'
-  | 'smokeBomb'; // Added new smoke bomb effect
+  | 'smokeBomb'
+  | 'royalPie'       // New
+  | 'glitterBomb'    // New
+  | 'jokeCrown'      // New
+  | 'memeFrame';     // New
 
 export type ExtendedMockeryAction = 
   | MockeryAction 

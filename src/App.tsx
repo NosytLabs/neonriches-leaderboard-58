@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import { ThemeProvider } from "@/components/ui/theme-provider"
@@ -10,7 +11,6 @@ import Signin from './pages/Signin';
 import Signup from './pages/Signup';
 import Wallet from './pages/Wallet';
 import NotFound from './pages/NotFound';
-import AuthContext from './contexts/AuthContext';
 import { useAuth } from './hooks/useAuth';
 import { Toaster } from '@/components/ui/toaster';
 import { Skeleton } from "@/components/ui/skeleton"
@@ -20,6 +20,8 @@ import RoyalPrestige from './pages/RoyalPrestige';
 import Leaderboard from './pages/Leaderboard';
 import Mockery from './pages/Mockery';
 import MockeryGuide from './pages/MockeryGuide';
+import About from './pages/About'; // Combined information page
+import StatusThroughHistory from './pages/StatusThroughHistory';
 
 function App() {
   const { isLoading } = useAuth();
@@ -52,6 +54,8 @@ function App() {
           <Route path="/wallet" element={<Wallet />} />
           <Route path="/prestige" element={<RoyalPrestige />} />
           <Route path="/leaderboard" element={<Leaderboard />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/status-history" element={<StatusThroughHistory />} />
 
           {/* Mockery Routes */}
           <Route path="/mockery" element={<Mockery />} />
