@@ -16,8 +16,8 @@ import RoyalTrophyModel from '@/components/3d/RoyalTrophyModel';
 import { Badge } from '@/components/ui/badge';
 import { motion } from 'framer-motion';
 import SpendingDistributionChart from '@/components/charts/SpendingDistributionChart';
+import ThroneCoinsIcon from '@/components/icons/ThroneCoinsIcon';
 
-// Sample data for spending distribution
 const spendingData = [
   { id: '1', label: 'Boosts', value: 2500, color: '#D4AF37' },
   { id: '2', label: 'Mockery', value: 1800, color: '#6B46C1' },
@@ -30,12 +30,10 @@ const Index = () => {
   const [showChart, setShowChart] = useState(false);
 
   useEffect(() => {
-    // Show trophy after a delay for a nice entrance effect
     const trophyTimer = setTimeout(() => {
       setShowTrophy(true);
     }, 1000);
     
-    // Show chart after another delay
     const chartTimer = setTimeout(() => {
       setShowChart(true);
     }, 1500);
@@ -53,7 +51,10 @@ const Index = () => {
       <div className="relative">
         <HeroShowcase />
         
-        {/* Floating crown effect */}
+        <div className="absolute top-10 left-10 w-32 h-32 opacity-90 pointer-events-none">
+          <ThroneCoinsIcon size="xl" animated={true} />
+        </div>
+        
         <div className="absolute top-10 right-10 w-32 h-32 opacity-70 pointer-events-none">
           <EnhancedCrownEffect width={128} height={128} opacity={0.5} interactive={false} />
         </div>
@@ -64,7 +65,6 @@ const Index = () => {
         description="Follow these steps to establish thy dominance in our kingdom of monetary excess"
         centered={true}
       >
-        {/* Trophy showcase */}
         {showTrophy && (
           <motion.div 
             initial={{ opacity: 0, scale: 0.8 }}
@@ -86,7 +86,6 @@ const Index = () => {
           </motion.div>
         )}
         
-        {/* Spending distribution chart */}
         {showChart && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -203,12 +202,15 @@ const Index = () => {
       
       <RoyalDivider variant="ornate" color="gold" />
       
-      {/* New Feature Showcase Section */}
       <RoyalSection
         title="Royal Extravagances"
         description="Explore the lavish features that await those with coin to spare"
         centered={true}
       >
+        <div className="flex justify-center mb-8">
+          <ThroneCoinsIcon size="lg" animated={true} />
+        </div>
+        
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
           <motion.div
             initial={{ opacity: 0, x: -20 }}
