@@ -25,18 +25,18 @@ export const getShameActionPrice = (action: ShameAction): number => {
 export const getShameActionIcon = (action: ShameAction): ReactNode => {
   switch(action) {
     case 'tomatoes':
-      return <Flame className="text-red-500" />;
+      return React.createElement(Flame, { className: "text-red-500" });
     case 'eggs':
-      return <Egg className="text-yellow-200" />;
+      return React.createElement(Egg, { className: "text-yellow-200" });
     case 'stocks':
-      return <Gavel className="text-amber-700" />;
+      return React.createElement(Gavel, { className: "text-amber-700" });
     case 'jester':
     case 'courtJester':
-      return <Crown className="text-emerald-500" />;
+      return React.createElement(Crown, { className: "text-emerald-500" });
     case 'protection':
-      return <Shield className="text-blue-400" />;
+      return React.createElement(Shield, { className: "text-blue-400" });
     default:
-      return <Flame className="text-red-500" />;
+      return React.createElement(Flame, { className: "text-red-500" });
   }
 };
 
