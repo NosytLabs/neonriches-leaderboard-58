@@ -1,3 +1,4 @@
+
 import { AnalysisResult } from './types';
 
 /**
@@ -9,8 +10,8 @@ export const generateAnalysisReport = (result: AnalysisResult): string => {
   let report = `# Code Analysis Report\n\n`;
 
   // Unused Files
-  report += `## Unused Files (${result.unusedFiles.length})\n\n`;
-  if (result.unusedFiles.length === 0) {
+  report += `## Unused Files (${result.unusedFiles?.length || 0})\n\n`;
+  if (!result.unusedFiles || result.unusedFiles.length === 0) {
     report += `No unused files detected.\n\n`;
   } else {
     report += `| File | Size | Impact |\n`;
@@ -42,20 +43,21 @@ export const generateAnalysisReport = (result: AnalysisResult): string => {
     report += `| File | Line | Variable | Impact |\n`;
     report += `|------|------|----------|--------|\n`;
     result.unusedVariables.forEach(variable => {
-      report += `| ${variable.file || variable.filePath} | ${variable.line} | ${variable.name || variable.variable} | ${variable.impact || 'Low'} |\n`;
+      report += `| ${variable.file || variable.filePath} | ${variable.line || 'N/A'} | ${variable.name || variable.variable} | ${variable.impact || 'Low'} |\n`;
     });
     report += `\n`;
   }
 
   // Unused CSS Selectors
-  report += `## Unused CSS Selectors (${result.unusedCssSelectors.length})\n\n`;
-  if (result.unusedCssSelectors.length === 0) {
+  const unusedSelectors = result.unusedCssSelectors || result.unusedSelectors;
+  report += `## Unused CSS Selectors (${unusedSelectors?.length || 0})\n\n`;
+  if (!unusedSelectors || unusedSelectors.length === 0) {
     report += `No unused CSS selectors detected.\n\n`;
   } else {
     report += `| File | Line | Selector | Impact |\n`;
     report += `|------|------|----------|--------|\n`;
-    result.unusedCssSelectors.forEach(selector => {
-      report += `| ${selector.file || selector.filePath} | ${selector.line} | \`${selector.selector}\` | ${selector.impact || 'Low'} |\n`;
+    unusedSelectors.forEach(selector => {
+      report += `| ${selector.file || selector.filePath || 'N/A'} | ${selector.line || 'N/A'} | \`${selector.selector}\` | ${selector.impact || 'Low'} |\n`;
     });
     report += `\n`;
   }
@@ -66,10 +68,10 @@ export const generateAnalysisReport = (result: AnalysisResult): string => {
   if (deadCodePaths.length === 0) {
     report += `No dead code detected.\n\n`;
   } else {
-    report += `| File | Function | Line |\n`;
-    report += `|------|----------|------|\n`;
+    report += `| File | Function | Line | Description |\n`;
+    report += `|------|----------|------|-------------|\n`;
     deadCodePaths.forEach(deadCode => {
-      report += `| ${deadCode.file} | ${deadCode.function} | ${deadCode.line} |\n`;
+      report += `| ${deadCode.file || deadCode.path || 'N/A'} | ${deadCode.function || 'N/A'} | ${deadCode.line || 'N/A'} | ${deadCode.description || deadCode.name} |\n`;
     });
     report += `\n`;
   }
@@ -84,12 +86,21 @@ export const generateAnalysisReport = (result: AnalysisResult): string => {
       report += `### Pattern ${index + 1}: ${dup.pattern}\n\n`;
       report += `Similarity: ${Math.round(dup.similarity * 100)}%\n\n`;
       report += `**Found in:**\n`;
-      if (Array.isArray(occurrences)) {
+      if (Array.isArray(occurrences) && occurrences.length > 0) {
         occurrences.forEach((occ: any) => {
-          // Format occurrence data
+          if (typeof occ === 'object' && occ.file) {
+            report += `- ${occ.file} (Line: ${occ.line || 'N/A'})\n`;
+          }
         });
-      } else if (dup.code) {
-        report += `\`\`\`typescript\n${dup.code}\n\`\`\`\n`;
+      } else if (dup.files && dup.files.length > 0) {
+        dup.files.forEach(file => {
+          report += `- ${file.path}\n`;
+        });
+      }
+      
+      if (dup.code || dup.codeSnippet || dup.snippet) {
+        report += `\n**Code:**\n\n`;
+        report += `\`\`\`typescript\n${dup.code || dup.codeSnippet || dup.snippet}\n\`\`\`\n`;
       }
       report += `\n`;
     });
@@ -103,7 +114,7 @@ export const generateAnalysisReport = (result: AnalysisResult): string => {
     report += `| File | Line | Function | Complexity |\n`;
     report += `|------|------|----------|------------|\n`;
     result.complexCode.forEach(complex => {
-      report += `| ${complex.file || complex.filePath} | ${complex.line || 'N/A'} | ${complex.function} | ${complex.cyclomaticComplexity || complex.complexity} |\n`;
+      report += `| ${complex.file || complex.filePath || 'N/A'} | ${complex.line || 'N/A'} | ${complex.function || complex.name || 'N/A'} | ${complex.cyclomaticComplexity || complex.complexity || 'N/A'} |\n`;
     });
     report += `\n`;
   }
@@ -116,7 +127,7 @@ export const generateAnalysisReport = (result: AnalysisResult): string => {
     report += `| Package | Version | Alternatives | Recommendation |\n`;
     report += `|---------|---------|--------------|----------------|\n`;
     result.unusedDependencies.forEach(dep => {
-      report += `| ${dep.name} | ${dep.version} | ${dep.alternatives.join(', ')} | ${dep.recommendation || 'Consider removal'} |\n`;
+      report += `| ${dep.name} | ${dep.version} | ${dep.alternatives?.join(', ') || 'N/A'} | ${dep.recommendation || 'Consider removal'} |\n`;
     });
     report += `\n${result.unusedDependencies.map(dep => dep.impact ? `- ${dep.name}: ${dep.impact} impact` : '').filter(Boolean).join('\n')}\n\n`;
   }
@@ -125,25 +136,49 @@ export const generateAnalysisReport = (result: AnalysisResult): string => {
   if (result.metrics) {
     report += `## Project Metrics\n\n`;
     report += `### Current\n\n`;
-    report += `- Total Size: ${result.metrics.beforeCleanup.projectSize || result.metrics.projectSize} KB\n`;
-    report += `- Files: ${result.metrics.beforeCleanup.fileCount || result.metrics.fileCount}\n`;
-    report += `- Dependencies: ${result.metrics.beforeCleanup.dependencyCount || result.metrics.dependencyCount}\n`;
+    report += `- Total Size: ${result.metrics.beforeCleanup?.projectSize || result.metrics.projectSize || 'N/A'} KB\n`;
+    report += `- Files: ${result.metrics.beforeCleanup?.fileCount || result.metrics.fileCount || 'N/A'}\n`;
+    report += `- Dependencies: ${result.metrics.beforeCleanup?.dependencyCount || result.metrics.dependencyCount || 'N/A'}\n`;
     report += `- Average File Size: ${result.metrics.averageFileSize?.toFixed(2) || 'N/A'} KB\n\n`;
     
     report += `### After Potential Cleanup\n\n`;
-    report += `- Total Size: ${result.metrics.afterCleanup.projectSize || result.metrics.projectSize} KB\n`;
-    report += `- Files: ${result.metrics.afterCleanup.fileCount || result.metrics.fileCount}\n`;
-    report += `- Dependencies: ${result.metrics.afterCleanup.dependencyCount || result.metrics.dependencyCount}\n`;
+    report += `- Total Size: ${result.metrics.afterCleanup?.projectSize || 'N/A'} KB\n`;
+    report += `- Files: ${result.metrics.afterCleanup?.fileCount || 'N/A'}\n`;
+    report += `- Dependencies: ${result.metrics.afterCleanup?.dependencyCount || 'N/A'}\n`;
     report += `- Average File Size: ${result.metrics.averageFileSize?.toFixed(2) || 'N/A'} KB\n\n`;
     
     report += `### Potential Savings\n\n`;
-    const sizeSavings = (result.metrics.beforeCleanup.projectSize - result.metrics.afterCleanup.projectSize) || 0;
-    const fileSavings = (result.metrics.beforeCleanup.fileCount - result.metrics.afterCleanup.fileCount) || 0;
-    const dependencySavings = (result.metrics.beforeCleanup.dependencyCount - result.metrics.afterCleanup.dependencyCount) || 0;
+    const sizeSavings = 
+      (result.metrics.beforeCleanup && result.metrics.afterCleanup) 
+        ? (result.metrics.beforeCleanup.projectSize - result.metrics.afterCleanup.projectSize) 
+        : (result.metrics.sizeSavings || 0);
     
-    report += `- Size Reduction: ${sizeSavings} KB (${sizeSavings > 0 ? Math.round((sizeSavings / result.metrics.beforeCleanup.projectSize) * 100) : 0}%)\n`;
-    report += `- Files Removed: ${fileSavings} (${fileSavings > 0 ? Math.round((fileSavings / result.metrics.beforeCleanup.fileCount) * 100) : 0}%)\n`;
-    report += `- Dependencies Removed: ${dependencySavings} (${dependencySavings > 0 ? Math.round((dependencySavings / result.metrics.beforeCleanup.dependencyCount) * 100) : 0}%)\n\n`;
+    const fileSavings = 
+      (result.metrics.beforeCleanup && result.metrics.afterCleanup) 
+        ? (result.metrics.beforeCleanup.fileCount - result.metrics.afterCleanup.fileCount) 
+        : (result.metrics.fileSavings || 0);
+    
+    const dependencySavings = 
+      (result.metrics.beforeCleanup && result.metrics.afterCleanup) 
+        ? (result.metrics.beforeCleanup.dependencyCount - result.metrics.afterCleanup.dependencyCount) 
+        : (result.metrics.dependencySavings || 0);
+    
+    const beforeProjectSize = result.metrics.beforeCleanup?.projectSize || result.metrics.projectSize || 0;
+    const beforeFileCount = result.metrics.beforeCleanup?.fileCount || result.metrics.fileCount || 0;
+    const beforeDependencyCount = result.metrics.beforeCleanup?.dependencyCount || result.metrics.dependencyCount || 0;
+    
+    const sizePercentage = result.metrics.sizePercentage || 
+      (beforeProjectSize > 0 ? Math.round((sizeSavings / beforeProjectSize) * 100) : 0);
+    
+    const filePercentage = result.metrics.filePercentage || 
+      (beforeFileCount > 0 ? Math.round((fileSavings / beforeFileCount) * 100) : 0);
+    
+    const dependencyPercentage = result.metrics.dependencyPercentage || 
+      (beforeDependencyCount > 0 ? Math.round((dependencySavings / beforeDependencyCount) * 100) : 0);
+    
+    report += `- Size Reduction: ${sizeSavings} KB (${sizePercentage}%)\n`;
+    report += `- Files Removed: ${fileSavings} (${filePercentage}%)\n`;
+    report += `- Dependencies Removed: ${dependencySavings} (${dependencyPercentage}%)\n\n`;
   }
 
   // Recommendations
@@ -153,7 +188,11 @@ export const generateAnalysisReport = (result: AnalysisResult): string => {
       report += `- ${rec}\n`;
     });
   } else {
-    report += `No specific recommendations generated.\n`;
+    report += `- Remove unused imports and variables to improve code readability\n`;
+    report += `- Consider refactoring complex code patterns to improve maintainability\n`;
+    report += `- Extract duplicated code into reusable utility functions\n`;
+    report += `- Remove dead code paths to reduce bundle size\n`;
+    report += `- Evaluate unused dependencies for removal to improve security and build performance\n`;
   }
 
   return report;

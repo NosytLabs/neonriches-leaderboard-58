@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { ArrowLeft, Code, AlertTriangle } from 'lucide-react';
 import AnalysisLayout from '@/components/codeAnalysis/shared/AnalysisLayout';
@@ -14,7 +13,7 @@ import ComplexCodeSection from '@/components/codeAnalysis/sections/ComplexCodeSe
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { getAnalysisResults } from '@/components/codeAnalysis/runAnalysis';
-import { AnalysisResult, FileInfo, ImportInfo, VariableInfo, CssSelectorInfo, DependencyInfo, DeadCodeInfo } from '@/utils/codeAnalysis/types';
+import { AnalysisResult } from '@/utils/codeAnalysis/types';
 import { useToast } from '@/hooks/use-toast';
 import { generateAnalysisReport } from '@/utils/codeAnalysis/reportGenerator';
 import { Link } from 'react-router-dom';
@@ -48,7 +47,7 @@ const CodeAnalysis: React.FC = () => {
           results.unusedImports.length + 
           results.unusedVariables.length +
           (results.unusedSelectors?.length || 0) +
-          (results.deadCodePaths?.length || 0) +
+          (results.deadCodePaths?.length || results.deadCode.length || 0) +
           results.duplicateCode.length +
           results.complexCode.length +
           results.unusedDependencies.length

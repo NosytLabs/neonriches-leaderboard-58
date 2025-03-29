@@ -148,6 +148,12 @@ export interface ProjectMetrics {
     fileCount: number;
     dependencyCount: number;
   };
+  sizeSavings?: number;
+  fileSavings?: number;
+  dependencySavings?: number;
+  sizePercentage?: number;
+  filePercentage?: number;
+  dependencyPercentage?: number;
 }
 
 export interface AnalysisResult {
