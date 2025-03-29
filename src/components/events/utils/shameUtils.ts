@@ -1,6 +1,6 @@
 
 import { ShameAction } from '@/types/mockery';
-import { ReactNode } from 'react';
+import React, { ReactNode } from 'react';
 import { Egg, Flame, Crown, Gavel, Shield } from 'lucide-react';
 
 // Get shame action price
