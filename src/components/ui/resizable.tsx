@@ -37,10 +37,10 @@ interface ResizableHandleProps {
   className?: string;
 }
 
-// The key fix: use ComponentProps<typeof Component> for proper typing including ref
+// Fix: Explicitly type the props using the ResizablePrimitive component's own types
 const ResizableHandle = forwardRef<
-  ElementRef<typeof ResizablePrimitive.PanelResizeHandle>,
-  ComponentProps<typeof ResizablePrimitive.PanelResizeHandle> & ResizableHandleProps
+  React.ElementRef<typeof ResizablePrimitive.PanelResizeHandle>,
+  React.ComponentPropsWithoutRef<typeof ResizablePrimitive.PanelResizeHandle> & ResizableHandleProps
 >(({ className, withHandle = false, ...props }, ref) => (
   <ResizablePrimitive.PanelResizeHandle
     ref={ref}
@@ -61,8 +61,8 @@ ResizableHandle.displayName = 'ResizableHandle';
 
 // Apply the same fix to ResizableSeparator
 const ResizableSeparator = forwardRef<
-  ElementRef<typeof ResizablePrimitive.PanelResizeHandle>,
-  ComponentProps<typeof ResizablePrimitive.PanelResizeHandle> & ResizableHandleProps
+  React.ElementRef<typeof ResizablePrimitive.PanelResizeHandle>,
+  React.ComponentPropsWithoutRef<typeof ResizablePrimitive.PanelResizeHandle> & ResizableHandleProps
 >(({ className, ...props }, ref) => (
   <ResizableHandle ref={ref} className={className} {...props} withHandle />
 ));
