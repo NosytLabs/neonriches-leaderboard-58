@@ -68,7 +68,7 @@ function App() {
                 </Suspense>
               } />
               
-              {/* Profile Pages */}
+              {/* Profile & Account Pages */}
               <Route path="/profile/:username" element={
                 <Suspense fallback={<LoadingScreen />}>
                   <Profile />
@@ -102,7 +102,7 @@ function App() {
                 </Suspense>
               } />
               
-              {/* Finance Pages */}
+              {/* Finance & Payment Pages */}
               <Route path="/wallet" element={
                 <Suspense fallback={<LoadingScreen />}>
                   <Wallet />
@@ -124,14 +124,12 @@ function App() {
                 </Suspense>
               } />
               
-              {/* Team Features */}
+              {/* Team & Competition Pages */}
               <Route path="/teams" element={
                 <Suspense fallback={<LoadingScreen />}>
                   <Teams />
                 </Suspense>
               } />
-              
-              {/* Core Game Features */}
               <Route path="/leaderboard" element={
                 <Suspense fallback={<LoadingScreen />}>
                   <Leaderboard />
@@ -142,6 +140,8 @@ function App() {
                   <RoyalPrestige />
                 </Suspense>
               } />
+              
+              {/* Social Interaction Pages */}
               <Route path="/mockery" element={
                 <Suspense fallback={<LoadingScreen />}>
                   <Mockery />
@@ -170,7 +170,7 @@ function App() {
                 </Suspense>
               } />
               
-              {/* Consolidated Legal & Info Pages */}
+              {/* Legal & Policy Pages */}
               <Route path="/terms" element={
                 <Suspense fallback={<LoadingScreen />}>
                   <ContentPage pageKey="terms" />
@@ -192,7 +192,7 @@ function App() {
                 </Suspense>
               } />
               
-              {/* Redirects for duplicate URLs */}
+              {/* Redirect aliases for common URL variations */}
               <Route path="/terms-of-service" element={
                 <Suspense fallback={<LoadingScreen />}>
                   <ContentPage pageKey="terms" />
@@ -204,7 +204,7 @@ function App() {
                 </Suspense>
               } />
               
-              {/* Catch All */}
+              {/* Catch All for 404 */}
               <Route path="*" element={
                 <Suspense fallback={<LoadingScreen />}>
                   <NotFound />

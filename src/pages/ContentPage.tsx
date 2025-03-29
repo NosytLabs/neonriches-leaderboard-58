@@ -8,13 +8,12 @@ import { privacyContent } from '@/data/privacyContent';
 import { featuresContent } from '@/data/featuresContent';
 import { faqContent } from '@/data/faqContent';
 import { updatesContent } from '@/data/updatesContent';
-import { codeAnalysisContent } from '@/data/codeAnalysisContent';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft } from 'lucide-react';
 
 interface ContentPageProps {
-  pageKey: 'about' | 'terms' | 'privacy' | 'features' | 'faq' | 'updates' | 'code-analysis';
+  pageKey: 'about' | 'terms' | 'privacy' | 'features' | 'faq' | 'updates';
 }
 
 const ContentPage: React.FC<ContentPageProps> = ({ pageKey }) => {
@@ -63,13 +62,6 @@ const ContentPage: React.FC<ContentPageProps> = ({ pageKey }) => {
           content: updatesContent,
           path: '/updates'
         };
-      case 'code-analysis':
-        return {
-          title: 'Code Analysis',
-          description: 'Technical insights into the SpendThrone codebase.',
-          content: codeAnalysisContent,
-          path: '/code-analysis'
-        };
       default:
         return {
           title: 'Content Not Found',
@@ -98,13 +90,6 @@ const ContentPage: React.FC<ContentPageProps> = ({ pageKey }) => {
               </Link>
             </Button>
             <h1 className="text-4xl font-bold royal-gradient">{pageContent.title}</h1>
-          </div>
-          
-          <div className="mb-8 p-4 rounded-lg bg-black/20">
-            <p className="text-white/80">
-              This is a consolidated legal/information page that's part of the SpendThrone site structure.
-              These pages share a common format for consistency and ease of navigation.
-            </p>
           </div>
           
           {pageContent.content.sections.map((section, index) => (

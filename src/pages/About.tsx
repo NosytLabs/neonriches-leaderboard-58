@@ -4,7 +4,6 @@ import { Container } from '@/components/ui/container';
 import PageSEO from '@/components/common/PageSEO';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import RouteExplanation from '@/components/docs/RouteExplanation';
 import { Crown, DollarSign, Users, Trophy, ScrollText } from 'lucide-react';
 
 const About = () => {
@@ -22,10 +21,9 @@ const About = () => {
           <p className="text-xl text-white/80 mb-8">A satirical exploration of status through spending</p>
           
           <Tabs defaultValue="concept">
-            <TabsList className="grid w-full grid-cols-4 mb-8">
+            <TabsList className="grid w-full grid-cols-3 mb-8">
               <TabsTrigger value="concept">Concept</TabsTrigger>
               <TabsTrigger value="features">Key Features</TabsTrigger>
-              <TabsTrigger value="site-structure">Site Structure</TabsTrigger>
               <TabsTrigger value="faq">FAQ</TabsTrigger>
             </TabsList>
             
@@ -104,10 +102,6 @@ const About = () => {
                   </CardContent>
                 </Card>
               </div>
-            </TabsContent>
-            
-            <TabsContent value="site-structure">
-              <RouteExplanation />
             </TabsContent>
             
             <TabsContent value="faq">

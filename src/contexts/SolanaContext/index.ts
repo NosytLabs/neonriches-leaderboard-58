@@ -1,5 +1,9 @@
 
-import { useSolana, SolanaContextValue } from './SolanaProvider';
-export { SolanaProvider } from './SolanaProvider';
-export { useSolana };
+import { useSolana, SolanaProvider, SolanaContextValue } from './SolanaProvider';
+
+export { 
+  useSolana, 
+  SolanaProvider 
+};
+
 export type { SolanaContextValue };
