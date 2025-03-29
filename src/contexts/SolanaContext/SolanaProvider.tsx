@@ -1,163 +1,120 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
-// Define the context value type
+// Define the context type with all necessary properties
 export interface SolanaContextValue {
-  // Basic properties
   connected: boolean;
-  walletPubkey: string | null;
+  connecting: boolean;
   walletBalance: number;
-  
-  // Methods
-  connectWallet: () => Promise<void>;
-  disconnectWallet: () => void;
-  sendSol: (amount: number, recipient: string) => Promise<boolean>;
-  
-  // Status flags
-  isConnected: boolean;
-  isConnecting: boolean;
-  hasWallet: boolean;
-  
-  // Account linking
-  linkWalletToAccount: (userId: string) => Promise<boolean>;
+  publicKey: { toString: () => string } | null;
+  signMessage?: (message: Uint8Array) => Promise<Uint8Array>;
+  sendSol?: (recipient: string, amount: number) => Promise<string | null>;
+  connect: () => Promise<void>;
+  disconnect: () => void;
+  walletPubkey?: string;
 }
 
-// Create a default context with safe, no-op implementations
-const defaultContextValue: SolanaContextValue = {
+// Create the context with default values
+const SolanaContext = createContext<SolanaContextValue>({
   connected: false,
-  walletPubkey: null,
+  connecting: false,
   walletBalance: 0,
-  
-  connectWallet: async () => { console.log('Wallet connect not implemented'); },
-  disconnectWallet: () => { console.log('Wallet disconnect not implemented'); },
-  sendSol: async () => false,
-  
-  isConnected: false,
-  isConnecting: false,
-  hasWallet: false,
-  
-  linkWalletToAccount: async () => false
-};
+  publicKey: null,
+  connect: async () => {},
+  disconnect: () => {},
+});
 
-// Create the context
-const SolanaContext = createContext<SolanaContextValue>(defaultContextValue);
-
-// Provider component
 export const SolanaProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [wallet, setWallet] = useState<{
-    connected: boolean;
-    pubkey: string | null;
-    balance: number;
-  }>({
-    connected: false,
-    pubkey: null,
-    balance: 0
-  });
-  
-  const [status, setStatus] = useState({
-    isConnecting: false,
-    hasWallet: false
-  });
+  const [connected, setConnected] = useState(false);
+  const [connecting, setConnecting] = useState(false);
+  const [walletBalance, setWalletBalance] = useState(0);
+  const [publicKey, setPublicKey] = useState<{ toString: () => string } | null>(null);
+  const [walletPubkey, setWalletPubkey] = useState<string | undefined>(undefined);
 
-  // Mock implementation - in a real app this would use actual wallet APIs
-  const connectWallet = async (): Promise<void> => {
-    setStatus(prev => ({ ...prev, isConnecting: true }));
+  // Mock connection function
+  const connect = async () => {
+    setConnecting(true);
     
     try {
-      // Simulate wallet connection
+      // Simulate connection delay
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      setWallet({
-        connected: true,
-        pubkey: 'demo123456789abcdef',
-        balance: 5.0
-      });
+      // Create mock public key
+      const mockPublicKey = {
+        toString: () => 'mock-pubkey-' + Math.random().toString(36).substring(2, 8)
+      };
+      
+      setPublicKey(mockPublicKey);
+      setWalletPubkey(mockPublicKey.toString());
+      setWalletBalance(Math.random() * 10 + 1); // Random balance between 1-11 SOL
+      setConnected(true);
+      
+      console.log('Solana wallet connected (mock)');
     } catch (error) {
-      console.error('Failed to connect wallet:', error);
+      console.error('Error connecting to Solana wallet:', error);
     } finally {
-      setStatus(prev => ({ ...prev, isConnecting: false }));
+      setConnecting(false);
     }
   };
-
-  const disconnectWallet = (): void => {
-    setWallet({
-      connected: false,
-      pubkey: null,
-      balance: 0
-    });
+  
+  // Mock disconnect function
+  const disconnect = () => {
+    setConnected(false);
+    setPublicKey(null);
+    setWalletBalance(0);
+    setWalletPubkey(undefined);
+    
+    console.log('Solana wallet disconnected');
   };
-
-  const sendSol = async (amount: number, recipient: string): Promise<boolean> => {
-    if (!wallet.connected) {
-      console.error('Wallet not connected');
-      return false;
-    }
+  
+  // Mock signMessage function
+  const signMessage = async (message: Uint8Array): Promise<Uint8Array> => {
+    if (!connected) throw new Error('Wallet not connected');
     
-    try {
-      // Simulate transaction
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Update balance
-      setWallet(prev => ({
-        ...prev,
-        balance: prev.balance - amount
-      }));
-      
-      return true;
-    } catch (error) {
-      console.error('Transaction failed:', error);
-      return false;
-    }
+    // Simulate signing delay
+    await new Promise(resolve => setTimeout(resolve, 800));
+    
+    // Return a mock signature (just reverses the message for demo)
+    const signature = message.slice().reverse();
+    
+    return signature;
   };
-
-  const linkWalletToAccount = async (userId: string): Promise<boolean> => {
-    if (!wallet.pubkey) return false;
+  
+  // Mock sendSol function
+  const sendSol = async (recipient: string, amount: number): Promise<string | null> => {
+    if (!connected) throw new Error('Wallet not connected');
+    if (amount <= 0) throw new Error('Amount must be greater than 0');
+    if (amount > walletBalance) throw new Error('Insufficient funds');
     
-    try {
-      // Mock API call to link wallet to user account
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      console.log(`Linked wallet ${wallet.pubkey} to user ${userId}`);
-      return true;
-    } catch (error) {
-      console.error('Failed to link wallet:', error);
-      return false;
-    }
+    // Simulate transaction delay
+    await new Promise(resolve => setTimeout(resolve, 1200));
+    
+    // Deduct balance
+    setWalletBalance(prev => prev - amount);
+    
+    // Return mock transaction signature
+    const txSignature = 'tx-' + Math.random().toString(36).substring(2, 15);
+    
+    return txSignature;
   };
-
-  // Check if wallet is available in browser
-  useEffect(() => {
-    const checkWalletAvailability = async () => {
-      // Mock check for wallet extension
-      const hasWalletExtension = true; // In real app, check window.solana
-      setStatus(prev => ({ ...prev, hasWallet: hasWalletExtension }));
-    };
-    
-    checkWalletAvailability();
-  }, []);
-
-  // Construct context value
-  const contextValue: SolanaContextValue = {
-    connected: wallet.connected,
-    walletPubkey: wallet.pubkey,
-    walletBalance: wallet.balance,
-    
-    connectWallet,
-    disconnectWallet,
-    sendSol,
-    
-    isConnected: wallet.connected,
-    isConnecting: status.isConnecting,
-    hasWallet: status.hasWallet,
-    
-    linkWalletToAccount
-  };
-
+  
   return (
-    <SolanaContext.Provider value={contextValue}>
+    <SolanaContext.Provider
+      value={{
+        connected,
+        connecting,
+        walletBalance,
+        publicKey,
+        walletPubkey,
+        signMessage,
+        sendSol,
+        connect,
+        disconnect,
+      }}
+    >
       {children}
     </SolanaContext.Provider>
   );
 };
 
-// Custom hook to use the Solana context
 export const useSolana = () => useContext(SolanaContext);

@@ -2,7 +2,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { AuthContextType, AuthProviderProps, UserProfile } from './types';
 import { useToast } from '@/hooks/use-toast';
-import { generateMockUser } from '@/utils/mockData';
+import generateMockUser from '@/utils/mockData';
 
 // Create the context with default empty values
 const AuthContext = createContext<AuthContextType>({
@@ -121,19 +121,18 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         profileImage: undefined,
         bio: '',
         totalSpent: 0,
+        rank: 9999,
         tier: 'free',
-        gender: 'prefer-not-to-say',
+        gender: 'neutral',
         joinedAt: new Date().toISOString(),
         team: 'none',
-        rank: 9999,
         previousRank: 9999,
         cosmetics: {
           badges: [],
           titles: [],
           borders: [],
           effects: [],
-          emojis: [],
-          socialLinks: [],
+          emojis: []
         }
       };
       
@@ -211,6 +210,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       
       // Update cosmetics
       const cosmetics = { ...(user.cosmetics || {}) };
+      
+      // Ensure each category exists in cosmetics
+      if (!cosmetics.badges) cosmetics.badges = [];
+      if (!cosmetics.titles) cosmetics.titles = [];
+      if (!cosmetics.borders) cosmetics.borders = [];
+      if (!cosmetics.effects) cosmetics.effects = [];
+      if (!cosmetics.emojis) cosmetics.emojis = [];
+      
       const categoryItems = cosmetics[category as keyof typeof cosmetics] || [];
       
       if (Array.isArray(categoryItems)) {

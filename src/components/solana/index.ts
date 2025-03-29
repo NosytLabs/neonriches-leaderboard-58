@@ -1,12 +1,8 @@
 
-// Export solana components
-import TreasuryDashboard from './TreasuryDashboard';
-import SolanaWalletButton from './SolanaWalletButton';
-import RealTimeLeaderboard from './RealTimeLeaderboard';
+import { useSolana } from '@/contexts/SolanaContext';
+import { SolanaWalletButton } from './SolanaWalletButton';
 
-// Fix exports 
-export { 
-  TreasuryDashboard,
-  SolanaWalletButton,
-  RealTimeLeaderboard
+export {
+  useSolana,
+  SolanaWalletButton
 };

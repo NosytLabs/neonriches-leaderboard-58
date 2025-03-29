@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import SolanaWalletButton from '@/components/solana/SolanaWalletButton';
+import { SolanaWalletButton } from '@/components/solana/SolanaWalletButton'; // Fixed import
 import { useSolana } from '@/contexts/SolanaContext';
 import { Coins, ArrowRight, Loader2, AlertTriangle } from 'lucide-react';
 import { formatAddress } from '@/utils/solanaUtils';
@@ -46,7 +46,7 @@ const SolanaPaymentForm: React.FC<SolanaPaymentFormProps> = ({
     if (!connected || !publicKey) return;
     
     try {
-      const signature = await sendSol(recipientAddress, solAmount);
+      const signature = await sendSol?.(recipientAddress, solAmount);
       if (signature) {
         // Wait briefly to ensure transaction is confirmed
         setTimeout(() => {

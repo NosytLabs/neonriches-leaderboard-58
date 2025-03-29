@@ -11,6 +11,7 @@ interface ShellProps {
   transparentHeader?: boolean;
   paddingTop?: boolean;
   noFooter?: boolean;
+  hideFooter?: boolean; // Added this property to match usage
 }
 
 /**
@@ -23,6 +24,7 @@ const Shell: React.FC<ShellProps> = ({
   transparentHeader = false,
   paddingTop = true,
   noFooter = false,
+  hideFooter = false, // Added with default value
 }) => {
   return (
     <div
@@ -41,7 +43,7 @@ const Shell: React.FC<ShellProps> = ({
         {children}
       </main>
       
-      {!noFooter && <Footer />}
+      {!noFooter && !hideFooter && <Footer />}
     </div>
   );
 };
