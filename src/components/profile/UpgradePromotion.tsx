@@ -10,7 +10,7 @@ export const subscriptionTiers = [
       "Basic profile customization",
       "Royal court access",
       "Team affiliation",
-      "Public certificate"
+      "Public certificate of gullibility"
     ],
     recommended: false
   },
@@ -24,7 +24,8 @@ export const subscriptionTiers = [
       "Enhanced profile visibility",
       "Exclusive borders and badges",
       "Profile boost (3-day)",
-      "Mockery protection (50% discount)"
+      "Mockery protection (50% discount)",
+      "Basic marketing analytics"
     ],
     recommended: true
   },
@@ -40,7 +41,10 @@ export const subscriptionTiers = [
       "Royal background effects",
       "Team leadership eligibility",
       "Free mockery protection",
-      "NFT certificate minting"
+      "NFT certificate minting",
+      "Premium advertising space",
+      "Marketing analytics dashboard",
+      "Profile visitor demographics"
     ],
     recommended: false
   }

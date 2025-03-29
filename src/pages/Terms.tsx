@@ -2,7 +2,7 @@
 import React from 'react';
 import { Shell } from '@/components/ui/shell';
 import { HeadingText } from '@/components/ui/heading-text';
-import { Scroll, AlertCircle, DollarSign, Crown, Target } from 'lucide-react';
+import { Scroll, AlertCircle, DollarSign, Crown, Target, Gem } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import RoyalDivider from '@/components/ui/decorations/RoyalDivider';
 
@@ -48,7 +48,7 @@ const Terms = () => {
                     SpendThrone is a <strong>satirical</strong> social platform that parodies and comments on consumer culture, materialism, and status-seeking behavior. All transactions are real, but the prestige is as substantive as a cloud castle.
                   </p>
                   <p className="text-white/70">
-                    By participating, you acknowledge that you understand the satirical nature of this service and that your purchases are effectively donations to a piece of performance art about wealth and status – like buying tickets to a theater show where you're both the audience and the performer.
+                    By participating, you acknowledge that you understand the satirical nature of this service and that your purchases are effectively donations to a piece of performance art about wealth and status – like buying tickets to a theater show where you're both the audience and the performer, except the performance never ends and your bank account is the script.
                   </p>
                 </div>
               </div>
@@ -63,7 +63,7 @@ const Terms = () => {
                     All payments to SpendThrone are <strong>FINAL and NON-REFUNDABLE</strong>. When you pay for rank, you're buying just that: pixels on a screen showing how much money you've spent. No refunds will be provided, regardless of whether you experience buyer's remorse or suddenly realize the existential implications of your purchase.
                   </p>
                   <p className="text-white/70">
-                    You acknowledge that the digital status you purchase has no real-world value beyond what importance you and others arbitrarily assign to it, much like designer logos, limited edition sneakers, and luxury water bottles.
+                    You acknowledge that the digital status you purchase has no real-world value beyond what importance you and others arbitrarily assign to it, much like designer logos, limited edition sneakers, and luxury water bottles. The key difference is that our product is honest about its worthlessness – no pretense of "quality craftsmanship" or "exclusive materials" here!
                   </p>
                 </div>
               </div>
@@ -78,7 +78,7 @@ const Terms = () => {
                     While we celebrate the absurdity of status-seeking, we do not tolerate harassment, hate speech, or illegal content. Your profile, comments, and interactions must comply with basic human decency – our digital moat may be filled with satire, but our moderation drawbridge drops swiftly when needed.
                   </p>
                   <p className="text-white/70">
-                    SpendThrone reserves the right to remove content and ban users who violate these terms, even if they've paid thousands for their rank. Money can't buy you immunity from the rules, just like it can't buy happiness (though it can buy a pretty convincing facsimile).
+                    SpendThrone reserves the right to remove content and ban users who violate these terms, even if they've paid thousands for their rank. Money can't buy you immunity from the rules, just like it can't buy happiness (though it can buy a pretty convincing facsimile, and on this platform, a very impressive leaderboard position).
                   </p>
                 </div>
               </div>
@@ -97,6 +97,21 @@ const Terms = () => {
                   </p>
                 </div>
               </div>
+
+              <div className="flex gap-4">
+                <div className="flex-shrink-0 mt-1">
+                  <Gem className="h-6 w-6 text-royal-gold" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-medium mb-2">Article V: Reality Check</h3>
+                  <p className="text-white/70">
+                    Let's be crystal clear: this entire platform is built on the premise that people will pay real money for completely meaningless digital status. If that sounds ridiculous to you, congratulations on your healthy perspective! If it sounds perfectly reasonable, perhaps reflect on that reaction.
+                  </p>
+                  <p className="text-white/70">
+                    Your payments directly fund our developers' exotic coffee habits and mechanical keyboard collections. No, we're not building schools or saving forests – we're creating a mirror that reflects society's obsession with status back upon itself, and charging admission for the privilege. Think of us as digital performance artists whose medium is your disposable income and willing participation in our socioeconomic commentary.
+                  </p>
+                </div>
+              </div>
             </div>
             
             <RoyalDivider variant="line" color="gold" className="my-6" />
@@ -106,7 +121,7 @@ const Terms = () => {
                 By using SpendThrone, you acknowledge that you have read, understood, and agreed to these terms.
               </p>
               <p className="text-white/60 text-sm">
-                If the idea of spending money for purely digital status bothers you, perhaps consider why so many other forms of status-seeking consumption don't. Our digital drawbridge is always down for those seeking to exit.
+                If the idea of spending money for purely digital status bothers you, perhaps consider why so many other forms of status-seeking consumption don't. Our digital drawbridge is always down for those seeking to exit, though your contributions remain firmly in our treasury vault regardless.
               </p>
             </div>
           </CardContent>
@@ -119,16 +134,16 @@ const Terms = () => {
           <CardContent className="prose prose-invert max-w-none">
             <div className="text-white/60 text-sm space-y-4">
               <p>
-                SpendThrone collects minimal user information necessary to maintain your account and rank. We don't sell your data because, frankly, your willingness to pay for digital status is all we're interested in – our business model is as transparent as our satire.
+                SpendThrone collects minimal user information necessary to maintain your account and rank. We don't sell your data because, frankly, your willingness to pay for digital status is all we're interested in – our business model is as transparent as our satire. Also, selling your data would require us to build actual data collection tools, and that sounds like work.
               </p>
               <p>
                 We use standard security measures to protect your information, but no digital fortress is impenetrable. Our security moat is deep, our encryption drawbridge is sturdy, but determined cyber dragons may still occasionally breach the perimeter. Your SpendThrone rank, however, is secured by blockchain technology, making it as immutable as your decision to spend money on digital prestige.
               </p>
               <p>
-                SpendThrone is intended for adults. If you're under 18, please get permission from a parent or guardian, who will hopefully use this as a teaching moment about the value of money and the nature of digital status.
+                SpendThrone is intended for adults. If you're under 18, please get permission from a parent or guardian, who will hopefully use this as a teaching moment about the value of money and the nature of digital status. If they approve your participation, perhaps consider whether their financial advice should be trusted in other matters.
               </p>
               <p>
-                Copyright © {new Date().getFullYear()} SpendThrone. All rights reserved. The concept of paying for meaningless status, however, is as old as civilization itself – we've just removed the physical objects and kept the price tags.
+                Copyright © {new Date().getFullYear()} SpendThrone. All rights reserved. The concept of paying for meaningless status, however, is as old as civilization itself – we've just removed the physical objects and kept the price tags. At least the Egyptian pharaohs got actual pyramids for their trouble.
               </p>
             </div>
           </CardContent>

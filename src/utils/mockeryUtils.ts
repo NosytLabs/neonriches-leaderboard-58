@@ -35,12 +35,12 @@ export const getMockeryActionTitle = (action: MockeryAction): string => {
 
 export const getMockeryActionDescription = (action: MockeryAction): string => {
   switch (action) {
-    case 'tomatoes': return 'Throw virtual tomatoes at this user, marking their profile for 24 hours – the digital equivalent of a pie in the face';
-    case 'eggs': return 'Throw virtual eggs at this user, marking their profile for 48 hours – like egging a house but without property damage charges';
-    case 'stocks': return 'Put this user in the virtual public stocks for 72 hours of digital shame – medieval humiliation without the physical discomfort';
-    case 'silence': return 'Silence this user in team chat for 24 hours – like a social media timeout but you pay for the privilege of enforcing it';
-    case 'courtJester': return 'Force this user to wear the digital jester hat for 48 hours – turns their serious profile into a comedy show';
-    default: return 'Unknown mockery action';
+    case 'tomatoes': return 'Throw virtual tomatoes at this user, marking their profile for 24 hours – the digital equivalent of a pie in the face, but with less cleanup and more sustained embarrassment';
+    case 'eggs': return 'Throw virtual eggs at this user, marking their profile for 48 hours – like egging a house but without property damage charges or having to make that awkward drive to buy eggs at 2 AM';
+    case 'stocks': return 'Put this user in the virtual public stocks for 72 hours of digital shame – medieval humiliation without the physical discomfort, though the psychological impact remains delightfully intact';
+    case 'silence': return 'Silence this user in team chat for 24 hours – like a social media timeout but you pay for the privilege of enforcing it. The digital equivalent of paying to put duct tape over someone's mouth, but completely legal!';
+    case 'courtJester': return 'Force this user to wear the digital jester hat for 48 hours – turns their serious profile into a comedy show. Nothing says "I don\'t respect you" like forcing someone to entertain others against their will!';
+    default: return 'Unknown mockery action – but rest assured, it\'s designed to digitally humiliate someone for your amusement';
   }
 };
 
@@ -134,11 +134,11 @@ export const getMockeryTierLabel = (tier: MockeryTier): string => {
 
 export const getMockeryTierText = (tier: MockeryTier): string => {
   switch (tier) {
-    case 'common': return 'Simple mockery for everyday social media feuds';
-    case 'uncommon': return 'Slightly more impressive than the mockery everyone has access to';
-    case 'rare': return 'Truly distinctive forms of digital humiliation';
-    case 'epic': return 'Premium mockery effects that will be remembered in screenshots';
-    case 'legendary': return 'The ultimate expression of digital ridicule – the social media equivalent of a mic drop';
-    default: return 'Unknown tier';
+    case 'common': return 'Simple mockery for everyday social media feuds – like using a water pistol in a digital war zone';
+    case 'uncommon': return 'Slightly more impressive than the mockery everyone has access to – the digital equivalent of using words with more than three syllables';
+    case 'rare': return 'Truly distinctive forms of digital humiliation – like having a custom insult written by a professional comedy writer';
+    case 'epic': return 'Premium mockery effects that will be remembered in screenshots – devastating enough to make someone consider deleting their account';
+    case 'legendary': return 'The ultimate expression of digital ridicule – the social media equivalent of a mic drop performed from orbit while riding a meteor';
+    default: return 'Unknown tier – but rest assured it involves some form of paid humiliation';
   }
 };

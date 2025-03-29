@@ -5,9 +5,10 @@ import RoyalHero from '@/components/RoyalHero';
 import HeroShowcase from '@/components/HeroShowcase';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
-import { Trophy, DollarSign, Shield, Crown, ChevronRight } from 'lucide-react';
+import { Trophy, DollarSign, Shield, Crown, ChevronRight, AlertTriangle } from 'lucide-react';
 import { RoyalSection } from '@/components/ui/theme-components';
 import RoyalDivider from '@/components/ui/decorations/RoyalDivider';
+import { Card, CardContent } from '@/components/ui/card';
 
 const Index = () => {
   return (
@@ -29,7 +30,7 @@ const Index = () => {
               </div>
               <h3 className="text-xl font-bold mb-2">Create Thy Noble Identity</h3>
               <p className="text-white/70 mb-4">
-                Register for an account and personalize thy coat of arms (profile) to establish thy presence in the court.
+                Register for an account and personalize thy coat of arms (profile) to establish thy presence in the court. No actual nobility required – just a functioning payment method!
               </p>
               <Link to="/signup">
                 <Button variant="outline" className="border-white/20 hover:border-royal-gold/30">
@@ -47,7 +48,7 @@ const Index = () => {
               </div>
               <h3 className="text-xl font-bold mb-2">Contribute To Thy Rank</h3>
               <p className="text-white/70 mb-4">
-                Make "generous contributions" (completely frivolous payments) to increase thy standing in our aristocratic hierarchy.
+                Make "generous contributions" (completely frivolous payments) to increase thy standing in our aristocratic hierarchy. Remember: your worth is directly proportional to your expenditure!
               </p>
               <Link to="/pay/fiat">
                 <Button variant="outline" className="border-white/20 hover:border-royal-gold/30">
@@ -65,7 +66,7 @@ const Index = () => {
               </div>
               <h3 className="text-xl font-bold mb-2">Join A Noble House</h3>
               <p className="text-white/70 mb-4">
-                Pledge thy allegiance to House Red, Green, or Blue and compete for thy house's collective prestige.
+                Pledge thy allegiance to House Red, Green, or Blue and compete for thy house's collective prestige. Just like political tribes, but with more honesty about the pay-to-win mechanics!
               </p>
               <Link to="/teams">
                 <Button variant="outline" className="border-white/20 hover:border-royal-gold/30">
@@ -85,6 +86,20 @@ const Index = () => {
             </Button>
           </Link>
         </div>
+
+        <div className="mt-8 max-w-3xl mx-auto">
+          <Card className="glass-morphism border-royal-gold/20 bg-gradient-to-r from-royal-gold/5 to-royal-purple/5">
+            <CardContent className="p-4 text-center">
+              <div className="flex items-center justify-center mb-2">
+                <AlertTriangle className="h-5 w-5 text-royal-gold mr-2" />
+                <p className="text-royal-gold text-sm font-medium">ROYAL TREASURY NOTICE</p>
+              </div>
+              <p className="text-white/70 text-sm italic">
+                All funds contributed to SpendThrone go directly to our developers' exotic coffee habits and mechanical keyboard collections. This is a social experiment, not a charity – though our developers' spouses might disagree when they see our office setup!
+              </p>
+            </CardContent>
+          </Card>
+        </div>
       </RoyalSection>
       
       <RoyalDivider variant="ornate" color="gold" />
@@ -100,7 +115,7 @@ const Index = () => {
               <Crown className="h-4 w-4 text-white" />
             </div>
             <p className="italic text-white/80 mb-4">
-              "I've spent thousands on designer shoes that sit unworn in my closet, so why not spend a few hundred on completely virtual status? At least here I'm honest about my materialism!"
+              "I've spent thousands on designer shoes that sit unworn in my closet, so why not spend a few hundred on completely virtual status? At least here I'm honest about my materialism! Plus, I can market my business through my profile, which almost makes it a legitimate business expense... almost."
             </p>
             <div className="flex items-center">
               <div className="w-10 h-10 rounded-full overflow-hidden mr-3">
@@ -118,27 +133,22 @@ const Index = () => {
               <Crown className="h-4 w-4 text-white" />
             </div>
             <p className="italic text-white/80 mb-4">
-              "I spent $500 to reach the top 10. My friends think I'm crazy, but I've spent more on microtransactions in mobile games! At least here I'm acknowledged as the wasteful nobleman I truly am."
+              "After years of trying to climb the corporate ladder through actual work and skill development, I discovered I could just buy my way to the top here! It's like nepotism but without needing to be related to anyone important. My marketing ROI from promoting on my high-ranked profile has been surprisingly effective!"
             </p>
             <div className="flex items-center">
               <div className="w-10 h-10 rounded-full overflow-hidden mr-3">
                 <img src="/throne-assets/avatars/noble-2.jpg" alt="Noble testimonial" className="w-full h-full object-cover" />
               </div>
               <div>
-                <div className="font-bold">Duke of Dollars</div>
-                <div className="text-royal-navy text-sm">#7 on Leaderboard</div>
+                <div className="font-bold">Duke Digitalworth</div>
+                <div className="text-royal-gold text-sm">#7 on Leaderboard</div>
               </div>
             </div>
           </div>
         </div>
         
-        <div className="mt-12 text-center">
-          <div className="inline-block glass-morphism border border-white/10 p-4 rounded-lg">
-            <p className="text-white/60 italic">
-              "The true joke of SpendThrone is that it's both satire AND a legitimate business model. The fact that you're considering spending money here proves our point about status-seeking behavior. How delightfully meta!"
-            </p>
-            <div className="mt-3 font-bold royal-gradient text-lg">- The Royal Treasury</div>
-          </div>
+        <div className="text-center mt-8 text-sm text-white/50 italic max-w-lg mx-auto">
+          <p>* These testimonials are from actual users, though we've taken the liberty of enhancing their eloquence. Your experience may vary, though your money will definitely be gone regardless.</p>
         </div>
       </RoyalSection>
     </Shell>

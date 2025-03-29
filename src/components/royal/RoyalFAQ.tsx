@@ -7,7 +7,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Scroll, Shield, Crown, Lock, DollarSign, User, Image, Link, MessageSquare } from 'lucide-react';
+import { Scroll, Shield, Crown, Lock, DollarSign, User, Image, Link, MessageSquare, AlertTriangle, Gem } from 'lucide-react';
 
 export interface FAQItem {
   question: string;
@@ -20,13 +20,15 @@ interface RoyalFAQProps {
   description?: string;
   items: FAQItem[];
   variant?: 'default' | 'profile' | 'team' | 'mockery' | 'payment';
+  disclaimer?: string;
 }
 
 const RoyalFAQ: React.FC<RoyalFAQProps> = ({ 
   title = "Frequently Asked Questions", 
   description = "Common inquiries from confused users", 
   items,
-  variant = 'default'
+  variant = 'default',
+  disclaimer
 }) => {
   const getVariantIcon = () => {
     switch (variant) {
@@ -70,6 +72,15 @@ const RoyalFAQ: React.FC<RoyalFAQProps> = ({
             </AccordionItem>
           ))}
         </Accordion>
+        
+        {disclaimer && (
+          <div className="mt-6 pt-4 border-t border-white/10 text-white/50 text-sm italic">
+            <div className="flex items-start">
+              <AlertTriangle className="h-4 w-4 text-royal-gold mr-2 mt-0.5 flex-shrink-0" />
+              <p>{disclaimer}</p>
+            </div>
+          </div>
+        )}
       </CardContent>
     </Card>
   );
