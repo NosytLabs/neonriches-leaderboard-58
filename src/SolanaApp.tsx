@@ -4,6 +4,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import AppRoutes from './AppRoutes';
 import { SolanaProvider } from './contexts/SolanaContext';
 import { Toaster } from './components/ui/toaster';
+import './styles/profile-boost.css';
 
 // All of this code is new, creating the SolanaApp component
 const SolanaApp: React.FC = () => {

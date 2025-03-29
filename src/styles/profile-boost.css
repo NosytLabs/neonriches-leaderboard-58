@@ -1,198 +1,310 @@
 
-/* Base boost effects */
-.profile-boost-pro {
+/* Boost animations and effects */
+
+/* Global boost utility classes */
+.boost-enhanced {
   position: relative;
-  box-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
+  z-index: 1;
 }
 
-.profile-boost-whale {
+/* Gold aura effect */
+.boost-gold-aura {
   position: relative;
-  box-shadow: 0 0 20px rgba(65, 105, 225, 0.3);
+  overflow: visible;
 }
 
-.profile-boost-shark {
-  position: relative;
-  box-shadow: 0 0 15px rgba(0, 191, 255, 0.2);
-}
-
-.profile-boost-dolphin {
-  position: relative;
-  box-shadow: 0 0 15px rgba(127, 255, 212, 0.2);
-}
-
-/* Team-specific boost effects */
-.profile-boost-team-red {
-  border-color: rgba(155, 35, 53, 0.4);
-}
-
-.profile-boost-team-green {
-  border-color: rgba(46, 139, 87, 0.4);
-}
-
-.profile-boost-team-blue {
-  border-color: rgba(0, 0, 128, 0.4);
-}
-
-/* Visibility Boosts */
-.boost-featured {
-  z-index: 10;
-  transform: scale(1.02);
-  transition: transform 0.3s ease;
-}
-
-.boost-priority {
-  z-index: 5;
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.15);
-}
-
-/* Appearance Boosts */
-.boost-gold-border {
-  border: 2px solid rgba(255, 215, 0, 0.6);
-  box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
-}
-
-.boost-neon-glow {
-  box-shadow: 0 0 15px rgba(124, 252, 0, 0.5);
-}
-
-.boost-royal-aura {
-  position: relative;
-}
-
-.boost-royal-aura::before {
+.boost-gold-aura::before {
   content: '';
   position: absolute;
   top: -10px;
+  left: -10px;
   right: -10px;
   bottom: -10px;
-  left: -10px;
-  background: radial-gradient(circle, rgba(138, 43, 226, 0.2) 0%, rgba(138, 43, 226, 0) 70%);
+  background: radial-gradient(ellipse at center, rgba(212, 175, 55, 0.3) 0%, rgba(212, 175, 55, 0) 70%);
   border-radius: inherit;
   z-index: -1;
-  animation: pulse-royal 3s infinite alternate;
+  animation: pulse 3s infinite ease-in-out;
 }
 
-/* Animation Boosts */
-.boost-sparkle {
-  overflow: hidden;
-  position: relative;
-}
-
-.boost-sparkle::after {
-  content: '';
-  position: absolute;
-  width: 3px;
-  height: 3px;
-  background: white;
-  box-shadow: 0 0 10px 2px white;
-  border-radius: 50%;
-  opacity: 0;
-  animation: sparkle 5s infinite;
-}
-
-.boost-pulse {
-  animation: pulse-effect 2s infinite;
-}
-
-.boost-rgb-flow {
-  position: relative;
-  overflow: hidden;
-}
-
-.boost-rgb-flow::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  background: linear-gradient(90deg, 
-    rgb(255, 0, 0) 0%, 
-    rgb(255, 154, 0) 10%,
-    rgb(208, 222, 33) 20%,
-    rgb(79, 220, 74) 30%, 
-    rgb(63, 218, 216) 40%,
-    rgb(47, 201, 226) 50%,
-    rgb(28, 127, 238) 60%,
-    rgb(95, 21, 242) 70%,
-    rgb(186, 12, 248) 80%,
-    rgb(251, 7, 217) 90%, 
-    rgb(255, 0, 0) 100%);
-  background-size: 400% 100%;
-  mix-blend-mode: overlay;
-  opacity: 0.1;
-  z-index: 1;
-  animation: rgb-flow 6s linear infinite;
-  pointer-events: none;
-}
-
-/* Special Effects */
+/* Crown effect */
 .boost-crown {
   position: relative;
+  overflow: visible;
 }
 
 .boost-crown::before {
   content: '👑';
   position: absolute;
-  top: -10px;
-  right: 10px;
-  font-size: 16px;
-  text-shadow: 0 0 5px rgba(255, 215, 0, 0.7);
+  top: -25px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 24px;
+  animation: float 3s infinite ease-in-out;
+  filter: drop-shadow(0 0 5px rgba(212, 175, 55, 0.8));
 }
 
-.boost-fireworks {
+/* Neon pulse effect */
+.boost-neon-pulse {
+  box-shadow: 0 0 15px rgba(155, 135, 245, 0.5);
+  animation: neonPulse 2s infinite alternate;
+}
+
+/* Rainbow flow effect */
+.boost-rainbow-flow {
   position: relative;
   overflow: hidden;
 }
 
-/* The fireworks effect will be added with JavaScript */
-
-/* Animations */
-@keyframes border-rotate {
-  0% { background-position: 0% 50%; }
-  100% { background-position: 100% 50%; }
+.boost-rainbow-flow::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #9400d3);
+  background-size: 400% 400%;
+  mix-blend-mode: overlay;
+  opacity: 0.3;
+  z-index: 0;
+  animation: rainbow 10s linear infinite;
+  border-radius: inherit;
 }
 
-@keyframes glow-pulse {
-  0% { box-shadow: 0 0 10px rgba(255, 215, 0, 0.2); }
-  100% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.5); }
+/* Sparkle effect */
+.boost-sparkle {
+  position: relative;
+  overflow: visible;
+}
+
+.boost-sparkle::after {
+  content: '';
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23D4AF37' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2L15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2z'/%3E%3C/svg%3E");
+  background-size: contain;
+  top: -5px;
+  right: -5px;
+  animation: spin 10s linear infinite, sparkle 3s infinite ease-in-out;
+  opacity: 0.8;
+}
+
+/* Animated border effect */
+.boost-animated-border {
+  position: relative;
+  border: none !important;
+  background-clip: padding-box;
+  overflow: hidden;
+}
+
+.boost-animated-border::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(90deg, #D4AF37, #7E69AB, #D4AF37);
+  background-size: 200% 200%;
+  z-index: -1;
+  border-radius: inherit;
+  animation: borderGradient 6s linear infinite;
+}
+
+/* Royal presence effect */
+.boost-royal-presence {
+  position: relative;
+  overflow: visible;
+}
+
+.boost-royal-presence::before {
+  content: '';
+  position: absolute;
+  top: -15px;
+  left: -15px;
+  right: -15px;
+  bottom: -15px;
+  background: radial-gradient(ellipse at center, rgba(126, 105, 171, 0.3) 0%, rgba(126, 105, 171, 0) 70%);
+  border-radius: inherit;
+  z-index: -1;
+  animation: pulse 4s infinite ease-in-out alternate;
+}
+
+/* Keyframe Animations */
+@keyframes pulse {
+  0% { transform: scale(0.95); opacity: 0.5; }
+  50% { transform: scale(1.05); opacity: 0.8; }
+  100% { transform: scale(0.95); opacity: 0.5; }
+}
+
+@keyframes float {
+  0% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(-10px); }
+  100% { transform: translateX(-50%) translateY(0); }
+}
+
+@keyframes neonPulse {
+  from { box-shadow: 0 0 5px rgba(155, 135, 245, 0.5), 0 0 10px rgba(155, 135, 245, 0.3); }
+  to { box-shadow: 0 0 10px rgba(155, 135, 245, 0.7), 0 0 20px rgba(155, 135, 245, 0.5); }
+}
+
+@keyframes rainbow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes borderGradient {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 @keyframes sparkle {
-  0% { 
-    opacity: 0;
-    transform: translate(calc(random(100) * 1%), calc(random(100) * 1%)) scale(0);
-  }
-  5% { 
-    opacity: 1;
-    transform: translate(calc(random(100) * 1%), calc(random(100) * 1%)) scale(1);
-  }
-  10% {
-    opacity: 0;
-    transform: translate(calc(random(100) * 1%), calc(random(100) * 1%)) scale(0);
-  }
-  100% {
-    opacity: 0;
-  }
+  0% { opacity: 0.5; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.2); }
+  100% { opacity: 0.5; transform: scale(0.8); }
 }
 
-@keyframes pulse-effect {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.02); }
-  100% { transform: scale(1); }
+/* Crown glow animation */
+@keyframes crown-glow {
+  0% { filter: drop-shadow(0 0 2px rgba(212, 175, 55, 0.5)); }
+  50% { filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.8)); }
+  100% { filter: drop-shadow(0 0 2px rgba(212, 175, 55, 0.5)); }
 }
 
-@keyframes pulse-royal {
-  0% { opacity: 0.2; }
-  100% { opacity: 0.5; }
+.animate-crown-glow {
+  animation: crown-glow 3s infinite ease-in-out;
 }
 
-@keyframes rgb-flow {
-  0% { background-position: 0% 50%; }
-  100% { background-position: 100% 50%; }
+/* Slow pulse animation */
+@keyframes pulse-slow {
+  0% { opacity: 0.6; transform: scale(0.95); }
+  50% { opacity: 1; transform: scale(1.05); }
+  100% { opacity: 0.6; transform: scale(0.95); }
 }
 
-@keyframes shine-sweep {
-  0% { transform: rotate(45deg) translateY(-100%); }
-  30%, 100% { transform: rotate(45deg) translateY(100%); }
+.animate-pulse-slow {
+  animation: pulse-slow 4s infinite ease-in-out;
+}
+
+/* Slow spin animation */
+@keyframes spin-slow {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 10s linear infinite;
+}
+
+/* Grid pattern background */
+.bg-grid-pattern {
+  background-image: 
+    linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+/* Royal gradient text */
+.royal-gradient {
+  background: linear-gradient(to right, #D4AF37, #E5C36A, #D4AF37);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Mockery effect styles */
+.mockery-tomatoes {
+  position: relative;
+  overflow: visible;
+}
+
+.mockery-tomatoes::before {
+  content: '🍅';
+  position: absolute;
+  top: -15px;
+  right: -10px;
+  font-size: 20px;
+  transform: rotate(25deg);
+}
+
+.mockery-tomatoes::after {
+  content: '🍅';
+  position: absolute;
+  bottom: -10px;
+  left: -5px;
+  font-size: 20px;
+  transform: rotate(-15deg);
+}
+
+.mockery-eggs {
+  position: relative;
+  overflow: visible;
+}
+
+.mockery-eggs::before {
+  content: '🥚';
+  position: absolute;
+  top: -10px;
+  right: -15px;
+  font-size: 20px;
+  transform: rotate(15deg);
+}
+
+.mockery-eggs::after {
+  content: '🥚';
+  position: absolute;
+  bottom: -5px;
+  left: -10px;
+  font-size: 20px;
+  transform: rotate(-20deg);
+}
+
+.mockery-stocks {
+  position: relative;
+  filter: saturate(0.7) brightness(0.9);
+}
+
+.mockery-stocks::before {
+  content: '🔒';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 30px;
+  opacity: 0.5;
+  z-index: 1;
+}
+
+.mockery-silence {
+  position: relative;
+}
+
+.mockery-silence::after {
+  content: '🤐';
+  position: absolute;
+  bottom: -10px;
+  right: -10px;
+  font-size: 20px;
+  z-index: 2;
+}
+
+.mockery-courtJester {
+  position: relative;
+  overflow: visible;
+}
+
+.mockery-courtJester::before {
+  content: '🤡';
+  position: absolute;
+  top: -15px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 24px;
 }
