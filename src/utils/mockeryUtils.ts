@@ -1,5 +1,5 @@
 
-import { MockeryAction, ShameAction } from '@/types/mockery';
+import { MockeryAction, ShameAction, MockeryTier } from '@/types/mockery';
 
 export const MOCKERY_NAMES: Record<string, string> = {
   tomatoes: 'Rotten Tomatoes',
@@ -102,4 +102,9 @@ export const getMockeryDuration = (action: MockeryAction): number => {
   };
   
   return durations[action] || 24;
+};
+
+// Helper function to get mockery action price for ShameAction type (for compatibility)
+export const getShameActionPrice = (action: ShameAction): number => {
+  return MOCKERY_COSTS[action] || 1;
 };

@@ -9,9 +9,9 @@ const SpendingExplanation: React.FC = () => {
   return (
     <div className="w-full max-w-6xl mx-auto py-8">
       <div className="text-center mb-10">
-        <h2 className="text-3xl md:text-4xl font-bold mb-3 royal-gradient">How Spending Works</h2>
+        <h2 className="text-3xl md:text-4xl font-bold mb-3 royal-gradient">How The Rank System Works</h2>
         <p className="text-white/70 max-w-2xl mx-auto">
-          At SpendThrone, your leaderboard rank is determined solely by how much money you spend.
+          At SpendThrone, your leaderboard rank is determined solely by how much money you deposit.
           It's refreshingly honest and straightforward.
         </p>
       </div>
@@ -23,21 +23,21 @@ const SpendingExplanation: React.FC = () => {
               <div className="p-2 rounded-full bg-green-500/20">
                 <DollarSign className="h-5 w-5 text-green-400" />
               </div>
-              <CardTitle className="text-xl">Dollar = Rank</CardTitle>
+              <CardTitle className="text-xl">Dollar = Rank Point</CardTitle>
             </div>
           </CardHeader>
           <CardContent>
             <p className="text-white/70 mb-4">
-              Every dollar you spend adds 1 point to your total. Your position on the leaderboard is determined 
-              by your total spending.
+              Every dollar you deposit adds 1 point to your total. Your position on the leaderboard is determined 
+              by your total deposit amount.
             </p>
             <div className="bg-white/5 p-3 rounded-lg">
               <div className="flex justify-between mb-1">
-                <span className="text-white/60">Spend:</span>
+                <span className="text-white/60">Deposit:</span>
                 <span className="font-mono">$100</span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-white/60">Points:</span>
+                <span className="text-white/60">Rank Points:</span>
                 <div className="flex items-center">
                   <span className="font-mono mr-1">+100</span>
                   <ArrowRight className="h-3 w-3 text-green-400" />
@@ -58,12 +58,12 @@ const SpendingExplanation: React.FC = () => {
           </CardHeader>
           <CardContent>
             <p className="text-white/70 mb-4">
-              Your leaderboard score never resets. Once you've spent money, those points are permanently 
+              Your leaderboard score never resets. Once you've deposited money, those points are permanently 
               attributed to your profile.
             </p>
             <div className="bg-white/5 p-3 rounded-lg">
               <div className="text-center">
-                <div className="text-lg font-mono text-purple-300">$500 spent = #43 rank forever</div>
+                <div className="text-lg font-mono text-purple-300">$500 deposited = #43 rank forever</div>
                 <div className="text-xs text-white/50 mt-1">
                   (unless someone outspends you)
                 </div>
@@ -83,12 +83,12 @@ const SpendingExplanation: React.FC = () => {
           </CardHeader>
           <CardContent>
             <p className="text-white/70 mb-4">
-              Join a team and your spending contributes to your team's total. Compete with other teams 
+              Join a team and your deposits contribute to your team's total. Compete with other teams 
               to reach the top of the team leaderboard.
             </p>
             <div className="bg-white/5 p-3 rounded-lg">
               <div className="flex justify-between mb-1">
-                <span className="text-white/60">Your Spend:</span>
+                <span className="text-white/60">Your Deposit:</span>
                 <span className="font-mono">$200</span>
               </div>
               <div className="flex justify-between items-center">
@@ -109,7 +109,7 @@ const SpendingExplanation: React.FC = () => {
             <CircleHelp className="h-6 w-6 text-amber-400" />
           </div>
           <div>
-            <h3 className="text-xl font-bold mb-2">Important Distinction: Subscriptions vs. Spending</h3>
+            <h3 className="text-xl font-bold mb-2">Important Distinction: Subscriptions vs. Deposits</h3>
             <p className="text-white/80 mb-4">
               There are two separate ways to enhance your experience:
             </p>
@@ -125,17 +125,17 @@ const SpendingExplanation: React.FC = () => {
                   profile customization, RGB borders, analytics, and more.
                 </p>
                 <div className="text-xs text-white/50 bg-white/10 p-2 rounded">
-                  Subscriptions do NOT affect your leaderboard rank directly.
+                  Subscriptions do NOT affect your leaderboard rank.
                 </div>
               </div>
               
               <div className="bg-white/5 p-4 rounded-lg">
                 <div className="flex items-center gap-2 mb-2">
                   <DollarSign className="h-5 w-5 text-green-400" />
-                  <h4 className="font-bold">Direct Spending</h4>
+                  <h4 className="font-bold">Direct Deposits</h4>
                 </div>
                 <p className="text-sm text-white/70 mb-3">
-                  Direct contributions <span className="font-bold text-green-300">increase your rank</span> on 
+                  Direct deposits <span className="font-bold text-green-300">increase your rank</span> on 
                   the leaderboard at a 1:1 ratio ($1 = 1 point).
                 </p>
                 <div className="text-xs text-white/50 bg-white/10 p-2 rounded">
@@ -143,6 +143,10 @@ const SpendingExplanation: React.FC = () => {
                 </div>
               </div>
             </div>
+            
+            <p className="mt-4 text-sm text-white/60 italic">
+              "Like blockchain but without the terrible environmental impact or confusing wallet addresses. Just pure, transparent status-seeking." — Anonymous Noble
+            </p>
           </div>
         </div>
       </div>
@@ -155,7 +159,7 @@ const SpendingExplanation: React.FC = () => {
           </Button>
         </Link>
         
-        <Link to="/profile-enhancements">
+        <Link to="/subscription">
           <Button variant="outline" className="w-full md:w-auto border-purple-500/30 text-purple-300 hover:bg-purple-500/10">
             <Crown className="h-4 w-4 mr-2" />
             View Subscription Options

@@ -3,9 +3,10 @@ import React from 'react';
 import { Container } from '@/components/ui/container';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Check, Crown, Sparkles, Gem } from 'lucide-react';
+import { Check, Crown, Sparkles, Gem, AlertCircle } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { SUBSCRIPTION_TIERS } from '@/config/subscriptions';
+import RoyalDivider from '@/components/ui/royal-divider';
 
 const Subscription = () => {
   const getTierIcon = (tierId: string) => {
@@ -41,6 +42,24 @@ const Subscription = () => {
         <p className="text-lg opacity-80 max-w-2xl mx-auto">
           Upgrade your standing in the royal court and unlock premium features with our exclusive subscription plans.
         </p>
+      </div>
+
+      <div className="glass-morphism border-royal-gold/20 p-6 rounded-lg mb-8 max-w-3xl mx-auto">
+        <div className="flex items-start gap-4">
+          <div className="p-3 rounded-full bg-amber-500/20 flex-shrink-0">
+            <AlertCircle className="h-6 w-6 text-amber-400" />
+          </div>
+          <div>
+            <h3 className="text-xl font-bold mb-2">Important: Subscriptions vs. Leaderboard Rank</h3>
+            <p className="text-white/80 mb-4">
+              Subscribing to SpendThrone will <span className="font-bold text-royal-gold">not</span> affect your position on the leaderboard. 
+              Your leaderboard rank is determined solely by direct deposits ($1 = 1 rank point).
+            </p>
+            <p className="text-white/70">
+              Subscriptions provide cosmetic enhancements and profile features, while deposits increase your standing in the royal hierarchy.
+            </p>
+          </div>
+        </div>
       </div>
 
       <div className="grid md:grid-cols-3 gap-6">
@@ -103,14 +122,19 @@ const Subscription = () => {
         ))}
       </div>
 
+      <RoyalDivider variant="fancy" className="my-8" />
+
       <div className="text-center mt-12 max-w-3xl mx-auto">
         <h2 className="text-2xl font-bold mb-4">Why Choose SpendThrone?</h2>
         <p className="text-white/70 mb-6">
-          Our subscriptions offer unparalleled visibility in our digital kingdom. Join the elite ranks of our most distinguished nobles and showcase your royal prestige.
+          Our subscriptions offer unparalleled visibility in our digital kingdom. Enhance your profile with royal flair while maintaining your budget for leaderboard contributions.
         </p>
         <div className="glass-morphism border-royal-gold/20 p-6 rounded-lg">
           <p className="italic text-white/60">
-            "All subscriptions are purely cosmetic - your rank is determined solely by your spending. The more gold coins you contribute to the royal treasury, the higher you climb in the court. It's a simple yet effective demonstration of digital nobility."
+            "All subscriptions are purely cosmetic - your rank is determined solely by your deposits. The more gold coins you contribute to the royal treasury, the higher you climb in the court. It's a simple yet effective demonstration of digital nobility."
+          </p>
+          <p className="mt-4 text-sm text-white/50">
+            "Think of it as the medieval blockchain - permanently recording your wealth for all to see, but without all those pesky gas fees." — Court Historian
           </p>
         </div>
       </div>

@@ -1,174 +1,166 @@
 
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import { Button } from './ui/button';
+import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import { useAuth } from '@/hooks/useAuth';
-import { useTheme } from '@/hooks/useTheme';
-import { useMockery } from '@/hooks/useMockery';
-import { Button } from '@/components/ui/button';
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { Crown, DollarSign, LogOut, Menu, Bell, Wallet, Settings, User, Shield } from 'lucide-react';
-import { 
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Switch } from '@/components/ui/switch';
-import { ModeToggle } from '@/components/ui/mode-toggle';
-import { cn } from '@/lib/utils';
-import Logo from '@/components/brand/Logo';
-import BetaTag from '@/components/ui/beta-tag';
-import MobileMenu from '@/components/navigation/MobileMenu';
-import ThemeSwitcher from '@/components/ui/theme-switcher';
+import { formatCurrency } from '@/utils/formatters';
+import { MenuIcon, X } from 'lucide-react';
+import { User } from '@/types/user';
+import { useToast } from '@/hooks/use-toast';
 
 const Header: React.FC = () => {
-  const { user, logout, isAuthenticated } = useAuth();
-  const { theme, setTheme } = useTheme();
-  const { mockeryEnabled, toggleMockery } = useMockery();
+  const location = useLocation();
+  const { isAuthenticated, user, logout } = useAuth();
+  const { toast } = useToast();
+  const [isScrolled, setIsScrolled] = useState<boolean>(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
-  const navigate = useNavigate();
+  
+  // Handle scroll events to change header appearance
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+    };
+    
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+  
+  // Close mobile menu when changing routes
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [location.pathname]);
   
   const handleLogout = async () => {
-    await logout();
-    navigate('/');
+    try {
+      await logout();
+      toast({
+        title: "Farewell, noble.",
+        description: "You have been safely escorted from the royal court.",
+      });
+    } catch (error) {
+      toast({
+        title: "Logout failed",
+        description: "The royal guards prevented your departure. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
   
-  const toggleMobileMenu = () => {
-    setMobileMenuOpen(!mobileMenuOpen);
+  const isActive = (path: string) => {
+    return location.pathname === path;
   };
-
+  
+  const renderUserInfo = (user: User) => (
+    <div className="flex items-center gap-2">
+      <div className="hidden md:block text-right">
+        <p className="text-sm font-medium">
+          {user.displayName || user.username}
+        </p>
+        <p className="text-xs text-white/60">
+          Rank #{user.rank} • ${user.walletBalance && formatCurrency(user.walletBalance)}
+        </p>
+      </div>
+      <Link to="/profile">
+        <Avatar className="h-8 w-8 border border-white/20">
+          <AvatarImage src={user.profileImage} alt={user.username} />
+          <AvatarFallback>{user.username?.charAt(0).toUpperCase()}</AvatarFallback>
+        </Avatar>
+      </Link>
+    </div>
+  );
+  
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-white/10 backdrop-blur-sm bg-black/60">
-      <div className="container flex h-16 items-center justify-between py-2">
-        <div className="flex items-center gap-4 md:gap-6">
-          <Link to="/" className="flex items-center gap-2">
-            <Logo size="sm" />
-            <span className="font-display text-xl hidden sm:inline-block text-white">
-              SpendThrone
-            </span>
-            <BetaTag position="top-right" />
-          </Link>
-          
-          <nav className="hidden md:flex gap-4 items-center">
-            <Link 
-              to="/leaderboard" 
-              className="text-white/70 hover:text-white transition-colors text-sm font-medium"
-            >
-              Leaderboard
-            </Link>
-            <Link 
-              to="/about" 
-              className="text-white/70 hover:text-white transition-colors text-sm font-medium"
-            >
-              About
-            </Link>
-            <Link 
-              to="/features" 
-              className="text-white/70 hover:text-white transition-colors text-sm font-medium"
-            >
-              Features
-            </Link>
-            {isAuthenticated && (
-              <Link 
-                to="/profile" 
-                className="text-white/70 hover:text-white transition-colors text-sm font-medium"
-              >
-                Profile
-              </Link>
-            )}
-          </nav>
-        </div>
+    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      isScrolled ? 'bg-background/80 backdrop-blur-md shadow-md py-3' : 'bg-transparent py-4'
+    }`}>
+      <div className="container mx-auto px-4 flex justify-between items-center">
+        {/* Logo */}
+        <Link to="/" className="flex items-center">
+          <span className="font-royal text-xl text-white">
+            <span className="royal-gradient">SpendThrone</span>
+          </span>
+        </Link>
         
-        <div className="flex items-center gap-2">
-          {isAuthenticated ? (
+        {/* Desktop Navigation */}
+        <nav className="hidden md:flex items-center space-x-6">
+          <Link to="/leaderboard" className={`nav-link ${isActive('/leaderboard') ? 'active' : ''}`}>Leaderboard</Link>
+          <Link to="/teams" className={`nav-link ${isActive('/teams') ? 'active' : ''}`}>Teams</Link>
+          <Link to="/features" className={`nav-link ${isActive('/features') ? 'active' : ''}`}>Features</Link>
+          <Link to="/deposit" className={`nav-link ${isActive('/deposit') ? 'active' : ''}`}>Deposit</Link>
+          {isAuthenticated && (
+            <Link to="/dashboard" className={`nav-link ${isActive('/dashboard') ? 'active' : ''}`}>Dashboard</Link>
+          )}
+        </nav>
+        
+        {/* User Actions */}
+        <div className="flex items-center space-x-4">
+          {isAuthenticated && user ? (
             <>
-              <Link to="/deposit" className="hidden sm:block">
-                <Button variant="royal" size="sm" className="flex items-center gap-1">
-                  <DollarSign className="h-4 w-4" />
-                  <span>Add Funds</span>
+              {renderUserInfo(user)}
+              <div className="hidden md:block">
+                <Button variant="outline" size="sm" onClick={handleLogout}>
+                  Logout
                 </Button>
-              </Link>
-              
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon" className="rounded-full">
-                    <Avatar className="h-8 w-8 border border-white/20">
-                      {user?.profileImage ? (
-                        <AvatarImage src={user.profileImage} alt={user.username} />
-                      ) : (
-                        <AvatarFallback className="bg-royal-purple/20 text-royal-purple">
-                          {user?.username?.charAt(0)?.toUpperCase() || 'U'}
-                        </AvatarFallback>
-                      )}
-                    </Avatar>
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-56 mt-2 glass-morphism border-white/10">
-                  <DropdownMenuLabel className="flex items-center gap-2">
-                    <Shield className="h-4 w-4 text-royal-gold" />
-                    <span>Rank #{user?.rank || 0}</span>
-                  </DropdownMenuLabel>
-                  <DropdownMenuSeparator className="bg-white/10" />
-                  <DropdownMenuItem onClick={() => navigate('/profile')}>
-                    <User className="h-4 w-4 mr-2" /> Profile
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => navigate('/wallet')}>
-                    <Wallet className="h-4 w-4 mr-2" /> Wallet
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => navigate('/settings')}>
-                    <Settings className="h-4 w-4 mr-2" /> Settings
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator className="bg-white/10" />
-                  <div className="px-2 py-1.5 text-sm flex justify-between items-center">
-                    <span className="text-white/60">Mockery Mode</span>
-                    <Switch 
-                      id="mockery-toggle"
-                      checked={mockeryEnabled} 
-                      onCheckedChange={toggleMockery}
-                    />
-                  </div>
-                  <DropdownMenuSeparator className="bg-white/10" />
-                  <DropdownMenuItem onClick={handleLogout} className="text-destructive hover:text-destructive">
-                    <LogOut className="h-4 w-4 mr-2" /> Logout
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+              </div>
             </>
           ) : (
-            <div className="flex gap-2 items-center">
-              <Link to="/login">
-                <Button variant="outline" size="sm" className="hidden md:flex glass-button">
-                  Login
-                </Button>
+            <div className="hidden md:flex space-x-2">
+              <Link to="/signin">
+                <Button variant="outline" size="sm">Sign In</Button>
               </Link>
               <Link to="/signup">
-                <Button variant="royalGold" size="sm" className="hidden md:flex">
-                  <Crown className="h-4 w-4 mr-2" />
-                  Begin Ascent
-                </Button>
+                <Button size="sm">Join Court</Button>
               </Link>
             </div>
           )}
           
-          <div className="flex md:hidden">
-            <Button variant="ghost" size="icon" onClick={toggleMobileMenu}>
-              <Menu className="h-5 w-5" />
-            </Button>
-          </div>
-          
-          <ModeToggle />
+          {/* Mobile Menu Button */}
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            className="md:hidden"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          >
+            {mobileMenuOpen ? <X className="h-6 w-6" /> : <MenuIcon className="h-6 w-6" />}
+          </Button>
         </div>
       </div>
       
+      {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <MobileMenu 
-          isAuthenticated={isAuthenticated} 
-          onClose={toggleMobileMenu} 
-          onLogout={handleLogout}
-          user={user}
-        />
+        <div className="md:hidden bg-background/95 backdrop-blur-lg pt-4 pb-6 border-t border-white/10 shadow-lg">
+          <div className="container mx-auto px-4 space-y-4">
+            <nav className="flex flex-col space-y-3">
+              <Link to="/leaderboard" className={`nav-link-mobile ${isActive('/leaderboard') ? 'text-royal-gold' : ''}`}>Leaderboard</Link>
+              <Link to="/teams" className={`nav-link-mobile ${isActive('/teams') ? 'text-royal-gold' : ''}`}>Teams</Link>
+              <Link to="/features" className={`nav-link-mobile ${isActive('/features') ? 'text-royal-gold' : ''}`}>Features</Link>
+              <Link to="/deposit" className={`nav-link-mobile ${isActive('/deposit') ? 'text-royal-gold' : ''}`}>Deposit</Link>
+              {isAuthenticated && (
+                <Link to="/dashboard" className={`nav-link-mobile ${isActive('/dashboard') ? 'text-royal-gold' : ''}`}>Dashboard</Link>
+              )}
+            </nav>
+            
+            <div className="pt-3 border-t border-white/10">
+              {isAuthenticated ? (
+                <Button variant="outline" className="w-full" onClick={handleLogout}>
+                  Logout
+                </Button>
+              ) : (
+                <div className="flex flex-col space-y-2">
+                  <Link to="/signin" className="w-full">
+                    <Button variant="outline" className="w-full">Sign In</Button>
+                  </Link>
+                  <Link to="/signup" className="w-full">
+                    <Button className="w-full">Join Court</Button>
+                  </Link>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
       )}
     </header>
   );

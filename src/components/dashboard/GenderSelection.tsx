@@ -2,37 +2,39 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { UserProfile, UserGender } from '@/types/user';
-import { Crown, Wand2, Sparkles } from 'lucide-react';
+import { UserProfile } from '@/types/user';
+import { Crown, Wand2, Sparkles, Shield } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+
+type RoyalTitle = 'king' | 'queen' | 'jester' | 'noble';
 
 interface GenderSelectionProps {
   userProfile: UserProfile;
-  onGenderChange: (gender: UserGender) => Promise<void>;
+  onGenderChange: (gender: RoyalTitle) => Promise<void>;
 }
 
 const GenderSelection: React.FC<GenderSelectionProps> = ({ userProfile, onGenderChange }) => {
-  const [selectedGender, setSelectedGender] = useState<UserGender>(
-    (userProfile.gender as UserGender) || 'noble'
+  const [selectedTitle, setSelectedTitle] = useState<RoyalTitle>(
+    (userProfile.gender as RoyalTitle) || 'noble'
   );
   const [isChanging, setIsChanging] = useState(false);
   const { toast } = useToast();
 
-  const handleGenderSelect = async (gender: UserGender) => {
-    if (gender === selectedGender) return;
+  const handleTitleSelect = async (title: RoyalTitle) => {
+    if (title === selectedTitle) return;
     
     setIsChanging(true);
     try {
-      await onGenderChange(gender);
-      setSelectedGender(gender);
+      await onGenderChange(title);
+      setSelectedTitle(title);
       
-      const genderText = gender === 'king' ? 'King' : 
-                        gender === 'queen' ? 'Queen' : 
-                        gender === 'jester' ? 'Royal Jester' : 'Noble';
+      const titleText = title === 'king' ? 'King' : 
+                        title === 'queen' ? 'Queen' : 
+                        title === 'jester' ? 'Royal Jester' : 'Noble';
       
       toast({
         title: "Royal Title Updated",
-        description: `You shall now be addressed as ${genderText} throughout the realm.`,
+        description: `You shall now be addressed as ${titleText} throughout the realm.`,
       });
     } catch (error) {
       toast({
@@ -58,13 +60,13 @@ const GenderSelection: React.FC<GenderSelectionProps> = ({ userProfile, onGender
           Choose how you wish to be addressed throughout the kingdom. Your title affects how other nobles perceive you.
         </p>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <Button
-            variant={selectedGender === 'king' ? 'royal' : 'outline'}
+            variant={selectedTitle === 'king' ? 'royal' : 'outline'}
             className={`h-auto py-6 flex flex-col items-center ${
-              selectedGender === 'king' ? '' : 'glass-morphism border-white/10 hover:bg-white/5'
+              selectedTitle === 'king' ? '' : 'glass-morphism border-white/10 hover:bg-white/5'
             }`}
-            onClick={() => handleGenderSelect('king')}
+            onClick={() => handleTitleSelect('king')}
             disabled={isChanging}
           >
             <Crown className="h-8 w-8 mb-2" />
@@ -73,11 +75,11 @@ const GenderSelection: React.FC<GenderSelectionProps> = ({ userProfile, onGender
           </Button>
           
           <Button
-            variant={selectedGender === 'queen' ? 'royal' : 'outline'}
+            variant={selectedTitle === 'queen' ? 'royal' : 'outline'}
             className={`h-auto py-6 flex flex-col items-center ${
-              selectedGender === 'queen' ? '' : 'glass-morphism border-white/10 hover:bg-white/5'
+              selectedTitle === 'queen' ? '' : 'glass-morphism border-white/10 hover:bg-white/5'
             }`}
-            onClick={() => handleGenderSelect('queen')}
+            onClick={() => handleTitleSelect('queen')}
             disabled={isChanging}
           >
             <Sparkles className="h-8 w-8 mb-2" />
@@ -86,16 +88,29 @@ const GenderSelection: React.FC<GenderSelectionProps> = ({ userProfile, onGender
           </Button>
           
           <Button
-            variant={selectedGender === 'jester' ? 'royal' : 'outline'}
+            variant={selectedTitle === 'jester' ? 'royal' : 'outline'}
             className={`h-auto py-6 flex flex-col items-center ${
-              selectedGender === 'jester' ? '' : 'glass-morphism border-white/10 hover:bg-white/5'
+              selectedTitle === 'jester' ? '' : 'glass-morphism border-white/10 hover:bg-white/5'
             }`}
-            onClick={() => handleGenderSelect('jester')}
+            onClick={() => handleTitleSelect('jester')}
             disabled={isChanging}
           >
             <Wand2 className="h-8 w-8 mb-2" />
             <span className="text-lg font-semibold">Jester</span>
             <span className="text-xs text-white/70 mt-1">Mock the royal system</span>
+          </Button>
+
+          <Button
+            variant={selectedTitle === 'noble' ? 'royal' : 'outline'}
+            className={`h-auto py-6 flex flex-col items-center ${
+              selectedTitle === 'noble' ? '' : 'glass-morphism border-white/10 hover:bg-white/5'
+            }`}
+            onClick={() => handleTitleSelect('noble')}
+            disabled={isChanging}
+          >
+            <Shield className="h-8 w-8 mb-2" />
+            <span className="text-lg font-semibold">Noble</span>
+            <span className="text-xs text-white/70 mt-1">Dignified and mysterious</span>
           </Button>
         </div>
         

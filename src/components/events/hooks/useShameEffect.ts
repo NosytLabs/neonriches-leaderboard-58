@@ -1,117 +1,118 @@
 
-import { useState, useCallback, useRef } from 'react';
-import { useToast } from '@/hooks/use-toast';
+import { useState, useEffect } from 'react';
+import { MockeryAction } from '@/types/mockery';
 
-export type ShameAction = 'tomatoes' | 'eggs' | 'stocks';
+// Redefine the ShameAction type to match MockeryAction for compatibility
+export type ShameAction = MockeryAction;
 
-interface ShameEffect {
-  userId: number;
-  username: string;
-  type: ShameAction;
-  appliedAt: number;
-  expiresAt: number;
+export interface ShameEffect {
+  action: ShameAction;
+  timestamp: number;
+  until: number;
 }
 
-interface ShameEffectOptions {
-  cooldownPeriod?: number;
+export interface ShameEffectState {
+  activeEffect: ShameEffect | null;
+  history: ShameEffect[];
+  applyEffect: (effect: ShameEffect) => void;
+  clearEffect: () => void;
+  hasActiveEffect: () => boolean;
+  getTimeRemaining: () => number;
+  getEffectPercentage: () => number;
 }
 
-export const useShameEffect = (options: ShameEffectOptions = {}) => {
-  const { cooldownPeriod = 24 * 60 * 60 * 1000 } = options; // 24 hours by default
-  const [shameEffects, setShameEffects] = useState<Record<number, ShameEffect | null>>({});
-  const [shameCooldown, setShameCooldown] = useState<Record<number, boolean>>({});
-  const [shameCount, setShameCount] = useState<Record<number, number>>({});
-  const { toast } = useToast();
-  
-  // Function to get shame count for a user
-  const getShameCount = useCallback((userId: number) => {
-    return shameCount[userId] || 0;
-  }, [shameCount]);
-  
-  // Handle shaming a user
-  const handleShame = useCallback(
-    (userId: number, username: string, type: ShameAction, price: number) => {
-      // Check if user is already shamed
-      if (shameEffects[userId]) {
-        toast({
-          title: "Already Shamed",
-          description: `${username} is already experiencing public shame.`,
-          variant: "destructive",
-        });
-        return false;
+const useShameEffect = (): ShameEffectState => {
+  const [activeEffect, setActiveEffect] = useState<ShameEffect | null>(null);
+  const [history, setHistory] = useState<ShameEffect[]>([]);
+
+  // Load from localStorage on initial mount
+  useEffect(() => {
+    const storedEffect = localStorage.getItem('activeShameEffect');
+    const storedHistory = localStorage.getItem('shameEffectHistory');
+    
+    if (storedEffect) {
+      try {
+        const parsedEffect = JSON.parse(storedEffect);
+        // Check if effect is still active
+        if (parsedEffect.until > Date.now()) {
+          setActiveEffect(parsedEffect);
+        } else {
+          localStorage.removeItem('activeShameEffect');
+        }
+      } catch (error) {
+        console.error('Error parsing active shame effect', error);
       }
-      
-      // Check if there's a cooldown
-      if (shameCooldown[userId]) {
-        toast({
-          title: "Cooldown Active",
-          description: `You must wait before shaming ${username} again.`,
-          variant: "destructive",
-        });
-        return false;
+    }
+    
+    if (storedHistory) {
+      try {
+        setHistory(JSON.parse(storedHistory));
+      } catch (error) {
+        console.error('Error parsing shame effect history', error);
       }
-      
-      // Create new shame effect
-      const now = Date.now();
-      const newEffect: ShameEffect = {
-        userId,
-        username,
-        type,
-        appliedAt: now,
-        expiresAt: now + cooldownPeriod,
-      };
-      
-      // Update state
-      setShameEffects((prev) => ({
-        ...prev,
-        [userId]: newEffect,
-      }));
-      
-      // Set cooldown
-      setShameCooldown((prev) => ({
-        ...prev,
-        [userId]: true,
-      }));
-      
-      // Update count
-      setShameCount((prev) => ({
-        ...prev,
-        [userId]: (prev[userId] || 0) + 1,
-      }));
-      
-      // Set timeout to remove effect
-      setTimeout(() => {
-        setShameEffects((prev) => ({
-          ...prev,
-          [userId]: null,
-        }));
-      }, cooldownPeriod);
-      
-      // Set timeout to remove cooldown
-      setTimeout(() => {
-        setShameCooldown((prev) => ({
-          ...prev,
-          [userId]: false,
-        }));
-      }, cooldownPeriod * 1.5); // Cooldown longer than effect
-      
-      toast({
-        title: "Shame Applied",
-        description: `You have successfully shamed ${username} with ${type}!`,
-        variant: "default",
-      });
-      
-      return true;
-    },
-    [shameEffects, shameCooldown, cooldownPeriod, toast]
-  );
-  
+    }
+  }, []);
+
+  // Save to localStorage when state changes
+  useEffect(() => {
+    if (activeEffect) {
+      localStorage.setItem('activeShameEffect', JSON.stringify(activeEffect));
+    } else {
+      localStorage.removeItem('activeShameEffect');
+    }
+  }, [activeEffect]);
+
+  useEffect(() => {
+    localStorage.setItem('shameEffectHistory', JSON.stringify(history));
+  }, [history]);
+
+  // Check if current effect has expired
+  useEffect(() => {
+    if (!activeEffect) return;
+    
+    const checkExpiryInterval = setInterval(() => {
+      if (activeEffect.until <= Date.now()) {
+        setActiveEffect(null);
+      }
+    }, 1000);
+    
+    return () => clearInterval(checkExpiryInterval);
+  }, [activeEffect]);
+
+  const applyEffect = (effect: ShameEffect) => {
+    setActiveEffect(effect);
+    setHistory(prev => [effect, ...prev]);
+  };
+
+  const clearEffect = () => {
+    setActiveEffect(null);
+  };
+
+  const hasActiveEffect = () => {
+    return activeEffect !== null && activeEffect.until > Date.now();
+  };
+
+  const getTimeRemaining = () => {
+    if (!activeEffect) return 0;
+    const remaining = activeEffect.until - Date.now();
+    return Math.max(0, remaining);
+  };
+
+  const getEffectPercentage = () => {
+    if (!activeEffect) return 0;
+    const total = activeEffect.until - activeEffect.timestamp;
+    const elapsed = Date.now() - activeEffect.timestamp;
+    return Math.min(100, Math.max(0, (elapsed / total) * 100));
+  };
+
   return {
-    shameEffects,
-    shameCooldown,
-    shameCount,
-    getShameCount,
-    handleShame,
+    activeEffect,
+    history,
+    applyEffect,
+    clearEffect,
+    hasActiveEffect,
+    getTimeRemaining,
+    getEffectPercentage
   };
 };
 
