@@ -26,11 +26,11 @@ export const getMockeryDescription = (type: MockeryTier | string): string => {
     case 'humiliate': 
       return 'Add a humiliating 7-day badge to your target's profile and reduce their visibility.';
     case 'curse': 
-      return 'Curse your target for 14 days, cutting their rank gains in half.';
+      return "Curse your target for 14 days, cutting their rank gains in half.";
     case 'banish': 
       return 'Banish your target from leaderboard visibility for 3 days.';
     case 'seize': 
-      return 'Seize 5% of your target\'s next purchase (added to your balance).';
+      return "Seize 5% of your target's next purchase (added to your balance).";
     case 'nuke': 
       return 'Nuclear option: drop your target 10 ranks for 24 hours. Expensive but devastating.';
     default: 
