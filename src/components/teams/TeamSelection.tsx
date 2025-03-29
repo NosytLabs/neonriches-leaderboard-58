@@ -8,6 +8,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useResponsive } from '@/hooks/use-responsive';
 import { TeamColor, TeamSelectionProps } from '@/types/teams';
 import RandomAbsurdFact from '@/components/ui/random-absurd-fact';
+import { getTeamMotto, getTeamBenefit, getTeamAbsurdStat } from '@/utils/teamUtils';
 
 const TeamSelection: React.FC<TeamSelectionProps> = ({ user, onTeamSelect }) => {
   const { updateUserProfile } = useAuth();
@@ -41,7 +42,7 @@ const TeamSelection: React.FC<TeamSelectionProps> = ({ user, onTeamSelect }) => 
       
       toast({
         title: "Team Updated",
-        description: `You've joined the ${getTeamName(selectedTeam)}!`,
+        description: `You've joined the ${getTeamName(selectedTeam)}! This changes nothing but your profile color.`,
         variant: "default"
       });
     } catch (error) {
@@ -64,20 +65,11 @@ const TeamSelection: React.FC<TeamSelectionProps> = ({ user, onTeamSelect }) => 
     }
   }
 
-  const getTeamMotto = (team: TeamColor): string => {
-    switch(team) {
-      case 'red': return '"Buy First, Think Never"';
-      case 'green': return '"Wealth So Strategic, It\'s Almost Pathetic"';
-      case 'blue': return '"Patience in Spending, Unbridled in Pretending"';
-      default: return '';
-    }
-  }
-
   const getTeamIcon = (team: TeamColor) => {
     switch(team) {
       case 'red': return <Flame className="h-8 w-8 text-red-400" />;
-      case 'green': return <CreditCard className="h-8 w-8 text-green-400" />;
-      case 'blue': return <Scroll className="h-8 w-8 text-blue-400" />;
+      case 'green': return <Coins className="h-8 w-8 text-green-400" />;
+      case 'blue': return <CreditCard className="h-8 w-8 text-blue-400" />;
       default: return null;
     }
   }
@@ -99,7 +91,7 @@ const TeamSelection: React.FC<TeamSelectionProps> = ({ user, onTeamSelect }) => 
         <div className="flex items-start">
           <Scroll className="text-royal-gold h-5 w-5 mr-2 mt-1 flex-shrink-0" />
           <p className="text-sm text-white/80 italic">
-            "Every coin spent in this realm is meticulously recorded by the esteemed Scribes of the Scroll at Nosyt Labs, keepers of the Great Ledger of Vanity. Their quills never rest, documenting each feeble attempt to purchase status and significance."
+            "Choose your faction wisely, for it will determine... absolutely nothing of consequence. Your team allegiance is purely cosmetic and exists mainly to fuel our satirical narrative."
           </p>
         </div>
       </div>
@@ -132,12 +124,19 @@ const TeamSelection: React.FC<TeamSelectionProps> = ({ user, onTeamSelect }) => 
             </div>
           </div>
           <div className="p-3 rounded-lg bg-black/20 border border-red-500/10">
-            <h4 className="text-sm font-medium text-red-400 mb-2">Recorded in the Great Ledger of Vanity:</h4>
+            <h4 className="text-sm font-medium text-red-400 mb-2">Alleged "Benefits":</h4>
             <ul className="text-xs text-white/70 space-y-1">
-              <li>• Most impulsive spending patterns in the realm</li>
-              <li>• Highest rate of post-purchase regret (87%)</li>
-              <li>• Record for most money spent in a single minute: $4,293</li>
+              {getTeamBenefit('red').map((benefit, index) => (
+                <li key={index}>• {benefit}</li>
+              ))}
             </ul>
+            <p className="text-xs text-white/50 italic mt-3 border-t border-white/10 pt-2">
+              <span className="text-amber-400">*</span> These benefits are entirely fictional and satirical. Joining this team grants you nothing but a red color scheme.
+            </p>
+          </div>
+          <div className="p-3 rounded-lg bg-black/20 border border-red-500/10">
+            <h4 className="text-sm font-medium text-red-400 mb-2">Absurd Faction Fact:</h4>
+            <p className="text-xs text-white/70 italic">{getTeamAbsurdStat('red')}</p>
           </div>
         </TabsContent>
 
@@ -153,12 +152,19 @@ const TeamSelection: React.FC<TeamSelectionProps> = ({ user, onTeamSelect }) => 
             </div>
           </div>
           <div className="p-3 rounded-lg bg-black/20 border border-green-500/10">
-            <h4 className="text-sm font-medium text-green-400 mb-2">Recorded in the Great Ledger of Vanity:</h4>
+            <h4 className="text-sm font-medium text-green-400 mb-2">Alleged "Benefits":</h4>
             <ul className="text-xs text-white/70 space-y-1">
-              <li>• Most spreadsheets created to justify spending</li>
-              <li>• Average of 42 minutes spent deciding on a $5 purchase</li>
-              <li>• Collectively hoarded 28,541 unused digital credits "just in case"</li>
+              {getTeamBenefit('green').map((benefit, index) => (
+                <li key={index}>• {benefit}</li>
+              ))}
             </ul>
+            <p className="text-xs text-white/50 italic mt-3 border-t border-white/10 pt-2">
+              <span className="text-amber-400">*</span> These benefits are entirely fictional and satirical. Joining this team grants you nothing but a green color scheme.
+            </p>
+          </div>
+          <div className="p-3 rounded-lg bg-black/20 border border-green-500/10">
+            <h4 className="text-sm font-medium text-green-400 mb-2">Absurd Faction Fact:</h4>
+            <p className="text-xs text-white/70 italic">{getTeamAbsurdStat('green')}</p>
           </div>
         </TabsContent>
 
@@ -174,12 +180,19 @@ const TeamSelection: React.FC<TeamSelectionProps> = ({ user, onTeamSelect }) => 
             </div>
           </div>
           <div className="p-3 rounded-lg bg-black/20 border border-blue-500/10">
-            <h4 className="text-sm font-medium text-blue-400 mb-2">Recorded in the Great Ledger of Vanity:</h4>
+            <h4 className="text-sm font-medium text-blue-400 mb-2">Alleged "Benefits":</h4>
             <ul className="text-xs text-white/70 space-y-1">
-              <li>• Most purchases timed precisely to leapfrog rivals on the leaderboard</li>
-              <li>• Longest average time spent staring at confirmation buttons (3.2 minutes)</li>
-              <li>• 74% of members admit to purchasing status while pretending not to care</li>
+              {getTeamBenefit('blue').map((benefit, index) => (
+                <li key={index}>• {benefit}</li>
+              ))}
             </ul>
+            <p className="text-xs text-white/50 italic mt-3 border-t border-white/10 pt-2">
+              <span className="text-amber-400">*</span> These benefits are entirely fictional and satirical. Joining this team grants you nothing but a blue color scheme.
+            </p>
+          </div>
+          <div className="p-3 rounded-lg bg-black/20 border border-blue-500/10">
+            <h4 className="text-sm font-medium text-blue-400 mb-2">Absurd Faction Fact:</h4>
+            <p className="text-xs text-white/70 italic">{getTeamAbsurdStat('blue')}</p>
           </div>
         </TabsContent>
       </Tabs>
@@ -197,6 +210,12 @@ const TeamSelection: React.FC<TeamSelectionProps> = ({ user, onTeamSelect }) => 
           <Shield className="w-4 h-4 mr-2" />
           {user?.team === selectedTeam ? 'Confirm Financial Allegiance' : 'Pledge Your Credit Card'}
         </Button>
+      </div>
+      
+      <div className="mt-8 text-center">
+        <p className="text-white/50 text-xs italic">
+          Disclaimer: Joining a team is purely cosmetic and grants no actual benefits whatsoever.
+        </p>
       </div>
       
       <RandomAbsurdFact 

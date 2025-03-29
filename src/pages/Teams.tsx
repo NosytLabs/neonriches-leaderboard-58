@@ -11,6 +11,7 @@ import { useToast } from '@/hooks/use-toast';
 import Loading from '@/components/Loading';
 import { TeamColor } from '@/types/teams';
 import { Scroll, Crown, Coins, CreditCard, Flame, Trophy } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 
 const Teams = () => {
   const { user, isLoading, updateUserProfile } = useAuth();
@@ -30,7 +31,7 @@ const Teams = () => {
       await updateUserProfile({ team });
       toast({
         title: "Faction Joined!",
-        description: `Your financial allegiance to the ${getTeamFullName(team)} has been recorded in the Great Ledger of Vanity!`,
+        description: `Your financial allegiance to the ${getTeamFullName(team)} has been recorded in our glorious ledger of paying customers!`,
       });
       setActiveTab('overview');
       return true;
@@ -38,7 +39,7 @@ const Teams = () => {
       console.error("Error updating team:", error);
       toast({
         title: "Failed to join faction",
-        description: "The Scribes of the Scroll were unable to record your allegiance. Please try again.",
+        description: "We couldn't process your allegiance. Our payment processor is probably down.",
         variant: "destructive"
       });
       return false;
@@ -62,6 +63,20 @@ const Teams = () => {
       default: return 'Unknown';
     }
   }
+
+  // Generate absurd team statistics
+  const getAbsurdTeamStat = (team: string): string => {
+    switch(team) {
+      case 'red': 
+        return 'Members have collectively clicked "Purchase" 8,742 times before checking their bank balance';
+      case 'green': 
+        return 'Spend an average of 3.7 hours per week creating spreadsheets to justify their spending';
+      case 'blue': 
+        return '97% claim to have a "system" for optimal spending, yet none can explain what it is';
+      default: 
+        return '';
+    }
+  };
   
   if (isLoading) {
     return <Loading />;
@@ -79,10 +94,10 @@ const Teams = () => {
             <h1 className="text-3xl font-medieval mb-4">Financial Factions of the Realm</h1>
             <div className="flex items-center justify-center gap-2 mb-4">
               <Scroll className="h-5 w-5 text-royal-gold" />
-              <span className="text-lg font-medium text-royal-gold">The Great Ledger of Vanity</span>
+              <span className="text-lg font-medium text-royal-gold">The Completely Meaningless Leaderboard</span>
             </div>
             <p className="text-white/70 max-w-2xl mx-auto">
-              Join a spending faction and compete in the kingdom-wide competition for wealth, mockery, and digital significance that means absolutely nothing in the real world.
+              Join a spending faction and compete in a kingdom-wide competition for wealth, mockery, and digital significance that means absolutely nothing in the real world.
             </p>
           </div>
         
@@ -90,9 +105,12 @@ const Teams = () => {
             <div className="flex items-start">
               <Scroll className="text-royal-gold h-6 w-6 mr-3 mt-1 flex-shrink-0" />
               <div>
-                <h3 className="text-royal-gold text-lg font-medium mb-2">From the Scribes of the Scroll at Nosyt Labs</h3>
+                <h3 className="text-royal-gold text-lg font-medium mb-2">A Message from the Treasury</h3>
                 <p className="text-white/80 italic">
-                  "Every coin spent in this realm is meticulously recorded by the esteemed Scribes of the Scroll at Nosyt Labs, keepers of the Great Ledger of Vanity. Their quills never rest, documenting each feeble attempt to purchase status and significance. Choose your faction wisely, for your spending habits will be scrutinized, analyzed, and occasionally mocked for all eternity."
+                  "Every coin spent in this realm is meticulously recorded by our financial department. Your spending habits will be scrutinized, analyzed, and occasionally mocked for all eternity. Or at least until our next database purge."
+                </p>
+                <p className="text-white/60 text-sm mt-2">
+                  <span className="text-amber-400">*</span> No actual benefits are provided for joining any team. This is purely for amusement.
                 </p>
               </div>
             </div>
@@ -102,7 +120,7 @@ const Teams = () => {
             <CardHeader>
               <CardTitle className="text-2xl font-medieval">Choose Your Financial Folly</CardTitle>
               <CardDescription>
-                Align yourself with one of the three factions competing for monetary supremacy and digital bragging rights
+                Align yourself with one of the three factions competing for monetary supremacy and digital bragging rights. None of this matters in the slightest.
               </CardDescription>
             </CardHeader>
             
@@ -152,9 +170,9 @@ const Teams = () => {
                         <CardContent>
                           <p className="text-xs text-white/60 italic mb-3">"Buy First, Think Never"</p>
                           <div className="text-sm text-white/80 glass-morphism border-white/5 p-3 rounded-lg">
-                            <p className="mb-2">From the Great Ledger of Vanity:</p>
+                            <p className="mb-2">Absurd Faction Statistic:</p>
                             <p className="text-xs text-white/60 italic">
-                              "The Royal Order of Reckless Spending continues its tradition of financial self-destruction, outspending all other factions through sheer impulsiveness rather than strategy."
+                              {getAbsurdTeamStat('red')}
                             </p>
                           </div>
                           <div className="text-sm text-white/60 mt-3">362 members</div>
@@ -180,9 +198,9 @@ const Teams = () => {
                         <CardContent>
                           <p className="text-xs text-white/60 italic mb-3">"Wealth So Strategic, It's Almost Pathetic"</p>
                           <div className="text-sm text-white/80 glass-morphism border-white/5 p-3 rounded-lg">
-                            <p className="mb-2">From the Great Ledger of Vanity:</p>
+                            <p className="mb-2">Absurd Faction Statistic:</p>
                             <p className="text-xs text-white/60 italic">
-                              "The Emerald Exchequer Cabaret continues to analyze every purchase to death, often spending more time calculating optimal spending than actually enjoying their digital spoils."
+                              {getAbsurdTeamStat('green')}
                             </p>
                           </div>
                           <div className="text-sm text-white/60 mt-3">285 members</div>
@@ -208,14 +226,23 @@ const Teams = () => {
                         <CardContent>
                           <p className="text-xs text-white/60 italic mb-3">"Patience in Spending, Unbridled in Pretending"</p>
                           <div className="text-sm text-white/80 glass-morphism border-white/5 p-3 rounded-lg">
-                            <p className="mb-2">From the Great Ledger of Vanity:</p>
+                            <p className="mb-2">Absurd Faction Statistic:</p>
                             <p className="text-xs text-white/60 italic">
-                              "The Cobalt Credit Cartel members remain the most calculating of spenders, timing their purchases to maximize visibility while pretending they don't care about their rank."
+                              {getAbsurdTeamStat('blue')}
                             </p>
                           </div>
                           <div className="text-sm text-white/60 mt-3">241 members</div>
                         </CardContent>
                       </Card>
+                    </div>
+
+                    <div className="mt-8 glass-morphism border-white/10 p-4 rounded-lg max-w-2xl mx-auto">
+                      <p className="text-sm text-white/70 italic">
+                        "The competition between factions is as fierce as it is meaningless. Members of each team regularly accuse the others of 'cheating' by spending more money, which is literally the only rule of the game."
+                      </p>
+                      <p className="text-xs text-white/50 mt-2">
+                        — Anonymous Financial Historian
+                      </p>
                     </div>
                   </div>
                 </TabsContent>

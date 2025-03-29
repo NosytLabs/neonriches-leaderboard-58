@@ -13,6 +13,7 @@ import {
 import { useAuth } from '@/contexts/auth';
 import { UserProfile } from '@/contexts/AuthContext';
 import { Separator } from '@/components/ui/separator';
+import { getTeamMotto, getTeamBenefit } from '@/utils/teamUtils';
 
 // Define team color type
 export type TeamColor = 'red' | 'green' | 'blue';
@@ -92,6 +93,11 @@ const TeamSwitchModal: React.FC<TeamSwitchModalProps> = ({
       setIsChanging(false);
     }
   };
+
+  // Get absurd benefits for each team
+  const getTeamBenefits = (teamId: TeamColor): string[] => {
+    return getTeamBenefit(teamId);
+  };
   
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -100,18 +106,9 @@ const TeamSwitchModal: React.FC<TeamSwitchModalProps> = ({
         <DialogHeader>
           <DialogTitle className="text-xl font-bold">Choose Your Financial Allegiance</DialogTitle>
           <DialogDescription>
-            Select the spending faction that represents your fiscal philosophy. Your choice determines how the Scribes of the Scroll at Nosyt Labs record your expenditures in the Great Ledger of Vanity.
+            Select the spending faction that best represents your fiscal philosophy. Or, more realistically, whichever one has the funniest name.
           </DialogDescription>
         </DialogHeader>
-        
-        <div className="p-3 border border-royal-gold/20 bg-black/30 rounded-lg mb-4">
-          <div className="flex items-start">
-            <Scroll className="text-royal-gold h-5 w-5 mr-2 mt-0.5 flex-shrink-0" />
-            <p className="text-sm text-white/80 italic">
-              "Every transfer of wealth is dutifully recorded by the Scribes of the Scroll, who judge the wisdom of your financial decisions with barely concealed amusement."
-            </p>
-          </div>
-        </div>
         
         <div className="space-y-4 my-4">
           {teamData.map((team) => (
@@ -130,7 +127,7 @@ const TeamSwitchModal: React.FC<TeamSwitchModalProps> = ({
                 </div>
                 <div className="flex-1">
                   <h3 className={`font-bold ${team.color}`}>{team.name}</h3>
-                  <p className="text-xs text-white/60 mt-0.5 italic">"{team.motto}"</p>
+                  <p className="text-xs text-white/60 mt-0.5 italic">"{getTeamMotto(team.id as TeamColor)}"</p>
                   <p className="text-sm text-white/70 mt-1">{team.description}</p>
                 </div>
                 {selectedTeam === team.id && (
@@ -138,6 +135,20 @@ const TeamSwitchModal: React.FC<TeamSwitchModalProps> = ({
                     <Check className={`h-5 w-5 ${team.color}`} />
                   </div>
                 )}
+              </div>
+              
+              <div className="mt-3 space-y-1">
+                <p className="text-xs font-medium text-white/80">Alleged "Benefits":</p>
+                <ul className="text-xs text-white/60 space-y-1">
+                  {getTeamBenefits(team.id as TeamColor).slice(0, 1).map((benefit, i) => (
+                    <li key={i} className="flex items-start">
+                      <span className="text-xs mr-1 mt-1">•</span> {benefit}
+                    </li>
+                  ))}
+                  <li className="flex items-start">
+                    <span className="text-xs mr-1 mt-1">•</span> <span className="italic">...and other equally ludicrous "advantages"</span>
+                  </li>
+                </ul>
               </div>
               
               <div className="flex justify-between mt-3 text-xs text-white/50">
@@ -153,7 +164,7 @@ const TeamSwitchModal: React.FC<TeamSwitchModalProps> = ({
         <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-3 text-sm flex items-start">
           <Info className="h-4 w-4 text-blue-400 mr-2 mt-0.5" />
           <p className="text-white/80">
-            The Scribes of the Scroll will record your faction change in the Great Ledger of Vanity for all eternity (or until our database is purged).
+            All of these teams are equally meaningless. Your choice is purely aesthetic and will have no actual impact on your experience, apart from the color scheme.
           </p>
         </div>
         

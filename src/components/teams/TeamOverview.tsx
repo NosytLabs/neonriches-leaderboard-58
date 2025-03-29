@@ -7,6 +7,7 @@ import { UserProfile } from '@/contexts/AuthContext';
 import { Badge } from '@/components/ui/badge';
 import TeamSwitchModal, { TeamColor } from '@/components/profile/TeamSwitchModal';
 import { useAuth } from '@/contexts/auth';
+import { getTeamBenefit, getTeamAbsurdStat, getTeamHistoricalNote } from '@/utils/teamUtils';
 
 interface TeamOverviewProps {
   user: UserProfile;
@@ -51,36 +52,6 @@ const TeamOverview: React.FC<TeamOverviewProps> = ({ user }) => {
     }
   };
   
-  // Define team benefits
-  const getTeamBenefits = (team: string): string[] => {
-    switch (team) {
-      case 'red':
-        return [
-          "Priority placement in the 'Most Impulsive Spenders' section",
-          "Special 'Money to Burn' profile badge",
-          "Access to exclusive higher-priced vanity items"
-        ];
-      case 'green':
-        return [
-          "'Fiscal Mastermind' title despite evidence to the contrary",
-          "Detailed analytics on money wasted vs. rivals",
-          "Access to the 'How to Justify Your Spending' guidebook"
-        ];
-      case 'blue':
-        return [
-          "Premium 'Calculated Spender' badge (extra fee applies)",
-          "Timing algorithms to maximize spending visibility",
-          "Exclusive 'I Spent More Than You' notification options"
-        ];
-      default:
-        return [
-          "Ability to silently judge the other houses",
-          "Retention of actual money in your bank account",
-          "Freedom from team-based spending pressure"
-        ];
-    }
-  };
-
   const handleTeamChange = async (team: TeamColor): Promise<void> => {
     try {
       await updateUserProfile({ team });
@@ -89,6 +60,11 @@ const TeamOverview: React.FC<TeamOverviewProps> = ({ user }) => {
     }
   };
   
+  // Get team benefits from util function
+  const benefits = getTeamBenefit(userTeam);
+  const absurdStat = getTeamAbsurdStat(userTeam);
+  const historicalNote = getTeamHistoricalNote(userTeam);
+
   return (
     <Card className="glass-morphism border-purple-400/20">
       <CardHeader className="pb-3">
@@ -110,7 +86,7 @@ const TeamOverview: React.FC<TeamOverviewProps> = ({ user }) => {
             <div className="flex items-start">
               <Scroll className="text-royal-gold h-5 w-5 mr-2 mt-0.5 flex-shrink-0" />
               <p className="text-sm text-white/80 italic">
-                "The Scribes of the Scroll have recorded your allegiance to {teamNames[userTeam as keyof typeof teamNames]} in the Great Ledger of Vanity."
+                "{historicalNote}"
               </p>
             </div>
           </div>
@@ -118,16 +94,31 @@ const TeamOverview: React.FC<TeamOverviewProps> = ({ user }) => {
           <div className="glass-morphism border-white/10 p-4 rounded-lg">
             <div className="flex items-center mb-2">
               <Award className="h-5 w-5 text-purple-400 mr-2" />
-              <span className="text-sm font-medium">Dubious Faction Perks</span>
+              <span className="text-sm font-medium">Dubious Faction "Perks"</span>
             </div>
             <ul className="text-xs text-white/70 space-y-2">
-              {getTeamBenefits(userTeam).map((benefit, index) => (
+              {benefits.map((benefit, index) => (
                 <li key={index} className="flex items-center">
                   <ArrowRight className="h-3 w-3 mr-1 text-purple-400" />
                   {benefit}
                 </li>
               ))}
             </ul>
+            <div className="mt-3 pt-3 border-t border-white/10">
+              <p className="text-xs text-white/50 italic">
+                <span className="text-amber-400">*</span> None of these perks actually exist. They're as imaginary as the value of your spending.
+              </p>
+            </div>
+          </div>
+
+          <div className="glass-morphism border-white/10 p-4 rounded-lg">
+            <div className="flex items-center mb-2">
+              <Scroll className="h-5 w-5 text-purple-400 mr-2" />
+              <span className="text-sm font-medium">Absurd Faction Statistic</span>
+            </div>
+            <p className="text-xs text-white/70 italic">
+              {absurdStat}
+            </p>
           </div>
           
           <Button 
