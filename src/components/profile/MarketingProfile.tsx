@@ -3,7 +3,7 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Eye, Zap, Award, Link as LinkIcon, Users } from 'lucide-react';
+import { Eye, Zap, Award, Link as LinkIcon, Users, TrendingUp, Clock, DollarSign } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { UserProfile } from '@/types/user';
 
@@ -32,10 +32,10 @@ const MarketingProfile: React.FC<MarketingProfileProps> = ({ user, onBoostProfil
       <CardHeader>
         <CardTitle className="text-lg font-royal flex items-center">
           <Award size={18} className="text-purple-400 mr-2" />
-          Profile Visibility
+          Profile Marketing Impact
         </CardTitle>
         <CardDescription>
-          Boost your profile visibility and presence
+          Your marketing reach scales with your rank
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -49,7 +49,7 @@ const MarketingProfile: React.FC<MarketingProfileProps> = ({ user, onBoostProfil
               <span className="font-bold">{viewCount}</span>
             </div>
             <div className="text-sm text-white/70">
-              <p>Boost visibility to attract more profile views</p>
+              <p>Higher rank = increased visibility and views</p>
               <div className="w-full h-2 bg-white/10 rounded-full mt-2 overflow-hidden">
                 <div 
                   className="h-full bg-gradient-to-r from-purple-600 to-purple-400" 
@@ -82,22 +82,57 @@ const MarketingProfile: React.FC<MarketingProfileProps> = ({ user, onBoostProfil
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center">
                 <Users size={16} className="text-purple-400 mr-2" />
-                <span className="font-medium">Followers</span>
+                <span className="font-medium">Outreach Potential</span>
               </div>
-              <span className="font-bold">{followerCount}</span>
+              <span className="font-bold">{user.rank ? `${Math.floor(1000 / Math.max(user.rank, 20))}x` : '1x'}</span>
             </div>
             <p className="text-sm text-white/70 mb-2">
-              More followers increases your profile's influence.
+              Your marketing potential grows as your rank improves:
+            </p>
+            <div className="grid grid-cols-2 gap-2 text-xs text-white/70">
+              <div className="flex items-center">
+                <TrendingUp className="h-3 w-3 text-green-400 mr-1" />
+                <span>Top 100: 8x boost</span>
+              </div>
+              <div className="flex items-center">
+                <TrendingUp className="h-3 w-3 text-green-400 mr-1" />
+                <span>Top 10: 20x boost</span>
+              </div>
+            </div>
+          </div>
+          
+          <div className="glass-morphism border-white/10 rounded-lg p-4">
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center">
+                <Clock size={16} className="text-purple-400 mr-2" />
+                <span className="font-medium">Weekly Events</span>
+              </div>
+              <Badge variant="outline" className="bg-purple-500/10 text-purple-400 border-purple-500/30">
+                Coming Soon
+              </Badge>
+            </div>
+            <p className="text-sm text-white/70 mb-2">
+              Participate in weekly spotlight events for additional visibility boosts.
             </p>
           </div>
 
-          <Button 
-            className="w-full bg-gradient-to-r from-purple-700 via-purple-500 to-purple-400 hover:opacity-90 text-white"
-            onClick={onBoostProfile}
-          >
-            <Zap size={16} className="mr-2" />
-            Boost Profile ($15)
-          </Button>
+          <div className="grid grid-cols-2 gap-3">
+            <Button 
+              className="w-full bg-gradient-to-r from-purple-700 via-purple-500 to-purple-400 hover:opacity-90 text-white"
+              onClick={onBoostProfile}
+            >
+              <Zap size={16} className="mr-2" />
+              Boost Profile
+            </Button>
+            
+            <Button 
+              className="w-full bg-gradient-to-r from-royal-gold-dark to-royal-gold hover:opacity-90 text-black"
+              onClick={() => window.location.href = '/deposit'}
+            >
+              <DollarSign size={16} className="mr-2" />
+              Increase Rank
+            </Button>
+          </div>
         </div>
       </CardContent>
     </Card>

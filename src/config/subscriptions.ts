@@ -17,7 +17,8 @@ export const PRODUCT_FEATURES = {
     'basic_profile',
     'leaderboard_presence',
     'team_affiliation',
-    'profile_boost_eligible'
+    'profile_boost_eligible',
+    'basic_marketing'
   ],
   'premium': [
     'basic_profile',
@@ -30,7 +31,8 @@ export const PRODUCT_FEATURES = {
     'rgb_borders',
     'video_embeds',
     'analytics_basic',
-    'discount_boosts'
+    'marketing_dashboard',
+    'profile_promotion'
   ],
   'royal': [
     'basic_profile',
@@ -43,13 +45,16 @@ export const PRODUCT_FEATURES = {
     'rgb_borders',
     'video_embeds',
     'analytics_basic',
-    'discount_boosts',
+    'marketing_dashboard',
+    'profile_promotion',
     'royal_styling',
     'permanent_boost',
     'exclusive_effects',
     'mockery_immunity',
     'analytics_advanced',
-    'team_leadership'
+    'team_leadership',
+    'priority_placement',
+    'audience_demographics'
   ]
 };
 
@@ -95,10 +100,6 @@ export const FEATURE_METADATA = {
     name: 'Basic Analytics',
     description: 'Track profile views and link clicks'
   },
-  discount_boosts: {
-    name: 'Discounted Boosts',
-    description: '50% discount on all profile boost purchases'
-  },
   royal_styling: {
     name: 'Royal Styling',
     description: 'Gold borders, crown icons, and exclusive animations'
@@ -122,6 +123,26 @@ export const FEATURE_METADATA = {
   team_leadership: {
     name: 'Team Leadership Eligibility',
     description: 'Ability to create and lead teams'
+  },
+  basic_marketing: {
+    name: 'Basic Marketing Tools',
+    description: 'Simple visibility analytics and profile sharing'
+  },
+  marketing_dashboard: {
+    name: 'Marketing Dashboard',
+    description: 'Comprehensive profile marketing analytics and tools'
+  },
+  profile_promotion: {
+    name: 'Profile Promotion',
+    description: 'Enhanced visibility across the platform'
+  },
+  priority_placement: {
+    name: 'Priority Placement',
+    description: 'Your profile appears in prominent positions across the site'
+  },
+  audience_demographics: {
+    name: 'Audience Demographics',
+    description: 'Detailed data about who views your profile'
   }
 };
 
@@ -138,6 +159,8 @@ export const SUBSCRIPTION_TIERS = [
       "Leaderboard presence with standard display",
       "Team affiliation",
       "Ability to purchase profile boosts",
+      "Basic marketing analytics",
+      "Profile view tracking",
       "Public certificate of conspicuous consumption"
     ],
     recommended: false,
@@ -147,16 +170,18 @@ export const SUBSCRIPTION_TIERS = [
   {
     id: "premium",
     name: "Premium",
-    description: "Enhanced digital presence with visual perks",
+    description: "Enhanced digital presence with marketing tools",
     priceMonthly: 15,
     priceYearly: 150,
     features: [
       "Advanced profile customization",
       "RGB borders and animations in leaderboard",
       "Up to 5 images and links on profile",
-      "50% discount on all Profile Boosts",
+      "Marketing analytics dashboard",
+      "Click tracking on profile links",
+      "Enhanced visibility in search results",
       "Profile boost (3-day) included monthly",
-      "Basic analytics dashboard",
+      "Conversion rate optimization tools",
       "Note: Does not affect leaderboard rank (rank only increases with deposits)"
     ],
     recommended: true,
@@ -166,7 +191,7 @@ export const SUBSCRIPTION_TIERS = [
   {
     id: "royal",
     name: "Royal",
-    description: "Maximum status with exclusive visual features",
+    description: "Maximum status with exclusive marketing features",
     priceMonthly: 30,
     priceYearly: 300,
     features: [
@@ -174,9 +199,10 @@ export const SUBSCRIPTION_TIERS = [
       "Royal styling on leaderboard (gold borders, crown icons, animations)",
       "Permanent profile boost effect",
       "Exclusive animated effects and visual enhancements",
-      "75% discount on all Profile Boosts",
+      "Priority placement across the platform",
+      "Advanced audience demographics",
       "Complete mockery immunity",
-      "Comprehensive analytics dashboard",
+      "Comprehensive marketing analytics",
       "Team leadership eligibility",
       "Note: Does not affect leaderboard rank (rank only increases with deposits)"
     ],

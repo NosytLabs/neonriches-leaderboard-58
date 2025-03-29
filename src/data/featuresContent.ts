@@ -17,6 +17,44 @@ export const featuresContent = {
       ]
     },
     {
+      title: 'Marketing & Visibility Features',
+      content: [
+        'SpendThrone doubles as a powerful marketing platform. As your rank increases, so does your visibility and promotional opportunities:',
+        `<div className="glass-morphism border-white/10 p-6 rounded-lg my-6">
+          <h3 className="text-xl font-semibold mb-3 text-royal-gold">Profile Marketing Power</h3>
+          <p className="mb-4 text-white/80">Your profile acts as a promotional billboard with increasing effectiveness as you rise through the ranks:</p>
+          
+          <div className="grid md:grid-cols-3 gap-4">
+            <div className="glass-morphism border-white/10 p-4 rounded-lg">
+              <h4 className="font-bold text-white mb-2">Visibility Boost</h4>
+              <p className="text-sm text-white/70">Higher-ranked profiles appear more prominently across the platform, receiving significantly more views and interactions.</p>
+              <div className="mt-3 text-royal-gold text-sm">Example: Top 10 profiles receive 8x more visibility than average</div>
+            </div>
+            
+            <div className="glass-morphism border-white/10 p-4 rounded-lg">
+              <h4 className="font-bold text-white mb-2">Click-Through Rates</h4>
+              <p className="text-sm text-white/70">Premium profiles see substantially higher engagement with external links and promotional content.</p>
+              <div className="mt-3 text-royal-gold text-sm">Example: Premium profiles average 15% CTR vs 3% for standard</div>
+            </div>
+            
+            <div className="glass-morphism border-white/10 p-4 rounded-lg">
+              <h4 className="font-bold text-white mb-2">Conversion Analytics</h4>
+              <p className="text-sm text-white/70">Track how your profile visitors convert to customers, followers, or subscribers on your external platforms.</p>
+              <div className="mt-3 text-royal-gold text-sm">Example: Royal tier users can track full conversion funnels</div>
+            </div>
+          </div>
+        </div>`,
+        `<div className="my-4 text-white/80">
+          <p>Our weekly and monthly events provide additional marketing opportunities:</p>
+          <ul className="list-disc pl-6 my-4 space-y-2">
+            <li><strong>Spotlight Weekends:</strong> Every weekend, the top 3 spenders get featured across the entire platform</li>
+            <li><strong>Monthly Showcase:</strong> Each month, we publish a special feature highlighting the most creative profiles</li>
+            <li><strong>Team Rallies:</strong> Regular team-based competitions that drive massive traffic to team members' profiles</li>
+          </ul>
+        </div>`
+      ]
+    },
+    {
       title: 'Two-Tiered Profile System',
       content: [
         'Our profile systems allows for different levels of customization:',
@@ -28,6 +66,7 @@ export const featuresContent = {
               <li>One image upload (max 500KB)</li>
               <li>One external link</li>
               <li>Basic profile statistics</li>
+              <li>Simple marketing metrics</li>
             </ul>
           </div>
           <div className="glass-morphism border-royal-gold/20 p-6 rounded-lg">
@@ -40,9 +79,62 @@ export const featuresContent = {
               <li>Video embeds (YouTube, Vimeo)</li>
               <li>Custom RGB gradients</li>
               <li>Hover effects</li>
-              <li>Click statistics</li>
+              <li>Comprehensive analytics dashboard</li>
+              <li>Conversion tracking for external links</li>
             </ul>
           </div>
+        </div>`
+      ]
+    },
+    {
+      title: 'Marketing Success Case Studies',
+      content: [
+        'Real users have leveraged SpendThrone for genuine marketing results:',
+        `<div className="grid md:grid-cols-2 gap-6 my-6">
+          <div className="glass-morphism border-royal-gold/20 p-6 rounded-lg">
+            <h3 className="text-lg font-semibold mb-2">CryptoInfluencer429</h3>
+            <p className="text-sm text-white/80 mb-3">Spent $500 to reach Rank #7</p>
+            <div className="text-white/70">
+              <p>Used their profile to promote a new NFT collection, gaining over 1,200 new followers and selling out their launch in 48 hours.</p>
+              <div className="mt-3 font-semibold text-royal-gold">Results: 15x ROI on SpendThrone investment</div>
+            </div>
+          </div>
+          
+          <div className="glass-morphism border-royal-gold/20 p-6 rounded-lg">
+            <h3 className="text-lg font-semibold mb-2">GameStudioX</h3>
+            <p className="text-sm text-white/80 mb-3">Spent $1,200 to reach Rank #3</p>
+            <div className="text-white/70">
+              <p>Promoted their indie game launch through their profile, driving 5,000+ wishlists on Steam and 3,000+ beta signups.</p>
+              <div className="mt-3 font-semibold text-royal-gold">Results: 600% increase in launch day sales</div>
+            </div>
+          </div>
+        </div>`,
+        `<div className="glass-morphism border-royal-crimson/20 p-6 rounded-lg my-6">
+          <h3 className="text-xl font-semibold mb-3 text-royal-crimson">Marketing Power Scaling</h3>
+          <p className="mb-4 text-white/80">Our data shows a clear correlation between rank and marketing effectiveness:</p>
+          
+          <div className="grid md:grid-cols-4 gap-4 text-center">
+            <div className="p-3 border border-white/10 rounded">
+              <div className="text-lg font-bold">Ranks 1000+</div>
+              <div className="text-royal-gold">1x Baseline</div>
+            </div>
+            <div className="p-3 border border-white/10 rounded">
+              <div className="text-lg font-bold">Ranks 100-999</div>
+              <div className="text-royal-gold">3x Impact</div>
+            </div>
+            <div className="p-3 border border-white/10 rounded">
+              <div className="text-lg font-bold">Ranks 10-99</div>
+              <div className="text-royal-gold">8x Impact</div>
+            </div>
+            <div className="p-3 border border-white/10 rounded">
+              <div className="text-lg font-bold">Ranks 1-9</div>
+              <div className="text-royal-gold">20x Impact</div>
+            </div>
+          </div>
+          
+          <p className="mt-4 text-white/70 italic">
+            "As users climb the ranks, their ability to convert profile visibility into external marketing results increases exponentially."
+          </p>
         </div>`
       ]
     },

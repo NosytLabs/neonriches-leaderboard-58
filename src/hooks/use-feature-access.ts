@@ -27,6 +27,7 @@ export function useFeatureAccess(): FeatureAccessHook {
     'leaderboard_presence': 'standard',
     'team_affiliation': 'standard',
     'profile_boost_eligible': 'standard',
+    'basic_marketing': 'standard',
     
     // Premium tier features
     'premium_profile': 'premium',
@@ -35,7 +36,8 @@ export function useFeatureAccess(): FeatureAccessHook {
     'rgb_borders': 'premium',
     'video_embeds': 'premium',
     'analytics_basic': 'premium',
-    'discount_boosts': 'premium',
+    'marketing_dashboard': 'premium',
+    'profile_promotion': 'premium',
     
     // Royal tier features
     'royal_styling': 'royal',
@@ -43,7 +45,9 @@ export function useFeatureAccess(): FeatureAccessHook {
     'exclusive_effects': 'royal',
     'mockery_immunity': 'royal',
     'analytics_advanced': 'royal',
-    'team_leadership': 'royal'
+    'team_leadership': 'royal',
+    'priority_placement': 'royal',
+    'audience_demographics': 'royal'
   };
 
   useEffect(() => {
