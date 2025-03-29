@@ -1,9 +1,6 @@
 
 import React, { useRef, useEffect } from 'react';
 import * as THREE from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
-import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
 
 interface RoyalTrophyModelProps {
   rank?: number;
@@ -24,12 +21,25 @@ const RoyalTrophyModel: React.FC<RoyalTrophyModelProps> = ({
   const sceneRef = useRef<THREE.Scene | null>(null);
   const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
   const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
-  const controlsRef = useRef<OrbitControls | null>(null);
+  const controlsRef = useRef<any | null>(null);
   const trophyRef = useRef<THREE.Group | null>(null);
   const frameIdRef = useRef<number | null>(null);
 
   useEffect(() => {
     if (!mountRef.current) return;
+
+    // Import needed Three.js addons dynamically to avoid TypeScript errors
+    const importOrbitControls = import('three/examples/jsm/controls/OrbitControls').then(
+      module => module.OrbitControls
+    );
+    
+    const importTextGeometry = import('three/examples/jsm/geometries/TextGeometry').then(
+      module => module.TextGeometry
+    );
+    
+    const importFontLoader = import('three/examples/jsm/loaders/FontLoader').then(
+      module => module.FontLoader
+    );
 
     // Scene setup
     const scene = new THREE.Scene();
@@ -52,8 +62,8 @@ const RoyalTrophyModel: React.FC<RoyalTrophyModelProps> = ({
     renderer.setSize(mountRef.current.clientWidth, mountRef.current.clientHeight);
     renderer.setPixelRatio(window.devicePixelRatio);
     
-    // Use SRGBColorSpace instead of outdated outputEncoding
-    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    // For Three.js v0.149.0 or earlier, use outputEncoding instead of outputColorSpace
+    renderer.outputEncoding = THREE.sRGBEncoding;
     
     mountRef.current.appendChild(renderer.domElement);
 
@@ -126,58 +136,63 @@ const RoyalTrophyModel: React.FC<RoyalTrophyModelProps> = ({
     handle2.rotation.y = Math.PI * -0.5;
     trophyGroup.add(handle2);
 
-    // Add rank and username text
-    const fontLoader = new FontLoader();
-    fontLoader.load('/fonts/helvetiker_regular.typeface.json', (font) => {
-      // Rank text
-      const rankTextGeometry = new TextGeometry(`#${rank}`, {
-        font: font,
-        size: 0.3,
-        height: 0.05,
-      });
-      
-      // Center the geometry
-      rankTextGeometry.computeBoundingBox();
-      const textWidth = rankTextGeometry.boundingBox?.max.x - rankTextGeometry.boundingBox?.min.x;
-      
-      const rankTextMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff });
-      const rankText = new THREE.Mesh(rankTextGeometry, rankTextMaterial);
-      if (textWidth) {
-        rankText.position.set(-textWidth / 2, -1.5, 0.5);
-      } else {
-        rankText.position.set(-0.3, -1.5, 0.5);
-      }
-      trophyGroup.add(rankText);
+    // Add text for rank and username
+    Promise.all([importFontLoader, importTextGeometry]).then(([FontLoader, TextGeometry]) => {
+      // Now we use the dynamically imported modules
+      const fontLoader = new FontLoader();
+      fontLoader.load('/fonts/helvetiker_regular.typeface.json', (font) => {
+        // Rank text
+        const rankTextGeometry = new TextGeometry(`#${rank}`, {
+          font: font,
+          size: 0.3,
+          height: 0.05,
+        });
+        
+        // Center the geometry
+        rankTextGeometry.computeBoundingBox();
+        const textWidth = rankTextGeometry.boundingBox?.max.x - rankTextGeometry.boundingBox?.min.x;
+        
+        const rankTextMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff });
+        const rankText = new THREE.Mesh(rankTextGeometry, rankTextMaterial);
+        if (textWidth) {
+          rankText.position.set(-textWidth / 2, -1.5, 0.5);
+        } else {
+          rankText.position.set(-0.3, -1.5, 0.5);
+        }
+        trophyGroup.add(rankText);
 
-      // Username text
-      const nameTextGeometry = new TextGeometry(username.length > 12 ? username.substring(0, 10) + "..." : username, {
-        font: font,
-        size: 0.15,
-        height: 0.03,
+        // Username text
+        const nameTextGeometry = new TextGeometry(username.length > 12 ? username.substring(0, 10) + "..." : username, {
+          font: font,
+          size: 0.15,
+          height: 0.03,
+        });
+        
+        // Center the username
+        nameTextGeometry.computeBoundingBox();
+        const nameWidth = nameTextGeometry.boundingBox?.max.x - nameTextGeometry.boundingBox?.min.x;
+        
+        const nameTextMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff });
+        const nameText = new THREE.Mesh(nameTextGeometry, nameTextMaterial);
+        if (nameWidth) {
+          nameText.position.set(-nameWidth / 2, -1.8, 0.5);
+        } else {
+          nameText.position.set(-0.5, -1.8, 0.5);
+        }
+        trophyGroup.add(nameText);
       });
-      
-      // Center the username
-      nameTextGeometry.computeBoundingBox();
-      const nameWidth = nameTextGeometry.boundingBox?.max.x - nameTextGeometry.boundingBox?.min.x;
-      
-      const nameTextMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff });
-      const nameText = new THREE.Mesh(nameTextGeometry, nameTextMaterial);
-      if (nameWidth) {
-        nameText.position.set(-nameWidth / 2, -1.8, 0.5);
-      } else {
-        nameText.position.set(-0.5, -1.8, 0.5);
-      }
-      trophyGroup.add(nameText);
     });
 
     // Add controls if interactive
     if (interactive) {
-      const controls = new OrbitControls(camera, renderer.domElement);
-      controlsRef.current = controls;
-      controls.enableDamping = true;
-      controls.dampingFactor = 0.05;
-      controls.enableZoom = true;
-      controls.autoRotate = false;
+      importOrbitControls.then(OrbitControls => {
+        const controls = new OrbitControls(camera, renderer.domElement);
+        controlsRef.current = controls;
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+        controls.enableZoom = true;
+        controls.autoRotate = false;
+      });
     }
 
     // Add sparkles/particles

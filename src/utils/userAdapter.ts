@@ -1,4 +1,3 @@
-
 import { UserProfile, UserTier } from '@/types/user';
 
 /**
