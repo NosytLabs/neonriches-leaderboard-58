@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/auth';
@@ -22,7 +21,7 @@ interface UserMenuProps {
 }
 
 const UserMenu: React.FC<UserMenuProps> = ({ user }) => {
-  const { signOut } = useAuth();
+  const { logout } = useAuth();
   
   if (!user) return null;
   
@@ -33,6 +32,10 @@ const UserMenu: React.FC<UserMenuProps> = ({ user }) => {
       .join('')
       .toUpperCase()
       .substring(0, 2);
+  };
+  
+  const handleLogout = async () => {
+    await logout();
   };
   
   return (
@@ -113,7 +116,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ user }) => {
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={signOut} className="cursor-pointer">
+        <DropdownMenuItem onClick={handleLogout} className="cursor-pointer">
           <Icon name="LogOut" size="xs" className="mr-2" />
           <span>Log out</span>
         </DropdownMenuItem>

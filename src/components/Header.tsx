@@ -44,7 +44,7 @@ const Header: React.FC<HeaderProps> = ({ transparent = false, className }) => {
               
               <div className="hidden md:flex">
                 <MoneyDisplay
-                  amount={user?.totalSpent || 0}
+                  amount={user?.amountSpent || 0}
                   size="sm"
                   animated
                   variant="gradient"

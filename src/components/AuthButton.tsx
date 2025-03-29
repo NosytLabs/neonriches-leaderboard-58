@@ -10,14 +10,14 @@ interface AuthButtonProps {
 }
 
 const AuthButton: React.FC<AuthButtonProps> = ({ className }) => {
-  const { isAuthenticated, signIn, signOut } = useAuth();
+  const { isAuthenticated, logout } = useAuth();
   
   if (isAuthenticated) {
     return (
       <Button
         variant="outline"
         size="sm"
-        onClick={() => signOut()}
+        onClick={() => logout()}
         className={className}
       >
         <Icon name="LogOut" size="xs" className="mr-2" />

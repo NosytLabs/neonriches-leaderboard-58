@@ -27,8 +27,10 @@ export type UserTier =
   | 'basic'
   | 'premium'
   | 'pro'
+  | 'elite'
   | 'free';
 
+export type UserTeam = 'red' | 'green' | 'blue' | 'none' | null;
 export type TeamType = 'red' | 'green' | 'blue' | 'none' | null;
 
 export interface UserSubscription {
@@ -83,6 +85,12 @@ export interface ProfileLink {
   clicks: number;
 }
 
+export interface ProfileImage {
+  id: string;
+  url: string;
+  isPrimary: boolean;
+}
+
 export interface User {
   id: string;
   username: string;
@@ -99,9 +107,10 @@ export interface User {
   totalSpent: number;
   spentAmount?: number;
   amountSpent?: number;
-  joinDate: string;
+  joinDate?: string;
   createdAt?: string;
   joinedAt?: string;
+  joined: Date;
   isVerified?: boolean;
   isAuthenticated?: boolean;
   gender?: UserGender;
@@ -117,18 +126,21 @@ export interface User {
   cosmetics?: UserCosmetics;
   subscription?: UserSubscription;
   socialLinks?: SocialLink[];
+  profileImages?: ProfileImage[];
   walletAddress?: string;
   lastActive?: string;
   avatarUrl?: string;
+  activeTitle?: string;
+  certificateNFT?: {
+    mintAddress: string;
+    tokenId: string;
+    imageUrl: string;
+  };
 }
 
-export interface UserProfile extends Omit<User, 'createdAt'> {
+export interface UserProfile extends User {
   joinedAt: string;
   totalSpent: number;
-  avatarUrl?: string; // Added avatarUrl property
-  lastActive?: string; // Added lastActive property
-  isAuthenticated?: boolean;
-  role?: UserRole;
 }
 
 export interface LeaderboardUser {
@@ -139,8 +151,11 @@ export interface LeaderboardUser {
   tier: UserTier;
   team?: TeamType;
   rank: number;
+  previousRank?: number;
   amountSpent: number;
-  avatarUrl?: string; // Added avatarUrl property
+  avatarUrl?: string;
+  isVerified?: boolean;
+  isProtected?: boolean;
 }
 
 export interface Feature {
