@@ -1,6 +1,6 @@
 
 import { ShameAction } from '@/types/mockery';
-import React, { ReactNode } from 'react';
+import React from 'react';
 import { Egg, Flame, Crown, Gavel, Shield } from 'lucide-react';
 
 // Get shame action price
@@ -22,7 +22,7 @@ export const getShameActionPrice = (action: ShameAction): number => {
 };
 
 // Get shame action icon as component
-export const getShameActionIcon = (action: ShameAction): ReactNode => {
+export const getShameActionIcon = (action: ShameAction) => {
   switch(action) {
     case 'tomatoes':
       return React.createElement(Flame, { className: "text-red-500" });
