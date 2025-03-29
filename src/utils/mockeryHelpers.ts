@@ -24,7 +24,7 @@ export const getMockeryDescription = (type: MockeryTier | string): string => {
     case 'shame': 
       return 'Publicly shame your target with a banner on their profile for 3 days.';
     case 'humiliate': 
-      return 'Add a humiliating 7-day badge to your target's profile and reduce their visibility.';
+      return 'Add a humiliating 7-day badge to your target\'s profile and reduce their visibility.';
     case 'curse': 
       return "Curse your target for 14 days, cutting their rank gains in half.";
     case 'banish': 
