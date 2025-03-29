@@ -1,134 +1,185 @@
 
 import React from 'react';
-import { Code, AlertCircle, FileX, Trash2 } from 'lucide-react';
-import AnalysisTable from './shared/AnalysisTable';
+import { Check, FileX, ImportIcon, Variable } from 'lucide-react';
+import { mockedAnalysisResults } from '@/utils/codeAnalysis/mockData';
 import EmptyState from './shared/EmptyState';
-import { 
-  unusedImportsMock, 
-  unusedVariablesMock, 
-  unusedFunctionsMock, 
-  unusedComponentsMock 
-} from '@/utils/codeAnalysis/mockData';
-
-interface UnusedComponent {
-  file: string;
-  line: number;
-}
 
 const UnusedCodeReport: React.FC = () => {
-  // Use centralized mock data
-  const unusedImports = unusedImportsMock;
-  const unusedVariables = unusedVariablesMock;
-  const unusedFunctions = unusedFunctionsMock;
-  // Cast the mockdata to the correct type
-  const unusedComponents = unusedComponentsMock as UnusedComponent[];
+  const {
+    unusedFiles = [],
+    unusedImports = [],
+    unusedVariables = [],
+    unusedSelectors = [],
+    unusedDependencies = []
+  } = mockedAnalysisResults;
+
+  const hasUnusedCode = 
+    unusedFiles.length > 0 || 
+    unusedImports.length > 0 || 
+    unusedVariables.length > 0 || 
+    unusedSelectors.length > 0 || 
+    unusedDependencies.length > 0;
+
+  if (!hasUnusedCode) {
+    return (
+      <EmptyState
+        icon={Check}
+        message="No unused code detected"
+        description="Great job! Your codebase doesn't contain any unused files, imports, variables or CSS selectors."
+      />
+    );
+  }
 
   return (
-    <div>
-      <h3 className="text-xl font-semibold mb-4 flex items-center">
-        <Code className="h-5 w-5 mr-2 text-emerald-500" />
-        Unused Code Detection
-      </h3>
-      <p className="text-white/70 mb-6">
-        The following unused code was detected in your codebase. Removing these elements can improve code maintainability and reduce bundle size.
-      </p>
-      
-      <div className="space-y-6">
+    <div className="space-y-8">
+      {unusedFiles.length > 0 && (
         <div>
-          <h4 className="text-lg font-medium mb-3 flex items-center">
-            <Trash2 className="h-4 w-4 mr-2 text-red-400" />
-            Unused Imports <span className="ml-2 text-xs py-0.5 px-2 bg-red-500/20 text-red-400 rounded-full">{unusedImports.length}</span>
-          </h4>
-          
-          {unusedImports.length > 0 ? (
-            <AnalysisTable headers={['File', 'Import', 'Line']}>
-              {unusedImports.map((item, index) => (
-                <tr key={index}>
-                  <td><span className="file-path">{item.file}</span></td>
-                  <td><code>{item.name}</code></td>
-                  <td>{item.line}</td>
-                </tr>
-              ))}
-            </AnalysisTable>
-          ) : (
-            <EmptyState 
-              icon={AlertCircle} 
-              message="No unused imports detected." 
-            />
-          )}
+          <h3 className="text-xl font-semibold mb-4 flex items-center">
+            <FileX className="h-5 w-5 mr-2 text-red-500" />
+            Unused Files
+          </h3>
+          <div className="space-y-3">
+            {unusedFiles.map((file, index) => (
+              <div 
+                key={index} 
+                className="p-3 glass-morphism border-white/10 rounded-lg"
+              >
+                <div className="flex items-start justify-between">
+                  <div>
+                    <p className="font-medium">{file.split('/').pop()}</p>
+                    <p className="text-sm text-white/60">{file}</p>
+                  </div>
+                  <span className="text-xs bg-red-500/20 text-red-400 px-2 py-0.5 rounded-full">
+                    Unused
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
-        
+      )}
+
+      {unusedImports.length > 0 && (
         <div>
-          <h4 className="text-lg font-medium mb-3 flex items-center">
-            <Trash2 className="h-4 w-4 mr-2 text-amber-400" />
-            Unused Variables <span className="ml-2 text-xs py-0.5 px-2 bg-amber-500/20 text-amber-400 rounded-full">{unusedVariables.length}</span>
-          </h4>
-          
-          {unusedVariables.length > 0 ? (
-            <AnalysisTable headers={['File', 'Variable', 'Line']}>
-              {unusedVariables.map((item, index) => (
-                <tr key={index}>
-                  <td><span className="file-path">{item.file}</span></td>
-                  <td><code>{item.name}</code></td>
-                  <td>{item.line}</td>
-                </tr>
-              ))}
-            </AnalysisTable>
-          ) : (
-            <EmptyState 
-              icon={AlertCircle} 
-              message="No unused variables detected." 
-            />
-          )}
+          <h3 className="text-xl font-semibold mb-4 flex items-center">
+            <ImportIcon className="h-5 w-5 mr-2 text-amber-500" />
+            Unused Imports
+          </h3>
+          <div className="space-y-3">
+            {unusedImports.map((imp, index) => (
+              <div 
+                key={index} 
+                className="p-3 glass-morphism border-white/10 rounded-lg"
+              >
+                <div className="flex items-start justify-between">
+                  <div>
+                    <p className="font-medium">{imp.name}</p>
+                    <p className="text-sm text-white/60">
+                      from <span className="text-amber-400">{imp.path}</span> in <span className="file-path">{imp.file}</span>
+                    </p>
+                    {imp.line && <p className="text-xs text-white/40">Line: {imp.line}</p>}
+                  </div>
+                  <span className="text-xs bg-amber-500/20 text-amber-400 px-2 py-0.5 rounded-full">
+                    Unused Import
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
-        
+      )}
+
+      {unusedVariables.length > 0 && (
         <div>
-          <h4 className="text-lg font-medium mb-3 flex items-center">
-            <Trash2 className="h-4 w-4 mr-2 text-blue-400" />
-            Unused Functions <span className="ml-2 text-xs py-0.5 px-2 bg-blue-500/20 text-blue-400 rounded-full">{unusedFunctions.length}</span>
-          </h4>
-          
-          {unusedFunctions.length > 0 ? (
-            <AnalysisTable headers={['File', 'Function', 'Line']}>
-              {unusedFunctions.map((item, index) => (
-                <tr key={index}>
-                  <td><span className="file-path">{item.file}</span></td>
-                  <td><code>{item.name}()</code></td>
-                  <td>{item.line}</td>
-                </tr>
-              ))}
-            </AnalysisTable>
-          ) : (
-            <EmptyState 
-              icon={AlertCircle} 
-              message="No unused functions detected." 
-            />
-          )}
+          <h3 className="text-xl font-semibold mb-4 flex items-center">
+            <Variable className="h-5 w-5 mr-2 text-blue-500" />
+            Unused Variables
+          </h3>
+          <div className="space-y-3">
+            {unusedVariables.map((variable, index) => (
+              <div 
+                key={index} 
+                className="p-3 glass-morphism border-white/10 rounded-lg"
+              >
+                <div className="flex items-start justify-between">
+                  <div>
+                    <p className="font-medium">
+                      {variable.name}
+                      {variable.type && <span className="text-sm text-white/60 ml-1">: {variable.type}</span>}
+                    </p>
+                    <p className="text-sm text-white/60">
+                      in <span className="file-path">{variable.file}</span>
+                    </p>
+                    {variable.line && <p className="text-xs text-white/40">Line: {variable.line}</p>}
+                  </div>
+                  <span className="text-xs bg-blue-500/20 text-blue-400 px-2 py-0.5 rounded-full">
+                    Unused Variable
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
-        
+      )}
+
+      {unusedSelectors.length > 0 && (
         <div>
-          <h4 className="text-lg font-medium mb-3 flex items-center">
-            <FileX className="h-4 w-4 mr-2 text-purple-400" />
-            Unused Components <span className="ml-2 text-xs py-0.5 px-2 bg-purple-500/20 text-purple-400 rounded-full">{unusedComponents.length}</span>
-          </h4>
-          
-          {unusedComponents.length > 0 ? (
-            <AnalysisTable headers={['File', 'Line']}>
-              {unusedComponents.map((item, index) => (
-                <tr key={index}>
-                  <td><span className="file-path">{item.file}</span></td>
-                  <td>{item.line}</td>
-                </tr>
-              ))}
-            </AnalysisTable>
-          ) : (
-            <EmptyState 
-              icon={AlertCircle} 
-              message="No unused components detected." 
-            />
-          )}
+          <h3 className="text-xl font-semibold mb-4 flex items-center">
+            <FileX className="h-5 w-5 mr-2 text-purple-500" />
+            Unused CSS Selectors
+          </h3>
+          <div className="space-y-3">
+            {unusedSelectors.map((selector, index) => (
+              <div 
+                key={index} 
+                className="p-3 glass-morphism border-white/10 rounded-lg"
+              >
+                <div className="flex items-start justify-between">
+                  <div>
+                    <p className="font-medium font-mono">{selector.selector}</p>
+                    <p className="text-sm text-white/60">
+                      in <span className="file-path">{selector.file}</span>
+                    </p>
+                    {selector.line && <p className="text-xs text-white/40">Line: {selector.line}</p>}
+                  </div>
+                  <span className="text-xs bg-purple-500/20 text-purple-400 px-2 py-0.5 rounded-full">
+                    Unused CSS
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
+
+      {unusedDependencies.length > 0 && (
+        <div>
+          <h3 className="text-xl font-semibold mb-4 flex items-center">
+            <FileX className="h-5 w-5 mr-2 text-emerald-500" />
+            Unused Dependencies
+          </h3>
+          <div className="space-y-3">
+            {unusedDependencies.map((dependency, index) => (
+              <div 
+                key={index} 
+                className="p-3 glass-morphism border-white/10 rounded-lg"
+              >
+                <div className="flex items-start justify-between">
+                  <div>
+                    <p className="font-medium">{dependency}</p>
+                    <p className="text-sm text-white/60">
+                      Listed in package.json but not imported anywhere
+                    </p>
+                  </div>
+                  <span className="text-xs bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded-full">
+                    Unused Dependency
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
