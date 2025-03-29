@@ -3,7 +3,7 @@ import React from 'react';
 import { Container } from '@/components/ui/container';
 import PageSEO from '@/components/common/PageSEO';
 import RoyalDivider from '@/components/ui/royal-divider';
-import { BookOpen, Clock, Gem, Crown, Coins, History, Link as LinkIcon } from 'lucide-react';
+import { BookOpen, Clock, Gem, Crown, Coins, History, Link as LinkIcon, Scroll } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import OptimizedImage from '@/components/ui/optimized-image';
 import ParchmentTexture from '@/components/ui/parchment-texture';
@@ -110,7 +110,7 @@ const historicalData: HistoricalPeriod[] = [
   },
   {
     era: "Modern Era",
-    description: "The 20th century saw status purchases evolve with new wealth and media attention.",
+    description: "The 21st century has transformed status purchasing through digital assets, social media verification, and virtual status symbols.",
     events: [
       {
         year: "2021-2022",
@@ -130,6 +130,36 @@ const historicalData: HistoricalPeriod[] = [
         icon: <Coins className="text-royal-gold" />,
         source: "The Verge Coverage",
         sourceUrl: "https://www.theverge.com/2022/11/9/23450289/twitter-impersonators-official-badge-musk-verification-blue-check"
+      },
+      {
+        year: "2020-2023",
+        title: "Crypto Wealth Signaling",
+        description: "Cryptocurrency enthusiasts adopted distinctive status signals: Lamborghinis as the vehicle of choice, 'laser eyes' profile pictures, and public wallet addresses. Spending $500,000+ on a car became the quintessential way to announce crypto success.",
+        location: "Global",
+        icon: <Coins className="text-royal-gold" />,
+        imageUrl: "https://i.imgur.com/rBxNTYs.jpg",
+        source: "Bloomberg Financial Analysis",
+        sourceUrl: "https://www.bloomberg.com/news/features/2022-02-19/crypto-bros-rich-off-bitcoin-ethereum-buying-lamborghinis-bugattis-and-mansions"
+      },
+      {
+        year: "2009-Present",
+        title: "Social Media Verification",
+        description: "The blue checkmark became the digital equivalent of VIP status. Initially meant to verify identity, it quickly transformed into a status symbol that influenced perceived credibility, earning potential, and social capital across platforms.",
+        location: "Global",
+        icon: <Gem className="text-royal-crimson" />,
+        imageUrl: "https://i.imgur.com/EwVz2tD.jpg",
+        source: "Journal of Digital Media Studies",
+        sourceUrl: "https://www.tandfonline.com/doi/full/10.1080/1369118X.2021.1874040"
+      },
+      {
+        year: "2023-2025",
+        title: "Trump's Gold Card",
+        description: "Former President Trump launched digital 'Trump Cards' with gold-level tiers ranging from $59 to $499, offering no practical benefits beyond association with Trump's brand. The status-driven marketing campaign generated millions selling purely symbolic digital membership cards.",
+        location: "USA",
+        icon: <Crown className="text-royal-gold" />,
+        imageUrl: "https://i.imgur.com/YU8nKPe.jpg",
+        source: "Digital Marketing Today",
+        sourceUrl: "https://www.businessinsider.com/trump-launches-digital-trading-card-nfts-major-announcement-2022-12"
       }
     ]
   }
@@ -163,6 +193,24 @@ const famousCases = [
     imageUrl: "https://i.imgur.com/aGCLfQZ.jpg",
     source: "Bad Blood by John Carreyrou",
     sourceUrl: "https://www.penguinrandomhouse.com/books/549478/bad-blood-by-john-carreyrou/"
+  },
+  {
+    name: "Elon Musk",
+    title: "Tech Billionaire Status Spectacle",
+    description: "Beyond building companies, Musk turned status purchasing into performance art: launching a Tesla Roadster into space, buying Twitter for $44 billion, and cultivating a 'meme lord' persona. His $44M Gulfstream jet and public stunts exemplify modern wealth signaling.",
+    year: "2018-Present",
+    imageUrl: "https://i.imgur.com/XnJEMdG.jpg",
+    source: "Elon Musk: Tesla, SpaceX, and the Quest for a Fantastic Future",
+    sourceUrl: "https://www.harpercollins.com/products/elon-musk-ashlee-vance"
+  },
+  {
+    name: "Paris Hilton",
+    title: "NFT & Digital Asset Pioneer",
+    description: "The heiress reinvented herself as a Web3 entrepreneur, selling NFTs for millions and purchasing digital real estate in platforms like The Sandbox. Her transition from reality TV to digital asset collector exemplifies how traditional celebrities now purchase status in virtual spaces.",
+    year: "2020-Present",
+    imageUrl: "https://i.imgur.com/YiQvNjD.jpg",
+    source: "Web3 Is Going Just Great",
+    sourceUrl: "https://web3isgoinggreat.com/"
   }
 ];
 
@@ -389,6 +437,12 @@ const StatusThroughHistory: React.FC = () => {
                 What makes SpendThrone unique is its transparency. Throughout history, the exchange of money for status was 
                 often obscured by tradition, bureaucracy, or social niceties. Here, we strip away the pretense and acknowledge 
                 the transaction for what it is.
+              </p>
+              
+              <p className="text-gray-700 mb-4">
+                The digital age has only accelerated this process. From social media verification to NFTs and digital membership cards,
+                status symbols have become increasingly virtual—yet no less powerful. In many ways, digital status is more ephemeral
+                yet more visible than its physical predecessors, broadcasting one's position to a global audience with algorithmic efficiency.
               </p>
               
               <p className="text-gray-700 font-medieval text-lg text-center italic mt-8">
