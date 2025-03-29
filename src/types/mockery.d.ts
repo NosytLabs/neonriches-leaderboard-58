@@ -1,6 +1,4 @@
 
-import { ElementType } from 'react';
-
 export type MockeryAction = 
   | 'tomatoes' 
   | 'eggs' 
@@ -19,12 +17,19 @@ export type MockeryAction =
   | 'roast'
   | 'ridicule'
   | 'taunt'
+  | 'shame'
+  | 'drama'
+  | 'custom'
   | 'protection'
   | 'removal';
 
-export type ShameAction = MockeryAction;
-
-export type ExtendedMockeryAction = MockeryAction;
+export type ShameAction = 
+  | 'stocks' 
+  | 'dunce' 
+  | 'roast' 
+  | 'ridicule'
+  | 'taunt'
+  | 'shame';
 
 export type MockeryTier = 
   | 'common' 
@@ -32,70 +37,52 @@ export type MockeryTier =
   | 'rare' 
   | 'epic' 
   | 'legendary'
-  | 'basic'
   | 'premium'
+  | 'basic'
   | 'elite';
 
-export interface MockeryEvent {
+export interface MockeryEffect {
   id: string;
-  targetUser: string;
+  name: string;
+  description: string;
   action: MockeryAction;
-  mockingUser: string;
-  timestamp: string;
-  expiresAt: string;
-  price: number;
   tier: MockeryTier;
-  isActive: boolean;
-  description?: string;
+  cost: number;
+  duration: number;
+  cssClass: string;
+  animation?: string;
 }
 
 export interface ShameEffect {
+  id: string;
+  name: string;
+  description: string;
   action: ShameAction;
   timestamp: number;
   until: number;
-}
-
-export interface MockeryEffectData {
-  username: string;
-  action: MockeryAction;
   tier?: MockeryTier;
-  title?: string;
-  description?: string;
-  price?: number;
-  icon?: string;
-}
-
-export interface UserMockeryStatus {
-  isProtected: boolean;
-  isMocked: boolean;
-  mockedUntil?: string;
-  protectedUntil?: string;
-  activeMockeries?: MockeryEvent[];
-}
-
-export interface MockUser {
-  id: string;
-  username: string;
-  profileImage?: string;
-  tier?: string;
-  lastMocked?: Date;
-}
-
-export interface MockeryProtection {
-  id: string;
-  userId: string;
-  startDate: string;
-  endDate: string;
-  isActive: boolean;
-  username?: string;
-  expiresAt?: number;
+  cost: number;
+  duration: number;
+  cssClass: string;
+  animation?: string;
 }
 
 export interface MockeryStats {
   totalMockeries: number;
+  receivedMockeries: number;
+  sentMockeries: number;
+  protectedCount: number;
   mostUsedAction: MockeryAction;
-  mostMockedUser: string;
-  mostExpensiveMockery: number;
+  mockeryRank: number;
+  favoriteTarget: string;
   totalSpent: number;
-  totalMockery?: number;
+}
+
+export interface MockeryProtection {
+  userId: number | string;
+  startTime: number;
+  expiresAt: number;
+  username?: string;
+  endDate?: string;
+  isActive?: boolean;
 }

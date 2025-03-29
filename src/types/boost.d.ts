@@ -26,7 +26,7 @@ export interface BoostEffect {
   allowStacking: boolean;
   minTier: UserTier;
   cssClass?: string;
-  tier?: SubscriptionTier;
+  tier?: UserTier | string;
 }
 
 export interface ProfileBoost {
@@ -34,10 +34,11 @@ export interface ProfileBoost {
   startDate: string;
   endDate: string;
   level: number;
-  effectId: BoostEffectType | string;
+  effectId?: string | BoostEffectType;
   startTime?: string;
   endTime?: number;
   type?: string;
   strength?: number;
   appliedBy?: string;
+  boostId?: string;
 }

@@ -7,33 +7,35 @@ interface ProfileBoostedContentProps {
   user?: UserProfile;
   children: React.ReactNode;
   className?: string;
+  type?: string;
 }
 
 const ProfileBoostedContent: React.FC<ProfileBoostedContentProps> = ({ 
   user, 
   children,
-  className = ''
+  className = '',
+  type = 'default'
 }) => {
   const boostManager = useProfileBoost(user);
   
-  // Helper functions to adapt the return type of useProfileBoost
-  const getBoostClasses = () => {
-    // Return default classes if the function doesn't exist
-    if (typeof boostManager.getBoostClasses !== 'function') {
-      return '';
-    }
-    return boostManager.getBoostClasses();
-  };
-  
-  const hasActiveBoosts = () => {
-    // Default to false if the property doesn't exist
-    return !!boostManager.hasActiveBoosts;
-  };
-  
   // If no user or no active boosts, just render children normally
-  if (!user || !hasActiveBoosts()) {
+  if (!user || !boostManager.activeBoosts.length) {
     return <div className={className}>{children}</div>;
   }
+  
+  const getBoostClasses = () => {
+    let classes = '';
+    
+    // Add classes based on active boosts
+    boostManager.activeBoosts.forEach(boost => {
+      const boostEffect = boostManager.getBoostEffect(boost.effectId?.toString() || '');
+      if (boostEffect?.cssClass) {
+        classes += ` ${boostEffect.cssClass}`;
+      }
+    });
+    
+    return classes.trim();
+  };
   
   return (
     <div className={`${getBoostClasses()} ${className}`}>

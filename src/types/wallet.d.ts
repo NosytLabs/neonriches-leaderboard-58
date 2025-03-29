@@ -9,7 +9,8 @@ export type TransactionType =
   | 'deposit'
   | 'mockery'
   | 'protection'
-  | 'purchase';
+  | 'purchase'
+  | 'deposit';
 
 export interface Transaction {
   id: string;

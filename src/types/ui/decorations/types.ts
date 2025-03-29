@@ -63,7 +63,7 @@ export interface BaseDecorationProps {
   color?: MedievalDecorationColor;
   className?: string;
   animate?: boolean;
-  icon?: MedievalIconName;
+  icon?: any;
 }
 
 // Mapping sizes to CSS classes for consistent sizing
@@ -116,7 +116,7 @@ export const MEDIEVAL_ICON_COLORS: Record<MedievalIconColor, string> = {
   'amber': 'text-amber-500',
   'default': 'text-white',
   'white': 'text-white',
-  'platinum': 'text-platinum-300',
+  'platinum': 'text-gray-300',
   'royal': 'text-royal-gold'
 };
 
@@ -136,7 +136,7 @@ export const MEDIEVAL_ICON_BG_COLORS: Record<MedievalIconColor, string> = {
   'amber': 'from-amber-500/20 to-amber-600/10 border-amber-500/30',
   'default': 'from-white/10 to-white/5 border-white/20',
   'white': 'from-white/20 to-white/10 border-white/30',
-  'platinum': 'from-platinum-300/20 to-platinum-300/10 border-platinum-300/30',
+  'platinum': 'from-gray-300/20 to-gray-300/10 border-gray-300/30',
   'royal': 'from-royal-gold/20 to-royal-gold/10 border-royal-gold/30'
 };
 
@@ -145,26 +145,8 @@ export type MedievalDecorationType = 'top' | 'bottom' | 'left' | 'right' | 'corn
 export type MedievalDecorationSize = 'sm' | 'md' | 'lg' | 'xl' | '2xl'; // Added '2xl'
 export type MedievalDecorationColor = MedievalIconColor;
 
-export const sizeClasses: Record<MedievalDecorationSize, string> = {
-  'sm': 'w-16 h-16',
-  'md': 'w-24 h-24',
-  'lg': 'w-32 h-32',
-  'xl': 'w-48 h-48',
-  '2xl': 'w-64 h-64' // Added 2xl
-};
-
-export const getColorClass = (color: MedievalDecorationColor = 'gold'): string => {
-  return MEDIEVAL_ICON_COLORS[color] || MEDIEVAL_ICON_COLORS.gold;
-};
-
-export const toMedievalIconColor = (color: string): MedievalIconColor => {
-  return (color as MedievalIconColor) || 'gold';
-};
-
-export type RoyalDividerVariant = 'simple' | 'ornate' | 'royal' | 'scroll' | 'fancy' | 'line' | 'double';
-
 export interface RoyalDividerProps {
-  variant?: RoyalDividerVariant;
-  color?: MedievalIconColor;
+  variant?: 'simple' | 'ornate' | 'royal' | 'scroll' | 'fancy' | 'line' | 'double';
+  color?: MedievalIconColor | 'default' | 'royal' | 'gold' | 'crimson' | 'purple';
   className?: string;
 }

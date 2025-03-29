@@ -1,352 +1,283 @@
 
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect } from 'react';
 import * as THREE from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
-import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
+import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
 
 interface RoyalTrophyModelProps {
+  rank?: number;
   username?: string;
-  placement?: number;
-  spinSpeed?: number;
-  size?: 'small' | 'medium' | 'large';
-  glowColor?: string;
-  showText?: boolean;
+  rotationSpeed?: number;
+  interactive?: boolean;
+  className?: string;
 }
 
-const RoyalTrophyModel: React.FC<RoyalTrophyModelProps> = ({
-  username = 'CHAMPION',
-  placement = 1,
-  spinSpeed = 0.5,
-  size = 'medium',
-  glowColor = '#FFD700',
-  showText = true
+const RoyalTrophyModel: React.FC<RoyalTrophyModelProps> = ({ 
+  rank = 1, 
+  username = 'Royal Champion', 
+  rotationSpeed = 0.005,
+  interactive = true,
+  className = ''
 }) => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
+  const mountRef = useRef<HTMLDivElement>(null);
   const sceneRef = useRef<THREE.Scene | null>(null);
   const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
+  const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
+  const controlsRef = useRef<OrbitControls | null>(null);
+  const trophyRef = useRef<THREE.Group | null>(null);
   const frameIdRef = useRef<number | null>(null);
-  const initializedRef = useRef(false);
-  
-  const [isLoaded, setIsLoaded] = useState(false);
-  
-  const getDimensions = () => {
-    switch (size) {
-      case 'small': return { width: 200, height: 200 };
-      case 'large': return { width: 500, height: 500 };
-      case 'medium':
-      default: return { width: 300, height: 300 };
-    }
-  };
-  
+
   useEffect(() => {
-    if (!containerRef.current || initializedRef.current) return;
-    
-    initializedRef.current = true;
-    
+    if (!mountRef.current) return;
+
     // Scene setup
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x000000);
-    scene.fog = new THREE.Fog(0x000000, 10, 30);
     sceneRef.current = scene;
-    
-    // Renderer setup
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    const dimensions = getDimensions();
-    renderer.setSize(dimensions.width, dimensions.height);
-    renderer.setPixelRatio(window.devicePixelRatio);
-    // For Three.js compatibility in different versions
-    if ('sRGBEncoding' in THREE) {
-      renderer.outputEncoding = THREE.sRGBEncoding;
-    } else if ('outputColorSpace' in renderer) {
-      renderer.outputColorSpace = THREE.SRGBColorSpace;
-    }
-    containerRef.current.appendChild(renderer.domElement);
-    rendererRef.current = renderer;
-    
+    scene.background = new THREE.Color(0x111827);
+
     // Camera setup
     const camera = new THREE.PerspectiveCamera(
       75,
-      dimensions.width / dimensions.height,
+      mountRef.current.clientWidth / mountRef.current.clientHeight,
       0.1,
       1000
     );
-    camera.position.z = 10;
     cameraRef.current = camera;
+    camera.position.z = 5;
+
+    // Renderer setup
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    rendererRef.current = renderer;
+    renderer.setSize(mountRef.current.clientWidth, mountRef.current.clientHeight);
+    renderer.setPixelRatio(window.devicePixelRatio);
     
-    // Lighting
+    // Use SRGBColorSpace instead of outdated outputEncoding
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    
+    mountRef.current.appendChild(renderer.domElement);
+
+    // Lights
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
     scene.add(ambientLight);
-    
-    const spotLight = new THREE.SpotLight(0xffffff, 1);
-    spotLight.position.set(5, 5, 10);
-    spotLight.angle = Math.PI / 6;
-    spotLight.penumbra = 0.2;
-    spotLight.decay = 2;
-    spotLight.distance = 100;
-    scene.add(spotLight);
-    
-    const spotLight2 = new THREE.SpotLight(0xffffff, 0.8);
-    spotLight2.position.set(-5, 5, 5);
-    spotLight2.angle = Math.PI / 6;
-    spotLight2.penumbra = 0.2;
-    spotLight2.decay = 2;
-    spotLight2.distance = 100;
-    scene.add(spotLight2);
-    
-    // Controls setup
-    const controls = new OrbitControls(camera, renderer.domElement);
-    controls.enableDamping = true;
-    controls.dampingFactor = 0.05;
-    controls.enableZoom = false;
-    controls.autoRotate = true;
-    controls.autoRotateSpeed = spinSpeed * 4;
-    
-    // Trophy material
-    const trophyMaterial = new THREE.MeshStandardMaterial({
-      color: 0xD4AF37, // Gold color
-      metalness: 1,
-      roughness: 0.25,
-      emissive: 0x221100,
-      emissiveIntensity: 0.2
+
+    const pointLight = new THREE.PointLight(0xffd700, 1);
+    pointLight.position.set(5, 5, 5);
+    scene.add(pointLight);
+
+    const pointLight2 = new THREE.PointLight(0xbb9955, 0.8);
+    pointLight2.position.set(-5, 5, 5);
+    scene.add(pointLight2);
+
+    // Create Trophy Group
+    const trophyGroup = new THREE.Group();
+    trophyRef.current = trophyGroup;
+    scene.add(trophyGroup);
+
+    // Trophy Base
+    const baseGeometry = new THREE.CylinderGeometry(1.2, 1.5, 0.5, 32);
+    const baseMaterial = new THREE.MeshStandardMaterial({
+      color: 0x8b4513,
+      metalness: 0.7,
+      roughness: 0.3,
     });
-    
-    // Trophy base
-    const baseGeometry = new THREE.CylinderGeometry(2, 2.5, 0.5, 32);
-    const base = new THREE.Mesh(baseGeometry, trophyMaterial);
-    base.position.y = -5;
-    scene.add(base);
-    
-    // Trophy stem
-    const stemGeometry = new THREE.CylinderGeometry(0.5, 0.5, 4, 32);
-    const stem = new THREE.Mesh(stemGeometry, trophyMaterial);
-    stem.position.y = -2.5;
-    scene.add(stem);
-    
-    // Trophy cup
-    const cupBottomGeometry = new THREE.CylinderGeometry(1.5, 0.5, 1, 32);
-    const cupBottom = new THREE.Mesh(cupBottomGeometry, trophyMaterial);
-    cupBottom.position.y = 0;
-    scene.add(cupBottom);
-    
-    const cupTopGeometry = new THREE.CylinderGeometry(2, 1.5, 3, 32);
-    const cupTop = new THREE.Mesh(cupTopGeometry, trophyMaterial);
-    cupTop.position.y = 2;
-    scene.add(cupTop);
-    
-    // Trophy handles
-    const handleGeometry = new THREE.TorusGeometry(1, 0.2, 16, 32, Math.PI);
-    const leftHandle = new THREE.Mesh(handleGeometry, trophyMaterial);
-    leftHandle.rotation.z = Math.PI / 2;
-    leftHandle.position.set(-2, 2, 0);
-    scene.add(leftHandle);
-    
-    const rightHandle = new THREE.Mesh(handleGeometry, trophyMaterial);
-    rightHandle.rotation.z = -Math.PI / 2;
-    rightHandle.position.set(2, 2, 0);
-    scene.add(rightHandle);
-    
-    // Crown on top
-    const crownGeometry = new THREE.ConeGeometry(0.3, 0.8, 32);
-    const crownMaterial = new THREE.MeshStandardMaterial({
-      color: 0xFFA500,
+    const base = new THREE.Mesh(baseGeometry, baseMaterial);
+    base.position.y = -2;
+    trophyGroup.add(base);
+
+    // Trophy Stem
+    const stemGeometry = new THREE.CylinderGeometry(0.3, 0.3, 2, 32);
+    const stemMaterial = new THREE.MeshStandardMaterial({
+      color: 0xdaa520,
       metalness: 0.8,
-      roughness: 0.2
+      roughness: 0.2,
+    });
+    const stem = new THREE.Mesh(stemGeometry, stemMaterial);
+    stem.position.y = -0.5;
+    trophyGroup.add(stem);
+
+    // Trophy Cup
+    const cupGeometry = new THREE.SphereGeometry(1, 32, 32, 0, Math.PI * 2, 0, Math.PI * 0.5);
+    const cupMaterial = new THREE.MeshStandardMaterial({
+      color: 0xffd700,
+      metalness: 0.9,
+      roughness: 0.1,
+    });
+    const cup = new THREE.Mesh(cupGeometry, cupMaterial);
+    cup.position.y = 1;
+    cup.scale.set(1.2, 1, 1.2);
+    trophyGroup.add(cup);
+
+    // Add handles to the cup
+    const handleGeometry = new THREE.TorusGeometry(0.4, 0.1, 16, 32, Math.PI);
+    const handleMaterial = new THREE.MeshStandardMaterial({
+      color: 0xffd700,
+      metalness: 0.9,
+      roughness: 0.1,
     });
     
-    // Create crown spikes
-    const crownGroup = new THREE.Group();
-    for (let i = 0; i < 5; i++) {
-      const spike = new THREE.Mesh(crownGeometry, crownMaterial);
-      spike.position.set(
-        1.5 * Math.sin((i / 5) * Math.PI * 2),
-        4,
-        1.5 * Math.cos((i / 5) * Math.PI * 2)
-      );
-      spike.lookAt(new THREE.Vector3(0, 6, 0));
-      crownGroup.add(spike);
-    }
-    scene.add(crownGroup);
+    const handle1 = new THREE.Mesh(handleGeometry, handleMaterial);
+    handle1.position.set(1, 1, 0);
+    handle1.rotation.y = Math.PI * 0.5;
+    trophyGroup.add(handle1);
     
-    // Glow effect
-    const glowGeometry = new THREE.SphereGeometry(5, 32, 32);
-    const glowMaterial = new THREE.MeshBasicMaterial({
-      color: new THREE.Color(glowColor),
-      transparent: true,
-      opacity: 0.1,
-      side: THREE.BackSide
-    });
-    const glow = new THREE.Mesh(glowGeometry, glowMaterial);
-    scene.add(glow);
-    
-    // Particle system for sparkles
-    const particles = new THREE.BufferGeometry();
-    const particleCount = 200;
-    const positionArray = new Float32Array(particleCount * 3);
-    
-    for (let i = 0; i < particleCount; i++) {
-      // Add safety check to ensure array property exists
-      if (typeof positionArray === 'object' && positionArray.length >= (i + 1) * 3) {
-        positionArray[i * 3] = (Math.random() - 0.5) * 10;
-        positionArray[i * 3 + 1] = (Math.random() - 0.5) * 10;
-        positionArray[i * 3 + 2] = (Math.random() - 0.5) * 10;
-      }
-    }
-    
-    particles.setAttribute('position', new THREE.BufferAttribute(positionArray, 3));
-    
-    const particleMaterial = new THREE.PointsMaterial({
-      color: 0xFFFFFF,
-      size: 0.05,
-      transparent: true,
-      opacity: 0.7
-    });
-    
-    const particleSystem = new THREE.Points(particles, particleMaterial);
-    scene.add(particleSystem);
-    
-    // Text for username and placement
-    if (showText) {
-      const fontLoader = new FontLoader();
+    const handle2 = new THREE.Mesh(handleGeometry, handleMaterial);
+    handle2.position.set(-1, 1, 0);
+    handle2.rotation.y = Math.PI * -0.5;
+    trophyGroup.add(handle2);
+
+    // Add rank and username text
+    const fontLoader = new FontLoader();
+    fontLoader.load('/fonts/helvetiker_regular.typeface.json', (font) => {
+      // Rank text
+      const rankTextGeometry = new TextGeometry(`#${rank}`, {
+        font: font,
+        size: 0.3,
+        height: 0.05,
+      });
       
-      fontLoader.load(
-        'https://threejs.org/examples/fonts/helvetiker_bold.typeface.json',
-        (font) => {
-          // Username text
-          const usernameGeometry = new TextGeometry(username, {
-            font: font,
-            size: 0.5,
-            height: 0.1,
-            curveSegments: 5,
-            bevelEnabled: true,
-            bevelThickness: 0.03,
-            bevelSize: 0.02,
-            bevelOffset: 0,
-            bevelSegments: 3
-          });
-          
-          usernameGeometry.computeBoundingBox();
-          const textWidth = usernameGeometry.boundingBox ? 
-            usernameGeometry.boundingBox.max.x - usernameGeometry.boundingBox.min.x : 0;
-          
-          const usernameMaterial = new THREE.MeshStandardMaterial({
-            color: 0xFFA500,
-            metalness: 0.8,
-            roughness: 0.2
-          });
-          
-          const usernameText = new THREE.Mesh(usernameGeometry, usernameMaterial);
-          usernameText.position.set(-textWidth / 2, -6, 0);
-          scene.add(usernameText);
-          
-          // Placement text
-          const placementGeometry = new TextGeometry(`#${placement}`, {
-            font: font,
-            size: 0.8,
-            height: 0.2,
-            curveSegments: 5,
-            bevelEnabled: true,
-            bevelThickness: 0.03,
-            bevelSize: 0.02,
-            bevelOffset: 0,
-            bevelSegments: 3
-          });
-          
-          placementGeometry.computeBoundingBox();
-          const placementWidth = placementGeometry.boundingBox ?
-            placementGeometry.boundingBox.max.x - placementGeometry.boundingBox.min.x : 0;
-          
-          const placementMaterial = new THREE.MeshStandardMaterial({
-            color: 0xFFA500,
-            metalness: 0.8,
-            roughness: 0.2
-          });
-          
-          const placementText = new THREE.Mesh(placementGeometry, placementMaterial);
-          placementText.position.set(-placementWidth / 2, -7.5, 0);
-          scene.add(placementText);
-          
-          setIsLoaded(true);
-        }
-      );
-    } else {
-      setIsLoaded(true);
+      // Center the geometry
+      rankTextGeometry.computeBoundingBox();
+      const textWidth = rankTextGeometry.boundingBox?.max.x - rankTextGeometry.boundingBox?.min.x;
+      
+      const rankTextMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff });
+      const rankText = new THREE.Mesh(rankTextGeometry, rankTextMaterial);
+      if (textWidth) {
+        rankText.position.set(-textWidth / 2, -1.5, 0.5);
+      } else {
+        rankText.position.set(-0.3, -1.5, 0.5);
+      }
+      trophyGroup.add(rankText);
+
+      // Username text
+      const nameTextGeometry = new TextGeometry(username.length > 12 ? username.substring(0, 10) + "..." : username, {
+        font: font,
+        size: 0.15,
+        height: 0.03,
+      });
+      
+      // Center the username
+      nameTextGeometry.computeBoundingBox();
+      const nameWidth = nameTextGeometry.boundingBox?.max.x - nameTextGeometry.boundingBox?.min.x;
+      
+      const nameTextMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff });
+      const nameText = new THREE.Mesh(nameTextGeometry, nameTextMaterial);
+      if (nameWidth) {
+        nameText.position.set(-nameWidth / 2, -1.8, 0.5);
+      } else {
+        nameText.position.set(-0.5, -1.8, 0.5);
+      }
+      trophyGroup.add(nameText);
+    });
+
+    // Add controls if interactive
+    if (interactive) {
+      const controls = new OrbitControls(camera, renderer.domElement);
+      controlsRef.current = controls;
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.05;
+      controls.enableZoom = true;
+      controls.autoRotate = false;
+    }
+
+    // Add sparkles/particles
+    const particlesGeometry = new THREE.BufferGeometry();
+    const particlesCount = 100;
+    
+    const posArray = new Float32Array(particlesCount * 3);
+    
+    // Fill the array with random positions
+    for (let i = 0; i < particlesCount * 3; i += 3) {
+      // Create a sphere of particles around the trophy
+      const radius = 3;
+      const theta = Math.random() * Math.PI * 2;
+      const phi = Math.random() * Math.PI;
+      
+      posArray[i] = radius * Math.sin(phi) * Math.cos(theta);
+      posArray[i + 1] = radius * Math.sin(phi) * Math.sin(theta) + 0.5; // Offset upward
+      posArray[i + 2] = radius * Math.cos(phi);
     }
     
-    // Animation loop
+    particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+    
+    const particlesMaterial = new THREE.PointsMaterial({
+      size: 0.03,
+      color: 0xffd700,
+      transparent: true,
+      opacity: 0.8,
+      blending: THREE.AdditiveBlending,
+    });
+    
+    const particles = new THREE.Points(particlesGeometry, particlesMaterial);
+    scene.add(particles);
+
+    // Animation function
     const animate = () => {
       frameIdRef.current = requestAnimationFrame(animate);
       
-      if (particleSystem) {
-        particleSystem.rotation.y += 0.001;
-        
-        // Update particle positions for sparkle effect
-        const positions = particleSystem.geometry.attributes.position;
-        // Add type check to ensure .array property exists
-        if (positions && 'array' in positions) {
-          const posArray = positions.array as Float32Array;
-          for (let i = 0; i < posArray.length; i += 3) {
-            posArray[i + 1] += Math.sin(Date.now() * 0.001 + i) * 0.003;
-          }
-          positions.needsUpdate = true;
-        }
+      // Auto-rotate the trophy
+      if (trophyRef.current && !interactive) {
+        trophyRef.current.rotation.y += rotationSpeed;
       }
       
-      // Animate glow
-      if (glow) {
-        glow.material.opacity = 0.05 + Math.sin(Date.now() * 0.001) * 0.03;
+      // Animate particles
+      if (particles) {
+        particles.rotation.y += 0.001;
       }
       
-      controls.update();
+      // Update controls if they exist
+      if (controlsRef.current) {
+        controlsRef.current.update();
+      }
+      
       renderer.render(scene, camera);
     };
     
     animate();
-    
-    // Handle window resize
+
+    // Handle resize
     const handleResize = () => {
-      if (!containerRef.current || !cameraRef.current || !rendererRef.current) return;
+      if (!mountRef.current || !cameraRef.current || !rendererRef.current) return;
       
-      const dimensions = getDimensions();
-      
-      cameraRef.current.aspect = dimensions.width / dimensions.height;
+      cameraRef.current.aspect = mountRef.current.clientWidth / mountRef.current.clientHeight;
       cameraRef.current.updateProjectionMatrix();
-      
-      rendererRef.current.setSize(dimensions.width, dimensions.height);
+      rendererRef.current.setSize(mountRef.current.clientWidth, mountRef.current.clientHeight);
     };
     
     window.addEventListener('resize', handleResize);
-    
-    // Cleanup on unmount
+
+    // Cleanup
     return () => {
-      window.removeEventListener('resize', handleResize);
-      
-      if (frameIdRef.current) {
+      if (frameIdRef.current !== null) {
         cancelAnimationFrame(frameIdRef.current);
       }
       
-      if (rendererRef.current && containerRef.current) {
-        containerRef.current.removeChild(rendererRef.current.domElement);
+      window.removeEventListener('resize', handleResize);
+      
+      if (mountRef.current && rendererRef.current) {
+        mountRef.current.removeChild(rendererRef.current.domElement);
       }
+      
+      // Dispose of geometries and materials
+      scene.traverse((object) => {
+        if (object instanceof THREE.Mesh) {
+          object.geometry.dispose();
+          
+          if (object.material instanceof THREE.Material) {
+            object.material.dispose();
+          } else if (Array.isArray(object.material)) {
+            object.material.forEach((material) => material.dispose());
+          }
+        }
+      });
       
       if (rendererRef.current) {
         rendererRef.current.dispose();
       }
-      
-      initializedRef.current = false;
     };
-  }, [username, placement, spinSpeed, size, glowColor, showText]);
-  
-  return (
-    <div ref={containerRef} className="w-full flex justify-center">
-      {!isLoaded && (
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-royal-gold"></div>
-        </div>
-      )}
-    </div>
-  );
+  }, [rank, username, rotationSpeed, interactive]);
+
+  return <div ref={mountRef} className={`w-full h-full min-h-[300px] ${className}`}></div>;
 };
 
 export default RoyalTrophyModel;

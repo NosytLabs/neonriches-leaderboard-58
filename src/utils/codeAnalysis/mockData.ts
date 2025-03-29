@@ -1,74 +1,178 @@
 
-import { AnalysisResult, ComplexityItem, DeadCodeInfo, DuplicateCodeInfo, ImportInfo, PerformanceIssue, VariableInfo } from './types';
+import { AnalysisResult, ComplexityItem, DeadCodeInfo, DuplicateCodeInfo, PerformanceIssue } from './types';
 
-// Mock data for code analysis
+// Mock performance issues for display
+export const mockPerformanceIssues: PerformanceIssue[] = [
+  {
+    id: 'perf-1',
+    description: 'Expensive DOM operations in ScrollingLeaderboard component',
+    file: 'src/components/leaderboard/ScrollingLeaderboard.tsx',
+    lineNumber: 127,
+    severity: 'high',
+    recommendation: 'Use React.memo or shouldComponentUpdate to prevent unnecessary re-renders'
+  },
+  {
+    id: 'perf-2',
+    description: 'Inefficient data fetching pattern in UserProfileData',
+    file: 'src/hooks/useProfileData.ts',
+    lineNumber: 58,
+    severity: 'medium',
+    recommendation: 'Implement pagination or virtualization for large datasets'
+  },
+  {
+    id: 'perf-3',
+    description: 'Multiple re-renders caused by state updates in RoyalCourtMember',
+    file: 'src/components/leaderboard/RoyalCourtMember.tsx',
+    lineNumber: 45,
+    severity: 'medium',
+    recommendation: 'Batch state updates using useReducer instead of multiple useState calls'
+  },
+  {
+    id: 'perf-4',
+    description: 'Expensive animation effects in EnhancedCrownEffect component',
+    file: 'src/components/animations/EnhancedCrownEffect.tsx',
+    lineNumber: 92,
+    severity: 'medium',
+    recommendation: 'Use CSS transitions instead of JavaScript animations where possible'
+  },
+  {
+    id: 'perf-5',
+    description: 'Unoptimized images causing slow page load',
+    file: 'src/pages/Home.tsx',
+    lineNumber: 34,
+    severity: 'high',
+    recommendation: 'Use next/image or other image optimization tools, add width/height attributes'
+  }
+];
+
+// Export the performance issues with a more common name
+export const performanceIssuesMock = mockPerformanceIssues;
+
+// Mock unused imports
+const mockUnusedImports = [
+  { name: 'useState', path: 'react', file: 'src/components/ui/StaticWidget.tsx', line: 1 },
+  { name: 'useEffect', path: 'react', file: 'src/components/ui/PureComponent.tsx', line: 1 },
+  { name: 'Button', path: '@/components/ui/button', file: 'src/pages/UnusedButtonPage.tsx', line: 4 },
+  { name: 'formatDate', path: '@/utils/formatters', file: 'src/components/DateDisplay.tsx', line: 3 },
+  { name: 'UserAvatar', path: '@/components/user/UserAvatar', file: 'src/components/profile/OldProfileCard.tsx', line: 7 }
+];
+
+// Mock unused variables
+const mockUnusedVariables = [
+  { name: 'isLoading', type: 'boolean', file: 'src/components/DataTable.tsx', line: 12 },
+  { name: 'errorMessage', type: 'string', file: 'src/components/FormWithValidation.tsx', line: 15 },
+  { name: 'userCount', type: 'number', file: 'src/pages/AdminDashboard.tsx', line: 28 },
+  { name: 'DEFAULT_THEME', type: 'string', file: 'src/constants/theme.ts', line: 4 },
+  { name: 'handleReset', type: 'function', file: 'src/components/SearchForm.tsx', line: 23 }
+];
+
+// Mock unused CSS selectors
+const mockUnusedSelectors = [
+  { selector: 'unused-class', file: 'src/styles/legacy.css', line: 45 },
+  { selector: 'old-button-style', file: 'src/styles/buttons.css', line: 78 },
+  { selector: 'deprecated-layout', file: 'src/styles/layouts.css', line: 120 },
+  { selector: 'unused-animation', file: 'src/styles/animations.css', line: 67 },
+  { selector: 'old-theme-dark', file: 'src/styles/themes.css', line: 210 }
+];
+
+// Mock dead code info
+const mockDeadCode: DeadCodeInfo[] = [
+  { file: 'src/utils/deprecated.ts', line: 25, path: 'src/utils/deprecated.ts', description: 'Function never called: formatLegacyData()' },
+  { file: 'src/components/OldButton.tsx', line: 1, path: 'src/components/OldButton.tsx', description: 'Component replaced by Button from UI library', type: 'component' },
+  { file: 'src/hooks/useOldAuth.ts', line: 1, path: 'src/hooks/useOldAuth.ts', description: 'Hook replaced by AuthProvider', type: 'hook' },
+  { file: 'src/pages/LegacyProfile.tsx', line: 1, path: 'src/pages/LegacyProfile.tsx', description: 'Page no longer in routing', type: 'page' },
+  { file: 'src/utils/helpers.ts', line: 67, path: 'src/utils/helpers.ts', description: 'Dead code branch in renderConditional()', type: 'function' }
+];
+
+// Mock duplicate code info
+const mockDuplicateCode: DuplicateCodeInfo[] = [
+  {
+    id: 1,
+    similarity: 0.95,
+    files: [{ path: 'src/components/LeaderboardItem.tsx' }, { path: 'src/components/RankItem.tsx' }],
+    lines: 32,
+    codeSnippet: 'const formatRank = (rank) => {\n  if (rank === 1) return "🥇";\n  if (rank === 2) return "🥈";\n  if (rank === 3) return "🥉";\n  return `#${rank}`;\n};',
+    recommendation: 'Move to shared utility function'
+  },
+  {
+    id: 2,
+    similarity: 0.88,
+    files: [{ path: 'src/utils/formatters.ts' }, { path: 'src/utils/stringHelpers.ts' }],
+    lines: 18,
+    codeSnippet: 'export const truncateString = (str, maxLength = 20) => {\n  if (str.length <= maxLength) return str;\n  return `${str.substring(0, maxLength)}...`;\n};',
+    recommendation: 'Consolidate string utilities into a single file'
+  },
+  {
+    id: 3,
+    similarity: 0.92,
+    files: [{ path: 'src/components/profile/ProfileCard.tsx' }, { path: 'src/components/user/UserCard.tsx' }],
+    lines: 45,
+    codeSnippet: 'const renderUserInfo = () => {\n  return (\n    <div className="user-info">\n      <Avatar src={user.profileImage} />\n      <h3 className="user-name">{user.displayName}</h3>\n      <p className="user-rank">Rank: {user.rank}</p>\n    </div>\n  );\n};',
+    recommendation: 'Create a shared UserInfoCard component'
+  }
+];
+
+// Mock complex code issues
+const mockComplexCode: ComplexityItem[] = [
+  { 
+    id: 'complex-1',
+    name: 'handleUserInteraction',
+    file: 'src/components/Dashboard.tsx',
+    complexity: 15,
+    line: 87,
+    explanation: 'Function has too many conditionals and nested logic. Break into smaller, focused functions.',
+    issues: ['High cyclomatic complexity', 'Multiple responsibilities', 'Hard to test']
+  },
+  { 
+    id: 'complex-2',
+    name: 'calculateLeaderboardPositions',
+    file: 'src/utils/leaderboardUtils.ts',
+    complexity: 18,
+    line: 42,
+    explanation: 'Complex algorithm with nested loops. Consider refactoring to use more declarative approaches.',
+    issues: ['O(n²) time complexity', 'Difficult to understand', 'Potential performance bottleneck']
+  },
+  { 
+    id: 'complex-3',
+    name: 'RoyalCourtRenderer',
+    file: 'src/components/RoyalCourt.tsx',
+    complexity: 12,
+    line: 128,
+    explanation: 'Component has too many responsibilities. Split into smaller, focused components.',
+    issues: ['Renders too many different elements', 'Complex state management', 'Excessive prop drilling']
+  }
+];
+
+// Mock unused files
+const mockUnusedFiles = [
+  'src/components/unused/OldNavigation.tsx',
+  'src/utils/deprecated/formatters.ts',
+  'src/hooks/unused/useOldAuth.ts',
+  'src/pages/Legacy/LegacyProfile.tsx',
+  'src/styles/unused/old-theme.css'
+];
+
+// Mock unused dependencies
+const mockUnusedDependencies = [
+  'moment',
+  'lodash-es',
+  'react-table',
+  'react-spring',
+  'uuid'
+];
+
+// Complete mock analysis result
 export const mockedAnalysisResults: AnalysisResult = {
-  unusedImports: [
-    { name: 'useState', path: 'react', file: 'src/components/unused/UnusedComponent.tsx', line: 1 },
-    { name: 'Button', path: '@/components/ui/button', file: 'src/pages/OldPage.tsx', line: 3 },
-    { name: 'useMemo', path: 'react', file: 'src/components/Profile.tsx', line: 2 }
-  ],
-  unusedVariables: [
-    { name: 'isLoading', type: 'boolean', file: 'src/components/DataTable.tsx', line: 12 },
-    { name: 'error', type: 'Error', file: 'src/hooks/useData.ts', line: 8 },
-    { name: 'counter', type: 'number', file: 'src/components/Counter.tsx', line: 5 }
-  ],
-  unusedFiles: [
-    'src/components/unused/TestComponent.tsx',
-    'src/utils/deprecated/helpers.ts',
-    'src/pages/OldPage.tsx'
-  ],
-  unusedSelectors: [
-    { selector: '.unused-class', file: 'src/styles/global.css', line: 45 },
-    { selector: '#old-id', file: 'src/styles/components.css', line: 23 },
-    { selector: '.legacy-theme', file: 'src/styles/legacy.css', line: 10 }
-  ],
-  deadCode: [
-    { file: 'src/components/Button.tsx', line: 45, description: 'Unreachable code after return statement', type: 'unreachable' },
-    { file: 'src/utils/formatters.ts', line: 89, description: 'Conditional always evaluates to false', type: 'conditional' },
-    { file: 'src/hooks/useAuth.ts', line: 120, description: 'Dead code path in switch statement', type: 'switch' }
-  ],
-  duplicateCode: [
-    { 
-      id: '1', 
-      similarity: 0.95, 
-      files: [
-        { path: 'src/components/ProfileCard.tsx' },
-        { path: 'src/components/UserCard.tsx' }
-      ],
-      lines: 25,
-      code: 'function formatDate(date) {\n  return new Date(date).toLocaleDateString();\n}'
-    },
-    { 
-      id: '2', 
-      similarity: 0.85, 
-      files: [
-        { path: 'src/utils/formatters.ts' },
-        { path: 'src/utils/dates.ts' }
-      ],
-      lines: 12,
-      code: 'export function formatCurrency(amount) {\n  return new Intl.NumberFormat("en-US", {\n    style: "currency",\n    currency: "USD"\n  }).format(amount);\n}'
-    }
-  ],
-  complexCode: [
-    {
-      id: 'complex-1',
-      name: 'processUserData',
-      file: 'src/utils/userProcessing.ts',
-      complexity: 25,
-      line: 34,
-      explanation: 'Function has multiple nested conditions and loops'
-    },
-    {
-      id: 'complex-2',
-      name: 'calculateUserRank',
-      file: 'src/utils/rankCalculator.ts',
-      complexity: 18,
-      line: 56,
-      explanation: 'Complex algorithm with many branches'
-    }
-  ],
-  performanceIssues: [],
+  unusedImports: mockUnusedImports,
+  unusedVariables: mockUnusedVariables,
+  unusedSelectors: mockUnusedSelectors,
+  deadCode: mockDeadCode,
+  deadCodePaths: mockDeadCode,
+  duplicateCode: mockDuplicateCode,
+  complexCode: mockComplexCode,
+  unusedFiles: mockUnusedFiles,
+  unusedDependencies: mockUnusedDependencies,
+  performanceIssues: mockPerformanceIssues,
   metrics: {
     projectSize: 8560,
     fileCount: 342,
@@ -90,166 +194,3 @@ export const mockedAnalysisResults: AnalysisResult = {
     }
   }
 };
-
-// Mock data for duplicate code report
-export const duplicateCodeMock: DuplicateCodeInfo[] = [
-  {
-    id: 'dup-1',
-    similarity: 0.95,
-    files: [
-      { path: 'src/components/ShameCard.tsx' },
-      { path: 'src/components/MockeryCard.tsx' }
-    ],
-    lines: 32,
-    codeSnippet: `
-const CardTitle = ({ title, icon }) => (
-  <div className="flex items-center">
-    {icon && <span className="mr-2">{icon}</span>}
-    <h3 className="font-semibold text-lg">{title}</h3>
-  </div>
-);
-
-const CardFooter = ({ price, onAction }) => (
-  <div className="mt-4 flex justify-between items-center">
-    <div className="text-royal-gold font-bold">${price}</div>
-    <Button onClick={onAction} size="sm">Apply</Button>
-  </div>
-);`
-  },
-  {
-    id: 'dup-2',
-    similarity: 0.88,
-    files: [
-      { path: 'src/hooks/use-mockery.ts' },
-      { path: 'src/hooks/use-shame.ts' }
-    ],
-    lines: 45,
-    codeSnippet: `
-const isUserProtected = (username: string): boolean => {
-  const protection = protections.find(p => p.username === username);
-  if (!protection) return false;
-  return protection.isActive && new Date() < new Date(protection.endDate);
-};
-
-const protectUser = (username: string, days: number = 7) => {
-  const now = new Date();
-  const endDate = new Date();
-  endDate.setDate(now.getDate() + days);
-  
-  const existingIndex = protections.findIndex(p => p.username === username);
-  
-  if (existingIndex >= 0) {
-    setProtections(prev => {
-      const updated = [...prev];
-      updated[existingIndex] = {
-        ...updated[existingIndex],
-        endDate: endDate.toISOString(),
-        isActive: true
-      };
-      return updated;
-    });
-  } else {
-    setProtections(prev => [
-      ...prev,
-      {
-        username,
-        endDate: endDate.toISOString(),
-        isActive: true
-      }
-    ]);
-  }
-};`
-  }
-];
-
-// Mock data for complexity report
-export const complexityReportMock = [
-  {
-    path: 'src/components/RoyalMockeryFestival.tsx',
-    complexity: 24,
-    linesOfCode: 275,
-    line: 1,
-    parameters: 5,
-    nestedLevel: 4,
-    issues: [
-      'Function has multiple responsibilities',
-      'Contains complex state management',
-      'Multiple conditional renders'
-    ],
-    functions: [
-      {
-        name: 'RoyalMockeryFestival',
-        complexity: 24
-      }
-    ],
-    explanation: 'Component is too large and handles too many responsibilities. Should be split into smaller, focused components.'
-  },
-  {
-    path: 'src/components/profile/ProfileContent.tsx',
-    complexity: 18,
-    linesOfCode: 341,
-    line: 1,
-    parameters: 6,
-    nestedLevel: 3,
-    issues: [
-      'Component is too large',
-      'Multiple conditional renders',
-      'Complex prop handling'
-    ],
-    functions: [
-      {
-        name: 'ProfileContent',
-        complexity: 18
-      }
-    ],
-    explanation: 'Component is overly complex with too many responsibilities. Should be split into tab-specific components.'
-  },
-  {
-    path: 'src/services/mockeryService.ts',
-    complexity: 16,
-    linesOfCode: 230,
-    line: 82,
-    parameters: 4,
-    nestedLevel: 3,
-    issues: [
-      'Function handles multiple types of logic',
-      'Complex state transformations',
-      'Lacks clear separation of concerns'
-    ],
-    functions: [
-      {
-        name: 'applyMockeryToUser',
-        complexity: 16
-      }
-    ],
-    explanation: 'Service function tries to do too much at once. Should be split into smaller, single-purpose functions.'
-  }
-];
-
-// Mock performance issues 
-export const mockPerformanceIssues: PerformanceIssue[] = [
-  {
-    id: 'perf-1',
-    description: 'Inefficient list rendering without keys',
-    file: 'src/components/dashboard/leaderboard/LeaderboardContent.tsx',
-    lineNumber: 58,
-    severity: 'medium',
-    recommendation: 'Add unique keys to list items to improve reconciliation'
-  },
-  {
-    id: 'perf-2',
-    description: 'Large component re-rendering unnecessarily',
-    file: 'src/pages/CodeCleanupReport.tsx',
-    lineNumber: 86,
-    severity: 'high',
-    recommendation: 'Use React.memo or useMemo to prevent unnecessary re-renders of expensive components'
-  },
-  {
-    id: 'perf-3',
-    description: 'Expensive calculation in render method',
-    file: 'src/components/charts/SpendingDistributionChart.tsx',
-    lineNumber: 124,
-    severity: 'high',
-    recommendation: 'Move expensive calculations to useMemo or outside the render cycle'
-  }
-];

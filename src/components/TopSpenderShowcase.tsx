@@ -1,432 +1,134 @@
-import React, { useEffect, useState } from 'react';
+
+import React from 'react';
+import { Trophy, CrownIcon, TrendingUp, Users, DollarSign } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
-import { Link } from 'react-router-dom';
-import { 
-  Crown, 
-  ExternalLink, 
-  Shield, 
-  Trophy, 
-  Clock, 
-  DollarSign, 
-  Award, 
-  Zap,
-  ArrowUpRight,
-  Star,
-  Sparkles,
-  Users,
-  Gem
-} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import MedievalFrame from '@/components/ui/medieval-frame';
-import ProfileBoostedContent from '@/components/ui/ProfileBoostedContent';
-import InteractiveRoyalCrown from '@/components/3d/InteractiveRoyalCrown';
-import useNotificationSounds from '@/hooks/use-notification-sounds';
-import { useToastContext } from '@/contexts/ToastContext';
-import { UserProfile, SocialLink } from '@/types/user';
-import { getUserRanking } from '@/services/spendingService';
+import { UserProfile } from '@/types/user';
+import { formatCurrency } from '@/utils/formatters';
 
 interface TopSpenderShowcaseProps {
-  topSpender?: UserProfile;
-  onInspect?: () => void;
-  highlightTop?: boolean;
+  user: UserProfile;
+  className?: string;
 }
 
-const LUXURY_TEAMS = {
-  red: {
-    name: "House Crimson Dynasty",
-    description: "Masters of opulent displays and lavish investments",
-    color: "text-red-500",
-    bg: "bg-red-500/20",
-    border: "border-red-500/30"
-  },
-  green: {
-    name: "Emerald Empire Collective",
-    description: "Architects of wealth and strategic spending",
-    color: "text-emerald-500",
-    bg: "bg-emerald-500/20", 
-    border: "border-emerald-500/30"
-  },
-  blue: {
-    name: "Sapphire Sovereign Alliance",
-    description: "Nobility through calculated financial dominance",
-    color: "text-blue-500",
-    bg: "bg-blue-500/20",
-    border: "border-blue-500/30"
-  }
-};
-
-const TopSpenderShowcase: React.FC<TopSpenderShowcaseProps> = ({ 
-  topSpender, 
-  onInspect, 
-  highlightTop = true 
-}) => {
-  const [isAnimating, setIsAnimating] = useState(false);
-  const [currentTopSpender, setCurrentTopSpender] = useState<UserProfile | undefined>(topSpender);
-  const { playSound } = useNotificationSounds();
-  const { addToast } = useToastContext();
-  
-  useEffect(() => {
-    if (!topSpender) {
-      const rankings = getUserRanking();
-      if (rankings && rankings.length > 0) {
-        const top = rankings[0];
-        const topUserProfile: UserProfile = {
-          id: top.userId,
-          username: top.username,
-          email: "",
-          rank: top.rank,
-          tier: top.tier as any,
-          team: top.team as any,
-          profileImage: top.profileImage,
-          amountSpent: top.totalSpent,
-          spentAmount: top.totalSpent,
-          spendStreak: top.spendStreak,
-          joinDate: new Date().toISOString(),
-          joinedAt: new Date().toISOString(),
-          walletBalance: 0,
-          totalSpent: top.totalSpent,
-          createdAt: new Date().toISOString()
-        };
-        setCurrentTopSpender(topUserProfile);
-      }
-    } else {
-      setCurrentTopSpender(topSpender);
-    }
-  }, [topSpender]);
-  
-  useEffect(() => {
-    const checkTopSpender = () => {
-      const rankings = getUserRanking();
-      if (rankings && rankings.length > 0 && currentTopSpender) {
-        const top = rankings[0];
-        if (top.userId !== currentTopSpender.id) {
-          addToast({
-            title: "New Ruler Crowned!",
-            description: `${top.username} has become the new top spender with $${top.totalSpent.toLocaleString()}`,
-            variant: "default",
-          });
-          
-          const topUserProfile: UserProfile = {
-            id: top.userId,
-            username: top.username,
-            email: "",
-            rank: top.rank,
-            tier: top.tier as any,
-            team: top.team as any,
-            profileImage: top.profileImage,
-            amountSpent: top.totalSpent,
-            spentAmount: top.totalSpent,
-            spendStreak: top.spendStreak,
-            joinDate: new Date().toISOString(),
-            joinedAt: new Date().toISOString(),
-            walletBalance: 0,
-            totalSpent: top.totalSpent,
-            createdAt: new Date().toISOString()
-          };
-          setCurrentTopSpender(topUserProfile);
-        }
-      }
-    };
-    
-    const interval = setInterval(checkTopSpender, 30000);
-    return () => clearInterval(interval);
-  }, [currentTopSpender, addToast]);
-  
-  if (!currentTopSpender) {
-    return null;
-  }
-  
-  const getSocialLinks = () => {
-    if (!currentTopSpender.socialLinks) return [];
-    
-    if (Array.isArray(currentTopSpender.socialLinks)) {
-      return currentTopSpender.socialLinks;
-    }
-    
-    const links: SocialLink[] = [];
-    const socialObj = currentTopSpender.socialLinks as { twitter?: string; discord?: string; website?: string; };
-    
-    if (socialObj.twitter) {
-      links.push({
-        id: 'twitter',
-        platform: 'Twitter',
-        url: socialObj.twitter,
-        clicks: 0
-      });
-    }
-    
-    if (socialObj.discord) {
-      links.push({
-        id: 'discord',
-        platform: 'Discord',
-        url: socialObj.discord,
-        clicks: 0
-      });
-    }
-    
-    if (socialObj.website) {
-      links.push({
-        id: 'website',
-        platform: 'Website',
-        url: socialObj.website,
-        clicks: 0
-      });
-    }
-    
-    return links;
-  };
-  
-  const royalTitle = currentTopSpender.gender === 'queen' ? 'Queen' : 'King';
-  
-  const handleCrownClick = () => {
-    setIsAnimating(true);
-    playSound('royalAnnouncement', 0.2);
-    
-    addToast({
-      title: `${royalTitle} of Spending`,
-      description: `All hail ${currentTopSpender.displayName || currentTopSpender.username}, who has contributed $${currentTopSpender.amountSpent?.toLocaleString()} to their meaningless digital status!`,
-      duration: 5000,
-    });
-    
-    setTimeout(() => setIsAnimating(false), 3000);
-  };
-  
-  const getTeamDetails = () => {
-    if (!currentTopSpender.team || !LUXURY_TEAMS[currentTopSpender.team]) {
-      return {
-        name: "Unaligned", 
-        description: "Not affiliated with any royal house",
-        color: "text-gray-400",
-        bg: "bg-gray-500/10",
-        border: "border-gray-500/20"
-      };
-    }
-    return LUXURY_TEAMS[currentTopSpender.team];
-  };
-  
-  const teamDetails = getTeamDetails();
-  
-  if (highlightTop && currentTopSpender.rank !== 1) {
-    return null;
-  }
-  
-  const socialLinks = getSocialLinks();
-  
+const TopSpenderShowcase: React.FC<TopSpenderShowcaseProps> = ({ user, className = '' }) => {
   return (
-    <div className="relative">
-      <div className="mx-auto text-center mb-8">
-        <h2 className="text-2xl md:text-3xl font-bold font-medieval royal-gradient mb-2 flex items-center justify-center">
-          <Crown size={28} className="text-royal-gold mr-3 animate-pulse-slow" />
-          Current Reigning {royalTitle}
-          <Crown size={28} className="text-royal-gold ml-3 animate-pulse-slow" />
+    <div className={`max-w-lg mx-auto ${className}`}>
+      <div className="text-center mb-6">
+        <h2 className="text-2xl font-bold mb-2 flex items-center justify-center">
+          <Trophy className="h-6 w-6 mr-2 text-yellow-400" />
+          Top Spender Showcase
         </h2>
-        <p className="text-white/80 max-w-2xl mx-auto font-medieval-text">
-          The highest paying member receives this exclusive advertising space as a purely cosmetic benefit.
+        <p className="text-white/70">
+          The throne belongs to those who spend the most
         </p>
       </div>
       
-      <div className="grid grid-cols-1 lg:grid-cols-7 gap-6 items-stretch">
-        <div className="hidden lg:block lg:col-span-2 h-full">
-          <MedievalFrame variant="royal" cornerDecoration className="h-full p-4">
-            <Card className="h-full bg-transparent border-0 flex items-center justify-center">
-              <InteractiveRoyalCrown 
-                onCrownClick={handleCrownClick}
-                showCoins={isAnimating}
-                size="large"
-              />
-            </Card>
-          </MedievalFrame>
-        </div>
-        
-        <div className="lg:col-span-3">
-          <MedievalFrame 
-            variant="royal" 
-            cornerDecoration 
-            borderDecoration 
-            seal 
-            className="h-full"
-          >
-            <div className="absolute top-2 left-2 z-10">
-              <div className="flex items-center gap-1 bg-royal-gold/20 backdrop-blur-sm px-2 py-1 rounded-full text-xs">
-                <Crown className="h-3 w-3 text-royal-gold animate-crown-glow" />
-                <span className="text-royal-gold font-medieval">Reigning {royalTitle}</span>
-              </div>
-            </div>
-            
-            <CardContent className="pt-12 pb-6">
+      <Card className="glass-morphism border-white/10 overflow-hidden">
+        <div className="relative">
+          <div className="absolute top-0 left-0 w-full h-24 bg-gradient-to-b from-yellow-500/20 to-transparent" />
+          
+          <div className="pt-6 pb-4 px-6 relative z-10">
+            <div className="flex justify-between items-start">
               <div className="flex flex-col items-center">
-                <div className="relative mb-4">
-                  <div className="absolute -inset-1 rounded-full bg-royal-gold/30 animate-pulse-slow"></div>
-                  <div className="relative w-28 h-28 rounded-full overflow-hidden border-4 border-royal-gold">
-                    <img 
-                      src={currentTopSpender.profileImage} 
-                      alt={currentTopSpender.username} 
+                <div className="relative">
+                  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                    <CrownIcon className="h-7 w-7 text-yellow-400" />
+                  </div>
+                  <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-yellow-400 mb-2">
+                    <img
+                      src={user.profileImage || `https://api.dicebear.com/6.x/personas/svg?seed=${user.username}`}
+                      alt={user.displayName}
                       className="w-full h-full object-cover"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                  </div>
-                  <div className="absolute -bottom-2 -right-2 bg-royal-gold rounded-full p-1.5 shadow-lg animate-crown-glow">
-                    <Crown className="h-5 w-5 text-black" />
                   </div>
                 </div>
                 
-                <ProfileBoostedContent user={currentTopSpender}>
-                  <h3 className="text-2xl font-bold royal-gradient font-medieval">
-                    {currentTopSpender.displayName || currentTopSpender.username}
-                  </h3>
-                </ProfileBoostedContent>
+                <h3 className="text-xl font-bold">{user.displayName}</h3>
+                <p className="text-white/60 text-sm">@{user.username}</p>
                 
-                <div className="flex flex-wrap justify-center gap-2 mt-2">
-                  {currentTopSpender.badges && currentTopSpender.badges?.map((badge, idx) => (
-                    <Badge key={idx} variant="outline" className="bg-royal-gold/10 text-royal-gold">
-                      {badge}
-                    </Badge>
-                  ))}
-                </div>
-                
-                <div className="space-y-3 w-full mt-6">
-                  <div className="glass-morphism border-royal-gold/20 p-3 rounded-lg flex justify-between items-center hover:border-royal-gold/50 transition-colors duration-300">
-                    <span className="text-white/80 flex items-center">
-                      <DollarSign className="h-4 w-4 mr-1.5 text-royal-gold" />
-                      Royal Treasury
-                    </span>
-                    <span className="font-mono text-royal-gold font-bold text-lg">${currentTopSpender.amountSpent?.toLocaleString()}</span>
-                  </div>
-                  
-                  <div className="glass-morphism border-royal-gold/20 p-3 rounded-lg flex justify-between items-center hover:border-royal-gold/50 transition-colors duration-300">
-                    <span className="text-white/80 flex items-center">
-                      <Crown className="h-4 w-4 mr-1.5 text-royal-gold" />
-                      Court Rank
-                    </span>
-                    <span className="font-mono text-royal-gold-bright font-bold">#{currentTopSpender.rank}</span>
-                  </div>
-                  
-                  <div className="glass-morphism border-royal-gold/20 p-3 rounded-lg flex justify-between items-center hover:border-royal-gold/50 transition-colors duration-300">
-                    <span className="text-white/80 flex items-center">
-                      <Shield className="h-4 w-4 mr-1.5" style={{color: teamDetails.color}} />
-                      Royal House
-                    </span>
-                    <span className="font-mono font-bold" style={{color: teamDetails.color}}>{teamDetails.name}</span>
-                  </div>
-                  
-                  {currentTopSpender.spendStreak && currentTopSpender.spendStreak > 0 && (
-                    <div className="glass-morphism border-royal-gold/20 p-3 rounded-lg flex justify-between items-center hover:border-royal-gold/50 transition-colors duration-300">
-                      <span className="text-white/80 flex items-center">
-                        <Clock className="h-4 w-4 mr-1.5 text-royal-gold" />
-                        Spending Streak
-                      </span>
-                      <span className="font-mono text-royal-gold-bright font-bold">{currentTopSpender.spendStreak} weeks</span>
-                    </div>
-                  )}
-                  
-                  {currentTopSpender.joinDate && (
-                    <div className="glass-morphism border-royal-gold/20 p-3 rounded-lg flex justify-between items-center hover:border-royal-gold/50 transition-colors duration-300">
-                      <span className="text-white/80 flex items-center">
-                        <Trophy className="h-4 w-4 mr-1.5 text-royal-gold" />
-                        Court Member Since
-                      </span>
-                      <span className="font-mono text-royal-gold-bright font-bold">{new Date(currentTopSpender.joinDate).toLocaleDateString()}</span>
-                    </div>
-                  )}
-                </div>
-                
-                <div className="mt-6 glass-morphism border-royal-gold/10 px-4 py-3 rounded-lg w-full">
-                  <p className="text-sm text-white/80 italic font-medieval-text text-center">
-                    "{currentTopSpender.bio || "A noble achievement that cost real money for digital prestige with absolutely no practical benefits."}"
-                  </p>
+                <div className="flex items-center mt-2">
+                  <Badge variant="outline" className="bg-yellow-500/10 border-yellow-500/20 text-yellow-400">
+                    Rank #{user.rank}
+                  </Badge>
                 </div>
               </div>
-            </CardContent>
-          </MedievalFrame>
-        </div>
-        
-        <div className="lg:col-span-2">
-          <MedievalFrame variant="noble" className="h-full">
-            <div className="absolute top-2 left-2 z-10">
-              <div className="flex items-center gap-1 bg-purple-500/20 backdrop-blur-sm px-2 py-1 rounded-full text-xs">
-                <Zap className="h-3 w-3 text-purple-400" />
-                <span className="text-purple-300 font-medieval">Royal Advertisement</span>
+              
+              <div className="space-y-4">
+                <div className="glass-morphism border-white/10 p-3 rounded-lg">
+                  <div className="flex items-center">
+                    <DollarSign className="h-5 w-5 text-green-400 mr-2" />
+                    <div>
+                      <div className="text-sm text-white/60">Total Spent</div>
+                      <div className="text-xl font-bold">{formatCurrency(user.totalSpent)}</div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="glass-morphism border-white/10 p-3 rounded-lg">
+                  <div className="flex items-center">
+                    <TrendingUp className="h-5 w-5 text-blue-400 mr-2" />
+                    <div>
+                      <div className="text-sm text-white/60">Spending Streak</div>
+                      <div className="text-xl font-bold">{user.spendStreak || 0} days</div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="glass-morphism border-white/10 p-3 rounded-lg">
+                  <div className="flex items-center">
+                    <Users className="h-5 w-5 text-purple-400 mr-2" />
+                    <div>
+                      <div className="text-sm text-white/60">Followers</div>
+                      <div className="text-xl font-bold">{user.followers || 0}</div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
             
-            <CardContent className="pt-12 pb-6">
-              <div className="flex flex-col h-full">
-                <h3 className="text-lg font-bold text-purple-300 mb-4 flex items-center">
-                  <Zap className="h-4 w-4 mr-1.5" />
-                  ROYAL PROMOTION SPACE
-                </h3>
-                
-                <div className="grid grid-cols-1 gap-3 mb-6">
-                  {socialLinks.length > 0 ? (
-                    socialLinks.map((link, index) => (
-                      <a 
-                        key={index}
-                        href={link.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-2 glass-morphism border-purple-500/20 p-2.5 rounded-lg hover:bg-purple-800/20 transition-colors group"
-                      >
-                        <ExternalLink size={14} className="text-purple-400" />
-                        <span className="flex-1 truncate text-sm">{link.platform}: {link.url.replace(/^https?:\/\/(www\.)?/, '')}</span>
-                        <Badge variant="outline" className="text-[10px] bg-purple-900/60 text-purple-100 border-0">
-                          {link.clicks || 0} clicks
-                        </Badge>
-                      </a>
-                    ))
-                  ) : (
-                    <>
-                      <div className="glass-morphism border-purple-500/20 p-2.5 rounded-lg">
-                        <span className="text-sm text-white/30">This space is reserved for the #1 ranked spender</span>
-                      </div>
-                      <div className="glass-morphism border-purple-500/20 p-2.5 rounded-lg">
-                        <span className="text-sm text-white/30">The top spender can promote their social links here</span>
-                      </div>
-                      <div className="glass-morphism border-purple-500/20 p-2.5 rounded-lg">
-                        <span className="text-sm text-white/30">Become the top spender to claim this promotion space</span>
-                      </div>
-                    </>
-                  )}
-                </div>
-                
-                <div className="mt-auto">
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {currentTopSpender.team && (
-                      <Badge variant="outline" className={`bg-team-${currentTopSpender.team}/20 text-team-${currentTopSpender.team}`}>
-                        <Shield size={10} className="mr-1" />
-                        Team {currentTopSpender.team.charAt(0).toUpperCase() + currentTopSpender.team.slice(1)}
-                      </Badge>
-                    )}
-                    
-                    {currentTopSpender.spendStreak && currentTopSpender.spendStreak > 0 && (
-                      <Badge variant="outline" className="bg-purple-800/20 text-purple-300">
-                        <Clock size={10} className="mr-1" />
-                        {currentTopSpender.spendStreak} week streak
-                      </Badge>
-                    )}
-                    
-                    <Badge variant="outline" className="bg-purple-900/20 text-purple-200">
-                      <Crown size={10} className="mr-1" />
-                      {currentTopSpender.gender === 'king' ? 'King' : currentTopSpender.gender === 'queen' ? 'Queen' : 'Ruler'}
-                    </Badge>
+            <div className="mt-6 glass-morphism border-white/10 p-4 rounded-lg">
+              <h4 className="text-lg font-semibold mb-2">Royal Stats</h4>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <div className="text-sm text-white/60">Member Since</div>
+                  <div className="font-medium">
+                    {new Date(user.joinedAt).toLocaleDateString()}
                   </div>
-                  
-                  <Link to={`/profile/${currentTopSpender.username}`}>
-                    <Button variant="outline" size="sm" className="w-full border-purple-500/30 text-purple-300 hover:bg-purple-900/30">
-                      <Award className="h-3.5 w-3.5 mr-1.5" />
-                      View Full Royal Profile
-                    </Button>
-                  </Link>
+                </div>
+                <div>
+                  <div className="text-sm text-white/60">Team</div>
+                  <div className="font-medium capitalize">
+                    {user.team || 'None'}
+                  </div>
+                </div>
+                <div>
+                  <div className="text-sm text-white/60">Tier</div>
+                  <div className="font-medium capitalize">
+                    {user.tier || 'Basic'}
+                  </div>
+                </div>
+                <div>
+                  <div className="text-sm text-white/60">Wallet Balance</div>
+                  <div className="font-medium">
+                    {formatCurrency(user.walletBalance || 0)}
+                  </div>
                 </div>
               </div>
-            </CardContent>
-          </MedievalFrame>
+            </div>
+            
+            <div className="flex justify-between mt-6">
+              <Button variant="outline" className="glass-morphism border-white/10 hover:bg-white/10">
+                View Profile
+              </Button>
+              <Button className="bg-royal-gold text-black hover:bg-royal-gold/90">
+                Boost Profile
+              </Button>
+            </div>
+          </div>
         </div>
-      </div>
-      
-      <div className="text-center mt-6 text-xs text-white/40 italic max-w-2xl mx-auto">
-        "The top spender on SpendThrone receives this premium advertising space. This cosmetic perk transfers immediately when rankings change."
-      </div>
+      </Card>
     </div>
   );
 };

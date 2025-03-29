@@ -25,7 +25,6 @@ const DeadCodePathsSection: React.FC<DeadCodePathsSectionProps> = ({
       title="Dead Code Paths" 
       count={deadCodePaths.length}
       description="These code paths are unreachable and can be safely removed."
-      icon={<AlertCircle className="h-5 w-5 text-amber-500" />}
     >
       {deadCodePaths.length === 0 ? (
         showEmpty && (

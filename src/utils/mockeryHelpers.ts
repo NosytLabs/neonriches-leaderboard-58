@@ -1,137 +1,153 @@
 
-import { MockeryAction, MockeryTier, ShameAction } from '@/types/mockery';
-import { 
-  Crown, 
-  Egg, 
-  MessageSquareOff, 
-  Tomato, 
-  LucideIcon, 
-  Laugh, 
-  ArrowBigDown,
-  ArrowDown,
-  ArrowUp,
-  Ban,
-  AlertTriangle
+import {
+  Egg,
+  MessageSquare,
+  Shield,
+  Crown,
+  ThumbsDown,
+  Award,
+  AlertTriangle,
+  Bell,
+  Flame,
+  Sparkles,
+  Target,
+  Meh,
+  LucideIcon,
 } from 'lucide-react';
-import { ElementType } from 'react';
+import { MockeryAction, MockeryTier } from '@/types/mockery';
 
-// Price tiers for mockery actions
-export const MOCKERY_ACTION_PRICES: Record<MockeryAction, number> = {
-  tomatoes: 5,
-  eggs: 10,
-  stocks: 25,
-  silence: 50,
-  courtJester: 100,
+// Mock prices for each mockery action
+export const MOCKERY_PRICES: Record<MockeryAction, number> = {
+  tomatoes: 10,
+  eggs: 15,
+  stocks: 20,
+  silence: 25,
+  courtJester: 30,
   jester: 15,
-  protected: 15,
-  immune: 30,
+  protected: 30,
+  immune: 50,
   dunce: 15,
-  roast: 25,
+  roast: 20,
   ridicule: 15,
   taunt: 10,
-  common: 5,
-  uncommon: 10,
-  rare: 25,
-  epic: 50,
-  legendary: 100,
-  protection: 15,
+  shame: 25,
+  drama: 15,
+  custom: 50,
+  common: 10,
+  uncommon: 15,
+  rare: 20,
+  epic: 25,
+  legendary: 30,
+  protection: 30,
   removal: 20
 };
 
-// Effects for each mockery tier
-export const MOCKERY_TIER_EFFECTS: Record<MockeryAction, number> = {
-  tomatoes: 1,
-  eggs: 2,
-  stocks: 3,
-  silence: 4,
-  courtJester: 5,
-  jester: 2,
-  protected: 0,
-  immune: 0,
-  dunce: 2,
-  roast: 3,
-  ridicule: 2,
-  taunt: 1,
-  common: 1,
-  uncommon: 2,
-  rare: 3,
-  epic: 4,
-  legendary: 5,
-  protection: 0,
-  removal: 0
+// Discounted prices for weekly special
+export const MOCKERY_DISCOUNTED_PRICES: Record<MockeryAction, number> = {
+  tomatoes: 7,
+  eggs: 12,
+  stocks: 15,
+  silence: 20,
+  courtJester: 25,
+  jester: 12,
+  protected: 25,
+  immune: 45,
+  dunce: 12,
+  roast: 15,
+  ridicule: 12,
+  taunt: 7,
+  shame: 20,
+  drama: 12,
+  custom: 45,
+  common: 7,
+  uncommon: 12,
+  rare: 15,
+  epic: 20,
+  legendary: 25,
+  protection: 25,
+  removal: 15
 };
 
-// Icons for each mockery action
-export const MOCKERY_ACTION_ICONS: Record<MockeryAction, ElementType> = {
-  tomatoes: Tomato,
+// Icon mapping for mockery actions
+export const MOCKERY_ICONS: Record<MockeryAction, LucideIcon> = {
+  tomatoes: Target,
   eggs: Egg,
-  stocks: ArrowBigDown,
-  silence: MessageSquareOff,
+  stocks: AlertTriangle,
+  silence: MessageSquare,
   courtJester: Crown,
-  jester: Laugh,
-  protected: Ban,
-  immune: Ban,
-  dunce: ArrowDown,
-  roast: AlertTriangle,
-  ridicule: Laugh,
-  taunt: ArrowUp,
-  common: Tomato,
+  jester: Meh,
+  protected: Shield,
+  immune: Shield,
+  dunce: ThumbsDown,
+  roast: Flame,
+  ridicule: ThumbsDown,
+  taunt: Bell,
+  shame: ThumbsDown,
+  drama: Flame,
+  custom: Sparkles,
+  common: Target,
   uncommon: Egg,
-  rare: ArrowBigDown,
-  epic: MessageSquareOff,
+  rare: Award,
+  epic: Flame,
   legendary: Crown,
-  protection: Ban,
-  removal: Ban
+  protection: Shield,
+  removal: Shield
 };
 
-// Text descriptions for each mockery action
-export const MOCKERY_ACTION_TEXT: Record<MockeryAction, string> = {
-  tomatoes: "Pelted with Tomatoes",
-  eggs: "Egged On",
-  stocks: "Placed in Stocks",
-  silence: "Silenced",
-  courtJester: "Made Court Jester",
-  jester: "Made Jester",
-  protected: "Protected",
-  immune: "Immune",
+// Title/name for each mockery action
+export const MOCKERY_TITLES: Record<MockeryAction, string> = {
+  tomatoes: "Throw Tomatoes",
+  eggs: "Throw Eggs",
+  stocks: "Put in Stocks",
+  silence: "Silence User",
+  courtJester: "Mark as Court Jester",
+  jester: "Jester's Cap",
+  protected: "Protected Status",
+  immune: "Royal Immunity",
   dunce: "Dunce Cap",
-  roast: "Roasted",
-  ridicule: "Ridiculed",
-  taunt: "Taunted",
+  roast: "Royal Roast",
+  ridicule: "Public Ridicule",
+  taunt: "Taunt",
+  shame: "Walk of Shame",
+  drama: "Drama Queen",
+  custom: "Custom Mockery",
   common: "Common Mockery",
   uncommon: "Uncommon Mockery",
   rare: "Rare Mockery",
   epic: "Epic Mockery",
   legendary: "Legendary Mockery",
-  protection: "Protected",
-  removal: "Mockery Removed"
+  protection: "Protection Shield",
+  removal: "Mockery Removal"
 };
 
-// Descriptions for each mockery action
-export const MOCKERY_ACTION_DESCRIPTIONS: Record<MockeryAction, string> = {
-  tomatoes: "This user has been pelted with digital tomatoes by other users",
-  eggs: "This user has been egged on by other users",
-  stocks: "This user has been placed in the digital stocks for public viewing",
-  silence: "This user has been silenced by royal decree",
-  courtJester: "This user has been appointed as the official court jester",
-  jester: "This user has been made a jester",
-  protected: "This user is protected from mockery",
-  immune: "This user is immune to mockery",
-  dunce: "This user has been labeled a dunce",
-  roast: "This user has been roasted publicly",
-  ridicule: "This user has been subjected to ridicule",
-  taunt: "This user has been taunted",
-  common: "A common mockery has been applied",
-  uncommon: "An uncommon mockery has been applied",
-  rare: "A rare mockery has been applied",
-  epic: "An epic mockery has been applied",
-  legendary: "A legendary mockery has been applied",
-  protection: "This user is protected from mockery",
-  removal: "Mockery has been removed from this user"
+// Description for each mockery action
+export const MOCKERY_DESCRIPTIONS: Record<MockeryAction, string> = {
+  tomatoes: "Throw virtual tomatoes at this user's profile",
+  eggs: "Throw virtual eggs at this user's avatar",
+  stocks: "Lock this user in virtual stocks for public viewing",
+  silence: "Prevent this user from posting for 24 hours",
+  courtJester: "Mark this user as the Court Jester for 3 days",
+  jester: "Place a jester's cap on their profile picture",
+  protected: "User is protected from mockery for 24 hours",
+  immune: "User has royal immunity from all mockery",
+  dunce: "Place a dunce cap on their profile picture",
+  roast: "Submit this user to a royal roasting",
+  ridicule: "Subject this user to public ridicule",
+  taunt: "Taunt this user with jeering notifications",
+  shame: "Force user on a virtual walk of shame",
+  drama: "Label this user as overly dramatic",
+  custom: "Create a custom mockery for this user",
+  common: "Basic mockery with minor visual effects",
+  uncommon: "Uncommon mockery with moderate effects",
+  rare: "Rare mockery with significant profile effects",
+  epic: "Epic mockery with major visual impact",
+  legendary: "Legendary mockery with maximum humiliation",
+  protection: "Protect yourself from mockery for 24 hours",
+  removal: "Remove an active mockery from your profile"
 };
 
-// Convert actions to tiers
-export const MOCKERY_ACTION_TIERS: Record<MockeryAction, MockeryTier> = {
+// Tier mapping for mockery actions
+export const MOCKERY_TIERS: Record<MockeryAction, MockeryTier> = {
   tomatoes: "common",
   eggs: "uncommon",
   stocks: "rare",
@@ -144,6 +160,9 @@ export const MOCKERY_ACTION_TIERS: Record<MockeryAction, MockeryTier> = {
   roast: "rare",
   ridicule: "uncommon",
   taunt: "common",
+  shame: "rare",
+  drama: "uncommon",
+  custom: "legendary",
   common: "common",
   uncommon: "uncommon",
   rare: "rare",
@@ -153,73 +172,95 @@ export const MOCKERY_ACTION_TIERS: Record<MockeryAction, MockeryTier> = {
   removal: "epic"
 };
 
-// Tier prices
-export const MOCKERY_TIER_PRICES: Record<MockeryTier, number> = {
-  common: 5,
-  uncommon: 10,
-  rare: 25,
-  epic: 50,
-  legendary: 100,
-  basic: 5,
-  premium: 50,
-  elite: 100
+// Colors for mockery tiers
+export const MOCKERY_TIER_COLORS: Record<MockeryTier, string> = {
+  common: "#9ca3af", // gray-400
+  uncommon: "#4ade80", // green-400
+  rare: "#3b82f6", // blue-500
+  epic: "#a855f7", // purple-500
+  legendary: "#f59e0b", // amber-500
+  premium: "#ec4899", // pink-500
+  basic: "#9ca3af", // gray-400
+  elite: "#f43f5e" // rose-500
+};
+
+// Get a mockery color based on its action
+export const getMockeryActionColor = (action: MockeryAction): string => {
+  const tier = MOCKERY_TIERS[action] || "common";
+  return MOCKERY_TIER_COLORS[tier];
 };
 
 // Convert a mockery action to its tier
 export const convertActionToTier = (action: MockeryAction): MockeryTier => {
-  return MOCKERY_ACTION_TIERS[action] || "common";
+  return MOCKERY_TIERS[action] || "common";
 };
 
-// Get mockery action icon component
-export const getMockeryActionIcon = (action: MockeryAction): ElementType => {
-  return MOCKERY_ACTION_ICONS[action] || Tomato;
+// Get the icon for a mockery action
+export const getMockeryActionIcon = (action: MockeryAction): LucideIcon => {
+  return MOCKERY_ICONS[action] || MOCKERY_ICONS.common;
 };
 
-// Get text description for mockery action
-export const getMockeryText = (action: MockeryAction): string => {
-  return MOCKERY_ACTION_TEXT[action] || "Mocked";
+// Get the title for a mockery action
+export const getMockeryActionTitle = (action: MockeryAction): string => {
+  return MOCKERY_TITLES[action] || "Unknown Mockery";
 };
 
-// Get detailed description for mockery action
-export const getMockeryDescription = (action: MockeryAction): string => {
-  return MOCKERY_ACTION_DESCRIPTIONS[action] || "This user has been mocked";
+// Get the description for a mockery action
+export const getMockeryActionDescription = (action: MockeryAction): string => {
+  return MOCKERY_DESCRIPTIONS[action] || "No description available";
 };
 
-// Get tier for mockery action
-export const getMockeryTier = (action: MockeryAction): MockeryTier => {
-  return MOCKERY_ACTION_TIERS[action] || "common";
+// Get the price for a mockery action
+export const getMockeryActionPrice = (action: MockeryAction): number => {
+  return MOCKERY_PRICES[action] || 10;
 };
 
-// Get price for mockery action
-export const getMockeryPrice = (action: MockeryAction): number => {
-  return MOCKERY_ACTION_PRICES[action] || 5;
+// Check if there's a weekly discount for this mockery action
+export const hasWeeklyDiscount = (action: MockeryAction): boolean => {
+  // Mock implementation - in a real app, this would check against current promotions
+  const weeklyDiscountActions: MockeryAction[] = ['tomatoes', 'eggs', 'ridicule', 'taunt'];
+  return weeklyDiscountActions.includes(action);
 };
 
-// Get price for mockery tier
-export const getMockeryTierPrice = (tier: MockeryTier): number => {
-  return MOCKERY_TIER_PRICES[tier] || 5;
-};
-
-// Helper function to get color for mockery tier
-export const getMockeryTierColor = (tier: MockeryTier): string => {
-  switch (tier) {
-    case 'common':
-      return 'text-gray-300';
-    case 'uncommon':
-      return 'text-green-400';
-    case 'rare':
-      return 'text-blue-400';
-    case 'epic':
-      return 'text-purple-500';
-    case 'legendary':
-      return 'text-royal-gold';
-    case 'basic':
-      return 'text-gray-300';
-    case 'premium':
-      return 'text-purple-500';
-    case 'elite':
-      return 'text-royal-gold';
-    default:
-      return 'text-gray-300';
+// Get the discounted price for a mockery action
+export const getDiscountedMockeryPrice = (action: MockeryAction): number => {
+  if (hasWeeklyDiscount(action)) {
+    return MOCKERY_DISCOUNTED_PRICES[action];
   }
+  return getMockeryActionPrice(action);
+};
+
+// Get the tier for a mockery action
+export const getMockeryTier = (action: MockeryAction): MockeryTier => {
+  return MOCKERY_TIERS[action] || "common";
+};
+
+// Get the mockery text for display
+export const getMockeryText = (action: MockeryAction): string => {
+  const texts: Record<MockeryAction, string> = {
+    tomatoes: "has been pelted with tomatoes!",
+    eggs: "has been egged!",
+    stocks: "has been put in the stocks!",
+    silence: "has been silenced for 24 hours!",
+    courtJester: "has been declared the Court Jester!",
+    jester: "is wearing the Jester's cap!",
+    protected: "is protected from mockery!",
+    immune: "has royal immunity from mockery!",
+    dunce: "is wearing the dunce cap!",
+    roast: "is being roasted by the court!",
+    ridicule: "is being publicly ridiculed!",
+    taunt: "is being taunted!",
+    shame: "is on a walk of shame!",
+    drama: "is being called dramatic!",
+    custom: "is being mocked in a custom way!",
+    common: "is being mocked!",
+    uncommon: "is being uncomfortably mocked!",
+    rare: "is being seriously mocked!",
+    epic: "is being epically mocked!",
+    legendary: "is facing legendary mockery!",
+    protection: "has purchased protection!",
+    removal: "has removed a mockery!"
+  };
+  
+  return texts[action] || "is being mocked!";
 };

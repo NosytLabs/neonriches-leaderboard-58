@@ -1,71 +1,57 @@
-import { User, UserProfile } from '@/types/user';
+
+import { UserProfile, UserTier } from '@/types/user';
 
 /**
- * Adapts a UserProfile to a User type
- * @param profile The user profile to adapt
- * @returns A User object
+ * Ensures a user object has all required properties, filling in defaults if needed
+ * @param user Partial user profile or user ID
+ * @returns Complete user profile
  */
-export const adaptUserProfileToUser = (profile: UserProfile): User => {
+export const ensureUser = (user: Partial<UserProfile> | string): UserProfile => {
+  if (typeof user === 'string') {
+    // If just an ID is provided, create a minimal valid user object
+    return {
+      id: user,
+      username: 'user_' + user.substring(0, 6),
+      displayName: 'User',
+      totalSpent: 0,
+      rank: 0,
+      joinedAt: new Date().toISOString()
+    };
+  }
+  
+  // Ensure all required fields are present
   return {
-    id: profile.id,
-    username: profile.username,
-    displayName: profile.displayName || profile.username,
-    email: profile.email || '',
-    profileImage: profile.profileImage || '',
-    bio: profile.bio || '',
-    rank: profile.rank || 0,
-    joinDate: profile.joinDate || profile.joinedAt || new Date().toISOString(),
-    joinedAt: profile.joinedAt || profile.joinDate || new Date().toISOString(),
-    amountSpent: profile.amountSpent || profile.totalSpent || 0,
-    totalSpent: profile.totalSpent || profile.amountSpent || 0,
-    spentAmount: profile.spentAmount || profile.totalSpent || profile.amountSpent || 0,
-    walletBalance: profile.walletBalance || 0,
-    tier: profile.tier || 'free',
-    team: profile.team || null,
-    roles: profile.roles || [],
-    badges: profile.badges || [],
-    activeTitle: profile.activeTitle || '',
-    cosmetics: profile.cosmetics || {},
-    subscription: profile.subscription || null,
-    spendStreak: profile.spendStreak || 0,
-    lastActive: new Date().toISOString(),
-    createdAt: profile.createdAt || profile.joinDate || profile.joinedAt || new Date().toISOString(),
-    settings: profile.settings || {
-      showRank: true,
-      showTeam: true,
-      showSpending: true,
-      publicProfile: true,
-      allowMessages: true,
-      emailNotifications: true,
-      darkMode: true,
-      language: 'en'
-    },
-    socialLinks: profile.socialLinks || []
+    id: user.id || 'unknown',
+    username: user.username || 'anonymous',
+    displayName: user.displayName || user.username || 'Anonymous User',
+    email: user.email,
+    profileImage: user.profileImage,
+    bio: user.bio,
+    totalSpent: user.totalSpent || user.amountSpent || user.spentAmount || 0,
+    amountSpent: user.amountSpent || user.totalSpent || 0,
+    spentAmount: user.spentAmount || user.totalSpent || 0,
+    spendStreak: user.spendStreak || 0,
+    rank: user.rank || 0,
+    previousRank: user.previousRank,
+    tier: user.tier || 'basic' as UserTier,
+    team: user.team,
+    gender: user.gender,
+    joinedAt: user.joinedAt || user.createdAt || new Date().toISOString(),
+    joinDate: user.joinDate,
+    createdAt: user.createdAt,
+    walletBalance: user.walletBalance || 0,
+    profileViews: user.profileViews || 0,
+    profileClicks: user.profileClicks || 0,
+    followers: user.followers || 0,
+    following: user.following || 0,
+    profileBoosts: user.profileBoosts || [],
+    cosmetics: user.cosmetics || {},
+    subscription: user.subscription,
+    settings: user.settings,
+    socialLinks: user.socialLinks || [],
+    badges: user.badges || [],
+    walletAddress: user.walletAddress
   };
 };
 
-/**
- * Ensures that a user object is a valid User type
- * @param user The user object to ensure
- * @returns A validated User object
- */
-export const ensureUser = (user: any): User => {
-  if (!user) {
-    throw new Error('User is required');
-  }
-
-  // If it's already a valid User, return it
-  if (
-    user.id &&
-    user.username &&
-    user.displayName &&
-    user.joinedAt !== undefined
-  ) {
-    return user as User;
-  }
-
-  // Otherwise, adapt it
-  return adaptUserProfileToUser(user as UserProfile);
-};
-
-export default adaptUserProfileToUser;
+export default ensureUser;

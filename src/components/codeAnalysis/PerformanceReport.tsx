@@ -1,76 +1,75 @@
 
 import React from 'react';
-import { AlertTriangle, Zap, FileWarning } from 'lucide-react';
-import EmptyState from './shared/EmptyState';
-import { performanceIssuesMock } from '@/utils/codeAnalysis/mockData';
-
-// Define proper interface for performance issues
-interface PerformanceIssue {
-  id: string;
-  description: string;
-  file: string;
-  lineNumber: number;
-  severity: string;
-  recommendation: string;
-  issue?: string; // Add optional field that was reported as missing
-}
+import { AlertTriangle, Zap } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { mockPerformanceIssues } from '@/utils/codeAnalysis/mockData';
 
 const PerformanceReport: React.FC = () => {
-  // Use centralized mock data with the correct type
-  const performanceIssues: PerformanceIssue[] = performanceIssuesMock;
+  const issues = mockPerformanceIssues;
+
+  if (issues.length === 0) {
+    return (
+      <div className="rounded-lg p-6 border glass-morphism border-white/10">
+        <div className="flex flex-col items-center justify-center text-center py-8">
+          <Zap className="h-12 w-12 text-green-400 mb-3" />
+          <h3 className="text-xl font-semibold mb-2">No Performance Issues</h3>
+          <p className="text-white/70 max-w-md">
+            No significant performance issues were detected in the codebase. Continue monitoring as the application grows.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div>
-      <h3 className="text-xl font-semibold mb-4 flex items-center">
-        <Zap className="h-5 w-5 mr-2 text-amber-500" />
-        Performance Issues
-      </h3>
+    <div className="space-y-4">
+      <div className="flex items-center justify-between mb-2">
+        <h3 className="text-xl font-semibold">Performance Issues</h3>
+        <Badge variant="outline" className="bg-amber-500/10 text-amber-400 border-amber-400/20">
+          {issues.length} issues
+        </Badge>
+      </div>
       
-      {performanceIssues.length === 0 ? (
-        <EmptyState
-          icon={FileWarning}
-          message="No performance issues detected."
-        />
-      ) : (
-        <div className="space-y-4">
-          <p className="text-white/70 mb-4">
-            The following performance issues were detected in your codebase. Addressing these can improve application responsiveness.
-          </p>
-          
-          {performanceIssues.map((issue) => (
-            <div 
-              key={issue.id} 
-              className={`p-4 rounded-md border ${
-                issue.severity === 'high' 
-                  ? 'border-red-500/30 bg-red-500/10' 
-                  : issue.severity === 'medium'
-                    ? 'border-amber-500/30 bg-amber-500/10'
-                    : 'border-blue-500/30 bg-blue-500/10'
-              }`}
-            >
-              <div className="flex items-center justify-between mb-2">
-                <h4 className="font-medium flex items-center">
-                  <AlertTriangle className={`h-4 w-4 mr-2 ${
-                    issue.severity === 'high' ? 'text-red-500' : 
-                    issue.severity === 'medium' ? 'text-amber-500' : 'text-blue-500'
-                  }`} />
-                  {issue.description}
-                </h4>
-                <span className={`text-xs px-2 py-1 rounded-full ${
-                  issue.severity === 'high' ? 'bg-red-500/20 text-red-500' : 
-                  issue.severity === 'medium' ? 'bg-amber-500/20 text-amber-500' : 'bg-blue-500/20 text-blue-500'
-                }`}>
-                  {issue.severity}
-                </span>
+      <div className="space-y-3">
+        {issues.map((issue) => (
+          <Card key={issue.id} className="bg-black/20 border-white/5 overflow-hidden">
+            <CardContent className="p-4">
+              <div className="flex items-start gap-3">
+                <AlertTriangle 
+                  className={`h-5 w-5 mt-1 ${
+                    issue.severity === 'high' ? 'text-red-400' : 
+                    issue.severity === 'medium' ? 'text-amber-400' : 
+                    'text-blue-400'
+                  }`} 
+                />
+                <div className="flex-1">
+                  <div className="flex justify-between items-start">
+                    <h4 className="font-medium text-sm">{issue.description}</h4>
+                    <Badge 
+                      variant="outline" 
+                      className={`ml-2 ${
+                        issue.severity === 'high' ? 'bg-red-500/10 text-red-400 border-red-400/20' : 
+                        issue.severity === 'medium' ? 'bg-amber-500/10 text-amber-400 border-amber-400/20' : 
+                        'bg-blue-500/10 text-blue-400 border-blue-400/20'
+                      }`}
+                    >
+                      {issue.severity}
+                    </Badge>
+                  </div>
+                  <p className="text-sm text-white/60 mt-1">
+                    {issue.file}:{issue.lineNumber}
+                  </p>
+                  <p className="text-sm mt-2">
+                    <span className="text-white/90">Recommendation:</span>{' '}
+                    <span className="text-white/70">{issue.recommendation}</span>
+                  </p>
+                </div>
               </div>
-              <p className="text-sm text-white/70 mb-1">File: <code className="text-xs bg-white/10 px-1 py-0.5 rounded">{issue.file}</code></p>
-              <p className="text-sm text-white/70">
-                <span className="font-medium">Recommendation:</span> {issue.recommendation}
-              </p>
-            </div>
-          ))}
-        </div>
-      )}
+            </CardContent>
+          </Card>
+        ))}
+      </div>
     </div>
   );
 };

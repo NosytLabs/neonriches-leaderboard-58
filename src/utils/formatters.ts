@@ -1,104 +1,90 @@
 
 /**
+ * Formats a number as a currency string
+ * @param amount The amount to format
+ * @param currency The currency code (default: USD)
+ * @returns Formatted currency string
+ */
+export const formatCurrency = (amount: number, currency = 'USD'): string => {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency,
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  }).format(amount);
+};
+
+/**
  * Formats a file size in bytes to a human-readable string
  * @param bytes The file size in bytes
- * @returns A formatted string like "1.2 KB" or "3.4 MB"
+ * @returns Formatted size string (e.g. "1.5 MB")
  */
 export const formatFileSize = (bytes: number): string => {
   if (bytes === 0) return '0 Bytes';
   
-  const k = 1024;
   const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  const i = Math.floor(Math.log(bytes) / Math.log(1024));
   
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
-};
-
-/**
- * Formats a number as a dollar amount
- * @param amount The amount to format
- * @returns A formatted string like "$1,234.56"
- */
-export const formatDollarAmount = (amount: number): string => {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(amount);
-};
-
-/**
- * Formats a number to a compact representation
- * @param num The number to format
- * @returns A formatted string like "1.2K" or "3.4M"
- */
-export const formatCompactNumber = (num: number): string => {
-  return new Intl.NumberFormat('en-US', {
-    notation: 'compact',
-    compactDisplay: 'short'
-  }).format(num);
+  return parseFloat((bytes / Math.pow(1024, i)).toFixed(2)) + ' ' + sizes[i];
 };
 
 /**
  * Formats a date to a readable string
- * @param date The date to format
- * @returns A formatted string like "Jan 1, 2023"
+ * @param date The date to format (Date object or string)
+ * @param format The format style ('full', 'long', 'medium', 'short')
+ * @returns Formatted date string
  */
-export const formatDate = (date: string | Date): string => {
-  if (!date) return 'Unknown';
+export const formatDate = (date: Date | string, format: 'full' | 'long' | 'medium' | 'short' = 'medium'): string => {
   const dateObj = typeof date === 'string' ? new Date(date) : date;
-  return dateObj.toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric'
-  });
+  
+  return new Intl.DateTimeFormat('en-US', {
+    dateStyle: format
+  }).format(dateObj);
 };
 
 /**
- * Formats a time elapsed since a date
- * @param date The date to calculate elapsed time from
- * @returns A formatted string like "2 days ago"
+ * Formats a timestamp as a relative time string (e.g. "2 hours ago")
+ * @param timestamp The timestamp to format
+ * @returns Relative time string
  */
-export const formatTimeElapsed = (date: string | Date): string => {
-  if (!date) return 'Unknown';
-  
-  const dateObj = typeof date === 'string' ? new Date(date) : date;
+export const formatRelativeTime = (timestamp: string | number | Date): string => {
+  const date = timestamp instanceof Date ? timestamp : new Date(timestamp);
   const now = new Date();
-  const diff = now.getTime() - dateObj.getTime();
+  const diffMs = now.getTime() - date.getTime();
   
-  const seconds = Math.floor(diff / 1000);
-  const minutes = Math.floor(seconds / 60);
-  const hours = Math.floor(minutes / 60);
-  const days = Math.floor(hours / 24);
+  const diffSec = Math.round(diffMs / 1000);
+  const diffMin = Math.round(diffSec / 60);
+  const diffHour = Math.round(diffMin / 60);
+  const diffDay = Math.round(diffHour / 24);
   
-  if (days > 0) {
-    return `${days} day${days > 1 ? 's' : ''} ago`;
-  } else if (hours > 0) {
-    return `${hours} hour${hours > 1 ? 's' : ''} ago`;
-  } else if (minutes > 0) {
-    return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
-  } else {
-    return 'Just now';
+  if (diffSec < 60) {
+    return `${diffSec} second${diffSec === 1 ? '' : 's'} ago`;
   }
+  if (diffMin < 60) {
+    return `${diffMin} minute${diffMin === 1 ? '' : 's'} ago`;
+  }
+  if (diffHour < 24) {
+    return `${diffHour} hour${diffHour === 1 ? '' : 's'} ago`;
+  }
+  if (diffDay < 30) {
+    return `${diffDay} day${diffDay === 1 ? '' : 's'} ago`;
+  }
+  
+  // Fall back to standard date format for older dates
+  return formatDate(date, 'short');
 };
 
 /**
- * Formats a number as currency
- * @param amount The amount to format
- * @param currency The currency code (default: 'USD')
- * @returns A formatted string like "$1,234.56"
+ * Formats a number with appropriate suffixes (e.g. 1K, 1M)
+ * @param num The number to format
+ * @returns Formatted number string
  */
-export const formatCurrency = (
-  amount: number, 
-  currency = 'USD', 
-  minimumFractionDigits = 0, 
-  maximumFractionDigits = 0
-): string => {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency,
-    minimumFractionDigits,
-    maximumFractionDigits,
-  }).format(amount);
+export const formatNumber = (num: number): string => {
+  if (num >= 1000000) {
+    return (num / 1000000).toFixed(1) + 'M';
+  }
+  if (num >= 1000) {
+    return (num / 1000).toFixed(1) + 'K';
+  }
+  return num.toString();
 };

@@ -1,126 +1,134 @@
 
 import React from 'react';
-import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Crown, Trophy } from 'lucide-react';
-import { UserProfile } from '@/types/user';
+import { Card, CardContent } from '@/components/ui/card';
+import { Crown, DollarSign, TrendingUp, Users } from 'lucide-react';
 import RoyalTrophyModel from './3d/RoyalTrophyModel';
+import { UserProfile } from '@/types/user';
+import { formatCurrency } from '@/utils/formatters';
 
 interface RoyalShowcaseProps {
-  user?: UserProfile;
-  onPurchaseRoyal?: () => void;
+  className?: string;
 }
 
-const RoyalShowcase: React.FC<RoyalShowcaseProps> = ({ user, onPurchaseRoyal }) => {
-  const handleUpgradeClick = () => {
-    if (onPurchaseRoyal) {
-      onPurchaseRoyal();
-    }
-  };
-  
-  const mockUser: UserProfile = {
-    id: '123',
-    username: 'RoyalSpender',
-    email: 'royaluser@example.com',
+const RoyalShowcase: React.FC<RoyalShowcaseProps> = ({ className = '' }) => {
+  // Mock top spender data
+  const topSpender: UserProfile = {
+    id: 'user-1',
+    username: 'moneybags',
+    email: 'money@example.com',
     rank: 1,
-    joinDate: '2023-05-01T00:00:00Z',
-    joinedAt: '2023-05-01T00:00:00Z',
-    displayName: 'Lord Spendington',
+    joinedAt: new Date().toISOString(),
+    displayName: 'Money Bags',
     gender: 'king',
-    profileImage: 'https://i.pravatar.cc/300?img=12',
+    profileImage: 'https://api.dicebear.com/6.x/personas/svg?seed=moneybags',
     amountSpent: 5000,
     totalSpent: 5000,
     spentAmount: 5000,
     tier: 'royal',
     team: 'red',
-    spendStreak: 12
+    walletBalance: 10000,
+    spendStreak: 30
   };
-  
-  const royalUser = user || mockUser;
-  
+
   return (
-    <Card className="glass-morphism border-royal-gold/20">
-      <CardContent className="p-6">
-        <div className="text-center mb-6">
-          <div className="inline-flex items-center gap-2 mb-1">
-            <Crown className="h-6 w-6 text-royal-gold" />
-            <h2 className="text-xl font-bold text-royal-gold">Royal Status</h2>
-            <Crown className="h-6 w-6 text-royal-gold" />
-          </div>
-          <p className="text-white/70 max-w-md mx-auto text-sm">
-            Showcase your dominance with visual flair and premium status effects
-          </p>
+    <div className={`${className} max-w-4xl mx-auto`}>
+      <div className="text-center mb-8">
+        <h2 className="text-3xl font-bold mb-2 royal-gradient">The Royal Throne</h2>
+        <p className="text-white/70">
+          Our top spender sits on the throne of honor and glory
+        </p>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="flex flex-col justify-center">
+          <Card className="glass-morphism border-white/10 overflow-hidden">
+            <CardContent className="pt-6 pb-4 px-6">
+              <div className="flex flex-col items-center">
+                <div className="relative">
+                  <div className="absolute -top-2 left-1/2 transform -translate-x-1/2">
+                    <Crown className="h-7 w-7 text-yellow-400" />
+                  </div>
+                  <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-yellow-400 mb-2">
+                    <img
+                      src={topSpender.profileImage}
+                      alt={topSpender.displayName}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                </div>
+
+                <h3 className="text-xl font-bold mt-2">{topSpender.displayName}</h3>
+                <p className="text-white/60 text-sm">@{topSpender.username}</p>
+
+                <div className="flex items-center mt-2">
+                  <Badge variant="outline" className="bg-yellow-500/10 border-yellow-500/20 text-yellow-400">
+                    Rank #{topSpender.rank}
+                  </Badge>
+                </div>
+
+                <div className="grid grid-cols-3 gap-3 w-full mt-4">
+                  <div className="glass-morphism border-white/10 p-3 rounded-lg flex flex-col items-center">
+                    <DollarSign className="h-5 w-5 text-green-400" />
+                    <div className="text-sm text-white/60">Total Spent</div>
+                    <div className="font-bold">{formatCurrency(topSpender.totalSpent)}</div>
+                  </div>
+
+                  <div className="glass-morphism border-white/10 p-3 rounded-lg flex flex-col items-center">
+                    <TrendingUp className="h-5 w-5 text-blue-400" />
+                    <div className="text-sm text-white/60">Streak</div>
+                    <div className="font-bold">{topSpender.spendStreak} days</div>
+                  </div>
+
+                  <div className="glass-morphism border-white/10 p-3 rounded-lg flex flex-col items-center">
+                    <Users className="h-5 w-5 text-purple-400" />
+                    <div className="text-sm text-white/60">Followers</div>
+                    <div className="font-bold">{topSpender.followers || 0}</div>
+                  </div>
+                </div>
+
+                <div className="mt-4 glass-morphism border-white/10 p-3 rounded-lg w-full">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <div className="text-sm text-white/60">Member Since</div>
+                      <div className="font-medium">
+                        {new Date(topSpender.joinedAt).toLocaleDateString()}
+                      </div>
+                    </div>
+                    <div>
+                      <div className="text-sm text-white/60">Team</div>
+                      <div className="font-medium capitalize">
+                        {topSpender.team || 'None'}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex justify-between w-full mt-4">
+                  <Button variant="outline" className="glass-morphism border-white/10 hover:bg-white/10">
+                    View Profile
+                  </Button>
+                  <Button className="bg-royal-gold text-black hover:bg-royal-gold/90">
+                    Claim Throne
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="flex flex-col justify-center items-center">
-            <RoyalTrophyModel 
-              username={royalUser.displayName}
-              placement={royalUser.rank}
-              spinSpeed={0.2}
-              size="medium"
+
+        <div className="flex items-center justify-center">
+          <div className="w-full h-80">
+            <RoyalTrophyModel
+              rank={topSpender.rank}
+              username={topSpender.username}
+              rotationSpeed={0.01}
             />
           </div>
-          
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-royal-gold flex items-center gap-2">
-              <Trophy className="h-5 w-5" />
-              Royal Benefits
-            </h3>
-            
-            <ul className="space-y-3">
-              <li className="flex items-start gap-2">
-                <div className="h-5 w-5 mt-0.5 text-royal-gold">✦</div>
-                <div>
-                  <span className="font-medium">Premium Profile Effects</span>
-                  <p className="text-sm text-white/60">Exclusive visual effects and animations for your profile</p>
-                </div>
-              </li>
-              
-              <li className="flex items-start gap-2">
-                <div className="h-5 w-5 mt-0.5 text-royal-gold">✦</div>
-                <div>
-                  <span className="font-medium">Unlimited Profile Boosts</span>
-                  <p className="text-sm text-white/60">Apply multiple profile boosts simultaneously</p>
-                </div>
-              </li>
-              
-              <li className="flex items-start gap-2">
-                <div className="h-5 w-5 mt-0.5 text-royal-gold">✦</div>
-                <div>
-                  <span className="font-medium">75% Discount on Mockery</span>
-                  <p className="text-sm text-white/60">Mock other users at a significant discount</p>
-                </div>
-              </li>
-              
-              <li className="flex items-start gap-2">
-                <div className="h-5 w-5 mt-0.5 text-royal-gold">✦</div>
-                <div>
-                  <span className="font-medium">Premium Chat Features</span>
-                  <p className="text-sm text-white/60">Animated text effects and premium emojis in team chat</p>
-                </div>
-              </li>
-              
-              <li className="flex items-start gap-2">
-                <div className="h-5 w-5 mt-0.5 text-royal-gold">✦</div>
-                <div>
-                  <span className="font-medium">Exclusive Cosmetics</span>
-                  <p className="text-sm text-white/60">Access to royal-tier cosmetic items for your profile</p>
-                </div>
-              </li>
-            </ul>
-            
-            <Button
-              onClick={handleUpgradeClick}
-              className="w-full bg-gradient-to-r from-royal-gold to-amber-500 hover:from-amber-500 hover:to-royal-gold text-black font-semibold border border-royal-gold/50 shadow-lg"
-            >
-              <Crown className="mr-2 h-4 w-4" />
-              Acquire Royal Status - $25/month
-            </Button>
-          </div>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 };
 

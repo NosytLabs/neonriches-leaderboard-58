@@ -4,7 +4,7 @@ import { UserCosmetics } from './cosmetics';
 export type UserGender = 'king' | 'queen' | 'neutral' | 'jester' | 'noble' | 'prefer-not-to-say' | 'male';
 export type UserTeam = 'red' | 'green' | 'blue' | null;
 export type SubscriptionStatus = 'active' | 'canceled' | 'past_due' | 'trialing' | 'unpaid' | 'incomplete';
-export type SubscriptionTier = 'basic' | 'premium' | 'royal';
+export type UserTier = 'free' | 'pro' | 'royal' | 'bronze' | 'silver' | 'gold' | 'platinum' | 'basic' | 'premium' | 'elite';
 export type SubscriptionInterval = 'monthly' | 'quarterly' | 'annual';
 
 export interface ProfileBoost {
@@ -41,7 +41,7 @@ export interface UserSettings {
 
 export interface UserSubscription {
   status: SubscriptionStatus;
-  tier: SubscriptionTier;
+  tier: UserTier;
   interval: SubscriptionInterval;
   startDate: string;
   endDate: string;
@@ -81,7 +81,7 @@ export interface UserProfile {
   subscription?: UserSubscription;
   settings?: UserSettings;
   socialLinks?: SocialLink[];
-  subscriptionTier?: SubscriptionTier;
+  subscriptionTier?: UserTier;
   isAuthenticated?: boolean;
   lastMocked?: Date;
   roles?: string[];
@@ -99,6 +99,7 @@ export interface SocialLink {
   label?: string;
   clicks?: number;
   icon?: string;
+  twitter?: string; // Adding this to fix type errors
 }
 
 export interface ProfileLink extends SocialLink {
@@ -107,7 +108,6 @@ export interface ProfileLink extends SocialLink {
 
 export type User = UserProfile;
 export type Team = UserTeam;
-export type TeamType = 'red' | 'green' | 'blue';
+export type TeamType = 'red' | 'green' | 'blue' | 'Red' | 'Green' | 'Blue';
 export type UserRole = 'admin' | 'moderator' | 'user';
 export type UserStatus = 'active' | 'inactive' | 'banned';
-export type UserTier = 'free' | 'pro' | 'royal' | 'bronze' | 'silver' | 'gold' | 'platinum' | 'basic' | 'premium' | 'elite';
