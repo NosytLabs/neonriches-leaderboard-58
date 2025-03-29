@@ -6,15 +6,15 @@ import { Team } from '@/types/team';
  */
 export const getTeamColors = (teamName: string): { primary: string; secondary: string } => {
   switch (teamName.toLowerCase()) {
-    case 'red':
+    case 'crimson':
       return { primary: 'rgb(220, 38, 38)', secondary: 'rgb(254, 202, 202)' };
-    case 'blue':
+    case 'azure':
       return { primary: 'rgb(37, 99, 235)', secondary: 'rgb(191, 219, 254)' };
-    case 'green':
+    case 'emerald':
       return { primary: 'rgb(22, 163, 74)', secondary: 'rgb(187, 247, 208)' };
-    case 'gold':
+    case 'aurum':
       return { primary: 'rgb(217, 119, 6)', secondary: 'rgb(253, 230, 138)' };
-    case 'purple':
+    case 'violet':
       return { primary: 'rgb(124, 58, 237)', secondary: 'rgb(221, 214, 254)' };
     default:
       return { primary: 'rgb(156, 163, 175)', secondary: 'rgb(229, 231, 235)' };
@@ -26,15 +26,15 @@ export const getTeamColors = (teamName: string): { primary: string; secondary: s
  */
 export const getNobleHouseName = (teamName: string): string => {
   switch (teamName.toLowerCase()) {
-    case 'red':
+    case 'crimson':
       return 'House Crimson';
-    case 'blue':
+    case 'azure':
       return 'House Azure';
-    case 'green':
+    case 'emerald':
       return 'House Emerald';
-    case 'gold':
+    case 'aurum':
       return 'House Aurum';
-    case 'purple':
+    case 'violet':
       return 'House Violet';
     default:
       return 'House Neutral';
@@ -47,8 +47,8 @@ export const getNobleHouseName = (teamName: string): string => {
 export const getAllTeams = (): Team[] => {
   return [
     {
-      id: 'red',
-      name: 'Red',
+      id: 'crimson',
+      name: 'Crimson',
       nobleHouse: 'House Crimson',
       description: 'Warriors of flame and passion, always charging ahead',
       members: 124,
@@ -57,8 +57,8 @@ export const getAllTeams = (): Team[] => {
       color: 'rgb(220, 38, 38)'
     },
     {
-      id: 'blue',
-      name: 'Blue',
+      id: 'azure',
+      name: 'Azure',
       nobleHouse: 'House Azure',
       description: 'Strategic thinkers who value wisdom and patience',
       members: 98,
@@ -67,8 +67,8 @@ export const getAllTeams = (): Team[] => {
       color: 'rgb(37, 99, 235)'
     },
     {
-      id: 'green',
-      name: 'Green',
+      id: 'emerald',
+      name: 'Emerald',
       nobleHouse: 'House Emerald',
       description: 'Prosperous and growth-oriented, always investing wisely',
       members: 76,
@@ -77,8 +77,8 @@ export const getAllTeams = (): Team[] => {
       color: 'rgb(22, 163, 74)'
     },
     {
-      id: 'gold',
-      name: 'Gold',
+      id: 'aurum',
+      name: 'Aurum',
       nobleHouse: 'House Aurum',
       description: 'The wealthiest house, known for extravagance and luxury',
       members: 45,
@@ -87,8 +87,8 @@ export const getAllTeams = (): Team[] => {
       color: 'rgb(217, 119, 6)'
     },
     {
-      id: 'purple',
-      name: 'Purple',
+      id: 'violet',
+      name: 'Violet',
       nobleHouse: 'House Violet',
       description: 'Mysterious and magical, devoted to secret knowledge',
       members: 67,

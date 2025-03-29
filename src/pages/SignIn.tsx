@@ -8,7 +8,7 @@ import { RoyalDivider } from '@/components/ui/royal-divider';
 import Shell from '@/components/Shell';
 import { useAuth } from '@/contexts/auth';
 import { Label } from '@/components/ui/label';
-import { Crown, Shield } from 'lucide-react';
+import { Shield } from 'lucide-react';
 
 const SignIn: React.FC = () => {
   const navigate = useNavigate();
