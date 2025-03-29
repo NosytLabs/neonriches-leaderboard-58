@@ -6,6 +6,7 @@ import useNotificationSounds from '@/hooks/use-notification-sounds';
 import { CosmeticItem, CosmeticRarity } from '@/types/cosmetics';
 import { User } from '@/types/user';
 import { ensureUser } from '@/utils/userAdapter';
+import { MARKETING_FEATURES } from '@/config/subscriptions';
 
 export interface Wish {
   id: string;
@@ -41,6 +42,7 @@ interface UseWishingWellReturn {
   addCoin: () => void;
   formatDate: (date: Date) => string;
   predefinedAmounts: number[];
+  canWinMarketingFeatures: boolean;
 }
 
 const useWishingWell = ({ initialAmount = 1 }: UseWishingWellProps = {}): UseWishingWellReturn => {
@@ -61,6 +63,10 @@ const useWishingWell = ({ initialAmount = 1 }: UseWishingWellProps = {}): UseWis
   const wellEffectsRef = useRef<HTMLDivElement>(null);
   
   const predefinedAmounts = [0.25, 0.5, 1, 2, 5, 10];
+  
+  const canWinMarketingFeatures = Boolean(
+    user && (wishAmount >= 5 || user.subscription?.tier === 'premium' || user.subscription?.tier === 'royal')
+  );
   
   useEffect(() => {
     if (user) {
@@ -191,22 +197,71 @@ const useWishingWell = ({ initialAmount = 1 }: UseWishingWellProps = {}): UseWis
       await new Promise(resolve => setTimeout(resolve, 1500));
       
       const nothingChance = Math.max(35 - wishAmount * 3, 15);
-      const noReward = Math.random() * 100 < nothingChance;
+      const marketingFeatureChance = canWinMarketingFeatures ? 10 : 0;
+      const cosmeticChance = 100 - nothingChance - marketingFeatureChance;
       
-      if (noReward) {
+      const randomValue = Math.random() * 100;
+      
+      if (randomValue < nothingChance) {
+        setResult("The well shimmers slightly, but nothing happens. Perhaps a larger wish next time?");
         setWishResult('lose');
-        setResult("Your wish fades into the ether. Perhaps fortune will favor you next time...");
-        playSound('error', 0.3);
         
-        const newWish: Wish = {
-          id: `wish_${Date.now()}`,
-          username: user.username,
+        saveWish({
+          id: Date.now().toString(),
+          username: user.username || 'Anonymous',
           amount: wishAmount,
           result: "No reward",
           timestamp: new Date()
-        };
+        });
+      } else if (randomValue < nothingChance + marketingFeatureChance) {
+        const eligibleFeatures = MARKETING_FEATURES.filter(feature => {
+          const userTier = user.subscription?.tier || 'free';
+          const tierHierarchy = { 'free': 0, 'standard': 1, 'premium': 2, 'royal': 3 };
+          const featureTierLevel = tierHierarchy[feature.tier as keyof typeof tierHierarchy] || 0;
+          const userTierLevel = tierHierarchy[userTier as keyof typeof tierHierarchy] || 0;
+          
+          return featureTierLevel <= userTierLevel + 1;
+        });
         
-        saveWish(newWish);
+        if (eligibleFeatures.length > 0) {
+          const randomFeature = eligibleFeatures[Math.floor(Math.random() * eligibleFeatures.length)];
+          
+          const purchasedFeatures = user.purchasedFeatures || [];
+          if (!purchasedFeatures.includes(randomFeature.id)) {
+            purchasedFeatures.push(randomFeature.id);
+            
+            await updateUserProfile({
+              ...user,
+              purchasedFeatures
+            });
+          }
+          
+          setResult(`The well glows with mystical energy! You've been granted access to: ${randomFeature.name}!`);
+          setWishResult('win');
+          setRewardRarity('epic');
+          
+          saveWish({
+            id: Date.now().toString(),
+            username: user.username || 'Anonymous',
+            amount: wishAmount,
+            result: `Won marketing feature: ${randomFeature.name}`,
+            rarity: 'epic',
+            timestamp: new Date()
+          });
+          
+          playSound('win');
+        } else {
+          setResult("The well shimmers with potential, but nothing quite materializes. Try again!");
+          setWishResult('lose');
+          
+          saveWish({
+            id: Date.now().toString(),
+            username: user.username || 'Anonymous',
+            amount: wishAmount,
+            result: "No reward",
+            timestamp: new Date()
+          });
+        }
       } else {
         const { cosmeticItem, rarity } = await awardRandomCosmetic(user, wishAmount, preferredCategory);
         
@@ -300,7 +355,8 @@ const useWishingWell = ({ initialAmount = 1 }: UseWishingWellProps = {}): UseWis
     handleWish,
     addCoin,
     formatDate,
-    predefinedAmounts
+    predefinedAmounts,
+    canWinMarketingFeatures
   };
 };
 

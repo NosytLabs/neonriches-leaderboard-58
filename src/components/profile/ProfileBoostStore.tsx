@@ -27,27 +27,6 @@ const ProfileBoostStore: React.FC<ProfileBoostStoreProps> = ({ user, onBoostAppl
     return profileBoostEffects.filter(boost => boost.type === activeTab);
   };
   
-  // Get discount for user based on subscription tier
-  const getUserDiscount = () => {
-    const subscriptionTier = user.subscription?.tier;
-    switch (subscriptionTier) {
-      case 'premium':
-        return 0.5; // 50% discount
-      case 'royal':
-        return 0.75; // 75% discount
-      default:
-        return 0; // No discount
-    }
-  };
-  
-  // Apply discount to boost price
-  const getDiscountedPrice = (originalPrice: number) => {
-    const discount = getUserDiscount();
-    if (discount === 0) return originalPrice;
-    
-    return Math.max(originalPrice - (originalPrice * discount), 1); // Minimum $1
-  };
-  
   // Handle boost purchase
   const handlePurchaseBoost = (boostId: string, price: number) => {
     // In a real app, this would make an API call to purchase the boost
@@ -97,9 +76,7 @@ const ProfileBoostStore: React.FC<ProfileBoostStoreProps> = ({ user, onBoostAppl
         <TabsContent value={activeTab}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {getFilteredBoosts().map((boost) => {
-              const originalPrice = boost.cost;
-              const discountedPrice = getDiscountedPrice(originalPrice);
-              const hasDiscount = discountedPrice < originalPrice;
+              const price = boost.cost;
               
               // Check if user can access this tier
               const userSubscriptionTier = user.subscription?.tier;
@@ -150,19 +127,16 @@ const ProfileBoostStore: React.FC<ProfileBoostStoreProps> = ({ user, onBoostAppl
                       
                       <div className="flex items-center gap-2">
                         <div className="text-right">
-                          {hasDiscount && (
-                            <span className="text-xs line-through text-white/50">${originalPrice}</span>
-                          )}
                           <div className="flex items-center gap-1">
                             <Tag className="h-3.5 w-3.5 text-royal-gold" />
-                            <span className="font-bold">${discountedPrice}</span>
+                            <span className="font-bold">${price}</span>
                           </div>
                         </div>
                         
                         <Button 
                           size="sm" 
                           disabled={!canAccess}
-                          onClick={() => handlePurchaseBoost(boost.id, discountedPrice)}
+                          onClick={() => handlePurchaseBoost(boost.id, price)}
                         >
                           {canAccess ? 'Purchase' : 'Locked'}
                         </Button>

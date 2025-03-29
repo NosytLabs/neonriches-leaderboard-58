@@ -3,9 +3,11 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Eye, Zap, Award, Link as LinkIcon, Users, TrendingUp, Clock, DollarSign } from 'lucide-react';
+import { Eye, Zap, Award, Link as LinkIcon, Users, TrendingUp, Clock, DollarSign, ShoppingBag } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { UserProfile } from '@/types/user';
+import { useFeatureAccess } from '@/hooks/use-feature-access';
+import { Link } from 'react-router-dom';
 
 interface MarketingProfileProps {
   user: UserProfile;
@@ -14,6 +16,7 @@ interface MarketingProfileProps {
 
 const MarketingProfile: React.FC<MarketingProfileProps> = ({ user, onBoostProfile }) => {
   const { toast } = useToast();
+  const { canAccessFeature } = useFeatureAccess();
   
   const viewCount = user.profileViews || 0;
   const clickCount = user.profileClicks || 0;
@@ -26,6 +29,11 @@ const MarketingProfile: React.FC<MarketingProfileProps> = ({ user, onBoostProfil
       description: "Your profile link has been copied to clipboard",
     });
   };
+  
+  const hasAdvancedMarketing = canAccessFeature('marketing_dashboard') || 
+                              (user.purchasedFeatures && 
+                                (user.purchasedFeatures.includes('basic_analytics') || 
+                                 user.purchasedFeatures.includes('advanced_analytics')));
   
   return (
     <Card className="glass-morphism border-purple-400/10">
@@ -108,12 +116,29 @@ const MarketingProfile: React.FC<MarketingProfileProps> = ({ user, onBoostProfil
                 <span className="font-medium">Weekly Events</span>
               </div>
               <Badge variant="outline" className="bg-purple-500/10 text-purple-400 border-purple-500/30">
-                Coming Soon
+                {user.subscription?.tier && user.subscription.tier !== 'free' ? 'Available' : 'Upgrade to Access'}
               </Badge>
             </div>
             <p className="text-sm text-white/70 mb-2">
               Participate in weekly spotlight events for additional visibility boosts.
             </p>
+            
+            {!hasAdvancedMarketing && (
+              <div className="mt-2 p-2 bg-black/20 rounded text-xs">
+                <div className="flex items-center text-white/80 mb-1">
+                  <ShoppingBag size={12} className="mr-1 text-purple-400" />
+                  <span>Enhance your marketing with advanced features</span>
+                </div>
+                <Button
+                  size="sm"
+                  variant="link"
+                  className="text-purple-400 p-0 h-auto text-xs"
+                  asChild
+                >
+                  <Link to="/marketing-shop">Shop Marketing Features</Link>
+                </Button>
+              </div>
+            )}
           </div>
 
           <div className="grid grid-cols-2 gap-3">

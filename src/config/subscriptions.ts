@@ -9,10 +9,22 @@ export const PRICE_IDS = {
   ROYAL_YEARLY: 'price_royal_yearly',
   BOOST_BASIC: 'price_boost_basic',
   BOOST_PREMIUM: 'price_boost_premium',
+  // Individual marketing feature price IDs
+  MARKETING_BASIC_ANALYTICS: 'price_marketing_basic_analytics',
+  MARKETING_ADVANCED_ANALYTICS: 'price_marketing_advanced_analytics',
+  MARKETING_PROMOTION_TOOLS: 'price_marketing_promotion_tools',
+  MARKETING_AUDIENCE_INSIGHTS: 'price_marketing_audience_insights',
 };
 
 // Map products to features they unlock
 export const PRODUCT_FEATURES = {
+  'free': [
+    'basic_profile',
+    'leaderboard_presence',
+    'team_affiliation',
+    'profile_boost_eligible',
+    'basic_marketing'
+  ],
   'standard': [
     'basic_profile',
     'leaderboard_presence',
@@ -146,22 +158,146 @@ export const FEATURE_METADATA = {
   }
 };
 
+// Individual marketing features available for purchase
+export const MARKETING_FEATURES = [
+  {
+    id: "basic_analytics",
+    name: "Basic Analytics Package",
+    description: "Track your profile views, clicks, and basic engagement metrics",
+    price: 2.99,
+    features: [
+      "Track profile views",
+      "Track link clicks",
+      "Basic visitor metrics",
+      "Weekly performance summary",
+      "14-day data history"
+    ],
+    priceId: PRICE_IDS.MARKETING_BASIC_ANALYTICS,
+    tier: "standard"
+  },
+  {
+    id: "advanced_analytics",
+    name: "Advanced Analytics Suite",
+    description: "Comprehensive analytics with detailed visitor insights and trends",
+    price: 4.99,
+    features: [
+      "All Basic Analytics features",
+      "Visitor demographics",
+      "Traffic source analysis",
+      "Engagement trends",
+      "30-day data history",
+      "Daily performance reports"
+    ],
+    priceId: PRICE_IDS.MARKETING_ADVANCED_ANALYTICS,
+    tier: "premium"
+  },
+  {
+    id: "promotion_tools",
+    name: "Promotion Toolkit",
+    description: "Tools to enhance your profile visibility and reach more viewers",
+    price: 5.99,
+    features: [
+      "Featured placement in discover section",
+      "Profile highlight effects",
+      "Enhanced search visibility",
+      "Social sharing toolkit",
+      "Automated promotion scheduling"
+    ],
+    priceId: PRICE_IDS.MARKETING_PROMOTION_TOOLS,
+    tier: "premium"
+  },
+  {
+    id: "audience_insights",
+    name: "Royal Audience Insights",
+    description: "Elite-tier visitor analysis and conversion optimization tools",
+    price: 8.99,
+    features: [
+      "All Advanced Analytics features",
+      "Visitor interest mapping",
+      "Click heatmaps",
+      "Engagement optimization suggestions", 
+      "Conversion tracking",
+      "Competitor analysis",
+      "90-day data history"
+    ],
+    priceId: PRICE_IDS.MARKETING_AUDIENCE_INSIGHTS,
+    tier: "royal"
+  }
+];
+
+// Weekly marketing promotion events
+export const MARKETING_EVENTS = [
+  {
+    id: "spotlight_sunday",
+    name: "Spotlight Sunday",
+    description: "Get featured in the Sunday Spotlight section for 24 hours",
+    recurrence: "weekly",
+    day: "Sunday",
+    benefit: "Up to 3x more profile views",
+    eligibility: "All users"
+  },
+  {
+    id: "boost_tuesday",
+    name: "Traffic Tuesday",
+    description: "Double effectiveness of profile boosts purchased on Tuesdays",
+    recurrence: "weekly",
+    day: "Tuesday",
+    benefit: "2x boost duration",
+    eligibility: "All users"
+  },
+  {
+    id: "featured_friday",
+    name: "Featured Friday",
+    description: "Chance to be featured on the homepage banner on Fridays",
+    recurrence: "weekly",
+    day: "Friday",
+    benefit: "Homepage visibility",
+    eligibility: "Standard tier and above"
+  },
+  {
+    id: "monthly_showcase",
+    name: "Monthly Showcase",
+    description: "Top spenders of the month get a special showcase section",
+    recurrence: "monthly",
+    day: "Last day of month",
+    benefit: "Dedicated showcase section for 3 days",
+    eligibility: "Top 10 spenders of the month"
+  }
+];
+
 // Subscription tiers with standardized naming and features
 export const SUBSCRIPTION_TIERS = [
   {
-    id: "standard",
-    name: "Standard",
-    description: "Entry level access to digital status",
-    priceMonthly: 5,
-    priceYearly: 50,
+    id: "free",
+    name: "Free",
+    description: "Basic access with limited features",
+    priceMonthly: 0,
+    priceYearly: 0,
     features: [
       "Basic profile customization",
       "Leaderboard presence with standard display",
       "Team affiliation",
       "Ability to purchase profile boosts",
-      "Basic marketing analytics",
+      "Basic view counter",
+      "Access to individual marketing features (sold separately)"
+    ],
+    recommended: false,
+    priceId: "",
+    yearlyPriceId: ""
+  },
+  {
+    id: "standard",
+    name: "Standard",
+    description: "Enhanced presence with basic marketing tools",
+    priceMonthly: 4.99,
+    priceYearly: 49.99,
+    features: [
+      "All Free tier features",
+      "Advanced profile customization",
+      "Basic marketing dashboard",
       "Profile view tracking",
-      "Public certificate of conspicuous consumption"
+      "Public certificate of conspicuous consumption",
+      "Weekly marketing event eligibility"
     ],
     recommended: false,
     priceId: PRICE_IDS.STANDARD_MONTHLY,
@@ -171,10 +307,10 @@ export const SUBSCRIPTION_TIERS = [
     id: "premium",
     name: "Premium",
     description: "Enhanced digital presence with marketing tools",
-    priceMonthly: 15,
-    priceYearly: 150,
+    priceMonthly: 14.99,
+    priceYearly: 149.99,
     features: [
-      "Advanced profile customization",
+      "All Standard tier features",
       "RGB borders and animations in leaderboard",
       "Up to 5 images and links on profile",
       "Marketing analytics dashboard",
@@ -192,10 +328,10 @@ export const SUBSCRIPTION_TIERS = [
     id: "royal",
     name: "Royal",
     description: "Maximum status with exclusive marketing features",
-    priceMonthly: 30,
-    priceYearly: 300,
+    priceMonthly: 29.99,
+    priceYearly: 299.99,
     features: [
-      "Maximum profile customization",
+      "All Premium tier features",
       "Royal styling on leaderboard (gold borders, crown icons, animations)",
       "Permanent profile boost effect",
       "Exclusive animated effects and visual enhancements",
