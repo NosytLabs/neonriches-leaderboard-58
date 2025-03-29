@@ -57,9 +57,10 @@ const ResizableHandle = forwardRef<
 ));
 ResizableHandle.displayName = 'ResizableHandle';
 
+// Ensure we're passing the correct props to the ResizableHandle component
 const ResizableSeparator = forwardRef<
   ElementRef<typeof ResizablePrimitive.PanelResizeHandle>,
-  ResizableHandleProps
+  Omit<ResizableHandleProps, 'withHandle'>
 >(({ className, ...props }, ref) => (
   <ResizableHandle
     ref={ref}
