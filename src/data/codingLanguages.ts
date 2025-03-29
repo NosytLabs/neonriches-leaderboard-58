@@ -1,5 +1,5 @@
 
-import React from 'react';
+import { ReactNode } from 'react';
 import { Terminal, Server, Database, Globe, Box, Code, BookOpen, Cpu } from 'lucide-react';
 import { CodeLanguage } from '@/types/code';
 
@@ -8,7 +8,7 @@ export const codingLanguages: CodeLanguage[] = [
     id: 'javascript',
     name: 'JavaScript',
     subtitle: 'The Scribe of the Web',
-    icon: <Terminal className="h-5 w-5 text-yellow-400" />,
+    icon: Terminal,
     description: 'The versatile language of the web, used by royal scribes to create interactive scrolls.',
     difficulty: 'Beginner',
     royalDecree: 'By order of the Crown, JavaScript shall be the primary language of the realm\'s interactive scrolls and magical interfaces.',
@@ -28,7 +28,7 @@ console.log(message);`,
     id: 'python',
     name: 'Python',
     subtitle: 'The Alchemist\'s Choice',
-    icon: <Server className="h-5 w-5 text-blue-400" />,
+    icon: Server,
     description: 'A powerful yet elegant language favored by the kingdom\'s alchemists and scholars.',
     difficulty: 'Beginner',
     royalDecree: 'The Royal Academy of Sciences hereby declares Python as the official language for scientific computations and alchemical formulations.',
@@ -53,7 +53,7 @@ print(f"The potion potency is {potency} units of magical power.")`,
     id: 'sql',
     name: 'SQL',
     subtitle: 'The Keeper of Records',
-    icon: <Database className="h-5 w-5 text-green-400" />,
+    icon: Database,
     description: 'The ancient language used to query the kingdom\'s vast archives and treasure records.',
     difficulty: 'Intermediate',
     royalDecree: 'All royal treasuries, census data, and kingdom archives shall be maintained through SQL, as decreed by the Royal Recordkeeper.',
@@ -76,7 +76,7 @@ LIMIT 5;
     id: 'nodejs',
     name: 'Node.js',
     subtitle: 'The Royal Messenger',
-    icon: <Globe className="h-5 w-5 text-green-500" />,
+    icon: Globe,
     description: 'The swift courier that delivers messages between the kingdom\'s various services.',
     difficulty: 'Intermediate',
     royalDecree: 'The Royal Communications Office shall utilize Node.js for all message brokering and service coordination throughout the realm.',
@@ -111,7 +111,7 @@ app.listen(port, () => {
     id: 'java',
     name: 'Java',
     subtitle: 'The Castle Builder',
-    icon: <Box className="h-5 w-5 text-orange-400" />,
+    icon: Box,
     description: 'A robust language used to construct the kingdom\'s most enduring and complex structures.',
     difficulty: 'Hard',
     royalDecree: 'For all strategic systems of the kingdom requiring longevity and stability, Java shall be the architectural language of choice.',
@@ -151,7 +151,7 @@ public class Castle {
     id: 'csharp',
     name: 'C#',
     subtitle: 'The Royal Engineer',
-    icon: <Cpu className="h-5 w-5 text-purple-400" />,
+    icon: Cpu,
     description: 'The precise language used by the kingdom\'s engineers to build powerful tools and war machines.',
     difficulty: 'Hard',
     royalDecree: 'The Royal Engineering Guild establishes C# as the standard for kingdom infrastructure, war machines, and mechanical enchantments.',
@@ -190,7 +190,7 @@ namespace RoyalSiegeEngineering
     id: 'php',
     name: 'PHP',
     subtitle: 'The Royal Archivist',
-    icon: <BookOpen className="h-5 w-5 text-blue-300" />,
+    icon: BookOpen,
     description: 'The traditional language used to maintain the kingdom\'s archives and public notices.',
     difficulty: 'Intermediate',
     royalDecree: 'The Keeper of the Archives shall continue the use of PHP for maintaining royal proclamations and public records.',
@@ -239,7 +239,7 @@ $archive->recordDecree(
     id: 'ruby',
     name: 'Ruby',
     subtitle: 'The Court Jeweler',
-    icon: <Code className="h-5 w-5 text-red-400" />,
+    icon: Code,
     description: 'An elegant language that crafts beautiful and valuable solutions for the royal court.',
     difficulty: 'Intermediate',
     royalDecree: 'The Guild of Royal Craftsmen recommends Ruby for its elegance and beauty in crafting the finest digital jewels of the realm.',
@@ -295,7 +295,7 @@ crown_jewel.display_royal_appraisal`,
     id: 'go',
     name: 'Go',
     subtitle: 'The Royal Explorer',
-    icon: <Globe className="h-5 w-5 text-blue-300" />,
+    icon: Globe,
     description: 'A swift language used by the kingdom\'s explorers to chart new territories and build efficient outposts.',
     difficulty: 'Intermediate',
     royalDecree: 'The Royal Geographic Society endorses Go for all new explorations, mapping expeditions, and outpost establishments.',
@@ -334,9 +334,9 @@ func (o *Outpost) ExpandTerritory(squareKm int) {
 	resourcesNeeded := squareKm * 10
 	
 	if o.Resources["wood"] >= resourcesNeeded && o.Garrison >= squareKm {
-		fmt.Printf("Expanding %s outpost by %d square kilometers...\n", o.Name, squareKm)
+		fmt.Printf("Expanding %s outpost by %d square kilometers...\\n", o.Name, squareKm)
 		o.Resources["wood"] -= resourcesNeeded
-		fmt.Printf("Territory claimed for the kingdom! Remaining wood: %d units\n", o.Resources["wood"])
+		fmt.Printf("Territory claimed for the kingdom! Remaining wood: %d units\\n", o.Resources["wood"])
 	} else {
 		fmt.Println("Cannot expand: insufficient resources or garrison")
 	}
@@ -346,7 +346,7 @@ func main() {
 	// Establish a new outpost
 	borderOutpost := NewOutpost("Northern Watch", "Frostpeak Mountains", 25)
 	
-	fmt.Printf("Outpost %s established at %s with %d soldiers\n", 
+	fmt.Printf("Outpost %s established at %s with %d soldiers\\n", 
 		borderOutpost.Name, borderOutpost.Location, borderOutpost.Garrison)
 	
 	// Expand the kingdom's territory
