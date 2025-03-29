@@ -1,5 +1,3 @@
 
-// Export from auth context
-export * from './AuthContext';
-export * from './authUtils';
-export * from './authHooks';
+export { AuthProvider, useAuth } from './AuthContext';
+export type { AuthContextType, UserProfile } from './types';

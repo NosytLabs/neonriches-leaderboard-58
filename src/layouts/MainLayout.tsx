@@ -1,13 +1,20 @@
 
 import React from 'react';
 import { Outlet } from 'react-router-dom';
-import { Shell } from '@/components/ui/shell';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 
-const MainLayout = () => {
+const MainLayout: React.FC = () => {
   return (
-    <Shell>
-      <Outlet />
-    </Shell>
+    <div className="min-h-screen flex flex-col bg-gradient-to-b from-gray-900 to-black">
+      <Header />
+      
+      <main className="flex-grow">
+        <Outlet />
+      </main>
+      
+      <Footer />
+    </div>
   );
 };
 

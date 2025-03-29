@@ -1,58 +1,19 @@
 
 import React from 'react';
-import { Helmet } from 'react-helmet-async';
-import { motion } from 'framer-motion';
-import WelcomeBanner from '@/components/home/WelcomeBanner';
-import RankingHighlights from '@/components/home/RankingHighlights';
-import RecentActivity from '@/components/home/RecentActivity';
-import TeamStandings from '@/components/home/TeamStandings';
+import Shell from '@/components/Shell';
+import RoyalHero from '@/components/RoyalHero';
 
-const Home = () => {
+const Home: React.FC = () => {
   return (
-    <>
-      <Helmet>
-        <title>SpendThrone | Pay to Win Social Experiment</title>
-        <meta name="description" content="The ultimate pay-to-win social experiment where status is determined by how much you spend." />
-      </Helmet>
-      
-      <div className="container mx-auto max-w-7xl px-4 py-6">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          <WelcomeBanner />
-        </motion.div>
-        
-        <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="lg:col-span-2"
-          >
-            <RankingHighlights />
-          </motion.div>
-          
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-          >
-            <TeamStandings />
-          </motion.div>
-          
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.4 }}
-            className="lg:col-span-2"
-          >
-            <RecentActivity />
-          </motion.div>
-        </div>
+    <Shell>
+      <RoyalHero />
+      <div className="container mx-auto p-4">
+        <h1 className="text-2xl text-white font-bold mb-4">Welcome to SpendThrone</h1>
+        <p className="text-white/70">
+          The ultimate pay-to-win social experience where your status is determined by how much you spend!
+        </p>
       </div>
-    </>
+    </Shell>
   );
 };
 

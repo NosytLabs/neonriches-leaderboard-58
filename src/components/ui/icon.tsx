@@ -1,27 +1,20 @@
+
 import React from 'react';
 import { cn } from '@/lib/utils';
 
-export type IconName = 
-  // Navigation & UI
-  | 'settings' | 'home' | 'search' | 'menu' | 'arrow-right' | 'close'
-  | 'user' | 'profile' | 'notification' | 'filter' | 'edit' | 'trash'
-  | 'wallet' | 'dollar' | 'coin' | 'crown' | 'trophy' | 'gift'
-  | 'play' | 'pause' | 'volume' | 'mute' | 'upload' | 'download'
-  // Royal & Medieval
-  | 'throne' | 'sword' | 'shield' | 'scroll' | 'quill' | 'key'
-  | 'treasure' | 'gem' | 'medal' | 'goblet' | 'castle' | 'flag'
-  // Social & Communication
-  | 'heart' | 'star' | 'like' | 'dislike' | 'comment' | 'message'
-  | 'mail' | 'send' | 'share' | 'link' | 'phone'
-  // Status & Feedback
-  | 'check' | 'warning' | 'info' | 'error' | 'help' | 'lock'
-  | 'clock' | 'calendar' | 'bell' | 'bookmark' | 'tag'
-  // Content & Media
-  | 'image' | 'video' | 'audio' | 'file' | 'folder' | 'camera'
-  | 'gallery' | 'music' | 'microphone' | 'headphones' | 'book';
-
 export type IconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
-export type IconVariant = 'default' | 'solid' | 'outline' | 'royal';
+export type IconVariant = 'solid' | 'outline' | 'royal';
+
+export type IconName = 
+  | 'home' | 'trophy' | 'user' | 'profile' | 'dollar' | 'bar-chart'
+  | 'star' | 'crown' | 'shield' | 'sword' | 'scroll' | 'coin'
+  | 'castle' | 'goblet' | 'key' | 'wallet' | 'medal' | 'heart'
+  | 'mail' | 'bell' | 'calendar' | 'edit' | 'trash' | 'lock'
+  | 'phone' | 'bookmark' | 'image' | 'video' | 'music' | 'book'
+  | 'upload' | 'download' | 'menu' | 'check' | 'warning' | 'info'
+  | 'help' | 'camera' | 'gift' | 'link' | 'share' | 'play'
+  | 'pause' | 'volume' | 'mute' | 'search' | 'settings' | 'gem'
+  | 'fire' | 'sun' | 'water' | 'eye';
 
 export interface IconProps {
   name: IconName;
@@ -35,146 +28,98 @@ export const Icon: React.FC<IconProps> = ({
   name,
   size = 'md',
   className,
-  variant = 'default',
+  variant = 'solid',
   color
 }) => {
-  const sizeClasses = {
-    xs: 'w-3 h-3',
-    sm: 'w-4 h-4',
-    md: 'w-6 h-6',
-    lg: 'w-8 h-8',
-    xl: 'w-12 h-12',
-    '2xl': 'w-16 h-16',
+  // Convert size to pixel dimensions
+  const dimensions = {
+    xs: 16,
+    sm: 20,
+    md: 24,
+    lg: 32,
+    xl: 48,
+    '2xl': 64
   };
-
-  // Map icon names to their positions in the sprite sheet
-  // Format: [row, column]
-  const iconPositions: Record<IconName, [number, number]> = {
-    // Navigation & UI (Row 1)
-    'settings': [0, 0],
-    'volume': [0, 1],
-    'home': [0, 3],
-    'search': [0, 9],
-    'menu': [2, 18],
-    
-    // Status indicators (Row 2)
-    'notification': [1, 1],
-    'info': [1, 2],
-    'warning': [1, 19],
-    
-    // Money & Value (Row 3-4)
-    'wallet': [2, 1],
-    'dollar': [3, 0],
-    'coin': [3, 1],
-    'crown': [1, 14],
-    'trophy': [7, 18],
-    
-    // Communication (Row 2-3)
-    'message': [2, 13],
-    'mail': [1, 12],
-    'phone': [2, 4],
-    
-    // Media & File (Row 0-1)
-    'image': [0, 19],
-    'camera': [5, 4],
-    'video': [0, 17],
-    'file': [1, 2],
-    
-    // User & Profile
-    'user': [2, 0],
-    'profile': [2, 0],
-    
-    // Actions
-    'edit': [0, 6],
-    'trash': [4, 2],
-    'upload': [3, 6],
-    'download': [3, 7],
-    'play': [3, 18],
-    'close': [1, 13],
-    
-    // Game elements
-    'shield': [0, 0],
-    'sword': [7, 1],
-    'scroll': [5, 17],
-    'castle': [2, 15],
-    'treasure': [5, 18],
-    
-    // Social
-    'heart': [3, 4],
-    'star': [1, 1],
-    'like': [3, 5],
-    'dislike': [3, 5],
-    'comment': [2, 13],
-    'share': [4, 14],
-    
-    // Other common icons
-    'lock': [2, 8],
-    'calendar': [0, 5],
-    'clock': [6, 5],
-    'bookmark': [6, 4],
-    'tag': [7, 3],
-    'check': [7, 4],
-    'error': [1, 13],
-    'help': [1, 19],
-    
-    // Additional icons
-    'arrow-right': [2, 19],
-    'filter': [6, 16],
-    'pause': [3, 18],
-    'mute': [2, 2],
-    'link': [4, 14],
-    'send': [2, 14],
-    'bell': [1, 14],
-    'folder': [4, 12],
-    'audio': [6, 15],
-    'music': [6, 15],
-    'microphone': [5, 16],
-    'headphones': [6, 13],
-    'book': [5, 17],
-    'gallery': [1, 19],
-    'gift': [6, 7],
-    'goblet': [7, 18],
-    'medal': [7, 19],
-    'gem': [7, 16],
-    'quill': [7, 1],
-    'key': [4, 1],
-    'flag': [6, 19],
-    'throne': [1, 14],
+  
+  // Map icon names to positions in the sprite sheet
+  const iconPositions: Record<IconName, { x: number; y: number }> = {
+    'home': { x: 0, y: 0 },
+    'trophy': { x: 1, y: 0 },
+    'user': { x: 2, y: 0 },
+    'profile': { x: 3, y: 0 },
+    'dollar': { x: 4, y: 0 },
+    'bar-chart': { x: 5, y: 0 },
+    'star': { x: 6, y: 0 },
+    'crown': { x: 7, y: 0 },
+    'shield': { x: 8, y: 0 },
+    'sword': { x: 9, y: 0 },
+    'scroll': { x: 10, y: 0 },
+    'coin': { x: 11, y: 0 },
+    'castle': { x: 12, y: 0 },
+    'goblet': { x: 13, y: 0 },
+    'key': { x: 14, y: 0 },
+    'wallet': { x: 15, y: 0 },
+    'medal': { x: 16, y: 0 },
+    'heart': { x: 17, y: 0 },
+    'mail': { x: 18, y: 0 },
+    'bell': { x: 19, y: 0 },
+    'calendar': { x: 0, y: 1 },
+    'edit': { x: 1, y: 1 },
+    'trash': { x: 2, y: 1 },
+    'lock': { x: 3, y: 1 },
+    'phone': { x: 4, y: 1 },
+    'bookmark': { x: 5, y: 1 },
+    'image': { x: 6, y: 1 },
+    'video': { x: 7, y: 1 },
+    'music': { x: 8, y: 1 },
+    'book': { x: 9, y: 1 },
+    'upload': { x: 10, y: 1 },
+    'download': { x: 11, y: 1 },
+    'menu': { x: 12, y: 1 },
+    'check': { x: 13, y: 1 },
+    'warning': { x: 14, y: 1 },
+    'info': { x: 15, y: 1 },
+    'help': { x: 16, y: 1 },
+    'camera': { x: 17, y: 1 },
+    'gift': { x: 18, y: 1 },
+    'link': { x: 19, y: 1 },
+    'share': { x: 0, y: 2 },
+    'play': { x: 1, y: 2 },
+    'pause': { x: 2, y: 2 },
+    'volume': { x: 3, y: 2 },
+    'mute': { x: 4, y: 2 },
+    'search': { x: 5, y: 2 },
+    'settings': { x: 6, y: 2 },
+    'gem': { x: 7, y: 2 },
+    'fire': { x: 8, y: 2 },
+    'sun': { x: 9, y: 2 },
+    'water': { x: 10, y: 2 },
+    'eye': { x: 11, y: 2 }
   };
-
-  // Calculate background position for the sprite
-  const getIconStyle = (name: IconName) => {
-    const position = iconPositions[name];
-    if (!position) return {};
-    
-    const [row, col] = position;
-    return {
-      backgroundPosition: `-${col * 24}px -${row * 24}px`
-    };
-  };
-
-  const variantClasses = {
-    default: 'text-foreground',
-    solid: 'text-white bg-foreground rounded-sm',
-    outline: 'text-foreground border border-foreground rounded-sm',
-    royal: 'text-royal-gold',
+  
+  // Get position for the requested icon
+  const position = iconPositions[name] || { x: 0, y: 0 }; // Default to first icon if not found
+  
+  // Calculate position in pixels (assuming each icon is 24px in the sprite sheet)
+  const posX = -position.x * 24;
+  const posY = -position.y * 24;
+  
+  const styleBg = {
+    maskPosition: `${posX}px ${posY}px`,
+    WebkitMaskPosition: `${posX}px ${posY}px`,
+    backgroundColor: color || undefined,
+    width: dimensions[size],
+    height: dimensions[size],
   };
 
   return (
-    <span 
+    <span
       className={cn(
-        'inline-block bg-current mask-icon',
-        sizeClasses[size],
-        variantClasses[variant],
+        "mask-icon block",
+        `icon-${variant}`,
         className
       )}
-      style={{
-        ...getIconStyle(name),
-        ...(color ? { color } : {}),
-      }}
-      aria-hidden="true"
+      style={styleBg}
     />
   );
 };
-
-export default Icon;

@@ -39,7 +39,7 @@ const MainNav = ({ className, ...props }: React.HTMLAttributes<HTMLElement>) => 
     {
       title: "Stats",
       href: "/stats",
-      icon: <Icon name="chart" size="sm" />
+      icon: <Icon name="bar-chart" size="sm" />
     },
     {
       title: "Enhance",

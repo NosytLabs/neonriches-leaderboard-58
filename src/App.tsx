@@ -2,8 +2,8 @@
 import React from 'react';
 import SolanaApp from './SolanaApp';
 
-function App() {
+const App: React.FC = () => {
   return <SolanaApp />;
-}
+};
 
 export default App;
