@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Crown, Shield, Flame, Zap, Droplets, CreditCard, Coins, Scroll } from 'lucide-react';

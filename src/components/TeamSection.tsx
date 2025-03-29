@@ -11,8 +11,8 @@ import { Button } from '@/components/ui/button';
 const LUXURY_TEAMS = [
   {
     id: 'red',
-    name: 'House Crimson Dynasty',
-    description: 'Masters of opulent displays and lavish spending',
+    name: 'Royal Order of Reckless Spending',
+    description: 'Masters of mindless monetary mayhem, the RORS believe that one must spend with reckless abandon to assert digital dominance.',
     icon: <Crown className="h-5 w-5 text-red-500" />,
     color: 'text-red-500',
     bgColor: 'bg-red-900/30',
@@ -27,8 +27,8 @@ const LUXURY_TEAMS = [
   },
   {
     id: 'green',
-    name: 'Emerald Empire Collective',
-    description: 'Architects of strategic spending',
+    name: 'Emerald Exchequer Cabaret',
+    description: 'The calculating gold-hoarders of the EEC believe that strategic spending is the key to digital nobility.',
     icon: <Gem className="h-5 w-5 text-emerald-500" />,
     color: 'text-emerald-500',
     bgColor: 'bg-emerald-900/30',
@@ -43,8 +43,8 @@ const LUXURY_TEAMS = [
   },
   {
     id: 'blue',
-    name: 'Sapphire Sovereign Alliance',
-    description: 'Nobility through calculated financial dominance',
+    name: 'Cobalt Credit Cartel',
+    description: 'The intellectual elite of digital aristocracy, the CCC members pride themselves on timing their purchases for maximum social impact.',
     icon: <Shield className="h-5 w-5 text-blue-500" />,
     color: 'text-blue-500',
     bgColor: 'bg-blue-900/30',

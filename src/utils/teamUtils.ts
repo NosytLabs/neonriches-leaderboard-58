@@ -1,4 +1,3 @@
-
 import { User } from '@/types/user';
 import { UserTeam, UserGender } from '@/types/user';
 
@@ -89,11 +88,11 @@ export const calculateTeamStats = (users: User[]) => {
 export const getTeamName = (team: UserTeam): string => {
   switch (team) {
     case 'red':
-      return "Red Dragons";
+      return "Royal Order of Reckless Spending";
     case 'green':
-      return "Green Griffins";
+      return "Emerald Exchequer Cabaret";
     case 'blue':
-      return "Blue Phoenix";
+      return "Cobalt Credit Cartel";
     case 'none':
     default:
       return "Unaffiliated";
@@ -106,11 +105,11 @@ export const getTeamName = (team: UserTeam): string => {
 export const getTeamDescription = (team: UserTeam): string => {
   switch (team) {
     case 'red':
-      return "The Red Dragons embrace the spirit of competition and dominance. Bold and fearless, they seek to claim the throne through sheer determination and fiery passion.";
+      return "Masters of mindless monetary mayhem, the RORS believe that one must spend with reckless abandon to assert digital dominance.";
     case 'green':
-      return "The Green Griffins value strategy and growth. Wise and calculated, they build their treasury with careful planning and sustainable investments.";
+      return "The calculating gold-hoarders of the EEC believe that strategic spending is the key to digital nobility.";
     case 'blue':
-      return "The Blue Phoenix prioritize loyalty and rebirth. Spiritual and resilient, they rise from setbacks stronger than before, united in their journey to ascend.";
+      return "The intellectual elite of digital aristocracy, the CCC members pride themselves on timing their purchases for maximum social impact.";
     case 'none':
     default:
       return "Those who have yet to pledge allegiance to a royal house. Their destiny awaits.";
@@ -123,11 +122,11 @@ export const getTeamDescription = (team: UserTeam): string => {
 export const getTeamMotto = (team: UserTeam): string => {
   switch (team) {
     case 'red':
-      return "Through Fire and Fortune";
+      return "Buy First, Think Never";
     case 'green':
-      return "Wealth Through Wisdom";
+      return "Wealth So Strategic, It's Almost Pathetic";
     case 'blue':
-      return "Rise, Renew, Reign";
+      return "Patience in Spending, Unbridled in Pretending";
     case 'none':
     default:
       return "Choose Your Destiny";
@@ -278,11 +277,11 @@ export const getTeamBenefit = (team: UserTeam): string[] => {
 export const getTeamAbsurdStat = (team: UserTeam): string => {
   switch (team) {
     case 'red':
-      return "Members of the Red Dragons have collectively spent enough money to buy 47 imaginary castles in the digital kingdom, each with its own virtual moat filled with premium pixels.";
+      return "Members of the Royal Order of Reckless Spending have collectively spent enough money to buy 47 imaginary castles in the digital kingdom, each with its own virtual moat filled with premium pixels.";
     case 'green':
-      return "Green Griffins have achieved a 237% increase in meaningless digital status symbols, outpacing other teams in the accumulation of non-existent prestige by a staggering margin.";
+      return "Emerald Exchequer Cabaret members have achieved a 237% increase in meaningless digital status symbols, outpacing other teams in the accumulation of non-existent prestige by a staggering margin.";
     case 'blue':
-      return "Blue Phoenix members hold the record for most simultaneous transactions in a single second, processing enough digital payments to temporarily overload our fictional economic monitoring system.";
+      return "Cobalt Credit Cartel members hold the record for most simultaneous transactions in a single second, processing enough digital payments to temporarily overload our fictional economic monitoring system.";
     default:
       return "Unaffiliated users have saved approximately $142,857 by not participating in our ridiculous spending competition, which could have purchased actual real-world goods and services.";
   }
