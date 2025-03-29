@@ -31,7 +31,7 @@ const ResizablePanel = forwardRef<
 ));
 ResizablePanel.displayName = 'ResizablePanel';
 
-// Custom interface extending the primitive component props
+// Define the ResizableHandleProps interface properly
 interface ResizableHandleProps extends ComponentProps<typeof ResizablePrimitive.PanelResizeHandle> {
   withHandle?: boolean;
 }
@@ -57,16 +57,17 @@ const ResizableHandle = forwardRef<
 ));
 ResizableHandle.displayName = 'ResizableHandle';
 
-// When using forwardRef with a component that takes another component's props,
-// we need to ensure proper typing to prevent TypeScript errors
+// Define specific props type for ResizableSeparator to avoid issues with ref forwarding
+type ResizableSeparatorProps = Omit<ResizableHandleProps, 'withHandle'>;
+
 const ResizableSeparator = forwardRef<
   ElementRef<typeof ResizablePrimitive.PanelResizeHandle>,
-  Omit<ResizableHandleProps, 'withHandle'> // Omit withHandle as we're explicitly setting it to true
+  ResizableSeparatorProps
 >(({ className, ...props }, ref) => (
   <ResizableHandle
     ref={ref}
-    className={className}
     withHandle={true}
+    className={className}
     {...props}
   />
 ));
