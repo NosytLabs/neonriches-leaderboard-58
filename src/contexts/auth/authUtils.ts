@@ -1,5 +1,7 @@
 
-import { User, UserCosmetics } from '@/types/user';
+import { User } from '@/types/user';
+import { UserCosmetics } from '@/types/cosmetics';
+import { ProfileBoost } from '@/types/user';
 
 /**
  * Creates a default user object with initial values
@@ -46,7 +48,91 @@ export const getDefaultUser = (email: string, username: string): User => {
     updatedAt: now,
     isVerified: false,
     cosmetics,
-    activeTitle: 'newcomer'
+    activeTitle: 'newcomer',
+    spendStreak: 0,
+    gender: 'male',
+    profileViews: 0,
+    profileClicks: 0,
+    followers: 0,
+    following: 0,
+    isVIP: false,
+    settings: {
+      showRank: true,
+      showTeam: true,
+      showSpending: true,
+      publicProfile: true,
+      allowMessages: true,
+      emailNotifications: false,
+      darkMode: true,
+      language: 'en'
+    },
+    profileBoosts: []
+  };
+};
+
+/**
+ * Adds a profile boost with specified duration in days
+ */
+export const addProfileBoostWithDays = (user: User, days: number, type: string = 'general', strength: number = 1): User => {
+  if (!user) return user;
+  
+  const now = new Date();
+  const endDate = new Date();
+  endDate.setDate(now.getDate() + days);
+  
+  const profileBoost: ProfileBoost = {
+    id: `boost-${Date.now()}`,
+    startDate: now.toISOString(),
+    endDate: endDate.toISOString(),
+    level: strength,
+    type,
+    strength,
+    appliedBy: 'user'
+  };
+  
+  const profileBoosts = user.profileBoosts || [];
+  profileBoosts.push(profileBoost);
+  
+  return {
+    ...user,
+    profileBoosts
+  };
+};
+
+/**
+ * Adds a cosmetic to a user by category string
+ */
+export const addCosmeticByCategoryString = (user: User, cosmeticId: string, category: string): User => {
+  if (!user || !cosmeticId || !category) return user;
+  
+  const cosmetics = user.cosmetics || {
+    borders: [],
+    colors: [],
+    fonts: [],
+    emojis: [],
+    titles: [],
+    backgrounds: [],
+    effects: [],
+    badges: [],
+    themes: []
+  };
+  
+  // Convert category to a valid key
+  const cosmeticKey = category as keyof typeof cosmetics;
+  
+  // Ensure the category exists and is an array
+  if (!cosmetics[cosmeticKey] || !Array.isArray(cosmetics[cosmeticKey])) {
+    cosmetics[cosmeticKey] = [];
+  }
+  
+  // Add cosmetic if it doesn't already exist
+  if (!(cosmetics[cosmeticKey] as string[]).includes(cosmeticId)) {
+    (cosmetics[cosmeticKey] as string[]).push(cosmeticId);
+  }
+  
+  return {
+    ...user,
+    cosmetics
   };
 };
 
@@ -71,6 +157,10 @@ export const getTierBackgroundClass = (tier: User['tier']): string => {
     case 'gold': return 'bg-yellow-500/20';
     case 'platinum': return 'bg-indigo-400/20';
     case 'royal': return 'bg-royal-gold/20';
+    case 'premium': return 'bg-purple-500/20';
+    case 'pro': return 'bg-blue-500/20';
+    case 'basic': return 'bg-green-500/20';
+    case 'free': return 'bg-gray-500/20';
     default: return 'bg-gray-600/20';
   }
 };
@@ -85,6 +175,10 @@ export const getTierTextClass = (tier: User['tier']): string => {
     case 'gold': return 'text-yellow-500';
     case 'platinum': return 'text-indigo-400';
     case 'royal': return 'text-royal-gold';
+    case 'premium': return 'text-purple-500';
+    case 'pro': return 'text-blue-500';
+    case 'basic': return 'text-green-500';
+    case 'free': return 'text-gray-400';
     default: return 'text-gray-400';
   }
 };
@@ -99,6 +193,10 @@ export const getTierBorderClass = (tier: User['tier']): string => {
     case 'gold': return 'border-yellow-500/30';
     case 'platinum': return 'border-indigo-400/30';
     case 'royal': return 'border-royal-gold/30';
+    case 'premium': return 'border-purple-500/30';
+    case 'pro': return 'border-blue-500/30';
+    case 'basic': return 'border-green-500/30';
+    case 'free': return 'border-gray-400/30';
     default: return 'border-gray-400/30';
   }
 };

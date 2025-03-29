@@ -46,9 +46,42 @@ export const ensureUser = (user: any): User => {
     subscription: user.subscription || null,
     activeTitle: user.activeTitle || null,
     socialLinks: user.socialLinks || {},
+    badges: user.badges || [],
+    spendStreak: user.spendStreak || 0,
+    gender: user.gender || 'male',
+    profileViews: user.profileViews || 0,
+    profileClicks: user.profileClicks || 0,
+    followers: user.followers || 0,
+    following: user.following || 0,
+    isVIP: user.isVIP || false,
+    settings: user.settings || {
+      showRank: true,
+      showTeam: true,
+      showSpending: true,
+      publicProfile: true,
+      allowMessages: true,
+      emailNotifications: false,
+      darkMode: true,
+      language: 'en'
+    },
+    profileBoosts: user.profileBoosts || []
   };
   
   return ensuredUser;
+};
+
+/**
+ * Adapts a UserProfile to a User type
+ */
+export const adaptUserProfileToUser = (profile: any): User => {
+  return ensureUser({
+    ...profile,
+    // make sure required fields are present
+    totalSpent: profile.totalSpent || profile.amountSpent || profile.spentAmount || 0,
+    spentAmount: profile.spentAmount || profile.totalSpent || profile.amountSpent || 0,
+    amountSpent: profile.amountSpent || profile.totalSpent || profile.spentAmount || 0,
+    createdAt: profile.createdAt || profile.joinDate || profile.joinedAt || new Date().toISOString()
+  });
 };
 
 /**

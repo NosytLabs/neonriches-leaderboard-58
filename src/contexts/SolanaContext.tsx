@@ -2,17 +2,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Connection, PublicKey, LAMPORTS_PER_SOL } from '@solana/web3.js';
 import { useAuth } from './auth/AuthContext';
-
-interface SolanaContextValue {
-  isConnecting: boolean;
-  hasWallet: boolean;
-  walletPubkey: string | null;
-  walletBalance: number;
-  connectWallet: () => Promise<void>;
-  disconnectWallet: () => void;
-  sendSol: (recipient: string, amount: number) => Promise<{ success: boolean; message: string }>;
-  linkWalletToAccount: () => Promise<boolean>;
-}
+import { SolanaContextValue } from '@/types/solana-context';
 
 const SolanaContext = createContext<SolanaContextValue | null>(null);
 
@@ -22,6 +12,7 @@ export const SolanaProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const [hasWallet, setHasWallet] = useState(false);
   const [walletPubkey, setWalletPubkey] = useState<string | null>(null);
   const [walletBalance, setWalletBalance] = useState(0);
+  const [connected, setConnected] = useState(false);
 
   useEffect(() => {
     // Check if wallet was previously connected
@@ -29,6 +20,7 @@ export const SolanaProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     if (storedPubkey) {
       setWalletPubkey(storedPubkey);
       setHasWallet(true);
+      setConnected(true);
       fetchWalletBalance(storedPubkey);
     }
   }, []);
@@ -38,6 +30,7 @@ export const SolanaProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     if (user?.walletAddress && !walletPubkey) {
       setWalletPubkey(user.walletAddress);
       setHasWallet(true);
+      setConnected(true);
       fetchWalletBalance(user.walletAddress);
     }
   }, [user, walletPubkey]);
@@ -65,12 +58,11 @@ export const SolanaProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       const mockPubkey = 'BW1Y9SqiPRSsEDxoYfSrpHpnvWNKGrNHyBnb4HqQiwJP';
       setWalletPubkey(mockPubkey);
       setHasWallet(true);
+      setConnected(true);
       localStorage.setItem('solana_wallet_pubkey', mockPubkey);
       await fetchWalletBalance(mockPubkey);
-      return true;
     } catch (error) {
       console.error('Error connecting wallet:', error);
-      return false;
     } finally {
       setIsConnecting(false);
     }
@@ -80,8 +72,23 @@ export const SolanaProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     setWalletPubkey(null);
     setHasWallet(false);
     setWalletBalance(0);
+    setConnected(false);
     localStorage.removeItem('solana_wallet_pubkey');
   };
+
+  const signMessage = async (message: string): Promise<Uint8Array | null> => {
+    // In a real app, this would use the wallet adapter to sign a message
+    // For a mock implementation, just return a fake signature
+    console.log(`Signing message: ${message}`);
+    
+    // Create a mock signature as a Uint8Array
+    const encoder = new TextEncoder();
+    const mockSignature = encoder.encode(`signed-${message}-${Date.now()}`);
+    
+    return mockSignature;
+  };
+
+  const publicKey = walletPubkey ? new PublicKey(walletPubkey) : null;
 
   const sendSol = async (recipient: string, amount: number) => {
     try {
@@ -133,6 +140,9 @@ export const SolanaProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         hasWallet,
         walletPubkey,
         walletBalance,
+        connected,
+        publicKey,
+        signMessage,
         connectWallet,
         disconnectWallet,
         sendSol,

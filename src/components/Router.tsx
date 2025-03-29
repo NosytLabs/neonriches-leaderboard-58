@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Navigate, Routes, Route, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/auth';
@@ -42,7 +41,7 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) =
     return <div>Loading...</div>;
   }
 
-  if (!user || !isAuthenticated) {
+  if (!isAuthenticated) {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 

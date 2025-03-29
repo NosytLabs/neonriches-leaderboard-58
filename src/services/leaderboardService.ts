@@ -17,6 +17,9 @@ const mockTopSpender: User = {
   amountSpent: 9850.25,
   createdAt: new Date().toISOString(),
   isVerified: true,
+  gender: 'king',
+  spendStreak: 12,
+  badges: ['whale', 'royal', 'early-adopter'],
   cosmetics: {
     borders: ['royal-border-1', 'royal-border-2'],
     colors: ['royal-color-1'],
@@ -61,12 +64,18 @@ export const fetchLeaderboard = async (page = 1, limit = 10): Promise<User[]> =>
     tier: i < 3 ? 'royal' : i < 8 ? 'platinum' : i < 15 ? 'gold' : 'silver',
     team: ['Red', 'Green', 'Blue'][i % 3],
     rank: i + 1,
+    previousRank: i + 2,
     walletBalance: Math.round(Math.random() * 100 * 100) / 100,
     totalSpent: Math.round((10000 - i * 500 + Math.random() * 200) * 100) / 100,
     spentAmount: Math.round((10000 - i * 500 + Math.random() * 200) * 100) / 100,
     amountSpent: Math.round((10000 - i * 500 + Math.random() * 200) * 100) / 100,
     createdAt: new Date().toISOString(),
-    isVerified: i < 10
+    joinDate: new Date().toISOString(),
+    gender: i % 2 === 0 ? 'king' : 'queen',
+    spendStreak: Math.floor(Math.random() * 20),
+    badges: i < 5 ? ['whale', 'royal'] : i < 10 ? ['big-spender'] : [],
+    isVerified: i < 10,
+    isVIP: i < 5
   } as User));
 
   // If page 1, ensure the top spender is the first result
@@ -81,4 +90,16 @@ export const fetchLeaderboard = async (page = 1, limit = 10): Promise<User[]> =>
       resolve(mockLeaderboard.slice(startIndex, endIndex));
     }, 800);
   });
+};
+
+// Get leaderboard entries with pagination
+export const getLeaderboardEntries = async (page = 1, limit = 10): Promise<{
+  entries: User[],
+  totalCount: number
+}> => {
+  const entries = await fetchLeaderboard(page, limit);
+  return {
+    entries,
+    totalCount: 100 // Mock total count
+  };
 };

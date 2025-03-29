@@ -1,7 +1,4 @@
 
-// This file is read-only, so we need to create a small wrapper component
-// that properly handles the fullWidth prop
-
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Users, LogIn } from 'lucide-react';
@@ -12,7 +9,7 @@ interface AuthButtonProps {
 }
 
 const AuthButton: React.FC<AuthButtonProps> = ({ fullWidth = false }) => {
-  const { openAuthModal } = useAuth();
+  const { openAuthModal, isAuthenticated } = useAuth();
   
   return (
     <Button 
@@ -22,7 +19,7 @@ const AuthButton: React.FC<AuthButtonProps> = ({ fullWidth = false }) => {
       size="sm"
     >
       <LogIn className="w-4 h-4 mr-2" />
-      Sign In
+      {isAuthenticated ? 'Account' : 'Sign In'}
     </Button>
   );
 };

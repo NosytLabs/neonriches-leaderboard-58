@@ -14,9 +14,15 @@ export type MockeryAction =
   'roast' | 
   'ridicule' | 
   'taunt' | 
-  'drama';
+  'drama' |
+  'common' |
+  'uncommon' |
+  'rare' |
+  'epic' |
+  'legendary';
 
 export type ShameAction = MockeryAction;
+export type ExtendedMockeryAction = MockeryAction;
 
 export type MockeryTier = 
   'common' | 
@@ -46,6 +52,7 @@ export interface MockeryEffectData {
   startTime: string;
   endTime: string;
   until?: string;
+  tier?: MockeryTier;
 }
 
 export interface MockeryEvent {
@@ -60,6 +67,7 @@ export interface MockeryEvent {
   message?: string;
   tier: UserTier;
   timestamp: string;
+  targetUserId?: string;
 }
 
 export interface UserMockeryStatus {
@@ -68,4 +76,17 @@ export interface UserMockeryStatus {
   activeEffects: MockeryEffectData[];
   immuneUntil?: string;
   protectedUntil?: string;
+  activeProtection?: boolean;
+}
+
+export interface MockUser {
+  id: string;
+  username: string;
+  displayName?: string;
+  profileImage?: string;
+  profilePicture?: string;
+  bio?: string;
+  tier?: UserTier;
+  team?: string;
+  rank?: number;
 }

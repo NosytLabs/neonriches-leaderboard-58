@@ -1,221 +1,207 @@
 
-import { FileInfo, ImportInfo, VariableInfo, CssSelectorInfo, DeadCodeInfo, DependencyInfo, PerformanceIssue, ComplexityItem } from '@/types/codeAnalysis';
+export const mockedAnalysisResults = {
+  projectSize: 12500000, // 12.5 MB
+  fileCount: 432,
+  duplicateCodeCount: 58,
+  unusedImports: 143,
+  unusedVariables: 78,
+  unusedComponents: 24,
+  unusedFunctions: 35,
+  unusedCssSelectors: 92,
+  deadCodePaths: 27,
+  complexFunctions: 41,
+  performanceIssues: 33,
+  accessibility: {
+    errors: 18,
+    warnings: 47
+  },
+  bestPracticesViolations: 72,
+  securityIssues: 12
+};
 
-// Mock data for code analysis features
-export const mockFiles: FileInfo[] = [
-  { path: 'src/components/Header.tsx', size: 4500, lines: 120 },
-  { path: 'src/components/Footer.tsx', size: 2100, lines: 65 },
-  { path: 'src/components/Dashboard.tsx', size: 8900, lines: 245 },
-  { path: 'src/hooks/useAuth.ts', size: 3200, lines: 85 },
-  { path: 'src/contexts/AuthContext.tsx', size: 7500, lines: 210 },
-  { path: 'src/pages/Leaderboard.tsx', size: 5600, lines: 180 }
-];
-
-export const mockUnusedImports: ImportInfo[] = [
-  { 
-    file: 'src/components/Header.tsx', 
-    name: 'Avatar', 
-    source: '@/components/ui/avatar', 
-    line: 5, 
-    used: false 
+export const duplicateCodeMock = [
+  {
+    id: 1,
+    similarity: 95,
+    files: ['src/components/UserProfile.tsx', 'src/components/UserCard.tsx'],
+    linesCount: 28,
+    snippet: `
+const formatCurrency = (amount: number) => {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  }).format(amount);
+};
+    `,
+    recommendation: 'Extract to a shared utility function in src/utils/formatters.ts'
   },
-  { 
-    file: 'src/components/Dashboard.tsx', 
-    name: 'Dialog', 
-    source: '@/components/ui/dialog', 
-    line: 8, 
-    used: false 
-  },
-  { 
-    file: 'src/pages/Profile.tsx', 
-    name: 'Skeleton', 
-    source: '@/components/ui/skeleton', 
-    line: 12, 
-    used: false 
-  }
-];
-
-export const mockUnusedVariables: VariableInfo[] = [
-  { 
-    file: 'src/components/Header.tsx', 
-    name: 'isMenuOpen', 
-    line: 15, 
-    type: 'boolean', 
-    used: false 
-  },
-  { 
-    file: 'src/contexts/AuthContext.tsx', 
-    name: 'refreshToken', 
-    line: 45, 
-    type: 'string', 
-    used: false 
-  },
-  { 
-    file: 'src/hooks/useAuth.ts', 
-    name: 'retryCount', 
-    line: 28, 
-    type: 'number', 
-    used: false 
-  }
-];
-
-export const mockDeadCode: DeadCodeInfo[] = [
-  { 
-    path: 'src/components/Dashboard.tsx', 
-    type: 'function', 
-    name: 'formatCurrency', 
-    line: 45, 
-    location: 'Dashboard component', 
-    description: 'Function declared but never used in component' 
-  },
-  { 
-    path: 'src/utils/formatter.ts', 
-    type: 'function', 
-    name: 'formatTimestamp', 
-    line: 23, 
-    location: 'formatter.ts', 
-    description: 'Exported but never imported anywhere' 
-  },
-  { 
-    path: 'src/hooks/useProfile.ts', 
-    type: 'hook', 
-    name: 'useProfileData', 
-    line: 58, 
-    location: 'useProfile.ts', 
-    description: 'Hook defined but not used in any component' 
-  },
-  { 
-    path: 'src/components/Profile.tsx', 
-    type: 'component', 
-    name: 'ProfileBadge', 
-    line: 112, 
-    location: 'Profile.tsx', 
-    description: 'Component declared but never rendered' 
-  },
-  { 
-    path: 'src/constants/index.ts', 
-    type: 'const', 
-    name: 'API_STAGING_URL', 
-    line: 5, 
-    location: 'constants/index.ts', 
-    description: 'Constant defined but never used' 
-  }
-];
-
-export const mockUnusedDependencies: DependencyInfo[] = [
-  { 
-    name: 'framer-motion', 
-    version: '6.2.8', 
-    description: 'Animation library', 
-    used: false, 
-    size: 240000 
-  },
-  { 
-    name: 'date-fns', 
-    version: '2.28.0', 
-    description: 'Date utility library', 
-    used: false, 
-    size: 180000 
-  },
-  { 
-    name: 'lodash', 
-    version: '4.17.21', 
-    description: 'Utility library', 
-    used: false, 
-    size: 320000 
-  }
-];
-
-export const mockPerformanceIssues: PerformanceIssue[] = [
-  { 
-    id: 'perf-001', 
-    description: 'Unnecessary re-renders in Dashboard component', 
-    file: 'src/components/Dashboard.tsx', 
-    line: 45, 
-    recommendation: 'Use React.memo or useCallback to prevent unnecessary re-renders', 
-    severity: 'medium', 
-    lineNumber: 45, 
-    type: 'react', 
-    impact: 'Performance degradation on dashboard page' 
-  },
-  { 
-    id: 'perf-002', 
-    description: 'Large bundle size due to importing entire library', 
-    file: 'src/components/Charts.tsx', 
-    line: 3, 
-    recommendation: 'Use selective imports instead of importing the entire library', 
-    severity: 'high', 
-    lineNumber: 3, 
-    type: 'bundle-size', 
-    impact: 'Increased initial load time' 
-  },
-  { 
-    id: 'perf-003', 
-    description: 'Expensive computation in render function', 
-    file: 'src/components/Leaderboard.tsx', 
-    line: 78, 
-    recommendation: 'Move calculation to useMemo hook or outside the render function', 
-    severity: 'high', 
-    lineNumber: 78, 
-    type: 'react', 
-    impact: 'UI freeze during leaderboard updates' 
-  }
-];
-
-export const mockComplexityItems: ComplexityItem[] = [
-  { 
-    path: 'src/components/Dashboard.tsx', 
-    name: 'handleFilterChange', 
-    complexity: 15, 
-    filePath: 'src/components/Dashboard.tsx', 
-    line: 120 
-  },
-  { 
-    path: 'src/contexts/AuthContext.tsx', 
-    name: 'handleAuthentication', 
-    complexity: 22, 
-    filePath: 'src/contexts/AuthContext.tsx', 
-    line: 67 
-  },
-  { 
-    path: 'src/components/PaymentForm.tsx', 
-    name: 'validatePaymentDetails', 
-    complexity: 18, 
-    filePath: 'src/components/PaymentForm.tsx', 
-    line: 52 
-  }
-];
-
-export const mockUnusedCss: CssSelectorInfo[] = [
-  { 
-    file: 'src/styles/globals.css', 
-    selector: '.hero-gradient', 
-    line: 45, 
-    used: false 
-  },
-  { 
-    file: 'src/styles/animations.css', 
-    selector: '.fade-in-slow', 
-    line: 23, 
-    used: false 
-  },
-  { 
-    file: 'src/styles/components.css', 
-    selector: '.card-premium', 
-    line: 78, 
-    used: false 
-  }
-];
-
-export const mockProjectMetrics = {
-  beforeCleanup: {
-    projectSize: 15400000, // 15.4 MB
-    fileCount: 126,
-    dependencyCount: 32
-  },
-  afterCleanup: {
-    projectSize: 12800000, // 12.8 MB
-    fileCount: 112,
-    dependencyCount: 28
+  {
+    id: 2,
+    similarity: 89,
+    files: ['src/components/Leaderboard.tsx', 'src/components/Stats.tsx', 'src/pages/Dashboard.tsx'],
+    linesCount: 42,
+    snippet: `
+const fetchUserData = async (userId: string) => {
+  try {
+    const response = await fetch(\`/api/users/\${userId}\`);
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || 'Failed to fetch user data');
+    }
+    return data;
+  } catch (error) {
+    console.error('Error fetching user data:', error);
+    return null;
   }
 };
+    `,
+    recommendation: 'Move to a shared API service in src/services/userService.ts'
+  }
+];
+
+export const complexityReportMock = [
+  {
+    id: 1,
+    filePath: 'src/components/RankingSystem.tsx',
+    functionName: 'calculateUserRank',
+    complexity: 24,
+    linesOfCode: 78,
+    nestingLevel: 5,
+    recommendation: 'Break down into smaller functions focused on specific calculations'
+  },
+  {
+    id: 2,
+    filePath: 'src/utils/paymentHelpers.ts',
+    functionName: 'processTransaction',
+    complexity: 18,
+    linesOfCode: 65,
+    nestingLevel: 4,
+    recommendation: 'Extract conditional logic into separate validator functions'
+  },
+  {
+    id: 3,
+    filePath: 'src/contexts/AuthContext.tsx',
+    functionName: 'handleAuthentication',
+    complexity: 16,
+    linesOfCode: 52,
+    nestingLevel: 4,
+    recommendation: 'Split into authentication step functions with clear responsibilities'
+  }
+];
+
+export const mockPerformanceIssues = [
+  {
+    id: 1,
+    filePath: 'src/components/Leaderboard.tsx',
+    issue: 'Expensive calculation in render method',
+    impact: 'High',
+    lineNumber: 142,
+    recommendation: 'Move expensive sorting operation to useMemo hook or computed property'
+  },
+  {
+    id: 2,
+    filePath: 'src/pages/UserProfile.tsx',
+    issue: 'Excessive re-renders due to object literal in props',
+    impact: 'Medium',
+    lineNumber: 87,
+    recommendation: 'Move object creation outside render or use useMemo to memoize the object'
+  },
+  {
+    id: 3,
+    filePath: 'src/components/RankingTable.tsx',
+    issue: 'Large unoptimized image loading',
+    impact: 'High',
+    lineNumber: 56,
+    recommendation: 'Use proper image optimization, lazy loading, and consider using next/image'
+  }
+];
+
+export const unusedImportsMock = [
+  {
+    id: 1,
+    file: 'src/components/Dashboard.tsx',
+    import: '{ Button } from "@/components/ui/button"',
+    line: 5
+  },
+  {
+    id: 2,
+    file: 'src/pages/Profile.tsx',
+    import: 'useState from "react"',
+    line: 2
+  },
+  {
+    id: 3,
+    file: 'src/contexts/ThemeContext.tsx',
+    import: '{ createContext, useEffect } from "react"',
+    line: 1,
+    note: 'useEffect is imported but not used'
+  }
+];
+
+export const unusedVariablesMock = [
+  {
+    id: 1,
+    file: 'src/components/UserSettings.tsx',
+    variable: 'isLoading',
+    line: 12
+  },
+  {
+    id: 2,
+    file: 'src/utils/formatters.ts',
+    variable: 'DEFAULT_LOCALE',
+    line: 5
+  },
+  {
+    id: 3,
+    file: 'src/hooks/useAuth.tsx',
+    variable: 'error',
+    line: 15,
+    note: 'Destructured but never used'
+  }
+];
+
+export const unusedFunctionsMock = [
+  {
+    id: 1,
+    file: 'src/utils/helpers.ts',
+    function: 'formatTimestamp',
+    line: 45
+  },
+  {
+    id: 2,
+    file: 'src/services/userService.ts',
+    function: 'validateUsername',
+    line: 78
+  },
+  {
+    id: 3,
+    file: 'src/components/common/Modal.tsx',
+    function: 'handleEscape',
+    line: 62,
+    note: 'Defined but not used in component'
+  }
+];
+
+export const unusedComponentsMock = [
+  {
+    id: 1,
+    file: 'src/components/ui/Tooltip.tsx',
+    component: 'Tooltip',
+    line: 5
+  },
+  {
+    id: 2,
+    file: 'src/components/profile/ProfileBadge.tsx',
+    component: 'ProfileBadge',
+    line: 8
+  },
+  {
+    id: 3,
+    file: 'src/components/common/ErrorBoundary.tsx',
+    component: 'ErrorFallback',
+    line: 32,
+    note: 'Defined in file but not exported or used internally'
+  }
+];

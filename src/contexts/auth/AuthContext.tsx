@@ -217,7 +217,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       
       // Update user's social links
       const socialLinks = user.socialLinks || {};
-      socialLinks[platform] = url;
+      socialLinks[platform as string] = url;
       
       const updatedUser = {
         ...user,
