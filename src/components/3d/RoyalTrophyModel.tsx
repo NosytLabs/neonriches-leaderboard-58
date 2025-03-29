@@ -1,9 +1,9 @@
 
 import React, { useRef, useEffect } from 'react';
 import * as THREE from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
-import { Font, FontLoader } from 'three/examples/jsm/loaders/FontLoader';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
+import { Font, FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
 
 interface RoyalTrophyModelProps {
   width?: number;
@@ -52,7 +52,8 @@ const RoyalTrophyModel: React.FC<RoyalTrophyModelProps> = ({
     renderer.setSize(width, height);
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.shadowMap.enabled = true;
-    renderer.outputEncoding = THREE.sRGBEncoding;
+    // Update: replaced deprecated outputEncoding with outputColorSpace
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
     containerRef.current.appendChild(renderer.domElement);
     rendererRef.current = renderer;
     

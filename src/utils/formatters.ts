@@ -82,3 +82,23 @@ export const formatTimeElapsed = (date: string | Date): string => {
     return 'Just now';
   }
 };
+
+/**
+ * Formats a number as currency
+ * @param amount The amount to format
+ * @param currency The currency code (default: 'USD')
+ * @returns A formatted string like "$1,234.56"
+ */
+export const formatCurrency = (
+  amount: number, 
+  currency = 'USD', 
+  minimumFractionDigits = 0, 
+  maximumFractionDigits = 0
+): string => {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency,
+    minimumFractionDigits,
+    maximumFractionDigits,
+  }).format(amount);
+};

@@ -1,128 +1,115 @@
 
-import { CosmeticCategory } from '@/types/cosmetics';
+import { BoostEffect } from '@/types/boost';
 
-export interface BoostEffect {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  tier: 'basic' | 'premium' | 'royal';
-  type: 'appearance' | 'animation' | 'visibility' | 'effect';
-  durationDays: number;
-  previewImage: string;
-  cssClass?: string;
-}
-
-export type BoostEffectType = 'gold-aura' | 'crown-effect' | 'neon-pulse' | 'rainbow-flow' | 'royal-sparkle';
-
-const profileBoostEffects: BoostEffect[] = [
+export const profileBoostEffects: BoostEffect[] = [
   {
     id: 'gold-aura',
     name: 'Gold Aura',
-    description: 'Surrounds your profile with a subtle golden glow, drawing attention to your noble status.',
-    price: 5,
-    tier: 'basic',
-    type: 'effect',
-    durationDays: 7,
-    previewImage: '/assets/boost-previews/gold-aura.png',
-    cssClass: 'gold-aura-effect'
-  },
-  {
-    id: 'crown-effect',
-    name: 'Royal Crown',
-    description: 'Display a majestic crown above your profile, marking you as true royalty.',
-    price: 15,
-    tier: 'premium',
+    description: 'A shimmering golden aura surrounds your profile',
+    duration: 24, // hours
+    cost: 5,
     type: 'appearance',
-    durationDays: 14,
-    previewImage: '/assets/boost-previews/crown-effect.png',
-    cssClass: 'crown-effect'
+    rarity: 'uncommon',
+    allowStacking: false,
+    cssClass: 'gold-aura-effect', // Added property to fix errors
+    minTier: 'free'
   },
   {
-    id: 'neon-pulse',
-    name: 'Neon Pulse',
-    description: 'An eye-catching pulsing effect that brings your profile to life.',
-    price: 10,
-    tier: 'basic',
-    type: 'animation',
-    durationDays: 7,
-    previewImage: '/assets/boost-previews/neon-pulse.png',
-    cssClass: 'neon-pulse-effect'
-  },
-  {
-    id: 'rainbow-flow',
-    name: 'Rainbow Flow',
-    description: 'A mesmerizing rainbow animation that flows around your profile elements.',
-    price: 20,
-    tier: 'premium',
-    type: 'animation',
-    durationDays: 14,
-    previewImage: '/assets/boost-previews/rainbow-flow.png',
-    cssClass: 'rainbow-flow-effect'
-  },
-  {
-    id: 'royal-sparkle',
-    name: 'Royal Sparkle',
-    description: 'Premium sparkling effect that makes your profile truly stand out from the crowd.',
-    price: 30,
-    tier: 'royal',
-    type: 'effect',
-    durationDays: 30,
-    previewImage: '/assets/boost-previews/royal-sparkle.png',
-    cssClass: 'royal-sparkle-effect'
-  },
-  {
-    id: 'animated-border',
-    name: 'Animated Border',
-    description: 'A dynamic border animation that frames your profile in constant motion.',
-    price: 25,
-    tier: 'premium',
+    id: 'rainbow-name',
+    name: 'Rainbow Name',
+    description: 'Your name appears with a rainbow gradient effect',
+    duration: 48,
+    cost: 10,
     type: 'appearance',
-    durationDays: 21,
-    previewImage: '/assets/boost-previews/animated-border.png',
-    cssClass: 'animated-border-effect'
+    rarity: 'rare',
+    allowStacking: false,
+    cssClass: 'rainbow-name-effect', // Added property to fix errors
+    minTier: 'free'
+  },
+  {
+    id: 'royal-glow',
+    name: 'Royal Glow',
+    description: 'A pulsing royal purple glow emanates from your profile',
+    duration: 72,
+    cost: 15,
+    type: 'appearance',
+    rarity: 'epic',
+    allowStacking: false,
+    cssClass: 'royal-glow-effect', // Added property to fix errors
+    minTier: 'pro'
+  },
+  {
+    id: 'sparkling-border',
+    name: 'Sparkling Border',
+    description: 'Your profile is surrounded by twinkling stars',
+    duration: 48,
+    cost: 12,
+    type: 'animation',
+    rarity: 'rare',
+    allowStacking: true,
+    cssClass: 'sparkling-border-effect', // Added property to fix errors
+    minTier: 'free'
+  },
+  {
+    id: 'floating-crown',
+    name: 'Floating Crown',
+    description: 'A crown floats above your profile image',
+    duration: 96,
+    cost: 20,
+    type: 'animation',
+    rarity: 'legendary',
+    allowStacking: false,
+    cssClass: 'floating-crown-effect', // Added property to fix errors
+    minTier: 'free'
   },
   {
     id: 'visibility-boost',
     name: 'Visibility Boost',
-    description: 'Increase your profile visibility in search results and leaderboards.',
-    price: 15,
-    tier: 'basic',
+    description: 'Your profile appears higher in lists and search results',
+    duration: 120,
+    cost: 25,
     type: 'visibility',
-    durationDays: 14,
-    previewImage: '/assets/boost-previews/visibility-boost.png',
-    cssClass: 'visibility-boost-effect'
+    rarity: 'legendary',
+    allowStacking: true,
+    cssClass: 'visibility-boost-effect', // Added property to fix errors
+    minTier: 'free'
   },
   {
-    id: 'leaderboard-highlight',
-    name: 'Leaderboard Highlight',
-    description: 'Make your name stand out with a special highlight effect on leaderboards.',
-    price: 25,
-    tier: 'premium',
-    type: 'visibility',
-    durationDays: 21,
-    previewImage: '/assets/boost-previews/leaderboard-highlight.png',
-    cssClass: 'leaderboard-highlight-effect'
+    id: 'attention-pulse',
+    name: 'Attention Pulse',
+    description: 'Your profile periodically pulses to draw attention',
+    duration: 72,
+    cost: 15,
+    type: 'animation',
+    rarity: 'epic',
+    allowStacking: false,
+    cssClass: 'attention-pulse-effect', // Added property to fix errors
+    minTier: 'free'
   },
   {
-    id: 'royal-presence',
-    name: 'Royal Presence',
-    description: 'The ultimate visibility package, ensuring your profile gets maximum exposure.',
-    price: 50,
-    tier: 'royal',
-    type: 'visibility',
-    durationDays: 30,
-    previewImage: '/assets/boost-previews/royal-presence.png',
-    cssClass: 'royal-presence-effect'
+    id: 'royal-banner',
+    name: 'Royal Banner',
+    description: 'A royal banner appears above your profile',
+    duration: 168,
+    cost: 30,
+    type: 'effect',
+    rarity: 'legendary',
+    allowStacking: false,
+    cssClass: 'royal-banner-effect', // Added property to fix errors
+    minTier: 'pro'
+  },
+  {
+    id: 'golden-frame',
+    name: 'Golden Frame',
+    description: 'Your profile image is framed with ornate gold',
+    duration: 120,
+    cost: 20,
+    type: 'appearance',
+    rarity: 'epic',
+    allowStacking: false,
+    cssClass: 'golden-frame-effect', // Added property to fix errors
+    minTier: 'free'
   }
 ];
-
-export const getBoostById = (id: string): BoostEffect | undefined => {
-  return profileBoostEffects.find(boost => boost.id === id);
-};
-
-export const getBoostsByType = (type: 'appearance' | 'animation' | 'visibility' | 'effect'): BoostEffect[] => {
-  return profileBoostEffects.filter(boost => boost.type === type);
-};
 
 export default profileBoostEffects;
