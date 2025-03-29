@@ -36,9 +36,8 @@ import NotFound from '@/pages/NotFound';
 
 // Layout wrapper for Protected routes
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { user } = useAuth();
+  const { user, isAuthenticated } = useAuth();
   const location = useLocation();
-  const isAuthenticated = !!user;
 
   if (!isAuthenticated) {
     return <Navigate to="/login" state={{ from: location }} replace />;

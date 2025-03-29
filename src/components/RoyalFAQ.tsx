@@ -1,156 +1,162 @@
 
-import React, { useState } from 'react';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { Crown, MessageCircle, CreditCard, ShieldQuestion, Users, Scroll, Clock, Trophy, Zap, Gift, DollarSign, Star } from 'lucide-react';
-import RoyalDivider from '@/components/ui/royal-divider';
+import React from 'react';
+import { 
+  Accordion, 
+  AccordionContent, 
+  AccordionItem, 
+  AccordionTrigger 
+} from '@/components/ui/accordion';
+import { Crown, DollarSign, Shield, Target, Trophy, Gem, Scroll, Coins, MessageSquare } from 'lucide-react';
+
+interface FAQItem {
+  question: string;
+  answer: React.ReactNode;
+  icon: React.ReactNode;
+}
 
 const RoyalFAQ: React.FC = () => {
-  const [openItem, setOpenItem] = useState<string | null>(null);
-
-  const faqItems = [
+  const faqItems: FAQItem[] = [
     {
-      id: 'faq-1',
-      question: 'What exactly is SpendThrone?',
-      answer: 'SpendThrone is a satirical social experiment exploring the relationship between wealth and status. It\'s a persistent leaderboard where your rank is determined solely by how much money you\'ve spent. $1 = 1 unit of rank. It never resets, making your investment in meaningless digital prestige eternal.',
-      icon: <Crown className="h-5 w-5 text-royal-gold" />
+      question: "What is this curious realm of SpendThrone?",
+      answer: (
+        <div>
+          <p>SpendThrone is a satirical social experiment that mocketh the concept of "pay-to-win" to its most absurd extreme. Here, thy status in our digital kingdom is determined solely by how much real currency thou hast parted with. $1 = 1 unit of rank. No skills required, only the willingness to part with thy gold!</p>
+          <p className="mt-2 italic text-royal-gold/80">"Where the jests are free but the status costs dearly."</p>
+        </div>
+      ),
+      icon: <Crown className="text-royal-gold mr-3 h-5 w-5 flex-shrink-0" />
     },
     {
-      id: 'faq-2',
-      question: 'Do I get anything real for my money?',
-      answer: 'Absolutely not! That\'s the beauty of it. You receive digital status, customization options for your profile, and the satisfaction of seeing your name rise in our completely arbitrary hierarchy. It\'s a satire of pay-to-win mechanics and social status games.',
-      icon: <ShieldQuestion className="h-5 w-5 text-royal-crimson" />
+      question: "How does one ascend the noble ranks?",
+      answer: (
+        <div>
+          <p>The path to nobility is paved with expenditure, dear subject! Simply part with thy real-world currency and watch as thy digital rank increases accordingly. Each dollar spent raises thy station by one unit. The more thou spendest, the higher thy position in our completely meaningless hierarchy.</p>
+          <p className="mt-2">Thy rank can never decrease unless others outspend thee. How delightfully anxiety-inducing!</p>
+          <p className="mt-2 italic text-royal-gold/80">"The simplest status system in the realm - thy worth equals thy expenditure."</p>
+        </div>
+      ),
+      icon: <DollarSign className="text-royal-gold mr-3 h-5 w-5 flex-shrink-0" />
     },
     {
-      id: 'faq-3',
-      question: 'How do teams work?',
-      answer: 'You can join one of three royal houses: the Crimson Dynasty (Red), the Emerald Empire Collective (Green), or the Sapphire Sovereign Alliance (Blue). Your spending contributes to your team\'s total, creating a collective competition alongside individual rankings. Teams participate in weekly challenges for additional benefits.',
-      icon: <Users className="h-5 w-5 text-royal-navy" />
+      question: "What are these Royal Houses thy subjects join?",
+      answer: (
+        <div>
+          <p>Our realm is divided into three noble houses, each vying for collective dominance:</p>
+          <ul className="list-disc pl-5 mt-2 space-y-1">
+            <li><span className="text-royal-crimson font-bold">House Red</span> - Fierce warriors of excess, known for their flamboyant displays of wealth</li>
+            <li><span className="text-emerald-500 font-bold">House Green</span> - Cunning strategists who believe consistent spending surpasses impulsive splurging</li>
+            <li><span className="text-royal-navy font-bold">House Blue</span> - Scholarly nobles who analyze every transaction with cold, calculated precision</li>
+          </ul>
+          <p className="mt-2">Choose thy allegiance wisely, for thy spending contributes to thy house's collective power. Or don't choose wisely - it matters not, as long as thou spend!</p>
+          <p className="mt-2 italic text-royal-gold/80">"The houses compete, but the treasury always wins."</p>
+        </div>
+      ),
+      icon: <Shield className="text-royal-gold mr-3 h-5 w-5 flex-shrink-0" />
     },
     {
-      id: 'faq-4',
-      question: 'What are the weekly events?',
-      answer: 'Each week features different events to keep things interesting. For example, during the Poke Party event, you can pay $0.50 to drop another user down one rank for 24 hours. We also have randomized discounts on public shaming methods and special Fire Sales every third month with 30-70% off cosmetic items.',
-      icon: <Scroll className="h-5 w-5 text-royal-purple" />
+      question: "What is this Court Mockery I hear whispers of?",
+      answer: (
+        <div>
+          <p>Ah, Court Mockery! The fine art of publicly shaming thy fellow nobles! For a modest fee, thou may subject others to various medieval punishments:</p>
+          <ul className="list-disc pl-5 mt-2 space-y-1">
+            <li>Throw virtual tomatoes at those beneath thy station</li>
+            <li>Place offenders in stocks for public ridicule</li>
+            <li>Appoint the most egregious spenders as Court Jesters</li>
+          </ul>
+          <p className="mt-2">The beauty of our system: victims can purchase protection from such mockery, further filling our royal coffers!</p>
+          <p className="mt-2 italic text-royal-gold/80">"Where even humiliation has a price tag, and dignity is but another commodity."</p>
+        </div>
+      ),
+      icon: <Target className="text-royal-gold mr-3 h-5 w-5 flex-shrink-0" />
     },
     {
-      id: 'faq-5',
-      question: 'How do I communicate with other nobles?',
-      answer: 'The top 10 spenders gain access to an exclusive chat room where they can discuss strategy, form alliances, or simply brag about their wealth. All users can also leave comments on profile pages (subject to moderation).',
-      icon: <MessageCircle className="h-5 w-5 text-royal-mahogany" />
+      question: "What rewards await the most generous nobles?",
+      answer: (
+        <div>
+          <p>Those who part with excessive amounts of currency shall receive:</p>
+          <ul className="list-disc pl-5 mt-2 space-y-1">
+            <li>Fanciful digital badges to display on thy profile</li>
+            <li>Customized profile features unavailable to the common rabble</li>
+            <li>The privilege of being ranked higher on a list seen by other participants in this peculiar experiment</li>
+            <li>Certificate of Nobility - a digital parchment proclaiming thy willingness to exchange real currency for imaginary status</li>
+          </ul>
+          <p className="mt-2">All of these rewards have the same real-world value as a jester's promissory note - absolutely none! But they do look rather magnificent...</p>
+          <p className="mt-2 italic text-royal-gold/80">"In this kingdom, even the prizes mock the concept of value."</p>
+        </div>
+      ),
+      icon: <Gem className="text-royal-gold mr-3 h-5 w-5 flex-shrink-0" />
     },
     {
-      id: 'faq-6',
-      question: 'What payment methods do you accept?',
-      answer: 'We accept both fiat currency (via credit card, PayPal) and cryptocurrency (via Solana wallet integration). We value your financial contributions regardless of their form!',
-      icon: <CreditCard className="h-5 w-5 text-royal-emerald" />
+      question: "Can I recover my royal investments?",
+      answer: (
+        <div>
+          <p>Recover thy gold? HAHAHA! Oh, dear noble, thy jests are most amusing!</p>
+          <p className="mt-2">All payments to our kingdom are as permanent as a royal execution. Once thy gold enters our treasury, it shall never return to thy purse. This is not an investment with returns but a satirical performance art piece about status-seeking behavior.</p>
+          <p className="mt-2">Perhaps the real value is the lesson learned about the absurdity of purchasing status? Nay, probably not.</p>
+          <p className="mt-2 italic text-royal-gold/80">"The royal treasury operates on the principle of 'what's mine is mine, and what's yours will soon be mine as well.'"</p>
+        </div>
+      ),
+      icon: <Trophy className="text-royal-gold mr-3 h-5 w-5 flex-shrink-0" />
     },
     {
-      id: 'faq-7',
-      question: 'What happens if I become the top spender?',
-      answer: 'The #1 ranked spender receives special privileges including exclusive advertising space on the homepage, a special profile badge, and the ability to sign Certificates of Nobility. All these perks transfer immediately if someone outspends you.',
-      icon: <Trophy className="h-5 w-5 text-royal-gold" />
+      question: "How secure is my noble information?",
+      answer: (
+        <div>
+          <p>We guard thy data with the same vigilance as medieval castle guards who occasionally fall asleep at their posts after too much mead.</p>
+          <p className="mt-2">In truth, we employ modern encryption and security practices, but even the sturdiest castle walls can be breached by determined dragons. No digital fortress is completely impenetrable, much like no noble's coin purse is safe from the kingdom's tax collectors.</p>
+          <p className="mt-2">Rest assured that we store minimal information about thee - mostly just enough to track thy spending habits and mock thy financial decisions accordingly.</p>
+          <p className="mt-2 italic text-royal-gold/80">"Our moats and drawbridges are formidable, but dragons of the digital realm are clever beasts indeed."</p>
+        </div>
+      ),
+      icon: <Scroll className="text-royal-gold mr-3 h-5 w-5 flex-shrink-0" />
     },
     {
-      id: 'faq-8',
-      question: 'What is the Certificate of Nobility?',
-      answer: 'Each noble receives a personalized Certificate of Nobility displaying their rank, spending amount, and the date of issuance. This purely cosmetic document serves as proof of your questionable financial decisions and can be shared with friends or colleagues who might question your judgment.',
-      icon: <Scroll className="h-5 w-5 text-royal-mahogany" />
+      question: "What payment methods does thy treasury accept?",
+      answer: (
+        <div>
+          <p>Our royal treasury accepts tribute in various forms:</p>
+          <ul className="list-disc pl-5 mt-2 space-y-1">
+            <li>Common peasant currency (credit/debit cards)</li>
+            <li>Magic internet money (cryptocurrency)</li>
+            <li>Digital payment potions (PayPal, etc.)</li>
+          </ul>
+          <p className="mt-2">All transactions are processed through secure merchant channels, ensuring thy gold reaches our coffers without being intercepted by highway bandits.</p>
+          <p className="mt-2">Remember, the more payment methods thou useth, the faster thy coffers shall empty and thy meaningless rank shall rise!</p>
+          <p className="mt-2 italic text-royal-gold/80">"The royal mint accepts all currencies, for gold is gold, regardless of its form."</p>
+        </div>
+      ),
+      icon: <Coins className="text-royal-gold mr-3 h-5 w-5 flex-shrink-0" />
     },
     {
-      id: 'faq-9',
-      question: 'What does the Pro account include?',
-      answer: 'Pro accounts unlock enhanced customization features for your profile including extended text limits (1000 characters), up to 5 social media links with tracking, up to 5 images, animated RGB borders, custom gradients, video embeds, hover effects, and advanced analytics.',
-      icon: <Gift className="h-5 w-5 text-royal-purple" />
-    },
-    {
-      id: 'faq-10',
-      question: 'Are there different account types?',
-      answer: 'Yes! We have Free accounts (basic customization), Pro accounts ($25 for enhanced features), and the exclusive Founders Badge ($100) that includes all Pro features plus permanent recognition in our Hall of Founders and early access to new features.',
-      icon: <DollarSign className="h-5 w-5 text-royal-navy" />
-    },
-    {
-      id: 'faq-11',
-      question: 'How can I use my profile as an advertisement?',
-      answer: 'Your profile page is essentially your own personal billboard. You can add text, images, links, and media to promote whatever you want - your social media, products, services, or just your own inflated ego. The #1 ranked spender even gets their profile featured on the homepage.',
-      icon: <Clock className="h-5 w-5 text-royal-purple" />
-    },
-    {
-      id: 'faq-12',
-      question: 'Is this all just a joke?',
-      answer: 'Yes and no. SpendThrone is definitely satirical, but it\'s also a genuine social experiment exploring how people behave when status is explicitly purchasable. The platform itself is real, the transactions are real, and the community dynamics that emerge are fascinating to observe.',
-      icon: <Star className="h-5 w-5 text-royal-gold" />
+      question: "Is this whole affair a jest?",
+      answer: (
+        <div>
+          <p>Indeed, but a jest with a mirror! SpendThrone is satire that mocketh consumer culture, digital status symbols, and the concept of "paying for prestige." We exaggerate these concepts to absurdity, inviting reflection on how we assign value in the digital age.</p>
+          <p className="mt-2">That said, the transactions are quite real. Thy gold pieces truly depart from thy possession in exchange for utterly worthless digital status. Much like purchasing designer pixels for thy social media portrait or spending on virtual goods that exist only as 1s and 0s.</p>
+          <p className="mt-2">The joke, dear noble, is that many might not see it as a joke at all!</p>
+          <p className="mt-2 italic text-royal-gold/80">"When satire becomes indistinguishable from reality, perhaps 'tis the reality that deserves the scrutiny."</p>
+        </div>
+      ),
+      icon: <MessageSquare className="text-royal-gold mr-3 h-5 w-5 flex-shrink-0" />
     }
   ];
 
-  const handleItemClick = (value: string) => {
-    setOpenItem(openItem === value ? null : value);
-  };
-
   return (
-    <div className="my-16">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <div className="glass-morphism border-white/10 p-6 rounded-xl">
-          <Accordion type="single" collapsible className="space-y-4">
-            {faqItems.slice(0, 6).map((item) => (
-              <AccordionItem 
-                key={item.id} 
-                value={item.id} 
-                className="glass-morphism border-white/10 rounded-lg overflow-hidden"
-              >
-                <AccordionTrigger 
-                  onClick={() => handleItemClick(item.id)}
-                  className="px-4 py-3 hover:bg-white/5 group"
-                >
-                  <div className="flex items-center text-left">
-                    <span className="mr-3">{item.icon}</span>
-                    <span className="font-medium royal-text">{item.question}</span>
-                  </div>
-                </AccordionTrigger>
-                <AccordionContent className="px-4 py-3 bg-white/5 border-t border-white/10">
-                  <div className="pl-10 text-white/70 font-medieval-text">
-                    {item.answer}
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
-        </div>
-        
-        <div className="glass-morphism border-white/10 p-6 rounded-xl">
-          <Accordion type="single" collapsible className="space-y-4">
-            {faqItems.slice(6).map((item) => (
-              <AccordionItem 
-                key={item.id} 
-                value={item.id} 
-                className="glass-morphism border-white/10 rounded-lg overflow-hidden"
-              >
-                <AccordionTrigger 
-                  onClick={() => handleItemClick(item.id)}
-                  className="px-4 py-3 hover:bg-white/5 group"
-                >
-                  <div className="flex items-center text-left">
-                    <span className="mr-3">{item.icon}</span>
-                    <span className="font-medium royal-text">{item.question}</span>
-                  </div>
-                </AccordionTrigger>
-                <AccordionContent className="px-4 py-3 bg-white/5 border-t border-white/10">
-                  <div className="pl-10 text-white/70 font-medieval-text">
-                    {item.answer}
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
-        </div>
-      </div>
-      
-      <div className="text-center mt-8 glass-morphism border-white/10 p-6 rounded-lg max-w-2xl mx-auto">
-        <ShieldQuestion size={24} className="text-royal-gold inline-block mb-2" />
-        <p className="text-white/70 font-medieval-text">
-          Have a question not answered here? Contact our Royal Advisors for immediate assistance.
-        </p>
-      </div>
-    </div>
+    <Accordion type="single" collapsible className="w-full">
+      {faqItems.map((item, index) => (
+        <AccordionItem key={index} value={`item-${index + 1}`} className="border-b border-white/10 py-2">
+          <AccordionTrigger className="font-medieval hover:no-underline">
+            <div className="flex items-center">
+              {item.icon}
+              <span>{item.question}</span>
+            </div>
+          </AccordionTrigger>
+          <AccordionContent className="pt-2 text-white/70">
+            {item.answer}
+          </AccordionContent>
+        </AccordionItem>
+      ))}
+    </Accordion>
   );
 };
 

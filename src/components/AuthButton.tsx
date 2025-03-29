@@ -16,19 +16,19 @@ const AuthButton: React.FC<AuthButtonProps> = ({ fullWidth = false }) => {
     if (isAuthenticated) {
       // Show user menu or profile
     } else {
-      signIn();
+      signIn("email", "password");
     }
   };
   
   return (
     <Button 
       onClick={handleAuth}
-      className={fullWidth ? "w-full" : ""}
+      className={`${fullWidth ? "w-full" : ""} royal-button-enhanced`}
       variant="royal"
       size="sm"
     >
       <LogIn className="w-4 h-4 mr-2" />
-      {isAuthenticated ? 'Account' : 'Sign In'}
+      {isAuthenticated ? 'Thy Royal Account' : 'Enter The Court'}
     </Button>
   );
 };

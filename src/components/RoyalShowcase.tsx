@@ -1,359 +1,264 @@
-import React, { useState } from 'react';
-import { Card, CardContent } from '@/components/ui/card';
+
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { 
-  Crown, 
-  ExternalLink, 
-  Shield, 
-  Trophy, 
-  Clock, 
-  DollarSign, 
-  Award, 
-  Zap,
-  ArrowUpRight,
-  Star,
-  Sparkles,
-  Users,
-  Gem
-} from 'lucide-react';
+import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import MedievalFrame from '@/components/ui/medieval-frame';
-import ProfileBoostedContent from '@/components/ui/ProfileBoostedContent';
-import InteractiveRoyalCrown from '@/components/3d/InteractiveRoyalCrown';
-import useNotificationSounds from '@/hooks/use-notification-sounds';
-import { useToastContext } from '@/contexts/ToastContext';
-import { UserProfile, SocialLink } from '@/types/user';
+import { 
+  Trophy, 
+  Crown, 
+  Feather, 
+  Calendar, 
+  User, 
+  Twitter, 
+  Instagram, 
+  Globe, 
+  Star, 
+  ArrowRight, 
+  Shield, 
+  Gem 
+} from 'lucide-react';
+import { formatDate } from '@/utils/formatters';
+import { formatCurrency } from '@/lib/utils';
+import { TeamBadge } from '@/components/ui/theme-components';
+import RoyalDecoration from '@/components/ui/royal-decoration';
+import { User as UserType } from '@/types/user';
 
-interface RoyalShowcaseProps {
-  topSpender?: UserProfile;
-  onInspect?: () => void;
-}
-
-const LUXURY_TEAMS = {
-  red: {
-    name: "House Crimson Dynasty",
-    description: "Masters of opulent displays and lavish investments",
-    color: "text-red-500",
-    bg: "bg-red-500/20",
-    border: "border-red-500/30"
-  },
-  green: {
-    name: "Emerald Empire Collective",
-    description: "Architects of wealth and strategic spending",
-    color: "text-emerald-500",
-    bg: "bg-emerald-500/20", 
-    border: "border-emerald-500/30"
-  },
-  blue: {
-    name: "Sapphire Sovereign Alliance",
-    description: "Nobility through calculated financial dominance",
-    color: "text-blue-500",
-    bg: "bg-blue-500/20",
-    border: "border-blue-500/30"
+const RoyalShowcase: React.FC = () => {
+  const [topSpender, setTopSpender] = useState<UserType | null>(null);
+  
+  useEffect(() => {
+    // Mock data for top spender
+    const mockUser: UserType = {
+      id: "usr123456",
+      username: "LordGolden",
+      email: "lord@spendthrone.com",
+      rank: 1,
+      joinDate: "2023-01-15T10:30:00Z",
+      displayName: "Earl of Extravagance",
+      gender: "king",
+      profileImage: "/throne-assets/avatars/royal-2.jpg",
+      amountSpent: 25000,
+      totalSpent: 25000,
+      spentAmount: 25000,
+      walletBalance: 1000,
+      team: "red",
+      bio: "The most profligate nobleman in all the realm. While peasants toil, I adorn my digital profile with meaningless trinkets. Bow before my superior spending ability!",
+      tier: "royal",
+      createdAt: "2023-01-15T10:30:00Z",
+      badges: ['top_spender', 'early_noble', 'golden_throne', 'royal_patron', 'money_baron'],
+      spendStreak: 7
+    };
+    
+    setTopSpender(mockUser);
+  }, []);
+  
+  if (!topSpender) {
+    return null;
   }
-};
-
-const DEFAULT_SPENDER: UserProfile = {
-  id: "default",
-  username: "NobleStranger",
-  email: "",
-  rank: 1,
-  joinDate: new Date().toISOString(),
-  displayName: "Unknown Noble",
-  gender: 'king',
-  profileImage: "https://source.unsplash.com/random/300x300?portrait&royal",
-  amountSpent: 1000,
-  walletBalance: 0,
-  team: "red",
-  bio: "This space awaits a true royal spender. Will you claim the throne?",
-  tier: 'royal',
-  totalSpent: 1000,
-  createdAt: new Date().toISOString()
-};
-
-const RoyalShowcase: React.FC<RoyalShowcaseProps> = ({ 
-  topSpender, 
-  onInspect 
-}) => {
-  const [isAnimating, setIsAnimating] = useState(false);
-  const { playSound } = useNotificationSounds();
-  const { addToast } = useToastContext();
   
-  const spender = topSpender || DEFAULT_SPENDER;
-  
-  const royalTitle = spender.gender === 'queen' ? 'Queen' : 'King';
-  
-  const handleCrownClick = () => {
-    setIsAnimating(true);
-    playSound('royalAnnouncement', 0.2);
-    
-    addToast({
-      title: `${royalTitle} of Spending`,
-      description: `All hail ${spender.displayName || spender.username}, who has contributed $${spender.amountSpent?.toLocaleString()} to their meaningless digital status!`,
-      duration: 5000,
-    });
-    
-    setTimeout(() => setIsAnimating(false), 3000);
-  };
-  
-  const getTeamDetails = () => {
-    if (!spender.team || !LUXURY_TEAMS[spender.team]) {
-      return {
-        name: "Unaligned", 
-        description: "Not affiliated with any royal house",
-        color: "text-gray-400",
-        bg: "bg-gray-500/10",
-        border: "border-gray-500/20"
-      };
+  const socialLinks = [
+    {
+      id: "twitter1",
+      platform: "twitter",
+      url: "https://twitter.com/lordgolden",
+      clicks: 342
+    },
+    {
+      id: "instagram1",
+      platform: "instagram",
+      url: "https://instagram.com/lordgolden",
+      clicks: 156
+    },
+    {
+      id: "website1",
+      platform: "website",
+      url: "https://lordgolden.com",
+      clicks: 98
     }
-    return LUXURY_TEAMS[spender.team];
-  };
+  ];
   
-  const teamDetails = getTeamDetails();
-  
-  const getSocialLinks = () => {
-    if (!spender.socialLinks) return [];
-    
-    if (Array.isArray(spender.socialLinks)) {
-      return spender.socialLinks;
-    }
-    
-    const links: SocialLink[] = [];
-    const socialObj = spender.socialLinks as { twitter?: string; discord?: string; website?: string; };
-    
-    if (socialObj.twitter) {
-      links.push({
-        id: 'twitter',
-        platform: 'Twitter',
-        url: socialObj.twitter,
-        clicks: 0
-      });
-    }
-    
-    if (socialObj.discord) {
-      links.push({
-        id: 'discord',
-        platform: 'Discord',
-        url: socialObj.discord,
-        clicks: 0
-      });
-    }
-    
-    if (socialObj.website) {
-      links.push({
-        id: 'website',
-        platform: 'Website',
-        url: socialObj.website,
-        clicks: 0
-      });
-    }
-    
-    return links;
-  };
-
-  const socialLinks = getSocialLinks();
+  const genderTitle = topSpender.gender === 'king' ? 'His Majesty' : 
+                      topSpender.gender === 'queen' ? 'Her Majesty' : 
+                      'Their Excellency';
   
   return (
-    <div className="relative">
-      <div className="mx-auto text-center mb-8">
-        <h2 className="text-2xl md:text-3xl font-bold font-medieval royal-gradient mb-2 flex items-center justify-center">
-          <Crown size={28} className="text-royal-gold mr-3 animate-pulse-slow" />
-          Current Reigning {royalTitle}
-          <Crown size={28} className="text-royal-gold ml-3 animate-pulse-slow" />
-        </h2>
-        <p className="text-white/80 max-w-2xl mx-auto font-medieval-text">
-          The highest paying member of our digital court, with purely cosmetic privileges and absolutely no real power.
-        </p>
+    <div className="rounded-xl glass-morphism overflow-hidden border border-royal-gold/20 relative z-10">
+      <RoyalDecoration
+        variant="corner-flourish"
+        position="top-left"
+        color="gold"
+        size="lg"
+      />
+      <RoyalDecoration
+        variant="corner-flourish"
+        position="bottom-right"
+        color="gold"
+        size="lg"
+      />
+      
+      {/* Background elements */}
+      <div className="absolute top-0 left-0 w-full h-full opacity-5 pointer-events-none">
+        <div 
+          className="absolute inset-0" 
+          style={{ 
+            backgroundImage: "url('/throne-assets/patterns/royal-pattern.svg')",
+            backgroundSize: '150px',
+            backgroundRepeat: 'repeat'
+          }}
+        ></div>
       </div>
       
-      <div className="grid grid-cols-1 lg:grid-cols-7 gap-6 items-stretch">
-        <div className="hidden lg:block lg:col-span-2 h-full">
-          <MedievalFrame variant="royal" cornerDecoration className="h-full p-4">
-            <Card className="h-full bg-transparent border-0 flex items-center justify-center">
-              <InteractiveRoyalCrown 
-                onCrownClick={handleCrownClick}
-                showCoins={isAnimating}
-                size="large"
+      <div className="p-6 md:p-8">
+        <div className="flex flex-col md:flex-row gap-6 md:gap-8 items-center md:items-start">
+          {/* Crown & Trophy Icon */}
+          <div className="md:hidden flex-shrink-0 mb-2">
+            <div className="relative">
+              <Crown size={40} className="text-royal-gold animate-crown-glow" />
+              <div className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/3">
+                <Trophy size={20} className="text-royal-gold" />
+              </div>
+            </div>
+          </div>
+          
+          {/* Avatar */}
+          <div className="relative">
+            <div className="w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden border-2 border-royal-gold/80 shadow-glow relative">
+              <img 
+                src={topSpender.profileImage || '/throne-assets/avatars/default.jpg'} 
+                alt={topSpender.displayName || topSpender.username} 
+                className="w-full h-full object-cover"
               />
-            </Card>
-          </MedievalFrame>
-        </div>
-        
-        <div className="lg:col-span-3">
-          <MedievalFrame 
-            variant="royal" 
-            cornerDecoration 
-            borderDecoration 
-            seal 
-            className="h-full"
-          >
-            <div className="absolute top-2 left-2 z-10">
-              <div className="flex items-center gap-1 bg-royal-gold/20 backdrop-blur-sm px-2 py-1 rounded-full text-xs">
-                <Crown className="h-3 w-3 text-royal-gold animate-crown-glow" />
-                <span className="text-royal-gold font-medieval">Reigning {royalTitle}</span>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+            </div>
+            
+            <div className="absolute -top-2 -right-2 hidden md:block">
+              <div className="relative">
+                <Crown size={30} className="text-royal-gold animate-crown-glow" />
+                <div className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/3">
+                  <Trophy size={16} className="text-royal-gold" />
+                </div>
               </div>
             </div>
             
-            <CardContent className="pt-12 pb-6">
-              <div className="flex flex-col items-center">
-                <div className="relative mb-4">
-                  <div className="absolute -inset-1 rounded-full bg-royal-gold/30 animate-pulse-slow"></div>
-                  <div className="relative w-28 h-28 rounded-full overflow-hidden border-4 border-royal-gold">
-                    <img 
-                      src={spender.profileImage} 
-                      alt={spender.username} 
-                      className="w-full h-full object-cover"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                  </div>
-                  <div className="absolute -bottom-2 -right-2 bg-royal-gold rounded-full p-1.5 shadow-lg animate-crown-glow">
-                    <Crown className="h-5 w-5 text-black" />
-                  </div>
+            <div className="absolute -bottom-2 -left-2">
+              <TeamBadge team={topSpender.team || 'red'} className="shadow-lg" />
+            </div>
+          </div>
+          
+          {/* User Info */}
+          <div className="flex-1 text-center md:text-left">
+            <div className="flex flex-col md:flex-row md:items-center gap-2 mb-3">
+              <h2 className="text-2xl md:text-3xl font-bold font-royal royal-gradient">
+                {topSpender.displayName || topSpender.username}
+              </h2>
+              
+              <div className="hidden md:block">
+                <Badge variant="outline" className="ml-2 border-royal-gold/30 text-royal-gold">
+                  <Crown size={12} className="mr-1" />
+                  {genderTitle}
+                </Badge>
+              </div>
+            </div>
+            
+            <div className="md:hidden flex justify-center mb-3">
+              <Badge variant="outline" className="border-royal-gold/30 text-royal-gold">
+                <Crown size={12} className="mr-1" />
+                {genderTitle}
+              </Badge>
+            </div>
+            
+            <div className="flex flex-col md:flex-row gap-4 md:gap-6 mb-4">
+              <div className="flex flex-col items-center md:items-start">
+                <div className="text-white/60 text-sm mb-1 flex items-center">
+                  <Trophy size={14} className="mr-1.5 text-royal-gold/70" />
+                  <span>Rank</span>
                 </div>
-                
-                <ProfileBoostedContent user={spender}>
-                  <h3 className="text-2xl font-bold royal-gradient font-medieval">
-                    {spender.displayName || spender.username}
-                  </h3>
-                </ProfileBoostedContent>
-                
-                <div className="flex flex-wrap justify-center gap-2 mt-2">
-                  {spender.badges && spender.badges.map((badge, idx) => (
-                    <Badge key={idx} variant="outline" className="bg-royal-gold/10 text-royal-gold">
-                      {badge}
+                <div className="text-2xl font-bold royal-text-shimmer">#{topSpender.rank}</div>
+              </div>
+              
+              <div className="flex flex-col items-center md:items-start">
+                <div className="text-white/60 text-sm mb-1 flex items-center">
+                  <Gem size={14} className="mr-1.5 text-royal-gold/70" />
+                  <span>Noble Investment</span>
+                </div>
+                <div className="text-2xl font-bold royal-text-shimmer">{formatCurrency(topSpender.totalSpent)}</div>
+              </div>
+              
+              <div className="flex flex-col items-center md:items-start">
+                <div className="text-white/60 text-sm mb-1 flex items-center">
+                  <Calendar size={14} className="mr-1.5 text-royal-gold/70" />
+                  <span>Nobility Established</span>
+                </div>
+                <div className="text-base font-medium">{formatDate(topSpender.joinDate || topSpender.createdAt)}</div>
+              </div>
+            </div>
+            
+            <div className="mb-4">
+              <p className="text-white/80 italic">"{topSpender.bio}"</p>
+            </div>
+            
+            {/* Badges Section */}
+            {topSpender.badges && topSpender.badges.length > 0 && (
+              <div className="mb-4">
+                <div className="flex flex-wrap gap-2 justify-center md:justify-start">
+                  {topSpender.badges.map((badge, index) => (
+                    <Badge 
+                      key={index} 
+                      className="bg-gradient-to-r from-royal-gold/20 to-royal-gold/10 border border-royal-gold/30 text-royal-gold"
+                    >
+                      <Star size={12} className="mr-1" />
+                      {badge.replace('_', ' ')}
                     </Badge>
                   ))}
                 </div>
-                
-                <div className="space-y-3 w-full mt-6">
-                  <div className="glass-morphism border-royal-gold/20 p-3 rounded-lg flex justify-between items-center hover:border-royal-gold/50 transition-colors duration-300">
-                    <span className="text-white/80 flex items-center">
-                      <DollarSign className="h-4 w-4 mr-1.5 text-royal-gold" />
-                      Royal Treasury
-                    </span>
-                    <span className="font-mono text-royal-gold font-bold text-lg">${spender.amountSpent?.toLocaleString()}</span>
-                  </div>
-                  
-                  <div className="glass-morphism border-royal-gold/20 p-3 rounded-lg flex justify-between items-center hover:border-royal-gold/50 transition-colors duration-300">
-                    <span className="text-white/80 flex items-center">
-                      <Crown className="h-4 w-4 mr-1.5 text-royal-gold" />
-                      Court Rank
-                    </span>
-                    <span className="font-mono text-royal-gold-bright font-bold">#{spender.rank}</span>
-                  </div>
-                  
-                  <div className="glass-morphism border-royal-gold/20 p-3 rounded-lg flex justify-between items-center hover:border-royal-gold/50 transition-colors duration-300">
-                    <span className="text-white/80 flex items-center">
-                      <Shield className="h-4 w-4 mr-1.5" style={{color: teamDetails.color}} />
-                      Royal House
-                    </span>
-                    <span className="font-mono font-bold" style={{color: teamDetails.color}}>{teamDetails.name}</span>
-                  </div>
-                  
-                  {spender.spendStreak && spender.spendStreak > 0 && (
-                    <div className="glass-morphism border-royal-gold/20 p-3 rounded-lg flex justify-between items-center hover:border-royal-gold/50 transition-colors duration-300">
-                      <span className="text-white/80 flex items-center">
-                        <Clock className="h-4 w-4 mr-1.5 text-royal-gold" />
-                        Spending Streak
-                      </span>
-                      <span className="font-mono text-royal-gold-bright font-bold">{spender.spendStreak} weeks</span>
-                    </div>
-                  )}
-                  
-                  {spender.joinDate && (
-                    <div className="glass-morphism border-royal-gold/20 p-3 rounded-lg flex justify-between items-center hover:border-royal-gold/50 transition-colors duration-300">
-                      <span className="text-white/80 flex items-center">
-                        <Trophy className="h-4 w-4 mr-1.5 text-royal-gold" />
-                        Court Member Since
-                      </span>
-                      <span className="font-mono text-royal-gold-bright font-bold">{new Date(spender.joinDate).toLocaleDateString()}</span>
-                    </div>
-                  )}
-                </div>
-                
-                <div className="mt-6 glass-morphism border-royal-gold/10 px-4 py-3 rounded-lg w-full">
-                  <p className="text-sm text-white/80 italic font-medieval-text text-center">
-                    "{spender.bio || "A noble achievement that cost real money for digital prestige with absolutely no practical benefits."}"
-                  </p>
-                </div>
               </div>
-            </CardContent>
-          </MedievalFrame>
-        </div>
-        
-        <div className="lg:col-span-2">
-          <MedievalFrame variant="noble" className="h-full">
-            <div className="absolute top-2 left-2 z-10">
-              <div className="flex items-center gap-1 bg-purple-500/20 backdrop-blur-sm px-2 py-1 rounded-full text-xs">
-                <Zap className="h-3 w-3 text-purple-400" />
-                <span className="text-purple-300 font-medieval">Royal Advertisement</span>
+            )}
+            
+            {/* Spend Streak */}
+            {topSpender.spendStreak && topSpender.spendStreak > 0 && (
+              <div className="mb-4 bg-gradient-to-r from-royal-gold/10 to-transparent p-2 rounded-lg inline-flex items-center">
+                <Feather size={16} className="text-royal-gold mr-2" />
+                <span>Noble spending streak: <span className="font-bold">{topSpender.spendStreak} days</span> of continuous wealth flaunting</span>
               </div>
+            )}
+            
+            {/* Social Links */}
+            <div className="flex gap-3 justify-center md:justify-start mb-4">
+              {socialLinks.map(link => (
+                <Link
+                  key={link.id}
+                  to={link.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-10 h-10 rounded-full flex items-center justify-center glass-morphism border border-white/10 hover:border-royal-gold/30 transition-colors"
+                >
+                  {link.platform === 'twitter' && <Twitter className="h-5 w-5 text-white/70" />}
+                  {link.platform === 'instagram' && <Instagram className="h-5 w-5 text-white/70" />}
+                  {link.platform === 'website' && <Globe className="h-5 w-5 text-white/70" />}
+                </Link>
+              ))}
             </div>
             
-            <CardContent className="pt-12 pb-6">
-              <h3 className="text-lg font-bold royal-gradient mb-4 font-medieval flex items-center">
-                <Star className="h-5 w-5 mr-2 text-royal-gold" />
-                Premium Royal Promotion
-              </h3>
-              
-              <div className="space-y-4 mb-6">
-                {socialLinks.length > 0 ? (
-                  socialLinks.map((link, idx) => (
-                    <a 
-                      key={idx}
-                      href={link.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-2 glass-morphism border-purple-500/20 p-3 rounded-lg hover:bg-purple-900/20 transition-colors group block"
-                    >
-                      <ExternalLink size={16} className="text-royal-gold flex-shrink-0" />
-                      <div className="flex-1 min-w-0">
-                        <div className="font-medium truncate">{link.platform}</div>
-                        <div className="text-xs text-white/60 truncate">{link.url.replace(/^https?:\/\/(www\.)?/, '')}</div>
-                      </div>
-                      <Badge variant="outline" className="text-[10px] bg-purple-900/60 text-purple-300 border-0 flex-shrink-0">
-                        {link.clicks || 0} clicks
-                      </Badge>
-                      <ArrowUpRight size={14} className="text-royal-gold opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" />
-                    </a>
-                  ))
-                ) : (
-                  <div className="glass-morphism border-purple-500/20 p-4 rounded-lg text-center">
-                    <Sparkles className="h-5 w-5 text-royal-gold mx-auto mb-2" />
-                    <p className="text-sm text-white/70">
-                      This space could showcase <strong>{royalTitle} {spender.displayName || spender.username}'s</strong> promotion, blog, products, or social media.
-                    </p>
-                  </div>
-                )}
-              </div>
-              
-              <div className="grid grid-cols-2 gap-3 mb-4">
-                <div className="glass-morphism border-royal-gold/10 p-3 rounded-lg text-center">
-                  <Users className="h-4 w-4 mx-auto mb-1 text-royal-gold" />
-                  <p className="text-xs text-white/70">Premium Visibility</p>
-                  <p className="text-sm font-semibold text-royal-gold">Top of Homepage</p>
-                </div>
-                
-                <div className="glass-morphism border-royal-gold/10 p-3 rounded-lg text-center">
-                  <Gem className="h-4 w-4 mx-auto mb-1 text-royal-gold" />
-                  <p className="text-xs text-white/70">Exclusive Status</p>
-                  <p className="text-sm font-semibold text-royal-gold">Royal Advertisement</p>
-                </div>
-              </div>
-              
-              <Link to={`/profile/${spender.username}`}>
-                <Button variant="secondary" size="sm" className="w-full bg-royal-gold/10 hover:bg-royal-gold/20 text-royal-gold border border-royal-gold/30">
-                  <Award className="h-4 w-4 mr-1.5" />
-                  Visit {royalTitle}'s Full Profile
+            <div className="flex justify-center md:justify-start">
+              <Link to={`/profile/${topSpender.username}`}>
+                <Button className="royal-button-enhanced font-royal text-black">
+                  <span>Visit Noble Profile</span>
+                  <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
-              
-              <div className="mt-4 text-xs text-white/40 italic text-center">
-                "The top spender earns this promotional space. All cosmetic, no real power - just digital prestige."
-              </div>
-            </CardContent>
-          </MedievalFrame>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      {/* Footer with Royal Decree */}
+      <div className="bg-gradient-to-r from-black/40 via-royal-gold/5 to-black/40 p-4 border-t border-royal-gold/20">
+        <div className="flex items-center justify-center">
+          <Shield size={16} className="text-royal-gold mr-2" />
+          <p className="text-white/70 text-sm italic">
+            By decree of the SpendThrone: "This noble hath demonstrated extraordinary dedication to parting with worldly wealth for digital prestige."
+          </p>
         </div>
       </div>
     </div>

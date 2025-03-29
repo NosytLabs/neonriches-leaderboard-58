@@ -1,166 +1,165 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { Connection, PublicKey, LAMPORTS_PER_SOL } from '@solana/web3.js';
-import { useAuth } from './auth/AuthContext';
-import { SolanaContextValue } from '@/types/solana-context';
+import { useToast } from '@/hooks/use-toast';
 
-const SolanaContext = createContext<SolanaContextValue | null>(null);
+export interface SolanaContextValue {
+  connected: boolean;
+  publicKey: any | null;
+  connect: () => Promise<void>;
+  disconnect: () => Promise<void>;
+  signMessage: (message: Uint8Array) => Promise<Uint8Array>;
+  sendTransaction: (transaction: any) => Promise<string>;
+}
+
+const defaultContextValue: SolanaContextValue = {
+  connected: false,
+  publicKey: null,
+  connect: async () => {},
+  disconnect: async () => {},
+  signMessage: async (message: Uint8Array) => new Uint8Array(),
+  sendTransaction: async (transaction: any) => ''
+};
+
+const SolanaContext = createContext<SolanaContextValue>(defaultContextValue);
+
+export const useSolana = () => useContext(SolanaContext);
 
 export const SolanaProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { user, updateUserProfile } = useAuth();
-  const [isConnecting, setIsConnecting] = useState(false);
-  const [hasWallet, setHasWallet] = useState(false);
-  const [walletPubkey, setWalletPubkey] = useState<string | null>(null);
-  const [walletBalance, setWalletBalance] = useState(0);
   const [connected, setConnected] = useState(false);
-
-  useEffect(() => {
-    // Check if wallet was previously connected
-    const storedPubkey = localStorage.getItem('solana_wallet_pubkey');
-    if (storedPubkey) {
-      setWalletPubkey(storedPubkey);
-      setHasWallet(true);
-      setConnected(true);
-      fetchWalletBalance(storedPubkey);
-    }
-  }, []);
-
-  useEffect(() => {
-    // If user has a wallet address saved in their profile, use that
-    if (user?.walletAddress && !walletPubkey) {
-      setWalletPubkey(user.walletAddress);
-      setHasWallet(true);
-      setConnected(true);
-      fetchWalletBalance(user.walletAddress);
-    }
-  }, [user, walletPubkey]);
-
-  const fetchWalletBalance = async (pubkey: string) => {
+  const [publicKey, setPublicKey] = useState<any | null>(null);
+  const { toast } = useToast();
+  
+  // Mock wallet connection
+  const connect = async (): Promise<void> => {
     try {
-      const connection = new Connection(
-        'https://api.devnet.solana.com',
-        'confirmed'
-      );
-      const publicKey = new PublicKey(pubkey);
-      const balance = await connection.getBalance(publicKey);
-      setWalletBalance(balance / LAMPORTS_PER_SOL);
-    } catch (error) {
-      console.error('Error fetching wallet balance:', error);
-      setWalletBalance(0);
-    }
-  };
-
-  const connectWallet = async () => {
-    setIsConnecting(true);
-    try {
-      // This is a placeholder for actual wallet connection
-      // In a real app, you'd use a proper wallet adapter
-      const mockPubkey = 'BW1Y9SqiPRSsEDxoYfSrpHpnvWNKGrNHyBnb4HqQiwJP';
-      setWalletPubkey(mockPubkey);
-      setHasWallet(true);
-      setConnected(true);
-      localStorage.setItem('solana_wallet_pubkey', mockPubkey);
-      await fetchWalletBalance(mockPubkey);
-    } catch (error) {
-      console.error('Error connecting wallet:', error);
-    } finally {
-      setIsConnecting(false);
-    }
-  };
-
-  const disconnectWallet = () => {
-    setWalletPubkey(null);
-    setHasWallet(false);
-    setWalletBalance(0);
-    setConnected(false);
-    localStorage.removeItem('solana_wallet_pubkey');
-  };
-
-  const signMessage = async (message: string): Promise<Uint8Array | null> => {
-    // In a real app, this would use the wallet adapter to sign a message
-    // For a mock implementation, just return a fake signature
-    console.log(`Signing message: ${message}`);
-    
-    // Create a mock signature as a Uint8Array
-    const encoder = new TextEncoder();
-    const mockSignature = encoder.encode(`signed-${message}-${Date.now()}`);
-    
-    return mockSignature;
-  };
-
-  const publicKey = walletPubkey ? new PublicKey(walletPubkey) : null;
-
-  const sendSol = async (recipient: string, amount: number) => {
-    try {
-      // This is a placeholder for actual SOL transfer
-      console.log(`Sending ${amount} SOL to ${recipient}`);
-
-      // In a real app, you'd use a proper wallet adapter for transactions
-      // For now, just mock a successful transaction
+      // Simulate wallet connection delay
       await new Promise(resolve => setTimeout(resolve, 1000));
-
-      // Update balance
-      if (walletPubkey) {
-        setWalletBalance(prev => Math.max(0, prev - amount));
-        await fetchWalletBalance(walletPubkey);
-      }
-
-      return {
-        success: true,
-        message: `Successfully sent ${amount} SOL to ${recipient}`
+      
+      // Create a mock public key
+      const mockPublicKey = {
+        toString: () => '8xgM2kj7Ym4eTVzWTdP5zmg5ZfvpA9r3UG5ZW8NXGV3A',
+        toBase58: () => '8xgM2kj7Ym4eTVzWTdP5zmg5ZfvpA9r3UG5ZW8NXGV3A',
+        toBuffer: () => Buffer.from('8xgM2kj7Ym4eTVzWTdP5zmg5ZfvpA9r3UG5ZW8NXGV3A')
       };
-    } catch (error) {
-      console.error('Error sending SOL:', error);
-      return {
-        success: false,
-        message: error instanceof Error ? error.message : 'An unknown error occurred'
-      };
-    }
-  };
-
-  const linkWalletToAccount = async () => {
-    if (!user || !walletPubkey) return false;
-
-    try {
-      await updateUserProfile({
-        ...user,
-        walletAddress: walletPubkey
+      
+      setPublicKey(mockPublicKey);
+      setConnected(true);
+      
+      toast({
+        title: "Royal Wallet Connected",
+        description: "Thy blockchain seal has been successfully tethered to our royal ledger.",
+        variant: "default"
       });
-      return true;
+      
     } catch (error) {
-      console.error('Error linking wallet to account:', error);
-      return false;
+      console.error('Connection error:', error);
+      toast({
+        title: "Royal Connection Failed",
+        description: "Thy blockchain seal could not be attached to our ledger. The court scribe is most displeased.",
+        variant: "destructive"
+      });
     }
   };
-
+  
+  const disconnect = async (): Promise<void> => {
+    try {
+      // Simulate disconnect delay
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      setPublicKey(null);
+      setConnected(false);
+      
+      toast({
+        title: "Royal Wallet Disconnected",
+        description: "Thy blockchain seal has been removed from our royal ledger.",
+        variant: "default"
+      });
+      
+    } catch (error) {
+      console.error('Disconnect error:', error);
+      toast({
+        title: "Disconnection Failed",
+        description: "Thy royal seal remains stubbornly attached. The court magician has been summoned.",
+        variant: "destructive"
+      });
+    }
+  };
+  
+  const signMessage = async (message: Uint8Array): Promise<Uint8Array> => {
+    try {
+      if (!connected || !publicKey) {
+        throw new Error('Wallet not connected');
+      }
+      
+      // Simulate signing delay
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      // Create a mock signature
+      const mockSignature = new Uint8Array(64);
+      window.crypto.getRandomValues(mockSignature);
+      
+      toast({
+        title: "Royal Seal Applied",
+        description: "Thy noble signature has been etched into the eternal blockchain.",
+        variant: "default"
+      });
+      
+      return mockSignature;
+      
+    } catch (error) {
+      console.error('Signing error:', error);
+      toast({
+        title: "Royal Seal Failed",
+        description: "The royal scribe could not apply thy blockchain seal. The court is most displeased.",
+        variant: "destructive"
+      });
+      throw error;
+    }
+  };
+  
+  const sendTransaction = async (transaction: any): Promise<string> => {
+    try {
+      if (!connected || !publicKey) {
+        throw new Error('Wallet not connected');
+      }
+      
+      // Simulate transaction delay
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      // Create a mock transaction signature
+      const mockTxSignature = 'TXsig' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+      
+      toast({
+        title: "Royal Transaction Complete",
+        description: "Thy blockchain transfer has been recorded in the royal ledger for all eternity.",
+        variant: "default"
+      });
+      
+      return mockTxSignature;
+      
+    } catch (error) {
+      console.error('Transaction error:', error);
+      toast({
+        title: "Royal Transaction Failed",
+        description: "The royal treasurer could not process thy blockchain payment. The kingdom's coffers remain unchanged.",
+        variant: "destructive"
+      });
+      throw error;
+    }
+  };
+  
   return (
     <SolanaContext.Provider
       value={{
-        isConnecting,
-        hasWallet,
-        walletPubkey,
-        walletBalance,
         connected,
         publicKey,
+        connect,
+        disconnect,
         signMessage,
-        connectWallet,
-        disconnectWallet,
-        sendSol,
-        linkWalletToAccount
+        sendTransaction
       }}
     >
       {children}
     </SolanaContext.Provider>
   );
 };
-
-export const useSolana = () => {
-  const context = useContext(SolanaContext);
-  if (!context) {
-    throw new Error('useSolana must be used within a SolanaProvider');
-  }
-  return context;
-};
-
-// Export for backward compatibility
-export default SolanaProvider;

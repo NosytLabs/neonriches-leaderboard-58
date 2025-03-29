@@ -1,6 +1,4 @@
 
-import { UserTier } from './user';
-
 export type MockeryAction = 
   'tomatoes' | 
   'eggs' | 
@@ -54,6 +52,7 @@ export interface MockeryEffectData {
   until?: string;
   tier?: MockeryTier;
   strength?: number;
+  appliedBy?: string;
 }
 
 export interface MockeryEvent {
@@ -66,10 +65,11 @@ export interface MockeryEvent {
   initiatorUsername: string;
   paid: number;
   message?: string;
-  tier: UserTier;
+  tier: string;
   timestamp: string;
   targetUserId?: string;
   sourceUserId?: string;
+  duration?: number;
 }
 
 export interface UserMockeryStatus {
@@ -88,7 +88,8 @@ export interface MockUser {
   profileImage?: string;
   profilePicture?: string;
   bio?: string;
-  tier?: UserTier;
+  tier?: string;
   team?: string;
   rank?: number;
+  lastMockery?: Date;
 }

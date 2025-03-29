@@ -1,275 +1,280 @@
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { AuthContextType } from '@/types/auth-context';
-import { User, SocialLink } from '@/types/user';
-import { CosmeticRarity } from '@/types/cosmetics';
-import { getDefaultUser } from './authUtils';
-import mockUsers from '@/utils/mockData';
+import React, { createContext, useState, useContext, useEffect } from 'react';
+import { User, UserRole, UserTier } from '@/types/user';
+import { v4 as uuidv4 } from 'uuid';
 
-// Create context with default undefined value
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+export interface AuthContextType {
+  user: User | null;
+  isAuthenticated: boolean;
+  signIn: (email: string, password: string) => void;
+  signOut: () => void;
+  register: (email: string, username: string, password: string) => void;
+  login: (email: string, password: string) => void;
+  logout: () => void;
+  updateUserProfile: (updates: Partial<User>) => void;
+  awardCosmetic: (type: string, item: string) => void;
+  openAuthModal: () => void;
+}
 
-// Provider component
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ 
-  children 
-}) => {
+const AuthContext = createContext<AuthContextType>({
+  user: null,
+  isAuthenticated: false,
+  signIn: () => {},
+  signOut: () => {},
+  register: () => {},
+  login: () => {},
+  logout: () => {},
+  updateUserProfile: () => {},
+  awardCosmetic: () => {},
+  openAuthModal: () => {},
+});
+
+export const useAuth = () => useContext(AuthContext);
+
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [showAuthModal, setShowAuthModal] = useState(false);
-
-  // Initialize authentication state
+  const [authModalOpen, setAuthModalOpen] = useState(false);
+  
   useEffect(() => {
-    const initAuth = async () => {
-      try {
-        // Check for stored auth in localStorage
-        const storedUser = localStorage.getItem('user');
-        
-        if (storedUser) {
-          setUser(JSON.parse(storedUser));
-        }
-      } catch (error) {
-        console.error('Error initializing auth:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    initAuth();
+    // Check if user is stored in localStorage
+    const storedUser = localStorage.getItem('throne_user');
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
   }, []);
-
-  // Sign in function
-  const signIn = async (email: string, password: string): Promise<boolean> => {
-    try {
-      setIsLoading(true);
-      
-      // In a real app, this would call an API
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Find mock user with matching email
-      const matchedUser = mockUsers.find(u => u.email === email);
-      
-      if (matchedUser) {
-        setUser(matchedUser);
-        localStorage.setItem('user', JSON.stringify(matchedUser));
-        setShowAuthModal(false);
-        return true;
-      }
-      
-      return false;
-    } catch (error) {
-      console.error('Sign in error:', error);
-      return false;
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  // Sign out function
-  const signOut = async (): Promise<void> => {
-    try {
-      setIsLoading(true);
-      
-      // In a real app, this would call an API
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
-      setUser(null);
-      localStorage.removeItem('user');
-    } catch (error) {
-      console.error('Sign out error:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  // Sign up function
-  const signUp = async (email: string, password: string, username: string): Promise<boolean> => {
-    try {
-      setIsLoading(true);
-      
-      // In a real app, this would call an API
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // Check if username or email already exists
-      const userExists = mockUsers.some(u => 
-        u.email === email || u.username === username
-      );
-      
-      if (userExists) {
-        return false;
-      }
-      
-      // Create new user
-      const newUser = getDefaultUser(email, username);
-      
-      setUser(newUser);
-      localStorage.setItem('user', JSON.stringify(newUser));
-      setShowAuthModal(false);
-      
-      return true;
-    } catch (error) {
-      console.error('Sign up error:', error);
-      return false;
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  // Update user profile
-  const updateUserProfile = async (newUserData: Partial<User>): Promise<boolean> => {
-    try {
-      setIsLoading(true);
-      
-      if (!user) {
-        throw new Error('No user is logged in');
-      }
-      
-      // In a real app, this would call an API
-      await new Promise(resolve => setTimeout(resolve, 800));
-      
-      // Update user with new data
-      const updatedUser = { ...user, ...newUserData };
-      
-      setUser(updatedUser);
-      localStorage.setItem('user', JSON.stringify(updatedUser));
-      
-      return true;
-    } catch (error) {
-      console.error('Update user error:', error);
-      return false;
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  // Award cosmetic to user
-  const awardCosmetic = async (
-    id: string,
-    category: string,
-    rarity: CosmeticRarity,
-    source: string
-  ): Promise<boolean> => {
-    try {
-      if (!user) {
-        throw new Error('No user is logged in');
-      }
-      
-      // In a real app, this would call an API
-      await new Promise(resolve => setTimeout(resolve, 800));
-      
-      // Update user cosmetics
-      const cosmetics = user.cosmetics || {
+  
+  const register = (email: string, username: string, password: string) => {
+    // Create a new user
+    const newUser: User = {
+      id: uuidv4(),
+      email,
+      username,
+      displayName: username,
+      profileImage: `/throne-assets/avatars/default-${Math.floor(Math.random() * 5) + 1}.jpg`,
+      bio: "A noble newcomer to the realm.",
+      tier: 'bronze',
+      role: 'user',
+      team: null,
+      rank: 9999,
+      previousRank: 9999,
+      walletBalance: 0,
+      totalSpent: 0,
+      spentAmount: 0,
+      amountSpent: 0,
+      joinDate: new Date().toISOString(),
+      createdAt: new Date().toISOString(),
+      isVerified: false,
+      gender: 'prefer-not-to-say',
+      profileViews: 0,
+      profileClicks: 0,
+      followers: 0,
+      following: 0,
+      isVIP: false,
+      badges: [],
+      spendStreak: 0,
+      socialLinks: {},
+      cosmetics: {
         borders: [],
         colors: [],
         fonts: [],
         emojis: [],
-        titles: [],
-        backgrounds: [],
+        banners: [],
+        themes: [],
         effects: [],
-        badges: [],
-        themes: []
-      };
-      
-      // Convert category to a valid key of UserCosmetics
-      const cosmeticKey = category as keyof typeof cosmetics;
-      
-      // Ensure the category exists and is an array
-      if (!cosmetics[cosmeticKey] || !Array.isArray(cosmetics[cosmeticKey])) {
-        cosmetics[cosmeticKey] = [];
-      }
-      
-      // Check if cosmetic already exists
-      if ((cosmetics[cosmeticKey] as string[]).includes(id)) {
-        return false;
-      }
-      
-      // Add cosmetic to the appropriate category
-      (cosmetics[cosmeticKey] as string[]).push(id);
-      
-      // Update user with new cosmetics
-      const updatedUser = { 
-        ...user,
-        cosmetics
-      };
-      
-      setUser(updatedUser);
-      localStorage.setItem('user', JSON.stringify(updatedUser));
-      
-      return true;
-    } catch (error) {
-      console.error('Award cosmetic error:', error);
-      return false;
+        titles: []
+      },
+      settings: {
+        showRank: true,
+        showTeam: true,
+        showSpending: true,
+        publicProfile: true,
+        allowMessages: true,
+        emailNotifications: true,
+        darkMode: true,
+        language: 'en',
+        profileVisibility: true,
+        allowProfileLinks: true,
+        showEmailOnProfile: false,
+        rankChangeAlerts: true,
+        shameAlerts: true,
+        newFollowerAlerts: true,
+        theme: 'dark'
+      },
+      profileBoosts: []
+    };
+    
+    // Save user to localStorage
+    localStorage.setItem('throne_user', JSON.stringify(newUser));
+    setUser(newUser);
+  };
+  
+  const login = (email: string, password: string) => {
+    // Mock login - in a real app, this would validate credentials
+    // For now, just create a mock user if none exists
+    const mockUser: User = {
+      id: uuidv4(),
+      email: email || 'noble@spendthrone.com',
+      username: 'NobleSpender',
+      displayName: 'Sir Spends-a-Lot',
+      profileImage: '/throne-assets/avatars/royal-1.jpg',
+      bio: "The realm's most extravagant noble, known for financial excess and questionable decision-making.",
+      tier: 'gold',
+      role: 'user',
+      team: 'red',
+      rank: 42,
+      previousRank: 45,
+      walletBalance: 150,
+      totalSpent: 500,
+      spentAmount: 500,
+      amountSpent: 500,
+      joinDate: '2023-04-15T10:30:00Z',
+      createdAt: '2023-04-15T10:30:00Z',
+      isVerified: true,
+      gender: 'king',
+      profileViews: 128,
+      profileClicks: 67,
+      followers: 24,
+      following: 12,
+      isVIP: true,
+      badges: ['early_supporter', 'big_spender', 'team_champion'],
+      spendStreak: 3,
+      socialLinks: {
+        twitter: 'https://twitter.com/sirspends',
+        instagram: 'https://instagram.com/sirspends',
+        website: 'https://sirspends.com'
+      },
+      cosmetics: {
+        borders: ['golden', 'royal'],
+        colors: ['crimson', 'gold'],
+        fonts: ['medieval', 'script'],
+        emojis: ['crown', 'money_bag', 'gem'],
+        banners: ['royal_red', 'gold_trim'],
+        themes: ['dark_castle', 'royal_court'],
+        effects: ['gold_sparkle', 'coin_rain'],
+        titles: ['Duke of Dollars', 'Count of Cash']
+      },
+      settings: {
+        showRank: true,
+        showTeam: true,
+        showSpending: true,
+        publicProfile: true,
+        allowMessages: true,
+        emailNotifications: true,
+        darkMode: true,
+        language: 'en',
+        profileVisibility: true,
+        allowProfileLinks: true,
+        showEmailOnProfile: false,
+        rankChangeAlerts: true,
+        shameAlerts: true,
+        newFollowerAlerts: true,
+        theme: 'dark'
+      },
+      profileBoosts: [
+        {
+          id: uuidv4(),
+          startDate: new Date().toISOString(),
+          endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+          level: 2,
+          type: 'visibility',
+          strength: 1.5
+        }
+      ]
+    };
+    
+    localStorage.setItem('throne_user', JSON.stringify(mockUser));
+    setUser(mockUser);
+  };
+  
+  const logout = () => {
+    localStorage.removeItem('throne_user');
+    setUser(null);
+  };
+  
+  const updateUserProfile = (updates: Partial<User>) => {
+    if (!user) return;
+    
+    const updatedUser = { ...user, ...updates };
+    localStorage.setItem('throne_user', JSON.stringify(updatedUser));
+    setUser(updatedUser);
+  };
+  
+  const awardCosmetic = (type: string, item: string) => {
+    if (!user || !user.cosmetics) return;
+    
+    const updatedCosmetics = { ...user.cosmetics };
+    
+    switch (type) {
+      case 'border':
+        if (!updatedCosmetics.borders.includes(item)) {
+          updatedCosmetics.borders = [...updatedCosmetics.borders, item];
+        }
+        break;
+      case 'color':
+        if (!updatedCosmetics.colors.includes(item)) {
+          updatedCosmetics.colors = [...updatedCosmetics.colors, item];
+        }
+        break;
+      case 'font':
+        if (!updatedCosmetics.fonts.includes(item)) {
+          updatedCosmetics.fonts = [...updatedCosmetics.fonts, item];
+        }
+        break;
+      case 'emoji':
+        if (!updatedCosmetics.emojis.includes(item)) {
+          updatedCosmetics.emojis = [...updatedCosmetics.emojis, item];
+        }
+        break;
+      case 'banner':
+        if (!updatedCosmetics.banners.includes(item)) {
+          updatedCosmetics.banners = [...updatedCosmetics.banners, item];
+        }
+        break;
+      case 'theme':
+        if (!updatedCosmetics.themes.includes(item)) {
+          updatedCosmetics.themes = [...updatedCosmetics.themes, item];
+        }
+        break;
+      case 'effect':
+        if (!updatedCosmetics.effects.includes(item)) {
+          updatedCosmetics.effects = [...updatedCosmetics.effects, item];
+        }
+        break;
+      case 'title':
+        if (!updatedCosmetics.titles.includes(item)) {
+          updatedCosmetics.titles = [...updatedCosmetics.titles, item];
+        }
+        break;
+      default:
+        break;
     }
+    
+    updateUserProfile({ cosmetics: updatedCosmetics });
   };
-
-  // Add social link
-  const addSocialLink = async (platform: SocialLink, url: string): Promise<boolean> => {
-    try {
-      if (!user) {
-        throw new Error('No user is logged in');
-      }
-      
-      // Validate URL
-      try {
-        new URL(url);
-      } catch (e) {
-        return false;
-      }
-      
-      // Update user's social links
-      const socialLinks = user.socialLinks || {};
-      socialLinks[platform as string] = url;
-      
-      const updatedUser = {
-        ...user,
-        socialLinks
-      };
-      
-      setUser(updatedUser);
-      localStorage.setItem('user', JSON.stringify(updatedUser));
-      
-      return true;
-    } catch (error) {
-      console.error('Add social link error:', error);
-      return false;
-    }
-  };
-
-  // Auth modal functions
-  const openAuthModal = () => setShowAuthModal(true);
-  const closeAuthModal = () => setShowAuthModal(false);
-
-  // Determine authentication status
-  const isAuthenticated = Boolean(user);
-
-  // Context value
-  const value: AuthContextType = {
-    user,
-    isLoading,
-    isAuthenticated,
-    signIn,
-    signOut,
-    signUp,
-    openAuthModal,
-    closeAuthModal,
-    updateUserProfile,
-    awardCosmetic
-  };
-
+  
+  // For backward compatibility
+  const signIn = login;
+  const signOut = logout;
+  const openAuthModal = () => setAuthModalOpen(true);
+  
+  const isAuthenticated = !!user;
+  
   return (
-    <AuthContext.Provider value={value}>
+    <AuthContext.Provider 
+      value={{ 
+        user, 
+        isAuthenticated,
+        signIn, 
+        signOut,
+        register,
+        login,
+        logout,
+        updateUserProfile,
+        awardCosmetic,
+        openAuthModal
+      }}
+    >
       {children}
-      {/* Auth modal would be rendered here */}
     </AuthContext.Provider>
   );
-};
-
-// Hook for using the auth context
-export const useAuth = (): AuthContextType => {
-  const context = useContext(AuthContext);
-  
-  if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  
-  return context;
 };

@@ -56,6 +56,7 @@ export interface MockUser {
   tier?: UserTier;
   team?: TeamType;
   rank?: number;
+  lastMockery?: Date;
 }
 
 export type UserRole = 'user' | 'moderator' | 'admin' | 'royal';
@@ -129,4 +130,15 @@ export interface UserSettings {
 
 export type UserProfile = User;
 
-export type { Team } from './team';
+export interface UserCosmetics {
+  borders: string[];
+  colors: string[];
+  fonts: string[];
+  emojis: string[];
+  banners: string[];
+  themes: string[];
+  effects: string[];
+  titles: string[];
+}
+
+export type Team = UserTeam;

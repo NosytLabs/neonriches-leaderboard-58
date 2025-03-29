@@ -1,119 +1,236 @@
 
 import React from 'react';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
-import { Menu, DollarSign, User, LogOut, Crown, Settings, Trophy, Users, CalendarDays, Home } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { 
+  Crown, 
+  Home, 
+  Trophy, 
+  Shield, 
+  Scroll, 
+  Info, 
+  HelpCircle, 
+  LogOut, 
+  LogIn, 
+  User, 
+  Settings,
+  MessageSquare,
+  Gem,
+  Store,
+  Coins
+} from 'lucide-react';
 import { useAuth } from '@/contexts/auth';
-import ThroneLogoIcon from './brand/ThroneLogoIcon';
 
 interface MobileMenuProps {
-  transparent?: boolean;
+  onClose: () => void;
 }
 
-const MobileMenu: React.FC<MobileMenuProps> = ({ transparent = false }) => {
-  const { user, logout } = useAuth();
+const MobileMenu: React.FC<MobileMenuProps> = ({ onClose }) => {
+  const { user, isAuthenticated, signOut } = useAuth();
   
-  const handleLogout = async () => {
-    try {
-      await logout();
-    } catch (error) {
-      console.error('Logout failed:', error);
-    }
+  const handleLogout = () => {
+    signOut();
+    onClose();
   };
   
   return (
-    <Sheet>
-      <SheetTrigger asChild>
-        <Button 
-          variant="outline" 
-          size="icon" 
-          className={`lg:hidden ${transparent ? 'bg-transparent border-white/20 hover:bg-white/10' : ''}`}
-        >
-          <Menu className="h-5 w-5" />
-          <span className="sr-only">Toggle menu</span>
+    <div className="p-4 glass-morphism border-royal-gold/20 rounded-lg max-h-[80vh] overflow-y-auto">
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center">
+          <Crown className="h-6 w-6 text-royal-gold mr-2" />
+          <h2 className="text-lg font-bold font-royal">Royal Navigation</h2>
+        </div>
+        <Button variant="ghost" size="sm" onClick={onClose}>
+          <span className="sr-only">Close</span>
+          <span aria-hidden="true">&times;</span>
         </Button>
-      </SheetTrigger>
-      <SheetContent side="right" className="glass-morphism border-white/10 w-full max-w-xs">
-        <div className="flex items-center mb-6">
-          <ThroneLogoIcon size="sm" />
-          <span className="font-royal text-xl tracking-wide text-royal-gold ml-2">SpendThrone</span>
+      </div>
+      
+      <div className="space-y-6">
+        <div className="space-y-2">
+          <h3 className="text-xs uppercase text-white/40 font-semibold mb-2">
+            The Noble's Map
+          </h3>
+          
+          <Link 
+            to="/" 
+            className="flex items-center p-2 rounded-md hover:bg-white/5 transition-colors"
+            onClick={onClose}
+          >
+            <Home className="w-5 h-5 text-royal-gold mr-3" />
+            <span>Royal Court (Home)</span>
+          </Link>
+          
+          <Link 
+            to="/leaderboard" 
+            className="flex items-center p-2 rounded-md hover:bg-white/5 transition-colors"
+            onClick={onClose}
+          >
+            <Trophy className="w-5 h-5 text-royal-gold mr-3" />
+            <span>Noble Rankings</span>
+          </Link>
+          
+          <Link 
+            to="/teams" 
+            className="flex items-center p-2 rounded-md hover:bg-white/5 transition-colors"
+            onClick={onClose}
+          >
+            <Shield className="w-5 h-5 text-royal-gold mr-3" />
+            <span>Royal Houses</span>
+          </Link>
+          
+          <Link 
+            to="/mockery" 
+            className="flex items-center p-2 rounded-md hover:bg-white/5 transition-colors"
+            onClick={onClose}
+          >
+            <Target className="w-5 h-5 text-royal-crimson mr-3" />
+            <span>Court Mockery</span>
+          </Link>
+          
+          <Link 
+            to="/royal-prestige" 
+            className="flex items-center p-2 rounded-md hover:bg-white/5 transition-colors"
+            onClick={onClose}
+          >
+            <Gem className="w-5 h-5 text-royal-gold mr-3" />
+            <span>Royal Prestige</span>
+          </Link>
+          
+          <Link 
+            to="/store" 
+            className="flex items-center p-2 rounded-md hover:bg-white/5 transition-colors"
+            onClick={onClose}
+          >
+            <Store className="w-5 h-5 text-royal-gold mr-3" />
+            <span>Royal Boutique</span>
+          </Link>
         </div>
         
-        {user && (
-          <div className="mb-6 flex items-center justify-between p-3 rounded-lg glass-morphism border-white/10">
-            <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-full bg-royal-gold/20 flex items-center justify-center text-royal-gold font-bold">
-                {user.username.charAt(0).toUpperCase()}
-              </div>
-              <div>
-                <div className="font-medium">{user.displayName || user.username}</div>
-                <div className="text-sm text-white/60">Rank #{user.rank}</div>
-              </div>
-            </div>
-            <div className="flex items-center gap-1 px-2 py-1 rounded-full bg-royal-gold/10">
-              <DollarSign className="h-3.5 w-3.5 text-royal-gold" />
-              <span className="text-sm font-medium">{user.walletBalance.toFixed(2)}</span>
-            </div>
+        {isAuthenticated && (
+          <div className="space-y-2">
+            <h3 className="text-xs uppercase text-white/40 font-semibold mb-2">
+              Thy Noble Affairs
+            </h3>
+            
+            <Link 
+              to="/dashboard" 
+              className="flex items-center p-2 rounded-md hover:bg-white/5 transition-colors"
+              onClick={onClose}
+            >
+              <Crown className="w-5 h-5 text-royal-gold mr-3" />
+              <span>Thy Royal Dashboard</span>
+            </Link>
+            
+            <Link 
+              to={`/profile/${user?.username}`} 
+              className="flex items-center p-2 rounded-md hover:bg-white/5 transition-colors"
+              onClick={onClose}
+            >
+              <User className="w-5 h-5 text-royal-gold mr-3" />
+              <span>Thy Noble Portrait</span>
+            </Link>
+            
+            <Link 
+              to="/settings" 
+              className="flex items-center p-2 rounded-md hover:bg-white/5 transition-colors"
+              onClick={onClose}
+            >
+              <Settings className="w-5 h-5 text-royal-gold mr-3" />
+              <span>Royal Preferences</span>
+            </Link>
+            
+            <Link 
+              to="/chat" 
+              className="flex items-center p-2 rounded-md hover:bg-white/5 transition-colors"
+              onClick={onClose}
+            >
+              <MessageSquare className="w-5 h-5 text-royal-gold mr-3" />
+              <span>Court Messenger</span>
+            </Link>
+            
+            <Link 
+              to="/pay/fiat" 
+              className="flex items-center p-2 rounded-md hover:bg-white/5 transition-colors"
+              onClick={onClose}
+            >
+              <Coins className="w-5 h-5 text-royal-gold mr-3" />
+              <span>Royal Treasury</span>
+            </Link>
           </div>
         )}
         
-        <nav className="flex flex-col gap-1 mb-6">
-          <Link to="/" className="flex items-center gap-3 px-4 py-2.5 hover:bg-white/10 rounded-md transition-colors">
-            <Home className="h-5 w-5 text-royal-gold" />
-            <span>Home</span>
+        <div className="space-y-2">
+          <h3 className="text-xs uppercase text-white/40 font-semibold mb-2">
+            Royal Intelligence
+          </h3>
+          
+          <Link 
+            to="/about" 
+            className="flex items-center p-2 rounded-md hover:bg-white/5 transition-colors"
+            onClick={onClose}
+          >
+            <Info className="w-5 h-5 text-royal-gold mr-3" />
+            <span>About The Kingdom</span>
           </Link>
-          <Link to="/leaderboard" className="flex items-center gap-3 px-4 py-2.5 hover:bg-white/10 rounded-md transition-colors">
-            <Trophy className="h-5 w-5 text-royal-gold" />
-            <span>Leaderboard</span>
+          
+          <Link 
+            to="/faq" 
+            className="flex items-center p-2 rounded-md hover:bg-white/5 transition-colors"
+            onClick={onClose}
+          >
+            <HelpCircle className="w-5 h-5 text-royal-gold mr-3" />
+            <span>Royal FAQs</span>
           </Link>
-          <Link to="/teams" className="flex items-center gap-3 px-4 py-2.5 hover:bg-white/10 rounded-md transition-colors">
-            <Users className="h-5 w-5 text-royal-gold" />
-            <span>Teams</span>
+          
+          <Link 
+            to="/terms" 
+            className="flex items-center p-2 rounded-md hover:bg-white/5 transition-colors"
+            onClick={onClose}
+          >
+            <Scroll className="w-5 h-5 text-royal-gold mr-3" />
+            <span>Royal Decree (Terms)</span>
           </Link>
-          <Link to="/events" className="flex items-center gap-3 px-4 py-2.5 hover:bg-white/10 rounded-md transition-colors">
-            <CalendarDays className="h-5 w-5 text-royal-gold" />
-            <span>Events</span>
-          </Link>
-          <Link to="/mockery" className="flex items-center gap-3 px-4 py-2.5 hover:bg-white/10 rounded-md transition-colors">
-            <Crown className="h-5 w-5 text-royal-gold" />
-            <span>Mockery</span>
-          </Link>
-        </nav>
+        </div>
         
-        <div className="mt-auto">
-          {user ? (
-            <div className="space-y-2">
-              <Link to="/dashboard" className="flex items-center gap-3 px-4 py-2.5 hover:bg-white/10 rounded-md transition-colors w-full">
-                <User className="h-5 w-5 text-royal-gold" />
-                <span>Dashboard</span>
-              </Link>
-              <Link to="/settings" className="flex items-center gap-3 px-4 py-2.5 hover:bg-white/10 rounded-md transition-colors w-full">
-                <Settings className="h-5 w-5 text-royal-gold" />
-                <span>Settings</span>
-              </Link>
-              <button 
-                onClick={handleLogout}
-                className="flex items-center gap-3 px-4 py-2.5 hover:bg-white/10 rounded-md transition-colors w-full text-left"
-              >
-                <LogOut className="h-5 w-5 text-royal-crimson" />
-                <span>Logout</span>
-              </button>
-            </div>
+        <div className="pt-4 border-t border-white/10">
+          {isAuthenticated ? (
+            <Button 
+              variant="ghost" 
+              className="w-full justify-start text-white/70 hover:text-white hover:bg-white/5"
+              onClick={handleLogout}
+            >
+              <LogOut className="w-5 h-5 mr-3" />
+              <span>Abandon Thy Royal Title</span>
+            </Button>
           ) : (
             <div className="space-y-2">
-              <Link to="/login" className="flex justify-center items-center py-2.5 rounded-md border border-white/20 hover:bg-white/10 transition-colors w-full">
-                Sign In
+              <Link 
+                to="/login" 
+                className="flex items-center p-2 rounded-md hover:bg-white/5 transition-colors"
+                onClick={onClose}
+              >
+                <LogIn className="w-5 h-5 text-royal-gold mr-3" />
+                <span>Enter The Court</span>
               </Link>
-              <Link to="/signup" className="flex justify-center items-center gap-2 py-2.5 rounded-md bg-royal-gold text-black hover:bg-royal-gold/90 transition-colors w-full">
-                <Crown className="h-4 w-4" />
-                Claim Your Throne
+              
+              <Link 
+                to="/signup" 
+                className="flex items-center p-2 rounded-md hover:bg-white/5 transition-colors"
+                onClick={onClose}
+              >
+                <User className="w-5 h-5 text-royal-gold mr-3" />
+                <span>Establish Noble Heritage</span>
               </Link>
             </div>
           )}
         </div>
-      </SheetContent>
-    </Sheet>
+      </div>
+      
+      <div className="mt-6 text-center text-xs text-white/30">
+        <p>SpendThrone: Where money is nobility</p>
+      </div>
+    </div>
   );
 };
 

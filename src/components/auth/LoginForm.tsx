@@ -1,132 +1,90 @@
 
 import React, { useState } from 'react';
-import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
-import { Loader2, Mail, Lock, AlertCircle } from 'lucide-react';
+import { Input } from '@/components/ui/input';
 import { useAuth } from '@/contexts/auth';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { motion } from 'framer-motion';
+import { Shield, Key, Scroll, Crown } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
-interface LoginFormProps {
-  onSuccess: () => void;
-  onSwitchToRegister?: () => void;
-}
-
-const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onSwitchToRegister }) => {
+const LoginForm: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const { login } = useAuth();
+  const { toast } = useToast();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setErrorMessage(null);
-    setIsLoading(true);
-
-    try {
-      await login(email, password);
-      onSuccess();
-    } catch (error: any) {
-      setErrorMessage(error.message || 'Failed to sign in');
-    } finally {
-      setIsLoading(false);
+    
+    if (!email || !password) {
+      toast({
+        title: "By royal decree!",
+        description: "Thou must provide both thy scroll (email) and secret seal (password).",
+        variant: "destructive"
+      });
+      return;
     }
+    
+    login(email, password);
+    
+    toast({
+      title: "Welcome back, noble one!",
+      description: "The royal court welcomes thy magnificent return.",
+      variant: "default"
+    });
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-    >
-      <form onSubmit={handleSubmit} className="space-y-4">
-        {errorMessage && (
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            <Alert variant="destructive" className="bg-royal-crimson/20 border-royal-crimson/40">
-              <AlertCircle className="h-4 w-4" />
-              <AlertTitle>Authentication Failed</AlertTitle>
-              <AlertDescription>
-                {errorMessage}
-              </AlertDescription>
-            </Alert>
-          </motion.div>
-        )}
-
-        <div className="space-y-2">
-          <Label htmlFor="email" className="flex items-center gap-2">
-            <Mail className="h-4 w-4 text-royal-gold" />
-            Royal Email
-          </Label>
-          <Input
-            id="email"
-            type="email"
-            placeholder="your.majesty@example.com"
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <div className="text-center mb-6">
+        <div className="inline-flex items-center justify-center rounded-full bg-royal-gold/10 p-3 mb-3">
+          <Crown className="h-7 w-7 text-royal-gold" />
+        </div>
+        <h2 className="text-2xl font-bold mb-1 font-royal">Enter The Royal Court</h2>
+        <p className="text-white/60 text-sm">Return to claim thy rightful place among the nobility</p>
+      </div>
+      
+      <div className="space-y-3">
+        <div className="relative">
+          <Scroll className="absolute left-3 top-3 h-5 w-5 text-white/40" />
+          <Input 
+            type="email" 
+            placeholder="Thy Royal Scroll (Email)" 
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="glass-morphism border-white/10 focus:border-royal-gold/50 focus:ring-royal-gold/20"
-            required
+            className="pl-10 bg-black/30 border-white/10 focus:border-royal-gold/50"
           />
         </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="password" className="flex items-center gap-2">
-            <Lock className="h-4 w-4 text-royal-gold" />
-            Royal Key
-          </Label>
-          <Input
-            id="password"
-            type="password"
-            placeholder="••••••••"
+        
+        <div className="relative">
+          <Key className="absolute left-3 top-3 h-5 w-5 text-white/40" />
+          <Input 
+            type="password" 
+            placeholder="Thy Secret Seal (Password)" 
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="glass-morphism border-white/10 focus:border-royal-gold/50 focus:ring-royal-gold/20"
-            required
+            className="pl-10 bg-black/30 border-white/10 focus:border-royal-gold/50"
           />
         </div>
-
-        <div className="flex justify-between items-center pt-2">
-          <a 
-            href="#" 
-            className="text-sm text-white/60 hover:text-royal-gold transition-colors"
-          >
-            Forgot your royal key?
-          </a>
-        </div>
-
-        <Button
-          type="submit"
-          className="w-full bg-gradient-to-r from-royal-gold via-amber-500 to-royal-gold text-black font-bold tracking-wide hover:opacity-90 transition-all royal-shadow"
-          disabled={isLoading}
-        >
-          {isLoading ? (
-            <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Authenticating...
-            </>
-          ) : (
-            'Enter the Court'
-          )}
-        </Button>
-        
-        {onSwitchToRegister && (
-          <div className="text-center mt-4">
-            <button
-              type="button"
-              onClick={onSwitchToRegister}
-              className="text-sm text-white/70 hover:text-royal-gold transition-colors"
-            >
-              Don't have an account? Join the nobility
-            </button>
-          </div>
-        )}
-      </form>
-    </motion.div>
+      </div>
+      
+      <Button 
+        type="submit" 
+        className="w-full font-bold bg-gradient-to-r from-royal-gold/90 to-royal-gold text-black hover:opacity-90"
+      >
+        <Shield className="mr-2 h-4 w-4" />
+        Claim Thy Noble Station
+      </Button>
+      
+      <div className="text-center mt-4">
+        <p className="text-white/60 text-sm">
+          New to the realm? <a href="/signup" className="text-royal-gold hover:underline">Request royal ancestry</a>
+        </p>
+      </div>
+      
+      <div className="text-center text-xs text-white/40 mt-6">
+        <p>Thy royal data is guarded with the same vigilance as the kingdom's gold,<br/>but even our sturdiest drawbridges and deepest moats can be breached by determined dragons.</p>
+      </div>
+    </form>
   );
 };
 
