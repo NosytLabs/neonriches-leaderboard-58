@@ -37,10 +37,10 @@ interface ResizableHandleProps {
   className?: string;
 }
 
-// Fix: Use PanelResizeHandleProps from the library directly
+// Combine the library's props with our custom props and ensure proper ref handling
 const ResizableHandle = forwardRef<
   ElementRef<typeof ResizablePrimitive.PanelResizeHandle>,
-  ResizablePrimitive.PanelResizeHandleProps & ResizableHandleProps
+  ComponentProps<typeof ResizablePrimitive.PanelResizeHandle> & ResizableHandleProps
 >(({ className, withHandle = false, ...props }, ref) => (
   <ResizablePrimitive.PanelResizeHandle
     ref={ref}
@@ -59,10 +59,10 @@ const ResizableHandle = forwardRef<
 ));
 ResizableHandle.displayName = 'ResizableHandle';
 
-// Apply the same fix to ResizableSeparator
+// Apply the same fix to ResizableSeparator - using ComponentProps for proper ref handling
 const ResizableSeparator = forwardRef<
   ElementRef<typeof ResizablePrimitive.PanelResizeHandle>,
-  ResizablePrimitive.PanelResizeHandleProps & ResizableHandleProps
+  ComponentProps<typeof ResizablePrimitive.PanelResizeHandle> & ResizableHandleProps
 >(({ className, ...props }, ref) => (
   <ResizableHandle ref={ref} className={className} {...props} withHandle />
 ));
