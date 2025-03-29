@@ -113,4 +113,3 @@ export const getDiscountedShamePrice = (action: ShameAction): number => {
   const originalPrice = getShameActionPrice(action);
   return Math.max(1, Math.round(originalPrice * 0.5)); // 50% discount
 };
-
