@@ -24,13 +24,35 @@ export const getTeamBorderColor = (team: UserTeam | string | undefined): string 
 };
 
 export const getTeamName = (team: UserTeam | string | undefined): string => {
-  if (!team) return 'No Team';
+  if (!team) return 'Unaffiliated Cheapskate';
   
   switch (team) {
-    case 'red': return 'Red Dragons';
-    case 'green': return 'Green Vipers';
-    case 'blue': return 'Blue Phoenixes';
+    case 'red': return 'Royal Order of Reckless Spending';
+    case 'green': return 'Emerald Exchequer Cabaret';
+    case 'blue': return 'Cobalt Credit Cartel';
     default: return 'Unaffiliated';
+  }
+};
+
+export const getTeamShortName = (team: UserTeam | string | undefined): string => {
+  if (!team) return 'None';
+  
+  switch (team) {
+    case 'red': return 'RORS';
+    case 'green': return 'EEC';
+    case 'blue': return 'CCC';
+    default: return 'None';
+  }
+};
+
+export const getTeamMotto = (team: UserTeam | string | undefined): string => {
+  if (!team) return 'Too Frugal to Care';
+  
+  switch (team) {
+    case 'red': return 'Buy First, Think Never';
+    case 'green': return 'Wealth So Strategic, It\'s Almost Pathetic';
+    case 'blue': return 'Patience in Spending, Unbridled in Pretending';
+    default: return 'Too Frugal to Care';
   }
 };
 

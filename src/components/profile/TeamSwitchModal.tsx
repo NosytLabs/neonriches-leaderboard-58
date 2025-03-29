@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Shield, Info, Check } from 'lucide-react';
+import { Shield, Info, Check, CreditCard, Scroll, Flame, Coins } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -21,31 +21,37 @@ export type TeamColor = 'red' | 'green' | 'blue';
 const teamData = [
   {
     id: 'red',
-    name: 'House Crimson',
+    name: 'Royal Order of Reckless Spending',
+    shortName: 'RORS',
+    motto: 'Buy First, Think Never',
     color: 'text-team-red',
     bgColor: 'bg-team-red/10',
-    icon: <Shield className="h-5 w-5 text-team-red" />,
-    description: 'Warriors of flame and passion, House Crimson values boldness and courage above all else.',
+    icon: <Flame className="h-5 w-5 text-team-red" />,
+    description: 'Masters of mindless monetary mayhem, the RORS believe that one must spend with reckless abandon to assert digital dominance.',
     members: 423,
     rank: 1
   },
   {
     id: 'green',
-    name: 'House Emerald',
+    name: 'Emerald Exchequer Cabaret',
+    shortName: 'EEC',
+    motto: 'Wealth So Strategic, It\'s Almost Pathetic',
     color: 'text-team-green',
     bgColor: 'bg-team-green/10',
-    icon: <Shield className="h-5 w-5 text-team-green" />,
-    description: 'Strategists and scholars, House Emerald values wisdom and growth as their highest virtues.',
+    icon: <Coins className="h-5 w-5 text-team-green" />,
+    description: 'The calculating gold-hoarders of the EEC believe that strategic spending is the key to digital nobility.',
     members: 387,
     rank: 2
   },
   {
     id: 'blue',
-    name: 'House Sapphire',
+    name: 'Cobalt Credit Cartel',
+    shortName: 'CCC',
+    motto: 'Patience in Spending, Unbridled in Pretending',
     color: 'text-team-blue',
     bgColor: 'bg-team-blue/10',
-    icon: <Shield className="h-5 w-5 text-team-blue" />,
-    description: 'Masters of transformation and innovation, House Sapphire values creativity and intellect.',
+    icon: <CreditCard className="h-5 w-5 text-team-blue" />,
+    description: 'The intellectual elite of digital aristocracy, the CCC members pride themselves on timing their purchases for maximum social impact.',
     members: 341,
     rank: 3
   }
@@ -92,11 +98,20 @@ const TeamSwitchModal: React.FC<TeamSwitchModalProps> = ({
       {trigger && <div onClick={() => onOpenChange(true)}>{trigger}</div>}
       <DialogContent className="sm:max-w-[500px] glass-morphism">
         <DialogHeader>
-          <DialogTitle className="text-xl font-bold">Choose Your Noble House</DialogTitle>
+          <DialogTitle className="text-xl font-bold">Choose Your Financial Allegiance</DialogTitle>
           <DialogDescription>
-            Select the house that represents your values and aspirations. Your choice influences team rankings and special events.
+            Select the spending faction that represents your fiscal philosophy. Your choice determines how the Scribes of the Scroll at Nosyt Labs record your expenditures in the Great Ledger of Vanity.
           </DialogDescription>
         </DialogHeader>
+        
+        <div className="p-3 border border-royal-gold/20 bg-black/30 rounded-lg mb-4">
+          <div className="flex items-start">
+            <Scroll className="text-royal-gold h-5 w-5 mr-2 mt-0.5 flex-shrink-0" />
+            <p className="text-sm text-white/80 italic">
+              "Every transfer of wealth is dutifully recorded by the Scribes of the Scroll, who judge the wisdom of your financial decisions with barely concealed amusement."
+            </p>
+          </div>
+        </div>
         
         <div className="space-y-4 my-4">
           {teamData.map((team) => (
@@ -115,6 +130,7 @@ const TeamSwitchModal: React.FC<TeamSwitchModalProps> = ({
                 </div>
                 <div className="flex-1">
                   <h3 className={`font-bold ${team.color}`}>{team.name}</h3>
+                  <p className="text-xs text-white/60 mt-0.5 italic">"{team.motto}"</p>
                   <p className="text-sm text-white/70 mt-1">{team.description}</p>
                 </div>
                 {selectedTeam === team.id && (
@@ -137,7 +153,7 @@ const TeamSwitchModal: React.FC<TeamSwitchModalProps> = ({
         <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-3 text-sm flex items-start">
           <Info className="h-4 w-4 text-blue-400 mr-2 mt-0.5" />
           <p className="text-white/80">
-            You can change your team at any time, but all contributions will stay with your previous team.
+            The Scribes of the Scroll will record your faction change in the Great Ledger of Vanity for all eternity (or until our database is purged).
           </p>
         </div>
         
@@ -150,7 +166,7 @@ const TeamSwitchModal: React.FC<TeamSwitchModalProps> = ({
             disabled={!selectedTeam || selectedTeam === user?.team || isChanging}
             className={selectedTeam ? `bg-team-${selectedTeam} hover:bg-team-${selectedTeam}/80` : ''}
           >
-            {isChanging ? 'Changing...' : 'Confirm Selection'}
+            {isChanging ? 'Changing...' : 'Pledge Financial Allegiance'}
           </Button>
         </DialogFooter>
       </DialogContent>

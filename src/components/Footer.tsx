@@ -12,7 +12,8 @@ import {
   Crown,
   Shield,
   Trophy,
-  CreditCard
+  CreditCard,
+  Scroll
 } from 'lucide-react';
 import SpendThroneLogo from '@/components/brand/SpendThroneLogo';
 
@@ -58,7 +59,7 @@ const Footer: React.FC = () => {
               <li>
                 <Link to="/teams" className="text-white/70 hover:text-royal-gold transition-colors text-sm flex items-center">
                   <Shield className="mr-2 h-4 w-4" />
-                  Noble Houses
+                  Financial Factions
                 </Link>
               </li>
               <li>
@@ -140,6 +141,25 @@ const Footer: React.FC = () => {
                   Secure Payments
                 </Badge>
               </div>
+            </div>
+          </div>
+        </div>
+        
+        <div className="mb-6 p-4 border border-royal-gold/20 rounded-lg bg-black/30">
+          <div className="flex items-start gap-3">
+            <div className="flex-shrink-0">
+              <Scroll className="h-6 w-6 text-royal-gold" />
+            </div>
+            <div>
+              <div className="flex items-center mb-1">
+                <Badge variant="outline" className="bg-royal-gold/10 border-royal-gold text-royal-gold text-xs">
+                  Royal Warrant
+                </Badge>
+              </div>
+              <h4 className="text-sm font-medium text-royal-gold mb-1">Digital Scribes by Appointment to His Majesty's Treasury</h4>
+              <p className="text-xs text-white/70 italic">
+                "Every coin spent in this realm is meticulously recorded by the esteemed Scribes of the Scroll at Nosyt Labs, keepers of the Great Ledger of Vanity. Their quills never rest, documenting each feeble attempt to purchase status and significance."
+              </p>
             </div>
           </div>
         </div>
