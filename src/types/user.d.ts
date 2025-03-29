@@ -3,8 +3,32 @@ import { ProfileBoost } from './boost';
 import { UserCosmetics } from './cosmetics';
 
 export type UserRole = 'admin' | 'moderator' | 'user' | 'vip';
-export type UserGender = 'king' | 'queen' | 'duke' | 'duchess' | 'lord' | 'lady' | 'neutral' | 'prefer-not-to-say' | 'male' | 'female' | 'jester' | 'noble';
-export type UserTier = 'bronze' | 'silver' | 'gold' | 'platinum' | 'diamond' | 'royal' | 'basic' | 'premium' | 'pro' | 'free';
+export type UserGender = 
+  | 'king'
+  | 'queen'
+  | 'duke'
+  | 'duchess'
+  | 'lord'
+  | 'lady'
+  | 'neutral'
+  | 'prefer-not-to-say'
+  | 'male'
+  | 'female'
+  | 'jester'
+  | 'noble';
+
+export type UserTier = 
+  | 'bronze'
+  | 'silver'
+  | 'gold'
+  | 'platinum'
+  | 'diamond'
+  | 'royal'
+  | 'basic'
+  | 'premium'
+  | 'pro'
+  | 'free';
+
 export type TeamType = 'red' | 'green' | 'blue' | 'none' | null;
 
 export interface UserSubscription {
@@ -100,6 +124,8 @@ export interface User {
 export interface UserProfile extends Omit<User, 'createdAt'> {
   joinedAt: string;
   totalSpent: number;
+  avatarUrl?: string; // Added avatarUrl property
+  lastActive?: string; // Added lastActive property
 }
 
 export interface LeaderboardUser {
@@ -111,7 +137,7 @@ export interface LeaderboardUser {
   team?: TeamType;
   rank: number;
   amountSpent: number;
-  avatarUrl?: string;
+  avatarUrl?: string; // Added avatarUrl property
 }
 
 export interface Feature {

@@ -75,7 +75,7 @@ const RoyalMockeryFestival = () => {
     
     if (success) {
       // Mockery successful
-      mockUser(username, action as MockeryAction, amount);
+      mockUser(username, action as MockeryAction);
       
       // Show mockery effect
       setMockeryEffectData({
@@ -147,7 +147,7 @@ const RoyalMockeryFestival = () => {
       displayName: user.username,
       avatarUrl: user.profileImage,
       mockedReason: `Subjected to ${user.tier || 'unknown'} mockery`,
-      mockedTimestamp: user.lastMocked ? user.lastMocked.toISOString() : new Date().toISOString(),
+      mockedTimestamp: user.lastMocked ? new Date(user.lastMocked).toISOString() : new Date().toISOString(),
       mockedBy: 'Unknown user',
       mockedTier: user.tier
     }));

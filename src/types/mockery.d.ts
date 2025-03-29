@@ -40,7 +40,8 @@ export type ShameAction =
   | 'dunce' 
   | 'stocks'
   | 'ridicule'
-  | 'shame';
+  | 'shame'
+  | 'silence'; // Added silence as a ShameAction
 
 export interface MockeryEffect {
   id: string;
@@ -60,11 +61,11 @@ export interface ShameEffect extends MockeryEffect {
 
 export interface MockeryProtection {
   id: string;
-  username: string;
+  username: string; // Added username
   userId: string;
   startDate: string;
-  endDate: string;
-  isActive: boolean;
+  endDate: string; // Added endDate
+  isActive: boolean; // Added isActive
   purchasedBy?: string;
 }
 

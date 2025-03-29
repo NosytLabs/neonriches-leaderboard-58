@@ -4,6 +4,11 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import profileBoostEffects from '@/data/boostEffects';
 
+// Helper function to get boost category
+const getBoostCategory = (boost: any) => {
+  return boost.type || 'effect';
+};
+
 const ThreeDBoostShowcase: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
@@ -32,6 +37,7 @@ const ThreeDBoostShowcase: React.FC = () => {
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setSize(containerRef.current.clientWidth, containerRef.current.clientHeight);
     renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
     rendererRef.current = renderer;
     containerRef.current.appendChild(renderer.domElement);
     
@@ -215,11 +221,11 @@ const ThreeDBoostShowcase: React.FC = () => {
       const nextIndex = (currentBoostIndex + 1) % profileBoostEffects.length;
       setCurrentBoostIndex(nextIndex);
       
-      // Update glow effect based on boost type
-      const boostType = profileBoostEffects[nextIndex].type;
+      // Update glow effect based on boost category
+      const boostCategory = getBoostCategory(profileBoostEffects[nextIndex]);
       let glowColor;
       
-      switch (boostType) {
+      switch (boostCategory) {
         case 'appearance':
           glowColor = 0xD4AF37; // Gold
           break;

@@ -1,265 +1,158 @@
 
-// Mock data for code analysis features
+import { AnalysisResult } from './types';
 
-export const mockPerformanceIssues = [
+export const duplicateCodeMock = [
   {
-    id: 'perf-1',
-    title: 'Excessive re-renders in ProductList component',
-    description: 'The ProductList component re-renders 15 times when data changes',
-    severity: 'high',
-    impact: 'High impact on user experience, causing noticeable lag',
-    solution: 'Use React.memo and useCallback to prevent unnecessary re-renders',
-    file: 'src/components/ProductList.tsx',
-    line: 45,
-    status: 'open',
-    recommendation: 'Use React.memo and useCallback',
-    lineNumber: 45
+    id: '1',
+    similarity: 0.85,
+    files: [{ path: 'src/components/ProfileCard.tsx' }, { path: 'src/components/UserCard.tsx' }],
+    lines: 12,
+    codeSnippet: `const renderUserInfo = (user) => {
+  return (
+    <div className="user-info">
+      <Avatar src={user.profileImage} alt={user.displayName} />
+      <div className="user-details">
+        <h3>{user.displayName}</h3>
+        <p className="user-role">{user.role}</p>
+      </div>
+    </div>
+  );
+};`,
+    recommendation: 'Extract to a shared UserInfo component'
   },
   {
-    id: 'perf-2',
-    title: 'Large bundle size from unused dependencies',
-    description: 'Including entire lodash library adds 72kb to bundle size',
-    severity: 'medium',
-    impact: 'Increases initial load time by approximately 300ms',
-    solution: 'Use specific lodash modules (e.g., import _map from "lodash/map")',
-    file: 'src/utils/helpers.ts',
-    line: 12,
-    status: 'open',
-    recommendation: 'Import specific lodash modules',
-    lineNumber: 12
-  },
-  {
-    id: 'perf-3',
-    title: 'Inefficient CSS selectors',
-    description: 'Using deep descendant selectors causes browser repainting',
-    severity: 'low',
-    impact: 'Minor impact on rendering performance',
-    solution: 'Use more specific class-based selectors instead of descendant selectors',
-    file: 'src/styles/global.css',
-    line: 124,
-    status: 'resolved',
-    recommendation: 'Use class-based selectors',
-    lineNumber: 124
-  },
-  {
-    id: 'perf-4',
-    title: 'Memory leak in useEffect cleanup',
-    description: 'Event listener not being removed in component unmount',
-    severity: 'critical',
-    impact: 'Progressive memory usage growth leading to browser crash',
-    solution: 'Add proper cleanup function to useEffect hook',
-    file: 'src/components/LiveData.tsx',
-    line: 78,
-    status: 'open',
-    recommendation: 'Add cleanup function',
-    lineNumber: 78
+    id: '2',
+    similarity: 0.92,
+    files: [{ path: 'src/services/userService.ts' }, { path: 'src/services/profileService.ts' }],
+    lines: 15,
+    codeSnippet: `const handleApiError = (error) => {
+  if (error.response) {
+    // The request was made and the server responded with an error status
+    console.error('API Error:', error.response.data);
+    return {
+      success: false,
+      message: error.response.data.message || 'Server error',
+      status: error.response.status
+    };
+  } else if (error.request) {
+    // The request was made but no response was received
+    console.error('Network Error:', error.request);
+    return { success: false, message: 'Network error', status: 0 };
+  } else {
+    // Something happened in setting up the request
+    console.error('Request Error:', error.message);
+    return { success: false, message: error.message, status: 0 };
+  }
+};`,
+    recommendation: 'Create a shared API error handling utility'
   }
 ];
 
 export const complexityReportMock = [
   {
-    id: 'comp-1',
-    title: 'High cognitive complexity in OrderProcessor function',
-    description: 'Function has cognitive complexity score of 25 (threshold: 15)',
+    id: '1',
+    file: 'src/components/RoyalMockeryFestival.tsx',
+    name: 'handleMockery',
+    complexity: 15,
+    line: 78,
+    lines: 40,
+    issues: [
+      'Contains nested conditionals',
+      'Multiple responsibilities',
+      'Too many parameters'
+    ],
+    explanation: 'This function handles the mockery action, validates input, processes payment, and shows user feedback.'
+  },
+  {
+    id: '2',
+    file: 'src/services/leaderboardService.ts',
+    name: 'calculateRanks',
+    complexity: 12,
+    line: 124,
+    lines: 35,
+    issues: [
+      'Complex sorting algorithm',
+      'Multiple nested loops',
+      'Handles multiple team types'
+    ],
+    explanation: 'This function calculates user ranks based on spending, team contribution, and other factors.'
+  }
+];
+
+export const performanceIssuesMock = [
+  {
+    id: '1',
+    description: 'Inefficient list rendering without key prop',
+    file: 'src/components/leaderboard/LeaderboardList.tsx',
+    line: 42,
+    lineNumber: 42,
+    severity: 'medium',
+    recommendation: 'Add a unique key prop to each list item for better React reconciliation',
+    issue: 'Missing key prop',
+    status: 'open'
+  },
+  {
+    id: '2',
+    description: 'Expensive operation in render function',
+    file: 'src/components/dashboard/Dashboard.tsx',
+    line: 87,
+    lineNumber: 87,
     severity: 'high',
-    impact: 'Difficult to maintain and high likelihood of bugs',
-    solution: 'Refactor into smaller, focused functions with clear responsibilities',
-    file: 'src/services/orderService.ts',
-    line: 145,
-    metrics: {
-      cyclomaticComplexity: 18,
-      cognitiveComplexity: 25,
-      maintenabilityIndex: 42,
-      lineCount: 87
-    }
-  },
-  {
-    id: 'comp-2',
-    title: 'Deeply nested conditionals in validateUser function',
-    description: 'Function has 5 levels of nesting in conditional logic',
-    severity: 'medium',
-    impact: 'Reduces readability and increases chance of logic errors',
-    solution: 'Use early returns and extract conditions to helper functions',
-    file: 'src/utils/userValidation.ts',
-    line: 34,
-    metrics: {
-      cyclomaticComplexity: 12,
-      cognitiveComplexity: 16,
-      maintenabilityIndex: 55,
-      lineCount: 42
-    }
+    recommendation: 'Move expensive calculations to useMemo or outside the render path',
+    issue: 'Expensive render calculation',
+    status: 'open'
   }
 ];
 
-export const duplicateCodeMock = [
-  {
-    id: 'dup-1',
-    title: 'Similar validation logic in multiple components',
-    description: 'Input validation logic repeated in 4 different form components',
-    severity: 'medium',
-    impact: 'Increases maintenance burden when validation logic needs changes',
-    solution: 'Extract to shared hook or utility function',
-    instances: [
-      { file: 'src/components/LoginForm.tsx', lines: '45-68' },
-      { file: 'src/components/SignupForm.tsx', lines: '56-79' },
-      { file: 'src/components/ContactForm.tsx', lines: '32-55' },
-      { file: 'src/components/CheckoutForm.tsx', lines: '112-135' }
-    ],
-    similarity: 0.92,
-    files: [
-      'src/components/LoginForm.tsx',
-      'src/components/SignupForm.tsx',
-      'src/components/ContactForm.tsx',
-      'src/components/CheckoutForm.tsx'
-    ]
-  },
-  {
-    id: 'dup-2',
-    title: 'Duplicate API request handling in services',
-    description: 'Error handling and response parsing duplicated across services',
-    severity: 'medium',
-    impact: 'Inconsistency in error handling across the application',
-    solution: 'Create a common API client with shared request/response handling',
-    instances: [
-      { file: 'src/services/userService.ts', lines: '23-45' },
-      { file: 'src/services/productService.ts', lines: '19-41' },
-      { file: 'src/services/orderService.ts', lines: '28-50' }
-    ],
-    similarity: 0.88,
-    files: [
-      'src/services/userService.ts',
-      'src/services/productService.ts',
-      'src/services/orderService.ts'
-    ]
-  }
-];
-
-export const mockedAnalysisResults = {
+export const mockedAnalysisResults: AnalysisResult = {
   unusedImports: [
-    {
-      name: 'useState',
-      source: 'react',
-      file: 'src/components/StaticInfo.tsx',
-      line: 1,
-      impact: 'Low - Adds unnecessary bytes to bundle'
-    },
-    {
-      name: 'useCallback',
-      source: 'react',
-      file: 'src/components/SimpleCard.tsx',
-      line: 1,
-      impact: 'Low - Adds unnecessary bytes to bundle'
-    }
+    { name: 'useState', source: 'react', file: 'src/components/StaticComponent.tsx', line: 1, impact: 'low' },
+    { name: 'useEffect', source: 'react', file: 'src/components/PureComponent.tsx', line: 1, impact: 'low' },
+    { name: 'Button', source: '@/components/ui/button', file: 'src/pages/UnusedButtonPage.tsx', line: 3, impact: 'low' }
   ],
   unusedVariables: [
-    {
-      name: 'isActive',
-      file: 'src/components/ToggleButton.tsx',
-      line: 12,
-      impact: 'Low - Creates noise in the codebase'
-    },
-    {
-      name: 'TIMEOUT_DURATION',
-      file: 'src/utils/constants.ts',
-      line: 8,
-      impact: 'Low - Dead code'
-    }
+    { name: 'unusedState', file: 'src/components/ProfileEditor.tsx', line: 12, impact: 'low' },
+    { name: 'tempData', file: 'src/hooks/useDataFetching.ts', line: 24, impact: 'low' },
+    { name: 'debugMode', file: 'src/utils/logger.ts', line: 5, impact: 'medium' }
   ],
   unusedFunctions: [
-    {
-      name: 'formatTimestamp',
-      file: 'src/utils/helpers.ts',
-      line: 45,
-      impact: 'Medium - Dead code, potential confusion'
-    },
-    {
-      name: 'validateEmail',
-      file: 'src/utils/validation.ts',
-      line: 22,
-      impact: 'Medium - Dead code, potential confusion'
-    }
+    { name: 'formatUserData', file: 'src/utils/formatters.ts', line: 45, impact: 'medium' },
+    { name: 'calculateBonus', file: 'src/utils/calculations.ts', line: 78, impact: 'medium' },
+    { name: 'debugLog', file: 'src/utils/logger.ts', line: 23, impact: 'low' }
   ],
   unusedCssSelectors: [
-    {
-      selector: '.card-highlight',
-      file: 'src/styles/components.css',
-      line: 156,
-      impact: 'Low - Increases CSS bundle size'
-    },
-    {
-      selector: '.btn-secondary-outline',
-      file: 'src/styles/buttons.css',
-      line: 87,
-      impact: 'Low - Increases CSS bundle size'
-    }
+    { selector: '.unused-card', file: 'src/styles/cards.css', line: 67, impact: 'low' },
+    { selector: '.legacy-button', file: 'src/styles/buttons.css', line: 112, impact: 'low' },
+    { selector: '.debug-outline', file: 'src/styles/debug.css', line: 14, impact: 'low' }
   ],
+  unusedFiles: [
+    'src/components/deprecated/OldNavbar.tsx',
+    'src/styles/unused.css',
+    'src/utils/oldHelpers.ts'
+  ],
+  unusedSelectors: [
+    { selector: '.legacy-layout', file: 'src/styles/layouts.css', line: 88 },
+    { selector: '.debug-grid', file: 'src/styles/debug.css', line: 22 },
+    { selector: '.old-theme', file: 'src/styles/themes.css', line: 155 }
+  ],
+  unusedDependencies: [
+    'lodash-es',
+    'moment',
+    'react-spring'
+  ],
+  duplicateCode: duplicateCodeMock,
+  complexCode: complexityReportMock,
+  performanceIssues: performanceIssuesMock,
   summary: {
-    totalIssues: 8,
-    criticalIssues: 0,
-    highIssues: 0,
-    mediumIssues: 2,
-    lowIssues: 6,
+    totalIssues: 29,
+    severity: {
+      high: 5,
+      medium: 12,
+      low: 12
+    },
     potentialSavings: {
-      bytes: 8546,
-      readabilityScore: 12
+      bundle: '~56 KB',
+      maintenance: 'High'
     }
-  }
-};
-
-// Mock metrics for project quality
-export const projectMetrics = {
-  beforeCleanup: {
-    projectSize: 2456000, // in bytes
-    fileCount: 187,
-    dependencyCount: 42,
-    linesOfCode: 28500,
-    duplicatedCodePercentage: 8.4,
-    testCoverage: 67.2,
-    averageComplexity: 15.3
-  },
-  afterCleanup: {
-    projectSize: 2145000, // in bytes
-    fileCount: 175,
-    dependencyCount: 37,
-    linesOfCode: 25200,
-    duplicatedCodePercentage: 4.2,
-    testCoverage: 67.2,
-    averageComplexity: 12.8
-  }
-};
-
-export const codeAnalysisTypes = {
-  DuplicateCodeInfo: {
-    files: [],
-    title: '',
-    description: '',
-    similarity: 0
-  },
-  ImportInfo: {
-    name: '',
-    source: '',
-    file: '',
-    line: 0
-  },
-  VariableInfo: {
-    name: '',
-    file: '',
-    line: 0
-  },
-  UnusedImport: {
-    name: '',
-    source: '',
-    file: '',
-    line: 0
-  },
-  UnusedVariable: {
-    name: '',
-    file: '',
-    line: 0
-  },
-  UnusedCssSelector: {
-    selector: '',
-    file: '',
-    line: 0
   }
 };

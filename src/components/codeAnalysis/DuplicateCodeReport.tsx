@@ -3,12 +3,50 @@ import React from 'react';
 import { Copy, AlertCircle } from 'lucide-react';
 import EmptyState from './shared/EmptyState';
 import CodeSnippet from './shared/CodeSnippet';
-import { duplicateCodeMock } from '@/utils/codeAnalysis/mockData';
 import { DuplicateCodeInfo } from '@/utils/codeAnalysis/types';
 
 const DuplicateCodeReport: React.FC = () => {
-  // Use centralized mock data
-  const duplicateCode = duplicateCodeMock as DuplicateCodeInfo[];
+  // Use mock data with proper type conversion
+  const rawDuplicateCode = [
+    {
+      id: '1',
+      title: 'Duplicate component rendering logic',
+      description: 'Similar rendering logic found in multiple components',
+      severity: 'medium',
+      impact: 'maintainability',
+      solution: 'Extract to a shared utility function',
+      instances: [
+        { file: 'src/components/ProfileCard.tsx', lines: '24-35' },
+        { file: 'src/components/UserCard.tsx', lines: '18-29' }
+      ],
+      similarity: 0.85,
+      files: ['src/components/ProfileCard.tsx', 'src/components/UserCard.tsx']
+    },
+    {
+      id: '2',
+      title: 'Duplicate API handling',
+      description: 'Similar API error handling logic',
+      severity: 'medium',
+      impact: 'maintainability',
+      solution: 'Create a shared API error handling utility',
+      instances: [
+        { file: 'src/services/userService.ts', lines: '45-60' },
+        { file: 'src/services/profileService.ts', lines: '32-47' }
+      ],
+      similarity: 0.92,
+      files: ['src/services/userService.ts', 'src/services/profileService.ts']
+    }
+  ];
+  
+  // Convert to the expected type
+  const duplicateCode: DuplicateCodeInfo[] = rawDuplicateCode.map(item => ({
+    id: item.id,
+    similarity: item.similarity,
+    files: item.files.map(path => ({ path })),
+    lines: parseInt(item.instances[0].lines.split('-')[1]) - parseInt(item.instances[0].lines.split('-')[0]),
+    codeSnippet: `// Code from ${item.instances[0].file}\n// Lines ${item.instances[0].lines}\n\n// Similar code found in ${item.instances.length} files`,
+    recommendation: item.solution
+  }));
 
   return (
     <div>

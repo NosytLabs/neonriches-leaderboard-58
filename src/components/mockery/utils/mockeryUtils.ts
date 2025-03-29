@@ -1,6 +1,6 @@
 
-import { MockeryAction, MockeryTier } from '@/types/mockery';
-import { Egg, Skull, LucideProps, Target, Crown } from 'lucide-react';
+import { MockeryAction, MockeryTier, ShameAction } from '@/types/mockery';
+import { Target, Shield, LucideProps, Crown, Egg } from 'lucide-react';
 import { ElementType } from 'react';
 
 export type ExtendedMockeryAction = MockeryAction | 'protection' | 'removal';
@@ -13,8 +13,7 @@ export const mockeryPrices: Partial<Record<MockeryAction, number>> = {
   silence: 10,
   courtJester: 25,
   protection: 10,
-  removal: 5,
-  shame: 7
+  removal: 5
 };
 
 // Weekly discount amount (percentage) for each mockery action
@@ -25,8 +24,7 @@ export const mockeryDiscounts: Partial<Record<MockeryAction, number>> = {
   silence: 20,
   courtJester: 0,
   protection: 25,
-  removal: 10,
-  shame: 15
+  removal: 10
 };
 
 // Display titles for mockery actions
@@ -37,8 +35,7 @@ export const mockeryActionTitles: Partial<Record<MockeryAction, string>> = {
   silence: 'Royal Silence',
   courtJester: 'Make Court Jester',
   protection: 'Royal Protection',
-  removal: 'Remove Mockery',
-  shame: 'Public Shame'
+  removal: 'Remove Mockery'
 };
 
 // Descriptions for mockery actions
@@ -47,8 +44,7 @@ export const mockeryActionDescriptions: Partial<Record<MockeryAction, string>> =
   eggs: 'Adorn their profile with rotten eggs',
   stocks: 'Lock them in the town stocks for public ridicule',
   silence: 'Forbid them from posting for 24 hours',
-  courtJester: 'Force them to wear the jester\'s outfit for a week',
-  shame: 'Subject them to public shame for 2 days'
+  courtJester: 'Force them to wear the jester\'s outfit for a week'
 };
 
 // Tiers for each mockery action
@@ -57,8 +53,7 @@ export const mockeryActionTiers: Partial<Record<MockeryAction, MockeryTier>> = {
   eggs: 'uncommon',
   stocks: 'rare',
   silence: 'epic',
-  courtJester: 'legendary',
-  shame: 'epic'
+  courtJester: 'legendary'
 };
 
 // CSS classes for each mockery action
@@ -67,8 +62,31 @@ export const mockeryActionClasses: Partial<Record<MockeryAction, string>> = {
   eggs: 'mockery-eggs',
   stocks: 'mockery-stocks',
   silence: 'mockery-silence',
-  courtJester: 'mockery-jester',
-  shame: 'mockery-shame'
+  courtJester: 'mockery-jester'
+};
+
+// Convert a mockery tier to a human-readable string
+export const getMockeryTier = (tier: MockeryTier): string => {
+  switch (tier) {
+    case 'common':
+      return 'Common';
+    case 'uncommon':
+      return 'Uncommon';
+    case 'rare':
+      return 'Rare';
+    case 'epic':
+      return 'Epic';
+    case 'legendary':
+      return 'Legendary';
+    case 'basic':
+      return 'Basic';
+    case 'premium':
+      return 'Premium';
+    case 'elite':
+      return 'Elite';
+    default:
+      return 'Unknown';
+  }
 };
 
 // Action icons
@@ -77,7 +95,7 @@ export const getMockeryActionIcon = (action: MockeryAction): ElementType => {
     case 'eggs':
       return Egg;
     case 'stocks':
-      return Skull;
+      return Target;
     case 'courtJester':
       return Crown;
     case 'silence':

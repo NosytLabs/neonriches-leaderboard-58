@@ -30,7 +30,7 @@ const ProfileBoostDisplay: React.FC<ProfileBoostDisplayProps> = ({
   return (
     <div className={`space-y-4 ${className}`}>
       {activeBoosts.map((boost: ProfileBoost) => {
-        const boostEffect = getBoostEffect(boost.effectId as string);
+        const boostEffect = getBoostEffect(boost.effectId?.toString() || '');
         const timeLeft = getBoostTimeLeft(boost);
         
         return (

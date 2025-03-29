@@ -22,6 +22,11 @@ export interface BoostEffect {
   tier?: string;
   durationDays?: number;
   cssClass?: string;
+  type?: 'effect' | 'appearance' | 'visibility' | 'animation'; // Add type property
+  cost?: number; // Add cost property
+  minTier?: string; // Add minTier property
+  allowStacking?: boolean; // Add allowStacking property
+  rarity?: string; // Add rarity property
 }
 
 export interface ProfileBoost {
