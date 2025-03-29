@@ -5,47 +5,47 @@ export const termsContent = {
       title: 'Terms of Service',
       content: [
         'Last Updated: March 29, 2025',
-        'Welcome to SpendThrone. By accessing or using our service, you agree to be bound by these Terms of Service.'
+        'Welcome to SpendThrone, where your financial regrets are our business model. By accessing our service, you agree to be bound by these Terms.'
       ]
     },
     {
       title: '1. Acceptance of Terms',
       content: [
-        'By accessing or using SpendThrone, you agree to be bound by these Terms of Service ("Terms"). If you don\'t agree, don\'t use the site.',
-        'We reserve the right to modify these terms at any time. Your continued use after modifications indicates acceptance of the updated terms.'
+        'By accessing SpendThrone, you agree to these Terms. If you don\'t agree, don\'t use the site. But we both know your FOMO won\'t let you walk away.',
+        'We reserve the right to modify these terms at any time. Much like your ex, we\'ll make changes without telling you and expect you to just deal with it.'
       ]
     },
     {
       title: '2. Description of Service',
       content: [
-        'SpendThrone is a satirical platform allowing users to gain status through monetary contributions. The service includes leaderboards, team competitions, profile customization, and mockery features.',
-        'We may modify or discontinue the service at any time. We shall not be liable for any modification, suspension, or discontinuance.'
+        'SpendThrone is a satirical platform allowing users to gain status through monetary contributions - like Instagram but with the pretense removed.',
+        'We may modify or discontinue the service at any time. Just like your investment in NFTs, we make no promises about longevity.'
       ]
     },
     {
       title: '3. User Conduct',
       content: [
         'You agree not to:',
-        '• Violate any laws or regulations',
-        '• Impersonate others',
-        '• Harass or harm others',
-        '• Submit false information',
-        '• Interfere with the service',
-        '• Use the service for unauthorized commercial purposes',
-        'We may terminate your access for violating these guidelines.'
+        '• Violate any laws (we\'re satirical, not criminals)',
+        '• Impersonate others (be your authentic, financially irresponsible self)',
+        '• Harass others (shade must be artful, not harmful)',
+        '• Submit false information (your actual bank balance is sad enough)',
+        '• Interfere with the service (our developers are fragile)',
+        '• Use the service for unauthorized commercial purposes (that\'s our job)',
+        'Break these rules and we\'ll banish you faster than you can say "crypto crash."'
       ]
     },
     {
       title: '4. User Payments and Refunds',
       content: [
-        'All payments to SpendThrone are final and non-refundable. By paying, you acknowledge the satirical nature of our platform and understand that payments directly influence your status.',
-        'We process payments through third-party processors and don\'t store your payment information on our servers.'
+        'All payments to SpendThrone are final and non-refundable. Like that gym membership you never use, your money is gone forever.',
+        'We process payments through third-party processors and don\'t store your payment information. We may be morally questionable, but we\'re not stupid.'
       ]
     },
     {
       title: '5. Data Security and Privacy',
       content: [
-        'While we enjoy medieval-themed humor, we take data security seriously. We implement industry-standard security measures:',
+        'While we joke about medieval themes, our security is modern and serious:',
         '• All data is encrypted in transit and at rest',
         '• We use secure authentication protocols',
         '• We regularly audit our security systems',
@@ -57,19 +57,19 @@ export const termsContent = {
     {
       title: '6. Limitation of Liability',
       content: [
-        'SpendThrone, its officers, directors, employees, and agents, are not liable for:',
-        '• Errors or inaccuracies in content',
-        '• Personal injury or property damage from using our service',
-        '• Unauthorized access to our secure servers and personal information stored therein',
-        '• Service interruptions',
-        '• Viruses transmitted by third parties',
-        '• Any loss resulting from use of our service'
+        'SpendThrone is not liable for:',
+        '• Errors in content (sometimes our satire is too realistic)',
+        '• Personal injury (unless you pulled a muscle flexing on the peasants)',
+        '• Unauthorized access (we can\'t help if your password is "password123")',
+        '• Service interruptions (even royal servers need naps)',
+        '• Viruses (we don\'t control what lurks in the digital moat)',
+        '• Any loss from using our service (including dignity, self-respect, or your ex\'s opinion of you)'
       ]
     },
     {
       title: '7. Contact Information',
       content: [
-        'Questions about these Terms? Contact us at support@spendthrone.com.'
+        'Questions about these Terms? Contact us at support@spendthrone.com. Our customer service monks will respond via digital scroll within 2-3 business days.'
       ]
     }
   ]

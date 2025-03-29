@@ -12,62 +12,62 @@ export interface FAQItem {
 export const faqItems: FAQItem[] = [
   {
     id: "faq-1",
-    question: "What is SpendThrone?",
-    answer: "SpendThrone is a satirical social experiment where your rank is determined solely by how much money you spend. The more you spend, the higher your rank. It's digital aristocracy where your wallet determines your status - like social media, but more honest about it.",
+    question: "What exactly is SpendThrone?",
+    answer: "It's a digital hierarchy where your wallet determines your worth - like social media but without pretending otherwise. Each dollar spent equals one rank point. Think of it as the honest version of Instagram.",
     category: "general"
   },
   {
     id: "faq-2",
-    question: "How do I improve my rank?",
-    answer: "Spend money. That's it. Each dollar equals one rank point. The leaderboard never resets, so your contributions are permanent. It's like buying NFTs, except you don't even get a JPEG to right-click and save.",
+    question: "How do I climb the ranks?",
+    answer: "Spend money. That's it. One dollar = one point. It's like buying followers, except we don't even pretend they're real people.",
     category: "ranks"
   },
   {
     id: "faq-3",
-    question: "What do I get for spending money?",
-    answer: "Besides watching your rank improve, you unlock profile customization options, special titles, and analytics. Think of it as a battle pass, but with no actual game to play.",
+    question: "What do I get for my money?",
+    answer: "A higher rank, customization options, and the ability to look down on those who've spent less. Basically, a digital version of wearing Gucci to the grocery store.",
     category: "benefits"
   },
   {
     id: "faq-4",
-    question: "What are teams?",
-    answer: "Join Red, Green, or Blue teams to compete for collective glory. Team rankings are based on total member spending. Choose wisely, or don't - it's purely cosmetic with absolutely no functional impact, much like expensive profile frames on other platforms.",
+    question: "What's with the teams?",
+    answer: "Choose Red, Green, or Blue to join the digital equivalent of high school cliques, but for adults with disposable income. Your team contribution affects the collective ranking - like a designer brand loyalty program.",
     category: "teams"
   },
   {
     id: "faq-5",
-    question: "Can I withdraw my money later?",
-    answer: "No! This is a royal competition of excess, not a sensible investment. All contributions are non-refundable. Think of it as buying a coffee, except instead of a coffee, you get a number on a leaderboard.",
+    question: "Can I get my money back?",
+    answer: "No. Much like those Supreme drops you waited in line for, all sales are final. Consider it an investment in your digital social capital.",
     category: "payment"
   },
   {
     id: "faq-6",
-    question: "How secure is my data?",
-    answer: "We take security seriously. Your data is protected with industry-standard encryption and security protocols. We like to joke about 'encryption moats and authentication drawbridges,' but our actual security measures are thoroughly modern and robust. Your sensitive information is genuinely secure.",
+    question: "Is my data secure?",
+    answer: "Absolutely. We protect your data better than you protect your credit score. Bank-level encryption, regular security audits, and zero tolerance for breaches. We joke about everything except security.",
     category: "security"
   },
   {
     id: "faq-7",
-    question: "Is this like buying NFTs?",
-    answer: "It's more honest than NFTs. When you spend money here, you know exactly what you're getting: absolutely nothing of tangible value except digital status. No promises of 'future utility' or 'community access' - just pure, unadulterated vanity. At least we're upfront about it!",
+    question: "Is this better than buying NFTs?",
+    answer: "Yes, because we're honest about selling you nothing. No vague promises about 'utility' or 'community access' - just pure, unapologetic status flexing.",
     category: "general"
   },
   {
     id: "faq-8",
     question: "Do you have a blockchain/token/DAO?",
-    answer: "No, we've cut out the middleman! You give us money directly, and we give you a higher number on a centralized database. It's blockchain without the transaction fees or environmental damage!",
+    answer: "No buzzwords, just straightforward wealth hierarchy. We've eliminated the middleman between your poor financial decisions and our profit margin.",
     category: "crypto"
   },
   {
     id: "faq-9",
-    question: "What happens if I become the top spender?",
-    answer: "You'll be crowned the reigning monarch of financially questionable decisions! Your profile will be featured prominently, your name immortalized, and you'll receive our most exclusive customizations. Plus, you'll get space to promote whatever you want - even your collection of digital pet rocks.",
+    question: "What happens if I become #1?",
+    answer: "You're crowned the Supreme Flexer and featured prominently. Your profile becomes a shrine to conspicuous consumption. Plus, you'll have undeniable proof you have more money than sense.",
     category: "ranks"
   },
   {
     id: "faq-10",
-    question: "Is this whole website satire?",
-    answer: "Yes and no. The concept is satirical - we're poking fun at digital status symbols and pay-to-win mechanics. But the platform itself is real, the ranks are real, and the money you spend is definitely real. Think of it as performance art where you're both the audience and the exhibit.",
+    question: "Is this satire or serious?",
+    answer: "Yes. We're satirizing the digital status economy while simultaneously participating in it. Like how you post about consumerism being toxic from your brand new iPhone.",
     category: "general"
   }
 ];

@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Info, Clock, AlertTriangle, Shield, Coins } from 'lucide-react';
+import { Info, Clock, AlertTriangle, Shield, Coins, ThumbsDown, CreditCard } from 'lucide-react';
 
 const MockeryRules = () => {
   return (
@@ -16,12 +16,12 @@ const MockeryRules = () => {
         <div className="flex space-x-3">
           <div className="flex-shrink-0">
             <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
-              <Coins className="h-4 w-4 text-royal-gold" />
+              <CreditCard className="h-4 w-4 text-royal-gold" />
             </div>
           </div>
           <div>
-            <h3 className="font-medium text-white mb-1">Pay to Play</h3>
-            <p>Each mockery costs money. Want to be meaner? Pay more.</p>
+            <h3 className="font-medium text-white mb-1">Monetized Meanness</h3>
+            <p>Like buying bottle service to flex on the table next to you, but without leaving your couch. The more you pay, the meaner you can be.</p>
           </div>
         </div>
         
@@ -33,7 +33,7 @@ const MockeryRules = () => {
           </div>
           <div>
             <h3 className="font-medium text-white mb-1">Cooldown Periods</h3>
-            <p>After being mocked, users enter a grace period where they can't be mocked again. You'll have to wait to continue your reign of terror.</p>
+            <p>Everyone gets a break between mockeries. Even TikTok bullies need to recharge.</p>
           </div>
         </div>
         
@@ -44,25 +44,25 @@ const MockeryRules = () => {
             </div>
           </div>
           <div>
-            <h3 className="font-medium text-white mb-1">Royal Protection</h3>
-            <p>Users can buy protection from mockery. Yes, it's basically a digital protection racket. We're not even subtle about it.</p>
+            <h3 className="font-medium text-white mb-1">VIP Protection</h3>
+            <p>Buy your way out of mockery. It's basically a digital bouncer for your ego. Exactly like paying for verified status on certain platforms we won't name.</p>
           </div>
         </div>
         
         <div className="flex space-x-3">
           <div className="flex-shrink-0">
             <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
-              <AlertTriangle className="h-4 w-4 text-amber-500" />
+              <ThumbsDown className="h-4 w-4 text-amber-500" />
             </div>
           </div>
           <div>
-            <h3 className="font-medium text-white mb-1">Keep It Playful</h3>
-            <p>Mockery should be fun, not harmful. Break the rules and we'll banish you from the kingdom.</p>
+            <h3 className="font-medium text-white mb-1">Playful Shade Only</h3>
+            <p>Keep it fun, not harmful. We're going for "Real Housewives" drama, not actual cyberbullying.</p>
           </div>
         </div>
         
         <div className="p-3 rounded-md bg-black/20 text-white/80 text-xs italic">
-          "All are equal targets in the court of mockery. Today's jester may be tomorrow's mocker."
+          "In the court of mockery, today's victim is tomorrow's bully. Just like how the intern who fetched your coffee yesterday is your boss's kid."
         </div>
       </CardContent>
     </Card>

@@ -1,274 +1,143 @@
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { AuthContextType, AuthProviderProps, UserProfile } from './types';
-import { useToast } from '@/hooks/use-toast';
-import generateMockUser from '@/utils/mockData';
+import React, { createContext, useState, useEffect, useContext } from 'react';
+import { signInWithEmail, signUpWithEmail, signOut } from '@/services/authService';
+import { UserProfile } from '@/types/user';
 
-// Create the context with default empty values
-const AuthContext = createContext<AuthContextType>({
-  user: null,
-  isAuthenticated: false,
-  isLoading: true,
-  login: async () => false,
-  logout: () => {},
-  register: async () => false,
-  updateUser: async () => false,
-  updateUserProfile: async () => false,
-  signIn: async () => false,
-  signOut: () => {},
-  awardCosmetic: async () => false
-});
+export interface AuthContextType {
+  user: UserProfile | null;
+  isLoading: boolean;
+  isAuthenticated: boolean;
+  login: (email: string, password: string) => Promise<void>;
+  register: (username: string, email: string, password: string) => Promise<void>;
+  logout: () => Promise<void>;
+}
 
-// AuthProvider component to wrap our app
-export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<UserProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const { toast } = useToast();
 
-  // Check if user is already logged in on mount
   useEffect(() => {
-    const checkAuth = async () => {
-      const token = localStorage.getItem('auth-token');
-      
-      if (token) {
-        try {
-          // In a real app, we'd verify the token with the server
-          // For now, just simulate an API call delay
-          await new Promise(resolve => setTimeout(resolve, 1000));
-          
-          // Mock user data
-          const userData = localStorage.getItem('user-data');
-          if (userData) {
-            setUser(JSON.parse(userData));
-          } else {
-            const mockUser = generateMockUser();
-            setUser(mockUser);
-            localStorage.setItem('user-data', JSON.stringify(mockUser));
-          }
-        } catch (error) {
-          console.error('Authentication error:', error);
-          localStorage.removeItem('auth-token');
-        }
-      }
-      
-      setIsLoading(false);
-    };
+    // Check for stored user data on component mount
+    const storedUser = localStorage.getItem('spendthrone_user');
     
-    checkAuth();
+    if (storedUser) {
+      try {
+        setUser(JSON.parse(storedUser));
+      } catch (error) {
+        console.error('Failed to parse stored user data:', error);
+        localStorage.removeItem('spendthrone_user');
+      }
+    }
+    
+    setIsLoading(false);
   }, []);
 
-  const login = async (username: string, password: string): Promise<boolean> => {
+  const login = async (email: string, password: string) => {
+    setIsLoading(true);
+    
     try {
-      setIsLoading(true);
+      const success = await signInWithEmail(email, password);
       
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // This is a mock login, in a real app we'd validate with a server
-      const mockUser = generateMockUser();
-      
-      // Save auth token and user data
-      localStorage.setItem('auth-token', 'mock-token-' + Date.now());
-      localStorage.setItem('user-data', JSON.stringify(mockUser));
-      
-      setUser(mockUser);
-      
-      toast({
-        title: 'Login Successful',
-        description: 'Welcome back to SpendThrone!',
-      });
-      
-      return true;
+      if (success) {
+        // Simulate user data fetch from API
+        const mockUser: UserProfile = {
+          id: 'user_' + Date.now(),
+          email,
+          username: email.split('@')[0],
+          displayName: email.split('@')[0].charAt(0).toUpperCase() + email.split('@')[0].slice(1),
+          walletBalance: 100,
+          rank: Math.floor(Math.random() * 100) + 1,
+          team: Math.random() > 0.5 ? (Math.random() > 0.5 ? 'red' : 'green') : 'blue',
+          joined: new Date(),
+          spentTotal: 0,
+          amountSpent: Math.floor(Math.random() * 1000),
+          tier: 'basic'
+        };
+        
+        setUser(mockUser);
+        localStorage.setItem('spendthrone_user', JSON.stringify(mockUser));
+      } else {
+        throw new Error('Login failed');
+      }
     } catch (error) {
       console.error('Login error:', error);
-      
-      toast({
-        title: 'Login Failed',
-        description: 'Invalid username or password.',
-        variant: 'destructive',
-      });
-      
-      return false;
+      throw error;
     } finally {
       setIsLoading(false);
     }
   };
 
-  const logout = () => {
-    localStorage.removeItem('auth-token');
-    localStorage.removeItem('user-data');
-    setUser(null);
+  const register = async (username: string, email: string, password: string) => {
+    setIsLoading(true);
     
-    toast({
-      title: 'Logged Out',
-      description: 'You have been successfully logged out.',
-    });
-  };
-
-  const register = async (username: string, email: string, password: string): Promise<boolean> => {
     try {
-      setIsLoading(true);
+      const success = await signUpWithEmail(email, password);
       
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // Create a new mock user
-      const newUser: UserProfile = {
-        id: 'user-' + Date.now(),
-        username,
-        displayName: username,
-        email,
-        profileImage: undefined,
-        bio: '',
-        totalSpent: 0,
-        rank: 9999,
-        tier: 'free',
-        gender: 'neutral',
-        joinedAt: new Date().toISOString(),
-        team: 'none',
-        previousRank: 9999,
-        cosmetics: {
-          badges: [],
-          titles: [],
-          borders: [],
-          effects: [],
-          emojis: []
-        }
-      };
-      
-      // Save auth token and user data
-      localStorage.setItem('auth-token', 'mock-token-' + Date.now());
-      localStorage.setItem('user-data', JSON.stringify(newUser));
-      
-      setUser(newUser);
-      
-      toast({
-        title: 'Registration Successful',
-        description: 'Welcome to SpendThrone!',
-      });
-      
-      return true;
+      if (success) {
+        // Simulate user data creation
+        const mockUser: UserProfile = {
+          id: 'user_' + Date.now(),
+          email,
+          username,
+          displayName: username,
+          walletBalance: 50, // New users get starting balance
+          rank: Math.floor(Math.random() * 1000) + 100, // Initial rank
+          joined: new Date(),
+          spentTotal: 0,
+          amountSpent: 0,
+          tier: 'basic'
+        };
+        
+        setUser(mockUser);
+        localStorage.setItem('spendthrone_user', JSON.stringify(mockUser));
+      } else {
+        throw new Error('Registration failed');
+      }
     } catch (error) {
       console.error('Registration error:', error);
-      
-      toast({
-        title: 'Registration Failed',
-        description: 'Failed to create your account.',
-        variant: 'destructive',
-      });
-      
-      return false;
+      throw error;
     } finally {
       setIsLoading(false);
     }
   };
 
-  const updateUser = async (userData: Partial<UserProfile>): Promise<boolean> => {
+  const logout = async () => {
+    setIsLoading(true);
+    
     try {
-      if (!user) return false;
-      
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 800));
-      
-      // Update user data
-      const updatedUser = { ...user, ...userData };
-      localStorage.setItem('user-data', JSON.stringify(updatedUser));
-      setUser(updatedUser);
-      
-      return true;
+      await signOut();
+      setUser(null);
+      localStorage.removeItem('spendthrone_user');
     } catch (error) {
-      console.error('Update user error:', error);
-      
-      toast({
-        title: 'Update Failed',
-        description: 'Failed to update your profile.',
-        variant: 'destructive',
-      });
-      
-      return false;
+      console.error('Logout error:', error);
+      throw error;
+    } finally {
+      setIsLoading(false);
     }
-  };
-
-  // Alias for updateUser for backward compatibility
-  const updateUserProfile = updateUser;
-  // Alias for login for backward compatibility
-  const signIn = login;
-  // Alias for logout for backward compatibility
-  const signOut = logout;
-
-  // Award a cosmetic item to the user
-  const awardCosmetic = async (
-    category: string, 
-    itemId: string, 
-    notify: boolean = true
-  ): Promise<boolean> => {
-    try {
-      if (!user) return false;
-      
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 600));
-      
-      // Update cosmetics
-      const cosmetics = { ...(user.cosmetics || {}) };
-      
-      // Ensure each category exists in cosmetics
-      if (!cosmetics.badges) cosmetics.badges = [];
-      if (!cosmetics.titles) cosmetics.titles = [];
-      if (!cosmetics.borders) cosmetics.borders = [];
-      if (!cosmetics.effects) cosmetics.effects = [];
-      if (!cosmetics.emojis) cosmetics.emojis = [];
-      
-      const categoryItems = cosmetics[category as keyof typeof cosmetics] || [];
-      
-      if (Array.isArray(categoryItems)) {
-        if (!categoryItems.includes(itemId)) {
-          const updatedCategory = [...categoryItems, itemId];
-          cosmetics[category as keyof typeof cosmetics] = updatedCategory;
-          
-          // Update user
-          const updatedUser = { ...user, cosmetics };
-          localStorage.setItem('user-data', JSON.stringify(updatedUser));
-          setUser(updatedUser);
-          
-          if (notify) {
-            toast({
-              title: 'Reward Unlocked!',
-              description: `You've unlocked a new ${category} item!`,
-            });
-          }
-          
-          return true;
-        }
-      }
-      
-      return false;
-    } catch (error) {
-      console.error('Award cosmetic error:', error);
-      return false;
-    }
-  };
-
-  // Create the value object for the context
-  const contextValue: AuthContextType = {
-    user,
-    isAuthenticated: !!user,
-    isLoading,
-    login,
-    logout,
-    register,
-    updateUser,
-    updateUserProfile,
-    signIn,
-    signOut,
-    awardCosmetic
   };
 
   return (
-    <AuthContext.Provider value={contextValue}>
+    <AuthContext.Provider value={{ 
+      user, 
+      isLoading, 
+      isAuthenticated: !!user, 
+      login, 
+      register, 
+      logout 
+    }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
-// Custom hook to use auth context
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  
+  if (context === undefined) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  
+  return context;
+};
