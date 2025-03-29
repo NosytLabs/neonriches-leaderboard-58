@@ -18,19 +18,19 @@ export const MOCKERY_NAMES: Record<string, string> = {
 };
 
 export const MOCKERY_COSTS: Record<string, number> = {
-  tomatoes: 25,
-  putridEggs: 50,
-  stocks: 100,
-  silence: 150,
-  jester: 200,
-  courtJester: 250,
-  dunce: 75,
-  protection: 200,
-  smokeBomb: 300,
-  royalPie: 60,
-  glitterBomb: 175,
-  jokeCrown: 125,
-  memeFrame: 180
+  tomatoes: 1,
+  putridEggs: 3,
+  stocks: 5,
+  silence: 8,
+  jester: 10,
+  courtJester: 15,
+  dunce: 5,
+  protection: 10,
+  smokeBomb: 20,
+  royalPie: 4,
+  glitterBomb: 12,
+  jokeCrown: 7,
+  memeFrame: 9
 };
 
 export const MOCKERY_DESCRIPTIONS: Record<string, string> = {

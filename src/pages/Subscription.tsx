@@ -37,9 +37,9 @@ const Subscription = () => {
   return (
     <Container className="py-10">
       <div className="text-center mb-10">
-        <h1 className="text-4xl font-bold mb-4 royal-gradient">Choose Your Throne</h1>
+        <h1 className="text-4xl font-bold mb-4 royal-gradient">Choose Your Royal Status</h1>
         <p className="text-lg opacity-80 max-w-2xl mx-auto">
-          Upgrade your status and unlock premium features with our exclusive subscription plans.
+          Upgrade your standing in the royal court and unlock premium features with our exclusive subscription plans.
         </p>
       </div>
 
@@ -106,11 +106,11 @@ const Subscription = () => {
       <div className="text-center mt-12 max-w-3xl mx-auto">
         <h2 className="text-2xl font-bold mb-4">Why Choose SpendThrone?</h2>
         <p className="text-white/70 mb-6">
-          Our premium subscriptions offer unparalleled visibility and status in our digital kingdom. Join the elite ranks of our most distinguished members and showcase your prestige.
+          Our subscriptions offer unparalleled visibility in our digital kingdom. Join the elite ranks of our most distinguished nobles and showcase your royal prestige.
         </p>
         <div className="glass-morphism border-royal-gold/20 p-6 rounded-lg">
           <p className="italic text-white/60">
-            "All subscriptions are purely cosmetic - your rank is determined solely by your spending. The more you spend, the higher you climb. It's a simple yet effective demonstration of digital status."
+            "All subscriptions are purely cosmetic - your rank is determined solely by your spending. The more gold coins you contribute to the royal treasury, the higher you climb in the court. It's a simple yet effective demonstration of digital nobility."
           </p>
         </div>
       </div>

@@ -164,7 +164,7 @@ export const MARKETING_FEATURES = [
     id: "basic_analytics",
     name: "Basic Analytics Package",
     description: "Track your profile views, clicks, and basic engagement metrics",
-    price: 29.99,
+    price: 9.99,
     features: [
       "Track profile views",
       "Track link clicks",
@@ -179,7 +179,7 @@ export const MARKETING_FEATURES = [
     id: "advanced_analytics",
     name: "Advanced Analytics Suite",
     description: "Comprehensive analytics with detailed visitor insights and trends",
-    price: 49.99,
+    price: 19.99,
     features: [
       "All Basic Analytics features",
       "Visitor demographics",
@@ -195,7 +195,7 @@ export const MARKETING_FEATURES = [
     id: "promotion_tools",
     name: "Promotion Toolkit",
     description: "Tools to enhance your profile visibility and reach more viewers",
-    price: 59.99,
+    price: 24.99,
     features: [
       "Featured placement in discover section",
       "Profile highlight effects",
@@ -210,7 +210,7 @@ export const MARKETING_FEATURES = [
     id: "audience_insights",
     name: "Royal Audience Insights",
     description: "Elite-tier visitor analysis and conversion optimization tools",
-    price: 89.99,
+    price: 39.99,
     features: [
       "All Advanced Analytics features",
       "Visitor interest mapping",
@@ -289,8 +289,8 @@ export const SUBSCRIPTION_TIERS = [
     id: "standard",
     name: "Standard",
     description: "Enhanced presence with basic marketing tools",
-    priceMonthly: 49.99,
-    priceYearly: 499.99,
+    priceMonthly: 9.99,
+    priceYearly: 99.99,
     features: [
       "All Free tier features",
       "Advanced profile customization",
@@ -307,8 +307,8 @@ export const SUBSCRIPTION_TIERS = [
     id: "premium",
     name: "Premium",
     description: "Enhanced digital presence with marketing tools",
-    priceMonthly: 149.99,
-    priceYearly: 1499.99,
+    priceMonthly: 29.99,
+    priceYearly: 299.99,
     features: [
       "All Standard tier features",
       "RGB borders and animations in leaderboard",
@@ -328,8 +328,8 @@ export const SUBSCRIPTION_TIERS = [
     id: "royal",
     name: "Royal",
     description: "Maximum status with exclusive marketing features",
-    priceMonthly: 299.99,
-    priceYearly: 2999.99,
+    priceMonthly: 99.99,
+    priceYearly: 999.99,
     features: [
       "All Premium tier features",
       "Royal styling on leaderboard (gold borders, crown icons, animations)",

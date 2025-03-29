@@ -4,9 +4,9 @@ import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { MockeryAction, MockeryTier } from '@/types/mockery';
-import { MOCKERY_COSTS, MOCKERY_NAMES, MOCKERY_DESCRIPTIONS, getMockeryIcon } from '@/utils/mockeryUtils';
+import { MOCKERY_COSTS, MOCKERY_NAMES, MOCKERY_DESCRIPTIONS } from '@/utils/mockeryUtils';
 import { cn } from '@/lib/utils';
-import { Flame, Egg, Target, MessageSquareOff, Crown, Lock, MousePointerClick, Cloud } from 'lucide-react';
+import { Flame, Egg, Target, MessageSquareOff, Crown, Lock, MousePointerClick, Cloud, Cake, Sparkles, Smile } from 'lucide-react';
 
 interface MockeryCardProps {
   action: MockeryAction;
@@ -34,18 +34,27 @@ const MockeryCard: React.FC<MockeryCardProps> = ({
     switch (action) {
       case 'tomatoes':
         return <Flame className="h-5 w-5 text-royal-crimson" />;
-      case 'putridEggs': // Renamed from eggs
+      case 'putridEggs':
         return <Egg className="h-5 w-5 text-royal-gold" />;
       case 'stocks':
         return <Lock className="h-5 w-5 text-royal-navy" />;
       case 'silence':
         return <MessageSquareOff className="h-5 w-5 text-royal-purple" />;
       case 'courtJester':
+      case 'jester':
         return <Crown className="h-5 w-5 text-royal-gold" />;
       case 'dunce':
         return <MousePointerClick className="h-5 w-5 text-royal-crimson" />;
-      case 'smokeBomb': // New smoke bomb effect
+      case 'smokeBomb':
         return <Cloud className="h-5 w-5 text-gray-400" />;
+      case 'royalPie':
+        return <Cake className="h-5 w-5 text-royal-purple" />;
+      case 'glitterBomb':
+        return <Sparkles className="h-5 w-5 text-royal-gold" />;
+      case 'jokeCrown':
+        return <Crown className="h-5 w-5 text-royal-crimson" />;
+      case 'memeFrame':
+        return <Smile className="h-5 w-5 text-royal-navy" />;
       default:
         return <Target className="h-5 w-5 text-white" />;
     }
@@ -89,11 +98,12 @@ const MockeryCard: React.FC<MockeryCardProps> = ({
   
   // Get description with username
   const getDescription = () => {
+    if (!MOCKERY_DESCRIPTIONS[action]) return "Apply mockery effect to this user.";
     return MOCKERY_DESCRIPTIONS[action].replace(/your target|the target/gi, username);
   };
   
-  // Special styling for smoke bomb
-  const isSmokeBomb = action === 'smokeBomb';
+  // Special styling for special cards
+  const isSpecial = action === 'smokeBomb' || action === 'glitterBomb' || action === 'royalPie';
   
   return (
     <Card 
@@ -101,7 +111,7 @@ const MockeryCard: React.FC<MockeryCardProps> = ({
         "glass-morphism cursor-pointer transition-all", 
         getBorderColor(),
         selected ? 'ring-2 ring-royal-gold/50' : '',
-        isSmokeBomb ? 'shadow-gold' : '',
+        isSpecial ? 'shadow-gold' : '',
         className
       )}
       onClick={handleSelect}
@@ -110,15 +120,15 @@ const MockeryCard: React.FC<MockeryCardProps> = ({
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center">
             {getIcon()}
-            <h3 className="ml-2 font-medium">{MOCKERY_NAMES[action]}</h3>
+            <h3 className="ml-2 font-medium">{MOCKERY_NAMES[action] || action}</h3>
           </div>
           <Badge className={getTierBadgeStyle()}>{tier}</Badge>
         </div>
         
         <p className="text-sm text-white/70 mt-2 mb-3">{getDescription()}</p>
         
-        {isSmokeBomb && (
-          <Badge className="bg-royal-gold text-black mb-2">NEW!</Badge>
+        {isSpecial && (
+          <Badge className="bg-royal-gold text-black mb-2">PREMIUM</Badge>
         )}
         
         <div className="flex justify-between items-center">
@@ -133,8 +143,13 @@ const MockeryCard: React.FC<MockeryCardProps> = ({
             {action === 'stocks' && '72h'}
             {action === 'silence' && '48h'}
             {action === 'courtJester' && '7d'}
+            {action === 'jester' && '4d'}
             {action === 'dunce' && '48h'}
             {action === 'smokeBomb' && '8h'}
+            {action === 'royalPie' && '36h'}
+            {action === 'glitterBomb' && '48h'}
+            {action === 'jokeCrown' && '72h'}
+            {action === 'memeFrame' && '60h'}
           </Badge>
         </div>
       </CardContent>
