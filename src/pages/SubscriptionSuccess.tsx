@@ -5,19 +5,21 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Crown, ArrowLeft, Check } from 'lucide-react';
+import { Crown, ArrowLeft, Check, Sparkles } from 'lucide-react';
 import { useAuth } from '@/contexts/auth';
-import { FEATURE_METADATA } from '@/config/subscriptions';
+import { PRODUCT_FEATURES, FEATURE_METADATA } from '@/config/subscriptions';
 
 const SubscriptionSuccess = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const [plan, setPlan] = useState<string>('premium');
   
   // Parse URL parameters
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
     const sessionId = queryParams.get('session_id');
+    const planParam = queryParams.get('plan');
     
     if (!sessionId) {
       // No session ID found, redirect back to home after a delay
@@ -25,17 +27,36 @@ const SubscriptionSuccess = () => {
       return () => clearTimeout(timeout);
     }
     
+    // Set the plan from URL parameters if available
+    if (planParam) {
+      if (planParam.includes('royal')) {
+        setPlan('royal');
+      } else if (planParam.includes('standard')) {
+        setPlan('standard');
+      } else {
+        setPlan('premium'); // Default to premium
+      }
+    }
+    
     // In a real implementation, you would verify the subscription status with Stripe here
     
   }, [location, navigate]);
   
-  // List of standard features unlocked with subscription
-  const unlockedFeatures = [
-    'premium_profile',
-    'analytics',
-    'profile_boost',
-    'custom_themes'
-  ];
+  // Get features for the subscribed plan
+  const getUnlockedFeatures = () => {
+    return PRODUCT_FEATURES[plan as keyof typeof PRODUCT_FEATURES] || PRODUCT_FEATURES.premium;
+  };
+  
+  const unlockedFeatures = getUnlockedFeatures();
+  
+  // Get plan display name
+  const getPlanDisplayName = () => {
+    switch (plan) {
+      case 'royal': return 'Royal';
+      case 'standard': return 'Standard';
+      default: return 'Premium';
+    }
+  };
   
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground">
@@ -45,9 +66,13 @@ const SubscriptionSuccess = () => {
         <Card className="max-w-md w-full glass-morphism border-royal-gold/20">
           <CardHeader className="pb-4">
             <div className="mx-auto mb-4 w-16 h-16 bg-royal-gold/10 rounded-full flex items-center justify-center">
-              <Crown className="h-10 w-10 text-royal-gold" />
+              {plan === 'royal' ? (
+                <Crown className="h-10 w-10 text-royal-gold" />
+              ) : (
+                <Sparkles className="h-10 w-10 text-royal-gold" />
+              )}
             </div>
-            <CardTitle className="text-center text-2xl">Welcome to Royalty!</CardTitle>
+            <CardTitle className="text-center text-2xl">Welcome to {getPlanDisplayName()} Tier!</CardTitle>
             <CardDescription className="text-center">
               Your subscription has been successfully activated
             </CardDescription>
@@ -75,7 +100,7 @@ const SubscriptionSuccess = () => {
                 asChild
               >
                 <Link to="/">
-                  <Crown className="mr-2 h-4 w-4" />
+                  <ArrowLeft className="mr-2 h-4 w-4" />
                   Dashboard
                 </Link>
               </Button>
@@ -85,7 +110,7 @@ const SubscriptionSuccess = () => {
                 asChild
               >
                 <Link to={user ? `/profile/${user.username}` : "/auth"}>
-                  <ArrowLeft className="mr-2 h-4 w-4" />
+                  <Crown className="mr-2 h-4 w-4" />
                   {user ? 'Customize Profile' : 'Sign In'}
                 </Link>
               </Button>
