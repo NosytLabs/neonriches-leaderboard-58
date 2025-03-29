@@ -1,175 +1,55 @@
 
-import React from 'react';
-import { Crown, DollarSign, Trophy, Users, Zap, Eye, Sparkles, Paintbrush } from 'lucide-react';
+import { FAQItem } from "@/types/faq";
 
-export interface FaqItem {
-  id: string;
-  question: string;
-  answer: React.ReactNode;
-  icon?: React.ReactNode;
-  category: string;
-}
-
-export const faqItems: FaqItem[] = [
+export const faqItems: FAQItem[] = [
   {
-    id: 'what-is-spend-throne',
-    question: 'What is SpendThrone?',
-    answer: (
-      <div className="space-y-2">
-        <p>
-          SpendThrone is a satirical social experiment where your rank is determined solely by how much money you spend. 
-          $1 spent equals 1 rank point - it's a transparent meritocracy based purely on spending.
-        </p>
-        <p>
-          The leaderboard never resets, creating a permanent record of conspicuous consumption.
-        </p>
-      </div>
-    ),
-    icon: <Crown />,
-    category: 'general'
+    id: "1",
+    question: "What is SpendThrone?",
+    answer: "SpendThrone is a satirical social experiment that explores the dynamics of wealth, status, and competition. It's a web platform where your rank is determined solely by how much money you spend. Think of it as pay-to-win, but with complete self-awareness and a hint of social commentary."
   },
   {
-    id: 'how-does-ranking-work',
-    question: 'How does the leaderboard ranking system work?',
-    answer: (
-      <div className="space-y-2">
-        <p>
-          The ranking system is extremely straightforward: $1 spent = 1 rank point. The more you spend, the higher your rank.
-        </p>
-        <p>
-          Your rank is determined by your total spending compared to other users. If you've spent more than someone else, you'll be ranked higher.
-        </p>
-        <p>
-          The leaderboard is persistent and never resets, creating a permanent hierarchy based solely on financial contributions.
-        </p>
-      </div>
-    ),
-    icon: <Trophy />,
-    category: 'rankings'
+    id: "2",
+    question: "How does the ranking system work?",
+    answer: "Our ranking system is beautifully simple: $1 spent equals 1 unit of rank. The more you spend, the higher you climb. The leaderboard never resets, so your financial commitments to digital prestige are preserved for eternity (or until our servers go down)."
   },
   {
-    id: 'profile-vs-rank',
-    question: 'What\'s the difference between profile enhancements and rank?',
-    answer: (
-      <div className="space-y-2">
-        <p>
-          Your <strong>rank</strong> on the leaderboard is determined solely by how much money you've deposited ($1 = 1 rank point). 
-          This is the only way to climb the leaderboard.
-        </p>
-        <p>
-          <strong>Profile enhancements</strong> are purely cosmetic features that make your profile and leaderboard entry more visually appealing. 
-          These can be purchased through subscriptions or as temporary boosts, but they do not affect your actual ranking.
-        </p>
-        <p>
-          Think of rank as your actual status, while profile enhancements are just how you present that status.
-        </p>
-      </div>
-    ),
-    icon: <Eye />,
-    category: 'profiles'
+    id: "3",
+    question: "Is this serious?",
+    answer: "Yes and no. We're seriously building a platform that lets people pay for status, but we're doing it with a satirical edge that pokes fun at the very concept. Think of it as performance art that comments on capitalism, social media validation, and status anxiety."
   },
   {
-    id: 'what-are-profile-boosts',
-    question: 'What are Profile Boosts?',
-    answer: (
-      <div className="space-y-2">
-        <p>
-          Profile Boosts are temporary visual enhancements you can purchase to make your profile and leaderboard entries more noticeable.
-          These include visibility boosts, appearance enhancements, animations, and special effects.
-        </p>
-        <p>
-          Boosts are purely cosmetic and do not affect your actual rank on the leaderboard. They're an affordable alternative
-          to higher-tier subscriptions for users who want some visual flair without the commitment.
-        </p>
-        <p>
-          Each boost lasts for a specific duration (typically 3-14 days) and can be renewed or changed when expired.
-        </p>
-      </div>
-    ),
-    icon: <Zap />,
-    category: 'boosts'
+    id: "4",
+    question: "What do I get for my money?",
+    answer: "Digital prestige, bragging rights, and a customizable profile that becomes more enhanced the more you spend. You'll also get access to exclusive features like profile boosts, mockery actions against lower-ranked users, and team competitions. Your contributions also help us continue developing this unique social experiment."
   },
   {
-    id: 'boost-vs-subscription',
-    question: 'What\'s the difference between Boosts and Subscriptions?',
-    answer: (
-      <div className="space-y-2">
-        <p>
-          <strong>Profile Boosts</strong> are temporary, one-time purchases that enhance your profile's appearance for a limited time (typically 3-14 days).
-          They're affordable and focused on specific visual effects.
-        </p>
-        <p>
-          <strong>Subscriptions</strong> (Premium and Royal tiers) provide ongoing benefits including enhanced profile customization, 
-          analytics, and permanent visual enhancements. They also include discounts on boosts and some exclusive boost effects.
-        </p>
-        <p>
-          Boosts are ideal for occasional enhancement, while subscriptions are better for users seeking continuous premium features.
-        </p>
-      </div>
-    ),
-    icon: <Sparkles />,
-    category: 'boosts'
+    id: "5",
+    question: "Can I withdraw my money?",
+    answer: "In general, no. Once you've exchanged real currency for digital status, there's no going back. However, Royal tier users do have limited withdrawal options via Solana. Remember: this is primarily about showcasing our human willingness to pay for intangible status, not an investment platform."
   },
   {
-    id: 'deposit-vs-subscription',
-    question: 'What\'s the difference between deposits and subscriptions?',
-    answer: (
-      <div className="space-y-2">
-        <p>
-          <strong>Deposits</strong> directly increase your rank on the leaderboard ($1 = 1 rank point). This is the only way to climb
-          the leaderboard hierarchy. Deposits are permanent contributions that never expire.
-        </p>
-        <p>
-          <strong>Subscriptions</strong> provide enhanced profile features, visual enhancements, and marketing tools, but they do not
-          affect your leaderboard rank. Subscription benefits last only as long as your subscription is active.
-        </p>
-        <p>
-          For maximum impact, many users both make deposits (for rank) and maintain subscriptions (for features).
-        </p>
-      </div>
-    ),
-    icon: <DollarSign />,
-    category: 'payments'
+    id: "6",
+    question: "Is this legal?",
+    answer: "Absolutely. We're transparently offering digital services in exchange for payment. We don't promise any financial returns, and we're very upfront about the satirical nature of our platform. We comply with all relevant regulations for digital services."
   },
   {
-    id: 'team-visual-effects',
-    question: 'Do teams get special visual effects?',
-    answer: (
-      <div className="space-y-2">
-        <p>
-          Yes! Each team (Red, Green, and Blue) has its own distinct visual styling that's applied to members' profiles and leaderboard entries.
-        </p>
-        <p>
-          Team Red features fiery red accents and warm-toned effects.
-          Team Green showcases electric lime highlights and nature-inspired visuals.
-          Team Blue displays cool pulse effects and ocean-themed elements.
-        </p>
-        <p>
-          These team-specific visual elements are automatically applied based on your team affiliation and combine with any boosts or subscription effects you have.
-        </p>
-      </div>
-    ),
-    icon: <Users />,
-    category: 'teams'
+    id: "7",
+    question: "What are Teams?",
+    answer: "Teams (Red, Green, and Blue) are collective groups you can join to compete for team dominance. Your individual spending contributes to your team's total, and the highest-spending team gets special perks and bragging rights. It's like political tribalism, but more honest about the money involved!"
   },
   {
-    id: 'custom-visual-effects',
-    question: 'Can I customize my visual effects?',
-    answer: (
-      <div className="space-y-2">
-        <p>
-          Basic users can purchase temporary boosts with preset visual effects, but customization is limited.
-        </p>
-        <p>
-          Premium subscribers can adjust some aspects of their visual effects, including RGB color selection, animation speed, and effect intensity.
-        </p>
-        <p>
-          Royal subscribers have full customization options for their visual effects, including the ability to create custom color palettes,
-          animation sequences, and combined effects for a truly unique presentation.
-        </p>
-      </div>
-    ),
-    icon: <Paintbrush />,
-    category: 'customization'
+    id: "8",
+    question: "What is Mockery?",
+    answer: "Mockery is our system that lets higher-ranked users spend money to apply humiliating effects to lower-ranked profiles. From virtual tomatoes to public stocks, it's all about asserting dominance through digital shame. Don't worry - targeted users can purchase 'Protection' to remove these effects."
+  },
+  {
+    id: "9",
+    question: "How do Profile Boosts work?",
+    answer: "Profile Boosts are premium visual enhancements that make your profile stand out. From animated backgrounds to special effects, these temporary boosts signal your commitment to digital excess. Different tiers (Basic, Premium, Royal) offer increasingly ostentatious visual effects."
+  },
+  {
+    id: "10",
+    question: "Is my payment information secure?",
+    answer: "Yes, we take security seriously. We use industry-standard payment processors and never store your full payment details on our servers. All transactions are processed through secure, encrypted connections."
   }
 ];

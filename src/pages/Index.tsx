@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Shell } from '@/components/ui/shell';
 import RoyalHero from '@/components/RoyalHero';
@@ -16,6 +15,7 @@ import EnhancedCrownEffect from '@/components/animations/EnhancedCrownEffect';
 import RoyalTrophyModel from '@/components/3d/RoyalTrophyModel';
 import { Badge } from '@/components/ui/badge';
 import { motion } from 'framer-motion';
+import SpendingDistributionChart from '@/components/charts/SpendingDistributionChart';
 
 // Sample data for spending distribution
 const spendingData = [
@@ -27,14 +27,23 @@ const spendingData = [
 
 const Index = () => {
   const [showTrophy, setShowTrophy] = useState(false);
+  const [showChart, setShowChart] = useState(false);
 
   useEffect(() => {
     // Show trophy after a delay for a nice entrance effect
-    const timer = setTimeout(() => {
+    const trophyTimer = setTimeout(() => {
       setShowTrophy(true);
     }, 1000);
     
-    return () => clearTimeout(timer);
+    // Show chart after another delay
+    const chartTimer = setTimeout(() => {
+      setShowChart(true);
+    }, 1500);
+    
+    return () => {
+      clearTimeout(trophyTimer);
+      clearTimeout(chartTimer);
+    };
   }, []);
 
   return (
@@ -74,6 +83,19 @@ const Index = () => {
                 Awarded to the #1 ranked noble
               </p>
             </div>
+          </motion.div>
+        )}
+        
+        {/* Spending distribution chart */}
+        {showChart && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+            className="max-w-lg mx-auto mb-8 glass-morphism border border-white/10 p-4 rounded-lg"
+          >
+            <h3 className="text-lg font-medium mb-2 text-center">How Nobles Distribute Their Wealth</h3>
+            <SpendingDistributionChart data={spendingData} height={250} />
           </motion.div>
         )}
         

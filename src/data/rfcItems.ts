@@ -1,101 +1,96 @@
 
-import React from 'react';
-import { MessageSquare, Crown, Gem, AlertTriangle } from 'lucide-react';
-
-export interface RFCItem {
-  id: string;
-  title: string;
-  description: React.ReactNode;
-  icon?: React.ReactNode;
-  status: 'open' | 'under-review' | 'approved' | 'implemented' | 'rejected';
-  votes: number;
-  createdAt: string;
-  author: string;
-}
+import { RFCItem } from "@/types/rfc";
 
 export const rfcItems: RFCItem[] = [
   {
-    id: 'rfc-001',
-    title: 'Advanced Mockery Features',
-    description: (
-      <p>
-        Allow users to purchase premium mockery packages that include animated GIFs, sound effects, and custom insult templates. This would enhance the humiliation experience while driving additional revenue – essentially monetizing digital schadenfreude. It's like selling both the knife AND the bandages in a single convenient package!
-      </p>
-    ),
-    icon: <MessageSquare className="h-4 w-4 text-royal-gold" />,
-    status: 'under-review',
-    votes: 42,
-    createdAt: '2023-10-15',
-    author: 'DuchessDigits'
+    id: "1",
+    title: "Team Tournaments",
+    status: "proposed",
+    description: "Implement weekly tournaments where teams compete on specialized challenges. Rewards include team-wide visibility boosts and special visual effects.",
+    proposedBy: "Duke Digitalworth",
+    votes: 24,
+    category: "feature"
   },
   {
-    id: 'rfc-002',
-    title: 'Team Wars Seasonal Events',
-    description: (
-      <p>
-        Implement quarterly seasonal competitions between teams with special limited-time rewards, unique profile decorations, and exclusive mockery rights. The winning team gets a 2x multiplier on profile visibility – turning bragging rights into an actual measurable metric. It's the digital equivalent of a country club membership, but without the golf or outdated dress codes!
-      </p>
-    ),
-    icon: <MessageSquare className="h-4 w-4 text-royal-gold" />,
-    status: 'approved',
-    votes: 87,
-    createdAt: '2023-11-02',
-    author: 'LordCashington'
+    id: "2",
+    title: "Mockery Evolution",
+    status: "under_review",
+    description: "Allow mockery effects to evolve or intensify over time if additional spending is directed at the same target, creating escalating levels of digital shame.",
+    proposedBy: "Countess Snarkington",
+    votes: 37,
+    category: "enhancement"
   },
   {
-    id: 'rfc-003',
-    title: 'Royal Portrait NFTs',
-    description: (
-      <p>
-        Allow top spenders to mint their profile as limited edition NFTs that can be traded or displayed in other web3 platforms. Each NFT could include rank certification and spending history as provable bragging rights – effectively turning conspicuous consumption into a tradable asset. It's like those aristocratic portraits from centuries past, but instead of depicting your land holdings, they showcase how much money you've wasted on digital status!
-      </p>
-    ),
-    icon: <MessageSquare className="h-4 w-4 text-royal-gold" />,
-    status: 'open',
+    id: "3",
+    title: "Royal Museum",
+    status: "approved",
+    description: "Create a virtual museum that showcases the history of top spenders, memorable mockeries, and important platform milestones. Premium placement available for purchase.",
+    proposedBy: "Lord Moneybags",
+    votes: 52,
+    category: "feature"
+  },
+  {
+    id: "4",
+    title: "Seasonal Themes",
+    status: "in_progress",
+    description: "Introduce rotating seasonal visual themes that affect the entire platform's appearance. Special seasonal boosts and mockery options will be available.",
+    proposedBy: "Viscount Visualworth",
+    votes: 41,
+    category: "enhancement"
+  },
+  {
+    id: "5",
+    title: "Royal Decrees",
+    status: "proposed",
+    description: "Allow the top-ranked user to issue weekly 'Royal Decrees' that temporarily modify minor platform rules or appearance for all users. These changes would be cosmetic but noticeable.",
+    proposedBy: "Emperor Excessivecoin",
     votes: 29,
-    createdAt: '2023-12-05',
-    author: 'BaronBankroll'
+    category: "feature"
   },
   {
-    id: 'rfc-004',
-    title: 'Treasury Transparency Report',
-    description: (
-      <p>
-        Create a monthly "Treasury Report" that humorously details how user contributions are being spent: "40% to developer coffee habits, 30% to server costs, 20% to exotic mechanical keyboards, and 10% to our collective therapy sessions for creating this platform." Include satirical pie charts and expenditure categories like "Gilded Mouse Pads" and "Premium Ergonomic Throne Chairs." 
-      </p>
-    ),
-    icon: <Gem className="h-4 w-4 text-royal-gold" />,
-    status: 'open',
-    votes: 65,
-    createdAt: '2023-12-12',
-    author: 'CountessCapital'
+    id: "6",
+    title: "Spending Milestones",
+    status: "approved",
+    description: "Create a system of milestone achievements that commemorate significant spending thresholds with special badges, effects, and platform notifications.",
+    proposedBy: "Baroness Bigspender",
+    votes: 45,
+    category: "enhancement"
   },
   {
-    id: 'rfc-005',
-    title: 'Nepotism Feature',
-    description: (
-      <p>
-        Implement a "Royal Family" system where top spenders can designate friends as family members who receive a small percentage of their rank without paying – a digital dynasty of sorts. This perfectly mirrors real-world nepotism, where those connected to wealth receive benefits without merit! Includes special titles like "Heir Apparent" and "Royal Cousin Twice Removed."
-      </p>
-    ),
-    icon: <Crown className="h-4 w-4 text-royal-gold" />,
-    status: 'under-review',
-    votes: 54,
-    createdAt: '2023-12-18',
-    author: 'DukeDigital'
+    id: "7",
+    title: "Charity Integration",
+    status: "rejected",
+    description: "Add an option to direct a percentage of spending to actual charities, with special recognition for charitable giving. Rejected as it contradicts the satirical nature of spending purely for status.",
+    proposedBy: "Sir Philanthropist",
+    votes: 18,
+    category: "feature",
+    rejectionReason: "Conflicts with core satirical concept of frivolous spending"
   },
   {
-    id: 'rfc-006',
-    title: 'Social Experiment Analysis Reports',
-    description: (
-      <p>
-        Generate quarterly "research papers" analyzing user spending patterns and status-seeking behaviors on the platform. Include pseudo-academic language, satirical sociological insights, and completely made-up psychological terms like "Digital Status Anxiety Disorder" and "Leaderboard Position Dysmorphia." A perfect way to remind users they're participating in a grand commentary on status!
-      </p>
-    ),
-    icon: <AlertTriangle className="h-4 w-4 text-royal-gold" />,
-    status: 'approved',
-    votes: 72,
-    createdAt: '2024-01-05',
-    author: 'ProfessorPrestige'
+    id: "8",
+    title: "Interactive Data Visualizations",
+    status: "in_progress",
+    description: "Develop advanced interactive data visualizations of spending patterns, mockery relationships, and team dynamics using D3.js for a more engaging analytics experience.",
+    proposedBy: "Duchess Datasmith",
+    votes: 33,
+    category: "enhancement"
+  },
+  {
+    id: "9",
+    title: "Royal Gala Events",
+    status: "proposed",
+    description: "Schedule monthly virtual gala events where users can showcase their profiles, compete in rapid spending challenges, and participate in exclusive mockery opportunities.",
+    proposedBy: "Marquess Eventful",
+    votes: 27,
+    category: "feature"
+  },
+  {
+    id: "10",
+    title: "Court of Appeals",
+    status: "under_review",
+    description: "Create a system where users can appeal mockery actions for a fee. Higher-ranked 'judges' would vote on whether to uphold or dismiss the mockery, receiving a portion of the appeal fee.",
+    proposedBy: "Judge Spendthrift",
+    votes: 31,
+    category: "feature"
   }
 ];
