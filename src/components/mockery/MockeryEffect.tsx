@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MockeryAction } from '@/types/mockery';
 import { cn } from '@/lib/utils';
+import { MOCKERY_DESCRIPTIONS } from '@/utils/mockeryUtils';
 
 interface MockeryEffectProps {
   username: string;
@@ -32,12 +33,12 @@ const MockeryEffect: React.FC<MockeryEffectProps> = ({
           sound: 'splat',
           impact: 'splatter'
         };
-      case 'eggs':
+      case 'putridEggs': // Renamed from eggs
         return {
           emoji: '🥚',
           text: 'Crack!',
           color: 'text-yellow-200',
-          className: 'egg-effect',
+          className: 'putrid-egg-effect',
           sound: 'crack',
           impact: 'shell-fragments'
         };
@@ -68,6 +69,15 @@ const MockeryEffect: React.FC<MockeryEffectProps> = ({
           sound: 'jingle',
           impact: 'confetti'
         };
+      case 'smokeBomb': // New smoke bomb effect
+        return {
+          emoji: '💨',
+          text: 'Smoke Bomb!',
+          color: 'text-gray-300',
+          className: 'smoke-bomb-effect',
+          sound: 'explosion',
+          impact: 'smoke'
+        };
       default:
         return {
           emoji: '😯',
@@ -86,7 +96,32 @@ const MockeryEffect: React.FC<MockeryEffectProps> = ({
     if (!isActive) return;
     
     // Create particles
-    const particleCount = action === 'tomatoes' || action === 'eggs' ? 20 : 10;
+    let particleCount = 20;
+    let particleType = 'standard';
+    
+    // Customize particles based on action
+    switch (action) {
+      case 'tomatoes':
+        particleCount = 25;
+        particleType = 'tomato';
+        break;
+      case 'putridEggs': // Renamed from eggs
+        particleCount = 15;
+        particleType = 'egg';
+        break;
+      case 'smokeBomb': // New smoke bomb effect
+        particleCount = 40;
+        particleType = 'smoke';
+        break;
+      case 'courtJester':
+        particleCount = 30;
+        particleType = 'confetti';
+        break;
+      default:
+        particleCount = 20;
+        particleType = 'standard';
+    }
+    
     const newParticles = Array.from({ length: particleCount }, (_, i) => ({
       id: i,
       x: action === 'silence' ? 50 + (Math.random() * 30 - 15) : Math.random() * 100,
@@ -123,6 +158,97 @@ const MockeryEffect: React.FC<MockeryEffectProps> = ({
     return () => clearTimeout(timer);
   }, [isActive, action, onComplete, effectContent.sound]);
   
+  // Special rendering for smoke bomb effect
+  if (isActive && action === 'smokeBomb') {
+    return (
+      <AnimatePresence>
+        <div className="fixed inset-0 pointer-events-none z-50 overflow-hidden perspective">
+          <motion.div 
+            className="absolute inset-0 bg-black/50 backdrop-blur-md"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          />
+          
+          <motion.div 
+            className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center"
+            initial={{ scale: 0.5, opacity: 0, rotateX: -20 }}
+            animate={{ scale: 1, opacity: 1, rotateX: 0 }}
+            exit={{ scale: 1.5, opacity: 0, rotateX: 20 }}
+            transition={{ duration: 0.5, type: "spring", damping: 15 }}
+          >
+            <div className="text-8xl mb-4">
+              💣 💨
+            </div>
+            <div className="text-4xl font-bold text-gray-300">
+              Smoke Bomb!
+            </div>
+            <motion.div 
+              className="text-xl text-white/80 mt-2"
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.3 }}
+            >
+              {username}'s profile is engulfed in smoke!
+            </motion.div>
+            <motion.div 
+              className="text-sm text-white/60 mt-4 max-w-md"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.6 }}
+            >
+              {MOCKERY_DESCRIPTIONS.smokeBomb}
+            </motion.div>
+          </motion.div>
+          
+          {/* Smoke particles */}
+          {particles.map((particle) => (
+            <motion.div
+              key={particle.id}
+              className="absolute"
+              initial={{ 
+                left: '50%',
+                top: '50%',
+                scale: 0.5,
+                opacity: 0
+              }}
+              animate={{ 
+                left: `${particle.x}%`,
+                top: `${particle.y}%`,
+                scale: 1 + Math.random(),
+                opacity: [0, 0.8, 0.4, 0],
+                rotate: particle.rotation * 2
+              }}
+              transition={{ 
+                duration: 2 / particle.velocity,
+                ease: "easeOut",
+                delay: particle.delay,
+                times: [0, 0.2, 0.8, 1]
+              }}
+            >
+              <div className="text-4xl transform blur-sm text-gray-300">
+                💨
+              </div>
+            </motion.div>
+          ))}
+          
+          <motion.div 
+            className="absolute inset-0 pointer-events-none"
+            animate={{ 
+              x: [0, -10, 10, -10, 10, 0],
+              y: [0, 10, -10, 10, -10, 0]
+            }}
+            transition={{ 
+              duration: 0.8, 
+              delay: 0.2,
+              ease: "easeInOut"
+            }}
+          />
+        </div>
+      </AnimatePresence>
+    );
+  }
+  
   return (
     <AnimatePresence>
       {isActive && (
@@ -156,6 +282,14 @@ const MockeryEffect: React.FC<MockeryEffectProps> = ({
             >
               {username} has been mocked!
             </motion.div>
+            <motion.div 
+              className="text-sm text-white/60 mt-4 max-w-md"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.6 }}
+            >
+              {MOCKERY_DESCRIPTIONS[action]}
+            </motion.div>
           </motion.div>
           
           {/* Impact effect */}
@@ -177,7 +311,7 @@ const MockeryEffect: React.FC<MockeryEffectProps> = ({
                     }}
                   />
                 )}
-                {action === 'eggs' && (
+                {action === 'putridEggs' && ( // Renamed from eggs
                   <div className="w-full h-full bg-yellow-200/30 rounded-full"
                     style={{
                       boxShadow: '0 0 30px rgba(254, 240, 138, 0.5)',
@@ -203,8 +337,8 @@ const MockeryEffect: React.FC<MockeryEffectProps> = ({
               key={particle.id}
               className="absolute"
               initial={{ 
-                left: action === 'tomatoes' || action === 'eggs' ? '50%' : `${particle.x}%`,
-                top: action === 'tomatoes' || action === 'eggs' ? '0%' : `${particle.y}%`,
+                left: action === 'tomatoes' || action === 'putridEggs' ? '50%' : `${particle.x}%`,
+                top: action === 'tomatoes' || action === 'putridEggs' ? '0%' : `${particle.y}%`,
                 rotate: 0,
                 opacity: 0,
                 scale: 0.5
@@ -230,7 +364,7 @@ const MockeryEffect: React.FC<MockeryEffectProps> = ({
           ))}
           
           {/* Screen shake for dramatic effects */}
-          {(action === 'tomatoes' || action === 'eggs' || action === 'stocks') && (
+          {(action === 'tomatoes' || action === 'putridEggs' || action === 'stocks') && (
             <motion.div 
               className="absolute inset-0 pointer-events-none"
               animate={{ 

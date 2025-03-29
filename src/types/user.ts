@@ -1,4 +1,3 @@
-
 // You'll need to add this file if it doesn't exist or update it
 // with the new purchasedFeatures field
 
@@ -28,6 +27,9 @@ export interface UserProfile {
   activeTitle?: string;
   purchasedFeatures?: string[]; // Array of feature IDs that the user has purchased individually
   gender?: string;
+  mockeryCount?: number; // Total times the user has been mocked
+  mockedOthersCount?: number; // Total times the user has mocked others
+  activeMockeryEffects?: string[]; // IDs of active mockery effects on this user
 }
 
 export interface User extends UserProfile {
@@ -63,4 +65,6 @@ export interface UserCosmetics {
   activeColor?: string;
   activeFont?: string;
   foundersPass?: boolean;
+  mockeryImmunities?: number; // Number of mockery immunity shields remaining
+  mockeryProtections?: number; // Number of mockery protection shields remaining
 }

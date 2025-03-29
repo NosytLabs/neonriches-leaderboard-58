@@ -3,7 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { Target, Shield, Hourglass, Crown, Star } from 'lucide-react';
+import { Target, Shield, Crown, Info, User, Bell, Cloud } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/auth';
 import { useToast } from '@/hooks/use-toast';
 import useMockery from '@/hooks/use-mockery';
@@ -13,8 +14,10 @@ import HallOfShame from '@/components/mockery/components/HallOfShame';
 import MockeryCard from '@/components/mockery/components/MockeryCard';
 import MockeryUserCard from '@/components/mockery/components/MockeryUserCard';
 import MockeryEffect from '@/components/mockery/MockeryEffect';
+import MockeryHowItWorks from '@/components/mockery/components/MockeryHowItWorks';
 import { adaptUserProfileToUser } from '@/utils/userAdapter';
 import { spendFromWallet } from '@/services/walletService';
+import { getMockeryDescription } from '@/utils/mockeryUtils';
 
 const RoyalMockeryFestival = () => {
   const { user } = useAuth();
@@ -34,7 +37,10 @@ const RoyalMockeryFestival = () => {
     protectUser, 
     isUserShamed, 
     canUserBeMocked, 
-    mockUser 
+    mockUser,
+    getUserMockeryCount,
+    getUserMockedOthersCount,
+    getActiveMockery
   } = useMockery();
   
   const handleSelectAction = (action: MockeryAction) => {
@@ -75,7 +81,7 @@ const RoyalMockeryFestival = () => {
     
     if (success) {
       // Mockery successful
-      mockUser(username, action as MockeryAction);
+      mockUser(fullUser, username, action as MockeryAction);
       
       // Show mockery effect
       setMockeryEffectData({
@@ -102,13 +108,13 @@ const RoyalMockeryFestival = () => {
     // Convert to full User
     const fullUser = adaptUserProfileToUser(user);
     
-    const protectionCost = 10;
+    const protectionCost = 50; // Updated protection cost
     
     const success = spendFromWallet(
       fullUser,
       protectionCost,
       'protection' as any,
-      'Purchased mockery protection',
+      'Purchased royal mockery protection',
       {}
     );
     
@@ -116,7 +122,7 @@ const RoyalMockeryFestival = () => {
       protectUser(user.username);
       
       toast({
-        title: "Protection Purchased",
+        title: "Royal Protection Purchased",
         description: "You are now protected from mockery for 7 days. Your digital fortress is secure, with moat filled and drawbridge raised!",
         variant: "success"
       });
@@ -149,7 +155,8 @@ const RoyalMockeryFestival = () => {
       mockedReason: `Subjected to ${user.tier || 'unknown'} mockery`,
       mockedTimestamp: user.lastMocked ? new Date(user.lastMocked).toISOString() : new Date().toISOString(),
       mockedBy: 'Unknown user',
-      mockedTier: user.tier
+      mockedTier: user.tier,
+      mockeryCount: user.mockeryCount || 1
     }));
   
   return (
@@ -158,16 +165,25 @@ const RoyalMockeryFestival = () => {
         <CardHeader>
           <div className="flex items-center">
             <Target className="mr-3 h-6 w-6 text-royal-crimson" />
-            <CardTitle>Digital Mockery Arena</CardTitle>
+            <CardTitle>Royal Mockery Festival</CardTitle>
           </div>
           <CardDescription>
-            Pay to apply cosmetic mockery effects to other users - purely visual satire with no functional impact
+            A satirical take on medieval public shaming - apply purely cosmetic effects to other users' profiles
           </CardDescription>
         </CardHeader>
         
         <CardContent>
+          <div className="mb-4 p-3 bg-royal-crimson/10 border border-royal-crimson/20 rounded-md">
+            <p className="text-sm flex items-start">
+              <Bell className="h-4 w-4 text-royal-crimson mr-2 mt-0.5 flex-shrink-0" />
+              <span>
+                <strong>Important:</strong> Mockery effects are purely visual and have no impact on rankings or functionality. They're designed as a satirical take on digital status.
+              </span>
+            </p>
+          </div>
+          
           <Tabs defaultValue="mockery" value={activeTab} onValueChange={setActiveTab}>
-            <TabsList className="glass-morphism border-white/10 grid grid-cols-3">
+            <TabsList className="glass-morphism border-white/10 grid grid-cols-4">
               <TabsTrigger value="mockery" className="flex items-center gap-2">
                 <Target size={16} />
                 <span>Mock Others</span>
@@ -180,26 +196,57 @@ const RoyalMockeryFestival = () => {
                 <Crown size={16} />
                 <span>Hall of Shame</span>
               </TabsTrigger>
+              <TabsTrigger value="howto" className="flex items-center gap-2">
+                <Info size={16} />
+                <span>How It Works</span>
+              </TabsTrigger>
             </TabsList>
             
             <TabsContent value="mockery" className="space-y-4 mt-4">
-              <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="col-span-1 md:col-span-3 glass-morphism border-royal-gold/30 p-4 rounded-lg shadow-gold">
+                  <div className="flex items-center">
+                    <Badge className="bg-royal-gold text-black font-bold">NEW!</Badge>
+                    <h3 className="ml-2 font-medium">Premium Mockery Effect</h3>
+                  </div>
+                  <div className="mt-3 grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
+                    <div className="col-span-2">
+                      <p className="text-white/80">
+                        Deploy our exclusive Royal Smoke Bomb effect! Completely shroud a user's profile in thick, dramatic smoke for 8 hours.
+                      </p>
+                      <p className="text-sm text-white/60 mt-2">
+                        The profile remains accessible, but visitors must peer through the royal fog to see it!
+                      </p>
+                    </div>
+                    <div className="col-span-1">
+                      <MockeryCard 
+                        action="smokeBomb" 
+                        tier="legendary"
+                        username={targetUser}
+                        onSelect={handleSelectAction}
+                        selected={selectedAction === 'smokeBomb'}
+                        className=""
+                      />
+                    </div>
+                  </div>
+                </div>
+                
                 <MockeryCard 
                   action="tomatoes" 
                   tier="common"
                   username={targetUser}
                   onSelect={handleSelectAction} 
                   selected={selectedAction === 'tomatoes'}
-                  className="md:col-span-1"
+                  className=""
                 />
                 
                 <MockeryCard 
-                  action="eggs" 
+                  action="putridEggs" 
                   tier="uncommon"
                   username={targetUser}
                   onSelect={handleSelectAction}
-                  selected={selectedAction === 'eggs'}
-                  className="md:col-span-1"
+                  selected={selectedAction === 'putridEggs'}
+                  className=""
                 />
                 
                 <MockeryCard 
@@ -208,7 +255,7 @@ const RoyalMockeryFestival = () => {
                   username={targetUser}
                   onSelect={handleSelectAction}
                   selected={selectedAction === 'stocks'}
-                  className="md:col-span-1"
+                  className=""
                 />
                 
                 <MockeryCard 
@@ -217,7 +264,7 @@ const RoyalMockeryFestival = () => {
                   username={targetUser}
                   onSelect={handleSelectAction}
                   selected={selectedAction === 'silence'}
-                  className="md:col-span-1"
+                  className=""
                 />
                 
                 <MockeryCard 
@@ -226,7 +273,16 @@ const RoyalMockeryFestival = () => {
                   username={targetUser}
                   onSelect={handleSelectAction}
                   selected={selectedAction === 'courtJester'}
-                  className="md:col-span-1"
+                  className=""
+                />
+                
+                <MockeryCard 
+                  action="dunce" 
+                  tier="common"
+                  username={targetUser}
+                  onSelect={handleSelectAction}
+                  selected={selectedAction === 'dunce'}
+                  className=""
                 />
               </div>
               
@@ -236,14 +292,52 @@ const RoyalMockeryFestival = () => {
                     user={adaptUserProfileToUser(user)}
                     isMocked={false}
                     isOnCooldown={false}
-                    mockeryCount={0}
-                    isProtected={false}
+                    mockeryCount={getUserMockeryCount(user.username)}
+                    mockedOthersCount={getUserMockedOthersCount(user.username)}
+                    isProtected={isUserProtected(user.username)}
+                    activeMockery={getActiveMockery(user.username)?.action as MockeryAction}
                     onMockery={(username, action, amount) => {
                       setTargetUser(username);
                       return handleMockery(username, action, Number(amount));
                     }}
                   />
                 )}
+              </div>
+              
+              <div className="mt-4 p-4 glass-morphism border-white/10 rounded-lg">
+                <div className="flex items-center mb-3">
+                  <User className="h-5 w-5 text-white/60 mr-2" />
+                  <h3 className="font-medium">Mockery Counts & Statistics</h3>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="glass-morphism border-white/10 p-3 rounded">
+                    <div className="text-2xl font-bold text-center text-royal-crimson">
+                      {mockedUsers.length}
+                    </div>
+                    <div className="text-center text-sm text-white/70">
+                      Active Mocked Users
+                    </div>
+                  </div>
+                  
+                  <div className="glass-morphism border-white/10 p-3 rounded">
+                    <div className="text-2xl font-bold text-center text-royal-gold">
+                      {user ? getUserMockedOthersCount(user.username) : 0}
+                    </div>
+                    <div className="text-center text-sm text-white/70">
+                      Users You've Mocked
+                    </div>
+                  </div>
+                  
+                  <div className="glass-morphism border-white/10 p-3 rounded">
+                    <div className="text-2xl font-bold text-center text-royal-purple">
+                      {user ? getUserMockeryCount(user.username) : 0}
+                    </div>
+                    <div className="text-center text-sm text-white/70">
+                      Times You've Been Mocked
+                    </div>
+                  </div>
+                </div>
               </div>
             </TabsContent>
             
@@ -256,6 +350,10 @@ const RoyalMockeryFestival = () => {
             
             <TabsContent value="hall" className="mt-4">
               <HallOfShame mockedUsers={mockedUsers} />
+            </TabsContent>
+            
+            <TabsContent value="howto" className="mt-4">
+              <MockeryHowItWorks />
             </TabsContent>
           </Tabs>
         </CardContent>

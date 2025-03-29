@@ -1,115 +1,156 @@
 
 import React from 'react';
-import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { MockeryAction } from '@/types/mockery';
-import { 
-  getMockeryActionIcon, 
-  getMockeryActionTitle, 
-  getMockeryActionDescription, 
-  getMockeryActionPrice,
-  hasWeeklyDiscount,
-  getDiscountedMockeryPrice
-} from '../utils/mockeryUtils';
+import { Badge } from '@/components/ui/badge';
+import { MockeryAction, MockeryTier } from '@/types/mockery';
+import { MOCKERY_COSTS, MOCKERY_NAMES, MOCKERY_DESCRIPTIONS, getMockeryIcon } from '@/utils/mockeryUtils';
+import { cn } from '@/lib/utils';
+import { Flame, Egg, Target, MessageSquareOff, Crown, Lock, MousePointerClick, Cloud } from 'lucide-react';
 
 interface MockeryCardProps {
   action: MockeryAction;
-  tier: string;
+  tier?: MockeryTier;
   username?: string;
-  onSelect: (action: MockeryAction) => boolean;
   selected?: boolean;
+  onSelect: (action: MockeryAction) => boolean;
   className?: string;
 }
 
 const MockeryCard: React.FC<MockeryCardProps> = ({ 
-  action, 
-  tier, 
-  username, 
-  onSelect, 
+  action,
+  tier = 'common',
+  username = 'the target',
   selected = false,
+  onSelect,
   className = ''
 }) => {
-  const Icon = getMockeryActionIcon(action);
-  const title = getMockeryActionTitle(action);
-  const description = getMockeryActionDescription(action);
-  const price = getMockeryActionPrice(action);
-  const hasDiscount = hasWeeklyDiscount(action);
-  const discountedPrice = hasDiscount ? getDiscountedMockeryPrice(action) : price;
-  
-  const handleClick = () => {
+  const handleSelect = () => {
     onSelect(action);
   };
   
-  // Helper function to get color based on tier
-  const getTierColor = () => {
-    switch (tier) {
-      case 'legendary': return 'text-royal-gold';
-      case 'epic': return 'text-purple-400';
-      case 'rare': return 'text-blue-400';
-      case 'uncommon': return 'text-green-400';
-      case 'common': return 'text-gray-300';
-      default: return 'text-gray-300';
+  // Get action icon
+  const getIcon = () => {
+    switch (action) {
+      case 'tomatoes':
+        return <Flame className="h-5 w-5 text-royal-crimson" />;
+      case 'putridEggs': // Renamed from eggs
+        return <Egg className="h-5 w-5 text-royal-gold" />;
+      case 'stocks':
+        return <Lock className="h-5 w-5 text-royal-navy" />;
+      case 'silence':
+        return <MessageSquareOff className="h-5 w-5 text-royal-purple" />;
+      case 'courtJester':
+        return <Crown className="h-5 w-5 text-royal-gold" />;
+      case 'dunce':
+        return <MousePointerClick className="h-5 w-5 text-royal-crimson" />;
+      case 'smokeBomb': // New smoke bomb effect
+        return <Cloud className="h-5 w-5 text-gray-400" />;
+      default:
+        return <Target className="h-5 w-5 text-white" />;
     }
   };
   
-  const getBgColor = () => {
+  // Get card border color based on tier
+  const getBorderColor = () => {
     switch (tier) {
-      case 'legendary': return 'bg-royal-gold/10 border-royal-gold/20';
-      case 'epic': return 'bg-purple-900/10 border-purple-500/20';
-      case 'rare': return 'bg-blue-900/10 border-blue-500/20';
-      case 'uncommon': return 'bg-green-900/10 border-green-500/20';
-      case 'common': return 'bg-gray-900/10 border-gray-500/20';
-      default: return 'bg-gray-900/10 border-gray-500/20';
+      case 'common':
+        return 'border-white/20';
+      case 'uncommon':
+        return 'border-royal-gold/20';
+      case 'rare':
+        return 'border-royal-navy/20';
+      case 'epic':
+        return 'border-royal-purple/20';
+      case 'legendary':
+        return 'border-royal-crimson/20';
+      default:
+        return 'border-white/20';
     }
   };
+  
+  // Get tier badge style
+  const getTierBadgeStyle = () => {
+    switch (tier) {
+      case 'common':
+        return 'bg-white/10 text-white/80';
+      case 'uncommon':
+        return 'bg-royal-gold/10 text-royal-gold';
+      case 'rare':
+        return 'bg-royal-navy/10 text-royal-navy';
+      case 'epic':
+        return 'bg-royal-purple/10 text-royal-purple';
+      case 'legendary':
+        return 'bg-royal-crimson/10 text-royal-crimson';
+      default:
+        return 'bg-white/10 text-white/80';
+    }
+  };
+  
+  // Get description with username
+  const getDescription = () => {
+    return MOCKERY_DESCRIPTIONS[action].replace(/your target|the target/gi, username);
+  };
+  
+  // Special styling for smoke bomb
+  const isSmokeBomb = action === 'smokeBomb';
   
   return (
-    <Card
-      className={`transition-all duration-300 ${getBgColor()} backdrop-blur-sm ${
-        selected 
-          ? 'ring-2 ring-offset-1 ring-offset-black ring-white/30' 
-          : 'hover:bg-white/5'
-      } ${className}`}
-      onClick={handleClick}
+    <Card 
+      className={cn(
+        "glass-morphism cursor-pointer transition-all", 
+        getBorderColor(),
+        selected ? 'ring-2 ring-royal-gold/50' : '',
+        isSmokeBomb ? 'shadow-gold' : '',
+        className
+      )}
+      onClick={handleSelect}
     >
       <CardContent className="p-4">
-        <div className="flex items-center gap-3 mb-3">
-          <div className={`w-10 h-10 rounded-full flex items-center justify-center bg-black/30 ${getTierColor()}`}>
-            <Icon size={20} />
+        <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center">
+            {getIcon()}
+            <h3 className="ml-2 font-medium">{MOCKERY_NAMES[action]}</h3>
           </div>
-          <div>
-            <h3 className="font-medium text-sm">{title}</h3>
-            <Badge 
-              variant="outline" 
-              className={`text-[10px] border-0 ${getTierColor()} bg-black/30`}
-            >
-              {tier.toUpperCase()}
-            </Badge>
-          </div>
+          <Badge className={getTierBadgeStyle()}>{tier}</Badge>
         </div>
         
-        <p className="text-xs text-white/60 mb-4">
-          {description}
-        </p>
+        <p className="text-sm text-white/70 mt-2 mb-3">{getDescription()}</p>
         
-        <div className="flex items-center justify-between">
-          <div className="text-xs">
-            {hasDiscount && (
-              <span className="line-through text-white/40 mr-1">${price}</span>
-            )}
-            <span className={`font-bold ${getTierColor()}`}>${discountedPrice}</span>
+        {isSmokeBomb && (
+          <Badge className="bg-royal-gold text-black mb-2">NEW!</Badge>
+        )}
+        
+        <div className="flex justify-between items-center">
+          <div className="text-sm">
+            <span className="text-white/50">Cost:</span> 
+            <span className="text-royal-gold ml-1">${MOCKERY_COSTS[action]}</span>
           </div>
           
-          <Button 
-            size="sm" 
-            variant={selected ? "default" : "secondary"}
-            className="text-xs px-2.5 py-1 h-auto"
-          >
-            {username ? 'Apply' : 'Select'}
-          </Button>
+          <Badge variant="outline" className="text-white/70">
+            {action === 'tomatoes' && '24h'}
+            {action === 'putridEggs' && '48h'}
+            {action === 'stocks' && '72h'}
+            {action === 'silence' && '48h'}
+            {action === 'courtJester' && '7d'}
+            {action === 'dunce' && '48h'}
+            {action === 'smokeBomb' && '8h'}
+          </Badge>
         </div>
       </CardContent>
+      
+      <CardFooter className="p-2 pt-0">
+        <Button 
+          variant={selected ? "default" : "ghost"} 
+          className={cn(
+            "w-full text-sm h-8",
+            selected ? "bg-royal-gold text-black hover:bg-royal-gold/90" : "text-white/70"
+          )}
+          onClick={handleSelect}
+        >
+          {selected ? 'Selected' : 'Select Effect'}
+        </Button>
+      </CardFooter>
     </Card>
   );
 };

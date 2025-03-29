@@ -3,7 +3,7 @@ export type MockeryTier = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary' 
 
 export type MockeryAction = 
   | 'tomatoes' 
-  | 'eggs' 
+  | 'putridEggs' // Renamed from 'eggs'
   | 'stocks' 
   | 'silence' 
   | 'courtJester' 
@@ -13,11 +13,12 @@ export type MockeryAction =
   | 'dunce' 
   | 'drama' 
   | 'taunt'
-  | 'removal';
+  | 'removal'
+  | 'smokeBomb'; // Added new smoke bomb effect
 
 export type ShameAction = 
   | 'tomatoes' 
-  | 'eggs' 
+  | 'putridEggs' // Renamed from 'eggs'
   | 'silence' 
   | 'roast' 
   | 'ridicule' 
@@ -25,7 +26,8 @@ export type ShameAction =
   | 'courtJester' 
   | 'jester' 
   | 'shame' 
-  | 'dunce';
+  | 'dunce'
+  | 'smokeBomb'; // Added new smoke bomb effect
 
 export type ExtendedMockeryAction = 
   | MockeryAction 
@@ -53,6 +55,7 @@ export interface MockeryEffect {
   active: boolean;
   tier: MockeryTier;
   price: number;
+  description?: string; // Added description field for better explanation
 }
 
 export interface MockeryEvent {
@@ -65,12 +68,15 @@ export interface MockeryEvent {
   sourceUser?: string;
   targetUser?: string;
   action?: MockeryAction;
+  mockeryCount?: number; // Added field to track times user has been mocked
 }
 
 export interface MockeryEffectData {
   action: MockeryAction;
   timestamp: number;
   until: number;
+  appliedBy?: string; // Added to track who applied the mockery
+  description?: string; // Added for better explanation
 }
 
 export interface UserMockeryStatus {
@@ -78,6 +84,8 @@ export interface UserMockeryStatus {
   cooldowns: Record<MockeryAction, number>;
   protection?: boolean;
   immunityUntil?: number;
+  mockeryCount: number; // Total times user has been mocked
+  mockedOthersCount: number; // Total times user has mocked others
 }
 
 export interface MockUser {
@@ -86,4 +94,7 @@ export interface MockUser {
   displayName: string;
   profileImage?: string;
   rank: number;
+  lastMocked?: string; // Added to track last time mocked
+  tier?: string; // Added to track user tier
+  mockeryCount?: number; // Added to track total times mocked
 }

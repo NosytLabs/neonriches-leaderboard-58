@@ -1,29 +1,20 @@
 
 import React from 'react';
-import { Clock, Crosshair, Award, User } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { getMockeryTier } from '@/components/mockery/utils/mockeryUtils';
-import { formatDistanceToNow } from '@/utils/formatters';
-
-// Helper function to format time elapsed since a timestamp
-const formatTimeElapsed = (timestamp: string): string => {
-  try {
-    const date = new Date(timestamp);
-    return formatDistanceToNow(date);
-  } catch (error) {
-    return 'Unknown time';
-  }
-};
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Target, Clock, Trophy, Crown } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface MockedUser {
   username: string;
-  displayName?: string;
+  displayName: string;
   avatarUrl?: string;
   mockedReason: string;
   mockedTimestamp: string;
   mockedBy: string;
   mockedTier?: string;
+  mockeryCount?: number;
 }
 
 interface HallOfShameProps {
@@ -31,75 +22,120 @@ interface HallOfShameProps {
 }
 
 const HallOfShame: React.FC<HallOfShameProps> = ({ mockedUsers }) => {
+  const getTimeSince = (timestamp: string) => {
+    const now = new Date();
+    const mockedTime = new Date(timestamp);
+    const diffInSeconds = Math.floor((now.getTime() - mockedTime.getTime()) / 1000);
+    
+    if (diffInSeconds < 60) {
+      return 'just now';
+    } else if (diffInSeconds < 3600) {
+      const minutes = Math.floor(diffInSeconds / 60);
+      return `${minutes} minute${minutes !== 1 ? 's' : ''} ago`;
+    } else if (diffInSeconds < 86400) {
+      const hours = Math.floor(diffInSeconds / 3600);
+      return `${hours} hour${hours !== 1 ? 's' : ''} ago`;
+    } else {
+      const days = Math.floor(diffInSeconds / 86400);
+      return `${days} day${days !== 1 ? 's' : ''} ago`;
+    }
+  };
+  
+  const getMockeryTierStyle = (tier?: string) => {
+    switch(tier?.toLowerCase()) {
+      case 'common':
+        return 'bg-white/10 text-white';
+      case 'uncommon':
+        return 'bg-royal-gold/10 text-royal-gold';
+      case 'rare':
+        return 'bg-royal-navy/10 text-royal-navy';
+      case 'epic':
+        return 'bg-royal-purple/10 text-royal-purple';
+      case 'legendary':
+        return 'bg-royal-crimson/10 text-royal-crimson';
+      default:
+        return 'bg-white/10 text-white';
+    }
+  };
+  
   return (
-    <div className="space-y-4">
-      <div className="text-sm text-white/60 mb-2">
-        <p>The Hall of Shame displays users who are currently under the effects of mockery.</p>
-      </div>
-      
-      {mockedUsers.length === 0 ? (
-        <div className="text-center py-10 bg-black/20 rounded-lg border border-white/10">
-          <Award className="h-10 w-10 mx-auto mb-3 text-white/30" />
-          <h3 className="text-lg font-medium text-white/80">No Shamed Users</h3>
-          <p className="text-sm text-white/50 mt-1">The Hall of Shame is currently empty.</p>
+    <Card className="glass-morphism border-royal-crimson/20">
+      <CardHeader className="pb-2">
+        <div className="flex items-center justify-between">
+          <CardTitle className="flex items-center">
+            <Crown className="mr-2 h-5 w-5 text-royal-crimson" />
+            <span className="royal-text-shimmer">Royal Hall of Shame</span>
+          </CardTitle>
+          
+          <Badge variant="outline" className="bg-royal-crimson/10 text-royal-crimson border-royal-crimson/30">
+            {mockedUsers.length} Mocked Royals
+          </Badge>
         </div>
-      ) : (
-        <ScrollArea className="h-[400px] rounded-lg">
-          <div className="space-y-3">
-            {mockedUsers.map((user, index) => (
-              <div 
-                key={index}
-                className="p-4 rounded-lg bg-black/20 border border-white/10 relative overflow-hidden transition-all duration-300 hover:bg-black/30"
-              >
-                <div className="absolute inset-0 opacity-10 mockery-background pointer-events-none"></div>
-                
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    {user.avatarUrl ? (
-                      <div className="h-10 w-10 rounded-full overflow-hidden border border-white/20">
-                        <img 
-                          src={user.avatarUrl} 
-                          alt={user.username} 
-                          className="h-full w-full object-cover"
-                        />
-                      </div>
-                    ) : (
-                      <div className="h-10 w-10 rounded-full bg-black/50 flex items-center justify-center border border-white/20">
-                        <User className="h-5 w-5 text-white/60" />
-                      </div>
-                    )}
+      </CardHeader>
+      
+      <CardContent className="px-4 pb-4">
+        {mockedUsers.length === 0 ? (
+          <div className="p-10 text-center text-white/50">
+            <Target className="mx-auto mb-2 h-8 w-8 text-white/30" />
+            <p className="text-sm">No users have been mocked yet. Be the first to mock someone!</p>
+          </div>
+        ) : (
+          <div className="space-y-4">
+            <div className="p-3 bg-black/20 rounded-lg text-sm text-white/70">
+              <p className="flex items-center">
+                <Trophy className="h-4 w-4 text-royal-gold mr-2" />
+                <span>The most mocked users in the kingdom are showcased in our Royal Hall of Shame. The mockery effects on these profiles are purely cosmetic and have no impact on ranking or functionality.</span>
+              </p>
+            </div>
+            
+            <div className="space-y-2">
+              {mockedUsers.map((user) => (
+                <div
+                  key={user.username}
+                  className="glass-morphism border-white/10 p-3 rounded-lg"
+                >
+                  <div className="flex items-center">
+                    <Avatar className="h-12 w-12 mr-3 border border-white/10">
+                      <AvatarImage src={user.avatarUrl} alt={user.username} />
+                      <AvatarFallback>{user.username.substring(0, 2).toUpperCase()}</AvatarFallback>
+                    </Avatar>
                     
-                    <div>
-                      <h4 className="font-medium">
-                        {user.displayName || user.username}
-                      </h4>
-                      <div className="text-xs text-white/60">
-                        {user.mockedReason}
+                    <div className="flex-grow">
+                      <div className="flex items-center flex-wrap gap-2">
+                        <div className="font-medium">{user.displayName}</div>
+                        
+                        <Badge
+                          className={cn("text-xs", getMockeryTierStyle(user.mockedTier))}
+                        >
+                          {user.mockedTier || 'Common'}
+                        </Badge>
+                        
+                        {user.mockeryCount && user.mockeryCount > 1 && (
+                          <Badge
+                            variant="outline"
+                            className="bg-royal-crimson/10 text-royal-crimson border-royal-crimson/30 text-xs"
+                          >
+                            <Target className="h-3 w-3 mr-1" />
+                            Mocked {user.mockeryCount} times
+                          </Badge>
+                        )}
                       </div>
-                    </div>
-                  </div>
-                  
-                  <div className="flex flex-col items-end">
-                    <Badge 
-                      variant="outline" 
-                      className="mb-1 bg-red-900/30 text-red-300 border-red-900/50"
-                    >
-                      <Crosshair className="h-3 w-3 mr-1" />
-                      {user.mockedTier ? (user.mockedTier) : 'Unknown'} Mockery
-                    </Badge>
-                    
-                    <div className="text-xs text-white/50 flex items-center">
-                      <Clock className="h-3 w-3 mr-1" />
-                      {formatTimeElapsed(user.mockedTimestamp)}
+                      
+                      <div className="text-sm text-white/60 mt-1">{user.mockedReason}</div>
+                      
+                      <div className="flex items-center text-xs text-white/50 mt-2">
+                        <Clock className="h-3 w-3 mr-1" />
+                        <span>{getTimeSince(user.mockedTimestamp)}</span>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </ScrollArea>
-      )}
-    </div>
+        )}
+      </CardContent>
+    </Card>
   );
 };
 
