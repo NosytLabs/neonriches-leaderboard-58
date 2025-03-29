@@ -26,8 +26,8 @@ const ProfileOverview: React.FC<ProfileOverviewProps> = ({ user, isOwnProfile })
         <CardContent>
           <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
             <Avatar className="h-24 w-24 border-2 border-royal-gold">
-              {user.avatarUrl ? (
-                <AvatarImage src={user.avatarUrl} alt={user.username} />
+              {user.profileImage ? (
+                <AvatarImage src={user.profileImage} alt={user.username} />
               ) : (
                 <AvatarFallback className="bg-royal-purple/20 text-royal-gold text-xl">
                   {user.username.substring(0, 2).toUpperCase()}
@@ -63,7 +63,7 @@ const ProfileOverview: React.FC<ProfileOverviewProps> = ({ user, isOwnProfile })
               <div className="flex flex-wrap gap-4 mt-4 justify-center md:justify-start text-sm text-white/60">
                 <div className="flex items-center">
                   <CalendarDays size={14} className="mr-1" />
-                  <span>Joined {new Date(user.createdAt).toLocaleDateString()}</span>
+                  <span>Joined {new Date(user.joinedAt).toLocaleDateString()}</span>
                 </div>
                 
                 <div className="flex items-center">

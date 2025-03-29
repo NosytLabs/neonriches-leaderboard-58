@@ -1,162 +1,138 @@
 
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Progress } from '@/components/ui/progress';
-import { UserProfile } from '@/types/user';
-import { Award, Crown, TrendingUp, Wallet, Users, Zap, Trophy, Star, Gift, BadgeCheck } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { UserProfile } from '@/types/user';
+import { Award, Crown, Star, Target, Zap, CheckCircle2, Lock } from 'lucide-react';
 
 interface ProfileAchievementsProps {
   user: UserProfile;
 }
 
+const ACHIEVEMENTS = [
+  {
+    id: 'first-deposit',
+    title: 'Royal Patron',
+    description: 'Made your first deposit to the royal treasury',
+    icon: <Crown />,
+    requirement: (user: UserProfile) => (user.totalSpent || 0) > 0,
+    progress: (user: UserProfile) => Math.min(1, ((user.totalSpent || 0) > 0 ? 1 : 0)),
+    unlocked: (user: UserProfile) => (user.totalSpent || 0) > 0,
+  },
+  {
+    id: 'big-spender',
+    title: 'Lavish Spender',
+    description: 'Spent at least $500 on the platform',
+    icon: <Zap />,
+    requirement: (user: UserProfile) => (user.totalSpent || 0) >= 500,
+    progress: (user: UserProfile) => Math.min(1, (user.totalSpent || 0) / 500),
+    unlocked: (user: UserProfile) => (user.totalSpent || 0) >= 500,
+  },
+  {
+    id: 'elite-status',
+    title: 'Elite Status',
+    description: 'Reached the top 100 on the leaderboard',
+    icon: <Star />,
+    requirement: (user: UserProfile) => (user.rank || 1000) <= 100,
+    progress: (user: UserProfile) => Math.min(1, (1000 - (user.rank || 1000)) / 900),
+    unlocked: (user: UserProfile) => (user.rank || 1000) <= 100,
+  },
+  {
+    id: 'team-player',
+    title: 'Team Player',
+    description: 'Joined a noble house and contributed to its glory',
+    icon: <Target />,
+    requirement: (user: UserProfile) => !!user.team,
+    progress: (user: UserProfile) => user.team ? 1 : 0,
+    unlocked: (user: UserProfile) => !!user.team,
+  },
+  {
+    id: 'premium-member',
+    title: 'Premium Member',
+    description: 'Subscribed to a premium tier membership',
+    icon: <Award />,
+    requirement: (user: UserProfile) => user.tier === 'premium' || user.tier === 'royal',
+    progress: (user: UserProfile) => (user.tier === 'premium' || user.tier === 'royal') ? 1 : 0,
+    unlocked: (user: UserProfile) => user.tier === 'premium' || user.tier === 'royal',
+  },
+  {
+    id: 'royal-elite',
+    title: 'Royal Elite',
+    description: 'Reached the exclusive royal tier membership',
+    icon: <Crown />,
+    requirement: (user: UserProfile) => user.tier === 'royal',
+    progress: (user: UserProfile) => user.tier === 'royal' ? 1 : 0,
+    unlocked: (user: UserProfile) => user.tier === 'royal',
+  }
+];
+
 const ProfileAchievements: React.FC<ProfileAchievementsProps> = ({ user }) => {
-  // Mock achievements data
-  const achievements = [
-    {
-      id: 'royal-donor',
-      name: 'Royal Donor',
-      description: 'Spend a total of $100 on the platform',
-      icon: <Crown className="h-5 w-5 text-royal-gold" />,
-      progress: Math.min(100, ((user.totalSpent || 0) / 100) * 100),
-      unlocked: (user.totalSpent || 0) >= 100,
-      rewardDescription: 'Royal Donor Badge'
-    },
-    {
-      id: 'noble-climb',
-      name: 'Noble Climb',
-      description: 'Reach rank 50 or higher on the leaderboard',
-      icon: <TrendingUp className="h-5 w-5 text-emerald-500" />,
-      progress: Math.min(100, (((user.rank || 1000) <= 50 ? 50 : 0) / 50) * 100),
-      unlocked: (user.rank || 1000) <= 50,
-      rewardDescription: 'Noble Climber Badge'
-    },
-    {
-      id: 'golden-treasury',
-      name: 'Golden Treasury',
-      description: 'Maintain a wallet balance of $500 or more',
-      icon: <Wallet className="h-5 w-5 text-amber-400" />,
-      progress: Math.min(100, ((user.walletBalance || 0) / 500) * 100),
-      unlocked: (user.walletBalance || 0) >= 500,
-      rewardDescription: 'Golden Treasury Badge'
-    },
-    {
-      id: 'team-loyalist',
-      name: 'Team Loyalist',
-      description: 'Stay in the same team for 30 days',
-      icon: <Users className="h-5 w-5 text-blue-500" />,
-      progress: 100, // Mocked progress
-      unlocked: true, // Mocked as unlocked
-      rewardDescription: 'Team Loyalist Badge'
-    },
-    {
-      id: 'swift-spender',
-      name: 'Swift Spender',
-      description: 'Make 5 transactions in a single day',
-      icon: <Zap className="h-5 w-5 text-purple-500" />,
-      progress: 80, // Mocked progress
-      unlocked: false,
-      rewardDescription: 'Swift Spender Badge'
-    },
-    {
-      id: 'throne-climber',
-      name: 'Throne Climber',
-      description: 'Reach the top 10 on the leaderboard',
-      icon: <Trophy className="h-5 w-5 text-royal-gold" />,
-      progress: Math.min(100, (((user.rank || 1000) <= 10 ? 10 : 0) / 10) * 100),
-      unlocked: (user.rank || 1000) <= 10,
-      rewardDescription: 'Throne Climber Badge'
-    },
-    {
-      id: 'premium-member',
-      name: 'Premium Member',
-      description: 'Subscribe to a premium membership tier',
-      icon: <Star className="h-5 w-5 text-amber-400" />,
-      progress: user.subscription === 'premium' || user.subscription === 'royal' ? 100 : 0,
-      unlocked: user.subscription === 'premium' || user.subscription === 'royal',
-      rewardDescription: 'Premium Member Badge'
-    },
-    {
-      id: 'gift-giver',
-      name: 'Gift Giver',
-      description: 'Send gifts to 5 different users',
-      icon: <Gift className="h-5 w-5 text-red-500" />,
-      progress: 40, // Mocked progress
-      unlocked: false,
-      rewardDescription: 'Gift Giver Badge'
-    }
-  ];
-  
-  const unlockedCount = achievements.filter(a => a.unlocked).length;
-  const totalAchievements = achievements.length;
-  const completionPercentage = Math.round((unlockedCount / totalAchievements) * 100);
-  
   return (
     <div className="space-y-6">
       <Card className="glass-morphism border-white/10">
         <CardHeader>
-          <div className="flex items-center gap-2">
+          <CardTitle className="flex items-center gap-2">
             <Award className="h-5 w-5 text-royal-gold" />
-            <CardTitle>Royal Achievements</CardTitle>
-          </div>
+            Royal Achievements
+          </CardTitle>
           <CardDescription>
-            Track your progress and earn exclusive badges
+            View your earned achievements and progress
           </CardDescription>
         </CardHeader>
         
         <CardContent>
-          <div className="mb-6">
-            <div className="flex justify-between mb-2">
-              <span className="text-sm text-white/70">Achievement Progress</span>
-              <span className="text-sm font-medium">{unlockedCount}/{totalAchievements} ({completionPercentage}%)</span>
-            </div>
-            <Progress value={completionPercentage} className="h-2" />
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {achievements.map((achievement) => (
-              <Card 
-                key={achievement.id}
-                className={`glass-morphism h-full ${
-                  achievement.unlocked 
-                    ? 'border-royal-gold/50 bg-gradient-to-br from-black/20 to-royal-gold/10' 
-                    : 'border-white/10'
-                }`}
-              >
-                <CardContent className="p-4 h-full flex flex-col">
-                  <div className="flex items-start gap-3 mb-3">
-                    <div className={`p-2 rounded-full ${achievement.unlocked ? 'bg-royal-gold/20' : 'bg-black/30'}`}>
-                      {achievement.icon}
-                    </div>
-                    
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2">
-                        <h3 className="font-semibold">{achievement.name}</h3>
-                        {achievement.unlocked && (
-                          <BadgeCheck className="h-4 w-4 text-royal-gold" />
-                        )}
-                      </div>
-                      <p className="text-sm text-white/70">{achievement.description}</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {ACHIEVEMENTS.map((achievement) => {
+              const isUnlocked = achievement.unlocked(user);
+              const progress = achievement.progress(user);
+              
+              return (
+                <div 
+                  key={achievement.id}
+                  className={`relative p-4 rounded-lg border ${isUnlocked 
+                    ? 'border-royal-gold/30 bg-royal-gold/5' 
+                    : 'border-white/10 bg-black/30'}`}
+                >
+                  <div className="absolute top-2 right-2">
+                    {isUnlocked ? (
+                      <CheckCircle2 className="h-5 w-5 text-emerald-500" />
+                    ) : (
+                      <Lock className="h-5 w-5 text-white/30" />
+                    )}
+                  </div>
+                  
+                  <div className={`w-12 h-12 rounded-full flex items-center justify-center mb-3 ${
+                    isUnlocked ? 'bg-royal-gold/20' : 'bg-white/10'
+                  }`}>
+                    <div className={isUnlocked ? 'text-royal-gold' : 'text-white/50'}>
+                      {React.cloneElement(achievement.icon, { size: 24 })}
                     </div>
                   </div>
                   
-                  <div className="mt-auto">
-                    <div className="flex justify-between mb-1 text-xs">
-                      <span>Progress</span>
-                      <span>{Math.round(achievement.progress)}%</span>
-                    </div>
-                    <Progress value={achievement.progress} className="h-1.5 mb-2" />
-                    
-                    <div className="flex items-center justify-between mt-2">
-                      <span className="text-xs text-white/60">Reward:</span>
-                      <Badge variant={achievement.unlocked ? "default" : "outline"} className="text-xs">
-                        {achievement.rewardDescription}
-                      </Badge>
-                    </div>
+                  <h3 className={`text-lg font-bold ${isUnlocked ? 'text-royal-gold' : 'text-white/70'}`}>
+                    {achievement.title}
+                  </h3>
+                  
+                  <p className="text-sm text-white/60 mt-1 mb-3">
+                    {achievement.description}
+                  </p>
+                  
+                  <div className="w-full h-2 bg-black/50 rounded-full overflow-hidden">
+                    <div 
+                      className={`h-full ${isUnlocked ? 'bg-royal-gold' : 'bg-white/30'}`}
+                      style={{ width: `${progress * 100}%` }}
+                    ></div>
                   </div>
-                </CardContent>
-              </Card>
-            ))}
+                  
+                  <div className="flex justify-between mt-2 text-xs">
+                    <span className="text-white/50">Progress</span>
+                    <span className={isUnlocked ? 'text-royal-gold' : 'text-white/70'}>
+                      {Math.round(progress * 100)}%
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </CardContent>
       </Card>

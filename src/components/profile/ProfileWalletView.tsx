@@ -1,233 +1,204 @@
 
 import React, { useState } from 'react';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { UserProfile } from '@/types/user';
-import { Wallet, CreditCard, PiggyBank, ArrowUpCircle, ArrowDownCircle, Clock } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
-import { formatDistanceToNow } from 'date-fns';
+import { PlusCircle, MinusCircle, History, CreditCard, ExternalLink, Wallet } from 'lucide-react';
+import { toast } from '@/hooks/use-toast';
 
 interface ProfileWalletViewProps {
   user: UserProfile;
 }
 
 const ProfileWalletView: React.FC<ProfileWalletViewProps> = ({ user }) => {
-  const { toast } = useToast();
-  const [depositAmount, setDepositAmount] = useState('');
+  const [amount, setAmount] = useState('');
+  const [isProcessing, setIsProcessing] = useState(false);
   
-  // Mock transactions
+  // Transaction history (mock data)
   const transactions = [
-    {
-      id: 'txn-1',
-      type: 'deposit',
-      amount: 100,
-      date: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
-      description: 'Wallet deposit'
-    },
-    {
-      id: 'txn-2',
-      type: 'spend',
-      amount: 25,
-      date: new Date(Date.now() - 24 * 60 * 60 * 1000), // 1 day ago
-      description: 'Rank boost'
-    },
-    {
-      id: 'txn-3',
-      type: 'deposit',
-      amount: 50,
-      date: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000), // 3 days ago
-      description: 'Wallet deposit'
-    },
-    {
-      id: 'txn-4',
-      type: 'spend',
-      amount: 15,
-      date: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000), // 5 days ago
-      description: 'Profile cosmetic'
-    },
-    {
-      id: 'txn-5',
-      type: 'spend',
-      amount: 30,
-      date: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000), // 7 days ago
-      description: 'Mockery action'
-    }
+    { id: 1, type: 'deposit', amount: 100, date: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000), status: 'completed' },
+    { id: 2, type: 'purchase', amount: 50, date: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000), status: 'completed' },
+    { id: 3, type: 'deposit', amount: 200, date: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000), status: 'completed' },
+    { id: 4, type: 'purchase', amount: 75, date: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000), status: 'completed' }
   ];
   
-  const totalSpent = transactions
-    .filter(t => t.type === 'spend')
-    .reduce((sum, t) => sum + t.amount, 0);
-    
-  const totalDeposits = transactions
-    .filter(t => t.type === 'deposit')
-    .reduce((sum, t) => sum + t.amount, 0);
-  
   const handleDeposit = () => {
-    const amount = parseFloat(depositAmount);
-    
-    if (isNaN(amount) || amount <= 0) {
+    if (!amount || isNaN(Number(amount)) || Number(amount) <= 0) {
       toast({
-        title: "Invalid Amount",
-        description: "Please enter a valid deposit amount.",
+        title: "Invalid amount",
+        description: "Please enter a valid amount greater than 0.",
         variant: "destructive"
       });
       return;
     }
     
-    // In a real app, this would make an API call to process the deposit
-    toast({
-      title: "Deposit Successful",
-      description: `You've added $${amount.toFixed(2)} to your wallet.`,
-    });
+    setIsProcessing(true);
     
-    setDepositAmount('');
+    // Simulate API call
+    setTimeout(() => {
+      setIsProcessing(false);
+      setAmount('');
+      toast({
+        title: "Deposit successful",
+        description: `$${amount} has been added to your royal treasury.`,
+      });
+    }, 1500);
   };
   
-  const walletBalance = user.walletBalance || 0;
+  const handleWithdraw = () => {
+    if (!amount || isNaN(Number(amount)) || Number(amount) <= 0) {
+      toast({
+        title: "Invalid amount",
+        description: "Please enter a valid amount greater than 0.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    if (Number(amount) > (user.walletBalance || 0)) {
+      toast({
+        title: "Insufficient funds",
+        description: "You don't have enough funds in your wallet.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    setIsProcessing(true);
+    
+    // Simulate API call
+    setTimeout(() => {
+      setIsProcessing(false);
+      setAmount('');
+      toast({
+        title: "Withdrawal initiated",
+        description: `$${amount} withdrawal is being processed.`,
+      });
+    }, 1500);
+  };
   
   return (
     <div className="space-y-6">
       <Card className="glass-morphism border-white/10">
         <CardHeader>
-          <div className="flex items-center gap-2">
+          <CardTitle className="flex items-center gap-2">
             <Wallet className="h-5 w-5 text-royal-gold" />
-            <CardTitle>Royal Treasury</CardTitle>
-          </div>
+            Royal Treasury
+          </CardTitle>
           <CardDescription>
-            Manage your funds and view transaction history
+            Manage your funds and transaction history
           </CardDescription>
         </CardHeader>
         
         <CardContent>
-          <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
-            <div className="w-full sm:w-auto text-center">
-              <p className="text-sm text-white/70">Current Balance</p>
-              <h2 className="text-3xl font-bold">${walletBalance.toFixed(2)}</h2>
-            </div>
-            
-            <div className="w-full sm:w-auto flex flex-col">
-              <Label htmlFor="depositAmount" className="mb-2">Quick Deposit</Label>
-              <div className="flex gap-2">
-                <Input
-                  id="depositAmount"
-                  type="number"
-                  min="1"
-                  step="1"
-                  value={depositAmount}
-                  onChange={(e) => setDepositAmount(e.target.value)}
-                  placeholder="Enter amount"
-                  className="w-full"
-                />
-                <Button 
-                  className="bg-royal-gold hover:bg-royal-gold/90 text-black"
-                  onClick={handleDeposit}
-                >
-                  <CreditCard className="h-4 w-4 mr-2" /> Add
-                </Button>
+          <div className="mb-6">
+            <div className="flex justify-center">
+              <div className="bg-black/30 px-12 py-4 rounded-lg text-center">
+                <p className="text-white/70 text-sm mb-1">Current Balance</p>
+                <p className="text-4xl font-bold text-royal-gold">${user.walletBalance?.toLocaleString() || 0}</p>
+                <p className="text-xs text-white/50 mt-1">Available for rank advancement</p>
               </div>
             </div>
           </div>
           
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-6">
-            <Card className="glass-morphism border-white/10">
-              <CardContent className="p-4">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-full bg-black/30">
-                    <ArrowUpCircle className="h-5 w-5 text-emerald-500" />
-                  </div>
-                  <div>
-                    <p className="text-xs text-white/70">Total Deposits</p>
-                    <p className="text-lg font-semibold">${totalDeposits.toFixed(2)}</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-            
-            <Card className="glass-morphism border-white/10">
-              <CardContent className="p-4">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-full bg-black/30">
-                    <ArrowDownCircle className="h-5 w-5 text-red-500" />
-                  </div>
-                  <div>
-                    <p className="text-xs text-white/70">Total Spent</p>
-                    <p className="text-lg font-semibold">${totalSpent.toFixed(2)}</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-            
-            <Card className="glass-morphism border-white/10">
-              <CardContent className="p-4">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-full bg-black/30">
-                    <PiggyBank className="h-5 w-5 text-royal-gold" />
-                  </div>
-                  <div>
-                    <p className="text-xs text-white/70">Current Rank</p>
-                    <p className="text-lg font-semibold">#{user.rank || 'N/A'}</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </CardContent>
-        
-        <CardFooter className="flex flex-col items-stretch">
-          <Button variant="outline" onClick={() => window.location.href = '/deposit'}>
-            <CreditCard className="h-4 w-4 mr-2" /> Go to Deposit Page
-          </Button>
-        </CardFooter>
-      </Card>
-      
-      <Card className="glass-morphism border-white/10">
-        <CardHeader>
-          <div className="flex items-center gap-2">
-            <Clock className="h-5 w-5 text-royal-gold" />
-            <CardTitle>Recent Transactions</CardTitle>
-          </div>
-        </CardHeader>
-        
-        <CardContent>
-          {transactions.length > 0 ? (
-            <ul className="space-y-3">
-              {transactions.map((transaction) => (
-                <li key={transaction.id} className="flex items-center gap-3 p-3 rounded-lg bg-black/20 border border-white/5">
-                  <div className="p-2 rounded-full bg-black/30">
-                    {transaction.type === 'deposit' ? (
-                      <ArrowUpCircle className="h-4 w-4 text-emerald-500" />
-                    ) : (
-                      <ArrowDownCircle className="h-4 w-4 text-red-500" />
-                    )}
-                  </div>
-                  
-                  <div className="flex-1 min-w-0">
-                    <div className="flex justify-between">
-                      <p className="font-medium">
-                        {transaction.description}
-                      </p>
-                      <span 
-                        className={`font-semibold ${
-                          transaction.type === 'deposit' ? 'text-emerald-500' : 'text-red-500'
-                        }`}
-                      >
-                        {transaction.type === 'deposit' ? '+' : '-'}${transaction.amount.toFixed(2)}
-                      </span>
-                    </div>
-                    <p className="text-xs text-white/60">
-                      {formatDistanceToNow(transaction.date, { addSuffix: true })}
-                    </p>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <div className="text-center py-6 text-white/60">
-              <p>No recent transactions</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+            <div>
+              <div className="flex space-x-2">
+                <Input
+                  type="number"
+                  min="0"
+                  placeholder="Enter amount"
+                  value={amount}
+                  onChange={(e) => setAmount(e.target.value)}
+                  className="glass-morphism"
+                />
+                <Button
+                  onClick={handleDeposit}
+                  disabled={isProcessing}
+                  className="flex-shrink-0"
+                >
+                  <PlusCircle className="h-4 w-4 mr-1" /> Deposit
+                </Button>
+              </div>
+              <p className="mt-2 text-xs text-white/60 text-center">Add funds to your royal treasury</p>
             </div>
-          )}
+            
+            <div>
+              <div className="flex space-x-2">
+                <Input
+                  type="number"
+                  min="0"
+                  max={user.walletBalance || 0}
+                  placeholder="Enter amount"
+                  value={amount}
+                  onChange={(e) => setAmount(e.target.value)}
+                  className="glass-morphism"
+                />
+                <Button
+                  onClick={handleWithdraw}
+                  disabled={isProcessing}
+                  variant="outline"
+                  className="flex-shrink-0"
+                >
+                  <MinusCircle className="h-4 w-4 mr-1" /> Withdraw
+                </Button>
+              </div>
+              <p className="mt-2 text-xs text-white/60 text-center">Withdraw funds from your royal treasury</p>
+            </div>
+          </div>
+          
+          <div className="mt-8">
+            <h3 className="text-lg font-bold flex items-center gap-2 mb-4">
+              <History className="h-5 w-5 text-royal-gold" />
+              Recent Transactions
+            </h3>
+            
+            {transactions.length > 0 ? (
+              <div className="space-y-3">
+                {transactions.map((transaction) => (
+                  <div 
+                    key={transaction.id}
+                    className="flex justify-between items-center p-3 bg-black/20 rounded-lg border border-white/5"
+                  >
+                    <div className="flex items-center">
+                      {transaction.type === 'deposit' ? (
+                        <div className="w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center mr-3">
+                          <PlusCircle className="h-5 w-5 text-emerald-500" />
+                        </div>
+                      ) : (
+                        <div className="w-10 h-10 rounded-full bg-amber-500/20 flex items-center justify-center mr-3">
+                          <CreditCard className="h-5 w-5 text-amber-500" />
+                        </div>
+                      )}
+                      
+                      <div>
+                        <p className="font-medium">
+                          {transaction.type === 'deposit' ? 'Deposit' : 'Purchase'}
+                        </p>
+                        <p className="text-xs text-white/60">
+                          {transaction.date.toLocaleDateString()}
+                        </p>
+                      </div>
+                    </div>
+                    
+                    <div className="text-right">
+                      <p className={`font-medium ${transaction.type === 'deposit' ? 'text-emerald-500' : ''}`}>
+                        {transaction.type === 'deposit' ? '+' : '-'}${transaction.amount}
+                      </p>
+                      <p className="text-xs text-white/60 flex items-center justify-end">
+                        {transaction.status} <ExternalLink className="ml-1 h-3 w-3" />
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-8 text-white/60">
+                <p>No transaction history yet</p>
+              </div>
+            )}
+          </div>
         </CardContent>
       </Card>
     </div>
