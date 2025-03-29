@@ -10,8 +10,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
 import Loading from '@/components/Loading';
 import { TeamColor } from '@/types/teams';
-import { Scroll, Crown, Coins, CreditCard, Flame, Trophy } from 'lucide-react';
+import { Scroll, Crown, Coins, CreditCard, Flame, Trophy, ShieldAlert, Lock } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { getTeamNFTJoke, getTeamCryptoRoast, getTeamSecurityGuarantee } from '@/utils/teamUtils';
 
 const Teams = () => {
   const { user, isLoading, updateUserProfile } = useAuth();
@@ -39,7 +40,7 @@ const Teams = () => {
       console.error("Error updating team:", error);
       toast({
         title: "Failed to join faction",
-        description: "We couldn't process your allegiance. Our payment processor is probably down.",
+        description: "We couldn't process your allegiance. Our blockchain validators are probably on lunch break.",
         variant: "destructive"
       });
       return false;
@@ -105,12 +106,12 @@ const Teams = () => {
             <div className="flex items-start">
               <Scroll className="text-royal-gold h-6 w-6 mr-3 mt-1 flex-shrink-0" />
               <div>
-                <h3 className="text-royal-gold text-lg font-medium mb-2">A Message from the Treasury</h3>
+                <h3 className="text-royal-gold text-lg font-medium mb-2">A Message from the Royal Treasury</h3>
                 <p className="text-white/80 italic">
-                  "Every coin spent in this realm is meticulously recorded by our financial department. Your spending habits will be scrutinized, analyzed, and occasionally mocked for all eternity. Or at least until our next database purge."
+                  "Our digital kingdom is protected by an impenetrable moat of encryption and a drawbridge of two-factor authentication. Just like medieval castles, which were famously never breached, your data is absolutely secure. Disclaimer: actual security may vary, much like the value of your contributions."
                 </p>
                 <p className="text-white/60 text-sm mt-2">
-                  <span className="text-amber-400">*</span> No actual benefits are provided for joining any team. This is purely for amusement.
+                  <span className="text-amber-400">*</span> Let's be honest, you're not here for the benefits but for the same reason people buy NFTs of rocks: digital bragging rights.
                 </p>
               </div>
             </div>
@@ -120,7 +121,7 @@ const Teams = () => {
             <CardHeader>
               <CardTitle className="text-2xl font-medieval">Choose Your Financial Folly</CardTitle>
               <CardDescription>
-                Align yourself with one of the three factions competing for monetary supremacy and digital bragging rights. None of this matters in the slightest.
+                Align yourself with one of the three factions competing for monetary supremacy and digital bragging rights. None of this matters in the slightest, but neither does most of what you spend money on anyway.
               </CardDescription>
             </CardHeader>
             
@@ -175,6 +176,15 @@ const Teams = () => {
                               {getAbsurdTeamStat('red')}
                             </p>
                           </div>
+                          <div className="mt-3 p-3 glass-morphism border-white/5 rounded-lg">
+                            <div className="flex items-center gap-2">
+                              <Lock className="h-4 w-4 text-red-400" />
+                              <p className="text-xs text-white/80 font-medium">Security Guarantee:</p>
+                            </div>
+                            <p className="text-xs text-white/60 mt-1 italic">
+                              {getTeamSecurityGuarantee('red').substring(0, 80)}...
+                            </p>
+                          </div>
                           <div className="text-sm text-white/60 mt-3">362 members</div>
                         </CardContent>
                       </Card>
@@ -201,6 +211,15 @@ const Teams = () => {
                             <p className="mb-2">Absurd Faction Statistic:</p>
                             <p className="text-xs text-white/60 italic">
                               {getAbsurdTeamStat('green')}
+                            </p>
+                          </div>
+                          <div className="mt-3 p-3 glass-morphism border-white/5 rounded-lg">
+                            <div className="flex items-center gap-2">
+                              <ShieldAlert className="h-4 w-4 text-green-400" />
+                              <p className="text-xs text-white/80 font-medium">NFT Investment Strategy:</p>
+                            </div>
+                            <p className="text-xs text-white/60 mt-1 italic">
+                              {getTeamNFTJoke('green').substring(0, 80)}...
                             </p>
                           </div>
                           <div className="text-sm text-white/60 mt-3">285 members</div>
@@ -231,6 +250,15 @@ const Teams = () => {
                               {getAbsurdTeamStat('blue')}
                             </p>
                           </div>
+                          <div className="mt-3 p-3 glass-morphism border-white/5 rounded-lg">
+                            <div className="flex items-center gap-2">
+                              <Crown className="h-4 w-4 text-blue-400" />
+                              <p className="text-xs text-white/80 font-medium">Crypto Philosophy:</p>
+                            </div>
+                            <p className="text-xs text-white/60 mt-1 italic">
+                              {getTeamCryptoRoast('blue').substring(0, 80)}...
+                            </p>
+                          </div>
                           <div className="text-sm text-white/60 mt-3">241 members</div>
                         </CardContent>
                       </Card>
@@ -242,6 +270,9 @@ const Teams = () => {
                       </p>
                       <p className="text-xs text-white/50 mt-2">
                         — Anonymous Financial Historian
+                      </p>
+                      <p className="text-xs text-white/40 mt-3 border-t border-white/10 pt-2">
+                        Breaking the 4th wall: Yes, we know this entire site is ridiculous. No, we don't plan to make it less ridiculous. You're still reading this, so clearly it's working.
                       </p>
                     </div>
                   </div>

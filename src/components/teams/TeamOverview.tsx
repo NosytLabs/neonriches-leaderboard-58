@@ -1,13 +1,20 @@
 
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Users, Award, ArrowRight, Scroll, CreditCard, Flame, Coins } from 'lucide-react';
+import { Users, Award, ArrowRight, Scroll, CreditCard, Flame, Coins, Shield, Lock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { UserProfile } from '@/contexts/AuthContext';
 import { Badge } from '@/components/ui/badge';
 import TeamSwitchModal, { TeamColor } from '@/components/profile/TeamSwitchModal';
 import { useAuth } from '@/contexts/auth';
-import { getTeamBenefit, getTeamAbsurdStat, getTeamHistoricalNote } from '@/utils/teamUtils';
+import { 
+  getTeamBenefit, 
+  getTeamAbsurdStat, 
+  getTeamHistoricalNote,
+  getTeamNFTJoke,
+  getTeamSecurityGuarantee,
+  getTeamCryptoRoast
+} from '@/utils/teamUtils';
 
 interface TeamOverviewProps {
   user: UserProfile;
@@ -64,6 +71,9 @@ const TeamOverview: React.FC<TeamOverviewProps> = ({ user }) => {
   const benefits = getTeamBenefit(userTeam);
   const absurdStat = getTeamAbsurdStat(userTeam);
   const historicalNote = getTeamHistoricalNote(userTeam);
+  const nftJoke = getTeamNFTJoke(userTeam);
+  const securityGuarantee = getTeamSecurityGuarantee(userTeam);
+  const cryptoRoast = getTeamCryptoRoast(userTeam);
 
   return (
     <Card className="glass-morphism border-purple-400/20">
@@ -106,7 +116,7 @@ const TeamOverview: React.FC<TeamOverviewProps> = ({ user }) => {
             </ul>
             <div className="mt-3 pt-3 border-t border-white/10">
               <p className="text-xs text-white/50 italic">
-                <span className="text-amber-400">*</span> None of these perks actually exist. They're as imaginary as the value of your spending.
+                <span className="text-amber-400">*</span> None of these perks actually exist. They're as imaginary as the value of your spending or an NFT collection's "floor price."
               </p>
             </div>
           </div>
@@ -121,6 +131,39 @@ const TeamOverview: React.FC<TeamOverviewProps> = ({ user }) => {
             </p>
           </div>
           
+          <div className="glass-morphism border-white/10 p-4 rounded-lg">
+            <div className="flex items-center mb-2">
+              <Flame className="h-5 w-5 text-purple-400 mr-2" />
+              <span className="text-sm font-medium">NFT Collector Status</span>
+            </div>
+            <p className="text-xs text-white/70 italic">
+              {nftJoke}
+            </p>
+          </div>
+          
+          <div className="glass-morphism border-white/10 p-4 rounded-lg">
+            <div className="flex items-center mb-2">
+              <Lock className="h-5 w-5 text-purple-400 mr-2" />
+              <span className="text-sm font-medium">Royal Security Guarantee</span>
+            </div>
+            <p className="text-xs text-white/70 italic">
+              {securityGuarantee}
+            </p>
+            <p className="text-xs text-white/50 mt-2">
+              <span className="text-amber-400">*</span> Let's be honest: we're about as secure as your decision to spend money here.
+            </p>
+          </div>
+          
+          <div className="glass-morphism border-white/10 p-4 rounded-lg">
+            <div className="flex items-center mb-2">
+              <Shield className="h-5 w-5 text-purple-400 mr-2" />
+              <span className="text-sm font-medium">Crypto Enthusiasm Analysis</span>
+            </div>
+            <p className="text-xs text-white/70 italic">
+              {cryptoRoast}
+            </p>
+          </div>
+          
           <Button 
             variant="outline" 
             className="w-full glass-morphism border-purple-400/20 hover:bg-purple-400/10"
@@ -128,6 +171,10 @@ const TeamOverview: React.FC<TeamOverviewProps> = ({ user }) => {
           >
             Switch Financial Allegiance
           </Button>
+          
+          <p className="text-xs text-white/50 text-center italic">
+            Breaking the 4th wall: Yes, we know this is ridiculous. No, we don't care. And neither do you, apparently.
+          </p>
           
           <TeamSwitchModal 
             open={isModalOpen}

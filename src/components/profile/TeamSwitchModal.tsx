@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Shield, Info, Check, CreditCard, Scroll, Flame, Coins } from 'lucide-react';
+import { Shield, Info, Check, CreditCard, Scroll, Flame, Coins, Lock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -13,7 +13,7 @@ import {
 import { useAuth } from '@/contexts/auth';
 import { UserProfile } from '@/contexts/AuthContext';
 import { Separator } from '@/components/ui/separator';
-import { getTeamMotto, getTeamBenefit } from '@/utils/teamUtils';
+import { getTeamMotto, getTeamBenefit, getTeamSecurityGuarantee } from '@/utils/teamUtils';
 
 // Define team color type
 export type TeamColor = 'red' | 'green' | 'blue';
@@ -99,6 +99,11 @@ const TeamSwitchModal: React.FC<TeamSwitchModalProps> = ({
     return getTeamBenefit(teamId);
   };
   
+  // Get security guarantee for each team
+  const getSecurityGuarantee = (teamId: TeamColor): string => {
+    return getTeamSecurityGuarantee(teamId);
+  };
+  
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       {trigger && <div onClick={() => onOpenChange(true)}>{trigger}</div>}
@@ -106,7 +111,7 @@ const TeamSwitchModal: React.FC<TeamSwitchModalProps> = ({
         <DialogHeader>
           <DialogTitle className="text-xl font-bold">Choose Your Financial Allegiance</DialogTitle>
           <DialogDescription>
-            Select the spending faction that best represents your fiscal philosophy. Or, more realistically, whichever one has the funniest name.
+            Select the spending faction that best represents your fiscal philosophy. Or, more realistically, whichever one has the colors you like best.
           </DialogDescription>
         </DialogHeader>
         
@@ -151,6 +156,13 @@ const TeamSwitchModal: React.FC<TeamSwitchModalProps> = ({
                 </ul>
               </div>
               
+              <div className="mt-3 flex items-start border-t border-white/10 pt-2">
+                <Lock className={`h-4 w-4 mr-1 ${team.color}`} />
+                <p className="text-xs text-white/60 italic">
+                  {getSecurityGuarantee(team.id as TeamColor).substring(0, 60)}...
+                </p>
+              </div>
+              
               <div className="flex justify-between mt-3 text-xs text-white/50">
                 <span>Members: {team.members}</span>
                 <span>Rank: #{team.rank}</span>
@@ -164,7 +176,7 @@ const TeamSwitchModal: React.FC<TeamSwitchModalProps> = ({
         <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-3 text-sm flex items-start">
           <Info className="h-4 w-4 text-blue-400 mr-2 mt-0.5" />
           <p className="text-white/80">
-            All of these teams are equally meaningless. Your choice is purely aesthetic and will have no actual impact on your experience, apart from the color scheme.
+            Look, let's break the 4th wall here: these teams are entirely meaningless. Your choice is solely aesthetic and about as consequential as picking a profile picture for a service you'll forget in a month.
           </p>
         </div>
         

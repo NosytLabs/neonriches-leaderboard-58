@@ -62,21 +62,21 @@ export const getTeamBenefit = (team: UserTeam | string | undefined): string[] =>
   switch (team) {
     case 'red':
       return [
-        'Exclusive access to our "What Was I Thinking?" support group',
-        'Priority placement on our "Most Impulsive Spenders" newsletter',
-        'Special digital therapy sessions for post-purchase regret'
+        'Exclusive membership to our "Just Like NFTs But Less Useless" collector club',
+        'Certificate of Self-Deception (backed by our proprietary blockchain of regret)',
+        'Advanced algorithms to justify your spending to concerned family members'
       ];
     case 'green':
       return [
-        'Digital certificate in "Advanced Spending Rationalization"',
-        'Access to spreadsheets that magically justify all purchases',
-        'Permission to use "It\'s an investment!" in all arguments'
+        'Access to our "Pretend Investment Portfolio" that looks impressive but does nothing',
+        'Digital trophy case for all your non-existent achievements in finance',
+        'Spreadsheet templates that make any purchase look like a sound financial decision'
       ];
     case 'blue':
       return [
-        'Complimentary course in "Pretending You Don\'t Care About Rank"',
-        'Advanced tutorials on timing purchases for maximum visibility',
-        'Expert training in looking down on the red team while secretly envying them'
+        'Membership to our "I Bought JPEGs Before It Was Cool" elite social club',
+        'Sophisticated tools to convince yourself you\'re not just buying digital bragging rights',
+        'Algorithms that optimize the timing of your meaningless purchases for maximum FOMO generation'
       ];
     default:
       return ['No perks, no problems'];
@@ -123,11 +123,11 @@ export const getTeamAbsurdStat = (team: UserTeam | string | undefined): string =
   
   switch (team) {
     case 'red':
-      return 'Members collectively spent $127,493 in under 3 minutes during the "Midnight Madness" event';
+      return 'Members collectively spent enough to buy 47 actual medieval castles, but opted for digital status instead';
     case 'green':
-      return 'Average member spends 42 minutes analyzing a $5 purchase, then impulse buys at $500 item';
+      return 'Has a dedicated Discord channel where members pretend their NFTs will "definitely go up in value one day"';
     case 'blue':
-      return '74% of members claim they "don\'t care about rank" while checking the leaderboard hourly';
+      return 'Makes PowerPoint presentations to their significant others explaining why spending money here is "smarter than crypto"';
     default:
       return 'No statistics available, much like their contributions';
   }
@@ -138,12 +138,57 @@ export const getTeamHistoricalNote = (team: UserTeam | string | undefined): stri
   
   switch (team) {
     case 'red':
-      return 'Founded by Lord Hastings Moneybags who famously said "I\'ll worry about the consequences after I see my name at the top"';
+      return 'Founded by a wealthy crypto enthusiast who famously said "I spent $300K on ape JPEGs, so this actually seems sensible by comparison"';
     case 'green':
-      return 'Established by the Countess of Calculon, who created 17 spreadsheets to justify her first donation';
+      return 'Created by a former hedge fund manager who realized separating people from their money is easier when you don\'t pretend it\'s an investment';
     case 'blue':
-      return 'Created by the Duke of Delay, who waited until precisely the right moment to donate... and missed it';
+      return 'Established by a group of tech executives who wanted the social status of crypto without the hassle of understanding blockchain';
     default:
       return 'No recorded history of significance';
+  }
+};
+
+export const getTeamNFTJoke = (team: UserTeam | string | undefined): string => {
+  if (!team) return 'Too sensible to buy pictures of rocks for the price of a car';
+  
+  switch (team) {
+    case 'red':
+      return 'The only group to ever mint an NFT of their transaction receipts from this site (and yes, they paid for that too)';
+    case 'green':
+      return 'Hosts weekly "Right-Click Save" art galleries featuring the most overpriced NFTs they didn\'t buy';
+    case 'blue':
+      return 'Has a secret vault of "blue-chip NFTs" that are now worth approximately 1/100th of what they paid';
+    default:
+      return 'No NFT jokes available - they\'re too expensive';
+  }
+};
+
+export const getTeamSecurityGuarantee = (team: UserTeam | string | undefined): string => {
+  if (!team) return 'Protected by the impenetrable armor of not giving us any money';
+  
+  switch (team) {
+    case 'red':
+      return 'Your data is protected by a digital moat filled with algorithmically-generated crocodiles and a firewall drawbridge that works about as well as medieval plumbing';
+    case 'green':
+      return 'We\'ve hired elite blockchain knights to guard your information with the same effectiveness as a paper shield in a rainstorm';
+    case 'blue':
+      return 'Your personal information is locked in our digital treasury, secured by the same technology that keeps people believing NFTs are valuable';
+    default:
+      return 'No security guarantees, just like the actual middle ages';
+  }
+};
+
+export const getTeamCryptoRoast = (team: UserTeam | string | undefined): string => {
+  if (!team) return 'Smart enough to keep their crypto wallet disconnected from our site';
+  
+  switch (team) {
+    case 'red':
+      return 'The type to brag about "buying the dip" while their portfolio looks like a medieval plague death chart';
+    case 'green':
+      return 'Still holding a coin that was endorsed by a celebrity who can\'t spell "blockchain" but does know how to cash a check';
+    case 'blue':
+      return 'Has uttered the phrase "this is good for Bitcoin" while watching their life savings evaporate';
+    default:
+      return 'No crypto jokes available - they\'re stuck in a failed smart contract';
   }
 };
