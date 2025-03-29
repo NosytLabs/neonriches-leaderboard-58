@@ -1,35 +1,57 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { Users, LogIn } from 'lucide-react';
 import { useAuth } from '@/contexts/auth';
+import { Link } from 'react-router-dom';
+import { Icon } from '@/components/ui/icon';
 
 interface AuthButtonProps {
-  fullWidth?: boolean;
+  className?: string;
 }
 
-const AuthButton: React.FC<AuthButtonProps> = ({ fullWidth = false }) => {
-  const { user, signIn, signOut } = useAuth();
-  const isAuthenticated = !!user;
+const AuthButton: React.FC<AuthButtonProps> = ({ className }) => {
+  const { isAuthenticated, signIn, signOut } = useAuth();
   
-  const handleAuth = () => {
-    if (isAuthenticated) {
-      // Show user menu or profile
-    } else {
-      signIn("email", "password");
-    }
-  };
+  if (isAuthenticated) {
+    return (
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={() => signOut()}
+        className={className}
+      >
+        <Icon name="LogOut" size="xs" className="mr-2" />
+        Logout
+      </Button>
+    );
+  }
   
   return (
-    <Button 
-      onClick={handleAuth}
-      className={`${fullWidth ? "w-full" : ""} royal-button-enhanced`}
-      variant="royal"
-      size="sm"
-    >
-      <LogIn className="w-4 h-4 mr-2" />
-      {isAuthenticated ? 'Thy Royal Account' : 'Enter The Court'}
-    </Button>
+    <div className="flex space-x-2">
+      <Button
+        variant="outline"
+        size="sm"
+        asChild
+        className={className}
+      >
+        <Link to="/login">
+          <Icon name="LogIn" size="xs" className="mr-2" />
+          Login
+        </Link>
+      </Button>
+      
+      <Button
+        variant="royalGold"
+        size="sm"
+        asChild
+        className={className}
+      >
+        <Link to="/register">
+          <Icon name="UserPlus" size="xs" className="mr-2" />
+          Register
+        </Link>
+      </Button>
+    </div>
   );
 };
 

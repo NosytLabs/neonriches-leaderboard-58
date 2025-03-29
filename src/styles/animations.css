@@ -75,6 +75,98 @@
   100% { transform: rotateY(360deg); }
 }
 
+@keyframes bounce-slow {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes ping-slow {
+  0% { transform: scale(1); opacity: 1; }
+  75%, 100% { transform: scale(2); opacity: 0; }
+}
+
+@keyframes shine-slow {
+  from {
+    left: -100%;
+  }
+  50% {
+    left: 100%;
+  }
+  to {
+    left: 100%;
+  }
+}
+
+@keyframes pulse-slow {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+/* Animation delays */
+.animation-delay-100 {
+  animation-delay: 0.1s;
+}
+
+.animation-delay-200 {
+  animation-delay: 0.2s;
+}
+
+.animation-delay-300 {
+  animation-delay: 0.3s;
+}
+
+.animation-delay-400 {
+  animation-delay: 0.4s;
+}
+
+.animation-delay-500 {
+  animation-delay: 0.5s;
+}
+
+/* Royal Animations */
+@keyframes royal-entrance {
+  0% { 
+    transform: translateY(20px); 
+    opacity: 0; 
+  }
+  100% { 
+    transform: translateY(0); 
+    opacity: 1; 
+  }
+}
+
+@keyframes royal-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes floating-coin {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-5px) rotate(5deg);
+  }
+  75% {
+    transform: translateY(5px) rotate(-5deg);
+  }
+}
+
+@keyframes gold-sparkle {
+  0%, 100% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
 /* Royal Particles */
 @keyframes gold-dust {
   0% {
@@ -191,6 +283,38 @@
   animation: coin-flip 3s ease-in-out infinite;
 }
 
+.animate-bounce-slow {
+  animation: bounce-slow 3s ease-in-out infinite;
+}
+
+.animate-ping-slow {
+  animation: ping-slow 3s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+.animate-shine-slow {
+  animation: shine-slow 4s infinite;
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 2s ease-in-out infinite;
+}
+
+.animate-royal-entrance {
+  animation: royal-entrance 0.5s ease-out forwards;
+}
+
+.animate-royal-spin {
+  animation: royal-spin 3s linear infinite;
+}
+
+.animate-floating-coin {
+  animation: floating-coin 3s ease-in-out infinite;
+}
+
+.animate-gold-sparkle {
+  animation: gold-sparkle 2s ease-in-out infinite;
+}
+
 .animate-gold-dust {
   position: relative;
 }
@@ -269,4 +393,42 @@
 
 .hover-shine:hover::after {
   animation: shimmer 1.5s forwards;
+}
+
+/* Game-inspired animations */
+.animate-coin-bounce {
+  animation: bounce-slow 1s ease-in-out infinite;
+}
+
+.animate-treasure-glow {
+  animation: crown-glow 2s ease-in-out infinite;
+}
+
+.animate-power-up {
+  animation: scale-in 0.5s ease-out, crown-glow 2s ease-in-out infinite;
+}
+
+/* Badge animations */
+.badge-shine {
+  position: relative;
+  overflow: hidden;
+}
+
+.badge-shine::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    to bottom right,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0) 40%,
+    rgba(255, 255, 255, 0.4) 50%,
+    rgba(255, 255, 255, 0) 60%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: rotate(45deg);
+  animation: shimmer 3s infinite;
 }

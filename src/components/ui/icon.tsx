@@ -1,125 +1,149 @@
-
 import React from 'react';
 import { cn } from '@/lib/utils';
-
-export type IconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
-export type IconVariant = 'solid' | 'outline' | 'royal';
+import * as LucideIcons from 'lucide-react';
+import { LucideIcon } from 'lucide-react';
+import SingleCoin from '@/assets/icons/SingleCoin';
+import CoinStack from '@/assets/icons/CoinStack';
+import MoneyBag from '@/assets/icons/MoneyBag';
+import Diamond from '@/assets/icons/Diamond';
+import Trophy from '@/assets/icons/Trophy';
+import Crown from '@/assets/icons/Crown';
+import ThroneLogoIcon from '@/components/brand/ThroneLogoIcon';
 
 export type IconName = 
-  | 'home' | 'trophy' | 'user' | 'profile' | 'dollar' | 'bar-chart'
-  | 'star' | 'crown' | 'shield' | 'sword' | 'scroll' | 'coin'
-  | 'castle' | 'goblet' | 'key' | 'wallet' | 'medal' | 'heart'
-  | 'mail' | 'bell' | 'calendar' | 'edit' | 'trash' | 'lock'
-  | 'phone' | 'bookmark' | 'image' | 'video' | 'music' | 'book'
-  | 'upload' | 'download' | 'menu' | 'check' | 'warning' | 'info'
-  | 'help' | 'camera' | 'gift' | 'link' | 'share' | 'play'
-  | 'pause' | 'volume' | 'mute' | 'search' | 'settings' | 'gem'
-  | 'fire' | 'sun' | 'water' | 'eye';
+  | keyof typeof LucideIcons 
+  | 'coin' 
+  | 'coins' 
+  | 'money-bag' 
+  | 'diamond' 
+  | 'trophy' 
+  | 'crown' 
+  | 'throne'
+  | 'profile'
+  | 'question-circle';
 
-export interface IconProps {
+export type IconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+export type IconVariant = 'default' | 'outline' | 'subtle' | 'custom';
+
+interface IconProps {
   name: IconName;
   size?: IconSize;
   className?: string;
+  animated?: boolean;
   variant?: IconVariant;
   color?: string;
+  onClick?: () => void;
 }
 
-export const Icon: React.FC<IconProps> = ({
+const QuestionCircle: React.FC<{ size?: number, className?: string }> = ({ size = 24, className }) => (
+  <svg 
+    xmlns="http://www.w3.org/2000/svg" 
+    width={size} 
+    height={size} 
+    viewBox="0 0 24 24" 
+    fill="none" 
+    stroke="currentColor" 
+    strokeWidth="2" 
+    strokeLinecap="round" 
+    strokeLinejoin="round" 
+    className={className}
+  >
+    <circle cx="12" cy="12" r="10"></circle>
+    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+  </svg>
+);
+
+const sizeMap: Record<IconSize, number> = {
+  xs: 16,
+  sm: 20,
+  md: 24,
+  lg: 32,
+  xl: 40
+};
+
+const getTailwindSizeClass = (size: IconSize): string => {
+  const sizeClasses: Record<IconSize, string> = {
+    xs: 'w-4 h-4',
+    sm: 'w-5 h-5',
+    md: 'w-6 h-6',
+    lg: 'w-8 h-8',
+    xl: 'w-10 h-10'
+  };
+  return sizeClasses[size];
+};
+
+export const Icon: React.FC<IconProps> = ({ 
   name,
   size = 'md',
   className,
-  variant = 'solid',
-  color
+  animated = false,
+  variant = 'default',
+  color,
+  onClick
 }) => {
-  // Convert size to pixel dimensions
-  const dimensions = {
-    xs: 16,
-    sm: 20,
-    md: 24,
-    lg: 32,
-    xl: 48,
-    '2xl': 64
-  };
-  
-  // Map icon names to positions in the sprite sheet
-  const iconPositions: Record<IconName, { x: number; y: number }> = {
-    'home': { x: 0, y: 0 },
-    'trophy': { x: 1, y: 0 },
-    'user': { x: 2, y: 0 },
-    'profile': { x: 3, y: 0 },
-    'dollar': { x: 4, y: 0 },
-    'bar-chart': { x: 5, y: 0 },
-    'star': { x: 6, y: 0 },
-    'crown': { x: 7, y: 0 },
-    'shield': { x: 8, y: 0 },
-    'sword': { x: 9, y: 0 },
-    'scroll': { x: 10, y: 0 },
-    'coin': { x: 11, y: 0 },
-    'castle': { x: 12, y: 0 },
-    'goblet': { x: 13, y: 0 },
-    'key': { x: 14, y: 0 },
-    'wallet': { x: 15, y: 0 },
-    'medal': { x: 16, y: 0 },
-    'heart': { x: 17, y: 0 },
-    'mail': { x: 18, y: 0 },
-    'bell': { x: 19, y: 0 },
-    'calendar': { x: 0, y: 1 },
-    'edit': { x: 1, y: 1 },
-    'trash': { x: 2, y: 1 },
-    'lock': { x: 3, y: 1 },
-    'phone': { x: 4, y: 1 },
-    'bookmark': { x: 5, y: 1 },
-    'image': { x: 6, y: 1 },
-    'video': { x: 7, y: 1 },
-    'music': { x: 8, y: 1 },
-    'book': { x: 9, y: 1 },
-    'upload': { x: 10, y: 1 },
-    'download': { x: 11, y: 1 },
-    'menu': { x: 12, y: 1 },
-    'check': { x: 13, y: 1 },
-    'warning': { x: 14, y: 1 },
-    'info': { x: 15, y: 1 },
-    'help': { x: 16, y: 1 },
-    'camera': { x: 17, y: 1 },
-    'gift': { x: 18, y: 1 },
-    'link': { x: 19, y: 1 },
-    'share': { x: 0, y: 2 },
-    'play': { x: 1, y: 2 },
-    'pause': { x: 2, y: 2 },
-    'volume': { x: 3, y: 2 },
-    'mute': { x: 4, y: 2 },
-    'search': { x: 5, y: 2 },
-    'settings': { x: 6, y: 2 },
-    'gem': { x: 7, y: 2 },
-    'fire': { x: 8, y: 2 },
-    'sun': { x: 9, y: 2 },
-    'water': { x: 10, y: 2 },
-    'eye': { x: 11, y: 2 }
-  };
-  
-  // Get position for the requested icon
-  const position = iconPositions[name] || { x: 0, y: 0 }; // Default to first icon if not found
-  
-  // Calculate position in pixels (assuming each icon is 24px in the sprite sheet)
-  const posX = -position.x * 24;
-  const posY = -position.y * 24;
-  
-  const styleBg = {
-    maskPosition: `${posX}px ${posY}px`,
-    WebkitMaskPosition: `${posX}px ${posY}px`,
-    backgroundColor: color || undefined,
-    width: dimensions[size],
-    height: dimensions[size],
+  const customIcons: Record<string, React.ReactNode> = {
+    'coin': <SingleCoin size={size} animated={animated} />,
+    'coins': <CoinStack size={size} animated={animated} />,
+    'money-bag': <MoneyBag size={size} animated={animated} />,
+    'diamond': <Diamond size={size} animated={animated} />,
+    'trophy': <Trophy size={size} animated={animated} />,
+    'crown': <Crown size={size} animated={animated} />,
+    'throne': <ThroneLogoIcon size={size} animated={animated} />,
+    'question-circle': <QuestionCircle size={sizeMap[size]} className={className} />
   };
 
+  const getVariantClasses = (): string => {
+    switch (variant) {
+      case 'outline':
+        return 'stroke-1 fill-none';
+      case 'subtle':
+        return 'opacity-75';
+      case 'custom':
+        return '';
+      default:
+        return '';
+    }
+  };
+
+  if (name in customIcons) {
+    return (
+      <span 
+        className={cn(
+          'inline-flex items-center justify-center',
+          onClick && 'cursor-pointer',
+          className
+        )}
+        onClick={onClick}
+        style={{ color: color }}
+      >
+        {customIcons[name as string]}
+      </span>
+    );
+  }
+
+  const LucideIconComponent = (LucideIcons[name as keyof typeof LucideIcons] as LucideIcon) || 
+                              LucideIcons.HelpCircle;
+
   return (
-    <span
+    <span 
       className={cn(
-        "mask-icon block",
-        `icon-${variant}`,
-        className
+        'inline-flex',
+        onClick && 'cursor-pointer',
+        animated && 'transition-transform hover:scale-110'
       )}
-      style={styleBg}
-    />
+      onClick={onClick}
+    >
+      <LucideIconComponent 
+        size={sizeMap[size]} 
+        className={cn(
+          getVariantClasses(),
+          className
+        )} 
+        color={color}
+      />
+    </span>
   );
 };
+
+export default Icon;

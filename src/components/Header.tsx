@@ -1,148 +1,75 @@
 
-import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import React from 'react';
+import { Link } from 'react-router-dom';
+import MainNav from '@/components/navigation/MainNav';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/auth';
-import ThroneLogoIcon from './brand/ThroneLogoIcon';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
-import MobileMenu from './MobileMenu';
-import { Icon } from '@/components/ui/icon';
+import SpendThroneLogo from '@/components/brand/SpendThroneLogo';
+import UserMenu from '@/components/header/UserMenu';
+import { SolanaWalletButton } from '@/components/solana/SolanaWalletButton';
+import MoneyDisplay from '@/components/ui/money-display';
 
 interface HeaderProps {
   transparent?: boolean;
+  className?: string;
 }
 
-const Header: React.FC<HeaderProps> = ({ transparent = false }) => {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const location = useLocation();
-  const { user } = useAuth();
+const Header: React.FC<HeaderProps> = ({ transparent = false, className }) => {
+  const { user, isAuthenticated, isLoading } = useAuth();
   
-  // Update scroll state
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10);
-    };
-    
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-  
-  // Determine header style based on scroll and transparent prop
-  const headerClass = cn(
-    'fixed top-0 left-0 right-0 z-50 flex justify-between items-center p-4 transition-all duration-300',
-    transparent && !isScrolled 
-      ? 'bg-transparent' 
-      : 'glass-morphism border-b border-white/10 backdrop-blur-lg shadow-lg',
-    isScrolled ? 'py-2' : 'py-4'
-  );
-  
-  // Active link style
-  const activeLinkClass = 'relative text-royal-gold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-royal-gold';
-  
-  // Navigation items array with our new Icon component
-  const navigationItems = [
-    {
-      name: "Home",
-      path: "/",
-      icon: <Icon name="home" size="sm" />,
-    },
-    {
-      name: "Leaderboard",
-      path: "/leaderboard",
-      icon: <Icon name="trophy" size="sm" />,
-    },
-    {
-      name: "Teams",
-      path: "/teams",
-      icon: <Icon name="user" size="sm" />,
-    },
-    {
-      name: "Events",
-      path: "/events",
-      icon: <Icon name="calendar" size="sm" />,
-    },
-    {
-      name: "Mockery",
-      path: "/mockery",
-      icon: <Icon name="crown" size="sm" />,
-    },
-    {
-      name: "Features",
-      path: "/features-showcase",
-      icon: <Icon name="star" size="sm" />,
-    },
-    {
-      name: "Visibility",
-      path: "/visibility-features",
-      icon: <Icon name="eye" size="sm" />,
-    },
-  ];
-
   return (
-    <header className={headerClass}>
-      <div className="flex items-center gap-2">
-        <Link to="/" className="flex items-center gap-2 mr-8">
-          <ThroneLogoIcon size="sm" animated={false} />
-          <span className={cn(
-            "font-royal text-xl tracking-wide transition-all duration-300",
-            isScrolled ? "text-lg" : "text-xl",
-            transparent && !isScrolled ? "text-white" : "text-royal-gold"
-          )}>
-            SpendThrone
-          </span>
+    <header
+      className={cn(
+        "fixed top-0 left-0 right-0 z-50 border-b backdrop-blur-sm transition-colors duration-200",
+        transparent 
+          ? "border-transparent bg-transparent" 
+          : "border-border/40 bg-background/80",
+        className
+      )}
+    >
+      <div className="container flex h-16 items-center px-4 py-2">
+        <Link to="/" className="flex items-center mr-6">
+          <SpendThroneLogo variant="icon" className="h-10 w-10 mr-2" />
+          <SpendThroneLogo variant="compact" className="h-8 w-auto hidden md:block" />
         </Link>
         
-        <nav className="hidden lg:flex items-center space-x-6">
-          {navigationItems.map((item) => (
-            <Link 
-              key={item.name}
-              to={item.path}
-              className={cn(
-                "flex items-center gap-1.5 px-2 py-1 hover:text-royal-gold transition-colors",
-                location.pathname === item.path && activeLinkClass
-              )}
-            >
-              {item.icon}
-              <span>{item.name}</span>
-            </Link>
-          ))}
-        </nav>
-      </div>
-      
-      <div className="flex items-center gap-4">
-        {user ? (
-          <>
-            <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10">
-              <Icon name="dollar" size="sm" className="text-royal-gold" />
-              <span>${user.walletBalance.toFixed(2)}</span>
-            </div>
-            
-            <div className="hidden md:block">
-              <Link to="/dashboard">
-                <Button variant="outline" size="sm" className={transparent && !isScrolled ? "border-white/20 hover:bg-white/10" : ""}>
-                  <Icon name="user" size="sm" className="mr-2" />
-                  Dashboard
+        <MainNav className="mx-4" />
+        
+        <div className="ml-auto flex items-center space-x-3">
+          {isAuthenticated && !isLoading && (
+            <>
+              <SolanaWalletButton />
+              
+              <div className="hidden md:flex">
+                <MoneyDisplay
+                  amount={user?.totalSpent || 0}
+                  size="sm"
+                  animated
+                  variant="gradient"
+                />
+              </div>
+              
+              <UserMenu user={user} />
+            </>
+          )}
+          
+          {!isAuthenticated && !isLoading && (
+            <div className="flex items-center gap-2">
+              <Link to="/login">
+                <Button variant="outline" size="sm" className="h-8">
+                  Login
+                </Button>
+              </Link>
+              <Link to="/register">
+                <Button variant="royalGold" size="sm" className="h-8">
+                  Register
                 </Button>
               </Link>
             </div>
-          </>
-        ) : (
-          <div className="hidden md:flex items-center gap-2">
-            <Link to="/login">
-              <Button variant="outline" size="sm" className={transparent && !isScrolled ? "border-white/20 hover:bg-white/10" : ""}>
-                Sign In
-              </Button>
-            </Link>
-            <Link to="/signup">
-              <Button size="sm" className="bg-royal-gold text-black hover:bg-royal-gold/90">
-                <Icon name="crown" size="sm" className="mr-2" />
-                Join
-              </Button>
-            </Link>
-          </div>
-        )}
-        
-        <MobileMenu transparent={transparent && !isScrolled} />
+          )}
+        </div>
       </div>
     </header>
   );

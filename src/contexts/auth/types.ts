@@ -1,7 +1,7 @@
 
 import { ReactNode } from 'react';
 
-export type UserTier = 'gold' | 'silver' | 'bronze' | 'platinum' | 'free' | 'pro';
+export type UserTier = 'free' | 'bronze' | 'silver' | 'gold' | 'platinum' | 'pro';
 export type UserGender = 'male' | 'female' | 'other' | 'prefer-not-to-say';
 export type TeamType = 'red' | 'green' | 'blue' | 'none';
 
@@ -29,7 +29,12 @@ export interface UserCosmetics {
   borders: string[];
   effects: string[];
   emojis: string[];
-  boosts: ProfileBoost[];
+  boosts?: ProfileBoost[];
+  activeBorder?: string;
+  activeColor?: string;
+  activeFont?: string;
+  foundersPass?: boolean;
+  socialLinks?: any;
 }
 
 export interface UserSubscription {
@@ -38,6 +43,7 @@ export interface UserSubscription {
   endDate: string | null;
   autoRenew: boolean;
   price: number;
+  status?: 'active' | 'canceled' | 'expired' | 'pending';
 }
 
 export interface UserProfile {
@@ -62,16 +68,21 @@ export interface UserProfile {
   socialLinks?: SocialLink[];
   profileBoosts?: ProfileBoost[];
   walletAddress?: string;
+  activeTitle?: string;
 }
 
 export interface AuthContextType {
   user: UserProfile | null;
   isAuthenticated: boolean;
+  isLoading: boolean;
   login: (username: string, password: string) => Promise<boolean>;
   logout: () => void;
   register: (username: string, email: string, password: string) => Promise<boolean>;
   updateUser: (userData: Partial<UserProfile>) => Promise<boolean>;
-  isLoading: boolean;
+  updateUserProfile: (userData: Partial<UserProfile>) => Promise<boolean>;
+  signIn: (username: string, password: string) => Promise<boolean>;
+  signOut: () => void;
+  awardCosmetic: (category: string, itemId: string, notify?: boolean) => Promise<boolean>;
 }
 
 export interface AuthProviderProps {

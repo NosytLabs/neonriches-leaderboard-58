@@ -1,100 +1,149 @@
 
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Crown, ArrowRight, DollarSign, Users, Award, Sparkles } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import { Icon } from '@/components/ui/icon';
+import { cn } from '@/lib/utils';
 import { useAuth } from '@/contexts/auth';
-import '../styles/animations/enhanced-animations.css';
+import SpendThroneLogo from '@/components/brand/SpendThroneLogo';
 
-const RoyalHero = () => {
-  const navigate = useNavigate();
-  const { user } = useAuth();
-  const isAuthenticated = !!user;
-  
-  const handleGetStarted = () => {
-    if (isAuthenticated) {
-      navigate('/dashboard');
-    } else {
-      navigate('/signup');
-    }
-  };
+interface RoyalHeroProps {
+  className?: string;
+}
+
+const RoyalHero: React.FC<RoyalHeroProps> = ({ className }) => {
+  const { isAuthenticated } = useAuth();
   
   return (
-    <div className="relative overflow-hidden py-20 bg-gradient-to-b from-black to-background">
-      {/* Animated elements */}
+    <div className={cn(
+      'relative py-20 overflow-hidden',
+      className
+    )}>
+      {/* Background gradient and texture */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black to-gray-900 opacity-80" />
+      
+      {/* Animated coin effects */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-        <div className="absolute top-10 left-[10%] w-40 h-40 bg-royal-crimson/5 rounded-full blur-3xl animate-royal-float"></div>
-        <div className="absolute bottom-10 right-[5%] w-56 h-56 bg-royal-navy/5 rounded-full blur-3xl animate-royal-float animation-delay-200"></div>
-        <div className="absolute top-1/2 left-1/3 w-64 h-64 bg-royal-purple/5 rounded-full blur-3xl animate-royal-float animation-delay-300"></div>
-        
-        {/* Floating coins */}
-        {[...Array(5)].map((_, i) => (
+        {Array.from({ length: 8 }).map((_, i) => (
           <div 
             key={i}
-            className="absolute w-7 h-7 rounded-full bg-royal-gold/30 animate-royal-float"
+            className="absolute animate-floating-coin"
             style={{
-              top: `${10 + Math.random() * 80}%`,
-              left: `${10 + Math.random() * 80}%`,
-              animationDelay: `${i * 0.7}s`,
-              animationDuration: `${3 + Math.random() * 2}s`
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+              animationDelay: `${Math.random() * 5}s`,
+              animationDuration: `${3 + Math.random() * 4}s`,
+              opacity: 0.3 + Math.random() * 0.4,
             }}
           >
-            <DollarSign className="w-4 h-4 text-royal-gold" />
+            <Icon 
+              name="coin" 
+              size={Math.random() > 0.5 ? 'md' : 'lg'} 
+            />
           </div>
         ))}
       </div>
       
-      <div className="container mx-auto px-4 relative z-10">
-        <div className="flex flex-col items-center text-center max-w-4xl mx-auto animate-royal-entrance">
-          <div className="rounded-full bg-royal-gold/10 p-4 mb-6">
-            <Crown className="h-12 w-12 text-royal-gold animate-crown-glow" />
+      <div className="container relative z-10 mx-auto px-4 py-12">
+        <div className="flex flex-col items-center text-center mb-8">
+          {/* Logo with animation */}
+          <div className="mb-6 animate-royal-entrance">
+            <SpendThroneLogo variant="full" className="h-24 md:h-32" animated />
           </div>
           
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 font-royal">
-            <span className="royal-gradient">The Ultimate Pay-to-Win</span>
-            <br />
-            <span className="royal-gradient">Social Experience</span>
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-4 tracking-tight animate-royal-entrance animation-delay-100">
+            <span className="bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-400 text-transparent bg-clip-text">
+              SpendThrone
+            </span>
           </h1>
           
-          <p className="text-white/80 max-w-3xl mb-8 text-lg md:text-xl leading-relaxed">
-            Welcome to the realm where your <span className="text-royal-gold">wealth</span> determines your <span className="text-royal-gold">worth</span>. 
-            Spend real money to climb the ranks in this satirical social experiment where $1 = 1 unit of rank.
+          <p className="text-xl md:text-2xl text-white/70 max-w-3xl animate-royal-entrance animation-delay-200">
+            The ultimate pay-to-win social experience where your status is determined by how much you spend!
           </p>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10 w-full">
-            <div className="glass-morphism rounded-lg p-5 flex flex-col items-center">
-              <DollarSign className="h-8 w-8 text-royal-gold mb-3" />
-              <h3 className="font-bold text-xl mb-2">Pay to Rank</h3>
-              <p className="text-white/70 text-sm text-center">Your rank is exactly equal to how much you've spent. Simple as that.</p>
+          {/* CTA buttons */}
+          <div className="flex flex-col sm:flex-row gap-4 mt-8 animate-royal-entrance animation-delay-300">
+            {!isAuthenticated ? (
+              <>
+                <Link to="/register">
+                  <Button 
+                    variant="royalGold" 
+                    size="lg" 
+                    className="relative group"
+                  >
+                    <span className="absolute inset-0 w-full h-full rounded-md blur opacity-30 bg-gradient-to-r from-amber-400 to-yellow-300 group-hover:opacity-50 transition duration-300"></span>
+                    <span className="relative flex items-center">
+                      <Icon name="crown" size="sm" className="mr-2" />
+                      Claim Your Throne
+                    </span>
+                  </Button>
+                </Link>
+                <Link to="/leaderboard">
+                  <Button 
+                    variant="outline" 
+                    size="lg" 
+                    className="border-royal-gold/50 text-royal-gold hover:bg-royal-gold/10 hover:text-royal-gold/90"
+                  >
+                    <Icon name="trophy" size="sm" className="mr-2" />
+                    View Leaderboard
+                  </Button>
+                </Link>
+              </>
+            ) : (
+              <>
+                <Link to="/deposit">
+                  <Button 
+                    variant="royalGold" 
+                    size="lg" 
+                    className="relative group"
+                  >
+                    <span className="absolute inset-0 w-full h-full rounded-md blur opacity-30 bg-gradient-to-r from-amber-400 to-yellow-300 group-hover:opacity-50 transition duration-300"></span>
+                    <span className="relative flex items-center">
+                      <Icon name="coin" size="sm" className="mr-2" />
+                      Increase Your Power
+                    </span>
+                  </Button>
+                </Link>
+                <Link to="/leaderboard">
+                  <Button 
+                    variant="outline" 
+                    size="lg" 
+                    className="border-royal-gold/50 text-royal-gold hover:bg-royal-gold/10 hover:text-royal-gold/90"
+                  >
+                    <Icon name="trophy" size="sm" className="mr-2" />
+                    View Your Rank
+                  </Button>
+                </Link>
+              </>
+            )}
+          </div>
+        </div>
+        
+        {/* Features section */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
+          <div className="bg-black/30 backdrop-blur-sm rounded-lg p-6 border border-white/10 animate-royal-entrance animation-delay-400">
+            <div className="rounded-full w-12 h-12 flex items-center justify-center bg-gradient-to-br from-amber-400 to-yellow-600 mb-4">
+              <Icon name="crown" size="md" />
             </div>
-            
-            <div className="glass-morphism rounded-lg p-5 flex flex-col items-center">
-              <Users className="h-8 w-8 text-royal-gold mb-3" />
-              <h3 className="font-bold text-xl mb-2">Join a Team</h3>
-              <p className="text-white/70 text-sm text-center">Choose Red, Green, or Blue and compete for team dominance.</p>
-            </div>
-            
-            <div className="glass-morphism rounded-lg p-5 flex flex-col items-center">
-              <Award className="h-8 w-8 text-royal-gold mb-3" />
-              <h3 className="font-bold text-xl mb-2">Win Prizes</h3>
-              <p className="text-white/70 text-sm text-center">Top spenders receive rewards from the Affluent Assembly prize pool.</p>
-            </div>
+            <h3 className="text-xl font-bold mb-2">Pay To Win</h3>
+            <p className="text-white/70">Your rank is determined solely by how much you spend. It's that simple.</p>
           </div>
           
-          <Button
-            onClick={handleGetStarted}
-            className="text-black bg-gradient-to-r from-royal-gold-dark via-royal-gold to-royal-gold-bright hover:opacity-90 text-lg px-8 py-6 h-auto group"
-          >
-            <span>Begin Your Noble Journey</span>
-            <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-          </Button>
+          <div className="bg-black/30 backdrop-blur-sm rounded-lg p-6 border border-white/10 animate-royal-entrance animation-delay-500">
+            <div className="rounded-full w-12 h-12 flex items-center justify-center bg-gradient-to-br from-amber-400 to-yellow-600 mb-4">
+              <Icon name="Users" size="md" />
+            </div>
+            <h3 className="text-xl font-bold mb-2">Join A Team</h3>
+            <p className="text-white/70">Ally with Red, Green, or Blue teams and compete for glory and rewards.</p>
+          </div>
           
-          <p className="mt-4 text-white/50 text-sm flex items-center">
-            <Sparkles className="h-4 w-4 mr-1 text-royal-gold/70" />
-            <span>
-              No skills required. Money is the only qualification.
-            </span>
-          </p>
+          <div className="bg-black/30 backdrop-blur-sm rounded-lg p-6 border border-white/10 animate-royal-entrance animation-delay-600">
+            <div className="rounded-full w-12 h-12 flex items-center justify-center bg-gradient-to-br from-amber-400 to-yellow-600 mb-4">
+              <Icon name="Sparkles" size="md" />
+            </div>
+            <h3 className="text-xl font-bold mb-2">Special Perks</h3>
+            <p className="text-white/70">Unlock exclusive profile features, badges, and more as you spend.</p>
+          </div>
         </div>
       </div>
     </div>

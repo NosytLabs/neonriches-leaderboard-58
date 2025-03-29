@@ -1,23 +1,47 @@
 
 import React from 'react';
-import Header from './Header';
-import Footer from './Footer';
+import { cn } from '@/lib/utils';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 
-export interface ShellProps {
+interface ShellProps {
   children: React.ReactNode;
-  hideFooter?: boolean;
+  className?: string;
+  fullHeight?: boolean;
+  transparentHeader?: boolean;
+  paddingTop?: boolean;
+  noFooter?: boolean;
 }
 
-const Shell: React.FC<ShellProps> = ({ children, hideFooter = false }) => {
+/**
+ * Shell component for page layout with header and footer
+ */
+const Shell: React.FC<ShellProps> = ({
+  children,
+  className,
+  fullHeight = false,
+  transparentHeader = false,
+  paddingTop = true,
+  noFooter = false,
+}) => {
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-b from-gray-900 to-black">
-      <Header />
+    <div
+      className={cn(
+        'flex flex-col min-h-screen bg-background',
+        fullHeight ? 'h-screen' : '',
+        className
+      )}
+    >
+      <Header transparent={transparentHeader} />
       
-      <main className="flex-grow">
+      <main className={cn(
+        'flex-1',
+        paddingTop && 'pt-16'
+      )}>
         {children}
       </main>
       
-      {!hideFooter && <Footer />}
+      {!noFooter && <Footer />}
     </div>
   );
 };

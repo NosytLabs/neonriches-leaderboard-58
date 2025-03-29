@@ -14,37 +14,37 @@ const MainNav = ({ className, ...props }: React.HTMLAttributes<HTMLElement>) => 
     {
       title: "Home",
       href: "/",
-      icon: <Icon name="home" size="sm" />
+      icon: "Home"
     },
     {
       title: "Leaderboard",
       href: "/leaderboard",
-      icon: <Icon name="trophy" size="sm" />
+      icon: "trophy"
     },
     {
       title: "Teams",
       href: "/teams",
-      icon: <Icon name="user" size="sm" />
+      icon: "Users"
     },
     {
       title: "Profile",
       href: user ? `/profile/${user.username}` : "/profile",
-      icon: <Icon name="profile" size="sm" />
+      icon: "User"
     },
     {
       title: "Deposit",
       href: "/deposit",
-      icon: <Icon name="dollar" size="sm" />
+      icon: "coin"
     },
     {
       title: "Stats",
       href: "/stats",
-      icon: <Icon name="bar-chart" size="sm" />
+      icon: "BarChart"
     },
     {
       title: "Enhance",
       href: "/profile-enhancements",
-      icon: <Icon name="star" size="sm" />
+      icon: "Sparkles"
     }
   ];
 
@@ -59,14 +59,14 @@ const MainNav = ({ className, ...props }: React.HTMLAttributes<HTMLElement>) => 
           to={item.href}
           className={({ isActive }) =>
             cn(
-              "flex items-center space-x-2 text-sm font-medium transition-colors hover:text-white",
+              "flex items-center space-x-2 text-sm font-medium transition-colors hover:text-white group",
               isActive
                 ? "text-white"
                 : "text-muted-foreground"
             )
           }
         >
-          {item.icon}
+          <Icon name={item.icon as any} size="sm" className="group-hover:scale-110 transition-transform duration-300" />
           <span className="hidden md:inline">{item.title}</span>
         </NavLink>
       ))}
