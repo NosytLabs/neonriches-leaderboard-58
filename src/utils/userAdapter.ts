@@ -1,71 +1,99 @@
 
 import { User, UserProfile, TeamType } from '@/types/user';
 
-/**
- * Converts a UserProfile to a User object
- * This helps bridge the gap between different user representations in the system
- */
-export function adaptUserProfileToUser(profile: UserProfile): User {
-  return {
-    ...profile,
-    // Ensure all required fields are present
-    spentTotal: profile.totalSpent || profile.amountSpent || profile.spentTotal || 0,
-    totalSpent: profile.totalSpent || profile.amountSpent || profile.spentTotal || 0,
-    amountSpent: profile.amountSpent || profile.totalSpent || profile.spentTotal || 0,
-    joinedAt: profile.joinedAt || (profile.joined ? new Date(profile.joined).toISOString() : new Date().toISOString()),
-    joined: profile.joined || new Date(profile.joinedAt || new Date()),
-    // Set defaults for other core properties if missing
-    walletBalance: profile.walletBalance || 0,
-    rank: profile.rank || 0,
-    tier: profile.tier || 'basic',
-    role: profile.role || 'user',
-    team: profile.team || null
-  };
-}
+// Convert User to UserProfile format
+export const ensureUserProfile = (user: User | UserProfile): UserProfile => {
+  // Already a UserProfile if it doesn't have uid
+  if (!('uid' in user)) {
+    return user as UserProfile;
+  }
 
-/**
- * Converts a User to a UserProfile object
- */
-export function adaptUserToUserProfile(user: User): UserProfile {
+  // Convert from User to UserProfile
   return {
-    ...user,
-    // Ensure all required fields are present
-    totalSpent: user.totalSpent || user.amountSpent || user.spentTotal || 0,
-    spentTotal: user.spentTotal || user.totalSpent || user.amountSpent || 0, 
-    amountSpent: user.amountSpent || user.totalSpent || user.spentTotal || 0,
-    joinedAt: user.joinedAt || (user.joined ? new Date(user.joined).toISOString() : new Date().toISOString()),
-    joined: user.joined || new Date(user.joinedAt || new Date()),
-    // Set defaults for other core properties if missing
+    id: user.id || user.uid || '',
+    username: user.username,
+    displayName: user.displayName,
+    profileImage: user.profileImage,
+    bio: user.bio,
+    email: user.email,
+    tier: user.tier,
+    team: user.team,
+    rank: user.rank,
+    previousRank: user.previousRank,
+    amountSpent: user.amountSpent || user.spentAmount || 0,
+    spentAmount: user.amountSpent || user.spentAmount || 0,
     walletBalance: user.walletBalance || 0,
-    rank: user.rank || 0,
-    tier: user.tier || 'basic',
-    role: user.role || 'user',
-    team: user.team || null
+    joinedAt: user.joinedAt || user.joinDate || user.createdAt,
+    joinDate: user.joinedAt || user.joinDate || user.createdAt,
+    createdAt: user.createdAt,
+    lastLogin: user.lastLogin,
+    isAuthenticated: user.isAuthenticated,
+    isAdmin: user.isAdmin,
+    isVIP: user.isVIP,
+    cosmetics: user.cosmetics,
+    spendStreak: user.spendStreak || 0,
+    profileBoosts: user.profileBoosts || [],
+    settings: user.settings,
+    socialLinks: user.socialLinks || [],
+    badges: user.badges || [],
+    activeTitle: user.activeTitle,
+    activeMockeryEffects: user.activeMockeryEffects,
+    certificateNFT: user.certificateNFT
   };
-}
-
-/**
- * Creates a leaderboard user from a standard user
- */
-export function createLeaderboardUser(user: Partial<User>) {
-  return {
-    id: user.id || '',
-    username: user.username || '',
-    displayName: user.displayName || user.username || '',
-    profileImage: user.profileImage || '',
-    tier: user.tier || 'basic',
-    team: user.team || null,
-    rank: user.rank || 0,
-    previousRank: user.previousRank || 0,
-    amountSpent: user.amountSpent || user.totalSpent || user.spentTotal || 0,
-    avatarUrl: user.avatarUrl || user.profileImage || '',
-    isVerified: user.isVerified || false,
-    isProtected: false
-  };
-}
-
-export default {
-  adaptUserProfileToUser,
-  adaptUserToUserProfile,
-  createLeaderboardUser
 };
+
+// Convert UserProfile to User format
+export const ensureUser = (userProfile: UserProfile | User): User => {
+  // Already a User if it has uid
+  if ('uid' in userProfile) {
+    return userProfile as User;
+  }
+
+  // Convert from UserProfile to User
+  return {
+    id: userProfile.id,
+    uid: userProfile.id,
+    username: userProfile.username,
+    displayName: userProfile.displayName,
+    profileImage: userProfile.profileImage,
+    bio: userProfile.bio,
+    email: userProfile.email,
+    tier: userProfile.tier,
+    team: userProfile.team,
+    rank: userProfile.rank,
+    previousRank: userProfile.previousRank,
+    amountSpent: userProfile.amountSpent || userProfile.spentAmount || 0,
+    spentAmount: userProfile.amountSpent || userProfile.spentAmount || 0,
+    walletBalance: userProfile.walletBalance || 0,
+    joinedAt: userProfile.joinedAt || userProfile.joinDate || userProfile.createdAt,
+    joinDate: userProfile.joinedAt || userProfile.joinDate || userProfile.createdAt,
+    createdAt: userProfile.createdAt,
+    lastLogin: userProfile.lastLogin,
+    isAuthenticated: userProfile.isAuthenticated,
+    isAdmin: userProfile.isAdmin,
+    isVIP: userProfile.isVIP,
+    cosmetics: userProfile.cosmetics,
+    spendStreak: userProfile.spendStreak || 0,
+    profileBoosts: userProfile.profileBoosts || [],
+    settings: userProfile.settings,
+    socialLinks: userProfile.socialLinks || [],
+    badges: userProfile.badges || [],
+    activeTitle: userProfile.activeTitle,
+    activeMockeryEffects: userProfile.activeMockeryEffects,
+    certificateNFT: userProfile.certificateNFT
+  };
+};
+
+// Create a partial user object with default values
+export const createPartialUser = (partialUser: Partial<User>): Partial<User> => {
+  return {
+    ...partialUser,
+    rank: partialUser.rank || 999,
+    previousRank: partialUser.previousRank || partialUser.rank || 999,
+    amountSpent: partialUser.amountSpent || partialUser.spentAmount || 0,
+    profileImage: partialUser.profileImage || partialUser.avatarUrl,
+    isAuthenticated: partialUser.isAuthenticated || partialUser.isVerified || false,
+  };
+};
+
+export default ensureUser;

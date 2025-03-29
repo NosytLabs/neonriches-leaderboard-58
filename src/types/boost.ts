@@ -1,22 +1,27 @@
 
-export type BoostEffectType = 'glow' | 'sparkle' | 'crown' | 'shine' | 'aura' | 'highlight';
-
 export interface BoostEffect {
   id: string;
   name: string;
   description: string;
-  minTier: string;
-  duration: number; // in hours
-  strength: number;
-  cssClass: string;
-  allowStacking: boolean;
-  iconName?: string;
+  duration: number; // in milliseconds
+  price: number;
+  rarity: 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
+  tier?: 'free' | 'premium' | 'royal';
+  cost?: number;
+  type?: string;
+  cssClass?: string;
 }
 
 export interface ProfileBoost {
   id: string;
-  effectId: string;
-  startDate: string;
-  endDate: string;
-  level: number;
+  name: string;
+  description: string;
+  duration: number;
+  startTime: number;
+  endTime: number;
+  effectId?: string;
+  strength?: number;
+  type?: string;
 }
+
+export type BoostEffectType = 'border' | 'glow' | 'background' | 'particles' | 'animation';

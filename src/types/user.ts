@@ -1,54 +1,78 @@
-// You'll need to add this file if it doesn't exist or update it
-// with the new purchasedFeatures field
 
-export type UserTier = 'free' | 'standard' | 'premium' | 'royal';
+// User type definitions
 
-export interface UserProfile {
+export type UserTier = 'standard' | 'premium' | 'royal';
+
+export type User = {
   id: string;
-  username?: string;
+  uid?: string;
+  username: string;
   displayName?: string;
   profileImage?: string;
   bio?: string;
   email?: string;
   tier?: UserTier;
   team?: string;
-  rank?: number;
-  amountSpent?: number;
-  totalSpent?: number;
-  walletBalance?: number;
-  joinedAt?: string;
-  lastActive?: string;
-  subscription?: UserSubscription;
-  profileViews?: number;
-  profileClicks?: number;
-  followers?: number;
-  profileBoosts?: ProfileBoost[];
+  rank: number;
+  previousRank?: number;
+  amountSpent: number;
+  spentAmount?: number; // Alias for amountSpent for backwards compatibility
+  walletBalance: number;
+  isAuthenticated?: boolean;
+  isAdmin?: boolean;
+  isVIP?: boolean;
+  joinedAt: string;
+  joinDate?: string; // Alias for joinedAt for backwards compatibility
+  createdAt: string;
+  lastLogin?: string;
   cosmetics?: UserCosmetics;
+  spendStreak?: number;
+  profileBoosts?: ProfileBoost[];
+  settings?: UserSettings;
+  socialLinks?: SocialLink[];
+  badges?: string[];
   activeTitle?: string;
-  purchasedFeatures?: string[]; // Array of feature IDs that the user has purchased individually
-  gender?: string;
-  mockeryCount?: number; // Total times the user has been mocked
-  mockedOthersCount?: number; // Total times the user has mocked others
-  activeMockeryEffects?: string[]; // IDs of active mockery effects on this user
+  activeMockeryEffects?: string[];
+  certificateNFT?: {
+    mintAddress: string;
+    imageUrl: string;
+    metadata: any;
+  };
+};
+
+export type UserProfile = User;
+
+export interface UserSettings {
+  notifications: {
+    email: boolean;
+    marketing: boolean;
+    rankChanges: boolean;
+    teamUpdates: boolean;
+  };
+  privacy: {
+    showSpending: boolean;
+    showProfile: boolean;
+    allowMockery: boolean;
+    allowTaunts: boolean;
+  };
+  display: {
+    theme: string;
+    colorMode: 'light' | 'dark' | 'system';
+    animations: boolean;
+    showEffects: boolean;
+  };
 }
 
-export interface User extends UserProfile {
-  uid: string;
+export interface SocialLink {
+  platform: string;
+  url: string;
+  isVerified?: boolean;
 }
 
-export interface UserSubscription {
-  id: string;
-  tier: UserTier;
-  status: 'active' | 'canceled' | 'past_due' | 'trialing';
-  currentPeriodEnd?: string;
-  cancelAtPeriodEnd?: boolean;
-}
-
-export interface ProfileBoost {
-  id: string;
-  level: number;
-  startDate: string;
-  endDate: string;
+export interface ProfileImage {
+  url: string;
+  isPremium: boolean;
+  isActive: boolean;
 }
 
 export interface UserCosmetics {
@@ -64,7 +88,35 @@ export interface UserCosmetics {
   activeBorder?: string;
   activeColor?: string;
   activeFont?: string;
+  activeEmoji?: string;
+  activeBadge?: string;
+  activeBackground?: string;
+  activeEffect?: string;
   foundersPass?: boolean;
-  mockeryImmunities?: number; // Number of mockery immunity shields remaining
-  mockeryProtections?: number; // Number of mockery protection shields remaining
 }
+
+export interface ProfileBoost {
+  id: string;
+  name: string;
+  description: string;
+  duration: number;
+  startTime: number;
+  endTime: number;
+  effectId?: string;
+  strength?: number;
+  type?: string;
+}
+
+export type ProfileTab = 'overview' | 'settings' | 'subscription' | 'activity' | 'wallet' | 'achievements' | 'faq';
+
+export type UserGender = 'king' | 'queen' | 'other';
+export type TeamType = 'red' | 'blue' | 'green';
+export type UserTeam = {
+  id: string;
+  name: string;
+  description: string;
+  color: string;
+  members: number;
+  totalSpent: number;
+  rank: number;
+};

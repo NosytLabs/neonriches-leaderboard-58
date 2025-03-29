@@ -136,7 +136,7 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
                       </div>
                       <div className="text-xs text-white/50 flex items-center">
                         <Scroll className="h-3 w-3 mr-1 text-white/40" />
-                        Joined {new Date(user.joinDate || user.joinedAt).toLocaleDateString()}
+                        Joined {new Date(user.joinedAt || user.joinDate || "").toLocaleDateString()}
                       </div>
                     </div>
                   </div>
@@ -159,7 +159,7 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
                 <td className="px-4 py-3 text-right">
                   <div className="flex items-center justify-end">
                     <DollarSign className="h-4 w-4 text-royal-gold mr-0.5" />
-                    <span className="font-mono">{user.amountSpent?.toLocaleString() || user.spentAmount?.toLocaleString() || 0}</span>
+                    <span className="font-mono">{(user.amountSpent || user.spentAmount || 0).toLocaleString()}</span>
                   </div>
                 </td>
                 

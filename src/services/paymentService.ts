@@ -1,64 +1,42 @@
 
-import { TransactionType } from '@/types/transaction';
+import { User, UserProfile } from '@/types/user';
+import { ensureUser } from '@/utils/userAdapter';
+import { toast } from '@/hooks/use-toast';
 
-interface Transaction {
-  id: string;
-  userId: string;
-  amount: number;
-  type: TransactionType;
-  description: string;
-  metadata?: Record<string, any>;
-  timestamp: string;
+export type TransactionType = 'deposit' | 'purchase' | 'refund' | 'transfer' | 'withdrawal';
+
+interface TransactionDetails {
+  itemId?: string;
+  category?: string;
+  targetUser?: string;
+  description?: string;
 }
 
-// Mock transaction storage
-const transactions: Transaction[] = [];
-
-// Record a new transaction
-export const recordTransaction = (
-  userId: string,
+export const processPayment = async (
+  user: User | UserProfile,
   amount: number,
   type: TransactionType,
   description: string,
-  metadata?: Record<string, any>
-): Transaction => {
-  const transaction: Transaction = {
-    id: `tx_${Date.now()}`,
-    userId,
-    amount,
-    type,
-    description,
-    metadata,
-    timestamp: new Date().toISOString()
-  };
-  
-  // Store transaction
-  transactions.push(transaction);
-  
-  return transaction;
+  details: TransactionDetails = {}
+): Promise<boolean> => {
+  try {
+    // This is a mock implementation
+    console.log(`Processing payment of $${amount} for ${user.username}`);
+    
+    // Simulate API call
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    // Mock success
+    return true;
+  } catch (error) {
+    console.error('Payment processing error:', error);
+    toast({
+      title: "Payment Failed",
+      description: "There was an error processing your payment",
+      variant: "destructive",
+    });
+    return false;
+  }
 };
 
-// Get user transactions
-export const getUserTransactions = (userId: string): Transaction[] => {
-  return transactions.filter(tx => tx.userId === userId);
-};
-
-// Get transaction by ID
-export const getTransactionById = (txId: string): Transaction | undefined => {
-  return transactions.find(tx => tx.id === txId);
-};
-
-// Get total spent by user
-export const getTotalSpentByUser = (userId: string): number => {
-  return transactions
-    .filter(tx => tx.userId === userId && ['spend', 'purchase'].includes(tx.type))
-    .reduce((sum, tx) => sum + tx.amount, 0);
-};
-
-// Export the functions
-export default {
-  recordTransaction,
-  getUserTransactions,
-  getTransactionById,
-  getTotalSpentByUser
-};
+export default processPayment;

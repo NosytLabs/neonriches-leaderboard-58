@@ -1,171 +1,175 @@
-import React from 'react';
-import { Link, NavLink } from 'react-router-dom';
-import { useAuth } from '@/contexts/auth';
-import { useTheme } from '@/contexts/theme';
-import { useMockeryContext } from '@/contexts/MockeryContext';
-import { useResponsive } from '@/hooks/use-responsive';
-import { cn } from '@/lib/utils';
-import { MoonIcon, SunIcon, Crown, Logout, User, MessageSquare, Settings, Sparkles, Shield, Home, Users, TrendingUp } from 'lucide-react';
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { Switch } from "@/components/ui/switch"
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
-import { Button } from '@/components/ui/button';
-import { ModeToggle } from '@/components/ui/mode-toggle';
-import RoyalDecoration from '@/components/ui/royal-decoration';
-import { getInitials } from '@/utils/teamUtils';
 
-const Header: React.FC<{ transparent?: boolean }> = ({ transparent = false }) => {
-  const { user, logout } = useAuth();
-  const { isDarkMode, toggleTheme } = useTheme();
-  const { isMocking, toggleMocking } = useMockeryContext();
-  const { isMobile, isTablet } = useResponsive();
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '@/hooks/useAuth';
+import { useTheme } from '@/hooks/useTheme';
+import { useMockery } from '@/hooks/useMockery';
+import { Button } from '@/components/ui/button';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { Crown, DollarSign, LogOut, Menu, Bell, Wallet, Settings, User, Shield } from 'lucide-react';
+import { 
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Switch } from '@/components/ui/switch';
+import { ModeToggle } from '@/components/ui/mode-toggle';
+import { cn } from '@/lib/utils';
+import Logo from '@/components/brand/Logo';
+import BetaTag from '@/components/ui/beta-tag';
+import MobileMenu from '@/components/navigation/MobileMenu';
+import ThemeSwitcher from '@/components/ui/theme-switcher';
+
+const Header: React.FC = () => {
+  const { user, logout, isAuthenticated } = useAuth();
+  const { theme, setTheme } = useTheme();
+  const { mockeryEnabled, toggleMockery } = useMockery();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
+  const navigate = useNavigate();
   
   const handleLogout = async () => {
     await logout();
+    navigate('/');
   };
   
+  const toggleMobileMenu = () => {
+    setMobileMenuOpen(!mobileMenuOpen);
+  };
+
   return (
-    <header className={cn(
-      'sticky top-0 z-40 w-full backdrop-blur-sm border-b',
-      transparent ? 'bg-transparent border-transparent' : 'bg-background/95 border-border',
-      isMobile ? 'safe-top' : ''
-    )}>
-      <div className="container flex items-center h-16 space-x-4 sm:justify-between sm:space-x-0">
-        <Link to="/" className="flex items-center font-semibold">
-          <Crown className="mr-2 h-6 w-6 text-royal-gold" />
-          <span className="hidden sm:inline-block">SpendThrone</span>
-        </Link>
-        
-        <div className="flex-1 hidden sm:block">
-          <nav className="flex items-center space-x-6">
-            <NavLink to="/" className={({ isActive }) => cn("text-white/70 hover:text-white transition-colors", isActive ? "text-white" : "")}>
-              <Home className="mr-2 h-4 w-4 inline-block" />
-              Home
-            </NavLink>
-            <NavLink to="/leaderboard" className={({ isActive }) => cn("text-white/70 hover:text-white transition-colors", isActive ? "text-white" : "")}>
-              <TrendingUp className="mr-2 h-4 w-4 inline-block" />
+    <header className="sticky top-0 z-40 w-full border-b border-white/10 backdrop-blur-sm bg-black/60">
+      <div className="container flex h-16 items-center justify-between py-2">
+        <div className="flex items-center gap-4 md:gap-6">
+          <Link to="/" className="flex items-center gap-2">
+            <Logo size="sm" />
+            <span className="font-display text-xl hidden sm:inline-block text-white">
+              SpendThrone
+            </span>
+            <BetaTag position="top-right" />
+          </Link>
+          
+          <nav className="hidden md:flex gap-4 items-center">
+            <Link 
+              to="/leaderboard" 
+              className="text-white/70 hover:text-white transition-colors text-sm font-medium"
+            >
               Leaderboard
-            </NavLink>
-            <NavLink to="/teams" className={({ isActive }) => cn("text-white/70 hover:text-white transition-colors", isActive ? "text-white" : "")}>
-              <Users className="mr-2 h-4 w-4 inline-block" />
-              Teams
-            </NavLink>
-            <NavLink to="/mockery" className={({ isActive }) => cn("text-white/70 hover:text-white transition-colors", isActive ? "text-white" : "")}>
-              <MessageSquare className="mr-2 h-4 w-4 inline-block" />
-              Mockery
-            </NavLink>
-            <NavLink to="/history-of-status" className={({ isActive }) => cn("text-white/70 hover:text-white transition-colors", isActive ? "text-white" : "")}>
-              <Shield className="mr-2 h-4 w-4 inline-block" />
-              History
-            </NavLink>
+            </Link>
+            <Link 
+              to="/about" 
+              className="text-white/70 hover:text-white transition-colors text-sm font-medium"
+            >
+              About
+            </Link>
+            <Link 
+              to="/features" 
+              className="text-white/70 hover:text-white transition-colors text-sm font-medium"
+            >
+              Features
+            </Link>
+            {isAuthenticated && (
+              <Link 
+                to="/profile" 
+                className="text-white/70 hover:text-white transition-colors text-sm font-medium"
+              >
+                Profile
+              </Link>
+            )}
           </nav>
         </div>
         
-        {/* Mobile-friendly account section */}
-        {isMobile ? (
-          <div className="flex items-center space-x-2">
-            {user ? (
+        <div className="flex items-center gap-2">
+          {isAuthenticated ? (
+            <>
+              <Link to="/deposit" className="hidden sm:block">
+                <Button variant="royal" size="sm" className="flex items-center gap-1">
+                  <DollarSign className="h-4 w-4" />
+                  <span>Add Funds</span>
+                </Button>
+              </Link>
+              
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-                    <Avatar className="h-8 w-8">
-                      <AvatarImage src={user?.profileImage} alt={user?.username} />
-                      <AvatarFallback>{getInitials(user?.username || 'ST')}</AvatarFallback>
+                  <Button variant="ghost" size="icon" className="rounded-full">
+                    <Avatar className="h-8 w-8 border border-white/20">
+                      {user?.profileImage ? (
+                        <AvatarImage src={user.profileImage} alt={user.username} />
+                      ) : (
+                        <AvatarFallback className="bg-royal-purple/20 text-royal-purple">
+                          {user?.username?.charAt(0)?.toUpperCase() || 'U'}
+                        </AvatarFallback>
+                      )}
                     </Avatar>
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" forceMount>
-                  <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                  <DropdownMenuItem asChild>
-                    <Link to={`/profile`}>
-                      <User className="mr-2 h-4 w-4" />
-                      <span>Profile</span>
-                    </Link>
+                <DropdownMenuContent align="end" className="w-56 mt-2 glass-morphism border-white/10">
+                  <DropdownMenuLabel className="flex items-center gap-2">
+                    <Shield className="h-4 w-4 text-royal-gold" />
+                    <span>Rank #{user?.rank || 0}</span>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator className="bg-white/10" />
+                  <DropdownMenuItem onClick={() => navigate('/profile')}>
+                    <User className="h-4 w-4 mr-2" /> Profile
                   </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link to="/settings">
-                      <Settings className="mr-2 h-4 w-4" />
-                      <span>Settings</span>
-                    </Link>
+                  <DropdownMenuItem onClick={() => navigate('/wallet')}>
+                    <Wallet className="h-4 w-4 mr-2" /> Wallet
                   </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem className="cursor-pointer" onSelect={handleLogout}>
-                    <Logout className="mr-2 h-4 w-4" />
-                    <span>Log out</span>
+                  <DropdownMenuItem onClick={() => navigate('/settings')}>
+                    <Settings className="h-4 w-4 mr-2" /> Settings
                   </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            ) : (
-              <>
-                <Button variant="ghost" asChild>
-                  <Link to="/login">Log In</Link>
-                </Button>
-                <Button asChild>
-                  <Link to="/signup">Sign Up</Link>
-                </Button>
-              </>
-            )}
-          </div>
-        ) : (
-          <div className="flex items-center space-x-2">
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger>
-                  <Switch id="mockery" onChecked={isMocking} onCheckedChange={toggleMocking} />
-                </TooltipTrigger>
-                <TooltipContent>
-                  Toggle Mockery
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-            
-            <ModeToggle />
-            
-            {user ? (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-                    <Avatar className="h-8 w-8">
-                      <AvatarImage src={user?.profileImage} alt={user?.username} />
-                      <AvatarFallback>{getInitials(user?.username || 'ST')}</AvatarFallback>
-                    </Avatar>
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" forceMount>
-                  <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                  <DropdownMenuItem asChild>
-                    <Link to={`/profile`}>
-                      <User className="mr-2 h-4 w-4" />
-                      <span>Profile</span>
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link to="/settings">
-                      <Settings className="mr-2 h-4 w-4" />
-                      <span>Settings</span>
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem className="cursor-pointer" onSelect={handleLogout}>
-                    <Logout className="mr-2 h-4 w-4" />
-                    <span>Log out</span>
+                  <DropdownMenuSeparator className="bg-white/10" />
+                  <div className="px-2 py-1.5 text-sm flex justify-between items-center">
+                    <span className="text-white/60">Mockery Mode</span>
+                    <Switch 
+                      id="mockery-toggle"
+                      checked={mockeryEnabled} 
+                      onCheckedChange={toggleMockery}
+                    />
+                  </div>
+                  <DropdownMenuSeparator className="bg-white/10" />
+                  <DropdownMenuItem onClick={handleLogout} className="text-destructive hover:text-destructive">
+                    <LogOut className="h-4 w-4 mr-2" /> Logout
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
-            ) : (
-              <>
-                <Button variant="ghost" asChild>
-                  <Link to="/login">Log In</Link>
+            </>
+          ) : (
+            <div className="flex gap-2 items-center">
+              <Link to="/login">
+                <Button variant="outline" size="sm" className="hidden md:flex glass-button">
+                  Login
                 </Button>
-                <Button asChild>
-                  <Link to="/signup">Sign Up</Link>
+              </Link>
+              <Link to="/signup">
+                <Button variant="royalGold" size="sm" className="hidden md:flex">
+                  <Crown className="h-4 w-4 mr-2" />
+                  Begin Ascent
                 </Button>
-              </>
-            )}
+              </Link>
+            </div>
+          )}
+          
+          <div className="flex md:hidden">
+            <Button variant="ghost" size="icon" onClick={toggleMobileMenu}>
+              <Menu className="h-5 w-5" />
+            </Button>
           </div>
-        )}
+          
+          <ModeToggle />
+        </div>
       </div>
+      
+      {mobileMenuOpen && (
+        <MobileMenu 
+          isAuthenticated={isAuthenticated} 
+          onClose={toggleMobileMenu} 
+          onLogout={handleLogout}
+          user={user}
+        />
+      )}
     </header>
   );
 };
