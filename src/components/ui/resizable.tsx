@@ -57,10 +57,13 @@ const ResizableHandle = forwardRef<
 ));
 ResizableHandle.displayName = 'ResizableHandle';
 
-// Correctly define the ResizableSeparator component with proper prop typing
+// Define a proper type for ResizableSeparator props
+type ResizableSeparatorProps = Omit<ResizableHandleProps, 'withHandle'>;
+
+// Use ElementRef with the correct base component (ResizablePrimitive.PanelResizeHandle)
 const ResizableSeparator = forwardRef<
-  React.ElementRef<typeof ResizableHandle>,
-  Omit<ComponentProps<typeof ResizableHandle>, 'withHandle'>
+  ElementRef<typeof ResizablePrimitive.PanelResizeHandle>,
+  ResizableSeparatorProps
 >(({ className, ...props }, ref) => (
   <ResizableHandle
     ref={ref}
