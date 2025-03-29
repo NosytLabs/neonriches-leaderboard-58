@@ -1,3 +1,4 @@
+
 export interface User {
   id: string;
   email: string;
@@ -73,6 +74,7 @@ export interface UserCosmetics {
   activeColor?: string | null;
   activeFont?: string | null;
   foundersPass?: boolean;
+  socialLinks?: SocialLink[];
 }
 
 export interface SocialLink {

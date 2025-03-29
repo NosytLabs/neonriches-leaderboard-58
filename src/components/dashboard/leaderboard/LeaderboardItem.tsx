@@ -1,243 +1,260 @@
-import React from 'react';
-import { User } from '@/types/user';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { 
-  DropdownMenu, 
-  DropdownMenuContent, 
-  DropdownMenuItem, 
-  DropdownMenuTrigger 
-} from '@/components/ui/dropdown-menu';
-import { 
-  Crown, 
-  ChevronUp, 
-  ChevronDown, 
-  MoreHorizontal, 
-  Eye, 
-  MessageSquare, 
-  Flag, 
-  Target 
-} from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { formatCurrency } from '@/utils/formatters';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '@/contexts/auth';
-import { useToast } from '@/hooks/use-toast';
 
-interface LeaderboardItemProps {
-  user: User;
+import React, { useState } from 'react';
+import { motion } from 'framer-motion';
+import { Shield, Flame, TrendingUp, TrendingDown, Crown, Check, ChevronRight, DollarSign } from 'lucide-react';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { Badge } from '@/components/ui/badge';
+import { User } from '@/types/user';
+import { formatCurrency, formatCompactNumber } from '@/utils/formatters';
+import { getTeamColor } from '@/utils/teamUtils';
+import { getTierBadge } from '@/utils/tierUtils';
+
+export interface LeaderboardUser {
+  id: string;
+  username: string;
+  displayName?: string;
+  profileImage?: string;
   rank: number;
   previousRank?: number;
-  isCurrentUser?: boolean;
-  onShame?: (userId: string, action: string) => void;
-  onMessage?: (userId: string) => void;
-  onFollow?: (userId: string) => void;
-  className?: string;
+  team?: 'red' | 'green' | 'blue' | null;
+  tier?: string;
+  totalSpent?: number;
+  amountSpent?: number;
+  spentAmount?: number;
+  isVerified?: boolean;
+  isProtected?: boolean;
 }
 
-const LeaderboardItem: React.FC<LeaderboardItemProps> = ({ 
-  user, 
-  rank,
-  previousRank,
-  isCurrentUser = false,
-  onShame,
-  onMessage,
-  onFollow,
-  className
+export interface LeaderboardItemProps {
+  userData: LeaderboardUser;
+  index: number;
+  currentUserId: string;
+  isOnCooldown: boolean;
+  onProfileClick: (userId: string) => void;
+  onShameUser: (user: LeaderboardUser, type?: string) => void;
+}
+
+const LeaderboardItem: React.FC<LeaderboardItemProps> = ({
+  userData,
+  index,
+  currentUserId,
+  isOnCooldown,
+  onProfileClick,
+  onShameUser
 }) => {
-  const navigate = useNavigate();
-  const { user: currentUser } = useAuth();
-  const { toast } = useToast();
+  const [isHovered, setIsHovered] = useState(false);
   
-  const rankChange = previousRank ? previousRank - rank : 0;
+  const isCurrentUser = userData.id === currentUserId;
   
-  const handleViewProfile = () => {
-    navigate(`/profile/${user.username}`);
+  const {
+    id,
+    username,
+    displayName,
+    profileImage,
+    rank,
+    previousRank,
+    team,
+    tier,
+    totalSpent = 0,
+    amountSpent = 0,
+    spentAmount = 0
+  } = userData;
+  
+  const teamColor = getTeamColor(team);
+  const actualSpentAmount = totalSpent || amountSpent || spentAmount || 0;
+  
+  // Rank change display
+  const rankChange = previousRank !== undefined ? previousRank - rank : undefined;
+  const rankDirection = rankChange ? (rankChange > 0 ? 'up' : rankChange < 0 ? 'down' : 'same') : undefined;
+  
+  const handleMouseEnter = () => {
+    setIsHovered(true);
   };
   
-  const handleMessage = () => {
-    if (!currentUser) {
-      toast({
-        title: "Authentication Required",
-        description: "You must be logged in to message users.",
-        variant: "destructive"
-      });
-      return;
-    }
-    
-    if (onMessage) {
-      onMessage(user.id);
-    }
+  const handleMouseLeave = () => {
+    setIsHovered(false);
   };
   
-  const handleShame = (action: string) => {
-    if (!currentUser) {
-      toast({
-        title: "Authentication Required",
-        description: "You must be logged in to shame users.",
-        variant: "destructive"
-      });
-      return;
-    }
-    
-    if (onShame) {
-      onShame(user.id, action);
-    }
+  const handleShameClick = () => {
+    onShameUser(userData);
   };
   
-  const handleFollow = () => {
-    if (!currentUser) {
-      toast({
-        title: "Authentication Required",
-        description: "You must be logged in to follow users.",
-        variant: "destructive"
-      });
-      return;
-    }
-    
-    if (onFollow) {
-      onFollow(user.id);
-    }
+  const handleProfileClick = () => {
+    onProfileClick(id);
+  };
+  
+  // Generate initials for avatar fallback
+  const getInitials = () => {
+    const nameToUse = displayName || username || 'User';
+    return nameToUse.substring(0, 2).toUpperCase();
+  };
+  
+  // Format rank for display
+  const formatRank = (rank: number) => {
+    return `#${rank.toLocaleString()}`;
   };
   
   return (
-    <div 
-      className={cn(
-        "relative flex items-center p-3 rounded-lg transition-all",
-        isCurrentUser ? "glass-morphism border-royal-gold/30" : "glass-morphism border-white/10 hover:border-white/20",
-        className
-      )}
+    <motion.div
+      className={`${isCurrentUser ? 'glass-morphism border-royal-gold/30' : 'glass-morphism border-white/10'} 
+        rounded-lg p-3 transition-all ${isHovered ? 'bg-black/20' : 'bg-black/10'} relative`}
+      whileHover={{ scale: 1.01 }}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3, delay: index * 0.05 }}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     >
-      {/* Rank */}
-      <div className="flex items-center justify-center w-10 mr-3">
-        <div className="text-lg font-bold">
-          {rank <= 3 ? (
-            <span className="flex items-center justify-center">
-              <Crown 
-                className={cn(
-                  "h-5 w-5",
-                  rank === 1 ? "text-royal-gold" : 
-                  rank === 2 ? "text-gray-300" : 
-                  "text-amber-600"
-                )} 
-              />
-              {rank}
-            </span>
-          ) : (
-            <span>{rank}</span>
+      {/* Rank indicator */}
+      <div className="absolute top-3 left-3 font-semibold text-sm">
+        <div className="flex items-center">
+          <span className={`${index < 3 ? 'text-royal-gold' : 'text-white/70'}`}>
+            {formatRank(rank)}
+          </span>
+          
+          {rankChange !== undefined && rankDirection && (
+            <div className="ml-2">
+              {rankDirection === 'up' && (
+                <span className="flex items-center text-emerald-500 text-xs">
+                  <TrendingUp size={12} className="mr-0.5" />
+                  {Math.abs(rankChange)}
+                </span>
+              )}
+              {rankDirection === 'down' && (
+                <span className="flex items-center text-red-500 text-xs">
+                  <TrendingDown size={12} className="mr-0.5" />
+                  {Math.abs(rankChange)}
+                </span>
+              )}
+            </div>
           )}
         </div>
       </div>
       
-      {/* Rank change indicator */}
-      {rankChange !== 0 && (
-        <div 
-          className={cn(
-            "absolute top-2 left-1 flex items-center text-xs font-medium",
-            rankChange > 0 ? "text-green-500" : "text-red-500"
-          )}
-        >
-          {rankChange > 0 ? (
-            <ChevronUp className="h-3 w-3" />
-          ) : (
-            <ChevronDown className="h-3 w-3" />
-          )}
-          <span>{Math.abs(rankChange)}</span>
+      {/* Top spender badge */}
+      {index < 3 && (
+        <div className="absolute -top-2 -right-2 z-10">
+          <Badge 
+            className={`${index === 0 ? 'bg-royal-gold text-black' : 
+                       index === 1 ? 'bg-gray-300 text-black' : 
+                       'bg-amber-700 text-white'} 
+                       font-bold px-2 py-1 royal-shadow`}
+          >
+            <Crown className="h-3 w-3 mr-1" />
+            <span>{index === 0 ? 'KING' : index === 1 ? '2ND' : '3RD'}</span>
+          </Badge>
         </div>
       )}
       
-      {/* Avatar */}
-      <Avatar 
-        className={cn(
-          "h-10 w-10 border",
-          isCurrentUser ? "border-royal-gold" : "border-white/20"
-        )}
-      >
-        <AvatarImage src={user.profileImage} alt={user.username} />
-        <AvatarFallback className="bg-royal-navy text-white">
-          {user.username.substring(0, 2).toUpperCase()}
-        </AvatarFallback>
-      </Avatar>
-      
-      {/* User info */}
-      <div className="ml-3 flex-1 min-w-0">
-        <div className="flex items-center">
-          <h3 className="font-medium truncate">
-            {user.username}
-          </h3>
-          
-          {user.verified && (
-            <Badge variant="outline" className="ml-2 bg-blue-500/10 text-blue-400 border-blue-500/30 px-1.5 py-0">
-              <Crown className="h-3 w-3 mr-1" />
-              <span className="text-xs">Verified</span>
-            </Badge>
-          )}
-          
-          {user.team && (
-            <Badge 
-              variant="outline" 
-              className={cn(
-                "ml-2 px-1.5 py-0",
-                user.team === 'red' ? "bg-team-red/10 text-team-red border-team-red/30" :
-                user.team === 'green' ? "bg-team-green/10 text-team-green border-team-green/30" :
-                "bg-team-blue/10 text-team-blue border-team-blue/30"
-              )}
-            >
-              <span className="text-xs">{user.team}</span>
-            </Badge>
-          )}
-        </div>
-        
-        <div className="flex items-center text-sm text-white/60">
-          <span className="truncate">
-            {formatCurrency(user.amountSpent || 0)} spent
-          </span>
-        </div>
-      </div>
-      
-      {/* Actions */}
-      <div className="flex items-center space-x-1">
-        <Button 
-          variant="ghost" 
-          size="icon" 
-          className="h-8 w-8" 
-          onClick={handleViewProfile}
+      <div className="flex items-center mt-3">
+        {/* Avatar */}
+        <Avatar 
+          className="h-12 w-12 border-2 border-white/10 cursor-pointer hover:border-royal-gold/50 transition-colors"
+          onClick={handleProfileClick}
         >
-          <Eye className="h-4 w-4" />
-        </Button>
+          <AvatarImage src={profileImage} alt={displayName || username} />
+          <AvatarFallback className="bg-gradient-to-br from-gray-800 to-gray-900">
+            {getInitials()}
+          </AvatarFallback>
+        </Avatar>
         
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" className="h-8 w-8">
-              <MoreHorizontal className="h-4 w-4" />
+        <div className="ml-3 flex-grow">
+          {/* Username and Verification */}
+          <div className="flex items-center">
+            <h3 
+              className={`font-semibold ${isCurrentUser ? 'text-royal-gold' : ''} cursor-pointer hover:text-royal-gold transition-colors`}
+              onClick={handleProfileClick}
+            >
+              {displayName || username}
+            </h3>
+            {userData.isVerified && (
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Check className="h-4 w-4 text-blue-500 ml-1" />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Verified User</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            )}
+          </div>
+          
+          {/* User metadata */}
+          <div className="flex items-center text-xs text-white/60 mt-1">
+            <span>@{username}</span>
+            
+            {team && (
+              <>
+                <span className="mx-1">•</span>
+                <span className={`font-medium ${teamColor}`}>
+                  Team {team.charAt(0).toUpperCase() + team.slice(1)}
+                </span>
+              </>
+            )}
+            
+            {tier && (
+              <>
+                <span className="mx-1">•</span>
+                <span>{getTierBadge(tier)}</span>
+              </>
+            )}
+          </div>
+        </div>
+        
+        {/* Amount spent */}
+        <div className="text-right">
+          <div className="flex items-center justify-end font-semibold text-royal-gold">
+            <DollarSign className="h-4 w-4 mr-0.5" />
+            <span>{formatCurrency(actualSpentAmount)}</span>
+          </div>
+          
+          {/* Action buttons */}
+          <div className="mt-2 flex justify-end">
+            {!isCurrentUser && (
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button 
+                      size="icon" 
+                      variant="ghost" 
+                      className="h-8 w-8 bg-black/20 hover:bg-black/30 hover:text-royal-crimson"
+                      onClick={handleShameClick}
+                      disabled={isOnCooldown || userData.isProtected}
+                    >
+                      {userData.isProtected ? (
+                        <Shield className="h-4 w-4 text-royal-navy" />
+                      ) : (
+                        <Flame className="h-4 w-4" />
+                      )}
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    {userData.isProtected 
+                      ? "This user is protected from mockery" 
+                      : isOnCooldown 
+                        ? "You're on cooldown" 
+                        : "Mock this user"}
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            )}
+            
+            <Button 
+              size="icon" 
+              variant="ghost" 
+              className="h-8 w-8 bg-black/20 hover:bg-black/30 ml-1"
+              onClick={handleProfileClick}
+            >
+              <ChevronRight className="h-4 w-4" />
             </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-48 glass-morphism border-white/10">
-            <DropdownMenuItem onClick={handleViewProfile}>
-              <Eye className="mr-2 h-4 w-4" />
-              <span>View Profile</span>
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={handleMessage}>
-              <MessageSquare className="mr-2 h-4 w-4" />
-              <span>Message</span>
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={handleFollow}>
-              <Crown className="mr-2 h-4 w-4" />
-              <span>Follow</span>
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => handleShame('tomatoes')}>
-              <Target className="mr-2 h-4 w-4 text-royal-crimson" />
-              <span>Shame</span>
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => navigate(`/report/${user.id}`)}>
-              <Flag className="mr-2 h-4 w-4" />
-              <span>Report</span>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+          </div>
+        </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

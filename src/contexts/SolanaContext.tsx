@@ -1,305 +1,207 @@
 
-import React, { FC, ReactNode, useMemo, useState, useEffect, createContext, useContext } from 'react';
-import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
-import { ConnectionProvider, WalletProvider, useWallet, useConnection } from '@solana/wallet-adapter-react';
-import { WalletModalProvider } from '@solana/wallet-adapter-react-ui';
-import { 
-  PhantomWalletAdapter,
-  SolflareWalletAdapter,
-  TorusWalletAdapter,
-  LedgerWalletAdapter,
-  CloverWalletAdapter
-} from '@solana/wallet-adapter-wallets';
-import { clusterApiUrl, Connection, PublicKey, Transaction, SystemProgram, LAMPORTS_PER_SOL } from '@solana/web3.js';
-import { useToast } from '@/hooks/use-toast';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/auth';
-import { UserProfile } from '@/types/user';
+import { PublicKey, Transaction, Connection } from '@solana/web3.js';
+import { useToast } from '@/hooks/use-toast';
 
-// Import wallet adapter CSS
-import '@solana/wallet-adapter-react-ui/styles.css';
-
-// Define Solana context types
-interface SolanaContextType {
-  connected: boolean;
-  publicKey: PublicKey | null;
-  walletBalance: number;
-  connectWallet: () => void;
-  disconnectWallet: () => void;
-  signMessage: (message: string) => Promise<Uint8Array | null>;
-  sendSol: (recipient: string, amount: number) => Promise<string | null>;
-  signTransaction: (transaction: Transaction) => Promise<Transaction | null>;
-  linkWalletToAccount: () => Promise<boolean>;
-  isConnecting: boolean;
-  hasWallet: boolean;
-  walletPubkey: string | null;
+interface SolanaProviderProps {
+  children: React.ReactNode;
 }
 
-const SolanaContext = createContext<SolanaContextType | null>(null);
+interface SolanaContextValue {
+  connected: boolean;
+  publicKey: PublicKey | null;
+  connectWallet: () => Promise<boolean>;
+  disconnect: () => Promise<void>;
+  signTransaction: (transaction: Transaction) => Promise<Transaction>;
+  signAllTransactions: (transactions: Transaction[]) => Promise<Transaction[]>;
+  signMessage: (message: string) => Promise<Uint8Array | null>;
+  connection: Connection | null;
+  walletAddress: string | null;
+}
 
-export const SolanaProvider: FC<{ children: ReactNode }> = ({ children }) => {
-  // Network setup - default to devnet for now, can be changed to mainnet-beta for production
-  const network = WalletAdapterNetwork.Devnet;
-  const endpoint = useMemo(() => clusterApiUrl(network), [network]);
-  
-  // Configure the wallet adapters
-  const wallets = useMemo(
-    () => [
-      new PhantomWalletAdapter(),
-      new SolflareWalletAdapter(),
-      new TorusWalletAdapter(),
-      new LedgerWalletAdapter(),
-      new CloverWalletAdapter()
-    ],
-    []
-  );
+const SolanaContext = createContext<SolanaContextValue | null>(null);
 
-  return (
-    <ConnectionProvider endpoint={endpoint}>
-      <WalletProvider wallets={wallets} autoConnect>
-        <WalletModalProvider>
-          <SolanaContextProvider>
-            {children}
-          </SolanaContextProvider>
-        </WalletModalProvider>
-      </WalletProvider>
-    </ConnectionProvider>
-  );
-};
-
-const SolanaContextProvider: FC<{ children: ReactNode }> = ({ children }) => {
-  const { connection } = useConnection();
-  const wallet = useWallet();
+export const SolanaProvider: React.FC<SolanaProviderProps> = ({ children }) => {
+  const [connected, setConnected] = useState(false);
+  const [publicKey, setPublicKey] = useState<PublicKey | null>(null);
+  const [connection, setConnection] = useState<Connection | null>(null);
+  const [walletAddress, setWalletAddress] = useState<string | null>(null);
+  const [phantom, setPhantom] = useState<any>(null);
+  const { user, updateUserProfile } = useAuth();
   const { toast } = useToast();
-  
-  // Use a try-catch for useAuth since it might not be available initially
-  let auth = { user: null, updateUserProfile: null };
-  try {
-    auth = useAuth();
-  } catch (error) {
-    console.warn("Auth context not available yet");
-  }
-  
-  const { user, updateUserProfile } = auth as { 
-    user: UserProfile | null, 
-    updateUserProfile: ((updates: Partial<UserProfile>) => Promise<void>) | null 
-  };
-  
-  const [walletBalance, setWalletBalance] = useState<number>(0);
-  const [isConnecting, setIsConnecting] = useState<boolean>(false);
-  const [hasWallet, setHasWallet] = useState<boolean>(false);
 
-  // Check if wallet exists
+  // Check for Phantom wallet
   useEffect(() => {
-    const checkWalletExists = async () => {
-      try {
-        // Check if the window object has solana property (Phantom, Solflare, etc.)
-        const hasWallet = 'solana' in window || 'phantom' in window;
-        setHasWallet(hasWallet);
-      } catch (error) {
-        console.error('Error checking wallet existence:', error);
-        setHasWallet(false);
-      }
-    };
-
-    checkWalletExists();
-  }, []);
-
-  // Update balance when wallet changes
-  useEffect(() => {
-    const updateBalance = async () => {
-      if (wallet.publicKey && connection) {
+    const checkForPhantom = async () => {
+      // @ts-ignore
+      const phantomWallet = window.phantom?.solana;
+      
+      if (phantomWallet) {
+        setPhantom(phantomWallet);
+        
         try {
-          const balance = await connection.getBalance(wallet.publicKey);
-          setWalletBalance(balance / LAMPORTS_PER_SOL);
+          // Initialize connection
+          const connection = new Connection(
+            process.env.SOLANA_RPC_URL || 'https://api.mainnet-beta.solana.com',
+            'confirmed'
+          );
+          setConnection(connection);
+          
+          // Check if already connected
+          if (phantomWallet.isConnected) {
+            const publicKey = phantomWallet.publicKey;
+            
+            if (publicKey) {
+              setPublicKey(publicKey);
+              setWalletAddress(publicKey.toString());
+              setConnected(true);
+              
+              // Update user profile if logged in
+              if (user && user.id && !user.walletAddress) {
+                updateUserProfile({
+                  walletAddress: publicKey.toString()
+                });
+              }
+            }
+          }
         } catch (error) {
-          console.error('Error fetching wallet balance:', error);
-          setWalletBalance(0);
+          console.error('Failed to initialize Solana connection:', error);
         }
-      } else {
-        setWalletBalance(0);
       }
     };
-
-    updateBalance();
-    // Set up an interval to periodically update the balance
-    const intervalId = setInterval(updateBalance, 15000); // every 15 seconds
     
-    return () => clearInterval(intervalId);
-  }, [wallet.publicKey, connection]);
+    checkForPhantom();
+  }, [user, updateUserProfile]);
 
   // Connect wallet
-  const connectWallet = async () => {
-    if (!wallet.wallet && wallet.select) {
-      wallet.select('phantom' as any);
-    }
-    
+  const connectWallet = async (): Promise<boolean> => {
     try {
-      setIsConnecting(true);
-      await wallet.connect();
+      if (!phantom) {
+        toast({
+          title: "Phantom Wallet Not Found",
+          description: "Please install Phantom wallet extension and refresh the page.",
+          variant: "destructive"
+        });
+        return false;
+      }
+      
+      const { publicKey } = await phantom.connect();
+      
+      if (publicKey) {
+        setPublicKey(publicKey);
+        setWalletAddress(publicKey.toString());
+        setConnected(true);
+        
+        // Update user profile if logged in
+        if (user && user.id) {
+          updateUserProfile({
+            walletAddress: publicKey.toString()
+          });
+        }
+        
+        return true;
+      }
+      
+      return false;
+    } catch (error: any) {
+      console.error('Connect wallet error:', error);
       
       toast({
-        title: "Wallet Connected",
-        description: `Connected to ${wallet.publicKey?.toString().slice(0, 4)}...${wallet.publicKey?.toString().slice(-4)}`,
-      });
-    } catch (error: any) {
-      toast({
         title: "Connection Failed",
-        description: error.message || "Could not connect to wallet",
-        variant: "destructive",
+        description: error.message || "Failed to connect Phantom wallet",
+        variant: "destructive"
       });
-    } finally {
-      setIsConnecting(false);
+      
+      return false;
     }
   };
 
   // Disconnect wallet
-  const disconnectWallet = async () => {
+  const disconnect = async (): Promise<void> => {
     try {
-      await wallet.disconnect();
+      if (phantom) {
+        await phantom.disconnect();
+      }
       
-      toast({
-        title: "Wallet Disconnected",
-        description: "Your wallet has been disconnected",
-      });
+      setPublicKey(null);
+      setWalletAddress(null);
+      setConnected(false);
+    } catch (error) {
+      console.error('Disconnect wallet error:', error);
+    }
+  };
+
+  // Sign transaction
+  const signTransaction = async (transaction: Transaction): Promise<Transaction> => {
+    if (!phantom) {
+      throw new Error('Phantom wallet not connected');
+    }
+    
+    try {
+      const signedTransaction = await phantom.signTransaction(transaction);
+      return signedTransaction;
     } catch (error: any) {
-      toast({
-        title: "Disconnection Failed",
-        description: error.message || "Could not disconnect wallet",
-        variant: "destructive",
-      });
+      console.error('Sign transaction error:', error);
+      throw new Error(error.message || 'Failed to sign transaction');
+    }
+  };
+
+  // Sign all transactions
+  const signAllTransactions = async (transactions: Transaction[]): Promise<Transaction[]> => {
+    if (!phantom) {
+      throw new Error('Phantom wallet not connected');
+    }
+    
+    try {
+      const signedTransactions = await phantom.signAllTransactions(transactions);
+      return signedTransactions;
+    } catch (error: any) {
+      console.error('Sign all transactions error:', error);
+      throw new Error(error.message || 'Failed to sign transactions');
     }
   };
 
   // Sign message
   const signMessage = async (message: string): Promise<Uint8Array | null> => {
+    if (!phantom) {
+      throw new Error('Phantom wallet not connected');
+    }
+    
     try {
-      if (!wallet.signMessage) {
-        throw new Error("Wallet doesn't support message signing");
-      }
-      
-      const encodedMessage = new TextEncoder().encode(message);
-      const signature = await wallet.signMessage(encodedMessage);
-      
+      // Convert message to Uint8Array
+      const messageBytes = new TextEncoder().encode(message);
+      const signature = await phantom.signMessage(messageBytes);
       return signature;
     } catch (error: any) {
-      toast({
-        title: "Signing Failed",
-        description: error.message || "Failed to sign message",
-        variant: "destructive",
-      });
-      return null;
-    }
-  };
-
-  // Send SOL
-  const sendSol = async (recipient: string, amount: number): Promise<string | null> => {
-    try {
-      if (!wallet.publicKey || !wallet.signTransaction) {
-        throw new Error("Wallet not connected");
-      }
+      console.error('Sign message error:', error);
       
-      const recipientPubkey = new PublicKey(recipient);
-      const transaction = new Transaction().add(
-        SystemProgram.transfer({
-          fromPubkey: wallet.publicKey,
-          toPubkey: recipientPubkey,
-          lamports: amount * LAMPORTS_PER_SOL,
-        })
-      );
-      
-      transaction.feePayer = wallet.publicKey;
-      const { blockhash } = await connection.getLatestBlockhash();
-      transaction.recentBlockhash = blockhash;
-      
-      const signedTransaction = await wallet.signTransaction(transaction);
-      const signature = await connection.sendRawTransaction(signedTransaction.serialize());
-      
-      toast({
-        title: "Transaction Sent",
-        description: `Sent ${amount} SOL to ${recipient.slice(0, 4)}...${recipient.slice(-4)}`,
-      });
-      
-      return signature;
-    } catch (error: any) {
-      toast({
-        title: "Transaction Failed",
-        description: error.message || "Failed to send SOL",
-        variant: "destructive",
-      });
-      return null;
-    }
-  };
-
-  // Sign transaction
-  const signTransaction = async (transaction: Transaction): Promise<Transaction | null> => {
-    try {
-      if (!wallet.signTransaction) {
-        throw new Error("Wallet doesn't support transaction signing");
-      }
-      
-      return await wallet.signTransaction(transaction);
-    } catch (error: any) {
-      toast({
-        title: "Signing Failed",
-        description: error.message || "Failed to sign transaction",
-        variant: "destructive",
-      });
-      return null;
-    }
-  };
-
-  // Context value
-  const contextValue: SolanaContextType = {
-    connected: wallet.connected,
-    publicKey: wallet.publicKey,
-    walletBalance,
-    connectWallet,
-    disconnectWallet,
-    signMessage,
-    sendSol,
-    signTransaction,
-    linkWalletToAccount: async (): Promise<boolean> => {
-      try {
-        if (!wallet.publicKey || !user || !updateUserProfile) {
-          return false;
-        }
-        
-        // Sign a message to verify wallet ownership
-        const message = `Linking wallet ${wallet.publicKey.toString()} to SpendThrone account ${user.username} at ${new Date().toISOString()}`;
-        const signature = await signMessage(message);
-        
-        if (!signature) {
-          return false;
-        }
-        
-        // Update user profile with wallet address
-        await updateUserProfile({
-          ...user,
-          walletAddress: wallet.publicKey.toString(),
-        });
-        
+      if (error.code !== 4001) { // 4001 is user rejection
         toast({
-          title: "Wallet Linked",
-          description: "Your wallet has been linked to your account",
+          title: "Signature Failed",
+          description: error.message || "Failed to sign message",
+          variant: "destructive"
         });
-        
-        return true;
-      } catch (error: any) {
-        toast({
-          title: "Link Failed",
-          description: error.message || "Failed to link wallet to account",
-          variant: "destructive",
-        });
-        return false;
       }
-    },
-    isConnecting,
-    hasWallet,
-    walletPubkey: wallet.publicKey?.toString() || null,
+      
+      return null;
+    }
   };
 
   return (
-    <SolanaContext.Provider value={contextValue}>
+    <SolanaContext.Provider
+      value={{
+        connected,
+        publicKey,
+        connectWallet,
+        disconnect,
+        signTransaction,
+        signAllTransactions,
+        signMessage,
+        connection,
+        walletAddress
+      }}
+    >
       {children}
     </SolanaContext.Provider>
   );
@@ -307,10 +209,10 @@ const SolanaContextProvider: FC<{ children: ReactNode }> = ({ children }) => {
 
 export const useSolana = () => {
   const context = useContext(SolanaContext);
+  
   if (!context) {
     throw new Error('useSolana must be used within a SolanaProvider');
   }
+  
   return context;
 };
-
-export default SolanaProvider;

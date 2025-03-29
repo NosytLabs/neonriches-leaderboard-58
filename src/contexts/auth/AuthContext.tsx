@@ -1,22 +1,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { User } from '@/types/user';
-
-interface AuthContextType {
-  user: User | null;
-  isAuthenticated: boolean;
-  isLoading: boolean;
-  login: (email: string, password: string) => Promise<void>;
-  register: (username: string, email: string, password: string) => Promise<void>;
-  logout: () => Promise<void>;
-  signOut: () => Promise<void>;
-  updateUserProfile: (updates: Partial<User>) => Promise<void>;
-  awardCosmetic?: (id: string, category: string, rarity: string, source: string) => Promise<boolean>;
-  boostProfile?: (duration: number) => Promise<boolean>;
-  openAuthModal: () => void;
-  closeAuthModal?: () => void;
-  error: Error | null;
-}
+import { AuthContextType } from '@/types/auth-context';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 

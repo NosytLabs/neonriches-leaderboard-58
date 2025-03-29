@@ -108,3 +108,78 @@ export const getMockeryPrice = (action: MockeryAction): number => {
     default: return 1.00;
   }
 };
+
+// Convert action to tier
+export const convertActionToTier = (action: MockeryAction): MockeryTier => {
+  switch (action) {
+    case 'tomatoes':
+    case 'dunce':
+    case 'taunt':
+      return 'common';
+    case 'eggs':
+    case 'roast':
+    case 'ridicule':
+      return 'uncommon';
+    case 'stocks':
+    case 'silence':
+    case 'drama':
+      return 'rare';
+    case 'courtJester':
+    case 'jester':
+    case 'protected':
+      return 'epic';
+    case 'immune':
+      return 'legendary';
+    default:
+      return 'common';
+  }
+};
+
+// Get mockery text (different from description)
+export const getMockeryText = (action: MockeryAction): string => {
+  switch (action) {
+    case 'tomatoes': return "Rotten Tomatoes";
+    case 'eggs': return "Rotten Eggs";
+    case 'stocks': return "Public Stocks";
+    case 'silence': return "Royal Silence";
+    case 'courtJester': return "Court Jester";
+    case 'jester': return "Royal Jester";
+    case 'protected': return "Royal Protection";
+    case 'immune': return "Royal Immunity";
+    case 'dunce': return "Dunce Cap";
+    case 'roast': return "Royal Roast";
+    case 'ridicule': return "Public Ridicule";
+    case 'taunt': return "Royal Taunt";
+    case 'drama': return "Court Drama";
+    default: return "Unknown";
+  }
+};
+
+// Get mockery color for UI elements
+export const getMockeryColor = (action: MockeryAction): string => {
+  const tier = convertActionToTier(action);
+  return getTierColor(tier);
+};
+
+// Get icon for mockery action
+export const getMockeryIcon = (action: MockeryAction): string => {
+  switch (action) {
+    case 'tomatoes': return 'tomato';
+    case 'eggs': return 'egg';
+    case 'stocks': return 'stocks';
+    case 'silence': return 'mute';
+    case 'courtJester': return 'jester-hat';
+    case 'jester': return 'jester-hat';
+    case 'protected': return 'shield';
+    case 'immune': return 'shield-star';
+    case 'dunce': return 'dunce-cap';
+    case 'roast': return 'fire';
+    case 'ridicule': return 'laugh';
+    case 'taunt': return 'message-circle';
+    case 'drama': return 'theater-masks';
+    default: return 'help-circle';
+  }
+};
+
+// Get mockery cost (alias for getMockeryPrice for compatibility)
+export const getMockeryCost = getMockeryPrice;

@@ -1,291 +1,258 @@
 
-import React, { useRef, useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
 interface ThroneCoinSceneProps {
+  size?: 'sm' | 'md' | 'lg';
+  animated?: boolean;
+  interactive?: boolean;
   className?: string;
 }
 
-const ThroneCoinScene: React.FC<ThroneCoinSceneProps> = ({ className }) => {
+const ThroneCoinScene = ({
+  size = 'md',
+  animated = true,
+  interactive = true,
+  className = ''
+}: ThroneCoinSceneProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
-
+  const sceneRef = useRef<THREE.Scene | null>(null);
+  const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
+  const frameIdRef = useRef<number | null>(null);
+  const controlsRef = useRef<OrbitControls | null>(null);
+  
+  // Get dimensions based on size prop
+  const getDimensions = () => {
+    switch (size) {
+      case 'sm':
+        return { width: 150, height: 150 };
+      case 'lg':
+        return { width: 400, height: 400 };
+      case 'md':
+      default:
+        return { width: 300, height: 300 };
+    }
+  };
+  
+  // Initialize the scene
   useEffect(() => {
     if (!containerRef.current) return;
     
-    // Initialize scene
+    // Create scene
     const scene = new THREE.Scene();
+    sceneRef.current = scene;
     
-    // Setup camera
-    const camera = new THREE.PerspectiveCamera(
-      75,
-      containerRef.current.clientWidth / containerRef.current.clientHeight,
-      0.1,
-      1000
-    );
-    camera.position.z = 10;
-    camera.position.y = 3;
+    // Set up background
+    scene.background = new THREE.Color(0x090909);
     
-    // Setup renderer
+    // Create camera
+    const { width, height } = getDimensions();
+    const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
+    camera.position.z = 7;
+    cameraRef.current = camera;
+    
+    // Create renderer
     const renderer = new THREE.WebGLRenderer({ 
       antialias: true,
-      alpha: true 
+      alpha: true
     });
-    renderer.setSize(containerRef.current.clientWidth, containerRef.current.clientHeight);
-    renderer.setClearColor(0x000000, 0); // Transparent background
+    renderer.setSize(width, height);
+    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.shadowMap.enabled = true;
     containerRef.current.appendChild(renderer.domElement);
     rendererRef.current = renderer;
     
+    // Add controls if interactive
+    if (interactive) {
+      const controls = new OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.05;
+      controls.minDistance = 3;
+      controls.maxDistance = 15;
+      controls.enablePan = false;
+      controlsRef.current = controls;
+    }
+    
     // Add lighting
-    const ambientLight = new THREE.AmbientLight(0x404040, 1);
+    const ambientLight = new THREE.AmbientLight(0x404040, 2);
     scene.add(ambientLight);
     
-    const dirLight1 = new THREE.DirectionalLight(0xffff80, 2);
-    dirLight1.position.set(5, 10, 7.5);
-    scene.add(dirLight1);
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+    directionalLight.position.set(5, 5, 5);
+    directionalLight.castShadow = true;
+    scene.add(directionalLight);
     
-    const dirLight2 = new THREE.DirectionalLight(0x8080ff, 1.5);
-    dirLight2.position.set(-5, 5, -7.5);
-    scene.add(dirLight2);
+    const directionalLight2 = new THREE.DirectionalLight(0xffaa00, 0.8);
+    directionalLight2.position.set(-5, 5, -5);
+    scene.add(directionalLight2);
     
-    // Add a spotlight for the throne
-    const spotlight = new THREE.SpotLight(0xd4af37, 2);
-    spotlight.position.set(0, 10, 5);
-    spotlight.angle = Math.PI / 6;
-    spotlight.penumbra = 0.5;
-    spotlight.decay = 2;
-    spotlight.distance = 50;
-    scene.add(spotlight);
+    // Create throne
+    const throneGroup = new THREE.Group();
     
-    // Create the throne
-    const createThrone = () => {
-      // Throne group
-      const throneGroup = new THREE.Group();
-      
-      // Throne base
-      const baseGeometry = new THREE.BoxGeometry(5, 1, 4);
-      const baseMaterial = new THREE.MeshPhongMaterial({ color: 0x7851a9 });
-      const base = new THREE.Mesh(baseGeometry, baseMaterial);
-      base.position.y = 0.5;
-      throneGroup.add(base);
-      
-      // Throne seat
-      const seatGeometry = new THREE.BoxGeometry(4, 1, 3);
-      const seatMaterial = new THREE.MeshPhongMaterial({ color: 0x9b2335 });
-      const seat = new THREE.Mesh(seatGeometry, seatMaterial);
-      seat.position.y = 1.5;
-      throneGroup.add(seat);
-      
-      // Throne back
-      const backGeometry = new THREE.BoxGeometry(4, 4, 1);
-      const backMaterial = new THREE.MeshPhongMaterial({ color: 0x9b2335 });
-      const back = new THREE.Mesh(backGeometry, backMaterial);
-      back.position.y = 3.5;
-      back.position.z = -1;
-      throneGroup.add(back);
-      
-      // Throne armrests
-      const armGeometry = new THREE.BoxGeometry(0.6, 1, 3);
-      const armMaterial = new THREE.MeshPhongMaterial({ color: 0x7851a9 });
-      
-      const leftArm = new THREE.Mesh(armGeometry, armMaterial);
-      leftArm.position.set(-2.3, 2, 0);
-      throneGroup.add(leftArm);
-      
-      const rightArm = new THREE.Mesh(armGeometry, armMaterial);
-      rightArm.position.set(2.3, 2, 0);
-      throneGroup.add(rightArm);
-      
-      // Crown on top
-      const crownGroup = new THREE.Group();
-      
-      // Crown base
-      const crownBaseGeometry = new THREE.CylinderGeometry(0.8, 1, 0.5, 8);
-      const crownBaseMaterial = new THREE.MeshPhongMaterial({ 
-        color: 0xd4af37,
-        metalness: 0.7,
-        roughness: 0.3,
-      });
-      const crownBase = new THREE.Mesh(crownBaseGeometry, crownBaseMaterial);
-      crownBase.position.y = 6;
-      crownGroup.add(crownBase);
-      
-      // Crown points
-      const createCrownPoint = (angle: number) => {
-        const pointGeometry = new THREE.ConeGeometry(0.2, 0.7, 8);
-        const pointMaterial = new THREE.MeshPhongMaterial({ 
-          color: 0xd4af37,
-          metalness: 0.7,
-          roughness: 0.3,
-        });
-        const point = new THREE.Mesh(pointGeometry, pointMaterial);
-        const radius = 0.8;
-        point.position.x = Math.cos(angle) * radius;
-        point.position.z = Math.sin(angle) * radius;
-        point.position.y = 6.5;
-        crownGroup.add(point);
-      };
-      
-      // Create crown points
-      for (let i = 0; i < 8; i++) {
-        createCrownPoint((i / 8) * Math.PI * 2);
-      }
-      
-      throneGroup.add(crownGroup);
-      
-      // Add decorative elements
-      const addOrb = (x: number, y: number, z: number, color: number) => {
-        const geometry = new THREE.SphereGeometry(0.3, 16, 16);
-        const material = new THREE.MeshPhongMaterial({ 
-          color,
-          metalness: 0.7,
-          roughness: 0.3,
-        });
-        const orb = new THREE.Mesh(geometry, material);
-        orb.position.set(x, y, z);
-        throneGroup.add(orb);
-      };
-      
-      // Add decorative orbs
-      addOrb(-1.5, 5.6, 0, 0xd4af37);
-      addOrb(1.5, 5.6, 0, 0xd4af37);
-      addOrb(0, 5.6, 0, 0x9b2335);
-      
-      return throneGroup;
-    };
+    // Throne base
+    const baseGeometry = new THREE.BoxGeometry(3, 0.5, 3);
+    const baseMaterial = new THREE.MeshPhongMaterial({ 
+      color: 0x8B4513,
+      shininess: 50
+    });
+    const base = new THREE.Mesh(baseGeometry, baseMaterial);
+    base.position.y = -2;
+    base.castShadow = true;
+    base.receiveShadow = true;
+    throneGroup.add(base);
     
-    // Create and add the throne
-    const throne = createThrone();
-    scene.add(throne);
+    // Throne seat
+    const seatGeometry = new THREE.BoxGeometry(2.5, 0.5, 2);
+    const seatMaterial = new THREE.MeshPhongMaterial({ 
+      color: 0x800000,
+      shininess: 100,
+      specular: 0x111111
+    });
+    const seat = new THREE.Mesh(seatGeometry, seatMaterial);
+    seat.position.y = -1.5;
+    seat.castShadow = true;
+    seat.receiveShadow = true;
+    throneGroup.add(seat);
     
-    // Create floating coins
-    const coins: THREE.Group[] = [];
-    const createCoin = () => {
-      const coinGroup = new THREE.Group();
-      
-      // Coin body
-      const coinGeometry = new THREE.CylinderGeometry(0.5, 0.5, 0.1, 32);
-      const coinMaterial = new THREE.MeshPhongMaterial({ 
-        color: 0xd4af37,
-        metalness: 0.7,
-        roughness: 0.3,
-      });
-      const coin = new THREE.Mesh(coinGeometry, coinMaterial);
-      coinGroup.add(coin);
-      
-      // Coin edge details
-      const edgeGeometry = new THREE.TorusGeometry(0.5, 0.05, 16, 32);
-      const edgeMaterial = new THREE.MeshPhongMaterial({ 
-        color: 0xf5cc5d,
-        metalness: 0.7,
-        roughness: 0.3,
-      });
-      const edge = new THREE.Mesh(edgeGeometry, edgeMaterial);
-      edge.rotation.x = Math.PI / 2;
-      coinGroup.add(edge);
-      
-      return coinGroup;
-    };
+    // Throne back
+    const backGeometry = new THREE.BoxGeometry(2.5, 3, 0.5);
+    const backMaterial = new THREE.MeshPhongMaterial({ 
+      color: 0x800000,
+      shininess: 100,
+      specular: 0x111111
+    });
+    const back = new THREE.Mesh(backGeometry, backMaterial);
+    back.position.y = -0.25;
+    back.position.z = -1;
+    back.castShadow = true;
+    back.receiveShadow = true;
+    throneGroup.add(back);
+    
+    // Throne left arm
+    const leftArmGeometry = new THREE.BoxGeometry(0.5, 1, 2);
+    const armMaterial = new THREE.MeshPhongMaterial({ 
+      color: 0x8B4513,
+      shininess: 50
+    });
+    const leftArm = new THREE.Mesh(leftArmGeometry, armMaterial);
+    leftArm.position.set(-1, -1, 0);
+    leftArm.castShadow = true;
+    leftArm.receiveShadow = true;
+    throneGroup.add(leftArm);
+    
+    // Throne right arm
+    const rightArm = new THREE.Mesh(leftArmGeometry, armMaterial);
+    rightArm.position.set(1, -1, 0);
+    rightArm.castShadow = true;
+    rightArm.receiveShadow = true;
+    throneGroup.add(rightArm);
+    
+    // Add crown on top
+    const crownGroup = new THREE.Group();
+    
+    const crownBaseGeometry = new THREE.CylinderGeometry(0.6, 0.8, 0.5, 8);
+    const crownMaterial = new THREE.MeshPhongMaterial({ 
+      color: 0xFFD700,
+      shininess: 100
+    });
+    const crownBase = new THREE.Mesh(crownBaseGeometry, crownMaterial);
+    crownBase.position.y = 0.25;
+    crownGroup.add(crownBase);
+    
+    // Crown points
+    for (let i = 0; i < 5; i++) {
+      const angle = (i / 5) * Math.PI * 2;
+      const pointGeometry = new THREE.ConeGeometry(0.2, 0.5, 6);
+      const point = new THREE.Mesh(pointGeometry, crownMaterial);
+      point.position.x = Math.cos(angle) * 0.5;
+      point.position.z = Math.sin(angle) * 0.5;
+      point.position.y = 0.75;
+      crownGroup.add(point);
+    }
+    
+    crownGroup.position.y = 1.5;
+    throneGroup.add(crownGroup);
     
     // Add coins around the throne
-    const coinPositions = [
-      { x: -3, y: 1, z: 0 },
-      { x: 3, y: 1, z: 0 },
-      { x: -2.5, y: 0.5, z: 2 },
-      { x: 2.5, y: 0.5, z: 2 },
-      { x: -2, y: 3, z: -1 },
-      { x: 2, y: 3, z: -1 },
-    ];
-    
-    coinPositions.forEach(position => {
-      const coin = createCoin();
-      coin.position.set(position.x, position.y, position.z);
-      coin.rotation.x = Math.PI / 2;
-      coin.userData = {
-        rotationSpeed: Math.random() * 0.02 + 0.01,
-        floatSpeed: Math.random() * 0.01 + 0.005,
-        floatDirection: Math.random() > 0.5 ? 1 : -1,
-        originalY: position.y,
-        floatAmount: 0.3
-      };
-      scene.add(coin);
-      coins.push(coin);
+    const coinGeometry = new THREE.CylinderGeometry(0.3, 0.3, 0.05, 24);
+    const goldMaterial = new THREE.MeshPhongMaterial({ 
+      color: 0xFFD700, 
+      shininess: 100 
     });
     
-    // Add controls
-    const controls = new OrbitControls(camera, renderer.domElement);
-    controls.enableZoom = false;
-    controls.enablePan = false;
-    controls.rotateSpeed = 0.5;
-    controls.minPolarAngle = Math.PI / 4;
-    controls.maxPolarAngle = Math.PI / 2.5;
+    for (let i = 0; i < 20; i++) {
+      const coin = new THREE.Mesh(coinGeometry, goldMaterial);
+      const angle = Math.random() * Math.PI * 2;
+      const radius = 2.5 + Math.random() * 2;
+      coin.position.x = Math.cos(angle) * radius;
+      coin.position.z = Math.sin(angle) * radius;
+      coin.position.y = -2 + Math.random() * 0.5;
+      coin.rotation.x = Math.PI / 2;
+      coin.rotation.z = Math.random() * Math.PI;
+      scene.add(coin);
+    }
     
-    // Animation function
-    let frameId: number | null = null;
+    // Add the throne to the scene
+    scene.add(throneGroup);
     
+    // Animation loop
     const animate = () => {
-      frameId = requestAnimationFrame(animate);
+      frameIdRef.current = requestAnimationFrame(animate);
       
-      if (throne) {
-        throne.rotation.y += 0.002;
+      if (animated) {
+        throneGroup.rotation.y += 0.005;
+        crownGroup.rotation.y -= 0.008;
       }
       
-      // Animate coins
-      coins.forEach(coin => {
-        if (coin.userData) {
-          coin.rotation.y += coin.userData.rotationSpeed;
-          
-          // Floating animation
-          const newY = coin.userData.originalY + 
-            Math.sin(Date.now() * coin.userData.floatSpeed) * 
-            coin.userData.floatAmount * 
-            coin.userData.floatDirection;
-          
-          coin.position.y = newY;
-        }
-      });
+      if (controlsRef.current) {
+        controlsRef.current.update();
+      }
       
-      controls.update();
       renderer.render(scene, camera);
     };
     
     animate();
     
-    // Handle window resize
+    // Cleanup on unmount
+    return () => {
+      if (frameIdRef.current !== null) {
+        cancelAnimationFrame(frameIdRef.current);
+      }
+      
+      if (rendererRef.current && containerRef.current) {
+        containerRef.current.removeChild(rendererRef.current.domElement);
+      }
+      
+      rendererRef.current?.dispose();
+      controlsRef.current?.dispose();
+    };
+  }, [size, animated, interactive]);
+  
+  // Handle window resize
+  useEffect(() => {
     const handleResize = () => {
-      if (!containerRef.current || !renderer) return;
+      if (!cameraRef.current || !rendererRef.current || !containerRef.current) return;
       
-      const width = containerRef.current.clientWidth;
-      const height = containerRef.current.clientHeight;
+      const { width, height } = getDimensions();
       
-      camera.aspect = width / height;
-      camera.updateProjectionMatrix();
+      cameraRef.current.aspect = width / height;
+      cameraRef.current.updateProjectionMatrix();
       
-      renderer.setSize(width, height);
+      rendererRef.current.setSize(width, height);
     };
     
     window.addEventListener('resize', handleResize);
     
-    // Cleanup
     return () => {
       window.removeEventListener('resize', handleResize);
-      
-      if (frameId !== null) {
-        cancelAnimationFrame(frameId);
-      }
-      
-      if (renderer && containerRef.current && containerRef.current.contains(renderer.domElement)) {
-        containerRef.current.removeChild(renderer.domElement);
-      }
-      
-      // Clean up scene resources
-      scene.clear();
-      renderer.dispose();
     };
-  }, []);
+  }, [size]);
   
-  return <div ref={containerRef} className={className} />;
+  return (
+    <div ref={containerRef} className={`throne-scene ${className}`}></div>
+  );
 };
 
 export default ThroneCoinScene;
