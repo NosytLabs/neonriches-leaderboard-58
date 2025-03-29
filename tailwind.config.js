@@ -60,6 +60,17 @@ module.exports = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        // Add the missing background colors
+        bg: {
+          dark: "#0D0D20",
+          darker: "#070714",
+          light: "#1A1A30"
+        },
+        text: {
+          primary: "#FFFFFF",
+          secondary: "rgba(255, 255, 255, 0.8)",
+          muted: "rgba(255, 255, 255, 0.6)"
+        }
       },
       borderRadius: {
         lg: "var(--radius)",
