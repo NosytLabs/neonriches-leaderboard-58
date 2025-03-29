@@ -1,20 +1,48 @@
 
 import React from 'react';
 import { cn } from '@/lib/utils';
+import { Icon, IconName } from '@/components/ui/icon';
+
+// Map medieval icon names to our Icon component names
+const medievalIconMap: Record<MedievalIconName, IconName> = {
+  crown: 'crown',
+  shield: 'shield',
+  sword: 'sword',
+  scroll: 'scroll',
+  coins: 'coin',
+  castle: 'castle',
+  dragon: 'warning', // We'll use a warning icon for dragon
+  goblet: 'goblet',
+  potion: 'gift',
+  map: 'image',
+  key: 'key',
+  wallet: 'wallet',
+  medal: 'medal',
+  heart: 'heart',
+  trophy: 'trophy',
+  seal: 'medal',
+  sparkles: 'star',
+  flame: 'fire',
+  sunburst: 'sun',
+  water: 'water',
+  user: 'user',
+  message: 'message',
+  gem: 'gem'
+};
 
 export type MedievalIconName = 
   'crown' | 'shield' | 'sword' | 'scroll' | 'coins' | 
   'castle' | 'dragon' | 'goblet' | 'potion' | 'map' | 
   'key' | 'wallet' | 'medal' | 'heart' | 'trophy' | 
   'seal' | 'sparkles' | 'flame' | 'sunburst' | 'water' |
-  'user' | 'message' | 'gem'; // Added 'gem'
+  'user' | 'message' | 'gem';
 
 export type MedievalIconSize = 
-  'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl'; // Added 'xs'
+  'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
 export type MedievalIconColor = 
   'gold' | 'silver' | 'purple' | 'red' | 'blue' | 'green' | 
-  'amber' | 'crimson' | 'navy' | 'copper' | 'emerald' | 'default' | 'white' | 'bronze'; // Added 'bronze'
+  'amber' | 'crimson' | 'navy' | 'copper' | 'emerald' | 'default' | 'white' | 'bronze';
 
 export interface MedievalIconProps {
   name: MedievalIconName;
@@ -31,15 +59,8 @@ const MedievalIcon: React.FC<MedievalIconProps> = ({
   className,
   animate = false
 }) => {
-  const sizeClasses = {
-    sm: 'w-4 h-4',
-    md: 'w-6 h-6',
-    lg: 'w-8 h-8',
-    xl: 'w-12 h-12',
-    '2xl': 'w-16 h-16'
-  };
-  
-  const colorClasses = {
+  // Convert color to a CSS variable or color value
+  const colorMap: Record<MedievalIconColor, string> = {
     gold: 'text-royal-gold',
     silver: 'text-gray-300',
     purple: 'text-purple-400',
@@ -52,76 +73,23 @@ const MedievalIcon: React.FC<MedievalIconProps> = ({
     copper: 'text-amber-600',
     emerald: 'text-emerald-400',
     default: 'text-white',
-    white: 'text-white'
+    white: 'text-white',
+    bronze: 'text-amber-800'
   };
   
   const animationClass = animate ? 'animate-bounce-subtle' : '';
   
-  // Replace this with actual SVG icons in a real implementation
-  const getIconContent = () => {
-    switch (name) {
-      case 'crown':
-        return '👑';
-      case 'shield':
-        return '🛡️';
-      case 'sword':
-        return '⚔️';
-      case 'scroll':
-        return '📜';
-      case 'coins':
-        return '🪙';
-      case 'castle':
-        return '🏰';
-      case 'dragon':
-        return '🐉';
-      case 'goblet':
-        return '🏆';
-      case 'potion':
-        return '🧪';
-      case 'map':
-        return '🗺️';
-      case 'key':
-        return '🔑';
-      case 'wallet':
-        return '👛';
-      case 'medal':
-        return '🏅';
-      case 'heart':
-        return '❤️';
-      case 'trophy':
-        return '🏆';
-      case 'seal':
-        return '🌟';
-      case 'sparkles':
-        return '✨';
-      case 'flame':
-        return '🔥';
-      case 'sunburst':
-        return '☀️';
-      case 'water':
-        return '💧';
-      case 'user':
-        return '👤';
-      case 'message':
-        return '💬';
-      default:
-        return '❓';
-    }
-  };
-  
   return (
-    <span 
+    <Icon 
+      name={medievalIconMap[name]}
+      size={size as any}
       className={cn(
-        'inline-block font-medieval',
-        sizeClasses[size],
-        colorClasses[color],
+        colorMap[color],
         animationClass,
         className
       )}
-      aria-hidden="true"
-    >
-      {getIconContent()}
-    </span>
+      variant="royal"
+    />
   );
 };
 

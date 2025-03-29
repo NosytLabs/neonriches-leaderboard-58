@@ -1,17 +1,9 @@
 
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { 
-  Home, 
-  Trophy, 
-  Users, 
-  User, 
-  DollarSign, 
-  TrendingUp, 
-  Sparkles
-} from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/contexts/auth';
+import { Icon } from '@/components/ui/icon';
 
 interface MainNavProps extends React.HTMLAttributes<HTMLElement> {}
 
@@ -22,37 +14,37 @@ const MainNav = ({ className, ...props }: React.HTMLAttributes<HTMLElement>) => 
     {
       title: "Home",
       href: "/",
-      icon: <Home className="h-5 w-5" />
+      icon: <Icon name="home" size="sm" />
     },
     {
       title: "Leaderboard",
       href: "/leaderboard",
-      icon: <Trophy className="h-5 w-5" />
+      icon: <Icon name="trophy" size="sm" />
     },
     {
       title: "Teams",
       href: "/teams",
-      icon: <Users className="h-5 w-5" />
+      icon: <Icon name="user" size="sm" />
     },
     {
       title: "Profile",
       href: user ? `/profile/${user.username}` : "/profile",
-      icon: <User className="h-5 w-5" />
+      icon: <Icon name="profile" size="sm" />
     },
     {
       title: "Deposit",
       href: "/deposit",
-      icon: <DollarSign className="h-5 w-5" />
+      icon: <Icon name="dollar" size="sm" />
     },
     {
       title: "Stats",
       href: "/stats",
-      icon: <TrendingUp className="h-5 w-5" />
+      icon: <Icon name="chart" size="sm" />
     },
     {
       title: "Enhance",
       href: "/profile-enhancements",
-      icon: <Sparkles className="h-5 w-5" />
+      icon: <Icon name="star" size="sm" />
     }
   ];
 

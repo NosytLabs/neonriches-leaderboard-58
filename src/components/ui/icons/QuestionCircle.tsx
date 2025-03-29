@@ -1,21 +1,26 @@
 
 import React from 'react';
-import { HelpCircle } from 'lucide-react';
+import { Icon } from '@/components/ui/icon';
 import { cn } from '@/lib/utils';
 
 interface QuestionCircleProps {
   className?: string;
-  size?: number;
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
   color?: string;
 }
 
 const QuestionCircle: React.FC<QuestionCircleProps> = ({ 
   className, 
-  size = 24, 
-  color = "currentColor" 
+  size = 'md', 
+  color
 }) => {
   return (
-    <HelpCircle className={cn(className)} size={size} color={color} />
+    <Icon 
+      name="help" 
+      size={size} 
+      className={cn(className)} 
+      color={color}
+    />
   );
 };
 

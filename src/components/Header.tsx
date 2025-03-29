@@ -2,24 +2,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import {
-  Home,
-  Crown,
-  Trophy,
-  Users,
-  CalendarDays,
-  DollarSign,
-  Menu,
-  Search,
-  User,
-  Settings,
-  Eye
-} from 'lucide-react';
-import MobileMenu from './MobileMenu';
-import { cn } from '@/lib/utils';
 import { useAuth } from '@/contexts/auth';
 import ThroneLogoIcon from './brand/ThroneLogoIcon';
-import { Sparkles } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import MobileMenu from './MobileMenu';
+import { Icon } from '@/components/ui/icon';
 
 interface HeaderProps {
   transparent?: boolean;
@@ -52,42 +39,42 @@ const Header: React.FC<HeaderProps> = ({ transparent = false }) => {
   // Active link style
   const activeLinkClass = 'relative text-royal-gold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-royal-gold';
   
-  // Find the navigation items array and add our new showcase link
+  // Navigation items array with our new Icon component
   const navigationItems = [
     {
       name: "Home",
       path: "/",
-      icon: <Home className="h-4 w-4" />,
+      icon: <Icon name="home" size="sm" />,
     },
     {
       name: "Leaderboard",
       path: "/leaderboard",
-      icon: <Trophy className="h-4 w-4" />,
+      icon: <Icon name="trophy" size="sm" />,
     },
     {
       name: "Teams",
       path: "/teams",
-      icon: <Users className="h-4 w-4" />,
+      icon: <Icon name="user" size="sm" />,
     },
     {
       name: "Events",
       path: "/events",
-      icon: <CalendarDays className="h-4 w-4" />,
+      icon: <Icon name="calendar" size="sm" />,
     },
     {
       name: "Mockery",
       path: "/mockery",
-      icon: <Crown className="h-4 w-4" />,
+      icon: <Icon name="crown" size="sm" />,
     },
     {
       name: "Features",
       path: "/features-showcase",
-      icon: <Sparkles className="h-4 w-4" />,
+      icon: <Icon name="star" size="sm" />,
     },
     {
       name: "Visibility",
       path: "/visibility-features",
-      icon: <Eye className="h-4 w-4" />,
+      icon: <Icon name="eye" size="sm" />,
     },
   ];
 
@@ -126,14 +113,14 @@ const Header: React.FC<HeaderProps> = ({ transparent = false }) => {
         {user ? (
           <>
             <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10">
-              <DollarSign className="h-4 w-4 text-royal-gold" />
+              <Icon name="dollar" size="sm" className="text-royal-gold" />
               <span>${user.walletBalance.toFixed(2)}</span>
             </div>
             
             <div className="hidden md:block">
               <Link to="/dashboard">
                 <Button variant="outline" size="sm" className={transparent && !isScrolled ? "border-white/20 hover:bg-white/10" : ""}>
-                  <User className="h-4 w-4 mr-2" />
+                  <Icon name="user" size="sm" className="mr-2" />
                   Dashboard
                 </Button>
               </Link>
@@ -148,7 +135,7 @@ const Header: React.FC<HeaderProps> = ({ transparent = false }) => {
             </Link>
             <Link to="/signup">
               <Button size="sm" className="bg-royal-gold text-black hover:bg-royal-gold/90">
-                <Crown className="h-4 w-4 mr-2" />
+                <Icon name="crown" size="sm" className="mr-2" />
                 Join
               </Button>
             </Link>

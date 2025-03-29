@@ -1,160 +1,181 @@
 
-import { MockeryAction, MockeryTier } from '@/types/mockery';
-import { CosmeticRarity } from '@/types/cosmetics';
-import iconMap from '@/utils/iconUtils';
+import { MockeryAction, MockeryTier, ShameAction } from '@/types/mockery';
+import { Icon } from '@/components/ui/icon';
+import { CosmeticRarity, getRarityColor } from '@/types/cosmetics';
+import { renderIcon } from './iconUtils';
 
-/**
- * Get price for a mockery action
- * @param action MockeryAction to price
- * @returns number price in dollars
- */
-export const getMockeryPrice = (action: MockeryAction): number => {
-  const prices: Partial<Record<MockeryAction, number>> = {
+// Convert mockery actions to associated costs
+export const getMockeryCosts = (action: MockeryAction): number => {
+  const costMap: Partial<Record<MockeryAction, number>> = {
     tomatoes: 5,
     eggs: 10,
     stocks: 25,
-    dunce: 15,
-    jester: 20,
-    courtJester: 50,
-    ridicule: 12,
-    roast: 18,
-    silence: 30,
-    protection: 40
+    silence: 50,
+    courtJester: 100,
+    jester: 75,
+    dunce: 35,
+    roast: 15,
+    ridicule: 20,
+    taunt: 30,
+    protection: 100,
+    removal: 150
   };
   
-  return prices[action] || 5;
+  return costMap[action] || 10;
 };
 
-/**
- * Get display duration for a mockery action
- * @param action MockeryAction
- * @returns number duration in hours
- */
-export const getMockeryDuration = (action: MockeryAction): number => {
-  const durations: Partial<Record<MockeryAction, number>> = {
-    tomatoes: 24,
-    eggs: 36,
-    stocks: 48,
-    dunce: 24,
-    jester: 72,
-    courtJester: 168, // 7 days
-    ridicule: 24,
-    roast: 48,
-    silence: 36,
-    protection: 168 // 7 days
+// Get durations for mockery effects in milliseconds
+export const getMockeryDurations = (action: MockeryAction): number => {
+  const durationMap: Partial<Record<MockeryAction, number>> = {
+    tomatoes: 3600000, // 1 hour
+    eggs: 7200000, // 2 hours
+    stocks: 14400000, // 4 hours
+    silence: 28800000, // 8 hours
+    courtJester: 86400000, // 24 hours
+    jester: 43200000, // 12 hours
+    dunce: 21600000, // 6 hours
+    roast: 10800000, // 3 hours
+    ridicule: 14400000, // 4 hours
+    taunt: 18000000, // 5 hours
+    protection: 604800000, // 7 days
+    removal: 0 // Immediate effect
   };
   
-  return durations[action] || 24;
+  return durationMap[action] || 3600000;
 };
 
-/**
- * Get icon for mockery action
- */
-export const getMockeryIcon = (action: MockeryAction) => {
-  const icons: Partial<Record<MockeryAction, any>> = {
-    tomatoes: iconMap.flame,
-    eggs: iconMap.shield,
-    stocks: iconMap.shield,
-    dunce: iconMap.circleDot,
-    jester: iconMap.flame,
-    courtJester: iconMap.messageSquare,
-    ridicule: iconMap.messageSquare
+// Get icons for mockery actions
+export const getMockeryIcons = (action: MockeryAction) => {
+  const iconMap: Partial<Record<MockeryAction, string>> = {
+    tomatoes: 'warning',
+    eggs: 'egg',
+    stocks: 'lock',
+    silence: 'mute',
+    courtJester: 'crown',
+    jester: 'crown',
+    common: 'info',
+    uncommon: 'gift',
+    rare: 'star',
+    epic: 'sparkles',
+    legendary: 'trophy',
+    protected: 'shield',
+    immune: 'shield',
+    dunce: 'help',
+    roast: 'flame',
+    ridicule: 'message',
+    taunt: 'message',
+    protection: 'shield',
+    removal: 'trash'
   };
   
-  return icons[action] || iconMap.flame;
+  return renderIcon(iconMap[action] || 'info');
 };
 
-/**
- * Get title for mockery action
- */
-export const getMockeryTitle = (action: MockeryAction): string => {
-  const titles: Partial<Record<MockeryAction, string>> = {
-    tomatoes: 'Digital Tomatoes',
-    eggs: 'Virtual Eggs',
-    stocks: 'Online Stocks',
-    dunce: 'Digital Dunce Cap',
-    jester: 'Court Jester',
-    courtJester: 'Royal Court Jester',
-    ridicule: 'Royal Ridicule',
+// Get display names for mockery actions
+export const getMockeryActionNames = (action: MockeryAction): string => {
+  const nameMap: Partial<Record<MockeryAction, string>> = {
+    tomatoes: 'Throw Tomatoes',
+    eggs: 'Throw Eggs',
+    stocks: 'Put in Stocks',
+    silence: 'Silence User',
+    courtJester: 'Court Jester',
+    jester: 'Jester Hat',
+    dunce: 'Dunce Cap',
     roast: 'Royal Roast',
-    silence: 'Royal Silencing',
-    protection: 'Royal Protection'
+    ridicule: 'Public Ridicule',
+    taunt: 'Royal Taunt',
+    protection: 'Mockery Protection',
+    removal: 'Mockery Removal'
   };
   
-  return titles[action] || 'Unknown Mockery';
+  return nameMap[action] || action;
 };
 
-/**
- * Get tier for mockery action
- */
+// Get descriptions for mockery actions
+export const getMockeryDescriptions = (action: MockeryAction): string => {
+  const descriptionMap: Partial<Record<MockeryAction, string>> = {
+    tomatoes: 'Throw virtual tomatoes at this user for 1 hour.',
+    eggs: 'Throw virtual eggs at this user for 2 hours.',
+    stocks: 'Put this user in virtual stocks for 4 hours.',
+    silence: 'Silence this user in public chats for 8 hours.',
+    courtJester: 'Make this user a court jester for 24 hours.',
+    jester: 'Force this user to wear a jester hat for 12 hours.',
+    dunce: 'Make this user wear a dunce cap for 6 hours.',
+    roast: 'Subject this user to a royal roasting for 3 hours.',
+    ridicule: 'Publicly ridicule this user for 4 hours.',
+    taunt: 'Taunt this user with royal insults for 5 hours.',
+    protection: 'Protect yourself from mockery for 7 days.',
+    removal: 'Remove all active mockery effects from yourself.'
+  };
+  
+  return descriptionMap[action] || `Apply ${action} effect to the user.`;
+};
+
+// Get tiers for mockery actions
 export const getMockeryTier = (action: MockeryAction): MockeryTier => {
-  const tiers: Partial<Record<MockeryAction, MockeryTier>> = {
+  const tierMap: Partial<Record<MockeryAction, MockeryTier>> = {
     tomatoes: 'common',
-    eggs: 'uncommon',
-    stocks: 'rare',
-    dunce: 'uncommon',
-    jester: 'rare',
+    eggs: 'common',
+    stocks: 'uncommon',
+    silence: 'rare',
     courtJester: 'legendary',
-    ridicule: 'common',
-    roast: 'uncommon',
-    silence: 'epic',
-    protection: 'legendary'
+    jester: 'epic',
+    dunce: 'uncommon',
+    roast: 'common',
+    ridicule: 'uncommon',
+    taunt: 'rare',
+    protection: 'premium',
+    removal: 'premium'
   };
   
-  return tiers[action] || 'common';
+  return tierMap[action] || 'common';
 };
 
-/**
- * Get color class for mockery action
- */
-export const getMockeryColor = (action: MockeryAction): string => {
-  const colors: Partial<Record<MockeryAction, string>> = {
-    tomatoes: 'text-red-500',
-    eggs: 'text-yellow-400',
-    stocks: 'text-amber-600',
-    dunce: 'text-blue-400',
-    jester: 'text-purple-400',
-    courtJester: 'text-purple-600',
-    ridicule: 'text-pink-400',
-    roast: 'text-orange-500',
-    silence: 'text-blue-600',
-    protection: 'text-emerald-500'
+// Get colors for mockery tiers
+export const getMockeryTierColor = (tier: MockeryTier): string => {
+  const colorMap: Partial<Record<MockeryTier, string>> = {
+    common: 'text-gray-400',
+    uncommon: 'text-green-400',
+    rare: 'text-blue-400',
+    epic: 'text-purple-400',
+    legendary: 'text-amber-400',
+    premium: 'text-rose-400',
+    basic: 'text-gray-300',
+    elite: 'text-indigo-400'
   };
   
-  return colors[action] || 'text-gray-400';
+  return colorMap[tier] || 'text-gray-400';
 };
 
-/**
- * Convert tier to rarity
- */
-export const tierToRarity = (tier: MockeryTier): CosmeticRarity => {
-  switch (tier) {
-    case 'common': return 'common';
-    case 'uncommon': return 'uncommon';
-    case 'rare': return 'rare';
-    case 'epic': return 'epic';
-    case 'legendary': return 'legendary';
-    default: return 'common';
-  }
-};
-
-/**
- * Get description for mockery action
- */
-export const getMockeryDescription = (action: MockeryAction, username?: string): string => {
-  const targetName = username || 'this user';
-  const descriptions: Partial<Record<MockeryAction, string>> = {
-    tomatoes: `Pelt ${targetName} with digital tomatoes for 24 hours.`,
-    eggs: `Throw virtual eggs at ${targetName} for 36 hours.`,
-    stocks: `Put ${targetName} in the public stocks for 48 hours.`,
-    dunce: `Place a dunce cap on ${targetName} for 24 hours.`,
-    jester: `Make ${targetName} wear a jester's hat for 72 hours.`,
-    courtJester: `Promote ${targetName} to Court Jester for 7 days.`,
-    ridicule: `Subject ${targetName} to public ridicule for 24 hours.`,
-    roast: `Deliver a royal roasting to ${targetName} for 48 hours.`,
-    silence: `Silence ${targetName} from public communication for 36 hours.`,
-    protection: `Protect yourself from all mockery for 7 days.`
+// Convert mockery tier to cosmetic rarity
+export const mockeryTierToRarity = (tier: MockeryTier): CosmeticRarity => {
+  const rarityMap: Record<MockeryTier, CosmeticRarity> = {
+    'common': 'common',
+    'uncommon': 'uncommon',
+    'rare': 'rare',
+    'epic': 'epic',
+    'legendary': 'legendary',
+    'premium': 'legendary',
+    'basic': 'common',
+    'elite': 'epic'
   };
   
-  return descriptions[action] || `Mock ${targetName} with unspecified means.`;
+  return rarityMap[tier];
+};
+
+// Check if a mockery action is a shame action
+export const isShameAction = (action: MockeryAction): action is ShameAction => {
+  const shameActions: ShameAction[] = [
+    'eggs', 
+    'tomatoes', 
+    'dunce', 
+    'stocks',
+    'ridicule',
+    'shame',
+    'silence',
+    'courtJester',
+    'jester'
+  ];
+  
+  return shameActions.includes(action as ShameAction);
 };

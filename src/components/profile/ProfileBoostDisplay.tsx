@@ -1,9 +1,9 @@
 
 import React from 'react';
 import { UserProfile } from '@/types/user';
-import { Clock, Sparkles } from 'lucide-react';
 import { ProfileBoost } from '@/types/boost';
 import useProfileBoost from '@/hooks/use-profile-boost';
+import { Icon } from '@/components/ui/icon';
 
 interface ProfileBoostDisplayProps {
   user: UserProfile;
@@ -34,6 +34,22 @@ const ProfileBoostDisplay: React.FC<ProfileBoostDisplayProps> = ({
         const boostEffect = getBoostEffect(boostEffectId);
         const timeLeft = getBoostTimeLeft(boost);
         
+        // Map boost effect types to appropriate icons
+        const getBoostIcon = () => {
+          if (!boostEffect) return 'star';
+          
+          // Check if boostEffect has a type property
+          const effectType = (boostEffect as any).type || 'visibility';
+          
+          switch (effectType) {
+            case 'visibility': return 'eye';
+            case 'appearance': return 'image';
+            case 'animation': return 'play';
+            case 'effect': return 'sparkles';
+            default: return 'star';
+          }
+        };
+        
         return (
           <div 
             key={boost.id} 
@@ -44,7 +60,7 @@ const ProfileBoostDisplay: React.FC<ProfileBoostDisplayProps> = ({
             <div className="flex items-start justify-between relative">
               <div>
                 <h4 className="text-lg font-medium flex items-center">
-                  <Sparkles className="mr-2 h-4 w-4 text-purple-400" />
+                  <Icon name={getBoostIcon()} className="mr-2 h-4 w-4 text-purple-400" size="sm" />
                   {boostEffect?.name || 'Profile Boost'}
                 </h4>
                 
@@ -53,7 +69,7 @@ const ProfileBoostDisplay: React.FC<ProfileBoostDisplayProps> = ({
                 </p>
                 
                 <div className="flex items-center mt-3 text-xs text-white/60">
-                  <Clock className="h-3.5 w-3.5 mr-1.5" />
+                  <Icon name="clock" className="h-3.5 w-3.5 mr-1.5" size="xs" />
                   <span>{timeLeft}</span>
                 </div>
               </div>

@@ -1,0 +1,51 @@
+
+/* Icon sprite styles */
+.mask-icon {
+  display: inline-block;
+  mask-image: url('/lovable-uploads/e39d63e2-1f26-455f-aa2b-a63aabe29f26.png');
+  mask-size: 480px 192px; /* 20x8 grid of 24px icons */
+  mask-repeat: no-repeat;
+  background-color: currentColor;
+}
+
+/* Variant modifiers */
+.icon-solid {
+  background-color: currentColor;
+}
+
+.icon-outline {
+  background-color: transparent;
+  border: 1.5px solid currentColor;
+  border-radius: 2px;
+}
+
+.icon-royal {
+  background-color: var(--royal-gold-color);
+}
+
+/* Animation classes */
+.icon-pulse {
+  animation: icon-pulse 2s infinite;
+}
+
+.icon-spin {
+  animation: icon-spin 2s linear infinite;
+}
+
+@keyframes icon-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+@keyframes icon-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
