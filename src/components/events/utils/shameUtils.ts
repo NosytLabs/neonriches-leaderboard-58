@@ -1,92 +1,87 @@
 
-/**
- * Checks if the current month is a Fire Sale month
- * @returns true if current month is a Fire Sale month
- */
-export const isFireSaleMonth = (): boolean => {
-  const currentMonth = new Date().getMonth() + 1; // JavaScript months are 0-indexed
-  
-  // Fire sales happen in January, April, July, and October
-  return [1, 4, 7, 10].includes(currentMonth);
+import { ShameAction } from '@/types/mockery';
+import { 
+  Target, 
+  Egg, 
+  Shield, 
+  AlertCircle, 
+  MessageSquareOff,
+  Crown
+} from 'lucide-react';
+
+// Weekly discount configuration
+const WEEKLY_DISCOUNT_PERCENTAGE = 0.5; // 50% discount
+let currentWeekDiscount: ShameAction = 'tomatoes'; // Changes weekly
+
+// Get weekly discounted action
+export const getWeeklyDiscountedAction = (): ShameAction => {
+  // In a real app, this would be determined server-side or based on the current week
+  return currentWeekDiscount;
 };
 
-/**
- * Gets the current Fire Sale discount percentage
- * @returns Discount percentage (0-100)
- */
-export const getFireSaleDiscountPercentage = (): number => {
-  if (!isFireSaleMonth()) {
-    return 0;
-  }
-  
-  // Different discount rates for different days of the month
-  const currentDay = new Date().getDate();
-  
-  if (currentDay <= 7) {
-    return 15; // 15% off in the first week
-  } else if (currentDay <= 14) {
-    return 10; // 10% off in the second week
-  } else if (currentDay <= 21) {
-    return 7; // 7% off in the third week
-  } else {
-    return 5; // 5% off in the last week
+// Check if an action has a weekly discount
+export const hasWeeklyDiscount = (action: ShameAction): boolean => {
+  return action === currentWeekDiscount;
+};
+
+// Get the regular price of a shame action
+export const getShameActionPrice = (action: ShameAction): number => {
+  switch (action) {
+    case 'tomatoes': return 0.25;
+    case 'eggs': return 0.50;
+    case 'stocks': return 1.00;
+    case 'silence': return 1.50;
+    case 'courtJester': return 2.00;
+    default: return 0.25;
   }
 };
 
-/**
- * Calculates the discounted price
- * @param originalPrice The original price
- * @returns The discounted price
- */
-export const getFireSalePrice = (originalPrice: number): number => {
-  const discountPercentage = getFireSaleDiscountPercentage();
-  if (discountPercentage === 0) {
-    return originalPrice;
-  }
-  
-  const discountAmount = originalPrice * (discountPercentage / 100);
-  return originalPrice - discountAmount;
+// Get discounted price of a shame action
+export const getDiscountedShamePrice = (action: ShameAction): number => {
+  const originalPrice = getShameActionPrice(action);
+  return originalPrice * (1 - WEEKLY_DISCOUNT_PERCENTAGE);
 };
 
-/**
- * Returns the end date of the current Fire Sale
- * @returns Date string of the end of the Fire Sale
- */
-export const getFireSaleEndDate = (): string => {
-  if (!isFireSaleMonth()) {
-    return '';
+// Get icon for shame action
+export const getShameActionIcon = (action: ShameAction) => {
+  switch (action) {
+    case 'tomatoes': return Target;
+    case 'eggs': return Egg;
+    case 'stocks': return Shield;
+    case 'silence': return MessageSquareOff;
+    case 'courtJester': return Crown;
+    default: return AlertCircle;
   }
-  
-  const now = new Date();
-  const lastDayOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-  
-  return lastDayOfMonth.toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  });
 };
 
-/**
- * Returns the time remaining in the current Fire Sale
- * @returns Object containing days, hours, minutes
- */
-export const getFireSaleTimeRemaining = (): { days: number, hours: number, minutes: number } => {
-  if (!isFireSaleMonth()) {
-    return { days: 0, hours: 0, minutes: 0 };
+// Get title for shame action
+export const getShameActionTitle = (action: ShameAction): string => {
+  switch (action) {
+    case 'tomatoes': return 'Throw Tomatoes';
+    case 'eggs': return 'Throw Rotten Eggs';
+    case 'stocks': return 'Place in Stocks';
+    case 'silence': return 'Royal Silence';
+    case 'courtJester': return 'Court Jester';
+    default: return 'Mock';
   }
+};
+
+// Get description for shame action
+export const getShameActionDescription = (action: ShameAction, username?: string): string => {
+  const target = username ? username : 'your target';
   
-  const now = new Date();
-  const lastDayOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59);
-  
-  const diffMs = lastDayOfMonth.getTime() - now.getTime();
-  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-  const diffHours = Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-  const diffMinutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
-  
-  return {
-    days: diffDays,
-    hours: diffHours,
-    minutes: diffMinutes
-  };
+  switch (action) {
+    case 'tomatoes':
+      return `Pelt ${target} with rotten tomatoes. A classic form of public ridicule (visual effect only).`;
+    case 'eggs':
+      return `Hurl rotten eggs at ${target}. The visual stench will follow them for a day.`;
+    case 'stocks':
+      return `Place ${target} in the public stocks. The ultimate medieval visual humiliation.`;
+    case 'silence':
+      return `Silence ${target} with a royal decree. They'll appear muted in public forums for 24 hours.`;
+    case 'courtJester':
+      return `Appoint ${target} as the court jester. They'll be adorned with a jester's hat and bells for all to see.`;
+    default:
+      return `Publicly shame ${target} with unknown consequences.`;
+  }
 };

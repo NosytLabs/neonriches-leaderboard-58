@@ -1,146 +1,243 @@
-
 import React from 'react';
+import { User } from '@/types/user';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { User, Scroll } from 'lucide-react';
-import { LeaderboardUser, getTeamColor, getTeamBorderColor, getRankIcon, getInitials } from './LeaderboardUtils';
-import { ShameAction } from '@/components/events/hooks/useShameEffect';
+import { 
+  DropdownMenu, 
+  DropdownMenuContent, 
+  DropdownMenuItem, 
+  DropdownMenuTrigger 
+} from '@/components/ui/dropdown-menu';
+import { 
+  Crown, 
+  ChevronUp, 
+  ChevronDown, 
+  MoreHorizontal, 
+  Eye, 
+  MessageSquare, 
+  Flag, 
+  Target 
+} from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { formatCurrency } from '@/utils/formatters';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/contexts/auth';
+import { useToast } from '@/hooks/use-toast';
 
 interface LeaderboardItemProps {
-  userData: LeaderboardUser;
-  index: number;
-  currentUserId?: string;
-  isOnCooldown: boolean;
-  onProfileClick: (userId: string) => void;
-  onShameUser: (user: LeaderboardUser, type: ShameAction) => void;
+  user: User;
+  rank: number;
+  previousRank?: number;
+  isCurrentUser?: boolean;
+  onShame?: (userId: string, action: string) => void;
+  onMessage?: (userId: string) => void;
+  onFollow?: (userId: string) => void;
+  className?: string;
 }
 
-const LeaderboardItem: React.FC<LeaderboardItemProps> = ({
-  userData,
-  index,
-  currentUserId,
-  isOnCooldown,
-  onProfileClick,
-  onShameUser
+const LeaderboardItem: React.FC<LeaderboardItemProps> = ({ 
+  user, 
+  rank,
+  previousRank,
+  isCurrentUser = false,
+  onShame,
+  onMessage,
+  onFollow,
+  className
 }) => {
-  const isCurrentUser = userData.id === currentUserId;
+  const navigate = useNavigate();
+  const { user: currentUser } = useAuth();
+  const { toast } = useToast();
   
-  // Get shame count
-  const getShameCount = () => {
-    const userShameKey = `user_shame_count_${userData.id}`;
-    return parseInt(localStorage.getItem(userShameKey) || '0');
+  const rankChange = previousRank ? previousRank - rank : 0;
+  
+  const handleViewProfile = () => {
+    navigate(`/profile/${user.username}`);
   };
   
-  const shameCount = getShameCount();
+  const handleMessage = () => {
+    if (!currentUser) {
+      toast({
+        title: "Authentication Required",
+        description: "You must be logged in to message users.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    if (onMessage) {
+      onMessage(user.id);
+    }
+  };
   
-  // Format amount with currency symbol
-  const formattedAmount = `$${userData.amountSpent.toLocaleString()}`;
+  const handleShame = (action: string) => {
+    if (!currentUser) {
+      toast({
+        title: "Authentication Required",
+        description: "You must be logged in to shame users.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    if (onShame) {
+      onShame(user.id, action);
+    }
+  };
   
-  // Get classes based on user position
-  const getPositionClass = () => {
-    if (index === 0) return "border-l-royal-gold";
-    if (index === 1) return "border-l-[#C0C0C0]";
-    if (index === 2) return "border-l-[#CD7F32]";
-    return "border-l-transparent";
+  const handleFollow = () => {
+    if (!currentUser) {
+      toast({
+        title: "Authentication Required",
+        description: "You must be logged in to follow users.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    if (onFollow) {
+      onFollow(user.id);
+    }
   };
   
   return (
-    <TooltipProvider>
-      <div className={`flex items-center justify-between py-2 px-3 my-1 rounded-md hover:bg-white/5 transition-colors border-l-2 ${getPositionClass()} ${
-        isCurrentUser ? 'bg-white/5' : ''
-      }`}>
-        <div className="flex items-center">
-          <div className="flex items-center justify-center w-6 h-6 rounded-full glass-morphism border-white/10 mr-2 text-xs">
-            <span>#{userData.rank}</span>
-          </div>
-          
-          <div className="relative group">
-            <div 
-              className={`w-8 h-8 rounded-full glass-morphism ${getTeamBorderColor(userData.team)} flex items-center justify-center mr-2 cursor-pointer`}
-              onClick={() => onProfileClick(userData.id)}
-            >
-              {userData.profileImage ? (
-                <img src={userData.profileImage} alt={userData.username} className="w-full h-full rounded-full" />
-              ) : (
-                <span className={`text-sm font-medium ${getTeamColor(userData.team)}`}>
-                  {getInitials(userData.username)}
-                </span>
-              )}
-              
-              {/* Show rank badge for top 3 */}
-              {index < 3 && (
-                <div className="absolute -top-1 -right-1 bg-background rounded-full p-0.5">
-                  {getRankIcon(userData.rank)}
-                </div>
-              )}
-            </div>
-            
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <span></span>
-              </TooltipTrigger>
-              <TooltipContent side="right">
-                <p>View profile</p>
-              </TooltipContent>
-            </Tooltip>
-          </div>
-          
-          <div>
-            <div className="flex items-center">
-              <span className={`font-medium text-sm ${isCurrentUser ? 'text-white' : ''}`}>
-                {userData.username}
-              </span>
-              {userData.team && (
-                <span className={`ml-2 h-2 w-2 rounded-full bg-team-${userData.team}`}></span>
-              )}
-              {shameCount > 0 && (
-                <span className="ml-2 text-xs bg-red-500/20 px-1.5 py-0.5 rounded-full text-red-300">
-                  {shameCount} {shameCount === 1 ? 'shame' : 'shames'}
-                </span>
-              )}
-            </div>
-            <div className="text-white/60 text-xs">{formattedAmount}</div>
-          </div>
-        </div>
-        
-        <div className="flex space-x-1">
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                className="h-8 w-8 rounded-full hover:bg-white/10"
-                onClick={() => onProfileClick(userData.id)}
-              >
-                <User size={14} />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>View profile</p>
-            </TooltipContent>
-          </Tooltip>
-          
-          {!isCurrentUser && (
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button 
-                  variant="ghost" 
-                  size="icon" 
-                  className="h-8 w-8 rounded-full hover:bg-white/10"
-                  onClick={() => onShameUser(userData, 'tomatoes')}
-                  disabled={isOnCooldown}
-                >
-                  <Scroll size={14} className={isOnCooldown ? 'text-white/30' : ''} />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>{isOnCooldown ? 'Shaming on cooldown' : 'Public Shame'}</p>
-              </TooltipContent>
-            </Tooltip>
+    <div 
+      className={cn(
+        "relative flex items-center p-3 rounded-lg transition-all",
+        isCurrentUser ? "glass-morphism border-royal-gold/30" : "glass-morphism border-white/10 hover:border-white/20",
+        className
+      )}
+    >
+      {/* Rank */}
+      <div className="flex items-center justify-center w-10 mr-3">
+        <div className="text-lg font-bold">
+          {rank <= 3 ? (
+            <span className="flex items-center justify-center">
+              <Crown 
+                className={cn(
+                  "h-5 w-5",
+                  rank === 1 ? "text-royal-gold" : 
+                  rank === 2 ? "text-gray-300" : 
+                  "text-amber-600"
+                )} 
+              />
+              {rank}
+            </span>
+          ) : (
+            <span>{rank}</span>
           )}
         </div>
       </div>
-    </TooltipProvider>
+      
+      {/* Rank change indicator */}
+      {rankChange !== 0 && (
+        <div 
+          className={cn(
+            "absolute top-2 left-1 flex items-center text-xs font-medium",
+            rankChange > 0 ? "text-green-500" : "text-red-500"
+          )}
+        >
+          {rankChange > 0 ? (
+            <ChevronUp className="h-3 w-3" />
+          ) : (
+            <ChevronDown className="h-3 w-3" />
+          )}
+          <span>{Math.abs(rankChange)}</span>
+        </div>
+      )}
+      
+      {/* Avatar */}
+      <Avatar 
+        className={cn(
+          "h-10 w-10 border",
+          isCurrentUser ? "border-royal-gold" : "border-white/20"
+        )}
+      >
+        <AvatarImage src={user.profileImage} alt={user.username} />
+        <AvatarFallback className="bg-royal-navy text-white">
+          {user.username.substring(0, 2).toUpperCase()}
+        </AvatarFallback>
+      </Avatar>
+      
+      {/* User info */}
+      <div className="ml-3 flex-1 min-w-0">
+        <div className="flex items-center">
+          <h3 className="font-medium truncate">
+            {user.username}
+          </h3>
+          
+          {user.verified && (
+            <Badge variant="outline" className="ml-2 bg-blue-500/10 text-blue-400 border-blue-500/30 px-1.5 py-0">
+              <Crown className="h-3 w-3 mr-1" />
+              <span className="text-xs">Verified</span>
+            </Badge>
+          )}
+          
+          {user.team && (
+            <Badge 
+              variant="outline" 
+              className={cn(
+                "ml-2 px-1.5 py-0",
+                user.team === 'red' ? "bg-team-red/10 text-team-red border-team-red/30" :
+                user.team === 'green' ? "bg-team-green/10 text-team-green border-team-green/30" :
+                "bg-team-blue/10 text-team-blue border-team-blue/30"
+              )}
+            >
+              <span className="text-xs">{user.team}</span>
+            </Badge>
+          )}
+        </div>
+        
+        <div className="flex items-center text-sm text-white/60">
+          <span className="truncate">
+            {formatCurrency(user.amountSpent || 0)} spent
+          </span>
+        </div>
+      </div>
+      
+      {/* Actions */}
+      <div className="flex items-center space-x-1">
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          className="h-8 w-8" 
+          onClick={handleViewProfile}
+        >
+          <Eye className="h-4 w-4" />
+        </Button>
+        
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="icon" className="h-8 w-8">
+              <MoreHorizontal className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-48 glass-morphism border-white/10">
+            <DropdownMenuItem onClick={handleViewProfile}>
+              <Eye className="mr-2 h-4 w-4" />
+              <span>View Profile</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={handleMessage}>
+              <MessageSquare className="mr-2 h-4 w-4" />
+              <span>Message</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={handleFollow}>
+              <Crown className="mr-2 h-4 w-4" />
+              <span>Follow</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => handleShame('tomatoes')}>
+              <Target className="mr-2 h-4 w-4 text-royal-crimson" />
+              <span>Shame</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => navigate(`/report/${user.id}`)}>
+              <Flag className="mr-2 h-4 w-4" />
+              <span>Report</span>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+    </div>
   );
 };
 

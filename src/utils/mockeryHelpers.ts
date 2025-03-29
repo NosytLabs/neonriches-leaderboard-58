@@ -24,7 +24,7 @@ export const getMockeryDescription = (type: MockeryTier | string): string => {
     case 'shame': 
       return 'Publicly shame your target with a banner on their profile for 3 days.';
     case 'humiliate': 
-      return 'Add a humiliating 7-day badge to your target\'s profile and reduce their visibility.';
+      return "Add a humiliating 7-day badge to your target's profile and reduce their visibility.";
     case 'curse': 
       return "Curse your target for 14 days, cutting their rank gains in half.";
     case 'banish': 
@@ -99,5 +99,30 @@ export const getMockeryCost = (type: MockeryTier | string): number => {
     case 'seize': return 150;
     case 'nuke': return 250;
     default: return 1;
+  }
+};
+
+// Helper function to convert action to tier
+export const convertActionToTier = (action: string): MockeryTier => {
+  switch (action) {
+    case 'tomatoes':
+    case 'poke':
+      return 'common';
+    case 'eggs':
+    case 'shame':
+      return 'uncommon';
+    case 'stocks':
+    case 'humiliate':
+      return 'rare';
+    case 'silence':
+    case 'curse':
+    case 'banish':
+      return 'epic';
+    case 'courtJester':
+    case 'seize':
+    case 'nuke':
+      return 'legendary';
+    default:
+      return 'common';
   }
 };
