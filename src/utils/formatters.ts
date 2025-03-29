@@ -47,3 +47,18 @@ export const formatTimeAgo = (date: Date | string): string => {
     return `${days} day${days !== 1 ? 's' : ''} ago`;
   }
 };
+
+/**
+ * Formats a monetary value to a currency string
+ * @param amount The amount to format
+ * @param currency The currency code (default: 'USD')
+ * @returns A formatted currency string like "$100.00"
+ */
+export const formatCurrency = (amount: number, currency: string = 'USD'): string => {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: currency,
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  }).format(amount);
+};

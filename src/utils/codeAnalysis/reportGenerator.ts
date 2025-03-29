@@ -1,158 +1,142 @@
 
 import { AnalysisResult } from './types';
-import { formatFileSize } from '@/utils/formatters';
 
-export const generateAnalysisReport = (analysisResult: AnalysisResult): string => {
-  const {
-    unusedFiles,
-    unusedImports,
-    unusedVariables,
-    unusedFunctions,
-    unusedCssSelectors,
-    deadCodePaths,
-    duplicateCode,
-    complexCode,
-    unusedDependencies,
-    metrics
-  } = analysisResult;
-
-  // Calculate metrics
-  const totalIssues = 
-    unusedFiles.length +
-    unusedImports.length +
-    unusedVariables.length +
-    unusedFunctions.length +
-    unusedCssSelectors.length +
-    deadCodePaths.length +
-    duplicateCode.length +
-    complexCode.length +
-    unusedDependencies.length;
+/**
+ * Generates a markdown report for an analysis result
+ */
+export const generateAnalysisReport = (result: AnalysisResult): string => {
+  let report = `# Code Analysis Report\n\n`;
   
-  const sizeSavingsKB = metrics.beforeCleanup.projectSize - metrics.afterCleanup.projectSize;
-  const sizeSavingsPercent = ((sizeSavingsKB / metrics.beforeCleanup.projectSize) * 100).toFixed(2);
-  const fileSavings = metrics.beforeCleanup.fileCount - metrics.afterCleanup.fileCount;
-  const dependencySavings = metrics.beforeCleanup.dependencyCount - metrics.afterCleanup.dependencyCount;
-
-  // Generate report
-  let report = `# Code Cleanup Analysis Report\n\n`;
-  
-  report += `## Summary\n\n`;
-  report += `- **Total Issues Found**: ${totalIssues}\n`;
-  report += `- **Potential Size Savings**: ${formatFileSize(sizeSavingsKB * 1024)} (${sizeSavingsPercent}%)\n`;
-  report += `- **File Count Reduction**: ${fileSavings} files\n`;
-  report += `- **Dependency Reduction**: ${dependencySavings} packages\n\n`;
-  
-  report += `## Project Metrics\n\n`;
-  report += `### Before Cleanup\n\n`;
-  report += `- Project Size: ${formatFileSize(metrics.beforeCleanup.projectSize * 1024)}\n`;
-  report += `- File Count: ${metrics.beforeCleanup.fileCount}\n`;
-  report += `- Dependency Count: ${metrics.beforeCleanup.dependencyCount}\n`;
-  report += `- Average File Size: ${formatFileSize(metrics.beforeCleanup.averageFileSize * 1024)}\n\n`;
-  
-  report += `### After Cleanup (Estimated)\n\n`;
-  report += `- Project Size: ${formatFileSize(metrics.afterCleanup.projectSize * 1024)}\n`;
-  report += `- File Count: ${metrics.afterCleanup.fileCount}\n`;
-  report += `- Dependency Count: ${metrics.afterCleanup.dependencyCount}\n`;
-  report += `- Average File Size: ${formatFileSize(metrics.afterCleanup.averageFileSize * 1024)}\n\n`;
-  
-  report += `## Detailed Findings\n\n`;
-  
-  if (unusedFiles.length > 0) {
-    report += `### Unused Files (${unusedFiles.length})\n\n`;
-    unusedFiles.forEach(file => {
-      report += `- \`${file.filePath}\` - ${formatFileSize(file.size * 1024)} - Impact: ${file.impact}\n`;
+  // Unused Files
+  report += `## Unused Files\n\n`;
+  if (result.unusedFiles.length === 0) {
+    report += `No unused files found.\n\n`;
+  } else {
+    result.unusedFiles.forEach(file => {
+      report += `- **${file.filePath}** (${file.size} KB, Impact: ${file.impact})\n`;
     });
     report += `\n`;
   }
   
-  if (unusedImports.length > 0) {
-    report += `### Unused Imports (${unusedImports.length})\n\n`;
-    unusedImports.forEach(imp => {
-      report += `- \`${imp.filePath}\` (Line ${imp.line}): \`${imp.import}\` - Impact: ${imp.impact}\n`;
+  // Unused Imports
+  report += `## Unused Imports\n\n`;
+  if (result.unusedImports.length === 0) {
+    report += `No unused imports found.\n\n`;
+  } else {
+    result.unusedImports.forEach(item => {
+      report += `- **${item.filePath}** (Line ${item.line}): \`${item.import}\` (Impact: ${item.impact})\n`;
     });
     report += `\n`;
   }
   
-  if (unusedVariables.length > 0) {
-    report += `### Unused Variables (${unusedVariables.length})\n\n`;
-    unusedVariables.forEach(variable => {
-      report += `- \`${variable.filePath}\` (Line ${variable.line}): \`${variable.variable}\` - Impact: ${variable.impact}\n`;
+  // Unused Variables
+  report += `## Unused Variables\n\n`;
+  if (result.unusedVariables.length === 0) {
+    report += `No unused variables found.\n\n`;
+  } else {
+    result.unusedVariables.forEach(item => {
+      report += `- **${item.filePath}** (Line ${item.line}): \`${item.variable}\` (Impact: ${item.impact})\n`;
     });
     report += `\n`;
   }
   
-  if (unusedFunctions.length > 0) {
-    report += `### Unused Functions (${unusedFunctions.length})\n\n`;
-    unusedFunctions.forEach(func => {
-      report += `- \`${func.filePath}\` (Line ${func.line}): \`${func.function}\` - Impact: ${func.impact}\n`;
+  // Unused CSS Selectors
+  report += `## Unused CSS Selectors\n\n`;
+  if (result.unusedCssSelectors.length === 0) {
+    report += `No unused CSS selectors found.\n\n`;
+  } else {
+    result.unusedCssSelectors.forEach(item => {
+      report += `- **${item.filePath}** (Line ${item.line}): \`${item.selector}\` (Impact: ${item.impact})\n`;
     });
     report += `\n`;
   }
   
-  if (unusedCssSelectors.length > 0) {
-    report += `### Unused CSS Selectors (${unusedCssSelectors.length})\n\n`;
-    unusedCssSelectors.forEach(selector => {
-      report += `- \`${selector.filePath}\` (Line ${selector.line}): \`${selector.selector}\` - Impact: ${selector.impact}\n`;
+  // Dead Code Paths
+  report += `## Dead Code Paths\n\n`;
+  if (result.deadCodePaths.length === 0) {
+    report += `No dead code paths found.\n\n`;
+  } else {
+    result.deadCodePaths.forEach(item => {
+      report += `- **${item.filePath}** (Line ${item.line}):\n\`\`\`typescript\n${item.code}\n\`\`\`\n(Impact: ${item.impact})\n\n`;
     });
-    report += `\n`;
   }
   
-  if (deadCodePaths.length > 0) {
-    report += `### Dead Code Paths (${deadCodePaths.length})\n\n`;
-    deadCodePaths.forEach(dead => {
-      report += `- \`${dead.filePath}\` (Line ${dead.line}) - Impact: ${dead.impact}\n`;
-      report += `  \`\`\`javascript\n  ${dead.code}\n  \`\`\`\n`;
-    });
-    report += `\n`;
-  }
-  
-  if (duplicateCode.length > 0) {
-    report += `### Duplicate Code (${duplicateCode.length})\n\n`;
-    duplicateCode.forEach((dup, index) => {
-      report += `#### Duplicate Pattern ${index + 1} - Impact: ${dup.impact}\n\n`;
-      report += `Found in:\n`;
-      dup.instances.forEach(instance => {
-        report += `- \`${instance.filePath}\` (Line ${instance.line})\n`;
+  // Duplicate Code
+  report += `## Duplicate Code\n\n`;
+  if (result.duplicateCode.length === 0) {
+    report += `No duplicate code found.\n\n`;
+  } else {
+    result.duplicateCode.forEach((item, index) => {
+      report += `### Duplicate Code ${index + 1}\n\n`;
+      report += `Instances:\n`;
+      item.instances.forEach(instance => {
+        report += `- **${instance.filePath}** (Line ${instance.line})\n`;
       });
-      report += `\n\`\`\`javascript\n${dup.code}\n\`\`\`\n\n`;
+      report += `\nCode:\n\`\`\`typescript\n${item.code}\n\`\`\`\n\n`;
+      report += `Impact: ${item.impact}\n\n`;
     });
   }
   
-  if (complexCode.length > 0) {
-    report += `### Complex Code (${complexCode.length})\n\n`;
-    complexCode.forEach(complex => {
-      report += `- \`${complex.filePath}\` (Line ${complex.line}): \`${complex.function}\` - Complexity: ${complex.complexity} - Impact: ${complex.impact}\n`;
-    });
-    report += `\n`;
-  }
-  
-  if (unusedDependencies.length > 0) {
-    report += `### Unused Dependencies (${unusedDependencies.length})\n\n`;
-    unusedDependencies.forEach(dep => {
-      report += `- \`${dep.name}@${dep.version}\` - Impact: ${dep.impact}\n`;
-      if (dep.alternatives && dep.alternatives.length > 0) {
-        report += `  - Alternatives: ${dep.alternatives.join(', ')}\n`;
-      }
-      if (dep.recommendation) {
-        report += `  - Recommendation: ${dep.recommendation}\n`;
-      }
+  // Complex Code
+  report += `## Complex Code\n\n`;
+  if (result.complexCode.length === 0) {
+    report += `No overly complex code found.\n\n`;
+  } else {
+    result.complexCode.forEach(item => {
+      report += `- **${item.filePath}** (Line ${item.line}): \`${item.function}\` (Complexity: ${item.complexity}, Impact: ${item.impact})\n`;
     });
     report += `\n`;
   }
   
-  report += `## Recommended Cleanup Approach\n\n`;
-  report += `1. Start with zero-risk changes (unused imports, variables, CSS selectors)\n`;
-  report += `2. Move to medium-risk changes (unused files, dependencies, dead code paths)\n`;
-  report += `3. Finally address complex issues (code duplication, complexity)\n\n`;
+  // Unused Dependencies
+  report += `## Unused Dependencies\n\n`;
+  if (result.unusedDependencies.length === 0) {
+    report += `No unused dependencies found.\n\n`;
+  } else {
+    result.unusedDependencies.forEach(item => {
+      report += `- **${item.name}** (${item.version})\n`;
+      if (item.alternatives && item.alternatives.length > 0) {
+        report += `  Alternatives: ${item.alternatives.join(', ')}\n`;
+      }
+      if (item.recommendation) {
+        report += `  Recommendation: ${item.recommendation}\n`;
+      }
+      report += `  Impact: ${item.impact}\n\n`;
+    });
+  }
   
-  report += `## Verification Steps\n\n`;
-  report += `After each change:\n`;
-  report += `- Run the full test suite\n`;
-  report += `- Test the application manually for the affected areas\n`;
-  report += `- Check for any build warnings or errors\n`;
-  report += `- Verify that the application still functions correctly\n\n`;
+  // Metrics
+  report += `## Project Metrics\n\n`;
   
-  report += `Report generated on ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()}`;
+  report += `### Before Cleanup\n\n`;
+  report += `- Project Size: ${result.metrics.beforeCleanup.projectSize.toLocaleString()} KB\n`;
+  report += `- File Count: ${result.metrics.beforeCleanup.fileCount}\n`;
+  report += `- Dependency Count: ${result.metrics.beforeCleanup.dependencyCount}\n`;
+  report += `- Average File Size: ${result.metrics.beforeCleanup.averageFileSize.toFixed(2)} KB\n`;
+  report += `- Largest Files:\n`;
+  result.metrics.beforeCleanup.largestFiles.forEach(file => {
+    report += `  - ${file.filePath} (${file.size.toLocaleString()} KB)\n`;
+  });
+  
+  report += `\n### After Cleanup\n\n`;
+  report += `- Project Size: ${result.metrics.afterCleanup.projectSize.toLocaleString()} KB\n`;
+  report += `- File Count: ${result.metrics.afterCleanup.fileCount}\n`;
+  report += `- Dependency Count: ${result.metrics.afterCleanup.dependencyCount}\n`;
+  report += `- Average File Size: ${result.metrics.afterCleanup.averageFileSize.toFixed(2)} KB\n`;
+  report += `- Largest Files:\n`;
+  result.metrics.afterCleanup.largestFiles.forEach(file => {
+    report += `  - ${file.filePath} (${file.size.toLocaleString()} KB)\n`;
+  });
+  
+  // Potential savings
+  const sizeSavings = result.metrics.beforeCleanup.projectSize - result.metrics.afterCleanup.projectSize;
+  const fileSavings = result.metrics.beforeCleanup.fileCount - result.metrics.afterCleanup.fileCount;
+  const dependencySavings = result.metrics.beforeCleanup.dependencyCount - result.metrics.afterCleanup.dependencyCount;
+  
+  report += `\n## Potential Savings\n\n`;
+  report += `- Size Reduction: ${sizeSavings.toLocaleString()} KB (${((sizeSavings / result.metrics.beforeCleanup.projectSize) * 100).toFixed(1)}%)\n`;
+  report += `- File Reduction: ${fileSavings} files (${((fileSavings / result.metrics.beforeCleanup.fileCount) * 100).toFixed(1)}%)\n`;
+  report += `- Dependency Reduction: ${dependencySavings} packages (${((dependencySavings / result.metrics.beforeCleanup.dependencyCount) * 100).toFixed(1)}%)\n`;
   
   return report;
 };

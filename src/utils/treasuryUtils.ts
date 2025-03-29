@@ -1,73 +1,81 @@
 
-import { SolanaTransaction, SolanaTreasuryInfo } from "@/types/solana";
-import { formatCurrency } from "./formatters";
+import { UserProfile } from '@/types/user';
+import { formatCurrency } from './formatters';
 
-/**
- * Format treasury data for display
- */
-export const formatTreasuryData = (treasuryInfo: SolanaTreasuryInfo) => {
-  return {
-    address: treasuryInfo.pubkey || 'Unknown',
-    shortAddress: formatShortAddress(treasuryInfo.pubkey),
-    balance: formatCurrency(treasuryInfo.amount || 0),
-    formattedSender: formatShortAddress(treasuryInfo.sender),
-  };
+export const calculatePrizePool = (weeklySpending: number): number => {
+  // 15% of weekly spending goes to the prize pool
+  return weeklySpending * 0.15;
 };
 
-/**
- * Format a Solana address to a shorter version
- */
-export const formatShortAddress = (address?: string): string => {
-  if (!address) return 'Unknown';
-  return `${address.substring(0, 4)}...${address.substring(address.length - 4)}`;
-};
-
-/**
- * Format a date in a readable format
- */
-export const formatDate = (date: string): string => {
-  return new Date(date).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-  });
-};
-
-/**
- * Convert SOL to USD based on the current price
- */
-export const solToUsd = (solAmount: number, solPrice: number): number => {
-  return solAmount * solPrice;
-};
-
-/**
- * Convert USD to SOL based on the current price
- */
-export const usdToSol = (usdAmount: number, solPrice: number): number => {
-  return usdAmount / solPrice;
-};
-
-/**
- * Get a color based on transaction type
- */
-export const getTransactionTypeColor = (type: string): string => {
-  switch (type) {
-    case 'deposit':
-      return 'text-green-400';
-    case 'withdrawal':
-      return 'text-red-400';
-    case 'transfer':
-      return 'text-blue-400';
-    default:
-      return 'text-gray-400';
+export const distributePrizePool = (
+  prizePool: number,
+  topSpenders: UserProfile[],
+  consistentSpenders: UserProfile[]
+): { 
+  rewards: { user: UserProfile; amount: number }[];
+  developerCut: number;
+  charityDonation: number;
+} => {
+  // Initialize results
+  const rewards: { user: UserProfile; amount: number }[] = [];
+  let remainingPool = prizePool;
+  
+  // 20% goes to the developer
+  const developerCut = prizePool * 0.2;
+  remainingPool -= developerCut;
+  
+  // Allocate to The Whale Endowment (50% of remaining)
+  const whaleEndowment = remainingPool * 0.5;
+  
+  // Top 3 whales get their share
+  if (topSpenders.length > 0) {
+    // #1 gets 60% of the whale endowment (minus 5% to "charity")
+    const whale1Amount = whaleEndowment * 0.6 * 0.95;
+    rewards.push({ user: topSpenders[0], amount: whale1Amount });
+    
+    if (topSpenders.length > 1) {
+      // #2 gets 30% of the whale endowment (minus 5% to "charity")
+      const whale2Amount = whaleEndowment * 0.3 * 0.95;
+      rewards.push({ user: topSpenders[1], amount: whale2Amount });
+      
+      if (topSpenders.length > 2) {
+        // #3 gets 10% of the whale endowment (minus 5% to "charity")
+        const whale3Amount = whaleEndowment * 0.1 * 0.95;
+        rewards.push({ user: topSpenders[2], amount: whale3Amount });
+      }
+    }
   }
+  
+  // 15% of the whale endowment goes to "charity" (5% from each whale)
+  const charityDonation = whaleEndowment * 0.15;
+  
+  // Allocate to The Sustenance Fund (50% of remaining)
+  const sustenanceFund = remainingPool * 0.5;
+  
+  // Distribute sustenance fund to consistent spenders
+  // This is a simplified implementation - real logic would be more complex
+  if (consistentSpenders.length > 0) {
+    const baseAmount = sustenanceFund / consistentSpenders.length;
+    
+    consistentSpenders.forEach(user => {
+      // Use properties that might affect reward amounts
+      const streakMultiplier = user.profileBoosts?.length ? 1.5 : 1;
+      const spendingBonus = (user.totalSpent || user.amountSpent || 0) > 1000 ? 1.1 : 1;
+      
+      const amount = baseAmount * streakMultiplier * spendingBonus;
+      rewards.push({ user, amount });
+    });
+  }
+  
+  return { rewards, developerCut, charityDonation };
 };
 
-export default {
-  formatTreasuryData,
-  formatShortAddress,
-  formatDate,
-  solToUsd,
-  usdToSol,
-  getTransactionTypeColor
+export const formatRewardAmount = (amount: number): string => {
+  return formatCurrency(amount);
+};
+
+export const getWeeklySpending = (): number => {
+  // This would normally come from a database
+  // For demo purposes, we'll return a fixed amount
+  return 10000;
 };

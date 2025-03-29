@@ -1,49 +1,50 @@
 
-import React, { createContext, forwardRef, useContext, type ComponentProps, type HTMLAttributes, type ElementRef } from 'react';
-import * as ResizablePrimitive from 'react-resizable-panels';
-import { cn } from '@/lib/utils';
-import { GripVertical } from 'lucide-react';
+import * as React from "react"
+import { GripVertical } from "lucide-react"
+import * as ResizablePrimitive from "react-resizable-panels"
+import { cn } from "@/lib/utils"
 
-const ResizablePanelGroup = forwardRef<
-  ElementRef<typeof ResizablePrimitive.PanelGroup>,
-  ComponentProps<typeof ResizablePrimitive.PanelGroup>
+const ResizablePanelGroup = React.forwardRef<
+  React.ElementRef<typeof ResizablePrimitive.PanelGroup>,
+  React.ComponentPropsWithoutRef<typeof ResizablePrimitive.PanelGroup>
 >(({ className, ...props }, ref) => (
   <ResizablePrimitive.PanelGroup
     ref={ref}
     className={cn(
-      'flex h-full w-full data-[panel-group-direction=vertical]:flex-col',
+      "flex h-full w-full data-[panel-group-direction=vertical]:flex-col",
       className
     )}
     {...props}
   />
-));
-ResizablePanelGroup.displayName = 'ResizablePanelGroup';
+))
+ResizablePanelGroup.displayName = "ResizablePanelGroup"
 
-const ResizablePanel = forwardRef<
-  ElementRef<typeof ResizablePrimitive.Panel>,
-  ComponentProps<typeof ResizablePrimitive.Panel>
+const ResizablePanel = React.forwardRef<
+  React.ElementRef<typeof ResizablePrimitive.Panel>,
+  React.ComponentPropsWithoutRef<typeof ResizablePrimitive.Panel>
 >(({ className, ...props }, ref) => (
   <ResizablePrimitive.Panel
     ref={ref}
-    className={cn('group/panel relative h-full w-full', className)}
+    className={cn("relative h-full w-full overflow-auto", className)}
     {...props}
   />
-));
-ResizablePanel.displayName = 'ResizablePanel';
+))
+ResizablePanel.displayName = "ResizablePanel"
 
-// Define the ResizableHandleProps interface properly
-interface ResizableHandleProps extends ComponentProps<typeof ResizablePrimitive.PanelResizeHandle> {
-  withHandle?: boolean;
+type ResizableHandleProps = React.ComponentPropsWithoutRef<
+  typeof ResizablePrimitive.PanelResizeHandle
+> & {
+  withHandle?: boolean
 }
 
-const ResizableHandle = forwardRef<
-  ElementRef<typeof ResizablePrimitive.PanelResizeHandle>,
+const ResizableHandle = React.forwardRef<
+  React.ElementRef<typeof ResizablePrimitive.PanelResizeHandle>,
   ResizableHandleProps
->(({ className, withHandle = false, ...props }, ref) => (
+>(({ className, withHandle, ...props }, ref) => (
   <ResizablePrimitive.PanelResizeHandle
     ref={ref}
     className={cn(
-      'relative flex w-px items-center justify-center bg-border after:absolute after:inset-y-0 after:left-1/2 after:w-1 after:-translate-x-1/2 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-1 data-[panel-group-direction=vertical]:h-px data-[panel-group-direction=vertical]:w-full data-[panel-group-direction=vertical]:after:left-0 data-[panel-group-direction=vertical]:after:h-1 data-[panel-group-direction=vertical]:after:w-full data-[panel-group-direction=vertical]:after:-translate-y-1/2 data-[panel-group-direction=vertical]:after:translate-x-0 [&[data-panel-group-direction=vertical]>div]:rotate-90',
+      "relative flex w-px items-center justify-center bg-border after:absolute after:inset-y-0 after:left-1/2 after:w-1 after:-translate-x-1/2 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-1 data-[panel-group-direction=vertical]:h-px data-[panel-group-direction=vertical]:w-full data-[panel-group-direction=vertical]:after:left-0 data-[panel-group-direction=vertical]:after:h-1 data-[panel-group-direction=vertical]:after:w-full data-[panel-group-direction=vertical]:after:-translate-y-1/2 data-[panel-group-direction=vertical]:after:translate-x-0 [&[data-panel-group-direction=vertical]>div]:rotate-90",
       className
     )}
     {...props}
@@ -54,29 +55,27 @@ const ResizableHandle = forwardRef<
       </div>
     )}
   </ResizablePrimitive.PanelResizeHandle>
-));
-ResizableHandle.displayName = 'ResizableHandle';
+))
+ResizableHandle.displayName = "ResizableHandle"
 
-// Define a proper type for ResizableSeparator props
+// Define props type for ResizableSeparator explicitly
 type ResizableSeparatorProps = Omit<ResizableHandleProps, 'withHandle'>;
 
-// Use ElementRef with the correct base component (ResizablePrimitive.PanelResizeHandle)
-const ResizableSeparator = forwardRef<
-  ElementRef<typeof ResizablePrimitive.PanelResizeHandle>,
+const ResizableSeparator = React.forwardRef<
+  React.ElementRef<typeof ResizablePrimitive.PanelResizeHandle>,
   ResizableSeparatorProps
 >(({ className, ...props }, ref) => (
-  <ResizableHandle
+  <ResizablePrimitive.PanelResizeHandle
     ref={ref}
-    withHandle={true}
-    className={className}
+    className={cn("w-px bg-gray-200 dark:bg-gray-800", className)}
     {...props}
   />
-));
-ResizableSeparator.displayName = 'ResizableSeparator';
+))
+ResizableSeparator.displayName = "ResizableSeparator"
 
 export {
   ResizablePanelGroup,
   ResizablePanel,
   ResizableHandle,
-  ResizableSeparator
-};
+  ResizableSeparator,
+}
