@@ -30,7 +30,7 @@ export const getMockeryDescription = (type: MockeryTier | string): string => {
     case 'banish': 
       return 'Banish your target from leaderboard visibility for 3 days.';
     case 'seize': 
-      return 'Seize 5% of your target's next purchase (added to your balance).';
+      return 'Seize 5% of your target\'s next purchase (added to your balance).';
     case 'nuke': 
       return 'Nuclear option: drop your target 10 ranks for 24 hours. Expensive but devastating.';
     default: 

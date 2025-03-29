@@ -17,6 +17,10 @@
   --royal-purple-bright: rgb(138, 43, 226);
   --royal-purple-dark: rgb(75, 0, 130);
   
+  --royal-emerald: rgb(44, 120, 74);
+  --royal-emerald-bright: rgb(72, 187, 120);
+  --royal-emerald-dark: rgb(30, 94, 56);
+  
   /* Background Colors */
   --bg-dark: rgb(13, 13, 32);
   --bg-dark-lighter: rgb(20, 20, 40);
@@ -29,7 +33,7 @@
   
   /* Team Colors */
   --team-red: var(--royal-crimson);
-  --team-green: var(--royal-gold);
+  --team-green: var(--royal-emerald);
   --team-blue: var(--royal-navy);
   
   /* Tier Colors */
@@ -67,6 +71,13 @@
     var(--royal-purple-dark) 0%,
     var(--royal-purple) 50%,
     var(--royal-purple-bright) 100%
+  );
+  
+  --gradient-royal-emerald: linear-gradient(
+    to right,
+    var(--royal-emerald-dark) 0%,
+    var(--royal-emerald) 50%,
+    var(--royal-emerald-bright) 100%
   );
   
   --gradient-bg: linear-gradient(
@@ -127,4 +138,40 @@
 body {
   background-color: var(--bg-body);
   color: var(--text-body);
+}
+
+/* Royal Gradients */
+.royal-gold-gradient {
+  background: var(--gradient-royal-gold);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.royal-crimson-gradient {
+  background: var(--gradient-royal-crimson);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.royal-navy-gradient {
+  background: var(--gradient-royal-navy);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.royal-purple-gradient {
+  background: var(--gradient-royal-purple);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.royal-emerald-gradient {
+  background: var(--gradient-royal-emerald);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }

@@ -1,143 +1,212 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, Crown, Search, Bell, Code, User, ChevronDown } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
 import { useAuth } from '@/contexts/auth';
+import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { getTeamColor } from '@/utils/teamUtils';
+import { Bell, LogOut, Menu, Settings, User, X } from 'lucide-react';
+import { formatCurrency } from '@/lib/utils';
+import MobileMenu from '@/components/MobileMenu';
+import SpendThroneLogo from '@/components/brand/SpendThroneLogo';
 
-const Header = ({ transparent = false }) => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { isAuthenticated, user } = useAuth();
+const Header: React.FC = () => {
+  const { user, logout } = useAuth();
   const location = useLocation();
-  
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
+  const [scrolled, setScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const toggleMobileMenu = () => {
+    setMobileMenuOpen(!mobileMenuOpen);
   };
-  
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const isScrolled = window.scrollY > 10;
+      if (isScrolled !== scrolled) {
+        setScrolled(isScrolled);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [scrolled]);
+
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [location.pathname]);
+
   const isActive = (path: string) => {
     return location.pathname === path;
   };
-  
-  const navItems = [
-    { name: 'Dashboard', path: '/dashboard' },
-    { name: 'Leaderboard', path: '/leaderboard' },
-    { name: 'Teams', path: '/teams' },
-    { name: 'Events', path: '/events' },
-    { name: 'Features', path: '/features' },
-    { name: 'Code Analysis', path: '/code-analysis' },
-  ];
-  
+
   return (
-    <header className={cn(
-      'fixed top-0 left-0 right-0 z-40 transition-colors duration-300',
-      transparent ? 'bg-transparent' : 'bg-background/90 backdrop-blur-md border-b border-border/40'
-    )}>
-      <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
-          {/* Logo */}
-          <Link to="/" className="flex items-center space-x-2">
-            <Crown className="h-6 w-6 text-royal-gold" />
-            <span className="font-bold text-xl text-royal-gold font-royal">SpendThrone</span>
-          </Link>
-          
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex space-x-6">
-            {navItems.map((item) => (
-              <Link
-                key={item.path}
-                to={item.path}
-                className={cn(
-                  'text-sm font-medium transition-colors hover:text-royal-gold',
-                  isActive(item.path) ? 'text-royal-gold' : 'text-white/70'
-                )}
-              >
-                {item.name}
-              </Link>
-            ))}
-          </nav>
-          
-          {/* Actions */}
-          <div className="flex items-center space-x-4">
-            <button className="text-white/70 hover:text-royal-gold transition-colors">
-              <Search className="h-5 w-5" />
-            </button>
-            
-            {isAuthenticated ? (
-              <>
-                <button className="text-white/70 hover:text-royal-gold transition-colors relative">
-                  <Bell className="h-5 w-5" />
-                  <span className="absolute -top-1 -right-1 w-4 h-4 bg-royal-crimson text-white text-xs flex items-center justify-center rounded-full">
-                    3
-                  </span>
-                </button>
-                
-                <div className="relative group">
-                  <button className="flex items-center space-x-2 text-white/70 hover:text-royal-gold transition-colors">
-                    <User className="h-5 w-5" />
-                    <span className="hidden sm:inline text-sm">{user?.username || 'User'}</span>
-                    <ChevronDown className="h-4 w-4" />
-                  </button>
-                  
-                  <div className="absolute right-0 mt-2 w-48 py-2 bg-background/90 backdrop-blur-md border border-border/40 rounded-md shadow-lg hidden group-hover:block">
-                    <Link to="/profile/me" className="block px-4 py-2 text-sm text-white/70 hover:text-royal-gold hover:bg-white/5">
-                      Profile
-                    </Link>
-                    <Link to="/settings" className="block px-4 py-2 text-sm text-white/70 hover:text-royal-gold hover:bg-white/5">
-                      Settings
-                    </Link>
-                    <Link to="/help" className="block px-4 py-2 text-sm text-white/70 hover:text-royal-gold hover:bg-white/5">
-                      Help
-                    </Link>
-                    <button className="w-full text-left px-4 py-2 text-sm text-white/70 hover:text-royal-gold hover:bg-white/5">
-                      Sign out
-                    </button>
-                  </div>
-                </div>
-              </>
-            ) : (
-              <Button variant="royal" asChild>
-                <Link to="/login">Sign In</Link>
-              </Button>
-            )}
-            
-            {/* Mobile menu button */}
-            <button 
-              className="inline-flex md:hidden items-center justify-center text-white/70 hover:text-royal-gold"
-              onClick={toggleMenu}
-            >
-              {isMenuOpen ? (
-                <X className="h-6 w-6" />
-              ) : (
-                <Menu className="h-6 w-6" />
-              )}
-            </button>
+    <header
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        scrolled ? 'py-3 bg-bg-dark/90 backdrop-blur-md shadow-md' : 'py-5 bg-transparent'
+      }`}
+    >
+      <div className="container mx-auto px-4 flex justify-between items-center">
+        <Link to="/" className="flex items-center">
+          <div className="w-auto h-10">
+            <SpendThroneLogo 
+              variant={scrolled ? 'compact' : 'full'} 
+              className={scrolled ? 'h-8' : 'h-10'} 
+            />
           </div>
+        </Link>
+
+        {/* Desktop Navigation */}
+        <nav className="hidden md:flex space-x-6 items-center">
+          <Link
+            to="/leaderboard"
+            className={`transition-colors text-sm font-medium ${
+              isActive('/leaderboard')
+                ? 'text-royal-gold'
+                : 'text-white/80 hover:text-white'
+            }`}
+          >
+            Leaderboard
+          </Link>
+          <Link
+            to="/teams"
+            className={`transition-colors text-sm font-medium ${
+              isActive('/teams')
+                ? 'text-royal-gold'
+                : 'text-white/80 hover:text-white'
+            }`}
+          >
+            Royal Houses
+          </Link>
+          <Link
+            to="/events"
+            className={`transition-colors text-sm font-medium ${
+              isActive('/events')
+                ? 'text-royal-gold'
+                : 'text-white/80 hover:text-white'
+            }`}
+          >
+            Events
+          </Link>
+          <Link
+            to="/mockery"
+            className={`transition-colors text-sm font-medium ${
+              isActive('/mockery')
+                ? 'text-royal-gold'
+                : 'text-white/80 hover:text-white'
+            }`}
+          >
+            Court of Mockery
+          </Link>
+          <Link
+            to="/royal-prestige"
+            className={`transition-colors text-sm font-medium ${
+              isActive('/royal-prestige')
+                ? 'text-royal-gold'
+                : 'text-white/80 hover:text-white'
+            }`}
+          >
+            Royal Prestige
+          </Link>
+        </nav>
+
+        <div className="flex items-center space-x-2">
+          {user ? (
+            <>
+              <div className="hidden sm:flex items-center mr-4">
+                <div
+                  className={`flex items-center rounded-full ${
+                    scrolled ? 'bg-white/5 px-3 py-1.5' : 'bg-white/10 px-3 py-1.5'
+                  }`}
+                >
+                  <span className="text-sm font-medium text-white">
+                    {formatCurrency(user.spendAmount || 0)}
+                  </span>
+                </div>
+              </div>
+
+              <Button variant="ghost" size="icon" className="text-white/70 hover:text-white">
+                <Bell size={20} />
+              </Button>
+
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Avatar className={`h-9 w-9 cursor-pointer ring-2 ${getTeamColor(user.team)}`}>
+                    <AvatarImage src={user.profileImage} alt={user.username} />
+                    <AvatarFallback className="text-sm">
+                      {user.username?.substring(0, 2).toUpperCase() || 'U'}
+                    </AvatarFallback>
+                  </Avatar>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56 glass-morphism">
+                  <DropdownMenuItem
+                    className="cursor-pointer"
+                    asChild
+                  >
+                    <Link to={`/profile/${user.username}`} className="flex items-center">
+                      <User className="mr-2 h-4 w-4" />
+                      <span>Profile</span>
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    className="cursor-pointer"
+                    asChild
+                  >
+                    <Link to="/settings" className="flex items-center">
+                      <Settings className="mr-2 h-4 w-4" />
+                      <span>Settings</span>
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    className="text-red-500 cursor-pointer"
+                    onClick={logout}
+                  >
+                    <LogOut className="mr-2 h-4 w-4" />
+                    <span>Logout</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </>
+          ) : (
+            <div className="hidden md:flex items-center space-x-2">
+              <Link to="/login">
+                <Button variant="ghost" className="border border-white/20">
+                  Login
+                </Button>
+              </Link>
+              <Link to="/signup">
+                <Button className="bg-royal-gold text-black hover:bg-royal-gold/90">
+                  Join Now
+                </Button>
+              </Link>
+            </div>
+          )}
+
+          {/* Mobile menu toggle */}
+          <button
+            type="button"
+            className="md:hidden inline-flex items-center justify-center p-2 rounded-md text-white/80 hover:text-white"
+            onClick={toggleMobileMenu}
+          >
+            {mobileMenuOpen ? (
+              <X className="h-6 w-6" />
+            ) : (
+              <Menu className="h-6 w-6" />
+            )}
+          </button>
         </div>
       </div>
-      
-      {/* Mobile navigation */}
-      {isMenuOpen && (
-        <div className="md:hidden glass-morphism rounded-b-lg mx-4 shadow-lg border border-white/10">
-          <nav className="flex flex-col space-y-2 p-4">
-            {navItems.map((item) => (
-              <Link
-                key={item.path}
-                to={item.path}
-                className={cn(
-                  'py-2 px-3 rounded-md transition-colors',
-                  isActive(item.path) 
-                    ? 'bg-white/10 text-royal-gold' 
-                    : 'hover:bg-white/5 text-white/80 hover:text-royal-gold'
-                )}
-                onClick={() => setIsMenuOpen(false)}
-              >
-                {item.name}
-              </Link>
-            ))}
-          </nav>
-        </div>
-      )}
+
+      {/* Mobile Menu */}
+      <MobileMenu isOpen={mobileMenuOpen} user={user} logout={logout} />
     </header>
   );
 };
