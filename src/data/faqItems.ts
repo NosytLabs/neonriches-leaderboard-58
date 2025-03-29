@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { DollarSign, Users, Crown, Shield, Trophy, Zap } from 'lucide-react';
+import { DollarSign, Users, Crown, Shield, Trophy, Zap, Gift, AlertTriangle } from 'lucide-react';
 
 export interface FAQItem {
   question: string;
@@ -34,7 +34,7 @@ export const faqItems: FAQItem[] = [
     question: "What are the Teams about?",
     answer: (
       <p>
-        Teams are our medieval-inspired houses: Red (neon fire), Green (lime zap), and Blue (cool pulse). When you join a team, your spending contributes to both your personal rank AND your team's collective standing. It's like political tribalism, but with more honesty about the pay-to-win mechanics!
+        Teams are our digital houses: Red (neon fire), Green (lime zap), and Blue (cool pulse). When you join a team, your spending contributes to both your personal rank AND your team's collective standing. It's like joining a sports fandom, but instead of cheering, you're spending!
       </p>
     ),
     icon: <Shield className="h-4 w-4 text-royal-gold" />,
@@ -44,7 +44,7 @@ export const faqItems: FAQItem[] = [
     question: "What happens to the money I spend?",
     answer: (
       <p>
-        Your generous contributions go directly to our developers' exotic coffee habits and mechanical keyboard collections. We're not a charity - though our spouses might disagree when they see our office setup! Think of it as patronage for digital court jesters creating this satire of modern status-seeking.
+        Your generous contributions fund our developers' avocado toast habits and mechanical keyboard collections. We're not curing diseases - we're maintaining this bizarre social experiment and paying our hosting bills. We also invest in creating more ways for you to spend money with us. Capitalism at its finest!
       </p>
     ),
     icon: <DollarSign className="h-4 w-4 text-royal-gold" />,
@@ -74,10 +74,30 @@ export const faqItems: FAQItem[] = [
     question: "What are Mockery features?",
     answer: (
       <p>
-        Our Mockery features let you pay to apply humorous visual effects to other users' profiles - like throwing digital tomatoes or putting someone in virtual stocks. It's medieval-style humiliation without the physical discomfort! All mockery is purely cosmetic and temporary, designed for good-natured ribbing rather than actual harassment.
+        Our Mockery features let you pay to apply hilarious visual effects to other users' profiles - like throwing digital tomatoes or putting someone in virtual stocks. It's social media shade-throwing, but monetized! All mockery is purely cosmetic and temporary, designed for laughs rather than actual harassment.
       </p>
     ),
     icon: <Users className="h-4 w-4 text-royal-gold" />,
     category: "mockery"
+  },
+  {
+    question: "Can I get a refund if I regret my spending?",
+    answer: (
+      <p>
+        Absolutely not! All payments to SpendThrone are final. Just like those impulse purchases sitting unused in your closet, your digital status is non-refundable. The difference is we're completely upfront about the worthlessness of what you're buying - it's literally just a number on a screen!
+      </p>
+    ),
+    icon: <AlertTriangle className="h-4 w-4 text-royal-gold" />,
+    category: "money"
+  },
+  {
+    question: "How do I maximize my marketing reach?",
+    answer: (
+      <p>
+        Royal tier members ($30/month) get premium advertising space visible to all users. Your profile becomes a billboard that others must view simply because you outspent them. We provide analytics on views and clicks so you can track your ROI. It's like buying a Times Square billboard, but for a much more specific audience of status-conscious digital citizens!
+      </p>
+    ),
+    icon: <Gift className="h-4 w-4 text-royal-gold" />,
+    category: "marketing"
   }
 ];

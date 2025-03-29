@@ -3,48 +3,49 @@
 export const subscriptionTiers = [
   {
     id: "basic",
-    name: "Basic Nobility",
-    description: "Entry level access to the royal court",
+    name: "Basic Status Seeker",
+    description: "Entry level access to digital status",
     price: 5,
     features: [
       "Basic profile customization",
-      "Royal court access",
+      "Leaderboard presence",
       "Team affiliation",
-      "Public certificate of gullibility"
+      "Public certificate of conspicuous consumption"
     ],
     recommended: false
   },
   {
-    id: "premium", // Changed from "pro" to "premium" to match UserSubscription type
-    name: "Premium Nobility",
-    description: "Enhanced presence in the royal court",
+    id: "premium",
+    name: "Status Influencer",
+    description: "Enhanced digital presence with marketing perks",
     price: 15,
     features: [
       "Advanced profile customization",
       "Enhanced profile visibility",
-      "Exclusive borders and badges",
+      "RGB borders and animations",
       "Profile boost (3-day)",
       "Mockery protection (50% discount)",
-      "Basic marketing analytics"
+      "Basic marketing analytics",
+      "Profile visitor metrics"
     ],
     recommended: true
   },
   {
     id: "royal",
-    name: "Royal Aristocracy",
-    description: "Premium presence with maximum benefits",
+    name: "Digital Royalty",
+    description: "Maximum status with premium marketing features",
     price: 30,
     features: [
       "Maximum profile customization",
       "Permanent profile boost",
-      "Exclusive royal cosmetics",
-      "Royal background effects",
+      "Exclusive animated effects",
+      "Premium billboard space",
       "Team leadership eligibility",
-      "Free mockery protection",
+      "Complete mockery immunity",
       "NFT certificate minting",
-      "Premium advertising space",
-      "Marketing analytics dashboard",
-      "Profile visitor demographics"
+      "Priority placements across site",
+      "Comprehensive marketing dashboard",
+      "Visitor demographics and conversion tracking"
     ],
     recommended: false
   }
