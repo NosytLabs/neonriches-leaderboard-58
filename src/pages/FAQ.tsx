@@ -1,129 +1,198 @@
 
-import React from 'react';
-import { ArrowLeft } from 'lucide-react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { ArrowLeft, ChevronDown, ChevronUp, Search, Crown, DollarSign, Users, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { 
+import { Input } from '@/components/ui/input';
+import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
-import ThroneChair from '@/components/logos/ThroneChair';
+import Layout from '@/components/layout/Layout';
 
 const FAQ: React.FC = () => {
+  const [searchTerm, setSearchTerm] = useState('');
+  
+  const faqCategories = [
+    {
+      title: 'General',
+      icon: <Crown className="h-5 w-5 text-royal-gold" />,
+      questions: [
+        {
+          question: 'What is SpendThrone?',
+          answer: 'SpendThrone is a satirical social experiment where your rank is directly proportional to how much money you spend. $1 equals 1 rank point. The site explores themes of status, wealth display, and digital hierarchies in a tongue-in-cheek manner.'
+        },
+        {
+          question: 'Is this a joke?',
+          answer: 'SpendThrone operates in the space between satire and reality. While the concept is deliberately over-the-top and self-aware about the absurdity of pay-to-win mechanics, the transactions and rankings are real. Think of it as performance art with your wallet.'
+        },
+        {
+          question: 'How do I get started?',
+          answer: 'Simply create an account, make your first deposit to establish your rank, and start exploring features like team membership, profile customization, and the various ways to interact with other users in the hierarchy.'
+        },
+        {
+          question: 'Is my personal information safe?',
+          answer: 'We take data security seriously. Your personal information is protected according to our Privacy Policy. Payment information is processed through secure third-party providers and is never stored on our servers.'
+        }
+      ]
+    },
+    {
+      title: 'Rankings & Spending',
+      icon: <DollarSign className="h-5 w-5 text-royal-gold" />,
+      questions: [
+        {
+          question: 'How exactly do rankings work?',
+          answer: 'Your rank is determined solely by the total amount of money you\'ve spent on SpendThrone. $1 = 1 rank point. The more you spend, the higher your rank. The leaderboard never resets, creating a persistent hierarchy.'
+        },
+        {
+          question: 'What happens when I spend money?',
+          answer: 'When you deposit money, your rank increases immediately by the exact amount spent. You\'ll also unlock various features, cosmetics, and abilities depending on your tier level, which is determined by your total spending.'
+        },
+        {
+          question: 'Can I get a refund?',
+          answer: 'All transactions on SpendThrone are final and non-refundable. Please spend responsibly and only use disposable income that you are comfortable parting with permanently.'
+        },
+        {
+          question: 'What payment methods do you accept?',
+          answer: 'We accept major credit/debit cards, PayPal, and several cryptocurrencies including Bitcoin, Ethereum, and Solana.'
+        },
+        {
+          question: 'Is there a minimum spending amount?',
+          answer: 'The minimum deposit is $1, which will give you 1 rank point. There is no maximum limit.'
+        }
+      ]
+    },
+    {
+      title: 'Teams & Competition',
+      icon: <Users className="h-5 w-5 text-royal-gold" />,
+      questions: [
+        {
+          question: 'What are the RGB Teams?',
+          answer: 'Users can join one of three teams: Red (neon fire), Green (lime zap), or Blue (cool pulse). Your spending contributes to your team\'s total score, creating a collective competition alongside individual rankings.'
+        },
+        {
+          question: 'How do team competitions work?',
+          answer: 'Teams compete based on their collective spending. Weekly, monthly, and annual trophies are awarded to the team with the highest total spending during that period. Team members may receive exclusive cosmetics when their team wins.'
+        },
+        {
+          question: 'Can I switch teams?',
+          answer: 'You can switch teams once every 30 days. There\'s a small fee for switching teams, which adds to your personal rank.'
+        },
+        {
+          question: 'Are there team-specific benefits?',
+          answer: 'Each team has access to exclusive team-colored cosmetics and a private team chat. Additionally, certain limited-time events may feature team-based bonuses or challenges.'
+        }
+      ]
+    },
+    {
+      title: 'Features & Customization',
+      icon: <Sparkles className="h-5 w-5 text-royal-gold" />,
+      questions: [
+        {
+          question: 'What features are available on profiles?',
+          answer: 'Profile features depend on your tier level. Free users ($1+) get basic profiles with limited text and one image. Pro users ($25+) get enhanced features including multiple images, animated borders, video embeds, custom gradients, and analytics.'
+        },
+        {
+          question: 'What are cosmetics?',
+          answer: 'Cosmetics are visual enhancements for your profile, including borders, effects, titles, badges, and more. Some are unlocked through spending thresholds, while others are available through the Royal Boutique or as limited-time offerings.'
+        },
+        {
+          question: 'What is Royal Mockery?',
+          answer: 'Royal Mockery allows users to spend money to apply temporary visual effects to other users\' profiles. These range from playful (like tomato splats) to elaborate (like forcing someone to wear a jester costume). The affected user can purchase immunity or protection.'
+        },
+        {
+          question: 'What is the Wishing Well?',
+          answer: 'The Wishing Well is a feature where you can spend coins for a chance to receive exclusive cosmetic items. The higher your wish amount, the better your chances of receiving rare items.'
+        }
+      ]
+    }
+  ];
+  
+  const filteredFAQs = searchTerm ? 
+    faqCategories.map(category => ({
+      ...category,
+      questions: category.questions.filter(item => 
+        item.question.toLowerCase().includes(searchTerm.toLowerCase()) || 
+        item.answer.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    })).filter(category => category.questions.length > 0) : 
+    faqCategories;
+  
   return (
-    <div className="container mx-auto px-4 py-8 max-w-4xl">
-      <Link to="/">
-        <Button variant="outline" className="mb-6 glass-morphism border-white/10">
-          <ArrowLeft className="h-4 w-4 mr-2" />
-          Back to Home
+    <Layout>
+      <div className="max-w-4xl mx-auto px-4 py-12">
+        <Button variant="ghost" size="sm" className="mb-6" asChild>
+          <Link to="/"><ArrowLeft className="mr-2 h-4 w-4" /> Back to Home</Link>
         </Button>
-      </Link>
-      
-      <div className="text-center mb-10">
-        <ThroneChair size={80} className="mx-auto mb-4" animate={true} />
-        <h1 className="text-4xl font-bold font-royal mb-2">Frequently Asked Questions</h1>
-        <p className="text-white/70 max-w-2xl mx-auto">
-          Everything you need to know about SpendThrone, the ultimate pay-to-win social platform.
-        </p>
+        
+        <div className="space-y-8">
+          <div className="text-center">
+            <h1 className="text-3xl font-bold mb-4">Frequently Asked Questions</h1>
+            <p className="text-white/70 max-w-2xl mx-auto">
+              Find answers to common questions about SpendThrone, the satirical social platform where wealth equals worth.
+            </p>
+          </div>
+          
+          <div className="relative mb-8">
+            <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
+              <Search className="h-5 w-5 text-white/40" />
+            </div>
+            <Input
+              type="search"
+              placeholder="Search FAQs..."
+              className="pl-10 bg-white/5 border-white/10"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+          
+          {filteredFAQs.length === 0 ? (
+            <div className="text-center py-12">
+              <p className="text-white/50 text-lg">No questions found matching "{searchTerm}"</p>
+              <Button variant="link" onClick={() => setSearchTerm('')}>Clear search</Button>
+            </div>
+          ) : (
+            filteredFAQs.map((category, categoryIndex) => (
+              <div key={categoryIndex} className="glass-morphism border-white/10 p-6 rounded-lg">
+                <div className="flex items-center mb-4">
+                  {category.icon}
+                  <h2 className="text-xl font-semibold ml-2">{category.title}</h2>
+                </div>
+                
+                <Accordion type="single" collapsible className="space-y-4">
+                  {category.questions.map((item, itemIndex) => (
+                    <AccordionItem 
+                      key={itemIndex} 
+                      value={`${categoryIndex}-${itemIndex}`}
+                      className="border-b border-white/10 last:border-b-0"
+                    >
+                      <AccordionTrigger className="text-left hover:no-underline py-4">
+                        <span className="text-white/90 font-medium">{item.question}</span>
+                      </AccordionTrigger>
+                      <AccordionContent className="text-white/70 pt-2 pb-4">
+                        {item.answer}
+                      </AccordionContent>
+                    </AccordionItem>
+                  ))}
+                </Accordion>
+              </div>
+            ))
+          )}
+          
+          <div className="text-center bg-royal-gold/10 p-6 rounded-lg">
+            <h3 className="text-xl font-semibold mb-3">Still have questions?</h3>
+            <p className="text-white/70 mb-4">
+              Can't find what you're looking for? We're here to help.
+            </p>
+            <Button asChild>
+              <Link to="/contact">Contact Support</Link>
+            </Button>
+          </div>
+        </div>
       </div>
-      
-      <div className="glass-morphism border-white/10 p-6 rounded-lg">
-        <Accordion type="single" collapsible className="space-y-4">
-          <AccordionItem value="item-1" className="border-white/10">
-            <AccordionTrigger className="text-lg font-medium">What is SpendThrone?</AccordionTrigger>
-            <AccordionContent className="text-white/80">
-              SpendThrone is a satirical social platform where users can climb the ranks simply by spending money. It's a tongue-in-cheek commentary on digital status games and pay-to-win mechanics, presented as a unique social experiment.
-            </AccordionContent>
-          </AccordionItem>
-          
-          <AccordionItem value="item-2" className="border-white/10">
-            <AccordionTrigger className="text-lg font-medium">How does the ranking system work?</AccordionTrigger>
-            <AccordionContent className="text-white/80">
-              The ranking system is refreshingly transparent: $1 spent equals 1 rank point. The more you spend, the higher your rank. The leaderboard never resets, so your position is permanent (unless someone outspends you).
-            </AccordionContent>
-          </AccordionItem>
-          
-          <AccordionItem value="item-3" className="border-white/10">
-            <AccordionTrigger className="text-lg font-medium">Is this a joke or a real service?</AccordionTrigger>
-            <AccordionContent className="text-white/80">
-              Both! SpendThrone is a satirical platform that parodies digital status mechanics, but the transactions are real, and the digital status you acquire is as real as any online status can be.
-            </AccordionContent>
-          </AccordionItem>
-          
-          <AccordionItem value="item-4" className="border-white/10">
-            <AccordionTrigger className="text-lg font-medium">Can I get a refund?</AccordionTrigger>
-            <AccordionContent className="text-white/80">
-              All transactions on SpendThrone are final and non-refundable. This policy is clearly stated in our Terms of Service. When you spend money here, you're purchasing digital status and virtual items with no real-world value.
-            </AccordionContent>
-          </AccordionItem>
-          
-          <AccordionItem value="item-5" className="border-white/10">
-            <AccordionTrigger className="text-lg font-medium">What do I get for my money?</AccordionTrigger>
-            <AccordionContent className="text-white/80">
-              Your contributions provide several benefits: a higher rank on the perpetual leaderboard, access to profile customization options based on your tier, the ability to participate in team competitions, and various mockery powers to use on other users.
-            </AccordionContent>
-          </AccordionItem>
-          
-          <AccordionItem value="item-6" className="border-white/10">
-            <AccordionTrigger className="text-lg font-medium">What are the different user tiers?</AccordionTrigger>
-            <AccordionContent className="text-white/80">
-              SpendThrone has several tiers based on your total spending: Bronze (up to $50), Silver ($50-$200), Gold ($200-$500), Platinum ($500-$1000), and Royal ($1000+). Each tier unlocks additional features and customization options.
-            </AccordionContent>
-          </AccordionItem>
-          
-          <AccordionItem value="item-7" className="border-white/10">
-            <AccordionTrigger className="text-lg font-medium">How do teams work?</AccordionTrigger>
-            <AccordionContent className="text-white/80">
-              Users can join one of three teams: Red, Green, or Blue. Team rankings are based on the collective spending of all team members. Weekly team challenges provide additional opportunities for recognition and rewards.
-            </AccordionContent>
-          </AccordionItem>
-          
-          <AccordionItem value="item-8" className="border-white/10">
-            <AccordionTrigger className="text-lg font-medium">What payment methods do you accept?</AccordionTrigger>
-            <AccordionContent className="text-white/80">
-              We accept various payment methods including major credit cards, PayPal, and select cryptocurrencies (including Solana). All transactions are processed securely.
-            </AccordionContent>
-          </AccordionItem>
-          
-          <AccordionItem value="item-9" className="border-white/10">
-            <AccordionTrigger className="text-lg font-medium">What is the Royal Mockery system?</AccordionTrigger>
-            <AccordionContent className="text-white/80">
-              Royal Mockery allows users to spend money to apply temporary effects to other users' profiles. These can range from cosmetic changes to temporary restrictions. Users can also purchase immunity to protect themselves from mockery.
-            </AccordionContent>
-          </AccordionItem>
-          
-          <AccordionItem value="item-10" className="border-white/10">
-            <AccordionTrigger className="text-lg font-medium">How do I customize my profile?</AccordionTrigger>
-            <AccordionContent className="text-white/80">
-              Profile customization options are unlocked based on your spending tier. These include profile borders, background effects, special titles, and more. You can access these options from your profile settings page.
-            </AccordionContent>
-          </AccordionItem>
-          
-          <AccordionItem value="item-11" className="border-white/10">
-            <AccordionTrigger className="text-lg font-medium">Are there any special events?</AccordionTrigger>
-            <AccordionContent className="text-white/80">
-              Yes! SpendThrone regularly hosts special events like Fire Sales (discounted cosmetics), Public Shaming Festivals (reduced mockery costs), and seasonal competitions with unique rewards.
-            </AccordionContent>
-          </AccordionItem>
-          
-          <AccordionItem value="item-12" className="border-white/10">
-            <AccordionTrigger className="text-lg font-medium">What happens if I delete my account?</AccordionTrigger>
-            <AccordionContent className="text-white/80">
-              If you delete your account, your profile will be removed from public view, but your spending history and rank may still be reflected in historical data. No refunds are provided for account deletion.
-            </AccordionContent>
-          </AccordionItem>
-        </Accordion>
-      </div>
-      
-      <div className="mt-8 text-center">
-        <p className="text-white/70 mb-4">Still have questions?</p>
-        <Button asChild>
-          <Link to="/contact">Contact Support</Link>
-        </Button>
-      </div>
-    </div>
+    </Layout>
   );
 };
 

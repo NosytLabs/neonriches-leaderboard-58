@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Navigate, Routes, Route, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/auth';
@@ -34,12 +35,9 @@ import NotFound from '@/pages/NotFound';
 
 // Layout wrapper for Protected routes
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { user, isLoading, isAuthenticated } = useAuth();
+  const { user } = useAuth();
   const location = useLocation();
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
+  const isAuthenticated = !!user;
 
   if (!isAuthenticated) {
     return <Navigate to="/login" state={{ from: location }} replace />;

@@ -1,2 +1,2 @@
 
-export type Team = 'Red' | 'Green' | 'Blue' | null;
+export type Team = 'red' | 'green' | 'blue' | null;

@@ -8,13 +8,14 @@ import '../styles/animations/enhanced-animations.css';
 
 const RoyalHero = () => {
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuth();
+  const { user } = useAuth();
+  const isAuthenticated = !!user;
   
   const handleGetStarted = () => {
     if (isAuthenticated) {
       navigate('/dashboard');
     } else {
-      navigate('/auth');
+      navigate('/signup');
     }
   };
   

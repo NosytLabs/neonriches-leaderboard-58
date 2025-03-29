@@ -60,7 +60,7 @@ export interface MockUser {
 
 export type UserRole = 'user' | 'moderator' | 'admin' | 'royal';
 
-export type UserTier = 'bronze' | 'silver' | 'gold' | 'platinum' | 'royal' | 'free' | 'basic' | 'pro' | 'premium';
+export type UserTier = 'bronze' | 'silver' | 'gold' | 'platinum' | 'royal' | 'free' | 'basic' | 'pro' | 'premium' | 'legendary' | 'rare' | 'common' | 'uncommon' | 'epic';
 
 export interface UserSubscription {
   tier: string;
@@ -95,6 +95,7 @@ export interface ProfileImage {
   url: string;
   type: string;
   isPrimary: boolean;
+  caption?: string;
 }
 
 export interface ProfileBoost {
@@ -105,6 +106,7 @@ export interface ProfileBoost {
   type: string;
   strength?: number;
   appliedBy?: string;
+  effectId?: string;
 }
 
 export interface UserSettings {
@@ -116,6 +118,13 @@ export interface UserSettings {
   emailNotifications: boolean;
   darkMode: boolean;
   language: string;
+  profileVisibility?: boolean;
+  allowProfileLinks?: boolean;
+  showEmailOnProfile?: boolean;
+  rankChangeAlerts?: boolean;
+  shameAlerts?: boolean;
+  newFollowerAlerts?: boolean;
+  theme?: string;
 }
 
 export type UserProfile = User;

@@ -1,168 +1,49 @@
 
 import { User } from '@/types/user';
 
-/**
- * Ensures a user object has all required properties
- * This is useful when working with user objects that may come from different sources
- * and might be missing some expected properties
- */
+// Ensure User object has all required properties
 export const ensureUser = (user: any): User => {
-  if (!user) {
-    throw new Error('User object is null or undefined');
-  }
-  
-  // Create a new user object with default values for missing properties
-  const ensuredUser: User = {
+  return {
     id: user.id || '',
     username: user.username || '',
-    email: user.email || '',
-    displayName: user.displayName || user.username || '',
-    profileImage: user.profileImage || user.avatar || '',
-    bio: user.bio || '',
-    tier: user.tier || 'bronze',
-    role: user.role || 'user',
-    team: user.team || null,
-    rank: user.rank || 0,
+    email: user.email,
+    displayName: user.displayName,
+    profileImage: user.profileImage,
+    bio: user.bio,
+    tier: user.tier,
+    role: user.role,
+    team: user.team,
+    rank: user.rank,
+    previousRank: user.previousRank,
     walletBalance: user.walletBalance || 0,
-    walletAddress: user.walletAddress || '',
-    totalSpent: user.totalSpent || user.amountSpent || user.spentAmount || 0,
-    spentAmount: user.spentAmount || user.totalSpent || user.amountSpent || 0,
-    amountSpent: user.amountSpent || user.totalSpent || user.spentAmount || 0,
-    joinDate: user.joinDate || user.createdAt || new Date().toISOString(),
-    createdAt: user.createdAt || user.joinDate || new Date().toISOString(),
-    updatedAt: user.updatedAt || new Date().toISOString(),
-    isVerified: user.isVerified || false,
-    cosmetics: user.cosmetics || {
-      borders: [],
-      colors: [],
-      fonts: [],
-      emojis: [],
-      titles: [],
-      backgrounds: [],
-      effects: [],
-      badges: [],
-      themes: [],
-    },
-    subscription: user.subscription || null,
-    activeTitle: user.activeTitle || null,
-    socialLinks: user.socialLinks || {},
+    walletAddress: user.walletAddress,
+    totalSpent: user.totalSpent || 0,
+    spentAmount: user.spentAmount || 0,
+    amountSpent: user.amountSpent || 0,
+    joinDate: user.joinDate,
+    joinedAt: user.joinedAt,
+    createdAt: user.createdAt || new Date().toISOString(),
+    updatedAt: user.updatedAt,
+    isVerified: user.isVerified,
+    cosmetics: user.cosmetics,
+    subscription: user.subscription,
+    activeTitle: user.activeTitle,
+    socialLinks: user.socialLinks,
     badges: user.badges || [],
     spendStreak: user.spendStreak || 0,
-    gender: user.gender || 'male',
+    gender: user.gender,
     profileViews: user.profileViews || 0,
     profileClicks: user.profileClicks || 0,
     followers: user.followers || 0,
     following: user.following || 0,
     isVIP: user.isVIP || false,
-    settings: user.settings || {
-      showRank: true,
-      showTeam: true,
-      showSpending: true,
-      publicProfile: true,
-      allowMessages: true,
-      emailNotifications: false,
-      darkMode: true,
-      language: 'en'
-    },
-    profileBoosts: user.profileBoosts || []
+    settings: user.settings,
+    profileBoosts: user.profileBoosts || [],
+    certificateNFT: user.certificateNFT
   };
-  
-  return ensuredUser;
 };
 
-/**
- * Adapts a UserProfile to a User type
- */
-export const adaptUserProfileToUser = (profile: any): User => {
-  return ensureUser({
-    ...profile,
-    // make sure required fields are present
-    totalSpent: profile.totalSpent || profile.amountSpent || profile.spentAmount || 0,
-    spentAmount: profile.spentAmount || profile.totalSpent || profile.amountSpent || 0,
-    amountSpent: profile.amountSpent || profile.totalSpent || profile.spentAmount || 0,
-    createdAt: profile.createdAt || profile.joinDate || profile.joinedAt || new Date().toISOString()
-  });
-};
-
-/**
- * Formats a user's display name
- */
-export const formatDisplayName = (user: User | null): string => {
-  if (!user) return '';
-  
-  if (user.displayName) {
-    return user.displayName;
-  }
-  
-  return user.username;
-};
-
-/**
- * Gets user's tier color class
- */
-export const getUserTierColor = (tier?: string): string => {
-  switch (tier) {
-    case 'bronze':
-      return 'text-amber-600';
-    case 'silver':
-      return 'text-slate-400';
-    case 'gold':
-      return 'text-yellow-500';
-    case 'platinum':
-      return 'text-indigo-400';
-    case 'royal':
-      return 'text-royal-gold';
-    default:
-      return 'text-gray-400';
-  }
-};
-
-/**
- * Gets user's tier badge class
- */
-export const getUserTierBadgeClass = (tier?: string): string => {
-  switch (tier) {
-    case 'bronze':
-      return 'bg-amber-600/20 text-amber-600 border-amber-600/30';
-    case 'silver':
-      return 'bg-slate-400/20 text-slate-400 border-slate-400/30';
-    case 'gold':
-      return 'bg-yellow-500/20 text-yellow-500 border-yellow-500/30';
-    case 'platinum':
-      return 'bg-indigo-400/20 text-indigo-400 border-indigo-400/30';
-    case 'royal':
-      return 'bg-royal-gold/20 text-royal-gold border-royal-gold/30';
-    default:
-      return 'bg-gray-400/20 text-gray-400 border-gray-400/30';
-  }
-};
-
-/**
- * Checks if a user has a specific cosmetic
- */
-export const userHasCosmetic = (user: User, cosmeticId: string, category: string): boolean => {
-  if (!user.cosmetics) return false;
-  
-  const categoryKey = category as keyof typeof user.cosmetics;
-  const cosmetics = user.cosmetics[categoryKey];
-  
-  if (!cosmetics || !Array.isArray(cosmetics)) return false;
-  
-  return cosmetics.includes(cosmeticId);
-};
-
-/**
- * Gets initials from user's name
- */
-export const getUserInitials = (user: User | null): string => {
-  if (!user) return '';
-  
-  const name = user.displayName || user.username;
-  
-  return name
-    .split(' ')
-    .map(part => part[0])
-    .join('')
-    .toUpperCase()
-    .slice(0, 2);
+// Convert a user profile from the API to a User object
+export const adaptUserProfileToUser = (userProfile: any): User => {
+  return ensureUser(userProfile);
 };

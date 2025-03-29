@@ -9,11 +9,20 @@ interface AuthButtonProps {
 }
 
 const AuthButton: React.FC<AuthButtonProps> = ({ fullWidth = false }) => {
-  const { openAuthModal, isAuthenticated } = useAuth();
+  const { user, signIn, signOut } = useAuth();
+  const isAuthenticated = !!user;
+  
+  const handleAuth = () => {
+    if (isAuthenticated) {
+      // Show user menu or profile
+    } else {
+      signIn();
+    }
+  };
   
   return (
     <Button 
-      onClick={openAuthModal}
+      onClick={handleAuth}
       className={fullWidth ? "w-full" : ""}
       variant="royal"
       size="sm"

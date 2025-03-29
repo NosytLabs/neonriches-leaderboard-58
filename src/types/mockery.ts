@@ -53,6 +53,7 @@ export interface MockeryEffectData {
   endTime: string;
   until?: string;
   tier?: MockeryTier;
+  strength?: number;
 }
 
 export interface MockeryEvent {
@@ -68,6 +69,7 @@ export interface MockeryEvent {
   tier: UserTier;
   timestamp: string;
   targetUserId?: string;
+  sourceUserId?: string;
 }
 
 export interface UserMockeryStatus {

@@ -1,122 +1,133 @@
 
 import React from 'react';
 import { ArrowLeft } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import ThroneChair from '@/components/logos/ThroneChair';
+import { Button } from '@/components/ui/button';
+import Layout from '@/components/layout/Layout';
 
 const TermsOfService: React.FC = () => {
   return (
-    <div className="container mx-auto px-4 py-8 max-w-4xl">
-      <Link to="/">
-        <Button variant="outline" className="mb-6 glass-morphism border-white/10">
-          <ArrowLeft className="h-4 w-4 mr-2" />
-          Back to Home
+    <Layout>
+      <div className="max-w-4xl mx-auto px-4 py-12">
+        <Button variant="ghost" size="sm" className="mb-6" asChild>
+          <Link to="/"><ArrowLeft className="mr-2 h-4 w-4" /> Back to Home</Link>
         </Button>
-      </Link>
-      
-      <Card className="glass-morphism border-white/10">
-        <CardHeader className="flex flex-col items-center text-center border-b border-white/10 pb-6">
-          <ThroneChair size={80} className="mb-4" animate={true} />
-          <CardTitle className="text-3xl font-royal text-royal-gold">Terms of Service</CardTitle>
-          <CardDescription>Last Updated: March 29, 2025</CardDescription>
-        </CardHeader>
         
-        <CardContent className="pt-6 space-y-6">
-          <div className="space-y-2">
-            <h2 className="text-xl font-semibold text-royal-gold">1. Acceptance of Terms</h2>
-            <p className="text-white/80 leading-relaxed">
-              Welcome to SpendThrone. By accessing or using our website and services, you agree to be bound by these Terms of Service. If you do not agree to these Terms, please do not use our services.
-            </p>
+        <div className="space-y-8">
+          <div>
+            <h1 className="text-3xl font-bold mb-4">Terms of Service</h1>
+            <p className="text-white/70">Last Updated: {new Date().toLocaleDateString()}</p>
           </div>
           
-          <div className="space-y-2">
-            <h2 className="text-xl font-semibold text-royal-gold">2. Description of Service</h2>
-            <p className="text-white/80 leading-relaxed">
-              SpendThrone is a satirical social platform where users can advance their rank by making monetary contributions. The platform offers various features including profile customization, team competition, and social interaction. All transactions are non-refundable and purely for entertainment purposes.
-            </p>
+          <div className="glass-morphism border-white/10 p-6 rounded-lg space-y-6">
+            <section>
+              <h2 className="text-xl font-semibold mb-3">1. Acceptance of Terms</h2>
+              <p className="text-white/80 leading-relaxed">
+                By accessing or using the SpendThrone website, you agree to be bound by these Terms of Service. 
+                If you do not agree to all the terms and conditions, you must not access or use the site.
+              </p>
+            </section>
+            
+            <section>
+              <h2 className="text-xl font-semibold mb-3">2. Description of Service</h2>
+              <p className="text-white/80 leading-relaxed">
+                SpendThrone is a satirical social experiment where users can spend real money to increase their rank on a public leaderboard.
+                The service includes features such as team competition, profile customization, and interactions with other users.
+              </p>
+            </section>
+            
+            <section>
+              <h2 className="text-xl font-semibold mb-3">3. Financial Terms</h2>
+              <div className="space-y-3">
+                <p className="text-white/80 leading-relaxed">
+                  a) <span className="font-medium">Payments</span>: All payments made to SpendThrone are final and non-refundable.
+                </p>
+                <p className="text-white/80 leading-relaxed">
+                  b) <span className="font-medium">Currency</span>: $1 USD spent equals 1 rank point on the leaderboard.
+                </p>
+                <p className="text-white/80 leading-relaxed">
+                  c) <span className="font-medium">Cryptocurrency</span>: Payments made in cryptocurrency will be valued at the exchange rate at the time of transaction.
+                </p>
+                <p className="text-white/80 leading-relaxed">
+                  d) <span className="font-medium">No Investment Value</span>: Spending on SpendThrone does not constitute an investment and has no potential for financial return.
+                </p>
+              </div>
+            </section>
+            
+            <section>
+              <h2 className="text-xl font-semibold mb-3">4. User Conduct</h2>
+              <div className="space-y-3">
+                <p className="text-white/80 leading-relaxed">
+                  Users agree not to:
+                </p>
+                <ul className="list-disc pl-6 space-y-2 text-white/80">
+                  <li>Use the service for any illegal purpose</li>
+                  <li>Upload or transmit any content that is unlawful, harmful, threatening, abusive, harassing, defamatory, vulgar, obscene, invasive of another's privacy, or otherwise objectionable</li>
+                  <li>Impersonate any person or entity</li>
+                  <li>Interfere with or disrupt the service or servers or networks connected to the service</li>
+                  <li>Attempt to gain unauthorized access to the service, other accounts, or computer systems</li>
+                </ul>
+              </div>
+            </section>
+            
+            <section>
+              <h2 className="text-xl font-semibold mb-3">5. Content Policy</h2>
+              <p className="text-white/80 leading-relaxed">
+                User profiles, images, and messages must comply with our content guidelines. SpendThrone reserves the right to remove any content that violates these guidelines without notice.
+              </p>
+            </section>
+            
+            <section>
+              <h2 className="text-xl font-semibold mb-3">6. Mockery Features</h2>
+              <p className="text-white/80 leading-relaxed">
+                The "mockery" features of SpendThrone are intended as satirical entertainment. Users who participate in these features acknowledge that they may be subject to virtual mockery by other users. All mockery actions should be taken in good humor and not as personal attacks.
+              </p>
+            </section>
+            
+            <section>
+              <h2 className="text-xl font-semibold mb-3">7. Termination</h2>
+              <p className="text-white/80 leading-relaxed">
+                SpendThrone reserves the right to terminate or suspend access to the service immediately, without prior notice or liability, for any reason whatsoever, including a breach of the Terms.
+              </p>
+            </section>
+            
+            <section>
+              <h2 className="text-xl font-semibold mb-3">8. Disclaimer</h2>
+              <p className="text-white/80 leading-relaxed">
+                SpendThrone is provided on an "AS IS" and "AS AVAILABLE" basis. We make no warranties, expressed or implied, and hereby disclaim all warranties including, but not limited to, implied warranties of merchantability, fitness for a particular purpose, non-infringement, or course of performance.
+              </p>
+            </section>
+            
+            <section>
+              <h2 className="text-xl font-semibold mb-3">9. Limitation of Liability</h2>
+              <p className="text-white/80 leading-relaxed">
+                In no event shall SpendThrone be liable for any indirect, incidental, special, consequential or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses, resulting from your access to or use of or inability to access or use the service.
+              </p>
+            </section>
+            
+            <section>
+              <h2 className="text-xl font-semibold mb-3">10. Changes to Terms</h2>
+              <p className="text-white/80 leading-relaxed">
+                SpendThrone reserves the right to modify or replace these Terms at any time. It is your responsibility to review these Terms periodically for changes. Your continued use of the service following the posting of any changes constitutes acceptance of those changes.
+              </p>
+            </section>
+            
+            <section>
+              <h2 className="text-xl font-semibold mb-3">11. Contact Information</h2>
+              <p className="text-white/80 leading-relaxed">
+                For questions about these Terms, please contact us at support@spendthrone.com.
+              </p>
+            </section>
           </div>
           
-          <div className="space-y-2">
-            <h2 className="text-xl font-semibold text-royal-gold">3. Account Registration</h2>
-            <p className="text-white/80 leading-relaxed">
-              To access certain features, you must create an account. You are responsible for maintaining the confidentiality of your account information and for all activities that occur under your account. You agree to provide accurate and complete information when creating your account and to update your information as necessary.
-            </p>
+          <div className="flex justify-center">
+            <Button asChild>
+              <Link to="/">Return to Home</Link>
+            </Button>
           </div>
-          
-          <div className="space-y-2">
-            <h2 className="text-xl font-semibold text-royal-gold">4. User Conduct</h2>
-            <p className="text-white/80 leading-relaxed">
-              You agree not to use the Service to:
-            </p>
-            <ul className="list-disc pl-6 text-white/80 space-y-1">
-              <li>Violate any laws or regulations</li>
-              <li>Post or transmit content that is harmful, offensive, obscene, abusive, or otherwise objectionable</li>
-              <li>Impersonate any person or entity</li>
-              <li>Engage in any activity that interferes with or disrupts the Service</li>
-              <li>Attempt to access any accounts or data not belonging to you</li>
-              <li>Use the Service for any fraudulent or illegal purpose</li>
-            </ul>
-          </div>
-          
-          <div className="space-y-2">
-            <h2 className="text-xl font-semibold text-royal-gold">5. Payments and Refunds</h2>
-            <p className="text-white/80 leading-relaxed">
-              All payments made on SpendThrone are final and non-refundable. By making a payment, you acknowledge that you are purchasing digital status and virtual items with no real-world value. We reserve the right to modify our pricing at any time.
-            </p>
-          </div>
-          
-          <div className="space-y-2">
-            <h2 className="text-xl font-semibold text-royal-gold">6. Content Ownership</h2>
-            <p className="text-white/80 leading-relaxed">
-              Users retain all ownership rights to the content they post on SpendThrone. By posting content, you grant us a non-exclusive, worldwide, royalty-free license to use, copy, modify, display, and distribute your content in connection with the Service.
-            </p>
-          </div>
-          
-          <div className="space-y-2">
-            <h2 className="text-xl font-semibold text-royal-gold">7. Content Moderation</h2>
-            <p className="text-white/80 leading-relaxed">
-              We reserve the right to remove any content that violates these Terms or that we find objectionable for any reason. We may suspend or terminate your account for violations of these Terms, inappropriate behavior, or for any other reason at our sole discretion.
-            </p>
-          </div>
-          
-          <div className="space-y-2">
-            <h2 className="text-xl font-semibold text-royal-gold">8. Disclaimer of Warranties</h2>
-            <p className="text-white/80 leading-relaxed">
-              THE SERVICE IS PROVIDED "AS IS" AND "AS AVAILABLE" WITHOUT ANY WARRANTIES OF ANY KIND. WE DISCLAIM ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT.
-            </p>
-          </div>
-          
-          <div className="space-y-2">
-            <h2 className="text-xl font-semibold text-royal-gold">9. Limitation of Liability</h2>
-            <p className="text-white/80 leading-relaxed">
-              TO THE MAXIMUM EXTENT PERMITTED BY LAW, IN NO EVENT SHALL SPENDTHRONE BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, INCLUDING LOSS OF PROFITS, DATA, OR USE, ARISING OUT OF OR RELATED TO YOUR USE OF THE SERVICE.
-            </p>
-          </div>
-          
-          <div className="space-y-2">
-            <h2 className="text-xl font-semibold text-royal-gold">10. Changes to Terms</h2>
-            <p className="text-white/80 leading-relaxed">
-              We reserve the right to modify these Terms at any time. We will provide notice of material changes by posting the updated Terms on our website. Your continued use of the Service after such changes constitutes your acceptance of the new Terms.
-            </p>
-          </div>
-          
-          <div className="space-y-2">
-            <h2 className="text-xl font-semibold text-royal-gold">11. Contact Information</h2>
-            <p className="text-white/80 leading-relaxed">
-              If you have any questions about these Terms, please contact us at support@spendthrone.com.
-            </p>
-          </div>
-          
-          <div className="mt-8 pt-6 border-t border-white/10 text-center">
-            <p className="text-white/60 italic">
-              By using SpendThrone, you acknowledge that you have read, understood, and agree to be bound by these Terms of Service.
-            </p>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
+        </div>
+      </div>
+    </Layout>
   );
 };
 

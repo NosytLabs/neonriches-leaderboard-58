@@ -36,6 +36,26 @@ export const formatNumber = (num: number): string => {
 };
 
 /**
+ * Format a dollar amount with dollar sign and commas
+ */
+export const formatDollarAmount = (amount: number): string => {
+  return `$${formatNumber(Math.round(amount))}`;
+};
+
+/**
+ * Format a number in compact form (1K, 1M, etc.)
+ */
+export const formatCompactNumber = (num: number): string => {
+  if (num < 1000) {
+    return num.toString();
+  } else if (num < 1000000) {
+    return (num / 1000).toFixed(1) + 'K';
+  } else {
+    return (num / 1000000).toFixed(1) + 'M';
+  }
+};
+
+/**
  * Format a time period in seconds to a human-readable string
  */
 export const formatTimePeriod = (seconds: number): string => {
