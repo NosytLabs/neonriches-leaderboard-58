@@ -1,93 +1,172 @@
 
 import { AnalysisResult } from './types';
-import { generateAnalysisReport } from './reportGenerator';
 
-/**
- * Exports the analysis report in various formats
- */
-export const exportAnalysisReportAsMarkdown = (analysis: AnalysisResult): string => {
-  return generateAnalysisReport(analysis);
+export const exportAnalysisReportAsMarkdown = (analysisResult: AnalysisResult): string => {
+  const report = generateAnalysisReport(analysisResult);
+  return report;
 };
 
-/**
- * Exports the analysis report as JSON
- */
-export const exportAnalysisReportAsJSON = (analysis: AnalysisResult): string => {
-  return JSON.stringify(analysis, null, 2);
-};
-
-/**
- * Exports the analysis report as HTML
- */
-export const exportAnalysisReportAsHTML = (analysis: AnalysisResult): string => {
-  // Convert markdown to HTML
-  const markdown = generateAnalysisReport(analysis);
-  
-  // Simple markdown to HTML conversion (a real implementation would use a proper converter)
-  const html = `
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Code Cleanup Analysis Report</title>
-  <style>
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-      line-height: 1.6;
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 20px;
-    }
-    h1, h2, h3 {
-      color: #333;
-    }
-    pre {
-      background-color: #f5f5f5;
-      padding: 10px;
-      border-radius: 5px;
-      overflow-x: auto;
-    }
-    code {
-      font-family: Consolas, Monaco, 'Andale Mono', monospace;
-    }
-    ul {
-      padding-left: 20px;
-    }
-  </style>
-</head>
-<body>
-  ${markdown
-    .replace(/^# (.*?)$/gm, '<h1>$1</h1>')
-    .replace(/^## (.*?)$/gm, '<h2>$1</h2>')
-    .replace(/^### (.*?)$/gm, '<h3>$1</h3>')
-    .replace(/\n\n/g, '</p><p>')
-    .replace(/- (.*?)$/gm, '<li>$1</li>')
-    .replace(/`([^`]+)`/g, '<code>$1</code>')}
-</body>
-</html>`;
-
-  return html;
-};
-
-/**
- * Saves the analysis report to a file
- */
 export const saveReportToFile = (content: string, filename: string): void => {
-  // Create a blob from the content
-  const blob = new Blob([content], { type: 'text/plain' });
-  
-  // Create a URL for the blob
+  const blob = new Blob([content], { type: 'text/markdown' });
   const url = URL.createObjectURL(blob);
   
-  // Create a temporary link element
-  const link = document.createElement('a');
-  link.href = url;
-  link.download = filename;
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
   
-  // Append the link to the body, click it, and remove it
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-  
-  // Clean up the URL
-  URL.revokeObjectURL(url);
+  // Clean up
+  setTimeout(() => {
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }, 100);
 };
+
+// Helper function to generate a complete report
+function generateAnalysisReport(analysisResult: AnalysisResult): string {
+  const {
+    unusedFiles,
+    unusedImports,
+    unusedVariables,
+    deadCodePaths,
+    duplicateCode,
+    complexCode,
+    unusedDependencies,
+    metrics
+  } = analysisResult;
+
+  // Calculate savings
+  const sizeReduction = metrics.beforeCleanup.projectSize - metrics.afterCleanup.projectSize;
+  const percentReduction = ((sizeReduction / metrics.beforeCleanup.projectSize) * 100).toFixed(1);
+  
+  let markdown = `# Code Analysis Report\n\n`;
+  
+  // Summary section
+  markdown += `## Summary\n\n`;
+  markdown += `This report identifies potential code cleanup opportunities in the codebase.\n\n`;
+  markdown += `- Project size: ${metrics.beforeCleanup.projectSize}KB\n`;
+  markdown += `- Potential reduction: ${sizeReduction}KB (${percentReduction}%)\n`;
+  markdown += `- Total issues found: ${
+    unusedFiles.length + 
+    unusedImports.length + 
+    unusedVariables.length +
+    unusedDependencies.length +
+    deadCodePaths.length +
+    duplicateCode.length +
+    complexCode.length
+  }\n\n`;
+  
+  // Unused files section
+  if (unusedFiles.length > 0) {
+    markdown += `## Unused Files\n\n`;
+    markdown += `The following files appear to be unused and could potentially be removed:\n\n`;
+    
+    unusedFiles.forEach(file => {
+      markdown += `- \`${file.filePath}\` (${file.size}KB)\n`;
+    });
+    
+    markdown += `\n`;
+  }
+  
+  // Unused imports section
+  if (unusedImports.length > 0) {
+    markdown += `## Unused Imports\n\n`;
+    markdown += `The following imports are not used and could be removed:\n\n`;
+    
+    unusedImports.forEach(imp => {
+      markdown += `- In \`${imp.filePath}\` line ${imp.line}: \`${imp.import}\`\n`;
+    });
+    
+    markdown += `\n`;
+  }
+  
+  // Unused variables section
+  if (unusedVariables.length > 0) {
+    markdown += `## Unused Variables\n\n`;
+    markdown += `The following variables are declared but not used:\n\n`;
+    
+    unusedVariables.forEach(variable => {
+      markdown += `- In \`${variable.filePath}\` line ${variable.line}: \`${variable.variable}\`\n`;
+    });
+    
+    markdown += `\n`;
+  }
+  
+  // Dead code paths section
+  if (deadCodePaths.length > 0) {
+    markdown += `## Dead Code Paths\n\n`;
+    markdown += `The following code is unreachable and can be safely removed:\n\n`;
+    
+    deadCodePaths.forEach(path => {
+      markdown += `### In \`${path.filePath}\` line ${path.line}:\n\n`;
+      markdown += "```javascript\n";
+      markdown += path.code + "\n";
+      markdown += "```\n\n";
+    });
+  }
+  
+  // Duplicate code section
+  if (duplicateCode.length > 0) {
+    markdown += `## Duplicate Code\n\n`;
+    markdown += `The following code patterns are duplicated and could be refactored:\n\n`;
+    
+    duplicateCode.forEach((dup, index) => {
+      markdown += `### Pattern ${index + 1}\n\n`;
+      markdown += `Found in:\n`;
+      
+      dup.instances.forEach(instance => {
+        markdown += `- \`${instance.filePath}\` line ${instance.line}\n`;
+      });
+      
+      markdown += "\n```javascript\n";
+      markdown += dup.code + "\n";
+      markdown += "```\n\n";
+    });
+  }
+  
+  // Complex code section
+  if (complexCode.length > 0) {
+    markdown += `## Complex Code\n\n`;
+    markdown += `The following functions have high complexity and could be simplified:\n\n`;
+    
+    complexCode.forEach(complex => {
+      markdown += `- \`${complex.filePath}\` line ${complex.line}: \`${complex.function}\` (complexity: ${complex.complexity})\n`;
+    });
+    
+    markdown += `\n`;
+  }
+  
+  // Unused dependencies section
+  if (unusedDependencies.length > 0) {
+    markdown += `## Unused Dependencies\n\n`;
+    markdown += `The following dependencies appear to be unused and could be removed:\n\n`;
+    
+    unusedDependencies.forEach(dep => {
+      markdown += `- \`${dep.name}@${dep.version}\`\n`;
+      
+      if (dep.alternatives && dep.alternatives.length > 0) {
+        markdown += `  - Alternatives: ${dep.alternatives.join(', ')}\n`;
+      }
+      
+      if (dep.recommendation) {
+        markdown += `  - Recommendation: ${dep.recommendation}\n`;
+      }
+    });
+    
+    markdown += `\n`;
+  }
+  
+  // Recommendations section
+  markdown += `## Recommendations\n\n`;
+  markdown += `1. Begin with removing unused imports and variables as they are low-risk changes\n`;
+  markdown += `2. Next, address unused files and dependencies after careful verification\n`;
+  markdown += `3. Refactor duplicate code into shared utilities\n`;
+  markdown += `4. Break down complex functions into smaller, more manageable pieces\n\n`;
+  
+  // Footer
+  markdown += `---\n\n`;
+  markdown += `Report generated on ${new Date().toLocaleString()}\n`;
+  
+  return markdown;
+}

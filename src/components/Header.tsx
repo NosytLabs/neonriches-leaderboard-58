@@ -1,168 +1,143 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { Menu, X, Crown, Search, Bell, Code, User, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { AlignJustify, X, Crown, Coins, Scroll, Bell, LayoutList, Calendar, Feather, Shield, MessageSquare } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import MobileMenu from './header/MobileMenu';
 import { useAuth } from '@/contexts/auth';
-import UserMenu from './header/UserMenu';
-import AuthButton from './AuthButton';
-import NavLink from './header/NavLink';
-import NotificationsDropdown from './header/NotificationsDropdown';
-import { Badge } from '@/components/ui/badge';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { useToastContext } from '@/contexts/ToastContext';
-import MedievalIcon from './ui/medieval-icon';
 
-interface HeaderProps {
-  transparent?: boolean;
-}
-
-const Header: React.FC<HeaderProps> = ({ transparent = false }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-  const { user } = useAuth();
-  const { addToast } = useToastContext();
+const Header = ({ transparent = false }) => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { isAuthenticated, user } = useAuth();
   const location = useLocation();
   
-  // Check if the header should be transparent (only on homepage)
-  const isHomepage = location.pathname === '/';
-  const showTransparent = transparent && isHomepage && !scrolled;
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
   
-  // Handle scroll event to make header solid on scroll
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 10) {
-        setScrolled(true);
-      } else {
-        setScrolled(false);
-      }
-    };
-    
-    window.addEventListener('scroll', handleScroll);
-    
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
+  const isActive = (path: string) => {
+    return location.pathname === path;
+  };
   
-  // Close mobile menu when changing routes
-  useEffect(() => {
-    setIsOpen(false);
-  }, [location.pathname]);
+  const navItems = [
+    { name: 'Dashboard', path: '/dashboard' },
+    { name: 'Leaderboard', path: '/leaderboard' },
+    { name: 'Teams', path: '/teams' },
+    { name: 'Events', path: '/events' },
+    { name: 'Features', path: '/features' },
+    { name: 'Code Analysis', path: '/code-analysis' },
+  ];
   
   return (
-    <header
-      className={cn(
-        'fixed top-0 left-0 right-0 z-50 transition-colors duration-300',
-        showTransparent ? 'bg-transparent' : 'bg-background/80 backdrop-blur-lg border-b border-white/10'
-      )}
-    >
-      <div className="container px-4 mx-auto">
+    <header className={cn(
+      'fixed top-0 left-0 right-0 z-40 transition-colors duration-300',
+      transparent ? 'bg-transparent' : 'bg-background/90 backdrop-blur-md border-b border-border/40'
+    )}>
+      <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link to="/" className="flex items-center">
-            <MedievalIcon name="crown" color="gold" size="md" className="mr-2 animate-crown-glow" />
-            <span className={cn(
-              "text-xl font-bold transition-colors",
-              showTransparent ? "text-white" : "royal-gradient"
-            )}>
-              SpendThrone
-            </span>
-            <Badge 
-              variant="outline" 
-              className="ml-2 px-1.5 text-[10px] py-0 bg-white/5 border-white/10 hidden sm:block"
-            >
-              v1.0
-            </Badge>
+          <Link to="/" className="flex items-center space-x-2">
+            <Crown className="h-6 w-6 text-royal-gold" />
+            <span className="font-bold text-xl text-royal-gold font-royal">SpendThrone</span>
           </Link>
           
-          {/* Desktop navigation */}
-          <nav className="hidden md:flex items-center space-x-1">
-            <NavLink to="/dashboard">
-              <LayoutList className="h-4 w-4 mr-1.5" />
-              Royal Court
-            </NavLink>
-            <NavLink to="/leaderboard">
-              <Coins className="h-4 w-4 mr-1.5 text-royal-gold" />
-              Treasury
-            </NavLink>
-            <NavLink to="/events">
-              <Calendar className="h-4 w-4 mr-1.5 text-royal-crimson" />
-              Tournaments
-            </NavLink>
-            <NavLink to="/features">
-              <MedievalIcon name="crown" size="sm" className="mr-1.5" color="gold" />
-              Royal Decrees
-            </NavLink>
-            <NavLink to="/royal-council">
-              <MessageSquare className="h-4 w-4 mr-1.5 text-royal-navy" />
-              Royal Council
-            </NavLink>
-            <NavLink to="/about">
-              <Scroll className="h-4 w-4 mr-1.5 text-royal-purple" />
-              Chronicles
-            </NavLink>
+          {/* Desktop Navigation */}
+          <nav className="hidden md:flex space-x-6">
+            {navItems.map((item) => (
+              <Link
+                key={item.path}
+                to={item.path}
+                className={cn(
+                  'text-sm font-medium transition-colors hover:text-royal-gold',
+                  isActive(item.path) ? 'text-royal-gold' : 'text-white/70'
+                )}
+              >
+                {item.name}
+              </Link>
+            ))}
           </nav>
           
-          {/* User actions section */}
-          <div className="hidden md:flex items-center space-x-2">
-            {user ? (
+          {/* Actions */}
+          <div className="flex items-center space-x-4">
+            <button className="text-white/70 hover:text-royal-gold transition-colors">
+              <Search className="h-5 w-5" />
+            </button>
+            
+            {isAuthenticated ? (
               <>
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button 
-                        variant="ghost" 
-                        size="sm"
-                        className="relative"
-                        onClick={() => addToast({
-                          title: "Royal Treasury",
-                          description: "Treasury feature coming soon!",
-                          variant: "default"
-                        })}
-                      >
-                        <MedievalIcon name="coins" color="gold" size="md" />
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Treasury</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
+                <button className="text-white/70 hover:text-royal-gold transition-colors relative">
+                  <Bell className="h-5 w-5" />
+                  <span className="absolute -top-1 -right-1 w-4 h-4 bg-royal-crimson text-white text-xs flex items-center justify-center rounded-full">
+                    3
+                  </span>
+                </button>
                 
-                <NotificationsDropdown />
-                <UserMenu user={user} />
+                <div className="relative group">
+                  <button className="flex items-center space-x-2 text-white/70 hover:text-royal-gold transition-colors">
+                    <User className="h-5 w-5" />
+                    <span className="hidden sm:inline text-sm">{user?.username || 'User'}</span>
+                    <ChevronDown className="h-4 w-4" />
+                  </button>
+                  
+                  <div className="absolute right-0 mt-2 w-48 py-2 bg-background/90 backdrop-blur-md border border-border/40 rounded-md shadow-lg hidden group-hover:block">
+                    <Link to="/profile/me" className="block px-4 py-2 text-sm text-white/70 hover:text-royal-gold hover:bg-white/5">
+                      Profile
+                    </Link>
+                    <Link to="/settings" className="block px-4 py-2 text-sm text-white/70 hover:text-royal-gold hover:bg-white/5">
+                      Settings
+                    </Link>
+                    <Link to="/help" className="block px-4 py-2 text-sm text-white/70 hover:text-royal-gold hover:bg-white/5">
+                      Help
+                    </Link>
+                    <button className="w-full text-left px-4 py-2 text-sm text-white/70 hover:text-royal-gold hover:bg-white/5">
+                      Sign out
+                    </button>
+                  </div>
+                </div>
               </>
             ) : (
-              <AuthButton />
-            )}
-          </div>
-          
-          {/* Mobile menu button */}
-          <div className="md:hidden flex items-center">
-            {user && (
-              <div className="flex items-center mr-2">
-                <NotificationsDropdown />
-                <UserMenu user={user} />
-              </div>
+              <Button variant="royal" asChild>
+                <Link to="/login">Sign In</Link>
+              </Button>
             )}
             
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setIsOpen(!isOpen)}
-              aria-label="Toggle menu"
+            {/* Mobile menu button */}
+            <button 
+              className="inline-flex md:hidden items-center justify-center text-white/70 hover:text-royal-gold"
+              onClick={toggleMenu}
             >
-              {isOpen ? <X className="h-6 w-6" /> : <AlignJustify className="h-6 w-6" />}
-            </Button>
+              {isMenuOpen ? (
+                <X className="h-6 w-6" />
+              ) : (
+                <Menu className="h-6 w-6" />
+              )}
+            </button>
           </div>
         </div>
       </div>
       
-      {/* Mobile menu */}
-      <MobileMenu isOpen={isOpen} onClose={() => setIsOpen(false)} />
+      {/* Mobile navigation */}
+      {isMenuOpen && (
+        <div className="md:hidden glass-morphism rounded-b-lg mx-4 shadow-lg border border-white/10">
+          <nav className="flex flex-col space-y-2 p-4">
+            {navItems.map((item) => (
+              <Link
+                key={item.path}
+                to={item.path}
+                className={cn(
+                  'py-2 px-3 rounded-md transition-colors',
+                  isActive(item.path) 
+                    ? 'bg-white/10 text-royal-gold' 
+                    : 'hover:bg-white/5 text-white/80 hover:text-royal-gold'
+                )}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                {item.name}
+              </Link>
+            ))}
+          </nav>
+        </div>
+      )}
     </header>
   );
 };

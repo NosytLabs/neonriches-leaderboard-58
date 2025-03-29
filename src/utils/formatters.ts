@@ -1,35 +1,8 @@
 
 /**
- * Format a number as currency (USD)
- */
-export const formatCurrency = (value: number = 0): string => {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2
-  }).format(value);
-};
-
-/**
- * Format a date string to a human-readable format
- */
-export const formatDate = (dateString: string): string => {
-  if (!dateString) return '';
-  
-  const date = new Date(dateString);
-  
-  return new Intl.DateTimeFormat('en-US', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit'
-  }).format(date);
-};
-
-/**
- * Format a number as a file size (KB, MB, GB)
+ * Formats a file size in bytes to a human-readable string
+ * @param bytes The size in bytes
+ * @returns A formatted string like "1.5 MB" or "256 KB"
  */
 export const formatFileSize = (bytes: number): string => {
   if (bytes === 0) return '0 Bytes';
@@ -42,41 +15,35 @@ export const formatFileSize = (bytes: number): string => {
 };
 
 /**
- * Format a number with a specific number of decimal places
+ * Formats a date to a localized string
+ * @param date The date to format
+ * @returns A formatted date string
  */
-export const formatNumber = (value: number, decimals: number = 0): string => {
-  return new Intl.NumberFormat('en-US', {
-    minimumFractionDigits: decimals,
-    maximumFractionDigits: decimals
-  }).format(value);
+export const formatDate = (date: Date | string): string => {
+  const d = typeof date === 'string' ? new Date(date) : date;
+  return d.toLocaleDateString();
 };
 
 /**
- * Format a number as a percentage
+ * Formats a time ago string from a date
+ * @param date The date to format
+ * @returns A formatted time ago string like "2 hours ago"
  */
-export const formatPercent = (value: number, decimals: number = 0): string => {
-  return new Intl.NumberFormat('en-US', {
-    style: 'percent',
-    minimumFractionDigits: decimals,
-    maximumFractionDigits: decimals
-  }).format(value / 100);
-};
-
-/**
- * Format a duration in milliseconds to a human-readable format
- */
-export const formatDuration = (milliseconds: number): string => {
-  const seconds = Math.floor(milliseconds / 1000);
-  const minutes = Math.floor(seconds / 60);
-  const hours = Math.floor(minutes / 60);
+export const formatTimeAgo = (date: Date | string): string => {
+  const d = typeof date === 'string' ? new Date(date) : date;
+  const now = new Date();
+  const seconds = Math.round((now.getTime() - d.getTime()) / 1000);
+  const minutes = Math.round(seconds / 60);
+  const hours = Math.round(minutes / 60);
+  const days = Math.round(hours / 24);
   
-  if (hours > 0) {
-    return `${hours}h ${minutes % 60}m`;
+  if (seconds < 60) {
+    return `${seconds} second${seconds !== 1 ? 's' : ''} ago`;
+  } else if (minutes < 60) {
+    return `${minutes} minute${minutes !== 1 ? 's' : ''} ago`;
+  } else if (hours < 24) {
+    return `${hours} hour${hours !== 1 ? 's' : ''} ago`;
+  } else {
+    return `${days} day${days !== 1 ? 's' : ''} ago`;
   }
-  
-  if (minutes > 0) {
-    return `${minutes}m ${seconds % 60}s`;
-  }
-  
-  return `${seconds}s`;
 };

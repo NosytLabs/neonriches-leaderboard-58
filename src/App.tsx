@@ -18,6 +18,8 @@ const Privacy = lazy(() => import('./pages/Privacy'));
 const Terms = lazy(() => import('./pages/Terms'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 const Chat = lazy(() => import('./pages/Chat'));
+const CodeAnalysis = lazy(() => import('./pages/CodeAnalysis'));
+const CodeAnalysisReport = lazy(() => import('./pages/CodeAnalysisReport'));
 
 // Loading fallback
 const PageLoader = () => (
@@ -93,6 +95,16 @@ function App() {
         <Route path="terms" element={
           <Suspense fallback={<PageLoader />}>
             <Terms />
+          </Suspense>
+        } />
+        <Route path="code-analysis" element={
+          <Suspense fallback={<PageLoader />}>
+            <CodeAnalysis />
+          </Suspense>
+        } />
+        <Route path="code-analysis/report" element={
+          <Suspense fallback={<PageLoader />}>
+            <CodeAnalysisReport />
           </Suspense>
         } />
         <Route path="*" element={

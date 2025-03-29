@@ -1,91 +1,98 @@
 
-export interface ComplexityItem {
-  id: string;
-  name: string;
-  file: string;
-  complexity: number;
-  linesOfCode: number;
-  parameters: number;
-  nestedLevel: number;
-  issues: string[];
-  functionName?: string;
-  line?: number;
-  explanation?: string;
-  status?: string;
-  path?: string;
-  function: string; // Added as required property
-  functions?: { name: string; complexity: number; status: string; }[];
+// File analysis types
+export interface FileInfo {
+  filePath: string;
+  size: number; // in KB
+  impact: 'low' | 'medium' | 'high';
 }
 
-export interface DuplicateCode {
-  id: string | number;
-  similarity: number;
-  files: { path: string; lines: string; }[];
-  snippet: string;
-  codeSnippet?: string;
-  lines?: number;
+export interface ImportInfo {
+  filePath: string;
+  line: number;
+  import: string;
+  impact: 'low' | 'medium' | 'high';
 }
 
-export interface ComplexCode {
-  id: string;
-  name: string;
-  file: string;
-  complexity: number;
-  linesOfCode: number;
-  parameters: number;
-  nestedLevel: number;
-  issues: string[];
+export interface VariableInfo {
+  filePath: string;
+  line: number;
+  variable: string;
+  impact: 'low' | 'medium' | 'high';
+}
+
+export interface FunctionInfo {
+  filePath: string;
+  line: number;
   function: string;
-  path?: string;
+  impact: 'low' | 'medium' | 'high';
+}
+
+export interface CssSelectorInfo {
+  filePath: string;
+  line: number;
+  selector: string;
+  impact: 'low' | 'medium' | 'high';
+}
+
+export interface DeadCodeInfo {
+  filePath: string;
+  line: number;
+  code: string;
+  impact: 'low' | 'medium' | 'high';
+}
+
+export interface CodeInstance {
+  filePath: string;
+  line: number;
+}
+
+export interface DuplicateCodeInfo {
+  instances: CodeInstance[];
+  code: string;
+  impact: 'low' | 'medium' | 'high';
+}
+
+export interface ComplexCodeInfo {
+  filePath: string;
+  line: number;
+  function: string;
+  complexity: number;
+  impact: 'low' | 'medium' | 'high';
+}
+
+export interface DependencyInfo {
+  name: string;
+  version: string;
+  alternatives?: string[];
+  recommendation?: string;
+  impact: 'low' | 'medium' | 'high';
+}
+
+export interface LargeFileInfo {
+  filePath: string;
+  size: number; // in KB
+}
+
+export interface ProjectMetrics {
+  projectSize: number; // in KB
+  fileCount: number;
+  dependencyCount: number;
+  averageFileSize: number; // in KB
+  largestFiles: LargeFileInfo[];
 }
 
 export interface AnalysisResult {
-  complexity: ComplexityItem[];
-  duplicates: any[];
-  unused: {
-    imports: any[];
-    variables: any[];
-    functions: any[];
-    components: any[];
-  };
-  summary: {
-    totalFiles: number;
-    totalComponents: number;
-    totalHooks: number;
-    totalUtilities: number;
-    complexityScore: number;
-    duplicateScore: number;
-    unusedCode: number;
-    overallHealth: number;
-  };
-  unusedFiles: any[];
-  unusedImports: any[];
-  unusedVariables: any[];
-  unusedCssSelectors: any[];
-  performanceIssues: any[];
-  accessibilityIssues: any[];
-  securityIssues: any[];
-  bestPracticeViolations: any[];
-  codeSmells: any[];
-  deadCodePaths: any[];
-  duplicateCode: DuplicateCode[];
-  complexCode: ComplexityItem[];
-  unusedDependencies: any[];
-  unusedFunctions: any[];
+  unusedFiles: FileInfo[];
+  unusedImports: ImportInfo[];
+  unusedVariables: VariableInfo[];
+  unusedFunctions: FunctionInfo[];
+  unusedCssSelectors: CssSelectorInfo[];
+  deadCodePaths: DeadCodeInfo[];
+  duplicateCode: DuplicateCodeInfo[];
+  complexCode: ComplexCodeInfo[];
+  unusedDependencies: DependencyInfo[];
   metrics: {
-    beforeCleanup: {
-      projectSize: number;
-      fileCount: number;
-      dependencyCount: number;
-    };
-    afterCleanup: {
-      projectSize: number;
-      fileCount: number;
-      dependencyCount: number;
-    };
+    beforeCleanup: ProjectMetrics;
+    afterCleanup: ProjectMetrics;
   };
-}
-
-export interface MockESLint {
-  lintFiles: (patterns: string[]) => Promise<any[]>;
 }
