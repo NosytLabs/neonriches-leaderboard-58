@@ -59,50 +59,24 @@ export interface DeadCodeInfo {
   description?: string;
 }
 
-export interface UnusedImport {
+export interface ComplexityItem {
+  id?: string;
   name: string;
-  source: string;
-  line: number;
-  file: string;
-}
-
-export interface UnusedVariable {
-  name: string;
-  type: string;
-  line: number;
-  file: string;
-}
-
-export interface UnusedComponent {
-  name: string;
-  file: string;
+  function?: string;
+  file?: string;
+  filePath?: string;
+  path?: string;
+  cyclomaticComplexity?: number;
+  complexity?: number;
+  lines?: number;
+  linesOfCode?: number;
+  parameters?: number;
+  nestedLevel?: number;
+  issues?: any[];
+  status?: string;
   line?: number;
-  used: boolean;
-}
-
-export interface UnusedCssSelector {
-  selector: string;
-  line: number;
-  file: string;
-}
-
-export interface DeadCodePath {
-  type: string;
-  name: string;
-  location: string;
-  line: number;
-  file: string;
-  description: string;
-}
-
-export interface EslintIssue {
-  id: string;
-  rule: string;
-  file: string;
-  line: number;
-  column: number;
-  message: string;
-  severity: "error" | "warning" | "info";
+  explanation?: string;
+  functionName?: string;
 }
 
 export interface PerformanceIssue {
@@ -115,26 +89,6 @@ export interface PerformanceIssue {
   lineNumber: number;
   type?: string;
   impact: string;
-}
-
-export interface ComplexityItem {
-  id: string;
-  name: string;
-  function: string;
-  file: string;
-  cyclomaticComplexity: number;
-  complexity?: number;
-  lines: number;
-  linesOfCode?: number;
-  parameters?: number;
-  nestedLevel?: number;
-  issues?: any[];
-  path?: string;
-  functions?: any[];
-  status?: string;
-  line?: number;
-  explanation?: string;
-  functionName?: string;
 }
 
 export interface DuplicateCodeInfo {
@@ -150,8 +104,27 @@ export interface DuplicateCodeInfo {
   lines?: number;
 }
 
-// Adding DuplicateCode as an alias for backward compatibility
+// Type aliases for backwards compatibility
 export type DuplicateCode = DuplicateCodeInfo;
+export type UnusedImport = ImportInfo;
+export type UnusedVariable = VariableInfo;
+export type UnusedCssSelector = CssSelectorInfo;
+export type UnusedComponent = {
+  name: string;
+  file: string;
+  line?: number;
+  used: boolean;
+};
+export type DeadCodePath = DeadCodeInfo;
+export type EslintIssue = {
+  id: string;
+  rule: string;
+  file: string;
+  line: number;
+  column: number;
+  message: string;
+  severity: "error" | "warning" | "info";
+};
 
 export interface ProjectMetrics {
   totalFiles?: number;

@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -37,7 +36,7 @@ const ProfileFeed: React.FC<ProfileFeedProps> = ({ user }) => {
       profileImage: '/throne-assets/avatars/noble-1.jpg',
       tier: 'gold',
       team: 'red',
-      content: 'Your contributions to the realm's treasury are most impressive. I shall endeavor to outspend you in the coming fortnight!',
+      content: 'Your contributions to the realm\'s treasury are most impressive. I shall endeavor to outspend you in the coming fortnight!',
       timestamp: '2023-12-01T10:00:00Z',
       likes: 3,
       hasLiked: false
