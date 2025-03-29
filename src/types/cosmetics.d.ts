@@ -7,7 +7,22 @@ export type CosmeticCategory =
   | 'title' 
   | 'background'
   | 'effect'
-  | 'badge';
+  | 'badge'
+  | 'theme'
+  | 'banner'
+  | 'borders'
+  | 'colors'
+  | 'fonts'
+  | 'emojis'
+  | 'titles'
+  | 'backgrounds'
+  | 'effects'
+  | 'badges'
+  | 'themes'
+  | 'banners'
+  | 'appearance'
+  | 'profile'
+  | 'interaction';
 
 export type CosmeticRarity = 
   | 'common' 
@@ -18,19 +33,6 @@ export type CosmeticRarity =
   | 'free'
   | 'premium'
   | 'royal';
-
-export type CosmeticType = 
-  | 'profile' 
-  | 'message' 
-  | 'post' 
-  | 'achievement';
-
-export type CosmeticPlacement = 
-  | 'avatar' 
-  | 'name' 
-  | 'border' 
-  | 'background' 
-  | 'title';
 
 export interface CosmeticItem {
   id: string;
@@ -45,8 +47,16 @@ export interface CosmeticItem {
   releaseDate?: string;
   expiryDate?: string;
   minTier?: string;
-  image?: string; // Add image property to fix errors
-  imageSrc?: string; // Add imageSrc property to fix errors
+  image?: string;
+  imageSrc?: string;
+  cost?: number;
+  type?: string;
+  previewImage?: string;
+  cssClass?: string;
+  unlockRequirement?: {
+    type: 'rank' | 'spend' | 'special';
+    value: number;
+  };
 }
 
 export interface UserCosmeticItem extends CosmeticItem {
@@ -69,5 +79,52 @@ export interface UserCosmetics {
   activeColor?: string;
   activeFont?: string;
   foundersPass?: boolean;
-  activeEmoji?: string; // Add activeEmoji property to fix errors
+  activeEmoji?: string;
+  socialLinks?: any; // Temporary fix
 }
+
+export type CosmeticType = 'profile' | 'message' | 'post' | 'achievement';
+export type CosmeticPlacement = 'avatar' | 'name' | 'border' | 'background' | 'title' | 'profile' | 'leaderboard' | 'chat' | 'global';
+
+// Helper functions for working with cosmetics
+export const getRarityColor = (rarity: CosmeticRarity): string => {
+  switch (rarity) {
+    case 'common': return 'text-gray-200';
+    case 'uncommon': return 'text-green-400';
+    case 'rare': return 'text-blue-400';
+    case 'epic': return 'text-purple-400';
+    case 'legendary': return 'text-royal-gold';
+    case 'free': return 'text-gray-200';
+    case 'premium': return 'text-purple-400';
+    case 'royal': return 'text-royal-gold';
+    default: return 'text-gray-200';
+  }
+};
+
+export const getRarityBgColor = (rarity: CosmeticRarity): string => {
+  switch (rarity) {
+    case 'common': return 'bg-gray-900/60';
+    case 'uncommon': return 'bg-green-900/20';
+    case 'rare': return 'bg-blue-900/20';
+    case 'epic': return 'bg-purple-900/20';
+    case 'legendary': return 'bg-orange-900/20';
+    case 'free': return 'bg-gray-900/60';
+    case 'premium': return 'bg-purple-900/20';
+    case 'royal': return 'bg-orange-900/20';
+    default: return 'bg-gray-900/60';
+  }
+};
+
+export const getRarityBorderColor = (rarity: CosmeticRarity): string => {
+  switch (rarity) {
+    case 'common': return 'border-gray-700';
+    case 'uncommon': return 'border-green-700';
+    case 'rare': return 'border-blue-700';
+    case 'epic': return 'border-purple-700';
+    case 'legendary': return 'border-royal-gold/50';
+    case 'free': return 'border-gray-700';
+    case 'premium': return 'border-purple-700';
+    case 'royal': return 'border-royal-gold/50';
+    default: return 'border-gray-700';
+  }
+};

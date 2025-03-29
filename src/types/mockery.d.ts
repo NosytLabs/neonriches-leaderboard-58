@@ -22,19 +22,9 @@ export type MockeryAction =
   | 'protection'
   | 'removal';
 
-export type ShameAction = 
-  | 'tomatoes' 
-  | 'eggs' 
-  | 'stocks' 
-  | 'silence' 
-  | 'courtJester'
-  | 'jester'
-  | 'dunce'
-  | 'roast'
-  | 'ridicule'
-  | 'taunt';
+export type ShameAction = MockeryAction;
 
-export type ExtendedMockeryAction = MockeryAction | 'protection' | 'removal';
+export type ExtendedMockeryAction = MockeryAction;
 
 export type MockeryTier = 
   | 'common' 
@@ -68,6 +58,11 @@ export interface ShameEffect {
 export interface MockeryEffectData {
   username: string;
   action: MockeryAction;
+  tier?: MockeryTier;
+  title?: string;
+  description?: string;
+  price?: number;
+  icon?: string;
 }
 
 export interface UserMockeryStatus {
@@ -92,7 +87,8 @@ export interface MockeryProtection {
   startDate: string;
   endDate: string;
   isActive: boolean;
-  username: string;
+  username?: string;
+  expiresAt?: number;
 }
 
 export interface MockeryStats {
@@ -101,5 +97,5 @@ export interface MockeryStats {
   mostMockedUser: string;
   mostExpensiveMockery: number;
   totalSpent: number;
-  totalMockery?: number; // Add totalMockery property to fix errors
+  totalMockery?: number;
 }

@@ -1,165 +1,151 @@
 
-import { useState, useEffect, useCallback } from 'react';
-import { useAuth } from '@/contexts/auth';
+import { useState, useEffect } from 'react';
+import { ProfileBoost, BoostEffectType } from '@/types/boost';
 import { UserProfile } from '@/types/user';
-import profileBoostEffects from '@/data/profileBoostEffects';
-
-export type BoostEffectType = 'glow' | 'crown' | 'sparkle' | 'pulse' | 'flame' | 'shadow';
+import { useToast } from '@/components/ui/use-toast';
+import profileBoostEffects from '@/data/boostEffects';
 
 export interface ProfileBoost {
   id: string;
-  effectId: BoostEffectType;
   startDate: string;
   endDate: string;
   level: number;
-  type: 'visibility' | 'appearance' | 'effect';
-  strength: number;
-  appliedBy: string;
+  effectId: BoostEffectType;
+  type?: string;
+  strength?: number;
+  appliedBy?: string;
 }
 
 export interface UseProfileBoostResult {
   activeBoosts: ProfileBoost[];
-  hasActiveBoost: boolean;
-  applyBoost: (boostId: string, days: number) => Promise<boolean>;
-  removeBoost: (boostId: string) => Promise<boolean>;
-  getBoostLevel: () => number;
-  getBoostEffect: () => BoostEffectType | null;
-  canApplyBoost: (boostId: string) => boolean;
+  addBoost: (effectId: BoostEffectType, days: number, level?: number) => boolean;
+  removeBoost: (boostId: string) => void;
+  hasActiveBoost: (effectId: BoostEffectType) => boolean;
+  isBoostActive: (boostId: string) => boolean;
+  getBoostClasses: () => string;
+  hasActiveBoosts: boolean;
 }
 
-export const useProfileBoost = (
-  profile?: UserProfile | null,
-  updateProfile?: (data: Partial<UserProfile>) => Promise<void>
-): UseProfileBoostResult => {
-  const { user } = useAuth();
-  const targetProfile = profile || user;
-  
+export const useProfileBoost = (user?: UserProfile): UseProfileBoostResult => {
   const [activeBoosts, setActiveBoosts] = useState<ProfileBoost[]>([]);
-  
+  const { toast } = useToast();
+
+  // Initialize boosts from user profile
   useEffect(() => {
-    if (!targetProfile) return;
+    if (user && user.profileBoosts) {
+      // Convert user profile boosts to our internal format
+      const validBoosts = user.profileBoosts.filter(boost => {
+        const endDate = new Date(boost.endDate);
+        return endDate > new Date(); // Only include active boosts
+      });
+      
+      // Convert the boosts to our internal format with proper type casting
+      const convertedBoosts = validBoosts.map(boost => ({
+        ...boost,
+        effectId: (boost.effectId || 'gold-aura') as BoostEffectType
+      }));
+      
+      setActiveBoosts(convertedBoosts as ProfileBoost[]);
+    }
+  }, [user]);
+
+  // Add a new boost
+  const addBoost = (effectId: BoostEffectType, days: number, level = 1): boolean => {
+    // Check if user has the required tier for this boost
+    const boostInfo = profileBoostEffects.find(b => b.id === effectId);
+    if (!boostInfo) {
+      toast({
+        title: "Boost Error",
+        description: "This boost type doesn't exist.",
+        variant: "destructive"
+      });
+      return false;
+    }
     
-    // Extract active boosts from profile
-    const profileBoosts = targetProfile.profileBoosts || [];
-    const now = new Date().toISOString();
+    // Check if boost allows stacking
+    if (!boostInfo.allowStacking && hasActiveBoost(effectId)) {
+      toast({
+        title: "Boost Error",
+        description: "This boost is already active and doesn't allow stacking.",
+        variant: "destructive"
+      });
+      return false;
+    }
     
-    // Filter active boosts
-    const active = profileBoosts.filter(boost => {
-      return new Date(boost.endDate).toISOString() > now;
-    });
-    
-    setActiveBoosts(active);
-  }, [targetProfile]);
-  
-  const applyBoost = useCallback(async (boostId: string, days: number = 7): Promise<boolean> => {
-    if (!targetProfile || !updateProfile) return false;
-    
-    // Get boost details
-    const boostDetails = profileBoostEffects.find(b => b.id === boostId);
-    if (!boostDetails) return false;
-    
-    // Create boost object
+    // Create the new boost
     const now = new Date();
     const endDate = new Date(now);
     endDate.setDate(endDate.getDate() + days);
     
-    const effectMapping: Record<string, BoostEffectType> = {
-      'gold-aura': 'glow',
-      'crown-effect': 'crown',
-      'neon-pulse': 'pulse',
-      'rainbow-flow': 'flame',
-      'royal-sparkle': 'sparkle',
-      'animated-border': 'shadow'
-    };
-    
     const newBoost: ProfileBoost = {
-      id: `boost_${Date.now()}`,
-      effectId: effectMapping[boostId] || 'glow',
+      id: crypto.randomUUID(),
       startDate: now.toISOString(),
       endDate: endDate.toISOString(),
-      level: boostDetails.tier === 'royal' ? 3 : boostDetails.tier === 'premium' ? 2 : 1,
-      type: boostDetails.type as 'visibility' | 'appearance' | 'effect',
-      strength: boostDetails.tier === 'royal' ? 3 : boostDetails.tier === 'premium' ? 2 : 1,
-      appliedBy: targetProfile.id
+      level,
+      effectId,
+      type: boostInfo.type
     };
     
-    // Update profile with new boost
-    const currentBoosts = targetProfile.profileBoosts || [];
-    const updatedBoosts = [...currentBoosts, newBoost];
+    setActiveBoosts(prev => [...prev, newBoost]);
     
-    try {
-      await updateProfile({
-        profileBoosts: updatedBoosts
-      });
-      setActiveBoosts(prev => [...prev, newBoost]);
-      return true;
-    } catch (error) {
-      console.error('Error applying boost:', error);
-      return false;
-    }
-  }, [targetProfile, updateProfile]);
-  
-  const removeBoost = useCallback(async (boostId: string): Promise<boolean> => {
-    if (!targetProfile || !updateProfile) return false;
-    
-    const currentBoosts = targetProfile.profileBoosts || [];
-    const updatedBoosts = currentBoosts.filter(boost => boost.id !== boostId);
-    
-    try {
-      await updateProfile({
-        profileBoosts: updatedBoosts
-      });
-      setActiveBoosts(prev => prev.filter(boost => boost.id !== boostId));
-      return true;
-    } catch (error) {
-      console.error('Error removing boost:', error);
-      return false;
-    }
-  }, [targetProfile, updateProfile]);
-  
-  const getBoostLevel = useCallback((): number => {
-    if (!activeBoosts.length) return 0;
-    
-    // Return highest boost level
-    return Math.max(...activeBoosts.map(boost => boost.level));
-  }, [activeBoosts]);
-  
-  const getBoostEffect = useCallback((): BoostEffectType | null => {
-    if (!activeBoosts.length) return null;
-    
-    // Get highest level boost
-    const highestLevelBoost = [...activeBoosts].sort((a, b) => b.level - a.level)[0];
-    return highestLevelBoost.effectId;
-  }, [activeBoosts]);
-  
-  const canApplyBoost = useCallback((boostId: string): boolean => {
-    if (!targetProfile) return false;
-    
-    const userTier = targetProfile.subscriptionTier || 'free';
-    const boostDetails = profileBoostEffects.find(b => b.id === boostId);
-    
-    if (!boostDetails) return false;
-    
-    // Check if user tier is high enough
-    if (boostDetails.tier === 'royal' && userTier !== 'royal') {
-      return false;
-    }
-    
-    if (boostDetails.tier === 'premium' && userTier === 'free') {
-      return false;
-    }
+    toast({
+      title: "Boost Applied",
+      description: `${boostInfo.name} boost has been applied to your profile for ${days} days.`,
+      variant: "default"
+    });
     
     return true;
-  }, [targetProfile]);
+  };
+  
+  // Remove a boost
+  const removeBoost = (boostId: string): void => {
+    setActiveBoosts(prev => prev.filter(b => b.id !== boostId));
+    
+    toast({
+      title: "Boost Removed",
+      description: "The boost has been removed from your profile.",
+      variant: "default"
+    });
+  };
+  
+  // Check if a specific boost type is active
+  const hasActiveBoost = (effectId: BoostEffectType): boolean => {
+    return activeBoosts.some(boost => boost.effectId === effectId);
+  };
+  
+  // Check if a specific boost is active by ID
+  const isBoostActive = (boostId: string): boolean => {
+    return activeBoosts.some(boost => boost.id === boostId);
+  };
+  
+  // Get CSS classes for active boosts
+  const getBoostClasses = (): string => {
+    const classes: string[] = [];
+    
+    // First check if user has required tier for premium effects
+    if (user && user.subscription?.tier === 'premium') {
+      classes.push('premium-tier-boost');
+    }
+    
+    // Add classes for each active boost
+    activeBoosts.forEach(boost => {
+      const effect = profileBoostEffects.find(e => e.id === boost.effectId);
+      if (effect?.cssClass) {
+        classes.push(effect.cssClass);
+      }
+    });
+    
+    return classes.join(' ');
+  };
   
   return {
     activeBoosts,
-    hasActiveBoost: activeBoosts.length > 0,
-    applyBoost,
+    addBoost,
     removeBoost,
-    getBoostLevel,
-    getBoostEffect,
-    canApplyBoost
+    hasActiveBoost,
+    isBoostActive,
+    getBoostClasses,
+    hasActiveBoosts: activeBoosts.length > 0
   };
 };
 

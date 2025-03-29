@@ -89,11 +89,7 @@ const TopSpenderShowcase: React.FC<TopSpenderShowcaseProps> = ({
         profileClicks: 120,
         followers: 28,
         badges: ["big_spender", "early_supporter", "team_champion"],
-        socialLinks: {
-          twitter: "https://twitter.com/dukeofdollars",
-          website: "https://spendthrone.example.com/duke",
-          discord: "https://discord.com/users/dukeofdollars"
-        }
+        socialLinks: []
       };
       
       setCurrentTopSpender(mockTopSpender);
@@ -162,6 +158,44 @@ const TopSpenderShowcase: React.FC<TopSpenderShowcaseProps> = ({
   }
   
   const socialLinks = getSocialLinks();
+  
+  // Handle social link rendering properly with type safety
+  const renderSocialLinks = () => {
+    if (socialLinks.length === 0) {
+      return (
+        <>
+          <div className="glass-morphism border-purple-500/20 p-2.5 rounded-lg">
+            <span className="text-sm text-white/30">This space is reserved for the #1 ranked spender</span>
+          </div>
+          <div className="glass-morphism border-purple-500/20 p-2.5 rounded-lg">
+            <span className="text-sm text-white/30">The top spender can promote their social links here</span>
+          </div>
+          <div className="glass-morphism border-purple-500/20 p-2.5 rounded-lg">
+            <span className="text-sm text-white/30">Become the top spender to claim this promotion space</span>
+          </div>
+        </>
+      );
+    }
+
+    return socialLinks.map((link, index) => (
+      <a 
+        key={index}
+        href={link.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="flex items-center gap-2 glass-morphism border-purple-500/20 p-2.5 rounded-lg hover:bg-purple-800/20 transition-colors group"
+      >
+        <ExternalLink size={14} className="text-purple-400" />
+        <span className="flex-1 truncate text-sm">
+          {link.platform ? `${link.platform}: ` : ''}
+          {link.url.toString().replace(/^https?:\/\/(www\.)?/, '')}
+        </span>
+        <Badge variant="outline" className="text-[10px] bg-purple-900/60 text-purple-100 border-0">
+          {link.clicks || 0} clicks
+        </Badge>
+      </a>
+    ));
+  };
   
   return (
     <div className="relative">
@@ -292,39 +326,7 @@ const TopSpenderShowcase: React.FC<TopSpenderShowcaseProps> = ({
                 </h3>
                 
                 <div className="grid grid-cols-1 gap-3 mb-6">
-                  {socialLinks.length > 0 ? (
-                    socialLinks.map((link, index) => (
-                      <a 
-                        key={index}
-                        href={typeof link === 'string' ? link : link.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-2 glass-morphism border-purple-500/20 p-2.5 rounded-lg hover:bg-purple-800/20 transition-colors group"
-                      >
-                        <ExternalLink size={14} className="text-purple-400" />
-                        <span className="flex-1 truncate text-sm">
-                          {typeof link === 'string' 
-                            ? link.replace(/^https?:\/\/(www\.)?/, '') 
-                            : `${link.platform}: ${link.url.replace(/^https?:\/\/(www\.)?/, '')}`}
-                        </span>
-                        <Badge variant="outline" className="text-[10px] bg-purple-900/60 text-purple-100 border-0">
-                          {typeof link === 'string' ? '0' : link.clicks || 0} clicks
-                        </Badge>
-                      </a>
-                    ))
-                  ) : (
-                    <>
-                      <div className="glass-morphism border-purple-500/20 p-2.5 rounded-lg">
-                        <span className="text-sm text-white/30">This space is reserved for the #1 ranked spender</span>
-                      </div>
-                      <div className="glass-morphism border-purple-500/20 p-2.5 rounded-lg">
-                        <span className="text-sm text-white/30">The top spender can promote their social links here</span>
-                      </div>
-                      <div className="glass-morphism border-purple-500/20 p-2.5 rounded-lg">
-                        <span className="text-sm text-white/30">Become the top spender to claim this promotion space</span>
-                      </div>
-                    </>
-                  )}
+                  {renderSocialLinks()}
                 </div>
                 
                 <div className="mt-auto">

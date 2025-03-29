@@ -1,7 +1,7 @@
 
 import { UserCosmetics } from './cosmetics';
 
-export type UserGender = 'king' | 'queen' | 'neutral' | 'jester' | 'noble' | 'prefer-not-to-say';
+export type UserGender = 'king' | 'queen' | 'neutral' | 'jester' | 'noble' | 'prefer-not-to-say' | 'male';
 export type UserTeam = 'red' | 'green' | 'blue' | null;
 export type SubscriptionStatus = 'active' | 'canceled' | 'past_due' | 'trialing' | 'unpaid' | 'incomplete';
 export type SubscriptionTier = 'basic' | 'premium' | 'royal';
@@ -30,6 +30,13 @@ export interface UserSettings {
   emailNotifications: boolean;
   darkMode: boolean;
   language: string;
+  profileVisibility?: boolean;
+  allowProfileLinks?: boolean;
+  showEmailOnProfile?: boolean;
+  rankChangeAlerts?: boolean;
+  shameAlerts?: boolean;
+  newFollowerAlerts?: boolean;
+  theme?: string;
 }
 
 export interface UserSubscription {
@@ -40,26 +47,27 @@ export interface UserSubscription {
   endDate: string;
   autoRenew: boolean;
   features: string[];
-  isActive?: boolean; // Add isActive property to fix errors
+  isActive?: boolean;
 }
 
 export interface UserProfile {
   id: string;
   username: string;
-  email: string;
+  email?: string;
   displayName: string;
   bio?: string;
   gender?: UserGender;
-  team: UserTeam;
+  team?: UserTeam;
   profileImage?: string;
-  walletBalance: number;
+  walletBalance?: number;
   activeTitle?: string;
   amountSpent?: number;
   spentAmount?: number;
   totalSpent: number;
-  spendStreak: number;
-  tier: UserTier;
+  spendStreak?: number;
+  tier?: UserTier;
   rank: number;
+  previousRank?: number;
   lastActive?: string;
   joinedAt: string;
   joinDate?: string;
@@ -67,15 +75,20 @@ export interface UserProfile {
   profileViews?: number;
   profileClicks?: number;
   followers?: number;
-  profileBoosts: ProfileBoost[];
+  following?: number;
+  profileBoosts?: ProfileBoost[];
   cosmetics?: UserCosmetics;
   subscription?: UserSubscription;
   settings?: UserSettings;
   socialLinks?: SocialLink[];
-  subscriptionTier?: SubscriptionTier; // Add subscriptionTier property to fix errors
-  isAuthenticated?: boolean; // Add isAuthenticated property to fix errors
-  lastMocked?: Date; // Add lastMocked property to fix errors
-  roles?: string[]; // Add roles property to fix errors
+  subscriptionTier?: SubscriptionTier;
+  isAuthenticated?: boolean;
+  lastMocked?: Date;
+  roles?: string[];
+  isVerified?: boolean;
+  isVIP?: boolean;
+  badges?: string[];
+  walletAddress?: string;
 }
 
 export interface SocialLink {
@@ -86,6 +99,10 @@ export interface SocialLink {
   label?: string;
   clicks?: number;
   icon?: string;
+}
+
+export interface ProfileLink extends SocialLink {
+  clicks: number;
 }
 
 export type User = UserProfile;

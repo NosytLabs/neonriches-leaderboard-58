@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { profileBoostEffects } from '@/data/boostEffects';
+import profileBoostEffects from '@/data/boostEffects';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
@@ -29,7 +29,8 @@ const ProfileBoostStore: React.FC<ProfileBoostStoreProps> = ({ user, onBoostAppl
   
   // Get discount for user based on subscription tier
   const getUserDiscount = () => {
-    switch (user.subscriptionTier) {
+    const subscriptionTier = user.subscription?.tier;
+    switch (subscriptionTier) {
       case 'premium':
         return 0.5; // 50% discount
       case 'royal':
@@ -96,15 +97,17 @@ const ProfileBoostStore: React.FC<ProfileBoostStoreProps> = ({ user, onBoostAppl
         <TabsContent value={activeTab}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {getFilteredBoosts().map((boost) => {
-              const originalPrice = boost.price;
+              const originalPrice = boost.cost;
               const discountedPrice = getDiscountedPrice(originalPrice);
               const hasDiscount = discountedPrice < originalPrice;
               
               // Check if user can access this tier
+              const userSubscriptionTier = user.subscription?.tier;
+              const boostSubscriptionTier = boost.tier || 'basic';
               const canAccess = 
-                (boost.tier === 'basic') || 
-                (boost.tier === 'premium' && ['premium', 'royal'].includes(user.subscriptionTier || '')) ||
-                (boost.tier === 'royal' && user.subscriptionTier === 'royal');
+                (boostSubscriptionTier === 'basic') || 
+                (boostSubscriptionTier === 'premium' && ['premium', 'royal'].includes(userSubscriptionTier || '')) ||
+                (boostSubscriptionTier === 'royal' && userSubscriptionTier === 'royal');
               
               return (
                 <Card 
@@ -135,14 +138,14 @@ const ProfileBoostStore: React.FC<ProfileBoostStoreProps> = ({ user, onBoostAppl
                           } border-none
                         `}
                       >
-                        {boost.tier.toUpperCase()}
+                        {boost.tier ? boost.tier.toUpperCase() : 'BASIC'}
                       </Badge>
                     </div>
                     
                     <div className="mt-4 flex items-center justify-between">
                       <div className="flex items-center gap-1 text-white/60 text-sm">
                         <Clock className="h-3.5 w-3.5" />
-                        <span>{boost.durationDays} days</span>
+                        <span>{boost.duration / 24} days</span>
                       </div>
                       
                       <div className="flex items-center gap-2">

@@ -1,8 +1,8 @@
 
 import React, { useRef, useEffect, useState } from 'react';
 import * as THREE from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import { profileBoostEffects } from '@/data/boostEffects';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import profileBoostEffects from '@/data/boostEffects';
 
 const ThreeDBoostShowcase: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -32,8 +32,8 @@ const ThreeDBoostShowcase: React.FC = () => {
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setSize(containerRef.current.clientWidth, containerRef.current.clientHeight);
     renderer.setPixelRatio(window.devicePixelRatio);
-    containerRef.current.appendChild(renderer.domElement);
     rendererRef.current = renderer;
+    containerRef.current.appendChild(renderer.domElement);
     
     // Add orbit controls
     const controls = new OrbitControls(camera, renderer.domElement);
@@ -194,11 +194,14 @@ const ThreeDBoostShowcase: React.FC = () => {
         particles.rotation.y += 0.001;
         
         // Update particle positions for sparkle effect
-        const positions = particles.geometry.attributes.position.array;
-        for (let i = 0; i < positions.length; i += 3) {
-          positions[i + 1] += Math.sin(Date.now() * 0.001 + i) * 0.001;
+        const positions = particles.geometry.attributes.position;
+        if (positions && 'array' in positions) {
+          const positionArray = positions.array as Float32Array;
+          for (let i = 0; i < positionArray.length; i += 3) {
+            positionArray[i + 1] += Math.sin(Date.now() * 0.001 + i) * 0.001;
+          }
+          particles.geometry.attributes.position.needsUpdate = true;
         }
-        particles.geometry.attributes.position.needsUpdate = true;
       }
       
       controls.update();
@@ -267,10 +270,18 @@ const ThreeDBoostShowcase: React.FC = () => {
         containerRef.current.removeChild(rendererRef.current.domElement);
       }
       
-      renderer.dispose();
       window.removeEventListener('resize', handleResize);
+      
+      if (rendererRef.current) {
+        rendererRef.current.dispose();
+      }
     };
   }, [currentBoostIndex]);
+  
+  // Display the boost tier as a string to avoid errors
+  const displayBoostTier = (boostEffect: any) => {
+    return boostEffect.tier || 'basic';
+  };
   
   return (
     <div 
@@ -284,7 +295,7 @@ const ThreeDBoostShowcase: React.FC = () => {
             <p className="text-xs text-white/60">{profileBoostEffects[currentBoostIndex].description}</p>
           </div>
           <div className="px-2 py-1 bg-black/50 rounded text-xs font-medium text-royal-gold">
-            {profileBoostEffects[currentBoostIndex].tier.toUpperCase()} TIER
+            {displayBoostTier(profileBoostEffects[currentBoostIndex]).toUpperCase()} TIER
           </div>
         </div>
       </div>

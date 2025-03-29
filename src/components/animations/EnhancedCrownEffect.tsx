@@ -1,186 +1,198 @@
 
-import React, { useState, useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
+import React, { useEffect, useRef, useState } from 'react';
 import { Crown } from 'lucide-react';
 
 interface EnhancedCrownEffectProps {
-  isActive?: boolean;
-  scale?: number;
-  duration?: number;
-  delay?: number;
-  color?: string;
-  effectType?: 'spin' | 'float' | 'pulse' | 'glow';
-  effectIntensity?: 'low' | 'medium' | 'high';
-  onComplete?: () => void;
-  interactive?: boolean;
+  size?: number;
   className?: string;
+  interactive?: boolean;
+  opacity?: number;
 }
 
 const EnhancedCrownEffect: React.FC<EnhancedCrownEffectProps> = ({
-  isActive = true,
-  scale = 1,
-  duration = 3,
-  delay = 0,
-  color = '#FFD700',
-  effectType = 'spin',
-  effectIntensity = 'medium',
-  onComplete,
-  interactive = false,
+  size = 100,
   className = '',
+  interactive = true,
+  opacity = 0.8
 }) => {
-  const [isHovered, setIsHovered] = useState(false);
-  const [isComplete, setIsComplete] = useState(false);
-  const [isAnimating, setIsAnimating] = useState(isActive);
-  const effectContainerRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [particles, setParticles] = useState<JSX.Element[]>([]);
+  const [isMouseOver, setIsMouseOver] = useState(false);
+  const [crownPosition, setCrownPosition] = useState({ x: 0, y: 0 });
+  const animationFrameRef = useRef<number>();
+  const lastUpdateTimeRef = useRef<number>(0);
+  const mousePositionRef = useRef({ x: 0, y: 0 });
   
+  // Initialize crown position
   useEffect(() => {
-    setIsAnimating(isActive);
-    if (!isActive && isComplete) {
-      setIsComplete(false);
+    if (containerRef.current) {
+      const rect = containerRef.current.getBoundingClientRect();
+      setCrownPosition({
+        x: rect.width / 2,
+        y: rect.height / 2
+      });
     }
-  }, [isActive, isComplete]);
+  }, []);
   
-  const getEffectIntensityValue = () => {
-    switch (effectIntensity) {
-      case 'low': return 0.5;
-      case 'medium': return 1;
-      case 'high': return 1.5;
-      default: return 1;
-    }
-  };
-  
-  const getEffectAnimation = () => {
-    const intensity = getEffectIntensityValue();
+  // Handle mouse movement for interactive mode
+  useEffect(() => {
+    if (!interactive) return;
     
-    switch (effectType) {
-      case 'spin':
-        return {
-          rotate: [0, 360],
-          transition: {
-            duration: duration * intensity,
-            repeat: Infinity,
-            ease: "linear",
-            delay,
-          }
-        };
-      case 'float':
-        return {
-          y: [0, -10 * intensity, 0],
-          transition: {
-            duration: duration * intensity,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay,
-          }
-        };
-      case 'pulse':
-        return {
-          scale: [1, 1 + (0.2 * intensity), 1],
-          transition: {
-            duration: duration * intensity,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay,
-          }
-        };
-      case 'glow':
-        return {
-          opacity: [0.7, 1, 0.7],
-          filter: [
-            'drop-shadow(0 0 2px ' + color + ')',
-            'drop-shadow(0 0 ' + (8 * intensity) + 'px ' + color + ')',
-            'drop-shadow(0 0 2px ' + color + ')',
-          ],
-          transition: {
-            duration: duration * intensity,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay,
-          }
-        };
-      default:
-        return {};
-    }
-  };
-  
-  const getInteractiveAnimation = () => {
-    if (!interactive) return {};
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!containerRef.current) return;
+      
+      const rect = containerRef.current.getBoundingClientRect();
+      mousePositionRef.current = {
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top
+      };
+    };
     
-    switch (effectType) {
-      case 'spin':
-        return {
-          rotate: isHovered ? [0, 180, 360] : [0, 0],
-          transition: {
-            duration: isHovered ? 1 : 0.3,
-            ease: "easeOut",
-          }
-        };
-      case 'float':
-        return {
-          y: isHovered ? -15 : 0,
-          transition: {
-            duration: 0.3,
-            ease: "easeOut",
-          }
-        };
-      case 'pulse':
-        return {
-          scale: isHovered ? 1.3 : 1,
-          transition: {
-            duration: 0.3,
-            ease: "easeOut",
-          }
-        };
-      case 'glow':
-        return {
-          filter: isHovered 
-            ? 'drop-shadow(0 0 8px ' + color + ')'
-            : 'drop-shadow(0 0 2px ' + color + ')',
-          transition: {
-            duration: 0.3,
-            ease: "easeOut",
-          }
-        };
-      default:
-        return {};
+    const container = containerRef.current;
+    if (container) {
+      container.addEventListener('mousemove', handleMouseMove);
+      container.addEventListener('mouseenter', () => setIsMouseOver(true));
+      container.addEventListener('mouseleave', () => setIsMouseOver(false));
     }
-  };
+    
+    return () => {
+      if (container) {
+        container.removeEventListener('mousemove', handleMouseMove);
+        container.removeEventListener('mouseenter', () => setIsMouseOver(true));
+        container.removeEventListener('mouseleave', () => setIsMouseOver(false));
+      }
+    };
+  }, [interactive]);
   
-  const handleAnimationComplete = () => {
-    if (isActive && !isComplete) {
-      setIsComplete(true);
-      if (onComplete) onComplete();
-    }
-  };
+  // Crown movement animation
+  useEffect(() => {
+    if (!interactive) return;
+    
+    const animateCrown = (timestamp: number) => {
+      // Limit updates to 60fps
+      if (timestamp - lastUpdateTimeRef.current < 16) {
+        animationFrameRef.current = requestAnimationFrame(animateCrown);
+        return;
+      }
+      
+      lastUpdateTimeRef.current = timestamp;
+      
+      if (isMouseOver && containerRef.current) {
+        // Smooth follow with easing
+        setCrownPosition(prev => ({
+          x: prev.x + (mousePositionRef.current.x - prev.x) * 0.1,
+          y: prev.y + (mousePositionRef.current.y - prev.y) * 0.1
+        }));
+      } else {
+        // Return to center with bobbing motion
+        const containerRect = containerRef.current?.getBoundingClientRect();
+        if (containerRect) {
+          const centerX = containerRect.width / 2;
+          const centerY = containerRect.height / 2;
+          const time = timestamp / 1000;
+          
+          setCrownPosition({
+            x: centerX + Math.sin(time) * 10,
+            y: centerY + Math.cos(time * 0.8) * 5
+          });
+        }
+      }
+      
+      animationFrameRef.current = requestAnimationFrame(animateCrown);
+    };
+    
+    animationFrameRef.current = requestAnimationFrame(animateCrown);
+    
+    return () => {
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
+    };
+  }, [interactive, isMouseOver]);
   
-  if (!isAnimating && !interactive) return null;
+  // Generate particles
+  useEffect(() => {
+    const particleCount = 15;
+    const generateParticles = () => {
+      const newParticles: JSX.Element[] = [];
+      
+      for (let i = 0; i < particleCount; i++) {
+        const particleSize = Math.random() * 4 + 2;
+        const startX = Math.random() * 100;
+        const startY = Math.random() * 100;
+        const duration = Math.random() * 3 + 2;
+        const delay = Math.random() * 2;
+        
+        newParticles.push(
+          <div
+            key={i}
+            className="absolute bg-royal-gold rounded-full animate-particle"
+            style={{
+              width: `${particleSize}px`,
+              height: `${particleSize}px`,
+              left: `${startX}%`,
+              top: `${startY}%`,
+              opacity: Math.random() * 0.5 + 0.3,
+              animationDuration: `${duration}s`,
+              animationDelay: `${delay}s`,
+              boxShadow: '0 0 4px var(--royal-gold)',
+              filter: 'blur(1px)'
+            }}
+          />
+        );
+      }
+      
+      setParticles(newParticles);
+    };
+    
+    generateParticles();
+    const intervalId = setInterval(generateParticles, 2000);
+    
+    return () => clearInterval(intervalId);
+  }, []);
   
   return (
     <div 
-      ref={effectContainerRef}
-      className={`crown-effect-container ${className}`}
-      style={{ position: 'relative', display: 'inline-block' }}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      ref={containerRef} 
+      className={`relative ${className}`}
+      style={{ 
+        width: `${size}px`, 
+        height: `${size}px`,
+        opacity
+      }}
     >
-      <motion.div
-        className="crown-effect"
-        animate={interactive ? getInteractiveAnimation() : getEffectAnimation()}
-        onAnimationComplete={handleAnimationComplete}
+      {/* Particle effect background */}
+      <div className="absolute inset-0 overflow-hidden rounded-full">
+        {particles}
+      </div>
+      
+      {/* Crown gradient bg */}
+      <div 
+        className="absolute rounded-full bg-gradient-radial from-royal-gold/30 to-transparent"
         style={{
-          color,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          transform: `scale(${scale})`,
+          width: `${size * 0.8}px`,
+          height: `${size * 0.8}px`,
+          left: `${crownPosition.x - (size * 0.4)}px`,
+          top: `${crownPosition.y - (size * 0.4)}px`,
+          transition: 'left 0.1s, top 0.1s',
+          filter: 'blur(8px)'
+        }}
+      />
+      
+      {/* Crown with glow */}
+      <div
+        className="absolute transform -translate-x-1/2 -translate-y-1/2"
+        style={{
+          left: `${crownPosition.x}px`,
+          top: `${crownPosition.y}px`,
+          filter: 'drop-shadow(0 0 8px var(--royal-gold))'
         }}
       >
         <Crown 
-          size={24 * scale} 
-          strokeWidth={2}
-          color={color}
+          size={size * 0.4}
+          className="text-royal-gold animate-float"
         />
-      </motion.div>
+      </div>
     </div>
   );
 };

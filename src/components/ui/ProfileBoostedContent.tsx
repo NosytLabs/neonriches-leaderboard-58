@@ -1,38 +1,42 @@
 
 import React from 'react';
 import { UserProfile } from '@/types/user';
-import { useProfileBoost } from '@/hooks/use-profile-boost';
-import '../../styles/profile-boost.css';
+import useProfileBoost from '@/hooks/use-profile-boost';
 
 interface ProfileBoostedContentProps {
-  user: UserProfile;
+  user?: UserProfile;
   children: React.ReactNode;
   className?: string;
-  type?: 'text' | 'card' | 'container';
 }
 
-/**
- * Component that wraps content and applies active profile boost effects
- */
-const ProfileBoostedContent: React.FC<ProfileBoostedContentProps> = ({
-  user,
+const ProfileBoostedContent: React.FC<ProfileBoostedContentProps> = ({ 
+  user, 
   children,
-  className = '',
-  type = 'text'
+  className = ''
 }) => {
-  const { getBoostClasses, hasActiveBoosts } = useProfileBoost(user);
+  const boostManager = useProfileBoost(user);
   
-  // No wrapper needed if no boosts active
-  if (!hasActiveBoosts()) {
-    return <>{children}</>;
+  // Helper functions to adapt the return type of useProfileBoost
+  const getBoostClasses = () => {
+    // Return default classes if the function doesn't exist
+    if (typeof boostManager.getBoostClasses !== 'function') {
+      return '';
+    }
+    return boostManager.getBoostClasses();
+  };
+  
+  const hasActiveBoosts = () => {
+    // Default to false if the property doesn't exist
+    return !!boostManager.hasActiveBoosts;
+  };
+  
+  // If no user or no active boosts, just render children normally
+  if (!user || !hasActiveBoosts()) {
+    return <div className={className}>{children}</div>;
   }
   
-  // Get all boost classes and combine with any additional classes
-  const boostClasses = getBoostClasses();
-  const finalClassName = `${boostClasses} ${className}`.trim();
-  
   return (
-    <div className={finalClassName}>
+    <div className={`${getBoostClasses()} ${className}`}>
       {children}
     </div>
   );

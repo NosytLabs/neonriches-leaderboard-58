@@ -18,12 +18,15 @@ export interface BoostEffect {
   name: string;
   description: string;
   duration: number; // in hours
+  durationDays?: number; // for UI display
   cost: number;
+  price?: number; // alias for cost
   type: 'visibility' | 'effect' | 'appearance' | 'animation';
   rarity: CosmeticRarity;
   allowStacking: boolean;
   minTier: UserTier;
-  cssClass?: string; // Add cssClass property to fix errors
+  cssClass?: string;
+  tier?: SubscriptionTier;
 }
 
 export interface ProfileBoost {
@@ -31,7 +34,7 @@ export interface ProfileBoost {
   startDate: string;
   endDate: string;
   level: number;
-  effectId: BoostEffectType;
+  effectId: BoostEffectType | string;
   startTime?: string;
   endTime?: number;
   type?: string;

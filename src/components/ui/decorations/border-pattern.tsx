@@ -1,43 +1,93 @@
 
 import React from 'react';
-import { cn } from '@/lib/utils';
-import { BaseDecorationProps, sizeClasses } from '@/types/ui/decorations/types';
-import MedievalIcon from '@/components/ui/medieval-icon';
-import { adaptIconName, adaptIconSize, adaptIconColor } from '@/utils/iconTypeAdapter';
+import { BaseDecorationProps } from '@/types/ui/decorations/types';
+import { toMedievalIconColor } from './colorUtils';
+import sizeClasses from './sizeClasses';
 
-const BorderPattern: React.FC<BaseDecorationProps> = ({
-  size = 'md',
+/**
+ * A decorative medieval border pattern
+ */
+const BorderPattern: React.FC<BaseDecorationProps> = ({ 
+  size = 'md', 
   color = 'gold',
-  className,
-  animate = false,
-  icon,
+  className = '',
+  animate,
+  icon
 }) => {
-  const sizeClass = sizeClasses[size];
+  const sizeClass = sizeClasses[size] || sizeClasses.md;
+  const colorClass = toMedievalIconColor(color);
   
-  // Choose container classes based on props
-  const containerClass = cn(
-    'relative rounded-lg border border-dashed overflow-hidden',
-    typeof sizeClass === 'string' ? sizeClass : sizeClass.container,
-    className
-  );
-
-  // Add icon if provided
-  const iconElement = icon ? (
-    <div className="absolute top-2 right-2">
-      <MedievalIcon 
-        name={adaptIconName(icon)} 
-        size={adaptIconSize(typeof sizeClass === 'string' ? 'md' : sizeClass.icon)} 
-        color={adaptIconColor(color)} 
-      />
-    </div>
-  ) : null;
-
-  // Animation classes
-  const animationClass = animate ? 'animate-pulse-slow' : '';
-
   return (
-    <div className={cn(containerClass, animationClass)}>
-      {iconElement}
+    <div 
+      className={`relative ${sizeClass} ${className} ${animate ? 'animate-pulse-slow' : ''}`}
+      aria-hidden="true"
+    >
+      <svg 
+        viewBox="0 0 100 100" 
+        fill="none" 
+        xmlns="http://www.w3.org/2000/svg"
+        className="w-full h-full"
+      >
+        <path 
+          d="M5,5 L95,5 L95,95 L5,95 L5,5 Z" 
+          stroke="currentColor" 
+          strokeWidth="2" 
+          className={`text-${colorClass}`}
+        />
+        <path 
+          d="M10,10 L90,10 L90,90 L10,90 L10,10 Z" 
+          stroke="currentColor" 
+          strokeWidth="1.5" 
+          className={`text-${colorClass} opacity-70`}
+        />
+        <path 
+          d="M5,50 L95,50" 
+          stroke="currentColor" 
+          strokeWidth="1" 
+          className={`text-${colorClass} opacity-50`}
+        />
+        <path 
+          d="M50,5 L50,95" 
+          stroke="currentColor" 
+          strokeWidth="1" 
+          className={`text-${colorClass} opacity-50`}
+        />
+        <circle 
+          cx="50" 
+          cy="50" 
+          r="3" 
+          fill="currentColor" 
+          className={`text-${colorClass}`}
+        />
+        <circle 
+          cx="5" 
+          cy="5" 
+          r="2" 
+          fill="currentColor" 
+          className={`text-${colorClass}`}
+        />
+        <circle 
+          cx="95" 
+          cy="5" 
+          r="2" 
+          fill="currentColor" 
+          className={`text-${colorClass}`}
+        />
+        <circle 
+          cx="5" 
+          cy="95" 
+          r="2" 
+          fill="currentColor" 
+          className={`text-${colorClass}`}
+        />
+        <circle 
+          cx="95" 
+          cy="95" 
+          r="2" 
+          fill="currentColor" 
+          className={`text-${colorClass}`}
+        />
+      </svg>
     </div>
   );
 };

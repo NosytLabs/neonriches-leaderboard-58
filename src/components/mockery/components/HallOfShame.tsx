@@ -1,12 +1,12 @@
 
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Crown, Scroll, HelpCircle, User, CalendarDays } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { convertActionToTier, getMockeryText, getMockeryColor } from '@/utils/mockeryHelpers';
+import { formatTimeElapsed } from '@/utils/formatters';
+import { getMockeryActionIcon, getMockeryTier, getMockeryActionTitle } from '@/components/mockery/utils/mockeryUtils';
 
-type MockedUser = {
+interface MockedUser {
   username: string;
   displayName?: string;
   avatarUrl?: string;
@@ -14,101 +14,92 @@ type MockedUser = {
   mockedTimestamp: string;
   mockedBy: string;
   mockedTier?: string;
-};
+}
 
 interface HallOfShameProps {
   mockedUsers: MockedUser[];
 }
 
 const HallOfShame: React.FC<HallOfShameProps> = ({ mockedUsers }) => {
-  // Helper function to get user initials for avatar fallback
-  const getUserInitials = (username: string) => {
-    return username.substring(0, 2).toUpperCase();
-  };
+  if (mockedUsers.length === 0) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>Hall of Shame</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="p-8 text-center border border-dashed border-white/10 rounded-md">
+            <p className="text-white/60">No users have been mocked yet. Be the first to shame someone!</p>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
   
-  // Helper function to format timestamp
-  const formatTimestamp = (timestamp: string) => {
-    try {
-      const date = new Date(timestamp);
-      return date.toLocaleDateString('en-US', { 
-        month: 'short', 
-        day: 'numeric', 
-        hour: '2-digit', 
-        minute: '2-digit' 
-      });
-    } catch (error) {
-      return timestamp;
+  // Helper function to get color based on mockery tier
+  const getTierColor = (tier: string = 'common') => {
+    switch (tier) {
+      case 'legendary': return 'text-royal-gold';
+      case 'epic': return 'text-purple-400';
+      case 'rare': return 'text-blue-400';
+      case 'uncommon': return 'text-green-400';
+      case 'common': return 'text-gray-300';
+      default: return 'text-gray-300';
     }
   };
   
-  // Helper function to get badge variant based on mockery type
-  const getBadgeVariant = (tier: string) => {
-    const mockeryTier = convertActionToTier(tier as any);
-    const colorClass = getMockeryColor(mockeryTier);
-    return colorClass.text;
-  };
-  
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <Scroll className="h-5 w-5 text-royal-crimson" />
-          <h2 className="text-xl font-bold">Hall of Shame</h2>
-        </div>
-        
-        <Badge className="bg-royal-crimson/80 hover:bg-royal-crimson">
-          {mockedUsers.length} Shamed
-        </Badge>
-      </div>
-      
-      {mockedUsers.length === 0 ? (
-        <div className="text-center py-10 bg-black/20 rounded-lg">
-          <HelpCircle className="mx-auto h-10 w-10 text-gray-500 mb-2" />
-          <h3 className="text-lg font-medium mb-1">No Shamed Users</h3>
-          <p className="text-white/60">The kingdom is peaceful... for now</p>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {mockedUsers.map((user, index) => (
-            <Card key={index} className="glass-morphism border-royal-crimson/20">
-              <CardHeader className="pb-2">
-                <CardTitle className="flex items-center justify-between text-base">
-                  <div className="flex items-center gap-2">
-                    <Avatar className="h-7 w-7 border border-white/20">
-                      <AvatarImage src={user.avatarUrl} />
-                      <AvatarFallback>{getUserInitials(user.displayName || user.username)}</AvatarFallback>
-                    </Avatar>
-                    <span>{user.displayName || user.username}</span>
-                  </div>
-                  
-                  <Badge className={getBadgeVariant(user.mockedTier || 'common')}>
-                    {getMockeryText(convertActionToTier(user.mockedTier as any))}
-                  </Badge>
-                </CardTitle>
-              </CardHeader>
+    <Card>
+      <CardHeader>
+        <CardTitle>Hall of Shame</CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        {mockedUsers.map((user, index) => {
+          const actionTitle = user.mockedReason || 'Unknown mockery';
+          const MockeryIcon = getMockeryActionIcon(actionTitle as any);
+          
+          return (
+            <div 
+              key={index} 
+              className="flex items-center gap-3 p-3 rounded-md bg-white/5 border border-white/10"
+            >
+              <Avatar className="h-10 w-10 border border-white/10">
+                <AvatarImage src={user.avatarUrl} alt={user.username} />
+                <AvatarFallback>{user.username.substring(0, 2).toUpperCase()}</AvatarFallback>
+              </Avatar>
               
-              <CardContent className="pt-0">
-                <div className="flex justify-between items-center text-sm text-white/60 mb-2">
-                  <div className="flex items-center gap-1">
-                    <User className="h-3 w-3" />
-                    <span>Mocked by {user.mockedBy}</span>
-                  </div>
-                  
-                  <div className="flex items-center gap-1">
-                    <CalendarDays className="h-3 w-3" />
-                    <span>{formatTimestamp(user.mockedTimestamp)}</span>
-                  </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2">
+                  <h3 className="font-medium text-sm truncate">
+                    {user.displayName || user.username}
+                  </h3>
+                  <Badge 
+                    variant="outline" 
+                    className={`text-[10px] border-0 ${getTierColor(user.mockedTier)} bg-black/30`}
+                  >
+                    {user.mockedTier?.toUpperCase() || 'COMMON'}
+                  </Badge>
                 </div>
                 
-                <div className="bg-black/20 p-2 rounded text-sm">
-                  <p className="italic">{user.mockedReason || 'No reason provided'}</p>
+                <div className="flex items-center gap-1.5 text-xs text-white/60">
+                  <MockeryIcon className={`h-3 w-3 ${getTierColor(user.mockedTier)}`} />
+                  <span>{actionTitle}</span>
+                  <span>•</span>
+                  <span>{formatTimeElapsed(user.mockedTimestamp)}</span>
                 </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      )}
-    </div>
+              </div>
+              
+              <Badge
+                variant="outline"
+                className="text-xs bg-black/20 border-0"
+              >
+                By {user.mockedBy}
+              </Badge>
+            </div>
+          );
+        })}
+      </CardContent>
+    </Card>
   );
 };
 

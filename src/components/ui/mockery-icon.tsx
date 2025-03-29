@@ -1,86 +1,48 @@
 
 import React from 'react';
-import { ExtendedMockeryAction, getMockeryActionIcon } from '@/components/mockery/utils/mockeryUtils';
-import { Egg, AlertCircle, Crown, Scroll, ShieldOff, MessageSquareOff, Theater } from 'lucide-react';
-import MedievalIcon, { MedievalIconSize } from './medieval-icon';
-
-type IconSize = 'sm' | 'md' | 'lg' | number;
+import { MockeryAction } from '@/types/mockery';
+import { getMockeryActionIcon } from '@/components/mockery/utils/mockeryUtils';
+import { cn } from '@/lib/utils';
 
 interface MockeryIconProps {
-  action: ExtendedMockeryAction;
-  size?: IconSize;
+  action: MockeryAction;
+  size?: number;
   className?: string;
-  color?: string;
 }
 
-const getSizeValue = (size: IconSize): number => {
-  if (typeof size === 'number') return size;
-  
-  switch (size) {
-    case 'sm': return 16;
-    case 'md': return 24;
-    case 'lg': return 32;
-    default: return 16;
-  }
-};
-
-const getMedievalSize = (size: IconSize): MedievalIconSize => {
-  if (typeof size === 'number') {
-    if (size <= 16) return "sm";
-    if (size <= 24) return "md";
-    return "lg";
-  }
-  
-  return size as MedievalIconSize;
-};
-
-const MockeryIcon: React.FC<MockeryIconProps> = ({ 
-  action, 
-  size = 'sm', 
-  className = '',
-  color
+const MockeryIcon: React.FC<MockeryIconProps> = ({
+  action,
+  size = 16,
+  className
 }) => {
-  const iconType = getMockeryActionIcon(action);
-  const sizeValue = getSizeValue(size);
-  const medievalSize = getMedievalSize(size);
+  const Icon = getMockeryActionIcon(action);
   
-  // Determine color class if color prop is not provided
-  const colorClass = color ? color : getDefaultColor(iconType);
+  // Get color based on action or tier
+  const getColor = () => {
+    switch (action) {
+      case 'legendary':
+      case 'courtJester':
+        return 'text-royal-gold';
+      case 'epic':
+      case 'silence':
+        return 'text-purple-400';
+      case 'rare':
+      case 'stocks':
+        return 'text-blue-400';
+      case 'uncommon':
+      case 'eggs':
+        return 'text-green-400';
+      case 'protection':
+      case 'immune':
+        return 'text-cyan-400';
+      default:
+        return 'text-gray-300';
+    }
+  };
   
-  switch (iconType) {
-    case 'tomato':
-      return <MedievalIcon name="gem" size={medievalSize} color="red" className={className} />;
-    case 'egg':
-      return <Egg size={sizeValue} className={`${colorClass} ${className}`} />;
-    case 'stocks':
-      return <MedievalIcon name="shield" size={medievalSize} color="amber" className={className} />;
-    case 'scroll':
-      return <Scroll size={sizeValue} className={`${colorClass} ${className}`} />;
-    case 'crown':
-      return <Crown size={sizeValue} className={`${colorClass} ${className}`} />;
-    case 'shield-off':
-      return <ShieldOff size={sizeValue} className={`${colorClass} ${className}`} />;
-    case 'message-square-off':
-      return <MessageSquareOff size={sizeValue} className={`${colorClass} ${className}`} />;
-    case 'drama':
-      return <Theater size={sizeValue} className={`${colorClass} ${className}`} />;
-    default:
-      return <AlertCircle size={sizeValue} className={`${colorClass} ${className}`} />;
-  }
-};
-
-const getDefaultColor = (iconType: string): string => {
-  switch (iconType) {
-    case 'tomato': return 'text-red-500';
-    case 'egg': return 'text-yellow-200';
-    case 'stocks': return 'text-amber-700';
-    case 'scroll': return 'text-white/80';
-    case 'crown': return 'text-royal-gold';
-    case 'shield-off': return 'text-red-500';
-    case 'message-square-off': return 'text-blue-500';
-    case 'drama': return 'text-emerald-500';
-    default: return 'text-white/70';
-  }
+  return (
+    <Icon className={cn(getColor(), className)} size={size} />
+  );
 };
 
 export default MockeryIcon;
