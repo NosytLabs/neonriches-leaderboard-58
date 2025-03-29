@@ -25,6 +25,7 @@ import Contact from '@/pages/Contact';
 import Terms from '@/pages/Terms';
 import FeaturesShowcase from '@/pages/FeaturesShowcase';
 import VisibilityFeatures from '@/pages/VisibilityFeatures';
+import StatusThroughHistory from '@/pages/StatusThroughHistory';
 
 // Protected pages
 import Dashboard from '@/pages/Dashboard';
@@ -70,6 +71,7 @@ const routes = [
   <Route path="/contact" element={<Contact />} />,
   <Route path="/features-showcase" element={<FeaturesShowcase />} />,
   <Route path="/visibility-features" element={<VisibilityFeatures />} />,
+  <Route path="/status-through-history" element={<StatusThroughHistory />} />,
 
   // Protected Routes
   <Route

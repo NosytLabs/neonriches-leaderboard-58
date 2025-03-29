@@ -14,7 +14,7 @@ const Withdraw = lazy(() => import('./pages/Withdraw'));
 const ProfileEnhancements = lazy(() => import('./pages/ProfileEnhancements'));
 const Mockery = lazy(() => import('./pages/Mockery'));
 const ContentPage = lazy(() => import('./pages/ContentPage'));
-const HistoryOfStatus = lazy(() => import('./pages/HistoryOfStatus'));
+const StatusThroughHistory = lazy(() => import('./pages/StatusThroughHistory'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 const Index = lazy(() => import('./pages/Index'));  // Keep both Home and Index for compatibility
 
@@ -72,9 +72,9 @@ const AppRoutes = () => {
             <Mockery />
           </Suspense>
         } />
-        <Route path="/history-of-status" element={
+        <Route path="/status-through-history" element={
           <Suspense fallback={<LoadingScreen />}>
-            <HistoryOfStatus />
+            <StatusThroughHistory />
           </Suspense>
         } />
         
