@@ -1,4 +1,6 @@
 
+import { ReactNode } from 'react';
+
 export type TeamColor = 'red' | 'green' | 'blue' | null;
 
 export interface TeamData {
@@ -8,7 +10,7 @@ export interface TeamData {
   members: number;
   totalSpent: number;
   rank: number;
-  iconComponent?: React.ReactNode;
+  iconComponent?: ReactNode;
   color: string;
   bgColor: string;
   borderColor: string;

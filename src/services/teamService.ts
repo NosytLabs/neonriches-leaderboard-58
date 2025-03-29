@@ -1,10 +1,12 @@
 
 import { TeamColor } from '@/types/teams';
+import { UserProfile } from '@/types/user';
+import { adaptUserProfileToUser } from '@/utils/userAdapter';
 
 export const switchUserTeam = async (
-  user: any,
+  user: UserProfile,
   team: TeamColor,
-  updateUserProfile: (updates: any) => Promise<boolean>
+  updateUserProfile: (updates: Partial<UserProfile>) => Promise<boolean>
 ): Promise<{ success: boolean; message?: string }> => {
   try {
     if (!user) {

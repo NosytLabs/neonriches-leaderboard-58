@@ -13,7 +13,12 @@ export function adaptUserProfileToUser(profile: UserProfile): User {
     totalSpent: profile.totalSpent || profile.amountSpent || 0,
     amountSpent: profile.amountSpent || profile.totalSpent || 0,
     joinedAt: profile.joinedAt || (profile.joined ? new Date(profile.joined).toISOString() : new Date().toISOString()),
-    joined: profile.joined || new Date(profile.joinedAt || new Date())
+    joined: profile.joined || new Date(profile.joinedAt || new Date()),
+    // Set defaults for other core properties if missing
+    walletBalance: profile.walletBalance || 0,
+    rank: profile.rank || 0,
+    tier: profile.tier || 'basic',
+    role: profile.role || 'user'
   };
 }
 
@@ -28,7 +33,12 @@ export function adaptUserToUserProfile(user: User): UserProfile {
     spentTotal: user.spentTotal || user.totalSpent || user.amountSpent || 0, 
     amountSpent: user.amountSpent || user.totalSpent || user.spentTotal || 0,
     joinedAt: user.joinedAt || (user.joined ? new Date(user.joined).toISOString() : new Date().toISOString()),
-    joined: user.joined || new Date(user.joinedAt || new Date())
+    joined: user.joined || new Date(user.joinedAt || new Date()),
+    // Set defaults for other core properties if missing
+    walletBalance: user.walletBalance || 0,
+    rank: user.rank || 0,
+    tier: user.tier || 'basic',
+    role: user.role || 'user'
   };
 }
 

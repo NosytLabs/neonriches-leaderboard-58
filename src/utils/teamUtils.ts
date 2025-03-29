@@ -165,3 +165,189 @@ export const getNobleTitle = (gender: UserGender | undefined, team: UserTeam): s
       return "Noble";
   }
 };
+
+/**
+ * Get team border color
+ */
+export const getTeamBorderColor = (team: UserTeam): string => {
+  switch (team) {
+    case 'red':
+      return "border-red-500/30";
+    case 'green':
+      return "border-green-500/30";
+    case 'blue':
+      return "border-blue-500/30";
+    default:
+      return "border-white/20";
+  }
+};
+
+/**
+ * Get initials from name
+ */
+export const getInitials = (name: string): string => {
+  return name
+    .split(' ')
+    .map(part => part[0])
+    .join('')
+    .toUpperCase()
+    .substring(0, 2);
+};
+
+/**
+ * Get gender title
+ */
+export const getGenderTitle = (gender: UserGender | undefined): string => {
+  switch (gender) {
+    case 'king':
+      return "King";
+    case 'queen':
+      return "Queen";
+    case 'duke':
+      return "Duke";
+    case 'duchess':
+      return "Duchess";
+    case 'lord':
+      return "Lord";
+    case 'lady':
+      return "Lady";
+    case 'jester':
+      return "Court Jester";
+    default:
+      return "Noble";
+  }
+};
+
+/**
+ * Get gender emoji
+ */
+export const getGenderEmoji = (gender: UserGender | undefined): string => {
+  switch (gender) {
+    case 'king':
+      return "👑";
+    case 'queen':
+      return "👸";
+    case 'duke':
+    case 'lord':
+      return "🤴";
+    case 'duchess':
+    case 'lady':
+      return "💃";
+    case 'jester':
+      return "🃏";
+    default:
+      return "👤";
+  }
+};
+
+/**
+ * Get team benefit list
+ */
+export const getTeamBenefit = (team: UserTeam): string[] => {
+  switch (team) {
+    case 'red':
+      return [
+        "Exclusive access to meaningless red profile flair",
+        "Ability to brag about your spending with a fiery theme",
+        "Fictional +5% spending efficiency on Tuesdays"
+      ];
+    case 'green':
+      return [
+        "Imaginary green profile effects that don't actually work",
+        "Pretend 10% discount on future rank purchases",
+        "Completely fabricated weekly bonus allocation"
+      ];
+    case 'blue':
+      return [
+        "Illusory blue profile highlights and animations",
+        "Non-existent priority access to special features",
+        "Made-up enhanced visibility on the leaderboard"
+      ];
+    default:
+      return [
+        "No benefits whatsoever",
+        "Complete freedom from team-based peer pressure",
+        "Zero expectations for contribution to team goals"
+      ];
+  }
+};
+
+/**
+ * Get absurd team statistic
+ */
+export const getTeamAbsurdStat = (team: UserTeam): string => {
+  switch (team) {
+    case 'red':
+      return "Members of the Red Dragons have collectively spent enough money to buy 47 imaginary castles in the digital kingdom, each with its own virtual moat filled with premium pixels.";
+    case 'green':
+      return "Green Griffins have achieved a 237% increase in meaningless digital status symbols, outpacing other teams in the accumulation of non-existent prestige by a staggering margin.";
+    case 'blue':
+      return "Blue Phoenix members hold the record for most simultaneous transactions in a single second, processing enough digital payments to temporarily overload our fictional economic monitoring system.";
+    default:
+      return "Unaffiliated users have saved approximately $142,857 by not participating in our ridiculous spending competition, which could have purchased actual real-world goods and services.";
+  }
+};
+
+/**
+ * Get team historical note
+ */
+export const getTeamHistoricalNote = (team: UserTeam): string => {
+  switch (team) {
+    case 'red':
+      return "Founded in the early days of digital excess, the RORS started when a group of financially reckless individuals decided that the best use of their money was to compete for meaningless online status.";
+    case 'green':
+      return "The Emerald Exchequer Cabaret began as a splinter group from the original spenders, claiming their strategic approach to wasteful spending was intellectually superior to mere reckless abandonment.";
+    case 'blue':
+      return "Historians trace the Cobalt Credit Cartel to the Great Digital Depression of 2022, when a collective of online status-seekers decided to form an alliance dedicated to synchronized spending for maximum leaderboard impact.";
+    default:
+      return "The unaffiliated represent the last bastion of financial sanity in our ecosystem, although their presence here suggests they too will eventually succumb to the allure of meaningless digital status.";
+  }
+};
+
+/**
+ * Get team NFT joke
+ */
+export const getTeamNFTJoke = (team: UserTeam): string => {
+  switch (team) {
+    case 'red':
+      return "Your team has collectively purchased 347 worthless NFTs of pixelated crowns that are now worth approximately 0.0003% of their original value. Congratulations on your investment acumen!";
+    case 'green':
+      return "Members of your faction have spent a cumulative 5,872 hours explaining to friends and family why their collection of procedurally generated emerald JPEGs represents the future of finance.";
+    case 'blue':
+      return "Your team's NFT portfolio has achieved the impressive feat of losing value faster than actual physical artwork left outside during a hurricane. A truly remarkable achievement in digital asset depreciation.";
+    default:
+      return "By not joining a team, you've saved yourself from at least eight different NFT-related group purchase schemes that would have resulted in owning digital images of cartoon royalty with varying accessories.";
+  }
+};
+
+/**
+ * Get team security guarantee
+ */
+export const getTeamSecurityGuarantee = (team: UserTeam): string => {
+  switch (team) {
+    case 'red':
+      return "Your financial information is secured by our state-of-the-art security system, which consists primarily of crossing our fingers really hard and hoping nobody tries anything nefarious.";
+    case 'green':
+      return "We've invested heavily in a premium security solution: a very stern warning message on our server that says 'Please do not hack' in flashing green Comic Sans font.";
+    case 'blue':
+      return "Your data is protected by 128-bits of encryption, which sounds impressive until you realize it's just us running your password through a Caesar cipher and adding the word 'secure' to the beginning.";
+    default:
+      return "As an unaffiliated user, your data benefits from our special security protocol of being mixed in with everyone else's, operating on the principle that hackers probably can't be bothered to sort it all out.";
+  }
+};
+
+/**
+ * Get team crypto roast
+ */
+export const getTeamCryptoRoast = (team: UserTeam): string => {
+  switch (team) {
+    case 'red':
+      return "Members of your team are 73% more likely to describe themselves as 'crypto visionaries' while simultaneously being unable to explain blockchain technology beyond 'it's like, um, decentralized and stuff.'";
+    case 'green':
+      return "Your faction has the highest rate of members who've named their pets after cryptocurrencies, with 'Ethereum' being the most popular choice, followed closely by 'HODL' and 'ToTheMoon.'";
+    case 'blue':
+      return "Statistical analysis shows your team members have spent more time watching price charts than sleeping, achieving the remarkable feat of being simultaneously exhausted and overstimulated at all times.";
+    default:
+      return "By remaining unaffiliated, you've managed to avoid approximately 247 hours of crypto-related conversations that would have inevitably included the phrase 'you just don't understand the technology.'";
+  }
+};

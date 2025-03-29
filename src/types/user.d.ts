@@ -1,3 +1,4 @@
+
 import { ProfileBoost } from './boost';
 import { UserCosmetics } from './cosmetics';
 
@@ -106,7 +107,7 @@ export interface User {
   walletBalance: number;
   amountSpent: number;
   totalSpent: number;
-  spentAmount?: number;
+  spentTotal: number;
   joinedAt: string;
   createdAt?: string;
   joined: Date;
@@ -136,7 +137,6 @@ export interface User {
     tokenId: string;
     imageUrl: string;
   };
-  spentTotal: number;
 }
 
 export type UserProfile = User;
