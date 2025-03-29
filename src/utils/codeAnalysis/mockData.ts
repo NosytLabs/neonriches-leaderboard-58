@@ -1,218 +1,217 @@
 
-import { AnalysisResult, FileInfo, ImportInfo, VariableInfo, CssSelectorInfo, DependencyInfo, DeadCodeInfo, DuplicateCodeInfo, ComplexityItem, PerformanceIssue } from './types';
+import { 
+  AnalysisResult, 
+  FileInfo, 
+  ImportInfo, 
+  VariableInfo, 
+  CssSelectorInfo, 
+  DependencyInfo, 
+  DeadCodeInfo,
+  ComplexityItem,
+  DuplicateCodeInfo,
+  PerformanceIssue
+} from './types';
 
-// Mock data for unused imports
-export const unusedImportsMock = [
-  { file: 'src/components/Dashboard.tsx', name: 'useState', from: 'react', line: 3 },
-  { file: 'src/pages/Profile.tsx', name: 'useEffect', from: 'react', line: 4 },
-  { file: 'src/utils/helpers.tsx', name: 'debounce', from: 'lodash', line: 7 }
+// Mock data for demonstrations
+const unusedFilesMock: FileInfo[] = [
+  { path: 'src/components/Unused.tsx', size: 2.5 },
+  { path: 'src/utils/deprecated.ts', size: 1.2 },
+  { path: 'src/hooks/useOldFeature.ts', size: 0.8 }
 ];
 
-// Mock data for unused variables
-export const unusedVariablesMock = [
-  { file: 'src/components/UserList.tsx', name: 'isLoading', line: 12 },
-  { file: 'src/hooks/useAuth.ts', name: 'errorMessage', line: 24 },
-  { file: 'src/services/api.ts', name: 'timeout', line: 8 }
+const unusedImportsMock: ImportInfo[] = [
+  { name: 'useState', source: 'react', used: false, line: 5, column: 10 },
+  { name: 'Button', source: '@/components/ui/button', used: false, line: 8, column: 10 },
+  { name: 'getStaticProps', source: 'next', used: false, line: 12, column: 10 }
 ];
 
-// Mock data for unused functions
-export const unusedFunctionsMock = [
-  { file: 'src/utils/formatting.ts', name: 'formatDate', line: 45 },
-  { file: 'src/hooks/useData.ts', name: 'fetchData', line: 67 },
-  { file: 'src/components/Header.tsx', name: 'handleLogout', line: 92 }
+const unusedVariablesMock: VariableInfo[] = [
+  { name: 'counter', type: 'number', used: false, file: 'src/components/Counter.tsx', line: 15 },
+  { name: 'tempState', type: 'string', used: false, file: 'src/components/Form.tsx', line: 27 },
+  { name: 'oldConfig', type: 'object', used: false, file: 'src/utils/config.ts', line: 42 }
 ];
 
-// Mock data for unused components
-export const unusedComponentsMock = [
-  { file: 'src/components/ui/Tooltip.tsx', line: 1 },
-  { file: 'src/components/ui/Modal.tsx', line: 1 },
-  { file: 'src/components/forms/PasswordInput.tsx', line: 1 }
+const unusedCssSelectorsMock: CssSelectorInfo[] = [
+  { selector: '.unused-class', used: false, file: 'src/styles/globals.css', line: 56 },
+  { selector: '#legacy-id', used: false, file: 'src/styles/components.css', line: 78 },
+  { selector: '.deprecated-component', used: false, file: 'src/styles/deprecated.css', line: 105 }
 ];
 
-// Mock data for duplicate code
-export const duplicateCodeMock = [
-  {
+const unusedDependenciesMock: DependencyInfo[] = [
+  { name: 'moment', version: '2.29.1', used: false, size: 289 },
+  { name: 'lodash', version: '4.17.21', used: false, size: 526 },
+  { name: 'jquery', version: '3.6.0', used: false, size: 320 }
+];
+
+const deadCodeMock: DeadCodeInfo[] = [
+  { path: 'src/utils/helpers.ts', type: 'function', name: 'formatLegacyDate', line: 45, description: 'Function is exported but never used in the project' },
+  { path: 'src/components/legacy/Sidebar.tsx', type: 'component', name: 'LegacySidebar', line: 12, description: 'Component is defined but not used anywhere' },
+  { path: 'src/contexts/OldContext.tsx', type: 'class', name: 'OldContextProvider', line: 24, description: 'Class is defined but not instantiated' }
+];
+
+const complexCodeMock: ComplexityItem[] = [
+  { 
     id: '1',
-    pattern: 'User data fetching pattern',
-    similarity: 0.92,
+    name: 'calculateTotalWithTax',
+    file: 'src/utils/calculations.ts',
+    functionName: 'calculateTotalWithTax',
+    function: 'calculateTotalWithTax',
+    path: 'src/utils/calculations.ts',
+    complexity: 12,
+    cyclomaticComplexity: 12,
+    linesOfCode: 45,
+    lines: 45,
+    parameters: 5,
+    nestedLevel: 4,
+    issues: ['Too many conditional branches', 'Nested loops'],
+    status: 'needs-refactor',
+    functions: ['calculateTotalWithTax']
+  },
+  { 
+    id: '2',
+    name: 'processUserData',
+    file: 'src/utils/userProcessor.ts',
+    functionName: 'processUserData',
+    function: 'processUserData',
+    path: 'src/utils/userProcessor.ts',
+    complexity: 15,
+    cyclomaticComplexity: 15,
+    linesOfCode: 68,
+    lines: 68,
+    parameters: 7,
+    nestedLevel: 5,
+    issues: ['Function too long', 'Too many parameters'],
+    status: 'critical',
+    functions: ['processUserData']
+  },
+  { 
+    id: '3',
+    name: 'renderDashboard',
+    file: 'src/components/Dashboard.tsx',
+    functionName: 'renderDashboard',
+    function: 'renderDashboard',
+    path: 'src/components/Dashboard.tsx',
+    complexity: 9,
+    cyclomaticComplexity: 9,
+    linesOfCode: 32,
+    lines: 32,
+    parameters: 3,
+    nestedLevel: 3,
+    issues: ['Conditional rendering can be simplified'],
+    status: 'moderate',
+    functions: ['renderDashboard']
+  }
+];
+
+const duplicateCodeMock: DuplicateCodeInfo[] = [
+  {
+    id: 'dup1',
+    pattern: 'API fetch pattern',
+    similarity: 95,
+    occurrences: 12,
     files: [
-      { path: 'src/pages/UserProfile.tsx' },
-      { path: 'src/pages/UserSettings.tsx' }
+      { path: 'src/pages/users.tsx' },
+      { path: 'src/pages/products.tsx' },
+      { path: 'src/pages/orders.tsx' }
     ],
-    codeSnippet: `const fetchUserData = async (userId) => {
-  try {
-    const response = await fetch(\`/api/users/\${userId}\`);
-    const data = await response.json();
-    if (!response.ok) throw new Error(data.message);
-    return data;
-  } catch (error) {
-    console.error('Error fetching user data:', error);
-    return null;
-  }
-}`,
-    snippet: `// Duplicate fetch pattern
-const fetchUserData = async (userId) => {
-  try {
-    const response = await fetch(\`/api/users/\${userId}\`);
-    const data = await response.json();
-    if (!response.ok) throw new Error(data.message);
-    return data;
-  } catch (error) {
-    console.error('Error fetching user data:', error);
-    return null;
-  }
-}`
+    lines: 15,
+    snippet: 'const fetchData = async () => {\n  setLoading(true);\n  try {\n    const response = await fetch(url);\n    const data = await response.json();\n    setData(data);\n  } catch (error) {\n    setError(error);\n  } finally {\n    setLoading(false);\n  }\n};',
+    codeSnippet: 'const fetchData = async () => {\n  setLoading(true);\n  try {\n    const response = await fetch(url);\n    const data = await response.json();\n    setData(data);\n  } catch (error) {\n    setError(error);\n  } finally {\n    setLoading(false);\n  }\n};'
   },
   {
-    id: '2',
-    pattern: 'Form validation logic',
-    similarity: 0.85,
+    id: 'dup2',
+    pattern: 'Form validation',
+    similarity: 88,
+    occurrences: 8,
     files: [
       { path: 'src/components/LoginForm.tsx' },
       { path: 'src/components/RegisterForm.tsx' },
       { path: 'src/components/ContactForm.tsx' }
     ],
-    codeSnippet: `const validateForm = (values) => {
-  const errors = {};
-  if (!values.email) {
-    errors.email = 'Email is required';
-  } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}$/i.test(values.email)) {
-    errors.email = 'Invalid email address';
-  }
-  return errors;
-}`,
-    snippet: `// Duplicate validation logic
-const validateForm = (values) => {
-  const errors = {};
-  if (!values.email) {
-    errors.email = 'Email is required';
-  } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}$/i.test(values.email)) {
-    errors.email = 'Invalid email address';
-  }
-  return errors;
-}`
+    lines: 22,
+    snippet: 'const validateForm = () => {\n  const errors = {};\n  if (!values.email) {\n    errors.email = "Email is required";\n  } else if (!/\\S+@\\S+\\.\\S+/.test(values.email)) {\n    errors.email = "Email is invalid";\n  }\n  if (!values.password) {\n    errors.password = "Password is required";\n  } else if (values.password.length < 6) {\n    errors.password = "Password must be at least 6 characters";\n  }\n  return errors;\n};',
+    codeSnippet: 'const validateForm = () => {\n  const errors = {};\n  if (!values.email) {\n    errors.email = "Email is required";\n  } else if (!/\\S+@\\S+\\.\\S+/.test(values.email)) {\n    errors.email = "Email is invalid";\n  }\n  if (!values.password) {\n    errors.password = "Password is required";\n  } else if (values.password.length < 6) {\n    errors.password = "Password must be at least 6 characters";\n  }\n  return errors;\n};'
   }
 ];
 
-// Mock data for complexity reports
-export const complexityReportMock = [
+const performanceIssuesMock: PerformanceIssue[] = [
   {
-    path: 'src/components/Dashboard.tsx',
-    complexity: 25,
-    functions: [
-      { name: 'handleUserAction', complexity: 25, line: 145 }
-    ],
-    status: 'high'
-  },
-  {
-    path: 'src/utils/calculations.ts',
-    complexity: 18,
-    functions: [
-      { name: 'calculateUserMetrics', complexity: 18, line: 67 }
-    ],
-    status: 'medium'
-  },
-  {
-    path: 'src/services/dataProcessing.ts',
-    complexity: 15,
-    functions: [
-      { name: 'processTransactionData', complexity: 15, line: 89 }
-    ],
-    status: 'medium'
-  }
-];
-
-// Mock data for performance issues
-export const performanceIssuesMock = [
-  {
-    id: '1',
-    file: 'src/components/UserList.tsx',
-    issue: 'Inefficient list rendering',
-    description: 'The component re-renders the entire list on every state change',
+    id: 'perf1',
+    type: 'rendering',
+    component: 'DataTable',
+    file: 'src/components/DataTable.tsx',
+    description: 'Unnecessary re-renders due to missing memoization',
     impact: 'high',
-    recommendation: 'Use React.memo and virtualize the list with react-window',
-    lineNumber: 78,
-    severity: 'high'
+    recommendation: 'Use React.memo() and useCallback() for child components and handlers'
   },
   {
-    id: '2',
-    file: 'src/hooks/useData.ts',
-    issue: 'Excessive API calls',
-    description: 'Multiple API calls are made for the same data',
+    id: 'perf2',
+    type: 'memory',
+    component: 'ImageGallery',
+    file: 'src/components/ImageGallery.tsx',
+    description: 'Memory leak due to uncleared interval in useEffect',
     impact: 'medium',
-    recommendation: 'Implement a caching mechanism or use react-query',
-    lineNumber: 45,
-    severity: 'medium'
+    recommendation: 'Add cleanup function to useEffect to clear interval'
   },
   {
-    id: '3',
-    file: 'src/utils/helpers.ts',
-    issue: 'Expensive calculation in render',
-    description: 'Complex calculations are performed during component rendering',
-    impact: 'medium',
-    recommendation: 'Use useMemo to cache calculation results',
-    lineNumber: 112,
-    severity: 'medium'
+    id: 'perf3',
+    type: 'network',
+    component: 'ProductList',
+    file: 'src/components/ProductList.tsx',
+    description: 'Multiple API calls for the same data',
+    impact: 'high',
+    recommendation: 'Implement data caching using React Query or SWR'
   }
 ];
 
-// Complete mock analysis results
+// Combine all mock data into a full analysis result
 export const mockedAnalysisResults: AnalysisResult = {
-  unusedFiles: [
-    { path: 'src/components/Unused.tsx', size: 2048 },
-    { path: 'src/styles/unused.css', size: 4096 },
-    { path: 'src/utils/unusedUtil.ts', size: 1024 }
-  ],
+  timestamp: new Date().toISOString(),
+  unusedFiles: unusedFilesMock,
   unusedImports: unusedImportsMock,
   unusedVariables: unusedVariablesMock,
-  unusedCssSelectors: [
-    { file: 'src/styles/main.css', selector: '.unused-class', line: 45 },
-    { file: 'src/styles/components.css', selector: '#unused-id', line: 78 },
-    { file: 'src/styles/layout.css', selector: '.container .unused', line: 120 }
-  ],
-  unusedDependencies: [
-    { name: 'unused-package', version: '1.0.0', alternatives: ['better-package'] },
-    { name: 'legacy-utility', version: '0.8.5', alternatives: ['modern-utility', 'new-tool'] }
-  ],
-  deadCode: [
-    { file: 'src/utils/helpers.ts', function: 'unusedFunction', line: 56 },
-    { file: 'src/components/OldFeature.tsx', function: 'renderDeprecatedUI', line: 89 }
-  ],
-  deadCodePaths: [
-    { file: 'src/utils/helpers.ts', function: 'unusedFunction', line: 56, description: 'This function is never called from anywhere in the codebase' },
-    { file: 'src/components/OldFeature.tsx', function: 'renderDeprecatedUI', line: 89, description: 'This UI rendering function is for a deprecated feature' }
-  ],
+  unusedCssSelectors: unusedCssSelectorsMock,
+  unusedDependencies: unusedDependenciesMock,
+  deadCode: deadCodeMock,
+  complexCode: complexCodeMock,
   duplicateCode: duplicateCodeMock,
-  complexCode: complexityReportMock as unknown as ComplexityItem[],
-  recommendations: [
-    'Remove identified unused files to reduce bundle size',
-    'Clean up unused imports to improve code clarity',
-    'Refactor duplicate code patterns into reusable utilities',
-    'Consider splitting complex functions into smaller, more manageable parts',
-    'Upgrade to newer alternatives for outdated dependencies'
-  ],
-  metrics: {
-    projectSize: 8560,
-    fileCount: 342,
-    dependencyCount: 45,
-    averageFileSize: 25.03,
-    largestFiles: [
-      { filePath: 'src/assets/images/background.jpg', size: 1240 },
-      { filePath: 'src/components/DataGrid.tsx', size: 256 }
-    ],
-    beforeCleanup: {
-      projectSize: 8560,
-      fileCount: 342,
-      dependencyCount: 45
-    },
-    afterCleanup: {
-      projectSize: 7250,
-      fileCount: 324,
-      dependencyCount: 38
-    }
-  },
+  performanceIssues: performanceIssuesMock,
   bestPracticeViolations: [
-    { rule: 'no-console', occurrences: 24, impact: 'low' },
-    { rule: 'useEffect-cleanup', occurrences: 12, impact: 'medium' }
+    {
+      id: 'bp1',
+      rule: 'no-unused-vars',
+      file: 'src/components/Form.tsx',
+      line: 12,
+      column: 7,
+      message: 'useState is defined but never used',
+      severity: 'warning'
+    },
+    {
+      id: 'bp2',
+      rule: 'react-hooks/exhaustive-deps',
+      file: 'src/components/Profile.tsx',
+      line: 34,
+      column: 6,
+      message: 'React Hook useEffect has a missing dependency: \'userId\'',
+      severity: 'warning'
+    }
   ]
 };
+
+// Export individual mocks for component testing
+export const complexityReportMock = complexCodeMock;
+export const duplicateCodeMock = duplicateCodeMock;
+export const performanceIssuesMock = performanceIssuesMock;
+export const unusedImportsMock = unusedImportsMock;
+export const unusedVariablesMock = unusedVariablesMock;
+export const unusedFunctionsMock = deadCodeMock.filter(item => item.type === 'function');
+export const unusedComponentsMock = deadCodeMock.filter(item => item.type === 'component');
+
+// File size information
+export const fileSizeInfo = [
+  { filePath: 'src/assets/images/hero.jpg', size: 1240 },
+  { filePath: 'src/components/DataGrid.tsx', size: 256 },
+  { filePath: 'src/components/Dashboard.tsx', size: 178 },
+  { filePath: 'src/pages/index.tsx', size: 145 },
+  { filePath: 'src/utils/api.ts', size: 89 }
+];

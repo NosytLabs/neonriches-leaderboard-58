@@ -37,10 +37,22 @@ export const ensureUser = (profile: UserProfile | Partial<UserProfile> | null): 
     walletBalance: profile.walletBalance || 0,
     createdAt: profile.createdAt || profile.joinDate || profile.joinedAt || new Date().toISOString(),
     totalSpent: profile.totalSpent || profile.amountSpent || profile.spentAmount || 0,
-    joinDate: profile.joinDate || profile.joinedAt || new Date().toISOString(),
-    joinedAt: profile.joinedAt || profile.joinDate || new Date().toISOString(),
+    joinDate: profile.joinDate || profile.joinedAt || profile.createdAt || new Date().toISOString(),
+    joinedAt: profile.joinedAt || profile.joinDate || profile.createdAt || new Date().toISOString(),
     ...profile
   };
 
   return adaptUserProfileToUser(validProfile);
+};
+
+/**
+ * Helper function to ensure createdAt field is present on a user object
+ * @param user A potentially incomplete user object
+ * @returns A user object with createdAt field
+ */
+export const ensureCreatedAt = (user: Partial<User>): Partial<User> & { createdAt: string } => {
+  return {
+    ...user,
+    createdAt: user.createdAt || user.joinDate || user.joinedAt || new Date().toISOString()
+  };
 };

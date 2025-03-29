@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '@/components/Header';
@@ -19,6 +18,32 @@ import { UserProfile } from '@/types/user';
 import { ToastProvider } from '@/contexts/ToastContext';
 import { getUserRanking } from '@/services/spendingService';
 import SEO from '@/components/seo/SEO';
+
+const mockTopUser: UserProfile = {
+  id: "1",
+  username: "RoyalSpender",
+  email: "royal@spendthrone.com",
+  rank: 1,
+  tier: "royal",
+  team: "red",
+  profileImage: "https://source.unsplash.com/random/300x300?portrait&royal",
+  amountSpent: 10000,
+  spentAmount: 10000,
+  spendStreak: 10,
+  joinDate: "2023-01-01T00:00:00Z",
+  joinedAt: "2023-01-01T00:00:00Z",
+  walletBalance: 5000,
+  displayName: "Lord Moneybags",
+  bio: "I spend therefore I am.",
+  gender: "king",
+  followers: 100,
+  following: 20,
+  profileViews: 1500,
+  profileClicks: 300,
+  profileBoosts: [],
+  socialLinks: [],
+  createdAt: "2023-01-01T00:00:00Z"
+};
 
 const Index = () => {
   const navigate = useNavigate();

@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -53,7 +52,7 @@ const LinksEditor: React.FC<LinksEditorProps> = ({ user, links, onLinksChange })
       return;
     }
 
-    // Create a new link with required platform property
+    // Create a new link with required properties
     const newLink: ProfileLink = {
       id: `link_${Date.now()}`,
       url: newLinkUrl,

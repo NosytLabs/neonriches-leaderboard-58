@@ -81,6 +81,7 @@ export interface SocialLink {
   platform: string;
   url: string;
   label?: string;
+  title?: string;
   icon?: string;
   clicks?: number;
 }
@@ -92,7 +93,7 @@ export interface ProfileImage {
   isPrimary?: boolean;
 }
 
-export type UserGender = 'male' | 'female' | 'non-binary' | 'prefer-not-to-say' | 'king' | 'queen' | 'jester';
+export type UserGender = 'male' | 'female' | 'non-binary' | 'prefer-not-to-say' | 'king' | 'queen' | 'jester' | 'noble';
 export type UserTeam = 'red' | 'green' | 'blue' | null;
 export type TeamType = 'red' | 'green' | 'blue' | 'all';
 export type UserRole = 'user' | 'admin' | 'moderator';
@@ -133,17 +134,11 @@ export interface UserSubscription {
   features: string[];
 }
 
-// Also define ProfileLink for LinksEditor
-export interface ProfileLink {
-  id: string | number;
-  title: string;
-  url: string;
-  clicks?: number;
-}
+// For backward compatibility with existing code
+export type ProfileLink = SocialLink;
 
 // For backward compatibility with existing code
 export type UserProfile = User;
 
 // Alias Team type for backward compatibility
 export type Team = UserTeam;
-

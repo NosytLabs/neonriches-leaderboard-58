@@ -4,7 +4,7 @@ import { Session } from '@supabase/supabase-js';
 import { UserProfile } from '@/types/user';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import { addProfileBoost, addCosmetic } from './authUtils';
+import { addProfileBoostWithDays, addCosmeticByCategoryString } from './authUtils';
 
 export const useAuthState = () => {
   const [user, setUser] = useState<UserProfile | null>(null);
@@ -165,7 +165,7 @@ export const useAuthMethods = (
     try {
       if (!user) return false;
       
-      const newBoosts = addProfileBoost(user, days, level);
+      const newBoosts = addProfileBoostWithDays(user, days, level);
       
       const updatedUser = {
         ...user,
@@ -206,7 +206,7 @@ export const useAuthMethods = (
     try {
       if (!user) return false;
       
-      const updatedCosmetics = addCosmetic(user, cosmeticId, category);
+      const updatedCosmetics = addCosmeticByCategoryString(user, cosmeticId, category);
       
       const updatedUser = {
         ...user,

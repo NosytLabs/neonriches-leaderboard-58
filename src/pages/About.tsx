@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import Header from '@/components/Header';
@@ -30,6 +29,25 @@ import useNotificationSounds from '@/hooks/use-notification-sounds';
 import { useToastContext } from '@/contexts/ToastContext';
 import { UserProfile } from '@/types/user';
 import { Link } from 'react-router-dom';
+
+const mockFounder: UserProfile = {
+  id: 'founder',
+  username: 'RoyalFounder',
+  displayName: 'Sir Spends-A-Lot',
+  profileImage: 'https://source.unsplash.com/random/300x300?portrait&royal',
+  email: 'founder@spendthrone.com',
+  amountSpent: 50000,
+  spentAmount: 50000,
+  walletBalance: 5000,
+  rank: 0,
+  tier: 'founder',
+  team: 'all',
+  joinDate: '2023-01-01T00:00:00Z',
+  bio: 'Creating a platform where money literally buys you power was my lifelong dream. Now you too can experience the thrill of spending real money for completely meaningless digital prestige!',
+  gender: 'king',
+  socialLinks: undefined,
+  createdAt: '2023-01-01T00:00:00Z'
+};
 
 const About = () => {
   const [certificateVisible, setCertificateVisible] = useState(false);
@@ -587,7 +605,7 @@ const About = () => {
       {certificateVisible && (
         <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
           <CertificateOfNobility
-            user={demoUser}
+            user={mockFounder}
             certificateId="NOB-12345-ABCDE"
             onVerify={() => handleCertificateVerify()}
             onDismiss={() => setCertificateVisible(false)}

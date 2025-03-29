@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { UserProfile, Team } from '@/types/user';
 
@@ -70,7 +69,8 @@ export const useProfileData = (userId: string, userContext?: UserProfile | null)
               themes: []
             },
             socialLinks: [],
-            profileImages: []
+            profileImages: [],
+            createdAt: new Date(Date.now() - Math.random() * 10000000000).toISOString() // Add createdAt
           };
 
           setProfileData(mockUserProfile);

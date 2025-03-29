@@ -68,7 +68,8 @@ const DEFAULT_SPENDER: UserProfile = {
   team: "red",
   bio: "This space awaits a true royal spender. Will you claim the throne?",
   tier: 'royal',
-  totalSpent: 1000
+  totalSpent: 1000,
+  createdAt: new Date().toISOString()
 };
 
 const RoyalShowcase: React.FC<RoyalShowcaseProps> = ({ 

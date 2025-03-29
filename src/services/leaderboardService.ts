@@ -1,138 +1,57 @@
-
-import { UserProfile } from "@/types/user";
-import { supabase } from "@/integrations/supabase/client";
-import { OnChainLeaderboardEntry } from "@/types/solana";
-
-export interface LeaderboardEntry {
-  id: string;
-  rank: number;
-  username: string;
-  display_name?: string;
-  team?: string;
-  total_deposited: number;
-  tier: string;
-  profile_image?: string;
-  joined_at: string;
-}
+import { faker } from '@faker-js/faker';
+import { User } from '@/types/user';
 
 /**
- * Get leaderboard entries with pagination
- * @param options Options for fetching leaderboard entries
- * @returns Promise with leaderboard entries
+ * Generates a random integer between min and max (inclusive)
+ * @param min The minimum value
+ * @param max The maximum value
+ * @returns A random integer
  */
-export const getLeaderboardEntries = async (options: {
-  limit?: number;
-  offset?: number;
-  filter?: string;
-  sort?: string;
-  direction?: 'asc' | 'desc';
-} = {}): Promise<LeaderboardEntry[]> => {
-  const {
-    limit = 10,
-    offset = 0,
-    filter,
-    sort = 'total_deposited',
-    direction = 'desc'
-  } = options;
-
-  let query = supabase
-    .from('leaderboard')
-    .select('*')
-    .order(sort, { ascending: direction === 'asc' })
-    .range(offset, offset + limit - 1);
-
-  if (filter) {
-    query = query.eq('team', filter);
-  }
-
-  const { data, error } = await query;
-
-  if (error) {
-    console.error('Error fetching leaderboard:', error);
-    return [];
-  }
-
-  return data as LeaderboardEntry[];
+const getRandomInt = (min: number, max: number): number => {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
 /**
- * Get total count of leaderboard entries
- * @param filter Optional filter by team
- * @returns Promise with count
+ * Generates a mock leaderboard
+ * @param count The number of users to generate
+ * @returns An array of mock users
  */
-export const getLeaderboardCount = async (filter?: string): Promise<number> => {
-  let query = supabase.from('leaderboard').select('id', { count: 'exact' });
-
-  if (filter) {
-    query = query.eq('team', filter);
+export const generateMockLeaderboard = (count: number = 50): User[] => {
+  const leaderboard: User[] = [];
+  
+  for (let i = 0; i < count; i++) {
+    const userTeam = faker.helpers.arrayElement(['red', 'green', 'blue', null]);
+    const userTier = faker.helpers.arrayElement(['basic', 'premium', 'royal']);
+    const totalSpent = getRandomInt(10, 5000);
+    
+    leaderboard.push({
+      id: `user-${getRandomInt(1000, 9999)}`,
+      username: faker.internet.userName(),
+      displayName: faker.name.fullName(),
+      team: userTeam,
+      tier: userTier,
+      rank: i + 1,
+      totalSpent: totalSpent,
+      amountSpent: totalSpent,
+      profileImage: faker.image.avatar(),
+      joinDate: faker.date.past().toISOString(),
+      walletBalance: Math.floor(Math.random() * 1000),
+      email: faker.internet.email(),
+      socialLinks: [],
+      profileBoosts: [],
+      createdAt: faker.date.past().toISOString()
+    });
   }
-
-  const { count, error } = await query;
-
-  if (error) {
-    console.error('Error fetching leaderboard count:', error);
-    return 0;
-  }
-
-  return count || 0;
+  
+  return leaderboard;
 };
 
 /**
- * Get a user's current rank
- * @param userId User ID
- * @returns Promise with rank
+ * Gets a user ranking
+ * @returns An array of mock users
  */
-export const getUserRank = async (userId: string): Promise<number | null> => {
-  const { data, error } = await supabase
-    .from('leaderboard')
-    .select('rank')
-    .eq('id', userId)
-    .single();
-
-  if (error) {
-    console.error('Error fetching user rank:', error);
-    return null;
-  }
-
-  return data?.rank || null;
-};
-
-/**
- * Transform a leaderboard entry to a UserProfile
- * @param entry LeaderboardEntry object
- * @returns UserProfile object
- */
-export const transformLeaderboardEntryToUserProfile = (entry: LeaderboardEntry): UserProfile => {
-  return {
-    id: entry.id,
-    username: entry.username,
-    displayName: entry.display_name,
-    team: entry.team as any,
-    tier: entry.tier as any,
-    rank: entry.rank,
-    totalSpent: entry.total_deposited,
-    amountSpent: entry.total_deposited,
-    profileImage: entry.profile_image,
-    joinDate: entry.joined_at,
-    walletBalance: 0, // Default value
-    email: "", // Required by UserProfile type
-    socialLinks: [],
-    profileBoosts: [],
-  };
-};
-
-/**
- * Get on-chain leaderboard entries
- * Mock implementation to fix build errors
- */
-export const getOnChainLeaderboard = async (): Promise<OnChainLeaderboardEntry[]> => {
-  return [];
-};
-
-export default {
-  getLeaderboardEntries,
-  getLeaderboardCount,
-  getUserRank,
-  transformLeaderboardEntryToUserProfile,
-  getOnChainLeaderboard
+export const getUserRanking = (): User[] => {
+  return generateMockLeaderboard(25);
 };

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { ArrowLeft, Code, AlertTriangle } from 'lucide-react';
 import AnalysisLayout from '@/components/codeAnalysis/shared/AnalysisLayout';
@@ -20,7 +19,19 @@ import { generateAnalysisReport } from '@/utils/codeAnalysis/reportGenerator';
 import { Link } from 'react-router-dom';
 
 const CodeAnalysis: React.FC = () => {
-  const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
+  const [analysis, setAnalysis] = useState<AnalysisResult>({
+    timestamp: "",
+    unusedFiles: [],
+    unusedImports: [],
+    unusedVariables: [],
+    unusedCssSelectors: [],
+    unusedDependencies: [],
+    deadCode: [],
+    deadCodePaths: [],
+    complexCode: [],
+    duplicateCode: [],
+    performanceIssues: []
+  });
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [activeTab, setActiveTab] = useState('issues');
   const { toast } = useToast();
@@ -29,7 +40,16 @@ const CodeAnalysis: React.FC = () => {
     try {
       setIsAnalyzing(true);
       const results = await getAnalysisResults();
-      setAnalysisResult(results);
+      setAnalysis({
+        ...results,
+        unusedFiles: results.unusedFiles as any as FileInfo[],
+        unusedImports: results.unusedImports as any as ImportInfo[],
+        unusedVariables: results.unusedVariables as any as VariableInfo[],
+        unusedCssSelectors: results.unusedCssSelectors as any as CssSelectorInfo[],
+        unusedDependencies: results.unusedDependencies as any as DependencyInfo[],
+        deadCode: results.deadCode as any as DeadCodeInfo[],
+        deadCodePaths: results.deadCodePaths as any as DeadCodeInfo[],
+      });
       toast({
         title: 'Analysis Complete',
         description: `Found ${
@@ -60,7 +80,7 @@ const CodeAnalysis: React.FC = () => {
     runAnalysis();
   }, []);
 
-  if (!analysisResult) {
+  if (!analysis) {
     return (
       <div className="flex flex-col items-center justify-center h-screen">
         <AlertTriangle className="h-12 w-12 text-amber-500 animate-pulse mb-4" />
@@ -80,7 +100,7 @@ const CodeAnalysis: React.FC = () => {
           </Button>
         </Link>
         <AnalysisControls 
-          analysisResult={analysisResult}
+          analysisResult={analysis}
           onRefresh={runAnalysis}
           isRefreshing={isAnalyzing}
         />
@@ -104,16 +124,16 @@ const CodeAnalysis: React.FC = () => {
           <AnalysisLayout
             title="Code Cleanup Analysis"
             description="This report identifies potential issues in the codebase that could be improved or removed."
-            metrics={analysisResult.metrics}
+            metrics={analysis.metrics}
           >
-            <UnusedFilesSection unusedFiles={analysisResult.unusedFiles} />
-            <UnusedImportsSection unusedImports={analysisResult.unusedImports} />
-            <UnusedVariablesSection unusedVariables={analysisResult.unusedVariables} />
-            <UnusedCssSelectorsSection unusedCssSelectors={analysisResult.unusedCssSelectors} />
-            <UnusedDependenciesSection unusedDependencies={analysisResult.unusedDependencies} />
-            <DeadCodePathsSection deadCodePaths={analysisResult.deadCodePaths} />
-            <DuplicateCodeSection duplicateCode={analysisResult.duplicateCode} />
-            <ComplexCodeSection complexCode={analysisResult.complexCode as any} />
+            <UnusedFilesSection unusedFiles={analysis.unusedFiles} />
+            <UnusedImportsSection unusedImports={analysis.unusedImports} />
+            <UnusedVariablesSection unusedVariables={analysis.unusedVariables} />
+            <UnusedCssSelectorsSection unusedCssSelectors={analysis.unusedCssSelectors} />
+            <UnusedDependenciesSection unusedDependencies={analysis.unusedDependencies} />
+            <DeadCodePathsSection deadCodePaths={analysis.deadCodePaths} />
+            <DuplicateCodeSection duplicateCode={analysis.duplicateCode} />
+            <ComplexCodeSection complexCode={analysis.complexCode as any} />
           </AnalysisLayout>
         </TabsContent>
         
@@ -124,7 +144,7 @@ const CodeAnalysis: React.FC = () => {
           >
             <div className="glass-morphism border-white/10 p-6 rounded-lg">
               <pre className="whitespace-pre-wrap text-sm font-mono text-white/80">
-                {generateAnalysisReport(analysisResult)}
+                {generateAnalysisReport(analysis)}
               </pre>
             </div>
           </AnalysisLayout>

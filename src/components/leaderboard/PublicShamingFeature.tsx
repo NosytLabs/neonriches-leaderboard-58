@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -76,7 +75,8 @@ const PublicShamingFeature: React.FC<PublicShamingFeatureProps> = ({
       lastActive: user.lastActive,
       tier: user.tier,
       walletBalance: 0,
-      joinDate: '2023-01-01T00:00:00Z'
+      joinDate: '2023-01-01T00:00:00Z',
+      createdAt: '2023-01-01T00:00:00Z'
     };
     
     setSelectedUser(userProfile);

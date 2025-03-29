@@ -1,10 +1,8 @@
-
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { getCertificateById } from '@/services/certificateService';
 import { UserSettings, UserProfile } from '@/types/user';
 
-// Let's fix the issue with the UserProfile and settings
 const CertificatePage = () => {
   const { id } = useParams<{ id: string }>();
   const [certificate, setCertificate] = useState<any>(null);
@@ -35,7 +33,6 @@ const CertificatePage = () => {
     return <div>Certificate not found</div>;
   }
   
-  // Create a proper UserProfile object with all required fields
   const userProfile: UserProfile = {
     id: certificate.user.id || "1",
     username: certificate.user.username || "User",
@@ -43,7 +40,7 @@ const CertificatePage = () => {
     displayName: certificate.user.displayName || certificate.user.username,
     rank: certificate.rank || 1,
     amountSpent: certificate.amountSpent || 0,
-    walletBalance: 0, // This was missing
+    walletBalance: 0,
     tier: certificate.user.tier || "basic",
     cosmetics: {
       borders: [],
@@ -81,11 +78,11 @@ const CertificatePage = () => {
     team: certificate.user.team,
     joinedAt: certificate.user.joinedAt,
     joinDate: certificate.user.joinDate,
+    createdAt: certificate.user.joinDate || certificate.user.joinedAt || new Date().toISOString()
   };
   
   return (
     <div>
-      {/* Certificate display UI */}
       <h1>Royal Certificate #{certificate.id}</h1>
       <p>For: {userProfile.username}</p>
       <p>Rank: {userProfile.rank}</p>

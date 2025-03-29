@@ -4,50 +4,130 @@ import LeaderboardHeader from './LeaderboardHeader';
 import LeaderboardFilters from './LeaderboardFilters';
 import LeaderboardTable from './LeaderboardTable';
 import LeaderboardFooter from './LeaderboardFooter';
-import { mockLeaderboardData } from './LeaderboardData';
 import { useToastContext } from '@/contexts/ToastContext';
 import { Crown, Coins, Scroll } from 'lucide-react';
 import useFloatingCoins from '@/hooks/use-floating-coins';
-import { UserProfile } from '@/types/user';
+import { User } from '@/types/user';
 import RoyalButton from '@/components/ui/royal-button';
 import useNotificationSounds from '@/hooks/use-notification-sounds';
 import RoyalDivider from '@/components/ui/royal-divider';
 import RoyalDecrees from '@/components/dashboard/RoyalDecrees';
 
-const RoyalCourt = () => {
-  // Convert mock leaderboard data to UserProfile format
-  const convertedLeaderboardData: UserProfile[] = mockLeaderboardData.map(user => ({
-    id: user.id.toString(),
-    username: user.username,
-    email: `${user.username.toLowerCase()}@example.com`,
-    profileImage: user.profileImage,
-    amountSpent: user.amountSpent,
-    spentAmount: user.amountSpent,
-    walletBalance: 0,
-    rank: user.rank,
-    previousRank: user.previousRank,
-    spendStreak: Math.floor(Math.random() * 10),
-    tier: 'crab',
-    team: user.team as any || null,
+const mockRoyalUsers: User[] = [
+  {
+    id: '1',
+    username: 'GoldenKing',
+    email: 'king@royal.com',
+    profileImage: 'https://source.unsplash.com/random/300x300?portrait&king',
+    amountSpent: 5000,
+    spentAmount: 5000,
+    walletBalance: 1000,
+    rank: 1,
+    previousRank: 1,
+    spendStreak: 8,
+    tier: 'royal',
+    team: 'red',
     gender: 'king',
-    joinDate: new Date().toISOString(),
-    joinedAt: new Date().toISOString(),
-    isVIP: user.rank <= 3,
-    cosmetics: {
-      borders: [],
-      colors: [],
-      fonts: [],
-      emojis: [],
-      titles: [],
-      backgrounds: [],
-      effects: [],
-      badges: [],
-      themes: []
-    },
-    socialLinks: []
-  }));
-  
-  const [leaderboardData, setLeaderboardData] = useState<UserProfile[]>(convertedLeaderboardData);
+    joinDate: '2023-01-01T00:00:00Z',
+    socialLinks: [],
+    createdAt: '2023-01-01T00:00:00Z',
+    isAuthenticated: true,
+    isAdmin: true,
+    isVerified: true,
+    lastLogin: '2023-01-01T00:00:00Z'
+  },
+  {
+    id: '2',
+    username: 'DiamondDuchess',
+    email: 'duchess@luxury.net',
+    profileImage: 'https://source.unsplash.com/random/300x300?portrait&duchess',
+    amountSpent: 4200,
+    spentAmount: 4200,
+    walletBalance: 800,
+    rank: 2,
+    previousRank: 2,
+    spendStreak: 5,
+    tier: 'premium',
+    team: 'green',
+    gender: 'queen',
+    joinDate: '2023-02-15T00:00:00Z',
+    socialLinks: [],
+    createdAt: '2023-02-15T00:00:00Z',
+    isAuthenticated: true,
+    isAdmin: false,
+    isVerified: true,
+    lastLogin: '2023-02-15T00:00:00Z'
+  },
+  {
+    id: '3',
+    username: 'SapphireSultan',
+    email: 'sultan@wealth.org',
+    profileImage: 'https://source.unsplash.com/random/300x300?portrait&sultan',
+    amountSpent: 3500,
+    spentAmount: 3500,
+    walletBalance: 650,
+    rank: 3,
+    previousRank: 3,
+    spendStreak: 3,
+    tier: 'pro',
+    team: 'blue',
+    gender: 'king',
+    joinDate: '2023-03-10T00:00:00Z',
+    socialLinks: [],
+    createdAt: '2023-03-10T00:00:00Z',
+    isAuthenticated: true,
+    isAdmin: false,
+    isVerified: false,
+    lastLogin: '2023-03-10T00:00:00Z'
+  },
+  {
+    id: '4',
+    username: 'EmeraldEmpress',
+    email: 'empress@elite.io',
+    profileImage: 'https://source.unsplash.com/random/300x300?portrait&empress',
+    amountSpent: 2800,
+    spentAmount: 2800,
+    walletBalance: 500,
+    rank: 4,
+    previousRank: 4,
+    spendStreak: 10,
+    tier: 'basic',
+    team: 'red',
+    gender: 'queen',
+    joinDate: '2023-04-05T00:00:00Z',
+    socialLinks: [],
+    createdAt: '2023-04-05T00:00:00Z',
+    isAuthenticated: true,
+    isAdmin: false,
+    isVerified: false,
+    lastLogin: '2023-04-05T00:00:00Z'
+  },
+  {
+    id: '5',
+    username: 'RubyRuler',
+    email: 'ruler@prestige.com',
+    profileImage: 'https://source.unsplash.com/random/300x300?portrait&ruler',
+    amountSpent: 2100,
+    spentAmount: 2100,
+    walletBalance: 400,
+    rank: 5,
+    previousRank: 5,
+    spendStreak: 6,
+    tier: 'free',
+    team: 'green',
+    gender: 'king',
+    joinDate: '2023-05-20T00:00:00Z',
+    socialLinks: [],
+    createdAt: '2023-05-20T00:00:00Z',
+    isAuthenticated: true,
+    isAdmin: false,
+    isVerified: false,
+    lastLogin: '2023-05-20T00:00:00Z'
+  }
+];
+
+const RoyalCourt = () => {
+  const [leaderboardData, setLeaderboardData] = useState<User[]>(mockRoyalUsers);
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
   const [activeFilter, setActiveFilter] = useState<string | null>(null);
   const [showDecrees, setShowDecrees] = useState<boolean>(false);
@@ -55,10 +135,8 @@ const RoyalCourt = () => {
   const { playSound } = useNotificationSounds();
   const containerRef = useRef<HTMLElement>(null);
   
-  // Use our floating coins hook
   const { createBurst, toggle: toggleCoins } = useFloatingCoins();
   
-  // Satirical welcome toast
   useEffect(() => {
     const timer = setTimeout(() => {
       addToast({
@@ -68,7 +146,6 @@ const RoyalCourt = () => {
         variant: "royal"
       });
       
-      // Play royal sound
       playSound('royalAnnouncement', 0.5);
     }, 1500);
     
@@ -94,13 +171,12 @@ const RoyalCourt = () => {
     setActiveFilter(team);
     
     if (team === null) {
-      setLeaderboardData(convertedLeaderboardData);
+      setLeaderboardData(mockRoyalUsers);
     } else {
-      const filteredData = convertedLeaderboardData.filter(user => user.team === team);
+      const filteredData = mockRoyalUsers.filter(user => user.team === team);
       setLeaderboardData(filteredData);
     }
     
-    // Satirical toast based on team selection
     const teamMessages: Record<string, string> = {
       'red': "Ah, the Purple Dynasty! Where the wealthy flaunt their digital status with reckless abandon.",
       'green': "The Gold Dominion welcomes you! Remember, he who pays the most, shines the brightest.",
@@ -174,7 +250,6 @@ const RoyalCourt = () => {
           </RoyalButton>
         </div>
         
-        {/* Royal Decrees */}
         <motion.div
           initial={{ height: 0, opacity: 0 }}
           animate={{ 
