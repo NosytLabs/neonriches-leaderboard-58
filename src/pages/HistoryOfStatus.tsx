@@ -139,7 +139,7 @@ const historicalData: HistoricalPeriod[] = [
   },
   {
     era: "Modern Era",
-    description: "Today's status purchases may take different forms, but the fundamental exchange of wealth for social standing continues.",
+    description: "Today's status purchases may take different forms, but the fundamental exchange of wealth for social standing continues through new mediums and technologies.",
     events: [
       {
         year: "1996",
@@ -162,12 +162,63 @@ const historicalData: HistoricalPeriod[] = [
         location: "United States",
         icon: <Scroll className="text-royal-navy" />,
         imageUrl: "https://i.imgur.com/X5QFzAw.jpg"
+      },
+      {
+        year: "2023",
+        title: "Trump Gold Card",
+        description: "Donald Trump launched a collection of digital 'Trump Cards' and physical gold-colored cards priced at $99 each, offering no tangible benefits beyond symbolizing support for the former president. Despite being marketed as 'digital trading cards,' these NFTs functioned purely as status symbols among supporters, selling out within hours and raising approximately $4.5 million.",
+        location: "United States",
+        icon: <Coins className="text-royal-gold" />,
+        imageUrl: "https://i.imgur.com/6kSvYnZ.jpg"
+      },
+      {
+        year: "2021-2022",
+        title: "Bored Ape Yacht Club NFTs",
+        description: "At the height of the NFT craze, celebrities including Jimmy Fallon, Paris Hilton, and Justin Bieber paid hundreds of thousands of dollars for digital artwork from the Bored Ape Yacht Club collection. These purchases were prominently displayed as Twitter profile pictures, serving as digital status symbols in web3 communities and demonstrating membership in an exclusive digital club.",
+        location: "Global",
+        icon: <Gem className="text-royal-crimson" />,
+        imageUrl: "https://i.imgur.com/LpTCZUd.jpg"
+      },
+      {
+        year: "2022",
+        title: "Twitter Blue Verification",
+        description: "Following Elon Musk's acquisition of Twitter (now X), the platform's verification system was monetized, allowing anyone to purchase a blue checkmark for $8 monthly. This transformed what was once a carefully vetted status symbol into a purchasable commodity, while simultaneously creating a new hierarchy between those who retained 'legacy' verification and those who paid for it.",
+        location: "Global",
+        icon: <Scroll className="text-royal-navy" />
+      }
+    ]
+  },
+  {
+    era: "Digital Status Economy",
+    description: "The emergence of cryptocurrencies and digital assets has created entirely new status economies where wealth is flaunted through digital ownership and online prestige.",
+    events: [
+      {
+        year: "2020-2023",
+        title: "Crypto Wealth Signaling",
+        description: "The rise of 'crypto natives' who display their wallet addresses, ENS domains, and holdings publicly. Communities like Nouns DAO charge 30+ ETH (over $100,000) for NFTs that primarily serve as status symbols and access passes to exclusive communities. Research from Chainalysis shows over $40 billion was spent on NFTs primarily for status signaling in this period.",
+        location: "Global (Digital)",
+        icon: <Coins className="text-royal-gold" />,
+        imageUrl: "https://i.imgur.com/R8qMTxV.jpg"
+      },
+      {
+        year: "2022",
+        title: "Luxury Brands in the Metaverse",
+        description: "Brands like Gucci, Louis Vuitton, and Balenciaga created virtual versions of their products selling for thousands of dollars in platforms like Decentraland and Roblox. A virtual Gucci bag in Roblox resold for over $4,000 (more than the physical version), purely for the status of digital ownership and display.",
+        location: "Metaverse Platforms",
+        icon: <Gem className="text-royal-crimson" />
+      },
+      {
+        year: "2023",
+        title: "Social Media Verification Markets",
+        description: "Beyond Twitter Blue, platforms like Instagram and TikTok introduced paid verification programs, creating new hierarchies of digital status. Studies by social media analytics firm HypeAuditor found that accounts with purchased verification badges saw an average 30% increase in engagement, despite offering no functional improvements to content.",
+        location: "Global Social Platforms",
+        icon: <Scroll className="text-royal-navy" />
       }
     ]
   }
 ];
 
-// Famous historical status purchasers
+// Famous historical status purchasers - updated to include modern examples
 const famousCases = [
   {
     name: "William Randolph Hearst",
@@ -189,6 +240,20 @@ const famousCases = [
     description: "Though fictional, F. Scott Fitzgerald's character represents the real phenomenon of 1920s bootleggers and nouveaux riches who used illegal fortunes to buy mansions, throw lavish parties, and attempt to enter high society.",
     year: "1922",
     imageUrl: "https://i.imgur.com/KgzUh4n.jpg"
+  },
+  {
+    name: "Elon Musk",
+    title: "Technologist Status Symbol",
+    description: "Beyond his business ventures, Musk has made numerous high-profile purchases explicitly intended to demonstrate status, from buying Twitter for $44 billion partly to control a social platform to launching a Tesla Roadster into space as a cosmic status symbol—perhaps the most expensive flex in human history.",
+    year: "2018-2023",
+    imageUrl: "https://i.imgur.com/Ow7xR7q.jpg"
+  },
+  {
+    name: "Kim Kardashian",
+    title: "Modern Status Architect",
+    description: "Transformed fame into a business empire centered around status symbols, from her $60 million minimalist mansion to her infamous $1.26 million purchase of Princess Diana's diamond cross pendant—explicitly to own a piece of royal adjacent status. Her social media presence is carefully crafted to showcase wealth indicators to her 360+ million followers.",
+    year: "2010-Present",
+    imageUrl: "https://i.imgur.com/BkJRZP2.jpg"
   }
 ];
 
@@ -331,14 +396,20 @@ const HistoryOfStatus: React.FC = () => {
               </p>
               
               <p className="text-gray-700 mb-4">
-                From Roman equites to Gilded Age marriages, Renaissance title purchases to modern philanthropic naming rights, 
+                From Roman equites to Gilded Age marriages, Renaissance title purchases to modern NFT collections, 
                 the methods change but the fundamental transaction remains: wealth exchanged for recognition, access, and prestige.
               </p>
               
               <p className="text-gray-700 mb-4">
                 What makes SpendThrone unique is its transparency. Throughout history, the exchange of money for status was 
                 often obscured by tradition, bureaucracy, or social niceties. Here, we strip away the pretense and acknowledge 
-                the transaction for what it is.
+                the transaction for what it is—whether purchasing a Roman knighthood with sesterces or a blue checkmark with cryptocurrency.
+              </p>
+              
+              <p className="text-gray-700 mb-4">
+                The digital era has not eliminated status purchasing—it has simply moved much of it online. From purchasing 
+                verified badges on social platforms to collecting exclusive NFTs, from flaunting crypto wealth to buying virtual 
+                luxury goods in metaverse platforms, the fundamental human desire to convert wealth to status remains unchanged.
               </p>
               
               <p className="text-gray-700 font-medieval text-lg text-center italic mt-8">
