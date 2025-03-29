@@ -1,76 +1,203 @@
 
 import { User } from '@/types/user';
+import { MockeryAction } from '@/types/mockery';
+import { Crown, Egg, MessageSquare, Music, VolumeX, User as UserIcon, Flame, Star, Award, AlertTriangle, Skull, ThumbsDown, CloudLightning } from 'lucide-react';
 
-/**
- * Check if the current month is a FireSale month (e.g., seasonal sale)
- */
-export const isFireSaleMonth = (): boolean => {
-  const currentMonth = new Date().getMonth();
-  // Returns true for December (11), July (6), and March (2)
-  return [2, 6, 11].includes(currentMonth);
+export type ShameAction = MockeryAction;
+
+export interface ShameEvent {
+  id: string;
+  targetUserId: string;
+  sourceUserId: string;
+  action: ShameAction;
+  createdAt: string;
+  expiresAt: string;
+  message?: string;
+  isActive: boolean;
+}
+
+export const getShameActionName = (action: ShameAction): string => {
+  switch (action) {
+    case 'tomatoes': return 'Throw Tomatoes';
+    case 'eggs': return 'Throw Eggs';
+    case 'stocks': return 'Place in Stocks';
+    case 'silence': return 'Royal Silence';
+    case 'courtJester': return 'Court Jester';
+    case 'jester': return 'Royal Jester';
+    case 'protected': return 'Royal Protection';
+    case 'immune': return 'Royal Immunity';
+    case 'dunce': return 'Dunce Cap';
+    case 'roast': return 'Royal Roast';
+    case 'ridicule': return 'Public Ridicule';
+    case 'taunt': return 'Royal Taunt';
+    case 'drama': return 'Court Drama';
+    default: return 'Unknown';
+  }
 };
 
-/**
- * Get the current FireSale discount percentage based on the current month
- */
+export const getShameActionTitle = (action: ShameAction): string => {
+  return getShameActionName(action);
+};
+
+export const getShameActionIcon = (action: ShameAction) => {
+  switch (action) {
+    case 'tomatoes': return Egg;
+    case 'eggs': return Egg;
+    case 'stocks': return AlertTriangle;
+    case 'silence': return VolumeX;
+    case 'courtJester': return Crown;
+    case 'jester': return Crown;
+    case 'protected': return Shield;
+    case 'immune': return Star;
+    case 'dunce': return UserIcon;
+    case 'roast': return Flame;
+    case 'ridicule': return ThumbsDown;
+    case 'taunt': return MessageSquare;
+    case 'drama': return CloudLightning;
+    default: return Crown;
+  }
+};
+
+export const getShameActionDescription = (action: ShameAction, targetName: string = 'this user'): string => {
+  switch (action) {
+    case 'tomatoes': return `Pelt ${targetName} with rotten tomatoes. A classic form of public ridicule.`;
+    case 'eggs': return `Hurl rotten eggs at ${targetName}. The stench will follow them for a day.`;
+    case 'stocks': return `Place ${targetName} in the public stocks. The ultimate medieval humiliation.`;
+    case 'silence': return `Silence ${targetName} with a royal decree. They will appear muted for 24 hours.`;
+    case 'courtJester': return `Appoint ${targetName} as the court jester. A jester's hat will adorn their profile.`;
+    case 'jester': return `Make ${targetName} the fool of the court. Their profile will display jester symbols.`;
+    case 'protected': return `Grant ${targetName} royal protection. They cannot be shamed for 24 hours.`;
+    case 'immune': return `Grant ${targetName} royal immunity. They are immune to all shaming for 72 hours.`;
+    case 'dunce': return `Place a dunce cap on ${targetName}. Their profile will show their lack of wisdom.`;
+    case 'roast': return `Subject ${targetName} to a royal roasting. Their profile will show burn marks.`;
+    case 'ridicule': return `Subject ${targetName} to public ridicule. Their shame will be announced in court.`;
+    case 'taunt': return `Publicly taunt ${targetName}. A banner of mockery will appear on their profile.`;
+    case 'drama': return `Create court drama involving ${targetName}. Gossip will spread throughout the kingdom.`;
+    default: return `Shame ${targetName} with unknown consequences.`;
+  }
+};
+
+export const getShameActionPrice = (action: ShameAction): number => {
+  switch (action) {
+    case 'tomatoes': return 0.25;
+    case 'eggs': return 0.50;
+    case 'stocks': return 1.00;
+    case 'silence': return 1.50;
+    case 'courtJester': return 2.00;
+    case 'jester': return 2.50;
+    case 'protected': return 5.00;
+    case 'immune': return 10.00;
+    case 'dunce': return 1.75;
+    case 'roast': return 1.25;
+    case 'ridicule': return 1.50;
+    case 'taunt': return 1.00;
+    case 'drama': return 3.00;
+    default: return 1.00;
+  }
+};
+
+export const getShameActionDuration = (action: ShameAction): number => {
+  switch (action) {
+    case 'tomatoes': return 24;
+    case 'eggs': return 48;
+    case 'stocks': return 72;
+    case 'silence': return 24;
+    case 'courtJester': return 48;
+    case 'jester': return 48;
+    case 'protected': return 24;
+    case 'immune': return 72;
+    case 'dunce': return 36;
+    case 'roast': return 24;
+    case 'ridicule': return 48;
+    case 'taunt': return 24;
+    case 'drama': return 72;
+    default: return 24;
+  }
+};
+
+export const isFireSaleMonth = (): boolean => {
+  const now = new Date();
+  return now.getMonth() === 11 || now.getMonth() === 5; // June and December
+};
+
 export const getFireSaleDiscountPercentage = (): number => {
   if (!isFireSaleMonth()) return 0;
   
-  const currentMonth = new Date().getMonth();
+  const now = new Date();
+  const day = now.getDate();
   
-  // Different discount percentages for different months
-  switch (currentMonth) {
-    case 11: // December - Holiday Sale
-      return 30;
-    case 6: // July - Summer Sale
-      return 25;
-    case 2: // March - Spring Sale
-      return 20;
-    default:
-      return 15;
+  // Higher discounts in the middle of the month
+  if (day >= 10 && day <= 20) {
+    return 30; // 30% off
+  } else {
+    return 15; // 15% off
   }
 };
 
-/**
- * Get a random set of users to be featured in shaming events
- * @param count Number of users to return
- * @param excludeUserId Optional user ID to exclude from results
- */
-export const getRandomShameableUsers = (count: number, excludeUserId?: string): User[] => {
-  // This would typically come from an API, but for demo, we'll generate them
-  const mockUsers: User[] = [];
+export const isUserProtected = (user: User): boolean => {
+  // Check if the user has active protection
+  if (!user.profileBoosts) return false;
   
-  for (let i = 0; i < count + (excludeUserId ? 1 : 0); i++) {
-    const mockUser: User = {
-      id: `user-${i + 100}`,
-      email: `user${i + 100}@example.com`,
-      username: `royal_subject_${i + 100}`,
-      displayName: `Royal Subject #${i + 100}`,
-      profileImage: `https://source.unsplash.com/random/300x300?portrait&sig=${i}`,
-      createdAt: new Date().toISOString(),
-      rank: i + 1,
-      tier: i < 2 ? 'whale' : i < 5 ? 'shark' : i < 10 ? 'dolphin' : 'fish',
-      team: ['red', 'green', 'blue'][i % 3] as any,
-      totalSpent: 1000 - (i * 100),
-      spentAmount: 1000 - (i * 100),
-      amountSpent: 1000 - (i * 100),
-      walletBalance: 50 + (i * 10),
-    };
-    
-    mockUsers.push(mockUser);
-  }
+  const now = new Date();
   
-  // Filter out the excluded user if needed
-  const filteredUsers = excludeUserId 
-    ? mockUsers.filter(user => user.id !== excludeUserId)
-    : mockUsers;
-  
-  // Return only the requested number of users
-  return filteredUsers.slice(0, count);
+  return user.profileBoosts.some(boost => 
+    boost.type === 'protection' && 
+    new Date(boost.endDate) > now
+  );
 };
 
-export default {
-  isFireSaleMonth,
-  getFireSaleDiscountPercentage,
-  getRandomShameableUsers
+// Additional functions needed by components
+export const hasWeeklyDiscount = (action: ShameAction): boolean => {
+  // Example implementation: discounts on weekends
+  const now = new Date();
+  const dayOfWeek = now.getDay(); // 0 is Sunday, 6 is Saturday
+  
+  return dayOfWeek === 0 || dayOfWeek === 6;
 };
+
+export const getWeeklyDiscountedAction = (): ShameAction => {
+  // Return a random action that's discounted this week
+  const actions: ShameAction[] = ['tomatoes', 'eggs', 'dunce'];
+  return actions[Math.floor(Math.random() * actions.length)];
+};
+
+export const getDiscountedShamePrice = (action: ShameAction): number => {
+  const basePrice = getShameActionPrice(action);
+  
+  if (hasWeeklyDiscount(action)) {
+    return basePrice * 0.7; // 30% discount
+  }
+  
+  return basePrice;
+};
+
+export const getMockeryColor = (action: ShameAction): string => {
+  switch (action) {
+    case 'tomatoes': return 'text-red-500';
+    case 'eggs': return 'text-yellow-300';
+    case 'stocks': return 'text-amber-700';
+    case 'silence': return 'text-gray-400';
+    case 'courtJester': return 'text-purple-400';
+    case 'jester': return 'text-indigo-400';
+    case 'protected': return 'text-blue-400';
+    case 'immune': return 'text-royal-gold';
+    case 'dunce': return 'text-gray-400';
+    case 'roast': return 'text-orange-500';
+    case 'ridicule': return 'text-pink-400';
+    case 'taunt': return 'text-green-400';
+    case 'drama': return 'text-violet-400';
+    default: return 'text-gray-400';
+  }
+};
+
+export const getMockeryText = (action: ShameAction): string => {
+  return getShameActionDescription(action);
+};
+
+export const getMockeryCost = (action: ShameAction): number => {
+  return getShameActionPrice(action);
+};
+
+// Import and re-export missing Shield component
+import { Shield } from 'lucide-react';
+export { Shield };

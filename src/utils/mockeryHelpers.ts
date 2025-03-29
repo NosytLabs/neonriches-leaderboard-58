@@ -1,221 +1,126 @@
 
 import { MockeryAction, MockeryTier } from '@/types/mockery';
-import { Shield, ThumbsDown, Egg, Flame, Skull, Crown, Sparkles, Scissors, Music, Volume2, VolumeX, User } from 'lucide-react';
+import { 
+  Crown, 
+  Egg, 
+  MessageSquare, 
+  Music, 
+  VolumeX, 
+  User, 
+  Flame, 
+  Star, 
+  Shield, 
+  AlertTriangle, 
+  ThumbsDown, 
+  CloudLightning 
+} from 'lucide-react';
 
-// Map MockeryAction to its display text
-export const getMockeryText = (action: MockeryAction): string => {
-  switch (action) {
-    case 'tomatoes':
-      return 'Throw Tomatoes';
-    case 'eggs':
-      return 'Throw Eggs';
-    case 'stocks':
-      return 'Put in Stocks';
-    case 'silence':
-      return 'Silence';
-    case 'courtJester':
-      return 'Court Jester';
-    case 'jester':
-      return 'Royal Jester';
-    case 'protected':
-      return 'Protected';
-    case 'immune':
-      return 'Immunity';
-    case 'dunce':
-      return 'Dunce Cap';
-    case 'roast':
-      return 'Royal Roast';
-    case 'ridicule':
-      return 'Public Ridicule';
-    case 'taunt':
-      return 'Royal Taunt';
-    case 'drama':
-      return 'Court Drama';
-    default:
-      return 'Unknown Action';
-  }
-};
-
-// Map MockeryAction to its description
-export const getMockeryDescription = (action: MockeryAction): string => {
-  switch (action) {
-    case 'tomatoes':
-      return 'Pelt this user with virtual tomatoes, marking their profile for 24 hours.';
-    case 'eggs':
-      return 'Throw eggs at this user, leaving their profile stained for 48 hours.';
-    case 'stocks':
-      return 'Place this user in the virtual stocks for public mockery for 72 hours.';
-    case 'silence':
-      return 'Silence this user, preventing them from posting for 24 hours.';
-    case 'courtJester':
-      return 'Force this user to wear the court jester outfit on their profile for 48 hours.';
-    case 'jester':
-      return 'Decree this user as the kingdom\'s jester for 72 hours.';
-    case 'protected':
-      return 'Grant protection from mockery for 24 hours.';
-    case 'immune':
-      return 'Grant complete immunity from all mockery for 72 hours.';
-    case 'dunce':
-      return 'Place a dunce cap on this user for 24 hours.';
-    case 'roast':
-      return 'Unleash a royal roast on this user for 48 hours.';
-    case 'ridicule':
-      return 'Subject this user to public ridicule for 48 hours.';
-    case 'taunt':
-      return 'Taunt this user with royal mockery for 24 hours.';
-    case 'drama':
-      return 'Create dramatic court intrigue involving this user for 72 hours.';
-    default:
-      return 'Unknown action effect';
-  }
-};
-
-// Map MockeryAction to its icon component
 export const getMockeryIcon = (action: MockeryAction) => {
   switch (action) {
-    case 'tomatoes':
-    case 'eggs':
-      return Egg;
-    case 'stocks':
-    case 'dunce':
-      return ThumbsDown;
-    case 'silence':
-      return VolumeX;
-    case 'courtJester':
-    case 'jester':
-      return Crown;
-    case 'protected':
-      return Shield;
-    case 'immune':
-      return Sparkles;
-    case 'roast':
-    case 'drama':
-      return Flame;
-    case 'ridicule':
-      return Scissors;
-    case 'taunt':
-      return Music;
-    default:
-      return User;
+    case 'tomatoes': return Egg;
+    case 'eggs': return Egg;
+    case 'stocks': return AlertTriangle;
+    case 'silence': return VolumeX;
+    case 'courtJester': return Crown;
+    case 'jester': return Crown;
+    case 'protected': return Shield;
+    case 'immune': return Star;
+    case 'dunce': return User;
+    case 'roast': return Flame;
+    case 'ridicule': return ThumbsDown;
+    case 'taunt': return MessageSquare;
+    case 'drama': return CloudLightning;
+    default: return Crown;
   }
 };
 
-// Map MockeryAction to its color
-export const getMockeryColor = (action: MockeryAction): { bg: string; text: string; border: string } | null => {
+export const getMockeryColor = (action: MockeryAction): string => {
   switch (action) {
-    case 'tomatoes':
-    case 'eggs':
-    case 'dunce':
-    case 'taunt':
-      return { bg: 'bg-yellow-500/20', text: 'text-yellow-500', border: 'border-yellow-500/50' };
-    case 'stocks':
-    case 'roast':
-    case 'ridicule':
-      return { bg: 'bg-orange-500/20', text: 'text-orange-500', border: 'border-orange-500/50' };
-    case 'silence':
-    case 'drama':
-      return { bg: 'bg-blue-500/20', text: 'text-blue-500', border: 'border-blue-500/50' };
-    case 'courtJester':
-    case 'jester':
-      return { bg: 'bg-purple-500/20', text: 'text-purple-500', border: 'border-purple-500/50' };
-    case 'protected':
-    case 'immune':
-      return { bg: 'bg-royal-gold/20', text: 'text-royal-gold', border: 'border-royal-gold/50' };
-    default:
-      return null;
+    case 'tomatoes': return 'text-red-500';
+    case 'eggs': return 'text-yellow-300';
+    case 'stocks': return 'text-amber-700';
+    case 'silence': return 'text-gray-400';
+    case 'courtJester': return 'text-purple-400';
+    case 'jester': return 'text-indigo-400';
+    case 'protected': return 'text-blue-400';
+    case 'immune': return 'text-royal-gold';
+    case 'dunce': return 'text-gray-400';
+    case 'roast': return 'text-orange-500';
+    case 'ridicule': return 'text-pink-400';
+    case 'taunt': return 'text-green-400';
+    case 'drama': return 'text-violet-400';
+    default: return 'text-gray-400';
   }
 };
 
-// Get the price of a mockery action
 export const getMockeryPrice = (action: MockeryAction): number => {
   switch (action) {
-    case 'tomatoes':
-    case 'dunce':
-    case 'taunt':
-      return 1;
-    case 'eggs':
-    case 'roast':
-    case 'ridicule':
-      return 5;
-    case 'stocks':
-    case 'silence':
-    case 'drama':
-      return 10;
-    case 'courtJester':
-    case 'jester':
-    case 'protected':
-      return 25;
-    case 'immune':
-      return 50;
-    default:
-      return 1;
+    case 'tomatoes': return 0.25;
+    case 'eggs': return 0.50;
+    case 'stocks': return 1.00;
+    case 'silence': return 1.50;
+    case 'courtJester': return 2.00;
+    case 'jester': return 2.50;
+    case 'protected': return 5.00;
+    case 'immune': return 10.00;
+    case 'dunce': return 1.75;
+    case 'roast': return 1.25;
+    case 'ridicule': return 1.50;
+    case 'taunt': return 1.00;
+    case 'drama': return 3.00;
+    default: return 1.00;
   }
 };
 
-// Get the duration of a mockery action in hours
+export const getMockeryText = (action: MockeryAction, targetName: string = 'this user'): string => {
+  switch (action) {
+    case 'tomatoes': return `Pelt ${targetName} with rotten tomatoes`;
+    case 'eggs': return `Hurl rotten eggs at ${targetName}`;
+    case 'stocks': return `Place ${targetName} in the public stocks`;
+    case 'silence': return `Silence ${targetName} with a royal decree`;
+    case 'courtJester': return `Appoint ${targetName} as the court jester`;
+    case 'jester': return `Make ${targetName} the fool of the court`;
+    case 'protected': return `Grant ${targetName} royal protection`;
+    case 'immune': return `Grant ${targetName} royal immunity`;
+    case 'dunce': return `Place a dunce cap on ${targetName}`;
+    case 'roast': return `Subject ${targetName} to a royal roasting`;
+    case 'ridicule': return `Subject ${targetName} to public ridicule`;
+    case 'taunt': return `Publicly taunt ${targetName}`;
+    case 'drama': return `Create court drama involving ${targetName}`;
+    default: return `Shame ${targetName}`;
+  }
+};
+
+export const convertActionToTier = (action: MockeryAction): MockeryTier => {
+  if (['tomatoes', 'dunce', 'taunt'].includes(action)) {
+    return 'common';
+  } else if (['eggs', 'roast', 'ridicule'].includes(action)) {
+    return 'uncommon';
+  } else if (['stocks', 'silence', 'drama'].includes(action)) {
+    return 'rare';
+  } else if (['courtJester', 'jester', 'protected'].includes(action)) {
+    return 'epic';
+  } else if (['immune'].includes(action)) {
+    return 'legendary';
+  }
+  return 'common';
+};
+
 export const getMockeryDuration = (action: MockeryAction): number => {
   switch (action) {
-    case 'tomatoes':
-    case 'dunce':
-    case 'taunt':
-    case 'silence':
-    case 'protected':
-      return 24;
-    case 'eggs':
-    case 'roast':
-    case 'ridicule':
-    case 'courtJester':
-      return 48;
-    case 'stocks':
-    case 'jester':
-    case 'drama':
-    case 'immune':
-      return 72;
-    default:
-      return 24;
-  }
-};
-
-// Convert MockeryAction to its tier
-export const convertActionToTier = (action: MockeryAction): MockeryTier => {
-  switch (action) {
-    case 'tomatoes':
-    case 'dunce':
-    case 'taunt':
-      return 'common';
-    case 'eggs':
-    case 'roast':
-    case 'ridicule':
-      return 'uncommon';
-    case 'stocks':
-    case 'silence':
-    case 'drama':
-      return 'rare';
-    case 'courtJester':
-    case 'jester':
-    case 'protected':
-      return 'epic';
-    case 'immune':
-      return 'legendary';
-    default:
-      return 'common';
-  }
-};
-
-// Convert tier to mockery action (for backward compatibility)
-export const convertTierToAction = (tier: MockeryTier): MockeryAction => {
-  switch (tier) {
-    case 'common':
-      return 'tomatoes';
-    case 'uncommon':
-      return 'eggs';
-    case 'rare':
-      return 'stocks';
-    case 'epic':
-      return 'courtJester';
-    case 'legendary':
-      return 'immune';
-    default:
-      return 'tomatoes';
+    case 'tomatoes': return 24;
+    case 'eggs': return 48;
+    case 'stocks': return 72;
+    case 'silence': return 24;
+    case 'courtJester': return 48;
+    case 'jester': return 48;
+    case 'protected': return 24;
+    case 'immune': return 72;
+    case 'dunce': return 36;
+    case 'roast': return 24;
+    case 'ridicule': return 48;
+    case 'taunt': return 24;
+    case 'drama': return 72;
+    default: return 24;
   }
 };

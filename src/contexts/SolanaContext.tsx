@@ -1,218 +1,142 @@
 
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import { useToast } from '@/hooks/use-toast';
-import { useAuth } from '@/contexts/auth';
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import { Connection, PublicKey, LAMPORTS_PER_SOL } from '@solana/web3.js';
+import { useAuth } from './auth/AuthContext';
 
-export interface SolanaContextValue {
-  connected: boolean;
-  publicKey: string | null;
-  balance: number;
-  connectWallet: () => Promise<boolean>;
+interface SolanaContextValue {
+  isConnecting: boolean;
+  hasWallet: boolean;
+  walletPubkey: string | null;
+  walletBalance: number;
+  connectWallet: () => Promise<void>;
   disconnectWallet: () => void;
-  signMessage: (message: string) => Promise<string | null>;
-  sendTransaction: (destination: string, amount: number) => Promise<boolean>;
-  airdropSol: () => Promise<void>;
+  sendSol: (recipient: string, amount: number) => Promise<{ success: boolean; message: string }>;
+  linkWalletToAccount: () => Promise<boolean>;
 }
 
-const SolanaContext = createContext<SolanaContextValue>({
-  connected: false,
-  publicKey: null,
-  balance: 0,
-  connectWallet: async () => false,
-  disconnectWallet: () => {},
-  signMessage: async () => null,
-  sendTransaction: async () => false,
-  airdropSol: async () => {},
-});
-
-export const useSolana = () => useContext(SolanaContext);
+const SolanaContext = createContext<SolanaContextValue | null>(null);
 
 export const SolanaProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [connected, setConnected] = useState(false);
-  const [publicKey, setPublicKey] = useState<string | null>(null);
-  const [balance, setBalance] = useState(0);
-  const { toast } = useToast();
   const { user, updateUserProfile } = useAuth();
+  const [isConnecting, setIsConnecting] = useState(false);
+  const [hasWallet, setHasWallet] = useState(false);
+  const [walletPubkey, setWalletPubkey] = useState<string | null>(null);
+  const [walletBalance, setWalletBalance] = useState(0);
 
   useEffect(() => {
     // Check if wallet was previously connected
-    const savedWallet = localStorage.getItem('solana_wallet');
-    if (savedWallet) {
-      try {
-        const walletData = JSON.parse(savedWallet);
-        setConnected(true);
-        setPublicKey(walletData.publicKey);
-        setBalance(walletData.balance || 0);
-      } catch (error) {
-        console.error('Error parsing saved wallet:', error);
-        localStorage.removeItem('solana_wallet');
-      }
+    const storedPubkey = localStorage.getItem('solana_wallet_pubkey');
+    if (storedPubkey) {
+      setWalletPubkey(storedPubkey);
+      setHasWallet(true);
+      fetchWalletBalance(storedPubkey);
     }
   }, []);
 
-  // Update user's wallet address when connected
   useEffect(() => {
-    if (connected && publicKey && user && (!user.walletAddress || user.walletAddress !== publicKey)) {
-      updateUserProfile({
-        ...user,
-        walletAddress: publicKey
-      });
+    // If user has a wallet address saved in their profile, use that
+    if (user?.walletAddress && !walletPubkey) {
+      setWalletPubkey(user.walletAddress);
+      setHasWallet(true);
+      fetchWalletBalance(user.walletAddress);
     }
-  }, [connected, publicKey, user]);
+  }, [user, walletPubkey]);
 
-  const connectWallet = async (): Promise<boolean> => {
+  const fetchWalletBalance = async (pubkey: string) => {
     try {
-      // In a real app, this would use Solana wallet adapter
-      // For demo, we'll simulate connection with a fake public key
-      const mockPublicKey = 'A1b2C3d4E5f6G7h8I9j0kLmNoPqRsTuVwXyZ';
-      const mockBalance = 5.0;
-      
-      setConnected(true);
-      setPublicKey(mockPublicKey);
-      setBalance(mockBalance);
-      
-      // Save wallet info to localStorage
-      localStorage.setItem('solana_wallet', JSON.stringify({
-        publicKey: mockPublicKey,
-        balance: mockBalance
-      }));
-      
-      toast({
-        title: "Wallet Connected",
-        description: "Your Solana wallet has been successfully connected.",
-      });
-      
+      const connection = new Connection(
+        'https://api.devnet.solana.com',
+        'confirmed'
+      );
+      const publicKey = new PublicKey(pubkey);
+      const balance = await connection.getBalance(publicKey);
+      setWalletBalance(balance / LAMPORTS_PER_SOL);
+    } catch (error) {
+      console.error('Error fetching wallet balance:', error);
+      setWalletBalance(0);
+    }
+  };
+
+  const connectWallet = async () => {
+    setIsConnecting(true);
+    try {
+      // This is a placeholder for actual wallet connection
+      // In a real app, you'd use a proper wallet adapter
+      const mockPubkey = 'BW1Y9SqiPRSsEDxoYfSrpHpnvWNKGrNHyBnb4HqQiwJP';
+      setWalletPubkey(mockPubkey);
+      setHasWallet(true);
+      localStorage.setItem('solana_wallet_pubkey', mockPubkey);
+      await fetchWalletBalance(mockPubkey);
       return true;
     } catch (error) {
       console.error('Error connecting wallet:', error);
-      toast({
-        title: "Connection Failed",
-        description: "Could not connect to your wallet. Please try again.",
-        variant: "destructive"
-      });
       return false;
+    } finally {
+      setIsConnecting(false);
     }
   };
 
   const disconnectWallet = () => {
-    setConnected(false);
-    setPublicKey(null);
-    setBalance(0);
-    localStorage.removeItem('solana_wallet');
-    
-    toast({
-      title: "Wallet Disconnected",
-      description: "Your Solana wallet has been disconnected.",
-    });
+    setWalletPubkey(null);
+    setHasWallet(false);
+    setWalletBalance(0);
+    localStorage.removeItem('solana_wallet_pubkey');
   };
 
-  const signMessage = async (message: string): Promise<string | null> => {
+  const sendSol = async (recipient: string, amount: number) => {
     try {
-      // In a real app, this would use wallet adapter to sign a message
-      // For demo, we'll simulate a signature
-      const signature = `sig_${Math.random().toString(36).substring(2, 15)}`;
-      
-      toast({
-        title: "Message Signed",
-        description: "Your message has been signed successfully.",
-      });
-      
-      return signature;
+      // This is a placeholder for actual SOL transfer
+      console.log(`Sending ${amount} SOL to ${recipient}`);
+
+      // In a real app, you'd use a proper wallet adapter for transactions
+      // For now, just mock a successful transaction
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      // Update balance
+      if (walletPubkey) {
+        setWalletBalance(prev => Math.max(0, prev - amount));
+        await fetchWalletBalance(walletPubkey);
+      }
+
+      return {
+        success: true,
+        message: `Successfully sent ${amount} SOL to ${recipient}`
+      };
     } catch (error) {
-      console.error('Error signing message:', error);
-      toast({
-        title: "Signing Failed",
-        description: "Could not sign the message. Please try again.",
-        variant: "destructive"
-      });
-      return null;
+      console.error('Error sending SOL:', error);
+      return {
+        success: false,
+        message: error instanceof Error ? error.message : 'An unknown error occurred'
+      };
     }
   };
 
-  const sendTransaction = async (destination: string, amount: number): Promise<boolean> => {
+  const linkWalletToAccount = async () => {
+    if (!user || !walletPubkey) return false;
+
     try {
-      // Check if wallet is connected
-      if (!connected || !publicKey) {
-        throw new Error('Wallet not connected');
-      }
-      
-      // Check if user has enough balance
-      if (balance < amount) {
-        throw new Error('Insufficient funds');
-      }
-      
-      // In a real app, this would use wallet adapter to send a transaction
-      // For demo, we'll just update the balance
-      setBalance(prevBalance => {
-        const newBalance = prevBalance - amount;
-        
-        // Update localStorage
-        localStorage.setItem('solana_wallet', JSON.stringify({
-          publicKey,
-          balance: newBalance
-        }));
-        
-        return newBalance;
+      await updateUserProfile({
+        ...user,
+        walletAddress: walletPubkey
       });
-      
-      toast({
-        title: "Transaction Complete",
-        description: `Successfully sent ${amount} SOL to ${destination.substring(0, 4)}...${destination.substring(destination.length - 4)}`,
-      });
-      
       return true;
     } catch (error) {
-      console.error('Transaction error:', error);
-      toast({
-        title: "Transaction Failed",
-        description: error instanceof Error ? error.message : "Could not complete transaction. Please try again.",
-        variant: "destructive"
-      });
+      console.error('Error linking wallet to account:', error);
       return false;
-    }
-  };
-
-  const airdropSol = async (): Promise<void> => {
-    try {
-      // In a real app, this would call a testnet/devnet airdrop
-      // For demo, we'll just update the balance
-      setBalance(prevBalance => {
-        const newBalance = prevBalance + 1;
-        
-        // Update localStorage
-        localStorage.setItem('solana_wallet', JSON.stringify({
-          publicKey,
-          balance: newBalance
-        }));
-        
-        return newBalance;
-      });
-      
-      toast({
-        title: "Airdrop Received",
-        description: "1 SOL has been added to your wallet.",
-      });
-    } catch (error) {
-      console.error('Airdrop error:', error);
-      toast({
-        title: "Airdrop Failed",
-        description: "Could not airdrop SOL. Please try again.",
-        variant: "destructive"
-      });
     }
   };
 
   return (
     <SolanaContext.Provider
       value={{
-        connected,
-        publicKey,
-        balance,
+        isConnecting,
+        hasWallet,
+        walletPubkey,
+        walletBalance,
         connectWallet,
         disconnectWallet,
-        signMessage,
-        sendTransaction,
-        airdropSol,
+        sendSol,
+        linkWalletToAccount
       }}
     >
       {children}
@@ -220,4 +144,13 @@ export const SolanaProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   );
 };
 
+export const useSolana = () => {
+  const context = useContext(SolanaContext);
+  if (!context) {
+    throw new Error('useSolana must be used within a SolanaProvider');
+  }
+  return context;
+};
+
+// Export for backward compatibility
 export default SolanaProvider;
