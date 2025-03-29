@@ -1,57 +1,66 @@
 
-import { BoostEffect } from "@/types/boostEffects";
+import { BoostEffect } from '@/types/boostEffects';
 
-// Export profile boost effects
 const profileBoostEffects: BoostEffect[] = [
   {
-    id: "royal-sparkle",
-    name: "Royal Sparkle",
-    description: "Add a majestic sparkle effect to your profile that showcases your noble status.",
-    price: 25,
-    tier: "premium",
-    type: "effect",
+    id: 'gold-aura',
+    name: 'Gold Aura',
+    description: 'Surrounds your profile with a subtle golden glow, drawing attention to your noble status.',
+    price: 5,
+    tier: 'basic',
+    type: 'effect',
     durationDays: 7,
-    previewImage: "/throne-assets/boosts/royal-sparkle.jpg"
+    previewImage: '/assets/boost-previews/gold-aura.png'
   },
   {
-    id: "golden-aura",
-    name: "Golden Aura",
-    description: "Surround your profile with a golden aura that makes you stand out in the crowd.",
-    price: 50,
-    tier: "royal",
-    type: "effect",
+    id: 'crown-effect',
+    name: 'Royal Crown',
+    description: 'Display a majestic crown above your profile, marking you as true royalty.',
+    price: 15,
+    tier: 'premium',
+    type: 'appearance',
     durationDays: 14,
-    previewImage: "/throne-assets/boosts/golden-aura.jpg"
+    previewImage: '/assets/boost-previews/crown-effect.png'
   },
   {
-    id: "crown-glow",
-    name: "Crown Glow",
-    description: "Add a glowing crown effect to your profile image that pulses with royal energy.",
-    price: 35,
-    tier: "premium",
-    type: "appearance",
-    durationDays: 10,
-    previewImage: "/throne-assets/boosts/crown-glow.jpg"
+    id: 'neon-pulse',
+    name: 'Neon Pulse',
+    description: 'An eye-catching pulsing effect that brings your profile to life.',
+    price: 10,
+    tier: 'basic',
+    type: 'animation',
+    durationDays: 7,
+    previewImage: '/assets/boost-previews/neon-pulse.png'
   },
   {
-    id: "royal-banner",
-    name: "Royal Banner",
-    description: "Display a customized royal banner on your profile that announces your status.",
+    id: 'rainbow-flow',
+    name: 'Rainbow Flow',
+    description: 'A mesmerizing rainbow animation that flows around your profile elements.',
     price: 20,
-    tier: "basic",
-    type: "appearance",
-    durationDays: 7,
-    previewImage: "/throne-assets/boosts/royal-banner.jpg"
+    tier: 'premium',
+    type: 'animation',
+    durationDays: 14,
+    previewImage: '/assets/boost-previews/rainbow-flow.png'
   },
   {
-    id: "leaderboard-highlight",
-    name: "Leaderboard Highlight",
-    description: "Make your name stand out on the leaderboard with a special highlight effect.",
+    id: 'royal-sparkle',
+    name: 'Royal Sparkle',
+    description: 'Premium sparkling effect that makes your profile truly stand out from the crowd.',
     price: 30,
-    tier: "premium",
-    type: "visibility",
-    durationDays: 7,
-    previewImage: "/throne-assets/boosts/leaderboard-highlight.jpg"
+    tier: 'royal',
+    type: 'effect',
+    durationDays: 30,
+    previewImage: '/assets/boost-previews/royal-sparkle.png'
+  },
+  {
+    id: 'animated-border',
+    name: 'Animated Border',
+    description: 'A dynamic border animation that frames your profile in constant motion.',
+    price: 25,
+    tier: 'premium',
+    type: 'appearance',
+    durationDays: 21,
+    previewImage: '/assets/boost-previews/animated-border.png'
   }
 ];
 

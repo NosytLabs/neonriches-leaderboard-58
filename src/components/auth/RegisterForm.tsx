@@ -2,101 +2,119 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { useAuth } from '@/contexts/auth';
-import { Shield, User, Mail, Lock, Scroll, Crown } from 'lucide-react';
+import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/contexts/auth';
+import { RegisterFormProps } from './types';
 
-const RegisterForm: React.FC = () => {
+const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchToLogin, onSuccess }) => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { register } = useAuth();
+  const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+  const { register } = useAuth();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!username || !email || !password) {
       toast({
-        title: "Halt, peasant!",
-        description: "Thou must provide all required information to enter our prestigious realm.",
-        variant: "destructive"
+        title: "Error",
+        description: "Please fill in all fields",
+        variant: "destructive",
       });
       return;
     }
     
-    register(email, username, password);
+    if (password.length < 6) {
+      toast({
+        title: "Error",
+        description: "Password must be at least 6 characters",
+        variant: "destructive",
+      });
+      return;
+    }
     
-    toast({
-      title: "Noble Status Granted!",
-      description: "Thy place in our illustrious kingdom has been secured. Spend freely to ascend the ranks!",
-      variant: "default"
-    });
+    setIsLoading(true);
+    
+    try {
+      await register(username, email, password);
+      toast({
+        title: "Success",
+        description: "Your royal account has been created",
+      });
+      
+      if (onSuccess) {
+        onSuccess();
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to create account. Email may already be in use.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <div className="text-center mb-6">
-        <div className="inline-flex items-center justify-center rounded-full bg-royal-gold/10 p-3 mb-3">
-          <Crown className="h-7 w-7 text-royal-gold" />
-        </div>
-        <h2 className="text-2xl font-bold mb-1 font-royal">Establish Thy Noble Lineage</h2>
-        <p className="text-white/60 text-sm">Join our prestigious realm where wealth determines worth</p>
+      <div className="space-y-2">
+        <Label htmlFor="username">Username</Label>
+        <Input
+          id="username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          disabled={isLoading}
+          placeholder="YourRoyalName"
+          className="glass-morphism border-white/10"
+        />
       </div>
       
-      <div className="space-y-3">
-        <div className="relative">
-          <User className="absolute left-3 top-3 h-5 w-5 text-white/40" />
-          <Input 
-            type="text" 
-            placeholder="Thy Noble Title (Username)" 
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            className="pl-10 bg-black/30 border-white/10 focus:border-royal-gold/50"
-          />
-        </div>
-        
-        <div className="relative">
-          <Mail className="absolute left-3 top-3 h-5 w-5 text-white/40" />
-          <Input 
-            type="email" 
-            placeholder="Thy Royal Scroll (Email)" 
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="pl-10 bg-black/30 border-white/10 focus:border-royal-gold/50"
-          />
-        </div>
-        
-        <div className="relative">
-          <Lock className="absolute left-3 top-3 h-5 w-5 text-white/40" />
-          <Input 
-            type="password" 
-            placeholder="Thy Secret Seal (Password)" 
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="pl-10 bg-black/30 border-white/10 focus:border-royal-gold/50"
-          />
-        </div>
+      <div className="space-y-2">
+        <Label htmlFor="email">Email</Label>
+        <Input
+          id="email"
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          disabled={isLoading}
+          placeholder="royal@example.com"
+          className="glass-morphism border-white/10"
+        />
       </div>
       
-      <Button 
-        type="submit" 
-        className="w-full font-bold bg-gradient-to-r from-royal-gold/90 to-royal-gold text-black hover:opacity-90"
+      <div className="space-y-2">
+        <Label htmlFor="password">Password</Label>
+        <Input
+          id="password"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          disabled={isLoading}
+          className="glass-morphism border-white/10"
+        />
+        <p className="text-xs text-white/60">Must be at least 6 characters</p>
+      </div>
+      
+      <Button
+        type="submit"
+        disabled={isLoading}
+        className="w-full"
       >
-        <Shield className="mr-2 h-4 w-4" />
-        Claim Thy Noble Heritage
+        {isLoading ? "Creating Account..." : "Create Account"}
       </Button>
       
-      <div className="text-center mt-4">
-        <p className="text-white/60 text-sm">
-          Already nobility? <a href="/login" className="text-royal-gold hover:underline">Return to thy castle</a>
-        </p>
-      </div>
-      
-      <div className="text-center text-xs text-white/40 mt-6">
-        <p>By establishing thyself, you agree to our <a href="/terms" className="underline">Royal Decree</a>.</p>
-        <p className="mt-1">Thy data shall be guarded by our most valiant knights, though even the mightiest castle walls can be breached by determined foes.</p>
-      </div>
+      {onSwitchToLogin && (
+        <div className="text-center text-sm text-white/60">
+          Already have an account?{" "}
+          <Button variant="link" onClick={onSwitchToLogin} className="p-0 text-white/90">
+            Sign in
+          </Button>
+        </div>
+      )}
     </form>
   );
 };

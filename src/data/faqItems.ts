@@ -1,36 +1,37 @@
 
 export interface FAQItem {
-  id: string;
   question: string;
   answer: string;
-  category?: string; // Make category optional
-  icon?: React.ReactNode; // Make icon optional
+  category?: string;
+  icon?: React.ReactNode;
 }
 
 export const faqItems: FAQItem[] = [
   {
-    id: "faq-1",
     question: "What is SpendThrone?",
-    answer: "SpendThrone is a satirical platform where your rank is determined solely by how much money you spend. The more you spend, the higher your rank on our leaderboard."
+    answer: "SpendThrone is a satirical social experiment where your rank is determined solely by how much money you spend. The more you spend, the higher your rank. It's a digital aristocracy where your wallet determines your status.",
+    category: "general"
   },
   {
-    id: "faq-2",
-    question: "Is this a real service?",
-    answer: "Yes! SpendThrone is a functioning platform, albeit one that satirizes digital status economies. Your contributions are real, and your rank truly reflects your spending."
+    question: "How do I improve my rank?",
+    answer: "Simple! Just spend more money. Each dollar spent equals one rank point. The leaderboard never resets, so your contributions are permanent.",
+    category: "ranks"
   },
   {
-    id: "faq-3",
-    question: "What do I get for my money?",
-    answer: "You receive a higher position on our leaderboard, which is persistent and never resets. You also gain access to profile customization options based on your spending tier."
+    question: "What do I get for spending money?",
+    answer: "Besides the immense satisfaction of watching your rank improve, you'll unlock various profile customization options, special titles, and the ability to view detailed analytics. The higher your tier, the more features you unlock.",
+    category: "benefits"
   },
   {
-    id: "faq-4",
-    question: "Can I get a refund?",
-    answer: "No. SpendThrone operates on a no-refund policy. All contributions are permanent, much like purchases in many digital platforms."
+    question: "What are teams?",
+    answer: "You can join one of three teams: Red, Green, or Blue. Teams compete for collective glory, with team rankings based on the total amount spent by all team members. Choose wisely!",
+    category: "teams"
   },
   {
-    id: "faq-5",
-    question: "How do teams work?",
-    answer: "You can join one of three teams: Red, Green, or Blue. Your spending contributes to your team's total score, and teams compete for dominance on the team leaderboard."
+    question: "Can I withdraw my money later?",
+    answer: "Of course not! This is a royal competition of excess, not a sensible investment. All contributions are non-refundable, fueling the eternal aristocratic hierarchy.",
+    category: "payment"
   }
 ];
+
+export default faqItems;

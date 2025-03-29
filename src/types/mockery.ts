@@ -1,5 +1,23 @@
 
-export type MockeryAction = 'tomatoes' | 'eggs' | 'stocks' | 'silence' | 'jester';
+export type MockeryAction = 
+  | 'tomatoes' 
+  | 'eggs' 
+  | 'stocks' 
+  | 'silence' 
+  | 'jester' 
+  | 'courtJester' 
+  | 'dunce' 
+  | 'roast' 
+  | 'ridicule' 
+  | 'taunt' 
+  | 'drama' 
+  | 'common' 
+  | 'uncommon' 
+  | 'rare' 
+  | 'epic' 
+  | 'legendary' 
+  | 'protected' 
+  | 'immune';
 
 export interface MockeryEvent {
   id: string;
@@ -36,7 +54,7 @@ export interface MockeryStats {
 }
 
 export type ExtendedMockeryAction = MockeryAction;
-export type MockeryTier = 'basic' | 'premium' | 'elite';
+export type MockeryTier = 'basic' | 'premium' | 'elite' | 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
 export type ShameAction = MockeryAction;
 export interface MockeryEffectData {
   action: MockeryAction;

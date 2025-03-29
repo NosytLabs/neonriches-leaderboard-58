@@ -11,6 +11,7 @@ export interface UserProfile {
   amountSpent?: number;
   spentAmount?: number;
   rank: number;
+  previousRank?: number;
   team?: 'red' | 'green' | 'blue' | null;
   joinedAt: string;
   joinDate?: string;
@@ -31,7 +32,6 @@ export interface UserProfile {
   activeTitle?: string;
   settings?: UserSettings;
   isVIP?: boolean;
-  previousRank?: number;
   certificateNFT?: any;
 }
 
@@ -60,6 +60,7 @@ export interface ProfileImage {
   id: string;
   url: string;
   isPrimary: boolean;
+  caption?: string;
 }
 
 export interface ProfileBoost {
