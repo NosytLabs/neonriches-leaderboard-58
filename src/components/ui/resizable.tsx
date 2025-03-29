@@ -32,15 +32,14 @@ const ResizablePanel = forwardRef<
 ResizablePanel.displayName = 'ResizablePanel';
 
 // Define our custom props
-interface ResizableHandleProps {
+interface ResizableHandleProps extends ComponentProps<typeof ResizablePrimitive.PanelResizeHandle> {
   withHandle?: boolean;
-  className?: string;
 }
 
-// Use specific type for ResizablePrimitive.PanelResizeHandle props
+// Use correct typing for ResizableHandle
 const ResizableHandle = forwardRef<
   ElementRef<typeof ResizablePrimitive.PanelResizeHandle>,
-  ResizablePrimitive.PanelResizeHandleProps & ResizableHandleProps
+  ResizableHandleProps
 >(({ className, withHandle = false, ...props }, ref) => (
   <ResizablePrimitive.PanelResizeHandle
     ref={ref}
@@ -59,10 +58,10 @@ const ResizableHandle = forwardRef<
 ));
 ResizableHandle.displayName = 'ResizableHandle';
 
-// Apply the same type definition for ResizableSeparator
+// Apply the same typing for ResizableSeparator
 const ResizableSeparator = forwardRef<
   ElementRef<typeof ResizablePrimitive.PanelResizeHandle>,
-  ResizablePrimitive.PanelResizeHandleProps & ResizableHandleProps
+  ResizableHandleProps
 >(({ className, ...props }, ref) => (
   <ResizableHandle ref={ref} className={className} {...props} withHandle />
 ));
