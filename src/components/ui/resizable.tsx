@@ -1,45 +1,38 @@
 
-import * as React from "react"
-import { GripVertical } from "lucide-react"
-import * as ResizablePrimitive from "react-resizable-panels"
-import { cn } from "@/lib/utils"
+import * as React from "react";
+import { GripVertical } from "lucide-react";
+import * as ResizablePrimitive from "react-resizable-panels";
 
-const ResizablePanelGroup = React.forwardRef<
-  React.ElementRef<typeof ResizablePrimitive.PanelGroup>,
-  React.ComponentPropsWithoutRef<typeof ResizablePrimitive.PanelGroup>
->(({ className, ...props }, ref) => (
+import { cn } from "@/lib/utils";
+
+const ResizablePanelGroup = ({
+  className,
+  ...props
+}: React.ComponentProps<typeof ResizablePrimitive.PanelGroup>) => (
   <ResizablePrimitive.PanelGroup
-    ref={ref}
     className={cn(
       "flex h-full w-full data-[panel-group-direction=vertical]:flex-col",
       className
     )}
     {...props}
   />
-))
-ResizablePanelGroup.displayName = "ResizablePanelGroup"
+);
 
 const ResizablePanel = React.forwardRef<
   React.ElementRef<typeof ResizablePrimitive.Panel>,
-  React.ComponentPropsWithoutRef<typeof ResizablePrimitive.Panel>
+  React.ComponentProps<typeof ResizablePrimitive.Panel>
 >(({ className, ...props }, ref) => (
   <ResizablePrimitive.Panel
     ref={ref}
-    className={cn("relative h-full w-full overflow-auto", className)}
+    className={cn("grow", className)}
     {...props}
   />
-))
-ResizablePanel.displayName = "ResizablePanel"
-
-type ResizableHandleProps = React.ComponentPropsWithoutRef<
-  typeof ResizablePrimitive.PanelResizeHandle
-> & {
-  withHandle?: boolean
-}
+));
+ResizablePanel.displayName = "ResizablePanel";
 
 const ResizableHandle = React.forwardRef<
   React.ElementRef<typeof ResizablePrimitive.PanelResizeHandle>,
-  ResizableHandleProps
+  React.ComponentProps<typeof ResizablePrimitive.PanelResizeHandle>
 >(({ className, withHandle, ...props }, ref) => (
   <ResizablePrimitive.PanelResizeHandle
     ref={ref}
@@ -55,27 +48,7 @@ const ResizableHandle = React.forwardRef<
       </div>
     )}
   </ResizablePrimitive.PanelResizeHandle>
-))
-ResizableHandle.displayName = "ResizableHandle"
+));
+ResizableHandle.displayName = "ResizableHandle";
 
-// Define props type for ResizableSeparator explicitly
-type ResizableSeparatorProps = Omit<ResizableHandleProps, 'withHandle'>;
-
-const ResizableSeparator = React.forwardRef<
-  React.ElementRef<typeof ResizablePrimitive.PanelResizeHandle>,
-  ResizableSeparatorProps
->(({ className, ...props }, ref) => (
-  <ResizablePrimitive.PanelResizeHandle
-    ref={ref}
-    className={cn("w-px bg-gray-200 dark:bg-gray-800", className)}
-    {...props}
-  />
-))
-ResizableSeparator.displayName = "ResizableSeparator"
-
-export {
-  ResizablePanelGroup,
-  ResizablePanel,
-  ResizableHandle,
-  ResizableSeparator,
-}
+export { ResizablePanelGroup, ResizablePanel, ResizableHandle };

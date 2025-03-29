@@ -1,76 +1,77 @@
 
-// File analysis types
+// Types for the code analysis module
+
+// Base information types
 export interface FileInfo {
-  filePath: string;
-  size: number; // in KB
-  impact: 'low' | 'medium' | 'high';
+  path: string;
+  size: number;
 }
 
 export interface ImportInfo {
-  filePath: string;
-  line: number;
-  import: string;
-  impact: 'low' | 'medium' | 'high';
+  file: string;
+  name: string;
+  from: string;
 }
 
 export interface VariableInfo {
-  filePath: string;
+  file: string;
+  name: string;
   line: number;
-  variable: string;
-  impact: 'low' | 'medium' | 'high';
-}
-
-export interface FunctionInfo {
-  filePath: string;
-  line: number;
-  function: string;
-  impact: 'low' | 'medium' | 'high';
 }
 
 export interface CssSelectorInfo {
-  filePath: string;
-  line: number;
+  file: string;
   selector: string;
-  impact: 'low' | 'medium' | 'high';
-}
-
-export interface DeadCodeInfo {
-  filePath: string;
   line: number;
-  code: string;
-  impact: 'low' | 'medium' | 'high';
-}
-
-export interface CodeInstance {
-  filePath: string;
-  line: number;
-}
-
-export interface DuplicateCodeInfo {
-  instances: CodeInstance[];
-  code: string;
-  impact: 'low' | 'medium' | 'high';
-}
-
-export interface ComplexCodeInfo {
-  filePath: string;
-  line: number;
-  function: string;
-  complexity: number;
-  impact: 'low' | 'medium' | 'high';
 }
 
 export interface DependencyInfo {
   name: string;
   version: string;
-  alternatives?: string[];
-  recommendation?: string;
-  impact: 'low' | 'medium' | 'high';
+  alternatives: string[];
 }
 
-export interface LargeFileInfo {
+export interface DeadCodeInfo {
+  file: string;
+  function: string;
+  line: number;
+}
+
+export interface CodeOccurrence {
+  file: string;
+  lines: string;
+}
+
+export interface DuplicateCodeInfo {
+  pattern: string;
+  occurrences: CodeOccurrence[];
+  similarity: number;
+  impact?: 'low' | 'medium' | 'high';
+  refactoringDifficulty?: 'easy' | 'medium' | 'hard';
+  recommendation?: string;
+}
+
+export interface ComplexityItem {
+  file: string;
+  function: string;
+  cyclomaticComplexity: number;
+  lines: string;
+  impact?: 'low' | 'medium' | 'high';
+  refactoringDifficulty?: 'easy' | 'medium' | 'hard';
+  recommendation?: string;
+}
+
+export interface PerformanceIssue {
+  file: string;
+  issue: string;
+  description: string;
+  impact: 'low' | 'medium' | 'high';
+  recommendation: string;
+}
+
+export interface LargeFile {
   filePath: string;
-  size: number; // in KB
+  size: number;
 }
 
 export interface ProjectMetrics {
@@ -78,21 +79,58 @@ export interface ProjectMetrics {
   fileCount: number;
   dependencyCount: number;
   averageFileSize: number; // in KB
-  largestFiles: LargeFileInfo[];
+  largestFiles: LargeFile[];
 }
 
+// Main analysis result type
 export interface AnalysisResult {
   unusedFiles: FileInfo[];
   unusedImports: ImportInfo[];
   unusedVariables: VariableInfo[];
-  unusedFunctions: FunctionInfo[];
   unusedCssSelectors: CssSelectorInfo[];
-  deadCodePaths: DeadCodeInfo[];
-  duplicateCode: DuplicateCodeInfo[];
-  complexCode: ComplexCodeInfo[];
   unusedDependencies: DependencyInfo[];
-  metrics: {
-    beforeCleanup: ProjectMetrics;
-    afterCleanup: ProjectMetrics;
-  };
+  deadCode: DeadCodeInfo[];
+  duplicateCode: DuplicateCodeInfo[];
+  complexCode: ComplexityItem[];
+  recommendations: string[];
+  metrics: ProjectMetrics;
+  bestPracticeViolations?: any[];
+}
+
+// Types for the UI components
+export interface UnusedImport {
+  file: string;
+  name: string;
+  from: string;
+}
+
+export interface UnusedVariable {
+  file: string;
+  name: string;
+  line: number;
+}
+
+export interface UnusedFunction {
+  file: string;
+  name: string;
+  line: number;
+}
+
+export interface UnusedComponent {
+  file: string;
+  name: string;
+  size: number;
+}
+
+export interface UnusedCssSelector {
+  file: string;
+  selector: string;
+  line: number;
+}
+
+export interface DeadCodePath {
+  file: string;
+  function: string;
+  description: string;
+  line: number;
 }

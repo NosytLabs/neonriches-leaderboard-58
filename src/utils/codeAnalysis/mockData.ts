@@ -1,100 +1,204 @@
 
-import { AnalysisResult } from './types';
+import { AnalysisResult, DuplicateCodeInfo, ProjectMetrics } from './types';
 
+// Mock analysis results for development and testing
 export const mockedAnalysisResults: AnalysisResult = {
   unusedFiles: [
-    { filePath: 'src/components/legacy/OldComponent.tsx', size: 34.5, impact: 'medium' },
-    { filePath: 'src/utils/deprecatedUtils.ts', size: 12.8, impact: 'low' },
-    { filePath: 'src/styles/unused-styles.css', size: 45.2, impact: 'high' },
+    { path: 'src/legacy/OldComponent.tsx', size: 5120 },
+    { path: 'src/utils/deprecated-helper.ts', size: 1024 },
   ],
   unusedImports: [
-    { filePath: 'src/components/Dashboard.tsx', line: 4, import: 'import { format } from "date-fns"', impact: 'low' },
-    { filePath: 'src/pages/Profile.tsx', line: 12, import: 'import { useQuery } from "@tanstack/react-query"', impact: 'low' },
+    { file: 'src/components/Header.tsx', name: 'Button', from: '@/components/ui/button' },
+    { file: 'src/pages/Dashboard.tsx', name: 'useAuth', from: '@/hooks/useAuth' },
   ],
   unusedVariables: [
-    { filePath: 'src/components/Header.tsx', line: 23, variable: 'const user', impact: 'low' },
-    { filePath: 'src/hooks/use-auth.ts', line: 45, variable: 'const isError', impact: 'low' },
-  ],
-  unusedFunctions: [
-    { filePath: 'src/utils/formatters.ts', line: 67, function: 'export const formatCurrency', impact: 'medium' },
-    { filePath: 'src/hooks/use-data.ts', line: 89, function: 'const fetchData', impact: 'medium' },
+    { file: 'src/components/UserCard.tsx', name: 'isLoading', line: 12 },
+    { file: 'src/hooks/useData.ts', name: 'errorMessage', line: 25 },
   ],
   unusedCssSelectors: [
-    { filePath: 'src/styles/components.css', line: 145, selector: '.old-button', impact: 'low' },
-    { filePath: 'src/styles/utils.css', line: 67, selector: '.hidden-sm', impact: 'low' },
+    { file: 'src/styles/legacy.css', selector: '.legacy-button', line: 45 },
+    { file: 'src/styles/utils.css', selector: '.hidden-md', line: 78 },
   ],
-  deadCodePaths: [
-    {
-      filePath: 'src/components/UserProfile.tsx',
-      line: 87,
-      code: 'if (process.env.NODE_ENV === "test") { /* test-only code */ }',
-      impact: 'medium'
-    },
-    {
-      filePath: 'src/utils/api.ts',
-      line: 112,
-      code: 'if (false) { console.log("This will never run"); }',
-      impact: 'low'
-    },
+  unusedDependencies: [
+    { name: 'moment', version: '^2.29.1', alternatives: ['date-fns'] },
+    { name: 'lodash', version: '^4.17.21', alternatives: ['native array methods'] },
+  ],
+  deadCode: [
+    { file: 'src/utils/helpers.ts', function: 'formatLegacyDate', line: 56 },
+    { file: 'src/contexts/ThemeContext.tsx', function: 'useLegacyTheme', line: 128 },
   ],
   duplicateCode: [
     {
-      instances: [
-        { filePath: 'src/components/Button.tsx', line: 23 },
-        { filePath: 'src/components/Link.tsx', line: 34 }
+      pattern: 'fetch and error handling pattern',
+      occurrences: [
+        { file: 'src/hooks/useUsers.ts', lines: '15-32' },
+        { file: 'src/hooks/useProducts.ts', lines: '18-35' },
       ],
-      code: '// Validation pattern repeated in multiple files\nconst validateInput = (value) => { /* validation logic */ }',
-      impact: 'high'
+      similarity: 0.92,
     },
     {
-      instances: [
-        { filePath: 'src/utils/formatters.ts', line: 56 },
-        { filePath: 'src/utils/stringUtils.ts', line: 78 }
+      pattern: 'form validation logic',
+      occurrences: [
+        { file: 'src/components/LoginForm.tsx', lines: '45-72' },
+        { file: 'src/components/RegisterForm.tsx', lines: '51-78' },
       ],
-      code: '// Duplicate string formatting logic\nconst capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1);',
-      impact: 'medium'
+      similarity: 0.87,
     },
   ],
   complexCode: [
     {
-      filePath: 'src/components/DataTable.tsx',
-      line: 156,
-      function: 'processData',
-      complexity: 24,
-      impact: 'high'
+      file: 'src/utils/calculations.ts',
+      function: 'calculateTotalWithDiscounts',
+      cyclomaticComplexity: 25,
+      lines: '87-156',
     },
     {
-      filePath: 'src/utils/calculations.ts',
-      line: 89,
-      function: 'calculateTotals',
-      complexity: 18,
-      impact: 'medium'
+      file: 'src/components/ShoppingCart.tsx',
+      function: 'handleCheckout',
+      cyclomaticComplexity: 18,
+      lines: '210-268',
     },
   ],
-  unusedDependencies: [
-    { name: 'moment', version: '2.29.4', alternatives: ['date-fns', 'dayjs'], impact: 'medium' },
-    { name: 'lodash', version: '4.17.21', recommendation: 'Use specific lodash functions or modern JS', impact: 'high' },
+  recommendations: [
+    'Remove unused dependencies to reduce bundle size',
+    'Refactor duplicate fetch logic into a shared hook',
+    'Break down complex functions into smaller, more manageable pieces',
+    'Use proper code splitting to reduce initial load time',
   ],
   metrics: {
-    beforeCleanup: {
-      projectSize: 8560, // in KB
-      fileCount: 342,
-      dependencyCount: 45,
-      averageFileSize: 25.03, // in KB
-      largestFiles: [
-        { filePath: 'src/assets/images/background.jpg', size: 1240 },
-        { filePath: 'src/components/DataGrid.tsx', size: 256 },
-      ]
-    },
-    afterCleanup: {
-      projectSize: 7250, // in KB
-      fileCount: 324,
-      dependencyCount: 38,
-      averageFileSize: 22.38, // in KB
-      largestFiles: [
-        { filePath: 'src/assets/images/background.jpg', size: 1240 },
-        { filePath: 'src/components/DataGrid.tsx', size: 215 },
-      ]
-    }
+    projectSize: 8560,
+    fileCount: 342,
+    dependencyCount: 45,
+    averageFileSize: 25.03,
+    largestFiles: [
+      { filePath: 'src/assets/images/background.jpg', size: 1240 },
+      { filePath: 'src/components/DataGrid.tsx', size: 256 },
+    ]
   }
 };
+
+// Mock unused imports for the unused code report
+export const unusedImportsMock = [
+  { file: 'src/components/Header.tsx', name: 'Button', from: '@/components/ui/button' },
+  { file: 'src/pages/Dashboard.tsx', name: 'useAuth', from: '@/hooks/useAuth' },
+  { file: 'src/components/ProfileCard.tsx', name: 'Avatar', from: '@/components/ui/avatar' },
+  { file: 'src/hooks/useSorting.ts', name: 'SortDirection', from: '@/types/sorting' },
+];
+
+// Mock unused variables for the unused code report
+export const unusedVariablesMock = [
+  { file: 'src/components/UserCard.tsx', name: 'isLoading', line: 12 },
+  { file: 'src/hooks/useData.ts', name: 'errorMessage', line: 25 },
+  { file: 'src/contexts/CartContext.tsx', name: 'initialState', line: 8 },
+  { file: 'src/utils/formatting.ts', name: 'DEFAULT_LOCALE', line: 5 },
+];
+
+// Mock unused functions for the unused code report
+export const unusedFunctionsMock = [
+  { file: 'src/utils/helpers.ts', name: 'formatLegacyDate', line: 56 },
+  { file: 'src/hooks/useFilters.ts', name: 'resetAllFilters', line: 89 },
+  { file: 'src/components/Modal.tsx', name: 'handleKeyPress', line: 124 },
+  { file: 'src/contexts/ThemeContext.tsx', name: 'useLegacyTheme', line: 128 },
+];
+
+// Mock unused components for the unused code report
+export const unusedComponentsMock = [
+  { file: 'src/components/legacy/LegacyButton.tsx', name: 'LegacyButton', size: 2.4 },
+  { file: 'src/components/experimental/NewFeature.tsx', name: 'NewFeature', size: 4.8 },
+  { file: 'src/components/modals/DeprecatedModal.tsx', name: 'DeprecatedModal', size: 6.2 },
+];
+
+// Mock duplicate code data for the duplicate code report
+export const duplicateCodeMock: DuplicateCodeInfo[] = [
+  {
+    pattern: 'fetch and error handling pattern',
+    occurrences: [
+      { file: 'src/hooks/useUsers.ts', lines: '15-32' },
+      { file: 'src/hooks/useProducts.ts', lines: '18-35' },
+      { file: 'src/hooks/useOrders.ts', lines: '22-39' },
+    ],
+    similarity: 0.92,
+    impact: 'medium',
+    refactoringDifficulty: 'easy',
+    recommendation: 'Extract into a generic useFetch hook that accepts resource type as parameter.',
+  },
+  {
+    pattern: 'form validation logic',
+    occurrences: [
+      { file: 'src/components/LoginForm.tsx', lines: '45-72' },
+      { file: 'src/components/RegisterForm.tsx', lines: '51-78' },
+      { file: 'src/components/CheckoutForm.tsx', lines: '103-130' },
+    ],
+    similarity: 0.87,
+    impact: 'high',
+    refactoringDifficulty: 'medium',
+    recommendation: 'Create a shared form validation utility or use a form library like react-hook-form.',
+  },
+  {
+    pattern: 'theme manipulation functions',
+    occurrences: [
+      { file: 'src/contexts/ThemeContext.tsx', lines: '85-97' },
+      { file: 'src/utils/theme-helpers.ts', lines: '32-44' },
+    ],
+    similarity: 0.95,
+    impact: 'low',
+    refactoringDifficulty: 'easy',
+    recommendation: 'Move all theme-related functions to theme-helpers.ts.',
+  },
+];
+
+// Mock complexity report data
+export const complexityReportMock = [
+  {
+    file: 'src/utils/calculations.ts',
+    function: 'calculateTotalWithDiscounts',
+    cyclomaticComplexity: 25,
+    lines: '87-156',
+    impact: 'high',
+    refactoringDifficulty: 'hard',
+    recommendation: 'Break down into smaller functions for each discount type.',
+  },
+  {
+    file: 'src/components/ShoppingCart.tsx',
+    function: 'handleCheckout',
+    cyclomaticComplexity: 18,
+    lines: '210-268',
+    impact: 'medium',
+    refactoringDifficulty: 'medium',
+    recommendation: 'Split payment processing and order creation into separate functions.',
+  },
+  {
+    file: 'src/utils/formatting.ts',
+    function: 'formatDataForExport',
+    cyclomaticComplexity: 15,
+    lines: '125-168',
+    impact: 'medium',
+    refactoringDifficulty: 'medium',
+    recommendation: 'Create separate formatters for each export type (CSV, JSON, etc.).',
+  },
+];
+
+// Mock performance issues data
+export const performanceIssuesMock = [
+  {
+    file: 'src/components/ProductList.tsx',
+    issue: 'Excessive re-renders',
+    description: 'Component re-renders on every state change in parent component',
+    impact: 'high',
+    recommendation: 'Use React.memo and/or useCallback to prevent unnecessary re-renders.',
+  },
+  {
+    file: 'src/hooks/useProducts.ts',
+    issue: 'Inefficient data fetching',
+    description: 'Fetches all products instead of paginating results',
+    impact: 'high',
+    recommendation: 'Implement pagination or infinite scrolling to fetch data in chunks.',
+  },
+  {
+    file: 'src/utils/search.ts',
+    issue: 'Unoptimized search algorithm',
+    description: 'Linear search through large arrays without indexing',
+    impact: 'medium',
+    recommendation: 'Use a more efficient search algorithm or consider client-side indexing for large datasets.',
+  },
+];
