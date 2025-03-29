@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -18,6 +17,7 @@ import MobileMenu from './MobileMenu';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/contexts/auth';
 import ThroneLogoIcon from './brand/ThroneLogoIcon';
+import { Sparkles } from 'lucide-react';
 
 interface HeaderProps {
   transparent?: boolean;
@@ -50,6 +50,40 @@ const Header: React.FC<HeaderProps> = ({ transparent = false }) => {
   // Active link style
   const activeLinkClass = 'relative text-royal-gold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-royal-gold';
   
+  // Find the navigation items array and add our new showcase link
+  const navigationItems = [
+    {
+      name: "Home",
+      path: "/",
+      icon: <Home className="h-4 w-4" />,
+    },
+    {
+      name: "Leaderboard",
+      path: "/leaderboard",
+      icon: <Trophy className="h-4 w-4" />,
+    },
+    {
+      name: "Teams",
+      path: "/teams",
+      icon: <Users className="h-4 w-4" />,
+    },
+    {
+      name: "Events",
+      path: "/events",
+      icon: <CalendarDays className="h-4 w-4" />,
+    },
+    {
+      name: "Mockery",
+      path: "/mockery",
+      icon: <Crown className="h-4 w-4" />,
+    },
+    {
+      name: "Features Showcase",
+      path: "/features-showcase",
+      icon: <Sparkles className="h-4 w-4" />,
+    },
+  ];
+
   return (
     <header className={headerClass}>
       <div className="flex items-center gap-2">
@@ -65,56 +99,19 @@ const Header: React.FC<HeaderProps> = ({ transparent = false }) => {
         </Link>
         
         <nav className="hidden lg:flex items-center space-x-6">
-          <Link 
-            to="/"
-            className={cn(
-              "flex items-center gap-1.5 px-2 py-1 hover:text-royal-gold transition-colors",
-              location.pathname === '/' && activeLinkClass
-            )}
-          >
-            <Home className="h-4 w-4" />
-            <span>Home</span>
-          </Link>
-          <Link 
-            to="/leaderboard"
-            className={cn(
-              "flex items-center gap-1.5 px-2 py-1 hover:text-royal-gold transition-colors",
-              location.pathname === '/leaderboard' && activeLinkClass
-            )}
-          >
-            <Trophy className="h-4 w-4" />
-            <span>Leaderboard</span>
-          </Link>
-          <Link 
-            to="/teams"
-            className={cn(
-              "flex items-center gap-1.5 px-2 py-1 hover:text-royal-gold transition-colors",
-              location.pathname === '/teams' && activeLinkClass
-            )}
-          >
-            <Users className="h-4 w-4" />
-            <span>Teams</span>
-          </Link>
-          <Link 
-            to="/events"
-            className={cn(
-              "flex items-center gap-1.5 px-2 py-1 hover:text-royal-gold transition-colors",
-              location.pathname === '/events' && activeLinkClass
-            )}
-          >
-            <CalendarDays className="h-4 w-4" />
-            <span>Events</span>
-          </Link>
-          <Link 
-            to="/mockery"
-            className={cn(
-              "flex items-center gap-1.5 px-2 py-1 hover:text-royal-gold transition-colors",
-              location.pathname === '/mockery' && activeLinkClass
-            )}
-          >
-            <Crown className="h-4 w-4" />
-            <span>Mockery</span>
-          </Link>
+          {navigationItems.map((item) => (
+            <Link 
+              key={item.name}
+              to={item.path}
+              className={cn(
+                "flex items-center gap-1.5 px-2 py-1 hover:text-royal-gold transition-colors",
+                location.pathname === item.path && activeLinkClass
+              )}
+            >
+              {item.icon}
+              <span>{item.name}</span>
+            </Link>
+          ))}
         </nav>
       </div>
       
