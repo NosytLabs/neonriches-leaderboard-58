@@ -1,5 +1,6 @@
+
 import React, { useState, useEffect } from 'react';
-import { Shell } from '@/components/ui/shell';
+import Shell from '@/components/Shell';
 import RoyalHero from '@/components/RoyalHero';
 import HeroShowcase from '@/components/home/HeroShowcase';
 import { Button } from '@/components/ui/button';
@@ -17,17 +18,19 @@ import { Badge } from '@/components/ui/badge';
 import { motion } from 'framer-motion';
 import SpendingDistributionChart from '@/components/charts/SpendingDistributionChart';
 import ThroneCoinsIcon from '@/components/icons/ThroneCoinsIcon';
+import { Money, CoinPile, VipBadge, TreasureOpen, StarBadge } from '@/assets/icons';
 
 const spendingData = [
-  { id: '1', label: 'Boosts', value: 2500, color: '#D4AF37' },
-  { id: '2', label: 'Mockery', value: 1800, color: '#6B46C1' },
-  { id: '3', label: 'Teams', value: 1200, color: '#2563EB' },
-  { id: '4', label: 'Rank', value: 3500, color: '#E24F55' }
+  { name: 'Boosts', value: 2500, color: '#D4AF37' },
+  { name: 'Mockery', value: 1800, color: '#6B46C1' },
+  { name: 'Teams', value: 1200, color: '#2563EB' },
+  { name: 'Rank', value: 3500, color: '#E24F55' }
 ];
 
 const Index = () => {
   const [showTrophy, setShowTrophy] = useState(false);
   const [showChart, setShowChart] = useState(false);
+  const [hoverCard, setHoverCard] = useState<string | null>(null);
 
   useEffect(() => {
     const trophyTimer = setTimeout(() => {
@@ -45,19 +48,46 @@ const Index = () => {
   }, []);
 
   return (
-    <Shell hideFooter={false}>
+    <Shell 
+      hideFooter={false} 
+      backgroundEffect="gradient" 
+      pageTransition="scale" 
+      transparentHeader={true}
+    >
       <RoyalHero />
       
       <div className="relative">
         <HeroShowcase />
         
-        <div className="absolute top-10 left-10 w-32 h-32 opacity-90 pointer-events-none">
-          <ThroneCoinsIcon size="xl" animated={true} />
-        </div>
+        <motion.div 
+          className="absolute top-10 left-10 w-32 h-32 opacity-90 pointer-events-none"
+          initial={{ opacity: 0, scale: 0 }}
+          animate={{ opacity: 0.9, scale: 1, rotate: 10 }}
+          transition={{ 
+            duration: 0.8, 
+            type: 'spring', 
+            delay: 0.5 
+          }}
+        >
+          <CoinPile size="xl" animated={true} />
+        </motion.div>
         
-        <div className="absolute top-10 right-10 w-32 h-32 opacity-70 pointer-events-none">
-          <EnhancedCrownEffect width={128} height={128} opacity={0.5} interactive={false} />
-        </div>
+        <motion.div 
+          className="absolute top-10 right-10 w-32 h-32 opacity-70 pointer-events-none"
+          initial={{ opacity: 0, scale: 0 }}
+          animate={{ opacity: 0.7, scale: 1 }}
+          transition={{ 
+            duration: 0.8, 
+            type: 'spring', 
+            delay: 0.7 
+          }}
+        >
+          <EnhancedCrownEffect 
+            size={128}
+            opacity={0.5} 
+            interactive={false} 
+          />
+        </motion.div>
       </div>
       
       <RoyalSection
@@ -73,7 +103,7 @@ const Index = () => {
             className="relative mx-auto mb-12 max-w-sm"
           >
             <div className="mx-auto w-64 h-64">
-              <RoyalTrophyModel width={256} height={256} />
+              <RoyalTrophyModel />
             </div>
             <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 text-center w-full">
               <Badge variant="outline" className="bg-royal-gold/10 border-royal-gold/30 text-white">
@@ -94,7 +124,7 @@ const Index = () => {
             className="max-w-lg mx-auto mb-8 glass-morphism border border-white/10 p-4 rounded-lg"
           >
             <h3 className="text-lg font-medium mb-2 text-center">How Nobles Distribute Their Wealth</h3>
-            <SpendingDistributionChart data={spendingData} height={250} />
+            <SpendingDistributionChart data={spendingData} height={250} animated={true} />
           </motion.div>
         )}
         
@@ -103,20 +133,32 @@ const Index = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.5 }}
-            className="glass-morphism p-6 rounded-lg border border-white/10 hover:border-royal-gold/20 transition-colors"
+            className={cn(
+              "glass-morphism p-6 rounded-lg border border-white/10 transition-all duration-300",
+              hoverCard === 'identity' ? "border-royal-gold/50 bg-black/40 transform -translate-y-2" : "hover:border-royal-gold/20"
+            )}
+            onMouseEnter={() => setHoverCard('identity')}
+            onMouseLeave={() => setHoverCard(null)}
           >
             <div className="flex flex-col items-center text-center">
-              <div className="w-16 h-16 rounded-full bg-royal-gold/10 flex items-center justify-center mb-4">
-                <Crown className="h-7 w-7 text-royal-gold" />
+              <div className="w-16 h-16 rounded-full bg-royal-gold/10 flex items-center justify-center mb-4 relative overflow-hidden group">
+                <Crown className="h-7 w-7 text-royal-gold z-10 transition-transform duration-300 group-hover:scale-110" />
+                <motion.div 
+                  className="absolute inset-0 bg-gradient-to-r from-royal-gold/10 to-royal-gold/20 rounded-full"
+                  animate={{ 
+                    rotate: [0, 360],
+                    transition: { duration: 8, repeat: Infinity, ease: "linear" } 
+                  }}
+                />
               </div>
               <h3 className="text-xl font-bold mb-2">Create Thy Noble Identity</h3>
               <p className="text-white/70 mb-4">
                 Register for an account and personalize thy coat of arms (profile) to establish thy presence in the court. No actual nobility required – just a functioning payment method!
               </p>
               <Link to="/signup">
-                <Button variant="outline" className="border-white/20 hover:border-royal-gold/30">
+                <Button variant="outline" className="border-white/20 hover:border-royal-gold/30 group">
                   <span>Establish Thy Lineage</span>
-                  <ChevronRight className="ml-1 h-4 w-4" />
+                  <ChevronRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </Button>
               </Link>
             </div>
@@ -126,20 +168,32 @@ const Index = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, duration: 0.5 }}
-            className="glass-morphism p-6 rounded-lg border border-white/10 hover:border-royal-gold/20 transition-colors"
+            className={cn(
+              "glass-morphism p-6 rounded-lg border border-white/10 transition-all duration-300",
+              hoverCard === 'rank' ? "border-royal-gold/50 bg-black/40 transform -translate-y-2" : "hover:border-royal-gold/20"
+            )}
+            onMouseEnter={() => setHoverCard('rank')}
+            onMouseLeave={() => setHoverCard(null)}
           >
             <div className="flex flex-col items-center text-center">
-              <div className="w-16 h-16 rounded-full bg-royal-gold/10 flex items-center justify-center mb-4">
-                <DollarSign className="h-7 w-7 text-royal-gold" />
+              <div className="w-16 h-16 rounded-full bg-royal-gold/10 flex items-center justify-center mb-4 relative overflow-hidden group">
+                <DollarSign className="h-7 w-7 text-royal-gold z-10 transition-transform duration-300 group-hover:scale-110" />
+                <motion.div 
+                  className="absolute inset-0 bg-gradient-to-r from-royal-gold/10 to-royal-gold/20 rounded-full"
+                  animate={{ 
+                    rotate: [0, 360],
+                    transition: { duration: 8, repeat: Infinity, ease: "linear" } 
+                  }}
+                />
               </div>
               <h3 className="text-xl font-bold mb-2">Contribute To Thy Rank</h3>
               <p className="text-white/70 mb-4">
                 Make "generous contributions" (completely frivolous payments) to increase thy standing in our aristocratic hierarchy. Remember: your worth is directly proportional to your expenditure!
               </p>
               <Link to="/pay/fiat">
-                <Button variant="outline" className="border-white/20 hover:border-royal-gold/30">
+                <Button variant="outline" className="border-white/20 hover:border-royal-gold/30 group">
                   <span>Fund Thy Noble Status</span>
-                  <ChevronRight className="ml-1 h-4 w-4" />
+                  <ChevronRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </Button>
               </Link>
             </div>
@@ -149,20 +203,32 @@ const Index = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6, duration: 0.5 }}
-            className="glass-morphism p-6 rounded-lg border border-white/10 hover:border-royal-gold/20 transition-colors"
+            className={cn(
+              "glass-morphism p-6 rounded-lg border border-white/10 transition-all duration-300",
+              hoverCard === 'house' ? "border-royal-gold/50 bg-black/40 transform -translate-y-2" : "hover:border-royal-gold/20"
+            )}
+            onMouseEnter={() => setHoverCard('house')}
+            onMouseLeave={() => setHoverCard(null)}
           >
             <div className="flex flex-col items-center text-center">
-              <div className="w-16 h-16 rounded-full bg-royal-gold/10 flex items-center justify-center mb-4">
-                <Shield className="h-7 w-7 text-royal-gold" />
+              <div className="w-16 h-16 rounded-full bg-royal-gold/10 flex items-center justify-center mb-4 relative overflow-hidden group">
+                <Shield className="h-7 w-7 text-royal-gold z-10 transition-transform duration-300 group-hover:scale-110" />
+                <motion.div 
+                  className="absolute inset-0 bg-gradient-to-r from-royal-gold/10 to-royal-gold/20 rounded-full"
+                  animate={{ 
+                    rotate: [0, 360],
+                    transition: { duration: 8, repeat: Infinity, ease: "linear" } 
+                  }}
+                />
               </div>
               <h3 className="text-xl font-bold mb-2">Join A Noble House</h3>
               <p className="text-white/70 mb-4">
                 Pledge thy allegiance to House Red, Green, or Blue and compete for thy house's collective prestige. Just like political tribes, but with more honesty about the pay-to-win mechanics!
               </p>
               <Link to="/teams">
-                <Button variant="outline" className="border-white/20 hover:border-royal-gold/30">
+                <Button variant="outline" className="border-white/20 hover:border-royal-gold/30 group">
                   <span>Choose Thy Banner</span>
-                  <ChevronRight className="ml-1 h-4 w-4" />
+                  <ChevronRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </Button>
               </Link>
             </div>
@@ -171,15 +237,15 @@ const Index = () => {
         
         <div className="text-center mt-6 space-y-4">
           <Link to="/features">
-            <Button variant="royal" size="lg" className="px-6 mr-4">
-              <Trophy className="mr-2 h-5 w-5" />
+            <Button variant="royal" size="lg" className="px-6 mr-4 group">
+              <Trophy className="mr-2 h-5 w-5 transition-transform group-hover:scale-110" />
               <span>Explore All Noble Features</span>
             </Button>
           </Link>
           
           <Link to="/profile-enhancements">
-            <Button variant="outline" size="lg" className="px-6 border-royal-gold/30 hover:bg-royal-gold/10">
-              <Sparkles className="mr-2 h-5 w-5" />
+            <Button variant="outline" size="lg" className="px-6 border-royal-gold/30 hover:bg-royal-gold/10 group">
+              <Sparkles className="mr-2 h-5 w-5 transition-transform group-hover:scale-110" />
               <span>Discover Profile Enhancements</span>
             </Button>
           </Link>
@@ -208,7 +274,18 @@ const Index = () => {
         centered={true}
       >
         <div className="flex justify-center mb-8">
-          <ThroneCoinsIcon size="lg" animated={true} />
+          <motion.div
+            initial={{ opacity: 0, scale: 0 }}
+            animate={{ opacity: 1, scale: 1, rotate: [0, 10, 0] }}
+            transition={{ 
+              type: "spring", 
+              stiffness: 260, 
+              damping: 20,
+              delay: 0.3 
+            }}
+          >
+            <ThroneCoinsIcon size="lg" animated={true} />
+          </motion.div>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
@@ -216,11 +293,19 @@ const Index = () => {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.3, duration: 0.5 }}
-            className="glass-morphism border-white/10 rounded-lg p-5 hover:border-royal-gold/20 transition-all duration-300"
+            className="glass-morphism border-white/10 rounded-lg p-5 hover:border-royal-gold/20 transition-all duration-300 hover:bg-black/40 hover:transform hover:-translate-y-1"
+            whileHover={{ scale: 1.01 }}
           >
             <div className="flex items-center mb-4">
-              <div className="w-12 h-12 rounded-full bg-royal-purple/20 flex items-center justify-center mr-4">
-                <Gem className="h-6 w-6 text-royal-purple" />
+              <div className="w-12 h-12 rounded-full bg-royal-purple/20 flex items-center justify-center mr-4 relative overflow-hidden">
+                <Gem className="h-6 w-6 text-royal-purple z-10" />
+                <motion.div 
+                  className="absolute inset-0 bg-gradient-to-r from-royal-purple/10 to-royal-purple/20 rounded-full"
+                  animate={{ 
+                    rotate: [0, 360],
+                    transition: { duration: 10, repeat: Infinity, ease: "linear" } 
+                  }}
+                />
               </div>
               <div>
                 <h3 className="font-bold text-lg">Profile Boosts</h3>
@@ -231,8 +316,8 @@ const Index = () => {
               Purchase extravagant visual enhancements that boost your profile's appearance and visibility. From animated backgrounds to royal crowns, make sure everyone knows you've spent more than they have!
             </p>
             <Link to="/profile-enhancements">
-              <Button variant="outline" size="sm" className="w-full">
-                <Sparkles className="mr-2 h-4 w-4" />
+              <Button variant="outline" size="sm" className="w-full group">
+                <Sparkles className="mr-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                 <span>View Enhancements</span>
               </Button>
             </Link>
@@ -242,11 +327,19 @@ const Index = () => {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.4, duration: 0.5 }}
-            className="glass-morphism border-white/10 rounded-lg p-5 hover:border-royal-gold/20 transition-all duration-300"
+            className="glass-morphism border-white/10 rounded-lg p-5 hover:border-royal-gold/20 transition-all duration-300 hover:bg-black/40 hover:transform hover:-translate-y-1"
+            whileHover={{ scale: 1.01 }}
           >
             <div className="flex items-center mb-4">
-              <div className="w-12 h-12 rounded-full bg-royal-crimson/20 flex items-center justify-center mr-4">
-                <Target className="h-6 w-6 text-royal-crimson" />
+              <div className="w-12 h-12 rounded-full bg-royal-crimson/20 flex items-center justify-center mr-4 relative overflow-hidden">
+                <Target className="h-6 w-6 text-royal-crimson z-10" />
+                <motion.div 
+                  className="absolute inset-0 bg-gradient-to-r from-royal-crimson/10 to-royal-crimson/20 rounded-full"
+                  animate={{ 
+                    rotate: [0, 360],
+                    transition: { duration: 10, repeat: Infinity, ease: "linear" } 
+                  }}
+                />
               </div>
               <div>
                 <h3 className="font-bold text-lg">Mockery Arena</h3>
@@ -257,8 +350,8 @@ const Index = () => {
               Spend your hard-earned money to add humiliating visual effects to other users' profiles. Choose from tomatoes, eggs, stocks, and more to assert your digital dominance through pettiness!
             </p>
             <Link to="/mockery">
-              <Button variant="outline" size="sm" className="w-full">
-                <Target className="mr-2 h-4 w-4" />
+              <Button variant="outline" size="sm" className="w-full group">
+                <Target className="mr-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                 <span>Enter The Arena</span>
               </Button>
             </Link>
@@ -268,11 +361,19 @@ const Index = () => {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.5, duration: 0.5 }}
-            className="glass-morphism border-white/10 rounded-lg p-5 hover:border-royal-gold/20 transition-all duration-300"
+            className="glass-morphism border-white/10 rounded-lg p-5 hover:border-royal-gold/20 transition-all duration-300 hover:bg-black/40 hover:transform hover:-translate-y-1"
+            whileHover={{ scale: 1.01 }}
           >
             <div className="flex items-center mb-4">
-              <div className="w-12 h-12 rounded-full bg-royal-gold/20 flex items-center justify-center mr-4">
-                <Crown className="h-6 w-6 text-royal-gold" />
+              <div className="w-12 h-12 rounded-full bg-royal-gold/20 flex items-center justify-center mr-4 relative overflow-hidden">
+                <Crown className="h-6 w-6 text-royal-gold z-10" />
+                <motion.div 
+                  className="absolute inset-0 bg-gradient-to-r from-royal-gold/10 to-royal-gold/20 rounded-full"
+                  animate={{ 
+                    rotate: [0, 360],
+                    transition: { duration: 10, repeat: Infinity, ease: "linear" } 
+                  }}
+                />
               </div>
               <div>
                 <h3 className="font-bold text-lg">Leaderboard Glory</h3>
@@ -283,8 +384,8 @@ const Index = () => {
               Monitor thy standing in our royal court with interactive 3D leaderboards. Watch as your rank rises with each lavish contribution, and bask in the envy of the lower-ranked peasants!
             </p>
             <Link to="/leaderboard">
-              <Button variant="outline" size="sm" className="w-full">
-                <Trophy className="mr-2 h-4 w-4" />
+              <Button variant="outline" size="sm" className="w-full group">
+                <Trophy className="mr-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                 <span>View Leaderboard</span>
               </Button>
             </Link>
@@ -294,11 +395,19 @@ const Index = () => {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.6, duration: 0.5 }}
-            className="glass-morphism border-white/10 rounded-lg p-5 hover:border-royal-gold/20 transition-all duration-300"
+            className="glass-morphism border-white/10 rounded-lg p-5 hover:border-royal-gold/20 transition-all duration-300 hover:bg-black/40 hover:transform hover:-translate-y-1"
+            whileHover={{ scale: 1.01 }}
           >
             <div className="flex items-center mb-4">
-              <div className="w-12 h-12 rounded-full bg-royal-blue/20 flex items-center justify-center mr-4">
-                <BarChart className="h-6 w-6 text-royal-blue" />
+              <div className="w-12 h-12 rounded-full bg-royal-navy/20 flex items-center justify-center mr-4 relative overflow-hidden">
+                <BarChart className="h-6 w-6 text-royal-navy z-10" />
+                <motion.div 
+                  className="absolute inset-0 bg-gradient-to-r from-royal-navy/10 to-royal-navy/20 rounded-full"
+                  animate={{ 
+                    rotate: [0, 360],
+                    transition: { duration: 10, repeat: Infinity, ease: "linear" } 
+                  }}
+                />
               </div>
               <div>
                 <h3 className="font-bold text-lg">Spending Analytics</h3>
@@ -309,8 +418,8 @@ const Index = () => {
               View detailed visualizations of your completely unnecessary spending patterns. Compare your frivolous purchases with others and identify opportunities to waste even more money!
             </p>
             <Link to="/analytics">
-              <Button variant="outline" size="sm" className="w-full">
-                <BarChart className="mr-2 h-4 w-4" />
+              <Button variant="outline" size="sm" className="w-full group">
+                <BarChart className="mr-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                 <span>View Analytics</span>
               </Button>
             </Link>
@@ -331,21 +440,25 @@ const Index = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 0.5 }}
             className="glass-morphism border border-white/10 p-6 rounded-lg relative"
+            whileHover={{ scale: 1.02, boxShadow: "0 0 20px rgba(212, 175, 55, 0.2)" }}
           >
-            <div className="absolute -top-3 -left-3 w-8 h-8 rounded-full bg-royal-crimson flex items-center justify-center border-2 border-royal-crimson/50">
-              <Crown className="h-4 w-4 text-white" />
+            <div className="absolute -top-3 -left-3">
+              <VipBadge size="sm" animated />
             </div>
             <p className="italic text-white/80 mb-4">
               "I've spent thousands on designer shoes that sit unworn in my closet, so why not spend a few hundred on completely virtual status? At least here I'm honest about my materialism! Plus, I can market my business through my profile, which almost makes it a legitimate business expense... almost."
             </p>
             <div className="flex items-center">
-              <div className="w-10 h-10 rounded-full overflow-hidden mr-3">
+              <div className="w-10 h-10 rounded-full overflow-hidden mr-3 border border-royal-gold/50">
                 <img src="/throne-assets/avatars/noble-1.jpg" alt="Noble testimonial" className="w-full h-full object-cover" />
               </div>
               <div>
                 <div className="font-bold">Lady Goldencoin</div>
                 <div className="text-royal-gold text-sm">#4 on Leaderboard</div>
               </div>
+            </div>
+            <div className="absolute -bottom-2 -right-2">
+              <StarBadge size="sm" animated color="gold" />
             </div>
           </motion.div>
           
@@ -354,15 +467,16 @@ const Index = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5, duration: 0.5 }}
             className="glass-morphism border border-white/10 p-6 rounded-lg relative"
+            whileHover={{ scale: 1.02, boxShadow: "0 0 20px rgba(212, 175, 55, 0.2)" }}
           >
-            <div className="absolute -top-3 -left-3 w-8 h-8 rounded-full bg-royal-navy flex items-center justify-center border-2 border-royal-navy/50">
-              <Crown className="h-4 w-4 text-white" />
+            <div className="absolute -top-3 -left-3">
+              <TreasureOpen size="sm" animated />
             </div>
             <p className="italic text-white/80 mb-4">
               "After years of trying to climb the corporate ladder through actual work and skill development, I discovered I could just buy my way to the top here! It's like nepotism but without needing to be related to anyone important. My marketing ROI from promoting on my high-ranked profile has been surprisingly effective!"
             </p>
             <div className="flex items-center">
-              <div className="w-10 h-10 rounded-full overflow-hidden mr-3">
+              <div className="w-10 h-10 rounded-full overflow-hidden mr-3 border border-royal-gold/50">
                 <img src="/throne-assets/avatars/noble-2.jpg" alt="Noble testimonial" className="w-full h-full object-cover" />
               </div>
               <div>
@@ -370,12 +484,20 @@ const Index = () => {
                 <div className="text-royal-gold text-sm">#7 on Leaderboard</div>
               </div>
             </div>
+            <div className="absolute -bottom-2 -right-2">
+              <Money size="sm" animated />
+            </div>
           </motion.div>
         </div>
         
-        <div className="text-center mt-8 text-sm text-white/50 italic max-w-lg mx-auto">
+        <motion.div 
+          className="text-center mt-8 text-sm text-white/50 italic max-w-lg mx-auto"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.7, duration: 0.5 }}
+        >
           <p>* These testimonials are from actual users, though we've taken the liberty of enhancing their eloquence. Your experience may vary, though your money will definitely be gone regardless.</p>
-        </div>
+        </motion.div>
       </RoyalSection>
     </Shell>
   );

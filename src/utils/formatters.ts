@@ -1,120 +1,78 @@
 
-import { format, formatDistanceToNow as formatDistanceToNowFn } from 'date-fns';
-
 /**
- * Format a currency amount with proper formatting
+ * Formats a dollar amount with commas and a dollar sign
  */
-export const formatCurrency = (amount: number, currency: string = 'USD'): string => {
-  if (currency === 'USD') {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 2
-    }).format(amount);
-  }
-  
-  if (currency === 'SOL') {
-    return `${amount.toLocaleString(undefined, { 
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 4
-    })} SOL`;
-  }
-  
-  // Generic "coins" or other currencies
-  return `${amount.toLocaleString()}`;
+export const formatDollarAmount = (amount: number): string => {
+  return `$${amount.toLocaleString('en-US')}`;
 };
 
 /**
- * Format a number with commas and optional decimal places
+ * Formats a number with commas
  */
-export const formatNumber = (number: number, decimals: number = 0): string => {
-  return number.toLocaleString(undefined, {
-    minimumFractionDigits: decimals,
-    maximumFractionDigits: decimals
+export const formatNumber = (num: number): string => {
+  return num.toLocaleString('en-US');
+};
+
+/**
+ * Formats a Solana wallet address to be shorter (e.g., "8YLK...ePHS")
+ */
+export const formatAddress = (address: string): string => {
+  if (!address) return '';
+  return `${address.slice(0, 4)}...${address.slice(-4)}`;
+};
+
+/**
+ * Formats a date to a friendly string
+ */
+export const formatDate = (date: string | Date): string => {
+  if (!date) return '';
+  const d = new Date(date);
+  return d.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric'
   });
 };
 
 /**
- * Format a date to a readable string
+ * Formats a timestamp to a relative time string (e.g., "2 hours ago")
  */
-export const formatDate = (date: Date | string, formatString: string = 'PPP'): string => {
-  try {
-    const dateObject = typeof date === 'string' ? new Date(date) : date;
-    return format(dateObject, formatString);
-  } catch (error) {
-    console.error('Error formatting date:', error);
-    return 'Invalid date';
-  }
-};
-
-/**
- * Format a date as a relative time (e.g., "2 days ago")
- */
-export const formatDistanceToNow = (date: Date | string): string => {
-  try {
-    const dateObject = typeof date === 'string' ? new Date(date) : date;
-    return formatDistanceToNowFn(dateObject, { addSuffix: true });
-  } catch (error) {
-    console.error('Error calculating distance to now:', error);
-    return 'Unknown time';
-  }
-};
-
-/**
- * Format a percentage value
- */
-export const formatPercentage = (value: number, decimals: number = 1): string => {
-  return `${value.toLocaleString(undefined, {
-    minimumFractionDigits: decimals,
-    maximumFractionDigits: decimals
-  })}%`;
-};
-
-/**
- * Format a file size in bytes to a human-readable string
- */
-export const formatFileSize = (bytes: number): string => {
-  if (bytes === 0) return '0 Bytes';
+export const formatRelativeTime = (timestamp: string | Date): string => {
+  const date = new Date(timestamp);
+  const now = new Date();
+  const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
   
-  const k = 1024;
-  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  if (diffInSeconds < 60) {
+    return `${diffInSeconds} seconds ago`;
+  }
   
-  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(2))} ${sizes[i]}`;
-};
-
-/**
- * Format a rank position (adds st, nd, rd, th)
- */
-export const formatRank = (position: number): string => {
-  const j = position % 10;
-  const k = position % 100;
+  const diffInMinutes = Math.floor(diffInSeconds / 60);
+  if (diffInMinutes < 60) {
+    return `${diffInMinutes} minute${diffInMinutes === 1 ? '' : 's'} ago`;
+  }
   
-  if (j === 1 && k !== 11) {
-    return `${position}st`;
+  const diffInHours = Math.floor(diffInMinutes / 60);
+  if (diffInHours < 24) {
+    return `${diffInHours} hour${diffInHours === 1 ? '' : 's'} ago`;
   }
-  if (j === 2 && k !== 12) {
-    return `${position}nd`;
+  
+  const diffInDays = Math.floor(diffInHours / 24);
+  if (diffInDays < 30) {
+    return `${diffInDays} day${diffInDays === 1 ? '' : 's'} ago`;
   }
-  if (j === 3 && k !== 13) {
-    return `${position}rd`;
+  
+  const diffInMonths = Math.floor(diffInDays / 30);
+  if (diffInMonths < 12) {
+    return `${diffInMonths} month${diffInMonths === 1 ? '' : 's'} ago`;
   }
-  return `${position}th`;
+  
+  const diffInYears = Math.floor(diffInMonths / 12);
+  return `${diffInYears} year${diffInYears === 1 ? '' : 's'} ago`;
 };
 
 /**
- * Truncate text with ellipsis
+ * Formats a percentage (e.g., 0.257 to "25.7%")
  */
-export const truncateText = (text: string, maxLength: number): string => {
-  if (text.length <= maxLength) return text;
-  return `${text.substring(0, maxLength)}...`;
-};
-
-/**
- * Format a wallet address
- */
-export const formatWalletAddress = (address: string): string => {
-  if (!address) return '';
-  return `${address.substring(0, 4)}...${address.substring(address.length - 4)}`;
+export const formatPercentage = (percentage: number, decimals = 1): string => {
+  return `${(percentage * 100).toFixed(decimals)}%`;
 };

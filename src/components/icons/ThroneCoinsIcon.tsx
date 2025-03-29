@@ -2,111 +2,236 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
-import { Icon } from '@/components/ui/icon';
+
+export type IconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
 interface ThroneCoinsIconProps {
   className?: string;
-  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+  size?: IconSize;
   animated?: boolean;
   onClick?: () => void;
+  interactive?: boolean;
+  variant?: 'default' | 'royal' | 'intense';
 }
 
-const ThroneCoinsIcon: React.FC<ThroneCoinsIconProps> = ({ 
+export const ThroneCoinsIcon: React.FC<ThroneCoinsIconProps> = ({ 
   className, 
-  size = 'md', 
-  animated = true,
-  onClick
+  size = 'md',
+  animated = false,
+  onClick,
+  interactive = false,
+  variant = 'default'
 }) => {
   const sizeClasses = {
     xs: 'w-6 h-6',
     sm: 'w-8 h-8',
     md: 'w-12 h-12',
-    lg: 'w-20 h-20',
-    xl: 'w-32 h-32',
+    lg: 'w-16 h-16',
+    xl: 'w-20 h-20',
+    '2xl': 'w-24 h-24',
+  };
+
+  // Color variants
+  const colors = {
+    default: { main: "#FFD700", dark: "#FFA000", light: "#FFF176", stroke: "#212121" },
+    royal: { main: "#9C27B0", dark: "#7B1FA2", light: "#CE93D8", stroke: "#4A148C" },
+    intense: { main: "#F44336", dark: "#D32F2F", light: "#FFCDD2", stroke: "#B71C1C" }
+  };
+
+  const selectedColors = colors[variant];
+
+  const handleClick = () => {
+    if (onClick) onClick();
+  };
+
+  // Animation variants
+  const coinsContainerVariants = {
+    initial: { rotate: 0 },
+    hover: {
+      scale: 1.05,
+      transition: { type: "spring", stiffness: 400, damping: 10 }
+    },
+    tap: {
+      scale: 0.95,
+      transition: { duration: 0.1 }
+    }
+  };
+
+  const coinVariants = {
+    initial: { scale: 1, y: 0 },
+    animate: (i: number) => ({
+      y: [0, -5, 0],
+      transition: {
+        duration: 1.8,
+        delay: i * 0.2,
+        repeat: Infinity,
+        repeatType: "mirror"
+      }
+    })
+  };
+
+  const shineVariants = {
+    initial: { opacity: 0, scale: 0.8 },
+    animate: (i: number) => ({
+      opacity: [0, 1, 0],
+      scale: [0.8, 1.2, 0.8],
+      transition: {
+        duration: 1.5,
+        delay: i * 0.3,
+        repeat: Infinity
+      }
+    })
   };
 
   return (
-    <div 
+    <motion.div 
       className={cn(
-        'relative inline-flex items-center justify-center cursor-pointer', 
+        'relative inline-block', 
         sizeClasses[size], 
-        animated && 'group',
+        interactive && 'cursor-pointer',
         className
       )}
-      onClick={onClick}
-      aria-hidden="true"
+      onClick={handleClick}
+      initial="initial"
+      whileHover={interactive ? "hover" : undefined}
+      whileTap={interactive ? "tap" : undefined}
+      variants={coinsContainerVariants}
     >
-      {/* Base coin */}
-      <motion.div
-        className="absolute inset-0"
-        initial={animated ? { scale: 0.9, opacity: 0 } : {}}
-        animate={animated ? { scale: 1, opacity: 1 } : {}}
-        transition={{ duration: 0.5 }}
-      >
-        <Icon 
-          name="coin" 
-          size="2xl" 
-          color="#D4AF37"
-          className={cn(
-            "w-full h-full",
-            animated && "group-hover:brightness-110 transition-all duration-300"
-          )}
+      <svg viewBox="0 0 100 100" className="w-full h-full">
+        {/* Define gradients for 3D effect */}
+        <defs>
+          <linearGradient id={`coinGradient-${variant}`} x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor={selectedColors.light} />
+            <stop offset="50%" stopColor={selectedColors.main} />
+            <stop offset="100%" stopColor={selectedColors.dark} />
+          </linearGradient>
+          <filter id="coinShadow" x="-10%" y="-10%" width="120%" height="120%">
+            <feGaussianBlur stdDeviation="2" result="blur" />
+            <feComposite in="SourceGraphic" in2="blur" operator="over" />
+          </filter>
+        </defs>
+        
+        {/* Base coin stack */}
+        <ellipse 
+          cx="50" 
+          cy="80" 
+          rx="40" 
+          ry="15" 
+          fill={selectedColors.dark} 
+          opacity="0.3"
         />
-      </motion.div>
-      
-      {/* Crown overlay */}
-      <motion.div
-        className="absolute"
-        initial={animated ? { scale: 0.8, y: -2, opacity: 0 } : {}}
-        animate={animated ? { scale: 1, y: 0, opacity: 1 } : {}}
-        transition={{ delay: 0.3, duration: 0.5 }}
-        style={{ top: '25%', width: '50%', height: '30%' }}
-      >
-        <Icon 
-          name="crown" 
-          className={cn(
-            "w-full h-full text-royal-gold",
-            animated && "group-hover:brightness-125 transition-all duration-300"
-          )}
+        
+        {/* Bottom coins */}
+        <motion.circle 
+          cx="40" 
+          cy="65" 
+          r="15" 
+          fill={`url(#coinGradient-${variant})`} 
+          stroke={selectedColors.stroke} 
+          strokeWidth="1"
+          filter="url(#coinShadow)"
+          variants={coinVariants}
+          animate={animated ? "animate" : undefined}
+          custom={0}
         />
-      </motion.div>
-      
-      {/* Dollar sign */}
-      <motion.div
-        className="absolute"
-        initial={animated ? { opacity: 0, scale: 0.8 } : {}}
-        animate={animated ? { opacity: 1, scale: 1 } : {}}
-        transition={{ delay: 0.5, duration: 0.3 }}
-        style={{ bottom: '25%', width: '40%', height: '30%' }}
-      >
-        <Icon 
-          name="dollar" 
-          className={cn(
-            "w-full h-full text-amber-800",
-            animated && "group-hover:text-royal-gold transition-colors duration-300"
-          )}
+        <text 
+          x="40" 
+          y="68" 
+          fontSize="15" 
+          fontWeight="bold" 
+          fill={selectedColors.stroke} 
+          textAnchor="middle"
+          opacity="0.8"
+        >
+          $
+        </text>
+        
+        <motion.circle 
+          cx="60" 
+          cy="68" 
+          r="15" 
+          fill={`url(#coinGradient-${variant})`} 
+          stroke={selectedColors.stroke} 
+          strokeWidth="1"
+          filter="url(#coinShadow)"
+          variants={coinVariants}
+          animate={animated ? "animate" : undefined}
+          custom={1}
         />
-      </motion.div>
-      
-      {/* Shine effect */}
-      {animated && (
-        <motion.div
-          className="absolute w-1/4 h-1/4 bg-white/20 rounded-full"
-          style={{ top: '20%', left: '20%' }}
-          animate={{ 
-            opacity: [0, 0.3, 0],
-            x: [0, 10, 20],
-            y: [0, 10, 20]
-          }}
-          transition={{
-            duration: 2,
-            repeat: Infinity,
-            repeatType: "loop",
-            repeatDelay: 3
-          }}
+        <text 
+          x="60" 
+          y="71" 
+          fontSize="15" 
+          fontWeight="bold" 
+          fill={selectedColors.stroke} 
+          textAnchor="middle"
+          opacity="0.8"
+        >
+          $
+        </text>
+        
+        {/* Top coin */}
+        <motion.circle 
+          cx="50" 
+          cy="50" 
+          r="20" 
+          fill={`url(#coinGradient-${variant})`} 
+          stroke={selectedColors.stroke} 
+          strokeWidth="1.5"
+          filter="url(#coinShadow)"
+          variants={coinVariants}
+          animate={animated ? "animate" : undefined}
+          custom={2}
         />
-      )}
-    </div>
+        <text 
+          x="50" 
+          y="55" 
+          fontSize="20" 
+          fontWeight="bold" 
+          fill={selectedColors.stroke} 
+          textAnchor="middle"
+          opacity="0.9"
+        >
+          $
+        </text>
+        
+        {/* Shine effects */}
+        {animated && (
+          <>
+            <motion.circle 
+              cx="42" 
+              cy="45" 
+              r="4" 
+              fill="white" 
+              opacity="0.6"
+              variants={shineVariants}
+              animate="animate"
+              custom={0}
+            />
+            <motion.circle 
+              cx="35" 
+              cy="60" 
+              r="3" 
+              fill="white" 
+              opacity="0.6"
+              variants={shineVariants}
+              animate="animate"
+              custom={1}
+            />
+            <motion.circle 
+              cx="55" 
+              cy="65" 
+              r="3" 
+              fill="white" 
+              opacity="0.6"
+              variants={shineVariants}
+              animate="animate"
+              custom={2}
+            />
+          </>
+        )}
+      </svg>
+    </motion.div>
   );
 };
 
