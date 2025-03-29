@@ -16,7 +16,12 @@ const Mockery = lazy(() => import('./pages/Mockery'));
 const ContentPage = lazy(() => import('./pages/ContentPage'));
 const StatusThroughHistory = lazy(() => import('./pages/StatusThroughHistory'));
 const NotFound = lazy(() => import('./pages/NotFound'));
-const Index = lazy(() => import('./pages/Index'));  // Keep both Home and Index for compatibility
+const Index = lazy(() => import('./pages/Index'));
+const Signin = lazy(() => import('./pages/Signin'));
+const Signup = lazy(() => import('./pages/Signup'));
+const Subscription = lazy(() => import('./pages/Subscription'));
+const Wallet = lazy(() => import('./pages/Wallet'));
+const Updates = lazy(() => import('./pages/Updates'));
 
 const AppRoutes = () => {
   return (
@@ -52,6 +57,26 @@ const AppRoutes = () => {
             <Teams />
           </Suspense>
         } />
+        <Route path="/signin" element={
+          <Suspense fallback={<LoadingScreen />}>
+            <Signin />
+          </Suspense>
+        } />
+        <Route path="/signup" element={
+          <Suspense fallback={<LoadingScreen />}>
+            <Signup />
+          </Suspense>
+        } />
+        <Route path="/subscription" element={
+          <Suspense fallback={<LoadingScreen />}>
+            <Subscription />
+          </Suspense>
+        } />
+        <Route path="/wallet" element={
+          <Suspense fallback={<LoadingScreen />}>
+            <Wallet />
+          </Suspense>
+        } />
         <Route path="/deposit" element={
           <Suspense fallback={<LoadingScreen />}>
             <Deposit />
@@ -75,6 +100,11 @@ const AppRoutes = () => {
         <Route path="/status-through-history" element={
           <Suspense fallback={<LoadingScreen />}>
             <StatusThroughHistory />
+          </Suspense>
+        } />
+        <Route path="/updates" element={
+          <Suspense fallback={<LoadingScreen />}>
+            <Updates />
           </Suspense>
         } />
         
@@ -112,16 +142,6 @@ const AppRoutes = () => {
         <Route path="/faq" element={
           <Suspense fallback={<LoadingScreen />}>
             <ContentPage pageKey="faq" />
-          </Suspense>
-        } />
-        <Route path="/updates" element={
-          <Suspense fallback={<LoadingScreen />}>
-            <ContentPage pageKey="updates" />
-          </Suspense>
-        } />
-        <Route path="/code-analysis" element={
-          <Suspense fallback={<LoadingScreen />}>
-            <ContentPage pageKey="code-analysis" />
           </Suspense>
         } />
         

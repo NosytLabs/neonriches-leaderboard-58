@@ -4,7 +4,7 @@ import { Container } from '@/components/ui/container';
 import PageSEO from '@/components/common/PageSEO';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Crown, Star, Award, Lightbulb, BookOpen, BriefcaseBusiness, Swords, Youtube, DollarSign, Trophy } from 'lucide-react';
+import { Crown, Star, Award, Lightbulb, BookOpen, BriefcaseBusiness, Swords, Youtube, DollarSign, Trophy, ExternalLink } from 'lucide-react';
 
 const StatusThroughHistory = () => {
   return (
@@ -23,12 +23,11 @@ const StatusThroughHistory = () => {
         </p>
         
         <Tabs defaultValue="ancient" className="w-full">
-          <TabsList className="grid grid-cols-5 max-w-3xl mx-auto mb-6">
+          <TabsList className="grid grid-cols-4 max-w-3xl mx-auto mb-6">
             <TabsTrigger value="ancient">Ancient World</TabsTrigger>
             <TabsTrigger value="medieval">Medieval</TabsTrigger>
             <TabsTrigger value="industrial">Industrial</TabsTrigger>
             <TabsTrigger value="digital">Digital Age</TabsTrigger>
-            <TabsTrigger value="mrbeast">MrBeast Era</TabsTrigger>
           </TabsList>
           
           {/* Ancient World Timeline */}
@@ -167,7 +166,7 @@ const StatusThroughHistory = () => {
             </Card>
           </TabsContent>
           
-          {/* Digital Age Timeline */}
+          {/* Digital Age Timeline - Now includes MrBeast content */}
           <TabsContent value="digital">
             <Card className="glass-morphism border-white/10">
               <CardHeader>
@@ -191,6 +190,55 @@ const StatusThroughHistory = () => {
                     </p>
                   </div>
                   
+                  {/* MrBeast section - moved from separate tab to Digital Age */}
+                  <div className="border-l-2 border-royal-gold/30 pl-6 py-2">
+                    <h3 className="text-lg font-semibold flex items-center">
+                      <Youtube className="h-4 w-4 mr-2 text-red-500" />
+                      The MrBeast Revolution (2017-Present)
+                    </h3>
+                    <p className="text-white/70 mt-2">
+                      MrBeast (Jimmy Donaldson) revolutionized online status by transforming excessive spending into content and philanthropy. His videos featuring extravagant giveaways and challenges with six-figure budgets created a new form of status: the benevolent spender.
+                    </p>
+                    <div className="mt-2 text-sm text-white/80">
+                      <span className="font-semibold">Key innovations:</span>
+                      <ul className="mt-1 space-y-2">
+                        <li className="flex items-start">
+                          <DollarSign className="h-4 w-4 mr-2 text-green-500 mt-1 flex-shrink-0" />
+                          <div>
+                            <span className="font-medium">Monetized Philanthropy:</span> Transformed excessive spending into content and philanthropy, where giving away money generates more revenue and status.
+                            <a href="https://www.forbes.com/profile/mrbeast/" className="flex items-center text-blue-400 hover:text-blue-300 mt-1 text-xs">
+                              <ExternalLink className="h-3 w-3 mr-1" />
+                              Forbes: MrBeast Net Worth
+                            </a>
+                          </div>
+                        </li>
+                        <li className="flex items-start">
+                          <Trophy className="h-4 w-4 mr-2 text-royal-gold mt-1 flex-shrink-0" />
+                          <div>
+                            <span className="font-medium">Extreme Challenge Economy:</span> "Last To Leave" challenges and "Spend $1,000,000 in 24 Hours" videos created a new economy where spending becomes public entertainment.
+                            <a href="https://www.youtube.com/watch?v=OjXlp0-SZCs" className="flex items-center text-blue-400 hover:text-blue-300 mt-1 text-xs">
+                              <ExternalLink className="h-3 w-3 mr-1" />
+                              MrBeast: I Spent $1,000,000 In 24 Hours
+                            </a>
+                          </div>
+                        </li>
+                        <li className="flex items-start">
+                          <Star className="h-4 w-4 mr-2 text-yellow-400 mt-1 flex-shrink-0" />
+                          <div>
+                            <span className="font-medium">Meta-Spending Philosophy:</span> Created a system where spending money generates more money, transforming "costs" into investments with incredible ROI.
+                            <a href="https://www.businessinsider.com/how-much-does-mrbeast-make-per-video-youtube-earnings-merch-2023-1" className="flex items-center text-blue-400 hover:text-blue-300 mt-1 text-xs">
+                              <ExternalLink className="h-3 w-3 mr-1" />
+                              Business Insider: MrBeast's Earnings Model
+                            </a>
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
+                    <p className="mt-2 text-sm italic text-royal-gold/80">
+                      SpendThrone parallel: Our platform's public spending model turns financial transactions into entertainment, much like MrBeast turned excessive spending into watchable content.
+                    </p>
+                  </div>
+                  
                   <div className="border-l-2 border-royal-gold/30 pl-6 py-2">
                     <h3 className="text-lg font-semibold flex items-center">
                       <Crown className="h-4 w-4 mr-2 text-royal-gold" />
@@ -204,72 +252,58 @@ const StatusThroughHistory = () => {
                     </p>
                   </div>
                 </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-          
-          {/* MrBeast Timeline - New Section */}
-          <TabsContent value="mrbeast">
-            <Card className="glass-morphism border-white/10">
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <Youtube className="mr-2 h-5 w-5 text-red-500" />
-                  The MrBeast Revolution
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-6">
-                  <div className="border-l-2 border-royal-gold/30 pl-6 py-2">
-                    <h3 className="text-lg font-semibold flex items-center">
-                      <DollarSign className="h-4 w-4 mr-2 text-green-500" />
-                      Monetized Philanthropy (2017-Present)
-                    </h3>
-                    <p className="text-white/70 mt-2">
-                      MrBeast (Jimmy Donaldson) revolutionized online status by transforming excessive spending into content and philanthropy. His videos featuring extravagant giveaways and challenges with six-figure budgets created a new form of status: the benevolent spender.
-                    </p>
-                    <p className="mt-2 text-sm italic text-royal-gold/80">
-                      Digital parallel: SpendThrone's leaderboard system borrows directly from the MrBeast philosophy that public spending creates attention, which converts to status.
-                    </p>
-                  </div>
-                  
-                  <div className="border-l-2 border-royal-gold/30 pl-6 py-2">
-                    <h3 className="text-lg font-semibold flex items-center">
-                      <Trophy className="h-4 w-4 mr-2 text-royal-gold" />
-                      Extreme Challenge Economy (2019-Present)
-                    </h3>
-                    <p className="text-white/70 mt-2">
-                      MrBeast's "Last To Leave" challenges and "Spend $1,000,000 in 24 Hours" videos created a new economy where spending absurd amounts of money publicly becomes entertainment. This transforms money from a private asset into a public spectacle.
-                    </p>
-                    <p className="mt-2 text-sm italic text-royal-gold/80">
-                      SpendThrone parallel: Our platform's public spending model turns financial transactions into entertainment, much like MrBeast turned excessive spending into watchable content.
-                    </p>
-                  </div>
-                  
-                  <div className="border-l-2 border-royal-gold/30 pl-6 py-2">
-                    <h3 className="text-lg font-semibold flex items-center">
-                      <Star className="h-4 w-4 mr-2 text-yellow-400" />
-                      Meta-Spending Philosophy (2021-Present)
-                    </h3>
-                    <p className="text-white/70 mt-2">
-                      MrBeast's ultimate innovation was creating a system where spending money generates more money. By spending millions on videos, he earns tens of millions in revenue, creating a meta-economy where visible spending becomes an investment rather than a cost.
-                    </p>
-                    <p className="mt-2 text-sm italic text-royal-gold/80">
-                      SpendThrone parallel: Users spending money for status may similarly transform their "costs" into social capital, influence, and potentially monetary returns through our platform's visibility features.
-                    </p>
-                  </div>
-                  
-                  <div className="border-l-2 border-royal-gold/30 pl-6 py-2 bg-green-900/10 rounded-r">
-                    <h3 className="text-lg font-bold flex items-center text-green-400">
-                      <Award className="h-5 w-5 mr-2 text-green-400" />
-                      The MrBeast Effect on SpendThrone
-                    </h3>
-                    <p className="text-white mt-2">
-                      "What MrBeast did for YouTube, SpendThrone does for social status. We've created a platform where spending isn't just consumption—it's content, it's competition, it's community. In the attention economy, visible spending is the ultimate currency." 
-                    </p>
-                    <p className="mt-1 text-white/70 italic">
-                      — SpendThrone Founder
-                    </p>
-                  </div>
+                
+                {/* Sources and Further Reading Section */}
+                <div className="mt-8 pt-6 border-t border-white/10">
+                  <h3 className="text-lg font-semibold mb-3 flex items-center">
+                    <BookOpen className="h-4 w-4 mr-2 text-royal-gold" />
+                    Sources & Further Reading
+                  </h3>
+                  <ul className="space-y-2 text-sm">
+                    <li className="flex items-center">
+                      <ExternalLink className="h-4 w-4 mr-2 text-blue-400" />
+                      <a href="https://www.businessofapps.com/data/most-expensive-youtube-videos/" className="text-blue-400 hover:underline">
+                        Business of Apps: Most Expensive YouTube Videos (2023)
+                      </a>
+                    </li>
+                    <li className="flex items-center">
+                      <ExternalLink className="h-4 w-4 mr-2 text-blue-400" />
+                      <a href="https://www.cnbc.com/2023/01/13/how-mrbeast-became-the-first-person-to-reach-100-million-youtube-subs.html" className="text-blue-400 hover:underline">
+                        CNBC: How MrBeast Became YouTube's First 100M Subscriber Creator
+                      </a>
+                    </li>
+                    <li className="flex items-center">
+                      <ExternalLink className="h-4 w-4 mr-2 text-blue-400" />
+                      <a href="https://www.nytimes.com/2022/05/29/style/youtube-mrbeast-philanthropy.html" className="text-blue-400 hover:underline">
+                        New York Times: The Philanthropy of MrBeast, YouTube's Top Creator
+                      </a>
+                    </li>
+                    <li className="flex items-center">
+                      <ExternalLink className="h-4 w-4 mr-2 text-blue-400" />
+                      <a href="https://www.forbes.com/sites/abrambrown/2022/09/23/beast-philanthropy-jimmy-donaldson-youtube-mrbeast-charity/" className="text-blue-400 hover:underline">
+                        Forbes: MrBeast's Charitable Revolution
+                      </a>
+                    </li>
+                    <li className="flex items-center">
+                      <ExternalLink className="h-4 w-4 mr-2 text-blue-400" />
+                      <a href="https://www.theatlantic.com/technology/archive/2018/05/inside-the-gilded-age-history-of-internet-moderation/555485/" className="text-blue-400 hover:underline">
+                        The Atlantic: Status in Digital Communities
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+                
+                <div className="mt-8 p-4 bg-green-900/10 rounded-lg border border-green-500/20">
+                  <p className="text-white font-bold flex items-center">
+                    <Award className="h-5 w-5 mr-2 text-green-400" />
+                    The MrBeast Effect on SpendThrone
+                  </p>
+                  <p className="mt-2 text-white/90">
+                    "What MrBeast did for YouTube, SpendThrone does for social status. We've created a platform where spending isn't just consumption—it's content, it's competition, it's community. In the attention economy, visible spending is the ultimate currency."
+                  </p>
+                  <p className="mt-1 text-white/70 italic text-right">
+                    — SpendThrone Founder
+                  </p>
                 </div>
               </CardContent>
             </Card>

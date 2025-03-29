@@ -20,6 +20,8 @@ import Mockery from './pages/Mockery';
 import MockeryGuide from './pages/MockeryGuide';
 import About from './pages/About';
 import StatusThroughHistory from './pages/StatusThroughHistory';
+import Updates from './pages/Updates';
+import ContentPage from './pages/ContentPage';
 
 // Consolidating the app structure by eliminating duplicate routes and pages
 function App() {
@@ -65,7 +67,16 @@ function App() {
               
               {/* Information Pages */}
               <Route path="/about" element={<About />} />
-              <Route path="/status-history" element={<StatusThroughHistory />} />
+              <Route path="/status-through-history" element={<StatusThroughHistory />} />
+              <Route path="/updates" element={<Updates />} />
+              
+              {/* Content Pages (consolidated) */}
+              <Route path="/terms" element={<ContentPage pageKey="terms" />} />
+              <Route path="/terms-of-service" element={<ContentPage pageKey="terms" />} />
+              <Route path="/privacy" element={<ContentPage pageKey="privacy" />} />
+              <Route path="/privacy-policy" element={<ContentPage pageKey="privacy" />} />
+              <Route path="/features" element={<ContentPage pageKey="features" />} />
+              <Route path="/faq" element={<ContentPage pageKey="faq" />} />
               
               {/* Catch All */}
               <Route path="*" element={<NotFound />} />
