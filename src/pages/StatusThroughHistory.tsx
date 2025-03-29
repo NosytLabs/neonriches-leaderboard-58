@@ -124,15 +124,15 @@ const historicalData: HistoricalPeriod[] = [
       },
       {
         year: "2022",
-        title: "Twitter Blue Verification",
-        description: "Following Elon Musk's acquisition of Twitter, the platform's verification system was monetized, allowing anyone to purchase a blue checkmark for $8 monthly—transforming what was once a carefully vetted status symbol into a purchasable commodity.",
+        title: "Twitter/X Verification",
+        description: "Following Elon Musk's acquisition of Twitter (now X), the platform's verification system was monetized, allowing anyone to purchase a blue checkmark for $8 monthly—transforming what was once a carefully vetted status symbol into a purchasable commodity.",
         location: "Global",
         icon: <Coins className="text-royal-gold" />,
         source: "The Verge Coverage",
         sourceUrl: "https://www.theverge.com/2022/11/9/23450289/twitter-impersonators-official-badge-musk-verification-blue-check"
       },
       {
-        year: "2020-2023",
+        year: "2020-Present",
         title: "Crypto Wealth Signaling",
         description: "Cryptocurrency enthusiasts adopted distinctive status signals: Lamborghinis as the vehicle of choice, 'laser eyes' profile pictures, and public wallet addresses. Spending $500,000+ on a car became the quintessential way to announce crypto success.",
         location: "Global",
@@ -152,13 +152,13 @@ const historicalData: HistoricalPeriod[] = [
         sourceUrl: "https://www.tandfonline.com/doi/full/10.1080/1369118X.2021.1874040"
       },
       {
-        year: "2023-2025",
+        year: "2023-Present",
         title: "Trump's Gold Card",
-        description: "Former President Trump launched digital 'Trump Cards' with gold-level tiers ranging from $59 to $499, offering no practical benefits beyond association with Trump's brand. The status-driven marketing campaign generated millions selling purely symbolic digital membership cards.",
+        description: "Former President Trump's administration announced plans to issue up to 5 million 'USA Gold Cards' for residency status. This controversial program effectively monetizes immigration status, creating a new form of purchasable legal standing in the country.",
         location: "USA",
         icon: <Crown className="text-royal-gold" />,
         imageUrl: "https://i.imgur.com/YU8nKPe.jpg",
-        source: "Digital Marketing Today",
+        source: "US Immigration Policy News",
         sourceUrl: "https://www.businessinsider.com/trump-launches-digital-trading-card-nfts-major-announcement-2022-12"
       }
     ]
@@ -211,6 +211,24 @@ const famousCases = [
     imageUrl: "https://i.imgur.com/YiQvNjD.jpg",
     source: "Web3 Is Going Just Great",
     sourceUrl: "https://web3isgoinggreat.com/"
+  },
+  {
+    name: "Kim Kardashian",
+    title: "Social Media Status Empire",
+    description: "Kardashian built a billion-dollar empire through social media influence, purchasing status with $150,000+ designer outfits, a $60 million minimalist mansion, and maintaining a fleet of color-matched luxury vehicles. Her Met Gala appearances cost upwards of $1.5 million in attire alone.",
+    year: "2010-Present",
+    imageUrl: "https://i.imgur.com/72SZvFB.jpg",
+    source: "Empire of Influence: The Kardashian Method",
+    sourceUrl: "https://www.forbes.com/profile/kim-kardashian/"
+  },
+  {
+    name: "Jeff Bezos",
+    title: "Yacht Status Warfare",
+    description: "The Amazon founder commissioned the $500 million Y721 superyacht so massive it required disassembling a historic bridge. His transition from frugal entrepreneur to superyacht-owning, space-racing billionaire marks the ultimate evolution in conspicuous consumption.",
+    year: "2021-Present",
+    imageUrl: "https://i.imgur.com/p7J5tDV.jpg",
+    source: "The Inequality Machine",
+    sourceUrl: "https://www.bloomberg.com/news/features/2022-02-07/jeff-bezos-megayacht-y721-is-biggest-sailing-yacht-in-the-world"
   }
 ];
 
@@ -440,8 +458,8 @@ const StatusThroughHistory: React.FC = () => {
               </p>
               
               <p className="text-gray-700 mb-4">
-                The digital age has only accelerated this process. From social media verification to NFTs and digital membership cards,
-                status symbols have become increasingly virtual—yet no less powerful. In many ways, digital status is more ephemeral
+                The digital age has only accelerated this process. From Twitter/X verification to NFTs and digital membership cards,
+                status symbols have become increasingly virtual—yet no less powerful. Digital status is more ephemeral
                 yet more visible than its physical predecessors, broadcasting one's position to a global audience with algorithmic efficiency.
               </p>
               
