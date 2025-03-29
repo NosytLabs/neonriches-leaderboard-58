@@ -1,82 +1,70 @@
 
-export interface UserCosmetics {
-  borders: string[];
-  colors: string[];
-  fonts: string[];
-  emojis: string[];
-  banners: string[];
-  themes: string[];
-  effects: string[];
-  titles: string[];
-}
+export type CosmeticCategory = 
+  'border' | 'color' | 'font' | 'emoji' | 'title' | 
+  'effect' | 'background' | 'badge' | 'theme';
+
+export type CosmeticRarity = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary' | 'royal';
 
 export interface CosmeticItem {
   id: string;
   name: string;
   description: string;
-  price: number;
   category: CosmeticCategory;
   rarity: CosmeticRarity;
-  preview?: string;
-  effects?: any;
+  price: number;
+  cssClass?: string;
+  image?: string;
+  discountPrice?: number;
+  isLimited?: boolean;
+  limitedUntil?: string;
+  unlockRequirement?: string;
 }
 
-export type CosmeticCategory = 'border' | 'color' | 'font' | 'emoji' | 'banner' | 'theme' | 'effect' | 'title';
-
-export type CosmeticRarity = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
-
-export interface BorderCosmetic extends CosmeticItem {
-  category: 'border';
-  borderStyle: string;
-  borderColor: string;
-  borderWidth: string;
-  animation?: string;
+export interface UserCosmetics {
+  borders: string[];
+  colors: string[];
+  fonts: string[];
+  emojis: string[];
+  titles: string[];
+  backgrounds: string[];
+  effects: string[];
+  badges: string[];
+  themes: string[];
 }
 
-export interface ColorCosmetic extends CosmeticItem {
-  category: 'color';
-  colorHex: string;
-  gradient?: string;
-  textShadow?: string;
-}
+// Helper functions for rendering cosmetic rarities
+export const getRarityColor = (rarity: CosmeticRarity): string => {
+  switch (rarity) {
+    case 'common': return 'text-gray-300';
+    case 'uncommon': return 'text-green-400';
+    case 'rare': return 'text-blue-400';
+    case 'epic': return 'text-purple-400';
+    case 'legendary': return 'text-royal-gold';
+    case 'royal': return 'royal-gradient';
+    default: return 'text-white';
+  }
+};
 
-export interface FontCosmetic extends CosmeticItem {
-  category: 'font';
-  fontFamily: string;
-  fontWeight: string;
-  letterSpacing?: string;
-}
+export const getRarityBgColor = (rarity: CosmeticRarity): string => {
+  switch (rarity) {
+    case 'common': return 'bg-gray-800/30';
+    case 'uncommon': return 'bg-green-900/30';
+    case 'rare': return 'bg-blue-900/30';
+    case 'epic': return 'bg-purple-900/30';
+    case 'legendary': return 'bg-amber-900/30';
+    case 'royal': return 'bg-royal-purple/30';
+    default: return 'bg-gray-800/30';
+  }
+};
 
-export interface EmojiCosmetic extends CosmeticItem {
-  category: 'emoji';
-  emoji: string;
-  animation?: string;
-}
-
-export interface BannerCosmetic extends CosmeticItem {
-  category: 'banner';
-  imageUrl: string;
-  position?: string;
-  size?: string;
-}
-
-export interface ThemeCosmetic extends CosmeticItem {
-  category: 'theme';
-  backgroundColor: string;
-  textColor: string;
-  accentColor: string;
-  borderColor?: string;
-}
-
-export interface EffectCosmetic extends CosmeticItem {
-  category: 'effect';
-  animation: string;
-  duration: string;
-  selector?: string;
-}
-
-export interface TitleCosmetic extends CosmeticItem {
-  category: 'title';
-  title: string;
-  style?: string;
-}
+export const getRarityBorderColor = (rarity: CosmeticRarity): string => {
+  switch (rarity) {
+    case 'common': return 'border-gray-600';
+    case 'uncommon': return 'border-green-600';
+    case 'rare': return 'border-blue-600';
+    case 'epic': return 'border-purple-600';
+    case 'legendary': return 'border-royal-gold';
+    case 'royal': return 'border-royal-purple';
+    default: return 'border-gray-600';
+  }
+};

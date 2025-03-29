@@ -1,137 +1,166 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+import { useAuth } from '@/contexts/auth';
 import { UserProfile } from '@/types/user';
-import { BoostType, UserBoost } from '@/types/profile-boost';
-import { getBoostById, profileBoostEffects } from '@/data/boostEffects';
+import profileBoostEffects from '@/data/profileBoostEffects';
+
+export type BoostEffectType = 'glow' | 'crown' | 'sparkle' | 'pulse' | 'flame' | 'shadow';
 
 export interface ProfileBoost {
   id: string;
-  effectId: string;
+  effectId: BoostEffectType;
   startDate: string;
   endDate: string;
   level: number;
-  type: string;
+  type: 'visibility' | 'appearance' | 'effect';
   strength: number;
   appliedBy: string;
 }
 
-interface BoostEffect {
-  id: string;
-  name: string;
-  description: string;
-  bonusText: string;
-  icon?: React.ReactNode;
+export interface UseProfileBoostResult {
+  activeBoosts: ProfileBoost[];
+  hasActiveBoost: boolean;
+  applyBoost: (boostId: string, days: number) => Promise<boolean>;
+  removeBoost: (boostId: string) => Promise<boolean>;
+  getBoostLevel: () => number;
+  getBoostEffect: () => BoostEffectType | null;
+  canApplyBoost: (boostId: string) => boolean;
 }
 
-export const useProfileBoost = (user: UserProfile) => {
+export const useProfileBoost = (
+  profile?: UserProfile | null,
+  updateProfile?: (data: Partial<UserProfile>) => Promise<void>
+): UseProfileBoostResult => {
+  const { user } = useAuth();
+  const targetProfile = profile || user;
+  
   const [activeBoosts, setActiveBoosts] = useState<ProfileBoost[]>([]);
-
-  // Get active boosts from user profile
+  
   useEffect(() => {
-    if (user) {
-      // Filter to only active boosts
-      const now = new Date();
-      const active = user.profileBoosts?.filter(boost => {
-        const endDate = new Date(boost.endDate);
-        return endDate > now;
-      }) || [];
-      
-      setActiveBoosts(active);
-    }
-  }, [user]);
-  
-  // Check if a user has any active boosts
-  const hasActiveBoosts = () => {
-    return activeBoosts && activeBoosts.length > 0;
-  };
-  
-  // Get the effect details of a boost by ID
-  const getBoostEffect = (boostId: string): BoostEffect | null => {
-    const boost = activeBoosts.find(b => b.id === boostId);
-    if (!boost) return null;
+    if (!targetProfile) return;
     
-    const boostEffect = getBoostById(boost.effectId);
-    if (!boostEffect) return null;
+    // Extract active boosts from profile
+    const profileBoosts = targetProfile.profileBoosts || [];
+    const now = new Date().toISOString();
     
-    return {
-      id: boost.id,
-      name: boostEffect.name,
-      description: boostEffect.description,
-      bonusText: `Duration: ${getRemainingDaysText(boost)}`,
-    };
-  };
-  
-  // Calculate time remaining for a boost
-  const getBoostTimeRemaining = (boost: ProfileBoost): number => {
-    const now = Date.now();
-    return Math.max(0, new Date(boost.endDate).getTime() - now);
-  };
-  
-  // Get remaining days text
-  const getRemainingDaysText = (boost: ProfileBoost): string => {
-    const remainingMs = getBoostTimeRemaining(boost);
-    const days = Math.ceil(remainingMs / (1000 * 60 * 60 * 24));
-    return days === 1 ? "1 day" : `${days} days`;
-  };
-  
-  // Format time remaining in a human-readable format
-  const formatTimeRemaining = (milliseconds: number): string => {
-    if (milliseconds <= 0) return "Expired";
-    
-    const seconds = Math.floor(milliseconds / 1000);
-    const minutes = Math.floor(seconds / 60);
-    const hours = Math.floor(minutes / 60);
-    const days = Math.floor(hours / 24);
-    
-    if (days > 0) {
-      return `${days}d ${hours % 24}h remaining`;
-    } else if (hours > 0) {
-      return `${hours}h ${minutes % 60}m remaining`;
-    } else if (minutes > 0) {
-      return `${minutes}m ${seconds % 60}s remaining`;
-    } else {
-      return `${seconds}s remaining`;
-    }
-  };
-  
-  // Get CSS classes for active boosts
-  const getBoostClasses = (): string => {
-    if (!hasActiveBoosts()) return '';
-    
-    const classes: string[] = [];
-    
-    activeBoosts.forEach(boost => {
-      const boostEffect = getBoostById(boost.effectId);
-      if (boostEffect) {
-        classes.push(boostEffect.cssClass);
-      }
-      
-      // Add tier effects based on user's subscription tier
-      if (user.tier === 'premium') {
-        classes.push('profile-boost-pro');
-      } else if (user.tier === 'royal') {
-        classes.push('profile-boost-whale');
-      }
-      
-      // Add team-specific effects
-      if (user.team === 'red') {
-        classes.push('profile-boost-team-red');
-      } else if (user.team === 'green') {
-        classes.push('profile-boost-team-green');
-      } else if (user.team === 'blue') {
-        classes.push('profile-boost-team-blue');
-      }
+    // Filter active boosts
+    const active = profileBoosts.filter(boost => {
+      return new Date(boost.endDate).toISOString() > now;
     });
     
-    return classes.join(' ');
-  };
+    setActiveBoosts(active);
+  }, [targetProfile]);
+  
+  const applyBoost = useCallback(async (boostId: string, days: number = 7): Promise<boolean> => {
+    if (!targetProfile || !updateProfile) return false;
+    
+    // Get boost details
+    const boostDetails = profileBoostEffects.find(b => b.id === boostId);
+    if (!boostDetails) return false;
+    
+    // Create boost object
+    const now = new Date();
+    const endDate = new Date(now);
+    endDate.setDate(endDate.getDate() + days);
+    
+    const effectMapping: Record<string, BoostEffectType> = {
+      'gold-aura': 'glow',
+      'crown-effect': 'crown',
+      'neon-pulse': 'pulse',
+      'rainbow-flow': 'flame',
+      'royal-sparkle': 'sparkle',
+      'animated-border': 'shadow'
+    };
+    
+    const newBoost: ProfileBoost = {
+      id: `boost_${Date.now()}`,
+      effectId: effectMapping[boostId] || 'glow',
+      startDate: now.toISOString(),
+      endDate: endDate.toISOString(),
+      level: boostDetails.tier === 'royal' ? 3 : boostDetails.tier === 'premium' ? 2 : 1,
+      type: boostDetails.type as 'visibility' | 'appearance' | 'effect',
+      strength: boostDetails.tier === 'royal' ? 3 : boostDetails.tier === 'premium' ? 2 : 1,
+      appliedBy: targetProfile.id
+    };
+    
+    // Update profile with new boost
+    const currentBoosts = targetProfile.profileBoosts || [];
+    const updatedBoosts = [...currentBoosts, newBoost];
+    
+    try {
+      await updateProfile({
+        profileBoosts: updatedBoosts
+      });
+      setActiveBoosts(prev => [...prev, newBoost]);
+      return true;
+    } catch (error) {
+      console.error('Error applying boost:', error);
+      return false;
+    }
+  }, [targetProfile, updateProfile]);
+  
+  const removeBoost = useCallback(async (boostId: string): Promise<boolean> => {
+    if (!targetProfile || !updateProfile) return false;
+    
+    const currentBoosts = targetProfile.profileBoosts || [];
+    const updatedBoosts = currentBoosts.filter(boost => boost.id !== boostId);
+    
+    try {
+      await updateProfile({
+        profileBoosts: updatedBoosts
+      });
+      setActiveBoosts(prev => prev.filter(boost => boost.id !== boostId));
+      return true;
+    } catch (error) {
+      console.error('Error removing boost:', error);
+      return false;
+    }
+  }, [targetProfile, updateProfile]);
+  
+  const getBoostLevel = useCallback((): number => {
+    if (!activeBoosts.length) return 0;
+    
+    // Return highest boost level
+    return Math.max(...activeBoosts.map(boost => boost.level));
+  }, [activeBoosts]);
+  
+  const getBoostEffect = useCallback((): BoostEffectType | null => {
+    if (!activeBoosts.length) return null;
+    
+    // Get highest level boost
+    const highestLevelBoost = [...activeBoosts].sort((a, b) => b.level - a.level)[0];
+    return highestLevelBoost.effectId;
+  }, [activeBoosts]);
+  
+  const canApplyBoost = useCallback((boostId: string): boolean => {
+    if (!targetProfile) return false;
+    
+    const userTier = targetProfile.subscriptionTier || 'free';
+    const boostDetails = profileBoostEffects.find(b => b.id === boostId);
+    
+    if (!boostDetails) return false;
+    
+    // Check if user tier is high enough
+    if (boostDetails.tier === 'royal' && userTier !== 'royal') {
+      return false;
+    }
+    
+    if (boostDetails.tier === 'premium' && userTier === 'free') {
+      return false;
+    }
+    
+    return true;
+  }, [targetProfile]);
   
   return {
     activeBoosts,
-    hasActiveBoosts,
+    hasActiveBoost: activeBoosts.length > 0,
+    applyBoost,
+    removeBoost,
+    getBoostLevel,
     getBoostEffect,
-    getBoostTimeRemaining,
-    formatTimeRemaining,
-    getBoostClasses
+    canApplyBoost
   };
 };
+
+export default useProfileBoost;

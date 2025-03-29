@@ -1,204 +1,101 @@
 
-export type MockeryTier = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
-export type MockeryAction = 'tomatoes' | 'eggs' | 'stocks' | 'silence' | 'courtJester' | 'jester' | 'protected' | 'immune' | 'dunce' | 'roast' | 'ridicule' | 'taunt' | 'drama';
-export type ExtendedMockeryAction = MockeryAction;
+import { ExtendedMockeryAction, MockeryAction, MockeryTier } from "@/types/mockery";
+import { Egg, MessageSquareOff, Shield, ShieldOff, Theater } from "lucide-react";
 
+// Get mockery price based on action type
+export const getMockeryPrice = (action: MockeryAction): number => {
+  const prices: Record<MockeryAction, number> = {
+    tomatoes: 1,
+    eggs: 2,
+    stocks: 5,
+    silence: 10,
+    courtJester: 20
+  };
+  
+  return prices[action] || 1;
+};
+
+// Get mockery duration in hours
+export const getMockeryDuration = (action: MockeryAction): number => {
+  const durations: Record<MockeryAction, number> = {
+    tomatoes: 12,
+    eggs: 24,
+    stocks: 48,
+    silence: 72,
+    courtJester: 96
+  };
+  
+  return durations[action] || 24;
+};
+
+// Get mockery icon based on action
 export const getMockeryActionIcon = (action: ExtendedMockeryAction): string => {
-  switch (action) {
-    case 'tomatoes': return 'tomato';
-    case 'eggs': return 'egg';
-    case 'stocks': return 'stocks';
-    case 'silence': return 'message-square-off';
-    case 'courtJester': return 'drama';
-    case 'protected': return 'shield';
-    case 'immune': return 'crown';
-    case 'jester': return 'drama';
-    case 'dunce': return 'scroll';
-    case 'roast': return 'tomato';
-    case 'ridicule': return 'drama';
-    case 'taunt': return 'drama';
-    case 'drama': return 'drama';
-    default: return 'alert-circle';
-  }
+  const icons: Record<ExtendedMockeryAction, string> = {
+    tomatoes: 'tomato',
+    eggs: 'egg',
+    stocks: 'stocks',
+    silence: 'message-square-off',
+    courtJester: 'drama',
+    protection: 'shield',
+    removal: 'shield-off'
+  };
+  
+  return icons[action] || 'alert-circle';
 };
 
-export const getMockeryIcon = getMockeryActionIcon; // Alias for compatibility
+// Get mockery color based on action
+export const getMockeryColor = (action: MockeryAction): string => {
+  const colors: Record<MockeryAction, string> = {
+    tomatoes: 'text-red-500',
+    eggs: 'text-yellow-200',
+    stocks: 'text-amber-700',
+    silence: 'text-blue-500',
+    courtJester: 'text-emerald-500'
+  };
+  
+  return colors[action] || 'text-white';
+};
 
+// Get mockery background color based on action
+export const getMockeryBgColor = (action: MockeryAction): string => {
+  const colors: Record<MockeryAction, string> = {
+    tomatoes: 'bg-red-500/20',
+    eggs: 'bg-yellow-200/20',
+    stocks: 'bg-amber-700/20',
+    silence: 'bg-blue-500/20',
+    courtJester: 'bg-emerald-500/20'
+  };
+  
+  return colors[action] || 'bg-white/20';
+};
+
+// Get mockery tier based on action
 export const getMockeryTier = (action: MockeryAction): MockeryTier => {
-  switch (action) {
-    case 'tomatoes': return 'common';
-    case 'eggs': return 'uncommon';
-    case 'stocks': return 'rare';
-    case 'silence': return 'epic';
-    case 'courtJester': return 'legendary';
-    default: return 'common';
-  }
+  const tiers: Record<MockeryAction, MockeryTier> = {
+    tomatoes: 'common',
+    eggs: 'uncommon',
+    stocks: 'rare',
+    silence: 'epic',
+    courtJester: 'legendary'
+  };
+  
+  return tiers[action] || 'common';
 };
 
-export const getMockeryTierText = (tier: MockeryTier): string => {
-  switch (tier) {
-    case 'common': return 'Common';
-    case 'uncommon': return 'Uncommon';
-    case 'rare': return 'Rare';
-    case 'epic': return 'Epic';
-    case 'legendary': return 'Legendary';
-    default: return 'Common';
-  }
+// Get text description for mockery action
+export const getMockeryText = (action: MockeryAction): string => {
+  const descriptions: Record<MockeryAction, string> = {
+    tomatoes: 'Pelted with rotten tomatoes',
+    eggs: 'Egged with rotten eggs',
+    stocks: 'Placed in public stocks',
+    silence: 'Silenced by royal decree',
+    courtJester: 'Forced to serve as court jester'
+  };
+  
+  return descriptions[action] || 'Mocked';
 };
 
-export const getMockeryText = getMockeryTierText; // Alias for compatibility
-
-export const getMockeryTierColor = (tier: MockeryTier): { text: string, bg: string, border: string } => {
-  switch (tier) {
-    case 'common':
-      return {
-        text: 'text-white/80',
-        bg: 'bg-white/10',
-        border: 'border-white/20'
-      };
-    case 'uncommon':
-      return {
-        text: 'text-green-400',
-        bg: 'bg-green-500/20',
-        border: 'border-green-500/30'
-      };
-    case 'rare':
-      return {
-        text: 'text-blue-400',
-        bg: 'bg-blue-500/20',
-        border: 'border-blue-500/30'
-      };
-    case 'epic':
-      return {
-        text: 'text-purple-400',
-        bg: 'bg-purple-500/20',
-        border: 'border-purple-500/30'
-      };
-    case 'legendary':
-      return {
-        text: 'text-royal-gold',
-        bg: 'bg-royal-gold/20',
-        border: 'border-royal-gold/30'
-      };
-    default:
-      return {
-        text: 'text-white/80',
-        bg: 'bg-white/10',
-        border: 'border-white/20'
-      };
-  }
-};
-
-export const getMockeryColor = getMockeryTierColor; // Alias for compatibility
-
-export const getMockeryTierLabel = (tier: MockeryTier): string => {
-  switch (tier) {
-    case 'common': return 'Common Mockery';
-    case 'uncommon': return 'Uncommon Mockery';
-    case 'rare': return 'Rare Mockery';
-    case 'epic': return 'Epic Mockery';
-    case 'legendary': return 'Legendary Mockery';
-    default: return 'Common Mockery';
-  }
-};
-
-export const getMockeryActionTitle = (action: MockeryAction): string => {
-  switch (action) {
-    case 'tomatoes': return 'Throw Tomatoes';
-    case 'eggs': return 'Throw Eggs';
-    case 'stocks': return 'Put in Stocks';
-    case 'silence': return 'Digital Silence';
-    case 'courtJester': return 'Court Jester';
-    case 'jester': return 'Make a Jester';
-    case 'protected': return 'Protected';
-    case 'immune': return 'Immunity';
-    case 'dunce': return 'Dunce Cap';
-    case 'roast': return 'Digital Roast';
-    case 'ridicule': return 'Public Ridicule';
-    case 'taunt': return 'Premium Taunt';
-    case 'drama': return 'Create Drama';
-    default: return 'Unknown Mockery';
-  }
-};
-
-export const getMockeryActionDescription = (action: MockeryAction): string => {
-  switch (action) {
-    case 'tomatoes': return 'Throw virtual tomatoes at this user – the digital equivalent of booing a bad comedy act';
-    case 'eggs': return 'Throw virtual eggs at this user – less messy than the real thing but just as embarrassing';
-    case 'stocks': return 'Place this user in virtual stocks for public ridicule – social media pillory without the splinters';
-    case 'silence': return 'Temporarily silence this user in public chats – like a mute button you pay to enforce';
-    case 'courtJester': return 'Make this user the court jester for a day – turns their profile into a comedy venue';
-    case 'jester': return 'Make this user a jester for everyone to laugh at – social media roast in costume form';
-    case 'protected': return 'This user is protected from mockery – their digital moat is filled and drawbridge raised';
-    case 'immune': return 'This user has purchased immunity from mockery – the digital equivalent of diplomatic immunity';
-    case 'dunce': return 'Make this user wear a digital dunce cap – the adult version of the corner time-out';
-    case 'roast': return "Publicly roast this user with prepared comedy material – Comedy Central special but they're the subject";
-    case 'ridicule': return 'Subject this user to public ridicule – turns their feed into a digital comedy club';
-    case 'taunt': return 'Taunt this user with premium animations – premium gloating with visual effects';
-    case 'drama': return 'Create drama involving this user – like a reality TV producer but for social media feuds';
-    default: return 'Apply a mockery effect to this user – the digital equivalent of a practical joke';
-  }
-};
-
-export const getMockeryDescription = getMockeryActionDescription; // Alias for compatibility
-
-export const getMockeryActionPrice = (action: MockeryAction): number => {
-  switch (action) {
-    case 'tomatoes': return 0.5;
-    case 'eggs': return 1;
-    case 'stocks': return 2;
-    case 'silence': return 5;
-    case 'courtJester': return 10;
-    case 'jester': return 8;
-    case 'protected': return 15;
-    case 'immune': return 25;
-    case 'dunce': return 3;
-    case 'roast': return 7;
-    case 'ridicule': return 4;
-    case 'taunt': return 6;
-    case 'drama': return 9;
-    default: return 1;
-  }
-};
-
-export const getMockeryCost = getMockeryActionPrice; // Alias for compatibility
-
-export const hasWeeklyDiscount = (action: MockeryAction): boolean => {
-  return ['tomatoes', 'eggs'].includes(action);
-};
-
-export const getDiscountedMockeryPrice = (action: MockeryAction, discount: number = 25): number => {
-  const basePrice = getMockeryActionPrice(action);
-  return hasWeeklyDiscount(action) ? 
-    basePrice * (1 - discount / 100) : 
-    basePrice;
-};
-
-export interface MockUser {
-  id: string;
-  username: string;
-  profilePicture: string;
-  tier: MockeryTier;
-  lastMockery: string;
-  mockeryCount: number;
-  isProtected: boolean;
-  onlineStatus: boolean;
-}
-
-export default {
-  getMockeryActionIcon,
-  getMockeryIcon,
-  getMockeryTier,
-  getMockeryTierText,
-  getMockeryText,
-  getMockeryTierColor,
-  getMockeryColor,
-  getMockeryTierLabel,
-  getMockeryActionTitle,
-  getMockeryActionDescription,
-  getMockeryDescription,
-  getMockeryActionPrice,
-  getMockeryCost,
-  hasWeeklyDiscount,
-  getDiscountedMockeryPrice
+// Convert action to tier string
+export const convertActionToTier = (action: MockeryAction): string => {
+  return getMockeryTier(action);
 };

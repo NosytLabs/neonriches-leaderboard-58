@@ -1,128 +1,137 @@
 
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Clock, Sparkles, Info, ShoppingCart, Crown } from 'lucide-react';
+import { EyeIcon, ZapIcon } from 'lucide-react';
 import { BoostEffect } from '@/types/boostEffects';
-import { 
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger 
-} from '@/components/ui/tooltip';
-import CrownEffectCanvas from '@/components/animations/CrownEffectCanvas';
+import P5CrownEffect from '@/components/animations/P5CrownEffect';
 
 interface BoostEffectDemoProps {
-  boost: BoostEffect;
-  onPurchase?: (boostId: string) => void;
+  boost?: BoostEffect;
+  className?: string;
 }
 
-const BoostEffectDemo: React.FC<BoostEffectDemoProps> = ({ 
-  boost,
-  onPurchase 
-}) => {
-  const [isHovering, setIsHovering] = useState(false);
-  
-  const handlePurchase = () => {
-    if (onPurchase) {
-      onPurchase(boost.id);
-    }
-  };
-  
-  // Determine badge color based on tier
-  const getBadgeVariant = () => {
-    switch (boost.tier) {
-      case 'royal': return 'bg-royal-gold text-black border-none';
-      case 'premium': return 'bg-royal-purple text-white border-none';
-      default: return 'bg-blue-500 text-white border-none';
-    }
-  };
-  
-  // Determine icon based on type
-  const getBoostIcon = () => {
-    switch (boost.type) {
-      case 'appearance': return <Sparkles className="h-4 w-4" />;
-      case 'effect': return <Crown className="h-4 w-4" />;
-      case 'visibility': return <Eye className="h-4 w-4" />;
-      case 'animation': return <Zap className="h-4 w-4" />;
-      default: return <Sparkles className="h-4 w-4" />;
-    }
-  };
+const BoostEffectDemo: React.FC<BoostEffectDemoProps> = ({ boost, className }) => {
+  const [activeEffect, setActiveEffect] = useState<'glow' | 'crown' | 'sparkle'>('crown');
   
   return (
-    <motion.div
-      whileHover={{ scale: 1.03 }}
-      onHoverStart={() => setIsHovering(true)}
-      onHoverEnd={() => setIsHovering(false)}
-      className="h-full"
-    >
-      <Card className={`h-full border-white/10 hover:border-white/20 ${boost.cssClass} relative overflow-hidden transition-all duration-300`}>
-        {boost.tier === 'royal' && (
-          <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
-            <CrownEffectCanvas width={250} height={300} opacity={0.2} />
-          </div>
-        )}
-        
-        <CardContent className="p-4 h-full flex flex-col">
-          <div className="flex justify-between items-start mb-3">
-            <Badge className={getBadgeVariant()}>
-              {boost.tier.charAt(0).toUpperCase() + boost.tier.slice(1)} Tier
-            </Badge>
+    <Card className={`glass-morphism border-royal-gold/20 overflow-hidden ${className}`}>
+      <CardHeader className="pb-2">
+        <CardTitle className="text-lg flex items-center">
+          <ZapIcon className="mr-2 h-5 w-5 text-royal-gold" />
+          Profile Boost Effects
+        </CardTitle>
+      </CardHeader>
+      
+      <CardContent>
+        <Tabs defaultValue="crown" value={activeEffect} onValueChange={(value) => setActiveEffect(value as 'glow' | 'crown' | 'sparkle')}>
+          <TabsList className="grid grid-cols-3 glass-morphism border-white/10 mb-4">
+            <TabsTrigger value="glow" className="flex items-center">
+              <EyeIcon size={14} className="mr-1.5" />
+              Glow
+            </TabsTrigger>
+            <TabsTrigger value="crown" className="flex items-center">
+              <span className="mr-1.5">👑</span>
+              Crown
+            </TabsTrigger>
+            <TabsTrigger value="sparkle" className="flex items-center">
+              <ZapIcon size={14} className="mr-1.5" />
+              Sparkle
+            </TabsTrigger>
+          </TabsList>
+          
+          <div className="relative w-full aspect-square bg-gradient-to-br from-gray-900 to-black rounded-lg mb-4 overflow-hidden">
+            <div className="absolute inset-0 opacity-30 bg-grid-pattern"></div>
             
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button variant="ghost" size="icon" className="h-6 w-6">
-                    <Info className="h-3 w-3" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent side="left">
-                  <p className="text-xs">{boost.type.charAt(0).toUpperCase() + boost.type.slice(1)} effect</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
+            <TabsContent value="glow" className="absolute inset-0 m-0 flex items-center justify-center">
+              <div className="relative w-3/4 h-3/4">
+                <div className="absolute inset-0 rounded-full bg-royal-gold/10 animate-pulse-slow"></div>
+                <div className="absolute inset-0 -m-4 rounded-full bg-royal-gold/5 animate-pulse" style={{ animationDelay: '0.5s' }}></div>
+                <div className="absolute inset-0 -m-8 rounded-full bg-royal-gold/3 animate-pulse" style={{ animationDelay: '1s' }}></div>
+                
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="royal-text text-2xl royal-gradient font-royal">Royal Glow</div>
+                </div>
+              </div>
+            </TabsContent>
+            
+            <TabsContent value="crown" className="absolute inset-0 m-0 flex items-center justify-center">
+              <div className="relative w-full h-full">
+                <div className="absolute top-0 left-0 w-full h-full">
+                  <P5CrownEffect width={300} height={300} color="#D4AF37" animate={true} />
+                </div>
+                
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="royal-text text-2xl royal-gradient font-royal mt-24">Royal Crown</div>
+                </div>
+              </div>
+            </TabsContent>
+            
+            <TabsContent value="sparkle" className="absolute inset-0 m-0 flex items-center justify-center">
+              <div className="relative w-3/4 h-3/4">
+                {/* Generate randomly positioned sparkles */}
+                {Array.from({ length: 20 }).map((_, i) => (
+                  <div 
+                    key={i}
+                    className="absolute w-2 h-2 bg-royal-gold rounded-full animate-pulse-slow"
+                    style={{ 
+                      left: `${Math.random() * 100}%`, 
+                      top: `${Math.random() * 100}%`,
+                      animationDelay: `${Math.random() * 2}s`,
+                      opacity: 0.6 + Math.random() * 0.4
+                    }}
+                  ></div>
+                ))}
+                
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="royal-text text-2xl royal-gradient font-royal">Royal Sparkle</div>
+                </div>
+              </div>
+            </TabsContent>
           </div>
           
-          <h3 className="font-semibold text-lg mb-1">{boost.name}</h3>
-          <p className="text-sm text-white/70 mb-4 flex-grow">{boost.description}</p>
-          
-          <div className="flex items-center justify-between mt-auto">
-            <div className="flex items-center text-white/60 text-sm">
-              <Clock className="h-3.5 w-3.5 mr-1" />
-              <span>{boost.durationDays} days</span>
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <div className="font-medium">Effect Name</div>
+              <div className="text-royal-gold">
+                {activeEffect === 'glow' && 'Royal Glow Aura'}
+                {activeEffect === 'crown' && 'Royal Crown Effect'}
+                {activeEffect === 'sparkle' && 'Royal Sparkle'}
+              </div>
             </div>
             
-            <div className="flex items-center gap-2">
-              <div className="text-royal-gold font-semibold">${boost.price}</div>
-              <Button 
-                size="sm" 
-                className={`${boost.tier === 'royal' ? 'bg-royal-gold text-black hover:bg-royal-gold/90' : ''}`}
-                onClick={handlePurchase}
-              >
-                <ShoppingCart className="h-3.5 w-3.5 mr-1" />
-                Purchase
-              </Button>
+            <div className="flex items-center justify-between">
+              <div className="font-medium">Effect Tier</div>
+              <Badge className="bg-royal-gold/20 text-royal-gold border border-royal-gold/40">
+                {activeEffect === 'glow' && 'Premium'}
+                {activeEffect === 'crown' && 'Royal'}
+                {activeEffect === 'sparkle' && 'Premium'}
+              </Badge>
             </div>
+            
+            <div className="flex items-center justify-between">
+              <div className="font-medium">Duration</div>
+              <div className="text-white/70">30 Days</div>
+            </div>
+            
+            <div className="flex items-center justify-between">
+              <div className="font-medium">Price</div>
+              <div className="text-royal-gold font-bold">
+                {activeEffect === 'glow' && '$25.00'}
+                {activeEffect === 'crown' && '$50.00'}
+                {activeEffect === 'sparkle' && '$20.00'}
+              </div>
+            </div>
+            
+            <Button className="w-full mt-4 bg-royal-gold text-black hover:bg-royal-gold/90">
+              Apply This Effect
+            </Button>
           </div>
-          
-          {boost.tier === 'royal' && (
-            <motion.div 
-              className="absolute bottom-0 right-0 p-2 opacity-70"
-              initial={{ opacity: 0 }}
-              animate={{ 
-                opacity: isHovering ? 1 : 0.7,
-                scale: isHovering ? 1.1 : 1
-              }}
-              transition={{ duration: 0.3 }}
-            >
-              <Crown className="h-6 w-6 text-royal-gold animate-crown-glow" />
-            </motion.div>
-          )}
-        </CardContent>
-      </Card>
-    </motion.div>
+        </Tabs>
+      </CardContent>
+    </Card>
   );
 };
 
