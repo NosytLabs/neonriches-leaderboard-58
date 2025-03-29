@@ -1,0 +1,65 @@
+
+<svg xmlns="http://www.w3.org/2000/svg" width="196" height="196" viewBox="0 0 196 196" fill="none">
+  <rect width="196" height="196" rx="20" fill="#1A1A2E"/>
+  
+  <!-- Throne Base -->
+  <path d="M49 147H147V172H49V147Z" fill="#5D4037" stroke="#D4AF37" stroke-width="4"/>
+  
+  <!-- Throne Back -->
+  <path d="M57 82H139V147H57V82Z" fill="#5D4037" stroke="#D4AF37" stroke-width="4"/>
+  
+  <!-- Red Cushion -->
+  <rect x="65" y="90" width="66" height="57" fill="#9B2335" />
+  
+  <!-- Cushion buttons -->
+  <circle cx="73" cy="98" r="3" fill="#D4AF37" />
+  <circle cx="89" cy="98" r="3" fill="#D4AF37" />
+  <circle cx="106" cy="98" r="3" fill="#D4AF37" />
+  <circle cx="123" cy="98" r="3" fill="#D4AF37" />
+  
+  <circle cx="73" cy="114" r="3" fill="#D4AF37" />
+  <circle cx="89" cy="114" r="3" fill="#D4AF37" />
+  <circle cx="106" cy="114" r="3" fill="#D4AF37" />
+  <circle cx="123" cy="114" r="3" fill="#D4AF37" />
+  
+  <circle cx="73" cy="131" r="3" fill="#D4AF37" />
+  <circle cx="89" cy="131" r="3" fill="#D4AF37" />
+  <circle cx="106" cy="131" r="3" fill="#D4AF37" />
+  <circle cx="123" cy="131" r="3" fill="#D4AF37" />
+  
+  <!-- Throne armrests with skull decorations -->
+  <path d="M45 123L57 106V147H45V123Z" fill="#4E342E" stroke="#D4AF37" stroke-width="2"/>
+  <path d="M151 123L139 106V147H151V123Z" fill="#4E342E" stroke="#D4AF37" stroke-width="2"/>
+  
+  <!-- Skull motifs on armrests -->
+  <circle cx="49" cy="118" r="5" fill="#4E342E" stroke="#D4AF37" stroke-width="1"/>
+  <circle cx="147" cy="118" r="5" fill="#4E342E" stroke="#D4AF37" stroke-width="1"/>
+  
+  <!-- Throne Top with ornate spikes -->
+  <path d="M57 82L65 61L82 82L98 57L114 82L131 61L139 82" fill="#5D4037" stroke="#D4AF37" stroke-width="3"/>
+  
+  <!-- Crown -->
+  <path d="M73 61L98 36L123 61L114 73H82L73 61Z" fill="#D4AF37" stroke="#5D4037" stroke-width="2"/>
+  <rect x="73" y="73" width="50" height="14" fill="#D4AF37" stroke="#5D4037" stroke-width="2"/>
+  
+  <!-- Crown Jewels -->
+  <circle cx="85" cy="80" r="4" fill="#9B2335"/>
+  <circle cx="98" cy="80" r="4" fill="#1F4788"/>
+  <circle cx="111" cy="80" r="4" fill="#2C784A"/>
+  
+  <!-- Pile of Money/Coins -->
+  <ellipse cx="98" cy="172" rx="49" ry="10" fill="#D4AF37" opacity="0.9"/>
+  
+  <!-- Individual Coins -->
+  <circle cx="57" cy="164" r="10" fill="#D4AF37" stroke="#5D4037" stroke-width="1"/>
+  <text x="57" y="168" font-family="Arial" font-size="10" fill="#5D4037" text-anchor="middle" font-weight="bold">$</text>
+  
+  <circle cx="139" cy="164" r="10" fill="#D4AF37" stroke="#5D4037" stroke-width="1"/>
+  <text x="139" y="168" font-family="Arial" font-size="10" fill="#5D4037" text-anchor="middle" font-weight="bold">$</text>
+  
+  <circle cx="77" cy="172" r="8" fill="#D4AF37" stroke="#5D4037" stroke-width="1"/>
+  <text x="77" y="175" font-family="Arial" font-size="8" fill="#5D4037" text-anchor="middle" font-weight="bold">$</text>
+  
+  <circle cx="118" cy="172" r="8" fill="#D4AF37" stroke="#5D4037" stroke-width="1"/>
+  <text x="118" y="175" font-family="Arial" font-size="8" fill="#5D4037" text-anchor="middle" font-weight="bold">$</text>
+</svg>

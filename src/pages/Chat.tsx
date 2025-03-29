@@ -3,6 +3,7 @@ import React from 'react';
 import { Shell } from '@/components/ui/shell';
 import { HeadingText } from '@/components/ui/heading-text';
 import TeamChatRoom from '@/components/chat/TeamChatRoom';
+import ChatHeader from '@/components/chat/ChatHeader';
 import { Card, CardContent } from '@/components/ui/card';
 import { MessageCircle, Crown, Info } from 'lucide-react';
 import { useAuth } from '@/contexts/auth';
@@ -11,20 +12,9 @@ const Chat: React.FC = () => {
   const { user } = useAuth();
   
   return (
-    <Shell>
+    <Shell className="glass-morphism border-white/10 p-4 md:p-6" withBrandIcon>
       <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <HeadingText 
-            title="Royal Court Chat" 
-            description="Discuss strategies, form alliances, or simply boast about your spending"
-            as="h1"
-          />
-          
-          <div className="hidden md:flex items-center p-2 bg-white/5 rounded-full text-sm text-white/60">
-            <Crown className="h-4 w-4 text-royal-gold mr-1" />
-            <span>Active Nobles: 26</span>
-          </div>
-        </div>
+        <ChatHeader activeUsers={26} />
         
         <Card className="glass-morphism border-white/10">
           <CardContent className="p-4 md:p-6">

@@ -1,33 +1,118 @@
 
-<svg xmlns="http://www.w3.org/2000/svg" width="200" height="48" viewBox="0 0 200 48" fill="none">
-  <!-- Throne -->
-  <path d="M12 36H36V42H12V36Z" fill="#9B2335" stroke="#D4AF37" stroke-width="1"/>
-  <path d="M14 20H34V36H14V20Z" fill="#9B2335" stroke="#D4AF37" stroke-width="1"/>
-  <path d="M16 22H20V26H16V22Z" fill="#D4AF37"/>
-  <path d="M28 22H32V26H28V22Z" fill="#D4AF37"/>
-  <path d="M20 30H28V34H20V30Z" fill="#D4AF37"/>
-  
-  <!-- Crown -->
-  <path d="M24 8L18 14L16 12L24 6L32 12L30 14L24 8Z" fill="#D4AF37" stroke="#9B2335" stroke-width="0.5"/>
-  <path d="M18 14H30V18H18V14Z" fill="#D4AF37" stroke="#9B2335" stroke-width="0.5"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="240" height="60" viewBox="0 0 240 60" fill="none">
+  <!-- Throne with rich details -->
+  <g transform="translate(5 5) scale(0.8)">
+    <!-- Throne Base -->
+    <path d="M12 36H36V42H12V36Z" fill="#5D4037" stroke="#D4AF37" stroke-width="1.5"/>
+    
+    <!-- Throne Back -->
+    <path d="M14 20H34V36H14V20Z" fill="#5D4037" stroke="#D4AF37" stroke-width="1.5"/>
+    
+    <!-- Red Cushion -->
+    <rect x="16" y="22" width="16" height="14" fill="#9B2335" />
+    
+    <!-- Cushion buttons -->
+    <circle cx="18" cy="24" r="0.8" fill="#D4AF37" />
+    <circle cx="22" cy="24" r="0.8" fill="#D4AF37" />
+    <circle cx="26" cy="24" r="0.8" fill="#D4AF37" />
+    <circle cx="30" cy="24" r="0.8" fill="#D4AF37" />
+    <circle cx="18" cy="28" r="0.8" fill="#D4AF37" />
+    <circle cx="22" cy="28" r="0.8" fill="#D4AF37" />
+    <circle cx="26" cy="28" r="0.8" fill="#D4AF37" />
+    <circle cx="30" cy="28" r="0.8" fill="#D4AF37" />
+    <circle cx="18" cy="32" r="0.8" fill="#D4AF37" />
+    <circle cx="22" cy="32" r="0.8" fill="#D4AF37" />
+    <circle cx="26" cy="32" r="0.8" fill="#D4AF37" />
+    <circle cx="30" cy="32" r="0.8" fill="#D4AF37" />
+    
+    <!-- Throne armrests -->
+    <path d="M11 30L14 26V36H11V30Z" fill="#4E342E" stroke="#D4AF37" stroke-width="0.5"/>
+    <path d="M37 30L34 26V36H37V30Z" fill="#4E342E" stroke="#D4AF37" stroke-width="0.5"/>
+    
+    <!-- Skull decorations -->
+    <circle cx="12" cy="29" r="1.2" fill="#4E342E" stroke="#D4AF37" stroke-width="0.3"/>
+    <circle cx="36" cy="29" r="1.2" fill="#4E342E" stroke="#D4AF37" stroke-width="0.3"/>
+    
+    <!-- Throne Top -->
+    <path d="M14 20L16 15L20 20L24 14L28 20L32 15L34 20" fill="#5D4037" stroke="#D4AF37" stroke-width="0.8"/>
+    
+    <!-- Crown -->
+    <path d="M18 12L24 6L30 12L28 15L20 15L18 12Z" fill="#D4AF37" stroke="#5D4037" stroke-width="0.5"/>
+    <rect x="18" y="15" width="12" height="3" fill="#D4AF37" stroke="#5D4037" stroke-width="0.5"/>
+    
+    <!-- Crown Jewels -->
+    <circle cx="21" cy="16.5" r="0.8" fill="#9B2335"/>
+    <circle cx="24" cy="16.5" r="0.8" fill="#1F4788"/>
+    <circle cx="27" cy="16.5" r="0.8" fill="#2C784A"/>
+    
+    <!-- Pile of Money -->
+    <ellipse cx="24" cy="42" rx="12" ry="2.5" fill="#D4AF37" opacity="0.9"/>
+    
+    <!-- Individual Coins -->
+    <circle cx="14" cy="40" r="2.5" fill="#D4AF37" stroke="#5D4037" stroke-width="0.3"/>
+    <text x="14" y="41" font-family="Arial" font-size="2.5" fill="#5D4037" text-anchor="middle" font-weight="bold">$</text>
+    
+    <circle cx="34" cy="40" r="2.5" fill="#D4AF37" stroke="#5D4037" stroke-width="0.3"/>
+    <text x="34" y="41" font-family="Arial" font-size="2.5" fill="#5D4037" text-anchor="middle" font-weight="bold">$</text>
+    
+    <circle cx="19" cy="42" r="2" fill="#D4AF37" stroke="#5D4037" stroke-width="0.3"/>
+    <text x="19" y="43" font-family="Arial" font-size="2" fill="#5D4037" text-anchor="middle" font-weight="bold">$</text>
+    
+    <circle cx="29" cy="42" r="2" fill="#D4AF37" stroke="#5D4037" stroke-width="0.3"/>
+    <text x="29" y="43" font-family="Arial" font-size="2" fill="#5D4037" text-anchor="middle" font-weight="bold">$</text>
+  </g>
   
   <!-- Text -->
-  <path d="M58 18C58 16.8954 58.8954 16 60 16H62C63.1046 16 64 16.8954 64 18V30C64 31.1046 63.1046 32 62 32H60C58.8954 32 58 31.1046 58 30V18Z" fill="#D4AF37"/>
-  <path d="M66 18C66 16.8954 66.8954 16 68 16H72C74.2091 16 76 17.7909 76 20V22C76 24.2091 74.2091 26 72 26H68V30C68 31.1046 67.1046 32 66 32V18Z" fill="#D4AF37"/>
-  <path d="M68 22H72V20H68V22Z" fill="#0D0D20"/>
-  <path d="M78 18C78 16.8954 78.8954 16 80 16H84C86.2091 16 88 17.7909 88 20V28C88 30.2091 86.2091 32 84 32H80C78.8954 32 78 31.1046 78 30V18Z" fill="#D4AF37"/>
-  <path d="M80 28H84V20H80V28Z" fill="#0D0D20"/>
-  <path d="M90 18C90 16.8954 90.8954 16 92 16H94C95.1046 16 96 16.8954 96 18V26H100V18C100 16.8954 100.895 16 102 16H104C105.105 16 106 16.8954 106 18V30C106 31.1046 105.105 32 104 32H92C90.8954 32 90 31.1046 90 30V18Z" fill="#D4AF37"/>
-  <path d="M108 18C108 16.8954 108.895 16 110 16H114C116.209 16 118 17.7909 118 20V22C118 24.2091 116.209 26 114 26H110V30C110 31.1046 109.105 32 108 32V18Z" fill="#D4AF37"/>
-  <path d="M110 22H114V20H110V22Z" fill="#0D0D20"/>
-  <path d="M120 24C120 19.5817 123.582 16 128 16H130C134.418 16 138 19.5817 138 24C138 28.4183 134.418 32 130 32H128C123.582 32 120 28.4183 120 24Z" fill="#D4AF37"/>
-  <path d="M128 28H130C132.209 28 134 26.2091 134 24C134 21.7909 132.209 20 130 20H128C125.791 20 124 21.7909 124 24C124 26.2091 125.791 28 128 28Z" fill="#0D0D20"/>
-  <path d="M140 18C140 16.8954 140.895 16 142 16H144C145.105 16 146 16.8954 146 18V26H150V18C150 16.8954 150.895 16 152 16H154C155.105 16 156 16.8954 156 18V30C156 31.1046 155.105 32 154 32H142C140.895 32 140 31.1046 140 30V18Z" fill="#D4AF37"/>
-  <path d="M158 18C158 16.8954 158.895 16 160 16H164C166.209 16 168 17.7909 168 20V28C168 30.2091 166.209 32 164 32H160C158.895 32 158 31.1046 158 30V18Z" fill="#D4AF37"/>
-  <path d="M160 28H164V20H160V28Z" fill="#0D0D20"/>
-  <path d="M170 18C170 16.8954 170.895 16 172 16H184C185.105 16 186 16.8954 186 18V20C186 21.1046 185.105 22 184 22H174V24H182C183.105 24 184 24.8954 184 26V30C184 31.1046 183.105 32 182 32H172C170.895 32 170 31.1046 170 30V28C170 26.8954 170.895 26 172 26H180V24H172C170.895 24 170 23.1046 170 22V18Z" fill="#D4AF37"/>
+  <g transform="translate(50 15)">
+    <!-- SpendThrone Text with Medieval Style -->
+    <path d="M0 10C0 8.89543 0.895431 8 2 8H6C8.20914 8 10 9.79086 10 12V14C10 16.2091 8.20914 18 6 18H2V24C2 25.1046 1.10457 26 0 26V10Z" fill="#D4AF37"/>
+    <path d="M2 16H6C7.10457 16 8 15.1046 8 14V12C8 10.8954 7.10457 10 6 10H2V16Z" fill="#1A1A2E"/>
+    
+    <path d="M12 10C12 8.89543 12.8954 8 14 8H18C20.2091 8 22 9.79086 22 12V24C22 25.1046 21.1046 26 20 26H14C12.8954 26 12 25.1046 12 24V10Z" fill="#D4AF37"/>
+    <path d="M14 24H18C19.1046 24 20 23.1046 20 22V12C20 10.8954 19.1046 10 18 10H14V24Z" fill="#1A1A2E"/>
+    
+    <path d="M24 10C24 8.89543 24.8954 8 26 8H32C34.2091 8 36 9.79086 36 12V14C36 16.2091 34.2091 18 32 18H28V24C28 25.1046 27.1046 26 26 26V10Z" fill="#D4AF37"/>
+    <path d="M26 16H32C33.1046 16 34 15.1046 34 14V12C34 10.8954 33.1046 10 32 10H26V16Z" fill="#1A1A2E"/>
+    
+    <path d="M38 10C38 8.89543 38.8954 8 40 8H46C48.2091 8 50 9.79086 50 12V14C50 16.2091 48.2091 18 46 18H42V24C42 25.1046 41.1046 26 40 26V10Z" fill="#D4AF37"/>
+    <path d="M40 16H46C47.1046 16 48 15.1046 48 14V12C48 10.8954 47.1046 10 46 10H40V16Z" fill="#1A1A2E"/>
+    
+    <path d="M52 8C52 5.79086 53.7909 4 56 4H60C63.3137 4 66 6.68629 66 10V22C66 24.2091 63.3137 28 60 28H56C53.7909 28 52 26.2091 52 24V8Z" fill="#D4AF37"/>
+    <path d="M56 24H60C62.2091 24 64 21.1046 64 19V10C64 7.79086 62.2091 6 60 6H56C54.8954 6 54 6.89543 54 8V22C54 23.1046 54.8954 24 56 24Z" fill="#1A1A2E"/>
+    
+    <path d="M68 10C68 8.89543 68.8954 8 70 8H78C79.1046 8 80 8.89543 80 10V12C80 13.1046 79.1046 14 78 14H70V16H78C79.1046 16 80 16.8954 80 18V24C80 25.1046 79.1046 26 78 26H70C68.8954 26 68 25.1046 68 24V22C68 20.8954 68.8954 20 70 20H78V18H70C68.8954 18 68 17.1046 68 16V10Z" fill="#D4AF37"/>
+    
+    <path d="M82 10C82 8.89543 82.8954 8 84 8H92C93.1046 8 94 8.89543 94 10V12C94 13.1046 93.1046 14 92 14H84V16H92C93.1046 16 94 16.8954 94 18V24C94 25.1046 93.1046 26 92 26H84C82.8954 26 82 25.1046 82 24V22C82 20.8954 82.8954 20 84 20H92V18H84C82.8954 18 82 17.1046 82 16V10Z" fill="#D4AF37"/>
+    
+    <path d="M96 10C96 8.89543 96.8954 8 98 8H104C106.209 8 108 9.79086 108 12V24C108 25.1046 107.105 26 106 26H98C96.8954 26 96 25.1046 96 24V10Z" fill="#D4AF37"/>
+    <path d="M98 24H104C105.105 24 106 23.1046 106 22V12C106 10.8954 105.105 10 104 10H98V24Z" fill="#1A1A2E"/>
+    
+    <path d="M110 10C110 8.89543 110.895 8 112 8H116C118.209 8 120 9.79086 120 12V14C120 16.2091 118.209 18 116 18H112V24C112 25.1046 111.105 26 110 26V10Z" fill="#D4AF37"/>
+    <path d="M112 16H116C117.105 16 118 15.1046 118 14V12C118 10.8954 117.105 10 116 10H112V16Z" fill="#1A1A2E"/>
+    
+    <path d="M122 10C122 8.89543 122.895 8 124 8H132C134.209 8 136 9.79086 136 12V24C136 25.1046 135.105 26 134 26H124C122.895 26 122 25.1046 122 24V10Z" fill="#D4AF37"/>
+    <path d="M124 24H132C133.105 24 134 23.1046 134 22V12C134 10.8954 133.105 10 132 10H124V24Z" fill="#1A1A2E"/>
+    
+    <path d="M138 10C138 8.89543 138.895 8 140 8H148C149.105 8 150 8.89543 150 10V12C150 13.1046 149.105 14 148 14H140V16H148C149.105 16 150 16.8954 150 18V24C150 25.1046 149.105 26 148 26H140C138.895 26 138 25.1046 138 24V22C138 20.8954 138.895 20 140 20H148V18H140C138.895 18 138 17.1046 138 16V10Z" fill="#D4AF37"/>
+    
+    <!-- .com in smaller text -->
+    <path d="M156 22C156 20.3431 157.343 19 159 19H161C162.657 19 164 20.3431 164 22V22C164 23.6569 162.657 25 161 25H159C157.343 25 156 23.6569 156 22Z" fill="#D4AF37"/>
+    <path d="M158 22C158 21.4477 158.448 21 159 21H161C161.552 21 162 21.4477 162 22V22C162 22.5523 161.552 23 161 23H159C158.448 23 158 22.5523 158 22Z" fill="#1A1A2E"/>
+    
+    <path d="M166 19C166 18.4477 166.448 18 167 18H173C173.552 18 174 18.4477 174 19V25C174 25.5523 173.552 26 173 26H167C166.448 26 166 25.5523 166 25V19Z" fill="#D4AF37"/>
+    <path d="M168 24H172V20H168V24Z" fill="#1A1A2E"/>
+    
+    <path d="M176 22C176 20.3431 177.343 19 179 19H183C184.657 19 186 20.3431 186 22V25C186 25.5523 185.552 26 185 26H177C176.448 26 176 25.5523 176 25V22Z" fill="#D4AF37"/>
+    <path d="M178 24H184V22C184 21.4477 183.552 21 183 21H179C178.448 21 178 21.4477 178 22V24Z" fill="#1A1A2E"/>
+  </g>
   
-  <!-- Coin -->
-  <circle cx="190" cy="24" r="8" fill="#D4AF37" stroke="#9B2335" stroke-width="1"/>
-  <text x="190" y="28" font-family="Arial" font-size="10" fill="#9B2335" text-anchor="middle">$</text>
+  <!-- Additional Coins scattered around -->
+  <circle cx="155" cy="40" r="4" fill="#D4AF37" stroke="#5D4037" stroke-width="0.5"/>
+  <text x="155" y="42" font-family="Arial" font-size="4" fill="#5D4037" text-anchor="middle" font-weight="bold">$</text>
+  
+  <circle cx="190" cy="35" r="3.5" fill="#D4AF37" stroke="#5D4037" stroke-width="0.5"/>
+  <text x="190" y="37" font-family="Arial" font-size="3.5" fill="#5D4037" text-anchor="middle" font-weight="bold">$</text>
+  
+  <circle cx="45" cy="45" r="4.5" fill="#D4AF37" stroke="#5D4037" stroke-width="0.5"/>
+  <text x="45" y="47" font-family="Arial" font-size="4.5" fill="#5D4037" text-anchor="middle" font-weight="bold">$</text>
 </svg>
