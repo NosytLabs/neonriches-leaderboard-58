@@ -1,15 +1,13 @@
 
 import React from 'react';
 import { Outlet } from 'react-router-dom';
-import { Container } from '@/components/ui/container';
+import { Shell } from '@/components/ui/shell';
 
-const MainLayout: React.FC = () => {
+const MainLayout = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black text-white">
-      <Container className="py-4">
-        <Outlet />
-      </Container>
-    </div>
+    <Shell>
+      <Outlet />
+    </Shell>
   );
 };
 

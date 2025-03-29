@@ -12,6 +12,7 @@ const Home = () => {
     <>
       <Helmet>
         <title>SpendThrone | Pay to Win Social Experiment</title>
+        <meta name="description" content="The ultimate pay-to-win social experiment where status is determined by how much you spend." />
       </Helmet>
       
       <div className="container mx-auto max-w-7xl px-4 py-6">

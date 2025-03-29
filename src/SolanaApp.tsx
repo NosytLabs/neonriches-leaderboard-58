@@ -4,16 +4,18 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import AppRoutes from './AppRoutes';
 import { SolanaProvider } from './contexts/SolanaContext';
 import { Toaster } from './components/ui/toaster';
+import { AuthProvider } from './contexts/auth';
 import './styles/profile-boost.css';
 
-// All of this code is new, creating the SolanaApp component
 const SolanaApp: React.FC = () => {
   return (
     <Router>
-      <SolanaProvider>
-        <AppRoutes />
-        <Toaster />
-      </SolanaProvider>
+      <AuthProvider>
+        <SolanaProvider>
+          <AppRoutes />
+          <Toaster />
+        </SolanaProvider>
+      </AuthProvider>
     </Router>
   );
 };

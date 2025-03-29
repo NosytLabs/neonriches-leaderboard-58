@@ -15,12 +15,18 @@ const ProfileEnhancements = lazy(() => import('./pages/ProfileEnhancements'));
 const Mockery = lazy(() => import('./pages/Mockery'));
 const ContentPage = lazy(() => import('./pages/ContentPage'));
 const NotFound = lazy(() => import('./pages/NotFound'));
+const Index = lazy(() => import('./pages/Index'));  // Keep both Home and Index for compatibility
 
 const AppRoutes = () => {
   return (
     <Routes>
       <Route path="/" element={<MainLayout />}>
         <Route index element={
+          <Suspense fallback={<LoadingScreen />}>
+            <Index />
+          </Suspense>
+        } />
+        <Route path="/home" element={
           <Suspense fallback={<LoadingScreen />}>
             <Home />
           </Suspense>
@@ -66,7 +72,7 @@ const AppRoutes = () => {
           </Suspense>
         } />
         
-        {/* Content pages with unified component */}
+        {/* Unified Content pages */}
         <Route path="/about" element={
           <Suspense fallback={<LoadingScreen />}>
             <ContentPage pageKey="about" />
@@ -77,7 +83,17 @@ const AppRoutes = () => {
             <ContentPage pageKey="terms" />
           </Suspense>
         } />
+        <Route path="/terms-of-service" element={
+          <Suspense fallback={<LoadingScreen />}>
+            <ContentPage pageKey="terms" />
+          </Suspense>
+        } />
         <Route path="/privacy" element={
+          <Suspense fallback={<LoadingScreen />}>
+            <ContentPage pageKey="privacy" />
+          </Suspense>
+        } />
+        <Route path="/privacy-policy" element={
           <Suspense fallback={<LoadingScreen />}>
             <ContentPage pageKey="privacy" />
           </Suspense>
