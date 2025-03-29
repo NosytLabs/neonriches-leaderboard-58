@@ -11,65 +11,65 @@ export const termsContent = {
     {
       title: '1. Acceptance of Terms',
       content: [
-        'By accessing or using SpendThrone, you agree to be bound by these Terms of Service ("Terms") and all applicable laws and regulations. If you do not agree with any of these terms, you are prohibited from using or accessing this site.',
-        'We reserve the right to modify these terms at any time, and such modifications shall be effective immediately upon posting on this website. Your continued use of the website after any modifications indicates your acceptance of the modified terms.'
+        'By accessing or using SpendThrone, you agree to be bound by these Terms of Service ("Terms"). If you don\'t agree, don\'t use the site.',
+        'We reserve the right to modify these terms at any time. Your continued use after modifications indicates acceptance of the updated terms.'
       ]
     },
     {
       title: '2. Description of Service',
       content: [
-        'SpendThrone is a satirical social platform that allows users to gain status through monetary contributions. The service includes leaderboards, team competitions, profile customization, and mockery features, all operating under the premise that status can be directly purchased.',
-        'We reserve the right to modify or discontinue, temporarily or permanently, the service with or without notice. We shall not be liable to you or to any third party for any modification, suspension, or discontinuance of the service.'
+        'SpendThrone is a satirical platform allowing users to gain status through monetary contributions. The service includes leaderboards, team competitions, profile customization, and mockery features.',
+        'We may modify or discontinue the service at any time. We shall not be liable for any modification, suspension, or discontinuance.'
       ]
     },
     {
       title: '3. User Conduct',
       content: [
-        'You agree not to use the service to:',
-        '• Violate any applicable laws or regulations',
-        '• Impersonate any person or entity',
-        '• Harass, abuse, or harm another person',
-        '• Submit false or misleading information',
-        '• Interfere with or disrupt the service',
-        '• Use the service for any unauthorized commercial purpose',
-        'We reserve the right to terminate your access to the service for violation of these conduct guidelines.'
+        'You agree not to:',
+        '• Violate any laws or regulations',
+        '• Impersonate others',
+        '• Harass or harm others',
+        '• Submit false information',
+        '• Interfere with the service',
+        '• Use the service for unauthorized commercial purposes',
+        'We may terminate your access for violating these guidelines.'
       ]
     },
     {
       title: '4. User Payments and Refunds',
       content: [
-        'All payments made to SpendThrone are final and non-refundable. By making a payment, you acknowledge the satirical nature of our platform and understand that payments directly influence your status on our leaderboards.',
-        'We process payments through third-party payment processors and do not store your payment information on our servers. All payment transactions are subject to the terms and conditions of these third-party processors.'
+        'All payments to SpendThrone are final and non-refundable. By paying, you acknowledge the satirical nature of our platform and understand that payments directly influence your status.',
+        'We process payments through third-party processors and don\'t store your payment information on our servers.'
       ]
     },
     {
       title: '5. Data Security and Privacy',
       content: [
-        'While we enjoy our medieval-themed humor, we take your data security seriously. We implement industry-standard security measures to protect your personal information:',
+        'While we enjoy medieval-themed humor, we take data security seriously. We implement industry-standard security measures:',
         '• All data is encrypted in transit and at rest',
         '• We use secure authentication protocols',
         '• We regularly audit our security systems',
         '• We limit data access to authorized personnel only',
-        'Think of it as building an actual fortress around your data, not just a whimsical medieval castle with a moat drawn in crayon.',
+        'Think of it as building an actual digital fortress around your data, not just a medieval castle drawn in crayon.',
         'For complete details on how we collect, use, and protect your information, please review our Privacy Policy.'
       ]
     },
     {
       title: '6. Limitation of Liability',
       content: [
-        'In no event shall SpendThrone, its officers, directors, employees, or agents, be liable to you for any direct, indirect, incidental, special, punitive, or consequential damages whatsoever resulting from:',
-        '• Errors, mistakes, or inaccuracies of content',
-        '• Personal injury or property damage resulting from your access to and use of our service',
-        '• Unauthorized access to our secure servers and/or any personal or financial information stored therein',
-        '• Interruption or cessation of transmission to or from our service',
-        '• Bugs, viruses, or the like that may be transmitted by third parties',
-        '• Any errors or omissions in content or for any loss or damage incurred as a result of the use of content posted, transmitted, or otherwise made available through the service'
+        'SpendThrone, its officers, directors, employees, and agents, are not liable for:',
+        '• Errors or inaccuracies in content',
+        '• Personal injury or property damage from using our service',
+        '• Unauthorized access to our secure servers and personal information stored therein',
+        '• Service interruptions',
+        '• Viruses transmitted by third parties',
+        '• Any loss resulting from use of our service'
       ]
     },
     {
       title: '7. Contact Information',
       content: [
-        'If you have any questions about these Terms, please contact us at support@spendthrone.com.'
+        'Questions about these Terms? Contact us at support@spendthrone.com.'
       ]
     }
   ]

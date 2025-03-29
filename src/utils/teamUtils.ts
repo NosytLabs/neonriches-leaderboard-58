@@ -62,21 +62,21 @@ export const getTeamBenefit = (team: UserTeam | string | undefined): string[] =>
   switch (team) {
     case 'red':
       return [
-        'Exclusive membership to our "Just Like NFTs But Less Useless" collector club',
-        'Certificate of Self-Deception (backed by our proprietary blockchain of regret)',
-        'Advanced algorithms to justify your spending to concerned family members'
+        'Exclusive "Just Like NFTs But Less Useless" club membership',
+        'Certificate of Self-Deception (backed by blockchain of regret)',
+        'Algorithms to justify spending to concerned family members'
       ];
     case 'green':
       return [
-        'Access to our "Pretend Investment Portfolio" that looks impressive but does nothing',
-        'Digital trophy case for all your non-existent achievements in finance',
-        'Spreadsheet templates that make any purchase look like a sound financial decision'
+        'Access to "Pretend Investment Portfolio" looking impressive but doing nothing',
+        'Digital trophy case for non-existent achievements',
+        'Spreadsheets making any purchase look like a sound decision'
       ];
     case 'blue':
       return [
-        'Membership to our "I Bought JPEGs Before It Was Cool" elite social club',
-        'Sophisticated tools to convince yourself you\'re not just buying digital bragging rights',
-        'Algorithms that optimize the timing of your meaningless purchases for maximum FOMO generation'
+        'Membership to "I Bought JPEGs Before It Was Cool" club',
+        'Tools to convince yourself you're not just buying bragging rights',
+        'FOMO generation algorithms for maximum spending anxiety'
       ];
     default:
       return ['No perks, no problems'];
@@ -123,26 +123,26 @@ export const getTeamAbsurdStat = (team: UserTeam | string | undefined): string =
   
   switch (team) {
     case 'red':
-      return 'Members collectively spent enough to buy 47 actual medieval castles, but opted for digital status instead';
+      return 'Members collectively spent enough to buy 47 actual castles, but opted for digital status instead';
     case 'green':
-      return 'Has a dedicated Discord channel where members pretend their NFTs will "definitely go up in value one day"';
+      return 'Has a Discord channel where members pretend their NFTs will "definitely go up in value one day"';
     case 'blue':
-      return 'Makes PowerPoint presentations to their significant others explaining why spending money here is "smarter than crypto"';
+      return 'Makes PowerPoints explaining to partners why spending here is "smarter than crypto"';
     default:
       return 'No statistics available, much like their contributions';
   }
 };
 
 export const getTeamHistoricalNote = (team: UserTeam | string | undefined): string => {
-  if (!team) return 'History does not remember those who refused to part with their money';
+  if (!team) return 'History forgets those who refuse to part with their money';
   
   switch (team) {
     case 'red':
-      return 'Founded by a wealthy crypto enthusiast who famously said "I spent $300K on ape JPEGs, so this actually seems sensible by comparison"';
+      return 'Founded by a crypto enthusiast who said "I spent $300K on ape JPEGs, so this actually seems sensible"';
     case 'green':
-      return 'Created by a former hedge fund manager who realized separating people from their money is easier when you don\'t pretend it\'s an investment';
+      return 'Created by an ex-hedge fund manager who realized separating people from money is easier without pretending it's an investment';
     case 'blue':
-      return 'Established by a group of tech executives who wanted the social status of crypto without the hassle of understanding blockchain';
+      return 'Established by tech executives who wanted crypto's social status without blockchain's complexity';
     default:
       return 'No recorded history of significance';
   }
@@ -153,28 +153,28 @@ export const getTeamNFTJoke = (team: UserTeam | string | undefined): string => {
   
   switch (team) {
     case 'red':
-      return 'The only group to ever mint an NFT of their transaction receipts from this site (and yes, they paid for that too)';
+      return 'The only group to mint an NFT of their transaction receipts from this site (and pay for that too)';
     case 'green':
-      return 'Hosts weekly "Right-Click Save" art galleries featuring the most overpriced NFTs they didn\'t buy';
+      return 'Hosts weekly "Right-Click Save" galleries featuring overpriced NFTs they didn't buy';
     case 'blue':
-      return 'Has a secret vault of "blue-chip NFTs" that are now worth approximately 1/100th of what they paid';
+      return 'Has a vault of "blue-chip NFTs" now worth 1/100th of what they paid';
     default:
-      return 'No NFT jokes available - they\'re too expensive';
+      return 'No NFT jokes available - they're too expensive';
   }
 };
 
 export const getTeamSecurityGuarantee = (team: UserTeam | string | undefined): string => {
-  if (!team) return 'Protected by not providing any personal data beyond what\'s strictly necessary';
+  if (!team) return 'Protected by not providing any personal data beyond what\'s necessary';
   
   switch (team) {
     case 'red':
-      return 'Your data is protected by industry-standard encryption and security protocols. We just like to imagine it as a digital fortress with a moat of encryption algorithms and a drawbridge of secure authentication';
+      return 'Your data is protected by industry-standard encryption and robust security protocols. We just like to describe it as a digital fortress with encryption moats and authentication drawbridges.';
     case 'green':
-      return 'We implement comprehensive security measures to protect your information, though we doubt anyone would go through all that trouble just to discover how much you spent on digital status';
+      return 'We implement comprehensive security measures to safeguard your information. Though we joke about medieval protections, we use modern cybersecurity practices.';
     case 'blue':
-      return 'Your personal information is secured with the same level of protection we\'d want for our own data - multiple layers of security that are decidedly more effective than medieval castle defenses';
+      return 'Your personal information is secured with the same level of protection we'd want for our own data - multiple layers of modern security that are decidedly more effective than castle defenses.';
     default:
-      return 'While you haven\'t joined a team, your data is still protected by our comprehensive security protocols';
+      return 'Your data is protected by our comprehensive security protocols.';
   }
 };
 
@@ -183,12 +183,12 @@ export const getTeamCryptoRoast = (team: UserTeam | string | undefined): string 
   
   switch (team) {
     case 'red':
-      return 'The type to brag about "buying the dip" while their portfolio looks like a medieval plague death chart';
+      return 'Brags about "buying the dip" while their portfolio looks like a medieval plague death chart';
     case 'green':
-      return 'Still holding a coin that was endorsed by a celebrity who can\'t spell "blockchain" but does know how to cash a check';
+      return 'Still holding a coin endorsed by a celebrity who can't spell "blockchain"';
     case 'blue':
-      return 'Has uttered the phrase "this is good for Bitcoin" while watching their life savings evaporate';
+      return 'Has uttered "this is good for Bitcoin" while watching their savings evaporate';
     default:
-      return 'No crypto jokes available - they\'re stuck in a failed smart contract';
+      return 'No crypto jokes available - they're stuck in a failed smart contract';
   }
 };

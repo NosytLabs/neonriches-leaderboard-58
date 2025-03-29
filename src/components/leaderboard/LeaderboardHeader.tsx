@@ -11,7 +11,7 @@ const LeaderboardHeader = () => {
       </div>
       <h2 className="text-4xl font-royal royal-gradient mb-4">The Royal Court</h2>
       <p className="text-white/70 max-w-2xl mx-auto font-serif">
-        Behold the noble hierarchy of our realm—where status is measured in gold, and contributions to the crown determine one's place in court.
+        Where status is bought, not earned. Behold the finest collection of wallets our kingdom has to offer.
       </p>
     </div>
   );

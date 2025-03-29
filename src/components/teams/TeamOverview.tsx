@@ -80,7 +80,7 @@ const TeamOverview: React.FC<TeamOverviewProps> = ({ user }) => {
       <CardHeader className="pb-3">
         <CardTitle className="text-lg font-royal flex items-center">
           <Users className="mr-2 h-5 w-5 text-purple-400" />
-          Financial Faction Status
+          Your Financial Faction
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -104,7 +104,7 @@ const TeamOverview: React.FC<TeamOverviewProps> = ({ user }) => {
           <div className="glass-morphism border-white/10 p-4 rounded-lg">
             <div className="flex items-center mb-2">
               <Award className="h-5 w-5 text-purple-400 mr-2" />
-              <span className="text-sm font-medium">Dubious Faction "Perks"</span>
+              <span className="text-sm font-medium">Dubious "Perks"</span>
             </div>
             <ul className="text-xs text-white/70 space-y-2">
               {benefits.map((benefit, index) => (
@@ -116,7 +116,7 @@ const TeamOverview: React.FC<TeamOverviewProps> = ({ user }) => {
             </ul>
             <div className="mt-3 pt-3 border-t border-white/10">
               <p className="text-xs text-white/50 italic">
-                <span className="text-amber-400">*</span> None of these perks actually exist. They're as imaginary as the value of your spending or an NFT collection's "floor price."
+                <span className="text-amber-400">*</span> None of these perks actually exist. They're as imaginary as NFT utility.
               </p>
             </div>
           </div>
@@ -144,13 +144,10 @@ const TeamOverview: React.FC<TeamOverviewProps> = ({ user }) => {
           <div className="glass-morphism border-white/10 p-4 rounded-lg">
             <div className="flex items-center mb-2">
               <Lock className="h-5 w-5 text-purple-400 mr-2" />
-              <span className="text-sm font-medium">Royal Security Guarantee</span>
+              <span className="text-sm font-medium">Security Guarantee</span>
             </div>
             <p className="text-xs text-white/70 italic">
               {securityGuarantee}
-            </p>
-            <p className="text-xs text-white/50 mt-2">
-              <span className="text-amber-400">*</span> Let's be honest: we're about as secure as your decision to spend money here.
             </p>
           </div>
           
@@ -169,11 +166,11 @@ const TeamOverview: React.FC<TeamOverviewProps> = ({ user }) => {
             className="w-full glass-morphism border-purple-400/20 hover:bg-purple-400/10"
             onClick={() => setIsModalOpen(true)}
           >
-            Switch Financial Allegiance
+            Switch Faction
           </Button>
           
           <p className="text-xs text-white/50 text-center italic">
-            Breaking the 4th wall: Yes, we know this is ridiculous. No, we don't care. And neither do you, apparently.
+            Breaking the 4th wall: We know this is absurd. You know this is absurd. Yet here we are.
           </p>
           
           <TeamSwitchModal 

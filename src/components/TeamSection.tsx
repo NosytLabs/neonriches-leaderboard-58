@@ -3,7 +3,7 @@ import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import RoyalDivider from '@/components/ui/royal-divider';
-import { useAuth } from '@/contexts/auth';  // Updated import path
+import { useAuth } from '@/contexts/auth';
 import { useToastContext } from '@/contexts/ToastContext';
 import { Crown, Gem, Shield, ArrowRight, Users, Trophy } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -12,7 +12,7 @@ const LUXURY_TEAMS = [
   {
     id: 'red',
     name: 'House Crimson Dynasty',
-    description: 'Masters of opulent displays and lavish investments',
+    description: 'Masters of opulent displays and lavish spending',
     icon: <Crown className="h-5 w-5 text-red-500" />,
     color: 'text-red-500',
     bgColor: 'bg-red-900/30',
@@ -28,7 +28,7 @@ const LUXURY_TEAMS = [
   {
     id: 'green',
     name: 'Emerald Empire Collective',
-    description: 'Architects of wealth and strategic spending',
+    description: 'Architects of strategic spending',
     icon: <Gem className="h-5 w-5 text-emerald-500" />,
     color: 'text-emerald-500',
     bgColor: 'bg-emerald-900/30',
@@ -75,7 +75,7 @@ const TeamSection = () => {
     
     addToast({
       title: `Team Joined!`,
-      description: `You have joined the ${LUXURY_TEAMS.find(t => t.id === teamId)?.name}. Your spending will now contribute to their standings.`,
+      description: `You've joined ${LUXURY_TEAMS.find(t => t.id === teamId)?.name}. Your spending now contributes to their collective financial delusion.`,
     });
   };
   
@@ -84,7 +84,7 @@ const TeamSection = () => {
   
   return (
     <div className="mb-16">
-      <RoyalDivider variant="crown" label="LUXURY SPENDING FACTIONS" color="gold" className="mb-8" />
+      <RoyalDivider variant="crown" label="FINANCIAL FACTIONS" color="gold" className="mb-8" />
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         {LUXURY_TEAMS.map((team) => {
@@ -127,7 +127,7 @@ const TeamSection = () => {
                   
                   <div className="space-y-1">
                     <div className="flex justify-between text-xs">
-                      <span className="text-white/70">Faction Standing</span>
+                      <span className="text-white/70">Standing</span>
                       <span className={team.color}>{Math.round(spendingPercentage)}%</span>
                     </div>
                     <Progress 
@@ -141,7 +141,7 @@ const TeamSection = () => {
                 <div className="space-y-2 mb-6">
                   <h4 className={`text-sm font-medium ${team.color} flex items-center`}>
                     <Gem className="h-4 w-4 mr-1.5" />
-                    Exclusive Benefits
+                    "Benefits"
                   </h4>
                   <ul className="space-y-1">
                     {team.benefits.map((benefit, index) => (
@@ -169,7 +169,7 @@ const TeamSection = () => {
       </div>
       
       <div className="text-center text-white/60 text-sm italic">
-        "Join a luxury spending faction to demonstrate your allegiance to a specific aesthetic of meaningless digital wealth."
+        "Join a faction to demonstrate allegiance to a specific aesthetic of meaningless digital wealth."
       </div>
     </div>
   );
