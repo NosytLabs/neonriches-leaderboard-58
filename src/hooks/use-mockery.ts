@@ -69,6 +69,7 @@ const useMockery = () => {
   return {
     mockedUsers,
     stats,
+    mockUsers: mockedUsers, // Add missing mockUsers property
     mockUser: handleMockUser,
     protectUser: handleProtectUser,
     isUserProtected,

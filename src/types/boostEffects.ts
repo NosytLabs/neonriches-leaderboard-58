@@ -1,15 +1,25 @@
 
-export type BoostTier = 'basic' | 'premium' | 'royal';
-export type BoostType = 'appearance' | 'visibility' | 'effect' | 'animation';
-
 export interface BoostEffect {
   id: string;
   name: string;
   description: string;
-  cssClass: string;
-  type: BoostType;
-  tier: BoostTier;
   price: number;
+  tier: 'basic' | 'premium' | 'royal';
+  type: 'effect' | 'appearance' | 'visibility' | 'animation';
   durationDays: number;
-  previewImage?: string;
+  previewImage: string;
+}
+
+export type BoostEffectType = 'glow' | 'sparkle' | 'crown';
+
+export interface Feature {
+  id: string;
+  title: string;
+  description: string;
+  icon?: React.ReactNode;
+  category?: string;
+}
+
+export interface FeatureInfo extends Feature {
+  category: string;
 }

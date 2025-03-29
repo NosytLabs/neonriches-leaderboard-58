@@ -1,37 +1,51 @@
 
-export type MockeryAction = 'tomatoes' | 'eggs' | 'stocks' | 'silence' | 'courtJester';
+export type MockeryAction = 'tomatoes' | 'eggs' | 'stocks' | 'silence' | 'jester';
 
 export interface MockeryEvent {
   id: string;
-  sourceUser: string;
-  targetUser: string;
+  sourceId: string;
+  sourceUsername: string;
+  targetId: string;
+  targetUsername: string;
   action: MockeryAction;
-  timestamp: string;
-  amount: number;
+  timestamp: number;
+  expiresAt: number;
 }
 
 export interface MockedUser {
+  userId: string;
   username: string;
-  displayName: string;
-  avatarUrl?: string;
-  mockedTimestamp: string;
-  mockedReason: string;
-  mockedBy: string;
-  mockedTier?: string;
+  profileImage?: string;
+  mockery: MockeryEvent | null;
+  isProtected: boolean;
+  protectionExpiresAt: number | null;
 }
 
 export interface MockeryStats {
-  totalMockery: number;
-  targetedUsers: number;
-  mostUsedAction: MockeryAction;
-  highestMockerUsername: string;
-  mostMockedUsername: string;
+  totalMockeries: number;
+  activeShames: number;
+  popularShames: Record<MockeryAction, number>;
+  mostShamedUser: {
+    username: string;
+    count: number;
+  } | null;
+  mostShamingUser: {
+    username: string;
+    count: number;
+  } | null;
 }
 
-export interface MockeryProtection {
-  userId: string;
-  username: string;
-  startDate: string;
-  endDate: string;
-  isActive: boolean;
+export type ExtendedMockeryAction = MockeryAction;
+export type MockeryTier = 'basic' | 'premium' | 'elite';
+export type ShameAction = MockeryAction;
+export interface MockeryEffectData {
+  action: MockeryAction;
+  tier: MockeryTier;
+  title: string;
+  description: string;
+  price: number;
+  icon: string;
 }
+
+export type UserMockeryStatus = 'active' | 'expired' | 'protected';
+export type MockUser = MockedUser;
