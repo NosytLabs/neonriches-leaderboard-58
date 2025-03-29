@@ -31,12 +31,13 @@ const ResizablePanel = forwardRef<
 ));
 ResizablePanel.displayName = 'ResizablePanel';
 
-// Define our custom props by extending the base component props
-interface ResizableHandleProps extends ComponentProps<typeof ResizablePrimitive.PanelResizeHandle> {
+// Define our custom props
+interface ResizableHandleProps {
   withHandle?: boolean;
+  className?: string;
+  [key: string]: any;
 }
 
-// Use the proper forwardRef pattern with extended props
 const ResizableHandle = forwardRef<
   React.ElementRef<typeof ResizablePrimitive.PanelResizeHandle>,
   ResizableHandleProps
@@ -58,7 +59,6 @@ const ResizableHandle = forwardRef<
 ));
 ResizableHandle.displayName = 'ResizableHandle';
 
-// Apply the same approach to ResizableSeparator
 const ResizableSeparator = forwardRef<
   React.ElementRef<typeof ResizablePrimitive.PanelResizeHandle>,
   ResizableHandleProps
