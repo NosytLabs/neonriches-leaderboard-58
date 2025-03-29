@@ -1,5 +1,6 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { useToast } from '@/hooks/use-toast';
 
 // Define the context type with all necessary properties
 export interface SolanaContextValue {
@@ -25,6 +26,7 @@ const SolanaContext = createContext<SolanaContextValue>({
 });
 
 export const SolanaProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { toast } = useToast();
   const [connected, setConnected] = useState(false);
   const [connecting, setConnecting] = useState(false);
   const [walletBalance, setWalletBalance] = useState(0);
@@ -49,9 +51,19 @@ export const SolanaProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       setWalletBalance(Math.random() * 10 + 1); // Random balance between 1-11 SOL
       setConnected(true);
       
+      toast({
+        title: "Wallet Connected",
+        description: "Your Solana wallet has been connected successfully."
+      });
+      
       console.log('Solana wallet connected (mock)');
     } catch (error) {
       console.error('Error connecting to Solana wallet:', error);
+      toast({
+        title: "Connection Failed",
+        description: "Failed to connect to your Solana wallet.",
+        variant: "destructive"
+      });
     } finally {
       setConnecting(false);
     }
@@ -63,6 +75,11 @@ export const SolanaProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     setPublicKey(null);
     setWalletBalance(0);
     setWalletPubkey(undefined);
+    
+    toast({
+      title: "Wallet Disconnected",
+      description: "Your Solana wallet has been disconnected."
+    });
     
     console.log('Solana wallet disconnected');
   };
@@ -91,6 +108,11 @@ export const SolanaProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     
     // Deduct balance
     setWalletBalance(prev => prev - amount);
+    
+    toast({
+      title: "Transaction Completed",
+      description: `Successfully sent ${amount} SOL to ${recipient.substring(0, 6)}...`
+    });
     
     // Return mock transaction signature
     const txSignature = 'tx-' + Math.random().toString(36).substring(2, 15);

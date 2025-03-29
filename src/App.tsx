@@ -1,10 +1,10 @@
 
-import React, { useEffect, lazy, Suspense } from 'react';
+import React, { lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { ThemeProvider } from "@/components/ui/theme-provider";
 import { AuthProvider } from './hooks/useAuth';
 import { Toaster } from '@/components/ui/toaster';
-import { Skeleton } from "@/components/ui/skeleton";
+import LoadingScreen from '@/components/ui/LoadingScreen';
 import MainLayout from './layouts/MainLayout';
 
 // Lazy loaded components for better performance
@@ -20,7 +20,6 @@ const RoyalPrestige = lazy(() => import('./pages/RoyalPrestige'));
 const Leaderboard = lazy(() => import('./pages/Leaderboard'));
 const Mockery = lazy(() => import('./pages/Mockery'));
 const MockeryGuide = lazy(() => import('./pages/MockeryGuide'));
-const About = lazy(() => import('./pages/About'));
 const StatusThroughHistory = lazy(() => import('./pages/StatusThroughHistory'));
 const Updates = lazy(() => import('./pages/Updates'));
 const ContentPage = lazy(() => import('./pages/ContentPage'));
@@ -30,21 +29,7 @@ const Deposit = lazy(() => import('./pages/Deposit'));
 const Withdraw = lazy(() => import('./pages/Withdraw'));
 const ProfileEnhancements = lazy(() => import('./pages/ProfileEnhancements'));
 
-// Loading component for suspense fallback
-const LoadingScreen = () => (
-  <div className="flex flex-col items-center justify-center h-screen bg-background text-foreground">
-    <Skeleton className="w-[200px] h-[50px] rounded-md mb-4" />
-    <p className="text-muted-foreground">Loading...</p>
-  </div>
-);
-
 function App() {
-  // Force light/dark mode based on user preference
-  useEffect(() => {
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    document.documentElement.classList.toggle('dark', prefersDark);
-  }, []);
-
   return (
     <AuthProvider>
       <Router>
@@ -156,7 +141,7 @@ function App() {
               {/* Information Pages */}
               <Route path="/about" element={
                 <Suspense fallback={<LoadingScreen />}>
-                  <About />
+                  <ContentPage pageKey="about" />
                 </Suspense>
               } />
               <Route path="/status-history" element={
@@ -166,7 +151,7 @@ function App() {
               } />
               <Route path="/updates" element={
                 <Suspense fallback={<LoadingScreen />}>
-                  <Updates />
+                  <ContentPage pageKey="updates" />
                 </Suspense>
               } />
               

@@ -9,33 +9,31 @@ export interface SolanaContextValue {
   hasWallet: boolean;
   walletPubkey: string | null;
   walletBalance: number;
-  connected?: boolean;
+  connected: boolean;
   publicKey?: any;
-  connect?: () => Promise<void>;
-  disconnect?: () => Promise<void>;
-  signMessage?: (message: Uint8Array) => Promise<Uint8Array>;
-  sendTransaction?: (transaction: any) => Promise<string>;
+  connect: () => Promise<void>;
+  disconnect: () => void;
   connectWallet: () => Promise<boolean>;
   disconnectWallet: () => void;
   sendSol: (to: string, amount: number) => Promise<boolean>;
   linkWalletToAccount: () => Promise<boolean>;
 }
 
-// Default values for context
-const defaultContextValue: SolanaContextValue = {
+// Create the context
+const SolanaContext = createContext<SolanaContextValue>({
   isConnected: false,
   isConnecting: false,
   hasWallet: false,
   walletPubkey: null,
   walletBalance: 0,
+  connected: false,
+  connect: async () => {},
+  disconnect: () => {},
   connectWallet: async () => false,
   disconnectWallet: () => {},
   sendSol: async () => false,
   linkWalletToAccount: async () => false
-};
-
-// Create the context
-const SolanaContext = createContext<SolanaContextValue>(defaultContextValue);
+});
 
 // Provider component
 export const SolanaProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -94,7 +92,6 @@ export const SolanaProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       toast({
         title: "Wallet Connected",
         description: "Your Solana wallet has been connected successfully.",
-        variant: "default"
       });
       
       setIsConnecting(false);
@@ -121,7 +118,6 @@ export const SolanaProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     toast({
       title: "Wallet Disconnected",
       description: "Your Solana wallet has been disconnected.",
-      variant: "default"
     });
   };
 
@@ -156,7 +152,6 @@ export const SolanaProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       toast({
         title: "Transaction Complete",
         description: `Successfully sent ${amount} SOL.`,
-        variant: "default"
       });
       
       return true;
@@ -189,7 +184,6 @@ export const SolanaProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       toast({
         title: "Wallet Linked",
         description: "Your wallet has been linked to your account.",
-        variant: "default"
       });
       
       return true;
@@ -204,6 +198,15 @@ export const SolanaProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     }
   };
 
+  // Implement connect and disconnect for compatibility
+  const connect = async (): Promise<void> => {
+    await connectWallet();
+  };
+
+  const disconnect = (): void => {
+    disconnectWallet();
+  };
+
   // Context value
   const contextValue: SolanaContextValue = {
     isConnected,
@@ -216,6 +219,8 @@ export const SolanaProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     sendSol,
     linkWalletToAccount,
     connected: isConnected,
+    connect,
+    disconnect,
   };
 
   return (
@@ -228,5 +233,4 @@ export const SolanaProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 // Custom hook to use the context
 export const useSolana = () => useContext(SolanaContext);
 
-// Export the context as default
 export default SolanaContext;

@@ -2,16 +2,15 @@
 import React from 'react';
 import Shell from '@/components/Shell';
 import RoyalHero from '@/components/RoyalHero';
-import { Card, CardContent } from '@/components/ui/card';
-import { Sparkles, TrendingUp, CreditCard, Crown, DollarSign, Trophy, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import { DollarSign, Trophy, Crown } from 'lucide-react';
 import HeroShowcase from '@/components/home/HeroShowcase';
 import LeaderboardExplanation from '@/components/leaderboard/LeaderboardExplanation';
 import SpendingExplanation from '@/components/marketing/SpendingExplanation';
 import TopSpenderShowcase from '@/components/home/TopSpenderShowcase';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/hooks/useAuth';
 
 const Home: React.FC = () => {
   const { isAuthenticated } = useAuth();
@@ -56,7 +55,7 @@ const Home: React.FC = () => {
                   </Button>
                 </Link>
               ) : (
-                <Link to="/register">
+                <Link to="/signup">
                   <Button variant="royalGold" size="lg" className="w-full">
                     Start Your Ascent
                   </Button>
