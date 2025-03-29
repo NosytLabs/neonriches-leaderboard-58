@@ -1,3 +1,4 @@
+
 import React, { lazy, Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import MainLayout from './layouts/MainLayout';
@@ -11,7 +12,6 @@ const Teams = lazy(() => import('./pages/Teams'));
 const Deposit = lazy(() => import('./pages/Deposit'));
 const Withdraw = lazy(() => import('./pages/Withdraw'));
 const ProfileEnhancements = lazy(() => import('./pages/ProfileEnhancements'));
-const CodeAcademy = lazy(() => import('./pages/CodeAcademy'));
 // Mockery
 const RoyalMockeryFestivalPage = lazy(() => import('./pages/RoyalMockeryFestivalPage'));
 // Content Pages
@@ -62,11 +62,6 @@ const AppRoutes = () => {
         <Route path="/profile-enhancements" element={
           <Suspense fallback={<LoadingScreen />}>
             <ProfileEnhancements />
-          </Suspense>
-        } />
-        <Route path="/code" element={
-          <Suspense fallback={<LoadingScreen />}>
-            <CodeAcademy />
           </Suspense>
         } />
         <Route path="/mockery" element={

@@ -6,7 +6,6 @@ import WelcomeBanner from '@/components/home/WelcomeBanner';
 import RankingHighlights from '@/components/home/RankingHighlights';
 import RecentActivity from '@/components/home/RecentActivity';
 import TeamStandings from '@/components/home/TeamStandings';
-import HomePageCodePreview from '@/components/code/HomePageCodePreview';
 
 const Home = () => {
   return (
@@ -32,14 +31,6 @@ const Home = () => {
             className="lg:col-span-2"
           >
             <RankingHighlights />
-          </motion.div>
-          
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-          >
-            <HomePageCodePreview />
           </motion.div>
           
           <motion.div

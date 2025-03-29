@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { 
@@ -7,8 +8,7 @@ import {
   User, 
   DollarSign, 
   TrendingUp, 
-  Sparkles,
-  Code
+  Sparkles
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/contexts/auth';
@@ -53,11 +53,6 @@ const MainNav = ({ className, ...props }: React.HTMLAttributes<HTMLElement>) => 
       title: "Enhance",
       href: "/profile-enhancements",
       icon: <Sparkles className="h-5 w-5" />
-    },
-    {
-      title: "Code",
-      href: "/code",
-      icon: <Code className="h-5 w-5" />
     }
   ];
 
