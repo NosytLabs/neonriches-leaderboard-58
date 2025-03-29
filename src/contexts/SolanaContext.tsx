@@ -12,6 +12,9 @@ export interface SolanaContextValue {
   walletAddress: string | null;
   balance: number | null;
   signAndSendTransaction: (transaction: any) => Promise<string>;
+  walletPubkey?: PublicKey | null;
+  walletBalance?: number;
+  sendSol?: (recipient: string, amount: number) => Promise<string>;
 }
 
 const defaultContext: SolanaContextValue = {
@@ -23,7 +26,10 @@ const defaultContext: SolanaContextValue = {
   signTransaction: async () => ({}),
   disconnect: async () => {},
   connect: async () => {},
-  signAndSendTransaction: async () => ''
+  signAndSendTransaction: async () => '',
+  walletPubkey: null,
+  walletBalance: 0,
+  sendSol: async () => ''
 };
 
 export const SolanaContext = createContext<SolanaContextValue>(defaultContext);
@@ -41,7 +47,7 @@ export const SolanaProvider: React.FC<SolanaProviderProps> = ({ children }) => {
   const [balance, setBalance] = useState<number | null>(null);
 
   // Mock functions for development
-  const connect = async () => {
+  const connect = async (): Promise<void> => {
     try {
       // In a real implementation, this would use a wallet adapter
       const mockPublicKey = new PublicKey('8YLKoCu7NwqHNS8GzuvA2ibsvLRAxvMJEAMJAdCqePHS');
@@ -50,7 +56,6 @@ export const SolanaProvider: React.FC<SolanaProviderProps> = ({ children }) => {
       setConnected(true);
       setBalance(100); // Mock balance
       console.log('Connected to mock wallet');
-      return mockPublicKey;
     } catch (error) {
       console.error('Error connecting to wallet:', error);
       throw error;
@@ -104,6 +109,17 @@ export const SolanaProvider: React.FC<SolanaProviderProps> = ({ children }) => {
     }
   };
 
+  const sendSol = async (recipient: string, amount: number): Promise<string> => {
+    try {
+      // Mock SOL transfer
+      console.log(`Mock sending ${amount} SOL to ${recipient}`);
+      return 'mock-sol-transfer-signature';
+    } catch (error) {
+      console.error('Error sending SOL:', error);
+      throw error;
+    }
+  };
+
   const value: SolanaContextValue = {
     publicKey,
     connected,
@@ -113,7 +129,10 @@ export const SolanaProvider: React.FC<SolanaProviderProps> = ({ children }) => {
     connect,
     walletAddress,
     balance,
-    signAndSendTransaction
+    signAndSendTransaction,
+    walletPubkey: publicKey,
+    walletBalance: balance,
+    sendSol
   };
 
   return (

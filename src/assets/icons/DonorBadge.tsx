@@ -54,14 +54,16 @@ const DonorBadge: React.FC<DonorBadgeProps> = ({
     tap: {
       scale: 0.95,
       transition: { duration: 0.1 }
-    },
-    animate: {
-      scale: [1, 1.03, 1],
-      transition: { 
-        duration: 2,
-        repeat: Infinity,
-        repeatType: "reverse"
-      }
+    }
+  };
+  
+  // Separate animate variant to avoid TypeScript errors
+  const animateVariant = {
+    scale: [1, 1.03, 1],
+    transition: { 
+      duration: 2,
+      repeat: Infinity,
+      repeatType: "reverse" as const
     }
   };
 
@@ -90,7 +92,7 @@ const DonorBadge: React.FC<DonorBadgeProps> = ({
       initial="initial"
       whileHover={interactive ? "hover" : undefined}
       whileTap={interactive ? "tap" : undefined}
-      animate={animated ? "animate" : undefined}
+      animate={animated ? animateVariant : undefined}
       variants={badgeVariants}
     >
       <svg viewBox="0 0 100 100" className="w-full h-full">

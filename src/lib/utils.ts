@@ -2,65 +2,75 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
+/**
+ * Combines class names with Tailwind, handling conflicts
+ */
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
 /**
- * Formats a number as currency
- * @param value Number to format
- * @param currency Currency symbol
- * @returns Formatted currency string
+ * Delays execution for the specified milliseconds
  */
-export function formatCurrency(value: number, currency: string = '$'): string {
-  return `${currency}${value.toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
+export function delay(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 /**
- * Formats a number with commas
- * @param value Number to format
- * @returns Formatted number string
+ * Generates a random UUID
  */
-export function formatNumber(value: number): string {
-  return value.toLocaleString('en-US');
+export function generateUUID(): string {
+  return Math.random().toString(36).substring(2, 15) + 
+    Math.random().toString(36).substring(2, 15);
 }
 
 /**
- * Formats a date string in a readable format
- * @param dateString Date string
- * @returns Formatted date string
+ * Truncates text to a specific length with optional ellipsis
  */
-export function formatDate(dateString: string): string {
-  const date = new Date(dateString);
-  return date.toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  });
-}
-
-/**
- * Formats a file size in bytes to a human-readable format
- * @param bytes Size in bytes
- * @returns Formatted size string
- */
-export function formatFileSize(bytes: number): string {
-  if (bytes === 0) return '0 Bytes';
-  
-  const k = 1024;
-  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
-  
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-}
-
-/**
- * Truncates text to a specified length
- * @param text Text to truncate
- * @param maxLength Maximum length
- * @returns Truncated text
- */
-export function truncateText(text: string, maxLength: number): string {
+export function truncateText(text: string, maxLength: number, addEllipsis = true): string {
   if (text.length <= maxLength) return text;
-  return text.substring(0, maxLength) + '...';
+  return addEllipsis 
+    ? `${text.slice(0, maxLength)}...` 
+    : text.slice(0, maxLength);
+}
+
+/**
+ * Capitalizes the first letter of a string
+ */
+export function capitalizeFirstLetter(string: string): string {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+/**
+ * Deep clones an object
+ */
+export function deepClone<T>(obj: T): T {
+  return JSON.parse(JSON.stringify(obj));
+}
+
+/**
+ * Checks if a value is defined (not null or undefined)
+ */
+export function isDefined<T>(value: T | null | undefined): value is T {
+  return value !== null && value !== undefined;
+}
+
+/**
+ * Debounces a function call
+ */
+export function debounce<T extends (...args: any[]) => any>(
+  func: T,
+  wait: number
+): (...args: Parameters<T>) => void {
+  let timeout: ReturnType<typeof setTimeout> | null = null;
+  
+  return function(...args: Parameters<T>): void {
+    if (timeout) {
+      clearTimeout(timeout);
+    }
+    
+    timeout = setTimeout(() => {
+      func(...args);
+    }, wait);
+  };
 }

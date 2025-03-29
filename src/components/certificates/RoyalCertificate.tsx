@@ -1,3 +1,4 @@
+
 import React, { useRef, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -26,7 +27,7 @@ const RoyalCertificate: React.FC<RoyalCertificateProps> = ({
   hasNFT = false
 }) => {
   const { toast } = useToast();
-  const { connected, walletPubkey } = useSolana();
+  const { connected, publicKey } = useSolana();
   const [isGenerating, setIsGenerating] = useState(false);
   const [isMinting, setIsMinting] = useState(false);
   const [mintSuccess, setMintSuccess] = useState(false);
@@ -188,7 +189,7 @@ const RoyalCertificate: React.FC<RoyalCertificateProps> = ({
                   <Calendar className="h-4 w-4 text-royal-gold mr-1" />
                   <span className="text-sm text-white/70">Joined</span>
                 </div>
-                <div className="text-sm font-medium">{formatDate(user.joinDate)}</div>
+                <div className="text-sm font-medium">{formatDate(user.joinedAt)}</div>
               </div>
             </div>
             

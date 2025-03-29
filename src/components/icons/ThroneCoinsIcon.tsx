@@ -57,18 +57,36 @@ export const ThroneCoinsIcon: React.FC<ThroneCoinsIconProps> = ({
     }
   };
 
-  const coinVariants = {
-    initial: { scale: 1, y: 0 },
-    animate: (i: number) => ({
-      y: [0, -5, 0],
-      transition: {
-        duration: 1.8,
-        delay: i * 0.2,
-        repeat: Infinity,
-        repeatType: "mirror"
-      }
-    })
-  };
+  // Define type-safe animations using direct animation objects instead of variants
+  const bottomCoinAnimation = animated ? {
+    y: [0, -5, 0],
+    transition: {
+      duration: 1.8,
+      delay: 0,
+      repeat: Infinity,
+      repeatType: "mirror" as const
+    }
+  } : undefined;
+
+  const middleCoinAnimation = animated ? {
+    y: [0, -5, 0],
+    transition: {
+      duration: 1.8,
+      delay: 0.2,
+      repeat: Infinity,
+      repeatType: "mirror" as const
+    }
+  } : undefined;
+
+  const topCoinAnimation = animated ? {
+    y: [0, -5, 0],
+    transition: {
+      duration: 1.8,
+      delay: 0.4,
+      repeat: Infinity,
+      repeatType: "mirror" as const
+    }
+  } : undefined;
 
   const shineVariants = {
     initial: { opacity: 0, scale: 0.8 },
@@ -130,9 +148,7 @@ export const ThroneCoinsIcon: React.FC<ThroneCoinsIconProps> = ({
           stroke={selectedColors.stroke} 
           strokeWidth="1"
           filter="url(#coinShadow)"
-          variants={coinVariants}
-          animate={animated ? "animate" : undefined}
-          custom={0}
+          animate={bottomCoinAnimation}
         />
         <text 
           x="40" 
@@ -154,9 +170,7 @@ export const ThroneCoinsIcon: React.FC<ThroneCoinsIconProps> = ({
           stroke={selectedColors.stroke} 
           strokeWidth="1"
           filter="url(#coinShadow)"
-          variants={coinVariants}
-          animate={animated ? "animate" : undefined}
-          custom={1}
+          animate={middleCoinAnimation}
         />
         <text 
           x="60" 
@@ -179,9 +193,7 @@ export const ThroneCoinsIcon: React.FC<ThroneCoinsIconProps> = ({
           stroke={selectedColors.stroke} 
           strokeWidth="1.5"
           filter="url(#coinShadow)"
-          variants={coinVariants}
-          animate={animated ? "animate" : undefined}
-          custom={2}
+          animate={topCoinAnimation}
         />
         <text 
           x="50" 

@@ -50,14 +50,16 @@ const VipBadge: React.FC<VipBadgeProps> = ({
     tap: {
       scale: 0.95,
       transition: { duration: 0.1 }
-    },
-    animate: {
-      scale: [1, 1.03, 1],
-      transition: { 
-        duration: 2,
-        repeat: Infinity,
-        repeatType: "reverse"
-      }
+    }
+  };
+
+  // Separate animate variant to avoid TypeScript errors
+  const animateVariant = {
+    scale: [1, 1.03, 1],
+    transition: { 
+      duration: 2,
+      repeat: Infinity,
+      repeatType: "reverse" as const
     }
   };
 
@@ -98,7 +100,7 @@ const VipBadge: React.FC<VipBadgeProps> = ({
       initial="initial"
       whileHover={interactive ? "hover" : undefined}
       whileTap={interactive ? "tap" : undefined}
-      animate={animated && !interactive ? "animate" : undefined}
+      animate={animated && !interactive ? animateVariant : undefined}
       variants={badgeVariants}
     >
       <svg viewBox="0 0 100 100" className="w-full h-full">

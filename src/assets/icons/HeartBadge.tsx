@@ -53,14 +53,16 @@ const HeartBadge: React.FC<HeartBadgeProps> = ({
     tap: {
       scale: 0.95,
       transition: { duration: 0.1 }
-    },
-    animate: {
-      scale: [1, 1.1, 1],
-      transition: { 
-        duration: 1.5,
-        repeat: Infinity,
-        repeatType: "mirror"
-      }
+    }
+  };
+  
+  // Separate animate variant to avoid TypeScript errors
+  const animateVariant = {
+    scale: [1, 1.1, 1],
+    transition: { 
+      duration: 1.5,
+      repeat: Infinity,
+      repeatType: "mirror" as const
     }
   };
 
@@ -101,7 +103,7 @@ const HeartBadge: React.FC<HeartBadgeProps> = ({
       initial="initial"
       whileHover={interactive ? "hover" : undefined}
       whileTap={interactive ? "tap" : undefined}
-      animate={animated ? "animate" : undefined}
+      animate={animated ? animateVariant : undefined}
       variants={badgeVariants}
     >
       <svg viewBox="0 0 100 100" className="w-full h-full">
@@ -160,24 +162,28 @@ const HeartBadge: React.FC<HeartBadgeProps> = ({
               fill="white" 
               variants={sparkleVariants}
               custom={0}
+              animate="animate"
             />
             <motion.path 
               d="M70,30 L73,33 L70,36 L67,33 Z" 
               fill="white" 
               variants={sparkleVariants}
               custom={1}
+              animate="animate"
             />
             <motion.path 
               d="M50,15 L53,18 L50,21 L47,18 Z" 
               fill="white" 
               variants={sparkleVariants}
               custom={2}
+              animate="animate"
             />
             <motion.path 
               d="M50,65 L53,68 L50,71 L47,68 Z" 
               fill="white" 
               variants={sparkleVariants}
               custom={3}
+              animate="animate"
             />
           </>
         )}
