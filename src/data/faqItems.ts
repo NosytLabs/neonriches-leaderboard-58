@@ -1,144 +1,160 @@
 
 import React from 'react';
-import { Image, Link, Crown, MessageSquare, Lock, Shield, DollarSign } from 'lucide-react';
 import { FAQItem } from '@/components/royal/RoyalFAQ';
+import { DollarSign, Crown, Shield, Image, Link, MessageSquare, Coins, Lock, PiggyBank, User, Hearts } from 'lucide-react';
 
+// Profile FAQ Items
 export const profileFAQItems: FAQItem[] = [
   {
-    question: "How do I enhance my profile cosmetics?",
+    question: "How do I increase my royal rank?",
     answer: (
-      <div className="space-y-2">
-        <p>Purchase a higher tier to unlock additional profile decorations. The Pro tier ($25+) grants access to animated borders, custom colors, and multiple images. The Royal tier ($100+) unlocks the most ostentatious visual effects.</p>
-        <p className="text-royal-gold/80 italic mt-1">Remember: The more thou spendest, the gaudier thy profile becomes!</p>
-      </div>
+      <p>
+        Simple, dear noble: spend thy gold! Every dollar spent increases your rank by one unit. The more you pay, the higher you climb in our leaderboard of nobility.
+      </p>
     ),
-    icon: <Image size={16} className="text-royal-gold" />
+    icon: <Crown className="h-4 w-4 text-royal-gold" />
   },
   {
-    question: "Can I use my profile as a marketing billboard?",
+    question: "What benefits do I get from a higher rank?",
     answer: (
-      <div className="space-y-2">
-        <p>Indeed! Pro tier nobility ($25+) can add up to 5 external links to their profiles, essentially turning them into personal billboards. We even provide analytics on how many peasants click thy links!</p>
-        <p className="text-royal-gold/80 italic mt-1">Nothing says "I've made poor financial decisions" like paying to advertise on a satirical platform.</p>
-      </div>
+      <p>
+        Higher ranks grant thee bragging rights and access to premium profile features such as animated borders, more images, longer biographies, and the ability to showcase thy wealth in increasingly ostentatious ways.
+      </p>
     ),
-    icon: <Link size={16} className="text-royal-gold" />
+    icon: <DollarSign className="h-4 w-4 text-royal-gold" />
   },
   {
-    question: "What is the Founder's Pass and how do I get it?",
+    question: "How do the different tiers work?",
     answer: (
-      <div className="space-y-2">
-        <p>The Founder's Pass is an exclusive status reserved for the first 100 nobles who spend at least $50 in our realm. It grants special cosmetics, reduced mockery fees, and an on-chain certificate documenting thy questionable financial decision.</p>
-        <p className="text-royal-gold/80 italic mt-1">Hurry! Once 100 people waste their money, this opportunity to waste thine will be gone forever!</p>
-      </div>
+      <p>
+        Our hierarchy of nobility is based purely on monetary sacrifice! Bronze tier begins at $5, Silver at $25, Gold at $100, Platinum at $250, and the coveted Royal tier at $1000. Each tier unlocks more ways to flaunt thy status.
+      </p>
     ),
-    icon: <Crown size={16} className="text-royal-gold" />
+    icon: <Crown className="h-4 w-4 text-royal-gold" />
   },
   {
-    question: "Can other users comment on my profile?",
+    question: "What are Royal Teams?",
     answer: (
-      <div className="space-y-2">
-        <p>Pro tier ($25+) and Royal tier ($100+) nobles can enable comments on their profiles. This allows other users to leave messages praising thy wasteful spending habits and questionable life choices.</p>
-        <p className="text-royal-gold/80 italic mt-1">Fear not, we moderate comments to ensure they remain appropriately sycophantic.</p>
-      </div>
+      <p>
+        Join one of our three noble houses: House Red (of fiery aggression), House Green (of abundant prosperity), or House Blue (of mystical wisdom). Team rankings are determined by the collective spending of all members. Choose wisely!
+      </p>
     ),
-    icon: <MessageSquare size={16} className="text-royal-gold" />
+    icon: <Shield className="h-4 w-4 text-royal-gold" />
   },
   {
-    question: "Is my profile information secure?",
+    question: "How do I customize my profile?",
     answer: (
-      <div className="space-y-2">
-        <p>We guard thy profile data with the same vigilance as medieval castle guards protect their treasuries - which is to say, our defenses are impressive by ancient standards but woefully inadequate by modern ones.</p>
-        <p className="text-royal-gold/80 italic mt-1">Just as castle moats and drawbridges eventually gave way to cannons, our security measures are but a theatrical display against determined dragons of the digital realm.</p>
-      </div>
+      <p>
+        Visit thy profile settings, where thou may edit thy biography, upload images (quantity dependent on thy tier), add links to other digital domains, and select from various cosmetic enhancements that befit thy station.
+      </p>
     ),
-    icon: <Lock size={16} className="text-royal-gold" />
-  }
+    icon: <User className="h-4 w-4 text-royal-gold" />
+  },
+  {
+    question: "What is a Founders Pass?",
+    answer: (
+      <p>
+        The Founders Pass is a most exclusive badge of honor, bestowed upon early supporters who contributed $50 or more during our initial coronation period. It grants permanent access to Royal Tier features regardless of future expenditures.
+      </p>
+    ),
+    icon: <Crown className="h-4 w-4 text-royal-gold" />
+  },
+  {
+    question: "How can I use my profile for marketing?",
+    answer: (
+      <p>
+        Noble profiles of Gold tier and above may use their profile as a royal proclamation board! Add business links, display advertisements, and even showcase thy own products. The higher thy rank, the more visibility thy proclamations shall receive.
+      </p>
+    ),
+    icon: <MessageSquare className="h-4 w-4 text-royal-gold" />
+  },
+  {
+    question: "Are my profile analytics available?",
+    answer: (
+      <p>
+        Indeed! Silver tier nobles and above can view how many peasants have gazed upon their profile. Gold tier and above receive detailed analytics on link clicks and interaction patterns. Track thy influence across the digital realm!
+      </p>
+    ),
+    icon: <PiggyBank className="h-4 w-4 text-royal-gold" />
+  },
 ];
 
+// Team FAQ Items
 export const teamFAQItems: FAQItem[] = [
   {
-    question: "How do I join a team?",
+    question: "How do team rankings work?",
     answer: (
-      <div className="space-y-2">
-        <p>Visit the Teams page to pledge thy allegiance to House Red, Green, or Blue. Thou may only join one house at a time, but can switch allegiance for a modest fee of $5 (which, naturally, adds to thy personal spending total).</p>
-      </div>
+      <p>
+        Team rankings are determined by the combined wealth sacrificed by all members. Every dollar spent by a team member contributes to the collective glory of thy house. The team with the highest total expenditure rules the kingdom!
+      </p>
     ),
-    icon: <Shield size={16} className="text-royal-gold" />
+    icon: <Shield className="h-4 w-4 text-royal-gold" />
   },
   {
-    question: "What benefits do I get from team membership?",
+    question: "Can I change my team?",
     answer: (
-      <div className="space-y-2">
-        <p>Team membership grants access to exclusive team chat, team-specific cosmetics for thy profile, and the satisfaction of contributing to a collective leaderboard position. Teams compete weekly for meaningless bragging rights.</p>
-      </div>
+      <p>
+        Yes, but loyalty is prized among nobility! Changing allegiance requires a modest fee of $5, which naturally contributes to thy personal rank. Choose thy house wisely to avoid unnecessary expenditure. Team changes are permitted once per fortnight.
+      </p>
     ),
-    icon: <Crown size={16} className="text-royal-gold" />
-  }
-];
-
-export const mockeryFAQItems: FAQItem[] = [
-  {
-    question: "What is the Mockery system?",
-    answer: (
-      <div className="space-y-2">
-        <p>The Mockery system allows nobles to spend additional real money to temporarily shame, ridicule, or taunt other users. These visual effects appear on the target's profile for a limited time, creating a truly authentic medieval social experience.</p>
-      </div>
-    ),
-    icon: <Crown size={16} className="text-royal-gold" />
+    icon: <Coins className="h-4 w-4 text-royal-gold" />
   },
   {
-    question: "Can I protect myself from mockery?",
+    question: "What benefits do winning teams receive?",
     answer: (
-      <div className="space-y-2">
-        <p>Yes! For a small fee, thou can purchase Protection or Immunity shields that prevent others from mocking thee. Naturally, these protections are temporary, ensuring our treasury continues to grow.</p>
-      </div>
+      <p>
+        The dominant house enjoys exclusive cosmetic enhancements, team-specific profile features, and most importantly, the right to mock inferior houses with special shame animations. Victory brings both material and psychological rewards!
+      </p>
     ),
-    icon: <Shield size={16} className="text-royal-gold" />
-  }
+    icon: <Crown className="h-4 w-4 text-royal-gold" />
+  },
+  {
+    question: "How often are team contests held?",
+    answer: (
+      <p>
+        Team competitions occur weekly, with special seasonal tournaments quarterly. Each contest has different objectives, though they all inevitably require spending more gold than thy rivals. The nobility's favorite pastime!
+      </p>
+    ),
+    icon: <Hearts className="h-4 w-4 text-royal-gold" />
+  },
 ];
 
+// Payment FAQ Items
 export const paymentFAQItems: FAQItem[] = [
   {
     question: "What payment methods are accepted?",
     answer: (
-      <div className="space-y-2">
-        <p>We accept credit cards, PayPal, and cryptocurrency payments via Solana. All payments contribute to thy rank on the leaderboard, regardless of method. Each $1 spent equals 1 unit of rank.</p>
-      </div>
+      <p>
+        We accept traditional peasant currency (credit/debit cards) as well as the more sophisticated digital currencies of the realm (cryptocurrency). All transactions are secured with the finest digital moats and drawbridges available.
+      </p>
     ),
-    icon: <DollarSign size={16} className="text-royal-gold" />
+    icon: <DollarSign className="h-4 w-4 text-royal-gold" />
   },
   {
-    question: "Can I get a refund?",
+    question: "Are my payments secure?",
     answer: (
-      <div className="space-y-2">
-        <p>Refunds? HAHAHA! Thou jest most admirably! The entire premise of our kingdom is meaningless spending for digital status. Requesting a refund would contradict the very nature of thy noble sacrifice.</p>
-        <p className="text-royal-gold/80 italic mt-1">In the words of our royal treasurer: "No backsies, peasant."</p>
-      </div>
+      <p>
+        As secure as any noble's treasure vault! We employ state-of-the-art encryption, though as with any castle, no defense is impenetrable. Rest assured, we guard thy financial information with the same zeal as a dragon protects its hoard.
+      </p>
     ),
-    icon: <Crown size={16} className="text-royal-gold" />
-  }
-];
-
-export const generalFAQItems: FAQItem[] = [
-  {
-    question: "What is SpendThrone exactly?",
-    answer: (
-      <div className="space-y-2">
-        <p>SpendThrone is a satirical social experiment exploring the human desire for status and recognition. Users spend real money to climb a meaningless leaderboard, receiving absolutely no practical benefits beyond digital cosmetics and bragging rights.</p>
-        <p className="text-royal-gold/80 italic mt-1">It's a mirror reflecting society's obsession with materialism and status, albeit with better medieval theming.</p>
-      </div>
-    ),
-    icon: <Crown size={16} className="text-royal-gold" />
+    icon: <Lock className="h-4 w-4 text-royal-gold" />
   },
   {
-    question: "Is this a joke or a real business?",
+    question: "Can I withdraw my funds?",
     answer: (
-      <div className="space-y-2">
-        <p>The delightful answer is: both! We're genuinely satirizing status-seeking behavior while simultaneously profiting from it. The true joke is that despite openly acknowledging the pointlessness of spending money here, people do it anyway.</p>
-        <p className="text-royal-gold/80 italic mt-1">The royal treasury grows fat with irony and actual currency.</p>
-      </div>
+      <p>
+        Noble funds, once contributed to the royal treasury, cannot be withdrawn. Such is the nature of nobility - generosity without expectation of return! However, Solana blockchain integration allows withdrawal of certain promotional rewards.
+      </p>
     ),
-    icon: <DollarSign size={16} className="text-royal-gold" />
-  }
+    icon: <Coins className="h-4 w-4 text-royal-gold" />
+  },
+  {
+    question: "What is the minimum deposit?",
+    answer: (
+      <p>
+        The minimum contribution to begin thy ascent to nobility is a mere $1. However, true prestige begins at $5 with our Bronze tier. Greater sacrifice brings greater recognition, as is the natural order of hierarchy.
+      </p>
+    ),
+    icon: <DollarSign className="h-4 w-4 text-royal-gold" />
+  },
 ];
