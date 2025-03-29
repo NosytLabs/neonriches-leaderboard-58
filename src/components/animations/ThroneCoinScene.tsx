@@ -9,18 +9,13 @@ interface ThroneCoinSceneProps {
 
 const ThroneCoinScene: React.FC<ThroneCoinSceneProps> = ({ className }) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const sceneRef = useRef<THREE.Scene | null>(null);
   const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
-  const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
-  const controlsRef = useRef<OrbitControls | null>(null);
-  const frameIdRef = useRef<number | null>(null);
 
   useEffect(() => {
     if (!containerRef.current) return;
     
     // Initialize scene
     const scene = new THREE.Scene();
-    sceneRef.current = scene;
     
     // Setup camera
     const camera = new THREE.PerspectiveCamera(
@@ -31,7 +26,6 @@ const ThroneCoinScene: React.FC<ThroneCoinSceneProps> = ({ className }) => {
     );
     camera.position.z = 10;
     camera.position.y = 3;
-    cameraRef.current = camera;
     
     // Setup renderer
     const renderer = new THREE.WebGLRenderer({ 
@@ -62,7 +56,6 @@ const ThroneCoinScene: React.FC<ThroneCoinSceneProps> = ({ className }) => {
     spotlight.penumbra = 0.5;
     spotlight.decay = 2;
     spotlight.distance = 50;
-    spotlight.castShadow = true;
     scene.add(spotlight);
     
     // Create the throne
@@ -152,38 +145,12 @@ const ThroneCoinScene: React.FC<ThroneCoinSceneProps> = ({ className }) => {
         const orb = new THREE.Mesh(geometry, material);
         orb.position.set(x, y, z);
         throneGroup.add(orb);
-        return orb;
       };
       
       // Add decorative orbs
-      const orb1 = addOrb(-1.5, 5.6, 0, 0xd4af37);
-      const orb2 = addOrb(1.5, 5.6, 0, 0xd4af37);
-      const orb3 = addOrb(0, 5.6, 0, 0x9b2335);
-      
-      // Add skull at the base
-      const skullGroup = new THREE.Group();
-      
-      // Skull base
-      const skullGeometry = new THREE.SphereGeometry(0.6, 16, 16);
-      const skullMaterial = new THREE.MeshPhongMaterial({ color: 0xe8d8c0 });
-      const skull = new THREE.Mesh(skullGeometry, skullMaterial);
-      skull.position.y = -0.5;
-      skull.position.z = 1.5;
-      skullGroup.add(skull);
-      
-      // Eye sockets
-      const eyeSocketGeometry = new THREE.SphereGeometry(0.15, 16, 16);
-      const eyeSocketMaterial = new THREE.MeshPhongMaterial({ color: 0x000000 });
-      
-      const leftEye = new THREE.Mesh(eyeSocketGeometry, eyeSocketMaterial);
-      leftEye.position.set(-0.2, -0.4, 2);
-      skullGroup.add(leftEye);
-      
-      const rightEye = new THREE.Mesh(eyeSocketGeometry, eyeSocketMaterial);
-      rightEye.position.set(0.2, -0.4, 2);
-      skullGroup.add(rightEye);
-      
-      throneGroup.add(skullGroup);
+      addOrb(-1.5, 5.6, 0, 0xd4af37);
+      addOrb(1.5, 5.6, 0, 0xd4af37);
+      addOrb(0, 5.6, 0, 0x9b2335);
       
       return throneGroup;
     };
@@ -193,6 +160,7 @@ const ThroneCoinScene: React.FC<ThroneCoinSceneProps> = ({ className }) => {
     scene.add(throne);
     
     // Create floating coins
+    const coins: THREE.Group[] = [];
     const createCoin = () => {
       const coinGroup = new THREE.Group();
       
@@ -221,7 +189,6 @@ const ThroneCoinScene: React.FC<ThroneCoinSceneProps> = ({ className }) => {
     };
     
     // Add coins around the throne
-    const coins: THREE.Group[] = [];
     const coinPositions = [
       { x: -3, y: 1, z: 0 },
       { x: 3, y: 1, z: 0 },
@@ -253,50 +220,49 @@ const ThroneCoinScene: React.FC<ThroneCoinSceneProps> = ({ className }) => {
     controls.rotateSpeed = 0.5;
     controls.minPolarAngle = Math.PI / 4;
     controls.maxPolarAngle = Math.PI / 2.5;
-    controlsRef.current = controls;
     
     // Animation function
+    let frameId: number | null = null;
+    
     const animate = () => {
-      if (!rendererRef.current || !sceneRef.current || !cameraRef.current || !controlsRef.current) return;
+      frameId = requestAnimationFrame(animate);
       
-      frameIdRef.current = requestAnimationFrame(animate);
-      
-      // Animate throne
       if (throne) {
         throne.rotation.y += 0.002;
       }
       
       // Animate coins
       coins.forEach(coin => {
-        coin.rotation.y += coin.userData.rotationSpeed;
-        
-        // Floating animation
-        const newY = coin.userData.originalY + 
-          Math.sin(Date.now() * coin.userData.floatSpeed) * 
-          coin.userData.floatAmount * 
-          coin.userData.floatDirection;
-        
-        coin.position.y = newY;
+        if (coin.userData) {
+          coin.rotation.y += coin.userData.rotationSpeed;
+          
+          // Floating animation
+          const newY = coin.userData.originalY + 
+            Math.sin(Date.now() * coin.userData.floatSpeed) * 
+            coin.userData.floatAmount * 
+            coin.userData.floatDirection;
+          
+          coin.position.y = newY;
+        }
       });
       
-      controlsRef.current.update();
-      rendererRef.current.render(sceneRef.current, cameraRef.current);
+      controls.update();
+      renderer.render(scene, camera);
     };
     
-    // Start animation
     animate();
     
     // Handle window resize
     const handleResize = () => {
-      if (!containerRef.current || !rendererRef.current || !cameraRef.current) return;
+      if (!containerRef.current || !renderer) return;
       
       const width = containerRef.current.clientWidth;
       const height = containerRef.current.clientHeight;
       
-      cameraRef.current.aspect = width / height;
-      cameraRef.current.updateProjectionMatrix();
+      camera.aspect = width / height;
+      camera.updateProjectionMatrix();
       
-      rendererRef.current.setSize(width, height);
+      renderer.setSize(width, height);
     };
     
     window.addEventListener('resize', handleResize);
@@ -305,18 +271,17 @@ const ThroneCoinScene: React.FC<ThroneCoinSceneProps> = ({ className }) => {
     return () => {
       window.removeEventListener('resize', handleResize);
       
-      if (frameIdRef.current) {
-        cancelAnimationFrame(frameIdRef.current);
+      if (frameId !== null) {
+        cancelAnimationFrame(frameId);
       }
       
-      if (rendererRef.current && containerRef.current && containerRef.current.contains(rendererRef.current.domElement)) {
-        containerRef.current.removeChild(rendererRef.current.domElement);
+      if (renderer && containerRef.current && containerRef.current.contains(renderer.domElement)) {
+        containerRef.current.removeChild(renderer.domElement);
       }
       
-      // Dispose of ThreeJS resources
-      if (rendererRef.current) {
-        rendererRef.current.dispose();
-      }
+      // Clean up scene resources
+      scene.clear();
+      renderer.dispose();
     };
   }, []);
   
