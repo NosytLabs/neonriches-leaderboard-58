@@ -31,9 +31,10 @@ const ResizablePanel = forwardRef<
 ));
 ResizablePanel.displayName = 'ResizablePanel';
 
-// Define a proper interface for our custom props
-interface ResizableHandleProps extends ComponentProps<typeof ResizablePrimitive.PanelResizeHandle> {
+// Define proper interfaces for our components
+interface ResizableHandleProps extends Omit<ComponentProps<typeof ResizablePrimitive.PanelResizeHandle>, 'children'> {
   withHandle?: boolean;
+  children?: React.ReactNode;
 }
 
 const ResizableHandle = forwardRef<

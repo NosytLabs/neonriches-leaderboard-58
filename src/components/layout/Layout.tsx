@@ -1,15 +1,25 @@
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Outlet } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { useResponsive } from '@/hooks/use-responsive';
 
-const Layout: React.FC = () => {
+interface LayoutProps {
+  children?: React.ReactNode;
+  transparentHeader?: boolean;
+  showFooter?: boolean;
+}
+
+const Layout: React.FC<LayoutProps> = ({
+  children,
+  transparentHeader = false,
+  showFooter = true
+}) => {
   const { isMobile } = useResponsive();
 
   // Add viewport meta tag for better mobile experience
-  useEffect(() => {
+  React.useEffect(() => {
     // Check if the viewport meta tag exists
     let viewportMeta = document.querySelector('meta[name="viewport"]');
     
@@ -45,11 +55,11 @@ const Layout: React.FC = () => {
 
   return (
     <div className={`flex flex-col min-h-screen ${isMobile ? 'safe-bottom prevent-overscroll' : ''}`}>
-      <Header />
+      <Header transparent={transparentHeader} />
       <main className="flex-grow">
-        <Outlet />
+        {children || <Outlet />}
       </main>
-      <Footer />
+      {showFooter && <Footer />}
     </div>
   );
 };
