@@ -1,19 +1,23 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { UserProfile } from '@/types/user';
 import { getBoostById } from '@/data/boostEffects';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Clock, Sparkles, AlertTriangle } from 'lucide-react';
+import { Clock, Sparkles, AlertTriangle, Info } from 'lucide-react';
+import { motion } from 'framer-motion';
+import CrownEffectCanvas from '@/components/animations/CrownEffectCanvas';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface ProfileBoostDisplayProps {
   user: UserProfile;
 }
 
 const ProfileBoostDisplay: React.FC<ProfileBoostDisplayProps> = ({ user }) => {
+  const [expandedBoost, setExpandedBoost] = useState<string | null>(null);
+  
   // Get active boosts from the user profile
-  // This is mock data for now
   const activeBoosts = user.boosts || [];
   
   // Calculate time remaining for each boost
@@ -35,6 +39,15 @@ const ProfileBoostDisplay: React.FC<ProfileBoostDisplayProps> = ({ user }) => {
       return `${diffHours}h remaining`;
     }
   };
+
+  // Toggle expanded state for a boost
+  const toggleExpand = (boostId: string) => {
+    if (expandedBoost === boostId) {
+      setExpandedBoost(null);
+    } else {
+      setExpandedBoost(boostId);
+    }
+  };
   
   return (
     <div className="space-y-4">
@@ -44,36 +57,92 @@ const ProfileBoostDisplay: React.FC<ProfileBoostDisplayProps> = ({ user }) => {
           
           if (!boostDetails) return null;
           
+          const isExpanded = expandedBoost === boost.id;
+          const isRoyalTier = boostDetails.tier === 'royal';
+          
           return (
-            <Card key={boost.id} className={`border-white/10 ${boostDetails.cssClass}`}>
-              <CardContent className="p-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-royal-gold/10 flex items-center justify-center">
-                      <Sparkles className="h-5 w-5 text-royal-gold" />
-                    </div>
-                    <div>
-                      <h3 className="font-semibold">{boostDetails.name}</h3>
-                      <p className="text-xs text-white/60">{boostDetails.description}</p>
-                    </div>
+            <motion.div
+              key={boost.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+              whileHover={{ scale: 1.02 }}
+              className="relative"
+            >
+              <Card 
+                className={`border-white/10 ${boostDetails.cssClass} transition-all duration-300 overflow-hidden`}
+                onClick={() => toggleExpand(boost.id)}
+              >
+                {isRoyalTier && (
+                  <div className="absolute top-0 right-0 w-full h-full pointer-events-none">
+                    <CrownEffectCanvas width={300} height={150} opacity={0.3} />
                   </div>
-                  <Badge variant="outline" className="bg-black/30 border-white/10">
-                    {boostDetails.type.charAt(0).toUpperCase() + boostDetails.type.slice(1)}
-                  </Badge>
-                </div>
+                )}
                 
-                <div className="mt-4 flex items-center justify-between">
-                  <div className="flex items-center gap-1 text-white/60 text-sm">
-                    <Clock className="h-3.5 w-3.5" />
-                    <span>{getTimeRemaining(boost.endDate)}</span>
+                <CardContent className="p-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className={`w-10 h-10 rounded-full ${isRoyalTier ? 'bg-royal-gold/20' : 'bg-royal-gold/10'} flex items-center justify-center`}>
+                        <Sparkles className={`h-5 w-5 ${isRoyalTier ? 'text-royal-gold animate-crown-glow' : 'text-royal-gold'}`} />
+                      </div>
+                      <div>
+                        <h3 className="font-semibold">{boostDetails.name}</h3>
+                        <p className="text-xs text-white/60">{boostDetails.description}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Badge variant="outline" className="bg-black/30 border-white/10">
+                        {boostDetails.type.charAt(0).toUpperCase() + boostDetails.type.slice(1)}
+                      </Badge>
+                      
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button variant="ghost" size="icon" className="h-8 w-8">
+                              <Info className="h-4 w-4" />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Click to view boost details</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    </div>
                   </div>
                   
-                  <Button variant="ghost" size="sm" className="h-8">
-                    Renew Boost
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
+                  <motion.div
+                    animate={{ height: isExpanded ? 'auto' : 0, opacity: isExpanded ? 1 : 0 }}
+                    initial={{ height: 0, opacity: 0 }}
+                    className="overflow-hidden mt-4"
+                  >
+                    <div className="p-3 bg-black/20 rounded-md">
+                      <h4 className="text-sm font-medium mb-2">Boost Effects:</h4>
+                      <ul className="text-xs text-white/70 list-disc pl-4 space-y-1">
+                        <li>Increased profile visibility by {boostDetails.tier === 'royal' ? '300%' : boostDetails.tier === 'premium' ? '150%' : '50%'}</li>
+                        <li>{boostDetails.tier === 'royal' ? 'Royal' : boostDetails.tier === 'premium' ? 'Premium' : 'Basic'} appearance effects</li>
+                        {boostDetails.tier === 'royal' && (
+                          <li>Special animations and particles</li>
+                        )}
+                        {(boostDetails.tier === 'royal' || boostDetails.tier === 'premium') && (
+                          <li>Priority placement in leaderboards</li>
+                        )}
+                      </ul>
+                    </div>
+                  </motion.div>
+                  
+                  <div className="mt-4 flex items-center justify-between">
+                    <div className="flex items-center gap-1 text-white/60 text-sm">
+                      <Clock className="h-3.5 w-3.5" />
+                      <span>{getTimeRemaining(boost.endDate)}</span>
+                    </div>
+                    
+                    <Button variant="ghost" size="sm" className="h-8">
+                      Renew Boost
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
           );
         })
       ) : (
