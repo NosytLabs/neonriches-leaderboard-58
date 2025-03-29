@@ -43,13 +43,31 @@ export const termsContent = {
       ]
     },
     {
-      title: '5. Limitation of Liability',
+      title: '5. Data Security and Privacy',
       content: [
-        'In no event shall SpendThrone, its officers, directors, employees, or agents, be liable to you for any direct, indirect, incidental, special, punitive, or consequential damages whatsoever resulting from any (i) errors, mistakes, or inaccuracies of content, (ii) personal injury or property damage, of any nature whatsoever, resulting from your access to and use of our service, (iii) any unauthorized access to or use of our secure servers and/or any and all personal information and/or financial information stored therein.'
+        'While we enjoy our medieval-themed humor, we take your data security seriously. We implement industry-standard security measures to protect your personal information:',
+        '• All data is encrypted in transit and at rest',
+        '• We use secure authentication protocols',
+        '• We regularly audit our security systems',
+        '• We limit data access to authorized personnel only',
+        'Think of it as building an actual fortress around your data, not just a whimsical medieval castle with a moat drawn in crayon.',
+        'For complete details on how we collect, use, and protect your information, please review our Privacy Policy.'
       ]
     },
     {
-      title: '6. Contact Information',
+      title: '6. Limitation of Liability',
+      content: [
+        'In no event shall SpendThrone, its officers, directors, employees, or agents, be liable to you for any direct, indirect, incidental, special, punitive, or consequential damages whatsoever resulting from:',
+        '• Errors, mistakes, or inaccuracies of content',
+        '• Personal injury or property damage resulting from your access to and use of our service',
+        '• Unauthorized access to our secure servers and/or any personal or financial information stored therein',
+        '• Interruption or cessation of transmission to or from our service',
+        '• Bugs, viruses, or the like that may be transmitted by third parties',
+        '• Any errors or omissions in content or for any loss or damage incurred as a result of the use of content posted, transmitted, or otherwise made available through the service'
+      ]
+    },
+    {
+      title: '7. Contact Information',
       content: [
         'If you have any questions about these Terms, please contact us at support@spendthrone.com.'
       ]

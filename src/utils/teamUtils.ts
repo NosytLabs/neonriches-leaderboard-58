@@ -164,17 +164,17 @@ export const getTeamNFTJoke = (team: UserTeam | string | undefined): string => {
 };
 
 export const getTeamSecurityGuarantee = (team: UserTeam | string | undefined): string => {
-  if (!team) return 'Protected by the impenetrable armor of not giving us any money';
+  if (!team) return 'Protected by not providing any personal data beyond what\'s strictly necessary';
   
   switch (team) {
     case 'red':
-      return 'Your data is protected by a digital moat filled with algorithmically-generated crocodiles and a firewall drawbridge that works about as well as medieval plumbing';
+      return 'Your data is protected by industry-standard encryption and security protocols. We just like to imagine it as a digital fortress with a moat of encryption algorithms and a drawbridge of secure authentication';
     case 'green':
-      return 'We\'ve hired elite blockchain knights to guard your information with the same effectiveness as a paper shield in a rainstorm';
+      return 'We implement comprehensive security measures to protect your information, though we doubt anyone would go through all that trouble just to discover how much you spent on digital status';
     case 'blue':
-      return 'Your personal information is locked in our digital treasury, secured by the same technology that keeps people believing NFTs are valuable';
+      return 'Your personal information is secured with the same level of protection we\'d want for our own data - multiple layers of security that are decidedly more effective than medieval castle defenses';
     default:
-      return 'No security guarantees, just like the actual middle ages';
+      return 'While you haven\'t joined a team, your data is still protected by our comprehensive security protocols';
   }
 };
 

@@ -43,7 +43,7 @@ export const faqItems: FAQItem[] = [
   {
     id: "faq-6",
     question: "How secure is my data?",
-    answer: "Your data is protected by our state-of-the-art digital moat and encryption drawbridge system. Our security knights stand vigilant at the firewall, monitoring for any peasant hackers attempting to breach our noble database. In other words, we use standard web security, which is about as effective as a medieval castle against modern artillery.",
+    answer: "We take security seriously. Your data is protected using industry-standard encryption and security protocols. While we have fun describing it as a 'digital fortress with encryption moats and authentication drawbridges,' the reality is we implement legitimate security practices to protect your personal information. Our medieval analogies are just for entertainment - our actual security measures are thoroughly modern.",
     category: "security"
   },
   {
