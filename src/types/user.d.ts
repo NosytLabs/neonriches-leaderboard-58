@@ -3,8 +3,8 @@ import { ProfileBoost } from './boost';
 import { UserCosmetics } from './cosmetics';
 
 export type UserRole = 'admin' | 'moderator' | 'user' | 'vip';
-export type UserGender = 'king' | 'queen' | 'duke' | 'duchess' | 'lord' | 'lady' | 'neutral' | 'prefer-not-to-say' | 'male' | 'female';
-export type UserTier = 'bronze' | 'silver' | 'gold' | 'platinum' | 'diamond' | 'royal' | 'basic' | 'premium' | 'pro';
+export type UserGender = 'king' | 'queen' | 'duke' | 'duchess' | 'lord' | 'lady' | 'neutral' | 'prefer-not-to-say' | 'male' | 'female' | 'jester' | 'noble';
+export type UserTier = 'bronze' | 'silver' | 'gold' | 'platinum' | 'diamond' | 'royal' | 'basic' | 'premium' | 'pro' | 'free';
 export type TeamType = 'red' | 'green' | 'blue' | 'none' | null;
 
 export interface UserSubscription {
@@ -12,7 +12,14 @@ export interface UserSubscription {
   startDate: string;
   endDate: string;
   isActive?: boolean;
+  status?: SubscriptionStatus;
+  interval?: SubscriptionInterval;
+  autoRenew?: boolean;
+  features?: string[];
 }
+
+export type SubscriptionStatus = 'active' | 'canceled' | 'past_due' | 'trialing' | 'unpaid' | 'incomplete';
+export type SubscriptionInterval = 'monthly' | 'quarterly' | 'annual';
 
 export interface UserSettings {
   showRank: boolean;
@@ -33,9 +40,13 @@ export interface UserSettings {
 }
 
 export interface SocialLink {
-  platform: string;
+  id: string | number;
+  platform?: string;
   url: string;
-  clicks: number;
+  title?: string;
+  label?: string;
+  clicks?: number;
+  icon?: string;
 }
 
 export interface ProfileLink {
@@ -67,6 +78,7 @@ export interface User {
   createdAt?: string;
   joinedAt?: string;
   isVerified?: boolean;
+  isAuthenticated?: boolean;
   gender?: UserGender;
   profileViews?: number;
   profileClicks?: number;
@@ -82,7 +94,7 @@ export interface User {
   socialLinks?: SocialLink[];
   walletAddress?: string;
   lastActive?: string;
-  isAuthenticated?: boolean;
+  avatarUrl?: string;
 }
 
 export interface UserProfile extends Omit<User, 'createdAt'> {

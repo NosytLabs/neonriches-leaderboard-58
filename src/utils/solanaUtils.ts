@@ -1,27 +1,51 @@
 
-// Utility functions for Solana interactions
+/**
+ * Formats a Solana wallet address for display
+ * @param address Full Solana public key
+ * @param chars Number of characters to show at start and end
+ * @returns Formatted address string (e.g., "Ax12...7Bzt")
+ */
+export const formatAddress = (address: string, chars: number = 4): string => {
+  if (!address) return '';
+  if (address.length <= chars * 2) return address;
+  
+  return `${address.substring(0, chars)}...${address.substring(address.length - chars)}`;
+};
 
 /**
- * Generate a message for the user to sign to authenticate with Solana wallet
- * @param publicKey The user's public key
- * @returns A message string to be signed
+ * Validates a Solana address format (basic check)
+ * @param address Solana address to validate
+ * @returns Boolean indicating if format is valid
  */
-export const formatAddress = (address: string, length: number = 4): string => {
-  if (!address || address.length < 8) return address;
-  return `${address.slice(0, length)}...${address.slice(-length)}`;
-};
-
 export const isValidSolanaAddress = (address: string): boolean => {
-  // Basic validation - Solana addresses are 32-44 characters
-  return /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(address);
+  // Simple validation - real implementation should be more robust
+  return typeof address === 'string' && address.length >= 32 && address.length <= 44;
 };
 
-export const generateSignatureMessage = (publicKey: string): string => {
-  return `Sign this message to authenticate with your Solana wallet: ${publicKey} at ${new Date().toISOString()}`;
+/**
+ * Converts SOL to lamports
+ * @param sol Amount in SOL
+ * @returns Amount in lamports
+ */
+export const solToLamports = (sol: number): number => {
+  return sol * 1_000_000_000; // 1 SOL = 10^9 lamports
 };
 
-export default {
-  formatAddress,
-  isValidSolanaAddress,
-  generateSignatureMessage
+/**
+ * Converts lamports to SOL
+ * @param lamports Amount in lamports
+ * @returns Amount in SOL
+ */
+export const lamportsToSol = (lamports: number): number => {
+  return lamports / 1_000_000_000;
+};
+
+/**
+ * Estimates transaction fee for a simple transfer
+ * @returns Estimated fee in SOL
+ */
+export const estimateTransactionFee = (): number => {
+  // This is a simplified estimate - actual fees depend on network conditions
+  // A simple transfer usually costs around 0.000005 SOL
+  return 0.000005;
 };

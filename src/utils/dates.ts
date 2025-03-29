@@ -1,114 +1,77 @@
 
 /**
- * Formats a date using Intl.DateTimeFormat for consistency
- * @param date Date to format
- * @param options Intl.DateTimeFormatOptions
+ * Formats a date string into localized format
+ * @param dateString Date string to format
  * @returns Formatted date string
  */
-export const formatDate = (
-  date: Date | string | number,
-  options: Intl.DateTimeFormatOptions = {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  }
-): string => {
-  const dateObj = typeof date === 'string' || typeof date === 'number' 
-    ? new Date(date) 
-    : date;
+export const formatDate = (dateString: string): string => {
+  if (!dateString) return '';
   
-  return new Intl.DateTimeFormat('en-US', options).format(dateObj);
+  const date = new Date(dateString);
+  
+  // Check if the date is valid
+  if (isNaN(date.getTime())) {
+    return '';
+  }
+  
+  return date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric'
+  });
 };
 
 /**
- * Formats a date in a relative way (e.g., "2 days ago")
- * @param date Date to format
+ * Formats a date as a relative time (e.g., "2 days ago")
+ * @param dateString Date string to format
  * @returns Relative time string
  */
-export const formatRelativeTime = (date: Date | string | number): string => {
-  const dateObj = typeof date === 'string' || typeof date === 'number' 
-    ? new Date(date) 
-    : date;
-  
+export const formatRelativeTime = (dateString: string): string => {
+  const date = new Date(dateString);
   const now = new Date();
-  const diffMs = now.getTime() - dateObj.getTime();
-  const diffSecs = Math.floor(diffMs / 1000);
-  const diffMins = Math.floor(diffSecs / 60);
-  const diffHours = Math.floor(diffMins / 60);
-  const diffDays = Math.floor(diffHours / 24);
+  const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
   
-  if (diffSecs < 60) {
+  if (diffInSeconds < 60) {
     return 'just now';
-  } else if (diffMins < 60) {
-    return `${diffMins} minute${diffMins !== 1 ? 's' : ''} ago`;
-  } else if (diffHours < 24) {
-    return `${diffHours} hour${diffHours !== 1 ? 's' : ''} ago`;
-  } else if (diffDays < 30) {
-    return `${diffDays} day${diffDays !== 1 ? 's' : ''} ago`;
-  } else {
-    return formatDate(dateObj, { month: 'short', day: 'numeric', year: 'numeric' });
   }
-};
-
-/**
- * Formats a date for display in the Royal Court
- * @param date Date to format
- * @returns Royal-style date string
- */
-export const formatRoyalDate = (date: Date | string | number): string => {
-  const dateObj = typeof date === 'string' || typeof date === 'number' 
-    ? new Date(date) 
-    : date;
   
-  const day = dateObj.getDate();
-  const month = dateObj.toLocaleString('default', { month: 'long' });
-  const year = dateObj.getFullYear();
-  
-  // Add ordinal suffix to day
-  const suffix = getDaySuffix(day);
-  
-  return `the ${day}${suffix} of ${month}, Year of Our Realm ${year}`;
-};
-
-/**
- * Gets the ordinal suffix for a day of the month
- * @param day Day of the month (1-31)
- * @returns Ordinal suffix ('st', 'nd', 'rd', or 'th')
- */
-export const getDaySuffix = (day: number): string => {
-  if (day > 3 && day < 21) return 'th';
-  
-  switch (day % 10) {
-    case 1: return 'st';
-    case 2: return 'nd';
-    case 3: return 'rd';
-    default: return 'th';
+  const diffInMinutes = Math.floor(diffInSeconds / 60);
+  if (diffInMinutes < 60) {
+    return `${diffInMinutes} minute${diffInMinutes > 1 ? 's' : ''} ago`;
   }
+  
+  const diffInHours = Math.floor(diffInMinutes / 60);
+  if (diffInHours < 24) {
+    return `${diffInHours} hour${diffInHours > 1 ? 's' : ''} ago`;
+  }
+  
+  const diffInDays = Math.floor(diffInHours / 24);
+  if (diffInDays < 30) {
+    return `${diffInDays} day${diffInDays > 1 ? 's' : ''} ago`;
+  }
+  
+  const diffInMonths = Math.floor(diffInDays / 30);
+  if (diffInMonths < 12) {
+    return `${diffInMonths} month${diffInMonths > 1 ? 's' : ''} ago`;
+  }
+  
+  const diffInYears = Math.floor(diffInMonths / 12);
+  return `${diffInYears} year${diffInYears > 1 ? 's' : ''} ago`;
 };
 
 /**
- * Calculates the time difference between two dates in days
- * @param date1 First date 
- * @param date2 Second date (defaults to now)
- * @returns Number of days between dates
+ * Converts a date to ISO string safely
+ * @param date Date or timestamp to convert
+ * @returns ISO date string or empty string if invalid
  */
-export const getDaysBetween = (
-  date1: Date | string | number,
-  date2: Date | string | number = new Date()
-): number => {
-  const dateObj1 = typeof date1 === 'string' || typeof date1 === 'number' 
-    ? new Date(date1) 
-    : date1;
+export const toISOString = (date: Date | number | string): string => {
+  if (!date) return '';
   
-  const dateObj2 = typeof date2 === 'string' || typeof date2 === 'number' 
-    ? new Date(date2) 
-    : date2;
-  
-  // Set hours, minutes, seconds, and milliseconds to 0 to only compare dates
-  dateObj1.setHours(0, 0, 0, 0);
-  dateObj2.setHours(0, 0, 0, 0);
-  
-  // Calculate difference in days
-  const diffMs = Math.abs(dateObj2.getTime() - dateObj1.getTime());
-  return Math.floor(diffMs / (1000 * 60 * 60 * 24));
+  try {
+    const dateObj = typeof date === 'object' ? date : new Date(date);
+    return dateObj.toISOString();
+  } catch (error) {
+    console.error('Invalid date:', date);
+    return '';
+  }
 };

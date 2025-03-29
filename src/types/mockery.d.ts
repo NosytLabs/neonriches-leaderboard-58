@@ -1,9 +1,12 @@
 
+import { ElementType } from 'react';
+import { LucideIcon } from 'lucide-react';
+
 export type MockeryAction = 
   | 'tomatoes' 
   | 'eggs' 
   | 'stocks' 
-  | 'silence' 
+  | 'silence'
   | 'courtJester'
   | 'jester'
   | 'common'
@@ -18,18 +21,8 @@ export type MockeryAction =
   | 'ridicule'
   | 'taunt'
   | 'shame'
-  | 'drama'
-  | 'custom'
   | 'protection'
   | 'removal';
-
-export type ShameAction = 
-  | 'stocks' 
-  | 'dunce' 
-  | 'roast' 
-  | 'ridicule'
-  | 'taunt'
-  | 'shame';
 
 export type MockeryTier = 
   | 'common' 
@@ -41,48 +34,46 @@ export type MockeryTier =
   | 'basic'
   | 'elite';
 
+export type ShameAction = 
+  | 'eggs' 
+  | 'tomatoes' 
+  | 'dunce' 
+  | 'stocks'
+  | 'ridicule'
+  | 'shame';
+
 export interface MockeryEffect {
   id: string;
-  name: string;
-  description: string;
+  userId: string;
   action: MockeryAction;
+  appliedBy: string;
+  timestamp: number;
+  until: number;
   tier: MockeryTier;
-  cost: number;
-  duration: number;
-  cssClass: string;
-  animation?: string;
 }
 
-export interface ShameEffect {
-  id: string;
-  name: string;
-  description: string;
+export interface ShameEffect extends MockeryEffect {
   action: ShameAction;
   timestamp: number;
   until: number;
-  tier?: MockeryTier;
-  cost: number;
-  duration: number;
-  cssClass: string;
-  animation?: string;
-}
-
-export interface MockeryStats {
-  totalMockeries: number;
-  receivedMockeries: number;
-  sentMockeries: number;
-  protectedCount: number;
-  mostUsedAction: MockeryAction;
-  mockeryRank: number;
-  favoriteTarget: string;
-  totalSpent: number;
 }
 
 export interface MockeryProtection {
-  userId: number | string;
-  startTime: number;
-  expiresAt: number;
-  username?: string;
-  endDate?: string;
-  isActive?: boolean;
+  id: string;
+  username: string;
+  userId: string;
+  startDate: string;
+  endDate: string;
+  isActive: boolean;
+  purchasedBy?: string;
+}
+
+export interface MockeryStats {
+  userId: string;
+  totalMockeries: number;
+  mockeryBreakdown: Record<MockeryAction, number>;
+  received: number;
+  sent: number;
+  mostUsed: MockeryAction;
+  favoriteTarget?: string;
 }

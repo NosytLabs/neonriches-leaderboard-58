@@ -2,83 +2,70 @@
 import React from 'react';
 import { UserProfile } from '@/types/user';
 import { Clock, Sparkles } from 'lucide-react';
-import { getBoostById } from '@/data/boostEffects';
+import { ProfileBoost } from '@/types/boost';
 import useProfileBoost from '@/hooks/use-profile-boost';
 
 interface ProfileBoostDisplayProps {
+  user: UserProfile;
   className?: string;
 }
 
 const ProfileBoostDisplay: React.FC<ProfileBoostDisplayProps> = ({ 
+  user,
   className = '' 
 }) => {
-  // Use a mock user for demonstration
-  const mockUser: UserProfile = {
-    id: 'user-123',
-    username: 'royal_spender',
-    displayName: 'Royal Spender',
-    rank: 1,
-    totalSpent: 10000,
-    joinedAt: new Date().toISOString(),
-    profileBoosts: [
-      {
-        id: 'boost-1',
-        effectId: 'gold-aura',
-        startDate: new Date().toISOString(),
-        endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
-        level: 1
-      },
-      {
-        id: 'boost-2',
-        effectId: 'royal-glow',
-        startDate: new Date().toISOString(),
-        endDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString(),
-        level: 1
-      }
-    ]
-  };
-
-  const { activeBoosts, getBoostEffect, getBoostTimeLeft } = useProfileBoost(mockUser);
+  const { activeBoosts, getBoostEffect, getBoostTimeLeft } = useProfileBoost(user);
 
   if (activeBoosts.length === 0) {
     return (
       <div className={`text-center p-4 ${className}`}>
-        <p className="text-white/60">No active boosts</p>
+        <p className="text-white/60">No active boosts found for your profile</p>
+        <p className="text-sm text-white/40 mt-2">
+          Purchase boosts from the store to enhance your profile visibility
+        </p>
       </div>
     );
   }
 
   return (
-    <div className={`space-y-3 ${className}`}>
-      <h3 className="text-lg font-semibold flex items-center">
-        <Sparkles className="h-5 w-5 mr-2 text-yellow-400" />
-        Active Profile Boosts
-      </h3>
-      
-      <div className="space-y-2">
-        {activeBoosts.map(boost => {
-          const boostEffect = getBoostEffect(boost.effectId?.toString() || '');
-          const timeLeft = getBoostTimeLeft(boost.id);
-          
-          if (!boostEffect) return null;
-          
-          return (
-            <div 
-              key={boost.id} 
-              className="glass-morphism border-white/10 p-3 rounded-lg flex justify-between items-center"
-            >
+    <div className={`space-y-4 ${className}`}>
+      {activeBoosts.map((boost: ProfileBoost) => {
+        const boostEffect = getBoostEffect(boost.effectId as string);
+        const timeLeft = getBoostTimeLeft(boost);
+        
+        return (
+          <div 
+            key={boost.id} 
+            className="p-4 rounded-lg bg-black/20 border border-white/10 relative overflow-hidden"
+          >
+            <div className="absolute inset-0 opacity-20 bg-gradient-to-r from-purple-500 to-pink-500 pointer-events-none"></div>
+            
+            <div className="flex items-start justify-between relative">
               <div>
-                <h4 className="font-medium">{boostEffect.name}</h4>
-                <p className="text-sm text-white/60">{boostEffect.description}</p>
+                <h4 className="text-lg font-medium flex items-center">
+                  <Sparkles className="mr-2 h-4 w-4 text-purple-400" />
+                  {boostEffect?.name || 'Profile Boost'}
+                </h4>
+                
+                <p className="text-sm text-white/70 mt-1">
+                  {boostEffect?.description || 'Enhances your profile visibility'}
+                </p>
+                
+                <div className="flex items-center mt-3 text-xs text-white/60">
+                  <Clock className="h-3.5 w-3.5 mr-1.5" />
+                  <span>{timeLeft}</span>
+                </div>
               </div>
-              <div className="flex items-center text-sm text-white/80">
-                <Clock className="h-4 w-4 mr-1 text-blue-400" />
-                {timeLeft > 24 ? `${Math.floor(timeLeft / 24)}d remaining` : `${timeLeft}h remaining`}
+              
+              <div className="flex flex-col items-end">
+                <span className={`px-2 py-0.5 rounded text-xs bg-purple-500/20 text-purple-300`}>
+                  Level {boost.level}
+                </span>
               </div>
             </div>
-          );
-        })}
-      </div>
+          </div>
+        );
+      })}
     </div>
   );
 };

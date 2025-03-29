@@ -1,20 +1,32 @@
 
-export type CosmeticRarity = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary' | 'royal';
-export type CosmeticCategory = 'border' | 'color' | 'font' | 'emoji' | 'title' | 'background' | 'effect' | 'badge' | 'theme' | 'banner';
+export type CosmeticCategory = 
+  | 'border'
+  | 'color'
+  | 'font'
+  | 'emoji'
+  | 'title'
+  | 'background'
+  | 'effect'
+  | 'badge';
+
+export type CosmeticRarity = 
+  | 'common'
+  | 'uncommon'
+  | 'rare'
+  | 'epic'
+  | 'legendary'
+  | 'royal';
 
 export interface CosmeticItem {
   id: string;
   name: string;
   description: string;
-  rarity: CosmeticRarity;
   category: CosmeticCategory;
-  cost: number;
-  lockRequirement?: {
-    type: 'tier' | 'spend' | 'boost' | 'free';
-    value: string | number;
-  };
+  rarity: CosmeticRarity;
+  price: number;
+  isUnlocked?: boolean;
+  unlockRequirement?: string;
   cssClass?: string;
-  previewUrl?: string;
   imageSrc?: string;
   image?: string;
 }

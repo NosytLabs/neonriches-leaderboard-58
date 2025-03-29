@@ -1,32 +1,27 @@
 
-import { CosmeticRarity } from './cosmetics';
-import { UserTier } from './user';
-
 export type BoostEffectType = 
-  | 'gold-aura'
-  | 'rainbow-name'
-  | 'royal-glow'
-  | 'sparkling-border'
-  | 'floating-crown'
-  | 'visibility-boost'
-  | 'attention-pulse'
-  | 'royal-banner'
-  | 'golden-frame';
+  | 'spotlight'
+  | 'glow'
+  | 'shimmer'
+  | 'particles'
+  | 'pulse'
+  | 'shadow'
+  | 'aura'
+  | 'sparkle'
+  | 'flame'
+  | 'rainbow';
 
 export interface BoostEffect {
   id: string;
   name: string;
   description: string;
-  duration: number; // in hours
-  durationDays?: number; // for UI display
-  cost: number;
-  price?: number; // alias for cost
-  type: 'visibility' | 'effect' | 'appearance' | 'animation';
-  rarity: CosmeticRarity;
-  allowStacking: boolean;
-  minTier: UserTier;
+  effectType: BoostEffectType;
+  duration: number;
+  strength: number;
+  price?: number;
+  tier?: string;
+  durationDays?: number;
   cssClass?: string;
-  tier?: UserTier | string;
 }
 
 export interface ProfileBoost {

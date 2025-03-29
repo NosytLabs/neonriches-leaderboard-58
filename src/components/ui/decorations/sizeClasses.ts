@@ -1,13 +1,11 @@
 
-import { MedievalDecorationSize } from '@/types/ui/decorations/types';
+import { MedievalSize } from '@/types/ui/decorations/types';
 
-// Size classes for medieval decorations
-export const sizeClasses: Record<MedievalDecorationSize, string> = {
-  'sm': 'w-16 h-16',
-  'md': 'w-24 h-24',
-  'lg': 'w-32 h-32',
-  'xl': 'w-48 h-48',
-  '2xl': 'w-64 h-64'
+export const sizeClasses: Record<MedievalSize, string> = {
+  sm: 'w-4 h-4',
+  md: 'w-6 h-6',
+  lg: 'w-8 h-8',
+  xl: 'w-12 h-12'
 };
 
 export default sizeClasses;

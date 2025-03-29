@@ -1,4 +1,5 @@
-import { UserProfile, UserTier } from '@/types/user';
+
+import { UserProfile, UserTier, User } from '@/types/user';
 
 /**
  * Ensures a user object has all required properties, filling in defaults if needed
@@ -14,7 +15,10 @@ export const ensureUser = (user: Partial<UserProfile> | string): UserProfile => 
       displayName: 'User',
       totalSpent: 0,
       rank: 0,
-      joinedAt: new Date().toISOString()
+      joinedAt: new Date().toISOString(),
+      tier: 'basic',
+      team: null,
+      walletBalance: 0
     };
   }
   
@@ -49,7 +53,21 @@ export const ensureUser = (user: Partial<UserProfile> | string): UserProfile => 
     settings: user.settings,
     socialLinks: user.socialLinks || [],
     badges: user.badges || [],
-    walletAddress: user.walletAddress
+    walletAddress: user.walletAddress,
+    avatarUrl: user.avatarUrl || user.profileImage,
+    lastActive: user.lastActive || new Date().toISOString(),
+    isAuthenticated: false
+  };
+};
+
+/**
+ * Converts UserProfile to User type
+ */
+export const adaptUserProfileToUser = (userProfile: UserProfile): User => {
+  return {
+    ...userProfile,
+    role: userProfile.role || 'user',
+    tier: userProfile.tier || 'basic'
   };
 };
 
