@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Navigate, Routes, Route, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/auth';
@@ -23,6 +24,7 @@ import Certificate from '@/pages/Certificate';
 import Contact from '@/pages/Contact';
 import Terms from '@/pages/Terms';
 import FeaturesShowcase from '@/pages/FeaturesShowcase';
+import VisibilityFeatures from '@/pages/VisibilityFeatures';
 
 // Protected pages
 import Dashboard from '@/pages/Dashboard';
@@ -67,6 +69,7 @@ const routes = [
   <Route path="/certificate/:username" element={<Certificate />} />,
   <Route path="/contact" element={<Contact />} />,
   <Route path="/features-showcase" element={<FeaturesShowcase />} />,
+  <Route path="/visibility-features" element={<VisibilityFeatures />} />,
 
   // Protected Routes
   <Route

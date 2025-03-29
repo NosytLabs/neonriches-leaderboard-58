@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -11,7 +12,8 @@ import {
   Menu,
   Search,
   User,
-  Settings
+  Settings,
+  Eye
 } from 'lucide-react';
 import MobileMenu from './MobileMenu';
 import { cn } from '@/lib/utils';
@@ -78,9 +80,14 @@ const Header: React.FC<HeaderProps> = ({ transparent = false }) => {
       icon: <Crown className="h-4 w-4" />,
     },
     {
-      name: "Features Showcase",
+      name: "Features",
       path: "/features-showcase",
       icon: <Sparkles className="h-4 w-4" />,
+    },
+    {
+      name: "Visibility",
+      path: "/visibility-features",
+      icon: <Eye className="h-4 w-4" />,
     },
   ];
 

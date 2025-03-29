@@ -10,6 +10,7 @@ export const subscriptionTiers = [
       "Basic profile customization",
       "Leaderboard presence with standard display",
       "Team affiliation",
+      "Ability to purchase profile boosts",
       "Public certificate of conspicuous consumption"
     ],
     recommended: false
@@ -17,13 +18,15 @@ export const subscriptionTiers = [
   {
     id: "premium",
     name: "Status Influencer",
-    description: "Enhanced digital presence with marketing perks",
+    description: "Enhanced digital presence with visual perks",
     price: 15,
     features: [
       "Advanced profile customization",
-      "Enhanced profile visibility (RGB borders, premium styling)",
+      "Enhanced profile visibility",
       "RGB borders and animations in leaderboard",
-      "Profile boost (3-day)",
+      "50% discount on all Profile Boosts",
+      "Access to Premium Boost effects",
+      "Profile boost (3-day) included monthly",
       "Mockery protection (50% discount)",
       "Basic marketing analytics",
       "Profile visitor metrics",
@@ -34,13 +37,15 @@ export const subscriptionTiers = [
   {
     id: "royal",
     name: "Digital Royalty",
-    description: "Maximum status with premium marketing features",
+    description: "Maximum status with exclusive visual features",
     price: 30,
     features: [
       "Maximum profile customization",
       "Royal styling on leaderboard (gold borders, crown icons, animations)",
-      "Permanent profile boost",
-      "Exclusive animated effects",
+      "Permanent profile boost effect",
+      "Exclusive animated effects and visual enhancements",
+      "75% discount on all Profile Boosts",
+      "Access to Royal-tier Profile Boosts",
       "Premium billboard space",
       "Team leadership eligibility",
       "Complete mockery immunity",

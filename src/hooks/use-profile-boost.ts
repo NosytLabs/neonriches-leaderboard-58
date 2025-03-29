@@ -1,16 +1,18 @@
 
 import { useState, useEffect } from 'react';
 import { UserProfile } from '@/types/user';
-
-export type BoostEffectType = 'speed' | 'power' | 'prestige' | 'crown' | 'sparkle' | 'glow';
+import { BoostType, UserBoost } from '@/types/profile-boost';
+import { getBoostById, profileBoostEffects } from '@/data/boostEffects';
 
 export interface ProfileBoost {
   id: string;
-  effectType: BoostEffectType;
-  multiplier: number;
-  expiresAt: number; // Unix timestamp
-  acquiredAt: number; // Unix timestamp
-  active: boolean;
+  effectId: string;
+  startDate: string;
+  endDate: string;
+  level: number;
+  type: string;
+  strength: number;
+  appliedBy: string;
 }
 
 interface BoostEffect {
@@ -24,29 +26,17 @@ interface BoostEffect {
 export const useProfileBoost = (user: UserProfile) => {
   const [activeBoosts, setActiveBoosts] = useState<ProfileBoost[]>([]);
 
-  // Mock active boosts for testing
+  // Get active boosts from user profile
   useEffect(() => {
     if (user) {
-      const mockBoosts: ProfileBoost[] = [
-        {
-          id: 'boost-1',
-          effectType: 'speed',
-          multiplier: 1.5,
-          expiresAt: Date.now() + 1000 * 60 * 60 * 24, // 24 hours
-          acquiredAt: Date.now() - 1000 * 60 * 60, // 1 hour ago
-          active: true
-        },
-        {
-          id: 'boost-2',
-          effectType: 'power',
-          multiplier: 2,
-          expiresAt: Date.now() + 1000 * 60 * 60 * 2, // 2 hours
-          acquiredAt: Date.now() - 1000 * 60 * 30, // 30 minutes ago
-          active: true
-        }
-      ];
+      // Filter to only active boosts
+      const now = new Date();
+      const active = user.profileBoosts?.filter(boost => {
+        const endDate = new Date(boost.endDate);
+        return endDate > now;
+      }) || [];
       
-      setActiveBoosts(mockBoosts);
+      setActiveBoosts(active);
     }
   }, [user]);
   
@@ -60,59 +50,28 @@ export const useProfileBoost = (user: UserProfile) => {
     const boost = activeBoosts.find(b => b.id === boostId);
     if (!boost) return null;
     
-    // Map effect types to their details
-    switch (boost.effectType) {
-      case 'speed':
-        return {
-          id: boost.id,
-          name: "Royal Speed",
-          description: "Your profile loads faster for visitors",
-          bonusText: `+${(boost.multiplier * 100) - 100}% speed`,
-        };
-      case 'power':
-        return {
-          id: boost.id,
-          name: "Royal Power",
-          description: "Your actions have more impact",
-          bonusText: `+${(boost.multiplier * 100) - 100}% power`,
-        };
-      case 'prestige':
-        return {
-          id: boost.id,
-          name: "Royal Prestige",
-          description: "Your rank appears higher to others",
-          bonusText: `+${(boost.multiplier * 100) - 100}% prestige`,
-        };
-      case 'crown':
-        return {
-          id: boost.id,
-          name: "Royal Crown",
-          description: "Display a crown on your profile",
-          bonusText: "Premium Profile Effect",
-        };
-      case 'sparkle':
-        return {
-          id: boost.id,
-          name: "Royal Sparkle",
-          description: "Add sparkle effects to your profile",
-          bonusText: "Premium Profile Effect",
-        };
-      case 'glow':
-        return {
-          id: boost.id,
-          name: "Royal Glow",
-          description: "Make your profile glow",
-          bonusText: "Basic Profile Effect",
-        };
-      default:
-        return null;
-    }
+    const boostEffect = getBoostById(boost.effectId);
+    if (!boostEffect) return null;
+    
+    return {
+      id: boost.id,
+      name: boostEffect.name,
+      description: boostEffect.description,
+      bonusText: `Duration: ${getRemainingDaysText(boost)}`,
+    };
   };
   
   // Calculate time remaining for a boost
   const getBoostTimeRemaining = (boost: ProfileBoost): number => {
     const now = Date.now();
-    return Math.max(0, boost.expiresAt - now);
+    return Math.max(0, new Date(boost.endDate).getTime() - now);
+  };
+  
+  // Get remaining days text
+  const getRemainingDaysText = (boost: ProfileBoost): string => {
+    const remainingMs = getBoostTimeRemaining(boost);
+    const days = Math.ceil(remainingMs / (1000 * 60 * 60 * 24));
+    return days === 1 ? "1 day" : `${days} days`;
   };
   
   // Format time remaining in a human-readable format
@@ -122,8 +81,11 @@ export const useProfileBoost = (user: UserProfile) => {
     const seconds = Math.floor(milliseconds / 1000);
     const minutes = Math.floor(seconds / 60);
     const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
     
-    if (hours > 0) {
+    if (days > 0) {
+      return `${days}d ${hours % 24}h remaining`;
+    } else if (hours > 0) {
       return `${hours}h ${minutes % 60}m remaining`;
     } else if (minutes > 0) {
       return `${minutes}m ${seconds % 60}s remaining`;
@@ -139,34 +101,25 @@ export const useProfileBoost = (user: UserProfile) => {
     const classes: string[] = [];
     
     activeBoosts.forEach(boost => {
-      switch (boost.effectType) {
-        case 'speed':
-          classes.push('profile-boost-effect-shine');
-          break;
-        case 'power':
-          classes.push('profile-boost-pro');
-          break;
-        case 'prestige':
-          classes.push('profile-boost-border-gold');
-          break;
-        case 'crown':
-          classes.push('profile-boost-border-royal');
-          break;
-        case 'sparkle':
-          classes.push('profile-boost-effect-sparkle');
-          break;
-        case 'glow':
-          classes.push('profile-boost-effect-glow');
-          break;
+      const boostEffect = getBoostById(boost.effectId);
+      if (boostEffect) {
+        classes.push(boostEffect.cssClass);
       }
       
-      // Add other classes based on boost strength if needed
-      if (boost.multiplier >= 2) {
+      // Add tier effects based on user's subscription tier
+      if (user.tier === 'premium') {
+        classes.push('profile-boost-pro');
+      } else if (user.tier === 'royal') {
         classes.push('profile-boost-whale');
-      } else if (boost.multiplier >= 1.5) {
-        classes.push('profile-boost-shark');
-      } else if (boost.multiplier >= 1.2) {
-        classes.push('profile-boost-dolphin');
+      }
+      
+      // Add team-specific effects
+      if (user.team === 'red') {
+        classes.push('profile-boost-team-red');
+      } else if (user.team === 'green') {
+        classes.push('profile-boost-team-green');
+      } else if (user.team === 'blue') {
+        classes.push('profile-boost-team-blue');
       }
     });
     
