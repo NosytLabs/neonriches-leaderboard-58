@@ -1,506 +1,304 @@
 
-import React, { useState, useEffect } from 'react';
-import Shell from '@/components/Shell';
-import RoyalHero from '@/components/RoyalHero';
-import HeroShowcase from '@/components/home/HeroShowcase';
-import { Button } from '@/components/ui/button';
-import { Link } from 'react-router-dom';
-import { 
-  Trophy, DollarSign, Shield, Crown, ChevronRight, AlertTriangle, 
-  Sparkles, Eye, BarChart, Gem, Target
-} from 'lucide-react';
-import { RoyalSection } from '@/components/ui/theme-components';
-import RoyalDivider from '@/components/ui/decorations/RoyalDivider';
-import { Card, CardContent } from '@/components/ui/card';
-import EnhancedCrownEffect from '@/components/animations/EnhancedCrownEffect';
-import RoyalTrophyModel from '@/components/3d/RoyalTrophyModel';
-import { Badge } from '@/components/ui/badge';
+import React from 'react';
 import { motion } from 'framer-motion';
-import SpendingDistributionChart from '@/components/charts/SpendingDistributionChart';
-import ThroneCoinsIcon from '@/components/icons/ThroneCoinsIcon';
-import { Money, CoinPile, VipBadge, TreasureOpen, StarBadge } from '@/assets/icons';
+import { ArrowRight, CreditCard, Shield, Star } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { cn } from '@/lib/utils';
 
-const spendingData = [
-  { name: 'Boosts', value: 2500, color: '#D4AF37' },
-  { name: 'Mockery', value: 1800, color: '#6B46C1' },
-  { name: 'Teams', value: 1200, color: '#2563EB' },
-  { name: 'Rank', value: 3500, color: '#E24F55' }
-];
-
-const Index = () => {
-  const [showTrophy, setShowTrophy] = useState(false);
-  const [showChart, setShowChart] = useState(false);
-  const [hoverCard, setHoverCard] = useState<string | null>(null);
-
-  useEffect(() => {
-    const trophyTimer = setTimeout(() => {
-      setShowTrophy(true);
-    }, 1000);
-    
-    const chartTimer = setTimeout(() => {
-      setShowChart(true);
-    }, 1500);
-    
-    return () => {
-      clearTimeout(trophyTimer);
-      clearTimeout(chartTimer);
-    };
-  }, []);
-
+const HeroSection = () => {
   return (
-    <Shell 
-      hideFooter={false} 
-      backgroundEffect="gradient" 
-      pageTransition="scale" 
-      transparentHeader={true}
-    >
-      <RoyalHero />
+    <section className="bg-gradient-to-b from-royal-navy to-black py-28 text-white relative overflow-hidden">
+      <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] bg-center opacity-10"></div>
       
-      <div className="relative">
-        <HeroShowcase />
-        
+      <div className="container mx-auto px-4 relative z-10">
         <motion.div 
-          className="absolute top-10 left-10 w-32 h-32 opacity-90 pointer-events-none"
-          initial={{ opacity: 0, scale: 0 }}
-          animate={{ opacity: 0.9, scale: 1, rotate: 10 }}
-          transition={{ 
-            duration: 0.8, 
-            type: 'spring', 
-            delay: 0.5 
-          }}
+          className="max-w-4xl mx-auto text-center"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
         >
-          <CoinPile size="xl" animated={true} />
-        </motion.div>
-        
-        <motion.div 
-          className="absolute top-10 right-10 w-32 h-32 opacity-70 pointer-events-none"
-          initial={{ opacity: 0, scale: 0 }}
-          animate={{ opacity: 0.7, scale: 1 }}
-          transition={{ 
-            duration: 0.8, 
-            type: 'spring', 
-            delay: 0.7 
-          }}
-        >
-          <EnhancedCrownEffect 
-            size={128}
-            opacity={0.5} 
-            interactive={false} 
-          />
+          <h1 className="text-5xl md:text-7xl font-bold mb-6 font-royal-heading bg-clip-text text-transparent bg-gradient-to-r from-royal-gold via-yellow-200 to-royal-gold">
+            SPEND THRONE
+          </h1>
+          
+          <p className="text-xl md:text-2xl mb-8 font-royal-script text-royal-gold">
+            Where Your Wallet Determines Your Worth
+          </p>
+          
+          <p className="text-lg md:text-xl mb-12 text-white/80 max-w-2xl mx-auto">
+            A satirical pay-to-win social experiment where your rank is determined by how much you spend. Mock others. Rise above. Reign supreme.
+          </p>
+          
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button size="lg" className="bg-gradient-to-r from-royal-gold to-yellow-600 hover:from-yellow-600 hover:to-royal-gold text-black font-bold">
+              Start Spending Now
+              <ArrowRight className="ml-2 h-5 w-5" />
+            </Button>
+            <Button size="lg" variant="outline" className="border-royal-gold text-royal-gold hover:bg-royal-gold/10">
+              Learn More
+            </Button>
+          </div>
         </motion.div>
       </div>
       
-      <RoyalSection
-        title="The Noble's Path To Prestige"
-        description="Follow these steps to establish thy dominance in our kingdom of monetary excess"
-        centered={true}
+      {/* Coin animations */}
+      <motion.div 
+        className="absolute left-1/4 top-1/4"
+        animate={{ 
+          y: [0, -20, 0], 
+          rotate: [0, 360], 
+          scale: [1, 1.1, 1] 
+        }}
+        transition={{ 
+          duration: 8, 
+          repeat: Infinity,
+          times: [0, 0.5, 1] 
+        }}
       >
-        {showTrophy && (
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, type: 'spring' }}
-            className="relative mx-auto mb-12 max-w-sm"
-          >
-            <div className="mx-auto w-64 h-64">
-              <RoyalTrophyModel />
-            </div>
-            <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 text-center w-full">
-              <Badge variant="outline" className="bg-royal-gold/10 border-royal-gold/30 text-white">
-                Top Spender Trophy
-              </Badge>
-              <p className="text-white/60 text-xs mt-1">
-                Awarded to the #1 ranked noble
-              </p>
-            </div>
-          </motion.div>
-        )}
-        
-        {showChart && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.3 }}
-            className="max-w-lg mx-auto mb-8 glass-morphism border border-white/10 p-4 rounded-lg"
-          >
-            <h3 className="text-lg font-medium mb-2 text-center">How Nobles Distribute Their Wealth</h3>
-            <SpendingDistributionChart data={spendingData} height={250} animated={true} />
-          </motion.div>
-        )}
-        
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 py-8">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2, duration: 0.5 }}
-            className={cn(
-              "glass-morphism p-6 rounded-lg border border-white/10 transition-all duration-300",
-              hoverCard === 'identity' ? "border-royal-gold/50 bg-black/40 transform -translate-y-2" : "hover:border-royal-gold/20"
-            )}
-            onMouseEnter={() => setHoverCard('identity')}
-            onMouseLeave={() => setHoverCard(null)}
-          >
-            <div className="flex flex-col items-center text-center">
-              <div className="w-16 h-16 rounded-full bg-royal-gold/10 flex items-center justify-center mb-4 relative overflow-hidden group">
-                <Crown className="h-7 w-7 text-royal-gold z-10 transition-transform duration-300 group-hover:scale-110" />
-                <motion.div 
-                  className="absolute inset-0 bg-gradient-to-r from-royal-gold/10 to-royal-gold/20 rounded-full"
-                  animate={{ 
-                    rotate: [0, 360],
-                    transition: { duration: 8, repeat: Infinity, ease: "linear" } 
-                  }}
-                />
-              </div>
-              <h3 className="text-xl font-bold mb-2">Create Thy Noble Identity</h3>
-              <p className="text-white/70 mb-4">
-                Register for an account and personalize thy coat of arms (profile) to establish thy presence in the court. No actual nobility required – just a functioning payment method!
-              </p>
-              <Link to="/signup">
-                <Button variant="outline" className="border-white/20 hover:border-royal-gold/30 group">
-                  <span>Establish Thy Lineage</span>
-                  <ChevronRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" />
-                </Button>
-              </Link>
-            </div>
-          </motion.div>
-          
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4, duration: 0.5 }}
-            className={cn(
-              "glass-morphism p-6 rounded-lg border border-white/10 transition-all duration-300",
-              hoverCard === 'rank' ? "border-royal-gold/50 bg-black/40 transform -translate-y-2" : "hover:border-royal-gold/20"
-            )}
-            onMouseEnter={() => setHoverCard('rank')}
-            onMouseLeave={() => setHoverCard(null)}
-          >
-            <div className="flex flex-col items-center text-center">
-              <div className="w-16 h-16 rounded-full bg-royal-gold/10 flex items-center justify-center mb-4 relative overflow-hidden group">
-                <DollarSign className="h-7 w-7 text-royal-gold z-10 transition-transform duration-300 group-hover:scale-110" />
-                <motion.div 
-                  className="absolute inset-0 bg-gradient-to-r from-royal-gold/10 to-royal-gold/20 rounded-full"
-                  animate={{ 
-                    rotate: [0, 360],
-                    transition: { duration: 8, repeat: Infinity, ease: "linear" } 
-                  }}
-                />
-              </div>
-              <h3 className="text-xl font-bold mb-2">Contribute To Thy Rank</h3>
-              <p className="text-white/70 mb-4">
-                Make "generous contributions" (completely frivolous payments) to increase thy standing in our aristocratic hierarchy. Remember: your worth is directly proportional to your expenditure!
-              </p>
-              <Link to="/pay/fiat">
-                <Button variant="outline" className="border-white/20 hover:border-royal-gold/30 group">
-                  <span>Fund Thy Noble Status</span>
-                  <ChevronRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" />
-                </Button>
-              </Link>
-            </div>
-          </motion.div>
-          
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6, duration: 0.5 }}
-            className={cn(
-              "glass-morphism p-6 rounded-lg border border-white/10 transition-all duration-300",
-              hoverCard === 'house' ? "border-royal-gold/50 bg-black/40 transform -translate-y-2" : "hover:border-royal-gold/20"
-            )}
-            onMouseEnter={() => setHoverCard('house')}
-            onMouseLeave={() => setHoverCard(null)}
-          >
-            <div className="flex flex-col items-center text-center">
-              <div className="w-16 h-16 rounded-full bg-royal-gold/10 flex items-center justify-center mb-4 relative overflow-hidden group">
-                <Shield className="h-7 w-7 text-royal-gold z-10 transition-transform duration-300 group-hover:scale-110" />
-                <motion.div 
-                  className="absolute inset-0 bg-gradient-to-r from-royal-gold/10 to-royal-gold/20 rounded-full"
-                  animate={{ 
-                    rotate: [0, 360],
-                    transition: { duration: 8, repeat: Infinity, ease: "linear" } 
-                  }}
-                />
-              </div>
-              <h3 className="text-xl font-bold mb-2">Join A Noble House</h3>
-              <p className="text-white/70 mb-4">
-                Pledge thy allegiance to House Red, Green, or Blue and compete for thy house's collective prestige. Just like political tribes, but with more honesty about the pay-to-win mechanics!
-              </p>
-              <Link to="/teams">
-                <Button variant="outline" className="border-white/20 hover:border-royal-gold/30 group">
-                  <span>Choose Thy Banner</span>
-                  <ChevronRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" />
-                </Button>
-              </Link>
-            </div>
-          </motion.div>
-        </div>
-        
-        <div className="text-center mt-6 space-y-4">
-          <Link to="/features">
-            <Button variant="royal" size="lg" className="px-6 mr-4 group">
-              <Trophy className="mr-2 h-5 w-5 transition-transform group-hover:scale-110" />
-              <span>Explore All Noble Features</span>
-            </Button>
-          </Link>
-          
-          <Link to="/profile-enhancements">
-            <Button variant="outline" size="lg" className="px-6 border-royal-gold/30 hover:bg-royal-gold/10 group">
-              <Sparkles className="mr-2 h-5 w-5 transition-transform group-hover:scale-110" />
-              <span>Discover Profile Enhancements</span>
-            </Button>
-          </Link>
-        </div>
-
-        <div className="mt-8 max-w-3xl mx-auto">
-          <Card className="glass-morphism border-royal-gold/20 bg-gradient-to-r from-royal-gold/5 to-royal-purple/5">
-            <CardContent className="p-4 text-center">
-              <div className="flex items-center justify-center mb-2">
-                <AlertTriangle className="h-5 w-5 text-royal-gold mr-2" />
-                <p className="text-royal-gold text-sm font-medium">ROYAL TREASURY NOTICE</p>
-              </div>
-              <p className="text-white/70 text-sm italic">
-                All funds contributed to SpendThrone go directly to our developers' exotic coffee habits and mechanical keyboard collections. This is a social experiment, not a charity – though our developers' spouses might disagree when they see our office setup!
-              </p>
-            </CardContent>
-          </Card>
-        </div>
-      </RoyalSection>
+        <div className="w-16 h-16 rounded-full bg-royal-gold/70 backdrop-blur-lg shadow-lg shadow-royal-gold/30" />
+      </motion.div>
       
-      <RoyalDivider variant="ornate" color="gold" />
-      
-      <RoyalSection
-        title="Royal Extravagances"
-        description="Explore the lavish features that await those with coin to spare"
-        centered={true}
+      <motion.div 
+        className="absolute right-1/4 top-1/3"
+        animate={{ 
+          y: [0, -30, 0], 
+          rotate: [0, -360], 
+          scale: [1, 1.2, 1] 
+        }}
+        transition={{ 
+          duration: 10, 
+          repeat: Infinity,
+          times: [0, 0.5, 1],
+          delay: 1
+        }}
       >
-        <div className="flex justify-center mb-8">
-          <motion.div
-            initial={{ opacity: 0, scale: 0 }}
-            animate={{ opacity: 1, scale: 1, rotate: [0, 10, 0] }}
-            transition={{ 
-              type: "spring", 
-              stiffness: 260, 
-              damping: 20,
-              delay: 0.3 
-            }}
-          >
-            <ThroneCoinsIcon size="lg" animated={true} />
-          </motion.div>
-        </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.3, duration: 0.5 }}
-            className="glass-morphism border-white/10 rounded-lg p-5 hover:border-royal-gold/20 transition-all duration-300 hover:bg-black/40 hover:transform hover:-translate-y-1"
-            whileHover={{ scale: 1.01 }}
-          >
-            <div className="flex items-center mb-4">
-              <div className="w-12 h-12 rounded-full bg-royal-purple/20 flex items-center justify-center mr-4 relative overflow-hidden">
-                <Gem className="h-6 w-6 text-royal-purple z-10" />
-                <motion.div 
-                  className="absolute inset-0 bg-gradient-to-r from-royal-purple/10 to-royal-purple/20 rounded-full"
-                  animate={{ 
-                    rotate: [0, 360],
-                    transition: { duration: 10, repeat: Infinity, ease: "linear" } 
-                  }}
-                />
-              </div>
-              <div>
-                <h3 className="font-bold text-lg">Profile Boosts</h3>
-                <p className="text-white/60 text-sm">Enhance your digital presence</p>
-              </div>
-            </div>
-            <p className="text-white/70 mb-4">
-              Purchase extravagant visual enhancements that boost your profile's appearance and visibility. From animated backgrounds to royal crowns, make sure everyone knows you've spent more than they have!
-            </p>
-            <Link to="/profile-enhancements">
-              <Button variant="outline" size="sm" className="w-full group">
-                <Sparkles className="mr-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-                <span>View Enhancements</span>
-              </Button>
-            </Link>
-          </motion.div>
-          
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.4, duration: 0.5 }}
-            className="glass-morphism border-white/10 rounded-lg p-5 hover:border-royal-gold/20 transition-all duration-300 hover:bg-black/40 hover:transform hover:-translate-y-1"
-            whileHover={{ scale: 1.01 }}
-          >
-            <div className="flex items-center mb-4">
-              <div className="w-12 h-12 rounded-full bg-royal-crimson/20 flex items-center justify-center mr-4 relative overflow-hidden">
-                <Target className="h-6 w-6 text-royal-crimson z-10" />
-                <motion.div 
-                  className="absolute inset-0 bg-gradient-to-r from-royal-crimson/10 to-royal-crimson/20 rounded-full"
-                  animate={{ 
-                    rotate: [0, 360],
-                    transition: { duration: 10, repeat: Infinity, ease: "linear" } 
-                  }}
-                />
-              </div>
-              <div>
-                <h3 className="font-bold text-lg">Mockery Arena</h3>
-                <p className="text-white/60 text-sm">Shame thy rivals with style</p>
-              </div>
-            </div>
-            <p className="text-white/70 mb-4">
-              Spend your hard-earned money to add humiliating visual effects to other users' profiles. Choose from tomatoes, eggs, stocks, and more to assert your digital dominance through pettiness!
-            </p>
-            <Link to="/mockery">
-              <Button variant="outline" size="sm" className="w-full group">
-                <Target className="mr-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-                <span>Enter The Arena</span>
-              </Button>
-            </Link>
-          </motion.div>
-          
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.5, duration: 0.5 }}
-            className="glass-morphism border-white/10 rounded-lg p-5 hover:border-royal-gold/20 transition-all duration-300 hover:bg-black/40 hover:transform hover:-translate-y-1"
-            whileHover={{ scale: 1.01 }}
-          >
-            <div className="flex items-center mb-4">
-              <div className="w-12 h-12 rounded-full bg-royal-gold/20 flex items-center justify-center mr-4 relative overflow-hidden">
-                <Crown className="h-6 w-6 text-royal-gold z-10" />
-                <motion.div 
-                  className="absolute inset-0 bg-gradient-to-r from-royal-gold/10 to-royal-gold/20 rounded-full"
-                  animate={{ 
-                    rotate: [0, 360],
-                    transition: { duration: 10, repeat: Infinity, ease: "linear" } 
-                  }}
-                />
-              </div>
-              <div>
-                <h3 className="font-bold text-lg">Leaderboard Glory</h3>
-                <p className="text-white/60 text-sm">Compete for the top position</p>
-              </div>
-            </div>
-            <p className="text-white/70 mb-4">
-              Monitor thy standing in our royal court with interactive 3D leaderboards. Watch as your rank rises with each lavish contribution, and bask in the envy of the lower-ranked peasants!
-            </p>
-            <Link to="/leaderboard">
-              <Button variant="outline" size="sm" className="w-full group">
-                <Trophy className="mr-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-                <span>View Leaderboard</span>
-              </Button>
-            </Link>
-          </motion.div>
-          
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.6, duration: 0.5 }}
-            className="glass-morphism border-white/10 rounded-lg p-5 hover:border-royal-gold/20 transition-all duration-300 hover:bg-black/40 hover:transform hover:-translate-y-1"
-            whileHover={{ scale: 1.01 }}
-          >
-            <div className="flex items-center mb-4">
-              <div className="w-12 h-12 rounded-full bg-royal-navy/20 flex items-center justify-center mr-4 relative overflow-hidden">
-                <BarChart className="h-6 w-6 text-royal-navy z-10" />
-                <motion.div 
-                  className="absolute inset-0 bg-gradient-to-r from-royal-navy/10 to-royal-navy/20 rounded-full"
-                  animate={{ 
-                    rotate: [0, 360],
-                    transition: { duration: 10, repeat: Infinity, ease: "linear" } 
-                  }}
-                />
-              </div>
-              <div>
-                <h3 className="font-bold text-lg">Spending Analytics</h3>
-                <p className="text-white/60 text-sm">Track thy wasteful expenditures</p>
-              </div>
-            </div>
-            <p className="text-white/70 mb-4">
-              View detailed visualizations of your completely unnecessary spending patterns. Compare your frivolous purchases with others and identify opportunities to waste even more money!
-            </p>
-            <Link to="/analytics">
-              <Button variant="outline" size="sm" className="w-full group">
-                <BarChart className="mr-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-                <span>View Analytics</span>
-              </Button>
-            </Link>
-          </motion.div>
-        </div>
-      </RoyalSection>
-      
-      <RoyalDivider variant="ornate" color="gold" />
-      
-      <RoyalSection
-        title="Royal Testimonials"
-        description="Hear from our distinguished nobles who have traded real currency for imaginary status"
-        centered={true}
-      >
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3, duration: 0.5 }}
-            className="glass-morphism border border-white/10 p-6 rounded-lg relative"
-            whileHover={{ scale: 1.02, boxShadow: "0 0 20px rgba(212, 175, 55, 0.2)" }}
-          >
-            <div className="absolute -top-3 -left-3">
-              <VipBadge size="sm" animated />
-            </div>
-            <p className="italic text-white/80 mb-4">
-              "I've spent thousands on designer shoes that sit unworn in my closet, so why not spend a few hundred on completely virtual status? At least here I'm honest about my materialism! Plus, I can market my business through my profile, which almost makes it a legitimate business expense... almost."
-            </p>
-            <div className="flex items-center">
-              <div className="w-10 h-10 rounded-full overflow-hidden mr-3 border border-royal-gold/50">
-                <img src="/throne-assets/avatars/noble-1.jpg" alt="Noble testimonial" className="w-full h-full object-cover" />
-              </div>
-              <div>
-                <div className="font-bold">Lady Goldencoin</div>
-                <div className="text-royal-gold text-sm">#4 on Leaderboard</div>
-              </div>
-            </div>
-            <div className="absolute -bottom-2 -right-2">
-              <StarBadge size="sm" animated color="gold" />
-            </div>
-          </motion.div>
-          
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5, duration: 0.5 }}
-            className="glass-morphism border border-white/10 p-6 rounded-lg relative"
-            whileHover={{ scale: 1.02, boxShadow: "0 0 20px rgba(212, 175, 55, 0.2)" }}
-          >
-            <div className="absolute -top-3 -left-3">
-              <TreasureOpen size="sm" animated />
-            </div>
-            <p className="italic text-white/80 mb-4">
-              "After years of trying to climb the corporate ladder through actual work and skill development, I discovered I could just buy my way to the top here! It's like nepotism but without needing to be related to anyone important. My marketing ROI from promoting on my high-ranked profile has been surprisingly effective!"
-            </p>
-            <div className="flex items-center">
-              <div className="w-10 h-10 rounded-full overflow-hidden mr-3 border border-royal-gold/50">
-                <img src="/throne-assets/avatars/noble-2.jpg" alt="Noble testimonial" className="w-full h-full object-cover" />
-              </div>
-              <div>
-                <div className="font-bold">Duke Digitalworth</div>
-                <div className="text-royal-gold text-sm">#7 on Leaderboard</div>
-              </div>
-            </div>
-            <div className="absolute -bottom-2 -right-2">
-              <Money size="sm" animated />
-            </div>
-          </motion.div>
-        </div>
-        
-        <motion.div 
-          className="text-center mt-8 text-sm text-white/50 italic max-w-lg mx-auto"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.7, duration: 0.5 }}
-        >
-          <p>* These testimonials are from actual users, though we've taken the liberty of enhancing their eloquence. Your experience may vary, though your money will definitely be gone regardless.</p>
-        </motion.div>
-      </RoyalSection>
-    </Shell>
+        <div className="w-20 h-20 rounded-full bg-royal-gold/60 backdrop-blur-lg shadow-lg shadow-royal-gold/20" />
+      </motion.div>
+    </section>
   );
 };
 
-export default Index;
+const FeaturesSection = () => {
+  const features = [
+    {
+      icon: <CreditCard className="h-12 w-12 text-royal-gold" />,
+      title: "Pay-to-Win Leaderboard",
+      description: "Your rank is determined by how much you spend. It's that simple."
+    },
+    {
+      icon: <Shield className="h-12 w-12 text-royal-gold" />,
+      title: "Join RGB Teams",
+      description: "Align with Red, Green, or Blue teams and compete for team supremacy."
+    },
+    {
+      icon: <Star className="h-12 w-12 text-royal-gold" />,
+      title: "Royal Mockery",
+      description: "Pay to visually mock other users with tomatoes, eggs, and more."
+    }
+  ];
+  
+  return (
+    <section className="py-20 bg-gray-900">
+      <div className="container mx-auto px-4">
+        <div className="text-center mb-16">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-white">How It Works</h2>
+          <p className="text-xl text-white/60 max-w-2xl mx-auto">
+            A simple concept executed with satirical brilliance. Spend money, rise through the ranks.
+          </p>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {features.map((feature, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: index * 0.2 }}
+              viewport={{ once: true }}
+              className={cn(
+                "bg-gradient-to-b from-gray-800 to-gray-900 rounded-xl p-8 border",
+                "transform transition-transform hover:scale-105",
+                "shadow-xl hover:shadow-2xl hover:shadow-royal-gold/10"
+              )}
+            >
+              <div className="mb-6 text-center">{feature.icon}</div>
+              <h3 className="text-xl font-bold mb-4 text-white text-center">{feature.title}</h3>
+              <p className="text-white/70 text-center">{feature.description}</p>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const TeamSection = () => {
+  const teams = [
+    {
+      name: "Team Red",
+      color: "from-red-600 to-red-900",
+      textColor: "text-red-500",
+      borderColor: "border-red-700/30",
+      description: "The fierce warriors who blaze through competition with determination and fire."
+    },
+    {
+      name: "Team Green",
+      color: "from-green-600 to-green-900",
+      textColor: "text-green-500",
+      borderColor: "border-green-700/30",
+      description: "The strategic masterminds who grow their wealth and influence with precision."
+    },
+    {
+      name: "Team Blue",
+      color: "from-blue-600 to-blue-900",
+      textColor: "text-blue-500",
+      borderColor: "border-blue-700/30",
+      description: "The calm and collected intellects who flow with the currents of victory."
+    }
+  ];
+  
+  return (
+    <section className="py-20 bg-black">
+      <div className="container mx-auto px-4">
+        <div className="text-center mb-16">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-white">Choose Your Team</h2>
+          <p className="text-xl text-white/60 max-w-2xl mx-auto">
+            Select your allegiance and compete for team dominance on the global leaderboard.
+          </p>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {teams.map((team, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5, delay: index * 0.2 }}
+              viewport={{ once: true }}
+              className={cn(
+                `bg-gradient-to-b ${team.color} rounded-xl p-8`,
+                `border ${team.borderColor}`,
+                "transform transition-transform hover:scale-105"
+              )}
+            >
+              <h3 className={`text-2xl font-bold mb-4 ${team.textColor}`}>{team.name}</h3>
+              <p className="text-white/80">{team.description}</p>
+              <div className="mt-6">
+                <Button variant="outline" className="w-full border-white/20 text-white hover:bg-white/10">
+                  Join {team.name}
+                </Button>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const TestimonialsSection = () => {
+  const testimonials = [
+    {
+      quote: "Finally, a platform that lets me rise above the peasants through the power of my wallet!",
+      author: "Lord Moneybags, Rank #3",
+      spent: "$1,500"
+    },
+    {
+      quote: "The joy I felt watching my rank rise after dropping $500 was almost as satisfying as the mockery I unleashed.",
+      author: "GoldenSpender, Rank #7",
+      spent: "$980"
+    },
+    {
+      quote: "I've never felt more alive than when I'm spending money to climb a meaningless leaderboard.",
+      author: "WealthyJester, Rank #12",
+      spent: "$750"
+    }
+  ];
+  
+  return (
+    <section className="py-20 bg-gradient-to-b from-gray-900 to-black">
+      <div className="container mx-auto px-4">
+        <div className="text-center mb-16">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-white">What Our Nobles Say</h2>
+          <p className="text-xl text-white/60 max-w-2xl mx-auto">
+            Hear from the elite who have risen through the ranks with their wallets.
+          </p>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {testimonials.map((testimonial, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: index * 0.2 }}
+              viewport={{ once: true }}
+            >
+              <Card className="bg-gray-800/50 backdrop-blur-sm border-royal-gold/20">
+                <CardContent className="pt-6">
+                  <div className="flex flex-col h-full">
+                    <div className="text-2xl text-royal-gold mb-2">❝</div>
+                    <p className="text-white/90 mb-6 flex-grow">"{testimonial.quote}"</p>
+                    <div>
+                      <p className="font-medium text-white">{testimonial.author}</p>
+                      <p className="text-royal-gold text-sm">Total Spent: {testimonial.spent}</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const CallToActionSection = () => {
+  return (
+    <section className="py-20 bg-black relative overflow-hidden">
+      <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] bg-center opacity-5"></div>
+      
+      <div className="container mx-auto px-4 relative z-10">
+        <motion.div 
+          className="max-w-4xl mx-auto text-center"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+        >
+          <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white">Ready to Assert Your Dominance?</h2>
+          
+          <p className="text-xl mb-12 text-white/80 max-w-2xl mx-auto">
+            Your throne awaits, and the path to greatness is paved with dollars. Join now and experience the ultimate pay-to-win social experiment.
+          </p>
+          
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button size="lg" className="bg-gradient-to-r from-royal-gold to-yellow-600 hover:from-yellow-600 hover:to-royal-gold text-black font-bold">
+              Claim Your Throne
+              <ArrowRight className="ml-2 h-5 w-5" />
+            </Button>
+            <Button size="lg" variant="outline" className="border-royal-gold text-royal-gold hover:bg-royal-gold/10">
+              View Leaderboard
+            </Button>
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  );
+};
+
+const IndexPage = () => {
+  return (
+    <div className="min-h-screen bg-black text-white">
+      <HeroSection />
+      <FeaturesSection />
+      <TeamSection />
+      <TestimonialsSection />
+      <CallToActionSection />
+    </div>
+  );
+};
+
+export default IndexPage;

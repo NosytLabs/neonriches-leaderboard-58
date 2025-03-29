@@ -27,26 +27,39 @@ const ProfileBoostDisplay: React.FC<ProfileBoostDisplayProps> = ({
     );
   }
 
+  // Helper function to get the proper capitalized icon name
+  const getIconName = (iconNameLowerCase: string): string => {
+    const iconMap: Record<string, string> = {
+      'eye': 'Eye',
+      'image': 'Image',
+      'play': 'Play',
+      'sparkles': 'Sparkles',
+      'star': 'Star',
+      'clock': 'Clock'
+    };
+    
+    return iconMap[iconNameLowerCase] || 'Star';
+  };
+
   return (
     <div className={`space-y-4 ${className}`}>
       {activeBoosts.map((boost: ProfileBoost) => {
-        const boostEffectId = typeof boost.effectId === 'string' ? boost.effectId : '';
-        const boostEffect = getBoostEffect(boostEffectId);
+        const boostEffect = getBoostEffect(boost.effectId || '');
         const timeLeft = getBoostTimeLeft(boost);
         
         // Map boost effect types to appropriate icons
         const getBoostIcon = () => {
-          if (!boostEffect) return 'star';
+          if (!boostEffect) return 'Star';
           
           // Check if boostEffect has a type property
           const effectType = (boostEffect as any).type || 'visibility';
           
           switch (effectType) {
-            case 'visibility': return 'eye';
-            case 'appearance': return 'image';
-            case 'animation': return 'play';
-            case 'effect': return 'sparkles';
-            default: return 'star';
+            case 'visibility': return 'Eye';
+            case 'appearance': return 'Image';
+            case 'animation': return 'Play';
+            case 'effect': return 'Sparkles';
+            default: return 'Star';
           }
         };
         
@@ -69,7 +82,7 @@ const ProfileBoostDisplay: React.FC<ProfileBoostDisplayProps> = ({
                 </p>
                 
                 <div className="flex items-center mt-3 text-xs text-white/60">
-                  <Icon name="clock" className="h-3.5 w-3.5 mr-1.5" size="xs" />
+                  <Icon name="Clock" className="h-3.5 w-3.5 mr-1.5" size="xs" />
                   <span>{timeLeft}</span>
                 </div>
               </div>

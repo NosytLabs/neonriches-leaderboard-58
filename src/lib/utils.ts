@@ -74,3 +74,35 @@ export function debounce<T extends (...args: any[]) => any>(
     }, wait);
   };
 }
+
+/**
+ * Formats a date like 'Jan 1, 2023'
+ */
+export function formatDate(date: Date | string): string {
+  if (!date) return '';
+  const d = new Date(date);
+  return d.toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric'
+  });
+}
+
+/**
+ * Formats currency with dollar sign
+ */
+export function formatCurrency(amount: number, currency = 'USD'): string {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency,
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  }).format(amount);
+}
+
+/**
+ * Formats a number with commas as thousands separators
+ */
+export function formatNumber(num: number): string {
+  return num.toLocaleString('en-US');
+}
