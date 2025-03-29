@@ -23,9 +23,17 @@ export const faqItems: FAQItem[] = [
   {
     question: "How does the leaderboard work?",
     answer: (
-      <p>
-        It's beautifully simple: $1 = 1 point on the leaderboard. The more you spend, the higher you climb. No skill required whatsoever - just a functioning payment method and questionable financial priorities! Our leaderboard never resets, creating a permanent monument to conspicuous consumption.
-      </p>
+      <div>
+        <p className="mb-2">
+          It's beautifully simple: $1 deposited = 1 point on the leaderboard. The more you deposit, the higher you climb. No skill required whatsoever - just a functioning payment method and questionable financial priorities!
+        </p>
+        <p className="mb-2">
+          Our leaderboard never resets, creating a permanent monument to conspicuous consumption. Only deposits count toward your rank - not purchases made from your wallet balance.
+        </p>
+        <p>
+          For example, if you've deposited $100 total and you're #3 on the leaderboard, and user #1 has deposited $150, you'd need to deposit another $51 to claim the throne.
+        </p>
+      </div>
     ),
     icon: <Trophy className="h-4 w-4 text-royal-gold" />,
     category: "leaderboard"
@@ -51,6 +59,21 @@ export const faqItems: FAQItem[] = [
     category: "money"
   },
   {
+    question: "What's the difference between depositing and purchasing?",
+    answer: (
+      <div>
+        <p className="mb-2">
+          <strong>Deposits</strong> are adding money to your account, and they directly increase your leaderboard rank at a rate of $1 = 1 point. This is the ONLY way to climb the leaderboard rankings.
+        </p>
+        <p>
+          <strong>Purchases</strong> such as mockery actions, profile upgrades, or subscriptions use your wallet balance but don't affect your leaderboard position. Think of deposits as "money in" (affecting rank) and purchases as "money spent" (affecting features).
+        </p>
+      </div>
+    ),
+    icon: <DollarSign className="h-4 w-4 text-royal-gold" />,
+    category: "money"
+  },
+  {
     question: "What benefits do I get from being highly ranked?",
     answer: (
       <p>
@@ -59,6 +82,21 @@ export const faqItems: FAQItem[] = [
     ),
     icon: <Crown className="h-4 w-4 text-royal-gold" />,
     category: "benefits"
+  },
+  {
+    question: "Do subscription tiers affect my rank?",
+    answer: (
+      <div>
+        <p className="mb-2">
+          No! Your subscription tier (Basic, Premium, Royal) only affects your profile features and visual styling - it has no impact on your actual rank position. The leaderboard is purely meritocratic... if you define "merit" as "ability to deposit money."
+        </p>
+        <p>
+          Higher tier subscribers do get prettier borders, animations, and visibility features in the leaderboard, but this is purely cosmetic. The rankings themselves are determined solely by deposit amounts.
+        </p>
+      </div>
+    ),
+    icon: <Trophy className="h-4 w-4 text-royal-gold" />,
+    category: "leaderboard"
   },
   {
     question: "Is this serious or a joke?",

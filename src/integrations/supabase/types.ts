@@ -58,6 +58,13 @@ export type Database = {
             foreignKeyName: "certificates_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
+            referencedRelation: "leaderboard_view"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "certificates_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
             referencedRelation: "users"
             referencedColumns: ["id"]
           },
@@ -106,6 +113,13 @@ export type Database = {
             foreignKeyName: "deposits_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
+            referencedRelation: "leaderboard_view"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "deposits_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
             referencedRelation: "users"
             referencedColumns: ["id"]
           },
@@ -142,6 +156,13 @@ export type Database = {
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "leaderboard"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "leaderboard_snapshots_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "leaderboard_view"
             referencedColumns: ["id"]
           },
           {
@@ -241,6 +262,13 @@ export type Database = {
             foreignKeyName: "withdrawals_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
+            referencedRelation: "leaderboard_view"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "withdrawals_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
             referencedRelation: "users"
             referencedColumns: ["id"]
           },
@@ -253,6 +281,23 @@ export type Database = {
           current_balance: number | null
           display_name: string | null
           id: string | null
+          joined_at: string | null
+          profile_image: string | null
+          rank: number | null
+          recent_deposits_count: number | null
+          team: string | null
+          tier: string | null
+          total_deposited: number | null
+          username: string | null
+        }
+        Relationships: []
+      }
+      leaderboard_view: {
+        Row: {
+          current_balance: number | null
+          display_name: string | null
+          id: string | null
+          is_ranked: boolean | null
           joined_at: string | null
           profile_image: string | null
           rank: number | null

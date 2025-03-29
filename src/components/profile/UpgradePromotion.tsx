@@ -8,7 +8,7 @@ export const subscriptionTiers = [
     price: 5,
     features: [
       "Basic profile customization",
-      "Leaderboard presence",
+      "Leaderboard presence with standard display",
       "Team affiliation",
       "Public certificate of conspicuous consumption"
     ],
@@ -21,12 +21,13 @@ export const subscriptionTiers = [
     price: 15,
     features: [
       "Advanced profile customization",
-      "Enhanced profile visibility",
-      "RGB borders and animations",
+      "Enhanced profile visibility (RGB borders, premium styling)",
+      "RGB borders and animations in leaderboard",
       "Profile boost (3-day)",
       "Mockery protection (50% discount)",
       "Basic marketing analytics",
-      "Profile visitor metrics"
+      "Profile visitor metrics",
+      "Note: Does not affect leaderboard rank (rank only increases with deposits)"
     ],
     recommended: true
   },
@@ -37,6 +38,7 @@ export const subscriptionTiers = [
     price: 30,
     features: [
       "Maximum profile customization",
+      "Royal styling on leaderboard (gold borders, crown icons, animations)",
       "Permanent profile boost",
       "Exclusive animated effects",
       "Premium billboard space",
@@ -45,7 +47,8 @@ export const subscriptionTiers = [
       "NFT certificate minting",
       "Priority placements across site",
       "Comprehensive marketing dashboard",
-      "Visitor demographics and conversion tracking"
+      "Visitor demographics and conversion tracking",
+      "Note: Does not affect leaderboard rank (rank only increases with deposits)"
     ],
     recommended: false
   }
