@@ -56,6 +56,7 @@ export interface UserCosmetics {
   effects: string[];
   badges: string[];
   themes: string[];
+  socialLinks?: SocialLinks;
   foundersPass?: boolean;
   activeBorder?: string;
   activeColor?: string;
@@ -104,6 +105,14 @@ export const getRarityBorderColor = (rarity: CosmeticRarity): string => {
     default: return 'border-white';
   }
 };
+
+export interface SocialLinks {
+  twitter?: string;
+  instagram?: string;
+  github?: string;
+  linkedin?: string;
+  website?: string;
+}
 
 export type CosmeticType = string;
 export type CosmeticPlacement = string;

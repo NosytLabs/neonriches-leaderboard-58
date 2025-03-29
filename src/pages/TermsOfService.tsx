@@ -1,146 +1,121 @@
 
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Checkbox } from '@/components/ui/checkbox';
+import React from 'react';
+import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Scroll, Shield, Crown, Info, ExternalLink } from 'lucide-react';
-import Layout from '@/components/layouts/Layout';
-import { useToastContext } from '@/contexts/ToastContext';
-import RoyalDivider from '@/components/ui/royal-divider';
-import ThroneBackground from '@/components/ui/throne-background';
-import RoyalDecoration from '@/components/ui/royal-decoration';
+import { Link } from 'react-router-dom';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import ThroneChair from '@/components/logos/ThroneChair';
 
-const TermsOfService = () => {
-  const navigate = useNavigate();
-  const { addToast } = useToastContext();
-  const [acceptedTerms, setAcceptedTerms] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const handleAccept = () => {
-    if (!acceptedTerms) {
-      addToast({
-        title: "Terms Not Accepted",
-        description: "You must accept the terms to continue your journey to nobility.",
-        variant: "destructive",
-      });
-      return;
-    }
-    
-    setIsSubmitting(true);
-    
-    // Store in localStorage that user has accepted terms
-    localStorage.setItem('acceptedTerms', 'true');
-    localStorage.setItem('termsAcceptedDate', new Date().toISOString());
-    
-    setTimeout(() => {
-      addToast({
-        title: "Royal Decree Accepted",
-        description: "Welcome to SpendThrone! Your journey to purchased nobility awaits.",
-      });
-      
-      navigate('/dashboard');
-    }, 1000);
-  };
-
+const TermsOfService: React.FC = () => {
   return (
-    <div className="min-h-screen flex flex-col bg-background text-foreground">
-      <div className="absolute inset-0 -z-10">
-        <ThroneBackground variant="royal" animate={true} particles={true} />
-      </div>
+    <div className="container mx-auto px-4 py-8 max-w-4xl">
+      <Link to="/">
+        <Button variant="outline" className="mb-6 glass-morphism border-white/10">
+          <ArrowLeft className="h-4 w-4 mr-2" />
+          Back to Home
+        </Button>
+      </Link>
       
-      <Layout disablePadding fullHeight transparentHeader>
-        <div className="pt-24 pb-12 px-4 md:px-6">
-          <div className="max-w-3xl mx-auto relative">
-            <RoyalDecoration variant="corner-flourish" position="top-left" className="hidden md:block" />
-            <RoyalDecoration variant="corner-flourish" position="top-right" className="hidden md:block" />
-            
-            <div className="text-center mb-8 animate-fade-in">
-              <div className="inline-flex items-center justify-center mb-4">
-                <Scroll size={40} className="text-royal-gold animate-crown-glow" />
-              </div>
-              <h1 className="text-4xl font-royal font-bold text-royal-gold mb-2">Terms of Service</h1>
-              <p className="text-white/70">Please read and accept our terms to continue your path to nobility</p>
-            </div>
-            
-            <Card className="glass-morphism border-royal-gold/10 mb-6">
-              <CardHeader>
-                <CardTitle className="flex items-center text-xl font-royal text-royal-gold">
-                  <Crown className="mr-2 h-5 w-5 text-royal-gold" />
-                  Terms of Service Summary
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="prose prose-invert max-w-none">
-                <div className="space-y-4 text-white/80">
-                  <p>
-                    Welcome to SpendThrone, a satirical web application that parodies pay-to-win mechanics and wealth-based status. 
-                    By using this service, you acknowledge:
-                  </p>
-                  
-                  <ul className="list-disc pl-6 space-y-2">
-                    <li>This is a <span className="text-royal-gold font-bold">SATIRICAL</span> service designed for entertainment.</li>
-                    <li>All payments are <span className="text-royal-crimson font-bold">FINAL and NON-REFUNDABLE</span>.</li>
-                    <li>Your purchased status has no real-world value (just like most luxury goods).</li>
-                    <li>You will not post obscene, illegal, or harmful content.</li>
-                    <li>We collect minimal information necessary to maintain your account.</li>
-                    <li>Your leaderboard position is directly tied to how much money you give us, with no other considerations.</li>
-                  </ul>
-
-                  <RoyalDivider variant="line" className="my-4" />
-                  
-                  <div className="flex items-start space-x-3">
-                    <Checkbox 
-                      id="terms" 
-                      checked={acceptedTerms}
-                      onCheckedChange={(checked) => setAcceptedTerms(!!checked)}
-                      className="mt-1 data-[state=checked]:bg-royal-gold data-[state=checked]:border-royal-gold"
-                    />
-                    <label htmlFor="terms" className="text-sm">
-                      I accept the <a href="/terms" target="_blank" rel="noopener noreferrer" className="text-royal-gold underline inline-flex items-center">
-                        full Terms of Service <ExternalLink className="h-3 w-3 ml-1" />
-                      </a> and <a href="/privacy" target="_blank" rel="noopener noreferrer" className="text-royal-gold underline inline-flex items-center">
-                        Privacy Policy <ExternalLink className="h-3 w-3 ml-1" />
-                      </a> and understand this is a satirical platform.
-                    </label>
-                  </div>
-                </div>
-              </CardContent>
-              <CardFooter className="flex justify-end border-t border-royal-gold/20 pt-6">
-                <Button 
-                  variant="royal"
-                  className="royal-button glass-morphism border-royal-gold/30 bg-royal-gold/90"
-                  disabled={!acceptedTerms || isSubmitting}
-                  onClick={handleAccept}
-                >
-                  {isSubmitting ? (
-                    <>
-                      <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
-                      <span>Accepting Royal Decree...</span>
-                    </>
-                  ) : (
-                    <>
-                      <Shield className="mr-2 h-4 w-4" />
-                      <span>Accept & Continue</span>
-                    </>
-                  )}
-                </Button>
-              </CardFooter>
-            </Card>
-            
-            <div className="text-center text-white/50 text-sm mt-4">
-              <p>By proceeding, you acknowledge that money spent here is purely for satirical entertainment and social commentary.</p>
-              <p className="mt-1">
-                <a href="/privacy" className="text-royal-gold/70 hover:text-royal-gold transition-colors">Privacy Policy</a> • 
-                <a href="/terms" className="text-royal-gold/70 hover:text-royal-gold transition-colors ml-2">Full Terms</a> • 
-                <a href="/faq" className="text-royal-gold/70 hover:text-royal-gold transition-colors ml-2">Royal FAQ</a>
-              </p>
-            </div>
-            
-            <RoyalDecoration variant="corner-flourish" position="bottom-left" className="hidden md:block" />
-            <RoyalDecoration variant="corner-flourish" position="bottom-right" className="hidden md:block" />
+      <Card className="glass-morphism border-white/10">
+        <CardHeader className="flex flex-col items-center text-center border-b border-white/10 pb-6">
+          <ThroneChair size={80} className="mb-4" animate={true} />
+          <CardTitle className="text-3xl font-royal text-royal-gold">Terms of Service</CardTitle>
+          <CardDescription>Last Updated: March 29, 2025</CardDescription>
+        </CardHeader>
+        
+        <CardContent className="pt-6 space-y-6">
+          <div className="space-y-2">
+            <h2 className="text-xl font-semibold text-royal-gold">1. Acceptance of Terms</h2>
+            <p className="text-white/80 leading-relaxed">
+              Welcome to SpendThrone. By accessing or using our website and services, you agree to be bound by these Terms of Service. If you do not agree to these Terms, please do not use our services.
+            </p>
           </div>
-        </div>
-      </Layout>
+          
+          <div className="space-y-2">
+            <h2 className="text-xl font-semibold text-royal-gold">2. Description of Service</h2>
+            <p className="text-white/80 leading-relaxed">
+              SpendThrone is a satirical social platform where users can advance their rank by making monetary contributions. The platform offers various features including profile customization, team competition, and social interaction. All transactions are non-refundable and purely for entertainment purposes.
+            </p>
+          </div>
+          
+          <div className="space-y-2">
+            <h2 className="text-xl font-semibold text-royal-gold">3. Account Registration</h2>
+            <p className="text-white/80 leading-relaxed">
+              To access certain features, you must create an account. You are responsible for maintaining the confidentiality of your account information and for all activities that occur under your account. You agree to provide accurate and complete information when creating your account and to update your information as necessary.
+            </p>
+          </div>
+          
+          <div className="space-y-2">
+            <h2 className="text-xl font-semibold text-royal-gold">4. User Conduct</h2>
+            <p className="text-white/80 leading-relaxed">
+              You agree not to use the Service to:
+            </p>
+            <ul className="list-disc pl-6 text-white/80 space-y-1">
+              <li>Violate any laws or regulations</li>
+              <li>Post or transmit content that is harmful, offensive, obscene, abusive, or otherwise objectionable</li>
+              <li>Impersonate any person or entity</li>
+              <li>Engage in any activity that interferes with or disrupts the Service</li>
+              <li>Attempt to access any accounts or data not belonging to you</li>
+              <li>Use the Service for any fraudulent or illegal purpose</li>
+            </ul>
+          </div>
+          
+          <div className="space-y-2">
+            <h2 className="text-xl font-semibold text-royal-gold">5. Payments and Refunds</h2>
+            <p className="text-white/80 leading-relaxed">
+              All payments made on SpendThrone are final and non-refundable. By making a payment, you acknowledge that you are purchasing digital status and virtual items with no real-world value. We reserve the right to modify our pricing at any time.
+            </p>
+          </div>
+          
+          <div className="space-y-2">
+            <h2 className="text-xl font-semibold text-royal-gold">6. Content Ownership</h2>
+            <p className="text-white/80 leading-relaxed">
+              Users retain all ownership rights to the content they post on SpendThrone. By posting content, you grant us a non-exclusive, worldwide, royalty-free license to use, copy, modify, display, and distribute your content in connection with the Service.
+            </p>
+          </div>
+          
+          <div className="space-y-2">
+            <h2 className="text-xl font-semibold text-royal-gold">7. Content Moderation</h2>
+            <p className="text-white/80 leading-relaxed">
+              We reserve the right to remove any content that violates these Terms or that we find objectionable for any reason. We may suspend or terminate your account for violations of these Terms, inappropriate behavior, or for any other reason at our sole discretion.
+            </p>
+          </div>
+          
+          <div className="space-y-2">
+            <h2 className="text-xl font-semibold text-royal-gold">8. Disclaimer of Warranties</h2>
+            <p className="text-white/80 leading-relaxed">
+              THE SERVICE IS PROVIDED "AS IS" AND "AS AVAILABLE" WITHOUT ANY WARRANTIES OF ANY KIND. WE DISCLAIM ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT.
+            </p>
+          </div>
+          
+          <div className="space-y-2">
+            <h2 className="text-xl font-semibold text-royal-gold">9. Limitation of Liability</h2>
+            <p className="text-white/80 leading-relaxed">
+              TO THE MAXIMUM EXTENT PERMITTED BY LAW, IN NO EVENT SHALL SPENDTHRONE BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, INCLUDING LOSS OF PROFITS, DATA, OR USE, ARISING OUT OF OR RELATED TO YOUR USE OF THE SERVICE.
+            </p>
+          </div>
+          
+          <div className="space-y-2">
+            <h2 className="text-xl font-semibold text-royal-gold">10. Changes to Terms</h2>
+            <p className="text-white/80 leading-relaxed">
+              We reserve the right to modify these Terms at any time. We will provide notice of material changes by posting the updated Terms on our website. Your continued use of the Service after such changes constitutes your acceptance of the new Terms.
+            </p>
+          </div>
+          
+          <div className="space-y-2">
+            <h2 className="text-xl font-semibold text-royal-gold">11. Contact Information</h2>
+            <p className="text-white/80 leading-relaxed">
+              If you have any questions about these Terms, please contact us at support@spendthrone.com.
+            </p>
+          </div>
+          
+          <div className="mt-8 pt-6 border-t border-white/10 text-center">
+            <p className="text-white/60 italic">
+              By using SpendThrone, you acknowledge that you have read, understood, and agree to be bound by these Terms of Service.
+            </p>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };

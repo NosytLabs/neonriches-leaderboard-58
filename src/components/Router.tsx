@@ -15,31 +15,34 @@ import Teams from '@/pages/Teams';
 import Mockery from '@/pages/Mockery';
 import PrivacyPolicy from '@/pages/PrivacyPolicy';
 import TermsOfService from '@/pages/TermsOfService';
-import CodeAnalysis from '@/pages/CodeAnalysis';
-import CodeAnalysisReport from '@/pages/CodeAnalysisReport';
+import FAQ from '@/pages/FAQ';
+import Features from '@/pages/Features';
 import RoyalPrestige from '@/pages/RoyalPrestige';
 import EventsPage from '@/pages/EventsPage';
 import BrandKitPage from '@/pages/BrandKitPage';
+import Certificate from '@/pages/Certificate';
+import Contact from '@/pages/Contact';
 
 // Protected pages
 import Dashboard from '@/pages/Dashboard';
 import Settings from '@/pages/Settings';
 import PayWithCrypto from '@/pages/PayWithCrypto';
 import PayWithFiat from '@/pages/PayWithFiat';
+import Chat from '@/pages/Chat';
 
 // 404
 import NotFound from '@/pages/NotFound';
 
 // Layout wrapper for Protected routes
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { user, isLoading } = useAuth();
+  const { user, isLoading, isAuthenticated } = useAuth();
   const location = useLocation();
 
   if (isLoading) {
     return <div>Loading...</div>;
   }
 
-  if (!user) {
+  if (!user || !isAuthenticated) {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
@@ -63,11 +66,13 @@ const Router: React.FC = () => {
         <Route path="/profile/:username" element={<Profile />} />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         <Route path="/terms-of-service" element={<TermsOfService />} />
-        <Route path="/code-analysis" element={<CodeAnalysis />} />
-        <Route path="/code-analysis/report" element={<CodeAnalysisReport />} />
+        <Route path="/faq" element={<FAQ />} />
+        <Route path="/features" element={<Features />} />
         <Route path="/royal-prestige" element={<RoyalPrestige />} />
         <Route path="/events" element={<EventsPage />} />
         <Route path="/brand-kit" element={<BrandKitPage />} />
+        <Route path="/certificate/:username" element={<Certificate />} />
+        <Route path="/contact" element={<Contact />} />
 
         {/* Protected Routes */}
         <Route
@@ -99,6 +104,14 @@ const Router: React.FC = () => {
           element={
             <ProtectedRoute>
               <PayWithFiat />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/chat"
+          element={
+            <ProtectedRoute>
+              <Chat />
             </ProtectedRoute>
           }
         />

@@ -1,145 +1,148 @@
 
-import { User } from "@/types/user";
-import { SpendOptions, Transaction, TransactionType } from "@/types/wallet";
-import { useToast } from "@/hooks/use-toast";
+import { User } from '@/types/user';
 
-// Simulate getting a user's wallet balance
-export const getUserWalletBalance = (userId: string): number => {
-  // In a real app, this would fetch from an API
-  return 1000; // Mock balance
-};
+interface TransactionOptions {
+  wishAmount?: number;
+  preferredCategory?: string;
+  mockeryAction?: string;
+  targetUserId?: string;
+  itemId?: string;
+  itemPrice?: number;
+  [key: string]: any;
+}
 
-// Process a spending transaction
+/**
+ * Spend money from a user's wallet
+ * @param user The user who is spending
+ * @param amount The amount to spend
+ * @param type The type of transaction
+ * @param description A description of the transaction
+ * @param options Additional options for the transaction
+ * @returns A promise that resolves to a boolean indicating success or failure
+ */
 export const spendFromWallet = async (
   user: User,
   amount: number,
-  type: TransactionType,
+  type: 'wish' | 'mockery' | 'purchase' | 'team' | 'donation',
   description: string,
-  options?: SpendOptions
+  options: TransactionOptions = {}
 ): Promise<boolean> => {
-  if (!user) {
-    console.error("Cannot spend: No user provided");
-    return false;
-  }
-
-  if (amount <= 0) {
-    console.error("Cannot spend: Amount must be greater than 0");
-    return false;
-  }
-
-  // Check if user has enough balance (in a real app, this would be a server-side check)
+  // Validate user has enough balance
   if (user.walletBalance < amount) {
-    console.error("Cannot spend: Insufficient balance");
+    console.error(`Insufficient funds: ${user.walletBalance} < ${amount}`);
     return false;
   }
 
+  // In a real application, we would make an API call to process the transaction
+  // For now, we'll just simulate a successful transaction
   try {
-    // This would be an API call in a real application
-    const transaction: Transaction = {
-      id: `txn-${Date.now()}-${Math.random().toString(36).substring(2, 15)}`,
+    // Simulate API call delay
+    await new Promise(resolve => setTimeout(resolve, 800));
+
+    // Log the transaction for debugging
+    console.log('Transaction:', {
       userId: user.id,
       amount,
       type,
       description,
-      timestamp: new Date().toISOString(),
-      status: "completed",
-      targetUser: options?.targetUser,
-      targetItem: options?.cosmetic || options?.feature
-    };
-
-    console.log("Transaction processed:", transaction);
-
-    // In a real app, we would update the user's balance on the server
-    // and then update the local state
+      options,
+      timestamp: new Date().toISOString()
+    });
 
     return true;
   } catch (error) {
-    console.error("Error processing transaction:", error);
+    console.error('Transaction failed:', error);
     return false;
   }
 };
 
-// Get a user's transaction history
-export const getUserTransactionHistory = async (
+/**
+ * Add money to a user's wallet
+ * @param user The user who is adding money
+ * @param amount The amount to add
+ * @param source The source of the funds
+ * @returns A promise that resolves to a boolean indicating success or failure
+ */
+export const addToWallet = async (
+  user: User,
+  amount: number,
+  source: 'credit_card' | 'crypto' | 'gift' | 'refund'
+): Promise<boolean> => {
+  try {
+    // Simulate API call delay
+    await new Promise(resolve => setTimeout(resolve, 800));
+
+    // Log the transaction for debugging
+    console.log('Add funds:', {
+      userId: user.id,
+      amount,
+      source,
+      timestamp: new Date().toISOString()
+    });
+
+    return true;
+  } catch (error) {
+    console.error('Add funds failed:', error);
+    return false;
+  }
+};
+
+/**
+ * Get a user's transaction history
+ * @param userId The user ID
+ * @param limit The maximum number of transactions to return
+ * @param offset The offset for pagination
+ * @returns A promise that resolves to an array of transactions
+ */
+export const getTransactionHistory = async (
   userId: string,
-  type?: TransactionType,
-  limit: number = 10
-): Promise<Transaction[]> => {
-  // This would be an API call in a real application
-  // Return mock data for now
-  const mockTransactions: Transaction[] = [
-    {
-      id: "txn-1",
-      userId,
-      amount: 25,
-      type: "purchase",
-      description: "Premium Profile Upgrade",
-      timestamp: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
-      status: "completed"
-    },
-    {
-      id: "txn-2",
-      userId,
-      amount: 5,
-      type: "mockery",
-      description: "Royal Mockery: Court Jester",
-      timestamp: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
-      status: "completed",
-      targetUser: "user-123"
-    },
-    {
-      id: "txn-3",
-      userId,
-      amount: 0.5,
-      type: "mockery",
-      description: "Royal Mockery: Tomatoes",
-      timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
-      status: "completed",
-      targetUser: "user-456"
-    },
-    {
-      id: "txn-4",
-      userId,
-      amount: 10,
-      type: "deposit",
-      description: "Wallet Top-up",
-      timestamp: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString(),
-      status: "completed"
+  limit: number = 10,
+  offset: number = 0
+): Promise<any[]> => {
+  // In a real app, this would fetch from an API
+  // For now, return mock data
+  
+  // Simulate API call delay
+  await new Promise(resolve => setTimeout(resolve, 1000));
+  
+  // Generate mock transactions
+  const mockTransactions = Array.from({ length: limit }).map((_, i) => {
+    const types = ['wish', 'mockery', 'purchase', 'team', 'donation', 'refund'];
+    const type = types[Math.floor(Math.random() * types.length)];
+    const amount = Math.round(Math.random() * 500) / 100 * (type === 'refund' ? -1 : 1);
+    
+    let description = '';
+    switch (type) {
+      case 'wish':
+        description = 'Made a wish at the Royal Wishing Well';
+        break;
+      case 'mockery':
+        description = 'Applied a mockery effect to another user';
+        break;
+      case 'purchase':
+        description = 'Purchased a cosmetic item';
+        break;
+      case 'team':
+        description = 'Contributed to team ranking';
+        break;
+      case 'donation':
+        description = 'Donated to the royal treasury';
+        break;
+      case 'refund':
+        description = 'Refund for cancelled purchase';
+        break;
     }
-  ];
-
-  // Filter by type if specified
-  const filteredTransactions = type
-    ? mockTransactions.filter(t => t.type === type)
-    : mockTransactions;
-
-  // Sort by timestamp (newest first) and limit
-  return filteredTransactions
-    .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
-    .slice(0, limit);
-};
-
-// Get transaction statistics
-export const getTransactionStats = async (
-  userId: string
-): Promise<{
-  totalSpent: number;
-  totalDeposits: number;
-  transactionCount: number;
-  avgTransaction: number;
-}> => {
-  // This would be an API call in a real application
-  return {
-    totalSpent: 152.5,
-    totalDeposits: 200,
-    transactionCount: 12,
-    avgTransaction: 12.7
-  };
-};
-
-export default {
-  getUserWalletBalance,
-  spendFromWallet,
-  getUserTransactionHistory,
-  getTransactionStats
+    
+    return {
+      id: `txn-${offset + i}`,
+      userId,
+      type,
+      amount,
+      description,
+      timestamp: new Date(Date.now() - (i * 24 * 60 * 60 * 1000)).toISOString(),
+      status: 'completed'
+    };
+  });
+  
+  return mockTransactions;
 };

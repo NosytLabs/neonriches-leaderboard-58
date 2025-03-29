@@ -72,6 +72,8 @@ export const getMockeryPrice = (action: MockeryAction): number => {
   }
 };
 
+export const getMockeryCost = getMockeryPrice;
+
 export const getMockeryText = (action: MockeryAction, targetName: string = 'this user'): string => {
   switch (action) {
     case 'tomatoes': return `Pelt ${targetName} with rotten tomatoes`;

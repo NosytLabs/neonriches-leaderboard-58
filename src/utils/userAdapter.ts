@@ -1,58 +1,38 @@
 
-import { User, UserProfile, UserTeam, UserTier, UserGender } from '@/types/user';
+import { User } from '@/types/user';
 
 /**
- * Adapts a UserProfile to a User type
- * @param profile UserProfile to adapt
- * @returns Adapted User
+ * Ensures a user object has all required properties
+ * This is useful when working with user objects that may come from different sources
+ * and might be missing some expected properties
  */
-export const adaptUserProfileToUser = (profile: any): User => {
-  // Ensure createdAt is present
-  const createdAt = profile.createdAt || profile.joinDate || profile.joinedAt || new Date().toISOString();
-  
-  // Ensure team is a valid UserTeam
-  let team: UserTeam = null;
-  if (profile.team === 'red' || profile.team === 'green' || profile.team === 'blue') {
-    team = profile.team as UserTeam;
+export const ensureUser = (user: any): User => {
+  if (!user) {
+    throw new Error('User object is null or undefined');
   }
   
-  // Ensure tier is a valid UserTier
-  let tier: UserTier = 'basic';
-  if (profile.tier && typeof profile.tier === 'string') {
-    const validTiers: UserTier[] = ['basic', 'premium', 'royal', 'crab', 'fish', 'dolphin', 'shark', 'whale', 'free', 'pro', 'legendary'];
-    if (validTiers.includes(profile.tier as UserTier)) {
-      tier = profile.tier as UserTier;
-    }
-  }
-  
-  // Ensure gender is a valid UserGender or undefined
-  let gender: UserGender | undefined = undefined;
-  if (profile.gender && typeof profile.gender === 'string') {
-    const validGenders: UserGender[] = ['male', 'female', 'non-binary', 'prefer-not-to-say', 'king', 'queen', 'jester', 'noble', 'neutral'];
-    if (validGenders.includes(profile.gender as UserGender)) {
-      gender = profile.gender as UserGender;
-    }
-  }
-  
-  // Create a User object with required fields
-  const user: User = {
-    id: profile.id || `user-${Date.now()}`,
-    username: profile.username || 'anonymous',
-    email: profile.email || `${profile.username || 'anonymous'}@example.com`,
-    createdAt: createdAt,
-    team: team,
-    tier: tier,
-    displayName: profile.displayName || profile.username || 'Anonymous',
-    profileImage: profile.profileImage,
-    bio: profile.bio,
-    isAdmin: profile.isAdmin || false,
-    walletBalance: profile.walletBalance || 0,
-    totalSpent: profile.totalSpent || profile.amountSpent || profile.spentAmount || 0,
-    amountSpent: profile.amountSpent || profile.totalSpent || profile.spentAmount || 0,
-    gender: gender,
-    lastActive: profile.lastActive,
-    profileBoosts: profile.profileBoosts || [],
-    cosmetics: profile.cosmetics || {
+  // Create a new user object with default values for missing properties
+  const ensuredUser: User = {
+    id: user.id || '',
+    username: user.username || '',
+    email: user.email || '',
+    displayName: user.displayName || user.username || '',
+    profileImage: user.profileImage || user.avatar || '',
+    bio: user.bio || '',
+    tier: user.tier || 'bronze',
+    role: user.role || 'user',
+    team: user.team || null,
+    rank: user.rank || 0,
+    walletBalance: user.walletBalance || 0,
+    walletAddress: user.walletAddress || '',
+    totalSpent: user.totalSpent || user.amountSpent || user.spentAmount || 0,
+    spentAmount: user.spentAmount || user.totalSpent || user.amountSpent || 0,
+    amountSpent: user.amountSpent || user.totalSpent || user.spentAmount || 0,
+    joinDate: user.joinDate || user.createdAt || new Date().toISOString(),
+    createdAt: user.createdAt || user.joinDate || new Date().toISOString(),
+    updatedAt: user.updatedAt || new Date().toISOString(),
+    isVerified: user.isVerified || false,
+    cosmetics: user.cosmetics || {
       borders: [],
       colors: [],
       fonts: [],
@@ -61,60 +41,95 @@ export const adaptUserProfileToUser = (profile: any): User => {
       backgrounds: [],
       effects: [],
       badges: [],
-      themes: []
+      themes: [],
     },
-    activeTitle: profile.activeTitle,
-    rank: profile.rank || 0,
-    previousRank: profile.previousRank,
-    joinDate: profile.joinDate || createdAt,
-    joinedAt: profile.joinedAt || createdAt,
-    socialLinks: profile.socialLinks || [],
-    profileImages: profile.profileImages || [],
-    spendStreak: profile.spendStreak || 0,
-    spentAmount: profile.spentAmount || profile.amountSpent || profile.totalSpent || 0,
-    badges: profile.badges || [],
-    profileViews: profile.profileViews || 0,
-    profileClicks: profile.profileClicks || 0,
-    followers: profile.followers || 0,
-    following: profile.following || 0,
-    isVIP: profile.isVIP || false,
-    certificateNFT: profile.certificateNFT,
-    settings: profile.settings,
-    subscription: profile.subscription,
-    walletAddress: profile.walletAddress,
-    role: profile.role,
-    isVerified: profile.isVerified || false,
-    lastLoginDate: profile.lastLoginDate,
-    isAuthenticated: profile.isAuthenticated || false,
-    lastLogin: profile.lastLogin
+    subscription: user.subscription || null,
+    activeTitle: user.activeTitle || null,
+    socialLinks: user.socialLinks || {},
   };
   
-  return user;
+  return ensuredUser;
 };
 
 /**
- * Adapts a partial user object to ensure it has all required fields
- * @param partialUser Partial user object
- * @returns Complete User object
+ * Formats a user's display name
  */
-export const completeUserObject = (partialUser: Partial<User>): User => {
-  return adaptUserProfileToUser(partialUser);
+export const formatDisplayName = (user: User | null): string => {
+  if (!user) return '';
+  
+  if (user.displayName) {
+    return user.displayName;
+  }
+  
+  return user.username;
 };
 
 /**
- * Ensure a user object has all required fields
- * @param userOrProfile User or profile object that might be incomplete
- * @returns Complete User object
+ * Gets user's tier color class
  */
-export const ensureUser = (userOrProfile: any): User => {
-  if (!userOrProfile) {
-    return adaptUserProfileToUser({});
+export const getUserTierColor = (tier?: string): string => {
+  switch (tier) {
+    case 'bronze':
+      return 'text-amber-600';
+    case 'silver':
+      return 'text-slate-400';
+    case 'gold':
+      return 'text-yellow-500';
+    case 'platinum':
+      return 'text-indigo-400';
+    case 'royal':
+      return 'text-royal-gold';
+    default:
+      return 'text-gray-400';
   }
-  
-  if (userOrProfile.createdAt) {
-    // Probably already a valid user
-    return userOrProfile as User;
+};
+
+/**
+ * Gets user's tier badge class
+ */
+export const getUserTierBadgeClass = (tier?: string): string => {
+  switch (tier) {
+    case 'bronze':
+      return 'bg-amber-600/20 text-amber-600 border-amber-600/30';
+    case 'silver':
+      return 'bg-slate-400/20 text-slate-400 border-slate-400/30';
+    case 'gold':
+      return 'bg-yellow-500/20 text-yellow-500 border-yellow-500/30';
+    case 'platinum':
+      return 'bg-indigo-400/20 text-indigo-400 border-indigo-400/30';
+    case 'royal':
+      return 'bg-royal-gold/20 text-royal-gold border-royal-gold/30';
+    default:
+      return 'bg-gray-400/20 text-gray-400 border-gray-400/30';
   }
+};
+
+/**
+ * Checks if a user has a specific cosmetic
+ */
+export const userHasCosmetic = (user: User, cosmeticId: string, category: string): boolean => {
+  if (!user.cosmetics) return false;
   
-  return adaptUserProfileToUser(userOrProfile);
+  const categoryKey = category as keyof typeof user.cosmetics;
+  const cosmetics = user.cosmetics[categoryKey];
+  
+  if (!cosmetics || !Array.isArray(cosmetics)) return false;
+  
+  return cosmetics.includes(cosmeticId);
+};
+
+/**
+ * Gets initials from user's name
+ */
+export const getUserInitials = (user: User | null): string => {
+  if (!user) return '';
+  
+  const name = user.displayName || user.username;
+  
+  return name
+    .split(' ')
+    .map(part => part[0])
+    .join('')
+    .toUpperCase()
+    .slice(0, 2);
 };

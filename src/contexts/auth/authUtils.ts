@@ -1,48 +1,14 @@
 
-import { User, UserProfile, ProfileBoost, UserCosmetics } from '@/types/user';
+import { User, UserCosmetics } from '@/types/user';
 
 /**
- * Adds a profile boost with a specific duration in days
- * @param user User to update
- * @param days Duration in days
- * @param level Boost level (1-3)
- * @returns Updated profileBoosts array
+ * Creates a default user object with initial values
  */
-export const addProfileBoostWithDays = (
-  user: User, 
-  days: number = 1, 
-  level: number = 1
-): ProfileBoost[] => {
-  const startDate = new Date();
-  const endDate = new Date(startDate);
-  endDate.setDate(endDate.getDate() + days);
+export const getDefaultUser = (email: string, username: string): User => {
+  const now = new Date().toISOString();
   
-  const newBoost: ProfileBoost = {
-    id: `boost-${Date.now()}`,
-    startDate: startDate.toISOString(),
-    endDate: endDate.toISOString(),
-    level,
-    type: 'profile_boost',
-    effectId: `boost-effect-${level}`,
-  };
-  
-  const currentBoosts = user.profileBoosts || [];
-  return [...currentBoosts, newBoost];
-};
-
-/**
- * Adds a cosmetic to the user's collection in the specified category
- * @param user User to update
- * @param cosmeticId ID of the cosmetic to add
- * @param category Category of the cosmetic (borders, colors, etc.)
- * @returns Updated UserCosmetics object
- */
-export const addCosmeticByCategoryString = (
-  user: User, 
-  cosmeticId: string, 
-  category: string
-): UserCosmetics => {
-  const currentCosmetics = user.cosmetics || {
+  // Initialize cosmetics with empty arrays for each category
+  const cosmetics: UserCosmetics = {
     borders: [],
     colors: [],
     fonts: [],
@@ -51,136 +17,105 @@ export const addCosmeticByCategoryString = (
     backgrounds: [],
     effects: [],
     badges: [],
-    themes: []
+    themes: [],
+    socialLinks: {}
   };
   
-  // Check if category exists in cosmetics
-  const validCategories = [
-    'borders', 'colors', 'fonts', 'emojis', 'titles', 
-    'backgrounds', 'effects', 'badges', 'themes'
-  ];
+  // Add some starter cosmetics for new users
+  cosmetics.borders.push('starter-border');
+  cosmetics.colors.push('starter-color');
+  cosmetics.titles.push('newcomer');
   
-  if (validCategories.includes(category)) {
-    const updatedCosmetics = { ...currentCosmetics };
-    
-    // Safely handle the category
-    switch (category) {
-      case 'borders':
-        updatedCosmetics.borders = [...updatedCosmetics.borders, cosmeticId];
-        break;
-      case 'colors':
-        updatedCosmetics.colors = [...updatedCosmetics.colors, cosmeticId];
-        break;
-      case 'fonts':
-        updatedCosmetics.fonts = [...updatedCosmetics.fonts, cosmeticId];
-        break;
-      case 'emojis':
-        updatedCosmetics.emojis = [...updatedCosmetics.emojis, cosmeticId];
-        break;
-      case 'titles':
-        updatedCosmetics.titles = [...updatedCosmetics.titles, cosmeticId];
-        break;
-      case 'backgrounds':
-        updatedCosmetics.backgrounds = [...updatedCosmetics.backgrounds, cosmeticId];
-        break;
-      case 'effects':
-        updatedCosmetics.effects = [...updatedCosmetics.effects, cosmeticId];
-        break;
-      case 'badges':
-        updatedCosmetics.badges = [...updatedCosmetics.badges, cosmeticId];
-        break;
-      case 'themes':
-        updatedCosmetics.themes = [...updatedCosmetics.themes, cosmeticId];
-        break;
-      default:
-        break;
-    }
-    
-    return updatedCosmetics;
-  }
-  
-  return currentCosmetics;
-};
-
-/**
- * Activates a specific cosmetic
- * @param user User to update
- * @param cosmeticId ID of the cosmetic to activate
- * @param category Category of the cosmetic (borders, colors, etc.)
- * @returns Updated UserCosmetics object
- */
-export const activateCosmetic = (
-  user: User, 
-  cosmeticId: string, 
-  category: 'border' | 'color' | 'font'
-): UserCosmetics => {
-  const currentCosmetics = user.cosmetics || {
-    borders: [],
-    colors: [],
-    fonts: [],
-    emojis: [],
-    titles: [],
-    backgrounds: [],
-    effects: [],
-    badges: [],
-    themes: []
-  };
-  
-  const mappings = {
-    border: 'activeBorder',
-    color: 'activeColor',
-    font: 'activeFont'
-  };
-  
-  const propertyToUpdate = mappings[category];
-  const updatedCosmetics = { ...currentCosmetics };
-  
-  if (propertyToUpdate === 'activeBorder') {
-    updatedCosmetics.activeBorder = cosmeticId;
-  } else if (propertyToUpdate === 'activeColor') {
-    updatedCosmetics.activeColor = cosmeticId;
-  } else if (propertyToUpdate === 'activeFont') {
-    updatedCosmetics.activeFont = cosmeticId;
-  }
-  
-  return updatedCosmetics;
-};
-
-/**
- * Creates an empty user profile with default values
- * @returns Default user profile
- */
-export const createEmptyUserProfile = (): UserProfile => {
   return {
     id: `user-${Date.now()}`,
-    username: 'anonymous',
-    email: 'anonymous@example.com',
-    createdAt: new Date().toISOString(),
-    displayName: 'Anonymous',
-    walletBalance: 0,
-    amountSpent: 0,
-    spentAmount: 0,
+    email,
+    username,
+    displayName: username,
+    profileImage: `https://api.dicebear.com/7.x/personas/svg?seed=${username}`,
+    bio: '',
+    tier: 'bronze',
+    role: 'user',
     team: null,
-    rank: 999999,
-    joinDate: new Date().toISOString(),
-    joinedAt: new Date().toISOString(),
-    profileViews: 0,
-    profileClicks: 0,
-    followers: 0,
-    following: 0,
-    spendStreak: 0,
-    profileBoosts: [],
-    cosmetics: {
-      borders: [],
-      colors: [],
-      fonts: [],
-      emojis: [],
-      titles: [],
-      backgrounds: [],
-      effects: [],
-      badges: [],
-      themes: []
-    },
-    tier: 'basic'
+    rank: 0,
+    walletBalance: 5.00, // Starting balance
+    totalSpent: 0,
+    spentAmount: 0,
+    amountSpent: 0,
+    joinDate: now,
+    createdAt: now,
+    updatedAt: now,
+    isVerified: false,
+    cosmetics,
+    activeTitle: 'newcomer'
   };
+};
+
+/**
+ * Calculates user tier based on spending
+ */
+export const calculateUserTier = (totalSpent: number): User['tier'] => {
+  if (totalSpent >= 1000) return 'royal';
+  if (totalSpent >= 500) return 'platinum';
+  if (totalSpent >= 200) return 'gold';
+  if (totalSpent >= 50) return 'silver';
+  return 'bronze';
+};
+
+/**
+ * Gets the background CSS class for a user tier
+ */
+export const getTierBackgroundClass = (tier: User['tier']): string => {
+  switch (tier) {
+    case 'bronze': return 'bg-amber-900/20';
+    case 'silver': return 'bg-slate-400/20';
+    case 'gold': return 'bg-yellow-500/20';
+    case 'platinum': return 'bg-indigo-400/20';
+    case 'royal': return 'bg-royal-gold/20';
+    default: return 'bg-gray-600/20';
+  }
+};
+
+/**
+ * Gets the text color CSS class for a user tier
+ */
+export const getTierTextClass = (tier: User['tier']): string => {
+  switch (tier) {
+    case 'bronze': return 'text-amber-600';
+    case 'silver': return 'text-slate-400';
+    case 'gold': return 'text-yellow-500';
+    case 'platinum': return 'text-indigo-400';
+    case 'royal': return 'text-royal-gold';
+    default: return 'text-gray-400';
+  }
+};
+
+/**
+ * Gets the border color CSS class for a user tier
+ */
+export const getTierBorderClass = (tier: User['tier']): string => {
+  switch (tier) {
+    case 'bronze': return 'border-amber-600/30';
+    case 'silver': return 'border-slate-400/30';
+    case 'gold': return 'border-yellow-500/30';
+    case 'platinum': return 'border-indigo-400/30';
+    case 'royal': return 'border-royal-gold/30';
+    default: return 'border-gray-400/30';
+  }
+};
+
+/**
+ * Gets amount needed to reach next tier
+ */
+export const getAmountToNextTier = (totalSpent: number): { amount: number; nextTier: User['tier'] } => {
+  if (totalSpent < 50) {
+    return { amount: 50 - totalSpent, nextTier: 'silver' };
+  } else if (totalSpent < 200) {
+    return { amount: 200 - totalSpent, nextTier: 'gold' };
+  } else if (totalSpent < 500) {
+    return { amount: 500 - totalSpent, nextTier: 'platinum' };
+  } else if (totalSpent < 1000) {
+    return { amount: 1000 - totalSpent, nextTier: 'royal' };
+  }
+  // Already at highest tier
+  return { amount: 0, nextTier: 'royal' };
 };

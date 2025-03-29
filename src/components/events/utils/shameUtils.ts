@@ -1,123 +1,119 @@
 
-import { User } from '@/types/user';
-import { MockeryAction } from '@/types/mockery';
-import { Crown, Egg, MessageSquare, Music, VolumeX, User as UserIcon, Flame, Star, Award, AlertTriangle, Skull, ThumbsDown, CloudLightning } from 'lucide-react';
+import { ShameAction } from '@/types/mockery';
+import { Shield, Crown, CloudLightning, ThumbsDown, Flame, Egg, AlertTriangle, VolumeX, MessageSquare } from 'lucide-react';
 
-export type ShameAction = MockeryAction;
-
-export interface ShameEvent {
-  id: string;
-  targetUserId: string;
-  sourceUserId: string;
-  action: ShameAction;
-  createdAt: string;
-  expiresAt: string;
-  message?: string;
-  isActive: boolean;
-}
-
-export const getShameActionName = (action: ShameAction): string => {
-  switch (action) {
-    case 'tomatoes': return 'Throw Tomatoes';
-    case 'eggs': return 'Throw Eggs';
-    case 'stocks': return 'Place in Stocks';
-    case 'silence': return 'Royal Silence';
-    case 'courtJester': return 'Court Jester';
-    case 'jester': return 'Royal Jester';
-    case 'protected': return 'Royal Protection';
-    case 'immune': return 'Royal Immunity';
-    case 'dunce': return 'Dunce Cap';
-    case 'roast': return 'Royal Roast';
-    case 'ridicule': return 'Public Ridicule';
-    case 'taunt': return 'Royal Taunt';
-    case 'drama': return 'Court Drama';
-    default: return 'Unknown';
-  }
-};
-
-export const getShameActionTitle = (action: ShameAction): string => {
-  return getShameActionName(action);
+export const getShameActionPrice = (action: ShameAction): number => {
+  const prices: Record<ShameAction, number> = {
+    'tomatoes': 0.25,
+    'eggs': 0.50,
+    'stocks': 1.00,
+    'silence': 1.50,
+    'courtJester': 2.00,
+    'jester': 2.50,
+    'protected': 5.00,
+    'immune': 10.00,
+    'dunce': 1.75,
+    'roast': 1.25,
+    'ridicule': 1.50,
+    'taunt': 1.00,
+    'drama': 3.00
+  };
+  
+  return prices[action] || 1.00;
 };
 
 export const getShameActionIcon = (action: ShameAction) => {
-  switch (action) {
-    case 'tomatoes': return Egg;
-    case 'eggs': return Egg;
-    case 'stocks': return AlertTriangle;
-    case 'silence': return VolumeX;
-    case 'courtJester': return Crown;
-    case 'jester': return Crown;
-    case 'protected': return Shield;
-    case 'immune': return Star;
-    case 'dunce': return UserIcon;
-    case 'roast': return Flame;
-    case 'ridicule': return ThumbsDown;
-    case 'taunt': return MessageSquare;
-    case 'drama': return CloudLightning;
-    default: return Crown;
-  }
+  const icons: Record<ShameAction, any> = {
+    'tomatoes': Egg,
+    'eggs': Egg,
+    'stocks': AlertTriangle,
+    'silence': VolumeX,
+    'courtJester': Crown,
+    'jester': Crown,
+    'protected': Shield,
+    'immune': Shield,
+    'dunce': ThumbsDown,
+    'roast': Flame,
+    'ridicule': ThumbsDown,
+    'taunt': MessageSquare,
+    'drama': CloudLightning
+  };
+  
+  return icons[action] || Crown;
 };
 
-export const getShameActionDescription = (action: ShameAction, targetName: string = 'this user'): string => {
-  switch (action) {
-    case 'tomatoes': return `Pelt ${targetName} with rotten tomatoes. A classic form of public ridicule.`;
-    case 'eggs': return `Hurl rotten eggs at ${targetName}. The stench will follow them for a day.`;
-    case 'stocks': return `Place ${targetName} in the public stocks. The ultimate medieval humiliation.`;
-    case 'silence': return `Silence ${targetName} with a royal decree. They will appear muted for 24 hours.`;
-    case 'courtJester': return `Appoint ${targetName} as the court jester. A jester's hat will adorn their profile.`;
-    case 'jester': return `Make ${targetName} the fool of the court. Their profile will display jester symbols.`;
-    case 'protected': return `Grant ${targetName} royal protection. They cannot be shamed for 24 hours.`;
-    case 'immune': return `Grant ${targetName} royal immunity. They are immune to all shaming for 72 hours.`;
-    case 'dunce': return `Place a dunce cap on ${targetName}. Their profile will show their lack of wisdom.`;
-    case 'roast': return `Subject ${targetName} to a royal roasting. Their profile will show burn marks.`;
-    case 'ridicule': return `Subject ${targetName} to public ridicule. Their shame will be announced in court.`;
-    case 'taunt': return `Publicly taunt ${targetName}. A banner of mockery will appear on their profile.`;
-    case 'drama': return `Create court drama involving ${targetName}. Gossip will spread throughout the kingdom.`;
-    default: return `Shame ${targetName} with unknown consequences.`;
-  }
+export const getShameActionTitle = (action: ShameAction): string => {
+  const titles: Record<ShameAction, string> = {
+    'tomatoes': 'Pelt with Tomatoes',
+    'eggs': 'Hurl Eggs',
+    'stocks': 'Place in Stocks',
+    'silence': 'Royal Silence',
+    'courtJester': 'Court Jester',
+    'jester': 'Appoint as Jester',
+    'protected': 'Royal Protection',
+    'immune': 'Royal Immunity',
+    'dunce': 'Dunce Cap',
+    'roast': 'Royal Roasting',
+    'ridicule': 'Public Ridicule',
+    'taunt': 'Public Taunt',
+    'drama': 'Court Drama'
+  };
+  
+  return titles[action] || 'Shame';
 };
 
-export const getShameActionPrice = (action: ShameAction): number => {
-  switch (action) {
-    case 'tomatoes': return 0.25;
-    case 'eggs': return 0.50;
-    case 'stocks': return 1.00;
-    case 'silence': return 1.50;
-    case 'courtJester': return 2.00;
-    case 'jester': return 2.50;
-    case 'protected': return 5.00;
-    case 'immune': return 10.00;
-    case 'dunce': return 1.75;
-    case 'roast': return 1.25;
-    case 'ridicule': return 1.50;
-    case 'taunt': return 1.00;
-    case 'drama': return 3.00;
-    default: return 1.00;
-  }
+export const getShameActionDescription = (action: ShameAction): string => {
+  const descriptions: Record<ShameAction, string> = {
+    'tomatoes': 'Pelts the user with rotten tomatoes, marking them with shame for 24 hours.',
+    'eggs': 'Hurls rotten eggs at the user, marking them with shame for 48 hours.',
+    'stocks': 'Places the user in the public stocks for 72 hours, visible to all.',
+    'silence': 'Silences the user with a royal decree for 24 hours.',
+    'courtJester': 'Appoints the user as the court jester for 48 hours, reducing their status.',
+    'jester': 'Makes the user the fool of the court for 48 hours.',
+    'protected': 'Grants the user royal protection for 24 hours, preventing basic mockery.',
+    'immune': 'Grants the user royal immunity for 72 hours, preventing all mockery.',
+    'dunce': 'Places a dunce cap on the user for 36 hours.',
+    'roast': 'Subjects the user to a royal roasting for 24 hours.',
+    'ridicule': 'Subjects the user to public ridicule for 48 hours.',
+    'taunt': 'Publicly taunts the user for 24 hours.',
+    'drama': 'Creates court drama involving the user for 72 hours.'
+  };
+  
+  return descriptions[action] || 'Shames the user publicly.';
 };
 
-export const getShameActionDuration = (action: ShameAction): number => {
-  switch (action) {
-    case 'tomatoes': return 24;
-    case 'eggs': return 48;
-    case 'stocks': return 72;
-    case 'silence': return 24;
-    case 'courtJester': return 48;
-    case 'jester': return 48;
-    case 'protected': return 24;
-    case 'immune': return 72;
-    case 'dunce': return 36;
-    case 'roast': return 24;
-    case 'ridicule': return 48;
-    case 'taunt': return 24;
-    case 'drama': return 72;
-    default: return 24;
+export const hasWeeklyDiscount = (): boolean => {
+  // Check if there's a weekly discount based on the current date
+  const now = new Date();
+  const day = now.getDay(); // 0 is Sunday, 6 is Saturday
+  
+  // Discount on Tuesdays and Thursdays
+  return day === 2 || day === 4;
+};
+
+export const getWeeklyDiscountedAction = (): ShameAction => {
+  const now = new Date();
+  const week = Math.floor(now.getDate() / 7);
+  
+  // Rotate through different actions based on the week of the month
+  const discountedActions: ShameAction[] = ['tomatoes', 'eggs', 'ridicule', 'taunt'];
+  return discountedActions[week % discountedActions.length];
+};
+
+export const getDiscountedShamePrice = (action: ShameAction): number => {
+  const basePrice = getShameActionPrice(action);
+  if (hasWeeklyDiscount() && action === getWeeklyDiscountedAction()) {
+    return basePrice * 0.75; // 25% discount
   }
+  return basePrice;
 };
 
 export const isFireSaleMonth = (): boolean => {
   const now = new Date();
-  return now.getMonth() === 11 || now.getMonth() === 5; // June and December
+  const month = now.getMonth();
+  
+  // Fire sale in March (2) and September (8)
+  return month === 2 || month === 8;
 };
 
 export const getFireSaleDiscountPercentage = (): number => {
@@ -126,78 +122,9 @@ export const getFireSaleDiscountPercentage = (): number => {
   const now = new Date();
   const day = now.getDate();
   
-  // Higher discounts in the middle of the month
-  if (day >= 10 && day <= 20) {
-    return 30; // 30% off
-  } else {
-    return 15; // 15% off
-  }
+  // Higher discounts at the beginning of the month
+  if (day <= 7) return 30; // 30% off first week
+  if (day <= 14) return 25; // 25% off second week
+  if (day <= 21) return 20; // 20% off third week
+  return 15; // 15% off last week
 };
-
-export const isUserProtected = (user: User): boolean => {
-  // Check if the user has active protection
-  if (!user.profileBoosts) return false;
-  
-  const now = new Date();
-  
-  return user.profileBoosts.some(boost => 
-    boost.type === 'protection' && 
-    new Date(boost.endDate) > now
-  );
-};
-
-// Additional functions needed by components
-export const hasWeeklyDiscount = (action: ShameAction): boolean => {
-  // Example implementation: discounts on weekends
-  const now = new Date();
-  const dayOfWeek = now.getDay(); // 0 is Sunday, 6 is Saturday
-  
-  return dayOfWeek === 0 || dayOfWeek === 6;
-};
-
-export const getWeeklyDiscountedAction = (): ShameAction => {
-  // Return a random action that's discounted this week
-  const actions: ShameAction[] = ['tomatoes', 'eggs', 'dunce'];
-  return actions[Math.floor(Math.random() * actions.length)];
-};
-
-export const getDiscountedShamePrice = (action: ShameAction): number => {
-  const basePrice = getShameActionPrice(action);
-  
-  if (hasWeeklyDiscount(action)) {
-    return basePrice * 0.7; // 30% discount
-  }
-  
-  return basePrice;
-};
-
-export const getMockeryColor = (action: ShameAction): string => {
-  switch (action) {
-    case 'tomatoes': return 'text-red-500';
-    case 'eggs': return 'text-yellow-300';
-    case 'stocks': return 'text-amber-700';
-    case 'silence': return 'text-gray-400';
-    case 'courtJester': return 'text-purple-400';
-    case 'jester': return 'text-indigo-400';
-    case 'protected': return 'text-blue-400';
-    case 'immune': return 'text-royal-gold';
-    case 'dunce': return 'text-gray-400';
-    case 'roast': return 'text-orange-500';
-    case 'ridicule': return 'text-pink-400';
-    case 'taunt': return 'text-green-400';
-    case 'drama': return 'text-violet-400';
-    default: return 'text-gray-400';
-  }
-};
-
-export const getMockeryText = (action: ShameAction): string => {
-  return getShameActionDescription(action);
-};
-
-export const getMockeryCost = (action: ShameAction): number => {
-  return getShameActionPrice(action);
-};
-
-// Import and re-export missing Shield component
-import { Shield } from 'lucide-react';
-export { Shield };

@@ -1,699 +1,598 @@
 
-import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Progress } from "@/components/ui/progress";
-import { Separator } from "@/components/ui/separator";
-import {
-  Crown,
-  Coins,
-  Users,
-  Trophy,
-  ChevronRight,
-  Star,
-  Sparkles,
-  Shield,
-  Sword,
-  Flame,
-  Gift,
-  DollarSign,
-  LineChart,
-  Medal,
-  BarChart,
-  Heart,
-  PieChart,
-  Zap
-} from "lucide-react";
+import React from 'react';
 import { Link } from 'react-router-dom';
-import SpendThroneLogo from '@/components/brand/SpendThroneLogo';
-import BrandIcon from '@/components/ui/brand-icon';
-import { cn } from "@/lib/utils";
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
+import { ArrowLeft, Crown, DollarSign, Users, User, Shield, Sparkles, Award, Gift, BarChart } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import ThroneChair from '@/components/logos/ThroneChair';
 
-interface FeatureCardProps {
-  title: string;
-  description: string;
-  icon: React.ReactNode;
-  tier: 'free' | 'pro' | 'royal';
-  comingSoon?: boolean;
-  popular?: boolean;
-}
-
-const FeatureCard: React.FC<FeatureCardProps> = ({
-  title,
-  description,
-  icon,
-  tier,
-  comingSoon = false,
-  popular = false
-}) => {
-  const tierLabel = {
-    'free': { label: 'Free', color: 'bg-gray-200 text-gray-800' },
-    'pro': { label: 'Pro Tier', color: 'bg-royal-gold/20 text-royal-gold' },
-    'royal': { label: 'Royal Tier', color: 'bg-gradient-to-r from-royal-gold to-royal-gold-bright text-black' }
-  };
-
+const Features: React.FC = () => {
   return (
-    <Card className={cn(
-      "glass-morphism border-white/10 h-full transition-all duration-300 hover:border-white/20",
-      popular && "ring-2 ring-royal-gold/30"
-    )}>
-      <CardHeader>
-        <div className="flex justify-between items-start">
-          <div className="p-2 rounded-lg bg-white/5 mb-2">
-            {icon}
-          </div>
-          <div className="flex space-x-2">
-            {popular && (
-              <Badge variant="secondary" className="bg-royal-gold/20 text-royal-gold border-royal-gold/30">
-                Popular
-              </Badge>
-            )}
-            {comingSoon && (
-              <Badge variant="outline" className="border-white/20">
-                Coming Soon
-              </Badge>
-            )}
-            <Badge className={tierLabel[tier].color}>
-              {tierLabel[tier].label}
-            </Badge>
-          </div>
-        </div>
-        <CardTitle className="text-xl">{title}</CardTitle>
-        <CardDescription className="text-white/70">{description}</CardDescription>
-      </CardHeader>
-    </Card>
-  );
-};
-
-const FeatureCategorySection: React.FC<{
-  title: string;
-  description: string;
-  icon: React.ReactNode;
-  features: FeatureCardProps[];
-}> = ({ title, description, icon, features }) => (
-  <div className="space-y-6">
-    <div className="flex items-center gap-3">
-      <div className="p-2 rounded-lg bg-white/5">
-        {icon}
-      </div>
-      <div>
-        <h3 className="text-xl font-bold">{title}</h3>
-        <p className="text-white/70 text-sm">{description}</p>
-      </div>
-    </div>
-    
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {features.map((feature, index) => (
-        <FeatureCard key={index} {...feature} />
-      ))}
-    </div>
-  </div>
-);
-
-const PricingCard: React.FC<{
-  title: string;
-  price: string;
-  description: string;
-  features: string[];
-  tier: 'free' | 'pro' | 'royal';
-  popular?: boolean;
-  buttonText?: string;
-}> = ({ title, price, description, features, tier, popular = false, buttonText = "Choose Plan" }) => {
-  const tierColors = {
-    'free': 'border-white/10 hover:border-white/20',
-    'pro': 'border-royal-gold/30 hover:border-royal-gold/50',
-    'royal': 'border-purple-500/30 hover:border-purple-500/50'
-  };
-  
-  const buttonColors = {
-    'free': 'bg-white/10 text-white hover:bg-white/20',
-    'pro': 'bg-royal-gold text-black hover:bg-royal-gold/90',
-    'royal': 'bg-gradient-to-r from-royal-gold to-royal-purple text-black hover:opacity-90'
-  };
-  
-  return (
-    <Card className={cn(
-      "glass-morphism", 
-      tierColors[tier],
-      popular && "ring-2 ring-royal-gold"
-    )}>
-      <CardHeader>
-        {popular && (
-          <Badge className="w-fit mb-2 bg-royal-gold/20 text-royal-gold border-royal-gold/30">
-            Most Popular
-          </Badge>
-        )}
-        <CardTitle className="text-xl flex items-center">
-          {tier === 'royal' && <Crown className="mr-2 h-5 w-5 text-royal-gold" />}
-          {title}
-        </CardTitle>
-        <div className="flex items-baseline">
-          <span className="text-3xl font-bold">{price}</span>
-          <span className="text-sm text-white/70 ml-1">USD</span>
-        </div>
-        <CardDescription>{description}</CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <ul className="space-y-2">
-          {features.map((feature, i) => (
-            <li key={i} className="flex items-start">
-              <ChevronRight className="h-5 w-5 text-royal-gold mr-2 flex-shrink-0" />
-              <span className="text-white/80 text-sm">{feature}</span>
-            </li>
-          ))}
-        </ul>
-        
-        <Button className={cn("w-full mt-4", buttonColors[tier])}>
-          {buttonText}
+    <div className="container mx-auto px-4 py-8 max-w-6xl">
+      <Link to="/">
+        <Button variant="outline" className="mb-6 glass-morphism border-white/10">
+          <ArrowLeft className="h-4 w-4 mr-2" />
+          Back to Home
         </Button>
-      </CardContent>
-    </Card>
-  );
-};
-
-const ComparisonTable: React.FC = () => (
-  <div className="glass-morphism border-white/10 rounded-lg p-6 overflow-x-auto">
-    <table className="w-full min-w-[800px]">
-      <thead>
-        <tr className="border-b border-white/10">
-          <th className="py-4 px-4 text-left">Feature</th>
-          <th className="py-4 px-4 text-center">Free</th>
-          <th className="py-4 px-4 text-center">Pro ($25+)</th>
-          <th className="py-4 px-4 text-center">Royal ($100+)</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr className="border-b border-white/10">
-          <td className="py-4 px-4">Basic Profile</td>
-          <td className="py-4 px-4 text-center">✅</td>
-          <td className="py-4 px-4 text-center">✅</td>
-          <td className="py-4 px-4 text-center">✅</td>
-        </tr>
-        <tr className="border-b border-white/10">
-          <td className="py-4 px-4">Text Limit</td>
-          <td className="py-4 px-4 text-center">200 chars</td>
-          <td className="py-4 px-4 text-center">1000 chars</td>
-          <td className="py-4 px-4 text-center">Unlimited</td>
-        </tr>
-        <tr className="border-b border-white/10">
-          <td className="py-4 px-4">Images</td>
-          <td className="py-4 px-4 text-center">1 (500KB max)</td>
-          <td className="py-4 px-4 text-center">5 (2MB each)</td>
-          <td className="py-4 px-4 text-center">Unlimited (5MB each)</td>
-        </tr>
-        <tr className="border-b border-white/10">
-          <td className="py-4 px-4">Links</td>
-          <td className="py-4 px-4 text-center">1</td>
-          <td className="py-4 px-4 text-center">5</td>
-          <td className="py-4 px-4 text-center">Unlimited</td>
-        </tr>
-        <tr className="border-b border-white/10">
-          <td className="py-4 px-4">RGB Border Animation</td>
-          <td className="py-4 px-4 text-center">❌</td>
-          <td className="py-4 px-4 text-center">✅</td>
-          <td className="py-4 px-4 text-center">✅ (Premium)</td>
-        </tr>
-        <tr className="border-b border-white/10">
-          <td className="py-4 px-4">Video Embeds</td>
-          <td className="py-4 px-4 text-center">❌</td>
-          <td className="py-4 px-4 text-center">✅</td>
-          <td className="py-4 px-4 text-center">✅</td>
-        </tr>
-        <tr className="border-b border-white/10">
-          <td className="py-4 px-4">Custom Themes</td>
-          <td className="py-4 px-4 text-center">❌</td>
-          <td className="py-4 px-4 text-center">3 themes</td>
-          <td className="py-4 px-4 text-center">All themes</td>
-        </tr>
-        <tr className="border-b border-white/10">
-          <td className="py-4 px-4">Analytics</td>
-          <td className="py-4 px-4 text-center">Basic</td>
-          <td className="py-4 px-4 text-center">Advanced</td>
-          <td className="py-4 px-4 text-center">Premium</td>
-        </tr>
-        <tr className="border-b border-white/10">
-          <td className="py-4 px-4">Team Bonuses</td>
-          <td className="py-4 px-4 text-center">❌</td>
-          <td className="py-4 px-4 text-center">✅</td>
-          <td className="py-4 px-4 text-center">✅ (Double)</td>
-        </tr>
-        <tr>
-          <td className="py-4 px-4">Prize Pool Share</td>
-          <td className="py-4 px-4 text-center">Base</td>
-          <td className="py-4 px-4 text-center">+25%</td>
-          <td className="py-4 px-4 text-center">+100%</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-);
-
-const FeaturesPage: React.FC = () => {
-  const [activeTab, setActiveTab] = useState("all-features");
-  
-  const coreFeatures = [
-    {
-      title: "Dollar-Driven Rank",
-      description: "Your rank is directly tied to your spending. $1 spent equals 1 unit of rank in our persistent leaderboard.",
-      icon: <DollarSign className="h-6 w-6 text-royal-gold" />,
-      tier: "free" as const,
-      popular: true
-    },
-    {
-      title: "Profile Customization",
-      description: "Create and customize your royal profile with text, images, links, and more based on your tier.",
-      icon: <Users className="h-6 w-6 text-royal-gold" />,
-      tier: "free" as const
-    },
-    {
-      title: "Team Competition",
-      description: "Join one of three teams (Red, Green, or Blue) and compete for team dominance and rewards.",
-      icon: <Shield className="h-6 w-6 text-royal-gold" />,
-      tier: "free" as const
-    }
-  ];
-  
-  const premiumFeatures = [
-    {
-      title: "Enhanced Profile",
-      description: "Unlock premium profile features including RGB borders, more images, videos, and custom themes.",
-      icon: <Sparkles className="h-6 w-6 text-royal-gold" />,
-      tier: "pro" as const,
-      popular: true
-    },
-    {
-      title: "Advanced Analytics",
-      description: "Track profile views, clicks, and conversion rates with detailed statistics and insights.",
-      icon: <LineChart className="h-6 w-6 text-royal-gold" />,
-      tier: "pro" as const
-    },
-    {
-      title: "Profile Boosts",
-      description: "Temporarily boost your profile's visibility and appearance with special effects.",
-      icon: <Zap className="h-6 w-6 text-royal-gold" />,
-      tier: "pro" as const
-    }
-  ];
-  
-  const eventFeatures = [
-    {
-      title: "Weekly Events",
-      description: "Participate in weekly pay-to-win events with unique twists and temporary effects.",
-      icon: <Gift className="h-6 w-6 text-royal-gold" />,
-      tier: "free" as const
-    },
-    {
-      title: "Public Mockery",
-      description: "Pay to shame other users with a variety of effects that appear on their profile.",
-      icon: <Sword className="h-6 w-6 text-royal-gold" />,
-      tier: "free" as const,
-      popular: true
-    },
-    {
-      title: "Fire Sales",
-      description: "Take advantage of limited-time discounts on special items and profile upgrades.",
-      icon: <Flame className="h-6 w-6 text-royal-gold" />,
-      tier: "free" as const
-    }
-  ];
-  
-  const rewardFeatures = [
-    {
-      title: "Prize Pool",
-      description: "Top spenders receive rewards from the Affluent Assembly prize pool shared weekly.",
-      icon: <Trophy className="h-6 w-6 text-royal-gold" />,
-      tier: "free" as const,
-      popular: true
-    },
-    {
-      title: "Spend Streak Rewards",
-      description: "Get multipliers on your prize pool share by maintaining consistent spending.",
-      icon: <Coins className="h-6 w-6 text-royal-gold" />,
-      tier: "free" as const
-    },
-    {
-      title: "Royal Certificate",
-      description: "Earn a digital certificate of nobility based on your spending and rank.",
-      icon: <Medal className="h-6 w-6 text-royal-gold" />,
-      tier: "royal" as const
-    }
-  ];
-  
-  const comingSoonFeatures = [
-    {
-      title: "NFT Badges",
-      description: "Mint your achievements as NFTs on the Solana blockchain to show off your status.",
-      icon: <Star className="h-6 w-6 text-royal-gold" />,
-      tier: "royal" as const,
-      comingSoon: true
-    },
-    {
-      title: "Royal Council",
-      description: "Top spenders gain access to the exclusive Royal Council with governance powers.",
-      icon: <Crown className="h-6 w-6 text-royal-gold" />,
-      tier: "royal" as const,
-      comingSoon: true
-    },
-    {
-      title: "Whale Chat",
-      description: "Private chat room exclusively for top spenders to network and strategize.",
-      icon: <MessageCircle className="h-6 w-6 text-royal-gold" />,
-      tier: "royal" as const,
-      comingSoon: true
-    }
-  ];
-
-  const pricingTiers = [
-    {
-      title: "Free",
-      price: "$0",
-      description: "Basic access to the SpendThrone realm.",
-      features: [
-        "Basic profile customization",
-        "Participate in leaderboard",
-        "Join a team",
-        "1 profile image (500KB max)",
-        "1 external link",
-        "Base prize pool eligibility"
-      ],
-      tier: "free" as const,
-      buttonText: "Start Free"
-    },
-    {
-      title: "Pro Tier",
-      price: "$25+",
-      description: "Enhanced profile and features for serious contenders.",
-      features: [
-        "Everything in Free tier",
-        "Enhanced profile editor",
-        "RGB animated borders",
-        "5 profile images (2MB each)",
-        "5 external links",
-        "Video embeds",
-        "Advanced analytics",
-        "+25% prize pool bonus"
-      ],
-      tier: "pro" as const,
-      popular: true,
-      buttonText: "Upgrade to Pro"
-    },
-    {
-      title: "Royal Tier",
-      price: "$100+",
-      description: "The ultimate experience for those who crave power and prestige.",
-      features: [
-        "Everything in Pro tier",
-        "Unlimited images (5MB each)",
-        "Unlimited links",
-        "Premium RGB effects",
-        "Custom profile themes",
-        "Premium analytics",
-        "Top-tier certificate",
-        "+100% prize pool bonus",
-        "Exclusive Royal Cosmetics"
-      ],
-      tier: "royal" as const,
-      buttonText: "Claim Royal Status"
-    }
-  ];
-
-  return (
-    <>
-      <Header />
-      <main className="container mx-auto px-4 py-12 pt-28">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-16 animate-royal-entrance">
-            <div className="flex justify-center mb-4">
-              <BrandIcon size="lg" variant="fancy" animated className="animate-royal-float" />
+      </Link>
+      
+      <div className="text-center mb-12">
+        <ThroneChair size={80} className="mx-auto mb-4" animate={true} />
+        <h1 className="text-4xl font-bold font-royal mb-2">Features</h1>
+        <p className="text-white/70 max-w-2xl mx-auto">
+          Explore the extravagant features that make SpendThrone the ultimate pay-to-win social platform.
+        </p>
+      </div>
+      
+      <div className="space-y-16">
+        {/* Persistent Leaderboard */}
+        <section className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
+          <div className="md:col-span-2">
+            <div className="flex items-center mb-4">
+              <DollarSign className="h-7 w-7 text-royal-gold mr-2" />
+              <h2 className="text-2xl font-bold">Persistent Leaderboard</h2>
             </div>
-            <h1 className="text-4xl md:text-5xl font-bold mb-4 royal-gradient">
-              <span className="royal-gradient">SpendThrone Features</span>
-            </h1>
-            <p className="text-xl text-white/80 max-w-3xl mx-auto">
-              Explore the unique features that make SpendThrone the ultimate pay-to-win social experience where your wealth determines your worth.
+            <p className="text-white/80 mb-4 leading-relaxed">
+              SpendThrone features a perpetual leaderboard that never resets. Your rank is determined by one simple metric: how much you've spent. Every dollar equals one rank point, making this the most transparent ranking system in existence.
             </p>
-            
-            <div className="mt-8 grid grid-cols-3 gap-4 max-w-md mx-auto">
-              <div className="glass-morphism-highlight rounded-lg p-3 flex flex-col items-center">
-                <DollarSign className="h-6 w-6 text-royal-gold mb-1" />
-                <div className="text-lg font-bold">$1 = 1 Rank</div>
+            <ul className="space-y-2">
+              <li className="flex items-start">
+                <span className="h-5 w-5 text-royal-gold mr-2 flex-shrink-0">•</span>
+                <span className="text-white/80">Real-time updates as users spend and climb the ranks</span>
+              </li>
+              <li className="flex items-start">
+                <span className="h-5 w-5 text-royal-gold mr-2 flex-shrink-0">•</span>
+                <span className="text-white/80">Historical tracking of spending patterns and rank changes</span>
+              </li>
+              <li className="flex items-start">
+                <span className="h-5 w-5 text-royal-gold mr-2 flex-shrink-0">•</span>
+                <span className="text-white/80">Special recognition for milestone achievements and top spenders</span>
+              </li>
+              <li className="flex items-start">
+                <span className="h-5 w-5 text-royal-gold mr-2 flex-shrink-0">•</span>
+                <span className="text-white/80">Filter and sort options to view rankings by various criteria</span>
+              </li>
+            </ul>
+          </div>
+          <div className="glass-morphism border-white/10 p-6 rounded-lg">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between p-3 bg-royal-gold/10 rounded-lg">
+                <div className="flex items-center">
+                  <Crown className="h-5 w-5 text-royal-gold mr-2" />
+                  <span className="font-medium">RoyalTycoon</span>
+                </div>
+                <span className="text-royal-gold font-mono">$9,850.25</span>
               </div>
               
-              <div className="glass-morphism-highlight rounded-lg p-3 flex flex-col items-center">
-                <Users className="h-6 w-6 text-royal-gold mb-1" />
-                <div className="text-lg font-bold">3 Teams</div>
+              <div className="flex items-center justify-between p-3 bg-white/5 rounded-lg">
+                <div className="flex items-center">
+                  <User className="h-5 w-5 text-white/80 mr-2" />
+                  <span className="font-medium">WealthFlex</span>
+                </div>
+                <span className="font-mono">$7,342.18</span>
               </div>
               
-              <div className="glass-morphism-highlight rounded-lg p-3 flex flex-col items-center">
-                <Trophy className="h-6 w-6 text-royal-gold mb-1" />
-                <div className="text-lg font-bold">Weekly Prizes</div>
+              <div className="flex items-center justify-between p-3 bg-white/5 rounded-lg">
+                <div className="flex items-center">
+                  <User className="h-5 w-5 text-white/80 mr-2" />
+                  <span className="font-medium">MoneyMaker</span>
+                </div>
+                <span className="font-mono">$5,678.90</span>
+              </div>
+              
+              <div className="flex items-center justify-between p-3 bg-white/5 rounded-lg opacity-60">
+                <div className="flex items-center">
+                  <User className="h-5 w-5 text-white/80 mr-2" />
+                  <span className="font-medium">CashKing</span>
+                </div>
+                <span className="font-mono">$4,321.55</span>
+              </div>
+              
+              <div className="flex items-center justify-between p-3 bg-white/5 rounded-lg opacity-40">
+                <div className="flex items-center">
+                  <User className="h-5 w-5 text-white/80 mr-2" />
+                  <span className="font-medium">StatusSeeker</span>
+                </div>
+                <span className="font-mono">$3,145.72</span>
               </div>
             </div>
           </div>
-          
-          <Tabs defaultValue="all-features" value={activeTab} onValueChange={setActiveTab} className="mb-12">
-            <TabsList className="glass-morphism border-white/10 bg-transparent">
-              <TabsTrigger value="all-features" className="data-[state=active]:bg-white/10">
-                All Features
-              </TabsTrigger>
-              <TabsTrigger value="pricing" className="data-[state=active]:bg-white/10">
-                Pricing Tiers
-              </TabsTrigger>
-              <TabsTrigger value="comparison" className="data-[state=active]:bg-white/10">
-                Feature Comparison
-              </TabsTrigger>
-            </TabsList>
-            
-            <TabsContent value="all-features" className="space-y-16 mt-8 animate-fade-in">
-              <FeatureCategorySection
-                title="Core Features"
-                description="The fundamental mechanics that drive the SpendThrone experience"
-                icon={<Crown className="h-6 w-6 text-royal-gold" />}
-                features={coreFeatures}
-              />
-              
-              <Separator className="border-white/10" />
-              
-              <FeatureCategorySection
-                title="Premium Profile Features"
-                description="Enhanced customization options available with Pro tier and higher"
-                icon={<Sparkles className="h-6 w-6 text-royal-gold" />}
-                features={premiumFeatures}
-              />
-              
-              <Separator className="border-white/10" />
-              
-              <FeatureCategorySection
-                title="Events & Interactions"
-                description="Special events and ways to interact with other nobles"
-                icon={<Flame className="h-6 w-6 text-royal-gold" />}
-                features={eventFeatures}
-              />
-              
-              <Separator className="border-white/10" />
-              
-              <FeatureCategorySection
-                title="Rewards & Recognition"
-                description="Benefits and rewards for your spending and participation"
-                icon={<Trophy className="h-6 w-6 text-royal-gold" />}
-                features={rewardFeatures}
-              />
-              
-              <Separator className="border-white/10" />
-              
-              <FeatureCategorySection
-                title="Coming Soon"
-                description="Exciting features on the royal roadmap"
-                icon={<Star className="h-6 w-6 text-royal-gold" />}
-                features={comingSoonFeatures}
-              />
-              
-              <div className="text-center mt-12">
-                <h3 className="text-2xl font-bold mb-4">Ready to Experience SpendThrone?</h3>
-                <p className="text-white/70 mb-6 max-w-2xl mx-auto">
-                  Join the ranks of the nobility and prove your worth through your wealth.
-                </p>
-                <Link to="/register">
-                  <Button className="bg-gradient-to-r from-royal-gold-dark via-royal-gold to-royal-gold-bright text-black hover:opacity-90 px-8 py-6 h-auto text-lg">
-                    Join the Realm Now
-                  </Button>
-                </Link>
-              </div>
-            </TabsContent>
-            
-            <TabsContent value="pricing" className="space-y-12 mt-8 animate-fade-in">
-              <div className="text-center mb-8">
-                <h2 className="text-2xl font-bold mb-2">Choose Your Royal Status</h2>
-                <p className="text-white/70 max-w-2xl mx-auto">
-                  Select the tier that matches your ambition in the SpendThrone realm.
-                </p>
+        </section>
+        
+        {/* Team Competition */}
+        <section className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
+          <div className="md:order-2 md:col-span-2">
+            <div className="flex items-center mb-4">
+              <Users className="h-7 w-7 text-royal-gold mr-2" />
+              <h2 className="text-2xl font-bold">RGB Team Competition</h2>
+            </div>
+            <p className="text-white/80 mb-4 leading-relaxed">
+              Join one of three prestigious teams - Red, Green, or Blue - and contribute to their collective standing. Team rankings are determined by the total spending of all members, creating a social dimension to your conspicuous consumption.
+            </p>
+            <ul className="space-y-2">
+              <li className="flex items-start">
+                <span className="h-5 w-5 text-royal-gold mr-2 flex-shrink-0">•</span>
+                <span className="text-white/80">Team-specific visual effects and profile enhancements</span>
+              </li>
+              <li className="flex items-start">
+                <span className="h-5 w-5 text-royal-gold mr-2 flex-shrink-0">•</span>
+                <span className="text-white/80">Weekly team challenges with exclusive rewards for winning teams</span>
+              </li>
+              <li className="flex items-start">
+                <span className="h-5 w-5 text-royal-gold mr-2 flex-shrink-0">•</span>
+                <span className="text-white/80">Team chat channels to coordinate spending strategies</span>
+              </li>
+              <li className="flex items-start">
+                <span className="h-5 w-5 text-royal-gold mr-2 flex-shrink-0">•</span>
+                <span className="text-white/80">Ability to switch teams (for a fee, of course)</span>
+              </li>
+            </ul>
+          </div>
+          <div className="md:order-1 glass-morphism border-white/10 p-6 rounded-lg">
+            <div className="space-y-6">
+              <div className="p-4 bg-red-500/20 border border-red-500/30 rounded-lg">
+                <div className="flex justify-between items-center mb-2">
+                  <span className="font-bold text-red-400">Red Team</span>
+                  <span className="text-sm text-white/70">84 members</span>
+                </div>
+                <div className="w-full bg-white/10 rounded-full h-4">
+                  <div className="bg-gradient-to-r from-red-600 to-red-400 h-4 rounded-full" style={{ width: "75%" }}></div>
+                </div>
+                <div className="mt-2 text-right text-red-300 font-mono">$45,621.50</div>
               </div>
               
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                {pricingTiers.map((tier, index) => (
-                  <PricingCard key={index} {...tier} />
-                ))}
+              <div className="p-4 bg-green-500/20 border border-green-500/30 rounded-lg">
+                <div className="flex justify-between items-center mb-2">
+                  <span className="font-bold text-green-400">Green Team</span>
+                  <span className="text-sm text-white/70">92 members</span>
+                </div>
+                <div className="w-full bg-white/10 rounded-full h-4">
+                  <div className="bg-gradient-to-r from-green-600 to-green-400 h-4 rounded-full" style={{ width: "85%" }}></div>
+                </div>
+                <div className="mt-2 text-right text-green-300 font-mono">$52,348.75</div>
               </div>
               
-              <div className="glass-morphism border-white/10 p-6 rounded-lg">
-                <h3 className="text-xl font-bold mb-4 flex items-center">
-                  <Info className="h-5 w-5 mr-2 text-royal-gold" />
-                  Important Notes
-                </h3>
-                <ul className="space-y-2">
-                  <li className="flex items-start">
-                    <ChevronRight className="h-5 w-5 text-royal-gold mr-2 flex-shrink-0 mt-0.5" />
-                    <span className="text-white/80 text-sm">
-                      Spending is cumulative - you don't need to spend the full tier amount at once
-                    </span>
-                  </li>
-                  <li className="flex items-start">
-                    <ChevronRight className="h-5 w-5 text-royal-gold mr-2 flex-shrink-0 mt-0.5" />
-                    <span className="text-white/80 text-sm">
-                      Benefits unlock immediately when you reach the spending threshold
-                    </span>
-                  </li>
-                  <li className="flex items-start">
-                    <ChevronRight className="h-5 w-5 text-royal-gold mr-2 flex-shrink-0 mt-0.5" />
-                    <span className="text-white/80 text-sm">
-                      All spending contributes to your rank position on the leaderboard
-                    </span>
-                  </li>
-                  <li className="flex items-start">
-                    <ChevronRight className="h-5 w-5 text-royal-gold mr-2 flex-shrink-0 mt-0.5" />
-                    <span className="text-white/80 text-sm">
-                      Prize pool rewards are distributed weekly based on multiple factors including tier status
-                    </span>
-                  </li>
+              <div className="p-4 bg-blue-500/20 border border-blue-500/30 rounded-lg">
+                <div className="flex justify-between items-center mb-2">
+                  <span className="font-bold text-blue-400">Blue Team</span>
+                  <span className="text-sm text-white/70">78 members</span>
+                </div>
+                <div className="w-full bg-white/10 rounded-full h-4">
+                  <div className="bg-gradient-to-r from-blue-600 to-blue-400 h-4 rounded-full" style={{ width: "65%" }}></div>
+                </div>
+                <div className="mt-2 text-right text-blue-300 font-mono">$38,972.25</div>
+              </div>
+            </div>
+          </div>
+        </section>
+        
+        {/* Profile Customization */}
+        <section className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
+          <div className="md:col-span-2">
+            <div className="flex items-center mb-4">
+              <Sparkles className="h-7 w-7 text-royal-gold mr-2" />
+              <h2 className="text-2xl font-bold">Luxurious Profile Customization</h2>
+            </div>
+            <p className="text-white/80 mb-4 leading-relaxed">
+              Elevate your digital presence with our extensive profile customization options. The higher your spending tier, the more extravagant the available customizations. From glowing borders to animated backgrounds, flaunt your status in style.
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+              <div className="bg-black/20 p-3 rounded-lg">
+                <h3 className="font-semibold text-royal-gold mb-2">Free Tier ($1+)</h3>
+                <ul className="space-y-1 text-sm text-white/80">
+                  <li>• Basic text (200 characters)</li>
+                  <li>• One image (max 500KB)</li>
+                  <li>• One external link</li>
+                  <li>• Standard profile layout</li>
                 </ul>
               </div>
-            </TabsContent>
-            
-            <TabsContent value="comparison" className="mt-8 animate-fade-in">
-              <div className="text-center mb-8">
-                <h2 className="text-2xl font-bold mb-2">Feature Comparison</h2>
-                <p className="text-white/70 max-w-2xl mx-auto">
-                  Detailed breakdown of features available in each tier.
-                </p>
-              </div>
               
-              <ComparisonTable />
-              
-              <div className="mt-12 text-center">
-                <Link to="/register">
-                  <Button className="bg-royal-gold text-black hover:bg-royal-gold/90 px-8">
-                    Join SpendThrone
-                  </Button>
-                </Link>
+              <div className="bg-royal-gold/10 border border-royal-gold/30 p-3 rounded-lg">
+                <h3 className="font-semibold text-royal-gold mb-2">Pro Tier ($25+)</h3>
+                <ul className="space-y-1 text-sm text-white/80">
+                  <li>• Rich text (1000 characters)</li>
+                  <li>• Up to 5 images (max 2MB each)</li>
+                  <li>• Up to 5 external links</li>
+                  <li>• Animated borders and backgrounds</li>
+                  <li>• Custom color schemes</li>
+                  <li>• Video embeds</li>
+                  <li>• Visit statistics</li>
+                </ul>
               </div>
-            </TabsContent>
-          </Tabs>
-          
-          <div className="mt-16 glass-morphism border-white/10 p-8 rounded-lg">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div>
-                <h2 className="text-2xl font-bold mb-4">Progress Chart</h2>
-                <p className="text-white/70 mb-6">
-                  Track your journey through the different spending tiers and unlock more features.
-                </p>
+            </div>
+            <p className="text-white/70">
+              Premium cosmetic items are also available for purchase in our Royal Boutique, or can be earned through special events and the Wishing Well.
+            </p>
+          </div>
+          <div className="glass-morphism border-white/10 p-6 rounded-lg">
+            <div className="relative">
+              <div className="absolute inset-0 bg-gradient-to-br from-royal-gold/30 to-royal-purple/30 rounded-lg animate-pulse-slow opacity-70"></div>
+              <div className="relative p-4 space-y-4">
+                <div className="flex items-center">
+                  <div className="h-16 w-16 rounded-full bg-royal-navy border-4 border-royal-gold overflow-hidden mr-4">
+                    <img src="https://randomuser.me/api/portraits/men/1.jpg" alt="Profile" className="w-full h-full object-cover" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold">
+                      <span className="text-royal-gold">★</span> RoyalTycoon
+                    </h3>
+                    <p className="text-sm text-white/70">Money Monarch</p>
+                  </div>
+                </div>
                 
-                <div className="space-y-6">
-                  <div>
-                    <div className="flex justify-between mb-1">
-                      <span className="text-sm text-white/70">Basic ($0)</span>
-                      <span className="text-sm text-white/70">$25</span>
-                    </div>
-                    <Progress value={0} className="h-2 bg-white/10" />
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-white/60">Rank</span>
+                    <span className="font-medium">#1</span>
                   </div>
-                  
-                  <div>
-                    <div className="flex justify-between mb-1">
-                      <span className="text-sm text-white/70">Pro ($25)</span>
-                      <span className="text-sm text-white/70">$100</span>
-                    </div>
-                    <Progress value={0} className="h-2 bg-white/10" />
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-white/60">Team</span>
+                    <span className="text-red-400 font-medium">Red</span>
                   </div>
-                  
-                  <div>
-                    <div className="flex justify-between mb-1">
-                      <span className="text-sm text-white/70">Royal ($100)</span>
-                      <span className="text-sm text-white/70">$500</span>
-                    </div>
-                    <Progress value={0} className="h-2 bg-white/10" />
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-white/60">Total Spent</span>
+                    <span className="text-royal-gold font-medium">$9,850.25</span>
                   </div>
-                  
-                  <div>
-                    <div className="flex justify-between mb-1">
-                      <span className="text-sm text-white/70">Whale ($500)</span>
-                      <span className="text-sm text-white/70">$10,000</span>
-                    </div>
-                    <Progress value={0} className="h-2 bg-white/10" />
-                  </div>
+                </div>
+                
+                <div className="bg-black/30 p-3 rounded-lg">
+                  <p className="text-white/90 italic">
+                    "The throne is mine by right of spending. All shall acknowledge my financial supremacy!"
+                  </p>
+                </div>
+                
+                <div className="flex gap-2">
+                  <div className="h-20 w-20 bg-black/20 rounded-md"></div>
+                  <div className="h-20 w-20 bg-black/20 rounded-md"></div>
+                  <div className="h-20 w-20 bg-black/20 rounded-md"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        
+        {/* Royal Mockery */}
+        <section className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
+          <div className="md:order-2 md:col-span-2">
+            <div className="flex items-center mb-4">
+              <Shield className="h-7 w-7 text-royal-gold mr-2" />
+              <h2 className="text-2xl font-bold">Royal Mockery</h2>
+            </div>
+            <p className="text-white/80 mb-4 leading-relaxed">
+              With great spending comes great power to ridicule. Our Royal Mockery system lets you spend money to apply temporary effects to other users' profiles. From minor annoyances to major embarrassments, assert your dominance over the lesser spenders.
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+              <div>
+                <h3 className="font-semibold text-royal-gold mb-2">Offensive Actions</h3>
+                <ul className="space-y-1 text-sm text-white/80">
+                  <li>• Pelt with tomatoes ($0.25)</li>
+                  <li>• Hurl eggs ($0.50)</li>
+                  <li>• Place in stocks ($1.00)</li>
+                  <li>• Appoint as court jester ($2.00)</li>
+                  <li>• Royal silencing ($1.50)</li>
+                  <li>• Public roasting ($1.25)</li>
+                </ul>
+              </div>
+              
+              <div>
+                <h3 className="font-semibold text-royal-gold mb-2">Defensive Actions</h3>
+                <ul className="space-y-1 text-sm text-white/80">
+                  <li>• Royal protection ($5.00) - 24 hour immunity</li>
+                  <li>• Royal immunity ($10.00) - 72 hour immunity</li>
+                  <li>• Retaliation boosts (various prices)</li>
+                  <li>• Status restoration (price varies)</li>
+                </ul>
+              </div>
+            </div>
+            <p className="text-white/70">
+              Effects last for various durations based on the action's cost. Special weekly discounts are available on select mockery actions, and Public Shaming Festivals offer limited-time reduced pricing.
+            </p>
+          </div>
+          <div className="md:order-1 glass-morphism border-white/10 p-6 rounded-lg">
+            <div className="space-y-4">
+              <div className="p-3 bg-amber-500/20 border border-amber-500/30 rounded-lg">
+                <div className="flex items-center mb-2">
+                  <Crown className="h-5 w-5 text-amber-400 mr-2" />
+                  <h4 className="font-medium">Court Jester</h4>
+                </div>
+                <p className="text-sm text-white/80">
+                  Appoint another user as the royal court jester for 48 hours, adding jester icons and animations to their profile.
+                </p>
+                <div className="mt-2 flex justify-between items-center">
+                  <span className="text-xs text-white/60">48 hour effect</span>
+                  <span className="text-amber-300 font-medium">$2.00</span>
                 </div>
               </div>
               
-              <div>
-                <h2 className="text-2xl font-bold mb-4">Spending Benefits</h2>
-                <p className="text-white/70 mb-6">
-                  The more you spend, the more prestigious benefits you unlock.
+              <div className="p-3 bg-red-500/20 border border-red-500/30 rounded-lg">
+                <div className="flex items-center mb-2">
+                  <Sparkles className="h-5 w-5 text-red-400 mr-2" />
+                  <h4 className="font-medium">Rotten Tomatoes</h4>
+                </div>
+                <p className="text-sm text-white/80">
+                  Pelt a user with rotten tomatoes, adding splatter effects to their profile for 24 hours.
                 </p>
-                
-                <ul className="space-y-4">
-                  <li className="flex items-start">
-                    <BarChart className="h-5 w-5 text-royal-gold mr-2 flex-shrink-0 mt-0.5" />
-                    <div>
-                      <h4 className="font-semibold">Higher Prize Pool Share</h4>
-                      <p className="text-sm text-white/70">
-                        Earn up to 3x multiplier on your share of the weekly prize pool.
-                      </p>
-                    </div>
-                  </li>
-                  
-                  <li className="flex items-start">
-                    <Heart className="h-5 w-5 text-royal-gold mr-2 flex-shrink-0 mt-0.5" />
-                    <div>
-                      <h4 className="font-semibold">Exclusive Cosmetics</h4>
-                      <p className="text-sm text-white/70">
-                        Unlock limited-edition profile decorations based on your tier.
-                      </p>
-                    </div>
-                  </li>
-                  
-                  <li className="flex items-start">
-                    <PieChart className="h-5 w-5 text-royal-gold mr-2 flex-shrink-0 mt-0.5" />
-                    <div>
-                      <h4 className="font-semibold">Team Rewards Multiplier</h4>
-                      <p className="text-sm text-white/70">
-                        Boost rewards for your entire team based on your spending.
-                      </p>
-                    </div>
-                  </li>
-                  
-                  <li className="flex items-start">
-                    <Shield className="h-5 w-5 text-royal-gold mr-2 flex-shrink-0 mt-0.5" />
-                    <div>
-                      <h4 className="font-semibold">Mockery Protection</h4>
-                      <p className="text-sm text-white/70">
-                        High spenders become immune to cheaper forms of public mockery.
-                      </p>
-                    </div>
-                  </li>
-                </ul>
+                <div className="mt-2 flex justify-between items-center">
+                  <span className="text-xs text-white/60">24 hour effect</span>
+                  <span className="text-red-300 font-medium">$0.25</span>
+                </div>
+              </div>
+              
+              <div className="p-3 bg-blue-500/20 border border-blue-500/30 rounded-lg">
+                <div className="flex items-center mb-2">
+                  <Shield className="h-5 w-5 text-blue-400 mr-2" />
+                  <h4 className="font-medium">Royal Protection</h4>
+                </div>
+                <p className="text-sm text-white/80">
+                  Grant yourself divine protection from basic mockery actions for 24 hours.
+                </p>
+                <div className="mt-2 flex justify-between items-center">
+                  <span className="text-xs text-white/60">24 hour effect</span>
+                  <span className="text-blue-300 font-medium">$5.00</span>
+                </div>
               </div>
             </div>
           </div>
+        </section>
+        
+        {/* Wishing Well */}
+        <section className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
+          <div className="md:col-span-2">
+            <div className="flex items-center mb-4">
+              <Gift className="h-7 w-7 text-royal-gold mr-2" />
+              <h2 className="text-2xl font-bold">Royal Wishing Well</h2>
+            </div>
+            <p className="text-white/80 mb-4 leading-relaxed">
+              Make a wish by casting coins into our mystical well for a chance to receive exclusive cosmetic rewards. The higher your wish amount, the better your chances of receiving rare and legendary items to enhance your profile.
+            </p>
+            <ul className="space-y-2">
+              <li className="flex items-start">
+                <span className="h-5 w-5 text-royal-gold mr-2 flex-shrink-0">•</span>
+                <span className="text-white/80">Make wishes from $0.25 to $10 with increasing odds of rarer rewards</span>
+              </li>
+              <li className="flex items-start">
+                <span className="h-5 w-5 text-royal-gold mr-2 flex-shrink-0">•</span>
+                <span className="text-white/80">Receive cosmetic items across various categories: borders, colors, fonts, and more</span>
+              </li>
+              <li className="flex items-start">
+                <span className="h-5 w-5 text-royal-gold mr-2 flex-shrink-0">•</span>
+                <span className="text-white/80">Option to target specific categories for your wishes</span>
+              </li>
+              <li className="flex items-start">
+                <span className="h-5 w-5 text-royal-gold mr-2 flex-shrink-0">•</span>
+                <span className="text-white/80">Some items are exclusively available through the Wishing Well</span>
+              </li>
+            </ul>
+          </div>
+          <div className="glass-morphism border-white/10 p-6 rounded-lg">
+            <div className="space-y-4">
+              <div className="text-center mb-2">
+                <Gift className="h-16 w-16 text-royal-gold mx-auto mb-2" />
+                <h3 className="font-bold text-lg">Royal Wishing Well</h3>
+                <p className="text-sm text-white/70">Try your luck with a generous wish!</p>
+              </div>
+              
+              <div className="w-full bg-black/20 h-10 rounded-full flex items-center p-2">
+                <div className="bg-royal-gold h-6 rounded-full" style={{ width: "60%" }}></div>
+              </div>
+              
+              <div className="flex justify-between text-sm">
+                <span className="text-white/70">$0.25</span>
+                <span className="text-royal-gold">$6.00</span>
+                <span className="text-white/70">$10.00</span>
+              </div>
+              
+              <div className="grid grid-cols-5 gap-x-1 gap-y-2 my-3">
+                <div className="text-center">
+                  <div className="text-xs font-semibold text-gray-300">Common</div>
+                  <div className="text-xs text-white/50">25%</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-xs font-semibold text-green-400">Uncommon</div>
+                  <div className="text-xs text-white/50">30%</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-xs font-semibold text-blue-400">Rare</div>
+                  <div className="text-xs text-white/50">25%</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-xs font-semibold text-purple-400">Epic</div>
+                  <div className="text-xs text-white/50">15%</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-xs font-semibold text-royal-gold">Legendary</div>
+                  <div className="text-xs text-white/50">5%</div>
+                </div>
+              </div>
+              
+              <Button className="w-full bg-royal-gold hover:bg-royal-gold/90 text-black">
+                <Sparkles className="mr-2 h-4 w-4" />
+                Make a Wish
+              </Button>
+            </div>
+          </div>
+        </section>
+        
+        {/* Special Events */}
+        <section className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
+          <div className="md:order-2 md:col-span-2">
+            <div className="flex items-center mb-4">
+              <Award className="h-7 w-7 text-royal-gold mr-2" />
+              <h2 className="text-2xl font-bold">Special Events</h2>
+            </div>
+            <p className="text-white/80 mb-4 leading-relaxed">
+              SpendThrone regularly hosts special events that offer unique opportunities and limited-time features. From seasonal celebrations to promotional extravaganzas, these events provide fresh ways to spend your money and enhance your status.
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+              <div className="bg-black/20 p-3 rounded-lg">
+                <h3 className="font-semibold text-royal-gold mb-2">Regular Events</h3>
+                <ul className="space-y-1 text-sm text-white/80">
+                  <li>• Fire Sales - discounted cosmetic items</li>
+                  <li>• Public Shaming Festivals - reduced mockery costs</li>
+                  <li>• Weekly Team Challenges</li>
+                  <li>• Double Rank Days</li>
+                </ul>
+              </div>
+              
+              <div className="bg-royal-gold/10 border border-royal-gold/30 p-3 rounded-lg">
+                <h3 className="font-semibold text-royal-gold mb-2">Seasonal Events</h3>
+                <ul className="space-y-1 text-sm text-white/80">
+                  <li>• Royal Coronation Ceremony</li>
+                  <li>• Summer Spending Spree</li>
+                  <li>• Winter Wealth Showcase</li>
+                  <li>• Anniversary Auctions</li>
+                </ul>
+              </div>
+            </div>
+            <p className="text-white/70">
+              Events are announced on the platform and via email notifications. Premium users receive advance access to certain event features.
+            </p>
+          </div>
+          <div className="md:order-1 glass-morphism border-white/10 p-6 rounded-lg">
+            <div className="relative p-4 border-2 border-royal-gold/50 rounded-lg bg-gradient-to-br from-royal-gold/10 to-royal-navy/10">
+              <div className="absolute top-0 right-0 bg-royal-gold text-black px-3 py-1 text-sm font-bold rounded-bl-lg">ACTIVE</div>
+              <div className="pt-6">
+                <h3 className="text-xl font-bold text-center mb-4">Fire Sale</h3>
+                <p className="text-sm text-white/80 mb-4 text-center">
+                  Limited time discounts on premium cosmetic items!
+                </p>
+                
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center p-2 bg-black/30 rounded-lg">
+                    <span className="text-sm">Royal Border</span>
+                    <div className="flex items-center">
+                      <span className="text-xs line-through mr-2 text-white/50">$25.00</span>
+                      <span className="text-royal-gold font-medium">$17.50</span>
+                    </div>
+                  </div>
+                  
+                  <div className="flex justify-between items-center p-2 bg-black/30 rounded-lg">
+                    <span className="text-sm">Diamond Effect</span>
+                    <div className="flex items-center">
+                      <span className="text-xs line-through mr-2 text-white/50">$15.00</span>
+                      <span className="text-royal-gold font-medium">$10.50</span>
+                    </div>
+                  </div>
+                  
+                  <div className="flex justify-between items-center p-2 bg-black/30 rounded-lg">
+                    <span className="text-sm">Elite Title</span>
+                    <div className="flex items-center">
+                      <span className="text-xs line-through mr-2 text-white/50">$10.00</span>
+                      <span className="text-royal-gold font-medium">$7.00</span>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="mt-4 text-center">
+                  <p className="text-xs text-white/60 mb-2">Ends in:</p>
+                  <div className="flex justify-center gap-2 text-sm">
+                    <div className="bg-black/50 px-2 py-1 rounded">2</div>
+                    <div>:</div>
+                    <div className="bg-black/50 px-2 py-1 rounded">14</div>
+                    <div>:</div>
+                    <div className="bg-black/50 px-2 py-1 rounded">35</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        
+        {/* Analytics & Stats */}
+        <section className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
+          <div className="md:col-span-2">
+            <div className="flex items-center mb-4">
+              <BarChart className="h-7 w-7 text-royal-gold mr-2" />
+              <h2 className="text-2xl font-bold">Analytics & Stats</h2>
+            </div>
+            <p className="text-white/80 mb-4 leading-relaxed">
+              Track your spending, monitor your rank progression, and analyze your impact on the platform with our comprehensive analytics tools. Premium users get access to advanced statistics and visualizations.
+            </p>
+            <ul className="space-y-2">
+              <li className="flex items-start">
+                <span className="h-5 w-5 text-royal-gold mr-2 flex-shrink-0">•</span>
+                <span className="text-white/80">Detailed spending history with visualizations</span>
+              </li>
+              <li className="flex items-start">
+                <span className="h-5 w-5 text-royal-gold mr-2 flex-shrink-0">•</span>
+                <span className="text-white/80">Rank progression over time</span>
+              </li>
+              <li className="flex items-start">
+                <span className="h-5 w-5 text-royal-gold mr-2 flex-shrink-0">•</span>
+                <span className="text-white/80">Profile view statistics and visitor demographics</span>
+              </li>
+              <li className="flex items-start">
+                <span className="h-5 w-5 text-royal-gold mr-2 flex-shrink-0">•</span>
+                <span className="text-white/80">Impact of your spending on team rankings</span>
+              </li>
+              <li className="flex items-start">
+                <span className="h-5 w-5 text-royal-gold mr-2 flex-shrink-0">•</span>
+                <span className="text-white/80">Mockery effectiveness tracking</span>
+              </li>
+            </ul>
+          </div>
+          <div className="glass-morphism border-white/10 p-6 rounded-lg">
+            <div className="space-y-4">
+              <h3 className="font-bold text-lg text-center">Spending Overview</h3>
+              
+              <div className="h-40 bg-black/20 rounded-lg flex items-end p-4 gap-2">
+                <div className="bg-royal-gold/50 w-1/6 h-[20%]" style={{ height: "20%" }}></div>
+                <div className="bg-royal-gold/50 w-1/6 h-[35%]" style={{ height: "35%" }}></div>
+                <div className="bg-royal-gold/50 w-1/6 h-[25%]" style={{ height: "25%" }}></div>
+                <div className="bg-royal-gold/50 w-1/6 h-[50%]" style={{ height: "50%" }}></div>
+                <div className="bg-royal-gold/50 w-1/6 h-[80%]" style={{ height: "80%" }}></div>
+                <div className="bg-royal-gold/50 w-1/6 h-[60%]" style={{ height: "60%" }}></div>
+              </div>
+              
+              <div className="grid grid-cols-2 gap-4">
+                <div className="bg-black/20 p-3 rounded-lg text-center">
+                  <div className="text-sm text-white/60">Current Rank</div>
+                  <div className="text-xl font-bold">#42</div>
+                </div>
+                
+                <div className="bg-black/20 p-3 rounded-lg text-center">
+                  <div className="text-sm text-white/60">Total Spent</div>
+                  <div className="text-xl font-bold text-royal-gold">$528.50</div>
+                </div>
+              </div>
+              
+              <div className="bg-black/20 p-3 rounded-lg">
+                <div className="text-sm text-white/60 mb-1">Rank Projection</div>
+                <div className="flex items-center">
+                  <div className="w-full bg-white/10 h-2 rounded-full">
+                    <div className="bg-royal-gold h-2 rounded-full" style={{ width: "75%" }}></div>
+                  </div>
+                  <span className="ml-2 text-xs">75%</span>
+                </div>
+                <div className="text-xs text-white/60 mt-1">$171.50 more to reach rank #25</div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+      
+      <div className="mt-16 glass-morphism border-white/10 p-8 rounded-lg text-center">
+        <ThroneChair size={80} className="mx-auto mb-4" animate={true} />
+        <h2 className="text-3xl font-bold mb-4 font-royal">Ready to Ascend the Hierarchy?</h2>
+        <p className="text-lg mb-6 max-w-2xl mx-auto">
+          Join SpendThrone today and start your journey to digital nobility. Remember, on SpendThrone, your wallet is your worth.
+        </p>
+        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <Button size="lg" className="bg-royal-gold hover:bg-royal-gold/90 text-black">
+            <Link to="/signup">
+              <span>Sign Up Now</span>
+              <Crown className="ml-2 h-4 w-4" />
+            </Link>
+          </Button>
+          <Button size="lg" variant="outline" className="border-white/20 hover:bg-white/5">
+            <Link to="/login">
+              <span>Sign In</span>
+              <ChevronRight className="ml-2 h-4 w-4" />
+            </Link>
+          </Button>
         </div>
-      </main>
-      <Footer />
-    </>
+      </div>
+    </div>
   );
 };
 
-// Import MessageCircle and Info icon components
-import { MessageCircle, Info } from 'lucide-react';
-
-export default FeaturesPage;
+export default Features;

@@ -1,128 +1,84 @@
 
-import { User, UserTeam, UserTier } from '@/types/user';
+import { User } from '@/types/user';
 
-/**
- * Generates a random integer between min and max (inclusive)
- * @param min The minimum value
- * @param max The maximum value
- * @returns A random integer
- */
-const getRandomInt = (min: number, max: number): number => {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-};
-
-/**
- * Gets a random team
- * @returns Random team
- */
-const getRandomTeam = (): UserTeam => {
-  const teams: UserTeam[] = ['red', 'green', 'blue', null];
-  return teams[Math.floor(Math.random() * teams.length)];
-};
-
-/**
- * Gets a random tier
- * @returns Random tier
- */
-const getRandomTier = (): UserTier => {
-  const tiers: UserTier[] = ['basic', 'premium', 'royal'];
-  return tiers[Math.floor(Math.random() * tiers.length)];
-};
-
-/**
- * Generates a mock leaderboard
- * @param count The number of users to generate
- * @returns An array of mock users
- */
-export const generateMockLeaderboard = (count: number = 50): User[] => {
-  const leaderboard: User[] = [];
-  
-  for (let i = 0; i < count; i++) {
-    const userTeam = getRandomTeam();
-    const userTier = getRandomTier();
-    const totalSpent = getRandomInt(10, 5000);
-    const joinDate = new Date(Date.now() - Math.random() * 10000000000).toISOString();
-    
-    leaderboard.push({
-      id: `user-${getRandomInt(1000, 9999)}`,
-      username: `user${i + 1}`,
-      displayName: `Player ${i + 1}`,
-      team: userTeam,
-      tier: userTier,
-      rank: i + 1,
-      totalSpent: totalSpent,
-      amountSpent: totalSpent,
-      spentAmount: totalSpent,
-      profileImage: `https://source.unsplash.com/random/?portrait&${i}`,
-      joinDate: joinDate,
-      joinedAt: joinDate,
-      walletBalance: Math.floor(Math.random() * 1000),
-      email: `user${i + 1}@example.com`,
-      socialLinks: [],
-      profileBoosts: [],
-      createdAt: joinDate
-    });
+// Mocked top spender data
+const mockTopSpender: User = {
+  id: 'top-spender-1',
+  username: 'RoyalTycoon',
+  displayName: 'Royal Tycoon',
+  profileImage: 'https://randomuser.me/api/portraits/men/19.jpg',
+  bio: 'The undisputed king of spending! Bow before my wealth!',
+  tier: 'royal',
+  team: 'Red',
+  rank: 1,
+  walletBalance: 150.50,
+  totalSpent: 9850.25,
+  spentAmount: 9850.25,
+  amountSpent: 9850.25,
+  createdAt: new Date().toISOString(),
+  isVerified: true,
+  cosmetics: {
+    borders: ['royal-border-1', 'royal-border-2'],
+    colors: ['royal-color-1'],
+    fonts: ['royal-font-1'],
+    emojis: ['royal-emoji-1', 'royal-emoji-2'],
+    titles: ['royal-whale', 'money-monarch'],
+    backgrounds: ['royal-bg-1'],
+    effects: ['royal-effect-1'],
+    badges: ['royal-badge-1', 'royal-badge-2'],
+    themes: ['royal-theme-1'],
+    activeBorder: 'royal-border-1',
+    activeColor: 'royal-color-1',
+    activeFont: 'royal-font-1',
+    activeEmoji: 'royal-emoji-1',
+    activeTitle: 'money-monarch',
+    activeBackground: 'royal-bg-1',
+    activeEffect: 'royal-effect-1',
+    activeBadge: 'royal-badge-1',
+    activeTheme: 'royal-theme-1'
   }
-  
-  return leaderboard;
 };
 
-/**
- * Gets a user ranking
- * @returns An array of mock users
- */
-export const getUserRanking = (): User[] => {
-  return generateMockLeaderboard(25);
-};
-
-/**
- * Gets leaderboard entries with filtering and sorting options
- * @param options Options for filtering and sorting
- * @returns Leaderboard entries
- */
-export const getLeaderboardEntries = (options: {
-  limit?: number;
-  filter?: string;
-  sort?: string;
-  direction?: string;
-} = {}): User[] => {
-  const { limit = 50, filter, sort = 'rank', direction = 'asc' } = options;
-  
-  // Generate mock data
-  let entries = generateMockLeaderboard(limit);
-  
-  // Apply time filter if specified
-  if (filter) {
-    const now = new Date();
-    let cutoff = new Date();
-    
-    if (filter === 'week') {
-      cutoff.setDate(now.getDate() - 7);
-    } else if (filter === 'month') {
-      cutoff.setMonth(now.getMonth() - 1);
-    } else if (filter === 'year') {
-      cutoff.setFullYear(now.getFullYear() - 1);
-    }
-    
-    entries = entries.filter(entry => new Date(entry.joinDate || entry.createdAt) >= cutoff);
-  }
-  
-  // Apply sorting
-  entries.sort((a, b) => {
-    let valueA = a[sort as keyof User];
-    let valueB = b[sort as keyof User];
-    
-    if (typeof valueA === 'string' && typeof valueB === 'string') {
-      return direction === 'asc' ? valueA.localeCompare(valueB) : valueB.localeCompare(valueA);
-    }
-    
-    valueA = valueA as number || 0;
-    valueB = valueB as number || 0;
-    
-    return direction === 'asc' ? valueA - valueB : valueB - valueA;
+// Fetch the current top spender
+export const fetchTopSpender = async (): Promise<User> => {
+  // In a real app, this would fetch from an API
+  // For now, we're using mock data
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(mockTopSpender);
+    }, 800);
   });
-  
-  return entries;
+};
+
+// Fetch leaderboard data
+export const fetchLeaderboard = async (page = 1, limit = 10): Promise<User[]> => {
+  // Mock leaderboard data with 20 users
+  const mockLeaderboard = Array.from({ length: 20 }).map((_, i) => ({
+    id: `user-${i + 1}`,
+    username: `User${i + 1}`,
+    displayName: `User ${i + 1}`,
+    profileImage: `https://randomuser.me/api/portraits/men/${20 + i}.jpg`,
+    tier: i < 3 ? 'royal' : i < 8 ? 'platinum' : i < 15 ? 'gold' : 'silver',
+    team: ['Red', 'Green', 'Blue'][i % 3],
+    rank: i + 1,
+    walletBalance: Math.round(Math.random() * 100 * 100) / 100,
+    totalSpent: Math.round((10000 - i * 500 + Math.random() * 200) * 100) / 100,
+    spentAmount: Math.round((10000 - i * 500 + Math.random() * 200) * 100) / 100,
+    amountSpent: Math.round((10000 - i * 500 + Math.random() * 200) * 100) / 100,
+    createdAt: new Date().toISOString(),
+    isVerified: i < 10
+  } as User));
+
+  // If page 1, ensure the top spender is the first result
+  if (page === 1) {
+    mockLeaderboard[0] = mockTopSpender;
+  }
+
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      const startIndex = (page - 1) * limit;
+      const endIndex = startIndex + limit;
+      resolve(mockLeaderboard.slice(startIndex, endIndex));
+    }, 800);
+  });
 };
