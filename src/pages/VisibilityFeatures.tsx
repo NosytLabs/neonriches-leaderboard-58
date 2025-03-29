@@ -1,272 +1,303 @@
 
-import React from 'react';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
-import { Helmet } from 'react-helmet-async';
+import React, { useState } from 'react';
+import { Shell } from '@/components/ui/shell';
+import { RoyalSection } from '@/components/ui/theme-components';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import FeatureShowcase from '@/components/ui/feature-showcase';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { featuresData } from '@/data/featuresData';
-import FaqComponent from '@/components/FaqComponent';
-import { Eye, Paintbrush, Zap, Crown, DollarSign } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Link } from 'react-router-dom';
+import { Crown, Sparkles, Star, Zap, Eye, Award, ArrowRight } from 'lucide-react';
+import { profileBoostEffects, getBoostsByType } from '@/data/boostEffects';
+import BoostEffectDemo from '@/components/profile/BoostEffectDemo';
+import ThreeDBoostShowcase from '@/components/animations/ThreeDBoostShowcase';
+import { subscriptionTiers } from '@/components/profile/UpgradePromotion';
 
 const VisibilityFeatures = () => {
-  // Filter features that are relevant to visibility
-  const visualEnhancementFeatures = featuresData.filter(
-    feature => feature.category === "Visual Enhancements"
-  );
+  const [activeTab, setActiveTab] = useState<string>('overview');
+  const [selectedBoostType, setSelectedBoostType] = useState<string>('appearance');
+  
+  const boostsByType = getBoostsByType(selectedBoostType);
   
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <Helmet>
-        <title>Visibility & Visual Features | SpendThrone</title>
-        <meta name="description" content="Enhance your profile's visibility and appearance with visual effects that make you stand out without affecting leaderboard rank." />
-      </Helmet>
-      
-      <Header />
-      
-      <main className="container mx-auto px-4 py-8 pt-24">
-        <div className="max-w-4xl mx-auto mb-12 text-center">
-          <h1 className="text-3xl font-bold mb-4">Profile Visibility & Visual Enhancements</h1>
-          <p className="text-xl text-white/70">
-            Stand out with visual effects that don't affect your leaderboard rank
-          </p>
+    <Shell>
+      <div className="relative py-12">
+        {/* Background effects */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-0 left-1/4 w-64 h-64 bg-royal-gold/5 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-40 right-1/4 w-80 h-80 bg-royal-purple/5 rounded-full blur-3xl"></div>
         </div>
         
-        <Tabs defaultValue="overview" className="mb-12">
-          <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="overview" className="flex items-center gap-1.5">
-              <Eye className="h-4 w-4" />
-              <span>Overview</span>
-            </TabsTrigger>
-            <TabsTrigger value="features" className="flex items-center gap-1.5">
-              <Paintbrush className="h-4 w-4" />
-              <span>Features</span>
-            </TabsTrigger>
-            <TabsTrigger value="pricing" className="flex items-center gap-1.5">
-              <DollarSign className="h-4 w-4" />
-              <span>Pricing</span>
-            </TabsTrigger>
-            <TabsTrigger value="faq" className="flex items-center gap-1.5">
-              <Zap className="h-4 w-4" />
-              <span>FAQ</span>
-            </TabsTrigger>
-          </TabsList>
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="text-center mb-12">
+            <h1 className="text-4xl md:text-5xl font-bold mb-4 font-royal animate-royal-entrance">
+              <span className="royal-gradient">Profile Visibility</span> & <span className="royal-gradient">Visual Enhancements</span>
+            </h1>
+            <p className="text-white/70 max-w-3xl mx-auto text-lg">
+              Elevate your digital presence with our visual enhancements – purely cosmetic upgrades that make your profile shine without affecting your leaderboard rank.
+            </p>
+          </div>
           
-          <TabsContent value="overview" className="mt-6">
-            <Card className="glass-morphism border-white/10">
-              <CardHeader>
-                <CardTitle>Visibility Without Rank</CardTitle>
-                <CardDescription>
-                  Make your profile stand out without spending a fortune
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <p>
-                  While your position on the SpendThrone leaderboard is determined solely by how much you've spent,
-                  your profile's <strong>visual appearance</strong> and <strong>visibility</strong> can be enhanced
-                  in other ways.
-                </p>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
-                  <div className="glass-morphism-highlight p-4 rounded-lg">
-                    <div className="flex items-center text-royal-gold mb-2">
-                      <Eye className="h-5 w-5 mr-2" />
-                      <h3 className="font-bold">Visibility Boosts</h3>
-                    </div>
-                    <p className="text-sm text-white/70">
-                      Temporary enhancements that increase your profile's visibility across the platform without affecting rank.
-                    </p>
-                  </div>
-                  
-                  <div className="glass-morphism-highlight p-4 rounded-lg">
-                    <div className="flex items-center text-royal-gold mb-2">
-                      <Paintbrush className="h-5 w-5 mr-2" />
-                      <h3 className="font-bold">Visual Effects</h3>
-                    </div>
-                    <p className="text-sm text-white/70">
-                      Eye-catching borders, glows, and styles that make your profile and leaderboard entry visually distinct.
-                    </p>
-                  </div>
-                  
-                  <div className="glass-morphism-highlight p-4 rounded-lg">
-                    <div className="flex items-center text-royal-gold mb-2">
-                      <Zap className="h-5 w-5 mr-2" />
-                      <h3 className="font-bold">Animations</h3>
-                    </div>
-                    <p className="text-sm text-white/70">
-                      Dynamic movement and effects that bring your profile to life and create a premium experience.
-                    </p>
-                  </div>
-                </div>
-                
-                <div className="mt-6">
-                  <h3 className="text-lg font-bold mb-2">How It Works</h3>
-                  <p className="mb-4">
-                    These visibility features operate on a separate system from the leaderboard rankings:
+          <Tabs defaultValue="overview" value={activeTab} onValueChange={setActiveTab} className="w-full">
+            <TabsList className="grid grid-cols-3 w-full max-w-2xl mx-auto mb-8">
+              <TabsTrigger value="overview" className="data-[state=active]:bg-royal-gold/20">
+                <Crown className="mr-2 h-4 w-4" />
+                Overview
+              </TabsTrigger>
+              <TabsTrigger value="boost-showcase" className="data-[state=active]:bg-royal-gold/20">
+                <Sparkles className="mr-2 h-4 w-4" />
+                Boost Effects
+              </TabsTrigger>
+              <TabsTrigger value="subscription" className="data-[state=active]:bg-royal-gold/20">
+                <Star className="mr-2 h-4 w-4" />
+                Subscription Tiers
+              </TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="overview" className="animate-fade-in">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center mb-12">
+                <div>
+                  <h2 className="text-2xl md:text-3xl font-bold mb-4">Stand Out Without Spending More</h2>
+                  <p className="text-white/70 mb-6">
+                    Profile visibility features allow you to enhance your presence on SpendThrone without needing to increase your spending rank. These purely cosmetic upgrades add visual flair to your profile, making it more noticeable and personalized.
                   </p>
-                  
-                  <div className="space-y-3">
-                    <div className="flex">
-                      <div className="mr-3 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-royal-gold/20 text-royal-gold">
-                        1
+                  <div className="space-y-4">
+                    <div className="flex items-start">
+                      <div className="mt-1 mr-3 p-2 rounded-full bg-royal-gold/10">
+                        <Eye className="h-5 w-5 text-royal-gold" />
                       </div>
                       <div>
-                        <p className="font-medium">Your rank is determined by deposits only</p>
-                        <p className="text-sm text-white/70">
-                          Every $1 you deposit equals 1 rank point. This is the only way to climb the leaderboard.
-                        </p>
+                        <h3 className="font-medium">Enhanced Visibility</h3>
+                        <p className="text-sm text-white/70">Your profile appears more prominently in search results and browsing.</p>
                       </div>
                     </div>
-                    
-                    <div className="flex">
-                      <div className="mr-3 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-royal-gold/20 text-royal-gold">
-                        2
+                    <div className="flex items-start">
+                      <div className="mt-1 mr-3 p-2 rounded-full bg-royal-gold/10">
+                        <Sparkles className="h-5 w-5 text-royal-gold" />
                       </div>
                       <div>
-                        <p className="font-medium">Visual effects are purchased separately</p>
-                        <p className="text-sm text-white/70">
-                          Profile boosts and visual enhancements can be purchased as one-time boosts or through subscriptions.
-                        </p>
+                        <h3 className="font-medium">Visual Effects</h3>
+                        <p className="text-sm text-white/70">Add borders, glows, animations, and other visual elements to your profile.</p>
                       </div>
                     </div>
-                    
-                    <div className="flex">
-                      <div className="mr-3 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-royal-gold/20 text-royal-gold">
-                        3
+                    <div className="flex items-start">
+                      <div className="mt-1 mr-3 p-2 rounded-full bg-royal-gold/10">
+                        <Award className="h-5 w-5 text-royal-gold" />
                       </div>
                       <div>
-                        <p className="font-medium">Effects are temporary or subscription-based</p>
-                        <p className="text-sm text-white/70">
-                          Individual boosts last for a specific duration (3-14 days). Subscription effects last as long as your subscription.
-                        </p>
+                        <h3 className="font-medium">Special Badges</h3>
+                        <p className="text-sm text-white/70">Display special badges and icons next to your name.</p>
                       </div>
                     </div>
-                    
-                    <div className="flex">
-                      <div className="mr-3 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-royal-gold/20 text-royal-gold">
-                        4
-                      </div>
-                      <div>
-                        <p className="font-medium">Combine effects for unique presentation</p>
-                        <p className="text-sm text-white/70">
-                          Mix and match different visual effects and boosts to create a unique profile presentation.
-                        </p>
-                      </div>
-                    </div>
+                  </div>
+                  <div className="mt-6">
+                    <Button onClick={() => setActiveTab('boost-showcase')} className="gap-2">
+                      <Zap className="h-4 w-4" />
+                      Explore Boost Effects
+                    </Button>
                   </div>
                 </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-          
-          <TabsContent value="features" className="mt-6">
-            <FeatureShowcase 
-              features={visualEnhancementFeatures} 
-              showCategories={false} 
-              maxColumns={2}
-            />
-          </TabsContent>
-          
-          <TabsContent value="pricing" className="mt-6">
-            <Card className="glass-morphism border-white/10">
-              <CardHeader>
-                <CardTitle>Pricing Options</CardTitle>
-                <CardDescription>
-                  Choose the option that fits your visibility needs
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                  <div className="glass-morphism p-6 rounded-lg border border-white/10">
-                    <div className="flex items-center mb-4">
-                      <Zap className="h-5 w-5 text-royal-gold mr-2" />
-                      <h3 className="text-xl font-bold">Individual Boosts</h3>
+                <div className="flex justify-center">
+                  <ThreeDBoostShowcase />
+                </div>
+              </div>
+              
+              <div className="text-center mb-8">
+                <h2 className="text-2xl md:text-3xl font-bold mb-4">How It Works</h2>
+                <p className="text-white/70 max-w-3xl mx-auto">
+                  Our profile boosts and visibility features are designed to enhance your digital presence without affecting the fundamental pay-to-win mechanics.
+                </p>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+                <div className="glass-morphism p-6 rounded-lg border border-white/10 hover:border-royal-gold/20 transition-colors">
+                  <div className="flex flex-col items-center text-center">
+                    <div className="relative w-14 h-14 rounded-full bg-royal-gold/10 flex items-center justify-center mb-4">
+                      <Sparkles className="h-6 w-6 text-royal-gold" />
+                      <div className="absolute inset-0 rounded-full animate-pulse-slow opacity-60 bg-royal-gold/20"></div>
                     </div>
-                    
-                    <p className="mb-4 text-white/70">
-                      One-time purchases of specific visual effects and visibility enhancements.
+                    <h3 className="text-lg font-bold mb-2">Temporary Boosts</h3>
+                    <p className="text-white/70">
+                      Purchase temporary profile boosts that last for a specific duration, adding visual effects and enhanced visibility.
                     </p>
-                    
-                    <div className="space-y-3 mb-6">
-                      <div className="flex justify-between">
-                        <span>Visibility Boosts</span>
-                        <span className="font-mono">$5-10</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span>Appearance Boosts</span>
-                        <span className="font-mono">$3-15</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span>Animation Effects</span>
-                        <span className="font-mono">$4-12</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span>Special Effects</span>
-                        <span className="font-mono">$9-20</span>
-                      </div>
-                    </div>
-                    
-                    <div className="text-sm text-white/60">
-                      <strong>Boost duration:</strong> 3-14 days depending on the effect
-                    </div>
-                  </div>
-                  
-                  <div className="glass-morphism p-6 rounded-lg border border-royal-gold/20">
-                    <div className="flex items-center mb-4">
-                      <Crown className="h-5 w-5 text-royal-gold mr-2" />
-                      <h3 className="text-xl font-bold">Subscription Plans</h3>
-                    </div>
-                    
-                    <p className="mb-4 text-white/70">
-                      Ongoing access to premium visual features and visibility enhancements.
-                    </p>
-                    
-                    <div className="space-y-3 mb-6">
-                      <div className="flex justify-between">
-                        <span>Premium Tier</span>
-                        <span className="font-mono">$15/month</span>
-                      </div>
-                      <div className="text-sm text-white/60 pl-4 mb-2">
-                        • RGB borders and animations<br />
-                        • 50% discount on all boosts<br />
-                        • Monthly free 3-day boost<br />
-                        • Access to premium effects
-                      </div>
-                      
-                      <div className="flex justify-between">
-                        <span>Royal Tier</span>
-                        <span className="font-mono">$30/month</span>
-                      </div>
-                      <div className="text-sm text-white/60 pl-4">
-                        • Permanent profile boost<br />
-                        • Exclusive animated effects<br />
-                        • 75% discount on all boosts<br />
-                        • Access to royal-tier effects
-                      </div>
-                    </div>
-                    
-                    <div className="text-sm text-white/60">
-                      <strong>Note:</strong> Subscription benefits last as long as your subscription is active
-                    </div>
                   </div>
                 </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-          
-          <TabsContent value="faq" className="mt-6">
-            <FaqComponent 
-              title="Visibility Features FAQ" 
-              initialCategory="boosts"
-              showSearch={true}
-            />
-          </TabsContent>
-        </Tabs>
-      </main>
-      
-      <Footer />
-    </div>
+                
+                <div className="glass-morphism p-6 rounded-lg border border-white/10 hover:border-royal-gold/20 transition-colors">
+                  <div className="flex flex-col items-center text-center">
+                    <div className="relative w-14 h-14 rounded-full bg-royal-gold/10 flex items-center justify-center mb-4">
+                      <Star className="h-6 w-6 text-royal-gold" />
+                      <div className="absolute inset-0 rounded-full animate-pulse-slow opacity-60 bg-royal-gold/20"></div>
+                    </div>
+                    <h3 className="text-lg font-bold mb-2">Subscription Perks</h3>
+                    <p className="text-white/70">
+                      Subscribe to Premium or Royal tiers to unlock permanent visual enhancements and discounts on boost purchases.
+                    </p>
+                  </div>
+                </div>
+                
+                <div className="glass-morphism p-6 rounded-lg border border-white/10 hover:border-royal-gold/20 transition-colors">
+                  <div className="flex flex-col items-center text-center">
+                    <div className="relative w-14 h-14 rounded-full bg-royal-gold/10 flex items-center justify-center mb-4">
+                      <Crown className="h-6 w-6 text-royal-gold" />
+                      <div className="absolute inset-0 rounded-full animate-pulse-slow opacity-60 bg-royal-gold/20"></div>
+                    </div>
+                    <h3 className="text-lg font-bold mb-2">Exclusive Effects</h3>
+                    <p className="text-white/70">
+                      Unlock increasingly prestigious visual effects as you progress through subscription tiers and purchase exclusive boosts.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="text-center">
+                <Link to="/profile/me">
+                  <Button variant="outline" className="border-royal-gold/30 hover:bg-royal-gold/10">
+                    Try on Your Profile
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </Link>
+              </div>
+            </TabsContent>
+            
+            <TabsContent value="boost-showcase" className="animate-fade-in">
+              <RoyalSection
+                title="Profile Boost Effects"
+                description="Enhance your digital presence with these temporary visual boosts"
+                centered={true}
+              >
+                <div className="mb-8">
+                  <TabsList className="inline-flex p-1 rounded-md bg-background/50 border border-white/10">
+                    <TabsTrigger 
+                      value="appearance" 
+                      onClick={() => setSelectedBoostType('appearance')}
+                      className={selectedBoostType === 'appearance' ? 'bg-royal-gold/20 text-white' : ''}
+                    >
+                      <Crown className="mr-2 h-4 w-4" />
+                      Appearance
+                    </TabsTrigger>
+                    <TabsTrigger 
+                      value="animation" 
+                      onClick={() => setSelectedBoostType('animation')}
+                      className={selectedBoostType === 'animation' ? 'bg-royal-gold/20 text-white' : ''}
+                    >
+                      <Zap className="mr-2 h-4 w-4" />
+                      Animation
+                    </TabsTrigger>
+                    <TabsTrigger 
+                      value="visibility" 
+                      onClick={() => setSelectedBoostType('visibility')}
+                      className={selectedBoostType === 'visibility' ? 'bg-royal-gold/20 text-white' : ''}
+                    >
+                      <Eye className="mr-2 h-4 w-4" />
+                      Visibility
+                    </TabsTrigger>
+                    <TabsTrigger 
+                      value="effect" 
+                      onClick={() => setSelectedBoostType('effect')}
+                      className={selectedBoostType === 'effect' ? 'bg-royal-gold/20 text-white' : ''}
+                    >
+                      <Sparkles className="mr-2 h-4 w-4" />
+                      Special
+                    </TabsTrigger>
+                  </TabsList>
+                </div>
+                
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {boostsByType.map((boost) => (
+                    <BoostEffectDemo key={boost.id} boost={boost} />
+                  ))}
+                </div>
+                
+                <div className="mt-8 text-center">
+                  <Link to="/dashboard">
+                    <Button variant="royal" size="lg">
+                      <Sparkles className="mr-2 h-5 w-5" />
+                      Boost Your Profile
+                    </Button>
+                  </Link>
+                </div>
+              </RoyalSection>
+            </TabsContent>
+            
+            <TabsContent value="subscription" className="animate-fade-in">
+              <RoyalSection
+                title="Subscription Tiers & Visual Benefits"
+                description="Unlock permanent visual enhancements with our subscription plans"
+                centered={true}
+              >
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                  {subscriptionTiers.map((tier) => (
+                    <div 
+                      key={tier.id}
+                      className={`glass-morphism p-6 rounded-lg border ${
+                        tier.recommended 
+                          ? 'border-royal-gold animate-border-glow' 
+                          : 'border-white/10 hover:border-white/30'
+                      } transition-all relative`}
+                    >
+                      {tier.recommended && (
+                        <div className="absolute -top-3 -right-3 bg-royal-gold text-black px-3 py-1 text-xs font-bold rounded-full">
+                          RECOMMENDED
+                        </div>
+                      )}
+                      <div className="flex flex-col items-center text-center">
+                        <div className={`w-16 h-16 rounded-full ${
+                          tier.id === 'basic' 
+                            ? 'bg-gray-700/40' 
+                            : tier.id === 'premium' 
+                              ? 'bg-royal-purple/20' 
+                              : 'bg-royal-gold/20'
+                        } flex items-center justify-center mb-4`}>
+                          {tier.id === 'basic' ? (
+                            <Star className="h-8 w-8 text-gray-300" />
+                          ) : tier.id === 'premium' ? (
+                            <Crown className="h-8 w-8 text-royal-purple" />
+                          ) : (
+                            <Crown className="h-8 w-8 text-royal-gold animate-crown-glow" />
+                          )}
+                        </div>
+                        <h3 className={`text-xl font-bold mb-2 ${
+                          tier.id === 'royal' ? 'text-royal-gold' : ''
+                        }`}>{tier.name}</h3>
+                        <p className="text-white/70 mb-2">{tier.description}</p>
+                        <div className="text-2xl font-bold mb-6">${tier.price}<span className="text-sm font-normal text-white/50">/month</span></div>
+                        
+                        <ul className="text-left space-y-2 mb-6 min-h-[300px]">
+                          {tier.features.map((feature, index) => (
+                            <li key={index} className="flex items-start">
+                              <div className="mr-2 mt-1 text-royal-gold">
+                                <Sparkles className="h-4 w-4" />
+                              </div>
+                              <span className="text-sm text-white/80">{feature}</span>
+                            </li>
+                          ))}
+                        </ul>
+                        
+                        <Button 
+                          variant={tier.id === 'royal' ? 'royal' : tier.recommended ? 'default' : 'outline'} 
+                          size="lg"
+                          className={tier.id === 'royal' ? 'w-full' : 'w-full'}
+                        >
+                          {tier.id === 'royal' ? (
+                            <>
+                              <Crown className="mr-2 h-4 w-4" />
+                              Claim Royal Status
+                            </>
+                          ) : (
+                            <>
+                              Subscribe Now
+                            </>
+                          )}
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </RoyalSection>
+            </TabsContent>
+          </Tabs>
+        </div>
+      </div>
+    </Shell>
   );
 };
 

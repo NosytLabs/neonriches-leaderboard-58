@@ -5,7 +5,7 @@ import RoyalHero from '@/components/RoyalHero';
 import HeroShowcase from '@/components/HeroShowcase';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
-import { Trophy, DollarSign, Shield, Crown, ChevronRight, AlertTriangle } from 'lucide-react';
+import { Trophy, DollarSign, Shield, Crown, ChevronRight, AlertTriangle, Sparkles, Eye } from 'lucide-react';
 import { RoyalSection } from '@/components/ui/theme-components';
 import RoyalDivider from '@/components/ui/decorations/RoyalDivider';
 import { Card, CardContent } from '@/components/ui/card';
@@ -78,11 +78,19 @@ const Index = () => {
           </div>
         </div>
         
-        <div className="text-center mt-6">
+        <div className="text-center mt-6 space-y-4">
           <Link to="/features">
-            <Button variant="royal" size="lg" className="px-6">
+            <Button variant="royal" size="lg" className="px-6 mr-4">
               <Trophy className="mr-2 h-5 w-5" />
               <span>Explore All Noble Features</span>
+            </Button>
+          </Link>
+          
+          <Link to="/visibility-features">
+            <Button variant="outline" size="lg" className="px-6 border-royal-gold/30 hover:bg-royal-gold/10">
+              <Sparkles className="mr-2 h-5 w-5" />
+              <Eye className="mr-2 h-5 w-5" />
+              <span>Discover Profile Visibility Features</span>
             </Button>
           </Link>
         </div>

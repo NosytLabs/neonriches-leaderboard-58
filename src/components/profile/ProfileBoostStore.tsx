@@ -1,187 +1,184 @@
 
 import React, { useState } from 'react';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { profileBoostEffects } from '@/data/boostEffects';
+import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { useToast } from '@/hooks/use-toast';
-import { Sparkles, Clock, CreditCard, ShoppingCart, Eye, Paintbrush, Zap, Crown } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { UserProfile } from '@/types/user';
-import { ProfileBoostEffect } from '@/types/profile-boost';
-import { getBoostsByType, profileBoostEffects } from '@/data/boostEffects';
-import useUserCosmetics from '@/hooks/useUserCosmetics';
+import { useToast } from '@/components/ui/use-toast';
+import { ToastAction } from '@/components/ui/toast';
+import { Sparkles, Crown, Star, Zap, Clock, Tag } from 'lucide-react';
 
 interface ProfileBoostStoreProps {
   user: UserProfile;
   onBoostApplied?: () => void;
 }
 
-const BOOST_TYPES = [
-  { id: 'visibility', label: 'Visibility', icon: <Eye className="h-4 w-4" /> },
-  { id: 'appearance', label: 'Appearance', icon: <Paintbrush className="h-4 w-4" /> },
-  { id: 'animation', label: 'Animation', icon: <Zap className="h-4 w-4" /> },
-  { id: 'effect', label: 'Special Effects', icon: <Crown className="h-4 w-4" /> }
-];
-
 const ProfileBoostStore: React.FC<ProfileBoostStoreProps> = ({ user, onBoostApplied }) => {
-  const [selectedType, setSelectedType] = useState('visibility');
-  const [selectedBoost, setSelectedBoost] = useState<ProfileBoostEffect | null>(null);
-  const [isApplying, setIsApplying] = useState(false);
+  const [activeTab, setActiveTab] = useState('all');
   const { toast } = useToast();
-  const { boostProfile } = useUserCosmetics(user, async () => {
-    if (onBoostApplied) onBoostApplied();
-  });
   
-  const boostsByType = getBoostsByType(selectedType);
-  
-  const handleSelectBoost = (boost: ProfileBoostEffect) => {
-    setSelectedBoost(boost);
+  // Filter boosts based on active tab
+  const getFilteredBoosts = () => {
+    if (activeTab === 'all') {
+      return profileBoostEffects;
+    }
+    return profileBoostEffects.filter(boost => boost.type === activeTab);
   };
   
-  const handleApplyBoost = async () => {
-    if (!selectedBoost) return;
-    
-    try {
-      setIsApplying(true);
-      
-      // Simulate payment processing
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // Apply the boost to the user's profile
-      const result = await boostProfile(selectedBoost.durationDays, 
-        selectedBoost.tier === 'royal' ? 3 : selectedBoost.tier === 'premium' ? 2 : 1);
-      
-      if (result) {
-        toast({
-          title: "Profile Boost Applied!",
-          description: `Your profile now has the "${selectedBoost.name}" effect for ${selectedBoost.durationDays} days.`,
-        });
-        
-        if (onBoostApplied) {
-          onBoostApplied();
-        }
-      } else {
-        throw new Error("Failed to apply boost");
-      }
-    } catch (error) {
-      console.error("Error applying boost:", error);
-      toast({
-        title: "Failed to Apply Boost",
-        description: "Something went wrong. Please try again later.",
-        variant: "destructive"
-      });
-    } finally {
-      setIsApplying(false);
-      setSelectedBoost(null);
+  // Get discount for user based on subscription tier
+  const getUserDiscount = () => {
+    switch (user.subscriptionTier) {
+      case 'premium':
+        return 0.5; // 50% discount
+      case 'royal':
+        return 0.75; // 75% discount
+      default:
+        return 0; // No discount
     }
   };
-
+  
+  // Apply discount to boost price
+  const getDiscountedPrice = (originalPrice: number) => {
+    const discount = getUserDiscount();
+    if (discount === 0) return originalPrice;
+    
+    return Math.max(originalPrice - (originalPrice * discount), 1); // Minimum $1
+  };
+  
+  // Handle boost purchase
+  const handlePurchaseBoost = (boostId: string, price: number) => {
+    // In a real app, this would make an API call to purchase the boost
+    console.log(`Purchasing boost ${boostId} for $${price}`);
+    
+    // Show success toast
+    toast({
+      title: "Boost applied successfully!",
+      description: "Your profile has been enhanced with the selected boost effect.",
+      action: (
+        <ToastAction altText="View Profile">View Profile</ToastAction>
+      ),
+    });
+    
+    // Trigger parent callback to refresh active boosts
+    if (onBoostApplied) {
+      onBoostApplied();
+    }
+  };
+  
   return (
-    <Card className="glass-morphism border-white/10">
-      <CardHeader className="pb-2">
-        <CardTitle className="flex items-center">
-          <Sparkles className="mr-2 h-5 w-5 text-royal-gold" />
-          Profile Boost Store
-        </CardTitle>
-        <CardDescription>
-          Enhance your profile's visibility and appearance with temporary boosts
-        </CardDescription>
-      </CardHeader>
-      
-      <CardContent className="p-0">
-        <Tabs defaultValue="visibility" value={selectedType} onValueChange={setSelectedType} className="w-full">
-          <TabsList className="mx-4 my-2 grid w-auto grid-cols-4">
-            {BOOST_TYPES.map(type => (
-              <TabsTrigger key={type.id} value={type.id} className="flex items-center gap-1.5">
-                {type.icon}
-                <span className="hidden sm:inline">{type.label}</span>
-              </TabsTrigger>
-            ))}
-          </TabsList>
-          
-          {BOOST_TYPES.map(type => (
-            <TabsContent key={type.id} value={type.id} className="p-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {getBoostsByType(type.id).map(boost => (
-                  <div 
-                    key={boost.id}
-                    className={`glass-morphism-highlight rounded-lg p-3 cursor-pointer transition-all duration-200 border ${
-                      selectedBoost?.id === boost.id 
-                        ? 'border-royal-gold/50 bg-royal-gold/10' 
-                        : 'border-white/5 hover:border-white/20'
-                    }`}
-                    onClick={() => handleSelectBoost(boost)}
-                  >
-                    <div className="flex justify-between">
-                      <div className="font-medium">{boost.name}</div>
+    <div>
+      <Tabs defaultValue="all" value={activeTab} onValueChange={setActiveTab}>
+        <TabsList className="mb-4">
+          <TabsTrigger value="all" className="flex items-center gap-1.5">
+            <Star className="h-4 w-4" />
+            All Boosts
+          </TabsTrigger>
+          <TabsTrigger value="appearance" className="flex items-center gap-1.5">
+            <Crown className="h-4 w-4" />
+            Appearance
+          </TabsTrigger>
+          <TabsTrigger value="animation" className="flex items-center gap-1.5">
+            <Zap className="h-4 w-4" />
+            Animation
+          </TabsTrigger>
+          <TabsTrigger value="visibility" className="flex items-center gap-1.5">
+            <Star className="h-4 w-4" />
+            Visibility
+          </TabsTrigger>
+          <TabsTrigger value="effect" className="flex items-center gap-1.5">
+            <Sparkles className="h-4 w-4" />
+            Special
+          </TabsTrigger>
+        </TabsList>
+        
+        <TabsContent value={activeTab}>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {getFilteredBoosts().map((boost) => {
+              const originalPrice = boost.price;
+              const discountedPrice = getDiscountedPrice(originalPrice);
+              const hasDiscount = discountedPrice < originalPrice;
+              
+              // Check if user can access this tier
+              const canAccess = 
+                (boost.tier === 'basic') || 
+                (boost.tier === 'premium' && ['premium', 'royal'].includes(user.subscriptionTier || '')) ||
+                (boost.tier === 'royal' && user.subscriptionTier === 'royal');
+              
+              return (
+                <Card 
+                  key={boost.id} 
+                  className={`border-white/10 transition hover:border-white/20 ${
+                    !canAccess ? 'opacity-60' : ''
+                  }`}
+                >
+                  <CardContent className="p-4">
+                    <div className="flex justify-between items-start">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-full bg-royal-gold/10 flex items-center justify-center">
+                          <Sparkles className="h-5 w-5 text-royal-gold" />
+                        </div>
+                        <div>
+                          <h3 className="font-semibold">{boost.name}</h3>
+                          <p className="text-xs text-white/60">{boost.description}</p>
+                        </div>
+                      </div>
                       <Badge 
                         variant="outline" 
-                        className="bg-royal-gold/10 text-royal-gold border-royal-gold/20"
+                        className={`
+                          ${boost.tier === 'basic' 
+                            ? 'bg-gray-700' 
+                            : boost.tier === 'premium' 
+                              ? 'bg-royal-purple' 
+                              : 'bg-royal-gold text-black'
+                          } border-none
+                        `}
                       >
-                        ${boost.price}
+                        {boost.tier.toUpperCase()}
                       </Badge>
                     </div>
                     
-                    <div className="text-xs text-white/60 mt-1 mb-2">{boost.description}</div>
-                    
-                    <div className="flex items-center text-xs text-white/70">
-                      <Clock className="h-3 w-3 mr-1" />
-                      {boost.durationDays} days
-                    </div>
-                    
-                    {boost.previewImage && (
-                      <div className="mt-2 h-12 w-full overflow-hidden rounded bg-black/20">
-                        <div className={`h-full w-full ${boost.cssClass}`}>
-                          <div className="flex h-full w-full items-center justify-center text-xs">
-                            Preview Effect
+                    <div className="mt-4 flex items-center justify-between">
+                      <div className="flex items-center gap-1 text-white/60 text-sm">
+                        <Clock className="h-3.5 w-3.5" />
+                        <span>{boost.durationDays} days</span>
+                      </div>
+                      
+                      <div className="flex items-center gap-2">
+                        <div className="text-right">
+                          {hasDiscount && (
+                            <span className="text-xs line-through text-white/50">${originalPrice}</span>
+                          )}
+                          <div className="flex items-center gap-1">
+                            <Tag className="h-3.5 w-3.5 text-royal-gold" />
+                            <span className="font-bold">${discountedPrice}</span>
                           </div>
                         </div>
+                        
+                        <Button 
+                          size="sm" 
+                          disabled={!canAccess}
+                          onClick={() => handlePurchaseBoost(boost.id, discountedPrice)}
+                        >
+                          {canAccess ? 'Purchase' : 'Locked'}
+                        </Button>
+                      </div>
+                    </div>
+                    
+                    {!canAccess && (
+                      <div className="mt-2 text-xs text-white/50 bg-black/20 p-2 rounded">
+                        Upgrade your subscription to {boost.tier === 'premium' ? 'Premium' : 'Royal'} tier to unlock this boost.
                       </div>
                     )}
-                  </div>
-                ))}
-              </div>
-              
-              {getBoostsByType(type.id).length === 0 && (
-                <div className="text-center py-8 text-white/40">
-                  No {type.label.toLowerCase()} boosts available at this time
-                </div>
-              )}
-            </TabsContent>
-          ))}
-        </Tabs>
-      </CardContent>
-      
-      <CardFooter className="flex justify-between p-4 pt-2">
-        <div className="text-sm">
-          {selectedBoost ? (
-            <div className="text-royal-gold">
-              <span className="font-semibold">{selectedBoost.name}</span> - ${selectedBoost.price}
-            </div>
-          ) : (
-            <div className="text-white/60">Select a boost to apply</div>
-          )}
-        </div>
-        
-        <Button
-          onClick={handleApplyBoost}
-          disabled={!selectedBoost || isApplying}
-          className="bg-royal-gold text-black hover:bg-royal-gold/90"
-        >
-          {isApplying ? (
-            <>
-              <div className="h-4 w-4 animate-spin rounded-full border-2 border-black border-t-transparent mr-2"></div>
-              Processing...
-            </>
-          ) : (
-            <>
-              <CreditCard className="h-4 w-4 mr-2" />
-              Purchase Boost
-            </>
-          )}
-        </Button>
-      </CardFooter>
-    </Card>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+        </TabsContent>
+      </Tabs>
+    </div>
   );
 };
 
