@@ -208,7 +208,7 @@ const TeamChat: React.FC<TeamChatProps> = ({ user, limit = 50 }) => {
         username: user.username,
         displayName: user.displayName || user.username,
         profileImage: user.profileImage,
-        team: user.team || 'red',
+        team: user.team || null,
         timestamp: new Date().toISOString()
       };
       
@@ -314,7 +314,7 @@ const TeamChat: React.FC<TeamChatProps> = ({ user, limit = 50 }) => {
         userId: 'system',
         username: 'System',
         displayName: 'Royal Announcer',
-        team: user.team || 'red',
+        team: user.team || null,
         timestamp: new Date().toISOString(),
         isSystem: true
       };

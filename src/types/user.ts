@@ -8,12 +8,12 @@ export interface User {
   bio?: string;
   isAdmin?: boolean;
   createdAt: string;
-  team?: string;
-  tier?: string;
+  team?: UserTeam;
+  tier?: UserTier;
   walletBalance?: number;
   totalSpent?: number;
   amountSpent?: number;
-  gender?: string;
+  gender?: UserGender;
   lastActive?: string;
   profileBoosts?: ProfileBoost[];
   cosmetics?: UserCosmetics;

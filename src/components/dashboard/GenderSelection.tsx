@@ -13,7 +13,7 @@ interface GenderSelectionProps {
 
 const GenderSelection: React.FC<GenderSelectionProps> = ({ userProfile, onGenderChange }) => {
   const [selectedGender, setSelectedGender] = useState<UserGender>(
-    userProfile.gender || 'noble'
+    (userProfile.gender as UserGender) || 'noble'
   );
   const [isChanging, setIsChanging] = useState(false);
   const { toast } = useToast();

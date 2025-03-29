@@ -1,217 +1,235 @@
 
-import { 
-  AnalysisResult, 
-  FileInfo, 
-  ImportInfo, 
-  VariableInfo, 
-  CssSelectorInfo, 
-  DependencyInfo, 
-  DeadCodeInfo,
-  ComplexityItem,
-  DuplicateCodeInfo,
-  PerformanceIssue
-} from './types';
+import { AnalysisResult, ComplexityItem, PerformanceIssue, DuplicateCodeInfo } from './types';
 
-// Mock data for demonstrations
-const unusedFilesMock: FileInfo[] = [
-  { path: 'src/components/Unused.tsx', size: 2.5 },
-  { path: 'src/utils/deprecated.ts', size: 1.2 },
-  { path: 'src/hooks/useOldFeature.ts', size: 0.8 }
+// Mock unused imports
+export const unusedImportsMock = [
+  { file: 'src/components/SomeComponent.tsx', name: 'useState', source: 'react', line: 1 },
+  { file: 'src/components/AnotherComponent.tsx', name: 'useMemo', source: 'react', line: 2 },
+  { file: 'src/utils/helpers.ts', name: 'formatDate', source: '@/utils/formatters', line: 3 }
 ];
 
-const unusedImportsMock: ImportInfo[] = [
-  { name: 'useState', source: 'react', used: false, line: 5, column: 10 },
-  { name: 'Button', source: '@/components/ui/button', used: false, line: 8, column: 10 },
-  { name: 'getStaticProps', source: 'next', used: false, line: 12, column: 10 }
+// Mock unused variables
+export const unusedVariablesMock = [
+  { file: 'src/components/ProfileCard.tsx', name: 'userId', line: 15 },
+  { file: 'src/pages/Dashboard.tsx', name: 'isLoading', line: 22 },
+  { file: 'src/contexts/ThemeContext.tsx', name: 'defaultTheme', line: 8 }
 ];
 
-const unusedVariablesMock: VariableInfo[] = [
-  { name: 'counter', type: 'number', used: false, file: 'src/components/Counter.tsx', line: 15 },
-  { name: 'tempState', type: 'string', used: false, file: 'src/components/Form.tsx', line: 27 },
-  { name: 'oldConfig', type: 'object', used: false, file: 'src/utils/config.ts', line: 42 }
+// Mock unused functions
+export const unusedFunctionsMock = [
+  { file: 'src/utils/validation.ts', name: 'validatePassword', line: 45 },
+  { file: 'src/utils/formatting.ts', name: 'formatPhoneNumber', line: 32 },
+  { file: 'src/components/Form/helpers.ts', name: 'resetFormState', line: 17 }
 ];
 
-const unusedCssSelectorsMock: CssSelectorInfo[] = [
-  { selector: '.unused-class', used: false, file: 'src/styles/globals.css', line: 56 },
-  { selector: '#legacy-id', used: false, file: 'src/styles/components.css', line: 78 },
-  { selector: '.deprecated-component', used: false, file: 'src/styles/deprecated.css', line: 105 }
+// Mock unused components
+export const unusedComponentsMock = [
+  { file: 'src/components/unused/FeatureBanner.tsx', line: 1 },
+  { file: 'src/components/legacy/OldNavbar.tsx', line: 1 },
+  { file: 'src/components/experimental/NewFeature.tsx', line: 1 }
 ];
 
-const unusedDependenciesMock: DependencyInfo[] = [
-  { name: 'moment', version: '2.29.1', used: false, size: 289 },
-  { name: 'lodash', version: '4.17.21', used: false, size: 526 },
-  { name: 'jquery', version: '3.6.0', used: false, size: 320 }
-];
-
-const deadCodeMock: DeadCodeInfo[] = [
-  { path: 'src/utils/helpers.ts', type: 'function', name: 'formatLegacyDate', line: 45, description: 'Function is exported but never used in the project' },
-  { path: 'src/components/legacy/Sidebar.tsx', type: 'component', name: 'LegacySidebar', line: 12, description: 'Component is defined but not used anywhere' },
-  { path: 'src/contexts/OldContext.tsx', type: 'class', name: 'OldContextProvider', line: 24, description: 'Class is defined but not instantiated' }
-];
-
-const complexCodeMock: ComplexityItem[] = [
-  { 
-    id: '1',
-    name: 'calculateTotalWithTax',
-    file: 'src/utils/calculations.ts',
-    functionName: 'calculateTotalWithTax',
-    function: 'calculateTotalWithTax',
-    path: 'src/utils/calculations.ts',
-    complexity: 12,
-    cyclomaticComplexity: 12,
-    linesOfCode: 45,
-    lines: 45,
-    parameters: 5,
-    nestedLevel: 4,
-    issues: ['Too many conditional branches', 'Nested loops'],
-    status: 'needs-refactor',
-    functions: ['calculateTotalWithTax']
-  },
-  { 
-    id: '2',
-    name: 'processUserData',
-    file: 'src/utils/userProcessor.ts',
-    functionName: 'processUserData',
-    function: 'processUserData',
-    path: 'src/utils/userProcessor.ts',
+// Mock complexity data
+export const complexityReportMock = [
+  {
+    path: 'src/components/ComplexComponent.tsx',
     complexity: 15,
-    cyclomaticComplexity: 15,
-    linesOfCode: 68,
-    lines: 68,
-    parameters: 7,
-    nestedLevel: 5,
-    issues: ['Function too long', 'Too many parameters'],
-    status: 'critical',
-    functions: ['processUserData']
+    status: 'warning',
+    functions: [
+      {
+        name: 'handleSubmitForm',
+        complexity: 15,
+        lines: 50
+      }
+    ]
   },
-  { 
-    id: '3',
-    name: 'renderDashboard',
-    file: 'src/components/Dashboard.tsx',
-    functionName: 'renderDashboard',
-    function: 'renderDashboard',
-    path: 'src/components/Dashboard.tsx',
-    complexity: 9,
-    cyclomaticComplexity: 9,
-    linesOfCode: 32,
-    lines: 32,
-    parameters: 3,
-    nestedLevel: 3,
-    issues: ['Conditional rendering can be simplified'],
-    status: 'moderate',
-    functions: ['renderDashboard']
+  {
+    path: 'src/utils/calculations.ts',
+    complexity: 20,
+    status: 'error',
+    functions: [
+      {
+        name: 'calculateTotalWithTax',
+        complexity: 20,
+        lines: 65
+      }
+    ]
+  },
+  {
+    path: 'src/contexts/DataContext.tsx',
+    complexity: 12,
+    status: 'warning',
+    functions: [
+      {
+        name: 'processUserData',
+        complexity: 12,
+        lines: 40
+      }
+    ]
   }
 ];
 
-const duplicateCodeMock: DuplicateCodeInfo[] = [
+// Mock duplicate code data
+export const duplicateCodeMock = [
   {
-    id: 'dup1',
-    pattern: 'API fetch pattern',
-    similarity: 95,
-    occurrences: 12,
-    files: [
-      { path: 'src/pages/users.tsx' },
-      { path: 'src/pages/products.tsx' },
-      { path: 'src/pages/orders.tsx' }
-    ],
-    lines: 15,
-    snippet: 'const fetchData = async () => {\n  setLoading(true);\n  try {\n    const response = await fetch(url);\n    const data = await response.json();\n    setData(data);\n  } catch (error) {\n    setError(error);\n  } finally {\n    setLoading(false);\n  }\n};',
-    codeSnippet: 'const fetchData = async () => {\n  setLoading(true);\n  try {\n    const response = await fetch(url);\n    const data = await response.json();\n    setData(data);\n  } catch (error) {\n    setError(error);\n  } finally {\n    setLoading(false);\n  }\n};'
-  },
-  {
-    id: 'dup2',
-    pattern: 'Form validation',
-    similarity: 88,
-    occurrences: 8,
+    id: 'dup-1',
+    pattern: 'Form validation logic',
+    similarity: 0.9,
     files: [
       { path: 'src/components/LoginForm.tsx' },
-      { path: 'src/components/RegisterForm.tsx' },
-      { path: 'src/components/ContactForm.tsx' }
+      { path: 'src/components/SignupForm.tsx' }
     ],
-    lines: 22,
-    snippet: 'const validateForm = () => {\n  const errors = {};\n  if (!values.email) {\n    errors.email = "Email is required";\n  } else if (!/\\S+@\\S+\\.\\S+/.test(values.email)) {\n    errors.email = "Email is invalid";\n  }\n  if (!values.password) {\n    errors.password = "Password is required";\n  } else if (values.password.length < 6) {\n    errors.password = "Password must be at least 6 characters";\n  }\n  return errors;\n};',
-    codeSnippet: 'const validateForm = () => {\n  const errors = {};\n  if (!values.email) {\n    errors.email = "Email is required";\n  } else if (!/\\S+@\\S+\\.\\S+/.test(values.email)) {\n    errors.email = "Email is invalid";\n  }\n  if (!values.password) {\n    errors.password = "Password is required";\n  } else if (values.password.length < 6) {\n    errors.password = "Password must be at least 6 characters";\n  }\n  return errors;\n};'
+    codeSnippet: `const validateForm = () => {
+  let errors = {};
+  if (!email) errors.email = 'Email is required';
+  if (!password) errors.password = 'Password is required';
+  return Object.keys(errors).length === 0;
+};`,
+    snippet: `const validateForm = () => {
+  let errors = {};
+  if (!email) errors.email = 'Email is required';
+  if (!password) errors.password = 'Password is required';
+  return Object.keys(errors).length === 0;
+};`,
+    lines: 6
+  },
+  {
+    id: 'dup-2',
+    pattern: 'API error handling',
+    similarity: 0.85,
+    files: [
+      { path: 'src/services/userService.ts' },
+      { path: 'src/services/productService.ts' },
+      { path: 'src/services/orderService.ts' }
+    ],
+    codeSnippet: `const handleApiError = (error) => {
+  if (error.response) {
+    return { error: error.response.data.message || 'An error occurred' };
+  }
+  return { error: 'Network error' };
+};`,
+    snippet: `const handleApiError = (error) => {
+  if (error.response) {
+    return { error: error.response.data.message || 'An error occurred' };
+  }
+  return { error: 'Network error' };
+};`,
+    lines: 6
   }
 ];
 
-const performanceIssuesMock: PerformanceIssue[] = [
+// Mock performance issues
+export const performanceIssuesMock = [
   {
-    id: 'perf1',
-    type: 'rendering',
-    component: 'DataTable',
+    id: 'perf-1',
+    description: 'Expensive calculation in render method',
     file: 'src/components/DataTable.tsx',
-    description: 'Unnecessary re-renders due to missing memoization',
-    impact: 'high',
-    recommendation: 'Use React.memo() and useCallback() for child components and handlers'
+    line: 45,
+    recommendation: 'Move the calculation to useMemo or use a memoized selector',
+    severity: 'high',
+    lineNumber: 45,
+    type: 'rendering'
   },
   {
-    id: 'perf2',
-    type: 'memory',
-    component: 'ImageGallery',
-    file: 'src/components/ImageGallery.tsx',
-    description: 'Memory leak due to uncleared interval in useEffect',
-    impact: 'medium',
-    recommendation: 'Add cleanup function to useEffect to clear interval'
+    id: 'perf-2',
+    description: 'Large unoptimized image',
+    file: 'src/components/HeroBanner.tsx',
+    line: 22,
+    recommendation: 'Use appropriate image sizing and next/image for optimization',
+    severity: 'medium',
+    lineNumber: 22,
+    type: 'assets'
   },
   {
-    id: 'perf3',
-    type: 'network',
-    component: 'ProductList',
-    file: 'src/components/ProductList.tsx',
-    description: 'Multiple API calls for the same data',
-    impact: 'high',
-    recommendation: 'Implement data caching using React Query or SWR'
+    id: 'perf-3',
+    description: 'Multiple re-renders due to object creation in props',
+    file: 'src/pages/Dashboard.tsx',
+    line: 67,
+    recommendation: 'Use useMemo for object props or move the object outside the component',
+    severity: 'medium',
+    lineNumber: 67,
+    type: 'rendering'
   }
 ];
 
-// Combine all mock data into a full analysis result
+// Complete mocked analysis results
 export const mockedAnalysisResults: AnalysisResult = {
   timestamp: new Date().toISOString(),
-  unusedFiles: unusedFilesMock,
+  unusedFiles: [
+    { path: 'src/components/unused/DeprecatedButton.tsx', size: 1024 },
+    { path: 'src/styles/unused.css', size: 2048 },
+    { path: 'src/pages/Legacy.tsx', size: 4096 }
+  ],
   unusedImports: unusedImportsMock,
   unusedVariables: unusedVariablesMock,
-  unusedCssSelectors: unusedCssSelectorsMock,
-  unusedDependencies: unusedDependenciesMock,
-  deadCode: deadCodeMock,
-  complexCode: complexCodeMock,
-  duplicateCode: duplicateCodeMock,
+  unusedCssSelectors: [
+    { selector: '.unused-class', used: false, file: 'src/styles/main.css', line: 145 },
+    { selector: '#legacy-id', used: false, file: 'src/styles/components.css', line: 67 },
+    { selector: '.deprecated-layout', used: false, file: 'src/styles/layout.css', line: 89 }
+  ],
+  unusedDependencies: [
+    { name: 'unused-package', version: '1.0.0', used: false, size: 500 },
+    { name: 'legacy-helper', version: '0.5.0', used: false, size: 250 },
+    { name: 'temp-util', version: '2.1.0', used: false, size: 125 }
+  ],
+  deadCode: [
+    { path: 'src/utils/helpers.ts', type: 'function', name: 'unusedHelper', line: 25 },
+    { path: 'src/components/Form.tsx', type: 'component', name: 'DeprecatedInput', line: 78 },
+    { path: 'src/contexts/LegacyContext.tsx', type: 'variable', name: 'CONSTANTS', line: 12 }
+  ],
+  deadCodePaths: [
+    { path: 'src/utils/helpers.ts', type: 'function', name: 'unusedHelper', line: 25, description: 'This function is not used anywhere in the codebase' },
+    { path: 'src/components/Form.tsx', type: 'component', name: 'DeprecatedInput', line: 78, description: 'This component has been replaced with Input from UI library' }
+  ],
+  complexCode: complexityReportMock.map((item: any, index: number): ComplexityItem => ({
+    id: `complexity-${index}`,
+    name: item.functions?.[0]?.name || `Function-${index}`,
+    file: item.path || '',
+    complexity: item.complexity || 0,
+    cyclomaticComplexity: item.complexity || 0,
+    linesOfCode: item.functions?.[0]?.lines || 0,
+    lines: item.functions?.[0]?.lines || 0,
+    parameters: 0,
+    nestedLevel: 0,
+    issues: [],
+    function: item.functions?.[0]?.name || `function-${index}`,
+    path: item.path,
+    functions: item.functions,
+    status: item.status,
+    explanation: 'Consider breaking this function into smaller, more manageable pieces'
+  })),
+  duplicateCode: duplicateCodeMock.map((item: any): DuplicateCodeInfo => ({
+    ...item,
+    occurrences: item.files.length
+  })),
   performanceIssues: performanceIssuesMock,
-  bestPracticeViolations: [
-    {
-      id: 'bp1',
-      rule: 'no-unused-vars',
-      file: 'src/components/Form.tsx',
-      line: 12,
-      column: 7,
-      message: 'useState is defined but never used',
-      severity: 'warning'
+  metrics: {
+    projectSize: 2500, // KB
+    fileCount: 120,
+    dependencyCount: 25,
+    averageFileSize: 20.8, // KB
+    largestFiles: [
+      { filePath: 'src/assets/hero.png', size: 500 },
+      { filePath: 'src/components/DataTable.tsx', size: 75 },
+      { filePath: 'src/pages/Dashboard.tsx', size: 60 },
+      { filePath: 'src/contexts/DataContext.tsx', size: 45 },
+      { filePath: 'src/components/ComplexForm.tsx', size: 40 }
+    ],
+    beforeCleanup: {
+      projectSize: 2500,
+      fileCount: 120,
+      dependencyCount: 25
     },
-    {
-      id: 'bp2',
-      rule: 'react-hooks/exhaustive-deps',
-      file: 'src/components/Profile.tsx',
-      line: 34,
-      column: 6,
-      message: 'React Hook useEffect has a missing dependency: \'userId\'',
-      severity: 'warning'
+    afterCleanup: {
+      projectSize: 2150,
+      fileCount: 105,
+      dependencyCount: 22
     }
+  },
+  recommendations: [
+    'Remove unused files to reduce bundle size',
+    'Clean up unused imports for better code maintainability',
+    'Break down complex components into smaller, more focused ones',
+    'Extract duplicate code into shared utilities'
   ]
 };
-
-// Export individual mocks for component testing
-export const complexityReportMock = complexCodeMock;
-export const duplicateCodeMock = duplicateCodeMock;
-export const performanceIssuesMock = performanceIssuesMock;
-export const unusedImportsMock = unusedImportsMock;
-export const unusedVariablesMock = unusedVariablesMock;
-export const unusedFunctionsMock = deadCodeMock.filter(item => item.type === 'function');
-export const unusedComponentsMock = deadCodeMock.filter(item => item.type === 'component');
-
-// File size information
-export const fileSizeInfo = [
-  { filePath: 'src/assets/images/hero.jpg', size: 1240 },
-  { filePath: 'src/components/DataGrid.tsx', size: 256 },
-  { filePath: 'src/components/Dashboard.tsx', size: 178 },
-  { filePath: 'src/pages/index.tsx', size: 145 },
-  { filePath: 'src/utils/api.ts', size: 89 }
-];

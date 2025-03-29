@@ -19,17 +19,17 @@ const AnalysisControls: React.FC<AnalysisControlsProps> = ({
 }) => {
   const handleExportMarkdown = () => {
     const markdown = exportAnalysisReportAsMarkdown(analysisResult);
-    saveReportToFile(markdown, 'code-analysis-report.md');
+    saveReportToFile(markdown, 'code-analysis-report.md', 'text/markdown');
   };
   
   const handleExportJSON = () => {
     const json = exportAnalysisReportAsJSON(analysisResult);
-    saveReportToFile(json, 'code-analysis-report.json');
+    saveReportToFile(json, 'code-analysis-report.json', 'application/json');
   };
   
   const handleExportHTML = () => {
     const html = exportAnalysisReportAsHTML(analysisResult);
-    saveReportToFile(html, 'code-analysis-report.html');
+    saveReportToFile(html, 'code-analysis-report.html', 'text/html');
   };
   
   return (

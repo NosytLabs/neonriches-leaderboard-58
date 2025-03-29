@@ -1,233 +1,178 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
-import RoyalHero from '@/components/RoyalHero';
-import RoyalFeatures from '@/components/RoyalFeatures';
-import RoyalShowcase from '@/components/RoyalShowcase';
-import TeamSection from '@/components/TeamSection';
-import TopSpenderShowcase from '@/components/TopSpenderShowcase';
-import useNotificationSounds from '@/hooks/use-notification-sounds';
-import { useToast } from '@/hooks/use-toast';
-import { Button } from '@/components/ui/button';
-import RoyalDivider from '@/components/ui/royal-divider';
-import { Crown, ArrowRight } from 'lucide-react';
-import { useAuth } from '@/contexts/auth';
-import { mockLeaderboardData } from '@/components/leaderboard/LeaderboardData';
-import { UserProfile } from '@/types/user';
-import { ToastProvider } from '@/contexts/ToastContext';
-import { getUserRanking } from '@/services/spendingService';
-import SEO from '@/components/seo/SEO';
 
-const mockTopUser: UserProfile = {
-  id: "1",
-  username: "RoyalSpender",
-  email: "royal@spendthrone.com",
-  rank: 1,
-  tier: "royal",
-  team: "red",
-  profileImage: "https://source.unsplash.com/random/300x300?portrait&royal",
-  amountSpent: 10000,
-  spentAmount: 10000,
-  spendStreak: 10,
-  joinDate: "2023-01-01T00:00:00Z",
-  joinedAt: "2023-01-01T00:00:00Z",
-  walletBalance: 5000,
-  displayName: "Lord Moneybags",
-  bio: "I spend therefore I am.",
-  gender: "king",
-  followers: 100,
-  following: 20,
-  profileViews: 1500,
-  profileClicks: 300,
-  profileBoosts: [],
-  socialLinks: [],
-  createdAt: "2023-01-01T00:00:00Z"
-};
+import React, { useEffect, useState } from 'react';
+import { Shell } from '@/components/ui/shell';
+import { HeadingText } from '@/components/ui/heading-text';
+import { Banner } from '@/components/ui/banner';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { useAuth } from '@/contexts/auth';
+import { Link } from 'react-router-dom';
+import { ArrowRight, Crown, Trophy, Users, Heart } from 'lucide-react';
+import RoyalDivider from '@/components/ui/decorations/RoyalDivider';
+import { formatNumber, formatCurrency } from '@/lib/utils';
+import { User } from '@/types/user';
 
 const Index = () => {
-  const navigate = useNavigate();
-  const { user } = useAuth();
-  const { playSound, preloadSounds } = useNotificationSounds();
-  const { toast } = useToast();
-  const [hasCheckedTerms, setHasCheckedTerms] = useState(false);
-  const [hasAcceptedTerms, setHasAcceptedTerms] = useState(false);
-  const [topSpender, setTopSpender] = useState<UserProfile | null>(null);
+  const { user, isLoading } = useAuth();
+  const [totalSpent, setTotalSpent] = useState<number>(0);
+  const [totalUsers, setTotalUsers] = useState<number>(0);
+  const [topGiver, setTopGiver] = useState<User | null>(null);
   
   useEffect(() => {
-    preloadSounds();
+    // Simulate fetching site statistics
+    const fetchStats = async () => {
+      // In a real app, this would be an API call
+      setTimeout(() => {
+        setTotalSpent(3456789);
+        setTotalUsers(12345);
+        
+        // Mock top giver data
+        const mockTopGiver: User = {
+          id: "user-7891",
+          username: "whale_supreme",
+          email: "whale@example.com",
+          rank: 1,
+          tier: "whale",
+          team: "blue",
+          profileImage: "https://source.unsplash.com/random/?portrait&whale",
+          amountSpent: 250000,
+          spentAmount: 250000,
+          spendStreak: 12,
+          joinDate: new Date(Date.now() - 15000000000).toISOString(),
+          joinedAt: new Date(Date.now() - 15000000000).toISOString(),
+          walletBalance: 5000,
+          displayName: "Royal Whale",
+          totalSpent: 250000,
+          socialLinks: [],
+          cosmetics: {
+            borders: ["gold", "animated"],
+            colors: ["royal", "gold"],
+            fonts: ["medieval"],
+            emojis: ["crown", "money"],
+            titles: ["Generous"],
+            backgrounds: ["castle"],
+            effects: ["sparkle"],
+            badges: ["top-donor"],
+            themes: ["royal"]
+          },
+          profileBoosts: [],
+          createdAt: new Date(Date.now() - 15000000000).toISOString() // Ensure createdAt is not missing
+        };
+        
+        setTopGiver(mockTopGiver);
+      }, 1000);
+    };
     
-    const acceptedTerms = localStorage.getItem('acceptedTerms');
-    if (acceptedTerms === 'true') {
-      setHasAcceptedTerms(true);
-    }
-    
-    setHasCheckedTerms(true);
-    
-    const rankings = getUserRanking();
-    if (rankings && rankings.length > 0) {
-      const top = rankings[0];
-      const topUserProfile: UserProfile = {
-        id: top.userId,
-        username: top.username,
-        email: "",
-        rank: top.rank,
-        tier: top.tier as any,
-        team: top.team as any,
-        profileImage: top.profileImage,
-        amountSpent: top.totalSpent,
-        spentAmount: top.totalSpent,
-        spendStreak: top.spendStreak,
-        joinDate: new Date().toISOString(),
-        joinedAt: new Date().toISOString(),
-        walletBalance: 0,
-        cosmetics: {
-          borders: [],
-          colors: [],
-          fonts: [],
-          emojis: [],
-          titles: [],
-          backgrounds: [],
-          effects: [],
-          badges: [],
-          themes: []
-        },
-        profileViews: 0,
-        profileClicks: 0,
-        followers: 0,
-        subscription: {
-          status: 'active',
-          tier: 'basic',
-          interval: 'monthly',
-          startDate: new Date().toISOString(),
-          endDate: new Date().toISOString(),
-          autoRenew: false,
-          features: []
-        },
-        profileBoosts: []
-      };
-      setTopSpender(topUserProfile);
-    }
-  }, [preloadSounds]);
-
-  const handleGetStarted = () => {
-    playSound('royalAnnouncement');
-    
-    if (!hasAcceptedTerms) {
-      toast({
-        title: "Noble Reminder",
-        description: "You must accept our royal decree (Terms of Service) before joining the court.",
-        variant: "default"
-      });
-      
-      navigate('/terms-of-service');
-      return;
-    }
-    
-    if (user) {
-      navigate('/dashboard');
-    } else {
-      navigate('/auth');
-    }
-  };
-
-  // SEO keywords for the homepage
-  const seoKeywords = [
-    'pay to win', 
-    'social experiment', 
-    'digital nobility', 
-    'online status', 
-    'throne game', 
-    'spending competition', 
-    'satirical platform',
-    'digital status',
-    'web3 parody'
-  ];
+    fetchStats();
+  }, []);
 
   return (
-    <div className="min-h-screen flex flex-col bg-background text-foreground">
-      <SEO 
-        title="SpendThrone | The Ultimate Pay-to-Win Social Experiment"
-        description="Join SpendThrone, the satirical social platform where your rank is determined solely by how much money you spend. $1 = 1 unit of rank. No skills required."
-        keywords={seoKeywords}
-        ogType="website"
-      />
-      
-      <Header />
-      
-      <main className="flex-1">
-        <div className="container mx-auto px-4 pt-24 pb-8">
-          <ToastProvider>
-            <TopSpenderShowcase highlightTop={true} />
-          </ToastProvider>
+    <Shell>
+      <div className="flex flex-col gap-8">
+        <Banner 
+          title="P2W.FUN" 
+          subtitle="Where your wallet determines your worth" 
+          callToAction={
+            user ? (
+              <Link to="/dashboard">
+                <Button className="bg-royal-gold text-black hover:bg-royal-gold/90">
+                  Your Dashboard
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </Link>
+            ) : (
+              <Link to="/signup">
+                <Button className="bg-royal-gold text-black hover:bg-royal-gold/90">
+                  Claim Your Rank
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </Link>
+            )
+          }
+        />
+        
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <Card className="glass-morphism border-white/10">
+            <CardHeader className="pb-2">
+              <CardTitle className="flex items-center">
+                <Trophy className="mr-2 h-5 w-5 text-royal-gold" />
+                Total Spent
+              </CardTitle>
+              <CardDescription>Money paid to the kingdom</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p className="text-3xl font-bold royal-gradient">{formatCurrency(totalSpent)}</p>
+            </CardContent>
+          </Card>
+          
+          <Card className="glass-morphism border-white/10">
+            <CardHeader className="pb-2">
+              <CardTitle className="flex items-center">
+                <Users className="mr-2 h-5 w-5 text-royal-gold" />
+                Total Users
+              </CardTitle>
+              <CardDescription>Noble citizens in our kingdom</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p className="text-3xl font-bold royal-gradient">{formatNumber(totalUsers)}</p>
+            </CardContent>
+          </Card>
+          
+          <Card className="glass-morphism border-white/10">
+            <CardHeader className="pb-2">
+              <CardTitle className="flex items-center">
+                <Heart className="mr-2 h-5 w-5 text-royal-gold" />
+                Top Giver
+              </CardTitle>
+              <CardDescription>Most generous royal</CardDescription>
+            </CardHeader>
+            <CardContent>
+              {topGiver ? (
+                <div className="flex items-center space-x-2">
+                  <div className="h-10 w-10 rounded-full overflow-hidden">
+                    <img 
+                      src={topGiver.profileImage} 
+                      alt={topGiver.displayName || topGiver.username} 
+                      className="h-full w-full object-cover"
+                    />
+                  </div>
+                  <div>
+                    <p className="font-medium">{topGiver.displayName || topGiver.username}</p>
+                    <p className="text-sm text-white/70">{formatCurrency(topGiver.amountSpent)}</p>
+                  </div>
+                </div>
+              ) : (
+                <p className="text-white/50">Loading top giver...</p>
+              )}
+            </CardContent>
+          </Card>
         </div>
         
-        <RoyalHero />
+        <RoyalDivider variant="center" />
         
-        <div className="container mx-auto px-4 py-16">
-          <div className="text-center mb-14">
-            <div className="inline-block mb-3">
-              <Crown className="h-12 w-12 text-royal-gold animate-crown-glow" aria-hidden="true" />
-            </div>
-            <h1 className="text-3xl font-bold royal-gradient mb-4 font-royal">
-              Welcome to the Royal Court of Conspicuous Consumption
-            </h1>
-            <p className="text-white/70 max-w-2xl mx-auto">
-              Where you pay real money for fake status in a blatant parody of how actual status works.
-              Who needs talent, hard work, or social contribution when you can just throw cash at the leaderboard?
-            </p>
-            
-            <div className="mt-8">
-              <Button 
-                size="lg" 
-                onClick={handleGetStarted}
-                className="royal-button bg-royal-gold text-black hover:bg-royal-gold/90"
-              >
-                Begin Your Noble Ascent
-                <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
+        <div className="text-center max-w-3xl mx-auto">
+          <HeadingText className="mb-4" size="xl">
+            <Crown className="inline-block mr-2 h-6 w-6 text-royal-gold" />
+            The Ultimate Pay-to-Win Experience
+          </HeadingText>
+          <p className="text-white/70 mb-6">
+            Welcome to P2W.FUN, where your rank is determined solely by how much you spend. No skill required, just a willingness to part with your money for digital prestige. Join a team, customize your profile, and climb the ranks to become digital royalty.
+          </p>
+          <div className="flex justify-center gap-4">
+            <Link to="/how-it-works">
+              <Button variant="outline" className="glass-morphism border-white/10 hover:bg-white/10">
+                How It Works
               </Button>
-              <p className="text-xs mt-3 text-white/50 italic">
-                *No refunds for your questionable financial decisions
-              </p>
-            </div>
-          </div>
-          
-          <RoyalDivider variant="crown" className="my-16" />
-          
-          <RoyalFeatures />
-          
-          <RoyalDivider variant="ornate" className="my-16" />
-          
-          <ToastProvider>
-            <RoyalShowcase topSpender={topSpender || undefined} />
-          </ToastProvider>
-          
-          <TeamSection />
-          
-          <div className="text-center mt-16">
-            <Button 
-              onClick={() => navigate('/about')}
-              variant="outline"
-              className="border-royal-gold/30 text-royal-gold hover:bg-royal-gold/10 mr-4"
-            >
-              About SpendThrone
-              <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
-            </Button>
-            
-            <Button 
-              onClick={() => navigate('/faq')}
-              variant="outline"
-              className="border-royal-gold/30 text-royal-gold hover:bg-royal-gold/10"
-            >
-              View Royal FAQs
-              <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
-            </Button>
+            </Link>
+            <Link to="/leaderboard">
+              <Button className="bg-royal-gold text-black hover:bg-royal-gold/90">
+                View Leaderboard
+              </Button>
+            </Link>
           </div>
         </div>
-      </main>
-      
-      <Footer />
-    </div>
+      </div>
+    </Shell>
   );
 };
 

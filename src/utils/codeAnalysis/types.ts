@@ -4,6 +4,8 @@ export interface FileInfo {
   path: string;
   size: number;
   modifiedAt?: string;
+  filePath?: string; // Added for compatibility
+  impact?: string; // Added for compatibility
 }
 
 // Dependency information
@@ -13,6 +15,9 @@ export interface DependencyInfo {
   used: boolean;
   size?: number;
   isDevDependency?: boolean;
+  alternatives?: string[]; // Added for compatibility
+  recommendation?: string; // Added for compatibility
+  impact?: string; // Added for compatibility
 }
 
 // Import information
@@ -23,6 +28,10 @@ export interface ImportInfo {
   path?: string;
   line?: number;
   column?: number;
+  file?: string; // Added for compatibility
+  filePath?: string; // Added for compatibility
+  import?: string; // Added for compatibility
+  impact?: string; // Added for compatibility
 }
 
 // Variable information
@@ -33,6 +42,9 @@ export interface VariableInfo {
   file?: string;
   line?: number;
   column?: number;
+  filePath?: string; // Added for compatibility
+  variable?: string; // Added for compatibility
+  impact?: string; // Added for compatibility
 }
 
 // CSS selector information
@@ -41,6 +53,8 @@ export interface CssSelectorInfo {
   used: boolean;
   file?: string;
   line?: number;
+  filePath?: string; // Added for compatibility
+  impact?: string; // Added for compatibility
 }
 
 // Dead code information
@@ -50,6 +64,8 @@ export interface DeadCodeInfo {
   name: string;
   line?: number;
   description?: string;
+  file?: string; // Added for compatibility
+  function?: string; // Added for compatibility
 }
 
 // Compatibility types for existing components
@@ -97,6 +113,8 @@ export interface ComplexityItem {
   issues: string[];
   status?: string;
   functions?: string[];
+  line?: number; // Added for compatibility
+  explanation?: string; // Added for compatibility
 }
 
 // Duplicate code analysis types
@@ -109,7 +127,12 @@ export interface DuplicateCodeInfo {
   lines: number;
   snippet: string;
   codeSnippet?: string;
+  instances?: number; // Added for compatibility
+  code?: string; // Added for compatibility
 }
+
+// For compatibility with existing code
+export type DuplicateCode = DuplicateCodeInfo;
 
 // Performance issue information
 export interface PerformanceIssue {
@@ -120,6 +143,9 @@ export interface PerformanceIssue {
   description: string;
   impact: 'high' | 'medium' | 'low';
   recommendation: string;
+  lineNumber: number; // Added for compatibility
+  severity: string; // Added for compatibility
+  issue?: string; // Added for compatibility
 }
 
 // Overall analysis result
@@ -144,6 +170,9 @@ export interface AnalysisResult {
     message: string;
     severity: 'error' | 'warning' | 'info';
   }[];
+  metrics?: ProjectMetrics; // Added for compatibility
+  recommendations?: string[]; // Added for compatibility
+  unusedFunctions?: any[]; // Added for compatibility
 }
 
 // Project metrics
