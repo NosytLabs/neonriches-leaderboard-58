@@ -132,7 +132,7 @@ export const getMockeryActionDescription = (action: MockeryAction): string => {
     case 'protected': return 'This user is protected from mockery – their digital moat is filled and drawbridge raised';
     case 'immune': return 'This user has purchased immunity from mockery – the digital equivalent of diplomatic immunity';
     case 'dunce': return 'Make this user wear a digital dunce cap – the adult version of the corner time-out';
-    case 'roast': return 'Publicly roast this user with prepared comedy material – Comedy Central special but they're the subject';
+    case 'roast': return "Publicly roast this user with prepared comedy material – Comedy Central special but they're the subject"; // Fixed apostrophe issue
     case 'ridicule': return 'Subject this user to public ridicule – turns their feed into a digital comedy club';
     case 'taunt': return 'Taunt this user with premium animations – premium gloating with visual effects';
     case 'drama': return 'Create drama involving this user – like a reality TV producer but for social media feuds';

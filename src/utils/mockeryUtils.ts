@@ -38,7 +38,7 @@ export const getMockeryActionDescription = (action: MockeryAction): string => {
     case 'tomatoes': return 'Throw virtual tomatoes at this user, marking their profile for 24 hours – the digital equivalent of a pie in the face, but with less cleanup and more sustained embarrassment';
     case 'eggs': return 'Throw virtual eggs at this user, marking their profile for 48 hours – like egging a house but without property damage charges or having to make that awkward drive to buy eggs at 2 AM';
     case 'stocks': return 'Put this user in the virtual public stocks for 72 hours of digital shame – medieval humiliation without the physical discomfort, though the psychological impact remains delightfully intact';
-    case 'silence': return 'Silence this user in team chat for 24 hours – like a social media timeout but you pay for the privilege of enforcing it. The digital equivalent of paying to put duct tape over someone's mouth, but completely legal!';
+    case 'silence': return 'Silence this user in team chat for 24 hours – like a social media timeout but you pay for the privilege of enforcing it. The digital equivalent of paying to put duct tape over someone\'s mouth, but completely legal!';
     case 'courtJester': return 'Force this user to wear the digital jester hat for 48 hours – turns their serious profile into a comedy show. Nothing says "I don\'t respect you" like forcing someone to entertain others against their will!';
     default: return 'Unknown mockery action – but rest assured, it\'s designed to digitally humiliate someone for your amusement';
   }
