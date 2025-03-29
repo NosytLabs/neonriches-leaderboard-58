@@ -5,10 +5,17 @@ import { HeadingText } from '@/components/ui/heading-text';
 import { Scroll, AlertCircle, DollarSign, Crown, Target, Gem, Coffee, Keyboard, Server, Code } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import RoyalDivider from '@/components/ui/decorations/RoyalDivider';
+import PageSEO from '@/components/common/PageSEO';
 
 const Terms = () => {
   return (
     <Shell>
+      <PageSEO
+        title="Terms of Service | SpendThrone"
+        description="The official terms and conditions governing the use of SpendThrone's satirical status platform."
+        canonicalUrl="https://spendthrone.com/terms"
+      />
+      
       <div className="flex flex-col gap-6">
         <div className="text-center">
           <div className="inline-flex items-center justify-center mb-4">
@@ -146,7 +153,23 @@ const Terms = () => {
             
             <RoyalDivider variant="line" color="gold" className="my-6" />
             
-            <div className="p-4 bg-black/20 rounded-lg text-center">
+            <div className="p-4 bg-black/20 rounded-lg">
+              <h3 className="text-xl font-medium mb-2">About Our Website Structure</h3>
+              <p className="text-white/70 mb-3">
+                SpendThrone uses a consistent routing structure where:
+              </p>
+              <ul className="list-disc pl-5 space-y-2 text-white/70">
+                <li>All pages are accessible via consistent URLs (e.g., /profile, /leaderboard)</li>
+                <li>Common legal pages like Terms (/terms) and Privacy Policy (/privacy) use the same template for consistency</li>
+                <li>All pages are fully contained within the main application - there are no popup windows or external pages</li>
+                <li>Redirects are in place to handle common URL variations (e.g., /terms-of-service redirects to /terms)</li>
+              </ul>
+              <p className="text-white/70 mt-3">
+                For a complete overview of our site structure, please visit our <a href="/about" className="text-royal-gold hover:underline">About page</a> and navigate to the "Site Structure" tab.
+              </p>
+            </div>
+            
+            <div className="p-4 bg-black/20 rounded-lg text-center mt-6">
               <p className="text-white/80 mb-2">
                 By using SpendThrone, you acknowledge that you have read, understood, and agreed to these terms.
               </p>

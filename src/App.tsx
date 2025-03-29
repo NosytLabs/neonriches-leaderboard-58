@@ -67,6 +67,8 @@ function App() {
                   <Dashboard />
                 </Suspense>
               } />
+              
+              {/* Profile Pages */}
               <Route path="/profile/:username" element={
                 <Suspense fallback={<LoadingScreen />}>
                   <Profile />
@@ -77,18 +79,18 @@ function App() {
                   <Profile />
                 </Suspense>
               } />
+              <Route path="/profile-enhancements" element={
+                <Suspense fallback={<LoadingScreen />}>
+                  <ProfileEnhancements />
+                </Suspense>
+              } />
               <Route path="/settings" element={
                 <Suspense fallback={<LoadingScreen />}>
                   <Settings />
                 </Suspense>
               } />
               
-              {/* User Account Management */}
-              <Route path="/subscription" element={
-                <Suspense fallback={<LoadingScreen />}>
-                  <Subscription />
-                </Suspense>
-              } />
+              {/* Authentication Pages */}
               <Route path="/login" element={
                 <Suspense fallback={<LoadingScreen />}>
                   <Login />
@@ -99,13 +101,13 @@ function App() {
                   <Signup />
                 </Suspense>
               } />
+              
+              {/* Finance Pages */}
               <Route path="/wallet" element={
                 <Suspense fallback={<LoadingScreen />}>
                   <Wallet />
                 </Suspense>
               } />
-              
-              {/* Spending & Team Features */}
               <Route path="/deposit" element={
                 <Suspense fallback={<LoadingScreen />}>
                   <Deposit />
@@ -116,26 +118,28 @@ function App() {
                   <Withdraw />
                 </Suspense>
               } />
+              <Route path="/subscription" element={
+                <Suspense fallback={<LoadingScreen />}>
+                  <Subscription />
+                </Suspense>
+              } />
+              
+              {/* Team Features */}
               <Route path="/teams" element={
                 <Suspense fallback={<LoadingScreen />}>
                   <Teams />
                 </Suspense>
               } />
-              <Route path="/profile-enhancements" element={
-                <Suspense fallback={<LoadingScreen />}>
-                  <ProfileEnhancements />
-                </Suspense>
-              } />
               
-              {/* Feature Pages */}
-              <Route path="/prestige" element={
-                <Suspense fallback={<LoadingScreen />}>
-                  <RoyalPrestige />
-                </Suspense>
-              } />
+              {/* Core Game Features */}
               <Route path="/leaderboard" element={
                 <Suspense fallback={<LoadingScreen />}>
                   <Leaderboard />
+                </Suspense>
+              } />
+              <Route path="/prestige" element={
+                <Suspense fallback={<LoadingScreen />}>
+                  <RoyalPrestige />
                 </Suspense>
               } />
               <Route path="/mockery" element={
@@ -155,7 +159,7 @@ function App() {
                   <About />
                 </Suspense>
               } />
-              <Route path="/status-through-history" element={
+              <Route path="/status-history" element={
                 <Suspense fallback={<LoadingScreen />}>
                   <StatusThroughHistory />
                 </Suspense>
@@ -166,23 +170,13 @@ function App() {
                 </Suspense>
               } />
               
-              {/* Content Pages (consolidated) */}
+              {/* Consolidated Legal & Info Pages */}
               <Route path="/terms" element={
                 <Suspense fallback={<LoadingScreen />}>
                   <ContentPage pageKey="terms" />
                 </Suspense>
               } />
-              <Route path="/terms-of-service" element={
-                <Suspense fallback={<LoadingScreen />}>
-                  <ContentPage pageKey="terms" />
-                </Suspense>
-              } />
               <Route path="/privacy" element={
-                <Suspense fallback={<LoadingScreen />}>
-                  <ContentPage pageKey="privacy" />
-                </Suspense>
-              } />
-              <Route path="/privacy-policy" element={
                 <Suspense fallback={<LoadingScreen />}>
                   <ContentPage pageKey="privacy" />
                 </Suspense>
@@ -195,6 +189,18 @@ function App() {
               <Route path="/faq" element={
                 <Suspense fallback={<LoadingScreen />}>
                   <ContentPage pageKey="faq" />
+                </Suspense>
+              } />
+              
+              {/* Redirects for duplicate URLs */}
+              <Route path="/terms-of-service" element={
+                <Suspense fallback={<LoadingScreen />}>
+                  <ContentPage pageKey="terms" />
+                </Suspense>
+              } />
+              <Route path="/privacy-policy" element={
+                <Suspense fallback={<LoadingScreen />}>
+                  <ContentPage pageKey="privacy" />
                 </Suspense>
               } />
               
