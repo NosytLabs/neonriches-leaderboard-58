@@ -73,3 +73,37 @@ export const formatDate = (dateString: string): string => {
     year: 'numeric'
   });
 };
+
+/**
+ * Format a currency amount (replaces formatCurrency)
+ */
+export const formatCurrency = (amount: number): string => {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0
+  }).format(amount);
+};
+
+/**
+ * Format a file size in bytes to a human-readable format
+ */
+export const formatFileSize = (sizeInBytes: number): string => {
+  if (sizeInBytes < 1024) {
+    return sizeInBytes + ' B';
+  } else if (sizeInBytes < 1024 * 1024) {
+    return (sizeInBytes / 1024).toFixed(1) + ' KB';
+  } else if (sizeInBytes < 1024 * 1024 * 1024) {
+    return (sizeInBytes / (1024 * 1024)).toFixed(1) + ' MB';
+  } else {
+    return (sizeInBytes / (1024 * 1024 * 1024)).toFixed(1) + ' GB';
+  }
+};
+
+/**
+ * Format a number with commas (e.g., 1,234,567)
+ */
+export const formatNumber = (num: number): string => {
+  return new Intl.NumberFormat('en-US').format(num);
+};
