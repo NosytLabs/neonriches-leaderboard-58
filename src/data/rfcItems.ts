@@ -19,7 +19,7 @@ export const rfcItems: RFCItem[] = [
     title: 'Advanced Mockery Features',
     description: (
       <p>
-        Allow nobles to purchase premium mockery packages that include animated GIFs, sound effects, and even custom insult templates. This would enhance the humiliation experience while driving additional revenue.
+        Allow users to purchase premium mockery packages that include animated GIFs, sound effects, and custom insult templates. This would enhance the humiliation experience while driving additional revenue – essentially monetizing digital schadenfreude.
       </p>
     ),
     icon: <MessageSquare className="h-4 w-4 text-royal-gold" />,
@@ -33,7 +33,7 @@ export const rfcItems: RFCItem[] = [
     title: 'Team Wars Seasonal Events',
     description: (
       <p>
-        Implement quarterly seasonal competitions between teams with special limited-time rewards, unique profile decorations, and exclusive mockery rights. The winning team gets a 2x multiplier on profile visibility.
+        Implement quarterly seasonal competitions between teams with special limited-time rewards, unique profile decorations, and exclusive mockery rights. The winning team gets a 2x multiplier on profile visibility – turning bragging rights into an actual measurable metric.
       </p>
     ),
     icon: <MessageSquare className="h-4 w-4 text-royal-gold" />,
@@ -47,7 +47,7 @@ export const rfcItems: RFCItem[] = [
     title: 'Royal Portrait NFTs',
     description: (
       <p>
-        Allow top spenders to mint their profile as limited edition NFTs that can be traded or displayed in other web3 platforms. Each NFT could include rank certification and spending history as provable bragging rights.
+        Allow top spenders to mint their profile as limited edition NFTs that can be traded or displayed in other web3 platforms. Each NFT could include rank certification and spending history as provable bragging rights – effectively turning conspicuous consumption into a tradable asset.
       </p>
     ),
     icon: <MessageSquare className="h-4 w-4 text-royal-gold" />,

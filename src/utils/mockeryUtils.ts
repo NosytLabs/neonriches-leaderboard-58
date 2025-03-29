@@ -27,7 +27,7 @@ export const getMockeryActionTitle = (action: MockeryAction): string => {
     case 'tomatoes': return 'Tomatoes';
     case 'eggs': return 'Eggs';
     case 'stocks': return 'Public Stocks';
-    case 'silence': return 'Royal Silence';
+    case 'silence': return 'Digital Silence';
     case 'courtJester': return 'Court Jester';
     default: return 'Unknown Action';
   }
@@ -35,11 +35,11 @@ export const getMockeryActionTitle = (action: MockeryAction): string => {
 
 export const getMockeryActionDescription = (action: MockeryAction): string => {
   switch (action) {
-    case 'tomatoes': return 'Throw tomatoes at this user, marking their profile for 24 hours';
-    case 'eggs': return 'Throw eggs at this user, marking their profile for 48 hours';
-    case 'stocks': return 'Put this user in the public stocks for 72 hours of shame';
-    case 'silence': return 'Silence this user in team chat for 24 hours';
-    case 'courtJester': return 'Force this user to wear the jester hat for 48 hours';
+    case 'tomatoes': return 'Throw virtual tomatoes at this user, marking their profile for 24 hours – the digital equivalent of a pie in the face';
+    case 'eggs': return 'Throw virtual eggs at this user, marking their profile for 48 hours – like egging a house but without property damage charges';
+    case 'stocks': return 'Put this user in the virtual public stocks for 72 hours of digital shame – medieval humiliation without the physical discomfort';
+    case 'silence': return 'Silence this user in team chat for 24 hours – like a social media timeout but you pay for the privilege of enforcing it';
+    case 'courtJester': return 'Force this user to wear the digital jester hat for 48 hours – turns their serious profile into a comedy show';
     default: return 'Unknown mockery action';
   }
 };
@@ -134,11 +134,11 @@ export const getMockeryTierLabel = (tier: MockeryTier): string => {
 
 export const getMockeryTierText = (tier: MockeryTier): string => {
   switch (tier) {
-    case 'common': return 'Simple mockery for everyday use';
-    case 'uncommon': return 'Slightly more impressive than common mockery';
-    case 'rare': return 'Truly distinctive forms of public humiliation';
-    case 'epic': return 'Legendary acts of mockery that will be remembered';
-    case 'legendary': return 'The ultimate expression of royal ridicule';
+    case 'common': return 'Simple mockery for everyday social media feuds';
+    case 'uncommon': return 'Slightly more impressive than the mockery everyone has access to';
+    case 'rare': return 'Truly distinctive forms of digital humiliation';
+    case 'epic': return 'Premium mockery effects that will be remembered in screenshots';
+    case 'legendary': return 'The ultimate expression of digital ridicule – the social media equivalent of a mic drop';
     default: return 'Unknown tier';
   }
 };

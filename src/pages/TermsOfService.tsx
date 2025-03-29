@@ -40,16 +40,16 @@ const TermsOfService: React.FC = () => {
               <h2 className="text-xl font-semibold mb-3">3. Financial Terms</h2>
               <div className="space-y-3">
                 <p className="text-white/80 leading-relaxed">
-                  a) <span className="font-medium">Payments</span>: All payments made to SpendThrone are final and non-refundable.
+                  a) <span className="font-medium">Payments</span>: All payments made to SpendThrone are final and non-refundable. This is not an investment vehicle but rather a form of digital entertainment with no expected financial return.
                 </p>
                 <p className="text-white/80 leading-relaxed">
-                  b) <span className="font-medium">Currency</span>: $1 USD spent equals 1 rank point on the leaderboard.
+                  b) <span className="font-medium">Currency</span>: $1 USD spent equals 1 rank point on the leaderboard. Your status on SpendThrone has no real-world value beyond what you and others choose to assign to it.
                 </p>
                 <p className="text-white/80 leading-relaxed">
                   c) <span className="font-medium">Cryptocurrency</span>: Payments made in cryptocurrency will be valued at the exchange rate at the time of transaction.
                 </p>
                 <p className="text-white/80 leading-relaxed">
-                  d) <span className="font-medium">No Investment Value</span>: Spending on SpendThrone does not constitute an investment and has no potential for financial return.
+                  d) <span className="font-medium">No Investment Value</span>: Spending on SpendThrone does not constitute an investment and has no potential for financial return. It's essentially digital conspicuous consumption.
                 </p>
               </div>
             </section>
@@ -65,7 +65,7 @@ const TermsOfService: React.FC = () => {
                   <li>Upload or transmit any content that is unlawful, harmful, threatening, abusive, harassing, defamatory, vulgar, obscene, invasive of another's privacy, or otherwise objectionable</li>
                   <li>Impersonate any person or entity</li>
                   <li>Interfere with or disrupt the service or servers or networks connected to the service</li>
-                  <li>Attempt to gain unauthorized access to the service, other accounts, or computer systems</li>
+                  <li>Attempt to gain unauthorized access to the service, other accounts, or computer systems. (Our digital moat is filled with algorithmic crocodiles, and our firewall drawbridge is heavily guarded.)</li>
                 </ul>
               </div>
             </section>
@@ -73,21 +73,21 @@ const TermsOfService: React.FC = () => {
             <section>
               <h2 className="text-xl font-semibold mb-3">5. Content Policy</h2>
               <p className="text-white/80 leading-relaxed">
-                User profiles, images, and messages must comply with our content guidelines. SpendThrone reserves the right to remove any content that violates these guidelines without notice.
+                User profiles, images, and messages must comply with our content guidelines. SpendThrone reserves the right to remove any content that violates these guidelines without notice, even if you've paid handsomely for your rank.
               </p>
             </section>
             
             <section>
               <h2 className="text-xl font-semibold mb-3">6. Mockery Features</h2>
               <p className="text-white/80 leading-relaxed">
-                The "mockery" features of SpendThrone are intended as satirical entertainment. Users who participate in these features acknowledge that they may be subject to virtual mockery by other users. All mockery actions should be taken in good humor and not as personal attacks.
+                The "mockery" features of SpendThrone are intended as satirical entertainment. Users who participate in these features acknowledge that they may be subject to virtual mockery by other users. All mockery actions should be taken in good humor and not as personal attacks – think of it as a digital costume party where everyone has agreed to wear a "mock me" sign.
               </p>
             </section>
             
             <section>
               <h2 className="text-xl font-semibold mb-3">7. Termination</h2>
               <p className="text-white/80 leading-relaxed">
-                SpendThrone reserves the right to terminate or suspend access to the service immediately, without prior notice or liability, for any reason whatsoever, including a breach of the Terms.
+                SpendThrone reserves the right to terminate or suspend access to the service immediately, without prior notice or liability, for any reason whatsoever, including a breach of the Terms. Even users who have spent thousands on their rank can be removed – money can buy status on our platform, but it doesn't buy immunity from the rules.
               </p>
             </section>
             
@@ -116,6 +116,19 @@ const TermsOfService: React.FC = () => {
               <h2 className="text-xl font-semibold mb-3">11. Contact Information</h2>
               <p className="text-white/80 leading-relaxed">
                 For questions about these Terms, please contact us at support@spendthrone.com.
+              </p>
+            </section>
+
+            <section className="mt-10 p-4 bg-black/30 rounded-lg border border-white/10">
+              <h2 className="text-xl font-semibold mb-3 text-royal-gold">Reality Check (The Legal Small Print)</h2>
+              <p className="text-white/80 leading-relaxed">
+                In plain English: SpendThrone is a piece of satirical performance art about status, materialism, and digital consumption. When you spend money here, you're paying for entertainment with no financial return. Your purchases are non-refundable, and the digital status you receive has no value except what you assign to it.
+              </p>
+              <p className="text-white/80 leading-relaxed mt-2">
+                The mockery features are consensual digital role-play, not harassment. Everyone who participates has agreed to these terms. If something breaks, crashes, or disappears, we're not liable for any losses beyond the amount you paid for that specific feature.
+              </p>
+              <p className="text-white/80 leading-relaxed mt-2">
+                If you're uncertain about spending money on digital status symbols, please reconsider whether this platform is right for you. We've designed SpendThrone to provoke thought about how we assign value in the digital age – if that makes you uncomfortable, that's part of the point.
               </p>
             </section>
           </div>

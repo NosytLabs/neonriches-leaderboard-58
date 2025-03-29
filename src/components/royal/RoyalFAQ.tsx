@@ -24,7 +24,7 @@ interface RoyalFAQProps {
 
 const RoyalFAQ: React.FC<RoyalFAQProps> = ({ 
   title = "Frequently Asked Questions", 
-  description = "Common inquiries from confused nobles", 
+  description = "Common inquiries from confused users", 
   items,
   variant = 'default'
 }) => {

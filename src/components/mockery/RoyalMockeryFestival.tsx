@@ -39,7 +39,7 @@ const RoyalMockeryFestival = () => {
     if (!user) {
       toast({
         title: "Authentication Required",
-        description: "You must be logged in to perform mockery.",
+        description: "You must be logged in to perform mockery actions.",
         variant: "destructive"
       });
       return false;
@@ -48,7 +48,7 @@ const RoyalMockeryFestival = () => {
     if (!username || !action) {
       toast({
         title: "Missing Information",
-        description: "Please select a user and mockery action.",
+        description: "Please select a user and mockery action to proceed.",
         variant: "destructive"
       });
       return false;
@@ -72,7 +72,7 @@ const RoyalMockeryFestival = () => {
       
       toast({
         title: "Mockery Successful",
-        description: `You have successfully mocked ${username} with ${action}!`,
+        description: `You have successfully subjected ${username} to ${action}! Your digital moat of superiority grows deeper.`,
         variant: "default"
       });
       
@@ -80,7 +80,7 @@ const RoyalMockeryFestival = () => {
     } else {
       toast({
         title: "Mockery Failed",
-        description: "You do not have enough funds to perform this mockery.",
+        description: "Your digital treasury is insufficient to finance this mockery. Consider adding more funds to your account.",
         variant: "destructive"
       });
       
@@ -109,13 +109,13 @@ const RoyalMockeryFestival = () => {
       
       toast({
         title: "Protection Purchased",
-        description: "You are now protected from mockery for 7 days.",
+        description: "You are now protected from mockery for 7 days. Your digital fortress is secure, with moat filled and drawbridge raised!",
         variant: "success"
       });
     } else {
       toast({
         title: "Purchase Failed",
-        description: "You do not have enough funds to buy protection.",
+        description: "You do not have enough funds to buy protection. Your digital castle remains vulnerable.",
         variant: "destructive"
       });
     }
@@ -127,9 +127,9 @@ const RoyalMockeryFestival = () => {
     .map(user => ({
       username: user.username,
       displayName: user.username,
-      avatarUrl: user.profileImage, // Using the correct property name profileImage
-      mockedReason: `Mocked with ${user.tier || 'unknown'} mockery`,
-      mockedTimestamp: user.lastMocked ? user.lastMocked.toISOString() : new Date().toISOString(), // Using lastMocked instead of lastMockery
+      avatarUrl: user.profileImage,
+      mockedReason: `Subjected to ${user.tier || 'unknown'} mockery`,
+      mockedTimestamp: user.lastMocked ? user.lastMocked.toISOString() : new Date().toISOString(),
       mockedBy: 'Unknown user',
       mockedTier: user.tier
     }));
@@ -139,10 +139,10 @@ const RoyalMockeryFestival = () => {
       <CardHeader>
         <div className="flex items-center">
           <Target className="mr-3 h-6 w-6 text-royal-crimson" />
-          <CardTitle>Royal Mockery Court</CardTitle>
+          <CardTitle>Digital Mockery Arena</CardTitle>
         </div>
         <CardDescription>
-          Pay to publicly shame other users with medieval-style mockery
+          Pay to apply cosmetic mockery effects to other users - purely visual satire with no functional impact
         </CardDescription>
       </CardHeader>
       

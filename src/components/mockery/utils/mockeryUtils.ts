@@ -107,15 +107,15 @@ export const getMockeryActionTitle = (action: MockeryAction): string => {
     case 'tomatoes': return 'Throw Tomatoes';
     case 'eggs': return 'Throw Eggs';
     case 'stocks': return 'Put in Stocks';
-    case 'silence': return 'Royal Silence';
+    case 'silence': return 'Digital Silence';
     case 'courtJester': return 'Court Jester';
     case 'jester': return 'Make a Jester';
     case 'protected': return 'Protected';
     case 'immune': return 'Immunity';
     case 'dunce': return 'Dunce Cap';
-    case 'roast': return 'Royal Roast';
+    case 'roast': return 'Digital Roast';
     case 'ridicule': return 'Public Ridicule';
-    case 'taunt': return 'Royal Taunt';
+    case 'taunt': return 'Premium Taunt';
     case 'drama': return 'Create Drama';
     default: return 'Unknown Mockery';
   }
@@ -123,20 +123,20 @@ export const getMockeryActionTitle = (action: MockeryAction): string => {
 
 export const getMockeryActionDescription = (action: MockeryAction): string => {
   switch (action) {
-    case 'tomatoes': return 'Throw virtual tomatoes at this user';
-    case 'eggs': return 'Throw virtual eggs at this user';
-    case 'stocks': return 'Place this user in virtual stocks for public ridicule';
-    case 'silence': return 'Temporarily silence this user in public chats';
-    case 'courtJester': return 'Make this user the court jester for a day';
-    case 'jester': return 'Make this user a jester for everyone to laugh at';
-    case 'protected': return 'This user is protected from mockery';
-    case 'immune': return 'This user has royal immunity from mockery';
-    case 'dunce': return 'Make this user wear a dunce cap';
-    case 'roast': return 'Publicly roast this user in the royal court';
-    case 'ridicule': return 'Subject this user to public ridicule';
-    case 'taunt': return 'Taunt this user with royal privileges';
-    case 'drama': return 'Create drama involving this user in the royal court';
-    default: return 'Apply a mockery effect to this user';
+    case 'tomatoes': return 'Throw virtual tomatoes at this user – the digital equivalent of booing a bad comedy act';
+    case 'eggs': return 'Throw virtual eggs at this user – less messy than the real thing but just as embarrassing';
+    case 'stocks': return 'Place this user in virtual stocks for public ridicule – social media pillory without the splinters';
+    case 'silence': return 'Temporarily silence this user in public chats – like a mute button you pay to enforce';
+    case 'courtJester': return 'Make this user the court jester for a day – turns their profile into a comedy venue';
+    case 'jester': return 'Make this user a jester for everyone to laugh at – social media roast in costume form';
+    case 'protected': return 'This user is protected from mockery – their digital moat is filled and drawbridge raised';
+    case 'immune': return 'This user has purchased immunity from mockery – the digital equivalent of diplomatic immunity';
+    case 'dunce': return 'Make this user wear a digital dunce cap – the adult version of the corner time-out';
+    case 'roast': return 'Publicly roast this user with prepared comedy material – Comedy Central special but they're the subject';
+    case 'ridicule': return 'Subject this user to public ridicule – turns their feed into a digital comedy club';
+    case 'taunt': return 'Taunt this user with premium animations – premium gloating with visual effects';
+    case 'drama': return 'Create drama involving this user – like a reality TV producer but for social media feuds';
+    default: return 'Apply a mockery effect to this user – the digital equivalent of a practical joke';
   }
 };
 

@@ -21,8 +21,8 @@ const FAQ = () => {
             <Scroll size={40} className="text-royal-gold" />
           </div>
           <HeadingText 
-            title="Royal Questions & Proclamations" 
-            description="Frequently asked queries from the realm's curious nobles"
+            title="Frequently Asked Questions" 
+            description="Common inquiries about our digital status experiment"
             gradient={true}
             align="center"
             as="h1"
@@ -33,117 +33,117 @@ const FAQ = () => {
           <CardContent className="p-6">
             <Accordion type="single" collapsible className="w-full">
               <AccordionItem value="item-1" className="border-b border-white/10 py-2">
-                <AccordionTrigger className="font-medieval hover:no-underline">
+                <AccordionTrigger className="hover:no-underline">
                   <div className="flex items-center">
                     <Crown className="text-royal-gold mr-3 h-5 w-5 flex-shrink-0" />
-                    <span>What is this curious realm of SpendThrone?</span>
+                    <span>What exactly is SpendThrone?</span>
                   </div>
                 </AccordionTrigger>
                 <AccordionContent className="pt-2 text-white/70">
-                  <p>SpendThrone is a satirical social experiment that mocketh the concept of "pay-to-win" to its most absurd extreme. Here, thy status in our digital kingdom is determined solely by how much real currency thou hast parted with. $1 = 1 unit of rank. No skills required, only the willingness to part with thy gold!</p>
-                  <p className="mt-2 italic text-royal-gold/80">"Where the jests are free but the status costs dearly."</p>
+                  <p>SpendThrone is a satirical social experiment that takes the concept of "pay-to-win" to its logical extreme. Here, your status is determined solely by how much real money you've spent. $1 = 1 unit of rank. No skills required, only a willingness to part with your cash!</p>
+                  <p className="mt-2 italic text-royal-gold/80">"Where the entertainment is free but the status costs real money."</p>
                 </AccordionContent>
               </AccordionItem>
               
               <AccordionItem value="item-2" className="border-b border-white/10 py-2">
-                <AccordionTrigger className="font-medieval hover:no-underline">
+                <AccordionTrigger className="hover:no-underline">
                   <div className="flex items-center">
                     <DollarSign className="text-royal-gold mr-3 h-5 w-5 flex-shrink-0" />
-                    <span>How does one ascend the noble ranks?</span>
+                    <span>How do I increase my rank?</span>
                   </div>
                 </AccordionTrigger>
                 <AccordionContent className="pt-2 text-white/70">
-                  <p>The path to nobility is paved with expenditure, dear subject! Simply part with thy real-world currency and watch as thy digital rank increases accordingly. Each dollar spent raises thy station by one unit. The more thou spendest, the higher thy position in our completely meaningless hierarchy.</p>
-                  <p className="mt-2">Thy rank can never decrease unless others outspend thee. How delightfully anxiety-inducing!</p>
-                  <p className="mt-2 italic text-royal-gold/80">"The simplest status system in the realm - thy worth equals thy expenditure."</p>
+                  <p>Simply spend money and watch your digital rank increase accordingly. Each dollar spent raises your position by one unit. The more you spend, the higher your position in our completely arbitrary hierarchy – like a highscore board where the only skill is spending.</p>
+                  <p className="mt-2">Your rank can never decrease unless others outspend you. How delightfully anxiety-inducing!</p>
+                  <p className="mt-2 italic text-royal-gold/80">"The simplest status system ever devised - your worth equals your expenditure."</p>
                 </AccordionContent>
               </AccordionItem>
               
               <AccordionItem value="item-3" className="border-b border-white/10 py-2">
-                <AccordionTrigger className="font-medieval hover:no-underline">
+                <AccordionTrigger className="hover:no-underline">
                   <div className="flex items-center">
                     <Shield className="text-royal-gold mr-3 h-5 w-5 flex-shrink-0" />
-                    <span>What are these Royal Houses thy subjects join?</span>
+                    <span>What are these Teams you can join?</span>
                   </div>
                 </AccordionTrigger>
                 <AccordionContent className="pt-2 text-white/70">
-                  <p>Our realm is divided into three noble houses, each vying for collective dominance:</p>
+                  <p>Our platform is divided into three competing teams, each vying for collective dominance:</p>
                   <ul className="list-disc pl-5 mt-2 space-y-1">
-                    <li><span className="text-royal-crimson font-bold">House Red</span> - Fierce warriors of excess, known for their flamboyant displays of wealth</li>
-                    <li><span className="text-emerald-500 font-bold">House Green</span> - Cunning strategists who believe consistent spending surpasses impulsive splurging</li>
-                    <li><span className="text-royal-navy font-bold">House Blue</span> - Scholarly nobles who analyze every transaction with cold, calculated precision</li>
+                    <li><span className="text-royal-crimson font-bold">Team Red</span> - Aggressive spenders, known for their flamboyant displays of wealth</li>
+                    <li><span className="text-emerald-500 font-bold">Team Green</span> - Strategic spenders who believe consistent expenditure surpasses impulsive splurging</li>
+                    <li><span className="text-royal-navy font-bold">Team Blue</span> - Analytical spenders who calculate every transaction with precision</li>
                   </ul>
-                  <p className="mt-2">Choose thy allegiance wisely, for thy spending contributes to thy house's collective power. Or don't choose wisely - it matters not, as long as thou spend!</p>
-                  <p className="mt-2 italic text-royal-gold/80">"The houses compete, but the treasury always wins."</p>
+                  <p className="mt-2">Choose your team wisely, as your spending contributes to your team's collective power. Or don't choose wisely - it matters not, as long as you spend!</p>
+                  <p className="mt-2 italic text-royal-gold/80">"The teams compete, but the payment processor always wins."</p>
                 </AccordionContent>
               </AccordionItem>
               
               <AccordionItem value="item-4" className="border-b border-white/10 py-2">
-                <AccordionTrigger className="font-medieval hover:no-underline">
+                <AccordionTrigger className="hover:no-underline">
                   <div className="flex items-center">
                     <Target className="text-royal-gold mr-3 h-5 w-5 flex-shrink-0" />
-                    <span>What is this Court Mockery I hear whispers of?</span>
+                    <span>What is the Mockery feature I keep hearing about?</span>
                   </div>
                 </AccordionTrigger>
                 <AccordionContent className="pt-2 text-white/70">
-                  <p>Ah, Court Mockery! The fine art of publicly shaming thy fellow nobles! For a modest fee, thou may subject others to various medieval punishments:</p>
+                  <p>Ah, Mockery! The fine art of digitally shaming your fellow users! For a modest fee, you may subject others to various cosmetic effects:</p>
                   <ul className="list-disc pl-5 mt-2 space-y-1">
-                    <li>Throw virtual tomatoes at those beneath thy station</li>
-                    <li>Place offenders in stocks for public ridicule</li>
-                    <li>Appoint the most egregious spenders as Court Jesters</li>
+                    <li>Throw virtual tomatoes at profiles you dislike</li>
+                    <li>Place users in digital stocks for public ridicule</li>
+                    <li>Appoint high spenders as Jesters for comic effect</li>
                   </ul>
-                  <p className="mt-2">The beauty of our system: victims can purchase protection from such mockery, further filling our royal coffers!</p>
-                  <p className="mt-2 italic text-royal-gold/80">"Where even humiliation has a price tag, and dignity is but another commodity."</p>
+                  <p className="mt-2">The beautiful irony: victims can purchase protection from such mockery, further driving platform revenue. It's like Twitter's blue checkmark but for mockery immunity.</p>
+                  <p className="mt-2 italic text-royal-gold/80">"Where even humiliation has a price tag, and dignity is just another premium feature."</p>
                 </AccordionContent>
               </AccordionItem>
               
               <AccordionItem value="item-5" className="border-b border-white/10 py-2">
-                <AccordionTrigger className="font-medieval hover:no-underline">
+                <AccordionTrigger className="hover:no-underline">
                   <div className="flex items-center">
                     <Gem className="text-royal-gold mr-3 h-5 w-5 flex-shrink-0" />
-                    <span>What rewards await the most generous nobles?</span>
+                    <span>What rewards do high spenders receive?</span>
                   </div>
                 </AccordionTrigger>
                 <AccordionContent className="pt-2 text-white/70">
-                  <p>Those who part with excessive amounts of currency shall receive:</p>
+                  <p>Those who part with excessive amounts of money shall receive:</p>
                   <ul className="list-disc pl-5 mt-2 space-y-1">
-                    <li>Fanciful digital badges to display on thy profile</li>
-                    <li>Customized profile features unavailable to the common rabble</li>
-                    <li>The privilege of being ranked higher on a list seen by other participants in this peculiar experiment</li>
-                    <li>Certificate of Nobility - a digital parchment proclaiming thy willingness to exchange real currency for imaginary status</li>
+                    <li>Digital badges to display on your profile – like scout badges but for spending</li>
+                    <li>Customized profile features unavailable to lower-ranked users</li>
+                    <li>The privilege of being ranked higher on a list seen by other participants</li>
+                    <li>Certificate of Status – a digital document proclaiming your willingness to exchange real currency for virtual prestige</li>
                   </ul>
-                  <p className="mt-2">All of these rewards have the same real-world value as a jester's promissory note - absolutely none! But they do look rather magnificent...</p>
-                  <p className="mt-2 italic text-royal-gold/80">"In this kingdom, even the prizes mock the concept of value."</p>
+                  <p className="mt-2">All of these rewards have the same real-world value as a diploma from a fictional university - absolutely none! But they look rather impressive in certain digital circles.</p>
+                  <p className="mt-2 italic text-royal-gold/80">"On this platform, even the rewards are satire of value systems."</p>
                 </AccordionContent>
               </AccordionItem>
               
               <AccordionItem value="item-6" className="border-b border-white/10 py-2">
-                <AccordionTrigger className="font-medieval hover:no-underline">
+                <AccordionTrigger className="hover:no-underline">
                   <div className="flex items-center">
                     <Trophy className="text-royal-gold mr-3 h-5 w-5 flex-shrink-0" />
-                    <span>Can I recover my royal investments?</span>
+                    <span>Can I recover my investments?</span>
                   </div>
                 </AccordionTrigger>
                 <AccordionContent className="pt-2 text-white/70">
-                  <p>Recover thy gold? HAHAHA! Oh, dear noble, thy jests are most amusing!</p>
-                  <p className="mt-2">All payments to our kingdom are as permanent as a royal execution. Once thy gold enters our treasury, it shall never return to thy purse. This is not an investment with returns but a satirical performance art piece about status-seeking behavior.</p>
-                  <p className="mt-2">Perhaps the real value is the lesson learned about the absurdity of purchasing status? Nay, probably not.</p>
-                  <p className="mt-2 italic text-royal-gold/80">"The royal treasury operates on the principle of 'what's mine is mine, and what's yours will soon be mine as well.'"</p>
+                  <p>Recover your money? Ha! That's hilarious!</p>
+                  <p className="mt-2">All payments to our platform are as permanent as a tattoo. Once your money enters our system, it shall never return to your account. This is not an investment with returns but a satirical commentary on status-seeking behavior.</p>
+                  <p className="mt-2">Perhaps the real value is the lesson learned about the absurdity of purchasing status? Probably not.</p>
+                  <p className="mt-2 italic text-royal-gold/80">"Our payment system operates on the principle that money flows in one direction only."</p>
                 </AccordionContent>
               </AccordionItem>
               
               <AccordionItem value="item-7" className="border-b border-white/10 py-2">
-                <AccordionTrigger className="font-medieval hover:no-underline">
+                <AccordionTrigger className="hover:no-underline">
                   <div className="flex items-center">
                     <MessageSquare className="text-royal-gold mr-3 h-5 w-5 flex-shrink-0" />
-                    <span>Is this whole affair a jest?</span>
+                    <span>Is this whole thing satirical?</span>
                   </div>
                 </AccordionTrigger>
                 <AccordionContent className="pt-2 text-white/70">
-                  <p>Indeed, but a jest with a mirror! SpendThrone is satire that mocketh consumer culture, digital status symbols, and the concept of "paying for prestige." We exaggerate these concepts to absurdity, inviting reflection on how we assign value in the digital age.</p>
-                  <p className="mt-2">That said, the transactions are quite real. Thy gold pieces truly depart from thy possession in exchange for utterly worthless digital status. Much like purchasing designer pixels for thy social media portrait or spending on virtual goods that exist only as 1s and 0s.</p>
-                  <p className="mt-2">The joke, dear noble, is that many might not see it as a joke at all!</p>
-                  <p className="mt-2 italic text-royal-gold/80">"When satire becomes indistinguishable from reality, perhaps 'tis the reality that deserves the scrutiny."</p>
+                  <p>Indeed, but satire with a purpose! SpendThrone is a mirror reflecting consumer culture, digital status symbols, and the concept of "paying for prestige." We exaggerate these concepts to absurdity, inviting reflection on how we assign value in the digital age.</p>
+                  <p className="mt-2">That said, the transactions are quite real. Your money truly leaves your possession in exchange for utterly worthless digital status. Much like purchasing designer NFTs or spending on virtual goods that exist only as data.</p>
+                  <p className="mt-2">The joke is that many might not see it as a joke at all!</p>
+                  <p className="mt-2 italic text-royal-gold/80">"When satire becomes indistinguishable from reality, perhaps it's reality that deserves scrutiny."</p>
                 </AccordionContent>
               </AccordionItem>
             </Accordion>
@@ -152,9 +152,9 @@ const FAQ = () => {
         
         <Card className="glass-morphism border-white/10">
           <CardContent className="p-6 text-center">
-            <p className="text-lg font-medieval mb-2 royal-text-shimmer">Still have burning questions for the royal court?</p>
-            <p className="text-white/60">Send a royal messenger pigeon to our castle at <a href="mailto:nobles@spendthrone.com" className="text-royal-gold hover:underline">nobles@spendthrone.com</a></p>
-            <p className="text-white/40 text-sm mt-3">The court jesters typically respond within 2-3 business days, assuming they haven't been beheaded for poor humor.</p>
+            <p className="text-lg font-medium mb-2 royal-text-shimmer">Still have burning questions?</p>
+            <p className="text-white/60">Send an email to our customer support team at <a href="mailto:questions@spendthrone.com" className="text-royal-gold hover:underline">questions@spendthrone.com</a></p>
+            <p className="text-white/40 text-sm mt-3">Our support team typically responds within 2-3 business days, assuming they haven't spent all their salary on improving their own SpendThrone ranks.</p>
           </CardContent>
         </Card>
         
