@@ -1,3 +1,4 @@
+
 import React, { useRef, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -50,7 +51,7 @@ const RoyalCertificate: React.FC<RoyalCertificateProps> = ({
     }
   };
   
-  const getTierName = (tier: string) => {
+  const getTierName = (tier: string | undefined) => {
     const names: Record<string, string> = {
       'common': 'Commoner',
       'uncommon': 'Squire',
@@ -62,7 +63,7 @@ const RoyalCertificate: React.FC<RoyalCertificateProps> = ({
       'premium': 'Baron/Baroness'
     };
     
-    return names[tier] || 'Citizen';
+    return tier ? (names[tier] || 'Citizen') : 'Citizen';
   };
 
   const handleDownload = async () => {
@@ -140,6 +141,9 @@ const RoyalCertificate: React.FC<RoyalCertificateProps> = ({
     window.open(url, '_blank');
   };
   
+  // Format the date using our utility
+  const formattedDate = formatDate(user.joinedAt !== undefined ? user.joinedAt : new Date());
+  
   return (
     <div className="space-y-6">
       <div ref={certificateRef} className="rounded-lg overflow-hidden glass-morphism border-white/10 p-6 md:p-8 max-w-2xl mx-auto certificate-bg">
@@ -188,7 +192,7 @@ const RoyalCertificate: React.FC<RoyalCertificateProps> = ({
                   <Calendar className="h-4 w-4 text-royal-gold mr-1" />
                   <span className="text-sm text-white/70">Joined</span>
                 </div>
-                <div className="text-sm font-medium">{formatDate(user.joinedAt)}</div>
+                <div className="text-sm font-medium">{formattedDate}</div>
               </div>
             </div>
             
@@ -196,7 +200,7 @@ const RoyalCertificate: React.FC<RoyalCertificateProps> = ({
               "In the grand hierarchy of digital nobility, one's worth is measured not by character, but by the depth of their pockets."
             </div>
             
-            {hasNFT && (
+            {(hasNFT || (user.certificateNFT && user.certificateNFT.mintAddress)) && (
               <div className="flex items-center justify-center space-x-2">
                 <Badge variant="outline" className="bg-green-500/20 text-green-400 border-green-500/30">
                   <Shield className="h-3 w-3 mr-1" />
@@ -240,7 +244,7 @@ const RoyalCertificate: React.FC<RoyalCertificateProps> = ({
           Share on Twitter
         </Button>
         
-        {!hasNFT && !mintSuccess && (
+        {!hasNFT && !mintSuccess && !(user.certificateNFT?.mintAddress) && (
           <Button
             variant="outline"
             className="glass-morphism border-white/10 group"
@@ -255,11 +259,11 @@ const RoyalCertificate: React.FC<RoyalCertificateProps> = ({
           </Button>
         )}
         
-        {(hasNFT || mintSuccess) && user.certificateNFT?.mintAddress && (
+        {(hasNFT || mintSuccess || user.certificateNFT?.mintAddress) && (
           <Button
             variant="outline"
             className="glass-morphism border-white/10 bg-purple-500/10"
-            onClick={() => window.open(`https://explorer.solana.com/address/${user.certificateNFT?.mintAddress}`, '_blank')}
+            onClick={() => window.open(`https://explorer.solana.com/address/${user.certificateNFT?.mintAddress || ''}`, '_blank')}
           >
             <ExternalLink className="mr-2 h-4 w-4" />
             View NFT on Solana

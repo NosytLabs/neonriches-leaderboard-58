@@ -1,96 +1,58 @@
 import React from 'react';
-import { User, Crown, Trophy, Shield, Star, ChevronUp, ChevronDown, BadgeCheck } from 'lucide-react';
+import { UserBadge } from '@/components/ui/user-badge';
+import { UserProfile } from '@/types/user';
 import { cn } from '@/lib/utils';
-import { Team } from '@/types/user';
-import { formatCurrency, formatDate } from '@/utils/formatters';
 
 interface LeaderboardItemProps {
-  user: User;
-  index: number;
+  user: UserProfile;
+  position: number;
   isCurrentUser?: boolean;
-  previousRank?: number;
+  onClick?: () => void;
+  showTeam?: boolean;
+  className?: string;
 }
 
 const LeaderboardItem: React.FC<LeaderboardItemProps> = ({
   user,
-  index,
+  position,
   isCurrentUser = false,
-  previousRank
+  onClick,
+  showTeam = true,
+  className
 }) => {
-  const rankChange = previousRank ? previousRank - (index + 1) : 0;
-  const hasRankedUp = rankChange > 0;
-  const hasRankedDown = rankChange < 0;
-
-  const getTeamColor = (team: Team | null | undefined) => {
-    switch (team) {
-      case 'red': return 'text-royal-crimson';
-      case 'green': return 'text-royal-gold';
-      case 'blue': return 'text-royal-navy';
-      default: return 'text-white';
-    }
-  };
-
   return (
-    <li
+    <div 
       className={cn(
-        "py-4 px-6 rounded-lg glass-morphism border-white/10 flex items-center justify-between",
-        isCurrentUser && "border-2 border-royal-gold"
+        "relative flex items-center px-4 py-3 rounded-lg glass-morphism cursor-pointer transition-all",
+        isCurrentUser ? "border-2 border-royal-gold/60" : "border border-white/10 hover:border-royal-gold/40",
+        className
       )}
+      onClick={onClick}
     >
-      <div className="flex items-center space-x-4">
-        <span className="font-bold text-lg w-8 text-right">{index + 1}.</span>
-        <div className="relative">
-          <img
-            src={user.profileImage || "/images/knight.png"}
-            alt={`${user.displayName || user.username}'s profile`}
-            className="w-12 h-12 rounded-full object-cover"
-          />
-          {user.isVerified && (
-            <BadgeCheck className="absolute bottom-0 right-0 h-4 w-4 text-blue-500" />
+      <div className="mr-3">
+        <span className="font-semibold text-sm opacity-70">{position}</span>
+      </div>
+      
+      <div className="flex-shrink-0">
+        <UserBadge user={user} size="md" />
+      </div>
+      
+      <div className="ml-3 flex-grow">
+        <div className="font-medium">{user.displayName || user.username}</div>
+        <div className="text-sm text-white/60">
+          {showTeam && user.team && (
+            <span>{user.team} Team</span>
           )}
-        </div>
-        <div>
-          <div className="flex items-center">
-            <h3 className="font-semibold">{user.displayName || user.username}</h3>
-            {user.isVIP && (
-              <Crown className="ml-1 h-4 w-4 text-yellow-500" />
-            )}
-          </div>
-          <div className="text-sm text-white/60 flex items-center">
-            {user.tier && (
-              <>
-                <Star className="h-3 w-3 mr-1 text-yellow-400" />
-                <span>{user.tier}</span>
-              </>
-            )}
-            {user.team && (
-              <span className={`ml-2 ${getTeamColor(user.team)}`}>
-                ({user.team})
-              </span>
-            )}
-          </div>
+          {!showTeam && (
+            <span>Rank: {user.rank}</span>
+          )}
         </div>
       </div>
-      <div className="text-right">
-        <p className="font-bold">{formatCurrency(user.totalSpent || 0)}</p>
-        <p className="text-sm text-white/60">
-          Joined: {formatDate(user.joinedAt || '', 'short')}
-        </p>
+      
+      <div className="ml-auto font-bold text-sm">
+        ${user.totalSpent?.toLocaleString()}
       </div>
-      {rankChange !== 0 && (
-        <div className="ml-4 flex items-center">
-          {hasRankedUp && (
-            <ChevronUp className="h-4 w-4 text-green-500 mr-1" />
-          )}
-          {hasRankedDown && (
-            <ChevronDown className="h-4 w-4 text-red-500 mr-1" />
-          )}
-          <span className="text-sm text-white/70">
-            {Math.abs(rankChange)}
-          </span>
-        </div>
-      )}
-    </li>
+    </div>
   );
 };
 

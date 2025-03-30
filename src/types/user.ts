@@ -47,6 +47,7 @@ export interface UserCosmetics {
   foundersPass?: boolean;
   activeEmoji?: string;
   activeTitle?: string;
+  activeBackground?: string;
 }
 
 // User settings
@@ -67,6 +68,12 @@ export interface UserSettings {
   showEmailOnProfile?: boolean;
   rankChangeAlerts?: boolean;
   showTeam?: boolean;
+  showSpending?: boolean;
+  shameAlerts?: boolean;
+  publicProfile?: boolean;
+  newFollowerAlerts?: boolean;
+  darkMode?: boolean;
+  language?: string;
 }
 
 // Social links
@@ -93,6 +100,7 @@ export interface UserSubscription {
   status?: string;
   plan?: string;
   currentPeriodEnd?: string;
+  cancelAtPeriodEnd?: boolean;
 }
 
 // Achievement interface
@@ -157,6 +165,13 @@ export interface UserProfile {
   isProtected?: boolean;
   mockeryCount?: number;
   lastMocked?: string;
+  isAuthenticated?: boolean;
+  activeTitle?: string;
+  certificateNFT?: {
+    mintAddress: string;
+    mintedAt: string;
+    tokenId: string;
+  };
 }
 
 // Legacy alias for backwards compatibility

@@ -1,20 +1,19 @@
 
 /**
- * Formats a date string into localized format
- * @param dateString Date string to format
+ * Format a date string or Date object to a human readable format
+ * @param date String or Date object to format
  * @returns Formatted date string
  */
-export const formatDate = (dateString: string): string => {
-  if (!dateString) return '';
+export const formatDate = (date?: string | Date): string => {
+  if (!date) return 'Unknown date';
   
-  const date = new Date(dateString);
+  const dateObj = typeof date === 'string' ? new Date(date) : date;
   
-  // Check if the date is valid
-  if (isNaN(date.getTime())) {
-    return '';
+  if (isNaN(dateObj.getTime())) {
+    return 'Invalid date';
   }
   
-  return date.toLocaleDateString('en-US', {
+  return dateObj.toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'short',
     day: 'numeric'
@@ -22,14 +21,19 @@ export const formatDate = (dateString: string): string => {
 };
 
 /**
- * Formats a date as a relative time (e.g., "2 days ago")
- * @param dateString Date string to format
- * @returns Relative time string
+ * Format date to relative time (e.g., "2 days ago")
  */
-export const formatRelativeTime = (dateString: string): string => {
-  const date = new Date(dateString);
+export const formatRelativeTime = (date?: string | Date): string => {
+  if (!date) return 'Unknown time';
+  
+  const dateObj = typeof date === 'string' ? new Date(date) : date;
+  
+  if (isNaN(dateObj.getTime())) {
+    return 'Invalid time';
+  }
+  
   const now = new Date();
-  const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+  const diffInSeconds = Math.floor((now.getTime() - dateObj.getTime()) / 1000);
   
   if (diffInSeconds < 60) {
     return 'just now';
@@ -57,21 +61,4 @@ export const formatRelativeTime = (dateString: string): string => {
   
   const diffInYears = Math.floor(diffInMonths / 12);
   return `${diffInYears} year${diffInYears > 1 ? 's' : ''} ago`;
-};
-
-/**
- * Converts a date to ISO string safely
- * @param date Date or timestamp to convert
- * @returns ISO date string or empty string if invalid
- */
-export const toISOString = (date: Date | number | string): string => {
-  if (!date) return '';
-  
-  try {
-    const dateObj = typeof date === 'object' ? date : new Date(date);
-    return dateObj.toISOString();
-  } catch (error) {
-    console.error('Invalid date:', date);
-    return '';
-  }
 };

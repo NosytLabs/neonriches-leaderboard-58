@@ -1,9 +1,7 @@
 
 import React, { useEffect, useState } from 'react';
-import { MockeryAction } from '@/types/mockery';
 import { motion, AnimatePresence } from 'framer-motion';
-import { getMockeryActionIcon } from '../utils/mockeryUtils';
-import { Egg, Skull, Crown, UserCheck } from 'lucide-react';
+import { getMockeryDescription, getMockeryName, getMockeryActionIcon, type MockeryAction } from '@/utils/mockeryUtils';
 
 interface MockeryEffectProps {
   username: string;
@@ -12,104 +10,79 @@ interface MockeryEffectProps {
   onComplete: () => void;
 }
 
-const MockeryEffect: React.FC<MockeryEffectProps> = ({
-  username,
-  action,
-  isActive,
-  onComplete
-}) => {
-  const [elements, setElements] = useState<Array<{ id: number; x: number; y: number; rotation: number; scale: number }>>([]);
+const MockeryEffect: React.FC<MockeryEffectProps> = ({ username, action, isActive, onComplete }) => {
+  const [visible, setVisible] = useState(false);
+  const Icon = getMockeryActionIcon(action);
   
-  // Calculate positions for animation elements
   useEffect(() => {
     if (isActive) {
-      const newElements = Array.from({ length: 20 }, (_, i) => ({
-        id: i,
-        x: Math.random() * 100,
-        y: Math.random() * 100,
-        rotation: Math.random() * 360,
-        scale: 0.5 + Math.random() * 1.5
-      }));
-      
-      setElements(newElements);
-      
-      // Auto-complete after animation duration
+      setVisible(true);
       const timer = setTimeout(() => {
-        onComplete();
-      }, 3000);
+        setVisible(false);
+      }, 5000);
       
       return () => clearTimeout(timer);
     }
-  }, [isActive, onComplete]);
+  }, [isActive]);
   
-  if (!isActive) return null;
-  
-  const getIcon = () => {
-    switch (action) {
-      case 'eggs':
-        return Egg;
-      case 'stocks':
-        return Skull;
-      case 'courtJester':
-        return Crown;
-      case 'silence':
-        return UserCheck;
-      case 'tomatoes':
-      default:
-        return UserCheck;
+  const handleAnimationComplete = () => {
+    if (!visible) {
+      onComplete();
     }
   };
   
-  const Icon = getIcon();
-  
   return (
-    <AnimatePresence>
-      {isActive && (
-        <motion.div
+    <AnimatePresence onExitComplete={handleAnimationComplete}>
+      {visible && (
+        <motion.div 
+          className="fixed inset-0 flex items-center justify-center z-50 bg-black/70"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
+          transition={{ duration: 0.5 }}
         >
-          <motion.div
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.8, opacity: 0 }}
-            className="p-6 text-center"
+          <motion.div 
+            className="bg-gray-900/90 border border-white/10 p-8 rounded-lg max-w-lg text-center"
+            initial={{ scale: 0.8, y: 50 }}
+            animate={{ scale: 1, y: 0 }}
+            exit={{ scale: 0.8, y: 50 }}
+            transition={{ type: "spring", duration: 0.6 }}
           >
-            <h2 className="mb-4 text-2xl font-bold text-white">
-              {username} has been subjected to {action}!
-            </h2>
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: [0, 1.5, 1] }}
+              transition={{ delay: 0.3, duration: 0.5 }}
+              className="mx-auto mb-4 w-20 h-20 flex items-center justify-center bg-gradient-to-br from-purple-500/30 to-pink-500/30 rounded-full"
+            >
+              <Icon size={36} className={`text-${action === 'tomatoes' ? 'red' : action === 'eggs' ? 'yellow' : 'white'}-500`} />
+            </motion.div>
             
-            <div className="relative w-64 h-64 mx-auto">
-              {elements.map((el) => (
-                <motion.div
-                  key={el.id}
-                  initial={{ 
-                    x: 0, 
-                    y: 0, 
-                    opacity: 0,
-                    rotate: 0,
-                    scale: 0.5
-                  }}
-                  animate={{ 
-                    x: `${el.x - 50}vw`, 
-                    y: `${el.y - 50}vh`, 
-                    opacity: [0, 1, 0],
-                    rotate: el.rotation,
-                    scale: el.scale
-                  }}
-                  transition={{
-                    duration: 2,
-                    delay: el.id * 0.05,
-                    ease: "easeOut"
-                  }}
-                  className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
-                >
-                  <Icon className="w-8 h-8 text-royal-crimson" />
-                </motion.div>
-              ))}
-            </div>
+            <motion.h2 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+              className="text-2xl font-bold mb-2 text-white"
+            >
+              {getMockeryName(action)}
+            </motion.h2>
+            
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.7 }}
+              className="text-white/70 mb-4"
+            >
+              {username} has been subjected to {getMockeryName(action).toLowerCase()}!
+            </motion.p>
+            
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.9 }}
+              className="text-white/50 text-sm italic"
+            >
+              {getMockeryDescription(action)}
+            </motion.p>
           </motion.div>
         </motion.div>
       )}

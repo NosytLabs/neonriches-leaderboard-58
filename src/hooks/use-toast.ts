@@ -47,6 +47,7 @@ export function useToast() {
     royal: (props: ExtendedToastProps) => 
       baseToast({ 
         ...props, 
+        // Use default for now since royal isn't an available variant
         variant: "default",
         title: ensureString(props.title) || "",
         description: ensureString(props.description) || ""

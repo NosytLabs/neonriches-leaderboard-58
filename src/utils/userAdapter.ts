@@ -19,12 +19,22 @@ export const adaptUserProfileToUser = (profile: UserProfile): User => {
     joinedAt: profile.joinedAt, // Accept date type
     lastActive: profile.lastActive ? new Date(profile.lastActive) : new Date(),
     amountSpent: profile.amountSpent || 0,
+    totalSpent: profile.totalSpent || profile.amountSpent || 0,
     isActive: profile.isActive !== undefined ? profile.isActive : true,
     isVerified: profile.isVerified || false,
     isBanned: profile.isBanned || false,
     role: profile.role || 'user',
     badges: profile.badges || [],
-    cosmetics: profile.cosmetics || {}
+    cosmetics: profile.cosmetics || {
+      badges: [],
+      titles: [],
+      borders: [],
+      effects: [],
+      emojis: [],
+      fonts: [],
+      colors: [],
+      backgrounds: []
+    }
   };
 };
 
@@ -46,12 +56,22 @@ export const adaptUserToUserProfile = (user: User): UserProfile => {
     joinedAt: user.joinedAt, // Accept date type
     lastActive: user.lastActive || new Date(),
     amountSpent: user.amountSpent || 0,
+    totalSpent: user.totalSpent || user.amountSpent || 0,
     isActive: user.isActive !== undefined ? user.isActive : true,
     isVerified: user.isVerified || false,
     isBanned: user.isBanned || false,
     role: user.role || 'user',
     badges: user.badges || [],
-    cosmetics: user.cosmetics || {}
+    cosmetics: user.cosmetics || {
+      badges: [],
+      titles: [],
+      borders: [],
+      effects: [],
+      emojis: [],
+      fonts: [],
+      colors: [],
+      backgrounds: []
+    }
   };
 };
 
@@ -78,12 +98,22 @@ export const ensureUser = (user: User | UserProfile | Partial<User>): User => {
     joinedAt: user.joinedAt || new Date(),
     lastActive: user.lastActive || new Date(),
     amountSpent: user.amountSpent || 0,
+    totalSpent: user.totalSpent || user.amountSpent || 0,
     isActive: user.isActive !== undefined ? user.isActive : true,
     isVerified: user.isVerified || false,
     isBanned: user.isBanned || false,
     role: user.role || 'user',
     badges: user.badges || [],
-    cosmetics: user.cosmetics || {}
+    cosmetics: user.cosmetics || {
+      badges: [],
+      titles: [],
+      borders: [],
+      effects: [],
+      emojis: [],
+      fonts: [],
+      colors: [],
+      backgrounds: []
+    }
   };
   
   return baseUser;

@@ -1,29 +1,27 @@
-
 import React from 'react';
-import { UserProfile } from '@/contexts/AuthContext';
+import { UserProfile } from '@/types/user';
 import { ScrollText } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-import RoyalButton from '@/components/ui/royal-button';
 
 interface TitleItem {
   id: string;
   name: string;
   description: string;
   price: number;
-  text: string;
+  title: string;
   rarity: 'common' | 'rare' | 'legendary';
 }
 
 interface ProfileTitlesProps {
   onPurchase: (name: string, price: number, category: string, itemId: string) => Promise<void>;
   user: UserProfile | null;
-  onSelectTitle?: (titleId: string | null) => Promise<void>;
+  onSelectTitle: (titleId: string | null) => Promise<void>;
   activeTitle?: string | null;
 }
 
 const ProfileTitles: React.FC<ProfileTitlesProps> = ({ 
   onPurchase, 
-  user,
+  user, 
   onSelectTitle,
   activeTitle
 }) => {
@@ -35,7 +33,7 @@ const ProfileTitles: React.FC<ProfileTitlesProps> = ({
       name: 'Royal Patron',
       description: 'A title for loyal supporters of the kingdom',
       price: 30,
-      text: 'Royal Patron',
+      title: 'Royal Patron',
       rarity: 'common'
     },
     {
@@ -43,7 +41,7 @@ const ProfileTitles: React.FC<ProfileTitlesProps> = ({
       name: 'Noble Benefactor',
       description: 'A title for those who contribute to the realm',
       price: 40,
-      text: 'Noble Benefactor',
+      title: 'Noble Benefactor',
       rarity: 'rare'
     },
     {
@@ -51,7 +49,7 @@ const ProfileTitles: React.FC<ProfileTitlesProps> = ({
       name: 'Digital Aristocrat',
       description: 'A title for those of refined digital taste',
       price: 50,
-      text: 'Digital Aristocrat',
+      title: 'Digital Aristocrat',
       rarity: 'rare'
     },
     {
@@ -59,7 +57,7 @@ const ProfileTitles: React.FC<ProfileTitlesProps> = ({
       name: 'Crown Collector',
       description: 'A title for those who amass digital wealth',
       price: 60,
-      text: 'Crown Collector',
+      title: 'Crown Collector',
       rarity: 'legendary'
     },
     {
@@ -67,7 +65,7 @@ const ProfileTitles: React.FC<ProfileTitlesProps> = ({
       name: 'Grand Spender',
       description: 'A title acknowledging financial contributions',
       price: 75,
-      text: 'Grand Spender',
+      title: 'Grand Spender',
       rarity: 'legendary'
     },
     {
@@ -75,7 +73,7 @@ const ProfileTitles: React.FC<ProfileTitlesProps> = ({
       name: 'Founder',
       description: 'Reserved for those who were present at the beginning',
       price: 100,
-      text: 'Founder',
+      title: 'Founder',
       rarity: 'legendary'
     }
   ];
@@ -133,7 +131,7 @@ const ProfileTitles: React.FC<ProfileTitlesProps> = ({
               
               <div className="bg-black/30 rounded-lg p-6 mb-4 flex items-center justify-center">
                 <span className="font-medieval text-lg text-royal-gold">
-                  {item.text}
+                  {item.title}
                 </span>
               </div>
               

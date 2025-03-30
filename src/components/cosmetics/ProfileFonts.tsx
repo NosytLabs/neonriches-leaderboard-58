@@ -1,6 +1,5 @@
-
 import React from 'react';
-import { UserProfile } from '@/contexts/AuthContext';
+import { UserProfile } from '@/types/user';
 import { Type } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import RoyalButton from '@/components/ui/royal-button';
