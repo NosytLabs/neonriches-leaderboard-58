@@ -1,6 +1,5 @@
 
-import { TeamColor, TeamType } from './team';
-import { UserTier } from './user';
+import { TeamColor, UserTier } from './user';
 
 export interface LeaderboardUser {
   id: string;
@@ -14,8 +13,7 @@ export interface LeaderboardUser {
   previousRank?: number;
   walletBalance?: number;
   totalSpent?: number;
-  spentAmount?: number;
-  amountSpent?: number;  // For backward compatibility
+  spentAmount?: number;  // For backward compatibility
   avatarUrl?: string;    // For backward compatibility
   isVIP?: boolean;
   isVerified?: boolean;

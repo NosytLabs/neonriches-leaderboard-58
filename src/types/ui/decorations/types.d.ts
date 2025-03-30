@@ -6,10 +6,6 @@ export type DecorationColor = 'gold' | 'silver' | 'crimson' | 'emerald' | 'royal
 export type IconSize = DecorationSize;
 export type MedievalIconColor = 'gold' | 'silver' | 'crimson' | 'emerald' | 'royal';
 
-// Alias for backward compatibility
-export type BaseDecorationProps = DecorationProps;
-export type MedievalIconSize = DecorationSize;
-
 export interface DecorationProps {
   size?: DecorationSize;
   color?: DecorationColor;

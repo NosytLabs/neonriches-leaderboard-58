@@ -23,19 +23,19 @@ const MedievalShowcase = () => {
           <CardContent>
             <div className="flex flex-wrap gap-6 justify-center">
               <div className="text-center">
-                <MedievalIcon name="Crown" size="lg" />
+                <MedievalIcon name="crown" size="lg" />
                 <p className="mt-2 text-sm text-white/70">Crown</p>
               </div>
               <div className="text-center">
-                <MedievalIcon name="Scroll" size="lg" />
+                <MedievalIcon name="scroll" size="lg" />
                 <p className="mt-2 text-sm text-white/70">Scroll</p>
               </div>
               <div className="text-center">
-                <MedievalIcon name="Seal" size="lg" />
+                <MedievalIcon name="shield" size="lg" />
                 <p className="mt-2 text-sm text-white/70">Seal</p>
               </div>
               <div className="text-center">
-                <MedievalIcon name="Coins" size="lg" />
+                <MedievalIcon name="coins" size="lg" />
                 <p className="mt-2 text-sm text-white/70">Coins</p>
               </div>
             </div>
@@ -44,10 +44,10 @@ const MedievalShowcase = () => {
             
             <h3 className="text-lg font-semibold mb-3">Icon Colors</h3>
             <div className="flex flex-wrap gap-4 justify-center">
-              <MedievalIcon name="Crown" color="default" />
-              <MedievalIcon name="Crown" color="gold" />
-              <MedievalIcon name="Crown" color="silver" />
-              <MedievalIcon name="Crown" color="crimson" />
+              <MedievalIcon name="crown" color="default" />
+              <MedievalIcon name="crown" color="gold" />
+              <MedievalIcon name="crown" color="silver" />
+              <MedievalIcon name="crown" color="crimson" />
             </div>
           </CardContent>
         </Card>

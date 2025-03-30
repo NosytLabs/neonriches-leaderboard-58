@@ -118,34 +118,34 @@ export const getShameActionDescription = (action: ShameAction): string => {
     dungeons: 'Send the user to the royal dungeons for 24 hours of reflection.',
     immune: 'Grant immunity from all mockery for 7 days.',
     crown: 'Place a fake crown on the user\'s head as a pretender to the throne.',
-    stocks: 'Place the user in the town square stocks for public viewing.',
-    dunce: 'Place a dunce cap on the user\'s head.',
-    jester: 'Dress the user as the court jester.',
-    fool: 'Declare the user the village fool.',
-    troll: 'Turn the user into a bridge troll.',
-    peasant: 'Reduce the user to a lowly peasant status.',
-    rat: 'Transform the user into a plague rat.',
-    ghost: 'Turn the user into a ghost haunting the halls.',
-    skeleton: 'Reduce the user to mere bones.',
+    stocks: 'Place the user in the stocks for public ridicule.',
+    dunce: 'Place a dunce cap on the user\'s head marking them as a simpleton.',
+    jester: 'Dress the user as the court jester for all to laugh at.',
+    fool: 'Proclaim the user as the village fool.',
+    troll: 'Label the user as a bridge troll, demanding payment to cross.',
+    peasant: 'Demote the user to a lowly peasant status.',
+    rat: 'Declare the user a plague rat, to be avoided.',
+    ghost: 'Turn the user into a ghost that others can see through.',
+    skeleton: 'Transform the user into a skeleton, all bones and no substance.',
     zombie: 'Turn the user into a mindless zombie.',
-    witch: 'Accuse the user of witchcraft.',
-    monster: 'Reveal the user\'s monstrous form.',
-    demon: 'Expose the user\'s demonic nature.',
-    dragon: 'Reveal the user to be a fearsome dragon.',
-    king: 'Expose this user as a false king.',
-    queen: 'Reveal this user as a pretender to the throne.',
-    knight: 'Show this user to be a rusty knight.',
-    bishop: 'Reveal this corrupt bishop.',
-    rook: 'Show this user to be a crumbling rook.',
-    pawn: 'Reduce the user to a mere pawn in the game.',
+    witch: 'Accuse the user of witchcraft, leading to suspicion.',
+    monster: 'Mark the user as a monster to be feared.',
+    demon: 'Expose the user as a demon in disguise.',
+    dragon: 'Identify the user as a dragon hoarding wealth.',
+    king: 'Crown the user as a false king with no real power.',
+    queen: 'Crown the user as a false queen with no real authority.',
+    knight: 'Dub the user a rusty knight, past their prime.',
+    bishop: 'Name the user a corrupt bishop, falsely blessing actions.',
+    rook: 'Declare the user a crumbling rook, only useful at the edges.',
+    pawn: 'Expose the user as a mere pawn in the game.',
     target: 'Make the user a target for practice.',
-    challenge: 'Challenge the user to a royal duel.'
+    challenge: 'Issue a royal challenge to the user\'s worthiness.'
   };
   
-  return descriptions[action] || 'Publicly shame this user in medieval fashion.';
+  return descriptions[action] || 'Subject the user to public mockery for their actions.';
 };
 
-// Get the tier of a shame action
+// Get the tier for a shame action
 export const getShameActionTier = (action: ShameAction): MockeryTier => {
   const tiers: Record<MockeryAction, MockeryTier> = {
     tomatoes: 'basic',
@@ -181,46 +181,15 @@ export const getShameActionTier = (action: ShameAction): MockeryTier => {
   return tiers[action] || 'basic';
 };
 
-// Check if the action has a weekly discount
-export const hasWeeklyDiscount = (action: ShameAction): boolean => {
-  // Here we're just simulating a discount - in a real system this might be
-  // based on the current date or a server response
-  return action === getWeeklyDiscountedAction();
-};
-
-// Get the action that is discounted this week
-export const getWeeklyDiscountedAction = (): ShameAction => {
-  // Again, this is a simulation - a real implementation would be more dynamic
-  // For now, let's assume "stocks" is always the discounted action
-  return 'stocks';
-};
-
-// Get the discounted price
-export const getDiscountedShamePrice = (action: ShameAction): number => {
-  const regularPrice = getShameActionPrice(action);
-  return regularPrice * 0.5; // 50% discount
-};
-
-// Get FireSale discount percentage
-export const getFireSaleDiscountPercentage = (): number => {
-  return 30; // 30% discount
-};
-
-// Check if it's FireSale month
+// Helper functions
 export const isFireSaleMonth = (): boolean => {
   const now = new Date();
-  return now.getMonth() === 10; // November is 10 (0-based)
+  const month = now.getMonth(); // 0-based (0 = January)
+  return month === 4 || month === 11; // May or December
 };
 
-export default {
-  getShameActionIcon,
-  getShameActionTitle,
-  getShameActionDescription,
-  getShameActionPrice,
-  getShameActionTier,
-  hasWeeklyDiscount,
-  getWeeklyDiscountedAction,
-  getDiscountedShamePrice,
-  isFireSaleMonth,
-  getFireSaleDiscountPercentage
+export const getFireSaleDiscountPercentage = (): number => {
+  const now = new Date();
+  const month = now.getMonth();
+  return month === 4 ? 15 : 25; // 15% in May, 25% in December
 };

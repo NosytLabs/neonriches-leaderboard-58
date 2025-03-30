@@ -1,5 +1,6 @@
 
-import { MedievalIconProps, MedievalIconName, MedievalIconColor, IconSize } from '@/types/ui/icon-types';
+import { IconSize, MedievalIconColor } from '@/types/ui/icon-types';
+import { MedievalIconProps, MedievalIconName } from '@/types/ui/icon-types';
 
-export type { MedievalIconProps, MedievalIconName, MedievalIconColor };
+export { MedievalIconProps, MedievalIconName, MedievalIconColor };
 export type { IconSize as MedievalIconSize };

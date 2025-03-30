@@ -18,7 +18,16 @@ export type MedievalIconName =
   | 'throne'
   | 'tower'
   | 'treasure-chest'
-  | 'coat-of-arms';
+  | 'coat-of-arms'
+  | 'medal'
+  | 'gem'
+  | 'heart'
+  | 'trophy'
+  | 'key'
+  | 'coins'
+  | 'wallet'
+  | 'seal'
+  | 'sparkles';
 
 export interface MedievalIconProps {
   name: MedievalIconName;
@@ -26,3 +35,5 @@ export interface MedievalIconProps {
   color?: IconColor;
   className?: string;
 }
+
+export type MedievalIconColor = 'gold' | 'silver' | 'crimson' | 'emerald' | 'royal';

@@ -1,5 +1,5 @@
 
-import { TeamColor } from './team';
+import { TeamColor } from './user';
 
 export type MockeryAction = 
   | 'tomatoes'
@@ -63,10 +63,13 @@ export interface MockedUser {
 }
 
 export interface ShameEffectOptions {
-  duration?: number;
-  intensity?: 'light' | 'medium' | 'heavy';
-  sound?: boolean;
   volume?: number;
+}
+
+export interface NotificationSoundOptions {
+  volume?: number;
+  loop?: boolean;
+  delay?: number;
 }
 
 export interface ShameEffect {

@@ -1,7 +1,6 @@
 
 import { useState, useCallback } from 'react';
-import { MockeryAction, ShameAction, MockeryTier } from '@/types/mockery';
-import { NotificationSoundOptions } from '@/types/sound-types';
+import { MockeryAction, MockeryTier, ShameAction, NotificationSoundOptions } from '@/types/mockery';
 
 // Define mockery action info
 export const mockeryActionsInfo: Record<MockeryAction, { 
@@ -170,4 +169,5 @@ export function useShameEffect() {
   };
 }
 
+export type { ShameAction };
 export default useShameEffect;

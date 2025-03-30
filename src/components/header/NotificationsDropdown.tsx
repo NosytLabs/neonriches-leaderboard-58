@@ -56,11 +56,11 @@ const NotificationsDropdown: React.FC = () => {
   const getNotificationIcon = (type: string) => {
     switch (type) {
       case 'social':
-        return <MedievalIcon name="heart" size="sm" color="crimson" />;
+        return <MedievalIcon name="flag" size="sm" color="crimson" />;
       case 'rank':
         return <MedievalIcon name="crown" size="sm" color="gold" />;
       case 'team':
-        return <MedievalIcon name="shield" size="sm" color="navy" />;
+        return <MedievalIcon name="shield" size="sm" color="royal" />;
       default:
         return <MedievalIcon name="scroll" size="sm" />;
     }

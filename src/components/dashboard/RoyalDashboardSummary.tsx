@@ -1,97 +1,96 @@
 
 import React from 'react';
-import { Card, CardContent } from '@/components/ui/card';
-import { Crown, Coins, Shield, Calendar } from 'lucide-react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { ArrowUpRight, ArrowDownRight, Users, CreditCard } from 'lucide-react';
+import { formatCurrency } from '@/utils/formatters';
 import MedievalIcon from '@/components/ui/medieval-icon';
-import { formatCurrency } from '@/lib/utils';
 
-interface RoyalDashboardSummaryProps {
-  username: string;
-  rank: number;
-  totalSpent: number;
-  tier: string;
-  team: string;
+interface StatCardProps {
+  title: string;
+  value: string | number;
+  description: string;
+  change?: number;
+  icon?: React.ReactNode;
+  changeType?: 'positive' | 'negative' | 'neutral';
 }
 
-const RoyalDashboardSummary: React.FC<RoyalDashboardSummaryProps> = ({ 
-  username, 
-  rank, 
-  totalSpent, 
-  tier, 
-  team 
+const StatCard: React.FC<StatCardProps> = ({
+  title,
+  value,
+  description,
+  change,
+  icon,
+  changeType = 'neutral'
 }) => {
+  const getChangeColor = () => {
+    if (changeType === 'positive') return 'text-emerald-500';
+    if (changeType === 'negative') return 'text-red-500';
+    return 'text-white/50';
+  };
+
+  const getChangeIcon = () => {
+    if (changeType === 'positive') return <ArrowUpRight className="h-4 w-4" />;
+    if (changeType === 'negative') return <ArrowDownRight className="h-4 w-4" />;
+    return null;
+  };
+
   return (
-    <Card className="bg-gradient-to-r from-black/40 to-black/60 border-royal-gold/30 overflow-hidden rounded-lg">
-      <CardContent className="p-0">
-        <div className="relative">
-          {/* Background patterns */}
-          <div 
-            className="absolute inset-0 opacity-5 mix-blend-overlay" 
-            style={{ 
-              backgroundImage: "url('/throne-assets/medieval-patterns.svg')",
-              backgroundSize: '150px',
-              backgroundRepeat: 'repeat'
-            }}
-          ></div>
-          
-          <div className="flex flex-col md:flex-row p-6">
-            <div className="mb-4 md:mb-0 md:mr-6 flex items-center">
-              <div className="w-16 h-16 rounded-full bg-gradient-to-br from-royal-gold/80 to-royal-gold/20 flex items-center justify-center">
-                <Crown className="h-8 w-8 text-black" />
-              </div>
-            </div>
-            
-            <div className="flex-1">
-              <h1 className="text-2xl font-bold font-medieval mb-1">
-                {username}'s Royal Court
-              </h1>
-              
-              <p className="text-white/70 mb-4">
-                Welcome back to your kingdom, noble spender. Review your royal status and recent activities.
-              </p>
-              
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-2">
-                <div className="flex items-center">
-                  <MedievalIcon name="crown" color="gold" size="md" className="mr-2" />
-                  <div>
-                    <div className="text-sm text-white/60">Rank</div>
-                    <div className="text-lg font-bold">#{rank}</div>
-                  </div>
-                </div>
-                
-                <div className="flex items-center">
-                  <MedievalIcon name="coins" color="gold" size="md" className="mr-2" />
-                  <div>
-                    <div className="text-sm text-white/60">Total Spent</div>
-                    <div className="text-lg font-bold">{formatCurrency(totalSpent)}</div>
-                  </div>
-                </div>
-                
-                <div className="flex items-center">
-                  <MedievalIcon name="seal" color="gold" size="md" className="mr-2" />
-                  <div>
-                    <div className="text-sm text-white/60">Nobility Tier</div>
-                    <div className="text-lg font-bold capitalize">{tier}</div>
-                  </div>
-                </div>
-                
-                <div className="flex items-center">
-                  <MedievalIcon name="shield" color={
-                    team === 'red' ? 'crimson' : 
-                    team === 'green' ? 'emerald' : 
-                    team === 'blue' ? 'navy' : 'gold'
-                  } size="md" className="mr-2" />
-                  <div>
-                    <div className="text-sm text-white/60">Royal House</div>
-                    <div className="text-lg font-bold capitalize">{team}</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+    <Card className="glass-morphism border-white/5">
+      <CardHeader className="flex flex-row items-center justify-between pb-2">
+        <CardTitle className="text-sm font-medium text-white/80">{title}</CardTitle>
+        <div className="h-8 w-8 bg-black/20 rounded-md flex items-center justify-center">
+          {icon}
         </div>
+      </CardHeader>
+      <CardContent>
+        <div className="text-2xl font-bold">{value}</div>
+        <p className="text-xs text-white/60 mt-1">{description}</p>
+        {change !== undefined && (
+          <div className={`${getChangeColor()} flex items-center mt-3 text-xs`}>
+            {getChangeIcon()}
+            <span className="ml-1">{Math.abs(change)}%</span>
+            <span className="ml-1">from last week</span>
+          </div>
+        )}
       </CardContent>
     </Card>
+  );
+};
+
+const RoyalDashboardSummary = () => {
+  return (
+    <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+      <StatCard
+        title="Royal Treasury"
+        value={formatCurrency(12345.67)}
+        description="Total funds in your royal account"
+        change={12}
+        changeType="positive"
+        icon={<MedievalIcon name="coins" size="sm" color="gold" />}
+      />
+      <StatCard
+        title="Rank"
+        value="#42"
+        description="Your current position in the realm"
+        change={3}
+        changeType="positive"
+        icon={<MedievalIcon name="crown" size="sm" color="royal" />}
+      />
+      <StatCard
+        title="Royal Decrees"
+        value="7"
+        description="Active royal certificates"
+        icon={<MedievalIcon name="scroll" size="sm" color="crimson" />}
+      />
+      <StatCard
+        title="Followers"
+        value="128"
+        description="Loyal subjects following you"
+        change={-2}
+        changeType="negative"
+        icon={<Users className="h-5 w-5 text-white/80" />}
+      />
+    </div>
   );
 };
 

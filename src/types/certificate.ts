@@ -1,5 +1,5 @@
 
-import { TeamColor } from './team';
+import { TeamColor } from './user';
 
 export type CertificateType = 
   | 'achievement'
@@ -35,6 +35,7 @@ export interface Certificate {
   shareUrl?: string;
   isMinted?: boolean;
   nftMintAddress?: string;
+  mintAddress?: string;
 }
 
 export interface CertificateTemplate {
