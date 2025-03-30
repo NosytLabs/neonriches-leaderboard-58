@@ -6,9 +6,12 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Shield, Crown, Gem } from 'lucide-react';
+import ProfileTierCard from '@/components/profile/ProfileTierCard';
+import { useNavigate } from 'react-router-dom';
 
 const Profile: React.FC = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   if (!user) {
     return (
@@ -19,6 +22,10 @@ const Profile: React.FC = () => {
       </Layout>
     );
   }
+
+  const handleUpgradeTier = () => {
+    navigate('/wallet');
+  };
 
   return (
     <Layout>
@@ -59,16 +66,10 @@ const Profile: React.FC = () => {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Card className="glass-morphism border-white/10">
-              <CardHeader>
-                <CardTitle>Profile Stats</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="mb-2">Total Spent: ${user.totalSpent || 0}</p>
-                <p className="mb-2">Wallet Balance: ${user.walletBalance || 0}</p>
-                <p>Current Tier: {user.tier || 'Basic'}</p>
-              </CardContent>
-            </Card>
+            <ProfileTierCard 
+              totalSpent={user.totalSpent || 0} 
+              onUpgrade={handleUpgradeTier}
+            />
             
             <Card className="glass-morphism border-white/10">
               <CardHeader>
