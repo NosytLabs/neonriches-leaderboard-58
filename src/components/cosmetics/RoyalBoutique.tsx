@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -31,7 +31,7 @@ const RoyalBoutique = () => {
       return;
     }
 
-    // Corrected to match expected parameter count (item.id, item.category, item.rarity)
+    // Corrected the parameter count and boolean parameter
     const success = await awardCosmetic(item.id, item.category, item.rarity);
 
     if (success) {

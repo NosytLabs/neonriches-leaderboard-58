@@ -22,7 +22,8 @@ const ImagesEditor: React.FC<ImagesEditorProps> = ({ images, onImagesChange }) =
       id: `image-${Date.now()}`,
       url: 'https://source.unsplash.com/random/300x300',
       isPrimary: images.length === 0,
-      caption: 'New Image'
+      caption: 'New Image',
+      type: 'profile' // Add required type property
     };
     
     onImagesChange([...images, newImage]);
@@ -117,7 +118,7 @@ const ImagesEditor: React.FC<ImagesEditorProps> = ({ images, onImagesChange }) =
                 <Button 
                   size="sm" 
                   variant="outline" 
-                  onClick={() => handleSetPrimary(image.id)}
+                  onClick={() => handleSetPrimary(String(image.id))}
                   className="text-xs"
                 >
                   Set as Primary
@@ -132,14 +133,14 @@ const ImagesEditor: React.FC<ImagesEditorProps> = ({ images, onImagesChange }) =
                 <Button 
                   size="icon" 
                   variant="outline" 
-                  onClick={() => handleEditCaption(image.id)}
+                  onClick={() => handleEditCaption(String(image.id))}
                 >
                   <Pencil className="h-4 w-4" />
                 </Button>
                 <Button 
                   size="icon" 
                   variant="outline" 
-                  onClick={() => handleRemoveImage(image.id)}
+                  onClick={() => handleRemoveImage(String(image.id))}
                 >
                   <Trash className="h-4 w-4" />
                 </Button>

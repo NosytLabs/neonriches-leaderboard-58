@@ -1,5 +1,5 @@
 
-import { MockeryAction, ShameAction } from '@/types/mockery';
+import { MockeryAction, MockeryTier } from '@/types/mockery';
 import { getMockeryCost } from '@/utils/mockery/mockery-costs';
 import { hasWeeklyDiscount, getWeeklyDiscountedAction, getDiscountedShamePrice } from '@/utils/mockery/shame-discount-utils';
 
@@ -116,3 +116,6 @@ export const getShameActionDescription = (action: ShameAction): string => {
 
   return descriptions[action] || 'Apply a mysterious effect to the user';
 };
+
+// Alias type for backward compatibility
+export type ShameAction = MockeryAction;

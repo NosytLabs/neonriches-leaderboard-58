@@ -33,6 +33,14 @@ export interface UseSoundOptions {
   [key: string]: any; // Allow string indexing for flexibility
 }
 
+export interface NotificationSoundOptions {
+  volume?: number;
+  loop?: boolean;
+  delay?: number;
+  interrupt?: boolean;
+  [key: string]: any; // Allow string indexing for flexibility
+}
+
 export interface AudioLoaderReturn {
   audio: Record<SoundType, HTMLAudioElement>;
   volume: number;

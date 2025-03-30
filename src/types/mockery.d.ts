@@ -1,5 +1,6 @@
 
-import { TeamColor } from './user';
+import { CosmeticRarity } from './cosmetics';
+import { NotificationSoundOptions } from './sound-types';
 
 export type MockeryAction = 
   | 'tomatoes'
@@ -11,7 +12,7 @@ export type MockeryAction =
   | 'stocks'
   | 'dunce'
   | 'jester'
-  | 'fool'
+  | 'fool' // Added missing action
   | 'troll'
   | 'peasant'
   | 'rat'
@@ -31,48 +32,47 @@ export type MockeryAction =
   | 'target'
   | 'challenge';
 
-export type ShameAction = MockeryAction;
+export type MockeryTier = 
+  | 'common'
+  | 'rare'
+  | 'epic'
+  | 'legendary'
+  | 'silver' // Added missing tier
+  | 'basic'
+  | 'premium'
+  | 'royal'
+  | 'elite';
 
-export type MockeryTier = 'basic' | 'premium' | 'royal' | 'legendary' | 'silver';
+export interface MockeryEffect {
+  type: MockeryAction;
+  targetId: string;
+  appliedBy: string;
+  expiry: number;
+  isActive: boolean;
+  tier: MockeryTier;
+}
 
 export interface MockeryEvent {
   id: string;
+  type: MockeryAction;
   targetId: string;
+  targetUsername?: string;
   appliedBy: string;
-  action: MockeryAction;
+  appliedByUsername?: string;
   timestamp: number;
   expiry: number;
   isActive: boolean;
-  targetName?: string;
+  tier: MockeryTier;
 }
 
 export interface MockedUser {
   id: string;
-  userId?: string;
   username: string;
-  displayName?: string;
   profileImage?: string;
-  mockedReason?: string;
-  mockedTimestamp: string;
-  mockedBy: string;
-  mockedTier?: string;
-  mockeryCount?: number;
-  lastMocked?: string;
-  team?: string;
-  tier?: string;
-}
-
-export interface ShameEffectOptions {
-  volume?: number;
-}
-
-export interface NotificationSoundOptions {
-  volume?: number;
-  loop?: boolean;
-  delay?: number;
-}
-
-export interface ShameEffect {
-  type: ShameAction;
-  options?: ShameEffectOptions;
+  rank?: number;
+  mockeryType?: MockeryAction;
+  expiry?: number;
+  mockedReason?: string; // Make this optional to resolve type conflicts
+  mockedBy?: string;
+  timestamp?: number;
 }
