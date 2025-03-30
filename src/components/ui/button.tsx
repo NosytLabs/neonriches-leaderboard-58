@@ -19,8 +19,8 @@ const buttonVariants = cva(
           "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
-        royalGold: "bg-royal-gold text-black hover:bg-royal-gold/90",
-        royal: "bg-royal-purple text-white hover:bg-royal-purple/90", // Added royal variant
+        royal: "bg-royal-purple text-white hover:bg-royal-purple/90",
+        success: "bg-green-600 text-white hover:bg-green-700",
       },
       size: {
         default: "h-10 px-4 py-2",

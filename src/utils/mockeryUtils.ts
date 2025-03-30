@@ -1,147 +1,201 @@
 
-import { Egg, Target, Crown, Sword, Bell, BellOff, Flame, Skull, Shield, Zap, Sparkles } from 'lucide-react';
-import { MockeryAction } from '@/types/mockery';
+import { MockeryAction, MockeryTier, MockeryEvent } from '@/types/mockery';
 
-// Mockery names for each action
-export const getMockeryName = (action: MockeryAction): string => {
-  const mockeryNames = {
-    tomatoes: "Royal Tomato Toss",
-    eggs: "Noble Egg Splatter",
-    putridEggs: "Putrid Egg Bombardment",
-    stocks: "Public Humiliation Stocks",
-    dunce: "Dunce Crown of Shame",
-    silence: "Royal Silence Decree",
-    courtJester: "Court Jester Demotion",
-    smokeBomb: "Smoke Bomb Vanishing",
-    protection: "Royal Protection Shield",
-    immune: "Noble Immunity",
-    glitterBomb: "Glitter Bomb",
-    target: "Royal Target",
-    challenge: "Noble Challenge",
-    jest: "Jester's Mockery",
-    crown: "Crown Usurpation",
-    defeat: "Noble Defeat"
+export const getMockeryActionIcon = (action: MockeryAction): string => {
+  const icons: Record<MockeryAction, string> = {
+    tomatoes: '🍅',
+    eggs: '🥚',
+    putridEggs: '🍳',
+    stocks: '🪵',
+    dunce: '🎭',
+    silence: '🤐',
+    courtJester: '🃏',
+    smokeBomb: '💨',
+    protection: '🛡️',
+    immune: '✨',
+    glitterBomb: '✨',
+    target: '🎯',
+    challenge: '⚔️',
+    jest: '🤹',
+    crown: '👑',
+    defeat: '☠️'
   };
-  
-  return mockeryNames[action] || "Unknown Mockery";
+
+  return icons[action] || '❓';
 };
 
-// Descriptions for each mockery action
-export const getMockeryDescription = (action: MockeryAction): string => {
-  const mockeryDescriptions = {
-    tomatoes: "Splatter this noble with virtual tomatoes, temporarily marking their profile with tomato stains.",
-    eggs: "Bombard with fresh eggs, leaving their profile sticky and messy for all to see.",
-    putridEggs: "Launch rotten eggs that create a lingering effect and stronger visual impact.",
-    stocks: "Place them in the village stocks for public ridicule, severely limiting their profile visibility.",
-    dunce: "Force them to wear a dunce hat on their profile, marking them as foolish.",
-    silence: "Temporarily remove their ability to use chat features or post comments.",
-    courtJester: "Demote them to jester status with a special marker on their profile.",
-    smokeBomb: "Temporarily obscure their profile with smoke effects, making information harder to read.",
-    protection: "Shield that prevents any mockery for a limited time.",
-    immune: "Special status showing they've paid for mockery immunity.",
-    glitterBomb: "Cover their profile in sparkly glitter that takes time to clean off.",
-    target: "Mark as a prime target for future mockery events.",
-    challenge: "Issue a formal spending challenge to another noble.",
-    jest: "Apply jester-themed visual effects to their profile.",
-    crown: "Temporarily steal their crown if they're in a top position.",
-    defeat: "Declare victory over a rival in spending challenges."
+export const getMockeryActionTitle = (action: MockeryAction): string => {
+  const titles: Record<MockeryAction, string> = {
+    tomatoes: 'Throw Tomatoes',
+    eggs: 'Throw Rotten Eggs',
+    putridEggs: 'Throw Putrid Eggs',
+    stocks: 'Place in Stocks',
+    dunce: 'Dunce Cap',
+    silence: 'Silence',
+    courtJester: 'Court Jester',
+    smokeBomb: 'Smoke Bomb',
+    protection: 'Protection',
+    immune: 'Immunity',
+    glitterBomb: 'Glitter Bomb',
+    target: 'Target',
+    challenge: 'Challenge',
+    jest: 'Jest',
+    crown: 'Crown',
+    defeat: 'Defeat'
   };
-  
-  return mockeryDescriptions[action] || "An undefined mockery action with mysterious effects.";
+
+  return titles[action] || 'Unknown Action';
 };
 
-// Cost for each mockery action
 export const getMockeryCost = (action: MockeryAction): number => {
-  const mockeryCosts = {
-    tomatoes: 10,
-    eggs: 15,
-    putridEggs: 25,
-    stocks: 50,
-    dunce: 35,
-    silence: 75,
-    courtJester: 40,
-    smokeBomb: 30,
-    protection: 50,
-    immune: 200,
-    glitterBomb: 20,
-    target: 15,
-    challenge: 25,
-    jest: 20,
-    crown: 100,
-    defeat: 50
+  const costs: Record<MockeryAction, number> = {
+    tomatoes: 0.25,
+    eggs: 0.50,
+    putridEggs: 0.75,
+    stocks: 1.00,
+    dunce: 0.50,
+    silence: 0.80,
+    courtJester: 1.20,
+    smokeBomb: 0.75,
+    protection: 2.00,
+    immune: 3.00,
+    glitterBomb: 1.50,
+    target: 0.50,
+    challenge: 1.00,
+    jest: 0.90,
+    crown: 2.50,
+    defeat: 3.00
   };
-  
-  return mockeryCosts[action] || 20;
+
+  return costs[action] || 0.25;
 };
 
-// Cooldown (in hours) for each mockery action
-export const getMockeryCooldown = (action: MockeryAction): number => {
-  const mockeryCooldowns = {
-    tomatoes: 1,
-    eggs: 1,
-    putridEggs: 2,
-    stocks: 6,
-    dunce: 4,
-    silence: 12,
-    courtJester: 4,
-    smokeBomb: 3,
-    protection: 0, // No cooldown on protection
-    immune: 0, // No cooldown on immunity
-    glitterBomb: 2,
-    target: 1,
-    challenge: 4,
-    jest: 2,
-    crown: 8,
-    defeat: 6
+export const getMockeryDuration = (action: MockeryAction): number => {
+  const durations: Record<MockeryAction, number> = {
+    tomatoes: 3600000, // 1 hour
+    eggs: 7200000,     // 2 hours
+    putridEggs: 10800000, // 3 hours
+    stocks: 21600000,  // 6 hours
+    dunce: 14400000,   // 4 hours
+    silence: 43200000, // 12 hours
+    courtJester: 86400000, // 24 hours
+    smokeBomb: 1800000, // 30 minutes
+    protection: 604800000, // 7 days
+    immune: 1209600000, // 14 days
+    glitterBomb: 10800000, // 3 hours
+    target: 86400000,  // 24 hours
+    challenge: 43200000, // 12 hours
+    jest: 21600000,    // 6 hours
+    crown: 86400000,   // 24 hours
+    defeat: 43200000   // 12 hours
   };
-  
-  return mockeryCooldowns[action] || 2;
+
+  return durations[action] || 3600000; // Default to 1 hour
 };
 
-// Get the icon component for a mockery action
-export const getMockeryActionIcon = (action: MockeryAction) => {
-  const icons = {
-    tomatoes: Target,
-    eggs: Egg,
-    putridEggs: Egg,
-    stocks: Skull,
-    dunce: Crown,
-    silence: BellOff,
-    courtJester: Sparkles,
-    smokeBomb: Flame,
-    protection: Shield,
-    immune: Shield,
-    glitterBomb: Sparkles,
-    target: Target,
-    challenge: Sword,
-    jest: Sparkles,
-    crown: Crown,
-    defeat: Sword
-  };
+export const getMockeryDescription = (action: MockeryAction, username?: string): string => {
+  const targetName = username ? username : 'your target';
   
-  return icons[action] || Bell;
+  const descriptions: Record<MockeryAction, string> = {
+    tomatoes: `Pelt ${targetName} with rotten tomatoes. A classic form of public ridicule.`,
+    eggs: `Hurl rotten eggs at ${targetName}. The visual stench will follow them for a day.`,
+    putridEggs: `Throw particularly foul eggs that leave a lasting smell on ${targetName}.`,
+    stocks: `Place ${targetName} in the public stocks. The ultimate medieval humiliation.`,
+    dunce: `Force ${targetName} to wear a dunce cap for all to see.`,
+    silence: `Mute ${targetName} from public discussion temporarily.`,
+    courtJester: `Turn ${targetName} into the court's fool for a day.`,
+    smokeBomb: `Drop a smoke bomb on ${targetName}, obscuring their presence.`,
+    protection: `Shield yourself from mockery for a period of time.`,
+    immune: `Gain complete immunity from all mockery for an extended period.`,
+    glitterBomb: `Cover ${targetName} in glitter that just won't come off.`,
+    target: `Mark ${targetName} as a primary target for mockery.`,
+    challenge: `Challenge ${targetName} to a duel of wits and spending.`,
+    jest: `Make a playful joke at ${targetName}'s expense.`,
+    crown: `Place a mocking crown on ${targetName}'s head.`,
+    defeat: `Declare a humorous defeat over ${targetName}.`
+  };
+
+  return descriptions[action] || `Apply this mysterious action to ${targetName}.`;
 };
 
-// Get the CSS class for active mockery
-export const getActiveMockeryClass = (action: MockeryAction): string => {
-  const classes = {
-    tomatoes: "mockery-tomatoes",
-    eggs: "mockery-eggs",
-    putridEggs: "mockery-putrid-eggs",
-    stocks: "mockery-stocks",
-    dunce: "mockery-dunce",
-    silence: "mockery-silence",
-    courtJester: "mockery-jester",
-    smokeBomb: "mockery-smoke",
-    protection: "mockery-protected",
-    immune: "mockery-immune",
-    glitterBomb: "mockery-glitter",
-    target: "mockery-target",
-    challenge: "mockery-challenge",
-    jest: "mockery-jest",
-    crown: "mockery-crown",
-    defeat: "mockery-defeat"
-  };
+export const getMockeryTier = (action: MockeryAction): MockeryTier => {
+  if (action === 'tomatoes' || action === 'eggs' || action === 'dunce') {
+    return 'basic';
+  } else if (action === 'putridEggs' || action === 'stocks' || action === 'silence' || action === 'smokeBomb') {
+    return 'premium';
+  } else {
+    return 'royal';
+  }
+};
+
+export const getMockeryActionIconColor = (action: MockeryAction): string => {
+  switch(action) {
+    case 'tomatoes':
+      return 'text-red-500';
+    case 'eggs':
+    case 'putridEggs':
+      return 'text-yellow-300';
+    case 'stocks':
+      return 'text-brown-500';
+    case 'dunce':
+      return 'text-gray-400';
+    case 'silence':
+      return 'text-blue-300';
+    case 'courtJester':
+    case 'jest':
+      return 'text-purple-500';
+    case 'smokeBomb':
+      return 'text-gray-700';
+    case 'protection':
+    case 'immune':
+      return 'text-green-300';
+    case 'glitterBomb':
+      return 'text-pink-300';
+    case 'target':
+      return 'text-red-600';
+    case 'challenge':
+      return 'text-orange-500';
+    case 'crown':
+      return 'text-royal-gold';
+    case 'defeat':
+      return 'text-gray-800';
+    default:
+      return 'text-white';
+  }
+};
+
+export const getActiveMockeryClass = (mockeryEvent?: MockeryEvent): string => {
+  if (!mockeryEvent) return '';
   
-  return classes[action] || "";
+  switch(mockeryEvent.action) {
+    case 'tomatoes':
+      return 'mockery-tomatoes';
+    case 'eggs':
+    case 'putridEggs':
+      return 'mockery-eggs';
+    case 'stocks':
+      return 'mockery-stocks';
+    case 'dunce':
+      return 'mockery-dunce';
+    case 'silence':
+      return 'mockery-silence';
+    case 'courtJester':
+      return 'mockery-jester';
+    case 'smokeBomb':
+      return 'mockery-smoke';
+    case 'glitterBomb':
+      return 'mockery-glitter';
+    case 'target':
+      return 'mockery-target';
+    case 'challenge':
+      return 'mockery-challenge';
+    case 'jest':
+      return 'mockery-jest';
+    case 'crown':
+      return 'mockery-crown';
+    case 'defeat':
+      return 'mockery-defeat';
+    default:
+      return '';
+  }
 };

@@ -19,9 +19,9 @@ const RoyalShowcase: React.FC<RoyalShowcaseProps> = ({ className = '' }) => {
     username: 'moneybags',
     email: 'money@example.com',
     rank: 1,
-    joinedAt: new Date().toISOString(),
+    joinedAt: new Date(),
     displayName: 'Money Bags',
-    gender: 'male',
+    gender: 'male' as any,
     profileImage: 'https://api.dicebear.com/6.x/personas/svg?seed=moneybags',
     amountSpent: 5000,
     totalSpent: 5000,
@@ -64,7 +64,7 @@ const RoyalShowcase: React.FC<RoyalShowcaseProps> = ({ className = '' }) => {
 
                 <div className="flex items-center mt-2">
                   <Badge variant="outline" className="bg-yellow-500/10 border-yellow-500/20 text-yellow-400">
-                    Rank #{topSpender.rank}
+                    <Crown size={14} className="mr-1" /> Rank #{topSpender.rank || 0}
                   </Badge>
                 </div>
 
