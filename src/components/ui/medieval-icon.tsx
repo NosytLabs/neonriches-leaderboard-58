@@ -17,7 +17,8 @@ const medievalIconMap: Record<string, string> = {
   "seal": "Seal",
   "medal": "Medal",
   "gem": "Gem",
-  "wallet": "Wallet"
+  "wallet": "Wallet",
+  "castle": "Castle"
 };
 
 // Size mapping to pixel values
@@ -83,3 +84,4 @@ const MedievalIcon: React.FC<IconProps> = ({
 };
 
 export default MedievalIcon;
+export type { MedievalIconName, MedievalIconColor, IconSize };

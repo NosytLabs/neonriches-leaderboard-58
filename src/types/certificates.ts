@@ -1,47 +1,67 @@
 
+import { UserProfile } from "./user";
+
 export type CertificateType = 
-  | 'nobility'
-  | 'rank'
-  | 'achievement'
+  | 'royal'
   | 'team'
-  | 'founder'
-  | 'royal';
-
-export type CertificateStatus = 
-  | 'draft'
-  | 'issued'
-  | 'minted'
-  | 'revoked'
-  | 'expired';
-
-export interface CertificateTemplate {
-  id: string;
-  name: string;
-  type: CertificateType;
-  bgImage: string;
-  description?: string;
-  previewUrl?: string;
-}
+  | 'achievement'
+  | 'milestone'
+  | 'rank'
+  | 'custom';
 
 export interface Certificate {
   id: string;
   userId: string;
   username: string;
   displayName?: string;
-  templateId: string;
+  profileImage?: string;
   type: CertificateType;
-  status: CertificateStatus;
   title: string;
   description: string;
-  issueDate: string;
-  expiryDate?: string;
-  imageUrl: string;
-  signature?: string;
-  achievements?: string[];
+  createdAt: string;
+  rank?: number;
   team?: string;
-  createdAt?: string;
-  isMinted?: boolean;
-  mintedAt?: string;
-  mintAddress?: string;
+  amountSpent?: number;
+  signature?: string;
   shareUrl?: string;
+  mintAddress?: string;
+  isMinted: boolean;
+  mintedAt?: string;
+  templateId?: string;
+  properties?: Record<string, any>;
+}
+
+export interface CertificateTemplate {
+  id: string;
+  name: string;
+  type: CertificateType;
+  team?: string;
+  backgroundImage?: string;
+  borderImage?: string;
+  sealImage?: string;
+  colorScheme: Record<string, string>;
+  minRank?: number;
+  maxRank?: number;
+  templateHtml?: string;
+}
+
+export interface CertificateMetadata {
+  name: string;
+  description: string;
+  image: string;
+  attributes: {
+    trait_type: string;
+    value: string | number;
+  }[];
+  properties: {
+    files: {
+      uri: string;
+      type: string;
+    }[];
+    category: string;
+    creators: {
+      address: string;
+      share: number;
+    }[];
+  };
 }

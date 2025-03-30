@@ -1,15 +1,32 @@
 
 export type MockeryAction = 
   | 'tomatoes' 
+  | 'eggs'
   | 'putridEggs' 
   | 'stocks' 
   | 'dunce' 
   | 'silence' 
   | 'courtJester'
   | 'smokeBomb'
-  | 'protection';
+  | 'protection'
+  | 'immune'
+  | 'jester'
+  | 'glitterBomb'
+  | 'royalPie'
+  | 'jokeCrown'
+  | 'memeFrame'
+  | 'roast'
+  | 'ridicule'
+  | 'humiliate'
+  | 'expose'
+  | 'mock'
+  | 'shame'
+  | 'taunt'
+  | 'guillotine'
+  | 'dungeons'
+  | 'removal';
 
-export type MockeryTier = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
+export type MockeryTier = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary' | 'premium';
 
 export interface MockeryEvent {
   id: string;
@@ -31,7 +48,7 @@ export interface MockUser {
   tier?: string;
   team?: 'red' | 'green' | 'blue' | null;
   rank?: number;
-  lastMocked: Date;
+  lastMocked: string;
   mockeryCount: number;
 }
 
@@ -42,4 +59,23 @@ export type ShameAction =
   | 'dunce' 
   | 'silence' 
   | 'courtJester'
-  | 'smokeBomb';
+  | 'smokeBomb'
+  | 'eggs'
+  | 'shame'
+  | 'ridicule'
+  | 'jester';
+
+export interface MockeryEffectData {
+  username: string;
+  action: MockeryAction;
+  tier?: string;
+  duration?: number;
+}
+
+export interface UserMockeryStatus {
+  isProtected: boolean;
+  protectionEndsAt?: string;
+  activeEffects: MockeryEvent[];
+}
+
+export type ExtendedMockeryAction = MockeryAction;

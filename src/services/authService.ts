@@ -47,3 +47,30 @@ export const verifyMfaCode = async (code: string): Promise<boolean> => {
   console.log('MFA verification attempted with code:', code);
   return Promise.resolve(true);
 };
+
+/**
+ * Login with email and password
+ */
+export const loginWithCredentials = async (email: string, password: string): Promise<{success: boolean, user?: UserProfile}> => {
+  // Mock implementation
+  console.log('Login attempted with:', email);
+  
+  // Return mock success
+  return {
+    success: true,
+    user: {
+      id: '1',
+      username: 'user1',
+      displayName: 'Test User',
+      email,
+      joinedAt: new Date().toISOString(),
+      walletBalance: 500,
+      amountSpent: 1000,
+      totalSpent: 1000,
+      rank: 42,
+      previousRank: 45,
+      team: 'blue',
+      tier: 'silver'
+    }
+  };
+};

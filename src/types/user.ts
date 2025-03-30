@@ -22,7 +22,9 @@ export type UserGender =
   | 'other'
   | 'king'
   | 'queen'
-  | 'jester';
+  | 'jester'
+  | 'noble'
+  | 'prefer-not-to-say';
 
 export type Team = 
   | 'red'
@@ -32,10 +34,19 @@ export type Team =
   | 'Green'
   | 'Blue';
 
+export type UserTeam = Team;
+export type TeamType = Team;
+
 export type UserRole = 
   | 'user'
   | 'admin'
   | 'moderator';
+
+export type UserStatus = 
+  | 'active'
+  | 'inactive'
+  | 'banned'
+  | 'suspended';
 
 export interface SocialLink {
   id?: string;
@@ -43,6 +54,11 @@ export interface SocialLink {
   url: string;
   username?: string;
   clicks?: number;
+}
+
+export interface ProfileLink extends SocialLink {
+  displayOrder?: number;
+  isVisible?: boolean;
 }
 
 export interface ProfileImage {
@@ -86,6 +102,8 @@ export interface UserSettings {
   allowProfileLinks?: boolean;
   showEmailOnProfile?: boolean;
   showTeam?: boolean;
+  rankChangeAlerts?: boolean;
+  publicProfile?: boolean;
 }
 
 export interface UserSubscription {
@@ -97,6 +115,7 @@ export interface UserSubscription {
   autoRenew: boolean;
   plan?: string;
   status?: string;
+  currentPeriodEnd?: string;
 }
 
 export interface ProfileBoost {
@@ -113,6 +132,7 @@ export interface ProfileBoost {
   description?: string;
   level?: number;
   strength?: number;
+  appliedBy?: string;
 }
 
 export interface Achievement {

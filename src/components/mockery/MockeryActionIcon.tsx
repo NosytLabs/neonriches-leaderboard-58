@@ -17,16 +17,16 @@ const MockeryActionIcon: React.FC<MockeryActionIconProps> = ({
   const getIcon = (actionType: MockeryAction): string => {
     switch (actionType) {
       case 'tomatoes': return '🍅';
-      case 'eggs': return '🥚';
       case 'putridEggs': return '🥚';
+      case 'eggs': return '🥚';
       case 'stocks': return '🪵';
       case 'silence': return '🔇';
       case 'courtJester': return '🃏';
+      case 'smokeBomb': return '💨';
       case 'protection': return '🛡️';
       case 'immune': return '👑';
       case 'jester': return '🎭';
       case 'dunce': return '📝';
-      case 'smokeBomb': return '💨';
       case 'glitterBomb': return '✨';
       case 'royalPie': return '🥧';
       case 'jokeCrown': return '👑';
