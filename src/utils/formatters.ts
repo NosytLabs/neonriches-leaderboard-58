@@ -97,17 +97,17 @@ export const formatHistoricalValue = (amount: number, year: number): string => {
 export const getAchievementIcon = (type: string): React.ReactNode => {
   switch (type.toLowerCase()) {
     case 'rank':
-      return <Trophy className="h-5 w-5" />;
+      return React.createElement(Trophy, { className: "h-5 w-5" });
     case 'streak':
-      return <Zap className="h-5 w-5" />;
+      return React.createElement(Zap, { className: "h-5 w-5" });
     case 'milestone':
-      return <Award className="h-5 w-5" />;
+      return React.createElement(Award, { className: "h-5 w-5" });
     case 'royal':
-      return <Crown className="h-5 w-5" />;
+      return React.createElement(Crown, { className: "h-5 w-5" });
     case 'deposit':
-      return <DollarSign className="h-5 w-5" />;
+      return React.createElement(DollarSign, { className: "h-5 w-5" });
     default:
-      return <Star className="h-5 w-5" />;
+      return React.createElement(Star, { className: "h-5 w-5" });
   }
 };
 
