@@ -21,42 +21,42 @@ export const useToast = () => {
   
   // Create wrapped functions for common toast types
   const toast = (props: ExtendedToastProps) => {
-    return originalToast(props as Toast);
+    return originalToast(props as any);
   };
 
   const success = (props: Omit<ExtendedToastProps, 'variant'>) => {
     return originalToast({
       ...props,
       variant: 'success',
-    } as Toast);
+    } as any);
   };
 
   const error = (props: Omit<ExtendedToastProps, 'variant'>) => {
     return originalToast({
       ...props,
       variant: 'destructive',
-    } as Toast);
+    } as any);
   };
 
   const warning = (props: Omit<ExtendedToastProps, 'variant'>) => {
     return originalToast({
       ...props,
       variant: 'outline',
-    } as Toast);
+    } as any);
   };
 
   const info = (props: Omit<ExtendedToastProps, 'variant'>) => {
     return originalToast({
       ...props,
       variant: 'secondary',
-    } as Toast);
+    } as any);
   };
 
   const royal = (props: Omit<ExtendedToastProps, 'variant'>) => {
     return originalToast({
       ...props,
       variant: 'royal',
-    } as Toast);
+    } as any);
   };
 
   return {

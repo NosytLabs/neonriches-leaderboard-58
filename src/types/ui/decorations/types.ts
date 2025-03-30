@@ -1,4 +1,3 @@
-
 import { ReactNode } from 'react';
 
 export type MedievalIconName = 
@@ -26,11 +25,13 @@ export type MedievalIconColor =
   | 'gold'
   | 'silver'
   | 'bronze'
+  | 'royal'
   | 'crimson'
   | 'navy'
-  | 'royal'
+  | 'platinum'
   | 'purple'
-  | 'platinum';
+  | 'emerald'
+  | 'azure';
 
 export type MedievalDecorationType = 
   | 'border'
@@ -53,11 +54,13 @@ export type MedievalDecorationColor =
   | 'gold'
   | 'silver'
   | 'bronze'
+  | 'royal'
   | 'crimson'
   | 'navy'
-  | 'royal'
+  | 'platinum'
   | 'purple'
-  | 'platinum';
+  | 'emerald'
+  | 'azure';
 
 export interface BaseDecorationProps {
   size?: MedievalDecorationSize;

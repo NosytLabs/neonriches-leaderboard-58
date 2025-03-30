@@ -1,44 +1,34 @@
 
-export type BoostEffectType = 
-  | 'spotlight'
-  | 'glow'
-  | 'shimmer'
-  | 'particles'
-  | 'pulse'
-  | 'shadow'
-  | 'aura'
-  | 'sparkle'
-  | 'flame'
-  | 'rainbow';
-
+// Define boost types
 export interface BoostEffect {
   id: string;
   name: string;
   description: string;
-  effectType: BoostEffectType;
   duration: number;
-  strength: number;
-  price?: number;
-  tier?: string;
-  durationDays?: number;
+  icon: string;
+  type: BoostEffectType;
+  tier: string;
+  strength?: number;
+  cost?: number;
   cssClass?: string;
-  type?: 'effect' | 'appearance' | 'visibility' | 'animation'; // Add type property
-  cost?: number; // Add cost property
-  minTier?: string; // Add minTier property
-  allowStacking?: boolean; // Add allowStacking property
-  rarity?: string; // Add rarity property
+  durationDays?: number;
+  previewImage?: string;
 }
+
+export type BoostEffectType = 'profile' | 'marketing' | 'visibility' | 'engagement' | 'conversion' | 'reach';
 
 export interface ProfileBoost {
   id: string;
-  startDate: string;
-  endDate: string;
+  userId: string;
+  effectId: string;
+  duration: number;
   level: number;
-  effectId?: string | BoostEffectType;
-  startTime?: string;
-  endTime?: number;
+  isActive: boolean;
+  startDate?: string;
+  endDate?: string;
   type?: string;
   strength?: number;
   appliedBy?: string;
-  boostId?: string;
+  startTime?: string;
+  endTime?: string;
 }

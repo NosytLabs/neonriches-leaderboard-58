@@ -3,23 +3,9 @@ import { useState, useEffect, useCallback } from 'react';
 import { AnimationConfig } from '@/types/animations';
 import { useSound } from '@/hooks/sounds/use-sound';
 import { SoundType } from '@/types/sound';
-import { MockeryAction } from '@/types/mockery';
+import { ShameAction } from '@/types/mockery';
 
-// Define ShameAction type if not exported from mockery
-type ShameAction = 
-  | 'tomatoes'
-  | 'eggs'
-  | 'putridEggs'
-  | 'stocks'
-  | 'dunce'
-  | 'silence'
-  | 'courtJester'
-  | 'shame'
-  | 'protection'
-  | 'taunt'
-  | 'ridicule'
-  | 'jester';
-
+// Define a state type for our shame effect
 type ShameEffectState = {
   isActive: boolean;
   action: ShameAction | null;
@@ -27,11 +13,14 @@ type ShameEffectState = {
   source: string | null;
   animationConfig: AnimationConfig | null;
   duration: number;
+  shameCooldown: Record<number, number>;
+  shameEffects: Record<number, ShameAction>;
+  shameCount: Record<number, number>;
 };
 
 const DEFAULT_DURATION = 8000; // 8 seconds
 
-export const useShameEffect = () => {
+export const useShameEffect = (options = { cooldownPeriod: 24 * 60 * 60 * 1000 }) => {
   const [state, setState] = useState<ShameEffectState>({
     isActive: false,
     action: null,
@@ -39,6 +28,9 @@ export const useShameEffect = () => {
     source: null,
     animationConfig: null,
     duration: DEFAULT_DURATION,
+    shameCooldown: {},
+    shameEffects: {},
+    shameCount: {}
   });
   
   const { playSound, stopSound } = useSound();
@@ -74,15 +66,54 @@ export const useShameEffect = () => {
   const showShameEffect = useCallback((action: ShameAction, target: string, source: string, customDuration?: number) => {
     const config = getAnimationConfig(action);
     
-    setState({
+    setState(prev => ({
+      ...prev,
       isActive: true,
       action,
       target,
       source,
       animationConfig: config,
       duration: customDuration || DEFAULT_DURATION,
-    });
+    }));
   }, []);
+  
+  // Handle shame action (with cooldown)
+  const handleShame = useCallback((userId: number, username: string, action: ShameAction, amount: number) => {
+    setState(prev => {
+      // Check if user is on cooldown
+      const now = Date.now();
+      if (prev.shameCooldown[userId] && prev.shameCooldown[userId] > now) {
+        return prev; // Still on cooldown
+      }
+      
+      // Apply the effect and set cooldown
+      return {
+        ...prev,
+        shameCooldown: {
+          ...prev.shameCooldown,
+          [userId]: now + options.cooldownPeriod
+        },
+        shameEffects: {
+          ...prev.shameEffects,
+          [userId]: action
+        },
+        shameCount: {
+          ...prev.shameCount,
+          [userId]: (prev.shameCount[userId] || 0) + 1
+        }
+      };
+    });
+    
+    // Show the effect visually
+    showShameEffect(action, username, 'You');
+    
+    return true;
+  }, [options.cooldownPeriod, showShameEffect]);
+  
+  // Get shame count for a user
+  const getShameCount = useCallback((userId: number) => {
+    return state.shameCount[userId] || 0;
+  }, [state.shameCount]);
   
   // Clear shame effect
   const clearShameEffect = useCallback(() => {
@@ -90,9 +121,7 @@ export const useShameEffect = () => {
       ...prev,
       isActive: false,
     }));
-    
-    stopSound();
-  }, [stopSound]);
+  }, []);
   
   // Get animation config based on action
   const getAnimationConfig = useCallback((action: ShameAction): AnimationConfig => {
@@ -144,25 +173,25 @@ export const useShameEffect = () => {
   const playShameEffectSound = (action: ShameAction) => {
     switch (action) {
       case 'tomatoes':
-        playSound('splat');
+        playSound('shame');
         break;
       case 'eggs':
-        playSound('crack');
+        playSound('notification');
         break;
       case 'putridEggs':
-        playSound('stink');
+        playSound('error');
         break;
       case 'stocks':
-        playSound('lock');
+        playSound('notification');
         break;
       case 'dunce':
-        playSound('trumpet');
+        playSound('trumpets');
         break;
       case 'shame':
         playSound('shame');
         break;
       case 'jester':
-        playSound('jingle');
+        playSound('notification');
         break;
       default:
         playSound('notification');
@@ -173,6 +202,8 @@ export const useShameEffect = () => {
     ...state,
     showShameEffect,
     clearShameEffect,
+    handleShame,
+    getShameCount
   };
 };
 

@@ -85,7 +85,8 @@ interface ForumComment {
   flags: number;
 }
 
-const mockUser: UserProfile = {
+// Create simplified mock data for testing
+const mockUser: Partial<UserProfile> = {
   id: 'user-1',
   username: 'RoyalKnight',
   displayName: 'Sir Reginald',
@@ -98,10 +99,8 @@ const mockUser: UserProfile = {
   walletBalance: 500,
   amountSpent: 2500,
   totalSpent: 2500,
-  spentAmount: 2500,
   followers: 120,
   following: 85,
-  lastActive: new Date().toISOString(),
   gender: 'male',
   profileViews: 520,
   profileClicks: 75,
@@ -115,21 +114,44 @@ const mockUser: UserProfile = {
     backgrounds: ['castle-bg', 'forest-bg'],
     effects: ['sparkles', 'fireflies'],
     badges: ['vip-badge', 'loyal-badge'],
-    themes: ['royal-theme', 'classic-theme'],
   },
   spendStreak: 22,
   subscription: {
-    plan: 'Royal',
+    id: 'sub-123',
+    tier: 'royal',
+    startDate: new Date().toISOString(),
+    endDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
     status: 'active',
-    currentPeriodEnd: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
     cancelAtPeriodEnd: false,
+    features: ['all-features'],
   },
   socialLinks: [
-    { platform: 'twitter', url: 'https://twitter.com/RoyalKnight', username: 'RoyalKnight' },
-    { platform: 'instagram', url: 'https://instagram.com/RoyalKnight', username: 'RoyalKnight' },
+    { 
+      id: '1',
+      platform: 'twitter',
+      url: 'https://twitter.com/RoyalKnight',
+      username: 'RoyalKnight',
+      isVerified: false,
+      isPublic: true
+    },
+    { 
+      id: '2',
+      platform: 'instagram',
+      url: 'https://instagram.com/RoyalKnight',
+      username: 'RoyalKnight',
+      isVerified: false,
+      isPublic: true
+    }
   ],
   profileBoosts: [
-    { id: 'boost-1', startDate: new Date().toISOString(), endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(), type: 'profile', level: 3, strength: 1, appliedBy: 'system' },
+    { 
+      id: 'boost-1',
+      userId: 'user-1',
+      effectId: 'profile-boost',
+      duration: 7 * 24 * 60 * 60 * 1000,
+      level: 3,
+      isActive: true
+    }
   ],
 };
 

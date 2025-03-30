@@ -1,7 +1,6 @@
-
 export type TeamType = 'red' | 'green' | 'blue' | 'none';
 export type UserTier = 'free' | 'basic' | 'bronze' | 'silver' | 'gold' | 'platinum' | 'diamond' | 'royal' | 'founder' | 'pro' | 'premium' | 'whale' | 'shark' | 'dolphin' | 'standard';
-export type GenderType = 'king' | 'queen' | 'none' | 'noble' | 'other' | 'male' | 'female' | 'jester';
+export type GenderType = 'male' | 'female' | 'nonbinary' | 'other' | 'king' | 'queen' | 'noble' | 'jester' | 'none';
 
 export interface UserCosmetics {
   badges: string[];
@@ -33,9 +32,7 @@ export interface SocialLink {
 
 export interface ProfileImage {
   url: string;
-  alt?: string;
-  type: string;
-  id?: string;
+  id: string;
   caption?: string;
   isPrimary?: boolean;
 }
@@ -175,11 +172,13 @@ export interface User extends UserProfile {
 export type UserRole = 'user' | 'admin' | 'moderator' | 'developer' | 'founder';
 export type UserStatus = 'active' | 'inactive' | 'suspended' | 'banned';
 export type UserTeam = 'red' | 'green' | 'blue' | 'Red' | 'Green' | 'Blue' | 'none';
-export type Team = UserTeam;
+export type TeamType = UserTeam;
 export type UserGender = GenderType;
 
 export interface ProfileLink {
-  id: string | number;
+  id: string;
   url: string;
-  label: string;
+  title: string;
+  description?: string;
+  clicks: number;
 }

@@ -40,7 +40,6 @@ export type MockeryTier =
   | 'gold'
   | 'platinum'
   | 'diamond'
-  | 'royal'
   | 'common'
   | 'uncommon'
   | 'rare'
@@ -105,3 +104,4 @@ export interface UserMockeryStatus {
 }
 
 export type MockUser = MockedUser;
+
