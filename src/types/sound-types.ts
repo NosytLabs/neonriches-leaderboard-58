@@ -1,29 +1,26 @@
 
-// Consolidated sound types used throughout the application
-
-// Define the types of sounds available in the application
-export type SoundType = 
-  | 'hover' 
-  | 'click' 
-  | 'success' 
-  | 'error' 
-  | 'notification' 
-  | 'purchase' 
-  | 'levelUp' 
-  | 'achievement' 
+export type SoundType =
+  | 'hover'
+  | 'click'
+  | 'success'
+  | 'error'
+  | 'notification'
+  | 'purchase'
+  | 'levelUp'
+  | 'achievement'
   | 'reward'
   | 'coinDrop'
   | 'royalAnnouncement'
   | 'shame'
   | 'swordClash'
   | 'trumpets'
+  | 'trumpet'
   | 'scroll'
   | 'potion'
   | 'chatMessage'
   | 'unlock'
   | 'win'
   | 'message'
-  | 'trumpet'
   | 'coin'
   | 'boost'
   | 'advertisement'
@@ -34,27 +31,14 @@ export type SoundType =
   | 'pageChange'
   | 'medallion'
   | 'noblesLaugh'
-  | 'inkScribble';
+  | 'inkScribble'
+  | 'smoke';
 
-// Audio loader return type
-export interface AudioLoaderReturn {
-  loading?: boolean;
-  loaded?: boolean;
-  error?: Error | null;
-  sounds?: Record<string, HTMLAudioElement>;
-  audioElements?: Record<string, HTMLAudioElement>;
-  loadedSounds?: string[];
-  play: (soundType: SoundType, volumeMultiplier?: number) => void;
-}
-
-// Sound hook options
 export interface UseSoundOptions {
   baseVolume?: number;
   disableCache?: boolean;
-  volume?: number;
 }
 
-// Sound hook return type
 export interface UseSoundReturn {
   play: (soundType: SoundType, volumeMultiplier?: number) => void;
   playSuccess: (volumeMultiplier?: number) => void;
@@ -66,12 +50,27 @@ export interface UseSoundReturn {
   error: Error | null;
 }
 
-// Premium sound pack details
+export interface CacheOptions {
+  maxAge?: number;
+  staleWhileRevalidate?: number;
+}
+
 export interface PremiumSoundPackDetails {
   id: string;
   name: string;
   description: string;
   price: number;
-  previewUrl: string;
-  includes: SoundType[];
+  previewUrl?: string;
+  previewSound?: SoundType;
+  sounds?: SoundType[];
+  includes: string[];
+  features?: string[];
+  isPurchased?: boolean;
+}
+
+export interface AudioLoaderReturn {
+  load: (soundType: SoundType) => Promise<HTMLAudioElement>;
+  isLoaded: (soundType: SoundType) => boolean;
+  getVolume: (soundType: SoundType) => number;
+  setVolume: (soundType: SoundType, volume: number) => void;
 }

@@ -22,13 +22,13 @@ const soundFiles: Record<SoundType, string> = {
   shame: 'royal/shame.mp3',
   swordClash: 'royal/sword-clash.mp3',
   trumpets: 'royal/trumpets.mp3',
+  trumpet: 'royal/trumpet.mp3',
   scroll: 'ui/scroll.mp3',
   potion: 'items/potion.mp3',
   chatMessage: 'ui/chat-message.mp3',
   unlock: 'ui/unlock.mp3',
   win: 'achievements/win.mp3',
   message: 'ui/message.mp3',
-  trumpet: 'royal/trumpet.mp3',
   coin: 'transactions/coin.mp3',
   boost: 'items/boost.mp3',
   advertisement: 'marketing/advertisement.mp3',
@@ -39,7 +39,8 @@ const soundFiles: Record<SoundType, string> = {
   pageChange: 'ui/page-change.mp3',
   medallion: 'achievements/medallion.mp3',
   noblesLaugh: 'royal/nobles-laugh.mp3',
-  inkScribble: 'ui/ink-scribble.mp3'
+  inkScribble: 'ui/ink-scribble.mp3',
+  smoke: 'effects/smoke.mp3'
 };
 
 // Volume levels for different sound types
@@ -58,13 +59,13 @@ const volumeLevels: Record<SoundType, number> = {
   shame: 0.7,
   swordClash: 0.7,
   trumpets: 0.8,
+  trumpet: 0.7,
   scroll: 0.4,
   potion: 0.5,
   chatMessage: 0.5,
   unlock: 0.6,
   win: 0.7,
   message: 0.5,
-  trumpet: 0.7,
   coin: 0.6,
   boost: 0.6,
   advertisement: 0.6,
@@ -75,7 +76,8 @@ const volumeLevels: Record<SoundType, number> = {
   pageChange: 0.4,
   medallion: 0.7,
   noblesLaugh: 0.6,
-  inkScribble: 0.5
+  inkScribble: 0.5,
+  smoke: 0.6
 };
 
 // Cache audio elements to avoid recreating them
@@ -173,6 +175,7 @@ export const useSound = (options: UseSoundOptions = {}): UseSoundReturn => {
   
   return {
     play,
+    playSound: play,
     playSuccess,
     playError,
     playNotification,

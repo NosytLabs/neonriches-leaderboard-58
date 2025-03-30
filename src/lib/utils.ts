@@ -2,54 +2,20 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
-/**
- * Combines class names using clsx and tailwind-merge
- */
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-/**
- * Capitalizes the first letter of a string
- */
-export function capitalizeFirstLetter(string: string) {
-  return string.charAt(0).toUpperCase() + string.slice(1);
+export function formatNumber(value: number, options: Intl.NumberFormatOptions = {}): string {
+  return new Intl.NumberFormat('en-US', options).format(value);
 }
 
-/**
- * Debounce function to limit how often a function can be called
- */
-export function debounce<T extends (...args: any[]) => any>(
-  callback: T,
-  wait: number
-): (...args: Parameters<T>) => void {
-  let timeoutId: ReturnType<typeof setTimeout> | null = null;
-  
-  return (...args: Parameters<T>) => {
-    if (timeoutId) {
-      clearTimeout(timeoutId);
-    }
-    
-    timeoutId = setTimeout(() => {
-      callback(...args);
-    }, wait);
-  };
+export function formatDate(date: Date | string, options: Intl.DateTimeFormatOptions = {}): string {
+  const dateObject = typeof date === 'string' ? new Date(date) : date;
+  return new Intl.DateTimeFormat('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    ...options
+  }).format(dateObject);
 }
-
-/**
- * Generate a random string of characters
- */
-export function generateRandomId(length: number = 8): string {
-  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  let result = '';
-  
-  for (let i = 0; i < length; i++) {
-    result += characters.charAt(Math.floor(Math.random() * characters.length));
-  }
-  
-  return result;
-}
-
-// Export formatters to avoid circular dependencies
-import { formatCurrency } from '@/utils/formatters';
-export { formatCurrency };

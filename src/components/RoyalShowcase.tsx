@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Crown, DollarSign, TrendingUp, Users } from 'lucide-react';
 import RoyalTrophyModel from './3d/RoyalTrophyModel';
-import { UserProfile } from '@/types/user';
+import { User } from '@/types/user';
 import { formatCurrency } from '@/utils/formatters';
 
 interface RoyalShowcaseProps {
@@ -14,14 +14,14 @@ interface RoyalShowcaseProps {
 
 const RoyalShowcase: React.FC<RoyalShowcaseProps> = ({ className = '' }) => {
   // Mock top spender data
-  const topSpender: UserProfile = {
+  const topSpender: User = {
     id: 'user-1',
     username: 'moneybags',
     email: 'money@example.com',
     rank: 1,
     joinedAt: new Date().toISOString(),
     displayName: 'Money Bags',
-    gender: 'male', // Changed from 'king' to 'male'
+    gender: 'male',
     profileImage: 'https://api.dicebear.com/6.x/personas/svg?seed=moneybags',
     amountSpent: 5000,
     totalSpent: 5000,
@@ -29,8 +29,8 @@ const RoyalShowcase: React.FC<RoyalShowcaseProps> = ({ className = '' }) => {
     tier: 'royal',
     team: 'red',
     walletBalance: 10000,
-    // Adding spendStreak property
-    spendStreak: 30
+    spendStreak: 30,
+    followers: 150
   };
 
   return (

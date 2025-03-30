@@ -12,7 +12,8 @@ export type ShameAction =
   | 'jester' 
   | 'ridicule' 
   | 'shame' 
-  | 'smokeBomb';
+  | 'smokeBomb'
+  | 'glitterBomb';
 
 export type MockeryAction = ShameAction;
 export type MockeryTier = 'basic' | 'premium' | 'royal';
@@ -31,8 +32,9 @@ export const getShameActionPrice = (action: ShameAction): number => {
     case 'ridicule': return 15;
     case 'shame': return 75;
     case 'smokeBomb': return 75;
+    case 'glitterBomb': return 50;
     default: return 10;
-  }
+  };
 };
 
 // Discounted shame actions (for weekly specials)
@@ -68,6 +70,7 @@ export const getShameActionIcon = (action: ShameAction) => {
     case 'ridicule': return 'Target';
     case 'shame': return 'Target';
     case 'smokeBomb': return 'Cloud';
+    case 'glitterBomb': return 'Sparkles';
     default: return 'Target';
   }
 };
@@ -86,6 +89,7 @@ export const getShameActionTitle = (action: ShameAction): string => {
     case 'ridicule': return 'Public Ridicule';
     case 'shame': return 'Public Shaming';
     case 'smokeBomb': return 'Royal Smoke Bomb';
+    case 'glitterBomb': return 'Glitter Bomb';
     default: return 'Unknown Action';
   }
 };
@@ -104,6 +108,7 @@ export const getShameActionDescription = (action: ShameAction): string => {
     case 'ridicule': return 'Subject the user to public ridicule on their profile.';
     case 'shame': return 'Shame the user publicly on their profile and leaderboard.';
     case 'smokeBomb': return 'Completely obscure the user\'s profile with dramatic smoke for 8 hours.';
+    case 'glitterBomb': return 'Cover the user\'s profile with sparkling glitter for 24 hours.';
     default: return 'No description available';
   }
 };
@@ -141,6 +146,7 @@ export const getActionSoundType = (action: ShameAction): SoundType => {
     case 'ridicule': return 'noblesLaugh';
     case 'shame': return 'shame';
     case 'smokeBomb': return 'smoke';
+    case 'glitterBomb': return 'notification';
     default: return 'shame';
   }
 };
@@ -150,7 +156,7 @@ export const convertMockeryToShameAction = (action: MockeryAction): ShameAction 
   // Only convert if the action exists in ShameAction type
   const shameActions: ShameAction[] = [
     'tomatoes', 'eggs', 'putridEggs', 'stocks', 'silence', 
-    'courtJester', 'dunce', 'jester', 'ridicule', 'shame', 'smokeBomb'
+    'courtJester', 'dunce', 'jester', 'ridicule', 'shame', 'smokeBomb', 'glitterBomb'
   ];
   
   return shameActions.includes(action as any) ? action as ShameAction : undefined;

@@ -29,7 +29,8 @@ export type MedievalIconColor =
   | 'crimson'
   | 'navy'
   | 'royal'
-  | 'purple';
+  | 'purple'
+  | 'platinum';
 
 export type MedievalDecorationType = 
   | 'border'
@@ -55,7 +56,8 @@ export type MedievalDecorationColor =
   | 'crimson'
   | 'navy'
   | 'royal'
-  | 'purple';
+  | 'purple'
+  | 'platinum';
 
 export interface BaseDecorationProps {
   size?: MedievalDecorationSize;
@@ -78,11 +80,11 @@ export type RoyalDividerVariant =
 
 export interface RoyalDividerProps {
   variant?: RoyalDividerVariant;
-  color?: 'default' | 'royal' | 'crimson' | 'gold' | 'purple';
+  color?: 'default' | 'royal' | 'crimson' | 'gold' | 'purple' | 'silver';
   width?: 'full' | 'auto';
   className?: string;
   align?: 'left' | 'center' | 'right';
   glow?: boolean;
   animated?: boolean;
+  label?: string;
 }
-

@@ -8,18 +8,29 @@ export type UserTier =
   | 'founder' 
   | 'whale' 
   | 'shark' 
-  | 'dolphin';
+  | 'dolphin'
+  | 'gold'
+  | 'silver'
+  | 'bronze'
+  | 'platinum'
+  | 'diamond';
 
 export type UserGender = 
   | 'male'
   | 'female'
   | 'non-binary'
-  | 'other';
+  | 'other'
+  | 'king'
+  | 'queen'
+  | 'jester';
 
 export type Team = 
   | 'red'
   | 'green'
-  | 'blue';
+  | 'blue'
+  | 'Red'
+  | 'Green'
+  | 'Blue';
 
 export type UserRole = 
   | 'user'
@@ -27,12 +38,15 @@ export type UserRole =
   | 'moderator';
 
 export interface SocialLink {
+  id?: string;
   platform: string;
   url: string;
   username?: string;
+  clicks?: number;
 }
 
 export interface ProfileImage {
+  id?: string;
   url: string;
   isPrimary: boolean;
   isVerified: boolean;
@@ -50,12 +64,14 @@ export interface UserCosmetics {
   colors: string[];
   backgrounds: string[];
   themes?: string[];
+  foundersPass?: boolean;
   activeBorder?: string;
   activeColor?: string;
   activeFont?: string;
   activeEmoji?: string;
   activeTheme?: string;
   activeBadge?: string;
+  activeTitle?: string;
 }
 
 export interface UserSettings {
@@ -68,6 +84,8 @@ export interface UserSettings {
   showSpending?: boolean;
   profileVisibility?: 'public' | 'private' | 'friends';
   allowProfileLinks?: boolean;
+  showEmailOnProfile?: boolean;
+  showTeam?: boolean;
 }
 
 export interface UserSubscription {
@@ -78,6 +96,7 @@ export interface UserSubscription {
   isActive: boolean;
   autoRenew: boolean;
   plan?: string;
+  status?: string;
 }
 
 export interface ProfileBoost {
@@ -93,6 +112,7 @@ export interface ProfileBoost {
   endTime?: string;
   description?: string;
   level?: number;
+  strength?: number;
 }
 
 export interface Achievement {
@@ -141,6 +161,15 @@ export interface User {
   spentAmount?: number;
   createdAt?: string;
   updatedAt?: string;
+  spendStreak?: number;
+  followers?: number;
+  following?: number;
+  lastMocked?: string;
+  mockeryCount?: number;
+  profileViews?: number;
+  profileClicks?: number;
+  certificateNFT?: any;
+  purchasedFeatures?: string[];
 }
 
 export interface UserProfile extends User {
@@ -148,4 +177,5 @@ export interface UserProfile extends User {
   referredBy?: string;
   referralCount?: number;
   certificates?: any[];
+  activeTitle?: string;
 }
