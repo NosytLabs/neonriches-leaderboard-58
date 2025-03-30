@@ -1,92 +1,120 @@
+import { CertificateTemplate, CertificateType, CertificateStyle, CertificateTeam } from '@/types/certificate';
+import { UserProfile } from '@/types/user';
 
-import { CertificateTemplate, CertificateTemplateFactory, CertificateTeam, CertificateType, CertificateStyle } from '@/types/certificates';
-import { UserProfile, TeamType } from '@/types/user';
-import { getTeamName } from '@/utils/teamUtils';
-
-export class DefaultCertificateTemplateFactory implements CertificateTemplateFactory {
+class DefaultCertificateTemplateFactory {
   async getTemplatesForUser(user: UserProfile): Promise<CertificateTemplate[]> {
-    // Team-specific templates
-    const teamTemplates = user.team ? this.getTeamTemplates(user) : [];
-    
-    // Rank-based templates
-    const rankTemplates = user.rank && user.rank <= 10 ? this.getEliteRankTemplates() : [];
-    
-    // Founder-only templates
-    const founderTemplates = user.cosmetics?.foundersPass ? this.getFounderTemplates() : [];
-    
-    // Default template that everyone can access
-    const defaultTemplates = this.getDefaultTemplates();
-    
-    return [...teamTemplates, ...rankTemplates, ...founderTemplates, ...defaultTemplates];
+    // Mock templates - replace with actual data fetching logic
+    const templates = [
+      {
+        id: 'rank-template-1',
+        name: 'Rank Certificate - Bronze',
+        type: 'rank' as CertificateType,
+        style: 'classic' as CertificateStyle,
+        team: 'neutral' as CertificateTeam,
+        previewUrl: '/images/certificates/rank-bronze-preview.jpg',
+        imageUrl: '/images/certificates/rank-bronze.jpg',
+        description: 'A certificate celebrating your rank achievement',
+        availableForTier: ['basic', 'premium', 'pro']
+      },
+      {
+        id: 'rank-template-2',
+        name: 'Rank Certificate - Silver',
+        type: 'rank' as CertificateType,
+        style: 'royal' as CertificateStyle,
+        team: 'neutral' as CertificateTeam,
+        previewUrl: '/images/certificates/rank-silver-preview.jpg',
+        imageUrl: '/images/certificates/rank-silver.jpg',
+        description: 'A higher-level certificate for significant rank achievement',
+        availableForRank: [50, 100, 150, 200]
+      },
+      {
+        id: 'founder-certificate',
+        name: 'Founder Certificate',
+        type: 'founder' as CertificateType,
+        style: 'royal' as CertificateStyle,
+        team: 'gold' as CertificateTeam,
+        previewUrl: '/images/certificates/founder-preview.jpg',
+        imageUrl: '/images/certificates/founder.jpg',
+        description: 'An exclusive certificate for founding members',
+        requiresFounder: true
+      },
+      {
+        id: 'event-certificate',
+        name: 'Event Participation',
+        type: 'event' as CertificateType,
+        style: 'modern' as CertificateStyle,
+        team: 'blue' as CertificateTeam,
+        previewUrl: '/images/certificates/event-preview.jpg',
+        imageUrl: '/images/certificates/event.jpg',
+        description: 'A certificate for participating in special events',
+        availableForTier: ['basic', 'premium', 'pro', 'royal']
+      }
+    ];
+
+    return templates;
   }
 
-  async createCertificateFromTemplate(templateId: string, userId: string): Promise<Certificate> {
-    // This would fetch the template and create a certificate instance
-    // Mock implementation for now
+  createTemplate(templateData: Partial<CertificateTemplate>): CertificateTemplate {
+    // Basic implementation - replace with actual creation logic
+    const newTemplate: CertificateTemplate = {
+      id: templateData.id || 'temp-' + Math.random().toString(36).substring(7),
+      name: templateData.name || 'New Template',
+      type: templateData.type || 'rank',
+      style: templateData.style || 'classic',
+      team: templateData.team || 'neutral',
+      previewUrl: templateData.previewUrl || '/images/certificates/default-preview.jpg',
+      imageUrl: templateData.imageUrl || '/images/certificates/default.jpg',
+      description: templateData.description || 'A new certificate template'
+    };
+    return newTemplate;
+  }
+
+  getTemplateById(id: string): CertificateTemplate | null {
+    // Mock implementation - replace with actual data fetching
     return {
-      id: `cert-${Date.now()}`,
-      userId,
-      type: 'nobility',
-      style: 'royal',
-      team: 'none',
-      title: 'Certificate of Digital Nobility',
-      description: 'This certifies that the bearer has attained the rank of nobility through financial contributions.',
-      isMinted: false,
-      createdAt: new Date().toISOString()
+      id: 'rank-template-1',
+      name: 'Rank Certificate - Bronze',
+      type: 'rank',
+      style: 'classic',
+      team: 'neutral',
+      previewUrl: '/images/certificates/rank-bronze-preview.jpg',
+      imageUrl: '/images/certificates/rank-bronze.jpg',
+      description: 'A certificate celebrating your rank achievement',
+      availableForTier: ['basic', 'premium', 'pro']
     };
   }
 
-  private getTeamTemplates(user: UserProfile): CertificateTemplate[] {
-    if (!user.team) return [];
-    
-    return [{
-      id: `${user.team}-nobility`,
-      name: `${getTeamName(user.team)} Nobility Certificate`,
-      style: 'royal' as CertificateStyle,
-      team: user.team as CertificateTeam,
-      previewUrl: `/images/certificates/${user.team}-certificate.png`,
-      description: `The official certificate of nobility for members of the ${getTeamName(user.team)}.`,
-      availableForTier: ['basic', 'premium', 'royal']
-    }];
+  getAllTemplates(): CertificateTemplate[] {
+    return [
+      {
+        id: 'rank-template-1',
+        name: 'Rank Certificate - Bronze',
+        type: 'rank',
+        style: 'classic',
+        team: 'neutral',
+        previewUrl: '/images/certificates/rank-bronze-preview.jpg',
+        imageUrl: '/images/certificates/rank-bronze.jpg',
+        description: 'A certificate celebrating your rank achievement',
+        availableForTier: ['basic', 'premium', 'pro']
+      }
+    ];
   }
 
-  private getEliteRankTemplates(): CertificateTemplate[] {
-    return [{
-      id: 'top-10-rank',
-      name: 'Elite Top 10 Certificate',
-      style: 'fantasy' as CertificateStyle,
-      team: 'none' as CertificateTeam,
-      previewUrl: '/images/certificates/top-rank-certificate.png',
-      description: 'An exclusive certificate reserved for the top 10 nobles of the realm.',
-      availableForRank: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-    }];
-  }
-
-  private getFounderTemplates(): CertificateTemplate[] {
-    return [{
-      id: 'founders-certificate',
-      name: 'Founder\'s Certificate',
-      style: 'minimalist' as CertificateStyle,
-      team: 'none' as CertificateTeam,
-      previewUrl: '/images/certificates/founder-certificate.png',
-      description: 'The exclusive certificate proving your founding status in the SpendThrone kingdom.',
-      requiresFounder: true
-    }];
-  }
-
-  private getDefaultTemplates(): CertificateTemplate[] {
-    return [{
-      id: 'default-certificate',
-      name: 'Standard Certificate of Status',
-      style: 'classic' as CertificateStyle,
-      team: 'none' as CertificateTeam,
-      previewUrl: '/images/certificates/default-certificate.png',
-      description: 'The standard certificate showing your status and rank in the SpendThrone realm.',
-      availableForTier: ['basic', 'premium', 'royal']
-    }];
+  getTemplatesByType(type: CertificateType): CertificateTemplate[] {
+    return [
+      {
+        id: 'rank-template-1',
+        name: 'Rank Certificate - Bronze',
+        type: 'rank',
+        style: 'classic',
+        team: 'neutral',
+        previewUrl: '/images/certificates/rank-bronze-preview.jpg',
+        imageUrl: '/images/certificates/rank-bronze.jpg',
+        description: 'A certificate celebrating your rank achievement',
+        availableForTier: ['basic', 'premium', 'pro']
+      }
+    ];
   }
 }
 
-export const createCertificateTemplateFactory = (): CertificateTemplateFactory => {
-  return new DefaultCertificateTemplateFactory();
-};
+export default DefaultCertificateTemplateFactory;

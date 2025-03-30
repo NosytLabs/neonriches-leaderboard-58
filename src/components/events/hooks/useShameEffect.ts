@@ -143,7 +143,7 @@ export function useShameEffect() {
     return shameCount[id] || 0;
   }, [shameCount]);
   
-  const handleShame = useCallback((userId: number, username: string, action: MockeryAction) => {
+  const handleShame = useCallback((userId: number, username: string, action: MockeryAction, amount: number) => {
     applyShameEffect(userId.toString(), action);
     return true;
   }, [applyShameEffect]);

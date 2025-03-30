@@ -30,6 +30,17 @@ export interface UseSoundOptions {
   loop?: boolean;
 }
 
+export interface AudioLoaderReturn {
+  audio: Record<SoundType, HTMLAudioElement>;
+  volume: number;
+  setVolume: (volume: number) => void;
+  isEnabled: boolean;
+  setEnabled: (enabled: boolean) => void;
+  isPremium: boolean;
+  setPremium: (premium: boolean) => void;
+  isLoaded: boolean;
+}
+
 export interface PremiumSoundPackDetails {
   id: string;
   name: string;

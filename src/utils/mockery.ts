@@ -1,46 +1,9 @@
 
-import { MockeryAction, MockeryTier } from '@/types/mockery';
-import { CosmeticRarity } from '@/types/cosmetics';
+import { MockeryAction, MockeryTier, CosmeticRarity } from '@/types/mockery';
 
-// Get mockery action icon
-export function getMockeryActionIcon(action: MockeryAction): string {
-  const icons: Record<MockeryAction, string> = {
-    tomatoes: '🍅',
-    eggs: '🥚',
-    shame: '🔔',
-    dungeons: '⛓️',
-    immune: '🛡️',
-    crown: '👑',
-    stocks: '🪵',
-    dunce: '🎭',
-    jester: '🃏',
-    fool: '😵',
-    troll: '👹',
-    peasant: '👨‍🌾',
-    rat: '🐀',
-    ghost: '👻',
-    skeleton: '💀',
-    zombie: '🧟',
-    witch: '🧙',
-    monster: '👾',
-    demon: '😈',
-    dragon: '🐉',
-    king: '🤴',
-    queen: '👸',
-    knight: '🐴',
-    bishop: '♗',
-    rook: '♖',
-    pawn: '♟️',
-    target: '🎯',
-    challenge: '⚔️'
-  };
-  
-  return icons[action] || '🎭';
-}
-
-// Get mockery action title
-export function getMockeryActionTitle(action: MockeryAction): string {
-  const titles: Record<MockeryAction, string> = {
+// Get the name of a mockery action
+export const getMockeryName = (action: MockeryAction): string => {
+  const names: Record<MockeryAction, string> = {
     tomatoes: 'Rotten Tomatoes',
     eggs: 'Rotten Eggs',
     shame: 'Bell of Shame',
@@ -48,37 +11,73 @@ export function getMockeryActionTitle(action: MockeryAction): string {
     immune: 'Royal Immunity',
     crown: 'Mock Crown',
     stocks: 'In Stocks',
-    dunce: 'Dunce',
-    jester: 'Jester',
-    fool: 'Fool',
-    troll: 'Troll',
-    peasant: 'Peasant',
-    rat: 'Rat',
-    ghost: 'Ghost',
-    skeleton: 'Skeleton',
-    zombie: 'Zombie',
-    witch: 'Witch',
-    monster: 'Monster',
-    demon: 'Demon',
-    dragon: 'Dragon',
-    king: 'King',
-    queen: 'Queen',
-    knight: 'Knight',
-    bishop: 'Bishop',
-    rook: 'Rook',
-    pawn: 'Pawn',
-    target: 'Target',
-    challenge: 'Challenge'
+    dunce: 'Dunce Cap',
+    jester: 'Court Jester',
+    fool: 'Village Fool',
+    troll: 'Bridge Troll',
+    peasant: 'Lowly Peasant',
+    rat: 'Plague Rat',
+    ghost: 'Haunting Ghost',
+    skeleton: 'Bare Bones',
+    zombie: 'Walking Dead',
+    witch: 'Witch Hunt',
+    monster: 'Hidden Monster',
+    demon: 'Inner Demon',
+    dragon: 'Fierce Dragon',
+    king: 'False King',
+    queen: 'False Queen',
+    knight: 'Rusty Knight',
+    bishop: 'Corrupt Bishop',
+    rook: 'Crumbling Rook',
+    pawn: 'Mere Pawn',
+    target: 'Practice Target',
+    challenge: 'Royal Challenge'
   };
   
-  return titles[action] || 'Public Mockery';
-}
+  return names[action] || 'Unknown Mockery';
+};
 
-// Get mockery action price
-export function getMockeryActionPrice(action: MockeryAction): number {
-  const prices: Record<MockeryAction, number> = {
+// Get the description of a mockery action
+export const getMockeryDescription = (action: MockeryAction): string => {
+  const descriptions: Record<MockeryAction, string> = {
+    tomatoes: 'Pelt the user with rotten tomatoes, a classic form of medieval public humiliation.',
+    eggs: 'Throw rotten eggs at the user, leaving a lingering stench of medieval disgrace.',
+    shame: 'Ring the bell of shame as they are paraded through the digital town square.',
+    dungeons: 'Send them to the royal dungeons for a time-out from society.',
+    immune: 'Grant royal immunity, protecting from all mockery for a time.',
+    crown: 'Place a mockery crown on their profile, marking them as a pretender to the throne.',
+    stocks: 'Place them in the stocks for all to see and ridicule.',
+    dunce: 'Brand them with the dunce cap of digital ignorance.',
+    jester: 'Force them to wear the motley garb of a court jester.',
+    fool: 'Proclaim them as the village fool for all to witness.',
+    troll: 'Transform them into a bridge troll, collecting tolls from passersby.',
+    peasant: 'Reduce them to lowly peasant status, toiling in digital fields.',
+    rat: 'Turn them into a plague rat, scurrying through the digital gutters.',
+    ghost: 'Make them a ghost, haunting the halls of the leaderboard.',
+    skeleton: 'Strip them to bare bones, a reminder of mortality.',
+    zombie: 'Turn them into a mindless husk, wandering the digital realm.',
+    witch: 'Mark them for a witch hunt, suspicion brewing among the townsfolk.',
+    monster: 'Reveal their monstrous form, hidden beneath a human guise.',
+    demon: 'Expose their demonic nature, corrupting all they touch.',
+    dragon: 'Show their true form as a fierce dragon, hoarding wealth.',
+    king: 'Crown them as a false king, their legitimacy always in question.',
+    queen: 'Adorn them as a false queen, their rule a mere charade.',
+    knight: 'Equip them as a rusty knight, their armor creaking and useless.',
+    bishop: 'Consecrate them as a corrupt bishop, their prayers falling on deaf ears.',
+    rook: 'Fortify them as a crumbling rook, their defenses in disrepair.',
+    pawn: 'Reduce them to a mere pawn, expendable in the greater game.',
+    target: 'Place them as a target for archery practice, arrows landing all around.',
+    challenge: 'Issue them a royal challenge, their honor now at stake.'
+  };
+  
+  return descriptions[action] || 'This mockery has no description';
+};
+
+// Get the cost of a mockery action
+export const getMockeryCost = (action: MockeryAction): number => {
+  const costs: Record<MockeryAction, number> = {
     tomatoes: 0.25,
-    eggs: 0.50,
+    eggs: 0.5,
     shame: 0.75,
     dungeons: 1.0,
     immune: 5.0,
@@ -107,11 +106,11 @@ export function getMockeryActionPrice(action: MockeryAction): number {
     challenge: 5.0
   };
   
-  return prices[action] || 0.5;
-}
+  return costs[action] || 1.0;
+};
 
-// Get mockery action tier
-export function getMockeryTier(action: MockeryAction): MockeryTier {
+// Get the tier of a mockery action
+export const getMockeryTier = (action: MockeryAction): MockeryTier => {
   const tiers: Record<MockeryAction, MockeryTier> = {
     tomatoes: 'basic',
     eggs: 'basic',
@@ -144,93 +143,73 @@ export function getMockeryTier(action: MockeryAction): MockeryTier {
   };
   
   return tiers[action] || 'basic';
-}
+};
 
-// Get mockery tier color
-export function getMockeryTierColorClass(tier: MockeryTier): string {
+// Get the color class for a mockery tier
+export const getMockeryTierColorClass = (tier: MockeryTier): string => {
   const colors: Record<MockeryTier, string> = {
     basic: 'text-gray-400',
-    premium: 'text-blue-400',
-    royal: 'text-royal-gold',
-    legendary: 'text-purple-400',
-    silver: 'text-gray-300',
-    bronze: 'text-amber-600',
-    common: 'text-gray-400',
-    uncommon: 'text-green-400',
-    rare: 'text-blue-400',
-    epic: 'text-purple-400'
+    premium: 'text-royal-gold',
+    royal: 'text-purple-500',
+    legendary: 'text-red-500',
+    silver: 'text-gray-300'
   };
   
   return colors[tier] || 'text-gray-400';
-}
+};
 
-// Get mockery name
-export function getMockeryName(action: MockeryAction): string {
-  return getMockeryActionTitle(action);
-}
-
-// Get mockery description
-export function getMockeryDescription(action: MockeryAction): string {
-  const descriptions: Record<MockeryAction, string> = {
-    tomatoes: 'Pelt the user with rotten tomatoes, a classic medieval public humiliation.',
-    eggs: 'Throw rotten eggs at the user, leaving a subtle eggy aroma to follow them around.',
-    shame: 'Ring the bell of shame as the user is paraded through town.',
-    dungeons: 'Send the user to the royal dungeons for 24 hours of reflection.',
-    immune: 'Grant immunity from all mockery for 7 days.',
-    crown: 'Place a fake crown on the user\'s head as a pretender to the throne.',
-    stocks: 'Place the user in the town square stocks for public viewing.',
-    dunce: 'Place a dunce cap on the user\'s head.',
-    jester: 'Dress the user as the court jester.',
-    fool: 'Declare the user the village fool.',
-    troll: 'Turn the user into a bridge troll.',
-    peasant: 'Reduce the user to a lowly peasant status.',
-    rat: 'Transform the user into a plague rat.',
-    ghost: 'Turn the user into a ghost haunting the halls.',
-    skeleton: 'Reduce the user to mere bones.',
-    zombie: 'Turn the user into a mindless zombie.',
-    witch: 'Accuse the user of witchcraft.',
-    monster: 'Reveal the user\'s monstrous form.',
-    demon: 'Expose the user\'s demonic nature.',
-    dragon: 'Reveal the user to be a fearsome dragon.',
-    king: 'Expose this user as a false king.',
-    queen: 'Reveal this user as a pretender to the throne.',
-    knight: 'Show this user to be a rusty knight.',
-    bishop: 'Reveal this corrupt bishop.',
-    rook: 'Show this user to be a crumbling rook.',
-    pawn: 'Reduce the user to a mere pawn in the game.',
-    target: 'Make the user a target for practice.',
-    challenge: 'Challenge the user to a royal duel.'
-  };
-  
-  return descriptions[action] || 'Publicly mock this user in medieval fashion.';
-}
-
-// Get mockery cost
-export function getMockeryCost(action: MockeryAction): number {
-  return getMockeryActionPrice(action);
-}
-
-// Get mockery tier to cosmetic rarity mapping
-export function getTierToRarityMapping(tier: MockeryTier): CosmeticRarity {
-  const rarityMap: Record<MockeryTier, CosmeticRarity> = {
+// Get the rarity for a mockery tier
+export const getMockeryTierRarity = (tier: MockeryTier): CosmeticRarity => {
+  const rarities: Record<MockeryTier, CosmeticRarity> = {
     basic: 'common',
     premium: 'uncommon',
     royal: 'rare',
     legendary: 'epic',
-    silver: 'common',
-    bronze: 'common',
-    common: 'common',
-    uncommon: 'uncommon',
-    rare: 'rare',
-    epic: 'epic'
+    silver: 'uncommon'
   };
   
-  return rarityMap[tier] || 'common';
-}
+  return rarities[tier] || 'common';
+};
 
-// Get CSS class for active mockery effect
-export function getActiveMockeryClass(action: MockeryAction): string {
-  const effectClasses: Record<MockeryAction, string> = {
+// Get the action icon for a mockery action
+export const getMockeryActionIcon = (action: MockeryAction): string => {
+  const icons: Record<MockeryAction, string> = {
+    tomatoes: '🍅',
+    eggs: '🥚',
+    shame: '🔔',
+    dungeons: '⛓️',
+    immune: '🛡️',
+    crown: '👑',
+    stocks: '🪵',
+    dunce: '🎭',
+    jester: '🃏',
+    fool: '😵',
+    troll: '👹',
+    peasant: '👨‍🌾',
+    rat: '🐀',
+    ghost: '👻',
+    skeleton: '💀',
+    zombie: '🧟',
+    witch: '🧙',
+    monster: '👾',
+    demon: '😈',
+    dragon: '🐉',
+    king: '🤴',
+    queen: '👸',
+    knight: '🐴',
+    bishop: '♗',
+    rook: '♖',
+    pawn: '♟️',
+    target: '🎯',
+    challenge: '⚔️'
+  };
+  
+  return icons[action] || '❓';
+};
+
+// Get the CSS class for active mockery
+export const getActiveMockeryClass = (action: MockeryAction): string => {
+  const classNames: Record<MockeryAction, string> = {
     tomatoes: 'mockery-tomatoes',
     eggs: 'mockery-eggs',
     shame: 'mockery-shame',
@@ -261,11 +240,10 @@ export function getActiveMockeryClass(action: MockeryAction): string {
     challenge: 'mockery-challenge'
   };
   
-  return effectClasses[action] || 'mockery-generic';
-}
-
-export {
-  getMockeryTier as getMockeryTier,
-  getMockeryTierColorClass as getMockeryTierColorClass,
-  getActiveMockeryClass as getActiveMockeryClass
+  return classNames[action] || '';
 };
+
+// Alias functions for backward compatibility
+export const getMockeryActionTitle = getMockeryName;
+export const getMockeryActionDescription = getMockeryDescription;
+export const getMockeryActionPrice = getMockeryCost;

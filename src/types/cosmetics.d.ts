@@ -28,7 +28,7 @@ export interface CosmeticItem {
   cssClass?: string;
   imageSrc?: string;
   image?: string;
-  cost?: number; // Adding cost as an optional property
+  cost?: number; // For backward compatibility
 }
 
 export interface UserCosmeticState {
@@ -75,3 +75,5 @@ export interface CosmeticPurchaseResult {
   message: string;
   item?: CosmeticItem;
 }
+
+export type UserCosmetics = UserCosmeticState;

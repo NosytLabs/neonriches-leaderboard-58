@@ -1,5 +1,5 @@
 
-export type CertificateType = 'rank' | 'achievement' | 'founder' | 'event';
+export type CertificateType = 'rank' | 'achievement' | 'founder' | 'event' | 'membership' | 'royal' | 'special' | 'milestone' | 'nobility';
 export type CertificateStyle = 'royal' | 'classic' | 'modern' | 'gothic';
 export type CertificateTeam = 'red' | 'blue' | 'green' | 'gold' | 'neutral';
 
@@ -8,6 +8,13 @@ export interface Certificate {
   userId: string;
   templateId: string;
   dateIssued: string;
+  title?: string;
+  description?: string;
+  style?: CertificateStyle;
+  team?: CertificateTeam;
+  signature?: string;
+  type?: CertificateType;
+  userDisplayName?: string;
   metadata?: {
     rank?: number;
     tier?: string;

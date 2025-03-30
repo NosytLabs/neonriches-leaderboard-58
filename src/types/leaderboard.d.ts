@@ -6,86 +6,56 @@ export interface LeaderboardUser {
   username: string;
   displayName?: string;
   profileImage?: string;
-  tier: UserTier;
+  tier?: UserTier;
   team?: TeamColor;
   rank: number;
   previousRank?: number;
   walletBalance?: number;
-  totalSpent: number;
+  totalSpent?: number;
   spentAmount?: number;
-  amountSpent?: number;
-  supporters?: number;
-  supporting?: number;
+  amountSpent?: number;  // For backward compatibility
+  avatarUrl?: string;    // For backward compatibility
   isVIP?: boolean;
-  isFounder?: boolean;
   isVerified?: boolean;
   isProtected?: boolean;
-  avatarUrl?: string;
+  isFounder?: boolean;
+  spendStreak?: number;
+  joinedAt?: string;
   lastActive?: string;
   createdAt?: string;
-  joinedAt?: string;
-  spendStreak?: number;
 }
 
-export interface LeaderboardFilter {
-  timeFrame?: 'allTime' | 'thisWeek' | 'thisMonth' | 'today';
-  team: TeamColor | 'all';
-  tier: UserTier | 'all';
-  count: number;
-  page: number;
-  sortBy?: 'rank' | 'username' | 'totalSpent' | 'team';
-  sortDirection?: 'asc' | 'desc';
-  timespan?: string;
-}
-
-export interface LeaderboardStats {
-  totalUsers: number;
-  totalSpent: number;
-  topSpender: {
-    username: string;
-    amount: number;
-  };
-  topTeam: {
-    name: string;
-    members: number;
-    contribution: number;
-  };
-  averageSpent: number;
-  medianRank: number;
+export interface LeaderboardEntry {
+  userId: string;
+  rank: number;
+  amount: number;
+  username: string;
+  timestamp?: string;
 }
 
 export interface OnChainLeaderboardEntry {
   pubkey: string;
-  userId: string;
   amount: number;
-  timestamp: number;
+  timestamp: string;
   username?: string;
-  publicKey?: string;
-  amountSpent?: number;
-  totalDeposited?: number;
-  rank?: number;
-  joinDate?: number;
 }
 
-export type SolanaTransaction = {
-  signature: string;
-  timestamp: number;
-  sender: string;
-  recipient: string;
-  amount: number;
-  type: 'deposit' | 'withdrawal' | 'transfer';
-  status: 'confirmed' | 'pending' | 'failed';
-  error?: string;
-};
+export interface LeaderboardFilter {
+  timespan?: string;
+  team?: string;
+  tier?: string;
+  timeFrame?: string;  // For backward compatibility
+  sortBy?: string;     // For backward compatibility
+  sortDirection?: 'asc' | 'desc'; // For backward compatibility
+}
 
-export interface EventDetails {
+export interface SolanaTransaction {
   id: string;
-  name: string;
-  description: string;
-  startDate: string;
-  endDate: string;
-  isActive: boolean;
+  timestamp: string | Date;
+  amount: number;
+  sender: string;
+  receiver: string;
+  transactionHash: string;
+  status: 'pending' | 'completed' | 'failed';
   type: string;
-  rewards: any[];
-  find?: (id: string) => EventDetails | undefined;
 }

@@ -201,6 +201,17 @@ export const getDiscountedShamePrice = (action: ShameAction): number => {
   return regularPrice * 0.5; // 50% discount
 };
 
+// Get FireSale discount percentage
+export const getFireSaleDiscountPercentage = (): number => {
+  return 30; // 30% discount
+};
+
+// Check if it's FireSale month
+export const isFireSaleMonth = (): boolean => {
+  const now = new Date();
+  return now.getMonth() === 10; // November is 10 (0-based)
+};
+
 export default {
   getShameActionIcon,
   getShameActionTitle,
@@ -209,5 +220,7 @@ export default {
   getShameActionTier,
   hasWeeklyDiscount,
   getWeeklyDiscountedAction,
-  getDiscountedShamePrice
+  getDiscountedShamePrice,
+  isFireSaleMonth,
+  getFireSaleDiscountPercentage
 };

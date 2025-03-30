@@ -6,11 +6,11 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Badge } from '@/components/ui/badge';
-import { TeamType, UserTier } from '@/types/user';
+import { TeamColor, UserTier } from '@/types/user';
 import { formatCurrency } from '@/utils/formatters';
 import { getTeamColor } from '@/utils/teamUtils';
 import { getTierBadge } from '@/utils/tierUtils';
-import { LeaderboardUser } from './LeaderboardUtils';
+import { LeaderboardUser } from '@/types/leaderboard';
 
 export interface LeaderboardItemProps {
   userData: LeaderboardUser;
@@ -43,15 +43,14 @@ const LeaderboardItem: React.FC<LeaderboardItemProps> = ({
     team,
     tier,
     totalSpent = 0,
-    amountSpent = 0,
     spentAmount = 0,
   } = userData;
   
-  // Use the profileImage if avatarUrl is not available
-  const avatarSrc = userData.avatarUrl || profileImage;
+  // Use the profileImage if available, fall back to avatarUrl
+  const avatarSrc = profileImage || userData.avatarUrl;
   
   const teamColor = getTeamColor(team);
-  const actualSpentAmount = totalSpent || amountSpent || spentAmount || 0;
+  const actualSpentAmount = totalSpent || spentAmount || 0;
   
   // Rank change display
   const rankChange = previousRank !== undefined ? previousRank - rank : undefined;

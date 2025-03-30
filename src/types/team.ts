@@ -1,6 +1,8 @@
 
 export type TeamColor = 'red' | 'blue' | 'green' | 'gold' | 'purple' | 'none' | 'neutral';
 
+export type TeamType = 'red' | 'blue' | 'green' | 'gold';
+
 export interface Team {
   id: string;
   name: string;

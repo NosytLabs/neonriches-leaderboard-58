@@ -2,7 +2,7 @@
 import React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { LeaderboardUser } from '@/types/leaderboard';
-import { UserProfile, TeamColor, UserTier } from '@/types/user';
+import { TeamColor, UserTier } from '@/types/user';
 import { formatCurrency } from '@/utils/formatters';
 
 // Mock data for leaderboard
@@ -18,7 +18,6 @@ export const mockLeaderboardData: LeaderboardUser[] = [
     previousRank: 1,
     walletBalance: 50000,
     totalSpent: 25000,
-    amountSpent: 25000,
     isVIP: true,
     isFounder: true,
     isVerified: true,
@@ -36,7 +35,6 @@ export const mockLeaderboardData: LeaderboardUser[] = [
     previousRank: 3,
     walletBalance: 30000,
     totalSpent: 20000,
-    amountSpent: 20000,
     isVIP: true,
     avatarUrl: '/images/avatars/user2.jpg'
   },
@@ -51,7 +49,6 @@ export const mockLeaderboardData: LeaderboardUser[] = [
     previousRank: 2,
     walletBalance: 15000,
     totalSpent: 15000,
-    amountSpent: 15000,
     isVIP: true,
     avatarUrl: '/images/avatars/user3.jpg'
   },
@@ -66,7 +63,6 @@ export const mockLeaderboardData: LeaderboardUser[] = [
     previousRank: 5,
     walletBalance: 10000,
     totalSpent: 10000,
-    amountSpent: 10000,
     avatarUrl: '/images/avatars/user4.jpg'
   },
   {
@@ -80,7 +76,6 @@ export const mockLeaderboardData: LeaderboardUser[] = [
     previousRank: 4,
     walletBalance: 8000,
     totalSpent: 8000,
-    amountSpent: 8000,
     avatarUrl: '/images/avatars/user5.jpg'
   }
 ];

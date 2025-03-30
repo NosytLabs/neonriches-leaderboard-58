@@ -8,6 +8,27 @@ const CertificatePage = () => {
   const [certificate, setCertificate] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   
+  const defaultSettings: UserSettings = {
+    theme: "dark",
+    notifications: true,
+    emailNotifications: true,
+    marketingEmails: false,
+    teamNotifications: true,
+    soundEffects: true,
+    profileVisibility: "public",
+    allowProfileLinks: true,
+    showEmailOnProfile: false,
+    rankChangeAlerts: true,
+    newFollowerAlerts: true,
+    showRank: true,
+    showTeam: true,
+    showSpending: true,
+    darkMode: true,
+    publicProfile: true,
+    allowMessages: true,
+    language: 'en'
+  };
+
   useEffect(() => {
     const fetchCertificate = async () => {
       if (id) {

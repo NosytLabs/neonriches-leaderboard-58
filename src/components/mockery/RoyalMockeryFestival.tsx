@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -143,13 +142,13 @@ const RoyalMockeryFestival = () => {
       mockedReason: `Subjected to ${user.tier || 'unknown'} mockery`,
       mockedTimestamp: user.lastMocked ? user.lastMocked : new Date().toISOString(),
       mockedBy: 'Unknown user',
-      mockedTier: user.tier || 'basic',
+      mockedTier: user.mockeryCount ? user.tier : 'basic',
       mockeryCount: user.mockeryCount || 1,
       lastMocked: user.lastMocked,
-      team: user.team
+      team: user.team,
+      tier: user.tier || 'basic'
     }));
   
-  // Adjust the type signature for getActiveMockery
   const getActiveMockeryWrapper = (username: string): MockeryAction => {
     const mockeryEvent = getActiveMockery(username);
     if (mockeryEvent && typeof mockeryEvent === 'object' && 'action' in mockeryEvent) {
