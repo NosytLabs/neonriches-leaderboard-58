@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { MockeryAction } from '@/types/mockery';
-import { getMockeryIcon } from '@/utils/mockery/mockery-icons';
+import { getMockeryIcon, getMockeryActionIconColor } from '@/utils/mockery/mockery-icons';
 import { cn } from '@/lib/utils';
 import { getMockeryCost, getMockeryTierColorClass } from '@/utils/mockeryUtils';
 
@@ -35,8 +35,6 @@ const MockeryCard: React.FC<MockeryCardProps> = ({
     }
   };
   
-  const MockeryIcon = getMockeryIcon(action);
-  
   return (
     <Card 
       className={cn(
@@ -51,7 +49,9 @@ const MockeryCard: React.FC<MockeryCardProps> = ({
       <CardHeader className="p-4 pb-2">
         <div className="flex items-center justify-between">
           <CardTitle className="text-base font-semibold flex items-center">
-            {MockeryIcon}
+            <span className={getMockeryActionIconColor(action)}>
+              {getMockeryIcon(action)}
+            </span>
             <span className="ml-2">{name}</span>
           </CardTitle>
           <Badge 

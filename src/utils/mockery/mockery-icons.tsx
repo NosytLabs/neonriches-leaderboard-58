@@ -1,15 +1,12 @@
 
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { Target, Shield, Bomb, Crown, AlertCircle, Feather, Skull, ThumbsDown } from 'lucide-react';
 import { MockeryAction } from '@/types/mockery';
-
-// Define the type for our icon components
-type IconComponent = React.ReactNode;
 
 /**
  * Get the appropriate icon for a mockery action
  */
-export const getMockeryIcon = (action: MockeryAction): IconComponent => {
+export const getMockeryIcon = (action: MockeryAction): ReactNode => {
   switch (action) {
     case 'tomatoes':
     case 'eggs':
@@ -89,7 +86,7 @@ export const getMockeryActionIconColor = (action: MockeryAction): string => {
   }
 };
 
-export const getMockeryActionIcon = (action: MockeryAction): React.ReactNode => {
+export const getMockeryActionIcon = (action: MockeryAction): ReactNode => {
   // Reusing the getMockeryIcon function for now, but can be extended
   return getMockeryIcon(action);
 };

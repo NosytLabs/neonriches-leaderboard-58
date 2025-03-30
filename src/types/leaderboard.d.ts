@@ -1,33 +1,24 @@
 
-import { UserTeam } from './user';
+import { TeamType, UserTier } from './user';
 
 export interface LeaderboardEntry {
-  id: string;
-  userId: string;
-  rank: number;
-  previousRank: number;
-  amountSpent: number;
-  timestamp: string;
-}
-
-export interface LeaderboardUser {
   id: string;
   username: string;
   displayName?: string;
   profileImage?: string;
-  totalSpent: number;
   rank: number;
-  team?: UserTeam;
-  tier?: string;
   previousRank?: number;
+  team?: TeamType;
+  tier?: UserTier;
+  totalSpent?: number;
+  amountSpent?: number;
+  spentAmount?: number;
+  isVerified?: boolean;
+  isProtected?: boolean;
+  avatarUrl?: string;
+  walletBalance?: number;
   joinedAt?: string;
-  joinDate?: string;
-  userId?: string;
-  spendStreak?: number; // Added for ShameModal
 }
 
-export interface LeaderboardSnapshot {
-  id: string;
-  createdAt: string;
-  entries: LeaderboardEntry[];
-}
+// Add LeaderboardUser as an alias for backward compatibility
+export type LeaderboardUser = LeaderboardEntry;

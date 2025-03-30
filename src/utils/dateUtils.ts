@@ -20,12 +20,58 @@ export const formatDateTime = (date: string | Date): string => {
 };
 
 /**
+ * Format time only
+ */
+export const formatTime = (date: string | Date): string => {
+  if (!date) return 'N/A';
+  const dateObj = typeof date === 'string' ? new Date(date) : date;
+  return format(dateObj, 'h:mm a');
+};
+
+/**
  * Format a date as a relative time (e.g. "2 days ago")
  */
 export const formatTimeAgo = (date: string | Date): string => {
   if (!date) return 'N/A';
   const dateObj = typeof date === 'string' ? new Date(date) : date;
   return formatDistanceToNow(dateObj, { addSuffix: true });
+};
+
+/**
+ * Format relative time between two dates
+ */
+export const formatRelativeTime = (start: Date | string, end: Date | string): string => {
+  const startDate = typeof start === 'string' ? new Date(start) : start;
+  const endDate = typeof end === 'string' ? new Date(end) : end;
+  
+  // Calculate time difference in milliseconds
+  const diff = endDate.getTime() - startDate.getTime();
+  
+  // Convert to days
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+  
+  if (days > 0) {
+    return `${days} day${days > 1 ? 's' : ''}`;
+  }
+  
+  // Convert to hours
+  const hours = Math.floor(diff / (1000 * 60 * 60));
+  
+  if (hours > 0) {
+    return `${hours} hour${hours > 1 ? 's' : ''}`;
+  }
+  
+  // Convert to minutes
+  const minutes = Math.floor(diff / (1000 * 60));
+  
+  if (minutes > 0) {
+    return `${minutes} minute${minutes > 1 ? 's' : ''}`;
+  }
+  
+  // Convert to seconds
+  const seconds = Math.floor(diff / 1000);
+  
+  return `${seconds} second${seconds !== 1 ? 's' : ''}`;
 };
 
 /**

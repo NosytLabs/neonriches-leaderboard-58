@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -22,22 +23,37 @@ interface ShameTargetUser {
 
 interface ShameModalProps {
   targetUser: ShameTargetUser;
+  selectedUser?: LeaderboardUser; // Add compatibility with LeaderboardUser
+  shameAmount: number;
   shameType: ShameAction;
+  onClose: () => void;
   onConfirm: (userId: string, type: ShameAction) => void;
-  onCancel: () => void;
   hasDiscount?: boolean;
 }
 
 const ShameModal: React.FC<ShameModalProps> = ({
   targetUser,
+  selectedUser, // Accept the new prop
+  shameAmount,
   shameType,
   onConfirm,
-  onCancel,
+  onClose,
   hasDiscount = false
 }) => {
-  const shameAmount = getShameActionPrice(shameType);
+  // If selectedUser is provided, use it instead of targetUser
+  const user = selectedUser ? {
+    userId: selectedUser.id,
+    username: selectedUser.username,
+    profileImage: selectedUser.profileImage,
+    totalSpent: selectedUser.totalSpent || selectedUser.amountSpent || 0,
+    rank: selectedUser.rank,
+    team: selectedUser.team as 'red' | 'green' | 'blue' | null,
+    tier: selectedUser.tier || 'basic',
+    spendStreak: 0
+  } : targetUser;
+
   const shameLabel = getShameActionTitle(shameType);
-  const shameDescription = getShameActionDescription(shameType, targetUser.username);
+  const shameDescription = getShameActionDescription(shameType, user.username);
   const finalPrice = hasDiscount ? shameAmount * 0.8 : shameAmount; // 20% discount if hasDiscount is true
   
   const getInitials = (name: string) => {
@@ -58,23 +74,23 @@ const ShameModal: React.FC<ShameModalProps> = ({
       
       <div className="flex items-center space-x-4 p-4 bg-white/5 rounded-md">
         <Avatar className="h-12 w-12 border-2 border-white/20">
-          {targetUser.profileImage ? (
-            <AvatarImage src={targetUser.profileImage} alt={targetUser.username} />
+          {user.profileImage ? (
+            <AvatarImage src={user.profileImage} alt={user.username} />
           ) : (
-            <AvatarFallback className={getTeamColor(targetUser.team)}>
-              {getInitials(targetUser.username)}
+            <AvatarFallback className={getTeamColor(user.team)}>
+              {getInitials(user.username)}
             </AvatarFallback>
           )}
         </Avatar>
         
         <div>
           <div className="flex items-center">
-            <span className="font-medium text-lg">{targetUser.username}</span>
-            {targetUser.rank <= 3 && (
+            <span className="font-medium text-lg">{user.username}</span>
+            {user.rank <= 3 && (
               <Crown className="ml-1 h-4 w-4 text-royal-gold" />
             )}
           </div>
-          <div className="text-white/60 text-sm">Rank #{targetUser.rank}</div>
+          <div className="text-white/60 text-sm">Rank #{user.rank}</div>
         </div>
       </div>
       
@@ -96,12 +112,12 @@ const ShameModal: React.FC<ShameModalProps> = ({
       </div>
       
       <DialogFooter className="sm:justify-between">
-        <Button variant="outline" onClick={onCancel} className="glass-morphism border-white/10">
+        <Button variant="outline" onClick={onClose} className="glass-morphism border-white/10">
           Cancel
         </Button>
         <RoyalButton 
           variant="royal" 
-          onClick={() => onConfirm(targetUser.userId, shameType)}
+          onClick={() => onConfirm(user.userId, shameType)}
           icon={<ArrowRight className="h-4 w-4" />}
         >
           Confirm Shame (${finalPrice.toFixed(2)})
