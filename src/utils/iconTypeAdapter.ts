@@ -1,54 +1,75 @@
 
-import type { 
-  MedievalIconName as TypesMedievalIconName,
-  MedievalIconSize as TypesMedievalIconSize,
-  MedievalIconColor as TypesMedievalIconColor
-} from '@/types/ui/decorations/types';
+import { MedievalIconName, MedievalIconColor, MedievalIconSize } from '@/components/ui/medieval-icon';
 
-import type {
-  MedievalIconName as ComponentMedievalIconName,
-  MedievalIconSize as ComponentMedievalIconSize,
-  MedievalIconColor as ComponentMedievalIconColor  
-} from '@/components/ui/medieval-icon';
-
-// Function to adapt types/ui/decorations/types to components/ui/medieval-icon
-export function adaptIconName(name: TypesMedievalIconName): ComponentMedievalIconName {
-  // Map from types to component-compatible values
-  const nameMap: Record<string, ComponentMedievalIconName> = {
-    'chalice': 'goblet',
-    'fleur-de-lis': 'crown',
-    'knight': 'user',
-    'bow': 'sword',
-    'axe': 'sword',
-    'cross': 'shield'
+/**
+ * Converts a string to a valid MedievalIconName
+ * Handles common cases like lowercase names or hyphenated names
+ */
+export function toMedievalIconName(iconName: string): MedievalIconName {
+  // Convert kebab-case or lowercase to PascalCase
+  const formatted = iconName
+    .split('-')
+    .map(part => part.charAt(0).toUpperCase() + part.slice(1))
+    .join('');
+  
+  // Map for special cases and common icon names
+  const iconMap: Record<string, MedievalIconName> = {
+    // Direct mappings
+    "crown": "Crown",
+    "shield": "Shield",
+    "sword": "Sword",
+    "scroll": "Scroll",
+    "heart": "Heart",
+    "medal": "Medal",
+    "trophy": "Trophy",
+    "key": "Key",
+    "coins": "Coins",
+    "wallet": "Wallet",
+    "gem": "Gem",
+    
+    // Fallbacks for unsupported icons
+    "seal": "Medal",
+    "castle": "Shield",
+    "goblet": "Trophy",
+    "user": "Crown",
   };
-
-  // Return the mapped value if it exists, otherwise return the original value if it's valid
-  return nameMap[name] || name as ComponentMedievalIconName;
+  
+  return (iconMap[iconName.toLowerCase()] || formatted) as MedievalIconName;
 }
 
-export function adaptIconSize(size: TypesMedievalIconSize): ComponentMedievalIconSize {
-  // Map from types to component-compatible values
-  const sizeMap: Record<string, ComponentMedievalIconSize> = {
-    '3xl': '2xl',
-    '4xl': '2xl'
+/**
+ * Converts a string to a valid MedievalIconSize
+ */
+export function toMedievalIconSize(size: string): MedievalIconSize {
+  const sizeMap: Record<string, MedievalIconSize> = {
+    "xs": "xs",
+    "sm": "sm",
+    "md": "md",
+    "lg": "lg",
+    "xl": "xl",
+    "2xl": "xl" // Map 2xl to xl since it's not supported
   };
-
-  // Return the mapped value if it exists, otherwise return the original value if it's valid
-  return sizeMap[size] || size as ComponentMedievalIconSize;
+  
+  return (sizeMap[size] || "md") as MedievalIconSize;
 }
 
-export function adaptIconColor(color: TypesMedievalIconColor): ComponentMedievalIconColor {
-  // Map from types to component-compatible values
-  const colorMap: Record<string, ComponentMedievalIconColor> = {
-    'royal-gold': 'gold',
-    'royal-silver': 'silver',
-    'royal-crimson': 'crimson',
-    'royal-purple': 'purple',
-    'royal-blue': 'blue',
-    'royal-navy': 'navy'
+/**
+ * Converts a string to a valid MedievalIconColor
+ */
+export function toMedievalIconColor(color: string): MedievalIconColor {
+  const colorMap: Record<string, MedievalIconColor> = {
+    "default": "default",
+    "gold": "gold",
+    "silver": "silver",
+    "crimson": "crimson",
+    
+    // Map unsupported colors to supported ones
+    "purple": "crimson",
+    "blue": "silver",
+    "navy": "default",
+    "copper": "gold",
+    "bronze": "gold"
   };
-
-  // Return the mapped value if it exists, otherwise return the original value if it's valid
-  return colorMap[color] || color as ComponentMedievalIconColor;
+  
+  return (colorMap[color] || "default") as MedievalIconColor;
 }

@@ -1,75 +1,69 @@
 
 import React from 'react';
-import { cn } from "@/lib/utils";
 import * as LucideIcons from 'lucide-react';
+import { cn } from '@/lib/utils';
 
-// Define themed icon types
+// Define type-safe icon names and colors
 export type MedievalIconName = 
-  | 'Crown' 
-  | 'Shield' 
-  | 'Scroll' 
-  | 'Coins' 
-  | 'Key' 
-  | 'Sword'
-  | 'Trophy'
-  | 'Heart'
-  | 'Medal'
-  | 'Gem'
-  | 'Wallet';
+  | "Crown" | "Shield" | "Sword" | "Scroll" | "Heart"
+  | "Medal" | "Trophy" | "Key" | "Coins" | "Wallet" | "Gem";
 
-export type MedievalIconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
-export type MedievalIconColor = 'default' | 'gold' | 'silver' | 'crimson';
+export type MedievalIconColor = 
+  | "default" | "gold" | "silver" | "crimson";
+
+export type MedievalIconSize = 
+  | "xs" | "sm" | "md" | "lg" | "xl";
 
 export interface MedievalIconProps {
   name: MedievalIconName;
-  size?: MedievalIconSize;
   color?: MedievalIconColor;
+  size?: MedievalIconSize;
   className?: string;
-  onClick?: () => void;
 }
 
-const sizeMap = {
-  xs: 16,
-  sm: 20,
-  md: 24,
-  lg: 32,
-  xl: 40,
+const sizeClasses = {
+  xs: 'h-3 w-3',
+  sm: 'h-4 w-4',
+  md: 'h-5 w-5',
+  lg: 'h-6 w-6',
+  xl: 'h-8 w-8',
 };
 
-const colorMap = {
+const colorClasses = {
   default: 'text-white',
   gold: 'text-royal-gold',
-  silver: 'text-gray-300',
+  silver: 'text-slate-300',
   crimson: 'text-royal-crimson',
 };
 
+/**
+ * MedievalIcon component for themed icons with royal style
+ */
 const MedievalIcon: React.FC<MedievalIconProps> = ({
   name,
-  size = 'md',
-  color = 'default',
+  color = "default",
+  size = "md",
   className,
-  onClick
 }) => {
-  const pixelSize = sizeMap[size];
+  // Get the corresponding Lucide icon
+  const IconComponent = LucideIcons[name];
   
-  // Convert to proper Lucide icon name
-  const iconName = name as keyof typeof LucideIcons;
-  const LucideIcon = LucideIcons[iconName];
-  
-  if (!LucideIcon) {
+  if (!IconComponent) {
     console.warn(`Icon "${name}" not found`);
     return null;
   }
-  
+
   return (
-    <LucideIcon
-      size={pixelSize}
-      className={cn(
-        colorMap[color],
-        className
-      )}
-      onClick={onClick}
-    />
+    <span className={cn(
+      "inline-flex items-center justify-center",
+      colorClasses[color],
+      className
+    )}>
+      {React.createElement(IconComponent, {
+        className: sizeClasses[size],
+        'aria-hidden': true
+      })}
+    </span>
   );
 };
 

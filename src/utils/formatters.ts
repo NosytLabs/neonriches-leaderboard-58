@@ -1,38 +1,51 @@
 
 /**
+ * A collection of formatting utilities for consistent display of values
+ */
+
+/**
  * Formats a number as currency
  * @param amount - The amount to format
  * @param currency - The currency symbol (default: $)
  * @returns Formatted currency string
  */
-export const formatCurrency = (amount: number | undefined): string => {
-  if (amount === undefined) return '$0.00';
-  return `$${amount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+export const formatCurrency = (amount: number | undefined, currency = '$'): string => {
+  if (amount === undefined) return `${currency}0.00`;
+  return `${currency}${amount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 };
 
 /**
  * Formats a date string to a localized date
  * @param dateString - The date string to format
+ * @param options - Intl.DateTimeFormatOptions for customizing format
  * @returns Formatted date string
  */
-export const formatDate = (dateString: string): string => {
+export const formatDate = (
+  dateString: string | Date | undefined,
+  options: Intl.DateTimeFormatOptions = { 
+    year: 'numeric', 
+    month: 'short', 
+    day: 'numeric' 
+  }
+): string => {
   if (!dateString) return '-';
-  const date = new Date(dateString);
-  return date.toLocaleDateString();
+  const date = dateString instanceof Date ? dateString : new Date(dateString);
+  return date.toLocaleDateString(undefined, options);
 };
 
 /**
  * Formats a number with commas for thousands
  * @param num - The number to format
+ * @param defaultValue - Value to return if num is undefined
  * @returns Formatted number string
  */
-export const formatNumber = (num: number | undefined): string => {
-  if (num === undefined) return '0';
+export const formatNumber = (num: number | undefined, defaultValue = '0'): string => {
+  if (num === undefined) return defaultValue;
   return num.toLocaleString();
 };
 
 /**
- * Formats a rank number
+ * Formats a rank number with # prefix
  * @param rank - The rank to format
  * @returns Formatted rank string
  */
@@ -106,16 +119,38 @@ export const formatHistoricalValue = (value: number): string => {
 };
 
 /**
- * Formats a dollar amount with appropriate scaling
+ * Formats a dollar amount with appropriate scaling (K, M, B)
  * @param amount - The amount to format
  * @returns Formatted dollar amount string
  */
 export const formatDollarAmount = (amount: number): string => {
-  if (amount >= 1000000) {
-    return `$${(amount / 1000000).toFixed(1)}M`;
-  } else if (amount >= 1000) {
-    return `$${(amount / 1000).toFixed(1)}K`;
+  if (amount >= 1_000_000_000) {
+    return `$${(amount / 1_000_000_000).toFixed(1)}B`;
+  } else if (amount >= 1_000_000) {
+    return `$${(amount / 1_000_000).toFixed(1)}M`;
+  } else if (amount >= 1_000) {
+    return `$${(amount / 1_000).toFixed(1)}K`;
   } else {
     return `$${amount.toFixed(2)}`;
   }
+};
+
+/**
+ * Formats a number as a dollar amount (for inputs)
+ * @param value - The value to format
+ * @returns Formatted dollar amount
+ */
+export const formatDollarInput = (value: string | number): string => {
+  // Convert to string and remove all non-digit characters except decimal
+  const numericValue = String(value).replace(/[^\d.]/g, '');
+  
+  // Ensure only one decimal point
+  const parts = numericValue.split('.');
+  if (parts.length > 2) {
+    parts[1] = parts.slice(1).join('');
+    return `${parts[0]}.${parts[1]}`;
+  }
+  
+  // Return formatted value
+  return numericValue;
 };

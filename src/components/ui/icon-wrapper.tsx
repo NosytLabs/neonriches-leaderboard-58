@@ -1,40 +1,55 @@
-
 import React from 'react';
-import { Icon, IconName, IconSize } from '@/components/ui/icon';
+import Icon from '@/components/ui/icon';
+import MedievalIcon from '@/components/ui/medieval-icon';
+import { toMedievalIconName, toMedievalIconColor, toMedievalIconSize } from '@/utils/iconTypeAdapter';
 
-// This component wraps the ui/icon component for backward compatibility
-// with code that expects the old Icon component from src/components/Icon.tsx
 interface IconWrapperProps {
-  name: string;
-  size?: number;
+  icon: string;
+  size?: string;
   color?: string;
   className?: string;
-  onClick?: () => void;
+  medieval?: boolean;
 }
 
+/**
+ * IconWrapper is a convenience component that handles string-based icon names
+ * and automatically converts them to the correct format for both Icon and MedievalIcon
+ */
 const IconWrapper: React.FC<IconWrapperProps> = ({
-  name,
-  size = 24,
+  icon,
+  size = 'md',
   color,
   className,
-  onClick
+  medieval = false
 }) => {
-  // Convert size from number to the IconSize type expected by the ui/icon component
-  const getIconSize = (size: number): IconSize => {
-    if (size <= 16) return 'xs';
-    if (size <= 20) return 'sm';
-    if (size <= 24) return 'md';
-    if (size <= 32) return 'lg';
-    return 'xl';
-  };
-
+  // Safety check
+  if (!icon) return null;
+  
+  // Convert icon name to PascalCase for Lucide icons
+  const formattedIconName = icon
+    .split('-')
+    .map(part => part.charAt(0).toUpperCase() + part.slice(1))
+    .join('');
+  
+  // Use medieval icon if specified
+  if (medieval) {
+    return (
+      <MedievalIcon
+        name={toMedievalIconName(icon)}
+        size={toMedievalIconSize(size)}
+        color={toMedievalIconColor(color || 'default')}
+        className={className}
+      />
+    );
+  }
+  
+  // Otherwise use standard icon
   return (
     <Icon
-      name={name as IconName}
-      size={getIconSize(size)}
-      className={className}
+      name={formattedIconName as any}
+      size={size as any}
       color={color}
-      onClick={onClick}
+      className={className}
     />
   );
 };

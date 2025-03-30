@@ -1,60 +1,54 @@
 
 import React from 'react';
 import * as LucideIcons from 'lucide-react';
-import { cn } from "@/lib/utils";
+import { cn } from '@/lib/utils';
 
-// Define icon name and size types
 export type IconName = keyof typeof LucideIcons;
-export type IconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | number;
 
-export interface IconProps {
+export interface IconProps extends React.HTMLAttributes<HTMLSpanElement> {
   name: IconName;
-  size?: IconSize;
   className?: string;
+  size?: 'sm' | 'md' | 'lg' | 'xl' | '2xl';
   color?: string;
-  animated?: boolean;
-  onClick?: () => void;
 }
 
-const sizeMap = {
-  xs: 16,
-  sm: 20,
-  md: 24,
-  lg: 32,
-  xl: 40,
+const sizeClasses = {
+  sm: 'h-4 w-4',
+  md: 'h-5 w-5',
+  lg: 'h-6 w-6',
+  xl: 'h-8 w-8',
+  '2xl': 'h-10 w-10',
 };
 
-const Icon: React.FC<IconProps> = ({ 
-  name, 
-  size = 'md', 
-  className = '',
-  color,
-  animated = false,
-  onClick
-}) => {
-  // Convert size from string to number if needed
-  const pixelSize = typeof size === 'string' ? sizeMap[size] : size;
-  
-  // Get the appropriate Lucide icon component - ensure PascalCase
-  const pascalCaseName = name as keyof typeof LucideIcons;
-  const LucideIcon = LucideIcons[pascalCaseName];
-  
-  if (!LucideIcon) {
-    console.warn(`Icon "${name}" not found`);
-    return null;
+/**
+ * Icon component for using Lucide icons with consistent styling
+ */
+const Icon = React.forwardRef<HTMLSpanElement, IconProps>(
+  ({ name, className, size = 'md', color, ...props }, ref) => {
+    // Get the icon component dynamically
+    const IconComponent = LucideIcons[name as IconName];
+    
+    if (!IconComponent) {
+      console.warn(`Icon "${name}" not found`);
+      return null;
+    }
+
+    return (
+      <span 
+        ref={ref}
+        className={cn("inline-flex items-center justify-center", className)}
+        {...props}
+      >
+        {React.createElement(IconComponent, {
+          className: cn(sizeClasses[size]),
+          color: color,
+          'aria-hidden': true
+        })}
+      </span>
+    );
   }
-  
-  return (
-    <LucideIcon 
-      size={pixelSize} 
-      className={cn(
-        animated && 'transition-all duration-300',
-        className
-      )}
-      color={color}
-      onClick={onClick}
-    />
-  );
-};
+);
+
+Icon.displayName = 'Icon';
 
 export default Icon;
