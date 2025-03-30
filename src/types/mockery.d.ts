@@ -10,7 +10,10 @@ export type MockeryTier =
   | 'uncommon' 
   | 'rare' 
   | 'epic' 
-  | 'legendary';
+  | 'legendary'
+  | 'basic'
+  | 'premium'
+  | 'royal';
 
 export type MockeryAction = 
   | 'tomatoes' 
@@ -75,6 +78,8 @@ export interface MockeryEvent {
   active: boolean;
   isActive?: boolean;
   tier?: MockeryTier;
+  timestamp?: string;
+  userId?: string;
 }
 
 export interface MockeryEffectData {

@@ -1,19 +1,28 @@
 
+import { UserTeam } from './user';
+
+export interface LeaderboardEntry {
+  id: string;
+  userId: string;
+  rank: number;
+  previousRank: number;
+  amountSpent: number;
+  timestamp: string;
+}
+
 export interface LeaderboardUser {
   id: string;
   username: string;
   displayName?: string;
   profileImage?: string;
-  rank: number;
-  team?: 'red' | 'green' | 'blue' | null;
-  tier?: string;
   totalSpent: number;
-  spendStreak?: number;
+  rank: number;
+  team?: UserTeam;
+  tier?: string;
 }
 
-export interface LeaderboardEntry extends LeaderboardUser {
-  position: number;
-  previousRank?: number;
-  dailyChange?: number;
-  weeklyChange?: number;
+export interface LeaderboardSnapshot {
+  id: string;
+  createdAt: string;
+  entries: LeaderboardEntry[];
 }

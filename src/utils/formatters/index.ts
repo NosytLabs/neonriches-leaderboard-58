@@ -1,15 +1,25 @@
 
-export {
+// Re-export all formatters
+export { 
   formatDate,
+  formatTime, 
+  formatDateTime,
   formatCurrency,
   formatDollarAmount,
   formatNumber,
   formatPercentage,
   formatAddress,
-  formatHistoricalValue,
-  formatTimeAgo,
   formatFileSize,
-  formatTime,
-  formatDateTime,
+  formatHistoricalValue,
   getAchievementIcon
-} from '../formatters.tsx';
+} from '../formatters';
+
+// Re-export date utilities
+export {
+  ensureDate,
+  toDateObject,
+  formatDateString,
+  isEventActive,
+  daysUntil,
+  formatRelativeTime
+} from '../dateUtils';
