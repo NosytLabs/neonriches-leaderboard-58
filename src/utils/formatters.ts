@@ -1,92 +1,100 @@
 
 /**
- * Formats a number as a currency string
- * @param amount Number to format as currency
- * @param currency Currency code (default: USD)
- * @returns Formatted currency string
+ * Utility functions for formatting data in various ways
  */
-export const formatCurrency = (amount: number, currency = 'USD'): string => {
-  return amount.toLocaleString('en-US', {
-    style: 'decimal',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0
-  });
-};
 
 /**
- * Formats a number as a compact currency representation (e.g., $1.2K, $5M)
+ * Format a number as a dollar amount
+ * @param amount - Number to format
+ * @param options - Formatting options
+ * @returns Formatted dollar amount as string
  */
-export const formatCompactCurrency = (amount: number): string => {
-  if (amount >= 1_000_000) {
-    return `$${(amount / 1_000_000).toFixed(1)}M`;
-  } else if (amount >= 1_000) {
-    return `$${(amount / 1_000).toFixed(1)}K`;
+export function formatDollarAmount(
+  amount: number, 
+  options?: { 
+    maximumFractionDigits?: number;
+    minimumFractionDigits?: number;
+    notation?: 'standard' | 'compact';
   }
-  return `$${amount}`;
-};
+): string {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    maximumFractionDigits: options?.maximumFractionDigits ?? 0,
+    minimumFractionDigits: options?.minimumFractionDigits ?? 0,
+    notation: options?.notation
+  }).format(amount);
+}
 
 /**
- * Formats a date as a relative time (e.g., "2 days ago")
+ * Format a date string to a localized format
+ * @param dateString String representation of date
+ * @param format Format style to use
+ * @returns Formatted date string
  */
-export const formatRelativeTime = (date: string | Date): string => {
-  const now = new Date();
-  const then = new Date(date);
-  const diffInSeconds = Math.floor((now.getTime() - then.getTime()) / 1000);
+export function formatDate(
+  dateString: string | Date,
+  format: 'short' | 'medium' | 'long' | 'relative' = 'medium'
+): string {
+  const date = dateString instanceof Date ? dateString : new Date(dateString);
   
-  if (diffInSeconds < 60) {
-    return 'just now';
+  if (format === 'relative') {
+    // Calculate relative time (today, yesterday, etc)
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+    
+    if (diffDays === 0) return 'Today';
+    if (diffDays === 1) return 'Yesterday';
+    if (diffDays < 7) return `${diffDays} days ago`;
+    if (diffDays < 30) return `${Math.floor(diffDays / 7)} weeks ago`;
+    if (diffDays < 365) return `${Math.floor(diffDays / 30)} months ago`;
+    return `${Math.floor(diffDays / 365)} years ago`;
   }
   
-  const diffInMinutes = Math.floor(diffInSeconds / 60);
-  if (diffInMinutes < 60) {
-    return `${diffInMinutes} minute${diffInMinutes !== 1 ? 's' : ''} ago`;
-  }
+  // Format according to specified format
+  const options: Intl.DateTimeFormatOptions = 
+    format === 'short' ? { month: 'numeric', day: 'numeric', year: '2-digit' } :
+    format === 'long' ? { month: 'long', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric' } :
+    { month: 'short', day: 'numeric', year: 'numeric' };
   
-  const diffInHours = Math.floor(diffInMinutes / 60);
-  if (diffInHours < 24) {
-    return `${diffInHours} hour${diffInHours !== 1 ? 's' : ''} ago`;
-  }
-  
-  const diffInDays = Math.floor(diffInHours / 24);
-  if (diffInDays < 30) {
-    return `${diffInDays} day${diffInDays !== 1 ? 's' : ''} ago`;
-  }
-  
-  const diffInMonths = Math.floor(diffInDays / 30);
-  if (diffInMonths < 12) {
-    return `${diffInMonths} month${diffInMonths !== 1 ? 's' : ''} ago`;
-  }
-  
-  const diffInYears = Math.floor(diffInMonths / 12);
-  return `${diffInYears} year${diffInYears !== 1 ? 's' : ''} ago`;
-};
+  return new Intl.DateTimeFormat('en-US', options).format(date);
+}
 
 /**
- * Format a number with appropriate suffix (e.g., 1st, 2nd, 3rd)
+ * Format a wallet address by truncating the middle
+ * @param address Full wallet address
+ * @param start Number of characters to show at the start
+ * @param end Number of characters to show at the end
+ * @returns Shortened address
  */
-export const formatOrdinal = (n: number): string => {
-  const s = ['th', 'st', 'nd', 'rd'];
-  const v = n % 100;
-  return n + (s[(v - 20) % 10] || s[v] || s[0]);
-};
+export function formatAddress(address: string, start = 4, end = 4): string {
+  if (!address) return '';
+  if (address.length <= start + end) return address;
+  
+  return `${address.slice(0, start)}...${address.slice(address.length - end)}`;
+}
 
 /**
- * Format a rank with special coloring and naming based on position
+ * Format a file size in bytes to a human-readable size
+ * @param bytes Size in bytes
+ * @returns Human-readable file size
  */
-export const formatRankTitle = (rank: number): { title: string, color: string } => {
-  if (rank === 1) {
-    return { title: 'Sovereign', color: 'text-royal-gold' };
-  } else if (rank === 2) {
-    return { title: 'Grand Duke', color: 'text-amber-300' };
-  } else if (rank === 3) {
-    return { title: 'High Lord', color: 'text-zinc-300' };
-  } else if (rank <= 10) {
-    return { title: 'Noble Lord', color: 'text-royal-purple' };
-  } else if (rank <= 50) {
-    return { title: 'Lesser Lord', color: 'text-royal-navy' };
-  } else if (rank <= 100) {
-    return { title: 'Knight', color: 'text-royal-crimson' };
-  } else {
-    return { title: 'Commoner', color: 'text-gray-400' };
-  }
-};
+export function formatFileSize(bytes: number): string {
+  if (bytes === 0) return '0 B';
+  
+  const units = ['B', 'KB', 'MB', 'GB', 'TB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(1024));
+  
+  return `${(bytes / Math.pow(1024, i)).toFixed(2)} ${units[i]}`;
+}
+
+/**
+ * Format a percentage
+ * @param value Value to convert to percentage
+ * @param decimals Number of decimal places
+ * @returns Formatted percentage string
+ */
+export function formatPercent(value: number, decimals = 0): string {
+  return `${(value * 100).toFixed(decimals)}%`;
+}

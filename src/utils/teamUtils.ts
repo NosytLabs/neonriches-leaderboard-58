@@ -1,120 +1,149 @@
 
-import { TeamColor } from '@/types/teams';
+/**
+ * Team-related utility functions
+ */
+import { TeamColor, UserTeam } from '@/types/user';
 
 /**
- * Get a team motto based on the team color
+ * Get the display color for a team
+ * @param team Team identifier
+ * @returns CSS color class
  */
-export const getTeamMotto = (team: TeamColor): string => {
-  switch(team) {
+export function getTeamColor(team: UserTeam | string): string {
+  switch (team) {
     case 'red':
-      return "Spend First, Think Never";
-    case 'green':
-      return "Wealth So Strategic, It's Almost Pathetic";
+      return 'text-red-500';
     case 'blue':
-      return "Patience in Spending, Unbridled in Pretending";
+      return 'text-blue-500';
+    case 'green':
+      return 'text-green-500';
     default:
-      return "Choose a Side, Pay the Price";
+      return 'text-gray-500';
   }
-};
+}
 
 /**
- * Get a list of absurd team benefits
+ * Get the border color for a team
+ * @param team Team identifier
+ * @returns CSS border color class
  */
-export const getTeamBenefit = (team: TeamColor): string[] => {
-  switch(team) {
+export function getTeamBorderColor(team: UserTeam | string): string {
+  switch (team) {
     case 'red':
-      return [
-        "15% increased mockery toward financial prudence",
-        "Name appears in slightly more garish font on leaderboard",
-        "Access to exclusive 'Reckless Spending Tips' newsletter",
-        "Special ability to shame users who haven't spent in 24 hours",
-        "Royal red border on profile that cost us $0.00 to implement"
-      ];
-    case 'green':
-      return [
-        "Special 'Calculated Spender' badge that means nothing",
-        "Exclusive access to meaningless spending statistics", 
-        "Members can view spending patterns no one cares about",
-        "Ability to create strategic spending plans (that won't be followed)",
-        "Digital monocle for your profile picture because... sophistication"
-      ];
+      return 'border-red-500';
     case 'blue':
-      return [
-        "Rank updates appear with a 'thoughtful' 3-second delay",
-        "Exclusive 'Long-Term Planner' title (expires weekly)",
-        "Access to timing algorithm that suggests the worst times to spend",
-        "Special ability to pretend spending was strategic after the fact",
-        "Blue profile accent color that screams 'I think I'm clever'"
-      ];
+      return 'border-blue-500';
+    case 'green':
+      return 'border-green-500';
     default:
-      return [
-        "No benefits at all",
-        "You really should choose a team",
-        "Seriously, it's all meaningless anyway"
-      ];
+      return 'border-gray-500';
   }
-};
+}
 
 /**
- * Get an absurd team statistic
+ * Get the background color for a team
+ * @param team Team identifier
+ * @returns CSS background color class
  */
-export const getTeamAbsurdStat = (team: TeamColor): string => {
-  switch(team) {
+export function getTeamBackgroundColor(team: UserTeam | string): string {
+  switch (team) {
     case 'red':
-      return "RORS members have collectively clicked 'Purchase' 8,742 times before checking their bank balance, leading to a 43% increase in overdraft fees in the digital kingdom.";
-    case 'green':
-      return "EEC members spend an average of 3.7 hours per week creating spreadsheets to justify their spending, a process that actually costs more in lost productivity than they save through 'strategic spending'.";
+      return 'bg-red-500/10';
     case 'blue':
-      return "97% of CCC members claim to have a 'system' for optimal spending timing, yet none can explain what it is. When pressed, most mumble something about 'market conditions' and change the subject.";
+      return 'bg-blue-500/10';
+    case 'green':
+      return 'bg-green-500/10';
     default:
-      return "Team-less users are 100% more likely to eventually join a team, a statistic we just made up but sounds plausible.";
+      return 'bg-gray-500/10';
   }
-};
+}
 
 /**
- * Get a team's absurd NFT joke
+ * Get the display name for a team
+ * @param team Team identifier
+ * @returns Human-readable team name
  */
-export const getTeamNFTJoke = (team: TeamColor): string => {
-  switch(team) {
+export function getTeamName(team: UserTeam | string): string {
+  switch (team) {
     case 'red':
-      return "RORS members proudly collect NFTs of virtual dumpster fires, believing they're 'ironic investments' and not just digital receipts for burned money.";
-    case 'green':
-      return "EEC members maintain diversified portfolios of digital rocks, meticulously tracking their 'value' in spreadsheets with more columns than the actual market has buyers.";
+      return 'Crimson Crown';
     case 'blue':
-      return "CCC members only buy NFTs at 'optimal market timing' – which coincidentally always seems to be minutes before a collection crashes in value.";
+      return 'Azure Knights';
+    case 'green':
+      return 'Emerald Empire';
     default:
-      return "The only NFT worth owning is the 'Non-Fungible Trophy' you get for not owning any NFTs at all.";
+      return 'Unaligned';
   }
-};
+}
 
 /**
- * Get a team's absurd crypto roast
+ * Get historical lore note for a team
+ * @param team Team identifier
+ * @returns Historical note about the team
  */
-export const getTeamCryptoRoast = (team: TeamColor): string => {
-  switch(team) {
+export function getTeamHistoricalNote(team: TeamColor): string {
+  switch (team) {
     case 'red':
-      return "RORS members invest in currencies with names like 'RocketMoonLamboCoin' and are shocked when developers disappear with their funds.";
-    case 'green':
-      return "EEC members maintain 17 different crypto wallets, each with exactly $96.42 in different tokens, creating a perfectly balanced portfolio that still manages to lose value daily.";
+      return 'The Crimson Crown, descendants of the ancient royal bloodline, known for their fierce loyalty and determination to restore monarchic rule.';
     case 'blue':
-      return "CCC members proudly announce they're 'waiting for the right moment' to buy crypto, a moment that has mysteriously never arrived in the past decade.";
+      return 'The Azure Knights, guardians of wisdom and tradition, believe true nobility comes from enlightenment and justice rather than bloodlines.';
+    case 'green':
+      return 'The Emerald Empire, merchants and innovators who rose from common roots, advocate for meritocracy where wealth and contribution determine status.';
     default:
-      return "People without teams actually make better crypto decisions, probably because they're not trying to impress fictional factions with their digital currency prowess.";
+      return 'Those who have yet to pledge allegiance to a noble house in the struggle for the throne.';
   }
-};
+}
 
 /**
- * Get a team's absurd security guarantee
+ * Get a gendered title based on user preference
+ * @param gender User gender preference
+ * @returns Appropriate title
  */
-export const getTeamSecurityGuarantee = (team: TeamColor): string => {
-  switch(team) {
-    case 'red':
-      return "RORS security protocol: All passwords are written on virtual sticky notes attached to virtual monitors, protected by a state-of-the-art honor system.";
-    case 'green':
-      return "EEC security guarantee: Our data is secured with the same vigilance we apply to our spending – sporadic attention followed by elaborate justifications for failures.";
-    case 'blue':
-      return "CCC security promise: We time our security updates to perfectly coincide with moments when hackers are definitely busy attacking someone else.";
+export function getGenderTitle(gender: string): string {
+  switch (gender?.toLowerCase()) {
+    case 'male':
+      return 'Lord';
+    case 'female':
+      return 'Lady';
+    case 'neutral':
+    case 'nonbinary':
+      return 'Noble';
     default:
-      return "No team? Your data is actually safer because even our hackers operate on team-based quotas and don't bother with the unaffiliated.";
+      return 'Noble';
   }
-};
+}
+
+/**
+ * Get emoji representation for gender
+ * @param gender User gender preference
+ * @returns Emoji character
+ */
+export function getGenderEmoji(gender: string): string {
+  switch (gender?.toLowerCase()) {
+    case 'male':
+      return '♂️';
+    case 'female':
+      return '♀️';
+    case 'neutral':
+    case 'nonbinary':
+      return '⚧️';
+    default:
+      return '';
+  }
+}
+
+/**
+ * Get initials from a name
+ * @param name Full name
+ * @param maxLength Maximum number of initials
+ * @returns String of initials
+ */
+export function getInitials(name: string, maxLength = 2): string {
+  if (!name) return '';
+  
+  return name
+    .split(' ')
+    .map(part => part.charAt(0).toUpperCase())
+    .slice(0, maxLength)
+    .join('');
+}

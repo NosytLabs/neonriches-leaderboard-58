@@ -1,78 +1,99 @@
 
-import { OnChainLeaderboardEntry, SolanaTransaction } from '@/types/solana';
+/**
+ * Solana blockchain service functions
+ */
 
-// Mock Solana service
+import { useSolana } from '@/contexts/SolanaContext';
 
 /**
- * Get on-chain leaderboard data
+ * Generate metadata for a Royal Certificate NFT
+ * @param username Username of the certificate holder
+ * @param tier Tier/rank of the certificate
+ * @param date Date of issuance
+ * @returns Certificate metadata object
  */
-export const getOnChainLeaderboard = async (): Promise<OnChainLeaderboardEntry[]> => {
-  // In a real app, this would fetch from the Solana network
-  await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate network delay
-  
-  // Generate mock data
-  const entries: OnChainLeaderboardEntry[] = [];
-  
-  for (let i = 1; i <= 10; i++) {
-    entries.push({
-      userId: `user_${i}`,
-      username: `SolanaUser${i}`,
-      address: `So1Ana${i}xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`,
-      publicKey: `So1Ana${i}xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`,
-      rank: i,
-      spentAmount: Math.floor(1000 / i),
-      amountSpent: Math.floor(1000 / i),
-      totalDeposited: Math.floor(2000 / i),
-      timestamp: new Date(Date.now() - (i * 86400000)).toISOString() // i days ago
-    });
-  }
-  
-  return entries;
-};
-
-/**
- * Get Solana treasury information
- */
-export const getTreasuryInfo = async () => {
-  // In a real app, this would fetch from the Solana network
+export function generateCertificateMetadata(
+  username: string,
+  tier: string,
+  date: string
+) {
   return {
-    address: 'SolTreasury123456789abcdefghijklmnopqrstuvwxyz',
-    totalBalance: 15423.5,
-    depositCount: 384,
-    withdrawalCount: 42
+    name: `${username}'s Royal Certificate of Nobility`,
+    symbol: "THRONE",
+    description: `This certificate recognizes ${username} as a noble of the ${tier} rank in the SpendThrone royal court. Issued on ${date}.`,
+    seller_fee_basis_points: 0,
+    image: "https://example.com/certificate.png", // Would be replaced with actual image URL
+    external_url: `https://spendthrone.com/profile/${username}`,
+    attributes: [
+      {
+        trait_type: "Rank",
+        value: tier
+      },
+      {
+        trait_type: "Issued",
+        value: date
+      }
+    ],
+    properties: {
+      files: [
+        {
+          uri: "https://example.com/certificate.png",
+          type: "image/png"
+        }
+      ],
+      category: "image",
+      creators: [
+        {
+          address: "THRONE1111111111111111111111111111111",
+          share: 100
+        }
+      ]
+    }
   };
-};
+}
 
 /**
- * Get recent Solana transactions
+ * Create a Solana NFT representing a Royal Certificate
+ * @param user User object for certificate creation
+ * @returns Object with success status and NFT data
  */
-export const getRecentTransactions = async (): Promise<SolanaTransaction[]> => {
-  // In a real app, this would fetch from the Solana network
+export async function createCertificateNFT(user: any) {
+  // This would be a real implementation with Solana web3.js
+  console.log("Creating certificate NFT for", user.username);
   
-  // Generate mock data
-  const transactions: SolanaTransaction[] = [];
+  // Simulate blockchain delay
+  await new Promise(resolve => setTimeout(resolve, 2000));
   
-  for (let i = 1; i <= 5; i++) {
-    const types: ('deposit' | 'withdrawal' | 'transfer')[] = ['deposit', 'withdrawal', 'transfer'];
-    const type = types[Math.floor(Math.random() * types.length)];
-    
-    transactions.push({
-      signature: `sig_${Math.random().toString(36).substring(2, 15)}`,
-      blockTime: Math.floor(Date.now() / 1000) - (i * 600), // i * 10 minutes ago
-      slot: 123456789 + i,
-      status: 'confirmed',
-      amount: Math.random() * 10,
-      sender: 'SenderAddress123456789abcdefghijklmnopqrstuvwxyz',
-      recipient: 'RecipientAddress123456789abcdefghijklmnopqrstuvwxyz',
-      type
-    });
-  }
+  // Mock successful NFT creation
+  return {
+    success: true,
+    mintAddress: "NFTmint" + Math.random().toString(36).substr(2, 9),
+    metadata: generateCertificateMetadata(
+      user.username,
+      user.tier,
+      new Date().toLocaleDateString()
+    ),
+    imageUrl: "/certificate-template.png"
+  };
+}
+
+/**
+ * Get on-chain token balance
+ * @param tokenAddress Address of the token
+ * @returns Token balance
+ */
+export async function getTokenBalance(tokenAddress: string) {
+  console.log("Getting token balance for", tokenAddress);
   
-  return transactions;
-};
+  // Simulate blockchain delay
+  await new Promise(resolve => setTimeout(resolve, 500));
+  
+  // Mock token balance
+  return Math.floor(Math.random() * 1000);
+}
 
 export default {
-  getOnChainLeaderboard,
-  getTreasuryInfo,
-  getRecentTransactions
+  generateCertificateMetadata,
+  createCertificateNFT,
+  getTokenBalance
 };

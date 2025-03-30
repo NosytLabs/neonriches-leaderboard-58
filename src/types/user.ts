@@ -1,122 +1,105 @@
 
-// User type definitions
+export type UserTeam = 'red' | 'green' | 'blue';
+export type TeamColor = UserTeam;
+export type TeamType = 'red' | 'green' | 'blue' | 'none';
+export type UserTier = 'free' | 'premium' | 'royal';
 
-export type UserTier = 'standard' | 'premium' | 'royal';
-
-export type User = {
+export interface User {
   id: string;
-  uid?: string;
   username: string;
-  displayName?: string;
-  profileImage?: string;
-  bio?: string;
+  displayName: string;
   email?: string;
-  tier?: UserTier;
-  team?: string;
-  rank: number;
-  previousRank?: number;
-  amountSpent: number;
-  spentAmount?: number; // Alias for amountSpent for backwards compatibility
-  walletBalance: number;
-  isAuthenticated?: boolean;
-  isAdmin?: boolean;
-  isVIP?: boolean;
+  profileImage?: string;
   joinedAt: string;
-  joinDate?: string; // Alias for joinedAt for backwards compatibility
   createdAt: string;
-  lastLogin?: string;
-  cosmetics?: UserCosmetics;
-  spendStreak?: number;
-  profileBoosts?: ProfileBoost[];
+  tier: UserTier;
+  team: UserTeam;
+  rank: number;
+  walletBalance: number;
+  amountSpent: number;
+  // Extended properties
+  gender?: string;
+  bio?: string;
+  level?: number;
+  experience?: number;
+  totalSpent?: number;
+  profileViews?: number;
+  profileClicks?: number;
+  followers?: number;
+  following?: number;
+  lastActive?: string;
   settings?: UserSettings;
+  notifications?: UserNotificationSettings;
+  subscription?: UserSubscription;
+  profileBoosts?: ProfileBoost[];
   socialLinks?: SocialLink[];
-  badges?: string[];
-  activeTitle?: string;
-  activeMockeryEffects?: string[];
-  certificateNFT?: {
-    mintAddress: string;
-    imageUrl: string;
-    metadata: any;
-  };
-};
-
-export type UserProfile = User;
+  purchasedFeatures?: string[];
+  role?: string;
+}
 
 export interface UserSettings {
-  notifications: {
-    email: boolean;
+  theme: 'light' | 'dark' | 'royal' | 'system';
+  notifications: boolean;
+  email: {
     marketing: boolean;
-    rankChanges: boolean;
-    teamUpdates: boolean;
+    updates: boolean;
+    digests: boolean;
   };
   privacy: {
+    showRank: boolean;
     showSpending: boolean;
-    showProfile: boolean;
-    allowMockery: boolean;
-    allowTaunts: boolean;
+    publicProfile: boolean;
   };
-  display: {
-    theme: string;
-    colorMode: 'light' | 'dark' | 'system';
-    animations: boolean;
-    showEffects: boolean;
-  };
+  profileVisibility?: boolean;
+  allowProfileLinks?: boolean;
+}
+
+export interface UserNotificationSettings {
+  email: boolean;
+  marketing: boolean;
+  rankChanges: boolean;
+  teamUpdates: boolean;
+}
+
+export interface UserSubscription {
+  plan: string;
+  status: 'active' | 'canceled' | 'past_due';
+  currentPeriodEnd: string;
+  cancelAtPeriodEnd: boolean;
+}
+
+export interface ProfileBoost {
+  id: string;
+  type: string;
+  duration: number;
+  startDate?: string;
+  endDate?: string;
+  level?: number;
+  effects?: string[];
 }
 
 export interface SocialLink {
   platform: string;
   url: string;
-  isVerified?: boolean;
+  username?: string;
+  verified?: boolean;
+  id?: string;
+  clicks?: number;
 }
 
 export interface ProfileImage {
   url: string;
-  isPremium: boolean;
-  isActive: boolean;
+  isPrimary?: boolean;
+  id?: string;
+  caption?: string;
 }
 
-export interface UserCosmetics {
-  borders?: string[];
-  colors?: string[];
-  fonts?: string[];
-  emojis?: string[];
-  titles?: string[];
-  backgrounds?: string[];
-  effects?: string[];
-  badges?: string[];
-  themes?: string[];
-  activeBorder?: string;
-  activeColor?: string;
-  activeFont?: string;
-  activeEmoji?: string;
-  activeBadge?: string;
-  activeBackground?: string;
-  activeEffect?: string;
-  foundersPass?: boolean;
+export interface LeaderboardUser extends User {
+  previousRank?: number;
+  rankChange?: number;
+  spentAmount?: number;
+  avatarUrl?: string;
+  isVIP?: boolean;
 }
 
-export interface ProfileBoost {
-  id: string;
-  name: string;
-  description: string;
-  duration: number;
-  startTime: number;
-  endTime: number;
-  effectId?: string;
-  strength?: number;
-  type?: string;
-}
-
-export type ProfileTab = 'overview' | 'settings' | 'subscription' | 'activity' | 'wallet' | 'achievements' | 'faq';
-
-export type UserGender = 'king' | 'queen' | 'other';
-export type TeamType = 'red' | 'blue' | 'green';
-export type UserTeam = {
-  id: string;
-  name: string;
-  description: string;
-  color: string;
-  members: number;
-  totalSpent: number;
-  rank: number;
-};
+export type SocialPlatform = 'twitter' | 'instagram' | 'tiktok' | 'youtube' | 'twitch' | 'discord' | 'linkedin' | 'github' | 'website';

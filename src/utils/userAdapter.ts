@@ -1,60 +1,71 @@
 
-import { User, UserProfile } from '@/types/user';
+/**
+ * Utility functions for adapting user data
+ */
+import { User } from '@/types/user';
 
 /**
- * Adapts a User object to a UserProfile object
+ * Ensures we have a valid user object, providing defaults for missing properties
+ * @param user User object, potentially with missing fields
+ * @returns Complete user object with all required fields
  */
-export const adaptUserToUserProfile = (user: User): UserProfile => {
+export default function ensureUser(user: Partial<User> | null | undefined): User {
+  if (!user) {
+    return createDefaultUser();
+  }
+
+  // Create a complete user with all required fields
   return {
-    id: user.id,
-    username: user.username,
-    email: user.email,
-    displayName: user.displayName,
-    joinedAt: user.joinedAt || user.createdAt,
-    rank: user.rank,
-    amountSpent: user.amountSpent,
-    walletBalance: user.walletBalance,
-    profileImage: user.profileImage,
-    bio: user.bio,
-    team: user.team,
-    tier: user.tier,
-    gender: user.gender,
-    spendStreak: user.spendStreak,
-    totalSpent: user.totalSpent || user.amountSpent,
-    spentAmount: user.spentAmount || user.amountSpent,
-    followers: user.followers,
-    following: user.following
+    id: user.id || 'guest',
+    username: user.username || 'guest',
+    displayName: user.displayName || 'Guest User',
+    email: user.email || '',
+    profileImage: user.profileImage || '/placeholder.svg',
+    joinedAt: user.joinedAt || new Date().toISOString(),
+    createdAt: user.createdAt || new Date().toISOString(),
+    tier: user.tier || 'free',
+    team: user.team || 'red',
+    rank: user.rank || 0,
+    walletBalance: user.walletBalance || 0,
+    amountSpent: user.amountSpent || 0,
+    // Add any additional fields with their default values
+    gender: user.gender || 'neutral',
+    profileViews: user.profileViews || 0,
+    profileClicks: user.profileClicks || 0,
+    followers: user.followers || 0,
+    following: user.following || 0,
+    lastActive: user.lastActive || new Date().toISOString(),
+    totalSpent: user.totalSpent || 0,
+    role: user.role || 'user',
+    ...user, // Keep any additional properties from the original user
   };
-};
+}
 
 /**
- * Adapts a UserProfile object to a User object
+ * Creates a default user object with placeholder values
+ * @returns Default user object
  */
-export const adaptUserProfileToUser = (profile: UserProfile): User => {
+function createDefaultUser(): User {
   return {
-    id: profile.id,
-    username: profile.username,
-    email: profile.email,
-    displayName: profile.displayName,
-    joinedAt: profile.joinedAt,
-    createdAt: profile.joinedAt,
-    rank: profile.rank,
-    amountSpent: profile.amountSpent,
-    walletBalance: profile.walletBalance,
-    profileImage: profile.profileImage,
-    bio: profile.bio,
-    team: profile.team,
-    tier: profile.tier,
-    gender: profile.gender,
-    spendStreak: profile.spendStreak,
-    totalSpent: profile.totalSpent || profile.amountSpent,
-    spentAmount: profile.spentAmount || profile.amountSpent,
-    followers: profile.followers,
-    following: profile.following
+    id: 'guest',
+    username: 'guest',
+    displayName: 'Guest User',
+    email: '',
+    profileImage: '/placeholder.svg',
+    joinedAt: new Date().toISOString(),
+    createdAt: new Date().toISOString(),
+    tier: 'free',
+    team: 'red',
+    rank: 0,
+    walletBalance: 0,
+    amountSpent: 0,
+    gender: 'neutral',
+    profileViews: 0,
+    profileClicks: 0,
+    followers: 0,
+    following: 0,
+    lastActive: new Date().toISOString(),
+    totalSpent: 0,
+    role: 'user',
   };
-};
-
-export default {
-  adaptUserToUserProfile,
-  adaptUserProfileToUser
-};
+}
