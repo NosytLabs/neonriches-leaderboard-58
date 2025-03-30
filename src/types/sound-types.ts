@@ -37,7 +37,8 @@ export type SoundType =
   | 'smoke'
   | 'tab'
   | 'mockery'
-  | 'cosmetic';
+  | 'cosmetic'
+  | 'inkScribble';
 
 export interface SoundConfig {
   enabled: boolean;

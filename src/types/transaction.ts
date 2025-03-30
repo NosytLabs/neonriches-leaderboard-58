@@ -18,7 +18,8 @@ export type TransactionType =
   'shame' |
   'wish' |
   'spend' |
-  'protection';
+  'protection' |
+  'cosmetic';
 
 export interface Transaction {
   id: string;

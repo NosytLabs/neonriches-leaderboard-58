@@ -5,8 +5,8 @@ import { Certificate } from './certificates';
 
 export type UserRole = 'user' | 'admin' | 'moderator';
 export type UserStatus = 'active' | 'inactive' | 'banned' | 'pending';
-export type UserTier = 'basic' | 'plus' | 'premium' | 'royal' | 'diamond' | 'free' | 'bronze' | 'silver' | 'gold' | 'platinum' | 'pro' | 'founder';
-export type UserGender = 'male' | 'female' | 'other' | 'unspecified' | 'king' | 'queen' | 'jester' | 'noble';
+export type UserTier = 'basic' | 'plus' | 'premium' | 'royal' | 'diamond' | 'free' | 'bronze' | 'silver' | 'gold' | 'platinum' | 'pro' | 'founder' | 'whale';
+export type UserGender = 'male' | 'female' | 'other' | 'unspecified' | 'king' | 'queen' | 'jester' | 'noble' | 'neutral';
 export type TeamType = 'red' | 'green' | 'blue' | 'gold' | 'none' | 'silver' | 'bronze' | 'Red' | 'Green' | 'Blue';
 export type UserTeam = TeamType;
 
@@ -27,6 +27,7 @@ export interface UserCosmetics {
   activeEffect?: string;
   activeEmoji?: string;
   activeTheme?: string;
+  activeTitle?: string;
   socialLinks?: SocialLink[];
   foundersPass?: boolean;
 }
@@ -81,6 +82,7 @@ export interface UserSettings {
   shameAlerts?: boolean;
   newFollowerAlerts?: boolean;
   receiveRoyalAnnouncements?: boolean;
+  allowMessages?: boolean;
 }
 
 export interface UserSubscription {
@@ -96,6 +98,8 @@ export interface UserSubscription {
   cancelAtPeriodEnd?: boolean;
   nextBillingDate?: string | Date;
   active?: boolean;
+  status?: string;
+  plan?: string;
 }
 
 export interface CertificateNFT {
@@ -143,14 +147,20 @@ export interface UserProfile {
   isVerified?: boolean;
   isModerator?: boolean;
   isVIP?: boolean;
-  activeTitle?: string;
   followers?: number;
   following?: number;
   profileViews?: number;
   profileClicks?: number;
   lastSeen?: string;
   certificateNFT?: CertificateNFT;
+  spendStreak?: number;
+  lastActive?: string;
+  purchasedFeatures?: string[];
 }
 
 // Legacy alias for backwards compatibility
 export type User = UserProfile;
+
+// Export SocialLink to fix imported but not exported errors
+export { SocialLink };
+export type ProfileLink = SocialLink;

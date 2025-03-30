@@ -30,6 +30,7 @@ export interface BoostEffect {
   durationDays?: number;
   previewImage?: string;
   rarity?: string; // For backward compatibility
+  effectId?: string;
 }
 
 export interface ProfileBoostData {
@@ -42,6 +43,9 @@ export interface ProfileBoostData {
   type: BoostEffectType | string;
   strength: number;
   tier: string;
+  effectId?: string;
+  level?: number;
+  endDate?: string;
 }
 
 // Alias for backward compatibility

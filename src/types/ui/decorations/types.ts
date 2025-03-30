@@ -2,29 +2,34 @@
 import { ReactNode } from 'react';
 
 export type MedievalIconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
-export type MedievalIconColor = 'gold' | 'silver' | 'bronze' | 'purple' | 'green' | 'red' | 'blue' | 'default' | 'royal';
-export type MedievalIconName = 'crown' | 'sword' | 'shield' | 'scroll' | 'key' | 'goblet' | 'treasure' | 'castle' | 'dragon' | 'knight' | 'banner';
-export type MedievalDecorationType = 'border' | 'icon' | 'flourish' | 'banner' | 'insignia';
-export type MedievalDecorationSize = MedievalIconSize;
-export type MedievalDecorationColor = MedievalIconColor;
+export type MedievalIconColor = 
+  'default' | 
+  'gold' | 
+  'silver' | 
+  'bronze' | 
+  'purple' | 
+  'green' | 
+  'red' | 
+  'blue' | 
+  'royal' |
+  'crimson';
 
 export interface BaseDecorationProps {
-  size?: MedievalIconSize;
   color?: MedievalIconColor;
+  size?: MedievalIconSize;
   className?: string;
-  children?: ReactNode;
+  animate?: boolean; 
+  border?: string;
+  container?: string;
+  icon?: string;
 }
-
-export type RoyalDividerVariant = 'line' | 'double' | 'fancy' | 'ornate' | 'simple';
 
 export interface RoyalDividerProps extends BaseDecorationProps {
-  variant?: RoyalDividerVariant;
-  label?: string;
-  labelPosition?: 'left' | 'center' | 'right';
-  color?: MedievalIconColor | 'royal' | 'gold' | 'default' | 'crimson' | 'purple';
+  color?: MedievalIconColor | 'crimson';
+  variant?: 'single' | 'double' | 'fancy';
+  text?: string;
 }
 
-// Utility functions for handling decoration sizes and colors
 export const sizeClasses: Record<MedievalIconSize, string> = {
   'xs': 'w-3 h-3',
   'sm': 'w-4 h-4',
@@ -58,6 +63,7 @@ export const toMedievalIconColor = (color: string): MedievalIconColor => {
     case 'red': return 'red';
     case 'blue': return 'blue';
     case 'royal': return 'royal';
+    case 'crimson': return 'red';
     default: return 'default';
   }
 };

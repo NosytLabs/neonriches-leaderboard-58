@@ -1,6 +1,6 @@
 
 import { useCallback } from 'react';
-import { useSound } from './sounds/use-sound';
+import { useSound } from '@/hooks/sounds/use-sound';
 import { SoundType } from '@/types/sound-types';
 
 interface UseNotificationSoundsOptions {
@@ -40,4 +40,5 @@ const useNotificationSounds = (options: UseNotificationSoundsOptions = {}) => {
   };
 };
 
+export { useNotificationSounds };
 export default useNotificationSounds;

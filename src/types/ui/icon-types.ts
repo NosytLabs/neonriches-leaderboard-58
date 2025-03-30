@@ -1,52 +1,39 @@
 
-import { LucideProps } from 'lucide-react';
 import { CSSProperties } from 'react';
+import { LucideProps } from 'lucide-react';
 
-export type IconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+export type IconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+export type IconColor = 'default' | 'primary' | 'secondary' | 'accent' | 'warning' | 'danger' | 'success' | 'info' | 'royal' | 'gold';
+export type IconStyle = 'default' | 'outline' | 'solid' | 'medieval';
+export type IconAnimation = 'none' | 'spin' | 'pulse' | 'bounce' | 'shake';
 
-export type MedievalIconColor = 
-  | 'default' 
-  | 'gold' 
-  | 'silver' 
-  | 'crimson' 
-  | 'royal' 
-  | 'navy' 
-  | 'bronze' 
-  | 'purple';
-
-export type MedievalIconName = 
-  | 'crown' 
-  | 'shield' 
-  | 'sword' 
-  | 'scroll' 
-  | 'heart' 
-  | 'trophy' 
-  | 'coins' 
-  | 'key' 
-  | 'seal' 
-  | 'medal' 
-  | 'gem' 
-  | 'wallet'
-  | 'castle'
-  | string;
-
-export type IconColor = MedievalIconColor | string;
+export interface BaseIconProps {
+  name: string;
+  size?: IconSize;
+  color?: IconColor;
+  className?: string;
+  style?: IconStyle | CSSProperties;
+  animation?: IconAnimation;
+}
 
 export interface IconProps extends Omit<LucideProps, 'color'> {
-  name: MedievalIconName | string;
-  size?: IconSize | number;
+  size?: IconSize;
   color?: IconColor;
-  style?: 'default' | 'medieval' | CSSProperties;
+  style?: IconStyle | CSSProperties;
+  animate?: boolean;
+  animated?: boolean;
+}
+
+export interface MedievalIconProps {
+  name: string;
+  size?: IconSize;
+  color?: IconColor;
+  className?: string;
   animate?: boolean;
 }
 
-export type MedievalDecorationColor = 'gold' | 'silver' | 'crimson' | 'royal' | 'purple' | 'navy' | 'platinum' | 'bronze';
-export type MedievalSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
-
-export interface MedievalDecorationProps {
-  color?: MedievalDecorationColor;
-  size?: MedievalSize;
-  className?: string;
+export interface AnimatedIconProps extends IconProps {
+  animation: IconAnimation;
+  duration?: number;
+  iterationCount?: number | 'infinite';
 }
-
-export type RoyalDividerVariant = 'line' | 'double' | 'fancy' | 'ornate' | 'simple' | 'treasure' | 'quill';

@@ -4,16 +4,49 @@ import { UserProfile, UserTier } from './user';
 export type MockeryAction = 
   | 'tomatoes' 
   | 'eggs' 
-  | 'putridEggs' 
+  | 'putridEggs'
   | 'stocks' 
   | 'silence' 
   | 'courtJester'
-  | 'smokeBomb';
+  | 'smokeBomb'
+  | 'dunce'
+  | 'glitterBomb'
+  | 'royalPie'
+  | 'jokeCrown'
+  | 'memeFrame'
+  | 'roast'
+  | 'ridicule'
+  | 'shame'
+  | 'mock'
+  | 'humiliate'
+  | 'expose'
+  | 'guillotine'
+  | 'dungeons'
+  | 'removal'
+  | 'crown'
+  | 'target'
+  | 'challenge'
+  | 'jest'
+  | 'protection'
+  | 'immune'
+  | 'defeat'
+  | 'jester'
+  | 'taunt';
 
-export type ShameAction = 'tomatoes' | 'eggs' | 'stocks';
+export type ShameAction = 'tomatoes' | 'eggs' | 'stocks' | MockeryAction;
 export type ExtendedMockeryAction = MockeryAction | ShameAction;
 
-export type MockeryTier = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
+export type MockeryTier = 
+  | 'common' 
+  | 'uncommon' 
+  | 'rare' 
+  | 'epic' 
+  | 'legendary'
+  | 'bronze'
+  | 'silver'
+  | 'gold'
+  | 'platinum'
+  | 'diamond';
 
 export interface MockeryEvent {
   id: string;
@@ -26,6 +59,14 @@ export interface MockeryEvent {
   isPaid: boolean;
   amount: number;
   description?: string;
+  sourceId?: string;
+  sourceName?: string;
+  targetId?: string;
+  targetName?: string;
+  action?: MockeryAction;
+  appliedAt?: string;
+  appliedById?: string;
+  active?: boolean;
 }
 
 export interface MockeryEffectData {
@@ -62,7 +103,7 @@ export interface MockedUser {
   username: string;
   displayName: string;
   profileImage?: string;
-  mockedReason?: string;
+  mockedReason: string;
   mockedTimestamp: string;
   mockedBy: string;
   mockedTier?: UserTier | string;

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -95,10 +94,11 @@ const FireSaleEvent = ({ eventId, startDate, endDate }: FireSaleEventProps) => {
     
     try {
       const success = await spendFromWallet(
-        ensureUser(user),
+        user,
         item.price,
-        'cosmetic',
-        `Purchased ${item.name} cosmetic item`
+        'purchase' as any,
+        `Purchased ${item.name} from Fire Sale`,
+        { cosmeticId: item.id }
       );
       
       if (success) {
