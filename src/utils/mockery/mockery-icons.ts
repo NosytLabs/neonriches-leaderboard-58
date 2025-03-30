@@ -3,35 +3,35 @@ import React from 'react';
 import { Target, Shield, Bomb, Crown, AlertCircle, Feather, Skull, ThumbsDown } from 'lucide-react';
 import { MockeryAction } from '@/types/mockery';
 
-// Export utility function to get mockery action icon
-export const getMockeryIcon = (action: MockeryAction): React.ReactNode => {
+// Export utility function to get mockery action icon component
+export const getMockeryIcon = (action: MockeryAction): React.FC<{ size?: number }> => {
   switch (action) {
     case 'tomatoes':
     case 'eggs':
     case 'putridEggs':
-      return <Target size={16} />;
+      return Target;
     case 'stocks':
     case 'dunce':
     case 'silence':
-      return <AlertCircle size={16} />;
+      return AlertCircle;
     case 'courtJester':
     case 'jest':
-      return <Feather size={16} />;
+      return Feather;
     case 'smokeBomb':
     case 'glitterBomb':
-      return <Bomb size={16} />;
+      return Bomb;
     case 'protection':
     case 'immune':
-      return <Shield size={16} />;
+      return Shield;
     case 'guillotine':
     case 'dungeons':
-      return <Skull size={16} />;
+      return Skull;
     case 'crown':
     case 'target':
     case 'challenge':
-      return <Crown size={16} />;
+      return Crown;
     default:
-      return <ThumbsDown size={16} />;
+      return ThumbsDown;
   }
 };
 
@@ -84,7 +84,7 @@ export const getMockeryActionIconColor = (action: MockeryAction): string => {
   }
 };
 
-export const getMockeryActionIcon = (action: MockeryAction): React.ReactNode => {
+export const getMockeryActionIcon = (action: MockeryAction): React.FC<{ size?: number }> => {
   // Reusing the getMockeryIcon function for now, but can be extended
   return getMockeryIcon(action);
 };
