@@ -1,9 +1,8 @@
-
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { Toaster } from "@/components/ui/toaster";
-import { AuthProvider } from '@/contexts/auth/AuthContext';
+import { AuthProvider } from '@/contexts/auth';
 import Home from '@/pages/Home';
 import Login from '@/pages/Login';
 import SignUp from '@/pages/SignUp';

@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { LayoutList, Coins, Calendar, Scroll, ShieldQuestion, Shield, Crown, Feather, Gift, MessageSquare } from 'lucide-react';
-import AuthButton from '@/components/AuthButton';
+import AuthButton from '@/components/auth/AuthButton';
 import { useAuth } from '@/contexts/auth';
 import MedievalIcon from '@/components/ui/medieval-icon';
 import { Separator } from '@/components/ui/separator';
