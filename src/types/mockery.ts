@@ -1,8 +1,8 @@
 
 // Mockery-related types
-export type MockeryAction = 'tomatoes' | 'putridEggs' | 'stocks' | 'silence' | 'courtJester' | 'dunce' | 'smokeBomb';
-export type ShameAction = 'ridicule' | 'humiliate' | 'expose' | 'mock' | MockeryAction;
-export type MockeryTier = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
+export type MockeryAction = 'tomatoes' | 'putridEggs' | 'stocks' | 'silence' | 'courtJester' | 'dunce' | 'smokeBomb' | 'eggs' | 'jester' | 'protection' | 'immune' | 'royalPie' | 'glitterBomb' | 'jokeCrown' | 'memeFrame';
+export type ShameAction = 'ridicule' | 'humiliate' | 'expose' | 'mock' | 'tomatoes' | 'stocks' | 'eggs' | 'silence' | 'courtJester' | 'dunce' | 'smokeBomb' | 'shame' | 'jester';
+export type MockeryTier = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary' | 'premium';
 
 export interface MockeryEvent {
   id: string;
@@ -13,6 +13,9 @@ export interface MockeryEvent {
   duration: number; // in milliseconds
   expiresAt: string;
   active: boolean;
+  appliedTo?: string;
+  appliedBy?: string;
+  type?: string;
 }
 
 export interface MockeryEffectData {

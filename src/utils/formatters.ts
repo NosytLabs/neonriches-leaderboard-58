@@ -103,3 +103,12 @@ export const capitalize = (text: string): string => {
   if (!text) return '';
   return text.charAt(0).toUpperCase() + text.slice(1);
 };
+
+/**
+ * Formats a wallet address to show a truncated version
+ */
+export const formatAddress = (address: string): string => {
+  if (!address) return '';
+  if (address.length <= 12) return address;
+  return `${address.substring(0, 6)}...${address.substring(address.length - 4)}`;
+};

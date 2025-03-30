@@ -1,17 +1,26 @@
 
 export type UserTier = 'free' | 'bronze' | 'silver' | 'gold' | 'platinum' | 'royal' | 'premium' | 'pro' | 'basic';
 export type UserGender = 'male' | 'female' | 'other' | 'prefer-not-to-say' | 'king' | 'queen' | 'jester' | 'neutral' | 'noble';
-export type TeamType = 'red' | 'green' | 'blue' | 'none';
+export type TeamType = 'red' | 'green' | 'blue' | 'none' | null;
 export type UserTeam = 'red' | 'green' | 'blue';
 
+export interface CosmeticItem {
+  id: string;
+  name: string;
+  description?: string;
+  type?: string;
+  tier?: string;
+  cost?: number;
+}
+
 export interface UserCosmetics {
-  borders?: string[];
-  colors?: string[];
-  fonts?: string[];
-  emojis?: string[];
-  titles?: string[];
-  backgrounds?: string[];
-  effects?: string[];
+  borders?: CosmeticItem[];
+  colors?: CosmeticItem[];
+  fonts?: CosmeticItem[];
+  emojis?: CosmeticItem[];
+  titles?: CosmeticItem[];
+  backgrounds?: CosmeticItem[];
+  effects?: CosmeticItem[];
   badges?: string[];
   themes?: string[];
   activeBorder?: string | null;
@@ -25,7 +34,7 @@ export interface ProfileBoost {
   id: string;
   startDate: string;
   endDate: string;
-  type: string;
+  type?: string;
   level?: number;
   strength?: number;
   appliedBy: string;
@@ -35,7 +44,7 @@ export interface ProfileBoost {
 
 export interface SocialLink {
   id?: string;
-  platform: string;
+  platform?: string;
   url: string;
   username?: string;
   verified?: boolean;
@@ -84,6 +93,9 @@ export interface UserProfile {
   profileImages?: ProfileImage[];
   walletAddress?: string;
   isVIP?: boolean;
+  certificateNFT?: {
+    mintAddress: string;
+  };
 }
 
 export interface UserSubscription {
@@ -104,10 +116,6 @@ export interface User extends UserProfile {
   notifications?: UserNotificationSettings;
   level?: number;
   experience?: number;
-  gender?: string;
-  cosmetics?: UserCosmetics;
-  isVerified?: boolean;
-  updatedAt?: string;
   purchasedFeatures?: string[];
 }
 
@@ -148,4 +156,24 @@ export interface LeaderboardUser extends UserProfile {
   spendChange?: number;
   avatarUrl?: string;
   isVIP?: boolean;
+}
+
+export interface Badge {
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+  color?: string;
+  earnedAt?: string;
+}
+
+export interface Achievement {
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+  progress: number;
+  maxProgress: number;
+  earnedAt?: string;
+  category?: string;
 }

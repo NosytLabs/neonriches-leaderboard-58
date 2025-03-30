@@ -29,7 +29,7 @@ const ThroneLogoIcon: React.FC<ThroneLogoIconProps> = ({
     tap: { scale: 0.95, transition: { duration: 0.1 } },
     animate: animated ? {
       y: [0, -3, 0],
-      transition: { duration: 3, repeat: Infinity, repeatType: "mirror" }
+      transition: { duration: 3, repeat: Infinity, repeatType: "mirror" as const }
     } : {}
   };
 

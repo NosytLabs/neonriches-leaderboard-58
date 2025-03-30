@@ -1,71 +1,41 @@
 
-// Solana-related types
-export interface SolanaTreasuryInfo {
-  treasuryAddress: string;
-  currentBalance: number;
-  totalDeposited: number;
-  totalWithdrawn: number;
-  transactionCount: number;
-  lastUpdated: string;
-  transactions: SolanaTransaction[];
-}
-
 export interface SolanaTransaction {
-  id: string;
-  timestamp: string;
-  amount: number;
-  type: 'deposit' | 'withdrawal' | 'spend';
   signature: string;
-  userAddress: string;
-  status: 'confirmed' | 'pending' | 'failed';
+  slot: number;
+  timestamp: number;
+  amount: number;
+  usdValue: number;
+  type: 'in' | 'out';
+  status: 'success' | 'pending' | 'failed';
+  sender?: string;
+  recipient?: string;
 }
 
-export interface SolanaWallet {
-  address: string;
-  balance: number;
-  transactions: SolanaTransaction[];
+export interface SolanaNFT {
+  mint: string;
+  name: string;
+  symbol: string;
+  image: string;
+  description: string;
+  attributes: Array<{
+    trait_type: string;
+    value: string;
+  }>;
+  owner: string;
+  updateAuthority: string;
 }
 
 export interface OnChainLeaderboardEntry {
   id: string;
-  address: string;
-  username: string;
-  rank: number;
+  position: number;
   amount: number;
-  totalSpent: number;
-  lastTransaction: string;
+  userId?: string;
+  publicKey?: string;
+  spentAmount?: number;
+  amountSpent?: number;
+  totalDeposited?: number;
+  timestamp?: string;
 }
 
-export interface SolanaNFT {
-  mintAddress: string;
-  name: string;
-  description: string;
-  image: string;
-  attributes: {
-    trait_type: string;
-    value: string | number;
-  }[];
-  owner: string;
-  uri: string;
-}
-
-export interface CertificateMetadata {
-  name: string;
-  description: string;
-  image: string;
-  attributes: {
-    trait_type: string;
-    value: string | number;
-  }[];
-  properties: {
-    files: {
-      uri: string;
-      type: string;
-    }[];
-    category: string;
-    creators: {
-      address: string;
-      share: number;
-    }[];
-  };
-}
+export type SolanaNftInfo = SolanaNFT;
+export type LeaderboardEntry = OnChainLeaderboardEntry;
