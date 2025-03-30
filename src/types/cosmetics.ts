@@ -1,17 +1,11 @@
-
 export enum CosmeticCategory {
-  TITLE = 'title',
-  BADGE = 'badge',
-  BACKGROUND = 'background',
-  BORDER = 'border',
-  EFFECT = 'effect',
-  EMOJI = 'emoji',
-  FONT = 'font',
-  THEME = 'theme',
-  COLOR = 'color',
   APPEARANCE = 'appearance',
   PROFILE = 'profile',
-  INTERACTION = 'interaction'
+  INTERACTION = 'interaction',
+  VISUAL = 'visual',
+  ANIMATION = 'animation',
+  SOUND = 'sound',
+  SPECIAL = 'special'
 }
 
 export type CosmeticRarity = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary' | 'mythic' | 'unique' | 'royal';
@@ -20,32 +14,37 @@ export interface CosmeticItem {
   id: string;
   name: string;
   description: string;
+  category: CosmeticCategory;
   type: string;
-  category?: CosmeticCategory;
-  rarity: string;
-  price: number;
+  rarity: CosmeticRarity;
   cost: number;
-  image?: string;
+  price: number;
   cssClass?: string;
-  unlockRequirement?: string;
   imageSrc?: string;
   imageUrl?: string;
+  image?: string;
 }
 
-export interface CosmeticState {
-  selectedBadge: string | null;
-  selectedTitle: string | null;
-  selectedBorder: string | null;
-  selectedBackground: string | null;
-  selectedEffect: string | null;
-  selectedEmoji: string | null;
+export interface UserCosmeticState {
+  badges: string[];
+  titles: string[];
+  borders: string[];
+  effects: string[];
+  emojis: string[];
+  fonts?: string[];
+  colors?: string[];
+  backgrounds?: string[];
+  themes?: string[];
+  socialLinks?: any[];
+  activeTitle?: string;
+  activeBorder?: string;
+  activeEffect?: string;
+  activeBackground?: string;
+  activeEmoji?: string;
 }
 
-export type UserCosmeticState = CosmeticState;
-
-// Helper functions for rarity styling
-export const getRarityColor = (rarity: string): string => {
-  switch(rarity.toLowerCase()) {
+export const getRarityColor = (rarity: CosmeticRarity): string => {
+  switch(rarity) {
     case 'common': return 'text-gray-300';
     case 'uncommon': return 'text-green-400';
     case 'rare': return 'text-blue-400';
@@ -58,8 +57,8 @@ export const getRarityColor = (rarity: string): string => {
   }
 };
 
-export const getRarityBgColor = (rarity: string): string => {
-  switch(rarity.toLowerCase()) {
+export const getRarityBgColor = (rarity: CosmeticRarity): string => {
+  switch(rarity) {
     case 'common': return 'bg-gray-700/50';
     case 'uncommon': return 'bg-green-900/50';
     case 'rare': return 'bg-blue-900/50';
@@ -72,8 +71,8 @@ export const getRarityBgColor = (rarity: string): string => {
   }
 };
 
-export const getRarityBorderColor = (rarity: string): string => {
-  switch(rarity.toLowerCase()) {
+export const getRarityBorderColor = (rarity: CosmeticRarity): string => {
+  switch(rarity) {
     case 'common': return 'border-gray-500/50';
     case 'uncommon': return 'border-green-500/50';
     case 'rare': return 'border-blue-500/50';
@@ -86,23 +85,8 @@ export const getRarityBorderColor = (rarity: string): string => {
   }
 };
 
-// Define UserCosmetics type
-export interface UserCosmetics {
-  badges: string[];
-  titles: string[];
-  borders: string[];
-  effects: string[];
-  emojis: string[];
-  fonts: string[];
-  colors: string[];
-  backgrounds: string[];
-  themes: string[];
-  
-  // Optional properties
-  foundersPass?: boolean;
-  activeBorder?: string;
-  activeColor?: string;
-  activeFont?: string;
-  activeEmoji?: string;
-  activeTitle?: string;
-}
+export type UserCosmetics = UserCosmeticState;
+
+export type CosmeticType = string;
+export type CosmeticPlacement = 'profile' | 'card' | 'leaderboard' | 'chat' | 'global';
+export type UserCosmeticItem = CosmeticItem & { equipped: boolean; acquired: string };

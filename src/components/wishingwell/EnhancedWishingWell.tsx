@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -46,7 +45,7 @@ const EnhancedWishingWell: React.FC<EnhancedWishingWellProps> = ({ user }) => {
     
     // Simulate wish processing
     setTimeout(async () => {
-      const result = await makeWish(user);
+      const result = makeWish(user.id);
       
       if (result.success) {
         playSound('success');

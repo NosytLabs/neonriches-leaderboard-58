@@ -1,81 +1,70 @@
 
 import React from 'react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Trophy, X } from 'lucide-react';
 import { CosmeticItem } from '@/types/cosmetics';
+import { Sparkles } from 'lucide-react';
 
 export type WishResultType = 'win' | 'lose' | 'pending';
 
 export interface WishResultModalProps {
-  isOpen: boolean;
-  onClose: () => void;
   result: WishResultType;
-  title?: string;
-  message?: string;
-  rarity?: string;
   reward?: CosmeticItem;
+  rarity?: string;
+  title: string;
+  message: string;
+  onClose: () => void;
+  onOpenChange?: (open: boolean) => void;
 }
 
-const WishResultModal = ({ isOpen, onClose, result, title, message, rarity, reward }: WishResultModalProps) => {
-  const getResultContent = () => {
-    switch (result) {
-      case 'win':
-        return {
-          icon: <Trophy className="h-12 w-12 text-royal-gold" />,
-          title: title || 'Congratulations!',
-          message: message || 'Your wish has been granted!',
-          buttonText: 'Claim Reward',
-          buttonClass: 'bg-royal-gold text-black hover:bg-royal-gold/90'
-        };
-      case 'lose':
-        return {
-          icon: <X className="h-12 w-12 text-red-500" />,
-          title: title || 'Better luck next time!',
-          message: message || 'Your wish was not granted this time.',
-          buttonText: 'Try Again',
-          buttonClass: 'bg-gray-700 hover:bg-gray-600'
-        };
-      default:
-        return {
-          icon: null,
-          title: 'Processing...',
-          message: 'Your wish is being processed.',
-          buttonText: 'Close',
-          buttonClass: 'bg-gray-700 hover:bg-gray-600'
-        };
-    }
-  };
-
-  const resultContent = getResultContent();
-
+const WishResultModal: React.FC<WishResultModalProps> = ({
+  result,
+  reward,
+  rarity,
+  title,
+  message,
+  onClose,
+  onOpenChange
+}) => {
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="glass-morphism border-white/10 max-w-md">
-        <DialogHeader className="flex flex-col items-center text-center">
-          <div className="mb-4">{resultContent.icon}</div>
-          <DialogTitle className="text-xl font-bold">{resultContent.title}</DialogTitle>
+    <Dialog onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2">
+            <Sparkles className="h-5 w-5 text-royal-gold" />
+            {title}
+          </DialogTitle>
         </DialogHeader>
         
-        <div className="py-4 text-center">
-          <p className="text-white/80">{resultContent.message}</p>
-          {rarity && (
-            <p className="mt-2 text-royal-gold font-medium">{rarity} Rarity</p>
+        <div className="flex flex-col items-center py-6 gap-4">
+          {result === 'win' && reward && (
+            <div className="p-6 border rounded-lg bg-black/30 border-royal-gold/50 animate-pulse">
+              <img 
+                src={reward.imageSrc || '/placeholder-item.png'} 
+                alt={reward.name} 
+                className="w-24 h-24 mx-auto"
+              />
+              <h3 className="text-lg font-bold mt-2 text-center">{reward.name}</h3>
+              <p className="text-sm text-white/70 text-center">{reward.description}</p>
+            </div>
           )}
-          {reward && (
-            <div className="mt-4">
-              <h4 className="font-semibold">{reward.name}</h4>
-              <p className="text-sm text-white/70">{reward.description}</p>
+          
+          <p className="text-center text-white/80">{message}</p>
+          
+          {result === 'win' && (
+            <div className="text-center text-royal-gold font-medium animate-bounce">
+              <Sparkles className="h-4 w-4 inline-block mr-1" />
+              {rarity} item acquired!
             </div>
           )}
         </div>
         
         <DialogFooter>
           <Button 
-            className={`w-full ${resultContent.buttonClass}`} 
-            onClick={onClose}
+            onClick={onClose} 
+            className={result === 'win' ? 'bg-royal-gold text-black hover:bg-royal-gold/90' : ''}
           >
-            {resultContent.buttonText}
+            Close
           </Button>
         </DialogFooter>
       </DialogContent>

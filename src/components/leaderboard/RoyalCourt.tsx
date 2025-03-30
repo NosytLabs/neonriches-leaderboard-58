@@ -31,7 +31,6 @@ const mockRoyalUsers: User[] = [
     joinDate: '2023-01-01T00:00:00Z',
     socialLinks: [],
     createdAt: '2023-01-01T00:00:00Z',
-    isAuthenticated: true,
     isAdmin: true,
     isVerified: true,
     lastLogin: '2023-01-01T00:00:00Z'
@@ -53,7 +52,6 @@ const mockRoyalUsers: User[] = [
     joinDate: '2023-02-15T00:00:00Z',
     socialLinks: [],
     createdAt: '2023-02-15T00:00:00Z',
-    isAuthenticated: true,
     isAdmin: false,
     isVerified: true,
     lastLogin: '2023-02-15T00:00:00Z'
@@ -75,7 +73,6 @@ const mockRoyalUsers: User[] = [
     joinDate: '2023-03-10T00:00:00Z',
     socialLinks: [],
     createdAt: '2023-03-10T00:00:00Z',
-    isAuthenticated: true,
     isAdmin: false,
     isVerified: false,
     lastLogin: '2023-03-10T00:00:00Z'
@@ -97,7 +94,6 @@ const mockRoyalUsers: User[] = [
     joinDate: '2023-04-05T00:00:00Z',
     socialLinks: [],
     createdAt: '2023-04-05T00:00:00Z',
-    isAuthenticated: true,
     isAdmin: false,
     isVerified: false,
     lastLogin: '2023-04-05T00:00:00Z'
@@ -119,7 +115,6 @@ const mockRoyalUsers: User[] = [
     joinDate: '2023-05-20T00:00:00Z',
     socialLinks: [],
     createdAt: '2023-05-20T00:00:00Z',
-    isAuthenticated: true,
     isAdmin: false,
     isVerified: false,
     lastLogin: '2023-05-20T00:00:00Z'

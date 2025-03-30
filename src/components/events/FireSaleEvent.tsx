@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -5,8 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Flame, Tag, Clock, Coins } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import MedievalIcon from '@/components/ui/medieval-icon';
-import { CosmeticItem, CosmeticRarity } from '@/types/cosmetics';
-import { getRarityColor, getRarityBgColor, getRarityBorderColor } from '@/utils/cosmetics';
+import { CosmeticItem, CosmeticRarity, getRarityColor, getRarityBgColor, getRarityBorderColor } from '@/types/cosmetics';
 import { cosmeticsData } from '@/data/cosmeticsData';
 import { formatCurrency } from '@/utils/formatters';
 import { useAuth } from '@/contexts/AuthContext';

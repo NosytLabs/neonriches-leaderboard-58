@@ -1,10 +1,9 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Pencil, Trash2, Check, Star, Plus } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
-import { ProfileImage } from '@/types/user';
+import { ProfileImage, UserProfile } from '@/types/user';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
@@ -12,13 +11,13 @@ import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 
 interface ImagesEditorProps {
-  onSave: (images: ProfileImage[]) => void;
+  images: ProfileImage[];
+  onImagesChange: Dispatch<SetStateAction<ProfileImage[]>>;
+  user: UserProfile;
 }
 
-const ImagesEditor: React.FC<ImagesEditorProps> = ({ onSave }) => {
-  const { user } = useAuth();
+const ImagesEditor: React.FC<ImagesEditorProps> = ({ images, onImagesChange, user }) => {
   const { toast } = useToast();
-  const [images, setImages] = useState<ProfileImage[]>(user?.profileImages || []);
   const [editingImageId, setEditingImageId] = useState<string | null>(null);
   const [editCaption, setEditCaption] = useState('');
   const [newImageUrl, setNewImageUrl] = useState('');
@@ -42,7 +41,7 @@ const ImagesEditor: React.FC<ImagesEditorProps> = ({ onSave }) => {
     
     setImages([...images, newImage]);
     setNewImageUrl('');
-    onSave([...images, newImage]);
+    onImagesChange([...images, newImage]);
   };
   
   const handleDeleteImage = (id: string) => {
@@ -54,7 +53,7 @@ const ImagesEditor: React.FC<ImagesEditorProps> = ({ onSave }) => {
     }
     
     setImages(updatedImages);
-    onSave(updatedImages);
+    onImagesChange(updatedImages);
   };
   
   const handleEditCaption = (id: string) => {
@@ -77,7 +76,7 @@ const ImagesEditor: React.FC<ImagesEditorProps> = ({ onSave }) => {
     
     setImages(updatedImages);
     setEditingImageId(null);
-    onSave(updatedImages);
+    onImagesChange(updatedImages);
   };
   
   const makePrimary = (id: string) => {
@@ -87,7 +86,7 @@ const ImagesEditor: React.FC<ImagesEditorProps> = ({ onSave }) => {
     }));
     
     setImages(updatedImages);
-    onSave(updatedImages);
+    onImagesChange(updatedImages);
   };
   
   return (

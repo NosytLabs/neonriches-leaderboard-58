@@ -1,11 +1,10 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAuth } from '@/contexts/auth';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
-import { Paintbrush, Sparkles, Image, Crown, Lock } from 'lucide-react';
+import { Paintbrush, Sparkles, Image, Crown, Lock, DollarSign } from 'lucide-react';
 import { CosmeticItem } from '@/types/cosmetics';
 import { UserProfile } from '@/types/user';
 import { formatCurrency } from '@/utils/formatters';

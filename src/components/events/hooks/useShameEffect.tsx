@@ -2,7 +2,8 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
-export type ShameEffectType = 'tomatoes' | 'eggs' | 'stocks';
+export type ShameAction = 'tomatoes' | 'eggs' | 'stocks';
+export type ShameEffectType = ShameAction;
 
 export interface ShameEffectProps {
   type: ShameEffectType;

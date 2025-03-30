@@ -33,6 +33,7 @@ export interface Transaction {
   metadata?: Record<string, any>;
   status: 'pending' | 'completed' | 'failed' | 'reversed';
   referenceId?: string;
+  error?: string;
 }
 
 export const recordTransaction = (

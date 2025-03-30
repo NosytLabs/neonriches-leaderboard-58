@@ -1,27 +1,27 @@
 
 export interface SolanaWallet {
   publicKey: string;
-  signature?: string;
-  balance?: number;
-  signMessage?: (message: Uint8Array) => Promise<{ signature: Uint8Array }>;
+  balance: number;
+  isConnected: boolean;
 }
 
 export interface SolanaTreasuryInfo {
-  totalDeposited: number;
-  totalWithdrawn: number;
-  currentBalance: number;
+  amount: number;
+  pubkey: string;
   depositCount: number;
-  withdrawalCount: number;
   lastUpdate: string;
+  APY: number;
+  lastUpdated?: string;
+  transactions?: SolanaTransaction[];
 }
 
 export interface SolanaTransaction {
   signature: string;
   amount: number;
+  type: 'deposit' | 'withdrawal' | 'reward';
   timestamp: string;
-  successful: boolean;
-  type: 'deposit' | 'withdrawal';
-  user?: string;
+  status: 'confirmed' | 'processing' | 'failed';
+  id?: string;
 }
 
 export interface OnChainLeaderboardEntry {
@@ -29,17 +29,24 @@ export interface OnChainLeaderboardEntry {
   amount: number;
   timestamp: string;
   username?: string;
-  totalSpent?: number;
+  userId?: string;
+  publicKey?: string;
+  spentAmount?: number;
+  amountSpent?: number;
+  totalDeposited?: number;
+  rank?: number;
+  lastTransaction?: string;
+  joinDate?: string;
+  address?: string;
+  id?: string;
 }
 
 export interface SolanaNftInfo {
-  mintAddress: string;
-  tokenAccount: string;
   name: string;
-  symbol: string;
   image: string;
-  description: string;
   attributes: { trait_type: string; value: string }[];
+  mint: string;
+  owner: string;
+  updateAuthority: string;
+  isVerified: boolean;
 }
-
-export type LeaderboardEntry = OnChainLeaderboardEntry;

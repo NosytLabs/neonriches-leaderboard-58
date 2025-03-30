@@ -30,7 +30,9 @@ export type SoundType =
   | 'levelUp'
   | 'wish'
   | 'swordClash'
-  | 'coins';
+  | 'coins'
+  | 'message'
+  | 'pageChange';
 
 export interface SoundConfig {
   enabled: boolean;

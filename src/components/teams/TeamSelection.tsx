@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Crown, Shield, Flame, Zap, Droplets, CreditCard, Coins, Scroll } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useAuth } from '@/contexts/auth';
-import { useToast } from '@/hooks/use-toast';
-import { useResponsive } from '@/hooks/use-responsive';
-import { TeamColor, TeamSelectionProps } from '@/types/teams';
-import RandomAbsurdFact from '@/components/ui/random-absurd-fact';
-import { getTeamMotto, getTeamBenefit, getTeamAbsurdStat } from '@/utils/teamUtils';
+import { UserProfile } from '@/types/user';
+import { Shield } from 'lucide-react';
+
+export type TeamColor = 'red' | 'green' | 'blue';
+
+export interface TeamSelectionProps {
+  selectedTeam?: TeamColor;
+  teams: TeamColor[];
+  onTeamSelect: (team: TeamColor) => Promise<boolean>;
+  user?: UserProfile;
+}
 
 const TeamSelection: React.FC<TeamSelectionProps> = ({ user, onTeamSelect }) => {
   const { updateUserProfile } = useAuth();

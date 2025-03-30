@@ -1,23 +1,6 @@
 
 import { useState, useEffect, useCallback } from 'react';
-
-export type SoundType = 
-  | 'click' 
-  | 'success' 
-  | 'error' 
-  | 'notification' 
-  | 'coinDrop' 
-  | 'reward' 
-  | 'royalAnnouncement' 
-  | 'levelUp' 
-  | 'purchase' 
-  | 'shame' 
-  | 'message'
-  | 'win'
-  | 'swordClash'
-  | 'trumpet'
-  | 'scroll'
-  | 'hover';
+import { SoundType } from '@/types/sound-types';
 
 interface UseSoundOptions {
   baseUrl?: string;
@@ -26,8 +9,9 @@ interface UseSoundOptions {
 }
 
 // Map of sound types to file paths
-const soundMap: Record<SoundType, string> = {
+const soundMap: Record<string, string> = {
   click: '/sounds/click.mp3',
+  hover: '/sounds/hover.mp3',
   success: '/sounds/success.mp3',
   error: '/sounds/error.mp3',
   notification: '/sounds/notification.mp3',
@@ -42,12 +26,16 @@ const soundMap: Record<SoundType, string> = {
   win: '/sounds/win.mp3',
   trumpet: '/sounds/trumpet.mp3',
   scroll: '/sounds/scroll.mp3',
-  hover: '/sounds/hover.mp3'
+  seal: '/sounds/seal.mp3',
+  deposit: '/sounds/deposit.mp3',
+  wish: '/sounds/wish.mp3',
+  pageChange: '/sounds/page-change.mp3'
 };
 
 // Default volume levels for different sound types
-const volumeLevels: Record<SoundType, number> = {
+const volumeLevels: Record<string, number> = {
   click: 0.5,
+  hover: 0.3,
   success: 0.7,
   error: 0.6,
   notification: 0.7,
@@ -62,7 +50,10 @@ const volumeLevels: Record<SoundType, number> = {
   win: 0.8,
   trumpet: 0.7,
   scroll: 0.5,
-  hover: 0.3
+  seal: 0.7,
+  deposit: 0.7,
+  wish: 0.6,
+  pageChange: 0.5
 };
 
 export const useSound = (options: UseSoundOptions = {}) => {
@@ -72,7 +63,7 @@ export const useSound = (options: UseSoundOptions = {}) => {
     disabled = false
   } = options;
 
-  const [audioElements, setAudioElements] = useState<Record<SoundType, HTMLAudioElement | null>>({} as any);
+  const [audioElements, setAudioElements] = useState<Record<string, HTMLAudioElement | null>>({});
   const [loading, setLoading] = useState<boolean>(true);
   const [loaded, setLoaded] = useState<boolean>(false);
   const [error, setError] = useState<Error | null>(null);
@@ -95,12 +86,11 @@ export const useSound = (options: UseSoundOptions = {}) => {
 
     let loadedCount = 0;
     const totalSounds = Object.keys(soundMap).length;
-    const newAudioElements: Record<SoundType, HTMLAudioElement> = {} as any;
+    const newAudioElements: Record<string, HTMLAudioElement> = {};
     
     // Create audio elements for each sound
     Object.entries(soundMap).forEach(([key, path]) => {
       try {
-        const soundType = key as SoundType;
         const audio = new Audio(baseUrl + path);
         audio.preload = 'auto';
         
@@ -121,7 +111,7 @@ export const useSound = (options: UseSoundOptions = {}) => {
           }
         });
         
-        newAudioElements[soundType] = audio;
+        newAudioElements[key] = audio;
       } catch (err) {
         console.error(`Error creating audio element for ${key}:`, err);
         setError(err instanceof Error ? err : new Error(String(err)));
@@ -142,7 +132,7 @@ export const useSound = (options: UseSoundOptions = {}) => {
   }, [baseUrl, disabled]);
   
   // Play function
-  const play = useCallback((soundType: SoundType, volumeMultiplier = 1) => {
+  const play = useCallback((soundType: SoundType) => {
     if (disabled || !loaded) return;
     
     const soundsEnabled = localStorage.getItem('soundsEnabled');
@@ -161,7 +151,7 @@ export const useSound = (options: UseSoundOptions = {}) => {
       
       // Set volume
       const baseVol = volumeLevels[soundType] || 0.7;
-      audio.volume = Math.min(baseVol * volume * volumeMultiplier, 1);
+      audio.volume = Math.min(baseVol * volume, 1);
       
       // Play the sound
       const playPromise = audio.play();
@@ -178,20 +168,20 @@ export const useSound = (options: UseSoundOptions = {}) => {
   }, [audioElements, disabled, loaded, volume]);
   
   // Convenience methods for common sounds
-  const playSuccess = useCallback((volumeMultiplier = 1) => {
-    play('success', volumeMultiplier);
+  const playSuccess = useCallback(() => {
+    play('success');
   }, [play]);
   
-  const playError = useCallback((volumeMultiplier = 1) => {
-    play('error', volumeMultiplier);
+  const playError = useCallback(() => {
+    play('error');
   }, [play]);
   
-  const playNotification = useCallback((volumeMultiplier = 1) => {
-    play('notification', volumeMultiplier);
+  const playNotification = useCallback(() => {
+    play('notification');
   }, [play]);
   
-  const playClick = useCallback((volumeMultiplier = 1) => {
-    play('click', volumeMultiplier);
+  const playClick = useCallback(() => {
+    play('click');
   }, [play]);
 
   return {

@@ -11,7 +11,9 @@ export interface UserSubscription {
   price: number;
   interval: 'monthly' | 'yearly' | 'quarterly';
   features: string[];
-  tier: string; // Adding this property
+  tier: string;
+  active?: boolean;
+  cancelAtPeriodEnd?: boolean;
 }
 
 export interface AuthSession {
