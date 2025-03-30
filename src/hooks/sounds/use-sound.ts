@@ -1,71 +1,67 @@
 
 import { useState, useEffect, useCallback } from 'react';
-import { useSettingsStore } from '@/stores/settingsStore';
 import { SoundType, UseSoundOptions, UseSoundReturn } from '@/types/sound-types';
 
-// Base URLs for sounds
-const SOUND_BASE_URL = '/sounds/';
-
-// Mapping of sound types to file paths
-const soundFiles: Record<SoundType, string> = {
-  hover: 'ui/hover.mp3',
-  click: 'ui/click.mp3',
-  success: 'ui/success.mp3',
-  error: 'ui/error.mp3',
-  notification: 'ui/notification.mp3',
-  purchase: 'transactions/purchase.mp3',
-  levelUp: 'achievements/level-up.mp3',
-  achievement: 'achievements/achievement.mp3',
-  reward: 'achievements/reward.mp3',
-  coinDrop: 'transactions/coin-drop.mp3',
-  royalAnnouncement: 'royal/announcement.mp3',
-  shame: 'royal/shame.mp3',
-  swordClash: 'royal/sword-clash.mp3',
-  trumpets: 'royal/trumpets.mp3',
-  trumpet: 'royal/trumpet.mp3',
-  scroll: 'ui/scroll.mp3',
-  potion: 'items/potion.mp3',
-  chatMessage: 'ui/chat-message.mp3',
-  unlock: 'ui/unlock.mp3',
-  win: 'achievements/win.mp3',
-  message: 'ui/message.mp3',
-  coin: 'transactions/coin.mp3',
-  boost: 'items/boost.mp3',
-  advertisement: 'marketing/advertisement.mp3',
-  pageTransition: 'ui/page-transition.mp3',
-  seal: 'royal/seal.mp3',
-  parchmentUnfurl: 'ui/parchment-unfurl.mp3',
-  wish: 'achievements/wish.mp3',
-  pageChange: 'ui/page-change.mp3',
-  medallion: 'achievements/medallion.mp3',
-  noblesLaugh: 'royal/nobles-laugh.mp3',
-  inkScribble: 'ui/ink-scribble.mp3',
-  smoke: 'effects/smoke.mp3'
+// Default sound file paths
+const defaultSoundMap: Record<SoundType, string> = {
+  click: '/sounds/click.mp3',
+  success: '/sounds/success.mp3',
+  error: '/sounds/error.mp3',
+  notification: '/sounds/notification.mp3',
+  coinDrop: '/sounds/coin-drop.mp3',
+  reward: '/sounds/reward.mp3',
+  royalAnnouncement: '/sounds/royal-announcement.mp3',
+  levelUp: '/sounds/level-up.mp3',
+  purchase: '/sounds/purchase.mp3',
+  shame: '/sounds/shame.mp3',
+  swordClash: '/sounds/sword-clash.mp3',
+  message: '/sounds/message.mp3',
+  win: '/sounds/win.mp3',
+  trumpet: '/sounds/trumpet.mp3',
+  trumpets: '/sounds/trumpets.mp3',
+  scroll: '/sounds/scroll.mp3',
+  potion: '/sounds/potion.mp3',
+  chatMessage: '/sounds/chat-message.mp3',
+  unlock: '/sounds/unlock.mp3',
+  achievement: '/sounds/achievement.mp3',
+  coin: '/sounds/coin.mp3',
+  boost: '/sounds/boost.mp3',
+  advertisement: '/sounds/advertisement.mp3',
+  pageTransition: '/sounds/page-transition.mp3',
+  seal: '/sounds/seal.mp3',
+  parchmentUnfurl: '/sounds/parchment-unfurl.mp3',
+  wish: '/sounds/wish.mp3',
+  pageChange: '/sounds/page-change.mp3',
+  medallion: '/sounds/medallion.mp3',
+  noblesLaugh: '/sounds/nobles-laugh.mp3',
+  inkScribble: '/sounds/ink-scribble.mp3',
+  smoke: '/sounds/smoke.mp3',
+  tab: '/sounds/tab.mp3',
+  hover: '/sounds/hover.mp3'
 };
 
-// Volume levels for different sound types
+// Sound volume levels
 const volumeLevels: Record<SoundType, number> = {
-  hover: 0.3,
-  click: 0.4,
-  success: 0.5,
-  error: 0.5,
-  notification: 0.6,
-  purchase: 0.7,
-  levelUp: 0.8,
-  achievement: 0.7,
+  click: 0.5,
+  success: 0.7,
+  error: 0.6,
+  notification: 0.7,
+  coinDrop: 0.8,
   reward: 0.8,
-  coinDrop: 0.6,
-  royalAnnouncement: 0.8,
+  royalAnnouncement: 0.6,
+  levelUp: 0.8,
+  purchase: 0.7,
   shame: 0.7,
   swordClash: 0.7,
-  trumpets: 0.8,
+  message: 0.6,
+  win: 0.8,
   trumpet: 0.7,
+  trumpets: 0.7,
   scroll: 0.4,
   potion: 0.5,
   chatMessage: 0.5,
   unlock: 0.6,
-  win: 0.7,
-  message: 0.5,
+  achievement: 0.7,
   coin: 0.6,
   boost: 0.6,
   advertisement: 0.6,
@@ -77,121 +73,147 @@ const volumeLevels: Record<SoundType, number> = {
   medallion: 0.7,
   noblesLaugh: 0.6,
   inkScribble: 0.5,
-  smoke: 0.6
+  smoke: 0.6,
+  tab: 0.4,
+  hover: 0.3
 };
 
-// Cache audio elements to avoid recreating them
-const audioCache: Record<string, HTMLAudioElement> = {};
-
-/**
- * Custom hook for playing sound effects
- */
 export const useSound = (options: UseSoundOptions = {}): UseSoundReturn => {
-  const { baseVolume = 0.5, disableCache = false } = options;
+  const {
+    baseVolume = 0.5,
+    disableCache = false,
+  } = options;
+
+  const [audioElements, setAudioElements] = useState<Record<SoundType, HTMLAudioElement | null>>({} as any);
   const [loading, setLoading] = useState<boolean>(true);
   const [loaded, setLoaded] = useState<boolean>(false);
   const [error, setError] = useState<Error | null>(null);
-  
-  // Get sound settings from the global store
-  const soundEnabled = useSettingsStore(state => state.soundEffects);
-  const globalVolume = useSettingsStore(state => state.volume);
-  
-  // Preload the most common sound effects
+
+  // Preload audio files
   useEffect(() => {
-    const commonSounds: SoundType[] = ['click', 'success', 'error', 'notification'];
-    
-    if (!disableCache) {
-      commonSounds.forEach(soundType => {
-        const soundPath = SOUND_BASE_URL + soundFiles[soundType];
-        if (!audioCache[soundPath]) {
-          const audio = new Audio(soundPath);
-          audio.preload = 'auto';
-          audioCache[soundPath] = audio;
-        }
-      });
-    }
-    
-    setLoading(false);
-    setLoaded(true);
-  }, [disableCache]);
-  
-  const play = useCallback((soundType: SoundType, volumeMultiplier = 1.0) => {
-    if (!soundEnabled || !soundType || !soundFiles[soundType]) {
+    if (typeof window === 'undefined') {
+      setLoading(false);
+      setLoaded(true);
       return;
     }
+
+    let loadedCount = 0;
+    const totalSounds = Object.keys(defaultSoundMap).length;
+    const newAudioElements: Record<SoundType, HTMLAudioElement> = {} as any;
+    
+    // Check if sounds are already available in localStorage
+    const soundsEnabled = localStorage.getItem('soundsEnabled');
+    if (soundsEnabled === 'false') {
+      setLoading(false);
+      setLoaded(true);
+      return;
+    }
+
+    // Create audio elements for each sound
+    Object.entries(defaultSoundMap).forEach(([key, path]) => {
+      try {
+        const soundType = key as SoundType;
+        const audio = new Audio(path);
+        audio.preload = 'auto';
+        
+        audio.addEventListener('canplaythrough', () => {
+          loadedCount++;
+          if (loadedCount === totalSounds) {
+            setLoaded(true);
+            setLoading(false);
+          }
+        });
+        
+        audio.addEventListener('error', (err) => {
+          console.error(`Error loading sound: ${path}`, err);
+          loadedCount++;
+          if (loadedCount === totalSounds) {
+            setLoaded(true);
+            setLoading(false);
+          }
+        });
+        
+        newAudioElements[soundType] = audio;
+      } catch (err) {
+        console.error(`Error creating audio element for ${key}:`, err);
+        setError(err instanceof Error ? err : new Error(String(err)));
+      }
+    });
+    
+    setAudioElements(newAudioElements);
+    
+    // Cleanup
+    return () => {
+      Object.values(newAudioElements).forEach(audio => {
+        if (audio) {
+          audio.pause();
+          audio.src = '';
+        }
+      });
+    };
+  }, [disableCache]);
+  
+  // Play function
+  const play = useCallback((soundType: SoundType, volumeMultiplier = 1) => {
+    if (!loaded) return;
+    
+    const soundsEnabled = localStorage.getItem('soundsEnabled');
+    if (soundsEnabled === 'false') return;
+    
+    const audio = audioElements[soundType];
+    if (!audio) return;
     
     try {
-      const soundPath = SOUND_BASE_URL + soundFiles[soundType];
-      
-      // Calculate final volume (base * type-specific * multiplier * global)
-      const typeVolume = volumeLevels[soundType] || 0.5;
-      const finalVolume = Math.min(
-        baseVolume * typeVolume * volumeMultiplier * (globalVolume || 1.0),
-        1.0
-      );
-      
-      let audio: HTMLAudioElement;
-      
-      if (!disableCache && audioCache[soundPath]) {
-        audio = audioCache[soundPath];
-      } else {
-        audio = new Audio(soundPath);
-        if (!disableCache) {
-          audioCache[soundPath] = audio;
-        }
-      }
-      
-      // Reset audio to ensure it plays from the beginning
+      // Reset audio to start
+      audio.pause();
       audio.currentTime = 0;
-      audio.volume = finalVolume;
+      
+      // Set volume
+      const baseVol = volumeLevels[soundType] || 0.7;
+      audio.volume = Math.min(baseVol * baseVolume * volumeMultiplier, 1);
       
       // Play the sound
-      audio.play().catch(err => {
-        console.error('Error playing sound:', err);
-        setError(err);
-      });
+      const playPromise = audio.play();
+      
+      // Handle potential play() Promise rejection
+      if (playPromise !== undefined) {
+        playPromise.catch(e => {
+          console.warn('Audio playback was prevented:', e);
+        });
+      }
     } catch (err) {
-      console.error('Error in play function:', err);
-      setError(err instanceof Error ? err : new Error(String(err)));
+      console.error(`Error playing sound ${soundType}:`, err);
     }
-  }, [soundEnabled, baseVolume, globalVolume, disableCache]);
+  }, [audioElements, loaded, baseVolume]);
   
   // Convenience methods for common sounds
-  const playSuccess = useCallback((volumeMultiplier = 1.0) => {
+  const playSuccess = useCallback((volumeMultiplier = 1) => {
     play('success', volumeMultiplier);
   }, [play]);
   
-  const playError = useCallback((volumeMultiplier = 1.0) => {
+  const playError = useCallback((volumeMultiplier = 1) => {
     play('error', volumeMultiplier);
   }, [play]);
   
-  const playNotification = useCallback((volumeMultiplier = 1.0) => {
+  const playNotification = useCallback((volumeMultiplier = 1) => {
     play('notification', volumeMultiplier);
   }, [play]);
   
-  const playClick = useCallback((volumeMultiplier = 1.0) => {
+  const playClick = useCallback((volumeMultiplier = 1) => {
     play('click', volumeMultiplier);
   }, [play]);
-  
+
   return {
     play,
-    playSound: play,
+    playSound: play, // Making sure playSound alias is available
     playSuccess,
     playError,
     playNotification,
     playClick,
     loading,
     loaded,
-    error
+    error,
   };
-};
-
-// Sound categories for different user preferences
-export const SOUND_CATEGORIES = {
-  UI: ['click', 'notification', 'pageTransition', 'pageChange', 'hover'],
-  FEEDBACK: ['success', 'error', 'reward', 'levelUp', 'purchase'],
-  AMBIENT: ['coinDrop', 'royalAnnouncement', 'wish', 'trumpet'],
-  SPECIAL: ['swordClash', 'shame', 'parchmentUnfurl', 'medallion', 'seal', 'noblesLaugh', 'inkScribble']
 };
 
 export default useSound;

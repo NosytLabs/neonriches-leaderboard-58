@@ -1,7 +1,7 @@
 
 // Consolidated icon types used throughout the application
 
-// Icon name types
+// Icon name types - Notice the capitalized first letter which is crucial for TypeScript matching
 export type MedievalIconName = 
   | 'Crown' 
   | 'Shield' 

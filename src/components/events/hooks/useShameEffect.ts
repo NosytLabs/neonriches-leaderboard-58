@@ -1,9 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import { MockeryAction } from '@/types/mockery';
-
-// Redefine the ShameAction type to match MockeryAction for compatibility
-export type ShameAction = MockeryAction;
+import { MockeryAction, ShameAction } from '@/types/mockery';
 
 export interface ShameEffect {
   action: ShameAction;
@@ -116,4 +113,5 @@ const useShameEffect = (): ShameEffectState => {
   };
 };
 
+export { useShameEffect, ShameAction };
 export default useShameEffect;

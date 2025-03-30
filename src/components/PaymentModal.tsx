@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -28,17 +29,17 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
   const [isProcessing, setIsProcessing] = useState(false);
   const [paymentSuccess, setPaymentSuccess] = useState(false);
   const { toast } = useToast();
-  const { playSound } = useSound();
+  const { play } = useSound();
 
   const handlePay = async () => {
     setIsProcessing(true);
-    playSound('click', 0.3);
+    play('click', 0.3);
     
     // Simulate payment processing
     setTimeout(() => {
       setIsProcessing(false);
       setPaymentSuccess(true);
-      playSound('success', 0.5);
+      play('success', 0.5);
       
       // Close the modal and call onSuccess after showing the success state
       setTimeout(() => {

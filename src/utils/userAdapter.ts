@@ -16,14 +16,15 @@ export const adaptUserProfileToUser = (profile: UserProfile): User => {
     tier: profile.tier || 'free',
     team: profile.team,
     gender: profile.gender,
-    joinedAt: typeof profile.joinedAt === 'string' ? new Date(profile.joinedAt) : profile.joinedAt,
+    joinedAt: profile.joinedAt, // Accept date type
     lastActive: profile.lastActive ? new Date(profile.lastActive) : new Date(),
     amountSpent: profile.amountSpent || 0,
     isActive: profile.isActive !== undefined ? profile.isActive : true,
     isVerified: profile.isVerified || false,
     isBanned: profile.isBanned || false,
-    roles: profile.roles || [],
-    badges: profile.badges || []
+    role: profile.role || 'user',
+    badges: profile.badges || [],
+    cosmetics: profile.cosmetics || {}
   };
 };
 
@@ -42,13 +43,48 @@ export const adaptUserToUserProfile = (user: User): UserProfile => {
     tier: user.tier || 'free',
     team: user.team,
     gender: user.gender,
-    joinedAt: user.joinedAt,
+    joinedAt: user.joinedAt, // Accept date type
     lastActive: user.lastActive || new Date(),
     amountSpent: user.amountSpent || 0,
     isActive: user.isActive !== undefined ? user.isActive : true,
     isVerified: user.isVerified || false,
     isBanned: user.isBanned || false,
-    roles: user.roles || [],
-    badges: user.badges || []
+    role: user.role || 'user',
+    badges: user.badges || [],
+    cosmetics: user.cosmetics || {}
   };
+};
+
+/**
+ * Ensures a user object is properly formatted, handling partial users
+ */
+export const ensureUser = (user: User | UserProfile | Partial<User>): User => {
+  if (!user) {
+    throw new Error("Cannot ensure a null or undefined user");
+  }
+  
+  // Create a base user object with default values
+  const baseUser: User = {
+    id: user.id || '',
+    username: user.username || 'anonymous',
+    displayName: user.displayName || user.username || 'Anonymous User',
+    profileImage: user.profileImage || '',
+    email: user.email || '',
+    bio: user.bio || '',
+    rank: user.rank || 0,
+    tier: user.tier || 'free',
+    team: user.team || null,
+    gender: user.gender || 'neutral',
+    joinedAt: user.joinedAt || new Date(),
+    lastActive: user.lastActive || new Date(),
+    amountSpent: user.amountSpent || 0,
+    isActive: user.isActive !== undefined ? user.isActive : true,
+    isVerified: user.isVerified || false,
+    isBanned: user.isBanned || false,
+    role: user.role || 'user',
+    badges: user.badges || [],
+    cosmetics: user.cosmetics || {}
+  };
+  
+  return baseUser;
 };

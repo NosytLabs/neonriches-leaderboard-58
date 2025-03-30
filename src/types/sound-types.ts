@@ -32,15 +32,18 @@ export type SoundType =
   | 'medallion'
   | 'noblesLaugh'
   | 'inkScribble'
-  | 'smoke';
+  | 'smoke'
+  | 'tab';
 
 export interface UseSoundOptions {
   baseVolume?: number;
   disableCache?: boolean;
+  volume?: number; // Support for legacy volume option
 }
 
 export interface UseSoundReturn {
   play: (soundType: SoundType, volumeMultiplier?: number) => void;
+  playSound: (soundType: SoundType, volumeMultiplier?: number) => void; // Alias for backward compatibility
   playSuccess: (volumeMultiplier?: number) => void;
   playError: (volumeMultiplier?: number) => void;
   playNotification: (volumeMultiplier?: number) => void;

@@ -11,9 +11,25 @@ export type MockeryAction =
   | 'smokeBomb'
   | 'glitterBomb'
   | 'protection'
-  | 'immune';
+  | 'immune'
+  | 'royalPie'
+  | 'jokeCrown'
+  | 'memeFrame'
+  | 'roast'
+  | 'ridicule'
+  | 'humiliate'
+  | 'expose'
+  | 'mock'
+  | 'shame'
+  | 'taunt'
+  | 'guillotine'
+  | 'dungeons'
+  | 'removal';
 
-export type MockeryTier = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
+// Define ShameAction to be the same as MockeryAction for compatibility
+export type ShameAction = MockeryAction;
+
+export type MockeryTier = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary' | 'premium';
 
 export interface MockeryEvent {
   id: string;
@@ -34,6 +50,7 @@ export interface MockUser {
   rank?: number;
   lastMocked?: Date;
   mockeryCount?: number;
+  displayName?: string;
 }
 
 export interface MockedUser {
@@ -63,3 +80,6 @@ export interface MockeryEffectData {
   action: MockeryAction;
   duration: number;
 }
+
+// Export ExtendedMockeryAction for backward compatibility
+export type ExtendedMockeryAction = MockeryAction;
