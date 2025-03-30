@@ -1,86 +1,51 @@
 
-import React, { CSSProperties } from 'react';
+import { CSSProperties } from 'react';
 import { LucideProps } from 'lucide-react';
 
-// Define possible icon colors
-export type IconColor = 
-  | "default"
-  | "primary" 
-  | "secondary"
-  | "accent"
-  | "white"
-  | "black"
-  | "gold"
-  | "red"
-  | "green"
-  | "blue"
-  | "yellow"
-  | "gray"
-  | "silver"
-  | "bronze"
-  | "crimson"
-  | "navy"
-  | "purple"
-  | "muted"
-  | "emerald"
-  | "royal"
-  | "copper"
-  | string;
+export type IconType = 
+  | 'crown'
+  | 'coins'
+  | 'throne'
+  | 'shield'
+  | 'sword'
+  | 'scroll'
+  | 'chalice'
+  | 'key'
+  | 'seal'
+  | 'quill'
+  | 'treasure'
+  | 'medal'
+  | 'certificate'
+  | 'flag'
+  | 'banner'
+  | 'helm'
+  | 'dragon'
+  | 'castle'
+  | 'knight'
+  | 'king'
+  | 'queen'
+  | 'jester'
+  | 'wizard'
+  | 'torch'
+  | 'medieval';
 
-// Define possible icon sizes
-export type IconSize = 
-  | "xs"
-  | "sm"
-  | "md"
-  | "lg"
-  | "xl"
-  | "2xl"
-  | number;
+export type IconStyle = 
+  | 'default'
+  | 'solid'
+  | 'outline'
+  | 'duotone'
+  | 'royal'
+  | 'pixel'
+  | 'medieval'
+  | 'vintage';
 
-// Define possible icon styles
-export type IconStyle = "default" | "medieval" | CSSProperties;
+export type IconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl';
 
-// Prop interface for icons
-export interface IconProps extends Omit<LucideProps, "color"> {
-  name?: string;
+export interface IconProps extends Omit<LucideProps, 'color'> {
+  type?: IconType;
+  style?: IconStyle;
   size?: IconSize;
-  color?: IconColor;
-  style?: IconStyle | CSSProperties;
-  variant?: string;
-  animate?: boolean;
-  animated?: boolean;
+  color?: string;
+  secondaryColor?: string;
   className?: string;
-}
-
-export type IconComponent = React.ComponentType<IconProps>;
-
-// Medieval icon specific types
-export type MedievalIconName = string;
-export type MedievalIconColor = 
-  | "gold" 
-  | "primary" 
-  | "secondary" 
-  | "white" 
-  | "black"
-  | "silver"
-  | "bronze"
-  | "crimson"
-  | "navy"
-  | "purple"
-  | "emerald"
-  | "royal"
-  | "default"
-  | "red"
-  | "green"
-  | "blue" 
-  | string;
-
-export type MedievalIconSize = "xs" | "sm" | "md" | "lg" | "xl" | "2xl" | number;
-
-export interface MedievalIconProps {
-  name: MedievalIconName;
-  color?: MedievalIconColor;
-  size?: MedievalIconSize;
-  className?: string;
-  animate?: boolean;
 }

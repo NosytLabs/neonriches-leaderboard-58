@@ -29,3 +29,10 @@ export interface ProfileLink {
   isActive: boolean;
   createdAt: string;
 }
+
+export interface ProfileImage {
+  id: string;
+  url: string;
+  isPrimary: boolean;
+  title?: string;
+}

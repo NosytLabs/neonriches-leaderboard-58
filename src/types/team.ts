@@ -1,5 +1,5 @@
 
-export type TeamType = 'red' | 'green' | 'blue';
+export type TeamType = 'red' | 'green' | 'blue' | 'gold';
 export type TeamColor = TeamType | 'none';
 
 export interface UserTeam {

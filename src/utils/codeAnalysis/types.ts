@@ -10,6 +10,7 @@ export interface ImportInfo {
   path?: string;
   file: string;
   line: number;
+  impact?: string;
 }
 
 export interface VariableIssue {
@@ -17,6 +18,7 @@ export interface VariableIssue {
   type?: string;
   file: string;
   line: number;
+  impact?: string;
 }
 
 export interface SelectorIssue {
@@ -52,6 +54,12 @@ export interface DeadCodeIssue {
   line: number;
 }
 
+export interface CodeIssueInfo {
+  description: string;
+  file: string;
+  line: number;
+}
+
 export interface PerformanceIssue {
   description: string;
   file: string;
@@ -66,20 +74,65 @@ export interface MetricsData {
   dependencyCount: number;
 }
 
+export interface ProjectMetrics {
+  beforeCleanup?: MetricsData;
+  afterCleanup?: MetricsData;
+  sizeSavings?: number;
+  fileSavings?: number;
+  dependencySavings?: number;
+  sizePercentage?: number;
+  filePercentage?: number;
+  dependencyPercentage?: number;
+}
+
 export interface AnalysisResult {
   unusedImports?: ImportInfo[];
   unusedVariables?: VariableIssue[];
   unusedFiles?: FileInfo[];
   unusedSelectors?: SelectorIssue[];
   deadCode?: DeadCodeIssue[];
+  deadCodePaths?: DeadCodeIssue[];
   duplicateCode?: DuplicateCodeIssue[];
   complexCode?: ComplexCodeIssue[];
   unusedDependencies?: string[];
   performanceIssues?: PerformanceIssue[];
-  metrics?: {
-    beforeCleanup?: MetricsData;
-    afterCleanup?: MetricsData;
-  };
+  metrics?: ProjectMetrics;
+}
+
+export interface ComplexityItem {
+  id: string;
+  name: string;
+  function?: string; 
+  file: string;
+  complexity: number;
+  cyclomaticComplexity?: number;
+  line: number;
+  lines?: number;
+  linesOfCode?: number;
+  parameters?: number;
+  nestedLevel?: number;
+  issues?: string[];
+  explanation?: string;
+  path?: string;
+  functions?: any[];
+  status?: string;
+}
+
+export interface DuplicateCodeInfo {
+  id: string | number;
+  title?: string;
+  description?: string;
+  severity?: string;
+  solution?: string;
+  pattern?: string;
+  similarity: number;
+  files: { path: string, lineStart?: number, lineEnd?: number }[];
+  lines?: number;
+  linesCount?: number;
+  code?: string;
+  codeSnippet?: string;
+  snippet?: string;
+  recommendation?: string;
 }
 
 export interface CacheOptions {

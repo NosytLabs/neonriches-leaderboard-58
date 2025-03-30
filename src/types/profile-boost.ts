@@ -1,5 +1,5 @@
 
-export type BoostEffectType = 'glow' | 'sparkle' | 'pulse' | 'shimmer' | 'highlight';
+export type BoostEffectType = 'glow' | 'sparkle' | 'pulse' | 'shimmer' | 'highlight' | 'crown' | 'glow' | 'sparkle';
 export type BoostStrength = 'low' | 'medium' | 'high';
 export type BoostTier = 'basic' | 'pro' | 'royal';
 
@@ -9,6 +9,8 @@ export interface ProfileBoost {
   startDate: number;
   endDate: number;
   isActive: boolean;
+  strength?: BoostStrength;
+  level?: string;
 }
 
 export interface BoostEffect {
@@ -35,4 +37,5 @@ export interface ProfileBoostData {
   strength: BoostStrength;
   icon: string;
   previewImage: string;
+  startDate?: number;
 }
