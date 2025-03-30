@@ -3,23 +3,22 @@ export interface BoostEffect {
   id: string;
   name: string;
   description: string;
+  duration: number;
   price: number;
-  tier: 'basic' | 'premium' | 'royal';
-  type: 'effect' | 'appearance' | 'visibility' | 'animation';
-  durationDays: number;
-  previewImage: string;
+  icon: string;
+  type?: string;
+  cssClass?: string;
+  minTier?: string;
+  allowStacking?: boolean;
+  tier?: string; 
+  durationDays?: number;
+  previewImage?: string;
 }
 
-export type BoostEffectType = 'glow' | 'sparkle' | 'crown';
-
-export interface Feature {
-  id: string;
-  title: string;
-  description: string;
-  icon?: React.ReactNode;
-  category?: string;
-}
-
-export interface FeatureInfo extends Feature {
-  category: string;
-}
+export type BoostEffectType = 
+  | 'appearance'
+  | 'animation'
+  | 'visibility'
+  | 'effect'
+  | 'protection'
+  | 'enhancement';

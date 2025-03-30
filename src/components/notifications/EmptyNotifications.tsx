@@ -1,13 +1,15 @@
 
 import React from 'react';
-import { Gift } from 'lucide-react';
+import { Bell } from 'lucide-react';
 
 const EmptyNotifications: React.FC = () => {
   return (
-    <div className="h-full flex flex-col items-center justify-center text-white/50">
-      <Gift className="h-12 w-12 mb-4 text-white/30" />
-      <p className="text-center">No notifications yet</p>
-      <p className="text-center text-sm mt-1">Spend more to earn achievements and announcements!</p>
+    <div className="flex flex-col items-center justify-center h-64 text-white/50">
+      <Bell className="h-12 w-12 mb-3 opacity-25" />
+      <h3 className="text-lg font-medium mb-1">No Notifications</h3>
+      <p className="text-sm text-center max-w-xs">
+        You don't have any notifications yet. They will appear here when you receive achievements, rank changes, or important updates.
+      </p>
     </div>
   );
 };

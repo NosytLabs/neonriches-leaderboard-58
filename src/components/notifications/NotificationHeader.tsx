@@ -1,30 +1,45 @@
 
 import React from 'react';
-import { Check } from 'lucide-react';
+import { Check, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { SheetHeader, SheetTitle } from '@/components/ui/sheet';
+import { SheetTitle, SheetDescription } from '@/components/ui/sheet';
 
 interface NotificationHeaderProps {
   unreadCount: number;
   handleMarkAllAsRead: () => void;
 }
 
-const NotificationHeader: React.FC<NotificationHeaderProps> = ({ 
-  unreadCount, 
-  handleMarkAllAsRead 
+const NotificationHeader: React.FC<NotificationHeaderProps> = ({
+  unreadCount,
+  handleMarkAllAsRead
 }) => {
   return (
-    <SheetHeader className="flex-shrink-0">
-      <div className="flex justify-between items-center">
-        <SheetTitle className="text-xl font-medieval royal-gradient">Royal Notifications</SheetTitle>
+    <div className="flex flex-col">
+      <div className="flex items-center justify-between">
+        <div>
+          <SheetTitle className="text-xl font-bold">Notifications</SheetTitle>
+          <SheetDescription className="text-white/70">
+            {unreadCount > 0 ? (
+              <span>You have <span className="text-royal-gold font-medium">{unreadCount}</span> unread notifications</span>
+            ) : (
+              <span>No new notifications</span>
+            )}
+          </SheetDescription>
+        </div>
+        
         {unreadCount > 0 && (
-          <Button variant="ghost" size="sm" onClick={handleMarkAllAsRead} className="text-xs">
-            <Check className="h-4 w-4 mr-1" />
-            Mark all as read
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={handleMarkAllAsRead}
+            className="h-8 px-2 text-xs"
+          >
+            <Check className="h-3.5 w-3.5 mr-1" />
+            Mark all read
           </Button>
         )}
       </div>
-    </SheetHeader>
+    </div>
   );
 };
 

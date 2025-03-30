@@ -13,14 +13,22 @@ export type MockeryAction =
   | 'expose'
   | 'mock'
   | 'shame'
-  | 'immune'; // Special status for users who can't be mocked
+  | 'immune'
+  | 'eggs'
+  | 'protection'
+  | 'glitterBomb'
+  | 'royalPie'
+  | 'jokeCrown'
+  | 'memeFrame'
+  | 'roast'; // Added missing actions that were causing errors
 
 export type MockeryTier = 
   | 'common' 
   | 'uncommon' 
   | 'rare' 
   | 'epic' 
-  | 'legendary';
+  | 'legendary'
+  | 'premium'; // Added premium tier
 
 export type ShameAction = MockeryAction;
 
@@ -65,8 +73,40 @@ export interface MockedUser {
   mockeryCount: number;
 }
 
+// Alias for backward compatibility
+export type MockUser = MockedUser;
+
 export interface MockeryProtectionStatus {
   isProtected: boolean;
   expiresAt: string | null;
   purchasedAt: string | null;
 }
+
+// Additional types needed based on errors
+export interface MockeryEvent {
+  id: string;
+  userId: string;
+  targetId: string;
+  action: MockeryAction;
+  timestamp: string;
+  expiresAt: string;
+}
+
+export interface MockeryEffectData {
+  id: string;
+  user: string;
+  action: MockeryAction;
+  appliedBy: string;
+  appliedAt: string;
+  expiresAt: string;
+  isActive: boolean;
+}
+
+export interface UserMockeryStatus {
+  isActive: boolean;
+  currentEffect?: MockeryAction;
+  appliedBy?: string;
+  expiresAt?: string;
+}
+
+export type ExtendedMockeryAction = MockeryAction;
