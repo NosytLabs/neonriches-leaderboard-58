@@ -110,3 +110,72 @@ export const getAchievementIcon = (type: string): React.ReactNode => {
       return <Star className="h-5 w-5" />;
   }
 };
+
+// Type for RoyalDecorationType
+export type RoyalDecorationType = 'divider' | 'corner' | 'banner' | 'crest' | 'shield' | 'crown' | 'top' | 'bottom' | 'left' | 'right';
+
+// Type for RoyalButtonVariant
+export type RoyalButtonVariant = 'default' | 'royal' | 'gold' | 'crimson';
+
+// Type for ShameAction that extends MockeryAction
+export type ShameAction = 'shame' | 'taunt' | 'ridicule' | 'jester' | 'expose' | 'mock' | 'humiliate';
+
+// Type for LeaderboardUser
+export interface LeaderboardUser extends Omit<LeaderboardEntry, 'userId'> {
+  username: string;
+  displayName?: string;
+  profileImage?: string;
+  team?: UserTeam;
+  tier?: string;
+}
+
+// Type for MockeryEffectData
+export interface MockeryEffectData {
+  username: string;
+  action: MockeryAction;
+  duration?: number;
+  tier?: MockeryTier;
+}
+
+// Type for UserMockeryStatus
+export interface UserMockeryStatus {
+  username: string;
+  protected: boolean;
+  mockeryEffects: MockeryEvent[];
+  mockeryCount: number;
+  protectionUntil?: string | Date;
+}
+
+// Type for ExtendedMockeryAction
+export type ExtendedMockeryAction = MockeryAction | 'shame' | 'taunt' | 'ridicule' | 'jester' | 
+  'royalPie' | 'jokeCrown' | 'memeFrame' | 'roast' | 'mock' | 'humiliate' | 'expose' | 
+  'guillotine' | 'dungeons' | 'removal';
+
+// Add type alias for MockUser
+export type MockUser = MockedUser;
+
+// Function to get mockery action icon color
+export const getMockeryActionIconColor = (action: MockeryAction | ExtendedMockeryAction): string => {
+  switch (action) {
+    case 'tomatoes':
+    case 'eggs':
+    case 'putridEggs':
+      return 'text-red-500';
+    case 'stocks':
+    case 'dunce':
+      return 'text-amber-500';
+    case 'silence':
+    case 'courtJester':
+      return 'text-purple-500';
+    case 'protection':
+    case 'immune':
+      return 'text-blue-500';
+    case 'jest':
+    case 'defeat':
+      return 'text-lime-500';
+    case 'crown':
+      return 'text-yellow-500';
+    default:
+      return 'text-gray-500';
+  }
+};

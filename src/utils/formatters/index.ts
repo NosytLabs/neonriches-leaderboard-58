@@ -1,8 +1,8 @@
 
-// Re-export all formatters
-export { 
+// Re-export all formatters from the main formatters file
+export {
   formatDate,
-  formatTime, 
+  formatTime,
   formatDateTime,
   formatCurrency,
   formatDollarAmount,
@@ -11,7 +11,17 @@ export {
   formatAddress,
   formatFileSize,
   formatHistoricalValue,
-  getAchievementIcon
+  getAchievementIcon,
+  getMockeryActionIconColor,
+  // Type re-exports
+  RoyalDecorationType,
+  RoyalButtonVariant,
+  ShameAction,
+  LeaderboardUser,
+  MockeryEffectData,
+  UserMockeryStatus,
+  ExtendedMockeryAction,
+  MockUser
 } from '../formatters';
 
 // Re-export date utilities
