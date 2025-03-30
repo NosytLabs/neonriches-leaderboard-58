@@ -73,3 +73,72 @@ export const getRarityBorderColor = (rarity: string): string => {
     default: return 'border-gray-400/30';
   }
 };
+
+// Predefined cosmetic items
+export const COSMETIC_ITEMS: CosmeticItem[] = [
+  {
+    id: "cosmetic-royal-crown",
+    name: "Royal Crown",
+    description: "A majestic crown to display your royal status",
+    category: "profile",
+    type: "badge",
+    rarity: "legendary",
+    price: 10000,
+    cssClass: "royal-crown",
+    imageSrc: "/assets/cosmetics/crown.png"
+  },
+  {
+    id: "cosmetic-golden-border",
+    name: "Golden Border",
+    description: "Surround your profile with a shimmering golden border",
+    category: "border",
+    rarity: "epic",
+    price: 7500,
+    cssClass: "golden-border"
+  },
+  {
+    id: "cosmetic-royal-title",
+    name: "Royal Title",
+    description: "Add a prestigious title to your profile",
+    category: "title",
+    rarity: "rare",
+    price: 5000,
+    cssClass: "royal-title"
+  },
+  {
+    id: "cosmetic-throne-emoji",
+    name: "Throne Emoji",
+    description: "Special emoji that appears next to your messages",
+    category: "emoji",
+    rarity: "uncommon",
+    price: 2000,
+    cssClass: "throne-emoji"
+  },
+  {
+    id: "cosmetic-fancy-font",
+    name: "Fancy Font",
+    description: "Display your name in an elegant script",
+    category: "font",
+    rarity: "common",
+    price: 1000,
+    cssClass: "fancy-font"
+  },
+  {
+    id: "cosmetic-neon-glow",
+    name: "Neon Glow",
+    description: "Your profile radiates with a neon glow effect",
+    category: "effect",
+    rarity: "epic",
+    price: 8000,
+    cssClass: "neon-glow"
+  },
+  {
+    id: "cosmetic-royal-theme",
+    name: "Royal Theme",
+    description: "A complete royal makeover for your profile page",
+    category: "theme",
+    rarity: "legendary",
+    price: 15000,
+    cssClass: "royal-theme"
+  }
+];

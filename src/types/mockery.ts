@@ -110,3 +110,56 @@ export interface UserMockeryStatus {
 }
 
 export type ExtendedMockeryAction = MockeryAction;
+
+// Predefined mockery effects based on the MockeryAction type
+export const MOCKERY_EFFECTS: Record<MockeryAction, string> = {
+  tomatoes: "Pelted with virtual tomatoes",
+  putridEggs: "Splattered with rotten eggs",
+  stocks: "Locked in the virtual stocks",
+  silence: "Temporary voice removal",
+  courtJester: "Forced to wear jester attire",
+  dunce: "Wearing a dunce cap",
+  smokeBomb: "Clouded in smoke",
+  jester: "Made to perform as a jester",
+  ridicule: "Subject to public ridicule",
+  humiliate: "Public humiliation",
+  expose: "Embarrassing secrets revealed",
+  mock: "General mockery",
+  shame: "Public shaming",
+  immune: "Protected from mockery",
+  eggs: "Egged by the community",
+  protection: "Protected by royal decree",
+  glitterBomb: "Covered in glitter",
+  royalPie: "Hit with a royal pie",
+  jokeCrown: "Wearing the crown of jokes",
+  memeFrame: "Framed in memes",
+  roast: "Thoroughly roasted"
+};
+
+// Predefined tiers and their descriptions
+export const MOCKERY_TIERS: Record<MockeryTier, { name: string, description: string }> = {
+  common: {
+    name: "Common",
+    description: "Basic mockery effects available to all users"
+  },
+  uncommon: {
+    name: "Uncommon",
+    description: "Slightly more elaborate mockery effects"
+  },
+  rare: {
+    name: "Rare",
+    description: "Distinctive mockery effects with enhanced visibility"
+  },
+  epic: {
+    name: "Epic",
+    description: "Premium mockery effects with special animations"
+  },
+  legendary: {
+    name: "Legendary",
+    description: "The most prestigious mockery effects available"
+  },
+  premium: {
+    name: "Premium",
+    description: "Special effects only available to premium members"
+  }
+};

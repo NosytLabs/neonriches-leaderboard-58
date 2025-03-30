@@ -2,8 +2,26 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import { generateRandomAbsurdFact } from '@/utils/absurdityGenerator';
 import { Icon } from '@/components/ui/icon';
+
+// Pre-defined list of absurd facts instead of generating them
+const ABSURD_FACTS = [
+  "In 1784, a French nobleman spent his entire fortune building a golden throne that was never sat upon.",
+  "The world's most expensive virtual hat sold for $18,000 in an online game.",
+  "A Japanese billionaire bought a painting for $110 million just to hang it in his private jet.",
+  "Emperor Caligula once declared war on Neptune and had his soldiers stab the sea.",
+  "In medieval times, nobility would wear shoes so pointy they couldn't walk properly just to show they didn't need to work.",
+  "A crypto investor once lost access to $250 million in Bitcoin because he forgot his password.",
+  "A billionaire once commissioned a solid gold toilet for his private yacht.",
+  "Ancient Egyptian pharaohs were buried with their wealth, including solid gold coffins.",
+  "A tech CEO spent $30 million on a single party that lasted only 6 hours.",
+  "During the Dutch tulip mania, a single tulip bulb could cost more than a house.",
+  "King Louis XIV had 413 beds across his various palaces, most never slept in.",
+  "The Sultan of Brunei owns more than 7,000 luxury cars that he never drives.",
+  "A Wall Street executive once spent $15,000 on a single dessert covered in edible gold.",
+  "Roman emperor Nero had a dining room with a ceiling that dropped rose petals on guests.",
+  "A Silicon Valley mogul purchased a $90 million mansion that sits empty most of the year."
+];
 
 interface RandomAbsurdFactProps {
   className?: string;
@@ -18,13 +36,18 @@ const RandomAbsurdFact: React.FC<RandomAbsurdFactProps> = ({
   refreshInterval = null,
   onClose
 }) => {
-  const [fact, setFact] = useState<string>(generateRandomAbsurdFact());
+  const getRandomFact = () => {
+    const randomIndex = Math.floor(Math.random() * ABSURD_FACTS.length);
+    return ABSURD_FACTS[randomIndex];
+  };
+  
+  const [fact, setFact] = useState<string>(getRandomFact());
   const [isVisible, setIsVisible] = useState<boolean>(true);
   
   const refreshFact = () => {
     setIsVisible(false);
     setTimeout(() => {
-      setFact(generateRandomAbsurdFact());
+      setFact(getRandomFact());
       setIsVisible(true);
     }, 500);
   };
