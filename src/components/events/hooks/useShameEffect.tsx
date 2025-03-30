@@ -1,191 +1,173 @@
 
 import { useState, useEffect } from 'react';
 import { ShameAction } from '@/types/mockery';
-import { User } from '@/types/user';
-import { toast } from '@/hooks/use-toast';
-import { formatDollarAmount } from '@/utils/formatters';
 
 export type ShameEffect = {
-  userId: string | number;
-  username: string;
+  active: boolean;
   action: ShameAction;
-  timestamp: number;
-  until: number;
-  appliedBy?: string;
+  expiresAt: string | null;
+  appliedBy: string | null;
 };
 
-export const useShameEffect = (currentUser?: User | null) => {
-  const [shamedUsers, setShamedUsers] = useState<Record<string, ShameEffect>>({});
-  const [loading, setLoading] = useState(false);
-  const [cooldowns, setCooldowns] = useState<Record<string, number>>({});
-  
-  // Simulate applying a shame effect to a user
-  const applyShameEffect = (
-    targetUserId: string | number, 
-    targetUsername: string, 
-    action: ShameAction, 
-    amount: number
-  ): boolean => {
-    setLoading(true);
-    
-    try {
-      // Check if the current user can apply this effect
-      if (!currentUser) {
-        toast({
-          title: "Action Failed",
-          description: "You must be logged in to shame others.",
-          variant: "destructive",
-        });
-        return false;
-      }
-      
-      // Check if the user is on cooldown
-      const userCooldownKey = `${currentUser.id}-${targetUserId}`;
-      const cooldownUntil = cooldowns[userCooldownKey] || 0;
-      const now = Date.now();
-      
-      if (cooldownUntil > now) {
-        const remainingTime = Math.ceil((cooldownUntil - now) / (1000 * 60));
-        toast({
-          title: "On Cooldown",
-          description: `You can shame this user again in ${remainingTime} minutes.`,
-          variant: "destructive",
-        });
-        return false;
-      }
-      
-      // Check if the user has enough wallet balance
-      if ((currentUser.walletBalance || 0) < amount) {
-        toast({
-          title: "Insufficient Funds",
-          description: `You need ${formatDollarAmount(amount)} to use this shame action.`,
-          variant: "destructive",
-        });
-        return false;
-      }
-      
-      // Create the shame effect
-      const duration = getShameEffectDuration(action) * 60 * 60 * 1000; // hours to ms
-      const until = now + duration;
-      
-      // Update shamed users state
-      setShamedUsers(prev => ({
-        ...prev,
-        [targetUserId.toString()]: {
-          userId: targetUserId,
-          username: targetUsername,
-          action,
-          timestamp: now,
-          until,
-          appliedBy: currentUser.username
-        }
-      }));
-      
-      // Set cooldown for this user pair
-      const cooldownDuration = getShameEffectCooldown(action) * 60 * 60 * 1000; // hours to ms
-      setCooldowns(prev => ({
-        ...prev,
-        [userCooldownKey]: now + cooldownDuration
-      }));
-      
-      // Show success message
-      toast({
-        title: "Shame Applied!",
-        description: `You've successfully shamed ${targetUsername} with ${action}!`,
-      });
-      
-      // Return success
-      return true;
-    } catch (error) {
-      console.error("Error applying shame effect:", error);
-      toast({
-        title: "Action Failed",
-        description: "There was an error applying the shame effect.",
-        variant: "destructive",
-      });
-      return false;
-    } finally {
-      setLoading(false);
-    }
-  };
-  
-  // Check if a user is currently shamed
-  const isUserShamed = (userId: string | number): { isShamed: boolean; action?: ShameAction; until?: number } => {
-    const now = Date.now();
-    const userShame = shamedUsers[userId.toString()];
-    
-    if (userShame && userShame.until > now) {
-      return { isShamed: true, action: userShame.action, until: userShame.until };
-    }
-    
-    return { isShamed: false };
-  };
-  
-  // Check if a user is on cooldown
-  const isUserOnCooldown = (sourceUserId: string | number, targetUserId: string | number): boolean => {
-    const userCooldownKey = `${sourceUserId}-${targetUserId}`;
-    const cooldownUntil = cooldowns[userCooldownKey] || 0;
-    return Date.now() < cooldownUntil;
-  };
-  
-  // Get shame effect duration in hours
-  const getShameEffectDuration = (action: ShameAction): number => {
+export const useShameEffect = (username: string) => {
+  const [shameEffect, setShameEffect] = useState<ShameEffect>({
+    active: false,
+    action: 'tomatoes',
+    expiresAt: null,
+    appliedBy: null
+  });
+
+  const getShameEffectIcon = (action: ShameAction) => {
     switch (action) {
       case 'tomatoes':
-        return 12;
+        return '🍅';
       case 'eggs':
-        return 24;
+        return '🥚';
+      case 'putridEggs':
+        return '🥚';
       case 'stocks':
-        return 48;
+        return '🔒';
+      case 'silence':
+        return '🤐';
+      case 'courtJester':
+        return '🃏';
+      case 'dunce':
+        return '🧢';
+      case 'smokeBomb':
+        return '💨';
+      case 'jester':
+        return '🤡';
       case 'ridicule':
-        return 6;
+        return '😂';
       case 'humiliate':
-        return 36;
+        return '😱';
       case 'expose':
-        return 72;
+        return '👁️';
       case 'mock':
-        return 8;
+        return '🤨';
+      case 'shame':
+        return '😓';
       default:
-        return 24;
+        return '🍅';
     }
   };
-  
-  // Get shame effect cooldown in hours
-  const getShameEffectCooldown = (action: ShameAction): number => {
+
+  const getShameEffectName = (action: ShameAction) => {
     switch (action) {
       case 'tomatoes':
-        return 6;
+        return 'Tomatoes';
       case 'eggs':
-        return 12;
+        return 'Egg Shower';
+      case 'putridEggs':
+        return 'Putrid Eggs';
       case 'stocks':
-        return 24;
+        return 'Public Stocks';
+      case 'silence':
+        return 'Royal Silence';
+      case 'courtJester':
+        return 'Court Jester';
+      case 'dunce':
+        return 'Dunce Cap';
+      case 'smokeBomb':
+        return 'Smoke Bomb';
+      case 'jester':
+        return 'Jester Curse';
       case 'ridicule':
-        return 3;
+        return 'Public Ridicule';
       case 'humiliate':
-        return 18;
+        return 'Royal Humiliation';
       case 'expose':
-        return 36;
+        return 'Exposed Secrets';
       case 'mock':
-        return 4;
+        return 'Mockery';
+      case 'shame':
+        return 'Walk of Shame';
       default:
-        return 12;
+        return 'Unknown Shame';
     }
   };
-  
-  // Get shame count for a user
-  const getUserShameCount = (userId: string | number): number => {
-    return Object.values(shamedUsers).filter(shame => 
-      shame.userId.toString() === userId.toString()
-    ).length;
+
+  const getShameEffectDescription = (action: ShameAction) => {
+    switch (action) {
+      case 'tomatoes':
+        return 'This user has been pelted with rotten tomatoes by the crowd.';
+      case 'eggs':
+        return 'This user has been showered with eggs for their dishonor.';
+      case 'putridEggs':
+        return 'This user reeks of the putrid eggs thrown at them.';
+      case 'stocks':
+        return 'This user has been placed in the public stocks for general mockery.';
+      case 'silence':
+        return 'This user has been silenced by royal decree.';
+      case 'courtJester':
+        return 'This user has been demoted to court jester status.';
+      case 'dunce':
+        return 'This user wears the dunce cap for their foolish spending.';
+      case 'smokeBomb':
+        return 'This user is obscured by a cloud of smoke from their embarrassment.';
+      case 'jester':
+        return 'This user has been cursed to appear as a jester to all.';
+      case 'ridicule':
+        return 'This user is being openly ridiculed throughout the kingdom.';
+      case 'humiliate':
+        return 'This user suffers from royal humiliation.';
+      case 'expose':
+        return 'This user\'s darkest secrets have been exposed to the public.';
+      case 'mock':
+        return 'This user is being mocked by all who see them.';
+      case 'shame':
+        return 'This user is on a public walk of shame.';
+      default:
+        return 'This user is suffering from an unknown shame...';
+    }
   };
-  
+
+  const applyShameEffect = (action: ShameAction, duration = 3600000, appliedBy = null) => {
+    const expiresAt = new Date(Date.now() + duration).toISOString();
+    setShameEffect({
+      active: true,
+      action,
+      expiresAt,
+      appliedBy
+    });
+
+    return true;
+  };
+
+  const removeShameEffect = () => {
+    setShameEffect({
+      active: false,
+      action: 'tomatoes',
+      expiresAt: null,
+      appliedBy: null
+    });
+  };
+
+  const checkShameEffectExpiration = () => {
+    if (shameEffect.active && shameEffect.expiresAt) {
+      const expiryTime = new Date(shameEffect.expiresAt).getTime();
+      if (Date.now() > expiryTime) {
+        removeShameEffect();
+      }
+    }
+  };
+
+  useEffect(() => {
+    // Check if the shame effect has expired
+    checkShameEffectExpiration();
+
+    // Set up a timer to check for expiration
+    const interval = setInterval(checkShameEffectExpiration, 60000);
+    return () => clearInterval(interval);
+  }, [shameEffect]);
+
   return {
-    loading,
+    shameEffect,
     applyShameEffect,
-    isUserShamed,
-    isUserOnCooldown,
-    getUserShameCount,
-    shamedUsers
+    removeShameEffect,
+    getShameEffectIcon,
+    getShameEffectName,
+    getShameEffectDescription
   };
 };
 

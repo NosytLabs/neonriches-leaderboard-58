@@ -112,3 +112,40 @@ export const formatAddress = (address: string): string => {
   if (address.length <= 12) return address;
   return `${address.substring(0, 6)}...${address.substring(address.length - 4)}`;
 };
+
+/**
+ * Format a date as a relative time (e.g., "2 hours ago")
+ */
+export const formatRelativeTime = (date: string | Date): string => {
+  if (!date) return '';
+  
+  const dateObj = typeof date === 'string' ? new Date(date) : date;
+  const now = new Date();
+  const diffMs = now.getTime() - dateObj.getTime();
+  const diffSec = Math.round(diffMs / 1000);
+  const diffMin = Math.round(diffSec / 60);
+  const diffHour = Math.round(diffMin / 60);
+  const diffDay = Math.round(diffHour / 24);
+  
+  if (diffSec < 60) return `${diffSec} second${diffSec !== 1 ? 's' : ''} ago`;
+  if (diffMin < 60) return `${diffMin} minute${diffMin !== 1 ? 's' : ''} ago`;
+  if (diffHour < 24) return `${diffHour} hour${diffHour !== 1 ? 's' : ''} ago`;
+  if (diffDay < 30) return `${diffDay} day${diffDay !== 1 ? 's' : ''} ago`;
+  
+  return formatDate(dateObj);
+};
+
+/**
+ * Format a monetary value for display (without currency symbol)
+ */
+export const formatMoney = (amount: number | undefined): string => {
+  if (amount === undefined) return '0.00';
+  return amount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+};
+
+/**
+ * Format a rank number
+ */
+export const formatRankNumber = (rank: number): string => {
+  return rank?.toLocaleString() || '-';
+};

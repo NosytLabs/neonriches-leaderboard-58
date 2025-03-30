@@ -1,12 +1,13 @@
 
 export interface SolanaTransaction {
+  id?: string;
   signature: string;
   slot: number;
   timestamp: number;
   amount: number;
   usdValue: number;
-  type: 'in' | 'out';
-  status: 'success' | 'pending' | 'failed';
+  type: 'in' | 'out' | 'deposit' | 'withdrawal';
+  status: 'success' | 'pending' | 'failed' | 'confirmed';
   sender?: string;
   recipient?: string;
 }
@@ -35,6 +36,25 @@ export interface OnChainLeaderboardEntry {
   amountSpent?: number;
   totalDeposited?: number;
   timestamp?: string;
+  username?: string;
+  address?: string;
+  rank?: number;
+  joinDate?: string;
+  lastTransaction?: string;
+}
+
+export interface SolanaTreasuryInfo {
+  totalBalance: number;
+  depositAddress: string;
+  totalDeposits: number;
+  totalWithdrawals: number;
+  transactions: SolanaTransaction[];
+}
+
+export interface SolanaWallet {
+  address: string;
+  balance: number;
+  nfts?: SolanaNFT[];
 }
 
 export type SolanaNftInfo = SolanaNFT;

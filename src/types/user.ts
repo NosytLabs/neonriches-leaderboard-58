@@ -1,107 +1,139 @@
 
-export type TeamType = 'red' | 'green' | 'blue' | null;
-export type GenderType = 'king' | 'queen' | 'jester' | null;
-export type UserTier = 'free' | 'premium' | 'royal';
+export type UserTier = 'royal' | 'premium' | 'free' | 'pro' | 'basic' | 'bronze' | 'silver' | 'gold' | 'platinum';
+export type TeamType = 'red' | 'green' | 'blue' | 'none';
+export type GenderType = 'king' | 'queen' | 'neutral' | 'jester' | 'noble' | 'male' | 'female';
 
-export interface User {
+export interface SocialLink {
   id: string;
-  username: string;
-  email?: string;
-  profileImage?: string;
-  amountSpent: number;
-  walletBalance?: number;
-  rank: number;
-  previousRank?: number;
-  spendStreak?: number;
-  tier?: UserTier;
-  team?: TeamType;
-  gender?: GenderType;
-  joinedAt?: string;
-  socialLinks?: ProfileLink[];
-  createdAt?: string;
-  isAuthenticated?: boolean;
-  isAdmin?: boolean;
-  isVerified?: boolean;
-  lastLogin?: string;
-  activeTitle?: string;
-  cosmetics?: UserCosmetics;
+  url: string;
+  label?: string;
+  icon?: string;
+  platform?: string;
 }
 
 export interface ProfileLink {
   id: string;
-  type: string;
   url: string;
-  title?: string;
+  title: string;
   icon?: string;
+  platform?: string;
 }
 
-export interface UserProfile extends User {
+export interface ProfileImage {
+  id: string;
+  url: string;
+  type: 'avatar' | 'banner' | 'background';
+  default?: boolean;
+}
+
+export interface UserSettings {
+  theme: string;
+  notifications: boolean;
+  privacy: {
+    profileVisibility: 'public' | 'private' | 'friends';
+    showRank: boolean;
+    showSpending: boolean;
+  };
+  marketing: {
+    emailUpdates: boolean;
+    featuredInShowcase: boolean;
+  };
+}
+
+export interface UserCosmetics {
+  borders: CosmeticItem[];
+  colors: CosmeticItem[];
+  fonts: CosmeticItem[];
+  emojis: CosmeticItem[];
+  titles: CosmeticItem[];
+  backgrounds: CosmeticItem[];
+  effects: CosmeticItem[];
+  badges?: string[];
+  themes?: CosmeticItem[];
+  foundersPass?: boolean;
+}
+
+export interface UserTeam {
+  id: string;
+  name: string;
+  color: string;
+  members: number;
+  rank: number;
+}
+
+export interface UserProfile {
+  id: string;
+  username: string;
+  displayName?: string;
+  email?: string;
+  profileImage?: string;
   bio?: string;
-  bannerImage?: string;
-  badges?: Badge[];
-  achievements?: Achievement[];
-  boosts?: ProfileBoost[];
-  subscriptions?: UserSubscription[];
+  tier: UserTier;
+  team: TeamType | null;
+  rank: number;
+  previousRank?: number;
+  currency?: number;
+  walletBalance?: number;
+  amountSpent?: number;
+  totalSpent?: number;
+  spentAmount?: number;
+  joinedAt: string;
+  joinDate?: string;
+  lastActive?: string;
+  gender?: GenderType;
+  socialLinks?: SocialLink[];
+  profileLinks?: ProfileLink[];
+  profileImages?: ProfileImage[];
+  cosmetics?: UserCosmetics;
+  subscription?: string;
+  subscriptions?: string[];
+  badges?: string[];
+  settings?: UserSettings;
+  achievements?: string[];
+  isVIP?: boolean;
+  role?: string;
+  certificateNFT?: any;
+  followers?: number;
+  following?: number;
+  profileViews?: number;
+  profileClicks?: number;
+  purchasedFeatures?: string[];
+  profileBoosts?: ProfileBoost[];
+}
+
+export interface User extends UserProfile {
+  // Additional fields specific to users
+}
+
+export interface ProfileBoost {
+  id: string;
+  effectId: string;
+  duration: number;
+  startDate?: string;
+  endDate?: string;
+  active: boolean;
+  level?: number;
+  type?: string;
+  effects?: string[];
+}
+
+export interface BoostEffect {
+  id: string;
+  name: string;
+  description: string;
+  duration: number;
+  price: number;
+  icon: string;
+  type?: string;
+  cssClass?: string;
+  minTier?: UserTier;
+  allowStacking?: boolean;
 }
 
 export interface Badge {
   id: string;
   name: string;
-  description: string;
   icon: string;
-  color?: string;
-  earnedAt?: string;
-}
-
-export interface Achievement {
-  id: string;
-  name: string;
   description: string;
-  icon: string;
-  progress: number;
-  maxProgress: number;
-  earnedAt?: string;
-  category?: string;
-}
-
-export interface ProfileBoost {
-  id: string;
-  name: string;
-  description: string;
-  icon?: string;
-  effects?: string[];
-  startDate?: string;
-  endDate?: string;
-  tier?: string;
-  level?: number;
-  strength?: number;
-}
-
-export interface UserCosmetics {
-  borders?: CosmeticItem[];
-  colors?: CosmeticItem[];
-  fonts?: CosmeticItem[];
-  emojis?: CosmeticItem[];
-  titles?: CosmeticItem[];
-  backgrounds?: CosmeticItem[];
-  effects?: CosmeticItem[];
-  activeBorder?: string;
-  activeColor?: string;
-  activeFont?: string;
-  activeEmoji?: string;
-  activeTitle?: string;
-  activeBackground?: string;
-  activeEffect?: string;
-}
-
-export interface LeaderboardUser {
-  id: string;
-  username: string;
-  amountSpent: number;
-  rank: number;
-  team: TeamType;
-  tier?: UserTier;
-  profileImage?: string;
-  gender?: GenderType;
-  avatarUrl?: string;
+  tier: string;
 }
