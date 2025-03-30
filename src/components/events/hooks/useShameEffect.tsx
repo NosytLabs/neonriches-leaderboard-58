@@ -1,12 +1,10 @@
 
-import React from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
-
-export type ShameAction = 'tomatoes' | 'eggs' | 'stocks';
-export type ShameEffectType = ShameAction;
+import { ShameAction } from '@/types/mockery';
 
 export interface ShameEffectProps {
-  type: ShameEffectType;
+  type: ShameAction;
   duration?: number; // in milliseconds
   intensity?: 'light' | 'medium' | 'heavy';
 }
@@ -71,39 +69,50 @@ export const ShameEffect: React.FC<ShameEffectProps> = ({
 };
 
 export const useShameEffect = () => {
-  const [shameConfig, setShameConfig] = React.useState<ShameEffectProps | null>(null);
+  const [shameEffects, setShameEffects] = useState<Record<number, ShameAction>>({});
+  const [shameCooldown, setShameCooldown] = useState<Record<number, boolean>>({});
+  const [shameCount, setShameCount] = useState<Record<number, number>>({});
   
-  const triggerShame = (type: ShameEffectType, intensity?: 'light' | 'medium' | 'heavy', duration?: number) => {
-    setShameConfig({
-      type,
-      intensity,
-      duration
-    });
+  const handleShame = useCallback((userId: number, username: string, type: ShameAction) => {
+    // Apply the shame effect
+    setShameEffects(prev => ({ ...prev, [userId]: type }));
+    setShameCooldown(prev => ({ ...prev, [userId]: true }));
+    setShameCount(prev => ({ ...prev, [userId]: (prev[userId] || 0) + 1 }));
     
-    // Auto-clear after duration
-    if (duration) {
-      setTimeout(() => {
-        setShameConfig(null);
-      }, duration);
-    }
-  };
+    // Clear the shame effect after 24 hours (in a real app)
+    // For demo, we'll clear it after 5 seconds
+    setTimeout(() => {
+      setShameEffects(prev => {
+        const newEffects = { ...prev };
+        delete newEffects[userId];
+        return newEffects;
+      });
+    }, 5000);
+    
+    // Clear the cooldown after 60 seconds
+    setTimeout(() => {
+      setShameCooldown(prev => {
+        const newCooldown = { ...prev };
+        delete newCooldown[userId];
+        return newCooldown;
+      });
+    }, 60000);
+    
+    console.log(`Applied ${type} shame to ${username}`);
+    return true;
+  }, []);
   
-  const clearShame = () => {
-    setShameConfig(null);
-  };
-  
-  const ShameEffectComponent = () => {
-    if (!shameConfig) return null;
-    return <ShameEffect {...shameConfig} />;
-  };
+  const getShameCount = useCallback((userId: number) => {
+    return shameCount[userId] || 0;
+  }, [shameCount]);
   
   return {
-    triggerShame,
-    clearShame,
-    ShameEffectComponent,
-    shameConfig
+    shameEffects,
+    shameCooldown,
+    shameCount,
+    getShameCount,
+    handleShame
   };
 };
 
 export default useShameEffect;
-
