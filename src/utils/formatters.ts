@@ -1,73 +1,103 @@
 
-// Format functions for different data types
-
-// Format number as currency
-export const formatCurrency = (amount: number): string => {
-  return new Intl.NumberFormat('en-US', {
+// Format currency 
+export const formatCurrency = (amount: number, currency = 'USD', options = {}): string => {
+  const defaultOptions = {
     style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2
-  }).format(amount);
-};
-
-// Format as dollar amount with no cents for large numbers
-export const formatDollarAmount = (amount: number): string => {
-  if (amount >= 1000) {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0
-    }).format(amount);
-  }
-  return formatCurrency(amount);
-};
-
-// Format date with options
-export const formatDate = (date: Date | string, format: 'short' | 'medium' | 'long' = 'medium'): string => {
-  const dateObj = typeof date === 'string' ? new Date(date) : date;
+    currency,
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0
+  };
   
-  const options: Intl.DateTimeFormatOptions = {
-    short: { month: 'numeric', day: 'numeric', year: '2-digit' },
-    medium: { month: 'short', day: 'numeric', year: 'numeric' },
-    long: { month: 'long', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' }
-  }[format];
-  
-  return new Intl.DateTimeFormat('en-US', options).format(dateObj);
+  const formatter = new Intl.NumberFormat('en-US', { ...defaultOptions, ...options });
+  return formatter.format(amount);
 };
 
-// Format historical value (e.g., "2 days ago")
-export const formatHistoricalValue = (date: Date | string): string => {
-  const dateObj = typeof date === 'string' ? new Date(date) : date;
+// Format number with commas
+export const formatNumber = (num: number, options = {}): string => {
+  const defaultOptions = {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0
+  };
+  
+  const formatter = new Intl.NumberFormat('en-US', { ...defaultOptions, ...options });
+  return formatter.format(num);
+};
+
+// Format date
+export const formatDate = (dateString: string, format = 'medium'): string => {
+  const date = new Date(dateString);
+  
+  const options: Intl.DateTimeFormatOptions = 
+    format === 'short' ? { 
+      month: 'numeric', 
+      day: 'numeric', 
+      year: 'numeric' 
+    } : 
+    format === 'medium' ? { 
+      month: 'short', 
+      day: 'numeric', 
+      year: 'numeric' 
+    } : 
+    { 
+      month: 'long', 
+      day: 'numeric', 
+      year: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric'
+    };
+  
+  return new Intl.DateTimeFormat('en-US', options).format(date);
+};
+
+// Format relative time (e.g., "2 hours ago")
+export const formatRelativeTime = (dateString: string): string => {
+  const date = new Date(dateString);
   const now = new Date();
-  const diffInMs = now.getTime() - dateObj.getTime();
-  const diffInSecs = Math.floor(diffInMs / 1000);
-  const diffInMins = Math.floor(diffInSecs / 60);
-  const diffInHours = Math.floor(diffInMins / 60);
+  const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+  
+  if (diffInSeconds < 60) {
+    return 'just now';
+  }
+  
+  const diffInMinutes = Math.floor(diffInSeconds / 60);
+  if (diffInMinutes < 60) {
+    return `${diffInMinutes} ${diffInMinutes === 1 ? 'minute' : 'minutes'} ago`;
+  }
+  
+  const diffInHours = Math.floor(diffInMinutes / 60);
+  if (diffInHours < 24) {
+    return `${diffInHours} ${diffInHours === 1 ? 'hour' : 'hours'} ago`;
+  }
+  
   const diffInDays = Math.floor(diffInHours / 24);
+  if (diffInDays < 7) {
+    return `${diffInDays} ${diffInDays === 1 ? 'day' : 'days'} ago`;
+  }
   
-  if (diffInSecs < 60) return 'just now';
-  if (diffInMins < 60) return `${diffInMins} ${diffInMins === 1 ? 'minute' : 'minutes'} ago`;
-  if (diffInHours < 24) return `${diffInHours} ${diffInHours === 1 ? 'hour' : 'hours'} ago`;
-  if (diffInDays < 30) return `${diffInDays} ${diffInDays === 1 ? 'day' : 'days'} ago`;
+  const diffInWeeks = Math.floor(diffInDays / 7);
+  if (diffInWeeks < 4) {
+    return `${diffInWeeks} ${diffInWeeks === 1 ? 'week' : 'weeks'} ago`;
+  }
   
-  return formatDate(dateObj, 'short');
+  const diffInMonths = Math.floor(diffInDays / 30);
+  if (diffInMonths < 12) {
+    return `${diffInMonths} ${diffInMonths === 1 ? 'month' : 'months'} ago`;
+  }
+  
+  const diffInYears = Math.floor(diffInDays / 365);
+  return `${diffInYears} ${diffInYears === 1 ? 'year' : 'years'} ago`;
 };
 
-// Format address to shorter form
-export const formatAddress = (address: string, startChars = 4, endChars = 4): string => {
-  if (!address) return '';
-  if (address.length <= startChars + endChars) return address;
-  return `${address.substring(0, startChars)}...${address.substring(address.length - endChars)}`;
-};
-
-// Format number with commas and optional decimal places
-export const formatNumber = (num: number, decimals = 0): string => {
-  return new Intl.NumberFormat('en-US', {
-    minimumFractionDigits: decimals,
-    maximumFractionDigits: decimals
-  }).format(num);
+// Format percentage
+export const formatPercentage = (value: number, options = {}): string => {
+  const defaultOptions = {
+    style: 'percent',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2
+  };
+  
+  const formatter = new Intl.NumberFormat('en-US', { ...defaultOptions, ...options });
+  return formatter.format(value / 100);
 };
 
 // Format file size
@@ -79,16 +109,4 @@ export const formatFileSize = (bytes: number): string => {
   const i = Math.floor(Math.log(bytes) / Math.log(k));
   
   return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-};
-
-// Format duration (seconds to MM:SS)
-export const formatDuration = (seconds: number): string => {
-  const mins = Math.floor(seconds / 60);
-  const secs = Math.floor(seconds % 60);
-  return `${mins}:${secs.toString().padStart(2, '0')}`;
-};
-
-// Format percentage
-export const formatPercentage = (value: number, decimals = 1): string => {
-  return `${value.toFixed(decimals)}%`;
 };

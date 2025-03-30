@@ -1,7 +1,7 @@
 
 import React from 'react';
 import * as LucideIcons from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from "@/lib/utils";
 
 // Define icon name and size types
 export type IconName = keyof typeof LucideIcons;
@@ -35,8 +35,9 @@ const Icon: React.FC<IconProps> = ({
   // Convert size from string to number if needed
   const pixelSize = typeof size === 'string' ? sizeMap[size] : size;
   
-  // Get the appropriate Lucide icon
-  const LucideIcon = LucideIcons[name] as React.ComponentType<{ size?: number, className?: string, color?: string, onClick?: () => void }>;
+  // Get the appropriate Lucide icon component - ensure PascalCase
+  const pascalCaseName = name as keyof typeof LucideIcons;
+  const LucideIcon = LucideIcons[pascalCaseName];
   
   if (!LucideIcon) {
     console.warn(`Icon "${name}" not found`);

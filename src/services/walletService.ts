@@ -1,134 +1,126 @@
 
+import { Transaction, TransactionType, TransactionStatus } from '@/types/transactions';
 import { User } from '@/types/user';
-import { useToast } from '@/hooks/use-toast';
 
-export type TransactionType = 
-  | 'purchase'
-  | 'mockery'
-  | 'protection'
-  | 'boost'
-  | 'reward'
-  | 'deposit'
-  | 'withdrawal'
-  | 'refund'
-  | 'gift';
-
-export interface Transaction {
-  id: string;
-  userId: string;
-  amount: number;
-  type: TransactionType;
-  description: string;
-  timestamp: Date | string;
-  metadata?: Record<string, any>;
-}
-
-export interface SpendOptions {
-  showToast?: boolean;
-  updateProfile?: boolean;
-  metadata?: Record<string, any>;
-}
-
-const defaultOptions: SpendOptions = {
-  showToast: true,
-  updateProfile: true,
-  metadata: {}
+// Generate a unique transaction ID
+const generateTransactionId = (): string => {
+  return Date.now().toString(36) + Math.random().toString(36).substring(2);
 };
 
-// Spend money from user's wallet
-export const spendFromWallet = (
-  user: User, 
-  amount: number, 
-  type: TransactionType, 
+// Record a transaction
+export const recordTransaction = (
+  userId: string,
+  amount: number,
+  type: TransactionType,
   description: string,
-  metadata: Record<string, any> = {},
-  options: SpendOptions = defaultOptions
-): boolean => {
-  // Check if user has enough balance
-  if (!user || user.walletBalance < amount) {
-    // Could show a toast here in real app
-    console.error('Insufficient funds', {
-      available: user?.walletBalance || 0,
-      requested: amount
-    });
-    return false;
-  }
-  
-  // Create transaction record - in a real app this would be sent to API
+  metadata?: Record<string, any>
+): Transaction => {
   const transaction: Transaction = {
-    id: `tx-${Date.now()}`,
-    userId: user.id,
-    amount,
+    id: generateTransactionId(),
+    userId,
     type,
+    amount,
+    currency: 'USD',
+    status: 'completed',
     description,
-    timestamp: new Date().toISOString(),
+    createdAt: new Date().toISOString(),
+    completedAt: new Date().toISOString(),
     metadata
   };
+
+  // In a real app, this would save to a database
+  console.log('Transaction recorded:', transaction);
   
-  console.log('Transaction created:', transaction);
-  
-  // Update user balance - in real app this would happen server-side
-  user.walletBalance -= amount;
-  user.totalSpent = (user.totalSpent || 0) + amount;
-  user.amountSpent = (user.amountSpent || 0) + amount;
-  
-  // In a real app, you would update the user profile in the database
-  console.log('User balance updated:', user.walletBalance);
-  
-  return true;
+  return transaction;
 };
 
-// Add funds to user's wallet
-export const addFundsToWallet = (
+// Get user balance
+export const getUserBalance = (user: User): number => {
+  return user.walletBalance || 0;
+};
+
+// Add funds to user account
+export const addFunds = (user: User, amount: number, paymentMethod: string) => {
+  // Create a transaction record
+  const transaction = recordTransaction(
+    user.id,
+    amount,
+    'deposit',
+    `Deposit via ${paymentMethod}`,
+    { paymentMethod }
+  );
+  
+  // Return updated user data
+  return {
+    user: {
+      ...user,
+      walletBalance: (user.walletBalance || 0) + amount,
+      amountSpent: (user.amountSpent || 0) + amount
+    },
+    transaction
+  };
+};
+
+// Make a purchase
+export const makePurchase = (
   user: User,
   amount: number,
-  description = 'Added funds to wallet',
-  metadata: Record<string, any> = {}
-): boolean => {
-  if (!user) return false;
+  itemType: string,
+  itemId: string,
+  description: string
+) => {
+  // Check if user has enough funds
+  if ((user.walletBalance || 0) < amount) {
+    throw new Error('Insufficient funds');
+  }
   
-  // Create transaction record
-  const transaction: Transaction = {
-    id: `tx-${Date.now()}`,
-    userId: user.id,
+  // Create a transaction record
+  const transaction = recordTransaction(
+    user.id,
     amount,
-    type: 'deposit',
+    'purchase',
     description,
-    timestamp: new Date().toISOString(),
-    metadata
+    { itemType, itemId }
+  );
+  
+  // Return updated user data
+  return {
+    user: {
+      ...user,
+      walletBalance: (user.walletBalance || 0) - amount
+    },
+    transaction
   };
-  
-  console.log('Transaction created:', transaction);
-  
-  // Update user balance
-  user.walletBalance = (user.walletBalance || 0) + amount;
-  
-  // In a real app, you would update the user profile in the database
-  console.log('User balance updated:', user.walletBalance);
-  
-  return true;
 };
 
-// Get transaction history for a user
+// Get transaction history
 export const getTransactionHistory = (userId: string): Transaction[] => {
-  // In a real app, this would fetch from API/database
-  // This is a mock implementation
+  // In a real app, this would fetch from a database
+  // Returning mock data for now
   return [
     {
-      id: 'tx-1',
+      id: 'tx_1',
       userId,
-      amount: 10,
       type: 'deposit',
-      description: 'Initial wallet funding',
-      timestamp: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()
+      amount: 100,
+      currency: 'USD',
+      status: 'completed',
+      description: 'Initial deposit',
+      createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
+      completedAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
+      paymentMethod: 'credit_card'
     },
     {
-      id: 'tx-2',
+      id: 'tx_2',
       userId,
-      amount: 5,
       type: 'purchase',
-      description: 'Premium feature purchase',
-      timestamp: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString()
+      amount: 25,
+      currency: 'USD',
+      status: 'completed',
+      description: 'Rank boost purchase',
+      createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+      completedAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+      metadata: { itemType: 'boost', itemId: 'boost_1' }
     }
-  ];
+  ] as Transaction[];
 };

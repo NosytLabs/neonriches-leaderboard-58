@@ -1,27 +1,33 @@
 
+export type BoostEffectType = 
+  | 'visual'
+  | 'ranking'
+  | 'marketing'
+  | 'economic'
+  | 'exclusive';
+
 export interface BoostEffect {
   id: string;
   name: string;
   description: string;
-  duration: number; // in milliseconds
+  type: BoostEffectType;
   price: number;
-  rarity: 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
-  tier?: 'free' | 'premium' | 'royal';
-  cost?: number;
-  type?: string;
-  cssClass?: string;
+  duration: number; // in days
+  cssClass: string;
+  tier: string;
+  icon: string;
+  previewImage?: string;
+  allowStacking?: boolean;
+  minTier?: string;
 }
 
 export interface ProfileBoost {
   id: string;
-  name: string;
-  description: string;
-  duration: number;
-  startTime: number;
-  endTime: number;
-  effectId?: string;
-  strength?: number;
-  type?: string;
+  effectId: string;
+  userId: string;
+  startTime: string;
+  endTime: string;
+  isActive: boolean;
+  duration: number; // in days
+  level?: number;
 }
-
-export type BoostEffectType = 'border' | 'glow' | 'background' | 'particles' | 'animation';

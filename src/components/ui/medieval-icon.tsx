@@ -1,36 +1,26 @@
 
 import React from 'react';
-import Icon from '@/components/Icon';
-import { IconName } from '@/components/Icon';
+import { cn } from "@/lib/utils";
+import * as LucideIcons from 'lucide-react';
 
+// Define themed icon types
 export type MedievalIconName = 
-  | 'Crown'
-  | 'Shield'
+  | 'Crown' 
+  | 'Shield' 
+  | 'Scroll' 
+  | 'Coins' 
+  | 'Key' 
   | 'Sword'
-  | 'Scroll'
-  | 'Coins'
-  | 'Landmark'
-  | 'AlertTriangle'
-  | 'Wine'
-  | 'Flask'
-  | 'Map'
-  | 'Key'
-  | 'Wallet'
-  | 'Medal'
-  | 'Heart'
   | 'Trophy'
-  | 'Sparkles'
-  | 'Flame'
-  | 'Sun'
-  | 'Droplets'
-  | 'User'
-  | 'MessageSquare'
-  | 'Gem';
+  | 'Heart'
+  | 'Medal'
+  | 'Gem'
+  | 'Wallet';
 
 export type MedievalIconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
-export type MedievalIconColor = 'default' | 'gold' | 'silver' | 'royal' | 'crimson' | 'success' | 'warning' | 'info';
+export type MedievalIconColor = 'default' | 'gold' | 'silver' | 'crimson';
 
-interface MedievalIconProps {
+export interface MedievalIconProps {
   name: MedievalIconName;
   size?: MedievalIconSize;
   color?: MedievalIconColor;
@@ -38,43 +28,46 @@ interface MedievalIconProps {
   onClick?: () => void;
 }
 
-const sizeMap: Record<MedievalIconSize, number> = {
+const sizeMap = {
   xs: 16,
   sm: 20,
   md: 24,
   lg: 32,
-  xl: 40
+  xl: 40,
 };
 
-const colorMap: Record<MedievalIconColor, string> = {
-  default: 'currentColor',
-  gold: '#d4af37',
-  silver: '#c0c0c0',
-  royal: '#7851a9',
-  crimson: '#dc143c',
-  success: '#10b981',
-  warning: '#f59e0b',
-  info: '#3b82f6'
+const colorMap = {
+  default: 'text-white',
+  gold: 'text-royal-gold',
+  silver: 'text-gray-300',
+  crimson: 'text-royal-crimson',
 };
 
-const MedievalIcon: React.FC<MedievalIconProps> = ({ 
-  name, 
-  size = 'md', 
+const MedievalIcon: React.FC<MedievalIconProps> = ({
+  name,
+  size = 'md',
   color = 'default',
   className,
   onClick
 }) => {
-  // Convert MedievalIconName to IconName
-  const iconName = name as IconName;
-  const iconSize = sizeMap[size];
-  const iconColor = colorMap[color];
+  const pixelSize = sizeMap[size];
+  
+  // Convert to proper Lucide icon name
+  const iconName = name as keyof typeof LucideIcons;
+  const LucideIcon = LucideIcons[iconName];
+  
+  if (!LucideIcon) {
+    console.warn(`Icon "${name}" not found`);
+    return null;
+  }
   
   return (
-    <Icon
-      name={iconName}
-      size={iconSize}
-      color={iconColor}
-      className={className}
+    <LucideIcon
+      size={pixelSize}
+      className={cn(
+        colorMap[color],
+        className
+      )}
       onClick={onClick}
     />
   );

@@ -1,78 +1,49 @@
 
-// Define the base mockery action types
+export type MockeryTier = 
+  | 'common'
+  | 'uncommon' 
+  | 'rare' 
+  | 'epic' 
+  | 'legendary'
+  | 'royal'
+  | 'premium'
+  | 'elite'
+  | 'basic';
+
 export type MockeryAction = 
   | 'tomatoes'
-  | 'eggs' 
+  | 'eggs'
   | 'putridEggs'
   | 'stocks'
   | 'silence'
   | 'courtJester'
+  | 'jester'
   | 'dunce'
   | 'smokeBomb'
   | 'glitterBomb'
+  | 'immune'
+  | 'protection'
   | 'royalPie'
   | 'jokeCrown'
   | 'memeFrame'
-  | 'jester'
-  | 'roast'
   | 'ridicule'
   | 'humiliate'
   | 'expose'
   | 'mock'
-  | 'shame'
-  | 'taunt'
-  | 'immune'
-  | 'protection'
-  | 'guillotine'
-  | 'dungeons'
-  | 'removal';
+  | 'shame';
 
-// Subset of mockery actions that can be used for public shaming
-export type ShameAction = 
-  | 'tomatoes'
-  | 'eggs' 
-  | 'putridEggs'
-  | 'stocks'
-  | 'silence'
-  | 'courtJester'
-  | 'dunce'
-  | 'jester'
-  | 'ridicule'
-  | 'shame'
-  | 'smokeBomb';
-
-export type MockeryTier = 
-  | 'common'
-  | 'uncommon'
-  | 'rare'
-  | 'epic'
-  | 'legendary'
-  | 'basic'
-  | 'premium'
-  | 'elite'
-  | 'royal';
+// Alias for backwards compatibility
+export type ShameAction = MockeryAction;
 
 export interface MockeryEvent {
   id: string;
-  userId: string;
+  action: MockeryAction;
   targetId: string;
-  action: MockeryAction;
-  appliedAt: Date | string;
-  expiresAt: Date | string;
+  sourceId: string;
+  appliedAt: string; 
+  expiresAt: string;
   isActive: boolean;
-}
-
-export interface MockeryEffectData {
-  username: string;
-  action: MockeryAction;
-}
-
-export interface UserMockeryStatus {
-  isProtected: boolean;
-  protectionExpiresAt?: Date | string;
-  activeMockery?: MockeryEvent;
-  mockeryCount: number;
-  mockedOthersCount: number;
+  metadata?: Record<string, any>;
 }
 
 export interface MockUser {
@@ -82,14 +53,18 @@ export interface MockUser {
   profileImage?: string;
   tier?: string;
   team?: string;
-  lastMocked?: string;
-  mockeryCount?: number;
+  isProtected?: boolean;
+  isVerified?: boolean;
+  mockeryEvents?: MockeryEvent[];
+  rank?: number;
 }
 
-export interface ExtendedMockeryAction {
-  title: string;
+export interface MockeryActionDetails {
+  id: MockeryAction;
+  name: string;
   description: string;
   price: number;
   tier: MockeryTier;
-  icon?: string;
+  duration: number; // in hours
+  icon: string;
 }

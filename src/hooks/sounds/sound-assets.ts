@@ -1,24 +1,26 @@
 
 import { SoundType } from './types';
 
-// Sound asset paths
+// Define sound file paths
 export const soundAssets: Record<SoundType, string> = {
-  coinDrop: '/sounds/coin-drop.mp3',
-  reward: '/sounds/reward.mp3',
-  notification: '/sounds/notification.mp3',
   click: '/sounds/click.mp3',
-  success: '/sounds/success.mp3',
-  error: '/sounds/error.mp3',
-  royalAnnouncement: '/sounds/royal-announcement.mp3',
-  levelUp: '/sounds/level-up.mp3',
+  coinDrop: '/sounds/coin-drop.mp3',
   purchase: '/sounds/purchase.mp3',
+  royalAnnouncement: '/sounds/royal-announcement.mp3',
+  pageTransition: '/sounds/page-transition.mp3',
+  reward: '/sounds/reward.mp3',
+  win: '/sounds/win.mp3',
+  message: '/sounds/message.mp3',
   shame: '/sounds/shame.mp3',
   swordClash: '/sounds/sword-clash.mp3',
-  pageTransition: '/sounds/page-transition.mp3',
-  wish: '/sounds/wish.mp3',
-  pageChange: '/sounds/page-transition.mp3', // Using page-transition for pageChange
-  parchmentUnfurl: '/sounds/parchment-unfurl.mp3',
   seal: '/sounds/seal.mp3',
+  parchmentUnfurl: '/sounds/parchment-unfurl.mp3',
+  success: '/sounds/success.mp3',
+  error: '/sounds/error.mp3',
+  notification: '/sounds/notification.mp3',
+  levelUp: '/sounds/level-up.mp3',
+  wish: '/sounds/wish.mp3',
+  pageChange: '/sounds/page-change.mp3',
   medallion: '/sounds/medallion.mp3',
   trumpet: '/sounds/trumpet.mp3',
   noblesLaugh: '/sounds/nobles-laugh.mp3',
@@ -27,28 +29,30 @@ export const soundAssets: Record<SoundType, string> = {
   advertisement: '/sounds/advertisement.mp3'
 };
 
-// Volume presets for sounds (0 to 1)
-export const defaultVolumes: Record<SoundType, number> = {
-  coinDrop: 0.4,
-  reward: 0.3,
-  notification: 0.2,
-  click: 0.1,
-  success: 0.3,
-  error: 0.2,
-  royalAnnouncement: 0.3,
-  levelUp: 0.4,
-  purchase: 0.3,
-  shame: 0.3,
-  swordClash: 0.3,
-  pageTransition: 0.2,
-  wish: 0.3,
-  pageChange: 0.2,
-  parchmentUnfurl: 0.4,
-  seal: 0.4,
-  medallion: 0.5,
-  trumpet: 0.6,
-  noblesLaugh: 0.5,
-  inkScribble: 0.3,
-  hover: 0.2,
-  advertisement: 0.4
+// Define default volumes for each sound type
+export const soundVolumes: Record<SoundType, number> = {
+  coinDrop: 0.7,
+  reward: 0.8,
+  notification: 0.6,
+  click: 0.5,
+  success: 0.7,
+  error: 0.7,
+  royalAnnouncement: 0.9,
+  levelUp: 0.8,
+  purchase: 0.7,
+  shame: 0.8,
+  swordClash: 0.6,
+  seal: 0.7,
+  parchmentUnfurl: 0.6,
+  win: 0.8,
+  message: 0.6,
+  wish: 0.7,
+  pageTransition: 0.5,
+  pageChange: 0.5,
+  medallion: 0.7,
+  trumpet: 0.8,
+  noblesLaugh: 0.7,
+  inkScribble: 0.6,
+  hover: 0.3,
+  advertisement: 0.6
 };

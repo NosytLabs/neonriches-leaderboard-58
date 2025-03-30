@@ -4,54 +4,31 @@ export type TransactionType =
   | 'withdrawal'
   | 'purchase'
   | 'refund'
-  | 'transfer'
-  | 'bonus'
+  | 'reward'
+  | 'boost'
+  | 'gift'
+  | 'subscription'
   | 'cosmetic'
-  | 'event'
-  | 'protection'
-  | 'mockery_protection'
-  | 'founder'
+  | 'mockery'
   | 'wish';
 
 export type TransactionStatus = 
   | 'pending'
-  | 'confirmed'
+  | 'completed'
   | 'failed'
-  | 'cancelled';
+  | 'cancelled'
+  | 'refunded';
 
 export interface Transaction {
   id: string;
   userId: string;
   type: TransactionType;
   amount: number;
+  currency: string;
   status: TransactionStatus;
+  description: string;
   createdAt: string;
-  updatedAt?: string;
+  completedAt?: string;
+  paymentMethod?: string;
   metadata?: Record<string, any>;
-  description?: string;
-}
-
-export interface LeaderboardEntry {
-  id: string;
-  username: string;
-  rank: number;
-  totalDeposited: number;
-  currentBalance?: number;
-  team?: string;
-  profileImage?: string;
-  lastDepositDate: string;
-  joinDate?: string;
-  tier?: string;
-}
-
-export interface DbLeaderboardEntry {
-  id: string;
-  username: string;
-  rank: number;
-  total_deposited: number;
-  current_balance: number;
-  team: "red" | "green" | "blue" | null;
-  profile_image: string;
-  joined_at: string;
-  tier: string;
 }

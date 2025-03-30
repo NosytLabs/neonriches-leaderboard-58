@@ -1,106 +1,107 @@
 
 import { UserTier } from '@/types/user';
-import { Crown, Award, Star, Medal, CircleDollarSign } from 'lucide-react';
 
-export const getTierLabel = (tier: UserTier): string => {
+// Get tier display name
+export const getTierName = (tier: UserTier): string => {
   switch (tier) {
-    case 'bronze': return 'Bronze';
-    case 'silver': return 'Silver';
-    case 'gold': return 'Gold';
-    case 'platinum': return 'Platinum';
-    case 'royal': return 'Royal';
-    default: return 'Bronze';
-  }
-};
-
-export const getTierMinSpend = (tier: UserTier): number => {
-  switch (tier) {
-    case 'bronze': return 0;
-    case 'silver': return 50;
-    case 'gold': return 200;
-    case 'platinum': return 500;
-    case 'royal': return 1000;
-    default: return 0;
-  }
-};
-
-export const getTierMaxSpend = (tier: UserTier): number | null => {
-  switch (tier) {
-    case 'bronze': return 49.99;
-    case 'silver': return 199.99;
-    case 'gold': return 499.99;
-    case 'platinum': return 999.99;
-    case 'royal': return null; // No upper limit
-    default: return 49.99;
-  }
-};
-
-export const getTierBadge = (tier: UserTier) => {
-  switch (tier) {
-    case 'bronze': return Medal;
-    case 'silver': return Star;
-    case 'gold': return Award;
-    case 'platinum': return CircleDollarSign;
-    case 'royal': return Crown;
-    default: return Medal;
-  }
-};
-
-export const getTierColor = (tier: UserTier): string => {
-  switch (tier) {
-    case 'bronze': return 'text-amber-600';
-    case 'silver': return 'text-slate-400';
-    case 'gold': return 'text-yellow-500';
-    case 'platinum': return 'text-indigo-400';
-    case 'royal': return 'text-royal-gold';
-    default: return 'text-gray-400';
-  }
-};
-
-export const getTierBadgeColor = (tier: UserTier): { color: string; label: string } => {
-  switch (tier) {
-    case 'bronze':
-      return { color: 'bg-amber-600/20 text-amber-600 border-amber-600/30', label: 'Bronze' };
-    case 'silver':
-      return { color: 'bg-slate-400/20 text-slate-400 border-slate-400/30', label: 'Silver' };
-    case 'gold':
-      return { color: 'bg-yellow-500/20 text-yellow-500 border-yellow-500/30', label: 'Gold' };
-    case 'platinum':
-      return { color: 'bg-indigo-400/20 text-indigo-400 border-indigo-400/30', label: 'Platinum' };
+    case 'free':
+      return 'Free';
+    case 'basic':
+      return 'Basic';
     case 'royal':
-      return { color: 'bg-royal-gold/20 text-royal-gold border-royal-gold/30', label: 'Royal' };
+      return 'Royal';
+    case 'premium':
+      return 'Premium';
+    case 'pro':
+      return 'Pro';
+    case 'founder':
+      return 'Founder';
+    case 'whale':
+      return 'Whale';
+    case 'shark':
+      return 'Shark';
+    case 'dolphin':
+      return 'Dolphin';
     default:
-      return { color: 'bg-gray-400/20 text-gray-400 border-gray-400/30', label: 'Bronze' };
+      return 'Unknown';
   }
 };
 
-export const getUserTierProgress = (spentAmount: number): { tier: UserTier; progress: number; nextTier?: UserTier } => {
-  if (spentAmount >= 1000) {
-    return { tier: 'royal', progress: 100 };
-  } else if (spentAmount >= 500) {
-    const progress = Math.min(((spentAmount - 500) / 500) * 100, 99);
-    return { tier: 'platinum', progress, nextTier: 'royal' };
-  } else if (spentAmount >= 200) {
-    const progress = ((spentAmount - 200) / 300) * 100;
-    return { tier: 'gold', progress, nextTier: 'platinum' };
-  } else if (spentAmount >= 50) {
-    const progress = ((spentAmount - 50) / 150) * 100;
-    return { tier: 'silver', progress, nextTier: 'gold' };
-  } else {
-    const progress = (spentAmount / 50) * 100;
-    return { tier: 'bronze', progress, nextTier: 'silver' };
-  }
+// Get tier badge component
+export const getTierBadge = (tier: UserTier): JSX.Element => {
+  const tierColors: Record<UserTier, string> = {
+    'free': 'bg-gray-700 text-gray-300',
+    'basic': 'bg-gray-600 text-gray-200',
+    'royal': 'bg-royal-gold/20 text-royal-gold',
+    'premium': 'bg-purple-800/30 text-purple-300',
+    'pro': 'bg-royal-crimson/20 text-royal-crimson',
+    'founder': 'bg-royal-navy/20 text-royal-navy',
+    'whale': 'bg-blue-900/30 text-blue-300',
+    'shark': 'bg-blue-800/30 text-blue-300',
+    'dolphin': 'bg-blue-700/30 text-blue-300'
+  };
+  
+  const className = `inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${tierColors[tier] || 'bg-gray-700 text-gray-300'}`;
+  
+  return (
+    <span className={className}>
+      {getTierName(tier)}
+    </span>
+  );
 };
 
-export const getNextTierAmount = (currentSpent: number): number => {
-  if (currentSpent < 50) {
-    return 50 - currentSpent;
-  } else if (currentSpent < 200) {
-    return 200 - currentSpent;
-  } else if (currentSpent < 500) {
-    return 500 - currentSpent;
-  } else if (currentSpent < 1000) {
-    return 1000 - currentSpent;
+// Determine if a tier has a certain feature
+export const tierHasFeature = (tier: UserTier, featureKey: string): boolean => {
+  const tierFeatures: Record<UserTier, string[]> = {
+    'free': ['basic_profile', 'leaderboard_view'],
+    'basic': ['basic_profile', 'leaderboard_view', 'chat_access'],
+    'royal': ['basic_profile', 'leaderboard_view', 'chat_access', 'profile_customization', 'no_ads'],
+    'premium': ['basic_profile', 'leaderboard_view', 'chat_access', 'profile_customization', 'no_ads', 'priority_support'],
+    'pro': ['basic_profile', 'leaderboard_view', 'chat_access', 'profile_customization', 'no_ads', 'priority_support', 'exclusive_cosmetics'],
+    'founder': ['basic_profile', 'leaderboard_view', 'chat_access', 'profile_customization', 'no_ads', 'priority_support', 'exclusive_cosmetics', 'founder_badge', 'council_access'],
+    'whale': ['basic_profile', 'leaderboard_view', 'chat_access', 'profile_customization', 'no_ads', 'priority_support', 'exclusive_cosmetics', 'whale_badge', 'council_access', 'private_chat'],
+    'shark': ['basic_profile', 'leaderboard_view', 'chat_access', 'profile_customization', 'no_ads', 'priority_support', 'exclusive_cosmetics', 'council_access'],
+    'dolphin': ['basic_profile', 'leaderboard_view', 'chat_access', 'profile_customization', 'no_ads', 'priority_support']
+  };
+  
+  return tierFeatures[tier]?.includes(featureKey) || false;
+};
+
+// Compare tiers
+export const compareTiers = (tierA: UserTier, tierB: UserTier): number => {
+  const tierValues: Record<UserTier, number> = {
+    'free': 0,
+    'basic': 1,
+    'royal': 2,
+    'premium': 3,
+    'pro': 4,
+    'dolphin': 5,
+    'shark': 6,
+    'whale': 7,
+    'founder': 8
+  };
+  
+  return tierValues[tierA] - tierValues[tierB];
+};
+
+// Get tier requirement text
+export const getTierRequirement = (tier: UserTier): string => {
+  switch (tier) {
+    case 'royal':
+      return 'Spend $50+ to unlock';
+    case 'premium':
+      return 'Spend $100+ to unlock';
+    case 'pro':
+      return 'Spend $250+ to unlock';
+    case 'dolphin':
+      return 'Spend $500+ to unlock';
+    case 'shark':
+      return 'Spend $1,000+ to unlock';
+    case 'whale':
+      return 'Spend $5,000+ to unlock';
+    case 'founder':
+      return 'Exclusive early supporter tier';
+    default:
+      return '';
   }
-  return 0;
 };
