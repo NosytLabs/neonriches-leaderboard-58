@@ -7,7 +7,7 @@ import { Calendar, ChevronRight } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import EventDetailsModal from './components/EventDetailsModal';
-import { eventsData, eventDetailsData } from './data';
+import { events, eventDetails } from './data';
 
 interface UpcomingEventsProps {
   maxEvents?: number;
@@ -18,7 +18,7 @@ const UpcomingEvents: React.FC<UpcomingEventsProps> = ({ maxEvents = 3 }) => {
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   
   // Filter to show only upcoming events
-  const upcomingEvents = eventsData
+  const upcomingEvents = events
     .filter(event => event.status === 'upcoming' || event.status === 'active')
     .slice(0, maxEvents);
   

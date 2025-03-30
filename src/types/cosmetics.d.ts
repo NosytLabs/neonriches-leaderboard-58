@@ -1,32 +1,52 @@
 
+// Cosmetics-related types
 export type CosmeticCategory = 
-  | 'border'
-  | 'color'
-  | 'font'
-  | 'emoji'
-  | 'title'
-  | 'background'
-  | 'effect'
-  | 'theme'
-  | 'badge';
+  | 'border' 
+  | 'color' 
+  | 'font' 
+  | 'emoji' 
+  | 'title' 
+  | 'background' 
+  | 'effect' 
+  | 'badge' 
+  | 'theme';
 
-export type CosmeticRarity = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
+export type CosmeticRarity = 
+  | 'common' 
+  | 'uncommon' 
+  | 'rare' 
+  | 'epic' 
+  | 'legendary' 
+  | 'mythic'  // Added additional rarities
+  | 'unique'
+  | 'royal';
+
+export interface SocialLink {
+  id: string | number;
+  platform: string;
+  url: string;
+  username?: string;
+  display?: string;
+  icon?: string;
+  verified?: boolean;
+  primary?: boolean;
+  clicks?: number;
+  price?: number; // Added for cosmetic purchases
+}
 
 export interface CosmeticItem {
   id: string;
   name: string;
   description: string;
   price: number;
-  category: CosmeticCategory;
   type: string;
+  category: CosmeticCategory;
   rarity: CosmeticRarity;
-  isUnlocked?: boolean;
   imageSrc?: string;
-  cssClass?: string;
   image?: string;
+  cssClass?: string;
+  cost?: number;
 }
-
-export type CosmeticType = CosmeticCategory;
 
 export interface UserCosmeticState {
   // Currently active cosmetics
@@ -64,18 +84,6 @@ export interface UserCosmeticState {
   foundersPass?: boolean;
 }
 
-export interface SocialLink {
-  id: string | number;
-  platform: string;
-  url: string;
-  username?: string;
-  display?: string;
-  icon?: string;
-  verified?: boolean;
-  primary?: boolean;
-  clicks?: number;
-}
-
 export interface CosmeticSet {
   id: string;
   name: string;
@@ -109,3 +117,6 @@ export interface CosmeticShopState {
   loading: boolean;
   error: string | null;
 }
+
+// Type alias for UserCosmetics
+export type UserCosmetics = UserCosmeticState;

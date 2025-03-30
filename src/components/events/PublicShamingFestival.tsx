@@ -1,4 +1,5 @@
-import React from 'react';
+
+import React, { useState } from 'react';
 import { Scroll, DollarSign, Sparkles } from 'lucide-react';
 import { topUsers } from './data';
 import { useShameEffect } from './hooks/useShameEffect';
@@ -61,9 +62,7 @@ const PublicShamingDescription = () => {
 
 const PublicShamingFestival = () => {
   const { playSound } = useNotificationSounds();
-  const { shameCooldown, shameEffects, shameCount, getShameCount, handleShame } = useShameEffect({
-    cooldownPeriod: 60000 * 60 * 24 // 24 hours cooldown
-  });
+  const { shameCooldown, shameEffects, shameCount, getShameCount, handleShame } = useShameEffect();
   const [showModal, setShowModal] = React.useState(false);
   const [selectedUser, setSelectedUser] = React.useState<any>(null);
   const [selectedAction, setSelectedAction] = React.useState<ShameAction>('tomatoes');
@@ -82,16 +81,16 @@ const PublicShamingFestival = () => {
     return true;
   };
   
-  const confirmShame = (userId: string, action: ShameAction) => {
+  const confirmShame = (userId: string) => {
     const numericId = parseInt(userId, 10);
     const user = topUsers.find(u => u.id === numericId);
     
     if (user) {
-      const finalPrice = hasWeeklyDiscount(action) 
-        ? getDiscountedShamePrice(action) 
-        : getShameActionPrice(action);
+      const finalPrice = hasWeeklyDiscount(selectedAction) 
+        ? getDiscountedShamePrice(selectedAction) 
+        : getShameActionPrice(selectedAction);
         
-      handleShame(numericId, user.username, action, finalPrice);
+      handleShame(numericId, user.username, selectedAction, finalPrice);
       playSound('shame', 0.3);
     }
     

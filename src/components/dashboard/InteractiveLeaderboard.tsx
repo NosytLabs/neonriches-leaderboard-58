@@ -4,21 +4,20 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Crown, Scroll } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
-import { mockLeaderboardData } from './leaderboard/LeaderboardUtils';
+import { mockLeaderboardData, LeaderboardUser as LeaderboardUserType } from './leaderboard/LeaderboardUtils';
 import LeaderboardItem from './leaderboard/LeaderboardItem';
 import ShameModal from './leaderboard/ShameModal';
 import LeaderboardActions from './leaderboard/LeaderboardActions';
 import { getShameActionPrice } from '@/components/events/utils/shameUtils';
 import { ShameAction } from '@/components/events/hooks/useShameEffect';
-import { LeaderboardUser } from '@/types/leaderboard';
 import { MockeryAction } from '@/types/mockery';
 
 const InteractiveLeaderboard: React.FC = () => {
   const { toast } = useToast();
   const { user } = useAuth();
-  const [leaderboardData, setLeaderboardData] = useState<LeaderboardUser[]>(mockLeaderboardData);
+  const [leaderboardData, setLeaderboardData] = useState<LeaderboardUserType[]>(mockLeaderboardData);
   const [showShameModal, setShowShameModal] = useState<boolean>(false);
-  const [selectedUser, setSelectedUser] = useState<LeaderboardUser | null>(null);
+  const [selectedUser, setSelectedUser] = useState<LeaderboardUserType | null>(null);
   const [isOnCooldown, setIsOnCooldown] = useState<boolean>(false);
   const [shameType, setShameType] = useState<ShameAction>('tomatoes');
   const [shameAmount, setShameAmount] = useState<number>(getShameActionPrice('tomatoes'));
@@ -39,10 +38,10 @@ const InteractiveLeaderboard: React.FC = () => {
     // navigate(`/profile/${userId}`);
   };
 
-  const handleShameUser = (user: LeaderboardUser, type: ShameAction = 'tomatoes') => {
+  const handleShameUser = (user: LeaderboardUserType, type: string = 'tomatoes') => {
     setSelectedUser(user);
-    setShameType(type);
-    setShameAmount(getShameActionPrice(type));
+    setShameType(type as ShameAction);
+    setShameAmount(getShameActionPrice(type as ShameAction));
     setShowShameModal(true);
     
     // Play subtle royal sound effect
@@ -105,7 +104,7 @@ const InteractiveLeaderboard: React.FC = () => {
     }, 1000);
   };
 
-  const openShameModal = (user: LeaderboardUser) => {
+  const openShameModal = (user: LeaderboardUserType) => {
     setSelectedUser(user);
     setModalType('shame');
   };

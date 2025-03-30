@@ -1,7 +1,7 @@
 
-import { UserProfile } from '@/types/user';
-import { LeaderboardUser } from '@/types/leaderboard';
 import { v4 as uuidv4 } from 'uuid';
+import { TeamType, UserTier } from '@/types/user';
+import { LeaderboardUser } from '@/components/dashboard/leaderboard/LeaderboardUtils';
 
 /**
  * Generate a mock leaderboard of users
@@ -9,8 +9,8 @@ import { v4 as uuidv4 } from 'uuid';
 export const generateMockLeaderboard = (count: number = 20): LeaderboardUser[] => {
   const users: LeaderboardUser[] = [];
   
-  const teams = ['red', 'blue', 'green', 'gold'] as const;
-  const tiers = ['free', 'basic', 'premium', 'royal'] as const;
+  const teams: TeamType[] = ['red', 'blue', 'green', 'gold'];
+  const tiers: UserTier[] = ['free', 'basic', 'premium', 'royal'];
   
   for (let i = 0; i < count; i++) {
     const id = uuidv4();
@@ -31,9 +31,6 @@ export const generateMockLeaderboard = (count: number = 20): LeaderboardUser[] =
       totalSpent: amountSpent,
       amountSpent,
       spentAmount: amountSpent,
-      joinDate: new Date(2023, 0, 1 + (rank * 3)).toISOString(),
-      isVerified: Math.random() > 0.8,
-      isProtected: Math.random() > 0.9
     });
   }
   

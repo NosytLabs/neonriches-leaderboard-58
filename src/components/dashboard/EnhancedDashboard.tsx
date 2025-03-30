@@ -7,7 +7,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import { Trophy, Crown, Target, Users, Activity, Zap, DollarSign } from 'lucide-react';
 import { UserProfile } from '@/types/user';
-import { Achievement, AchievementType, AchievementTier } from '@/types/achievement';
+import { Achievement } from '@/types/achievement';
 import AchievementDisplay from '@/components/achievements/AchievementDisplay';
 import RankProgressChart from '@/components/dashboard/RankProgressChart';
 import TeamStatusCard from '@/components/dashboard/TeamStatusCard';
@@ -36,9 +36,9 @@ const EnhancedDashboard = () => {
           id: 'spend-100',
           name: 'Royal Patron',
           description: 'Spend $100 on the platform',
-          type: 'royal' as AchievementType,
+          type: 'royal',
           icon: 'crown',
-          tier: 'gold' as AchievementTier,
+          tier: 'gold',
           unlockedAt: new Date().toISOString(),
           amountSpent: 100
         },
@@ -46,9 +46,9 @@ const EnhancedDashboard = () => {
           id: 'spend-500',
           name: 'Throne Supporter',
           description: 'Spend $500 on the platform',
-          type: 'deposit' as AchievementType,
+          type: 'deposit',
           icon: 'dollar',
-          tier: 'platinum' as AchievementTier,
+          tier: 'platinum',
           unlockedAt: new Date().toISOString(),
           amountSpent: 500
         },
@@ -56,9 +56,9 @@ const EnhancedDashboard = () => {
           id: 'reach-rank-50',
           name: 'Rising Star',
           description: 'Reach rank 50 on the leaderboard',
-          type: 'rank' as AchievementType,
+          type: 'rank',
           icon: 'star',
-          tier: 'silver' as AchievementTier,
+          tier: 'silver',
           unlockedAt: new Date().toISOString()
         }
       ];

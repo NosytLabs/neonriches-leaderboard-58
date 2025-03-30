@@ -1,5 +1,5 @@
 
-import { Event, EventDetails, EventStats, EventParticipant } from '@/types/events';
+import { Event, EventDetails, EventStats, EventParticipant, EventReward } from '@/types/events';
 
 export const events: Event[] = [
   {
@@ -14,20 +14,7 @@ export const events: Event[] = [
     imageUrl: '/assets/events/tournament.jpg',
     image: '/assets/events/tournament.jpg',
     createdAt: '2023-07-25T12:00:00Z',
-    updatedAt: '2023-07-25T12:00:00Z',
-    rewards: [
-      {
-        id: 'reward-1',
-        eventId: 'event-1',
-        name: 'Golden Crown',
-        description: 'A majestic golden crown for your avatar, visible to all',
-        type: 'cosmetic',
-        tier: 'legendary',
-        value: 1000,
-        minRank: 1,
-        maxRank: 1
-      }
-    ]
+    updatedAt: '2023-07-25T12:00:00Z'
   },
   {
     id: 'event-2',
@@ -76,7 +63,8 @@ export const events: Event[] = [
 export const eventDetails: Record<string, EventDetails> = {
   'event-1': {
     id: 'event-1-details',
-    eventId: 'event-1',
+    title: 'Royal Tournament Details',
+    name: 'Royal Tournament Details',
     description: 'The Royal Tournament of Wealth is the premier competition for nobles to demonstrate their financial might. Spend lavishly to climb the ranks and earn the respect of your peers.',
     rules: [
       'All spending during the tournament period counts toward your score',
@@ -85,22 +73,22 @@ export const eventDetails: Record<string, EventDetails> = {
       'Participants must be registered nobles of the kingdom',
       'Tournament results are final and non-negotiable'
     ],
-    prizes: [
-      '1st Place: Golden Crown cosmetic, 500 bonus points, and "Champion of Wealth" title',
-      '2nd Place: Silver Chalice cosmetic and 250 bonus points',
-      '3rd Place: Bronze Medal cosmetic and 100 bonus points',
-      'Top 10 Finishers: Special "Tournament Elite" badge for their profile'
-    ],
-    prizePool: 5000,
+    rewards: ['Crown Cosmetic', 'Title Upgrade', 'Profile Boost'],
+    rewardTypes: ['Cosmetic', 'Title', 'Boost'],
+    eligibility: ['All registered users'],
+    participationRequirements: ['Spend at least $5 during the event period'],
+    specialRules: ['Bonus multipliers for consistent daily spending'],
+    type: 'tournament',
     startDate: '2023-08-15T00:00:00Z',
     endDate: '2023-08-22T23:59:59Z',
-    status: 'completed',
     createdAt: '2023-07-25T12:00:00Z',
-    updatedAt: '2023-07-25T12:00:00Z'
+    image: '/assets/events/tournament-detail.jpg',
+    longDescription: 'An extended description of the tournament with all important details.'
   },
   'event-2': {
     id: 'event-2-details',
-    eventId: 'event-2',
+    title: 'Festival of Mockery Details',
+    name: 'Festival of Mockery Details',
     description: 'The Festival of Mockery is a satirical event celebrating the absurdity of digital wealth displays. During this festival, nobles can engage in friendly mockery by purchasing tomato throws, egg throws, or even placing others in stocks!',
     rules: [
       'Mockery actions cost real money which contributes to your spending rank',
@@ -109,17 +97,17 @@ export const eventDetails: Record<string, EventDetails> = {
       'All mockery is intended in good fun - keep it light-hearted!',
       'The most mocked noble will receive the "Court Jester" title'
     ],
-    prizes: [
-      'Most Active Mocker: "Royal Heckler" title and unique mockery animation',
-      'Most Mocked Noble: "Court Jester" title and 100 bonus points for being a good sport',
-      'Best Protected: "Impenetrable" badge for purchasing the most protection'
-    ],
-    prizePool: 1000,
+    rewards: ['Jester Title', 'Mockery Animations', 'Royal Decree'],
+    rewardTypes: ['Title', 'Animation', 'Feature'],
+    eligibility: ['All registered users'],
+    participationRequirements: ['No minimum spending required'],
+    specialRules: ['Bonus rewards for creative mockery actions'],
+    type: 'shame',
     startDate: '2023-09-01T00:00:00Z',
     endDate: '2023-09-08T23:59:59Z',
-    status: 'active',
     createdAt: '2023-08-15T12:00:00Z',
-    updatedAt: '2023-08-15T12:00:00Z'
+    image: '/assets/events/mockery-detail.jpg',
+    longDescription: 'A detailed description of the Festival of Mockery event.'
   }
 };
 
@@ -129,26 +117,28 @@ export const eventStats: Record<string, EventStats> = {
     eventId: 'event-1',
     participantsCount: 156,
     totalSpent: 45678,
-    topContribution: 2500,
-    avgContribution: 292.8,
-    medianContribution: 175,
-    minContribution: 5,
-    maxContribution: 2500,
-    createdAt: '2023-08-22T23:59:59Z',
-    updatedAt: '2023-08-22T23:59:59Z'
+    totalPrizes: 5000,
+    averageSpent: 292.8,
+    prizePool: 10000,
+    totalPokes: 320,
+    mostPoked: [
+      { username: 'RichDuke', pokeCount: 45 },
+      { username: 'LavishLord', pokeCount: 32 }
+    ]
   },
   'event-2': {
     id: 'event-2-stats',
     eventId: 'event-2',
     participantsCount: 78,
     totalSpent: 3450,
-    topContribution: 500,
-    avgContribution: 44.2,
-    medianContribution: 25,
-    minContribution: 5,
-    maxContribution: 500,
-    createdAt: '2023-09-01T12:00:00Z',
-    updatedAt: '2023-09-05T18:30:00Z'
+    totalPrizes: 1000,
+    averageSpent: 44.2,
+    prizePool: 2000,
+    totalPokes: 156,
+    mostPoked: [
+      { username: 'SpenderOne', pokeCount: 23 },
+      { username: 'RoyalFool', pokeCount: 17 }
+    ]
   }
 };
 

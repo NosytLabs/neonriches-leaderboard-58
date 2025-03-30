@@ -6,27 +6,11 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Badge } from '@/components/ui/badge';
-import { User, UserTier } from '@/types/user';
+import { TeamType, UserTier } from '@/types/user';
 import { formatCurrency } from '@/utils/formatters';
 import { getTeamColor } from '@/utils/teamUtils';
 import { getTierBadge } from '@/utils/tierUtils';
-
-export interface LeaderboardUser {
-  id: string;
-  username: string;
-  displayName?: string;
-  profileImage?: string;
-  rank: number;
-  previousRank?: number;
-  team?: 'red' | 'green' | 'blue' | null;
-  tier?: string;
-  totalSpent?: number;
-  amountSpent?: number;
-  spentAmount?: number;
-  isVerified?: boolean;
-  isProtected?: boolean;
-  avatarUrl?: string;
-}
+import { LeaderboardUser } from './LeaderboardUtils';
 
 export interface LeaderboardItemProps {
   userData: LeaderboardUser;

@@ -45,6 +45,7 @@ export interface UserSettings {
   soundEffects: boolean;
   language: string;
   showEmailOnProfile: boolean;
+  mockeryAlerts?: boolean; // Make this property optional
 }
 
 export interface UserProfile {
@@ -81,6 +82,16 @@ export interface UserProfile {
   isOnline?: boolean;
 }
 
+export interface Team {
+  id: string;
+  name: string;
+  type: TeamType;
+  description: string;
+  memberCount: number;
+  leaderboardPosition: number;
+  totalPoints: number;
+}
+
 export type User = UserProfile;
 
-export type { UserCosmeticState };
+export { UserCosmeticState };
