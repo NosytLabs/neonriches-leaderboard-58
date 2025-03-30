@@ -6,12 +6,13 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Search, Crown, ShoppingCart, Bell, Gift, ChevronRight, Star, BadgeCheck } from 'lucide-react';
 import { Input } from '@/components/ui/input';
-import { CosmeticItem, SocialLink } from '@/types/cosmetics';
+import { CosmeticItem, CosmeticRarity, SocialLink } from '@/types/cosmetics';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 import { formatCurrency } from '@/utils/formatters';
 import { getRarityColor, getRarityBgColor, getRarityBorderColor } from '@/utils/cosmeticUtils';
+import useCosmeticPurchase from '@/hooks/useCosmeticPurchase';
 
 // Mock cosmetic items
 const cosmeticItems: CosmeticItem[] = [
@@ -21,6 +22,7 @@ const cosmeticItems: CosmeticItem[] = [
     description: 'A luxurious gold border for your profile that befits true royalty.',
     price: 100,
     category: 'border',
+    type: 'border',
     rarity: 'rare',
     imageSrc: '/assets/cosmetics/borders/royal-gold.png'
   },
@@ -30,6 +32,7 @@ const cosmeticItems: CosmeticItem[] = [
     description: 'Address yourself as a Duke or Duchess of the realm.',
     price: 250,
     category: 'title',
+    type: 'title',
     rarity: 'epic',
     imageSrc: '/assets/cosmetics/titles/duke.png'
   },
@@ -39,6 +42,7 @@ const cosmeticItems: CosmeticItem[] = [
     description: 'Add a sparkling effect to your profile picture.',
     price: 500,
     category: 'effect',
+    type: 'effect',
     rarity: 'legendary',
     imageSrc: '/assets/cosmetics/effects/sparkle.png'
   }
@@ -47,18 +51,9 @@ const cosmeticItems: CosmeticItem[] = [
 const RoyalBoutique: React.FC = () => {
   const { user } = useAuth();
   const { toast } = useToast();
+  const { purchaseCosmetic } = useCosmeticPurchase();
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState('featured');
-  
-  // Mock function for cosmetic purchase
-  const purchaseCosmetic = (item: CosmeticItem) => {
-    toast({
-      title: 'Purchase Successful',
-      description: `You have acquired ${item.name}!`,
-      variant: 'default'
-    });
-    return true;
-  };
   
   const userCosmetics = user?.cosmetics || {
     unlockedBorders: [],
@@ -117,21 +112,7 @@ const RoyalBoutique: React.FC = () => {
     }
     
     // Purchase the item
-    const success = purchaseCosmetic(item);
-    
-    if (success) {
-      toast({
-        title: 'Purchase Successful',
-        description: `You have acquired ${item.name}!`,
-        variant: 'default'
-      });
-    } else {
-      toast({
-        title: 'Purchase Failed',
-        description: 'There was an error processing your purchase.',
-        variant: 'destructive'
-      });
-    }
+    purchaseCosmetic(item);
   };
   
   const isItemOwned = (item: CosmeticItem): boolean => {
@@ -139,23 +120,23 @@ const RoyalBoutique: React.FC = () => {
     
     switch (item.category) {
       case 'border':
-        return userCosmetics.unlockedBorders?.includes(item.id) || userCosmetics.borders?.includes(item.id);
+        return userCosmetics.unlockedBorders?.includes(item.id) || (userCosmetics.borders?.includes(item.id) || false);
       case 'color':
-        return userCosmetics.unlockedColors?.includes(item.id) || userCosmetics.colors?.includes(item.id);
+        return userCosmetics.unlockedColors?.includes(item.id) || (userCosmetics.colors?.includes(item.id) || false);
       case 'font':
-        return userCosmetics.unlockedFonts?.includes(item.id) || userCosmetics.fonts?.includes(item.id);
+        return userCosmetics.unlockedFonts?.includes(item.id) || (userCosmetics.fonts?.includes(item.id) || false);
       case 'emoji':
-        return userCosmetics.unlockedEmojis?.includes(item.id) || userCosmetics.emojis?.includes(item.id);
+        return userCosmetics.unlockedEmojis?.includes(item.id) || (userCosmetics.emojis?.includes(item.id) || false);
       case 'title':
-        return userCosmetics.unlockedTitles?.includes(item.id) || userCosmetics.titles?.includes(item.id);
+        return userCosmetics.unlockedTitles?.includes(item.id) || (userCosmetics.titles?.includes(item.id) || false);
       case 'background':
-        return userCosmetics.unlockedBackgrounds?.includes(item.id) || userCosmetics.backgrounds?.includes(item.id);
+        return userCosmetics.unlockedBackgrounds?.includes(item.id) || (userCosmetics.backgrounds?.includes(item.id) || false);
       case 'effect':
-        return userCosmetics.unlockedEffects?.includes(item.id) || userCosmetics.effects?.includes(item.id);
+        return userCosmetics.unlockedEffects?.includes(item.id) || (userCosmetics.effects?.includes(item.id) || false);
       case 'badge':
-        return userCosmetics.unlockedBadges?.includes(item.id) || userCosmetics.badges?.includes(item.id);
+        return userCosmetics.unlockedBadges?.includes(item.id) || (userCosmetics.badges?.includes(item.id) || false);
       case 'theme':
-        return userCosmetics.unlockedThemes?.includes(item.id) || userCosmetics.themes?.includes(item.id);
+        return userCosmetics.unlockedThemes?.includes(item.id) || (userCosmetics.themes?.includes(item.id) || false);
       default:
         return false;
     }

@@ -1,80 +1,77 @@
 
-import { useState } from 'react';
+import { useCallback } from 'react';
 import { CosmeticItem } from '@/types/cosmetics';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 import { useSound } from '@/hooks/sounds/use-sound';
 
 export const useCosmeticPurchase = () => {
-  const [loading, setLoading] = useState(false);
-  const { toast } = useToast();
   const { user, updateUser } = useAuth();
+  const { toast } = useToast();
   const { play } = useSound();
-
-  const purchaseCosmetic = async (item: CosmeticItem) => {
+  
+  const purchaseCosmetic = useCallback((item: CosmeticItem) => {
     if (!user) {
       toast({
         title: 'Authentication Required',
-        description: 'You must be logged in to purchase cosmetics.',
+        description: 'You must be logged in to purchase cosmetics',
         variant: 'destructive'
       });
-      return { success: false, error: 'Not authenticated' };
+      return false;
     }
     
-    setLoading(true);
-    
-    try {
-      // Simulate purchase process
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Check if user has enough balance
-      if (!user.walletBalance || user.walletBalance < item.price) {
-        toast({
-          title: 'Insufficient Funds',
-          description: `You need ${item.price} coins to purchase this item.`,
-          variant: 'destructive'
-        });
-        return { success: false, error: 'Insufficient funds' };
-      }
-      
-      // Success! Play sound and update user state
-      play('purchase');
-      
-      // Update user cosmetics
-      const category = `unlocked${item.category.charAt(0).toUpperCase() + item.category.slice(1)}s`;
-      const updatedUser = {
-        ...user,
-        walletBalance: user.walletBalance - item.price,
-        cosmetics: {
-          ...user.cosmetics,
-          [category]: [...(user.cosmetics?.[category] || []), item.id]
-        }
-      };
-      
-      // Update global user state
-      await updateUser(updatedUser);
-      
+    // Check if user has enough funds
+    if ((user.walletBalance || 0) < item.price) {
       toast({
-        title: 'Purchase Successful',
-        description: `You have purchased ${item.name}!`,
-        variant: 'success'
-      });
-      
-      return { success: true, item };
-    } catch (error) {
-      console.error('Error purchasing cosmetic:', error);
-      toast({
-        title: 'Purchase Failed',
-        description: 'There was an error processing your purchase.',
+        title: 'Insufficient Funds',
+        description: `You need ${item.price} coins to purchase this item`,
         variant: 'destructive'
       });
-      return { success: false, error: 'Purchase failed' };
-    } finally {
-      setLoading(false);
+      play('error');
+      return false;
     }
-  };
+    
+    // Apply purchase - this is a demo so we'll just mock this
+    // In a real app, this would involve a server call
+    
+    const newBalance = (user.walletBalance || 0) - item.price;
+    
+    // Update user cosmetics
+    const unlockedKey = `unlocked${item.category.charAt(0).toUpperCase() + item.category.slice(1)}s`;
+    const legacyKey = `${item.category}s`;
+    
+    const updatedCosmetics = {
+      ...user.cosmetics || {},
+      [unlockedKey]: [
+        ...(user.cosmetics?.[unlockedKey as keyof typeof user.cosmetics] as string[] || []),
+        item.id
+      ],
+      [legacyKey]: [
+        ...(user.cosmetics?.[legacyKey as keyof typeof user.cosmetics] as string[] || []),
+        item.id
+      ]
+    };
+    
+    updateUser({
+      ...user,
+      walletBalance: newBalance,
+      cosmetics: updatedCosmetics
+    });
+    
+    // Play a success sound
+    play('purchase');
+    
+    // Show a toast
+    toast({
+      title: 'Purchase Successful',
+      description: `You've purchased ${item.name}!`,
+      variant: 'success'
+    });
+    
+    return true;
+  }, [user, toast, play, updateUser]);
   
-  return { purchaseCosmetic, loading };
+  return { purchaseCosmetic };
 };
 
 export default useCosmeticPurchase;

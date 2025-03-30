@@ -1,5 +1,6 @@
 
 import { v4 as uuidv4 } from 'uuid';
+import { UserProfile } from '@/types/user';
 
 export type TransactionType = 
   | 'deposit' 
@@ -54,6 +55,34 @@ export const createTransaction = (data: Omit<Transaction, 'id' | 'timestamp'>): 
   return Promise.resolve(transaction);
 };
 
+export const recordTransaction = (
+  userId: string,
+  amount: number,
+  type: TransactionType,
+  description: string,
+  metadata?: Record<string, any>
+): Transaction => {
+  const transaction: Transaction = {
+    id: uuidv4(),
+    userId,
+    amount,
+    type,
+    description,
+    metadata,
+    timestamp: new Date().toISOString()
+  };
+  
+  // Here you would typically send this to your backend
+  console.log('Recording transaction:', transaction);
+  
+  // For now, let's simulate storing it locally
+  const transactions = JSON.parse(localStorage.getItem('transactions') || '[]');
+  transactions.push(transaction);
+  localStorage.setItem('transactions', JSON.stringify(transactions));
+  
+  return transaction;
+};
+
 /**
  * Retrieve all transactions for a user
  */
@@ -64,5 +93,6 @@ export const getUserTransactions = (userId: string): Promise<Transaction[]> => {
 
 export default {
   createTransaction,
+  recordTransaction,
   getUserTransactions
 };

@@ -1,5 +1,5 @@
 
-import { CosmeticRarity } from '@/types/cosmetics';
+import { CosmeticRarity, CosmeticCategory } from '@/types/cosmetics';
 
 /**
  * Get the color class for a specific rarity
@@ -56,4 +56,55 @@ export const getRarityBorderColor = (rarity: CosmeticRarity): string => {
     default:
       return 'border-gray-400/20';
   }
+};
+
+/**
+ * Convert a cosmetic category to display name
+ */
+export const getCategoryDisplayName = (category: CosmeticCategory): string => {
+  return category.charAt(0).toUpperCase() + category.slice(1);
+};
+
+/**
+ * Get appropriate CSS class for a cosmetic type
+ */
+export const getCosmeticClassForType = (type: CosmeticCategory, value: string): string => {
+  switch (type) {
+    case 'border':
+      return `border-2 border-${value}`;
+    case 'color':
+      return `text-${value}`;
+    case 'background':
+      return `bg-${value}`;
+    case 'font':
+      return `font-${value}`;
+    default:
+      return '';
+  }
+};
+
+/**
+ * Check if a cosmetic is unlocked for the user
+ */
+export const isCosmeticUnlocked = (
+  cosmeticId: string, 
+  cosmeticType: CosmeticCategory, 
+  userCosmetics: Record<string, any>
+): boolean => {
+  const unlockedKey = `unlocked${cosmeticType.charAt(0).toUpperCase() + cosmeticType.slice(1)}s`;
+  const legacyKey = `${cosmeticType}s`;
+  
+  return (
+    (Array.isArray(userCosmetics[unlockedKey]) && userCosmetics[unlockedKey].includes(cosmeticId)) ||
+    (Array.isArray(userCosmetics[legacyKey]) && userCosmetics[legacyKey].includes(cosmeticId))
+  );
+};
+
+export default {
+  getRarityColor,
+  getRarityBgColor,
+  getRarityBorderColor,
+  getCategoryDisplayName,
+  getCosmeticClassForType,
+  isCosmeticUnlocked
 };

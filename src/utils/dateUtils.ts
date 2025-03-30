@@ -79,11 +79,42 @@ export const formatTime = (date: string | Date): string => {
   }
 };
 
+/**
+ * Format a date and time together
+ */
+export const formatDateTime = (date: string | Date): string => {
+  try {
+    const dateObj = typeof date === 'string' ? new Date(date) : date;
+    return format(dateObj, 'PPp');
+  } catch (error) {
+    console.error('Error formatting date and time:', error);
+    return 'Invalid date/time';
+  }
+};
+
+/**
+ * Check if an event is currently active based on start and end dates
+ */
+export const isEventActive = (startDate: string | Date, endDate: string | Date): boolean => {
+  try {
+    const now = new Date();
+    const start = typeof startDate === 'string' ? new Date(startDate) : startDate;
+    const end = typeof endDate === 'string' ? new Date(endDate) : endDate;
+    
+    return start <= now && now <= end;
+  } catch (error) {
+    console.error('Error checking if event is active:', error);
+    return false;
+  }
+};
+
 export default {
   formatDate,
   formatRelativeTime,
   daysUntil,
   isPastDate,
   isFutureDate,
-  formatTime
+  formatTime,
+  formatDateTime,
+  isEventActive
 };

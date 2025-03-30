@@ -18,9 +18,12 @@ export interface CosmeticItem {
   description: string;
   price: number;
   category: CosmeticCategory;
+  type: string;
   rarity: CosmeticRarity;
   isUnlocked?: boolean;
   imageSrc?: string;
+  cssClass?: string;
+  image?: string;
 }
 
 export type CosmeticType = CosmeticCategory;
@@ -58,10 +61,11 @@ export interface UserCosmeticState {
   effects?: string[];
   badges?: string[];
   themes?: string[];
+  foundersPass?: boolean;
 }
 
 export interface SocialLink {
-  id: string;
+  id: string | number;
   platform: string;
   url: string;
   username?: string;
@@ -69,4 +73,39 @@ export interface SocialLink {
   icon?: string;
   verified?: boolean;
   primary?: boolean;
+  clicks?: number;
+}
+
+export interface CosmeticSet {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  items: CosmeticItem[];
+  discount: number;
+  rarity: CosmeticRarity;
+  limited: boolean;
+  expiresAt?: string;
+}
+
+export interface CosmeticShopItem {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  type: CosmeticCategory;
+  rarity: CosmeticRarity;
+  imageSrc?: string;
+  isPurchased: boolean;
+  isEquipped: boolean;
+  isLimited?: boolean;
+  expiresAt?: string;
+}
+
+export interface CosmeticShopState {
+  items: CosmeticShopItem[];
+  sets: CosmeticSet[];
+  featured: CosmeticShopItem[];
+  loading: boolean;
+  error: string | null;
 }
