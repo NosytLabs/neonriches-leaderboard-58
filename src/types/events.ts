@@ -1,36 +1,38 @@
 
-// Event-related types
-import { TeamType } from './team';
-
-export type EventType = 
-  | 'firesale' 
-  | 'tournament' 
-  | 'challenge' 
-  | 'seasonal' 
-  | 'special'
-  | 'treasure'
-  | 'shame'
-  | 'team';
-
-export type EventStatus = 
-  | 'upcoming' 
-  | 'active' 
-  | 'completed' 
-  | 'canceled';
+export type EventType = 'social' | 'competition' | 'giveaway' | 'exclusive' | 'seasonal' | 'team' | 'shame' | 'treasure';
+export type EventStatus = 'upcoming' | 'active' | 'completed' | 'cancelled' | 'canceled'; // Added 'cancelled' and 'canceled'
 
 export interface Event {
   id: string;
-  title: string;
   name: string;
+  title?: string;
   description: string;
-  image: string;
-  imageUrl: string;
+  type: EventType;
   startDate: string;
   endDate: string;
-  type: EventType;
-  status: EventStatus;
+  imageUrl: string;
+  image?: string;
   createdAt: string;
   updatedAt: string;
+  status?: EventStatus;
+  rewards?: EventReward[];
+}
+
+export interface EventDetails {
+  id: string;
+  name: string;
+  title?: string;
+  description: string;
+  type: EventType;
+  startDate: string;
+  endDate: string;
+  imageUrl: string;
+  image?: string;
+  status?: EventStatus;
+  rewards?: EventReward[];
+  rules: string[];
+  prizes?: any[];
+  eventId?: string;
 }
 
 export interface EventStats {
@@ -38,57 +40,31 @@ export interface EventStats {
   eventId: string;
   participantsCount: number;
   totalSpent: number;
-  totalPrizes: number;
-  averageSpent: number;
-  prizePool: number;
-  totalPokes: number;
-  mostPoked: { username: string; pokeCount: number; }[];
+  topContributors: string[];
+  participantCount?: number; // Alias for participantsCount
+  averageSpend: number;
+  highestSpend: number;
+  lowestSpend: number;
+  duration: number;
+  topContribution?: number;
 }
 
 export interface EventParticipant {
   id: string;
   eventId: string;
   userId: string;
-  username: string;
-  displayName?: string;
-  profileImage?: string;
-  amountSpent: number;
-  rank: number;
-  team?: TeamType;
   joinedAt: string;
-}
-
-export interface EventDetails {
-  id: string;
-  title: string;
-  name: string;
-  description: string;
-  image: string;
-  longDescription: string;
-  rules: string[];
-  rewards: string[];
-  rewardTypes: string[];
-  eligibility: string[];
-  participationRequirements: string[];
-  specialRules: string[];
-  startDate?: string;
-  endDate?: string;
-  createdAt?: string;
-  type?: EventType;
+  contribution: number;
+  rank: number;
+  rewards: EventReward[];
 }
 
 export interface EventReward {
   id: string;
-  eventId: string;
   name: string;
   description: string;
-  image: string;
+  type: string;
   value: number;
-  rewardType: string;
-  rankRequired?: number;
-  teamRequired?: TeamType;
-  amountRequired?: number;
+  imageUrl: string;
+  rarity: string;
 }
-
-// Export all types
-export { EventType, EventStatus, Event, EventStats, EventParticipant, EventDetails, EventReward };

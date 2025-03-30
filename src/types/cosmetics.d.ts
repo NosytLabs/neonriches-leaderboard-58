@@ -51,5 +51,3 @@ export interface UserCosmeticState {
   badges?: string[];
   themes?: string[];
 }
-
-export { CosmeticCategory, CosmeticRarity, CosmeticType, CosmeticItem, UserCosmeticState };

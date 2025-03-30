@@ -82,8 +82,10 @@ export interface UserProfile {
   isOnline?: boolean;
   isProtected?: boolean;
   avatarUrl?: string;
+  spendStreak?: number;
 }
 
 export type User = UserProfile;
 
-export { UserTier, TeamType, UserTeam, UserSettings, SocialLink, ProfileBoost, UserCosmeticState, UserProfile, User };
+// Don't re-export types as they cause conflicts with 'isolatedModules'
+// Instead, make sure they're properly exported above

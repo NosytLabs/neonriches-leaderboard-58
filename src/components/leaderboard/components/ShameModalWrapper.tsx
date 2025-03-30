@@ -22,6 +22,9 @@ const ShameModalWrapper: React.FC<ShameModalWrapperProps> = ({
 }) => {
   if (!selectedUser) return null;
 
+  // Convert undefined team to null to avoid the TeamType error
+  const team = selectedUser.team || null;
+
   return (
     <Dialog open={showModal} onOpenChange={onOpenChange}>
       <ShameModal
@@ -31,13 +34,14 @@ const ShameModalWrapper: React.FC<ShameModalWrapperProps> = ({
           profileImage: selectedUser.profileImage || '/placeholder.svg',
           totalSpent: selectedUser.amountSpent || 0,
           rank: selectedUser.rank || 0,
-          team: selectedUser.team || null,
+          team: team,
           tier: selectedUser.tier || 'free',
           spendStreak: selectedUser.spendStreak || 0
         }}
         shameType={shameAction}
-        onConfirm={onConfirm}
+        onConfirm={() => onConfirm(selectedUser.id, shameAction)}
         onCancel={() => onOpenChange(false)}
+        hasDiscount={false}
       />
     </Dialog>
   );

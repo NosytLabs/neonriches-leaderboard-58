@@ -1,7 +1,7 @@
 
 import { UserProfile } from './user';
 import { CosmeticRarity } from './cosmetics';
-import { TeamType } from './team';
+import { TeamType } from './user';
 
 export type MockeryAction = 'tomatoes' | 'eggs' | 'stocks' | 'dunce' | 'protection' | 'shame' | 'taunt';
 export type ShameAction = 'tomatoes' | 'eggs' | 'stocks';
@@ -55,4 +55,4 @@ export interface UserMockeryStatus {
   protectionExpiresAt?: string;
 }
 
-export type { MockeryAction, MockeryEvent, MockeryTier, MockUser, MockedUser, ShameAction, ExtendedMockeryAction, MockeryEffectData, UserMockeryStatus };
+// No need for re-exports as they cause conflicts with isolatedModules

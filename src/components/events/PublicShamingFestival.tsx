@@ -1,14 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Scroll, DollarSign, Sparkles } from 'lucide-react';
 import { topUsers } from './data';
-import { useShameEffect } from './hooks/useShameEffect';
+import { useShameEffect, ShameAction } from './hooks/useShameEffect';
 import ShameUserCard from './components/ShameUserCard';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import RankingDisclaimer from '@/components/shared/RankingDisclaimer';
 import RoyalDivider from '@/components/ui/royal-divider';
 import { Dialog } from '@/components/ui/dialog';
 import ShameModal from './components/ShameModal';
-import { ShameAction } from '@/types/mockery';
 import useNotificationSounds from '@/hooks/use-notification-sounds';
 import { 
   hasWeeklyDiscount, 
@@ -94,6 +93,22 @@ const PublicShamingFestival = () => {
     }
     
     setShowModal(false);
+  };
+
+  const getActiveMockeryWrapper = (username: string): { action: string; timestamp: number; until: number } => {
+    const mockeryEvent = shameEffects[parseInt(username, 10)];
+    if (mockeryEvent) {
+      return {
+        action: mockeryEvent,
+        timestamp: Date.now(),
+        until: Date.now() + (24 * 60 * 60 * 1000) // 24 hours
+      };
+    }
+    return {
+      action: 'tomatoes',
+      timestamp: 0,
+      until: 0
+    };
   };
 
   return (

@@ -1,202 +1,175 @@
 
 import React from 'react';
-import {
+import { 
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogDescription,
-  DialogFooter,
+  DialogFooter
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
+import { EventDetails, EventStatus } from '@/types/events';
+import { UserProfile } from '@/types/user';
 import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import {
-  CalendarDays,
-  Trophy,
-  Users,
-  Clock,
-  Calendar,
-  Activity,
-  Info,
-  AlertCircle,
-} from 'lucide-react';
-import { Event, EventDetails } from '@/types/events';
-import { formatDate, formatDateRange } from '@/utils/formatters';
-import { Separator } from '@/components/ui/separator';
-import { cn } from '@/lib/utils';
-import RoyalDivider from '@/components/ui/royal-divider';
+import { Clock, Calendar, Trophy, Users, Coins } from 'lucide-react';
+import { formatDistanceToNow, format, isBefore, isAfter } from 'date-fns';
 
 interface EventDetailsModalProps {
-  event: Event | EventDetails;
+  event: EventDetails;
   isOpen: boolean;
   onClose: () => void;
-  onParticipate?: () => void;
+  onJoin?: (eventId: string) => void;
+  onLeave?: (eventId: string) => void;
+  currentUser?: UserProfile | null;
+  isParticipating?: boolean;
 }
 
 const EventDetailsModal: React.FC<EventDetailsModalProps> = ({
   event,
   isOpen,
   onClose,
-  onParticipate,
+  onJoin,
+  onLeave,
+  currentUser,
+  isParticipating = false
 }) => {
-  if (!event) return null;
-
+  const {
+    id,
+    name,
+    description,
+    type,
+    startDate,
+    endDate,
+    status,
+    rewards = [],
+    rules = []
+  } = event;
+  
+  const now = new Date();
+  const hasStarted = isBefore(new Date(startDate), now);
+  const hasEnded = isBefore(new Date(endDate), now);
+  
   const getStatusBadge = () => {
-    // Using optional chaining to safely access status
-    const status = 'status' in event ? event.status : undefined;
+    // Handle multiple status variations consistently 
+    const normalizedStatus = status?.toLowerCase();
     
-    if (status === 'active') {
-      return <Badge className="bg-green-500">Active</Badge>;
-    } else if (status === 'upcoming') {
-      return <Badge className="bg-blue-500">Upcoming</Badge>;
-    } else if (status === 'completed') {
-      return <Badge className="bg-gray-500">Completed</Badge>;
-    } else if (status === 'cancelled' || status === 'canceled') {
-      return <Badge className="bg-gray-500">Cancelled</Badge>;
+    if (normalizedStatus === 'upcoming') {
+      return <Badge className="bg-blue-600">Upcoming</Badge>;
+    } else if (normalizedStatus === 'active') {
+      return <Badge className="bg-green-600">Active</Badge>;
+    } else if (normalizedStatus === 'completed' || normalizedStatus === 'canceled' || normalizedStatus === 'cancelled') {
+      return <Badge className="bg-gray-600">{status}</Badge>;
     }
-    return null;
+    return <Badge className="bg-purple-600">{status}</Badge>;
   };
-
-  const hasRewards = 'rewards' in event && event.rewards && Array.isArray(event.rewards) && event.rewards.length > 0;
-
-  const getEventTime = () => {
-    const startDate = new Date(event.startDate);
-    const endDate = new Date(event.endDate);
-
-    const formattedStartDate = formatDate(startDate);
-    const formattedEndDate = formatDate(endDate);
-
-    if (formattedStartDate === formattedEndDate) {
-      return (
-        <div className="flex items-center text-sm text-white/60">
-          <Calendar className="mr-2 h-4 w-4" />
-          {formattedStartDate}
-        </div>
-      );
+  
+  const getTimeRemaining = () => {
+    if (hasEnded) {
+      return 'Event has ended';
+    } else if (hasStarted) {
+      return `Ends ${formatDistanceToNow(new Date(endDate), { addSuffix: true })}`;
     } else {
-      return (
-        <div className="flex items-center text-sm text-white/60">
-          <CalendarDays className="mr-2 h-4 w-4" />
-          {formatDateRange(startDate, endDate)}
-        </div>
-      );
+      return `Starts ${formatDistanceToNow(new Date(startDate), { addSuffix: true })}`;
     }
   };
-
-  const getEventDuration = () => {
-    const startDate = new Date(event.startDate);
-    const endDate = new Date(event.endDate);
-    const durationMs = endDate.getTime() - startDate.getTime();
-    const durationDays = Math.ceil(durationMs / (1000 * 60 * 60 * 24));
-
-    return (
-      <div className="flex items-center text-sm text-white/60">
-        <Clock className="mr-2 h-4 w-4" />
-        {durationDays} days
-      </div>
-    );
-  };
-
+  
+  const canJoin = currentUser && hasStarted && !hasEnded && !isParticipating;
+  const canLeave = currentUser && hasStarted && !hasEnded && isParticipating;
+  
   return (
-    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="glass-morphism border-white/10 max-w-3xl max-h-[90vh] overflow-y-auto">
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="max-w-2xl">
         <DialogHeader>
-          <div className="flex items-center justify-between">
-            <DialogTitle className="text-2xl font-bold royal-gradient">
-              {event.title || event.name}
-            </DialogTitle>
+          <DialogTitle className="flex items-center gap-2 text-xl">
+            {name}
             {getStatusBadge()}
-          </div>
-          <DialogDescription className="text-white/70">
-            {event.description}
+          </DialogTitle>
+          <DialogDescription>
+            {description}
           </DialogDescription>
         </DialogHeader>
-
-        <Tabs defaultValue="overview" className="mt-4">
-          <TabsList className="glass-morphism border-white/10 grid grid-cols-3 mb-4">
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="details">Details</TabsTrigger>
-            {hasRewards && (
-              <TabsTrigger value="rewards">Rewards</TabsTrigger>
+        
+        <div className="grid grid-cols-2 gap-6 py-4">
+          <div>
+            <h3 className="text-lg font-semibold mb-2">Event Details</h3>
+            <div className="space-y-2">
+              <div className="flex items-center text-sm">
+                <Calendar className="h-4 w-4 mr-2 text-royal-gold" />
+                <span>Starts: {format(new Date(startDate), 'PPP')}</span>
+              </div>
+              <div className="flex items-center text-sm">
+                <Calendar className="h-4 w-4 mr-2 text-royal-crimson" />
+                <span>Ends: {format(new Date(endDate), 'PPP')}</span>
+              </div>
+              <div className="flex items-center text-sm">
+                <Clock className="h-4 w-4 mr-2 text-royal-purple" />
+                <span>{getTimeRemaining()}</span>
+              </div>
+              <div className="flex items-center text-sm">
+                <Users className="h-4 w-4 mr-2 text-royal-navy" />
+                <span>Event Type: {type}</span>
+              </div>
+            </div>
+            
+            {rules.length > 0 && (
+              <div className="mt-4">
+                <h4 className="font-medium mb-1">Rules:</h4>
+                <ul className="list-disc list-inside text-sm space-y-1">
+                  {rules.map((rule, idx) => (
+                    <li key={idx}>{rule}</li>
+                  ))}
+                </ul>
+              </div>
             )}
-          </TabsList>
-
-          <TabsContent value="overview" className="space-y-4">
-            <div className="flex items-center text-sm text-white/60">
-              <Activity className="mr-2 h-4 w-4" />
-              {event.type} Event
-            </div>
-
-            {getEventTime()}
-            {getEventDuration()}
-
-            <Separator className="bg-white/10" />
-
-            <div className="text-white/80">{event.description}</div>
-          </TabsContent>
-
-          <TabsContent value="details" className="space-y-4">
-            <div className="flex items-center text-sm text-white/60">
-              <Info className="mr-2 h-4 w-4" />
-              Event Details
-            </div>
-
-            <ul className="list-disc list-inside text-white/80">
-              {('rules' in event && event.rules) ? (
-                event.rules.map((rule, index) => (
-                  <li key={index}>{rule}</li>
-                ))
-              ) : (
-                <li>No specific rules provided for this event.</li>
-              )}
-            </ul>
-          </TabsContent>
-
-          {hasRewards && (
-            <TabsContent value="rewards" className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {event.rewards?.map((reward: any, index: number) => (
-                  <div
-                    key={index}
-                    className="p-4 glass-morphism border-royal-gold/20 rounded-lg"
-                  >
-                    <div className="flex items-center">
-                      <Trophy className="mr-2 h-5 w-5 text-royal-gold" />
-                      <h4 className="text-lg font-semibold">{reward.name}</h4>
+          </div>
+          
+          <div>
+            <h3 className="text-lg font-semibold mb-2">Rewards</h3>
+            {rewards.length > 0 ? (
+              <div className="space-y-2">
+                {rewards.map((reward) => (
+                  <div key={reward.id} className="flex items-start gap-2 p-2 rounded bg-black/20">
+                    {reward.imageUrl && (
+                      <img 
+                        src={reward.imageUrl} 
+                        className="w-8 h-8 object-cover rounded" 
+                        alt={reward.name} 
+                      />
+                    )}
+                    <div>
+                      <div className="font-medium">{reward.name}</div>
+                      <div className="text-xs opacity-70">{reward.description}</div>
+                      <div className="text-xs flex items-center mt-1">
+                        <Trophy className="h-3 w-3 mr-1 text-royal-gold" />
+                        <span>{reward.rarity} {reward.type}</span>
+                      </div>
                     </div>
-                    <p className="text-sm text-white/70 mt-1">{reward.description}</p>
                   </div>
                 ))}
               </div>
-            </TabsContent>
-          )}
-        </Tabs>
-
-        <RoyalDivider variant="line" className="my-4" />
-
-        <DialogFooter className="flex flex-col sm:flex-row gap-2">
-          {('status' in event && event.status === 'active') && (
-            <Button 
-              className="w-full sm:w-auto bg-royal-gold hover:bg-royal-gold/90 text-black" 
-              onClick={onParticipate}
-            >
-              Participate Now
+            ) : (
+              <div className="text-sm opacity-70">No rewards specified for this event.</div>
+            )}
+          </div>
+        </div>
+        
+        <DialogFooter className="gap-2">
+          {canJoin && (
+            <Button onClick={() => onJoin?.(id)}>
+              <Users className="h-4 w-4 mr-2" />
+              Join Event
             </Button>
           )}
           
-          {('status' in event && event.status === 'upcoming') && (
-            <Button 
-              className="w-full sm:w-auto bg-royal-purple hover:bg-royal-purple/90" 
-              onClick={onParticipate}
-            >
-              Register Interest
+          {canLeave && (
+            <Button variant="outline" onClick={() => onLeave?.(id)}>
+              Leave Event
             </Button>
           )}
           
           <Button 
-            variant="outline" 
-            className="w-full sm:w-auto" 
+            variant="secondary" 
             onClick={onClose}
           >
             Close
