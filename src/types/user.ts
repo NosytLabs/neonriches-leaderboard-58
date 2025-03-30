@@ -1,5 +1,5 @@
 
-import { UserTier } from './tier';
+import { UserTier } from './user-types';
 import { TeamType } from './team';
 import { ProfileBoost } from './profile-boost';
 import { CertificateNFT } from './certificates';
@@ -10,6 +10,7 @@ export interface SocialLink {
   url: string;
   clicks?: number;
   label?: string;
+  id?: string;
 }
 
 export type SocialPlatform = 
@@ -47,6 +48,7 @@ export interface UserSettings {
   darkMode?: boolean;
   language?: string;
   allowMessages?: boolean;
+  showEmailOnProfile?: boolean;
 }
 
 // User cosmetics
@@ -67,6 +69,17 @@ export interface UserCosmeticState {
   unlockedBadges: string[];
   unlockedBackgrounds: string[];
   unlockedEffects: string[];
+  // Legacy compatibility properties
+  borders?: string[];
+  colors?: string[];
+  fonts?: string[];
+  emojis?: string[];
+  titles?: string[];
+  backgrounds?: string[];
+  effects?: string[];
+  badges?: string[];
+  themes?: string[];
+  foundersPass?: boolean;
 }
 
 // User profile
@@ -78,8 +91,12 @@ export interface UserProfile {
   profileImage?: string;
   bio?: string;
   joinDate?: string;
+  joinedAt?: string;
+  createdAt?: string;
+  updatedAt?: string;
   tier: UserTier;
   rank?: number;
+  previousRank?: number;
   team?: TeamType;
   walletBalance?: number;
   amountSpent?: number;
@@ -89,6 +106,7 @@ export interface UserProfile {
   withdrawalLimit?: number;
   lastWithdrawal?: string;
   subscriptionId?: string;
+  subscription?: any;
   referrerId?: string;
   referralCode?: string;
   referralCount?: number;
@@ -100,16 +118,41 @@ export interface UserProfile {
   achievements?: string[];
   isMember?: boolean;
   isVIP?: boolean;
+  isVerified?: boolean;
   isFounder?: boolean;
   certificateId?: string;
   certificateNFT?: CertificateNFT;
-  // Additional properties needed based on errors
+  // Additional properties
   spendStreak?: number;
   lastActive?: string;
   lastLogin?: string;
   activeTitle?: string;
   purchasedFeatures?: string[];
+  gender?: string;
+  role?: string;
+  followers?: number;
+  following?: number;
+  profileViews?: number;
+  profileClicks?: number;
+  profileImages?: ProfileImage[];
 }
 
+// Profile Image type
+export interface ProfileImage {
+  id: string | number;
+  url: string;
+  caption?: string;
+}
+
+// Profile Link type
+export interface ProfileLink {
+  id: number;
+  url: string;
+  label: string;
+}
+
+// Alias for User to maintain backward compatibility
+export type User = UserProfile;
+
 // Export types to be used in other modules
-export type { SocialLink };
+export { UserProfile, ProfileImage, ProfileLink };

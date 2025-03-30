@@ -1,8 +1,9 @@
+
 // Core app types
 export type { ThemeColor } from './theme';
 
 // UI types
-export type { 
+export { 
   MedievalIconName, 
   MedievalIconSize, 
   MedievalIconColor,
@@ -11,25 +12,61 @@ export type {
   MedievalDecorationColor,
   BaseDecorationProps,
   RoyalDividerProps,
-  RoyalDividerVariant
+  RoyalDividerVariant,
+  sizeClasses,
+  getColorClass,
+  toMedievalIconColor
 } from './ui/decorations/types';
 
 // User related types
 export type {
   User, 
   UserProfile, 
+  UserSettings,
+  SocialLink,
+  SocialPlatform,
+  ProfileImage,
+  ProfileLink
+} from './user';
+
+export type {
   UserRole,
   UserStatus,
   UserTier,
   UserGender,
-  TeamType,
   UserTeam,
-  SocialLink,
-  ProfileImage,
+  TeamType,
+  UserPreferences,
+  UserStats
+} from './user-types';
+
+// Import and reexport ProfileBoost
+export type { 
   ProfileBoost,
-  UserSubscription,
-  UserSettings
-} from './user';
+  BoostEffect,
+  BoostEffectType,
+  BoostStrength,
+  BoostTier,
+  ProfileBoostData
+} from './profile-boost';
+
+// Certificates
+export type {
+  Certificate,
+  CertificateType,
+  CertificateNFT,
+  CertificateTemplate,
+  CertificateStyle,
+  CertificateTeam,
+  RankCertificateMetadata
+} from './certificates';
+
+// Teams
+export type {
+  Team,
+  TeamColor,
+  TeamBenefit
+} from './team';
 
 // Cosmetics
 export type {
@@ -37,23 +74,13 @@ export type {
   CosmeticRarity,
   CosmeticItem,
   UserCosmeticItem,
+  UserCosmeticState,
   UserCosmetics,
   CosmeticType,
   CosmeticPlacement
 } from './cosmetics';
 
-// Other domain types
-export type { 
-  Certificate,
-  CertificateType
-} from './certificates';
-
-export type {
-  Event,
-  EventStatus,
-  EventType,
-} from './events';
-
+// Mockery
 export type {
   MockeryAction,
   MockeryTier,
@@ -61,14 +88,24 @@ export type {
   MockeryEffectData,
   UserMockeryStatus,
   MockUser,
+  MockedUser,
   ShameAction,
   ExtendedMockeryAction
 } from './mockery';
 
+// Events
 export type {
-  NFTMetadata,
+  Event,
+  EventStatus,
+  EventType
+} from './events';
+
+// NFT
+export type {
+  NFTMetadata
 } from './nft';
 
+// Wallet & Transactions
 export type {
   Transaction,
   TransactionType,
@@ -84,6 +121,23 @@ export type {
   OnChainLeaderboardEntry,
   SolanaNftInfo
 } from './solana';
+
+// Leaderboard types
+export type {
+  LeaderboardUser,
+  LeaderboardEntry,
+  LeaderboardFilter,
+  LeaderboardSortDirection,
+  LeaderboardSortOption,
+  LeaderboardTimeFrame
+} from './leaderboard';
+
+// Sound types
+export type {
+  SoundType,
+  SoundConfig,
+  PremiumSoundPackDetails
+} from './sound';
 
 // Export functions from cosmetics
 export { 

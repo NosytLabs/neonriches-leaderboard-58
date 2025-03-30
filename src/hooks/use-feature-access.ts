@@ -1,108 +1,90 @@
 
-import { useState } from 'react';
 import { UserProfile } from '@/types/user';
-import { UserTier } from '@/types/tier';
+import { UserTier } from '@/types/user-types';
 
-export interface FeatureAccess {
-  canAccess: (featureName: string) => boolean;
-  isPremiumFeature: (featureName: string) => boolean;
-  getUpgradeInfo: (featureName: string) => { 
-    requiredTier: UserTier, 
-    description: string 
-  };
-  userHasFeature: (featureName: string) => boolean;
+export type Feature = 
+  | 'profile-links'
+  | 'profile-stats'
+  | 'profile-views'
+  | 'profile-badges'
+  | 'profile-cosmetics'
+  | 'profile-marketing'
+  | 'profile-analytics'
+  | 'profile-boost'
+  | 'profile-verification';
+
+export interface FeatureRequirements {
+  [key: string]: UserTier;
 }
 
-// Feature tiers mapping
-const featureTiers: Record<string, UserTier> = {
-  'custom-profile': 'basic',
+export const featureRequirements: FeatureRequirements = {
+  'profile-links': 'basic',
+  'profile-stats': 'premium',
+  'profile-views': 'basic',
+  'profile-badges': 'premium',
+  
+  'profile-cosmetics': 'basic',
+  'profile-marketing': 'premium',
+  'profile-analytics': 'premium',
   'profile-boost': 'premium',
-  'achievement-showcase': 'basic',
-  'team-chat': 'premium',
-  'royal-council': 'royal',
-  'stats-analytics': 'premium',
-  'market-visibility': 'premium',
-  'animated-effects': 'premium',
-  'mockery-powers': 'premium',
-  'custom-titles': 'royal',
-  'priority-support': 'royal',
-  'private-messaging': 'basic',
-  'verified-badge': 'premium',
-  'certificate-nft': 'royal',
-  'wishing-well': 'basic',
-  'shameless-promotion': 'premium'
+  
+  'profile-verification': 'premium',
+  'profile-custom-domain': 'premium',
+  
+  'chat-access': 'basic',
+  'chat-premium': 'premium',
 };
 
-// Feature descriptions
-const featureDescriptions: Record<string, string> = {
-  'custom-profile': 'Customize your profile with themes and colors',
-  'profile-boost': 'Boost your profile visibility in the leaderboard',
-  'achievement-showcase': 'Display your achievements on your profile',
-  'team-chat': 'Access to exclusive team chat rooms',
-  'royal-council': 'Participate in the Royal Council forums',
-  'stats-analytics': 'View detailed spending and activity analytics',
-  'market-visibility': 'Enhanced visibility features for your profile',
-  'animated-effects': 'Unlock animated profile effects',
-  'mockery-powers': 'Use mockery powers on other users',
-  'custom-titles': 'Create and use custom titles',
-  'priority-support': 'Get priority support from the royal court',
-  'private-messaging': 'Send private messages to other users',
-  'verified-badge': 'Get a verified badge on your profile',
-  'certificate-nft': 'Mint your rank certificate as an NFT',
-  'wishing-well': 'Access to the Wishing Well feature',
-  'shameless-promotion': 'Promote your profile on the leaderboard'
-};
+export interface FeatureAccess {
+  hasFeature: (feature: Feature) => boolean;
+  getRequiredTier: (feature: Feature) => UserTier;
+  getUserTier: () => UserTier;
+  isUserPro?: (user: UserProfile) => boolean;
+  getUpgradeUrl?: (feature: Feature) => string;
+}
 
-// Tier hierarchy for comparison
-const tierHierarchy: Record<UserTier, number> = {
+export const tierValues: Record<UserTier, number> = {
   'free': 0,
   'basic': 1,
   'plus': 2,
   'premium': 3,
-  'pro': 4,
-  'royal': 5,
-  'founder': 6,
-  'whale': 7,
-  'shark': 8
+  'royal': 4,
+  'diamond': 5,
+  'pro': 3
 };
 
-const useFeatureAccess = (user?: UserProfile): FeatureAccess => {
-  const [purchasedFeatures] = useState<string[]>(user?.purchasedFeatures || []);
-
-  const canAccess = (featureName: string): boolean => {
-    // Direct purchase access
-    if (purchasedFeatures.includes(featureName)) {
-      return true;
-    }
-
-    // Tier-based access
-    const requiredTier = featureTiers[featureName] || 'royal';
-    const userTier = user?.tier || 'free';
-
-    return tierHierarchy[userTier] >= tierHierarchy[requiredTier];
+export const useFeatureAccess = (user: UserProfile | null): FeatureAccess => {
+  const getUserTier = (): UserTier => {
+    return user?.tier || 'free';
   };
 
-  const isPremiumFeature = (featureName: string): boolean => {
-    const requiredTier = featureTiers[featureName] || 'royal';
-    return tierHierarchy[requiredTier] >= tierHierarchy['premium'];
+  const getRequiredTier = (feature: Feature): UserTier => {
+    return featureRequirements[feature] || 'free';
   };
 
-  const getUpgradeInfo = (featureName: string) => {
-    const requiredTier = featureTiers[featureName] || 'royal';
-    const description = featureDescriptions[featureName] || 'Unlock premium features';
+  const hasFeature = (feature: Feature): boolean => {
+    if (!user) return false;
     
-    return { requiredTier, description };
+    const userTier = getUserTier();
+    const requiredTier = getRequiredTier(feature);
+    
+    return tierValues[userTier] >= tierValues[requiredTier];
   };
 
-  const userHasFeature = (featureName: string): boolean => {
-    return purchasedFeatures.includes(featureName);
+  const isUserPro = (userToCheck: UserProfile): boolean => {
+    return tierValues[userToCheck?.tier || 'free'] >= tierValues['premium'];
+  };
+
+  const getUpgradeUrl = (feature: Feature): string => {
+    return `/subscription?feature=${feature}`;
   };
 
   return {
-    canAccess,
-    isPremiumFeature,
-    getUpgradeInfo,
-    userHasFeature
+    hasFeature,
+    getRequiredTier,
+    getUserTier,
+    isUserPro,
+    getUpgradeUrl
   };
 };
 

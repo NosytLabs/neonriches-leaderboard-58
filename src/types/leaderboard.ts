@@ -16,6 +16,7 @@ export interface LeaderboardUser {
   isVIP?: boolean;
   avatarUrl?: string;
   totalDeposited?: number;
+  isVerified?: boolean;
 }
 
 export type LeaderboardSortOption = 
@@ -36,7 +37,7 @@ export type LeaderboardTimeFrame =
 
 export interface LeaderboardFilter {
   timeFrame: string;
-  timespan: string; // Added this required property
+  timespan: string;
   sortBy: string;
   sortDirection: LeaderboardSortDirection;
   team?: TeamType;

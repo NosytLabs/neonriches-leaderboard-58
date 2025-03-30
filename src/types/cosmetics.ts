@@ -1,43 +1,54 @@
 
 export type CosmeticCategory = 
-  | "title" 
-  | "badge" 
-  | "border" 
-  | "color" 
-  | "font" 
-  | "emoji" 
-  | "background" 
-  | "effect"
-  | "borders"
-  | "colors"
-  | "fonts"
-  | "emojis"
-  | "titles"
-  | "backgrounds" 
-  | "effects";
+  | 'border'
+  | 'color'
+  | 'font'
+  | 'emoji'
+  | 'title'
+  | 'background'
+  | 'effect'
+  | 'theme'
+  | 'badge'
+  // For backward compatibility
+  | 'borders'
+  | 'colors'
+  | 'fonts'
+  | 'emojis'
+  | 'titles'
+  | 'backgrounds'
+  | 'effects'
+  | 'badges'
+  | 'themes'
+  // Additional categories
+  | 'appearance'
+  | 'profile'
+  | 'interaction';
 
 export type CosmeticRarity = 
-  | "common" 
-  | "uncommon" 
-  | "rare" 
-  | "epic" 
-  | "legendary"
-  | "royal";
+  | 'common' 
+  | 'uncommon' 
+  | 'rare' 
+  | 'epic' 
+  | 'legendary'
+  | 'mythic'
+  | 'unique';
 
 export interface CosmeticItem {
   id: string;
   name: string;
   description: string;
   price: number;
-  type: string;
-  rarity: string;
   category: CosmeticCategory;
-  // Additional properties
+  rarity: CosmeticRarity | string;
+  type?: string;
+  isUnlocked?: boolean;
+  image?: string;
   cssClass?: string;
-  imageSrc?: string;
-  cost?: number;
-  imageUrl?: string;
 }
+
+export type CosmeticType = CosmeticCategory;
+export type UserCosmeticItem = CosmeticItem;
+export type UserCosmetics = UserCosmeticState;
 
 export interface UserCosmeticState {
   activeBorder?: string;
@@ -56,10 +67,23 @@ export interface UserCosmeticState {
   unlockedBadges: string[];
   unlockedBackgrounds: string[];
   unlockedEffects: string[];
+  // Legacy compatibility properties
+  borders?: string[];
+  colors?: string[];
+  fonts?: string[];
+  emojis?: string[];
+  titles?: string[];
+  backgrounds?: string[];
+  effects?: string[];
+  badges?: string[];
+  themes?: string[];
+  foundersPass?: boolean;
 }
 
+export type CosmeticPlacement = "profile" | "leaderboard" | "chat" | "global";
+
 // Helper functions for cosmetic rarity
-export const getRarityColor = (rarity: CosmeticRarity): string => {
+export const getRarityColor = (rarity: CosmeticRarity | string): string => {
   switch (rarity) {
     case 'common': return 'text-gray-400';
     case 'uncommon': return 'text-green-400';
@@ -67,11 +91,13 @@ export const getRarityColor = (rarity: CosmeticRarity): string => {
     case 'epic': return 'text-purple-400';
     case 'legendary': return 'text-royal-gold';
     case 'royal': return 'text-amber-300';
+    case 'mythic': return 'text-pink-400';
+    case 'unique': return 'text-teal-400';
     default: return 'text-gray-400';
   }
 };
 
-export const getRarityBgColor = (rarity: CosmeticRarity): string => {
+export const getRarityBgColor = (rarity: CosmeticRarity | string): string => {
   switch (rarity) {
     case 'common': return 'bg-gray-600/20';
     case 'uncommon': return 'bg-green-600/20';
@@ -79,11 +105,13 @@ export const getRarityBgColor = (rarity: CosmeticRarity): string => {
     case 'epic': return 'bg-purple-600/20';
     case 'legendary': return 'bg-amber-600/20';
     case 'royal': return 'bg-amber-500/20';
+    case 'mythic': return 'bg-pink-600/20';
+    case 'unique': return 'bg-teal-600/20';
     default: return 'bg-gray-600/20';
   }
 };
 
-export const getRarityBorderColor = (rarity: CosmeticRarity): string => {
+export const getRarityBorderColor = (rarity: CosmeticRarity | string): string => {
   switch (rarity) {
     case 'common': return 'border-gray-500/50';
     case 'uncommon': return 'border-green-500/50';
@@ -91,10 +119,8 @@ export const getRarityBorderColor = (rarity: CosmeticRarity): string => {
     case 'epic': return 'border-purple-500/50';
     case 'legendary': return 'border-amber-500/50';
     case 'royal': return 'border-amber-400/50';
+    case 'mythic': return 'border-pink-500/50';
+    case 'unique': return 'border-teal-500/50';
     default: return 'border-gray-500/50';
   }
 };
-
-export type UserCosmeticItem = CosmeticItem;
-export type CosmeticType = CosmeticCategory;
-export type CosmeticPlacement = "profile" | "leaderboard" | "chat" | "global";

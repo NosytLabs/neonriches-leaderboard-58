@@ -32,6 +32,9 @@ export type MockeryAction =
   | "jest"
   | "tomatoes";
 
+export type ShameAction = MockeryAction;
+export type ExtendedMockeryAction = MockeryAction;
+
 export type MockeryTier = 
   | "common" 
   | "uncommon" 
@@ -43,7 +46,8 @@ export type MockeryTier =
   | "silver"
   | "gold"
   | "platinum"
-  | "diamond";
+  | "diamond"
+  | "premium";
 
 export interface MockeryEvent {
   id: string;
@@ -62,26 +66,55 @@ export interface MockeryEvent {
   appliedAt?: string;
   appliedById?: string;
   tier?: MockeryTier;
+  duration?: number;
+}
+
+export interface MockeryEffectData {
+  id: string;
+  userId: string;
+  targetId: string;
+  action: MockeryAction;
+  startTime: string;
+  endTime: string;
+  active: boolean;
+}
+
+export interface UserMockeryStatus {
+  isProtected: boolean;
+  isImmune: boolean;
+  hasMockeryPowers: boolean;
+  currentMockeryCount: number;
+  remainingMockerySlots: number;
 }
 
 export interface MockedUser {
   id: string;
   username: string;
   profileImage?: string;
-  tier?: UserTier;
+  tier?: string;
   mockeryType?: MockeryAction;
   expiresAt?: string;
   mockedReason?: string;
+  displayName?: string;
+  mockedTimestamp?: string;
+  mockedBy?: string;
+  userId?: string;
 }
 
-export interface MockeryProtection {
+export type MockUser = MockedUser;
+
+export interface MockeryHistoryItem {
   id: string;
-  userId: string;
-  type: "shield" | "immunity" | "deflect";
-  createdAt: string;
+  target: string;
+  action: MockeryAction;
+  appliedBy: string;
+  appliedAt: string;
   expiresAt: string;
   isActive: boolean;
 }
 
-// Re-export for use in other files
-export type { MockeryAction, MockeryEvent, MockeryTier };
+export interface MockeryStats {
+  applied: number;
+  received: number;
+  active: number;
+}

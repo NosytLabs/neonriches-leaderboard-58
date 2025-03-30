@@ -1,71 +1,61 @@
 
-export type CertificateType = 'noble' | 'royal' | 'knight' | 'founder' | 'nobility';
+import { UserProfile } from './user';
+
+export type CertificateType = 'rank' | 'team' | 'milestone' | 'royal' | 'founder';
 
 export interface Certificate {
   id: string;
   userId: string;
   type: CertificateType;
-  imageUri?: string;
-  metadataUri?: string;
+  rank?: number;
+  teamId?: string;
+  milestoneId?: string;
+  createdAt: string;
+  imageUrl?: string;
+  shareable?: boolean;
+  shareUrl?: string;
+  isMinted?: boolean;
   mintAddress?: string;
   mintedAt?: string;
-  isVerified?: boolean;
-  isMinted?: boolean;
+}
+
+export interface CertificateNFT {
+  id: string;
+  mintAddress: string;
+  metadataUri: string;
+  imageUri: string;
+  certificateId: string;
+  userId: string;
   createdAt: string;
-  rank?: number;
-  amountSpent?: number;
-  
-  // Add missing properties that components are using
-  team?: string;
-  title?: string;
-  description?: string;
-  imageUrl?: string; // Alias for imageUri for backward compatibility
-  shareUrl?: string;
-  style?: string;
+  mintedAt: string;
 }
 
 export interface CertificateTemplate {
   id: string;
   name: string;
-  description: string;
   type: CertificateType;
+  description: string;
+  previewUrl: string;
   imageUrl: string;
-  previewUrl?: string; // Adding this since it's being used
-  availableForTier?: string;
-  availableForRank?: number;
   requiresFounder?: boolean;
-  style?: string;
-  team?: string;
+  style?: CertificateStyle;
+  team?: CertificateTeam;
 }
 
-export interface CertificateMetadata {
+export type CertificateStyle = 'classic' | 'modern' | 'minimal' | 'ornate' | 'royal';
+export type CertificateTeam = 'red' | 'green' | 'blue' | 'none';
+
+export interface RankCertificateMetadata {
   name: string;
   description: string;
   image: string;
-  attributes: { trait_type: string; value: string | number }[];
-  rank?: number;
-  amountSpent?: number;
-}
-
-// These types are referenced but missing, so let's add them
-export interface CertificateRepository {
-  getCertificateById: (id: string) => Promise<Certificate | null>;
-  updateCertificate: (certificate: Certificate) => Promise<boolean>;
-  getCertificatesForUser: (userId: string) => Promise<Certificate[]>;
-  getMintedCertificatesForUser: (userId: string) => Promise<Certificate[]>;
-}
-
-export interface CertificateTemplateFactory {
-  getTemplatesForUser: (user: any) => Promise<CertificateTemplate[]>;
-}
-
-// Additional types that are referenced in the codebase
-export type CertificateTeam = 'red' | 'green' | 'blue' | 'gold' | 'silver' | 'bronze' | 'none';
-
-export type CertificateStyle = 'royal' | 'noble' | 'knight' | 'founder' | 'standard' | 'elite' | 'premium';
-
-export interface RankCertificateMetadata extends CertificateMetadata {
-  rank: number;
-  amountSpent?: number;
-  username?: string; // Add this for compatibility with solanaService
+  attributes: {
+    rank: number;
+    spentAmount: number;
+    issueDate: string;
+    expiryDate?: string;
+    userId: string;
+    username: string;
+    displayName?: string;
+  }[];
 }

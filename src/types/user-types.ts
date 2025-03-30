@@ -1,10 +1,16 @@
 
 export type UserRole = 'user' | 'admin' | 'moderator' | 'vip' | 'developer';
 export type UserStatus = 'active' | 'inactive' | 'suspended' | 'banned';
-export type UserTier = 'free' | 'basic' | 'plus' | 'premium' | 'royal' | 'diamond';
+export type UserTier = 
+  | 'free' 
+  | 'basic' 
+  | 'plus' 
+  | 'premium' 
+  | 'royal' 
+  | 'diamond'
+  | 'pro';
 export type UserGender = 'male' | 'female' | 'non-binary' | 'other' | 'prefer-not-to-say';
 export type UserTeam = 'red' | 'green' | 'blue';
-export type TeamType = UserTeam | 'none' | 'Red' | 'Green' | 'Blue';
 
 export interface UserPreferences {
   theme: 'light' | 'dark' | 'system';
@@ -21,4 +27,14 @@ export interface UserStats {
   joinDate: string;
   lastLogin: string;
   referrals: number;
+}
+
+export interface UserSubscription {
+  id: string;
+  tier: UserTier;
+  startDate: string;
+  endDate: string;
+  isActive: boolean;
+  autoRenew: boolean;
+  price: number;
 }

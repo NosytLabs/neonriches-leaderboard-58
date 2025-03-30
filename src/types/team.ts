@@ -14,6 +14,8 @@ export type TeamType =
   | "Blue"
   | "none";
 
+export type UserTeam = "red" | "green" | "blue" | "none";
+
 export type TeamBenefit = {
   id: string;
   title: string;

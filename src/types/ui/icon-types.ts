@@ -22,7 +22,9 @@ export type IconColor =
   | "navy"
   | "purple"
   | "muted"
-  | "emerald";
+  | "emerald"
+  | "royal"
+  | "copper";
 
 // Define possible icon sizes
 export type IconSize = 
