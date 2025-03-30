@@ -42,6 +42,36 @@ export const formatCurrency = (amount: number): string => {
   }).format(amount);
 };
 
+// Dollar amount formatting with custom options
+export const formatDollarAmount = (amount: number, options?: { 
+  showSymbol?: boolean; 
+  abbreviate?: boolean;
+  precision?: number;
+}): string => {
+  const { showSymbol = true, abbreviate = false, precision = 2 } = options || {};
+  
+  // Handle abbreviation for large numbers
+  if (abbreviate) {
+    if (amount >= 1000000000) {
+      return `${showSymbol ? '$' : ''}${(amount / 1000000000).toFixed(precision)}B`;
+    }
+    if (amount >= 1000000) {
+      return `${showSymbol ? '$' : ''}${(amount / 1000000).toFixed(precision)}M`;
+    }
+    if (amount >= 1000) {
+      return `${showSymbol ? '$' : ''}${(amount / 1000).toFixed(precision)}K`;
+    }
+  }
+  
+  // Standard formatting
+  return new Intl.NumberFormat('en-US', {
+    style: showSymbol ? 'currency' : 'decimal',
+    currency: 'USD',
+    minimumFractionDigits: precision,
+    maximumFractionDigits: precision
+  }).format(amount);
+};
+
 // Percentage formatting
 export const formatPercentage = (value: number): string => {
   return `${(value * 100).toFixed(2)}%`;
@@ -130,3 +160,7 @@ export const getMockeryActionIconColor = (action: string): string => {
   
   return colorMap[action] || 'text-gray-500';
 };
+
+// Royal decoration types
+export type RoyalDecorationType = 'banner' | 'crown' | 'flourish' | 'insignia' | 'swords';
+export type RoyalButtonVariant = 'default' | 'royal' | 'gold' | 'crimson';

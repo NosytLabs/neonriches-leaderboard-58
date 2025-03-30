@@ -1,5 +1,5 @@
 
-// Re-export all formatters
+// Re-export all formatters from the formatters.ts file
 export {
   formatDate,
   formatTime,
@@ -7,19 +7,19 @@ export {
   formatTimeAgo,
   formatRelativeTime,
   formatCurrency,
+  formatDollarAmount,
   formatPercentage,
   formatAddress,
   formatFileSize,
   formatHistoricalValue,
   getAchievementIcon,
   getTeamColor,
-  getMockeryActionIconColor
+  getMockeryActionIconColor,
+  // Types
+  RoyalDecorationType,
+  RoyalButtonVariant
 } from '../formatters';
 
-// Export types related to formatters
-export type RoyalDecorationType = 'banner' | 'crown' | 'flourish' | 'insignia' | 'swords';
-export type RoyalButtonVariant = 'default' | 'royal' | 'gold' | 'crimson';
-
-// Import required types from the appropriate files
+// Export types related to leaderboard
 import { LeaderboardEntry } from '@/types/leaderboard';
 export type LeaderboardUser = LeaderboardEntry;
