@@ -1,6 +1,6 @@
 
 import React, { useReducer, useEffect } from 'react';
-import { AuthContextType, AuthProviderProps, AuthState } from './types';
+import { AuthContextType, AuthProviderProps, AuthState, AuthAction } from './types';
 import { authReducer } from './authReducer';
 import { 
   fetchUserProfile, 
