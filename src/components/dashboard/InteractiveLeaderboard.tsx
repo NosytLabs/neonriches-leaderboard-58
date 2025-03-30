@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Crown, Scroll } from 'lucide-react';
@@ -15,7 +14,7 @@ const InteractiveLeaderboard: React.FC = () => {
   const { toast } = useToast();
   const { user } = useAuth();
   const [leaderboardData, setLeaderboardData] = useState<LeaderboardUser[]>(mockLeaderboardData);
-  const [showShameOptions, setShowShameOptions] = useState<boolean>(false);
+  const [showShameModal, setShowShameModal] = useState<boolean>(false);
   const [selectedUser, setSelectedUser] = useState<LeaderboardUser | null>(null);
   const [isOnCooldown, setIsOnCooldown] = useState<boolean>(false);
   const [shameType, setShameType] = useState<ShameAction>('tomatoes');
@@ -40,7 +39,7 @@ const InteractiveLeaderboard: React.FC = () => {
     setSelectedUser(user);
     setShameType(type);
     setShameAmount(getShameActionPrice(type));
-    setShowShameOptions(true);
+    setShowShameModal(true);
     
     // Play subtle royal sound effect
     const audio = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-fairy-arcade-sparkle-866.mp3');
@@ -48,7 +47,7 @@ const InteractiveLeaderboard: React.FC = () => {
     audio.play().catch(e => console.log('Audio playback error:', e));
   };
 
-  const confirmShame = () => {
+  const handleConfirmShame = () => {
     if (!selectedUser || isOnCooldown) return;
     
     // Get shame emoji based on type
@@ -86,7 +85,7 @@ const InteractiveLeaderboard: React.FC = () => {
       // Store last shame time
       localStorage.setItem(`lastShame_${selectedUser.id}`, Date.now().toString());
       
-      setShowShameOptions(false);
+      setShowShameModal(false);
       setSelectedUser(null);
       setIsOnCooldown(true);
       
@@ -100,11 +99,6 @@ const InteractiveLeaderboard: React.FC = () => {
         });
       }, 30000); // 30-second cooldown for demo
     }, 1000);
-  };
-
-  const handleCloseShameModal = () => {
-    setShowShameOptions(false);
-    setSelectedUser(null);
   };
 
   return (
@@ -130,13 +124,13 @@ const InteractiveLeaderboard: React.FC = () => {
         
         <LeaderboardActions />
         
-        {showShameOptions && selectedUser && (
+        {showShameModal && selectedUser && (
           <ShameModal
-            selectedUser={selectedUser}
+            targetUser={selectedUser}
             shameAmount={shameAmount}
             shameType={shameType}
-            onClose={handleCloseShameModal}
-            onConfirm={confirmShame}
+            onClose={() => setShowShameModal(false)}
+            onConfirm={handleConfirmShame}
           />
         )}
       </CardContent>

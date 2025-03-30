@@ -1,39 +1,16 @@
+/**
+ * Utility functions for formatting data consistently across the application
+ */
 
-import { format, formatDistanceToNow, formatRelative } from 'date-fns';
+import { TeamType } from '@/types/user';
 
-// Date formatting
-export const formatDate = (date: string | Date): string => {
-  if (!date) return 'N/A';
-  const dateObj = typeof date === 'string' ? new Date(date) : date;
-  return format(dateObj, 'MMM d, yyyy');
-};
-
-export const formatTime = (date: string | Date): string => {
-  if (!date) return 'N/A';
-  const dateObj = typeof date === 'string' ? new Date(date) : date;
-  return format(dateObj, 'h:mm a');
-};
-
-export const formatDateTime = (date: string | Date): string => {
-  if (!date) return 'N/A';
-  const dateObj = typeof date === 'string' ? new Date(date) : date;
-  return format(dateObj, 'MMM d, yyyy h:mm a');
-};
-
-export const formatTimeAgo = (date: string | Date): string => {
-  if (!date) return 'N/A';
-  const dateObj = typeof date === 'string' ? new Date(date) : date;
-  return formatDistanceToNow(dateObj, { addSuffix: true });
-};
-
-export const formatRelativeTime = (date: string | Date): string => {
-  if (!date) return 'N/A';
-  const dateObj = typeof date === 'string' ? new Date(date) : date;
-  return formatRelative(dateObj, new Date());
-};
-
-// Currency formatting
+// Format currency values
 export const formatCurrency = (amount: number): string => {
+  // Handle undefined, null, or NaN
+  if (amount === undefined || amount === null || isNaN(amount)) {
+    return '$0.00';
+  }
+  
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
@@ -42,125 +19,129 @@ export const formatCurrency = (amount: number): string => {
   }).format(amount);
 };
 
-// Dollar amount formatting with custom options
-export const formatDollarAmount = (amount: number, options?: { 
-  showSymbol?: boolean; 
-  abbreviate?: boolean;
-  precision?: number;
-}): string => {
-  const { showSymbol = true, abbreviate = false, precision = 2 } = options || {};
-  
-  // Handle abbreviation for large numbers
-  if (abbreviate) {
-    if (amount >= 1000000000) {
-      return `${showSymbol ? '$' : ''}${(amount / 1000000000).toFixed(precision)}B`;
-    }
-    if (amount >= 1000000) {
-      return `${showSymbol ? '$' : ''}${(amount / 1000000).toFixed(precision)}M`;
-    }
-    if (amount >= 1000) {
-      return `${showSymbol ? '$' : ''}${(amount / 1000).toFixed(precision)}K`;
-    }
+// Format a simple dollar amount without cents for larger numbers
+export const formatDollarAmount = (amount: number): string => {
+  if (amount === undefined || amount === null || isNaN(amount)) {
+    return '$0';
   }
   
-  // Standard formatting
-  return new Intl.NumberFormat('en-US', {
-    style: showSymbol ? 'currency' : 'decimal',
-    currency: 'USD',
-    minimumFractionDigits: precision,
-    maximumFractionDigits: precision
-  }).format(amount);
-};
-
-// Percentage formatting
-export const formatPercentage = (value: number): string => {
-  return `${(value * 100).toFixed(2)}%`;
-};
-
-// Address formatting (for wallet addresses)
-export const formatAddress = (address: string, length = 6): string => {
-  if (!address) return '';
-  if (address.length <= length * 2) return address;
-  return `${address.substring(0, length)}...${address.substring(address.length - length)}`;
-};
-
-// File size formatting
-export const formatFileSize = (bytes: number): string => {
-  if (bytes === 0) return '0 Bytes';
+  // For amounts over 1000, format without cents
+  if (Math.abs(amount) >= 1000) {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
+    }).format(amount);
+  }
   
-  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
-  const i = Math.floor(Math.log(bytes) / Math.log(1024));
+  // For smaller amounts, show cents
+  return formatCurrency(amount);
+};
+
+// Format a date
+export const formatDate = (date: string | Date): string => {
+  if (!date) return '';
   
-  return `${parseFloat((bytes / Math.pow(1024, i)).toFixed(2))} ${sizes[i]}`;
+  const dateObj = typeof date === 'string' ? new Date(date) : date;
+  return dateObj.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric'
+  });
 };
 
-// Historical value formatting
-export const formatHistoricalValue = (value: number, year?: number): string => {
-  return `${formatCurrency(value)}${year ? ` (${year})` : ''}`;
-};
-
-// Achievement icon mapping
-export const getAchievementIcon = (achievementType: string): string => {
-  const iconMap: Record<string, string> = {
-    'spending': '💰',
-    'milestone': '🏆',
-    'streak': '🔥',
-    'royal': '👑',
-    'referral': '👥',
-    'special': '⭐',
-    'event': '🎭',
-    'contribution': '🤝'
-  };
+// Format a time ago string (e.g. "2 hours ago")
+export const formatTimeAgo = (date: string | Date): string => {
+  if (!date) return '';
   
-  return iconMap[achievementType.toLowerCase()] || '🎯';
+  const now = new Date();
+  const past = typeof date === 'string' ? new Date(date) : date;
+  
+  const diffInSeconds = Math.floor((now.getTime() - past.getTime()) / 1000);
+  
+  if (diffInSeconds < 60) {
+    return `${diffInSeconds} second${diffInSeconds !== 1 ? 's' : ''} ago`;
+  }
+  
+  const diffInMinutes = Math.floor(diffInSeconds / 60);
+  if (diffInMinutes < 60) {
+    return `${diffInMinutes} minute${diffInMinutes !== 1 ? 's' : ''} ago`;
+  }
+  
+  const diffInHours = Math.floor(diffInMinutes / 60);
+  if (diffInHours < 24) {
+    return `${diffInHours} hour${diffInHours !== 1 ? 's' : ''} ago`;
+  }
+  
+  const diffInDays = Math.floor(diffInHours / 24);
+  if (diffInDays < 30) {
+    return `${diffInDays} day${diffInDays !== 1 ? 's' : ''} ago`;
+  }
+  
+  const diffInMonths = Math.floor(diffInDays / 30);
+  if (diffInMonths < 12) {
+    return `${diffInMonths} month${diffInMonths !== 1 ? 's' : ''} ago`;
+  }
+  
+  const diffInYears = Math.floor(diffInMonths / 12);
+  return `${diffInYears} year${diffInYears !== 1 ? 's' : ''} ago`;
 };
 
-// Team color mapping
-export const getTeamColor = (team: string | null): string => {
-  switch (team?.toLowerCase()) {
+// Format a relative time string
+export const formatRelativeTime = (date: string | Date): string => {
+  if (!date) return '';
+  
+  const now = new Date();
+  const targetDate = typeof date === 'string' ? new Date(date) : date;
+  
+  // Check if the date is today
+  if (
+    targetDate.getDate() === now.getDate() &&
+    targetDate.getMonth() === now.getMonth() &&
+    targetDate.getFullYear() === now.getFullYear()
+  ) {
+    return 'Today';
+  }
+  
+  // Check if date is yesterday
+  const yesterday = new Date(now);
+  yesterday.setDate(now.getDate() - 1);
+  if (
+    targetDate.getDate() === yesterday.getDate() &&
+    targetDate.getMonth() === yesterday.getMonth() &&
+    targetDate.getFullYear() === yesterday.getFullYear()
+  ) {
+    return 'Yesterday';
+  }
+  
+  // Otherwise return formatted date
+  return formatDate(targetDate);
+};
+
+// Get color class for team
+export const getTeamColor = (team: TeamType): string => {
+  const normalizedTeam = typeof team === 'string' ? team.toLowerCase() as TeamType : team;
+  
+  switch (normalizedTeam) {
     case 'red':
-      return 'text-red-500';
+      return 'text-red-500 border-red-500/50';
     case 'green':
-      return 'text-green-500';
+      return 'text-green-500 border-green-500/50';
     case 'blue':
-      return 'text-blue-500';
+      return 'text-blue-500 border-blue-500/50';
     default:
-      return 'text-gray-500';
+      return 'text-gray-400 border-gray-400/50';
   }
 };
 
-// Get mockery action icon color
-export const getMockeryActionIconColor = (action: string): string => {
-  const colorMap: Record<string, string> = {
-    'shame': 'text-red-500',
-    'tomatoes': 'text-red-500',
-    'taunt': 'text-yellow-500',
-    'eggs': 'text-yellow-500',
-    'ridicule': 'text-orange-500',
-    'putridEggs': 'text-orange-500',
-    'jester': 'text-purple-500',
-    'courtJester': 'text-purple-500',
-    'mock': 'text-blue-500',
-    'dunce': 'text-blue-500',
-    'humiliate': 'text-indigo-500',
-    'silence': 'text-indigo-500',
-    'expose': 'text-pink-500',
-    'glitterBomb': 'text-pink-500',
-    'guillotine': 'text-stone-500',
-    'smokeBomb': 'text-stone-500',
-    'dungeons': 'text-slate-500',
-    'defeat': 'text-slate-500',
-    'removal': 'text-amber-500',
-    'challenge': 'text-amber-500',
-    'roast': 'text-rose-500',
-    'royalPie': 'text-royal-crimson',
-    'jokeCrown': 'text-royal-gold',
-    'memeFrame': 'text-royal-purple'
-  };
-  
-  return colorMap[action] || 'text-gray-500';
+// Get rank text color class
+export const getRankTextColorClass = (rank: number): string => {
+  if (rank === 1) return 'text-royal-gold';
+  if (rank === 2) return 'text-gray-300';
+  if (rank === 3) return 'text-amber-700';
+  if (rank <= 10) return 'text-indigo-400';
+  if (rank <= 50) return 'text-purple-400';
+  if (rank <= 100) return 'text-blue-400';
+  return 'text-gray-400';
 };
-
-// Royal decoration types
-export type RoyalDecorationType = 'banner' | 'crown' | 'flourish' | 'insignia' | 'swords';
-export type RoyalButtonVariant = 'default' | 'royal' | 'gold' | 'crimson';

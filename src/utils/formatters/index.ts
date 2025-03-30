@@ -39,7 +39,7 @@ export const formatHistoricalValue = (value: number, year: number): string => {
   // Simple inflation adjustment (not accurate but for display purposes)
   const adjustedValue = value * Math.pow(1.03, yearDiff);
   
-  return `${formatCurrency(adjustedValue)} (${formatCurrency(value)} in ${year})`;
+  return `${formatCurrency(value)} (adjusted to ${formatCurrency(adjustedValue)} in ${currentYear})`;
 };
 
 export const getAchievementIcon = (type: string) => {
@@ -54,9 +54,9 @@ export const getAchievementIcon = (type: string) => {
   }
 };
 
-// Export types as type only to fix isolatedModules issues
+// Export types using the 'export type' syntax for compatibility with isolatedModules
 export type { RoyalDecorationType } from '../types/decorations';
 export type { RoyalButtonVariant } from '../types/buttons';
 
-// Export types related to leaderboard
+// Export LeaderboardUser as an alias for LeaderboardEntry
 export type { LeaderboardEntry as LeaderboardUser } from '@/types/leaderboard';

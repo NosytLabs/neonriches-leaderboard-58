@@ -1,141 +1,118 @@
 
-import { format, formatDistanceToNow } from 'date-fns';
-
 /**
- * Format a date to a readable string
+ * Date utility functions for formatting and manipulating dates
  */
+
+// Format a date to a user-friendly string
 export const formatDate = (date: string | Date): string => {
-  if (!date) return 'N/A';
+  if (!date) return '';
+  
   const dateObj = typeof date === 'string' ? new Date(date) : date;
-  return format(dateObj, 'MMM d, yyyy');
+  return dateObj.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric'
+  });
 };
 
-/**
- * Format a date with time
- */
+// Format a date with time
 export const formatDateTime = (date: string | Date): string => {
-  if (!date) return 'N/A';
+  if (!date) return '';
+  
   const dateObj = typeof date === 'string' ? new Date(date) : date;
-  return format(dateObj, 'MMM d, yyyy h:mm a');
+  return dateObj.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
 };
 
-/**
- * Format time only
- */
-export const formatTime = (date: string | Date): string => {
-  if (!date) return 'N/A';
-  const dateObj = typeof date === 'string' ? new Date(date) : date;
-  return format(dateObj, 'h:mm a');
-};
-
-/**
- * Format a date as a relative time (e.g. "2 days ago")
- */
-export const formatTimeAgo = (date: string | Date): string => {
-  if (!date) return 'N/A';
-  const dateObj = typeof date === 'string' ? new Date(date) : date;
-  return formatDistanceToNow(dateObj, { addSuffix: true });
-};
-
-/**
- * Format relative time between two dates
- */
-export const formatRelativeTime = (start: Date | string, end: Date | string): string => {
-  const startDate = typeof start === 'string' ? new Date(start) : start;
-  const endDate = typeof end === 'string' ? new Date(end) : end;
+// Calculate relative time (e.g. "2 hours ago")
+export const getRelativeTime = (date: string | Date): string => {
+  const now = new Date();
+  const past = typeof date === 'string' ? new Date(date) : date;
   
-  // Calculate time difference in milliseconds
-  const diff = endDate.getTime() - startDate.getTime();
+  const diffInSeconds = Math.floor((now.getTime() - past.getTime()) / 1000);
   
-  // Convert to days
-  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-  
-  if (days > 0) {
-    return `${days} day${days > 1 ? 's' : ''}`;
+  if (diffInSeconds < 60) {
+    return `${diffInSeconds} seconds ago`;
   }
   
-  // Convert to hours
-  const hours = Math.floor(diff / (1000 * 60 * 60));
-  
-  if (hours > 0) {
-    return `${hours} hour${hours > 1 ? 's' : ''}`;
+  const diffInMinutes = Math.floor(diffInSeconds / 60);
+  if (diffInMinutes < 60) {
+    return `${diffInMinutes} minute${diffInMinutes !== 1 ? 's' : ''} ago`;
   }
   
-  // Convert to minutes
-  const minutes = Math.floor(diff / (1000 * 60));
-  
-  if (minutes > 0) {
-    return `${minutes} minute${minutes > 1 ? 's' : ''}`;
+  const diffInHours = Math.floor(diffInMinutes / 60);
+  if (diffInHours < 24) {
+    return `${diffInHours} hour${diffInHours !== 1 ? 's' : ''} ago`;
   }
   
-  // Convert to seconds
-  const seconds = Math.floor(diff / 1000);
+  const diffInDays = Math.floor(diffInHours / 24);
+  if (diffInDays < 30) {
+    return `${diffInDays} day${diffInDays !== 1 ? 's' : ''} ago`;
+  }
   
-  return `${seconds} second${seconds !== 1 ? 's' : ''}`;
+  const diffInMonths = Math.floor(diffInDays / 30);
+  if (diffInMonths < 12) {
+    return `${diffInMonths} month${diffInMonths !== 1 ? 's' : ''} ago`;
+  }
+  
+  const diffInYears = Math.floor(diffInMonths / 12);
+  return `${diffInYears} year${diffInYears !== 1 ? 's' : ''} ago`;
 };
 
-/**
- * Check if a date is in the past
- */
-export const isPastDate = (date: string | Date): boolean => {
-  const dateObj = typeof date === 'string' ? new Date(date) : date;
-  return dateObj < new Date();
+// Check if a date is today
+export const isToday = (date: string | Date): boolean => {
+  const today = new Date();
+  const checkDate = typeof date === 'string' ? new Date(date) : date;
+  
+  return today.getDate() === checkDate.getDate() &&
+    today.getMonth() === checkDate.getMonth() &&
+    today.getFullYear() === checkDate.getFullYear();
 };
 
-/**
- * Calculate days remaining until a date
- */
-export const daysUntil = (date: string | Date): number => {
-  const dateObj = typeof date === 'string' ? new Date(date) : date;
+// Check if a date is within the last 24 hours
+export const isRecent = (date: string | Date): boolean => {
   const now = new Date();
-  const diffTime = dateObj.getTime() - now.getTime();
-  return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  const checkDate = typeof date === 'string' ? new Date(date) : date;
+  
+  const diffInHours = (now.getTime() - checkDate.getTime()) / (1000 * 60 * 60);
+  return diffInHours < 24;
 };
 
-/**
- * Calculate days elapsed since a date
- */
-export const daysSince = (date: string | Date): number => {
+// Format date for certificates and formal documents
+export const formatFormalDate = (date: string | Date): string => {
+  if (!date) return '';
+  
   const dateObj = typeof date === 'string' ? new Date(date) : date;
-  const now = new Date();
-  const diffTime = now.getTime() - dateObj.getTime();
-  return Math.floor(diffTime / (1000 * 60 * 60 * 24));
+  
+  return dateObj.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
 };
 
-/**
- * Check if an event is active based on start and end dates
- */
-export const isEventActive = (startDate: string | Date, endDate: string | Date): boolean => {
-  const start = typeof startDate === 'string' ? new Date(startDate) : startDate;
-  const end = typeof endDate === 'string' ? new Date(endDate) : endDate;
-  const now = new Date();
+// Get start and end of a week
+export const getWeekRange = (date: Date = new Date()): { start: Date, end: Date } => {
+  const day = date.getDay();
+  const diff = date.getDate() - day + (day === 0 ? -6 : 1); // Adjust when day is Sunday
   
-  return start <= now && now <= end;
+  const start = new Date(date);
+  start.setDate(diff);
+  start.setHours(0, 0, 0, 0);
+  
+  const end = new Date(start);
+  end.setDate(start.getDate() + 6);
+  end.setHours(23, 59, 59, 999);
+  
+  return { start, end };
 };
 
-/**
- * Format a date range (start to end)
- */
-export const formatDateRange = (startDate: string | Date, endDate: string | Date): string => {
-  const start = typeof startDate === 'string' ? new Date(startDate) : startDate;
-  const end = typeof endDate === 'string' ? new Date(endDate) : endDate;
-  
-  return `${format(start, 'MMM d, yyyy')} - ${format(end, 'MMM d, yyyy')}`;
-};
-
-/**
- * Check if two date ranges overlap
- */
-export const doDateRangesOverlap = (
-  startA: string | Date, 
-  endA: string | Date, 
-  startB: string | Date, 
-  endB: string | Date
-): boolean => {
-  const a1 = typeof startA === 'string' ? new Date(startA) : startA;
-  const a2 = typeof endA === 'string' ? new Date(endA) : endA;
-  const b1 = typeof startB === 'string' ? new Date(startB) : startB;
-  const b2 = typeof endB === 'string' ? new Date(endB) : endB;
-  
-  return (a1 <= b2) && (b1 <= a2);
+// Format date to ISO string without time
+export const formatISODate = (date: Date): string => {
+  return date.toISOString().split('T')[0];
 };
