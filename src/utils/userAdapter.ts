@@ -1,42 +1,37 @@
 
-import { UserProfile, UserCosmetics } from '@/types/user';
+import { User, UserProfile } from '@/types/user';
+import { UserCosmeticState } from '@/types/cosmetics';
 
 /**
- * Ensures that a UserProfile has all required properties
+ * Adapts a raw user object to a UserProfile object
  */
-export const ensureUser = (profile: UserProfile): UserProfile => {
-  if (!profile) return null;
-  
+export const adaptUserToProfile = (user: User): UserProfile => {
   return {
-    ...profile,
-    // Ensure required fields exist
-    id: profile.id,
-    username: profile.username,
-    email: profile.email || '',
-    amountSpent: profile.totalSpent || profile.amountSpent || 0,
-    spentAmount: profile.totalSpent || profile.amountSpent || 0,
-    walletBalance: profile.walletBalance || 0,
-    rank: profile.rank || 0,
-    previousRank: profile.previousRank || profile.rank || 0,
-    tier: profile.tier || 'basic',
-    team: profile.team || 'none',
-    joinDate: typeof profile.joinedAt === 'string' ? profile.joinedAt : 
-              profile.joinedAt ? new Date(profile.joinedAt).toISOString() : new Date().toISOString(),
-    joinedAt: profile.joinedAt || new Date().toISOString(),
-    createdAt: profile.createdAt || new Date().toISOString(),
-    updatedAt: profile.updatedAt || new Date().toISOString(),
-    cosmetics: profile.cosmetics || {
-      badges: [],
-      titles: [],
-      borders: [],
-      effects: [],
-      emojis: [],
-      fonts: [],
-      colors: [],
-      backgrounds: [],
-      themes: []
+    id: user.id,
+    username: user.username,
+    displayName: user.displayName || user.username,
+    email: user.email,
+    profileImage: user.profileImage || user.avatarUrl || '',
+    bio: user.bio || '',
+    joinDate: user.joinDate || user.createdAt || user.joinedAt || '',
+    tier: user.tier,
+    team: user.team,
+    rank: user.rank || 0,
+    amountSpent: user.amountSpent || user.totalSpent || user.spentAmount || 0,
+    walletBalance: user.walletBalance || (user.wallet ? user.wallet.balance : 0),
+    previousRank: user.previousRank || 0,
+    cosmetics: user.cosmetics || {
+      border: [],
+      color: [],
+      font: [],
+      emoji: [],
+      title: [],
+      background: [],
+      effect: [],
+      badge: [],
+      theme: []
     },
-    settings: profile.settings || {
+    settings: {
       profileVisibility: 'public',
       allowProfileLinks: true,
       theme: 'dark',
@@ -44,40 +39,42 @@ export const ensureUser = (profile: UserProfile): UserProfile => {
       emailNotifications: false,
       marketingEmails: false,
       showRank: true,
-      showSpending: true,
-      showBadges: true,
-      showAchievements: true,
+      darkMode: true,
       soundEffects: true,
       showEmailOnProfile: false,
-      rankChangeAlerts: true,
-      teamChangeAlerts: true,
-      spendingAlerts: true,
-      mockeryAlerts: true,
-      shameAlerts: true,
-      animationEffects: true,
-      showStatusInLeaderboard: true,
-      displayRankChanges: true,
-      enableMockeryEffects: true,
-      receiveRoyalAnnouncements: true,
-      language: 'en',
-      allowMessages: false,
-      showTeam: true
-    }
+      rankChangeAlerts: false
+    },
+    followers: user.followers || 0,
+    following: user.following || 0,
+    isVerified: user.isVerified || false,
+    isFounder: user.isVIP || false
   };
 };
 
 /**
- * Adapts a UserProfile to a full User object
- * This is used to handle cases where older components expect a User structure
+ * Adapts a UserProfile object to a User object
  */
-export const adaptUserProfileToUser = (profile: UserProfile): any => {
-  if (!profile) return null;
-  
-  const user = ensureUser(profile);
-  
-  // For TypeScript compatibility, return as any to avoid strict type checking
-  // This is a compromise to make existing code work without massive refactoring
-  return user;
+export const adaptProfileToUser = (profile: UserProfile): User => {
+  return {
+    id: profile.id,
+    username: profile.username,
+    displayName: profile.displayName,
+    email: profile.email,
+    profileImage: profile.profileImage,
+    bio: profile.bio,
+    joinDate: profile.joinDate,
+    tier: profile.tier,
+    team: profile.team,
+    rank: profile.rank,
+    amountSpent: profile.amountSpent,
+    walletBalance: profile.walletBalance,
+    previousRank: profile.previousRank,
+    followers: profile.followers,
+    following: profile.following,
+    isVerified: profile.isVerified,
+    isVIP: profile.isFounder
+  };
 };
 
-export default adaptUserProfileToUser;
+// This is just an alias to make it clearer when we are adapting a user profile to a user
+export const adaptUserProfileToUser = adaptProfileToUser;

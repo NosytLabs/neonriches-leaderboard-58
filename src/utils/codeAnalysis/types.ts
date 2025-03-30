@@ -3,6 +3,7 @@ export interface FileInfo {
   path: string;
   size?: number;
   type?: string;
+  impact?: string;
 }
 
 export interface ImportInfo {
@@ -13,11 +14,26 @@ export interface ImportInfo {
   impact?: string;
 }
 
-export interface VariableIssue {
+export interface VariableInfo {
   name: string;
   type?: string;
   file: string;
   line: number;
+  impact?: string;
+}
+
+export interface ImportIssue {
+  name: string;
+  path?: string;
+  file: string;
+  line: number;
+  impact?: string;
+}
+
+export interface FileIssue {
+  path: string;
+  size?: number;
+  type?: string;
   impact?: string;
 }
 
@@ -87,7 +103,7 @@ export interface ProjectMetrics {
 
 export interface AnalysisResult {
   unusedImports?: ImportInfo[];
-  unusedVariables?: VariableIssue[];
+  unusedVariables?: VariableInfo[];
   unusedFiles?: FileInfo[];
   unusedSelectors?: SelectorIssue[];
   deadCode?: DeadCodeIssue[];

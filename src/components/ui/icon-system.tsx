@@ -2,6 +2,7 @@
 import React from 'react';
 import { IconProps, IconSize } from '@/types/ui/icon-types';
 import * as LucideIcons from 'lucide-react';
+import { adaptIconName } from '@/utils/iconNameAdapter';
 
 // Helper function to adapt icon names to match the Lucide icon names
 export const adaptIconName = (name: string): string => {
