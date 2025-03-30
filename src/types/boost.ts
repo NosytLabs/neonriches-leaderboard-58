@@ -16,9 +16,10 @@ export interface BoostEffect {
   id: string;
   name: string;
   description: string;
-  type: string;
+  type: BoostEffectType | string;
   tier: string;
   price: number;
+  cost?: number; // For backward compatibility
   duration: number;
   icon: ReactNode;
   cssClass?: string;
@@ -28,6 +29,7 @@ export interface BoostEffect {
   iconName?: string;
   durationDays?: number;
   previewImage?: string;
+  rarity?: string; // For backward compatibility
 }
 
 export interface ProfileBoostData {
@@ -37,7 +39,10 @@ export interface ProfileBoostData {
   duration: number; // in days
   price: number;
   cssClass: string;
-  type: BoostEffectType;
+  type: BoostEffectType | string;
   strength: number;
   tier: string;
 }
+
+// Alias for backward compatibility
+export type ProfileBoost = ProfileBoostData;

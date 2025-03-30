@@ -1,0 +1,39 @@
+
+import { MedievalIconColor, MedievalIconSize } from '@/types/ui/decorations/types';
+
+export const sizeClasses: Record<MedievalIconSize, string> = {
+  'xs': 'w-3 h-3',
+  'sm': 'w-4 h-4',
+  'md': 'w-6 h-6',
+  'lg': 'w-8 h-8',
+  'xl': 'w-10 h-10',
+  '2xl': 'w-12 h-12'
+};
+
+export const getColorClass = (color: MedievalIconColor): string => {
+  switch (color) {
+    case 'gold': return 'text-royal-gold';
+    case 'silver': return 'text-gray-300';
+    case 'bronze': return 'text-amber-600';
+    case 'purple': return 'text-royal-purple';
+    case 'green': return 'text-emerald-500';
+    case 'red': return 'text-royal-crimson';
+    case 'blue': return 'text-royal-navy';
+    case 'royal': return 'text-royal-gold';
+    default: return 'text-white';
+  }
+};
+
+export const toMedievalIconColor = (color: string): MedievalIconColor => {
+  switch (color) {
+    case 'gold': return 'gold';
+    case 'silver': return 'silver';
+    case 'bronze': return 'bronze';
+    case 'purple': return 'purple';
+    case 'green': return 'green';
+    case 'red': return 'red';
+    case 'blue': return 'blue';
+    case 'royal': return 'royal';
+    default: return 'default';
+  }
+};

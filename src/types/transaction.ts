@@ -1,5 +1,5 @@
 
-import { UserProfile, User } from './user';
+import { UserProfile } from './user';
 
 export type TransactionType = 
   'deposit' | 
@@ -16,7 +16,9 @@ export type TransactionType =
   'fee' |
   'mockery' |
   'shame' |
-  'wish';
+  'wish' |
+  'spend' |
+  'protection';
 
 export interface Transaction {
   id: string;

@@ -29,10 +29,15 @@ export type SoundType =
   | 'royalAnnouncement'
   | 'levelUp'
   | 'wish'
+  | 'message'
+  | 'pageChange'
   | 'swordClash'
   | 'coins'
-  | 'message'
-  | 'pageChange';
+  | 'noblesLaugh'
+  | 'smoke'
+  | 'tab'
+  | 'mockery'
+  | 'cosmetic';
 
 export interface SoundConfig {
   enabled: boolean;
@@ -54,9 +59,9 @@ export interface PremiumSoundPackDetails {
   sounds: SoundType[];
   features: string[];
   tags: string[];
-  royalSounds: Record<SoundType, string>;
-  gameSounds: Record<SoundType, string>;
-  isUnlocked: boolean;
+  royalSounds?: Record<SoundType, string>;
+  gameSounds?: Record<SoundType, string>;
+  isUnlocked?: boolean;
   includes?: string[];
 }
 
@@ -82,5 +87,6 @@ export interface UseSoundReturn {
   stop: (sound?: SoundType) => void;
   isPlaying: boolean;
   duration: number;
-  playSound: (sound: SoundType) => void;
+  playSound?: (sound: SoundType) => void;
+  playSuccess?: (sound?: SoundType) => void;
 }

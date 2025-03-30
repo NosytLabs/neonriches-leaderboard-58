@@ -1,7 +1,7 @@
 
-import { useEffect, useCallback } from 'react';
-import { SoundType } from '@/types/sound';
-import useSound from './sounds/use-sound';
+import { useCallback } from 'react';
+import { useSound } from './sounds/use-sound';
+import { SoundType } from '@/types/sound-types';
 
 interface UseNotificationSoundsOptions {
   enabled?: boolean;
@@ -26,7 +26,7 @@ const useNotificationSounds = (options: UseNotificationSoundsOptions = {}) => {
   const playPurchase = useCallback(() => playSound('purchase'), [playSound]);
   const playRankUp = useCallback(() => playSound('rankUp'), [playSound]);
   const playAchievement = useCallback(() => playSound('achievement'), [playSound]);
-  const playCoins = useCallback(() => playSound('coinDrop'), [playSound]);
+  const playCoins = useCallback(() => playSound('coins'), [playSound]);
   
   return {
     playSound,

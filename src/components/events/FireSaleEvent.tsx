@@ -33,8 +33,8 @@ const FireSaleEvent = ({ eventId, startDate, endDate }: FireSaleEventProps) => {
       
       const discountedItems = randomItems.map(item => ({
         ...item,
-        originalCost: item.cost,
-        cost: Math.floor(item.cost * 0.7)
+        originalPrice: item.price,
+        price: Math.floor(item.price * 0.7)
       }));
       
       setSaleItems(discountedItems);
@@ -84,10 +84,10 @@ const FireSaleEvent = ({ eventId, startDate, endDate }: FireSaleEventProps) => {
       return;
     }
     
-    if (user.walletBalance < item.cost) {
+    if (user.walletBalance < item.price) {
       toast({
         title: "Insufficient Funds",
-        description: `You need ${formatCurrency(item.cost)} to purchase this item.`,
+        description: `You need ${formatCurrency(item.price)} to purchase this item.`,
         variant: "destructive"
       });
       return;
@@ -96,7 +96,7 @@ const FireSaleEvent = ({ eventId, startDate, endDate }: FireSaleEventProps) => {
     try {
       const success = await spendFromWallet(
         ensureUser(user),
-        item.cost,
+        item.price,
         'cosmetic',
         `Purchased ${item.name} cosmetic item`
       );
@@ -115,14 +115,16 @@ const FireSaleEvent = ({ eventId, startDate, endDate }: FireSaleEventProps) => {
         };
         
         const updatedCosmetics = { ...userCosmetics };
-        if (Array.isArray(updatedCosmetics[item.type as keyof typeof updatedCosmetics])) {
-          (updatedCosmetics[item.type as keyof typeof updatedCosmetics] as string[]).push(item.id);
+        const categoryKey = item.category.toString();
+        
+        if (Array.isArray(updatedCosmetics[categoryKey as keyof typeof updatedCosmetics])) {
+          (updatedCosmetics[categoryKey as keyof typeof updatedCosmetics] as string[]).push(item.id);
         }
         
         await updateUserProfile({
           ...user,
           cosmetics: updatedCosmetics,
-          walletBalance: user.walletBalance - item.cost
+          walletBalance: user.walletBalance - item.price
         });
         
         toast({
@@ -146,7 +148,7 @@ const FireSaleEvent = ({ eventId, startDate, endDate }: FireSaleEventProps) => {
     }
   };
   
-  const getRarityIcon = (rarity: CosmeticRarity) => {
+  const getRarityIcon = (rarity: CosmeticRarity | string) => {
     switch (rarity) {
       case 'common':
         return <MedievalIcon name="shield" size="sm" color="silver" />;
@@ -193,7 +195,7 @@ const FireSaleEvent = ({ eventId, startDate, endDate }: FireSaleEventProps) => {
                     <span className="ml-2">{item.name}</span>
                   </CardTitle>
                   <Badge variant="outline" className={getRarityColor(item.rarity)}>
-                    {item.rarity.charAt(0).toUpperCase() + item.rarity.slice(1)}
+                    {typeof item.rarity === 'string' ? item.rarity.charAt(0).toUpperCase() + item.rarity.slice(1) : 'Common'}
                   </Badge>
                 </div>
               </CardHeader>
@@ -203,16 +205,16 @@ const FireSaleEvent = ({ eventId, startDate, endDate }: FireSaleEventProps) => {
                   <div className="flex items-center">
                     <Tag className="h-4 w-4 text-royal-gold mr-1" />
                     <span className="text-sm line-through text-white/50 mr-2">
-                      ${(item as any).originalCost?.toFixed(2) || item.cost.toFixed(2)}
+                      ${(item as any).originalPrice?.toFixed(2) || item.price.toFixed(2)}
                     </span>
                     <span className="text-lg font-bold text-royal-gold">
-                      ${item.cost.toFixed(2)}
+                      ${item.price.toFixed(2)}
                     </span>
                   </div>
                   <Button 
                     size="sm" 
                     onClick={() => handlePurchase(item)}
-                    disabled={!user || user.walletBalance < item.cost}
+                    disabled={!user || user.walletBalance < item.price}
                     className="bg-royal-gold hover:bg-royal-gold/90 text-black"
                   >
                     <Coins className="h-3 w-3 mr-1" />

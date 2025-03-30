@@ -67,4 +67,5 @@ export type CertificateStyle = 'royal' | 'noble' | 'knight' | 'founder' | 'stand
 export interface RankCertificateMetadata extends CertificateMetadata {
   rank: number;
   amountSpent?: number;
+  username?: string; // Add this for compatibility with solanaService
 }
