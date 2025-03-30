@@ -159,7 +159,7 @@ const Terms = () => {
               <span>Security is no jest - your data is protected by our finest digital knights</span>
               <Shield className="h-4 w-4 text-royal-gold" />
             </div>
-            These terms of service are intended for entertainment as part of our satirical platform. While they reflect actual terms structures with a medieval twist, please remember that SpendThrone is a fictional service.
+            These terms of service are intended for entertainment as part of our satirical platform. While they reflect actual terms structures with a medieval twist, please remember that SpendThrone is a real site.
           </div>
         </Container>
       </Shell>
