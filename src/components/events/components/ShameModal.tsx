@@ -1,29 +1,25 @@
 
 import React from 'react';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Dialog, DialogContent, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { MockeryAction, ShameAction } from '@/types/mockery';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { ShameAction } from '@/types/mockery';
 import { getShameActionIcon, getShameActionPrice, getShameActionTitle, getShameActionDescription } from '@/components/events/utils/shameUtils';
-import { ArrowRight } from 'lucide-react';
-import { getTeamColor } from '@/utils/teamUtils';
-import RoyalButton from '@/components/ui/royal-button';
-
-interface ShameTargetUser {
-  userId: string;
-  username: string;
-  profileImage?: string;
-  totalSpent: number;
-  rank: number;
-  team: 'red' | 'green' | 'blue' | null;
-  tier: string;
-  spendStreak: number;
-}
+import { User } from '@/types/user';
 
 interface ShameModalProps {
-  targetUser: ShameTargetUser;
+  targetUser: {
+    userId: string;
+    username: string;
+    profileImage?: string;
+    totalSpent?: number;
+    rank?: number;
+    team?: string;
+    tier?: string;
+    spendStreak?: number;
+  };
   shameType: ShameAction;
-  onConfirm: (userId: string, type: ShameAction) => void;
+  onConfirm: (userId: string) => void;
   onCancel: () => void;
   hasDiscount?: boolean;
 }
@@ -35,74 +31,79 @@ const ShameModal: React.FC<ShameModalProps> = ({
   onCancel,
   hasDiscount = false
 }) => {
-  const shameAmount = getShameActionPrice(shameType);
-  const shameLabel = getShameActionTitle(shameType);
-  const shameDescription = getShameActionDescription(shameType, targetUser.username);
-  const finalPrice = hasDiscount ? shameAmount * 0.8 : shameAmount; // 20% discount if hasDiscount is true
-  
-  const getInitials = (name: string) => {
-    return name.charAt(0).toUpperCase();
+  // Get the action icon, title, description and price
+  const actionIcon = getShameActionIcon(shameType);
+  const actionTitle = getShameActionTitle(shameType);
+  const actionDescription = getShameActionDescription(shameType).replace('the user', targetUser.username);
+  const basePrice = getShameActionPrice(shameType);
+  const price = hasDiscount ? basePrice * 0.5 : basePrice;
+
+  const handleConfirm = () => {
+    onConfirm(targetUser.userId);
   };
-  
+
   return (
-    <DialogContent className="glass-morphism border-white/10 sm:max-w-md">
-      <DialogHeader>
-        <DialogTitle className="flex items-center">
-          <span className="mr-2">{getShameActionIcon(shameType)}</span>
-          {shameLabel}
-        </DialogTitle>
-        <DialogDescription>
-          {shameDescription}
-        </DialogDescription>
-      </DialogHeader>
+    <DialogContent className="glass-morphism border-white/20 max-w-md mx-auto">
+      <DialogTitle className="text-center flex flex-col items-center gap-2">
+        <span className="text-3xl">{actionIcon}</span>
+        <span>{actionTitle}</span>
+      </DialogTitle>
       
-      <div className="flex items-center space-x-4 p-4 bg-white/5 rounded-md">
-        <Avatar className="h-12 w-12 border-2 border-white/20">
-          {targetUser.profileImage ? (
-            <AvatarImage src={targetUser.profileImage} alt={targetUser.username} />
-          ) : (
-            <AvatarFallback className={getTeamColor(targetUser.team)}>
-              {getInitials(targetUser.username)}
-            </AvatarFallback>
-          )}
+      <div className="my-4 text-center">
+        <Avatar className="h-16 w-16 mx-auto mb-2 border-2 border-white/20">
+          <AvatarImage src={targetUser.profileImage} alt={targetUser.username} />
+          <AvatarFallback className="bg-gradient-to-br from-gray-700 to-gray-900">
+            {targetUser.username.substring(0, 2).toUpperCase()}
+          </AvatarFallback>
         </Avatar>
         
-        <div>
-          <div className="flex items-center">
-            <span className="font-medium text-lg">{targetUser.username}</span>
-          </div>
-          <div className="text-white/60 text-sm">Rank #{targetUser.rank}</div>
-        </div>
+        <h3 className="font-medium">@{targetUser.username}</h3>
+        
+        {targetUser.rank && (
+          <p className="text-sm text-white/60">Rank #{targetUser.rank}</p>
+        )}
       </div>
       
-      <div className="space-y-2">
-        <div className="flex justify-between items-center p-2 bg-white/5 rounded">
-          <span>Cost to shame:</span>
-          <span className="font-bold">${finalPrice.toFixed(2)}</span>
-        </div>
-        
-        {hasDiscount && (
-          <div className="p-2 bg-green-500/10 border border-green-500/20 rounded text-center text-sm">
-            <span className="text-green-400 font-medium">20% Festival Discount Applied!</span>
+      <DialogDescription className="text-center">
+        {actionDescription}
+        {targetUser.username !== 'the user' && (
+          <div className="mt-2 text-sm text-white/80">
+            This effect is purely cosmetic and will last for 24 hours.
           </div>
         )}
-        
-        <div className="p-3 bg-gradient-to-r from-royal-crimson/20 to-royal-purple/20 rounded text-center text-sm italic">
-          "In the royal court, shame is merely a commodity to be bought and sold."
+      </DialogDescription>
+      
+      <div className="my-4 px-4 py-3 rounded-lg bg-black/20 text-center">
+        <div className="font-semibold">
+          {hasDiscount ? (
+            <div className="flex items-center justify-center gap-2">
+              <span className="line-through text-white/50">${basePrice.toFixed(2)}</span>
+              <span className="text-royal-gold">${price.toFixed(2)}</span>
+              <span className="text-xs px-2 py-0.5 bg-royal-gold/20 text-royal-gold rounded">50% OFF</span>
+            </div>
+          ) : (
+            <span>${price.toFixed(2)}</span>
+          )}
+        </div>
+        <div className="text-xs text-white/60 mt-1">
+          This amount will be deducted from your wallet balance.
         </div>
       </div>
       
-      <DialogFooter className="sm:justify-between">
-        <Button variant="outline" onClick={onCancel} className="glass-morphism border-white/10">
+      <DialogFooter className="flex flex-col sm:flex-row gap-2">
+        <Button
+          variant="outline"
+          className="w-full sm:w-auto glass-morphism border-white/10 hover:bg-white/5"
+          onClick={onCancel}
+        >
           Cancel
         </Button>
-        <RoyalButton 
-          variant="royal" 
-          onClick={() => onConfirm(targetUser.userId, shameType)}
-          icon={<ArrowRight className="h-4 w-4" />}
+        <Button
+          className="w-full sm:w-auto bg-royal-crimson hover:bg-royal-crimson/90"
+          onClick={handleConfirm}
         >
-          Confirm Shame (${finalPrice.toFixed(2)})
-        </RoyalButton>
+          Confirm {actionTitle}
+        </Button>
       </DialogFooter>
     </DialogContent>
   );

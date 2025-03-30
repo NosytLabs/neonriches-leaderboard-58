@@ -1,11 +1,6 @@
 
 import { useState, useCallback } from 'react';
-import { MockeryAction } from '@/types/mockery';
-
-export interface ShameEffectOptions {
-  duration?: number;
-  message?: string;
-}
+import { MockeryAction, ShameAction, ShameEffectOptions, MockeryTier } from '@/types/mockery';
 
 // Define mockery action info
 export const mockeryActionsInfo: Record<MockeryAction, { 
@@ -94,8 +89,6 @@ export const mockeryActionsInfo: Record<MockeryAction, {
   target: { icon: '🎯', title: 'Target', description: 'Target practice', tier: 'basic', price: 0.5, duration: 24 * 60 * 60 * 1000 },
   challenge: { icon: '⚔️', title: 'Challenge', description: 'Royal challenge', tier: 'royal', price: 5.0, duration: 24 * 60 * 60 * 1000 }
 };
-
-export type ShameAction = MockeryAction;
 
 export function useShameEffect() {
   const [shameEffects, setShameEffects] = useState<Record<string, { action: MockeryAction; timestamp: number; until: number; }>>({});

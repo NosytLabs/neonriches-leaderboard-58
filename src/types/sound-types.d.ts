@@ -1,50 +1,32 @@
 
 export type SoundType = 
-  | 'coinDrop' 
-  | 'reward' 
-  | 'notification' 
   | 'click' 
+  | 'button' 
+  | 'hover' 
+  | 'coins' 
+  | 'coins_drop' 
   | 'success' 
   | 'error' 
-  | 'royalAnnouncement' 
-  | 'levelUp' 
   | 'purchase' 
-  | 'shame' 
-  | 'swordClash' 
-  | 'pageTransition'
-  | 'win' 
-  | 'message' 
-  | 'seal' 
-  | 'applause' 
-  | 'throne' 
-  | 'mockery' 
-  | 'deposit' 
+  | 'trumpets' 
+  | 'notification' 
+  | 'achievement' 
   | 'rankUp' 
   | 'royal' 
-  | 'rankChange' 
-  | 'smoke' 
-  | 'tab' 
-  | 'achievement'
-  | 'trumpets'
-  | 'trumpet'
-  | 'scroll'
-  | 'potion'
-  | 'boost'
-  | 'advertisement'
-  | 'parchmentUnfurl'
-  | 'wish'
-  | 'coin'
-  | 'hover'
-  | 'pageChange'
-  | 'medallion';
+  | 'shame'
+  | 'levelUp'
+  | 'fanfare'
+  | 'wish';
 
-export interface AudioLoaderReturn {
-  play: (sound: SoundType) => void;
-  stop: (sound: SoundType) => void;
-  isReady: boolean;
-  sounds: Record<SoundType, string>;
-  volumes: Record<SoundType, number>;
-  loading?: boolean;
+export interface NotificationSoundOptions {
+  volume?: number;
+  loop?: boolean;
+  delay?: number;
+}
+
+export interface UseSoundOptions {
+  volume?: number;
+  loop?: boolean;
 }
 
 export interface PremiumSoundPackDetails {
@@ -55,23 +37,5 @@ export interface PremiumSoundPackDetails {
   previewSound: SoundType;
   sounds: SoundType[];
   features: string[];
-  includes: string[];
-}
-
-export interface UseSoundOptions {
-  volume?: number;
-  loop?: boolean;
-  interrupt?: boolean;
-  onEnd?: () => void;
-  baseVolume?: number;
-  disableCache?: boolean;
-}
-
-export interface UseSoundReturn {
-  play: (sound?: SoundType) => void;
-  stop: (sound?: SoundType) => void;
-  isPlaying: boolean;
-  duration: number;
-  playSound?: (sound: SoundType) => void;
-  playSuccess?: (sound?: SoundType) => void;
+  tags: string[];
 }

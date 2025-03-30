@@ -1,4 +1,7 @@
 
+import { UserCosmeticState } from './cosmetics';
+import { TeamColor } from './team';
+
 // Define the user tiers in the application
 export type UserTier = 
   | 'basic' 

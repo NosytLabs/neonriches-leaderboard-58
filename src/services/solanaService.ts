@@ -1,5 +1,5 @@
 
-import { OnChainLeaderboardEntry, SolanaTransaction } from '@/types/leaderboard';
+import { OnChainLeaderboardEntry } from '@/types/leaderboard';
 
 export interface RankCertificateMetadata {
   owner: string;
@@ -7,6 +7,16 @@ export interface RankCertificateMetadata {
   timestamp: number;
   spentAmount: number;
 }
+
+// Function to generate certificate metadata
+export const generateCertificateMetadata = (user: any, data: Partial<RankCertificateMetadata>) => {
+  return {
+    owner: user.id || user.username,
+    tier: data.tier || user.tier || 'silver',
+    timestamp: Date.now(),
+    spentAmount: data.spentAmount || user.amountSpent || user.totalSpent || 0
+  };
+};
 
 // Mock Solana service implementation
 export const mintRankCertificate = async (user: any, metadata: Partial<RankCertificateMetadata>) => {
@@ -70,8 +80,20 @@ export const getOnChainLeaderboard = async (): Promise<OnChainLeaderboardEntry[]
   ];
 };
 
+export type SolanaTransaction = {
+  signature: string;
+  timestamp: number;
+  sender: string;
+  recipient: string;
+  amount: number;
+  type: 'deposit' | 'withdrawal' | 'transfer';
+  status: 'confirmed' | 'pending' | 'failed';
+  error?: string;
+};
+
 export default {
   mintRankCertificate,
   createCertificateNFT,
-  getOnChainLeaderboard
+  getOnChainLeaderboard,
+  generateCertificateMetadata
 };

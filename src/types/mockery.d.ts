@@ -65,6 +65,7 @@ export interface ShameEffect {
 export interface ShameEffectOptions {
   duration?: number;
   message?: string;
+  volume?: number;
 }
 
 export interface MockeryEvent {

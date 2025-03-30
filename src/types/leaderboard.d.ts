@@ -23,7 +23,6 @@ export interface LeaderboardUser {
   avatarUrl?: string;
   lastActive?: string;
   createdAt?: string;
-  // Add missing properties
   joinedAt?: string;
   spendStreak?: number;
 }
@@ -66,6 +65,7 @@ export interface OnChainLeaderboardEntry {
   totalDeposited?: number;
   rank?: number;
   joinDate?: number;
+  lastTransaction?: number;
 }
 
 export type SolanaTransaction = {
@@ -77,3 +77,15 @@ export type SolanaTransaction = {
   type: 'deposit' | 'withdrawal' | 'transfer';
   status: 'confirmed' | 'pending' | 'failed';
 };
+
+export interface EventDetails {
+  id: string;
+  name: string;
+  description: string;
+  startDate: string;
+  endDate: string;
+  isActive: boolean;
+  type: string;
+  rewards: any[];
+  find?: (id: string) => EventDetails | undefined;
+}
