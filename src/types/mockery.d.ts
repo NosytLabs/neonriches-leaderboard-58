@@ -28,7 +28,9 @@ export type MockeryAction =
   | 'knight'
   | 'bishop'
   | 'rook'
-  | 'pawn';
+  | 'pawn'
+  | 'target'
+  | 'challenge';
 
 export type ShameAction = MockeryAction;
 
@@ -79,10 +81,10 @@ export interface MockedUser {
   username: string;
   displayName: string;
   profileImage: string;
-  tier: UserTier;
-  team: TeamColor;
+  tier?: UserTier;
+  team?: TeamColor;
   mockeryCount: number;
-  lastMocked: string;
+  lastMocked?: string;
   mockedReason?: string;
   mockedTimestamp?: string;
   mockedBy?: string;

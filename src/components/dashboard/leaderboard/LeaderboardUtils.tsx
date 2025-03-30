@@ -21,14 +21,15 @@ export const mockLeaderboardData: LeaderboardUser[] = [
     amountSpent: 25000,
     isVIP: true,
     isFounder: true,
-    isVerified: true
+    isVerified: true,
+    isProtected: false
   },
   {
     id: '2',
     username: 'goldspender',
     displayName: 'Gold Spender',
     profileImage: '/images/avatars/user2.jpg',
-    tier: 'premium',
+    tier: 'gold', // Changed from premium to gold
     team: 'green',
     rank: 2,
     previousRank: 3,
@@ -42,7 +43,7 @@ export const mockLeaderboardData: LeaderboardUser[] = [
     username: 'royalbuyer',
     displayName: 'Royal Buyer',
     profileImage: '/images/avatars/user3.jpg',
-    tier: 'premium',
+    tier: 'gold', // Changed from premium to gold
     team: 'blue',
     rank: 3,
     previousRank: 2,
@@ -82,18 +83,24 @@ export const mockLeaderboardData: LeaderboardUser[] = [
 export const getTeamBadge = (team: TeamColor | undefined | null) => {
   if (!team) return null;
   
-  const teamColors: Record<TeamColor, { bg: string, text: string }> = {
+  const teamColors: Record<string, { bg: string, text: string }> = {
     red: { bg: 'bg-royal-crimson/20', text: 'text-royal-crimson' },
     blue: { bg: 'bg-royal-navy/20', text: 'text-royal-navy' },
     green: { bg: 'bg-emerald-600/20', text: 'text-emerald-500' },
-    gold: { bg: 'bg-royal-gold/20', text: 'text-royal-gold' }
+    gold: { bg: 'bg-royal-gold/20', text: 'text-royal-gold' },
+    purple: { bg: 'bg-purple-600/20', text: 'text-purple-500' },
+    none: { bg: 'bg-gray-600/20', text: 'text-gray-400' },
+    neutral: { bg: 'bg-gray-600/20', text: 'text-gray-400' }
   };
   
-  const teamNames: Record<TeamColor, string> = {
+  const teamNames: Record<string, string> = {
     red: 'Crimson',
     blue: 'Azure',
     green: 'Emerald',
-    gold: 'Golden'
+    gold: 'Golden',
+    purple: 'Royal',
+    none: 'Neutral',
+    neutral: 'Neutral'
   };
   
   const color = teamColors[team];

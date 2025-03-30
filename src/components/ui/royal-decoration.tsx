@@ -13,6 +13,8 @@ const RoyalDecoration: React.FC<RoyalDecorationProps> = ({
   style,
   children,
   type, // Accept the type prop
+  variant, // Accept the variant prop
+  animate, // Accept the animate prop
   ...props
 }) => {
   const sizeClass = sizeClasses[size];
@@ -24,6 +26,8 @@ const RoyalDecoration: React.FC<RoyalDecorationProps> = ({
         sizeClass,
         `royal-decoration-${color}`,
         type && `royal-decoration-${type}`,
+        variant && `royal-decoration-${variant}`,
+        animate && 'animate-pulse-slow',
         className
       )}
       style={style}

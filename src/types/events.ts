@@ -17,6 +17,7 @@ export interface Event {
   image?: string;
   title?: string;
   imageUrl?: string;
+  createdAt?: string;
 }
 
 export interface EventReward {
@@ -25,6 +26,8 @@ export interface EventReward {
   description: string;
   type: string;
   tier: string;
+  imageUrl?: string;
+  rarity?: string;
 }
 
 export interface EventDetails extends Event {
@@ -38,6 +41,7 @@ export interface EventDetails extends Event {
   startDate: string;
   endDate: string;
   status: EventStatus;
+  createdAt?: string;
 }
 
 export interface EventParticipant {
@@ -51,12 +55,23 @@ export interface EventParticipant {
 }
 
 export interface EventStats {
+  id?: string;
   usersParticipating: number;
   totalContributed: number;
   topContributor: string;
   daysRemaining: number;
   teamsParticipating: number;
   leadingTeam: string;
+  prizePool?: number;
+  totalPrizes?: number;
+  participantsCount?: number; 
+  participantCount?: number;
+  totalPokes?: number;
+  totalSpent?: number;
+  mostPoked?: Array<{
+    username: string;
+    pokeCount: number;
+  }>;
 }
 
 export interface EventRegistration {

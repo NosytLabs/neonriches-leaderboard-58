@@ -24,19 +24,30 @@ export interface CosmeticItem {
   unlockCondition?: string;
   cost?: number;
   tags?: string[];
+  image?: string;
 }
 
 export interface UserCosmeticState {
-  border: string[];
-  color: string[];
-  font: string[];
-  emoji: string[];
-  title: string[];
-  background: string[];
-  effect: string[];
-  badge: string[];
-  theme: string[];
-  // Legacy support
+  border: string;
+  color: string;
+  font: string;
+  emoji: string;
+  title: string;
+  background: string;
+  effect: string;
+  badge: string;
+  theme: string;
+  unlockedBorders: string[];
+  unlockedColors: string[];
+  unlockedFonts: string[];
+  unlockedEmojis: string[];
+  unlockedTitles: string[];
+  unlockedBackgrounds: string[];
+  unlockedEffects: string[];
+  unlockedBadges: string[];
+  unlockedThemes: string[];
+  
+  // For backward compatibility
   borders?: string[];
   colors?: string[];
   fonts?: string[];
@@ -47,25 +58,4 @@ export interface UserCosmeticState {
   badges?: string[];
   themes?: string[];
   foundersPass?: boolean;
-  activeTitle?: string;
-  activeBorder?: string;
-  activeBackground?: string;
-  activeEffect?: string;
-  activeColor?: string;
-  activeFont?: string;
-  activeBadge?: string;
-  activeEmoji?: string;
-  activeTheme?: string;
-  unlockedBorders?: string[];
-  unlockedColors?: string[];
-  unlockedFonts?: string[];
-  unlockedEmojis?: string[];
-  unlockedTitles?: string[];
-  unlockedBackgrounds?: string[];
-  unlockedEffects?: string[];
-  unlockedBadges?: string[];
-  unlockedThemes?: string[];
-  socialLinks?: Record<string, string>;
 }
-
-export type CosmeticInventory = Record<CosmeticCategory, string[]>;

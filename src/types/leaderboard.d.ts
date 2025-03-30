@@ -21,6 +21,8 @@ export interface LeaderboardUser {
   isVerified?: boolean;
   isProtected?: boolean;
   avatarUrl?: string;
+  lastActive?: string;
+  createdAt?: string;
 }
 
 export interface LeaderboardFilter {

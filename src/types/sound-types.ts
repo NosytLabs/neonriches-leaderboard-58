@@ -34,7 +34,9 @@ export type SoundType =
   | 'coin'
   | 'reward'
   | 'pageTransition'
-  | 'shame';
+  | 'shame'
+  | 'levelUp'
+  | 'fanfare';
 
 export interface AudioLoaderReturn {
   audio: Record<SoundType, HTMLAudioElement>;
@@ -57,6 +59,7 @@ export interface PremiumSoundPackDetails {
   features: string[];
   tags: string[];
   isPurchased?: boolean;
+  includes?: string[];
 }
 
 export interface CacheOptions {
@@ -79,6 +82,9 @@ export interface UseSoundReturn {
   play: (options?: UseSoundOptions) => void;
   stop: () => void;
   isPlaying: boolean;
+  duration?: number; 
+  playSound?: (sound: SoundType) => void;
+  playSuccess?: (sound?: SoundType) => void;
 }
 
 export interface NotificationSoundOptions {
