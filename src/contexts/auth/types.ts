@@ -1,5 +1,5 @@
 
-import { User, UserProfile } from '@/types/user';
+import { UserProfile } from '@/types/user';
 
 export interface RegisterData {
   username: string;
@@ -41,8 +41,6 @@ export interface VerifyMfaData {
   email: string;
   code: string;
 }
-
-export type { UserTier, UserTeam, TeamType } from '@/types/user';
 
 export interface AuthState {
   user: UserProfile | null;

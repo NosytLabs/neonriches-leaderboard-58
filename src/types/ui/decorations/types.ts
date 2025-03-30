@@ -1,55 +1,55 @@
 
+import { Size } from '../../common';
 import { ReactNode } from 'react';
-import { MedievalIconColor } from '@/types/ui/icon-types';
 
+export type MedievalIconColor = string;
 export type MedievalDecorationColor = string;
 
-export interface BaseDecorationProps {
-  size?: number | string;
-  color?: MedievalDecorationColor;
-  className?: string;
-  children?: ReactNode;
-}
-
-export interface RoyalDividerProps extends Omit<BaseDecorationProps, 'color'> {
-  label?: string;
-  variant?: 'line' | 'double' | 'fancy';
-  color?: 'royal' | 'gold' | 'default' | 'crimson';
-}
-
-export const sizeClasses = {
-  xs: 'h-2 w-2',
-  sm: 'h-4 w-4',
-  md: 'h-6 w-6',
-  lg: 'h-8 w-8',
-  xl: 'h-10 w-10',
-  '2xl': 'h-12 w-12',
-  '3xl': 'h-16 w-16',
-  '4xl': 'h-20 w-20',
+/**
+ * Size classes for medieval decorations
+ */
+export const sizeClasses: Record<Size, string> = {
+  'xs': 'h-4 w-4',
+  'sm': 'h-6 w-6',
+  'md': 'h-8 w-8',
+  'lg': 'h-12 w-12',
+  'xl': 'h-16 w-16',
+  '2xl': 'h-24 w-24',
+  '3xl': 'h-32 w-32',
+  '4xl': 'h-40 w-40'
 };
 
-export const getColorClass = (color: MedievalIconColor | string): string => {
+/**
+ * Convert a string color to a medieval icon color
+ */
+export const toMedievalIconColor = (color: string): MedievalIconColor => {
+  return color as MedievalIconColor;
+};
+
+/**
+ * Get CSS color class for a medieval decoration
+ */
+export const getColorClass = (color: MedievalIconColor): string => {
   switch (color) {
-    case 'bronze': return 'text-amber-600';
+    case 'bronze': return 'text-amber-700';
+    case 'silver': return 'text-gray-400';
+    case 'gold': return 'text-yellow-500';
+    case 'royal': return 'text-royal-gold';
     case 'purple': return 'text-purple-500';
-    case 'green': return 'text-emerald-500';
+    case 'green': return 'text-green-500';
     case 'red': return 'text-red-500';
     case 'blue': return 'text-blue-500';
-    case 'royal': return 'text-royal-purple';
-    default: return 'text-royal-gold';
+    default: return 'text-gray-300';
   }
 };
 
-export const toMedievalIconColor = (color: string): MedievalIconColor => {
-  switch (color) {
-    case 'bronze': return 'bronze';
-    case 'purple': return 'purple';
-    case 'green': return 'green';
-    case 'red': return 'red';
-    case 'blue': return 'blue';
-    case 'royal': return 'royal';
-    default: return 'default';
-  }
-};
+export interface BaseDecorationProps {
+  size?: Size;
+  color?: MedievalIconColor;
+  className?: string;
+}
 
-export type RoyalDecorationProps = BaseDecorationProps;
+export interface RoyalDecorationProps extends Omit<BaseDecorationProps, 'color'> {
+  children?: ReactNode;
+  color?: 'royal' | 'gold' | 'default' | 'crimson';
+}

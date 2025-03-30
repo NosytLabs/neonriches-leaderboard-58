@@ -1,6 +1,7 @@
 
-import { TeamColor } from './team';
-import { UserTier } from './user';
+/**
+ * Types for the mockery and shame system
+ */
 
 export type MockeryAction = 
   | 'tomatoes' 
@@ -40,8 +41,8 @@ export interface MockedUser {
   mockedTier: string;
   mockeryCount: number;
   lastMocked?: string;
-  team: TeamColor;
-  tier: UserTier;
+  team: string;
+  tier: string;
 }
 
 export interface MockeryProtection {

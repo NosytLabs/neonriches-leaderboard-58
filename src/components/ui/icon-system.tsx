@@ -17,7 +17,7 @@ export const adaptIconName = (name: string): string => {
 };
 
 const IconSystem = React.forwardRef<SVGSVGElement, IconProps>((props, ref) => {
-  const sizeMap: Record<IconSize, number> = {
+  const sizeMap: Record<string, number> = {
     'xs': 16,
     'sm': 20,
     'md': 24,

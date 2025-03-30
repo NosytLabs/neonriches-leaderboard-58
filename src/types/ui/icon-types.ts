@@ -55,4 +55,4 @@ export interface IconProps {
 
 export type MedievalIconName = string;
 export type IconColor = string;
-export type MedievalIconColor = string | 'default' | 'bronze' | 'purple' | 'green' | 'red' | 'blue' | 'royal';
+export type MedievalIconColor = string;

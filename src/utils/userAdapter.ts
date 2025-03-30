@@ -43,7 +43,9 @@ export const adaptUserToProfile = (user: User): UserProfile => {
       darkMode: true,
       soundEffects: true,
       showEmailOnProfile: false,
-      rankChangeAlerts: false
+      rankChangeAlerts: false,
+      showTeam: true,
+      showSpending: true
     },
     followers: user.followers || 0,
     following: user.following || 0,
@@ -73,7 +75,8 @@ export const adaptProfileToUser = (profile: UserProfile): User => {
     followers: profile.followers,
     following: profile.following,
     isVerified: profile.isVerified,
-    isVIP: profile.isFounder
+    isVIP: profile.isFounder,
+    cosmetics: profile.cosmetics
   };
 };
 

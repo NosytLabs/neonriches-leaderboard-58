@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import Layout from '@/components/layout/Layout';
-import { useAuth, UserProfile } from '@/contexts';
+import { useAuth } from '@/contexts/auth';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -11,6 +11,7 @@ import ProfileContent from '@/components/profile/ProfileContent';
 import { useNavigate } from 'react-router-dom';
 import { SEO } from '@/components/seo/SEO';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { formatDate } from '@/utils/dateUtils';
 
 // Import the ProfileTab type
 import { ProfileTab } from '@/components/profile/ProfileContent';
@@ -53,7 +54,7 @@ const Profile: React.FC = () => {
               
               <div className="flex-1 text-center md:text-left">
                 <h1 className="text-3xl font-bold mb-2">{user.displayName || user.username}</h1>
-                <p className="text-white/70 mb-4">Joined {user.joinedAt ? new Date(user.joinedAt).toLocaleDateString() : 'recently'}</p>
+                <p className="text-white/70 mb-4">Joined {user.joinDate ? formatDate(user.joinDate) : 'recently'}</p>
                 
                 <div className="flex flex-wrap gap-3 justify-center md:justify-start mb-4">
                   <div className="bg-white/10 px-3 py-1 rounded-full flex items-center">

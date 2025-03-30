@@ -1,6 +1,10 @@
 
-export type TeamType = 'red' | 'green' | 'blue' | 'gold';
-export type TeamColor = TeamType | 'none';
+/**
+ * Team types for user teams and group functionality
+ */
+
+export type TeamType = 'red' | 'blue' | 'green' | 'gold' | 'none';
+export type TeamColor = TeamType;
 
 export interface UserTeam {
   teamId: string;
@@ -33,6 +37,3 @@ export interface TeamBenefit {
 
 // Define a type for the team string values used in the TeamChat component
 export type TeamString = 'red' | 'green' | 'blue' | 'gold' | 'top';
-
-// Explicitly export the types
-export type { TeamType, TeamColor, UserTeam, Team, TeamBenefit, TeamString };

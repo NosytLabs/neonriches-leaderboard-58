@@ -1,24 +1,50 @@
 
-import { TeamType, UserTier } from './user';
+import { TeamColor, UserTier } from './user';
 
-export interface LeaderboardEntry {
+export interface LeaderboardUser {
   id: string;
   username: string;
   displayName?: string;
   profileImage?: string;
+  tier: UserTier;
+  team?: TeamColor;
   rank: number;
   previousRank?: number;
-  team?: TeamType;
-  tier?: UserTier;
-  totalSpent?: number;
-  amountSpent?: number;
+  walletBalance?: number;
+  totalSpent: number;
   spentAmount?: number;
+  amountSpent?: number;
+  supporters?: number;
+  supporting?: number;
+  isVIP?: boolean;
+  isFounder?: boolean;
   isVerified?: boolean;
   isProtected?: boolean;
   avatarUrl?: string;
-  walletBalance?: number;
-  joinedAt?: string;
 }
 
-// Add LeaderboardUser as an alias for backward compatibility
-export type LeaderboardUser = LeaderboardEntry;
+export interface LeaderboardFilter {
+  timeFrame: 'allTime' | 'thisWeek' | 'thisMonth' | 'today';
+  team: TeamColor | 'all';
+  tier: UserTier | 'all';
+  count: number;
+  page: number;
+  sortBy?: 'rank' | 'username' | 'totalSpent' | 'team';
+  sortDirection?: 'asc' | 'desc';
+}
+
+export interface LeaderboardStats {
+  totalUsers: number;
+  totalSpent: number;
+  topSpender: {
+    username: string;
+    amount: number;
+  };
+  topTeam: {
+    name: string;
+    members: number;
+    contribution: number;
+  };
+  averageSpent: number;
+  medianRank: number;
+}

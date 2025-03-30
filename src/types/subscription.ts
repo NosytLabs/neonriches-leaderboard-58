@@ -1,6 +1,4 @@
 
-// Subscription types
-
 import { UserTier } from './user';
 
 export interface SubscriptionTier {
@@ -15,6 +13,11 @@ export interface SubscriptionTier {
   ctaText?: string;
   color?: string;
   tag?: string;
+  priceMonthly?: number;
+  priceYearly?: number;
+  recommended?: boolean;
+  priceId?: string;
+  yearlyPriceId?: string;
 }
 
 export interface SubscriptionPlan {
@@ -48,4 +51,19 @@ export interface SubscriptionContext {
   cancelSubscription: () => Promise<CancelSubscriptionResponse>;
   isSubscribing: boolean;
   error: string | null;
+}
+
+export interface Feature {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  type?: string;
+  tier?: string;
+}
+
+export interface FeatureInfo extends Feature {
+  category: string;
+  icon?: any;
+  title?: string;
 }

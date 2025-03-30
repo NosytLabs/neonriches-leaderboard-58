@@ -1,53 +1,42 @@
 
+/**
+ * Types for cosmetic items and cosmetic state
+ */
+
 export type CosmeticCategory = 
-  'border' | 'color' | 'font' | 'emoji' | 'title' | 'background' | 'effect' | 'badge' | 'theme' | 
-  'appearance' | 'profile' | 'interaction' |
-  'borders' | 'colors' | 'fonts' | 'emojis' | 'titles' | 'backgrounds' | 'effects';
+  | 'border' | 'color' | 'font' | 'emoji' 
+  | 'title' | 'background' | 'effect' | 'badge' | 'theme';
 
-export type CosmeticRarity = 
-  'common' | 'uncommon' | 'rare' | 'epic' | 'legendary' | 'mythic' | 'unique' | 'royal';
-
-export type CosmeticType = 'border' | 'color' | 'font' | 'emoji' | 'title' | 'background' | 'effect' | 'badge' | 'theme';
+export type CosmeticRarity = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary' | 'mythic' | 'royal';
 
 export interface CosmeticItem {
   id: string;
   name: string;
   description: string;
-  category: CosmeticCategory;
-  rarity: CosmeticRarity;
   price: number;
-  value: string;
-  cost?: number; // Added missing property
-  previewImage?: string;
-  unlockMethod?: string;
-  isActive?: boolean;
-  unlockRequirement?: number | string;
+  type: string;
+  rarity: string;
+  category: CosmeticCategory;
+  imageSrc?: string;
+  icon?: string;
+  cssClass?: string;
+  preview?: string;
+  unlockCondition?: string;
+  cost?: number;
+  tags?: string[];
 }
 
 export interface UserCosmeticState {
-  // Active items
-  activeBorder?: string;
-  activeColor?: string;
-  activeFont?: string;
-  activeEmoji?: string;
-  activeTitle?: string;
-  activeBadge?: string;
-  activeBackground?: string;
-  activeEffect?: string;
-  activeTheme?: string;
-  
-  // Unlocked items collections
-  unlockedBorders: string[];
-  unlockedColors: string[];
-  unlockedFonts: string[];
-  unlockedEmojis: string[];
-  unlockedTitles: string[];
-  unlockedBackgrounds: string[];
-  unlockedEffects: string[];
-  unlockedBadges: string[];
-  unlockedThemes: string[];
-  
-  // For compatibility with older code
+  border: string[];
+  color: string[];
+  font: string[];
+  emoji: string[];
+  title: string[];
+  background: string[];
+  effect: string[];
+  badge: string[];
+  theme: string[];
+  // Legacy support
   borders?: string[];
   colors?: string[];
   fonts?: string[];
@@ -57,7 +46,26 @@ export interface UserCosmeticState {
   effects?: string[];
   badges?: string[];
   themes?: string[];
+  foundersPass?: boolean;
+  activeTitle?: string;
+  activeBorder?: string;
+  activeBackground?: string;
+  activeEffect?: string;
+  activeColor?: string;
+  activeFont?: string;
+  activeBadge?: string;
+  activeEmoji?: string;
+  activeTheme?: string;
+  unlockedBorders?: string[];
+  unlockedColors?: string[];
+  unlockedFonts?: string[];
+  unlockedEmojis?: string[];
+  unlockedTitles?: string[];
+  unlockedBackgrounds?: string[];
+  unlockedEffects?: string[];
+  unlockedBadges?: string[];
+  unlockedThemes?: string[];
+  socialLinks?: Record<string, string>;
 }
 
-// Alias for backward compatibility
-export type UserCosmetics = UserCosmeticState;
+export type CosmeticInventory = Record<CosmeticCategory, string[]>;

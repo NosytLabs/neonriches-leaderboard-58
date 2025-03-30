@@ -1,4 +1,8 @@
 
+/**
+ * Event types for the platform events system
+ */
+
 export type EventType = 'tournament' | 'mockery' | 'auction' | 'team' | 'treasure' | 'shame';
 export type EventStatus = 'upcoming' | 'active' | 'completed' | 'cancelled';
 
@@ -30,6 +34,10 @@ export interface EventDetails extends Event {
     reward: string;
   }>;
   rewards?: EventReward[];
+  type: EventType;
+  startDate: string;
+  endDate: string;
+  status: EventStatus;
 }
 
 export interface EventParticipant {
