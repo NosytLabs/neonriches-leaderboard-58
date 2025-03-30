@@ -38,7 +38,10 @@ export function toMedievalIconName(iconName: string): MedievalIconName {
   }
   
   // Then check if the formatted name is a valid MedievalIconName
-  if (Object.values(iconMap).includes(formattedName as MedievalIconName)) {
+  if (formattedName === "Crown" || formattedName === "Shield" || formattedName === "Sword" ||
+      formattedName === "Scroll" || formattedName === "Heart" || formattedName === "Medal" ||
+      formattedName === "Trophy" || formattedName === "Key" || formattedName === "Coins" ||
+      formattedName === "Wallet" || formattedName === "Gem" || formattedName === "Seal") {
     return formattedName as MedievalIconName;
   }
   

@@ -51,12 +51,14 @@ export const getAnalysisResults = async (): Promise<AnalysisResult> => {
     ],
     complexCode: [
       {
+        id: 'complex-1',
         name: 'processUserData',
         file: 'src/utils/userProcessing.ts',
         complexity: 24,
         line: 12
       },
       {
+        id: 'complex-2',
         name: 'renderComponent',
         file: 'src/components/ComplexComponent.tsx',
         complexity: 18,
