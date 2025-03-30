@@ -2,6 +2,9 @@
 import { Trophy, Zap, Award, Star, Crown, DollarSign } from 'lucide-react';
 import React from 'react';
 import { format, isValid } from 'date-fns';
+import { LeaderboardUser } from '@/types/leaderboard';
+import { UserTeam, GenderType } from '@/types/user';
+import { MockeryAction, MockeryTier, MockeryEvent, MockedUser } from '@/types/mockery';
 
 export const formatDate = (date: string | Date | null | undefined): string => {
   if (!date) return 'N/A';
@@ -115,19 +118,13 @@ export const getAchievementIcon = (type: string): React.ReactNode => {
 export type RoyalDecorationType = 'divider' | 'corner' | 'banner' | 'crest' | 'shield' | 'crown' | 'top' | 'bottom' | 'left' | 'right';
 
 // Type for RoyalButtonVariant
-export type RoyalButtonVariant = 'default' | 'royal' | 'gold' | 'crimson';
+export type RoyalButtonVariant = 'default' | 'royal' | 'gold' | 'crimson' | 'royalGold' | 'royalPurple' | 'royalNavy' | 'royalCrimson' | 'glass' | 'outline' | 'goldOutline' | 'crimsonOutline' | 'navyOutline' | 'mahogany' | 'purple';
 
 // Type for ShameAction that extends MockeryAction
-export type ShameAction = 'shame' | 'taunt' | 'ridicule' | 'jester' | 'expose' | 'mock' | 'humiliate';
+export type ShameAction = MockeryAction;
 
 // Type for LeaderboardUser
-export interface LeaderboardUser extends Omit<LeaderboardEntry, 'userId'> {
-  username: string;
-  displayName?: string;
-  profileImage?: string;
-  team?: UserTeam;
-  tier?: string;
-}
+export type { LeaderboardUser };
 
 // Type for MockeryEffectData
 export interface MockeryEffectData {
@@ -147,9 +144,7 @@ export interface UserMockeryStatus {
 }
 
 // Type for ExtendedMockeryAction
-export type ExtendedMockeryAction = MockeryAction | 'shame' | 'taunt' | 'ridicule' | 'jester' | 
-  'royalPie' | 'jokeCrown' | 'memeFrame' | 'roast' | 'mock' | 'humiliate' | 'expose' | 
-  'guillotine' | 'dungeons' | 'removal';
+export type ExtendedMockeryAction = MockeryAction;
 
 // Add type alias for MockUser
 export type MockUser = MockedUser;

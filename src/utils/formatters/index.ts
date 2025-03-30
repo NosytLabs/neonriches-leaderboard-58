@@ -12,8 +12,11 @@ export {
   formatFileSize,
   formatHistoricalValue,
   getAchievementIcon,
-  getMockeryActionIconColor,
-  // Type re-exports
+  getMockeryActionIconColor
+} from '../formatters';
+
+// Type re-exports
+export type { 
   RoyalDecorationType,
   RoyalButtonVariant,
   ShameAction,

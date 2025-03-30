@@ -19,6 +19,9 @@ export interface LeaderboardUser {
   rank: number;
   team?: UserTeam;
   tier?: string;
+  previousRank?: number;
+  joinedAt?: string;
+  joinDate?: string;
 }
 
 export interface LeaderboardSnapshot {

@@ -1,8 +1,8 @@
 
 // User types for the application
 
-export type UserRole = 'user' | 'admin' | 'moderator';
-export type UserStatus = 'active' | 'inactive' | 'banned' | 'pending';
+export type UserRole = 'user' | 'admin' | 'moderator' | 'developer' | 'founder';
+export type UserStatus = 'active' | 'inactive' | 'banned' | 'pending' | 'suspended';
 export type UserTier = 
   | 'free' 
   | 'basic'
@@ -22,12 +22,16 @@ export type UserTier =
 
 export type TeamType = 'red' | 'green' | 'blue' | 'none' | 'Red' | 'Green' | 'Blue';
 export type UserTeam = TeamType;
+export type Team = TeamType;
 
-export type GenderType = 'male' | 'female' | 'other' | 'none' | 'king' | 'queen' | 'jester';
+export type GenderType = 'male' | 'female' | 'other' | 'none' | 'king' | 'queen' | 'jester' | 'noble';
+export type UserGender = GenderType;
 
 export interface ProfileImage {
   url: string;
-  id: string;
+  id?: string;
+  alt?: string;
+  type?: string;
   isPrimary?: boolean;
   caption?: string;
 }
@@ -46,6 +50,9 @@ export interface SocialLink {
   url: string;
   icon?: string;
   clicks?: number;
+  username?: string;
+  isVerified?: boolean;
+  isPublic?: boolean;
 }
 
 export interface UserCosmetics {
@@ -57,7 +64,17 @@ export interface UserCosmetics {
   colors?: string[];
   backgrounds?: string[];
   emojis?: string[];
+  themes?: string[];
+  foundersPass?: boolean;
   socialLinks?: SocialLink[];
+  activeBorder?: string;
+  activeColor?: string;
+  activeFont?: string;
+  activeBackground?: string;
+  activeTitle?: string;
+  activeBadge?: string;
+  activeEmoji?: string;
+  activeTheme?: string;
 }
 
 export interface ProfileBoost {
@@ -66,14 +83,14 @@ export interface ProfileBoost {
   effectId: string;
   startTime: Date;
   endTime: Date;
+  startDate?: string;
+  endDate?: string;
   level: number;
   type: string;
   duration: number;
   isActive: boolean;
   strength?: number;
   appliedBy?: string;
-  startDate?: string;
-  endDate?: string;
 }
 
 export interface UserSettings {
@@ -90,12 +107,23 @@ export interface UserSettings {
   soundEffects: boolean;
   animationEffects: boolean;
   language: string;
-  timezone: string;
-  dateFormat: string;
-  currencyFormat: string;
-  receiveMessages: boolean;
+  timezone?: string;
+  dateFormat?: string;
+  currencyFormat?: string;
+  receiveMessages?: boolean;
   newFollowerAlerts?: boolean;
   publicProfile?: boolean;
+  rankChangeAlerts?: boolean;
+  teamChangeAlerts?: boolean;
+  spendingAlerts?: boolean;
+  mockeryAlerts?: boolean;
+  shameAlerts?: boolean;
+  showEmailOnProfile?: boolean;
+  showTeam?: boolean;
+  displayRankChanges?: boolean;
+  enableMockeryEffects?: boolean;
+  receiveRoyalAnnouncements?: boolean;
+  showStatusInLeaderboard?: boolean;
 }
 
 export interface UserSubscription {
@@ -118,16 +146,17 @@ export interface UserProfile {
   profileImage?: string;
   profileImages?: ProfileImage[];
   walletAddress?: string;
-  bio?: string;
-  rank?: number;
-  tier?: UserTier;
-  team?: UserTeam;
+  walletBalance?: number;
   amountSpent?: number;
   spentAmount?: number;
   totalSpent?: number;
   previousRank?: number;
-  walletBalance?: number;
+  bio?: string;
+  rank?: number;
+  tier?: UserTier;
+  team?: UserTeam;
   joinedAt?: Date | string;
+  joinDate?: string;
   isVerified?: boolean;
   isModerator?: boolean;
   isAdmin?: boolean;
@@ -153,10 +182,37 @@ export interface UserProfile {
     tokenId: string;
   };
   createdAt?: string;
+  role?: string;
+  followers?: number;
+  following?: number;
+  profileViews?: number;
+  profileClicks?: number;
+  isVIP?: boolean;
+  purchasedFeatures?: string[];
 }
 
 // Extended User type that includes full details
 export interface User extends UserProfile {
   createdAt: Date;
   updatedAt: Date;
+  email: string;
+  rank: number;
+  team: TeamType;
+  tier: UserTier;
+  totalSpent: number;
+  spentAmount: number;
+  amountSpent: number;
+  joinDate: string;
+  isVerified: boolean;
+  cosmetics: UserCosmetics;
+  activeTitle: string;
+  spendStreak: number;
+  gender: GenderType;
+  profileViews: number;
+  profileClicks: number;
+  followers: number;
+  following: number;
+  isVIP: boolean;
+  settings: UserSettings;
+  profileBoosts: ProfileBoost[];
 }
