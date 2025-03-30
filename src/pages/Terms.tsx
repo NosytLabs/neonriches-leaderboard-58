@@ -14,7 +14,7 @@ const Terms = () => {
       <PageSEO 
         title="Royal Decree (Terms of Service) | SpendThrone" 
         description="The official royal decree (terms and conditions) for using the SpendThrone kingdom."
-        canonicalUrl="/terms"
+        canonical="/terms"
       />
       
       <Shell>
@@ -45,7 +45,7 @@ const Terms = () => {
                 you are banished forthwith from our kingdom (please close your browser tab).
               </p>
               
-              <RoyalDivider variant="simple" color="default" className="my-6" />
+              <RoyalDivider variant="line" color="default" className="my-6" />
               
               <h2>Peasant Registration & Royal Authentication</h2>
               <p>
@@ -56,7 +56,7 @@ const Terms = () => {
                 You are responsible for safeguarding your secret password scroll. Should your scroll fall into the hands of brigands, we cannot be held responsible for the plundering of your digital coffers.
               </p>
               
-              <RoyalDivider variant="simple" color="default" className="my-6" />
+              <RoyalDivider variant="line" color="default" className="my-6" />
               
               <h2>The Royal Treasury & Taxation System</h2>
               <p>
@@ -68,7 +68,7 @@ const Terms = () => {
                 You may dismiss your subscription at any time, but like taxes already paid to the crown, no refunds shall be issued for the current period.
               </p>
               
-              <RoyalDivider variant="simple" color="default" className="my-6" />
+              <RoyalDivider variant="line" color="default" className="my-6" />
               
               <h2>Royal Code of Conduct</h2>
               <p>
@@ -86,7 +86,7 @@ const Terms = () => {
                 Break these sacred rules and you shall be banished faster than a plague-carrier from a medieval village.
               </p>
               
-              <RoyalDivider variant="simple" color="default" className="my-6" />
+              <RoyalDivider variant="line" color="default" className="my-6" />
               
               <h2>Royal Mockery Festival Regulations</h2>
               <p>
@@ -99,7 +99,7 @@ const Terms = () => {
                 Don't be a bad jester - they were often beheaded.
               </p>
               
-              <RoyalDivider variant="simple" color="default" className="my-6" />
+              <RoyalDivider variant="line" color="default" className="my-6" />
               
               <h2>Royal Intellectual Property Rights</h2>
               <p>
@@ -111,7 +111,7 @@ const Terms = () => {
                 Attempt to copy our royal assets without permission, and we shall dispatch our finest digital knights to your IP address.
               </p>
               
-              <RoyalDivider variant="simple" color="default" className="my-6" />
+              <RoyalDivider variant="line" color="default" className="my-6" />
               
               <h2>Banishment Procedures</h2>
               <p>
@@ -123,7 +123,7 @@ const Terms = () => {
                 you may simply ride your digital horse away from our kingdom (stop using the service).
               </p>
               
-              <RoyalDivider variant="simple" color="default" className="my-6" />
+              <RoyalDivider variant="line" color="default" className="my-6" />
               
               <h2>The King's Disclaimers</h2>
               <p>
@@ -138,7 +138,7 @@ const Terms = () => {
                 <li>Loss of dignity from spending real money on digital status (that's actually the point)</li>
               </ul>
               
-              <RoyalDivider variant="simple" color="default" className="my-6" />
+              <RoyalDivider variant="line" color="default" className="my-6" />
               
               <h2>Royal Messengers</h2>
               <p>
