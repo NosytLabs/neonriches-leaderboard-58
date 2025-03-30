@@ -1,38 +1,23 @@
-
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { Toaster } from '@/components/ui/toaster';
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from '@/pages/Home';
-import About from '@/pages/About';
-import Leaderboard from '@/pages/Leaderboard';
-import Profile from '@/pages/Profile';
-import Login from '@/pages/Login';
-import Signup from '@/pages/Signup';
-import Dashboard from '@/pages/Dashboard';
-import Deposit from '@/pages/Deposit';
-import { AuthProvider } from '@/hooks/useAuth';
-import { ToastProvider } from '@/contexts/ToastContext';
-import { SolanaProvider } from '@/contexts/SolanaContext';
+import AboutPage from '@/pages/About';
+import FAQ from '@/pages/FAQ';
+import Features from '@/pages/Features';
+import StatusThroughHistory from '@/pages/StatusThroughHistory';
+import HistoricalAbsurdities from '@/pages/HistoricalAbsurdities';
 
 function App() {
   return (
     <Router>
-      <AuthProvider>
-        <ToastProvider>
-          <SolanaProvider>
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/leaderboard" element={<Leaderboard />} />
-              <Route path="/profile/:username" element={<Profile />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/signup" element={<Signup />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/deposit" element={<Deposit />} />
-            </Routes>
-            <Toaster />
-          </SolanaProvider>
-        </ToastProvider>
-      </AuthProvider>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/about" element={<AboutPage />} />
+        <Route path="/faq" element={<FAQ />} />
+        <Route path="/features" element={<Features />} />
+        <Route path="/status-through-history" element={<StatusThroughHistory />} />
+        <Route path="/historical-absurdities" element={<HistoricalAbsurdities />} />
+      </Routes>
     </Router>
   );
 }

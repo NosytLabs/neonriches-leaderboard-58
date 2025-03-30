@@ -27,6 +27,21 @@ const StatusThroughHistory = () => {
             A satirical journey through humanity's long tradition of purchasing power, influence, and social standing
           </p>
           
+          {/* Add a link to the new historical absurdities page */}
+          <div className="text-center mb-10">
+            <motion.a
+              href="/historical-absurdities"
+              className="inline-block bg-royal-gold/20 border border-royal-gold/50 px-5 py-2 rounded text-royal-gold hover:bg-royal-gold/30 transition duration-300"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <span className="flex items-center">
+                <Icon name="Sparkles" className="mr-2" size={18} />
+                View Gallery of Historical Absurdities
+              </span>
+            </motion.a>
+          </div>
+          
           <RoyalDivider variant="scroll" label="HISTORICAL PARALLELS" color="gold" />
           
           <div className="space-y-12 mt-12">

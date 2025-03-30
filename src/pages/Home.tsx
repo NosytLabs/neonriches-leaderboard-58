@@ -1,4 +1,3 @@
-
 import React from 'react';
 import Shell from '@/components/Shell';
 import RoyalHero from '@/components/RoyalHero';
@@ -19,7 +18,7 @@ const Home: React.FC = () => {
   return (
     <Shell>
       <RoyalHero />
-      <div className="container mx-auto p-4 py-12">
+      <div className="container mx-auto px-4 py-12">
         <motion.div 
           className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12"
           initial={{ opacity: 0, y: 20 }}
@@ -73,6 +72,23 @@ const Home: React.FC = () => {
             <HeroShowcase />
           </div>
         </motion.div>
+        
+        <div className="mb-16 text-center">
+          <h2 className="text-3xl font-bold mb-6">Explore SpendThrone</h2>
+          <div className="flex flex-wrap justify-center gap-4">
+            <motion.a
+              href="/historical-absurdities"
+              className="bg-black/40 border border-royal-gold/30 px-6 py-3 rounded-lg text-white hover:bg-royal-gold/20 hover:border-royal-gold/50 transition duration-300"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <span className="flex items-center">
+                <Icon name="History" className="mr-2 text-royal-gold" />
+                Historical Absurdities
+              </span>
+            </motion.a>
+          </div>
+        </div>
         
         <motion.div
           initial={{ opacity: 0 }}

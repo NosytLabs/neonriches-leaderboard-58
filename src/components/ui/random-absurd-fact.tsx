@@ -20,7 +20,14 @@ const ABSURD_FACTS = [
   "The Sultan of Brunei owns more than 7,000 luxury cars that he never drives.",
   "A Wall Street executive once spent $15,000 on a single dessert covered in edible gold.",
   "Roman emperor Nero had a dining room with a ceiling that dropped rose petals on guests.",
-  "A Silicon Valley mogul purchased a $90 million mansion that sits empty most of the year."
+  "A Silicon Valley mogul purchased a $90 million mansion that sits empty most of the year.",
+  "An oil tycoon bought a $500,000 gold bathtub that he admitted to using only three times.",
+  "In 2023, a tech billionaire spent $44 billion to buy a social media company primarily to change its name and logo.",
+  "A Russian oligarch spent $35 million on a wedding for his daughter featuring Elton John and Mariah Carey as performers.",
+  "A startup CEO once spent $7 million on office furniture for a company that went bankrupt 6 months later.",
+  "MrBeast spent $3.5 million to recreate Willy Wonka's chocolate factory for a 30-minute YouTube video.",
+  "A hedge fund manager paid $91.1 million for a 3-foot-tall stainless steel rabbit sculpture.",
+  "A cryptocurrency founder bought a $4.3 million lunch with Warren Buffett, then canceled and apologized for 'excessive self-promotion'."
 ];
 
 interface RandomAbsurdFactProps {
@@ -89,7 +96,7 @@ const RandomAbsurdFact: React.FC<RandomAbsurdFactProps> = ({
                 animate={{ rotate: [0, 10, -10, 0] }}
                 transition={{ duration: 5, repeat: Infinity }}
               >
-                <Icon name="Info" className="text-royal-gold h-5 w-5" />
+                <Icon name="AlertCircle" className="text-royal-gold h-5 w-5" />
               </motion.div>
             </div>
             
@@ -102,7 +109,7 @@ const RandomAbsurdFact: React.FC<RandomAbsurdFactProps> = ({
                   }}
                   transition={{ duration: 3, repeat: Infinity }}
                 >
-                  Absurd Throne Fact
+                  Absurd Wealth Fact
                 </motion.h4>
                 
                 {variant !== 'tooltip' && (
@@ -111,7 +118,7 @@ const RandomAbsurdFact: React.FC<RandomAbsurdFactProps> = ({
                       onClick={refreshFact}
                       className="text-gray-400 hover:text-white transition-colors"
                     >
-                      <Icon name="RefreshCw" size="sm" />
+                      <Icon name="RefreshCw" size={16} />
                     </button>
                     
                     {onClose && (
@@ -119,7 +126,7 @@ const RandomAbsurdFact: React.FC<RandomAbsurdFactProps> = ({
                         onClick={onClose}
                         className="text-gray-400 hover:text-white transition-colors"
                       >
-                        <Icon name="X" size="sm" />
+                        <Icon name="X" size={16} />
                       </button>
                     )}
                   </div>
