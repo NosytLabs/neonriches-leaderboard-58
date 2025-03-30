@@ -1,31 +1,49 @@
 
-export interface ImportIssue {
-  name: string;
+export interface FileInfo {
   path: string;
+  size?: number;
+  type?: string;
+}
+
+export interface ImportInfo {
+  name: string;
+  path?: string;
   file: string;
   line: number;
-  impact?: string;
 }
 
 export interface VariableIssue {
   name: string;
-  type: string;
+  type?: string;
   file: string;
   line: number;
-  impact?: string;
-}
-
-export interface FileIssue {
-  path: string;
-  size: number;
-  impact?: string;
 }
 
 export interface SelectorIssue {
   name: string;
+  selector?: string;
   file: string;
   line: number;
-  selector?: string;
+}
+
+export interface DuplicateCodeIssue {
+  id: string;
+  files: Array<{path: string, lineStart?: number, lineEnd?: number}>;
+  similarity: number;
+  lines?: number;
+  linesCount?: number;
+  recommendation?: string;
+}
+
+export interface ComplexCodeIssue {
+  id?: string;
+  file: string;
+  function?: string;
+  name?: string;
+  line: number;
+  cyclomaticComplexity?: number;
+  complexity?: number;
+  explanation?: string;
 }
 
 export interface DeadCodeIssue {
@@ -34,81 +52,38 @@ export interface DeadCodeIssue {
   line: number;
 }
 
-export interface DuplicateCodeFile {
-  path: string;
-  lineStart?: number;
-  lineEnd?: number;
-}
-
-export interface DuplicateCodeIssue {
-  id: string;
-  files: DuplicateCodeFile[];
-  similarity: number;
-  lines: number;
-  linesCount?: number;
-  recommendation?: string;
-}
-
-export interface ComplexCodeIssue {
-  id: string;
-  name: string;
-  file: string;
-  complexity: number;
-  cyclomaticComplexity?: number;
-  line: number;
-  explanation?: string;
-  function?: string;
-}
-
 export interface PerformanceIssue {
-  id: string;
   description: string;
   file: string;
   lineNumber: number;
-  severity: string;
   recommendation: string;
+  severity: 'low' | 'medium' | 'high';
 }
 
-export interface ProjectMetrics {
-  projectSize?: number;
-  fileCount?: number;
-  dependencyCount?: number;
-  beforeCleanup?: {
-    projectSize: number;
-    fileCount: number;
-    dependencyCount: number;
-  };
-  afterCleanup?: {
-    projectSize: number;
-    fileCount: number;
-    dependencyCount: number;
-  };
-  sizeSavings?: number;
-  fileSavings?: number;
-  dependencySavings?: number;
-  sizePercentage?: number;
-  filePercentage?: number;
-  dependencyPercentage?: number;
+export interface MetricsData {
+  projectSize: number; // in KB
+  fileCount: number;
+  dependencyCount: number;
 }
-
-// Alias types to match what's being used elsewhere
-export type ImportInfo = ImportIssue;
-export type VariableInfo = VariableIssue;
-export type FileInfo = FileIssue;
-export type CodeIssueInfo = DeadCodeIssue;
-export type ComplexityItem = ComplexCodeIssue;
-export type DuplicateCodeInfo = DuplicateCodeIssue;
 
 export interface AnalysisResult {
-  unusedImports: ImportIssue[];
-  unusedVariables: VariableIssue[];
-  unusedFiles?: FileIssue[];
+  unusedImports?: ImportInfo[];
+  unusedVariables?: VariableIssue[];
+  unusedFiles?: FileInfo[];
   unusedSelectors?: SelectorIssue[];
   deadCode?: DeadCodeIssue[];
-  deadCodePaths?: DeadCodeIssue[];
-  duplicateCode: DuplicateCodeIssue[];
-  complexCode: ComplexCodeIssue[];
+  duplicateCode?: DuplicateCodeIssue[];
+  complexCode?: ComplexCodeIssue[];
   unusedDependencies?: string[];
   performanceIssues?: PerformanceIssue[];
-  metrics?: ProjectMetrics;
+  metrics?: {
+    beforeCleanup?: MetricsData;
+    afterCleanup?: MetricsData;
+  };
+}
+
+export interface CacheOptions {
+  ttl?: number;
+  key?: string;
+  forceRefresh?: boolean;
 }

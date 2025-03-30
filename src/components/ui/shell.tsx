@@ -2,8 +2,6 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 
-// Removed BrandIcon import because it was causing errors and we're simplifying
-
 interface ShellProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
   className?: string;
@@ -29,9 +27,8 @@ export function Shell({
     >
       {withBrandIcon && (
         <div className="absolute -top-6 left-1/2 transform -translate-x-1/2">
-          {/* Removed BrandIcon for simplicity */}
           <div className="w-12 h-12 bg-royal-gold rounded-full flex items-center justify-center">
-            <span className="text-black">ST</span>
+            <span className="text-black font-bold">ST</span>
           </div>
         </div>
       )}

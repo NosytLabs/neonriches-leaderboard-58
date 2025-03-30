@@ -1,132 +1,87 @@
 
-// Decoration-related types
-import { ReactNode } from 'react';
-
 export type MedievalDecorationType = 
-  | 'flourish' 
-  | 'crest' 
-  | 'banner' 
-  | 'seal' 
-  | 'scroll' 
-  | 'border'
-  | 'ribbon'
-  | 'frame'
-  | 'shield'
-  | 'corner'
-  | 'divider'
-  | 'top'
-  | 'bottom';
+  | 'border-pattern'
+  | 'corner-flourish' 
+  | 'coat-of-arms'
+  | 'royal-banner'
+  | 'royal-insignia'
+  | 'crossed-swords';
 
 export type MedievalDecorationColor = 
-  | 'gold' 
-  | 'silver' 
-  | 'bronze' 
-  | 'red' 
-  | 'blue' 
-  | 'green'
-  | 'purple'
-  | 'royal'
-  | 'default';
+  | 'royal-gold'
+  | 'royal-purple'
+  | 'royal-blue'
+  | 'royal-red'
+  | 'royal-green';
 
-export type MedievalSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
-
-export type MedievalIconColor = 
-  | 'gold' 
-  | 'silver' 
-  | 'bronze' 
-  | 'red' 
-  | 'blue' 
-  | 'green'
-  | 'purple'
-  | 'royal'
-  | 'default';
-
+export type MedievalSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+export type MedievalIconColor = 'gold' | 'silver' | 'copper' | 'royal' | 'default';
 export type MedievalIconName = 
-  | 'crown' 
-  | 'swords' 
-  | 'shield' 
-  | 'scroll' 
-  | 'goblet'
+  | 'crown'
+  | 'throne'
+  | 'scroll'
+  | 'sword'
+  | 'chalice'
+  | 'shield'
   | 'coin'
-  | 'key'
-  | 'castle'
-  | 'dragon'
-  | 'horse'
-  | 'knight'
-  | 'queen'
-  | 'king';
+  | 'treasure'
+  | 'quill'
+  | 'royal-seal';
 
-export type MedievalIconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+export type MedievalIconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 
 export interface BaseDecorationProps {
-  size?: MedievalSize;
-  color?: MedievalDecorationColor;
-  className?: string;
-  children?: ReactNode;
-}
-
-export interface RoyalDecorationProps extends BaseDecorationProps {
   type?: MedievalDecorationType;
-  position?: string;
-  animate?: boolean;
-  variant?: string;
+  color?: MedievalDecorationColor; 
+  size?: MedievalSize;
+  className?: string;
+  children?: React.ReactNode;
 }
 
 export interface RoyalDividerProps extends BaseDecorationProps {
-  style?: 'line' | 'double' | 'fancy';
+  variant?: 'line' | 'double' | 'fancy';
   color?: 'royal' | 'gold' | 'default' | 'crimson';
+  label?: string;
+  labelPosition?: 'left' | 'center' | 'right';
 }
 
-// Size classes for different element sizes
+// Size classes mapping
 export const sizeClasses: Record<MedievalSize, string> = {
-  'xs': 'h-4 w-4',
-  'sm': 'h-6 w-6',
-  'md': 'h-8 w-8',
-  'lg': 'h-12 w-12',
-  'xl': 'h-16 w-16',
-  '2xl': 'h-24 w-24'
+  xs: 'h-4 w-4',
+  sm: 'h-6 w-6',
+  md: 'h-8 w-8',
+  lg: 'h-10 w-10',
+  xl: 'h-12 w-12'
 };
 
-// Utility function to get color class based on medieval color
-export const getColorClass = (color: MedievalIconColor): string => {
+// Color classes mapping
+export const getColorClass = (color: MedievalDecorationColor) => {
   switch (color) {
-    case 'purple': return 'text-purple-500';
-    case 'green': return 'text-green-500';
-    case 'red': return 'text-red-500';
-    case 'blue': return 'text-blue-500';
-    case 'royal': return 'text-royal-gold';
-    case 'gold': return 'text-yellow-400';
-    case 'silver': return 'text-gray-400';
-    case 'bronze': return 'text-amber-700';
-    case 'default': return 'text-gray-200';
-    default: return 'text-gray-200';
+    case 'royal-gold':
+      return 'text-royal-gold';
+    case 'royal-purple':
+      return 'text-royal-purple';
+    case 'royal-blue':
+      return 'text-royal-blue';
+    case 'royal-red':
+      return 'text-royal-red';
+    case 'royal-green':
+      return 'text-royal-green';
+    default:
+      return 'text-royal-gold';
   }
 };
 
-// Convert to medieval icon color
-export const toMedievalIconColor = (color: string): MedievalIconColor => {
+// Map to icon color
+export const toMedievalIconColor = (color?: MedievalDecorationColor): MedievalIconColor => {
+  if (!color) return 'default';
+  
   switch (color) {
-    case 'purple': return 'purple';
-    case 'green': return 'green';
-    case 'red': return 'red';
-    case 'blue': return 'blue';
-    case 'royal': return 'royal';
-    case 'gold': return 'gold';
-    case 'silver': return 'silver';
-    case 'bronze': return 'bronze';
-    default: return 'default';
+    case 'royal-gold':
+      return 'gold';
+    case 'royal-purple':
+      return 'royal';
+    default:
+      return 'default';
   }
-};
-
-// Export types and utilities
-export { 
-  MedievalDecorationType, 
-  MedievalDecorationColor, 
-  MedievalSize,
-  sizeClasses,
-  getColorClass,
-  toMedievalIconColor,
-  MedievalIconColor,
-  MedievalIconName,
-  MedievalIconSize
 };

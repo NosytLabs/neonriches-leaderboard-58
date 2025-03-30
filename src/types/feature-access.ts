@@ -34,8 +34,3 @@ export interface FeatureAccess {
   requirements: FeatureRequirements;
   alternateAccess?: string;
 }
-
-// Make sure to use 'export type' syntax for module interoperability
-export type { Feature };
-export type { FeatureRequirements };
-export type { FeatureAccess };

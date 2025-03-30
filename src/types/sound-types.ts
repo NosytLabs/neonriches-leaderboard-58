@@ -1,51 +1,31 @@
 
-// Sound-related types
 export type SoundType = 
-  | 'button_click' 
-  | 'success' 
-  | 'error' 
-  | 'notification' 
-  | 'achievement' 
-  | 'level_up' 
-  | 'coins_drop'
-  | 'purchase'
-  | 'royal_fanfare'
-  | 'trumpet'
-  | 'crowd_cheer'
   | 'click'
-  | 'hover'
-  | 'pop'
-  | 'swoosh'
-  | 'chime'
-  | 'bell'
-  | 'cash';
+  | 'coins'
+  | 'coins_drop'
+  | 'coins_pour'
+  | 'deposit'
+  | 'success'
+  | 'error'
+  | 'notification'
+  | 'royal'
+  | 'achievement'
+  | 'unlock'
+  | 'purchase'
+  | 'level_up'
+  | 'shame'
+  | 'message'
+  | 'parchment'
+  | 'trumpet';
 
 export interface AudioLoaderReturn {
-  play: () => void;
-  stop: () => void;
-  isPlaying: boolean;
-  duration: number;
-}
-
-export interface UseSoundOptions {
-  volume?: number;
-  playbackRate?: number;
-  interrupt?: boolean;
-  soundEnabled?: boolean;
-  sprite?: Record<string, [number, number]>;
-  onload?: () => void;
-  onplay?: () => void;
-  onend?: () => void;
-  onpause?: () => void;
-  onstop?: () => void;
-}
-
-export interface UseSoundReturn {
-  play: (options?: { id?: string }) => void;
-  stop: (id?: string) => void;
-  pause: (id?: string) => void;
-  isPlaying: boolean;
-  duration: number | null;
+  audioMap: Record<SoundType, HTMLAudioElement>;
+  playSound: (sound: SoundType) => void;
+  stopSound: (sound: SoundType) => void;
+  toggleMute: (muted: boolean) => void;
+  setVolume: (volume: number) => void;
+  isMuted: boolean;
+  volume: number;
 }
 
 export interface PremiumSoundPackDetails {
@@ -57,27 +37,22 @@ export interface PremiumSoundPackDetails {
   sounds: SoundType[];
   features: string[];
   tags: string[];
-  isPurchased?: boolean;
 }
 
-export interface SoundConfig {
-  enabled: boolean;
-  muted: boolean;
-  volume: number;
-  premiumSoundPacks: string[];
+export interface UseSoundOptions {
+  volume?: number;
+  interrupt?: boolean;
+  sprite?: Record<string, [number, number]>;
+  loop?: boolean;
+  onEnd?: () => void;
+  baseVolume?: number;
+  disableCache?: boolean;
 }
 
-// Sound configuration
-export const DEFAULT_SOUND_CONFIG: SoundConfig = {
-  enabled: true,
-  muted: false,
-  volume: 0.5,
-  premiumSoundPacks: []
-};
-
-// Re-export types with 'export type' syntax for TS modules
-export type { SoundType };
-export type { AudioLoaderReturn };
-export type { PremiumSoundPackDetails };
-export type { UseSoundOptions };
-export type { UseSoundReturn };
+export interface UseSoundReturn {
+  play: (options?: { id?: string; }) => void;
+  stop: (id?: string) => void;
+  pause: (id?: string) => void;
+  isPlaying: boolean;
+  duration: number;
+}

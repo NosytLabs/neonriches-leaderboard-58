@@ -2,7 +2,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const Footer = () => {
+const Footer: React.FC = () => {
   return (
     <footer className="py-8 border-t border-gray-800 bg-black">
       <div className="container mx-auto px-4 text-center text-gray-500 text-sm">
@@ -21,17 +21,15 @@ const Footer = () => {
               <li><Link to="/" className="text-gray-400 hover:text-royal-gold transition-colors">Home</Link></li>
               <li><Link to="/leaderboard" className="text-gray-400 hover:text-royal-gold transition-colors">Leaderboard</Link></li>
               <li><Link to="/about" className="text-gray-400 hover:text-royal-gold transition-colors">About</Link></li>
-              <li><Link to="/terms" className="text-gray-400 hover:text-royal-gold transition-colors">Terms</Link></li>
-              <li><Link to="/privacy" className="text-gray-400 hover:text-royal-gold transition-colors">Privacy</Link></li>
             </ul>
           </div>
           
           <div>
             <h3 className="text-white font-semibold mb-4">Connect</h3>
             <ul className="space-y-2">
-              <li><a href="https://twitter.com/spendthrone" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-royal-gold transition-colors">Twitter</a></li>
-              <li><a href="https://discord.gg/spendthrone" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-royal-gold transition-colors">Discord</a></li>
-              <li><a href="mailto:info@spendthrone.com" className="text-gray-400 hover:text-royal-gold transition-colors">Contact</a></li>
+              <li><a href="#" className="text-gray-400 hover:text-royal-gold transition-colors">Twitter</a></li>
+              <li><a href="#" className="text-gray-400 hover:text-royal-gold transition-colors">Discord</a></li>
+              <li><a href="#" className="text-gray-400 hover:text-royal-gold transition-colors">Contact</a></li>
             </ul>
           </div>
         </div>

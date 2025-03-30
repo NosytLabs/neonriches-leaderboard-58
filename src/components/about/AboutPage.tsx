@@ -2,23 +2,23 @@
 import React from 'react';
 import { Crown, Users, ScrollText, DollarSign, Sparkles, Heart, Trophy, Gem, Coins, Shield } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import RoyalDivider from '@/components/ui/royal-divider';
-import MedievalIcon from '@/components/ui/medieval-icon';
 
 const AboutPage: React.FC = () => {
   return (
     <div className="container mx-auto py-12 px-4">
       <div className="text-center mb-12">
-        <h1 className="text-4xl font-bold royal-gradient mb-4">About SpendThrone</h1>
+        <h1 className="text-4xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-royal-gold to-amber-400">About SpendThrone</h1>
         <p className="text-xl text-white/70 max-w-2xl mx-auto">
           A satirical social experiment where your wallet determines your worth and mockery is an art form.
         </p>
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-        <Card className="glass-morphism border-white/10">
+        <Card className="bg-white/5 backdrop-blur-sm border-white/10">
           <CardHeader>
-            <MedievalIcon name="crown" size="sm" className="mb-2" />
+            <div className="mb-2 text-royal-gold">
+              <Crown size={24} />
+            </div>
             <CardTitle>The Kingdom's Premise</CardTitle>
             <CardDescription>Understanding the SpendThrone experiment</CardDescription>
           </CardHeader>
@@ -36,9 +36,11 @@ const AboutPage: React.FC = () => {
           </CardContent>
         </Card>
         
-        <Card className="glass-morphism border-white/10">
+        <Card className="bg-white/5 backdrop-blur-sm border-white/10">
           <CardHeader>
-            <MedievalIcon name="scroll" size="sm" className="mb-2" />
+            <div className="mb-2 text-royal-gold">
+              <ScrollText size={24} />
+            </div>
             <CardTitle>Royal Rules</CardTitle>
             <CardDescription>How the system works</CardDescription>
           </CardHeader>
@@ -82,10 +84,16 @@ const AboutPage: React.FC = () => {
         </Card>
       </div>
       
-      <RoyalDivider variant="ornate" label="KEY FEATURES" className="mb-12 mt-16" />
+      <div className="relative py-8 mb-12">
+        <div className="absolute inset-0 bg-gradient-to-r from-royal-purple/10 to-royal-gold/10"></div>
+        <div className="relative text-center">
+          <h2 className="text-2xl font-semibold mb-2">KEY FEATURES</h2>
+          <div className="w-24 h-1 bg-gradient-to-r from-royal-purple to-royal-gold mx-auto"></div>
+        </div>
+      </div>
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
-        <Card className="glass-morphism border-white/10">
+        <Card className="bg-white/5 backdrop-blur-sm border-white/10">
           <CardHeader>
             <Crown className="h-6 w-6 text-royal-gold mb-2" />
             <CardTitle>Royal Mockery Festival</CardTitle>
@@ -111,7 +119,7 @@ const AboutPage: React.FC = () => {
           </CardContent>
         </Card>
         
-        <Card className="glass-morphism border-white/10">
+        <Card className="bg-white/5 backdrop-blur-sm border-white/10">
           <CardHeader>
             <Users className="h-6 w-6 text-royal-gold mb-2" />
             <CardTitle>Team Warfare</CardTitle>
@@ -137,7 +145,7 @@ const AboutPage: React.FC = () => {
           </CardContent>
         </Card>
         
-        <Card className="glass-morphism border-white/10">
+        <Card className="bg-white/5 backdrop-blur-sm border-white/10">
           <CardHeader>
             <Gem className="h-6 w-6 text-royal-gold mb-2" />
             <CardTitle>Royal Profiles</CardTitle>
@@ -164,72 +172,12 @@ const AboutPage: React.FC = () => {
         </Card>
       </div>
       
-      <div className="mb-16 glass-morphism border-white/10 p-6 rounded-lg">
-        <div className="text-center mb-8">
-          <Sparkles className="h-8 w-8 text-royal-gold mx-auto mb-4" />
-          <h2 className="text-2xl font-bold mb-2">The Great Mockery Revolution</h2>
-          <p className="text-white/70 max-w-2xl mx-auto">
-            SpendThrone's mockery system is a satirical take on social dynamics in digital spaces. It provides purely cosmetic effects without affecting rankings, separating mockery from actual status.
-          </p>
-        </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="flex items-start">
-            <div className="p-2 rounded-full bg-royal-gold/20 mr-3 flex-shrink-0">
-              <ScrollText className="h-5 w-5 text-royal-gold" />
-            </div>
-            <div>
-              <h3 className="font-medium mb-1">Cosmetic Mockery</h3>
-              <p className="text-sm text-white/70">
-                All mockery effects are purely visual and last for 24 hours. They add a layer of medieval-themed humor to the platform without affecting actual rankings or status.
-              </p>
-            </div>
-          </div>
-          
-          <div className="flex items-start">
-            <div className="p-2 rounded-full bg-royal-gold/20 mr-3 flex-shrink-0">
-              <Shield className="h-5 w-5 text-royal-gold" />
-            </div>
-            <div>
-              <h3 className="font-medium mb-1">Royal Protection</h3>
-              <p className="text-sm text-white/70">
-                Purchase mockery protection to shield yourself from visual effects for 24 hours. Display your immunity with a royal shield indicator on your profile.
-              </p>
-            </div>
-          </div>
-          
-          <div className="flex items-start">
-            <div className="p-2 rounded-full bg-royal-gold/20 mr-3 flex-shrink-0">
-              <Heart className="h-5 w-5 text-royal-gold" />
-            </div>
-            <div>
-              <h3 className="font-medium mb-1">Community Engagement</h3>
-              <p className="text-sm text-white/70">
-                The mockery system creates a playful dynamic between users, encouraging interaction and engagement through visual jokes without affecting the core competitive structure.
-              </p>
-            </div>
-          </div>
-          
-          <div className="flex items-start">
-            <div className="p-2 rounded-full bg-royal-gold/20 mr-3 flex-shrink-0">
-              <Coins className="h-5 w-5 text-royal-gold" />
-            </div>
-            <div>
-              <h3 className="font-medium mb-1">Separate Economy</h3>
-              <p className="text-sm text-white/70">
-                The mockery economy is separate from the leaderboard ranking system. Spending on mockery features doesn't contribute to your or anyone else's rank position.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-      
       <div className="text-center">
-        <h2 className="text-2xl font-bold royal-gradient mb-4">Join the Royal Court</h2>
+        <h2 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-royal-gold to-amber-400 mb-4">Join the Royal Court</h2>
         <p className="text-white/70 max-w-2xl mx-auto mb-6">
           SpendThrone awaits nobles willing to pay for prestige in this satirical kingdom. Will you rise through the ranks or enjoy the mockery from the sidelines?
         </p>
-        <a href="/register" className="inline-block px-6 py-3 royal-button bg-gradient-to-r from-royal-gold to-yellow-600 text-black font-medium rounded-lg hover:shadow-lg transition-all">
+        <a href="/register" className="inline-block px-6 py-3 bg-gradient-to-r from-royal-gold to-yellow-600 text-black font-medium rounded-lg hover:shadow-lg transition-all">
           Claim Your Throne
         </a>
       </div>

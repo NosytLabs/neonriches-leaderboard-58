@@ -1,13 +1,21 @@
 
+import React from 'react';
 import { MockeryAction } from '@/types/mockery';
 import { getActiveMockeryClass } from '@/utils/mockery/mockery-effects';
-import { getMockeryTier } from '@/utils/mockery/mockery-tiers';
-import { getMockeryActionPrice } from '@/utils/mockery/mockery-costs';
-import { renderMockeryIcon } from '@/utils/mockeryIcons';
+import { getMockeryTier, getMockeryTierColorClass } from '@/utils/mockery/mockery-tiers';
 import { getMockeryActionIcon } from '@/utils/mockery/mockery-icons';
+import { getMockeryActionPrice } from '@/utils/mockery/mockery-costs';
 
 /**
- * Get the appropriate icon for a mockery action as a React component
+ * Render the appropriate icon for a mockery action
+ */
+export const renderMockeryIcon = (iconName: string, className: string = "h-4 w-4") => {
+  // In a full implementation, this would retrieve and render the appropriate icon component
+  return <span className={className}>{iconName}</span>;
+};
+
+/**
+ * Get the appropriate icon component for a mockery action
  */
 export const getMockeryActionIconComponent = (action: MockeryAction, className: string = "h-4 w-4") => {
   // Get the icon name from mockery-icons
@@ -20,5 +28,6 @@ export const getMockeryActionIconComponent = (action: MockeryAction, className: 
 export { 
   getActiveMockeryClass,
   getMockeryTier,
-  getMockeryActionPrice
+  getMockeryActionPrice,
+  getMockeryTierColorClass
 };

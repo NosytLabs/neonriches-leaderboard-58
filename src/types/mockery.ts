@@ -26,7 +26,10 @@ export interface MockedUser {
   profileImage: string;
   tier: UserTier;
   rank?: number;
-  team: Team;
+  team: TeamType;
   activeEffects?: MockeryEvent[];
   hasProtection?: boolean;
+  mockedReason?: string;
+  mockedTimestamp?: string;
+  mockedBy?: string;
 }

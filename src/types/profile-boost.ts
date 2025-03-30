@@ -1,43 +1,26 @@
 
-import { LucideIcon } from "lucide-react";
+export type BoostEffectType = 'glow' | 'sparkle' | 'pulse' | 'shimmer' | 'highlight';
+export type BoostStrength = 'low' | 'medium' | 'high';
+export type BoostTier = 'basic' | 'pro' | 'royal';
 
-// Profile boost related types
-export type BoostEffectType = 
-  | 'aura' 
-  | 'highlight' 
-  | 'background' 
-  | 'nameEffect'
-  | 'profileGlow'
-  | 'crown'
-  | 'sparkle'
-  | 'glow';
-
-export type BoostStrength = 'low' | 'medium' | 'high' | 'extreme';
-
-export type BoostTier = 'basic' | 'premium' | 'royal' | 'legendary';
+export interface ProfileBoost {
+  id: string;
+  type: string;
+  startDate: number;
+  endDate: number;
+  isActive: boolean;
+}
 
 export interface BoostEffect {
   id: string;
   name: string;
   description: string;
-  icon: string | LucideIcon;
   type: BoostEffectType;
   cssClass: string;
-  tier: BoostTier | string;
-  duration: number;
+  tier: BoostTier;
   price: number;
-  durationDays?: number; // for backward compatibility
-  previewImage?: string;
-}
-
-export interface ProfileBoost {
-  id: string;
-  userId: string;
-  effectId: string;
-  startDate: string | Date;
-  endDate: string | Date;
-  isActive: boolean;
-  purchaseDate: string | Date;
+  duration: number;
+  icon: string;
 }
 
 export interface ProfileBoostData {
@@ -45,19 +28,11 @@ export interface ProfileBoostData {
   name: string;
   description: string;
   type: BoostEffectType;
-  duration: number;
-  price: number;
   cssClass: string;
-  tier: string;
-  startDate?: string | Date;
-  endDate?: string | Date;
-  isActive?: boolean;
+  tier: BoostTier;
+  price: number;
+  duration: number;
+  strength: BoostStrength;
+  icon: string;
+  previewImage: string;
 }
-
-// Re-export types with 'export type' syntax for TS modules
-export type { ProfileBoost };
-export type { BoostEffect };
-export type { BoostEffectType };
-export type { BoostStrength };
-export type { BoostTier };
-export type { ProfileBoostData };
