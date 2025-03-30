@@ -27,6 +27,11 @@ const MainNav = ({ className, ...props }: React.HTMLAttributes<HTMLElement>) => 
       icon: "Users"
     },
     {
+      title: "Mockery",
+      href: "/mockery",
+      icon: "Target"
+    },
+    {
       title: "Profile",
       href: user ? `/profile/${user.username}` : "/profile",
       icon: "User"

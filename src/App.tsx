@@ -21,6 +21,7 @@ import Profile from '@/pages/Profile';
 import Wallet from '@/pages/Wallet';
 import Settings from '@/pages/Settings';
 import Events from '@/pages/Events';
+import Mockery from '@/pages/Mockery';
 
 function App() {
   return (
@@ -37,6 +38,7 @@ function App() {
               <Route path="/about" element={<About />} />
               <Route path="/privacy" element={<Privacy />} />
               <Route path="/terms" element={<Terms />} />
+              <Route path="/mockery" element={<Mockery />} />
               
               {/* Protected User Pages */}
               <Route 
