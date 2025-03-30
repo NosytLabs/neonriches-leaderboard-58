@@ -1,3 +1,4 @@
+
 export type UserTier = 
   | 'free' 
   | 'basic'
@@ -171,22 +172,33 @@ export interface User {
   followers?: number;
   following?: number;
   spendStreak?: number;
-  gender?: 'male' | 'female' | 'other' | 'prefer-not-to-say';
+  gender?: UserGender;
   isProtected?: boolean;
   totalSpent?: number;
   lastMocked?: string;
   mockeryCount?: number;
   isVerified?: boolean;
   previousRank?: number;
+  role?: UserRole;
+  settings?: UserSettings;
+  cosmetics?: UserCosmetics;
+  profileBoosts?: ProfileBoost[];
+  certificates?: any[];
+  subscription?: UserSubscription;
+  profileViews?: number;
+  profileClicks?: number;
+  purchasedFeatures?: string[];
+  socialLinks?: SocialLink[];
+  profileImages?: ProfileImage[];
+  certificateNFT?: any;
 }
 
 export interface UserProfile extends User {
   referralCode?: string;
   referredBy?: string;
   referralCount?: number;
-  certificates?: any[];
   activeTitle?: string;
 }
 
-// Export interface declarations to make sure they're available
+// Use 'export type' to avoid duplicate export errors
 export type { UserTier, UserTeam, TeamType, UserGender };

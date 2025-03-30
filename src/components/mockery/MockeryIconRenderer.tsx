@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { ShieldAlert, Sword, Crown, FaceSad, ThumbsDown, Laugh, Target, Skull, Map } from 'lucide-react';
+import { ShieldAlert, Sword, Crown, AlertCircle, ThumbsDown, Laugh, Target, Skull, Map } from 'lucide-react';
 import { MockeryAction } from '@/types/mockery';
 import { getMockeryActionIconColor } from '@/utils/mockeryUtils';
 import { cn } from '@/lib/utils';
@@ -18,7 +18,7 @@ const MockeryIconRenderer: React.FC<MockeryIconProps> = ({ action, className, si
   const getIconComponent = () => {
     switch(action) {
       case 'shame':
-        return <FaceSad size={size} className={cn(iconColor, className)} />;
+        return <AlertCircle size={size} className={cn(iconColor, className)} />;
       case 'taunt':
         return <ThumbsDown size={size} className={cn(iconColor, className)} />;
       case 'crown':

@@ -1,158 +1,95 @@
 
-/**
- * Utility functions for formatting different types of data
- */
+import { format, formatDistanceToNow, formatRelative } from 'date-fns';
 
-/**
- * Format a date to a human-readable string
- * @param date Date to format
- * @param options Formatting options
- * @returns Formatted date string
- */
-export function formatDate(date: string | Date, options: Intl.DateTimeFormatOptions = { 
-  year: 'numeric', 
-  month: 'long', 
-  day: 'numeric' 
-}): string {
+// Format a date to a string
+export const formatDate = (date: string | Date, formatString: string = 'PPP'): string => {
   if (!date) return 'N/A';
-  
   const dateObj = typeof date === 'string' ? new Date(date) : date;
-  
-  // Handle invalid dates
-  if (isNaN(dateObj.getTime())) return 'Invalid Date';
-  
-  return new Intl.DateTimeFormat('en-US', options).format(dateObj);
-}
+  return format(dateObj, formatString);
+};
 
-/**
- * Format a dollar amount with currency symbol
- * @param amount Amount to format
- * @param options Formatting options
- * @returns Formatted currency string
- */
-export function formatCurrency(amount: number, currency: string = 'USD', minimumFractionDigits: number = 2): string {
+// Format a dollar amount
+export const formatDollarAmount = (amount: number | undefined): string => {
+  if (amount === undefined) return '$0.00';
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  }).format(amount);
+};
+
+// Format a number with commas
+export const formatNumber = (number: number | undefined, precision: number = 0): string => {
+  if (number === undefined) return '0';
+  return new Intl.NumberFormat('en-US', {
+    minimumFractionDigits: precision,
+    maximumFractionDigits: precision
+  }).format(number);
+};
+
+// Format a percentage
+export const formatPercentage = (number: number | undefined, precision: number = 1): string => {
+  if (number === undefined) return '0%';
+  return new Intl.NumberFormat('en-US', {
+    style: 'percent',
+    minimumFractionDigits: precision,
+    maximumFractionDigits: precision
+  }).format(number / 100);
+};
+
+// Format currency
+export const formatCurrency = (amount: number | undefined, currency: string = 'USD'): string => {
+  if (amount === undefined) return '$0.00';
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency,
-    minimumFractionDigits,
-    maximumFractionDigits: minimumFractionDigits
-  }).format(amount);
-}
-
-/**
- * Format a dollar amount with currency symbol
- * @param amount Amount to format
- * @returns Formatted dollar string
- */
-export function formatDollarAmount(amount: number): string {
-  return formatCurrency(amount);
-}
-
-/**
- * Format a number with thousands separators
- * @param num Number to format
- * @param minimumFractionDigits Minimum fraction digits
- * @returns Formatted number string
- */
-export function formatNumber(num: number, minimumFractionDigits: number = 0): string {
-  return new Intl.NumberFormat('en-US', {
-    minimumFractionDigits,
+    minimumFractionDigits: 2,
     maximumFractionDigits: 2
-  }).format(num);
-}
+  }).format(amount);
+};
 
-/**
- * Format a percentage value
- * @param value Value to format as percentage
- * @param decimals Number of decimal places
- * @returns Formatted percentage string
- */
-export function formatPercentage(value: number, decimals: number = 2): string {
-  return new Intl.NumberFormat('en-US', {
-    style: 'percent',
-    minimumFractionDigits: decimals,
-    maximumFractionDigits: decimals
-  }).format(value / 100);
-}
+// Format address
+export const formatAddress = (address: string): string => {
+  if (!address) return 'N/A';
+  if (address.length < 10) return address;
+  return `${address.slice(0, 6)}...${address.slice(-4)}`;
+};
 
-/**
- * Format an address with optional line breaks
- * @param address Address components
- * @returns Formatted address string
- */
-export function formatAddress(address: {
-  street?: string;
-  city?: string;
-  state?: string;
-  zipCode?: string;
-  country?: string;
-}, useLineBreaks: boolean = false): string {
-  const parts = [
-    address.street,
-    address.city,
-    [address.state, address.zipCode].filter(Boolean).join(' '),
-    address.country
-  ].filter(Boolean);
-  
-  return useLineBreaks ? parts.join('\n') : parts.join(', ');
-}
-
-/**
- * Format a historical value with percentage change
- * @param current Current value
- * @param previous Previous value
- * @returns Formatted historical value string
- */
-export function formatHistoricalValue(current: number, previous: number): string {
-  const percentChange = previous ? ((current - previous) / previous) * 100 : 0;
-  const direction = percentChange >= 0 ? '↑' : '↓';
-  
-  return `${formatCurrency(current)} ${direction} ${Math.abs(percentChange).toFixed(1)}%`;
-}
-
-/**
- * Format a timestamp as a relative time string
- * @param date Date to format
- * @returns Relative time string
- */
-export function formatTimeAgo(date: string | Date): string {
-  const dateObj = typeof date === 'string' ? new Date(date) : date;
-  const now = new Date();
-  const seconds = Math.floor((now.getTime() - dateObj.getTime()) / 1000);
-  
-  // Time intervals in seconds
-  const intervals = {
-    year: 31536000,
-    month: 2592000,
-    week: 604800,
-    day: 86400,
-    hour: 3600,
-    minute: 60,
-    second: 1
-  };
-  
-  let counter;
-  for (const [unit, secondsInUnit] of Object.entries(intervals)) {
-    counter = Math.floor(seconds / secondsInUnit);
-    if (counter > 0) {
-      return `${counter} ${unit}${counter === 1 ? '' : 's'} ago`;
-    }
+// Format historical value
+export const formatHistoricalValue = (
+  current: number, 
+  previous: number | undefined
+): { value: string; isPositive: boolean; isNeutral: boolean; percentChange: string } => {
+  if (previous === undefined || previous === current) {
+    return { value: '0', isPositive: false, isNeutral: true, percentChange: '0%' };
   }
   
-  return 'just now';
-}
+  const diff = current - previous;
+  const percentChange = previous !== 0 ? (diff / previous) * 100 : 0;
+  
+  return {
+    value: diff >= 0 ? `+${formatNumber(diff)}` : formatNumber(diff),
+    isPositive: diff > 0,
+    isNeutral: diff === 0,
+    percentChange: `${diff >= 0 ? '+' : ''}${percentChange.toFixed(1)}%`
+  };
+};
 
-/**
- * Format file size with appropriate units
- * @param bytes Size in bytes
- * @returns Formatted file size string
- */
-export function formatFileSize(bytes: number): string {
+// Format time ago
+export const formatTimeAgo = (date: string | Date): string => {
+  if (!date) return 'N/A';
+  const dateObj = typeof date === 'string' ? new Date(date) : date;
+  return formatDistanceToNow(dateObj, { addSuffix: true });
+};
+
+// Format file size
+export const formatFileSize = (bytes: number): string => {
   if (bytes === 0) return '0 Bytes';
   
   const k = 1024;
-  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
   const i = Math.floor(Math.log(bytes) / Math.log(k));
   
   return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-}
+};

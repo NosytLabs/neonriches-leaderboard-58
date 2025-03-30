@@ -1,6 +1,8 @@
+
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { UserProfile } from '@/types/user';
 import { AuthContextType } from '@/types/auth-context';
+import { useToast } from '@/hooks/use-toast';
 
 // Create a mock initial user
 const mockUser: UserProfile = {
@@ -35,6 +37,7 @@ export const AuthContext = createContext<AuthContextType>({
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<UserProfile | null>(mockUser);
   const [isLoading, setIsLoading] = useState(false);
+  const { toast } = useToast();
 
   // Mock login implementation
   const login = async (email: string, password: string): Promise<boolean> => {
@@ -75,7 +78,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   // Mock logout implementation
-  const logout = () => {
+  const logout = async (): Promise<void> => {
     setUser(null);
   };
 
@@ -99,7 +102,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // Alias methods for backward compatibility
   const signIn = login;
   const signOut = logout;
-  const updateUserProfile = updateUser;
+  const updateUserProfile = async (updates: Partial<UserProfile>): Promise<void> => {
+    await updateUser(updates);
+  };
 
   // Award cosmetic items to user
   const awardCosmetic = async (category: string, itemId: string, notify = true): Promise<boolean> => {
