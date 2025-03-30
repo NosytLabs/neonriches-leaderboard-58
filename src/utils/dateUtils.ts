@@ -1,62 +1,73 @@
 
-// Utility functions for date handling
+import { format, isBefore, isAfter } from 'date-fns';
 
-// Format a date to a specific format
-export const formatDate = (date: string | Date, format = 'MMM DD, YYYY') => {
-  if (!date) return '';
+/**
+ * Formats a date string to a human-readable format
+ */
+export function formatDate(dateString?: string): string {
+  if (!dateString) return 'N/A';
   
-  const d = new Date(date);
-  const year = d.getFullYear();
-  const month = d.getMonth() + 1;
-  const day = d.getDate();
-  
-  // Add leading zeros
-  const monthStr = month < 10 ? `0${month}` : `${month}`;
-  const dayStr = day < 10 ? `0${day}` : `${day}`;
-  
-  // Simple format replacements
-  return format
-    .replace('YYYY', `${year}`)
-    .replace('MM', monthStr)
-    .replace('DD', dayStr)
-    .replace('MMM', new Date(date).toLocaleString('default', { month: 'short' }));
-};
+  try {
+    const date = new Date(dateString);
+    return format(date, 'MMM d, yyyy');
+  } catch (error) {
+    console.error('Error formatting date:', error);
+    return 'Invalid Date';
+  }
+}
 
-// Format a date and time
-export const formatDateTime = (date: string | Date) => {
-  if (!date) return '';
+/**
+ * Formats a date string to include time
+ */
+export function formatDateTime(dateString?: string): string {
+  if (!dateString) return 'N/A';
   
-  const d = new Date(date);
-  return d.toLocaleString('en-US', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit'
-  });
-};
+  try {
+    const date = new Date(dateString);
+    return format(date, 'MMM d, yyyy h:mm a');
+  } catch (error) {
+    console.error('Error formatting date:', error);
+    return 'Invalid Date';
+  }
+}
 
-// Check if an event is currently active
-export const isEventActive = (
-  startDate: string | Date, 
-  endDate: string | Date
-): boolean => {
-  const now = new Date();
-  const start = new Date(startDate);
-  const end = new Date(endDate);
+/**
+ * Checks if an event is currently active based on start and end dates
+ */
+export function isEventActive(startDate?: string, endDate?: string): boolean {
+  if (!startDate || !endDate) return false;
   
-  return now >= start && now <= end;
-};
+  try {
+    const now = new Date();
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    
+    return isAfter(now, start) && isBefore(now, end);
+  } catch (error) {
+    console.error('Error checking if event is active:', error);
+    return false;
+  }
+}
 
-// Get number of days until a date
-export const daysUntil = (date: string | Date): number => {
-  const now = new Date();
-  const target = new Date(date);
+/**
+ * Calculates the time remaining until a date
+ */
+export function getTimeRemaining(endDate: string): { 
+  days: number;
+  hours: number;
+  minutes: number;
+  seconds: number;
+} {
+  const total = new Date(endDate).getTime() - new Date().getTime();
+  const seconds = Math.floor((total / 1000) % 60);
+  const minutes = Math.floor((total / 1000 / 60) % 60);
+  const hours = Math.floor((total / (1000 * 60 * 60)) % 24);
+  const days = Math.floor(total / (1000 * 60 * 60 * 24));
   
-  // Reset time to start of day
-  now.setHours(0, 0, 0, 0);
-  target.setHours(0, 0, 0, 0);
-  
-  const diff = target.getTime() - now.getTime();
-  return Math.ceil(diff / (1000 * 60 * 60 * 24));
-};
+  return {
+    days,
+    hours,
+    minutes,
+    seconds
+  };
+}

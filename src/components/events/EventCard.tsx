@@ -12,18 +12,22 @@ import { useIntersectionObserver } from '@/hooks/use-intersection-observer';
 
 interface EventCardProps {
   event: Event;
-  onClick?: () => void;
+  onViewDetails?: () => void;
+  onParticipate?: () => void;
   compact?: boolean;
   active?: boolean;
   className?: string;
+  isPast?: boolean;
 }
 
 const EventCard: React.FC<EventCardProps> = ({
   event,
-  onClick,
+  onViewDetails,
+  onParticipate,
   compact = false,
   active = false,
-  className
+  className,
+  isPast = false
 }) => {
   const [ref, isVisible] = useIntersectionObserver<HTMLDivElement>({
     threshold: 0.1,
@@ -43,16 +47,16 @@ const EventCard: React.FC<EventCardProps> = ({
         isActive && "border-l-royal-gold border-l-2",
         className
       )}
-      onClick={onClick}
+      onClick={onViewDetails}
     >
       {!compact && eventImage && isVisible && (
         <div className="relative h-40 w-full overflow-hidden">
           <Image
             src={eventImage}
             alt={eventName}
-            className="w-full h-full"
+            className="w-full h-full object-cover"
           />
-          {isActive && (
+          {isActive && !isPast && (
             <div className="absolute top-2 right-2">
               <Badge variant="outline" className="bg-royal-gold/90 text-black font-bold">
                 Active
@@ -85,8 +89,8 @@ const EventCard: React.FC<EventCardProps> = ({
               <div className="flex items-center">
                 <Clock size={12} className="mr-1" />
                 <span>
-                  {isActive ? 'Ends' : 'Starts'}: {formatDate(
-                    isActive ? event.endDate : event.startDate
+                  {isActive && !isPast ? 'Ends' : 'Starts'}: {formatDate(
+                    isActive && !isPast ? event.endDate : event.startDate
                   )}
                 </span>
               </div>
@@ -94,14 +98,17 @@ const EventCard: React.FC<EventCardProps> = ({
           </div>
         </div>
         
-        {compact && (
+        {!isPast && onParticipate && (
           <Button 
             variant="outline" 
             size="sm" 
             className="ml-2 border-royal-gold/30 hover:bg-royal-gold/10"
-            onClick={onClick}
+            onClick={(e) => {
+              e.stopPropagation();
+              onParticipate();
+            }}
           >
-            Details
+            Participate
           </Button>
         )}
       </CardContent>
@@ -111,14 +118,15 @@ const EventCard: React.FC<EventCardProps> = ({
 
 // Helper function to get the appropriate icon based on event type
 function getEventIcon(type: EventType) {
-  if (type === 'treasure') {
-    return <Trophy size={18} className="text-royal-gold" />;
-  } else if (type === 'shame') {
-    return <Users size={18} className="text-royal-crimson" />;
-  } else if (type === 'team') {
-    return <Trophy size={18} className="text-royal-navy" />;
-  } else {
-    return <Calendar size={18} className="text-white/60" />;
+  switch(type) {
+    case 'treasure':
+      return <Trophy size={18} className="text-royal-gold" />;
+    case 'shame':
+      return <Users size={18} className="text-royal-crimson" />;
+    case 'team':
+      return <Trophy size={18} className="text-royal-navy" />;
+    default:
+      return <Calendar size={18} className="text-white/60" />;
   }
 }
 

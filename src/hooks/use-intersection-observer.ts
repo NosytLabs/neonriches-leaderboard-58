@@ -1,53 +1,60 @@
 
-import { useEffect, useRef, useState, RefObject } from 'react';
+import { useState, useEffect, useRef, RefObject } from 'react';
 
-interface UseIntersectionObserverOptions {
-  threshold?: number;
-  rootMargin?: string;
-  root?: Element | null;
+interface IntersectionObserverOptions extends IntersectionObserverInit {
   once?: boolean;
 }
 
-/**
- * Hook to detect when an element is visible in the viewport
- * Useful for implementing lazy loading of images and other resources
- */
+type IntersectionObserverReturn<T extends HTMLElement> = [
+  RefObject<T>,
+  boolean,
+  IntersectionObserverEntry | null
+];
+
 export function useIntersectionObserver<T extends HTMLElement>(
-  options: UseIntersectionObserverOptions = {}
-): [RefObject<T>, boolean] {
-  const {
-    threshold = 0,
-    rootMargin = '0px',
-    root = null,
-    once = false
-  } = options;
+  options: IntersectionObserverOptions = {}
+): IntersectionObserverReturn<T> {
+  const { threshold = 0, root = null, rootMargin = '0px', once = false } = options;
   
-  const ref = useRef<T>(null);
   const [isIntersecting, setIsIntersecting] = useState(false);
+  const [entry, setEntry] = useState<IntersectionObserverEntry | null>(null);
+  const elementRef = useRef<T>(null);
+  const observerRef = useRef<IntersectionObserver | null>(null);
   
   useEffect(() => {
-    const element = ref.current;
+    const element = elementRef.current;
+    // If element doesn't exist or observer already active, do nothing
+    if (!element || observerRef.current) return;
     
-    if (!element) return;
+    const observerCallback: IntersectionObserverCallback = ([entry]) => {
+      setIsIntersecting(entry.isIntersecting);
+      setEntry(entry);
+      
+      // If configured for one-time detection and element is visible, disconnect
+      if (once && entry.isIntersecting && observerRef.current) {
+        observerRef.current.disconnect();
+        observerRef.current = null;
+      }
+    };
     
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIsIntersecting(entry.isIntersecting);
-        
-        // If 'once' is true and element is intersecting, disconnect the observer
-        if (once && entry.isIntersecting) {
-          observer.disconnect();
-        }
-      },
-      { threshold, rootMargin, root }
-    );
+    const observer = new IntersectionObserver(observerCallback, {
+      threshold,
+      root,
+      rootMargin
+    });
     
     observer.observe(element);
+    observerRef.current = observer;
     
     return () => {
-      observer.disconnect();
+      if (observerRef.current) {
+        observerRef.current.disconnect();
+        observerRef.current = null;
+      }
     };
-  }, [threshold, rootMargin, root, once]);
+  }, [threshold, root, rootMargin, once]);
   
-  return [ref, isIntersecting];
+  return [elementRef, isIntersecting, entry];
 }
+
+export default useIntersectionObserver;
