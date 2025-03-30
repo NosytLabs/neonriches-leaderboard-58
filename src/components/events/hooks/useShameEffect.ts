@@ -1,8 +1,13 @@
 
 import { useState, useCallback } from 'react';
-import { MockeryAction, ShameEffect, ShameEffectOptions } from '@/types/mockery';
+import { MockeryAction } from '@/types/mockery';
 
-// Define mockery action info - this time with a proper name
+export interface ShameEffectOptions {
+  duration?: number;
+  message?: string;
+}
+
+// Define mockery action info
 export const mockeryActionsInfo: Record<MockeryAction, { 
   icon: string; 
   title: string; 
@@ -51,7 +56,6 @@ export const mockeryActionsInfo: Record<MockeryAction, {
     price: 5.0,
     duration: 7 * 24 * 60 * 60 * 1000, // 7 days
   },
-  // Add more mockery types as needed with minimal implementation
   crown: {
     icon: '👑',
     title: 'Mock Crown',
@@ -68,10 +72,8 @@ export const mockeryActionsInfo: Record<MockeryAction, {
     price: 1.25,
     duration: 24 * 60 * 60 * 1000,
   },
-  // Add minimal definitions for all other mockery actions
   dunce: { icon: '🎭', title: 'Dunce', description: 'Dunce cap', tier: 'basic', price: 0.5, duration: 24 * 60 * 60 * 1000 },
   jester: { icon: '🃏', title: 'Jester', description: 'Court jester', tier: 'premium', price: 1.0, duration: 24 * 60 * 60 * 1000 },
-  clown: { icon: '🤡', title: 'Clown', description: 'Royal clown', tier: 'basic', price: 0.75, duration: 24 * 60 * 60 * 1000 },
   fool: { icon: '😵', title: 'Fool', description: 'Village fool', tier: 'basic', price: 0.5, duration: 24 * 60 * 60 * 1000 },
   troll: { icon: '👹', title: 'Troll', description: 'Bridge troll', tier: 'premium', price: 1.0, duration: 24 * 60 * 60 * 1000 },
   peasant: { icon: '👨‍🌾', title: 'Peasant', description: 'Lowly peasant', tier: 'basic', price: 0.5, duration: 24 * 60 * 60 * 1000 },
@@ -92,6 +94,8 @@ export const mockeryActionsInfo: Record<MockeryAction, {
   target: { icon: '🎯', title: 'Target', description: 'Target practice', tier: 'basic', price: 0.5, duration: 24 * 60 * 60 * 1000 },
   challenge: { icon: '⚔️', title: 'Challenge', description: 'Royal challenge', tier: 'royal', price: 5.0, duration: 24 * 60 * 60 * 1000 }
 };
+
+export type ShameAction = MockeryAction;
 
 export function useShameEffect() {
   const [shameEffects, setShameEffects] = useState<Record<string, { action: MockeryAction; timestamp: number; until: number; }>>({});

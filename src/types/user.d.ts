@@ -51,14 +51,14 @@ export interface UserSettings {
   soundEffects: boolean;
   showEmailOnProfile: boolean;
   rankChangeAlerts: boolean;
+  newFollowerAlerts: boolean;
+  teamNotifications: boolean;
   shameAlerts?: boolean;
-  newFollowerAlerts?: boolean;
-  teamNotifications?: boolean;
+  teamChangeAlerts?: boolean;
   showTeam?: boolean;
   showSpending?: boolean;
   spendAlerts?: boolean;
   spendingAlerts?: boolean;
-  teamChangeAlerts?: boolean;
   publicProfile?: boolean;
   allowMessages?: boolean;
   language?: string;
@@ -80,6 +80,7 @@ export interface UserSubscription {
   price?: number;
   interval?: 'monthly' | 'yearly' | 'quarterly';
   features?: string[];
+  status?: string;
 }
 
 export interface UserProfile {
@@ -125,7 +126,9 @@ export interface UserProfile {
   isOnline?: boolean;
   isProtected?: boolean;
   avatarUrl?: string;
+  spentAmount?: number;
   userTeam?: UserTeam;
+  lastLogin?: string;
 }
 
 export interface UserTeam {

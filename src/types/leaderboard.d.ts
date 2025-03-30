@@ -23,6 +23,9 @@ export interface LeaderboardUser {
   avatarUrl?: string;
   lastActive?: string;
   createdAt?: string;
+  // Add missing properties
+  joinedAt?: string;
+  spendStreak?: number;
 }
 
 export interface LeaderboardFilter {
