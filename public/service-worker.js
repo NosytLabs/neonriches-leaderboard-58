@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'v1.0.1';
+const CACHE_VERSION = 'v1.1.0';
 const CACHE_NAME = `spendthrone-cache-${CACHE_VERSION}`;
 
 const STATIC_CACHE_NAME = `static-${CACHE_VERSION}`;
@@ -27,6 +27,7 @@ const CACHE_TIMES = {
   images: 24 * 60 * 60 * 1000 // 24 hours
 };
 
+// Preload critical assets during installation
 self.addEventListener('install', event => {
   self.skipWaiting();
 
@@ -36,9 +37,20 @@ self.addEventListener('install', event => {
         console.log('[Service Worker] Caching static assets');
         return cache.addAll(STATIC_ASSETS);
       })
+      .then(() => {
+        // Preload critical fonts
+        return caches.open(FONTS_CACHE_NAME)
+          .then(cache => {
+            return cache.addAll([
+              'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap',
+              'https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuOKfAZ9hiA.woff2'
+            ]);
+          });
+      })
   );
 });
 
+// Clean up old caches on activation
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys().then(cacheNames => {
@@ -61,6 +73,7 @@ self.addEventListener('activate', event => {
   );
 });
 
+// Determine which cache to use based on request type
 function getCacheNameForRequest(request) {
   const url = new URL(request.url);
   
@@ -90,9 +103,23 @@ function getCacheNameForRequest(request) {
     return IMAGES_CACHE_NAME;
   }
   
+  // Check for JavaScript files to cache separately
+  if (
+    url.pathname.endsWith('.js') ||
+    url.pathname.endsWith('.mjs')
+  ) {
+    return `js-${CACHE_VERSION}`;
+  }
+  
+  // Check for CSS files to cache separately
+  if (url.pathname.endsWith('.css')) {
+    return `css-${CACHE_VERSION}`;
+  }
+  
   return DYNAMIC_CACHE_NAME;
 }
 
+// Determine if a request should be cached
 function shouldCache(request) {
   const url = new URL(request.url);
   
@@ -108,9 +135,15 @@ function shouldCache(request) {
     return false;
   }
   
+  // Don't cache POST requests to API
+  if (request.method === 'POST' && url.pathname.includes('/api/')) {
+    return false;
+  }
+  
   return true;
 }
 
+// Calculate expiry time for cached items
 function getExpiryTimestamp(cacheName) {
   const now = Date.now();
   
@@ -129,25 +162,30 @@ function getExpiryTimestamp(cacheName) {
   return now + CACHE_TIMES.dynamic;
 }
 
+// Store response in cache with metadata
 async function cacheWithMetadata(request, response, cacheName) {
   const expiry = getExpiryTimestamp(cacheName);
   
   const responseToCache = response.clone();
   
+  // Add cache metadata to headers (timestamp and expiry)
   const headers = new Headers(responseToCache.headers);
   headers.append('sw-cache-timestamp', Date.now().toString());
   headers.append('sw-cache-expiry', expiry.toString());
   
+  // Create new response with added headers
   const augmentedResponse = new Response(await responseToCache.blob(), {
     status: responseToCache.status,
     statusText: responseToCache.statusText,
     headers: headers
   });
   
+  // Store in appropriate cache
   const cache = await caches.open(cacheName);
   cache.put(request, augmentedResponse);
 }
 
+// Check if a cached response has expired
 async function isResponseExpired(response) {
   if (!response || !response.headers) {
     return true;
@@ -161,7 +199,15 @@ async function isResponseExpired(response) {
   return Date.now() > parseInt(expiry, 10);
 }
 
+// Compress a string for performance logging
+function compressString(str) {
+  // Simple compression by removing spaces and limiting length
+  return str.replace(/\s+/g, '').slice(0, 100);
+}
+
+// Advanced fetch handler with stale-while-revalidate strategy
 self.addEventListener('fetch', event => {
+  // Only handle requests from our origin and font services
   if (!event.request.url.startsWith(self.location.origin) && 
       !event.request.url.startsWith('https://fonts.')) {
     return;
@@ -174,6 +220,11 @@ self.addEventListener('fetch', event => {
     return;
   }
   
+  // Performance tracking
+  const fetchStart = Date.now();
+  let cacheHit = false;
+  
+  // Special handling for navigation requests (HTML pages)
   if (event.request.mode === 'navigate') {
     event.respondWith(
       fetch(event.request)
@@ -191,13 +242,19 @@ self.addEventListener('fetch', event => {
               if (cachedResponse) {
                 return cachedResponse;
               }
+              // Return the homepage as a fallback
               return caches.match('/');
             });
+        })
+        .finally(() => {
+          const fetchEnd = Date.now();
+          console.log(`[Performance] Navigation fetch completed in ${fetchEnd - fetchStart}ms. Cache hit: ${cacheHit}`);
         })
     );
     return;
   }
   
+  // Special handling for API requests
   if (requestUrl.pathname.includes('/api/')) {
     event.respondWith(
       caches.open(API_CACHE_NAME)
@@ -205,39 +262,54 @@ self.addEventListener('fetch', event => {
           return cache.match(event.request)
             .then(async cachedResponse => {
               const expired = await isResponseExpired(cachedResponse);
+              cacheHit = cachedResponse && !expired;
               
-              const fetchPromise = fetch(event.request)
-                .then(networkResponse => {
-                  if (networkResponse.ok && shouldCache(event.request)) {
-                    cacheWithMetadata(event.request, networkResponse, API_CACHE_NAME);
-                  }
-                  return networkResponse;
-                })
-                .catch(error => {
-                  console.error('[Service Worker] API fetch failed:', error);
-                  if (cachedResponse) {
-                    return cachedResponse;
-                  }
-                  throw error;
-                });
+              // Network request with timeout
+              const networkPromise = Promise.race([
+                fetch(event.request)
+                  .then(networkResponse => {
+                    if (networkResponse.ok && shouldCache(event.request)) {
+                      cacheWithMetadata(event.request, networkResponse, API_CACHE_NAME);
+                    }
+                    return networkResponse;
+                  }),
+                new Promise((_, reject) => 
+                  setTimeout(() => reject(new Error('Network request timeout')), 10000)
+                )
+              ]).catch(error => {
+                console.error('[Service Worker] API fetch failed:', error);
+                if (cachedResponse) {
+                  return cachedResponse;
+                }
+                throw error;
+              });
               
+              // Return cached response immediately if it's not expired
               if (cachedResponse && !expired) {
-                fetchPromise.catch(console.error);
+                // Revalidate in the background
+                networkPromise.catch(console.error);
                 return cachedResponse;
               }
               
-              return fetchPromise;
+              // Otherwise, wait for the network response
+              return networkPromise;
             });
+        })
+        .finally(() => {
+          const fetchEnd = Date.now();
+          console.log(`[Performance] API fetch for ${compressString(event.request.url)} completed in ${fetchEnd - fetchStart}ms. Cache hit: ${cacheHit}`);
         })
     );
     return;
   }
   
+  // Static assets handling
   if (STATIC_ASSETS.includes(requestUrl.pathname) || requestUrl.pathname.startsWith('/static/')) {
     event.respondWith(
       caches.match(event.request)
         .then(cachedResponse => {
           if (cachedResponse) {
+            cacheHit = true;
             return cachedResponse;
           }
           return fetch(event.request)
@@ -250,10 +322,15 @@ self.addEventListener('fetch', event => {
               return response;
             });
         })
+        .finally(() => {
+          const fetchEnd = Date.now();
+          console.log(`[Performance] Static asset fetch for ${compressString(requestUrl.pathname)} completed in ${fetchEnd - fetchStart}ms. Cache hit: ${cacheHit}`);
+        })
     );
     return;
   }
   
+  // Default handling for all other requests
   const cacheName = getCacheNameForRequest(event.request);
   
   event.respondWith(
@@ -262,68 +339,179 @@ self.addEventListener('fetch', event => {
         return cache.match(event.request)
           .then(async cachedResponse => {
             const expired = await isResponseExpired(cachedResponse);
+            cacheHit = cachedResponse && !expired;
             
-            const fetchPromise = fetch(event.request)
-              .then(networkResponse => {
-                if (networkResponse.ok && shouldCache(event.request)) {
-                  cacheWithMetadata(event.request, networkResponse, cacheName);
-                }
-                return networkResponse;
-              })
-              .catch(error => {
-                console.error('[Service Worker] Fetch failed:', error);
-                if (cachedResponse) {
-                  return cachedResponse;
-                }
-                throw error;
-              });
+            // Network request with timeout for images and non-critical resources
+            const isNonCritical = cacheName === IMAGES_CACHE_NAME || cacheName === DYNAMIC_CACHE_NAME;
+            const timeout = isNonCritical ? 8000 : 5000;
             
+            const networkPromise = Promise.race([
+              fetch(event.request)
+                .then(networkResponse => {
+                  if (networkResponse.ok && shouldCache(event.request)) {
+                    cacheWithMetadata(event.request, networkResponse, cacheName);
+                  }
+                  return networkResponse;
+                }),
+              new Promise((_, reject) => 
+                setTimeout(() => reject(new Error('Network request timeout')), timeout)
+              )
+            ]).catch(error => {
+              console.error(`[Service Worker] Fetch failed for ${requestUrl.pathname}:`, error);
+              if (cachedResponse) {
+                return cachedResponse;
+              }
+              throw error;
+            });
+            
+            // Stale-while-revalidate: return cached immediately and update in background
             if (cachedResponse && !expired) {
-              fetchPromise.catch(console.error);
+              networkPromise.catch(console.error);
               return cachedResponse;
             }
             
-            return fetchPromise;
+            // If we have a stale (expired) response and this is an image, use it temporarily
+            if (cachedResponse && expired && cacheName === IMAGES_CACHE_NAME) {
+              // Revalidate in the background
+              networkPromise.catch(console.error);
+              return cachedResponse;
+            }
+            
+            // Otherwise, wait for the network response
+            return networkPromise;
           });
+      })
+      .finally(() => {
+        const fetchEnd = Date.now();
+        const resourceType = cacheName.split('-')[0]; // Get the resource type from the cache name
+        console.log(`[Performance] ${resourceType} fetch for ${compressString(requestUrl.pathname)} completed in ${fetchEnd - fetchStart}ms. Cache hit: ${cacheHit}`);
       })
   );
 });
 
+// Background sync for offline actions
 self.addEventListener('sync', event => {
   if (event.tag === 'sync-offline-actions') {
     event.waitUntil(
-      console.log('[Service Worker] Processing offline actions')
+      self.clients.matchAll().then(clients => {
+        clients.forEach(client => {
+          client.postMessage({
+            type: 'SYNC_STARTED',
+            timestamp: Date.now()
+          });
+        });
+        
+        // Process offline queue
+        console.log('[Service Worker] Processing offline actions');
+        return processOfflineQueue()
+          .then(results => {
+            // Notify clients of completion
+            return self.clients.matchAll().then(clients => {
+              clients.forEach(client => {
+                client.postMessage({
+                  type: 'SYNC_COMPLETED',
+                  results: results,
+                  timestamp: Date.now()
+                });
+              });
+            });
+          });
+      })
     );
   }
 });
 
+// Process queued offline actions
+async function processOfflineQueue() {
+  // Implementation would depend on how offline actions are stored
+  // This is a placeholder
+  return { processed: 0, failed: 0 };
+}
+
+// Handle push notifications
 self.addEventListener('push', event => {
   if (event.data) {
-    const data = event.data.json();
-    
-    const options = {
-      body: data.body || 'New notification',
-      icon: data.icon || '/favicon-196.png',
-      badge: '/favicon-196.png',
-      data: {
-        url: data.url || '/'
-      }
-    };
-    
-    event.waitUntil(
-      self.registration.showNotification(data.title || 'SpendThrone Notification', options)
-    );
+    try {
+      const data = event.data.json();
+      
+      const options = {
+        body: data.body || 'New notification',
+        icon: data.icon || '/favicon-196.png',
+        badge: '/favicon-196.png',
+        data: {
+          url: data.url || '/',
+          timestamp: Date.now()
+        },
+        actions: data.actions || [],
+        tag: data.tag || 'default',
+        renotify: data.renotify || false,
+        requireInteraction: data.requireInteraction || false
+      };
+      
+      event.waitUntil(
+        self.registration.showNotification(data.title || 'SpendThrone Notification', options)
+      );
+    } catch (error) {
+      console.error('[Service Worker] Error processing push notification:', error);
+    }
   }
 });
 
+// Handle notification clicks
 self.addEventListener('notificationclick', event => {
   event.notification.close();
   
   if (event.notification.data && event.notification.data.url) {
     event.waitUntil(
-      clients.openWindow(event.notification.data.url)
+      clients.matchAll({ type: 'window' }).then(windowClients => {
+        // Check if there is already a window/tab open with the URL
+        for (let client of windowClients) {
+          if (client.url === event.notification.data.url && 'focus' in client) {
+            return client.focus();
+          }
+        }
+        // If not, open a new window/tab
+        if (clients.openWindow) {
+          return clients.openWindow(event.notification.data.url);
+        }
+      })
     );
   }
 });
+
+// Keep service worker alive
+self.addEventListener('message', event => {
+  if (event.data && event.data.type === 'KEEP_ALIVE') {
+    console.log('[Service Worker] Received keep-alive ping');
+  }
+  
+  // Handle cache invalidation requests from the app
+  if (event.data && event.data.type === 'INVALIDATE_CACHE') {
+    const urls = event.data.urls || [];
+    const cacheName = event.data.cacheName || API_CACHE_NAME;
+    
+    caches.open(cacheName).then(cache => {
+      urls.forEach(url => {
+        cache.delete(new Request(url))
+          .then(success => {
+            console.log(`[Service Worker] Cache invalidated for ${url}: ${success}`);
+          });
+      });
+    });
+  }
+});
+
+// Update service worker metrics
+setInterval(() => {
+  const memoryUsage = self.performance && self.performance.memory 
+    ? {
+        usedJSHeapSize: self.performance.memory.usedJSHeapSize,
+        totalJSHeapSize: self.performance.memory.totalJSHeapSize
+      }
+    : { usedJSHeapSize: 0, totalJSHeapSize: 0 };
+  
+  // This would be used for monitoring, but just log for now
+  console.log('[Service Worker] Memory usage:', memoryUsage);
+}, 60000);
 
 console.log('[Service Worker] Initialized (Version:', CACHE_VERSION, ')');

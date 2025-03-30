@@ -24,9 +24,97 @@ export const initPerformanceMonitoring = (): void => {
       }
     }
     
-    // Measure component render times
+    // Core Web Vitals measurement
+    if ('PerformanceObserver' in window) {
+      try {
+        // Largest Contentful Paint
+        const lcpObserver = new PerformanceObserver((entryList) => {
+          const entries = entryList.getEntries();
+          const lastEntry = entries[entries.length - 1];
+          const lcp = lastEntry.startTime;
+          
+          // Log LCP and assess quality
+          const lcpQuality = lcp < 2500 ? 'Good' : lcp < 4000 ? 'Needs Improvement' : 'Poor';
+          console.info(`[Core Web Vitals] LCP: ${lcp.toFixed(2)}ms (${lcpQuality})`);
+          
+          // Store for reporting
+          window.__PERFORMANCE_METRICS = window.__PERFORMANCE_METRICS || {};
+          window.__PERFORMANCE_METRICS.LCP = { value: lcp, quality: lcpQuality };
+        });
+        
+        lcpObserver.observe({ type: 'largest-contentful-paint', buffered: true });
+        
+        // First Input Delay
+        const fidObserver = new PerformanceObserver((entryList) => {
+          const entries = entryList.getEntries();
+          entries.forEach(entry => {
+            const fid = (entry as PerformanceEventTiming).processingStart - entry.startTime;
+            
+            // Log FID and assess quality
+            const fidQuality = fid < 100 ? 'Good' : fid < 300 ? 'Needs Improvement' : 'Poor';
+            console.info(`[Core Web Vitals] FID: ${fid.toFixed(2)}ms (${fidQuality})`);
+            
+            // Store for reporting
+            window.__PERFORMANCE_METRICS = window.__PERFORMANCE_METRICS || {};
+            window.__PERFORMANCE_METRICS.FID = { value: fid, quality: fidQuality };
+          });
+        });
+        
+        fidObserver.observe({ type: 'first-input', buffered: true });
+        
+        // Cumulative Layout Shift
+        const clsObserver = new PerformanceObserver((entryList) => {
+          let clsValue = 0;
+          
+          entryList.getEntries().forEach(entry => {
+            if (!(entry as any).hadRecentInput) {
+              clsValue += (entry as any).value;
+            }
+          });
+          
+          // Log CLS and assess quality
+          const clsQuality = clsValue < 0.1 ? 'Good' : clsValue < 0.25 ? 'Needs Improvement' : 'Poor';
+          console.info(`[Core Web Vitals] CLS: ${clsValue.toFixed(3)} (${clsQuality})`);
+          
+          // Store for reporting
+          window.__PERFORMANCE_METRICS = window.__PERFORMANCE_METRICS || {};
+          window.__PERFORMANCE_METRICS.CLS = { value: clsValue, quality: clsQuality };
+        });
+        
+        clsObserver.observe({ type: 'layout-shift', buffered: true });
+        
+        // Interaction to Next Paint
+        if ('interactionCount' in PerformanceEventTiming.prototype) {
+          const inpObserver = new PerformanceObserver((entryList) => {
+            const interactions = entryList.getEntries();
+            
+            if (interactions.length > 0) {
+              // Get the 95th percentile for INP
+              const values = interactions.map(entry => {
+                return entry.duration;
+              }).sort((a, b) => a - b);
+              
+              const inp = values[Math.floor(values.length * 0.95)];
+              
+              // Log INP and assess quality
+              const inpQuality = inp < 200 ? 'Good' : inp < 500 ? 'Needs Improvement' : 'Poor';
+              console.info(`[Core Web Vitals] INP: ${inp.toFixed(2)}ms (${inpQuality})`);
+              
+              // Store for reporting
+              window.__PERFORMANCE_METRICS = window.__PERFORMANCE_METRICS || {};
+              window.__PERFORMANCE_METRICS.INP = { value: inp, quality: inpQuality };
+            }
+          });
+          
+          inpObserver.observe({ type: 'event', buffered: true, durationThreshold: 16 });
+        }
+      } catch (error) {
+        console.error('[Performance] Error measuring Core Web Vitals:', error);
+      }
+    }
+    
+    // Component render times in development
     if (process.env.NODE_ENV === 'development') {
-      // Only in development mode to avoid impacting production
       window.__PERFORMANCE_MARKS = window.__PERFORMANCE_MARKS || {};
       
       // Clear previous marks on page navigation
@@ -81,9 +169,53 @@ export const markComponentRenderEnd = (componentName: string): void => {
   }
 };
 
+/**
+ * Track a user interaction for performance analysis
+ */
+export const trackUserInteraction = (actionName: string, callback: () => void): void => {
+  if (typeof window !== 'undefined') {
+    const startTime = performance.now();
+    
+    // Execute the callback
+    callback();
+    
+    // Measure the time taken
+    const endTime = performance.now();
+    const duration = endTime - startTime;
+    
+    // Warn if interaction took too long
+    if (duration > 100) {
+      console.warn(`[Performance] User interaction '${actionName}' took ${duration.toFixed(2)}ms - consider optimizing`);
+    }
+    
+    // Record the interaction
+    window.__PERFORMANCE_INTERACTIONS = window.__PERFORMANCE_INTERACTIONS || [];
+    window.__PERFORMANCE_INTERACTIONS.push({
+      name: actionName,
+      timestamp: Date.now(),
+      duration
+    });
+  }
+};
+
+/**
+ * Get a summary of performance metrics
+ */
+export const getPerformanceSummary = (): Record<string, any> => {
+  if (typeof window === 'undefined') return {};
+  
+  return {
+    metrics: window.__PERFORMANCE_METRICS || {},
+    interactions: window.__PERFORMANCE_INTERACTIONS || [],
+    navigation: performance.getEntriesByType('navigation')[0] || {}
+  };
+};
+
 // Add a type for the global window object
 declare global {
   interface Window {
     __PERFORMANCE_MARKS?: Record<string, { start: number }>;
+    __PERFORMANCE_METRICS?: Record<string, { value: number, quality: string }>;
+    __PERFORMANCE_INTERACTIONS?: Array<{ name: string, timestamp: number, duration: number }>;
   }
 }
