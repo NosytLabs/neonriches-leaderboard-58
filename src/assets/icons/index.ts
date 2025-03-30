@@ -7,6 +7,8 @@ import VipBadge from './VipBadge';
 import DonorBadge from './DonorBadge';
 import StarBadge from './StarBadge';
 import HeartBadge from './HeartBadge';
+import MoneyBag from './MoneyBag';
+import Crown from './Crown';
 
 export {
   CoinPile,
@@ -16,5 +18,7 @@ export {
   VipBadge,
   DonorBadge,
   StarBadge,
-  HeartBadge
+  HeartBadge,
+  MoneyBag,
+  Crown
 };
