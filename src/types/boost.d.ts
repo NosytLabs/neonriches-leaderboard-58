@@ -27,8 +27,8 @@ export interface ProfileBoost {
   type: string;
   strength?: number;
   appliedBy: string;
-  startDate?: string;
-  endDate?: string;
   startTime?: string | Date;
   endTime?: string | Date;
+  startDate?: string;
+  endDate?: string;
 }

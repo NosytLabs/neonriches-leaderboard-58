@@ -5,22 +5,18 @@ export interface PaymentModalProps {
   amount: number;
   onSuccess: () => void;
   trigger: React.ReactNode;
+  url?: string;
 }
 
 export interface PaymentResult {
   success: boolean;
-  transactionId?: string;
+  subscriptionId?: string;
   error?: string;
   url?: string;
-  subscriptionId?: string;
 }
 
-export interface PaymentMethod {
-  id: string;
-  name: string;
-  icon: string;
+export interface PaymentMethodProps {
+  onPaymentComplete: (result: boolean) => void;
+  amount: number;
   description: string;
-  isDefault: boolean;
 }
-
-export type PaymentType = 'oneTime' | 'subscription' | 'donation';

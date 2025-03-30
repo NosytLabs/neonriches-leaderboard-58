@@ -10,3 +10,10 @@ export interface LeaderboardUser {
   totalSpent: number;
   spendStreak?: number;
 }
+
+export interface LeaderboardEntry extends LeaderboardUser {
+  position: number;
+  previousRank?: number;
+  dailyChange?: number;
+  weeklyChange?: number;
+}

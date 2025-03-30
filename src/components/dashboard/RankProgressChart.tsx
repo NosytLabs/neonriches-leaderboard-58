@@ -1,80 +1,53 @@
 
 import React from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { useAuth } from '@/hooks/useAuth';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
-// Mock data - in a real app, this would come from an API
-const generateMockData = (count: number, startRank: number) => {
-  const data = [];
-  let currentRank = startRank;
-  
-  for (let i = 0; i < count; i++) {
-    // Simulate rank improvement (lower number is better)
-    currentRank = Math.max(1, currentRank - Math.floor(Math.random() * 3));
-    
-    data.push({
-      date: new Date(Date.now() - (count - i) * 24 * 60 * 60 * 1000).toLocaleDateString(),
-      rank: currentRank
-    });
-  }
-  
-  return data;
-};
+const RankProgressChart = () => {
+  // Mock data - in a real app, this would come from the API
+  const data = [
+    { day: 'Mon', rank: 120 },
+    { day: 'Tue', rank: 115 },
+    { day: 'Wed', rank: 110 },
+    { day: 'Thu', rank: 105 },
+    { day: 'Fri', rank: 95 },
+    { day: 'Sat', rank: 88 },
+    { day: 'Sun', rank: 82 },
+  ];
 
-const RankProgressChart: React.FC = () => {
-  const { user } = useAuth();
-  const [data, setData] = React.useState<{ date: string; rank: number }[]>([]);
-  
-  React.useEffect(() => {
-    if (user) {
-      const startRank = user.rank ? user.rank + 10 : 100;
-      setData(generateMockData(14, startRank));
-    }
-  }, [user]);
-  
-  if (!user) return null;
-  
   return (
     <ResponsiveContainer width="100%" height="100%">
       <LineChart
         data={data}
-        margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+        margin={{
+          top: 20,
+          right: 30,
+          left: 20,
+          bottom: 10,
+        }}
       >
-        <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
+        <CartesianGrid strokeDasharray="3 3" opacity={0.1} />
         <XAxis 
-          dataKey="date" 
-          stroke="rgba(255,255,255,0.5)"
-          tickFormatter={(value) => {
-            const date = new Date(value);
-            return `${date.getDate()}/${date.getMonth() + 1}`;
-          }}
+          dataKey="day" 
+          tick={{ fill: 'rgba(255, 255, 255, 0.6)' }}
         />
         <YAxis 
-          stroke="rgba(255,255,255,0.5)" 
-          reversed={true} 
-          domain={[1, 'dataMax']}
-          label={{ 
-            value: 'Rank', 
-            angle: -90, 
-            position: 'insideLeft',
-            style: { fill: 'rgba(255,255,255,0.7)' }
-          }}
+          tick={{ fill: 'rgba(255, 255, 255, 0.6)' }}
+          domain={['dataMin - 5', 'dataMax + 5']}
+          reversed
         />
         <Tooltip 
-          formatter={(value) => [`Rank ${value}`, 'Rank']}
-          contentStyle={{ 
-            backgroundColor: 'rgba(10,10,20,0.8)', 
-            border: '1px solid rgba(255,255,255,0.2)' 
-          }}
-          labelStyle={{ color: 'rgba(255,255,255,0.8)' }}
+          contentStyle={{ backgroundColor: '#1a1a1a', borderColor: '#333' }}
+          labelStyle={{ color: '#fff' }}
+          formatter={(value) => [`Rank #${value}`, 'Rank']}
         />
         <Line 
           type="monotone" 
           dataKey="rank" 
-          stroke="rgba(218,165,32,0.8)" 
-          strokeWidth={2}
-          dot={{ fill: '#DAA520', stroke: '#DAA520', strokeWidth: 2, r: 4 }}
-          activeDot={{ r: 6, fill: '#FFFFFF', stroke: '#DAA520' }}
+          stroke="#FFD700" 
+          strokeWidth={2} 
+          dot={{ fill: '#FFD700', strokeWidth: 2 }}
+          activeDot={{ r: 8, fill: '#FFD700', stroke: '#fff' }}
         />
       </LineChart>
     </ResponsiveContainer>

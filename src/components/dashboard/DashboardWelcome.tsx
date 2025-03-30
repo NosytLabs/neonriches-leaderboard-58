@@ -1,56 +1,37 @@
 
 import React from 'react';
 import { UserProfile } from '@/types/user';
-import { CalendarDays, Star, Crown, Award } from 'lucide-react';
-import { formatDistanceToNow } from 'date-fns';
+import { Card, CardContent } from '@/components/ui/card';
+import { Crown } from 'lucide-react';
+import { formatCurrency } from '@/utils/formatters';
 
 interface DashboardWelcomeProps {
   user: UserProfile;
 }
 
 export const DashboardWelcome: React.FC<DashboardWelcomeProps> = ({ user }) => {
-  const joinDate = user.joinedAt instanceof Date ? user.joinedAt : new Date(user.joinedAt || Date.now());
-  const memberSince = formatDistanceToNow(joinDate, { addSuffix: true });
-  
   return (
-    <div className="mb-8">
-      <div className="flex flex-col md:flex-row md:items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold royal-gradient">
-            Welcome, {user.displayName || user.username}
-          </h1>
-          <p className="text-white/60 flex items-center mt-2">
-            <CalendarDays className="mr-2 h-4 w-4" />
-            Member since {memberSince}
-          </p>
-        </div>
-        
-        <div className="flex items-center space-x-4 mt-4 md:mt-0">
-          <div className="flex items-center bg-white/5 p-2 rounded-md">
-            <Crown className="h-5 w-5 text-royal-gold mr-2" />
-            <div>
-              <p className="text-sm text-white/60">Rank</p>
-              <p className="font-medium">{user.rank || 'Unranked'}</p>
-            </div>
+    <Card className="glass-morphism border-royal-gold/20 mb-6">
+      <CardContent className="p-6">
+        <div className="flex items-start justify-between">
+          <div>
+            <h1 className="text-2xl font-bold mb-2">
+              Welcome, {user.displayName || user.username}!
+            </h1>
+            <p className="text-white/70">
+              Your current rank is <span className="text-royal-gold font-medium">#{user.rank || 'N/A'}</span>
+            </p>
+            <p className="text-white/70">
+              Total spent: <span className="text-royal-gold font-medium">{formatCurrency(user.totalSpent || user.amountSpent || 0)}</span>
+            </p>
           </div>
-          
-          <div className="flex items-center bg-white/5 p-2 rounded-md">
-            <Star className="h-5 w-5 text-royal-gold mr-2" />
-            <div>
-              <p className="text-sm text-white/60">Tier</p>
-              <p className="font-medium capitalize">{user.tier || 'Basic'}</p>
-            </div>
-          </div>
-          
-          <div className="flex items-center bg-white/5 p-2 rounded-md">
-            <Award className="h-5 w-5 text-royal-gold mr-2" />
-            <div>
-              <p className="text-sm text-white/60">Streak</p>
-              <p className="font-medium">{user.spendStreak || 0} days</p>
-            </div>
+          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-royal-gold to-royal-amber">
+            <Crown className="h-6 w-6 text-black" />
           </div>
         </div>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 };
+
+export default DashboardWelcome;
