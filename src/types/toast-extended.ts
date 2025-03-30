@@ -1,11 +1,9 @@
 
-import React from 'react';
-import { ToastActionElement } from '@/components/ui/toast';
+import { ReactNode } from 'react';
+import { ToastProps } from '@/components/ui/toast';
 
-export interface ExtendedToastProps {
-  title?: React.ReactNode;
-  description?: React.ReactNode;
-  action?: ToastActionElement;
-  variant?: 'default' | 'destructive' | 'success';
+export interface ExtendedToastProps extends Partial<ToastProps> {
+  title?: ReactNode;
+  description?: ReactNode;
   duration?: number;
 }

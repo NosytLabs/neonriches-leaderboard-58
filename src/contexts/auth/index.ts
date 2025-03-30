@@ -17,8 +17,8 @@ export const AuthContext = createContext<AuthContextType>({
 // Hook to use the auth context
 export const useAuth = () => useContext(AuthContext);
 
-// Export the AuthContext directly
-export { UserProfile };
+// Export the UserProfile type
+export type { UserProfile };
 
-// Export from internal components
-export * from './AuthProvider';
+// Export the AuthProvider component
+export { AuthProvider } from './AuthProvider';

@@ -1,36 +1,8 @@
 
-// Basic user types
-export type UserGender = 'male' | 'female' | 'other' | 'prefer-not-to-say' | 'king' | 'queen' | 'neutral' | 'jester' | 'noble';
-export type UserTier = 'free' | 'basic' | 'premium' | 'pro' | 'royal' | 'founder' | 'whale' | 'silver' | 'bronze' | 'gold' | 'platinum' | 'diamond' | 'dolphin' | 'shark' | 'standard';
-export type TeamType = 'red' | 'green' | 'blue' | 'Red' | 'Green' | 'Blue' | 'none' | null;
-export type UserTeam = TeamType;
+export type TeamType = 'red' | 'green' | 'blue' | 'none';
+export type UserTier = 'free' | 'basic' | 'bronze' | 'silver' | 'gold' | 'platinum' | 'diamond' | 'royal' | 'founder' | 'pro' | 'premium' | 'whale';
+export type GenderType = 'king' | 'queen' | 'none';
 
-// Profile image
-export interface ProfileImage {
-  id: string;
-  url: string;
-  isPrimary: boolean;
-  caption: string;
-  isVerified: boolean;
-  uploadedAt: string;
-}
-
-// User profile boost
-export interface ProfileBoost {
-  id: string;
-  effectId: string;
-  userId: string;
-  type: string;
-  startDate?: string;
-  endDate?: string;
-  duration: number;
-  level: number;
-  strength: number;
-  appliedBy: string;
-  isActive: boolean;
-}
-
-// User cosmetics
 export interface UserCosmetics {
   badges: string[];
   titles: string[];
@@ -40,17 +12,31 @@ export interface UserCosmetics {
   fonts: string[];
   colors: string[];
   backgrounds: string[];
-  themes?: string[];
-  activeBorder?: string;
-  activeColor?: string;
-  activeFont?: string;
-  foundersPass?: boolean;
-  activeEmoji?: string;
-  activeTitle?: string;
-  activeBackground?: string;
 }
 
-// User settings
+export interface SocialLink {
+  id: string;
+  platform: string;
+  url: string;
+  username: string;
+  isVerified: boolean;
+  isPublic: boolean;
+}
+
+export interface ProfileBoost {
+  id: string;
+  userId: string;
+  effectId: string;
+  startDate: string;
+  endDate: string;
+  duration: number;
+  type: string;
+  level: number;
+  strength: number;
+  appliedBy: string;
+  isActive: boolean;
+}
+
 export interface UserSettings {
   profileVisibility: 'public' | 'private' | 'friends';
   allowProfileLinks: boolean;
@@ -58,66 +44,35 @@ export interface UserSettings {
   notifications: boolean;
   emailNotifications: boolean;
   soundEffects: boolean;
+  showEmailOnProfile: boolean;
+  rankChangeAlerts: boolean;
+  teamChangeAlerts: boolean;
+  spendingAlerts: boolean;
+  mockeryAlerts: boolean;
+  shameAlerts: boolean;
   animationEffects: boolean;
   showStatusInLeaderboard: boolean;
   displayRankChanges: boolean;
   enableMockeryEffects: boolean;
   receiveRoyalAnnouncements: boolean;
-  allowMessages?: boolean;
+  language: string;
   showRank?: boolean;
-  showEmailOnProfile?: boolean;
-  rankChangeAlerts?: boolean;
   showTeam?: boolean;
   showSpending?: boolean;
-  shameAlerts?: boolean;
-  publicProfile?: boolean;
-  newFollowerAlerts?: boolean;
-  darkMode?: boolean;
-  language?: string;
 }
 
-// Social links
-export interface SocialLink {
-  id: string;
-  platform: string;
-  url: string;
-  isVerified: boolean;
-  isPublic: boolean;
-  username?: string;
-  clicks?: number;
-  title?: string;
-}
-
-// User subscription
 export interface UserSubscription {
   id: string;
   tier: UserTier;
+  status: string;
   startDate: string;
   endDate: string;
-  isActive: boolean;
-  autoRenew: boolean;
-  lastPayment: string;
-  status?: string;
-  plan?: string;
-  currentPeriodEnd?: string;
-  cancelAtPeriodEnd?: boolean;
+  currentPeriodEnd: string;
+  cancelAtPeriodEnd: boolean;
+  price: number;
+  interval: 'month' | 'year';
 }
 
-// Achievement interface
-export interface Achievement {
-  id: string;
-  type: 'royal' | 'rank' | 'milestone' | 'deposit' | 'streak' | string;
-  name: string;
-  description: string;
-  unlockedAt?: string;
-  progress?: number;
-  maxProgress?: number;
-  icon: string;
-  tier: string;
-  amountSpent?: number;
-}
-
-// Core user profile interface
 export interface UserProfile {
   id: string;
   username: string;
@@ -128,67 +83,27 @@ export interface UserProfile {
   walletBalance?: number;
   amountSpent?: number;
   totalSpent?: number;
-  spentAmount?: number;
   rank?: number;
   previousRank?: number;
-  joinedAt?: Date | string;
-  joinDate?: string;
-  createdAt?: string;
   team?: TeamType;
   tier?: UserTier;
-  gender?: UserGender;
+  gender?: GenderType;
   bio?: string;
-  role?: string;
-  settings?: UserSettings;
-  socialLinks?: SocialLink[];
-  subscription?: UserSubscription;
-  cosmetics?: UserCosmetics;
-  profileBoosts?: ProfileBoost[];
-  achievements?: Achievement[];
-  images?: ProfileImage[];
-  profileImages?: ProfileImage[];
-  referralCode?: string;
-  referredBy?: string;
-  referralCount?: number;
+  joinedAt?: Date;
+  lastLogin?: Date;
   spendStreak?: number;
-  followers?: number;
-  following?: number;
-  profileViews?: number;
-  profileClicks?: number;
-  purchasedFeatures?: string[];
-  lastActive?: Date | string;
-  isActive?: boolean;
+  settings?: UserSettings;
+  subscription?: UserSubscription;
+  profileBoosts?: ProfileBoost[];
+  socialLinks?: SocialLink[];
+  cosmetics?: UserCosmetics;
   isVerified?: boolean;
-  isBanned?: boolean;
-  badges?: string[];
-  isVIP?: boolean;
-  isProtected?: boolean;
-  mockeryCount?: number;
-  lastMocked?: string;
-  isAuthenticated?: boolean;
   activeTitle?: string;
+  joinDate?: string;
+  lastMocked?: string;
   certificateNFT?: {
     mintAddress: string;
     mintedAt: string;
     tokenId: string;
   };
-}
-
-// Legacy alias for backwards compatibility
-export type User = UserProfile;
-
-// Export UserRole and UserStatus explicitly to avoid errors
-export type UserRole = 'user' | 'admin' | 'moderator';
-export type UserStatus = 'active' | 'inactive' | 'banned';
-
-// Export Team type for backward compatibility
-export type Team = TeamType;
-
-// Profile link type
-export interface ProfileLink {
-  id: number | string;
-  url: string;
-  label: string;
-  title?: string;
-  platform?: string;
 }

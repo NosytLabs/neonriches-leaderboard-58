@@ -1,6 +1,5 @@
 
 import { useToast as useShadcnToast } from "@/components/ui/use-toast";
-import { type ToastProps } from "@/components/ui/toast";
 import { type ExtendedToastProps } from "@/types/toast-extended";
 
 export function useToast() {
@@ -47,7 +46,7 @@ export function useToast() {
     royal: (props: ExtendedToastProps) => 
       baseToast({ 
         ...props, 
-        // Use default for now since royal isn't an available variant
+        // For now, use default variant since royal isn't available in the component
         variant: "default",
         title: ensureString(props.title) || "",
         description: ensureString(props.description) || ""

@@ -1,5 +1,5 @@
+
 import React from 'react';
-import { UserBadge } from '@/components/ui/user-badge';
 import { UserProfile } from '@/types/user';
 import { cn } from '@/lib/utils';
 
@@ -34,7 +34,21 @@ const LeaderboardItem: React.FC<LeaderboardItemProps> = ({
       </div>
       
       <div className="flex-shrink-0">
-        <UserBadge user={user} size="md" />
+        {user.profileImage ? (
+          <div className="w-10 h-10 rounded-full overflow-hidden">
+            <img 
+              src={user.profileImage} 
+              alt={user.username} 
+              className="w-full h-full object-cover"
+            />
+          </div>
+        ) : (
+          <div className="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center">
+            <span className="text-lg font-semibold text-white">
+              {user.username.charAt(0).toUpperCase()}
+            </span>
+          </div>
+        )}
       </div>
       
       <div className="ml-3 flex-grow">
@@ -50,7 +64,7 @@ const LeaderboardItem: React.FC<LeaderboardItemProps> = ({
       </div>
       
       <div className="ml-auto font-bold text-sm">
-        ${user.totalSpent?.toLocaleString()}
+        ${user.totalSpent?.toLocaleString() || user.amountSpent?.toLocaleString() || '0'}
       </div>
     </div>
   );

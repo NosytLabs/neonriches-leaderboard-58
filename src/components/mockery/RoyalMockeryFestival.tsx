@@ -10,8 +10,8 @@ import useMockery from '@/hooks/use-mockery';
 import { MockeryAction } from '@/types/mockery';
 import MockeryProtectionCard from '@/components/mockery/components/MockeryProtectionCard';
 import HallOfShame from '@/components/mockery/components/HallOfShame';
-import MockeryEffect from '@/components/mockery/MockeryEffect';
-import Link from '@/components/ui/link';
+import MockeryEffect from '@/components/mockery/components/MockeryEffect';
+import { Link } from 'react-router-dom';
 import { adaptUserProfileToUser } from '@/utils/userAdapter';
 import { spendFromWallet } from '@/services/walletService';
 import MockeryTabContent from './components/MockeryTabContent';
@@ -46,7 +46,7 @@ const RoyalMockeryFestival = () => {
   
   const handleMockery = (username: string, action: string, amount: number) => {
     if (!user) {
-      toast.error({
+      toast.default({
         title: "Authentication Required",
         description: "You must be logged in to perform mockery actions."
       });
@@ -54,7 +54,7 @@ const RoyalMockeryFestival = () => {
     }
     
     if (!username || !action) {
-      toast.error({
+      toast.default({
         title: "Missing Information",
         description: "Please select a user and mockery action to proceed."
       });
@@ -86,7 +86,7 @@ const RoyalMockeryFestival = () => {
       
       return true;
     } else {
-      toast.error({
+      toast.default({
         title: "Mockery Failed",
         description: "Your digital treasury is insufficient to finance this mockery. Consider adding more funds to your account."
       });
@@ -119,7 +119,7 @@ const RoyalMockeryFestival = () => {
         description: "You are now protected from mockery for 7 days. Your digital fortress is secure, with moat filled and drawbridge raised!"
       });
     } else {
-      toast.error({
+      toast.default({
         title: "Purchase Failed",
         description: "You do not have enough funds to buy protection. Your digital castle remains vulnerable."
       });
@@ -130,8 +130,8 @@ const RoyalMockeryFestival = () => {
     setShowMockeryEffect(false);
     
     toast.success({
-      title: "Mockery Successful",
-      description: `You have successfully subjected ${mockeryEffectData.username} to ${mockeryEffectData.action}! Your digital moat of superiority grows deeper.`
+        title: "Mockery Successful",
+        description: `You have successfully subjected ${mockeryEffectData.username} to ${mockeryEffectData.action}! Your digital moat of superiority grows deeper.`
     });
   };
 

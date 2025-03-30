@@ -3,7 +3,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { Toaster } from "@/components/ui/toaster";
-import { AuthProvider } from '@/contexts/auth';
+import { AuthProvider } from '@/contexts/auth/AuthProvider';
 import { ThemeProvider } from '@/providers/theme-provider';
 
 // Core pages
@@ -73,10 +73,7 @@ function App() {
               />
               
               {/* Feature Pages */}
-              <Route 
-                path="/events" 
-                element={<Events />} 
-              />
+              <Route path="/events" element={<Events />} />
               
               {/* Catch-all for 404 */}
               <Route path="*" element={<NotFound />} />

@@ -1,7 +1,8 @@
 
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { getMockeryDescription, getMockeryName, getMockeryActionIcon, type MockeryAction } from '@/utils/mockeryUtils';
+import { getMockeryDescription, getMockeryName, getMockeryActionIcon } from '@/utils/mockeryUtils';
+import { MockeryAction } from '@/types/mockery';
 
 interface MockeryEffectProps {
   username: string;

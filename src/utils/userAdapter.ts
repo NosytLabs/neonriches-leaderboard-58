@@ -1,30 +1,28 @@
 
-import { User, UserProfile } from '@/types/user';
+import { UserProfile } from '@/types/user';
 
 /**
- * Converts a UserProfile object to a User object
+ * Adapts a UserProfile to a full User object
+ * This is used to handle cases where older components expect a User structure
  */
-export const adaptUserProfileToUser = (profile: UserProfile): User => {
+export const adaptUserProfileToUser = (profile: UserProfile) => {
+  if (!profile) return null;
+  
   return {
+    ...profile,
+    // Ensure required fields exist
     id: profile.id,
     username: profile.username,
-    displayName: profile.displayName || profile.username,
-    profileImage: profile.profileImage,
-    email: profile.email,
-    bio: profile.bio || '',
+    email: profile.email || '',
+    amountSpent: profile.totalSpent || profile.amountSpent || 0,
+    spentAmount: profile.totalSpent || profile.amountSpent || 0,
+    walletBalance: profile.walletBalance || 0,
     rank: profile.rank || 0,
-    tier: profile.tier || 'free',
-    team: profile.team,
-    gender: profile.gender,
-    joinedAt: profile.joinedAt, // Accept date type
-    lastActive: profile.lastActive ? new Date(profile.lastActive) : new Date(),
-    amountSpent: profile.amountSpent || 0,
-    totalSpent: profile.totalSpent || profile.amountSpent || 0,
-    isActive: profile.isActive !== undefined ? profile.isActive : true,
-    isVerified: profile.isVerified || false,
-    isBanned: profile.isBanned || false,
-    role: profile.role || 'user',
-    badges: profile.badges || [],
+    previousRank: profile.previousRank || profile.rank || 0,
+    tier: profile.tier || 'basic',
+    team: profile.team || 'none',
+    joinDate: profile.joinedAt ? profile.joinedAt.toISOString() : new Date().toISOString(),
+    createdAt: profile.joinedAt ? profile.joinedAt.toISOString() : new Date().toISOString(),
     cosmetics: profile.cosmetics || {
       badges: [],
       titles: [],
@@ -34,87 +32,28 @@ export const adaptUserProfileToUser = (profile: UserProfile): User => {
       fonts: [],
       colors: [],
       backgrounds: []
+    },
+    settings: profile.settings || {
+      profileVisibility: 'public',
+      allowProfileLinks: true,
+      theme: 'dark',
+      notifications: true,
+      emailNotifications: false,
+      soundEffects: true,
+      showEmailOnProfile: false,
+      rankChangeAlerts: true,
+      teamChangeAlerts: true,
+      spendingAlerts: true,
+      mockeryAlerts: true,
+      shameAlerts: true,
+      animationEffects: true,
+      showStatusInLeaderboard: true,
+      displayRankChanges: true,
+      enableMockeryEffects: true,
+      receiveRoyalAnnouncements: true,
+      language: 'en'
     }
   };
 };
 
-/**
- * Converts a User object to a UserProfile object
- */
-export const adaptUserToUserProfile = (user: User): UserProfile => {
-  return {
-    id: user.id,
-    username: user.username,
-    displayName: user.displayName || user.username,
-    profileImage: user.profileImage,
-    email: user.email,
-    bio: user.bio || '',
-    rank: user.rank || 0,
-    tier: user.tier || 'free',
-    team: user.team,
-    gender: user.gender,
-    joinedAt: user.joinedAt, // Accept date type
-    lastActive: user.lastActive || new Date(),
-    amountSpent: user.amountSpent || 0,
-    totalSpent: user.totalSpent || user.amountSpent || 0,
-    isActive: user.isActive !== undefined ? user.isActive : true,
-    isVerified: user.isVerified || false,
-    isBanned: user.isBanned || false,
-    role: user.role || 'user',
-    badges: user.badges || [],
-    cosmetics: user.cosmetics || {
-      badges: [],
-      titles: [],
-      borders: [],
-      effects: [],
-      emojis: [],
-      fonts: [],
-      colors: [],
-      backgrounds: []
-    }
-  };
-};
-
-/**
- * Ensures a user object is properly formatted, handling partial users
- */
-export const ensureUser = (user: User | UserProfile | Partial<User>): User => {
-  if (!user) {
-    throw new Error("Cannot ensure a null or undefined user");
-  }
-  
-  // Create a base user object with default values
-  const baseUser: User = {
-    id: user.id || '',
-    username: user.username || 'anonymous',
-    displayName: user.displayName || user.username || 'Anonymous User',
-    profileImage: user.profileImage || '',
-    email: user.email || '',
-    bio: user.bio || '',
-    rank: user.rank || 0,
-    tier: user.tier || 'free',
-    team: user.team || null,
-    gender: user.gender || 'neutral',
-    joinedAt: user.joinedAt || new Date(),
-    lastActive: user.lastActive || new Date(),
-    amountSpent: user.amountSpent || 0,
-    totalSpent: user.totalSpent || user.amountSpent || 0,
-    isActive: user.isActive !== undefined ? user.isActive : true,
-    isVerified: user.isVerified || false,
-    isBanned: user.isBanned || false,
-    role: user.role || 'user',
-    badges: user.badges || [],
-    cosmetics: user.cosmetics || {
-      badges: [],
-      titles: [],
-      borders: [],
-      effects: [],
-      emojis: [],
-      fonts: [],
-      colors: [],
-      backgrounds: []
-    }
-  };
-  
-  return baseUser;
-};
+export default adaptUserProfileToUser;

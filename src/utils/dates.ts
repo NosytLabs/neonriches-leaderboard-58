@@ -62,3 +62,21 @@ export const formatRelativeTime = (date?: string | Date): string => {
   const diffInYears = Math.floor(diffInMonths / 12);
   return `${diffInYears} year${diffInYears > 1 ? 's' : ''} ago`;
 };
+
+/**
+ * Safely convert any date format to a string
+ * @param date The date to convert
+ * @returns A formatted date string or null if invalid
+ */
+export const safeFormatDate = (date: string | Date | undefined): string | null => {
+  if (!date) return null;
+  
+  try {
+    const dateObj = typeof date === 'string' ? new Date(date) : date;
+    if (isNaN(dateObj.getTime())) return null;
+    return dateObj.toISOString();
+  } catch (e) {
+    console.error("Error formatting date:", e);
+    return null;
+  }
+};
