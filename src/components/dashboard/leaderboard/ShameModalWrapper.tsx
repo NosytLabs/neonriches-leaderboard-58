@@ -1,16 +1,17 @@
 
 import React from 'react';
 import { Dialog } from '@/components/ui/dialog';
-import ShameModal from '@/dashboard/leaderboard/ShameModal';
-import { ShameAction, MockeryAction } from '@/types/mockery';
-import { User, TeamColor } from '@/types/user';
+import ShameModal from '@/components/dashboard/leaderboard/ShameModal';
+import { MockeryAction } from '@/types/mockery';
+import { TeamColor, TeamType } from '@/types/team';
+import { UserProfile } from '@/types/user';
 
 interface ShameModalWrapperProps {
   showModal: boolean;
-  selectedUser: User | null;
-  shameAction: ShameAction | MockeryAction;
+  selectedUser: UserProfile | null;
+  shameAction: MockeryAction;
   onOpenChange: (open: boolean) => void;
-  onConfirm: (userId: string, type: ShameAction | MockeryAction) => void;
+  onConfirm: (userId: string, type: MockeryAction) => void;
 }
 
 const ShameModalWrapper: React.FC<ShameModalWrapperProps> = ({
@@ -36,7 +37,7 @@ const ShameModalWrapper: React.FC<ShameModalWrapperProps> = ({
           userId: selectedUser.id.toString(),
           username: selectedUser.username,
           profileImage: selectedUser.profileImage || '/placeholder.svg',
-          totalSpent: selectedUser.amountSpent || 0,
+          totalSpent: selectedUser.totalSpent || 0,
           rank: selectedUser.rank || 0,
           team: validTeam,
           tier: selectedUser.tier || 'free',

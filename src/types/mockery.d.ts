@@ -43,6 +43,7 @@ export interface MockeryEvent {
   timestamp: number;
   expiry: number;
   isActive: boolean;
+  targetName?: string;
 }
 
 export interface MockedUser {

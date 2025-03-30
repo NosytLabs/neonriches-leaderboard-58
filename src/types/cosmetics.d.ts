@@ -8,7 +8,10 @@ export type CosmeticCategory =
   | 'background'
   | 'effect'
   | 'badge'
-  | 'theme';
+  | 'theme'
+  | 'appearance'
+  | 'profile'
+  | 'interaction';
 
 export type CosmeticRarity = 
   | 'common'

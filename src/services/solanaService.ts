@@ -1,88 +1,95 @@
 
-import { OnChainLeaderboardEntry, SolanaTransaction } from '@/types/leaderboard';
+import { UserProfile } from '@/types/user';
+import { LeaderboardEntry, OnChainLeaderboardEntry, SolanaTransaction } from '@/types/leaderboard';
+import { Certificate } from '@/types/certificate';
 
-export interface RankCertificateMetadata {
-  owner: string;
-  tier: string;
-  timestamp: number;
-  spentAmount: number;
+export interface SolanaConnectionStatus {
+  connected: boolean;
+  publicKey: string | null;
+  balance: number;
 }
 
-// Function to generate certificate metadata
-export const generateCertificateMetadata = (user: any, data: Partial<RankCertificateMetadata>): RankCertificateMetadata => {
-  return {
-    owner: user.id || user.username,
-    tier: data.tier || user.tier || 'silver',
-    timestamp: Date.now(),
-    spentAmount: data.spentAmount || user.amountSpent || user.totalSpent || 0
-  };
-};
+export interface SolanaTransactionResult {
+  success: boolean;
+  transactionId?: string;
+  error?: string;
+}
 
-// Mock Solana service implementation
-export const mintRankCertificate = async (user: any, metadata: Partial<RankCertificateMetadata>) => {
-  // Mock implementation for certificate minting
-  return {
-    success: true,
-    mintAddress: 'SoL1234567890AbCdEfGhIjKlMnOpQrStUvWxYz',
-    rank: metadata.spentAmount ? Math.ceil(metadata.spentAmount / 1000) : 1,
-    tier: metadata.tier || 'silver'
-  };
-};
+export interface RankCertificateMetadata {
+  name: string;
+  description: string;
+  image: string;
+  attributes: {
+    rank: number;
+    tier: string;
+    dateIssued: string;
+    amountSpent: number;
+    team?: string;
+  }
+}
 
-export const createCertificateNFT = async (user: any, certificateData: any) => {
-  // Mock implementation for NFT creation
+// Added function to fix RoyalCertificate.tsx error
+export const generateCertificateMetadata = (user: UserProfile, templateId?: string): RankCertificateMetadata => {
   return {
-    success: true,
-    txId: 'SoLTx1234567890AbCdEfGhIjKlMnOpQrStUvWxYz',
-    mintAddress: 'SoL1234567890AbCdEfGhIjKlMnOpQrStUvWxYz'
+    name: `${user.displayName || user.username}'s Certificate of Nobility`,
+    description: `This certificate recognizes ${user.displayName || user.username}'s rank #${user.rank} on SpendThrone.`,
+    image: "https://placeholder.com/certificate.png",
+    attributes: {
+      rank: user.rank,
+      tier: user.tier,
+      dateIssued: new Date().toISOString(),
+      amountSpent: user.amountSpent,
+      team: user.team
+    }
   };
 };
 
 export const getOnChainLeaderboard = async (): Promise<OnChainLeaderboardEntry[]> => {
-  // Mock data for on-chain leaderboard
+  // Mock implementation for now
   return [
-    {
-      pubkey: 'SoL1111111111111111111111111111111111111111',
-      userId: '1',
-      amount: 25000,
-      timestamp: Date.now() - 86400000 * 30,
-      username: 'whale_master',
-      publicKey: 'SoL1111111111111111111111111111111111111111',
-      amountSpent: 25000,
-      totalDeposited: 30000,
-      rank: 1,
-      joinDate: Date.now() - 86400000 * 90
+    { pubkey: 'abc123', amount: 1000, timestamp: new Date().toISOString(), username: 'crypto_whale' },
+    { pubkey: 'def456', amount: 500, timestamp: new Date().toISOString(), username: 'blockchain_king' },
+    { pubkey: 'ghi789', amount: 250, timestamp: new Date().toISOString(), username: 'sol_master' }
+  ];
+};
+
+export const getTransactionHistory = async (pubkey: string): Promise<SolanaTransaction[]> => {
+  // Mock implementation for now
+  return [
+    { 
+      id: '1',
+      timestamp: new Date().toISOString(),
+      amount: 100,
+      sender: pubkey,
+      receiver: 'treasury_key',
+      transactionHash: 'tx_hash_1',
+      status: 'completed',
+      type: 'deposit'
     },
     {
-      pubkey: 'SoL2222222222222222222222222222222222222222',
-      userId: '2',
-      amount: 20000,
-      timestamp: Date.now() - 86400000 * 25,
-      username: 'crypto_king',
-      publicKey: 'SoL2222222222222222222222222222222222222222',
-      amountSpent: 20000,
-      totalDeposited: 25000,
-      rank: 2,
-      joinDate: Date.now() - 86400000 * 100
-    },
-    {
-      pubkey: 'SoL3333333333333333333333333333333333333333',
-      userId: '3',
-      amount: 15000,
-      timestamp: Date.now() - 86400000 * 20,
-      username: 'nft_collector',
-      publicKey: 'SoL3333333333333333333333333333333333333333',
-      amountSpent: 15000,
-      totalDeposited: 18000,
-      rank: 3,
-      joinDate: Date.now() - 86400000 * 110
+      id: '2',
+      timestamp: new Date().toISOString(),
+      amount: 50,
+      sender: pubkey,
+      receiver: 'treasury_key',
+      transactionHash: 'tx_hash_2',
+      status: 'completed',
+      type: 'purchase'
     }
   ];
 };
 
-export default {
-  mintRankCertificate,
-  createCertificateNFT,
-  getOnChainLeaderboard,
-  generateCertificateMetadata
+export const mintCertificateAsNFT = async (certificate: Certificate, user: UserProfile) => {
+  // Mock implementation - this would call the actual Solana API in a real implementation
+  await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate network latency
+  
+  return {
+    success: true,
+    mintAddress: `cert_${Math.random().toString(36).substring(2, 10)}`
+  };
+};
+
+export const generateShareableImage = async (certificate: Certificate, user: UserProfile) => {
+  // Mock implementation
+  return `https://example.com/certificates/${certificate.id}/share`;
 };

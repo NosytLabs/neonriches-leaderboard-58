@@ -1,6 +1,4 @@
 
-import { DecorationSize } from './decorations/types';
-
 export type IconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl';
 export type IconColor = 'gold' | 'silver' | 'crimson' | 'emerald' | 'royal' | 'default';
 

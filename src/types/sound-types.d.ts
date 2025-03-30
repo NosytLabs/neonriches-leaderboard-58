@@ -1,44 +1,38 @@
 
 export type SoundType = 
   | 'click' 
-  | 'button' 
   | 'hover' 
-  | 'coins' 
-  | 'coins_drop' 
   | 'success' 
   | 'error' 
-  | 'purchase' 
-  | 'trumpets' 
   | 'notification' 
-  | 'achievement' 
+  | 'purchase' 
   | 'rankUp' 
-  | 'royal' 
-  | 'shame'
+  | 'coinDrop' 
+  | 'achievement' 
+  | 'trumpets' 
+  | 'fanfare' 
+  | 'shame' 
+  | 'parchment' 
+  | 'pageFlip' 
+  | 'medal' 
+  | 'coin' 
+  | 'info' 
+  | 'warning' 
+  | 'seal' 
+  | 'deposit' 
+  | 'reward' 
+  | 'advertisement' 
+  | 'message' 
+  | 'royal'
   | 'levelUp'
-  | 'fanfare'
   | 'wish'
   | 'pageChange';
 
-export interface NotificationSoundOptions {
-  volume?: number;
-  loop?: boolean;
-  delay?: number;
-}
-
-export interface UseSoundOptions {
-  volume?: number;
-  loop?: boolean;
-}
-
-export interface AudioLoaderReturn {
-  audio: Record<SoundType, HTMLAudioElement>;
+export interface SoundConfig {
   volume: number;
-  setVolume: (volume: number) => void;
-  isEnabled: boolean;
-  setEnabled: (enabled: boolean) => void;
-  isPremium: boolean;
-  setPremium: (premium: boolean) => void;
-  isLoaded: boolean;
+  enabled: boolean;
+  isMuted: boolean;
+  premium: boolean;
 }
 
 export interface PremiumSoundPackDetails {
@@ -50,4 +44,48 @@ export interface PremiumSoundPackDetails {
   sounds: SoundType[];
   features: string[];
   tags: string[];
+  isPurchased?: boolean;
+  includes?: string[];
+}
+
+export interface NotificationSoundOptions {
+  volume?: number;
+  loop?: boolean;
+  delay?: number;
+}
+
+export interface UseSoundOptions {
+  volume?: number;
+  interrupt?: boolean;
+  soundEnabled?: boolean;
+  onComplete?: () => void;
+  baseVolume?: number;
+  loop?: boolean;
+  onEnd?: () => void;
+  disableCache?: boolean;
+}
+
+export interface UseSoundReturn {
+  play: (options?: UseSoundOptions) => void;
+  stop: () => void;
+  isPlaying: boolean;
+  duration?: number; 
+  playSound?: (sound: SoundType) => void;
+  playSuccess?: (sound?: SoundType) => void;
+}
+
+export interface AudioLoaderReturn {
+  audio: Record<SoundType, HTMLAudioElement>;
+  volume: number;
+  setVolume: (volume: number) => void;
+  isEnabled: boolean;
+  setEnabled: (enabled: boolean) => void;
+  isPremium: boolean;
+  setPremium: (isPremium: boolean) => void;
+  isLoaded: boolean;
+}
+
+export interface CacheOptions {
+  maxAge?: number;
+  staleWhileRevalidate?: boolean;
 }

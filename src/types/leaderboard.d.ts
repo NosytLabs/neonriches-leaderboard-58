@@ -1,8 +1,10 @@
 
-import { TeamColor, UserTier } from './user';
+import { TeamColor, TeamType } from './team';
+import { UserTier } from './user';
 
 export interface LeaderboardUser {
   id: string;
+  userId?: string;
   username: string;
   displayName?: string;
   profileImage?: string;

@@ -1,5 +1,6 @@
+
 import React from 'react';
-import { MedievalIconName, IconSize, IconColor } from '@/types/ui/icon-types';
+import { IconSize, IconColor } from '@/types/ui/icon-types';
 
 export interface MedievalIconProps {
   name: MedievalIconName;
@@ -7,6 +8,24 @@ export interface MedievalIconProps {
   color?: IconColor;
   className?: string;
 }
+
+export type MedievalIconName = 
+  | 'crown'
+  | 'shield'
+  | 'sword'
+  | 'castle'
+  | 'chalice'
+  | 'dragon'
+  | 'flag'
+  | 'fleur-de-lis'
+  | 'goblet'
+  | 'knight'
+  | 'royal-crown'
+  | 'scroll'
+  | 'throne'
+  | 'tower'
+  | 'treasure-chest'
+  | 'coat-of-arms';
 
 const iconSizes: Record<IconSize, number> = {
   'xs': 16,
@@ -45,5 +64,5 @@ const MedievalIcon: React.FC<MedievalIconProps> = ({
   );
 };
 
-export { MedievalIconName };
+export type { MedievalIconName };
 export default MedievalIcon;

@@ -1,13 +1,14 @@
 
 import React from 'react';
-import { Dialog, DialogContent, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
+import { DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { ShameAction, MockeryAction } from '@/types/mockery'; 
-import { getShameActionTitle, getShameActionDescription, getShameActionIcon } from '@/components/events/utils/shameUtils';
-import { TeamColor, UserTier } from '@/types/user';
+import { Card } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { formatCurrency } from '@/utils/formatters';
+import { MockeryAction } from '@/types/mockery';
+import { TeamColor } from '@/types/team';
 
-interface ShameModalProps {
+export interface ShameModalProps {
   targetUser: {
     userId: string;
     username: string;
@@ -15,14 +16,84 @@ interface ShameModalProps {
     totalSpent?: number;
     rank?: number;
     team?: TeamColor;
-    tier?: UserTier;
+    tier?: string;
     spendStreak?: number;
   };
-  shameType: ShameAction | MockeryAction;
-  onConfirm: (userId: string) => void;
+  shameType: MockeryAction;
+  onConfirm: () => void;
   onCancel: () => void;
   hasDiscount?: boolean;
 }
+
+const getMockeryActionDescription = (action: MockeryAction): string => {
+  const descriptions: Record<MockeryAction, string> = {
+    tomatoes: 'Pelt with rotten tomatoes',
+    eggs: 'Throw rotten eggs at them',
+    shame: 'Ring the bell of shame',
+    dungeons: 'Send to the royal dungeons',
+    immune: 'Grant royal immunity',
+    crown: 'Add a mock crown',
+    stocks: 'Place in the stocks',
+    dunce: 'Put on a dunce cap',
+    jester: 'Dress as a court jester',
+    fool: 'Label as village fool',
+    troll: 'Declare a bridge troll',
+    peasant: 'Demote to lowly peasant',
+    rat: 'Name a plague rat',
+    ghost: 'Turn into a ghost',
+    skeleton: 'Transform into skeleton',
+    zombie: 'Convert to a zombie',
+    witch: 'Accuse of witchcraft',
+    monster: 'Label a monster',
+    demon: 'Expose as a demon',
+    dragon: 'Identify as a dragon',
+    king: 'Crown as a false king',
+    queen: 'Crown as a false queen',
+    knight: 'Dub a rusty knight',
+    bishop: 'Name corrupt bishop',
+    rook: 'Declare a crumbling rook',
+    pawn: 'Expose as a mere pawn',
+    target: 'Make a target practice',
+    challenge: 'Issue a royal challenge'
+  };
+  
+  return descriptions[action] || 'Apply mockery';
+};
+
+const getMockeryActionIcon = (action: MockeryAction): string => {
+  const icons: Record<MockeryAction, string> = {
+    tomatoes: '🍅',
+    eggs: '🥚',
+    shame: '🔔',
+    dungeons: '⛓️',
+    immune: '🛡️',
+    crown: '👑',
+    stocks: '🪵',
+    dunce: '🎭',
+    jester: '🃏',
+    fool: '😵',
+    troll: '👹',
+    peasant: '👨‍🌾',
+    rat: '🐀',
+    ghost: '👻',
+    skeleton: '💀',
+    zombie: '🧟',
+    witch: '🧙',
+    monster: '👾',
+    demon: '😈',
+    dragon: '🐉',
+    king: '🤴',
+    queen: '👸',
+    knight: '🐴',
+    bishop: '♗',
+    rook: '♖',
+    pawn: '♟️',
+    target: '🎯',
+    challenge: '⚔️'
+  };
+  
+  return icons[action] || '🎭';
+};
 
 const ShameModal: React.FC<ShameModalProps> = ({
   targetUser,
@@ -31,78 +102,80 @@ const ShameModal: React.FC<ShameModalProps> = ({
   onCancel,
   hasDiscount = false
 }) => {
-  // Get the action icon, title, description and price
-  const actionIcon = getShameActionIcon(shameType);
-  const actionTitle = getShameActionTitle(shameType);
-  const actionDescription = getShameActionDescription(shameType).replace('the user', targetUser.username);
-  const basePrice = 0.5; // Default price if not available
-  const price = hasDiscount ? basePrice * 0.5 : basePrice;
-
-  const handleConfirm = () => {
-    onConfirm(targetUser.userId);
-  };
-
+  const cost = 1.25; // Placeholder cost
+  const discountedCost = hasDiscount ? cost * 0.8 : cost;
+  
   return (
-    <DialogContent className="glass-morphism border-white/20 max-w-md mx-auto">
-      <DialogTitle className="text-center flex flex-col items-center gap-2">
-        <span className="text-3xl">{actionIcon}</span>
-        <span>{actionTitle}</span>
-      </DialogTitle>
+    <DialogContent className="sm:max-w-[425px] bg-black border-red-900/50">
+      <DialogHeader>
+        <DialogTitle className="text-xl flex items-center">
+          <span className="mr-2 text-xl">{getMockeryActionIcon(shameType)}</span>
+          {getMockeryActionDescription(shameType)}
+        </DialogTitle>
+        <DialogDescription>
+          The target will be subjected to this mockery effect for 24 hours
+        </DialogDescription>
+      </DialogHeader>
       
-      <div className="my-4 text-center">
-        <Avatar className="h-16 w-16 mx-auto mb-2 border-2 border-white/20">
-          <AvatarImage src={targetUser.profileImage} alt={targetUser.username} />
-          <AvatarFallback className="bg-gradient-to-br from-gray-700 to-gray-900">
-            {targetUser.username.substring(0, 2).toUpperCase()}
-          </AvatarFallback>
-        </Avatar>
-        
-        <h3 className="font-medium">@{targetUser.username}</h3>
-        
-        {targetUser.rank && (
-          <p className="text-sm text-white/60">Rank #{targetUser.rank}</p>
-        )}
-      </div>
-      
-      <DialogDescription className="text-center">
-        {actionDescription}
-        {targetUser.username !== 'the user' && (
-          <div className="mt-2 text-sm text-white/80">
-            This effect is purely cosmetic and will last for 24 hours.
-          </div>
-        )}
-      </DialogDescription>
-      
-      <div className="my-4 px-4 py-3 rounded-lg bg-black/20 text-center">
-        <div className="font-semibold">
-          {hasDiscount ? (
-            <div className="flex items-center justify-center gap-2">
-              <span className="line-through text-white/50">${basePrice.toFixed(2)}</span>
-              <span className="text-royal-gold">${price.toFixed(2)}</span>
-              <span className="text-xs px-2 py-0.5 bg-royal-gold/20 text-royal-gold rounded">50% OFF</span>
+      <div className="py-4">
+        <Card className="bg-black/30 border-white/5 p-4 mb-4">
+          <div className="flex items-center space-x-3">
+            <div className="relative">
+              <img
+                src={targetUser.profileImage || '/images/default-avatar.png'}
+                alt={targetUser.username}
+                className="h-12 w-12 rounded-full object-cover"
+              />
+              {targetUser.team && (
+                <div className={`absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-${targetUser.team}-500 border border-black`} />
+              )}
             </div>
-          ) : (
-            <span>${price.toFixed(2)}</span>
+            <div>
+              <h3 className="font-semibold">{targetUser.username}</h3>
+              <div className="flex items-center space-x-2 text-xs text-white/70">
+                {targetUser.rank && (
+                  <span>Rank #{targetUser.rank}</span>
+                )}
+                {targetUser.tier && (
+                  <Badge variant="outline" className="px-1 py-0 h-5 text-[10px]">
+                    {targetUser.tier}
+                  </Badge>
+                )}
+              </div>
+            </div>
+          </div>
+        </Card>
+        
+        <div className="flex flex-col space-y-2 text-sm">
+          <div className="flex justify-between py-1 border-b border-white/10">
+            <span>Base cost:</span>
+            <span>{formatCurrency(cost)}</span>
+          </div>
+          
+          {hasDiscount && (
+            <div className="flex justify-between py-1 border-b border-white/10 text-green-400">
+              <span>Discount:</span>
+              <span>-{formatCurrency(cost - discountedCost)}</span>
+            </div>
           )}
-        </div>
-        <div className="text-xs text-white/60 mt-1">
-          This amount will be deducted from your wallet balance.
+          
+          <div className="flex justify-between py-1 font-bold">
+            <span>Total:</span>
+            <span>{formatCurrency(discountedCost)}</span>
+          </div>
         </div>
       </div>
       
-      <DialogFooter className="flex flex-col sm:flex-row gap-2">
-        <Button
-          variant="outline"
-          className="w-full sm:w-auto glass-morphism border-white/10 hover:bg-white/5"
-          onClick={onCancel}
-        >
+      <DialogFooter className="flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2">
+        <Button variant="outline" onClick={onCancel}>
           Cancel
         </Button>
-        <Button
-          className="w-full sm:w-auto bg-royal-crimson hover:bg-royal-crimson/90"
-          onClick={handleConfirm}
+        <Button 
+          variant="destructive" 
+          className="bg-red-900 hover:bg-red-800" 
+          onClick={onConfirm}
         >
-          Confirm {actionTitle}
+          Confirm & Pay
         </Button>
       </DialogFooter>
     </DialogContent>

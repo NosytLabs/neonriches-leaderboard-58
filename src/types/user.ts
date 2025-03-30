@@ -2,7 +2,7 @@
 import { TeamColor } from './team';
 import { UserCosmeticState } from './cosmetics';
 
-export type UserTier = 'free' | 'basic' | 'silver' | 'gold' | 'platinum' | 'diamond' | 'royal' | 'founder' | 'premium' | 'pro';
+export type UserTier = 'free' | 'basic' | 'silver' | 'gold' | 'platinum' | 'diamond' | 'royal' | 'founder' | 'premium' | 'pro' | 'bronze' | 'vip';
 
 export interface ProfileBoost {
   id?: string;
@@ -13,6 +13,7 @@ export interface ProfileBoost {
   startDate?: string;
   endDate?: string;
   active?: boolean;
+  strength?: number;
 }
 
 export interface ProfileLink {
@@ -30,6 +31,7 @@ export interface ProfileImage {
   url: string;
   type: string;
   isPrimary?: boolean;
+  caption?: string;
 }
 
 export type SocialLink = ProfileLink;
@@ -53,6 +55,23 @@ export interface UserSettings {
   publicProfile?: boolean;
   allowMessages?: boolean;
   language?: string;
+  shameAlerts?: boolean;
+}
+
+export interface UserSubscription {
+  id?: string;
+  active: boolean;
+  tier: string;
+  startDate: string;
+  endDate: string;
+  nextBillingDate: string;
+  plan: string;
+  autoRenew?: boolean;
+  cancelAtPeriodEnd?: boolean;
+  price?: number;
+  interval?: 'monthly' | 'yearly' | 'quarterly';
+  features?: string[];
+  status?: string;
 }
 
 export interface UserProfile {
@@ -74,6 +93,7 @@ export interface UserProfile {
   spendStreak?: number;
   isFounder: boolean;
   isVerified?: boolean;
+  isVIP?: boolean;
   activeTitle?: string;
   following?: string[];
   followers?: string[];
@@ -83,6 +103,18 @@ export interface UserProfile {
   joinedAt?: string; 
   createdAt?: string;
   lastLogin?: string;
+  lastActive?: string;
   profileImages?: ProfileImage[];
+  socialLinks?: SocialLink[];
   gender?: string;
+  profileViews?: number;
+  profileClicks?: number;
+  subscription?: UserSubscription;
+  purchasedFeatures?: string[];
+  role?: string;
+  walletAddress?: string;
+  certificateNFT?: any;
 }
+
+// For backward compatibility
+export type User = UserProfile;
