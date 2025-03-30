@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -18,7 +17,7 @@ import MockeryTabContent from './components/MockeryTabContent';
 
 const RoyalMockeryFestival = () => {
   const { user } = useAuth();
-  const { toast } = useToast();
+  const { toast, default: defaultToast, success } = useToast();
   const [activeTab, setActiveTab] = useState('mockery');
   const [selectedAction, setSelectedAction] = useState<MockeryAction | null>(null);
   const [targetUser, setTargetUser] = useState<string>('');
@@ -46,7 +45,7 @@ const RoyalMockeryFestival = () => {
   
   const handleMockery = (username: string, action: string, amount: number) => {
     if (!user) {
-      toast.default({
+      defaultToast({
         title: "Authentication Required",
         description: "You must be logged in to perform mockery actions."
       });
@@ -54,18 +53,16 @@ const RoyalMockeryFestival = () => {
     }
     
     if (!username || !action) {
-      toast.default({
+      defaultToast({
         title: "Missing Information",
         description: "Please select a user and mockery action to proceed."
       });
       return false;
     }
     
-    // Convert user to full User type
     const fullUser = adaptUserProfileToUser(user);
     
-    // Attempt to spend money for the mockery
-    const success = spendFromWallet(
+    const successResult = spendFromWallet(
       fullUser,
       amount,
       'mockery' as any,
@@ -73,11 +70,9 @@ const RoyalMockeryFestival = () => {
       { targetUser: username, mockeryType: action }
     );
     
-    if (success) {
-      // Mockery successful
+    if (successResult) {
       mockUser(fullUser, username, action as MockeryAction);
       
-      // Show mockery effect
       setMockeryEffectData({
         username,
         action: action as MockeryAction
@@ -86,7 +81,7 @@ const RoyalMockeryFestival = () => {
       
       return true;
     } else {
-      toast.default({
+      defaultToast({
         title: "Mockery Failed",
         description: "Your digital treasury is insufficient to finance this mockery. Consider adding more funds to your account."
       });
@@ -98,10 +93,9 @@ const RoyalMockeryFestival = () => {
   const handleBuyProtection = () => {
     if (!user) return;
     
-    // Convert to full User
     const fullUser = adaptUserProfileToUser(user);
     
-    const protectionCost = 50; // Updated protection cost
+    const protectionCost = 50;
     
     const success = spendFromWallet(
       fullUser,
@@ -114,12 +108,12 @@ const RoyalMockeryFestival = () => {
     if (success) {
       protectUser(user.username);
       
-      toast.success({
+      success({
         title: "Royal Protection Purchased",
         description: "You are now protected from mockery for 7 days. Your digital fortress is secure, with moat filled and drawbridge raised!"
       });
     } else {
-      toast.default({
+      defaultToast({
         title: "Purchase Failed",
         description: "You do not have enough funds to buy protection. Your digital castle remains vulnerable."
       });
@@ -129,13 +123,12 @@ const RoyalMockeryFestival = () => {
   const handleEffectComplete = () => {
     setShowMockeryEffect(false);
     
-    toast.success({
+    success({
         title: "Mockery Successful",
         description: `You have successfully subjected ${mockeryEffectData.username} to ${mockeryEffectData.action}! Your digital moat of superiority grows deeper.`
     });
   };
 
-  // Transform the mockUsers to match the MockedUser interface
   const mockedUsers = mockUsers
     .filter(user => isUserShamed(user.username))
     .map(user => ({

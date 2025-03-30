@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -85,6 +86,8 @@ interface ForumComment {
 }
 
 const prepareUserForProfile = (): UserProfile => {
+  const currentDate = new Date().toISOString();
+  
   return {
     id: '1',
     username: 'royalUser',
@@ -100,7 +103,7 @@ const prepareUserForProfile = (): UserProfile => {
     tier: 'royal',
     team: 'red',
     gender: 'king',
-    joinedAt: new Date().toISOString(),
+    joinedAt: currentDate,
     subscription: {
       id: "sub_123456",
       tier: "royal",

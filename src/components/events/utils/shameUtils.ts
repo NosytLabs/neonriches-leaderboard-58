@@ -1,3 +1,4 @@
+
 import { ShameAction } from '@/types/mockery';
 
 // Define the shame action types

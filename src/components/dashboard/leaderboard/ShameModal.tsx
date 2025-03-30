@@ -1,11 +1,13 @@
 import React from 'react';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import PaymentModal from '@/components/PaymentModal';
-import { LeaderboardUser } from './LeaderboardUtils';
-import { Scroll, Crown, Target, Shield } from 'lucide-react';
-import useNotificationSounds from '@/hooks/use-notification-sounds';
-import RoyalDivider from '@/components/ui/royal-divider';
+import { DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { ShameAction } from '@/types/mockery';
+import { getShameActionIcon, getShameActionTitle, getShameActionPrice, getShameActionDescription } from '@/components/events/utils/shameUtils';
+import { Crown, ArrowRight } from 'lucide-react';
+import { getTeamColor } from '@/utils/teamUtils';
+import RoyalButton from '@/components/ui/royal-button';
+import { PaymentModalProps } from '@/types/payment';
 
 interface PaymentModalProps {
   title: string;
@@ -15,7 +17,6 @@ interface PaymentModalProps {
   trigger: React.ReactNode;
 }
 
-// Create the PaymentModal component with the required prop
 const PaymentModal = ({ title, description, amount, onSuccess, trigger }: PaymentModalProps) => {
   return (
     <Button onClick={() => {}}>
@@ -41,12 +42,10 @@ const ShameModal: React.FC<ShameModalProps> = ({
 }) => {
   const { playSound } = useNotificationSounds();
 
-  // Play shame-related sound when modal opens
   React.useEffect(() => {
     playSound('notification', 0.2);
   }, []);
 
-  // Get shame emoji based on type
   const getShameEmoji = () => {
     switch (shameType.toLowerCase()) {
       case 'tomatoes':
@@ -60,7 +59,6 @@ const ShameModal: React.FC<ShameModalProps> = ({
     }
   };
   
-  // Get description based on type
   const getShameDescription = () => {
     switch (shameType.toLowerCase()) {
       case 'tomatoes':
@@ -74,7 +72,6 @@ const ShameModal: React.FC<ShameModalProps> = ({
     }
   };
 
-  // Get shame icon based on type
   const getShameIcon = () => {
     switch (shameType.toLowerCase()) {
       case 'tomatoes':

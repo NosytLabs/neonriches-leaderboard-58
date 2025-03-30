@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useCallback } from 'react';
 import { AnimationConfig } from '@/types/animations';
 import { useSound } from '@/hooks/sounds/use-sound';
@@ -32,7 +33,7 @@ export const useShameEffect = (options = { cooldownPeriod: 24 * 60 * 60 * 1000 }
     shameCount: {}
   });
   
-  const { playSound, stopSound } = useSound();
+  const { playSound } = useSound();
   
   // Clear the effect after duration
   useEffect(() => {
@@ -56,8 +57,7 @@ export const useShameEffect = (options = { cooldownPeriod: 24 * 60 * 60 * 1000 }
     }
     
     return () => {
-      // Stop effect sounds on cleanup
-      stopSound();
+      // We don't need to stop sounds since our useSound hook doesn't have stopSound
     };
   }, [state.isActive, state.action]);
   

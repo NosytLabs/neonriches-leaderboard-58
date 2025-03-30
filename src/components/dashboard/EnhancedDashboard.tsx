@@ -32,6 +32,7 @@ import AchievementDisplay from '@/components/achievements/AchievementDisplay';
 import ProfileCustomization from '@/components/profile/ProfileCustomization';
 import SocialShare from '@/components/social/SocialShare';
 import { useNotifications } from '@/hooks/use-notifications';
+import { Achievement, AchievementType } from '@/types/achievement';
 
 // Mock deposit data
 const mockDeposits = [
@@ -106,6 +107,29 @@ const mockAchievements: Achievement[] = [
     icon: "trophy",
     tier: "diamond",
     amountSpent: 5000
+  },
+];
+
+const userAchievements: Achievement[] = [
+  {
+    id: 'achievement1',
+    name: 'Royal Spender',
+    description: 'Spent over $10,000 in the platform',
+    type: 'royal' as AchievementType,
+    icon: 'crown',
+    tier: 'legendary',
+    unlockedAt: new Date().toISOString(),
+    amountSpent: 10000
+  },
+  {
+    id: 'achievement2',
+    name: 'Big Deposit',
+    description: 'Made a deposit of over $1,000',
+    type: 'deposit' as AchievementType,
+    icon: 'dollar',
+    tier: 'epic',
+    unlockedAt: new Date().toISOString(),
+    amountSpent: 1000
   },
 ];
 

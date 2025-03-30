@@ -24,6 +24,13 @@ export const useToast = () => {
     return originalToast(props as any);
   };
 
+  const default_toast = (props: Omit<ExtendedToastProps, 'variant'>) => {
+    return originalToast({
+      ...props,
+      variant: 'default',
+    } as any);
+  };
+
   const success = (props: Omit<ExtendedToastProps, 'variant'>) => {
     return originalToast({
       ...props,
@@ -56,13 +63,6 @@ export const useToast = () => {
     return originalToast({
       ...props,
       variant: 'royal',
-    } as any);
-  };
-
-  const default_toast = (props: Omit<ExtendedToastProps, 'variant'>) => {
-    return originalToast({
-      ...props,
-      variant: 'default',
     } as any);
   };
 

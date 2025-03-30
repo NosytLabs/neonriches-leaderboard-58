@@ -1,3 +1,4 @@
+
 import { MockeryTier } from '@/types/mockery';
 
 // Helper functions for working with mockery tiers

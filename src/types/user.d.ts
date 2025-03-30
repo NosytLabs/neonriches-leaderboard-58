@@ -1,3 +1,4 @@
+
 export type TeamType = 'red' | 'green' | 'blue' | 'none' | 'Red' | 'Green' | 'Blue';
 export type UserTier = 'free' | 'basic' | 'bronze' | 'silver' | 'gold' | 'platinum' | 'diamond' | 'royal' | 'founder' | 'pro' | 'premium' | 'whale' | 'shark' | 'dolphin' | 'standard';
 export type GenderType = 'male' | 'female' | 'nonbinary' | 'other' | 'king' | 'queen' | 'noble' | 'jester' | 'none';
@@ -143,48 +144,4 @@ export interface UserProfile {
   };
 }
 
-export interface User extends UserProfile {
-  id: string;
-  username: string;
-  email: string;
-  displayName: string;
-  profileImage: string;
-  walletBalance: number;
-  rank: number;
-  team: TeamType | null;
-  tier: UserTier;
-  totalSpent: number;
-  spentAmount: number;
-  amountSpent: number;
-  joinDate: string;
-  createdAt: string;
-  updatedAt: string;
-  isVerified: boolean;
-  cosmetics: UserCosmetics;
-  activeTitle: string;
-  spendStreak: number;
-  gender: GenderType;
-  profileViews: number;
-  profileClicks: number;
-  followers: number;
-  following: number;
-  isVIP: boolean;
-  settings: UserSettings;
-  profileBoosts: ProfileBoost[];
-}
-
-export type UserRole = 'user' | 'admin' | 'moderator' | 'developer' | 'founder';
-export type UserStatus = 'active' | 'inactive' | 'suspended' | 'banned';
-export type UserTeam = 'red' | 'green' | 'blue' | 'Red' | 'Green' | 'Blue' | 'none';
-export type Team = UserTeam;
-export type UserGender = GenderType;
-
-export interface ProfileLink {
-  id: string;
-  url: string;
-  title: string;
-  description?: string;
-  clicks: number;
-  label?: string;
-  platform?: string;
-}
+export type ProfileLink = SocialLink;
