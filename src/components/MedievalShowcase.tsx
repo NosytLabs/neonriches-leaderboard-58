@@ -127,7 +127,7 @@ const MedievalShowcase = () => {
             </div>
             
             <div className="animate-parchment-unfurl delay-500">
-              <RoyalButton variant="royalGold">
+              <RoyalButton variant="gold">
                 Unfurling Effect
               </RoyalButton>
             </div>

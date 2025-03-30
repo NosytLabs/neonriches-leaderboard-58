@@ -2,39 +2,30 @@
 import { MockeryAction } from '@/types/mockery';
 import { getMockeryCost } from './mockery-costs';
 
-// Check if there's a weekly discount active
-export const hasWeeklyDiscount = (): boolean => {
-  // Get current day of week (0-6, Sunday is 0)
-  const today = new Date().getDay();
-  
-  // For simplicity, let's say there's a discount on weekends
-  return today === 0 || today === 6;
-};
-
-// Get the featured discounted action of the week
+// Current day of the week determines which mockery action has a discount
 export const getWeeklyDiscountedAction = (): MockeryAction => {
-  // We could have a more sophisticated system here, but for now
-  // let's just use the day of the month to determine the action
-  const day = new Date().getDate();
+  const day = new Date().getDay(); // 0 = Sunday, 1 = Monday, etc.
   
-  const actions: MockeryAction[] = [
-    'tomatoes', 'eggs', 'shame', 'dungeons', 'crown', 
-    'stocks', 'dunce', 'jester', 'fool', 'troll'
-  ];
-  
-  // Use the day to select an action, cycling through the list
-  return actions[day % actions.length];
+  // Map day of week to a mockery action
+  switch (day) {
+    case 0: return 'tomatoes';
+    case 1: return 'eggs';
+    case 2: return 'shame';
+    case 3: return 'dungeons';
+    case 4: return 'crown';
+    case 5: return 'stocks';
+    case 6: return 'dunce';
+    default: return 'tomatoes';
+  }
 };
 
-// Get the discounted price for an action
+// Check if an action has a weekly discount
+export const hasWeeklyDiscount = (action: MockeryAction): boolean => {
+  return action === getWeeklyDiscountedAction();
+};
+
+// Return the discounted price (50% off)
 export const getDiscountedShamePrice = (action: MockeryAction): number => {
   const originalPrice = getMockeryCost(action);
-  const discountPercentage = 30; // 30% discount
-  
-  // Only apply discount if this is the featured action and there's a discount active
-  if (hasWeeklyDiscount() && getWeeklyDiscountedAction() === action) {
-    return Math.floor(originalPrice * (1 - discountPercentage / 100));
-  }
-  
-  return originalPrice;
+  return Math.floor(originalPrice * 0.5); // 50% discount
 };

@@ -10,6 +10,7 @@ export type RoyalButtonVariant =
   | "link" 
   | "royal" 
   | "gold" 
+  | "emerald"
   | "premium"
   | "glass"
   | "mahogany"
@@ -21,7 +22,7 @@ export type RoyalButtonVariant =
   | "royalNavy"  
   | "royalPurple";
 
-export type RoyalButtonSize = "default" | "sm" | "lg" | "icon";
+export type RoyalButtonSize = "default" | "sm" | "md" | "lg" | "icon";
 
 export interface RoyalButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: RoyalButtonVariant;
@@ -29,4 +30,5 @@ export interface RoyalButtonProps extends React.ButtonHTMLAttributes<HTMLButtonE
   asChild?: boolean;
   icon?: React.ReactNode;
   glow?: boolean;
+  shimmer?: boolean;
 }
