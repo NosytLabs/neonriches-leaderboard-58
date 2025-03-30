@@ -1,13 +1,12 @@
 
 // Shame utility functions
-import { MockeryAction } from '@/types/mockery';
-export type ShameAction = MockeryAction; 
+import { MockeryAction, MockeryTier } from '@/types/mockery';
 
 // Define the shame action types
 export type ShameActionType = 'shame' | 'protection' | 'taunt';
 
 // Define shame action prices
-export const getShameActionPrice = (action: ShameAction): number => {
+export const getShameActionPrice = (action: MockeryAction): number => {
   switch (action) {
     case 'tomatoes':
       return 0.25;
@@ -25,7 +24,7 @@ export const getShameActionPrice = (action: ShameAction): number => {
       return 0.80;
     case 'courtJester':
       return 1.20;
-    // Additional actions from the extended MockeryAction
+    // Additional actions
     case 'shame':
       return 0.25;
     case 'taunt':
@@ -60,27 +59,27 @@ export const getShameActionPrice = (action: ShameAction): number => {
 };
 
 // Weekly discount functionality
-export const hasWeeklyDiscount = (action: ShameAction): boolean => {
+export const hasWeeklyDiscount = (action: MockeryAction): boolean => {
   // This week's discount (could be made dynamic based on current date)
   const discountedAction = getWeeklyDiscountedAction();
   return action === discountedAction;
 };
 
 // Get current week's discounted action
-export const getWeeklyDiscountedAction = (): ShameAction => {
+export const getWeeklyDiscountedAction = (): MockeryAction => {
   // This could be dynamic based on the current week
   // For now, hardcoded to 'tomatoes'
   return 'tomatoes';
 };
 
 // Get discounted price
-export const getDiscountedShamePrice = (action: ShameAction): number => {
+export const getDiscountedShamePrice = (action: MockeryAction): number => {
   const originalPrice = getShameActionPrice(action);
   return originalPrice * 0.5; // 50% discount
 };
 
 // Get action icon
-export const getShameActionIcon = (action: ShameAction): string => {
+export const getShameActionIcon = (action: MockeryAction): string => {
   switch (action) {
     case 'tomatoes':
       return '🍅';
@@ -133,7 +132,7 @@ export const getShameActionIcon = (action: ShameAction): string => {
 };
 
 // Get action title
-export const getShameActionTitle = (action: ShameAction): string => {
+export const getShameActionTitle = (action: MockeryAction): string => {
   switch (action) {
     case 'tomatoes':
       return 'Throw Tomatoes';
@@ -186,7 +185,7 @@ export const getShameActionTitle = (action: ShameAction): string => {
 };
 
 // Get action description
-export const getShameActionDescription = (action: ShameAction, username?: string): string => {
+export const getShameActionDescription = (action: MockeryAction, username?: string): string => {
   const targetName = username ? username : 'your target';
   
   switch (action) {

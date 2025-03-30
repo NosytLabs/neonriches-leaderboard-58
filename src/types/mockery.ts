@@ -1,7 +1,42 @@
 
 // Mockery types
 
-export interface MockeryAction {
+// Define MockeryAction as a string literal union type to match how it's used in shameUtils
+export type MockeryAction = 
+  | 'tomatoes'
+  | 'eggs' 
+  | 'putridEggs'
+  | 'stocks'
+  | 'dunce'
+  | 'silence'
+  | 'courtJester'
+  | 'jester'
+  | 'smokeBomb'
+  | 'glitterBomb'
+  | 'taunt'
+  | 'ridicule'
+  | 'shame'
+  | 'mock'
+  | 'humiliate'
+  | 'expose'
+  | 'guillotine'
+  | 'dungeons'
+  | 'removal'
+  | 'crown'
+  | 'target'
+  | 'challenge'
+  | 'jest'
+  | 'protection'
+  | 'immune'
+  | 'defeat'
+  | 'roast'
+  | 'royalPie'
+  | 'jokeCrown'
+  | 'memeFrame';
+
+export type MockeryTier = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary' | 'basic' | 'premium' | 'bronze' | 'silver' | 'gold' | 'platinum' | 'diamond';
+
+export interface MockeryActionData {
   id: string;
   name: string;
   description: string;
@@ -11,9 +46,8 @@ export interface MockeryAction {
   icon: string;
   targetId?: string;
   targetUsername?: string;
+  tier?: MockeryTier;
 }
-
-export type MockeryTier = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
 
 export interface MockeryEvent {
   id: string;
@@ -47,6 +81,9 @@ export interface MockUser {
   displayName?: string;
   profileImage?: string;
   rank: number;
+  mockeryCount?: number;
+  lastMocked?: string;
+  tier?: MockeryTier;
 }
 
 export interface ShameAction {
@@ -59,7 +96,18 @@ export interface ShameAction {
   icon: string;
 }
 
-export interface ExtendedMockeryAction extends MockeryAction {
+export interface ExtendedMockeryAction extends MockeryActionData {
   tier: MockeryTier;
   targetUser?: MockUser;
+}
+
+export interface MockedUser {
+  username: string;
+  displayName: string;
+  avatarUrl?: string;
+  mockedReason: string;
+  mockedTimestamp: string;
+  mockedBy: string;
+  mockedTier?: string;
+  mockeryCount: number;
 }

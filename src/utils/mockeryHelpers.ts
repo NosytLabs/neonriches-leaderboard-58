@@ -6,7 +6,7 @@ import { CosmeticRarity } from '@/types/cosmetics';
 
 // Define mockery action costs
 export const getShameActionPrice = (action: MockeryAction): number => {
-  const prices: Partial<Record<MockeryAction, number>> = {
+  const prices: Record<MockeryAction, number> = {
     tomatoes: 0.25,
     eggs: 0.50,
     shame: 0.30,
@@ -37,6 +37,7 @@ export const getShameActionPrice = (action: MockeryAction): number => {
     dungeons: 1.80,
     removal: 2.50,
     royalPie: 1.00,
+    target: 0.35
   };
   
   return prices[action] || 0.25;
@@ -44,7 +45,7 @@ export const getShameActionPrice = (action: MockeryAction): number => {
 
 // Define mockery durations (in hours)
 export const getShameActionDuration = (action: MockeryAction): number => {
-  const durations: Partial<Record<MockeryAction, number>> = {
+  const durations: Record<MockeryAction, number> = {
     tomatoes: 1,
     eggs: 2,
     shame: 3,
@@ -75,6 +76,7 @@ export const getShameActionDuration = (action: MockeryAction): number => {
     dungeons: 48,
     removal: 72,
     royalPie: 6,
+    target: 3
   };
   
   return durations[action] || 1;
@@ -84,7 +86,7 @@ export const getShameActionDuration = (action: MockeryAction): number => {
 export const getShameActionDescription = (action: MockeryAction, username?: string): string => {
   const targetName = username ? username : 'your target';
   
-  const descriptions: Partial<Record<MockeryAction, string>> = {
+  const descriptions: Record<MockeryAction, string> = {
     tomatoes: `Pelt ${targetName} with rotten tomatoes. A classic form of public ridicule.`,
     eggs: `Hurl rotten eggs at ${targetName}. The visual stench will follow them for a day.`,
     shame: `Publicly shame ${targetName} with a mark of disgrace.`,
@@ -114,6 +116,8 @@ export const getShameActionDescription = (action: MockeryAction, username?: stri
     dungeons: `Send ${targetName} to the virtual dungeons for a time.`,
     removal: `Remove ${targetName}'s royal privileges temporarily.`,
     royalPie: `Hit ${targetName} with a royal cream pie.`,
+    immune: `Make ${targetName} immune to mockery.`,
+    target: `Mark ${targetName} as a target for others.`
   };
   
   return descriptions[action] || `Apply this mysterious action to ${targetName}.`;
@@ -121,7 +125,7 @@ export const getShameActionDescription = (action: MockeryAction, username?: stri
 
 // Get action icon
 export const getShameActionIcon = (action: MockeryAction): string => {
-  const icons: Partial<Record<MockeryAction, string>> = {
+  const icons: Record<MockeryAction, string> = {
     tomatoes: '🍅',
     eggs: '🥚',
     shame: '😱',
@@ -152,6 +156,7 @@ export const getShameActionIcon = (action: MockeryAction): string => {
     dungeons: '🏰',
     removal: '❌',
     royalPie: '🥧',
+    target: '🎯'
   };
   
   return icons[action] || '❓';
@@ -216,7 +221,7 @@ export const getTierRarity = (tier: MockeryTier): CosmeticRarity => {
     epic: 'epic',
     legendary: 'legendary',
     basic: 'common',
-    'premium': 'rare',
+    premium: 'rare',
     bronze: 'uncommon',
     silver: 'rare',
     gold: 'epic',

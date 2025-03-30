@@ -5,7 +5,7 @@ import { useSound } from '@/hooks/sounds/use-sound';
 import { SoundType } from '@/types/sound-types';
 import { MockeryAction } from '@/types/mockery';
 
-// Use MockeryAction as ShameAction for compatibility
+// Export MockeryAction as ShameAction for compatibility
 export type ShameAction = MockeryAction;
 
 // Define a state type for our shame effect
@@ -17,7 +17,7 @@ type ShameEffectState = {
   animationConfig: AnimationConfig | null;
   duration: number;
   shameCooldown: Record<number, number>;
-  shameEffects: Record<number, ShameAction>;
+  shameEffects: Record<number, { action: ShameAction; timestamp: number; until: number }>;
   shameCount: Record<number, number>;
 };
 
@@ -36,7 +36,7 @@ export const useShameEffect = (options = { cooldownPeriod: 24 * 60 * 60 * 1000 }
     shameCount: {}
   });
   
-  const { playSound } = useSound();
+  const { play: playSound } = useSound();
   
   // Clear the effect after duration
   useEffect(() => {
@@ -60,7 +60,7 @@ export const useShameEffect = (options = { cooldownPeriod: 24 * 60 * 60 * 1000 }
     }
     
     return () => {
-      // We don't need to stop sounds since our useSound hook doesn't have stopSound
+      // No cleanup needed
     };
   }, [state.isActive, state.action]);
   
@@ -89,6 +89,8 @@ export const useShameEffect = (options = { cooldownPeriod: 24 * 60 * 60 * 1000 }
       }
       
       // Apply the effect and set cooldown
+      const effectDuration = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+      
       return {
         ...prev,
         shameCooldown: {
@@ -97,7 +99,11 @@ export const useShameEffect = (options = { cooldownPeriod: 24 * 60 * 60 * 1000 }
         },
         shameEffects: {
           ...prev.shameEffects,
-          [userId]: action
+          [userId]: {
+            action,
+            timestamp: now,
+            until: now + effectDuration
+          }
         },
         shameCount: {
           ...prev.shameCount,
@@ -230,4 +236,5 @@ export const useShameEffect = (options = { cooldownPeriod: 24 * 60 * 60 * 1000 }
   };
 };
 
-export { ShameAction };
+// Re-export the type
+export type { ShameAction };

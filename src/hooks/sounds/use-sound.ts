@@ -1,199 +1,77 @@
 
-import { useCallback, useState, useEffect, useRef } from 'react';
-import { SoundType, UseSoundOptions, UseSoundReturn } from '@/types/sound-types';
+import { useCallback, useState } from 'react';
+import { SoundType } from '@/types/sound-types';
 
-export function useSound(initialSound?: SoundType, options?: UseSoundOptions): UseSoundReturn {
+export interface UseSoundReturn {
+  play: (sound: SoundType, volume?: number) => void;
+  isPlaying: boolean;
+  stop: () => void;
+}
+
+export const useSound = (): UseSoundReturn => {
+  const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [isMuted, setIsMuted] = useState(options?.muted || false);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  
-  // Mapping of sound types to file paths
-  const soundPaths: Record<SoundType, string> = {
-    success: '/sounds/success.mp3',
-    error: '/sounds/error.mp3',
-    warning: '/sounds/warning.mp3',
-    info: '/sounds/info.mp3',
-    notification: '/sounds/notification.mp3',
-    achievement: '/sounds/achievement.mp3',
-    purchase: '/sounds/purchase.mp3',
-    levelUp: '/sounds/level-up.mp3',
-    royal: '/sounds/royal.mp3',
-    trumpets: '/sounds/trumpets.mp3',
-    fanfare: '/sounds/fanfare.mp3',
-    coins: '/sounds/coins.mp3',
-    spend: '/sounds/spend.mp3',
-    deposit: '/sounds/deposit.mp3',
-    withdrawal: '/sounds/withdrawal.mp3',
-    click: '/sounds/click.mp3',
-    hover: '/sounds/hover.mp3',
-    tab: '/sounds/tab.mp3',
-    shame: '/sounds/shame.mp3',
-    taunt: '/sounds/taunt.mp3',
-    mockery: '/sounds/mockery.mp3',
-    shatter: '/sounds/shatter.mp3',
-    sweep: '/sounds/sweep.mp3',
-    pop: '/sounds/pop.mp3',
-    swoosh: '/sounds/swoosh.mp3',
-    chime: '/sounds/chime.mp3',
-    bell: '/sounds/bell.mp3',
-    alert: '/sounds/alert.mp3',
-    drum: '/sounds/drum.mp3',
-    throne: '/sounds/throne.mp3',
-    applause: '/sounds/applause.mp3',
-    boo: '/sounds/boo.mp3',
-    medal: '/sounds/medal.mp3',
-    medallion: '/sounds/medallion.mp3',
-    certificate: '/sounds/certificate.mp3',
-    coinDrop: '/sounds/coin-drop.mp3',
-    swordClash: '/sounds/sword-clash.mp3',
-    noblesLaugh: '/sounds/nobles-laugh.mp3'
+
+  const getSoundUrl = (sound: SoundType): string => {
+    const soundMap: Record<SoundType, string> = {
+      notification: 'https://assets.mixkit.co/sfx/preview/mixkit-software-interface-start-2574.mp3',
+      success: 'https://assets.mixkit.co/sfx/preview/mixkit-game-success-alert-2039.mp3',
+      error: 'https://assets.mixkit.co/sfx/preview/mixkit-software-interface-remove-2576.mp3',
+      purchase: 'https://assets.mixkit.co/sfx/preview/mixkit-coins-handling-1939.mp3',
+      trumpets: 'https://assets.mixkit.co/sfx/preview/mixkit-medieval-show-fanfare-announcement-226.mp3',
+      achievement: 'https://assets.mixkit.co/sfx/preview/mixkit-winning-chimes-2015.mp3',
+      deposit: 'https://assets.mixkit.co/sfx/preview/mixkit-positive-interface-beep-221.mp3',
+      shame: 'https://assets.mixkit.co/sfx/preview/mixkit-crowd-boo-and-whistle-733.mp3',
+      click: 'https://assets.mixkit.co/sfx/preview/mixkit-click-melodic-tone-1129.mp3',
+      royal: 'https://assets.mixkit.co/sfx/preview/mixkit-fairy-arcade-sparkle-866.mp3',
+      levelUp: 'https://assets.mixkit.co/sfx/preview/mixkit-player-boost-recharging-2040.mp3'
+    };
+
+    return soundMap[sound] || soundMap.notification;
   };
-  
-  // Mapping of sound types to volume levels
-  const soundVolumes: Record<SoundType, number> = {
-    success: 0.7,
-    error: 0.7,
-    warning: 0.7,
-    info: 0.6,
-    notification: 0.7,
-    achievement: 0.8,
-    purchase: 0.8,
-    levelUp: 0.8,
-    royal: 0.8,
-    trumpets: 0.8,
-    fanfare: 0.8,
-    coins: 0.6,
-    spend: 0.6,
-    deposit: 0.7,
-    withdrawal: 0.7,
-    click: 0.4,
-    hover: 0.3,
-    tab: 0.4,
-    shame: 0.7,
-    taunt: 0.7,
-    mockery: 0.7,
-    shatter: 0.7,
-    sweep: 0.7,
-    pop: 0.6,
-    swoosh: 0.6,
-    chime: 0.6,
-    bell: 0.7,
-    alert: 0.7,
-    drum: 0.7,
-    throne: 0.8,
-    applause: 0.7,
-    boo: 0.7,
-    medal: 0.7,
-    medallion: 0.7,
-    certificate: 0.7,
-    coinDrop: 0.7,
-    swordClash: 0.8,
-    noblesLaugh: 0.7
-  };
-  
-  // Initialize audio
-  useEffect(() => {
-    if (initialSound && typeof window !== 'undefined') {
-      audioRef.current = new Audio(soundPaths[initialSound]);
-      audioRef.current.volume = (options?.volume !== undefined) ? options.volume : soundVolumes[initialSound];
-      audioRef.current.muted = isMuted;
-      
-      if (options?.autoplay) {
-        audioRef.current.play().catch(err => console.error('Error auto-playing sound:', err));
-        setIsPlaying(true);
+
+  const play = useCallback((sound: SoundType, volume: number = 0.3) => {
+    try {
+      if (audio) {
+        audio.pause();
+        audio.currentTime = 0;
       }
+
+      const newAudio = new Audio(getSoundUrl(sound));
+      newAudio.volume = Math.min(1, Math.max(0, volume)); // Clamp volume between 0 and 1
       
-      if (options?.loop) {
-        audioRef.current.loop = true;
-      }
-      
-      return () => {
-        if (audioRef.current) {
-          audioRef.current.pause();
-          audioRef.current = null;
-        }
+      newAudio.onplaying = () => setIsPlaying(true);
+      newAudio.onended = () => setIsPlaying(false);
+      newAudio.onpause = () => setIsPlaying(false);
+      newAudio.onerror = () => {
+        console.error('Error playing sound:', sound);
+        setIsPlaying(false);
       };
-    }
-  }, [initialSound]);
-  
-  // Update muted state
-  useEffect(() => {
-    if (audioRef.current) {
-      audioRef.current.muted = isMuted;
-    }
-  }, [isMuted]);
-  
-  // Play a sound
-  const play = useCallback((sound?: SoundType) => {
-    const soundToPlay = sound || initialSound;
-    
-    if (!soundToPlay || isMuted) return;
-    
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current = null;
-    }
-    
-    const audio = new Audio(soundPaths[soundToPlay]);
-    audio.volume = (options?.volume !== undefined) ? options.volume : soundVolumes[soundToPlay];
-    audio.muted = isMuted;
-    
-    if (options?.loop) {
-      audio.loop = true;
-    }
-    
-    audio.play().catch(err => console.error('Error playing sound:', err));
-    audio.addEventListener('ended', () => setIsPlaying(false));
-    
-    audioRef.current = audio;
-    setIsPlaying(true);
-  }, [initialSound, isMuted, options]);
-  
-  // Pause current sound
-  const pause = useCallback(() => {
-    if (audioRef.current) {
-      audioRef.current.pause();
+      
+      setAudio(newAudio);
+      newAudio.play().catch(e => {
+        console.error('Failed to play sound:', e);
+        setIsPlaying(false);
+      });
+    } catch (error) {
+      console.error('Error in sound hook:', error);
       setIsPlaying(false);
     }
-  }, []);
-  
-  // Stop current sound
+  }, [audio]);
+
   const stop = useCallback(() => {
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current.currentTime = 0;
+    if (audio) {
+      audio.pause();
+      audio.currentTime = 0;
       setIsPlaying(false);
     }
-  }, []);
-  
-  // Set volume
-  const setVolume = useCallback((volume: number) => {
-    if (audioRef.current) {
-      audioRef.current.volume = Math.max(0, Math.min(1, volume));
-    }
-  }, []);
-  
-  // Toggle mute
-  const toggleMute = useCallback(() => {
-    setIsMuted(prev => !prev);
-  }, []);
-  
-  // Play a random sound from a list
-  const playRandom = useCallback((sounds: SoundType[]) => {
-    if (sounds.length === 0 || isMuted) return;
-    
-    const randomIndex = Math.floor(Math.random() * sounds.length);
-    play(sounds[randomIndex]);
-  }, [play, isMuted]);
-  
+  }, [audio]);
+
   return {
     play,
-    pause,
-    stop,
     isPlaying,
-    isMuted,
-    setVolume,
-    toggleMute,
-    playRandom
+    stop
   };
-}
+};
+
+export default useSound;
