@@ -1,18 +1,36 @@
 
-import React, { ReactNode } from 'react';
+import React from 'react';
+import { cn } from '@/lib/utils';
 
 interface EmptyStateProps {
   message: string;
-  description?: string;
-  icon?: ReactNode;
+  icon?: React.ReactNode;
+  className?: string;
+  action?: React.ReactNode;
 }
 
-const EmptyState: React.FC<EmptyStateProps> = ({ message, description, icon }) => {
+const EmptyState: React.FC<EmptyStateProps> = ({
+  message,
+  icon,
+  className,
+  action
+}) => {
   return (
-    <div className="flex flex-col items-center justify-center text-center py-6">
-      {icon && <div className="mb-3">{icon}</div>}
-      <p className="text-white/70 font-medium">{message}</p>
-      {description && <p className="text-white/50 text-sm mt-1">{description}</p>}
+    <div className={cn(
+      "flex flex-col items-center justify-center p-8 text-center rounded-lg bg-black/10 border border-white/5",
+      className
+    )}>
+      {icon && (
+        <div className="mb-4">
+          {icon}
+        </div>
+      )}
+      <p className="text-white/70 mb-4">{message}</p>
+      {action && (
+        <div className="mt-2">
+          {action}
+        </div>
+      )}
     </div>
   );
 };

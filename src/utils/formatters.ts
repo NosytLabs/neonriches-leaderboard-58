@@ -1,129 +1,97 @@
 
-import { formatCurrency } from '@/lib/utils';
+/**
+ * Format a number as currency (dollars)
+ */
+export const formatCurrency = (amount: number): string => {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 2
+  }).format(amount);
+};
 
 /**
- * Formats a number as a currency string
+ * Format a dollar amount with dollar sign
  */
-export { formatCurrency };
+export const formatDollarAmount = (amount: number): string => {
+  return `$${amount.toLocaleString('en-US', { maximumFractionDigits: 2 })}`;
+};
 
 /**
- * Formats a file size in bytes to a human-readable string
+ * Format a date to a readable string
  */
-export function formatFileSize(bytes: number): string {
-  if (bytes === 0) return '0 Bytes';
-  
-  const k = 1024;
-  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
-  
-  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(2))} ${sizes[i]}`;
-}
-
-/**
- * Formats a date in a consistent way across the app
- */
-export function formatDate(date: Date | string): string {
+export const formatDate = (date: Date | string): string => {
   if (!date) return '';
-  
-  const d = typeof date === 'string' ? new Date(date) : date;
-  
-  if (isNaN(d.getTime())) return 'Invalid Date';
-  
-  return new Intl.DateTimeFormat('en-US', {
+  const dateObj = typeof date === 'string' ? new Date(date) : date;
+  return dateObj.toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'short',
-    day: 'numeric',
-  }).format(d);
-}
+    day: 'numeric'
+  });
+};
 
 /**
- * Formats a date with time
+ * Format a historical value for display
  */
-export function formatDateTime(date: Date | string): string {
-  if (!date) return '';
-  
-  const d = typeof date === 'string' ? new Date(date) : date;
-  
-  if (isNaN(d.getTime())) return 'Invalid Date';
-  
-  return new Intl.DateTimeFormat('en-US', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-    hour: 'numeric',
-    minute: 'numeric',
-  }).format(d);
-}
+export const formatHistoricalValue = (value: number, year: number): string => {
+  return `${formatCurrency(value)} (${year})`;
+};
 
 /**
- * Formats a number with commas for thousands
+ * Format a blockchain address by truncating the middle
  */
-export function formatNumber(num: number): string {
-  return new Intl.NumberFormat('en-US').format(num);
-}
+export const formatAddress = (address: string): string => {
+  if (!address || address.length < 10) return address;
+  return `${address.slice(0, 6)}...${address.slice(-4)}`;
+};
 
 /**
- * Truncates text to a specified length and adds ellipsis
+ * Format a number with appropriate separators
  */
-export function truncateText(text: string, maxLength: number): string {
-  if (!text || text.length <= maxLength) return text || '';
-  return text.slice(0, maxLength) + '...';
-}
+export const formatNumber = (num: number): string => {
+  return num.toLocaleString('en-US');
+};
 
 /**
- * Formats a percentage
+ * Format a file size in bytes to a readable string
  */
-export function formatPercent(value: number, decimals = 1): string {
-  return `${value.toFixed(decimals)}%`;
-}
+export const formatFileSize = (bytes: number): string => {
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+};
 
 /**
- * Formats a relativeTime string (e.g. "2 hours ago")
+ * Format a duration in seconds to a readable string
  */
-export function formatRelativeTime(date: Date | string): string {
-  if (!date) return '';
-  
-  const d = typeof date === 'string' ? new Date(date) : date;
-  
-  if (isNaN(d.getTime())) return 'Invalid Date';
-  
-  const now = new Date();
-  const diffInSeconds = Math.floor((now.getTime() - d.getTime()) / 1000);
-  
-  if (diffInSeconds < 60) return `${diffInSeconds} seconds ago`;
-  if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)} minutes ago`;
-  if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)} hours ago`;
-  if (diffInSeconds < 2592000) return `${Math.floor(diffInSeconds / 86400)} days ago`;
-  if (diffInSeconds < 31536000) return `${Math.floor(diffInSeconds / 2592000)} months ago`;
-  
-  return `${Math.floor(diffInSeconds / 31536000)} years ago`;
-}
-
-/**
- * Formats a username (e.g. truncates if too long, adds @ if missing)
- */
-export function formatUsername(username: string): string {
-  if (!username) return '';
-  
-  // Remove @ if present
-  const formattedUsername = username.startsWith('@') ? username : `@${username}`;
-  
-  // Truncate if too long
-  return truncateText(formattedUsername, 15);
-}
-
-/**
- * Formats time duration (e.g. "2h 30m")
- */
-export function formatDuration(seconds: number): string {
+export const formatDuration = (seconds: number): string => {
   if (seconds < 60) return `${seconds}s`;
-  
-  const minutes = Math.floor(seconds / 60);
-  if (minutes < 60) return `${minutes}m`;
-  
-  const hours = Math.floor(minutes / 60);
-  const remainingMinutes = minutes % 60;
-  
-  if (remainingMinutes === 0) return `${hours}h`;
-  return `${hours}h ${remainingMinutes}m`;
-}
+  if (seconds < 3600) {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes}m${remainingSeconds > 0 ? ` ${remainingSeconds}s` : ''}`;
+  }
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  return `${hours}h${minutes > 0 ? ` ${minutes}m` : ''}`;
+};
+
+/**
+ * Format a percentage value
+ */
+export const formatPercentage = (value: number, digits = 1): string => {
+  return `${value.toFixed(digits)}%`;
+};
+
+// Re-export all formatters to match the expected imports
+export { 
+  formatCurrency,
+  formatDollarAmount,
+  formatDate,
+  formatHistoricalValue,
+  formatAddress,
+  formatNumber,
+  formatFileSize,
+  formatDuration,
+  formatPercentage
+};

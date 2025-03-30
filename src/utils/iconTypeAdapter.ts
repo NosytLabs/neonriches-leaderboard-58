@@ -1,87 +1,53 @@
 
-import { MedievalIconName, MedievalIconColor, MedievalIconSize } from '@/components/ui/medieval-icon';
-import { toPascalCase, getIconAlias } from './iconNameAdapter';
+import { MedievalIconName, MedievalIconColor, MedievalIconSize } from '@/components/ui/medieval-icon.d';
 
-/**
- * Converts a string to a valid MedievalIconName
- * Handles common cases like lowercase names or hyphenated names
- */
-export function toMedievalIconName(iconName: string): MedievalIconName {
-  // Try to get a standard Lucide icon name first
-  const formattedName = toPascalCase(iconName);
-  
-  // Map for special cases and common icon names
+// Convert lowercase icon names to the proper capitalized format required by MedievalIconName
+export const adaptIconName = (name: string): MedievalIconName => {
   const iconMap: Record<string, MedievalIconName> = {
-    // Direct mappings
-    "crown": "Crown",
-    "shield": "Shield",
-    "sword": "Sword",
-    "scroll": "Scroll",
-    "heart": "Heart",
-    "medal": "Medal",
-    "trophy": "Trophy",
-    "key": "Key",
-    "coins": "Coins",
-    "wallet": "Wallet",
-    "gem": "Gem",
-    "seal": "Seal",
-    
-    // Fallbacks for unsupported icons
-    "castle": "Shield",
-    "goblet": "Trophy",
-    "user": "Crown",
+    'crown': 'Crown',
+    'shield': 'Shield',
+    'sword': 'Sword',
+    'scroll': 'Scroll',
+    'heart': 'Heart',
+    'medal': 'Medal',
+    'trophy': 'Trophy',
+    'key': 'Key',
+    'coins': 'Coins',
+    'wallet': 'Wallet',
+    'gem': 'Gem',
+    'seal': 'Seal'
   };
-  
-  // First check for direct matches
-  if (iconMap[iconName.toLowerCase()]) {
-    return iconMap[iconName.toLowerCase()] as MedievalIconName;
-  }
-  
-  // Then check if the formatted name is a valid MedievalIconName
-  if (formattedName === "Crown" || formattedName === "Shield" || formattedName === "Sword" ||
-      formattedName === "Scroll" || formattedName === "Heart" || formattedName === "Medal" ||
-      formattedName === "Trophy" || formattedName === "Key" || formattedName === "Coins" ||
-      formattedName === "Wallet" || formattedName === "Gem" || formattedName === "Seal") {
-    return formattedName as MedievalIconName;
-  }
-  
-  // Default to Crown if no match is found
-  return "Crown";
-}
 
-/**
- * Converts a string to a valid MedievalIconSize
- */
-export function toMedievalIconSize(size: string): MedievalIconSize {
+  return iconMap[name.toLowerCase()] || 'Crown';
+};
+
+// Convert size string to the proper format required by MedievalIconSize
+export const adaptIconSize = (size: string): MedievalIconSize => {
   const sizeMap: Record<string, MedievalIconSize> = {
-    "xs": "xs",
-    "sm": "sm",
-    "md": "md",
-    "lg": "lg",
-    "xl": "xl",
-    "2xl": "xl" // Map 2xl to xl since it's not supported
+    'xs': 'xs',
+    'sm': 'sm',
+    'md': 'md',
+    'lg': 'lg',
+    'xl': 'xl'
   };
-  
-  return (sizeMap[size] || "md") as MedievalIconSize;
-}
 
-/**
- * Converts a string to a valid MedievalIconColor
- */
-export function toMedievalIconColor(color: string): MedievalIconColor {
+  return sizeMap[size.toLowerCase()] || 'md';
+};
+
+// Convert color string to the proper format required by MedievalIconColor
+export const adaptIconColor = (color: string): MedievalIconColor => {
   const colorMap: Record<string, MedievalIconColor> = {
-    "default": "default",
-    "gold": "gold",
-    "silver": "silver",
-    "crimson": "crimson",
-    
-    // Map unsupported colors to supported ones
-    "purple": "crimson",
-    "blue": "silver",
-    "navy": "default",
-    "copper": "gold",
-    "bronze": "gold"
+    'default': 'default',
+    'gold': 'gold',
+    'silver': 'silver',
+    'crimson': 'crimson',
+    // Map other colors to the allowed values
+    'navy': 'default',
+    'purple': 'default',
+    'copper': 'default',
+    'bronze': 'default',
+    'emerald': 'default'
   };
-  
-  return (colorMap[color] || "default") as MedievalIconColor;
-}
+
+  return colorMap[color.toLowerCase()] || 'default';
+};

@@ -3,7 +3,7 @@ import React from 'react';
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { FileIcon, Code, Package, Trash2, FileText, Folder } from 'lucide-react';
-import { AnalysisResult } from '@/utils/codeAnalysis/types';
+import { AnalysisResult, FileInfo } from '@/utils/codeAnalysis/types';
 import EmptyState from '@/components/ui/empty-state';
 
 interface UnusedCodeReportProps {
@@ -16,7 +16,6 @@ const UnusedCodeReport: React.FC<UnusedCodeReportProps> = ({ analysisResult = {
   unusedFiles: [],
   unusedSelectors: [],
   unusedDependencies: [],
-  unusedFunctions: [],
   deadCode: [],
   duplicateCode: [],
   complexCode: []
@@ -26,9 +25,11 @@ const UnusedCodeReport: React.FC<UnusedCodeReportProps> = ({ analysisResult = {
     unusedVariables = [],
     unusedFiles = [],
     unusedSelectors = [],
-    unusedDependencies = [],
-    unusedFunctions = []
+    unusedDependencies = []
   } = analysisResult;
+
+  // Type check to ensure unusedFiles is an array
+  const unusedFilesArray = Array.isArray(unusedFiles) ? unusedFiles : [];
 
   return (
     <div className="space-y-6">
@@ -102,29 +103,31 @@ const UnusedCodeReport: React.FC<UnusedCodeReportProps> = ({ analysisResult = {
         )}
       </div>
 
-      {/* Unused Functions */}
+      {/* Unused Files */}
       <div>
-        <h3 className="text-lg font-medium mb-2">Unused Functions</h3>
-        {unusedFunctions.length === 0 ? (
+        <h3 className="text-lg font-medium mb-2">Unused Files</h3>
+        {unusedFilesArray.length === 0 ? (
           <EmptyState 
-            message="No unused functions found" 
-            icon={<Code className="h-6 w-6 opacity-50" />}
+            message="No unused files found" 
+            icon={<Folder className="h-6 w-6 opacity-50" />}
           />
         ) : (
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Function</TableHead>
-                <TableHead>File</TableHead>
-                <TableHead>Line</TableHead>
+                <TableHead>File Path</TableHead>
+                <TableHead>Action</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {unusedFunctions.map((item, index) => (
+              {unusedFilesArray.map((file, index) => (
                 <TableRow key={index}>
-                  <TableCell className="font-mono">{item.name}</TableCell>
-                  <TableCell className="text-xs">{item.file}</TableCell>
-                  <TableCell>{item.line}</TableCell>
+                  <TableCell className="font-mono text-xs">{typeof file === 'string' ? file : file.path}</TableCell>
+                  <TableCell>
+                    <Badge variant="outline" className="bg-red-500/10 text-red-400 border-red-500/20">
+                      Safe to delete
+                    </Badge>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -162,42 +165,10 @@ const UnusedCodeReport: React.FC<UnusedCodeReportProps> = ({ analysisResult = {
         )}
       </div>
 
-      {/* Unused Files */}
-      <div>
-        <h3 className="text-lg font-medium mb-2">Unused Files</h3>
-        {unusedFiles.length === 0 ? (
-          <EmptyState 
-            message="No unused files found" 
-            icon={<Folder className="h-6 w-6 opacity-50" />}
-          />
-        ) : (
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>File Path</TableHead>
-                <TableHead>Action</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {unusedFiles.map((filePath, index) => (
-                <TableRow key={index}>
-                  <TableCell className="font-mono text-xs">{filePath}</TableCell>
-                  <TableCell>
-                    <Badge variant="outline" className="bg-red-500/10 text-red-400 border-red-500/20">
-                      Safe to delete
-                    </Badge>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        )}
-      </div>
-
       {/* Unused Dependencies */}
       <div>
         <h3 className="text-lg font-medium mb-2">Unused Dependencies</h3>
-        {unusedDependencies.length === 0 ? (
+        {!unusedDependencies || unusedDependencies.length === 0 ? (
           <EmptyState 
             message="No unused dependencies found" 
             icon={<Package className="h-6 w-6 opacity-50" />}

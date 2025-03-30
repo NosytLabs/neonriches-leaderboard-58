@@ -1,3 +1,5 @@
 
-export { AuthProvider, useAuth, AuthContext } from './AuthContext';
-export type { AuthProviderProps } from './AuthContext';
+import { AuthProvider, AuthContext } from './AuthContext';
+import { useAuth } from '../../hooks/useAuth';
+
+export { AuthProvider, AuthContext, useAuth };
