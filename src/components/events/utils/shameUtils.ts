@@ -1,16 +1,21 @@
 
-import { MockeryAction, MockeryTier, ShameAction } from '@/types/mockery';
-import { 
-  Target, 
-  Egg, 
-  Lock, 
-  VolumeX, 
-  Crown, 
-  Flame,
-  Cloud,
-  Sparkles,
-  Milestone
-} from 'lucide-react';
+import { SoundType } from '@/types/sound-types';
+
+export type ShameAction = 
+  | 'tomatoes' 
+  | 'eggs' 
+  | 'putridEggs' 
+  | 'stocks' 
+  | 'silence' 
+  | 'courtJester' 
+  | 'dunce' 
+  | 'jester' 
+  | 'ridicule' 
+  | 'shame' 
+  | 'smokeBomb';
+
+export type MockeryAction = ShameAction;
+export type MockeryTier = 'basic' | 'premium' | 'royal';
 
 // Shame action prices
 export const getShameActionPrice = (action: ShameAction): number => {
@@ -52,18 +57,18 @@ export const getMaxDiscountPercentage = (): number => {
 // Get shame action icon
 export const getShameActionIcon = (action: ShameAction) => {
   switch (action) {
-    case 'tomatoes': return Flame;
+    case 'tomatoes': return 'Flame';
     case 'eggs': 
-    case 'putridEggs': return Egg;
-    case 'stocks': return Lock;
-    case 'silence': return VolumeX;
+    case 'putridEggs': return 'Egg';
+    case 'stocks': return 'Lock';
+    case 'silence': return 'VolumeX';
     case 'courtJester': 
-    case 'jester': return Crown;
-    case 'dunce': return Milestone;
-    case 'ridicule': return Target;
-    case 'shame': return Target;
-    case 'smokeBomb': return Cloud;
-    default: return Target;
+    case 'jester': return 'Crown';
+    case 'dunce': return 'Milestone';
+    case 'ridicule': return 'Target';
+    case 'shame': return 'Target';
+    case 'smokeBomb': return 'Cloud';
+    default: return 'Target';
   }
 };
 
@@ -120,6 +125,24 @@ export const getWeeklyDiscountedAction = (): ShameAction => {
   const weekOfYear = Math.floor(Date.now() / (7 * 24 * 60 * 60 * 1000));
   const actions: ShameAction[] = ['tomatoes', 'eggs', 'putridEggs'];
   return actions[weekOfYear % actions.length];
+};
+
+// Map ShameAction to SoundType for appropriate sound effects
+export const getActionSoundType = (action: ShameAction): SoundType => {
+  switch (action) {
+    case 'tomatoes': return 'shame';
+    case 'eggs': return 'shame';
+    case 'putridEggs': return 'shame';
+    case 'stocks': return 'swordClash';
+    case 'silence': return 'royalAnnouncement';
+    case 'courtJester': return 'noblesLaugh';
+    case 'dunce': return 'shame';
+    case 'jester': return 'noblesLaugh';
+    case 'ridicule': return 'noblesLaugh';
+    case 'shame': return 'shame';
+    case 'smokeBomb': return 'smoke';
+    default: return 'shame';
+  }
 };
 
 // Convert MockeryAction to ShameAction safely

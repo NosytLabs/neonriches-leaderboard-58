@@ -1,33 +1,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useSettingsStore } from '@/stores/settingsStore';
-
-// Define the types of sounds available in the application
-export type SoundType = 
-  | 'hover' 
-  | 'click' 
-  | 'success' 
-  | 'error' 
-  | 'notification' 
-  | 'purchase' 
-  | 'levelUp' 
-  | 'achievement' 
-  | 'reward'
-  | 'coinDrop'
-  | 'royalAnnouncement'
-  | 'shame'
-  | 'swordClash'
-  | 'trumpets'
-  | 'scroll'
-  | 'potion'
-  | 'chatMessage'
-  | 'unlock'
-  | 'win'
-  | 'message'
-  | 'trumpet'
-  | 'coin'
-  | 'boost'
-  | 'advertisement';
+import { SoundType, UseSoundOptions, UseSoundReturn } from '@/types/sound-types';
 
 // Base URLs for sounds
 const SOUND_BASE_URL = '/sounds/';
@@ -57,7 +31,15 @@ const soundFiles: Record<SoundType, string> = {
   trumpet: 'royal/trumpet.mp3',
   coin: 'transactions/coin.mp3',
   boost: 'items/boost.mp3',
-  advertisement: 'marketing/advertisement.mp3'
+  advertisement: 'marketing/advertisement.mp3',
+  pageTransition: 'ui/page-transition.mp3',
+  seal: 'royal/seal.mp3',
+  parchmentUnfurl: 'ui/parchment-unfurl.mp3',
+  wish: 'achievements/wish.mp3',
+  pageChange: 'ui/page-change.mp3',
+  medallion: 'achievements/medallion.mp3',
+  noblesLaugh: 'royal/nobles-laugh.mp3',
+  inkScribble: 'ui/ink-scribble.mp3'
 };
 
 // Volume levels for different sound types
@@ -85,28 +67,19 @@ const volumeLevels: Record<SoundType, number> = {
   trumpet: 0.7,
   coin: 0.6,
   boost: 0.6,
-  advertisement: 0.6
+  advertisement: 0.6,
+  pageTransition: 0.5,
+  seal: 0.6,
+  parchmentUnfurl: 0.5,
+  wish: 0.7,
+  pageChange: 0.4,
+  medallion: 0.7,
+  noblesLaugh: 0.6,
+  inkScribble: 0.5
 };
 
 // Cache audio elements to avoid recreating them
 const audioCache: Record<string, HTMLAudioElement> = {};
-
-interface UseSoundOptions {
-  baseVolume?: number;
-  disableCache?: boolean;
-  volume?: number;
-}
-
-interface UseSoundReturn {
-  play: (soundType: SoundType, volumeMultiplier?: number) => void;
-  playSuccess: (volumeMultiplier?: number) => void;
-  playError: (volumeMultiplier?: number) => void;
-  playNotification: (volumeMultiplier?: number) => void;
-  playClick: (volumeMultiplier?: number) => void;
-  loading: boolean;
-  loaded: boolean;
-  error: Error | null;
-}
 
 /**
  * Custom hook for playing sound effects
@@ -208,6 +181,14 @@ export const useSound = (options: UseSoundOptions = {}): UseSoundReturn => {
     loaded,
     error
   };
+};
+
+// Sound categories for different user preferences
+export const SOUND_CATEGORIES = {
+  UI: ['click', 'notification', 'pageTransition', 'pageChange', 'hover'],
+  FEEDBACK: ['success', 'error', 'reward', 'levelUp', 'purchase'],
+  AMBIENT: ['coinDrop', 'royalAnnouncement', 'wish', 'trumpet'],
+  SPECIAL: ['swordClash', 'shame', 'parchmentUnfurl', 'medallion', 'seal', 'noblesLaugh', 'inkScribble']
 };
 
 export default useSound;

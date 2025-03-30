@@ -3,25 +3,7 @@ import React from 'react';
 import * as LucideIcons from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Crown } from '@/assets/icons/Crown';
-
-// Define the icon types
-export type IconName = keyof typeof LucideIcons | 'Crown';
-
-// Define size and color types
-export type IconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
-export type IconColor = 
-  | 'default' 
-  | 'primary' 
-  | 'secondary' 
-  | 'muted' 
-  | 'accent'
-  | 'gold'
-  | 'silver'
-  | 'crimson'
-  | 'royal'
-  | 'navy';
-
-export type IconStyle = 'default' | 'medieval';
+import { IconName, IconSize, IconColor, IconStyle } from '@/types/ui/icon-types';
 
 // Size classes map
 const iconSizeClasses: Record<IconSize, string> = {
@@ -34,7 +16,7 @@ const iconSizeClasses: Record<IconSize, string> = {
 };
 
 // Color classes map
-const iconColorClasses: Record<IconColor, string> = {
+const iconColorClasses: Record<string, string> = {
   'default': 'text-foreground',
   'primary': 'text-primary',
   'secondary': 'text-secondary',
@@ -45,10 +27,12 @@ const iconColorClasses: Record<IconColor, string> = {
   'crimson': 'text-royal-crimson',
   'royal': 'text-royal-purple',
   'navy': 'text-royal-navy',
+  'bronze': 'text-amber-700',
+  'purple': 'text-purple-600',
 };
 
 export interface IconSystemProps extends React.SVGAttributes<SVGElement> {
-  name: IconName | string;
+  name: string;
   size?: IconSize | string;
   color?: IconColor | string;
   className?: string;
@@ -60,7 +44,7 @@ const IconSystem = React.forwardRef<SVGSVGElement, IconSystemProps>(
   ({ name, size = 'md', color = 'default', className, style = 'default', ...props }, ref) => {
     // Safety checks for size and color
     const sizeKey = size as IconSize;
-    const colorKey = color as IconColor;
+    const colorKey = color as string;
     
     // Get the appropriate classes
     const sizeClass = iconSizeClasses[sizeKey] || iconSizeClasses.md;

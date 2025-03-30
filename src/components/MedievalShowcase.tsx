@@ -5,7 +5,7 @@ import MedievalIcon from '@/components/ui/medieval-icon';
 import ParchmentTexture from '@/components/ui/parchment-texture';
 import RoyalDivider from '@/components/ui/royal-divider';
 import RoyalButton from '@/components/ui/royal-button';
-import { Scroll, Crown, Coins, Shield } from 'lucide-react';
+import { Icon } from '@/components/ui/icon';
 
 const MedievalShowcase = () => {
   return (
@@ -16,26 +16,26 @@ const MedievalShowcase = () => {
         <Card className="glass-morphism border-royal-gold/20">
           <CardHeader>
             <CardTitle className="flex items-center">
-              <Crown className="mr-2 text-royal-gold" size={20} />
+              <Icon name="Crown" className="mr-2 text-royal-gold" size="sm" />
               Medieval Icons
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex flex-wrap gap-6 justify-center">
               <div className="text-center">
-                <MedievalIcon name="crown" size="lg" animate />
+                <MedievalIcon name="Crown" size="lg" />
                 <p className="mt-2 text-sm text-white/70">Crown</p>
               </div>
               <div className="text-center">
-                <MedievalIcon name="scroll" size="lg" animate />
+                <MedievalIcon name="Scroll" size="lg" />
                 <p className="mt-2 text-sm text-white/70">Scroll</p>
               </div>
               <div className="text-center">
-                <MedievalIcon name="seal" size="lg" animate />
+                <MedievalIcon name="Seal" size="lg" />
                 <p className="mt-2 text-sm text-white/70">Seal</p>
               </div>
               <div className="text-center">
-                <MedievalIcon name="coins" size="lg" animate />
+                <MedievalIcon name="Coins" size="lg" />
                 <p className="mt-2 text-sm text-white/70">Coins</p>
               </div>
             </div>
@@ -44,10 +44,10 @@ const MedievalShowcase = () => {
             
             <h3 className="text-lg font-semibold mb-3">Icon Colors</h3>
             <div className="flex flex-wrap gap-4 justify-center">
-              <MedievalIcon name="crown" color="default" />
-              <MedievalIcon name="crown" color="gold" />
-              <MedievalIcon name="crown" color="silver" />
-              <MedievalIcon name="crown" color="copper" />
+              <MedievalIcon name="Crown" color="default" />
+              <MedievalIcon name="Crown" color="gold" />
+              <MedievalIcon name="Crown" color="silver" />
+              <MedievalIcon name="Crown" color="crimson" />
             </div>
           </CardContent>
         </Card>
@@ -55,7 +55,7 @@ const MedievalShowcase = () => {
         <Card className="glass-morphism border-royal-gold/20">
           <CardHeader>
             <CardTitle className="flex items-center">
-              <Scroll className="mr-2 text-royal-gold" size={20} />
+              <Icon name="Scroll" className="mr-2 text-royal-gold" size="sm" />
               Parchment & Textures
             </CardTitle>
           </CardHeader>
@@ -80,7 +80,7 @@ const MedievalShowcase = () => {
       <Card className="glass-morphism border-royal-gold/20 mb-12">
         <CardHeader>
           <CardTitle className="flex items-center">
-            <Coins className="mr-2 text-royal-gold" size={20} />
+            <Icon name="Coins" className="mr-2 text-royal-gold" size="sm" />
             Medieval Animations
           </CardTitle>
         </CardHeader>
@@ -88,28 +88,28 @@ const MedievalShowcase = () => {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             <div className="flex flex-col items-center">
               <div className="animate-crown-glow">
-                <Crown size={40} className="text-royal-gold" />
+                <Icon name="Crown" size="lg" className="text-royal-gold" />
               </div>
               <p className="mt-2 text-sm text-white/70">Crown Glow</p>
             </div>
             
             <div className="flex flex-col items-center">
               <div className="animate-quill-write">
-                <Scroll size={40} className="text-royal-gold" />
+                <Icon name="Scroll" size="lg" className="text-royal-gold" />
               </div>
               <p className="mt-2 text-sm text-white/70">Quill Write</p>
             </div>
             
             <div className="flex flex-col items-center">
               <div className="animate-coin-flip">
-                <Coins size={40} className="text-royal-gold" />
+                <Icon name="Coins" size="lg" className="text-royal-gold" />
               </div>
               <p className="mt-2 text-sm text-white/70">Coin Flip</p>
             </div>
             
             <div className="flex flex-col items-center">
               <div className="animate-seal-stamp">
-                <Shield size={40} className="text-royal-gold" />
+                <Icon name="Shield" size="lg" className="text-royal-gold" />
               </div>
               <p className="mt-2 text-sm text-white/70">Seal Stamp</p>
             </div>
@@ -141,7 +141,7 @@ const MedievalShowcase = () => {
           variant="royal" 
           size="lg" 
           className="royal-button-enhanced"
-          icon={<Crown size={16} />}
+          icon={<Icon name="Crown" size="sm" />}
         >
           Explore the Royal Kingdom
         </RoyalButton>

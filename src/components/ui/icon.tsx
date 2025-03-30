@@ -1,21 +1,13 @@
 
 import React from 'react';
-import IconSystem, { IconName, IconSize, IconColor } from './icon-system';
-
-export type { IconName, IconSize, IconColor } from './icon-system';
-
-export interface IconProps extends React.HTMLAttributes<SVGElement> {
-  name: IconName | string;
-  size?: IconSize;
-  color?: IconColor | string;
-  className?: string;
-}
+import IconSystem from './icon-system';
+import { IconProps } from '@/types/ui/icon-types';
 
 /**
  * Icon component for using Lucide icons with consistent styling
  */
 const Icon = React.forwardRef<SVGSVGElement, IconProps>(
-  ({ name, size = 'md', color, className, ...props }, ref) => {
+  ({ name, size = 'md', color = 'default', className, style = 'default', ...props }, ref) => {
     return (
       <IconSystem
         ref={ref}
@@ -23,7 +15,7 @@ const Icon = React.forwardRef<SVGSVGElement, IconProps>(
         size={size}
         color={color}
         className={className}
-        style="default"
+        style={style}
         {...props}
       />
     );

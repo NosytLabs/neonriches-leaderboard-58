@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import { AudioLoaderReturn, SoundType } from './types';
+import { SoundType, AudioLoaderReturn } from '@/types/sound-types';
 
 // Mapping of sound types to their file paths
 // We're using MP3s for better browser compatibility
@@ -26,12 +26,22 @@ const SOUND_PATHS: Record<SoundType, string> = {
   noblesLaugh: '/sounds/nobles-laugh.mp3',
   inkScribble: '/sounds/ink-scribble.mp3',
   hover: '/sounds/hover.mp3',
-  advertisement: '/sounds/advertisement.mp3'
+  advertisement: '/sounds/advertisement.mp3',
+  achievement: '/sounds/achievement.mp3',
+  potion: '/sounds/potion.mp3',
+  chatMessage: '/sounds/chat-message.mp3',
+  unlock: '/sounds/unlock.mp3',
+  win: '/sounds/win.mp3',
+  message: '/sounds/message.mp3',
+  trumpets: '/sounds/trumpets.mp3',
+  scroll: '/sounds/scroll.mp3',
+  coin: '/sounds/coin.mp3',
+  boost: '/sounds/boost.mp3'
 };
 
 // Sound categories for different user preferences
 export const SOUND_CATEGORIES = {
-  UI: ['click', 'notification', 'pageTransition', 'pageChange'],
+  UI: ['click', 'notification', 'pageTransition', 'pageChange', 'hover'],
   FEEDBACK: ['success', 'error', 'reward', 'levelUp', 'purchase'],
   AMBIENT: ['coinDrop', 'royalAnnouncement', 'wish', 'trumpet'],
   SPECIAL: ['swordClash', 'shame', 'parchmentUnfurl', 'medallion', 'seal', 'noblesLaugh', 'inkScribble']
@@ -135,3 +145,5 @@ export const useAudioLoader = (
     play: playSound
   };
 };
+
+export default useAudioLoader;

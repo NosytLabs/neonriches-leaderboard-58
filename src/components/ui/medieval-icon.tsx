@@ -1,14 +1,7 @@
 
 import React from 'react';
-import { cn } from '@/lib/utils';
-import {
-  MedievalIconProps,
-  MedievalIconName,
-  MedievalIconColor,
-  MedievalIconSize
-} from './medieval-icon.d';
+import { MedievalIconProps } from '@/types/ui/icon-types';
 import IconSystem from './icon-system';
-import { adaptIconName, adaptIconColor, adaptIconSize } from '@/utils/iconTypeAdapter';
 
 const MedievalIcon: React.FC<MedievalIconProps> = ({
   name,
@@ -16,14 +9,9 @@ const MedievalIcon: React.FC<MedievalIconProps> = ({
   color = 'default',
   className
 }) => {
-  // Convert the name to the IconSystem name format
-  const iconName = name === 'Crown' ? 'Crown' : name;
-  
-  // Size and color classes are handled by IconSystem
-  
   return (
     <IconSystem
-      name={iconName}
+      name={name}
       size={size}
       color={color}
       className={className}

@@ -1,14 +1,14 @@
 
 import React from 'react';
-import { Crown, Award, Shield, Gem, Trophy, Swords, Scroll, User, Coins } from 'lucide-react';
 import RoyalDivider from '@/components/ui/royal-divider';
 import MedievalIcon from '@/components/ui/medieval-icon';
+import { Icon } from '@/components/ui/icon';
 
 const badges = [
   {
     name: "Peasant's Pittance",
     tier: "Peasant Tier",
-    icon: <User size={32} className="text-gray-400" />,
+    icon: <Icon name="User" size="lg" className="text-gray-400" />,
     amount: "$0 - $5",
     description: "The humble commoner, contributing what little they have to the royal treasury.",
     color: "gray-400",
@@ -17,7 +17,7 @@ const badges = [
   {
     name: "Merchant's Contribution",
     tier: "Merchant Tier",
-    icon: <Coins size={32} className="text-amber-700" />,
+    icon: <Icon name="Coins" size="lg" className="text-amber-700" />,
     amount: "$5 - $15",
     description: "A respectable trader making modest contributions to gain standing in the court.",
     color: "amber-700", 
@@ -26,7 +26,7 @@ const badges = [
   {
     name: "Knight's Honor",
     tier: "Knight Tier",
-    icon: <Swords size={32} className="text-blue-500" />,
+    icon: <Icon name="Swords" size="lg" className="text-blue-500" />,
     amount: "$15 - $30",
     description: "A loyal servant of the crown, sworn to uphold the royal status.",
     color: "blue-500",
@@ -35,7 +35,7 @@ const badges = [
   {
     name: "Baron's Patronage",
     tier: "Baron Tier",
-    icon: <Shield size={32} className="text-royal-purple" />,
+    icon: <Icon name="Shield" size="lg" className="text-royal-purple" />,
     amount: "$30 - $75",
     description: "A noble with land and title, regularly contributing to royal projects.",
     color: "royal-purple",
@@ -44,7 +44,7 @@ const badges = [
   {
     name: "Duke's Fortune",
     tier: "Duke Tier",
-    icon: <Gem size={32} className="text-royal-gold" />,
+    icon: <Icon name="Gem" size="lg" className="text-royal-gold" />,
     amount: "$75 - $150",
     description: "A powerful noble, second only to the royal family in wealth and influence.",
     color: "royal-gold",
@@ -53,7 +53,7 @@ const badges = [
   {
     name: "Royal Benefactor",
     tier: "Royal Tier",
-    icon: <Crown size={32} className="text-royal-blue" />,
+    icon: <Icon name="Crown" size="lg" className="text-royal-blue" />,
     amount: "$150+",
     description: "A true royal patron whose exceptional contributions sustain the entire kingdom.",
     color: "royal-blue",
@@ -76,7 +76,7 @@ const RoyalBadges = () => {
         <div className="text-center mb-16">
           <div className="inline-block mb-4">
             <div className="relative">
-              <MedievalIcon name="crown" size="md" color="gold" animate />
+              <MedievalIcon name="Crown" size="md" color="gold" />
               <div className="absolute -inset-4 bg-royal-gold/20 blur-xl rounded-full"></div>
             </div>
           </div>
@@ -120,7 +120,7 @@ const RoyalBadges = () => {
           <div className="flex flex-col md:flex-row items-center">
             <div className="mb-6 md:mb-0 md:mr-8">
               <div className="relative">
-                <MedievalIcon name="seal" size="lg" color="gold" animate />
+                <MedievalIcon name="Seal" size="lg" color="gold" />
               </div>
             </div>
             <div className="text-center md:text-left">
