@@ -35,6 +35,7 @@ export interface CertificateTemplate {
   availableForRank?: number;
   requiresFounder?: boolean;
   style?: string;
+  team?: string;
 }
 
 export interface CertificateMetadata {
@@ -55,4 +56,13 @@ export interface CertificateRepository {
 
 export interface CertificateTemplateFactory {
   getTemplatesForUser: (user: any) => Promise<CertificateTemplate[]>;
+}
+
+// Additional types that are referenced in the codebase
+export type CertificateTeam = 'red' | 'green' | 'blue' | 'gold' | 'silver' | 'bronze' | 'none';
+
+export type CertificateStyle = 'royal' | 'noble' | 'knight' | 'founder' | 'standard' | 'elite' | 'premium';
+
+export interface RankCertificateMetadata extends CertificateMetadata {
+  rank: number;
 }

@@ -22,10 +22,31 @@ export type MockeryAction =
   | 'roast'
   | 'royalPie'
   | 'jokeCrown'
-  | 'memeFrame';
+  | 'memeFrame'
+  // Additional actions used in the codebase
+  | 'jest'
+  | 'crown'
+  | 'challenge'
+  | 'defeat'
+  | 'target'
+  | 'smokeBomb'
+  | 'glitterBomb'
+  | 'immune';
 
 // Define the mockery tier levels
-export type MockeryTier = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
+export type MockeryTier = 
+  | 'common' 
+  | 'uncommon' 
+  | 'rare' 
+  | 'epic' 
+  | 'legendary'
+  // Additional tiers used in the codebase
+  | 'bronze'
+  | 'silver'
+  | 'gold'
+  | 'platinum'
+  | 'diamond'
+  | 'basic';
 
 // Define the mockery target types
 export type MockeryTargetType = 'user' | 'team' | 'all';
@@ -40,8 +61,12 @@ export interface MockeryEvent {
   expiresAt: number;
   isActive: boolean;
   metadata?: Record<string, any>;
-  // Added property for sourceName
   sourceName?: string;
+  // Add properties used in the codebase
+  tier?: MockeryTier;
+  targetId?: string;
+  appliedAt?: number;
+  appliedById?: string;
 }
 
 // Define mockery protection structure
@@ -75,4 +100,29 @@ export interface UseMockeryReturn {
   getActiveMockery: (username: string) => MockeryEvent | null;
 }
 
-// No duplicate ShameAction export here
+// Add interfaces that are being used in the codebase
+export interface MockedUser {
+  userId: string;
+  username: string;
+  profileImage?: string;
+  activeMockery?: MockeryEvent;
+  mockeryCount?: number;
+}
+
+export interface MockeryEffectData {
+  type: MockeryAction;
+  duration: number;
+  intensity?: 'light' | 'medium' | 'heavy';
+}
+
+export interface UserMockeryStatus {
+  isShamed: boolean;
+  protection: MockeryProtection | null;
+  activeEffect: MockeryEvent | null;
+}
+
+// Export ShameAction as a type alias for MockeryAction for backward compatibility
+export type ShameAction = MockeryAction;
+
+// Additional export for ExtendedMockeryAction
+export type ExtendedMockeryAction = MockeryAction;

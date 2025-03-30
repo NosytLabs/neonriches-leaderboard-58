@@ -3,7 +3,7 @@ import React from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { ShameAction } from '@/types/mockery';
+import { MockeryAction } from '@/types/mockery';
 import { getShameActionIcon, getShameActionTitle, getShameActionPrice, getShameActionDescription } from '@/components/events/utils/shameUtils';
 import { Crown, ArrowRight } from 'lucide-react';
 import { getTeamColor } from '@/utils/teamUtils';
@@ -22,8 +22,8 @@ interface ShameTargetUser {
 
 interface ShameModalProps {
   targetUser: ShameTargetUser;
-  shameType: ShameAction;
-  onConfirm: (userId: string, type: ShameAction) => void;
+  shameType: MockeryAction;
+  onConfirm: (userId: string, type: MockeryAction) => void;
   onCancel: () => void;
   hasDiscount?: boolean;
 }

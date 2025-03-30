@@ -1,18 +1,12 @@
 
-import { useTheme } from '@/providers/ThemeProvider';
+import { useTheme } from "@/hooks/use-theme";
 
-export function useThemeToggle() {
-  const { theme, setTheme, isDarkTheme } = useTheme();
-  
-  // Function to toggle between light and dark modes
+export const useThemeToggle = () => {
+  const { theme, setTheme } = useTheme();
+
   const toggleTheme = () => {
-    setTheme(theme === 'light' ? 'dark' : 'light');
+    setTheme(theme === "dark" ? "light" : "dark");
   };
-  
-  return {
-    theme,
-    setTheme,
-    toggleTheme,
-    isDark: isDarkTheme
-  };
-}
+
+  return { theme, toggleTheme };
+};

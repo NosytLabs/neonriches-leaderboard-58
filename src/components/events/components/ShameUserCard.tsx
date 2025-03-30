@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -7,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { getTeamColor } from '@/utils/teamUtils';
 import { formatCurrency, formatNumber } from '@/lib/utils';
 import { getShameActionIcon, getShameActionPrice, hasWeeklyDiscount, getDiscountedShamePrice } from '../utils/shameUtils';
-import { ShameAction } from '../hooks/useShameEffect';
+import { MockeryAction } from '@/types/mockery';
 import { Trophy, Crown, ShieldOff, Clock } from 'lucide-react';
 
 interface ShameUserCardProps {
@@ -19,11 +18,11 @@ interface ShameUserCardProps {
     team: 'red' | 'green' | 'blue' | null;
     amountSpent: number;
   };
-  isShamed: { action: ShameAction; timestamp: number; until: number } | null;
+  isShamed: { action: MockeryAction; timestamp: number; until: number } | null;
   isOnCooldown: boolean;
   shameCount: number;
-  onShame: (userId: number, username: string, type: ShameAction, amount: number) => boolean;
-  featuredAction?: ShameAction;
+  onShame: (userId: number, username: string, type: MockeryAction, amount: number) => boolean;
+  featuredAction?: MockeryAction;
 }
 
 const ShameUserCard: React.FC<ShameUserCardProps> = ({
@@ -34,10 +33,10 @@ const ShameUserCard: React.FC<ShameUserCardProps> = ({
   onShame,
   featuredAction
 }) => {
-  const [selectedAction, setSelectedAction] = useState<ShameAction | null>(null);
+  const [selectedAction, setSelectedAction] = useState<MockeryAction | null>(null);
   const [isShaming, setIsShaming] = useState(false);
   
-  const handleActionSelect = (action: ShameAction) => {
+  const handleActionSelect = (action: MockeryAction) => {
     setSelectedAction(action);
   };
   
@@ -54,7 +53,6 @@ const ShameUserCard: React.FC<ShameUserCardProps> = ({
     const success = onShame(userId, user.username, selectedAction, amount);
     
     if (success) {
-      // Shake animation for successful shaming
       const userCard = document.getElementById(`shame-user-${user.id}`);
       if (userCard) {
         userCard.classList.add(`shame-effect-${selectedAction}`);
@@ -72,7 +70,6 @@ const ShameUserCard: React.FC<ShameUserCardProps> = ({
     return name.substring(0, 2).toUpperCase();
   };
   
-  // Calculate time remaining for shame effect
   const getTimeRemaining = () => {
     if (!isShamed) return '';
     
@@ -87,7 +84,7 @@ const ShameUserCard: React.FC<ShameUserCardProps> = ({
     return `${hours}h ${minutes}m remaining`;
   };
   
-  const isFeaturedAction = (action: ShameAction) => {
+  const isFeaturedAction = (action: MockeryAction) => {
     return action === featuredAction;
   };
   
@@ -100,7 +97,6 @@ const ShameUserCard: React.FC<ShameUserCardProps> = ({
     >
       <CardContent className="p-4">
         <div className="flex items-center justify-between">
-          {/* User Information */}
           <div className="flex items-center">
             <Avatar className={`h-10 w-10 mr-3 ${isShamed ? `ring-2 ring-${isShamed.action === 'tomatoes' ? 'red' : isShamed.action === 'eggs' ? 'yellow' : 'amber'}-500/50` : ''}`}>
               <AvatarImage src={user.profileImage} alt={user.username} />
@@ -135,7 +131,6 @@ const ShameUserCard: React.FC<ShameUserCardProps> = ({
             </div>
           </div>
           
-          {/* Status badges */}
           <div>
             {isShamed && (
               <div className="flex flex-col items-end">
@@ -165,7 +160,6 @@ const ShameUserCard: React.FC<ShameUserCardProps> = ({
           </div>
         </div>
         
-        {/* Mockery Actions */}
         {!isShamed && !isOnCooldown && (
           <div className="mt-4">
             <div className="text-xs text-white/60 mb-2">Select a mockery type:</div>
@@ -262,7 +256,6 @@ const ShameUserCard: React.FC<ShameUserCardProps> = ({
           </div>
         )}
         
-        {/* Display mockery effect info */}
         {isShamed && (
           <div className="mt-3 p-2 bg-black/20 rounded-md">
             <div className="flex items-center text-sm">

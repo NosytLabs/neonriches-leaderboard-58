@@ -1,58 +1,50 @@
 
-import { SoundType } from './types';
+import { SoundType } from '@/types/sound-types';
 
-// Define sound file paths
-export const soundAssets: Record<SoundType, string> = {
+// Map of sound types to their file paths
+const soundAssets: Record<SoundType, string> = {
   click: '/sounds/click.mp3',
-  coinDrop: '/sounds/coin-drop.mp3',
-  purchase: '/sounds/purchase.mp3',
-  royalAnnouncement: '/sounds/royal-announcement.mp3',
-  pageTransition: '/sounds/page-transition.mp3',
-  reward: '/sounds/reward.mp3',
-  win: '/sounds/win.mp3',
-  message: '/sounds/message.mp3',
-  shame: '/sounds/shame.mp3',
-  swordClash: '/sounds/sword-clash.mp3',
-  seal: '/sounds/seal.mp3',
-  parchmentUnfurl: '/sounds/parchment-unfurl.mp3',
+  hover: '/sounds/hover.mp3',
   success: '/sounds/success.mp3',
   error: '/sounds/error.mp3',
   notification: '/sounds/notification.mp3',
-  levelUp: '/sounds/level-up.mp3',
-  wish: '/sounds/wish.mp3',
-  pageChange: '/sounds/page-change.mp3',
-  medallion: '/sounds/medallion.mp3',
-  trumpet: '/sounds/trumpet.mp3',
-  noblesLaugh: '/sounds/nobles-laugh.mp3',
-  inkScribble: '/sounds/ink-scribble.mp3',
-  hover: '/sounds/hover.mp3',
-  advertisement: '/sounds/advertisement.mp3'
+  purchase: '/sounds/purchase.mp3',
+  rankUp: '/sounds/rank-up.mp3',
+  coinDrop: '/sounds/coin-drop.mp3',
+  achievement: '/sounds/achievement.mp3',
+  trumpets: '/sounds/trumpets.mp3',
+  fanfare: '/sounds/fanfare.mp3',
+  shame: '/sounds/shame.mp3',
+  parchment: '/sounds/parchment.mp3',
+  treasure: '/sounds/treasure.mp3',
+  royal: '/sounds/royal.mp3',
+  crown: '/sounds/crown.mp3',
+  pageTransition: '/sounds/page-transition.mp3',
+  parchmentUnfurl: '/sounds/parchment-unfurl.mp3',
+  info: '/sounds/info.mp3'
 };
 
-// Define default volumes for each sound type
-export const soundVolumes: Record<SoundType, number> = {
-  coinDrop: 0.7,
-  reward: 0.8,
-  notification: 0.6,
-  click: 0.5,
-  success: 0.7,
-  error: 0.7,
-  royalAnnouncement: 0.9,
-  levelUp: 0.8,
-  purchase: 0.7,
-  shame: 0.8,
-  swordClash: 0.6,
-  seal: 0.7,
-  parchmentUnfurl: 0.6,
-  win: 0.8,
-  message: 0.6,
-  wish: 0.7,
-  pageTransition: 0.5,
-  pageChange: 0.5,
-  medallion: 0.7,
-  trumpet: 0.8,
-  noblesLaugh: 0.7,
-  inkScribble: 0.6,
-  hover: 0.3,
-  advertisement: 0.6
+// Sound durations in milliseconds
+export const soundDurations: Record<SoundType, number> = {
+  click: 200,
+  hover: 100,
+  success: 1000,
+  error: 800,
+  notification: 700,
+  purchase: 1200,
+  rankUp: 2500,
+  coinDrop: 800,
+  achievement: 3000,
+  trumpets: 3500,
+  fanfare: 4000,
+  shame: 1500,
+  parchment: 1200,
+  treasure: 2000,
+  royal: 1800,
+  crown: 1500,
+  pageTransition: 600,
+  parchmentUnfurl: 1500,
+  info: 500
 };
+
+export default soundAssets;

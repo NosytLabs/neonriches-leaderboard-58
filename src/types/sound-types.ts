@@ -1,42 +1,46 @@
 
 export type SoundType = 
-  | 'notification'
+  | 'click'
+  | 'hover'
   | 'success'
   | 'error'
+  | 'notification'
   | 'purchase'
-  | 'trumpets'
-  | 'achievement'
-  | 'deposit'
-  | 'shame'
-  | 'click'
-  | 'royal'
-  | 'levelUp'
-  | 'win'
-  | 'lose'
-  | 'reward'
-  | 'warning'
+  | 'rankUp'
   | 'coinDrop'
-  | 'swordClash'
-  | 'noblesLaugh'
-  | 'seal'
-  | 'medallion'
-  | 'royalAnnouncement'
-  | 'trumpet'
-  | 'hover';
+  | 'achievement'
+  | 'trumpets'
+  | 'fanfare'
+  | 'shame'
+  | 'parchment'
+  | 'treasure'
+  | 'royal'
+  | 'crown'
+  | 'pageTransition'
+  | 'parchmentUnfurl'
+  | 'info';
 
-export interface AudioLoaderReturn {
-  isLoaded: boolean;
-  isError: boolean;
-  load: () => Promise<void>;
-  sounds: Record<SoundType, HTMLAudioElement | null>;
+export interface SoundConfig {
+  enabled: boolean;
+  volume: number;
+  muted: boolean;
+  themeSound: string;
+  effectsVolume: number;
+  musicVolume: number;
+  notificationsVolume: number;
+  uiVolume: number;
 }
 
 export interface PremiumSoundPackDetails {
+  id: string;
   name: string;
   description: string;
-  tags: string[];
-  royalSounds: SoundType[];
-  gameSounds: SoundType[];
   price: number;
+  previewSound: SoundType;
+  sounds: SoundType[];
+  features: string[];
+  tags: string[];
+  royalSounds: Record<SoundType, string>;
+  gameSounds: Record<SoundType, string>;
   isUnlocked: boolean;
 }

@@ -4,19 +4,16 @@ import { useSound } from '@/hooks/sounds/use-sound';
 import { SoundType } from '@/types/sound-types';
 import { MockeryAction } from '@/types/mockery';
 
-// Export MockeryAction as ShameAction for compatibility
-export type ShameAction = MockeryAction;
-
 // Define a state type for our shame effect
 type ShameEffectState = {
   isActive: boolean;
-  action: ShameAction | null;
+  action: MockeryAction | null;
   target: string | null;
   source: string | null;
   animationConfig: AnimationConfig | null;
   duration: number;
   shameCooldown: Record<number, number>;
-  shameEffects: Record<number, { action: ShameAction; timestamp: number; until: number }>;
+  shameEffects: Record<number, { action: MockeryAction; timestamp: number; until: number }>;
   shameCount: Record<number, number>;
 };
 
@@ -64,7 +61,7 @@ export const useShameEffect = (options = { cooldownPeriod: 24 * 60 * 60 * 1000 }
   }, [state.isActive, state.action]);
   
   // Show shame effect
-  const showShameEffect = useCallback((action: ShameAction, target: string, source: string, customDuration?: number) => {
+  const showShameEffect = useCallback((action: MockeryAction, target: string, source: string, customDuration?: number) => {
     const config = getAnimationConfig(action);
     
     setState(prev => ({
@@ -79,7 +76,7 @@ export const useShameEffect = (options = { cooldownPeriod: 24 * 60 * 60 * 1000 }
   }, []);
   
   // Handle shame action (with cooldown)
-  const handleShame = useCallback((userId: number, username: string, action: ShameAction, amount: number) => {
+  const handleShame = useCallback((userId: number, username: string, action: MockeryAction, amount: number) => {
     setState(prev => {
       // Check if user is on cooldown
       const now = Date.now();
@@ -131,7 +128,7 @@ export const useShameEffect = (options = { cooldownPeriod: 24 * 60 * 60 * 1000 }
   }, []);
   
   // Get animation config based on action
-  const getAnimationConfig = useCallback((action: ShameAction): AnimationConfig => {
+  const getAnimationConfig = useCallback((action: MockeryAction): AnimationConfig => {
     switch (action) {
       case 'tomatoes':
         return {
@@ -198,7 +195,7 @@ export const useShameEffect = (options = { cooldownPeriod: 24 * 60 * 60 * 1000 }
   }, []);
   
   // Play appropriate sound for the effect
-  const playShameEffectSound = (action: ShameAction) => {
+  const playShameEffectSound = (action: MockeryAction) => {
     switch (action) {
       case 'tomatoes':
         playSound('shame');
