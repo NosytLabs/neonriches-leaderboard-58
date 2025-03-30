@@ -58,6 +58,7 @@ export interface MockeryEvent {
   expiresAt: string;
   isActive: boolean;
   // Additional properties needed based on errors
+  active?: boolean;
   action?: MockeryAction;
   sourceId?: string;
   sourceName?: string;
@@ -90,15 +91,18 @@ export interface UserMockeryStatus {
 export interface MockedUser {
   id: string;
   username: string;
+  displayName?: string;
   profileImage?: string;
   tier?: string;
   mockeryType?: MockeryAction;
   expiresAt?: string;
   mockedReason?: string;
-  displayName?: string;
   mockedTimestamp?: string;
   mockedBy?: string;
   userId?: string;
+  rank?: number;
+  lastMocked?: string;
+  mockeryCount?: number;
 }
 
 export type MockUser = MockedUser;
@@ -118,3 +122,6 @@ export interface MockeryStats {
   received: number;
   active: number;
 }
+
+// Make sure to export all types
+export { MockeryAction, MockeryEvent, MockeryTier, MockUser, MockedUser, ShameAction, ExtendedMockeryAction };

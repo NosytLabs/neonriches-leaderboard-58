@@ -13,10 +13,12 @@ export interface LeaderboardUser {
   amountSpent: number;
   totalSpent?: number;
   joinDate?: string;
+  joinedAt?: string;
   isVIP?: boolean;
   avatarUrl?: string;
   totalDeposited?: number;
   isVerified?: boolean;
+  walletBalance?: number;
 }
 
 export type LeaderboardSortOption = 

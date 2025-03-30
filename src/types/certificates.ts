@@ -1,7 +1,7 @@
 
 import { UserProfile } from './user';
 
-export type CertificateType = 'rank' | 'team' | 'milestone' | 'royal' | 'founder';
+export type CertificateType = 'rank' | 'team' | 'milestone' | 'royal' | 'founder' | 'nobility';
 
 export interface Certificate {
   id: string;
@@ -9,14 +9,19 @@ export interface Certificate {
   type: CertificateType;
   rank?: number;
   teamId?: string;
+  team?: string;
   milestoneId?: string;
   createdAt: string;
   imageUrl?: string;
+  imageUri?: string;
+  title?: string;
+  description?: string;
   shareable?: boolean;
   shareUrl?: string;
   isMinted?: boolean;
   mintAddress?: string;
   mintedAt?: string;
+  style?: CertificateStyle;
 }
 
 export interface CertificateNFT {
@@ -40,6 +45,8 @@ export interface CertificateTemplate {
   requiresFounder?: boolean;
   style?: CertificateStyle;
   team?: CertificateTeam;
+  availableForTier?: string[];
+  availableForRank?: number[];
 }
 
 export type CertificateStyle = 'classic' | 'modern' | 'minimal' | 'ornate' | 'royal';
@@ -49,6 +56,8 @@ export interface RankCertificateMetadata {
   name: string;
   description: string;
   image: string;
+  rank?: number;
+  displayName?: string;
   attributes: {
     rank: number;
     spentAmount: number;
@@ -58,4 +67,19 @@ export interface RankCertificateMetadata {
     username: string;
     displayName?: string;
   }[];
+}
+
+export interface CertificateRepository {
+  getCertificateById(id: string): Promise<Certificate>;
+  getCertificatesByUserId(userId: string): Promise<Certificate[]>;
+  createCertificate(certificate: Certificate): Promise<Certificate>;
+  updateCertificate(certificate: Certificate): Promise<boolean>;
+  deleteCertificate(id: string): Promise<boolean>;
+}
+
+export interface CertificateTemplateFactory {
+  createTemplate(type: CertificateType, user: UserProfile): CertificateTemplate;
+  getTemplateById(id: string): CertificateTemplate | null;
+  getAllTemplates(): CertificateTemplate[];
+  getTemplatesByType(type: CertificateType): CertificateTemplate[];
 }

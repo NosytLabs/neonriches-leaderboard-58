@@ -49,6 +49,10 @@ export interface UserSettings {
   language?: string;
   allowMessages?: boolean;
   showEmailOnProfile?: boolean;
+  shameAlerts?: boolean;
+  newFollowerAlerts?: boolean;
+  publicProfile?: boolean;
+  teamChangeAlerts?: boolean;
 }
 
 // User cosmetics
@@ -61,6 +65,7 @@ export interface UserCosmeticState {
   activeBadge?: string;
   activeBackground?: string;
   activeEffect?: string;
+  activeTheme?: string;
   unlockedBorders: string[];
   unlockedColors: string[];
   unlockedFonts: string[];
@@ -80,6 +85,7 @@ export interface UserCosmeticState {
   badges?: string[];
   themes?: string[];
   foundersPass?: boolean;
+  socialLinks?: SocialLink[];
 }
 
 // User profile
@@ -120,6 +126,7 @@ export interface UserProfile {
   isVIP?: boolean;
   isVerified?: boolean;
   isFounder?: boolean;
+  isAdmin?: boolean;
   certificateId?: string;
   certificateNFT?: CertificateNFT;
   // Additional properties
@@ -142,6 +149,7 @@ export interface ProfileImage {
   id: string | number;
   url: string;
   caption?: string;
+  isPrimary?: boolean;
 }
 
 // Profile Link type
@@ -149,10 +157,14 @@ export interface ProfileLink {
   id: number;
   url: string;
   label: string;
+  title?: string;
 }
+
+// Alias for UserCosmetics
+export type UserCosmetics = UserCosmeticState;
 
 // Alias for User to maintain backward compatibility
 export type User = UserProfile;
 
 // Export types to be used in other modules
-export { UserProfile, ProfileImage, ProfileLink };
+export type { UserProfile, ProfileImage, ProfileLink, UserCosmetics };

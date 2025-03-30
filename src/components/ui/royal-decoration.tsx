@@ -1,111 +1,86 @@
 
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { MedievalIconColor, MedievalIconSize } from '@/types/ui/decorations/types';
-import CoatOfArms from './decorations/coat-of-arms';
-import CrossedSwords from './decorations/crossed-swords';
-import RoyalBanner from './decorations/royal-banner';
-import CornerFlourish from './decorations/corner-flourish';
-import RoyalInsignia from './decorations/royal-insignia';
-import BorderPattern from './decorations/border-pattern';
-
-export type RoyalDecorationType = 
-  'coat-of-arms' | 
-  'crossed-swords' | 
-  'royal-banner' | 
-  'corner-flourish' | 
-  'royal-insignia' |
-  'border-pattern';
+import { 
+  MedievalDecorationColor, 
+  MedievalSize, 
+  MedievalDecorationType, 
+  getColorClass 
+} from '@/types/ui/decorations/types';
 
 interface RoyalDecorationProps {
-  type: RoyalDecorationType;
-  color?: MedievalIconColor;
-  size?: MedievalIconSize;
+  type?: string;
+  color?: MedievalDecorationColor;
+  size?: MedievalSize;
   className?: string;
+  position?: string;
   animate?: boolean;
 }
 
-/**
- * RoyalDecoration component for displaying medieval-themed decorative elements
- * that fit with the royal/medieval aesthetic of the application.
- */
 const RoyalDecoration: React.FC<RoyalDecorationProps> = ({
-  type,
-  color = 'royal',
+  type = 'top',
+  color = 'gold',
   size = 'md',
-  className,
-  animate = false,
+  className = '',
+  position,
+  animate
 }) => {
-  const baseClass = cn(
-    'inline-block transition-colors',
-    className
+  const colorClass = getColorClass(color as MedievalDecorationColor);
+  
+  const sizeClasses = {
+    xs: 'h-4 w-16',
+    sm: 'h-6 w-24',
+    md: 'h-8 w-32',
+    lg: 'h-10 w-40',
+    xl: 'h-12 w-48',
+    '2xl': 'h-16 w-64'
+  };
+  
+  const sizeClass = sizeClasses[size as keyof typeof sizeClasses] || sizeClasses.md;
+  
+  const getDecorationPath = () => {
+    if (type === 'top') {
+      return (
+        <path 
+          d="M10,10 C30,5 70,5 90,10 L90,20 C70,15 30,15 10,20 Z" 
+          className={colorClass}
+          fill="currentColor"
+        />
+      );
+    } else if (type === 'bottom') {
+      return (
+        <path 
+          d="M10,20 C30,25 70,25 90,20 L90,10 C70,15 30,15 10,10 Z" 
+          className={colorClass}
+          fill="currentColor"
+        />
+      );
+    } else {
+      return (
+        <rect 
+          x="10" 
+          y="10" 
+          width="80" 
+          height="10" 
+          rx="2" 
+          className={colorClass}
+          fill="currentColor"
+        />
+      );
+    }
+  };
+  
+  return (
+    <div className={cn("relative inline-block", className)}>
+      <svg
+        viewBox="0 0 100 30"
+        className={cn(sizeClass, "mx-auto")}
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        {getDecorationPath()}
+      </svg>
+    </div>
   );
-
-  // Render the appropriate decoration based on type
-  switch (type) {
-    case 'coat-of-arms':
-      return (
-        <CoatOfArms 
-          color={color}
-          size={size}
-          className={baseClass}
-          animate={animate}
-        />
-      );
-    
-    case 'crossed-swords':
-      return (
-        <CrossedSwords 
-          color={color}
-          size={size}
-          className={baseClass}
-          animate={animate}
-        />
-      );
-    
-    case 'royal-banner':
-      return (
-        <RoyalBanner 
-          color={color}
-          size={size}
-          className={baseClass}
-          animate={animate}
-        />
-      );
-    
-    case 'corner-flourish':
-      return (
-        <CornerFlourish 
-          color={color}
-          size={size}
-          className={baseClass}
-          animate={animate}
-        />
-      );
-    
-    case 'royal-insignia':
-      return (
-        <RoyalInsignia 
-          color={color}
-          size={size}
-          className={baseClass}
-          animate={animate}
-        />
-      );
-    
-    case 'border-pattern':
-      return (
-        <BorderPattern 
-          color={color}
-          size={size}
-          className={baseClass}
-          animate={animate}
-        />
-      );
-    
-    default:
-      return null;
-  }
 };
 
 export default RoyalDecoration;

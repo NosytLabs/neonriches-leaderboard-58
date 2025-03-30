@@ -1,40 +1,33 @@
 
 export type SoundType = 
-  | "click"
-  | "hover"
-  | "success"
-  | "error"
-  | "notification"
-  | "warning"
-  | "purchase"
-  | "rankUp"
-  | "coinDrop"
-  | "achievement"
-  | "trumpets"
-  | "fanfare"
-  | "shame"
-  | "parchment"
-  | "royal"
-  | "medieval"
-  | "crown"
-  | "info"
-  | "message"
-  | "seal"
-  | "deposit"
-  | "reward"
-  | "pageChange"
-  | "noblesLaugh"
-  | "smoke"
-  | "coins"
-  | "inkScribble"
-  | "advertisement";
+  | 'click'
+  | 'hover'
+  | 'success'
+  | 'error'
+  | 'notification'
+  | 'purchase'
+  | 'rankUp'
+  | 'coinDrop'
+  | 'achievement'
+  | 'trumpets'
+  | 'fanfare'
+  | 'shame'
+  | 'parchment'
+  | 'pageFlip'
+  | 'medal'
+  | 'coin'
+  | 'info'
+  | 'warning'
+  | 'seal'
+  | 'deposit'
+  | 'reward'
+  | 'advertisement';
 
 export interface SoundConfig {
-  enabled: boolean;
   volume: number;
-  effects: {
-    [key in SoundType]?: boolean;
-  };
+  enabled: boolean;
+  isMuted: boolean;
+  premium: boolean;
 }
 
 export interface PremiumSoundPackDetails {
@@ -46,4 +39,5 @@ export interface PremiumSoundPackDetails {
   sounds: SoundType[];
   features: string[];
   tags: string[];
+  isPurchased?: boolean;
 }

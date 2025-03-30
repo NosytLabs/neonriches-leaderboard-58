@@ -8,7 +8,11 @@ export type UserTier =
   | 'premium' 
   | 'royal' 
   | 'diamond'
-  | 'pro';
+  | 'pro'
+  | 'gold'
+  | 'silver'
+  | 'bronze'
+  | 'platinum';
 export type UserGender = 'male' | 'female' | 'non-binary' | 'other' | 'prefer-not-to-say';
 export type UserTeam = 'red' | 'green' | 'blue';
 
@@ -38,3 +42,6 @@ export interface UserSubscription {
   autoRenew: boolean;
   price: number;
 }
+
+// Make sure these are explicitly exported
+export { UserRole, UserStatus, UserTier, UserGender, UserTeam };

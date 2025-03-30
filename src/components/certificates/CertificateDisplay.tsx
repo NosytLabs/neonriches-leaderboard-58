@@ -44,14 +44,14 @@ const CertificateDisplay = ({
   };
 
   return (
-    <Card className={`glass-morphism ${getBorderColor(certificate.team)}`}>
+    <Card className={`glass-morphism ${getBorderColor(certificate?.team)}`}>
       <CardContent className="p-6">
         <div className="flex flex-col space-y-4">
           <div className="text-center">
-            <h2 className={`text-2xl font-bold ${getTeamColor(certificate.team)}`}>
-              {certificate.title || `${certificate.type} Certificate`}
+            <h2 className={`text-2xl font-bold ${getTeamColor(certificate?.team)}`}>
+              {certificate?.title || `${certificate.type} Certificate`}
             </h2>
-            {certificate.description && (
+            {certificate?.description && (
               <p className="text-white/70 mt-2">{certificate.description}</p>
             )}
           </div>
@@ -68,11 +68,11 @@ const CertificateDisplay = ({
             </Badge>
           </div>
 
-          {(certificate.imageUrl || certificate.imageUri) && (
+          {(certificate.imageUrl || certificate.imageUrl) && (
             <div className="mt-4 rounded-lg overflow-hidden">
               <img 
-                src={certificate.imageUrl || certificate.imageUri} 
-                alt={certificate.title || certificate.type} 
+                src={certificate.imageUrl || certificate.imageUrl} 
+                alt={certificate?.title || certificate.type} 
                 className="w-full object-contain"
               />
             </div>

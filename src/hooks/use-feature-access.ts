@@ -18,21 +18,21 @@ export interface FeatureRequirements {
 }
 
 export const featureRequirements: FeatureRequirements = {
-  'profile-links': 'basic',
-  'profile-stats': 'premium',
-  'profile-views': 'basic',
-  'profile-badges': 'premium',
+  'profile-links': 'basic' as UserTier,
+  'profile-stats': 'premium' as UserTier,
+  'profile-views': 'basic' as UserTier,
+  'profile-badges': 'premium' as UserTier,
   
-  'profile-cosmetics': 'basic',
-  'profile-marketing': 'premium',
-  'profile-analytics': 'premium',
-  'profile-boost': 'premium',
+  'profile-cosmetics': 'basic' as UserTier,
+  'profile-marketing': 'premium' as UserTier,
+  'profile-analytics': 'premium' as UserTier,
+  'profile-boost': 'premium' as UserTier,
   
-  'profile-verification': 'premium',
-  'profile-custom-domain': 'premium',
+  'profile-verification': 'premium' as UserTier,
+  'profile-custom-domain': 'premium' as UserTier,
   
-  'chat-access': 'basic',
-  'chat-premium': 'premium',
+  'chat-access': 'basic' as UserTier,
+  'chat-premium': 'premium' as UserTier,
 };
 
 export interface FeatureAccess {
@@ -41,6 +41,10 @@ export interface FeatureAccess {
   getUserTier: () => UserTier;
   isUserPro?: (user: UserProfile) => boolean;
   getUpgradeUrl?: (feature: Feature) => string;
+  canAccessFeature?: (feature: Feature) => boolean;
+  isLoading?: boolean;
+  purchaseFeatureIndividually?: (featureId: string) => Promise<boolean>;
+  getMarketingFeaturePriceId?: (featureId: string) => string;
 }
 
 export const tierValues: Record<UserTier, number> = {
@@ -50,7 +54,11 @@ export const tierValues: Record<UserTier, number> = {
   'premium': 3,
   'royal': 4,
   'diamond': 5,
-  'pro': 3
+  'pro': 3,
+  'gold': 4,
+  'silver': 2,
+  'bronze': 1,
+  'platinum': 5
 };
 
 export const useFeatureAccess = (user: UserProfile | null): FeatureAccess => {
@@ -79,12 +87,18 @@ export const useFeatureAccess = (user: UserProfile | null): FeatureAccess => {
     return `/subscription?feature=${feature}`;
   };
 
+  const canAccessFeature = (feature: Feature): boolean => {
+    return hasFeature(feature);
+  };
+
   return {
     hasFeature,
     getRequiredTier,
     getUserTier,
     isUserPro,
-    getUpgradeUrl
+    getUpgradeUrl,
+    canAccessFeature,
+    isLoading: false
   };
 };
 

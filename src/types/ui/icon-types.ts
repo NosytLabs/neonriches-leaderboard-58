@@ -24,7 +24,8 @@ export type IconColor =
   | "muted"
   | "emerald"
   | "royal"
-  | "copper";
+  | "copper"
+  | string;
 
 // Define possible icon sizes
 export type IconSize = 
@@ -37,7 +38,7 @@ export type IconSize =
   | number;
 
 // Define possible icon styles
-export type IconStyle = "default" | "medieval";
+export type IconStyle = "default" | "medieval" | CSSProperties;
 
 // Prop interface for icons
 export interface IconProps extends Omit<LucideProps, "color"> {
@@ -47,6 +48,7 @@ export interface IconProps extends Omit<LucideProps, "color"> {
   style?: IconStyle | CSSProperties;
   variant?: string;
   animate?: boolean;
+  animated?: boolean;
   className?: string;
 }
 
@@ -65,7 +67,10 @@ export type MedievalIconColor =
   | "crimson"
   | "navy"
   | "purple"
-  | "emerald";
+  | "emerald"
+  | "royal"
+  | "default"
+  | string;
 
 export type MedievalIconSize = "xs" | "sm" | "md" | "lg" | "xl" | "2xl" | number;
 

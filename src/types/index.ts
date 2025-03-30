@@ -3,7 +3,7 @@
 export type { ThemeColor } from './theme';
 
 // UI types
-export { 
+export type { 
   MedievalIconName, 
   MedievalIconSize, 
   MedievalIconColor,
@@ -12,7 +12,11 @@ export {
   MedievalDecorationColor,
   BaseDecorationProps,
   RoyalDividerProps,
-  RoyalDividerVariant,
+  RoyalDividerVariant
+} from './ui/decorations/types';
+
+// Export utility functions from decorations
+export { 
   sizeClasses,
   getColorClass,
   toMedievalIconColor
@@ -29,16 +33,24 @@ export type {
   ProfileLink
 } from './user';
 
+// User types
 export type {
   UserRole,
   UserStatus,
   UserTier,
   UserGender,
   UserTeam,
-  TeamType,
   UserPreferences,
   UserStats
 } from './user-types';
+
+// Team types
+export type {
+  TeamType,
+  TeamColor,
+  TeamBenefit,
+  Team
+} from './team';
 
 // Import and reexport ProfileBoost
 export type { 
@@ -58,15 +70,10 @@ export type {
   CertificateTemplate,
   CertificateStyle,
   CertificateTeam,
-  RankCertificateMetadata
+  RankCertificateMetadata,
+  CertificateRepository,
+  CertificateTemplateFactory
 } from './certificates';
-
-// Teams
-export type {
-  Team,
-  TeamColor,
-  TeamBenefit
-} from './team';
 
 // Cosmetics
 export type {
@@ -97,7 +104,9 @@ export type {
 export type {
   Event,
   EventStatus,
-  EventType
+  EventType,
+  EventDetails,
+  EventStats
 } from './events';
 
 // NFT
@@ -145,3 +154,10 @@ export {
   getRarityBgColor, 
   getRarityBorderColor 
 } from './cosmetics';
+
+// Feature access types
+export type {
+  Feature,
+  FeatureAccess,
+  FeatureRequirements
+} from './hooks/use-feature-access';

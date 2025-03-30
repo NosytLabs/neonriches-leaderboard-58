@@ -39,7 +39,7 @@ const Chat: React.FC = () => {
                   </p>
                 </div>
                 
-                <TeamChatRoom user={user} />
+                <TeamChatRoom team={user?.team || 'none'} user={user} />
               </div>
             </CardContent>
           </Card>

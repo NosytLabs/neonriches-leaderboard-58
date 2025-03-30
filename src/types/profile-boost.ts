@@ -1,27 +1,28 @@
 
-import { ReactNode } from 'react';
-
+// Define types for profile boosts
+export type BoostStrength = 'low' | 'medium' | 'high' | 'extreme';
+export type BoostTier = 'basic' | 'premium' | 'royal' | 'legendary';
 export type BoostEffectType = 
-  | "visibility" 
-  | "rankup" 
-  | "highlight" 
-  | "animated" 
-  | "special"
-  | "crown"
-  | "sparkle"
-  | "glow";
+  'spotlight' | 
+  'highlight' | 
+  'featured' | 
+  'promoted' | 
+  'enhanced' |
+  'crown' |
+  'sparkle' |
+  'glow';
 
 export interface BoostEffect {
   id: string;
   name: string;
   description: string;
-  duration: number;
-  price: number;
-  type: string;
+  type: BoostEffectType;
   tier: string;
-  icon: ReactNode;
-  cssClass?: string;
+  price: number;
+  duration: number;
   durationDays?: number;
+  cssClass: string;
+  icon: string;
   previewImage?: string;
 }
 
@@ -31,27 +32,24 @@ export interface ProfileBoost {
   effectId: string;
   startDate: string;
   endDate: string;
-  level: number;
-  type: string;
-  strength: number;
-  appliedBy: string;
+  isActive: boolean;
+  tier?: BoostTier;
+  strength?: BoostStrength;
 }
 
 export interface ProfileBoostData {
   id: string;
   name: string;
   description: string;
-  duration: number;
-  price: number;
-  type: string;
+  type: BoostEffectType;
   tier: string;
-  effectId?: string;
+  price: number;
+  duration: number;
   startDate?: string;
-  endDate?: string;
-  level?: number;
-  strength?: number;
+  cssClass: string;
+  icon: string;
+  previewImage?: string;
 }
 
-export type BoostStrength = "low" | "medium" | "high";
-
-export type BoostTier = "basic" | "premium" | "royal" | "legendary";
+// Make sure to export the types for use elsewhere
+export { ProfileBoost, BoostEffect, BoostEffectType, BoostStrength, BoostTier, ProfileBoostData };
