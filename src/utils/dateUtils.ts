@@ -1,73 +1,89 @@
 
-import { format, isBefore, isAfter } from 'date-fns';
+import { format, formatDistance, differenceInDays } from 'date-fns';
 
 /**
- * Formats a date string to a human-readable format
+ * Format a date to a human readable string
  */
-export function formatDate(dateString?: string): string {
-  if (!dateString) return 'N/A';
-  
+export const formatDate = (date: string | Date): string => {
   try {
-    const date = new Date(dateString);
-    return format(date, 'MMM d, yyyy');
+    const dateObj = typeof date === 'string' ? new Date(date) : date;
+    return format(dateObj, 'PPP');
   } catch (error) {
     console.error('Error formatting date:', error);
-    return 'Invalid Date';
+    return 'Invalid date';
   }
-}
+};
 
 /**
- * Formats a date string to include time
+ * Format a date as a relative time (e.g. "2 days ago")
  */
-export function formatDateTime(dateString?: string): string {
-  if (!dateString) return 'N/A';
-  
+export const formatRelativeTime = (date: string | Date): string => {
   try {
-    const date = new Date(dateString);
-    return format(date, 'MMM d, yyyy h:mm a');
+    const dateObj = typeof date === 'string' ? new Date(date) : date;
+    return formatDistance(dateObj, new Date(), { addSuffix: true });
   } catch (error) {
-    console.error('Error formatting date:', error);
-    return 'Invalid Date';
+    console.error('Error formatting relative time:', error);
+    return 'Unknown time';
   }
-}
+};
 
 /**
- * Checks if an event is currently active based on start and end dates
+ * Calculate days until a future date
  */
-export function isEventActive(startDate?: string, endDate?: string): boolean {
-  if (!startDate || !endDate) return false;
-  
+export const daysUntil = (futureDate: string | Date): number => {
   try {
-    const now = new Date();
-    const start = new Date(startDate);
-    const end = new Date(endDate);
-    
-    return isAfter(now, start) && isBefore(now, end);
+    const dateObj = typeof futureDate === 'string' ? new Date(futureDate) : futureDate;
+    return Math.max(0, differenceInDays(dateObj, new Date()));
   } catch (error) {
-    console.error('Error checking if event is active:', error);
+    console.error('Error calculating days until:', error);
+    return 0;
+  }
+};
+
+/**
+ * Check if a date is in the past
+ */
+export const isPastDate = (date: string | Date): boolean => {
+  try {
+    const dateObj = typeof date === 'string' ? new Date(date) : date;
+    return dateObj < new Date();
+  } catch (error) {
+    console.error('Error checking if date is past:', error);
     return false;
   }
-}
+};
 
 /**
- * Calculates the time remaining until a date
+ * Check if a date is in the future
  */
-export function getTimeRemaining(endDate: string): { 
-  days: number;
-  hours: number;
-  minutes: number;
-  seconds: number;
-} {
-  const total = new Date(endDate).getTime() - new Date().getTime();
-  const seconds = Math.floor((total / 1000) % 60);
-  const minutes = Math.floor((total / 1000 / 60) % 60);
-  const hours = Math.floor((total / (1000 * 60 * 60)) % 24);
-  const days = Math.floor(total / (1000 * 60 * 60 * 24));
-  
-  return {
-    days,
-    hours,
-    minutes,
-    seconds
-  };
-}
+export const isFutureDate = (date: string | Date): boolean => {
+  try {
+    const dateObj = typeof date === 'string' ? new Date(date) : date;
+    return dateObj > new Date();
+  } catch (error) {
+    console.error('Error checking if date is future:', error);
+    return false;
+  }
+};
+
+/**
+ * Format a date as a time (e.g. "3:30 PM")
+ */
+export const formatTime = (date: string | Date): string => {
+  try {
+    const dateObj = typeof date === 'string' ? new Date(date) : date;
+    return format(dateObj, 'p');
+  } catch (error) {
+    console.error('Error formatting time:', error);
+    return 'Invalid time';
+  }
+};
+
+export default {
+  formatDate,
+  formatRelativeTime,
+  daysUntil,
+  isPastDate,
+  isFutureDate,
+  formatTime
+};

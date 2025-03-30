@@ -43,7 +43,10 @@ const baseSoundPaths: Record<SoundType, string> = {
   swordClash: '/sounds/sword-clash.mp3',
   coins: '/sounds/coins.mp3',
   trumpet: '/sounds/trumpet.mp3',
-  coin: '/sounds/coin.mp3'
+  coin: '/sounds/coin.mp3',
+  // Additional sounds
+  medieval: '/sounds/medieval.mp3',
+  award: '/sounds/award.mp3'
 };
 
 // Default amplitudes for sounds (0-1)
@@ -88,11 +91,14 @@ const soundAmplitudes: Record<SoundType, number> = {
   swordClash: 0.8,
   coins: 0.7,
   trumpet: 0.8,
-  coin: 0.7
+  coin: 0.7,
+  // Additional sounds
+  medieval: 0.7,
+  award: 0.8
 };
 
 // Duration of sounds in seconds (for tracking playback)
-export const soundDurations: Record<SoundType, number> = {
+const soundDurations: Record<SoundType, number> = {
   click: 0.3,
   hover: 0.1,
   success: 1.5,
@@ -133,21 +139,24 @@ export const soundDurations: Record<SoundType, number> = {
   swordClash: 1.0,
   coins: 1.5,
   trumpet: 2.0,
-  coin: 0.7
+  coin: 0.7,
+  // Additional sounds
+  medieval: 2.5,
+  award: 1.8
 };
 
 /**
  * Get the path to a sound file
  */
-export const getSoundPath = (sound: SoundType): string => {
+export function getSoundPath(sound: SoundType): string {
   return baseSoundPaths[sound] || '';
-};
+}
 
 /**
  * Get the amplitude (volume multiplier) for a sound
  */
-export const getAmplitudes = (sound: SoundType): number => {
+export function getAmplitudes(sound: SoundType): number {
   return soundAmplitudes[sound] || 0.7;
-};
+}
 
-export { soundDurations, getSoundPath, getAmplitudes };
+export { soundDurations };

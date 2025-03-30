@@ -7,7 +7,7 @@ import { Coins, Info } from 'lucide-react';
 import { createTransaction } from '@/services/transactionService';
 import { formatCurrency } from '@/utils/formatters';
 import { UserProfile } from '@/types/user';
-import { toast } from '@/hooks/use-toast';
+import { useToast } from '@/hooks/use-toast';
 
 interface WishingWellProps {
   user: UserProfile;
@@ -17,6 +17,7 @@ interface WishingWellProps {
 const WishingWell: React.FC<WishingWellProps> = ({ user, onWishMade }) => {
   const [amount, setAmount] = useState<string>('');
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -48,7 +49,7 @@ const WishingWell: React.FC<WishingWellProps> = ({ user, onWishMade }) => {
       await createTransaction({
         userId: user.id,
         amount: wishAmount,
-        type: 'wish' as any, // Type conversion to match TransactionType
+        type: 'wish',
         description: `Made a wish in the Royal Wishing Well`,
         metadata: {
           wishAmount: wishAmount

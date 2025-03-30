@@ -1,60 +1,68 @@
 
-import { UserProfile } from '@/types/user';
+import { v4 as uuidv4 } from 'uuid';
 
 export type TransactionType = 
-  | 'deposit'
-  | 'withdrawal'
-  | 'purchase'
-  | 'subscription'
-  | 'charge'
-  | 'refund'
-  | 'system'
-  | 'bonus'
-  | 'gift'
-  | 'commission'
-  | 'fee'
-  | 'adjustment'
-  | 'reward'
-  | 'penalty'
-  | 'rank'
-  | 'team'
-  | 'cosmetic'
-  | 'wish'
-  | 'mockery'
-  | 'protection';
+  | 'deposit' 
+  | 'purchase' 
+  | 'refund' 
+  | 'reward' 
+  | 'spend'
+  | 'transfer'
+  | 'wish';
 
 export interface Transaction {
   id: string;
   userId: string;
-  type: TransactionType;
   amount: number;
+  type: TransactionType;
   description: string;
-  timestamp: Date;
   metadata?: Record<string, any>;
-  status: 'pending' | 'completed' | 'failed' | 'reversed';
-  referenceId?: string;
-  error?: string;
+  timestamp: string;
 }
 
-export const recordTransaction = (
-  userId: string,
-  amount: number,
-  type: TransactionType,
-  description: string,
-  metadata: Record<string, any> = {}
-): Transaction => {
-  // This would normally call an API, but for now we'll just return a mock transaction
+/**
+ * Create a transaction record
+ */
+export const createTransaction = (data: Omit<Transaction, 'id' | 'timestamp'>): Promise<Transaction> => {
   const transaction: Transaction = {
-    id: `tx_${Date.now()}`,
-    userId,
-    type,
-    amount,
-    description,
-    timestamp: new Date(),
-    metadata,
-    status: 'completed'
+    id: uuidv4(),
+    ...data,
+    timestamp: new Date().toISOString()
   };
   
-  console.log('Transaction recorded:', transaction);
-  return transaction;
+  // Here you would typically send this to your backend
+  console.log('Creating transaction:', transaction);
+  
+  // For now, let's simulate storing it locally
+  const transactions = JSON.parse(localStorage.getItem('transactions') || '[]');
+  transactions.push(transaction);
+  localStorage.setItem('transactions', JSON.stringify(transactions));
+  
+  // Update user wallet balance (in a real app, this would be done server-side)
+  const updateUserBalance = (userId: string, amount: number, type: TransactionType) => {
+    // For demo purposes only
+    console.log(`Updating user ${userId} balance: ${amount} (${type})`);
+  };
+  
+  // Adjust balance based on transaction type
+  if (data.type === 'deposit' || data.type === 'refund' || data.type === 'reward') {
+    updateUserBalance(data.userId, data.amount, data.type);
+  } else if (data.type === 'purchase' || data.type === 'spend' || data.type === 'transfer' || data.type === 'wish') {
+    updateUserBalance(data.userId, -data.amount, data.type);
+  }
+  
+  return Promise.resolve(transaction);
+};
+
+/**
+ * Retrieve all transactions for a user
+ */
+export const getUserTransactions = (userId: string): Promise<Transaction[]> => {
+  const transactions = JSON.parse(localStorage.getItem('transactions') || '[]');
+  return Promise.resolve(transactions.filter((tx: Transaction) => tx.userId === userId));
+};
+
+export default {
+  createTransaction,
+  getUserTransactions
 };

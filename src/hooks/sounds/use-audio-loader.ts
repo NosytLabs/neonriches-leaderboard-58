@@ -1,19 +1,10 @@
-import { useState, useEffect, useCallback } from 'react';
+
+import { useEffect, useState } from 'react';
 import { SoundType } from '@/types/sound-types';
-import soundAssets from './sound-assets';
+import { getSoundPath } from './sound-assets';
 
-// Type for the return of our hook
-export interface AudioLoaderReturn {
-  sounds: Record<SoundType, HTMLAudioElement | null>;
-  loadingComplete: boolean;
-  loadingError: boolean;
-  loading: boolean;
-  loadSound: (type: SoundType) => Promise<HTMLAudioElement | null>;
-}
-
-// Load audio assets
-export const useAudioLoader = (): AudioLoaderReturn => {
-  const [sounds, setSounds] = useState<Record<SoundType, HTMLAudioElement | null>>({
+const useAudioLoader = () => {
+  const [audioElements, setAudioElements] = useState<Record<SoundType, HTMLAudioElement | null>>({
     click: null,
     hover: null,
     success: null,
@@ -27,63 +18,125 @@ export const useAudioLoader = (): AudioLoaderReturn => {
     fanfare: null,
     shame: null,
     parchment: null,
-    treasure: null,
-    royal: null,
     crown: null,
+    royal: null,
+    medallion: null,
     pageTransition: null,
     parchmentUnfurl: null,
-    info: null
+    pageChange: null,
+    info: null,
+    warning: null,
+    seal: null,
+    deposit: null,
+    reward: null,
+    unlock: null,
+    team: null,
+    applause: null,
+    levelUp: null,
+    boost: null,
+    curse: null,
+    laugh: null,
+    magic: null,
+    celebration: null,
+    message: null,
+    treasure: null,
+    bell: null,
+    royalAnnouncement: null,
+    swordClash: null,
+    coins: null,
+    trumpet: null,
+    coin: null,
+    medieval: null,
+    award: null
   });
-  const [loadingComplete, setLoadingComplete] = useState(false);
-  const [loadingError, setLoadingError] = useState(false);
   
-  // Load a single sound
-  const loadSound = useCallback(async (type: SoundType): Promise<HTMLAudioElement | null> => {
-    return new Promise((resolve, reject) => {
-      if (!soundAssets[type]) {
-        console.error(`Sound asset not found for type: ${type}`);
-        return resolve(null);
-      }
-      
-      const audio = new Audio(soundAssets[type]);
-      
-      audio.addEventListener('canplaythrough', () => {
-        setSounds(prevSounds => ({ ...prevSounds, [type]: audio }));
-        resolve(audio);
-      });
-      
-      audio.addEventListener('error', (error) => {
-        console.error(`Failed to load sound for type: ${type}`, error);
-        reject(error);
-        resolve(null);
-      });
-    });
-  }, []);
+  const [isLoaded, setIsLoaded] = useState<boolean>(false);
+  const [loadProgress, setLoadProgress] = useState<number>(0);
   
-  // Load all sounds on mount
+  // Load all audio elements
   useEffect(() => {
-    const loadAllSounds = async () => {
-      try {
-        const soundTypes = Object.keys(soundAssets) as SoundType[];
-        
-        // Load all sounds in parallel
-        await Promise.all(soundTypes.map(type => loadSound(type)));
-        
-        setLoadingComplete(true);
-      } catch (error) {
-        console.error('Failed to load one or more sounds', error);
-        setLoadingError(true);
-      }
+    const loadAudio = async () => {
+      // Create new object for immutability
+      const newAudioElements: Record<SoundType, HTMLAudioElement> = {} as Record<SoundType, HTMLAudioElement>;
+      const totalSounds = Object.keys(audioElements).length;
+      let loadedSounds = 0;
+      
+      // Create promises for all audio elements
+      const loadPromises = Object.keys(audioElements).map((key) => {
+        return new Promise<void>((resolve) => {
+          try {
+            const soundType = key as SoundType;
+            const soundPath = getSoundPath(soundType);
+            
+            if (!soundPath) {
+              console.warn(`No path for sound: ${soundType}`);
+              loadedSounds++;
+              setLoadProgress(Math.floor((loadedSounds / totalSounds) * 100));
+              resolve();
+              return;
+            }
+            
+            const audio = new Audio(soundPath);
+            
+            // Handle when audio metadata is loaded
+            audio.addEventListener('loadedmetadata', () => {
+              loadedSounds++;
+              setLoadProgress(Math.floor((loadedSounds / totalSounds) * 100));
+              resolve();
+            });
+            
+            // Handle errors
+            audio.addEventListener('error', () => {
+              console.warn(`Error loading audio: ${soundType}`);
+              loadedSounds++;
+              setLoadProgress(Math.floor((loadedSounds / totalSounds) * 100));
+              resolve();
+            });
+            
+            // Set properties
+            audio.preload = 'auto';
+            
+            // Add to new elements
+            newAudioElements[soundType] = audio;
+            
+            // Start loading
+            audio.load();
+          } catch (error) {
+            console.error(`Error creating audio element for key: ${key}`, error);
+            loadedSounds++;
+            setLoadProgress(Math.floor((loadedSounds / totalSounds) * 100));
+            resolve();
+          }
+        });
+      });
+      
+      // Wait for all audio to load
+      await Promise.all(loadPromises);
+      
+      // Update state
+      setAudioElements(newAudioElements);
+      setIsLoaded(true);
+      setLoadProgress(100);
     };
     
-    loadAllSounds();
-  }, [loadSound]);
-
+    loadAudio();
+    
+    // Cleanup
+    return () => {
+      Object.values(audioElements).forEach((audio) => {
+        if (audio) {
+          audio.pause();
+          audio.src = '';
+        }
+      });
+    };
+  }, []);
+  
   return {
-    sounds,
-    loadingComplete,
-    loadingError,
-    loading: !loadingComplete && !loadingError,
-    loadSound
+    audioElements,
+    isLoaded,
+    loadProgress
   };
 };
+
+export default useAudioLoader;

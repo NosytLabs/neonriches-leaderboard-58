@@ -6,13 +6,12 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Search, Crown, ShoppingCart, Bell, Gift, ChevronRight, Star, BadgeCheck } from 'lucide-react';
 import { Input } from '@/components/ui/input';
-import { CosmeticItem, UserCosmeticState, getRarityColor, getRarityBgColor, getRarityBorderColor } from '@/types/cosmetics';
-import { SocialLink } from '@/types/social-links';
+import { CosmeticItem, SocialLink } from '@/types/cosmetics';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 import { formatCurrency } from '@/utils/formatters';
-import { useCosmeticPurchase } from '@/hooks/useCosmeticPurchase';
+import { getRarityColor, getRarityBgColor, getRarityBorderColor } from '@/utils/cosmeticUtils';
 
 // Mock cosmetic items
 const cosmeticItems: CosmeticItem[] = [
@@ -23,7 +22,7 @@ const cosmeticItems: CosmeticItem[] = [
     price: 100,
     category: 'border',
     rarity: 'rare',
-    cssClass: 'border-yellow-400'
+    imageSrc: '/assets/cosmetics/borders/royal-gold.png'
   },
   {
     id: 'title-1',
@@ -32,7 +31,7 @@ const cosmeticItems: CosmeticItem[] = [
     price: 250,
     category: 'title',
     rarity: 'epic',
-    cssClass: 'title-duke'
+    imageSrc: '/assets/cosmetics/titles/duke.png'
   },
   {
     id: 'effect-1',
@@ -41,18 +40,27 @@ const cosmeticItems: CosmeticItem[] = [
     price: 500,
     category: 'effect',
     rarity: 'legendary',
-    cssClass: 'effect-sparkle'
+    imageSrc: '/assets/cosmetics/effects/sparkle.png'
   }
 ];
 
 const RoyalBoutique: React.FC = () => {
   const { user } = useAuth();
   const { toast } = useToast();
-  const { purchaseCosmetic } = useCosmeticPurchase();
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState('featured');
   
-  const userCosmetics: UserCosmeticState = user?.cosmetics || {
+  // Mock function for cosmetic purchase
+  const purchaseCosmetic = (item: CosmeticItem) => {
+    toast({
+      title: 'Purchase Successful',
+      description: `You have acquired ${item.name}!`,
+      variant: 'default'
+    });
+    return true;
+  };
+  
+  const userCosmetics = user?.cosmetics || {
     unlockedBorders: [],
     unlockedColors: [],
     unlockedFonts: [],
@@ -109,7 +117,7 @@ const RoyalBoutique: React.FC = () => {
     }
     
     // Purchase the item
-    const success = purchaseCosmetic(item as SocialLink & CosmeticItem);
+    const success = purchaseCosmetic(item);
     
     if (success) {
       toast({
@@ -291,7 +299,7 @@ const CosmeticItemCard: React.FC<CosmeticItemCardProps> = ({ item, owned, onPurc
     <Card className={cn(
       "overflow-hidden transition-all",
       getRarityBorderColor(item.rarity),
-      "hover:shadow-md hover:shadow-" + item.rarity + "-500/20"
+      "hover:shadow-md"
     )}>
       <div className={cn(
         "h-2",
