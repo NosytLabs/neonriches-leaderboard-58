@@ -1,191 +1,149 @@
 
-import { TeamType } from '@/types/user';
+import { UserTeam } from '@/types/user';
 
-/**
- * Get the display name for a team
- * @param team Team identifier
- * @returns Human-readable team name
- */
-export function getTeamName(team: TeamType | null | undefined): string {
+export const getTeamColor = (team: UserTeam): string => {
   switch (team) {
-    case 'red': return 'Royal Crimson';
-    case 'green': return 'Emerald Kingdom';
-    case 'blue': return 'Azure Dynasty';
-    case 'none': return 'Unaligned';
-    default: return 'Unaligned';
+    case 'red':
+      return 'text-red-500';
+    case 'green':
+      return 'text-green-500';
+    case 'blue':
+      return 'text-blue-500';
+    default:
+      return 'text-gray-500';
   }
-}
+};
 
-/**
- * Get the color class for a team
- * @param team Team identifier
- * @returns CSS color class for the team
- */
-export function getTeamColor(team: TeamType | null | undefined): string {
+export const getTeamBgColor = (team: UserTeam): string => {
   switch (team) {
-    case 'red': return 'text-royal-crimson';
-    case 'green': return 'text-royal-gold'; // Using gold for green team
-    case 'blue': return 'text-royal-navy';
-    default: return 'text-white';
+    case 'red':
+      return 'bg-red-500';
+    case 'green':
+      return 'bg-green-500';
+    case 'blue':
+      return 'bg-blue-500';
+    default:
+      return 'bg-gray-500';
   }
-}
+};
 
-/**
- * Get the border color class for a team
- * @param team Team identifier
- * @returns CSS border color class for the team
- */
-export function getTeamBorderColor(team: TeamType | null | undefined): string {
+export const getTeamBorderColor = (team: UserTeam): string => {
   switch (team) {
-    case 'red': return 'border-royal-crimson/30';
-    case 'green': return 'border-royal-gold/30'; // Using gold for green team
-    case 'blue': return 'border-royal-navy/30';
-    default: return 'border-white/10';
+    case 'red':
+      return 'border-red-500';
+    case 'green':
+      return 'border-green-500';
+    case 'blue':
+      return 'border-blue-500';
+    default:
+      return 'border-gray-500';
   }
-}
+};
 
-/**
- * Get the background color class for a team
- * @param team Team identifier
- * @returns CSS background color class for the team
- */
-export function getTeamBgColor(team: TeamType | null | undefined): string {
+export const getTeamDisplayName = (team: UserTeam): string => {
   switch (team) {
-    case 'red': return 'bg-royal-crimson/10';
-    case 'green': return 'bg-royal-gold/10'; // Using gold for green team
-    case 'blue': return 'bg-royal-navy/10';
-    default: return 'bg-white/5';
+    case 'red':
+      return 'Red Dynasty';
+    case 'green':
+      return 'Green Vanguard';
+    case 'blue':
+      return 'Blue Legion';
+    default:
+      return 'Unknown Team';
   }
-}
+};
 
-/**
- * Get the motto for a team
- * @param team Team identifier
- * @returns Team motto
- */
-export function getTeamMotto(team: TeamType | null | undefined): string {
+export const getTeamMotto = (team: UserTeam): string => {
   switch (team) {
-    case 'red': return 'Crimson Coins Rule the Realm';
-    case 'green': return 'All That Glitters Is Our Gold';
-    case 'blue': return 'Deep Waters Run Rich with Wealth';
-    default: return 'Choose a team to display your allegiance';
+    case 'red':
+      return 'Wealth Through Aggression';
+    case 'green':
+      return 'Prosperity Through Innovation';
+    case 'blue':
+      return 'Power Through Knowledge';
+    default:
+      return 'No Team Motto';
   }
-}
+};
 
-/**
- * Get a benefit description for a team
- * @param team Team identifier
- * @returns Team benefit description
- */
-export function getTeamBenefit(team: TeamType | null | undefined): string {
+export const getTeamBenefit = (team: UserTeam): string => {
   switch (team) {
-    case 'red': return '5% bonus on all transactions to fellow Crimson members';
-    case 'green': return 'Weekly golden profile boost for loyal Gold supporters';
-    case 'blue': return 'Exclusive access to Azure Dynasty team events';
-    default: return 'Join a team to unlock team benefits';
+    case 'red':
+      return '5% bonus to all spending power';
+    case 'green':
+      return '10% discount on all cosmetic purchases';
+    case 'blue':
+      return 'Exclusive access to special marketplace items';
+    default:
+      return 'No team benefits';
   }
-}
+};
 
-/**
- * Get an absurd statistic for a team
- * @param team Team identifier
- * @returns Absurd team statistic
- */
-export function getTeamAbsurdStat(team: TeamType | null | undefined): string {
+export const getTeamAbsurdStat = (team: UserTeam): string => {
   switch (team) {
-    case 'red': return 'Members have collectively spent enough to buy 3 private islands';
-    case 'green': return 'Our gold reserves would sink a medium-sized yacht';
-    case 'blue': return 'If stacked, our transactions would reach the mesosphere';
-    default: return 'No team statistics available';
+    case 'red':
+      return 'Members have collectively thrown 342,567 virtual tomatoes';
+    case 'green':
+      return 'Has planted 45,678 digital trees that produce absolutely nothing';
+    case 'blue':
+      return 'Members spend an average of 5.3 hours daily staring at leaderboards';
+    default:
+      return 'No absurd stats available';
   }
-}
+};
 
-/**
- * Get the security guarantee for a team
- * @param team Team identifier
- * @returns Team security guarantee text
- */
-export function getTeamSecurityGuarantee(team: TeamType | null | undefined): string {
+export const getTeamHistoricalNote = (team: UserTeam): string => {
   switch (team) {
-    case 'red': return 'Protected by an army of highly-trained digital knights';
-    case 'green': return 'Secured by state-of-the-art golden blockchain technology';
-    case 'blue': return 'Guarded by the mythical sea creatures of the deep web';
-    default: return 'Standard security protocols in place';
+    case 'red':
+      return 'Founded by Lord Cashington after a particularly heated bidding war';
+    case 'green':
+      return 'Established when Lady Emeralda outspent three dukes combined';
+    case 'blue':
+      return 'Formed when Count Sapphire purchased the entire eastern treasury';
+    default:
+      return 'No historical notes available';
   }
-}
+};
 
-/**
- * Get a satirical NFT joke for a team
- * @param team Team identifier
- * @returns Team NFT joke
- */
-export function getTeamNFTJoke(team: TeamType | null | undefined): string {
+export const getTeamNFTJoke = (team: UserTeam): string => {
   switch (team) {
-    case 'red': return 'Our NFTs are so exclusive they don\'t even exist';
-    case 'green': return 'Each transaction creates a digital statue in your honor*';
-    case 'blue': return 'Your profile is technically underwater real estate';
-    default: return 'NFTs are digital assets with questionable utility';
+    case 'red':
+      return 'We turn money into digital badges faster than you can say "depreciating asset"';
+    case 'green':
+      return 'Our NFTs are so exclusive, even we don't know what they do';
+    case 'blue':
+      return 'We've calculated the exact mathematical formula for FOMO';
+    default:
+      return 'No NFT jokes available';
   }
-}
+};
 
-/**
- * Get a crypto roast for a team
- * @param team Team identifier
- * @returns Team crypto roast
- */
-export function getTeamCryptoRoast(team: TeamType | null | undefined): string {
+export const getTeamSecurityGuarantee = (team: UserTeam): string => {
   switch (team) {
-    case 'red': return 'Making real cash disappear faster than a cryptocurrency exchange';
-    case 'green': return 'Our gold is as real as your crypto portfolio gains';
-    case 'blue': return 'More stable than a stablecoin during a financial crisis';
-    default: return 'Cryptocurrency: turning electricity into speculation since 2009';
+    case 'red':
+      return 'Your money is perfectly safe with us (terms and conditions apply)';
+    case 'green':
+      return 'Triple-encrypted with algorithms we made up this morning';
+    case 'blue':
+      return 'So secure, sometimes even we can't access your funds';
+    default:
+      return 'No security guarantees available';
   }
-}
+};
 
-/**
- * Get the title based on gender
- * @param gender Gender identifier
- * @returns Appropriate title for the gender
- */
-export function getGenderTitle(gender: string | null | undefined): string {
-  switch (gender) {
-    case 'king': return 'His Majesty';
-    case 'queen': return 'Her Majesty';
-    case 'jester': return 'The Honorable Jester';
-    case 'neutral': return 'Your Excellency';
-    case 'noble': return 'Noble Sovereign';
-    default: return 'Your Highness';
+export const getTeamCryptoRoast = (team: UserTeam): string => {
+  switch (team) {
+    case 'red':
+      return 'At least our digital currency is backed by real money you've wasted';
+    case 'green':
+      return 'Our blockchain has so many buzzwords, venture capitalists faint';
+    case 'blue':
+      return 'We've proven spending money on nothing can be intellectually stimulating';
+    default:
+      return 'No crypto roasts available';
   }
-}
+};
 
-/**
- * Get an emoji for a gender
- * @param gender Gender identifier
- * @returns Emoji representing the gender
- */
-export function getGenderEmoji(gender: string | null | undefined): string {
-  switch (gender) {
-    case 'king': return '👑';
-    case 'queen': return '👸';
-    case 'jester': return '🃏';
-    case 'neutral': return '🏅';
-    case 'noble': return '🎭';
-    default: return '👤';
-  }
-}
-
-/**
- * Get the initials from a name
- * @param name Full name
- * @returns Initials (up to 2 characters)
- */
-export function getInitials(name: string | undefined | null): string {
-  if (!name) return '?';
-  
-  const parts = name.split(' ');
-  if (parts.length === 1) {
-    return name.substring(0, 2).toUpperCase();
-  }
-  
-  return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
-}
+export const getAllTeams = (): UserTeam[] => {
+  return ['red', 'green', 'blue'];
+};

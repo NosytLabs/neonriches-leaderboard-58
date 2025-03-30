@@ -1,56 +1,96 @@
 
-export type CertificateType = 'nobility' | 'rank' | 'achievement' | 'contribution' | 'founder';
-export type CertificateStyle = 'classic' | 'royal' | 'modern' | 'fantasy' | 'minimalist';
-export type CertificateTeam = 'red' | 'green' | 'blue' | 'none';
+import { UserTier } from './user';
+
+export type CertificateType = 'rank' | 'team' | 'nobility' | 'achievement' | 'royal';
+export type CertificateStatus = 'draft' | 'published' | 'minted' | 'revoked';
+export type CertificateStyle = 'classic' | 'modern' | 'minimalist' | 'ornate' | 'royal';
 
 export interface Certificate {
   id: string;
   userId: string;
   type: CertificateType;
-  style: CertificateStyle;
-  team: CertificateTeam;
   title: string;
-  description?: string;
-  rank?: number;
-  amountSpent?: number;
+  description: string;
   imageUrl?: string;
   mintAddress?: string;
-  metadataUri?: string;
-  isMinted: boolean;
-  mintedAt?: string;
+  metadata?: string;
   createdAt: string;
-  shareUrl?: string;
+  status: CertificateStatus;
+  style: CertificateStyle;
+  rank?: number;
+  amountSpent?: number;
+  team?: string;
+  achievementId?: string;
+  achievementName?: string;
+  minterAddress?: string;
+  mintTxSignature?: string;
+  mintedAt?: string;
+  verificationUrl?: string;
 }
 
 export interface CertificateTemplate {
   id: string;
+  type: CertificateType;
   name: string;
-  style: CertificateStyle;
-  team: CertificateTeam;
-  previewUrl: string;
   description: string;
-  availableForTier?: string[];
-  availableForRank?: number[];
-  requiresFounder?: boolean;
+  style: CertificateStyle;
+  previewImageUrl: string;
+  minTier?: UserTier;
+  price?: number;
+  isPremium: boolean;
 }
 
-export interface UserCertificates {
-  ownedCertificates: Certificate[];
-  mintedCertificates: Certificate[];
-  availableTemplates: CertificateTemplate[];
+export interface CertificateTemplateProps {
+  certificate: Certificate;
+  showControls?: boolean;
+  showDownloadButton?: boolean;
+  showMintButton?: boolean;
+  showShareButton?: boolean;
+  onDownload?: () => void;
+  onMint?: () => void;
+  onShare?: () => void;
+  className?: string;
+  preview?: boolean;
+  width?: number;
+  height?: number;
 }
 
-// Repository interfaces
-export interface CertificateRepository {
-  getCertificateById(id: string): Promise<Certificate | null>;
-  getCertificatesForUser(userId: string): Promise<Certificate[]>;
-  getMintedCertificatesForUser(userId: string): Promise<Certificate[]>;
-  saveCertificate(certificate: Certificate): Promise<Certificate>;
-  updateCertificate(certificate: Certificate): Promise<Certificate>;
+export interface CertificateService {
+  createCertificate: (userId: string, type: CertificateType, options: any) => Promise<Certificate>;
+  getCertificateById: (id: string) => Promise<Certificate>;
+  getUserCertificates: (userId: string) => Promise<Certificate[]>;
+  mintCertificate: (certificateId: string, userWallet: string) => Promise<{ success: boolean; mintAddress?: string; error?: string }>;
+  verifyCertificate: (mintAddress: string) => Promise<{ valid: boolean; certificate?: Certificate }>;
 }
 
-// Factory interfaces
-export interface CertificateTemplateFactory {
-  getTemplatesForUser(user: UserProfile): Promise<CertificateTemplate[]>;
-  createCertificateFromTemplate(templateId: string, userId: string): Promise<Certificate>;
+export interface CertificateRankData {
+  rank: number;
+  username: string;
+  displayName: string;
+  amountSpent: number;
+  date: string;
+  userId: string;
+  team: string;
+  tier: UserTier;
+}
+
+export interface CertificateOfNobilityData {
+  username: string;
+  displayName: string;
+  rank: number;
+  amountSpent: number;
+  date: string;
+  userId: string;
+  title: string;
+}
+
+export interface CertificateTeamData {
+  team: string;
+  username: string;
+  displayName: string;
+  teamDisplayName: string;
+  rank: number;
+  amountSpent: number;
+  date: string;
+  userId: string;
 }

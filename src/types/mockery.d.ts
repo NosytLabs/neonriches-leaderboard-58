@@ -60,3 +60,19 @@ export interface ExtendedMockeryAction extends MockeryAction {
   tier: MockeryTier;
   icon?: string;
 }
+
+export interface MockeryEffect {
+  id: string;
+  name: string;
+  description: string;
+  duration: number;
+  tier: MockeryTier;
+  icon: string;
+}
+
+export interface MockeryStats {
+  totalMockeries: number;
+  usersMocked: number;
+  mostPopularAction: string;
+  mostActiveUser: string;
+}

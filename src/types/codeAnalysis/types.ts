@@ -8,12 +8,11 @@ export interface FileInfo {
 
 export interface ImportInfo {
   name: string;
-  path?: string; 
+  path?: string;
   file?: string;
   line?: number;
   note?: string;
   source?: string;
-  impact?: string;
 }
 
 export interface VariableInfo {
@@ -22,7 +21,6 @@ export interface VariableInfo {
   file?: string;
   line?: number;
   note?: string;
-  impact?: string;
 }
 
 export interface FunctionInfo {
@@ -42,10 +40,9 @@ export interface DependencyInfo {
 }
 
 export interface CssSelectorInfo {
-  selector?: string;
+  selector: string;
   file?: string;
   line?: number;
-  name?: string;
 }
 
 export interface ComplexityItem {
@@ -65,15 +62,14 @@ export interface ComplexityItem {
   path?: string;
   functions?: any[];
   status?: string;
-  title?: string;
-  description?: string;
-  severity?: string;
-  impact?: string;
-  solution?: string;
 }
 
 export interface DuplicateCodeInfo {
   id: string | number;
+  title?: string;
+  description?: string;
+  severity?: string;
+  solution?: string;
   pattern?: string;
   similarity: number;
   files: { path: string }[];
@@ -83,12 +79,6 @@ export interface DuplicateCodeInfo {
   codeSnippet?: string;
   snippet?: string;
   recommendation?: string;
-  title?: string;
-  description?: string;
-  severity?: string;
-  impact?: string;
-  solution?: string;
-  instances?: { file: string; lines: string; }[];
 }
 
 export interface DeadCodeInfo {
@@ -111,9 +101,9 @@ export interface PerformanceIssue {
 }
 
 export interface ProjectMetrics {
-  projectSize: number;
-  fileCount: number;
-  dependencyCount: number;
+  projectSize?: number;
+  fileCount?: number;
+  dependencyCount?: number;
   averageFileSize?: number;
   largestFiles?: Array<{ filePath: string, size: number }>;
   beforeCleanup?: {
@@ -126,12 +116,6 @@ export interface ProjectMetrics {
     fileCount: number;
     dependencyCount: number;
   };
-  sizeSavings?: number;
-  fileSavings?: number;
-  dependencySavings?: number;
-  sizePercentage?: number;
-  filePercentage?: number;
-  dependencyPercentage?: number;
 }
 
 export interface AnalysisResult {
@@ -146,28 +130,7 @@ export interface AnalysisResult {
   complexCode: ComplexityItem[];
   performanceIssues?: PerformanceIssue[];
   metrics?: ProjectMetrics;
-  unusedFunctions?: VariableInfo[];
   summary?: any;
-}
-
-export interface UnusedImport {
-  file: string;
-  name: string;
-  line: number;
-  source: string;
-}
-
-export interface UnusedVariable {
-  file: string;
-  name: string;
-  line: number;
-  type?: string;
-}
-
-export interface UnusedCssSelector {
-  file: string;
-  selector: string;
-  line: number;
 }
 
 export interface EslintIssue {
@@ -177,7 +140,34 @@ export interface EslintIssue {
   line: number;
   column: number;
   nodeType: string;
-  messageId: string;
-  endLine: number;
-  endColumn: number;
+  filePath: string;
+  fix?: {
+    range: [number, number];
+    text: string;
+  };
+}
+
+export interface UnusedImport {
+  file: string;
+  name: string;
+  line: number;
+  source?: string;
+}
+
+export interface UnusedVariable {
+  file: string;
+  name: string;
+  line: number;
+}
+
+export interface UnusedCssSelector {
+  file: string;
+  selector: string;
+  line: number;
+}
+
+export interface UnusedFunction {
+  file: string;
+  name: string;
+  line: number;
 }

@@ -1,71 +1,77 @@
 
-export type UserTeam = 'red' | 'green' | 'blue';
-export type TeamColor = UserTeam;
-export type TeamType = 'red' | 'green' | 'blue' | 'none';
-export type UserTier = 'free' | 'premium' | 'royal';
-
-export interface User {
+export interface UserProfile {
   id: string;
   username: string;
-  displayName: string;
+  displayName?: string;
   email?: string;
   profileImage?: string;
   joinedAt: string;
-  createdAt: string;
+  createdAt?: string;
   tier: UserTier;
-  team: UserTeam;
-  rank: number;
-  walletBalance: number;
-  amountSpent: number;
-  // Extended properties
-  gender?: string;
-  bio?: string;
-  level?: number;
-  experience?: number;
-  totalSpent?: number;
+  team?: UserTeam;
+  rank?: number;
+  walletBalance?: number;
+  amountSpent?: number;
+  gender?: UserGender;
   profileViews?: number;
   profileClicks?: number;
   followers?: number;
   following?: number;
   lastActive?: string;
+  totalSpent?: number;
+  role?: UserRole;
+  cosmetics?: UserCosmetics;
+  activeTitle?: string;
+  spendStreak?: number;
   settings?: UserSettings;
-  notifications?: UserNotificationSettings;
-  subscription?: UserSubscription;
-  profileBoosts?: ProfileBoost[];
-  socialLinks?: SocialLink[];
-  purchasedFeatures?: string[];
-  role?: string;
+}
+
+export type UserTier = 'free' | 'premium' | 'royal' | 'basic';
+export type UserTeam = 'red' | 'green' | 'blue';
+export type UserRole = 'user' | 'admin' | 'moderator';
+export type UserGender = 'male' | 'female' | 'neutral' | 'other';
+export type UserStatus = 'online' | 'offline' | 'away' | 'busy';
+
+export interface UserCosmetics {
+  border?: string;
+  color?: string;
+  font?: string;
+  emoji?: string;
+  title?: string;
+  background?: string;
+  effect?: string;
+  borders?: string[];
+  colors?: string[];
+  titles?: string[];
+  emojis?: string[];
+  fonts?: string[];
+  backgrounds?: string[];
+  effects?: string[];
 }
 
 export interface UserSettings {
-  theme: 'light' | 'dark' | 'royal' | 'system';
-  notifications: boolean;
-  email: {
-    marketing: boolean;
-    updates: boolean;
-    digests: boolean;
+  notifications: {
+    email: boolean;
+    push: boolean;
+    rankChanges: boolean;
+    mockery: boolean;
   };
   privacy: {
-    showRank: boolean;
+    showProfile: boolean;
     showSpending: boolean;
-    publicProfile: boolean;
   };
-  profileVisibility?: boolean;
-  allowProfileLinks?: boolean;
+  display: {
+    theme: string;
+    showRank?: boolean;
+  };
 }
 
-export interface UserNotificationSettings {
-  email: boolean;
-  marketing: boolean;
-  rankChanges: boolean;
-  teamUpdates: boolean;
-}
-
-export interface UserSubscription {
-  plan: string;
-  status: 'active' | 'canceled' | 'past_due';
-  currentPeriodEnd: string;
-  cancelAtPeriodEnd: boolean;
+export interface ProfileLink {
+  id: string;
+  type: string;
+  url: string;
+  title: string;
+  icon?: string;
 }
 
 export interface ProfileBoost {
@@ -74,32 +80,33 @@ export interface ProfileBoost {
   duration: number;
   startDate?: string;
   endDate?: string;
+  effects: string[];
   level?: number;
-  effects?: string[];
+  strength?: number;
+  effectId?: string;
 }
 
-export interface SocialLink {
-  platform: string;
-  url: string;
-  username?: string;
-  verified?: boolean;
-  id?: string;
-  clicks?: number;
+export interface Team {
+  id: string;
+  name: UserTeam;
+  displayName: string;
+  description: string;
+  memberCount: number;
+  color: string;
+  icon: string;
+  benefits: string[];
 }
 
-export interface ProfileImage {
-  url: string;
-  isPrimary?: boolean;
-  id?: string;
-  caption?: string;
-}
-
-export interface LeaderboardUser extends User {
-  previousRank?: number;
-  rankChange?: number;
-  spentAmount?: number;
+export interface LeaderboardUser {
+  id: string;
+  username: string;
+  displayName?: string;
   avatarUrl?: string;
-  isVIP?: boolean;
+  profileImage?: string;
+  rank?: number;
+  tier?: string;
+  team?: string;
+  amountSpent?: number;
+  lastMocked?: string;
+  mockeryCount?: number;
 }
-
-export type SocialPlatform = 'twitter' | 'instagram' | 'tiktok' | 'youtube' | 'twitch' | 'discord' | 'linkedin' | 'github' | 'website';

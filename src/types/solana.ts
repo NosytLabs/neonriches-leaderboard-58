@@ -1,73 +1,71 @@
 
-export interface SolanaWallet {
-  address: string;
-  balance: number;
-  publicKey: string;
-}
-
+// Solana-related types
 export interface SolanaTreasuryInfo {
-  address: string;
-  totalBalance: number;
-  depositCount: number;
-  withdrawalCount: number;
+  treasuryAddress: string;
+  currentBalance: number;
+  totalDeposited: number;
+  totalWithdrawn: number;
+  transactionCount: number;
+  lastUpdated: string;
+  transactions: SolanaTransaction[];
 }
 
 export interface SolanaTransaction {
-  signature: string;
-  blockTime: number;
-  slot: number;
-  status: 'confirmed' | 'finalized' | 'processed' | 'failed';
+  id: string;
+  timestamp: string;
   amount: number;
-  sender: string;
-  recipient: string;
-  type: 'deposit' | 'withdrawal' | 'transfer';
+  type: 'deposit' | 'withdrawal' | 'spend';
+  signature: string;
+  userAddress: string;
+  status: 'confirmed' | 'pending' | 'failed';
+}
+
+export interface SolanaWallet {
+  address: string;
+  balance: number;
+  transactions: SolanaTransaction[];
 }
 
 export interface OnChainLeaderboardEntry {
-  userId: string;
-  username: string;
+  id: string;
   address: string;
-  publicKey: string;
-  rank: number;
-  spentAmount?: number;
-  amountSpent?: number;
-  totalDeposited: number;
-  timestamp: string;
-}
-
-export interface LeaderboardEntry {
-  userId: string;
   username: string;
-  publicKey?: string;
-  amountSpent: number;
-  totalDeposited: number;
   rank: number;
-  joinDate: string;
+  amount: number;
+  totalSpent: number;
+  lastTransaction: string;
 }
 
-export interface SolanaNftInfo {
-  mint: string;
+export interface SolanaNFT {
+  mintAddress: string;
+  name: string;
+  description: string;
+  image: string;
+  attributes: {
+    trait_type: string;
+    value: string | number;
+  }[];
   owner: string;
-  metadata: {
-    name: string;
-    symbol: string;
-    uri: string;
-    sellerFeeBasisPoints: number;
-    creators: Array<{
+  uri: string;
+}
+
+export interface CertificateMetadata {
+  name: string;
+  description: string;
+  image: string;
+  attributes: {
+    trait_type: string;
+    value: string | number;
+  }[];
+  properties: {
+    files: {
+      uri: string;
+      type: string;
+    }[];
+    category: string;
+    creators: {
       address: string;
-      verified: boolean;
       share: number;
-    }>;
-  };
-  arweaveMetadata?: {
-    name: string;
-    symbol: string;
-    description: string;
-    image: string;
-    external_url?: string;
-    attributes?: Array<{
-      trait_type: string;
-      value: string | number;
-    }>;
+    }[];
   };
 }
