@@ -116,16 +116,28 @@ export const getTeamMotto = (team: TeamType): string => {
 /**
  * Gets a benefit associated with the team
  */
-export const getTeamBenefit = (team: TeamType): string => {
+export const getTeamBenefit = (team: TeamType): string[] => {
   switch (team) {
     case 'red':
-      return '10% bonus visibility on the leaderboard';
+      return [
+        '10% bonus visibility on the leaderboard',
+        'Priority access to mockery tools',
+        'Special crimson royal badge'
+      ];
     case 'green':
-      return '5% discount on all purchases';
+      return [
+        '5% discount on all purchases',
+        'Enhanced treasury analytics',
+        'Special gold emblem for profile'
+      ];
     case 'blue':
-      return 'Access to exclusive strategic tools';
+      return [
+        'Access to exclusive strategic tools',
+        'Advanced spending projections',
+        'Special navy insignia for profile'
+      ];
     default:
-      return 'Freedom from team obligations';
+      return ['Freedom from team obligations'];
   }
 };
 
