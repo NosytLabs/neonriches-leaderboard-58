@@ -1,11 +1,10 @@
 
 import React from 'react';
-import * as LucideIcons from 'lucide-react';
-import { cn } from '@/lib/utils';
+import IconWrapper from '@/components/ui/icon-wrapper';
 
 // Types
 type IconProps = {
-  name: keyof typeof LucideIcons;
+  name: string;
   size?: number;
   color?: string;
   className?: string;
@@ -19,24 +18,12 @@ const Icon: React.FC<IconProps> = ({
   className, 
   onClick 
 }) => {
-  // We need to ensure the component is a valid React component
-  const LucideIcon = LucideIcons[name] as React.ComponentType<{
-    size?: number;
-    color?: string;
-    className?: string;
-    onClick?: () => void;
-  }>;
-
-  if (!LucideIcon) {
-    console.warn(`Icon "${name}" does not exist in Lucide icons`);
-    return null;
-  }
-
   return (
-    <LucideIcon
+    <IconWrapper
+      name={name}
       size={size}
       color={color}
-      className={cn(className)}
+      className={className}
       onClick={onClick}
     />
   );

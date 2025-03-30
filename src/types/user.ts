@@ -1,4 +1,3 @@
-
 export interface User {
   id: string;
   email: string;
@@ -35,6 +34,12 @@ export interface User {
   settings?: UserSettings;
   isVIP?: boolean;
   walletAddress?: string;
+  totalSpent?: number; // Adding this property to fix errors
+  spentAmount?: number; // Adding this property to fix errors
+  lastMocked?: string;
+  mockeryCount?: number;
+  isProtected?: boolean;
+  isVerified?: boolean;
 }
 
 export interface SocialLink {
@@ -114,4 +119,3 @@ export interface Team {
   totalSpent: number;
   icon: string;
 }
-

@@ -43,4 +43,3 @@ export interface SoundOptions {
   playbackRate?: number;
   delay?: number;
 }
-

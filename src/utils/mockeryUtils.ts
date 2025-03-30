@@ -1,8 +1,7 @@
-
 import { MockeryAction, MockeryTier } from '@/types/mockery';
 
 // Cost in virtual currency for each mockery action
-export const MOCKERY_COSTS: Record<MockeryAction, number> = {
+export const MOCKERY_COSTS: Record<string, number> = {
   tomatoes: 10,
   putridEggs: 25,
   stocks: 50,
@@ -24,6 +23,30 @@ export const MOCKERY_COSTS: Record<MockeryAction, number> = {
   jokeCrown: 60,
   memeFrame: 25,
   roast: 40
+};
+
+// Mockery cooldowns in milliseconds
+export const MOCKERY_COOLDOWNS: Record<string, number> = {
+  tomatoes: 1000 * 60 * 60, // 1 hour
+  putridEggs: 1000 * 60 * 60 * 2, // 2 hours
+  stocks: 1000 * 60 * 60 * 3, // 3 hours
+  silence: 1000 * 60 * 60 * 4, // 4 hours
+  courtJester: 1000 * 60 * 60 * 6, // 6 hours
+  dunce: 1000 * 60 * 60, // 1 hour
+  smokeBomb: 1000 * 60 * 60 * 8, // 8 hours
+  jester: 1000 * 60 * 60 * 5, // 5 hours
+  ridicule: 1000 * 60 * 60 * 2, // 2 hours
+  humiliate: 1000 * 60 * 60 * 4, // 4 hours
+  expose: 1000 * 60 * 60 * 3, // 3 hours
+  mock: 1000 * 60 * 60, // 1 hour
+  shame: 1000 * 60 * 60 * 2, // 2 hours
+  eggs: 1000 * 60 * 60 * 2, // 2 hours
+  protection: 1000 * 60 * 60 * 24, // 24 hours
+  glitterBomb: 1000 * 60 * 60 * 3, // 3 hours
+  royalPie: 1000 * 60 * 60 * 2, // 2 hours
+  jokeCrown: 1000 * 60 * 60 * 4, // 4 hours
+  memeFrame: 1000 * 60 * 60 * 3, // 3 hours
+  roast: 1000 * 60 * 60 * 2 // 2 hours
 };
 
 // Display names for mockery actions

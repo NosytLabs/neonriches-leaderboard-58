@@ -41,4 +41,3 @@ export interface CertificateRepository {
   createCertificate(certificate: Omit<Certificate, 'id'>): Promise<Certificate>;
   verifyCertificate(certificateId: string): Promise<boolean>;
 }
-
