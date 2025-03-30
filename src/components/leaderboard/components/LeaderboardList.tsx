@@ -4,6 +4,7 @@ import { CardContent } from '@/components/ui/card';
 import LeaderboardEntry from './LeaderboardEntry';
 import { User } from '@/types/user';
 import { ShameAction } from '@/components/events/hooks/useShameEffect';
+import { Crown } from 'lucide-react';
 
 interface LeaderboardListProps {
   users: User[];

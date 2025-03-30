@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Trophy as TrophyIcon, Crown } from 'lucide-react';
+import { Crown, Trophy as TrophyIcon } from 'lucide-react';
 
 interface TrophyProps {
   rank: number;
