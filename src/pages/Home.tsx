@@ -10,6 +10,7 @@ import HeroShowcase from '@/components/home/HeroShowcase';
 import LeaderboardExplanation from '@/components/leaderboard/LeaderboardExplanation';
 import SpendingExplanation from '@/components/marketing/SpendingExplanation';
 import TopSpenderShowcase from '@/components/home/TopSpenderShowcase';
+import RealTimeLeaderboard from '@/components/leaderboard/RealTimeLeaderboard';
 import { useAuth } from '@/hooks/useAuth';
 
 const Home: React.FC = () => {
@@ -44,7 +45,7 @@ const Home: React.FC = () => {
               </div>
               <div className="flex items-center text-white/80">
                 <Crown className="h-5 w-5 text-royal-gold mr-3" />
-                <span>Subscriptions unlock cosmetic features and profile perks</span>
+                <span>Achieve milestones to unlock cosmetic features and perks</span>
               </div>
             </div>
             <div className="mt-8 flex flex-col sm:flex-row gap-4">
@@ -78,7 +79,14 @@ const Home: React.FC = () => {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.2 }}
         >
-          <SpendingExplanation />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
+            <div className="col-span-1 md:col-span-2">
+              <SpendingExplanation />
+            </div>
+            <div className="col-span-1">
+              <RealTimeLeaderboard limit={5} />
+            </div>
+          </div>
         </motion.div>
 
         <motion.div

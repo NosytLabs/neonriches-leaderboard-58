@@ -2,59 +2,42 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
- 
-@import './styles/icon-sprite.css';
 
 @layer base {
   :root {
     --background: 0 0% 3.9%;
     --foreground: 0 0% 98%;
-    --card: 0 0% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 0 0% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 249 71% 65%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 0 0% 14.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 14.9%;
-    --muted-foreground: 0 0% 63.9%;
-    --accent: 0 0% 14.9%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 14.9%;
-    --input: 0 0% 14.9%;
-    --ring: 249 71% 65%;
-    --radius: 0.5rem;
     
-    --royal-gold: 45 100% 52%;
-    --royal-gold-foreground: 0 0% 10%;
-    --royal-purple: 275 70% 57%;
-    --royal-crimson: 347 77% 50%;
-    --royal-navy: 240 64% 27%;
-  }
- 
-  .dark {
-    --background: 0 0% 3.9%;
-    --foreground: 0 0% 98%;
     --card: 0 0% 3.9%;
     --card-foreground: 0 0% 98%;
+    
     --popover: 0 0% 3.9%;
     --popover-foreground: 0 0% 98%;
-    --primary: 249 71% 65%;
-    --primary-foreground: 0 0% 98%;
+    
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 9%;
+    
     --secondary: 0 0% 14.9%;
     --secondary-foreground: 0 0% 98%;
+    
     --muted: 0 0% 14.9%;
     --muted-foreground: 0 0% 63.9%;
-    --accent: 0 0% 14.9%;
+    
+    --accent: 270 75% 60%;
     --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
+    
+    --destructive: 0, 84.2%, 60.2%;
     --destructive-foreground: 0 0% 98%;
+    
+    --royal-gold: 36, 100%, 45%;
+    --royal-purple: 270, 75%, 60%;
+    --royal-crimson: 345, 80%, 50%;
+    
     --border: 0 0% 14.9%;
     --input: 0 0% 14.9%;
-    --ring: 249 71% 65%;
+    --ring: 0 0% 83.1%;
+    
+    --radius: 0.5rem;
   }
 }
 
@@ -68,277 +51,70 @@
   }
 }
 
-/* Custom CSS for Pay-to-Win elements */
-:root {
-  --team-red: #ff5757;
-  --team-green: #57ff8f;
-  --team-blue: #5783ff;
+@layer utilities {
+  .royal-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-royal-gold to-royal-purple;
+  }
   
-  --royal-gold-color: #d4af37;
-  --royal-purple-color: #7e22ce;
-  --royal-crimson-color: #dc2626;
-  --royal-navy-color: #1e3a8a;
-}
-
-/* Team Colors */
-.text-team-red {
-  color: var(--team-red);
-}
-.text-team-green {
-  color: var(--team-green);
-}
-.text-team-blue {
-  color: var(--team-blue);
-}
-.bg-team-red {
-  background-color: var(--team-red);
-}
-.bg-team-green {
-  background-color: var(--team-green);
-}
-.bg-team-blue {
-  background-color: var(--team-blue);
-}
-
-/* Royal Colors */
-.text-royal-gold {
-  color: var(--royal-gold-color);
-}
-.text-royal-purple {
-  color: var(--royal-purple-color);
-}
-.text-royal-crimson {
-  color: var(--royal-crimson-color);
-}
-.text-royal-navy {
-  color: var(--royal-navy-color);
-}
-.bg-royal-gold {
-  background-color: var(--royal-gold-color);
-}
-.bg-royal-purple {
-  background-color: var(--royal-purple-color);
-}
-.bg-royal-crimson {
-  background-color: var(--royal-crimson-color);
-}
-.bg-royal-navy {
-  background-color: var(--royal-navy-color);
-}
-
-/* Royal Gradient Text */
-.royal-gradient {
-  @apply bg-gradient-to-r from-royal-gold via-royal-purple to-amber-300 text-transparent bg-clip-text;
-}
-
-/* Font for royal themes */
-.font-royal {
-  font-family: 'Cinzel', serif;
-}
-
-/* Royal text shimmer effect - Enhanced */
-.royal-text-shimmer {
-  background: linear-gradient(
-    to right,
-    var(--royal-gold-color) 0%,
-    #f5e27a 20%,
-    var(--royal-gold-color) 40%,
-    #f5e27a 60%,
-    var(--royal-gold-color) 80%,
-    #f5e27a 100%
-  );
-  background-size: 200% auto;
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: shimmer 3s linear infinite;
-}
-
-@keyframes shimmer {
-  to {
-    background-position: 200% center;
+  .glass-morphism {
+    @apply bg-white/5 backdrop-blur-sm;
+  }
+  
+  .royal-shine {
+    @apply relative overflow-hidden;
+  }
+  
+  .royal-shine::after {
+    content: '';
+    @apply absolute top-0 left-0 h-full w-10 bg-white/10 transform -skew-x-20 translate-x-full;
+    animation: shine 3s infinite;
+  }
+  
+  @keyframes shine {
+    0% { transform: translateX(-100%) skewX(-20deg); }
+    20% { transform: translateX(100%) skewX(-20deg); }
+    100% { transform: translateX(100%) skewX(-20deg); }
+  }
+  
+  .animate-pulse-slow {
+    animation: pulse-slow 3s ease-in-out infinite;
+  }
+  
+  @keyframes pulse-slow {
+    0%, 100% { opacity: 0.7; }
+    50% { opacity: 1; }
+  }
+  
+  .animate-crown-glow {
+    animation: crown-glow 2s ease-in-out infinite;
+  }
+  
+  @keyframes crown-glow {
+    0%, 100% { 
+      filter: drop-shadow(0 0 2px rgba(212, 175, 55, 0.5));
+    }
+    50% { 
+      filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.8));
+    }
+  }
+  
+  .bg-silver-glow {
+    background: radial-gradient(circle, rgba(192,192,192,0.8) 0%, rgba(192,192,192,0.4) 100%);
+  }
+  
+  .bg-gold-glow {
+    background: radial-gradient(circle, rgba(212,175,55,0.8) 0%, rgba(212,175,55,0.4) 100%);
+  }
+  
+  .bg-team-red {
+    @apply bg-red-500/80;
+  }
+  
+  .bg-team-green {
+    @apply bg-green-500/80;
+  }
+  
+  .bg-team-blue {
+    @apply bg-blue-500/80;
   }
 }
-
-/* Gold border glow effect - Enhanced */
-.royal-border {
-  position: relative;
-  border: 1px solid rgba(212, 175, 55, 0.5);
-  box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
-  transition: all 0.3s ease;
-}
-
-.royal-border:hover {
-  border-color: rgba(212, 175, 55, 0.8);
-  box-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
-}
-
-/* Animation for crown icons */
-@keyframes crown-float {
-  0%, 100% {
-    transform: translateY(0) rotate(0deg);
-  }
-  50% {
-    transform: translateY(-5px) rotate(5deg);
-  }
-}
-
-.crown-float {
-  animation: crown-float 3s ease-in-out infinite;
-}
-
-/* Slow pulse animation */
-@keyframes pulse-slow {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.7;
-  }
-}
-
-.animate-pulse-slow {
-  animation: pulse-slow 3s ease-in-out infinite;
-}
-
-/* Team background gradients */
-.bg-team-red-gradient {
-  background: linear-gradient(135deg, rgba(255, 87, 87, 0.1), rgba(255, 87, 87, 0.01));
-}
-.bg-team-green-gradient {
-  background: linear-gradient(135deg, rgba(87, 255, 143, 0.1), rgba(87, 255, 143, 0.01));
-}
-.bg-team-blue-gradient {
-  background: linear-gradient(135deg, rgba(87, 131, 255, 0.1), rgba(87, 131, 255, 0.01));
-}
-
-/* Glass morphism effect - Enhanced */
-.glass-morphism {
-  background: rgba(0, 0, 0, 0.3);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-  transition: all 0.3s ease;
-}
-
-.glass-morphism:hover {
-  background: rgba(0, 0, 0, 0.35);
-  border-color: rgba(255, 255, 255, 0.15);
-}
-
-.glass-morphism-highlight {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-  transition: all 0.3s ease;
-}
-
-.glass-morphism-highlight:hover {
-  background: rgba(255, 255, 255, 0.08);
-}
-
-/* Marketing specific utility classes */
-.marketing-badge {
-  display: inline-flex;
-  align-items: center;
-  padding: 0.25rem 0.5rem;
-  font-size: 0.75rem;
-  font-weight: 500;
-  border-radius: 9999px;
-  background-color: rgba(255, 215, 0, 0.2);
-  border: 1px solid rgba(255, 215, 0, 0.4);
-  color: #FFD700;
-  transition: all 0.3s ease;
-}
-
-.marketing-badge:hover {
-  background-color: rgba(255, 215, 0, 0.3);
-}
-
-.profile-highlight {
-  position: relative;
-  border: 2px solid rgba(255, 215, 0, 0.6);
-  box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
-  transition: all 0.3s ease;
-  overflow: hidden;
-}
-
-.profile-highlight:hover {
-  box-shadow: 0 0 20px rgba(255, 215, 0, 0.7);
-  transform: translateY(-2px);
-}
-
-.profile-highlight::after {
-  content: '';
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: linear-gradient(
-    to bottom right,
-    rgba(255, 255, 255, 0) 0%,
-    rgba(255, 255, 255, 0) 40%,
-    rgba(255, 255, 255, 0.3) 50%,
-    rgba(255, 255, 255, 0) 60%,
-    rgba(255, 255, 255, 0) 100%
-  );
-  transform: rotate(45deg);
-  animation: profile-shine 3.5s ease-in-out infinite;
-}
-
-@keyframes profile-shine {
-  0% {
-    top: -50%;
-    left: -50%;
-    opacity: 0;
-  }
-  25% {
-    opacity: 0.3;
-  }
-  100% {
-    top: 150%;
-    left: 150%;
-    opacity: 0;
-  }
-}
-
-.marketing-banner {
-  background: linear-gradient(to right, rgba(13, 13, 32, 0.8), rgba(30, 26, 58, 0.8));
-  padding: 1rem;
-  border-radius: 0.5rem;
-  border-left: 4px solid #FFD700;
-  margin: 1rem 0;
-  position: relative;
-  overflow: hidden;
-}
-
-.marketing-banner::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    90deg, 
-    transparent 0%, 
-    rgba(255, 215, 0, 0.1) 50%, 
-    transparent 100%
-  );
-  transform: translateX(-100%);
-  animation: banner-shine 3s infinite;
-}
-
-@keyframes banner-shine {
-  100% {
-    transform: translateX(100%);
-  }
-}
-
-/* Import specific effect stylesheets */
-@import './styles/medieval-animations.css';
-@import './styles/mockery-effects.css';
-@import './styles/fire-sale-effects.css';
-@import './styles/animations/enhanced-animations.css';

@@ -174,6 +174,160 @@ export type Database = {
           },
         ]
       }
+      milestones: {
+        Row: {
+          cosmetic_effect: string | null
+          created_at: string
+          id: string
+          reward_description: string | null
+          reward_name: string
+          reward_type: string
+          threshold: number
+        }
+        Insert: {
+          cosmetic_effect?: string | null
+          created_at?: string
+          id?: string
+          reward_description?: string | null
+          reward_name: string
+          reward_type: string
+          threshold: number
+        }
+        Update: {
+          cosmetic_effect?: string | null
+          created_at?: string
+          id?: string
+          reward_description?: string | null
+          reward_name?: string
+          reward_type?: string
+          threshold?: number
+        }
+        Relationships: []
+      }
+      referral_rewards: {
+        Row: {
+          created_at: string
+          id: string
+          referral_id: string
+          referred_id: string
+          referrer_id: string
+          reward_amount: number
+          reward_type: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          referral_id: string
+          referred_id: string
+          referrer_id: string
+          reward_amount: number
+          reward_type: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          referral_id?: string
+          referred_id?: string
+          referrer_id?: string
+          reward_amount?: number
+          reward_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "referral_rewards_referral_id_fkey"
+            columns: ["referral_id"]
+            isOneToOne: false
+            referencedRelation: "referrals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      referral_tiers: {
+        Row: {
+          bonus_multiplier: number
+          created_at: string
+          id: string
+          min_referrals: number
+          tier_name: string
+        }
+        Insert: {
+          bonus_multiplier?: number
+          created_at?: string
+          id?: string
+          min_referrals: number
+          tier_name: string
+        }
+        Update: {
+          bonus_multiplier?: number
+          created_at?: string
+          id?: string
+          min_referrals?: number
+          tier_name?: string
+        }
+        Relationships: []
+      }
+      referrals: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          first_deposit_amount: number | null
+          id: string
+          referral_code: string
+          referred_id: string
+          referrer_id: string
+          status: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          first_deposit_amount?: number | null
+          id?: string
+          referral_code: string
+          referred_id: string
+          referrer_id: string
+          status?: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          first_deposit_amount?: number | null
+          id?: string
+          referral_code?: string
+          referred_id?: string
+          referrer_id?: string
+          status?: string
+        }
+        Relationships: []
+      }
+      user_milestones: {
+        Row: {
+          achieved_at: string
+          id: string
+          milestone_id: string
+          user_id: string
+        }
+        Insert: {
+          achieved_at?: string
+          id?: string
+          milestone_id: string
+          user_id: string
+        }
+        Update: {
+          achieved_at?: string
+          id?: string
+          milestone_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_milestones_milestone_id_fkey"
+            columns: ["milestone_id"]
+            isOneToOne: false
+            referencedRelation: "milestones"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       users: {
         Row: {
           bio: string | null
@@ -311,6 +465,18 @@ export type Database = {
       }
     }
     Functions: {
+      check_and_award_milestones: {
+        Args: {
+          user_uuid: string
+        }
+        Returns: string[]
+      }
+      generate_referral_code: {
+        Args: {
+          user_uuid: string
+        }
+        Returns: string
+      }
       get_user_current_balance: {
         Args: {
           user_uuid: string
@@ -322,6 +488,17 @@ export type Database = {
           user_uuid: string
         }
         Returns: number
+      }
+      get_user_referral_tier: {
+        Args: {
+          user_uuid: string
+        }
+        Returns: {
+          tier_id: string
+          tier_name: string
+          min_referrals: number
+          bonus_multiplier: number
+        }[]
       }
       get_user_total_deposits: {
         Args: {
