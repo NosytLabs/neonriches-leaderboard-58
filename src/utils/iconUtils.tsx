@@ -6,17 +6,17 @@ import { Shield, Flame, MessageSquare, CircleDot, Sparkles } from 'lucide-react'
 // Map legacy icon names to our new IconName type
 export const iconMap: Record<string, IconName> = {
   shield: 'shield',
-  flame: 'fire',
-  messageSquare: 'message',
-  circleDot: 'info',
-  sparkles: 'star',
+  flame: 'flame',
+  messageSquare: 'message-square',
+  circleDot: 'circle',
+  sparkles: 'sparkles',
   home: 'home',
   search: 'search',
   settings: 'settings',
   user: 'user',
   crown: 'crown',
   trophy: 'trophy',
-  dollar: 'dollar',
+  dollar: 'dollar-sign',
   coins: 'coin',
   bell: 'bell',
   calendar: 'calendar',
@@ -36,17 +36,17 @@ export const iconMap: Record<string, IconName> = {
   download: 'download',
   menu: 'menu',
   check: 'check',
-  warning: 'warning',
+  warning: 'alert-triangle',
   info: 'info',
-  help: 'help',
+  help: 'help-circle',
   camera: 'camera',
   gift: 'gift',
   link: 'link',
   share: 'share',
   play: 'play',
   pause: 'pause',
-  volume: 'volume',
-  mute: 'mute',
+  volume: 'volume-2',
+  mute: 'volume-x',
 };
 
 // For backward compatibility
@@ -63,7 +63,7 @@ export const renderIcon = (name: string, props = {}) => {
     messageSquare: MessageSquare,
     circleDot: CircleDot,
     sparkles: Sparkles
-  }[name as keyof typeof iconMap];
+  }[name];
   
   if (LucideIconComponent) {
     return <LucideIconComponent {...props} />;
@@ -84,17 +84,17 @@ export const convertLucideToIcon = (lucideIcon: React.ReactNode): IconName | nul
   // Map Lucide component names to our IconNames
   const mapping: Record<string, IconName> = {
     Shield: 'shield',
-    Flame: 'fire', 
-    MessageSquare: 'message',
-    CircleDot: 'info',
-    Sparkles: 'star',
+    Flame: 'flame', 
+    MessageSquare: 'message-square',
+    CircleDot: 'circle',
+    Sparkles: 'sparkles',
     Home: 'home',
     Search: 'search',
     Settings: 'settings',
     User: 'user',
     Crown: 'crown',
     Trophy: 'trophy',
-    DollarSign: 'dollar',
+    DollarSign: 'dollar-sign',
     Coins: 'coin',
     Bell: 'bell',
     Calendar: 'calendar',
@@ -114,17 +114,17 @@ export const convertLucideToIcon = (lucideIcon: React.ReactNode): IconName | nul
     Download: 'download',
     Menu: 'menu',
     Check: 'check',
-    AlertTriangle: 'warning',
+    AlertTriangle: 'alert-triangle',
     Info: 'info',
-    HelpCircle: 'help',
+    HelpCircle: 'help-circle',
     Camera: 'camera',
     Gift: 'gift',
     Link: 'link',
     Share: 'share',
     Play: 'play',
     Pause: 'pause',
-    Volume: 'volume',
-    VolumeX: 'mute',
+    Volume: 'volume-2',
+    VolumeX: 'volume-x',
   };
   
   return mapping[componentName] || null;

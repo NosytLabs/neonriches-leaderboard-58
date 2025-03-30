@@ -27,7 +27,12 @@ export type SoundType =
   | 'parchmentUnfurl'
   | 'swordClash'
   | 'coinDrop'
-  | 'royalAnnouncement';
+  | 'royalAnnouncement'
+  | 'tomatoes'
+  | 'eggs'
+  | 'stocks'
+  | 'silence'
+  | 'courtJester';
 
 export interface SoundAsset {
   id: string;

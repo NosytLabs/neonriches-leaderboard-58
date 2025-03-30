@@ -1,7 +1,6 @@
 
 import React from 'react';
-import Icon from '@/components/ui/icon';
-import { IconName } from '@/components/ui/icon';
+import { Icon, IconName, IconSize } from '@/components/ui/icon';
 
 // This component wraps the ui/icon component for backward compatibility
 // with code that expects the old Icon component from src/components/Icon.tsx
@@ -21,7 +20,7 @@ const IconWrapper: React.FC<IconWrapperProps> = ({
   onClick
 }) => {
   // Convert size from number to the IconSize type expected by the ui/icon component
-  const getIconSize = (size: number) => {
+  const getIconSize = (size: number): IconSize => {
     if (size <= 16) return 'xs';
     if (size <= 20) return 'sm';
     if (size <= 24) return 'md';

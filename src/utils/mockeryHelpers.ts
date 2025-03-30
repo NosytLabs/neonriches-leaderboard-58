@@ -1,7 +1,7 @@
 
 import { MockeryAction, MockeryTier, ShameAction } from '@/types/mockery';
 import { Icon } from '@/components/ui/icon';
-import { CosmeticRarity, getRarityColor } from '@/types/cosmetics';
+import type { CosmeticRarity } from '@/types/cosmetics';
 import { renderIcon } from './iconUtils';
 
 // Convert mockery actions to associated costs
@@ -9,6 +9,7 @@ export const getMockeryCosts = (action: MockeryAction): number => {
   const costMap: Partial<Record<MockeryAction, number>> = {
     tomatoes: 5,
     eggs: 10,
+    putridEggs: 25,
     stocks: 25,
     silence: 50,
     courtJester: 100,
@@ -29,6 +30,7 @@ export const getMockeryDurations = (action: MockeryAction): number => {
   const durationMap: Partial<Record<MockeryAction, number>> = {
     tomatoes: 3600000, // 1 hour
     eggs: 7200000, // 2 hours
+    putridEggs: 7200000, // 2 hours
     stocks: 14400000, // 4 hours
     silence: 28800000, // 8 hours
     courtJester: 86400000, // 24 hours
@@ -46,9 +48,10 @@ export const getMockeryDurations = (action: MockeryAction): number => {
 
 // Get icons for mockery actions
 export const getMockeryIcons = (action: MockeryAction) => {
-  const iconMap: Partial<Record<MockeryAction, string>> = {
+  const iconMap: Partial<Record<MockeryAction | string, string>> = {
     tomatoes: 'warning',
     eggs: 'egg',
+    putridEggs: 'egg',
     stocks: 'lock',
     silence: 'mute',
     courtJester: 'crown',
@@ -76,6 +79,7 @@ export const getMockeryActionNames = (action: MockeryAction): string => {
   const nameMap: Partial<Record<MockeryAction, string>> = {
     tomatoes: 'Throw Tomatoes',
     eggs: 'Throw Eggs',
+    putridEggs: 'Throw Putrid Eggs',
     stocks: 'Put in Stocks',
     silence: 'Silence User',
     courtJester: 'Court Jester',
@@ -96,6 +100,7 @@ export const getMockeryDescriptions = (action: MockeryAction): string => {
   const descriptionMap: Partial<Record<MockeryAction, string>> = {
     tomatoes: 'Throw virtual tomatoes at this user for 1 hour.',
     eggs: 'Throw virtual eggs at this user for 2 hours.',
+    putridEggs: 'Throw putrid eggs at this user for 2 hours.',
     stocks: 'Put this user in virtual stocks for 4 hours.',
     silence: 'Silence this user in public chats for 8 hours.',
     courtJester: 'Make this user a court jester for 24 hours.',
@@ -116,6 +121,7 @@ export const getMockeryTier = (action: MockeryAction): MockeryTier => {
   const tierMap: Partial<Record<MockeryAction, MockeryTier>> = {
     tomatoes: 'common',
     eggs: 'common',
+    putridEggs: 'uncommon',
     stocks: 'uncommon',
     silence: 'rare',
     courtJester: 'legendary',
@@ -141,7 +147,8 @@ export const getMockeryTierColor = (tier: MockeryTier): string => {
     legendary: 'text-amber-400',
     premium: 'text-rose-400',
     basic: 'text-gray-300',
-    elite: 'text-indigo-400'
+    elite: 'text-indigo-400',
+    royal: 'text-royal-gold'
   };
   
   return colorMap[tier] || 'text-gray-400';
@@ -157,10 +164,11 @@ export const mockeryTierToRarity = (tier: MockeryTier): CosmeticRarity => {
     'legendary': 'legendary',
     'premium': 'legendary',
     'basic': 'common',
-    'elite': 'epic'
+    'elite': 'epic',
+    'royal': 'legendary'
   };
   
-  return rarityMap[tier];
+  return rarityMap[tier] || 'common';
 };
 
 // Check if a mockery action is a shame action
@@ -168,6 +176,7 @@ export const isShameAction = (action: MockeryAction): action is ShameAction => {
   const shameActions: ShameAction[] = [
     'eggs', 
     'tomatoes', 
+    'putridEggs',
     'dunce', 
     'stocks',
     'ridicule',

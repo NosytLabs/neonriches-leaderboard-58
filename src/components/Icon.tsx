@@ -1,15 +1,15 @@
 
 import React from 'react';
-import IconWrapper from '@/components/ui/icon-wrapper';
+import { IconName } from '@/components/ui/icon';
+import { Icon as UIIcon } from '@/components/ui/icon';
 
-// Types
-type IconProps = {
-  name: string;
+interface IconProps {
+  name: IconName;
   size?: number;
   color?: string;
   className?: string;
   onClick?: () => void;
-};
+}
 
 const Icon: React.FC<IconProps> = ({ 
   name, 
@@ -18,12 +18,21 @@ const Icon: React.FC<IconProps> = ({
   className, 
   onClick 
 }) => {
+  // Convert size from number to the size format expected by the UI icon
+  const getIconSize = (size: number) => {
+    if (size <= 16) return 'xs';
+    if (size <= 20) return 'sm';
+    if (size <= 24) return 'md';
+    if (size <= 32) return 'lg';
+    return 'xl';
+  };
+
   return (
-    <IconWrapper
+    <UIIcon
       name={name}
-      size={size}
-      color={color}
+      size={getIconSize(size)}
       className={className}
+      color={color}
       onClick={onClick}
     />
   );

@@ -1,14 +1,16 @@
+
 export interface User {
   id: string;
-  email: string;
+  email?: string;
   username: string;
   displayName?: string;
-  walletBalance: number;
-  rank: number;
+  walletBalance?: number;
+  rank?: number;
   previousRank?: number;
   team?: 'red' | 'green' | 'blue' | null;
-  joined: Date;
-  spentTotal: number;
+  joined?: Date;
+  joinedAt?: string;
+  spentTotal?: number;
   amountSpent?: number;
   profileImage?: string;
   bio?: string;
@@ -28,14 +30,13 @@ export interface User {
   profileClicks?: number;
   lastActive?: Date | string;
   spendStreak?: number;
-  joinedAt?: string; // Alternative to 'joined' for string representation
   purchasedFeatures?: string[];
   subscription?: UserSubscription;
   settings?: UserSettings;
   isVIP?: boolean;
   walletAddress?: string;
-  totalSpent?: number; // Adding this property to fix errors
-  spentAmount?: number; // Adding this property to fix errors
+  totalSpent?: number;
+  spentAmount?: number;
   lastMocked?: string;
   mockeryCount?: number;
   isProtected?: boolean;
@@ -118,4 +119,17 @@ export interface Team {
   description: string;
   totalSpent: number;
   icon: string;
+}
+
+export interface BoostEffect {
+  id: string;
+  name: string;
+  description: string;
+  duration: number;
+  price: number;
+  icon: string;
+  type?: string;
+  cssClass?: string;
+  minTier?: UserTier;
+  allowStacking?: boolean;
 }

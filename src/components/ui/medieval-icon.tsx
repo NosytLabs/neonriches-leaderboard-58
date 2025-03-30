@@ -10,23 +10,23 @@ const medievalIconMap: Record<MedievalIconName, IconName> = {
   sword: 'sword',
   scroll: 'scroll',
   coins: 'coin',
-  castle: 'castle',
+  castle: 'landmark',
   dragon: 'warning', // We'll use a warning icon for dragon
-  goblet: 'goblet',
-  potion: 'gift',
-  map: 'image',
+  goblet: 'wine',
+  potion: 'flask',
+  map: 'map',
   key: 'key',
   wallet: 'wallet',
   medal: 'medal',
   heart: 'heart',
   trophy: 'trophy',
   seal: 'medal',
-  sparkles: 'star',
-  flame: 'fire',
+  sparkles: 'sparkles',
+  flame: 'flame',
   sunburst: 'sun',
-  water: 'water',
+  water: 'droplets',
   user: 'user',
-  message: 'message',
+  message: 'message-square',
   gem: 'gem'
 };
 
@@ -82,13 +82,12 @@ const MedievalIcon: React.FC<MedievalIconProps> = ({
   return (
     <Icon 
       name={medievalIconMap[name]}
-      size={size as any}
+      size={size}
       className={cn(
         colorMap[color],
         animationClass,
         className
       )}
-      variant="royal"
     />
   );
 };

@@ -34,6 +34,14 @@ const MockeryActionIcon: React.FC<MockeryActionIconProps> = ({
       case 'memeFrame': return '🖼️';
       case 'roast': return '🔥';
       case 'ridicule': return '😂';
+      case 'humiliate': return '😱';
+      case 'expose': return '👁️';
+      case 'mock': return '🤡';
+      case 'shame': return '😳';
+      case 'taunt': return '👈';
+      case 'guillotine': return '🪓';
+      case 'dungeons': return '🏰';
+      case 'removal': return '🗑️';
       default: return '❓';
     }
   };
