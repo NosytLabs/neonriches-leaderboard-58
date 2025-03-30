@@ -58,7 +58,8 @@ export type UserTier =
   | 'platinum'
   | 'diamond';
 
-export type UserTeam = 'red' | 'green' | 'blue' | 'Red' | 'Green' | 'Blue';
+export type UserTeam = 'red' | 'green' | 'blue' | 'Red' | 'Green' | 'Blue' | 'none';
+export type TeamType = UserTeam;
 
 export interface AuthState {
   user: UserProfile | null;
@@ -71,3 +72,6 @@ export interface AuthAction {
   type: string;
   payload?: any;
 }
+
+// Re-export UserProfile from types
+export type { UserProfile } from '@/types/user';

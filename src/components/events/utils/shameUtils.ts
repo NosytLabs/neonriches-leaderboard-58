@@ -14,7 +14,8 @@ export type ShameAction =
   | 'ridicule' 
   | 'shame' 
   | 'smokeBomb'
-  | 'glitterBomb';
+  | 'glitterBomb'
+  | 'protection'; // Added protection to fix type errors
 
 // Shame action prices
 export const getShameActionPrice = (action: ShameAction): number => {
@@ -31,6 +32,7 @@ export const getShameActionPrice = (action: ShameAction): number => {
     case 'shame': return 75;
     case 'smokeBomb': return 75;
     case 'glitterBomb': return 50;
+    case 'protection': return 100;
     default: return 10;
   };
 };
@@ -55,21 +57,22 @@ export const getMaxDiscountPercentage = (): number => {
 };
 
 // Get shame action icon
-export const getShameActionIcon = (action: ShameAction) => {
+export const getShameActionIcon = (action: ShameAction): string => {
   switch (action) {
-    case 'tomatoes': return 'Flame';
+    case 'tomatoes': return '🍅';
     case 'eggs': 
-    case 'putridEggs': return 'Egg';
-    case 'stocks': return 'Lock';
-    case 'silence': return 'VolumeX';
+    case 'putridEggs': return '🥚';
+    case 'stocks': return '🪵';
+    case 'silence': return '🔇';
     case 'courtJester': 
-    case 'jester': return 'Crown';
-    case 'dunce': return 'Milestone';
-    case 'ridicule': return 'Target';
-    case 'shame': return 'Target';
-    case 'smokeBomb': return 'Cloud';
-    case 'glitterBomb': return 'Sparkles';
-    default: return 'Target';
+    case 'jester': return '🃏';
+    case 'dunce': return '🎓';
+    case 'ridicule': return '😂';
+    case 'shame': return '😳';
+    case 'smokeBomb': return '💨';
+    case 'glitterBomb': return '✨';
+    case 'protection': return '🛡️';
+    default: return '❓';
   }
 };
 
@@ -88,6 +91,7 @@ export const getShameActionTitle = (action: ShameAction): string => {
     case 'shame': return 'Public Shaming';
     case 'smokeBomb': return 'Royal Smoke Bomb';
     case 'glitterBomb': return 'Glitter Bomb';
+    case 'protection': return 'Royal Protection';
     default: return 'Unknown Action';
   }
 };
@@ -109,6 +113,7 @@ export const getShameActionDescription = (action: ShameAction, username?: string
     case 'shame': return `Shame ${targetText} publicly on their profile and leaderboard.`;
     case 'smokeBomb': return `Completely obscure ${targetText}'s profile with dramatic smoke for 8 hours.`;
     case 'glitterBomb': return `Cover ${targetText}'s profile with sparkling glitter for 24 hours.`;
+    case 'protection': return `Protect yourself from all mockery for 7 days.`;
     default: return 'No description available';
   }
 };
@@ -147,6 +152,7 @@ export const getActionSoundType = (action: ShameAction): SoundType => {
     case 'shame': return 'shame';
     case 'smokeBomb': return 'smoke';
     case 'glitterBomb': return 'notification';
+    case 'protection': return 'shield';
     default: return 'shame';
   }
 };
@@ -156,7 +162,8 @@ export const convertMockeryToShameAction = (action: MockeryAction): ShameAction 
   // Only convert if the action exists in ShameAction type
   const shameActions: ShameAction[] = [
     'tomatoes', 'eggs', 'putridEggs', 'stocks', 'silence', 
-    'courtJester', 'dunce', 'jester', 'ridicule', 'shame', 'smokeBomb', 'glitterBomb'
+    'courtJester', 'dunce', 'jester', 'ridicule', 'shame', 
+    'smokeBomb', 'glitterBomb', 'protection'
   ];
   
   return shameActions.includes(action as any) ? action as ShameAction : undefined;

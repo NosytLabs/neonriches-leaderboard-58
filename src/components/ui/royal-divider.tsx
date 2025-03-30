@@ -1,74 +1,73 @@
 
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { Crown } from 'lucide-react';
 
-export type RoyalDividerVariant = 'line' | 'crown' | 'simple' | 'ornate';
+export type RoyalDividerVariant = 
+  | 'line' 
+  | 'double' 
+  | 'fancy' 
+  | 'ornate' 
+  | 'simple' 
+  | 'treasure' 
+  | 'quill';
 
-export interface RoyalDividerProps {
+export type RoyalDividerColor = 
+  | 'default' 
+  | 'royal' 
+  | 'gold' 
+  | 'crimson' 
+  | 'silver' 
+  | 'navy' 
+  | 'purple';
+
+interface RoyalDividerProps {
   variant?: RoyalDividerVariant;
   label?: string;
+  color?: RoyalDividerColor;
   className?: string;
-  color?: 'gold' | 'silver' | 'default';
 }
 
 const RoyalDivider: React.FC<RoyalDividerProps> = ({
   variant = 'line',
   label,
-  className,
-  color = 'default'
+  color = 'default',
+  className
 }) => {
-  const colorClasses = {
-    gold: 'border-royal-gold text-royal-gold',
-    silver: 'border-gray-400 text-gray-400',
-    default: 'border-white/20 text-white/60'
+  const getColorClass = () => {
+    switch (color) {
+      case 'royal': return 'text-royal-purple';
+      case 'gold': return 'text-royal-gold';
+      case 'crimson': return 'text-royal-crimson';
+      case 'silver': return 'text-gray-300';
+      case 'navy': return 'text-royal-navy';
+      case 'purple': return 'text-purple-500';
+      default: return 'text-gray-500';
+    }
   };
 
-  const baseColorClass = colorClasses[color];
+  const getLineClass = () => {
+    switch (variant) {
+      case 'double': return 'h-[3px] border-t-2 border-b-[1px] border-current opacity-60';
+      case 'fancy': return 'h-[1px] bg-gradient-to-r from-transparent via-current to-transparent';
+      case 'ornate': return 'h-[4px] bg-gradient-to-r from-transparent via-current to-transparent border-t border-b border-current opacity-40';
+      case 'simple': return 'h-[1px] bg-current opacity-40';
+      case 'treasure': return 'h-[2px] bg-gradient-to-r from-royal-gold/20 via-royal-gold to-royal-gold/20 border-t border-royal-gold/40';
+      case 'quill': return 'h-[1px] bg-gradient-to-r from-royal-purple/20 via-royal-purple to-royal-purple/20';
+      default: return 'h-[1px] bg-current opacity-40';
+    }
+  };
 
   return (
-    <div className={cn('flex items-center justify-center my-4', className)}>
-      {variant === 'line' && !label && (
-        <div className={cn('w-full border-t', baseColorClass)} />
-      )}
-
-      {variant === 'simple' && !label && (
-        <div className={cn('w-full border-t', baseColorClass)} />
-      )}
-
-      {variant === 'ornate' && !label && (
-        <div className="flex items-center w-full">
-          <div className={cn('w-full border-t', baseColorClass)} />
-          <div className={cn('mx-2 text-lg', baseColorClass)}>❖</div>
-          <div className={cn('w-full border-t', baseColorClass)} />
-        </div>
-      )}
-
-      {variant === 'crown' && !label && (
-        <div className="flex items-center w-full">
-          <div className={cn('flex-1 border-t', baseColorClass)} />
-          <Crown className={cn('mx-4 h-4 w-4', color === 'gold' ? 'text-royal-gold' : color === 'silver' ? 'text-gray-400' : 'text-white/60')} />
-          <div className={cn('flex-1 border-t', baseColorClass)} />
-        </div>
-      )}
-
+    <div className={cn('flex items-center w-full', className)}>
+      <div className={cn('flex-1', getColorClass(), getLineClass())} />
+      
       {label && (
-        <div className="flex items-center w-full">
-          <div className={cn('flex-1 border-t', baseColorClass)} />
-          <div className="flex items-center mx-4">
-            {variant === 'crown' && (
-              <Crown className={cn('mr-2 h-4 w-4', color === 'gold' ? 'text-royal-gold' : color === 'silver' ? 'text-gray-400' : 'text-white/60')} />
-            )}
-            <span className={cn('text-xs font-medium', color === 'gold' ? 'text-royal-gold' : color === 'silver' ? 'text-gray-400' : 'text-white/60')}>
-              {label}
-            </span>
-            {variant === 'crown' && (
-              <Crown className={cn('ml-2 h-4 w-4', color === 'gold' ? 'text-royal-gold' : color === 'silver' ? 'text-gray-400' : 'text-white/60')} />
-            )}
-          </div>
-          <div className={cn('flex-1 border-t', baseColorClass)} />
+        <div className={cn('px-4 text-sm font-medium uppercase tracking-wider', getColorClass())}>
+          {label}
         </div>
       )}
+      
+      <div className={cn('flex-1', getColorClass(), getLineClass())} />
     </div>
   );
 };
