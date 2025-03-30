@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Scroll, DollarSign, Sparkles } from 'lucide-react';
 import { topUsers } from './data';
@@ -9,12 +8,16 @@ import RankingDisclaimer from '@/components/shared/RankingDisclaimer';
 import RoyalDivider from '@/components/ui/royal-divider';
 import { Dialog } from '@/components/ui/dialog';
 import ShameModal from './components/ShameModal';
-import { ShameAction } from './hooks/useShameEffect';
+import { ShameAction } from '@/types/mockery';
 import useNotificationSounds from '@/hooks/use-notification-sounds';
-import { hasWeeklyDiscount, getWeeklyDiscountedAction, getShameActionPrice, getDiscountedShamePrice } from './utils/shameUtils';
+import { 
+  hasWeeklyDiscount, 
+  getWeeklyDiscountedAction, 
+  getShameActionPrice, 
+  getDiscountedShamePrice 
+} from './utils/shameUtils';
 import MedievalIcon from '@/components/ui/medieval-icon';
 
-// Format user data for ShameUserCard
 const formatUserForShameCard = (user: any) => ({
   id: user.id,
   username: user.username,
@@ -25,7 +28,6 @@ const formatUserForShameCard = (user: any) => ({
 });
 
 const PublicShamingDescription = () => {
-  // Get this week's featured discount
   const discountedAction = getWeeklyDiscountedAction();
   const regularPrice = getShameActionPrice(discountedAction);
   const discountedPrice = getDiscountedShamePrice(discountedAction);
@@ -66,15 +68,12 @@ const PublicShamingFestival = () => {
   const [selectedUser, setSelectedUser] = React.useState<any>(null);
   const [selectedAction, setSelectedAction] = React.useState<ShameAction>('tomatoes');
   
-  // Get the discounted action for this week
   const discountedAction = getWeeklyDiscountedAction();
   
   const handleShameUser = (userId: number, username: string, type: ShameAction, amount: number) => {
-    // First, find the user
     const user = topUsers.find(u => u.id === userId);
     if (!user) return false;
     
-    // Set selected user and action for the modal
     setSelectedUser(user);
     setSelectedAction(type);
     setShowModal(true);
@@ -84,12 +83,10 @@ const PublicShamingFestival = () => {
   };
   
   const confirmShame = (userId: string, action: ShameAction) => {
-    // Convert userId to number since our mock data uses numbers
     const numericId = parseInt(userId, 10);
     const user = topUsers.find(u => u.id === numericId);
     
     if (user) {
-      // Apply discount if this is the weekly featured action
       const finalPrice = hasWeeklyDiscount(action) 
         ? getDiscountedShamePrice(action) 
         : getShameActionPrice(action);
@@ -203,7 +200,7 @@ const PublicShamingFestival = () => {
               <ShameUserCard
                 user={formatUserForShameCard(targetUser)}
                 isShamed={shameEffects[targetUser.id] || null}
-                isOnCooldown={shameCooldown[targetUser.id] || false}
+                isOnCooldown={!!shameCooldown[targetUser.id]}
                 shameCount={getShameCount(targetUser.id)}
                 onShame={handleShameUser}
                 featuredAction={discountedAction}
@@ -222,7 +219,6 @@ const PublicShamingFestival = () => {
           </p>
         </div>
         
-        {/* Confirmation modal */}
         <Dialog open={showModal} onOpenChange={setShowModal}>
           {selectedUser && (
             <ShameModal

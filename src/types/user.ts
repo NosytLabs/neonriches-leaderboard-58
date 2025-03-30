@@ -1,7 +1,7 @@
 
 // Basic user types
-export type UserGender = 'male' | 'female' | 'other' | 'prefer-not-to-say' | 'king' | 'queen' | 'neutral' | 'jester';
-export type UserTier = 'basic' | 'premium' | 'pro' | 'royal' | 'founder' | 'whale' | 'silver' | 'bronze' | 'gold' | 'platinum' | 'diamond' | 'dolphin' | 'shark' | 'free' | 'standard';
+export type UserGender = 'male' | 'female' | 'other' | 'prefer-not-to-say' | 'king' | 'queen' | 'neutral' | 'jester' | 'noble';
+export type UserTier = 'free' | 'basic' | 'premium' | 'pro' | 'royal' | 'founder' | 'whale' | 'silver' | 'bronze' | 'gold' | 'platinum' | 'diamond' | 'dolphin' | 'shark' | 'standard';
 export type TeamType = 'red' | 'green' | 'blue' | 'Red' | 'Green' | 'Blue' | 'none' | null;
 export type UserTeam = TeamType;
 
@@ -40,12 +40,12 @@ export interface UserCosmetics {
   fonts: string[];
   colors: string[];
   backgrounds: string[];
-  // Additional properties that weren't in the original but are used in code
+  themes?: string[];
   activeBorder?: string;
   activeColor?: string;
   activeFont?: string;
   foundersPass?: boolean;
-  themes?: string[];
+  activeEmoji?: string;
 }
 
 // User settings
@@ -64,6 +64,8 @@ export interface UserSettings {
   allowMessages?: boolean;
   showRank?: boolean;
   showEmailOnProfile?: boolean;
+  rankChangeAlerts?: boolean;
+  showTeam?: boolean;
 }
 
 // Social links
@@ -75,6 +77,7 @@ export interface SocialLink {
   isPublic: boolean;
   username?: string;
   clicks?: number;
+  title?: string;
 }
 
 // User subscription
@@ -88,6 +91,7 @@ export interface UserSubscription {
   lastPayment: string;
   status?: string;
   plan?: string;
+  currentPeriodEnd?: string;
 }
 
 // Achievement interface
@@ -120,6 +124,7 @@ export interface UserProfile {
   previousRank?: number;
   joinedAt?: Date | string;
   joinDate?: string;
+  createdAt?: string;
   team?: TeamType;
   tier?: UserTier;
   gender?: UserGender;
@@ -170,4 +175,5 @@ export interface ProfileLink {
   id: number | string;
   url: string;
   label: string;
+  title?: string;
 }

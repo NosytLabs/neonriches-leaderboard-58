@@ -167,4 +167,3 @@ export const isFireSaleMonth = (): boolean => {
 export const getFireSaleDiscountPercentage = (): number => {
   return isFireSaleMonth() ? 50 : 0; // 50% discount during fire sale months
 };
-

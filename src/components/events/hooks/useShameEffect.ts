@@ -3,7 +3,7 @@ import { useState, useCallback } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 import { MockeryAction, MockeryTier } from '@/types/mockery';
-import { ShameAction } from '@/components/events/utils/shameUtils';
+import { ShameAction } from '@/types/mockery';
 
 export interface ShameEffect {
   action: ShameAction;
@@ -131,5 +131,5 @@ export const useShameEffect = (options?: ShameEffectOptions): ShameEffectState =
   };
 };
 
-export { type ShameAction } from '@/components/events/utils/shameUtils';
+export { type ShameAction } from '@/types/mockery';
 export default useShameEffect;

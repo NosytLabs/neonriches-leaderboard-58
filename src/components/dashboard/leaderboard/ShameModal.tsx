@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -126,7 +125,7 @@ const ShameModal: React.FC<ShameModalProps> = ({
           <div className="space-y-4">
             <div className="flex justify-between">
               <Button 
-                variant="glass" 
+                variant="outline" 
                 onClick={handleClose}
               >
                 Cancel

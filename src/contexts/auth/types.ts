@@ -76,4 +76,3 @@ export interface AuthAction {
 
 // Re-export UserProfile from types
 export type { UserProfile } from '@/types/user';
-export { UserProfile } from '@/types/user';

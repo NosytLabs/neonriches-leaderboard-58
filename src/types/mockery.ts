@@ -35,7 +35,7 @@ export type MockeryAction =
   | 'target';
 
 // Define the mockery tier types
-export type MockeryTier = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary' | 'elite' | 'premium';
+export type MockeryTier = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary' | 'elite' | 'premium' | 'basic';
 
 // Define the mockery event interface
 export interface MockeryEvent {
@@ -75,10 +75,23 @@ export interface MockUser {
   lastMocked?: string;
   mockeryCount?: number;
   rank?: number;
+  team?: string;
 }
 
 // Define the public shaming actions
-export type ShameAction = 'shame' | 'protection' | 'taunt' | 'tomatoes' | 'eggs' | 'putridEggs' | 'stocks' | 'ridicule' | 'silence' | 'courtJester' | 'jester' | 'dunce';
+export type ShameAction = 
+  | 'shame' 
+  | 'protection' 
+  | 'taunt' 
+  | 'tomatoes' 
+  | 'eggs' 
+  | 'putridEggs' 
+  | 'stocks' 
+  | 'ridicule' 
+  | 'silence' 
+  | 'courtJester' 
+  | 'jester' 
+  | 'dunce';
 
 // Define extended mockery action (for compatibility)
 export type ExtendedMockeryAction = MockeryAction;
