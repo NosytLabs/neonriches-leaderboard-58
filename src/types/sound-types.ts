@@ -36,7 +36,8 @@ export type SoundType =
   | 'pageTransition'
   | 'shame'
   | 'levelUp'
-  | 'fanfare';
+  | 'fanfare'
+  | 'wish'; // Add missing sound types
 
 export interface AudioLoaderReturn {
   audio: Record<SoundType, HTMLAudioElement>;
@@ -57,7 +58,7 @@ export interface PremiumSoundPackDetails {
   previewSound: SoundType;
   sounds: SoundType[];
   features: string[];
-  tags: string[];
+  tags: string[]; // Add missing property
   isPurchased?: boolean;
   includes?: string[];
 }

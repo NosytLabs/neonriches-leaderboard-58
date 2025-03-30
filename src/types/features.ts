@@ -1,61 +1,52 @@
 
-import { UserTier } from "./user";
+import { ReactNode } from 'react';
 
+export type FeatureStatus = 'active' | 'coming_soon' | 'beta' | 'new';
+export type FeatureCategory = 'profile' | 'leaderboard' | 'team' | 'social' | 'mockery' | 'cosmetic' | 'achievement' | 'certificate' | 'marketing';
+export type FeatureTier = 'free' | 'basic' | 'premium' | 'royal' | 'all';
+
+// Define the Feature type as either a string or an object
 export type Feature = 
-  | 'analytics' 
-  | 'visibility'
-  | 'marketing'
-  | 'advertising'
-  | 'design'
-  | 'mockery'
-  | 'protection'
-  | 'shame'
-  | 'status'
-  | 'cosmetics'
-  | 'certificates'
-  | 'royal_chat'
-  | 'teams'
-  | 'challenges'
-  | 'nft'
-  | 'boost'
-  | 'marketing_dashboard'
-  | 'solana';
+  | string 
+  | {
+      id: string;
+      title: string;
+      description: string;
+      icon: ReactNode;
+      color: string;
+      bgColor: string;
+      details: string[];
+      category?: FeatureCategory;
+      status?: FeatureStatus;
+      tier?: FeatureTier;
+    };
 
 export interface FeatureInfo {
   id: string;
   name: string;
   description: string;
-  tier: UserTier;
-  price: number;
-  icon: string;
-  title: string;
+  icon: ReactNode;
+  status: FeatureStatus;
+  tier: FeatureTier;
+  category: FeatureCategory;
 }
 
-export interface SubscriptionTier {
-  id: string;
-  name: string;
-  price: number;
-  billingPeriod: 'monthly' | 'yearly';
-  features: string[];
-  description: string;
-  popularFeature?: string;
-  ctaText: string;
-  color: string;
-  discount?: number;
-  compareFeatures?: Record<string, boolean | string>;
+export interface FeatureInfoProps {
+  feature: Feature;
+  showDetails?: boolean;
 }
 
-export interface ProfileBoostData {
-  id: string;
-  userId: string;
-  type: string;
-  name: string;
-  description: string;
-  startDate?: string;
-  endDate?: string;
-  isActive: boolean;
-  duration: number;
-  price: number;
-  cssClass: string;
-  tier: string;
+export interface FeatureCardProps {
+  feature: Feature;
+  onClick?: () => void;
+  active?: boolean;
+  showBadge?: boolean;
+  showDescription?: boolean;
+  hideStatus?: boolean;
+}
+
+export interface FeatureAccessProps {
+  feature: Feature;
+  children: ReactNode;
+  fallback?: ReactNode;
 }

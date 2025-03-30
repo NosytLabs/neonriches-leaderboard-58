@@ -39,7 +39,7 @@ export type MockeryTier =
   | 'premium' 
   | 'royal' 
   | 'legendary'
-  | 'silver';
+  | 'silver'; // Add missing tier
 
 export interface MockeryInfo {
   icon: string;
@@ -72,7 +72,7 @@ export interface MockeryEvent {
   duration: number;
   isActive: boolean;
   expiresAt: number;
-  targetName?: string;
+  targetName?: string; // Add missing property
 }
 
 export interface MockedUser {
@@ -85,8 +85,11 @@ export interface MockedUser {
   team?: TeamColor;
   mockeryCount: number;
   lastMocked?: string;
-  mockedReason?: string;
+  mockedReason?: string; // Make optional
   mockedTimestamp?: string;
   mockedBy?: string;
   mockedTier?: MockeryTier;
 }
+
+// Alias for backwards compatibility
+export type MockUser = MockedUser;

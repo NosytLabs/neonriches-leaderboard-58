@@ -22,35 +22,38 @@ export const mockLeaderboardData: LeaderboardUser[] = [
     isVIP: true,
     isFounder: true,
     isVerified: true,
-    isProtected: false
+    isProtected: false,
+    avatarUrl: '/images/avatars/user1.jpg'
   },
   {
     id: '2',
     username: 'goldspender',
     displayName: 'Gold Spender',
     profileImage: '/images/avatars/user2.jpg',
-    tier: 'gold', // Changed from premium to gold
+    tier: 'gold',
     team: 'green',
     rank: 2,
     previousRank: 3,
     walletBalance: 30000,
     totalSpent: 20000,
     amountSpent: 20000,
-    isVIP: true
+    isVIP: true,
+    avatarUrl: '/images/avatars/user2.jpg'
   },
   {
     id: '3',
     username: 'royalbuyer',
     displayName: 'Royal Buyer',
     profileImage: '/images/avatars/user3.jpg',
-    tier: 'gold', // Changed from premium to gold
+    tier: 'gold',
     team: 'blue',
     rank: 3,
     previousRank: 2,
     walletBalance: 15000,
     totalSpent: 15000,
     amountSpent: 15000,
-    isVIP: true
+    isVIP: true,
+    avatarUrl: '/images/avatars/user3.jpg'
   },
   {
     id: '4',
@@ -63,7 +66,8 @@ export const mockLeaderboardData: LeaderboardUser[] = [
     previousRank: 5,
     walletBalance: 10000,
     totalSpent: 10000,
-    amountSpent: 10000
+    amountSpent: 10000,
+    avatarUrl: '/images/avatars/user4.jpg'
   },
   {
     id: '5',
@@ -76,14 +80,15 @@ export const mockLeaderboardData: LeaderboardUser[] = [
     previousRank: 4,
     walletBalance: 8000,
     totalSpent: 8000,
-    amountSpent: 8000
+    amountSpent: 8000,
+    avatarUrl: '/images/avatars/user5.jpg'
   }
 ];
 
 export const getTeamBadge = (team: TeamColor | undefined | null) => {
   if (!team) return null;
   
-  const teamColors: Record<string, { bg: string, text: string }> = {
+  const teamColors: Record<TeamColor, { bg: string, text: string }> = {
     red: { bg: 'bg-royal-crimson/20', text: 'text-royal-crimson' },
     blue: { bg: 'bg-royal-navy/20', text: 'text-royal-navy' },
     green: { bg: 'bg-emerald-600/20', text: 'text-emerald-500' },
@@ -93,7 +98,7 @@ export const getTeamBadge = (team: TeamColor | undefined | null) => {
     neutral: { bg: 'bg-gray-600/20', text: 'text-gray-400' }
   };
   
-  const teamNames: Record<string, string> = {
+  const teamNames: Record<TeamColor, string> = {
     red: 'Crimson',
     blue: 'Azure',
     green: 'Emerald',

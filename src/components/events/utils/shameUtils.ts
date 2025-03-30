@@ -1,143 +1,137 @@
 
 import { MockeryAction, ShameAction } from '@/types/mockery';
 
-/**
- * Get the icon name for a shame action
- */
-export const getShameActionIconName = (action: ShameAction): string => {
-  switch (action) {
-    case 'tomatoes': return 'tomato';
-    case 'eggs': return 'egg';
-    case 'stocks': return 'lock-square';
-    case 'dunce': return 'hat';
-    case 'jester': return 'party-popper';
-    case 'crown': return 'crown';
-    case 'taunt': return 'message-square-more';
-    case 'shame': return 'thumbs-down';
-    case 'putridEggs': return 'egg';
-    case 'silence': return 'mic-off';
-    default: return 'ban';
-  }
+// Prices for different shame actions
+const shameActionPrices: Record<ShameAction, number> = {
+  tomatoes: 0.25,
+  eggs: 0.50,
+  stocks: 1.00,
+  shame: 0.75,
+  dungeons: 1.50,
+  immune: 5.00,
+  crown: 2.00,
+  dunce: 0.75,
+  jester: 1.00,
+  clown: 1.25,
+  fool: 0.50,
+  troll: 1.50,
+  peasant: 0.75,
+  rat: 0.50,
+  ghost: 1.25,
+  skeleton: 1.50,
+  zombie: 2.00,
+  witch: 2.25,
+  monster: 2.50,
+  demon: 3.00,
+  dragon: 4.00,
+  king: 3.50,
+  queen: 3.50,
+  knight: 2.00,
+  bishop: 2.25,
+  rook: 1.75,
+  pawn: 0.50,
+  target: 0.75,
+  challenge: 5.00
 };
 
-/**
- * Get the icon for a shame action (for compatibility)
- */
-export const getShameActionIcon = getShameActionIconName;
-
-/**
- * Get the title for a shame action
- */
-export const getShameActionTitle = (action: ShameAction): string => {
-  switch (action) {
-    case 'tomatoes': return 'Throw Tomatoes';
-    case 'eggs': return 'Throw Eggs';
-    case 'stocks': return 'Put in Stocks';
-    case 'dunce': return 'Dunce Cap';
-    case 'jester': return 'Jester Hat';
-    case 'crown': return 'Mockery Crown';
-    case 'taunt': return 'Public Taunt';
-    case 'shame': return 'Public Shame';
-    case 'putridEggs': return 'Throw Putrid Eggs';
-    case 'silence': return 'Silence';
-    default: return 'Unknown Action';
-  }
-};
-
-/**
- * Get the description for a shame action
- */
-export const getShameActionDescription = (action: ShameAction): string => {
-  switch (action) {
-    case 'tomatoes': return 'Throw tomatoes at this user, leaving a temporary mark on their profile.';
-    case 'eggs': return 'Egg this user\'s profile, leaving a temporary mess.';
-    case 'stocks': return 'Lock this user in the stocks for public humiliation.';
-    case 'dunce': return 'Place a dunce cap on this user to highlight their folly.';
-    case 'jester': return 'Make this user wear a jester hat for the amusement of others.';
-    case 'crown': return 'Crown this user as the monarch of mockery.';
-    case 'taunt': return 'Display a custom taunt on this user\'s profile.';
-    case 'shame': return 'Shame this user publicly on the leaderboard.';
-    case 'putridEggs': return 'Throw rotten eggs at this user, causing a lasting stench.';
-    case 'silence': return 'Temporarily prevent this user from commenting.';
-    default: return 'Unknown action effect.';
-  }
-};
-
-/**
- * Get price for a shame action
- */
+// Get the price of a shame action
 export const getShameActionPrice = (action: ShameAction): number => {
-  switch (action) {
-    case 'tomatoes': return 5;
-    case 'eggs': return 10;
-    case 'stocks': return 25;
-    case 'dunce': return 15;
-    case 'jester': return 20;
-    case 'crown': return 50;
-    case 'taunt': return 30;
-    case 'shame': return 35;
-    case 'putridEggs': return 15;
-    case 'silence': return 40;
-    default: return 10;
-  }
+  return shameActionPrices[action] || 1.00;
 };
 
-/**
- * Check if there's a weekly discount
- */
+// Weekly discounted action
+let _weeklyDiscountedAction: ShameAction = 'stocks';
+
+// Check if an action has a weekly discount
 export const hasWeeklyDiscount = (action: ShameAction): boolean => {
-  // Implement weekly discount logic
-  const now = new Date();
-  const dayOfWeek = now.getDay();
-  
-  // Discounts on Mondays and Fridays
-  if (dayOfWeek === 1 || dayOfWeek === 5) {
-    return true;
-  }
-  
-  return false;
+  return action === _weeklyDiscountedAction;
 };
 
-/**
- * Get discounted price for a shame action
- */
-export const getDiscountedShamePrice = (action: ShameAction): number => {
-  const basePrice = getShameActionPrice(action);
-  
-  if (!hasWeeklyDiscount(action)) {
-    return basePrice;
-  }
-  
-  // 25% discount
-  return Math.round(basePrice * 0.75);
-};
-
-/**
- * Get weekly discounted action
- */
+// Get the current weekly discounted action
 export const getWeeklyDiscountedAction = (): ShameAction => {
-  const now = new Date();
-  const weekOfYear = Math.floor((now.getTime() - new Date(now.getFullYear(), 0, 0).getTime()) / (1000 * 60 * 60 * 24 * 7));
-  
-  // Rotate through actions based on week of year
-  const actions: ShameAction[] = ['tomatoes', 'eggs', 'stocks', 'dunce', 'jester', 'crown', 'taunt', 'shame', 'putridEggs', 'silence'];
-  const index = weekOfYear % actions.length;
-  
-  return actions[index];
+  return _weeklyDiscountedAction;
 };
 
-/**
- * Check if it's a fire sale month
- */
-export const isFireSaleMonth = (): boolean => {
-  const now = new Date();
-  // Fire sale in March and October
-  return now.getMonth() === 2 || now.getMonth() === 9;
+// Set a new weekly discounted action
+export const setWeeklyDiscountedAction = (action: ShameAction): void => {
+  _weeklyDiscountedAction = action;
 };
 
-/**
- * Get fire sale discount percentage
- */
-export const getFireSaleDiscountPercentage = (): number => {
-  return isFireSaleMonth() ? 40 : 0;
+// Get the discounted price (50% off)
+export const getDiscountedShamePrice = (action: ShameAction): number => {
+  return getShameActionPrice(action) * 0.5;
+};
+
+// Get the icon name for a shame action
+export const getShameActionIconName = (action: MockeryAction): string => {
+  const icons: Record<MockeryAction, string> = {
+    tomatoes: 'tomato',
+    eggs: 'egg',
+    shame: 'bell',
+    dungeons: 'lock',
+    immune: 'shield',
+    crown: 'crown',
+    stocks: 'wood',
+    dunce: 'hat',
+    jester: 'cards',
+    clown: 'clown',
+    fool: 'dizzy',
+    troll: 'troll',
+    peasant: 'farmer',
+    rat: 'rat',
+    ghost: 'ghost',
+    skeleton: 'skull',
+    zombie: 'zombie',
+    witch: 'witch',
+    monster: 'monster',
+    demon: 'devil',
+    dragon: 'dragon',
+    king: 'king',
+    queen: 'queen',
+    knight: 'chess-knight',
+    bishop: 'chess-bishop',
+    rook: 'chess-rook',
+    pawn: 'chess-pawn',
+    target: 'target',
+    challenge: 'swords'
+  };
+  
+  return icons[action] || 'help-circle';
+};
+
+// Get the icon for a shame action
+export const getShameActionIcon = (action: ShameAction): string => {
+  const icons: Record<ShameAction, string> = {
+    tomatoes: '🍅',
+    eggs: '🥚',
+    stocks: '🪵',
+    shame: '🔔',
+    dungeons: '⛓️',
+    immune: '🛡️',
+    crown: '👑',
+    dunce: '🎭',
+    jester: '🃏',
+    clown: '🤡',
+    fool: '😵',
+    troll: '👹',
+    peasant: '👨‍🌾',
+    rat: '🐀',
+    ghost: '👻',
+    skeleton: '💀',
+    zombie: '🧟',
+    witch: '🧙',
+    monster: '👾',
+    demon: '😈',
+    dragon: '🐉',
+    king: '🤴',
+    queen: '👸',
+    knight: '🐴',
+    bishop: '♗',
+    rook: '♖',
+    pawn: '♟️',
+    target: '🎯',
+    challenge: '⚔️'
+  };
+  
+  return icons[action] || '❓';
 };

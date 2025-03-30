@@ -1,176 +1,133 @@
 
-import { Event, EventDetails, EventReward, EventStats } from '@/types/events';
+import { Event, EventDetails, EventStats } from '@/types/events';
 
-// Sample top users for mocking
+export const events: Event[] = [
+  {
+    id: "1",
+    name: "Royal Tournament",
+    description: "Compete for glory and riches in our first tournament",
+    startDate: "2023-06-01",
+    endDate: "2023-06-30",
+    type: "tournament",
+    status: "completed",
+    imageUrl: "/images/events/tournament.jpg",
+    createdAt: "2023-05-15"
+  },
+  {
+    id: "2",
+    name: "Summer Auction",
+    description: "Bid on exclusive items and special privileges",
+    startDate: "2023-07-15",
+    endDate: "2023-07-18",
+    type: "auction",
+    status: "upcoming",
+    imageUrl: "/images/events/auction.jpg",
+    createdAt: "2023-06-20"
+  }
+];
+
+export const mockEventDetails: EventDetails = {
+  id: "1",
+  name: "Royal Tournament",
+  description: "Compete for glory and riches in our first tournament",
+  startDate: "2023-06-01",
+  endDate: "2023-06-30",
+  type: "tournament",
+  status: "completed",
+  imageUrl: "/images/events/tournament.jpg",
+  rules: [
+    "All participants must have a minimum rank of 10",
+    "Points are awarded based on daily contribution",
+    "The top 3 players will receive special rewards"
+  ],
+  prizes: [
+    { rank: "1st", reward: "Royal Crown Cosmetic + 1000 bonus points" },
+    { rank: "2nd", reward: "Silver Badge + 500 bonus points" },
+    { rank: "3rd", reward: "Bronze Badge + 250 bonus points" }
+  ],
+  rewards: [
+    {
+      id: "1",
+      name: "Royal Crown",
+      description: "A magnificent crown for the tournament champion",
+      type: "cosmetic",
+      tier: "legendary",
+      imageUrl: "/images/rewards/crown.png",
+      rarity: "legendary"
+    },
+    {
+      id: "2",
+      name: "Silver Badge",
+      description: "A shining silver badge for the runner-up",
+      type: "badge",
+      tier: "epic",
+      imageUrl: "/images/rewards/silver-badge.png",
+      rarity: "epic"
+    }
+  ],
+  createdAt: "2023-05-15"
+};
+
+export const eventStats: EventStats = {
+  id: "event-stats-1",
+  usersParticipating: 128,
+  totalContributed: 25600,
+  topContributor: "WhaleKing",
+  daysRemaining: 5,
+  teamsParticipating: 3,
+  leadingTeam: "Red Team",
+  prizePool: 50000,
+  totalPrizes: 5,
+  participantsCount: 128,
+  participantCount: 128,
+  totalPokes: 562,
+  totalSpent: 25600,
+  mostPoked: [
+    { username: "PoorGuy", pokeCount: 45 },
+    { username: "EasyTarget", pokeCount: 32 },
+    { username: "NewPlayer", pokeCount: 28 }
+  ]
+};
+
+// Export alias for backward compatibility
+export const eventDetails = mockEventDetails;
+
+// Export mock top users for PublicShamingFestival
 export const topUsers = [
   {
     id: 1,
-    username: "royalspender",
-    displayName: "Royal Spender",
-    profileImage: "/images/avatars/royal-spender.png",
+    username: "KingSpender",
+    displayName: "King Spender",
+    profileImage: "/images/avatars/king.jpg",
     rank: 1,
     team: "red",
-    amountSpent: 5000,
-    tier: "royal"
+    amountSpent: 10000
   },
   {
     id: 2,
-    username: "goldenmidas",
-    displayName: "Golden Midas",
-    profileImage: "/images/avatars/golden-midas.png",
+    username: "QueenSpender",
+    displayName: "Queen Spender",
+    profileImage: "/images/avatars/queen.jpg",
     rank: 2,
-    team: "gold",
-    amountSpent: 4500,
-    tier: "gold"
+    team: "blue",
+    amountSpent: 9500
   },
   {
     id: 3,
-    username: "silverstreak",
-    displayName: "Silver Streak",
-    profileImage: "/images/avatars/silver-streak.png",
+    username: "DukeWallet",
+    displayName: "Duke Wallet",
+    profileImage: "/images/avatars/duke.jpg",
     rank: 3,
-    team: "blue",
-    amountSpent: 3800,
-    tier: "silver"
+    team: "green",
+    amountSpent: 8800
   },
   {
     id: 4,
-    username: "bronzebearer",
-    displayName: "Bronze Bearer",
-    profileImage: "/images/avatars/bronze-bearer.png",
+    username: "CountMoney",
+    displayName: "Count Money",
+    profileImage: "/images/avatars/count.jpg",
     rank: 4,
-    team: "green",
-    amountSpent: 2500,
-    tier: "bronze"
+    team: "gold",
+    amountSpent: 7200
   }
 ];
-
-// Sample events
-export const upcomingEvents: Event[] = [
-  {
-    id: "event-1",
-    name: "Royal Tournament",
-    description: "Compete for the title of Royal Champion",
-    startDate: "2025-05-01T00:00:00Z",
-    endDate: "2025-05-07T00:00:00Z",
-    type: "tournament",
-    status: "upcoming",
-    createdAt: "2025-04-15T00:00:00Z"
-  },
-  {
-    id: "event-2",
-    name: "Mockery Festival",
-    description: "A week of royal mockery and satire",
-    startDate: "2025-05-10T00:00:00Z",
-    endDate: "2025-05-17T00:00:00Z",
-    type: "mockery",
-    status: "upcoming",
-    createdAt: "2025-04-20T00:00:00Z"
-  },
-  {
-    id: "event-3",
-    name: "Treasure Hunt",
-    description: "Find the hidden royal treasures",
-    startDate: "2025-05-20T00:00:00Z",
-    endDate: "2025-05-27T00:00:00Z",
-    type: "treasure",
-    status: "upcoming",
-    createdAt: "2025-04-25T00:00:00Z"
-  }
-];
-
-// Sample active events
-export const activeEvents: Event[] = [
-  {
-    id: "event-4",
-    name: "Public Shaming",
-    description: "Shame others in a medieval-style spectacle",
-    startDate: "2025-04-25T00:00:00Z",
-    endDate: "2025-05-05T00:00:00Z",
-    type: "shame",
-    status: "active"
-  }
-];
-
-// Sample event rewards
-export const eventRewards: EventReward[] = [
-  {
-    id: "reward-1",
-    name: "Royal Crown",
-    description: "A crown fit for royalty",
-    type: "cosmetic",
-    tier: "legendary",
-    imageUrl: "/images/rewards/royal-crown.png"
-  },
-  {
-    id: "reward-2",
-    name: "Gold Scepter",
-    description: "A symbol of royal power",
-    type: "cosmetic",
-    tier: "epic",
-    imageUrl: "/images/rewards/gold-scepter.png"
-  }
-];
-
-// Sample event details
-export const mockEventDetails: EventDetails = {
-  id: "event-1",
-  name: "Royal Tournament",
-  description: "Compete for the title of Royal Champion",
-  startDate: "2025-05-01T00:00:00Z",
-  endDate: "2025-05-07T00:00:00Z",
-  type: "tournament",
-  status: "upcoming",
-  rules: [
-    "Each participant must spend at least $10 to enter",
-    "The winner is determined by total amount spent during the event",
-    "All transactions are final"
-  ],
-  prizes: [
-    { rank: "1st", reward: "Royal Crown + 100 Bonus Points" },
-    { rank: "2nd", reward: "Gold Scepter + 50 Bonus Points" },
-    { rank: "3rd", reward: "Silver Chalice + 25 Bonus Points" }
-  ],
-  rewards: eventRewards,
-  createdAt: "2025-04-15T00:00:00Z"
-};
-
-// Sample event stats
-export const mockEventStats: EventStats = {
-  id: "event-stats-1",
-  usersParticipating: 150,
-  totalContributed: 25000,
-  topContributor: "royalspender",
-  daysRemaining: 7,
-  teamsParticipating: 4,
-  leadingTeam: "red",
-  prizePool: 10000,
-  totalPokes: 325,
-  participantsCount: 150,
-  totalSpent: 25000,
-  mostPoked: [
-    { username: "bronzebearer", pokeCount: 42 },
-    { username: "silverstreak", pokeCount: 38 },
-    { username: "goldenmidas", pokeCount: 25 }
-  ]
-};
-
-// Sample mockery event stats
-export const mockeryEventStats: EventStats = {
-  id: "event-stats-2",
-  usersParticipating: 200,
-  totalContributed: 15000,
-  topContributor: "goldenmidas",
-  daysRemaining: 5,
-  teamsParticipating: 4,
-  leadingTeam: "gold",
-  prizePool: 7500,
-  totalPokes: 458,
-  participantsCount: 200,
-  totalSpent: 15000,
-  mostPoked: [
-    { username: "royalspender", pokeCount: 56 },
-    { username: "bronzebearer", pokeCount: 41 },
-    { username: "silverstreak", pokeCount: 33 }
-  ]
-};

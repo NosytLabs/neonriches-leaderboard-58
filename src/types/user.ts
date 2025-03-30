@@ -12,7 +12,8 @@ export type UserTier =
   | 'pro'
   | 'free'
   | 'vip'
-  | 'diamond';
+  | 'diamond'
+  | 'whale'; // Add missing tier
 
 // Define the team colors available
 export type TeamColor = 
@@ -84,42 +85,6 @@ export interface UserSettings {
   showBadges?: boolean;
 }
 
-export interface UserCosmeticState {
-  border: string;
-  color: string;
-  font: string;
-  emoji: string;
-  title: string;
-  background: string;
-  effect: string;
-  badge: string;
-  theme: string;
-  unlockedBorders: string[];
-  unlockedColors: string[];
-  unlockedFonts: string[];
-  unlockedEmojis: string[];
-  unlockedTitles: string[];
-  unlockedBackgrounds: string[];
-  unlockedEffects: string[];
-  unlockedBadges: string[];
-  unlockedThemes: string[];
-  
-  // For backward compatibility
-  borders?: string[];
-  colors?: string[];
-  fonts?: string[];
-  emojis?: string[];
-  titles?: string[];
-  backgrounds?: string[];
-  effects?: string[];
-  badges?: string[];
-  themes?: string[];
-  foundersPass?: boolean;
-}
-
-// For backward compatibility
-export type UserCosmetics = UserCosmeticState;
-
 export interface CertificateNFT {
   mintAddress: string;
   mintedAt?: string;
@@ -140,6 +105,7 @@ export interface UserSubscription {
   price?: number;
   interval?: 'monthly' | 'yearly' | 'quarterly';
   features?: string[];
+  status?: string; // Add missing property
 }
 
 export interface ProfileBoost {
@@ -158,6 +124,41 @@ export interface ProfileBoost {
   level?: number;
   strength?: number;
   appliedBy?: string;
+  effectId?: string; // Add missing property
+}
+
+export type BoostEffectType = 
+  | 'aura' 
+  | 'halo' 
+  | 'shine' 
+  | 'pulse' 
+  | 'border' 
+  | 'background'
+  | 'crown'  // Add missing types
+  | 'sparkle'
+  | 'glow';
+
+export interface ProfileBoostData {
+  id: string;
+  name: string;
+  description: string;
+  duration: number;
+  price: number;
+  type: BoostEffectType;
+  tier: string;
+  icon: string;
+  startDate?: string; // Add missing property
+}
+
+export interface BoostEffect {
+  id: string;
+  name: string;
+  description: string;
+  duration: number;
+  price: number;
+  type: string;
+  tier: string;
+  icon: string;
 }
 
 export interface UserProfile {
@@ -206,6 +207,7 @@ export interface UserProfile {
   walletAddress?: string;
   spentAmount?: number;
   userTeam?: UserTeam;
+  lastLogin?: string; // Add missing property
 }
 
 export interface UserTeam {

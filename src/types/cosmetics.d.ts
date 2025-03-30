@@ -17,14 +17,14 @@ export interface CosmeticItem {
   type: string;
   rarity: string;
   category: CosmeticCategory;
-  imageSrc?: string;
+  imageSrc?: string; // Add missing property
   icon?: string;
   cssClass?: string;
   preview?: string;
   unlockCondition?: string;
-  cost?: number;
+  cost?: number; // Add missing property
   tags?: string[];
-  image?: string;
+  image?: string; // Add missing property
 }
 
 export interface UserCosmeticState {
@@ -59,3 +59,6 @@ export interface UserCosmeticState {
   themes?: string[];
   foundersPass?: boolean;
 }
+
+// Export UserCosmetics as an alias for backward compatibility
+export type UserCosmetics = UserCosmeticState;
