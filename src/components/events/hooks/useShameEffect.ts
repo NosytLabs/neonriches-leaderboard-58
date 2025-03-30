@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useCallback } from 'react';
 import { AnimationConfig } from '@/types/animations';
 import { useSound } from '@/hooks/sounds/use-sound';

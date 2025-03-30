@@ -30,6 +30,6 @@ export interface ProfileBoost {
   type?: string;
   strength?: number;
   appliedBy?: string;
-  startTime?: string;
-  endTime?: string;
+  startTime?: string | Date;
+  endTime?: string | Date;
 }

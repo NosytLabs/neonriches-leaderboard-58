@@ -6,16 +6,6 @@ export interface AnimationConfig {
   overlayImage?: string;
   containerImage?: string;
   accessoryImage?: string;
-  position?: 'top' | 'bottom' | 'left' | 'right';
+  position?: 'top' | 'bottom' | 'left' | 'right' | 'center';
   duration: number;
-}
-
-export interface AnimationOptions {
-  duration?: number;
-  delay?: number;
-  easing?: string;
-  once?: boolean;
-  mirror?: boolean;
-  offset?: number;
-  anchorPlacement?: string;
 }

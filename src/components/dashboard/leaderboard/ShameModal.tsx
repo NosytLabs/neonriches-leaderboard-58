@@ -7,6 +7,23 @@ import { Scroll, Crown, Target, Shield } from 'lucide-react';
 import useNotificationSounds from '@/hooks/use-notification-sounds';
 import RoyalDivider from '@/components/ui/royal-divider';
 
+interface PaymentModalProps {
+  title: string;
+  description: string;
+  amount: number;
+  onSuccess: () => void; 
+  trigger: React.ReactNode;
+}
+
+// Create the PaymentModal component with the required prop
+const PaymentModal = ({ title, description, amount, onSuccess, trigger }: PaymentModalProps) => {
+  return (
+    <Button onClick={() => {}}>
+      {trigger}
+    </Button>
+  );
+};
+
 interface ShameModalProps {
   selectedUser: LeaderboardUser;
   shameAmount: number;
@@ -136,6 +153,7 @@ const ShameModal: React.FC<ShameModalProps> = ({
                 description={getShameDescription()}
                 amount={shameAmount}
                 onSuccess={handleConfirm}
+                trigger={<Button>Open Payment</Button>}
               />
             </div>
           </div>

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -45,53 +44,67 @@ const mockDeposits = [
   { id: '7', amount: 225, date: '2023-04-18T00:00:00Z' },
 ];
 
-// Mock achievements
-const mockAchievements = [
+// Define an Achievement type with specific type values
+type AchievementType = 'royal' | 'deposit' | 'rank' | 'milestone' | 'streak';
+
+interface Achievement {
+  id: string;
+  name: string;
+  description: string;
+  type: AchievementType; // Now using the specific union type
+  icon: string;
+  tier: string;
+  unlockedAt: string;
+  amountSpent?: number;
+}
+
+// Use type casting to convert string to AchievementType
+const mockAchievements: Achievement[] = [
   {
-    id: '1',
-    name: 'Noble Beginner',
-    description: 'Joined the royal court and made your first deposit',
-    type: 'milestone',
-    icon: 'crown',
-    tier: 'bronze',
-    unlockedAt: '2023-03-10T00:00:00Z',
-    amountSpent: 100
+    id: "1",
+    name: "First Royal Contribution",
+    description: "Made your first contribution to the royal treasury",
+    type: "deposit" as AchievementType, // Cast to the specific type
+    icon: "coin-stack",
+    tier: "bronze",
+    unlockedAt: "2023-01-15",
+    amountSpent: 50
   },
   {
-    id: '2',
-    name: 'Rising Star',
-    description: 'Reach $500 in total contributions',
-    type: 'milestone',
-    icon: 'star',
-    tier: 'silver',
-    unlockedAt: '2023-03-30T00:00:00Z',
+    id: "2",
+    name: "Rising Star",
+    description: "Reach $500 in total contributions",
+    type: "milestone" as AchievementType,
+    icon: "star",
+    tier: "silver",
+    unlockedAt: "2023-03-30T00:00:00Z",
     amountSpent: 500
   },
   {
-    id: '3',
-    name: 'Consistent Patron',
-    description: 'Maintain a 7-day deposit streak',
-    type: 'streak',
-    icon: 'zap',
-    tier: 'gold',
-    unlockedAt: '2023-04-12T00:00:00Z'
+    id: "3",
+    name: "Consistent Patron",
+    description: "Maintain a 7-day deposit streak",
+    type: "streak" as AchievementType,
+    icon: "zap",
+    tier: "gold",
+    unlockedAt: "2023-04-12T00:00:00Z"
   },
   {
-    id: '4',
-    name: 'Digital Aristocrat',
-    description: 'Reach $2,000 in total contributions',
-    type: 'milestone',
-    icon: 'award',
-    tier: 'platinum',
+    id: "4",
+    name: "Digital Aristocrat",
+    description: "Reach $2,000 in total contributions",
+    type: "milestone" as AchievementType,
+    icon: "award",
+    tier: "platinum",
     amountSpent: 2000
   },
   {
-    id: '5',
-    name: 'Royal Whale',
-    description: 'Reach $5,000 in total contributions',
-    type: 'milestone',
-    icon: 'trophy',
-    tier: 'diamond',
+    id: "5",
+    name: "Royal Whale",
+    description: "Reach $5,000 in total contributions",
+    type: "milestone" as AchievementType,
+    icon: "trophy",
+    tier: "diamond",
     amountSpent: 5000
   },
 ];

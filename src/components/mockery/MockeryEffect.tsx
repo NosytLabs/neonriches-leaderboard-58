@@ -1,9 +1,8 @@
-
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MockeryAction } from '@/types/mockery';
 import { cn } from '@/lib/utils';
-import { MOCKERY_DESCRIPTIONS } from '@/utils/mockeryUtils';
+import { getMockeryDescription } from '@/utils/mockeryUtils';
 
 interface MockeryEffectProps {
   username: string;
@@ -21,7 +20,6 @@ const MockeryEffect: React.FC<MockeryEffectProps> = ({
   const [particles, setParticles] = useState<Array<{id: number, x: number, y: number, rotation: number, velocity: number, delay: number}>>([]);
   const [showImpactEffect, setShowImpactEffect] = useState(false);
   
-  // Effect content based on mockery type
   const getEffectContent = () => {
     switch (action) {
       case 'tomatoes':
@@ -95,11 +93,9 @@ const MockeryEffect: React.FC<MockeryEffectProps> = ({
   useEffect(() => {
     if (!isActive) return;
     
-    // Create particles
     let particleCount = 20;
     let particleType = 'standard';
     
-    // Customize particles based on action
     switch (action) {
       case 'tomatoes':
         particleCount = 25;
@@ -127,20 +123,17 @@ const MockeryEffect: React.FC<MockeryEffectProps> = ({
       x: action === 'silence' ? 50 + (Math.random() * 30 - 15) : Math.random() * 100,
       y: action === 'silence' ? 50 + (Math.random() * 30 - 15) : Math.random() * 100,
       rotation: Math.random() * 360,
-      velocity: 1 + Math.random() * 2, // Different speeds
-      delay: Math.random() * 0.5 // Staggered start
+      velocity: 1 + Math.random() * 2,
+      delay: Math.random() * 0.5
     }));
     
     setParticles(newParticles);
     
-    // Show impact effect after a delay
     setTimeout(() => {
       setShowImpactEffect(true);
       
-      // Play sound effect if Web Audio API is available
       if (typeof window !== 'undefined' && 'AudioContext' in window) {
         try {
-          // This would be replaced with actual sound effects in a real implementation
           console.log(`Playing ${effectContent.sound} sound effect`);
         } catch (error) {
           console.error('Error playing sound effect:', error);
@@ -148,7 +141,6 @@ const MockeryEffect: React.FC<MockeryEffectProps> = ({
       }
     }, 500);
     
-    // Clean up effect after animation
     const timer = setTimeout(() => {
       setParticles([]);
       setShowImpactEffect(false);
@@ -158,7 +150,6 @@ const MockeryEffect: React.FC<MockeryEffectProps> = ({
     return () => clearTimeout(timer);
   }, [isActive, action, onComplete, effectContent.sound]);
   
-  // Special rendering for smoke bomb effect
   if (isActive && action === 'smokeBomb') {
     return (
       <AnimatePresence>
@@ -197,11 +188,10 @@ const MockeryEffect: React.FC<MockeryEffectProps> = ({
               animate={{ opacity: 1 }}
               transition={{ delay: 0.6 }}
             >
-              {MOCKERY_DESCRIPTIONS.smokeBomb}
+              {getMockeryDescription(action)}
             </motion.div>
           </motion.div>
           
-          {/* Smoke particles */}
           {particles.map((particle) => (
             <motion.div
               key={particle.id}
@@ -260,7 +250,6 @@ const MockeryEffect: React.FC<MockeryEffectProps> = ({
             exit={{ opacity: 0 }}
           />
           
-          {/* Main effect */}
           <motion.div 
             className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center"
             initial={{ scale: 0.5, opacity: 0, rotateX: -20 }}
@@ -288,11 +277,10 @@ const MockeryEffect: React.FC<MockeryEffectProps> = ({
               animate={{ opacity: 1 }}
               transition={{ delay: 0.6 }}
             >
-              {MOCKERY_DESCRIPTIONS[action]}
+              {getMockeryDescription(action)}
             </motion.div>
           </motion.div>
           
-          {/* Impact effect */}
           {showImpactEffect && (
             <motion.div
               className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2"
@@ -302,7 +290,6 @@ const MockeryEffect: React.FC<MockeryEffectProps> = ({
               transition={{ duration: 0.5 }}
             >
               <div className={`impact-${effectContent.impact} w-40 h-40 rounded-full flex items-center justify-center`}>
-                {/* Different impact effects based on mockery type */}
                 {action === 'tomatoes' && (
                   <div className="w-full h-full bg-red-500/30 rounded-full" 
                     style={{
@@ -311,7 +298,7 @@ const MockeryEffect: React.FC<MockeryEffectProps> = ({
                     }}
                   />
                 )}
-                {action === 'putridEggs' && ( // Renamed from eggs
+                {action === 'putridEggs' && (
                   <div className="w-full h-full bg-yellow-200/30 rounded-full"
                     style={{
                       boxShadow: '0 0 30px rgba(254, 240, 138, 0.5)',
@@ -331,7 +318,6 @@ const MockeryEffect: React.FC<MockeryEffectProps> = ({
             </motion.div>
           )}
           
-          {/* Particles */}
           {particles.map((particle) => (
             <motion.div
               key={particle.id}
@@ -363,7 +349,6 @@ const MockeryEffect: React.FC<MockeryEffectProps> = ({
             </motion.div>
           ))}
           
-          {/* Screen shake for dramatic effects */}
           {(action === 'tomatoes' || action === 'putridEggs' || action === 'stocks') && (
             <motion.div 
               className="absolute inset-0 pointer-events-none"

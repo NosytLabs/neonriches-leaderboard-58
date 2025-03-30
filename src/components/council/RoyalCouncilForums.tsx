@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -28,7 +27,6 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { UserProfile } from '@/types/user';
 import Link from '@/components/ui/link';
 
-// Helper functions for badge formatting
 const getPostStatusBadge = (status: string) => {
   switch (status) {
     case 'open':
@@ -86,78 +84,70 @@ interface ForumComment {
   flags: number;
 }
 
-// Create simplified mock data for testing
-const mockUser: UserProfile = {
-  id: 'user-1',
-  username: 'RoyalKnight',
-  displayName: 'Sir Reginald',
-  profileImage: 'https://i.pravatar.cc/150?img=7',
-  email: 'reginald@example.com',
-  joinedAt: new Date().toISOString(),
-  tier: 'royal',
-  team: 'red',
-  rank: 15,
-  walletBalance: 500,
-  amountSpent: 2500,
-  totalSpent: 2500,
-  followers: 120,
-  following: 85,
-  gender: 'male',
-  profileViews: 520,
-  profileClicks: 75,
-  activeTitle: 'Knight of the Realm',
-  cosmetics: {
-    borders: ['gold-border', 'silver-border'],
-    colors: ['royal-blue', 'crimson-red'],
-    fonts: ['royal-font', 'classic-font'],
-    emojis: ['crown', 'sword'],
-    titles: ['Knight of the Realm', 'Lord of the Manor'],
-    backgrounds: ['castle-bg', 'forest-bg'],
-    effects: ['sparkles', 'fireflies'],
-    badges: ['vip-badge', 'loyal-badge'],
-  },
-  spendStreak: 22,
-  subscription: {
-    id: 'sub-123',
+const prepareUserForProfile = (): UserProfile => {
+  return {
+    id: '1',
+    username: 'royalUser',
+    displayName: 'Royal User',
+    email: 'user@example.com',
+    profileImage: '/images/avatar.png',
+    bio: 'Royal user with premium subscription',
+    walletBalance: 2500,
+    amountSpent: 15000,
+    totalSpent: 15000,
+    rank: 3,
+    previousRank: 5,
     tier: 'royal',
-    startDate: new Date().toISOString(),
-    endDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
-    status: 'active',
-    cancelAtPeriodEnd: false,
-    price: 29.99,
-    interval: 'month',
-  },
-  socialLinks: [
-    { 
-      id: '1',
-      platform: 'twitter',
-      url: 'https://twitter.com/RoyalKnight',
-      username: 'RoyalKnight',
-      isVerified: false,
-      isPublic: true
+    team: 'red',
+    gender: 'king',
+    joinedAt: new Date().toISOString(),
+    subscription: {
+      id: "sub_123456",
+      tier: "royal",
+      startDate: "2023-01-01",
+      endDate: "2023-12-31",
+      status: "active",
+      cancelAtPeriodEnd: false,
+      currentPeriodEnd: "2023-12-31",
+      price: 99.99,
+      interval: "month",
+      plan: "Royal Throne"
     },
-    { 
-      id: '2',
-      platform: 'instagram',
-      url: 'https://instagram.com/RoyalKnight',
-      username: 'RoyalKnight',
-      isVerified: false,
-      isPublic: true
-    }
-  ],
-  profileBoosts: [
-    { 
-      id: 'boost-1',
-      userId: 'user-1',
-      effectId: 'profile-boost',
-      duration: 7 * 24 * 60 * 60 * 1000,
-      level: 3,
-      isActive: true,
-      type: 'profile',
-      appliedBy: 'system'
-    }
-  ],
+    socialLinks: [
+      {
+        id: "1",
+        platform: "twitter",
+        url: "https://twitter.com/royalUser",
+        username: "royalUser",
+        isVerified: true,
+        isPublic: true
+      },
+      {
+        id: "2",
+        platform: "instagram",
+        url: "https://instagram.com/royalUser",
+        username: "royalUser",
+        isVerified: true,
+        isPublic: true
+      }
+    ],
+    profileBoosts: [
+      {
+        id: "boost1",
+        userId: "1", 
+        effectId: "effect1",
+        duration: 7 * 24 * 3600,
+        level: 2,
+        isActive: true,
+        type: "visibility",
+        strength: 1.5,
+        appliedBy: "system"
+      }
+    ]
+  };
 };
+
+const mockUser: UserProfile = prepareUserForProfile();
 
 const mockPosts: ForumPost[] = [
   {

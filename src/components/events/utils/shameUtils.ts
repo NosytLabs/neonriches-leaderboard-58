@@ -1,11 +1,7 @@
-
 import { ShameAction } from '@/types/mockery';
 
 // Define the shame action types
 export type ShameActionType = 'shame' | 'protection' | 'taunt';
-
-// Export the shame action types
-export { type ShameAction };
 
 // Define shame action prices
 export const getShameActionPrice = (action: ShameAction): number => {

@@ -1,10 +1,10 @@
 
-import { MockeryAction, MockeryTier } from '@/types/mockery';
+import { MockeryAction, MockeryTier, ShameAction } from '@/types/mockery';
 import { CosmeticRarity } from '@/types/cosmetics';
 
 // Utility functions for mockery
 export const getMockeryName = (action: MockeryAction): string => {
-  const MOCKERY_NAMES: Record<MockeryAction, string> = {
+  const MOCKERY_NAMES: Record<string, string> = {
     'tomatoes': 'Rotten Tomatoes',
     'eggs': 'Rotten Eggs',
     'putridEggs': 'Putrid Eggs',
@@ -43,7 +43,7 @@ export const getMockeryName = (action: MockeryAction): string => {
 export const getMockeryDescription = (action: MockeryAction, targetUsername?: string): string => {
   const target = targetUsername || "your target";
   
-  const MOCKERY_DESCRIPTIONS: Record<MockeryAction, string> = {
+  const MOCKERY_DESCRIPTIONS: Record<string, string> = {
     'tomatoes': `Splatter ${target} with rotten tomatoes, leaving them marked with shame for 24 hours.`,
     'eggs': `Pelt ${target} with eggs, causing them embarrassment for 12 hours.`,
     'putridEggs': `Bombard ${target} with putrid eggs that leave a lingering stench for 48 hours.`,
@@ -80,7 +80,7 @@ export const getMockeryDescription = (action: MockeryAction, targetUsername?: st
 };
 
 export const getMockeryCost = (action: MockeryAction): number => {
-  const MOCKERY_COSTS: Record<MockeryAction, number> = {
+  const MOCKERY_COSTS: Record<string, number> = {
     'tomatoes': 5,
     'eggs': 10,
     'putridEggs': 25,
@@ -117,7 +117,7 @@ export const getMockeryCost = (action: MockeryAction): number => {
 };
 
 export const getMockeryCooldown = (action: MockeryAction): number => {
-  const MOCKERY_COOLDOWNS: Record<MockeryAction, number> = {
+  const MOCKERY_COOLDOWNS: Record<string, number> = {
     'tomatoes': 12 * 60 * 60 * 1000, // 12 hours
     'eggs': 6 * 60 * 60 * 1000, // 6 hours
     'putridEggs': 24 * 60 * 60 * 1000, // 24 hours
@@ -153,30 +153,28 @@ export const getMockeryCooldown = (action: MockeryAction): number => {
   return MOCKERY_COOLDOWNS[action] || 24 * 60 * 60 * 1000; // 24 hours default
 };
 
-export const getMockeryTier = (action: MockeryAction): MockeryTier => {
+export const getMockeryTierString = (action: MockeryAction): MockeryTier => {
+  // Get the appropriate tier as a string
   if (action === 'tomatoes' || action === 'eggs' || action === 'smokeBomb' || 
-      action === 'target' || action === 'jest' || action === 'taunt') {
+      action === 'target' || action === 'jest') {
     return 'basic';
   }
   
   if (action === 'putridEggs' || action === 'dunce' || action === 'glitterBomb' || 
-      action === 'challenge' || action === 'jester' || action === 'mock' || 
-      action === 'roast' || action === 'shame') {
+      action === 'challenge') {
     return 'premium';
   }
   
   if (action === 'stocks' || action === 'silence' || action === 'crown' || 
-      action === 'royalPie' || action === 'memeFrame' || action === 'protection' || 
-      action === 'ridicule' || action === 'expose' || action === 'removal') {
+      action === 'protection') {
     return 'royal';
   }
   
-  if (action === 'courtJester' || action === 'defeat' || action === 'jokeCrown' || 
-      action === 'humiliate' || action === 'dungeons') {
+  if (action === 'courtJester' || action === 'defeat') {
     return 'premium';
   }
   
-  if (action === 'immune' || action === 'guillotine') {
+  if (action === 'immune') {
     return 'royal';
   }
   
@@ -243,7 +241,6 @@ export const getMockeryDuration = (action: MockeryAction): number => {
 export const getMockeryActionIconColor = (action: MockeryAction): string => {
   switch (action) {
     case 'tomatoes':
-    case 'shame':
       return 'text-red-500';
     case 'protection':
     case 'immune':
@@ -251,7 +248,6 @@ export const getMockeryActionIconColor = (action: MockeryAction): string => {
     case 'crown':
       return 'text-yellow-400';
     case 'target':
-    case 'taunt':
       return 'text-orange-400';
     default:
       return 'text-gray-400';
@@ -269,9 +265,14 @@ export const getMockeryActionIcon = (action: MockeryAction): string => {
     case 'smokeBomb': return '💨';
     case 'protection': return '🛡️';
     case 'immune': return '👑';
-    case 'jester': return '🎭';
+    case 'jest': return '🎭';
     case 'dunce': return '📝';
     case 'glitterBomb': return '✨';
+    case 'target': return '🎯';
+    case 'challenge': return '⚔️';
+    case 'crown': return '👑';
+    case 'defeat': return '😵';
+    case 'jester': return '🎭';
     case 'royalPie': return '🥧';
     case 'jokeCrown': return '👑';
     case 'memeFrame': return '🖼️';

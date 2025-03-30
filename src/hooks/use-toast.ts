@@ -59,10 +59,17 @@ export const useToast = () => {
     } as any);
   };
 
+  const default_toast = (props: Omit<ExtendedToastProps, 'variant'>) => {
+    return originalToast({
+      ...props,
+      variant: 'default',
+    } as any);
+  };
+
   return {
     ...rest,
     toast,
-    default: toast,
+    default: default_toast,
     success,
     error,
     warning,

@@ -102,17 +102,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  // Award cosmetic items to user
+  const awardCosmetic = async (category: string, itemId: string, notify = true): Promise<boolean> => {
+    console.log(`Awarding cosmetic: ${category} - ${itemId}, notify: ${notify}`);
+    return true;
+  };
+
   // Alias methods for backward compatibility
   const signIn = login;
   const signOut = logout;
   const updateUserProfile = async (updates: Partial<UserProfile>): Promise<void> => {
     await updateUser(updates);
-  };
-
-  // Award cosmetic items to user
-  const awardCosmetic = async (category: string, itemId: string, notify = true): Promise<boolean> => {
-    console.log(`Awarding cosmetic: ${category} - ${itemId}, notify: ${notify}`);
-    return true;
   };
 
   return (
@@ -125,9 +125,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         logout,
         register,
         updateUserProfile,
+        awardCosmetic,
         signIn,
         signOut,
-        awardCosmetic,
       }}
     >
       {children}

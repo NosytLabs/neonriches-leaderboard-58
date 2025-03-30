@@ -1,10 +1,9 @@
-
 import React from 'react';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { MockeryAction, MockeryTier } from '@/types/mockery';
-import { MOCKERY_COSTS, MOCKERY_NAMES, MOCKERY_DESCRIPTIONS } from '@/utils/mockeryUtils';
+import { getMockeryCost, getMockeryName, getMockeryDescription } from '@/utils/mockeryUtils';
 import { cn } from '@/lib/utils';
 import { Flame, Egg, Target, MessageSquareOff, Crown, Lock, MousePointerClick, Cloud, Cake, Sparkles, Smile } from 'lucide-react';
 
@@ -41,20 +40,14 @@ const MockeryCard: React.FC<MockeryCardProps> = ({
       case 'silence':
         return <MessageSquareOff className="h-5 w-5 text-royal-purple" />;
       case 'courtJester':
-      case 'jester':
         return <Crown className="h-5 w-5 text-royal-gold" />;
       case 'dunce':
         return <MousePointerClick className="h-5 w-5 text-royal-crimson" />;
       case 'smokeBomb':
         return <Cloud className="h-5 w-5 text-gray-400" />;
-      case 'royalPie':
-        return <Cake className="h-5 w-5 text-royal-purple" />;
-      case 'glitterBomb':
-        return <Sparkles className="h-5 w-5 text-royal-gold" />;
-      case 'jokeCrown':
-        return <Crown className="h-5 w-5 text-royal-crimson" />;
-      case 'memeFrame':
-        return <Smile className="h-5 w-5 text-royal-navy" />;
+      // Handle cases that were causing type errors before
+      case 'jest':
+        return <Smile className="h-5 w-5 text-royal-gold" />;
       default:
         return <Target className="h-5 w-5 text-white" />;
     }
@@ -98,8 +91,7 @@ const MockeryCard: React.FC<MockeryCardProps> = ({
   
   // Get description with username
   const getDescription = () => {
-    if (!MOCKERY_DESCRIPTIONS[action]) return "Apply mockery effect to this user.";
-    return MOCKERY_DESCRIPTIONS[action].replace(/your target|the target/gi, username);
+    return getMockeryDescription(action, username);
   };
   
   // Special styling for special cards
@@ -120,7 +112,7 @@ const MockeryCard: React.FC<MockeryCardProps> = ({
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center">
             {getIcon()}
-            <h3 className="ml-2 font-medium">{MOCKERY_NAMES[action] || action}</h3>
+            <h3 className="ml-2 font-medium">{getMockeryName(action) || action}</h3>
           </div>
           <Badge className={getTierBadgeStyle()}>{tier}</Badge>
         </div>
@@ -134,7 +126,7 @@ const MockeryCard: React.FC<MockeryCardProps> = ({
         <div className="flex justify-between items-center">
           <div className="text-sm">
             <span className="text-white/50">Cost:</span> 
-            <span className="text-royal-gold ml-1">${MOCKERY_COSTS[action]}</span>
+            <span className="text-royal-gold ml-1">${getMockeryCost(action)}</span>
           </div>
           
           <Badge variant="outline" className="text-white/70">

@@ -1,57 +1,66 @@
-
 import { MockeryTier } from '@/types/mockery';
 
 // Helper functions for working with mockery tiers
 export const getMockeryTierColor = (tier: MockeryTier): { text: string, bg: string, border: string } => {
-  switch (tier) {
-    case 'common':
-      return {
-        text: 'text-white/80',
-        bg: 'bg-white/10',
-        border: 'border-white/20'
-      };
-    case 'uncommon':
-      return {
-        text: 'text-green-400',
-        bg: 'bg-green-500/20',
-        border: 'border-green-500/30'
-      };
-    case 'rare':
-      return {
-        text: 'text-blue-400',
-        bg: 'bg-blue-500/20',
-        border: 'border-blue-500/30'
-      };
-    case 'epic':
-      return {
-        text: 'text-purple-400',
-        bg: 'bg-purple-500/20',
-        border: 'border-purple-500/30'
-      };
-    case 'legendary':
-      return {
-        text: 'text-royal-gold',
-        bg: 'bg-royal-gold/20',
-        border: 'border-royal-gold/30'
-      };
-    default:
-      return {
-        text: 'text-white/80',
-        bg: 'bg-white/10',
-        border: 'border-white/20'
-      };
-  }
+  const tierColors: Record<string, { text: string, bg: string, border: string }> = {
+    'common': {
+      text: 'text-white/80',
+      bg: 'bg-white/10',
+      border: 'border-white/20'
+    },
+    'uncommon': {
+      text: 'text-green-400',
+      bg: 'bg-green-500/20',
+      border: 'border-green-500/30'
+    },
+    'rare': {
+      text: 'text-blue-400',
+      bg: 'bg-blue-500/20',
+      border: 'border-blue-500/30'
+    },
+    'epic': {
+      text: 'text-purple-400',
+      bg: 'bg-purple-500/20',
+      border: 'border-purple-500/30'
+    },
+    'legendary': {
+      text: 'text-royal-gold',
+      bg: 'bg-royal-gold/20',
+      border: 'border-royal-gold/30'
+    },
+    'basic': {
+      text: 'text-white/80',
+      bg: 'bg-white/10',
+      border: 'border-white/20'
+    },
+    'premium': {
+      text: 'text-royal-gold',
+      bg: 'bg-royal-gold/20',
+      border: 'border-royal-gold/30'
+    },
+    'royal': {
+      text: 'text-royal-purple',
+      bg: 'bg-royal-purple/20',
+      border: 'border-royal-purple/30'
+    }
+  };
+  
+  return tierColors[tier] || tierColors['common'];
 };
 
 export const getMockeryTierLabel = (tier: MockeryTier): string => {
-  switch (tier) {
-    case 'common': return 'Common Mockery';
-    case 'uncommon': return 'Uncommon Mockery';
-    case 'rare': return 'Rare Mockery';
-    case 'epic': return 'Epic Mockery';
-    case 'legendary': return 'Legendary Mockery';
-    default: return 'Common Mockery';
-  }
+  const tierLabels: Record<string, string> = {
+    'common': 'Common Mockery',
+    'uncommon': 'Uncommon Mockery',
+    'rare': 'Rare Mockery',
+    'epic': 'Epic Mockery',
+    'legendary': 'Legendary Mockery',
+    'basic': 'Basic Mockery',
+    'premium': 'Premium Mockery',
+    'royal': 'Royal Mockery'
+  };
+  
+  return tierLabels[tier] || 'Common Mockery';
 };
 
 // Simple explanation function for encyclopedia

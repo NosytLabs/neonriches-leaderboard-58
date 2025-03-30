@@ -1,4 +1,3 @@
-
 export type TeamType = 'red' | 'green' | 'blue' | 'none' | 'Red' | 'Green' | 'Blue';
 export type UserTier = 'free' | 'basic' | 'bronze' | 'silver' | 'gold' | 'platinum' | 'diamond' | 'royal' | 'founder' | 'pro' | 'premium' | 'whale' | 'shark' | 'dolphin' | 'standard';
 export type GenderType = 'male' | 'female' | 'nonbinary' | 'other' | 'king' | 'queen' | 'noble' | 'jester' | 'none';

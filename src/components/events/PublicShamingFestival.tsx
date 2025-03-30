@@ -1,3 +1,5 @@
+
+// Update the imports at the top of the file
 import React from 'react';
 import { Scroll, DollarSign, Sparkles } from 'lucide-react';
 import { topUsers } from './data';
@@ -8,7 +10,7 @@ import RankingDisclaimer from '@/components/shared/RankingDisclaimer';
 import RoyalDivider from '@/components/ui/royal-divider';
 import { Dialog } from '@/components/ui/dialog';
 import ShameModal from './components/ShameModal';
-import { ShameAction } from '@/types/mockery';
+import { ShameAction } from '@/types/mockery'; // Use this import instead
 import useNotificationSounds from '@/hooks/use-notification-sounds';
 import { 
   hasWeeklyDiscount, 
