@@ -2,17 +2,11 @@
 import { 
   Crown, 
   Egg, 
-  Drumstick, 
-  Bomb, 
+  Target, 
   VolumeX, 
   Milestone, 
-  Presentation, 
   Sparkles, 
-  AlarmClock,
-  Target,
-  MessageSquareOff,
   Lock,
-  MousePointerClick,
   Cloud,
   Flame
 } from 'lucide-react';

@@ -2,7 +2,6 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 import { MockeryAction } from '@/types/mockery';
-import { getMockeryTier } from '@/utils/mockeryUtils';
 
 interface MockeryActionIconProps {
   action: MockeryAction;

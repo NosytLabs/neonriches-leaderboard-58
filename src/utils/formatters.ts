@@ -75,3 +75,43 @@ export const formatNumber = (value: number | undefined | null): string => {
   return new Intl.NumberFormat('en-US').format(value);
 };
 
+/**
+ * Format a file size in bytes to a human-readable format
+ */
+export const formatFileSize = (bytes: number | undefined | null): string => {
+  if (bytes === undefined || bytes === null) return '0 Bytes';
+  if (bytes === 0) return '0 Bytes';
+  
+  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(1024));
+  
+  return parseFloat((bytes / Math.pow(1024, i)).toFixed(2)) + ' ' + sizes[i];
+};
+
+/**
+ * Format a time duration in seconds to a human-readable format
+ */
+export const formatDuration = (seconds: number | undefined | null): string => {
+  if (seconds === undefined || seconds === null) return '0s';
+  
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = seconds % 60;
+  
+  if (minutes === 0) {
+    return `${remainingSeconds}s`;
+  }
+  
+  return `${minutes}m ${remainingSeconds}s`;
+};
+
+/**
+ * Format a percentage with a specific number of decimal places
+ */
+export const formatPercentage = (
+  value: number | undefined | null, 
+  decimalPlaces = 2
+): string => {
+  if (value === undefined || value === null) return '0%';
+  
+  return value.toFixed(decimalPlaces) + '%';
+};

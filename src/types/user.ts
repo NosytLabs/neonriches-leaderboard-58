@@ -12,12 +12,13 @@ export interface User {
   joinedAt?: string;
   spentTotal?: number;
   amountSpent?: number;
+  totalSpent?: number;
   profileImage?: string;
   bio?: string;
   
-  // Additional properties referenced throughout the codebase
-  tier?: 'free' | 'bronze' | 'silver' | 'gold' | 'platinum' | 'royal' | 'premium' | 'pro';
-  gender?: 'male' | 'female' | 'other' | 'prefer-not-to-say';
+  // Additional properties
+  tier?: UserTier;
+  gender?: UserGender;
   socialLinks?: SocialLink[];
   cosmetics?: UserCosmetics;
   profileBoosts?: ProfileBoost[];
@@ -35,12 +36,15 @@ export interface User {
   settings?: UserSettings;
   isVIP?: boolean;
   walletAddress?: string;
-  totalSpent?: number;
   spentAmount?: number;
   lastMocked?: string;
   mockeryCount?: number;
   isProtected?: boolean;
   isVerified?: boolean;
+  isAuthenticated?: boolean;
+  isAdmin?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface SocialLink {
@@ -55,11 +59,13 @@ export interface SocialLink {
 export interface ProfileBoost {
   id: string;
   type: string;
-  name: string;
+  name?: string;
   startDate: string;
   endDate: string;
-  active: boolean;
+  active?: boolean;
   level?: number;
+  strength?: number;
+  appliedBy?: string;
 }
 
 export interface UserCosmetics {
@@ -74,6 +80,10 @@ export interface UserCosmetics {
   activeFont?: string;
   foundersPass?: boolean;
   socialLinks?: any;
+  colors?: string[];
+  fonts?: string[];
+  backgrounds?: string[];
+  themes?: string[];
 }
 
 export interface UserSubscription {
@@ -92,14 +102,20 @@ export interface UserSettings {
   showWalletBalance?: boolean;
   showRank?: boolean;
   showSpendingHistory?: boolean;
+  showTeam?: boolean;
+  allowMessages?: boolean;
+  darkMode?: boolean;
+  language?: string;
 }
 
 export type UserProfile = User;
 
-export type UserTier = 'free' | 'bronze' | 'silver' | 'gold' | 'platinum' | 'royal' | 'premium' | 'pro';
+export type UserTier = 'free' | 'bronze' | 'silver' | 'gold' | 'platinum' | 'royal' | 'premium' | 'pro' | 'basic';
 export type UserGender = 'male' | 'female' | 'other' | 'prefer-not-to-say';
 export type TeamType = 'red' | 'green' | 'blue' | 'none';
 export type UserTeam = 'red' | 'green' | 'blue' | null;
+export type UserRole = 'user' | 'admin' | 'moderator';
+export type UserStatus = 'active' | 'suspended' | 'banned' | 'pending';
 
 export interface ProfileImage {
   id: string;

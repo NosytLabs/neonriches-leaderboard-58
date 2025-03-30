@@ -1,4 +1,3 @@
-
 import { User } from './user';
 
 export type MockeryTier = 
@@ -38,6 +37,18 @@ export type MockeryAction =
   | 'guillotine'
   | 'dungeons'
   | 'removal';
+
+export type ShameAction = 
+  | 'tomatoes' 
+  | 'eggs' 
+  | 'putridEggs'
+  | 'stocks' 
+  | 'silence' 
+  | 'courtJester'
+  | 'dunce'
+  | 'jester'
+  | 'ridicule' 
+  | 'shame';
 
 export interface MockeryEvent {
   id: string;
@@ -130,15 +141,3 @@ export interface MockeryStats {
   mostPopularAction: string;
   mostActiveUser: string;
 }
-
-export type ShameAction = 
-  | 'tomatoes' 
-  | 'eggs' 
-  | 'putridEggs'
-  | 'stocks' 
-  | 'silence' 
-  | 'courtJester'
-  | 'dunce'
-  | 'jester'
-  | 'ridicule' 
-  | 'shame';

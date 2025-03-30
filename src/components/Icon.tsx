@@ -1,7 +1,6 @@
 
 import React from 'react';
-import { IconName } from '@/components/ui/icon';
-import { Icon as UIIcon } from '@/components/ui/icon';
+import { Icon as UIIcon, IconName, IconSize } from '@/components/ui/icon';
 
 interface IconProps {
   name: IconName;
@@ -19,7 +18,7 @@ const Icon: React.FC<IconProps> = ({
   onClick 
 }) => {
   // Convert size from number to the size format expected by the UI icon
-  const getIconSize = (size: number) => {
+  const getIconSize = (size: number): IconSize => {
     if (size <= 16) return 'xs';
     if (size <= 20) return 'sm';
     if (size <= 24) return 'md';
