@@ -1,7 +1,22 @@
 
-import { User } from './user';
+import { UserProfile, User } from './user';
 
-export type TransactionType = 'deposit' | 'withdrawal' | 'purchase' | 'refund' | 'bonus' | 'transfer' | 'subscription' | 'mockery' | 'boost' | 'cosmetic' | 'wish' | 'spend';
+export type TransactionType = 
+  'deposit' | 
+  'withdrawal' | 
+  'purchase' | 
+  'refund' | 
+  'bonus' | 
+  'promotion' | 
+  'boost' |
+  'cosmetic' | 
+  'subscription' | 
+  'gift' | 
+  'reward' | 
+  'fee' |
+  'mockery' |
+  'shame' |
+  'wish';
 
 export interface Transaction {
   id: string;
@@ -10,60 +25,28 @@ export interface Transaction {
   type: TransactionType;
   description: string;
   timestamp: string;
-  status: 'completed' | 'pending' | 'failed';
-  paymentMethod?: string;
+  status: 'pending' | 'completed' | 'failed' | 'cancelled';
   metadata?: Record<string, any>;
 }
 
-export interface TransactionWithUser extends Transaction {
-  user: User;
+export interface TransactionPayload {
+  userId: string;
+  amount: number;
+  type: TransactionType;
+  description: string;
+  metadata?: Record<string, any>;
 }
 
 export interface SpendOptions {
-  silent?: boolean;
-  skipConfirmation?: boolean;
-  skipBalanceCheck?: boolean;
-  metadata?: Record<string, any>;
-  itemId?: string;
-  category?: string;
-  targetUser?: string;
+  skipVerification?: boolean;
+  bypassBalance?: boolean;
+  allowNegative?: boolean;
 }
 
-export interface TransactionResult {
-  success: boolean;
-  transactionId?: string;
-  newBalance?: number;
-  error?: string;
-  transaction?: Transaction;
-}
-
-export interface PaymentIntent {
-  id: string;
-  amount: number;
-  currency: string;
-  status: string;
-  clientSecret: string;
-}
-
-export interface PaymentMethod {
-  id: string;
-  type: string;
-  card?: {
-    brand: string;
-    last4: string;
-    expiryMonth: number;
-    expiryYear: number;
-  };
-  billingDetails?: {
-    name: string;
-    email: string;
-    address?: {
-      line1: string;
-      line2?: string;
-      city: string;
-      state: string;
-      postalCode: string;
-      country: string;
-    };
-  };
+export interface WalletBalance {
+  balance: number;
+  pendingBalance: number;
+  totalDeposited: number;
+  totalWithdrawn: number;
+  lastTransaction?: string;
 }

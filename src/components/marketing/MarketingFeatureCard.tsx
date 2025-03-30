@@ -1,134 +1,125 @@
 
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Check, Lock, Tag, User } from 'lucide-react';
-import { useFeatureAccess } from '@/hooks/use-feature-access';
-import { useToast } from '@/hooks/use-toast';
-import { useAuth } from '@/contexts/AuthContext';
-import { MARKETING_FEATURES } from '@/config/subscriptions';
+import { Lock, Star, Check } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { useAuth } from '@/contexts';
+import useFeatureAccess from '@/hooks/use-feature-access';
 
 interface MarketingFeatureCardProps {
-  featureId: string;
-  onPurchase?: () => void;
+  id: string;
+  title: string;
+  description: string;
+  tier: string;
+  price: number;
+  icon?: React.ReactNode;
+  className?: string;
+  features?: string[];
 }
 
-const MarketingFeatureCard: React.FC<MarketingFeatureCardProps> = ({ 
-  featureId,
-  onPurchase
+const MarketingFeatureCard: React.FC<MarketingFeatureCardProps> = ({
+  id,
+  title,
+  description,
+  tier,
+  price,
+  icon,
+  className,
+  features = []
 }) => {
-  const { toast } = useToast();
   const { user } = useAuth();
-  const { canAccessFeature, purchaseFeatureIndividually } = useFeatureAccess();
+  const { isUserPro, getUpgradeUrl } = useFeatureAccess();
   
-  // Find feature details
-  const feature = MARKETING_FEATURES.find(f => f.id === featureId);
-  if (!feature) return null;
+  const userTier = user?.tier || 'basic';
+  const userSubscription = user?.subscription;
   
-  // Check if user already has this feature
-  const hasFeature = user?.purchasedFeatures?.includes(featureId) || 
-                   canAccessFeature(featureId);
+  const isActiveSubscription = userSubscription?.status === 'active';
+  const isTierAvailable = userTier === tier || (userSubscription?.tier === tier && isActiveSubscription);
   
-  // Check if user has appropriate subscription tier
-  const userTier = user?.subscription?.tier || 'free';
-  const canPurchase = user && feature.tier !== 'royal';
-  
-  const handleFeaturePurchase = async () => {
-    if (!user) {
-      toast({
-        title: "Authentication Required",
-        description: "Please sign in to purchase this feature",
-        variant: "destructive"
-      });
-      return;
-    }
-    
-    try {
-      const success = await purchaseFeatureIndividually(feature.id);
-      
-      if (success) {
-        toast({
-          title: "Purchase Successful",
-          description: `You now have access to ${feature.name}`,
-        });
-        
-        if (onPurchase) onPurchase();
-      } else {
-        throw new Error("Purchase failed");
-      }
-    } catch (error) {
-      toast({
-        title: "Purchase Failed",
-        description: "Unable to complete your purchase. Please try again.",
-        variant: "destructive"
-      });
-    }
+  // Check if user already has this tier or higher
+  const getTierLevel = (tier: string) => {
+    const levels: Record<string, number> = {
+      'free': 0,
+      'basic': 1,
+      'plus': 2,
+      'premium': 3,
+      'royal': 4,
+      'diamond': 5
+    };
+    return levels[tier] || 0;
   };
   
+  const currentTierLevel = getTierLevel(userTier);
+  const cardTierLevel = getTierLevel(tier);
+  const isCurrentTier = currentTierLevel === cardTierLevel;
+  const isAlreadyUpgraded = currentTierLevel > cardTierLevel;
+  
   return (
-    <Card className={`glass-morphism ${hasFeature ? 'border-green-500/30' : 'border-white/10'}`}>
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <CardTitle className="text-lg">{feature.name}</CardTitle>
-          {hasFeature ? (
-            <Badge className="bg-green-600 text-white">Active</Badge>
-          ) : (
-            <Badge className="bg-white/10 text-white/70">Available</Badge>
-          )}
+    <Card className={cn(
+      "glass-morphism border-white/10 transition-all duration-300 hover:shadow-lg",
+      isTierAvailable && "border-royal-gold/30",
+      isCurrentTier && "border-royal-gold/50 shadow-royal-gold/20 shadow-sm",
+      className
+    )}>
+      <CardHeader className={cn(
+        "text-center",
+        isCurrentTier && "bg-royal-gold/10"
+      )}>
+        <div className="flex justify-center mb-2">
+          {icon}
         </div>
-        <CardDescription>{feature.description}</CardDescription>
+        <CardTitle className="font-bold text-lg capitalize">{title}</CardTitle>
+        
+        {isCurrentTier && (
+          <Badge className="bg-royal-gold text-black font-medium mx-auto mt-2">
+            Current Plan
+          </Badge>
+        )}
+        
+        {isAlreadyUpgraded && (
+          <Badge variant="outline" className="bg-gray-800/50 border-white/20 mx-auto mt-2">
+            <Check className="h-3 w-3 mr-1" />
+            Included in your plan
+          </Badge>
+        )}
       </CardHeader>
       
-      <CardContent>
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center">
-            <Tag className="h-4 w-4 text-white/70 mr-1" />
-            <span className="text-lg font-bold">${feature.price}</span>
-          </div>
-          
-          <Badge variant="outline" className={`
-            ${feature.tier === 'standard' ? 'bg-blue-500/20 text-blue-300' : 
-              feature.tier === 'premium' ? 'bg-purple-500/20 text-purple-300' : 
-              'bg-royal-gold/20 text-royal-gold'}
-          `}>
-            {feature.tier.charAt(0).toUpperCase() + feature.tier.slice(1)} Tier
-          </Badge>
+      <CardContent className="pt-4">
+        <p className="text-white/70 text-center mb-4">{description}</p>
+        
+        <div className="text-center mb-6">
+          <span className="text-3xl font-bold">${price}</span>
+          <span className="text-white/60 ml-1">/month</span>
         </div>
         
-        <div className="space-y-2 mb-4">
-          {feature.features.map((feat, i) => (
-            <div key={i} className="flex items-start">
-              <Check className="h-4 w-4 text-green-400 mt-1 flex-shrink-0" />
-              <span className="ml-2 text-sm text-white/80">{feat}</span>
+        <div className="space-y-2 mb-6">
+          {features.map((feature, index) => (
+            <div key={index} className="flex items-start">
+              <Check className="h-4 w-4 mr-2 mt-1 text-royal-gold" />
+              <p className="text-sm text-white/80">{feature}</p>
             </div>
           ))}
         </div>
       </CardContent>
       
       <CardFooter>
-        {hasFeature ? (
-          <Button
-            className="w-full bg-green-600 text-white hover:bg-green-700"
-            disabled
-          >
-            <Check className="mr-2 h-4 w-4" />
-            Feature Active
+        {isCurrentTier ? (
+          <Button className="w-full" disabled>
+            Current Plan
           </Button>
-        ) : canPurchase ? (
-          <Button
-            className="w-full bg-purple-600 hover:bg-purple-700"
-            onClick={handleFeaturePurchase}
-          >
-            Purchase Feature
+        ) : isAlreadyUpgraded ? (
+          <Button variant="outline" className="w-full" disabled>
+            Included in {userTier}
           </Button>
         ) : (
-          <Button
-            className="w-full bg-white/10 text-white/70"
-            disabled
+          <Button 
+            className="w-full bg-royal-gold hover:bg-royal-gold/90 text-black"
+            onClick={() => window.location.href = getUpgradeUrl(id)}
           >
-            <Lock className="mr-2 h-4 w-4" />
-            Requires {feature.tier.charAt(0).toUpperCase() + feature.tier.slice(1)} Tier
+            {!isUserPro && <Lock className="h-4 w-4 mr-2" />}
+            {isUserPro ? 'Change Plan' : 'Upgrade Now'}
           </Button>
         )}
       </CardFooter>

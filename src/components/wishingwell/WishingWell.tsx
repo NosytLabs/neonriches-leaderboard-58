@@ -1,110 +1,111 @@
+
 import React, { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Sparkles, Coins, Gift, Award } from 'lucide-react';
+import { useAuth } from '@/contexts';
 import { useToast } from '@/hooks/use-toast';
-import { useAuth } from '@/contexts/auth';
-import { spendFromWallet } from '@/services/walletService';
-import { getRarityColor, getRarityBgColor, getRarityBorderColor } from '@/utils/cosmetics';
-import useNotificationSounds from '@/hooks/use-notification-sounds';
+import { Sparkles, CoinIcon, InformationCircleIcon } from 'lucide-react';
+import { transactionService } from '@/services';
+import { formatCurrency } from '@/utils/formatters';
 
-interface WishingWellProps {
-  className?: string;
-}
-
-const WishingWell: React.FC<WishingWellProps> = ({ className = '' }) => {
-  const [isWishing, setIsWishing] = useState(false);
-  const { toast } = useToast();
+const WishingWell: React.FC = () => {
   const { user } = useAuth();
-  const { playSound } = useNotificationSounds();
-
-  const handleWish = async () => {
+  const { toast } = useToast();
+  const [isWishing, setIsWishing] = useState(false);
+  
+  const handleMakeWish = async () => {
     if (!user) {
       toast({
         title: "Authentication Required",
-        description: "You must be logged in to make a wish.",
+        description: "You need to be logged in to make a wish.",
         variant: "destructive"
       });
       return;
     }
-
+    
+    if ((user.walletBalance || 0) < 5) {
+      toast({
+        title: "Insufficient Funds",
+        description: "You need at least $5 to make a wish.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
     setIsWishing(true);
-
+    
     try {
-      // Simulate a wish outcome (replace with actual logic)
-      const wishCost = 10;
-      const wishResult = Math.random();
-
-      if (wishResult > 0.5) {
-        // Simulate a successful wish
-        await spendFromWallet(user, wishCost, 'wish', 'Wishing Well Attempt');
+      // Record the transaction
+      await transactionService.recordTransaction(
+        user.id,
+        5,
+        "wish",
+        "Made a wish at the wishing well",
+        { source: "wishing_well" }
+      );
+      
+      // Determine if wish granted (70% chance)
+      const wishGranted = Math.random() < 0.7;
+      
+      if (wishGranted) {
         toast({
-          title: "Your Wish Granted!",
-          description: "You feel a surge of royal luck!",
+          title: "Wish Granted!",
+          description: "You received a small cosmetic reward.",
         });
-        playSound('success');
       } else {
-        // Simulate a failed wish
-        await spendFromWallet(user, wishCost, 'wish', 'Wishing Well Attempt');
         toast({
-          title: "Alas, Your Wish Fades...",
-          description: "Perhaps the royal treasury is not in your favor today.",
+          title: "Wish Not Granted",
+          description: "Better luck next time!",
           variant: "destructive"
         });
-        playSound('error');
       }
     } catch (error) {
+      console.error("Error making wish:", error);
       toast({
-        title: "Wish Interrupted",
-        description: "Something went wrong with your wish. Please try again.",
+        title: "Error",
+        description: "Something went wrong with your wish.",
         variant: "destructive"
       });
     } finally {
       setIsWishing(false);
     }
   };
-
+  
   return (
-    <Card className={`glass-morphism border-white/10 ${className}`}>
+    <Card className="glass-morphism border-white/10 overflow-hidden">
       <CardHeader>
-        <div className="flex items-center">
-          <Sparkles className="mr-3 h-6 w-6 text-royal-gold" />
-          <CardTitle>The Royal Wishing Well</CardTitle>
-        </div>
+        <CardTitle className="flex items-center">
+          <Sparkles className="h-5 w-5 mr-2 text-royal-gold" />
+          Wishing Well
+        </CardTitle>
         <CardDescription>
-          Toss a coin and let fate decide your fortune
+          Toss a coin and make a wish
         </CardDescription>
       </CardHeader>
-      <CardContent className="text-center">
-        <div className="relative">
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/50 rounded-lg" />
-          <div className="relative z-10 p-6 space-y-4">
-            <div className="text-white/70">
-              Cast a coin into the well and whisper your desires to the royal spirits.
-            </div>
-            <div className="text-xl font-semibold text-royal-gold">
-              10 Coins per wish
-            </div>
-            <Button
-              className="w-full bg-gradient-to-r from-royal-purple to-royal-gold hover:opacity-90"
-              onClick={handleWish}
-              disabled={isWishing}
-            >
-              {isWishing ? (
-                <>
-                  <span className="animate-spin mr-2">⚙️</span> Wishing...
-                </>
-              ) : (
-                <>
-                  <Coins className="mr-2 h-4 w-4" /> Make a Wish
-                </>
-              )}
-            </Button>
+      
+      <CardContent>
+        <div className="flex flex-col items-center">
+          <div className="w-24 h-24 rounded-full bg-blue-500/20 flex items-center justify-center mb-4">
+            <CoinIcon className="h-10 w-10 text-royal-gold" />
           </div>
-        </div>
-        <div className="mt-4 text-sm text-white/60">
-          <Gift className="mr-2 inline-block h-4 w-4" />
-          Each wish has a chance to grant you royal favor!
+          
+          <p className="text-center mb-4 text-white/70">
+            Make a wish by tossing {formatCurrency(5)} into the well. 
+            You might receive a cosmetic reward!
+          </p>
+          
+          <div className="flex items-center justify-center mb-4 text-white/60 text-sm">
+            <InformationCircleIcon className="h-4 w-4 mr-1" />
+            <span>Your balance: {formatCurrency(user?.walletBalance || 0)}</span>
+          </div>
+          
+          <Button
+            disabled={isWishing || (user?.walletBalance || 0) < 5}
+            onClick={handleMakeWish}
+            className="bg-royal-gold text-black hover:bg-royal-gold/90"
+          >
+            {isWishing ? 'Making Wish...' : 'Make a Wish'}
+          </Button>
         </div>
       </CardContent>
     </Card>

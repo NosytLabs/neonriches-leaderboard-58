@@ -1,325 +1,591 @@
 
-import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import React from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Crown, MessageSquare, Users, Sparkles, Clock, Calendar, User, Heart, ThumbsUp, ThumbsDown, Badge } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Badge } from '@/components/ui/badge';
-import {
-  MessageCircle,
-  Crown,
-  Calendar,
-  Tag,
-  ThumbsUp,
-  ThumbsDown,
-  Flag,
-  Filter,
-  Search,
-  PlusCircle,
-  BookOpen,
-  Clock,
-  CheckCircle,
-  XCircle,
-  AlertCircle,
-  Award
-} from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { UserProfile } from '@/types/user';
-import Link from '@/components/ui/link';
+import { formatDistanceToNow } from 'date-fns';
+import { UserProfile, SocialLink, ProfileBoost } from '@/types/user';
 
-const getPostStatusBadge = (status: string) => {
-  switch (status) {
-    case 'open':
-      return <Badge className="bg-green-500">Open</Badge>;
-    case 'closed':
-      return <Badge className="bg-gray-500">Closed</Badge>;
-    case 'resolved':
-      return <Badge className="bg-blue-500">Resolved</Badge>;
-    case 'pinned':
-      return <Badge className="bg-yellow-500">Pinned</Badge>;
-    default:
-      return <Badge>Unknown</Badge>;
-  }
-};
-
-const getCategoryBadge = (category: string) => {
-  switch (category) {
-    case 'announcement':
-      return <Badge className="bg-purple-500">Announcement</Badge>;
-    case 'suggestion':
-      return <Badge className="bg-blue-500">Suggestion</Badge>;
-    case 'discussion':
-      return <Badge className="bg-green-500">Discussion</Badge>;
-    case 'question':
-      return <Badge className="bg-yellow-500">Question</Badge>;
-    case 'bug':
-      return <Badge className="bg-red-500">Bug</Badge>;
-    default:
-      return <Badge>Other</Badge>;
-  }
-};
-
-interface ForumPost {
-  id: string;
-  title: string;
-  content: string;
-  author: UserProfile;
-  category: string;
-  status: string;
-  createdAt: string;
-  updatedAt: string;
-  likes: number;
-  dislikes: number;
-  flags: number;
-  comments: ForumComment[];
+interface RoyalCouncilForumsProps {
+  user: UserProfile;
 }
 
-interface ForumComment {
-  id: string;
-  author: UserProfile;
-  content: string;
-  createdAt: string;
-  likes: number;
-  dislikes: number;
-  flags: number;
-}
-
-const prepareUserForProfile = (): UserProfile => {
-  const currentDate = new Date().toISOString();
-  
-  return {
-    id: '1',
-    username: 'royalUser',
-    displayName: 'Royal User',
-    email: 'user@example.com',
-    profileImage: '/images/avatar.png',
-    bio: 'Royal user with premium subscription',
-    walletBalance: 2500,
-    amountSpent: 15000,
-    totalSpent: 15000,
-    rank: 3,
-    previousRank: 5,
-    tier: 'royal',
-    team: 'red',
-    gender: 'king',
-    joinedAt: currentDate,
-    subscription: {
-      id: "sub_123456",
-      tier: "royal",
-      startDate: "2023-01-01",
-      endDate: "2023-12-31",
-      status: "active",
-      cancelAtPeriodEnd: false,
-      currentPeriodEnd: "2023-12-31",
-      price: 99.99,
-      interval: "month",
-      plan: "Royal Throne"
+const RoyalCouncilForums: React.FC<RoyalCouncilForumsProps> = ({ user }) => {
+  // Mock forum data
+  const forumSections = [
+    {
+      id: 'general',
+      name: 'General Discussion',
+      description: 'Talk about anything related to SpendThrone',
+      threads: 32,
+      messages: 156,
+      lastActive: '2 hours ago'
     },
+    {
+      id: 'strategy',
+      name: 'Spending Strategy',
+      description: 'Discuss spending tactics and rank optimization',
+      threads: 28,
+      messages: 203,
+      lastActive: '35 minutes ago'
+    },
+    {
+      id: 'teams',
+      name: 'Team Tactics',
+      description: 'Coordinate with your team members',
+      threads: 45,
+      messages: 312,
+      lastActive: '1 hour ago'
+    },
+    {
+      id: 'royal',
+      name: 'Royal Court',
+      description: 'Exclusive discussion for top 100 members',
+      threads: 19,
+      messages: 98,
+      lastActive: '3 hours ago',
+      restricted: true
+    }
+  ];
+  
+  const featuredUsers = [
+    {
+      id: '1',
+      username: 'EliteSpender',
+      displayName: 'Lord Moneybags',
+      tier: 'royal',
+      rank: 3,
+      amountSpent: 15000,
+      profileImage: 'https://i.pravatar.cc/100?img=1'
+    },
+    {
+      id: '2',
+      username: 'Golden_Throne',
+      displayName: 'Master Goldcoins',
+      tier: 'diamond',
+      rank: 7,
+      amountSpent: 12300,
+      profileImage: 'https://i.pravatar.cc/100?img=2'
+    },
+    {
+      id: '3',
+      username: 'RoyalPurse',
+      displayName: 'Spender Supreme',
+      tier: 'royal',
+      rank: 12,
+      amountSpent: 9800,
+      profileImage: 'https://i.pravatar.cc/100?img=3'
+    }
+  ];
+  
+  const recentThreads = [
+    {
+      id: '1',
+      title: 'Strategies for breaking into the top 20',
+      author: 'RankClimber',
+      replies: 23,
+      views: 145,
+      lastReply: '1 hour ago',
+      isHot: true
+    },
+    {
+      id: '2',
+      title: 'How team coordination can maximize visibility',
+      author: 'TeamPlayer',
+      replies: 17,
+      views: 93,
+      lastReply: '3 hours ago',
+      isHot: false
+    },
+    {
+      id: '3',
+      title: 'Is spending more at once better than small consistent amounts?',
+      author: 'StrategyGuru',
+      replies: 42,
+      views: 287,
+      lastReply: '20 minutes ago',
+      isHot: true
+    }
+  ];
+  
+  const announcements = [
+    {
+      id: '1',
+      title: 'Team competition week starts Monday',
+      content: 'Get ready for our biggest team event yet with double rewards and special recognition.',
+      authorName: 'Royal Admin',
+      postedAt: '1 day ago',
+      isPinned: true
+    },
+    {
+      id: '2',
+      title: 'New profile features coming soon',
+      content: 'We\'re adding exciting new ways to customize your profile and show off your status.',
+      authorName: 'Royal Admin',
+      postedAt: '3 days ago',
+      isPinned: true
+    }
+  ];
+  
+  // Mock user forum profile
+  const forumProfile = {
+    joinDate: '2023-05-15',
+    lastActive: '2023-08-21',
+    posts: 37,
+    reactions: 142,
+    subscription: {
+      id: 'sub_123',
+      tier: 'premium',
+      status: 'active',
+      startDate: '2023-06-01',
+      endDate: '2024-06-01',
+      plan: 'yearly',
+      interval: 'monthly',
+      price: 19.99,
+      features: ['Forum access', 'Private messaging', 'Signature'],
+      paymentMethod: 'credit_card',
+      autoRenew: true,
+      cancelAtPeriodEnd: false
+    },
+    badges: ['early-supporter', 'top-contributor', 'team-leader'],
     socialLinks: [
       {
-        id: "1",
-        platform: "twitter",
-        url: "https://twitter.com/royalUser",
-        username: "royalUser",
+        platform: 'twitter',
+        url: 'https://twitter.com/username',
+        username: 'username',
+        icon: 'twitter',
+        id: 'twt1',
         isVerified: true,
         isPublic: true
       },
       {
-        id: "2",
-        platform: "instagram",
-        url: "https://instagram.com/royalUser",
-        username: "royalUser",
+        platform: 'discord',
+        url: 'https://discord.gg/username',
+        username: 'username#1234',
+        icon: 'discord',
+        id: 'dis1',
         isVerified: true,
         isPublic: true
       }
     ],
     profileBoosts: [
       {
-        id: "boost1",
-        userId: "1", 
-        effectId: "effect1",
-        duration: 7 * 24 * 3600,
+        id: 'boost-1',
+        effectId: 'spotlight',
+        userId: user.id,
+        startDate: new Date().toISOString(),
+        endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+        type: 'visibility',
+        strength: 3,
         level: 2,
+        status: 'active',
         isActive: true,
-        type: "visibility",
-        strength: 1.5,
-        appliedBy: "system"
+        appliedBy: user.id
       }
     ]
   };
-};
-
-const mockUser: UserProfile = prepareUserForProfile();
-
-const mockPosts: ForumPost[] = [
-  {
-    id: 'post-1',
-    title: 'New Royal Decree: Spending Limits',
-    content: 'The King has announced new spending limits for all citizens. What are your thoughts?',
-    author: mockUser,
-    category: 'announcement',
-    status: 'open',
-    createdAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
-    updatedAt: new Date().toISOString(),
-    likes: 55,
-    dislikes: 5,
-    flags: 0,
-    comments: [
-      {
-        id: 'comment-1',
-        author: mockUser,
-        content: 'I think it\'s a great idea! We need to control spending.',
-        createdAt: new Date(Date.now() - 1 * 60 * 60 * 1000).toISOString(),
-        likes: 12,
-        dislikes: 1,
-        flags: 0,
-      },
-    ],
-  },
-  {
-    id: 'post-2',
-    title: 'Suggestion: More Gold Emotes',
-    content: 'I think we need more gold emotes. They are the best!',
-    author: mockUser,
-    category: 'suggestion',
-    status: 'open',
-    createdAt: new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString(),
-    updatedAt: new Date().toISOString(),
-    likes: 32,
-    dislikes: 2,
-    flags: 0,
-    comments: [],
-  },
-  {
-    id: 'post-3',
-    title: 'Discussion: Is the Economy Rigged?',
-    content: 'Is the economy rigged in favor of the rich? Let\'s discuss.',
-    author: mockUser,
-    category: 'discussion',
-    status: 'open',
-    createdAt: new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString(),
-    updatedAt: new Date().toISOString(),
-    likes: 48,
-    dislikes: 8,
-    flags: 1,
-    comments: [],
-  },
-];
-
-const RoyalCouncilForums = () => {
-  const [activeTab, setActiveTab] = useState('recent');
-  const [searchQuery, setSearchQuery] = useState('');
-
-  const filteredPosts = mockPosts.filter((post) =>
-    post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    post.content.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
+  
+  const canAccessForums = () => {
+    // In a real app, check membership status, tier, etc.
+    return true;
+  };
+  
   return (
     <Card className="glass-morphism border-white/10">
       <CardHeader>
-        <div className="flex items-center">
-          <MessageCircle className="mr-3 h-6 w-6 text-royal-gold" />
-          <CardTitle>Royal Council Forums</CardTitle>
-        </div>
-        <CardDescription>Discuss matters of the realm</CardDescription>
+        <CardTitle className="flex items-center">
+          <Crown className="h-5 w-5 mr-2 text-royal-gold" />
+          Royal Council Forums
+        </CardTitle>
       </CardHeader>
+      
       <CardContent>
-        <Tabs defaultValue="recent" value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="glass-morphism border-white/10">
-            <TabsTrigger value="recent" className="flex items-center gap-2">
-              <Clock size={16} />
-              <span>Recent</span>
+        <Tabs defaultValue="forums">
+          <TabsList className="glass-morphism mb-6">
+            <TabsTrigger value="forums" className="flex items-center">
+              <MessageSquare className="h-4 w-4 mr-2" />
+              Forums
             </TabsTrigger>
-            <TabsTrigger value="popular" className="flex items-center gap-2">
-              <ThumbsUp size={16} />
-              <span>Popular</span>
+            <TabsTrigger value="members" className="flex items-center">
+              <Users className="h-4 w-4 mr-2" />
+              Members
             </TabsTrigger>
-            <TabsTrigger value="my-posts" className="flex items-center gap-2">
-              <BookOpen size={16} />
-              <span>My Posts</span>
+            <TabsTrigger value="profile" className="flex items-center">
+              <User className="h-4 w-4 mr-2" />
+              Forum Profile
             </TabsTrigger>
           </TabsList>
-
-          <div className="mt-4 flex items-center justify-between">
-            <div className="flex items-center">
-              <Input
-                type="text"
-                placeholder="Search forums..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="glass-morphism border-white/10 mr-2"
-              />
-              <Button variant="outline" size="icon" className="glass-morphism border-white/10">
-                <Search className="h-4 w-4" />
-              </Button>
+          
+          <TabsContent value="forums">
+            <div className="mb-6 glass-morphism border-white/10 p-4 rounded-lg">
+              <h3 className="text-lg font-bold mb-2 text-royal-gold">Announcements</h3>
+              <div className="space-y-4">
+                {announcements.map((announcement) => (
+                  <div key={announcement.id} className="border-b border-white/10 pb-4 last:border-b-0 last:pb-0">
+                    <div className="flex items-start justify-between">
+                      <div className="flex items-center">
+                        <Sparkles className="h-4 w-4 text-royal-gold mr-2" />
+                        <h4 className="font-medium">{announcement.title}</h4>
+                      </div>
+                      <Badge variant="outline" className="bg-royal-gold/10 border-royal-gold/20 text-royal-gold text-xs">
+                        Pinned
+                      </Badge>
+                    </div>
+                    <p className="mt-2 text-white/70 text-sm">{announcement.content}</p>
+                    <div className="flex items-center mt-2 text-xs text-white/50">
+                      <span>{announcement.authorName}</span>
+                      <span className="mx-2">•</span>
+                      <Clock className="h-3 w-3 mr-1" />
+                      <span>{announcement.postedAt}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
-            <Button className="bg-royal-gold text-black hover:bg-royal-gold/90">
-              <PlusCircle className="mr-2 h-4 w-4" />
-              New Post
-            </Button>
-          </div>
-
-          <TabsContent value="recent" className="mt-4">
-            {filteredPosts.map((post) => (
-              <div key={post.id} className="glass-morphism border-white/10 p-4 rounded-lg mb-4">
-                <div className="flex justify-between items-start mb-2">
-                  <div className="flex items-center">
-                    <Avatar className="mr-3 h-8 w-8">
-                      <AvatarImage src={post.author.profileImage} alt={post.author.displayName} />
-                      <AvatarFallback>{post.author.username.substring(0, 2).toUpperCase()}</AvatarFallback>
-                    </Avatar>
+            
+            <div className="space-y-4">
+              {forumSections.map((section) => (
+                <div 
+                  key={section.id} 
+                  className={`glass-morphism border-white/10 p-4 rounded-lg ${
+                    section.restricted ? 'opacity-80' : ''
+                  }`}
+                >
+                  <div className="flex items-start justify-between">
                     <div>
-                      <Link to={`/profile/${post.author.username}`} className="font-medium hover:underline">
-                        {post.author.displayName}
-                      </Link>
-                      <div className="text-sm text-white/60">
-                        {post.author.activeTitle}
+                      <div className="flex items-center">
+                        <h3 className="font-bold">{section.name}</h3>
+                        {section.restricted && (
+                          <Badge className="ml-2 bg-royal-gold/20 border-royal-gold/30 text-royal-gold text-xs">
+                            Restricted
+                          </Badge>
+                        )}
+                      </div>
+                      <p className="text-white/70 text-sm mt-1">{section.description}</p>
+                    </div>
+                    
+                    <div className="text-right text-sm text-white/60">
+                      <div>
+                        <span className="font-medium">{section.threads}</span> Threads
+                      </div>
+                      <div>
+                        <span className="font-medium">{section.messages}</span> Messages
+                      </div>
+                      <div className="text-xs mt-1">
+                        <Clock className="inline h-3 w-3 mr-1" />
+                        {section.lastActive}
                       </div>
                     </div>
                   </div>
-                  <div className="flex items-center space-x-2">
-                    {getPostStatusBadge(post.status)}
-                    {getCategoryBadge(post.category)}
+                  
+                  <div className="flex justify-end mt-4">
+                    <Button 
+                      variant="outline"
+                      className="text-sm"
+                      disabled={section.restricted && (user?.rank || 999) > 100}
+                    >
+                      <MessageSquare className="h-3 w-3 mr-1" />
+                      View Threads
+                    </Button>
                   </div>
                 </div>
-                <Link to={`/forums/${post.id}`} className="block hover:underline">
-                  <h3 className="text-xl font-semibold mb-1">{post.title}</h3>
-                </Link>
-                <p className="text-white/70">{post.content.substring(0, 100)}...</p>
-                <div className="flex justify-between items-center mt-3">
-                  <div className="text-sm text-white/60">
-                    <Calendar className="mr-1 inline-block h-4 w-4" />
-                    {new Date(post.createdAt).toLocaleDateString()}
+              ))}
+            </div>
+            
+            <div className="mt-6 glass-morphism border-white/10 p-4 rounded-lg">
+              <h3 className="text-lg font-bold mb-4">Recent Discussions</h3>
+              <ScrollArea className="h-[300px] pr-4">
+                <div className="space-y-4">
+                  {recentThreads.map((thread) => (
+                    <div key={thread.id} className="border-b border-white/10 pb-4 last:border-b-0 last:pb-0">
+                      <div className="flex items-start justify-between">
+                        <div>
+                          <div className="flex items-center">
+                            <h4 className="font-medium">{thread.title}</h4>
+                            {thread.isHot && (
+                              <Badge className="ml-2 bg-red-500/20 border-red-500/30 text-red-400 text-xs">
+                                Hot
+                              </Badge>
+                            )}
+                          </div>
+                          <div className="text-xs text-white/60 mt-1">
+                            <span>by {thread.author}</span>
+                          </div>
+                        </div>
+                        
+                        <div className="text-right text-xs text-white/60">
+                          <div>
+                            <MessageSquare className="inline h-3 w-3 mr-1" />
+                            {thread.replies} replies
+                          </div>
+                          <div>
+                            <Users className="inline h-3 w-3 mr-1" />
+                            {thread.views} views
+                          </div>
+                          <div className="mt-1">
+                            <Clock className="inline h-3 w-3 mr-1" />
+                            {thread.lastReply}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </ScrollArea>
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="members">
+            <div className="mb-4">
+              <h3 className="text-lg font-bold mb-2">Featured Members</h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {featuredUsers.map((member) => (
+                  <div 
+                    key={member.id} 
+                    className="glass-morphism border-white/10 p-4 rounded-lg flex flex-col items-center"
+                  >
+                    <Avatar className="h-16 w-16 mb-3">
+                      <AvatarImage src={member.profileImage} alt={member.displayName} />
+                      <AvatarFallback className="bg-royal-gold/20">
+                        {member.displayName.substring(0, 2)}
+                      </AvatarFallback>
+                    </Avatar>
+                    
+                    <h4 className="font-bold">{member.displayName}</h4>
+                    <p className="text-white/60 text-sm">@{member.username}</p>
+                    
+                    <div className="flex items-center mt-2 space-x-2">
+                      <Badge className="bg-royal-gold/20 border-royal-gold/30 text-royal-gold text-xs">
+                        #{member.rank}
+                      </Badge>
+                      <Badge className="bg-purple-500/20 border-purple-500/30 text-purple-400 text-xs capitalize">
+                        {member.tier}
+                      </Badge>
+                    </div>
+                    
+                    <Button variant="outline" className="mt-4 text-xs w-full">
+                      <User className="h-3 w-3 mr-1" />
+                      View Profile
+                    </Button>
                   </div>
-                  <div className="flex items-center space-x-3">
-                    <div className="flex items-center">
-                      <ThumbsUp className="mr-1 h-4 w-4" />
-                      {post.likes}
+                ))}
+              </div>
+            </div>
+            
+            <div className="glass-morphism border-white/10 p-4 rounded-lg">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-lg font-bold">Online Members</h3>
+                <div className="text-sm text-white/70">
+                  <Users className="inline h-4 w-4 mr-1" />
+                  {Math.floor(Math.random() * 50) + 10} members online
+                </div>
+              </div>
+              
+              <div className="flex flex-wrap gap-3">
+                {[...Array(8)].map((_, idx) => (
+                  <div 
+                    key={idx} 
+                    className="flex items-center glass-morphism border-white/10 px-3 py-2 rounded-lg"
+                  >
+                    <Avatar className="h-6 w-6 mr-2">
+                      <AvatarImage src={`https://i.pravatar.cc/100?img=${idx + 4}`} />
+                      <AvatarFallback className="text-xs">U{idx}</AvatarFallback>
+                    </Avatar>
+                    <span className="text-sm">User{idx + 1}</span>
+                    <div className="h-2 w-2 rounded-full bg-green-500 ml-2"></div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="profile">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="col-span-1">
+                <div className="glass-morphism border-white/10 p-4 rounded-lg mb-6">
+                  <div className="flex flex-col items-center">
+                    <Avatar className="h-24 w-24 mb-4">
+                      <AvatarImage src={user.profileImage} alt={user.displayName} />
+                      <AvatarFallback className="bg-royal-gold/20 text-lg">
+                        {user.displayName?.substring(0, 2) || user.username.substring(0, 2)}
+                      </AvatarFallback>
+                    </Avatar>
+                    
+                    <h3 className="text-xl font-bold">{user.displayName || user.username}</h3>
+                    <p className="text-white/60 text-sm">@{user.username}</p>
+                    
+                    {user.activeTitle && (
+                      <Badge className="mt-2 bg-royal-gold/20 border-royal-gold/30 text-royal-gold">
+                        {user.activeTitle}
+                      </Badge>
+                    )}
+                    
+                    <div className="flex items-center mt-4 space-x-2">
+                      <Button variant="outline" size="sm" className="text-xs">
+                        <MessageSquare className="h-3 w-3 mr-1" />
+                        Message
+                      </Button>
+                      <Button variant="outline" size="sm" className="text-xs">
+                        <Heart className="h-3 w-3 mr-1" />
+                        Follow
+                      </Button>
                     </div>
-                    <div className="flex items-center">
-                      <ThumbsDown className="mr-1 h-4 w-4" />
-                      {post.dislikes}
+                  </div>
+                </div>
+                
+                <div className="glass-morphism border-white/10 p-4 rounded-lg">
+                  <h4 className="font-bold mb-3">Forum Stats</h4>
+                  <div className="space-y-3 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-white/60">Join Date:</span>
+                      <span>
+                        <Calendar className="inline h-3 w-3 mr-1" />
+                        {new Date(forumProfile.joinDate).toLocaleDateString()}
+                      </span>
                     </div>
-                    <div className="flex items-center">
-                      <Flag className="mr-1 h-4 w-4" />
-                      {post.flags}
+                    <div className="flex justify-between">
+                      <span className="text-white/60">Last Active:</span>
+                      <span>
+                        <Clock className="inline h-3 w-3 mr-1" />
+                        {formatDistanceToNow(new Date(forumProfile.lastActive), { addSuffix: true })}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-white/60">Posts:</span>
+                      <span>
+                        <MessageSquare className="inline h-3 w-3 mr-1" />
+                        {forumProfile.posts}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-white/60">Reactions:</span>
+                      <span>
+                        <ThumbsUp className="inline h-3 w-3 mr-1" />
+                        {forumProfile.reactions}
+                      </span>
                     </div>
                   </div>
                 </div>
               </div>
-            ))}
-          </TabsContent>
-
-          <TabsContent value="popular" className="mt-4">
-            <p>Popular posts content goes here.</p>
-          </TabsContent>
-
-          <TabsContent value="my-posts" className="mt-4">
-            <p>My posts content goes here.</p>
+              
+              <div className="col-span-2 space-y-6">
+                <div className="glass-morphism border-white/10 p-4 rounded-lg">
+                  <h4 className="font-bold mb-3">Forum Badges</h4>
+                  <div className="flex flex-wrap gap-3">
+                    {forumProfile.badges.map((badge, index) => (
+                      <Badge 
+                        key={index} 
+                        className="bg-purple-500/20 border-purple-500/30 text-purple-400 px-3 py-1"
+                      >
+                        <Badge className="h-3 w-3 mr-1" />
+                        {badge.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+                
+                <div className="glass-morphism border-white/10 p-4 rounded-lg">
+                  <h4 className="font-bold mb-3">Recent Activity</h4>
+                  <div className="space-y-3">
+                    <div className="p-3 bg-white/5 rounded-md">
+                      <div className="flex items-start">
+                        <MessageSquare className="h-4 w-4 mr-2 mt-0.5 text-royal-gold" />
+                        <div>
+                          <p className="text-sm">
+                            <span className="font-medium">You replied to</span>
+                            <span className="text-royal-gold ml-1">How to maximize spending impact?</span>
+                          </p>
+                          <p className="text-xs text-white/60 mt-1">
+                            <Clock className="inline h-3 w-3 mr-1" />
+                            2 hours ago
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="p-3 bg-white/5 rounded-md">
+                      <div className="flex items-start">
+                        <ThumbsUp className="h-4 w-4 mr-2 mt-0.5 text-royal-gold" />
+                        <div>
+                          <p className="text-sm">
+                            <span className="font-medium">You liked</span>
+                            <span className="text-royal-gold ml-1">Team Red strategy discussion</span>
+                          </p>
+                          <p className="text-xs text-white/60 mt-1">
+                            <Clock className="inline h-3 w-3 mr-1" />
+                            1 day ago
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="p-3 bg-white/5 rounded-md">
+                      <div className="flex items-start">
+                        <MessageSquare className="h-4 w-4 mr-2 mt-0.5 text-royal-gold" />
+                        <div>
+                          <p className="text-sm">
+                            <span className="font-medium">You created a new thread</span>
+                            <span className="text-royal-gold ml-1">Tips for new spenders</span>
+                          </p>
+                          <p className="text-xs text-white/60 mt-1">
+                            <Clock className="inline h-3 w-3 mr-1" />
+                            3 days ago
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="glass-morphism border-white/10 p-4 rounded-lg">
+                  <h4 className="font-bold mb-3">Subscription Status</h4>
+                  <div className="p-3 bg-white/5 rounded-md">
+                    <div className="flex justify-between items-center">
+                      <div>
+                        <p className="font-medium capitalize">{forumProfile.subscription.plan} Plan</p>
+                        <p className="text-sm text-white/60">
+                          {forumProfile.subscription.status === 'active' ? 'Active' : 'Inactive'} - Renews {
+                            forumProfile.subscription.autoRenew ? 'automatically' : 'manually'
+                          }
+                        </p>
+                      </div>
+                      <Badge className="bg-green-500/20 text-green-400 border-green-500/30">
+                        Active
+                      </Badge>
+                    </div>
+                  </div>
+                  
+                  <div className="mt-3">
+                    <h5 className="text-sm font-medium mb-2">Features Included:</h5>
+                    <div className="grid grid-cols-2 gap-2">
+                      {forumProfile.subscription.features.map((feature, index) => (
+                        <div key={index} className="flex items-center text-sm">
+                          <Check className="h-3 w-3 mr-1 text-green-400" />
+                          <span>{feature}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </TabsContent>
         </Tabs>
+        
+        {!canAccessForums() && (
+          <div className="mt-6 glass-morphism border-white/10 p-6 rounded-lg text-center">
+            <h3 className="text-xl font-bold mb-2">Access Restricted</h3>
+            <p className="text-white/70 mb-4">
+              Forum access is available to members with an active subscription.
+            </p>
+            <Button className="bg-royal-gold text-black hover:bg-royal-gold/90">
+              Upgrade Membership
+            </Button>
+          </div>
+        )}
       </CardContent>
     </Card>
   );

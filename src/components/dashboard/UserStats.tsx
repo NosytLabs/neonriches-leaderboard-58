@@ -71,7 +71,7 @@ const UserStats: React.FC<UserStatsProps> = ({ user }) => {
   }
   
   function formatJoinDate(): string {
-    return formatDate(user.joinedAt || user.joinDate || '');
+    return formatDate(user.joinedAt || '');
   }
 };
 

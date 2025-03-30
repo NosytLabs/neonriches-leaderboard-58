@@ -1,60 +1,23 @@
 
-import { TeamType, UserTier } from './user';
-import { MockeryAction } from './mockery';
-
-export interface LeaderboardUser {
-  id: string;
-  username: string;
-  displayName?: string;
-  profileImage?: string;
-  rank: number;
-  previousRank?: number;
-  amountSpent: number;
-  team?: TeamType;
-  tier?: UserTier;
-  joinedAt?: string;
-  isOnline?: boolean;
-  lastActive?: string;
-  isProtected?: boolean;
-}
-
-export interface HistoricalRankEntry {
-  rank: number;
-  date: string;
-  spending: number;
-}
-
-export interface TeamScore {
-  team: TeamType;
-  score: number;
-  memberCount: number;
-  averageSpending: number;
-}
+import { UserProfile, UserTeam } from './user';
 
 export interface LeaderboardFilter {
-  timeFrame: string;
-  timespan: string;
-  sortBy: string;
+  timespan: string;   // 'day', 'week', 'month', 'year', 'all'
+  timeFrame?: string; // Same as timespan but allows backward compatibility
+  sortBy: string;     // 'amountSpent', 'rank', 'joinDate', etc.
   sortDirection: 'asc' | 'desc';
-  team?: TeamType;
+  team?: UserTeam | string;
+  limit?: number;
+  search?: string;
 }
 
-export interface LeaderboardSnapshot {
-  id: string;
-  date: string;
-  entries: LeaderboardUser[];
+export interface LeaderboardUser extends UserProfile {
+  rank: number;
+  amountSpent: number;
+  previousRank?: number;
+  rankDelta?: number;
+  team: UserTeam;
 }
 
-export interface LeaderboardStats {
-  totalUsers: number;
-  totalSpent: number;
-  averageSpent: number;
-  topTeam: TeamType;
-  fastestRiser: {
-    username: string;
-    rankChange: number;
-  };
-}
-
-// Re-export MockeryAction to avoid duplicate declarations
-export type { MockeryAction };
+// For backwards compatibility
+export type LeaderboardEntry = LeaderboardUser;

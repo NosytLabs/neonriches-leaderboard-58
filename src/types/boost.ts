@@ -1,71 +1,43 @@
 
+import { ReactNode } from 'react';
+
 export type BoostEffectType = 
-  | 'spotlight' 
-  | 'highlight' 
-  | 'glitter' 
-  | 'aura' 
-  | 'halo' 
-  | 'sparkle' 
-  | 'pulse' 
-  | 'shimmer' 
-  | 'radiance' 
-  | 'glow' 
-  | 'crown'
-  | 'visibility'
-  | 'appearance'
-  | 'animation'
-  | 'effect'
-  | 'protection'
-  | 'enhancement';
+  'glow' | 
+  'sparkle' | 
+  'shine' | 
+  'pulse' | 
+  'crown' | 
+  'flash' | 
+  'shadow' | 
+  'spotlight' | 
+  'aura';
 
 export interface BoostEffect {
   id: string;
   name: string;
   description: string;
-  cssClass: string;
-  type: BoostEffectType;
+  type: string;
   tier: string;
   price: number;
   duration: number;
-  icon: string;
-  durationDays?: number;
-  previewImage?: string;
-  rarity?: string;
+  icon: ReactNode;
+  cssClass?: string;
+  minTier?: string;
   strength?: number;
   allowStacking?: boolean;
-  cost?: number;
-  minTier?: string;
   iconName?: string;
+  durationDays?: number;
+  previewImage?: string;
 }
 
-export interface ProfileBoost {
+export interface ProfileBoostData {
   id: string;
-  userId: string;
-  effectId: string;
-  startDate: string;
-  endDate: string;
-  isPermanent?: boolean;
-  isActive?: boolean;
-  type?: string;
-  strength?: number;
-  level?: number;
-  status?: 'active' | 'expired' | 'pending';
-  startTime?: number;
-  endTime?: number;
-  duration?: number;
-}
-
-export interface BoostPurchaseResult {
-  success: boolean;
-  message: string;
-  boost?: ProfileBoost;
-  transactionId?: string;
-}
-
-export interface UseProfileBoostReturn {
-  availableBoosts: BoostEffect[];
-  activeBoosts: ProfileBoost[];
-  purchaseBoost: (boostId: string) => Promise<BoostPurchaseResult>;
-  isLoading: boolean;
-  error: string | null;
+  name: string;
+  description: string;
+  duration: number; // in days
+  price: number;
+  cssClass: string;
+  type: BoostEffectType;
+  strength: number;
+  tier: string;
 }

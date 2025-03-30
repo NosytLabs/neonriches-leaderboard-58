@@ -1,133 +1,109 @@
 
-import React, { useState } from 'react';
+import React from 'react';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { ScrollText, Megaphone, BarChart3, Users, Link } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Megaphone, ShoppingBag, Calendar, BarChart, Crown } from 'lucide-react';
-import { useAuth } from '@/contexts/AuthContext';
-import { useFeatureAccess } from '@/hooks/use-feature-access';
+import { useAuth } from '@/contexts';
+import useFeatureAccess from '@/hooks/use-feature-access';
 import MarketingFeatureShop from './MarketingFeatureShop';
 import MarketingEvents from './MarketingEvents';
-import UpgradePromotion from '../profile/UpgradePromotion';
+import ProfileBillboardGuide from './ProfileBillboardGuide';
 
-const MarketingHub = () => {
-  const [activeTab, setActiveTab] = useState('features');
+const MarketingHub: React.FC = () => {
   const { user } = useAuth();
-  const { canAccessFeature } = useFeatureAccess();
+  const { isUserPro } = useFeatureAccess();
   
-  const userTier = user?.subscription?.tier || 'free';
-  const hasMarketing = canAccessFeature('marketing_dashboard');
+  const userTier = user?.tier || 'basic';
+  const userSubscription = user?.subscription;
   
   return (
-    <div className="container mx-auto py-8 px-4 max-w-7xl">
-      <div className="mb-8 text-center">
-        <h1 className="text-3xl font-bold mb-2">Marketing Hub</h1>
-        <p className="text-white/70 max-w-2xl mx-auto">
-          Enhance your profile visibility and track your impact with our marketing tools
-        </p>
-      </div>
-      
-      <Card className="glass-morphism border-white/10 mb-8">
+    <div className="space-y-6">
+      <Card className="glass-morphism border-white/10">
         <CardHeader>
-          <div className="flex items-center">
-            <Megaphone className="mr-3 h-6 w-6 text-purple-400" />
-            <CardTitle>Your Marketing Status</CardTitle>
-          </div>
-          <CardDescription>
-            Current marketing capabilities based on your tier
-          </CardDescription>
+          <CardTitle className="flex items-center">
+            <Megaphone className="mr-2 h-5 w-5 text-royal-gold" />
+            SpendThrone Marketing Hub
+          </CardTitle>
         </CardHeader>
         
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="p-4 glass-morphism border-white/5 rounded-lg">
-              <div className="flex items-center gap-2 mb-3">
-                <Crown className="h-5 w-5 text-purple-400" />
-                <h3 className="font-medium">Current Tier</h3>
-              </div>
-              <p className="text-2xl font-bold mb-2">
-                {userTier.charAt(0).toUpperCase() + userTier.slice(1)}
-              </p>
-              <p className="text-sm text-white/70">
-                {userTier === 'free' ? 
-                  'Basic marketing features only' :
-                  userTier === 'standard' ? 
-                    'Standard marketing toolset' :
-                    userTier === 'premium' ?
-                      'Enhanced marketing capabilities' :
-                      'Royal marketing suite'
-                }
-              </p>
-            </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+            <Card className="glass-morphism border-white/10">
+              <CardContent className="p-6">
+                <div className="flex items-start">
+                  <div className="h-10 w-10 rounded-full bg-royal-gold/20 flex items-center justify-center mr-4">
+                    <Users className="h-5 w-5 text-royal-gold" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-lg mb-1">Profile Views</h3>
+                    <p className="text-3xl font-bold">{user?.profileViews || 0}</p>
+                    <p className="text-sm text-white/60">Lifetime visibility</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
             
-            <div className="p-4 glass-morphism border-white/5 rounded-lg">
-              <div className="flex items-center gap-2 mb-3">
-                <ShoppingBag className="h-5 w-5 text-purple-400" />
-                <h3 className="font-medium">Individual Features</h3>
-              </div>
-              <p className="text-2xl font-bold mb-2">
-                {user?.purchasedFeatures?.length || 0} Purchased
-              </p>
-              <p className="text-sm text-white/70">
-                Individual marketing features you've purchased separately
-              </p>
-            </div>
+            <Card className="glass-morphism border-white/10">
+              <CardContent className="p-6">
+                <div className="flex items-start">
+                  <div className="h-10 w-10 rounded-full bg-royal-gold/20 flex items-center justify-center mr-4">
+                    <Link className="h-5 w-5 text-royal-gold" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-lg mb-1">Link Clicks</h3>
+                    <p className="text-3xl font-bold">{user?.profileClicks || 0}</p>
+                    <p className="text-sm text-white/60">Total engagement</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
             
-            <div className="p-4 glass-morphism border-white/5 rounded-lg">
-              <div className="flex items-center gap-2 mb-3">
-                <BarChart className="h-5 w-5 text-purple-400" />
-                <h3 className="font-medium">Marketing Power</h3>
-              </div>
-              <p className="text-2xl font-bold mb-2">
-                {userTier === 'free' ? '1x' : 
-                 userTier === 'standard' ? '2x' :
-                 userTier === 'premium' ? '5x' : '10x'}
-              </p>
-              <p className="text-sm text-white/70">
-                Your marketing effectiveness multiplier
-              </p>
-            </div>
+            <Card className="glass-morphism border-white/10">
+              <CardContent className="p-6">
+                <div className="flex items-start">
+                  <div className="h-10 w-10 rounded-full bg-royal-gold/20 flex items-center justify-center mr-4">
+                    <BarChart3 className="h-5 w-5 text-royal-gold" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-lg mb-1">Rank</h3>
+                    <p className="text-3xl font-bold">#{user?.rank || 'N/A'}</p>
+                    <p className="text-sm text-white/60">Current position</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </div>
+          
+          <Tabs defaultValue="guide">
+            <TabsList className="grid w-full grid-cols-3 mb-6">
+              <TabsTrigger value="guide">
+                <ScrollText className="h-4 w-4 mr-2" />
+                Billboard Guide
+              </TabsTrigger>
+              <TabsTrigger value="events">
+                <Megaphone className="h-4 w-4 mr-2" />
+                Marketing Events
+              </TabsTrigger>
+              <TabsTrigger value="shop">
+                <Link className="h-4 w-4 mr-2" />
+                Feature Shop
+              </TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="guide">
+              <ProfileBillboardGuide />
+            </TabsContent>
+            
+            <TabsContent value="events">
+              <MarketingEvents />
+            </TabsContent>
+            
+            <TabsContent value="shop">
+              <MarketingFeatureShop />
+            </TabsContent>
+          </Tabs>
         </CardContent>
       </Card>
-      
-      <Tabs 
-        defaultValue="features" 
-        value={activeTab} 
-        onValueChange={setActiveTab} 
-        className="mb-8"
-      >
-        <TabsList className="grid grid-cols-3 w-full max-w-md mx-auto mb-6">
-          <TabsTrigger value="features" className="flex items-center gap-2">
-            <ShoppingBag className="h-4 w-4" />
-            <span className="hidden sm:inline">Marketing Features</span>
-          </TabsTrigger>
-          <TabsTrigger value="events" className="flex items-center gap-2">
-            <Calendar className="h-4 w-4" />
-            <span className="hidden sm:inline">Events</span>
-          </TabsTrigger>
-          <TabsTrigger value="upgrade" className="flex items-center gap-2">
-            <Crown className="h-4 w-4" />
-            <span className="hidden sm:inline">Upgrade</span>
-          </TabsTrigger>
-        </TabsList>
-        
-        <TabsContent value="features">
-          <MarketingFeatureShop />
-        </TabsContent>
-        
-        <TabsContent value="events">
-          <MarketingEvents />
-        </TabsContent>
-        
-        <TabsContent value="upgrade">
-          <UpgradePromotion />
-        </TabsContent>
-      </Tabs>
-      
-      <div className="text-center mt-8 text-white/50 text-sm italic">
-        All marketing features are virtual and enhance your profile visibility and analytics only.
-        <br />They do not affect your rank on the leaderboard, which is determined exclusively by your deposits.
-      </div>
     </div>
   );
 };

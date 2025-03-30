@@ -1,175 +1,220 @@
 
-import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
+import React, { useState } from 'react';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { useToast } from '@/hooks/use-toast';
-import { CheckCircle, Lock, Tag, Sparkles, BarChart3, TrendingUp, Users } from 'lucide-react';
-import { useFeatureAccess } from '@/hooks/use-feature-access';
-import { MARKETING_FEATURES } from '@/config/subscriptions';
+import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { useAuth } from '@/contexts/AuthContext';
-import { createCheckoutSession } from '@/services/stripeService';
+import { ShoppingCart, Search, Tag, Filter, Check } from 'lucide-react';
+import { useAuth } from '@/contexts';
+import useFeatureAccess from '@/hooks/use-feature-access';
+import RoyalDecoration from '@/components/ui/royal-decoration';
 
-const MarketingFeatureShop = () => {
-  const { toast } = useToast();
-  const { canAccessFeature, purchaseFeatureIndividually } = useFeatureAccess();
+interface MarketingFeature {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  tier: string;
+  features?: string[];
+}
+
+const MarketingFeatureShop: React.FC = () => {
   const { user } = useAuth();
+  const { isUserPro } = useFeatureAccess();
+  const [searchTerm, setSearchTerm] = useState('');
+  const [tierFilter, setTierFilter] = useState('all');
   
-  // Get user's purchased features
-  const purchasedFeatures = user?.purchasedFeatures || [];
-  
-  const getFeatureIcon = (id: string) => {
-    switch (id) {
-      case 'basic_analytics':
-        return <BarChart3 className="h-5 w-5" />;
-      case 'advanced_analytics':
-        return <TrendingUp className="h-5 w-5" />;
-      case 'promotion_tools':
-        return <Sparkles className="h-5 w-5" />;
-      case 'audience_insights':
-        return <Users className="h-5 w-5" />;
-      default:
-        return <BarChart3 className="h-5 w-5" />;
+  // Mock features data
+  const features: MarketingFeature[] = [
+    {
+      id: 'feature-boost',
+      name: 'Profile Spotlight',
+      description: 'Get your profile featured at the top of the leaderboard for 24 hours.',
+      price: 20,
+      tier: 'basic',
+      features: [
+        'Top of leaderboard placement',
+        '24 hours of spotlight',
+        'Special visual effects',
+        'Link click tracking'
+      ]
+    },
+    {
+      id: 'feature-analytics',
+      name: 'Advanced Analytics',
+      description: 'Unlock detailed metrics about your profile views, clicks, and engagement.',
+      price: 15,
+      tier: 'plus',
+      features: [
+        'Visitor demographics',
+        'Traffic sources',
+        'Click-through rates',
+        'Engagement heatmaps'
+      ]
+    },
+    {
+      id: 'feature-custom',
+      name: 'Custom Profile Theme',
+      description: 'Create a unique look for your profile with custom colors and animations.',
+      price: 25,
+      tier: 'premium',
+      features: [
+        'Custom color scheme',
+        'Animated elements',
+        'Premium backgrounds',
+        'Interactive components'
+      ]
     }
+  ];
+  
+  const handleBuyFeature = (featureId: string) => {
+    // Implementation would handle purchase logic
+    console.log('Purchasing feature:', featureId);
   };
   
-  const handlePurchase = async (feature: typeof MARKETING_FEATURES[0]) => {
-    if (!user) {
-      toast({
-        title: "Authentication Required",
-        description: "Please sign in to purchase marketing features",
-        variant: "destructive"
-      });
-      return;
-    }
+  // Filter features
+  const filteredFeatures = features.filter(feature => {
+    const matchesSearch = feature.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                         feature.description.toLowerCase().includes(searchTerm.toLowerCase());
     
-    try {
-      // In a real app, this would redirect to Stripe checkout
-      const result = await createCheckoutSession(
-        feature.price,
-        `${feature.name} - Marketing Feature`,
-        'marketing_feature',
-        feature.id
-      );
-      
-      if (result?.url) {
-        window.location.href = result.url;
-      } else {
-        throw new Error('Failed to create checkout session');
-      }
-    } catch (error) {
-      console.error('Error creating checkout session:', error);
-      toast({
-        title: "Purchase Failed",
-        description: "Unable to process your purchase. Please try again.",
-        variant: "destructive"
-      });
-    }
-  };
+    const matchesTier = tierFilter === 'all' || feature.tier === tierFilter;
+    
+    return matchesSearch && matchesTier;
+  });
+  
+  // Check if user already owns a feature
+  const userOwnedFeatures = user?.purchasedFeatures || [];
   
   return (
     <div className="space-y-6">
-      <div className="text-center mb-8">
-        <h2 className="text-2xl font-bold mb-2">Marketing Feature Shop</h2>
-        <p className="text-white/70">
-          Enhance your profile with powerful marketing tools and analytics
-        </p>
-      </div>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {MARKETING_FEATURES.map((feature) => {
-          const isPurchased = purchasedFeatures.includes(feature.id);
-          const canAccess = canAccessFeature(feature.id) || isPurchased;
+      <Card className="glass-morphism border-white/10">
+        <CardHeader>
+          <CardTitle className="flex items-center">
+            <ShoppingCart className="mr-2 h-5 w-5 text-royal-gold" />
+            Marketing Features Marketplace
+          </CardTitle>
+        </CardHeader>
+        
+        <CardContent>
+          <div className="flex flex-col md:flex-row gap-4 mb-6">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/50" />
+              <Input
+                placeholder="Search marketing features..."
+                className="pl-9"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+            
+            <div className="flex gap-2">
+              <Button
+                variant={tierFilter === 'all' ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setTierFilter('all')}
+              >
+                All
+              </Button>
+              <Button
+                variant={tierFilter === 'basic' ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setTierFilter('basic')}
+              >
+                Basic
+              </Button>
+              <Button
+                variant={tierFilter === 'premium' ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setTierFilter('premium')}
+              >
+                Premium
+              </Button>
+            </div>
+          </div>
           
-          return (
-            <Card 
-              key={feature.id} 
-              className={`glass-morphism border-white/10 hover:border-white/20 transition-all ${
-                isPurchased ? 'border-green-500/30 bg-green-500/5' : ''
-              }`}
-            >
-              <CardHeader>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <div className="p-2 rounded-full bg-purple-500/20">
-                      {getFeatureIcon(feature.id)}
-                    </div>
-                    <div>
-                      <CardTitle className="text-lg">{feature.name}</CardTitle>
-                      <CardDescription>{feature.description}</CardDescription>
-                    </div>
-                  </div>
-                  
-                  <Badge variant="outline" className={`
-                    ${feature.tier === 'standard' ? 'bg-blue-500/20 text-blue-300' : 
-                      feature.tier === 'premium' ? 'bg-purple-500/20 text-purple-300' : 
-                      'bg-royal-gold/20 text-royal-gold'}
-                  `}>
-                    {feature.tier.charAt(0).toUpperCase() + feature.tier.slice(1)}
-                  </Badge>
-                </div>
-              </CardHeader>
-              
-              <CardContent>
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-1">
-                    <Tag className="h-4 w-4 text-white/70" />
-                    <span className="text-xl font-bold">${feature.price.toFixed(2)}</span>
-                  </div>
-                  
-                  {isPurchased && (
-                    <Badge variant="outline" className="bg-green-500/20 text-green-300 border-green-500/30">
-                      Already Purchased
-                    </Badge>
-                  )}
-                </div>
+          {filteredFeatures.length === 0 ? (
+            <div className="text-center py-12">
+              <Search className="h-12 w-12 mx-auto text-white/30" />
+              <p className="mt-4 text-white/70">No marketing features found matching your criteria.</p>
+              <Button 
+                variant="outline" 
+                className="mt-4"
+                onClick={() => {
+                  setSearchTerm('');
+                  setTierFilter('all');
+                }}
+              >
+                Clear Filters
+              </Button>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredFeatures.map((feature) => {
+                const isOwned = userOwnedFeatures.includes(feature.id);
+                const canPurchase = 
+                  feature.tier === 'basic' || 
+                  (feature.tier === 'plus' && user?.tier && ['plus', 'premium', 'royal'].includes(user.tier)) ||
+                  (feature.tier === 'premium' && user?.tier && ['premium', 'royal'].includes(user.tier));
                 
-                <div className="space-y-2">
-                  {feature.features.map((feat, index) => (
-                    <div key={index} className="flex items-start gap-2">
-                      <CheckCircle className="h-4 w-4 text-green-400 mt-1 flex-shrink-0" />
-                      <span className="text-sm text-white/80">{feat}</span>
+                return (
+                  <Card 
+                    key={feature.id} 
+                    className={`overflow-hidden transition-all duration-300 hover:shadow-lg ${
+                      isOwned ? 'border-green-500/30 bg-green-500/5' : 'border-white/10'
+                    }`}
+                  >
+                    <div className="p-4">
+                      <div className="flex justify-between items-start mb-3">
+                        <h3 className="font-bold text-lg">{feature.name}</h3>
+                        <Badge variant="outline" className="bg-white/10 border-white/20 capitalize">
+                          {feature.tier}
+                        </Badge>
+                      </div>
+                      
+                      <p className="text-white/70 text-sm mb-4">{feature.description}</p>
+                      
+                      {feature.features && feature.features.length > 0 && (
+                        <div className="space-y-2 mb-4">
+                          {feature.features.map((f, i) => (
+                            <div key={i} className="flex items-start">
+                              <Check className="h-4 w-4 mr-2 mt-0.5 text-royal-gold" />
+                              <p className="text-xs text-white/80">{f}</p>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                      
+                      <div className="flex justify-between items-center mt-4">
+                        <div className="font-bold text-xl">${feature.price}</div>
+                        
+                        {isOwned ? (
+                          <Badge className="bg-green-500/20 text-green-400 border-green-500/30">
+                            <Check className="h-3 w-3 mr-1" />
+                            Purchased
+                          </Badge>
+                        ) : canPurchase ? (
+                          <Button 
+                            onClick={() => handleBuyFeature(feature.id)}
+                            className="bg-royal-gold hover:bg-royal-gold/90 text-black"
+                          >
+                            <ShoppingCart className="h-4 w-4 mr-2" />
+                            Buy Now
+                          </Button>
+                        ) : (
+                          <Button variant="outline" disabled>
+                            <Tag className="h-4 w-4 mr-2" />
+                            Requires {feature.tier}
+                          </Button>
+                        )}
+                      </div>
                     </div>
-                  ))}
-                </div>
-              </CardContent>
-              
-              <CardFooter>
-                {isPurchased ? (
-                  <Button 
-                    className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:opacity-90"
-                    disabled
-                  >
-                    <CheckCircle className="mr-2 h-4 w-4" />
-                    Already Purchased
-                  </Button>
-                ) : user?.subscription?.tier && feature.tier === user.subscription.tier ? (
-                  <Button 
-                    className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:opacity-90"
-                    disabled
-                  >
-                    <CheckCircle className="mr-2 h-4 w-4" />
-                    Included in Your Subscription
-                  </Button>
-                ) : (
-                  <Button 
-                    className="w-full bg-gradient-to-r from-purple-600 to-violet-600 hover:opacity-90"
-                    onClick={() => handlePurchase(feature)}
-                  >
-                    {canAccess ? 'Purchase Again' : 'Purchase Feature'}
-                  </Button>
-                )}
-              </CardFooter>
-            </Card>
-          );
-        })}
-      </div>
-      
-      <div className="bg-white/5 p-4 rounded-lg text-center text-sm text-white/70 mt-8">
-        <p>
-          <span className="font-medium text-white">Pro Tip:</span> Subscribe to Premium or Royal tier to get many of these features included in your subscription!
-        </p>
-      </div>
+                  </Card>
+                );
+              })}
+            </div>
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
 };

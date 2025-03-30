@@ -1,69 +1,117 @@
 
 import React from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
+import { Trophy, Award, Star, Sparkles } from 'lucide-react';
 import { CosmeticItem } from '@/types/cosmetics';
-import { Sparkles } from 'lucide-react';
+import { motion } from 'framer-motion';
 
-export type WishResultType = 'win' | 'lose' | 'pending';
+export type WishResultType = 'success' | 'failure' | 'jackpot';
 
 export interface WishResultModalProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
   result: WishResultType;
-  reward?: CosmeticItem;
-  rarity?: string;
+  reward: CosmeticItem;
+  rarity: string;
   title: string;
   message: string;
   onClose: () => void;
-  onOpenChange?: (open: boolean) => void;
 }
 
 const WishResultModal: React.FC<WishResultModalProps> = ({
+  open,
+  onOpenChange,
   result,
   reward,
   rarity,
   title,
   message,
-  onClose,
-  onOpenChange
+  onClose
 }) => {
+  const getRarityColor = () => {
+    switch (rarity.toLowerCase()) {
+      case 'common': return 'text-gray-300';
+      case 'uncommon': return 'text-green-400';
+      case 'rare': return 'text-blue-400';
+      case 'epic': return 'text-purple-400';
+      case 'legendary': return 'text-orange-400';
+      case 'royal': return 'text-royal-gold';
+      default: return 'text-gray-300';
+    }
+  };
+  
+  const getBgGradient = () => {
+    switch (result) {
+      case 'jackpot': return 'bg-gradient-to-b from-royal-gold/30 to-transparent';
+      case 'success': return 'bg-gradient-to-b from-green-500/30 to-transparent';
+      case 'failure': return 'bg-gradient-to-b from-red-500/30 to-transparent';
+      default: return 'bg-gradient-to-b from-white/10 to-transparent';
+    }
+  };
+
   return (
-    <Dialog onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className={`glass-morphism border-white/10 max-w-md ${getBgGradient()}`}>
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <Sparkles className="h-5 w-5 text-royal-gold" />
+          <motion.div 
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.5 }}
+            className="flex justify-center"
+          >
+            {result === 'jackpot' && (
+              <Trophy className="h-16 w-16 text-royal-gold" />
+            )}
+            {result === 'success' && (
+              <Award className="h-16 w-16 text-green-400" />
+            )}
+            {result === 'failure' && (
+              <Star className="h-16 w-16 text-gray-400" />
+            )}
+          </motion.div>
+          
+          <DialogTitle className="text-center mt-2 text-xl">
             {title}
           </DialogTitle>
         </DialogHeader>
         
-        <div className="flex flex-col items-center py-6 gap-4">
-          {result === 'win' && reward && (
-            <div className="p-6 border rounded-lg bg-black/30 border-royal-gold/50 animate-pulse">
-              <img 
-                src={reward.imageSrc || '/placeholder-item.png'} 
-                alt={reward.name} 
-                className="w-24 h-24 mx-auto"
-              />
-              <h3 className="text-lg font-bold mt-2 text-center">{reward.name}</h3>
-              <p className="text-sm text-white/70 text-center">{reward.description}</p>
-            </div>
-          )}
+        <div className="text-center space-y-4">
+          <p className="text-white/70">
+            {message}
+          </p>
           
-          <p className="text-center text-white/80">{message}</p>
-          
-          {result === 'win' && (
-            <div className="text-center text-royal-gold font-medium animate-bounce">
-              <Sparkles className="h-4 w-4 inline-block mr-1" />
-              {rarity} item acquired!
-            </div>
+          {result !== 'failure' && reward && (
+            <motion.div 
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.3, duration: 0.5 }}
+              className="p-4 glass-morphism border-white/10 rounded-lg"
+            >
+              <div className="mb-2">
+                <span className={`text-sm font-medium uppercase ${getRarityColor()}`}>
+                  {rarity}
+                </span>
+              </div>
+              
+              <h3 className="text-lg font-bold mb-1">{reward.name}</h3>
+              <p className="text-sm text-white/70">{reward.description}</p>
+              
+              <div className="mt-4 flex justify-center">
+                <div className="h-20 w-20 rounded-full bg-black/20 flex items-center justify-center overflow-hidden">
+                  {reward.image ? (
+                    <img src={reward.image} alt={reward.name} className="h-full w-full object-cover" />
+                  ) : (
+                    <Sparkles className="h-10 w-10 text-royal-gold" />
+                  )}
+                </div>
+              </div>
+            </motion.div>
           )}
         </div>
         
-        <DialogFooter>
-          <Button 
-            onClick={onClose} 
-            className={result === 'win' ? 'bg-royal-gold text-black hover:bg-royal-gold/90' : ''}
-          >
+        <DialogFooter className="mt-4">
+          <Button onClick={onClose} className="w-full">
             Close
           </Button>
         </DialogFooter>

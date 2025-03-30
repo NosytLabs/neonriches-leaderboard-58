@@ -1,9 +1,10 @@
+
 export type UserRole = 'user' | 'admin' | 'moderator' | 'vip' | 'developer';
 export type UserStatus = 'active' | 'inactive' | 'suspended' | 'banned';
-export type UserTier = 'free' | 'basic' | 'plus' | 'premium' | 'royal' | 'diamond';
+export type UserTier = 'free' | 'basic' | 'plus' | 'premium' | 'royal' | 'diamond' | 'bronze' | 'silver' | 'gold' | 'platinum' | 'pro';
 export type UserGender = 'male' | 'female' | 'non-binary' | 'other' | 'prefer-not-to-say';
-export type UserTeam = 'red' | 'green' | 'blue';
-export type TeamType = UserTeam | 'none' | 'Red' | 'Green' | 'Blue';
+export type UserTeam = 'red' | 'green' | 'blue' | 'none' | 'Red' | 'Green' | 'Blue';
+export type TeamType = UserTeam;
 
 export interface UserPreferences {
   theme: 'light' | 'dark' | 'system';
@@ -30,6 +31,7 @@ export interface SocialLink {
   isPublic?: boolean;
   icon?: string;
   clicks?: number;
+  id?: string;
 }
 
 export interface ProfileImage {
@@ -41,15 +43,17 @@ export interface ProfileImage {
   uploadDate?: string;
   size?: string;
   type?: string;
+  isPrimary?: boolean;
+  caption?: string;
 }
 
 export interface UserSubscription {
   id: string;
   plan: string;
   status: 'active' | 'cancelled' | 'expired' | 'trial';
-  startDate: Date;
-  endDate?: Date;
-  renewalDate: Date;
+  startDate: string | Date;
+  endDate?: string | Date;
+  renewalDate: string | Date;
   paymentMethod: 'credit_card' | 'paypal' | 'crypto';
   autoRenew: boolean;
   price: number;
@@ -87,7 +91,16 @@ export interface UserSettings {
   publicProfile: boolean;
   allowMessages: boolean;
   language: string;
-  darkMode?: boolean; // For backward compatibility
+  darkMode?: boolean;
+  shameAlerts?: boolean;
+  newFollowerAlerts?: boolean;
+  spendingAlerts?: boolean;
+  mockeryAlerts?: boolean;
+  animationEffects?: boolean;
+  showStatusInLeaderboard?: boolean;
+  displayRankChanges?: boolean;
+  enableMockeryEffects?: boolean;
+  receiveRoyalAnnouncements?: boolean;
 }
 
 export interface ProfileBoost {
@@ -105,7 +118,37 @@ export interface ProfileBoost {
   startTime?: number;
   endTime?: number;
   duration?: number;
+  appliedBy?: string;
 }
+
+export interface CertificateNFT {
+  mintAddress: string;
+  tokenAccount?: string;
+  metadataUri?: string;
+  mintedAt?: string;
+  imageUri?: string;
+}
+
+export interface UserCosmetics {
+  badges: string[];
+  titles: string[];
+  borders: string[];
+  effects: string[];
+  emojis: string[];
+  fonts: string[];
+  colors: string[];
+  backgrounds: string[];
+  themes: string[];
+  activeBorder?: string;
+  activeColor?: string;
+  activeFont?: string;
+  activeBackground?: string;
+  foundersPass?: boolean;
+  socialLinks?: any;
+}
+
+// Maintaining backward compatibility with "User" name referenced in many files
+export type User = UserProfile;
 
 export interface UserProfile {
   id: string;
@@ -126,10 +169,11 @@ export interface UserProfile {
   tier?: UserTier;
   team?: UserTeam | TeamType;
   rank?: number;
+  previousRank?: number;
   preferences?: UserPreferences;
   settings?: UserSettings;
   stats?: UserStats;
-  cosmetics?: Record<string, any>;
+  cosmetics?: UserCosmetics;
   socialLinks?: SocialLink[];
   achievementPoints?: number;
   badges?: string[];
@@ -147,4 +191,27 @@ export interface UserProfile {
   purchasedFeatures?: string[];
   isAdmin?: boolean;
   isAuthenticated?: boolean;
+  isVIP?: boolean;
+  isVerified?: boolean;
+  followers?: number;
+  following?: number;
+  profileViews?: number;
+  profileClicks?: number;
+  activeTitle?: string;
+  gender?: UserGender;
+  profileImages?: ProfileImage[];
+  joinDate?: string;
+  createdAt?: string;
+  updatedAt?: string;
+  certificateNFT?: CertificateNFT;
 }
+
+// For backwards compatibility
+export interface ProfileLink {
+  id: number;
+  url: string;
+  label: string;
+}
+
+// Export Team enum for compatibility
+export type Team = UserTeam;

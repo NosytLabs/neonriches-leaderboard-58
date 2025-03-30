@@ -1,92 +1,84 @@
+
+import { UserTier } from './user';
+
 export enum CosmeticCategory {
+  BORDER = 'borders',
+  COLOR = 'colors',
+  FONT = 'fonts',
+  EMOJI = 'emojis',
+  TITLE = 'titles',
+  BACKGROUND = 'backgrounds',
+  EFFECT = 'effects',
+  BADGE = 'badges',
+  THEME = 'themes',
   APPEARANCE = 'appearance',
   PROFILE = 'profile',
-  INTERACTION = 'interaction',
-  VISUAL = 'visual',
-  ANIMATION = 'animation',
-  SOUND = 'sound',
-  SPECIAL = 'special'
+  INTERACTION = 'interaction'
 }
 
-export type CosmeticRarity = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary' | 'mythic' | 'unique' | 'royal';
+export type CosmeticRarity = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary' | 'royal';
+export type CosmeticType = string;
+export type CosmeticPlacement = string;
 
 export interface CosmeticItem {
   id: string;
   name: string;
   description: string;
-  category: CosmeticCategory;
-  type: string;
-  rarity: CosmeticRarity;
-  cost: number;
   price: number;
-  cssClass?: string;
-  imageSrc?: string;
-  imageUrl?: string;
+  category: CosmeticCategory | string;
+  rarity: CosmeticRarity | string;
   image?: string;
+  cssClass?: string;
+  tags?: string[];
+  requirements?: {
+    tier?: UserTier;
+    minRank?: number;
+    maxRank?: number;
+    minSpent?: number;
+    achievement?: string;
+  };
 }
 
-export interface UserCosmeticState {
-  badges: string[];
-  titles: string[];
-  borders: string[];
-  effects: string[];
-  emojis: string[];
-  fonts?: string[];
-  colors?: string[];
-  backgrounds?: string[];
-  themes?: string[];
-  socialLinks?: any[];
-  activeTitle?: string;
-  activeBorder?: string;
-  activeEffect?: string;
-  activeBackground?: string;
-  activeEmoji?: string;
+export interface UserCosmeticItem extends CosmeticItem {
+  acquiredAt: string;
+  isEquipped: boolean;
 }
 
-export const getRarityColor = (rarity: CosmeticRarity): string => {
-  switch(rarity) {
+export type UserCosmeticState = Record<string, string[]>;
+
+// Utility functions for handling cosmetic rarities - export these to avoid TS errors in imports
+export function getRarityColor(rarity: CosmeticRarity | string): string {
+  switch (rarity) {
     case 'common': return 'text-gray-300';
     case 'uncommon': return 'text-green-400';
     case 'rare': return 'text-blue-400';
     case 'epic': return 'text-purple-400';
-    case 'legendary': return 'text-yellow-400';
-    case 'mythic': return 'text-pink-400';
-    case 'unique': return 'text-orange-400';
+    case 'legendary': return 'text-orange-400';
     case 'royal': return 'text-royal-gold';
     default: return 'text-gray-300';
   }
-};
+}
 
-export const getRarityBgColor = (rarity: CosmeticRarity): string => {
-  switch(rarity) {
-    case 'common': return 'bg-gray-700/50';
-    case 'uncommon': return 'bg-green-900/50';
-    case 'rare': return 'bg-blue-900/50';
-    case 'epic': return 'bg-purple-900/50';
-    case 'legendary': return 'bg-yellow-900/50';
-    case 'mythic': return 'bg-pink-900/50';
-    case 'unique': return 'bg-orange-900/50';
+export function getRarityBgColor(rarity: CosmeticRarity | string): string {
+  switch (rarity) {
+    case 'common': return 'bg-gray-500/20';
+    case 'uncommon': return 'bg-green-500/20';
+    case 'rare': return 'bg-blue-500/20';
+    case 'epic': return 'bg-purple-500/20';
+    case 'legendary': return 'bg-orange-500/20';
     case 'royal': return 'bg-royal-gold/20';
-    default: return 'bg-gray-700/50';
+    default: return 'bg-gray-500/20';
   }
-};
+}
 
-export const getRarityBorderColor = (rarity: CosmeticRarity): string => {
-  switch(rarity) {
-    case 'common': return 'border-gray-500/50';
-    case 'uncommon': return 'border-green-500/50';
-    case 'rare': return 'border-blue-500/50';
-    case 'epic': return 'border-purple-500/50';
-    case 'legendary': return 'border-yellow-500/50';
-    case 'mythic': return 'border-pink-500/50';
-    case 'unique': return 'border-orange-500/50';
-    case 'royal': return 'border-royal-gold/50';
-    default: return 'border-gray-500/50';
+export function getRarityBorderColor(rarity: CosmeticRarity | string): string {
+  switch (rarity) {
+    case 'common': return 'border-gray-500/40';
+    case 'uncommon': return 'border-green-500/40';
+    case 'rare': return 'border-blue-500/40';
+    case 'epic': return 'border-purple-500/40';
+    case 'legendary': return 'border-orange-500/40';
+    case 'royal': return 'border-royal-gold/40';
+    default: return 'border-gray-500/40';
   }
-};
-
-export type UserCosmetics = UserCosmeticState;
-
-export type CosmeticType = string;
-export type CosmeticPlacement = 'profile' | 'card' | 'leaderboard' | 'chat' | 'global';
-export type UserCosmeticItem = CosmeticItem & { equipped: boolean; acquired: string };
+}
