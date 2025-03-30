@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -6,16 +5,11 @@ import { Button } from '@/components/ui/button';
 import { Flame, Tag, Clock, Coins } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import MedievalIcon from '@/components/ui/medieval-icon';
-import { 
-  CosmeticItem, 
-  CosmeticRarity,
-  getRarityColor, 
-  getRarityBgColor, 
-  getRarityBorderColor 
-} from '@/types/cosmetics';
+import { CosmeticItem, CosmeticRarity } from '@/types/cosmetics';
+import { getRarityColor, getRarityBgColor, getRarityBorderColor } from '@/utils/cosmetics';
 import { cosmeticsData } from '@/data/cosmeticsData';
 import { formatCurrency } from '@/utils/formatters';
-import { useAuth } from '@/contexts/auth';
+import { useAuth } from '@/contexts/AuthContext';
 import { ensureUser } from '@/utils/userAdapter';
 import { spendFromWallet } from '@/services/walletService';
 
@@ -32,18 +26,15 @@ const FireSaleEvent = ({ eventId, startDate, endDate }: FireSaleEventProps) => {
   const { user, updateUserProfile } = useAuth();
   
   useEffect(() => {
-    // Simulate getting sale items - in a real app, you would fetch this from your backend
     const getDiscountedItems = () => {
-      // For demo purposes, just pick a few random items from the cosmetics data
       const randomItems = [...cosmeticsData]
         .sort(() => 0.5 - Math.random())
         .slice(0, 4);
       
-      // Apply "sale" prices
       const discountedItems = randomItems.map(item => ({
         ...item,
         originalCost: item.cost,
-        cost: Math.floor(item.cost * 0.7) // 30% discount
+        cost: Math.floor(item.cost * 0.7)
       }));
       
       setSaleItems(discountedItems);
@@ -111,7 +102,6 @@ const FireSaleEvent = ({ eventId, startDate, endDate }: FireSaleEventProps) => {
       );
       
       if (success) {
-        // Update user's cosmetics collection
         const userCosmetics = user.cosmetics || {
           borders: [],
           colors: [],
@@ -124,7 +114,6 @@ const FireSaleEvent = ({ eventId, startDate, endDate }: FireSaleEventProps) => {
           themes: []
         };
         
-        // Add the item to the appropriate collection based on its type
         const updatedCosmetics = { ...userCosmetics };
         if (Array.isArray(updatedCosmetics[item.type as keyof typeof updatedCosmetics])) {
           (updatedCosmetics[item.type as keyof typeof updatedCosmetics] as string[]).push(item.id);

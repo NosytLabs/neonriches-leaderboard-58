@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -212,7 +211,7 @@ const TeamChat: React.FC<TeamChatProps> = ({ user, limit = 50 }) => {
       
       setMessage('');
       setIsLoading(false);
-      playSound('message', 0.2);
+      playSound('message');
     }, 300);
   };
   
@@ -260,7 +259,7 @@ const TeamChat: React.FC<TeamChatProps> = ({ user, limit = 50 }) => {
     }
     
     setActiveTab(value);
-    playSound('click', 0.2);
+    playSound('click');
   };
   
   const getTeamColor = (team: UserTeam | null) => {
@@ -321,7 +320,7 @@ const TeamChat: React.FC<TeamChatProps> = ({ user, limit = 50 }) => {
         description: "You have successfully joined the chat.",
       });
       
-      playSound('notification', 0.2);
+      playSound('notification');
     }, 800);
   };
   

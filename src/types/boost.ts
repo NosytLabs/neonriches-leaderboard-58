@@ -28,13 +28,14 @@ export interface BoostEffect {
   price: number;
   duration: number;
   icon: string;
-  minTier?: string;
   durationDays?: number;
   previewImage?: string;
   rarity?: string;
   strength?: number;
   allowStacking?: boolean;
   cost?: number;
+  minTier?: string;
+  iconName?: string;
 }
 
 export interface ProfileBoost {

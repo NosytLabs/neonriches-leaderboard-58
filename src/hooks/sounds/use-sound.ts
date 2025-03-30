@@ -43,7 +43,11 @@ export const useSound = (props?: UseSoundProps) => {
     warning: 0.6,
     medallion: 0.7,
     trumpet: 0.8,
-    royalAnnouncement: 0.9
+    royalAnnouncement: 0.9,
+    levelUp: 0.8,
+    wish: 0.7,
+    swordClash: 0.8,
+    coins: 0.6
   };
   
   // Play a sound

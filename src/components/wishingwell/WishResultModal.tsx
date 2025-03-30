@@ -3,17 +3,21 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Trophy, X } from 'lucide-react';
+import { CosmeticItem } from '@/types/cosmetics';
 
-interface WishResultModalProps {
+export type WishResultType = 'win' | 'lose' | 'pending';
+
+export interface WishResultModalProps {
   isOpen: boolean;
   onClose: () => void;
-  result: 'win' | 'lose' | 'pending';
+  result: WishResultType;
   title?: string;
   message?: string;
   rarity?: string;
+  reward?: CosmeticItem;
 }
 
-const WishResultModal = ({ isOpen, onClose, result, title, message, rarity }: WishResultModalProps) => {
+const WishResultModal = ({ isOpen, onClose, result, title, message, rarity, reward }: WishResultModalProps) => {
   const getResultContent = () => {
     switch (result) {
       case 'win':
@@ -57,6 +61,12 @@ const WishResultModal = ({ isOpen, onClose, result, title, message, rarity }: Wi
           <p className="text-white/80">{resultContent.message}</p>
           {rarity && (
             <p className="mt-2 text-royal-gold font-medium">{rarity} Rarity</p>
+          )}
+          {reward && (
+            <div className="mt-4">
+              <h4 className="font-semibold">{reward.name}</h4>
+              <p className="text-sm text-white/70">{reward.description}</p>
+            </div>
           )}
         </div>
         

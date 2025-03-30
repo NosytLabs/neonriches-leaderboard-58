@@ -1,7 +1,8 @@
+
 export type UserTier = 'free' | 'basic' | 'plus' | 'premium' | 'royal' | 'bronze' | 'silver' | 'gold' | 'platinum' | 'diamond' | 'pro';
 export type TeamType = 'none' | 'Red' | 'Green' | 'Blue' | 'red' | 'green' | 'blue';
 export type UserTeam = TeamType;
-export type UserGender = 'male' | 'female' | 'other' | 'king' | 'queen' | 'neutral' | 'jester' | 'noble';
+export type UserGender = 'male' | 'female' | 'other' | 'king' | 'queen' | 'neutral' | 'jester' | 'noble' | 'unspecified';
 export type UserRole = 'user' | 'admin' | 'moderator' | 'vip';
 export type UserStatus = 'active' | 'inactive' | 'banned' | 'pending';
 
@@ -14,6 +15,7 @@ export interface SocialLink {
   icon?: string;
   clicks?: number;
   username?: string;
+  isVerified?: boolean;
 }
 
 export type ProfileLink = SocialLink;
@@ -45,6 +47,7 @@ export interface UserSubscription {
   startDate: string;
   endDate: string;
   autoRenew: boolean;
+  tier?: string;
 }
 
 export interface UserProfile {
@@ -69,6 +72,7 @@ export interface UserProfile {
   cosmetics?: UserCosmetics;
   settings?: UserSettings;
   avatarUrl?: string;
+  isAuthenticated?: boolean;
   
   // Missing properties that we're adding
   spendStreak?: number;
@@ -107,6 +111,7 @@ export interface UserCosmetics {
   activeColor?: string;
   activeFont?: string;
   activeEmoji?: string;
+  activeTitle?: string;
 }
 
 export interface UserSettings {
@@ -135,6 +140,7 @@ export interface UserSettings {
   language: string;
   allowMessages: boolean;
   showTeam: boolean;
+  darkMode?: boolean;
   
   // Missing properties
   newFollowerAlerts?: boolean;
@@ -143,3 +149,6 @@ export interface UserSettings {
 
 // Define a User type that aliases UserProfile for backward compatibility
 export type User = UserProfile;
+
+// Add Team alias for backwards compatibility
+export type Team = TeamType;

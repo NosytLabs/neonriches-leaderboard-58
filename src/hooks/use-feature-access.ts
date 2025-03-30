@@ -1,171 +1,173 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
-import { PRODUCT_FEATURES } from '@/config/subscriptions';
+import { useToast } from '@/hooks/use-toast';
+import { createCheckoutSession } from '@/services/stripeService';
 
-// Define a Feature type to use in the FeatureAccessCard component
-export type Feature = string;
+type FeatureTier = 'free' | 'standard' | 'premium' | 'royal';
 
-export interface FeatureAccessHook {
-  hasActiveSubscription: boolean;
-  isLoading: boolean;
-  canAccessFeature: (featureName: string) => boolean;
-  requiredTierForFeature: (featureName: string) => string;
-  hasAccess: (featureName: Feature) => boolean;
-  purchaseFeatureIndividually: (featureId: string) => Promise<boolean>;
-  getMarketingFeaturePriceId: (featureId: string) => string | null;
+interface FeatureDefinition {
+  id: string;
+  minTier: FeatureTier;
+  individualPurchase: boolean;
+  price: number;
 }
 
-// This hook checks if the user has access to specific features
-export function useFeatureAccess(): FeatureAccessHook {
+// Define the features and their access requirements
+const FEATURES: Record<string, FeatureDefinition> = {
+  'basic_analytics': { id: 'basic_analytics', minTier: 'standard', individualPurchase: true, price: 9.99 },
+  'advanced_analytics': { id: 'advanced_analytics', minTier: 'premium', individualPurchase: true, price: 19.99 },
+  'multi_profile': { id: 'multi_profile', minTier: 'premium', individualPurchase: true, price: 14.99 },
+  'custom_themes': { id: 'custom_themes', minTier: 'standard', individualPurchase: true, price: 7.99 },
+  'priority_support': { id: 'priority_support', minTier: 'premium', individualPurchase: false, price: 0 },
+  'marketing_dashboard': { id: 'marketing_dashboard', minTier: 'standard', individualPurchase: true, price: 9.99 },
+  'audience_insights': { id: 'audience_insights', minTier: 'premium', individualPurchase: true, price: 24.99 },
+  'unlimited_cosmetics': { id: 'unlimited_cosmetics', minTier: 'royal', individualPurchase: false, price: 0 },
+  'royal_profile': { id: 'royal_profile', minTier: 'royal', individualPurchase: false, price: 0 }
+};
+
+// Map subscription tiers to their numerical level for comparison
+const TIER_LEVELS: Record<string, number> = {
+  'free': 0,
+  'standard': 1,
+  'premium': 2,
+  'royal': 3
+};
+
+export interface UseFeatureAccessReturn {
+  canAccessFeature: (featureId: string) => boolean;
+  checkFeatureAccess: (featureId: string) => { hasAccess: boolean; reason: string };
+  purchaseFeatureIndividually: (featureId: string) => Promise<boolean>;
+  isLoading: boolean;
+  error: string | null;
+}
+
+export const useFeatureAccess = (): UseFeatureAccessReturn => {
   const { user } = useAuth();
-  const [isLoading, setIsLoading] = useState(true);
-  const [hasActiveSubscription, setHasActiveSubscription] = useState(false);
+  const { toast } = useToast();
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  // Feature to tier mapping - maps each feature to the minimum tier required
-  const featureToTierMap: Record<string, string> = {
-    // Free tier features (available to all users)
-    'basic_profile': 'free',
-    'leaderboard_presence': 'free',
-    'team_affiliation': 'free',
-    'profile_boost_eligible': 'free',
-    'basic_marketing': 'free',
+  // Check if the user has access to a feature based on subscription tier or individual purchase
+  const canAccessFeature = useCallback((featureId: string): boolean => {
+    if (!user || !FEATURES[featureId]) return false;
     
-    // Standard tier features
-    'weekly_events_access': 'standard',
-    
-    // Premium tier features
-    'premium_profile': 'premium',
-    'multiple_images': 'premium',
-    'multiple_links': 'premium',
-    'rgb_borders': 'premium',
-    'video_embeds': 'premium',
-    'analytics_basic': 'premium',
-    'marketing_dashboard': 'premium',
-    'profile_promotion': 'premium',
-    
-    // Royal tier features
-    'royal_styling': 'royal',
-    'permanent_boost': 'royal',
-    'exclusive_effects': 'royal',
-    'mockery_immunity': 'royal',
-    'analytics_advanced': 'royal',
-    'team_leadership': 'royal',
-    'priority_placement': 'royal',
-    'audience_demographics': 'royal'
-  };
-
-  useEffect(() => {
-    const checkSubscription = async () => {
-      try {
-        // Check if the user has an active subscription
-        const hasSubscription = Boolean(
-          user?.subscription && 
-          user.subscription.status === 'active' &&
-          user.subscription.tier !== 'free'
-        );
-        
-        setHasActiveSubscription(hasSubscription);
-      } catch (error) {
-        console.error("Error checking subscription:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    checkSubscription();
-  }, [user]);
-
-  // Check if the user can access a specific feature
-  const canAccessFeature = (featureName: string): boolean => {
-    if (!user) return false;
-    
-    // Everyone has access to free tier features
-    const requiredTier = featureToTierMap[featureName] || 'royal';
-    if (requiredTier === 'free') return true;
-    
-    // Check if user has individually purchased this feature
-    if (user.purchasedFeatures && user.purchasedFeatures.includes(featureName)) {
+    // Check if user has directly purchased this feature
+    if (user.purchasedFeatures?.includes(featureId)) {
       return true;
     }
     
-    const userTier = user.subscription?.tier || user.tier || 'free';
+    // Check if user's subscription tier includes this feature
+    const feature = FEATURES[featureId];
+    const userSubscription = user.subscription;
     
-    // Tier hierarchy for access control
-    const tierHierarchy = {
-      'free': 0,
-      'standard': 1,
-      'premium': 2,
-      'royal': 3
-    };
-    
-    // Get numeric values for comparison
-    const requiredLevel = tierHierarchy[requiredTier as keyof typeof tierHierarchy] || 0;
-    const userLevel = tierHierarchy[userTier as keyof typeof tierHierarchy] || 0;
-    
-    // User can access if their tier is equal or higher than required
-    return userLevel >= requiredLevel;
-  };
-
-  // Get the required tier for a feature
-  const requiredTierForFeature = (featureName: string): string => {
-    return featureToTierMap[featureName] || 'premium';
-  };
-
-  // Add the hasAccess method as an alias to canAccessFeature for consistency
-  const hasAccess = (featureName: Feature): boolean => {
-    return canAccessFeature(featureName);
-  };
-  
-  // Function to purchase a feature individually
-  const purchaseFeatureIndividually = async (featureId: string): Promise<boolean> => {
-    // In a real app, this would redirect to a Stripe checkout or similar
-    console.log(`Purchasing feature ${featureId} individually`);
-    
-    // Mock implementation - in real app this would call a payment gateway
-    try {
-      // Here we would actually call the payment API
-      const success = true; // Mock success
+    if (userSubscription && userSubscription.tier) {
+      const userTierLevel = TIER_LEVELS[userSubscription.tier.toLowerCase()] || 0;
+      const requiredTierLevel = TIER_LEVELS[feature.minTier];
       
-      if (success && user) {
-        // In a real app, this would be handled by a webhook after successful payment
-        const purchasedFeatures = user.purchasedFeatures || [];
-        if (!purchasedFeatures.includes(featureId)) {
-          purchasedFeatures.push(featureId);
-          // Update user profile - this is just mock code
-          // In a real app, this would be handled server-side
-          console.log(`Feature ${featureId} purchased successfully!`);
-        }
+      return userTierLevel >= requiredTierLevel;
+    }
+    
+    return false;
+  }, [user]);
+  
+  // More detailed check with reason for lack of access
+  const checkFeatureAccess = useCallback((featureId: string): { hasAccess: boolean; reason: string } => {
+    if (!user) {
+      return { hasAccess: false, reason: 'Please log in to access this feature.' };
+    }
+    
+    if (!FEATURES[featureId]) {
+      return { hasAccess: false, reason: 'Feature not found.' };
+    }
+    
+    if (user.purchasedFeatures?.includes(featureId)) {
+      return { hasAccess: true, reason: 'Individually purchased' };
+    }
+    
+    const feature = FEATURES[featureId];
+    const userSubscription = user.subscription;
+    
+    if (userSubscription && userSubscription.tier) {
+      const userTierLevel = TIER_LEVELS[userSubscription.tier.toLowerCase()] || 0;
+      const requiredTierLevel = TIER_LEVELS[feature.minTier];
+      
+      if (userTierLevel >= requiredTierLevel) {
+        return { hasAccess: true, reason: `Included in ${userSubscription.tier} subscription` };
       }
       
-      return success;
-    } catch (error) {
-      console.error('Error purchasing feature:', error);
+      return { 
+        hasAccess: false, 
+        reason: `Requires ${feature.minTier} subscription. You have ${userSubscription.tier}.` 
+      };
+    }
+    
+    return { hasAccess: false, reason: `Requires ${feature.minTier} subscription.` };
+  }, [user]);
+  
+  // Purchase a feature individually
+  const purchaseFeatureIndividually = useCallback(async (featureId: string): Promise<boolean> => {
+    if (!user) {
+      toast({
+        title: "Authentication Required",
+        description: "Please sign in to purchase features",
+        variant: "destructive"
+      });
       return false;
     }
-  };
-  
-  // Get the price ID for a marketing feature
-  const getMarketingFeaturePriceId = (featureId: string): string | null => {
-    // In a real app, this would look up the price ID from your backend or config
-    // Mock implementation
-    const priceIdMap: Record<string, string> = {
-      'basic_analytics': 'price_marketing_basic_analytics',
-      'advanced_analytics': 'price_marketing_advanced_analytics',
-      'promotion_tools': 'price_marketing_promotion_tools',
-      'audience_insights': 'price_marketing_audience_insights'
-    };
     
-    return priceIdMap[featureId] || null;
-  };
-
+    const feature = FEATURES[featureId];
+    
+    if (!feature) {
+      toast({
+        title: "Feature Not Found",
+        description: "The requested feature is not available",
+        variant: "destructive"
+      });
+      return false;
+    }
+    
+    if (!feature.individualPurchase) {
+      toast({
+        title: "Subscription Required",
+        description: `This feature is only available as part of a ${feature.minTier} subscription`,
+        variant: "destructive"
+      });
+      return false;
+    }
+    
+    setIsLoading(true);
+    setError(null);
+    
+    try {
+      // In a real app, this would redirect to Stripe checkout
+      const checkoutSession = await createCheckoutSession(
+        feature.price, 
+        `${featureId} Feature`, 
+        'feature', 
+        featureId
+      );
+      
+      // Simulate successful purchase for now
+      setIsLoading(false);
+      return true;
+    } catch (err: any) {
+      setError(err.message || 'Failed to purchase feature');
+      toast({
+        title: "Purchase Failed",
+        description: err.message || 'There was an error processing your payment',
+        variant: "destructive"
+      });
+      setIsLoading(false);
+      return false;
+    }
+  }, [user, toast]);
+  
   return {
-    hasActiveSubscription,
-    isLoading,
     canAccessFeature,
-    requiredTierForFeature,
-    hasAccess,
+    checkFeatureAccess,
     purchaseFeatureIndividually,
-    getMarketingFeaturePriceId
+    isLoading,
+    error
   };
-}
+};

@@ -29,7 +29,8 @@ export type SoundType =
   | 'royalAnnouncement'
   | 'levelUp'
   | 'wish'
-  | 'seal';
+  | 'swordClash'
+  | 'coins';
 
 export interface SoundConfig {
   enabled: boolean;
@@ -79,6 +80,5 @@ export interface UseSoundReturn {
   stop: (sound?: SoundType) => void;
   isPlaying: boolean;
   duration: number;
-  playSound?: (sound: SoundType) => void;
-  playSuccess?: () => void; // Fixing these to not expect a second parameter
+  playSound: (sound: SoundType) => void;
 }
