@@ -1,149 +1,191 @@
 
-/**
- * Team-related utility functions
- */
-import { TeamColor, UserTeam } from '@/types/user';
-
-/**
- * Get the display color for a team
- * @param team Team identifier
- * @returns CSS color class
- */
-export function getTeamColor(team: UserTeam | string): string {
-  switch (team) {
-    case 'red':
-      return 'text-red-500';
-    case 'blue':
-      return 'text-blue-500';
-    case 'green':
-      return 'text-green-500';
-    default:
-      return 'text-gray-500';
-  }
-}
-
-/**
- * Get the border color for a team
- * @param team Team identifier
- * @returns CSS border color class
- */
-export function getTeamBorderColor(team: UserTeam | string): string {
-  switch (team) {
-    case 'red':
-      return 'border-red-500';
-    case 'blue':
-      return 'border-blue-500';
-    case 'green':
-      return 'border-green-500';
-    default:
-      return 'border-gray-500';
-  }
-}
-
-/**
- * Get the background color for a team
- * @param team Team identifier
- * @returns CSS background color class
- */
-export function getTeamBackgroundColor(team: UserTeam | string): string {
-  switch (team) {
-    case 'red':
-      return 'bg-red-500/10';
-    case 'blue':
-      return 'bg-blue-500/10';
-    case 'green':
-      return 'bg-green-500/10';
-    default:
-      return 'bg-gray-500/10';
-  }
-}
+import { TeamType } from '@/types/user';
 
 /**
  * Get the display name for a team
  * @param team Team identifier
  * @returns Human-readable team name
  */
-export function getTeamName(team: UserTeam | string): string {
+export function getTeamName(team: TeamType | null | undefined): string {
   switch (team) {
-    case 'red':
-      return 'Crimson Crown';
-    case 'blue':
-      return 'Azure Knights';
-    case 'green':
-      return 'Emerald Empire';
-    default:
-      return 'Unaligned';
+    case 'red': return 'Royal Crimson';
+    case 'green': return 'Emerald Kingdom';
+    case 'blue': return 'Azure Dynasty';
+    case 'none': return 'Unaligned';
+    default: return 'Unaligned';
   }
 }
 
 /**
- * Get historical lore note for a team
+ * Get the color class for a team
  * @param team Team identifier
- * @returns Historical note about the team
+ * @returns CSS color class for the team
  */
-export function getTeamHistoricalNote(team: TeamColor): string {
+export function getTeamColor(team: TeamType | null | undefined): string {
   switch (team) {
-    case 'red':
-      return 'The Crimson Crown, descendants of the ancient royal bloodline, known for their fierce loyalty and determination to restore monarchic rule.';
-    case 'blue':
-      return 'The Azure Knights, guardians of wisdom and tradition, believe true nobility comes from enlightenment and justice rather than bloodlines.';
-    case 'green':
-      return 'The Emerald Empire, merchants and innovators who rose from common roots, advocate for meritocracy where wealth and contribution determine status.';
-    default:
-      return 'Those who have yet to pledge allegiance to a noble house in the struggle for the throne.';
+    case 'red': return 'text-royal-crimson';
+    case 'green': return 'text-royal-gold'; // Using gold for green team
+    case 'blue': return 'text-royal-navy';
+    default: return 'text-white';
   }
 }
 
 /**
- * Get a gendered title based on user preference
- * @param gender User gender preference
- * @returns Appropriate title
+ * Get the border color class for a team
+ * @param team Team identifier
+ * @returns CSS border color class for the team
  */
-export function getGenderTitle(gender: string): string {
-  switch (gender?.toLowerCase()) {
-    case 'male':
-      return 'Lord';
-    case 'female':
-      return 'Lady';
-    case 'neutral':
-    case 'nonbinary':
-      return 'Noble';
-    default:
-      return 'Noble';
+export function getTeamBorderColor(team: TeamType | null | undefined): string {
+  switch (team) {
+    case 'red': return 'border-royal-crimson/30';
+    case 'green': return 'border-royal-gold/30'; // Using gold for green team
+    case 'blue': return 'border-royal-navy/30';
+    default: return 'border-white/10';
   }
 }
 
 /**
- * Get emoji representation for gender
- * @param gender User gender preference
- * @returns Emoji character
+ * Get the background color class for a team
+ * @param team Team identifier
+ * @returns CSS background color class for the team
  */
-export function getGenderEmoji(gender: string): string {
-  switch (gender?.toLowerCase()) {
-    case 'male':
-      return '♂️';
-    case 'female':
-      return '♀️';
-    case 'neutral':
-    case 'nonbinary':
-      return '⚧️';
-    default:
-      return '';
+export function getTeamBgColor(team: TeamType | null | undefined): string {
+  switch (team) {
+    case 'red': return 'bg-royal-crimson/10';
+    case 'green': return 'bg-royal-gold/10'; // Using gold for green team
+    case 'blue': return 'bg-royal-navy/10';
+    default: return 'bg-white/5';
   }
 }
 
 /**
- * Get initials from a name
+ * Get the motto for a team
+ * @param team Team identifier
+ * @returns Team motto
+ */
+export function getTeamMotto(team: TeamType | null | undefined): string {
+  switch (team) {
+    case 'red': return 'Crimson Coins Rule the Realm';
+    case 'green': return 'All That Glitters Is Our Gold';
+    case 'blue': return 'Deep Waters Run Rich with Wealth';
+    default: return 'Choose a team to display your allegiance';
+  }
+}
+
+/**
+ * Get a benefit description for a team
+ * @param team Team identifier
+ * @returns Team benefit description
+ */
+export function getTeamBenefit(team: TeamType | null | undefined): string {
+  switch (team) {
+    case 'red': return '5% bonus on all transactions to fellow Crimson members';
+    case 'green': return 'Weekly golden profile boost for loyal Gold supporters';
+    case 'blue': return 'Exclusive access to Azure Dynasty team events';
+    default: return 'Join a team to unlock team benefits';
+  }
+}
+
+/**
+ * Get an absurd statistic for a team
+ * @param team Team identifier
+ * @returns Absurd team statistic
+ */
+export function getTeamAbsurdStat(team: TeamType | null | undefined): string {
+  switch (team) {
+    case 'red': return 'Members have collectively spent enough to buy 3 private islands';
+    case 'green': return 'Our gold reserves would sink a medium-sized yacht';
+    case 'blue': return 'If stacked, our transactions would reach the mesosphere';
+    default: return 'No team statistics available';
+  }
+}
+
+/**
+ * Get the security guarantee for a team
+ * @param team Team identifier
+ * @returns Team security guarantee text
+ */
+export function getTeamSecurityGuarantee(team: TeamType | null | undefined): string {
+  switch (team) {
+    case 'red': return 'Protected by an army of highly-trained digital knights';
+    case 'green': return 'Secured by state-of-the-art golden blockchain technology';
+    case 'blue': return 'Guarded by the mythical sea creatures of the deep web';
+    default: return 'Standard security protocols in place';
+  }
+}
+
+/**
+ * Get a satirical NFT joke for a team
+ * @param team Team identifier
+ * @returns Team NFT joke
+ */
+export function getTeamNFTJoke(team: TeamType | null | undefined): string {
+  switch (team) {
+    case 'red': return 'Our NFTs are so exclusive they don\'t even exist';
+    case 'green': return 'Each transaction creates a digital statue in your honor*';
+    case 'blue': return 'Your profile is technically underwater real estate';
+    default: return 'NFTs are digital assets with questionable utility';
+  }
+}
+
+/**
+ * Get a crypto roast for a team
+ * @param team Team identifier
+ * @returns Team crypto roast
+ */
+export function getTeamCryptoRoast(team: TeamType | null | undefined): string {
+  switch (team) {
+    case 'red': return 'Making real cash disappear faster than a cryptocurrency exchange';
+    case 'green': return 'Our gold is as real as your crypto portfolio gains';
+    case 'blue': return 'More stable than a stablecoin during a financial crisis';
+    default: return 'Cryptocurrency: turning electricity into speculation since 2009';
+  }
+}
+
+/**
+ * Get the title based on gender
+ * @param gender Gender identifier
+ * @returns Appropriate title for the gender
+ */
+export function getGenderTitle(gender: string | null | undefined): string {
+  switch (gender) {
+    case 'king': return 'His Majesty';
+    case 'queen': return 'Her Majesty';
+    case 'jester': return 'The Honorable Jester';
+    case 'neutral': return 'Your Excellency';
+    case 'noble': return 'Noble Sovereign';
+    default: return 'Your Highness';
+  }
+}
+
+/**
+ * Get an emoji for a gender
+ * @param gender Gender identifier
+ * @returns Emoji representing the gender
+ */
+export function getGenderEmoji(gender: string | null | undefined): string {
+  switch (gender) {
+    case 'king': return '👑';
+    case 'queen': return '👸';
+    case 'jester': return '🃏';
+    case 'neutral': return '🏅';
+    case 'noble': return '🎭';
+    default: return '👤';
+  }
+}
+
+/**
+ * Get the initials from a name
  * @param name Full name
- * @param maxLength Maximum number of initials
- * @returns String of initials
+ * @returns Initials (up to 2 characters)
  */
-export function getInitials(name: string, maxLength = 2): string {
-  if (!name) return '';
+export function getInitials(name: string | undefined | null): string {
+  if (!name) return '?';
   
-  return name
-    .split(' ')
-    .map(part => part.charAt(0).toUpperCase())
-    .slice(0, maxLength)
-    .join('');
+  const parts = name.split(' ');
+  if (parts.length === 1) {
+    return name.substring(0, 2).toUpperCase();
+  }
+  
+  return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
 }

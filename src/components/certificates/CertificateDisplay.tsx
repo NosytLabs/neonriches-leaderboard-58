@@ -111,17 +111,15 @@ const CertificateDisplay = ({
               )}
               
               {certificate.isMinted && certificate.mintAddress && (
-                <Button 
-                  variant="outline"
-                  className="w-full sm:w-auto bg-purple-500/10 text-purple-300" 
-                  as="a"
+                <a 
                   href={`https://explorer.solana.com/address/${certificate.mintAddress}`}
                   target="_blank"
                   rel="noopener noreferrer"
+                  className="inline-flex h-10 px-4 py-2 w-full sm:w-auto items-center justify-center rounded-md bg-purple-500/10 text-purple-300 text-sm font-medium ring-offset-background transition-colors hover:bg-purple-500/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-purple-500/20"
                 >
                   <Shield size={16} className="mr-2" />
                   View on Solana
-                </Button>
+                </a>
               )}
             </div>
           </div>

@@ -2,7 +2,7 @@
 /**
  * Utility functions for adapting user data
  */
-import { User } from '@/types/user';
+import { User, UserProfile } from '@/types/user';
 
 /**
  * Ensures we have a valid user object, providing defaults for missing properties
@@ -37,7 +37,26 @@ export default function ensureUser(user: Partial<User> | null | undefined): User
     lastActive: user.lastActive || new Date().toISOString(),
     totalSpent: user.totalSpent || 0,
     role: user.role || 'user',
+    cosmetics: user.cosmetics || {},
     ...user, // Keep any additional properties from the original user
+  };
+}
+
+/**
+ * Converts a UserProfile to a full User object
+ * @param profile UserProfile to convert
+ * @returns User object with all required fields
+ */
+export function adaptUserProfileToUser(profile: UserProfile | null | undefined): User {
+  if (!profile) {
+    return createDefaultUser();
+  }
+
+  return {
+    ...profile,
+    createdAt: profile.createdAt || profile.joinedAt,
+    totalSpent: profile.totalSpent || profile.amountSpent || 0,
+    role: profile.role || 'user',
   };
 }
 

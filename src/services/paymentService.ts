@@ -1,142 +1,170 @@
 
-/**
- * Payment service for handling transactions
- */
 import { User } from '@/types/user';
-import ensureUser from '@/utils/userAdapter';
+import { Transaction, TransactionType } from '@/types/transaction';
 
-export type TransactionType = 'deposit' | 'withdrawal' | 'purchase' | 'refund' | 'reward';
-
-export interface Transaction {
-  id: string;
-  userId: string;
-  amount: number;
-  type: TransactionType;
-  description: string;
-  timestamp: string;
-  status: 'pending' | 'completed' | 'failed';
-  metadata?: Record<string, any>;
-}
+// In-memory transaction storage for demonstration
+const transactions: Transaction[] = [];
 
 /**
- * Record a transaction
- * @param userId User ID
- * @param amount Transaction amount
- * @param type Transaction type
- * @param description Transaction description
- * @param metadata Additional metadata
- * @returns Recorded transaction
+ * Records a transaction in the system
  */
-export function recordTransaction(
+export const recordTransaction = (
   userId: string,
   amount: number,
   type: TransactionType,
   description: string,
   metadata?: Record<string, any>
-): Transaction {
-  // In a real app, this would make an API call to your backend
-  
-  // Generate a unique transaction ID
-  const id = `txn_${Date.now().toString(36)}_${Math.random().toString(36).substring(2, 9)}`;
-  
-  // Create transaction object
+): Transaction => {
   const transaction: Transaction = {
-    id,
+    id: `txn-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
     userId,
     amount,
     type,
     description,
     timestamp: new Date().toISOString(),
-    status: 'completed',
-    metadata
+    metadata,
+    status: 'completed'
   };
   
-  // In a real app, you'd store this transaction in your database
-  console.log('Recording transaction:', transaction);
-  
-  // Simulate storing in local storage for demo purposes
-  const transactions = JSON.parse(localStorage.getItem('transactions') || '[]');
   transactions.push(transaction);
-  localStorage.setItem('transactions', JSON.stringify(transactions));
-  
   return transaction;
-}
+};
 
 /**
- * Get transaction history for a user
- * @param userId User ID
- * @returns Array of transactions
+ * Gets transactions for a user
  */
-export function getTransactionHistory(userId: string): Transaction[] {
-  // In a real app, this would fetch from your API or database
-  
-  // For demo, get from local storage
-  const allTransactions = JSON.parse(localStorage.getItem('transactions') || '[]');
-  return allTransactions.filter((txn: Transaction) => txn.userId === userId);
-}
+export const getUserTransactions = (userId: string): Transaction[] => {
+  return transactions.filter(txn => txn.userId === userId);
+};
 
 /**
- * Process a wallet deposit
- * @param user User object
- * @param amount Amount to deposit
- * @returns Updated user and transaction
+ * Gets a transaction by ID
  */
-export async function processDeposit(
+export const getTransactionById = (transactionId: string): Transaction | undefined => {
+  return transactions.find(txn => txn.id === transactionId);
+};
+
+/**
+ * Makes a payment for a feature or item
+ */
+export const makePayment = (
   user: User,
-  amount: number
-): Promise<{ success: boolean; user: User; transaction?: Transaction; error?: string }> {
+  amount: number,
+  description: string,
+  type: TransactionType = 'spend',
+  metadata?: Record<string, any>
+): { success: boolean; transaction?: Transaction; error?: string } => {
+  if (!user || amount <= 0) {
+    return { success: false, error: 'Invalid payment details' };
+  }
+  
+  // Check if user has sufficient balance
+  if ((user.walletBalance || 0) < amount) {
+    return { success: false, error: 'Insufficient funds' };
+  }
+  
   try {
-    const safeUser = ensureUser(user);
-    
-    // Validate amount
-    if (amount <= 0) {
-      return {
-        success: false,
-        user: safeUser,
-        error: 'Deposit amount must be greater than zero'
-      };
-    }
-    
-    // In a real app, you'd process payment, verify it, then update user
-    // Here we just update the mock user data
-    
-    // Record transaction
+    // Record the transaction
     const transaction = recordTransaction(
-      safeUser.id,
+      user.id,
       amount,
-      'deposit',
-      `Wallet deposit of ${amount}`
+      type,
+      description,
+      metadata
     );
     
-    // Update user balance and stats
-    const updatedUser = {
-      ...safeUser,
-      walletBalance: (safeUser.walletBalance || 0) + amount,
-      amountSpent: (safeUser.amountSpent || 0) + amount,
-      totalSpent: (safeUser.totalSpent || 0) + amount,
-      // Update rank based on new total
-      rank: Math.floor((safeUser.totalSpent || 0) + amount) 
-    };
+    // In a real application, this would update the user's balance in the database
+    // For now, we'll just update it in memory
+    user.walletBalance = (user.walletBalance || 0) - amount;
+    user.amountSpent = (user.amountSpent || 0) + amount;
     
-    // In a real app, you'd save this to your database
-    
-    return {
-      success: true,
-      user: updatedUser,
-      transaction
-    };
+    return { success: true, transaction };
   } catch (error) {
-    console.error('Error processing deposit:', error);
-    return {
-      success: false,
-      user,
-      error: 'Failed to process deposit'
+    return { 
+      success: false, 
+      error: error instanceof Error ? error.message : 'Payment processing failed' 
     };
   }
-}
+};
+
+/**
+ * Processes a refund
+ */
+export const processRefund = (
+  transactionId: string,
+  reason: string
+): { success: boolean; transaction?: Transaction; error?: string } => {
+  const originalTransaction = getTransactionById(transactionId);
+  
+  if (!originalTransaction) {
+    return { success: false, error: 'Transaction not found' };
+  }
+  
+  if (originalTransaction.type === 'refund') {
+    return { success: false, error: 'Cannot refund a refund transaction' };
+  }
+  
+  try {
+    const refundTransaction = recordTransaction(
+      originalTransaction.userId,
+      originalTransaction.amount,
+      'refund',
+      `Refund for transaction ${transactionId}: ${reason}`,
+      {
+        originalTransactionId: transactionId,
+        reason
+      }
+    );
+    
+    return { success: true, transaction: refundTransaction };
+  } catch (error) {
+    return { 
+      success: false, 
+      error: error instanceof Error ? error.message : 'Refund processing failed' 
+    };
+  }
+};
+
+/**
+ * Adds funds to a user's wallet
+ */
+export const addFunds = (
+  user: User,
+  amount: number,
+  paymentMethod: string
+): { success: boolean; transaction?: Transaction; error?: string } => {
+  if (!user || amount <= 0) {
+    return { success: false, error: 'Invalid payment details' };
+  }
+  
+  try {
+    // Record the transaction
+    const transaction = recordTransaction(
+      user.id,
+      amount,
+      'deposit',
+      `Added funds via ${paymentMethod}`,
+      { paymentMethod }
+    );
+    
+    // In a real application, this would update the user's balance in the database
+    // For now, we'll just update it in memory
+    user.walletBalance = (user.walletBalance || 0) + amount;
+    
+    return { success: true, transaction };
+  } catch (error) {
+    return { 
+      success: false, 
+      error: error instanceof Error ? error.message : 'Deposit processing failed' 
+    };
+  }
+};
 
 export default {
   recordTransaction,
-  getTransactionHistory,
-  processDeposit
+  getUserTransactions,
+  getTransactionById,
+  makePayment,
+  processRefund,
+  addFunds
 };

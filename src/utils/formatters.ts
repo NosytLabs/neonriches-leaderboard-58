@@ -9,14 +9,16 @@
  * @param options - Formatting options
  * @returns Formatted dollar amount as string
  */
-export function formatDollarAmount(
-  amount: number, 
+export function formatCurrency(
+  amount: number | undefined, 
   options?: { 
     maximumFractionDigits?: number;
     minimumFractionDigits?: number;
     notation?: 'standard' | 'compact';
   }
 ): string {
+  if (amount === undefined) return '$0';
+  
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
@@ -97,4 +99,13 @@ export function formatFileSize(bytes: number): string {
  */
 export function formatPercent(value: number, decimals = 0): string {
   return `${(value * 100).toFixed(decimals)}%`;
+}
+
+/**
+ * Format a number with commas
+ * @param num Number to format
+ * @returns Formatted number as string
+ */
+export function formatNumber(num: number): string {
+  return new Intl.NumberFormat('en-US').format(num);
 }

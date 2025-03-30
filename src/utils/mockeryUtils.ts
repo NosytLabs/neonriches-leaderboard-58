@@ -1,110 +1,108 @@
 
-import { MockeryAction, ShameAction, MockeryTier } from '@/types/mockery';
+import { MockeryAction, MockeryTier } from '@/types/mockery';
 
-export const MOCKERY_NAMES: Record<string, string> = {
-  tomatoes: 'Rotten Tomatoes',
-  putridEggs: 'Putrid Eggs',
-  stocks: 'Public Stocks',
-  silence: 'Royal Silencing',
-  courtJester: 'Court Jester',
-  jester: 'Court Jester',
-  dunce: 'Dunce Cap',
-  protection: 'Royal Protection',
-  smokeBomb: 'Smoke Bomb',
-  royalPie: 'Royal Pie',
-  glitterBomb: 'Glitter Bomb',
-  jokeCrown: 'Joke Crown',
-  memeFrame: 'Meme Frame'
-};
+/**
+ * Get the title for a mockery action
+ * @param action Mockery action type
+ * @returns Human-readable title for the action
+ */
+export function getMockeryTitle(action: MockeryAction): string {
+  switch (action) {
+    case 'tomatoes': return 'Rotten Tomatoes';
+    case 'putridEggs': return 'Putrid Eggs';
+    case 'stocks': return 'Public Stocks';
+    case 'silence': return 'Royal Silence';
+    case 'courtJester': return 'Court Jester';
+    case 'dunce': return 'Dunce Cap';
+    case 'smokeBomb': return 'Royal Smoke Bomb';
+    default: return 'Unknown Mockery';
+  }
+}
 
-export const MOCKERY_COSTS: Record<string, number> = {
-  tomatoes: 1,
-  putridEggs: 3,
-  stocks: 5,
-  silence: 8,
-  jester: 10,
-  courtJester: 15,
-  dunce: 5,
-  protection: 10,
-  smokeBomb: 20,
-  royalPie: 4,
-  glitterBomb: 12,
-  jokeCrown: 7,
-  memeFrame: 9
-};
+/**
+ * Get the description for a mockery action
+ * @param action Mockery action type
+ * @returns Description of the mockery action
+ */
+export function getMockeryDescription(action: MockeryAction): string {
+  switch (action) {
+    case 'tomatoes': return 'Cover the user\'s profile with digital rotten tomatoes.';
+    case 'putridEggs': return 'Splatter the user\'s profile with putrid digital eggs.';
+    case 'stocks': return 'Place the user in digital stocks for public ridicule.';
+    case 'silence': return 'Prevent the user from posting in public forums for 1 hour.';
+    case 'courtJester': return 'Transform the user\'s profile to that of a court jester.';
+    case 'dunce': return 'Place a digital dunce cap on the user\'s profile picture.';
+    case 'smokeBomb': return 'Cover the user\'s profile in thick, dramatic smoke for 8 hours.';
+    default: return 'Apply an unknown mockery effect to the user.';
+  }
+}
 
-export const MOCKERY_DESCRIPTIONS: Record<string, string> = {
-  tomatoes: 'Pelt the user with virtual rotten tomatoes for 24 hours, adding splatters to their profile.',
-  putridEggs: 'Throw virtual eggs at the user for 48 hours, covering their profile with egg splats.',
-  stocks: 'Place the user in the public stocks for 72 hours, restricting their profile in a wooden restraint frame.',
-  silence: 'Apply a silent treatment effect to the user\'s profile for 48 hours, adding a muzzle graphic to their avatar.',
-  courtJester: 'Elevate the user to Court Jester for a full 7 days, adding a jester\'s hat and bells to their profile.',
-  jester: 'Force the user to wear the jester\'s hat for 96 hours, adding a colorful fool\'s cap to their profile.',
-  dunce: 'Place a dunce cap on the user for 48 hours, displaying their folly to all visitors.',
-  protection: 'Protect yourself from all mockery attempts for 7 days with royal immunity.',
-  smokeBomb: 'Deploy a smoke bomb on the user\'s profile for 8 hours, obscuring their content with thick smoke effects.',
-  royalPie: 'Launch a royal cream pie at the user\'s profile for 36 hours, adding splattered cream to their avatar.',
-  glitterBomb: 'Explode a glitter bomb on the user\'s profile for 48 hours, covering everything in sparkly residue.',
-  jokeCrown: 'Add a ridiculous oversized crown to the user\'s profile for 72 hours, mocking their royal aspirations.',
-  memeFrame: 'Frame the user\'s profile in animated memes for 60 hours, surrounding their content with internet humor.'
-};
+/**
+ * Get the price for a mockery action
+ * @param action Mockery action type
+ * @returns Price of the mockery action
+ */
+export function getMockeryActionPrice(action: MockeryAction): number {
+  switch (action) {
+    case 'tomatoes': return 5;
+    case 'putridEggs': return 10;
+    case 'stocks': return 25;
+    case 'silence': return 50;
+    case 'courtJester': return 100;
+    case 'dunce': return 5;
+    case 'smokeBomb': return 75;
+    default: return 5;
+  }
+}
 
-export const mockeryActions: MockeryAction[] = [
-  'tomatoes',
-  'putridEggs',
-  'stocks',
-  'silence', 
-  'jester',
-  'courtJester',
-  'dunce',
-  'smokeBomb',
-  'royalPie',
-  'glitterBomb',
-  'jokeCrown',
-  'memeFrame'
-];
+/**
+ * Get the tier of a mockery action
+ * @param action Mockery action type
+ * @returns Tier of the mockery action
+ */
+export function getMockeryTier(action: MockeryAction): MockeryTier {
+  switch (action) {
+    case 'tomatoes': return 'common';
+    case 'putridEggs': return 'uncommon';
+    case 'stocks': return 'rare';
+    case 'silence': return 'epic';
+    case 'courtJester': return 'legendary';
+    case 'dunce': return 'common';
+    case 'smokeBomb': return 'legendary';
+    default: return 'common';
+  }
+}
 
-export const getMockeryDescription = (action: MockeryAction, username: string): string => {
-  const descriptions: Record<string, string> = {
-    tomatoes: `Pelt ${username} with virtual rotten tomatoes for 24 hours.`,
-    putridEggs: `Throw virtual eggs at ${username} for 48 hours.`,
-    stocks: `Place ${username} in the public stocks for 72 hours.`,
-    silence: `Silence ${username} from all public communication for 48 hours.`,
-    jester: `Force ${username} to wear the jester's hat for 96 hours.`,
-    courtJester: `Elevate ${username} to the position of Court Jester for a full 7 days.`,
-    dunce: `Place a dunce cap on ${username} for 48 hours.`,
-    protection: `Protect ${username} from all mockery attempts for 7 days.`,
-    smokeBomb: `Deploy a smoke bomb on ${username}'s profile for 8 hours.`,
-    royalPie: `Launch a royal cream pie at ${username}'s profile for 36 hours.`,
-    glitterBomb: `Explode a glitter bomb on ${username}'s profile for 48 hours.`,
-    jokeCrown: `Add a ridiculous crown to ${username}'s profile for 72 hours.`,
-    memeFrame: `Frame ${username}'s profile in animated memes for 60 hours.`
-  };
-  
-  return descriptions[action] || `Mock ${username} publicly.`;
-};
+/**
+ * Get the CSS class for a mockery tier
+ * @param tier Mockery tier
+ * @returns CSS class for the tier
+ */
+export function getMockeryTierClass(tier: MockeryTier): string {
+  switch (tier) {
+    case 'common': return 'text-gray-300';
+    case 'uncommon': return 'text-green-400';
+    case 'rare': return 'text-blue-400';
+    case 'epic': return 'text-purple-400';
+    case 'legendary': return 'text-yellow-400';
+    default: return 'text-gray-300';
+  }
+}
 
-export const getMockeryDuration = (action: MockeryAction): number => {
-  const durations: Record<string, number> = {
-    tomatoes: 24,
-    putridEggs: 48,
-    stocks: 72,
-    silence: 48,
-    jester: 96,
-    courtJester: 168, // 7 days
-    dunce: 48,
-    protection: 168, // 7 days
-    smokeBomb: 8,
-    royalPie: 36,
-    glitterBomb: 48,
-    jokeCrown: 72,
-    memeFrame: 60
-  };
-  
-  return durations[action] || 24;
-};
-
-// Helper function to get mockery action price for ShameAction type (for compatibility)
-export const getShameActionPrice = (action: ShameAction): number => {
-  return MOCKERY_COSTS[action] || 1;
-};
+/**
+ * Get the CSS class for an active mockery effect
+ * @param action Mockery action type
+ * @returns CSS class for the mockery effect
+ */
+export function getActiveMockeryClass(action: MockeryAction): string {
+  switch (action) {
+    case 'tomatoes': return 'mockery-tomatoes';
+    case 'putridEggs': return 'mockery-eggs';
+    case 'stocks': return 'mockery-stocks';
+    case 'silence': return 'mockery-silence';
+    case 'courtJester': return 'mockery-jester';
+    case 'dunce': return 'mockery-dunce';
+    case 'smokeBomb': return 'mockery-smoke';
+    default: return '';
+  }
+}

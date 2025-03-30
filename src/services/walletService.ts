@@ -1,8 +1,7 @@
 
 import { User } from '@/types/user';
-import { TransactionType } from '@/types/transaction';
+import { TransactionType, SpendOptions } from '@/types/transaction';
 import { recordTransaction } from './paymentService';
-import { useToast } from '@/hooks/use-toast';
 
 // Spend money from user's wallet with interactive feedback
 export const spendFromWallet = (
@@ -10,7 +9,7 @@ export const spendFromWallet = (
   amount: number,
   type: TransactionType,
   description: string,
-  metadata?: Record<string, any>
+  metadata?: SpendOptions
 ): boolean => {
   if (!user || amount <= 0) return false;
   
@@ -130,4 +129,3 @@ export const calculateNewRank = (
   const rankGain = Math.floor(amount / 100);
   return Math.max(1, (user.rank || 0) - rankGain);
 };
-

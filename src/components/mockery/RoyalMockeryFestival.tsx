@@ -14,7 +14,7 @@ import HallOfShame from '@/components/mockery/components/HallOfShame';
 import MockeryCard from '@/components/mockery/components/MockeryCard';
 import MockeryUserCard from '@/components/mockery/components/MockeryUserCard';
 import MockeryEffect from '@/components/mockery/MockeryEffect';
-import MockeryHowItWorks from '@/components/mockery/components/MockeryHowItWorks';
+import Link from '@/components/ui/link';
 import { adaptUserProfileToUser } from '@/utils/userAdapter';
 import { spendFromWallet } from '@/services/walletService';
 import { getMockeryDescription } from '@/utils/mockeryUtils';
