@@ -15,49 +15,73 @@ export function useToast() {
     toast: baseToast,
     dismiss,
     toasts,
-    default: (props: ExtendedToastProps) => 
-      baseToast({ 
+    default: (props: ExtendedToastProps) => {
+      const title = props.title ? ensureString(props.title) : "";
+      const description = props.description ? ensureString(props.description) : "";
+      
+      return baseToast({ 
         ...props, 
         variant: "default",
-        title: props.title || "",
-        description: props.description || ""
-      }),
-    success: (props: ExtendedToastProps) => 
-      baseToast({ 
+        title,
+        description
+      });
+    },
+    success: (props: ExtendedToastProps) => {
+      const title = props.title ? ensureString(props.title) : "";
+      const description = props.description ? ensureString(props.description) : "";
+      
+      return baseToast({ 
         ...props, 
         variant: "success",
-        title: props.title || "",
-        description: props.description || ""
-      }),
-    error: (props: ExtendedToastProps) => 
-      baseToast({ 
+        title,
+        description
+      });
+    },
+    error: (props: ExtendedToastProps) => {
+      const title = props.title ? ensureString(props.title) : "";
+      const description = props.description ? ensureString(props.description) : "";
+      
+      return baseToast({ 
         ...props, 
         variant: "destructive",
-        title: props.title || "",
-        description: props.description || ""
-      }),
-    warning: (props: ExtendedToastProps) => 
-      baseToast({ 
+        title,
+        description
+      });
+    },
+    warning: (props: ExtendedToastProps) => {
+      const title = props.title ? ensureString(props.title) : "";
+      const description = props.description ? ensureString(props.description) : "";
+      
+      return baseToast({ 
         ...props, 
         variant: "destructive",
-        title: props.title || "",
-        description: props.description || ""
-      }),
-    royal: (props: ExtendedToastProps) => 
-      baseToast({ 
+        title,
+        description
+      });
+    },
+    royal: (props: ExtendedToastProps) => {
+      const title = props.title ? ensureString(props.title) : "";
+      const description = props.description ? ensureString(props.description) : "";
+      
+      return baseToast({ 
         ...props, 
         // For now, use default variant since royal isn't available in the component
         variant: "default",
-        title: props.title || "",
-        description: props.description || ""
-      }),
-    loading: (props: ExtendedToastProps) => 
-      baseToast({
+        title,
+        description
+      });
+    },
+    loading: (props: ExtendedToastProps) => {
+      const title = props.title ? ensureString(props.title) : "Loading...";
+      const description = props.description ? ensureString(props.description) : "Please wait while we process your request.";
+      
+      return baseToast({
         ...props,
         variant: "default",
-        title: props.title || "Loading...",
-        description: props.description || "Please wait while we process your request."
-      })
+        title,
+        description
+      });
+    }
   };
 }
 

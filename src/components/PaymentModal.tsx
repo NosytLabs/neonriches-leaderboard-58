@@ -1,133 +1,110 @@
 
 import React, { useState } from 'react';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { CreditCard, DollarSign, Check } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
-import { useSound } from "@/hooks/sounds/use-sound";
+import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { useToast } from '@/hooks/use-toast';
+import { DollarSign } from 'lucide-react';
 
 interface PaymentModalProps {
-  amount?: number;
-  onSuccess?: (amount: number) => void;
+  title: string;
+  description: string;
+  amount: number;
+  onSuccess: () => void;
   buttonText?: string;
-  title?: string;
-  description?: string;
-  trigger?: React.ReactNode;
+  buttonVariant?: 'royal' | 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link';
+  customIcon?: React.ReactNode;
 }
 
 const PaymentModal: React.FC<PaymentModalProps> = ({
-  amount = 100,
+  title,
+  description,
+  amount,
   onSuccess,
-  buttonText = "Pay Now",
-  title = "Complete Payment",
-  description = "Enter your payment details to continue",
-  trigger
+  buttonText = 'Confirm Payment',
+  buttonVariant = 'royal',
+  customIcon
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
-  const [paymentSuccess, setPaymentSuccess] = useState(false);
   const { toast } = useToast();
-  const { play } = useSound();
 
-  const handlePay = async () => {
+  const handlePayment = async () => {
     setIsProcessing(true);
-    play('click', 0.3);
-    
-    // Simulate payment processing
-    setTimeout(() => {
-      setIsProcessing(false);
-      setPaymentSuccess(true);
-      play('success', 0.5);
+    try {
+      // Simulate payment processing
+      await new Promise(resolve => setTimeout(resolve, 1500));
       
-      // Close the modal and call onSuccess after showing the success state
-      setTimeout(() => {
-        setIsOpen(false);
-        setPaymentSuccess(false);
-        if (onSuccess) onSuccess(amount);
-      }, 1500);
-    }, 2000);
+      // Payment success
+      setIsOpen(false);
+      onSuccess();
+      
+      toast({
+        title: "Payment Successful",
+        description: `You have successfully paid $${amount.toFixed(2)}`
+      });
+      
+    } catch (error) {
+      toast({
+        title: "Payment Failed",
+        description: "There was an error processing your payment.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
-        {trigger ? (
-          trigger
-        ) : (
-          <Button variant="royalGold">{buttonText}</Button>
-        )}
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px] glass-morphism border-white/10">
-        <DialogHeader>
-          <DialogTitle>{title}</DialogTitle>
-          <DialogDescription>
-            {description}
-          </DialogDescription>
-        </DialogHeader>
-        
-        {paymentSuccess ? (
-          <div className="text-center space-y-4">
-            <Check className="mx-auto h-12 w-12 text-green-500 animate-pulse" />
-            <p className="text-lg font-semibold">Payment Successful!</p>
-            <p className="text-white/70">Thank you for your purchase.</p>
+    <>
+      <Button 
+        onClick={() => setIsOpen(true)}
+        variant={buttonVariant as any}
+      >
+        {customIcon || <DollarSign className="mr-2 h-4 w-4" />}
+        {buttonText || `Pay $${amount.toFixed(2)}`}
+      </Button>
+
+      <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <DialogContent className="glass-morphism border-royal-gold/20">
+          <DialogHeader>
+            <DialogTitle className="text-xl">{title}</DialogTitle>
+            <DialogDescription>
+              {description}
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="my-4 p-4 bg-black/20 rounded-md flex items-center justify-between">
+            <span>Amount:</span>
+            <span className="text-xl font-bold">${amount.toFixed(2)}</span>
           </div>
-        ) : (
-          <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="amount" className="text-right">
-                Amount
-              </Label>
-              <Input
-                type="number"
-                id="amount"
-                defaultValue={amount}
-                className="col-span-3 glass-morphism border-white/10"
-                disabled
-              />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="card-number" className="text-right">
-                Card number
-              </Label>
-              <Input
-                id="card-number"
-                placeholder="**** **** **** ****"
-                className="col-span-3 glass-morphism border-white/10"
-                disabled={isProcessing}
-              />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="name" className="text-right">
-                Name
-              </Label>
-              <Input
-                id="name"
-                placeholder="John Doe"
-                className="col-span-3 glass-morphism border-white/10"
-                disabled={isProcessing}
-              />
-            </div>
+
+          <div className="flex justify-end space-x-2">
             <Button 
-              onClick={handlePay}
-              className="col-span-4 bg-gradient-to-r from-royal-purple to-royal-gold hover:opacity-90 text-white"
+              variant="outline" 
+              onClick={() => setIsOpen(false)}
               disabled={isProcessing}
+            >
+              Cancel
+            </Button>
+            <Button 
+              variant="royal"
+              onClick={handlePayment}
+              disabled={isProcessing}
+              className="min-w-[120px]"
             >
               {isProcessing ? (
                 <>
-                  <span className="animate-spin mr-2">⚙️</span> Processing
+                  <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-t-transparent"></div>
+                  Processing...
                 </>
               ) : (
-                <>
-                  <CreditCard className="mr-2 h-4 w-4" /> Pay Now
-                </>
+                buttonText
               )}
             </Button>
           </div>
-        )}
-      </DialogContent>
-    </Dialog>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 };
 

@@ -21,7 +21,7 @@ const RoyalShowcase: React.FC<RoyalShowcaseProps> = ({ className = '' }) => {
     rank: 1,
     joinedAt: new Date(),
     displayName: 'Money Bags',
-    gender: 'male',
+    gender: 'other', // Changed from 'male' to a valid GenderType
     profileImage: 'https://api.dicebear.com/6.x/personas/svg?seed=moneybags',
     amountSpent: 5000,
     totalSpent: 5000,
@@ -93,7 +93,7 @@ const RoyalShowcase: React.FC<RoyalShowcaseProps> = ({ className = '' }) => {
                     <div>
                       <div className="text-sm text-white/60">Member Since</div>
                       <div className="font-medium">
-                        {new Date(topSpender.joinedAt).toLocaleDateString()}
+                        {new Date(topSpender.joinedAt || "").toLocaleDateString()}
                       </div>
                     </div>
                     <div>

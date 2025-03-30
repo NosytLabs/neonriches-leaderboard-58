@@ -2,9 +2,9 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { ButtonProps } from '@/components/ui/button';
+import { type ButtonProps } from '@/components/ui/button';
 
-interface RoyalButtonProps extends Omit<ButtonProps, 'variant'> {
+interface RoyalButtonProps extends Omit<ButtonProps, "variant"> {
   variant?: 'default' | 'gold' | 'purple' | 'crimson' | 'royalGold' | 'glass';
   size?: 'sm' | 'md' | 'lg' | 'default' | 'icon';
   glow?: boolean;
@@ -65,7 +65,7 @@ const RoyalButton: React.FC<RoyalButtonProps> = ({
         className
       )}
       variant={buttonVariant as ButtonProps['variant']}
-      size={size}
+      size={size as ButtonProps['size']}
       {...props}
     >
       {children}

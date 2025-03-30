@@ -1,20 +1,18 @@
 
 export type MockeryAction = 
-  | 'tomatoes' 
-  | 'eggs' 
-  | 'putridEggs' 
-  | 'stocks' 
-  | 'dunce' 
-  | 'silence' 
-  | 'courtJester' 
-  | 'smokeBomb' 
-  | 'protection' 
-  | 'immune' 
-  | 'glitterBomb'
   | 'target'
   | 'challenge'
-  | 'jest'
   | 'crown'
+  | 'tomatoes'
+  | 'eggs'
+  | 'stocks'
+  | 'putridEggs'
+  | 'dunce'
+  | 'silence'
+  | 'courtJester'
+  | 'protection'
+  | 'immune'
+  | 'jest'
   | 'defeat'
   | 'jester'
   | 'royalPie'
@@ -31,9 +29,28 @@ export type MockeryAction =
   | 'dungeons'
   | 'removal';
 
+export type ShameAction = 
+  | 'tomatoes'
+  | 'eggs'
+  | 'stocks'
+  | 'putridEggs'
+  | 'dunce'
+  | 'shame'
+  | 'protection'
+  | 'taunt'
+  | 'ridicule'
+  | 'silence'
+  | 'courtJester'
+  | 'jester';
+
+export type ExtendedMockeryAction = MockeryAction | ShameAction;
+
 export type MockeryTier = 
-  | 'basic' 
-  | 'premium' 
+  | 'bronze'
+  | 'silver'
+  | 'gold'
+  | 'platinum'
+  | 'diamond'
   | 'royal'
   | 'common'
   | 'uncommon'
@@ -43,57 +60,42 @@ export type MockeryTier =
 
 export interface MockeryEvent {
   id: string;
-  userId: string;
+  mockeryType: MockeryAction;
   targetId: string;
-  action: MockeryAction;
-  timestamp: string;
-  expiresAt: string;
-  active: boolean;
-  tier?: MockeryTier;
+  targetUsername: string;
   sourceId?: string;
+  sourceUsername: string;
+  timestamp: number;
+  expiresAt: number;
+  active: boolean;
+  tier: MockeryTier;
 }
-
-export interface MockedUser {
-  username: string;
-  displayName?: string;
-  avatarUrl?: string;
-  mockedReason: string;
-  mockedTimestamp: string;
-  mockedBy: string;
-  mockedTier?: string;
-  mockeryCount: number;
-}
-
-export type ShameAction = 
-  | 'tomatoes' 
-  | 'eggs' 
-  | 'stocks' 
-  | 'shame' 
-  | 'protection' 
-  | 'taunt' 
-  | 'putridEggs' 
-  | 'dunce' 
-  | 'ridicule' 
-  | 'silence' 
-  | 'courtJester' 
-  | 'jester';
-
-export type ExtendedMockeryAction = MockeryAction;
 
 export interface MockeryEffectData {
-  username: string;
+  id: string;
   action: MockeryAction;
-  duration?: number;
-  tier?: MockeryTier;
-  strength?: number;
+  targetUsername: string;
+  sourceUsername: string;
+  timestamp: number;
+  duration: number;
 }
 
 export interface UserMockeryStatus {
-  protected: boolean;
-  protectedUntil?: string;
-  activeEffects: MockeryEvent[];
-  totalReceived: number;
-  totalApplied: number;
+  isProtected: boolean;
+  protectionExpiresAt: number;
+  activeMockeries: MockeryEvent[];
+}
+
+export interface MockedUser {
+  id: string;
+  username: string;
+  displayName: string;
+  avatarUrl: string;
+  mockedReason: string;
+  mockedTimestamp: string;
+  mockedBy: string;
+  mockedTier: string;
+  mockeryCount: number;
 }
 
 export interface MockUser {
@@ -101,6 +103,6 @@ export interface MockUser {
   username: string;
   profileImage?: string;
   tier?: string;
-  lastMocked?: string;
+  lastMocked?: number;
   mockeryCount?: number;
 }
