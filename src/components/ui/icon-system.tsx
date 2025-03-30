@@ -31,9 +31,9 @@ const iconColorClasses: Record<string, string> = {
   'purple': 'text-purple-600',
 };
 
-export interface IconSystemProps extends React.SVGAttributes<SVGElement> {
+export interface IconSystemProps extends Omit<React.SVGAttributes<SVGElement>, 'style'> {
   name: string;
-  size?: IconSize | string;
+  size?: IconSize | number;
   color?: IconColor | string;
   className?: string;
   style?: IconStyle;
@@ -42,12 +42,16 @@ export interface IconSystemProps extends React.SVGAttributes<SVGElement> {
 // The main icon system component
 const IconSystem = React.forwardRef<SVGSVGElement, IconSystemProps>(
   ({ name, size = 'md', color = 'default', className, style = 'default', ...props }, ref) => {
-    // Safety checks for size and color
-    const sizeKey = size as IconSize;
-    const colorKey = color as string;
+    // Handle numeric sizes (convert to inline style)
+    const isNumericSize = typeof size === 'number';
+    const sizeStyle = isNumericSize ? { width: `${size}px`, height: `${size}px` } : {};
     
-    // Get the appropriate classes
-    const sizeClass = iconSizeClasses[sizeKey] || iconSizeClasses.md;
+    // For predefined sizes, use the class
+    const sizeKey = !isNumericSize ? size as IconSize : 'md';
+    const sizeClass = !isNumericSize ? iconSizeClasses[sizeKey] || iconSizeClasses.md : '';
+    
+    // Handle color
+    const colorKey = color as string;
     const colorClass = iconColorClasses[colorKey] || iconColorClasses.default;
     
     // Combine classes
@@ -55,19 +59,19 @@ const IconSystem = React.forwardRef<SVGSVGElement, IconSystemProps>(
     
     // Handle custom icons first
     if (name === 'Crown') {
-      return <Crown className={combinedClassName} {...props} ref={ref} />;
+      return <Crown className={combinedClassName} style={sizeStyle} {...props} ref={ref} />;
     }
     
     // Then try to find a Lucide icon
     const LucideIcon = (LucideIcons as any)[name];
     
     if (LucideIcon) {
-      return <LucideIcon className={combinedClassName} {...props} ref={ref} />;
+      return <LucideIcon className={combinedClassName} style={sizeStyle} {...props} ref={ref} />;
     }
     
     // Fallback to a default icon
     console.warn(`Icon "${name}" not found, using default`);
-    return <LucideIcons.HelpCircle className={combinedClassName} {...props} ref={ref} />;
+    return <LucideIcons.HelpCircle className={combinedClassName} style={sizeStyle} {...props} ref={ref} />;
   }
 );
 

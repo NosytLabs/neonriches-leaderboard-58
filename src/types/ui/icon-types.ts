@@ -45,7 +45,7 @@ export type IconStyle = 'default' | 'medieval';
 
 // Icon props interfaces
 export interface BaseIconProps {
-  size?: IconSize;
+  size?: IconSize | number; // Allow both predefined sizes and numeric values
   color?: IconColor | string;
   className?: string;
 }

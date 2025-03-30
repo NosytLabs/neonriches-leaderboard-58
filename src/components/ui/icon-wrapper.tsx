@@ -2,11 +2,12 @@
 import React from 'react';
 import IconSystem from '@/components/ui/icon-system';
 import { adaptIconName, adaptIconColor, adaptIconSize } from '@/utils/iconTypeAdapter';
+import { IconSize, IconColor } from '@/types/ui/icon-types';
 
 interface IconWrapperProps {
   icon: string;
-  size?: string;
-  color?: string;
+  size?: IconSize | number;
+  color?: IconColor | string;
   className?: string;
   medieval?: boolean;
 }

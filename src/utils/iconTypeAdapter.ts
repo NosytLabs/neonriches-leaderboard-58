@@ -1,8 +1,19 @@
 
-import { MedievalIconName, IconSize, IconColor } from '@/types/ui/icon-types';
+import { MedievalIconName, IconColor, IconSize } from '@/types/ui/icon-types';
 
-// Convert lowercase icon names to the proper capitalized format required by MedievalIconName
-export const adaptIconName = (name: string): MedievalIconName => {
+/**
+ * Adapts a lowercase icon name to the proper capitalized format
+ */
+export function adaptIconName(name: string): string {
+  // Convert kebab-case or snake_case to camelCase first
+  const camelCase = name
+    .replace(/[-_](.)/g, (_, char) => char.toUpperCase())
+    .replace(/[-_]/g, '');
+  
+  // Capitalize first letter
+  const capitalizedName = camelCase.charAt(0).toUpperCase() + camelCase.slice(1);
+  
+  // Map common medieval icons to their correct names
   const iconMap: Record<string, MedievalIconName> = {
     'crown': 'Crown',
     'shield': 'Shield',
@@ -13,30 +24,19 @@ export const adaptIconName = (name: string): MedievalIconName => {
     'trophy': 'Trophy',
     'key': 'Key',
     'coins': 'Coins',
+    'coin': 'Coins',
     'wallet': 'Wallet',
     'gem': 'Gem',
-    'seal': 'Seal'
+    'seal': 'Seal',
   };
 
-  return iconMap[name.toLowerCase()] || 'Crown';
-};
+  return iconMap[name.toLowerCase()] || capitalizedName;
+}
 
-// Convert size string to the proper format required by IconSize
-export const adaptIconSize = (size: string): IconSize => {
-  const sizeMap: Record<string, IconSize> = {
-    'xs': 'xs',
-    'sm': 'sm',
-    'md': 'md',
-    'lg': 'lg',
-    'xl': 'xl',
-    '2xl': '2xl'
-  };
-
-  return sizeMap[size.toLowerCase()] || 'md';
-};
-
-// Convert color string to the proper format required by IconColor
-export const adaptIconColor = (color: string): IconColor => {
+/**
+ * Adapts icon color
+ */
+export function adaptIconColor(color: string): IconColor {
   const colorMap: Record<string, IconColor> = {
     'default': 'default',
     'gold': 'gold',
@@ -49,13 +49,28 @@ export const adaptIconColor = (color: string): IconColor => {
     'primary': 'primary',
     'secondary': 'secondary',
     'muted': 'muted',
-    'accent': 'accent'
+    'accent': 'accent',
   };
 
   return colorMap[color.toLowerCase()] || 'default';
-};
+}
 
-// Legacy exports for backward compatibility
-export const toMedievalIconName = adaptIconName;
-export const toMedievalIconColor = adaptIconColor;
-export const toMedievalIconSize = adaptIconSize;
+/**
+ * Adapts icon size
+ */
+export function adaptIconSize(size: IconSize | number): IconSize | number {
+  if (typeof size === 'number') {
+    return size;
+  }
+
+  const sizeMap: Record<string, IconSize> = {
+    'xs': 'xs',
+    'sm': 'sm',
+    'md': 'md',
+    'lg': 'lg',
+    'xl': 'xl',
+    '2xl': '2xl',
+  };
+
+  return sizeMap[size] || 'md';
+}

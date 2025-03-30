@@ -1,13 +1,20 @@
 
-import { Transaction, TransactionType, TransactionStatus } from '@/types/transactions';
 import { User } from '@/types/user';
+import { TransactionType } from '@/types/transactions';
 
-// Generate a unique transaction ID
-const generateTransactionId = (): string => {
-  return Date.now().toString(36) + Math.random().toString(36).substring(2);
-};
+interface Transaction {
+  id: string;
+  userId: string;
+  amount: number;
+  type: TransactionType;
+  description: string;
+  timestamp: Date;
+  metadata?: Record<string, any>;
+}
 
-// Record a transaction
+/**
+ * Mock function to record a transaction in the system
+ */
 export const recordTransaction = (
   userId: string,
   amount: number,
@@ -16,32 +23,52 @@ export const recordTransaction = (
   metadata?: Record<string, any>
 ): Transaction => {
   const transaction: Transaction = {
-    id: generateTransactionId(),
+    id: `txn_${Math.random().toString(36).substring(2, 9)}`,
     userId,
-    type,
     amount,
-    currency: 'USD',
-    status: 'completed',
+    type,
     description,
-    createdAt: new Date().toISOString(),
-    completedAt: new Date().toISOString(),
+    timestamp: new Date(),
     metadata
   };
-
-  // In a real app, this would save to a database
+  
   console.log('Transaction recorded:', transaction);
   
   return transaction;
 };
 
-// Get user balance
-export const getUserBalance = (user: User): number => {
-  return user.walletBalance || 0;
+/**
+ * Spend money from a user's wallet
+ */
+export const spendFromWallet = (
+  user: Partial<User>,
+  amount: number,
+  type: TransactionType,
+  description: string,
+  metadata?: Record<string, any>
+): boolean => {
+  // Mock implementation - in a real app, this would check balance and handle actual spending
+  console.log(`User ${user.username} spent $${amount} on ${description}`);
+  
+  // Record the transaction
+  recordTransaction(user.id || '', amount, type, description, metadata);
+  
+  // Return success (always true in mock implementation)
+  return true;
 };
 
-// Add funds to user account
-export const addFunds = (user: User, amount: number, paymentMethod: string) => {
-  // Create a transaction record
+/**
+ * Add funds to a user's wallet
+ */
+export const addFunds = (
+  user: User,
+  amount: number,
+  paymentMethod: string
+): { success: boolean; transactionId?: string; error?: string } => {
+  // Mock implementation - in a real app, this would handle actual payment processing
+  console.log(`User ${user.username} added $${amount} via ${paymentMethod}`);
+  
+  // Record the transaction
   const transaction = recordTransaction(
     user.id,
     amount,
@@ -50,77 +77,25 @@ export const addFunds = (user: User, amount: number, paymentMethod: string) => {
     { paymentMethod }
   );
   
-  // Return updated user data
   return {
-    user: {
-      ...user,
-      walletBalance: (user.walletBalance || 0) + amount,
-      amountSpent: (user.amountSpent || 0) + amount
-    },
-    transaction
+    success: true,
+    transactionId: transaction.id
   };
 };
 
-// Make a purchase
-export const makePurchase = (
-  user: User,
-  amount: number,
-  itemType: string,
-  itemId: string,
-  description: string
-) => {
-  // Check if user has enough funds
-  if ((user.walletBalance || 0) < amount) {
-    throw new Error('Insufficient funds');
-  }
-  
-  // Create a transaction record
-  const transaction = recordTransaction(
-    user.id,
-    amount,
-    'purchase',
-    description,
-    { itemType, itemId }
-  );
-  
-  // Return updated user data
-  return {
-    user: {
-      ...user,
-      walletBalance: (user.walletBalance || 0) - amount
-    },
-    transaction
-  };
+/**
+ * Get user wallet balance 
+ */
+export const getWalletBalance = (userId: string): number => {
+  // Mock implementation - in a real app, this would query the database
+  // Return a random number between 10 and 1000
+  return Math.floor(Math.random() * 990 + 10);
 };
 
-// Get transaction history
+/**
+ * Get transaction history for a user
+ */
 export const getTransactionHistory = (userId: string): Transaction[] => {
-  // In a real app, this would fetch from a database
-  // Returning mock data for now
-  return [
-    {
-      id: 'tx_1',
-      userId,
-      type: 'deposit',
-      amount: 100,
-      currency: 'USD',
-      status: 'completed',
-      description: 'Initial deposit',
-      createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
-      completedAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
-      paymentMethod: 'credit_card'
-    },
-    {
-      id: 'tx_2',
-      userId,
-      type: 'purchase',
-      amount: 25,
-      currency: 'USD',
-      status: 'completed',
-      description: 'Rank boost purchase',
-      createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
-      completedAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
-      metadata: { itemType: 'boost', itemId: 'boost_1' }
-    }
-  ] as Transaction[];
+  // Mock implementation - in a real app, this would query the database
+  return [];
 };

@@ -1,5 +1,6 @@
 
 import { SoundType } from '@/types/sound-types';
+import { MockeryAction } from '@/types/mockery';
 
 export type ShameAction = 
   | 'tomatoes' 
@@ -14,9 +15,6 @@ export type ShameAction =
   | 'shame' 
   | 'smokeBomb'
   | 'glitterBomb';
-
-export type MockeryAction = ShameAction;
-export type MockeryTier = 'basic' | 'premium' | 'royal';
 
 // Shame action prices
 export const getShameActionPrice = (action: ShameAction): number => {
@@ -95,20 +93,22 @@ export const getShameActionTitle = (action: ShameAction): string => {
 };
 
 // Get shame action description
-export const getShameActionDescription = (action: ShameAction): string => {
+export const getShameActionDescription = (action: ShameAction, username?: string): string => {
+  const targetText = username ? username : 'the user';
+  
   switch (action) {
-    case 'tomatoes': return 'Splatter the user\'s profile with rotten tomatoes for all to see.';
-    case 'eggs': return 'Throw eggs at the user\'s profile, creating a messy display.';
-    case 'putridEggs': return 'Throw putrid eggs at the user\'s profile for a particularly foul effect.';
-    case 'stocks': return 'Lock the user in the royal stocks for public ridicule.';
-    case 'silence': return 'Prevent the user from commenting for a period of time.';
-    case 'courtJester': return 'Force the user to wear the court jester outfit on their profile.';
-    case 'dunce': return 'Put a dunce cap on the user\'s profile picture.';
-    case 'jester': return 'Mark the user with the symbol of the royal jester.';
-    case 'ridicule': return 'Subject the user to public ridicule on their profile.';
-    case 'shame': return 'Shame the user publicly on their profile and leaderboard.';
-    case 'smokeBomb': return 'Completely obscure the user\'s profile with dramatic smoke for 8 hours.';
-    case 'glitterBomb': return 'Cover the user\'s profile with sparkling glitter for 24 hours.';
+    case 'tomatoes': return `Splatter ${targetText}'s profile with rotten tomatoes for all to see.`;
+    case 'eggs': return `Throw eggs at ${targetText}'s profile, creating a messy display.`;
+    case 'putridEggs': return `Throw putrid eggs at ${targetText}'s profile for a particularly foul effect.`;
+    case 'stocks': return `Lock ${targetText} in the royal stocks for public ridicule.`;
+    case 'silence': return `Prevent ${targetText} from commenting for a period of time.`;
+    case 'courtJester': return `Force ${targetText} to wear the court jester outfit on their profile.`;
+    case 'dunce': return `Put a dunce cap on ${targetText}'s profile picture.`;
+    case 'jester': return `Mark ${targetText} with the symbol of the royal jester.`;
+    case 'ridicule': return `Subject ${targetText} to public ridicule on their profile.`;
+    case 'shame': return `Shame ${targetText} publicly on their profile and leaderboard.`;
+    case 'smokeBomb': return `Completely obscure ${targetText}'s profile with dramatic smoke for 8 hours.`;
+    case 'glitterBomb': return `Cover ${targetText}'s profile with sparkling glitter for 24 hours.`;
     default: return 'No description available';
   }
 };
