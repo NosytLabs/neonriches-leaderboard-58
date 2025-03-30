@@ -22,6 +22,7 @@ const buttonVariants = cva(
         royalGold: "bg-royal-gold text-black hover:bg-royal-gold/90",
         royal: "bg-royal-purple text-white hover:bg-royal-purple/90",
         glass: "bg-white/10 backdrop-blur-sm border border-white/20 text-white hover:bg-white/20",
+        success: "bg-emerald-600 text-white hover:bg-emerald-700",
       },
       size: {
         default: "h-10 px-4 py-2",

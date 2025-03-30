@@ -78,7 +78,7 @@ ${d.recommendation ? `- Recommendation: ${d.recommendation}` : ''}
 ${analysis.complexCode.length > 0 ? `
 Found ${analysis.complexCode.length} instances of overly complex code:
 
-${analysis.complexCode.map(c => `#### ${c.name || 'Unnamed function'} in \`${c.file}\`
+${analysis.complexCode.map(c => `#### ${c.name || c.function || 'Unnamed function'} in \`${c.file}\`
 - Complexity score: ${c.complexity}
 - Line: ${c.line}
 - Issue: ${c.explanation || 'High cyclomatic complexity'}

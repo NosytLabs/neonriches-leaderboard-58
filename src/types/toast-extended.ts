@@ -1,21 +1,21 @@
 
 import { ReactNode } from 'react';
-import { ToastActionElement, ToastProps } from '@/components/ui/toast';
+import { ToastProps, ToastActionElement } from '@/components/ui/toast';
+import { VariantProps } from 'class-variance-authority';
 
-// Define ToasterToast to match the structure expected
-export interface ToasterToast extends Omit<ToastProps, 'title'> {
+export interface ExtendedToastProps {
+  id?: string;
+  title?: ReactNode;
+  description?: ReactNode;
+  variant?: 'default' | 'destructive' | 'success' | 'royal';
+  action?: ToastActionElement;
+  duration?: number;
+  className?: string;
+}
+
+export interface ToasterToast extends ExtendedToastProps {
   id: string;
-  title?: ReactNode;
-  description?: ReactNode;
-  action?: ToastActionElement;
-  variant?: 'default' | 'destructive' | 'royal' | 'success';
+  dismiss: () => void;
 }
 
-// Extend the default toast props to include our custom variant types
-export interface ExtendedToastProps extends Omit<ToasterToast, "id"> {
-  title?: ReactNode;
-  description?: ReactNode;
-  variant?: 'default' | 'destructive' | 'royal' | 'success';
-  action?: ToastActionElement;
-  sound?: string;
-}
+export type ToastOptions = ExtendedToastProps;

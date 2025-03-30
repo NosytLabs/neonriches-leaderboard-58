@@ -52,19 +52,7 @@ export interface MockUser {
   mockeryCount: number;
 }
 
-export type ShameAction = 
-  | 'tomatoes' 
-  | 'putridEggs' 
-  | 'stocks' 
-  | 'dunce' 
-  | 'silence' 
-  | 'courtJester'
-  | 'smokeBomb'
-  | 'eggs'
-  | 'shame'
-  | 'ridicule'
-  | 'jester'
-  | 'glitterBomb';
+export type ShameAction = MockeryAction;
 
 export interface MockeryEffectData {
   username: string;

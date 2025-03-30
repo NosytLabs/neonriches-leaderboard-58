@@ -1,17 +1,8 @@
 
 import { toast as sonnerToast } from "sonner";
+import { ToastOptions } from '@/types/toast-extended';
 
 type ToastType = "default" | "success" | "error" | "warning" | "loading";
-
-type ToastOptions = {
-  id?: string;
-  title?: string;
-  description?: React.ReactNode;
-  action?: React.ReactNode;
-  variant?: "default" | "destructive" | "success" | "royal";
-  duration?: number;
-  className?: string;
-};
 
 export const toast = {
   dismiss: (toastId?: string) => {
@@ -19,7 +10,7 @@ export const toast = {
   },
   
   default: (options: ToastOptions) => {
-    return sonnerToast(options.title || "", {
+    return sonnerToast(options.title?.toString() || "", {
       id: options.id,
       description: options.description,
       action: options.action,
@@ -29,7 +20,7 @@ export const toast = {
   },
   
   success: (options: ToastOptions) => {
-    return sonnerToast.success(options.title || "", {
+    return sonnerToast.success(options.title?.toString() || "", {
       id: options.id,
       description: options.description,
       action: options.action,
@@ -39,7 +30,7 @@ export const toast = {
   },
   
   error: (options: ToastOptions) => {
-    return sonnerToast.error(options.title || "", {
+    return sonnerToast.error(options.title?.toString() || "", {
       id: options.id,
       description: options.description,
       action: options.action,
@@ -49,7 +40,7 @@ export const toast = {
   },
   
   warning: (options: ToastOptions) => {
-    return sonnerToast(options.title || "", {
+    return sonnerToast(options.title?.toString() || "", {
       id: options.id,
       description: options.description,
       action: options.action,
@@ -59,35 +50,38 @@ export const toast = {
   },
   
   loading: (options: ToastOptions) => {
-    return sonnerToast.loading(options.title || "", {
+    return sonnerToast.loading(options.title?.toString() || "", {
       id: options.id,
       description: options.description,
       duration: options.duration,
       className: options.className,
     });
   },
+
+  // Call method for direct usage with any options
+  call: (options: ToastOptions) => {
+    const { variant = "default", ...rest } = options;
+    
+    switch (variant) {
+      case "success":
+        return toast.success(rest);
+      case "destructive":
+        return toast.error(rest);
+      case "royal":
+        return toast.default({
+          ...rest,
+          className: `bg-royal-purple/20 border-royal-purple/30 text-royal-gold ${rest.className || ""}`,
+        });
+      default:
+        return toast.default(rest);
+    }
+  }
 };
 
 // Compatibility layer with any existing shadcn/ui toast usage
 export const useToast = () => {
   return {
-    toast: (options: ToastOptions) => {
-      const { variant = "default", ...rest } = options;
-      
-      switch (variant) {
-        case "success":
-          return toast.success(rest);
-        case "destructive":
-          return toast.error(rest);
-        case "royal":
-          return toast.default({
-            ...rest,
-            className: `bg-royal-purple/20 border-royal-purple/30 text-royal-gold ${rest.className || ""}`,
-          });
-        default:
-          return toast.default(rest);
-      }
-    },
+    toast: toast.call,
     dismiss: toast.dismiss,
   };
 };

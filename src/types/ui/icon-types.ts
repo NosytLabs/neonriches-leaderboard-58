@@ -40,7 +40,7 @@ export interface IconProps extends Omit<LucideProps, 'color'> {
   animate?: boolean;
 }
 
-export type MedievalDecorationColor = 'gold' | 'silver' | 'crimson' | 'royal' | 'purple' | 'navy' | 'platinum';
+export type MedievalDecorationColor = 'gold' | 'silver' | 'crimson' | 'royal' | 'purple' | 'navy' | 'platinum' | 'bronze';
 export type MedievalSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
 export interface MedievalDecorationProps {

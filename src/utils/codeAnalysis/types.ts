@@ -57,6 +57,7 @@ export interface ComplexCodeIssue {
   cyclomaticComplexity?: number;
   line: number;
   explanation?: string;
+  function?: string;
 }
 
 export interface PerformanceIssue {
@@ -82,6 +83,12 @@ export interface ProjectMetrics {
     fileCount: number;
     dependencyCount: number;
   };
+  sizeSavings?: number;
+  fileSavings?: number;
+  dependencySavings?: number;
+  sizePercentage?: number;
+  filePercentage?: number;
+  dependencyPercentage?: number;
 }
 
 // Alias types to match what's being used elsewhere
