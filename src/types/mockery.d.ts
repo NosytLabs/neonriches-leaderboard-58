@@ -13,7 +13,8 @@ export type MockeryTier =
   | 'legendary'
   | 'basic'
   | 'premium'
-  | 'royal';
+  | 'royal'
+  | 'elite'; // Added missing tiers
 
 export type MockeryAction = 
   | 'tomatoes' 
@@ -51,15 +52,20 @@ export type ShameAction = MockeryAction;
 export type ExtendedMockeryAction = MockeryAction;
 
 export interface MockedUser {
-  id: string;
+  id?: string;
   username: string;
   displayName?: string;
   profileImage?: string;
+  avatarUrl?: string;
   rank?: number;
   team?: string;
   tier?: string;
   mockeryCount?: number;
   lastMocked?: string;
+  mockedReason?: string;
+  mockedTimestamp?: string;
+  mockedBy?: string;
+  mockedTier?: string;
 }
 
 export type MockUser = MockedUser;
@@ -67,19 +73,23 @@ export type MockUser = MockedUser;
 export interface MockeryEvent {
   id: string;
   targetId: string;
-  targetName: string;
+  targetUserId?: string; // For compatibility with existing code
+  targetName?: string;
   sourceId?: string;
   sourceName?: string;
+  userId?: string;
   action: MockeryAction;
   startTime?: string | Date;
   endTime?: string | Date;
+  startDate?: string;
+  endDate?: string;
   appliedAt?: string;
   expiresAt?: string;
+  timestamp?: string;
   active: boolean;
   isActive?: boolean;
   tier?: MockeryTier;
-  timestamp?: string;
-  userId?: string;
+  appliedById?: string; // For compatibility with existing code
 }
 
 export interface MockeryEffectData {
@@ -96,3 +106,6 @@ export interface UserMockeryStatus {
   mockeryCount: number;
   protectionUntil?: string | Date;
 }
+
+// Add alias for legacy code
+export type MockeryEffectDataType = MockeryEffectData;

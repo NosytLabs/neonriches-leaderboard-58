@@ -1,22 +1,14 @@
 
-export type AchievementType = 'royal' | 'rank' | 'deposit' | 'milestone' | 'streak';
-export type AchievementTier = 'gold' | 'platinum' | 'silver' | 'bronze' | 'diamond';
+export type AchievementType = 'royal' | 'rank' | 'milestone' | 'subscription' | 'deposit' | 'streak';
+export type AchievementTier = 'gold' | 'silver' | 'bronze' | 'platinum' | 'diamond';
 
 export interface Achievement {
   id: string;
   name: string;
   description: string;
   type: AchievementType;
-  icon: "star" | "zap" | "award" | "trophy" | "crown" | "dollar";
-  tier: AchievementTier;
+  icon: 'star' | 'zap' | 'award' | 'trophy' | 'crown' | 'dollar';
+  tier: AchievementTier | string; // Allow string for backward compatibility
   unlockedAt: string;
   amountSpent?: number;
-}
-
-export interface UserAchievement {
-  id: string;
-  userId: string;
-  achievementId: string;
-  unlockDate: Date;
-  displayed: boolean;
 }

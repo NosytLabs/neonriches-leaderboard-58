@@ -1,8 +1,9 @@
-
 import { useState, useEffect } from 'react';
 import { UserProfile } from '@/types/user';
 import { BoostEffect, BoostEffectType, ProfileBoost } from '@/types/boost';
 import { profileBoostEffects, getBoostById } from '@/data/boostEffects';
+
+export type BoostEffectType = 'visibility' | 'rank' | 'profile' | 'cosmetic' | 'marketing';
 
 export interface UseProfileBoostResult {
   activeBoosts: ProfileBoost[];

@@ -1,47 +1,55 @@
 
-export interface SolanaTreasuryInfo {
-  address: string;
-  balance: number;
-  currentBalance?: number;
-  totalDeposited?: number;
-  totalWithdrawn?: number;
-  transactions?: SolanaTransaction[];
-  lastUpdated?: string;
-}
-
-export interface SolanaTransaction {
-  signature: string;
-  id?: string;
-  timestamp?: string;
-  amount: number;
-  type: 'deposit' | 'withdrawal' | 'fee';
-  status: 'confirmed' | 'pending' | 'failed';
-  from?: string;
-  to?: string;
-  userId?: string;
-}
-
 export interface OnChainLeaderboardEntry {
-  userId: string;
-  id?: string;
+  id: string;
   username: string;
-  publicKey: string;
-  address?: string;
-  spentAmount: number;
+  publicKey?: string;
+  address?: string; // Added for compatibility
+  wallet?: string;
+  spentAmount?: number;
   amountSpent?: number;
-  totalSpent?: number;
   totalDeposited?: number;
-  rank: number;
-  timestamp: string;
-  lastTransaction?: string;
+  rank?: number;
+  timestamp?: string;
+  userId?: string; // Added for compatibility
+  lastTransaction?: string; // Added for compatibility
 }
 
 export interface LeaderboardEntry {
   userId: string;
   username: string;
-  publicKey: string;
+  publicKey?: string;
   amountSpent: number;
-  totalDeposited: number;
+  totalDeposited?: number;
   rank: number;
-  joinDate: string;
+  joinDate?: string;
+}
+
+export interface SolanaTransaction {
+  id: string;
+  timestamp: string;
+  amount: number;
+  type: string;
+  sender: string;
+  receiver?: string; // Added for compatibility
+  status: 'confirmed' | 'pending' | 'failed';
+  signature?: string;
+}
+
+export interface SolanaTreasuryInfo {
+  totalBalance: number;
+  totalDeposits: number;
+  totalWithdrawals: number;
+  totalTransactions: number;
+  lastUpdate: string;
+  totalDeposited?: number; // Added for compatibility
+  totalWithdrawn?: number; // Added for compatibility
+  transactions?: SolanaTransaction[]; // Added for compatibility
+}
+
+export interface CertificateMetadata {
+  name: string;
+  description: string;
+  image: string;
+  attributes: any[];
+  rank?: number; // Added for compatibility
 }

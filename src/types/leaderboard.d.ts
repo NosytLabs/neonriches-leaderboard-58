@@ -23,6 +23,7 @@ export interface LeaderboardUser {
   joinedAt?: string;
   joinDate?: string;
   userId?: string;
+  spendStreak?: number; // Added for ShameModal
 }
 
 export interface LeaderboardSnapshot {

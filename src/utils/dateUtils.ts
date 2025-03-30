@@ -1,113 +1,66 @@
 
-import { format, parse, differenceInDays, parseISO, isValid } from 'date-fns';
-
 /**
- * Ensures a date is a Date object, converting from string if necessary
+ * Utility functions for working with dates consistently
  */
-export const ensureDate = (date: string | Date | undefined | null): Date | null => {
-  if (!date) return null;
+
+// Convert any date format to a Date object
+export const toDateObject = (date: string | Date | number): Date => {
   if (date instanceof Date) return date;
-  
-  try {
-    const dateObj = new Date(date);
-    return isValid(dateObj) ? dateObj : null;
-  } catch {
-    return null;
-  }
+  if (typeof date === 'string') return new Date(date);
+  if (typeof date === 'number') return new Date(date);
+  return new Date();
 };
 
-/**
- * Converts a date string to a Date object
- */
-export const toDateObject = (dateString: string | undefined): Date | null => {
-  if (!dateString) return null;
-  
-  try {
-    const dateObj = parseISO(dateString);
-    return isValid(dateObj) ? dateObj : null;
-  } catch {
-    return null;
-  }
+// Ensure we have a date string
+export const ensureDate = (date: string | Date | number | undefined): string => {
+  if (!date) return new Date().toISOString();
+  if (date instanceof Date) return date.toISOString();
+  if (typeof date === 'string') return date;
+  return new Date(date).toISOString();
 };
 
-/**
- * Formats a date string according to the specified format
- */
-export const formatDateString = (dateString: string | undefined, formatStr: string = 'PP'): string => {
-  if (!dateString) return 'N/A';
-  
-  const dateObj = toDateObject(dateString);
-  if (!dateObj) return 'Invalid date';
-  
-  return format(dateObj, formatStr);
+// Format a date string consistently
+export const formatDateString = (dateString: string | Date): string => {
+  const date = toDateObject(dateString);
+  return date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric'
+  });
 };
 
-/**
- * Checks if an event is currently active
- */
-export const isEventActive = (startDate: string | Date, endDate: string | Date): boolean => {
+// Determine if an event is active
+export const isEventActive = (
+  startDate: string | Date,
+  endDate: string | Date
+): boolean => {
   const now = new Date();
-  const start = ensureDate(startDate);
-  const end = ensureDate(endDate);
+  const start = toDateObject(startDate);
+  const end = toDateObject(endDate);
   
-  if (!start || !end) return false;
-  
-  return start <= now && now <= end;
+  return now >= start && now <= end;
 };
 
-/**
- * Calculates the number of days until a specific date
- */
+// Calculate days until a date
 export const daysUntil = (date: string | Date): number => {
-  const targetDate = ensureDate(date);
-  if (!targetDate) return 0;
-  
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  
-  return Math.max(0, differenceInDays(targetDate, today));
-};
-
-/**
- * Formats a date relative to the current time (e.g., "3 days ago")
- */
-export const formatRelativeTime = (date: string | Date | undefined): string => {
-  if (!date) return 'N/A';
-  
-  const dateObj = ensureDate(date);
-  if (!dateObj) return 'Invalid date';
-  
+  const targetDate = toDateObject(date);
   const now = new Date();
-  const diffTime = now.getTime() - dateObj.getTime();
-  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
   
-  if (diffDays === 0) {
-    return 'Today';
-  } else if (diffDays === 1) {
-    return 'Yesterday';
-  } else if (diffDays < 7) {
-    return `${diffDays} days ago`;
-  } else if (diffDays < 30) {
-    const weeks = Math.floor(diffDays / 7);
-    return `${weeks} ${weeks === 1 ? 'week' : 'weeks'} ago`;
-  } else if (diffDays < 365) {
-    const months = Math.floor(diffDays / 30);
-    return `${months} ${months === 1 ? 'month' : 'months'} ago`;
-  } else {
-    const years = Math.floor(diffDays / 365);
-    return `${years} ${years === 1 ? 'year' : 'years'} ago`;
-  }
+  const diffTime = targetDate.getTime() - now.getTime();
+  return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 };
 
-/**
- * Formats a date to a standard display format
- */
-export const formatDate = (date: string | Date | null | undefined): string => {
-  if (!date) return 'N/A';
+// Format relative time
+export const formatRelativeTime = (dateString: string | Date): string => {
+  const date = toDateObject(dateString);
+  const now = new Date();
   
-  const dateObj = typeof date === 'string' ? new Date(date) : date;
+  const diffSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
   
-  if (!isValid(dateObj)) return 'Invalid date';
-  
-  return format(dateObj, 'MMM d, yyyy');
+  if (diffSeconds < 60) return `${diffSeconds} seconds ago`;
+  if (diffSeconds < 3600) return `${Math.floor(diffSeconds / 60)} minutes ago`;
+  if (diffSeconds < 86400) return `${Math.floor(diffSeconds / 3600)} hours ago`;
+  if (diffSeconds < 2592000) return `${Math.floor(diffSeconds / 86400)} days ago`;
+  if (diffSeconds < 31536000) return `${Math.floor(diffSeconds / 2592000)} months ago`;
+  return `${Math.floor(diffSeconds / 31536000)} years ago`;
 };

@@ -82,6 +82,7 @@ export interface ProfileBoost {
   id: string;
   userId: string;
   effectId: string;
+  // Allow flexibility with Date or string type
   startTime: Date | string;
   endTime: Date | string;
   startDate?: string;
@@ -126,6 +127,7 @@ export interface UserSettings {
   enableMockeryEffects?: boolean;
   receiveRoyalAnnouncements?: boolean;
   showStatusInLeaderboard?: boolean;
+  allowMessages?: boolean; // Added to support CertificatePage
 }
 
 export interface UserSubscription {
@@ -138,6 +140,10 @@ export interface UserSubscription {
   paymentMethod: string;
   price: number;
   features: string[];
+  cancelAtPeriodEnd?: boolean; // Added to support RoyalCouncilForums
+  currentPeriodEnd?: string; // Added to support user.d.ts compatibility
+  interval?: 'month' | 'year'; // Added to support user.d.ts compatibility
+  plan?: string; // Added to support user.d.ts compatibility
 }
 
 export interface UserProfile {
@@ -157,8 +163,10 @@ export interface UserProfile {
   rank?: number;
   tier?: UserTier;
   team?: UserTeam;
+  // Allow flexibility with date types
   joinedAt?: Date | string;
   joinDate?: string;
+  lastLogin?: Date | string;
   isVerified?: boolean;
   isModerator?: boolean;
   isAdmin?: boolean;
@@ -184,6 +192,7 @@ export interface UserProfile {
     tokenId: string;
   };
   createdAt?: string | Date;
+  updatedAt?: string | Date; // Added for compatibility with User
   role?: string;
   followers?: number;
   following?: number;
@@ -194,9 +203,10 @@ export interface UserProfile {
 }
 
 // Extended User type that includes full details
-export interface User extends Omit<UserProfile, 'createdAt'> {
-  createdAt: Date;
-  updatedAt: Date;
+// Make User compatible with UserProfile by allowing string | Date
+export interface User extends Omit<UserProfile, 'createdAt' | 'updatedAt'> {
+  createdAt: string | Date;
+  updatedAt: string | Date;
   email: string;
   rank: number;
   team: TeamType;

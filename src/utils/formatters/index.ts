@@ -15,17 +15,16 @@ export {
   getMockeryActionIconColor
 } from '../formatters';
 
-// Type re-exports
+// Type re-exports - use export type for isolated modules
 export type { 
   RoyalDecorationType,
   RoyalButtonVariant,
-  ShameAction,
-  LeaderboardUser,
-  MockeryEffectDataType as MockeryEffectData,
-  UserMockeryStatus,
-  ExtendedMockeryAction,
-  MockUser
 } from '../formatters';
+
+// Explicitly export types from source modules
+export type { ShameAction } from '@/types/mockery';
+export type { LeaderboardUser } from '@/types/leaderboard';
+export type { MockeryEffectData, UserMockeryStatus, ExtendedMockeryAction, MockUser } from '@/types/mockery';
 
 // Re-export date utilities
 export {

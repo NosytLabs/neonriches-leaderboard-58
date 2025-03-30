@@ -1,104 +1,69 @@
-
-import { format, isValid } from 'date-fns';
 import React from 'react';
-import { Trophy, Zap, Award, Star, Crown, DollarSign } from 'lucide-react';
-import { LeaderboardUser } from '@/types/leaderboard';
-import { UserTeam, GenderType } from '@/types/user';
-import { MockeryAction, MockeryTier, MockeryEvent, MockedUser, ShameAction, UserMockeryStatus, MockUser } from '@/types/mockery';
-import { RoyalButtonVariant, RoyalDecorationType } from '@/types/royal-divider-types';
+import { Trophy, Zap, Award, DollarSign, Crown, Star } from 'lucide-react';
+import { LeaderboardEntry } from '@/types/leaderboard';
+import { TeamType, UserTeam } from '@/types/user';
+import { MockeryAction, MockeryTier } from '@/types/mockery';
 
-export const formatDate = (date: string | Date | null | undefined): string => {
-  if (!date) return 'N/A';
-  
-  const dateObj = typeof date === 'string' ? new Date(date) : date;
-  
-  if (!isValid(dateObj)) return 'Invalid date';
-  
-  return format(dateObj, 'MMM d, yyyy');
+// Function to format a date
+export const formatDate = (date: Date | string): string => {
+  const dateObj = new Date(date);
+  return dateObj.toLocaleDateString();
 };
 
-export const formatTime = (date: string | Date | null | undefined): string => {
-  if (!date) return 'N/A';
-  
-  const dateObj = typeof date === 'string' ? new Date(date) : date;
-  
-  if (!isValid(dateObj)) return 'Invalid time';
-  
-  return format(dateObj, 'h:mm a');
+// Function to format time
+export const formatTime = (date: Date | string): string => {
+  const dateObj = new Date(date);
+  return dateObj.toLocaleTimeString();
 };
 
-export const formatDateTime = (date: string | Date | null | undefined): string => {
-  if (!date) return 'N/A';
-  
-  const dateObj = typeof date === 'string' ? new Date(date) : date;
-  
-  if (!isValid(dateObj)) return 'Invalid date/time';
-  
-  return format(dateObj, 'MMM d, yyyy h:mm a');
+// Function to format date and time
+export const formatDateTime = (date: Date | string): string => {
+  const dateObj = new Date(date);
+  return dateObj.toLocaleString();
 };
 
-export const formatCurrency = (amount: number | undefined | null): string => {
-  if (amount === undefined || amount === null) return '$0.00';
+// Function to format currency
+export const formatCurrency = (amount: number, currency: string = 'USD'): string => {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
+    currency: currency,
   }).format(amount);
 };
 
-export const formatDollarAmount = (amount: number | undefined | null): string => {
-  if (amount === undefined || amount === null) return '$0';
-  
-  if (amount >= 1000000) {
-    return `$${(amount / 1000000).toFixed(1)}M`;
-  } else if (amount >= 1000) {
-    return `$${(amount / 1000).toFixed(1)}K`;
-  }
-  
-  return `$${Math.round(amount)}`;
+// Function to format dollar amount
+export const formatDollarAmount = (amount: number): string => {
+  return `$${amount.toFixed(2)}`;
 };
 
-export const formatPercentage = (value: number, decimals: number = 2): string => {
-  return `${value.toFixed(decimals)}%`;
+// Function to format number
+export const formatNumber = (number: number): string => {
+  return number.toLocaleString();
 };
 
-export const formatNumber = (value: number, decimals: number = 0): string => {
-  return value.toLocaleString('en-US', {
-    minimumFractionDigits: decimals,
-    maximumFractionDigits: decimals,
-  });
+// Function to format percentage
+export const formatPercentage = (number: number): string => {
+  return `${number.toFixed(2)}%`;
 };
 
-export const formatAddress = (address: string | undefined, length: number = 6): string => {
-  if (!address) return '';
-  if (address.length < length * 2) return address;
-  
-  return `${address.substring(0, length)}...${address.substring(address.length - length)}`;
+// Function to format address
+export const formatAddress = (address: string): string => {
+  return `${address.substring(0, 6)}...${address.substring(address.length - 4)}`;
 };
 
+// Function to format file size
 export const formatFileSize = (bytes: number): string => {
-  if (bytes === 0) return '0 Bytes';
-  
-  const k = 1024;
   const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
-  
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  if (bytes === 0) return '0 Byte';
+  const i = Math.floor(Math.log(bytes) / Math.log(1024));
+  return `${(bytes / Math.pow(1024, i)).toFixed(2)} ${sizes[i]}`;
 };
 
-export const formatHistoricalValue = (amount: number, year: number): string => {
-  const currentYear = new Date().getFullYear();
-  const yearsAgo = currentYear - year;
-  const inflationRate = 0.03; // Assume 3% annual inflation
-  
-  // Calculate approximate modern value
-  const modernValue = amount * Math.pow(1 + inflationRate, yearsAgo);
-  
-  return formatCurrency(modernValue);
+// Function to format historical value
+export const formatHistoricalValue = (value: number): string => {
+  return value > 0 ? `+${value.toFixed(2)}` : value.toFixed(2);
 };
 
-export const getAchievementIcon = (type: string): React.ReactNode => {
+export const getAchievementIcon = (type: string): React.ReactElement => {
   switch (type.toLowerCase()) {
     case 'rank':
       return React.createElement(Trophy, { className: "h-5 w-5" });
@@ -115,64 +80,54 @@ export const getAchievementIcon = (type: string): React.ReactNode => {
   }
 };
 
-// Define MockeryEffectData interface
-export interface MockeryEffectData {
-  username: string;
-  action: MockeryAction;
-  duration?: number;
-  tier?: MockeryTier;
-}
+// Define required types
+export type RoyalDecorationType = 'border' | 'corner' | 'icon' | 'flourish';
+export type RoyalButtonVariant = 
+  | "default" 
+  | "destructive" 
+  | "outline" 
+  | "secondary" 
+  | "ghost" 
+  | "link" 
+  | "royal" 
+  | "gold" 
+  | "premium"
+  | "glass"
+  | "mahogany"
+  | "goldOutline"
+  | "crimsonOutline"
+  | "navyOutline"
+  | "royalGold"  
+  | "royalCrimson"
+  | "royalNavy"  
+  | "royalPurple";
 
-// Define UserMockeryStatus interface
-export interface UserMockeryStatusImpl {
-  username: string;
-  protected: boolean;
-  mockeryEffects: MockeryEvent[];
-  mockeryCount: number;
-  protectionUntil?: string | Date;
-}
-
-// Export types
-export type { RoyalDecorationType, RoyalButtonVariant, ShameAction, LeaderboardUser, MockeryEffectData as MockeryEffectDataType, UserMockeryStatus, ExtendedMockeryAction, MockUser };
-
-// Get mockery action icon color
-export const getMockeryActionIconColor = (action: MockeryAction | ShameAction): string => {
+// Add the missing function
+export const getMockeryActionIconColor = (action: MockeryAction) => {
   switch (action) {
     case 'tomatoes':
     case 'eggs':
     case 'putridEggs':
-      return 'text-red-500';
-    case 'stocks':
     case 'dunce':
       return 'text-amber-500';
+    case 'stocks':
     case 'silence':
     case 'courtJester':
+      return 'text-red-500';
+    case 'jest':
+    case 'mockery':
+    case 'defeat':
       return 'text-purple-500';
     case 'protection':
     case 'immune':
+      return 'text-green-500';
+    case 'smokeBomb':
+    case 'glitterBomb':
       return 'text-blue-500';
-    case 'jest':
-    case 'defeat':
-      return 'text-lime-500';
     case 'crown':
+    case 'target':
+    case 'challenge':
       return 'text-yellow-500';
-    case 'shame':
-    case 'taunt':
-    case 'ridicule':
-    case 'jester':
-      return 'text-orange-500';
-    case 'mock':
-    case 'humiliate':
-    case 'expose':
-      return 'text-rose-500';
-    case 'guillotine':
-    case 'dungeons':
-    case 'removal':
-      return 'text-red-700';
-    case 'royalPie':
-    case 'jokeCrown':
-    case 'memeFrame':
-      return 'text-indigo-500';
     default:
       return 'text-gray-500';
   }
