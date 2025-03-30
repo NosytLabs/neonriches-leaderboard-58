@@ -18,6 +18,25 @@
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
 }
 
+/* Team-specific certificate backgrounds */
+.certificate-bg-red {
+  background-color: #F5E6CA;
+  border: 8px double #9B2335;
+  color: #333;
+}
+
+.certificate-bg-green {
+  background-color: #F5E6CA;
+  border: 8px double #D4AF37;
+  color: #333;
+}
+
+.certificate-bg-blue {
+  background-color: #F5E6CA;
+  border: 8px double #1F4788;
+  color: #333;
+}
+
 /* Scroll Background */
 .scroll-bg {
   background-color: #F5E6CA;
@@ -33,8 +52,8 @@
 /* Royal Seal */
 .royal-seal {
   position: relative;
-  width: 80px;
-  height: 80px;
+  width: 60px;
+  height: 60px;
   background: #9B2335;
   border-radius: 50%;
   display: flex;
@@ -43,11 +62,25 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
+/* Team-specific royal seals */
+.royal-seal.bg-royal-crimson {
+  background: #9B2335;
+}
+
+.royal-seal.bg-royal-gold {
+  background: #D4AF37;
+  color: #333;
+}
+
+.royal-seal.bg-royal-navy {
+  background: #1F4788;
+}
+
 .royal-seal::before {
   content: '';
   position: absolute;
-  width: 70px;
-  height: 70px;
+  width: 52px;
+  height: 52px;
   border: 2px solid #D4AF37;
   border-radius: 50%;
 }
@@ -55,8 +88,8 @@
 .royal-seal::after {
   content: '';
   position: absolute;
-  width: 60px;
-  height: 60px;
+  width: 40px;
+  height: 40px;
   background-image: url('/throne-assets/royal-seal.svg');
   background-size: contain;
   background-repeat: no-repeat;
@@ -73,16 +106,17 @@
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
 }
 
+/* Team-specific ribbons */
+.ribbon-crimson {
+  background: linear-gradient(to right, #9B2335 0%, #C41E3A 100%);
+}
+
 .ribbon-gold {
   background: linear-gradient(to right, #D4AF37 0%, #FFD700 100%);
 }
 
-.ribbon-blue {
-  background: linear-gradient(to right, #000080 0%, #1a1a7a 100%);
-}
-
-.ribbon-purple {
-  background: linear-gradient(to right, #4B0082 0%, #6a0dad 100%);
+.ribbon-navy {
+  background: linear-gradient(to right, #1F4788 0%, #4682B4 100%);
 }
 
 /* Medieval Dividers */
@@ -102,6 +136,31 @@
   color: #D4AF37;
   background: #0D0D20;
   padding: 0 10px;
+}
+
+/* Team-specific dividers */
+.medieval-divider-crimson {
+  background: linear-gradient(to right, transparent, #9B2335, transparent);
+}
+
+.medieval-divider-crimson::before {
+  color: #9B2335;
+}
+
+.medieval-divider-gold {
+  background: linear-gradient(to right, transparent, #D4AF37, transparent);
+}
+
+.medieval-divider-gold::before {
+  color: #D4AF37;
+}
+
+.medieval-divider-navy {
+  background: linear-gradient(to right, transparent, #1F4788, transparent);
+}
+
+.medieval-divider-navy::before {
+  color: #1F4788;
 }
 
 /* Ornamental Corners */
@@ -131,6 +190,22 @@
   border-right: 3px solid #D4AF37;
 }
 
+/* Team-specific ornamental corners */
+.ornamental-corner-crimson::before,
+.ornamental-corner-crimson::after {
+  border-color: #9B2335;
+}
+
+.ornamental-corner-gold::before,
+.ornamental-corner-gold::after {
+  border-color: #D4AF37;
+}
+
+.ornamental-corner-navy::before,
+.ornamental-corner-navy::after {
+  border-color: #1F4788;
+}
+
 /* Certificate Title */
 .certificate-title {
   font-family: 'Playfair Display', serif;
@@ -140,6 +215,19 @@
   font-size: 28px;
   letter-spacing: 1px;
   margin-bottom: 10px;
+}
+
+/* Team-specific titles */
+.certificate-title-crimson {
+  color: #9B2335;
+}
+
+.certificate-title-gold {
+  color: #D4AF37;
+}
+
+.certificate-title-navy {
+  color: #1F4788;
 }
 
 /* Certificate Body Text */
@@ -158,6 +246,19 @@
   margin-top: 20px;
   text-align: center;
   color: #333;
+}
+
+/* Team-specific signatures */
+.certificate-signature-crimson {
+  color: #9B2335;
+}
+
+.certificate-signature-gold {
+  color: #D4AF37;
+}
+
+.certificate-signature-navy {
+  color: #1F4788;
 }
 
 /* Medieval Font Styles */
@@ -202,6 +303,37 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
+/* Team-specific buttons */
+.medieval-button-crimson {
+  background: linear-gradient(to bottom, #9B2335 0%, #800020 100%);
+  border: 2px solid #4A0010;
+  color: #fff;
+}
+
+.medieval-button-crimson:hover {
+  background: linear-gradient(to bottom, #C41E3A 0%, #9B2335 100%);
+}
+
+.medieval-button-gold {
+  background: linear-gradient(to bottom, #D4AF37 0%, #AA8C2C 100%);
+  border: 2px solid #806600;
+  color: #000;
+}
+
+.medieval-button-gold:hover {
+  background: linear-gradient(to bottom, #FFD700 0%, #D4AF37 100%);
+}
+
+.medieval-button-navy {
+  background: linear-gradient(to bottom, #1F4788 0%, #0F3361 100%);
+  border: 2px solid #071A33;
+  color: #fff;
+}
+
+.medieval-button-navy:hover {
+  background: linear-gradient(to bottom, #4682B4 0%, #1F4788 100%);
+}
+
 /* Decorative Frames */
 .medieval-frame {
   border: 8px double #D4AF37;
@@ -219,6 +351,31 @@
   bottom: 5px;
   border: 1px solid #D4AF3777;
   pointer-events: none;
+}
+
+/* Team-specific frames */
+.medieval-frame-crimson {
+  border-color: #9B2335;
+}
+
+.medieval-frame-crimson::before {
+  border-color: #9B233577;
+}
+
+.medieval-frame-gold {
+  border-color: #D4AF37;
+}
+
+.medieval-frame-gold::before {
+  border-color: #D4AF3777;
+}
+
+.medieval-frame-navy {
+  border-color: #1F4788;
+}
+
+.medieval-frame-navy::before {
+  border-color: #1F478877;
 }
 
 /* Animations for medieval elements */
@@ -292,8 +449,71 @@
   transform: scaleX(-1);
 }
 
+/* Team-specific scrollwork */
+.scrollwork-crimson::before,
+.scrollwork-crimson::after {
+  color: #9B2335;
+}
+
+.scrollwork-gold::before,
+.scrollwork-gold::after {
+  color: #D4AF37;
+}
+
+.scrollwork-navy::before,
+.scrollwork-navy::after {
+  color: #1F4788;
+}
+
 /* Throne background */
 .throne-bg {
   background-color: var(--background);
   background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23D4AF37' fill-opacity='0.03' fill-rule='evenodd'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* Team-specific throne backgrounds */
+.throne-bg-crimson {
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%239B2335' fill-opacity='0.03' fill-rule='evenodd'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+.throne-bg-gold {
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23D4AF37' fill-opacity='0.03' fill-rule='evenodd'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+.throne-bg-navy {
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%231F4788' fill-opacity='0.03' fill-rule='evenodd'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* Certificate tier styles */
+.certificate-tier-basic {
+  border-width: 4px;
+}
+
+.certificate-tier-premium {
+  border-width: 6px;
+}
+
+.certificate-tier-royal {
+  border-width: 8px;
+}
+
+/* Certificate rank styles */
+.certificate-rank-1 {
+  box-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+}
+
+.certificate-rank-2 {
+  box-shadow: 0 0 15px rgba(192, 192, 192, 0.5);
+}
+
+.certificate-rank-3 {
+  box-shadow: 0 0 15px rgba(205, 127, 50, 0.5);
+}
+
+.certificate-top-10 {
+  box-shadow: 0 0 10px rgba(138, 43, 226, 0.3);
+}
+
+.certificate-top-50 {
+  box-shadow: 0 0 8px rgba(70, 130, 180, 0.3);
 }

@@ -33,8 +33,16 @@
   
   /* Team Colors */
   --team-red: var(--royal-crimson);
-  --team-green: var(--royal-emerald);
+  --team-green: var(--royal-gold);
   --team-blue: var(--royal-navy);
+  
+  /* Certificate Colors */
+  --certificate-red: var(--royal-crimson);
+  --certificate-green: var(--royal-gold);
+  --certificate-blue: var(--royal-navy);
+  --certificate-purple: var(--royal-purple);
+  --certificate-parchment: rgb(245, 230, 202);
+  --certificate-ink: rgb(51, 51, 51);
   
   /* Tier Colors */
   --tier-whale: var(--royal-purple);
@@ -43,6 +51,14 @@
   --tier-fish: rgb(70, 130, 180);
   --tier-octopus: rgb(128, 0, 128);
   --tier-crab: rgb(205, 127, 50);
+  
+  /* Rank Colors */
+  --rank-1: var(--royal-gold);
+  --rank-2: rgb(192, 192, 192);
+  --rank-3: rgb(205, 127, 50);
+  --rank-top-10: var(--royal-purple);
+  --rank-top-50: rgb(70, 130, 180);
+  --rank-top-100: rgb(46, 139, 87);
   
   /* Gradients */
   --gradient-royal-gold: linear-gradient(
@@ -92,6 +108,14 @@
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
   --shadow-gold: 0 0 15px rgba(212, 175, 55, 0.3);
+  --shadow-crimson: 0 0 15px rgba(155, 35, 53, 0.3);
+  --shadow-navy: 0 0 15px rgba(31, 71, 136, 0.3);
+  
+  /* Certificate Shadows */
+  --shadow-certificate-gold: 0 0 20px rgba(212, 175, 55, 0.5);
+  --shadow-certificate-silver: 0 0 15px rgba(192, 192, 192, 0.5);
+  --shadow-certificate-bronze: 0 0 15px rgba(205, 127, 50, 0.5);
+  --shadow-certificate-royal: 0 0 15px rgba(106, 13, 173, 0.5);
   
   /* Glass Effects */
   --glass-bg: rgba(20, 20, 40, 0.6);
@@ -174,4 +198,102 @@ body {
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+}
+
+/* Team Color Text Classes */
+.text-team-red {
+  color: var(--royal-crimson);
+}
+
+.text-team-green {
+  color: var(--royal-gold);
+}
+
+.text-team-blue {
+  color: var(--royal-navy);
+}
+
+/* Team Color Background Classes */
+.bg-team-red {
+  background-color: var(--royal-crimson);
+}
+
+.bg-team-green {
+  background-color: var(--royal-gold);
+}
+
+.bg-team-blue {
+  background-color: var(--royal-navy);
+}
+
+/* Team Color Border Classes */
+.border-team-red {
+  border-color: var(--royal-crimson);
+}
+
+.border-team-green {
+  border-color: var(--royal-gold);
+}
+
+.border-team-blue {
+  border-color: var(--royal-navy);
+}
+
+/* Certificate-specific styles */
+.certificate-text-red {
+  color: var(--royal-crimson);
+}
+
+.certificate-text-green {
+  color: var(--royal-gold);
+}
+
+.certificate-text-blue {
+  color: var(--royal-navy);
+}
+
+.certificate-bg-red {
+  background-color: var(--certificate-parchment);
+  border-color: var(--royal-crimson);
+}
+
+.certificate-bg-green {
+  background-color: var(--certificate-parchment);
+  border-color: var(--royal-gold);
+}
+
+.certificate-bg-blue {
+  background-color: var(--certificate-parchment);
+  border-color: var(--royal-navy);
+}
+
+/* Rank badge styles */
+.rank-badge-1 {
+  background-color: var(--royal-gold);
+  color: black;
+}
+
+.rank-badge-2 {
+  background-color: rgb(192, 192, 192);
+  color: black;
+}
+
+.rank-badge-3 {
+  background-color: rgb(205, 127, 50);
+  color: white;
+}
+
+.rank-badge-top-10 {
+  background-color: var(--royal-purple);
+  color: white;
+}
+
+.rank-badge-top-50 {
+  background-color: var(--royal-navy);
+  color: white;
+}
+
+.rank-badge-top-100 {
+  background-color: var(--royal-emerald);
+  color: white;
 }
