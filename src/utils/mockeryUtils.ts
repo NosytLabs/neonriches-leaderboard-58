@@ -1,6 +1,6 @@
 
 import { ReactNode } from 'react';
-import { ShieldAlert, Sword, Crown, FaceSad, ThumbsDown, Laugh, Target, Skull, Map } from 'lucide-react';
+import { MockeryAction, MockeryTier, ShameAction } from '@/types/mockery';
 
 export type MockeryAction = 
   | 'shame'
@@ -97,7 +97,6 @@ export const getMockeryCooldown = (action: MockeryAction): number => {
 };
 
 // Get icon component name for mockery action
-// This returns the component name as a string instead of actual JSX
 export const getMockeryActionIcon = (action: MockeryAction): string => {
   const iconNames: Record<MockeryAction, string> = {
     'shame': 'FaceSad',

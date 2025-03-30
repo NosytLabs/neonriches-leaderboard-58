@@ -1,13 +1,10 @@
 
-import { 
-  Toast,
-  ToastActionElement, 
-  ToastProps 
-} from "@/components/ui/toast";
-import { ExtendedToastProps, ToasterToast } from "@/types/toast-extended";
+import * as React from "react";
+import { Toast, ToastActionElement, ToastProps } from "@/components/ui/toast";
+import { ExtendedToastProps } from "@/types/toast-extended";
 
 const TOAST_LIMIT = 5;
-const TOAST_REMOVE_DELAY = 1000000;
+const TOAST_REMOVE_DELAY = 1000;
 
 type ToasterToastProps = Omit<ExtendedToastProps, "id"> & {
   id: string;
@@ -135,8 +132,6 @@ function dispatch(action: Action) {
   });
 }
 
-type Toast = Omit<ToasterToastProps, "id">;
-
 function toast(props: ExtendedToastProps) {
   const id = genId();
 
@@ -165,7 +160,7 @@ function toast(props: ExtendedToastProps) {
   };
 }
 
-function useToast() {
+export function useToast() {
   const [state, setState] = React.useState<State>(memoryState);
 
   React.useEffect(() => {
@@ -187,8 +182,7 @@ function useToast() {
     error: (props: ExtendedToastProps) => toast({ ...props, variant: "destructive" }),
     warning: (props: ExtendedToastProps) => toast({ ...props, variant: "destructive" }),
     royal: (props: ExtendedToastProps) => toast({ ...props, variant: "royal" }),
-    loading: (props: ExtendedToastProps) => toast({ ...props, variant: "default" }),
   };
 }
 
-export { useToast, toast };
+export { toast };

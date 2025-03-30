@@ -1,7 +1,8 @@
 
 import React from 'react';
 import { ShieldAlert, Sword, Crown, FaceSad, ThumbsDown, Laugh, Target, Skull, Map } from 'lucide-react';
-import { MockeryAction, getMockeryActionIconColor } from '@/utils/mockeryUtils';
+import { MockeryAction } from '@/types/mockery';
+import { getMockeryActionIconColor } from '@/utils/mockeryUtils';
 import { cn } from '@/lib/utils';
 
 interface MockeryIconProps {

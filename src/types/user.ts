@@ -1,4 +1,3 @@
-
 export type UserTier = 
   | 'free' 
   | 'basic'
@@ -157,49 +156,28 @@ export interface Achievement {
 
 export interface User {
   id: string;
-  email?: string;
   username: string;
   displayName?: string;
-  walletBalance?: number;
-  rank?: number;
-  previousRank?: number;
-  team?: Team | null;
+  email?: string;
   profileImage?: string;
-  profileImages?: ProfileImage[];
   bio?: string;
-  gender?: UserGender;
+  rank?: number;
+  tier?: string;
+  amountSpent?: number;
+  walletBalance?: number;
+  team?: string | null;
   joinedAt?: string;
   lastActive?: string;
-  isVerified?: boolean;
-  isVIP?: boolean;
-  isModerator?: boolean;
-  isAdmin?: boolean;
-  isProtected?: boolean;
-  isBanned?: boolean;
-  achievements?: Achievement[];
-  socialLinks?: SocialLink[];
-  settings?: UserSettings;
-  cosmetics?: UserCosmetics;
-  subscription?: UserSubscription;
-  profileBoosts?: ProfileBoost[];
-  statistics?: Record<string, any>;
-  notifications?: number;
-  role?: UserRole;
-  tier?: UserTier;
-  amountSpent?: number;
-  totalSpent?: number;
-  spentAmount?: number;
-  createdAt?: string;
-  updatedAt?: string;
-  spendStreak?: number;
   followers?: number;
   following?: number;
+  spendStreak?: number;
+  gender?: 'male' | 'female' | 'other' | 'prefer-not-to-say';
+  isProtected?: boolean;
+  totalSpent?: number;
   lastMocked?: string;
   mockeryCount?: number;
-  profileViews?: number;
-  profileClicks?: number;
-  certificateNFT?: any;
-  purchasedFeatures?: string[];
+  isVerified?: boolean;
+  previousRank?: number;
 }
 
 export interface UserProfile extends User {
@@ -210,17 +188,5 @@ export interface UserProfile extends User {
   activeTitle?: string;
 }
 
-export interface LeaderboardUser {
-  id: string;
-  username: string;
-  displayName?: string;
-  profileImage?: string;
-  avatarUrl?: string;
-  rank: number;
-  tier?: string;
-  team?: Team;
-  amountSpent?: number;
-  totalSpent?: number;
-  joinedAt?: string;
-  isVerified?: boolean;
-}
+// Export interface declarations to make sure they're available
+export type { UserTier, UserTeam, TeamType, UserGender };

@@ -11,6 +11,7 @@ export interface ExtendedToastProps {
   duration?: number;
   className?: string;
   open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
 export interface ToasterToast extends ExtendedToastProps {

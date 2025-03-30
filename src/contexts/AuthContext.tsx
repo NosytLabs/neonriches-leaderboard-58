@@ -1,7 +1,6 @@
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { UserProfile } from '@/types/user';
-import { AuthContextType } from '@/contexts/auth/types';
+import { AuthContextType } from '@/types/auth-context';
 
 // Create a mock initial user
 const mockUser: UserProfile = {
@@ -27,13 +26,9 @@ export const AuthContext = createContext<AuthContextType>({
   isAuthenticated: false,
   isLoading: true,
   login: async () => false,
-  logout: () => {},
+  logout: async () => {},
   register: async () => false,
-  updateUser: async () => false,
-  updateUserProfile: async () => false,
-  signIn: async () => false,
-  signOut: () => {},
-  awardCosmetic: async () => false,
+  updateUserProfile: async () => {},
 });
 
 // Provider component

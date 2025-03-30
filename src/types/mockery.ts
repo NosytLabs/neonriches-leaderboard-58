@@ -1,43 +1,32 @@
 
+import { CosmeticRarity } from './cosmetics';
+
 export type MockeryAction = 
-  | 'tomatoes' 
-  | 'eggs'
-  | 'putridEggs' 
-  | 'stocks' 
-  | 'dunce' 
-  | 'silence' 
-  | 'courtJester'
-  | 'smokeBomb'
-  | 'protection'
-  | 'immune'
-  | 'jester'
-  | 'glitterBomb'
-  | 'royalPie'
-  | 'jokeCrown'
-  | 'memeFrame'
-  | 'roast'
-  | 'ridicule'
-  | 'humiliate'
-  | 'expose'
-  | 'mock'
   | 'shame'
   | 'taunt'
-  | 'guillotine'
-  | 'dungeons'
-  | 'removal';
+  | 'crown'
+  | 'challenge'
+  | 'protection'
+  | 'jest'
+  | 'target'
+  | 'defeat'
+  | 'expose';
 
-export type MockeryTier = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary' | 'premium';
+export type MockeryTier = 'basic' | 'premium' | 'royal' | 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
 
 export interface MockeryEvent {
   id: string;
-  sourceId: string;
-  sourceName: string;
+  sourceId?: string;
+  sourceName?: string;
   targetId: string;
   targetName: string;
   action: MockeryAction;
   appliedAt: string;
   expiresAt: string;
   isActive: boolean;
+  duration?: number;
+  tier?: MockeryTier;
+  cost?: number;
 }
 
 export interface MockUser {
@@ -50,27 +39,58 @@ export interface MockUser {
   rank?: number;
   lastMocked: string;
   mockeryCount: number;
+  userId?: string;
 }
 
 export type ShameAction = MockeryAction;
 
 export interface MockeryEffectData {
-  username: string;
+  id?: string;
+  username?: string;
   action: MockeryAction;
-  tier?: string;
+  target?: string;
+  appliedBy?: string;
   duration?: number;
+  strength?: number;
+  timestamp?: number;
+  tier?: MockeryTier;
   title?: string;
   message?: string;
-  rarity?: string;
+  name?: string;
+  description?: string;
+  price?: number;
+  imageUrl?: string;
+  animationClass?: string;
 }
 
 export interface UserMockeryStatus {
   isProtected: boolean;
   protectionEndsAt?: string;
   activeEffects: MockeryEvent[];
+  protectionExpiry?: string | null;
+  lastMocked?: string | null;
+  mockeryCount?: number;
+  mockedOthersCount?: number;
+  activeMockery?: MockeryEvent;
 }
 
 export type ExtendedMockeryAction = MockeryAction;
+
+export interface MockeryEffect {
+  id: string;
+  name: string;
+  description: string;
+  duration: number;
+  tier: MockeryTier;
+  icon: string;
+}
+
+export interface MockeryStats {
+  totalMockeries: number;
+  usersMocked: number;
+  mostPopularAction: string;
+  mostActiveUser: string;
+}
 
 export interface ShameEffectState {
   shameCooldown: number;
