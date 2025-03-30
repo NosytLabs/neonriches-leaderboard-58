@@ -1,6 +1,5 @@
-
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button } from './ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import { useAuth } from '@/hooks/useAuth';
@@ -8,15 +7,17 @@ import { formatCurrency } from '@/utils/formatters';
 import { MenuIcon, X } from 'lucide-react';
 import { User } from '@/types/user';
 import { useToast } from '@/hooks/use-toast';
+import Crown from '@/components/ui/icons/Crown';
 
-const Header: React.FC = () => {
+const Header: React.FC = ({ transparent = false }) => {
   const location = useLocation();
-  const { isAuthenticated, user, logout } = useAuth();
+  const { isAuthenticated, user, isLoading, logout } = useAuth();
+  const navigate = useNavigate();
   const { toast } = useToast();
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
+  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   
-  // Handle scroll events to change header appearance
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
@@ -28,7 +29,6 @@ const Header: React.FC = () => {
     };
   }, []);
   
-  // Close mobile menu when changing routes
   useEffect(() => {
     setMobileMenuOpen(false);
   }, [location.pathname]);
@@ -73,92 +73,105 @@ const Header: React.FC = () => {
   );
   
   return (
-    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-      isScrolled ? 'bg-background/80 backdrop-blur-md shadow-md py-3' : 'bg-transparent py-4'
-    }`}>
-      <div className="container mx-auto px-4 flex justify-between items-center">
-        {/* Logo */}
-        <Link to="/" className="flex items-center">
-          <span className="font-royal text-xl text-white">
-            <span className="royal-gradient">SpendThrone</span>
-          </span>
-        </Link>
-        
-        {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center space-x-6">
-          <Link to="/leaderboard" className={`nav-link ${isActive('/leaderboard') ? 'active' : ''}`}>Leaderboard</Link>
-          <Link to="/teams" className={`nav-link ${isActive('/teams') ? 'active' : ''}`}>Teams</Link>
-          <Link to="/features" className={`nav-link ${isActive('/features') ? 'active' : ''}`}>Features</Link>
-          <Link to="/deposit" className={`nav-link ${isActive('/deposit') ? 'active' : ''}`}>Deposit</Link>
-          {isAuthenticated && (
-            <Link to="/dashboard" className={`nav-link ${isActive('/dashboard') ? 'active' : ''}`}>Dashboard</Link>
-          )}
-        </nav>
-        
-        {/* User Actions */}
-        <div className="flex items-center space-x-4">
-          {isAuthenticated && user ? (
-            <>
-              {renderUserInfo(user)}
-              <div className="hidden md:block">
-                <Button variant="outline" size="sm" onClick={handleLogout}>
-                  Logout
-                </Button>
-              </div>
-            </>
-          ) : (
-            <div className="hidden md:flex space-x-2">
-              <Link to="/signin">
-                <Button variant="outline" size="sm">Sign In</Button>
-              </Link>
-              <Link to="/signup">
-                <Button size="sm">Join Court</Button>
-              </Link>
-            </div>
-          )}
+    <header className={`sticky top-0 z-50 w-full ${transparent ? 'bg-transparent' : 'bg-black/80 backdrop-blur-sm border-b border-white/10'} transition-colors duration-300`}>
+      <div className="container mx-auto px-4">
+        <div className="flex h-16 items-center justify-between">
+          <div className="flex items-center">
+            <Link to="/" className="flex items-center">
+              <Crown className="h-6 w-6 text-royal-gold" />
+              <span className="ml-2 text-lg font-bold">SpendThrone</span>
+            </Link>
+            
+            <nav className="hidden md:ml-8 md:flex md:space-x-4">
+              <Link to="/leaderboard" className="text-sm font-medium text-white/90 hover:text-royal-gold transition-colors">Leaderboard</Link>
+              <Link to="/features" className="text-sm font-medium text-white/90 hover:text-royal-gold transition-colors">Features</Link>
+              <Link to="/teams" className="text-sm font-medium text-white/90 hover:text-royal-gold transition-colors">Teams</Link>
+              <Link to="/status-through-history" className="text-sm font-medium text-white/90 hover:text-royal-gold transition-colors">Status History</Link>
+            </nav>
+          </div>
           
-          {/* Mobile Menu Button */}
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            className="md:hidden"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          >
-            {mobileMenuOpen ? <X className="h-6 w-6" /> : <MenuIcon className="h-6 w-6" />}
-          </Button>
+          <div className="flex items-center space-x-4">
+            {isAuthenticated && user ? (
+              <>
+                {renderUserInfo(user)}
+                <div className="hidden md:block">
+                  <Button variant="outline" size="sm" onClick={handleLogout}>
+                    Logout
+                  </Button>
+                </div>
+              </>
+            ) : (
+              <div className="hidden md:flex space-x-2">
+                <Link to="/signin">
+                  <Button variant="outline" size="sm">Sign In</Button>
+                </Link>
+                <Link to="/signup">
+                  <Button size="sm">Join Court</Button>
+                </Link>
+              </div>
+            )}
+            
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="md:hidden"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            >
+              {mobileMenuOpen ? <X className="h-6 w-6" /> : <MenuIcon className="h-6 w-6" />}
+            </Button>
+          </div>
         </div>
       </div>
       
-      {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden bg-background/95 backdrop-blur-lg pt-4 pb-6 border-t border-white/10 shadow-lg">
-          <div className="container mx-auto px-4 space-y-4">
-            <nav className="flex flex-col space-y-3">
-              <Link to="/leaderboard" className={`nav-link-mobile ${isActive('/leaderboard') ? 'text-royal-gold' : ''}`}>Leaderboard</Link>
-              <Link to="/teams" className={`nav-link-mobile ${isActive('/teams') ? 'text-royal-gold' : ''}`}>Teams</Link>
-              <Link to="/features" className={`nav-link-mobile ${isActive('/features') ? 'text-royal-gold' : ''}`}>Features</Link>
-              <Link to="/deposit" className={`nav-link-mobile ${isActive('/deposit') ? 'text-royal-gold' : ''}`}>Deposit</Link>
-              {isAuthenticated && (
-                <Link to="/dashboard" className={`nav-link-mobile ${isActive('/dashboard') ? 'text-royal-gold' : ''}`}>Dashboard</Link>
-              )}
-            </nav>
-            
-            <div className="pt-3 border-t border-white/10">
-              {isAuthenticated ? (
-                <Button variant="outline" className="w-full" onClick={handleLogout}>
-                  Logout
-                </Button>
-              ) : (
-                <div className="flex flex-col space-y-2">
-                  <Link to="/signin" className="w-full">
-                    <Button variant="outline" className="w-full">Sign In</Button>
-                  </Link>
-                  <Link to="/signup" className="w-full">
-                    <Button className="w-full">Join Court</Button>
-                  </Link>
-                </div>
-              )}
-            </div>
+        <div className="md:hidden bg-black/95 backdrop-blur-sm">
+          <div className="space-y-1 px-2 pt-2 pb-3">
+            <Link 
+              to="/leaderboard" 
+              onClick={() => setIsMenuOpen(false)}
+              className="block px-3 py-2 text-base font-medium text-white/90 hover:text-royal-gold"
+            >
+              Leaderboard
+            </Link>
+            <Link 
+              to="/features" 
+              onClick={() => setIsMenuOpen(false)}
+              className="block px-3 py-2 text-base font-medium text-white/90 hover:text-royal-gold"
+            >
+              Features
+            </Link>
+            <Link 
+              to="/teams" 
+              onClick={() => setIsMenuOpen(false)}
+              className="block px-3 py-2 text-base font-medium text-white/90 hover:text-royal-gold"
+            >
+              Teams
+            </Link>
+            <Link 
+              to="/status-through-history" 
+              onClick={() => setIsMenuOpen(false)}
+              className="block px-3 py-2 text-base font-medium text-white/90 hover:text-royal-gold"
+            >
+              Status History
+            </Link>
+            {isAuthenticated && (
+              <>
+                <Link 
+                  to="/profile" 
+                  onClick={() => setIsMenuOpen(false)}
+                  className="block px-3 py-2 text-base font-medium text-white/90 hover:text-royal-gold"
+                >
+                  Profile
+                </Link>
+                <Link 
+                  to="/wallet" 
+                  onClick={() => setIsMenuOpen(false)}
+                  className="block px-3 py-2 text-base font-medium text-white/90 hover:text-royal-gold"
+                >
+                  Wallet
+                </Link>
+              </>
+            )}
           </div>
         </div>
       )}

@@ -5,6 +5,8 @@ import PageSEO from '@/components/common/PageSEO';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Crown, Star, Award, Lightbulb, BookOpen, BriefcaseBusiness, Swords, Youtube, DollarSign, Trophy, ExternalLink } from 'lucide-react';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 
 const StatusThroughHistory = () => {
   return (
@@ -14,6 +16,8 @@ const StatusThroughHistory = () => {
         description="Explore how wealth, status, and prestige have manifested throughout human history, from ancient civilizations to modern digital economies."
         canonicalUrl="/status-through-history"
       />
+      
+      <Header />
       
       <Container className="py-10">
         <h1 className="text-4xl font-bold mb-2 royal-gradient text-center">Status Through History</h1>
@@ -310,6 +314,8 @@ const StatusThroughHistory = () => {
           </TabsContent>
         </Tabs>
       </Container>
+      
+      <Footer />
     </>
   );
 };

@@ -1,52 +1,41 @@
 
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import { ThemeProvider } from './contexts/ThemeContext';
-import { ToastProvider } from './contexts/ToastContext';
-import { AuthProvider } from './contexts/AuthContext';
+import { Routes, Route } from 'react-router-dom';
 
 // Pages
 import Home from './pages/Home';
-import Leaderboard from './pages/LeaderboardPage';
+import About from './pages/About';
+import Leaderboard from './pages/Leaderboard';
 import Profile from './pages/Profile';
-import Dashboard from './pages/Dashboard';
-import Subscription from './pages/Subscription';
+import Wallet from './pages/Wallet';
+import Features from './pages/Features';
+import Teams from './pages/Teams';
 import Terms from './pages/Terms';
 import Privacy from './pages/Privacy';
-import SignUp from './pages/SignUp';
+import PaymentSuccess from './pages/PaymentSuccess';
 import SignIn from './pages/SignIn';
-import Teams from './pages/Teams';
-import Deposit from './pages/Deposit';
-import Features from './pages/Features';
-import NotFound from './pages/NotFound';
+import SignUp from './pages/SignUp';
+import StatusThroughHistory from './pages/StatusThroughHistory';
 
-const App: React.FC = () => {
+function App() {
   return (
-    <ThemeProvider>
-      <ToastProvider>
-        <AuthProvider>
-          <Router>
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/leaderboard" element={<Leaderboard />} />
-              <Route path="/profile/:username" element={<Profile />} />
-              <Route path="/profile" element={<Profile />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/subscription" element={<Subscription />} />
-              <Route path="/teams" element={<Teams />} />
-              <Route path="/deposit" element={<Deposit />} />
-              <Route path="/signup" element={<SignUp />} />
-              <Route path="/signin" element={<SignIn />} />
-              <Route path="/features" element={<Features />} />
-              <Route path="/terms" element={<Terms />} />
-              <Route path="/privacy" element={<Privacy />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </Router>
-        </AuthProvider>
-      </ToastProvider>
-    </ThemeProvider>
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/about" element={<About />} />
+      <Route path="/leaderboard" element={<Leaderboard />} />
+      <Route path="/profile" element={<Profile />} />
+      <Route path="/profile/:username" element={<Profile />} />
+      <Route path="/wallet" element={<Wallet />} />
+      <Route path="/features" element={<Features />} />
+      <Route path="/teams" element={<Teams />} />
+      <Route path="/terms" element={<Terms />} />
+      <Route path="/privacy" element={<Privacy />} />
+      <Route path="/payment/success" element={<PaymentSuccess />} />
+      <Route path="/auth/signin" element={<SignIn />} />
+      <Route path="/auth/signup" element={<SignUp />} />
+      <Route path="/status-through-history" element={<StatusThroughHistory />} />
+    </Routes>
   );
-};
+}
 
 export default App;
