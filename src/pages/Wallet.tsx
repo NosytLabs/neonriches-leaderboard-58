@@ -1,136 +1,101 @@
 
 import React from 'react';
-import { Container } from '@/components/ui/container';
+import Layout from '@/components/layout/Layout';
+import { useAuth } from '@/contexts/auth';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ArrowUpRight, ArrowDownLeft, DollarSign, Wallet as WalletIcon } from 'lucide-react';
+import { Coins, ArrowUpRight, ArrowDownLeft, History } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
-const Wallet = () => {
-  const transactions = [
-    { id: 1, type: 'deposit', amount: 50, date: '2025-03-25', status: 'completed' },
-    { id: 2, type: 'withdraw', amount: 25, date: '2025-03-20', status: 'completed' },
-    { id: 3, type: 'deposit', amount: 100, date: '2025-03-15', status: 'completed' },
-    { id: 4, type: 'withdraw', amount: 30, date: '2025-03-10', status: 'pending' },
-  ];
+const Wallet: React.FC = () => {
+  const { user } = useAuth();
+  const navigate = useNavigate();
 
   return (
-    <Container className="py-10">
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold mb-6">Royal Treasury</h1>
-        
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <Card>
-            <CardHeader className="pb-2">
-              <CardDescription>Available Balance</CardDescription>
-              <CardTitle className="text-2xl flex items-center">
-                <DollarSign className="h-5 w-5 mr-1 text-royal-gold" /> 
-                120.00
-              </CardTitle>
-            </CardHeader>
-          </Card>
+    <Layout>
+      <div className="container mx-auto px-4 py-12">
+        <div className="max-w-4xl mx-auto">
+          <h1 className="text-3xl font-bold mb-8 royal-gradient">Royal Treasury</h1>
           
-          <Card>
-            <CardHeader className="pb-2">
-              <CardDescription>Total Spent</CardDescription>
-              <CardTitle className="text-2xl flex items-center">
-                <ArrowUpRight className="h-5 w-5 mr-1 text-red-500" /> 
-                350.00
-              </CardTitle>
-            </CardHeader>
-          </Card>
-          
-          <Card>
-            <CardHeader className="pb-2">
-              <CardDescription>Total Deposited</CardDescription>
-              <CardTitle className="text-2xl flex items-center">
-                <ArrowDownLeft className="h-5 w-5 mr-1 text-green-500" /> 
-                470.00
-              </CardTitle>
-            </CardHeader>
-          </Card>
-        </div>
-        
-        <Tabs defaultValue="deposit" className="w-full">
-          <TabsList className="grid w-full grid-cols-3 mb-8">
-            <TabsTrigger value="deposit">Deposit</TabsTrigger>
-            <TabsTrigger value="withdraw">Withdraw</TabsTrigger>
-            <TabsTrigger value="history">Transaction History</TabsTrigger>
-          </TabsList>
-          
-          <TabsContent value="deposit" className="space-y-4">
-            <Card>
-              <CardHeader>
-                <CardTitle>Add Funds</CardTitle>
-                <CardDescription>Choose a payment method to add funds to your wallet</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <Button className="h-24 flex flex-col items-center justify-center">
-                    <DollarSign className="h-8 w-8 mb-2" />
-                    Credit Card
-                  </Button>
-                  <Button variant="outline" className="h-24 flex flex-col items-center justify-center">
-                    <WalletIcon className="h-8 w-8 mb-2" />
-                    Crypto Wallet
-                  </Button>
+          <div className="glass-morphism border-white/10 p-8 rounded-lg mb-8">
+            <div className="flex flex-col md:flex-row items-center justify-between">
+              <div className="flex items-center mb-4 md:mb-0">
+                <div className="bg-royal-gold/10 p-4 rounded-full mr-4">
+                  <Coins className="h-8 w-8 text-royal-gold" />
                 </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
+                <div>
+                  <p className="text-white/70">Current Balance</p>
+                  <h2 className="text-3xl font-bold">${user?.walletBalance || 0}</h2>
+                </div>
+              </div>
+              
+              <div className="space-x-3">
+                <Button onClick={() => navigate('/deposit')} className="bg-royal-gold hover:bg-royal-gold/90 text-black">
+                  <ArrowUpRight className="mr-2 h-4 w-4" />
+                  Deposit
+                </Button>
+                <Button onClick={() => navigate('/withdraw')} variant="outline">
+                  <ArrowDownLeft className="mr-2 h-4 w-4" />
+                  Withdraw
+                </Button>
+              </div>
+            </div>
+          </div>
           
-          <TabsContent value="withdraw" className="space-y-4">
-            <Card>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <Card className="glass-morphism border-white/10">
               <CardHeader>
-                <CardTitle>Withdraw Funds</CardTitle>
-                <CardDescription>Request a withdrawal to your preferred method</CardDescription>
+                <CardTitle>Quick Actions</CardTitle>
+                <CardDescription>Ways to increase your royal status</CardDescription>
               </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground mb-4">
-                  Note: Withdrawals may take 1-3 business days to process
-                </p>
-                <Button className="w-full">Request Withdrawal</Button>
+              <CardContent className="space-y-4">
+                <Button className="w-full justify-between">
+                  Boost Your Rank
+                  <span className="bg-white/10 px-2 py-1 rounded text-xs">+10 Rank</span>
+                </Button>
+                <Button className="w-full justify-between" variant="outline">
+                  Purchase Profile Flair
+                  <span className="bg-white/10 px-2 py-1 rounded text-xs">From $5</span>
+                </Button>
+                <Button className="w-full justify-between" variant="secondary">
+                  Team Contribution
+                  <span className="bg-white/10 px-2 py-1 rounded text-xs">Team Bonus</span>
+                </Button>
               </CardContent>
             </Card>
-          </TabsContent>
-          
-          <TabsContent value="history">
-            <Card>
+            
+            <Card className="glass-morphism border-white/10">
               <CardHeader>
                 <CardTitle>Transaction History</CardTitle>
+                <CardDescription>Your recent financial activities</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
-                  {transactions.map(transaction => (
-                    <div key={transaction.id} className="flex items-center justify-between p-3 border-b">
-                      <div className="flex items-center">
-                        {transaction.type === 'deposit' ? (
-                          <ArrowDownLeft className="h-5 w-5 mr-3 text-green-500" />
-                        ) : (
-                          <ArrowUpRight className="h-5 w-5 mr-3 text-red-500" />
-                        )}
-                        <div>
-                          <p className="font-medium">{transaction.type === 'deposit' ? 'Deposit' : 'Withdrawal'}</p>
-                          <p className="text-sm text-muted-foreground">{transaction.date}</p>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <p className="font-bold">${transaction.amount.toFixed(2)}</p>
-                        <p className={`text-sm ${
-                          transaction.status === 'completed' ? 'text-green-500' : 'text-amber-500'
-                        }`}>
-                          {transaction.status.charAt(0).toUpperCase() + transaction.status.slice(1)}
-                        </p>
-                      </div>
-                    </div>
-                  ))}
+                <div className="text-center py-8">
+                  <History className="h-12 w-12 text-white/30 mx-auto mb-3" />
+                  <p className="text-white/70">No transactions yet</p>
+                  <p className="text-white/50 text-sm">Deposit funds to get started</p>
                 </div>
               </CardContent>
             </Card>
-          </TabsContent>
-        </Tabs>
+          </div>
+          
+          <Card className="glass-morphism border-white/10">
+            <CardHeader>
+              <CardTitle>Financial Absurdities</CardTitle>
+              <CardDescription>What your expenditure could have bought instead</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p className="text-white/70 italic mb-4">
+                "The money you've spent on digital status so far could have bought you {user?.totalSpent ? (user.totalSpent / 5).toFixed(0) : 0} cups of premium coffee."
+              </p>
+              <p className="text-white/70 italic">
+                "Or {user?.totalSpent ? (user.totalSpent / 15).toFixed(0) : 0} movie tickets. But digital prestige is forever, right?"
+              </p>
+            </CardContent>
+          </Card>
+        </div>
       </div>
-    </Container>
+    </Layout>
   );
 };
 
