@@ -1,36 +1,29 @@
 
 // Team-related types
-export type TeamColor = "red" | "green" | "blue" | "gold" | "silver" | "bronze";
+export type TeamType = 'red' | 'green' | 'blue' | 'gold' | 'none';
 
-export type TeamType = 
-  | "red" 
-  | "green" 
-  | "blue" 
-  | "gold" 
-  | "silver" 
-  | "bronze"
-  | "Red"
-  | "Green"
-  | "Blue"
-  | "none";
+export type TeamColor = 'red' | 'green' | 'blue' | 'gold' | 'purple' | 'black';
 
-export type UserTeam = "red" | "green" | "blue" | "none";
+export type UserTeam = 'red' | 'green' | 'blue' | 'gold' | 'none';
 
-export type TeamBenefit = {
-  id: string;
-  title: string;
-  description: string;
-  team: TeamType;
-};
-
-export type Team = {
+export interface Team {
   id: TeamType;
   name: string;
-  color: string;
+  color: TeamColor;
   description: string;
-  members: number;
+  motto: string;
   benefits: TeamBenefit[];
-};
+  memberCount: number;
+  leaderUsername?: string;
+  iconPath: string;
+}
 
-// Export these types properly
+export interface TeamBenefit {
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+  type: 'passive' | 'active' | 'special';
+}
+
 export type { TeamType, TeamColor, UserTeam, Team, TeamBenefit };

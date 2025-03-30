@@ -34,7 +34,16 @@ export type SoundType =
   | 'celebration'
   | 'message'
   | 'treasure'
-  | 'bell';
+  | 'bell'
+  | 'pageTransition'
+  | 'parchmentUnfurl'
+  | 'pageChange'
+  | 'royalAnnouncement'
+  | 'swordClash'
+  | 'coins'
+  | 'trumpet'
+  | 'medallion'
+  | 'coin';
 
 export interface AudioLoaderReturn {
   audios: Record<SoundType, HTMLAudioElement>;
@@ -55,6 +64,26 @@ export interface PremiumSoundPackDetails {
   features: string[];
   tags: string[];
   isPurchased?: boolean;
+  includes?: string[];
 }
 
-export { SoundType, AudioLoaderReturn, PremiumSoundPackDetails };
+export interface UseSoundOptions {
+  volume?: number;
+  loop?: boolean;
+  interrupt?: boolean;
+  onEnd?: () => void;
+  baseVolume?: number;
+  disableCache?: boolean;
+}
+
+export interface UseSoundReturn {
+  play: (sound?: SoundType) => void;
+  stop: (sound?: SoundType) => void;
+  isPlaying: boolean;
+  duration: number;
+  playSound?: (sound: SoundType) => void;
+  playSuccess?: (sound?: SoundType) => void;
+}
+
+// Use export type to avoid TS1205 errors
+export type { SoundType, AudioLoaderReturn, PremiumSoundPackDetails, UseSoundOptions, UseSoundReturn };

@@ -1,41 +1,42 @@
 
-// Profile boost related types
-export type BoostStrength = 'low' | 'medium' | 'high' | 'extreme';
-export type BoostTier = 'basic' | 'premium' | 'royal' | 'legendary';
+// Profile boost types
 export type BoostEffectType = 
-  'spotlight' | 
-  'highlight' | 
-  'featured' | 
-  'promoted' | 
-  'enhanced' |
-  'crown' |
-  'sparkle' |
-  'glow';
+  | 'glow' 
+  | 'sparkle' 
+  | 'shine' 
+  | 'pulse' 
+  | 'royal' 
+  | 'diamond' 
+  | 'gold' 
+  | 'aura' 
+  | 'highlight' 
+  | 'shadow'
+  | 'crown'
+  | 'sparkle'
+  | 'glow';
+
+export type BoostStrength = 'low' | 'medium' | 'high' | 'extreme';
+
+export type BoostTier = 'basic' | 'premium' | 'royal' | 'elite';
 
 export interface BoostEffect {
-  id: string;
-  name: string;
-  description: string;
   type: BoostEffectType;
-  tier: string;
-  price: number;
+  strength: BoostStrength;
+  color?: string;
   duration: number;
-  durationDays?: number;
-  cssClass: string;
   icon: string;
-  previewImage?: string;
 }
 
 export interface ProfileBoost {
   id: string;
   userId: string;
-  effectId: string;
+  type: BoostEffectType;
+  tier: BoostTier;
   startDate: string;
   endDate: string;
-  isActive: boolean;
-  tier?: BoostTier;
-  strength?: BoostStrength;
-  level?: string; // Added for compatibility
+  active: boolean;
+  strength: BoostStrength;
+  level?: string;
 }
 
 export interface ProfileBoostData {
@@ -43,14 +44,12 @@ export interface ProfileBoostData {
   name: string;
   description: string;
   type: BoostEffectType;
-  tier: string;
-  price: number;
+  tier: BoostTier;
+  strength: BoostStrength;
   duration: number;
-  startDate?: string;
-  cssClass: string;
+  price: number;
   icon: string;
-  previewImage?: string;
+  startDate?: string;
 }
 
-// Export types explicitly
-export { ProfileBoost, BoostEffect, BoostEffectType, BoostStrength, BoostTier, ProfileBoostData };
+export type { ProfileBoost, BoostEffect, BoostEffectType, BoostStrength, BoostTier, ProfileBoostData };

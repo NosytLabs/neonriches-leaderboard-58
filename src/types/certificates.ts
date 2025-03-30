@@ -33,7 +33,8 @@ export interface Certificate {
   type: CertificateType;
   style: CertificateStyle;
   imageUrl: string;
-  nftMintAddress?: string;
+  nftMintAddress?: string; 
+  mintAddress?: string;  // Added this for backward compatibility
   team?: CertificateTeam;
   createdAt: string;
   updatedAt?: string;
@@ -84,4 +85,14 @@ export interface CertificateTemplateFactory {
   getTemplatesByType(type: CertificateType): CertificateTemplate[];
 }
 
-export { CertificateType, CertificateStyle, CertificateTeam, Certificate, CertificateTemplate, RankCertificateMetadata, CertificateRepository, CertificateTemplateFactory };
+// Use export type to avoid TS1205 errors
+export type { 
+  CertificateType, 
+  CertificateStyle, 
+  CertificateTeam, 
+  Certificate, 
+  CertificateTemplate, 
+  RankCertificateMetadata, 
+  CertificateRepository, 
+  CertificateTemplateFactory 
+};

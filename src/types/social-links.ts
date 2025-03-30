@@ -1,26 +1,28 @@
 
-// Social media related types
+// Social media platform types
 export type SocialPlatform = 
-  | "twitter" 
-  | "instagram" 
-  | "facebook" 
-  | "linkedin" 
-  | "github" 
-  | "youtube" 
-  | "twitch"
-  | "tiktok"
-  | "reddit"
-  | "discord"
-  | "website"
-  | "other";
+  | 'twitter' 
+  | 'facebook' 
+  | 'instagram' 
+  | 'youtube' 
+  | 'twitch' 
+  | 'linkedin' 
+  | 'github' 
+  | 'discord' 
+  | 'reddit' 
+  | 'tiktok' 
+  | 'website' 
+  | 'other';
 
 export interface SocialLink {
+  id: string;
   platform: SocialPlatform;
+  username: string;
   url: string;
-  clicks?: number;
-  label?: string;
-  id?: string;
+  isVerified?: boolean;
+  isPrivate?: boolean;
+  displayTitle?: string;
+  displayOrder?: number;
 }
 
-// Export these types properly
-export { SocialPlatform, SocialLink };
+export type { SocialPlatform, SocialLink };

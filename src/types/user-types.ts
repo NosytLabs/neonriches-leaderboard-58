@@ -71,6 +71,3 @@ export interface UserSettings {
   teamChangeAlerts?: boolean;
   spendingAlerts?: boolean; // Alternative to spendAlerts for compatibility
 }
-
-// Export all types explicitly
-export { UserRole, UserStatus, UserTier, UserGender, UserTeam, UserPreferences, UserStats, UserSubscription, UserSettings };

@@ -25,7 +25,14 @@ export type MockeryAction =
   | 'royalPie'
   | 'jokeCrown'
   | 'memeFrame'
-  | 'target';
+  | 'target'
+  // Include ShameAction types in MockeryAction for compatibility
+  | 'shame'
+  | 'mock'
+  | 'ridicule'
+  | 'humiliate'
+  | 'expose'
+  | 'jester';
 
 export type MockeryTier = 
   | 'basic' 
@@ -48,7 +55,8 @@ export type ShameAction =
   | 'mock' 
   | 'ridicule' 
   | 'humiliate'
-  | 'expose';
+  | 'expose'
+  | 'jester';
 
 export type ExtendedMockeryAction = MockeryAction | ShameAction;
 
@@ -116,8 +124,8 @@ export interface UserMockeryStatus {
   lastMockedAt?: string;
 }
 
-// Export types properly
-export { 
+// Use export type to avoid TS1205 errors
+export type { 
   MockeryAction, 
   MockeryEvent, 
   MockeryTier, 

@@ -277,11 +277,11 @@ const TeamCertificate: React.FC<TeamCertificateProps> = ({
               Certificate #{certificate?.id || user.id}
             </div>
             
-            {certificate?.isMinted && certificate?.mintAddress && (
+            {certificate?.isMinted && certificate?.nftMintAddress && (
               <div className="flex justify-center mt-2">
                 <Badge variant="outline" className="bg-green-500/20 text-green-600">
                   <Shield className="h-3 w-3 mr-1" />
-                  Verified On-Chain: {certificate.mintAddress.substring(0, 6)}...
+                  Verified On-Chain: {certificate.nftMintAddress.substring(0, 6)}...
                 </Badge>
               </div>
             )}
@@ -322,11 +322,11 @@ const TeamCertificate: React.FC<TeamCertificateProps> = ({
           </Button>
         )}
         
-        {certificate?.isMinted && certificate?.mintAddress && (
+        {certificate?.isMinted && certificate?.nftMintAddress && (
           <Button
             variant="outline"
             className="glass-morphism border-white/10 bg-purple-500/10"
-            onClick={() => window.open(`https://explorer.solana.com/address/${certificate.mintAddress}`, '_blank')}
+            onClick={() => window.open(`https://explorer.solana.com/address/${certificate.nftMintAddress}`, '_blank')}
           >
             <ExternalLink className="mr-2 h-4 w-4" />
             View NFT on Solana

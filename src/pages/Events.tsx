@@ -2,9 +2,8 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Calendar, Trophy, Target, Megaphone } from 'lucide-react';
+import { Calendar, Trophy, Megaphone } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
 import { PageTitle } from '@/components/ui/page-title';
 import { Badge } from '@/components/ui/badge';
@@ -15,21 +14,20 @@ import FireSaleEvent from '@/components/events/FireSaleEvent';
 import PublicShamingFestival from '@/components/events/PublicShamingFestival';
 import UpcomingEvents from '@/components/events/UpcomingEvents';
 import EventDetailsModal from '@/components/events/components/EventDetailsModal';
-import { Event } from '@/types/events';
 import PageSEO from '@/components/SEO/PageSEO';
 
 const Events = () => {
   const { user } = useAuth();
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState('current');
-  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
+  const [selectedEvent, setSelectedEvent] = useState(null);
   const [showEventDetails, setShowEventDetails] = useState(false);
   
-  const currentEvents = eventsData.filter(event => event.status === 'active');
-  const upcomingEvents = eventsData.filter(event => event.status === 'upcoming');
-  const pastEvents = eventsData.filter(event => event.status === 'completed');
+  const currentEvents = eventsData.filter((event) => event.status === 'active');
+  const upcomingEvents = eventsData.filter((event) => event.status === 'upcoming');
+  const pastEvents = eventsData.filter((event) => event.status === 'completed');
   
-  const handleViewDetails = (event: Event) => {
+  const handleViewDetails = (event) => {
     setSelectedEvent(event);
     setShowEventDetails(true);
   };
@@ -39,12 +37,12 @@ const Events = () => {
     setSelectedEvent(null);
   };
   
-  const handleParticipate = (eventId: string) => {
+  const handleParticipate = (eventId) => {
     if (!user) {
       toast({
         title: 'Authentication Required',
         description: 'You must be logged in to participate in events.',
-        variant: 'destructive',
+        variant: 'destructive'
       });
       return;
     }
@@ -52,19 +50,19 @@ const Events = () => {
     toast({
       title: 'Participation Registered',
       description: 'You are now participating in this event. Check back for updates!',
-      variant: 'default',
+      variant: 'default'
     });
   };
   
   return (
     <>
-      <PageSEO 
-        title="Royal Events | Spend Throne" 
+      <PageSEO
+        title="Royal Events | Spend Throne"
         description="Participate in exclusive royal events to earn rewards and climb the ranks faster."
       />
       
-      <PageTitle 
-        title="Royal Events" 
+      <PageTitle
+        title="Royal Events"
         subtitle="Participate in exclusive events to earn rewards and climb the ranks faster"
         icon={<Calendar className="h-6 w-6 text-royal-gold" />}
       />
@@ -100,14 +98,18 @@ const Events = () => {
             </Card>
           ) : (
             <>
-              <FireSaleEvent />
+              <FireSaleEvent
+                eventId="sale1"
+                startDate="2023-07-01T00:00:00Z"
+                endDate="2023-07-31T23:59:59Z"
+              />
               <PublicShamingFestival />
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
                 {currentEvents.map((event) => (
-                  <EventCard 
-                    key={event.id} 
-                    event={event} 
+                  <EventCard
+                    key={event.id}
+                    event={event}
                     onViewDetails={() => handleViewDetails(event)}
                     onParticipate={() => handleParticipate(event.id)}
                   />
@@ -116,7 +118,7 @@ const Events = () => {
             </>
           )}
         </TabsContent>
-        
+      
         <TabsContent value="upcoming" className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="md:col-span-2">
@@ -140,9 +142,9 @@ const Events = () => {
                     <ScrollArea className="h-[500px] pr-3">
                       <div className="space-y-6">
                         {upcomingEvents.map((event) => (
-                          <EventCard 
-                            key={event.id} 
-                            event={event} 
+                          <EventCard
+                            key={event.id}
+                            event={event}
                             onViewDetails={() => handleViewDetails(event)}
                             onParticipate={() => handleParticipate(event.id)}
                           />
@@ -162,9 +164,7 @@ const Events = () => {
                 <CardContent>
                   <div className="text-center p-6">
                     <Calendar className="h-12 w-12 text-white/30 mx-auto mb-4" />
-                    <p className="text-white/60">
-                      Event calendar coming soon.
-                    </p>
+                    <p className="text-white/60">Event calendar coming soon.</p>
                   </div>
                 </CardContent>
               </Card>
@@ -206,10 +206,10 @@ const Events = () => {
                             Completed
                           </Badge>
                         </div>
-                        <EventCard 
-                          event={event} 
+                        <EventCard
+                          event={event}
                           onViewDetails={() => handleViewDetails(event)}
-                          isPast
+                          isPast={true}
                         />
                       </div>
                     ))}

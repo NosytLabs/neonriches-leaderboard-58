@@ -1,236 +1,99 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import React from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Hourglass, DollarSign, Tag, Info } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Flame, Tag, Clock, Coins } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
-import MedievalIcon from '@/components/ui/medieval-icon';
-import { CosmeticItem, CosmeticRarity, getRarityColor, getRarityBgColor, getRarityBorderColor } from '@/types/cosmetics';
-import { cosmeticsData } from '@/data/cosmeticsData';
-import { formatCurrency } from '@/utils/formatters';
-import { useAuth } from '@/contexts/AuthContext';
-import { ensureUser } from '@/utils/userAdapter';
-import { spendFromWallet } from '@/services/walletService';
+import { formatDistanceToNow } from 'date-fns';
+import { Event } from '@/types/events';
 
-interface FireSaleEventProps {
+// Add proper props interface
+export interface FireSaleEventProps {
   eventId: string;
   startDate: string;
   endDate: string;
+  discountPercentage?: number;
+  title?: string;
+  description?: string;
+  categories?: string[];
 }
 
-const FireSaleEvent = ({ eventId, startDate, endDate }: FireSaleEventProps) => {
-  const [saleItems, setSaleItems] = useState<CosmeticItem[]>([]);
-  const [timeLeft, setTimeLeft] = useState('');
-  const { toast } = useToast();
-  const { user, updateUserProfile } = useAuth();
-  
-  useEffect(() => {
-    const getDiscountedItems = () => {
-      const randomItems = [...cosmeticsData]
-        .sort(() => 0.5 - Math.random())
-        .slice(0, 4);
-      
-      const discountedItems = randomItems.map(item => ({
-        ...item,
-        originalPrice: item.price,
-        price: Math.floor(item.price * 0.7)
-      }));
-      
-      setSaleItems(discountedItems);
-    };
-    
-    getDiscountedItems();
-  }, [eventId]);
-  
-  useEffect(() => {
-    const calculateTimeLeft = () => {
-      const endDateTime = new Date(endDate);
-      const now = new Date();
-      
-      if (now > endDateTime) {
-        setTimeLeft('Event ended');
-        return;
-      }
-      
-      const diff = endDateTime.getTime() - now.getTime();
-      
-      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-      
-      if (days > 0) {
-        setTimeLeft(`${days}d ${hours}h ${minutes}m`);
-      } else if (hours > 0) {
-        setTimeLeft(`${hours}h ${minutes}m`);
-      } else {
-        setTimeLeft(`${minutes}m`);
-      }
-    };
-    
-    calculateTimeLeft();
-    const timer = setInterval(calculateTimeLeft, 60000);
-    
-    return () => clearInterval(timer);
-  }, [endDate]);
-  
-  const handlePurchase = async (item: CosmeticItem) => {
-    if (!user) {
-      toast({
-        title: "Authentication Required",
-        description: "You must be logged in to purchase items.",
-        variant: "destructive"
-      });
-      return;
-    }
-    
-    if (user.walletBalance < item.price) {
-      toast({
-        title: "Insufficient Funds",
-        description: `You need ${formatCurrency(item.price)} to purchase this item.`,
-        variant: "destructive"
-      });
-      return;
-    }
-    
-    try {
-      const success = await spendFromWallet(
-        user,
-        item.price,
-        'purchase' as any,
-        `Purchased ${item.name} from Fire Sale`,
-        { cosmeticId: item.id }
-      );
-      
-      if (success) {
-        const userCosmetics = user.cosmetics || {
-          borders: [],
-          colors: [],
-          fonts: [],
-          emojis: [],
-          titles: [],
-          backgrounds: [],
-          effects: [],
-          badges: [],
-          themes: []
-        };
-        
-        const updatedCosmetics = { ...userCosmetics };
-        const categoryKey = item.category.toString();
-        
-        if (Array.isArray(updatedCosmetics[categoryKey as keyof typeof updatedCosmetics])) {
-          (updatedCosmetics[categoryKey as keyof typeof updatedCosmetics] as string[]).push(item.id);
-        }
-        
-        await updateUserProfile({
-          ...user,
-          cosmetics: updatedCosmetics,
-          walletBalance: user.walletBalance - item.price
-        });
-        
-        toast({
-          title: "Purchase Successful",
-          description: `You've acquired the ${item.name}!`,
-        });
-      } else {
-        toast({
-          title: "Purchase Failed",
-          description: "There was an error processing your purchase.",
-          variant: "destructive"
-        });
-      }
-    } catch (error) {
-      console.error("Error purchasing item:", error);
-      toast({
-        title: "Purchase Failed",
-        description: "There was an error processing your purchase.",
-        variant: "destructive"
-      });
-    }
-  };
-  
-  const getRarityIcon = (rarity: CosmeticRarity | string) => {
-    switch (rarity) {
-      case 'common':
-        return <MedievalIcon name="shield" size="sm" color="silver" />;
-      case 'uncommon':
-        return <MedievalIcon name="shield" size="sm" color="silver" />;
-      case 'rare':
-        return <MedievalIcon name="shield" size="sm" color="gold" />;
-      case 'epic':
-        return <MedievalIcon name="crown" size="sm" color="purple" />;
-      case 'legendary':
-        return <MedievalIcon name="crown" size="sm" color="gold" />;
-      default:
-        return <MedievalIcon name="shield" size="sm" color="silver" />;
-    }
-  };
-  
+const FireSaleEvent: React.FC<FireSaleEventProps> = ({
+  eventId,
+  startDate,
+  endDate,
+  discountPercentage = 50,
+  title = "Royal Treasury Fire Sale",
+  description = "Limited time offer! All cosmetics, profile boosts, and status enhancements are now available at a royal discount.",
+  categories = ["Cosmetics", "Boosts", "Enhancements", "Titles", "Decorations"]
+}) => {
   return (
-    <Card className="glass-morphism border-royal-gold/20">
-      <CardHeader className="pb-3">
-        <div className="flex justify-between items-center">
-          <div>
-            <CardTitle className="text-xl font-royal flex items-center">
-              <Flame className="mr-2 h-5 w-5 text-royal-crimson" />
-              Royal Fire Sale
-            </CardTitle>
-            <CardDescription>
-              Limited-time discounts on premium cosmetics
-            </CardDescription>
-          </div>
-          <div className="flex items-center text-royal-gold">
-            <Clock className="h-4 w-4 mr-1" />
-            <span className="text-sm font-mono">{timeLeft}</span>
-          </div>
+    <Card className="glass-morphism border-royal-gold/20 shadow-royal overflow-hidden relative">
+      <div className="absolute -top-4 -right-4 w-28 h-28 bg-royal-gold/80 rotate-12 z-0"></div>
+      <div className="absolute -top-6 -right-6 transform rotate-45 bg-royal-gold text-black font-bold py-1 px-10 text-sm shadow-lg z-10">
+        SALE
+      </div>
+      
+      <CardHeader className="relative z-10">
+        <div className="flex items-center space-x-2">
+          <Tag className="h-5 w-5 text-royal-gold" />
+          <CardTitle>{title}</CardTitle>
         </div>
       </CardHeader>
-      <CardContent>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {saleItems.map((item) => (
-            <Card key={item.id} className={`glass-morphism border ${getRarityBorderColor(item.rarity)}`}>
-              <CardHeader className={`pb-2 ${getRarityBgColor(item.rarity)}`}>
-                <div className="flex justify-between items-center">
-                  <CardTitle className="text-base flex items-center">
-                    {getRarityIcon(item.rarity)}
-                    <span className="ml-2">{item.name}</span>
-                  </CardTitle>
-                  <Badge variant="outline" className={getRarityColor(item.rarity)}>
-                    {typeof item.rarity === 'string' ? item.rarity.charAt(0).toUpperCase() + item.rarity.slice(1) : 'Common'}
-                  </Badge>
-                </div>
-              </CardHeader>
-              <CardContent className="py-3">
-                <p className="text-sm text-white/70 mb-3">{item.description}</p>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center">
-                    <Tag className="h-4 w-4 text-royal-gold mr-1" />
-                    <span className="text-sm line-through text-white/50 mr-2">
-                      ${(item as any).originalPrice?.toFixed(2) || item.price.toFixed(2)}
-                    </span>
-                    <span className="text-lg font-bold text-royal-gold">
-                      ${item.price.toFixed(2)}
-                    </span>
-                  </div>
-                  <Button 
-                    size="sm" 
-                    onClick={() => handlePurchase(item)}
-                    disabled={!user || user.walletBalance < item.price}
-                    className="bg-royal-gold hover:bg-royal-gold/90 text-black"
-                  >
-                    <Coins className="h-3 w-3 mr-1" />
-                    Buy Now
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
+      
+      <CardContent className="relative z-10">
+        <div className="mb-4 space-y-2">
+          <div className="flex items-center space-x-2">
+            <Hourglass className="h-4 w-4 text-royal-gold/70" />
+            <span className="text-sm text-white/70">
+              {new Date(endDate) > new Date() 
+                ? `Ends ${formatDistanceToNow(new Date(endDate), { addSuffix: true })}`
+                : `Ended ${formatDistanceToNow(new Date(endDate), { addSuffix: true })}`
+              }
+            </span>
+          </div>
+          
+          <div className="flex items-center space-x-2">
+            <DollarSign className="h-4 w-4 text-royal-gold/70" />
+            <span className="text-sm text-white/70">
+              <span className="font-bold text-royal-gold">{discountPercentage}% OFF</span> on selected items
+            </span>
+          </div>
+        </div>
+        
+        <p className="text-white/80 mb-4">{description}</p>
+        
+        <div className="flex flex-wrap gap-2 mb-4">
+          {categories.map((category, index) => (
+            <Badge key={index} variant="outline" className="border-royal-gold/30 bg-black/20">
+              {category}
+            </Badge>
           ))}
         </div>
+        
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
+          <Button 
+            variant="default" 
+            className="bg-royal-gold hover:bg-royal-gold/90 text-black"
+          >
+            Shop Fire Sale
+          </Button>
+          
+          <Button 
+            variant="outline" 
+            className="border-royal-gold/50 text-royal-gold hover:bg-royal-gold/10"
+          >
+            View Details
+          </Button>
+        </div>
+        
+        <div className="mt-4 p-3 bg-black/30 rounded-md border border-white/10 flex items-start space-x-2">
+          <Info className="h-4 w-4 text-royal-gold/70 flex-shrink-0 mt-0.5" />
+          <p className="text-xs text-white/60">
+            Fire Sales occur once per quarter. Items purchased during Fire Sales may still be subject to 
+            platform terms and conditions. Some items may be excluded from the sale.
+          </p>
+        </div>
       </CardContent>
-      <CardFooter className="pt-0">
-        <p className="text-xs text-white/50 italic">
-          *All sales are final. Items purchased during the Fire Sale are non-refundable.
-        </p>
-      </CardFooter>
     </Card>
   );
 };

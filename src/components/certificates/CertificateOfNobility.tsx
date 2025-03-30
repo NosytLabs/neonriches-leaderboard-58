@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { format } from 'date-fns';
@@ -31,7 +30,7 @@ const CertificateOfNobility: React.FC<CertificateProps> = ({
   
   const handleVerify = () => {
     setIsVerifying(true);
-    playSound('royalAnnouncement');
+    playSound('royal');
     
     // Simulate verification process
     setTimeout(() => {
@@ -43,7 +42,7 @@ const CertificateOfNobility: React.FC<CertificateProps> = ({
   };
   
   const handleDismiss = () => {
-    playSound('pageChange');
+    playSound('notification');
     if (onDismiss) onDismiss();
   };
 
