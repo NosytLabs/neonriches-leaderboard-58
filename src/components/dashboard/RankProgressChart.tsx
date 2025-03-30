@@ -1,55 +1,71 @@
 
 import React from 'react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
-const RankProgressChart = () => {
-  // Mock data - in a real app, this would come from the API
-  const data = [
-    { day: 'Mon', rank: 120 },
-    { day: 'Tue', rank: 115 },
-    { day: 'Wed', rank: 110 },
-    { day: 'Thu', rank: 105 },
-    { day: 'Fri', rank: 95 },
-    { day: 'Sat', rank: 88 },
-    { day: 'Sun', rank: 82 },
-  ];
+interface RankProgressChartProps {
+  // Add props as needed
+}
 
+const mockData = [
+  { day: '1 May', rank: 10 },
+  { day: '3 May', rank: 9 },
+  { day: '5 May', rank: 7 },
+  { day: '7 May', rank: 8 },
+  { day: '9 May', rank: 6 },
+  { day: '11 May', rank: 5 },
+  { day: '13 May', rank: 4 },
+  { day: '15 May', rank: 3 },
+  { day: '17 May', rank: 3 },
+  { day: '19 May', rank: 2 },
+  { day: '21 May', rank: 2 },
+  { day: '23 May', rank: 1 },
+];
+
+const RankProgressChart: React.FC<RankProgressChartProps> = () => {
   return (
     <ResponsiveContainer width="100%" height="100%">
-      <LineChart
-        data={data}
-        margin={{
-          top: 20,
-          right: 30,
-          left: 20,
-          bottom: 10,
-        }}
+      <AreaChart
+        data={mockData}
+        margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
       >
-        <CartesianGrid strokeDasharray="3 3" opacity={0.1} />
+        <defs>
+          <linearGradient id="rankProgress" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="5%" stopColor="#ffd700" stopOpacity={0.8} />
+            <stop offset="95%" stopColor="#ffd700" stopOpacity={0} />
+          </linearGradient>
+        </defs>
+        <CartesianGrid strokeDasharray="3 3" strokeOpacity={0.15} />
         <XAxis 
           dataKey="day" 
-          tick={{ fill: 'rgba(255, 255, 255, 0.6)' }}
+          stroke="#fff" 
+          opacity={0.5} 
+          tick={{ fontSize: 12 }} 
         />
         <YAxis 
-          tick={{ fill: 'rgba(255, 255, 255, 0.6)' }}
-          domain={['dataMin - 5', 'dataMax + 5']}
-          reversed
+          stroke="#fff" 
+          opacity={0.5} 
+          tick={{ fontSize: 12 }} 
+          domain={['dataMin', 'dataMax']}
+          reversed={true} // Higher rank = better (rank 1 is best)
+          allowDecimals={false}
         />
         <Tooltip 
-          contentStyle={{ backgroundColor: '#1a1a1a', borderColor: '#333' }}
-          labelStyle={{ color: '#fff' }}
-          formatter={(value) => [`Rank #${value}`, 'Rank']}
+          contentStyle={{ 
+            backgroundColor: 'rgba(0, 0, 0, 0.8)', 
+            borderColor: 'rgba(255, 215, 0, 0.5)',
+            color: 'white' 
+          }} 
+          itemStyle={{ color: '#ffd700' }}
+          labelStyle={{ color: 'white' }}
         />
-        <Line 
+        <Area 
           type="monotone" 
           dataKey="rank" 
-          stroke="#FFD700" 
-          strokeWidth={2} 
-          dot={{ fill: '#FFD700', strokeWidth: 2 }}
-          activeDot={{ r: 8, fill: '#FFD700', stroke: '#fff' }}
+          stroke="#ffd700" 
+          fillOpacity={1} 
+          fill="url(#rankProgress)" 
         />
-      </LineChart>
+      </AreaChart>
     </ResponsiveContainer>
   );
 };

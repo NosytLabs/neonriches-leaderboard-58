@@ -1,132 +1,94 @@
 
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { DollarSign, TrendingUp } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { UserProfile } from '@/types/user';
+import { formatCurrency } from '@/utils/formatters';
 
-interface SpendingVisualizerProps {
+export interface SpendingVisualizerProps {
   user: UserProfile;
-  onSpend?: () => void;
+  onSpend: () => void;
 }
 
 const SpendingVisualizer: React.FC<SpendingVisualizerProps> = ({ user, onSpend }) => {
-  // Generate mock spending data for the last 14 days
-  const spendingData = React.useMemo(() => {
-    const data = [];
-    const now = new Date();
-    const totalSpent = user.totalSpent || user.amountSpent || 0;
-    const averageDaily = Math.max(1, totalSpent / 30); // Assume 30 days of activity
-    
-    for (let i = 13; i >= 0; i--) {
-      const date = new Date(now);
-      date.setDate(date.getDate() - i);
-      
-      // Generate random spending amount with occasional spikes
-      const isSpike = Math.random() > 0.85;
-      const variance = Math.random() * 0.5 + 0.75; // Between 0.75 and 1.25
-      const amount = isSpike 
-        ? averageDaily * variance * (Math.random() * 8 + 3) // 3x to 10x spike
-        : averageDaily * variance;
-      
-      data.push({
-        date: date.toLocaleDateString(undefined, { month: 'short', day: 'numeric' }),
-        amount: Math.round(amount * 100) / 100
-      });
-    }
-    
-    return data;
-  }, [user.totalSpent, user.amountSpent]);
+  const totalSpent = user.totalSpent || user.amountSpent || 0;
+  const spendStreak = user.spendStreak || 0;
   
-  const maxAmount = Math.max(...spendingData.map(d => d.amount));
+  // Calculate next rank milestone based on current spending
+  const calculateNextMilestone = () => {
+    const milestones = [10, 50, 100, 500, 1000, 5000, 10000, 50000, 100000];
+    for (const milestone of milestones) {
+      if (totalSpent < milestone) {
+        return milestone;
+      }
+    }
+    return Math.ceil(totalSpent * 1.5 / 10000) * 10000; // Next big round number
+  };
+  
+  const nextMilestone = calculateNextMilestone();
+  const progressPercentage = Math.min(100, (totalSpent / nextMilestone) * 100);
   
   return (
     <Card className="glass-morphism border-white/10">
-      <CardHeader>
+      <CardHeader className="pb-2">
         <CardTitle className="flex items-center">
           <DollarSign className="mr-2 h-5 w-5 text-royal-gold" />
-          Spending Activity
+          Spend Progress
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="h-[300px]">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={spendingData} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
-              <XAxis 
-                dataKey="date" 
-                stroke="rgba(255,255,255,0.5)"
-                tick={{ fill: 'rgba(255,255,255,0.7)', fontSize: 12 }}
-              />
-              <YAxis 
-                stroke="rgba(255,255,255,0.5)"
-                tick={{ fill: 'rgba(255,255,255,0.7)', fontSize: 12 }}
-                tickFormatter={(value) => `$${value}`}
-              />
-              <Tooltip 
-                formatter={(value) => [`$${value}`, 'Amount']}
-                contentStyle={{ 
-                  backgroundColor: 'rgba(10,10,20,0.8)', 
-                  border: '1px solid rgba(255,255,255,0.2)' 
-                }}
-                labelStyle={{ color: 'rgba(255,255,255,0.8)' }}
-              />
-              <Bar dataKey="amount" radius={[4, 4, 0, 0]}>
-                {spendingData.map((entry, index) => (
-                  <Cell 
-                    key={`cell-${index}`} 
-                    fill={entry.amount > averageSpending(spendingData) * 2 ? '#FFD700' : '#6366F1'} 
-                    fillOpacity={0.8 + (entry.amount / maxAmount) * 0.2}
-                  />
-                ))}
-              </Bar>
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-        
-        <div className="mt-6 bg-white/5 p-4 rounded-md flex items-center">
-          <TrendingUp className="h-10 w-10 mr-4 text-green-400" />
-          <div>
-            <h3 className="font-medium text-lg">Spending Analysis</h3>
-            <p className="text-sm text-white/70">
-              {getSpendingAnalysis(spendingData)}
-            </p>
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-white/60">Total Contributed</p>
+              <p className="text-2xl font-bold">{formatCurrency(totalSpent)}</p>
+            </div>
+            <div className="text-right">
+              <p className="text-sm text-white/60">Daily Streak</p>
+              <p className="text-xl font-bold">
+                <span className="flex items-center justify-end">
+                  {spendStreak} days
+                  {spendStreak > 2 && <TrendingUp className="ml-1 h-4 w-4 text-green-500" />}
+                </span>
+              </p>
+            </div>
           </div>
-        </div>
-        
-        {onSpend && (
-          <div className="mt-4 text-center">
-            <button 
-              className="px-4 py-2 bg-royal-purple text-white rounded hover:bg-royal-purple/90 transition-colors"
+          
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-white/60">
+                Progress to {formatCurrency(nextMilestone)}
+              </span>
+              <span className="text-sm text-royal-gold">
+                {progressPercentage.toFixed(1)}%
+              </span>
+            </div>
+            <div className="h-2 bg-white/10 rounded-full overflow-hidden">
+              <div 
+                className="h-full bg-gradient-to-r from-royal-gold to-royal-amber" 
+                style={{ width: `${progressPercentage}%` }}
+              />
+            </div>
+          </div>
+          
+          <div className="flex justify-center mt-4">
+            <Button 
               onClick={onSpend}
+              className="bg-royal-gold hover:bg-royal-gold/90 text-black"
             >
-              Spend More
-            </button>
+              <DollarSign className="mr-2 h-4 w-4" />
+              Add Funds
+            </Button>
           </div>
-        )}
+          
+          <div className="text-sm text-white/60 italic text-center mt-2">
+            "Fortune favors those who spend boldly."
+          </div>
+        </div>
       </CardContent>
     </Card>
   );
-};
-
-const averageSpending = (data: Array<{amount: number}>): number => {
-  const sum = data.reduce((acc, d) => acc + d.amount, 0);
-  return sum / data.length;
-};
-
-const getSpendingAnalysis = (data: Array<{date: string; amount: number}>): string => {
-  const avg = averageSpending(data);
-  const recent = data.slice(-3);
-  const recentAvg = averageSpending(recent);
-  
-  if (recentAvg > avg * 1.5) {
-    return "Your recent spending has increased significantly. You're on track to improve your rank!";
-  } else if (recentAvg > avg * 1.1) {
-    return "Your spending has increased slightly. Keep it up to climb the ranks faster!";
-  } else if (recentAvg < avg * 0.7) {
-    return "Your spending has decreased recently. Consider increasing your activity to maintain your rank.";
-  } else {
-    return "Your spending is consistent. Steady spending helps maintain your position in the rankings.";
-  }
 };
 
 export default SpendingVisualizer;

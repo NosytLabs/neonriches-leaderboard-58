@@ -23,8 +23,7 @@ import { DashboardWelcome } from '@/components/dashboard/DashboardWelcome';
 import BriberyBanner from '@/components/dashboard/BriberyBanner';
 
 // Import utilities and hooks
-import { cn, formatCurrency } from '@/lib/utils';
-import { useTabState } from '@/hooks/useTabState';
+import { cn } from '@/lib/utils';
 import { getAchievementIcon, formatDate } from '@/utils/formatters';
 import { useToast } from '@/hooks/use-toast';
 
@@ -85,7 +84,6 @@ const EnhancedDashboard = () => {
 
   // Get formatted total spent amount
   const totalSpent = user.totalSpent || user.amountSpent || 0;
-  const formattedTotalSpent = formatCurrency(totalSpent);
 
   const handleSpend = () => {
     toast({

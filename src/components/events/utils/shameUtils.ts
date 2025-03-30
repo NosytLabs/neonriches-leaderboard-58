@@ -1,5 +1,6 @@
 
-import { ShameAction } from '@/types/mockery';
+import { MockeryAction } from '@/types/mockery';
+export type ShameAction = MockeryAction;
 
 // Define the shame action types
 export type ShameActionType = 'shame' | 'protection' | 'taunt';

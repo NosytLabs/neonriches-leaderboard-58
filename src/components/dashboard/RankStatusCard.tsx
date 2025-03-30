@@ -1,72 +1,79 @@
 
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Trophy, TrendingUp, Crown } from 'lucide-react';
-import { UserProfile } from '@/contexts/AuthContext';
-import ProfileBoostedContent from '@/components/ui/ProfileBoostedContent';
+import { Card, CardContent } from '@/components/ui/card';
+import { Trophy, TrendingUp, TrendingDown } from 'lucide-react';
+import { UserProfile } from '@/types/user';
+import { Progress } from '@/components/ui/progress';
 
 interface RankStatusCardProps {
   user: UserProfile;
 }
 
 const RankStatusCard: React.FC<RankStatusCardProps> = ({ user }) => {
-  // Calculate next rank cost based on current spending
-  const nextRankCost = (user?.amountSpent || 0) + 10;
+  const rank = user.rank || 999;
+  const previousRank = user.previousRank || rank;
+  const rankChange = previousRank - rank;
   
-  // Calculate progress percentage toward next rank
-  const progressPercentage = Math.min(
-    65, // Default progress for demo purposes
-    ((user?.amountSpent || 0) / nextRankCost) * 100
-  );
+  // Progress to next rank (mock calculation)
+  const getProgressToNextRank = () => {
+    if (rank <= 1) return 100; // Already at the top
+    
+    // This is a simplification - in a real app you'd calculate this based on actual spending
+    const spentForCurrentRank = user.totalSpent || user.amountSpent || 0;
+    const estimatedAmountForNextRank = spentForCurrentRank * 1.2;
+    const progressPercent = Math.min(100, (spentForCurrentRank / estimatedAmountForNextRank) * 100);
+    
+    return progressPercent;
+  };
+  
+  const progressToNextRank = getProgressToNextRank();
   
   return (
-    <Card className="glass-morphism border-purple-400/20">
-      <CardHeader className="pb-3">
-        <CardTitle className="text-lg font-royal flex items-center">
-          <Trophy className="mr-2 h-5 w-5 text-purple-400" />
-          Your Royal Ranking
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="glass-morphism border-white/10 p-4 rounded-lg">
-            <div className="text-sm text-white/70 mb-1">Current Rank</div>
-            <ProfileBoostedContent user={user} type="text">
-              <div className="text-2xl font-bold flex items-center">
-                <Crown className="h-5 w-5 text-purple-400 mr-2" />
-                #{user?.rank || '??'}
-              </div>
-            </ProfileBoostedContent>
+    <Card className="glass-morphism border-white/10">
+      <CardContent className="p-6">
+        <div className="flex items-center">
+          <div className="h-12 w-12 rounded-full bg-royal-gold/20 flex items-center justify-center mr-4">
+            <Trophy className="h-6 w-6 text-royal-gold" />
           </div>
-          
-          <div className="glass-morphism border-white/10 p-4 rounded-lg">
-            <div className="text-sm text-white/70 mb-1">Total Spent</div>
-            <div className="text-2xl font-bold">
-              ${user?.amountSpent?.toFixed(2) || '0.00'}
-            </div>
-          </div>
-          
-          <div className="glass-morphism border-white/10 p-4 rounded-lg">
-            <div className="text-sm text-white/70 mb-1">Weekly Change</div>
-            <div className="text-xl font-bold flex items-center">
-              <TrendingUp className="h-5 w-5 text-green-400 mr-2" />
-              +3 Ranks
+          <div>
+            <p className="text-white/60 text-sm">Current Rank</p>
+            <div className="flex items-center">
+              <span className="text-3xl font-bold mr-2">#{rank}</span>
+              {rankChange !== 0 && (
+                <div className={`flex items-center text-sm ${rankChange > 0 ? 'text-green-500' : 'text-red-500'}`}>
+                  {rankChange > 0 ? (
+                    <>
+                      <TrendingUp className="h-4 w-4 mr-1" />
+                      +{rankChange}
+                    </>
+                  ) : (
+                    <>
+                      <TrendingDown className="h-4 w-4 mr-1" />
+                      {rankChange}
+                    </>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         </div>
         
-        <div className="mt-4 glass-morphism border-white/10 p-4 rounded-lg">
-          <div className="mb-2 text-sm text-white/70">Path to Next Rank</div>
-          <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden">
-            <div 
-              className="h-full bg-gradient-to-r from-purple-600 to-purple-400" 
-              style={{ width: `${progressPercentage}%` }}
-            ></div>
+        {rank > 1 && (
+          <div className="mt-4 space-y-2">
+            <div className="flex items-center justify-between text-sm">
+              <span className="text-white/60">Progress to Rank #{rank - 1}</span>
+              <span className="text-royal-gold">{progressToNextRank.toFixed(1)}%</span>
+            </div>
+            <Progress value={progressToNextRank} className="h-2 bg-white/10" indicatorClassName="bg-gradient-to-r from-royal-gold to-royal-amber" />
           </div>
-          <div className="mt-2 text-xs text-white/70 flex justify-between">
-            <span>Current: ${user?.amountSpent?.toFixed(2) || '0.00'}</span>
-            <span>Next Rank: ${nextRankCost.toFixed(2)}</span>
-          </div>
+        )}
+        
+        <div className="mt-4 px-3 py-2 rounded-md bg-white/5 text-center text-sm text-white/70">
+          {rank === 1 && "You've reached the pinnacle of the kingdom!"}
+          {rank > 1 && rank <= 3 && "Almost there! You're among the elite few at the top."}
+          {rank > 3 && rank <= 10 && "Excellent progress! You've ascended to nobility."}
+          {rank > 10 && rank <= 50 && "Well done! You're rising through the ranks steadily."}
+          {rank > 50 && "Keep contributing to ascend the royal hierarchy!"}
         </div>
       </CardContent>
     </Card>

@@ -12,3 +12,11 @@ export interface Achievement {
   unlockedAt: string;
   amountSpent?: number;
 }
+
+export interface UserAchievement {
+  id: string;
+  userId: string;
+  achievementId: string;
+  unlockDate: Date;
+  displayed: boolean;
+}

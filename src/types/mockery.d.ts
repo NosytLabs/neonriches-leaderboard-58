@@ -1,6 +1,16 @@
 
 // Define basic Mockery types
-export type MockeryTier = 'bronze' | 'silver' | 'gold' | 'platinum' | 'diamond' | 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
+export type MockeryTier = 
+  | 'bronze' 
+  | 'silver' 
+  | 'gold' 
+  | 'platinum' 
+  | 'diamond' 
+  | 'common' 
+  | 'uncommon' 
+  | 'rare' 
+  | 'epic' 
+  | 'legendary';
 
 export type MockeryAction = 
   | 'tomatoes' 
@@ -64,6 +74,7 @@ export interface MockeryEvent {
   expiresAt?: string;
   active: boolean;
   isActive?: boolean;
+  tier?: MockeryTier;
 }
 
 export interface MockeryEffectData {

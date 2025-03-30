@@ -1,7 +1,7 @@
 
 import { Trophy, Zap, Award, Star, Crown, DollarSign } from 'lucide-react';
 import React from 'react';
-import { format, isValid } from 'date-fns';
+import { format, isValid, formatDistance } from 'date-fns';
 
 export const formatDate = (date: string | Date | null | undefined): string => {
   if (!date) return 'N/A';
@@ -33,73 +33,45 @@ export const formatDateTime = (date: string | Date | null | undefined): string =
   return format(dateObj, 'MMM d, yyyy h:mm a');
 };
 
-export const formatCurrency = (amount: number | null | undefined): string => {
-  if (amount === null || amount === undefined) return '$0.00';
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2
-  }).format(amount);
+export const formatCurrency = (amount: number | undefined | null): string => {
+  if (amount === undefined || amount === null) return '$0.00';
+  return `$${amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 };
 
-export const formatDollarAmount = (amount: number | null | undefined): string => {
-  if (amount === null || amount === undefined) return '$0';
-  return '$' + Math.round(amount).toLocaleString('en-US');
+export const formatDollarAmount = (amount: number): string => {
+  return `$${amount.toLocaleString()}`;
 };
 
-export const formatNumber = (number: number | null | undefined): string => {
-  if (number === null || number === undefined) return '0';
-  return number.toLocaleString('en-US');
+export const formatNumber = (num: number): string => {
+  return num.toLocaleString();
 };
 
-export const formatPercentage = (number: number | null | undefined, decimals = 2): string => {
-  if (number === null || number === undefined) return '0%';
-  return number.toFixed(decimals) + '%';
+export const formatPercentage = (num: number): string => {
+  return `${num.toFixed(1)}%`;
 };
 
-export const formatAddress = (address: string, chars = 4): string => {
+export const formatAddress = (address: string): string => {
   if (!address) return '';
-  if (address.length <= chars * 2) return address;
-  return `${address.substring(0, chars)}...${address.substring(address.length - chars)}`;
+  if (address.length <= 8) return address;
+  return `${address.substring(0, 4)}...${address.substring(address.length - 4)}`;
 };
 
-export const formatHistoricalValue = (value: number | string, year?: number): string => {
-  if (typeof value === 'string') {
-    value = parseFloat(value.replace(/[^0-9.-]+/g, ''));
-  }
-  
-  if (isNaN(value)) return '$0';
-  
-  // Format the value with historical context
-  return `${formatCurrency(value)} ${year ? `(${year})` : 'in historical currency'}`;
+export const formatHistoricalValue = (value: number, year: number): number => {
+  const inflation = 0.03; // 3% average annual inflation
+  const currentYear = new Date().getFullYear();
+  const yearDiff = currentYear - year;
+  return value * Math.pow(1 + inflation, yearDiff);
 };
 
-export const formatTimeAgo = (date: Date | string | number): string => {
-  const now = new Date();
-  const past = new Date(date);
-  const diffMs = now.getTime() - past.getTime();
-  
-  const diffSecs = Math.floor(diffMs / 1000);
-  const diffMins = Math.floor(diffSecs / 60);
-  const diffHours = Math.floor(diffMins / 60);
-  const diffDays = Math.floor(diffHours / 24);
-  
-  if (diffSecs < 60) return `${diffSecs} second${diffSecs !== 1 ? 's' : ''} ago`;
-  if (diffMins < 60) return `${diffMins} minute${diffMins !== 1 ? 's' : ''} ago`;
-  if (diffHours < 24) return `${diffHours} hour${diffHours !== 1 ? 's' : ''} ago`;
-  if (diffDays < 30) return `${diffDays} day${diffDays !== 1 ? 's' : ''} ago`;
-  
-  return formatDate(past);
+export const formatTimeAgo = (date: string | Date): string => {
+  return formatDistance(new Date(date), new Date(), { addSuffix: true });
 };
 
 export const formatFileSize = (bytes: number): string => {
   if (bytes === 0) return '0 Bytes';
-  
   const k = 1024;
   const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
   const i = Math.floor(Math.log(bytes) / Math.log(k));
-  
   return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
 };
 
