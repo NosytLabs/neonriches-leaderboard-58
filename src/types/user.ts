@@ -104,7 +104,7 @@ export interface UserProfile {
   totalSpent?: number;
   rank?: number;
   previousRank?: number;
-  joinedAt?: Date;
+  joinedAt?: Date | string;
   team?: TeamType;
   tier?: UserTier;
   gender?: UserGender;
@@ -122,7 +122,20 @@ export interface UserProfile {
   referralCount?: number;
   activeTitle?: string;
   certificateNFT?: any;
+  spendStreak?: number;
+  followers?: number;
+  following?: number;
+  profileViews?: number;
+  profileClicks?: number;
+  purchasedFeatures?: string[];
 }
 
 // Legacy alias for backwards compatibility
 export type User = UserProfile;
+
+// Export UserRole and UserStatus explicitly to avoid errors
+export type UserRole = 'user' | 'admin' | 'moderator';
+export type UserStatus = 'active' | 'inactive' | 'banned';
+
+// Export Team type for backward compatibility
+export type Team = TeamType;

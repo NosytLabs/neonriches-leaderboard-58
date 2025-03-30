@@ -1,13 +1,14 @@
 
-import { ToastActionElement, ToastProps } from "@/components/ui/toast";
+import { ReactNode } from 'react';
+import { ToastActionElement } from '@/components/ui/toast';
 
 export interface ExtendedToastProps {
   id?: string;
-  title?: React.ReactNode;
-  description?: React.ReactNode;
+  title?: ReactNode;
+  description?: ReactNode;
   action?: ToastActionElement;
-  variant?: "default" | "destructive" | "success" | "royal";
   duration?: number;
+  variant?: 'default' | 'destructive' | 'success' | 'royal';
   className?: string;
   onOpenChange?: (open: boolean) => void;
 }

@@ -1,5 +1,6 @@
 
 import { useToast as useShadcnToast } from "@/components/ui/use-toast";
+import { type ToastProps } from "@/components/ui/toast";
 import { type ExtendedToastProps } from "@/types/toast-extended";
 
 export function useToast() {

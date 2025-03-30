@@ -2,7 +2,7 @@
 import { useState, useCallback } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
-import { MockeryAction, MockeryTier } from '@/utils/mockeryUtils';
+import { MockeryAction, MockeryTier } from '@/types/mockery';
 import { ShameAction } from '@/components/events/utils/shameUtils';
 
 export interface ShameEffect {

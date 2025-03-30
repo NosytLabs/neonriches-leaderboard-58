@@ -6,7 +6,7 @@ import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { ShieldAlert } from 'lucide-react';
 import { User } from '@/types/user';
-import { MockeryAction } from '@/utils/mockeryUtils';
+import { MockeryAction } from '@/types/mockery';
 import { useToast } from '@/hooks/use-toast';
 import { formatDistanceToNow } from 'date-fns';
 import { cn } from '@/lib/utils';
@@ -94,7 +94,7 @@ export const MockeryUserCard: React.FC<MockeryUserCardProps> = ({
                   activeEffect === 'crown' ||
                   activeEffect === 'challenge' || 
                   activeEffect === 'defeat' ? 'destructive' :
-                  activeEffect === 'protection' ? 'success' : 'default'
+                  activeEffect === 'protection' ? 'default' : 'default'
                 }
                 className="text-xs animate-pulse"
               >
@@ -103,7 +103,7 @@ export const MockeryUserCard: React.FC<MockeryUserCardProps> = ({
             )}
             
             {isProtected && (
-              <Badge variant="success" className="text-xs flex items-center gap-1">
+              <Badge variant="outline" className="text-xs flex items-center gap-1">
                 <ShieldAlert className="h-3 w-3" />
                 Protected
               </Badge>
