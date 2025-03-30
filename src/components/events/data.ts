@@ -1,4 +1,3 @@
-
 import { Event, EventDetails, EventStats, EventType, EventStatus } from '@/types/events';
 
 // Mock user data for shame targets
@@ -53,7 +52,7 @@ export const topUsers = [
   }
 ];
 
-// Upcoming events data with updated images
+// Update the upcomingEvents array to include updatedAt
 export const upcomingEvents: Event[] = [
   {
     id: "public-shaming",
@@ -66,7 +65,8 @@ export const upcomingEvents: Event[] = [
     endDate: new Date(Date.now() + 17 * 24 * 60 * 60 * 1000).toISOString(), // 17 days from now
     type: "shame" as EventType,
     status: "upcoming" as EventStatus,
-    createdAt: new Date().toISOString()
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
   },
   {
     id: "team-conquest",
@@ -79,7 +79,8 @@ export const upcomingEvents: Event[] = [
     endDate: new Date(Date.now() + 28 * 24 * 60 * 60 * 1000).toISOString(), // 28 days from now
     type: "team" as EventType,
     status: "upcoming" as EventStatus,
-    createdAt: new Date().toISOString()
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
   }
 ];
 
@@ -139,15 +140,17 @@ export const eventDetailsData: Record<string, EventDetails> = {
   }
 };
 
-// Update EventStats data
-export const eventStats: EventStats = {
-  prizePool: 24750,
-  participantsCount: 487,
-  totalPokes: 1253,
-  mostPoked: {
-    username: 'SilverBaron',
-    pokeCount: 15
-  }
+// Update the eventStatsData to include the missing properties
+export const eventStatsData: EventStats = {
+  totalParticipants: 128,
+  topPrize: 500,
+  totalPrizes: 2500,
+  daysRemaining: 3,
+  hoursRemaining: 72,
+  prizePool: 5000,
+  participantsCount: 128,
+  totalPokes: 247,
+  mostPoked: "LordCashington"
 };
 
 // Updated current event to Public Shaming instead of Treasure Hunt
@@ -162,5 +165,6 @@ export const currentEvent: Event = {
   endDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(), // 5 days from now
   type: "shame" as EventType,
   status: "active" as EventStatus,
-  createdAt: new Date().toISOString()
+  createdAt: new Date().toISOString(),
+  updatedAt: new Date().toISOString()
 };

@@ -5,12 +5,12 @@ import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { User, MessageSquare, Send, ChevronRight, Users, Shield, Crown } from 'lucide-react';
-import { UserTeam, UserProfile } from '@/types/user';
+import { UserTeam } from '@/types/team';
+import { UserProfile } from '@/types/user';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useToast } from '@/hooks/use-toast';
 import useNotificationSounds from '@/hooks/use-notification-sounds';
 import { format } from 'date-fns';
-import { adaptUserProfileToUser } from '@/utils/userAdapter';
 
 interface ChatMessage {
   id: string;
@@ -296,7 +296,6 @@ const TeamChat: React.FC<TeamChatProps> = ({ user, limit = 50 }) => {
       setIsJoined(true);
       setIsLoading(false);
       
-      // Only add to the message array if user.team is a valid UserTeam ('red', 'green', 'blue')
       const userTeam = user.team && ['red', 'green', 'blue'].includes(user.team) ? user.team as UserTeam : null;
       
       const joinMessage: ChatMessage = {

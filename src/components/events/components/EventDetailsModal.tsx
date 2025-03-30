@@ -1,153 +1,120 @@
 
 import React from 'react';
-import { DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Separator } from '@/components/ui/separator';
-import { Check, Calendar, Info, ScrollText, Shield } from 'lucide-react';
-import { eventDetailsData } from '../data';
-import { formatDate } from '@/utils/dateUtils';
-import OptimizedImage from '@/components/ui/optimized-image';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { EventDetails } from '@/types/events';
+import { Badge } from '@/components/ui/badge';
+import { Calendar, Trophy, Users, Info, Clock } from 'lucide-react';
+import { format } from 'date-fns';
 
-export interface EventDetailsModalProps {
-  eventId: string;
-  onClose?: () => void;
+interface EventDetailsModalProps {
+  event: EventDetails;
+  isOpen: boolean;
+  onClose: () => void;
 }
 
-const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ eventId, onClose }) => {
-  const eventDetails = eventDetailsData[eventId];
-  
-  if (!eventDetails) {
-    return (
-      <DialogContent className="glass-morphism border-white/10">
-        <DialogHeader>
-          <DialogTitle>Event Not Found</DialogTitle>
-          <DialogDescription>
-            Sorry, we couldn't find details for this event.
-          </DialogDescription>
-        </DialogHeader>
-        <DialogFooter>
-          <Button onClick={onClose}>Close</Button>
-        </DialogFooter>
-      </DialogContent>
-    );
-  }
+const EventDetailsModal = ({ event, isOpen, onClose }: EventDetailsModalProps) => {
+  // If image is not defined, use imageUrl
+  const imageSource = event.image || event.imageUrl;
+  // If name is not defined, use title
+  const eventName = event.name || event.title;
+
+  const formatDate = (dateStr: string) => {
+    try {
+      return format(new Date(dateStr), 'MMMM d, yyyy');
+    } catch (e) {
+      return dateStr;
+    }
+  };
 
   return (
-    <DialogContent className="glass-morphism border-white/10 max-w-3xl min-h-[50vh] max-h-[85vh]">
-      <DialogHeader>
-        <OptimizedImage
-          src={eventDetails.image}
-          alt={eventDetails.name}
-          className="w-full h-40 object-cover rounded-t-lg -mt-6 -mx-6"
-          objectFit="cover"
-        />
-        <div className="pt-4">
-          <DialogTitle className="text-2xl font-royal">{eventDetails.name}</DialogTitle>
-          <DialogDescription className="text-white/70">
-            {eventDetails.description}
-          </DialogDescription>
-        </div>
-      </DialogHeader>
-      
-      <ScrollArea className="pr-4 max-h-[50vh]">
-        <div className="space-y-6">
-          <div className="flex flex-wrap gap-4">
-            <InfoCard
-              title="Event Dates"
-              icon={<Calendar className="h-5 w-5 text-royal-gold" />}
-              content={
-                <div className="space-y-1">
-                  <p><span className="text-white/60">Starts:</span> {formatDate(eventDetails.startDate)}</p>
-                  <p><span className="text-white/60">Ends:</span> {formatDate(eventDetails.endDate)}</p>
-                </div>
-              }
-            />
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="max-w-3xl">
+        <DialogHeader>
+          <DialogTitle className="text-xl">{eventName}</DialogTitle>
+        </DialogHeader>
+        
+        <div className="mt-4">
+          {imageSource && (
+            <div className="mb-6 rounded-lg overflow-hidden">
+              <img src={imageSource} alt={eventName} className="w-full h-48 object-cover" />
+            </div>
+          )}
+          
+          <div className="space-y-4">
+            <div>
+              <h3 className="font-semibold text-lg mb-2">About</h3>
+              <p className="text-gray-700 dark:text-gray-300">{event.description}</p>
+            </div>
             
-            <InfoCard
-              title="Rewards"
-              icon={<Info className="h-5 w-5 text-royal-navy" />}
-              content={
+            <div className="flex justify-between flex-wrap gap-2">
+              <div className="flex items-center gap-2">
+                <Calendar className="w-4 h-4" />
+                <span>Starts: {formatDate(event.startDate)}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Calendar className="w-4 h-4" />
+                <span>Ends: {formatDate(event.endDate)}</span>
+              </div>
+            </div>
+            
+            <div className="flex justify-between flex-wrap gap-2">
+              <div className="flex items-center gap-2">
+                <Users className="w-4 h-4" />
+                <span>Participants: {event.participants} / {event.maxParticipants}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Badge variant="outline">{event.status}</Badge>
+                <Badge>{event.type}</Badge>
+              </div>
+            </div>
+            
+            {event.rewardTypes && event.rewardTypes.length > 0 && (
+              <div>
+                <h3 className="font-semibold text-lg mb-2 flex items-center gap-2">
+                  <Trophy className="w-4 h-4" /> Rewards
+                </h3>
                 <div className="flex flex-wrap gap-2">
-                  {eventDetails.rewardTypes.map((reward, i) => (
-                    <span 
-                      key={i} 
-                      className="px-2 py-1 bg-white/5 rounded text-xs font-medium"
-                    >
-                      {reward}
-                    </span>
+                  {event.rewardTypes.map((reward, idx) => (
+                    <Badge key={idx} variant="secondary">{reward}</Badge>
                   ))}
                 </div>
-              }
-            />
-          </div>
-          
-          <Separator className="border-white/10" />
-          
-          <div>
-            <h3 className="text-lg font-bold mb-2 flex items-center">
-              <ScrollText className="h-5 w-5 mr-2 text-royal-gold" />
-              Participation Requirements
-            </h3>
-            <p className="text-white/70 text-sm mb-3">{eventDetails.eligibility}</p>
-            <ul className="space-y-2">
-              {eventDetails.participationRequirements.map((req, i) => (
-                <li key={i} className="flex items-start">
-                  <Check className="h-4 w-4 mr-2 text-team-green mt-1 flex-shrink-0" />
-                  <span className="text-sm text-white/80">{req}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-          
-          <Separator className="border-white/10" />
-          
-          <div>
-            <h3 className="text-lg font-bold mb-2 flex items-center">
-              <Shield className="h-5 w-5 mr-2 text-royal-gold" />
-              Special Rules
-            </h3>
-            <ul className="space-y-2">
-              {eventDetails.specialRules.map((rule, i) => (
-                <li key={i} className="flex items-start">
-                  <div className="h-1.5 w-1.5 rounded-full bg-royal-gold mt-1.5 mr-2 flex-shrink-0" />
-                  <span className="text-sm text-white/80">{rule}</span>
-                </li>
-              ))}
-            </ul>
+              </div>
+            )}
+            
+            {event.eligibility && (
+              <div>
+                <h3 className="font-semibold text-lg mb-2 flex items-center gap-2">
+                  <Info className="w-4 h-4" /> Eligibility
+                </h3>
+                <p className="text-gray-700 dark:text-gray-300">{event.eligibility}</p>
+              </div>
+            )}
+            
+            {event.participationRequirements && event.participationRequirements.length > 0 && (
+              <div>
+                <h3 className="font-semibold text-lg mb-2">Requirements</h3>
+                <ul className="list-disc list-inside">
+                  {event.participationRequirements.map((req, idx) => (
+                    <li key={idx}>{req}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            
+            {event.specialRules && event.specialRules.length > 0 && (
+              <div>
+                <h3 className="font-semibold text-lg mb-2">Special Rules</h3>
+                <ul className="list-disc list-inside">
+                  {event.specialRules.map((rule, idx) => (
+                    <li key={idx}>{rule}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
         </div>
-      </ScrollArea>
-      
-      <DialogFooter className="mt-6">
-        <Button variant="outline" onClick={onClose}>
-          Close
-        </Button>
-        <Button 
-          className="bg-gradient-to-r from-team-blue to-royal-gold text-black font-medium"
-        >
-          Join Event
-        </Button>
-      </DialogFooter>
-    </DialogContent>
-  );
-};
-
-interface InfoCardProps {
-  title: string;
-  icon: React.ReactNode;
-  content: React.ReactNode;
-}
-
-const InfoCard: React.FC<InfoCardProps> = ({ title, icon, content }) => {
-  return (
-    <div className="glass-morphism border-white/10 p-4 rounded-lg flex-1 min-w-[200px]">
-      <h3 className="text-sm font-medium text-white/70 flex items-center mb-2">
-        {icon}
-        <span className="ml-2">{title}</span>
-      </h3>
-      {content}
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 };
 

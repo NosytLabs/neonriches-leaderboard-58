@@ -1,91 +1,30 @@
 
 import { UserTier } from './user-types';
 import { TeamType } from './team';
-import { ProfileBoost } from './profile-boost';
-import { CertificateNFT } from './certificates';
+import { SocialLink, SocialPlatform } from './social-links';
+import { UserCosmeticState } from './cosmetics';
 
-// Social link type
-export interface SocialLink {
-  platform: SocialPlatform;
-  url: string;
-  clicks?: number;
-  label?: string;
-  id?: string;
+// ProfileBoost type
+export interface ProfileBoost {
+  id: string;
+  userId: string;
+  effectId: string;
+  startDate: string;
+  endDate: string;
+  isActive: boolean;
+  tier?: string;
+  strength?: string;
 }
 
-export type SocialPlatform = 
-  | "twitter" 
-  | "instagram" 
-  | "facebook" 
-  | "linkedin" 
-  | "github" 
-  | "youtube" 
-  | "twitch"
-  | "tiktok"
-  | "reddit"
-  | "discord"
-  | "website"
-  | "other";
-
-// User settings
-export interface UserSettings {
-  profileVisibility: "public" | "private" | "friends";
-  allowProfileLinks: boolean;
-  theme: "light" | "dark" | "royal" | "system";
-  notifications: boolean;
-  emailNotifications: boolean;
-  marketingEmails: boolean;
-  showRank: boolean;
-  showSpending: boolean;
-  showBalance: boolean;
-  showAchievements: boolean;
-  showBadges: boolean;
-  spendAlerts: boolean;
-  rankChangeAlerts: boolean;
-  teamNotifications?: boolean;
-  showTeam: boolean;
-  soundEffects: boolean;
-  darkMode?: boolean;
-  language?: string;
-  allowMessages?: boolean;
-  showEmailOnProfile?: boolean;
-  shameAlerts?: boolean;
-  newFollowerAlerts?: boolean;
-  publicProfile?: boolean;
-  teamChangeAlerts?: boolean;
-}
-
-// User cosmetics
-export interface UserCosmeticState {
-  activeBorder?: string;
-  activeColor?: string;
-  activeFont?: string;
-  activeEmoji?: string;
-  activeTitle?: string;
-  activeBadge?: string;
-  activeBackground?: string;
-  activeEffect?: string;
-  activeTheme?: string;
-  unlockedBorders: string[];
-  unlockedColors: string[];
-  unlockedFonts: string[];
-  unlockedEmojis: string[];
-  unlockedTitles: string[];
-  unlockedBadges: string[];
-  unlockedBackgrounds: string[];
-  unlockedEffects: string[];
-  // Legacy compatibility properties
-  borders?: string[];
-  colors?: string[];
-  fonts?: string[];
-  emojis?: string[];
-  titles?: string[];
-  backgrounds?: string[];
-  effects?: string[];
-  badges?: string[];
-  themes?: string[];
-  foundersPass?: boolean;
-  socialLinks?: SocialLink[];
+// Certificate type
+export interface CertificateNFT {
+  id: string;
+  userId: string;
+  mintAddress: string;
+  imageUrl: string;
+  metadataUrl: string;
+  certificateType: string;
+  issuedAt: string;
 }
 
 // User profile
@@ -165,6 +104,3 @@ export type UserCosmetics = UserCosmeticState;
 
 // Alias for User to maintain backward compatibility
 export type User = UserProfile;
-
-// Export types to be used in other modules
-export type { UserProfile, ProfileImage, ProfileLink, UserCosmetics };

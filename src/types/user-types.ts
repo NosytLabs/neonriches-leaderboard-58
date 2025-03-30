@@ -14,7 +14,7 @@ export type UserTier =
   | 'bronze'
   | 'platinum';
 export type UserGender = 'male' | 'female' | 'non-binary' | 'other' | 'prefer-not-to-say';
-export type UserTeam = 'red' | 'green' | 'blue';
+export type UserTeam = 'red' | 'green' | 'blue' | 'none';
 
 export interface UserPreferences {
   theme: 'light' | 'dark' | 'system';
@@ -43,5 +43,29 @@ export interface UserSubscription {
   price: number;
 }
 
-// Make sure these are explicitly exported
-export { UserRole, UserStatus, UserTier, UserGender, UserTeam };
+export interface UserSettings {
+  profileVisibility: "public" | "private" | "friends";
+  allowProfileLinks: boolean;
+  theme: "light" | "dark" | "royal" | "system";
+  notifications: boolean;
+  emailNotifications: boolean;
+  marketingEmails: boolean;
+  showRank: boolean;
+  showSpending: boolean;
+  showBalance: boolean;
+  showAchievements: boolean;
+  showBadges: boolean;
+  spendAlerts: boolean;
+  rankChangeAlerts: boolean;
+  teamNotifications?: boolean;
+  showTeam: boolean;
+  soundEffects: boolean;
+  darkMode?: boolean;
+  language?: string;
+  allowMessages?: boolean;
+  showEmailOnProfile?: boolean;
+  shameAlerts?: boolean;
+  newFollowerAlerts?: boolean;
+  publicProfile?: boolean;
+  teamChangeAlerts?: boolean;
+}

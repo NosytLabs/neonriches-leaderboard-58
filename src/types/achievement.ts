@@ -1,6 +1,18 @@
 
-export type AchievementType = 'royal' | 'deposit' | 'rank' | 'milestone' | 'streak' | 'purchase';
-export type AchievementTier = 'bronze' | 'silver' | 'gold' | 'platinum' | 'diamond';
+export type AchievementType = 
+  | "royal" 
+  | "rank" 
+  | "deposit" 
+  | "milestone" 
+  | "streak"
+  | "purchase";
+
+export type AchievementTier = 
+  | "bronze" 
+  | "silver" 
+  | "gold" 
+  | "platinum" 
+  | "diamond";
 
 export interface Achievement {
   id: string;
@@ -8,7 +20,14 @@ export interface Achievement {
   description: string;
   type: AchievementType;
   tier: AchievementTier;
-  icon: 'star' | 'zap' | 'award' | 'trophy' | 'crown' | 'dollar';
-  unlockedAt: string;
+  icon?: string;
+  unlockedAt?: string;
   amountSpent?: number;
+}
+
+export interface AchievementProgress {
+  achievementId: string;
+  progress: number;
+  total: number;
+  isComplete: boolean;
 }

@@ -68,6 +68,7 @@ export interface MockeryEvent {
   appliedById?: string;
   tier?: MockeryTier;
   duration?: number;
+  cost?: number;
 }
 
 export interface MockeryEffectData {
@@ -101,6 +102,7 @@ export interface MockedUser {
   mockedBy?: string;
   userId?: string;
   rank?: number;
+  team?: string;
   lastMocked?: string;
   mockeryCount?: number;
 }
@@ -122,6 +124,3 @@ export interface MockeryStats {
   received: number;
   active: number;
 }
-
-// Make sure to export all types
-export { MockeryAction, MockeryEvent, MockeryTier, MockUser, MockedUser, ShameAction, ExtendedMockeryAction };

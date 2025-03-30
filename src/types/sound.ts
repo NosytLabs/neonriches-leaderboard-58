@@ -21,7 +21,9 @@ export type SoundType =
   | 'seal'
   | 'deposit'
   | 'reward'
-  | 'advertisement';
+  | 'advertisement'
+  | 'message'
+  | 'royal';
 
 export interface SoundConfig {
   volume: number;

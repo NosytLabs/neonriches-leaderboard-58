@@ -31,7 +31,8 @@ export type CosmeticRarity =
   | 'epic' 
   | 'legendary'
   | 'mythic'
-  | 'unique';
+  | 'unique'
+  | 'royal';
 
 export interface CosmeticItem {
   id: string;
@@ -43,7 +44,9 @@ export interface CosmeticItem {
   type?: string;
   isUnlocked?: boolean;
   image?: string;
+  imageUrl?: string;
   cssClass?: string;
+  cost?: number; // Adding cost as an optional property
 }
 
 export type CosmeticType = CosmeticCategory;
@@ -51,6 +54,7 @@ export type UserCosmeticItem = CosmeticItem;
 export type UserCosmetics = UserCosmeticState;
 
 export interface UserCosmeticState {
+  // Active properties
   activeBorder?: string;
   activeColor?: string;
   activeFont?: string;
@@ -59,6 +63,9 @@ export interface UserCosmeticState {
   activeBadge?: string;
   activeBackground?: string;
   activeEffect?: string;
+  activeTheme?: string;
+  
+  // Unlocked collections - new format
   unlockedBorders: string[];
   unlockedColors: string[];
   unlockedFonts: string[];
@@ -67,6 +74,7 @@ export interface UserCosmeticState {
   unlockedBadges: string[];
   unlockedBackgrounds: string[];
   unlockedEffects: string[];
+  
   // Legacy compatibility properties
   borders?: string[];
   colors?: string[];
@@ -78,6 +86,7 @@ export interface UserCosmeticState {
   badges?: string[];
   themes?: string[];
   foundersPass?: boolean;
+  socialLinks?: SocialLink[];
 }
 
 export type CosmeticPlacement = "profile" | "leaderboard" | "chat" | "global";

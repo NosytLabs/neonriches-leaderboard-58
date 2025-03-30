@@ -1,12 +1,13 @@
 
 import { TeamType } from './team';
+import { UserTier } from './user-types';
 
 export interface LeaderboardUser {
   id: string;
   username: string;
   displayName?: string;
   profileImage?: string;
-  tier: string;
+  tier: UserTier | string;
   team: TeamType;
   rank: number;
   previousRank?: number;

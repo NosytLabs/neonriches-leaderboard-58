@@ -50,6 +50,3 @@ export interface ProfileBoostData {
   icon: string;
   previewImage?: string;
 }
-
-// Make sure to export the types for use elsewhere
-export { ProfileBoost, BoostEffect, BoostEffectType, BoostStrength, BoostTier, ProfileBoostData };

@@ -34,15 +34,22 @@ export interface Event {
 }
 
 export interface EventDetails {
+  id?: string;
   title: string;
   description: string;
   startDate: string;
   endDate: string;
   imageUrl: string;
+  image?: string;
+  name?: string;
   participants: number;
   maxParticipants: number;
   type: EventType;
   status: EventStatus;
+  rewardTypes?: string[];
+  eligibility?: string;
+  participationRequirements?: string[];
+  specialRules?: string[];
 }
 
 export interface EventStats {
@@ -51,6 +58,8 @@ export interface EventStats {
   totalPrizes: number;
   daysRemaining: number;
   hoursRemaining: number;
+  prizePool?: number;
+  participantsCount?: number;
+  totalPokes?: number;
+  mostPoked?: string;
 }
-
-export { EventType, EventStatus, EventStats, EventDetails };

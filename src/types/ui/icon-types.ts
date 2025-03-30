@@ -70,6 +70,9 @@ export type MedievalIconColor =
   | "emerald"
   | "royal"
   | "default"
+  | "red"
+  | "green"
+  | "blue" 
   | string;
 
 export type MedievalIconSize = "xs" | "sm" | "md" | "lg" | "xl" | "2xl" | number;
