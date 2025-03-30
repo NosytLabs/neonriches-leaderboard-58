@@ -13,6 +13,7 @@ export interface BoostEffect {
   cssClass?: string;
   durationDays?: number;
   previewImage?: string;
+  rarity?: string;
 }
 
 export type BoostEffectType = 'profile' | 'marketing' | 'visibility' | 'engagement' | 'conversion' | 'reach';

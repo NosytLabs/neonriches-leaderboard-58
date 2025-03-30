@@ -1,5 +1,4 @@
 
-
 export type SoundType = 
   | 'royal'
   | 'success'
@@ -59,4 +58,3 @@ export interface PremiumSoundPackDetails {
   features: string[];
   includes: (sound: SoundType) => boolean;
 }
-

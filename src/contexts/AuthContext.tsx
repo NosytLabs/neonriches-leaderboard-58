@@ -31,6 +31,9 @@ export const AuthContext = createContext<AuthContextType>({
   logout: async () => {},
   register: async () => false,
   updateUserProfile: async () => {},
+  awardCosmetic: async () => false,
+  signIn: async () => false,
+  signOut: async () => {},
 });
 
 // Provider component
@@ -121,7 +124,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         login,
         logout,
         register,
-        updateUser,
         updateUserProfile,
         signIn,
         signOut,
@@ -135,3 +137,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
 // Hook to use auth context
 export const useAuth = () => useContext(AuthContext);
+
+// Export UserProfile for typechecking
+export type { UserProfile };

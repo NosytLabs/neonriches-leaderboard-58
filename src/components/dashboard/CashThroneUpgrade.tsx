@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -124,7 +125,7 @@ const SpendToRankUp = ({ user, onPaymentSuccess }: SpendToRankUpProps) => {
             
             <PaymentModal 
               amount={suggestedAmount}
-              onSuccess={(amount) => onPaymentSuccess(amount)}
+              onSuccess={onPaymentSuccess}
               trigger={
                 <Button className="w-full bg-gradient-to-r from-royal-crimson via-royal-gold to-royal-navy text-white flex items-center justify-center mt-2">
                   <Gem size={16} className="mr-2" />

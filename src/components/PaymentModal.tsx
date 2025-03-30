@@ -1,107 +1,174 @@
 
 import React, { useState } from 'react';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { useToast } from '@/hooks/use-toast';
-import { DollarSign } from 'lucide-react';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { CreditCard, CheckCircle } from 'lucide-react';
 
 interface PaymentModalProps {
-  title: string;
-  description: string;
   amount: number;
-  onSuccess: () => void;
-  buttonText?: string;
-  buttonVariant?: 'royal' | 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link';
-  customIcon?: React.ReactNode;
+  onSuccess: (amount: number) => void;
+  trigger: React.ReactNode;
+  title?: string;
+  description?: string;
 }
 
-const PaymentModal: React.FC<PaymentModalProps> = ({
-  title,
-  description,
-  amount,
-  onSuccess,
-  buttonText = 'Confirm Payment',
-  buttonVariant = 'royal',
-  customIcon
-}) => {
+const PaymentModal = ({ 
+  amount, 
+  onSuccess, 
+  trigger, 
+  title = "Complete Your Payment",
+  description = "Enter your payment details below to complete your transaction."
+}: PaymentModalProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [isProcessing, setIsProcessing] = useState(false);
-  const { toast } = useToast();
+  const [cardNumber, setCardNumber] = useState('');
+  const [expiry, setExpiry] = useState('');
+  const [cvc, setCvc] = useState('');
+  const [name, setName] = useState('');
+  const [processing, setProcessing] = useState(false);
+  const [success, setSuccess] = useState(false);
 
-  const handlePayment = async () => {
-    setIsProcessing(true);
-    try {
-      // Simulate payment processing
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // Payment success
-      setIsOpen(false);
-      onSuccess();
-      
-      toast({
-        title: "Payment Successful",
-        description: `You have successfully paid $${amount.toFixed(2)}`
-      });
-      
-    } catch (error) {
-      toast({
-        title: "Payment Failed",
-        description: "There was an error processing your payment.",
-        variant: "destructive"
-      });
-    } finally {
-      setIsProcessing(false);
+  const formatCardNumber = (input: string) => {
+    const numbers = input.replace(/\D/g, '');
+    const formatted = numbers.replace(/(\d{4})/g, '$1 ').trim();
+    return formatted.slice(0, 19); // Max of 16 digits + 3 spaces
+  };
+
+  const formatExpiry = (input: string) => {
+    const numbers = input.replace(/\D/g, '');
+    if (numbers.length >= 3) {
+      return `${numbers.slice(0, 2)}/${numbers.slice(2, 4)}`;
     }
+    return numbers;
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setProcessing(true);
+    
+    // Simulate payment processing
+    setTimeout(() => {
+      setProcessing(false);
+      setSuccess(true);
+      
+      // Close the modal and trigger success callback after showing success state
+      setTimeout(() => {
+        setIsOpen(false);
+        setSuccess(false);
+        setCardNumber('');
+        setExpiry('');
+        setCvc('');
+        setName('');
+        
+        // Only call onSuccess if it exists
+        if (onSuccess) {
+          onSuccess(amount);
+        }
+      }, 1500);
+    }, 2000);
   };
 
   return (
     <>
-      <Button 
-        onClick={() => setIsOpen(true)}
-        variant={buttonVariant as any}
-      >
-        {customIcon || <DollarSign className="mr-2 h-4 w-4" />}
-        {buttonText || `Pay $${amount.toFixed(2)}`}
-      </Button>
+      <div onClick={() => setIsOpen(true)}>
+        {trigger}
+      </div>
 
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent className="glass-morphism border-royal-gold/20">
+        <DialogContent className="glass-morphism border-white/10 text-white sm:max-w-md">
           <DialogHeader>
-            <DialogTitle className="text-xl">{title}</DialogTitle>
-            <DialogDescription>
+            <DialogTitle>{title}</DialogTitle>
+            <DialogDescription className="text-white/70">
               {description}
             </DialogDescription>
           </DialogHeader>
-
-          <div className="my-4 p-4 bg-black/20 rounded-md flex items-center justify-between">
-            <span>Amount:</span>
-            <span className="text-xl font-bold">${amount.toFixed(2)}</span>
-          </div>
-
-          <div className="flex justify-end space-x-2">
-            <Button 
-              variant="outline" 
-              onClick={() => setIsOpen(false)}
-              disabled={isProcessing}
-            >
-              Cancel
-            </Button>
-            <Button 
-              variant="royal"
-              onClick={handlePayment}
-              disabled={isProcessing}
-              className="min-w-[120px]"
-            >
-              {isProcessing ? (
-                <>
-                  <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-t-transparent"></div>
-                  Processing...
-                </>
-              ) : (
-                buttonText
-              )}
-            </Button>
-          </div>
+          
+          {!success ? (
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="amount">Amount</Label>
+                <div className="glass-morphism border-white/10 p-2 rounded">
+                  <span className="text-xl font-bold">${amount.toFixed(2)}</span>
+                </div>
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="card-name">Name on Card</Label>
+                <Input
+                  id="card-name"
+                  placeholder="Reginald Von Spendthrift"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="glass-morphism border-white/10"
+                  required
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="card-number">Card Number</Label>
+                <div className="relative">
+                  <Input
+                    id="card-number"
+                    placeholder="4111 1111 1111 1111"
+                    value={cardNumber}
+                    onChange={(e) => setCardNumber(formatCardNumber(e.target.value))}
+                    className="glass-morphism border-white/10 pl-10"
+                    pattern="[\d\s]{16,19}"
+                    required
+                  />
+                  <CreditCard className="absolute left-3 top-2.5 h-4 w-4 text-white/50" />
+                </div>
+              </div>
+              
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="expiry">Expiry</Label>
+                  <Input
+                    id="expiry"
+                    placeholder="MM/YY"
+                    value={expiry}
+                    onChange={(e) => setExpiry(formatExpiry(e.target.value))}
+                    className="glass-morphism border-white/10"
+                    maxLength={5}
+                    required
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="cvc">CVC</Label>
+                  <Input
+                    id="cvc"
+                    placeholder="123"
+                    value={cvc}
+                    onChange={(e) => setCvc(e.target.value.replace(/\D/g, '').slice(0, 3))}
+                    className="glass-morphism border-white/10"
+                    maxLength={3}
+                    required
+                  />
+                </div>
+              </div>
+              
+              <DialogFooter className="pt-2">
+                <Button 
+                  type="submit" 
+                  disabled={processing}
+                  className="w-full bg-gradient-to-r from-royal-crimson via-royal-gold to-royal-navy hover:opacity-90"
+                >
+                  {processing ? "Processing..." : `Pay $${amount.toFixed(2)}`}
+                </Button>
+              </DialogFooter>
+            </form>
+          ) : (
+            <div className="flex flex-col items-center justify-center py-6">
+              <div className="bg-green-500/20 p-3 rounded-full mb-4">
+                <CheckCircle className="h-12 w-12 text-green-500" />
+              </div>
+              <h3 className="text-xl font-bold mb-2">Payment Successful!</h3>
+              <p className="text-white/70 text-center mb-4">
+                Thank you for your payment of ${amount.toFixed(2)}. Your royal status has been elevated!
+              </p>
+            </div>
+          )}
         </DialogContent>
       </Dialog>
     </>

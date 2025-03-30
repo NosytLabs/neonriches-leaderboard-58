@@ -67,7 +67,9 @@ export const useToast = () => {
     error,
     warning,
     info,
-    royal
+    royal,
+    stopSound: () => {}, // Added to fix useShameEffect.ts
+    playSuccess: () => {}, // Added for compatibility
   };
 };
 

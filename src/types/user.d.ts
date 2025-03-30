@@ -1,4 +1,5 @@
-export type TeamType = 'red' | 'green' | 'blue' | 'none';
+
+export type TeamType = 'red' | 'green' | 'blue' | 'none' | 'Red' | 'Green' | 'Blue';
 export type UserTier = 'free' | 'basic' | 'bronze' | 'silver' | 'gold' | 'platinum' | 'diamond' | 'royal' | 'founder' | 'pro' | 'premium' | 'whale' | 'shark' | 'dolphin' | 'standard';
 export type GenderType = 'male' | 'female' | 'nonbinary' | 'other' | 'king' | 'queen' | 'noble' | 'jester' | 'none';
 
@@ -18,6 +19,7 @@ export interface UserCosmetics {
   activeFont?: string;
   activeBackground?: string;
   socialLinks?: Record<string, string>;
+  activeEmoji?: string;
 }
 
 export interface SocialLink {
@@ -35,6 +37,8 @@ export interface ProfileImage {
   id: string;
   caption?: string;
   isPrimary?: boolean;
+  alt?: string;
+  type?: string;
 }
 
 export interface ProfileBoost {
@@ -43,8 +47,8 @@ export interface ProfileBoost {
   effectId: string;
   startDate?: string;
   endDate?: string;
-  startTime?: string;
-  endTime?: string;
+  startTime?: Date | string;
+  endTime?: Date | string;
   duration: number;
   isActive: boolean;
   level: number;
@@ -90,6 +94,7 @@ export interface UserSubscription {
   price: number;
   interval: 'month' | 'year';
   plan?: string;
+  features?: string[];
 }
 
 export interface UserProfile {
@@ -111,7 +116,7 @@ export interface UserProfile {
   gender?: GenderType;
   bio?: string;
   joinedAt?: Date | string;
-  lastLogin?: Date;
+  lastLogin?: Date | string;
   spendStreak?: number;
   settings?: UserSettings;
   subscription?: UserSubscription;
@@ -172,7 +177,7 @@ export interface User extends UserProfile {
 export type UserRole = 'user' | 'admin' | 'moderator' | 'developer' | 'founder';
 export type UserStatus = 'active' | 'inactive' | 'suspended' | 'banned';
 export type UserTeam = 'red' | 'green' | 'blue' | 'Red' | 'Green' | 'Blue' | 'none';
-export type TeamType = UserTeam;
+export type Team = UserTeam;
 export type UserGender = GenderType;
 
 export interface ProfileLink {
@@ -181,4 +186,6 @@ export interface ProfileLink {
   title: string;
   description?: string;
   clicks: number;
+  label?: string;
+  platform?: string;
 }

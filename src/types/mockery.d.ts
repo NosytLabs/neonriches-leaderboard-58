@@ -59,6 +59,7 @@ export interface MockeryEvent {
   active: boolean;
   isActive?: boolean;
   tier?: MockeryTier;
+  appliedAt?: string;
 }
 
 export interface MockedUser {
@@ -104,4 +105,3 @@ export interface UserMockeryStatus {
 }
 
 export type MockUser = MockedUser;
-

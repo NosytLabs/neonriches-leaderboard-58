@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -86,7 +87,7 @@ interface ForumComment {
 }
 
 // Create simplified mock data for testing
-const mockUser: Partial<UserProfile> = {
+const mockUser: UserProfile = {
   id: 'user-1',
   username: 'RoyalKnight',
   displayName: 'Sir Reginald',
@@ -123,7 +124,8 @@ const mockUser: Partial<UserProfile> = {
     endDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
     status: 'active',
     cancelAtPeriodEnd: false,
-    features: ['all-features'],
+    price: 29.99,
+    interval: 'month',
   },
   socialLinks: [
     { 
@@ -150,7 +152,9 @@ const mockUser: Partial<UserProfile> = {
       effectId: 'profile-boost',
       duration: 7 * 24 * 60 * 60 * 1000,
       level: 3,
-      isActive: true
+      isActive: true,
+      type: 'profile',
+      appliedBy: 'system'
     }
   ],
 };

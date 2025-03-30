@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -13,10 +14,6 @@ interface BriberyBannerProps {
 
 const BriberyBanner = ({ user, onPaymentSuccess }: BriberyBannerProps) => {
   const [amount, setAmount] = useState(50);
-
-  const handleUpgrade = (amount: number) => {
-    onPaymentSuccess(amount);
-  };
 
   return (
     <Card className="glass-morphism border-white/10 relative overflow-hidden group">
@@ -61,7 +58,7 @@ const BriberyBanner = ({ user, onPaymentSuccess }: BriberyBannerProps) => {
             
             <PaymentModal 
               amount={amount}
-              onSuccess={handleUpgrade}
+              onSuccess={onPaymentSuccess}
               trigger={
                 <Button className="w-full bg-gradient-to-r from-royal-crimson via-royal-gold to-royal-navy text-white flex items-center justify-center mt-2">
                   <Gem size={16} className="mr-2" />
