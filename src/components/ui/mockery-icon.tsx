@@ -2,6 +2,7 @@
 import React from 'react';
 import { MockeryAction } from '@/types/mockery';
 import { cn } from '@/lib/utils';
+import { LucideProps } from 'lucide-react';
 
 interface MockeryIconProps {
   action: MockeryAction;

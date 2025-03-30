@@ -15,7 +15,7 @@ const MockeryIconRenderer: React.FC<MockeryIconProps> = ({ action, className, si
   const iconColor = getMockeryActionIconColor(action);
   
   // Map action to the corresponding icon component
-  const getIconComponent = () => {
+  const renderIcon = () => {
     switch(action) {
       case 'shame':
         return <AlertCircle size={size} className={cn(iconColor, className)} />;
@@ -40,7 +40,7 @@ const MockeryIconRenderer: React.FC<MockeryIconProps> = ({ action, className, si
     }
   };
   
-  return getIconComponent();
+  return renderIcon();
 };
 
 export default MockeryIconRenderer;

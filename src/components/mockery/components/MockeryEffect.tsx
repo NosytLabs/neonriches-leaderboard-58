@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { MockeryAction } from '@/types/mockery';
-import { getMockeryActionIcon, getMockeryDescription } from '@/utils/mockeryUtils';
+import { getMockeryDescription } from '@/utils/mockeryUtils';
 
 interface MockeryEffectProps {
   username: string;
@@ -69,8 +69,21 @@ const MockeryEffect: React.FC<MockeryEffectProps> = ({
     }
   };
   
-  const effectIcon = getMockeryActionIcon(action);
-  const effectDescription = getMockeryDescription(action, username);
+  const getEffectIcon = (actionType: MockeryAction): string => {
+    switch (actionType) {
+      case 'tomatoes': return '🍅';
+      case 'putridEggs': return '🥚';
+      case 'eggs': return '🥚';
+      case 'stocks': return '🪵';
+      case 'silence': return '🔇';
+      case 'courtJester': return '🃏';
+      case 'smokeBomb': return '💨';
+      case 'glitterBomb': return '✨';
+      default: return '❓';
+    }
+  };
+  
+  const effectDescription = getMockeryDescription(action);
   const animationClass = getEffectAnimation();
   
   return (
@@ -86,7 +99,7 @@ const MockeryEffect: React.FC<MockeryEffectProps> = ({
       
       <div className="text-center max-w-md">
         <div className={`text-6xl mb-6 ${animationClass}`}>
-          {effectIcon}
+          {getEffectIcon(action)}
         </div>
         
         <h2 className="text-2xl font-bold mb-2 royal-gradient">
