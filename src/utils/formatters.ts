@@ -1,84 +1,91 @@
 
 /**
- * Format a number as currency (dollars)
+ * Utility functions for formatting different data types
  */
-export const formatCurrency = (amount: number): string => {
+
+/**
+ * Formats a file size into a human-readable string
+ * @param bytes Size in bytes
+ * @returns Formatted file size string (e.g., "1.5 MB")
+ */
+export const formatFileSize = (bytes: number): string => {
+  if (bytes === 0) return '0 Bytes';
+  
+  const k = 1024;
+  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+};
+
+/**
+ * Formats a number with commas as thousands separators
+ * @param value Number to format
+ * @returns Formatted number string
+ */
+export const formatNumber = (value: number): string => {
+  return new Intl.NumberFormat('en-US').format(value);
+};
+
+/**
+ * Formats a currency value with dollar sign and 2 decimal places
+ * @param value Value to format as currency
+ * @param currency Currency code (default: USD)
+ * @returns Formatted currency string
+ */
+export const formatCurrency = (value: number, currency = 'USD'): string => {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
-    currency: 'USD',
+    currency,
     minimumFractionDigits: 2
-  }).format(amount);
+  }).format(value);
 };
 
 /**
- * Format a dollar amount with dollar sign
+ * Formats a date in a consistent way
+ * @param date Date to format
+ * @param options Formatting options
+ * @returns Formatted date string
  */
-export const formatDollarAmount = (amount: number): string => {
-  return `$${amount.toLocaleString('en-US', { maximumFractionDigits: 2 })}`;
-};
-
-/**
- * Format a date to a readable string
- */
-export const formatDate = (date: Date | string): string => {
-  if (!date) return '';
-  const dateObj = typeof date === 'string' ? new Date(date) : date;
-  return dateObj.toLocaleDateString('en-US', {
+export const formatDate = (
+  date: Date | string, 
+  options: Intl.DateTimeFormatOptions = {
     year: 'numeric',
     month: 'short',
     day: 'numeric'
-  });
-};
-
-/**
- * Format a historical value for display
- */
-export const formatHistoricalValue = (value: number, year: number): string => {
-  return `${formatCurrency(value)} (${year})`;
-};
-
-/**
- * Format a blockchain address by truncating the middle
- */
-export const formatAddress = (address: string): string => {
-  if (!address || address.length < 10) return address;
-  return `${address.slice(0, 6)}...${address.slice(-4)}`;
-};
-
-/**
- * Format a number with appropriate separators
- */
-export const formatNumber = (num: number): string => {
-  return num.toLocaleString('en-US');
-};
-
-/**
- * Format a file size in bytes to a readable string
- */
-export const formatFileSize = (bytes: number): string => {
-  if (bytes < 1024) return `${bytes} B`;
-  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
-  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
-};
-
-/**
- * Format a duration in seconds to a readable string
- */
-export const formatDuration = (seconds: number): string => {
-  if (seconds < 60) return `${seconds}s`;
-  if (seconds < 3600) {
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    return `${minutes}m${remainingSeconds > 0 ? ` ${remainingSeconds}s` : ''}`;
   }
-  const hours = Math.floor(seconds / 3600);
-  const minutes = Math.floor((seconds % 3600) / 60);
-  return `${hours}h${minutes > 0 ? ` ${minutes}m` : ''}`;
+): string => {
+  const dateObj = typeof date === 'string' ? new Date(date) : date;
+  return new Intl.DateTimeFormat('en-US', options).format(dateObj);
 };
 
 /**
- * Format a percentage value
+ * Formats a time duration in milliseconds to a human-readable format
+ * @param ms Time in milliseconds
+ * @returns Formatted time string
  */
-export const formatPercentage = (value: number, digits = 1): string => {
-  return `${value.toFixed(digits)}%`;
+export const formatDuration = (ms: number): string => {
+  if (ms < 1000) return `${ms}ms`;
+  
+  const seconds = Math.floor(ms / 1000);
+  if (seconds < 60) return `${seconds}s`;
+  
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = seconds % 60;
+  if (minutes < 60) return `${minutes}m ${remainingSeconds}s`;
+  
+  const hours = Math.floor(minutes / 60);
+  const remainingMinutes = minutes % 60;
+  return `${hours}h ${remainingMinutes}m`;
+};
+
+/**
+ * Truncates text to a specified length and adds ellipsis if needed
+ * @param text Text to truncate
+ * @param length Maximum length
+ * @returns Truncated text
+ */
+export const truncateText = (text: string, length = 50): string => {
+  if (text.length <= length) return text;
+  return text.substring(0, length) + '...';
 };

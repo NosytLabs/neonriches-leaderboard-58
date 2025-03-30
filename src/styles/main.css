@@ -17,6 +17,9 @@
 @import './theme/glass-effects.css';
 @import './theme/royal-effects.css';
 @import './theme/royal-team-colors.css';
+@import './theme/rank-badges.css';
+@import './theme/shame-effects.css';
+@import './theme/scrollbar.css';
 
 /* Animation system */
 @import './animations/index.css';
@@ -26,3 +29,9 @@
 @import './utilities/decorative-effects.css';
 @import './utilities/glass-effects.css';
 @import './utilities/hover-effects.css';
+
+/* Base body styles */
+body {
+  background-color: #0D0D20;
+  color: #FFFFFF;
+}
