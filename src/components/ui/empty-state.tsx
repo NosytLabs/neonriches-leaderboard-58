@@ -1,25 +1,18 @@
 
-import { ReactNode } from 'react';
-import { AlertCircle } from 'lucide-react';
+import React, { ReactNode } from 'react';
 
-export interface EmptyStateProps {
+interface EmptyStateProps {
   message: string;
+  description?: string;
   icon?: ReactNode;
-  children?: ReactNode;
 }
 
-export const EmptyState: React.FC<EmptyStateProps> = ({ 
-  message, 
-  icon = <AlertCircle className="h-6 w-6 opacity-50" />,
-  children 
-}) => {
+const EmptyState: React.FC<EmptyStateProps> = ({ message, description, icon }) => {
   return (
-    <div className="flex flex-col items-center justify-center p-8 text-center">
-      <div className="flex justify-center mb-4 text-white/50">
-        {icon}
-      </div>
-      <p className="text-white/70 text-sm">{message}</p>
-      {children}
+    <div className="flex flex-col items-center justify-center text-center py-6">
+      {icon && <div className="mb-3">{icon}</div>}
+      <p className="text-white/70 font-medium">{message}</p>
+      {description && <p className="text-white/50 text-sm mt-1">{description}</p>}
     </div>
   );
 };

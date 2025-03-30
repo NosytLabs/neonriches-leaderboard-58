@@ -12,6 +12,9 @@ import Dashboard from '@/pages/Dashboard';
 import SignIn from '@/pages/SignIn';
 import { AuthProvider } from '@/contexts/auth/AuthContext';
 import Leaderboard from '@/pages/Leaderboard';
+import CodeAnalysis from '@/pages/CodeAnalysis';
+import CodeAnalysisReport from '@/pages/CodeAnalysisReport';
+import CodeCleanupReport from '@/pages/CodeCleanupReport';
 
 function App() {
   return (
@@ -31,6 +34,9 @@ function App() {
           <Route path="/register" element={<Auth />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/leaderboard" element={<Leaderboard />} />
+          <Route path="/code-analysis" element={<CodeAnalysis />} />
+          <Route path="/code-analysis/report" element={<CodeAnalysisReport />} />
+          <Route path="/code-cleanup" element={<CodeCleanupReport />} />
           <Route path="/auth/signin" element={<Auth />} />
           <Route path="/auth/signup" element={<Auth />} />
         </Routes>
