@@ -17,18 +17,6 @@ export function capitalizeFirstLetter(string: string) {
 }
 
 /**
- * Format number as currency
- */
-export function formatCurrency(amount: number): string {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2
-  }).format(amount);
-}
-
-/**
  * Debounce function to limit how often a function can be called
  */
 export function debounce<T extends (...args: any[]) => any>(
@@ -61,3 +49,7 @@ export function generateRandomId(length: number = 8): string {
   
   return result;
 }
+
+// Export formatters to avoid circular dependencies
+import { formatCurrency } from '@/utils/formatters';
+export { formatCurrency };

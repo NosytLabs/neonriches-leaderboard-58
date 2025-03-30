@@ -82,16 +82,3 @@ export const formatDuration = (seconds: number): string => {
 export const formatPercentage = (value: number, digits = 1): string => {
   return `${value.toFixed(digits)}%`;
 };
-
-// Re-export all formatters to match the expected imports
-export { 
-  formatCurrency,
-  formatDollarAmount,
-  formatDate,
-  formatHistoricalValue,
-  formatAddress,
-  formatNumber,
-  formatFileSize,
-  formatDuration,
-  formatPercentage
-};

@@ -1,13 +1,15 @@
 
 import { AnalysisResult } from '@/utils/codeAnalysis/types';
 
-// Mock function to simulate running code analysis
-// In a real application, this would connect to a backend service
+/**
+ * Get code analysis results - in a real application this would connect to 
+ * a backend service or use static analysis tools
+ */
 export const getAnalysisResults = async (): Promise<AnalysisResult> => {
   // Simulate API call delay
   await new Promise(resolve => setTimeout(resolve, 1500));
   
-  // Return mock data
+  // Return mock data for demonstration purposes
   return {
     unusedImports: [
       { name: 'useState', path: 'react', file: 'src/components/Example.tsx', line: 1 },

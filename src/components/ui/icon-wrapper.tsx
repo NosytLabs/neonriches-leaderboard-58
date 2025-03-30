@@ -1,6 +1,6 @@
 
 import React from 'react';
-import IconSystem from '@/components/ui/IconSystem';
+import IconSystem from '@/components/ui/icon-system';
 import { toMedievalIconName, toMedievalIconColor, toMedievalIconSize } from '@/utils/iconTypeAdapter';
 
 interface IconWrapperProps {

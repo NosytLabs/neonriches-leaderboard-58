@@ -51,3 +51,8 @@ export const adaptIconColor = (color: string): MedievalIconColor => {
 
   return colorMap[color.toLowerCase()] || 'default';
 };
+
+// Additional utility for backward compatibility
+export const toMedievalIconName = adaptIconName;
+export const toMedievalIconColor = adaptIconColor;
+export const toMedievalIconSize = adaptIconSize;
