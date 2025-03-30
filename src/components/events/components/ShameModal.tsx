@@ -3,9 +3,9 @@ import React from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { MockeryAction } from '@/types/mockery';
+import { MockeryAction, ShameAction } from '@/types/mockery';
 import { getShameActionIcon, getShameActionTitle, getShameActionPrice, getShameActionDescription } from '@/components/events/utils/shameUtils';
-import { Crown, ArrowRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { getTeamColor } from '@/utils/teamUtils';
 import RoyalButton from '@/components/ui/royal-button';
 
@@ -22,8 +22,8 @@ interface ShameTargetUser {
 
 interface ShameModalProps {
   targetUser: ShameTargetUser;
-  shameType: MockeryAction;
-  onConfirm: (userId: string, type: MockeryAction) => void;
+  shameType: ShameAction;
+  onConfirm: (userId: string, type: ShameAction) => void;
   onCancel: () => void;
   hasDiscount?: boolean;
 }
@@ -70,9 +70,6 @@ const ShameModal: React.FC<ShameModalProps> = ({
         <div>
           <div className="flex items-center">
             <span className="font-medium text-lg">{targetUser.username}</span>
-            {targetUser.rank <= 3 && (
-              <Crown className="ml-1 h-4 w-4 text-royal-gold" />
-            )}
           </div>
           <div className="text-white/60 text-sm">Rank #{targetUser.rank}</div>
         </div>

@@ -9,7 +9,26 @@ export type MockeryAction =
   | 'crown' 
   | 'taunt'
   | 'shame'
-  | 'protection';
+  | 'putridEggs'
+  | 'silence'
+  | 'courtJester'
+  | 'smokeBomb'
+  | 'protection'
+  | 'jest'
+  | 'glitterBomb'
+  | 'defeat'
+  | 'immune'
+  | 'guillotine'
+  | 'dungeons'
+  | 'removal'
+  | 'roast'
+  | 'royalPie'
+  | 'jokeCrown'
+  | 'memeFrame'
+  | 'challenge'
+  | 'target';
+
+export type ShameAction = 'tomatoes' | 'eggs' | 'stocks';
 
 export type MockeryTier = 
   | 'common' 
@@ -54,6 +73,11 @@ export interface MockUser {
   profileImage?: string;
   tier: string;
   rank: number;
+  amountSpent?: number;
+  team?: string;
+  isProtected?: boolean;
+  lastMocked?: string;
+  mockeryCount?: number;
 }
 
 export interface MockedUser extends MockUser {
@@ -61,11 +85,6 @@ export interface MockedUser extends MockUser {
   hasProtection: boolean;
   protectionEnds?: string;
 }
-
-// For backward compatibility
-export type ShameAction = 'tomatoes' | 'eggs' | 'stocks';
-
-export type ExtendedMockeryAction = MockeryAction | string;
 
 export interface MockeryEffectData {
   id: string;
@@ -90,18 +109,13 @@ export interface UserMockeryStatus {
   };
 }
 
+export interface MockeryActionInfo {
+  action: MockeryAction;
+  timestamp: number;
+  until: number;
+}
+
 // Utility function for ShameAction conversion
 export function isShameAction(action: string): action is ShameAction {
   return ['tomatoes', 'eggs', 'stocks'].includes(action);
 }
-
-// Re-export types with 'export type' syntax for TS modules
-export type { MockeryAction };
-export type { MockeryEvent };
-export type { MockeryTier };
-export type { MockUser };
-export type { MockedUser };
-export type { ShameAction };
-export type { ExtendedMockeryAction };
-export type { MockeryEffectData };
-export type { UserMockeryStatus };

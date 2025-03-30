@@ -1,13 +1,14 @@
 
-import { ShameAction } from '../../../types/mockery';
+import { ShameAction, MockeryAction } from '@/types/mockery';
 import { 
   Egg, 
   TrendingDown, 
   Tomato, 
   Crown, 
   Laugh, 
-  Shield 
+  Shield
 } from 'lucide-react';
+import React from 'react';
 
 // Get the current weekly discounted action (would normally come from API/backend)
 export const getWeeklyDiscountedAction = (): ShameAction => {
@@ -44,17 +45,17 @@ export const getDiscountedShamePrice = (action: ShameAction): number => {
   return getShameActionPrice(action) * 0.5;
 };
 
-// New helper functions for shame action metadata
-export const getShameActionIcon = (action: ShameAction) => {
+// Helper functions for shame action metadata
+export const getShameActionIcon = (action: ShameAction | MockeryAction) => {
   switch (action) {
-    case 'tomatoes': return Tomato;
-    case 'eggs': return Egg;
-    case 'stocks': return TrendingDown;
-    default: return Tomato;
+    case 'tomatoes': return <Tomato className="h-4 w-4" />;
+    case 'eggs': return <Egg className="h-4 w-4" />;
+    case 'stocks': return <TrendingDown className="h-4 w-4" />;
+    default: return <Crown className="h-4 w-4" />;
   }
 };
 
-export const getShameActionTitle = (action: ShameAction): string => {
+export const getShameActionTitle = (action: ShameAction | MockeryAction): string => {
   switch (action) {
     case 'tomatoes': return 'Throw Tomatoes';
     case 'eggs': return 'Throw Eggs';
@@ -63,16 +64,18 @@ export const getShameActionTitle = (action: ShameAction): string => {
   }
 };
 
-export const getShameActionDescription = (action: ShameAction): string => {
+export const getShameActionDescription = (action: ShameAction | MockeryAction, username?: string): string => {
+  const targetText = username ? ` on ${username}` : '';
+  
   switch (action) {
     case 'tomatoes': 
-      return 'Shower your target with virtual tomatoes, showing your disagreement in the most medieval way possible.';
+      return `Shower your target with virtual tomatoes${targetText}, showing your disagreement in the most medieval way possible.`;
     case 'eggs': 
-      return 'Nothing says disapproval like eggs. Digital and mess-free but gets the point across.';
+      return `Nothing says disapproval like eggs${targetText}. Digital and mess-free but gets the point across.`;
     case 'stocks': 
-      return 'Tank their virtual status by showing everyone their stocks are falling.';
+      return `Tank their virtual status${targetText} by showing everyone their stocks are falling.`;
     default: 
-      return 'Take action against this user.';
+      return `Take action against this user${targetText}.`;
   }
 };
 

@@ -1,13 +1,14 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { getTeamColor } from '@/utils/teamUtils';
-import { formatCurrency, formatNumber } from '@/lib/utils';
+import { formatCurrency } from '@/lib/utils';
 import { getShameActionIcon, getShameActionPrice, hasWeeklyDiscount, getDiscountedShamePrice } from '../utils/shameUtils';
-import { MockeryAction } from '@/types/mockery';
-import { Trophy, Crown, ShieldOff, Clock } from 'lucide-react';
+import { ShameAction, MockeryAction } from '@/types/mockery';
+import { ShieldOff, Clock } from 'lucide-react';
 
 interface ShameUserCardProps {
   user: {
@@ -18,11 +19,11 @@ interface ShameUserCardProps {
     team: 'red' | 'green' | 'blue' | null;
     amountSpent: number;
   };
-  isShamed: { action: MockeryAction; timestamp: number; until: number } | null;
+  isShamed: { action: ShameAction | MockeryAction; timestamp: number; until: number } | null;
   isOnCooldown: boolean;
   shameCount: number;
-  onShame: (userId: number, username: string, type: MockeryAction, amount: number) => boolean;
-  featuredAction?: MockeryAction;
+  onShame: (userId: number, username: string, type: ShameAction, amount: number) => boolean;
+  featuredAction?: ShameAction;
 }
 
 const ShameUserCard: React.FC<ShameUserCardProps> = ({
@@ -33,10 +34,10 @@ const ShameUserCard: React.FC<ShameUserCardProps> = ({
   onShame,
   featuredAction
 }) => {
-  const [selectedAction, setSelectedAction] = useState<MockeryAction | null>(null);
+  const [selectedAction, setSelectedAction] = useState<ShameAction | null>(null);
   const [isShaming, setIsShaming] = useState(false);
   
-  const handleActionSelect = (action: MockeryAction) => {
+  const handleActionSelect = (action: ShameAction) => {
     setSelectedAction(action);
   };
   
@@ -84,7 +85,7 @@ const ShameUserCard: React.FC<ShameUserCardProps> = ({
     return `${hours}h ${minutes}m remaining`;
   };
   
-  const isFeaturedAction = (action: MockeryAction) => {
+  const isFeaturedAction = (action: ShameAction) => {
     return action === featuredAction;
   };
   
@@ -108,9 +109,6 @@ const ShameUserCard: React.FC<ShameUserCardProps> = ({
             <div>
               <div className="flex items-center">
                 <span className="font-medium">{user.username}</span>
-                {user.rank <= 3 && (
-                  <Trophy className="ml-1.5 h-3.5 w-3.5 text-royal-gold" />
-                )}
               </div>
               
               <div className="flex items-center space-x-2 mt-1">

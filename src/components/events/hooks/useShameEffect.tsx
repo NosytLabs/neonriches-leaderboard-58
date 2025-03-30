@@ -1,10 +1,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
-import { MockeryAction } from '@/types/mockery';
-
-// Define ShameAction type explicitly and export it
-export type ShameAction = 'tomatoes' | 'eggs' | 'stocks';
+import { MockeryAction, ShameAction } from '@/types/mockery';
 
 export interface ShameEffectProps {
   type: ShameAction;
