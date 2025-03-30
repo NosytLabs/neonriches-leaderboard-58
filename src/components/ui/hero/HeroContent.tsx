@@ -26,6 +26,12 @@ const HeroContent: React.FC = () => {
         $1 = 1 unit of rank. The leaderboard never resets.
       </p>
       
+      <div className="bg-black/30 backdrop-blur-sm p-4 rounded-lg border border-royal-gold/20 mb-8 max-w-2xl">
+        <p className="text-xl italic text-royal-gold font-semibold">
+          "SpendThrone: Where you can literally buy your way to the top of the leaderboard. Because who needs skills when you've got a wallet, right?"
+        </p>
+      </div>
+      
       <Button 
         className="animate-royal-shine bg-gradient-to-r from-royal-gold via-amber-600 to-royal-gold text-black font-semibold py-6 px-8 rounded-lg"
         onClick={handleSparkleClick}
