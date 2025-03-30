@@ -1,5 +1,6 @@
+
 import { useToastContext } from '@/contexts/ToastContext';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/contexts/auth';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 

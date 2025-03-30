@@ -5,8 +5,8 @@ import Footer from '@/components/Footer';
 import ThroneBackground from '@/components/ui/throne-background';
 import RoyalDivider from '@/components/ui/royal-divider';
 import { Crown, Scroll, Sparkles } from 'lucide-react';
-import { UserProfile } from '@/contexts/AuthContext';
-import { useAuth } from '@/contexts/AuthContext';
+import { UserProfile } from '@/types/user';
+import { useAuth } from '@/contexts/auth';
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
