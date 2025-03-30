@@ -1,117 +1,112 @@
 
-export interface FileInfo {
-  path: string;
-  size: number;
-  lastModified?: Date;
-  language?: string;
-}
-
 export interface ImportInfo {
   name: string;
-  path?: string;
-  file?: string;
+  path: string;
+  file: string;
+  used: boolean;
+  impact?: number;
   line?: number;
-  note?: string;
-  source?: string;
 }
 
 export interface VariableInfo {
   name: string;
-  type?: string;
-  file?: string;
+  file: string;
+  scope: string;
+  type: string;
+  used: boolean;
+  impact?: number;
   line?: number;
-  note?: string;
 }
 
-export interface FunctionInfo {
+export interface FileInfo {
+  path: string;
+  size: number;
+  used: boolean;
+  impact?: number;
+}
+
+export interface SelectorInfo {
   name: string;
-  file?: string;
+  file: string;
+  used: boolean;
+  impact?: number;
   line?: number;
-  params?: number;
-  complexity?: number;
-  linesOfCode?: number;
+  selector?: string;
+}
+
+export interface CodeIssueInfo {
+  description: string;
+  file: string;
+  lineStart: number;
+  lineEnd: number;
+  severity: 'low' | 'medium' | 'high';
+  impact?: number;
+  line?: number;
+}
+
+export interface DuplicateCodeInfo {
+  id: string;
+  instances: Array<{ path: string; lineStart: number; lineEnd: number }>;
+  linesCount: number;
+  code: string;
+  recommendation?: string;
+  impact?: number;
+  similarity?: number;
+  lines?: number;
+  files?: Array<{ path: string; lineStart?: number; lineEnd?: number }>;
+}
+
+export interface ComplexityItem {
+  id: string;
+  file: string;
+  function?: string;
+  complexity: number;
+  lineCount: number;
+  recommendation?: string;
+  impact?: number;
+  line?: number;
+  name?: string;
+  explanation?: string;
+  cyclomaticComplexity?: number;
 }
 
 export interface DependencyInfo {
   name: string;
   version: string;
-  size?: number;
-  used?: boolean;
-}
-
-export interface CssSelectorInfo {
-  selector: string;
-  file?: string;
-  line?: number;
-}
-
-export interface ComplexityItem {
-  id: string;
-  name: string;
-  function?: string; 
-  file: string;
-  complexity: number;
-  cyclomaticComplexity?: number;
-  line: number;
-  lines?: number;
-  linesOfCode?: number;
-  parameters?: number;
-  nestedLevel?: number;
-  issues?: string[];
-  explanation?: string;
-  path?: string;
-  functions?: any[];
-  status?: string;
-}
-
-export interface DuplicateCodeInfo {
-  id: string | number;
-  title?: string;
-  description?: string;
-  severity?: string;
-  solution?: string;
-  pattern?: string;
-  similarity: number;
-  files: { path: string }[];
-  lines?: number;
-  linesCount?: number;
-  code?: string;
-  codeSnippet?: string;
-  snippet?: string;
-  recommendation?: string;
-}
-
-export interface DeadCodeInfo {
-  file: string;
-  path?: string;
-  name?: string;
-  line: number;
-  description: string;
-  type?: string;
+  used: boolean;
+  size: number;
+  impact?: number;
 }
 
 export interface PerformanceIssue {
-  id: string;
   description: string;
   file: string;
   lineNumber: number;
-  severity: string;
+  severity: 'low' | 'medium' | 'high';
   recommendation: string;
-  issue?: string;
+  impact?: number;
 }
 
 export interface ProjectMetrics {
-  projectSize?: number;
-  fileCount?: number;
-  dependencyCount?: number;
-  averageFileSize?: number;
-  largestFiles?: Array<{ filePath: string, size: number }>;
-  beforeCleanup?: {
+  totalFiles: number;
+  totalLines: number;
+  totalComponents: number;
+  averageComponentSize: number;
+  totalDependencies: number;
+  totalSize: number;
+  sizeSavings: number;
+  fileSavings: number;
+  dependencySavings: number;
+  sizePercentage: number;
+  filePercentage: number;
+  dependencyPercentage: number;
+  formattedSize: string;
+  beforeCleanup: {
     projectSize: number;
     fileCount: number;
     dependencyCount: number;
   };
-  afterCleanup?: {
+  afterCleanup: {
     projectSize: number;
     fileCount: number;
     dependencyCount: number;
@@ -121,53 +116,13 @@ export interface ProjectMetrics {
 export interface AnalysisResult {
   unusedImports: ImportInfo[];
   unusedVariables: VariableInfo[];
-  unusedFiles?: string[];
-  unusedSelectors?: CssSelectorInfo[];
-  unusedDependencies?: string[];
-  deadCode?: DeadCodeInfo[];
-  deadCodePaths?: DeadCodeInfo[];
+  unusedFiles?: FileInfo[];
+  unusedSelectors?: SelectorInfo[];
+  unusedDependencies?: DependencyInfo[];
+  deadCode?: CodeIssueInfo[];
+  deadCodePaths?: CodeIssueInfo[];
   duplicateCode: DuplicateCodeInfo[];
   complexCode: ComplexityItem[];
-  performanceIssues?: PerformanceIssue[];
+  performanceIssues: PerformanceIssue[];
   metrics?: ProjectMetrics;
-  summary?: any;
-}
-
-export interface EslintIssue {
-  ruleId: string;
-  severity: number;
-  message: string;
-  line: number;
-  column: number;
-  nodeType: string;
-  filePath: string;
-  fix?: {
-    range: [number, number];
-    text: string;
-  };
-}
-
-export interface UnusedImport {
-  file: string;
-  name: string;
-  line: number;
-  source?: string;
-}
-
-export interface UnusedVariable {
-  file: string;
-  name: string;
-  line: number;
-}
-
-export interface UnusedCssSelector {
-  file: string;
-  selector: string;
-  line: number;
-}
-
-export interface UnusedFunction {
-  file: string;
-  name: string;
-  line: number;
 }

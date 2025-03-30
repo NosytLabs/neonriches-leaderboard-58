@@ -1,7 +1,7 @@
 
 import { useCallback } from 'react';
 import { SoundType } from '@/types/sound-types';
-import { useAudioLoader } from '@/hooks/sounds/use-audio-loader';
+import useAudioLoader from '@/hooks/sounds/use-audio-loader';
 
 interface NotificationSoundOptions {
   volume?: number;

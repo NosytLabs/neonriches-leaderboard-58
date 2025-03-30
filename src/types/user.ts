@@ -1,56 +1,56 @@
 
-import { MedievalColor } from './common';
-import { UserCosmeticState } from './cosmetics';
-
+// Define the user tiers in the application
 export type UserTier = 
-  | 'free' 
   | 'basic' 
-  | 'premium' 
-  | 'pro'
+  | 'bronze'
+  | 'silver' 
+  | 'gold' 
+  | 'platinum' 
   | 'royal' 
-  | 'founder' 
-  | 'vip'
-  | 'common'
-  | 'uncommon'
-  | 'rare'
-  | 'epic'
-  | 'legendary'
-  | 'mythic'
-  | 'silver'
-  | 'gold'
-  | 'platinum'
-  | 'diamond'
-  | 'whale';
+  | 'founder';
 
-export type TeamColor = 'red' | 'blue' | 'green' | 'gold';
+// Define the team colors available
+export type TeamColor = 
+  | 'red' 
+  | 'blue' 
+  | 'green' 
+  | 'gold' 
+  | 'purple' 
+  | 'none';
 
-export interface ProfileBoost {
+// For backwards compatibility
+export type TeamType = TeamColor;
+export type Team = {
   id: string;
-  type: BoostEffectType;
-  startDate: string;
-  endDate: string;
-  isActive: boolean;
-  duration: number;
   name: string;
-  description: string;
-  cssClass: string;
-  price: number;
-  tier: string;
-  icon: string;
+  color: TeamColor;
+  members: number;
+  totalSpent: number;
+};
+
+export interface ProfileImage {
+  id: string;
+  url: string;
+  isPrimary: boolean;
+  caption?: string;
 }
 
-export type BoostEffectType = 
-  | 'highlight' 
-  | 'frame' 
-  | 'aura' 
-  | 'badge' 
-  | 'animation'
-  | 'background'
-  | 'spotlight'
-  | 'shadow'
-  | 'sparkle'
-  | 'glow'
-  | 'crown';
+export interface SocialLink {
+  id: string;
+  platform: string;
+  url: string;
+  title: string;
+  icon: string;
+  clicks: number;
+}
+
+export interface ProfileLink {
+  id: string;
+  title: string;
+  url: string;
+  icon: string;
+  clicks: number;
+}
 
 export interface UserSettings {
   profileVisibility: 'public' | 'private' | 'friends';
@@ -60,33 +60,53 @@ export interface UserSettings {
   emailNotifications: boolean;
   marketingEmails: boolean;
   soundEffects: boolean;
-  showEmailOnProfile: boolean;
+  showRank: boolean;
   rankChangeAlerts: boolean;
   newFollowerAlerts: boolean;
   teamNotifications: boolean;
   darkMode: boolean;
-  showRank: boolean;
   showTeam: boolean;
   showSpending: boolean;
+  showEmailOnProfile: boolean;
+  publicProfile?: boolean;
   shameAlerts?: boolean;
 }
 
-export interface SocialLink {
-  platform: string;
-  url: string;
-  isVerified: boolean;
+export interface UserCosmeticState {
+  border: string;
+  color: string;
+  font: string;
+  emoji: string;
+  title: string;
+  background: string;
+  effect: string;
+  badge: string;
+  theme: string;
+  unlockedBorders: string[];
+  unlockedColors: string[];
+  unlockedFonts: string[];
+  unlockedEmojis: string[];
+  unlockedTitles: string[];
+  unlockedBackgrounds: string[];
+  unlockedEffects: string[];
+  unlockedBadges: string[];
+  unlockedThemes: string[];
+  
+  // For backward compatibility
+  borders?: string[];
+  colors?: string[];
+  fonts?: string[];
+  emojis?: string[];
+  titles?: string[];
+  backgrounds?: string[];
+  effects?: string[];
+  badges?: string[];
+  themes?: string[];
+  foundersPass?: boolean;
 }
 
-export interface UserSubscription {
-  id: string;
-  tier: UserTier;
-  startDate: string;
-  endDate: string | null;
-  isActive: boolean;
-  autoRenew: boolean;
-  nextBillingDate: string | null;
-  paymentMethod: string;
-}
+// For backward compatibility
+export type UserCosmetics = UserCosmeticState;
 
 export interface UserProfile {
   id: string;
@@ -94,49 +114,29 @@ export interface UserProfile {
   displayName: string;
   email: string;
   profileImage: string;
+  profileImages?: ProfileImage[];
   bio: string;
   joinDate: string;
   tier: UserTier;
-  team: TeamColor | null;
+  team: TeamColor;
   rank: number;
-  previousRank?: number;
-  walletBalance: number;
-  amountSpent: number;
   totalSpent: number;
+  amountSpent: number;
+  walletBalance: number;
   settings: UserSettings;
   cosmetics: UserCosmeticState;
   profileBoosts: ProfileBoost[];
   isFounder: boolean;
-  isVIP?: boolean;
-  isVerified?: boolean;
-  activeTitle?: string;
-  certificateNFT?: {
-    mintAddress: string;
-    imageUrl: string;
-    tokenId: string;
-  };
-  gender?: string;
-  followers?: number;
-  following?: number;
-  lastActive?: string;
-  role?: string;
+  isVerified: boolean;
+  subscription?: string;
   purchasedFeatures?: string[];
+  
+  // For compatibility with existing code
+  spentAmount?: number;
+  joinedAt?: string;
+  avatarUrl?: string;
+  socialLinks?: SocialLink[];
+  spendStreak?: number;
+  profileViews?: number;
+  profileClicks?: number;
 }
-
-export type RankProgressData = {
-  currentRank: number;
-  nextRank: number;
-  rankProgress: number;
-  spentAmount: number;
-  remainingAmount: number;
-};
-
-export interface ProfileImage {
-  id: string;
-  url: string;
-  isPremium: boolean;
-  tier: UserTier;
-}
-
-// For consistency, provide an alias to match expected types in the codebase
-export type User = UserProfile;

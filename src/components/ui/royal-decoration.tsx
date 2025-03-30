@@ -1,71 +1,41 @@
 
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { RoyalDecorationProps } from '@/types/ui/decorations/types';
-import BorderPattern from './decorations/border-pattern';
-import CornerFlourish from './decorations/corner-flourish';
-import CoatOfArms from './decorations/coat-of-arms';
-import CrossedSwords from './decorations/crossed-swords';
-import RoyalInsignia from './decorations/royal-insignia';
-import RoyalBanner from './decorations/royal-banner';
+import { BaseDecorationProps } from '@/types/ui/decorations/types';
+import sizeClasses from './decorations/sizeClasses';
+
+export type RoyalDecorationProps = BaseDecorationProps;
 
 const RoyalDecoration: React.FC<RoyalDecorationProps> = ({
-  type = 'corner',
   size = 'md',
-  color = 'gold',
+  color = 'royal',
   className,
-  position = 'top-right',
-  animate = false,
-  variant = 'default',
+  style,
+  children,
+  ...props
 }) => {
-  // Map color names to CSS classes
-  const getColorClass = () => {
-    switch (color) {
-      case 'gold':
-        return 'text-royal-gold';
-      case 'silver':
-        return 'text-gray-300';
-      case 'bronze':
-        return 'text-amber-600';
-      case 'red':
-        return 'text-red-500';
-      case 'blue':
-        return 'text-blue-500';
-      case 'green':
-        return 'text-green-500';
-      case 'purple':
-        return 'text-purple-500';
-      case 'royal':
-        return 'text-royal-purple';
-      case 'default':
-      default:
-        return 'text-white/80';
-    }
-  };
-
-  // Render the appropriate decoration component based on type
-  const renderDecoration = () => {
-    switch (type) {
-      case 'border':
-        return <BorderPattern size={size} color={color} className={className} animate={animate} />;
-      case 'corner':
-        return <CornerFlourish size={size} color={color} className={className} animate={animate} />;
-      case 'arms':
-        return <CoatOfArms size={size} color={color} className={className} animate={animate} />;
-      case 'swords':
-        return <CrossedSwords size={size} color={color} className={className} animate={animate} />;
-      case 'insignia':
-        return <RoyalInsignia size={size} color={color} className={className} animate={animate} />;
-      case 'banner':
-        return <RoyalBanner size={size} color={color} className={className} animate={animate} />;
-      default:
-        return <CornerFlourish size={size} color={color} className={className} animate={animate} />;
-    }
-  };
-
+  const sizeClass = sizeClasses[size];
+  
   return (
-    <div className={cn('royal-decoration', getColorClass(), className)}>
-      {renderDecoration()}
+    <div 
+      className={cn(
+        'royal-decoration relative flex items-center justify-center',
+        sizeClass,
+        `royal-decoration-${color}`,
+        className
+      )}
+      style={style}
+      {...props}
+    >
+      <div className="container flex items-center justify-center relative">
+        {color === 'royal' && (
+          <div className="border absolute inset-0 border-gold/30 rounded-full" />
+        )}
+        
+        <div className="icon relative z-10 flex items-center justify-center">
+          {children}
+        </div>
+      </div>
     </div>
   );
 };

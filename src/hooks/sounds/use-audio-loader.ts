@@ -1,142 +1,82 @@
 
-import { useEffect, useState } from 'react';
-import { SoundType } from '@/types/sound-types';
-import { getSoundPath } from './sound-assets';
+import { useState, useEffect, useRef } from 'react';
+import { SoundType, AudioLoaderReturn } from '@/types/sound-types';
+import { soundAssets, premiumSoundAssets } from './sound-assets';
 
-const useAudioLoader = () => {
-  const [audioElements, setAudioElements] = useState<Record<SoundType, HTMLAudioElement | null>>({
-    click: null,
-    hover: null,
-    success: null,
-    error: null,
-    notification: null,
-    purchase: null,
-    rankUp: null,
-    coinDrop: null,
-    achievement: null,
-    trumpets: null,
-    fanfare: null,
-    shame: null,
-    parchment: null,
-    crown: null,
-    royal: null,
-    medallion: null,
-    pageTransition: null,
-    parchmentUnfurl: null,
-    pageChange: null,
-    info: null,
-    warning: null,
-    seal: null,
-    deposit: null,
-    reward: null,
-    unlock: null,
-    team: null,
-    applause: null,
-    levelUp: null,
-    boost: null,
-    curse: null,
-    laugh: null,
-    magic: null,
-    celebration: null,
-    message: null,
-    treasure: null,
-    bell: null,
-    royalAnnouncement: null,
-    swordClash: null,
-    coins: null,
-    trumpet: null,
-    coin: null,
-    medieval: null,
-    award: null
-  });
-  
+export function useAudioLoader(): AudioLoaderReturn {
+  const [volume, setVolume] = useState<number>(0.5);
+  const [isEnabled, setEnabled] = useState<boolean>(true);
+  const [isPremium, setPremium] = useState<boolean>(false);
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
-  const [loadProgress, setLoadProgress] = useState<number>(0);
   
-  // Load all audio elements
+  // Create audio elements with proper paths
+  const createAudioElements = (): Record<SoundType, HTMLAudioElement> => {
+    const audioElements: Partial<Record<SoundType, HTMLAudioElement>> = {};
+    
+    // Standard sounds
+    Object.entries(soundAssets.paths).forEach(([key, path]) => {
+      const audioElement = new Audio(path);
+      audioElement.preload = 'auto';
+      audioElements[key as SoundType] = audioElement;
+    });
+    
+    // Add compatibility for special sounds
+    audioElements.coinDrop = audioElements.coins_drop;
+    
+    return audioElements as Record<SoundType, HTMLAudioElement>;
+  };
+  
+  const audioRef = useRef<Record<SoundType, HTMLAudioElement>>(createAudioElements());
+  
+  // Update volume for all audio elements when it changes
   useEffect(() => {
-    const loadAudio = async () => {
-      // Create new object for immutability
-      const newAudioElements: Record<SoundType, HTMLAudioElement> = {} as Record<SoundType, HTMLAudioElement>;
-      const totalSounds = Object.keys(audioElements).length;
-      let loadedSounds = 0;
-      
-      // Create promises for all audio elements
-      const loadPromises = Object.keys(audioElements).map((key) => {
-        return new Promise<void>((resolve) => {
-          try {
-            const soundType = key as SoundType;
-            const soundPath = getSoundPath(soundType);
-            
-            if (!soundPath) {
-              console.warn(`No path for sound: ${soundType}`);
-              loadedSounds++;
-              setLoadProgress(Math.floor((loadedSounds / totalSounds) * 100));
-              resolve();
-              return;
-            }
-            
-            const audio = new Audio(soundPath);
-            
-            // Handle when audio metadata is loaded
-            audio.addEventListener('loadedmetadata', () => {
-              loadedSounds++;
-              setLoadProgress(Math.floor((loadedSounds / totalSounds) * 100));
-              resolve();
-            });
-            
-            // Handle errors
-            audio.addEventListener('error', () => {
-              console.warn(`Error loading audio: ${soundType}`);
-              loadedSounds++;
-              setLoadProgress(Math.floor((loadedSounds / totalSounds) * 100));
-              resolve();
-            });
-            
-            // Set properties
-            audio.preload = 'auto';
-            
-            // Add to new elements
-            newAudioElements[soundType] = audio;
-            
-            // Start loading
-            audio.load();
-          } catch (error) {
-            console.error(`Error creating audio element for key: ${key}`, error);
-            loadedSounds++;
-            setLoadProgress(Math.floor((loadedSounds / totalSounds) * 100));
-            resolve();
-          }
-        });
-      });
-      
-      // Wait for all audio to load
-      await Promise.all(loadPromises);
-      
-      // Update state
-      setAudioElements(newAudioElements);
-      setIsLoaded(true);
-      setLoadProgress(100);
-    };
+    if (!audioRef.current) return;
     
-    loadAudio();
+    Object.values(audioRef.current).forEach(audio => {
+      audio.volume = volume;
+    });
+  }, [volume]);
+  
+  // Load premium sounds if premium status changes
+  useEffect(() => {
+    if (!isPremium || !audioRef.current) return;
     
-    // Cleanup
+    // Add premium sounds to audio elements
+    Object.entries(premiumSoundAssets.paths).forEach(([key, path]) => {
+      if (!audioRef.current[key as SoundType]) {
+        const audioElement = new Audio(path);
+        audioElement.preload = 'auto';
+        audioElement.volume = volume;
+        audioRef.current[key as SoundType] = audioElement;
+      }
+    });
+    
+    setIsLoaded(true);
+  }, [isPremium, volume]);
+  
+  useEffect(() => {
+    // Mark as loaded once initial sounds are ready
+    setIsLoaded(true);
+    
+    // Cleanup on unmount
     return () => {
-      Object.values(audioElements).forEach((audio) => {
-        if (audio) {
-          audio.pause();
-          audio.src = '';
-        }
+      Object.values(audioRef.current).forEach(audio => {
+        audio.pause();
+        audio.src = '';
       });
     };
   }, []);
   
   return {
-    audioElements,
-    isLoaded,
-    loadProgress
+    audio: audioRef.current,
+    volume,
+    setVolume,
+    isEnabled,
+    setEnabled,
+    isPremium,
+    setPremium,
+    isLoaded
   };
-};
+}
 
 export default useAudioLoader;

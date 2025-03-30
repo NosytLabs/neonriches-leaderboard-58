@@ -1,185 +1,125 @@
 
 import React from 'react';
-import { Card, CardContent, CardHeader, CardFooter } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Shield, Share2, Download, Award, Calendar, ExternalLink } from 'lucide-react';
-import { formatDistanceToNow } from 'date-fns';
-import { Certificate } from '@/types/certificates';
-import { getTeamColor } from '@/utils/teamUtils';
-import { useToast } from '@/hooks/use-toast';
+import { Certificate, CertificateType } from '@/types/certificate';
+import { TeamColor } from '@/types/user';
+import { formatDate } from '@/utils/dateUtils';
+import { cn } from '@/lib/utils';
 
 interface CertificateDisplayProps {
   certificate: Certificate;
-  onShare?: () => void;
-  onDownload?: () => void;
-  onView?: () => void;
-  className?: string;
+  size?: 'sm' | 'md' | 'lg';
+  interactive?: boolean;
+  onClick?: () => void;
 }
 
 const CertificateDisplay: React.FC<CertificateDisplayProps> = ({
   certificate,
-  onShare,
-  onDownload,
-  onView,
-  className = '',
+  size = 'md',
+  interactive = false,
+  onClick
 }) => {
-  const { toast } = useToast();
-  
-  if (!certificate) return null;
-  
-  const handleShare = () => {
-    if (onShare) {
-      onShare();
-      return;
-    }
-    
-    // Default share functionality if no callback provided
-    if (navigator.share) {
-      navigator.share({
-        title: certificate.title || `Royal Certificate for ${certificate.userDisplayName}`,
-        text: certificate.description || 'Check out my royal certificate!',
-        url: certificate.shareUrl || window.location.href,
-      }).catch((error) => console.log('Error sharing', error));
-    } else {
-      // Fallback if Web Share API not available
-      toast({
-        title: 'Share Link Copied',
-        description: 'Certificate link copied to clipboard.',
-      });
-      navigator.clipboard.writeText(window.location.href);
-    }
+  const {
+    id,
+    title,
+    description,
+    imageUrl,
+    style,
+    team,
+    dateIssued,
+    signature,
+    type,
+    userDisplayName
+  } = certificate;
+
+  const sizeClasses = {
+    sm: 'w-64 h-48',
+    md: 'w-80 h-60',
+    lg: 'w-96 h-72'
   };
-  
-  const handleDownload = () => {
-    if (onDownload) {
-      onDownload();
-      return;
-    }
-    
-    // Default download functionality
-    toast({
-      title: 'Download Started',
-      description: 'Your certificate is being downloaded.',
-    });
-    
-    // Create a link element
-    const link = document.createElement('a');
-    link.href = certificate.imageUrl;
-    link.download = `certificate-${certificate.id}.png`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
-  
-  const getTimeAgo = (dateString: string) => {
-    try {
-      return formatDistanceToNow(new Date(dateString), { addSuffix: true });
-    } catch (e) {
-      return 'recently';
+
+  const getTeamColorClass = (team: TeamColor) => {
+    switch (team) {
+      case 'red': return 'border-red-500 bg-red-900/10';
+      case 'blue': return 'border-blue-500 bg-blue-900/10';
+      case 'green': return 'border-green-500 bg-green-900/10';
+      case 'gold': return 'border-yellow-500 bg-yellow-900/10';
+      case 'purple': return 'border-purple-500 bg-purple-900/10';
+      default: return 'border-gray-500 bg-gray-900/10';
     }
   };
-  
-  const getCertificateTypeColor = () => {
-    switch (certificate.type) {
-      case 'rank': return 'bg-purple-500/20 text-purple-400';
-      case 'achievement': return 'bg-green-500/20 text-green-400';
-      case 'membership': return 'bg-blue-500/20 text-blue-400';
-      case 'royal': return 'bg-amber-500/20 text-amber-400';
-      case 'special': return 'bg-red-500/20 text-red-400';
-      case 'event': return 'bg-teal-500/20 text-teal-400';
-      case 'milestone': return 'bg-pink-500/20 text-pink-400';
-      case 'team': return 'bg-indigo-500/20 text-indigo-400';
-      case 'nobility': return 'bg-rose-500/20 text-rose-400';
-      default: return 'bg-gray-500/20 text-gray-400';
+
+  const getStyleClasses = (style: string) => {
+    switch (style) {
+      case 'royal': return 'border-amber-400 bg-amber-900/20 text-amber-200';
+      case 'gold': return 'border-yellow-400 bg-yellow-900/20 text-yellow-200';
+      case 'silver': return 'border-gray-400 bg-gray-900/20 text-gray-200';
+      case 'bronze': return 'border-orange-400 bg-orange-900/20 text-orange-200';
+      case 'platinum': return 'border-blue-400 bg-blue-900/20 text-blue-200';
+      case 'special': return 'border-purple-400 bg-purple-900/20 text-purple-200';
+      default: return 'border-gray-400 bg-gray-900/20 text-gray-200';
     }
   };
-  
-  const getTeamBadge = () => {
-    if (!certificate.team || certificate.team === 'neutral') return null;
-    
-    const teamColorClass = getTeamColor(certificate.team);
-    
-    return (
-      <Badge className={`${teamColorClass} ml-2`}>
-        <Shield className="h-3 w-3 mr-1" />
-        {certificate.team.charAt(0).toUpperCase() + certificate.team.slice(1)}
-      </Badge>
-    );
+
+  const getTypeIcon = (certType: CertificateType) => {
+    switch (certType) {
+      case 'membership':
+        return '🏅';
+      case 'royal':
+        return '👑';
+      case 'special':
+        return '🌟';
+      case 'achievement':
+        return '🏆';
+      case 'milestone':
+        return '📊';
+      case 'rank':
+        return '⚔️';
+      case 'nobility':
+        return '🛡️';
+      default:
+        return '📜';
+    }
   };
-  
+
   return (
-    <Card className={`glass-morphism border-royal-gold/20 overflow-hidden ${className}`}>
-      <CardHeader className="pb-2">
-        <div className="flex flex-wrap justify-between items-center gap-2">
-          <div className="flex flex-wrap items-center">
-            <Badge className={getCertificateTypeColor()}>
-              <Award className="h-3 w-3 mr-1" />
-              {certificate.type.charAt(0).toUpperCase() + certificate.type.slice(1)}
-            </Badge>
-            {getTeamBadge()}
+    <div 
+      className={cn(
+        'certificate-display relative border-2 rounded-lg p-4 flex flex-col',
+        getTeamColorClass(team),
+        getStyleClasses(style),
+        sizeClasses[size],
+        interactive && 'cursor-pointer hover:shadow-lg transition-all duration-300 hover:scale-105',
+      )}
+      onClick={interactive ? onClick : undefined}
+    >
+      <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none bg-repeat"
+        style={{ backgroundImage: 'url(/assets/parchment-texture.png)' }}
+      />
+      
+      <div className="relative z-10 flex flex-col h-full">
+        <div className="flex justify-between items-start mb-2">
+          <h3 className="font-medieval text-lg font-bold">{title}</h3>
+          <span className="text-2xl">{getTypeIcon(type as CertificateType)}</span>
+        </div>
+        
+        {userDisplayName && (
+          <p className="font-medieval text-sm mb-1">Awarded to: {userDisplayName}</p>
+        )}
+        
+        <p className="text-sm opacity-80 mb-auto">{description}</p>
+        
+        <div className="mt-2 flex justify-between items-end text-xs opacity-70">
+          <span>№{id.substring(0, 8)}</span>
+          <span>{formatDate(dateIssued)}</span>
+        </div>
+        
+        {signature && (
+          <div className="mt-2 text-right font-medieval italic text-xs">
+            {signature}
           </div>
-          <Badge variant="outline" className="text-white/70">
-            <Calendar className="h-3 w-3 mr-1" />
-            {certificate.createdAt ? getTimeAgo(certificate.createdAt) : 'Recently issued'}
-          </Badge>
-        </div>
-        <h3 className="text-lg font-semibold mt-2">
-          {certificate.title || `${certificate.type.charAt(0).toUpperCase() + certificate.type.slice(1)} Certificate`}
-        </h3>
-        {certificate.description && (
-          <p className="text-sm text-white/70">{certificate.description}</p>
         )}
-      </CardHeader>
-      <CardContent className="px-4 pb-2">
-        <div 
-          className="relative rounded-lg overflow-hidden transition-transform hover:scale-[1.01] cursor-pointer" 
-          onClick={onView}
-        >
-          <img 
-            src={certificate.imageUrl} 
-            alt={certificate.title || 'Royal Certificate'} 
-            className="w-full h-auto object-contain"
-          />
-          {certificate.isMinted && (
-            <Badge className="absolute top-2 right-2 bg-green-500/20 text-green-400 border-green-500/30">
-              NFT Minted
-            </Badge>
-          )}
-        </div>
-      </CardContent>
-      <CardFooter className="flex justify-between gap-2 p-4">
-        <Button 
-          variant="outline" 
-          size="sm" 
-          className="glass-morphism border-royal-gold/20 hover:bg-royal-gold/10" 
-          onClick={handleShare}
-        >
-          <Share2 className="h-4 w-4 mr-2" />
-          Share
-        </Button>
-        <Button 
-          variant="outline" 
-          size="sm" 
-          className="glass-morphism border-royal-gold/20 hover:bg-royal-gold/10" 
-          onClick={handleDownload}
-        >
-          <Download className="h-4 w-4 mr-2" />
-          Download
-        </Button>
-        {certificate.isMinted && certificate.nftMintAddress && (
-          <Button 
-            variant="outline" 
-            size="sm" 
-            className="glass-morphism border-royal-gold/20 hover:bg-royal-gold/10"
-            onClick={() => window.open(`https://solscan.io/token/${certificate.nftMintAddress}`, '_blank')}
-          >
-            <ExternalLink className="h-4 w-4 mr-2" />
-            View NFT
-          </Button>
-        )}
-      </CardFooter>
-    </Card>
+      </div>
+    </div>
   );
 };
 

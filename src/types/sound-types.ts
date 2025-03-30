@@ -21,7 +21,20 @@ export type SoundType =
   | 'royal'
   | 'parchment'
   | 'deposit'
-  | 'message';
+  | 'message'
+  | 'royalAnnouncement'
+  | 'trumpet'
+  | 'seal'
+  | 'medallion'
+  | 'coinDrop'
+  | 'swordClash'
+  | 'noblesLaugh'
+  | 'parchmentUnfurl'
+  | 'rankChange'
+  | 'coin'
+  | 'reward'
+  | 'pageTransition'
+  | 'shame';
 
 export interface AudioLoaderReturn {
   audio: Record<SoundType, HTMLAudioElement>;
@@ -56,10 +69,18 @@ export interface UseSoundOptions {
   interrupt?: boolean;
   soundEnabled?: boolean;
   onComplete?: () => void;
+  baseVolume?: number;
+  loop?: boolean;
+  onEnd?: () => void;
+  disableCache?: boolean;
 }
 
 export interface UseSoundReturn {
   play: (options?: UseSoundOptions) => void;
   stop: () => void;
   isPlaying: boolean;
+}
+
+export interface NotificationSoundOptions {
+  volume?: number;
 }
