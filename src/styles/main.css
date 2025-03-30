@@ -4,20 +4,25 @@
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Crimson+Text:wght@400;600;700&display=swap');
 
-/* Base styles */
+/* Base tailwind styles */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 /* Theme system */
 @import './theme/royal-theme.css';
+@import './theme/royal-variables.css';
+@import './theme/royal-gradients.css';
+@import './theme/royal-text.css';
+@import './theme/glass-effects.css';
+@import './theme/royal-effects.css';
+@import './theme/royal-team-colors.css';
 
 /* Animation system */
-@import './animations.css';
+@import './animations/index.css';
 
 /* Specific components & utilities */
 @import './utilities/royal-theme.css';
 @import './utilities/decorative-effects.css';
-
-/* Clean up old styles */
-@import './theme/index.css';
+@import './utilities/glass-effects.css';
+@import './utilities/hover-effects.css';

@@ -16,7 +16,18 @@ export type MedievalIconName =
   | 'Gem' 
   | 'Seal';
 
-export type LucideIconName = string;
+export type LucideIconName = 
+  | 'History'
+  | 'DollarSign'
+  | 'Crown'
+  | 'Trophy'
+  | 'Target'
+  | 'AlertTriangle'
+  | 'Bell'
+  | 'Shield'
+  | 'User'
+  | string;
+
 export type IconName = MedievalIconName | LucideIconName;
 
 // Icon color types

@@ -1,10 +1,12 @@
+
 import React from 'react';
 import Shell from '@/components/Shell';
 import RoyalHero from '@/components/RoyalHero';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { DollarSign, Trophy, Crown } from 'lucide-react';
+import { DollarSign, Trophy, Crown, History } from 'lucide-react';
+import Icon from '@/components/Icon';
 import HeroShowcase from '@/components/home/HeroShowcase';
 import LeaderboardExplanation from '@/components/leaderboard/LeaderboardExplanation';
 import SpendingExplanation from '@/components/marketing/SpendingExplanation';
@@ -83,7 +85,7 @@ const Home: React.FC = () => {
               whileTap={{ scale: 0.95 }}
             >
               <span className="flex items-center">
-                <Icon name="History" className="mr-2 text-royal-gold" />
+                <History className="mr-2 text-royal-gold h-5 w-5" />
                 Historical Absurdities
               </span>
             </motion.a>

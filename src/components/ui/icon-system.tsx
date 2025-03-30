@@ -1,22 +1,19 @@
 
 import React from 'react';
 import * as LucideIcons from 'lucide-react';
+import { IconProps, IconSize } from '@/types/ui/icon-types';
 import { cn } from '@/lib/utils';
-import { Crown } from '@/assets/icons/Crown';
-import { IconName, IconSize, IconColor, IconStyle } from '@/types/ui/icon-types';
 
-// Size classes map
-const iconSizeClasses: Record<IconSize, string> = {
-  'xs': 'h-3 w-3',
-  'sm': 'h-4 w-4',
-  'md': 'h-5 w-5',
-  'lg': 'h-6 w-6',
-  'xl': 'h-8 w-8',
-  '2xl': 'h-10 w-10',
+const sizeMap: Record<IconSize, number> = {
+  'xs': 16,
+  'sm': 20,
+  'md': 24,
+  'lg': 32,
+  'xl': 40,
+  '2xl': 48
 };
 
-// Color classes map
-const iconColorClasses: Record<string, string> = {
+const colorMap: Record<string, string> = {
   'default': 'text-foreground',
   'primary': 'text-primary',
   'secondary': 'text-secondary',
@@ -27,51 +24,31 @@ const iconColorClasses: Record<string, string> = {
   'crimson': 'text-royal-crimson',
   'royal': 'text-royal-purple',
   'navy': 'text-royal-navy',
-  'bronze': 'text-amber-700',
-  'purple': 'text-purple-600',
+  'bronze': 'text-amber-600',
+  'purple': 'text-purple-500'
 };
 
-export interface IconSystemProps extends Omit<React.SVGAttributes<SVGElement>, 'style'> {
-  name: string;
-  size?: IconSize | number;
-  color?: IconColor | string;
-  className?: string;
-  style?: IconStyle;
-}
-
-// The main icon system component
-const IconSystem = React.forwardRef<SVGSVGElement, IconSystemProps>(
+const IconSystem = React.forwardRef<SVGSVGElement, IconProps>(
   ({ name, size = 'md', color = 'default', className, style = 'default', ...props }, ref) => {
-    // Handle numeric sizes (convert to inline style)
-    const isNumericSize = typeof size === 'number';
-    const sizeStyle = isNumericSize ? { width: `${size}px`, height: `${size}px` } : {};
+    const pixelSize = typeof size === 'number' ? size : sizeMap[size] || 24;
+    const colorClass = colorMap[color] || color;
     
-    // For predefined sizes, use the class
-    const sizeKey = !isNumericSize ? size as IconSize : 'md';
-    const sizeClass = !isNumericSize ? iconSizeClasses[sizeKey] || iconSizeClasses.md : '';
-    
-    // Handle color
-    const colorKey = color as string;
-    const colorClass = iconColorClasses[colorKey] || iconColorClasses.default;
-    
-    // Combine classes
-    const combinedClassName = cn(sizeClass, colorClass, className);
-    
-    // Handle custom icons first
-    if (name === 'Crown') {
-      return <Crown className={combinedClassName} style={sizeStyle} {...props} ref={ref} />;
-    }
-    
-    // Then try to find a Lucide icon
+    // Get the icon component from Lucide
     const LucideIcon = (LucideIcons as any)[name];
     
-    if (LucideIcon) {
-      return <LucideIcon className={combinedClassName} style={sizeStyle} {...props} ref={ref} />;
+    if (!LucideIcon) {
+      console.warn(`Icon "${name}" not found in Lucide icons`);
+      return null;
     }
     
-    // Fallback to a default icon
-    console.warn(`Icon "${name}" not found, using default`);
-    return <LucideIcons.HelpCircle className={combinedClassName} style={sizeStyle} {...props} ref={ref} />;
+    return (
+      <LucideIcon
+        ref={ref}
+        size={pixelSize}
+        className={cn(colorClass, className)}
+        {...props}
+      />
+    );
   }
 );
 

@@ -1,8 +1,10 @@
+
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { Toaster } from "@/components/ui/toaster";
 import { AuthProvider } from '@/contexts/auth';
+import { ThemeProvider } from '@/providers/theme-provider';
 import Home from '@/pages/Home';
 import Login from '@/pages/Login';
 import SignUp from '@/pages/SignUp';
@@ -32,115 +34,117 @@ import AdminSettings from '@/pages/AdminSettings';
 function App() {
   return (
     <HelmetProvider>
-      <AuthProvider>
-        <Router>
-          <Routes>
-            {/* Public Pages */}
-            <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signin" element={<SignIn />} />
-            <Route path="/signup" element={<SignUp />} />
-            <Route path="/auth" element={<Auth />} />
-            <Route path="/leaderboard" element={<Leaderboard />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/privacy" element={<Privacy />} />
-            <Route path="/terms" element={<Terms />} />
-            <Route path="/features" element={<Features />} />
-            <Route path="/teams" element={<Teams />} />
-            <Route path="/status-through-history" element={<StatusThroughHistory />} />
-            
-            {/* Protected User Pages */}
-            <Route 
-              path="/dashboard" 
-              element={
-                <ProtectedRoute>
-                  <Dashboard />
-                </ProtectedRoute>
-              } 
-            />
-            <Route 
-              path="/profile" 
-              element={
-                <ProtectedRoute>
-                  <Profile />
-                </ProtectedRoute>
-              } 
-            />
-            <Route 
-              path="/wallet" 
-              element={
-                <ProtectedRoute>
-                  <Wallet />
-                </ProtectedRoute>
-              } 
-            />
-            <Route 
-              path="/deposit" 
-              element={
-                <ProtectedRoute>
-                  <Deposit />
-                </ProtectedRoute>
-              } 
-            />
-            <Route 
-              path="/withdraw" 
-              element={
-                <ProtectedRoute>
-                  <Withdraw />
-                </ProtectedRoute>
-              } 
-            />
-            <Route 
-              path="/settings" 
-              element={
-                <ProtectedRoute>
-                  <Settings />
-                </ProtectedRoute>
-              } 
-            />
-            
-            {/* Feature Pages */}
-            <Route 
-              path="/mockery" 
-              element={<Mockery />} 
-            />
-            <Route 
-              path="/events" 
-              element={<Events />} 
-            />
-            <Route 
-              path="/chat" 
-              element={
-                <ProtectedRoute>
-                  <Chat />
-                </ProtectedRoute>
-              } 
-            />
-            <Route 
-              path="/royal-council" 
-              element={
-                <ProtectedRoute>
-                  <RoyalCouncil />
-                </ProtectedRoute>
-              } 
-            />
-            
-            {/* Admin Pages */}
-            <Route 
-              path="/admin-settings" 
-              element={
-                <ProtectedRoute>
-                  <AdminSettings />
-                </ProtectedRoute>
-              } 
-            />
-            
-            {/* Catch-all for 404 */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-          <Toaster />
-        </Router>
-      </AuthProvider>
+      <ThemeProvider defaultTheme="dark" storageKey="spendthrone-theme">
+        <AuthProvider>
+          <Router>
+            <Routes>
+              {/* Public Pages */}
+              <Route path="/" element={<Home />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/signin" element={<SignIn />} />
+              <Route path="/signup" element={<SignUp />} />
+              <Route path="/auth" element={<Auth />} />
+              <Route path="/leaderboard" element={<Leaderboard />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/privacy" element={<Privacy />} />
+              <Route path="/terms" element={<Terms />} />
+              <Route path="/features" element={<Features />} />
+              <Route path="/teams" element={<Teams />} />
+              <Route path="/status-through-history" element={<StatusThroughHistory />} />
+              
+              {/* Protected User Pages */}
+              <Route 
+                path="/dashboard" 
+                element={
+                  <ProtectedRoute>
+                    <Dashboard />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/profile" 
+                element={
+                  <ProtectedRoute>
+                    <Profile />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/wallet" 
+                element={
+                  <ProtectedRoute>
+                    <Wallet />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/deposit" 
+                element={
+                  <ProtectedRoute>
+                    <Deposit />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/withdraw" 
+                element={
+                  <ProtectedRoute>
+                    <Withdraw />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/settings" 
+                element={
+                  <ProtectedRoute>
+                    <Settings />
+                  </ProtectedRoute>
+                } 
+              />
+              
+              {/* Feature Pages */}
+              <Route 
+                path="/mockery" 
+                element={<Mockery />} 
+              />
+              <Route 
+                path="/events" 
+                element={<Events />} 
+              />
+              <Route 
+                path="/chat" 
+                element={
+                  <ProtectedRoute>
+                    <Chat />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/royal-council" 
+                element={
+                  <ProtectedRoute>
+                    <RoyalCouncil />
+                  </ProtectedRoute>
+                } 
+              />
+              
+              {/* Admin Pages */}
+              <Route 
+                path="/admin-settings" 
+                element={
+                  <ProtectedRoute>
+                    <AdminSettings />
+                  </ProtectedRoute>
+                } 
+              />
+              
+              {/* Catch-all for 404 */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+            <Toaster />
+          </Router>
+        </AuthProvider>
+      </ThemeProvider>
     </HelmetProvider>
   );
 }
