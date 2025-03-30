@@ -85,13 +85,35 @@ const useSound = (options: UseSoundOptions = {}) => {
     }
   }, [audioElements, enabled, volume]);
 
+  // Add convenience methods for common sounds
+  const playSuccess = useCallback((volumeMultiplier = 1) => {
+    play('success', volumeMultiplier);
+  }, [play]);
+
+  const playError = useCallback((volumeMultiplier = 1) => {
+    play('error', volumeMultiplier);
+  }, [play]);
+
+  const playNotification = useCallback((volumeMultiplier = 1) => {
+    play('notification', volumeMultiplier);
+  }, [play]);
+  
+  const playClick = useCallback((volumeMultiplier = 1) => {
+    play('click', volumeMultiplier);
+  }, [play]);
+
   return {
     loading,
     loaded,
     error,
     sounds: audioElements,
     loadedSounds,
-    play
+    play,
+    playSound: play, // Alias for compatibility
+    playSuccess,
+    playError,
+    playNotification,
+    playClick
   };
 };
 

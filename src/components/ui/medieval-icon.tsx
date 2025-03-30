@@ -6,7 +6,8 @@ import { cn } from '@/lib/utils';
 // Define type-safe icon names and colors
 export type MedievalIconName = 
   | "Crown" | "Shield" | "Sword" | "Scroll" | "Heart"
-  | "Medal" | "Trophy" | "Key" | "Coins" | "Wallet" | "Gem";
+  | "Medal" | "Trophy" | "Key" | "Coins" | "Wallet" | "Gem"
+  | "Seal";  // Added Seal as it's used in the codebase
 
 export type MedievalIconColor = 
   | "default" | "gold" | "silver" | "crimson";
@@ -59,10 +60,10 @@ const MedievalIcon: React.FC<MedievalIconProps> = ({
       colorClasses[color],
       className
     )}>
-      {React.createElement(IconComponent, {
-        className: sizeClasses[size],
-        'aria-hidden': true
-      })}
+      <IconComponent 
+        className={sizeClasses[size]}
+        aria-hidden="true"
+      />
     </span>
   );
 };

@@ -26,9 +26,9 @@ export function toMedievalIconName(iconName: string): MedievalIconName {
     "coins": "Coins",
     "wallet": "Wallet",
     "gem": "Gem",
+    "seal": "Seal",
     
     // Fallbacks for unsupported icons
-    "seal": "Medal",
     "castle": "Shield",
     "goblet": "Trophy",
     "user": "Crown",

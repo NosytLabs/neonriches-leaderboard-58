@@ -26,7 +26,7 @@ const sizeClasses = {
 const Icon = React.forwardRef<HTMLSpanElement, IconProps>(
   ({ name, className, size = 'md', color, ...props }, ref) => {
     // Get the icon component dynamically
-    const IconComponent = LucideIcons[name as IconName];
+    const IconComponent = LucideIcons[name];
     
     if (!IconComponent) {
       console.warn(`Icon "${name}" not found`);
@@ -39,11 +39,11 @@ const Icon = React.forwardRef<HTMLSpanElement, IconProps>(
         className={cn("inline-flex items-center justify-center", className)}
         {...props}
       >
-        {React.createElement(IconComponent, {
-          className: cn(sizeClasses[size]),
-          color: color,
-          'aria-hidden': true
-        })}
+        <IconComponent 
+          className={sizeClasses[size]} 
+          color={color}
+          aria-hidden="true"
+        />
       </span>
     );
   }
