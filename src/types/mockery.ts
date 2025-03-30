@@ -20,7 +20,7 @@ export type MockeryAction =
   | 'royalPie'
   | 'jokeCrown'
   | 'memeFrame'
-  | 'roast'; // Added missing actions that were causing errors
+  | 'roast'; 
 
 export type MockeryTier = 
   | 'common' 
@@ -28,7 +28,7 @@ export type MockeryTier =
   | 'rare' 
   | 'epic' 
   | 'legendary'
-  | 'premium'; // Added premium tier
+  | 'premium'; 
 
 export type ShameAction = MockeryAction;
 

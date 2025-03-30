@@ -80,3 +80,16 @@ export const formatRelativeTime = (timestamp: string | Date): string => {
 export const formatPercentage = (value: number, decimals: number = 1): string => {
   return `${value.toFixed(decimals)}%`;
 };
+
+/**
+ * Format historical money values with modern equivalents
+ */
+export const formatHistoricalValue = (amount: number, currency: string, year: number, modernEquivalent?: number): string => {
+  const formattedOriginal = `${amount.toLocaleString()} ${currency} (${year})`;
+  
+  if (modernEquivalent) {
+    return `${formattedOriginal} ≈ ${formatCurrency(modernEquivalent)} today`;
+  }
+  
+  return formattedOriginal;
+};
