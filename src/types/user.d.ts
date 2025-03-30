@@ -42,17 +42,28 @@ export type UserTier =
   | 'founder' 
   | 'pro' 
   | 'premium' 
-  | 'whale';
+  | 'whale'
+  | 'free'
+  | 'standard';
 
-export type TeamType = 'red' | 'green' | 'blue' | 'none';
+export type TeamType = 'red' | 'green' | 'blue' | 'none' | 'Red' | 'Green' | 'Blue' | 'None';
 
-export type GenderType = 'male' | 'female' | 'other' | 'prefer-not-to-say' | 'king' | 'queen' | 'neutral' | 'jester' | 'noble';
+export type GenderType = 
+  | 'male' 
+  | 'female' 
+  | 'other' 
+  | 'prefer-not-to-say' 
+  | 'king' 
+  | 'queen' 
+  | 'neutral' 
+  | 'jester' 
+  | 'noble';
 
 export type UserRole = 'user' | 'admin' | 'moderator' | 'vip';
 
 export type UserStatus = 'active' | 'inactive' | 'banned' | 'pending';
 
-export type UserTeam = TeamType | 'Red' | 'Green' | 'Blue' | 'None';
+export type UserTeam = TeamType;
 
 export interface Team {
   id: string;
@@ -99,6 +110,7 @@ export interface UserProfile {
   isVIP?: boolean;
   spentAmount?: number;
   certificateNFT?: any;
+  profileImages?: ProfileImage[];
 }
 
 export interface ProfileImage {
@@ -130,10 +142,13 @@ export interface ProfileBoost {
   level: number;
   startDate?: string;
   endDate?: string;
+  startTime?: string;
+  endTime?: string;
   duration: number;
   isActive: boolean;
   strength?: number;
   appliedBy?: string;
+  boostId?: string;
 }
 
 export interface UserSettings {
@@ -170,6 +185,9 @@ export interface UserSubscription {
   status: 'active' | 'cancelled' | 'expired' | 'pending';
   plan?: string;
   cancelAtPeriodEnd?: boolean;
+  currentPeriodEnd?: string;
+  price?: number;
+  interval?: 'month' | 'year';
 }
 
 export interface SubscriptionTier {
@@ -196,12 +214,16 @@ export interface UserCosmetics {
   fonts: string[];
   colors: string[];
   backgrounds: string[];
+  themes?: string[];
+  foundersPass?: boolean;
   activeBorder?: string;
   activeColor?: string;
   activeFont?: string;
+  activeEmoji?: string;
+  activeTheme?: string;
+  activeBadge?: string;
   activeTitle?: string;
   activeBackground?: string;
-  foundersPass?: boolean;
 }
 
 export interface Achievement {

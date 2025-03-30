@@ -4,7 +4,7 @@ import { Button, ButtonProps } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
 interface RoyalButtonProps extends ButtonProps {
-  variant?: 'default' | 'gold' | 'purple' | 'crimson';
+  variant?: 'default' | 'gold' | 'purple' | 'crimson' | 'royalGold' | 'glass';
   size?: 'sm' | 'md' | 'lg';
   glow?: boolean;
   animated?: boolean;
@@ -45,6 +45,11 @@ const RoyalButton: React.FC<RoyalButtonProps> = ({
 
   const animationClass = animated ? 'animate-pulse' : '';
 
+  const buttonVariant = variant === 'gold' ? 'royalGold' : 
+                         variant === 'purple' ? 'royal' : 
+                         variant === 'crimson' ? 'destructive' :
+                         variant === 'default' ? 'default' : 'ghost';
+
   return (
     <Button
       className={cn(
@@ -53,6 +58,7 @@ const RoyalButton: React.FC<RoyalButtonProps> = ({
         animationClass,
         className
       )}
+      variant={buttonVariant}
       {...props}
     >
       {children}

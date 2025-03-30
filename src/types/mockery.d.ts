@@ -15,9 +15,31 @@ export type MockeryAction =
   | 'challenge'
   | 'jest'
   | 'crown'
-  | 'defeat';
+  | 'defeat'
+  | 'jester'
+  | 'royalPie'
+  | 'jokeCrown'
+  | 'memeFrame'
+  | 'roast'
+  | 'ridicule'
+  | 'humiliate'
+  | 'expose'
+  | 'mock'
+  | 'shame'
+  | 'taunt'
+  | 'guillotine'
+  | 'dungeons'
+  | 'removal';
 
-export type MockeryTier = 'basic' | 'premium' | 'royal';
+export type MockeryTier = 
+  | 'basic' 
+  | 'premium' 
+  | 'royal'
+  | 'common'
+  | 'uncommon'
+  | 'rare'
+  | 'epic'
+  | 'legendary';
 
 export interface MockeryEvent {
   id: string;
@@ -55,22 +77,7 @@ export type ShameAction =
   | 'courtJester' 
   | 'jester';
 
-export type ExtendedMockeryAction = 
-  | MockeryAction 
-  | 'jester' 
-  | 'royalPie' 
-  | 'jokeCrown' 
-  | 'memeFrame' 
-  | 'roast' 
-  | 'ridicule' 
-  | 'humiliate' 
-  | 'expose' 
-  | 'mock' 
-  | 'shame' 
-  | 'taunt' 
-  | 'guillotine' 
-  | 'dungeons' 
-  | 'removal';
+export type ExtendedMockeryAction = MockeryAction;
 
 export interface ExtendedMockeryTier extends MockeryTier {
   common: string;

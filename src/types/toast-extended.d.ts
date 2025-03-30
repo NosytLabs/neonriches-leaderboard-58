@@ -6,4 +6,5 @@ export interface ExtendedToastProps extends Partial<ToastProps> {
   title?: string | ReactNode;
   description?: string | ReactNode;
   duration?: number;
+  variant?: 'default' | 'destructive' | 'success' | 'royal';
 }

@@ -1,63 +1,38 @@
 
-export interface RoyalDividerProps {
-  variant?: RoyalDividerVariant;
-  color?: 'gold' | 'crimson' | 'navy' | 'emerald' | 'silver';
-  label?: string;
-  className?: string;
-  inverted?: boolean;
-}
-
-export interface SpendAmountProps {
-  amount: number;
-  showPrefix?: boolean;
-  showPostfix?: boolean;
-  size?: 'sm' | 'md' | 'lg' | 'xl';
-  variant?: 'default' | 'royal' | 'success' | 'warning' | 'danger';
-  withIcon?: boolean;
-}
+import { ReactNode } from 'react';
 
 export type RoyalButtonVariant = 
-  | 'default' 
-  | 'royal' 
-  | 'gold' 
-  | 'crimson' 
-  | 'outline' 
-  | 'ghost'
-  | 'link'
+  | 'royal'
   | 'royalGold'
   | 'royalPurple'
   | 'royalNavy'
   | 'royalCrimson'
   | 'glass'
+  | 'outline'
   | 'goldOutline'
   | 'crimsonOutline'
   | 'navyOutline'
-  | 'mahogany'
-  | 'purple';
-
-export type RoyalDecorationType = 
-  | 'royal-insignia' 
-  | 'crown' 
-  | 'scroll' 
-  | 'shield' 
-  | 'sword' 
-  | 'coins'
-  | 'top'
-  | 'bottom'
-  | 'left'
-  | 'right'
-  | 'corner';
+  | 'mahogany';
 
 export type RoyalDividerVariant = 
-  | 'line' 
-  | 'ornate' 
-  | 'simple' 
-  | 'elegant'
+  | 'line'
+  | 'double'
+  | 'fancy'
   | 'scroll'
   | 'quill'
   | 'treasure'
-  | 'crown'
-  | 'sword'
-  | 'shield'
-  | 'double'
-  | 'royal';
+  | 'ornate'
+  | 'simple'; 
+
+export interface RoyalDividerProps {
+  variant?: RoyalDividerVariant;
+  color?: 'default' | 'royal' | 'crimson' | 'gold' | 'purple' | 'silver';
+  width?: 'full' | 'auto';
+  className?: string;
+  align?: 'left' | 'center' | 'right';
+  glow?: boolean;
+  animated?: boolean;
+  label?: string;
+  withIcon?: boolean;
+  icon?: ReactNode;
+}
