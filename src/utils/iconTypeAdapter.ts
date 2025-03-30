@@ -1,16 +1,14 @@
 
 import { MedievalIconName, MedievalIconColor, MedievalIconSize } from '@/components/ui/medieval-icon';
+import { toPascalCase, getIconAlias } from './iconNameAdapter';
 
 /**
  * Converts a string to a valid MedievalIconName
  * Handles common cases like lowercase names or hyphenated names
  */
 export function toMedievalIconName(iconName: string): MedievalIconName {
-  // Convert kebab-case or lowercase to PascalCase
-  const formatted = iconName
-    .split('-')
-    .map(part => part.charAt(0).toUpperCase() + part.slice(1))
-    .join('');
+  // Try to get a standard Lucide icon name first
+  const formattedName = toPascalCase(iconName);
   
   // Map for special cases and common icon names
   const iconMap: Record<string, MedievalIconName> = {
@@ -34,7 +32,18 @@ export function toMedievalIconName(iconName: string): MedievalIconName {
     "user": "Crown",
   };
   
-  return (iconMap[iconName.toLowerCase()] || formatted) as MedievalIconName;
+  // First check for direct matches
+  if (iconMap[iconName.toLowerCase()]) {
+    return iconMap[iconName.toLowerCase()] as MedievalIconName;
+  }
+  
+  // Then check if the formatted name is a valid MedievalIconName
+  if (Object.values(iconMap).includes(formattedName as MedievalIconName)) {
+    return formattedName as MedievalIconName;
+  }
+  
+  // Default to Crown if no match is found
+  return "Crown";
 }
 
 /**

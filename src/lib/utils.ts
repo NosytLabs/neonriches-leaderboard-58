@@ -61,28 +61,3 @@ export function generateRandomId(length: number = 8): string {
   
   return result;
 }
-
-/**
- * Truncate text with ellipsis
- */
-export function truncateText(text: string, maxLength: number): string {
-  if (text.length <= maxLength) return text;
-  return text.slice(0, maxLength) + '...';
-}
-
-/**
- * Convert snake_case or kebab-case to camelCase
- */
-export function toCamelCase(str: string): string {
-  return str
-    .replace(/[-_]([a-z])/g, (_, letter) => letter.toUpperCase())
-    .replace(/^(.)/, (_, letter) => letter.toLowerCase());
-}
-
-/**
- * Parse a string into a Date object, returning null if invalid
- */
-export function parseDate(dateString: string): Date | null {
-  const date = new Date(dateString);
-  return isNaN(date.getTime()) ? null : date;
-}

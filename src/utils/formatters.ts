@@ -1,156 +1,129 @@
 
-/**
- * A collection of formatting utilities for consistent display of values
- */
+import { formatCurrency } from '@/lib/utils';
 
 /**
- * Formats a number as currency
- * @param amount - The amount to format
- * @param currency - The currency symbol (default: $)
- * @returns Formatted currency string
+ * Formats a number as a currency string
  */
-export const formatCurrency = (amount: number | undefined, currency = '$'): string => {
-  if (amount === undefined) return `${currency}0.00`;
-  return `${currency}${amount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-};
+export { formatCurrency };
 
 /**
- * Formats a date string to a localized date
- * @param dateString - The date string to format
- * @param options - Intl.DateTimeFormatOptions for customizing format
- * @returns Formatted date string
+ * Formats a file size in bytes to a human-readable string
  */
-export const formatDate = (
-  dateString: string | Date | undefined,
-  options: Intl.DateTimeFormatOptions = { 
-    year: 'numeric', 
-    month: 'short', 
-    day: 'numeric' 
-  }
-): string => {
-  if (!dateString) return '-';
-  const date = dateString instanceof Date ? dateString : new Date(dateString);
-  return date.toLocaleDateString(undefined, options);
-};
-
-/**
- * Formats a number with commas for thousands
- * @param num - The number to format
- * @param defaultValue - Value to return if num is undefined
- * @returns Formatted number string
- */
-export const formatNumber = (num: number | undefined, defaultValue = '0'): string => {
-  if (num === undefined) return defaultValue;
-  return num.toLocaleString();
-};
-
-/**
- * Formats a rank number with # prefix
- * @param rank - The rank to format
- * @returns Formatted rank string
- */
-export const formatRank = (rank: number | undefined): string => {
-  if (rank === undefined) return '-';
-  return `#${rank.toLocaleString()}`;
-};
-
-/**
- * Formats a file size in bytes to a human-readable format
- * @param bytes - The file size in bytes
- * @param decimals - Number of decimal places to show
- * @returns Formatted file size string
- */
-export const formatFileSize = (bytes: number, decimals = 2): string => {
+export function formatFileSize(bytes: number): string {
   if (bytes === 0) return '0 Bytes';
   
   const k = 1024;
-  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB'];
+  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
   const i = Math.floor(Math.log(bytes) / Math.log(k));
   
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(decimals)) + ' ' + sizes[i];
-};
+  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(2))} ${sizes[i]}`;
+}
 
 /**
- * Formats a duration in milliseconds to a human-readable format
- * @param ms - The duration in milliseconds
- * @returns Formatted duration string
+ * Formats a date in a consistent way across the app
  */
-export const formatDuration = (ms: number): string => {
-  if (ms < 1000) return `${ms}ms`;
-  if (ms < 60000) return `${(ms / 1000).toFixed(1)}s`;
+export function formatDate(date: Date | string): string {
+  if (!date) return '';
   
-  const minutes = Math.floor(ms / 60000);
-  const seconds = ((ms % 60000) / 1000).toFixed(1);
-  return `${minutes}m ${seconds}s`;
-};
+  const d = typeof date === 'string' ? new Date(date) : date;
+  
+  if (isNaN(d.getTime())) return 'Invalid Date';
+  
+  return new Intl.DateTimeFormat('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  }).format(d);
+}
 
 /**
- * Formats a percentage value
- * @param value - The value to format as percentage
- * @param decimals - Number of decimal places
- * @returns Formatted percentage string
+ * Formats a date with time
  */
-export const formatPercentage = (value: number, decimals = 1): string => {
+export function formatDateTime(date: Date | string): string {
+  if (!date) return '';
+  
+  const d = typeof date === 'string' ? new Date(date) : date;
+  
+  if (isNaN(d.getTime())) return 'Invalid Date';
+  
+  return new Intl.DateTimeFormat('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+  }).format(d);
+}
+
+/**
+ * Formats a number with commas for thousands
+ */
+export function formatNumber(num: number): string {
+  return new Intl.NumberFormat('en-US').format(num);
+}
+
+/**
+ * Truncates text to a specified length and adds ellipsis
+ */
+export function truncateText(text: string, maxLength: number): string {
+  if (!text || text.length <= maxLength) return text || '';
+  return text.slice(0, maxLength) + '...';
+}
+
+/**
+ * Formats a percentage
+ */
+export function formatPercent(value: number, decimals = 1): string {
   return `${value.toFixed(decimals)}%`;
-};
+}
 
 /**
- * Formats a wallet address by truncating the middle
- * @param address - The wallet address to format
- * @returns Truncated address string
+ * Formats a relativeTime string (e.g. "2 hours ago")
  */
-export const formatAddress = (address: string): string => {
-  if (!address) return '';
-  if (address.length <= 12) return address;
+export function formatRelativeTime(date: Date | string): string {
+  if (!date) return '';
   
-  return `${address.substring(0, 6)}...${address.substring(address.length - 4)}`;
-};
+  const d = typeof date === 'string' ? new Date(date) : date;
+  
+  if (isNaN(d.getTime())) return 'Invalid Date';
+  
+  const now = new Date();
+  const diffInSeconds = Math.floor((now.getTime() - d.getTime()) / 1000);
+  
+  if (diffInSeconds < 60) return `${diffInSeconds} seconds ago`;
+  if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)} minutes ago`;
+  if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)} hours ago`;
+  if (diffInSeconds < 2592000) return `${Math.floor(diffInSeconds / 86400)} days ago`;
+  if (diffInSeconds < 31536000) return `${Math.floor(diffInSeconds / 2592000)} months ago`;
+  
+  return `${Math.floor(diffInSeconds / 31536000)} years ago`;
+}
 
 /**
- * Formats a historical value with an ancient unit
- * @param value - The value to format
- * @returns Formatted string with ancient unit
+ * Formats a username (e.g. truncates if too long, adds @ if missing)
  */
-export const formatHistoricalValue = (value: number): string => {
-  const units = ['talents', 'sesterces', 'denarii', 'drachmas', 'solidi'];
-  const unit = units[Math.floor(Math.random() * units.length)];
+export function formatUsername(username: string): string {
+  if (!username) return '';
   
-  return `${value.toLocaleString()} ${unit}`;
-};
+  // Remove @ if present
+  const formattedUsername = username.startsWith('@') ? username : `@${username}`;
+  
+  // Truncate if too long
+  return truncateText(formattedUsername, 15);
+}
 
 /**
- * Formats a dollar amount with appropriate scaling (K, M, B)
- * @param amount - The amount to format
- * @returns Formatted dollar amount string
+ * Formats time duration (e.g. "2h 30m")
  */
-export const formatDollarAmount = (amount: number): string => {
-  if (amount >= 1_000_000_000) {
-    return `$${(amount / 1_000_000_000).toFixed(1)}B`;
-  } else if (amount >= 1_000_000) {
-    return `$${(amount / 1_000_000).toFixed(1)}M`;
-  } else if (amount >= 1_000) {
-    return `$${(amount / 1_000).toFixed(1)}K`;
-  } else {
-    return `$${amount.toFixed(2)}`;
-  }
-};
-
-/**
- * Formats a number as a dollar amount (for inputs)
- * @param value - The value to format
- * @returns Formatted dollar amount
- */
-export const formatDollarInput = (value: string | number): string => {
-  // Convert to string and remove all non-digit characters except decimal
-  const numericValue = String(value).replace(/[^\d.]/g, '');
+export function formatDuration(seconds: number): string {
+  if (seconds < 60) return `${seconds}s`;
   
-  // Ensure only one decimal point
-  const parts = numericValue.split('.');
-  if (parts.length > 2) {
-    parts[1] = parts.slice(1).join('');
-    return `${parts[0]}.${parts[1]}`;
-  }
+  const minutes = Math.floor(seconds / 60);
+  if (minutes < 60) return `${minutes}m`;
   
-  // Return formatted value
-  return numericValue;
-};
+  const hours = Math.floor(minutes / 60);
+  const remainingMinutes = minutes % 60;
+  
+  if (remainingMinutes === 0) return `${hours}h`;
+  return `${hours}h ${remainingMinutes}m`;
+}

@@ -1,6 +1,10 @@
 
 import * as LucideIcons from 'lucide-react';
 
+/**
+ * Utility for converting various icon name formats to the correct format for Lucide icons
+ */
+
 // Create a mapping of kebab-case to PascalCase icon names
 const createIconNameMap = (): Record<string, string> => {
   const iconMap: Record<string, string> = {};
@@ -21,17 +25,23 @@ const createIconNameMap = (): Record<string, string> => {
     
     // Also add the PascalCase key for direct lookups
     iconMap[iconName] = iconName;
+    
+    // Add camelCase variant
+    const camelCase = iconName.charAt(0).toLowerCase() + iconName.slice(1);
+    iconMap[camelCase] = iconName;
   });
   
   return iconMap;
 };
 
-// Create a map of kebab-case to PascalCase icon names
+// Create a map of icon name variants to PascalCase icon names
 const iconNameMap = createIconNameMap();
 
-// Convert any icon name format to PascalCase (which is what Lucide uses)
+/**
+ * Convert any icon name format to PascalCase (which is what Lucide uses)
+ */
 export const toPascalCase = (iconName: string): string => {
-  // If already in the map (either as kebab-case or PascalCase), return mapped name
+  // If already in the map (any variant), return mapped name
   if (iconNameMap[iconName]) {
     return iconNameMap[iconName];
   }
@@ -56,18 +66,28 @@ export const toPascalCase = (iconName: string): string => {
     }
   }
   
+  // Check for common aliases
+  const alias = getIconAlias(iconName);
+  if (alias && iconNameMap[alias]) {
+    return iconNameMap[alias];
+  }
+  
   // If not found, return the original (might not be valid)
   console.warn(`Icon name "${iconName}" not found in Lucide icons`);
-  return iconName;
+  return 'HelpCircle'; // Default fallback
 };
 
-// Check if an icon name exists in Lucide
+/**
+ * Check if an icon name exists in Lucide
+ */
 export const iconExists = (iconName: string): boolean => {
   const pascalCase = toPascalCase(iconName);
   return !!LucideIcons[pascalCase as keyof typeof LucideIcons];
 };
 
-// Get common icon aliases (like "money" -> "DollarSign")
+/**
+ * Get common icon aliases (like "money" -> "DollarSign")
+ */
 export const getIconAlias = (iconName: string): string => {
   const aliases: Record<string, string> = {
     money: 'DollarSign',
@@ -125,8 +145,178 @@ export const getIconAlias = (iconName: string): string => {
     music: 'Music',
     file: 'File',
     folder: 'Folder',
-    document: 'FileText'
+    document: 'FileText',
+    crown: 'Crown',
+    gem: 'Gem',
+    shield: 'Shield',
+    sword: 'Sword',
+    scroll: 'Scroll',
+    chart: 'BarChart',
+    graph: 'LineChart',
+    stats: 'PieChart',
+    trophy: 'Trophy',
+    medal: 'Medal',
+    gift: 'Gift',
+    rocket: 'Rocket',
+    star: 'Star',
+    heart: 'Heart',
+    thumbsUp: 'ThumbsUp',
+    thumbsDown: 'ThumbsDown',
+    key: 'Key',
+    lock: 'Lock',
+    unlock: 'Unlock',
+    gear: 'Settings',
+    cog: 'Settings',
+    tag: 'Tag',
+    list: 'List',
+    grid: 'Grid',
+    menu: 'Menu',
+    sidebar: 'PanelLeft',
+    layout: 'Layout',
+    template: 'Template',
+    code: 'Code',
+    terminal: 'Terminal',
+    server: 'Server',
+    cloud: 'Cloud',
+    database: 'Database',
+    wifi: 'Wifi',
+    bluetooth: 'Bluetooth',
+    signal: 'Signal',
+    battery: 'Battery',
+    power: 'Power',
+    refresh: 'RefreshCw',
+    rotate: 'RotateCw',
+    undo: 'Undo',
+    redo: 'Redo',
+    reply: 'Reply',
+    forward: 'Forward',
+    send: 'Send',
+    trash: 'Trash',
+    archive: 'Archive',
+    compress: 'Minimize',
+    expand: 'Maximize',
+    eye: 'Eye',
+    eyeOff: 'EyeOff',
+    visible: 'Eye',
+    invisible: 'EyeOff',
+    pin: 'MapPin',
+    flag: 'Flag',
+    bookmark: 'Bookmark',
+    camera: 'Camera',
+    printer: 'Printer',
+    scissors: 'Scissors',
+    copy: 'Copy',
+    paste: 'Clipboard',
+    clipboard: 'Clipboard',
+    layers: 'Layers',
+    stack: 'Layers',
+    package: 'Package',
+    box: 'Package',
+    map: 'Map',
+    globe: 'Globe',
+    compass: 'Compass',
+    navigation: 'Navigation',
+    share: 'Share',
+    trending: 'TrendingUp',
+    decrease: 'TrendingDown',
+    increase: 'TrendingUp',
+    zoomIn: 'ZoomIn',
+    zoomOut: 'ZoomOut',
+    filter: 'Filter',
+    sliders: 'Sliders',
+    options: 'Sliders',
+    coffee: 'Coffee',
+    food: 'Utensils',
+    cart: 'ShoppingCart',
+    bag: 'ShoppingBag',
+    credit: 'CreditCard',
+    payment: 'CreditCard',
+    bank: 'Landmark',
+    calc: 'Calculator',
+    calendar: 'Calendar',
+    event: 'Calendar',
+    ticket: 'Ticket',
+    airplane: 'Plane',
+    train: 'Train',
+    car: 'Car',
+    truck: 'Truck',
+    bus: 'Bus',
+    bike: 'Bike',
+    walk: 'Walking',
+    run: 'Running',
+    ruler: 'Ruler',
+    wrench: 'Wrench',
+    tools: 'Tool',
+    target: 'Target',
+    crosshair: 'Crosshair',
+    focus: 'Crosshair',
+    person: 'User',
+    people: 'Users',
+    team: 'Users',
+    group: 'Users',
+    friends: 'Users',
+    contact: 'UserPlus',
+    book: 'Book',
+    read: 'BookOpen',
+    newspaper: 'Newspaper',
+    palette: 'Palette',
+    brush: 'Brush',
+    pen: 'Pen',
+    color: 'Palette',
+    shape: 'Square',
+    tv: 'Tv',
+    screen: 'Monitor',
+    computer: 'Monitor',
+    mobile: 'Smartphone',
+    tablet: 'Tablet',
+    device: 'Smartphone',
+    watch: 'Watch',
+    time: 'Clock',
+    alarm: 'Clock',
+    timer: 'Timer',
+    stopwatch: 'Stopwatch',
+    mail: 'Mail',
+    chat: 'MessageSquare',
+    talk: 'MessageCircle',
+    quote: 'Quote',
+    mic: 'Mic',
+    record: 'Mic',
+    voicemail: 'Voicemail',
+    call: 'Phone',
+    telephone: 'Phone',
+    dial: 'Phone',
+    fax: 'Printer',
+    battery: 'Battery',
+    power: 'Power',
+    lightning: 'Zap',
+    bolt: 'Zap',
+    electric: 'Zap',
+    plug: 'Power',
+    outlet: 'Power',
+    bulb: 'Lightbulb',
+    idea: 'Lightbulb',
+    light: 'Sun',
+    dark: 'Moon',
+    sun: 'Sun',
+    moon: 'Moon',
+    stars: 'Stars',
+    night: 'Moon',
+    day: 'Sun',
+    cloud: 'Cloud',
+    cloudy: 'Cloud',
+    rain: 'CloudRain',
+    lightning: 'CloudLightning',
+    snow: 'CloudSnow',
+    weather: 'Cloud',
+    drop: 'Droplets',
+    water: 'Droplets',
+    wind: 'Wind'
   };
   
   return aliases[iconName.toLowerCase()] || iconName;
 };
+
+// Export a comprehensive icon map for projects using custom icon naming
+export const iconMap = iconNameMap;
+
+export default iconNameMap;

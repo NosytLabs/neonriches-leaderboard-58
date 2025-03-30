@@ -9,6 +9,9 @@ export interface UseSoundOptions {
   preload?: boolean;
 }
 
+/**
+ * Hook for playing sounds across the application
+ */
 const useSound = (options: UseSoundOptions = {}) => {
   const { enabled = true, volume = 0.5, preload = true } = options;
   const [audioElements, setAudioElements] = useState<Record<string, HTMLAudioElement>>({});
@@ -29,6 +32,7 @@ const useSound = (options: UseSoundOptions = {}) => {
           for (const [type, path] of Object.entries(soundAssets)) {
             const audio = new Audio(path);
             audio.preload = 'auto';
+            audio.volume = volume * (soundVolumes[type as SoundType] || 1);
             elements[type] = audio;
             loaded.push(type);
           }
@@ -45,7 +49,22 @@ const useSound = (options: UseSoundOptions = {}) => {
 
       loadAudio();
     }
-  }, [preload, enabled]);
+    
+    // Cleanup audio elements on unmount
+    return () => {
+      Object.values(audioElements).forEach(audio => {
+        audio.pause();
+        audio.src = '';
+      });
+    };
+  }, [preload, enabled, volume]);
+
+  // Update volume when it changes
+  useEffect(() => {
+    Object.entries(audioElements).forEach(([type, audio]) => {
+      audio.volume = volume * (soundVolumes[type as SoundType] || 1);
+    });
+  }, [volume, audioElements]);
 
   // Play sound function
   const play = useCallback((soundType: SoundType, volumeMultiplier = 1) => {
@@ -85,7 +104,7 @@ const useSound = (options: UseSoundOptions = {}) => {
     }
   }, [audioElements, enabled, volume]);
 
-  // Add convenience methods for common sounds
+  // Convenience methods for common sounds
   const playSuccess = useCallback((volumeMultiplier = 1) => {
     play('success', volumeMultiplier);
   }, [play]);

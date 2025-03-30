@@ -1,9 +1,8 @@
 
 import React from 'react';
-import * as LucideIcons from 'lucide-react';
-import { cn } from '@/lib/utils';
+import IconSystem, { IconName, IconSize } from './IconSystem';
 
-export type IconName = keyof typeof LucideIcons;
+export type { IconName } from './IconSystem';
 
 export interface IconProps extends React.HTMLAttributes<HTMLSpanElement> {
   name: IconName;
@@ -12,39 +11,21 @@ export interface IconProps extends React.HTMLAttributes<HTMLSpanElement> {
   color?: string;
 }
 
-const sizeClasses = {
-  sm: 'h-4 w-4',
-  md: 'h-5 w-5',
-  lg: 'h-6 w-6',
-  xl: 'h-8 w-8',
-  '2xl': 'h-10 w-10',
-};
-
 /**
  * Icon component for using Lucide icons with consistent styling
  */
 const Icon = React.forwardRef<HTMLSpanElement, IconProps>(
   ({ name, className, size = 'md', color, ...props }, ref) => {
-    // Get the icon component dynamically
-    const IconComponent = LucideIcons[name];
-    
-    if (!IconComponent) {
-      console.warn(`Icon "${name}" not found`);
-      return null;
-    }
-
     return (
-      <span 
+      <IconSystem
         ref={ref}
-        className={cn("inline-flex items-center justify-center", className)}
+        name={name}
+        size={size}
+        color={color}
+        className={className}
+        style="default"
         {...props}
-      >
-        <IconComponent 
-          className={sizeClasses[size]} 
-          color={color}
-          aria-hidden="true"
-        />
-      </span>
+      />
     );
   }
 );
