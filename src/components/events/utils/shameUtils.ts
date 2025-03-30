@@ -1,11 +1,11 @@
 
-import { ShameAction } from './shameUtils';
+import { ShameAction } from '@/types/mockery';
 
 // Define the shame action types
 export type ShameActionType = 'shame' | 'protection' | 'taunt';
 
 // Export the shame action types
-export default ShameAction;
+export { type ShameAction };
 
 // Define shame action prices
 export const getShameActionPrice = (action: ShameAction): number => {
@@ -124,34 +124,36 @@ export const getShameActionTitle = (action: ShameAction): string => {
 };
 
 // Get action description
-export const getShameActionDescription = (action: ShameAction): string => {
+export const getShameActionDescription = (action: ShameAction, username?: string): string => {
+  const targetName = username ? username : 'your target';
+  
   switch (action) {
     case 'tomatoes':
-      return 'Pelt your target with rotten tomatoes. A classic form of public ridicule.';
+      return `Pelt ${targetName} with rotten tomatoes. A classic form of public ridicule.`;
     case 'eggs':
-      return 'Hurl rotten eggs at your target. The visual stench will follow them for a day.';
+      return `Hurl rotten eggs at ${targetName}. The visual stench will follow them for a day.`;
     case 'stocks':
-      return 'Place your target in the public stocks. The ultimate medieval humiliation.';
+      return `Place ${targetName} in the public stocks. The ultimate medieval humiliation.`;
     case 'shame':
-      return 'Publicly shame your target with a mark of disgrace.';
+      return `Publicly shame ${targetName} with a mark of disgrace.`;
     case 'protection':
       return 'Shield yourself from mockery for 24 hours.';
     case 'taunt':
-      return 'Taunt your target with jeers and mockery.';
+      return `Taunt ${targetName} with jeers and mockery.`;
     case 'putridEggs':
-      return 'Throw particularly foul eggs that leave a lasting smell.';
+      return `Throw particularly foul eggs that leave a lasting smell on ${targetName}.`;
     case 'dunce':
-      return 'Force your target to wear a dunce cap for all to see.';
+      return `Force ${targetName} to wear a dunce cap for all to see.`;
     case 'ridicule':
-      return 'Subject your target to public ridicule.';
+      return `Subject ${targetName} to public ridicule.`;
     case 'silence':
-      return 'Mute your target from public discussion.';
+      return `Mute ${targetName} from public discussion.`;
     case 'courtJester':
-      return 'Turn your target into the court's fool.';
+      return `Turn ${targetName} into the court's fool.`;
     case 'jester':
-      return 'Make your target perform as the jester for your amusement.';
+      return `Make ${targetName} perform as the jester for your amusement.`;
     default:
-      return 'Apply this mysterious action to your target.';
+      return `Apply this mysterious action to ${targetName}.`;
   }
 };
 
@@ -165,3 +167,4 @@ export const isFireSaleMonth = (): boolean => {
 export const getFireSaleDiscountPercentage = (): number => {
   return isFireSaleMonth() ? 50 : 0; // 50% discount during fire sale months
 };
+
