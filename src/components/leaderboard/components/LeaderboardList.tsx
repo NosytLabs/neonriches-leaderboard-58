@@ -3,7 +3,6 @@ import React from 'react';
 import { CardContent } from '@/components/ui/card';
 import LeaderboardEntry from './LeaderboardEntry';
 import { User } from '@/types/user';
-import { ShameAction } from '@/components/events/hooks/useShameEffect';
 import { Crown } from 'lucide-react';
 
 interface LeaderboardListProps {
@@ -13,7 +12,7 @@ interface LeaderboardListProps {
   currentUserId?: string;
   compact?: boolean;
   onProfileClick: (userId: string, username: string) => void;
-  onShameUser: (user: User, action: ShameAction) => void;
+  onShameUser?: (user: User, action: string) => void;
 }
 
 const LeaderboardList: React.FC<LeaderboardListProps> = ({

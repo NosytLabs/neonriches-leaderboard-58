@@ -1,14 +1,12 @@
 
 import React from 'react';
+import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { getTeamColor, getTeamTextColorClass, getRankTextColorClass } from '@/lib/colors';
-import RoyalButton from '@/components/ui/royal-button';
-import { getShameActionPrice } from '@/components/events/utils/shameUtils';
-import { ShameAction } from '@/components/events/hooks/useShameEffect';
-import { Crown } from 'lucide-react';
 import { User } from '@/types/user';
-import Trophy from './Trophy';
+import { Crown, Shield, ChevronRight, Target } from 'lucide-react';
+import { formatCurrency } from '@/utils/formatters';
+import { cn } from '@/lib/utils';
 
 interface LeaderboardEntryProps {
   user: User;
@@ -16,7 +14,7 @@ interface LeaderboardEntryProps {
   currentUserId?: string;
   compact?: boolean;
   onProfileClick: (userId: string, username: string) => void;
-  onShameUser: (user: User, action: ShameAction) => void;
+  onShameUser?: (user: User, action: string) => void;
 }
 
 const LeaderboardEntry: React.FC<LeaderboardEntryProps> = ({
@@ -27,131 +25,105 @@ const LeaderboardEntry: React.FC<LeaderboardEntryProps> = ({
   onProfileClick,
   onShameUser
 }) => {
-  const getRankBadgeClass = (rank: number): string => {
-    if (rank === 1) return 'bg-royal-gold/20 border-royal-gold/40';
-    if (rank === 2) return 'bg-gray-300/20 border-gray-300/40';
-    if (rank === 3) return 'bg-amber-700/20 border-amber-700/40';
-    if (rank <= 10) return 'bg-purple-500/20 border-purple-500/40';
-    if (rank <= 25) return 'bg-blue-500/20 border-blue-500/40';
-    return 'bg-white/10 border-white/20';
+  const isCurrentUser = currentUserId === user.id;
+  
+  // Format the rank with proper ordinal
+  const formatRank = (rank: number) => {
+    const suffixes = ['th', 'st', 'nd', 'rd'];
+    const suffix = rank % 10 < 4 && Math.floor(rank / 10) !== 1 
+      ? suffixes[rank % 10] 
+      : suffixes[0];
+    return `${rank}${suffix}`;
   };
 
-  const getTierStyle = (tier: string | null | undefined): string => {
-    if (!tier) return '';
-    
-    switch (tier.toLowerCase()) {
-      case 'royal':
-        return 'border-l-4 border-l-royal-gold';
-      case 'premium':
-        return 'border-l-4 border-l-purple-500';
-      case 'gold':
-        return 'border-l-4 border-l-amber-500';
-      default:
-        return '';
+  // Get profile color based on team
+  const getTeamColor = () => {
+    switch (user.team) {
+      case 'red': return 'text-team-red border-team-red/30 bg-team-red/10';
+      case 'green': return 'text-team-green border-team-green/30 bg-team-green/10';
+      case 'blue': return 'text-team-blue border-team-blue/30 bg-team-blue/10';
+      default: return 'text-gray-400 border-gray-400/30 bg-gray-400/10';
     }
   };
 
-  const getRankIcon = (rank: number) => {
-    return <Trophy rank={rank} />;
+  // Get tier badge style
+  const getTierBadge = () => {
+    switch (user.tier) {
+      case 'founder':
+        return <Badge variant="outline" className="bg-royal-gold/20 text-royal-gold border-royal-gold/30">Founder</Badge>;
+      case 'basic':
+        return <Badge variant="outline" className="bg-blue-500/20 text-blue-400 border-blue-500/30">Basic</Badge>;
+      default:
+        return <Badge variant="outline" className="bg-gray-500/20 text-gray-400 border-gray-500/30">Free</Badge>;
+    }
   };
 
   return (
-    <div
-      key={user.id}
-      className={`p-4 hover:bg-white/5 transition-colors ${
-        index < 3 ? getTeamColor(user.team) : ''
-      } ${getTierStyle(user.tier)}`}
+    <div 
+      className={cn(
+        "py-4 px-2 flex items-center transition-colors hover:bg-white/5",
+        isCurrentUser ? "bg-white/10" : ""
+      )}
     >
-      <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-4">
-          <div className={`flex items-center justify-center w-8 h-8 rounded-full glass-morphism border-white/10 
-            ${index < 10 ? getRankBadgeClass(index + 1) : 'bg-white/5'}`}>
-            {getRankIcon(index + 1) || (
-              <span className={`text-sm font-bold ${getRankTextColorClass(index + 1)}`}>#{index + 1}</span>
-            )}
-          </div>
-          
-          <div className="flex items-center space-x-3">
-            <Avatar 
-              className={`h-10 w-10 border-2 cursor-pointer ${
-                user.tier === 'royal' ? 'border-royal-gold' :
-                user.tier === 'premium' ? 'border-purple-500' :
-                user.tier === 'gold' ? 'border-amber-500' : 'border-white/20'
-              }`}
+      {/* Rank indicator */}
+      <div className="flex-shrink-0 w-12 text-center">
+        <span className="text-lg font-bold">#{user.rank || index + 1}</span>
+      </div>
+      
+      {/* User info */}
+      <div className="flex-grow flex items-center min-w-0">
+        <Avatar 
+          onClick={() => onProfileClick(user.id, user.username)}
+          className={cn(
+            "cursor-pointer h-10 w-10 mr-3 border-2",
+            getTeamColor()
+          )}
+        >
+          <AvatarImage src={user.profileImage} alt={user.username} />
+          <AvatarFallback>{user.username.substring(0, 2).toUpperCase()}</AvatarFallback>
+        </Avatar>
+        
+        <div className="flex-grow min-w-0">
+          <div className="flex items-center">
+            <h3 
+              className="font-semibold truncate cursor-pointer hover:underline"
               onClick={() => onProfileClick(user.id, user.username)}
             >
-              {user.profileImage ? (
-                <AvatarImage src={user.profileImage} alt={user.username} />
-              ) : (
-                <AvatarFallback className={getTeamColor(user.team)}>
-                  {user.username.charAt(0).toUpperCase()}
-                </AvatarFallback>
-              )}
-            </Avatar>
-            
-            <div>
-              <div className="flex items-center space-x-2">
-                <span 
-                  className={`font-medium hover:text-royal-gold cursor-pointer ${index < 3 ? getRankTextColorClass(index + 1) : ''} ${
-                    user.tier === 'royal' ? 'text-royal-gold' :
-                    user.tier === 'premium' ? 'text-purple-400' :
-                    user.tier === 'gold' ? 'text-amber-400' : ''
-                  }`} 
-                  onClick={() => onProfileClick(user.id, user.username)}
-                >
-                  {user.displayName || user.username}
-                </span>
-                {user.team && (
-                  <Badge 
-                    variant="outline" 
-                    className={`${getTeamTextColorClass(user.team)} text-xs`}
-                  >
-                    {user.team.toUpperCase()}
-                  </Badge>
-                )}
-              </div>
-              <div className="flex items-center text-sm text-white/60">
-                <span className="flex items-center">
-                  <Crown size={12} className="mr-1 text-royal-gold/70" />
-                  ${user.amountSpent?.toLocaleString()}
-                </span>
-              </div>
-            </div>
+              {user.username}
+            </h3>
+            {getTierBadge()}
+          </div>
+          
+          <div className="text-sm text-gray-400">
+            Total Spent: {formatCurrency(user.totalSpent || 0)}
           </div>
         </div>
-        
-        {!compact && currentUserId && currentUserId !== user.id && (
-          <div className="flex items-center space-x-2">
-            <RoyalButton
-              variant="royalPurple"
-              size="sm"
-              className="text-xs"
-              icon={<span className="text-sm">🍅</span>}
-              onClick={() => onShameUser(user, 'tomatoes')}
-            >
-              ${getShameActionPrice('tomatoes')}
-            </RoyalButton>
-            <RoyalButton
-              variant="royalGold"
-              size="sm"
-              className="text-xs"
-              icon={<span className="text-sm">🥚</span>}
-              onClick={() => onShameUser(user, 'eggs')}
-            >
-              ${getShameActionPrice('eggs')}
-            </RoyalButton>
-            <RoyalButton
-              variant="royalPurple"
-              size="sm"
-              className="text-xs"
-              icon={<span className="text-sm">🪵</span>}
-              onClick={() => onShameUser(user, 'stocks')}
-            >
-              ${getShameActionPrice('stocks')}
-            </RoyalButton>
-          </div>
-        )}
       </div>
+      
+      {/* Actions */}
+      {!compact && (
+        <div className="flex-shrink-0 flex gap-1">
+          {onShameUser && (
+            <Button 
+              variant="ghost" 
+              size="icon"
+              onClick={() => onShameUser(user, 'tomatoes')}
+              className="h-8 w-8 text-gray-400 hover:text-royal-crimson hover:bg-royal-crimson/10"
+            >
+              <Target size={16} />
+            </Button>
+          )}
+          
+          <Button 
+            variant="ghost" 
+            size="icon"
+            onClick={() => onProfileClick(user.id, user.username)}
+            className="h-8 w-8"
+          >
+            <ChevronRight size={16} />
+          </Button>
+        </div>
+      )}
     </div>
   );
 };

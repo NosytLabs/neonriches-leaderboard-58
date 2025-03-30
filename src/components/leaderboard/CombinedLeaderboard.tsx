@@ -1,189 +1,142 @@
+
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent } from '@/components/ui/card';
-import { useNavigate } from 'react-router-dom';
-import { useToast } from '@/hooks/use-toast';
-import { useAuth } from '@/contexts/AuthContext';
-import useNotificationSounds from '@/hooks/use-notification-sounds';
-import { fetchLeaderboard } from '@/services/leaderboardService';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Trophy, Filter, Users, Search } from 'lucide-react';
+import { Input } from '@/components/ui/input';
 import { User } from '@/types/user';
-import { ShameAction } from '@/components/events/hooks/useShameEffect';
-import { getShameActionPrice } from '@/components/events/utils/shameUtils';
-
-// Import the new component parts
-import LeaderboardHeader from './components/LeaderboardHeader';
-import LeaderboardFilters from './components/LeaderboardFilters';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/contexts/auth';
 import LeaderboardList from './components/LeaderboardList';
-import ShameModalWrapper from './components/ShameModalWrapper';
 
-interface CombinedLeaderboardProps {
-  className?: string;
-  limit?: number;
-  compact?: boolean;
-}
+// Create some mock data
+const mockUsers: User[] = [
+  {
+    id: '1',
+    username: 'RoyalSpender',
+    profileImage: 'https://api.dicebear.com/6.x/personas/svg?seed=RoyalSpender',
+    tier: 'founder',
+    team: 'red',
+    totalSpent: 10000,
+    rank: 1
+  },
+  {
+    id: '2',
+    username: 'CrownCollector',
+    profileImage: 'https://api.dicebear.com/6.x/personas/svg?seed=CrownCollector',
+    tier: 'founder',
+    team: 'blue',
+    totalSpent: 8500,
+    rank: 2
+  },
+  {
+    id: '3',
+    username: 'ThroneSeeker',
+    profileImage: 'https://api.dicebear.com/6.x/personas/svg?seed=ThroneSeeker',
+    tier: 'basic',
+    team: 'green',
+    totalSpent: 6000,
+    rank: 3
+  },
+  {
+    id: '4',
+    username: 'RegalDonor',
+    profileImage: 'https://api.dicebear.com/6.x/personas/svg?seed=RegalDonor',
+    tier: 'basic',
+    team: 'red',
+    totalSpent: 4500,
+    rank: 4
+  },
+  {
+    id: '5',
+    username: 'NobleCash',
+    profileImage: 'https://api.dicebear.com/6.x/personas/svg?seed=NobleCash',
+    tier: 'basic',
+    team: 'blue',
+    totalSpent: 3200,
+    rank: 5
+  }
+];
 
-const CombinedLeaderboard: React.FC<CombinedLeaderboardProps> = ({ 
-  className = '', 
-  limit = 10, 
-  compact = false 
-}) => {
+const CombinedLeaderboard: React.FC = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const [leaderboardData, setLeaderboardData] = useState<User[]>([]);
-  const [filteredData, setFilteredData] = useState<User[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
-  const [teamFilter, setTeamFilter] = useState<'all' | 'red' | 'green' | 'blue'>('all');
-  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
-  const [selectedUser, setSelectedUser] = useState<User | null>(null);
-  const [shameAction, setShameAction] = useState<ShameAction>('tomatoes');
-  const [showShameModal, setShowShameModal] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const { toast } = useToast();
-  const { playSound } = useNotificationSounds();
-  const { user: currentUser } = useAuth();
-
-  // Load real leaderboard data from Supabase
+  const [isLoading, setIsLoading] = useState(false);
+  const [filteredUsers, setFilteredUsers] = useState<User[]>(mockUsers);
+  
+  // Filter users on search query change
   useEffect(() => {
-    const loadLeaderboardData = async () => {
-      setLoading(true);
-      try {
-        const data = await fetchLeaderboard(1, limit);
-        setLeaderboardData(data);
-        setFilteredData(data);
-      } catch (error) {
-        console.error('Failed to load leaderboard data:', error);
-        toast({
-          title: "Failed to load leaderboard",
-          description: "We couldn't fetch the latest ranks. Please try again later.",
-          variant: "destructive",
-        });
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadLeaderboardData();
-  }, [limit, toast]);
-
-  const handleSearch = (query: string) => {
-    setSearchQuery(query);
-    filterData(query, teamFilter);
-  };
-
-  const handleTeamFilter = (team: 'all' | 'red' | 'green' | 'blue') => {
-    setTeamFilter(team);
-    filterData(searchQuery, team);
-  };
-
-  const filterData = (query: string, team: 'all' | 'red' | 'green' | 'blue') => {
-    let filtered = [...leaderboardData];
-    
-    if (team !== 'all') {
-      filtered = filtered.filter(user => 
-        user.team && user.team.toLowerCase() === team.toLowerCase()
-      );
+    if (!searchQuery) {
+      setFilteredUsers(mockUsers);
+      return;
     }
     
-    if (query) {
-      const lowercaseQuery = query.toLowerCase();
-      filtered = filtered.filter(user => 
-        user.username.toLowerCase().includes(lowercaseQuery) ||
-        (user.displayName && user.displayName.toLowerCase().includes(lowercaseQuery))
-      );
-    }
+    const lowercaseQuery = searchQuery.toLowerCase();
+    const filtered = mockUsers.filter(user => 
+      user.username.toLowerCase().includes(lowercaseQuery)
+    );
     
-    filtered = sortData(filtered, sortDirection);
-    
-    setFilteredData(filtered);
-  };
-
-  const handleSort = () => {
-    const newDirection = sortDirection === 'desc' ? 'asc' : 'desc';
-    setSortDirection(newDirection);
-    
-    const sorted = sortData(filteredData, newDirection);
-    setFilteredData(sorted);
-  };
-
-  const sortData = (data: User[], direction: 'asc' | 'desc') => {
-    return [...data].sort((a, b) => {
-      return direction === 'desc' 
-        ? (b.amountSpent || 0) - (a.amountSpent || 0) 
-        : (a.amountSpent || 0) - (b.amountSpent || 0);
-    });
-  };
-
+    setFilteredUsers(filtered);
+  }, [searchQuery]);
+  
   const handleProfileClick = (userId: string, username: string) => {
     navigate(`/profile/${username}`);
-    
-    toast({
-      title: "Royal Intelligence",
-      description: "You are now viewing another noble's profile.",
-      duration: 3000,
-    });
-
-    playSound('notification');
   };
-
-  const handleShameUser = (user: User, action: ShameAction) => {
-    setSelectedUser(user);
-    setShameAction(action);
-    setShowShameModal(true);
-    
-    playSound('notification');
+  
+  const handleShameUser = (user: User, action: string) => {
+    console.log(`Applied ${action} to user ${user.username}`);
+    // Show toast or notification
   };
-
-  const confirmShame = (userId: string, type: ShameAction) => {
-    if (!selectedUser) return;
-    
-    const amount = getShameActionPrice(type);
-    
-    setTimeout(() => {
-      toast({
-        title: "Royal Decree of Shame",
-        description: `You have spent $${amount} to shame ${selectedUser.username}.`,
-        duration: 4000,
-      });
-      
-      setShowShameModal(false);
-      setSelectedUser(null);
-      
-      playSound('shame');
-    }, 500);
-  };
-
+  
   return (
-    <Card className={`glass-morphism border-white/10 ${className}`}>
-      <LeaderboardHeader />
-      
-      <CardContent className="p-0">
-        <LeaderboardFilters 
-          searchQuery={searchQuery}
-          teamFilter={teamFilter}
-          sortDirection={sortDirection}
-          onSearchChange={handleSearch}
-          onTeamFilterChange={handleTeamFilter}
-          onSortChange={handleSort}
-        />
-
-        <LeaderboardList 
-          users={filteredData}
-          loading={loading}
-          limit={limit}
-          currentUserId={currentUser?.id}
-          compact={compact}
-          onProfileClick={handleProfileClick}
-          onShameUser={handleShameUser}
-        />
-
-        <ShameModalWrapper 
-          showModal={showShameModal}
-          selectedUser={selectedUser}
-          shameAction={shameAction}
-          onOpenChange={setShowShameModal}
-          onConfirm={confirmShame}
-        />
-      </CardContent>
-    </Card>
+    <div className="space-y-6">
+      <Card className="glass-morphism border-white/10">
+        <CardHeader>
+          <CardTitle className="flex items-center">
+            <Trophy className="mr-2 h-5 w-5 text-royal-gold" />
+            Royal Spending Leaderboard
+          </CardTitle>
+          <CardDescription>
+            Where nobles compete for rank and glory through monetary sacrifice
+          </CardDescription>
+        </CardHeader>
+        
+        <CardContent className="p-0">
+          <div className="p-4 border-b border-white/10">
+            <div className="flex items-center gap-2">
+              <div className="relative flex-grow">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-white/50" />
+                <Input
+                  placeholder="Search nobles..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-9 glass-morphism border-white/10"
+                />
+              </div>
+              
+              <Button variant="outline" size="icon" className="glass-morphism border-white/10">
+                <Filter className="h-4 w-4" />
+              </Button>
+              
+              <Button variant="outline" size="sm" className="gap-1 glass-morphism border-white/10">
+                <Users className="h-4 w-4" />
+                <span className="hidden sm:inline">Teams</span>
+              </Button>
+            </div>
+          </div>
+          
+          <LeaderboardList
+            users={filteredUsers}
+            loading={isLoading}
+            limit={10}
+            currentUserId={user?.id}
+            onProfileClick={handleProfileClick}
+            onShameUser={handleShameUser}
+          />
+        </CardContent>
+      </Card>
+    </div>
   );
 };
 

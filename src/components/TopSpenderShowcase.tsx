@@ -13,6 +13,10 @@ interface TopSpenderShowcaseProps {
 }
 
 const TopSpenderShowcase: React.FC<TopSpenderShowcaseProps> = ({ user, className = '' }) => {
+  // Calculate custom values that might not exist on user
+  const spendStreak = 0; // Default value
+  const followers = 0; // Default value
+
   return (
     <div className={`max-w-lg mx-auto ${className}`}>
       <div className="text-center mb-6">
@@ -39,18 +43,18 @@ const TopSpenderShowcase: React.FC<TopSpenderShowcaseProps> = ({ user, className
                   <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-yellow-400 mb-2">
                     <img
                       src={user.profileImage || `https://api.dicebear.com/6.x/personas/svg?seed=${user.username}`}
-                      alt={user.displayName}
+                      alt={user.displayName || user.username}
                       className="w-full h-full object-cover"
                     />
                   </div>
                 </div>
                 
-                <h3 className="text-xl font-bold">{user.displayName}</h3>
+                <h3 className="text-xl font-bold">{user.displayName || user.username}</h3>
                 <p className="text-white/60 text-sm">@{user.username}</p>
                 
                 <div className="flex items-center mt-2">
                   <Badge variant="outline" className="bg-yellow-500/10 border-yellow-500/20 text-yellow-400">
-                    Rank #{user.rank}
+                    Rank #{user.rank || 'N/A'}
                   </Badge>
                 </div>
               </div>
@@ -71,7 +75,7 @@ const TopSpenderShowcase: React.FC<TopSpenderShowcaseProps> = ({ user, className
                     <TrendingUp className="h-5 w-5 text-blue-400 mr-2" />
                     <div>
                       <div className="text-sm text-white/60">Spending Streak</div>
-                      <div className="text-xl font-bold">{user.spendStreak || 0} days</div>
+                      <div className="text-xl font-bold">{spendStreak || 0} days</div>
                     </div>
                   </div>
                 </div>
@@ -81,7 +85,7 @@ const TopSpenderShowcase: React.FC<TopSpenderShowcaseProps> = ({ user, className
                     <Users className="h-5 w-5 text-purple-400 mr-2" />
                     <div>
                       <div className="text-sm text-white/60">Followers</div>
-                      <div className="text-xl font-bold">{user.followers || 0}</div>
+                      <div className="text-xl font-bold">{followers || 0}</div>
                     </div>
                   </div>
                 </div>
