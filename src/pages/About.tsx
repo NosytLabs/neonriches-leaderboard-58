@@ -1,11 +1,15 @@
+
 import React from 'react';
+import { Link } from 'react-router-dom';
 import Shell from '@/components/Shell';
 import PageSEO from '@/components/common/PageSEO';
 import RoyalDivider from '@/components/ui/royal-divider';
-import { Crown, Scroll, Coins, Star, Shield, AlertTriangle } from 'lucide-react';
+import { Crown, Scroll, Coins, Shield, AlertTriangle, ArrowRight, FileText, Sparkles } from 'lucide-react';
 import MedievalFrame from '@/components/ui/medieval-frame';
 import { generateRandomAbsurdFact } from '@/utils/absurdityGenerator';
 import usePageTracking from '@/hooks/usePageTracking';
+import { Button } from '@/components/ui/button';
+import RoyalButton from '@/components/ui/royal-button';
 
 const About = () => {
   usePageTracking();
@@ -20,26 +24,34 @@ const About = () => {
       
       <div className="container mx-auto px-4 py-12">
         <div className="max-w-4xl mx-auto">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 royal-gradient text-center">
-            The Royal Manifesto
-          </h1>
-          <p className="text-xl text-white/70 text-center mb-8">
-            A brazenly honest declaration of our kingdom's intentions
-          </p>
+          <div className="text-center mb-12">
+            <h1 className="text-4xl md:text-5xl font-bold mb-4 royal-gradient">
+              The Royal Manifesto of SpendThrone
+            </h1>
+            <p className="text-xl text-white/70 italic mb-6">
+              A Brazenly Honest Declaration of Our Kingdom's Intentions (Yeah, We're Talking to You)
+            </p>
+            
+            <div className="flex justify-center mb-8">
+              <div className="relative">
+                <img 
+                  src="/throne-assets/royal-seal.svg" 
+                  alt="Royal Seal" 
+                  className="w-32 h-32 animate-slow-spin" 
+                />
+                <div className="absolute top-12 right-7 text-2xl animate-wink">😉</div>
+              </div>
+            </div>
+          </div>
           
           <RoyalDivider variant="crown" label="OUR MISSION" color="gold" />
           
           <div className="mt-12 mb-16">
             <MedievalFrame variant="royal" seal>
-              <div className="p-8 text-center">
-                <h2 className="text-3xl font-bold mb-6 royal-gradient">The Vision of SpendThrone</h2>
-                <p className="text-xl mb-8 leading-relaxed">
-                  To create the world's most transparent status hierarchy where wealth directly equals rank, 
-                  with zero pretense about "merit" or "contribution."
-                </p>
-                <p className="italic text-white/80">
-                  "In a world obsessed with purchasing status while pretending not to, 
-                  we remove the charade and embrace the absurdity."
+              <div className="p-8">
+                <h2 className="text-3xl font-bold mb-6 royal-gradient text-center">The Vision of SpendThrone</h2>
+                <p className="text-lg mb-5 leading-relaxed">
+                  To create the world's most transparent status hierarchy where wealth directly equals rank, with zero pretense about "merit" or "contribution." Come on, you know online status often boils down to who's spending the most anyway. SpendThrone just makes it hilariously obvious. See who's really calling the shots (with their wallets!)
                 </p>
               </div>
             </MedievalFrame>
@@ -53,14 +65,10 @@ const About = () => {
               </h2>
               <div className="glass-morphism p-6 rounded-lg h-full">
                 <p className="mb-4">
-                  SpendThrone began as a satirical thought experiment: What if we created a social platform where 
-                  people could simply <em>buy</em> their status, rather than pretending various subscription models, 
-                  luxury goods, and conspicuous consumption weren't already doing exactly that?
+                  SpendThrone began as a thought experiment, kind of like when you realize everyone's doing something but pretending they're not. We thought, "What if we just made it the point to buy status?"
                 </p>
                 <p>
-                  We quickly realized that by making the transaction explicit rather than implicit, we'd created 
-                  the most honest social network in history. Welcome to the digital aristocracy, where at least 
-                  we admit what we're selling.
+                  Like a medieval lord upgrading his armor with gold – except here, your credit card is your royal decree. Welcome to the digital aristocracy where we're at least honest about what's for sale.
                 </p>
               </div>
             </div>
@@ -74,19 +82,19 @@ const About = () => {
                 <ul className="space-y-4">
                   <li className="flex">
                     <span className="text-royal-gold mr-2">⚜️</span>
-                    <span><strong>Radical Transparency:</strong> Your rank is exactly equal to your spending. No hidden algorithms.</span>
+                    <span><strong>Radical Transparency:</strong> Your rank = your spending. No sneaky algorithms here.</span>
                   </li>
                   <li className="flex">
                     <span className="text-royal-gold mr-2">⚜️</span>
-                    <span><strong>Glorious Absurdity:</strong> We embrace the inherent ridiculousness of spending money for digital status.</span>
+                    <span><strong>Glorious Absurdity:</strong> We fully embrace the delightful ridiculousness of paying for online bragging rights.</span>
                   </li>
                   <li className="flex">
                     <span className="text-royal-gold mr-2">⚜️</span>
-                    <span><strong>Equal Opportunity:</strong> Anyone can rise to nobility—it just depends on your credit limit.</span>
+                    <span><strong>Equal Opportunity:</strong> Anyone with the coin can climb our digital feudal system.</span>
                   </li>
                   <li className="flex">
                     <span className="text-royal-gold mr-2">⚜️</span>
-                    <span><strong>Team Rivalry:</strong> Because tribalism makes spending even more compelling.</span>
+                    <span><strong>Team Rivalry:</strong> Because humans love a good drama (and spending more to win).</span>
                   </li>
                 </ul>
               </div>
@@ -95,41 +103,35 @@ const About = () => {
           
           <RoyalDivider variant="treasure" label="OUR APPROACH" color="gold" className="mb-12" />
           
-          <div className="grid md:grid-cols-3 gap-6 mb-16">
-            <div className="glass-morphism border-royal-gold/30 p-6 rounded-lg">
-              <div className="flex justify-center mb-4">
-                <div className="w-16 h-16 rounded-full bg-royal-gold/20 flex items-center justify-center">
-                  <Star className="h-8 w-8 text-royal-gold" />
-                </div>
-              </div>
-              <h3 className="text-xl font-bold text-center mb-3">The Simple Exchange</h3>
-              <p className="text-center text-white/70">
-                Each dollar spent equals one point of rank. No complex formulas, no hidden modifiers. Pure, simple, and brazenly transparent.
-              </p>
-            </div>
+          <div className="glass-morphism border-royal-gold/30 p-8 rounded-lg mb-16">
+            <h2 className="text-2xl font-bold mb-4 royal-gradient text-center">
+              The Coin-Operated Kingdom
+            </h2>
+            <h3 className="text-lg text-center text-white/70 italic mb-6">
+              (It's Simpler Than Understanding Crypto, Promise)
+            </h3>
             
-            <div className="glass-morphism border-royal-gold/30 p-6 rounded-lg">
-              <div className="flex justify-center mb-4">
-                <div className="w-16 h-16 rounded-full bg-royal-gold/20 flex items-center justify-center">
-                  <Coins className="h-8 w-8 text-royal-gold" />
-                </div>
-              </div>
-              <h3 className="text-xl font-bold text-center mb-3">The Visual Display</h3>
-              <p className="text-center text-white/70">
-                Cosmetics, effects, and visual distinctions ensure everyone knows exactly how much you've spent at a glance.
-              </p>
-            </div>
+            <p className="mb-6">
+              Each shilling spent equals one rank point. Think of it as tossing a coin into our virtual wishing well for status. We'll deck you out with visual flair so everyone knows your spending level – like a medieval lord with a really, really big hat.
+            </p>
             
-            <div className="glass-morphism border-royal-gold/30 p-6 rounded-lg">
-              <div className="flex justify-center mb-4">
-                <div className="w-16 h-16 rounded-full bg-royal-gold/20 flex items-center justify-center">
-                  <Shield className="h-8 w-8 text-royal-gold" />
-                </div>
+            <p className="mb-6">
+              Join noble houses (your online crew) and collectively outspend the competition for ultimate bragging rights. Think of our top-ranked users as the ultimate endorsements – their digital spending speaks volumes (literally!).
+            </p>
+            
+            <div className="grid grid-cols-3 gap-4 mt-8">
+              <div className="flex flex-col items-center text-center p-4 bg-black/20 rounded-lg">
+                <Coins className="h-10 w-10 text-royal-gold mb-2" />
+                <span className="text-sm font-medium">$1 = 1 Rank Point</span>
               </div>
-              <h3 className="text-xl font-bold text-center mb-3">The Team Rivalry</h3>
-              <p className="text-center text-white/70">
-                Join one of our noble houses and compete for collective glory, encouraging ever-more-enthusiastic spending.
-              </p>
+              <div className="flex flex-col items-center text-center p-4 bg-black/20 rounded-lg">
+                <Crown className="h-10 w-10 text-royal-gold mb-2" />
+                <span className="text-sm font-medium">Visual Status Symbols</span>
+              </div>
+              <div className="flex flex-col items-center text-center p-4 bg-black/20 rounded-lg">
+                <Shield className="h-10 w-10 text-royal-gold mb-2" />
+                <span className="text-sm font-medium">Team Competition</span>
+              </div>
             </div>
           </div>
           
@@ -137,14 +139,20 @@ const About = () => {
             <div className="flex items-start">
               <AlertTriangle className="text-royal-crimson mt-1 mr-4 flex-shrink-0" />
               <div>
-                <h3 className="text-xl font-bold mb-2">Royal Disclaimer</h3>
-                <p>
-                  SpendThrone is a satirical social experiment exploring how wealth and spending behavior affect perceived status 
-                  and social dynamics in digital spaces. We're holding a mirror to society's often-unspoken relationships 
-                  with money, status, and the purchasing of social capital.
+                <h3 className="text-xl font-bold mb-2">Royal Disclaimer: The "Seriously Though, Don't Empty Your Piggy Bank" Legal Nudge</h3>
+                <p className="mb-4">
+                  SpendThrone is satire, folks. We're holding a mirror up to the internet's obsession with status and the role of money. This isn't financial advice, so please don't sell your actual kingdom for a digital one. We're not responsible for your instant noodle habit.
                 </p>
-                <p className="mt-4 italic">
-                  Please spend responsibly. No refunds for buyer's remorse or existential crises.
+                <p className="mb-4">
+                  For the real, boring (but important) rules, check out our{" "}
+                  <Link to="/terms" className="text-royal-gold hover:underline">
+                    Terms of Service
+                  </Link>
+                  {" "}and{" "}
+                  <Link to="/privacy" className="text-royal-gold hover:underline">
+                    Privacy Policy
+                  </Link>
+                  . Seriously, give 'em a peek.
                 </p>
               </div>
             </div>
@@ -153,18 +161,67 @@ const About = () => {
           <RoyalDivider variant="quill" label="THE ROYAL COURT" color="gold" className="mb-12" />
           
           <div className="text-center mb-16">
-            <h2 className="text-2xl font-bold mb-6">The Minds Behind The Throne</h2>
+            <h2 className="text-2xl font-bold mb-6">The Minds Behind The Throne (Just Like You, Probably)</h2>
             <div className="max-w-2xl mx-auto glass-morphism border-royal-gold/20 p-6 rounded-lg">
+              <p className="text-lg mb-6">
+                We built SpendThrone as both entertainment and a bit of social commentary. We're just a bunch of internet folks who noticed the emperor had no clothes (or maybe just a really expensive skin).
+              </p>
               <p className="italic">
-                "We built SpendThrone as both entertainment and social commentary. If you find yourself 
-                outraged by the concept, we invite you to consider why a transparent pay-for-status 
-                system feels more offensive than the countless opaque ones we participate in daily."
+                "We thought, 'Why not point it out and maybe collect a few shillings along the way?' Consider us the medieval jesters of the digital age."
               </p>
               <p className="mt-4 text-right text-royal-gold">— The Royal Chroniclers</p>
             </div>
           </div>
           
-          <div className="text-center">
+          <div className="glass-morphism border-royal-gold/20 p-8 rounded-lg mb-16 text-center">
+            <h2 className="text-2xl font-bold mb-4 royal-gradient">One Last Thought (You Know You're Intrigued):</h2>
+            <p className="text-xl italic mb-8">
+              Free social network where everyone pretends status is earned? Cute.<br />
+              Honest one where spending equals status? What are you waiting for?
+            </p>
+            
+            <div className="flex flex-col md:flex-row justify-center gap-6 mt-10">
+              <Link to="/signup">
+                <RoyalButton 
+                  variant="royalGold" 
+                  size="lg" 
+                  className="px-8 py-6 text-lg font-bold"
+                  icon={<Crown className="w-5 h-5" />}
+                >
+                  Claim Your Throne
+                </RoyalButton>
+              </Link>
+              
+              <Link to="/leaderboard">
+                <Button 
+                  variant="outline" 
+                  size="lg" 
+                  className="border-royal-gold/50 hover:bg-royal-gold/10 px-8 py-6 text-lg"
+                >
+                  <Sparkles className="mr-2 h-5 w-5" />
+                  View the Nobility
+                </Button>
+              </Link>
+            </div>
+          </div>
+          
+          <div className="flex justify-between items-center">
+            <Link to="/privacy" className="flex items-center text-white/60 hover:text-white/80 transition-colors">
+              <FileText className="mr-2 h-4 w-4" />
+              Privacy Policy
+            </Link>
+            
+            <div className="text-white/60 text-sm">
+              <span className="text-royal-gold">⚜️</span> SpendThrone © {new Date().getFullYear()}
+            </div>
+            
+            <Link to="/terms" className="flex items-center text-white/60 hover:text-white/80 transition-colors">
+              <FileText className="mr-2 h-4 w-4" />
+              Terms of Service
+            </Link>
+          </div>
+          
+          <div className="text-center mt-16">
             <div className="glass-morphism border-white/10 py-6 px-8 rounded-lg inline-block">
               <h3 className="text-xl mb-4">Royal Absurdity Archives</h3>
               <p className="text-white/70 mb-6">A randomly selected fact from our royal historians:</p>
