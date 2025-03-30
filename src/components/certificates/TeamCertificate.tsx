@@ -1,4 +1,3 @@
-
 import React, { useRef, useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
@@ -39,7 +38,6 @@ const TeamCertificate: React.FC<TeamCertificateProps> = ({
   const teamBorder = getTeamBorderColor(user.team);
   const createdDate = certificate?.createdAt || new Date().toISOString();
   
-  // Certificate title based on user rank and team
   const getCertificateTitle = () => {
     if (user.rank === 1) {
       return "Royal Crown Certificate";
@@ -52,7 +50,6 @@ const TeamCertificate: React.FC<TeamCertificateProps> = ({
     }
   };
   
-  // Get the appropriate title for the user
   const getUserTitle = () => {
     if (user.rank === 1) {
       return "Royal Sovereign";
@@ -69,7 +66,6 @@ const TeamCertificate: React.FC<TeamCertificateProps> = ({
     }
   };
   
-  // Get a team-specific motto
   const getTeamMotto = () => {
     switch (user.team) {
       case 'red':
@@ -83,7 +79,6 @@ const TeamCertificate: React.FC<TeamCertificateProps> = ({
     }
   };
   
-  // Handle certificate download
   const handleDownload = async () => {
     if (!certificateRef.current) return;
     
@@ -117,7 +112,6 @@ const TeamCertificate: React.FC<TeamCertificateProps> = ({
     }
   };
   
-  // Handle NFT minting
   const handleMintNFT = async () => {
     if (!connected) {
       toast({
@@ -166,7 +160,6 @@ const TeamCertificate: React.FC<TeamCertificateProps> = ({
     }
   };
   
-  // Handle social sharing
   const handleShare = async () => {
     setIsSharing(true);
     
@@ -175,10 +168,8 @@ const TeamCertificate: React.FC<TeamCertificateProps> = ({
         throw new Error("No certificate to share");
       }
       
-      // Generate sharable image URL
       const shareImageUrl = await generateShareableImage(certificate, user);
       
-      // If the Web Share API is available, use it
       if (navigator.share) {
         await navigator.share({
           title: `${user.displayName || user.username}'s SpendThrone Certificate`,
@@ -186,7 +177,6 @@ const TeamCertificate: React.FC<TeamCertificateProps> = ({
           url: certificate.shareUrl || window.location.href,
         });
       } else {
-        // Fallback - copy the URL to clipboard
         const shareUrl = certificate.shareUrl || window.location.href;
         await navigator.clipboard.writeText(shareUrl);
         
@@ -213,12 +203,10 @@ const TeamCertificate: React.FC<TeamCertificateProps> = ({
   
   return (
     <div className="flex flex-col items-center space-y-6">
-      {/* Certificate Display */}
       <div 
         ref={certificateRef} 
         className={`relative max-w-2xl w-full p-8 parchment-bg border-8 ${teamBorder} rounded-lg shadow-xl`}
       >
-        {/* Corner decorations */}
         <div className="absolute top-0 left-0 w-16 h-16">
           <div className={`absolute top-2 left-2 w-8 h-8 border-t-2 border-l-2 ${teamBorder}`}></div>
         </div>
@@ -232,9 +220,7 @@ const TeamCertificate: React.FC<TeamCertificateProps> = ({
           <div className={`absolute bottom-2 right-2 w-8 h-8 border-b-2 border-r-2 ${teamBorder}`}></div>
         </div>
 
-        {/* Certificate Content */}
         <div className="space-y-6 text-center">
-          {/* Title */}
           <div>
             <h1 className={`text-2xl font-bold font-medieval-title ${teamColor}`}>
               {getCertificateTitle()}
@@ -243,7 +229,6 @@ const TeamCertificate: React.FC<TeamCertificateProps> = ({
             <p className="text-xs text-gray-500 italic">{getTeamMotto()}</p>
           </div>
 
-          {/* Main Content */}
           <div className="space-y-4">
             <p className="text-lg">This certifies that</p>
             <h2 className={`text-2xl font-bold ${teamColor}`}>
@@ -254,7 +239,6 @@ const TeamCertificate: React.FC<TeamCertificateProps> = ({
               within the <span className={`font-bold ${teamColor}`}>{teamName}</span>
             </p>
             
-            {/* Rank and Stats */}
             <div className="grid grid-cols-3 gap-4 my-4">
               <div className="border rounded p-3">
                 <div className="text-sm text-gray-600">Rank</div>
@@ -272,12 +256,10 @@ const TeamCertificate: React.FC<TeamCertificateProps> = ({
               </div>
             </div>
             
-            {/* Satirical Quote */}
             <p className="text-sm italic text-gray-600 my-4">
               "Wealth in the physical realm is fleeting, but digital status on SpendThrone is forever."
             </p>
             
-            {/* Seal and Date */}
             <div className="flex justify-between items-end mt-6">
               <div>
                 <div className={`royal-seal ${teamBorder.replace('border', 'bg')}`}>
@@ -286,16 +268,14 @@ const TeamCertificate: React.FC<TeamCertificateProps> = ({
               </div>
               <div className="text-right">
                 <div className="text-sm text-gray-600">Issued on</div>
-                <div>{formatDate(createdDate, 'long')}</div>
+                <div>{formatDate(createdDate)}</div>
               </div>
             </div>
             
-            {/* Certificate Number */}
             <div className="text-xs text-gray-500 mt-4">
               Certificate #{certificate?.id || user.id}
             </div>
             
-            {/* Optional NFT Verification */}
             {certificate?.isMinted && certificate?.mintAddress && (
               <div className="flex justify-center mt-2">
                 <Badge variant="outline" className="bg-green-500/20 text-green-600">
@@ -308,7 +288,6 @@ const TeamCertificate: React.FC<TeamCertificateProps> = ({
         </div>
       </div>
       
-      {/* Action Buttons */}
       <div className="flex flex-wrap justify-center gap-3">
         <Button
           variant="outline"

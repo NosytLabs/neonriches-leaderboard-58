@@ -1,91 +1,87 @@
 
-/**
- * Utility functions for formatting different data types
- */
-
-/**
- * Formats a file size into a human-readable string
- * @param bytes Size in bytes
- * @returns Formatted file size string (e.g., "1.5 MB")
- */
-export const formatFileSize = (bytes: number): string => {
-  if (bytes === 0) return '0 Bytes';
-  
-  const k = 1024;
-  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
-  
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-};
-
-/**
- * Formats a number with commas as thousands separators
- * @param value Number to format
- * @returns Formatted number string
- */
-export const formatNumber = (value: number): string => {
-  return new Intl.NumberFormat('en-US').format(value);
-};
-
-/**
- * Formats a currency value with dollar sign and 2 decimal places
- * @param value Value to format as currency
- * @param currency Currency code (default: USD)
- * @returns Formatted currency string
- */
-export const formatCurrency = (value: number, currency = 'USD'): string => {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency,
-    minimumFractionDigits: 2
-  }).format(value);
-};
-
-/**
- * Formats a date in a consistent way
- * @param date Date to format
- * @param options Formatting options
- * @returns Formatted date string
- */
 export const formatDate = (
-  date: Date | string, 
-  options: Intl.DateTimeFormatOptions = {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric'
-  }
+  date: string | Date,
+  style: 'short' | 'medium' | 'long' = 'medium'
 ): string => {
+  if (!date) return '';
+
   const dateObj = typeof date === 'string' ? new Date(date) : date;
+  
+  const options: Intl.DateTimeFormatOptions = {
+    year: 'numeric',
+    month: style === 'short' ? '2-digit' : 'long',
+    day: 'numeric'
+  };
+  
+  if (style === 'long') {
+    options.hour = '2-digit';
+    options.minute = '2-digit';
+  }
+  
   return new Intl.DateTimeFormat('en-US', options).format(dateObj);
 };
 
-/**
- * Formats a time duration in milliseconds to a human-readable format
- * @param ms Time in milliseconds
- * @returns Formatted time string
- */
-export const formatDuration = (ms: number): string => {
-  if (ms < 1000) return `${ms}ms`;
-  
-  const seconds = Math.floor(ms / 1000);
-  if (seconds < 60) return `${seconds}s`;
-  
-  const minutes = Math.floor(seconds / 60);
-  const remainingSeconds = seconds % 60;
-  if (minutes < 60) return `${minutes}m ${remainingSeconds}s`;
-  
-  const hours = Math.floor(minutes / 60);
-  const remainingMinutes = minutes % 60;
-  return `${hours}h ${remainingMinutes}m`;
+export const formatCurrency = (amount: number): string => {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  }).format(amount);
 };
 
-/**
- * Truncates text to a specified length and adds ellipsis if needed
- * @param text Text to truncate
- * @param length Maximum length
- * @returns Truncated text
- */
-export const truncateText = (text: string, length = 50): string => {
-  if (text.length <= length) return text;
-  return text.substring(0, length) + '...';
+export const formatDollarAmount = (amount: number): string => {
+  return `$${amount.toLocaleString('en-US', {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0
+  })}`;
+};
+
+export const formatNumber = (num: number): string => {
+  return num.toLocaleString('en-US');
+};
+
+export const formatPercentage = (value: number, decimalPlaces = 1): string => {
+  return `${value.toFixed(decimalPlaces)}%`;
+};
+
+export const formatAddress = (address: string, length = 6): string => {
+  if (!address || address.length < 10) return address || '';
+  return `${address.substring(0, length)}...${address.substring(address.length - 4)}`;
+};
+
+export const formatHistoricalValue = (amount: number, year: number): string => {
+  // Rough inflation adjustment (simplified)
+  const currentYear = new Date().getFullYear();
+  const yearsAgo = currentYear - year;
+  const inflationRate = 0.03; // 3% annual average inflation
+  const multiplier = Math.pow(1 + inflationRate, yearsAgo);
+  
+  const adjustedAmount = amount * multiplier;
+  
+  return formatDollarAmount(Math.round(adjustedAmount));
+};
+
+export const formatTimeAgo = (date: string | Date): string => {
+  const now = new Date();
+  const past = new Date(date);
+  const diffMs = now.getTime() - past.getTime();
+  
+  // Convert to seconds, minutes, hours, days
+  const diffSec = Math.floor(diffMs / 1000);
+  const diffMin = Math.floor(diffSec / 60);
+  const diffHrs = Math.floor(diffMin / 60);
+  const diffDays = Math.floor(diffHrs / 24);
+  
+  if (diffDays > 30) {
+    return formatDate(date, 'short');
+  } else if (diffDays > 0) {
+    return `${diffDays}d ago`;
+  } else if (diffHrs > 0) {
+    return `${diffHrs}h ago`;
+  } else if (diffMin > 0) {
+    return `${diffMin}m ago`;
+  } else {
+    return 'just now';
+  }
 };

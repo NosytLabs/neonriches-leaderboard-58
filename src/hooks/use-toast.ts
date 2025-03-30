@@ -1,32 +1,95 @@
 
-import { useState, useCallback } from 'react';
+import { toast as sonnerToast } from "sonner";
 
-interface ToastOptions {
-  title: string;
-  description?: string;
-  variant?: 'default' | 'destructive' | 'success';
+type ToastType = "default" | "success" | "error" | "warning" | "loading";
+
+type ToastOptions = {
+  id?: string;
+  title?: string;
+  description?: React.ReactNode;
+  action?: React.ReactNode;
+  variant?: "default" | "destructive" | "success" | "royal";
   duration?: number;
-}
+  className?: string;
+};
 
-export function useToast() {
-  const [toasts, setToasts] = useState<ToastOptions[]>([]);
+export const toast = {
+  dismiss: (toastId?: string) => {
+    sonnerToast.dismiss(toastId);
+  },
+  
+  default: (options: ToastOptions) => {
+    return sonnerToast(options.title || "", {
+      id: options.id,
+      description: options.description,
+      action: options.action,
+      duration: options.duration,
+      className: options.className,
+    });
+  },
+  
+  success: (options: ToastOptions) => {
+    return sonnerToast.success(options.title || "", {
+      id: options.id,
+      description: options.description,
+      action: options.action,
+      duration: options.duration,
+      className: options.className,
+    });
+  },
+  
+  error: (options: ToastOptions) => {
+    return sonnerToast.error(options.title || "", {
+      id: options.id,
+      description: options.description,
+      action: options.action,
+      duration: options.duration,
+      className: options.className,
+    });
+  },
+  
+  warning: (options: ToastOptions) => {
+    return sonnerToast(options.title || "", {
+      id: options.id,
+      description: options.description,
+      action: options.action,
+      duration: options.duration,
+      className: `bg-amber-100 text-amber-900 ${options.className || ""}`,
+    });
+  },
+  
+  loading: (options: ToastOptions) => {
+    return sonnerToast.loading(options.title || "", {
+      id: options.id,
+      description: options.description,
+      duration: options.duration,
+      className: options.className,
+    });
+  },
+};
 
-  const toast = useCallback((options: ToastOptions) => {
-    const id = Math.random().toString(36).substring(2, 9);
-    const newToast = { ...options, id };
-    setToasts((prevToasts) => [...prevToasts, newToast]);
+// Compatibility layer with any existing shadcn/ui toast usage
+export const useToast = () => {
+  return {
+    toast: (options: ToastOptions) => {
+      const { variant = "default", ...rest } = options;
+      
+      switch (variant) {
+        case "success":
+          return toast.success(rest);
+        case "destructive":
+          return toast.error(rest);
+        case "royal":
+          return toast.default({
+            ...rest,
+            className: `bg-royal-purple/20 border-royal-purple/30 text-royal-gold ${rest.className || ""}`,
+          });
+        default:
+          return toast.default(rest);
+      }
+    },
+    dismiss: toast.dismiss,
+  };
+};
 
-    // Auto-dismiss after duration
-    setTimeout(() => {
-      setToasts((prevToasts) => prevToasts.filter((t) => t.id !== id));
-    }, options.duration || 5000);
-
-    return id;
-  }, []);
-
-  const dismiss = useCallback((id: string) => {
-    setToasts((prevToasts) => prevToasts.filter((t) => t.id !== id));
-  }, []);
-
-  return { toast, dismiss, toasts };
-}
+export default useToast;

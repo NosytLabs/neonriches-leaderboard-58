@@ -8,6 +8,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
 import { Award, Crown, Medal, Shield } from 'lucide-react';
+import { Button } from '@/components/ui/button';  // Added Button import
 import CertificateDisplay from '@/components/certificates/CertificateDisplay';
 import { useCertificate } from '@/hooks/useCertificate';
 

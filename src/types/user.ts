@@ -24,6 +24,7 @@ export type UserGender =
   | 'queen'
   | 'jester'
   | 'noble'
+  | 'neutral'
   | 'prefer-not-to-say';
 
 export type Team = 
@@ -32,7 +33,8 @@ export type Team =
   | 'blue'
   | 'Red'
   | 'Green'
-  | 'Blue';
+  | 'Blue'
+  | 'none';
 
 export type UserTeam = Team;
 export type TeamType = Team;
@@ -54,11 +56,14 @@ export interface SocialLink {
   url: string;
   username?: string;
   clicks?: number;
+  title?: string;
+  label?: string;
 }
 
 export interface ProfileLink extends SocialLink {
   displayOrder?: number;
   isVisible?: boolean;
+  title?: string;
 }
 
 export interface ProfileImage {
@@ -88,6 +93,8 @@ export interface UserCosmetics {
   activeTheme?: string;
   activeBadge?: string;
   activeTitle?: string;
+  activeBackground?: string;
+  socialLinks?: string[];
 }
 
 export interface UserSettings {
@@ -98,12 +105,14 @@ export interface UserSettings {
   showRank: boolean;
   showTotalSpent: boolean;
   showSpending?: boolean;
-  profileVisibility?: 'public' | 'private' | 'friends';
+  profileVisibility: 'public' | 'private' | 'friends';
   allowProfileLinks?: boolean;
   showEmailOnProfile?: boolean;
   showTeam?: boolean;
   rankChangeAlerts?: boolean;
   publicProfile?: boolean;
+  shameAlerts?: boolean;
+  allowMessages?: boolean;
 }
 
 export interface UserSubscription {
@@ -116,6 +125,7 @@ export interface UserSubscription {
   plan?: string;
   status?: string;
   currentPeriodEnd?: string;
+  cancelAtPeriodEnd?: boolean;
 }
 
 export interface ProfileBoost {
@@ -198,4 +208,19 @@ export interface UserProfile extends User {
   referralCount?: number;
   certificates?: any[];
   activeTitle?: string;
+}
+
+export interface LeaderboardUser {
+  id: string;
+  username: string;
+  displayName?: string;
+  profileImage?: string;
+  avatarUrl?: string;
+  rank: number;
+  tier?: string;
+  team?: Team;
+  amountSpent?: number;
+  totalSpent?: number;
+  joinedAt?: string;
+  isVerified?: boolean;
 }

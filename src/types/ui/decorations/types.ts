@@ -1,92 +1,71 @@
 
-import React from 'react';
+import { ReactNode } from 'react';
+import { MedievalIconColor, MedievalIconName } from '@/types/ui/icon-types';
 
-export type MedievalSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
-export type MedievalIconColor = 'gold' | 'silver' | 'royal' | 'crimson' | 'default' | 'purple';
+export type MedievalDecorationType = 
+  | 'border'
+  | 'corner'
+  | 'pattern'
+  | 'banner'
+  | 'insignia'
+  | 'divider'
+  | 'shield'
+  | 'crossed-swords'
+  | 'coat-of-arms';
+
+export type MedievalDecorationColor = 
+  | 'gold'
+  | 'silver'
+  | 'crimson' 
+  | 'royal'
+  | 'purple'
+  | 'navy'
+  | 'platinum';
+
+export type MedievalDecorationSize = 
+  | 'xs'
+  | 'sm'
+  | 'md'
+  | 'lg'
+  | 'xl'
+  | '2xl';
 
 export interface BaseDecorationProps {
-  size?: MedievalSize;
-  color?: MedievalIconColor;
+  color?: MedievalDecorationColor;
+  size?: MedievalDecorationSize;
   className?: string;
+  style?: React.CSSProperties;
   animate?: boolean;
-  icon?: React.ReactNode;
+  container?: {
+    className?: string;
+    style?: React.CSSProperties;
+  };
+  icon?: {
+    name: MedievalIconName;
+    color: MedievalIconColor;
+    size: MedievalDecorationSize;
+    animate?: boolean;
+  };
+  border?: {
+    className?: string;
+    style?: React.CSSProperties;
+  };
 }
 
-export type RoyalDividerVariant = 'line' | 'fancy' | 'double' | 'simple' | 'ornate';
+export type RoyalDividerVariant = 
+  | 'line' 
+  | 'double' 
+  | 'fancy' 
+  | 'ornate' 
+  | 'simple' 
+  | 'treasure' 
+  | 'quill';
 
 export interface RoyalDividerProps {
   variant?: RoyalDividerVariant;
-  color?: 'default' | 'gold' | 'royal' | 'crimson' | 'purple';
+  color?: 'default' | 'gold' | 'crimson' | 'royal' | 'purple';
   className?: string;
-  label?: string;
-  vertical?: boolean;
+  withIcon?: boolean;
+  iconName?: MedievalIconName;
+  label?: string | ReactNode;
 }
-
-export type MedievalIconName = 
-  | 'crown' 
-  | 'shield' 
-  | 'sword' 
-  | 'scroll' 
-  | 'potion' 
-  | 'castle' 
-  | 'warning' 
-  | 'goblet' 
-  | 'gift' 
-  | 'image' 
-  | 'key' 
-  | 'wallet' 
-  | 'medal' 
-  | 'heart';
-
-export type MedievalIconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
-
-export type MedievalDecorationType = 'border-pattern' | 'coat-of-arms' | 'corner-flourish' | 'crossed-swords' | 'royal-banner' | 'royal-insignia';
-
-export type MedievalDecorationSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
-
-export type MedievalDecorationColor = 'gold' | 'silver' | 'royal' | 'crimson' | 'bronze';
-
-export const sizeClasses = {
-  xs: 'w-4 h-4',
-  sm: 'w-6 h-6',
-  md: 'w-8 h-8',
-  lg: 'w-12 h-12',
-  xl: 'w-16 h-16',
-  '2xl': 'w-24 h-24'
-};
-
-export const getColorClass = (color: MedievalIconColor): string => {
-  switch (color) {
-    case 'gold':
-      return 'text-yellow-400';
-    case 'silver':
-      return 'text-gray-300';
-    case 'royal':
-      return 'text-purple-500';
-    case 'crimson':
-      return 'text-red-600';
-    case 'purple':
-      return 'text-purple-600';
-    default:
-      return 'text-white';
-  }
-};
-
-export const toMedievalIconColor = (color: string): MedievalIconColor => {
-  switch (color) {
-    case 'gold':
-    case 'yellow':
-      return 'gold';
-    case 'silver':
-    case 'gray':
-      return 'silver';
-    case 'royal':
-    case 'purple':
-      return 'royal';
-    case 'crimson':
-    case 'red':
-      return 'crimson';
-    default:
-      return 'default';
-  }
-};

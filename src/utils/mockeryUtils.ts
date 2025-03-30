@@ -1,209 +1,190 @@
 
 import { MockeryAction, MockeryTier, ShameAction } from '@/types/mockery';
+import { CosmeticRarity } from '@/types/cosmetics';
 
-/**
- * Get the display name for a mockery action
- */
-export const getMockeryName = (action: MockeryAction): string => {
-  switch (action) {
-    case 'tomatoes': return 'Rotten Tomatoes';
-    case 'eggs':
-    case 'putridEggs': return 'Putrid Eggs';
-    case 'stocks': return 'Stockade';
-    case 'dunce': return 'Dunce Cap';
-    case 'silence': return 'Royal Silence';
-    case 'courtJester': return 'Court Jester';
-    case 'smokeBomb': return 'Smoke Bomb';
-    case 'protection': return 'Royal Protection';
-    case 'jester': return 'Jester Mockery';
-    case 'glitterBomb': return 'Glitter Bomb';
-    case 'royalPie': return 'Royal Pie';
-    case 'jokeCrown': return 'Joke Crown';
-    case 'memeFrame': return 'Meme Frame';
-    case 'roast': return 'Royal Roast';
-    case 'ridicule': return 'Public Ridicule';
-    case 'humiliate': return 'Royal Humiliation';
-    case 'expose': return 'Royal Exposure';
-    case 'mock': return 'Royal Mockery';
-    case 'shame': return 'Public Shame';
-    case 'taunt': return 'Royal Taunt';
-    case 'guillotine': return 'Royal Guillotine';
-    case 'dungeons': return 'Royal Dungeons';
-    case 'removal': return 'Royal Removal';
-    case 'immune': return 'Royal Immunity';
-    default: return 'Unknown Mockery';
-  }
+// Constants for mockery functionality
+export const MOCKERY_DURATION = {
+  'tomatoes': 24 * 60 * 60 * 1000, // 24 hours
+  'eggs': 12 * 60 * 60 * 1000, // 12 hours
+  'putridEggs': 48 * 60 * 60 * 1000, // 48 hours
+  'stocks': 72 * 60 * 60 * 1000, // 72 hours
+  'dunce': 36 * 60 * 60 * 1000, // 36 hours
+  'silence': 24 * 60 * 60 * 1000, // 24 hours
+  'courtJester': 48 * 60 * 60 * 1000, // 48 hours
+  'smokeBomb': 6 * 60 * 60 * 1000, // 6 hours
+  'protection': 7 * 24 * 60 * 60 * 1000, // 7 days
+  'immune': 30 * 24 * 60 * 60 * 1000, // 30 days
+  'jester': 48 * 60 * 60 * 1000, // 48 hours
+  'glitterBomb': 12 * 60 * 60 * 1000, // 12 hours
+  'royalPie': 24 * 60 * 60 * 1000, // 24 hours
+  'jokeCrown': 72 * 60 * 60 * 1000, // 72 hours
+  'memeFrame': 48 * 60 * 60 * 1000, // 48 hours
 };
 
-/**
- * Get the cost (in dollars) of a mockery action
- */
-export const getMockeryCost = (action: MockeryAction): number => {
-  switch (action) {
-    case 'tomatoes': return 5;
-    case 'eggs':
-    case 'putridEggs': return 10;
-    case 'stocks': return 15;
-    case 'dunce': return 20;
-    case 'silence': return 25;
-    case 'courtJester': return 30;
-    case 'smokeBomb': return 35;
-    case 'protection': return 50;
-    case 'glitterBomb': return 60;
-    case 'royalPie': return 75;
-    case 'jokeCrown': return 100;
-    case 'memeFrame': return 125;
-    case 'immune': return 150;
-    default: return 10;
-  }
-};
-
-/**
- * Get the description for a mockery action
- */
-export const getMockeryDescription = (action: MockeryAction): string => {
-  switch (action) {
-    case 'tomatoes': return 'Shower the target with virtual rotten tomatoes, creating a mess on their profile.';
-    case 'eggs':
-    case 'putridEggs': return 'Pelt the target with putrid eggs, adding a foul stench to their profile.';
-    case 'stocks': return 'Place the target in virtual stocks for public viewing and ridicule.';
-    case 'dunce': return 'Add a dunce cap to the target\'s profile image, marking them as foolish.';
-    case 'silence': return 'Temporarily prevent the target from being able to comment on public posts.';
-    case 'courtJester': return 'Transform the target\'s profile into that of a court jester, complete with bells and motley.';
-    case 'smokeBomb': return 'Drop a smoke bomb on the target\'s profile, obscuring their information temporarily.';
-    case 'protection': return 'Protect yourself from being mocked by others for a period of time.';
-    case 'glitterBomb': return 'Explode a glitter bomb on the target\'s profile that cannot be removed for days.';
-    case 'royalPie': return 'Smash a pie in the target\'s face that appears on their profile image.';
-    case 'jokeCrown': return 'Place a ridiculous joke crown on the target\'s head in their profile.';
-    case 'memeFrame': return 'Frame the target\'s profile with embarrassing memes.';
-    case 'immune': return 'Become completely immune to mockery effects for a period of time.';
-    default: return 'An unknown form of mockery with mysterious effects.';
-  }
-};
-
-/**
- * Get the duration (in hours) of a mockery effect
- */
 export const getMockeryDuration = (action: MockeryAction): number => {
-  switch (action) {
-    case 'tomatoes': return 12;
-    case 'eggs':
-    case 'putridEggs': return 24;
-    case 'stocks': return 36;
-    case 'dunce': return 48;
-    case 'silence': return 72;
-    case 'courtJester': return 96;
-    case 'smokeBomb': return 4;
-    case 'protection': return 168; // 7 days
-    case 'glitterBomb': return 120;
-    case 'royalPie': return 144;
-    case 'jokeCrown': return 192;
-    case 'memeFrame': return 240;
-    case 'immune': return 336; // 14 days
-    default: return 24;
-  }
+  return MOCKERY_DURATION[action] || 24 * 60 * 60 * 1000; // Default 24 hours
 };
 
-/**
- * Get the tier of a mockery action
- */
+export const getMockeryCost = (action: MockeryAction): number => {
+  const costs: Partial<Record<MockeryAction, number>> = {
+    'tomatoes': 5,
+    'eggs': 10,
+    'putridEggs': 25,
+    'stocks': 50,
+    'dunce': 35,
+    'silence': 75,
+    'courtJester': 100,
+    'smokeBomb': 20,
+    'protection': 150,
+    'immune': 500,
+    'glitterBomb': 35,
+    'royalPie': 50,
+    'jokeCrown': 75,
+    'memeFrame': 100,
+  };
+  
+  return costs[action] || 25; // Default cost
+};
+
+export const getMockeryName = (action: MockeryAction): string => {
+  const names: Partial<Record<MockeryAction, string>> = {
+    'tomatoes': 'Rotten Tomatoes',
+    'eggs': 'Rotten Eggs',
+    'putridEggs': 'Putrid Eggs',
+    'stocks': 'Public Stocks',
+    'dunce': 'Dunce Cap',
+    'silence': 'Royal Silence',
+    'courtJester': 'Court Jester',
+    'smokeBomb': 'Smoke Bomb',
+    'protection': 'Royal Protection',
+    'immune': 'Royal Immunity',
+    'glitterBomb': 'Glitter Bomb',
+    'royalPie': 'Royal Pie',
+    'jokeCrown': 'Joke Crown',
+    'memeFrame': 'Meme Frame',
+    'jester': 'Jester Hat',
+  };
+  
+  return names[action] || action;
+};
+
+export const getMockeryDescription = (action: MockeryAction): string => {
+  const descriptions: Partial<Record<MockeryAction, string>> = {
+    'tomatoes': 'Splatter the target with rotten tomatoes, leaving them marked with shame for 24 hours.',
+    'eggs': 'Pelt the target with eggs, causing them embarrassment for 12 hours.',
+    'putridEggs': 'Bombard the target with putrid eggs that leave a lingering stench for 48 hours.',
+    'stocks': 'Place the target in the public stocks for 72 hours of humiliation.',
+    'dunce': 'Force the target to wear a dunce cap for 36 hours.',
+    'silence': 'Silence the target for 24 hours, preventing them from speaking in public forums.',
+    'courtJester': 'Make the target the court jester for 48 hours, forced to entertain others.',
+    'smokeBomb': 'Drop a smoke bomb that obscures the target temporarily for 6 hours.',
+    'protection': 'Protect yourself from mockery for 7 days.',
+    'immune': 'Grant yourself royal immunity from mockery for 30 days.',
+    'glitterBomb': 'Cover the target in glitter they can\'t wash off for 12 hours.',
+    'royalPie': 'Splat a royal pie in the target\'s face for 24 hours of sticky embarrassment.',
+    'jokeCrown': 'Crown the target as the kingdom\'s fool for 72 hours.',
+    'memeFrame': 'Frame the target\'s profile in ridiculous memes for 48 hours.',
+    'jester': 'Force the target to wear a jester hat and bells for 48 hours of ridicule.',
+  };
+  
+  return descriptions[action] || `Apply the ${action} effect to the target.`;
+};
+
 export const getMockeryTier = (action: MockeryAction): MockeryTier => {
-  switch (action) {
-    case 'tomatoes': return 'common';
-    case 'eggs':
-    case 'putridEggs': return 'common';
-    case 'stocks': return 'uncommon';
-    case 'dunce': return 'uncommon';
-    case 'silence': return 'rare';
-    case 'courtJester': return 'rare';
-    case 'smokeBomb': return 'epic';
-    case 'protection': return 'legendary';
-    case 'glitterBomb': return 'epic';
-    case 'royalPie': return 'epic';
-    case 'jokeCrown': return 'legendary';
-    case 'memeFrame': return 'legendary';
-    case 'immune': return 'legendary';
-    default: return 'common';
-  }
+  const tiers: Partial<Record<MockeryAction, MockeryTier>> = {
+    'tomatoes': 'common',
+    'eggs': 'common',
+    'putridEggs': 'uncommon',
+    'stocks': 'rare',
+    'dunce': 'uncommon',
+    'silence': 'rare',
+    'courtJester': 'epic',
+    'smokeBomb': 'common',
+    'protection': 'rare',
+    'immune': 'legendary',
+    'glitterBomb': 'uncommon',
+    'royalPie': 'rare',
+    'jokeCrown': 'epic',
+    'memeFrame': 'rare',
+    'jester': 'uncommon',
+  };
+  
+  return tiers[action] || 'common';
 };
 
-/**
- * Get the CSS class for styling a mockery effect
- */
-export const getMockeryCssClass = (action: MockeryAction): string => {
-  switch (action) {
-    case 'tomatoes': return 'mockery-tomatoes';
-    case 'eggs':
-    case 'putridEggs': return 'mockery-eggs';
-    case 'stocks': return 'mockery-stocks';
-    case 'dunce': return 'mockery-dunce';
-    case 'silence': return 'mockery-silence';
-    case 'courtJester': return 'mockery-jester';
-    case 'smokeBomb': return 'mockery-smoke';
-    case 'protection': return 'mockery-protection';
-    case 'glitterBomb': return 'mockery-glitter';
-    case 'royalPie': return 'mockery-pie';
-    case 'jokeCrown': return 'mockery-joke-crown';
-    case 'memeFrame': return 'mockery-meme';
-    case 'immune': return 'mockery-immune';
-    default: return 'mockery-default';
-  }
+export const getMockeryCss = (action: MockeryAction): string => {
+  const cssClasses: Partial<Record<MockeryAction, string>> = {
+    'tomatoes': 'mockery-tomatoes',
+    'eggs': 'mockery-eggs',
+    'putridEggs': 'mockery-putrid-eggs',
+    'stocks': 'mockery-stocks',
+    'dunce': 'mockery-dunce',
+    'silence': 'mockery-silence',
+    'courtJester': 'mockery-jester',
+    'smokeBomb': 'mockery-smoke',
+    'protection': 'mockery-protected',
+    'immune': 'mockery-immune',
+    'glitterBomb': 'mockery-glitter',
+    'royalPie': 'mockery-pie',
+    'jokeCrown': 'mockery-joke-crown',
+    'memeFrame': 'mockery-meme-frame',
+    'jester': 'mockery-jester-hat',
+  };
+  
+  return cssClasses[action] || '';
 };
 
-/**
- * Get descriptive label for mockery tiers
- */
-export const getMockeryTierLabel = (tier: MockeryTier): string => {
-  switch (tier) {
-    case 'common': return 'Common';
-    case 'uncommon': return 'Uncommon';
-    case 'rare': return 'Rare';
-    case 'epic': return 'Epic';
-    case 'legendary': return 'Legendary';
-    case 'premium': return 'Premium';
-    default: return 'Unknown';
-  }
+export const getActiveMockeryClass = (action: MockeryAction): string => {
+  const mockeryClasses: Record<string, string> = {
+    'tomatoes': 'bg-red-800/30 border-red-600/30',
+    'eggs': 'bg-yellow-800/30 border-yellow-600/30',
+    'putridEggs': 'bg-green-900/30 border-green-700/30',
+    'stocks': 'bg-stone-800/30 border-stone-600/30',
+    'dunce': 'bg-gray-800/30 border-gray-600/30',
+    'silence': 'bg-blue-900/30 border-blue-700/30',
+    'courtJester': 'bg-purple-900/30 border-purple-700/30',
+    'smokeBomb': 'bg-gray-900/40 border-gray-700/30',
+    'protection': 'bg-royal-gold/10 border-royal-gold/20',
+    'immune': 'bg-royal-gold/20 border-royal-gold/30',
+    'jester': 'bg-purple-800/30 border-purple-600/30',
+    'glitterBomb': 'bg-pink-800/30 border-pink-600/30',
+    'royalPie': 'bg-royal-crimson/20 border-royal-crimson/30',
+    'jokeCrown': 'bg-royal-navy/20 border-royal-navy/30',
+    'memeFrame': 'bg-orange-800/30 border-orange-600/30',
+  };
+  
+  return mockeryClasses[action] || 'bg-gray-800/30 border-gray-600/30';
 };
 
-/**
- * Get color class for mockery tiers
- */
-export const getMockeryTierColor = (tier: MockeryTier): string => {
-  switch (tier) {
-    case 'common': return 'text-gray-400';
-    case 'uncommon': return 'text-green-400';
-    case 'rare': return 'text-blue-400';
-    case 'epic': return 'text-purple-400';
-    case 'legendary': return 'text-royal-gold';
-    case 'premium': return 'text-royal-purple';
-    default: return 'text-gray-400';
-  }
+export const getMockeryRarity = (action: MockeryAction): CosmeticRarity => {
+  const rarityMap: Record<MockeryTier, CosmeticRarity> = {
+    'common': 'common',
+    'uncommon': 'uncommon',
+    'rare': 'rare',
+    'epic': 'epic',
+    'legendary': 'legendary',
+    'premium': 'legendary'
+  };
+  
+  const tier = getMockeryTier(action);
+  return rarityMap[tier];
 };
 
-/**
- * Map shame actions to mockery actions
- */
-export const mapShameToMockery = (action: ShameAction): MockeryAction => {
-  switch (action) {
-    case 'tomatoes': return 'tomatoes';
-    case 'putridEggs': return 'putridEggs';
-    case 'eggs': return 'putridEggs';
-    case 'stocks': return 'stocks';
-    case 'dunce': return 'dunce';
-    case 'silence': return 'silence';
-    case 'courtJester': return 'courtJester';
-    case 'smokeBomb': return 'smokeBomb';
-    case 'shame': return 'mock';
-    case 'ridicule': return 'ridicule';
-    case 'jester': return 'courtJester';
-    default: return 'tomatoes';
-  }
-};
-
-/**
- * Get the active mockery class for a user
- */
-export const getActiveMockeryClass = (action: MockeryAction | null): string => {
-  if (!action) return '';
-  return getMockeryCssClass(action);
+// For shame actions specifically (subset of mockery)
+export const isValidShameAction = (action: string): action is ShameAction => {
+  const validShameActions: ShameAction[] = [
+    'tomatoes', 
+    'putridEggs', 
+    'stocks', 
+    'dunce', 
+    'silence', 
+    'courtJester',
+    'smokeBomb',
+    'eggs',
+    'shame',
+    'ridicule',
+    'jester'
+  ];
+  
+  return validShameActions.includes(action as ShameAction);
 };

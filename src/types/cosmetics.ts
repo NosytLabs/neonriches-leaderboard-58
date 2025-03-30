@@ -1,29 +1,59 @@
 
-export type CosmeticCategory = 'borders' | 'titles' | 'effects' | 'backgrounds' | 'emojis' | 'fonts' | 'colors' | 'badges' | 'themes';
+import { UserProfile } from './user';
 
-export type CosmeticRarity = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary' | 'royal';
+export type CosmeticCategory = 
+  | 'border'
+  | 'background'  
+  | 'profile'
+  | 'badge'
+  | 'title'
+  | 'effect'
+  | 'emoji'
+  | 'font'
+  | 'theme'
+  | 'color'
+  | 'appearance'
+  | 'interaction';
+
+export type CosmeticRarity = 
+  | 'common'
+  | 'uncommon' 
+  | 'rare' 
+  | 'epic' 
+  | 'legendary'
+  | 'royal';
+
+export type CosmeticPlacement = 
+  | 'profile'
+  | 'leaderboard'
+  | 'messages'
+  | 'global';
 
 export interface CosmeticItem {
   id: string;
   name: string;
   description: string;
-  price: number;
-  type: string;
-  rarity: CosmeticRarity;
+  type: CosmeticCategory;
   category: CosmeticCategory;
-  imageSrc?: string;
-  image?: string;
+  rarity: CosmeticRarity;
+  placement?: CosmeticPlacement;
+  price: number;
+  cost: number;
+  previewImage?: string;
   cssClass?: string;
-  minTier?: string;
-  includedWith?: string;
+  imageSrc?: string;
+  imageUrl?: string;
+  requiredTier?: string;
+  animationClass?: string;
+  isLimited?: boolean;
+  isOwned?: boolean;
 }
 
-export type CosmeticType = CosmeticItem;
-
-export interface UserCosmeticItem extends CosmeticItem {
-  purchasedAt: string;
-  isActive: boolean;
-}
+export type UserCosmeticItem = CosmeticItem & {
+  isEquipped: boolean;
+  acquiredAt: string;
+  source: string;
+};
 
 export interface UserCosmetics {
   badges: string[];
@@ -46,40 +76,59 @@ export interface UserCosmetics {
   activeBackground?: string;
 }
 
-export type CosmeticPlacement = 'profile' | 'avatar' | 'nameplate' | 'background' | 'card' | 'chat';
-
 export const getRarityColor = (rarity: CosmeticRarity): string => {
   switch (rarity) {
-    case 'common': return 'text-gray-400';
-    case 'uncommon': return 'text-green-400';
-    case 'rare': return 'text-blue-400';
-    case 'epic': return 'text-purple-400';
-    case 'legendary': return 'text-royal-gold';
-    case 'royal': return 'text-royal-purple';
-    default: return 'text-gray-400';
+    case 'common':
+      return 'text-gray-300';
+    case 'uncommon':
+      return 'text-green-400';
+    case 'rare':
+      return 'text-blue-400';
+    case 'epic':
+      return 'text-purple-400';
+    case 'legendary':
+      return 'text-yellow-400';
+    case 'royal':
+      return 'text-royal-gold';
+    default:
+      return 'text-white';
   }
 };
 
 export const getRarityBgColor = (rarity: CosmeticRarity): string => {
   switch (rarity) {
-    case 'common': return 'bg-gray-400/10';
-    case 'uncommon': return 'bg-green-400/10';
-    case 'rare': return 'bg-blue-400/10';
-    case 'epic': return 'bg-purple-400/10';
-    case 'legendary': return 'bg-royal-gold/10';
-    case 'royal': return 'bg-royal-purple/10';
-    default: return 'bg-gray-400/10';
+    case 'common':
+      return 'bg-gray-700/30';
+    case 'uncommon':
+      return 'bg-green-900/30';
+    case 'rare':
+      return 'bg-blue-900/30';
+    case 'epic':
+      return 'bg-purple-900/30';
+    case 'legendary':
+      return 'bg-yellow-900/30';
+    case 'royal':
+      return 'bg-royal-gold/20';
+    default:
+      return 'bg-gray-800/30';
   }
 };
 
 export const getRarityBorderColor = (rarity: CosmeticRarity): string => {
   switch (rarity) {
-    case 'common': return 'border-gray-400/30';
-    case 'uncommon': return 'border-green-400/30';
-    case 'rare': return 'border-blue-400/30';
-    case 'epic': return 'border-purple-400/30';
-    case 'legendary': return 'border-royal-gold/30';
-    case 'royal': return 'border-royal-purple/30';
-    default: return 'border-gray-400/30';
+    case 'common':
+      return 'border-gray-500/30';
+    case 'uncommon':
+      return 'border-green-500/30';
+    case 'rare':
+      return 'border-blue-500/30';
+    case 'epic':
+      return 'border-purple-500/30';
+    case 'legendary':
+      return 'border-yellow-500/30';
+    case 'royal':
+      return 'border-royal-gold/30';
+    default:
+      return 'border-white/10';
   }
 };

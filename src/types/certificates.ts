@@ -7,6 +7,7 @@ export type CertificateType =
   | 'achievement'
   | 'milestone'
   | 'rank'
+  | 'nobility'
   | 'custom';
 
 export interface Certificate {
@@ -29,6 +30,8 @@ export interface Certificate {
   mintedAt?: string;
   templateId?: string;
   properties?: Record<string, any>;
+  imageUrl?: string;
+  style?: string;
 }
 
 export interface CertificateTemplate {
@@ -43,6 +46,9 @@ export interface CertificateTemplate {
   minRank?: number;
   maxRank?: number;
   templateHtml?: string;
+  previewUrl?: string;
+  description?: string;
+  style?: string;
 }
 
 export interface CertificateMetadata {
@@ -65,3 +71,22 @@ export interface CertificateMetadata {
     }[];
   };
 }
+
+// Additional interfaces for certificate-related repositories and factories
+export interface CertificateRepository {
+  getCertificateById: (id: string) => Promise<Certificate | null>;
+  getCertificatesByUser: (userId: string) => Promise<Certificate[]>;
+  createCertificate: (certificate: Omit<Certificate, 'id'>) => Promise<Certificate>;
+  updateCertificate: (id: string, updates: Partial<Certificate>) => Promise<Certificate>;
+  deleteCertificate: (id: string) => Promise<boolean>;
+}
+
+export interface CertificateTemplateFactory {
+  createTemplate: (type: CertificateType, team?: string, style?: string) => CertificateTemplate;
+  getDefaultTemplate: (team?: string) => CertificateTemplate;
+}
+
+export type CertificateTeam = 'red' | 'green' | 'blue' | null;
+export type CertificateStyle = 'classic' | 'modern' | 'minimal' | 'ornate';
+
+export type RankCertificateMetadata = CertificateMetadata;

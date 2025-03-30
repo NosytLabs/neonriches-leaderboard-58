@@ -63,13 +63,17 @@ export type ShameAction =
   | 'eggs'
   | 'shame'
   | 'ridicule'
-  | 'jester';
+  | 'jester'
+  | 'glitterBomb';
 
 export interface MockeryEffectData {
   username: string;
   action: MockeryAction;
   tier?: string;
   duration?: number;
+  title?: string;
+  message?: string;
+  rarity?: string;
 }
 
 export interface UserMockeryStatus {
@@ -79,3 +83,14 @@ export interface UserMockeryStatus {
 }
 
 export type ExtendedMockeryAction = MockeryAction;
+
+export interface ShameEffectState {
+  shameCooldown: number;
+  shameEffects: Record<string, ShameAction[]>;
+  shameCount: number;
+  getShameCount: () => number;
+  handleShame: (user: string, action: ShameAction) => void;
+  isUserShamed: (user: string) => boolean;
+  getActiveShame: (user: string) => ShameAction | null;
+  incrementShameCount: () => void;
+}

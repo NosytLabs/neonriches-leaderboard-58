@@ -36,7 +36,8 @@ export interface IconProps extends Omit<LucideProps, 'color'> {
   name: MedievalIconName | string;
   size?: IconSize | number;
   color?: IconColor;
-  style?: 'default' | 'medieval' | string | CSSProperties;
+  style?: 'default' | 'medieval' | CSSProperties;
+  animate?: boolean;
 }
 
 export type MedievalDecorationColor = 'gold' | 'silver' | 'crimson' | 'royal' | 'purple' | 'navy' | 'platinum';
