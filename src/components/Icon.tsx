@@ -1,11 +1,11 @@
 
 import React from 'react';
-import * as Icons from 'lucide-react';
+import * as LucideIcons from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 // Types
 type IconProps = {
-  name: keyof typeof Icons;
+  name: keyof typeof LucideIcons;
   size?: number;
   color?: string;
   className?: string;
@@ -19,15 +19,21 @@ const Icon: React.FC<IconProps> = ({
   className, 
   onClick 
 }) => {
-  const IconComponent = Icons[name];
+  // We need to ensure the component is a valid React component
+  const LucideIcon = LucideIcons[name] as React.ComponentType<{
+    size?: number;
+    color?: string;
+    className?: string;
+    onClick?: () => void;
+  }>;
 
-  if (!IconComponent) {
+  if (!LucideIcon) {
     console.warn(`Icon "${name}" does not exist in Lucide icons`);
     return null;
   }
 
   return (
-    <IconComponent
+    <LucideIcon
       size={size}
       color={color}
       className={cn(className)}
@@ -37,4 +43,3 @@ const Icon: React.FC<IconProps> = ({
 };
 
 export default Icon;
-

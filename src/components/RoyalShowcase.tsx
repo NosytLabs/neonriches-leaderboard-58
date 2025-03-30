@@ -21,7 +21,7 @@ const RoyalShowcase: React.FC<RoyalShowcaseProps> = ({ className = '' }) => {
     rank: 1,
     joinedAt: new Date().toISOString(),
     displayName: 'Money Bags',
-    gender: 'king',
+    gender: 'male', // Changed from 'king' to 'male'
     profileImage: 'https://api.dicebear.com/6.x/personas/svg?seed=moneybags',
     amountSpent: 5000,
     totalSpent: 5000,

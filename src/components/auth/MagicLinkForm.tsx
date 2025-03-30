@@ -1,9 +1,8 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { signInWithMagicLink } from '@/services/authService';
+import { signInWithEmail } from '@/services/authService';
 import { Mail, Wand2 } from 'lucide-react';
 import FormError from '@/components/auth/FormError';
 
@@ -29,13 +28,13 @@ const MagicLinkForm: React.FC<MagicLinkFormProps> = ({ onSuccess }) => {
     setIsLoading(true);
     
     try {
-      const success = await signInWithMagicLink(email);
+      const success = await signInWithEmail(email);
       
       if (success) {
         setSent(true);
         if (onSuccess) onSuccess();
       }
-    } catch (err) {
+    } catch (err: any) {
       setError(err.message || 'Failed to send magic link');
     } finally {
       setIsLoading(false);

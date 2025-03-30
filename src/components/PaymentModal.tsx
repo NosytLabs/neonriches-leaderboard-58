@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -28,7 +27,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
 
   const handlePay = async () => {
     setIsProcessing(true);
-    playSound('hover', 0.3);
+    playSound('click', 0.3);
     
     // Simulate payment processing
     setTimeout(() => {

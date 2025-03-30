@@ -1,5 +1,28 @@
+export interface User {
+  id: string;
+  username: string;
+  displayName?: string;
+  email?: string;
+  profileImage?: string;
+  bio?: string;
+  rank?: number;
+  tier?: string;
+  amountSpent?: number;
+  walletBalance?: number;
+  team?: string | null;
+  joinedAt?: string;
+  lastActive?: string;
+  followers?: number;
+  following?: number;
+  spendStreak?: number;
+  gender?: 'male' | 'female' | 'other' | 'prefer-not-to-say';
+  isProtected?: boolean;
+  totalSpent?: number;
+  lastMocked?: string;
+  mockeryCount?: number;
+  isVerified?: boolean;
+}
 
-// Add missing BoostEffect type
 export interface BoostEffect {
   id: string;
   name: string;
