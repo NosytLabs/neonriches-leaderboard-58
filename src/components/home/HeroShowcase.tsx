@@ -1,9 +1,10 @@
+
 import React from 'react';
 import { UserProfile } from '@/types/user';
 import { Card, CardContent } from '@/components/ui/card';
 import { Trophy, Crown, Shield, Users, DollarSign, ChevronsUp, Clock } from 'lucide-react';
 import CountUp from 'react-countup';
-import { formatNumber, formatDollarAmount } from '@/utils/formatters';
+import { formatDollarAmount } from '@/utils/formatters';
 
 interface HeroShowcaseProps {
   topUser: UserProfile | null;
@@ -38,7 +39,7 @@ const HeroShowcase: React.FC<HeroShowcaseProps> = ({
       <Card className="glass-morphism border-white/10">
         <CardContent className="flex flex-col space-y-2 p-6">
           <div className="text-2xl font-bold">
-            <CountUp end={totalUsers} separator="," />
+            <CountUp end={totalUsers} separator="," duration={2.5} />
           </div>
           <div className="text-sm text-muted-foreground">Total Users</div>
           <div className="flex items-center space-x-2 text-muted-foreground">
