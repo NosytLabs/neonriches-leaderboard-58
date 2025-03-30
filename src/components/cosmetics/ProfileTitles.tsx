@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -182,7 +181,7 @@ const ProfileTitles: React.FC<ProfileTitlesProps> = ({
                   ) : (
                     title.price > 0 ? (
                       <RoyalButton
-                        variant="purple"
+                        variant="default"
                         size="sm"
                         onClick={() => handlePurchase(title)}
                       >

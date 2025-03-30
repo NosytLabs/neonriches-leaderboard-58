@@ -1,11 +1,11 @@
 
 import React from 'react';
-import { Button, ButtonProps } from '@/components/ui/button';
+import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
-interface RoyalButtonProps extends Omit<ButtonProps, "variant"> {
-  variant?: 'default' | 'royal' | 'gold' | 'emerald' | 'royalGold' | 'royalCrimson' | 'royalNavy' | 'royalPurple' | 'glass' | 'outline' | 'mahogany' | 'goldOutline' | 'crimsonOutline';
-  size?: 'sm' | 'md' | 'lg';
+interface RoyalButtonProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'size'> {
+  variant?: 'default' | 'royal' | 'gold' | 'emerald' | 'royalGold' | 'royalCrimson' | 'royalNavy' | 'royalPurple' | 'glass' | 'outline' | 'mahogany' | 'goldOutline' | 'crimsonOutline' | 'navyOutline';
+  size?: 'default' | 'sm' | 'lg' | 'icon';
   glow?: boolean;
   shimmer?: boolean;
   icon?: React.ReactNode;
@@ -15,7 +15,7 @@ const RoyalButton: React.FC<RoyalButtonProps> = ({
   children,
   className,
   variant = 'default',
-  size = 'md',
+  size = 'default',
   glow = false,
   shimmer = false,
   icon,
@@ -34,13 +34,15 @@ const RoyalButton: React.FC<RoyalButtonProps> = ({
     outline: 'bg-transparent border border-white/20 hover:bg-white/10 text-white',
     mahogany: 'bg-gradient-to-r from-red-900 to-amber-900 hover:from-red-950 hover:to-amber-950 text-white',
     goldOutline: 'bg-transparent border border-royal-gold/50 text-royal-gold hover:bg-royal-gold/10',
-    crimsonOutline: 'bg-transparent border border-royal-crimson/50 text-royal-crimson hover:bg-royal-crimson/10'
+    crimsonOutline: 'bg-transparent border border-royal-crimson/50 text-royal-crimson hover:bg-royal-crimson/10',
+    navyOutline: 'bg-transparent border border-royal-navy/50 text-royal-navy hover:bg-royal-navy/10'
   };
 
-  const sizeClasses = {
+  const sizeButtonClasses = {
+    default: 'py-2 px-4',
     sm: 'py-1 px-3 text-sm',
-    md: 'py-2 px-4',
     lg: 'py-3 px-6 text-lg',
+    icon: 'p-2'
   };
 
   const glowClass = glow ? 
@@ -56,7 +58,7 @@ const RoyalButton: React.FC<RoyalButtonProps> = ({
       className={cn(
         'font-medieval transition-all shadow-md flex items-center justify-center gap-2',
         variantClasses[variant],
-        sizeClasses[size],
+        sizeButtonClasses[size],
         glowClass,
         shimmerClass,
         className

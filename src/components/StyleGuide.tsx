@@ -8,6 +8,7 @@ import { Separator } from '@/components/ui/separator';
 import MedievalIcon from '@/components/ui/medieval-icon';
 import { MedievalIconName } from '@/types/ui/icon-types';
 import RoyalDivider from '@/components/ui/royal-divider';
+import RoyalButton from '@/components/ui/royal-button';
 
 const StyleGuide = () => {
   // These are only the icon names supported in our MedievalIconName type
@@ -20,7 +21,7 @@ const StyleGuide = () => {
     <div className="container mx-auto py-10 space-y-10">
       <section>
         <Typography variant="h1" className="mb-6">SpendThrone Style Guide</Typography>
-        <Typography variant="lead" className="text-white/70">
+        <Typography variant="p" className="text-white/70">
           This document provides visual guidelines and examples for the various UI elements and components used in the SpendThrone application.
         </Typography>
       </section>
@@ -115,7 +116,7 @@ const StyleGuide = () => {
                   Nullam euismod, nisl at tincidunt ultricies, nisl nunc ultricies nunc, vitae 
                   ultricies nisl nunc eget nisl.
                 </Typography>
-                <Typography variant="lead" className="mt-4">
+                <Typography variant="large" className="mt-4">
                   Lead paragraph with slightly larger text for important sections.
                 </Typography>
                 <Typography variant="small" className="mt-4">
@@ -169,9 +170,9 @@ const StyleGuide = () => {
                   <h4 className="text-md font-medium mb-2">Royal Buttons</h4>
                   <div className="flex flex-wrap gap-4">
                     <RoyalButton variant="royal">Royal</RoyalButton>
-                    <RoyalButton variant="royalGold">Royal Gold</RoyalButton>
-                    <RoyalButton variant="royalOutline">Royal Outline</RoyalButton>
-                    <RoyalButton variant="royalGhost">Royal Ghost</RoyalButton>
+                    <RoyalButton variant="gold">Royal Gold</RoyalButton>
+                    <RoyalButton variant="default">Royal Outline</RoyalButton>
+                    <RoyalButton variant="default">Royal Ghost</RoyalButton>
                   </div>
                 </div>
               </div>

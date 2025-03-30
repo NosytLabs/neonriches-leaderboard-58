@@ -20,9 +20,10 @@ export type RoyalButtonVariant =
   | "royalGold"  
   | "royalCrimson"
   | "royalNavy"  
-  | "royalPurple";
+  | "royalPurple"
+  | "purple";
 
-export type RoyalButtonSize = "default" | "sm" | "md" | "lg" | "icon";
+export type RoyalButtonSize = "default" | "sm" | "lg" | "icon";
 
 export interface RoyalButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: RoyalButtonVariant;

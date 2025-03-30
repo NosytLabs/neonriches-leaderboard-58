@@ -1,15 +1,25 @@
 
 import React from 'react';
-import { ShameAction, MockeryAction } from '@/types/mockery';
-import { renderMockeryIcon } from '@/utils/mockeryIcons';
-import { getShameActionIcon } from '@/components/events/utils/shameUtils';
+import { ShameAction } from '@/types/mockery';
+import { getShameActionIcon } from './shameUtils';
 
-/**
- * Render the appropriate icon component for a shame action
- */
-export const renderShameActionIcon = (action: ShameAction | MockeryAction, className: string = "h-4 w-4") => {
-  const iconName = getShameActionIcon(action);
-  return renderMockeryIcon(iconName, className);
+export const ShameIcon: React.FC<{ action: ShameAction; size?: 'sm' | 'md' | 'lg' }> = ({ 
+  action, 
+  size = 'md' 
+}) => {
+  const icon = getShameActionIcon(action);
+  
+  const sizeClass = {
+    sm: 'text-lg',
+    md: 'text-2xl',
+    lg: 'text-3xl'
+  };
+  
+  return (
+    <span className={sizeClass[size]}>
+      {icon}
+    </span>
+  );
 };
 
-export default renderShameActionIcon;
+export default ShameIcon;
