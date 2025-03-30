@@ -1,9 +1,9 @@
 
 // Basic user types
-export type UserGender = 'male' | 'female' | 'other' | 'prefer-not-to-say';
-export type UserTier = 'basic' | 'premium' | 'pro' | 'royal' | 'founder' | 'whale' | 'silver' | 'bronze' | 'gold' | 'platinum' | 'diamond' | 'dolphin' | 'shark';
-export type TeamType = 'red' | 'green' | 'blue';
-export type UserTeam = TeamType | null;
+export type UserGender = 'male' | 'female' | 'other' | 'prefer-not-to-say' | 'king' | 'queen' | 'neutral' | 'jester';
+export type UserTier = 'basic' | 'premium' | 'pro' | 'royal' | 'founder' | 'whale' | 'silver' | 'bronze' | 'gold' | 'platinum' | 'diamond' | 'dolphin' | 'shark' | 'free' | 'standard';
+export type TeamType = 'red' | 'green' | 'blue' | 'Red' | 'Green' | 'Blue' | 'none' | null;
+export type UserTeam = TeamType;
 
 // Profile image
 export interface ProfileImage {
@@ -40,6 +40,12 @@ export interface UserCosmetics {
   fonts: string[];
   colors: string[];
   backgrounds: string[];
+  // Additional properties that weren't in the original but are used in code
+  activeBorder?: string;
+  activeColor?: string;
+  activeFont?: string;
+  foundersPass?: boolean;
+  themes?: string[];
 }
 
 // User settings
@@ -56,6 +62,8 @@ export interface UserSettings {
   enableMockeryEffects: boolean;
   receiveRoyalAnnouncements: boolean;
   allowMessages?: boolean;
+  showRank?: boolean;
+  showEmailOnProfile?: boolean;
 }
 
 // Social links
@@ -65,6 +73,8 @@ export interface SocialLink {
   url: string;
   isVerified: boolean;
   isPublic: boolean;
+  username?: string;
+  clicks?: number;
 }
 
 // User subscription
@@ -76,12 +86,14 @@ export interface UserSubscription {
   isActive: boolean;
   autoRenew: boolean;
   lastPayment: string;
+  status?: string;
+  plan?: string;
 }
 
 // Achievement interface
 export interface Achievement {
   id: string;
-  type: 'royal' | 'rank' | 'milestone' | 'deposit' | 'streak';
+  type: 'royal' | 'rank' | 'milestone' | 'deposit' | 'streak' | string;
   name: string;
   description: string;
   unlockedAt?: string;
@@ -89,6 +101,7 @@ export interface Achievement {
   maxProgress?: number;
   icon: string;
   tier: string;
+  amountSpent?: number;
 }
 
 // Core user profile interface
@@ -102,9 +115,11 @@ export interface UserProfile {
   walletBalance?: number;
   amountSpent?: number;
   totalSpent?: number;
+  spentAmount?: number;
   rank?: number;
   previousRank?: number;
   joinedAt?: Date | string;
+  joinDate?: string;
   team?: TeamType;
   tier?: UserTier;
   gender?: UserGender;
@@ -117,6 +132,7 @@ export interface UserProfile {
   profileBoosts?: ProfileBoost[];
   achievements?: Achievement[];
   images?: ProfileImage[];
+  profileImages?: ProfileImage[];
   referralCode?: string;
   referredBy?: string;
   referralCount?: number;
@@ -128,6 +144,15 @@ export interface UserProfile {
   profileViews?: number;
   profileClicks?: number;
   purchasedFeatures?: string[];
+  lastActive?: Date | string;
+  isActive?: boolean;
+  isVerified?: boolean;
+  isBanned?: boolean;
+  badges?: string[];
+  isVIP?: boolean;
+  isProtected?: boolean;
+  mockeryCount?: number;
+  lastMocked?: string;
 }
 
 // Legacy alias for backwards compatibility
@@ -139,3 +164,10 @@ export type UserStatus = 'active' | 'inactive' | 'banned';
 
 // Export Team type for backward compatibility
 export type Team = TeamType;
+
+// Profile link type
+export interface ProfileLink {
+  id: number | string;
+  url: string;
+  label: string;
+}

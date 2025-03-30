@@ -1,5 +1,5 @@
 
-import { User, UserProfile } from '@/types/user';
+import { User } from '@/types/user';
 
 export interface RegisterData {
   username: string;
@@ -56,7 +56,8 @@ export type UserTier =
   | 'silver'
   | 'bronze'
   | 'platinum'
-  | 'diamond';
+  | 'diamond'
+  | 'standard';
 
 export type UserTeam = 'red' | 'green' | 'blue' | 'Red' | 'Green' | 'Blue' | 'none';
 export type TeamType = UserTeam;
@@ -75,4 +76,4 @@ export interface AuthAction {
 
 // Re-export UserProfile from types
 export type { UserProfile } from '@/types/user';
-export { UserProfile };
+export { UserProfile } from '@/types/user';

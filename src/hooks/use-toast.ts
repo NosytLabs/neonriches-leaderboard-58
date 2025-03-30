@@ -11,21 +11,46 @@ export function useToast() {
     dismiss,
     toasts,
     default: (props: ExtendedToastProps) => 
-      baseToast({ ...props, variant: "default" }),
+      baseToast({ 
+        ...props, 
+        variant: "default",
+        title: props.title?.toString() || "",
+        description: props.description?.toString() || ""
+      }),
     success: (props: ExtendedToastProps) => 
-      baseToast({ ...props, variant: "success" }),
+      baseToast({ 
+        ...props, 
+        variant: "success",
+        title: props.title?.toString() || "",
+        description: props.description?.toString() || ""
+      }),
     error: (props: ExtendedToastProps) => 
-      baseToast({ ...props, variant: "destructive" }),
+      baseToast({ 
+        ...props, 
+        variant: "destructive",
+        title: props.title?.toString() || "",
+        description: props.description?.toString() || ""
+      }),
     warning: (props: ExtendedToastProps) => 
-      baseToast({ ...props, variant: "destructive" }),
+      baseToast({ 
+        ...props, 
+        variant: "destructive",
+        title: props.title?.toString() || "",
+        description: props.description?.toString() || ""
+      }),
     royal: (props: ExtendedToastProps) => 
-      baseToast({ ...props, variant: "royal" }),
+      baseToast({ 
+        ...props, 
+        variant: "default",
+        title: props.title?.toString() || "",
+        description: props.description?.toString() || ""
+      }),
     loading: (props: ExtendedToastProps) => 
       baseToast({
         ...props,
         variant: "default",
-        title: props.title || "Loading...",
-        description: props.description || "Please wait while we process your request."
+        title: (props.title || "Loading...").toString(),
+        description: (props.description || "Please wait while we process your request.").toString()
       })
   };
 }

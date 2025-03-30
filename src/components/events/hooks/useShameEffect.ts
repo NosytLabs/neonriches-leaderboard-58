@@ -11,50 +11,55 @@ export interface ShameEffect {
   until: number;
 }
 
-export interface ShameEffectState {
-  shameEffects: ShameEffect[];
-  shameCooldown: number;
-  shameCount: number;
-  getShameCount: () => number;
-  handleShame: (userId: string, action: ShameAction) => Promise<boolean>;
-  canShameUser: (userId: string) => boolean;
-  getUserEffects: (userId: string) => ShameEffect[];
-  hasActiveShame: (userId: string) => boolean;
+export interface ShameEffectOptions {
+  cooldownPeriod?: number;
 }
 
-export const useShameEffect = (): ShameEffectState => {
+export interface ShameEffectState {
+  shameEffects: Record<number | string, ShameEffect | null>;
+  shameCooldown: Record<number | string, number>;
+  shameCount: Record<number | string, number>;
+  getShameCount: (userId: number | string) => number;
+  handleShame: (userId: number | string, username: string, action: ShameAction, amount: number) => Promise<boolean>;
+  canShameUser: (userId: number | string) => boolean;
+  getUserEffects: (userId: number | string) => ShameEffect[];
+  hasActiveShame: (userId: number | string) => boolean;
+}
+
+export const useShameEffect = (options?: ShameEffectOptions): ShameEffectState => {
   const { user } = useAuth();
-  const [shameEffects, setShameEffects] = useState<ShameEffect[]>([]);
-  const [shameCooldown, setShameCooldown] = useState<number>(0);
-  const [shameCount, setShameCount] = useState<number>(0);
+  const [shameEffects, setShameEffects] = useState<Record<number | string, ShameEffect | null>>({});
+  const [shameCooldown, setShameCooldown] = useState<Record<number | string, number>>({});
+  const [shameCount, setShameCount] = useState<Record<number | string, number>>({});
   const { toast } = useToast();
 
-  const getShameCount = useCallback(() => {
-    return shameCount;
+  const getShameCount = useCallback((userId: number | string) => {
+    return shameCount[userId] || 0;
   }, [shameCount]);
 
-  const canShameUser = useCallback((userId: string) => {
+  const canShameUser = useCallback((userId: number | string) => {
     if (!user) return false;
-    if (user.id === userId) return false;
+    if (user.id === userId.toString()) return false;
     
     // Check if cooldown is active
-    if (shameCooldown > Date.now()) return false;
+    if (shameCooldown[userId] && shameCooldown[userId] > Date.now()) return false;
     
     return true;
   }, [user, shameCooldown]);
 
-  const getUserEffects = useCallback((userId: string) => {
-    return shameEffects.filter(effect => effect.action === 'shame');
+  const getUserEffects = useCallback((userId: number | string) => {
+    return Object.values(shameEffects).filter(effect => 
+      effect && effect.action === 'shame'
+    ) as ShameEffect[];
   }, [shameEffects]);
 
-  const hasActiveShame = useCallback((userId: string) => {
+  const hasActiveShame = useCallback((userId: number | string) => {
     const now = Date.now();
-    return shameEffects.some(effect => 
-      effect.action === 'shame' && effect.until > now
-    );
+    const effect = shameEffects[userId];
+    return effect !== null && effect !== undefined && effect.until > now;
   }, [shameEffects]);
 
-  const handleShame = useCallback(async (userId: string, action: ShameAction) => {
+  const handleShame = useCallback(async (userId: number | string, username: string, action: ShameAction, amount: number) => {
     if (!user) {
       toast.error({
         title: "Authentication Required",
@@ -76,7 +81,10 @@ export const useShameEffect = (): ShameEffectState => {
       const cooldownDuration = action === 'protection' ? 86400000 : 3600000; // 24hrs for protection, 1hr for others
       const effectDuration = action === 'protection' ? 7200000 : 3600000; // 2hrs for protection, 1hr for others
       
-      setShameCooldown(Date.now() + cooldownDuration);
+      setShameCooldown(prev => ({
+        ...prev,
+        [userId]: Date.now() + cooldownDuration
+      }));
       
       // Add effect to list
       const newEffect: ShameEffect = {
@@ -85,8 +93,15 @@ export const useShameEffect = (): ShameEffectState => {
         until: Date.now() + effectDuration
       };
       
-      setShameEffects(prev => [...prev, newEffect]);
-      setShameCount(prev => prev + 1);
+      setShameEffects(prev => ({
+        ...prev,
+        [userId]: newEffect
+      }));
+      
+      setShameCount(prev => ({
+        ...prev,
+        [userId]: (prev[userId] || 0) + 1
+      }));
       
       toast.success({
         title: "Action Successful",

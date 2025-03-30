@@ -1,4 +1,6 @@
 
+import { UserTier } from '@/types/user';
+
 // Define the mockery action types
 export type MockeryAction = 
   | 'shame'
@@ -28,10 +30,12 @@ export type MockeryAction =
   | 'mock'
   | 'guillotine'
   | 'dungeons'
-  | 'removal';
+  | 'removal'
+  | 'expose'
+  | 'target';
 
 // Define the mockery tier types
-export type MockeryTier = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary' | 'elite';
+export type MockeryTier = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary' | 'elite' | 'premium';
 
 // Define the mockery event interface
 export interface MockeryEvent {
@@ -43,6 +47,11 @@ export interface MockeryEvent {
   duration: number;
   active: boolean;
   expiry: number;
+  tier?: MockeryTier;
+  sourceId?: string;
+  appliedById?: string;
+  appliedAt?: number;
+  expiresAt?: number;
 }
 
 // Define the mockery status interface
@@ -65,10 +74,11 @@ export interface MockUser {
   tier?: UserTier;
   lastMocked?: string;
   mockeryCount?: number;
+  rank?: number;
 }
 
 // Define the public shaming actions
-export type ShameAction = 'shame' | 'protection' | 'taunt';
+export type ShameAction = 'shame' | 'protection' | 'taunt' | 'tomatoes' | 'eggs' | 'putridEggs' | 'stocks' | 'ridicule' | 'silence' | 'courtJester' | 'jester' | 'dunce';
 
 // Define extended mockery action (for compatibility)
 export type ExtendedMockeryAction = MockeryAction;
