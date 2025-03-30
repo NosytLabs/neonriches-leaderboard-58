@@ -1,131 +1,134 @@
 
 import { User } from '@/types/user';
-import { TransactionType, SpendOptions } from '@/types/transaction';
-import { recordTransaction } from './paymentService';
+import { useToast } from '@/hooks/use-toast';
 
-// Spend money from user's wallet with interactive feedback
+export type TransactionType = 
+  | 'purchase'
+  | 'mockery'
+  | 'protection'
+  | 'boost'
+  | 'reward'
+  | 'deposit'
+  | 'withdrawal'
+  | 'refund'
+  | 'gift';
+
+export interface Transaction {
+  id: string;
+  userId: string;
+  amount: number;
+  type: TransactionType;
+  description: string;
+  timestamp: Date | string;
+  metadata?: Record<string, any>;
+}
+
+export interface SpendOptions {
+  showToast?: boolean;
+  updateProfile?: boolean;
+  metadata?: Record<string, any>;
+}
+
+const defaultOptions: SpendOptions = {
+  showToast: true,
+  updateProfile: true,
+  metadata: {}
+};
+
+// Spend money from user's wallet
 export const spendFromWallet = (
-  user: User,
-  amount: number,
-  type: TransactionType,
+  user: User, 
+  amount: number, 
+  type: TransactionType, 
   description: string,
-  metadata?: SpendOptions
+  metadata: Record<string, any> = {},
+  options: SpendOptions = defaultOptions
 ): boolean => {
-  if (!user || amount <= 0) return false;
-  
   // Check if user has enough balance
-  if ((user.walletBalance || 0) < amount) return false;
+  if (!user || user.walletBalance < amount) {
+    // Could show a toast here in real app
+    console.error('Insufficient funds', {
+      available: user?.walletBalance || 0,
+      requested: amount
+    });
+    return false;
+  }
   
-  // Update wallet balance
-  user.walletBalance = (user.walletBalance || 0) - amount;
-  
-  // Update total spent
-  user.amountSpent = (user.amountSpent || 0) + amount;
-  
-  // Record transaction
-  recordTransaction(
-    user.id,
+  // Create transaction record - in a real app this would be sent to API
+  const transaction: Transaction = {
+    id: `tx-${Date.now()}`,
+    userId: user.id,
     amount,
     type,
     description,
+    timestamp: new Date().toISOString(),
     metadata
-  );
+  };
   
-  // In a real app, this would update the user in the database
-  // For demo, update in localStorage
-  const userJson = JSON.stringify(user);
-  localStorage.setItem('currentUser', userJson);
+  console.log('Transaction created:', transaction);
   
-  // Trigger spending effect if possible (client-side only)
-  if (typeof window !== 'undefined') {
-    // Dispatch custom event that can be listened to for effects
-    const spendEvent = new CustomEvent('user:spend', { 
-      detail: { 
-        userId: user.id,
-        amount,
-        type,
-        description 
-      }
-    });
-    window.dispatchEvent(spendEvent);
-  }
+  // Update user balance - in real app this would happen server-side
+  user.walletBalance -= amount;
+  user.totalSpent = (user.totalSpent || 0) + amount;
+  user.amountSpent = (user.amountSpent || 0) + amount;
+  
+  // In a real app, you would update the user profile in the database
+  console.log('User balance updated:', user.walletBalance);
   
   return true;
 };
 
-// Add funds to wallet with interactive feedback
-export const addToWallet = (
+// Add funds to user's wallet
+export const addFundsToWallet = (
   user: User,
   amount: number,
-  description: string
-): boolean => {
-  if (!user || amount <= 0) return false;
-  
-  // Update wallet balance
-  user.walletBalance = (user.walletBalance || 0) + amount;
-  
-  // Record transaction
-  recordTransaction(
-    user.id,
-    amount,
-    'deposit',
-    description
-  );
-  
-  // In a real app, this would update the user in the database
-  // For demo, update in localStorage
-  const userJson = JSON.stringify(user);
-  localStorage.setItem('currentUser', userJson);
-  
-  // Trigger deposit effect if possible (client-side only)
-  if (typeof window !== 'undefined') {
-    // Dispatch custom event that can be listened to for effects
-    const depositEvent = new CustomEvent('user:deposit', { 
-      detail: { 
-        userId: user.id,
-        amount,
-        description 
-      }
-    });
-    window.dispatchEvent(depositEvent);
-  }
-  
-  return true;
-};
-
-// Check if a user can afford something
-export const canUserAfford = (
-  user: User,
-  amount: number
+  description = 'Added funds to wallet',
+  metadata: Record<string, any> = {}
 ): boolean => {
   if (!user) return false;
-  return (user.walletBalance || 0) >= amount;
+  
+  // Create transaction record
+  const transaction: Transaction = {
+    id: `tx-${Date.now()}`,
+    userId: user.id,
+    amount,
+    type: 'deposit',
+    description,
+    timestamp: new Date().toISOString(),
+    metadata
+  };
+  
+  console.log('Transaction created:', transaction);
+  
+  // Update user balance
+  user.walletBalance = (user.walletBalance || 0) + amount;
+  
+  // In a real app, you would update the user profile in the database
+  console.log('User balance updated:', user.walletBalance);
+  
+  return true;
 };
 
-// Calculate new rank after a hypothetical spend
-export const calculateNewRank = (
-  user: User,
-  amount: number,
-  leaderboard: { rank: number; amountSpent: number }[] = []
-): number => {
-  if (!user) return 0;
-  
-  const newTotalSpent = (user.amountSpent || 0) + amount;
-  
-  // If we have leaderboard data, do a more accurate calculation
-  if (leaderboard.length > 0) {
-    // Count how many people would be surpassed
-    let surpassedCount = 0;
-    leaderboard.forEach(entry => {
-      if (entry.amountSpent < newTotalSpent && entry.rank < (user.rank || 0)) {
-        surpassedCount++;
-      }
-    });
-    return Math.max(1, (user.rank || 0) - surpassedCount);
-  }
-  
-  // Simple approximation if we don't have leaderboard data
-  // Estimate that every $100 gains 1 rank
-  const rankGain = Math.floor(amount / 100);
-  return Math.max(1, (user.rank || 0) - rankGain);
+// Get transaction history for a user
+export const getTransactionHistory = (userId: string): Transaction[] => {
+  // In a real app, this would fetch from API/database
+  // This is a mock implementation
+  return [
+    {
+      id: 'tx-1',
+      userId,
+      amount: 10,
+      type: 'deposit',
+      description: 'Initial wallet funding',
+      timestamp: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()
+    },
+    {
+      id: 'tx-2',
+      userId,
+      amount: 5,
+      type: 'purchase',
+      description: 'Premium feature purchase',
+      timestamp: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString()
+    }
+  ];
 };

@@ -121,57 +121,31 @@ export default function useMockery() {
         return user;
       });
       setMockUsers(updatedMockUsers);
-      
-      // Add to mocked users list
-      const mockedUser: MockedUser = {
-        username: targetUsername,
-        displayName: targetUser.displayName || targetUsername,
-        avatarUrl: targetUser.profileImage,
-        mockedReason: `Subjected to ${action} mockery`,
-        mockedTimestamp: now.toISOString(),
-        mockedBy: sourceUser.username,
-        mockedTier: targetUser.tier,
-        mockeryCount: (targetUser.mockeryCount || 0) + 1
-      };
-      
-      setMockedUsers(prev => [...prev, mockedUser]);
     }
     
     return true;
   };
   
-  // Get mockery count for a user
+  // Get user mockery count
   const getUserMockeryCount = (username: string): number => {
     const user = mockUsers.find(user => user.username === username);
     return user?.mockeryCount || 0;
   };
   
-  // Get count of users mocked by a specific user
+  // Get how many users this user has mocked
   const getUserMockedOthersCount = (username: string): number => {
     return mockeryEvents.filter(event => event.sourceUserId === username).length;
   };
   
-  // Mock stats
-  const stats = {
-    totalMockeryEvents: mockeryEvents.length,
-    activeMockeryEvents: mockeryEvents.filter(event => 
-      new Date(event.expiresAt) > new Date() && event.active
-    ).length,
-    protectedUsers: protectedUsers.size,
-    mostMockedUser: [...mockUsers].sort((a, b) => 
-      (b.mockeryCount || 0) - (a.mockeryCount || 0)
-    )[0]?.username || 'None'
-  };
-  
   return {
-    mockedUsers,
-    stats,
     mockUsers,
-    mockUser,
-    isUserProtected,
+    mockeryEvents,
+    mockedUsers,
     protectUser,
+    isUserProtected,
     isUserShamed,
     canUserBeMocked,
+    mockUser,
     getActiveMockery,
     getUserMockeryCount,
     getUserMockedOthersCount

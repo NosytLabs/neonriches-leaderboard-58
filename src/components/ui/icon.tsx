@@ -3,6 +3,7 @@ import React from 'react';
 import * as LucideIcons from 'lucide-react';
 import { cn } from '@/lib/utils';
 
+// Define icon name and size types
 export type IconName = keyof typeof LucideIcons;
 export type IconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | number;
 
@@ -35,7 +36,7 @@ const Icon: React.FC<IconProps> = ({
   const pixelSize = typeof size === 'string' ? sizeMap[size] : size;
   
   // Get the appropriate Lucide icon
-  const LucideIcon = LucideIcons[name] as React.ComponentType<{ size?: number, className?: string, onClick?: () => void }>;
+  const LucideIcon = LucideIcons[name] as React.ComponentType<{ size?: number, className?: string, color?: string, onClick?: () => void }>;
   
   if (!LucideIcon) {
     console.warn(`Icon "${name}" not found`);
@@ -46,14 +47,13 @@ const Icon: React.FC<IconProps> = ({
     <LucideIcon 
       size={pixelSize} 
       className={cn(
-        color,
         animated && 'transition-all duration-300',
         className
       )}
+      color={color}
       onClick={onClick}
     />
   );
 };
 
 export default Icon;
-

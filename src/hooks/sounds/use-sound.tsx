@@ -26,7 +26,19 @@ const useSound = (options: UseSoundOptions = {}) => {
       shame: '/sounds/shame.mp3',
       swordClash: '/sounds/sword-clash.mp3',
       seal: '/sounds/seal.mp3',
-      parchmentUnfurl: '/sounds/parchment-unfurl.mp3'
+      parchmentUnfurl: '/sounds/parchment-unfurl.mp3',
+      success: '/sounds/success.mp3',
+      error: '/sounds/error.mp3',
+      notification: '/sounds/notification.mp3',
+      levelUp: '/sounds/level-up.mp3',
+      wish: '/sounds/wish.mp3',
+      pageChange: '/sounds/page-change.mp3',
+      medallion: '/sounds/medallion.mp3',
+      trumpet: '/sounds/trumpet.mp3',
+      noblesLaugh: '/sounds/nobles-laugh.mp3',
+      inkScribble: '/sounds/ink-scribble.mp3',
+      hover: '/sounds/hover.mp3',
+      advertisement: '/sounds/advertisement.mp3'
     };
     
     const loadedAudio: Record<string, HTMLAudioElement> = {};
@@ -60,22 +72,31 @@ const useSound = (options: UseSoundOptions = {}) => {
   }, [volume, audioElements]);
   
   // Play a sound
-  const play = useCallback((soundType: SoundType) => {
+  const play = useCallback((soundType: SoundType, volumeMultiplier = 1) => {
     if (disabled || !soundsLoaded) return;
     
     const audio = audioElements[soundType];
     if (audio) {
       // Reset sound and play
       audio.currentTime = 0;
+      // Adjust volume if multiplier is provided
+      if (volumeMultiplier !== 1) {
+        audio.volume = volume * volumeMultiplier;
+      }
       audio.play().catch(err => {
         console.warn(`Error playing sound ${soundType}:`, err);
       });
     } else {
       console.warn(`Sound not found: ${soundType}`);
     }
-  }, [audioElements, disabled, soundsLoaded]);
+  }, [audioElements, disabled, soundsLoaded, volume]);
   
-  return { play };
+  // Provide a better-named interface for components
+  const playSound = useCallback((soundType: SoundType, volumeMultiplier = 1) => {
+    play(soundType, volumeMultiplier);
+  }, [play]);
+  
+  return { play, playSound };
 };
 
 export default useSound;

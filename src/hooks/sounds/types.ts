@@ -11,15 +11,28 @@ export type SoundType =
   | 'shame'
   | 'swordClash'
   | 'seal'
-  | 'parchmentUnfurl';
+  | 'parchmentUnfurl'
+  | 'success'
+  | 'error'
+  | 'notification'
+  | 'levelUp'
+  | 'wish'
+  | 'pageChange'
+  | 'medallion'
+  | 'trumpet'
+  | 'noblesLaugh'
+  | 'inkScribble'
+  | 'hover'
+  | 'advertisement';
 
 export interface AudioLoaderReturn {
-  play: (soundType: SoundType) => void;
-  stop: (soundType: SoundType) => void;
-  pauseAll: () => void;
-  resumeAll: () => void;
-  isPlaying: (soundType: SoundType) => boolean;
-  setVolume: (volume: number) => void;
+  loading?: boolean;
+  loaded?: boolean;
+  error?: Error | null;
+  sounds?: Record<string, HTMLAudioElement>;
+  audioElements?: Record<string, HTMLAudioElement>;
+  loadedSounds?: string[];
+  play: (soundType: SoundType, volumeMultiplier?: number) => void;
 }
 
 export interface PremiumSoundPackDetails {

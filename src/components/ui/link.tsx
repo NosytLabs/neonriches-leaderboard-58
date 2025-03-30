@@ -1,17 +1,40 @@
 
 import React from 'react';
-import { Link as RouterLink, LinkProps as RouterLinkProps } from 'react-router-dom';
+import { cn } from '@/lib/utils';
 
-type LinkProps = RouterLinkProps & {
+interface LinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
+  to: string;
+  external?: boolean;
+  underline?: boolean;
   className?: string;
   children: React.ReactNode;
-};
+}
 
-const Link: React.FC<LinkProps> = ({ className, children, ...props }) => {
+const Link: React.FC<LinkProps> = ({
+  to,
+  external = false,
+  underline = false,
+  className,
+  children,
+  ...props
+}) => {
+  const externalProps = external
+    ? { target: '_blank', rel: 'noopener noreferrer' }
+    : {};
+
   return (
-    <RouterLink className={className} {...props}>
+    <a
+      href={to}
+      className={cn(
+        'text-primary hover:text-primary/90 transition-colors',
+        underline && 'underline hover:no-underline',
+        className
+      )}
+      {...externalProps}
+      {...props}
+    >
       {children}
-    </RouterLink>
+    </a>
   );
 };
 

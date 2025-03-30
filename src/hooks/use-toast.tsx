@@ -1,5 +1,3 @@
 
-// Re-export from the main toast implementation
-import { useToast, toast, ToastOptions } from "@/components/ui/use-toast";
-export { useToast, toast };
-export type { ToastOptions };
+// Just a re-export from the shadcn-ui toast component
+export { useToast, toast } from '@/components/ui/toast';
