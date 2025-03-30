@@ -65,7 +65,6 @@ export interface OnChainLeaderboardEntry {
   totalDeposited?: number;
   rank?: number;
   joinDate?: number;
-  lastTransaction?: number;
 }
 
 export type SolanaTransaction = {
@@ -76,6 +75,7 @@ export type SolanaTransaction = {
   amount: number;
   type: 'deposit' | 'withdrawal' | 'transfer';
   status: 'confirmed' | 'pending' | 'failed';
+  error?: string;
 };
 
 export interface EventDetails {

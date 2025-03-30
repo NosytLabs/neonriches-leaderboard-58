@@ -1,87 +1,85 @@
+
 import React from 'react';
-import * as LucideIcons from 'lucide-react';
-import { IconProps, IconSize, MedievalIconName, MedievalIconColor } from '@/types/ui/icon-types';
 import { cn } from '@/lib/utils';
+import { IconSize } from '@/types/ui/decorations/types';
 
-// Map of medieval icon names to their actual component names
-const medievalIconMap: Record<string, string> = {
-  // Use proper capitalization for the icon names
-  "crown": "Crown",
-  "shield": "Shield",
-  "sword": "Sword",
-  "scroll": "Scroll",
-  "heart": "Heart",
-  "trophy": "Trophy",
-  "coins": "Coins",
-  "key": "Key",
-  "seal": "Seal",
-  "medal": "Medal",
-  "gem": "Gem",
-  "wallet": "Wallet",
-  "castle": "Castle"
-};
+interface MedievalIconProps {
+  name: string;
+  size?: IconSize;
+  color?: string;
+  className?: string;
+  animated?: boolean;
+}
 
-// Size mapping to pixel values
-const sizeMap: Record<IconSize, number> = {
-  'xs': 16,
-  'sm': 20,
-  'md': 24,
-  'lg': 32,
-  'xl': 40,
-  '2xl': 48
-};
-
-// Color mapping to CSS classes
-const colorMap: Record<MedievalIconColor, string> = {
-  'default': 'text-foreground',
-  'gold': 'text-royal-gold',
-  'silver': 'text-gray-300',
-  'crimson': 'text-royal-crimson',
-  'royal': 'text-royal-purple',
-  'navy': 'text-royal-navy',
-  'bronze': 'text-amber-600',
-  'purple': 'text-purple-500'
-};
-
-// Function to normalize icon names to proper casing
-export const normalizeIconName = (name: string): string => {
-  // If the name is already in medievalIconMap, convert to proper case
-  if (name.toLowerCase() in medievalIconMap) {
-    return medievalIconMap[name.toLowerCase()];
-  }
-  
-  // Otherwise, capitalize first letter for direct Lucide icon usage
-  return name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
-};
-
-const MedievalIcon: React.FC<IconProps> = ({
+const MedievalIcon: React.FC<MedievalIconProps> = ({
   name,
   size = 'md',
-  color = 'default',
+  color = 'gold',
   className,
-  ...props
+  animated = false
 }) => {
-  // Normalize the icon name to ensure proper casing
-  const normalizedName = normalizeIconName(name as string);
-  const pixelSize = typeof size === 'number' ? size : sizeMap[size as IconSize] || 24;
-  const colorClass = typeof color === 'string' ? (colorMap[color as MedievalIconColor] || color) : '';
+  const iconSizeMap: Record<IconSize, number> = {
+    'xs': 16,
+    'sm': 20,
+    'md': 24,
+    'lg': 32,
+    'xl': 48,
+    '2xl': 64,
+    '3xl': 96,
+    '4xl': 128
+  };
   
-  // Get the icon component from Lucide
-  const LucideIcon = (LucideIcons as any)[normalizedName];
+  const iconSize = iconSizeMap[size] || 24;
   
-  if (!LucideIcon) {
-    console.warn(`Icon "${normalizedName}" not found in Lucide icons`);
-    return null;
-  }
+  const getColorClass = (color: string): string => {
+    switch (color) {
+      case 'gold': return 'text-royal-gold';
+      case 'silver': return 'text-gray-300';
+      case 'bronze': return 'text-amber-600';
+      case 'royal': return 'text-royal-purple';
+      case 'crimson': return 'text-royal-crimson';
+      case 'navy': return 'text-royal-navy';
+      case 'emerald': return 'text-emerald-500';
+      default: return 'text-royal-gold';
+    }
+  };
+  
+  const getIconContent = (name: string): React.ReactNode => {
+    // Map icon names to unicode symbols or SVG
+    switch (name.toLowerCase()) {
+      case 'crown': return '👑';
+      case 'sword': return '⚔️';
+      case 'shield': return '🛡️';
+      case 'scroll': return '📜';
+      case 'castle': return '🏰';
+      case 'dragon': return '🐉';
+      case 'knight': return '🏇';
+      case 'treasure': return '💰';
+      case 'potion': return '🧪';
+      case 'wizard': return '🧙‍♂️';
+      case 'king': return '🤴';
+      case 'queen': return '👸';
+      case 'jester': return '🃏';
+      case 'arrow': return '🏹';
+      default: return '⚜️';
+    }
+  };
   
   return (
-    <LucideIcon
-      size={pixelSize}
-      className={cn(colorClass, className)}
-      {...props}
-    />
+    <span 
+      className={cn(
+        getColorClass(color),
+        animated && 'animate-pulse-slow',
+        'inline-flex items-center justify-center',
+        className
+      )}
+      style={{ fontSize: `${iconSize / 16}rem` }}
+      role="img"
+      aria-label={name}
+    >
+      {getIconContent(name)}
+    </span>
   );
 };
 
 export default MedievalIcon;
-export type { MedievalIconName, MedievalIconColor, IconSize };

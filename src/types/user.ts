@@ -1,8 +1,7 @@
 
 import { UserCosmeticState } from './cosmetics';
-import { TeamColor } from './team';
 
-// Define the user tiers in the application
+// Define user tier type
 export type UserTier = 
   | 'basic' 
   | 'bronze'
@@ -16,9 +15,9 @@ export type UserTier =
   | 'free'
   | 'vip'
   | 'diamond'
-  | 'whale'; // Add missing tier
+  | 'whale'; 
 
-// Define the team colors available
+// Define team color type
 export type TeamColor = 
   | 'red' 
   | 'blue' 
@@ -26,30 +25,23 @@ export type TeamColor =
   | 'gold' 
   | 'purple' 
   | 'none'
-  | 'neutral'; // Added neutral for compatibility with CertificateTeam
+  | 'neutral';
 
 // For backwards compatibility
 export type TeamType = TeamColor;
-export type Team = TeamColor; // Updated to make Team directly use TeamColor
-
-export interface ProfileImage {
-  id: string;
-  url: string;
-  isPrimary: boolean;
-  caption?: string;
-}
+export type Team = TeamColor;
 
 export interface SocialLink {
-  id: string;
+  id: string | number;
   platform: string;
   url: string;
-  title: string;
-  icon: string;
-  clicks: number;
   username?: string;
   display?: string;
+  icon?: string;
   verified?: boolean;
   primary?: boolean;
+  clicks?: number;
+  title?: string;
   label?: string;
 }
 
@@ -63,6 +55,32 @@ export interface ProfileLink {
   label?: string;
 }
 
+export interface ProfileImage {
+  id: string | number;
+  url: string;
+  caption?: string;
+  isPrimary?: boolean;
+}
+
+export interface ProfileBoost {
+  id: string;
+  type: string;
+  level: number;
+  startDate: string;
+  endDate: string;
+  appliedBy?: string;
+  strength?: number;
+  userId?: string;
+  name?: string;
+  description?: string;
+  isActive?: boolean;
+  duration?: number;
+  price?: number;
+  cssClass?: string;
+  tier?: string;
+  effectId?: string;
+}
+
 export interface UserSettings {
   profileVisibility: 'public' | 'private' | 'friends';
   allowProfileLinks: boolean;
@@ -70,29 +88,25 @@ export interface UserSettings {
   notifications: boolean;
   emailNotifications: boolean;
   marketingEmails: boolean;
-  soundEffects: boolean;
   showRank: boolean;
+  darkMode?: boolean;
+  soundEffects: boolean;
+  showEmailOnProfile: boolean;
   rankChangeAlerts: boolean;
   newFollowerAlerts: boolean;
   teamNotifications: boolean;
-  darkMode: boolean;
-  showTeam: boolean;
-  showSpending: boolean;
-  showEmailOnProfile: boolean;
-  publicProfile?: boolean;
   shameAlerts?: boolean;
+  teamChangeAlerts?: boolean;
+  showTeam?: boolean;
+  showSpending?: boolean;
+  spendAlerts?: boolean;
+  spendingAlerts?: boolean;
+  publicProfile?: boolean;
   allowMessages?: boolean;
   language?: string;
   showBalance?: boolean;
   showAchievements?: boolean;
   showBadges?: boolean;
-}
-
-export interface CertificateNFT {
-  mintAddress: string;
-  mintedAt?: string;
-  tokenId?: string;
-  network?: string;
 }
 
 export interface UserSubscription {
@@ -108,27 +122,67 @@ export interface UserSubscription {
   price?: number;
   interval?: 'monthly' | 'yearly' | 'quarterly';
   features?: string[];
-  status?: string; // Add missing property
+  status?: string;
 }
 
-export interface ProfileBoost {
+export interface UserProfile {
   id: string;
-  type: string;
-  userId?: string;
-  name?: string;
-  description?: string;
-  startDate?: string;
-  endDate?: string;
-  isActive?: boolean;
-  duration?: number;
-  price?: number;
-  cssClass?: string;
-  tier?: string;
-  level?: number;
-  strength?: number;
-  appliedBy?: string;
-  effectId?: string; // Add missing property
+  username: string;
+  displayName: string;
+  email: string;
+  profileImage: string;
+  bio: string;
+  joinDate: string;
+  joinedAt?: string; // Legacy support
+  createdAt?: string; // Legacy support
+  tier: UserTier;
+  team: TeamColor;
+  rank: number;
+  amountSpent: number;
+  totalSpent?: number;
+  walletBalance: number;
+  previousRank: number;
+  cosmetics: UserCosmeticState;
+  settings: UserSettings;
+  followers: number;
+  following: number;
+  isVerified: boolean;
+  isFounder: boolean;
+  profileImages?: ProfileImage[];
+  socialLinks?: SocialLink[];
+  profileBoosts?: ProfileBoost[];
+  lastActive?: string;
+  subscription?: UserSubscription;
+  spendStreak?: number;
+  purchasedFeatures?: string[];
+  role?: string;
+  gender?: string;
+  walletAddress?: string;
+  certificateNFT?: any;
+  profileViews?: number;
+  profileClicks?: number;
+  isVIP?: boolean;
+  isAdmin?: boolean;
+  isStaff?: boolean;
+  isContributor?: boolean;
+  isOnline?: boolean;
+  isProtected?: boolean;
+  avatarUrl?: string;
+  spentAmount?: number;
+  userTeam?: UserTeam;
+  lastLogin?: string;
 }
+
+export interface UserTeam {
+  id: string;
+  name: string;
+  type: TeamType;
+  joinDate?: string;
+  contribution?: number;
+  rank?: number;
+}
+
+export type User = UserProfile;
 
 export type BoostEffectType = 
   | 'aura' 
@@ -137,7 +191,7 @@ export type BoostEffectType =
   | 'pulse' 
   | 'border' 
   | 'background'
-  | 'crown'  // Add missing types
+  | 'crown'
   | 'sparkle'
   | 'glow';
 
@@ -150,7 +204,7 @@ export interface ProfileBoostData {
   type: BoostEffectType;
   tier: string;
   icon: string;
-  startDate?: string; // Add missing property
+  startDate?: string;
 }
 
 export interface BoostEffect {
@@ -163,64 +217,3 @@ export interface BoostEffect {
   tier: string;
   icon: string;
 }
-
-export interface UserProfile {
-  id: string;
-  username: string;
-  displayName: string;
-  email: string;
-  profileImage: string;
-  profileImages?: ProfileImage[];
-  bio: string;
-  joinDate: string;
-  tier: UserTier;
-  team: TeamColor;
-  rank: number;
-  totalSpent: number;
-  amountSpent: number;
-  walletBalance: number;
-  settings: UserSettings;
-  cosmetics: UserCosmeticState;
-  profileBoosts?: ProfileBoost[];
-  isFounder: boolean;
-  isVerified: boolean;
-  subscription?: UserSubscription | string;
-  purchasedFeatures?: string[];
-  previousRank?: number;
-  followers?: number;
-  following?: number;
-  activeTitle?: string;
-  isVIP?: boolean;
-  role?: string;
-  lastActive?: string;
-  gender?: string;
-  certificateNFT?: CertificateNFT;
-  createdAt?: string;
-  joinedAt?: string;
-  avatarUrl?: string;
-  socialLinks?: SocialLink[];
-  spendStreak?: number;
-  profileViews?: number;
-  profileClicks?: number;
-  isProtected?: boolean;
-  isAdmin?: boolean;
-  isStaff?: boolean;
-  isContributor?: boolean;
-  isOnline?: boolean;
-  walletAddress?: string;
-  spentAmount?: number;
-  userTeam?: UserTeam;
-  lastLogin?: string; // Add missing property
-}
-
-export interface UserTeam {
-  id: string;
-  name: string;
-  type: TeamType;
-  joinDate?: string;
-  contribution?: number;
-  rank?: number;
-}
-
-// For compatibility
-export type User = UserProfile;

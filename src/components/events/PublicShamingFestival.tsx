@@ -1,8 +1,8 @@
-
 import React, { useState } from 'react';
 import { Scroll, DollarSign, Sparkles } from 'lucide-react';
 import { topUsers } from './data';
-import { useShameEffect, ShameAction } from './hooks/useShameEffect';
+import { useShameEffect } from './hooks/useShameEffect';
+import { MockeryAction } from '@/types/mockery';
 import ShameUserCard from './components/ShameUserCard';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import RankingDisclaimer from '@/components/shared/RankingDisclaimer';
@@ -17,7 +17,6 @@ import {
   getDiscountedShamePrice 
 } from './utils/shameUtils';
 import MedievalIcon from '@/components/ui/medieval-icon';
-import { MockeryAction } from '@/types/mockery';
 
 const formatUserForShameCard = (user: any) => ({
   id: user.id,
@@ -65,11 +64,11 @@ const PublicShamingFestival = () => {
   const { shameCooldown, shameEffects, shameCount, getShameCount, handleShame, getActiveMockery } = useShameEffect();
   const [showModal, setShowModal] = React.useState(false);
   const [selectedUser, setSelectedUser] = React.useState<any>(null);
-  const [selectedAction, setSelectedAction] = React.useState<ShameAction>('tomatoes');
+  const [selectedAction, setSelectedAction] = React.useState<MockeryAction>('tomatoes');
   
   const discountedAction = getWeeklyDiscountedAction();
   
-  const handleShameUser = (userId: number, type: ShameAction, amount: number) => {
+  const handleShameUser = (userId: number, type: MockeryAction, amount: number) => {
     const user = topUsers.find(u => u.id === userId);
     if (!user) return false;
     
@@ -77,7 +76,7 @@ const PublicShamingFestival = () => {
     setSelectedAction(type);
     setShowModal(true);
     
-    playSound('notification');
+    playSound('notification', { volume: 0.3 });
     return true;
   };
   
@@ -91,13 +90,13 @@ const PublicShamingFestival = () => {
         : getShameActionPrice(selectedAction);
         
       handleShame(numericId, user.username, selectedAction);
-      playSound('shame', 0.3);
+      playSound('shame', { volume: 0.3 });
     }
     
     setShowModal(false);
   };
 
-  const getActiveMockeryWrapper = (userId: number): { action: ShameAction | MockeryAction; timestamp: number; until: number } => {
+  const getActiveMockeryWrapper = (userId: number) => {
     const mockeryInfo = getActiveMockery(userId);
     return mockeryInfo;
   };

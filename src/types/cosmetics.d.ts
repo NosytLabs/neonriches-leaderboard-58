@@ -28,6 +28,7 @@ export interface CosmeticItem {
   cssClass?: string;
   imageSrc?: string;
   image?: string;
+  cost?: number; // Adding cost as an optional property
 }
 
 export interface UserCosmeticState {

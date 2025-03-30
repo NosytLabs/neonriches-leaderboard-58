@@ -1,6 +1,7 @@
 
 import { useState, useCallback } from 'react';
-import { MockeryAction, ShameAction, ShameEffectOptions, MockeryTier } from '@/types/mockery';
+import { MockeryAction, ShameAction, MockeryTier } from '@/types/mockery';
+import { NotificationSoundOptions } from '@/types/sound-types';
 
 // Define mockery action info
 export const mockeryActionsInfo: Record<MockeryAction, { 
@@ -97,9 +98,9 @@ export function useShameEffect() {
   const [isLoading, setIsLoading] = useState(false);
   const [currentEffect, setCurrentEffect] = useState<MockeryAction>('tomatoes');
 
-  const applyShameEffect = useCallback((targetId: string, action: MockeryAction, options?: ShameEffectOptions): true => {
+  const applyShameEffect = useCallback((targetId: string, action: MockeryAction, options?: NotificationSoundOptions): true => {
     const now = Date.now();
-    const duration = options?.duration || 24 * 60 * 60 * 1000; // Default: 24 hours
+    const duration = options?.volume ? options.volume * 24 * 60 * 60 * 1000 : 24 * 60 * 60 * 1000; // Default: 24 hours
     
     setShameEffects(prev => ({
       ...prev,

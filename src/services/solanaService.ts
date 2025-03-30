@@ -1,5 +1,5 @@
 
-import { OnChainLeaderboardEntry } from '@/types/leaderboard';
+import { OnChainLeaderboardEntry, SolanaTransaction } from '@/types/leaderboard';
 
 export interface RankCertificateMetadata {
   owner: string;
@@ -9,7 +9,7 @@ export interface RankCertificateMetadata {
 }
 
 // Function to generate certificate metadata
-export const generateCertificateMetadata = (user: any, data: Partial<RankCertificateMetadata>) => {
+export const generateCertificateMetadata = (user: any, data: Partial<RankCertificateMetadata>): RankCertificateMetadata => {
   return {
     owner: user.id || user.username,
     tier: data.tier || user.tier || 'silver',
@@ -78,17 +78,6 @@ export const getOnChainLeaderboard = async (): Promise<OnChainLeaderboardEntry[]
       joinDate: Date.now() - 86400000 * 110
     }
   ];
-};
-
-export type SolanaTransaction = {
-  signature: string;
-  timestamp: number;
-  sender: string;
-  recipient: string;
-  amount: number;
-  type: 'deposit' | 'withdrawal' | 'transfer';
-  status: 'confirmed' | 'pending' | 'failed';
-  error?: string;
 };
 
 export default {

@@ -27,6 +27,9 @@ export interface FeatureInfo {
   isPremium: boolean;
   isNew?: boolean;
   comingSoon?: boolean;
+  color?: string;
+  bgColor?: string;
+  details?: string[];
 }
 
 export type SubscriptionTier = {

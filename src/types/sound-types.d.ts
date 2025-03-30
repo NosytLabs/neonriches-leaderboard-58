@@ -16,7 +16,8 @@ export type SoundType =
   | 'shame'
   | 'levelUp'
   | 'fanfare'
-  | 'wish';
+  | 'wish'
+  | 'pageChange';
 
 export interface NotificationSoundOptions {
   volume?: number;

@@ -24,7 +24,7 @@ const cosmeticItems: CosmeticItem[] = [
     category: 'border',
     type: 'border',
     rarity: 'rare',
-    imageSrc: '/assets/cosmetics/borders/royal-gold.png'
+    image: '/assets/cosmetics/borders/royal-gold.png'
   },
   {
     id: 'title-1',
@@ -34,7 +34,7 @@ const cosmeticItems: CosmeticItem[] = [
     category: 'title',
     type: 'title',
     rarity: 'epic',
-    imageSrc: '/assets/cosmetics/titles/duke.png'
+    image: '/assets/cosmetics/titles/duke.png'
   },
   {
     id: 'effect-1',
@@ -44,7 +44,7 @@ const cosmeticItems: CosmeticItem[] = [
     category: 'effect',
     type: 'effect',
     rarity: 'legendary',
-    imageSrc: '/assets/cosmetics/effects/sparkle.png'
+    image: '/assets/cosmetics/effects/sparkle.png'
   }
 ];
 
