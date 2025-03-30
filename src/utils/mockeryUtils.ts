@@ -181,3 +181,9 @@ export const getTierRarityClass = (tier: MockeryTier): string => {
   
   return tierClasses[tier] || 'text-white';
 };
+
+// Export mockery constants for use in other files
+export const MOCKERY_COOLDOWNS = getMockeryCooldown;
+export const MOCKERY_COSTS = getMockeryCost;
+export const MOCKERY_NAMES = getMockeryName;
+export const MOCKERY_DESCRIPTIONS = getMockeryDescription;
