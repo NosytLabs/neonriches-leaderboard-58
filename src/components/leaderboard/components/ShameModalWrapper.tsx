@@ -2,8 +2,8 @@
 import React from 'react';
 import { Dialog } from '@/components/ui/dialog';
 import ShameModal from '@/components/events/components/ShameModal';
-import { ShameAction } from '@/components/events/hooks/useShameEffect';
-import { User } from '@/types/user';
+import { ShameAction } from '@/types/mockery';
+import { User, TeamType } from '@/types/user';
 
 interface ShameModalWrapperProps {
   showModal: boolean;
@@ -24,6 +24,8 @@ const ShameModalWrapper: React.FC<ShameModalWrapperProps> = ({
 
   // Convert undefined team to null to avoid the TeamType error
   const team = selectedUser.team || null;
+  // Make sure team is one of the allowed values or provide a fallback
+  const validTeam = (team === 'red' || team === 'blue' || team === 'green') ? team : 'red';
 
   return (
     <Dialog open={showModal} onOpenChange={onOpenChange}>
@@ -34,7 +36,7 @@ const ShameModalWrapper: React.FC<ShameModalWrapperProps> = ({
           profileImage: selectedUser.profileImage || '/placeholder.svg',
           totalSpent: selectedUser.amountSpent || 0,
           rank: selectedUser.rank || 0,
-          team: team,
+          team: validTeam,
           tier: selectedUser.tier || 'free',
           spendStreak: selectedUser.spendStreak || 0
         }}

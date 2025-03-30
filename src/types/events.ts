@@ -1,5 +1,5 @@
 
-export type EventType = 'social' | 'competition' | 'giveaway' | 'exclusive' | 'seasonal' | 'team' | 'shame' | 'treasure';
+export type EventType = 'social' | 'competition' | 'giveaway' | 'exclusive' | 'seasonal' | 'team' | 'shame' | 'treasure' | 'tournament';
 export type EventStatus = 'upcoming' | 'active' | 'completed' | 'cancelled' | 'canceled'; // Added 'cancelled' and 'canceled'
 
 export interface Event {
@@ -18,18 +18,7 @@ export interface Event {
   rewards?: EventReward[];
 }
 
-export interface EventDetails {
-  id: string;
-  name: string;
-  title?: string;
-  description: string;
-  type: EventType;
-  startDate: string;
-  endDate: string;
-  imageUrl: string;
-  image?: string;
-  status?: EventStatus;
-  rewards?: EventReward[];
+export interface EventDetails extends Event {
   rules: string[];
   prizes?: any[];
   eventId?: string;
@@ -47,6 +36,11 @@ export interface EventStats {
   lowestSpend: number;
   duration: number;
   topContribution?: number;
+  // Added missing properties
+  prizePool: number;
+  totalPokes?: number;
+  mostPoked?: { username: string; pokeCount: number }[];
+  totalPrizes?: number; // For backward compatibility
 }
 
 export interface EventParticipant {
@@ -68,3 +62,6 @@ export interface EventReward {
   imageUrl: string;
   rarity: string;
 }
+
+// Use export type for re-exports
+export type { EventType, EventStatus, Event, EventStats, EventParticipant, EventDetails, EventReward };

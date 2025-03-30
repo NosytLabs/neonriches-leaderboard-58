@@ -23,7 +23,7 @@ const EventStatsCard: React.FC<EventStatsCardProps> = ({ stats, className }) => 
               <DollarSign className="h-5 w-5" />
               <span className="font-semibold">Prize Pool</span>
             </div>
-            <span className="text-2xl font-bold">{formatCurrency(stats.prizePool)}</span>
+            <span className="text-2xl font-bold">{formatCurrency(stats.prizePool || stats.totalPrizes || 0)}</span>
           </div>
           
           <div className="flex flex-col p-4 bg-black/20 rounded-lg">
@@ -31,7 +31,7 @@ const EventStatsCard: React.FC<EventStatsCardProps> = ({ stats, className }) => 
               <Users className="h-5 w-5" />
               <span className="font-semibold">Participants</span>
             </div>
-            <span className="text-2xl font-bold">{stats.participantsCount}</span>
+            <span className="text-2xl font-bold">{stats.participantsCount || stats.participantCount || 0}</span>
           </div>
           
           <div className="flex flex-col p-4 bg-black/20 rounded-lg">
@@ -39,7 +39,7 @@ const EventStatsCard: React.FC<EventStatsCardProps> = ({ stats, className }) => 
               <Target className="h-5 w-5" />
               <span className="font-semibold">Total Pokes</span>
             </div>
-            <span className="text-2xl font-bold">{stats.totalPokes}</span>
+            <span className="text-2xl font-bold">{stats.totalPokes || 0}</span>
           </div>
           
           <div className="flex flex-col p-4 bg-black/20 rounded-lg">

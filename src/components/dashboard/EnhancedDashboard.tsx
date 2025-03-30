@@ -7,7 +7,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import { Trophy, Crown, Target, Users, Activity, Zap, DollarSign } from 'lucide-react';
 import { UserProfile } from '@/types/user';
-import { Achievement, AchievementType, AchievementTier } from '@/types/achievement';
+import { Achievement } from '@/types/achievement';
 import AchievementDisplay from '@/components/achievements/AchievementDisplay';
 import RankProgressChart from '@/components/dashboard/RankProgressChart';
 import TeamStatusCard from '@/components/dashboard/TeamStatusCard';
@@ -36,9 +36,9 @@ const EnhancedDashboard = () => {
           id: 'spend-100',
           name: 'Royal Patron',
           description: 'Spend $100 on the platform',
-          type: 'royal' as AchievementType,
+          type: 'royal',
           icon: 'crown',
-          tier: 'gold' as AchievementTier,
+          tier: 'gold',
           unlockedAt: new Date().toISOString(),
           amountSpent: 100
         },
@@ -46,9 +46,9 @@ const EnhancedDashboard = () => {
           id: 'spend-500',
           name: 'Throne Supporter',
           description: 'Spend $500 on the platform',
-          type: 'deposit' as AchievementType,
+          type: 'deposit',
           icon: 'dollar',
-          tier: 'platinum' as AchievementTier,
+          tier: 'platinum',
           unlockedAt: new Date().toISOString(),
           amountSpent: 500
         },
@@ -56,18 +56,18 @@ const EnhancedDashboard = () => {
           id: 'reach-rank-50',
           name: 'Rising Star',
           description: 'Reach rank 50 on the leaderboard',
-          type: 'rank' as AchievementType,
+          type: 'rank',
           icon: 'star',
-          tier: 'silver' as AchievementTier,
+          tier: 'silver',
           unlockedAt: new Date().toISOString()
         },
         {
           id: 'premium-purchase',
           name: 'Premium Buyer',
           description: 'Purchase premium features',
-          type: 'purchase' as AchievementType,
+          type: 'purchase',
           icon: 'star',
-          tier: 'gold' as AchievementTier,
+          tier: 'gold',
           unlockedAt: new Date().toISOString()
         }
       ];
@@ -97,8 +97,10 @@ const EnhancedDashboard = () => {
     });
   };
   
-  // No need for type conversion as our Achievement already has the correct types
-  const convertedAchievements = achievements;
+  // The achievements are already in the right format for the components
+  const achievementsToDisplay = achievements.map(achievement => ({
+    ...achievement
+  }));
 
   return (
     <div className="container mx-auto px-4 py-6">
@@ -171,7 +173,7 @@ const EnhancedDashboard = () => {
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {convertedAchievements.map((achievement) => (
+                  {achievementsToDisplay.map((achievement) => (
                     <AchievementDisplay 
                       key={achievement.id}
                       achievement={achievement}

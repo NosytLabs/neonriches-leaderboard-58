@@ -67,7 +67,7 @@ const PublicShamingFestival = () => {
   
   const discountedAction = getWeeklyDiscountedAction();
   
-  const handleShameUser = (userId: number, username: string, type: ShameAction, amount: number) => {
+  const handleShameUser = (userId: number, type: ShameAction, amount: number) => {
     const user = topUsers.find(u => u.id === userId);
     if (!user) return false;
     
@@ -88,14 +88,14 @@ const PublicShamingFestival = () => {
         ? getDiscountedShamePrice(selectedAction) 
         : getShameActionPrice(selectedAction);
         
-      handleShame(numericId, user.username, selectedAction);
+      handleShame(numericId, selectedAction);
       playSound('shame', 0.3);
     }
     
     setShowModal(false);
   };
 
-  const getActiveMockeryWrapper = (username: string): { action: string; timestamp: number; until: number } => {
+  const getActiveMockeryWrapper = (username: string): { action: MockeryAction; timestamp: number; until: number } => {
     const mockeryEvent = shameEffects[parseInt(username, 10)];
     if (mockeryEvent) {
       return {

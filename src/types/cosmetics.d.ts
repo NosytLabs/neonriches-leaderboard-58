@@ -1,5 +1,5 @@
 
-export type CosmeticCategory = 'border' | 'color' | 'font' | 'emoji' | 'title' | 'background' | 'effect' | 'badge' | 'theme';
+export type CosmeticCategory = 'border' | 'color' | 'font' | 'emoji' | 'title' | 'background' | 'effect' | 'badge' | 'theme' | 'appearance' | 'profile' | 'interaction' | 'borders' | 'colors' | 'fonts' | 'emojis' | 'titles' | 'backgrounds' | 'effects';
 export type CosmeticRarity = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary' | 'mythic' | 'unique' | 'royal';
 export type CosmeticType = 'border' | 'color' | 'font' | 'emoji' | 'title' | 'background' | 'effect' | 'badge' | 'theme';
 
@@ -11,6 +11,7 @@ export interface CosmeticItem {
   rarity: CosmeticRarity;
   price: number;
   value: string;
+  cost?: number; // Added missing property
   previewImage?: string;
   unlockMethod?: string;
   isActive?: boolean;

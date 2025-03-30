@@ -1,7 +1,7 @@
 
 import { UserCosmeticState } from './cosmetics';
 
-export type UserTier = 'free' | 'basic' | 'premium' | 'royal';
+export type UserTier = 'free' | 'basic' | 'premium' | 'royal' | 'diamond' | 'pro' | 'gold' | 'silver' | 'bronze' | 'platinum';
 export type TeamType = 'red' | 'blue' | 'green' | 'gold';
 export type UserTeam = { id: string; name: string; type: TeamType; };
 
@@ -87,5 +87,5 @@ export interface UserProfile {
 
 export type User = UserProfile;
 
-// Don't re-export types as they cause conflicts with 'isolatedModules'
-// Instead, make sure they're properly exported above
+// Explicitly export these types to make them available
+export { UserTier, TeamType, UserTeam, UserSettings, ProfileBoost, SocialLink };

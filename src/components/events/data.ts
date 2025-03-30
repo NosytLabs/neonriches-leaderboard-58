@@ -1,152 +1,331 @@
 
-import { Event, EventDetails, EventStats, EventParticipant, EventReward } from '@/types/events';
+import { Event, EventDetails, EventStats, EventType } from '@/types/events';
 
 export const events: Event[] = [
   {
-    id: 'event-1',
-    title: 'Royal Tournament of Wealth',
-    name: 'Royal Tournament of Wealth',
-    description: 'Compete against other nobles in a grand tournament of spending. The highest contributor will be crowned Champion of Wealth.',
-    type: 'tournament',
-    startDate: '2023-08-15T00:00:00Z',
-    endDate: '2023-08-22T23:59:59Z',
-    status: 'completed',
-    imageUrl: '/assets/events/tournament.jpg',
-    image: '/assets/events/tournament.jpg',
-    createdAt: '2023-07-25T12:00:00Z',
-    updatedAt: '2023-07-25T12:00:00Z'
-  },
-  {
-    id: 'event-2',
-    title: 'Festival of Mockery',
-    name: 'Festival of Mockery',
-    description: 'A week-long festival where nobles can mock others for spending too little or too much. Purely satirical fun!',
-    type: 'shame',
-    startDate: '2023-09-01T00:00:00Z',
-    endDate: '2023-09-08T23:59:59Z',
+    id: '1',
+    name: 'Royal Mockery Festival',
+    title: 'Royal Mockery Festival',
+    description: 'A satirical take on medieval public shaming - apply purely cosmetic effects to other users\' profiles.',
+    type: 'shame' as EventType, // Fixed type
+    startDate: '2023-06-01T00:00:00Z',
+    endDate: '2023-07-01T00:00:00Z',
+    imageUrl: '/events/mockery-festival.jpg',
+    image: '/events/mockery-festival.jpg',
+    createdAt: '2023-05-30T00:00:00Z',
+    updatedAt: '2023-05-30T00:00:00Z',
     status: 'active',
-    imageUrl: '/assets/events/mockery.jpg',
-    image: '/assets/events/mockery.jpg',
-    createdAt: '2023-08-15T12:00:00Z',
-    updatedAt: '2023-08-15T12:00:00Z'
+    rewards: [
+      {
+        id: '101',
+        name: 'Royal Shame Badge',
+        description: 'A badge marking your participation in the Royal Mockery Festival',
+        type: 'badge',
+        value: 1,
+        imageUrl: '/rewards/royal-shame-badge.png',
+        rarity: 'uncommon'
+      },
+      {
+        id: '102',
+        name: 'Crown Emoji',
+        description: 'A special emoji to use in chat and comments',
+        type: 'emoji',
+        value: 1,
+        imageUrl: '/rewards/crown-emoji.png',
+        rarity: 'rare'
+      }
+    ]
   },
   {
-    id: 'event-3',
-    title: 'Team Challenge: Red vs Blue',
-    name: 'Team Challenge: Red vs Blue',
-    description: 'Support your team by contributing to the common treasury. The team with the highest total contribution wins special privileges for all members.',
-    type: 'team',
-    startDate: '2023-10-01T00:00:00Z',
-    endDate: '2023-10-15T23:59:59Z',
-    status: 'upcoming',
-    imageUrl: '/assets/events/team.jpg',
-    image: '/assets/events/team.jpg',
-    createdAt: '2023-09-15T12:00:00Z',
-    updatedAt: '2023-09-15T12:00:00Z'
-  },
-  {
-    id: 'event-4',
-    title: 'Treasure Hunt',
-    name: 'Treasure Hunt',
-    description: 'A special event where spending in specific categories reveals clues to find a hidden treasure. The first to solve all clues gets a massive treasure bonus.',
-    type: 'treasure',
+    id: '2',
+    name: 'Spending Showdown Tournament',
+    title: 'Spending Showdown Tournament',
+    description: 'Compete with other members to climb the spending ranks and win exclusive rewards!',
+    type: 'competition' as EventType, // Fixed type
     startDate: '2023-07-01T00:00:00Z',
-    endDate: '2023-07-10T23:59:59Z',
-    status: 'completed',
-    imageUrl: '/assets/events/treasure.jpg',
-    image: '/assets/events/treasure.jpg',
-    createdAt: '2023-06-15T12:00:00Z',
-    updatedAt: '2023-06-15T12:00:00Z'
+    endDate: '2023-07-31T00:00:00Z',
+    imageUrl: '/events/spending-showdown.jpg',
+    image: '/events/spending-showdown.jpg',
+    createdAt: '2023-06-15T00:00:00Z',
+    updatedAt: '2023-06-15T00:00:00Z',
+    status: 'upcoming',
+    rewards: [
+      {
+        id: '201',
+        name: 'Gold Crown Border',
+        description: 'An exclusive profile border available only to top spenders',
+        type: 'border',
+        value: 1,
+        imageUrl: '/rewards/gold-crown-border.png',
+        rarity: 'legendary'
+      },
+      {
+        id: '202',
+        name: 'Royal Title',
+        description: 'An exclusive title to display on your profile',
+        type: 'title',
+        value: 1,
+        imageUrl: '/rewards/royal-title.png',
+        rarity: 'epic'
+      },
+      {
+        id: '203',
+        name: 'Cash Bonus',
+        description: 'A cash bonus for your spending efforts',
+        type: 'cash',
+        value: 500,
+        imageUrl: '/rewards/cash-bonus.png',
+        rarity: 'rare'
+      }
+    ]
+  },
+  {
+    id: '3',
+    name: 'Seasonal Royal Celebration',
+    title: 'Seasonal Royal Celebration',
+    description: 'Join the seasonal festivities with special events, rewards, and community challenges!',
+    type: 'seasonal' as EventType, // Fixed type
+    startDate: '2023-08-15T00:00:00Z',
+    endDate: '2023-09-15T00:00:00Z',
+    imageUrl: '/events/seasonal-celebration.jpg',
+    image: '/events/seasonal-celebration.jpg',
+    createdAt: '2023-07-20T00:00:00Z',
+    updatedAt: '2023-07-20T00:00:00Z',
+    status: 'upcoming',
+    rewards: [
+      {
+        id: '301',
+        name: 'Seasonal Theme',
+        description: 'A limited-time theme for your profile',
+        type: 'theme',
+        value: 1,
+        imageUrl: '/rewards/seasonal-theme.png',
+        rarity: 'rare'
+      },
+      {
+        id: '302',
+        name: 'Exclusive Background',
+        description: 'A special background for your profile during the celebration',
+        type: 'background',
+        value: 1,
+        imageUrl: '/rewards/exclusive-background.png',
+        rarity: 'epic'
+      }
+    ]
   }
 ];
 
-export const eventDetails: Record<string, EventDetails> = {
-  'event-1': {
-    id: 'event-1-details',
-    title: 'Royal Tournament Details',
-    name: 'Royal Tournament Details',
-    description: 'The Royal Tournament of Wealth is the premier competition for nobles to demonstrate their financial might. Spend lavishly to climb the ranks and earn the respect of your peers.',
+export const eventDetails: EventDetails[] = [
+  {
+    id: '1',
+    name: 'Royal Mockery Festival',
+    title: 'Royal Mockery Festival',
+    description: 'A satirical take on medieval public shaming - apply purely cosmetic effects to other users\' profiles. All effects are visual only and do not impact functionality or rankings.',
+    type: 'shame' as EventType, // Fixed type
+    startDate: '2023-06-01T00:00:00Z',
+    endDate: '2023-07-01T00:00:00Z',
+    imageUrl: '/events/mockery-festival.jpg',
+    image: '/events/mockery-festival.jpg',
+    createdAt: '2023-05-30T00:00:00Z',
+    updatedAt: '2023-05-30T00:00:00Z',
+    status: 'active',
     rules: [
-      'All spending during the tournament period counts toward your score',
-      'The participant with the highest total spending wins the Golden Crown',
-      'Second and third place will receive Silver and Bronze titles respectively',
-      'Participants must be registered nobles of the kingdom',
-      'Tournament results are final and non-negotiable'
+      'All shaming effects are purely visual and do not affect functionality',
+      'Users can purchase protection to prevent being shamed',
+      'Effects last for 24 hours unless removed by the target user (with protection)',
+      'Premium users get a discount on shaming actions',
+      'Be respectful - this is satirical fun, not actual harassment'
     ],
-    rewards: ['Crown Cosmetic', 'Title Upgrade', 'Profile Boost'],
-    rewardTypes: ['Cosmetic', 'Title', 'Boost'],
-    eligibility: ['All registered users'],
-    participationRequirements: ['Spend at least $5 during the event period'],
-    specialRules: ['Bonus multipliers for consistent daily spending'],
-    type: 'tournament',
-    startDate: '2023-08-15T00:00:00Z',
-    endDate: '2023-08-22T23:59:59Z',
-    createdAt: '2023-07-25T12:00:00Z',
-    image: '/assets/events/tournament-detail.jpg',
-    longDescription: 'An extended description of the tournament with all important details.'
+    prizes: [
+      {
+        name: 'Top Mocker',
+        description: 'Awarded to the user who applies the most mockery effects',
+        reward: 'Exclusive Crown Emoji and Profile Badge'
+      },
+      {
+        name: 'Most Protected',
+        description: 'Awarded to the user who purchases the most protection',
+        reward: 'Royal Shield Border'
+      }
+    ],
+    rewards: [
+      {
+        id: '101',
+        name: 'Royal Shame Badge',
+        description: 'A badge marking your participation in the Royal Mockery Festival',
+        type: 'badge',
+        value: 1,
+        imageUrl: '/rewards/royal-shame-badge.png',
+        rarity: 'uncommon'
+      },
+      {
+        id: '102',
+        name: 'Crown Emoji',
+        description: 'A special emoji to use in chat and comments',
+        type: 'emoji',
+        value: 1,
+        imageUrl: '/rewards/crown-emoji.png',
+        rarity: 'rare'
+      }
+    ]
   },
-  'event-2': {
-    id: 'event-2-details',
-    title: 'Festival of Mockery Details',
-    name: 'Festival of Mockery Details',
-    description: 'The Festival of Mockery is a satirical event celebrating the absurdity of digital wealth displays. During this festival, nobles can engage in friendly mockery by purchasing tomato throws, egg throws, or even placing others in stocks!',
+  {
+    id: '2',
+    name: 'Spending Showdown Tournament',
+    title: 'Spending Showdown Tournament',
+    description: 'Compete with other members to climb the spending ranks and win exclusive rewards! This month-long event celebrates our top spenders with exclusive cosmetics and benefits.',
+    type: 'competition' as EventType, // Fixed type
+    startDate: '2023-07-01T00:00:00Z',
+    endDate: '2023-07-31T00:00:00Z',
+    imageUrl: '/events/spending-showdown.jpg',
+    image: '/events/spending-showdown.jpg',
+    createdAt: '2023-06-15T00:00:00Z',
+    updatedAt: '2023-06-15T00:00:00Z',
+    status: 'upcoming',
     rules: [
-      'Mockery actions cost real money which contributes to your spending rank',
-      'Mockery effects are purely visual and last for 24 hours',
-      'Nobles can purchase protection shields to avoid being mocked',
-      'All mockery is intended in good fun - keep it light-hearted!',
-      'The most mocked noble will receive the "Court Jester" title'
+      'All spending on the platform during the event period counts toward your total',
+      'Users must have a verified account to participate',
+      'Rewards are distributed based on final ranking at event end',
+      'Top 3 spenders receive premium rewards',
+      'All participants receive a participant badge'
     ],
-    rewards: ['Jester Title', 'Mockery Animations', 'Royal Decree'],
-    rewardTypes: ['Title', 'Animation', 'Feature'],
-    eligibility: ['All registered users'],
-    participationRequirements: ['No minimum spending required'],
-    specialRules: ['Bonus rewards for creative mockery actions'],
-    type: 'shame',
-    startDate: '2023-09-01T00:00:00Z',
-    endDate: '2023-09-08T23:59:59Z',
-    createdAt: '2023-08-15T12:00:00Z',
-    image: '/assets/events/mockery-detail.jpg',
-    longDescription: 'A detailed description of the Festival of Mockery event.'
+    prizes: [
+      {
+        name: '1st Place',
+        description: 'Top spender during the event period',
+        reward: 'Gold Crown Border, Royal Title, and $500 Cash Bonus'
+      },
+      {
+        name: '2nd Place',
+        description: 'Second highest spender during the event',
+        reward: 'Silver Crown Border, Duke Title, and $250 Cash Bonus'
+      },
+      {
+        name: '3rd Place',
+        description: 'Third highest spender during the event',
+        reward: 'Bronze Crown Border, Knight Title, and $100 Cash Bonus'
+      }
+    ],
+    rewards: [
+      {
+        id: '201',
+        name: 'Gold Crown Border',
+        description: 'An exclusive profile border available only to top spenders',
+        type: 'border',
+        value: 1,
+        imageUrl: '/rewards/gold-crown-border.png',
+        rarity: 'legendary'
+      },
+      {
+        id: '202',
+        name: 'Royal Title',
+        description: 'An exclusive title to display on your profile',
+        type: 'title',
+        value: 1,
+        imageUrl: '/rewards/royal-title.png',
+        rarity: 'epic'
+      },
+      {
+        id: '203',
+        name: 'Cash Bonus',
+        description: 'A cash bonus for your spending efforts',
+        type: 'cash',
+        value: 500,
+        imageUrl: '/rewards/cash-bonus.png',
+        rarity: 'rare'
+      }
+    ]
+  },
+  {
+    id: '3',
+    name: 'Seasonal Royal Celebration',
+    title: 'Seasonal Royal Celebration',
+    description: 'Join the seasonal festivities with special events, rewards, and community challenges! A time for all community members to come together and celebrate.',
+    type: 'seasonal' as EventType, // Fixed type
+    startDate: '2023-08-15T00:00:00Z',
+    endDate: '2023-09-15T00:00:00Z',
+    imageUrl: '/events/seasonal-celebration.jpg',
+    image: '/events/seasonal-celebration.jpg',
+    createdAt: '2023-07-20T00:00:00Z',
+    updatedAt: '2023-07-20T00:00:00Z',
+    status: 'upcoming',
+    rules: [
+      'Daily challenges award points toward seasonal rewards',
+      'Community milestones unlock special content for all users',
+      'Premium users get double points for all activities',
+      'Limited-time cosmetics are available only during the event',
+      'All users who participate in at least 5 daily challenges receive a commemoration badge'
+    ],
+    prizes: [
+      {
+        name: 'Season Champion',
+        description: 'Highest points earned during the seasonal event',
+        reward: 'Exclusive Seasonal Theme and Title'
+      },
+      {
+        name: 'Community Builder',
+        description: 'Most contribution to community milestones',
+        reward: 'Special Background and Community Badge'
+      }
+    ],
+    rewards: [
+      {
+        id: '301',
+        name: 'Seasonal Theme',
+        description: 'A limited-time theme for your profile',
+        type: 'theme',
+        value: 1,
+        imageUrl: '/rewards/seasonal-theme.png',
+        rarity: 'rare'
+      },
+      {
+        id: '302',
+        name: 'Exclusive Background',
+        description: 'A special background for your profile during the celebration',
+        type: 'background',
+        value: 1,
+        imageUrl: '/rewards/exclusive-background.png',
+        rarity: 'epic'
+      }
+    ]
   }
-};
+];
 
 export const eventStats: Record<string, EventStats> = {
-  'event-1': {
-    id: 'event-1-stats',
-    eventId: 'event-1',
+  '1': {
+    id: 'stats-1',
+    eventId: '1',
     participantsCount: 156,
-    totalSpent: 45678,
-    totalPrizes: 5000,
-    averageSpent: 292.8,
-    prizePool: 10000,
-    totalPokes: 320,
+    totalSpent: 3500,
+    prizePool: 1500,
+    totalPrizes: 1500, // For backward compatibility
+    topContributors: ['user1', 'user2', 'user3'],
+    averageSpend: 22.5,
+    highestSpend: 250,
+    lowestSpend: 5,
+    duration: 30,
+    topContribution: 250,
+    totalPokes: 432,
     mostPoked: [
-      { username: 'RichDuke', pokeCount: 45 },
-      { username: 'LavishLord', pokeCount: 32 }
+      { username: 'RoyalPeasant', pokeCount: 42 },
+      { username: 'CourtJester', pokeCount: 35 },
+      { username: 'DuchessOfDigital', pokeCount: 28 }
     ]
   },
-  'event-2': {
-    id: 'event-2-stats',
-    eventId: 'event-2',
-    participantsCount: 78,
-    totalSpent: 3450,
-    totalPrizes: 1000,
-    averageSpent: 44.2,
-    prizePool: 2000,
-    totalPokes: 156,
-    mostPoked: [
-      { username: 'SpenderOne', pokeCount: 23 },
-      { username: 'RoyalFool', pokeCount: 17 }
-    ]
+  '2': {
+    id: 'stats-2',
+    eventId: '2',
+    participantsCount: 87,
+    totalSpent: 12500,
+    prizePool: 3000,
+    totalPrizes: 3000, // For backward compatibility
+    topContributors: ['user4', 'user5', 'user6'],
+    averageSpend: 143.7,
+    highestSpend: 1200,
+    lowestSpend: 10,
+    duration: 31,
+    topContribution: 1200,
+    totalPokes: 0,
+    mostPoked: []
   }
 };
-
-export const topUsers = [
-  { id: 1, username: 'GoldenKing', profileImage: 'https://source.unsplash.com/random/100x100?face=1', rank: 1, team: 'red', amountSpent: 5000 },
-  { id: 2, username: 'DiamondDuchess', profileImage: 'https://source.unsplash.com/random/100x100?face=2', rank: 2, team: 'blue', amountSpent: 4200 },
-  { id: 3, username: 'SapphireSultan', profileImage: 'https://source.unsplash.com/random/100x100?face=3', rank: 3, team: 'green', amountSpent: 3500 },
-  { id: 4, username: 'EmeraldEmpress', profileImage: 'https://source.unsplash.com/random/100x100?face=4', rank: 4, team: 'red', amountSpent: 2800 },
-  { id: 5, username: 'OpalOverseer', profileImage: 'https://source.unsplash.com/random/100x100?face=5', rank: 5, team: 'green', amountSpent: 2500 },
-  { id: 6, username: 'RubyRegent', profileImage: 'https://source.unsplash.com/random/100x100?face=6', rank: 6, team: 'blue', amountSpent: 2000 }
-];

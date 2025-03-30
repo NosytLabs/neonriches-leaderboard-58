@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Event } from '@/types/events';
+import { Event, EventDetails } from '@/types/events';
 import { Button } from '@/components/ui/button';
 import { Calendar, ChevronRight } from 'lucide-react';
 import { format } from 'date-fns';
@@ -44,6 +44,18 @@ const UpcomingEvents: React.FC<UpcomingEventsProps> = ({ maxEvents = 3 }) => {
       case 'team': return 'bg-sky-500/20 text-sky-400 border-sky-500/20';
       default: return 'bg-gray-500/20 text-gray-300 border-gray-500/20';
     }
+  };
+  
+  // Helper function to convert Event to EventDetails
+  const getEventDetails = (event: Event): EventDetails => {
+    // Find matching event details or create default
+    const details = eventDetails.find(detail => detail.id === event.id) || {
+      ...event,
+      rules: ['No specific rules available for this event.'],
+      prizes: []
+    };
+    
+    return details;
   };
   
   return (
@@ -105,7 +117,7 @@ const UpcomingEvents: React.FC<UpcomingEventsProps> = ({ maxEvents = 3 }) => {
         <EventDetailsModal
           isOpen={isDetailsModalOpen}
           onClose={handleCloseModal}
-          event={selectedEvent}
+          event={getEventDetails(selectedEvent)}
         />
       )}
     </Card>

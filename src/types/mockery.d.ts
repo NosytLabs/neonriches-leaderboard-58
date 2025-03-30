@@ -1,8 +1,4 @@
 
-import { UserProfile } from './user';
-import { CosmeticRarity } from './cosmetics';
-import { TeamType } from './user';
-
 export type MockeryAction = 'tomatoes' | 'eggs' | 'stocks' | 'dunce' | 'protection' | 'shame' | 'taunt';
 export type ShameAction = 'tomatoes' | 'eggs' | 'stocks';
 export type MockeryTier = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary' | 'basic' | 'premium' | 'bronze' | 'silver' | 'gold' | 'platinum' | 'diamond' | 'royal';
@@ -55,4 +51,11 @@ export interface UserMockeryStatus {
   protectionExpiresAt?: string;
 }
 
-// No need for re-exports as they cause conflicts with isolatedModules
+export interface MockeryActionInfo {
+  action: MockeryAction;
+  timestamp: number;
+  until: number;
+}
+
+// Export the interfaces and types to prevent conflicts with isolatedModules
+export { MockeryAction, ShameAction, MockeryTier, ExtendedMockeryAction, MockeryEvent, MockeryEffectData, MockUser, MockedUser, UserMockeryStatus, MockeryActionInfo };

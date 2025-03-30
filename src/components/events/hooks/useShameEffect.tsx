@@ -1,10 +1,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
-import { MockeryAction } from '@/types/mockery';
-
-// Define ShameAction type and export it
-export type ShameAction = 'tomatoes' | 'eggs' | 'stocks';
+import { ShameAction } from '@/types/mockery';
 
 export interface ShameEffectProps {
   type: ShameAction;
@@ -29,7 +26,9 @@ export const ShameEffect: React.FC<ShameEffectProps> = ({
       const rotation = Math.random() * 360;
       const scale = 0.5 + Math.random() * 1;
       
-      const emoji = type === 'tomatoes' ? '🍅' : type === 'eggs' ? '🥚' : '🪵';
+      // Using type comparison but with string literals for the ShameAction
+      const emoji = type === ('tomatoes' as ShameAction) ? '🍅' : 
+                    type === ('eggs' as ShameAction) ? '🥚' : '🪵';
       
       newElements.push(
         <motion.div
@@ -109,12 +108,29 @@ export const useShameEffect = () => {
     return shameCount[userId] || 0;
   }, [shameCount]);
   
+  const getActiveMockery = useCallback((userId: number): { action: ShameAction; timestamp: number; until: number } => {
+    const action = shameEffects[userId];
+    if (action) {
+      return {
+        action,
+        timestamp: Date.now(),
+        until: Date.now() + 24 * 60 * 60 * 1000 // 24 hours from now
+      };
+    }
+    return {
+      action: 'tomatoes',
+      timestamp: 0,
+      until: 0
+    };
+  }, [shameEffects]);
+  
   return {
     shameEffects,
     shameCooldown,
     shameCount,
     getShameCount,
-    handleShame
+    handleShame,
+    getActiveMockery
   };
 };
 
