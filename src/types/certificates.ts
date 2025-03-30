@@ -1,48 +1,25 @@
 
-// Certificate related types
-import { TeamType } from './team';
+import { TeamColor, UserProfile, UserTier } from './user';
 
-export type CertificateType = 
-  | 'rank' 
-  | 'achievement' 
-  | 'membership'
-  | 'royal'
-  | 'special'
-  | 'event'
-  | 'milestone'
-  | 'team'
-  | 'nobility';
-
-export type CertificateStyle = 
-  | 'royal' 
-  | 'gilded' 
-  | 'classic' 
-  | 'modern' 
-  | 'minimalist'
-  | 'ornate'
-  | 'parchment'
-  | 'elite'
-  | 'vip';
-
-export type CertificateTeam = TeamType | 'neutral';
+export type CertificateType = 'rank' | 'achievement' | 'team' | 'founder' | 'event';
+export type CertificateStyle = 'classic' | 'modern' | 'royal' | 'vintage' | 'minimalist';
+export type CertificateTeam = TeamColor | 'neutral';
 
 export interface Certificate {
   id: string;
   userId: string;
-  userDisplayName: string;
   type: CertificateType;
-  style: CertificateStyle;
-  imageUrl: string;
-  nftMintAddress?: string; 
-  mintAddress?: string;  // Added this for backward compatibility
-  team?: CertificateTeam;
+  title: string;
+  description: string;
   createdAt: string;
-  updatedAt?: string;
-  title?: string;
-  description?: string;
-  isMinted?: boolean;
-  mintedAt?: string;
+  imageUrl: string;
   shareUrl?: string;
+  isMinted: boolean;
+  nftMintAddress?: string;
+  tokenId?: string;
+  team?: CertificateTeam;
+  style?: CertificateStyle;
+  data?: Record<string, any>;
 }
 
 export interface CertificateTemplate {
@@ -54,18 +31,18 @@ export interface CertificateTemplate {
   previewUrl: string;
   imageUrl: string;
   description: string;
-  requiresFounder?: boolean;
   availableForTier?: string[];
   availableForRank?: number[];
+  requiresFounder?: boolean;
 }
 
 export interface RankCertificateMetadata {
-  rank: number;
   userName: string;
-  userId: string;
-  certId: string;
-  timestamp: number;
-  amountSpent?: number;
+  userRank: number;
+  userTeam: TeamColor | null;
+  certificateId: string;
+  issuedDate: string;
+  amountSpent: number;
 }
 
 export interface CertificateRepository {
@@ -78,21 +55,9 @@ export interface CertificateRepository {
 }
 
 export interface CertificateTemplateFactory {
-  getTemplatesForUser(userId: string, user: any): CertificateTemplate[];
-  createTemplate(type: CertificateType, style: CertificateStyle, team: CertificateTeam): CertificateTemplate;
+  createTemplate(data: Partial<CertificateTemplate>): CertificateTemplate;
   getTemplateById(id: string): CertificateTemplate | null;
   getAllTemplates(): CertificateTemplate[];
   getTemplatesByType(type: CertificateType): CertificateTemplate[];
+  getTemplatesForUser(userId: string, user: any): CertificateTemplate[];
 }
-
-// Use export type to avoid TS1205 errors
-export type { 
-  CertificateType, 
-  CertificateStyle, 
-  CertificateTeam, 
-  Certificate, 
-  CertificateTemplate, 
-  RankCertificateMetadata, 
-  CertificateRepository, 
-  CertificateTemplateFactory 
-};

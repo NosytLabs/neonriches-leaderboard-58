@@ -12,7 +12,7 @@ import RoyalDecoration from '@/components/ui/royal-decoration';
 import { SpendAmount } from '@/components/ui/theme-components';
 import { motion } from 'framer-motion';
 import MedievalIcon from '@/components/ui/medieval-icon';
-import { formatDate } from '@/utils/dates';
+import { formatDate } from '@/utils/formatters';
 
 interface RoyalCertificateProps {
   user: UserProfile;
@@ -140,7 +140,6 @@ const RoyalCertificate: React.FC<RoyalCertificateProps> = ({
     window.open(url, '_blank');
   };
   
-  // Format the date using our utility
   const formattedDate = formatDate(user.joinDate !== undefined ? user.joinDate : new Date());
   
   return (

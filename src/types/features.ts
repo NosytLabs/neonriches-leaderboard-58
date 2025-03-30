@@ -1,40 +1,61 @@
 
-// Feature types for the application
+import { UserTier } from "./user";
 
-export interface Feature {
+export type Feature = 
+  | 'analytics' 
+  | 'visibility'
+  | 'marketing'
+  | 'advertising'
+  | 'design'
+  | 'mockery'
+  | 'protection'
+  | 'shame'
+  | 'status'
+  | 'cosmetics'
+  | 'certificates'
+  | 'royal_chat'
+  | 'teams'
+  | 'challenges'
+  | 'nft'
+  | 'boost'
+  | 'marketing_dashboard'
+  | 'solana';
+
+export interface FeatureInfo {
   id: string;
   name: string;
   description: string;
-  tier: string;
-  icon: string;
+  tier: UserTier;
   price: number;
-  category?: string;
-  features?: string[];
+  icon: string;
+  title: string;
 }
 
-export interface FeatureInfo extends Feature {
-  category: string;
-}
-
-export interface FeatureCategory {
+export interface SubscriptionTier {
   id: string;
   name: string;
-  icon: string;
+  price: number;
+  billingPeriod: 'monthly' | 'yearly';
+  features: string[];
   description: string;
-  features: Feature[];
+  popularFeature?: string;
+  ctaText: string;
+  color: string;
+  discount?: number;
+  compareFeatures?: Record<string, boolean | string>;
 }
 
-export interface FeaturePurchaseResult {
-  success: boolean;
-  featureId?: string;
-  error?: string;
-  redirectUrl?: string;
-  subscriptionId?: string;
-}
-
-export interface SubscriptionResponse {
-  success: boolean;
-  subscriptionId?: string;
-  error?: string;
-  url?: string;
+export interface ProfileBoostData {
+  id: string;
+  userId: string;
+  type: string;
+  name: string;
+  description: string;
+  startDate?: string;
+  endDate?: string;
+  isActive: boolean;
+  duration: number;
+  price: number;
+  cssClass: string;
+  tier: string;
 }

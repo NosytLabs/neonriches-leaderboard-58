@@ -36,7 +36,7 @@ export type MockeryAction =
   | 'immune';
 
 // Union of tiers for mockery actions
-export type MockeryTier = 'basic' | 'premium' | 'royal' | 'legendary' | 'common' | 'uncommon' | 'rare' | 'epic';
+export type MockeryTier = 'basic' | 'premium' | 'royal' | 'legendary' | 'common' | 'uncommon' | 'rare' | 'epic' | 'bronze';
 
 export interface MockeryEvent {
   id: string;
@@ -49,6 +49,7 @@ export interface MockeryEvent {
   tier: MockeryTier;
   isActive: boolean;
   sourceId?: string;
+  sourceName?: string;
 }
 
 export interface MockedUser {
@@ -90,6 +91,15 @@ export interface MockeryStats {
   usersParticipating?: number;
   participantCount?: number;
   participantsCount?: number;
+}
+
+export interface MockeryActionInfo {
+  icon: string;
+  title: string;
+  description: string;
+  tier: MockeryTier;
+  price: number;
+  duration: number;
 }
 
 export type ShameAction = MockeryAction;

@@ -1,44 +1,37 @@
 
 import { useCallback } from 'react';
-import { useSound } from '@/hooks/sounds/use-sound';
 import { SoundType } from '@/types/sound-types';
+import { useAudioLoader } from '@/hooks/sounds/use-audio-loader';
 
-interface UseNotificationSoundsOptions {
-  enabled?: boolean;
+interface NotificationSoundOptions {
   volume?: number;
 }
 
-const useNotificationSounds = (options: UseNotificationSoundsOptions = {}) => {
-  const { enabled = true, volume = 0.5 } = options;
-  const { play } = useSound();
+export default function useNotificationSounds() {
+  const { audio, isEnabled, volume } = useAudioLoader();
   
-  // Play a notification sound
-  const playSound = useCallback((type: SoundType) => {
-    if (!enabled) return;
+  const playSound = useCallback((sound: SoundType, options?: NotificationSoundOptions) => {
+    if (!isEnabled || !audio) return;
     
-    play(type);
-  }, [enabled, play]);
+    try {
+      const soundElement = audio[sound];
+      if (!soundElement) return;
+      
+      // Stop the sound if it's already playing
+      soundElement.pause();
+      soundElement.currentTime = 0;
+      
+      // Set volume
+      soundElement.volume = (options?.volume !== undefined ? options.volume : volume);
+      
+      // Play the sound
+      soundElement.play().catch(err => {
+        console.error(`Error playing sound ${sound}:`, err);
+      });
+    } catch (error) {
+      console.error(`Failed to play sound ${sound}:`, error);
+    }
+  }, [audio, isEnabled, volume]);
   
-  // Helper methods for specific sounds
-  const playNotification = useCallback(() => playSound('notification'), [playSound]);
-  const playSuccess = useCallback(() => playSound('success'), [playSound]);
-  const playError = useCallback(() => playSound('error'), [playSound]);
-  const playPurchase = useCallback(() => playSound('purchase'), [playSound]);
-  const playRankUp = useCallback(() => playSound('rankUp'), [playSound]);
-  const playAchievement = useCallback(() => playSound('achievement'), [playSound]);
-  const playCoins = useCallback(() => playSound('coins'), [playSound]);
-  
-  return {
-    playSound,
-    playNotification,
-    playSuccess,
-    playError,
-    playPurchase,
-    playRankUp,
-    playAchievement,
-    playCoins
-  };
-};
-
-export { useNotificationSounds };
-export default useNotificationSounds;
+  return { playSound };
+}

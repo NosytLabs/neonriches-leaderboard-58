@@ -1,87 +1,78 @@
 
-export interface AnalysisResult {
-  unusedImports?: ImportInfo[];
-  unusedVariables?: VariableInfo[];
-  unusedFiles?: FileInfo[];
-  unusedSelectors?: SelectorInfo[];
-  deadCode?: CodeIssueInfo[];
-  duplicateCode?: DuplicateCodeInfo[];
-  complexCode?: ComplexityItem[];
-  unusedDependencies?: DependencyInfo[];
-  performanceIssues?: PerformanceIssue[];
-  metrics?: ProjectMetrics;
-}
-
 export interface ImportInfo {
-  filePath: string;
-  line: number;
   name: string;
-  statement: string;
-  suggestion: string;
+  path: string;
+  file: string;
+  used: boolean;
+  impact?: number;
 }
 
 export interface VariableInfo {
-  filePath: string;
-  line: number;
   name: string;
+  file: string;
   scope: string;
   type: string;
-  suggestion: string;
+  used: boolean;
+  impact?: number;
 }
 
 export interface FileInfo {
   path: string;
-  reason: string;
-  suggestion: string;
+  size: number;
+  used: boolean;
+  impact?: number;
 }
 
 export interface SelectorInfo {
-  filePath: string;
-  selector: string;
-  line: number;
-  suggestion: string;
+  name: string;
+  file: string;
+  used: boolean;
+  impact?: number;
+}
+
+export interface CodeIssueInfo {
+  description: string;
+  file: string;
+  lineStart: number;
+  lineEnd: number;
+  severity: 'low' | 'medium' | 'high';
+  impact?: number;
+}
+
+export interface DuplicateCodeInfo {
+  id: string;
+  instances: Array<{ path: string; lineStart: number; lineEnd: number }>;
+  linesCount: number;
+  code: string;
+  recommendation?: string;
+  impact?: number;
+}
+
+export interface ComplexityItem {
+  id: string;
+  file: string;
+  function: string;
+  complexity: number;
+  lineCount: number;
+  recommendation: string;
+  impact?: number;
 }
 
 export interface DependencyInfo {
   name: string;
   version: string;
-  reason: string;
-  suggestion: string;
-}
-
-export interface CodeIssueInfo {
-  filePath: string;
-  line: number;
-  description: string;
-  suggestion: string;
-  severity: 'low' | 'medium' | 'high' | 'critical';
-}
-
-export interface DuplicateCodeInfo {
-  files: string[];
-  similarity: number;
-  lines: number;
-  snippet: string;
-  suggestion: string;
-}
-
-export interface ComplexityItem {
-  filePath: string;
-  function: string;
-  name: string;
-  line: number;
-  complexity: number;
-  cyclomaticComplexity: number;
-  explanation: string;
-  suggestion: string;
+  used: boolean;
+  size: number;
+  impact?: number;
 }
 
 export interface PerformanceIssue {
-  filePath: string;
-  line: number;
   description: string;
-  impact: 'low' | 'medium' | 'high';
-  suggestion: string;
+  file: string;
+  lineNumber: number;
+  severity: 'low' | 'medium' | 'high';
+  recommendation: string;
+  impact?: number;
 }
 
 export interface ProjectMetrics {
@@ -89,10 +80,37 @@ export interface ProjectMetrics {
   totalLines: number;
   totalComponents: number;
   averageComponentSize: number;
-  largestFile: {
-    path: string;
-    lines: number;
-  };
+  totalDependencies: number;
   totalSize: number;
+  sizeSavings: number;
+  fileSavings: number;
+  dependencySavings: number;
+  sizePercentage: number;
+  filePercentage: number;
+  dependencyPercentage: number;
   formattedSize: string;
+  beforeCleanup: {
+    projectSize: number;
+    fileCount: number;
+    dependencyCount: number;
+  };
+  afterCleanup: {
+    projectSize: number;
+    fileCount: number;
+    dependencyCount: number;
+  };
+}
+
+export interface AnalysisResult {
+  unusedImports: ImportInfo[];
+  unusedVariables: VariableInfo[];
+  unusedFiles?: FileInfo[];
+  unusedSelectors?: SelectorInfo[];
+  unusedDependencies?: DependencyInfo[];
+  deadCode?: CodeIssueInfo[];
+  deadCodePaths?: CodeIssueInfo[];
+  duplicateCode: DuplicateCodeInfo[];
+  complexCode: ComplexityItem[];
+  performanceIssues: PerformanceIssue[];
+  metrics?: ProjectMetrics;
 }

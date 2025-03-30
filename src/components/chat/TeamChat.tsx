@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -6,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { User, MessageSquare, Send, ChevronRight, Users, Shield, Crown } from 'lucide-react';
-import { TeamColor, TeamString } from '@/types/team';
+import { TeamColor } from '@/types/user';
 import { UserProfile } from '@/types/user';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useToast } from '@/hooks/use-toast';
@@ -24,6 +23,8 @@ interface ChatMessage {
   timestamp: string;
   isSystem?: boolean;
 }
+
+type TeamString = 'red' | 'green' | 'blue' | 'gold' | 'top';
 
 interface TeamChatProps {
   user: UserProfile | null;
@@ -237,7 +238,7 @@ const TeamChat: React.FC<TeamChatProps> = ({ user, limit = 50 }) => {
       
       setMessage('');
       setIsLoading(false);
-      playSound({id: 'message'});
+      playSound('message');
     }, 300);
   };
   
@@ -285,7 +286,7 @@ const TeamChat: React.FC<TeamChatProps> = ({ user, limit = 50 }) => {
     }
     
     setActiveTab(value);
-    playSound({id: 'click'});
+    playSound('click');
   };
   
   const getTeamColor = (team: TeamColor | null) => {
@@ -347,7 +348,7 @@ const TeamChat: React.FC<TeamChatProps> = ({ user, limit = 50 }) => {
         description: "You have successfully joined the chat.",
       });
       
-      playSound({id: 'notification'});
+      playSound('notification');
     }, 800);
   };
   

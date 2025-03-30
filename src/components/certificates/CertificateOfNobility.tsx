@@ -30,7 +30,7 @@ const CertificateOfNobility: React.FC<CertificateProps> = ({
   
   const handleVerify = () => {
     setIsVerifying(true);
-    playSound('royal');
+    playSound('trumpets');
     
     // Simulate verification process
     setTimeout(() => {

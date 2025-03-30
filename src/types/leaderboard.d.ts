@@ -48,3 +48,26 @@ export interface LeaderboardStats {
   averageSpent: number;
   medianRank: number;
 }
+
+export interface OnChainLeaderboardEntry {
+  pubkey: string;
+  userId: string;
+  amount: number;
+  timestamp: number;
+  username?: string;
+  publicKey?: string;
+  amountSpent?: number;
+  totalDeposited?: number;
+  rank?: number;
+  joinDate?: number;
+}
+
+export type SolanaTransaction = {
+  signature: string;
+  timestamp: number;
+  sender: string;
+  recipient: string;
+  amount: number;
+  type: 'deposit' | 'withdrawal' | 'transfer';
+  status: 'confirmed' | 'pending' | 'failed';
+};

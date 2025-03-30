@@ -73,3 +73,43 @@ export const formatDuration = (seconds: number): string => {
   
   return `${hours}h ${minutes}m`;
 };
+
+/**
+ * Format dollar amount for display
+ */
+export const formatDollarAmount = (amount: number): string => {
+  return `$${amount.toLocaleString()}`;
+};
+
+/**
+ * Format a Solana address to a shortened version
+ */
+export const formatAddress = (address: string): string => {
+  if (!address) return '';
+  if (address.length <= 8) return address;
+  
+  return `${address.substring(0, 4)}...${address.substring(address.length - 4)}`;
+};
+
+/**
+ * Format a historical value for display
+ */
+export const formatHistoricalValue = (value: number): string => {
+  return value.toLocaleString();
+};
+
+/**
+ * Get icon for achievement based on type
+ */
+export const getAchievementIcon = (type: string): string => {
+  const icons: Record<string, string> = {
+    'rank': 'crown',
+    'spending': 'coins',
+    'social': 'users',
+    'event': 'calendar',
+    'mockery': 'trending-up',
+    'special': 'star'
+  };
+  
+  return icons[type] || 'award';
+};

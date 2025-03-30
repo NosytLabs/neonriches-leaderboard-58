@@ -1,78 +1,98 @@
 
-import { useState, useCallback } from 'react';
-import { MockeryAction } from '@/types/mockery';
+import { useCallback, useState } from 'react';
+import { MockeryAction, MockeryTier } from '@/types/mockery';
+import { UserProfile } from '@/types/user';
 
-export type ShameAction = MockeryAction;
-
-export interface MockeryActionInfo {
-  action: ShameAction | MockeryAction;
-  timestamp: number;
-  until: number;
+interface ShameEffectOptions {
+  duration?: number;
+  displayName?: string;
 }
 
-const useShameEffect = () => {
-  const [shameEffects, setShameEffects] = useState<Record<number, ShameAction>>({});
-  const [shameCooldown, setShameCooldown] = useState<Record<number, boolean>>({});
-  const [shameCount, setShameCount] = useState<Record<number, number>>({});
+// Dictionary of shame action information
+export const mockeryActionInfo: Record<MockeryAction, { 
+  icon: string;
+  title: string;
+  description: string;
+  tier: MockeryTier;
+  price: number;
+  duration: number; 
+}> = {
+  tomatoes: {
+    icon: '🍅',
+    title: 'Tomato Pelting',
+    description: 'Pelt the target with virtual tomatoes, leaving them red-faced and embarrassed.',
+    tier: 'basic',
+    price: 5,
+    duration: 86400 // 1 day in seconds
+  },
+  eggs: {
+    icon: '🥚',
+    title: 'Egg Barrage',
+    description: 'Throw rotten eggs at the target\'s profile, creating a stinky mess.',
+    tier: 'basic',
+    price: 5,
+    duration: 86400
+  },
+  // ... Add more action info for other MockeryAction types
+  shame: {
+    icon: '🔔',
+    title: 'Bell of Shame',
+    description: 'Ring the shame bell, notifying everyone of the user\'s disgrace.',
+    tier: 'basic',
+    price: 10,
+    duration: 172800 // 2 days
+  },
+  // ... Add remaining actions with their details
+  dungeons: {
+    icon: '🏰',
+    title: 'Dungeon Detention',
+    description: 'Lock them in the virtual dungeons for all to see.',
+    tier: 'premium',
+    price: 30,
+    duration: 259200 // 3 days
+  },
+  immune: {
+    icon: '🛡️',
+    title: 'Royal Immunity',
+    description: 'Gain temporary immunity from mockery (not an attack).',
+    tier: 'royal',
+    price: 100,
+    duration: 604800 // 7 days
+  }
+};
+
+// Hook for handling shame effects
+export const useShameEffect = (user: UserProfile | null) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [currentEffect, setCurrentEffect] = useState<MockeryAction | null>(null);
   
-  const handleShame = useCallback((userId: number, username: string, type: ShameAction) => {
-    // Apply the shame effect
-    setShameEffects(prev => ({ ...prev, [userId]: type }));
-    setShameCooldown(prev => ({ ...prev, [userId]: true }));
-    setShameCount(prev => ({ ...prev, [userId]: (prev[userId] || 0) + 1 }));
+  const applyShameEffect = useCallback((targetId: string, action: MockeryAction, options?: ShameEffectOptions) => {
+    setIsLoading(true);
+    setCurrentEffect(action);
     
-    // Clear the shame effect after 24 hours (in a real app)
-    // For demo, we'll clear it after 5 seconds
+    // Simulate applying the effect
     setTimeout(() => {
-      setShameEffects(prev => {
-        const newEffects = { ...prev };
-        delete newEffects[userId];
-        return newEffects;
-      });
-    }, 5000);
+      setIsLoading(false);
+      setCurrentEffect(null);
+      console.log(`Applied ${action} to user ${targetId} for ${options?.duration || mockeryActionInfo[action]?.duration || 86400} seconds`);
+    }, 1500);
     
-    // Clear the cooldown after 60 seconds
-    setTimeout(() => {
-      setShameCooldown(prev => {
-        const newCooldown = { ...prev };
-        delete newCooldown[userId];
-        return newCooldown;
-      });
-    }, 60000);
-    
-    console.log(`Applied ${type} shame to ${username}`);
     return true;
   }, []);
   
-  const getShameCount = useCallback((userId: number) => {
-    return shameCount[userId] || 0;
-  }, [shameCount]);
-  
-  const getActiveMockery = useCallback((userId: number): MockeryActionInfo => {
-    const action = shameEffects[userId];
-    if (action) {
-      return {
-        action,
-        timestamp: Date.now(),
-        until: Date.now() + 24 * 60 * 60 * 1000 // 24 hours from now
-      };
-    }
-    return {
-      action: 'tomatoes',
-      timestamp: 0,
-      until: 0
-    };
-  }, [shameEffects]);
+  const removeShameEffect = useCallback((targetId: string) => {
+    console.log(`Removed shame effect from user ${targetId}`);
+    return true;
+  }, []);
   
   return {
-    shameEffects,
-    shameCooldown,
-    shameCount,
-    getShameCount,
-    handleShame,
-    getActiveMockery
+    applyShameEffect,
+    removeShameEffect,
+    isLoading,
+    currentEffect
   };
 };
 
-export default useShameEffect;
-export type { ShameAction, MockeryActionInfo };
+export type { ShameEffectOptions };
+export type ShameAction = MockeryAction;
+export { mockeryActionInfo };

@@ -1,4 +1,8 @@
 
+/**
+ * Sound types for the platform sound system
+ */
+
 // Sound type represents all available sound effects
 export type SoundType = 
   | 'click'
@@ -13,7 +17,11 @@ export type SoundType =
   | 'rankUp'
   | 'button'
   | 'hover'
-  | 'medieval';
+  | 'medieval'
+  | 'royal'
+  | 'parchment'
+  | 'deposit'
+  | 'message';
 
 export interface AudioLoaderReturn {
   audio: Record<SoundType, HTMLAudioElement>;
@@ -41,4 +49,17 @@ export interface PremiumSoundPackDetails {
 export interface CacheOptions {
   maxAge?: number;
   staleWhileRevalidate?: boolean;
+}
+
+export interface UseSoundOptions {
+  volume?: number;
+  interrupt?: boolean;
+  soundEnabled?: boolean;
+  onComplete?: () => void;
+}
+
+export interface UseSoundReturn {
+  play: (options?: UseSoundOptions) => void;
+  stop: () => void;
+  isPlaying: boolean;
 }
