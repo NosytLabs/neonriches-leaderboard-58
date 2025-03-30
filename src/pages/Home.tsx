@@ -107,7 +107,7 @@ const Home: React.FC = () => {
           <p className="text-white/40 text-sm italic max-w-2xl mx-auto">
             "In a world where people buy blue checkmarks and spend real money on virtual goods, 
             we're just cutting out the middleman and being honest about what social media really is." 
-            — SpendThrone Founder
+            — Keeper of the Royal Scrolls
           </p>
         </motion.div>
       </div>

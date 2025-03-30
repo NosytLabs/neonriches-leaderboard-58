@@ -119,7 +119,7 @@ const CertificateOfNobility: React.FC<CertificateProps> = ({
             <div className="text-right">
               <div className="text-xs text-gray-600 mb-1">Signature of the CEO</div>
               <div className="font-signature text-lg sm:text-xl text-purple-800">
-                {user.rank === 1 ? `${user.displayName || user.username}` : 'Max Statusberg'}
+                {user.rank === 1 ? `${user.displayName || user.username}` : 'Grand Sage of the Treasury'}
               </div>
             </div>
           </div>

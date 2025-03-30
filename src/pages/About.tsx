@@ -1,4 +1,3 @@
-
 import React from 'react';
 import Shell from '@/components/Shell';
 import PageSEO from '@/components/common/PageSEO';
@@ -161,7 +160,7 @@ const About = () => {
                 outraged by the concept, we invite you to consider why a transparent pay-for-status 
                 system feels more offensive than the countless opaque ones we participate in daily."
               </p>
-              <p className="mt-4 text-right text-royal-gold">— The Royal Founders</p>
+              <p className="mt-4 text-right text-royal-gold">— The Royal Chroniclers</p>
             </div>
           </div>
           
