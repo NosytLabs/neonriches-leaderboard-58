@@ -39,13 +39,18 @@ export type IconStyle =
   | 'medieval'
   | 'vintage';
 
-export type IconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl';
+export type IconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' | number;
 
-export interface IconProps extends Omit<LucideProps, 'color'> {
+export interface IconProps extends Omit<LucideProps, "color"> {
   type?: IconType;
-  style?: IconStyle;
+  style?: IconStyle | string;
   size?: IconSize;
   color?: string;
   secondaryColor?: string;
   className?: string;
 }
+
+export type MedievalIconName = string;
+export type IconColor = string;
+export type MedievalIconColor = string;
+

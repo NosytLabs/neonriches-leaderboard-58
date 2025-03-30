@@ -1,4 +1,3 @@
-
 import React, { useRef, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -142,7 +141,7 @@ const RoyalCertificate: React.FC<RoyalCertificateProps> = ({
   };
   
   // Format the date using our utility
-  const formattedDate = formatDate(user.joinedAt !== undefined ? user.joinedAt : new Date());
+  const formattedDate = formatDate(user.joinDate !== undefined ? user.joinDate : new Date());
   
   return (
     <div className="space-y-6">

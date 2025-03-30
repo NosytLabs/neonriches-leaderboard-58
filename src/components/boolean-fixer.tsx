@@ -1,4 +1,3 @@
-
 import React from 'react';
 
 // This component is used to fix properties where boolean values are expected but strings are provided
@@ -37,7 +36,7 @@ export const fixBooleanProps = <T extends Record<string, any>>(
   
   propNames.forEach(propName => {
     if (propName in props) {
-      result[propName] = convertPropToBool(props[propName]);
+      result[propName] = (props[propName] === 'true' || props[propName] === true) as T[keyof T];
     }
   });
   
