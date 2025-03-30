@@ -1,220 +1,124 @@
 
-import React, { createContext, useState, useEffect, useContext } from 'react';
-import { signInWithEmail, signUpWithEmail, signOut } from '@/services/authService';
-import { UserProfile } from '@/types/user';
-import { AuthContextType } from '@/types/auth-context';
-import { adaptUserProfileToUser, adaptUserToUserProfile } from '@/utils/userAdapter';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { User } from '@/types/user';
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+interface AuthContextType {
+  user: User | null;
+  isAuthenticated: boolean;
+  isLoading: boolean;
+  login: (email: string, password: string) => Promise<void>;
+  register: (email: string, password: string, username: string) => Promise<void>;
+  logout: () => Promise<void>;
+  updateUserProfile: (updates: Partial<User>) => Promise<void>;
+}
 
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<UserProfile | null>(null);
+const AuthContext = createContext<AuthContextType>({
+  user: null,
+  isAuthenticated: false,
+  isLoading: true,
+  login: async () => {},
+  register: async () => {},
+  logout: async () => {},
+  updateUserProfile: async () => {},
+});
+
+export const useAuth = () => useContext(AuthContext);
+
+interface AuthProviderProps {
+  children: ReactNode;
+}
+
+// Mock user data
+const mockUser: User = {
+  id: '1',
+  username: 'LordCashington',
+  displayName: 'Lord Cashington III',
+  email: 'lord@example.com',
+  joinedAt: new Date().toISOString(),
+  createdAt: new Date().toISOString(),
+  tier: 'premium',
+  team: 'red',
+  rank: 42,
+  walletBalance: 1500,
+  amountSpent: 5000,
+  profileImage: 'https://i.pravatar.cc/150?img=3'
+};
+
+export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+  const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Check for stored user data on component mount
+    // Check local storage for user session
     const storedUser = localStorage.getItem('spendthrone_user');
-    
     if (storedUser) {
-      try {
-        const parsedUser = JSON.parse(storedUser);
-        setUser(adaptUserToUserProfile(parsedUser));
-      } catch (error) {
-        console.error('Failed to parse stored user data:', error);
-        localStorage.removeItem('spendthrone_user');
-      }
+      setUser(JSON.parse(storedUser));
     }
-    
     setIsLoading(false);
   }, []);
 
   const login = async (email: string, password: string) => {
-    setIsLoading(true);
+    // Simulate API call
+    await new Promise(resolve => setTimeout(resolve, 1000));
     
-    try {
-      const success = await signInWithEmail(email, password);
-      
-      if (success) {
-        // Simulate user data fetch from API
-        const mockUser: UserProfile = {
-          id: 'user_' + Date.now(),
-          email,
-          username: email.split('@')[0],
-          displayName: email.split('@')[0].charAt(0).toUpperCase() + email.split('@')[0].slice(1),
-          walletBalance: 100,
-          rank: Math.floor(Math.random() * 100) + 1,
-          team: Math.random() > 0.5 ? (Math.random() > 0.5 ? 'red' : 'green') : 'blue',
-          joined: new Date(),
-          joinedAt: new Date().toISOString(),
-          spentTotal: 0,
-          totalSpent: 0,
-          amountSpent: Math.floor(Math.random() * 1000),
-          tier: 'basic',
-          role: 'user'
-        };
-        
-        setUser(mockUser);
-        localStorage.setItem('spendthrone_user', JSON.stringify(mockUser));
-      } else {
-        throw new Error('Login failed');
-      }
-    } catch (error) {
-      console.error('Login error:', error);
-      throw error;
-    } finally {
-      setIsLoading(false);
-    }
+    // Save user to state and local storage
+    setUser(mockUser);
+    localStorage.setItem('spendthrone_user', JSON.stringify(mockUser));
   };
 
-  const register = async (username: string, email: string, password: string) => {
-    setIsLoading(true);
+  const register = async (email: string, password: string, username: string) => {
+    // Simulate API call
+    await new Promise(resolve => setTimeout(resolve, 1000));
     
-    try {
-      const success = await signUpWithEmail(email, password);
-      
-      if (success) {
-        // Simulate user data creation
-        const mockUser: UserProfile = {
-          id: 'user_' + Date.now(),
-          email,
-          username,
-          displayName: username,
-          walletBalance: 50, // New users get starting balance
-          rank: Math.floor(Math.random() * 1000) + 100, // Initial rank
-          joined: new Date(),
-          joinedAt: new Date().toISOString(),
-          spentTotal: 0,
-          totalSpent: 0,
-          amountSpent: 0,
-          tier: 'basic',
-          role: 'user',
-          team: 'none'
-        };
-        
-        setUser(mockUser);
-        localStorage.setItem('spendthrone_user', JSON.stringify(mockUser));
-      } else {
-        throw new Error('Registration failed');
-      }
-    } catch (error) {
-      console.error('Registration error:', error);
-      throw error;
-    } finally {
-      setIsLoading(false);
-    }
+    // Create custom user with provided username
+    const newUser = {
+      ...mockUser,
+      username,
+      displayName: username,
+      email,
+      rank: 0,
+      walletBalance: 0,
+      amountSpent: 0
+    };
+    
+    // Save user to state and local storage
+    setUser(newUser);
+    localStorage.setItem('spendthrone_user', JSON.stringify(newUser));
   };
 
   const logout = async () => {
-    setIsLoading(true);
+    // Simulate API call
+    await new Promise(resolve => setTimeout(resolve, 500));
     
-    try {
-      await signOut();
-      setUser(null);
-      localStorage.removeItem('spendthrone_user');
-    } catch (error) {
-      console.error('Logout error:', error);
-      throw error;
-    } finally {
-      setIsLoading(false);
-    }
+    // Clear user from state and local storage
+    setUser(null);
+    localStorage.removeItem('spendthrone_user');
   };
 
-  const updateUserProfile = async (updatedProfile: Partial<UserProfile>) => {
+  const updateUserProfile = async (updates: Partial<User>) => {
     if (!user) return;
-
-    try {
-      // Create updated user by merging current user with updates
-      const updatedUser = {
-        ...user,
-        ...updatedProfile,
-      };
-
-      // Update the state and localStorage
-      setUser(updatedUser);
-      localStorage.setItem('spendthrone_user', JSON.stringify(updatedUser));
-    } catch (error) {
-      console.error('Error updating user profile:', error);
-      throw error;
-    }
-  };
-
-  const updateUser = async (userData: Partial<UserProfile>): Promise<boolean> => {
-    if (!user) return false;
-
-    try {
-      // Create updated user by merging current user with updates
-      const updatedUser = {
-        ...user,
-        ...userData,
-      };
-
-      // Update the state and localStorage
-      setUser(updatedUser);
-      localStorage.setItem('spendthrone_user', JSON.stringify(updatedUser));
-      return true;
-    } catch (error) {
-      console.error('Error updating user:', error);
-      return false;
-    }
-  };
-
-  const awardCosmetic = async (cosmeticId: string, category: string): Promise<boolean> => {
-    if (!user) return false;
-
-    try {
-      // Deep clone the current user's cosmetics
-      const currentCosmetics = user.cosmetics ? JSON.parse(JSON.stringify(user.cosmetics)) : {};
-      
-      // Add the new cosmetic to the appropriate category
-      if (!currentCosmetics[category]) {
-        currentCosmetics[category] = [];
-      }
-      
-      // Avoid duplicates
-      if (!currentCosmetics[category].includes(cosmeticId)) {
-        currentCosmetics[category].push(cosmeticId);
-      }
-      
-      // Update the user with the new cosmetics
-      const updatedUser = {
-        ...user,
-        cosmetics: currentCosmetics
-      };
-      
-      setUser(updatedUser);
-      localStorage.setItem('spendthrone_user', JSON.stringify(updatedUser));
-      return true;
-    } catch (error) {
-      console.error('Error awarding cosmetic:', error);
-      return false;
-    }
+    
+    // Simulate API call
+    await new Promise(resolve => setTimeout(resolve, 800));
+    
+    const updatedUser = { ...user, ...updates };
+    setUser(updatedUser);
+    localStorage.setItem('spendthrone_user', JSON.stringify(updatedUser));
   };
 
   return (
-    <AuthContext.Provider value={{ 
-      user, 
-      isLoading, 
-      isAuthenticated: !!user, 
-      login, 
-      register, 
-      logout,
-      signIn: login,
-      signOut: logout,
-      updateUserProfile,
-      updateUser,
-      awardCosmetic
-    }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        isAuthenticated: !!user,
+        isLoading,
+        login,
+        register,
+        logout,
+        updateUserProfile
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
-};
-
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  
-  if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  
-  return context;
 };

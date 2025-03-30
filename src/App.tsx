@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, BrowserRouter } from 'react-router-dom';
 import { AuthProvider } from '@/hooks/useAuth';
 import { Toaster } from '@/components/ui/toaster';
 import { HelmetProvider } from 'react-helmet-async';
@@ -19,29 +19,35 @@ import PaymentSuccess from './pages/PaymentSuccess';
 import SignIn from './pages/SignIn';
 import SignUp from './pages/SignUp';
 import StatusThroughHistory from './pages/StatusThroughHistory';
+import Chat from './pages/Chat';
+import Community from './pages/Community';
 
 function App() {
   return (
     <HelmetProvider>
-      <AuthProvider>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/leaderboard" element={<Leaderboard />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/profile/:username" element={<Profile />} />
-          <Route path="/wallet" element={<Wallet />} />
-          <Route path="/features" element={<Features />} />
-          <Route path="/teams" element={<Teams />} />
-          <Route path="/terms" element={<Terms />} />
-          <Route path="/privacy" element={<Privacy />} />
-          <Route path="/payment/success" element={<PaymentSuccess />} />
-          <Route path="/auth/signin" element={<SignIn />} />
-          <Route path="/auth/signup" element={<SignUp />} />
-          <Route path="/status-through-history" element={<StatusThroughHistory />} />
-        </Routes>
-        <Toaster />
-      </AuthProvider>
+      <BrowserRouter>
+        <AuthProvider>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/leaderboard" element={<Leaderboard />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/profile/:username" element={<Profile />} />
+            <Route path="/wallet" element={<Wallet />} />
+            <Route path="/features" element={<Features />} />
+            <Route path="/teams" element={<Teams />} />
+            <Route path="/terms" element={<Terms />} />
+            <Route path="/privacy" element={<Privacy />} />
+            <Route path="/payment/success" element={<PaymentSuccess />} />
+            <Route path="/auth/signin" element={<SignIn />} />
+            <Route path="/auth/signup" element={<SignUp />} />
+            <Route path="/status-through-history" element={<StatusThroughHistory />} />
+            <Route path="/chat" element={<Chat />} />
+            <Route path="/community" element={<Community />} />
+          </Routes>
+          <Toaster />
+        </AuthProvider>
+      </BrowserRouter>
     </HelmetProvider>
   );
 }

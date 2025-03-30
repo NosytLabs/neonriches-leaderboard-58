@@ -1,26 +1,23 @@
 
 import React from 'react';
-import { Helmet } from 'react-helmet-async';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
+import Shell from '@/components/Shell';
+import PageSEO from '@/components/common/PageSEO';
 import CommunityVoting from '@/components/community/CommunityVoting';
-import { Users, VoteIcon, LightbulbIcon, MessageCircle } from 'lucide-react';
+import { Users, MessageCircle } from 'lucide-react';
 import RoyalDivider from '@/components/ui/royal-divider';
+import usePageTracking from '@/hooks/usePageTracking';
 
 const Community = () => {
+  usePageTracking();
+  
   return (
-    <div className="min-h-screen flex flex-col bg-background text-foreground">
-      <Helmet>
-        <title>Community | SpendThrone</title>
-        <meta 
-          name="description" 
-          content="Join the SpendThrone community, vote on feature ideas, and help shape the future of our satirical social experiment." 
-        />
-      </Helmet>
+    <Shell>
+      <PageSEO 
+        title="Royal Community | SpendThrone"
+        description="Join the SpendThrone community, vote on feature ideas, and help shape the future of our satirical social experiment." 
+      />
       
-      <Header />
-      
-      <main className="flex-1 pt-24 pb-12 px-4 sm:px-6">
+      <main className="container mx-auto px-4 py-12 pt-24">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
             <h1 className="text-3xl md:text-4xl font-bold royal-gradient mb-4">Royal Community</h1>
@@ -32,7 +29,7 @@ const Community = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
             <div className="glass-morphism border-white/10 p-6 rounded-lg text-center">
               <div className="w-12 h-12 rounded-full bg-royal-gold/20 flex items-center justify-center mx-auto mb-4">
-                <VoteIcon className="h-6 w-6 text-royal-gold" />
+                <span className="h-6 w-6 text-royal-gold">🗳️</span>
               </div>
               <h3 className="text-xl font-bold mb-2">Vote on Features</h3>
               <p className="text-white/70">
@@ -42,7 +39,7 @@ const Community = () => {
             
             <div className="glass-morphism border-white/10 p-6 rounded-lg text-center">
               <div className="w-12 h-12 rounded-full bg-royal-purple/20 flex items-center justify-center mx-auto mb-4">
-                <LightbulbIcon className="h-6 w-6 text-royal-purple" />
+                <span className="h-6 w-6 text-royal-purple">💡</span>
               </div>
               <h3 className="text-xl font-bold mb-2">Suggest Ideas</h3>
               <p className="text-white/70">
@@ -82,9 +79,7 @@ const Community = () => {
           </div>
         </div>
       </main>
-      
-      <Footer />
-    </div>
+    </Shell>
   );
 };
 

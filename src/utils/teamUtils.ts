@@ -1,114 +1,120 @@
 
-import { Team } from '@/types/team';
+import { TeamColor } from '@/types/teams';
 
 /**
- * Get team colors based on team name
+ * Get a team motto based on the team color
  */
-export const getTeamColors = (teamName: string): { primary: string; secondary: string } => {
-  switch (teamName.toLowerCase()) {
-    case 'crimson':
-      return { primary: 'rgb(220, 38, 38)', secondary: 'rgb(254, 202, 202)' };
-    case 'azure':
-      return { primary: 'rgb(37, 99, 235)', secondary: 'rgb(191, 219, 254)' };
-    case 'emerald':
-      return { primary: 'rgb(22, 163, 74)', secondary: 'rgb(187, 247, 208)' };
-    case 'aurum':
-      return { primary: 'rgb(217, 119, 6)', secondary: 'rgb(253, 230, 138)' };
-    case 'violet':
-      return { primary: 'rgb(124, 58, 237)', secondary: 'rgb(221, 214, 254)' };
+export const getTeamMotto = (team: TeamColor): string => {
+  switch(team) {
+    case 'red':
+      return "Spend First, Think Never";
+    case 'green':
+      return "Wealth So Strategic, It's Almost Pathetic";
+    case 'blue':
+      return "Patience in Spending, Unbridled in Pretending";
     default:
-      return { primary: 'rgb(156, 163, 175)', secondary: 'rgb(229, 231, 235)' };
+      return "Choose a Side, Pay the Price";
   }
 };
 
 /**
- * Convert team name to noble house name
+ * Get a list of absurd team benefits
  */
-export const getNobleHouseName = (teamName: string): string => {
-  switch (teamName.toLowerCase()) {
-    case 'crimson':
-      return 'House Crimson';
-    case 'azure':
-      return 'House Azure';
-    case 'emerald':
-      return 'House Emerald';
-    case 'aurum':
-      return 'House Aurum';
-    case 'violet':
-      return 'House Violet';
+export const getTeamBenefit = (team: TeamColor): string[] => {
+  switch(team) {
+    case 'red':
+      return [
+        "15% increased mockery toward financial prudence",
+        "Name appears in slightly more garish font on leaderboard",
+        "Access to exclusive 'Reckless Spending Tips' newsletter",
+        "Special ability to shame users who haven't spent in 24 hours",
+        "Royal red border on profile that cost us $0.00 to implement"
+      ];
+    case 'green':
+      return [
+        "Special 'Calculated Spender' badge that means nothing",
+        "Exclusive access to meaningless spending statistics", 
+        "Members can view spending patterns no one cares about",
+        "Ability to create strategic spending plans (that won't be followed)",
+        "Digital monocle for your profile picture because... sophistication"
+      ];
+    case 'blue':
+      return [
+        "Rank updates appear with a 'thoughtful' 3-second delay",
+        "Exclusive 'Long-Term Planner' title (expires weekly)",
+        "Access to timing algorithm that suggests the worst times to spend",
+        "Special ability to pretend spending was strategic after the fact",
+        "Blue profile accent color that screams 'I think I'm clever'"
+      ];
     default:
-      return 'House Neutral';
+      return [
+        "No benefits at all",
+        "You really should choose a team",
+        "Seriously, it's all meaningless anyway"
+      ];
   }
 };
 
 /**
- * Get all available teams
+ * Get an absurd team statistic
  */
-export const getAllTeams = (): Team[] => {
-  return [
-    {
-      id: 'crimson',
-      name: 'Crimson',
-      nobleHouse: 'House Crimson',
-      description: 'Warriors of flame and passion, always charging ahead',
-      members: 124,
-      totalSpent: 48750,
-      rank: 1,
-      color: 'rgb(220, 38, 38)'
-    },
-    {
-      id: 'azure',
-      name: 'Azure',
-      nobleHouse: 'House Azure',
-      description: 'Strategic thinkers who value wisdom and patience',
-      members: 98,
-      totalSpent: 37200,
-      rank: 2,
-      color: 'rgb(37, 99, 235)'
-    },
-    {
-      id: 'emerald',
-      name: 'Emerald',
-      nobleHouse: 'House Emerald',
-      description: 'Prosperous and growth-oriented, always investing wisely',
-      members: 76,
-      totalSpent: 29500,
-      rank: 3,
-      color: 'rgb(22, 163, 74)'
-    },
-    {
-      id: 'aurum',
-      name: 'Aurum',
-      nobleHouse: 'House Aurum',
-      description: 'The wealthiest house, known for extravagance and luxury',
-      members: 45,
-      totalSpent: 19800,
-      rank: 4,
-      color: 'rgb(217, 119, 6)'
-    },
-    {
-      id: 'violet',
-      name: 'Violet',
-      nobleHouse: 'House Violet',
-      description: 'Mysterious and magical, devoted to secret knowledge',
-      members: 67,
-      totalSpent: 24300,
-      rank: 5,
-      color: 'rgb(124, 58, 237)'
-    }
-  ];
+export const getTeamAbsurdStat = (team: TeamColor): string => {
+  switch(team) {
+    case 'red':
+      return "RORS members have collectively clicked 'Purchase' 8,742 times before checking their bank balance, leading to a 43% increase in overdraft fees in the digital kingdom.";
+    case 'green':
+      return "EEC members spend an average of 3.7 hours per week creating spreadsheets to justify their spending, a process that actually costs more in lost productivity than they save through 'strategic spending'.";
+    case 'blue':
+      return "97% of CCC members claim to have a 'system' for optimal spending timing, yet none can explain what it is. When pressed, most mumble something about 'market conditions' and change the subject.";
+    default:
+      return "Team-less users are 100% more likely to eventually join a team, a statistic we just made up but sounds plausible.";
+  }
 };
 
 /**
- * Get team by ID
+ * Get a team's absurd NFT joke
  */
-export const getTeamById = (teamId: string): Team | undefined => {
-  return getAllTeams().find(team => team.id === teamId);
+export const getTeamNFTJoke = (team: TeamColor): string => {
+  switch(team) {
+    case 'red':
+      return "RORS members proudly collect NFTs of virtual dumpster fires, believing they're 'ironic investments' and not just digital receipts for burned money.";
+    case 'green':
+      return "EEC members maintain diversified portfolios of digital rocks, meticulously tracking their 'value' in spreadsheets with more columns than the actual market has buyers.";
+    case 'blue':
+      return "CCC members only buy NFTs at 'optimal market timing' – which coincidentally always seems to be minutes before a collection crashes in value.";
+    default:
+      return "The only NFT worth owning is the 'Non-Fungible Trophy' you get for not owning any NFTs at all.";
+  }
 };
 
-export default {
-  getTeamColors,
-  getNobleHouseName,
-  getAllTeams,
-  getTeamById
+/**
+ * Get a team's absurd crypto roast
+ */
+export const getTeamCryptoRoast = (team: TeamColor): string => {
+  switch(team) {
+    case 'red':
+      return "RORS members invest in currencies with names like 'RocketMoonLamboCoin' and are shocked when developers disappear with their funds.";
+    case 'green':
+      return "EEC members maintain 17 different crypto wallets, each with exactly $96.42 in different tokens, creating a perfectly balanced portfolio that still manages to lose value daily.";
+    case 'blue':
+      return "CCC members proudly announce they're 'waiting for the right moment' to buy crypto, a moment that has mysteriously never arrived in the past decade.";
+    default:
+      return "People without teams actually make better crypto decisions, probably because they're not trying to impress fictional factions with their digital currency prowess.";
+  }
+};
+
+/**
+ * Get a team's absurd security guarantee
+ */
+export const getTeamSecurityGuarantee = (team: TeamColor): string => {
+  switch(team) {
+    case 'red':
+      return "RORS security protocol: All passwords are written on virtual sticky notes attached to virtual monitors, protected by a state-of-the-art honor system.";
+    case 'green':
+      return "EEC security guarantee: Our data is secured with the same vigilance we apply to our spending – sporadic attention followed by elaborate justifications for failures.";
+    case 'blue':
+      return "CCC security promise: We time our security updates to perfectly coincide with moments when hackers are definitely busy attacking someone else.";
+    default:
+      return "No team? Your data is actually safer because even our hackers operate on team-based quotas and don't bother with the unaffiliated.";
+  }
 };
