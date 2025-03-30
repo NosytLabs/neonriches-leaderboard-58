@@ -44,6 +44,7 @@ export interface CertificateMetadata {
   image: string;
   attributes: { trait_type: string; value: string | number }[];
   rank?: number;
+  amountSpent?: number;
 }
 
 // These types are referenced but missing, so let's add them
@@ -65,4 +66,5 @@ export type CertificateStyle = 'royal' | 'noble' | 'knight' | 'founder' | 'stand
 
 export interface RankCertificateMetadata extends CertificateMetadata {
   rank: number;
+  amountSpent?: number;
 }

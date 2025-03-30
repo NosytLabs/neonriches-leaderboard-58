@@ -1,8 +1,12 @@
+
 import { useState, useEffect, useCallback } from 'react';
 import { AnimationConfig } from '@/types/animations';
 import { useSound } from '@/hooks/sounds/use-sound';
 import { SoundType } from '@/types/sound-types';
 import { MockeryAction } from '@/types/mockery';
+
+// Export for components that need this type
+export type ShameAction = MockeryAction;
 
 // Define a state type for our shame effect
 type ShameEffectState = {

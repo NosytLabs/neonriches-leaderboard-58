@@ -1,38 +1,19 @@
 
-import { TeamType } from './user';
+export type TeamColor = 'red' | 'green' | 'blue' | 'none';
 
-export interface Team {
-  id: TeamType;
+export interface TeamData {
+  id: TeamColor;
   name: string;
   description: string;
+  motto: string;
   color: string;
-  image: string;
   members: number;
-  totalSpent: number;
-  ranking: number;
+  benefits: string[];
+  securityGuarantee: string;
 }
 
-export interface TeamStats {
-  totalMembers: number;
-  averageSpending: number;
-  topContributor: string;
-  recentActivity: TeamActivity[];
-}
-
-export interface TeamActivity {
-  userId: string;
-  username: string;
-  action: 'joined' | 'spent' | 'left';
-  amount?: number;
-  timestamp: string;
-}
-
-export interface TeamRankings {
-  rankings: {
-    team: TeamType;
-    rank: number;
-    members: number;
-    totalSpent: number;
-  }[];
-  lastUpdated: string;
+export interface TeamSelectionProps {
+  selectedTeam: TeamColor | null;
+  onTeamSelect: (team: TeamColor) => void;
+  teams: TeamData[];
 }

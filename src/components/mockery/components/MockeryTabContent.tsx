@@ -90,7 +90,7 @@ const MockeryTabContent: React.FC<MockeryTabContentProps> = ({
                   >
                     <div className="flex items-center mb-2">
                       <div className="p-1 rounded-full bg-white/10 mr-2">
-                        <Icon size={16} className="text-white/70" />
+                        {Icon && <Icon size={16} className="text-white/70" />}
                       </div>
                       <h4 className="text-sm font-medium">{getMockeryName(action)}</h4>
                     </div>
@@ -144,18 +144,18 @@ const MockeryTabContent: React.FC<MockeryTabContentProps> = ({
       {mockedUsers.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
           {mockedUsers.slice(0, 6).map((mockedUser) => (
-            <Card key={mockedUser.username} className="glass-morphism border-white/10 p-3">
+            <Card key={mockedUser.userId || mockedUser.username} className="glass-morphism border-white/10 p-3">
               <div className="flex items-center">
                 <div className="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center">
-                  {mockedUser.avatarUrl ? (
-                    <img src={mockedUser.avatarUrl} alt={mockedUser.username} className="w-full h-full rounded-full" />
+                  {mockedUser.profileImage ? (
+                    <img src={mockedUser.profileImage} alt={mockedUser.username} className="w-full h-full rounded-full" />
                   ) : (
                     <span>{mockedUser.username.charAt(0).toUpperCase()}</span>
                   )}
                 </div>
                 <div className="ml-3">
                   <h4 className="font-medium">{mockedUser.displayName || mockedUser.username}</h4>
-                  <p className="text-xs text-white/60">{mockedUser.mockedReason}</p>
+                  <p className="text-xs text-white/60">{mockedUser.mockedReason || "Recently mocked"}</p>
                 </div>
               </div>
             </Card>

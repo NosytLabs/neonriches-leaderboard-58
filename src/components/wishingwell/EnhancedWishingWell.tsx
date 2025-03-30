@@ -1,142 +1,178 @@
+
 import React, { useState, useEffect } from 'react';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
-import { Sparkles, Coins, Gift, ChevronsUp, Award, Crown } from 'lucide-react';
-import { Progress } from '@/components/ui/progress';
-import { useToast } from '@/hooks/use-toast';
-import { useAuth } from '@/contexts/auth';
-import { spendFromWallet } from '@/services/walletService';
-import { getRarityColor, getRarityBgColor, getRarityBorderColor } from '@/utils/cosmetics';
-import useNotificationSounds from '@/hooks/use-notification-sounds';
+import { Coins, TrendingUp, Star, Sparkles, Crown } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useSound } from '@/hooks/sounds/use-sound'; 
 import useWishingWell from '@/hooks/use-wishing-well';
+import { UserProfile } from '@/types/user';
+import WishResultModal from './WishResultModal';
+import { CosmeticItem } from '@/types/cosmetics';
 
 interface EnhancedWishingWellProps {
-  cost: number;
-  baseChance: number;
-  jackpotChance: number;
-  guaranteedPulls: number;
-  onWish: () => void;
+  user: UserProfile;
 }
 
-const EnhancedWishingWell: React.FC<EnhancedWishingWellProps> = ({
-  cost,
-  baseChance,
-  jackpotChance,
-  guaranteedPulls,
-  onWish
-}) => {
-  const { toast } = useToast();
-  const { user } = useAuth();
-  const { playSound } = useNotificationSounds();
-  const {
-    isWishing,
-    wishResult,
-    wishError,
-    pullCount,
-    canWish,
-    handleWish,
-    resetWish
-  } = useWishingWell(cost, baseChance, jackpotChance, guaranteedPulls);
+type WishResultType = 'win' | 'lose' | 'pending';
+
+interface WishResult {
+  type: WishResultType;
+  title: string;
+  message: string;
+  reward?: CosmeticItem;
+  rarity?: string;
+}
+
+const EnhancedWishingWell: React.FC<EnhancedWishingWellProps> = ({ user }) => {
+  const [isWishing, setIsWishing] = useState(false);
+  const [showResults, setShowResults] = useState(false);
+  const [wishResult, setWishResult] = useState<WishResult | null>(null);
+  const [coins, setCoins] = useState<number[]>([]);
   
-  useEffect(() => {
-    if (wishResult) {
-      toast({
-        title: "Royal Fortune Granted!",
-        description: wishResult.message,
-        className: getRarityBgColor(wishResult.rarity),
-      });
-      playSound('win');
-      onWish();
-    }
+  const { makeWish, hasWishAvailable, wishesRemaining } = useWishingWell();
+  
+  const { play: playSound } = useSound();
+  
+  const handleWish = async () => {
+    if (!hasWishAvailable) return;
     
-    if (wishError) {
-      toast({
-        title: "Wishing Well Error",
-        description: wishError,
-        variant: "destructive",
-      });
-      playSound('error');
-    }
-  }, [wishResult, wishError, toast, playSound, onWish]);
+    setIsWishing(true);
+    playSound('coinDrop');
+    
+    // Generate falling coins animation
+    const newCoins = Array.from({ length: 20 }, (_, i) => i);
+    setCoins(newCoins);
+    
+    // Simulate wish processing
+    setTimeout(async () => {
+      const result = await makeWish(user);
+      
+      if (result.success) {
+        playSound('success');
+        
+        setWishResult({
+          type: 'win',
+          title: "Your wish was granted!",
+          message: "You've received a special cosmetic reward!",
+          reward: result.reward,
+          rarity: result.rarity
+        });
+      } else {
+        playSound('error');
+        
+        setWishResult({
+          type: 'lose',
+          title: "Your wish wasn't granted this time",
+          message: "Try again tomorrow for another chance at magical rewards!"
+        });
+      }
+      
+      setIsWishing(false);
+      setShowResults(true);
+    }, 2500);
+  };
   
-  const handleTryAgain = () => {
-    resetWish();
+  const handleCloseResults = () => {
+    setShowResults(false);
+    setWishResult(null);
   };
   
   return (
-    <Card className="glass-morphism border-white/10">
-      <CardHeader>
-        <div className="flex items-center">
-          <Sparkles className="mr-3 h-6 w-6 text-royal-gold" />
-          <CardTitle>Enhanced Wishing Well</CardTitle>
-        </div>
-        <CardDescription>
-          Test your royal luck for a chance to win big!
-        </CardDescription>
-      </CardHeader>
-      
-      <CardContent className="space-y-4">
-        {wishResult ? (
-          <div className={`p-4 rounded-lg text-center space-y-3 ${getRarityBgColor(wishResult.rarity)}`}>
-            <Gift className={`mx-auto h-8 w-8 ${getRarityColor(wishResult.rarity)}`} />
-            <h3 className="text-lg font-semibold">{wishResult.title}</h3>
-            <p className="text-white/70">{wishResult.message}</p>
-            
-            <Button onClick={handleTryAgain} className="w-full">
-              Try Again
-            </Button>
-          </div>
-        ) : (
-          <>
-            <div className="flex items-center justify-between text-sm text-white/70">
-              <span>Progress to Guaranteed Prize</span>
-              <span className="font-medium">{pullCount}/{guaranteedPulls}</span>
+    <>
+      <Card className="glass-morphism overflow-hidden relative border-purple-400/20">
+        <div className="absolute inset-0 bg-gradient-to-b from-purple-500/10 to-indigo-500/5 pointer-events-none z-0"></div>
+        
+        <CardHeader>
+          <div className="flex items-center gap-3">
+            <div className="p-2 rounded-full bg-purple-600/30">
+              <Star className="h-5 w-5 text-yellow-300" />
             </div>
-            <Progress value={(pullCount / guaranteedPulls) * 100} className="h-2" />
+            <div>
+              <CardTitle>Royal Wishing Well</CardTitle>
+              <CardDescription>Cast your coins and make a wish for magical rewards</CardDescription>
+            </div>
+          </div>
+        </CardHeader>
+        
+        <CardContent className="pb-0">
+          <div className="relative h-60 rounded-lg overflow-hidden bg-gradient-to-b from-indigo-900/40 to-purple-900/40 border border-white/10 flex items-center justify-center">
+            <div className="absolute inset-0 bg-[url('/assets/stars.svg')] opacity-20 animate-twinkle"></div>
             
-            <div className="grid grid-cols-2 gap-4 text-center">
-              <div className="p-3 rounded-md bg-white/5">
-                <div className="flex items-center justify-center mb-1">
-                  <Award className="h-4 w-4 text-royal-gold mr-1" />
-                  <span className="text-sm text-white/70">Base Chance</span>
-                </div>
-                <div className="text-xl font-bold">{baseChance}%</div>
+            <div className="text-center z-10 relative">
+              <div className="w-24 h-24 rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 mx-auto mb-4 flex items-center justify-center shadow-xl shadow-purple-500/20">
+                <Sparkles className={`h-12 w-12 text-yellow-200 ${isWishing ? 'animate-spin-slow' : 'animate-pulse'}`} />
               </div>
               
-              <div className="p-3 rounded-md bg-white/5">
-                <div className="flex items-center justify-center mb-1">
-                  <Crown className="h-4 w-4 text-royal-gold mr-1" />
-                  <span className="text-sm text-white/70">Jackpot Chance</span>
-                </div>
-                <div className="text-xl font-bold">{jackpotChance}%</div>
-              </div>
+              <p className="text-purple-100 mb-6">
+                {hasWishAvailable
+                  ? "Make a wish and perhaps fortune will smile upon you"
+                  : "You've used all your wishes for today"}
+              </p>
+              
+              <AnimatePresence>
+                {isWishing && coins.map((i) => (
+                  <motion.div
+                    key={`coin-${i}`}
+                    initial={{ y: -50, x: Math.random() * 200 - 100, opacity: 1, scale: 0.5 + Math.random() * 0.5 }}
+                    animate={{ 
+                      y: 150, 
+                      opacity: 0,
+                      transition: { 
+                        duration: 1 + Math.random() * 1.5, 
+                        ease: "easeIn" 
+                      }
+                    }}
+                    className="absolute top-0 left-1/2"
+                  >
+                    <Coins className="h-5 w-5 text-yellow-300" />
+                  </motion.div>
+                ))}
+              </AnimatePresence>
             </div>
-            
-            <Button 
-              className="w-full bg-gradient-to-r from-royal-purple to-royal-gold hover:opacity-90 text-white"
-              disabled={isWishing || !canWish}
-              onClick={handleWish}
-            >
-              {isWishing ? (
-                <>
-                  <ChevronsUp className="mr-2 h-4 w-4 animate-bounce" /> Wishing...
-                </>
-              ) : (
-                <>
-                  <Coins className="mr-2 h-4 w-4" /> Try Your Royal Luck ({cost} Throne Coins)
-                </>
-              )}
-            </Button>
-          </>
-        )}
-      </CardContent>
-      
-      {user && canWish && !isWishing && !wishResult && (
-        <CardFooter className="text-center text-white/60">
-          Each wish gives you a chance to win exclusive prizes!
+          </div>
+        </CardContent>
+        
+        <CardFooter className="flex flex-col sm:flex-row items-center justify-between pt-6 pb-6">
+          <div className="flex items-center gap-2 mb-4 sm:mb-0">
+            <Crown className="h-5 w-5 text-yellow-400" />
+            <span className="text-sm text-purple-100">
+              {hasWishAvailable
+                ? `Wishes remaining: ${wishesRemaining}`
+                : "Return tomorrow for more wishes"}
+            </span>
+          </div>
+          
+          <Button 
+            className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700"
+            onClick={handleWish}
+            disabled={!hasWishAvailable || isWishing}
+          >
+            {isWishing ? (
+              <>
+                <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
+                Wishing...
+              </>
+            ) : (
+              <>Make a Wish</>
+            )}
+          </Button>
         </CardFooter>
+      </Card>
+      
+      {wishResult && (
+        <WishResultModal
+          open={showResults}
+          onOpenChange={setShowResults}
+          result={wishResult.type}
+          reward={wishResult.reward}
+          rarity={wishResult.rarity}
+          title={wishResult.title}
+          message={wishResult.message}
+          onClose={handleCloseResults}
+        />
       )}
-    </Card>
+    </>
   );
 };
 

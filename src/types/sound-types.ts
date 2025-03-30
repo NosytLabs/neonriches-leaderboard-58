@@ -18,7 +18,15 @@ export type SoundType =
   | 'crown'
   | 'pageTransition'
   | 'parchmentUnfurl'
-  | 'info';
+  | 'info'
+  | 'seal'
+  | 'deposit'
+  | 'reward'
+  | 'win'
+  | 'warning'
+  | 'medallion'
+  | 'trumpet'
+  | 'royalAnnouncement';
 
 export interface SoundConfig {
   enabled: boolean;
@@ -43,4 +51,31 @@ export interface PremiumSoundPackDetails {
   royalSounds: Record<SoundType, string>;
   gameSounds: Record<SoundType, string>;
   isUnlocked: boolean;
+  includes?: string[];
+}
+
+export interface AudioLoaderReturn {
+  sounds: Record<SoundType, HTMLAudioElement | null>;
+  loadingComplete: boolean;
+  loadingError: boolean;
+  loading: boolean;
+  loadSound: (type: SoundType) => Promise<HTMLAudioElement | null>;
+}
+
+export interface UseSoundOptions {
+  volume?: number;
+  loop?: boolean;
+  interrupt?: boolean;
+  onEnd?: () => void;
+  baseVolume?: number;
+  disableCache?: boolean;
+}
+
+export interface UseSoundReturn {
+  play: (sound?: SoundType) => void;
+  stop: (sound?: SoundType) => void;
+  isPlaying: boolean;
+  duration: number;
+  playSound?: (sound: SoundType) => void;
+  playSuccess?: (sound?: SoundType) => void;
 }

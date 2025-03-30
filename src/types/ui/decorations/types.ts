@@ -1,28 +1,53 @@
 
-import { ReactNode } from 'react';
+export type MedievalIconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
-export type MedievalIconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
-export type MedievalIconName = 'shield' | 'sword' | 'crown' | 'scroll' | 'goblet' | 'helmet' | 'castle' | 'dragon' | 'knight';
-export type MedievalIconColor = 'gold' | 'silver' | 'bronze' | 'royal' | 'default';
+export type MedievalIconColor = 
+  | 'default'
+  | 'gold'
+  | 'silver'
+  | 'bronze'
+  | 'royal'
+  | 'crimson'
+  | 'emerald'
+  | 'sapphire'
+  | 'amethyst';
 
-export type MedievalSize = MedievalIconSize;
-export type MedievalDecorationSize = MedievalIconSize;
-export type MedievalDecorationType = 'top' | 'bottom' | 'left' | 'right' | 'corners' | 'full';
+export type MedievalDecorationColor = MedievalIconColor;
 
-export interface BaseDecorationProps {
-  size?: MedievalIconSize;
-  color?: MedievalIconColor;
-  className?: string;
-  animate?: boolean;
-  icon?: ReactNode;
-  container?: ReactNode;
-  border?: ReactNode;
-}
+// Helper functions to get classes for decorations
+export const sizeClasses: Record<MedievalIconSize, string> = {
+  'xs': 'w-4 h-4',
+  'sm': 'w-5 h-5',
+  'md': 'w-6 h-6',
+  'lg': 'w-8 h-8',
+  'xl': 'w-10 h-10',
+  '2xl': 'w-12 h-12'
+};
 
-export type RoyalDividerVariant = 'line' | 'double' | 'fancy' | 'ornate' | 'simple';
+export const toMedievalIconColor = (color: string): MedievalIconColor => {
+  switch (color) {
+    case 'gold': return 'gold';
+    case 'silver': return 'silver';
+    case 'bronze': return 'bronze';
+    case 'royal': return 'royal';
+    case 'crimson': return 'crimson';
+    case 'emerald': return 'emerald';
+    case 'sapphire': return 'sapphire';
+    case 'amethyst': return 'amethyst';
+    default: return 'default';
+  }
+};
 
-export interface RoyalDividerProps {
-  variant?: RoyalDividerVariant;
-  color?: 'default' | 'royal' | 'gold' | 'crimson' | 'purple';
-  className?: string;
-}
+export const getColorClass = (color: MedievalIconColor): string => {
+  switch (color) {
+    case 'gold': return 'text-royal-gold';
+    case 'silver': return 'text-royal-silver';
+    case 'bronze': return 'text-royal-bronze';
+    case 'royal': return 'text-royal-purple';
+    case 'crimson': return 'text-royal-crimson';
+    case 'emerald': return 'text-emerald-500';
+    case 'sapphire': return 'text-blue-500';
+    case 'amethyst': return 'text-purple-500';
+    default: return 'text-white';
+  }
+};

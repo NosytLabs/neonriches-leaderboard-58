@@ -46,7 +46,8 @@ export type MockeryTier =
   | 'gold'
   | 'platinum'
   | 'diamond'
-  | 'basic';
+  | 'basic'
+  | 'premium';
 
 // Define the mockery target types
 export type MockeryTargetType = 'user' | 'team' | 'all';
@@ -55,8 +56,8 @@ export type MockeryTargetType = 'user' | 'team' | 'all';
 export interface MockeryEvent {
   id: string;
   action: MockeryAction;
-  sourceUserId: string;
-  targetUserId: string;
+  sourceUserId?: string;
+  targetUserId?: string;
   timestamp: number;
   expiresAt: number;
   isActive: boolean;
@@ -67,6 +68,9 @@ export interface MockeryEvent {
   targetId?: string;
   appliedAt?: number;
   appliedById?: string;
+  targetName?: string;
+  sourceId?: string;
+  active?: boolean;
 }
 
 // Define mockery protection structure
@@ -106,6 +110,24 @@ export interface MockedUser {
   username: string;
   profileImage?: string;
   activeMockery?: MockeryEvent;
+  mockeryCount?: number;
+  avatarUrl?: string;
+  displayName?: string;
+  mockedReason?: string;
+  mockedTimestamp?: string;
+  mockedBy?: string;
+  mockedTier?: string;
+}
+
+export interface MockUser {
+  id: string;
+  username: string;
+  displayName?: string;
+  profileImage?: string;
+  rank?: number;
+  team?: string;
+  tier?: string;
+  lastMocked?: string;
   mockeryCount?: number;
 }
 

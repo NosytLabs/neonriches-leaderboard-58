@@ -1,89 +1,115 @@
 
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { useAudioLoader } from './use-audio-loader';
 import { SoundType } from '@/types/sound-types';
 
-export interface UseSoundReturn {
-  play: (sound: SoundType) => void;
-  isPlaying: boolean;
-  stop: () => void;
+export interface UseSoundProps {
+  sound?: SoundType;
+  volume?: number;
+  muted?: boolean;
 }
 
-export const useSound = (): UseSoundReturn => {
-  const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
+export const useSound = (props?: UseSoundProps) => {
+  const { sound, volume = 0.5, muted = false } = props || {};
   const [isPlaying, setIsPlaying] = useState(false);
-
-  const getSoundUrl = (sound: SoundType): string => {
-    const soundMap: Record<SoundType, string> = {
-      notification: 'https://assets.mixkit.co/sfx/preview/mixkit-software-interface-start-2574.mp3',
-      success: 'https://assets.mixkit.co/sfx/preview/mixkit-game-success-alert-2039.mp3',
-      error: 'https://assets.mixkit.co/sfx/preview/mixkit-software-interface-remove-2576.mp3',
-      purchase: 'https://assets.mixkit.co/sfx/preview/mixkit-coins-handling-1939.mp3',
-      trumpets: 'https://assets.mixkit.co/sfx/preview/mixkit-medieval-show-fanfare-announcement-226.mp3',
-      achievement: 'https://assets.mixkit.co/sfx/preview/mixkit-winning-chimes-2015.mp3',
-      deposit: 'https://assets.mixkit.co/sfx/preview/mixkit-positive-interface-beep-221.mp3',
-      shame: 'https://assets.mixkit.co/sfx/preview/mixkit-crowd-boo-and-whistle-733.mp3',
-      click: 'https://assets.mixkit.co/sfx/preview/mixkit-click-melodic-tone-1129.mp3',
-      royal: 'https://assets.mixkit.co/sfx/preview/mixkit-fairy-arcade-sparkle-866.mp3',
-      levelUp: 'https://assets.mixkit.co/sfx/preview/mixkit-player-boost-recharging-2040.mp3',
-      win: 'https://assets.mixkit.co/sfx/preview/mixkit-winning-chimes-2015.mp3',
-      lose: 'https://assets.mixkit.co/sfx/preview/mixkit-losing-bleeps-2026.mp3',
-      reward: 'https://assets.mixkit.co/sfx/preview/mixkit-unlock-game-notification-253.mp3',
-      warning: 'https://assets.mixkit.co/sfx/preview/mixkit-alert-bells-echo-765.mp3',
-      coinDrop: 'https://assets.mixkit.co/sfx/preview/mixkit-coins-handling-1939.mp3',
-      swordClash: 'https://assets.mixkit.co/sfx/preview/mixkit-sword-slash-swoosh-1476.mp3',
-      noblesLaugh: 'https://assets.mixkit.co/sfx/preview/mixkit-crowd-applause-small-439.mp3',
-      seal: 'https://assets.mixkit.co/sfx/preview/mixkit-fairy-arcade-sparkle-866.mp3',
-      medallion: 'https://assets.mixkit.co/sfx/preview/mixkit-achievement-medal-600.mp3',
-      royalAnnouncement: 'https://assets.mixkit.co/sfx/preview/mixkit-medieval-show-fanfare-announcement-226.mp3',
-      trumpet: 'https://assets.mixkit.co/sfx/preview/mixkit-medieval-show-fanfare-announcement-226.mp3',
-      hover: 'https://assets.mixkit.co/sfx/preview/mixkit-click-melodic-tone-1129.mp3'
-    };
-
-    return soundMap[sound] || soundMap.notification;
+  const [isMuted, setIsMuted] = useState(muted);
+  const { sounds, loadingComplete } = useAudioLoader();
+  
+  // Create a map of all available sounds with their volume levels
+  const soundVolumes: Record<SoundType, number> = {
+    click: 0.4,
+    hover: 0.2,
+    success: 0.7,
+    error: 0.6,
+    notification: 0.6,
+    purchase: 0.8,
+    rankUp: 0.8,
+    coinDrop: 0.7,
+    achievement: 0.8,
+    trumpets: 0.9,
+    fanfare: 0.9,
+    shame: 0.7,
+    parchment: 0.6,
+    treasure: 0.8,
+    royal: 0.8,
+    crown: 0.7,
+    pageTransition: 0.5,
+    parchmentUnfurl: 0.6,
+    info: 0.5,
+    seal: 0.7,
+    deposit: 0.7,
+    reward: 0.8,
+    win: 0.9,
+    warning: 0.6,
+    medallion: 0.7,
+    trumpet: 0.8,
+    royalAnnouncement: 0.9
   };
-
-  const play = useCallback((sound: SoundType) => {
-    try {
-      if (audio) {
-        audio.pause();
-        audio.currentTime = 0;
+  
+  // Play a sound
+  const play = useCallback(
+    (soundToPlay: SoundType = sound as SoundType) => {
+      if (isMuted || !loadingComplete || !soundToPlay) return;
+      
+      const audio = sounds[soundToPlay];
+      if (!audio) return;
+      
+      // Set volume and play
+      audio.volume = soundVolumes[soundToPlay] || volume;
+      audio.currentTime = 0;
+      
+      const playPromise = audio.play();
+      
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            setIsPlaying(true);
+          })
+          .catch((error) => {
+            console.error('Sound playback failed:', error);
+            setIsPlaying(false);
+          });
       }
-
-      const newAudio = new Audio(getSoundUrl(sound));
-      newAudio.volume = 0.3; // Default volume
+    },
+    [sounds, loadingComplete, isMuted, sound, volume, soundVolumes]
+  );
+  
+  // Stop a sound
+  const stop = useCallback(
+    (soundToStop: SoundType = sound as SoundType) => {
+      if (!loadingComplete || !soundToStop) return;
       
-      newAudio.onplaying = () => setIsPlaying(true);
-      newAudio.onended = () => setIsPlaying(false);
-      newAudio.onpause = () => setIsPlaying(false);
-      newAudio.onerror = () => {
-        console.error('Error playing sound:', sound);
-        setIsPlaying(false);
-      };
+      const audio = sounds[soundToStop];
+      if (!audio) return;
       
-      setAudio(newAudio);
-      newAudio.play().catch(e => {
-        console.error('Failed to play sound:', e);
-        setIsPlaying(false);
-      });
-    } catch (error) {
-      console.error('Error in sound hook:', error);
-      setIsPlaying(false);
-    }
-  }, [audio]);
-
-  const stop = useCallback(() => {
-    if (audio) {
       audio.pause();
       audio.currentTime = 0;
       setIsPlaying(false);
-    }
-  }, [audio]);
-
+    },
+    [sounds, loadingComplete, sound]
+  );
+  
+  // Toggle mute state
+  const toggleMute = useCallback(() => {
+    setIsMuted(prev => !prev);
+  }, []);
+  
+  // Handle cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (sound && sounds[sound]) {
+        sounds[sound]?.pause();
+      }
+    };
+  }, [sound, sounds]);
+  
   return {
     play,
+    stop,
     isPlaying,
-    stop
+    isMuted,
+    toggleMute,
+    // Backward compatibility for existing code that uses playSound
+    playSound: play
   };
 };
-
-export default useSound;
