@@ -1,237 +1,118 @@
 
-import { useState, useEffect, useCallback } from 'react';
-import { AnimationConfig } from '@/types/animations';
-import { useSound } from '@/hooks/sounds/use-sound';
-import { SoundType } from '@/types/sound-types';
-import { MockeryAction } from '@/types/mockery';
+import React, { useState, useEffect, useCallback } from 'react';
+import { motion } from 'framer-motion';
+import { ShameAction } from '@/types/mockery';
 
-// Export for components that need this type
-export type ShameAction = MockeryAction;
+export interface ShameEffectProps {
+  type: ShameAction;
+  duration?: number; // in milliseconds
+  intensity?: 'light' | 'medium' | 'heavy';
+}
 
-// Define a state type for our shame effect
-type ShameEffectState = {
-  isActive: boolean;
-  action: MockeryAction | null;
-  target: string | null;
-  source: string | null;
-  animationConfig: AnimationConfig | null;
-  duration: number;
-  shameCooldown: Record<number, number>;
-  shameEffects: Record<number, { action: MockeryAction; timestamp: number; until: number }>;
-  shameCount: Record<number, number>;
+export const ShameEffect: React.FC<ShameEffectProps> = ({ 
+  type,
+  duration = 3000,
+  intensity = 'medium'
+}) => {
+  const [elements, setElements] = React.useState<React.ReactNode[]>([]);
+  
+  React.useEffect(() => {
+    const count = intensity === 'light' ? 5 : intensity === 'medium' ? 10 : 20;
+    const newElements = [];
+    
+    for (let i = 0; i < count; i++) {
+      const delay = Math.random() * 1000;
+      const xPosition = Math.random() * 100;
+      const rotation = Math.random() * 360;
+      const scale = 0.5 + Math.random() * 1;
+      
+      const emoji = type === 'tomatoes' ? '🍅' : type === 'eggs' ? '🥚' : '🪵';
+      
+      newElements.push(
+        <motion.div
+          key={`shame-${type}-${i}`}
+          initial={{ 
+            opacity: 0, 
+            y: -100, 
+            x: `${xPosition}vw`,
+            rotate: rotation,
+            scale
+          }}
+          animate={{ 
+            opacity: [0, 1, 1, 0],
+            y: ['0vh', '100vh'],
+            rotate: [rotation, rotation + 360]
+          }}
+          transition={{ 
+            duration: 3,
+            delay: delay / 1000,
+            times: [0, 0.1, 0.9, 1]
+          }}
+          className="fixed z-50 text-4xl pointer-events-none"
+        >
+          {emoji}
+        </motion.div>
+      );
+    }
+    
+    setElements(newElements);
+    
+    // Clean up
+    const timer = setTimeout(() => {
+      setElements([]);
+    }, duration);
+    
+    return () => clearTimeout(timer);
+  }, [type, duration, intensity]);
+  
+  return <>{elements}</>;
 };
 
-const DEFAULT_DURATION = 8000; // 8 seconds
-
-export const useShameEffect = (options = { cooldownPeriod: 24 * 60 * 60 * 1000 }) => {
-  const [state, setState] = useState<ShameEffectState>({
-    isActive: false,
-    action: null,
-    target: null,
-    source: null,
-    animationConfig: null,
-    duration: DEFAULT_DURATION,
-    shameCooldown: {},
-    shameEffects: {},
-    shameCount: {}
-  });
+export const useShameEffect = () => {
+  const [shameEffects, setShameEffects] = useState<Record<number, ShameAction>>({});
+  const [shameCooldown, setShameCooldown] = useState<Record<number, boolean>>({});
+  const [shameCount, setShameCount] = useState<Record<number, number>>({});
   
-  const { play: playSound } = useSound();
-  
-  // Clear the effect after duration
-  useEffect(() => {
-    let timer: NodeJS.Timeout;
+  const handleShame = useCallback((userId: number, username: string, type: ShameAction) => {
+    // Apply the shame effect
+    setShameEffects(prev => ({ ...prev, [userId]: type }));
+    setShameCooldown(prev => ({ ...prev, [userId]: true }));
+    setShameCount(prev => ({ ...prev, [userId]: (prev[userId] || 0) + 1 }));
     
-    if (state.isActive) {
-      timer = setTimeout(() => {
-        clearShameEffect();
-      }, state.duration);
-    }
+    // Clear the shame effect after 24 hours (in a real app)
+    // For demo, we'll clear it after 5 seconds
+    setTimeout(() => {
+      setShameEffects(prev => {
+        const newEffects = { ...prev };
+        delete newEffects[userId];
+        return newEffects;
+      });
+    }, 5000);
     
-    return () => {
-      if (timer) clearTimeout(timer);
-    };
-  }, [state.isActive, state.duration]);
-  
-  // Play sound when effect starts
-  useEffect(() => {
-    if (state.isActive && state.action) {
-      playShameEffectSound(state.action);
-    }
+    // Clear the cooldown after 60 seconds
+    setTimeout(() => {
+      setShameCooldown(prev => {
+        const newCooldown = { ...prev };
+        delete newCooldown[userId];
+        return newCooldown;
+      });
+    }, 60000);
     
-    return () => {
-      // No cleanup needed
-    };
-  }, [state.isActive, state.action]);
-  
-  // Show shame effect
-  const showShameEffect = useCallback((action: MockeryAction, target: string, source: string, customDuration?: number) => {
-    const config = getAnimationConfig(action);
-    
-    setState(prev => ({
-      ...prev,
-      isActive: true,
-      action,
-      target,
-      source,
-      animationConfig: config,
-      duration: customDuration || DEFAULT_DURATION,
-    }));
-  }, []);
-  
-  // Handle shame action (with cooldown)
-  const handleShame = useCallback((userId: number, username: string, action: MockeryAction, amount: number) => {
-    setState(prev => {
-      // Check if user is on cooldown
-      const now = Date.now();
-      if (prev.shameCooldown[userId] && prev.shameCooldown[userId] > now) {
-        return prev; // Still on cooldown
-      }
-      
-      // Apply the effect and set cooldown
-      const effectDuration = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
-      
-      return {
-        ...prev,
-        shameCooldown: {
-          ...prev.shameCooldown,
-          [userId]: now + options.cooldownPeriod
-        },
-        shameEffects: {
-          ...prev.shameEffects,
-          [userId]: {
-            action,
-            timestamp: now,
-            until: now + effectDuration
-          }
-        },
-        shameCount: {
-          ...prev.shameCount,
-          [userId]: (prev.shameCount[userId] || 0) + 1
-        }
-      };
-    });
-    
-    // Show the effect visually
-    showShameEffect(action, username, 'You');
-    
+    console.log(`Applied ${type} shame to ${username}`);
     return true;
-  }, [options.cooldownPeriod, showShameEffect]);
+  }, []);
   
-  // Get shame count for a user
   const getShameCount = useCallback((userId: number) => {
-    return state.shameCount[userId] || 0;
-  }, [state.shameCount]);
-  
-  // Clear shame effect
-  const clearShameEffect = useCallback(() => {
-    setState(prev => ({
-      ...prev,
-      isActive: false,
-    }));
-  }, []);
-  
-  // Get animation config based on action
-  const getAnimationConfig = useCallback((action: MockeryAction): AnimationConfig => {
-    switch (action) {
-      case 'tomatoes':
-        return {
-          type: 'particles',
-          particleImage: '/assets/tomato.png',
-          particleCount: 20,
-          duration: 5000,
-        };
-      case 'eggs':
-        return {
-          type: 'particles',
-          particleImage: '/assets/egg.png',
-          particleCount: 15,
-          duration: 4000,
-        };
-      case 'putridEggs':
-        return {
-          type: 'overlay',
-          overlayImage: '/assets/putrid-splash.png',
-          duration: 6000,
-        };
-      case 'stocks':
-        return {
-          type: 'container',
-          containerImage: '/assets/stocks.png',
-          duration: 10000,
-        };
-      case 'dunce':
-        return {
-          type: 'accessory',
-          accessoryImage: '/assets/dunce-hat.png',
-          position: 'top',
-          duration: 8000,
-        };
-      case 'shame':
-        return {
-          type: 'particles',
-          particleImage: '/assets/shame.png',
-          particleCount: 10,
-          duration: 4000,
-        };
-      case 'taunt':
-        return {
-          type: 'particles',
-          particleImage: '/assets/taunt.png',
-          particleCount: 12,
-          duration: 4000,
-        };
-      case 'jester':
-        return {
-          type: 'accessory',
-          accessoryImage: '/assets/jester-hat.png',
-          position: 'top',
-          duration: 7000,
-        };
-      default:
-        return {
-          type: 'particles',
-          particleImage: '/assets/shame.png',
-          particleCount: 10,
-          duration: 4000,
-        };
-    }
-  }, []);
-  
-  // Play appropriate sound for the effect
-  const playShameEffectSound = (action: MockeryAction) => {
-    switch (action) {
-      case 'tomatoes':
-        playSound('shame');
-        break;
-      case 'eggs':
-        playSound('notification');
-        break;
-      case 'putridEggs':
-        playSound('error');
-        break;
-      case 'stocks':
-        playSound('notification');
-        break;
-      case 'dunce':
-        playSound('trumpets');
-        break;
-      case 'shame':
-        playSound('shame');
-        break;
-      case 'jester':
-        playSound('notification');
-        break;
-      default:
-        playSound('notification');
-    }
-  };
+    return shameCount[userId] || 0;
+  }, [shameCount]);
   
   return {
-    ...state,
-    showShameEffect,
-    clearShameEffect,
-    handleShame,
-    getShameCount
+    shameEffects,
+    shameCooldown,
+    shameCount,
+    getShameCount,
+    handleShame
   };
 };
+
+export default useShameEffect;

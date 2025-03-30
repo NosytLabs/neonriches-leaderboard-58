@@ -1,6 +1,7 @@
 
 import { format, formatDistance } from 'date-fns';
 
+// Basic formatters
 export const formatCurrency = (amount: number): string => {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
@@ -49,4 +50,55 @@ export const formatDateRange = (startDate: Date, endDate: Date): string => {
     return `${format(startDate, 'MMM d')} - ${format(endDate, 'MMM d, yyyy')}`;
   }
   return `${formatDate(startDate)} - ${formatDate(endDate)}`;
+};
+
+// Additional formatters needed by components
+export const formatDollarAmount = (amount: number): string => {
+  return `$${amount.toLocaleString()}`;
+};
+
+export const formatAddress = (address: string, length: number = 6): string => {
+  if (!address) return '';
+  if (address.length <= length * 2) return address;
+  return `${address.substring(0, length)}...${address.substring(address.length - length)}`;
+};
+
+export const formatFileSize = (bytes: number): string => {
+  if (bytes === 0) return '0 Bytes';
+  const k = 1024;
+  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+};
+
+export const getTeamColor = (team: string): string => {
+  switch (team?.toLowerCase()) {
+    case 'red': return 'team-red';
+    case 'blue': return 'team-blue';
+    case 'green': return 'team-green';
+    case 'gold': return 'royal-gold';
+    default: return 'gray-500';
+  }
+};
+
+export const formatHistoricalValue = (value: number, type: string = 'currency'): string => {
+  if (type === 'currency') {
+    return formatCurrency(value);
+  } else if (type === 'percentage') {
+    return formatPercentage(value);
+  } else {
+    return formatNumber(value);
+  }
+};
+
+export const getAchievementIcon = (type: string): string => {
+  switch (type) {
+    case 'royal': return 'crown';
+    case 'rank': return 'trophy';
+    case 'deposit': return 'dollar';
+    case 'milestone': return 'award';
+    case 'streak': return 'zap';
+    case 'purchase': return 'star';
+    default: return 'star';
+  }
 };

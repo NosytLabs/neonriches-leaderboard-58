@@ -86,4 +86,4 @@ export interface UserProfile {
 
 export type User = UserProfile;
 
-export { UserCosmeticState };
+export { UserTier, TeamType, UserTeam, UserSettings, SocialLink, ProfileBoost, UserCosmeticState, UserProfile, User };

@@ -69,4 +69,4 @@ export interface EventReward {
   rarity: string;
 }
 
-export { EventType, EventStatus, Event, EventStats, EventParticipant, EventDetails, EventReward };
+export type { EventType, EventStatus, Event, EventStats, EventParticipant, EventDetails, EventReward };

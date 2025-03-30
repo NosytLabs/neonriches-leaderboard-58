@@ -1,3 +1,4 @@
+
 import React from 'react';
 import {
   Dialog,
@@ -49,8 +50,10 @@ const EventDetailsModal: React.FC<EventDetailsModalProps> = ({
       return <Badge className="bg-green-500">Active</Badge>;
     } else if (status === 'upcoming') {
       return <Badge className="bg-blue-500">Upcoming</Badge>;
-    } else if (status === 'completed' || status === 'cancelled') {
-      return <Badge className="bg-gray-500">{status === 'cancelled' ? 'Cancelled' : 'Completed'}</Badge>;
+    } else if (status === 'completed') {
+      return <Badge className="bg-gray-500">Completed</Badge>;
+    } else if (status === 'cancelled' || status === 'canceled') {
+      return <Badge className="bg-gray-500">Cancelled</Badge>;
     }
     return null;
   };
