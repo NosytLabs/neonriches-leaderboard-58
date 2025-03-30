@@ -9,7 +9,7 @@ import { Trophy, Crown, Target, Users, Activity, Zap, DollarSign } from 'lucide-
 import { UserProfile } from '@/types/user';
 
 // Import achievement types from our custom type definition
-import type { Achievement, AchievementType } from '@/types/achievement';
+import { Achievement, AchievementType, AchievementTier } from '@/types/achievement';
 
 // Import other components
 import AchievementDisplay from '@/components/achievements/AchievementDisplay';
@@ -19,7 +19,7 @@ import SpendingVisualizer from '@/components/dashboard/SpendingVisualizer';
 import UserStats from '@/components/dashboard/UserStats';
 import RankStatusCard from '@/components/dashboard/RankStatusCard';
 import CashThroneUpgrade from '@/components/dashboard/CashThroneUpgrade';
-import DashboardWelcome from '@/components/dashboard/DashboardWelcome';
+import { DashboardWelcome } from '@/components/dashboard/DashboardWelcome';
 import BriberyBanner from '@/components/dashboard/BriberyBanner';
 
 // Import utilities and hooks
@@ -49,7 +49,7 @@ const EnhancedDashboard = () => {
           description: 'Spend $100 on the platform',
           type: 'royal' as AchievementType,
           icon: 'crown',
-          tier: 'gold',
+          tier: 'gold' as AchievementTier,
           unlockedAt: new Date().toISOString(),
           amountSpent: 100
         },
@@ -59,7 +59,7 @@ const EnhancedDashboard = () => {
           description: 'Spend $500 on the platform',
           type: 'deposit' as AchievementType,
           icon: 'dollar',
-          tier: 'platinum',
+          tier: 'platinum' as AchievementTier,
           unlockedAt: new Date().toISOString(),
           amountSpent: 500
         },
@@ -69,7 +69,7 @@ const EnhancedDashboard = () => {
           description: 'Reach rank 50 on the leaderboard',
           type: 'rank' as AchievementType,
           icon: 'star',
-          tier: 'silver',
+          tier: 'silver' as AchievementTier,
           unlockedAt: new Date().toISOString()
         }
       ];
@@ -86,6 +86,21 @@ const EnhancedDashboard = () => {
   // Get formatted total spent amount
   const totalSpent = user.totalSpent || user.amountSpent || 0;
   const formattedTotalSpent = formatCurrency(totalSpent);
+
+  const handleSpend = () => {
+    toast({
+      title: "Spending action",
+      description: "This would trigger a spending action in a real app."
+    });
+  };
+
+  const handlePaymentSuccess = () => {
+    toast({
+      title: "Bribery successful",
+      description: "Your rank has been temporarily boosted for cosmetic display purposes.",
+      variant: "success"
+    });
+  };
   
   // Convert string achievement icons to lucide icon components for the AchievementDisplay
   const convertedAchievements = achievements.map(achievement => ({
@@ -130,8 +145,8 @@ const EnhancedDashboard = () => {
             </div>
             
             <div className="space-y-6">
-              <SpendingVisualizer user={user} />
-              <BriberyBanner />
+              <SpendingVisualizer user={user} onSpend={handleSpend} />
+              <BriberyBanner user={user} onPaymentSuccess={handlePaymentSuccess} />
             </div>
           </TabsContent>
           
