@@ -71,12 +71,12 @@ export const getTeamMotto = (team: Team): string => {
 };
 
 // Get team benefit
-export const getTeamBenefit = (team: Team): string => {
+export const getTeamBenefit = (team: Team): string[] => {
   switch (team.toLowerCase()) {
-    case 'red': return '+10% Mockery Discount';
-    case 'green': return '+5% Cosmetic Discount';
-    case 'blue': return '+15% Profile Boost Duration';
-    default: return 'No Special Benefits';
+    case 'red': return ['+10% Mockery Discount', 'First access to special events', 'Exclusive red team emotes'];
+    case 'green': return ['+5% Cosmetic Discount', 'Bonus profile customization options', 'Special green team profile frame'];
+    case 'blue': return ['+15% Profile Boost Duration', 'Priority access to royal council', 'Exclusive blue team banner'];
+    default: return ['No Special Benefits'];
   }
 };
 
@@ -114,7 +114,7 @@ export const getTeamHistoricalNote = (team: Team): string => {
 export const getTeamNFTJoke = (team: Team): string => {
   switch (team.toLowerCase()) {
     case 'red': return 'Exclusively accepts digital artwork of members in increasingly ridiculous poses';
-    case 'green': return 'Claims their digital assets are "environmentally friendly" because they're imaginary';
+    case 'green': return 'Claims their digital assets are "environmentally friendly" because they\'re imaginary';
     case 'blue': return 'Once tried to sell the concept of nobility as an NFT';
     default: return 'Believes the "T" in NFT stands for "Title of nobility"';
   }
@@ -129,3 +129,28 @@ export const getTeamCryptoRoast = (team: Team): string => {
     default: return 'Somehow managed to create a cryptocurrency worth less than monopoly money';
   }
 };
+
+// Get team border color
+export const getTeamBorderColor = (team: Team | null | undefined): string => {
+  if (!team) return 'border-white/20';
+  
+  switch (team.toLowerCase()) {
+    case 'red': return 'border-red-600/30';
+    case 'green': return 'border-green-600/30';
+    case 'blue': return 'border-blue-600/30';
+    default: return 'border-white/20';
+  }
+};
+
+// Get team name
+export const getTeamName = (team: Team | null | undefined): string => {
+  if (!team) return 'Unaffiliated';
+  
+  switch (team.toLowerCase()) {
+    case 'red': return 'Royal Order of Reckless Spending';
+    case 'green': return 'Emerald Exchequer Cabaret';
+    case 'blue': return 'Cobalt Credit Cartel';
+    default: return 'Unaffiliated';
+  }
+};
+
