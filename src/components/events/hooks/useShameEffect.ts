@@ -2,7 +2,8 @@
 import { useState, useCallback } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
-import { MockeryAction, ShameAction } from '@/utils/mockeryUtils';
+import { MockeryAction, MockeryTier } from '@/utils/mockeryUtils';
+import { ShameAction } from '@/components/events/utils/shameUtils';
 
 export interface ShameEffect {
   action: ShameAction;
@@ -55,19 +56,17 @@ export const useShameEffect = (): ShameEffectState => {
 
   const handleShame = useCallback(async (userId: string, action: ShameAction) => {
     if (!user) {
-      toast({
+      toast.error({
         title: "Authentication Required",
-        description: "You must be logged in to shame other users",
-        variant: "destructive"
+        description: "You must be logged in to shame other users"
       });
       return false;
     }
     
     if (!canShameUser(userId)) {
-      toast({
+      toast.error({
         title: "Cannot Perform Action",
-        description: "You cannot perform this action at this time",
-        variant: "destructive"
+        description: "You cannot perform this action at this time"
       });
       return false;
     }
@@ -89,19 +88,17 @@ export const useShameEffect = (): ShameEffectState => {
       setShameEffects(prev => [...prev, newEffect]);
       setShameCount(prev => prev + 1);
       
-      toast({
+      toast.success({
         title: "Action Successful",
-        description: `The ${action} action has been applied successfully`,
-        variant: "success"
+        description: `The ${action} action has been applied successfully`
       });
       
       return true;
     } catch (error) {
       console.error("Error applying shame effect:", error);
-      toast({
+      toast.error({
         title: "Action Failed",
-        description: "Failed to apply the action. Please try again.",
-        variant: "destructive"
+        description: "Failed to apply the action. Please try again."
       });
       return false;
     }
@@ -119,5 +116,5 @@ export const useShameEffect = (): ShameEffectState => {
   };
 };
 
-export type { ShameAction } from '@/utils/mockeryUtils';
+export { type ShameAction } from '@/components/events/utils/shameUtils';
 export default useShameEffect;

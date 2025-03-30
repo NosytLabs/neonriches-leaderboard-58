@@ -1,6 +1,28 @@
 
-import { MockeryAction, MockeryTier } from '@/types/mockery';
 import { cn } from '@/lib/utils';
+
+// Define the available mockery actions
+export type MockeryAction = 
+  | 'shame'
+  | 'taunt' 
+  | 'crown'
+  | 'challenge'
+  | 'protection'
+  | 'jest'
+  | 'target'
+  | 'defeat'
+  | 'expose';
+
+// Define mockery tiers
+export type MockeryTier = 
+  | 'basic' 
+  | 'premium' 
+  | 'royal'
+  | 'common'
+  | 'uncommon'
+  | 'rare'
+  | 'epic'
+  | 'legendary';
 
 // Get name for mockery action
 export const getMockeryName = (action: MockeryAction): string => {
@@ -180,6 +202,24 @@ export const getTierRarityClass = (tier: MockeryTier): string => {
   };
   
   return tierClasses[tier] || 'text-white';
+};
+
+// Helper function to get active mockery effect class
+export const getActiveMockeryClass = (action: MockeryAction): string => {
+  switch (action) {
+    case 'shame':
+      return 'mockery-shame-effect';
+    case 'taunt':
+      return 'mockery-taunt-effect';
+    case 'crown':
+      return 'mockery-crown-effect';
+    case 'jest':
+      return 'mockery-jest-effect';
+    case 'protection':
+      return 'mockery-protection-effect';
+    default:
+      return '';
+  }
 };
 
 // Export mockery constants for use in other files

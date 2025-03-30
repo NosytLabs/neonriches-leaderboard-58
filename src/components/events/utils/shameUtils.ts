@@ -1,44 +1,28 @@
 
 import { SoundType } from '@/types/sound-types';
-import { MockeryAction } from '@/types/mockery';
+import { MockeryAction, MockeryTier } from '@/utils/mockeryUtils';
 
-export type ShameAction = 
-  | 'tomatoes' 
-  | 'eggs' 
-  | 'putridEggs' 
-  | 'stocks' 
-  | 'silence' 
-  | 'courtJester' 
-  | 'dunce' 
-  | 'jester' 
-  | 'ridicule' 
-  | 'shame' 
-  | 'smokeBomb'
-  | 'glitterBomb'
-  | 'protection'; // Added protection to fix type errors
+// Define ShameAction as an alias to MockeryAction for backwards compatibility
+export type ShameAction = MockeryAction;
 
 // Shame action prices
 export const getShameActionPrice = (action: ShameAction): number => {
   switch (action) {
-    case 'tomatoes': return 5;
-    case 'eggs': return 10;
-    case 'putridEggs': return 15;
-    case 'stocks': return 25;
-    case 'silence': return 50;
-    case 'courtJester': return 100;
-    case 'dunce': return 5;
-    case 'jester': return 20;
-    case 'ridicule': return 15;
-    case 'shame': return 75;
-    case 'smokeBomb': return 75;
-    case 'glitterBomb': return 50;
-    case 'protection': return 100;
+    case 'shame': return 10;
+    case 'taunt': return 15;
+    case 'crown': return 100;
+    case 'challenge': return 25;
+    case 'protection': return 50;
+    case 'jest': return 20;
+    case 'target': return 30;
+    case 'defeat': return 5;
+    case 'expose': return 40;
     default: return 10;
   };
 };
 
 // Discounted shame actions (for weekly specials)
-const WEEKLY_DISCOUNTED_ACTIONS: ShameAction[] = ['tomatoes', 'eggs', 'putridEggs'];
+const WEEKLY_DISCOUNTED_ACTIONS: ShameAction[] = ['shame', 'taunt', 'jest'];
 
 // Check if action has a weekly discount
 export const hasWeeklyDiscount = (action: ShameAction): boolean => {
@@ -59,19 +43,15 @@ export const getMaxDiscountPercentage = (): number => {
 // Get shame action icon
 export const getShameActionIcon = (action: ShameAction): string => {
   switch (action) {
-    case 'tomatoes': return '🍅';
-    case 'eggs': 
-    case 'putridEggs': return '🥚';
-    case 'stocks': return '🪵';
-    case 'silence': return '🔇';
-    case 'courtJester': 
-    case 'jester': return '🃏';
-    case 'dunce': return '🎓';
-    case 'ridicule': return '😂';
     case 'shame': return '😳';
-    case 'smokeBomb': return '💨';
-    case 'glitterBomb': return '✨';
+    case 'taunt': 
+    case 'challenge': return '⚔️';
+    case 'crown': return '👑';
     case 'protection': return '🛡️';
+    case 'jest': return '🃏';
+    case 'target': return '🎯';
+    case 'defeat': return '🏳️';
+    case 'expose': return '📣';
     default: return '❓';
   }
 };
@@ -79,19 +59,15 @@ export const getShameActionIcon = (action: ShameAction): string => {
 // Get shame action title
 export const getShameActionTitle = (action: ShameAction): string => {
   switch (action) {
-    case 'tomatoes': return 'Rotten Tomatoes';
-    case 'eggs': return 'Regular Eggs';
-    case 'putridEggs': return 'Putrid Eggs';
-    case 'stocks': return 'Royal Stocks';
-    case 'silence': return 'Royal Silence';
-    case 'courtJester': return 'Court Jester';
-    case 'dunce': return 'Dunce Cap';
-    case 'jester': return 'Jester Mark';
-    case 'ridicule': return 'Public Ridicule';
     case 'shame': return 'Public Shaming';
-    case 'smokeBomb': return 'Royal Smoke Bomb';
-    case 'glitterBomb': return 'Glitter Bomb';
+    case 'taunt': return 'Royal Taunt';
+    case 'crown': return 'Crown Challenge';
+    case 'challenge': return 'Noble Challenge';
     case 'protection': return 'Royal Protection';
+    case 'jest': return 'Court Jester';
+    case 'target': return 'Mark Target';
+    case 'defeat': return 'Declare Defeat';
+    case 'expose': return 'Royal Exposure';
     default: return 'Unknown Action';
   }
 };
@@ -101,19 +77,15 @@ export const getShameActionDescription = (action: ShameAction, username?: string
   const targetText = username ? username : 'the user';
   
   switch (action) {
-    case 'tomatoes': return `Splatter ${targetText}'s profile with rotten tomatoes for all to see.`;
-    case 'eggs': return `Throw eggs at ${targetText}'s profile, creating a messy display.`;
-    case 'putridEggs': return `Throw putrid eggs at ${targetText}'s profile for a particularly foul effect.`;
-    case 'stocks': return `Lock ${targetText} in the royal stocks for public ridicule.`;
-    case 'silence': return `Prevent ${targetText} from commenting for a period of time.`;
-    case 'courtJester': return `Force ${targetText} to wear the court jester outfit on their profile.`;
-    case 'dunce': return `Put a dunce cap on ${targetText}'s profile picture.`;
-    case 'jester': return `Mark ${targetText} with the symbol of the royal jester.`;
-    case 'ridicule': return `Subject ${targetText} to public ridicule on their profile.`;
-    case 'shame': return `Shame ${targetText} publicly on their profile and leaderboard.`;
-    case 'smokeBomb': return `Completely obscure ${targetText}'s profile with dramatic smoke for 8 hours.`;
-    case 'glitterBomb': return `Cover ${targetText}'s profile with sparkling glitter for 24 hours.`;
-    case 'protection': return `Protect yourself from all mockery for 7 days.`;
+    case 'shame': return `Publicly shame ${targetText} for their spending habits.`;
+    case 'taunt': return `Taunt ${targetText} with royal authority.`;
+    case 'crown': return `Challenge ${targetText} for their crown position.`;
+    case 'challenge': return `Issue a formal challenge to outspend ${targetText}.`;
+    case 'protection': return `Grant royal protection against mockery to ${targetText}.`;
+    case 'jest': return `Turn ${targetText} into a jester for all to laugh at.`;
+    case 'target': return `Mark ${targetText} as a target for the kingdom.`;
+    case 'defeat': return `Declare your defeat to ${targetText}.`;
+    case 'expose': return `Expose ${targetText}'s spending to the kingdom.`;
     default: return 'No description available';
   }
 };
@@ -133,38 +105,27 @@ export const getFireSaleDiscountPercentage = (): number => {
 export const getWeeklyDiscountedAction = (): ShameAction => {
   // Rotate based on week of year
   const weekOfYear = Math.floor(Date.now() / (7 * 24 * 60 * 60 * 1000));
-  const actions: ShameAction[] = ['tomatoes', 'eggs', 'putridEggs'];
+  const actions: ShameAction[] = ['shame', 'taunt', 'jest'];
   return actions[weekOfYear % actions.length];
 };
 
 // Map ShameAction to SoundType for appropriate sound effects
 export const getActionSoundType = (action: ShameAction): SoundType => {
   switch (action) {
-    case 'tomatoes': return 'shame';
-    case 'eggs': return 'shame';
-    case 'putridEggs': return 'shame';
-    case 'stocks': return 'swordClash';
-    case 'silence': return 'royalAnnouncement';
-    case 'courtJester': return 'noblesLaugh';
-    case 'dunce': return 'shame';
-    case 'jester': return 'noblesLaugh';
-    case 'ridicule': return 'noblesLaugh';
     case 'shame': return 'shame';
-    case 'smokeBomb': return 'smoke';
-    case 'glitterBomb': return 'notification';
-    case 'protection': return 'shield';
-    default: return 'shame';
+    case 'taunt': return 'notification';
+    case 'crown': return 'notification';
+    case 'challenge': return 'swordClash';
+    case 'protection': return 'notification';
+    case 'jest': return 'notification';
+    case 'target': return 'notification';
+    case 'defeat': return 'notification';
+    case 'expose': return 'notification';
+    default: return 'notification';
   }
 };
 
 // Convert MockeryAction to ShameAction safely
-export const convertMockeryToShameAction = (action: MockeryAction): ShameAction | undefined => {
-  // Only convert if the action exists in ShameAction type
-  const shameActions: ShameAction[] = [
-    'tomatoes', 'eggs', 'putridEggs', 'stocks', 'silence', 
-    'courtJester', 'dunce', 'jester', 'ridicule', 'shame', 
-    'smokeBomb', 'glitterBomb', 'protection'
-  ];
-  
-  return shameActions.includes(action as any) ? action as ShameAction : undefined;
+export const convertMockeryToShameAction = (action: MockeryAction): ShameAction => {
+  return action;
 };
