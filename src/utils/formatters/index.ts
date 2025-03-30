@@ -21,7 +21,7 @@ export type {
   RoyalButtonVariant,
   ShameAction,
   LeaderboardUser,
-  MockeryEffectData,
+  MockeryEffectDataType as MockeryEffectData,
   UserMockeryStatus,
   ExtendedMockeryAction,
   MockUser

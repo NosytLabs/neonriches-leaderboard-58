@@ -22,6 +22,7 @@ export interface LeaderboardUser {
   previousRank?: number;
   joinedAt?: string;
   joinDate?: string;
+  userId?: string;
 }
 
 export interface LeaderboardSnapshot {

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -7,11 +6,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import { Trophy, Crown, Target, Users, Activity, Zap, DollarSign } from 'lucide-react';
 import { UserProfile } from '@/types/user';
-
-// Import achievement types from our custom type definition
 import { Achievement, AchievementType, AchievementTier } from '@/types/achievement';
-
-// Import other components
 import AchievementDisplay from '@/components/achievements/AchievementDisplay';
 import RankProgressChart from '@/components/dashboard/RankProgressChart';
 import TeamStatusCard from '@/components/dashboard/TeamStatusCard';
@@ -21,13 +16,9 @@ import RankStatusCard from '@/components/dashboard/RankStatusCard';
 import CashThroneUpgrade from '@/components/dashboard/CashThroneUpgrade';
 import { DashboardWelcome } from '@/components/dashboard/DashboardWelcome';
 import BriberyBanner from '@/components/dashboard/BriberyBanner';
-
-// Import utilities and hooks
 import { cn } from '@/lib/utils';
 import { getAchievementIcon, formatDate } from '@/utils/formatters';
 import { useToast } from '@/hooks/use-toast';
-
-// UI components
 import RoyalDivider from '@/components/ui/royal-divider';
 
 const EnhancedDashboard = () => {
@@ -35,10 +26,8 @@ const EnhancedDashboard = () => {
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState('overview');
   
-  // Mock achievements data - this would come from an API in a real app
   const [achievements, setAchievements] = useState<Achievement[]>([]);
   
-  // Generate mock achievements
   useEffect(() => {
     if (user) {
       const mockAchievements: Achievement[] = [
@@ -77,12 +66,10 @@ const EnhancedDashboard = () => {
     }
   }, [user]);
   
-  // Ensure we have a user before rendering
   if (!user) {
     return null;
   }
 
-  // Get formatted total spent amount
   const totalSpent = user.totalSpent || user.amountSpent || 0;
 
   const handleSpend = () => {
@@ -100,10 +87,8 @@ const EnhancedDashboard = () => {
     });
   };
   
-  // Convert string achievement icons to lucide icon components for the AchievementDisplay
   const convertedAchievements = achievements.map(achievement => ({
     ...achievement,
-    // This is a simple mapping that the AchievementDisplay component needs
     icon: achievement.icon as "star" | "zap" | "award" | "trophy" | "crown" | "dollar"
   }));
 

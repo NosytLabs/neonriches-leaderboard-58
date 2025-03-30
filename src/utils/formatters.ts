@@ -1,10 +1,11 @@
 
-import { Trophy, Zap, Award, Star, Crown, DollarSign } from 'lucide-react';
-import React from 'react';
 import { format, isValid } from 'date-fns';
+import React from 'react';
+import { Trophy, Zap, Award, Star, Crown, DollarSign } from 'lucide-react';
 import { LeaderboardUser } from '@/types/leaderboard';
 import { UserTeam, GenderType } from '@/types/user';
-import { MockeryAction, MockeryTier, MockeryEvent, MockedUser } from '@/types/mockery';
+import { MockeryAction, MockeryTier, MockeryEvent, MockedUser, ShameAction, UserMockeryStatus, MockUser } from '@/types/mockery';
+import { RoyalButtonVariant, RoyalDecorationType } from '@/types/royal-divider-types';
 
 export const formatDate = (date: string | Date | null | undefined): string => {
   if (!date) return 'N/A';
@@ -114,19 +115,7 @@ export const getAchievementIcon = (type: string): React.ReactNode => {
   }
 };
 
-// Type for RoyalDecorationType
-export type RoyalDecorationType = 'divider' | 'corner' | 'banner' | 'crest' | 'shield' | 'crown' | 'top' | 'bottom' | 'left' | 'right';
-
-// Type for RoyalButtonVariant
-export type RoyalButtonVariant = 'default' | 'royal' | 'gold' | 'crimson' | 'royalGold' | 'royalPurple' | 'royalNavy' | 'royalCrimson' | 'glass' | 'outline' | 'goldOutline' | 'crimsonOutline' | 'navyOutline' | 'mahogany' | 'purple';
-
-// Type for ShameAction that extends MockeryAction
-export type ShameAction = MockeryAction;
-
-// Type for LeaderboardUser
-export type { LeaderboardUser };
-
-// Type for MockeryEffectData
+// Define MockeryEffectData interface
 export interface MockeryEffectData {
   username: string;
   action: MockeryAction;
@@ -134,8 +123,8 @@ export interface MockeryEffectData {
   tier?: MockeryTier;
 }
 
-// Type for UserMockeryStatus
-export interface UserMockeryStatus {
+// Define UserMockeryStatus interface
+export interface UserMockeryStatusImpl {
   username: string;
   protected: boolean;
   mockeryEffects: MockeryEvent[];
@@ -143,14 +132,11 @@ export interface UserMockeryStatus {
   protectionUntil?: string | Date;
 }
 
-// Type for ExtendedMockeryAction
-export type ExtendedMockeryAction = MockeryAction;
+// Export types
+export type { RoyalDecorationType, RoyalButtonVariant, ShameAction, LeaderboardUser, MockeryEffectData as MockeryEffectDataType, UserMockeryStatus, ExtendedMockeryAction, MockUser };
 
-// Add type alias for MockUser
-export type MockUser = MockedUser;
-
-// Function to get mockery action icon color
-export const getMockeryActionIconColor = (action: MockeryAction | ExtendedMockeryAction): string => {
+// Get mockery action icon color
+export const getMockeryActionIconColor = (action: MockeryAction | ShameAction): string => {
   switch (action) {
     case 'tomatoes':
     case 'eggs':
@@ -170,6 +156,23 @@ export const getMockeryActionIconColor = (action: MockeryAction | ExtendedMocker
       return 'text-lime-500';
     case 'crown':
       return 'text-yellow-500';
+    case 'shame':
+    case 'taunt':
+    case 'ridicule':
+    case 'jester':
+      return 'text-orange-500';
+    case 'mock':
+    case 'humiliate':
+    case 'expose':
+      return 'text-rose-500';
+    case 'guillotine':
+    case 'dungeons':
+    case 'removal':
+      return 'text-red-700';
+    case 'royalPie':
+    case 'jokeCrown':
+    case 'memeFrame':
+      return 'text-indigo-500';
     default:
       return 'text-gray-500';
   }

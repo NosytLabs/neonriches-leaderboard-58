@@ -158,6 +158,27 @@ export const useShameEffect = (options = { cooldownPeriod: 24 * 60 * 60 * 1000 }
           position: 'top',
           duration: 8000,
         };
+      case 'shame':
+        return {
+          type: 'particles',
+          particleImage: '/assets/shame.png',
+          particleCount: 10,
+          duration: 4000,
+        };
+      case 'taunt':
+        return {
+          type: 'particles',
+          particleImage: '/assets/taunt.png',
+          particleCount: 12,
+          duration: 4000,
+        };
+      case 'jester':
+        return {
+          type: 'accessory',
+          accessoryImage: '/assets/jester-hat.png',
+          position: 'top',
+          duration: 7000,
+        };
       default:
         return {
           type: 'particles',

@@ -1,5 +1,3 @@
-
-// Update the imports at the top of the file
 import React from 'react';
 import { Scroll, DollarSign, Sparkles } from 'lucide-react';
 import { topUsers } from './data';

@@ -24,7 +24,7 @@ export type TeamType = 'red' | 'green' | 'blue' | 'none' | 'Red' | 'Green' | 'Bl
 export type UserTeam = TeamType;
 export type Team = TeamType;
 
-export type GenderType = 'male' | 'female' | 'other' | 'none' | 'king' | 'queen' | 'jester' | 'noble';
+export type GenderType = 'male' | 'female' | 'other' | 'none' | 'king' | 'queen' | 'jester' | 'noble' | 'neutral';
 export type UserGender = GenderType;
 
 export interface ProfileImage {
@@ -75,14 +75,15 @@ export interface UserCosmetics {
   activeBadge?: string;
   activeEmoji?: string;
   activeTheme?: string;
+  activeEffect?: string;
 }
 
 export interface ProfileBoost {
   id: string;
   userId: string;
   effectId: string;
-  startTime: Date;
-  endTime: Date;
+  startTime: Date | string;
+  endTime: Date | string;
   startDate?: string;
   endDate?: string;
   level: number;
@@ -120,6 +121,7 @@ export interface UserSettings {
   shameAlerts?: boolean;
   showEmailOnProfile?: boolean;
   showTeam?: boolean;
+  showSpending?: boolean;
   displayRankChanges?: boolean;
   enableMockeryEffects?: boolean;
   receiveRoyalAnnouncements?: boolean;
@@ -129,8 +131,8 @@ export interface UserSettings {
 export interface UserSubscription {
   id: string;
   tier: UserTier;
-  startDate: Date;
-  endDate?: Date;
+  startDate: Date | string;
+  endDate?: Date | string;
   autoRenew: boolean;
   status: 'active' | 'canceled' | 'expired' | 'pending';
   paymentMethod: string;
@@ -172,7 +174,7 @@ export interface UserProfile {
   activeBackground?: string;
   spendStreak?: number;
   gender?: GenderType;
-  lastActive?: Date;
+  lastActive?: Date | string;
   links?: ProfileLink[];
   socialLinks?: SocialLink[];
   certificates?: any[];
@@ -181,7 +183,7 @@ export interface UserProfile {
     mintedAt: string;
     tokenId: string;
   };
-  createdAt?: string;
+  createdAt?: string | Date;
   role?: string;
   followers?: number;
   following?: number;
@@ -192,7 +194,7 @@ export interface UserProfile {
 }
 
 // Extended User type that includes full details
-export interface User extends UserProfile {
+export interface User extends Omit<UserProfile, 'createdAt'> {
   createdAt: Date;
   updatedAt: Date;
   email: string;
