@@ -7,6 +7,8 @@ import MedievalFrame from '@/components/ui/medieval-frame';
 import { Scroll, Crown, Coins, Users, DollarSign, Banknote, Landmark } from 'lucide-react';
 import ParchmentTexture from '@/components/ui/parchment-texture';
 import usePageTracking from '@/hooks/usePageTracking';
+import { motion } from 'framer-motion';
+import { Icon } from '@/components/ui/icon';
 
 const StatusThroughHistory = () => {
   usePageTracking();
@@ -27,7 +29,7 @@ const StatusThroughHistory = () => {
             A satirical journey through humanity's long tradition of purchasing power, influence, and social standing
           </p>
           
-          {/* Add a link to the new historical absurdities page */}
+          {/* Add a link to the historical absurdities page */}
           <div className="text-center mb-10">
             <motion.a
               href="/historical-absurdities"
@@ -340,37 +342,6 @@ const StatusThroughHistory = () => {
                   </div>
                 </MedievalFrame>
               </div>
-              
-              <MedievalFrame variant="royal">
-                <div className="p-6">
-                  <h3 className="text-xl font-semibold mb-3 text-center">Private Space Conquest</h3>
-                  <p className="mb-5 text-center">When Earth-bound status symbols aren't enough, today's ultra-wealthy launch themselves into actual orbit.</p>
-                  
-                  <div className="grid md:grid-cols-2 gap-6 mb-6">
-                    <div className="glass-morphism p-4 rounded-lg">
-                      <h4 className="font-medium mb-2 text-royal-gold">Status Space Race:</h4>
-                      <ul className="text-sm space-y-2">
-                        <li>• <span className="text-royal-gold">Elon Musk (SpaceX)</span>: Has spent over $100 billion on his space company</li>
-                        <li>• <span className="text-royal-gold">Jeff Bezos (Blue Origin)</span>: Personally funds his space company with $1 billion in Amazon stock annually</li>
-                        <li>• <span className="text-royal-gold">Richard Branson (Virgin Galactic)</span>: First billionaire to ride his own spacecraft in July 2021</li>
-                        <li>• <span className="text-royal-gold">Jared Isaacman</span>: Paid an estimated $200 million for a private SpaceX orbital mission in 2021</li>
-                      </ul>
-                    </div>
-                    <div className="glass-morphism p-4 rounded-lg">
-                      <h4 className="font-medium mb-2 text-royal-gold">Elite Status Achievements:</h4>
-                      <ul className="text-sm space-y-2">
-                        <li>"I spent more to go to space for 10 minutes than some countries spend on their entire education budget." - Space tourism patron</li>
-                        <li>"My rocket is bigger than your rocket." - Unspoken billionaire status competition</li>
-                        <li>"When you've bought everything on Earth, the next logical status symbol is buying your way off it." - Space industry analyst</li>
-                      </ul>
-                    </div>
-                  </div>
-                  
-                  <div className="text-center mt-4">
-                    <p className="text-sm italic text-white/70">From Roman temples to medieval cathedrals to private rockets—status symbols keep reaching higher while serving the same purpose.</p>
-                  </div>
-                </div>
-              </MedievalFrame>
             </section>
           </div>
           
