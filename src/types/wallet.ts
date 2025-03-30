@@ -1,16 +1,18 @@
 
+import { User } from '@/types/user';
+
 export type TransactionType = 
-  | 'deposit' 
-  | 'withdrawal' 
-  | 'purchase' 
-  | 'transfer' 
-  | 'mockery' 
-  | 'cosmetic' 
-  | 'subscription' 
-  | 'boost' 
-  | 'wish' 
-  | 'advertisement' 
-  | 'protection';
+  'deposit' | 
+  'withdrawal' | 
+  'purchase' | 
+  'refund' | 
+  'bonus' | 
+  'subscription' | 
+  'mockery' | 
+  'shame' | 
+  'wishing-well' | 
+  'gift' | 
+  'adjustment';
 
 export interface Transaction {
   id: string;
@@ -18,28 +20,38 @@ export interface Transaction {
   amount: number;
   type: TransactionType;
   description: string;
-  timestamp: string;
-  status: 'pending' | 'completed' | 'failed' | 'refunded';
-  targetUser?: string;
-  targetItem?: string;
+  timestamp: Date;
+  status: 'pending' | 'completed' | 'failed' | 'reversed';
+  referenceId?: string;
   metadata?: Record<string, any>;
 }
 
-export interface SpendOptions {
-  targetUser?: string;
-  cosmetic?: string;
-  feature?: string;
-  wishAmount?: number;
-  preferredCategory?: string;
-  mockeryType?: string;
-  itemId?: string;
-  category?: string; // Added for backward compatibility
-}
-
 export interface WalletBalance {
+  walletId: string;
   userId: string;
   balance: number;
-  pendingDeposits: number;
-  pendingWithdrawals: number;
-  lastUpdated: string;
+  lockedAmount: number;
+  lastUpdated: Date;
+  currency: string;
 }
+
+export interface SpendOptions {
+  description?: string;
+  referenceId?: string;
+  metadata?: Record<string, any>;
+  notifyUser?: boolean;
+  skipHistory?: boolean;
+  skipRankUpdate?: boolean;
+  mockeryType?: string;
+  wishAmount?: number;
+}
+
+// Transaction history for a user
+export interface TransactionHistory {
+  userId: string;
+  transactions: Transaction[];
+  totalSpent: number;
+  totalReceived: number;
+  netAmount: number;
+}
+

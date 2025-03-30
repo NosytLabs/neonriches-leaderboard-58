@@ -1,61 +1,58 @@
 
-export interface SolanaTransaction {
-  id?: string;
-  signature: string;
-  slot: number;
-  timestamp: number;
-  amount: number;
-  usdValue: number;
-  type: 'in' | 'out' | 'deposit' | 'withdrawal';
-  status: 'success' | 'pending' | 'failed' | 'confirmed';
-  sender?: string;
-  recipient?: string;
+export interface SolanaWallet {
+  publicKey: string;
+  balance: number;
+  lastUpdated: string;
+  transactions: SolanaTransaction[];
+  nfts: SolanaNftInfo[];
 }
 
-export interface SolanaNFT {
-  mint: string;
-  name: string;
-  symbol: string;
-  image: string;
-  description: string;
-  attributes: Array<{
-    trait_type: string;
-    value: string;
-  }>;
-  owner: string;
-  updateAuthority: string;
+export interface SolanaTreasuryInfo {
+  publicKey: string;
+  totalDeposits: number;
+  totalWithdrawals: number;
+  totalUsers: number;
+  lastTransaction: string;
+  lastUpdated?: string;
+  currentBalance?: number;
+}
+
+export interface SolanaTransaction {
+  id: string;
+  signature: string;
+  sender: string;
+  recipient: string;
+  amount: number;
+  timestamp: string;
+  status: 'confirmed' | 'pending' | 'failed';
+  type: 'deposit' | 'withdrawal' | 'transfer' | 'nft' | 'other';
+  blockHeight?: number;
+  fee?: number;
 }
 
 export interface OnChainLeaderboardEntry {
   id: string;
+  publicKey: string;
   position: number;
   amount: number;
-  userId?: string;
-  publicKey?: string;
-  spentAmount?: number;
-  amountSpent?: number;
-  totalDeposited?: number;
-  timestamp?: string;
-  username?: string;
-  address?: string;
-  rank?: number;
-  joinDate?: string;
-  lastTransaction?: string;
+  username: string;
+  timestamp: string;
+  totalSpent?: number;
 }
 
-export interface SolanaTreasuryInfo {
-  totalBalance: number;
-  depositAddress: string;
-  totalDeposits: number;
-  totalWithdrawals: number;
-  transactions: SolanaTransaction[];
+export interface SolanaNftInfo {
+  id: string;
+  name: string;
+  description: string;
+  image: string;
+  mintAddress: string;
+  metadata: {
+    collection?: string;
+    attributes?: Array<{trait_type: string; value: string}>;
+    external_url?: string;
+    properties?: any;
+  };
+  ownerId: string;
+  createdAt: string;
 }
 
-export interface SolanaWallet {
-  address: string;
-  balance: number;
-  nfts?: SolanaNFT[];
-}
-
-export type SolanaNftInfo = SolanaNFT;
-export type LeaderboardEntry = OnChainLeaderboardEntry;

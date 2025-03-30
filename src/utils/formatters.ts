@@ -1,34 +1,77 @@
 
 /**
- * Formats a number of bytes into a human-readable string
- * @param bytes The number of bytes to format
- * @returns A formatted string (e.g., "1.5 KB", "2.3 MB")
+ * Utility functions for formatting values consistently throughout the application
  */
-export const formatFileSize = (bytes: number): string => {
-  if (bytes === 0) return '0 Bytes';
-  
-  const k = 1024;
-  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
-  
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+
+/**
+ * Format a currency value with dollar sign
+ */
+export const formatCurrency = (value: number | undefined | null): string => {
+  if (value === undefined || value === null) return '$0.00';
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  }).format(value);
 };
 
 /**
- * Formats a number with commas as thousands separators
- * @param num The number to format
- * @returns A formatted string (e.g., "1,234,567")
+ * Format a currency value without dollar sign
  */
-export const formatNumber = (num: number): string => {
-  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+export const formatDollarAmount = (value: number | undefined | null): string => {
+  if (value === undefined || value === null) return '0.00';
+  return new Intl.NumberFormat('en-US', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  }).format(value);
 };
 
 /**
- * Formats a percentage value with specified decimal places
- * @param value The percentage value (e.g., 0.123 for 12.3%)
- * @param decimals The number of decimal places to show
- * @returns A formatted percentage string (e.g., "12.3%")
+ * Format a date in a human-readable format
  */
-export const formatPercent = (value: number, decimals: number = 1): string => {
-  return (value * 100).toFixed(decimals) + '%';
+export const formatDate = (date: Date | string | null | undefined): string => {
+  if (!date) return 'N/A';
+  
+  const dateObj = typeof date === 'string' ? new Date(date) : date;
+  
+  return new Intl.DateTimeFormat('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  }).format(dateObj);
 };
+
+/**
+ * Format a historical monetary value with adjustments
+ */
+export const formatHistoricalValue = (
+  value: number, 
+  year: number, 
+  currentYear = new Date().getFullYear()
+): string => {
+  // Simple inflation adjustment (very approximate)
+  const averageInflation = 0.03; // 3% per year
+  const yearsDifference = currentYear - year;
+  const adjustmentFactor = Math.pow(1 + averageInflation, yearsDifference);
+  const adjustedValue = value * adjustmentFactor;
+  
+  return formatCurrency(adjustedValue);
+};
+
+/**
+ * Format a wallet address for display
+ */
+export const formatAddress = (address: string | null | undefined): string => {
+  if (!address) return 'Unknown Address';
+  return `${address.substring(0, 4)}...${address.substring(address.length - 4)}`;
+};
+
+/**
+ * Format a number with commas
+ */
+export const formatNumber = (value: number | undefined | null): string => {
+  if (value === undefined || value === null) return '0';
+  return new Intl.NumberFormat('en-US').format(value);
+};
+

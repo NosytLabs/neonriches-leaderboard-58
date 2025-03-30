@@ -1,61 +1,46 @@
 
-// Sound type definitions
+/**
+ * Types for the sound system
+ */
 
-// Types of sounds available in the application
-export type SoundType =
+export type SoundType = 
+  | 'click'
+  | 'hover'
   | 'notification'
   | 'success'
   | 'error'
-  | 'shame'
   | 'purchase'
-  | 'levelUp'
-  | 'swordClash'
-  | 'click'
-  | 'hover'
-  | 'coinDrop'
+  | 'deposit'
+  | 'withdraw'
+  | 'rank-up'
+  | 'achievement'
+  | 'royal-decree'
+  | 'message'
+  | 'coin-drop'
+  | 'crown-click'
   | 'pageTransition'
-  | 'parchmentUnfurl'
-  | 'seal'
-  | 'royalAnnouncement'
+  | 'shame'
+  | 'win'
+  | 'lose'
   | 'reward'
-  | 'wish'
-  | 'advertisement'
-  | 'pageChange'
-  | 'trumpet'
-  | 'medallion'
-  | 'noblesLaugh'
-  | 'inkScribble';
+  | 'seal'
+  | 'parchmentUnfurl'
+  | 'swordClash'
+  | 'coinDrop'
+  | 'royalAnnouncement';
 
-// Premium sound pack types
-export type PremiumSoundPack = string;
-
-// Sound settings
-export interface SoundSettings {
-  enabled: boolean;
-  volume: number;
-  pack: PremiumSoundPack;
-}
-
-// Premium sound pack details
-export interface PremiumSoundPackDetails {
+export interface SoundAsset {
   id: string;
-  name: string;
-  description: string;
-  price: number;
-  preview?: string;
-  previewSound?: SoundType | string;
-  sounds?: SoundType[] | string[];
-  features?: string[];
-  isPurchased?: boolean;
+  url: string;
+  volume?: number;
+  loop?: boolean;
+  duration?: number;
 }
 
-// Audio loader return type
-export interface AudioLoaderReturn {
-  loading: boolean;
-  loaded: boolean;
-  error: Error | null;
-  sounds: Record<string, HTMLAudioElement>;
-  play: (sound: SoundType) => void;
-  loadedSounds?: string[];
-  audioElements?: Record<string, HTMLAudioElement>;
+export interface SoundOptions {
+  volume?: number;
+  loop?: boolean;
+  playbackRate?: number;
+  delay?: number;
 }
+

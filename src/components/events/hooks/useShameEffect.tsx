@@ -1,174 +1,108 @@
 
-import { useState, useEffect } from 'react';
-import { ShameAction } from '@/types/mockery';
+import React from 'react';
+import { motion } from 'framer-motion';
 
-export type ShameEffect = {
-  active: boolean;
-  action: ShameAction;
-  expiresAt: string | null;
-  appliedBy: string | null;
+export type ShameEffectType = 'tomatoes' | 'eggs' | 'stocks';
+
+export interface ShameEffectProps {
+  type: ShameEffectType;
+  duration?: number; // in milliseconds
+  intensity?: 'light' | 'medium' | 'heavy';
+}
+
+export const ShameEffect: React.FC<ShameEffectProps> = ({ 
+  type,
+  duration = 3000,
+  intensity = 'medium'
+}) => {
+  const [elements, setElements] = React.useState<React.ReactNode[]>([]);
+  
+  React.useEffect(() => {
+    const count = intensity === 'light' ? 5 : intensity === 'medium' ? 10 : 20;
+    const newElements = [];
+    
+    for (let i = 0; i < count; i++) {
+      const delay = Math.random() * 1000;
+      const xPosition = Math.random() * 100;
+      const rotation = Math.random() * 360;
+      const scale = 0.5 + Math.random() * 1;
+      
+      const emoji = type === 'tomatoes' ? '🍅' : type === 'eggs' ? '🥚' : '🪵';
+      
+      newElements.push(
+        <motion.div
+          key={`shame-${type}-${i}`}
+          initial={{ 
+            opacity: 0, 
+            y: -100, 
+            x: `${xPosition}vw`,
+            rotate: rotation,
+            scale
+          }}
+          animate={{ 
+            opacity: [0, 1, 1, 0],
+            y: ['0vh', '100vh'],
+            rotate: [rotation, rotation + 360]
+          }}
+          transition={{ 
+            duration: 3,
+            delay: delay / 1000,
+            times: [0, 0.1, 0.9, 1]
+          }}
+          className="fixed z-50 text-4xl pointer-events-none"
+        >
+          {emoji}
+        </motion.div>
+      );
+    }
+    
+    setElements(newElements);
+    
+    // Clean up
+    const timer = setTimeout(() => {
+      setElements([]);
+    }, duration);
+    
+    return () => clearTimeout(timer);
+  }, [type, duration, intensity]);
+  
+  return <>{elements}</>;
 };
 
-export const useShameEffect = (username: string) => {
-  const [shameEffect, setShameEffect] = useState<ShameEffect>({
-    active: false,
-    action: 'tomatoes',
-    expiresAt: null,
-    appliedBy: null
-  });
-
-  const getShameEffectIcon = (action: ShameAction) => {
-    switch (action) {
-      case 'tomatoes':
-        return '🍅';
-      case 'eggs':
-        return '🥚';
-      case 'putridEggs':
-        return '🥚';
-      case 'stocks':
-        return '🔒';
-      case 'silence':
-        return '🤐';
-      case 'courtJester':
-        return '🃏';
-      case 'dunce':
-        return '🧢';
-      case 'smokeBomb':
-        return '💨';
-      case 'jester':
-        return '🤡';
-      case 'ridicule':
-        return '😂';
-      case 'humiliate':
-        return '😱';
-      case 'expose':
-        return '👁️';
-      case 'mock':
-        return '🤨';
-      case 'shame':
-        return '😓';
-      default:
-        return '🍅';
-    }
-  };
-
-  const getShameEffectName = (action: ShameAction) => {
-    switch (action) {
-      case 'tomatoes':
-        return 'Tomatoes';
-      case 'eggs':
-        return 'Egg Shower';
-      case 'putridEggs':
-        return 'Putrid Eggs';
-      case 'stocks':
-        return 'Public Stocks';
-      case 'silence':
-        return 'Royal Silence';
-      case 'courtJester':
-        return 'Court Jester';
-      case 'dunce':
-        return 'Dunce Cap';
-      case 'smokeBomb':
-        return 'Smoke Bomb';
-      case 'jester':
-        return 'Jester Curse';
-      case 'ridicule':
-        return 'Public Ridicule';
-      case 'humiliate':
-        return 'Royal Humiliation';
-      case 'expose':
-        return 'Exposed Secrets';
-      case 'mock':
-        return 'Mockery';
-      case 'shame':
-        return 'Walk of Shame';
-      default:
-        return 'Unknown Shame';
-    }
-  };
-
-  const getShameEffectDescription = (action: ShameAction) => {
-    switch (action) {
-      case 'tomatoes':
-        return 'This user has been pelted with rotten tomatoes by the crowd.';
-      case 'eggs':
-        return 'This user has been showered with eggs for their dishonor.';
-      case 'putridEggs':
-        return 'This user reeks of the putrid eggs thrown at them.';
-      case 'stocks':
-        return 'This user has been placed in the public stocks for general mockery.';
-      case 'silence':
-        return 'This user has been silenced by royal decree.';
-      case 'courtJester':
-        return 'This user has been demoted to court jester status.';
-      case 'dunce':
-        return 'This user wears the dunce cap for their foolish spending.';
-      case 'smokeBomb':
-        return 'This user is obscured by a cloud of smoke from their embarrassment.';
-      case 'jester':
-        return 'This user has been cursed to appear as a jester to all.';
-      case 'ridicule':
-        return 'This user is being openly ridiculed throughout the kingdom.';
-      case 'humiliate':
-        return 'This user suffers from royal humiliation.';
-      case 'expose':
-        return 'This user\'s darkest secrets have been exposed to the public.';
-      case 'mock':
-        return 'This user is being mocked by all who see them.';
-      case 'shame':
-        return 'This user is on a public walk of shame.';
-      default:
-        return 'This user is suffering from an unknown shame...';
-    }
-  };
-
-  const applyShameEffect = (action: ShameAction, duration = 3600000, appliedBy = null) => {
-    const expiresAt = new Date(Date.now() + duration).toISOString();
-    setShameEffect({
-      active: true,
-      action,
-      expiresAt,
-      appliedBy
+export const useShameEffect = () => {
+  const [shameConfig, setShameConfig] = React.useState<ShameEffectProps | null>(null);
+  
+  const triggerShame = (type: ShameEffectType, intensity?: 'light' | 'medium' | 'heavy', duration?: number) => {
+    setShameConfig({
+      type,
+      intensity,
+      duration
     });
-
-    return true;
-  };
-
-  const removeShameEffect = () => {
-    setShameEffect({
-      active: false,
-      action: 'tomatoes',
-      expiresAt: null,
-      appliedBy: null
-    });
-  };
-
-  const checkShameEffectExpiration = () => {
-    if (shameEffect.active && shameEffect.expiresAt) {
-      const expiryTime = new Date(shameEffect.expiresAt).getTime();
-      if (Date.now() > expiryTime) {
-        removeShameEffect();
-      }
+    
+    // Auto-clear after duration
+    if (duration) {
+      setTimeout(() => {
+        setShameConfig(null);
+      }, duration);
     }
   };
-
-  useEffect(() => {
-    // Check if the shame effect has expired
-    checkShameEffectExpiration();
-
-    // Set up a timer to check for expiration
-    const interval = setInterval(checkShameEffectExpiration, 60000);
-    return () => clearInterval(interval);
-  }, [shameEffect]);
-
+  
+  const clearShame = () => {
+    setShameConfig(null);
+  };
+  
+  const ShameEffectComponent = () => {
+    if (!shameConfig) return null;
+    return <ShameEffect {...shameConfig} />;
+  };
+  
   return {
-    shameEffect,
-    applyShameEffect,
-    removeShameEffect,
-    getShameEffectIcon,
-    getShameEffectName,
-    getShameEffectDescription
+    triggerShame,
+    clearShame,
+    ShameEffectComponent,
+    shameConfig
   };
 };
 
 export default useShameEffect;
+
