@@ -17,24 +17,25 @@ const MockeryIcon: React.FC<MockeryIconProps> = ({
 }) => {
   const Icon = getMockeryActionIcon(action);
   
-  // Get color based on action or tier
+  // Get color based on action
   const getColor = () => {
     switch (action) {
-      case 'legendary':
       case 'courtJester':
         return 'text-royal-gold';
-      case 'epic':
       case 'silence':
         return 'text-purple-400';
-      case 'rare':
       case 'stocks':
         return 'text-blue-400';
-      case 'uncommon':
       case 'eggs':
+      case 'putridEggs':
         return 'text-green-400';
       case 'protection':
       case 'immune':
         return 'text-cyan-400';
+      case 'smokeBomb':
+        return 'text-gray-400';
+      case 'glitterBomb':
+        return 'text-pink-400';
       default:
         return 'text-gray-300';
     }

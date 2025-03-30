@@ -1,10 +1,11 @@
 
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { ExtendedMockeryAction } from './utils/mockeryUtils';
+import { MockeryAction } from '@/types/mockery';
+import { getMockeryTier } from '@/utils/mockeryUtils';
 
 interface MockeryActionIconProps {
-  action: ExtendedMockeryAction;
+  action: MockeryAction;
   size?: number;
   className?: string;
 }
@@ -14,21 +15,25 @@ const MockeryActionIcon: React.FC<MockeryActionIconProps> = ({
   size = 16,
   className
 }) => {
-  const getIcon = (actionType: ExtendedMockeryAction): string => {
+  const getIcon = (actionType: MockeryAction): string => {
     switch (actionType) {
       case 'tomatoes': return '🍅';
       case 'eggs': return '🥚';
+      case 'putridEggs': return '🥚';
       case 'stocks': return '🪵';
       case 'silence': return '🔇';
       case 'courtJester': return '🃏';
-      case 'protected': return '🛡️';
+      case 'protection': return '🛡️';
       case 'immune': return '👑';
       case 'jester': return '🎭';
       case 'dunce': return '📝';
+      case 'smokeBomb': return '💨';
+      case 'glitterBomb': return '✨';
+      case 'royalPie': return '🥧';
+      case 'jokeCrown': return '👑';
+      case 'memeFrame': return '🖼️';
       case 'roast': return '🔥';
       case 'ridicule': return '😂';
-      case 'taunt': return '👋';
-      case 'drama': return '🎭';
       default: return '❓';
     }
   };
