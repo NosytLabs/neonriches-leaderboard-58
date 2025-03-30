@@ -1,0 +1,67 @@
+
+/* Profile themes */
+.theme-medieval-court {
+  @apply bg-gradient-to-br from-royal-purple/20 via-transparent to-royal-gold/20;
+}
+
+.theme-digital-kingdom {
+  @apply bg-gradient-to-r from-blue-900/30 via-purple-900/30 to-pink-900/30;
+}
+
+.theme-crypto-royalty {
+  @apply bg-gradient-to-br from-yellow-900/30 via-orange-900/20 to-red-900/30;
+}
+
+.theme-founders-hall {
+  @apply bg-gradient-to-br from-royal-gold/20 via-royal-purple/10 to-royal-gold/20;
+}
+
+.theme-marketing-guru {
+  @apply bg-gradient-to-r from-blue-700/20 via-indigo-700/20 to-purple-700/20;
+}
+
+/* Profile backgrounds */
+.background-castle {
+  background-image: url('/images/backgrounds/castle.jpg');
+  background-size: cover;
+  background-position: center;
+}
+
+.background-throne-room {
+  background-image: url('/images/backgrounds/throne.jpg');
+  background-size: cover;
+  background-position: center;
+}
+
+.background-treasure-vault {
+  background-image: url('/images/backgrounds/treasure.jpg');
+  background-size: cover;
+  background-position: center;
+}
+
+.background-digital-realm {
+  background-image: url('/images/backgrounds/digital.jpg');
+  background-size: cover;
+  background-position: center;
+}
+
+/* Item rarity classes */
+.rarity-common {
+  @apply bg-gray-500/20 text-gray-300 border-gray-500/40;
+}
+
+.rarity-uncommon {
+  @apply bg-green-600/20 text-green-400 border-green-600/40;
+}
+
+.rarity-rare {
+  @apply bg-royal-blue/20 text-royal-blue border-royal-blue/40;
+}
+
+.rarity-epic {
+  @apply bg-purple-600/20 text-purple-400 border-purple-600/40;
+}
+
+.rarity-legendary {
+  @apply bg-royal-gold/20 text-royal-gold border-royal-gold/40;
+}

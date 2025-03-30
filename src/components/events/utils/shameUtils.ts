@@ -36,8 +36,8 @@ export const getDiscountedShamePrice = (action: ShameAction): number => {
   return getShameActionPrice(action) * 0.5;
 };
 
-// Helper functions for shame action metadata
-export const getShameActionIcon = (action: ShameAction | MockeryAction): string => {
+// Helper functions for shame action metadata - returns icon name as string
+export const getShameActionIconName = (action: ShameAction | MockeryAction): string => {
   switch (action) {
     case 'tomatoes': return 'Tomato';
     case 'eggs': return 'Egg';
@@ -87,7 +87,7 @@ export default {
   hasWeeklyDiscount,
   getShameActionPrice,
   getDiscountedShamePrice,
-  getShameActionIcon,
+  getShameActionIconName,
   getShameActionTitle,
   getShameActionDescription,
   isFireSaleMonth,

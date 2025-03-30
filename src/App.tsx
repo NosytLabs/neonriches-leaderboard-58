@@ -1,10 +1,10 @@
 
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { Toaster } from "@/components/ui/toaster";
 import { AuthProvider } from '@/contexts/auth/AuthProvider';
-import { ThemeProvider } from '@/providers/theme-provider';
+import { ThemeProvider } from '@/providers/ThemeProvider';
 
 // Core pages
 import Home from '@/pages/Home';

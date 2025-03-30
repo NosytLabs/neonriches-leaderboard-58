@@ -1,0 +1,113 @@
+
+/* Profile special effects */
+.effect-golden-shimmer {
+  @apply animate-pulse-slow;
+  box-shadow: 0 0 15px rgba(212, 175, 55, 0.2), 0 0 30px rgba(212, 175, 55, 0.1);
+}
+
+.effect-flame-border {
+  @apply animate-border-pulse-flame;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 0, 0, 0.2),
+    rgba(255, 166, 0, 0.2),
+    rgba(255, 0, 0, 0.2)
+  );
+  background-size: 200% 200%;
+}
+
+.effect-royal-sparkle {
+  position: relative;
+  overflow: hidden;
+}
+
+.effect-royal-sparkle::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='10' cy='10' r='1' fill='%23D4AF37' fill-opacity='0.3'/%3E%3C/svg%3E");
+  animation: sparkle-drift 10s linear infinite;
+  pointer-events: none;
+}
+
+.effect-crown-aura {
+  position: relative;
+}
+
+.effect-crown-aura::before {
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  right: -10px;
+  bottom: -10px;
+  z-index: -1;
+  background: radial-gradient(circle, rgba(212, 175, 55, 0.2) 0%, transparent 70%);
+  border-radius: inherit;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+/* Cosmetic decoration animations */
+@keyframes crown-float {
+  0%, 100% {
+    transform: translateY(-3px);
+  }
+  50% {
+    transform: translateY(0);
+  }
+}
+
+.crown-float {
+  animation: crown-float 2s ease-in-out infinite;
+}
+
+@keyframes name-sparkle {
+  0%, 100% {
+    text-shadow: 0 0 4px rgba(212, 175, 55, 0.7);
+  }
+  50% {
+    text-shadow: 0 0 8px rgba(212, 175, 55, 1);
+  }
+}
+
+.name-sparkle {
+  animation: name-sparkle 2s ease-in-out infinite;
+}
+
+@keyframes border-pulse {
+  0%, 100% {
+    border-color: rgba(212, 175, 55, 0.7);
+  }
+  50% {
+    border-color: rgba(212, 175, 55, 0.3);
+  }
+}
+
+.border-pulse {
+  animation: border-pulse 2s ease-in-out infinite;
+}
+
+@keyframes sparkle-drift {
+  0% {
+    background-position: 0% 0%;
+  }
+  100% {
+    background-position: 100% 100%;
+  }
+}
+
+/* Royal rainbow animation for text */
+@keyframes royal-rainbow {
+  0% { color: #9B2335; }
+  25% { color: #D4AF37; }
+  50% { color: #1F4788; }
+  75% { color: #7851A9; }
+  100% { color: #9B2335; }
+}
+
+.royal-rainbow-text {
+  animation: royal-rainbow 6s linear infinite;
+}

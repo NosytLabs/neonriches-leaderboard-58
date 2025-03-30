@@ -1,0 +1,92 @@
+
+/* Base cosmetic items styling */
+.cosmetic-item {
+  @apply transition-all duration-300 hover:transform hover:scale-105 hover:shadow-royal-gold/20;
+}
+
+.cosmetic-preview {
+  @apply bg-black/40 backdrop-blur-sm rounded-lg p-4 flex items-center justify-center;
+}
+
+/* Premium fonts */
+.font-royal-script {
+  font-family: 'Playfair Display', serif;
+}
+
+.font-medieval-blackletter {
+  font-family: 'Cinzel', serif;
+}
+
+.font-majestic-serif {
+  font-family: 'Cormorant Garamond', serif;
+}
+
+.font-royal-modern {
+  font-family: 'Crimson Text', serif;
+}
+
+.font-noble-sans {
+  font-family: 'Spectral', serif;
+}
+
+.font-courtly-display {
+  font-family: 'Fredericka the Great', cursive;
+}
+
+.font-digital-kingdom {
+  font-family: 'Orbitron', sans-serif;
+}
+
+.font-crypto-royal {
+  font-family: 'Press Start 2P', cursive;
+}
+
+.font-marketing-pro {
+  font-family: 'Montserrat', sans-serif;
+}
+
+/* Royal colors */
+.royal-purple-text {
+  color: #7851A9;
+  text-shadow: 0 0 5px rgba(120, 81, 169, 0.5);
+}
+
+.emerald-green-text {
+  color: #2C784A;
+  text-shadow: 0 0 5px rgba(44, 120, 74, 0.5);
+}
+
+.sapphire-blue-text {
+  color: #1F4788;
+  text-shadow: 0 0 5px rgba(31, 71, 136, 0.5);
+}
+
+.crimson-glory-text {
+  color: #9B2335;
+  text-shadow: 0 0 5px rgba(155, 35, 53, 0.5);
+}
+
+.royal-gold-text {
+  color: #D4AF37;
+  text-shadow: 0 0 5px rgba(212, 175, 55, 0.5);
+}
+
+.platinum-silver-text {
+  color: #C0C0C0;
+  text-shadow: 0 0 5px rgba(192, 192, 192, 0.5);
+}
+
+.neon-pink-text {
+  color: #ff00ff;
+  text-shadow: 0 0 10px rgba(255, 0, 255, 0.7);
+}
+
+.cyber-blue-text {
+  color: #00ffff;
+  text-shadow: 0 0 10px rgba(0, 255, 255, 0.7);
+}
+
+.digital-green-text {
+  color: #00ff00;
+  text-shadow: 0 0 10px rgba(0, 255, 0, 0.7);
+}
