@@ -40,9 +40,10 @@ export const MockeryUserCard: React.FC<MockeryUserCardProps> = ({
   };
   
   const handleProtectedClick = () => {
-    toast.warning({
+    toast({
       title: "Royal Protection Active",
-      description: "This user is protected by royal decree and cannot be mocked at this time."
+      description: "This user is protected by royal decree and cannot be mocked at this time.",
+      variant: "destructive"
     });
   };
   

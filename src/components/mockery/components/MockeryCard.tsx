@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -91,7 +92,7 @@ const MockeryCard: React.FC<MockeryCardProps> = ({
   
   // Get description with username
   const getDescription = () => {
-    return getMockeryDescription(action, username);
+    return getMockeryDescription(action);
   };
   
   // Special styling for special cards

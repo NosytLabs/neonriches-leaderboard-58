@@ -1,93 +1,132 @@
 
-/**
- * Format a number as a dollar amount
- */
-export const formatDollarAmount = (amount: number): string => {
+import { format, formatDistanceToNow, formatRelative } from 'date-fns';
+
+// Date formatting
+export const formatDate = (date: string | Date): string => {
+  if (!date) return 'N/A';
+  const dateObj = typeof date === 'string' ? new Date(date) : date;
+  return format(dateObj, 'MMM d, yyyy');
+};
+
+export const formatTime = (date: string | Date): string => {
+  if (!date) return 'N/A';
+  const dateObj = typeof date === 'string' ? new Date(date) : date;
+  return format(dateObj, 'h:mm a');
+};
+
+export const formatDateTime = (date: string | Date): string => {
+  if (!date) return 'N/A';
+  const dateObj = typeof date === 'string' ? new Date(date) : date;
+  return format(dateObj, 'MMM d, yyyy h:mm a');
+};
+
+export const formatTimeAgo = (date: string | Date): string => {
+  if (!date) return 'N/A';
+  const dateObj = typeof date === 'string' ? new Date(date) : date;
+  return formatDistanceToNow(dateObj, { addSuffix: true });
+};
+
+export const formatRelativeTime = (date: string | Date): string => {
+  if (!date) return 'N/A';
+  const dateObj = typeof date === 'string' ? new Date(date) : date;
+  return formatRelative(dateObj, new Date());
+};
+
+// Currency formatting
+export const formatCurrency = (amount: number): string => {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
-    maximumFractionDigits: 0
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
   }).format(amount);
 };
 
-/**
- * Format currency amount with more flexibility
- */
-export const formatCurrency = (
-  amount: number, 
-  currency: string = 'USD', 
-  locale: string = 'en-US', 
-  maximumFractionDigits: number = 0
-): string => {
-  return new Intl.NumberFormat(locale, {
-    style: 'currency',
-    currency: currency,
-    maximumFractionDigits: maximumFractionDigits
-  }).format(amount);
+// Percentage formatting
+export const formatPercentage = (value: number): string => {
+  return `${(value * 100).toFixed(2)}%`;
 };
 
-/**
- * Format a date in a readable format
- */
-export const formatDate = (date: Date | string): string => {
-  if (typeof date === 'string') {
-    date = new Date(date);
-  }
+// Address formatting (for wallet addresses)
+export const formatAddress = (address: string, length = 6): string => {
+  if (!address) return '';
+  if (address.length <= length * 2) return address;
+  return `${address.substring(0, length)}...${address.substring(address.length - length)}`;
+};
+
+// File size formatting
+export const formatFileSize = (bytes: number): string => {
+  if (bytes === 0) return '0 Bytes';
   
-  return new Intl.DateTimeFormat('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  }).format(date);
+  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(1024));
+  
+  return `${parseFloat((bytes / Math.pow(1024, i)).toFixed(2))} ${sizes[i]}`;
 };
 
-/**
- * Format a number with commas
- */
-export const formatNumber = (num: number): string => {
-  return new Intl.NumberFormat('en-US').format(num);
+// Historical value formatting
+export const formatHistoricalValue = (value: number, year?: number): string => {
+  return `${formatCurrency(value)}${year ? ` (${year})` : ''}`;
 };
 
-/**
- * Format a rank with a prefix
- */
-export const formatRank = (rank: number): string => {
-  if (rank === 1) return '1st';
-  if (rank === 2) return '2nd';
-  if (rank === 3) return '3rd';
-  return `${rank}th`;
+// Achievement icon mapping
+export const getAchievementIcon = (achievementType: string): string => {
+  const iconMap: Record<string, string> = {
+    'spending': '💰',
+    'milestone': '🏆',
+    'streak': '🔥',
+    'royal': '👑',
+    'referral': '👥',
+    'special': '⭐',
+    'event': '🎭',
+    'contribution': '🤝'
+  };
+  
+  return iconMap[achievementType.toLowerCase()] || '🎯';
 };
 
-/**
- * Format a time duration in a human-readable way
- */
-export const formatDuration = (milliseconds: number): string => {
-  const seconds = Math.floor(milliseconds / 1000);
-  const minutes = Math.floor(seconds / 60);
-  const hours = Math.floor(minutes / 60);
-  const days = Math.floor(hours / 24);
-
-  if (days > 0) {
-    return `${days} day${days > 1 ? 's' : ''}`;
-  } else if (hours > 0) {
-    return `${hours} hour${hours > 1 ? 's' : ''}`;
-  } else if (minutes > 0) {
-    return `${minutes} minute${minutes > 1 ? 's' : ''}`;
-  } else {
-    return `${seconds} second${seconds !== 1 ? 's' : ''}`;
+// Team color mapping
+export const getTeamColor = (team: string | null): string => {
+  switch (team?.toLowerCase()) {
+    case 'red':
+      return 'text-red-500';
+    case 'green':
+      return 'text-green-500';
+    case 'blue':
+      return 'text-blue-500';
+    default:
+      return 'text-gray-500';
   }
 };
 
-/**
- * Format a time relative to now (e.g. "2 hours ago")
- */
-export const formatTimeAgo = (dateOrTimestamp: Date | string | number): string => {
-  const date = typeof dateOrTimestamp === 'object' 
-    ? dateOrTimestamp 
-    : new Date(dateOrTimestamp);
+// Get mockery action icon color
+export const getMockeryActionIconColor = (action: string): string => {
+  const colorMap: Record<string, string> = {
+    'shame': 'text-red-500',
+    'tomatoes': 'text-red-500',
+    'taunt': 'text-yellow-500',
+    'eggs': 'text-yellow-500',
+    'ridicule': 'text-orange-500',
+    'putridEggs': 'text-orange-500',
+    'jester': 'text-purple-500',
+    'courtJester': 'text-purple-500',
+    'mock': 'text-blue-500',
+    'dunce': 'text-blue-500',
+    'humiliate': 'text-indigo-500',
+    'silence': 'text-indigo-500',
+    'expose': 'text-pink-500',
+    'glitterBomb': 'text-pink-500',
+    'guillotine': 'text-stone-500',
+    'smokeBomb': 'text-stone-500',
+    'dungeons': 'text-slate-500',
+    'defeat': 'text-slate-500',
+    'removal': 'text-amber-500',
+    'challenge': 'text-amber-500',
+    'roast': 'text-rose-500',
+    'royalPie': 'text-royal-crimson',
+    'jokeCrown': 'text-royal-gold',
+    'memeFrame': 'text-royal-purple'
+  };
   
-  const now = new Date();
-  const diff = now.getTime() - date.getTime();
-  
-  return formatDuration(diff) + ' ago';
+  return colorMap[action] || 'text-gray-500';
 };
