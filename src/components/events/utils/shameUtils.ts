@@ -12,7 +12,6 @@ export const MOCKERY_PRICES: Record<MockeryAction, number> = {
   'stocks': 1.25,
   'dunce': 0.5,
   'jester': 1.0,
-  // 'clown': 0.75, // Remove this line as it's causing the error
   'fool': 0.5,
   'troll': 1.0,
   'peasant': 0.5,
@@ -69,7 +68,6 @@ export const MOCKERY_ICONS: Record<MockeryAction, string> = {
   'stocks': '🪵',
   'dunce': '🎭',
   'jester': '🃏',
-  // 'clown': '🤡', // Remove this line as it's causing the error
   'fool': '😵',
   'troll': '👹',
   'peasant': '👨‍🌾',
@@ -92,8 +90,8 @@ export const MOCKERY_ICONS: Record<MockeryAction, string> = {
 };
 
 // Get the icon for a shame action
-export const getShameActionIcon = (action: MockeryAction): JSX.Element => {
-  return <span className="text-lg">{MOCKERY_ICONS[action] || '🎭'}</span>;
+export const getShameActionIcon = (action: MockeryAction): string => {
+  return MOCKERY_ICONS[action] || '🎭';
 };
 
 // Get the icon name for a shame action
@@ -112,7 +110,6 @@ export const MOCKERY_TITLES: Record<MockeryAction, string> = {
   'stocks': 'In Stocks',
   'dunce': 'Dunce Cap',
   'jester': 'Court Jester',
-  // 'clown': 'Royal Clown', // Remove this line as it's causing the error
   'fool': 'Village Fool',
   'troll': 'Bridge Troll',
   'peasant': 'Lowly Peasant',
@@ -151,7 +148,6 @@ export const getShameActionDescription = (action: MockeryAction, username: strin
     'stocks': `Place ${username} in the stocks for public viewing and ridicule.`,
     'dunce': `Place a dunce cap on ${username}'s head to highlight their folly.`,
     'jester': `Force ${username} to serve as court jester for royal entertainment.`,
-    // 'clown': `Make ${username} perform as the royal clown for all to laugh at.`, // Remove this line as it's causing the error
     'fool': `Proclaim ${username} as the village fool, to be ridiculed by all.`,
     'troll': `Designate ${username} as a bridge troll, collecting tolls from passersby.`,
     'peasant': `Demote ${username} to lowly peasant status, toiling in the royal fields.`,
