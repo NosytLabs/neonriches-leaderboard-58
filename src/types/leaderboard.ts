@@ -1,68 +1,45 @@
 
-import { UserProfile, UserTier, TeamType } from './user';
+import { TeamType } from './team';
 
 export interface LeaderboardUser {
   id: string;
   username: string;
   displayName?: string;
   profileImage?: string;
-  amountSpent: number;
-  totalSpent?: number;
-  totalDeposited?: number;
+  tier: string;
+  team: TeamType;
   rank: number;
   previousRank?: number;
-  team?: TeamType;
-  tier?: UserTier;
+  amountSpent: number;
+  totalSpent?: number;
   joinDate?: string;
-  createdAt?: string;
-  gender?: string;
+  isVIP?: boolean;
   avatarUrl?: string;
+  totalDeposited?: number;
 }
+
+export type LeaderboardSortOption = 
+  | "rank"
+  | "amountSpent"
+  | "totalSpent"
+  | "joinDate"
+  | "username";
+
+export type LeaderboardSortDirection = "asc" | "desc";
+
+export type LeaderboardTimeFrame = 
+  | "all" 
+  | "today" 
+  | "week" 
+  | "month" 
+  | "year";
 
 export interface LeaderboardFilter {
-  timespan: string;
-  timeFrame?: string;
-  sortBy?: string;
-  sortDirection?: 'asc' | 'desc';
-  team?: string;
-  limit?: number;
+  timeFrame: string;
+  timespan: string; // Added this required property
+  sortBy: string;
+  sortDirection: LeaderboardSortDirection;
+  team?: TeamType;
 }
 
-export interface LeaderboardStats {
-  topSpender: LeaderboardUser | null;
-  totalUsers: number;
-  totalSpent: number;
-  averageSpent: number;
-}
-
-export interface TeamLeaderboardStats {
-  red: {
-    totalSpent: number;
-    memberCount: number;
-    topSpender: LeaderboardUser | null;
-  };
-  green: {
-    totalSpent: number;
-    memberCount: number;
-    topSpender: LeaderboardUser | null;
-  };
-  blue: {
-    totalSpent: number;
-    memberCount: number;
-    topSpender: LeaderboardUser | null;
-  };
-}
-
-export interface OnChainLeaderboardEntry {
-  pubkey: string;
-  amount: number;
-  timestamp: number;
-  userId?: string;
-  username?: string;
-  publicKey?: string;
-  amountSpent?: number;
-  totalDeposited?: number;
-  rank?: number;
-  joinDate?: number;
-  totalSpent?: number;
-}
+export type LeaderboardEntry = LeaderboardUser;

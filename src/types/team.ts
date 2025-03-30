@@ -1,2 +1,31 @@
 
-export type Team = 'red' | 'green' | 'blue' | null;
+// Team-related types
+export type TeamColor = "red" | "green" | "blue" | "gold" | "silver" | "bronze";
+
+export type TeamType = 
+  | "red" 
+  | "green" 
+  | "blue" 
+  | "gold" 
+  | "silver" 
+  | "bronze"
+  | "Red"
+  | "Green"
+  | "Blue"
+  | "none";
+
+export type TeamBenefit = {
+  id: string;
+  title: string;
+  description: string;
+  team: TeamType;
+};
+
+export type Team = {
+  id: TeamType;
+  name: string;
+  color: string;
+  description: string;
+  members: number;
+  benefits: TeamBenefit[];
+};

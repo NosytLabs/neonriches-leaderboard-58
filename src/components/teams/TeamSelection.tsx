@@ -1,7 +1,63 @@
 import React, { useState } from 'react';
+import { motion } from 'framer-motion';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { UserProfile } from '@/types/user';
-import { Shield } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Flame, Coins, CreditCard, Scroll } from 'lucide-react';
+import { useAuth } from '@/hooks/useAuth';
+import { useToast } from '@/hooks/use-toast';
+import { useResponsive } from '@/hooks/use-responsive';
+import { RandomAbsurdFact } from '@/components/ui/random-absurd-fact';
+import { TeamColor } from '@/types/team';
+
+const getTeamMotto = (team: string) => {
+  switch (team) {
+    case 'red':
+      return "Glory through Spending!";
+    case 'green':
+      return "Wealth is Power!";
+    case 'blue':
+      return "Strategic Extravagance!";
+    default:
+      return "Choose your path to glory!";
+  }
+};
+
+const getTeamBenefit = (team: string, index: number) => {
+  const benefits = {
+    red: [
+      "20% bonus on direct deposits",
+      "Exclusive crimson profile frames",
+      "Access to special fire-themed effects"
+    ],
+    green: [
+      "15% discount on profile boosts",
+      "Nature-themed custom emojis",
+      "Emerald crown cosmetic item"
+    ],
+    blue: [
+      "5% royalty on team member spending",
+      "Sapphire profile decorations",
+      "Water-themed animation effects"
+    ]
+  };
+  
+  return benefits[team as keyof typeof benefits]?.[index] || "Unknown benefit";
+};
+
+const getTeamAbsurdStat = (team: string) => {
+  switch (team) {
+    case 'red':
+      return "Has collectively spent enough to buy 14,287 royal crowns";
+    case 'green':
+      return "Members have sacrificed the equivalent of 8,942 luxury vacations";
+    case 'blue':
+      return "Could have purchased 3 small islands with their combined spending";
+    default:
+      return "Teams have wasted enough money to fund a small nation";
+  }
+};
 
 export type TeamColor = 'red' | 'green' | 'blue';
 

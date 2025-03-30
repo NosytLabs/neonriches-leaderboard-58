@@ -1,39 +1,76 @@
 
-import { CSSProperties } from 'react';
+import React, { CSSProperties } from 'react';
 import { LucideProps } from 'lucide-react';
 
-export type IconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
-export type IconColor = 'default' | 'primary' | 'secondary' | 'accent' | 'warning' | 'danger' | 'success' | 'info' | 'royal' | 'gold';
-export type IconStyle = 'default' | 'outline' | 'solid' | 'medieval';
-export type IconAnimation = 'none' | 'spin' | 'pulse' | 'bounce' | 'shake';
+// Define possible icon colors
+export type IconColor = 
+  | "default"
+  | "primary" 
+  | "secondary"
+  | "accent"
+  | "white"
+  | "black"
+  | "gold"
+  | "red"
+  | "green"
+  | "blue"
+  | "yellow"
+  | "gray"
+  | "silver"
+  | "bronze"
+  | "crimson"
+  | "navy"
+  | "purple"
+  | "muted"
+  | "emerald";
 
-export interface BaseIconProps {
-  name: string;
+// Define possible icon sizes
+export type IconSize = 
+  | "xs"
+  | "sm"
+  | "md"
+  | "lg"
+  | "xl"
+  | "2xl"
+  | number;
+
+// Define possible icon styles
+export type IconStyle = "default" | "medieval";
+
+// Prop interface for icons
+export interface IconProps extends Omit<LucideProps, "color"> {
+  name?: string;
   size?: IconSize;
   color?: IconColor;
-  className?: string;
   style?: IconStyle | CSSProperties;
-  animation?: IconAnimation;
-}
-
-export interface IconProps extends Omit<LucideProps, 'color'> {
-  size?: IconSize;
-  color?: IconColor;
-  style?: IconStyle | CSSProperties;
+  variant?: string;
   animate?: boolean;
-  animated?: boolean;
+  className?: string;
 }
+
+export type IconComponent = React.ComponentType<IconProps>;
+
+// Medieval icon specific types
+export type MedievalIconName = string;
+export type MedievalIconColor = 
+  | "gold" 
+  | "primary" 
+  | "secondary" 
+  | "white" 
+  | "black"
+  | "silver"
+  | "bronze"
+  | "crimson"
+  | "navy"
+  | "purple"
+  | "emerald";
+
+export type MedievalIconSize = "xs" | "sm" | "md" | "lg" | "xl" | "2xl" | number;
 
 export interface MedievalIconProps {
-  name: string;
-  size?: IconSize;
-  color?: IconColor;
+  name: MedievalIconName;
+  color?: MedievalIconColor;
+  size?: MedievalIconSize;
   className?: string;
   animate?: boolean;
-}
-
-export interface AnimatedIconProps extends IconProps {
-  animation: IconAnimation;
-  duration?: number;
-  iterationCount?: number | 'infinite';
 }
