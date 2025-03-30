@@ -1,3 +1,4 @@
+
 import React from 'react';
 import HeroShowcase from '@/components/home/HeroShowcase';
 import { UserProfile } from '@/types/user';

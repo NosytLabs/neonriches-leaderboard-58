@@ -9,7 +9,8 @@ export type RoyalDividerVariant =
   | 'ornate' 
   | 'simple' 
   | 'treasure' 
-  | 'quill';
+  | 'quill'
+  | 'crown';
 
 export type RoyalDividerColor = 
   | 'default' 
@@ -53,6 +54,7 @@ const RoyalDivider: React.FC<RoyalDividerProps> = ({
       case 'simple': return 'h-[1px] bg-current opacity-40';
       case 'treasure': return 'h-[2px] bg-gradient-to-r from-royal-gold/20 via-royal-gold to-royal-gold/20 border-t border-royal-gold/40';
       case 'quill': return 'h-[1px] bg-gradient-to-r from-royal-purple/20 via-royal-purple to-royal-purple/20';
+      case 'crown': return 'h-[2px] bg-gradient-to-r from-royal-gold/30 via-royal-gold to-royal-gold/30 border-dashed border-t border-royal-gold/50';
       default: return 'h-[1px] bg-current opacity-40';
     }
   };

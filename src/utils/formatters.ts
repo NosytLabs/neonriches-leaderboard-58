@@ -1,144 +1,158 @@
 
 /**
- * Common formatting utilities for displaying values in a consistent way
+ * Utility functions for formatting different types of data
  */
 
-// Format a date to a readable string
-export const formatDate = (date: string | Date, options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'short', day: 'numeric' }): string => {
+/**
+ * Format a date to a human-readable string
+ * @param date Date to format
+ * @param options Formatting options
+ * @returns Formatted date string
+ */
+export function formatDate(date: string | Date, options: Intl.DateTimeFormatOptions = { 
+  year: 'numeric', 
+  month: 'long', 
+  day: 'numeric' 
+}): string {
   if (!date) return 'N/A';
+  
   const dateObj = typeof date === 'string' ? new Date(date) : date;
+  
+  // Handle invalid dates
+  if (isNaN(dateObj.getTime())) return 'Invalid Date';
+  
   return new Intl.DateTimeFormat('en-US', options).format(dateObj);
-};
+}
 
-// Format a number as currency
-export const formatCurrency = (amount: number): string => {
-  if (amount === undefined || amount === null) return '$0.00';
+/**
+ * Format a dollar amount with currency symbol
+ * @param amount Amount to format
+ * @param options Formatting options
+ * @returns Formatted currency string
+ */
+export function formatCurrency(amount: number, currency: string = 'USD', minimumFractionDigits: number = 2): string {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2
+    currency,
+    minimumFractionDigits,
+    maximumFractionDigits: minimumFractionDigits
   }).format(amount);
-};
+}
 
-// Format a dollar amount with larger values using K/M/B suffixes
-export const formatDollarAmount = (amount: number): string => {
-  if (amount === undefined || amount === null) return '$0';
-  
-  const formatter = new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0
-  });
-  
-  if (amount >= 1000000000) {
-    return formatter.format(amount / 1000000000) + 'B';
-  } else if (amount >= 1000000) {
-    return formatter.format(amount / 1000000) + 'M';
-  } else if (amount >= 1000) {
-    return formatter.format(amount / 1000) + 'K';
-  } else {
-    return formatter.format(amount);
-  }
-};
+/**
+ * Format a dollar amount with currency symbol
+ * @param amount Amount to format
+ * @returns Formatted dollar string
+ */
+export function formatDollarAmount(amount: number): string {
+  return formatCurrency(amount);
+}
 
-// Format a number with commas
-export const formatNumber = (num: number): string => {
-  if (num === undefined || num === null) return '0';
-  return new Intl.NumberFormat('en-US').format(num);
-};
+/**
+ * Format a number with thousands separators
+ * @param num Number to format
+ * @param minimumFractionDigits Minimum fraction digits
+ * @returns Formatted number string
+ */
+export function formatNumber(num: number, minimumFractionDigits: number = 0): string {
+  return new Intl.NumberFormat('en-US', {
+    minimumFractionDigits,
+    maximumFractionDigits: 2
+  }).format(num);
+}
 
-// Format a number as a percentage
-export const formatPercentage = (value: number, decimals = 1): string => {
-  if (value === undefined || value === null) return '0%';
+/**
+ * Format a percentage value
+ * @param value Value to format as percentage
+ * @param decimals Number of decimal places
+ * @returns Formatted percentage string
+ */
+export function formatPercentage(value: number, decimals: number = 2): string {
   return new Intl.NumberFormat('en-US', {
     style: 'percent',
     minimumFractionDigits: decimals,
     maximumFractionDigits: decimals
   }).format(value / 100);
-};
+}
 
-// Format a blockchain address to shortened form
-export const formatAddress = (address: string): string => {
-  if (!address) return '';
-  if (address.length < 10) return address;
-  return `${address.slice(0, 6)}...${address.slice(-4)}`;
-};
+/**
+ * Format an address with optional line breaks
+ * @param address Address components
+ * @returns Formatted address string
+ */
+export function formatAddress(address: {
+  street?: string;
+  city?: string;
+  state?: string;
+  zipCode?: string;
+  country?: string;
+}, useLineBreaks: boolean = false): string {
+  const parts = [
+    address.street,
+    address.city,
+    [address.state, address.zipCode].filter(Boolean).join(' '),
+    address.country
+  ].filter(Boolean);
+  
+  return useLineBreaks ? parts.join('\n') : parts.join(', ');
+}
 
-// Format value in historical context with fake "old money" terminology
-export const formatHistoricalValue = (value: number, era: string = 'medieval', currency: string = 'gold'): string => {
-  if (!value) return '0 pieces';
+/**
+ * Format a historical value with percentage change
+ * @param current Current value
+ * @param previous Previous value
+ * @returns Formatted historical value string
+ */
+export function formatHistoricalValue(current: number, previous: number): string {
+  const percentChange = previous ? ((current - previous) / previous) * 100 : 0;
+  const direction = percentChange >= 0 ? '↑' : '↓';
   
-  let prefix = '';
-  let suffix = '';
-  
-  switch (era) {
-    case 'medieval':
-      prefix = value >= 1000 ? 'A king\'s ransom of ' : value >= 100 ? 'A lord\'s fortune of ' : '';
-      suffix = value === 1 ? ' piece of ' + currency : ' pieces of ' + currency;
-      break;
-    case 'renaissance':
-      prefix = value >= 1000 ? 'A merchant prince\'s treasury of ' : value >= 100 ? 'A guild master\'s chest of ' : '';
-      suffix = ' ' + currency + ' coins';
-      break;
-    case 'victorian':
-      prefix = value >= 1000 ? 'An aristocrat\'s wealth of ' : value >= 100 ? 'A gentleman\'s purse of ' : '';
-      suffix = ' ' + currency + ' sovereigns';
-      break;
-    default:
-      suffix = ' ' + currency;
-  }
-  
-  return `${prefix}${formatNumber(value)}${suffix}`;
-};
+  return `${formatCurrency(current)} ${direction} ${Math.abs(percentChange).toFixed(1)}%`;
+}
 
-// Format a date as relative time (e.g., "2 hours ago")
-export const formatTimeAgo = (date: string | Date): string => {
-  if (!date) return '';
-  
+/**
+ * Format a timestamp as a relative time string
+ * @param date Date to format
+ * @returns Relative time string
+ */
+export function formatTimeAgo(date: string | Date): string {
+  const dateObj = typeof date === 'string' ? new Date(date) : date;
   const now = new Date();
-  const pastDate = typeof date === 'string' ? new Date(date) : date;
-  const seconds = Math.floor((now.getTime() - pastDate.getTime()) / 1000);
+  const seconds = Math.floor((now.getTime() - dateObj.getTime()) / 1000);
   
-  // Time periods in seconds
-  const minute = 60;
-  const hour = minute * 60;
-  const day = hour * 24;
-  const week = day * 7;
-  const month = day * 30;
-  const year = day * 365;
+  // Time intervals in seconds
+  const intervals = {
+    year: 31536000,
+    month: 2592000,
+    week: 604800,
+    day: 86400,
+    hour: 3600,
+    minute: 60,
+    second: 1
+  };
   
-  if (seconds < minute) {
-    return seconds === 1 ? '1 second ago' : `${seconds} seconds ago`;
-  } else if (seconds < hour) {
-    const minutes = Math.floor(seconds / minute);
-    return minutes === 1 ? '1 minute ago' : `${minutes} minutes ago`;
-  } else if (seconds < day) {
-    const hours = Math.floor(seconds / hour);
-    return hours === 1 ? '1 hour ago' : `${hours} hours ago`;
-  } else if (seconds < week) {
-    const days = Math.floor(seconds / day);
-    return days === 1 ? '1 day ago' : `${days} days ago`;
-  } else if (seconds < month) {
-    const weeks = Math.floor(seconds / week);
-    return weeks === 1 ? '1 week ago' : `${weeks} weeks ago`;
-  } else if (seconds < year) {
-    const months = Math.floor(seconds / month);
-    return months === 1 ? '1 month ago' : `${months} months ago`;
-  } else {
-    const years = Math.floor(seconds / year);
-    return years === 1 ? '1 year ago' : `${years} years ago`;
+  let counter;
+  for (const [unit, secondsInUnit] of Object.entries(intervals)) {
+    counter = Math.floor(seconds / secondsInUnit);
+    if (counter > 0) {
+      return `${counter} ${unit}${counter === 1 ? '' : 's'} ago`;
+    }
   }
-};
+  
+  return 'just now';
+}
 
-// Format file size in bytes to human-readable format
-export const formatFileSize = (bytes: number): string => {
+/**
+ * Format file size with appropriate units
+ * @param bytes Size in bytes
+ * @returns Formatted file size string
+ */
+export function formatFileSize(bytes: number): string {
   if (bytes === 0) return '0 Bytes';
-
+  
   const k = 1024;
-  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
   const i = Math.floor(Math.log(bytes) / Math.log(k));
-
+  
   return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-};
+}
