@@ -1,27 +1,17 @@
+import { SocialLink } from './social-links';
 
 export type CosmeticCategory = 
-  | 'border'
-  | 'color'
-  | 'font'
-  | 'emoji'
-  | 'title'
-  | 'background'
-  | 'effect'
-  | 'theme'
+  | 'border' 
+  | 'color' 
+  | 'font' 
+  | 'emoji' 
+  | 'title' 
+  | 'background' 
+  | 'effect' 
   | 'badge'
-  // For backward compatibility
-  | 'borders'
-  | 'colors'
-  | 'fonts'
-  | 'emojis'
-  | 'titles'
-  | 'backgrounds'
-  | 'effects'
-  | 'badges'
-  | 'themes'
-  // Additional categories
-  | 'appearance'
+  | 'theme'
   | 'profile'
+  | 'appearance'
   | 'interaction';
 
 export type CosmeticRarity = 
@@ -38,23 +28,31 @@ export interface CosmeticItem {
   id: string;
   name: string;
   description: string;
+  type?: string;
   price: number;
   category: CosmeticCategory;
-  rarity: CosmeticRarity | string;
-  type?: string;
-  isUnlocked?: boolean;
+  rarity: CosmeticRarity;
+  cssClass?: string;
+  isLocked?: boolean;
   image?: string;
   imageUrl?: string;
-  cssClass?: string;
-  cost?: number; // Adding cost as an optional property
+  imageSrc?: string;
+  cost?: number; // Alternative to price for compatibility
 }
 
-export type CosmeticType = CosmeticCategory;
-export type UserCosmeticItem = CosmeticItem;
-export type UserCosmetics = UserCosmeticState;
-
 export interface UserCosmeticState {
-  // Active properties
+  // Collections of unlocked items
+  unlockedBorders: string[];
+  unlockedColors: string[];
+  unlockedFonts: string[];
+  unlockedEmojis: string[];
+  unlockedTitles: string[];
+  unlockedBackgrounds: string[];
+  unlockedEffects: string[];
+  unlockedBadges: string[];
+  unlockedThemes: string[];
+  
+  // Currently active items
   activeBorder?: string;
   activeColor?: string;
   activeFont?: string;
@@ -65,17 +63,7 @@ export interface UserCosmeticState {
   activeEffect?: string;
   activeTheme?: string;
   
-  // Unlocked collections - new format
-  unlockedBorders: string[];
-  unlockedColors: string[];
-  unlockedFonts: string[];
-  unlockedEmojis: string[];
-  unlockedTitles: string[];
-  unlockedBadges: string[];
-  unlockedBackgrounds: string[];
-  unlockedEffects: string[];
-  
-  // Legacy compatibility properties
+  // Legacy/compatibility properties
   borders?: string[];
   colors?: string[];
   fonts?: string[];
@@ -85,51 +73,41 @@ export interface UserCosmeticState {
   effects?: string[];
   badges?: string[];
   themes?: string[];
+  
+  // Feature flags
   foundersPass?: boolean;
+  
+  // Other optional properties
   socialLinks?: SocialLink[];
 }
 
-export type CosmeticPlacement = "profile" | "leaderboard" | "chat" | "global";
+export interface CosmeticSet {
+  id: string;
+  name: string;
+  items: CosmeticItem[];
+  price: number;
+  discount?: number;
+  rarity: CosmeticRarity;
+}
 
-// Helper functions for cosmetic rarity
-export const getRarityColor = (rarity: CosmeticRarity | string): string => {
-  switch (rarity) {
-    case 'common': return 'text-gray-400';
-    case 'uncommon': return 'text-green-400';
-    case 'rare': return 'text-blue-400';
-    case 'epic': return 'text-purple-400';
-    case 'legendary': return 'text-royal-gold';
-    case 'royal': return 'text-amber-300';
-    case 'mythic': return 'text-pink-400';
-    case 'unique': return 'text-teal-400';
-    default: return 'text-gray-400';
-  }
-};
+export interface CosmeticShopItem extends CosmeticItem {
+  isOwned: boolean;
+  isFeatured?: boolean;
+  onSale?: boolean;
+  salePrice?: number;
+  saleEnds?: string;
+}
 
-export const getRarityBgColor = (rarity: CosmeticRarity | string): string => {
-  switch (rarity) {
-    case 'common': return 'bg-gray-600/20';
-    case 'uncommon': return 'bg-green-600/20';
-    case 'rare': return 'bg-blue-600/20';
-    case 'epic': return 'bg-purple-600/20';
-    case 'legendary': return 'bg-amber-600/20';
-    case 'royal': return 'bg-amber-500/20';
-    case 'mythic': return 'bg-pink-600/20';
-    case 'unique': return 'bg-teal-600/20';
-    default: return 'bg-gray-600/20';
-  }
-};
-
-export const getRarityBorderColor = (rarity: CosmeticRarity | string): string => {
-  switch (rarity) {
-    case 'common': return 'border-gray-500/50';
-    case 'uncommon': return 'border-green-500/50';
-    case 'rare': return 'border-blue-500/50';
-    case 'epic': return 'border-purple-500/50';
-    case 'legendary': return 'border-amber-500/50';
-    case 'royal': return 'border-amber-400/50';
-    case 'mythic': return 'border-pink-500/50';
-    case 'unique': return 'border-teal-500/50';
-    default: return 'border-gray-500/50';
-  }
-};
+export interface CosmeticShopState {
+  featured: CosmeticShopItem[];
+  borders: CosmeticShopItem[];
+  colors: CosmeticShopItem[];
+  fonts: CosmeticShopItem[];
+  emojis: CosmeticShopItem[];
+  titles: CosmeticShopItem[];
+  backgrounds: CosmeticShopItem[];
+  effects: CosmeticShopItem[];
+  badges: CosmeticShopItem[];
+  themes: CosmeticShopItem[];
+  sets: CosmeticSet[];
+}

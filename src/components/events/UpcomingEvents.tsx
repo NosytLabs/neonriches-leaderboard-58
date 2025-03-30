@@ -1,57 +1,94 @@
 
 import React, { useState } from 'react';
-import { Dialog } from '@/components/ui/dialog';
-import { upcomingEvents } from './data';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { CalendarDays, ChevronRight, Info } from 'lucide-react';
+import { formatDate } from '@/utils/dates';
+import { EventDetails, Event } from '@/types/events';
 import EventDetailsModal from './components/EventDetailsModal';
-import EventCard from './EventCard';
-import { daysUntil } from '@/utils/dateUtils';
-import { Event } from '@/types/events';
+import { events, eventDetails } from './data';
 
-const UpcomingEvents = () => {
-  const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
-  
-  const handleEventClick = (eventId: string) => {
-    setSelectedEventId(eventId);
+const UpcomingEvents: React.FC = () => {
+  const [selectedEvent, setSelectedEvent] = useState<EventDetails | null>(null);
+  const upcomingEvents = events.filter(event => event.status === 'upcoming');
+
+  const handleOpenDetails = (eventId: string) => {
+    const details = eventDetails.find(ed => ed.eventId === eventId);
+    const event = events.find(e => e.id === eventId);
+    
+    if (details) {
+      setSelectedEvent({
+        ...details,
+        id: eventId,
+        title: event?.title || details.title,
+        name: event?.name || details.title,
+        description: event?.description || details.description,
+        image: event?.image || details.image,
+        startDate: event?.startDate || '',
+        endDate: event?.endDate || '',
+        type: event?.type || 'special',
+        status: event?.status || 'upcoming'
+      });
+    }
   };
-  
-  const handleCloseModal = () => {
-    setSelectedEventId(null);
+
+  const handleCloseDetails = () => {
+    setSelectedEvent(null);
   };
-  
-  // Sort events by start date
-  const sortedEvents = [...upcomingEvents].sort((a, b) => {
-    return daysUntil(a.startDate) - daysUntil(b.startDate);
-  });
-  
+
   return (
-    <div className="space-y-6">
-      <h2 className="text-2xl font-bold royal-gradient">Upcoming Royal Events</h2>
+    <div className="space-y-4">
+      <h2 className="text-xl font-bold mb-4">Upcoming Events</h2>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {sortedEvents.map((event) => (
-          <EventCard
-            key={event.id}
-            event={event as Event}
-            onClick={() => handleEventClick(event.id)}
-            className="animate-fade-in"
-          />
-        ))}
-        
-        {sortedEvents.length === 0 && (
-          <div className="col-span-full text-center p-8 glass-morphism border-white/10 rounded-lg">
-            <p className="text-white/70">No upcoming events at this time. Check back soon for more royal gatherings!</p>
-          </div>
-        )}
-      </div>
+      {upcomingEvents.length === 0 ? (
+        <Card className="glass-morphism border-white/10">
+          <CardContent className="pt-6">
+            <p className="text-center text-white/70">No upcoming events at the moment.</p>
+          </CardContent>
+        </Card>
+      ) : (
+        upcomingEvents.map(event => (
+          <Card key={event.id} className="glass-morphism border-white/10 hover:border-white/20 transition-all">
+            <CardHeader className="pb-2">
+              <div className="flex justify-between items-start">
+                <div>
+                  <CardTitle className="text-lg">{event.title}</CardTitle>
+                  <CardDescription>{event.description}</CardDescription>
+                </div>
+                <Badge variant="outline" className="bg-purple-500/30 border-purple-500/30 text-white">
+                  {event.type.toUpperCase()}
+                </Badge>
+              </div>
+            </CardHeader>
+            
+            <CardContent>
+              <div className="flex items-center text-sm text-white/70 mb-4">
+                <CalendarDays className="mr-2 h-4 w-4" />
+                <span>{formatDate(event.startDate)} - {formatDate(event.endDate)}</span>
+              </div>
+              
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="w-full glass-morphism border-white/10"
+                onClick={() => handleOpenDetails(event.id)}
+              >
+                <Info className="mr-2 h-4 w-4" />
+                View Details
+                <ChevronRight className="ml-auto h-4 w-4" />
+              </Button>
+            </CardContent>
+          </Card>
+        ))
+      )}
       
-      <Dialog open={!!selectedEventId} onOpenChange={() => setSelectedEventId(null)}>
-        {selectedEventId && (
-          <EventDetailsModal 
-            eventId={selectedEventId} 
-            onClose={handleCloseModal} 
-          />
-        )}
-      </Dialog>
+      {selectedEvent && (
+        <EventDetailsModal 
+          event={selectedEvent}
+          onClose={handleCloseDetails}
+        />
+      )}
     </div>
   );
 };

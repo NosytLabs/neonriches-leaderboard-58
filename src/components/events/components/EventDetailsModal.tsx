@@ -1,117 +1,157 @@
 
 import React from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { EventDetails } from '@/types/events';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import { Event, EventDetails } from '@/types/events';
 import { Badge } from '@/components/ui/badge';
-import { Calendar, Trophy, Users, Info, Clock } from 'lucide-react';
-import { format } from 'date-fns';
+import { CalendarDays, Timer, Gift, Trophy, Info, Check, Target } from 'lucide-react';
+import { formatDate } from '@/utils/dates';
 
-interface EventDetailsModalProps {
-  event: EventDetails;
-  isOpen: boolean;
+export interface EventDetailsModalProps {
+  event: EventDetails | Event;
   onClose: () => void;
+  isOpen?: boolean;
 }
 
-const EventDetailsModal = ({ event, isOpen, onClose }: EventDetailsModalProps) => {
-  // If image is not defined, use imageUrl
-  const imageSource = event.image || event.imageUrl;
-  // If name is not defined, use title
-  const eventName = event.name || event.title;
-
-  const formatDate = (dateStr: string) => {
-    try {
-      return format(new Date(dateStr), 'MMMM d, yyyy');
-    } catch (e) {
-      return dateStr;
-    }
-  };
+const EventDetailsModal: React.FC<EventDetailsModalProps> = ({
+  event,
+  onClose,
+  isOpen = true
+}) => {
+  const formattedStartDate = event.startDate ? formatDate(event.startDate) : '-';
+  const formattedEndDate = event.endDate ? formatDate(event.endDate) : '-';
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-3xl">
+    <Dialog open={isOpen} onOpenChange={() => onClose()}>
+      <DialogContent className="glass-morphism border-white/10 max-w-3xl max-h-[85vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="text-xl">{eventName}</DialogTitle>
+          <div className="flex justify-between items-center">
+            <DialogTitle className="text-2xl font-royal">{event.title || event.name}</DialogTitle>
+            <Badge 
+              variant="outline" 
+              className="bg-purple-500/30 text-white border-purple-500/30"
+            >
+              {event.type?.toUpperCase()}
+            </Badge>
+          </div>
+          <DialogDescription className="text-white/70">
+            {event.description}
+          </DialogDescription>
         </DialogHeader>
-        
+
         <div className="mt-4">
-          {imageSource && (
+          {event.image && (
             <div className="mb-6 rounded-lg overflow-hidden">
-              <img src={imageSource} alt={eventName} className="w-full h-48 object-cover" />
+              <img 
+                src={event.image} 
+                alt={event.title || event.name} 
+                className="w-full h-auto object-cover"
+              />
             </div>
           )}
-          
-          <div className="space-y-4">
-            <div>
-              <h3 className="font-semibold text-lg mb-2">About</h3>
-              <p className="text-gray-700 dark:text-gray-300">{event.description}</p>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <div className="flex items-center space-x-2">
+              <CalendarDays className="h-5 w-5 text-royal-gold" />
+              <span className="text-white/70">Start: {formattedStartDate}</span>
             </div>
-            
-            <div className="flex justify-between flex-wrap gap-2">
-              <div className="flex items-center gap-2">
-                <Calendar className="w-4 h-4" />
-                <span>Starts: {formatDate(event.startDate)}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Calendar className="w-4 h-4" />
-                <span>Ends: {formatDate(event.endDate)}</span>
-              </div>
+            <div className="flex items-center space-x-2">
+              <Timer className="h-5 w-5 text-royal-gold" />
+              <span className="text-white/70">End: {formattedEndDate}</span>
             </div>
-            
-            <div className="flex justify-between flex-wrap gap-2">
-              <div className="flex items-center gap-2">
-                <Users className="w-4 h-4" />
-                <span>Participants: {event.participants} / {event.maxParticipants}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Badge variant="outline">{event.status}</Badge>
-                <Badge>{event.type}</Badge>
-              </div>
-            </div>
-            
-            {event.rewardTypes && event.rewardTypes.length > 0 && (
-              <div>
-                <h3 className="font-semibold text-lg mb-2 flex items-center gap-2">
-                  <Trophy className="w-4 h-4" /> Rewards
-                </h3>
-                <div className="flex flex-wrap gap-2">
-                  {event.rewardTypes.map((reward, idx) => (
-                    <Badge key={idx} variant="secondary">{reward}</Badge>
-                  ))}
-                </div>
-              </div>
-            )}
-            
-            {event.eligibility && (
-              <div>
-                <h3 className="font-semibold text-lg mb-2 flex items-center gap-2">
-                  <Info className="w-4 h-4" /> Eligibility
-                </h3>
-                <p className="text-gray-700 dark:text-gray-300">{event.eligibility}</p>
-              </div>
-            )}
-            
-            {event.participationRequirements && event.participationRequirements.length > 0 && (
-              <div>
-                <h3 className="font-semibold text-lg mb-2">Requirements</h3>
-                <ul className="list-disc list-inside">
-                  {event.participationRequirements.map((req, idx) => (
-                    <li key={idx}>{req}</li>
-                  ))}
-                </ul>
-              </div>
-            )}
-            
-            {event.specialRules && event.specialRules.length > 0 && (
-              <div>
-                <h3 className="font-semibold text-lg mb-2">Special Rules</h3>
-                <ul className="list-disc list-inside">
-                  {event.specialRules.map((rule, idx) => (
-                    <li key={idx}>{rule}</li>
-                  ))}
-                </ul>
-              </div>
-            )}
           </div>
+
+          {'longDescription' in event && event.longDescription && (
+            <div className="mb-6">
+              <h3 className="text-lg font-semibold mb-2">Description</h3>
+              <p className="text-white/70 whitespace-pre-line">{event.longDescription}</p>
+            </div>
+          )}
+
+          {'rules' in event && event.rules && event.rules.length > 0 && (
+            <div className="mb-6">
+              <h3 className="text-lg font-semibold mb-2 flex items-center">
+                <Info className="h-5 w-5 mr-2 text-royal-gold" />
+                Rules
+              </h3>
+              <ul className="list-disc pl-5 space-y-1 text-white/70">
+                {event.rules.map((rule, index) => (
+                  <li key={`rule-${index}`}>{rule}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {'rewards' in event && event.rewards && event.rewards.length > 0 && (
+            <div className="mb-6">
+              <h3 className="text-lg font-semibold mb-2 flex items-center">
+                <Gift className="h-5 w-5 mr-2 text-royal-gold" />
+                Rewards
+              </h3>
+              <ul className="list-disc pl-5 space-y-1 text-white/70">
+                {event.rewards.map((reward, index) => (
+                  <li key={`reward-${index}`}>{reward}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {'rewardTypes' in event && event.rewardTypes && event.rewardTypes.length > 0 && (
+            <div className="mb-6">
+              <h3 className="text-lg font-semibold mb-2 flex items-center">
+                <Trophy className="h-5 w-5 mr-2 text-royal-gold" />
+                Reward Types
+              </h3>
+              <div className="flex flex-wrap gap-2">
+                {event.rewardTypes.map((type, index) => (
+                  <Badge key={`type-${index}`} variant="outline" className="bg-royal-gold/20 border-royal-gold/30">
+                    {type}
+                  </Badge>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {'eligibility' in event && event.eligibility && event.eligibility.length > 0 && (
+            <div className="mb-6">
+              <h3 className="text-lg font-semibold mb-2 flex items-center">
+                <Check className="h-5 w-5 mr-2 text-royal-gold" />
+                Eligibility
+              </h3>
+              <ul className="list-disc pl-5 space-y-1 text-white/70">
+                {event.eligibility.map((item, index) => (
+                  <li key={`eligibility-${index}`}>{item}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {'participationRequirements' in event && event.participationRequirements && event.participationRequirements.length > 0 && (
+            <div className="mb-6">
+              <h3 className="text-lg font-semibold mb-2 flex items-center">
+                <Target className="h-5 w-5 mr-2 text-royal-gold" />
+                Participation Requirements
+              </h3>
+              <ul className="list-disc pl-5 space-y-1 text-white/70">
+                {event.participationRequirements.map((req, index) => (
+                  <li key={`req-${index}`}>{req}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {'specialRules' in event && event.specialRules && event.specialRules.length > 0 && (
+            <div className="mb-6">
+              <h3 className="text-lg font-semibold mb-2 flex items-center">
+                <Info className="h-5 w-5 mr-2 text-royal-gold" />
+                Special Rules
+              </h3>
+              <ul className="list-disc pl-5 space-y-1 text-white/70">
+                {event.specialRules.map((rule, index) => (
+                  <li key={`special-${index}`}>{rule}</li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
       </DialogContent>
     </Dialog>

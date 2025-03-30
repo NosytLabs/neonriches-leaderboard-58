@@ -1,4 +1,4 @@
-import { Event, EventDetails, EventStats, EventType, EventStatus } from '@/types/events';
+import { Event, EventType, EventStatus, EventDetails, EventStats } from '@/types/events';
 
 // Mock user data for shame targets
 export const topUsers = [
@@ -168,3 +168,54 @@ export const currentEvent: Event = {
   createdAt: new Date().toISOString(),
   updatedAt: new Date().toISOString()
 };
+
+export const eventStats: EventStats[] = [
+  {
+    id: "stats1",
+    eventId: "event1",
+    participantsCount: 253,
+    totalSpent: 25678,
+    totalPrizes: 10000,
+    averageSpent: 101.49,
+    prizePool: 15000,
+    totalPokes: 1256,
+    mostPoked: [
+      {
+        username: "spendaholic123",
+        pokeCount: 156
+      },
+      {
+        username: "royalBurner",
+        pokeCount: 129
+      },
+      {
+        username: "eliteSpender",
+        pokeCount: 98
+      }
+    ]
+  },
+  {
+    id: "stats2",
+    eventId: "event2",
+    participantsCount: 187,
+    totalSpent: 19850,
+    totalPrizes: 7500,
+    averageSpent: 106.15,
+    prizePool: 12000,
+    totalPokes: 876,
+    mostPoked: [
+      {
+        username: "kingSpender",
+        pokeCount: 112
+      },
+      {
+        username: "moneyBurner",
+        pokeCount: 95
+      },
+      {
+        username: "wealthyUser",
+        pokeCount: 81
+      }
+    ]
+  }
+];

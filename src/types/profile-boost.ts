@@ -35,6 +35,7 @@ export interface ProfileBoost {
   isActive: boolean;
   tier?: BoostTier;
   strength?: BoostStrength;
+  level?: string; // Added for compatibility
 }
 
 export interface ProfileBoostData {
@@ -50,3 +51,5 @@ export interface ProfileBoostData {
   icon: string;
   previewImage?: string;
 }
+
+export type { ProfileBoost, BoostEffect, BoostEffectType, BoostStrength, BoostTier, ProfileBoostData };

@@ -17,7 +17,9 @@ export type CertificateStyle =
   | 'royal' 
   | 'gothic' 
   | 'elegant'
-  | 'basic';
+  | 'basic'
+  | 'fantasy'
+  | 'minimalist';
 
 export type CertificateTeam = TeamType;
 
@@ -35,20 +37,13 @@ export interface Certificate {
   title?: string;
   description?: string;
   style?: CertificateStyle;
-}
-
-export interface CertificateTemplate {
-  id: string;
-  name: string;
-  type: CertificateType;
-  style: CertificateStyle;
-  team: CertificateTeam;
-  imageUrl: string;
-  previewUrl?: string;
-  description: string;
-  requiresFounder?: boolean;
-  availableForTier?: string[];
-  availableForRank?: number[];
+  // New properties
+  createdAt?: string;
+  isMinted?: boolean;
+  mintedAt?: string;
+  mintAddress?: string;
+  shareUrl?: string;
+  updatedAt?: string;
 }
 
 export interface RankCertificateMetadata {
@@ -68,8 +63,21 @@ export interface CertificateRepository {
   createCertificate: (certificate: Certificate) => Promise<Certificate>;
   updateCertificate: (certificate: Certificate) => Promise<boolean>;
   deleteCertificate: (id: string) => Promise<boolean>;
-  getCertificatesByType?: (type: CertificateType) => Promise<Certificate[]>;
   getMintedCertificatesForUser?: (userId: string) => Promise<Certificate[]>;
+}
+
+export interface CertificateTemplate {
+  id: string;
+  name: string;
+  type: CertificateType;
+  style: CertificateStyle;
+  team: CertificateTeam;
+  imageUrl: string;
+  previewUrl?: string;
+  description: string;
+  requiresFounder?: boolean;
+  availableForTier?: string[];
+  availableForRank?: number[];
 }
 
 export interface CertificateTemplateFactory {
@@ -77,5 +85,15 @@ export interface CertificateTemplateFactory {
   getTemplateById: (id: string) => CertificateTemplate | null;
   getAllTemplates: () => CertificateTemplate[];
   getTemplatesByType: (type: CertificateType) => CertificateTemplate[];
-  getTemplatesForUser?: (userId: string, user: any) => CertificateTemplate[];
+  getTemplatesForUser?: (user: any) => Promise<CertificateTemplate[]>;
+}
+
+export interface CertificateWithUser extends Certificate {
+  user: {
+    id: string;
+    username: string;
+    displayName?: string;
+    tier?: UserTier;
+    team?: TeamType;
+  };
 }

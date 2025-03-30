@@ -20,3 +20,6 @@ export interface SocialLink {
   label?: string;
   id?: string;
 }
+
+// Export these types
+export type { SocialPlatform, SocialLink };

@@ -68,4 +68,8 @@ export interface UserSettings {
   newFollowerAlerts?: boolean;
   publicProfile?: boolean;
   teamChangeAlerts?: boolean;
+  spendingAlerts?: boolean; // Alternative to spendAlerts for compatibility
 }
+
+// Export all types using export type to avoid isolatedModules error
+export type { UserRole, UserStatus, UserTier, UserGender, UserTeam };

@@ -31,3 +31,5 @@ export type Team = {
   members: number;
   benefits: TeamBenefit[];
 };
+
+export type { TeamType, TeamColor, UserTeam, Team };

@@ -30,3 +30,5 @@ export interface FeatureAccess {
   getMarketingFeaturePriceId: (feature: Feature) => string;
   purchaseFeatureIndividually: (feature: Feature) => Promise<any>;
 }
+
+export type { Feature, FeatureAccess };

@@ -1,20 +1,9 @@
 
-import { UserTier } from './user-types';
+import { UserTier, UserTeam, UserSettings } from './user-types';
 import { TeamType } from './team';
-import { SocialLink, SocialPlatform } from './social-links';
+import { SocialLink } from './social-links';
 import { UserCosmeticState } from './cosmetics';
-
-// ProfileBoost type
-export interface ProfileBoost {
-  id: string;
-  userId: string;
-  effectId: string;
-  startDate: string;
-  endDate: string;
-  isActive: boolean;
-  tier?: string;
-  strength?: string;
-}
+import { ProfileBoost } from './profile-boost';
 
 // Certificate type
 export interface CertificateNFT {
@@ -81,6 +70,7 @@ export interface UserProfile {
   profileViews?: number;
   profileClicks?: number;
   profileImages?: ProfileImage[];
+  isOnline?: boolean;
 }
 
 // Profile Image type
@@ -104,3 +94,6 @@ export type UserCosmetics = UserCosmeticState;
 
 // Alias for User to maintain backward compatibility
 export type User = UserProfile;
+
+// Export using export type to fix isolation module errors
+export type { UserProfile, ProfileImage, ProfileLink, UserCosmetics, User };
