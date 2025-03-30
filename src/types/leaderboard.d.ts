@@ -13,27 +13,27 @@ export interface LeaderboardUser {
   walletBalance?: number;
   totalSpent: number;
   spentAmount?: number;
-  amountSpent?: number; // Add missing property
+  amountSpent?: number;
   supporters?: number;
   supporting?: number;
   isVIP?: boolean;
   isFounder?: boolean;
   isVerified?: boolean;
-  isProtected?: boolean; // Add missing property
-  avatarUrl?: string; // Add missing property
+  isProtected?: boolean;
+  avatarUrl?: string;
   lastActive?: string;
   createdAt?: string;
 }
 
 export interface LeaderboardFilter {
-  timeFrame?: 'allTime' | 'thisWeek' | 'thisMonth' | 'today'; // Add missing property
+  timeFrame?: 'allTime' | 'thisWeek' | 'thisMonth' | 'today';
   team: TeamColor | 'all';
   tier: UserTier | 'all';
   count: number;
   page: number;
-  sortBy?: 'rank' | 'username' | 'totalSpent' | 'team'; // Add missing property
-  sortDirection?: 'asc' | 'desc'; // Add missing property
-  timespan?: string; // Additional property from errors
+  sortBy?: 'rank' | 'username' | 'totalSpent' | 'team';
+  sortDirection?: 'asc' | 'desc';
+  timespan?: string;
 }
 
 export interface LeaderboardStats {
@@ -57,7 +57,7 @@ export interface OnChainLeaderboardEntry {
   userId: string;
   amount: number;
   timestamp: number;
-  username?: string; // Add missing property
+  username?: string;
   publicKey?: string;
   amountSpent?: number;
   totalDeposited?: number;

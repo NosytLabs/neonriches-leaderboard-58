@@ -17,14 +17,14 @@ export interface CosmeticItem {
   type: string;
   rarity: string;
   category: CosmeticCategory;
-  imageSrc?: string; // Add missing property
+  imageSrc?: string;
+  image?: string;
   icon?: string;
   cssClass?: string;
   preview?: string;
   unlockCondition?: string;
-  cost?: number; // Add missing property
+  cost?: number;
   tags?: string[];
-  image?: string; // Add missing property
 }
 
 export interface UserCosmeticState {

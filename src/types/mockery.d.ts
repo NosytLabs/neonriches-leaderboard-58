@@ -39,7 +39,12 @@ export type MockeryTier =
   | 'premium' 
   | 'royal' 
   | 'legendary'
-  | 'silver'; // Add missing tier
+  | 'silver'
+  | 'common'
+  | 'uncommon'
+  | 'rare'
+  | 'epic'
+  | 'bronze';
 
 export interface MockeryInfo {
   icon: string;
@@ -50,13 +55,13 @@ export interface MockeryInfo {
   duration: number;
 }
 
-export type ShameEffect = {
+export interface ShameEffect {
   action: MockeryAction;
   duration: number;
   appliedAt: number;
   appliedBy: string;
   isActive: boolean;
-};
+}
 
 export interface ShameEffectOptions {
   duration?: number;
@@ -67,12 +72,16 @@ export interface MockeryEvent {
   id: string;
   action: MockeryAction;
   targetId: string;
+  targetUsername?: string;
+  targetName?: string;
   appliedBy: string;
   appliedAt: number;
   duration: number;
   isActive: boolean;
   expiresAt: number;
-  targetName?: string; // Add missing property
+  tier?: MockeryTier;
+  sourceId?: string;
+  sourceName?: string;
 }
 
 export interface MockedUser {
@@ -81,11 +90,11 @@ export interface MockedUser {
   username: string;
   displayName: string;
   profileImage: string;
-  tier?: UserTier;
+  tier: string;
   team?: TeamColor;
   mockeryCount: number;
   lastMocked?: string;
-  mockedReason?: string; // Make optional
+  mockedReason?: string;
   mockedTimestamp?: string;
   mockedBy?: string;
   mockedTier?: MockeryTier;

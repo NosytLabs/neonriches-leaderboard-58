@@ -4,7 +4,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { MockeryAction, ShameAction } from '@/types/mockery';
-import { getShameActionIcon, getShameActionTitle, getShameActionPrice, getShameActionDescription } from '@/components/events/utils/shameUtils';
+import { getShameActionIcon, getShameActionPrice, getShameActionTitle, getShameActionDescription } from '@/components/events/utils/shameUtils';
 import { ArrowRight } from 'lucide-react';
 import { getTeamColor } from '@/utils/teamUtils';
 import RoyalButton from '@/components/ui/royal-button';
