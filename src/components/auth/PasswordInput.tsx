@@ -3,55 +3,46 @@ import React, { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Eye, EyeOff } from 'lucide-react';
 
-interface PasswordInputProps {
-  id: string;
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onFocus?: () => void;
+export interface PasswordInputProps {
   placeholder?: string;
-  hasError?: boolean;
-  isValid?: boolean;
-  disabled?: boolean;
-  required?: boolean; // Added the required prop
+  value?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  name?: string;
+  id?: string;
+  className?: string;
+  [x: string]: any; // Allow any other props
 }
 
-const PasswordInput = ({
-  id,
-  value,
-  onChange,
-  onFocus,
-  placeholder = "••••••••",
-  hasError = false,
-  isValid = false,
-  disabled = false,
-  required = false, // Set default value
-}: PasswordInputProps) => {
+const PasswordInput: React.FC<PasswordInputProps> = ({ 
+  placeholder = "Password",
+  className = "",
+  ...props
+}) => {
   const [showPassword, setShowPassword] = useState(false);
 
-  const togglePasswordVisibility = () => setShowPassword(!showPassword);
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
 
   return (
     <div className="relative">
-      <Input 
-        id={id} 
-        type={showPassword ? "text" : "password"} 
-        placeholder={placeholder} 
-        value={value}
-        onChange={onChange}
-        onFocus={onFocus}
-        className={`glass-morphism border-white/10 pl-10 pr-10 transition-all ${
-          hasError ? 'border-destructive' : isValid ? 'border-green-500' : ''
-        }`}
-        disabled={disabled}
-        required={required}
+      <Input
+        type={showPassword ? "text" : "password"}
+        placeholder={placeholder}
+        className={`pr-10 ${className}`}
+        {...props}
       />
-      <button 
-        type="button" 
+      <button
+        type="button"
         onClick={togglePasswordVisibility}
-        className="absolute right-3 top-3 text-white/40 hover:text-white transition-colors"
-        disabled={disabled}
+        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-500"
+        tabIndex={-1}
       >
-        {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+        {showPassword ? (
+          <EyeOff className="h-4 w-4" />
+        ) : (
+          <Eye className="h-4 w-4" />
+        )}
       </button>
     </div>
   );
