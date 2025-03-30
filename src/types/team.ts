@@ -30,3 +30,6 @@ export interface TeamBenefit {
   minTeamSize: number;
   discount: number;
 }
+
+// Define a type for the team string values used in the TeamChat component
+export type TeamString = 'red' | 'green' | 'blue' | 'top';

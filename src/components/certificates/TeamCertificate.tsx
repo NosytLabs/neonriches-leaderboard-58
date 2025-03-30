@@ -1,3 +1,4 @@
+
 import React, { useRef, useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
@@ -252,7 +253,7 @@ const TeamCertificate: React.FC<TeamCertificateProps> = ({
               </div>
               <div className="border rounded p-3">
                 <div className="text-sm text-gray-600">Joined</div>
-                <div className="text-sm font-medium">{formatDate(user.joinDate !== undefined ? user.joinDate : new Date())}</div>
+                <div className="text-sm font-medium">{formatDate(user.joinDate || '')}</div>
               </div>
             </div>
             

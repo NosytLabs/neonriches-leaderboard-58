@@ -2,7 +2,19 @@
 import React from 'react';
 import { IconProps, IconSize } from '@/types/ui/icon-types';
 import * as LucideIcons from 'lucide-react';
-import { adaptIconName } from '@/utils/iconNameAdapter';
+
+// Helper function to adapt icon names to match the Lucide icon names
+export const adaptIconName = (name: string): string => {
+  if (!name) return '';
+  
+  // Convert kebab case or snake case to camel case
+  const camelCase = name.replace(/(-|_)([a-z])/g, (_, __, char) => char.toUpperCase());
+  
+  // Convert first character to uppercase
+  const pascalCase = camelCase.charAt(0).toUpperCase() + camelCase.slice(1);
+  
+  return pascalCase;
+};
 
 const IconSystem = React.forwardRef<SVGSVGElement, IconProps>((props, ref) => {
   const sizeMap: Record<string, number> = {
@@ -18,6 +30,7 @@ const IconSystem = React.forwardRef<SVGSVGElement, IconProps>((props, ref) => {
   
   const {
     name,
+    type,
     size = 'md',
     color = 'currentColor',
     className = '',
@@ -31,20 +44,21 @@ const IconSystem = React.forwardRef<SVGSVGElement, IconProps>((props, ref) => {
     : (typeof size === 'number' ? size : 24);
   
   // Adapt the icon name to a format that Lucide can use
-  const adaptedName = adaptIconName(name || '');
+  const iconName = name || type || '';
+  const adaptedName = adaptIconName(iconName);
   
   // Get the Lucide icon component if it exists
-  const LucideIcon = adaptedName && adaptedName in LucideIcons 
-    ? LucideIcons[adaptedName as keyof typeof LucideIcons] 
+  const LucideIconComponent = adaptedName && adaptedName in LucideIcons 
+    ? (LucideIcons as any)[adaptedName] 
     : null;
   
-  if (!LucideIcon) {
-    console.warn(`Icon "${name}" not found`);
+  if (!LucideIconComponent) {
+    console.warn(`Icon "${name || type}" not found`);
     return null;
   }
   
   return (
-    <LucideIcon
+    <LucideIconComponent
       ref={ref}
       size={pixelSize}
       color={color}

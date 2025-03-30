@@ -43,14 +43,15 @@ export type IconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' 
 
 export interface IconProps extends Omit<LucideProps, "color"> {
   type?: IconType;
+  name?: string;
   style?: IconStyle | string;
   size?: IconSize;
   color?: string;
   secondaryColor?: string;
   className?: string;
+  animate?: boolean;
 }
 
 export type MedievalIconName = string;
 export type IconColor = string;
 export type MedievalIconColor = string;
-

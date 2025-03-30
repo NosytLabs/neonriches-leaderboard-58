@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -5,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { User, MessageSquare, Send, ChevronRight, Users, Shield, Crown } from 'lucide-react';
-import { UserTeam } from '@/types/team';
+import { TeamColor, TeamString } from '@/types/team';
 import { UserProfile } from '@/types/user';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useToast } from '@/hooks/use-toast';
@@ -19,7 +20,7 @@ interface ChatMessage {
   username: string;
   displayName?: string;
   profileImage?: string;
-  team: UserTeam | null;
+  team: TeamColor | null;
   timestamp: string;
   isSystem?: boolean;
 }
@@ -30,16 +31,16 @@ interface TeamChatProps {
 }
 
 const TeamChat: React.FC<TeamChatProps> = ({ user, limit = 50 }) => {
-  const [activeTab, setActiveTab] = useState<string>(user?.team || 'red');
+  const [activeTab, setActiveTab] = useState<TeamString>(user?.team as TeamString || 'red');
   const [message, setMessage] = useState('');
-  const [messages, setMessages] = useState<Record<string, ChatMessage[]>>({
+  const [messages, setMessages] = useState<Record<TeamString, ChatMessage[]>>({
     red: [],
     green: [],
     blue: [],
     top: []
   });
   const [isLoading, setIsLoading] = useState(false);
-  const [onlineUsers, setOnlineUsers] = useState<Record<string, number>>({
+  const [onlineUsers, setOnlineUsers] = useState<Record<TeamString, number>>({
     red: 0,
     green: 0,
     blue: 0,
@@ -52,7 +53,7 @@ const TeamChat: React.FC<TeamChatProps> = ({ user, limit = 50 }) => {
   const { playSound } = useNotificationSounds();
   
   useEffect(() => {
-    const mockMessages: Record<string, ChatMessage[]> = {
+    const mockMessages: Record<TeamString, ChatMessage[]> = {
       red: [
         {
           id: 'r1',
@@ -200,7 +201,7 @@ const TeamChat: React.FC<TeamChatProps> = ({ user, limit = 50 }) => {
         username: user.username,
         displayName: user.displayName || user.username,
         profileImage: user.profileImage,
-        team: user.team && ['red', 'green', 'blue'].includes(user.team) ? user.team as UserTeam : null,
+        team: user.team && ['red', 'green', 'blue'].includes(user.team) ? user.team as TeamColor : null,
         timestamp: new Date().toISOString()
       };
       
@@ -226,7 +227,7 @@ const TeamChat: React.FC<TeamChatProps> = ({ user, limit = 50 }) => {
     return format(new Date(timestamp), 'h:mm a');
   };
   
-  const canAccessChannel = (channel: string) => {
+  const canAccessChannel = (channel: TeamString) => {
     if (channel === 'top') {
       return isUserInTop50();
     }
@@ -239,7 +240,7 @@ const TeamChat: React.FC<TeamChatProps> = ({ user, limit = 50 }) => {
     return false;
   };
   
-  const handleTabChange = (value: string) => {
+  const handleTabChange = (value: TeamString) => {
     if (value === 'top' && !isUserInTop50()) {
       toast({
         title: "Access Restricted",
@@ -262,7 +263,7 @@ const TeamChat: React.FC<TeamChatProps> = ({ user, limit = 50 }) => {
     playSound('click');
   };
   
-  const getTeamColor = (team: UserTeam | null) => {
+  const getTeamColor = (team: TeamColor | null) => {
     switch (team) {
       case 'red': return 'text-royal-crimson';
       case 'green': return 'text-royal-gold';
@@ -271,7 +272,7 @@ const TeamChat: React.FC<TeamChatProps> = ({ user, limit = 50 }) => {
     }
   };
   
-  const getTeamBadge = (team: UserTeam | null) => {
+  const getTeamBadge = (team: TeamColor | null) => {
     switch (team) {
       case 'red': return <Shield className="h-3 w-3 text-royal-crimson" />;
       case 'green': return <Shield className="h-3 w-3 text-royal-gold" />;
@@ -296,7 +297,7 @@ const TeamChat: React.FC<TeamChatProps> = ({ user, limit = 50 }) => {
       setIsJoined(true);
       setIsLoading(false);
       
-      const userTeam = user.team && ['red', 'green', 'blue'].includes(user.team) ? user.team as UserTeam : null;
+      const userTeam = user.team && ['red', 'green', 'blue'].includes(user.team) ? user.team as TeamColor : null;
       
       const joinMessage: ChatMessage = {
         id: `join-${Date.now()}`,
@@ -394,9 +395,9 @@ const TeamChat: React.FC<TeamChatProps> = ({ user, limit = 50 }) => {
           <TabsContent key={team} value={team} className="m-0">
             <div className="h-80 flex flex-col">
               <ScrollArea className="flex-1 p-4">
-                {messages[team].length > 0 ? (
+                {messages[team as TeamString].length > 0 ? (
                   <div className="space-y-4">
-                    {messages[team].map((msg) => (
+                    {messages[team as TeamString].map((msg) => (
                       <div 
                         key={msg.id} 
                         className={`flex ${msg.userId === user.id ? 'justify-end' : 'justify-start'}`}
@@ -440,7 +441,7 @@ const TeamChat: React.FC<TeamChatProps> = ({ user, limit = 50 }) => {
                         {msg.userId === user.id && !msg.isSystem && (
                           <Avatar className="h-8 w-8 ml-2">
                             <AvatarImage src={user.profileImage} alt={user.displayName || user.username} />
-                            <AvatarFallback className={getTeamColor(user.team as UserTeam)}>
+                            <AvatarFallback className={getTeamColor(user.team as TeamColor)}>
                               {(user.displayName || user.username).charAt(0).toUpperCase()}
                             </AvatarFallback>
                           </Avatar>

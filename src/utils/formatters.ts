@@ -92,4 +92,3 @@ export const formatHistoricalValue = (value: number, year: number): number => {
 export const getAchievementIcon = (type: string) => {
   return null; // Placeholder - this will need to be properly implemented with icons
 };
-
