@@ -1,104 +1,51 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/auth';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import TeamCertificate from '@/components/certificates/TeamCertificate';
-import CertificateOfNobility from '@/components/certificates/CertificateOfNobility';
 import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
-import { Award, Crown, Medal, Shield, Sword, Scroll } from 'lucide-react';
-import { UserProfile } from '@/types/user';
-import { Certificate, CertificateTemplate } from '@/types/certificates';
-import { getCertificateById, getAvailableCertificateTemplates } from '@/services/certificateService';
-import { useToast } from '@/hooks/use-toast';
+import { Award, Crown, Medal, Shield } from 'lucide-react';
+import CertificateDisplay from '@/components/certificates/CertificateDisplay';
+import { useCertificate } from '@/hooks/useCertificate';
 
 const CertificatePage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const { user } = useAuth();
   const navigate = useNavigate();
-  const { toast } = useToast();
   
-  const [certificate, setCertificate] = useState<Certificate | null>(null);
-  const [templates, setTemplates] = useState<CertificateTemplate[]>([]);
-  const [activeTab, setActiveTab] = useState<string>('team');
-  const [loading, setLoading] = useState<boolean>(true);
+  const [activeTab, setActiveTab] = useState<string>(user?.team || 'default');
   
-  useEffect(() => {
-    const loadData = async () => {
-      setLoading(true);
-      
-      try {
-        // If ID is provided, fetch the specific certificate
-        if (id && id !== 'new') {
-          const cert = await getCertificateById(id);
-          if (cert) {
-            setCertificate(cert);
-          }
-        }
-        
-        // Load available certificate templates
-        if (user) {
-          const availableTemplates = await getAvailableCertificateTemplates(user as UserProfile);
-          setTemplates(availableTemplates);
-          
-          // Set active tab based on user's team
-          if (user.team) {
-            setActiveTab(user.team);
-          }
-        }
-      } catch (error) {
-        console.error('Error loading certificate data:', error);
-        toast({
-          title: 'Error Loading Certificate',
-          description: 'Could not load the certificate data. Please try again.',
-          variant: 'destructive'
-        });
-      } finally {
-        setLoading(false);
-      }
-    };
-    
-    loadData();
-  }, [id, user, toast]);
+  const { 
+    certificate, 
+    templates, 
+    userCertificates, 
+    loading, 
+    isMinting, 
+    mintCertificate, 
+    generateShareableImage 
+  } = useCertificate({ 
+    user: user, 
+    certificateId: id 
+  });
   
-  const handleMintSuccess = (mintAddress: string) => {
-    if (certificate) {
-      setCertificate({
-        ...certificate,
-        isMinted: true,
-        mintAddress,
-        mintedAt: new Date().toISOString()
-      });
-      
-      toast({
-        title: 'NFT Minted Successfully',
-        description: 'Your certificate has been minted as an NFT on the Solana blockchain.',
-      });
+  const handleMint = async (cert) => {
+    return await mintCertificate(cert);
+  };
+  
+  const handleShare = async (cert) => {
+    const imageUrl = await generateShareableImage(cert);
+    if (imageUrl) {
+      // Implementation would depend on how sharing is handled in the app
+      console.log('Share certificate:', imageUrl);
     }
   };
   
-  const handleShare = () => {
-    toast({
-      title: 'Certificate Shared',
-      description: 'Your certificate link has been copied to clipboard.',
-    });
-  };
-  
-  const CertificateIcon = ({ team }: { team?: string }) => {
-    switch (team) {
-      case 'red':
-        return <Crown className="h-5 w-5 text-royal-crimson" />;
-      case 'green':
-        return <Medal className="h-5 w-5 text-royal-gold" />;
-      case 'blue':
-        return <Shield className="h-5 w-5 text-royal-navy" />;
-      default:
-        return <Award className="h-5 w-5" />;
-    }
+  const handleDownload = async (cert) => {
+    // Implementation would depend on how downloading works in the app
+    console.log('Download certificate:', cert);
   };
   
   if (!user) {
@@ -130,88 +77,95 @@ const CertificatePage: React.FC = () => {
           
           <Separator className="my-6" />
           
-          <Tabs defaultValue={activeTab} onValueChange={setActiveTab}>
-            <TabsList className="grid grid-cols-3 mb-8">
-              <TabsTrigger value="red" disabled={!user.team}>
-                <Crown className="h-4 w-4 mr-2 text-royal-crimson" />
-                <span className="hidden sm:inline">Crimson Crown</span>
-              </TabsTrigger>
-              <TabsTrigger value="green" disabled={!user.team}>
-                <Sword className="h-4 w-4 mr-2 text-royal-gold" />
-                <span className="hidden sm:inline">Golden Order</span>
-              </TabsTrigger>
-              <TabsTrigger value="blue" disabled={!user.team}>
-                <Shield className="h-4 w-4 mr-2 text-royal-navy" />
-                <span className="hidden sm:inline">Azure Knights</span>
-              </TabsTrigger>
-            </TabsList>
-            
-            <TabsContent value="red">
-              <TeamCertificate 
-                user={{ ...user as UserProfile, team: 'red' }}
-                certificate={certificate}
-                onMintSuccess={handleMintSuccess}
-                onShare={handleShare}
-              />
-            </TabsContent>
-            
-            <TabsContent value="green">
-              <TeamCertificate 
-                user={{ ...user as UserProfile, team: 'green' }}
-                certificate={certificate}
-                onMintSuccess={handleMintSuccess}
-                onShare={handleShare}
-              />
-            </TabsContent>
-            
-            <TabsContent value="blue">
-              <TeamCertificate 
-                user={{ ...user as UserProfile, team: 'blue' }}
-                certificate={certificate}
-                onMintSuccess={handleMintSuccess}
-                onShare={handleShare}
-              />
-            </TabsContent>
-          </Tabs>
-          
-          <Separator className="my-8" />
-          
-          <h2 className="text-xl font-semibold mb-4">Classic Certificate</h2>
-          <Card className="glass-morphism border-white/10 bg-black/20">
-            <CardContent className="p-6">
-              <CertificateOfNobility 
-                user={user as UserProfile}
-                onVerify={() => {}}
-                onDismiss={() => {}}
-                onDownload={() => {}}
-              />
-            </CardContent>
-          </Card>
-          
-          <Separator className="my-8" />
-          
-          <h2 className="text-xl font-semibold mb-4">Available Certificate Templates</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-            {templates.map((template) => (
-              <Card key={template.id} className="glass-morphism border-white/10">
-                <CardContent className="p-4">
-                  <div className="aspect-video relative overflow-hidden rounded-md mb-2">
-                    <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/50 z-10"></div>
-                    <img 
-                      src={template.previewUrl} 
-                      alt={template.name} 
-                      className="object-cover w-full h-full"
-                    />
-                    <div className="absolute bottom-2 left-2 z-20">
-                      <CertificateIcon team={template.team} />
-                    </div>
+          {loading ? (
+            <div className="py-10 text-center">
+              <p>Loading certificates...</p>
+            </div>
+          ) : (
+            <>
+              {certificate ? (
+                <CertificateDisplay 
+                  certificate={certificate}
+                  user={user}
+                  onMint={handleMint}
+                  onShare={handleShare}
+                  onDownload={handleDownload}
+                  isMinting={isMinting}
+                />
+              ) : (
+                <>
+                  <Tabs defaultValue={activeTab} onValueChange={setActiveTab}>
+                    <TabsList className="grid grid-cols-3 mb-8">
+                      <TabsTrigger value="red" disabled={!user.team}>
+                        <Crown className="h-4 w-4 mr-2 text-royal-crimson" />
+                        <span className="hidden sm:inline">Crimson Crown</span>
+                      </TabsTrigger>
+                      <TabsTrigger value="green" disabled={!user.team}>
+                        <Medal className="h-4 w-4 mr-2 text-royal-gold" />
+                        <span className="hidden sm:inline">Golden Order</span>
+                      </TabsTrigger>
+                      <TabsTrigger value="blue" disabled={!user.team}>
+                        <Shield className="h-4 w-4 mr-2 text-royal-navy" />
+                        <span className="hidden sm:inline">Azure Knights</span>
+                      </TabsTrigger>
+                    </TabsList>
+                    
+                    {['red', 'green', 'blue'].map(team => (
+                      <TabsContent key={team} value={team}>
+                        {userCertificates.filter(cert => cert.team === team).length > 0 ? (
+                          userCertificates
+                            .filter(cert => cert.team === team)
+                            .map(cert => (
+                              <CertificateDisplay 
+                                key={cert.id}
+                                certificate={cert}
+                                user={user}
+                                onMint={handleMint}
+                                onShare={handleShare}
+                                onDownload={handleDownload}
+                                isMinting={isMinting && certificate?.id === cert.id}
+                              />
+                            ))
+                        ) : (
+                          <Card className="glass-morphism border-white/10">
+                            <CardContent className="p-6 text-center">
+                              <Award className="h-10 w-10 text-muted-foreground mx-auto mb-4" />
+                              <h3 className="text-lg font-semibold mb-2">No Certificates Yet</h3>
+                              <p className="text-muted-foreground">
+                                You haven't claimed any certificates for this team.
+                              </p>
+                            </CardContent>
+                          </Card>
+                        )}
+                      </TabsContent>
+                    ))}
+                  </Tabs>
+                
+                  <Separator className="my-8" />
+                  
+                  <h2 className="text-xl font-semibold mb-4">Available Certificate Templates</h2>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+                    {templates.map((template) => (
+                      <Card key={template.id} className="glass-morphism border-white/10">
+                        <CardContent className="p-4">
+                          <div className="aspect-video relative overflow-hidden rounded-md mb-2">
+                            <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/50 z-10"></div>
+                            <img 
+                              src={template.previewUrl} 
+                              alt={template.name} 
+                              className="object-cover w-full h-full"
+                            />
+                          </div>
+                          <h3 className="font-semibold text-sm">{template.name}</h3>
+                          <p className="text-xs text-muted-foreground">{template.description}</p>
+                        </CardContent>
+                      </Card>
+                    ))}
                   </div>
-                  <h3 className="font-semibold text-sm">{template.name}</h3>
-                  <p className="text-xs text-muted-foreground">{template.description}</p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+                </>
+              )}
+            </>
+          )}
         </div>
       </main>
       

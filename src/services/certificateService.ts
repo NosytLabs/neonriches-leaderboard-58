@@ -1,9 +1,13 @@
 
 import { User, UserProfile } from '@/types/user';
-import { Certificate, CertificateType, CertificateTeam } from '@/types/certificates';
+import { Certificate, CertificateType, CertificateTeam, CertificateRepository, CertificateTemplateFactory, CertificateTemplate } from '@/types/certificates';
 import { createCertificateNFT } from '@/services/solanaService';
-import { getTeamName } from '@/utils/teamUtils';
-import { formatDate } from '@/utils/formatters';
+import { createCertificateRepository } from '@/repositories/certificateRepository';
+import { createCertificateTemplateFactory } from '@/factories/certificateTemplateFactory';
+
+// Create instances of repository and factory
+const certificateRepository = createCertificateRepository();
+const templateFactory = createCertificateTemplateFactory();
 
 /**
  * Generates a certificate of nobility for the user
@@ -57,6 +61,17 @@ export const mintCertificateAsNFT = async (
     });
     
     if (result.success) {
+      // Update the certificate with minting information
+      const updatedCertificate = {
+        ...certificate,
+        isMinted: true,
+        mintAddress: result.mintAddress,
+        mintedAt: new Date().toISOString()
+      };
+      
+      // Save the updated certificate
+      await certificateRepository.updateCertificate(updatedCertificate);
+      
       return {
         success: true,
         mintAddress: result.mintAddress
@@ -71,86 +86,28 @@ export const mintCertificateAsNFT = async (
 };
 
 export const getCertificateById = async (certificateId: string): Promise<Certificate | null> => {
-  // This would normally call an API endpoint to get certificate details
-  // For now, we'll just mock the response
-  
-  return {
-    id: certificateId,
-    userId: 'user-123',
-    type: 'nobility',
-    style: 'royal',
-    team: 'red',
-    title: 'Certificate of Digital Nobility',
-    description: 'This certifies that the bearer has attained the rank of nobility through financial contributions.',
-    rank: 42,
-    amountSpent: 5000,
-    imageUrl: '/images/certificates/certificate-template.png',
-    isMinted: false,
-    createdAt: new Date().toISOString(),
-    shareUrl: `/certificates/share/${certificateId}`
-  };
+  return await certificateRepository.getCertificateById(certificateId);
 };
 
 /**
  * Gets available certificate templates for a user
  */
 export const getAvailableCertificateTemplates = async (userProfile: UserProfile): Promise<CertificateTemplate[]> => {
-  // This would normally call an API endpoint to get available templates
-  // For now, we'll just mock the response
-  
-  // Team-specific templates
-  const teamTemplates = userProfile.team ? [
-    {
-      id: `${userProfile.team}-nobility`,
-      name: `${getTeamName(userProfile.team)} Nobility Certificate`,
-      style: 'royal' as const,
-      team: userProfile.team as CertificateTeam,
-      previewUrl: `/images/certificates/${userProfile.team}-certificate.png`,
-      description: `The official certificate of nobility for members of the ${getTeamName(userProfile.team)}.`,
-      availableForTier: ['basic', 'premium', 'royal']
-    }
-  ] : [];
-  
-  // Rank-based templates
-  const rankTemplates = userProfile.rank && userProfile.rank <= 10 ? [
-    {
-      id: 'top-10-rank',
-      name: 'Elite Top 10 Certificate',
-      style: 'fantasy' as const,
-      team: 'none' as CertificateTeam,
-      previewUrl: '/images/certificates/top-rank-certificate.png',
-      description: 'An exclusive certificate reserved for the top 10 nobles of the realm.',
-      availableForRank: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-    }
-  ] : [];
-  
-  // Founder-only templates
-  const founderTemplates = userProfile.cosmetics?.foundersPass ? [
-    {
-      id: 'founders-certificate',
-      name: 'Founder\'s Certificate',
-      style: 'minimalist' as const,
-      team: 'none' as CertificateTeam,
-      previewUrl: '/images/certificates/founder-certificate.png',
-      description: 'The exclusive certificate proving your founding status in the SpendThrone kingdom.',
-      requiresFounder: true
-    }
-  ] : [];
-  
-  // Default template that everyone can access
-  const defaultTemplates = [
-    {
-      id: 'default-certificate',
-      name: 'Standard Certificate of Status',
-      style: 'classic' as const,
-      team: 'none' as CertificateTeam,
-      previewUrl: '/images/certificates/default-certificate.png',
-      description: 'The standard certificate showing your status and rank in the SpendThrone realm.',
-      availableForTier: ['basic', 'premium', 'royal']
-    }
-  ];
-  
-  return [...teamTemplates, ...rankTemplates, ...founderTemplates, ...defaultTemplates];
+  return await templateFactory.getTemplatesForUser(userProfile);
+};
+
+/**
+ * Gets certificates owned by a user
+ */
+export const getUserCertificates = async (userId: string): Promise<Certificate[]> => {
+  return await certificateRepository.getCertificatesForUser(userId);
+};
+
+/**
+ * Gets minted certificates for a user
+ */
+export const getUserMintedCertificates = async (userId: string): Promise<Certificate[]> => {
+  return await certificateRepository.getMintedCertificatesForUser(userId);
 };
 
 /**
@@ -172,5 +129,7 @@ export default {
   getCertificateById,
   mintCertificateAsNFT,
   getAvailableCertificateTemplates,
+  getUserCertificates,
+  getUserMintedCertificates,
   generateShareableImage
 };

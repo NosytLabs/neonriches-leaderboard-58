@@ -39,3 +39,18 @@ export interface UserCertificates {
   mintedCertificates: Certificate[];
   availableTemplates: CertificateTemplate[];
 }
+
+// Repository interfaces
+export interface CertificateRepository {
+  getCertificateById(id: string): Promise<Certificate | null>;
+  getCertificatesForUser(userId: string): Promise<Certificate[]>;
+  getMintedCertificatesForUser(userId: string): Promise<Certificate[]>;
+  saveCertificate(certificate: Certificate): Promise<Certificate>;
+  updateCertificate(certificate: Certificate): Promise<Certificate>;
+}
+
+// Factory interfaces
+export interface CertificateTemplateFactory {
+  getTemplatesForUser(user: UserProfile): Promise<CertificateTemplate[]>;
+  createCertificateFromTemplate(templateId: string, userId: string): Promise<Certificate>;
+}
