@@ -1,9 +1,10 @@
 
 import React from 'react';
-import { Button, ButtonProps } from '@/components/ui/button';
+import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { ButtonProps } from '@/components/ui/button';
 
-interface RoyalButtonProps extends ButtonProps {
+interface RoyalButtonProps extends Omit<ButtonProps, 'variant'> {
   variant?: 'default' | 'gold' | 'purple' | 'crimson' | 'royalGold' | 'glass';
   size?: 'sm' | 'md' | 'lg';
   glow?: boolean;
@@ -45,10 +46,13 @@ const RoyalButton: React.FC<RoyalButtonProps> = ({
 
   const animationClass = animated ? 'animate-pulse' : '';
 
-  const buttonVariant = variant === 'gold' ? 'royalGold' : 
-                         variant === 'purple' ? 'royal' : 
-                         variant === 'crimson' ? 'destructive' :
-                         variant === 'default' ? 'default' : 'ghost';
+  // Map our component variants to the Button component variants
+  const buttonVariant = 
+    variant === 'gold' ? 'gold' : 
+    variant === 'purple' ? 'purple' : 
+    variant === 'crimson' ? 'crimson' :
+    variant === 'royalGold' ? 'royalGold' :
+    variant === 'default' ? 'default' : 'glass';
 
   return (
     <Button
@@ -58,7 +62,7 @@ const RoyalButton: React.FC<RoyalButtonProps> = ({
         animationClass,
         className
       )}
-      variant={buttonVariant}
+      variant={buttonVariant as ButtonProps['variant']}
       {...props}
     >
       {children}

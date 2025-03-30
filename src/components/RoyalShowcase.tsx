@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -29,7 +28,7 @@ const RoyalShowcase: React.FC<RoyalShowcaseProps> = ({ className = '' }) => {
     team: 'red',
     walletBalance: 10000,
     spendStreak: 30,
-    followers: 150
+    followers: 150  // Now this is valid in the UserProfile type
   };
 
   return (

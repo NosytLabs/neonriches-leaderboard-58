@@ -50,6 +50,7 @@ export interface MockeryEvent {
   expiresAt: string;
   active: boolean;
   tier?: MockeryTier;
+  sourceId?: string;
 }
 
 export interface MockedUser {
@@ -78,14 +79,6 @@ export type ShameAction =
   | 'jester';
 
 export type ExtendedMockeryAction = MockeryAction;
-
-export interface ExtendedMockeryTier extends MockeryTier {
-  common: string;
-  uncommon: string;
-  rare: string;
-  epic: string;
-  legendary: string;
-}
 
 export interface MockeryEffectData {
   username: string;

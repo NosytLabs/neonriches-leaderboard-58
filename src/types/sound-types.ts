@@ -29,7 +29,10 @@ export type SoundType =
   | 'scroll'
   | 'potion'
   | 'boost'
-  | 'advertisement';
+  | 'advertisement'
+  | 'parchmentUnfurl'
+  | 'wish'
+  | 'coin';
 
 export interface AudioLoaderReturn {
   play: (sound: SoundType) => void;
@@ -49,4 +52,18 @@ export interface PremiumSoundPackDetails {
   sounds: SoundType[];
   features: string[];
   includes: string[];
+}
+
+export interface UseSoundOptions {
+  volume?: number;
+  loop?: boolean;
+  interrupt?: boolean;
+  onEnd?: () => void;
+}
+
+export interface UseSoundReturn {
+  play: (sound?: SoundType) => void;
+  stop: (sound?: SoundType) => void;
+  isPlaying: boolean;
+  duration: number;
 }

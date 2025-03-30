@@ -23,6 +23,9 @@ const buttonVariants = cva(
         royalGold: "bg-royal-gold text-black hover:bg-royal-gold/90",
         glass: "glass-morphism border-white/10 hover:bg-white/10",
         success: "bg-green-600 text-white hover:bg-green-700",
+        crimson: "bg-royal-crimson hover:bg-royal-crimson/90",
+        gold: "bg-royal-gold text-black hover:bg-royal-gold/90",
+        purple: "bg-royal-purple text-white hover:bg-royal-purple/90",
       },
       size: {
         default: "h-10 px-4 py-2",

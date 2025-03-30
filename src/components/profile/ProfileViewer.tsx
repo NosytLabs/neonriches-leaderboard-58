@@ -1,7 +1,5 @@
-
 import React from 'react';
 import { UserProfile } from '@/types/user';
-import { ProfileData } from './ProfileContent';
 import { Card, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
@@ -9,6 +7,16 @@ import { Calendar, Crown, Eye, Link, Sparkles } from 'lucide-react';
 import ProfileSocialLinks from './ProfileSocialLinks';
 import { cn } from '@/lib/utils';
 import { getTeamColor, getRankTextColorClass } from '@/lib/colors';
+
+// Define ProfileData interface
+export interface ProfileData {
+  bio?: string;
+  images?: { id: string; url: string; caption?: string }[];
+  links?: { id: string | number; url: string; label: string }[];
+  joinDate?: string;
+  lastActive?: string;
+  views?: number;
+}
 
 interface ProfileViewerProps {
   user: UserProfile;
@@ -19,7 +27,6 @@ const ProfileViewer: React.FC<ProfileViewerProps> = ({ user, profileData }) => {
   const { bio, images, links, joinDate, lastActive, views } = profileData;
   
   // Convert ProfileLink[] to SocialLink[] for compatibility with ProfileSocialLinks
-  // Fix: Add the 'label' property to each converted link item
   const convertedLinks = links ? links.map(link => ({
     id: typeof link.id === 'string' ? parseInt(link.id) : link.id,
     url: link.url,
