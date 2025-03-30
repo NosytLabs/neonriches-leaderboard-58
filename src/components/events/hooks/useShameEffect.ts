@@ -1,138 +1,179 @@
-import { useEffect, useState } from 'react';
-import { useAuth } from '@/contexts/AuthContext';
-import { useToast } from '@/hooks/use-toast';
-import useNotificationSounds from '@/hooks/use-notification-sounds';
-import { MockeryAction, MockeryTier } from '@/types/mockery';
-import { ShameAction } from '@/types/mockery';
 
-export interface ShameEffect {
-  action: ShameAction;
-  timestamp: number;
-  until: number;
-}
+import { useState, useEffect, useCallback } from 'react';
+import { AnimationConfig } from '@/types/animations';
+import { useSound } from '@/hooks/sounds/use-sound';
+import { SoundType } from '@/types/sound';
+import { MockeryAction } from '@/types/mockery';
 
-export interface ShameEffectOptions {
-  cooldownPeriod?: number;
-}
+// Define ShameAction type if not exported from mockery
+type ShameAction = 
+  | 'tomatoes'
+  | 'eggs'
+  | 'putridEggs'
+  | 'stocks'
+  | 'dunce'
+  | 'silence'
+  | 'courtJester'
+  | 'shame'
+  | 'protection'
+  | 'taunt'
+  | 'ridicule'
+  | 'jester';
 
-export interface ShameEffectState {
-  shameEffects: Record<number | string, ShameEffect | null>;
-  shameCooldown: Record<number | string, number>;
-  shameCount: Record<number | string, number>;
-  getShameCount: (userId: number | string) => number;
-  handleShame: (userId: number | string, username: string, action: ShameAction, amount: number) => Promise<boolean>;
-  canShameUser: (userId: number | string) => boolean;
-  getUserEffects: (userId: number | string) => ShameEffect[];
-  hasActiveShame: (userId: number | string) => boolean;
-}
+type ShameEffectState = {
+  isActive: boolean;
+  action: ShameAction | null;
+  target: string | null;
+  source: string | null;
+  animationConfig: AnimationConfig | null;
+  duration: number;
+};
 
-export const useShameEffect = (options?: ShameEffectOptions): ShameEffectState => {
-  const { user } = useAuth();
-  const [shameEffects, setShameEffects] = useState<Record<number | string, ShameEffect | null>>({});
-  const [shameCooldown, setShameCooldown] = useState<Record<number | string, number>>({});
-  const [shameCount, setShameCount] = useState<Record<number | string, number>>({});
-  const toast = useToast();
-  const notificationSounds = useNotificationSounds();
+const DEFAULT_DURATION = 8000; // 8 seconds
 
-  const getShameCount = useCallback((userId: number | string) => {
-    return shameCount[userId] || 0;
-  }, [shameCount]);
-
-  const canShameUser = useCallback((userId: number | string) => {
-    if (!user) return false;
-    if (user.id === userId.toString()) return false;
+export const useShameEffect = () => {
+  const [state, setState] = useState<ShameEffectState>({
+    isActive: false,
+    action: null,
+    target: null,
+    source: null,
+    animationConfig: null,
+    duration: DEFAULT_DURATION,
+  });
+  
+  const { playSound, stopSound } = useSound();
+  
+  // Clear the effect after duration
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
     
-    // Check if cooldown is active
-    if (shameCooldown[userId] && shameCooldown[userId] > Date.now()) return false;
-    
-    return true;
-  }, [user, shameCooldown]);
-
-  const getUserEffects = useCallback((userId: number | string) => {
-    return Object.values(shameEffects).filter(effect => 
-      effect && effect.action === 'shame'
-    ) as ShameEffect[];
-  }, [shameEffects]);
-
-  const hasActiveShame = useCallback((userId: number | string) => {
-    const now = Date.now();
-    const effect = shameEffects[userId];
-    return effect !== null && effect !== undefined && effect.until > now;
-  }, [shameEffects]);
-
-  const handleShame = useCallback(async (userId: number | string, username: string, action: ShameAction, amount: number) => {
-    if (!user) {
-      toast.error({
-        title: "Authentication Required",
-        description: "You must be logged in to shame other users"
-      });
-      return false;
+    if (state.isActive) {
+      timer = setTimeout(() => {
+        clearShameEffect();
+      }, state.duration);
     }
     
-    if (!canShameUser(userId)) {
-      toast.error({
-        title: "Cannot Perform Action",
-        description: "You cannot perform this action at this time"
-      });
-      return false;
+    return () => {
+      if (timer) clearTimeout(timer);
+    };
+  }, [state.isActive, state.duration]);
+  
+  // Play sound when effect starts
+  useEffect(() => {
+    if (state.isActive && state.action) {
+      playShameEffectSound(state.action);
     }
     
-    try {
-      // Set cooldown (varies by action type)
-      const cooldownDuration = action === 'protection' ? 86400000 : 3600000; // 24hrs for protection, 1hr for others
-      const effectDuration = action === 'protection' ? 7200000 : 3600000; // 2hrs for protection, 1hr for others
-      
-      setShameCooldown(prev => ({
-        ...prev,
-        [userId]: Date.now() + cooldownDuration
-      }));
-      
-      // Add effect to list
-      const newEffect: ShameEffect = {
-        action,
-        timestamp: Date.now(),
-        until: Date.now() + effectDuration
-      };
-      
-      setShameEffects(prev => ({
-        ...prev,
-        [userId]: newEffect
-      }));
-      
-      setShameCount(prev => ({
-        ...prev,
-        [userId]: (prev[userId] || 0) + 1
-      }));
-      
-      toast.success({
-        title: "Action Successful",
-        description: `The ${action} action has been applied successfully`
-      });
-      
-      notificationSounds.playShameEffectSound();
-      
-      return true;
-    } catch (error) {
-      console.error("Error applying shame effect:", error);
-      toast.error({
-        title: "Action Failed",
-        description: "Failed to apply the action. Please try again."
-      });
-      return false;
+    return () => {
+      // Stop effect sounds on cleanup
+      stopSound();
+    };
+  }, [state.isActive, state.action]);
+  
+  // Show shame effect
+  const showShameEffect = useCallback((action: ShameAction, target: string, source: string, customDuration?: number) => {
+    const config = getAnimationConfig(action);
+    
+    setState({
+      isActive: true,
+      action,
+      target,
+      source,
+      animationConfig: config,
+      duration: customDuration || DEFAULT_DURATION,
+    });
+  }, []);
+  
+  // Clear shame effect
+  const clearShameEffect = useCallback(() => {
+    setState(prev => ({
+      ...prev,
+      isActive: false,
+    }));
+    
+    stopSound();
+  }, [stopSound]);
+  
+  // Get animation config based on action
+  const getAnimationConfig = useCallback((action: ShameAction): AnimationConfig => {
+    switch (action) {
+      case 'tomatoes':
+        return {
+          type: 'particles',
+          particleImage: '/assets/tomato.png',
+          particleCount: 20,
+          duration: 5000,
+        };
+      case 'eggs':
+        return {
+          type: 'particles',
+          particleImage: '/assets/egg.png',
+          particleCount: 15,
+          duration: 4000,
+        };
+      case 'putridEggs':
+        return {
+          type: 'overlay',
+          overlayImage: '/assets/putrid-splash.png',
+          duration: 6000,
+        };
+      case 'stocks':
+        return {
+          type: 'container',
+          containerImage: '/assets/stocks.png',
+          duration: 10000,
+        };
+      case 'dunce':
+        return {
+          type: 'accessory',
+          accessoryImage: '/assets/dunce-hat.png',
+          position: 'top',
+          duration: 8000,
+        };
+      default:
+        return {
+          type: 'particles',
+          particleImage: '/assets/shame.png',
+          particleCount: 10,
+          duration: 4000,
+        };
     }
-  }, [user, canShameUser, toast, notificationSounds]);
-
+  }, []);
+  
+  // Play appropriate sound for the effect
+  const playShameEffectSound = (action: ShameAction) => {
+    switch (action) {
+      case 'tomatoes':
+        playSound('splat');
+        break;
+      case 'eggs':
+        playSound('crack');
+        break;
+      case 'putridEggs':
+        playSound('stink');
+        break;
+      case 'stocks':
+        playSound('lock');
+        break;
+      case 'dunce':
+        playSound('trumpet');
+        break;
+      case 'shame':
+        playSound('shame');
+        break;
+      case 'jester':
+        playSound('jingle');
+        break;
+      default:
+        playSound('notification');
+    }
+  };
+  
   return {
-    shameEffects,
-    shameCooldown,
-    shameCount,
-    getShameCount,
-    handleShame,
-    canShameUser,
-    getUserEffects,
-    hasActiveShame
+    ...state,
+    showShameEffect,
+    clearShameEffect,
   };
 };
 
-export { type ShameAction } from '@/types/mockery';
-export default useShameEffect;
+export type { ShameAction };

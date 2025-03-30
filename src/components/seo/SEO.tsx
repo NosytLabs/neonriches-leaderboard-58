@@ -5,7 +5,7 @@ import { Helmet } from 'react-helmet-async';
 interface SEOProps {
   title: string;
   description?: string;
-  canonicalUrl?: string;
+  canonical?: string;
   ogType?: 'website' | 'article' | 'profile';
   ogImage?: string;
   keywords?: string[];
@@ -15,10 +15,10 @@ interface SEOProps {
 /**
  * SEO component to handle meta tags consistently across the app
  */
-const SEO: React.FC<SEOProps> = ({
+export const SEO: React.FC<SEOProps> = ({
   title,
   description,
-  canonicalUrl,
+  canonical,
   ogType = 'website',
   ogImage = '/og-image.jpg',
   keywords = [],
@@ -38,16 +38,16 @@ const SEO: React.FC<SEOProps> = ({
       )}
       
       {/* Canonical URL */}
-      {canonicalUrl && (
-        <link rel="canonical" href={canonicalUrl} />
+      {canonical && (
+        <link rel="canonical" href={canonical} />
       )}
       
       {/* Open Graph / Facebook */}
       <meta property="og:title" content={fullTitle} />
       <meta property="og:description" content={description || defaultDescription} />
       <meta property="og:type" content={ogType} />
-      {canonicalUrl && (
-        <meta property="og:url" content={canonicalUrl} />
+      {canonical && (
+        <meta property="og:url" content={canonical} />
       )}
       <meta property="og:image" content={ogImage} />
       <meta property="og:site_name" content={siteName} />
@@ -64,4 +64,5 @@ const SEO: React.FC<SEOProps> = ({
   );
 };
 
+// Export as both named and default export for flexibility
 export default SEO;

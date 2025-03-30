@@ -1,88 +1,75 @@
 
-import { useToast as useShadcnToast } from "@/components/ui/use-toast";
-import { type ExtendedToastProps } from "@/types/toast-extended";
+import {
+  Toast,
+  ToastActionElement,
+  ToastProps,
+} from "@/components/ui/toast";
+import { ReactNode } from "react";
 
-export function useToast() {
-  const { toast: baseToast, dismiss, toasts } = useShadcnToast();
+import {
+  useToast as useToastOriginal,
+} from "@/components/ui/use-toast";
+
+type ExtendedToastProps = Omit<ToastProps, 'title' | 'description'> & {
+  title?: ReactNode;
+  description?: ReactNode;
+  variant?: 'default' | 'destructive' | 'success' | 'outline' | 'secondary' | 'royal';
+};
+
+export const useToast = () => {
+  const { toast: originalToast, ...rest } = useToastOriginal();
   
-  // Convert ReactNode to string if needed
-  const ensureString = (value: any): string => {
-    if (value === null || value === undefined) return "";
-    return String(value);
+  // Create wrapped functions for common toast types
+  const toast = (props: ExtendedToastProps) => {
+    return originalToast(props as Toast);
   };
-  
+
+  const success = (props: Omit<ExtendedToastProps, 'variant'>) => {
+    return originalToast({
+      ...props,
+      variant: 'success',
+    } as Toast);
+  };
+
+  const error = (props: Omit<ExtendedToastProps, 'variant'>) => {
+    return originalToast({
+      ...props,
+      variant: 'destructive',
+    } as Toast);
+  };
+
+  const warning = (props: Omit<ExtendedToastProps, 'variant'>) => {
+    return originalToast({
+      ...props,
+      variant: 'outline',
+    } as Toast);
+  };
+
+  const info = (props: Omit<ExtendedToastProps, 'variant'>) => {
+    return originalToast({
+      ...props,
+      variant: 'secondary',
+    } as Toast);
+  };
+
+  const royal = (props: Omit<ExtendedToastProps, 'variant'>) => {
+    return originalToast({
+      ...props,
+      variant: 'royal',
+    } as Toast);
+  };
+
   return {
-    toast: baseToast,
-    dismiss,
-    toasts,
-    default: (props: ExtendedToastProps) => {
-      const title = props.title ? ensureString(props.title) : "";
-      const description = props.description ? ensureString(props.description) : "";
-      
-      return baseToast({ 
-        ...props, 
-        variant: "default",
-        title,
-        description
-      });
-    },
-    success: (props: ExtendedToastProps) => {
-      const title = props.title ? ensureString(props.title) : "";
-      const description = props.description ? ensureString(props.description) : "";
-      
-      return baseToast({ 
-        ...props, 
-        variant: "success",
-        title,
-        description
-      });
-    },
-    error: (props: ExtendedToastProps) => {
-      const title = props.title ? ensureString(props.title) : "";
-      const description = props.description ? ensureString(props.description) : "";
-      
-      return baseToast({ 
-        ...props, 
-        variant: "destructive",
-        title,
-        description
-      });
-    },
-    warning: (props: ExtendedToastProps) => {
-      const title = props.title ? ensureString(props.title) : "";
-      const description = props.description ? ensureString(props.description) : "";
-      
-      return baseToast({ 
-        ...props, 
-        variant: "destructive",
-        title,
-        description
-      });
-    },
-    royal: (props: ExtendedToastProps) => {
-      const title = props.title ? ensureString(props.title) : "";
-      const description = props.description ? ensureString(props.description) : "";
-      
-      return baseToast({ 
-        ...props, 
-        // For now, use default variant since royal isn't available in the component
-        variant: "default",
-        title,
-        description
-      });
-    },
-    loading: (props: ExtendedToastProps) => {
-      const title = props.title ? ensureString(props.title) : "Loading...";
-      const description = props.description ? ensureString(props.description) : "Please wait while we process your request.";
-      
-      return baseToast({
-        ...props,
-        variant: "default",
-        title,
-        description
-      });
-    }
+    ...rest,
+    toast,
+    default: toast,
+    success,
+    error,
+    warning,
+    info,
+    royal
   };
-}
+};
 
-export default useToast;
+export type { ExtendedToastProps };
+export { toast } from "@/components/ui/use-toast";

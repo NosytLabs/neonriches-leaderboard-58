@@ -104,11 +104,4 @@ export interface UserMockeryStatus {
   activeMockeries: MockeryEvent[];
 }
 
-export interface MockUser {
-  id: string;
-  username: string;
-  profileImage?: string;
-  tier?: string;
-  lastMocked?: number;
-  mockeryCount?: number;
-}
+export type MockUser = MockedUser;
