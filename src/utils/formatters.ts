@@ -1,83 +1,87 @@
 
-// General formatting utilities
+// Utility functions for formatting values
 
-import { TeamType } from '@/types/user';
-
-// Format a timestamp as a relative time
-export const formatTimeAgo = (timestamp: string | number | Date): string => {
-  if (!timestamp) return '';
-  
-  const date = new Date(timestamp);
-  const now = new Date();
-  const seconds = Math.floor((now.getTime() - date.getTime()) / 1000);
-  
-  if (seconds < 60) {
-    return `${seconds} second${seconds !== 1 ? 's' : ''} ago`;
-  }
-  
-  const minutes = Math.floor(seconds / 60);
-  if (minutes < 60) {
-    return `${minutes} minute${minutes !== 1 ? 's' : ''} ago`;
-  }
-  
-  const hours = Math.floor(minutes / 60);
-  if (hours < 24) {
-    return `${hours} hour${hours !== 1 ? 's' : ''} ago`;
-  }
-  
-  const days = Math.floor(hours / 24);
-  if (days < 30) {
-    return `${days} day${days !== 1 ? 's' : ''} ago`;
-  }
-  
-  const months = Math.floor(days / 30);
-  if (months < 12) {
-    return `${months} month${months !== 1 ? 's' : ''} ago`;
-  }
-  
-  const years = Math.floor(months / 12);
-  return `${years} year${years !== 1 ? 's' : ''} ago`;
-};
-
-// Format date in a readable format
-export const formatDate = (date: string | number | Date): string => {
+// Format a date to a user-friendly string
+export const formatDate = (date: string | Date) => {
   if (!date) return '';
   
   const d = new Date(date);
-  const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'short', day: 'numeric' };
-  return d.toLocaleDateString('en-US', options);
+  return d.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric'
+  });
 };
 
-// Format relative time
-export const formatRelativeTime = (date: string | number | Date): string => {
+// Format a date to a relative time string (e.g. "2 days ago")
+export const formatTimeAgo = (date: string | Date) => {
   if (!date) return '';
-  return formatTimeAgo(date);
+  
+  const d = new Date(date);
+  const now = new Date();
+  const diff = now.getTime() - d.getTime();
+  
+  const seconds = Math.floor(diff / 1000);
+  const minutes = Math.floor(seconds / 60);
+  const hours = Math.floor(minutes / 60);
+  const days = Math.floor(hours / 24);
+  
+  if (days > 0) {
+    return `${days} day${days === 1 ? '' : 's'} ago`;
+  } else if (hours > 0) {
+    return `${hours} hour${hours === 1 ? '' : 's'} ago`;
+  } else if (minutes > 0) {
+    return `${minutes} minute${minutes === 1 ? '' : 's'} ago`;
+  } else {
+    return 'Just now';
+  }
 };
 
-// Format currency
-export const formatCurrency = (amount: number): string => {
+// Format a date as a relative time (future or past)
+export const formatRelativeTime = (date: string | Date) => {
+  if (!date) return '';
+  
+  const d = new Date(date);
+  const now = new Date();
+  const diff = d.getTime() - now.getTime();
+  
+  const seconds = Math.floor(Math.abs(diff) / 1000);
+  const minutes = Math.floor(seconds / 60);
+  const hours = Math.floor(minutes / 60);
+  const days = Math.floor(hours / 24);
+  
+  const prefix = diff < 0 ? '' : 'in ';
+  const suffix = diff < 0 ? ' ago' : '';
+  
+  if (days > 0) {
+    return `${prefix}${days} day${days === 1 ? '' : 's'}${suffix}`;
+  } else if (hours > 0) {
+    return `${prefix}${hours} hour${hours === 1 ? '' : 's'}${suffix}`;
+  } else if (minutes > 0) {
+    return `${prefix}${minutes} minute${minutes === 1 ? '' : 's'}${suffix}`;
+  } else {
+    return 'Just now';
+  }
+};
+
+// Format a number as currency
+export const formatCurrency = (amount: number) => {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2
+    minimumFractionDigits: 2
   }).format(amount);
 };
 
-// Format dollar amount (without cents if it's a whole number)
-export const formatDollarAmount = (amount: number): string => {
-  return amount % 1 === 0 
-    ? `$${amount.toFixed(0)}` 
-    : formatCurrency(amount);
+// Format a number as dollar amount
+export const formatDollarAmount = (amount: number | string) => {
+  const num = typeof amount === 'string' ? parseFloat(amount) : amount;
+  return formatCurrency(num);
 };
 
-// Get color for team
-export const getTeamColor = (team: TeamType | string | null): string => {
-  if (!team) return 'text-gray-500';
-  
-  const lowerTeam = typeof team === 'string' ? team.toLowerCase() : '';
-  
-  switch (lowerTeam) {
+// Get a color based on the team
+export const getTeamColor = (team: string) => {
+  switch (team?.toLowerCase()) {
     case 'red':
       return 'text-red-500';
     case 'green':
@@ -89,8 +93,8 @@ export const getTeamColor = (team: TeamType | string | null): string => {
   }
 };
 
-// Format file size
-export const formatFileSize = (bytes: number): string => {
+// Format file size from bytes to human-readable format
+export const formatFileSize = (bytes: number) => {
   if (bytes === 0) return '0 Bytes';
   
   const k = 1024;
@@ -100,39 +104,40 @@ export const formatFileSize = (bytes: number): string => {
   return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
 };
 
-// Format wallet address for display
-export const formatAddress = (address: string, start = 4, end = 4): string => {
-  if (!address || address.length < (start + end + 3)) return address || '';
-  return `${address.substring(0, start)}...${address.substring(address.length - end)}`;
-};
-
-// Format percentage
-export const formatPercentage = (value: number, decimalPlaces = 2): string => {
-  return `${(value * 100).toFixed(decimalPlaces)}%`;
-};
-
-// Format historical value with inflation adjustment
-export const formatHistoricalValue = (value: number, year: number): string => {
-  const currentYear = new Date().getFullYear();
-  const yearDiff = currentYear - year;
+// Format a wallet address with ellipsis
+export const formatAddress = (address: string, chars = 4) => {
+  if (!address) return '';
   
-  // Simple inflation adjustment (not accurate but for display purposes)
-  const adjustedValue = value * Math.pow(1.03, yearDiff);
-  
-  return `${formatCurrency(value)} (adjusted to ${formatCurrency(adjustedValue)} in ${currentYear})`;
+  return address.substring(0, chars) + '...' + address.substring(address.length - chars);
 };
 
-// Get achievement icon
-export const getAchievementIcon = (type: string): string => {
+// Format a percentage
+export const formatPercentage = (value: number, decimals = 2) => {
+  return value.toFixed(decimals) + '%';
+};
+
+// Format a historical value with time period
+export const formatHistoricalValue = (value: number, period: string, showPlus = true) => {
+  const sign = value > 0 ? (showPlus ? '+' : '') : '';
+  return `${sign}${value.toFixed(2)} (${period})`;
+};
+
+// Get an icon for an achievement type
+export const getAchievementIcon = (type: string) => {
   switch (type) {
-    case 'royal': return '👑';
-    case 'rank': return '🏆';
-    case 'milestone': return '🌟';
-    case 'deposit': return '💰';
-    case 'streak': return '🔥';
-    case 'purchase': return '💎';
-    case 'referral': return '👥';
-    case 'social': return '📱';
-    default: return '🎯';
+    case 'royal':
+      return 'crown';
+    case 'rank':
+      return 'trophy';
+    case 'milestone':
+      return 'star';
+    case 'deposit':
+      return 'dollar';
+    case 'streak':
+      return 'zap';
+    case 'purchase':
+      return 'award';
+    default:
+      return 'award';
   }
 };

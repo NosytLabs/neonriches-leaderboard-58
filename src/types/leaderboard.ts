@@ -15,6 +15,10 @@ export interface LeaderboardEntry {
   tier?: UserTier;
   team?: TeamType;
   walletBalance?: number;
+  avatarUrl?: string;
+  previousRank?: number;
+  isVerified?: boolean;
+  id?: string;
 }
 
 export type LeaderboardUser = {
@@ -22,7 +26,7 @@ export type LeaderboardUser = {
   username: string;
   displayName?: string;
   profileImage?: string;
-  rank?: number;
+  rank: number;
   tier?: UserTier;
   team?: TeamType;
   amountSpent?: number;
@@ -34,6 +38,9 @@ export interface LeaderboardFilter {
   timespan: 'all' | 'day' | 'week' | 'month' | 'year';
   team?: TeamType;
   tier?: UserTier;
+  timeFrame?: string;
+  sortBy?: string;
+  sortDirection?: 'asc' | 'desc';
 }
 
-export { MockeryAction };
+export type { MockeryAction };

@@ -1,219 +1,199 @@
 
-import { useState, useEffect, useCallback } from 'react';
+import { useCallback, useState, useEffect, useRef } from 'react';
 import { SoundType, UseSoundOptions, UseSoundReturn } from '@/types/sound-types';
 
-// Default sound file paths
-const defaultSoundMap: Record<SoundType, string> = {
-  click: '/sounds/click.mp3',
-  success: '/sounds/success.mp3',
-  error: '/sounds/error.mp3',
-  notification: '/sounds/notification.mp3',
-  coinDrop: '/sounds/coin-drop.mp3',
-  reward: '/sounds/reward.mp3',
-  royalAnnouncement: '/sounds/royal-announcement.mp3',
-  levelUp: '/sounds/level-up.mp3',
-  purchase: '/sounds/purchase.mp3',
-  shame: '/sounds/shame.mp3',
-  swordClash: '/sounds/sword-clash.mp3',
-  message: '/sounds/message.mp3',
-  win: '/sounds/win.mp3',
-  trumpet: '/sounds/trumpet.mp3',
-  trumpets: '/sounds/trumpets.mp3',
-  scroll: '/sounds/scroll.mp3',
-  potion: '/sounds/potion.mp3',
-  chatMessage: '/sounds/chat-message.mp3',
-  unlock: '/sounds/unlock.mp3',
-  achievement: '/sounds/achievement.mp3',
-  coin: '/sounds/coin.mp3',
-  boost: '/sounds/boost.mp3',
-  advertisement: '/sounds/advertisement.mp3',
-  pageTransition: '/sounds/page-transition.mp3',
-  seal: '/sounds/seal.mp3',
-  parchmentUnfurl: '/sounds/parchment-unfurl.mp3',
-  wish: '/sounds/wish.mp3',
-  pageChange: '/sounds/page-change.mp3',
-  medallion: '/sounds/medallion.mp3',
-  noblesLaugh: '/sounds/nobles-laugh.mp3',
-  inkScribble: '/sounds/ink-scribble.mp3',
-  smoke: '/sounds/smoke.mp3',
-  tab: '/sounds/tab.mp3',
-  hover: '/sounds/hover.mp3'
-};
-
-// Sound volume levels
-const volumeLevels: Record<SoundType, number> = {
-  click: 0.5,
-  success: 0.7,
-  error: 0.6,
-  notification: 0.7,
-  coinDrop: 0.8,
-  reward: 0.8,
-  royalAnnouncement: 0.6,
-  levelUp: 0.8,
-  purchase: 0.7,
-  shame: 0.7,
-  swordClash: 0.7,
-  message: 0.6,
-  win: 0.8,
-  trumpet: 0.7,
-  trumpets: 0.7,
-  scroll: 0.4,
-  potion: 0.5,
-  chatMessage: 0.5,
-  unlock: 0.6,
-  achievement: 0.7,
-  coin: 0.6,
-  boost: 0.6,
-  advertisement: 0.6,
-  pageTransition: 0.5,
-  seal: 0.6,
-  parchmentUnfurl: 0.5,
-  wish: 0.7,
-  pageChange: 0.4,
-  medallion: 0.7,
-  noblesLaugh: 0.6,
-  inkScribble: 0.5,
-  smoke: 0.6,
-  tab: 0.4,
-  hover: 0.3
-};
-
-export const useSound = (options: UseSoundOptions = {}): UseSoundReturn => {
-  const {
-    baseVolume = 0.5,
-    disableCache = false,
-  } = options;
-
-  const [audioElements, setAudioElements] = useState<Record<SoundType, HTMLAudioElement | null>>({} as any);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [loaded, setLoaded] = useState<boolean>(false);
-  const [error, setError] = useState<Error | null>(null);
-
-  // Preload audio files
+export function useSound(initialSound?: SoundType, options?: UseSoundOptions): UseSoundReturn {
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [isMuted, setIsMuted] = useState(options?.muted || false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  
+  // Mapping of sound types to file paths
+  const soundPaths: Record<SoundType, string> = {
+    success: '/sounds/success.mp3',
+    error: '/sounds/error.mp3',
+    warning: '/sounds/warning.mp3',
+    info: '/sounds/info.mp3',
+    notification: '/sounds/notification.mp3',
+    achievement: '/sounds/achievement.mp3',
+    purchase: '/sounds/purchase.mp3',
+    levelUp: '/sounds/level-up.mp3',
+    royal: '/sounds/royal.mp3',
+    trumpets: '/sounds/trumpets.mp3',
+    fanfare: '/sounds/fanfare.mp3',
+    coins: '/sounds/coins.mp3',
+    spend: '/sounds/spend.mp3',
+    deposit: '/sounds/deposit.mp3',
+    withdrawal: '/sounds/withdrawal.mp3',
+    click: '/sounds/click.mp3',
+    hover: '/sounds/hover.mp3',
+    tab: '/sounds/tab.mp3',
+    shame: '/sounds/shame.mp3',
+    taunt: '/sounds/taunt.mp3',
+    mockery: '/sounds/mockery.mp3',
+    shatter: '/sounds/shatter.mp3',
+    sweep: '/sounds/sweep.mp3',
+    pop: '/sounds/pop.mp3',
+    swoosh: '/sounds/swoosh.mp3',
+    chime: '/sounds/chime.mp3',
+    bell: '/sounds/bell.mp3',
+    alert: '/sounds/alert.mp3',
+    drum: '/sounds/drum.mp3',
+    throne: '/sounds/throne.mp3',
+    applause: '/sounds/applause.mp3',
+    boo: '/sounds/boo.mp3',
+    medal: '/sounds/medal.mp3',
+    medallion: '/sounds/medallion.mp3',
+    certificate: '/sounds/certificate.mp3',
+    coinDrop: '/sounds/coin-drop.mp3',
+    swordClash: '/sounds/sword-clash.mp3',
+    noblesLaugh: '/sounds/nobles-laugh.mp3'
+  };
+  
+  // Mapping of sound types to volume levels
+  const soundVolumes: Record<SoundType, number> = {
+    success: 0.7,
+    error: 0.7,
+    warning: 0.7,
+    info: 0.6,
+    notification: 0.7,
+    achievement: 0.8,
+    purchase: 0.8,
+    levelUp: 0.8,
+    royal: 0.8,
+    trumpets: 0.8,
+    fanfare: 0.8,
+    coins: 0.6,
+    spend: 0.6,
+    deposit: 0.7,
+    withdrawal: 0.7,
+    click: 0.4,
+    hover: 0.3,
+    tab: 0.4,
+    shame: 0.7,
+    taunt: 0.7,
+    mockery: 0.7,
+    shatter: 0.7,
+    sweep: 0.7,
+    pop: 0.6,
+    swoosh: 0.6,
+    chime: 0.6,
+    bell: 0.7,
+    alert: 0.7,
+    drum: 0.7,
+    throne: 0.8,
+    applause: 0.7,
+    boo: 0.7,
+    medal: 0.7,
+    medallion: 0.7,
+    certificate: 0.7,
+    coinDrop: 0.7,
+    swordClash: 0.8,
+    noblesLaugh: 0.7
+  };
+  
+  // Initialize audio
   useEffect(() => {
-    if (typeof window === 'undefined') {
-      setLoading(false);
-      setLoaded(true);
-      return;
-    }
-
-    let loadedCount = 0;
-    const totalSounds = Object.keys(defaultSoundMap).length;
-    const newAudioElements: Record<SoundType, HTMLAudioElement> = {} as any;
-    
-    // Check if sounds are already available in localStorage
-    const soundsEnabled = localStorage.getItem('soundsEnabled');
-    if (soundsEnabled === 'false') {
-      setLoading(false);
-      setLoaded(true);
-      return;
-    }
-
-    // Create audio elements for each sound
-    Object.entries(defaultSoundMap).forEach(([key, path]) => {
-      try {
-        const soundType = key as SoundType;
-        const audio = new Audio(path);
-        audio.preload = 'auto';
-        
-        audio.addEventListener('canplaythrough', () => {
-          loadedCount++;
-          if (loadedCount === totalSounds) {
-            setLoaded(true);
-            setLoading(false);
-          }
-        });
-        
-        audio.addEventListener('error', (err) => {
-          console.error(`Error loading sound: ${path}`, err);
-          loadedCount++;
-          if (loadedCount === totalSounds) {
-            setLoaded(true);
-            setLoading(false);
-          }
-        });
-        
-        newAudioElements[soundType] = audio;
-      } catch (err) {
-        console.error(`Error creating audio element for ${key}:`, err);
-        setError(err instanceof Error ? err : new Error(String(err)));
+    if (initialSound && typeof window !== 'undefined') {
+      audioRef.current = new Audio(soundPaths[initialSound]);
+      audioRef.current.volume = (options?.volume !== undefined) ? options.volume : soundVolumes[initialSound];
+      audioRef.current.muted = isMuted;
+      
+      if (options?.autoplay) {
+        audioRef.current.play().catch(err => console.error('Error auto-playing sound:', err));
+        setIsPlaying(true);
       }
-    });
-    
-    setAudioElements(newAudioElements);
-    
-    // Cleanup
-    return () => {
-      Object.values(newAudioElements).forEach(audio => {
-        if (audio) {
-          audio.pause();
-          audio.src = '';
+      
+      if (options?.loop) {
+        audioRef.current.loop = true;
+      }
+      
+      return () => {
+        if (audioRef.current) {
+          audioRef.current.pause();
+          audioRef.current = null;
         }
-      });
-    };
-  }, [disableCache]);
-  
-  // Play function
-  const play = useCallback((soundType: SoundType, volumeMultiplier = 1) => {
-    if (!loaded) return;
-    
-    const soundsEnabled = localStorage.getItem('soundsEnabled');
-    if (soundsEnabled === 'false') return;
-    
-    const audio = audioElements[soundType];
-    if (!audio) return;
-    
-    try {
-      // Reset audio to start
-      audio.pause();
-      audio.currentTime = 0;
-      
-      // Set volume
-      const baseVol = volumeLevels[soundType] || 0.7;
-      audio.volume = Math.min(baseVol * baseVolume * volumeMultiplier, 1);
-      
-      // Play the sound
-      const playPromise = audio.play();
-      
-      // Handle potential play() Promise rejection
-      if (playPromise !== undefined) {
-        playPromise.catch(e => {
-          console.warn('Audio playback was prevented:', e);
-        });
-      }
-    } catch (err) {
-      console.error(`Error playing sound ${soundType}:`, err);
+      };
     }
-  }, [audioElements, loaded, baseVolume]);
+  }, [initialSound]);
   
-  // Convenience methods for common sounds
-  const playSuccess = useCallback((volumeMultiplier = 1) => {
-    play('success', volumeMultiplier);
-  }, [play]);
+  // Update muted state
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.muted = isMuted;
+    }
+  }, [isMuted]);
   
-  const playError = useCallback((volumeMultiplier = 1) => {
-    play('error', volumeMultiplier);
-  }, [play]);
+  // Play a sound
+  const play = useCallback((sound?: SoundType) => {
+    const soundToPlay = sound || initialSound;
+    
+    if (!soundToPlay || isMuted) return;
+    
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current = null;
+    }
+    
+    const audio = new Audio(soundPaths[soundToPlay]);
+    audio.volume = (options?.volume !== undefined) ? options.volume : soundVolumes[soundToPlay];
+    audio.muted = isMuted;
+    
+    if (options?.loop) {
+      audio.loop = true;
+    }
+    
+    audio.play().catch(err => console.error('Error playing sound:', err));
+    audio.addEventListener('ended', () => setIsPlaying(false));
+    
+    audioRef.current = audio;
+    setIsPlaying(true);
+  }, [initialSound, isMuted, options]);
   
-  const playNotification = useCallback((volumeMultiplier = 1) => {
-    play('notification', volumeMultiplier);
-  }, [play]);
+  // Pause current sound
+  const pause = useCallback(() => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+      setIsPlaying(false);
+    }
+  }, []);
   
-  const playClick = useCallback((volumeMultiplier = 1) => {
-    play('click', volumeMultiplier);
-  }, [play]);
-
+  // Stop current sound
+  const stop = useCallback(() => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+      setIsPlaying(false);
+    }
+  }, []);
+  
+  // Set volume
+  const setVolume = useCallback((volume: number) => {
+    if (audioRef.current) {
+      audioRef.current.volume = Math.max(0, Math.min(1, volume));
+    }
+  }, []);
+  
+  // Toggle mute
+  const toggleMute = useCallback(() => {
+    setIsMuted(prev => !prev);
+  }, []);
+  
+  // Play a random sound from a list
+  const playRandom = useCallback((sounds: SoundType[]) => {
+    if (sounds.length === 0 || isMuted) return;
+    
+    const randomIndex = Math.floor(Math.random() * sounds.length);
+    play(sounds[randomIndex]);
+  }, [play, isMuted]);
+  
   return {
     play,
-    playSound: play, // Making sure playSound alias is available
-    playSuccess,
-    playError,
-    playNotification,
-    playClick,
-    loading,
-    loaded,
-    error,
+    pause,
+    stop,
+    isPlaying,
+    isMuted,
+    setVolume,
+    toggleMute,
+    playRandom
   };
-};
-
-export default useSound;
+}

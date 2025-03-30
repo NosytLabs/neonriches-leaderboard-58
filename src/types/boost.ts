@@ -1,7 +1,7 @@
 
-// Types for profile boosts and effects
+// Boost effect types
 
-export type BoostEffectType = 
+export type BoostEffectType =
   | 'visibility'
   | 'highlight'
   | 'promote'
@@ -23,6 +23,9 @@ export interface BoostEffect {
   strength?: number;
   cssClass?: string;
   previewImage?: string;
+  cost?: number;
+  minTier?: UserTier;
+  rarity?: string;
 }
 
 export interface ProfileBoost {
@@ -35,6 +38,10 @@ export interface ProfileBoost {
   isActive: boolean;
   level: number;
   type: string;
+  strength?: number;
+  appliedBy?: string;
+  startDate?: string;
+  endDate?: string;
 }
 
 export interface BoostPurchaseResult {

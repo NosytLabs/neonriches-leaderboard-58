@@ -1,5 +1,5 @@
 
-// Define the achievement types
+// Achievement types
 
 export type AchievementType = 
   | 'royal'

@@ -1,61 +1,67 @@
 
-export interface OnChainLeaderboardEntry {
-  publicKey: string;
-  username: string;
-  userId?: string;
-  address?: string;
-  totalSpent: number;
-  spentAmount?: number;
-  amountSpent?: number;
-  totalDeposited?: number;
-  rank?: number;
-  timestamp: string;
-  lastTransaction?: string;
-}
-
-export interface LeaderboardEntry {
-  userId: string;
-  username: string;
-  publicKey: string;
-  amountSpent: number;
-  totalDeposited: number;
-  rank: number;
-  joinDate: string;
-}
+// Solana related types
 
 export interface SolanaTransaction {
   id: string;
   signature: string;
-  sourceAddress: string;
-  destinationAddress: string;
-  receiver?: string;
   amount: number;
-  timestamp: string;
+  timestamp: number;
+  type: 'deposit' | 'withdrawal' | 'spend' | 'transfer';
   status: 'confirmed' | 'pending' | 'failed';
-  blockHeight?: number;
-  type: 'deposit' | 'withdrawal' | 'transfer' | 'payment';
+  sender?: string;
+  receiver?: string;
 }
 
 export interface SolanaTreasuryInfo {
-  address: string;
-  balance: number;
   totalDeposits: number;
   totalWithdrawals: number;
-  lastUpdate: string;
+  balance: number;
+  lastUpdate: number;
+  lastTransaction?: SolanaTransaction;
+  recentTransactions: SolanaTransaction[];
+  transactions?: SolanaTransaction[];
+  currentBalance?: number;
   totalDeposited?: number;
   totalWithdrawn?: number;
-  transactions?: SolanaTransaction[];
+}
+
+export interface SolanaWallet {
+  address: string;
+  balance: number;
+  label?: string;
+}
+
+export interface OnChainLeaderboardEntry {
+  publicKey: string;
+  lamports: number;
+  account: any;
+  id?: string;
+  address?: string;
+  spentAmount?: number;
+  amountSpent?: number;
+  totalDeposited?: number;
+  rank?: number;
+  userId?: string;
+  lastTransaction?: number;
+}
+
+export interface SolanaNftInfo {
+  name: string;
+  symbol: string;
+  uri: string;
+  mint: string;
+  owner: string;
+  metadata?: any;
 }
 
 export interface CertificateMetadata {
   name: string;
+  symbol: string;
   description: string;
   image: string;
-  attributes: Array<{
+  attributes: {
     trait_type: string;
-    value: string | number;
-  }>;
-  issueDate: string;
-  owner: string;
+    value: string;
+  }[];
   rank?: number;
 }

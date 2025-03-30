@@ -36,7 +36,10 @@ export type SoundType =
   | 'boo'
   | 'medal'
   | 'medallion'
-  | 'certificate';
+  | 'certificate'
+  | 'coinDrop'
+  | 'swordClash'
+  | 'noblesLaugh';
 
 export interface AudioLoaderReturn {
   isLoading: boolean;
@@ -55,4 +58,22 @@ export interface PremiumSoundPackDetails {
   sounds: SoundType[];
   features: string[];
   includes: SoundType[];
+}
+
+export interface UseSoundOptions {
+  volume?: number;
+  autoplay?: boolean;
+  loop?: boolean;
+  muted?: boolean;
+}
+
+export interface UseSoundReturn {
+  play: (sound?: SoundType) => void;
+  pause: () => void;
+  stop: () => void;
+  isPlaying: boolean;
+  isMuted: boolean;
+  setVolume: (volume: number) => void;
+  toggleMute: () => void;
+  playRandom: (sounds: SoundType[]) => void;
 }

@@ -42,25 +42,7 @@ export interface VerifyMfaData {
   code: string;
 }
 
-export type UserTier = 
-  | 'free' 
-  | 'basic'
-  | 'royal' 
-  | 'premium' 
-  | 'pro' 
-  | 'founder' 
-  | 'whale' 
-  | 'shark' 
-  | 'dolphin'
-  | 'gold'
-  | 'silver'
-  | 'bronze'
-  | 'platinum'
-  | 'diamond'
-  | 'standard';
-
-export type UserTeam = 'red' | 'green' | 'blue' | 'Red' | 'Green' | 'Blue' | 'none';
-export type TeamType = UserTeam;
+export type { UserTier, UserTeam, TeamType } from '@/types/user';
 
 export interface AuthState {
   user: UserProfile | null;
@@ -74,4 +56,4 @@ export interface AuthAction {
   payload?: any;
 }
 
-export { UserProfile };
+export type { UserProfile };
