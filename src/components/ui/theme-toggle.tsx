@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Moon, Sun, Crown } from "lucide-react";
-import { useTheme } from "@/providers/theme-provider";
+import { useTheme } from "@/providers/ThemeProvider";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,

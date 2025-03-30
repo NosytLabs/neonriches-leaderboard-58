@@ -6,12 +6,12 @@ import { useAuth } from '@/contexts/auth';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Shield, Crown, Settings, Globe, Palette } from 'lucide-react';
 import SeoSettings from '@/components/admin/SeoSettings';
-import { useToastContext } from '@/contexts/ToastContext';
+import { useToast } from '@/hooks/use-toast';
 import { SecurityLevel, useProtectedRoute } from '@/lib/security';
 
 const AdminSettings = () => {
   const { user } = useAuth();
-  const { addToast } = useToastContext();
+  const { toast } = useToast();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<string>("seo");
   const { isAuthorized, isLoading } = useProtectedRoute(SecurityLevel.HIGH);
@@ -50,7 +50,7 @@ const AdminSettings = () => {
     console.log('Saving SEO data:', seoData);
     
     // In a real application, you would save this to a database
-    addToast({
+    toast({
       title: "Settings Saved",
       description: "Your royal branding settings have been updated successfully.",
       duration: 3000,
