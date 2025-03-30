@@ -54,9 +54,19 @@ export const getAchievementIcon = (type: string) => {
   }
 };
 
-// Export types using the 'export type' syntax for compatibility with isolatedModules
-export type { RoyalDecorationType } from '../types/decorations';
-export type { RoyalButtonVariant } from '../types/buttons';
+// Create missing type definitions for decorations and buttons
+export interface RoyalDecorationType {
+  type: 'border' | 'corner' | 'divider' | 'crown' | 'shield' | 'scroll' | 'banner';
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+  color?: 'gold' | 'silver' | 'bronze' | 'royal' | 'crimson' | 'emerald' | 'obsidian';
+  animated?: boolean;
+}
+
+export interface RoyalButtonVariant {
+  variant?: 'default' | 'royal' | 'gold' | 'crimson' | 'emerald' | 'obsidian' | 'outline' | 'ghost';
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+  animated?: boolean;
+}
 
 // Export LeaderboardUser as an alias for LeaderboardEntry
 export type { LeaderboardEntry as LeaderboardUser } from '@/types/leaderboard';

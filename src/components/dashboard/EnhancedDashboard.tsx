@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -17,7 +18,7 @@ import CashThroneUpgrade from '@/components/dashboard/CashThroneUpgrade';
 import { DashboardWelcome } from '@/components/dashboard/DashboardWelcome';
 import BriberyBanner from '@/components/dashboard/BriberyBanner';
 import { cn } from '@/lib/utils';
-import { getAchievementIcon, formatDate } from '@/utils/formatters';
+import { getAchievementIcon } from '@/utils/formatters';
 import { useToast } from '@/hooks/use-toast';
 import RoyalDivider from '@/components/ui/royal-divider';
 

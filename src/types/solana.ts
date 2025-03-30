@@ -1,58 +1,61 @@
 
-export interface SolanaWallet {
+export interface OnChainLeaderboardEntry {
   publicKey: string;
-  balance: number;
-  lastUpdated: string;
-  transactions: SolanaTransaction[];
-  nfts: SolanaNftInfo[];
+  username: string;
+  userId?: string;
+  address?: string;
+  totalSpent: number;
+  spentAmount?: number;
+  amountSpent?: number;
+  totalDeposited?: number;
+  rank?: number;
+  timestamp: string;
+  lastTransaction?: string;
 }
 
-export interface SolanaTreasuryInfo {
+export interface LeaderboardEntry {
+  userId: string;
+  username: string;
   publicKey: string;
-  totalDeposits: number;
-  totalWithdrawals: number;
-  totalUsers: number;
-  lastTransaction: string;
-  lastUpdated?: string;
-  currentBalance?: number;
+  amountSpent: number;
+  totalDeposited: number;
+  rank: number;
+  joinDate: string;
 }
 
 export interface SolanaTransaction {
   id: string;
   signature: string;
-  sender: string;
-  recipient: string;
+  sourceAddress: string;
+  destinationAddress: string;
+  receiver?: string;
   amount: number;
   timestamp: string;
   status: 'confirmed' | 'pending' | 'failed';
-  type: 'deposit' | 'withdrawal' | 'transfer' | 'nft' | 'other';
   blockHeight?: number;
-  fee?: number;
+  type: 'deposit' | 'withdrawal' | 'transfer' | 'payment';
 }
 
-export interface OnChainLeaderboardEntry {
-  id: string;
-  publicKey: string;
-  position: number;
-  amount: number;
-  username: string;
-  timestamp: string;
-  totalSpent?: number;
+export interface SolanaTreasuryInfo {
+  address: string;
+  balance: number;
+  totalDeposits: number;
+  totalWithdrawals: number;
+  lastUpdate: string;
+  totalDeposited?: number;
+  totalWithdrawn?: number;
+  transactions?: SolanaTransaction[];
 }
 
-export interface SolanaNftInfo {
-  id: string;
+export interface CertificateMetadata {
   name: string;
   description: string;
   image: string;
-  mintAddress: string;
-  metadata: {
-    collection?: string;
-    attributes?: Array<{trait_type: string; value: string}>;
-    external_url?: string;
-    properties?: any;
-  };
-  ownerId: string;
-  createdAt: string;
+  attributes: Array<{
+    trait_type: string;
+    value: string | number;
+  }>;
+  issueDate: string;
+  owner: string;
+  rank?: number;
 }
-

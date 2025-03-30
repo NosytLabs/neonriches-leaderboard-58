@@ -116,3 +116,27 @@ export const getWeekRange = (date: Date = new Date()): { start: Date, end: Date 
 export const formatISODate = (date: Date): string => {
   return date.toISOString().split('T')[0];
 };
+
+// Add missing functions
+export const isEventActive = (startDate: string | Date, endDate: string | Date): boolean => {
+  const now = new Date();
+  const start = typeof startDate === 'string' ? new Date(startDate) : startDate;
+  const end = typeof endDate === 'string' ? new Date(endDate) : endDate;
+  
+  return now >= start && now <= end;
+};
+
+export const daysUntil = (date: string | Date): number => {
+  const target = typeof date === 'string' ? new Date(date) : date;
+  const now = new Date();
+  
+  // Reset times to compare dates only
+  now.setHours(0, 0, 0, 0);
+  const targetDate = new Date(target);
+  targetDate.setHours(0, 0, 0, 0);
+  
+  const diffTime = targetDate.getTime() - now.getTime();
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  
+  return diffDays;
+};

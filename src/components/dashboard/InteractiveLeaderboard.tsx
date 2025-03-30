@@ -9,6 +9,7 @@ import ShameModal from './leaderboard/ShameModal';
 import LeaderboardActions from './leaderboard/LeaderboardActions';
 import { getShameActionPrice } from '@/components/events/utils/shameUtils';
 import { ShameAction } from '@/components/events/hooks/useShameEffect';
+import { MockeryAction } from '@/types/leaderboard';
 
 const InteractiveLeaderboard: React.FC = () => {
   const { toast } = useToast();
@@ -19,6 +20,7 @@ const InteractiveLeaderboard: React.FC = () => {
   const [isOnCooldown, setIsOnCooldown] = useState<boolean>(false);
   const [shameType, setShameType] = useState<ShameAction>('tomatoes');
   const [shameAmount, setShameAmount] = useState<number>(getShameActionPrice('tomatoes'));
+  const [modalType, setModalType] = useState<string | null>(null);
 
   useEffect(() => {
     // In a real app, fetch leaderboard data from API
@@ -47,7 +49,7 @@ const InteractiveLeaderboard: React.FC = () => {
     audio.play().catch(e => console.log('Audio playback error:', e));
   };
 
-  const handleConfirmShame = () => {
+  const handleShameConfirm = () => {
     if (!selectedUser || isOnCooldown) return;
     
     // Get shame emoji based on type
@@ -101,40 +103,47 @@ const InteractiveLeaderboard: React.FC = () => {
     }, 1000);
   };
 
+  const openShameModal = (user: LeaderboardEntry) => {
+    setSelectedUser(user);
+    setModalType('shame');
+  };
+
   return (
-    <Card className="glass-morphism border-white/10">
-      <CardHeader className="pb-3">
-        <CardTitle className="text-lg font-royal royal-gradient flex items-center">
-          <Crown size={18} className="text-royal-gold mr-2" />
-          Royal Court Standings
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        {leaderboardData.map((userData, index) => (
-          <LeaderboardItem
-            key={userData.id}
-            userData={userData}
-            index={index}
-            currentUserId={user?.id}
-            isOnCooldown={isOnCooldown}
-            onProfileClick={handleProfileClick}
-            onShameUser={handleShameUser}
-          />
-        ))}
-        
-        <LeaderboardActions />
-        
-        {showShameModal && selectedUser && (
-          <ShameModal
-            targetUser={selectedUser}
-            shameAmount={shameAmount}
-            shameType={shameType}
-            onClose={() => setShowShameModal(false)}
-            onConfirm={handleConfirmShame}
-          />
-        )}
-      </CardContent>
-    </Card>
+    <div>
+      <Card className="glass-morphism border-white/10">
+        <CardHeader className="pb-3">
+          <CardTitle className="text-lg font-royal royal-gradient flex items-center">
+            <Crown size={18} className="text-royal-gold mr-2" />
+            Royal Court Standings
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          {leaderboardData.map((userData, index) => (
+            <LeaderboardItem
+              key={userData.id}
+              userData={userData}
+              index={index}
+              currentUserId={user?.id}
+              isOnCooldown={isOnCooldown}
+              onProfileClick={handleProfileClick}
+              onShameUser={handleShameUser}
+            />
+          ))}
+          
+          <LeaderboardActions />
+          
+          {modalType === 'shame' && selectedUser && (
+            <ShameModal
+              targetUser={selectedUser}
+              shameAmount={shameAmount}
+              shameType={shameType as MockeryAction}
+              onClose={() => setModalType(null)}
+              onConfirm={handleShameConfirm}
+            />
+          )}
+        </CardContent>
+      </Card>
+    </div>
   );
 };
 
