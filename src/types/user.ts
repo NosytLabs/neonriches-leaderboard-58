@@ -1,112 +1,107 @@
 
-export interface UserProfile {
+export type TeamType = 'red' | 'green' | 'blue' | null;
+export type GenderType = 'king' | 'queen' | 'jester' | null;
+export type UserTier = 'free' | 'premium' | 'royal';
+
+export interface User {
   id: string;
   username: string;
-  displayName?: string;
   email?: string;
   profileImage?: string;
-  joinedAt: string;
-  createdAt?: string;
-  tier: UserTier;
-  team?: UserTeam;
-  rank?: number;
+  amountSpent: number;
   walletBalance?: number;
-  amountSpent?: number;
-  gender?: UserGender;
-  profileViews?: number;
-  profileClicks?: number;
-  followers?: number;
-  following?: number;
-  lastActive?: string;
-  totalSpent?: number;
-  role?: UserRole;
-  cosmetics?: UserCosmetics;
-  activeTitle?: string;
+  rank: number;
+  previousRank?: number;
   spendStreak?: number;
-  settings?: UserSettings;
-}
-
-export type UserTier = 'free' | 'premium' | 'royal' | 'basic';
-export type UserTeam = 'red' | 'green' | 'blue';
-export type UserRole = 'user' | 'admin' | 'moderator';
-export type UserGender = 'male' | 'female' | 'neutral' | 'other';
-export type UserStatus = 'online' | 'offline' | 'away' | 'busy';
-
-export interface UserCosmetics {
-  border?: string;
-  color?: string;
-  font?: string;
-  emoji?: string;
-  title?: string;
-  background?: string;
-  effect?: string;
-  borders?: string[];
-  colors?: string[];
-  titles?: string[];
-  emojis?: string[];
-  fonts?: string[];
-  backgrounds?: string[];
-  effects?: string[];
-}
-
-export interface UserSettings {
-  notifications: {
-    email: boolean;
-    push: boolean;
-    rankChanges: boolean;
-    mockery: boolean;
-  };
-  privacy: {
-    showProfile: boolean;
-    showSpending: boolean;
-  };
-  display: {
-    theme: string;
-    showRank?: boolean;
-  };
+  tier?: UserTier;
+  team?: TeamType;
+  gender?: GenderType;
+  joinedAt?: string;
+  socialLinks?: ProfileLink[];
+  createdAt?: string;
+  isAuthenticated?: boolean;
+  isAdmin?: boolean;
+  isVerified?: boolean;
+  lastLogin?: string;
+  activeTitle?: string;
+  cosmetics?: UserCosmetics;
 }
 
 export interface ProfileLink {
   id: string;
   type: string;
   url: string;
-  title: string;
+  title?: string;
   icon?: string;
+}
+
+export interface UserProfile extends User {
+  bio?: string;
+  bannerImage?: string;
+  badges?: Badge[];
+  achievements?: Achievement[];
+  boosts?: ProfileBoost[];
+  subscriptions?: UserSubscription[];
+}
+
+export interface Badge {
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+  color?: string;
+  earnedAt?: string;
+}
+
+export interface Achievement {
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+  progress: number;
+  maxProgress: number;
+  earnedAt?: string;
+  category?: string;
 }
 
 export interface ProfileBoost {
   id: string;
-  type: string;
-  duration: number;
+  name: string;
+  description: string;
+  icon?: string;
+  effects?: string[];
   startDate?: string;
   endDate?: string;
-  effects: string[];
+  tier?: string;
   level?: number;
   strength?: number;
-  effectId?: string;
 }
 
-export interface Team {
-  id: string;
-  name: UserTeam;
-  displayName: string;
-  description: string;
-  memberCount: number;
-  color: string;
-  icon: string;
-  benefits: string[];
+export interface UserCosmetics {
+  borders?: CosmeticItem[];
+  colors?: CosmeticItem[];
+  fonts?: CosmeticItem[];
+  emojis?: CosmeticItem[];
+  titles?: CosmeticItem[];
+  backgrounds?: CosmeticItem[];
+  effects?: CosmeticItem[];
+  activeBorder?: string;
+  activeColor?: string;
+  activeFont?: string;
+  activeEmoji?: string;
+  activeTitle?: string;
+  activeBackground?: string;
+  activeEffect?: string;
 }
 
 export interface LeaderboardUser {
   id: string;
   username: string;
-  displayName?: string;
-  avatarUrl?: string;
+  amountSpent: number;
+  rank: number;
+  team: TeamType;
+  tier?: UserTier;
   profileImage?: string;
-  rank?: number;
-  tier?: string;
-  team?: string;
-  amountSpent?: number;
-  lastMocked?: string;
-  mockeryCount?: number;
+  gender?: GenderType;
+  avatarUrl?: string;
 }

@@ -1,139 +1,175 @@
 
-import { MockeryAction, MockeryTier, ShameAction, MockeryEvent, MockedUser, MockUser } from '@/types/mockery';
+import { MockeryAction, MockeryTier, ShameAction, ExtendedMockeryAction } from '@/types/mockery';
 
-// Mockery action titles
+/**
+ * Gets the display title for a mockery action
+ */
 export const getMockeryTitle = (action: MockeryAction): string => {
-  const titles: Record<MockeryAction, string> = {
-    tomatoes: 'Throw Tomatoes',
-    putridEggs: 'Throw Putrid Eggs',
-    stocks: 'Put in the Stocks',
-    silence: 'Silence',
-    courtJester: 'Make Court Jester',
-    dunce: 'Dunce Cap',
-    smokeBomb: 'Smoke Bomb',
-  };
-  
-  return titles[action] || action;
-};
-
-// Mockery action descriptions
-export const getMockeryDescription = (action: MockeryAction): string => {
-  const descriptions: Record<MockeryAction, string> = {
-    tomatoes: 'Throw virtual tomatoes at the user, leaving their profile splattered for a day',
-    putridEggs: 'Throw virtual rotten eggs that leave a stench on their profile for 2 days',
-    stocks: 'Lock them in the public stocks for all to see for 3 days',
-    silence: 'Prevent them from commenting for 1 day',
-    courtJester: 'Force them to wear the court jester outfit on their profile for 2 days',
-    dunce: 'Make them wear a dunce cap on their profile for 3 days',
-    smokeBomb: 'Cover their profile in smoke for a day, making it hard to see',
-  };
-  
-  return descriptions[action] || 'Mock this user with an unknown action';
-};
-
-// Mockery action costs
-export const MOCKERY_COSTS: Record<MockeryAction, number> = {
-  tomatoes: 10,
-  putridEggs: 25,
-  stocks: 50,
-  silence: 75,
-  courtJester: 100,
-  dunce: 150,
-  smokeBomb: 200,
-};
-
-// Mockery action names for display
-export const MOCKERY_NAMES: Record<MockeryAction, string> = {
-  tomatoes: 'Tomato Pelting',
-  putridEggs: 'Putrid Egg Barrage',
-  stocks: 'Public Stocks',
-  silence: 'Royal Silence',
-  courtJester: 'Court Jester',
-  dunce: 'Dunce Cap',
-  smokeBomb: 'Smoke Bomb',
-};
-
-// Mockery cooldowns in hours
-export const MOCKERY_COOLDOWNS: Record<MockeryAction, number> = {
-  tomatoes: 24,
-  putridEggs: 48,
-  stocks: 72,
-  silence: 96,
-  courtJester: 120,
-  dunce: 144,
-  smokeBomb: 168,
-};
-
-// Mockery tiers
-export const getMockeryTierCost = (tier: MockeryTier): number => {
-  const costs: Record<MockeryTier, number> = {
-    common: 10,
-    uncommon: 25,
-    rare: 50,
-    epic: 100,
-    legendary: 200
-  };
-  
-  return costs[tier] || 10;
-};
-
-// Map shame actions to mockery actions
-export const shameActionToMockeryAction = (action: ShameAction): MockeryAction => {
   switch (action) {
-    case 'ridicule':
-      return 'tomatoes';
-    case 'humiliate':
-      return 'putridEggs';
-    case 'expose':
-      return 'stocks';
-    case 'mock':
-      return 'courtJester';
+    case 'tomatoes':
+      return 'Rotten Tomatoes';
+    case 'putridEggs':
+      return 'Putrid Eggs';
+    case 'stocks':
+      return 'Stocks of Shame';
+    case 'silence':
+      return 'Gag Order';
+    case 'courtJester':
+      return 'Court Jester';
+    case 'dunce':
+      return 'Dunce Cap';
+    case 'smokeBomb':
+      return 'Smoke Bomb';
     default:
-      return action as MockeryAction;
+      return 'Unknown Action';
   }
 };
 
-// Check if a value is a MockeryAction
-export const isMockeryAction = (value: string): value is MockeryAction => {
-  return [
-    'tomatoes',
-    'putridEggs',
-    'stocks',
-    'silence',
-    'courtJester',
-    'dunce',
-    'smokeBomb'
-  ].includes(value);
+/**
+ * Gets the description for a mockery action
+ */
+export const getMockeryDescription = (action: MockeryAction): string => {
+  switch (action) {
+    case 'tomatoes':
+      return 'Cover their profile with rotten tomatoes for all to see.';
+    case 'putridEggs':
+      return 'Splatter rancid eggs on their profile page.';
+    case 'stocks':
+      return 'Lock them in the public stocks for shame.';
+    case 'silence':
+      return 'Prevent them from commenting for 24 hours.';
+    case 'courtJester':
+      return 'Force them to wear the royal jester outfit.';
+    case 'dunce':
+      return 'Make them wear a dunce cap on their profile.';
+    case 'smokeBomb':
+      return 'Temporarily hide their profile in a cloud of smoke.';
+    default:
+      return 'A mysterious effect.';
+  }
 };
 
-// Check if a value is a ShameAction
-export const isShameAction = (value: string): value is ShameAction => {
-  return [
-    'ridicule',
-    'humiliate',
-    'expose',
-    'mock',
-    'tomatoes',
-    'putridEggs',
-    'stocks',
-    'silence',
-    'courtJester',
-    'dunce',
-    'smokeBomb'
-  ].includes(value);
+/**
+ * Gets the price for a mockery action
+ */
+export const getMockeryActionPrice = (action: MockeryAction): number => {
+  switch (action) {
+    case 'tomatoes':
+      return 10;
+    case 'putridEggs':
+      return 25;
+    case 'stocks':
+      return 50;
+    case 'silence':
+      return 100;
+    case 'courtJester':
+      return 150;
+    case 'dunce':
+      return 200;
+    case 'smokeBomb':
+      return 300;
+    default:
+      return 0;
+  }
 };
 
-// Get mockery action icon
+/**
+ * Gets the tier for a mockery action
+ */
+export const getMockeryTier = (action: MockeryAction): MockeryTier => {
+  switch (action) {
+    case 'tomatoes':
+    case 'putridEggs':
+      return 'common';
+    case 'stocks':
+    case 'silence':
+      return 'uncommon';
+    case 'courtJester':
+      return 'rare';
+    case 'dunce':
+      return 'epic';
+    case 'smokeBomb':
+      return 'legendary';
+    default:
+      return 'common';
+  }
+};
+
+/**
+ * Gets the icon for a mockery action
+ */
 export const getMockeryActionIcon = (action: MockeryAction): string => {
-  const icons: Record<MockeryAction, string> = {
-    tomatoes: '🍅',
-    putridEggs: '🥚',
-    stocks: '🔒',
-    silence: '🤐',
-    courtJester: '🃏',
-    dunce: '🎯',
-    smokeBomb: '💨'
+  switch (action) {
+    case 'tomatoes':
+      return '🍅';
+    case 'putridEggs':
+      return '🥚';
+    case 'stocks':
+      return '🔒';
+    case 'silence':
+      return '🔇';
+    case 'courtJester':
+      return '🃏';
+    case 'dunce':
+      return '🎭';
+    case 'smokeBomb':
+      return '💨';
+    default:
+      return '❓';
+  }
+};
+
+/**
+ * Gets the CSS class for an active mockery
+ */
+export const getActiveMockeryClass = (action: MockeryAction): string => {
+  switch (action) {
+    case 'tomatoes':
+      return 'mockery-tomatoes';
+    case 'putridEggs':
+      return 'mockery-eggs';
+    case 'stocks':
+      return 'mockery-stocks';
+    case 'silence':
+      return 'mockery-silence';
+    case 'courtJester':
+      return 'mockery-jester';
+    case 'dunce':
+      return 'mockery-dunce';
+    case 'smokeBomb':
+      return 'mockery-smoke';
+    default:
+      return '';
+  }
+};
+
+/**
+ * Gets details for a mockery action
+ */
+export const getMockeryActionDetails = (action: MockeryAction): ExtendedMockeryAction => {
+  return {
+    title: getMockeryTitle(action),
+    description: getMockeryDescription(action),
+    price: getMockeryActionPrice(action),
+    tier: getMockeryTier(action),
+    icon: getMockeryActionIcon(action),
   };
-  
-  return icons[action] || '❓';
+};
+
+/**
+ * Compatible with ShameAction
+ */
+export const isValidShameAction = (action: ShameAction): boolean => {
+  if (action === 'ridicule' || action === 'humiliate' || action === 'expose' || action === 'mock') {
+    return true;
+  }
+  return isValidMockeryAction(action as MockeryAction);
+};
+
+/**
+ * Validates mockery action
+ */
+export const isValidMockeryAction = (action: MockeryAction): boolean => {
+  const validActions: MockeryAction[] = ['tomatoes', 'putridEggs', 'stocks', 'silence', 'courtJester', 'dunce', 'smokeBomb'];
+  return validActions.includes(action);
 };

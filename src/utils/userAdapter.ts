@@ -1,90 +1,58 @@
 
-/**
- * Utility functions for adapting user data
- */
-import { User, UserProfile } from '@/types/user';
+import { User, UserProfile, LeaderboardUser } from '@/types/user';
 
 /**
- * Ensures we have a valid user object, providing defaults for missing properties
- * @param user User object, potentially with missing fields
- * @returns Complete user object with all required fields
+ * Adapts a UserProfile to a User
  */
-export default function ensureUser(user: Partial<User> | null | undefined): User {
-  if (!user) {
-    return createDefaultUser();
+export const adaptUserProfileToUser = (profile: UserProfile): User => {
+  return {
+    id: profile.id,
+    username: profile.username,
+    email: profile.email,
+    profileImage: profile.profileImage,
+    amountSpent: profile.amountSpent,
+    walletBalance: profile.walletBalance,
+    rank: profile.rank,
+    previousRank: profile.previousRank,
+    spendStreak: profile.spendStreak,
+    tier: profile.tier,
+    team: profile.team,
+    gender: profile.gender,
+    joinedAt: profile.joinedAt,
+    socialLinks: profile.socialLinks,
+    createdAt: profile.createdAt,
+    isAuthenticated: profile.isAuthenticated,
+    isAdmin: profile.isAdmin,
+    isVerified: profile.isVerified,
+    lastLogin: profile.lastLogin,
+    activeTitle: profile.activeTitle,
+    cosmetics: profile.cosmetics
+  };
+};
+
+/**
+ * Ensures we're working with a User object
+ */
+export const ensureUser = (user: User | UserProfile): User => {
+  if ((user as UserProfile).bio !== undefined) {
+    return adaptUserProfileToUser(user as UserProfile);
   }
-
-  // Create a complete user with all required fields
-  return {
-    id: user.id || 'guest',
-    username: user.username || 'guest',
-    displayName: user.displayName || 'Guest User',
-    email: user.email || '',
-    profileImage: user.profileImage || '/placeholder.svg',
-    joinedAt: user.joinedAt || new Date().toISOString(),
-    createdAt: user.createdAt || new Date().toISOString(),
-    tier: user.tier || 'free',
-    team: user.team || 'red',
-    rank: user.rank || 0,
-    walletBalance: user.walletBalance || 0,
-    amountSpent: user.amountSpent || 0,
-    // Add any additional fields with their default values
-    gender: user.gender || 'neutral',
-    profileViews: user.profileViews || 0,
-    profileClicks: user.profileClicks || 0,
-    followers: user.followers || 0,
-    following: user.following || 0,
-    lastActive: user.lastActive || new Date().toISOString(),
-    totalSpent: user.totalSpent || 0,
-    role: user.role || 'user',
-    cosmetics: user.cosmetics || {},
-    ...user, // Keep any additional properties from the original user
-  };
-}
+  return user as User;
+};
 
 /**
- * Converts a UserProfile to a full User object
- * @param profile UserProfile to convert
- * @returns User object with all required fields
+ * Adapts a User to a LeaderboardUser
  */
-export function adaptUserProfileToUser(profile: UserProfile | null | undefined): User {
-  if (!profile) {
-    return createDefaultUser();
-  }
-
+export const adaptUserToLeaderboardUser = (user: User): LeaderboardUser => {
   return {
-    ...profile,
-    createdAt: profile.createdAt || profile.joinedAt,
-    totalSpent: profile.totalSpent || profile.amountSpent || 0,
-    role: profile.role || 'user',
+    id: user.id,
+    username: user.username,
+    amountSpent: user.amountSpent,
+    rank: user.rank,
+    team: user.team || null,
+    tier: user.tier,
+    profileImage: user.profileImage,
+    gender: user.gender,
+    avatarUrl: user.profileImage,
   };
-}
-
-/**
- * Creates a default user object with placeholder values
- * @returns Default user object
- */
-function createDefaultUser(): User {
-  return {
-    id: 'guest',
-    username: 'guest',
-    displayName: 'Guest User',
-    email: '',
-    profileImage: '/placeholder.svg',
-    joinedAt: new Date().toISOString(),
-    createdAt: new Date().toISOString(),
-    tier: 'free',
-    team: 'red',
-    rank: 0,
-    walletBalance: 0,
-    amountSpent: 0,
-    gender: 'neutral',
-    profileViews: 0,
-    profileClicks: 0,
-    followers: 0,
-    following: 0,
-    lastActive: new Date().toISOString(),
-    totalSpent: 0,
-    role: 'user',
-  };
-}
+};

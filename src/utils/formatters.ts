@@ -35,7 +35,7 @@ export const formatDollarAmount = (value: number, options: {
 /**
  * Formats a date in a human-readable format
  */
-export const formatDate = (date: string | Date): string => {
+export const formatDate = (date: string | Date, options: Intl.DateTimeFormatOptions = {}): string => {
   if (!date) return '';
   
   const dateObj = typeof date === 'string' ? new Date(date) : date;
@@ -44,6 +44,7 @@ export const formatDate = (date: string | Date): string => {
     month: 'short',
     day: 'numeric',
     year: 'numeric',
+    ...options
   }).format(dateObj);
 };
 
@@ -76,4 +77,29 @@ export const formatNumber = (value: number): string => {
  */
 export const formatPercentage = (value: number, decimals: number = 0): string => {
   return `${value.toFixed(decimals)}%`;
+};
+
+/**
+ * Formats a file size for display
+ */
+export const formatFileSize = (bytes: number): string => {
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+};
+
+/**
+ * Truncates text to a specified length
+ */
+export const truncateText = (text: string, maxLength: number): string => {
+  if (!text || text.length <= maxLength) return text;
+  return text.slice(0, maxLength) + '...';
+};
+
+/**
+ * Capitalizes the first letter of a string
+ */
+export const capitalize = (text: string): string => {
+  if (!text) return '';
+  return text.charAt(0).toUpperCase() + text.slice(1);
 };

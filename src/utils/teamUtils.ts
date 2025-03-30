@@ -1,7 +1,10 @@
 
-import { UserTeam } from '@/types/user';
+import { TeamType, GenderType } from '@/types/user';
 
-export const getTeamColor = (team: UserTeam): string => {
+/**
+ * Get the color class for a team
+ */
+export const getTeamColor = (team: TeamType | null): string => {
   switch (team) {
     case 'red':
       return 'text-red-500';
@@ -10,24 +13,14 @@ export const getTeamColor = (team: UserTeam): string => {
     case 'blue':
       return 'text-blue-500';
     default:
-      return 'text-gray-500';
+      return 'text-gray-400';
   }
 };
 
-export const getTeamBgColor = (team: UserTeam): string => {
-  switch (team) {
-    case 'red':
-      return 'bg-red-500';
-    case 'green':
-      return 'bg-green-500';
-    case 'blue':
-      return 'bg-blue-500';
-    default:
-      return 'bg-gray-500';
-  }
-};
-
-export const getTeamBorderColor = (team: UserTeam): string => {
+/**
+ * Get the border color class for a team
+ */
+export const getTeamBorderColor = (team: TeamType | null): string => {
   switch (team) {
     case 'red':
       return 'border-red-500';
@@ -36,114 +29,167 @@ export const getTeamBorderColor = (team: UserTeam): string => {
     case 'blue':
       return 'border-blue-500';
     default:
-      return 'border-gray-500';
+      return 'border-gray-400';
   }
 };
 
-export const getTeamDisplayName = (team: UserTeam): string => {
+/**
+ * Get the display name for a team
+ */
+export const getTeamName = (team: TeamType | null): string => {
   switch (team) {
     case 'red':
-      return 'Red Dynasty';
+      return 'Purple Dynasty';
     case 'green':
-      return 'Green Vanguard';
+      return 'Gold Dominion';
     case 'blue':
-      return 'Blue Legion';
+      return 'Azure Order';
     default:
-      return 'Unknown Team';
+      return 'Unaligned';
   }
 };
 
-export const getTeamMotto = (team: UserTeam): string => {
+/**
+ * Get the initials for a username
+ */
+export const getInitials = (username: string): string => {
+  if (!username) return '';
+  
+  const parts = username.split(/[^a-zA-Z0-9]/);
+  const filteredParts = parts.filter(part => part.length > 0);
+  
+  if (filteredParts.length === 0) return '';
+  if (filteredParts.length === 1) {
+    return filteredParts[0].substring(0, 2).toUpperCase();
+  }
+  
+  return (filteredParts[0].charAt(0) + filteredParts[1].charAt(0)).toUpperCase();
+};
+
+/**
+ * Get the title for a gender
+ */
+export const getGenderTitle = (gender: GenderType | null): string => {
+  switch (gender) {
+    case 'king':
+      return 'His Royal Highness';
+    case 'queen':
+      return 'Her Royal Highness';
+    case 'jester':
+      return 'The Court Jester';
+    default:
+      return 'Noble';
+  }
+};
+
+/**
+ * Get the emoji for a gender
+ */
+export const getGenderEmoji = (gender: GenderType | null): string => {
+  switch (gender) {
+    case 'king':
+      return '👑';
+    case 'queen':
+      return '👸';
+    case 'jester':
+      return '🃏';
+    default:
+      return '🏰';
+  }
+};
+
+/**
+ * Get the team motto
+ */
+export const getTeamMotto = (team: TeamType | null): string => {
   switch (team) {
     case 'red':
-      return 'Wealth Through Aggression';
+      return "Wealth is power, and power is our destiny.";
     case 'green':
-      return 'Prosperity Through Innovation';
+      return "Golden opportunities await those who pay their way.";
     case 'blue':
-      return 'Power Through Knowledge';
+      return "In spending we trust, in wealth we prosper.";
     default:
-      return 'No Team Motto';
+      return "All wealth flows to those who embrace the system.";
   }
 };
 
-export const getTeamBenefit = (team: UserTeam): string => {
+/**
+ * Get the team benefit description
+ */
+export const getTeamBenefit = (team: TeamType | null): string => {
   switch (team) {
     case 'red':
-      return '5% bonus to all spending power';
+      return "Access to exclusive digital titles and premium profile effects.";
     case 'green':
-      return '10% discount on all cosmetic purchases';
+      return "Enhanced visibility on the leaderboard and special animations.";
     case 'blue':
-      return 'Exclusive access to special marketplace items';
+      return "Priority access to limited-time spending opportunities.";
     default:
-      return 'No team benefits';
+      return "Basic platform access with standard features.";
   }
 };
 
-export const getTeamAbsurdStat = (team: UserTeam): string => {
+/**
+ * Get an absurd stat about the team
+ */
+export const getTeamAbsurdStat = (team: TeamType | null): string => {
   switch (team) {
     case 'red':
-      return 'Members have collectively thrown 342,567 virtual tomatoes';
+      return "Members of the Purple Dynasty have collectively spent enough to buy a small island nation.";
     case 'green':
-      return 'Has planted 45,678 digital trees that produce absolutely nothing';
+      return "Gold Dominion users average 17.3 hours staring at their rank position daily.";
     case 'blue':
-      return 'Members spend an average of 5.3 hours daily staring at leaderboards';
+      return "Azure Order members believe their spending directly influences global financial markets.";
     default:
-      return 'No absurd stats available';
+      return "Unaligned users are 73% more likely to eventually surrender to the allure of spending.";
   }
 };
 
-export const getTeamHistoricalNote = (team: UserTeam): string => {
+/**
+ * Get a joke about the team's NFT
+ */
+export const getTeamNFTJoke = (team: TeamType | null): string => {
   switch (team) {
     case 'red':
-      return 'Founded by Lord Cashington after a particularly heated bidding war';
+      return "Our exclusive Purple Crown NFT is absolutely worthless, but it costs more than your car!";
     case 'green':
-      return 'Established when Lady Emeralda outspent three dukes combined';
+      return "Own a piece of digital nothing with our Golden Coin NFT - only $10,000!";
     case 'blue':
-      return 'Formed when Count Sapphire purchased the entire eastern treasury';
+      return "Our Azure Seal NFT is guaranteed to be unique, just like the other 10,000 we minted!";
     default:
-      return 'No historical notes available';
+      return "Join a team to unlock the privilege of buying overpriced digital assets!";
   }
 };
 
-export const getTeamNFTJoke = (team: UserTeam): string => {
+/**
+ * Get the team's fake security guarantee
+ */
+export const getTeamSecurityGuarantee = (team: TeamType | null): string => {
   switch (team) {
     case 'red':
-      return 'We turn money into digital badges faster than you can say "depreciating asset"';
+      return "Your funds are secured by our proprietary 'Trust Us' technology.";
     case 'green':
-      return 'Our NFTs are so exclusive, even we don't know what they do';
+      return "128-bit encryption that definitely won't be obsolete by the time you read this.";
     case 'blue':
-      return 'We've calculated the exact mathematical formula for FOMO';
+      return "Security audited by our cousin who once read a book about computers.";
     default:
-      return 'No NFT jokes available';
+      return "We promise not to lose your money (terms and conditions apply).";
   }
 };
 
-export const getTeamSecurityGuarantee = (team: UserTeam): string => {
+/**
+ * Get a crypto roast for the team
+ */
+export const getTeamCryptoRoast = (team: TeamType | null): string => {
   switch (team) {
     case 'red':
-      return 'Your money is perfectly safe with us (terms and conditions apply)';
+      return "Just like our crypto investments, your rank will be worth nothing in a few years!";
     case 'green':
-      return 'Triple-encrypted with algorithms we made up this morning';
+      return "Our blockchain is so efficient it only wastes the electricity of a small country!";
     case 'blue':
-      return 'So secure, sometimes even we can't access your funds';
+      return "We're just three market crashes away from profitability!";
     default:
-      return 'No security guarantees available';
+      return "Crypto: Making gambling seem like a sensible investment strategy since 2009.";
   }
-};
-
-export const getTeamCryptoRoast = (team: UserTeam): string => {
-  switch (team) {
-    case 'red':
-      return 'At least our digital currency is backed by real money you've wasted';
-    case 'green':
-      return 'Our blockchain has so many buzzwords, venture capitalists faint';
-    case 'blue':
-      return 'We've proven spending money on nothing can be intellectually stimulating';
-    default:
-      return 'No crypto roasts available';
-  }
-};
-
-export const getAllTeams = (): UserTeam[] => {
-  return ['red', 'green', 'blue'];
 };
