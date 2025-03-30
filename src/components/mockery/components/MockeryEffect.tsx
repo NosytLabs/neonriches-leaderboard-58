@@ -1,9 +1,9 @@
 
-import React, { useState, useEffect } from 'react';
-import { X } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import React, { useEffect, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { MockeryAction } from '@/types/mockery';
-import { getMockeryDescription } from '@/utils/mockeryUtils';
+import { renderMockeryIcon } from '@/utils/mockeryUtils';
+import { getMockeryActionIcon } from '@/utils/mockery/mockery-icons';
 
 interface MockeryEffectProps {
   username: string;
@@ -12,114 +12,95 @@ interface MockeryEffectProps {
   onComplete: () => void;
 }
 
-const MockeryEffect: React.FC<MockeryEffectProps> = ({ 
-  username, 
-  action, 
-  isActive, 
-  onComplete 
+const MockeryEffect: React.FC<MockeryEffectProps> = ({
+  username,
+  action,
+  isActive,
+  onComplete
 }) => {
-  const [showEffect, setShowEffect] = useState(false);
-  const [animationDone, setAnimationDone] = useState(false);
+  const [elements, setElements] = useState<React.ReactNode[]>([]);
   
   useEffect(() => {
-    if (isActive) {
-      setShowEffect(true);
-      setAnimationDone(false);
+    if (!isActive) return;
+    
+    const count = action === 'tomatoes' || action === 'eggs' ? 20 : 10;
+    const duration = 3000;
+    const newElements = [];
+    
+    for (let i = 0; i < count; i++) {
+      const delay = Math.random() * 1000;
+      const xPosition = Math.random() * 100;
+      const rotation = Math.random() * 360;
+      const scale = 0.5 + Math.random() * 1;
       
-      const timer = setTimeout(() => {
-        setAnimationDone(true);
-      }, 2500);
+      const iconName = getMockeryActionIcon(action);
       
-      return () => clearTimeout(timer);
-    } else {
-      setShowEffect(false);
+      newElements.push(
+        <motion.div
+          key={`mockery-${action}-${i}`}
+          initial={{ 
+            opacity: 0, 
+            y: -100, 
+            x: `${xPosition}vw`,
+            rotate: rotation,
+            scale
+          }}
+          animate={{ 
+            opacity: [0, 1, 1, 0],
+            y: ['0vh', '100vh'],
+            rotate: [rotation, rotation + 360]
+          }}
+          transition={{ 
+            duration: 3,
+            delay: delay / 1000,
+            times: [0, 0.1, 0.9, 1]
+          }}
+          className="fixed z-50 text-4xl pointer-events-none"
+        >
+          {renderMockeryIcon(iconName, "h-12 w-12")}
+        </motion.div>
+      );
     }
-  }, [isActive]);
+    
+    setElements(newElements);
+    
+    // Clean up and trigger the completion callback
+    const timer = setTimeout(() => {
+      setElements([]);
+      if (onComplete) onComplete();
+    }, duration);
+    
+    return () => clearTimeout(timer);
+  }, [isActive, action, username, onComplete]);
   
-  const handleClose = () => {
-    setShowEffect(false);
-    if (onComplete) {
-      onComplete();
-    }
-  };
-  
-  if (!showEffect) return null;
-  
-  const getEffectAnimation = () => {
-    switch(action) {
-      case 'tomatoes':
-        return 'mockery-tomatoes-animation';
-      case 'eggs':
-      case 'putridEggs':
-        return 'mockery-eggs-animation';
-      case 'dunce':
-        return 'mockery-dunce-animation';
-      case 'courtJester':
-        return 'mockery-jester-animation';
-      case 'stocks':
-        return 'mockery-stocks-animation';
-      case 'glitterBomb':
-        return 'mockery-glitter-animation';
-      case 'smokeBomb':
-        return 'mockery-smoke-animation';
-      case 'silence':
-        return 'mockery-silence-animation';
-      default:
-        return 'mockery-default-animation';
-    }
-  };
-  
-  const getEffectIcon = (actionType: MockeryAction): string => {
-    switch (actionType) {
-      case 'tomatoes': return '🍅';
-      case 'putridEggs': return '🥚';
-      case 'eggs': return '🥚';
-      case 'stocks': return '🪵';
-      case 'silence': return '🔇';
-      case 'courtJester': return '🃏';
-      case 'smokeBomb': return '💨';
-      case 'glitterBomb': return '✨';
-      default: return '❓';
-    }
-  };
-  
-  const effectDescription = getMockeryDescription(action);
-  const animationClass = getEffectAnimation();
+  if (!isActive) return null;
   
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/80">
-      <Button 
-        variant="outline" 
-        size="sm" 
-        className="absolute top-4 right-4 glass-morphism"
-        onClick={handleClose}
-      >
-        <X className="h-4 w-4" />
-      </Button>
-      
-      <div className="text-center max-w-md">
-        <div className={`text-6xl mb-6 ${animationClass}`}>
-          {getEffectIcon(action)}
-        </div>
-        
-        <h2 className="text-2xl font-bold mb-2 royal-gradient">
-          {username} has been mocked!
-        </h2>
-        
-        <p className="text-white/70 mb-6">
-          {effectDescription}
-        </p>
-        
-        {animationDone && (
-          <Button 
-            className="bg-royal-gold text-black hover:bg-royal-gold/90"
-            onClick={handleClose}
+    <AnimatePresence>
+      {isActive && (
+        <div className="fixed inset-0 z-50 pointer-events-none">
+          <motion.div 
+            className="absolute inset-0 bg-black/50"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
           >
-            Dismiss
-          </Button>
-        )}
-      </div>
-    </div>
+            <motion.div 
+              className="absolute top-1/3 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-center"
+              initial={{ scale: 0.5, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.5, opacity: 0 }}
+            >
+              <h2 className="text-2xl font-bold mb-2">{username} is being subjected to:</h2>
+              <div className="text-4xl font-bold royal-gradient">
+                {action.charAt(0).toUpperCase() + action.slice(1)}
+              </div>
+            </motion.div>
+          </motion.div>
+          {elements}
+        </div>
+      )}
+    </AnimatePresence>
   );
 };
 

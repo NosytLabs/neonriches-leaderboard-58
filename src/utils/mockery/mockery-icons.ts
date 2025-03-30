@@ -1,40 +1,27 @@
 
 import { MockeryAction } from '@/types/mockery';
-import { 
-  Tomato, 
-  Egg, 
-  TrendingDown, 
-  Crown, 
-  Shield,
-  AlertCircle,
-  Feather,
-  Bomb,
-  Skull,
-  ThumbsDown
-} from 'lucide-react';
-import React from 'react';
 
 /**
  * Get icon for a mockery action
  */
-export const getMockeryActionIcon = (action: MockeryAction) => {
+export const getMockeryActionIcon = (action: MockeryAction): string => {
   switch (action) {
-    case 'tomatoes': return <Tomato className="h-4 w-4" />;
-    case 'eggs': return <Egg className="h-4 w-4" />;
-    case 'stocks': return <TrendingDown className="h-4 w-4" />;
+    case 'tomatoes': return 'Tomato';
+    case 'eggs': return 'Egg';
+    case 'stocks': return 'TrendingDown';
     case 'dunce': 
-    case 'silence': return <AlertCircle className="h-4 w-4" />;
+    case 'silence': return 'AlertCircle';
     case 'jester': 
-    case 'courtJester': return <Feather className="h-4 w-4" />;
+    case 'courtJester': return 'Feather';
     case 'smokeBomb': 
-    case 'glitterBomb': return <Bomb className="h-4 w-4" />;
-    case 'protection': return <Shield className="h-4 w-4" />;
+    case 'glitterBomb': return 'Bomb';
+    case 'protection': return 'Shield';
     case 'guillotine': 
-    case 'dungeons': return <Skull className="h-4 w-4" />;
+    case 'dungeons': return 'Skull';
     case 'crown': 
     case 'target': 
-    case 'challenge': return <Crown className="h-4 w-4" />;
-    default: return <ThumbsDown className="h-4 w-4" />;
+    case 'challenge': return 'Crown';
+    default: return 'ThumbsDown';
   }
 };
 

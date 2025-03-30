@@ -1,14 +1,5 @@
 
 import { ShameAction, MockeryAction } from '@/types/mockery';
-import { 
-  Egg, 
-  TrendingDown, 
-  Tomato, 
-  Crown, 
-  Laugh, 
-  Shield
-} from 'lucide-react';
-import React from 'react';
 
 // Get the current weekly discounted action (would normally come from API/backend)
 export const getWeeklyDiscountedAction = (): ShameAction => {
@@ -46,12 +37,12 @@ export const getDiscountedShamePrice = (action: ShameAction): number => {
 };
 
 // Helper functions for shame action metadata
-export const getShameActionIcon = (action: ShameAction | MockeryAction) => {
+export const getShameActionIcon = (action: ShameAction | MockeryAction): string => {
   switch (action) {
-    case 'tomatoes': return <Tomato className="h-4 w-4" />;
-    case 'eggs': return <Egg className="h-4 w-4" />;
-    case 'stocks': return <TrendingDown className="h-4 w-4" />;
-    default: return <Crown className="h-4 w-4" />;
+    case 'tomatoes': return 'Tomato';
+    case 'eggs': return 'Egg';
+    case 'stocks': return 'TrendingDown';
+    default: return 'Crown';
   }
 };
 
