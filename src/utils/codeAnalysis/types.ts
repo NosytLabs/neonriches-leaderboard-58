@@ -22,6 +22,14 @@ export interface VariableInfo {
   impact?: string;
 }
 
+export interface VariableIssue {
+  name: string;
+  type?: string;
+  file: string;
+  line: number;
+  impact?: string;
+}
+
 export interface ImportIssue {
   name: string;
   path?: string;

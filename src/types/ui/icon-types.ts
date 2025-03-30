@@ -41,7 +41,7 @@ export type IconStyle =
 
 export type IconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' | number;
 
-export interface IconProps extends Omit<LucideProps, "color"> {
+export interface IconProps {
   type?: IconType;
   name?: string;
   style?: IconStyle | CSSProperties;
@@ -50,8 +50,9 @@ export interface IconProps extends Omit<LucideProps, "color"> {
   secondaryColor?: string;
   className?: string;
   animate?: boolean;
+  animated?: boolean;
 }
 
 export type MedievalIconName = string;
 export type IconColor = string;
-export type MedievalIconColor = string;
+export type MedievalIconColor = string | 'default' | 'bronze' | 'purple' | 'green' | 'red' | 'blue' | 'royal';

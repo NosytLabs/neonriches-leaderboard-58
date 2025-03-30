@@ -1,75 +1,88 @@
 
-/**
- * Format a date into a human-readable string
- * @param dateStr Date string to format
- * @returns Formatted date string
- */
-export const formatDate = (dateStr: string | Date): string => {
-  const date = new Date(dateStr);
-  return date.toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric'
-  });
+import { format, formatDistanceToNow, isValid, parse, parseISO } from "date-fns";
+
+export const formatDate = (date: string | Date): string => {
+  if (!date) return '';
+  
+  const dateObj = typeof date === 'string' ? new Date(date) : date;
+  return format(dateObj, 'MMM d, yyyy');
 };
 
-/**
- * Check if an event is currently active based on start and end dates
- * @param startDate Start date of the event
- * @param endDate End date of the event
- * @returns Boolean indicating if the event is currently active
- */
-export const isEventActive = (startDate: string | Date, endDate: string | Date): boolean => {
-  try {
-    const now = new Date();
-    const start = typeof startDate === 'string' ? new Date(startDate) : startDate;
-    const end = typeof endDate === 'string' ? new Date(endDate) : endDate;
-    
-    return start <= now && now <= end;
-  } catch (error) {
-    console.error('Error checking if event is active:', error);
-    return false;
-  }
+export const formatDateTime = (date: string | Date): string => {
+  if (!date) return '';
+  
+  const dateObj = typeof date === 'string' ? new Date(date) : date;
+  return format(dateObj, 'MMM d, yyyy h:mm a');
 };
 
-/**
- * Format a date and time into a human-readable string
- * @param dateStr Date string to format
- * @returns Formatted date and time string
- */
-export const formatDateTime = (dateStr: string | Date): string => {
-  const date = new Date(dateStr);
-  return date.toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit'
-  });
+export const formatTime = (date: string | Date): string => {
+  if (!date) return '';
+  
+  const dateObj = typeof date === 'string' ? new Date(date) : date;
+  return format(dateObj, 'h:mm a');
 };
 
-/**
- * Calculate days until a given date
- * @param dateStr Target date
- * @returns Number of days until the target date
- */
-export const daysUntil = (dateStr: string | Date): number => {
+export const isEventActive = (startDate: string, endDate: string): boolean => {
   const now = new Date();
-  const targetDate = new Date(dateStr);
+  const start = new Date(startDate);
+  const end = new Date(endDate);
   
-  // Reset time part for accurate day calculation
-  now.setHours(0, 0, 0, 0);
-  targetDate.setHours(0, 0, 0, 0);
-  
-  const diffTime = targetDate.getTime() - now.getTime();
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-  
-  return diffDays;
+  return now >= start && now <= end;
 };
 
-export default {
+export const isEventUpcoming = (startDate: string): boolean => {
+  const now = new Date();
+  const start = new Date(startDate);
+  
+  return now < start;
+};
+
+export const isEventPast = (endDate: string): boolean => {
+  const now = new Date();
+  const end = new Date(endDate);
+  
+  return now > end;
+};
+
+export const getTimeUntilEvent = (startDate: string): string => {
+  const now = new Date();
+  const start = new Date(startDate);
+  
+  if (now >= start) return 'Started';
+  
+  return formatDistanceToNow(start, { addSuffix: true });
+};
+
+export const getTimeRemaining = (endDate: string): string => {
+  const now = new Date();
+  const end = new Date(endDate);
+  
+  if (now >= end) return 'Ended';
+  
+  return formatDistanceToNow(end, { addSuffix: true });
+};
+
+export const getRelativeTimeString = (date: string | Date): string => {
+  const now = new Date();
+  const then = new Date(date);
+  const diff = Math.max(1, Math.floor((now.getTime() - then.getTime()) / 1000));
+  
+  if (diff < 60) return `${diff}s ago`;
+  if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
+  if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
+  if (diff < 2592000) return `${Math.floor(diff / 86400)}d ago`;
+  if (diff < 31536000) return `${Math.floor(diff / 2592000)}mo ago`;
+  return `${Math.floor(diff / 31536000)}y ago`;
+};
+
+export default { 
   formatDate,
-  isEventActive,
   formatDateTime,
-  daysUntil
+  formatTime,
+  isEventActive,
+  isEventUpcoming,
+  isEventPast,
+  getTimeUntilEvent,
+  getTimeRemaining,
+  getRelativeTimeString
 };

@@ -34,5 +34,5 @@ export interface TeamBenefit {
 // Define a type for the team string values used in the TeamChat component
 export type TeamString = 'red' | 'green' | 'blue' | 'gold' | 'top';
 
-// Export the types explicitly so they can be imported by other modules
-export { TeamType, TeamColor, UserTeam, Team, TeamBenefit, TeamString };
+// Explicitly export the types
+export type { TeamType, TeamColor, UserTeam, Team, TeamBenefit, TeamString };

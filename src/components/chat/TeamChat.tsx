@@ -37,6 +37,7 @@ const TeamChat: React.FC<TeamChatProps> = ({ user, limit = 50 }) => {
     red: [],
     green: [],
     blue: [],
+    gold: [],
     top: []
   });
   const [isLoading, setIsLoading] = useState(false);
@@ -44,6 +45,7 @@ const TeamChat: React.FC<TeamChatProps> = ({ user, limit = 50 }) => {
     red: 0,
     green: 0,
     blue: 0,
+    gold: 0,
     top: 0
   });
   const [isJoined, setIsJoined] = useState(false);
@@ -130,6 +132,28 @@ const TeamChat: React.FC<TeamChatProps> = ({ user, limit = 50 }) => {
           timestamp: new Date(Date.now() - 2100000).toISOString()
         }
       ],
+      gold: [
+        {
+          id: 'g1',
+          text: 'Welcome to the Gold Team chat!',
+          userId: 'system',
+          username: 'System',
+          displayName: 'Royal Announcer',
+          team: 'gold',
+          timestamp: new Date(Date.now() - 3600000).toISOString(),
+          isSystem: true
+        },
+        {
+          id: 'g2',
+          text: 'Gold team is the most elite team!',
+          userId: 'gold-leader',
+          username: 'GoldLeader',
+          displayName: 'Golden Sovereign',
+          profileImage: '/images/avatars/gold-leader.jpg',
+          team: 'gold',
+          timestamp: new Date(Date.now() - 2100000).toISOString()
+        }
+      ],
       top: [
         {
           id: 't1',
@@ -170,6 +194,7 @@ const TeamChat: React.FC<TeamChatProps> = ({ user, limit = 50 }) => {
       red: 23,
       green: 17,
       blue: 19,
+      gold: 12,
       top: 8
     });
     
@@ -201,7 +226,7 @@ const TeamChat: React.FC<TeamChatProps> = ({ user, limit = 50 }) => {
         username: user.username,
         displayName: user.displayName || user.username,
         profileImage: user.profileImage,
-        team: user.team && ['red', 'green', 'blue'].includes(user.team) ? user.team as TeamColor : null,
+        team: user.team && ['red', 'green', 'blue', 'gold'].includes(user.team as string) ? user.team as TeamColor : null,
         timestamp: new Date().toISOString()
       };
       
@@ -212,7 +237,7 @@ const TeamChat: React.FC<TeamChatProps> = ({ user, limit = 50 }) => {
       
       setMessage('');
       setIsLoading(false);
-      playSound('message');
+      playSound({id: 'message'});
     }, 300);
   };
   
@@ -232,7 +257,7 @@ const TeamChat: React.FC<TeamChatProps> = ({ user, limit = 50 }) => {
       return isUserInTop50();
     }
     
-    if (['red', 'green', 'blue'].includes(channel)) {
+    if (['red', 'green', 'blue', 'gold'].includes(channel)) {
       if (!user || !user.team) return false;
       return user.team === channel || (user.amountSpent || 0) > 1000;
     }
@@ -250,7 +275,7 @@ const TeamChat: React.FC<TeamChatProps> = ({ user, limit = 50 }) => {
       return;
     }
     
-    if (['red', 'green', 'blue'].includes(value) && user?.team !== value && (user?.amountSpent || 0) <= 1000) {
+    if (['red', 'green', 'blue', 'gold'].includes(value) && user?.team !== value && (user?.amountSpent || 0) <= 1000) {
       toast({
         title: "Team Restricted",
         description: `Only members of the ${value.charAt(0).toUpperCase() + value.slice(1)} Team can access this channel.`,
@@ -260,7 +285,7 @@ const TeamChat: React.FC<TeamChatProps> = ({ user, limit = 50 }) => {
     }
     
     setActiveTab(value);
-    playSound('click');
+    playSound({id: 'click'});
   };
   
   const getTeamColor = (team: TeamColor | null) => {
@@ -268,6 +293,7 @@ const TeamChat: React.FC<TeamChatProps> = ({ user, limit = 50 }) => {
       case 'red': return 'text-royal-crimson';
       case 'green': return 'text-royal-gold';
       case 'blue': return 'text-royal-navy';
+      case 'gold': return 'text-yellow-500';
       default: return 'text-white';
     }
   };
@@ -277,6 +303,7 @@ const TeamChat: React.FC<TeamChatProps> = ({ user, limit = 50 }) => {
       case 'red': return <Shield className="h-3 w-3 text-royal-crimson" />;
       case 'green': return <Shield className="h-3 w-3 text-royal-gold" />;
       case 'blue': return <Shield className="h-3 w-3 text-royal-navy" />;
+      case 'gold': return <Shield className="h-3 w-3 text-yellow-500" />;
       default: return null;
     }
   };
@@ -297,7 +324,7 @@ const TeamChat: React.FC<TeamChatProps> = ({ user, limit = 50 }) => {
       setIsJoined(true);
       setIsLoading(false);
       
-      const userTeam = user.team && ['red', 'green', 'blue'].includes(user.team) ? user.team as TeamColor : null;
+      const userTeam = user.team && ['red', 'green', 'blue', 'gold'].includes(user.team as string) ? user.team as TeamColor : null;
       
       const joinMessage: ChatMessage = {
         id: `join-${Date.now()}`,
@@ -320,7 +347,7 @@ const TeamChat: React.FC<TeamChatProps> = ({ user, limit = 50 }) => {
         description: "You have successfully joined the chat.",
       });
       
-      playSound('notification');
+      playSound({id: 'notification'});
     }, 800);
   };
   
@@ -359,7 +386,7 @@ const TeamChat: React.FC<TeamChatProps> = ({ user, limit = 50 }) => {
       </CardHeader>
       
       <Tabs value={activeTab} onValueChange={handleTabChange}>
-        <TabsList className="grid grid-cols-4 bg-transparent">
+        <TabsList className="grid grid-cols-5 bg-transparent">
           <TabsTrigger 
             value="red" 
             disabled={!canAccessChannel('red')}
@@ -382,6 +409,13 @@ const TeamChat: React.FC<TeamChatProps> = ({ user, limit = 50 }) => {
             Blue Team
           </TabsTrigger>
           <TabsTrigger 
+            value="gold" 
+            disabled={!canAccessChannel('gold')}
+            className="data-[state=active]:text-yellow-500 data-[state=active]:bg-yellow-500/20"
+          >
+            Gold Team
+          </TabsTrigger>
+          <TabsTrigger 
             value="top" 
             disabled={!isUserInTop50()}
             className="data-[state=active]:text-royal-purple data-[state=active]:bg-royal-purple/20"
@@ -391,13 +425,13 @@ const TeamChat: React.FC<TeamChatProps> = ({ user, limit = 50 }) => {
           </TabsTrigger>
         </TabsList>
         
-        {Object.keys(messages).map((team) => (
+        {(Object.keys(messages) as TeamString[]).map((team) => (
           <TabsContent key={team} value={team} className="m-0">
             <div className="h-80 flex flex-col">
               <ScrollArea className="flex-1 p-4">
-                {messages[team as TeamString].length > 0 ? (
+                {messages[team].length > 0 ? (
                   <div className="space-y-4">
-                    {messages[team as TeamString].map((msg) => (
+                    {messages[team].map((msg) => (
                       <div 
                         key={msg.id} 
                         className={`flex ${msg.userId === user.id ? 'justify-end' : 'justify-start'}`}

@@ -1,383 +1,135 @@
 
-import { EventDetails, EventStats, Event, EventReward } from '@/types/events';
+import { Event, EventDetails } from '@/types/events';
 
-// Mock event data for development purposes
+// Define event data
 export const events: Event[] = [
   {
-    id: 'event-1',
-    title: 'Royal Tournament',
-    description: 'A grand competition for glory and riches',
-    startDate: new Date(Date.now() + 86400000 * 2), // 2 days from now
-    endDate: new Date(Date.now() + 86400000 * 5), // 5 days from now
+    id: '1',
+    name: 'Royal Gold Rush',
+    description: 'Compete to contribute the most to the royal treasury and win exclusive rewards!',
+    startDate: new Date().toISOString(),
+    endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
     type: 'tournament',
-    status: 'upcoming',
-    maxParticipants: 100,
-    currentParticipants: 36,
-    rewards: ['250 gold coins', 'Royal Badge', 'Special Title'],
-    teamEvent: true,
-    requiredTier: 'basic',
-    imageUrl: '/events/tournament.jpg',
-    name: 'Royal Tournament',
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString()
+    status: 'active',
+    image: '/events/gold-rush.jpg',
+    title: 'Royal Gold Rush'
   },
   {
-    id: 'event-2',
-    title: 'Public Shaming Festival',
-    description: 'Express your disapproval with style',
-    startDate: new Date(), // Now
-    endDate: new Date(Date.now() + 86400000 * 3), // 3 days from now
+    id: '2',
+    name: 'Public Shaming Festival',
+    description: 'Send your rivals to the stocks! A lighthearted way to mark your competitors with visual effects.',
+    startDate: new Date().toISOString(),
+    endDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString(),
     type: 'mockery',
     status: 'active',
-    maxParticipants: 0, // Unlimited
-    currentParticipants: 156,
-    rewards: ['Discount on mockery actions', 'Jester Badge'],
-    teamEvent: false,
-    requiredTier: 'free',
-    imageUrl: '/events/festival.jpg',
-    name: 'Public Shaming Festival',
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString()
+    image: '/events/public-shaming.jpg',
+    title: 'Public Shaming Festival'
   },
   {
-    id: 'event-3',
-    title: 'Royal Auction',
-    description: 'Bid on exclusive cosmetic items',
-    startDate: new Date(Date.now() + 86400000 * 7), // 7 days from now
-    endDate: new Date(Date.now() + 86400000 * 8), // 8 days from now
+    id: '3',
+    name: 'Royal Auction',
+    description: 'Bid on exclusive profile cosmetics and effects that can\'t be purchased elsewhere.',
+    startDate: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000).toISOString(),
+    endDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString(),
     type: 'auction',
     status: 'upcoming',
-    maxParticipants: 0, // Unlimited
-    currentParticipants: 0,
-    rewards: ['Exclusive cosmetics', 'Limited edition titles'],
-    teamEvent: false,
-    requiredTier: 'premium',
-    imageUrl: '/events/auction.jpg',
-    name: 'Royal Auction',
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString()
+    image: '/events/royal-auction.jpg',
+    title: 'Royal Auction'
   }
 ];
 
-export const eventDetails: Record<string, EventDetails> = {
-  'event-1': {
-    id: 'event-1',
-    title: 'Royal Tournament',
-    description: 'A grand competition for glory and riches',
-    longDescription: 'Compete in our royal tournament to prove your worth! Participants will battle in various challenges including spending contests, team recruitment, and mockery prowess. The winners will be granted exclusive rewards and eternal glory in our kingdom.',
-    rules: [
-      'Must be at least Squire rank to participate',
-      'Teams must have a minimum of 5 members',
-      'All spending during the event counts double towards your rank',
-      'Mockery actions against opposing teams grant bonus points'
-    ],
-    rewards: [
-      {
-        id: 'reward-1',
-        name: '250 gold coins',
-        description: 'Added directly to your wallet',
-        tier: 'common',
-        type: 'currency',
-        value: 250,
-        imageUrl: '/rewards/coins.jpg',
-        rarity: 'common'
-      },
-      {
-        id: 'reward-2',
-        name: 'Royal Badge',
-        description: 'Exclusive profile badge for tournament winners',
-        tier: 'rare',
-        type: 'cosmetic',
-        value: 1,
-        imageUrl: '/rewards/badge.jpg',
-        rarity: 'rare'
-      },
-      {
-        id: 'reward-3',
-        name: 'Special Title',
-        description: '"Champion of the Realm" title for your profile',
-        tier: 'epic',
-        type: 'title',
-        value: 1,
-        imageUrl: '/rewards/title.jpg',
-        rarity: 'epic'
-      }
-    ],
-    schedule: [
-      { date: new Date(Date.now() + 86400000 * 2), title: 'Opening Ceremony' },
-      { date: new Date(Date.now() + 86400000 * 3), title: 'Team Challenges' },
-      { date: new Date(Date.now() + 86400000 * 4), title: 'Individual Contests' },
-      { date: new Date(Date.now() + 86400000 * 5), title: 'Awards Ceremony' }
-    ],
-    startDate: new Date(Date.now() + 86400000 * 2),
-    endDate: new Date(Date.now() + 86400000 * 5),
+export const eventDetails: EventDetails[] = [
+  {
+    id: '1',
+    name: 'Royal Gold Rush',
+    description: 'Compete to contribute the most to the royal treasury and win exclusive rewards!',
+    startDate: new Date().toISOString(),
+    endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
     type: 'tournament',
-    imageUrl: '/events/tournament.jpg',
-    name: 'Royal Tournament',
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString()
-  },
-  'event-2': {
-    id: 'event-2',
-    title: 'Public Shaming Festival',
-    description: 'Express your disapproval with style',
-    longDescription: 'Join our medieval-inspired mockery festival! During this event, all mockery actions are discounted and special themed mockery effects are available. Show your rivals who\'s boss by decorating their profiles with eggs, tomatoes, and more!',
+    status: 'active',
+    image: '/events/gold-rush.jpg',
     rules: [
-      'All users can participate',
-      '50% discount on all mockery actions',
-      'Special festival mockery effects available',
-      'Most active participants receive special rewards'
+      'Participants must spend at least $5 during the event period',
+      'The top 10 spenders will receive exclusive cosmetic rewards',
+      'All participants will receive a participation certificate',
+      'Teams with the highest collective contribution will receive bonus rewards'
     ],
-    rewards: [
+    prizes: [
       {
-        id: 'reward-1',
-        name: 'Discount on mockery actions',
-        description: '25% permanent discount on all future mockery actions',
-        tier: 'uncommon',
-        type: 'discount',
-        value: 25,
-        imageUrl: '/rewards/discount.jpg',
-        rarity: 'uncommon'
+        rank: '1st Place',
+        reward: 'Golden Crown Cosmetic'
       },
       {
-        id: 'reward-2',
-        name: 'Jester Badge',
-        description: 'Special profile badge for festival participants',
-        tier: 'common',
-        type: 'cosmetic',
-        value: 1,
-        imageUrl: '/rewards/jester.jpg',
-        rarity: 'common'
+        rank: '2nd Place',
+        reward: 'Silver Scepter Cosmetic'
+      },
+      {
+        rank: '3rd Place',
+        reward: 'Bronze Throne Cosmetic'
+      },
+      {
+        rank: 'Top 10',
+        reward: 'Royal Gold Rush Participant Badge'
       }
     ],
-    schedule: [
-      { date: new Date(), title: 'Festival Begins' },
-      { date: new Date(Date.now() + 86400000 * 1), title: 'Tomato Day' },
-      { date: new Date(Date.now() + 86400000 * 2), title: 'Egg Day' },
-      { date: new Date(Date.now() + 86400000 * 3), title: 'Festival Ends' }
-    ],
-    startDate: new Date(),
-    endDate: new Date(Date.now() + 86400000 * 3),
-    type: 'mockery',
-    imageUrl: '/events/festival.jpg',
+    title: 'Royal Gold Rush',
+    rewards: [
+      {
+        id: '1',
+        name: 'Golden Crown',
+        description: 'A shimmering crown that marks you as royalty',
+        type: 'cosmetic',
+        tier: 'legendary'
+      }
+    ]
+  },
+  {
+    id: '2',
     name: 'Public Shaming Festival',
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString()
-  },
-  'event-3': {
-    id: 'event-3',
-    title: 'Royal Auction',
-    description: 'Bid on exclusive cosmetic items',
-    longDescription: 'Participate in our exclusive royal auction! Rare and unique cosmetic items, titles, and effects will be available for bidding. These items will never be available through regular purchases, so don\'t miss your chance!',
+    description: 'Send your rivals to the stocks! A lighthearted way to mark your competitors with visual effects.',
+    startDate: new Date().toISOString(),
+    endDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString(),
+    type: 'mockery',
+    status: 'active',
+    image: '/events/public-shaming.jpg',
     rules: [
-      'Premium tier or higher required to participate',
-      'All bids are final and non-refundable',
-      'Minimum bid increments of 10 gold coins',
-      'Winning bids are processed immediately'
+      'All mockery effects are purely visual and have no impact on rankings',
+      'Effects last for 24 hours',
+      'Users can purchase protection from mockery',
+      'Premium users receive discounts on mockery actions'
     ],
-    rewards: [
-      {
-        id: 'reward-1',
-        name: 'Exclusive cosmetics',
-        description: 'Unique profile decorations and effects',
-        tier: 'legendary',
-        type: 'cosmetic',
-        value: 3,
-        imageUrl: '/rewards/cosmetics.jpg',
-        rarity: 'legendary'
-      },
-      {
-        id: 'reward-2',
-        name: 'Limited edition titles',
-        description: 'Rare titles that will never be available again',
-        tier: 'epic',
-        type: 'title',
-        value: 2,
-        imageUrl: '/rewards/rare-title.jpg',
-        rarity: 'epic'
-      }
-    ],
-    schedule: [
-      { date: new Date(Date.now() + 86400000 * 7), title: 'Auction Preview' },
-      { date: new Date(Date.now() + 86400000 * 7.5), title: 'Bidding Begins' },
-      { date: new Date(Date.now() + 86400000 * 8), title: 'Auction Ends' }
-    ],
-    startDate: new Date(Date.now() + 86400000 * 7),
-    endDate: new Date(Date.now() + 86400000 * 8),
-    type: 'auction',
-    imageUrl: '/events/auction.jpg',
+    prizes: [],
+    title: 'Public Shaming Festival',
+    rewards: []
+  },
+  {
+    id: '3',
     name: 'Royal Auction',
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString()
+    description: 'Bid on exclusive profile cosmetics and effects that can\'t be purchased elsewhere.',
+    startDate: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000).toISOString(),
+    endDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString(),
+    type: 'auction',
+    status: 'upcoming',
+    image: '/events/royal-auction.jpg',
+    rules: [
+      'All bids are final',
+      'Items are exclusive and will not be available again',
+      'Minimum bid increments of $5',
+      'Winners must have sufficient funds to pay for their winning bids'
+    ],
+    prizes: [],
+    title: 'Royal Auction',
+    rewards: []
   }
+];
+
+export const eventStats = {
+  usersParticipating: 342,
+  totalContributed: 15780,
+  topContributor: 'GoldKing',
+  daysRemaining: 5,
+  teamsParticipating: 3,
+  leadingTeam: 'Red'
 };
 
-export const eventStats: EventStats = {
-  activeEvents: 1,
-  upcomingEvents: 2,
-  pastEvents: 8,
-  totalParticipation: 2456,
-  popularEvent: 'Public Shaming Festival',
-  totalRewardsDistributed: 15750,
-  teamParticipation: {
-    red: 823,
-    blue: 762,
-    green: 687,
-    gold: 184
-  },
-  id: 'stats-1',
-  eventId: 'global',
-  participantsCount: 2456,
-  totalSpent: 152480,
-  topContributors: ['user-1', 'user-2', 'user-3'],
-  averageSpend: 62.1,
-  highestSpend: 5430,
-  lowestSpend: 1,
-  duration: 30,
-  prizePool: 25000,
-  topContribution: 5430
-};
-
-// Export mock data for public shaming festival
-export const topUsers = [
-  { id: 1, username: "RoyalSpender1", profileImage: "https://i.pravatar.cc/150?img=1", rank: 1, team: "red", amountSpent: 5000, lastMocked: new Date().toISOString() },
-  { id: 2, username: "GoldenThrone", profileImage: "https://i.pravatar.cc/150?img=2", rank: 2, team: "blue", amountSpent: 4500, lastMocked: new Date().toISOString() },
-  { id: 3, username: "WealthyNoble", profileImage: "https://i.pravatar.cc/150?img=3", rank: 3, team: "green", amountSpent: 4000, lastMocked: new Date().toISOString() },
-  { id: 4, username: "PurpleSovereign", profileImage: "https://i.pravatar.cc/150?img=4", rank: 4, team: "red", amountSpent: 3500, lastMocked: new Date().toISOString() },
-  { id: 5, username: "GoldHoarder", profileImage: "https://i.pravatar.cc/150?img=5", rank: 5, team: "green", amountSpent: 3000, lastMocked: new Date().toISOString() },
-  { id: 6, username: "RoyalJester", profileImage: "https://i.pravatar.cc/150?img=6", rank: 6, team: "blue", amountSpent: 2500, lastMocked: new Date().toISOString() }
-];
-
-// Mock event data
-export const mockEvents = [
-  {
-    id: "1",
-    name: "Royal Spending Tournament",
-    title: "Royal Tournament",
-    description: "Compete to spend the most and climb the ranks faster during this limited time event!",
-    type: "competition" as EventType,
-    startDate: new Date(Date.now() - 86400000 * 2).toISOString(), // 2 days ago
-    endDate: new Date(Date.now() + 86400000 * 5).toISOString(), // 5 days from now
-    imageUrl: "https://source.unsplash.com/random/800x600/?golden,crown",
-    image: "https://source.unsplash.com/random/800x600/?golden,crown",
-    createdAt: new Date(Date.now() - 86400000 * 3).toISOString(),
-    updatedAt: new Date(Date.now() - 86400000).toISOString(),
-    status: "active",
-    rewards: [
-      {
-        id: "r1",
-        name: "Golden Crown",
-        description: "A prestigious cosmetic for your profile",
-        type: "cosmetic",
-        value: 100,
-        imageUrl: "/images/rewards/crown.png",
-        rarity: "legendary",
-      },
-      {
-        id: "r2",
-        name: "Royal Title",
-        description: "Exclusive 'Tournament Champion' title",
-        type: "title",
-        value: 50,
-        imageUrl: "/images/rewards/title.png",
-        rarity: "epic",
-      },
-      {
-        id: "r3",
-        name: "Bonus Rank Points",
-        description: "500 bonus points towards your rank",
-        type: "bonus",
-        value: 500,
-        imageUrl: "/images/rewards/rank.png",
-        rarity: "rare",
-      }
-    ]
-  },
-  {
-    id: "2",
-    name: "Medieval Mockery Festival",
-    title: "Mockery Festival",
-    description: "Engage in harmless medieval tomfoolery by tossing virtual rotten tomatoes!",
-    type: "social" as EventType,
-    startDate: new Date(Date.now() - 86400000).toISOString(), // 1 day ago
-    endDate: new Date(Date.now() + 86400000 * 3).toISOString(), // 3 days from now
-    imageUrl: "https://source.unsplash.com/random/800x600/?medieval,jester",
-    image: "https://source.unsplash.com/random/800x600/?medieval,jester",
-    createdAt: new Date(Date.now() - 86400000 * 2).toISOString(),
-    updatedAt: new Date(Date.now() - 86400000).toISOString(),
-    status: "active",
-    rewards: [
-      {
-        id: "r4",
-        name: "Jester Hat",
-        description: "A colorful jester hat cosmetic",
-        type: "cosmetic",
-        value: 50,
-        imageUrl: "/images/rewards/jester.png",
-        rarity: "rare",
-      },
-      {
-        id: "r5",
-        name: "Mockery Master",
-        description: "Exclusive title for most active participants",
-        type: "title",
-        value: 30,
-        imageUrl: "/images/rewards/mockerytitle.png",
-        rarity: "uncommon",
-      },
-      {
-        id: "r6",
-        name: "Novelty Throne Border",
-        description: "Special profile border with tomato design",
-        type: "border",
-        value: 40,
-        imageUrl: "/images/rewards/border.png",
-        rarity: "uncommon",
-      }
-    ]
-  }
-];
-
-// Mock event stats
-export const mockEventStats = [
-  {
-    id: "stat1",
-    eventId: "1",
-    participantsCount: 150,
-    totalSpent: 25000,
-    topContributors: ["RoyalSpender1", "GoldenThrone", "WealthyNoble"],
-    participantCount: 150,
-    averageSpend: 166.67,
-    highestSpend: 1200,
-    lowestSpend: 5,
-    duration: 7,
-    topContribution: 1200,
-    prizePool: 5000,
-    totalPrizes: 10,
-    totalPokes: 342,
-    mostPoked: [
-      { username: "RoyalJester", pokeCount: 42 },
-      { username: "PurpleSovereign", pokeCount: 38 }
-    ]
-  },
-  {
-    id: "stat2",
-    eventId: "2",
-    participantsCount: 87,
-    totalSpent: 8750,
-    topContributors: ["RoyalJester", "PurpleSovereign", "GoldHoarder"],
-    participantCount: 87,
-    averageSpend: 100.57,
-    highestSpend: 800,
-    lowestSpend: 10,
-    duration: 5,
-    topContribution: 800,
-    prizePool: 2000,
-    totalPrizes: 5,
-    totalPokes: 217,
-    mostPoked: [
-      { username: "RoyalSpender1", pokeCount: 53 },
-      { username: "GoldenThrone", pokeCount: 41 }
-    ]
-  }
-];
+export type { Event, EventDetails };

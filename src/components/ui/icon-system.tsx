@@ -2,7 +2,6 @@
 import React from 'react';
 import { IconProps, IconSize } from '@/types/ui/icon-types';
 import * as LucideIcons from 'lucide-react';
-import { adaptIconName } from '@/utils/iconNameAdapter';
 
 // Helper function to adapt icon names to match the Lucide icon names
 export const adaptIconName = (name: string): string => {
@@ -18,7 +17,7 @@ export const adaptIconName = (name: string): string => {
 };
 
 const IconSystem = React.forwardRef<SVGSVGElement, IconProps>((props, ref) => {
-  const sizeMap: Record<string, number> = {
+  const sizeMap: Record<IconSize, number> = {
     'xs': 16,
     'sm': 20,
     'md': 24,
@@ -36,6 +35,7 @@ const IconSystem = React.forwardRef<SVGSVGElement, IconProps>((props, ref) => {
     color = 'currentColor',
     className = '',
     style = 'default',
+    animate,
     ...rest
   } = props;
   

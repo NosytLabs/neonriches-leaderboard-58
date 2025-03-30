@@ -1,6 +1,7 @@
 
-export type CosmeticRarity = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary' | 'mythic';
-export type CosmeticCategory = 'border' | 'color' | 'font' | 'emoji' | 'title' | 'background' | 'effect' | 'badge' | 'theme';
+export type CosmeticRarity = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary' | 'mythic' | 'unique' | 'royal';
+export type CosmeticCategory = 'border' | 'color' | 'font' | 'emoji' | 'title' | 'background' | 'effect' | 'badge' | 'theme' | 
+                               'appearance' | 'profile' | 'interaction';
 
 export interface CosmeticItem {
   id: string;
@@ -10,7 +11,8 @@ export interface CosmeticItem {
   category: CosmeticCategory;
   type: string;
   rarity: CosmeticRarity;
-  imageSrc?: string; // Add this property to fix RoyalBoutique errors
+  imageSrc?: string;
+  image?: string;
 }
 
 export interface UserCosmeticState {
