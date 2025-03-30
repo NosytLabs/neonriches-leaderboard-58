@@ -42,10 +42,10 @@ export const renderIcon = (name: string, className = 'h-4 w-4'): React.ReactNode
   const IconComponent = getIconComponent(name);
   
   if (IconComponent) {
-    return <IconComponent className={className} />;
+    return React.createElement(IconComponent, { className });
   }
   
-  return <span className={className}>🔷</span>;
+  return React.createElement('span', { className }, '🔷');
 };
 
 export default renderIcon;
