@@ -96,21 +96,39 @@ export const getMockeryCooldown = (action: MockeryAction): number => {
   return cooldowns[action] || 3600000;
 };
 
-// Get icon for mockery action
-export const getMockeryActionIcon = (action: MockeryAction): ReactNode => {
-  const icons: Record<MockeryAction, ReactNode> = {
-    'shame': <FaceSad className="text-amber-500" />,
-    'taunt': <ThumbsDown className="text-red-500" />,
-    'crown': <Crown className="text-yellow-500" />,
-    'challenge': <Sword className="text-blue-500" />,
-    'protection': <ShieldAlert className="text-green-500" />,
-    'jest': <Laugh className="text-purple-500" />,
-    'target': <Target className="text-red-500" />,
-    'defeat': <Skull className="text-gray-500" />,
-    'expose': <Map className="text-amber-500" />
+// Get icon component name for mockery action
+// This returns the component name as a string instead of actual JSX
+export const getMockeryActionIcon = (action: MockeryAction): string => {
+  const iconNames: Record<MockeryAction, string> = {
+    'shame': 'FaceSad',
+    'taunt': 'ThumbsDown',
+    'crown': 'Crown',
+    'challenge': 'Sword',
+    'protection': 'ShieldAlert',
+    'jest': 'Laugh',
+    'target': 'Target',
+    'defeat': 'Skull',
+    'expose': 'Map'
   };
   
-  return icons[action] || <Laugh className="text-purple-500" />;
+  return iconNames[action] || 'Laugh';
+};
+
+// Get icon color for mockery action
+export const getMockeryActionIconColor = (action: MockeryAction): string => {
+  const colorMap: Record<MockeryAction, string> = {
+    'shame': 'text-amber-500',
+    'taunt': 'text-red-500',
+    'crown': 'text-yellow-500',
+    'challenge': 'text-blue-500',
+    'protection': 'text-green-500',
+    'jest': 'text-purple-500',
+    'target': 'text-red-500',
+    'defeat': 'text-gray-500',
+    'expose': 'text-amber-500'
+  };
+  
+  return colorMap[action] || 'text-purple-500';
 };
 
 // Get title for mockery action
