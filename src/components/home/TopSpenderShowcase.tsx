@@ -1,227 +1,181 @@
 
-import React, { useState, useEffect } from 'react';
-import { Trophy, CrownIcon, TrendingUp, Users, DollarSign } from 'lucide-react';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { UserProfile } from '@/types/user';
+import React from 'react';
+import { motion } from 'framer-motion';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Crown, DollarSign, Star, Medal } from 'lucide-react';
+import { User } from '@/types/user';
 import { formatCurrency } from '@/utils/formatters';
-import { supabase } from '@/integrations/supabase/client';
 
 interface TopSpenderShowcaseProps {
   highlightTop?: boolean;
-  className?: string;
 }
 
-const TopSpenderShowcase: React.FC<TopSpenderShowcaseProps> = ({ 
-  highlightTop = false,
-  className = '' 
-}) => {
-  const [topUser, setTopUser] = useState<UserProfile | null>(null);
-  const [loading, setLoading] = useState(true);
-  
-  useEffect(() => {
-    const fetchTopUser = async () => {
-      try {
-        const { data, error } = await supabase
-          .from('leaderboard_view')
-          .select('*')
-          .order('rank', { ascending: true })
-          .limit(1)
-          .single();
-        
-        if (error) throw error;
-        
-        setTopUser({
-          id: data.id,
-          username: data.username,
-          displayName: data.display_name,
-          profileImage: data.profile_image,
-          rank: data.rank,
-          totalSpent: data.total_deposited,
-          amountSpent: data.total_deposited,
-          team: data.team,
-          tier: data.tier,
-          joinDate: data.joined_at,
-          joinedAt: data.joined_at,
-          spendStreak: 0,
-          followers: 0
-        });
-      } catch (error) {
-        console.error('Error fetching top user:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    
-    fetchTopUser();
-    
-    // Set up real-time subscription to update when rankings change
-    const channel = supabase
-      .channel('leaderboard-changes')
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'deposits'
-        },
-        async () => {
-          // Refresh the top user when there's a change in deposits
-          await fetchTopUser();
-        }
-      )
-      .subscribe();
-    
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, []);
-  
-  if (loading || !topUser) {
-    return (
-      <div className={`max-w-lg mx-auto ${className}`}>
-        <div className="text-center mb-6">
-          <h2 className="text-2xl font-bold mb-2 flex items-center justify-center">
-            <Trophy className="h-6 w-6 mr-2 text-yellow-400" />
-            Top Spender Showcase
-          </h2>
-          <p className="text-white/70">
-            Loading the current sovereign...
-          </p>
-        </div>
-        
-        <Card className="glass-morphism border-white/10 overflow-hidden animate-pulse">
-          <div className="h-[300px]"></div>
-        </Card>
-      </div>
-    );
-  }
-  
+const TopSpenderShowcase: React.FC<TopSpenderShowcaseProps> = ({ highlightTop = true }) => {
+  // Mock data for top spenders
+  const topSpenders: User[] = [
+    {
+      id: '1',
+      username: 'JeffBezos',
+      displayName: 'Lord Moneybags',
+      profileImage: 'https://i.pravatar.cc/150?img=1',
+      rank: 1,
+      team: 'blue',
+      tier: 'diamond',
+      amountSpent: 1250000,
+      walletBalance: 75000,
+      joinedAt: '2023-01-15T00:00:00.000Z'
+    },
+    {
+      id: '2',
+      username: 'ElonTusk',
+      displayName: 'The Rocket Baron',
+      profileImage: 'https://i.pravatar.cc/150?img=2',
+      rank: 2,
+      team: 'red',
+      tier: 'platinum',
+      amountSpent: 980000,
+      walletBalance: 45000,
+      joinedAt: '2023-02-10T00:00:00.000Z'
+    },
+    {
+      id: '3',
+      username: 'WallStWolf',
+      displayName: 'Duke of Dividends',
+      profileImage: 'https://i.pravatar.cc/150?img=3',
+      rank: 3,
+      team: 'green',
+      tier: 'platinum',
+      amountSpent: 750000,
+      walletBalance: 30000,
+      joinedAt: '2023-01-22T00:00:00.000Z'
+    }
+  ];
+
   return (
-    <div className={`max-w-lg mx-auto ${className}`}>
-      <div className="text-center mb-6">
-        <h2 className="text-2xl font-bold mb-2 flex items-center justify-center">
-          <Trophy className="h-6 w-6 mr-2 text-yellow-400" />
-          Top Spender Showcase
-        </h2>
-        <p className="text-white/70">
-          The throne belongs to those who spend the most
-        </p>
-      </div>
-      
-      <Card className="glass-morphism border-white/10 overflow-hidden">
-        <CardHeader className="relative p-0">
-          <div className="absolute top-0 left-0 w-full h-24 bg-gradient-to-b from-yellow-500/20 to-transparent" />
-          
-          {highlightTop && (
-            <div className="absolute -top-5 left-1/2 transform -translate-x-1/2 bg-royal-gold text-black px-3 py-1 rounded-full text-sm font-bold flex items-center z-10">
-              <CrownIcon className="h-4 w-4 mr-1" />
-              CURRENT SOVEREIGN
-            </div>
-          )}
-        </CardHeader>
-        
-        <CardContent className="pt-6 pb-4 px-6 relative z-10">
-          <div className="flex justify-between items-start">
-            <div className="flex flex-col items-center">
-              <div className="relative">
-                <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                  <CrownIcon className="h-7 w-7 text-yellow-400" />
-                </div>
-                <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-yellow-400 mb-2">
-                  <img
-                    src={topUser.profileImage || `https://api.dicebear.com/6.x/personas/svg?seed=${topUser.username}`}
-                    alt={topUser.displayName || topUser.username}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              </div>
+    <Card className="glass-morphism border-white/10">
+      <CardHeader>
+        <CardTitle className="flex items-center">
+          <Crown className="mr-2 h-5 w-5 text-royal-gold" />
+          The Royal Elite
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {topSpenders.map((spender, index) => (
+            <motion.div
+              key={spender.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+              className={`relative rounded-lg overflow-hidden ${
+                index === 0 && highlightTop
+                  ? 'md:col-span-3 lg:col-span-1 md:row-span-2'
+                  : ''
+              }`}
+            >
+              <div className={`
+                absolute inset-0 opacity-30
+                ${index === 0 ? 'bg-gradient-to-br from-royal-gold to-amber-600' : 
+                  index === 1 ? 'bg-gradient-to-br from-gray-300 to-gray-500' :
+                  'bg-gradient-to-br from-amber-700 to-amber-900'}
+              `}></div>
               
-              <h3 className="text-xl font-bold">{topUser.displayName || topUser.username}</h3>
-              <p className="text-white/60 text-sm">@{topUser.username}</p>
-              
-              <div className="flex items-center mt-2">
-                <Badge variant="outline" className="bg-yellow-500/10 border-yellow-500/20 text-yellow-400">
-                  Rank #{topUser.rank}
-                </Badge>
-              </div>
-            </div>
-            
-            <div className="space-y-4">
-              <div className="glass-morphism border-white/10 p-3 rounded-lg">
-                <div className="flex items-center">
-                  <DollarSign className="h-5 w-5 text-green-400 mr-2" />
-                  <div>
-                    <div className="text-sm text-white/60">Total Spent</div>
-                    <div className="text-xl font-bold">{formatCurrency(topUser.totalSpent || 0)}</div>
+              <div className="relative p-4 flex flex-col h-full">
+                <div className="absolute top-3 right-3">
+                  {index === 0 ? (
+                    <Crown className="h-8 w-8 text-royal-gold" />
+                  ) : index === 1 ? (
+                    <Medal className="h-8 w-8 text-gray-300" />
+                  ) : (
+                    <Medal className="h-8 w-8 text-amber-700" />
+                  )}
+                </div>
+                
+                <div className="flex items-center mb-4">
+                  <div className={`h-16 w-16 rounded-full overflow-hidden border-2 ${
+                    index === 0 ? 'border-royal-gold' : 
+                    index === 1 ? 'border-gray-300' : 
+                    'border-amber-700'
+                  }`}>
+                    <img
+                      src={spender.profileImage}
+                      alt={spender.displayName}
+                      className="h-full w-full object-cover"
+                    />
+                  </div>
+                  
+                  <div className="ml-4">
+                    <h3 className="font-bold text-lg">{spender.displayName}</h3>
+                    <p className="text-white/60">@{spender.username}</p>
+                    <div className="flex items-center mt-1">
+                      <div className={`h-2 w-2 rounded-full mr-1 ${
+                        spender.team === 'red' ? 'bg-red-500' :
+                        spender.team === 'green' ? 'bg-green-500' :
+                        'bg-blue-500'
+                      }`}></div>
+                      <span className="text-xs text-white/70 capitalize">{spender.team} Team</span>
+                    </div>
                   </div>
                 </div>
-              </div>
-              
-              <div className="glass-morphism border-white/10 p-3 rounded-lg">
-                <div className="flex items-center">
-                  <TrendingUp className="h-5 w-5 text-blue-400 mr-2" />
-                  <div>
-                    <div className="text-sm text-white/60">Virtual Status</div>
-                    <div className="text-xl font-bold text-royal-gold">Sovereign</div>
+                
+                <div className={`
+                  mt-2 p-3 rounded-md ${
+                    index === 0 ? 'bg-royal-gold/20' : 
+                    index === 1 ? 'bg-white/20' : 
+                    'bg-amber-900/20'
+                  }
+                `}>
+                  <div className="flex justify-between items-center">
+                    <span className="text-white/70">Total Spent:</span>
+                    <span className="font-bold text-lg flex items-center">
+                      <DollarSign className="h-4 w-4 mr-1 text-royal-gold" />
+                      {formatCurrency(spender.amountSpent).replace('$', '')}
+                    </span>
+                  </div>
+                  
+                  <div className="flex justify-between items-center mt-1">
+                    <span className="text-white/70">Rank:</span>
+                    <span className="font-bold">{spender.rank}</span>
+                  </div>
+                  
+                  <div className="flex justify-between items-center mt-1">
+                    <span className="text-white/70">Tier:</span>
+                    <span className="flex items-center capitalize">
+                      <Star className="h-3 w-3 text-royal-gold mr-1" />
+                      {spender.tier}
+                    </span>
                   </div>
                 </div>
-              </div>
-              
-              <div className="glass-morphism border-white/10 p-3 rounded-lg">
-                <div className="flex items-center">
-                  <Users className="h-5 w-5 text-purple-400 mr-2" />
-                  <div>
-                    <div className="text-sm text-white/60">Team</div>
-                    <div className="text-xl font-bold capitalize">{topUser.team || 'None'}</div>
+                
+                {index === 0 && highlightTop && (
+                  <div className="mt-4 p-3 bg-black/30 rounded-md">
+                    <p className="text-sm text-white/80 italic">
+                      "I've spent more money on this platform than I'd care to admit, but seeing my name at the top 
+                      of the leaderboard gives me a rush that my other investments just can't match."
+                    </p>
+                    <p className="text-right text-xs text-royal-gold mt-2">— {spender.displayName}</p>
                   </div>
+                )}
+                
+                <div className="mt-auto pt-4">
+                  <a 
+                    href={`/profile/${spender.username}`}
+                    className={`
+                      text-sm flex items-center justify-center py-2 rounded-md
+                      ${index === 0 ? 'text-black bg-royal-gold hover:bg-royal-gold/90' : 
+                        'bg-white/10 hover:bg-white/20 text-white'}
+                      transition-colors
+                    `}
+                  >
+                    View Royal Profile
+                  </a>
                 </div>
               </div>
-            </div>
-          </div>
-          
-          <div className="mt-6 glass-morphism border-white/10 p-4 rounded-lg">
-            <h4 className="text-lg font-semibold mb-2">Royal Stats</h4>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <div className="text-sm text-white/60">Member Since</div>
-                <div className="font-medium">
-                  {new Date(topUser.joinDate || topUser.joinedAt).toLocaleDateString()}
-                </div>
-              </div>
-              <div>
-                <div className="text-sm text-white/60">Tier</div>
-                <div className="font-medium capitalize">
-                  {topUser.tier || 'Royal'}
-                </div>
-              </div>
-              <div>
-                <div className="text-sm text-white/60">Days at #1</div>
-                <div className="font-medium">
-                  {Math.floor(Math.random() * 30) + 1} {/* Mock data */}
-                </div>
-              </div>
-              <div>
-                <div className="text-sm text-white/60">Milestone Level</div>
-                <div className="font-medium">
-                  Maximum
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <div className="flex justify-between mt-6">
-            <Button variant="outline" className="glass-morphism border-white/10 hover:bg-white/10">
-              View Profile
-            </Button>
-            <Button className="bg-royal-gold text-black hover:bg-royal-gold/90">
-              Compete for #1
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
+            </motion.div>
+          ))}
+        </div>
+      </CardContent>
+    </Card>
   );
 };
 

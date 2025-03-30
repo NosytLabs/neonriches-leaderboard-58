@@ -1,95 +1,72 @@
 
 /**
- * Format a number as currency ($X,XXX.XX)
+ * Utility functions for formatting data in the application
  */
-export const formatCurrency = (amount: number | undefined): string => {
-  if (amount === undefined) return '$0.00';
-  
+
+/**
+ * Format a number as currency (USD)
+ */
+export const formatCurrency = (amount: number): string => {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0
   }).format(amount);
 };
 
 /**
- * Format a number with commas (X,XXX)
+ * Format a dollar amount with commas and dollar sign
  */
-export const formatNumber = (number: number | undefined): string => {
-  if (number === undefined) return '0';
-  
-  return new Intl.NumberFormat('en-US').format(number);
+export const formatDollarAmount = (amount: number | string): string => {
+  const numAmount = typeof amount === 'string' ? parseFloat(amount) : amount;
+  return `$${numAmount.toLocaleString('en-US')}`;
 };
 
 /**
- * Format a file size (bytes to KB, MB, etc.)
+ * Format a date to a readable string
  */
-export const formatFileSize = (bytes: number): string => {
-  if (bytes === 0) return '0 Bytes';
-  
-  const k = 1024;
-  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
-  
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-};
-
-/**
- * Format a date in a readable format
- */
-export const formatDate = (dateString: string | undefined): string => {
-  if (!dateString) return '';
-  
+export const formatDate = (dateString: string): string => {
   const date = new Date(dateString);
   return date.toLocaleDateString('en-US', {
     year: 'numeric',
-    month: 'short',
+    month: 'long',
     day: 'numeric'
   });
 };
 
 /**
- * Format a timestamp as relative time (e.g. "2 hours ago")
+ * Format a relative time (e.g. "2 hours ago")
  */
-export const formatRelativeTime = (timestamp: string | Date): string => {
-  const date = typeof timestamp === 'string' ? new Date(timestamp) : timestamp;
+export const formatRelativeTime = (dateString: string): string => {
+  const date = new Date(dateString);
   const now = new Date();
+  const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
   
-  const seconds = Math.floor((now.getTime() - date.getTime()) / 1000);
-  const minutes = Math.floor(seconds / 60);
-  const hours = Math.floor(minutes / 60);
-  const days = Math.floor(hours / 24);
-  
-  if (seconds < 60) {
-    return `${seconds} seconds ago`;
-  } else if (minutes < 60) {
-    return `${minutes} ${minutes === 1 ? 'minute' : 'minutes'} ago`;
-  } else if (hours < 24) {
-    return `${hours} ${hours === 1 ? 'hour' : 'hours'} ago`;
-  } else if (days < 30) {
-    return `${days} ${days === 1 ? 'day' : 'days'} ago`;
-  } else {
-    return formatDate(date.toISOString());
-  }
-};
-
-/**
- * Format a number as a percentage
- */
-export const formatPercentage = (value: number, decimals: number = 1): string => {
-  return `${value.toFixed(decimals)}%`;
-};
-
-/**
- * Format historical money values with modern equivalents
- */
-export const formatHistoricalValue = (amount: number, currency: string, year: number, modernEquivalent?: number): string => {
-  const formattedOriginal = `${amount.toLocaleString()} ${currency} (${year})`;
-  
-  if (modernEquivalent) {
-    return `${formattedOriginal} ≈ ${formatCurrency(modernEquivalent)} today`;
+  if (diffInSeconds < 60) {
+    return `${diffInSeconds} seconds ago`;
   }
   
-  return formattedOriginal;
+  const diffInMinutes = Math.floor(diffInSeconds / 60);
+  if (diffInMinutes < 60) {
+    return `${diffInMinutes} minute${diffInMinutes !== 1 ? 's' : ''} ago`;
+  }
+  
+  const diffInHours = Math.floor(diffInMinutes / 60);
+  if (diffInHours < 24) {
+    return `${diffInHours} hour${diffInHours !== 1 ? 's' : ''} ago`;
+  }
+  
+  const diffInDays = Math.floor(diffInHours / 24);
+  if (diffInDays < 30) {
+    return `${diffInDays} day${diffInDays !== 1 ? 's' : ''} ago`;
+  }
+  
+  const diffInMonths = Math.floor(diffInDays / 30);
+  if (diffInMonths < 12) {
+    return `${diffInMonths} month${diffInMonths !== 1 ? 's' : ''} ago`;
+  }
+  
+  const diffInYears = Math.floor(diffInMonths / 12);
+  return `${diffInYears} year${diffInYears !== 1 ? 's' : ''} ago`;
 };

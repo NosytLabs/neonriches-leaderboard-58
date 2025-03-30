@@ -1,172 +1,91 @@
 
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { DollarSign, Trophy, Users, ArrowRight, CircleHelp, Crown } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { motion } from 'framer-motion';
+import { Card, CardContent } from '@/components/ui/card';
 import { Link } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
+import { DollarSign, Crown, ChevronRight } from 'lucide-react';
 
 const SpendingExplanation: React.FC = () => {
   return (
-    <div className="w-full max-w-6xl mx-auto py-8">
-      <div className="text-center mb-10">
-        <h2 className="text-3xl md:text-4xl font-bold mb-3 royal-gradient">How The Rank System Works</h2>
-        <p className="text-white/70 max-w-2xl mx-auto">
-          At SpendThrone, your leaderboard rank is determined solely by how much money you deposit.
-          It's refreshingly honest and straightforward.
-        </p>
-      </div>
-      
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-        <Card className="glass-morphism border-white/10">
-          <CardHeader>
-            <div className="flex items-center gap-2 mb-2">
-              <div className="p-2 rounded-full bg-green-500/20">
-                <DollarSign className="h-5 w-5 text-green-400" />
-              </div>
-              <CardTitle className="text-xl">Dollar = Rank Point</CardTitle>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <p className="text-white/70 mb-4">
-              Every dollar you deposit adds 1 point to your total. Your position on the leaderboard is determined 
-              by your total deposit amount.
-            </p>
-            <div className="bg-white/5 p-3 rounded-lg">
-              <div className="flex justify-between mb-1">
-                <span className="text-white/60">Deposit:</span>
-                <span className="font-mono">$100</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-white/60">Rank Points:</span>
-                <div className="flex items-center">
-                  <span className="font-mono mr-1">+100</span>
-                  <ArrowRight className="h-3 w-3 text-green-400" />
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card className="glass-morphism border-white/10">
-          <CardHeader>
-            <div className="flex items-center gap-2 mb-2">
-              <div className="p-2 rounded-full bg-purple-500/20">
-                <Trophy className="h-5 w-5 text-purple-400" />
-              </div>
-              <CardTitle className="text-xl">Permanent Ranking</CardTitle>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <p className="text-white/70 mb-4">
-              Your leaderboard score never resets. Once you've deposited money, those points are permanently 
-              attributed to your profile.
-            </p>
-            <div className="bg-white/5 p-3 rounded-lg">
-              <div className="text-center">
-                <div className="text-lg font-mono text-purple-300">$500 deposited = #43 rank forever</div>
-                <div className="text-xs text-white/50 mt-1">
-                  (unless someone outspends you)
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card className="glass-morphism border-white/10">
-          <CardHeader>
-            <div className="flex items-center gap-2 mb-2">
-              <div className="p-2 rounded-full bg-blue-500/20">
-                <Users className="h-5 w-5 text-blue-400" />
-              </div>
-              <CardTitle className="text-xl">Team Competition</CardTitle>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <p className="text-white/70 mb-4">
-              Join a team and your deposits contribute to your team's total. Compete with other teams 
-              to reach the top of the team leaderboard.
-            </p>
-            <div className="bg-white/5 p-3 rounded-lg">
-              <div className="flex justify-between mb-1">
-                <span className="text-white/60">Your Deposit:</span>
-                <span className="font-mono">$200</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-white/60">Team Total:</span>
-                <div className="flex items-center">
-                  <span className="font-mono">+200</span>
-                  <ArrowRight className="h-3 w-3 text-blue-400" />
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-      
-      <div className="glass-morphism border-white/10 p-6 rounded-lg mb-12">
-        <div className="flex items-start gap-4">
-          <div className="p-3 rounded-full bg-amber-500/20 flex-shrink-0">
-            <CircleHelp className="h-6 w-6 text-amber-400" />
+    <Card className="glass-morphism border-white/10 h-full">
+      <CardContent className="p-6">
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
+        >
+          <div className="flex items-center gap-2 mb-4">
+            <DollarSign className="h-6 w-6 text-royal-gold" />
+            <h2 className="text-2xl font-bold">Spend Your Way to Glory</h2>
           </div>
-          <div>
-            <h3 className="text-xl font-bold mb-2">Important Distinction: Subscriptions vs. Deposits</h3>
-            <p className="text-white/80 mb-4">
-              There are two separate ways to enhance your experience:
-            </p>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="bg-white/5 p-4 rounded-lg">
-                <div className="flex items-center gap-2 mb-2">
-                  <Crown className="h-5 w-5 text-purple-400" />
-                  <h4 className="font-bold">Subscriptions</h4>
-                </div>
-                <p className="text-sm text-white/70 mb-3">
-                  Subscriptions provide <span className="font-bold text-purple-300">cosmetic benefits</span> like 
-                  profile customization, RGB borders, analytics, and more.
-                </p>
-                <div className="text-xs text-white/50 bg-white/10 p-2 rounded">
-                  Subscriptions do NOT affect your leaderboard rank.
-                </div>
-              </div>
-              
-              <div className="bg-white/5 p-4 rounded-lg">
-                <div className="flex items-center gap-2 mb-2">
-                  <DollarSign className="h-5 w-5 text-green-400" />
-                  <h4 className="font-bold">Direct Deposits</h4>
-                </div>
-                <p className="text-sm text-white/70 mb-3">
-                  Direct deposits <span className="font-bold text-green-300">increase your rank</span> on 
-                  the leaderboard at a 1:1 ratio ($1 = 1 point).
-                </p>
-                <div className="text-xs text-white/50 bg-white/10 p-2 rounded">
-                  This is the ONLY way to improve your position on the leaderboard.
-                </div>
-              </div>
+          
+          <p className="text-white/70 mb-6">
+            In a world obsessed with status symbols but afraid to admit it, SpendThrone cuts through 
+            the pretense. We offer a refreshingly honest approach to social networking:
+          </p>
+          
+          <div className="bg-gradient-to-r from-royal-gold/20 to-transparent p-4 rounded-lg mb-6">
+            <p className="text-lg font-semibold mb-1">Simple Formula:</p>
+            <div className="flex items-center">
+              <p className="text-2xl font-bold">$1 = 1 Rank Point</p>
+              <Crown className="h-5 w-5 text-royal-gold ml-2" />
             </div>
-            
-            <p className="mt-4 text-sm text-white/60 italic">
-              "Like blockchain but without the terrible environmental impact or confusing wallet addresses. Just pure, transparent status-seeking." — Anonymous Noble
-            </p>
           </div>
-        </div>
-      </div>
-      
-      <div className="flex flex-col md:flex-row items-center justify-center gap-6">
-        <Link to="/deposit">
-          <Button className="w-full md:w-auto bg-gradient-to-r from-green-600 to-green-500 hover:opacity-90 text-white">
-            <DollarSign className="h-4 w-4 mr-2" />
-            Increase Your Rank
-          </Button>
-        </Link>
-        
-        <Link to="/subscription">
-          <Button variant="outline" className="w-full md:w-auto border-purple-500/30 text-purple-300 hover:bg-purple-500/10">
-            <Crown className="h-4 w-4 mr-2" />
-            View Subscription Options
-          </Button>
-        </Link>
-      </div>
-    </div>
+          
+          <ul className="space-y-4 mb-6">
+            <li className="flex gap-3">
+              <div className="bg-white/10 rounded-full h-6 w-6 flex items-center justify-center flex-shrink-0 mt-1">
+                <span className="text-royal-gold font-bold">1</span>
+              </div>
+              <div>
+                <p className="font-medium">Add funds to your royal treasury</p>
+                <p className="text-sm text-white/60">
+                  Load up your account with whatever amount you deem worthy of your status aspirations.
+                </p>
+              </div>
+            </li>
+            
+            <li className="flex gap-3">
+              <div className="bg-white/10 rounded-full h-6 w-6 flex items-center justify-center flex-shrink-0 mt-1">
+                <span className="text-royal-gold font-bold">2</span>
+              </div>
+              <div>
+                <p className="font-medium">Convert funds to rank points</p>
+                <p className="text-sm text-white/60">
+                  Each dollar spent immediately and permanently increases your rank on the leaderboard.
+                </p>
+              </div>
+            </li>
+            
+            <li className="flex gap-3">
+              <div className="bg-white/10 rounded-full h-6 w-6 flex items-center justify-center flex-shrink-0 mt-1">
+                <span className="text-royal-gold font-bold">3</span>
+              </div>
+              <div>
+                <p className="font-medium">Enjoy your elevated status</p>
+                <p className="text-sm text-white/60">
+                  Unlock exclusive perks, customization options, and the admiration of your peers.
+                </p>
+              </div>
+            </li>
+          </ul>
+          
+          <div className="mt-6">
+            <Button 
+              variant="default" 
+              className="bg-royal-gold hover:bg-royal-gold/90 text-black w-full"
+              asChild
+            >
+              <Link to="/deposit">
+                <span>Start Your Ascension</span>
+                <ChevronRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
+          </div>
+        </motion.div>
+      </CardContent>
+    </Card>
   );
 };
 

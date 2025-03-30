@@ -1,95 +1,69 @@
 
 import React from 'react';
-import { DollarSign, TrendingUp, ShieldAlert, Coins } from 'lucide-react';
-import { Card, CardContent } from '@/components/ui/card';
+import { motion } from 'framer-motion';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Crown, DollarSign, TrendingUp } from 'lucide-react';
 
 const LeaderboardExplanation: React.FC = () => {
   return (
-    <div className="max-w-4xl mx-auto p-6">
-      <h2 className="text-2xl font-bold mb-4 text-center royal-gradient">
-        SpendThrone's Ranking System Explained
-      </h2>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-        <Card className="glass-morphism border-white/10">
-          <CardContent className="p-6">
-            <div className="flex items-center mb-4">
-              <div className="p-2 bg-royal-gold/20 rounded-full mr-3">
-                <DollarSign className="h-6 w-6 text-royal-gold" />
-              </div>
-              <h3 className="text-xl font-semibold">$1 = 1 Rank Point</h3>
+    <Card className="glass-morphism border-white/10">
+      <CardHeader>
+        <CardTitle className="flex items-center">
+          <TrendingUp className="mr-2 h-5 w-5 text-royal-gold" />
+          How Our Leaderboard Works
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-6">
+          <motion.div 
+            className="flex gap-4"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <div className="flex-shrink-0 w-12 h-12 rounded-full bg-royal-gold/20 flex items-center justify-center">
+              <DollarSign className="h-6 w-6 text-royal-gold" />
             </div>
-            <p className="text-white/70 mb-3">
-              Every dollar you deposit directly converts to 1 point on our leaderboard. We don't use algorithms or artificial boosts - just pure, transparent ranking.
-            </p>
-            <div className="bg-white/5 rounded-lg p-3 text-sm">
-              <p className="text-white/60 italic">
-                "Unlike other social platforms that hide behind complex algorithms, we proudly display our shallow, purely financial ranking system." — Founder's Decree
+            <div>
+              <h3 className="text-lg font-medium mb-1">Simple & Transparent Ranking</h3>
+              <p className="text-white/70">
+                Every dollar you spend equals one rank point. No complicated algorithms, 
+                no hidden formulas. Your position on the leaderboard is determined purely by 
+                your spending power.
               </p>
             </div>
-          </CardContent>
-        </Card>
-        
-        <Card className="glass-morphism border-white/10">
-          <CardContent className="p-6">
-            <div className="flex items-center mb-4">
-              <div className="p-2 bg-royal-purple/20 rounded-full mr-3">
-                <TrendingUp className="h-6 w-6 text-royal-purple" />
-              </div>
-              <h3 className="text-xl font-semibold">Permanent Rankings</h3>
+          </motion.div>
+
+          <motion.div 
+            className="flex gap-4"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
+            <div className="flex-shrink-0 w-12 h-12 rounded-full bg-royal-gold/20 flex items-center justify-center">
+              <Crown className="h-6 w-6 text-royal-gold" />
             </div>
-            <p className="text-white/70 mb-3">
-              Your rank is based on your total deposit amount over time. No resets, no seasonal changes - once you've deposited, those points remain forever.
-            </p>
-            <div className="bg-white/5 rounded-lg p-3 text-sm">
-              <p className="text-white/60 italic">
-                "Think of it like your own personal blockchain ledger - if blockchains were centralized, easy to understand, and concerned only with flaunting wealth."
+            <div>
+              <h3 className="text-lg font-medium mb-1">Permanent Status</h3>
+              <p className="text-white/70">
+                Unlike other platforms where your status can fade, your rank on SpendThrone 
+                is permanent. The leaderboard never resets, ensuring your contributions are 
+                forever recognized in our digital kingdom.
               </p>
             </div>
-          </CardContent>
-        </Card>
-      </div>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <Card className="glass-morphism border-white/10">
-          <CardContent className="p-6">
-            <div className="flex items-center mb-4">
-              <div className="p-2 bg-royal-crimson/20 rounded-full mr-3">
-                <ShieldAlert className="h-6 w-6 text-royal-crimson" />
-              </div>
-              <h3 className="text-xl font-semibold">Spending vs. Depositing</h3>
-            </div>
-            <p className="text-white/70 mb-3">
-              Depositing money increases your rank. Spending your deposited funds on features like subscriptions or mockery does NOT affect your rank - it's based solely on your total deposits.
+          </motion.div>
+
+          <div className="p-4 bg-white/5 rounded-lg border border-royal-gold/20">
+            <p className="text-sm text-white/80">
+              "SpendThrone is the only social network honest enough to admit that status is 
+              primarily about how much money you're willing to part with. At least here, you 
+              know exactly what you're paying for."
             </p>
-            <div className="bg-white/5 rounded-lg p-3 text-sm">
-              <p className="text-white/60 italic">
-                "The modern nobility doesn't waste gold on frivolous wars - they spend it on digital status symbols and the privilege of mocking others."
-              </p>
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card className="glass-morphism border-white/10">
-          <CardContent className="p-6">
-            <div className="flex items-center mb-4">
-              <div className="p-2 bg-royal-navy/20 rounded-full mr-3">
-                <Coins className="h-6 w-6 text-royal-navy" />
-              </div>
-              <h3 className="text-xl font-semibold">Wallet vs. Rank Points</h3>
-            </div>
-            <p className="text-white/70 mb-3">
-              Your wallet balance can be spent on features, but your rank is based on your total deposited amount. Think of deposits as investments in your status that stay on your record forever.
-            </p>
-            <div className="bg-white/5 rounded-lg p-3 text-sm">
-              <p className="text-white/60 italic">
-                "Like a medieval NFT, but instead of an ugly ape picture, you get a number beside your name that makes others respect you marginally more."
-              </p>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    </div>
+            <p className="text-right text-sm text-royal-gold mt-2">— The Royal Economist</p>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
   );
 };
 

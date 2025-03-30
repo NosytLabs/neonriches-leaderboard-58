@@ -5,38 +5,44 @@ import { Helmet } from 'react-helmet-async';
 interface PageSEOProps {
   title: string;
   description: string;
-  canonicalUrl?: string;
-  ogImageUrl?: string;
+  canonical?: string;
+  openGraph?: {
+    title?: string;
+    description?: string;
+    url?: string;
+    type?: string;
+    image?: string;
+  };
 }
 
-const PageSEO: React.FC<PageSEOProps> = ({ 
-  title, 
-  description, 
-  canonicalUrl,
-  ogImageUrl = '/og-image.jpg'
+const PageSEO: React.FC<PageSEOProps> = ({
+  title,
+  description,
+  canonical,
+  openGraph
 }) => {
-  const fullTitle = `${title} | SpendThrone`;
+  const siteName = 'SpendThrone';
+  const ogTitle = openGraph?.title || title;
+  const ogDescription = openGraph?.description || description;
   
   return (
     <Helmet>
-      <title>{fullTitle}</title>
+      <title>{title}</title>
       <meta name="description" content={description} />
+      {canonical && <link rel="canonical" href={canonical} />}
       
       {/* Open Graph / Facebook */}
-      <meta property="og:type" content="website" />
-      <meta property="og:title" content={fullTitle} />
-      <meta property="og:description" content={description} />
-      <meta property="og:image" content={ogImageUrl} />
-      {canonicalUrl && <meta property="og:url" content={canonicalUrl} />}
+      <meta property="og:type" content={openGraph?.type || 'website'} />
+      <meta property="og:title" content={ogTitle} />
+      <meta property="og:description" content={ogDescription} />
+      <meta property="og:site_name" content={siteName} />
+      {openGraph?.url && <meta property="og:url" content={openGraph.url} />}
+      {openGraph?.image && <meta property="og:image" content={openGraph.image} />}
       
       {/* Twitter */}
       <meta name="twitter:card" content="summary_large_image" />
-      <meta name="twitter:title" content={fullTitle} />
-      <meta name="twitter:description" content={description} />
-      <meta name="twitter:image" content={ogImageUrl} />
-      
-      {/* Canonical URL */}
-      {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
+      <meta name="twitter:title" content={ogTitle} />
+      <meta name="twitter:description" content={ogDescription} />
     </Helmet>
   );
 };
