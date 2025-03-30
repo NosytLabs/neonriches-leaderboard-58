@@ -1,88 +1,65 @@
 
-// Mockery type definitions
+// Mockery types
 
-export type MockeryAction = 
-  | 'crown'
-  | 'challenge'
-  | 'eggs'
-  | 'shame'
-  | 'taunt' 
-  | 'jest'
-  | 'defeat'
-  | 'protection';
+export interface MockeryAction {
+  id: string;
+  name: string;
+  description: string;
+  cost: number;
+  effect: string;
+  duration: number;
+  icon: string;
+  targetId?: string;
+  targetUsername?: string;
+}
 
-// Additional actions that are treated as MockeryAction in the codebase
-export const mockeryActionExtensions = [
-  'putridEggs',
-  'stocks',
-  'dunce',
-  'silence',
-  'courtJester',
-  'smokeBomb',
-  'glitterBomb',
-  'immune',
-  'jester',
-  'royalPie',
-  'jokeCrown',
-  'memeFrame',
-  'roast',
-  'ridicule',
-  'humiliate',
-  'expose',
-  'mock',
-  'guillotine',
-  'dungeons',
-  'removal',
-  'target'
-] as const;
-
-export type ExtendedMockeryAction = MockeryAction | typeof mockeryActionExtensions[number];
-
-export type MockeryTier = 'basic' | 'standard' | 'premium' | 'elite';
+export type MockeryTier = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
 
 export interface MockeryEvent {
   id: string;
-  type: MockeryAction;
+  actionId: string;
+  senderId: string;
   targetId: string;
-  appliedById: string;
-  timestamp: number;
-  expires: number;
+  timestamp: string;
+  duration: number;
   isActive: boolean;
-  tier: MockeryTier;
-  sourceName?: string;
-  targetName?: string;
-  message?: string;
-  duration?: number;
-}
-
-export interface ShameAction {
-  action: MockeryAction;
-  timestamp: number;
-  until: number;
-}
-
-export interface MockedUser {
-  id: string;
-  username: string;
-  lastMocked: number;
-  mockeryStatus: MockeryEvent[];
-  displayName?: string;
-  avatarUrl?: string;
-  mockedReason?: string;
-  mockedTimestamp?: string;
-  mockedBy?: string;
-  mockedTier?: string;
-  mockeryCount?: number;
+  endTime: string;
 }
 
 export interface MockeryEffectData {
-  action: MockeryAction;
-  user: MockedUser;
-  expiration: number;
+  id: string;
+  targetId: string;
+  effect: string;
+  durationRemaining: number;
+  senderName: string;
+  actionName: string;
 }
 
 export interface UserMockeryStatus {
-  activeEffects: MockeryEvent[];
-  immunityUntil: number;
-  lastMocked: number;
+  userId: string;
+  activeEffects: MockeryEffectData[];
+  lastMocked: string | null;
+}
+
+export interface MockUser {
+  id: string;
+  username: string;
+  displayName?: string;
+  profileImage?: string;
+  rank: number;
+}
+
+export interface ShameAction {
+  id: string;
+  name: string;
+  description: string;
+  tier: MockeryTier;
+  cost: number;
+  effect: string;
+  icon: string;
+}
+
+export interface ExtendedMockeryAction extends MockeryAction {
+  tier: MockeryTier;
+  targetUser?: MockUser;
 }

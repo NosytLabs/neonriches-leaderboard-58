@@ -1,5 +1,5 @@
 
-import { UserProfile, UserCosmetics, User } from '@/types/user';
+import { UserProfile, UserCosmetics } from '@/types/user';
 
 /**
  * Ensures that a UserProfile has all required properties
@@ -44,7 +44,7 @@ export const ensureUser = (profile: UserProfile): UserProfile => {
       emailNotifications: false,
       marketingEmails: false,
       showRank: true,
-      showSpendingAmount: true,
+      showSpending: true,
       showBadges: true,
       showAchievements: true,
       soundEffects: true,
@@ -61,7 +61,6 @@ export const ensureUser = (profile: UserProfile): UserProfile => {
       receiveRoyalAnnouncements: true,
       language: 'en',
       allowMessages: false,
-      showSpending: true,
       showTeam: true
     }
   };

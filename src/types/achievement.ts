@@ -9,7 +9,8 @@ export type AchievementType =
   | 'streak'
   | 'purchase'
   | 'referral'
-  | 'social';
+  | 'social'
+  | 'subscription';
 
 export type AchievementTier = 
   | 'gold'
@@ -22,7 +23,7 @@ export interface Achievement {
   id: string;
   name: string;
   description: string;
-  type: 'royal' | 'rank' | 'milestone' | 'deposit' | 'streak';
+  type: AchievementType;
   icon: 'star' | 'zap' | 'award' | 'trophy' | 'crown' | 'dollar';
   tier: AchievementTier;
   unlockedAt: string;

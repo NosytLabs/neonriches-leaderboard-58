@@ -1,6 +1,17 @@
 
 import { TeamType, UserTier } from './user';
-import { MockeryAction } from './mockery';
+
+export interface MockeryAction {
+  id: string;
+  name: string;
+  description: string;
+  cost: number;
+  effect: string;
+  duration: number;
+  icon: string;
+  targetId?: string;
+  targetUsername?: string;
+}
 
 export interface LeaderboardEntry {
   userId: string;

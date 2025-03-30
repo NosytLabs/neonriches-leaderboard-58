@@ -8,5 +8,9 @@ export interface AuthContextType {
   login: (email: string, password: string) => Promise<boolean>;
   register: (username: string, email: string, password: string) => Promise<boolean>;
   logout: () => Promise<void>;
-  updateUserProfile?: (updates: Partial<UserProfile>) => Promise<void>;
+  updateUserProfile: (updates: Partial<UserProfile>) => Promise<boolean>;
+  awardCosmetic?: (category: string, itemId: string, notify?: boolean) => Promise<boolean>;
+  signIn?: (email: string, password: string) => Promise<boolean>;
+  signOut?: () => void;
+  updateUser?: (userData: Partial<UserProfile>) => Promise<boolean>;
 }

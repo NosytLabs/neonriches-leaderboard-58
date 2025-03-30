@@ -1,5 +1,6 @@
 
 // Boost effect types
+import { UserTier } from './user';
 
 export type BoostEffectType =
   | 'visibility'
@@ -9,7 +10,11 @@ export type BoostEffectType =
   | 'advertise'
   | 'boost'
   | 'rocket'
-  | 'star';
+  | 'star'
+  | 'rank'
+  | 'profile'
+  | 'cosmetic'
+  | 'marketing';
 
 export interface BoostEffect {
   id: string;
@@ -26,6 +31,7 @@ export interface BoostEffect {
   cost?: number;
   minTier?: UserTier;
   rarity?: string;
+  durationDays?: number;
 }
 
 export interface ProfileBoost {
@@ -34,14 +40,14 @@ export interface ProfileBoost {
   effectId: string;
   startTime: string;
   endTime: string;
+  startDate?: string;
+  endDate?: string;
   duration: number;
   isActive: boolean;
   level: number;
   type: string;
   strength?: number;
   appliedBy?: string;
-  startDate?: string;
-  endDate?: string;
 }
 
 export interface BoostPurchaseResult {
