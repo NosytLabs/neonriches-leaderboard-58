@@ -1,5 +1,6 @@
 
-import { 
+// This file is updated to import from the new structure
+import {
   getMockeryName, 
   getMockeryDescription, 
   getMockeryCost,
@@ -10,7 +11,7 @@ import {
   getMockeryActionTitle,
   getMockeryActionDescription,
   getMockeryActionPrice
-} from '@/utils/mockeryUtils';
+} from '@/utils/mockery';
 
 export {
   getMockeryName,
