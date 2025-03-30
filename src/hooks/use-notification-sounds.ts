@@ -1,11 +1,7 @@
 
 import { useCallback } from 'react';
-import { SoundType } from '@/types/sound-types';
+import { SoundType, NotificationSoundOptions } from '@/types/sound-types';
 import useAudioLoader from '@/hooks/sounds/use-audio-loader';
-
-interface NotificationSoundOptions {
-  volume?: number;
-}
 
 export default function useNotificationSounds() {
   const { audio, isEnabled, volume } = useAudioLoader();
@@ -21,7 +17,7 @@ export default function useNotificationSounds() {
       soundElement.pause();
       soundElement.currentTime = 0;
       
-      // Set volume
+      // Set volume - use options.volume if provided, otherwise use the global volume
       soundElement.volume = (options?.volume !== undefined ? options.volume : volume);
       
       // Play the sound

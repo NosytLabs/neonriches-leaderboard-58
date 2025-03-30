@@ -37,13 +37,16 @@ const CertificateDisplay: React.FC<CertificateDisplayProps> = ({
     lg: 'w-96 h-72'
   };
 
-  const getTeamColorClass = (team: TeamColor) => {
-    switch (team) {
+  const getTeamColorClass = (teamColor: TeamColor | string | undefined) => {
+    if (!teamColor) return 'border-gray-500 bg-gray-900/10';
+    
+    switch (teamColor) {
       case 'red': return 'border-red-500 bg-red-900/10';
       case 'blue': return 'border-blue-500 bg-blue-900/10';
       case 'green': return 'border-green-500 bg-green-900/10';
       case 'gold': return 'border-yellow-500 bg-yellow-900/10';
       case 'purple': return 'border-purple-500 bg-purple-900/10';
+      case 'neutral': return 'border-gray-300 bg-gray-800/10';
       default: return 'border-gray-500 bg-gray-900/10';
     }
   };
@@ -85,7 +88,7 @@ const CertificateDisplay: React.FC<CertificateDisplayProps> = ({
     <div 
       className={cn(
         'certificate-display relative border-2 rounded-lg p-4 flex flex-col',
-        getTeamColorClass(team),
+        getTeamColorClass(team as TeamColor),
         getStyleClasses(style),
         sizeClasses[size],
         interactive && 'cursor-pointer hover:shadow-lg transition-all duration-300 hover:scale-105',

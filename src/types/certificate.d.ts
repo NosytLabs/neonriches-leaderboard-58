@@ -48,14 +48,26 @@ export interface Certificate {
   signature?: string;
   mintAddress?: string;
   userDisplayName?: string;
+  shareUrl?: string;
+  isMinted?: boolean;
+  nftMintAddress?: string;
+  tokenId?: string;
+  data?: Record<string, any>;
+  mintedAt?: string;
 }
 
-export interface CertificateTemplateFactory {
-  getTemplatesForUser: (userId: string, user: any) => CertificateTemplate[];
-  createTemplate: (data: any) => CertificateTemplate;
-  getTemplateById: (id: string) => CertificateTemplate | null;
-  getAllTemplates: () => CertificateTemplate[];
-  getTemplatesByType: (type: CertificateType) => CertificateTemplate[];
+export interface RankCertificateMetadata {
+  userId: string;
+  username: string;
+  rank: number;
+  date: string;
+  signature: string;
+  userTeam: TeamColor | null;
+  issuedDate: string;
+  amountSpent: number;
+  userName: string;
+  userRank: number;
+  certificateId: string;
 }
 
 export interface CertificateRepository {
@@ -67,10 +79,10 @@ export interface CertificateRepository {
   deleteCertificate: (id: string) => Promise<boolean>;
 }
 
-export interface RankCertificateMetadata {
-  userId: string;
-  username: string;
-  rank: number;
-  date: string;
-  signature: string;
+export interface CertificateTemplateFactory {
+  getTemplatesForUser: (userId: string, user: any) => CertificateTemplate[];
+  createTemplate: (data: any) => CertificateTemplate;
+  getTemplateById: (id: string) => CertificateTemplate | null;
+  getAllTemplates: () => CertificateTemplate[];
+  getTemplatesByType: (type: CertificateType) => CertificateTemplate[];
 }

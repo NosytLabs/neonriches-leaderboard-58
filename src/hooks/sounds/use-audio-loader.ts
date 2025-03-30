@@ -1,74 +1,64 @@
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+import { useLocalStorage } from '@/hooks/use-local-storage';
 import { SoundType, AudioLoaderReturn } from '@/types/sound-types';
-import { soundAssets, premiumSoundAssets } from './sound-assets';
+import { soundAssets, soundVolumes, premiumSoundAssets } from './sound-assets';
 
-export function useAudioLoader(): AudioLoaderReturn {
-  const [volume, setVolume] = useState<number>(0.5);
-  const [isEnabled, setEnabled] = useState<boolean>(true);
-  const [isPremium, setPremium] = useState<boolean>(false);
-  const [isLoaded, setIsLoaded] = useState<boolean>(false);
+export const useAudioLoader = (): AudioLoaderReturn => {
+  const [audio, setAudio] = useState<Record<SoundType, HTMLAudioElement>>({} as Record<SoundType, HTMLAudioElement>);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [isEnabled, setEnabled] = useLocalStorage('sound-enabled', true);
+  const [isPremium, setPremium] = useLocalStorage('premium-sound-pack', false);
+  const [volume, setVolume] = useLocalStorage('sound-volume', 0.5);
   
-  // Create audio elements with proper paths
-  const createAudioElements = (): Record<SoundType, HTMLAudioElement> => {
-    const audioElements: Partial<Record<SoundType, HTMLAudioElement>> = {};
-    
-    // Standard sounds
-    Object.entries(soundAssets.paths).forEach(([key, path]) => {
-      const audioElement = new Audio(path);
-      audioElement.preload = 'auto';
-      audioElements[key as SoundType] = audioElement;
-    });
-    
-    // Add compatibility for special sounds
-    audioElements.coinDrop = audioElements.coins_drop;
-    
-    return audioElements as Record<SoundType, HTMLAudioElement>;
-  };
-  
-  const audioRef = useRef<Record<SoundType, HTMLAudioElement>>(createAudioElements());
-  
-  // Update volume for all audio elements when it changes
+  // Load audio files
   useEffect(() => {
-    if (!audioRef.current) return;
+    const audioElements: Record<SoundType, HTMLAudioElement> = {} as Record<SoundType, HTMLAudioElement>;
+    const assets = isPremium ? premiumSoundAssets : soundAssets;
     
-    Object.values(audioRef.current).forEach(audio => {
-      audio.volume = volume;
-    });
-  }, [volume]);
-  
-  // Load premium sounds if premium status changes
-  useEffect(() => {
-    if (!isPremium || !audioRef.current) return;
-    
-    // Add premium sounds to audio elements
-    Object.entries(premiumSoundAssets.paths).forEach(([key, path]) => {
-      if (!audioRef.current[key as SoundType]) {
-        const audioElement = new Audio(path);
-        audioElement.preload = 'auto';
-        audioElement.volume = volume;
-        audioRef.current[key as SoundType] = audioElement;
+    // For each sound type, create an audio element and set its source
+    Object.entries(assets).forEach(([key, path]) => {
+      try {
+        const audio = new Audio(path as string);
+        audio.preload = 'auto';
+        audio.volume = (soundVolumes[key as SoundType] || 0.5) * volume;
+        audioElements[key as SoundType] = audio;
+      } catch (error) {
+        console.error(`Failed to load sound: ${key}`, error);
       }
     });
     
-    setIsLoaded(true);
-  }, [isPremium, volume]);
-  
-  useEffect(() => {
-    // Mark as loaded once initial sounds are ready
+    setAudio(audioElements);
     setIsLoaded(true);
     
-    // Cleanup on unmount
+    // Cleanup function to release audio resources
     return () => {
-      Object.values(audioRef.current).forEach(audio => {
-        audio.pause();
-        audio.src = '';
+      Object.values(audioElements).forEach(audio => {
+        try {
+          audio.pause();
+          audio.src = '';
+        } catch (e) {
+          // Ignore cleanup errors
+        }
       });
     };
-  }, []);
+  }, [isPremium, volume]);
+  
+  // Update volume for all audio elements when volume changes
+  useEffect(() => {
+    if (!isLoaded) return;
+    
+    Object.entries(audio).forEach(([key, audioElement]) => {
+      try {
+        audioElement.volume = (soundVolumes[key as SoundType] || 0.5) * volume;
+      } catch (error) {
+        console.error(`Failed to update volume for sound: ${key}`, error);
+      }
+    });
+  }, [audio, isLoaded, volume]);
   
   return {
-    audio: audioRef.current,
+    audio,
     volume,
     setVolume,
     isEnabled,
@@ -77,6 +67,6 @@ export function useAudioLoader(): AudioLoaderReturn {
     setPremium,
     isLoaded
   };
-}
+};
 
 export default useAudioLoader;

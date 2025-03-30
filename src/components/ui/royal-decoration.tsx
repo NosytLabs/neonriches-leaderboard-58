@@ -12,6 +12,7 @@ const RoyalDecoration: React.FC<RoyalDecorationProps> = ({
   className,
   style,
   children,
+  type, // Accept the type prop
   ...props
 }) => {
   const sizeClass = sizeClasses[size];
@@ -22,6 +23,7 @@ const RoyalDecoration: React.FC<RoyalDecorationProps> = ({
         'royal-decoration relative flex items-center justify-center',
         sizeClass,
         `royal-decoration-${color}`,
+        type && `royal-decoration-${type}`,
         className
       )}
       style={style}
