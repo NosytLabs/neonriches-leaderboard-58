@@ -30,7 +30,7 @@ export const getMockeryDescription = (action: MockeryAction): string => {
     'jest': 'Turn this user into a jester for all to laugh at',
     'target': 'Mark user as a target for the kingdom',
     'defeat': 'Declare your defeat to this noble spender',
-    'expose': 'Expose this user's spending to the kingdom'
+    'expose': 'Expose this user\'s spending to the kingdom'
   };
   
   return descriptions[action] || 'Unknown Action';
