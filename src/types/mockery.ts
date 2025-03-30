@@ -13,9 +13,30 @@ export type MockeryAction =
   | 'taunt' 
   | 'shame'
   | 'putridEggs'
-  | 'silence';
+  | 'silence'
+  | 'courtJester'
+  | 'smokeBomb'
+  | 'protection'
+  | 'jest'
+  | 'glitterBomb'
+  | 'royalPie'
+  | 'jokeCrown'
+  | 'memeFrame'
+  | 'roast'
+  | 'ridicule'
+  | 'humiliate'
+  | 'expose'
+  | 'mock'
+  | 'guillotine'
+  | 'dungeons'
+  | 'removal'
+  | 'challenge'
+  | 'target'
+  | 'defeat'
+  | 'immune';
 
-export type MockeryTier = 'basic' | 'premium' | 'royal' | 'legendary';
+// Union of tiers for mockery actions
+export type MockeryTier = 'basic' | 'premium' | 'royal' | 'legendary' | 'common' | 'uncommon' | 'rare' | 'epic';
 
 export interface MockeryEvent {
   id: string;
@@ -27,6 +48,7 @@ export interface MockeryEvent {
   expiresAt: string;
   tier: MockeryTier;
   isActive: boolean;
+  sourceId?: string;
 }
 
 export interface MockedUser {
@@ -60,6 +82,14 @@ export interface MockeryStats {
   mostMockedUser: string;
   mostActiveUser: string;
   protectedUsers: number;
+  totalPokes?: number;
+  mostPoked?: string;
+  prizePool?: number;
+  totalPrizes?: number;
+  totalSpent?: number;
+  usersParticipating?: number;
+  participantCount?: number;
+  participantsCount?: number;
 }
 
 export type ShameAction = MockeryAction;

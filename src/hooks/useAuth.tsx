@@ -1,136 +1,37 @@
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { UserProfile, AuthContextType, AuthProviderProps } from '@/contexts/auth/types';
+import { createContext, useContext, useEffect, useState } from 'react';
+import { UserProfile } from '@/types/user';
 
-// Create a mock initial user
-const mockUser: UserProfile = {
-  id: '1',
-  username: 'royaluser',
-  displayName: 'Royal User',
-  profileImage: '/images/avatars/default.png',
-  email: 'user@spendthrone.com',
-  bio: 'A loyal supporter of the throne',
-  totalSpent: 1500,
-  amountSpent: 1500,
-  walletBalance: 500,
-  rank: 42,
-  previousRank: 45,
-  tier: 'silver',
-  joinedAt: new Date().toISOString(),
-  team: 'blue',
-};
+export interface AuthContextType {
+  user: UserProfile | null;
+  isAuthenticated: boolean;
+  isLoading: boolean;
+  signIn: (email: string, password: string) => Promise<boolean>;
+  login: (email: string, password: string) => Promise<boolean>;
+  logout: () => void;
+  signOut: () => void;
+  register: (username: string, email: string, password: string) => Promise<boolean>;
+  updateUser: (userData: Partial<UserProfile>) => Promise<boolean>;
+  updateUserProfile: (userData: Partial<UserProfile>) => Promise<boolean>;
+  awardCosmetic: (category: string, itemId: string, notify?: boolean) => Promise<boolean>;
+}
 
-// Create auth context with default values
+// Create the context with a default empty value
 const AuthContext = createContext<AuthContextType>({
   user: null,
   isAuthenticated: false,
   isLoading: true,
+  signIn: async () => false,
   login: async () => false,
   logout: () => {},
+  signOut: () => {},
   register: async () => false,
   updateUser: async () => false,
   updateUserProfile: async () => false,
-  signIn: async () => false,
-  signOut: () => {},
   awardCosmetic: async () => false,
 });
 
-// Provider component
-export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const [user, setUser] = useState<UserProfile | null>(mockUser);
-  const [isLoading, setIsLoading] = useState(false);
-
-  // Mock login implementation
-  const login = async (email: string, password: string): Promise<boolean> => {
-    setIsLoading(true);
-    try {
-      console.log('Login attempt with:', email);
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      setUser(mockUser);
-      return true;
-    } catch (error) {
-      console.error('Login error:', error);
-      return false;
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  // Mock register implementation
-  const register = async (username: string, email: string, password: string): Promise<boolean> => {
-    setIsLoading(true);
-    try {
-      console.log('Register attempt with:', username, email);
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      setUser({
-        ...mockUser,
-        username,
-        email,
-      });
-      return true;
-    } catch (error) {
-      console.error('Register error:', error);
-      return false;
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  // Mock logout implementation
-  const logout = () => {
-    setUser(null);
-  };
-
-  // Mock update user implementation
-  const updateUser = async (userData: Partial<UserProfile>): Promise<boolean> => {
-    setIsLoading(true);
-    try {
-      console.log('Updating user:', userData);
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 500));
-      setUser(prev => prev ? { ...prev, ...userData } : null);
-      return true;
-    } catch (error) {
-      console.error('Update user error:', error);
-      return false;
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  // Alias methods for backward compatibility
-  const signIn = login;
-  const signOut = logout;
-  const updateUserProfile = updateUser;
-
-  // Award cosmetic items to user
-  const awardCosmetic = async (category: string, itemId: string, notify = true): Promise<boolean> => {
-    console.log(`Awarding cosmetic: ${category} - ${itemId}, notify: ${notify}`);
-    return true;
-  };
-
-  return (
-    <AuthContext.Provider
-      value={{
-        user,
-        isAuthenticated: !!user,
-        isLoading,
-        login,
-        logout,
-        register,
-        updateUser,
-        updateUserProfile,
-        signIn,
-        signOut,
-        awardCosmetic,
-      }}
-    >
-      {children}
-    </AuthContext.Provider>
-  );
-};
-
-// Hook to use auth context
+// Hook for easy context usage
 export const useAuth = () => useContext(AuthContext);
+
+export default AuthContext;

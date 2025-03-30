@@ -1,24 +1,33 @@
 
 /**
- * Format a number as currency
+ * Format a date to a readable string
  */
-export const formatCurrency = (amount: number, currency = 'USD', locale = 'en-US'): string => {
-  return new Intl.NumberFormat(locale, {
-    style: 'currency',
-    currency: currency,
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2
-  }).format(amount);
+export const formatDate = (date: string | Date): string => {
+  if (!date) return 'N/A';
+  
+  const dateObj = typeof date === 'string' ? new Date(date) : date;
+  
+  if (isNaN(dateObj.getTime())) {
+    return 'Invalid date';
+  }
+  
+  return dateObj.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  });
 };
 
 /**
- * Format a number as a dollar amount
+ * Format currency values
  */
-export const formatDollarAmount = (amount: number, minimumFractionDigits = 2): string => {
+export const formatCurrency = (amount: number): string => {
+  if (amount === undefined || amount === null) return '$0.00';
+  
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
-    minimumFractionDigits,
+    minimumFractionDigits: 2,
     maximumFractionDigits: 2
   }).format(amount);
 };
@@ -27,57 +36,40 @@ export const formatDollarAmount = (amount: number, minimumFractionDigits = 2): s
  * Format a number with commas
  */
 export const formatNumber = (num: number): string => {
-  return new Intl.NumberFormat().format(num);
-};
-
-/**
- * Format an address for display
- */
-export const formatAddress = (address: string, chars = 6): string => {
-  if (!address) return '';
-  return `${address.substring(0, chars)}...${address.substring(address.length - 4)}`;
-};
-
-/**
- * Format a date to a relative time string
- */
-export const getRelativeTimeString = (date: string | Date): string => {
-  const now = new Date();
-  const then = new Date(date);
-  const diff = Math.max(1, Math.floor((now.getTime() - then.getTime()) / 1000));
+  if (num === undefined || num === null) return '0';
   
-  if (diff < 60) return `${diff}s ago`;
-  if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
-  if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
-  if (diff < 2592000) return `${Math.floor(diff / 86400)}d ago`;
-  if (diff < 31536000) return `${Math.floor(diff / 2592000)}mo ago`;
-  return `${Math.floor(diff / 31536000)}y ago`;
+  return new Intl.NumberFormat('en-US').format(num);
 };
 
 /**
- * Format a historical value
+ * Format a file size in bytes to a human readable format
  */
-export const formatHistoricalValue = (value: number, currency = true): string => {
-  if (currency) {
-    return formatCurrency(value);
-  }
-  return formatNumber(value);
-};
-
-/**
- * Get an icon for an achievement
- */
-export const getAchievementIcon = (achievement: string): string => {
-  const iconMap: Record<string, string> = {
-    'first_purchase': 'trophy',
-    'reached_top_100': 'award',
-    'spent_milestone': 'target',
-    'joined_team': 'users',
-    'referred_user': 'user-plus',
-    'purchased_cosmetic': 'sparkles',
-    'royal_status': 'crown',
-    'verified': 'check-circle',
-  };
+export const formatFileSize = (bytes: number): string => {
+  if (bytes === 0) return '0 Bytes';
   
-  return iconMap[achievement] || 'circle';
+  const k = 1024;
+  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+};
+
+/**
+ * Format a percentage value
+ */
+export const formatPercentage = (value: number, decimals = 1): string => {
+  return `${value.toFixed(decimals)}%`;
+};
+
+/**
+ * Format a time duration in seconds to a readable format
+ */
+export const formatDuration = (seconds: number): string => {
+  if (seconds < 60) return `${seconds}s`;
+  if (seconds < 3600) return `${Math.floor(seconds / 60)}m ${seconds % 60}s`;
+  
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  
+  return `${hours}h ${minutes}m`;
 };

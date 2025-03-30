@@ -1,31 +1,29 @@
 
+// Sound type represents all available sound effects
 export type SoundType = 
   | 'click'
   | 'coins'
   | 'coins_drop'
-  | 'coins_pour'
-  | 'deposit'
   | 'success'
   | 'error'
-  | 'notification'
-  | 'royal'
-  | 'achievement'
-  | 'unlock'
   | 'purchase'
-  | 'level_up'
-  | 'shame'
-  | 'message'
-  | 'parchment'
-  | 'trumpet';
+  | 'trumpets'
+  | 'notification'
+  | 'achievement'
+  | 'rankUp'
+  | 'button'
+  | 'hover'
+  | 'medieval';
 
 export interface AudioLoaderReturn {
-  audioMap: Record<SoundType, HTMLAudioElement>;
-  playSound: (sound: SoundType) => void;
-  stopSound: (sound: SoundType) => void;
-  toggleMute: (muted: boolean) => void;
-  setVolume: (volume: number) => void;
-  isMuted: boolean;
+  audio: Record<SoundType, HTMLAudioElement>;
   volume: number;
+  setVolume: (volume: number) => void;
+  isEnabled: boolean;
+  setEnabled: (enabled: boolean) => void;
+  isPremium: boolean;
+  setPremium: (isPremium: boolean) => void;
+  isLoaded: boolean;
 }
 
 export interface PremiumSoundPackDetails {
@@ -37,22 +35,10 @@ export interface PremiumSoundPackDetails {
   sounds: SoundType[];
   features: string[];
   tags: string[];
+  isPurchased?: boolean;
 }
 
-export interface UseSoundOptions {
-  volume?: number;
-  interrupt?: boolean;
-  sprite?: Record<string, [number, number]>;
-  loop?: boolean;
-  onEnd?: () => void;
-  baseVolume?: number;
-  disableCache?: boolean;
-}
-
-export interface UseSoundReturn {
-  play: (options?: { id?: string; }) => void;
-  stop: (id?: string) => void;
-  pause: (id?: string) => void;
-  isPlaying: boolean;
-  duration: number;
+export interface CacheOptions {
+  maxAge?: number;
+  staleWhileRevalidate?: boolean;
 }

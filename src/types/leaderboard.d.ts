@@ -24,7 +24,7 @@ export interface LeaderboardUser {
 }
 
 export interface LeaderboardFilter {
-  timeFrame: 'allTime' | 'thisWeek' | 'thisMonth' | 'today';
+  timeFrame?: 'allTime' | 'thisWeek' | 'thisMonth' | 'today';
   team: TeamColor | 'all';
   tier: UserTier | 'all';
   count: number;

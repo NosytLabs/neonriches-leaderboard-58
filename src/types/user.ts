@@ -1,63 +1,155 @@
 
-import { UserCosmeticState } from './cosmetics';
 import { TeamColor } from './team';
+import { SubscriptionTier } from './subscription';
+import { CosmeticCategory } from './cosmetics';
 
-// User tiers
-export type UserTier = 'basic' | 'premium' | 'founder' | 'vip' | 'noble' | 
-                       'bronze' | 'silver' | 'gold' | 'platinum' | 'diamond' | 'pro' | 'free';
+// User tier types
+export type UserTier = 
+  | 'free' 
+  | 'basic' 
+  | 'pro' 
+  | 'premium' 
+  | 'founder' 
+  | 'vip' 
+  | 'noble' 
+  | 'silver' 
+  | 'gold' 
+  | 'bronze' 
+  | 'platinum' 
+  | 'diamond' 
+  | 'royal';
 
-// Define the ProfileImage type
+// Profile image
 export interface ProfileImage {
-  id: string | number;
+  id: string;
   url: string;
   caption?: string;
+  uploadDate?: string;
+  isPrimary?: boolean;
 }
 
-// Define ProfileBoost
+// Profile boost
 export interface ProfileBoost {
   id: string;
   type: string;
-  level: number;
   startDate: string;
   endDate: string;
+  tier: string;
+  strength?: number;
+  effectId?: string;
 }
 
-// Define SocialLink
+export type ProfileBoostData = {
+  id: string;
+  name: string;
+  description: string;
+  cssClass: string;
+  type: string;
+  tier: string;
+  price: number;
+  duration: number;
+  startDate?: string;
+  icon: string;
+};
+
+export type BoostEffectType = 'highlight' | 'glow' | 'spotlight' | 'shimmer' | 'border' | 'crown' | 'sparkle' | 'shadow';
+
+export interface BoostEffect {
+  id: string;
+  name: string;
+  description: string;
+  cssClass: string;
+  type: string;
+  tier: string;
+  price: number;
+  duration: number;
+  icon: string;
+  durationDays?: number;
+  previewImage?: string;
+}
+
+// Social media link
 export interface SocialLink {
   id: string | number;
   platform: string;
   url: string;
-  isVerified?: boolean;
+  icon?: string;
+  clicks?: number;
 }
 
+// Profile links
+export interface ProfileLink {
+  id: string | number;
+  url: string;
+  platform?: string;
+  title: string;
+  label?: string;
+}
+
+// User profile settings
 export interface UserSettings {
-  profileVisibility: 'public' | 'private' | 'friends';
-  allowProfileLinks: boolean;
   theme: 'light' | 'dark' | 'royal' | 'system';
+  profileVisibility: 'public' | 'private' | 'friends';
   notifications: boolean;
   emailNotifications: boolean;
   marketingEmails: boolean;
-  showRank: boolean;
-  darkMode: boolean;
-  soundEffects: boolean;
-  showEmailOnProfile: boolean;
   rankChangeAlerts: boolean;
-  shameAlerts?: boolean;
-  newFollowerAlerts?: boolean;
-  teamNotifications?: boolean;
-  showTeam?: boolean;
+  newFollowerAlerts: boolean;
+  teamNotifications: boolean;
+  soundEffects: boolean;
+  darkMode: boolean;
+  showRank: boolean;
+  showTeam: boolean;
+  showEmailOnProfile: boolean;
   showSpending?: boolean;
+  publicProfile?: boolean;
+  allowProfileLinks: boolean;
 }
 
+// User cosmetic state
+export interface UserCosmeticState {
+  border: string;
+  color: string;
+  font: string;
+  emoji: string;
+  title: string;
+  background: string;
+  effect: string;
+  badge: string;
+  theme: string;
+  unlockedBorders: string[];
+  unlockedColors: string[];
+  unlockedFonts: string[];
+  unlockedEmojis: string[];
+  unlockedTitles: string[];
+  unlockedBackgrounds: string[];
+  unlockedEffects: string[];
+  unlockedBadges: string[];
+  unlockedThemes: string[];
+  foundersPass?: boolean;
+  borders?: string[];
+  colors?: string[];
+  fonts?: string[];
+  emojis?: string[];
+  titles?: string[];
+  backgrounds?: string[];
+  effects?: string[];
+  badges?: string[];
+  themes?: string[];
+}
+
+// User subscription details
 export interface UserSubscription {
-  active: boolean;
-  tier: string;
-  startDate: string;
-  endDate: string;
-  nextBillingDate: string;
-  plan: string;
+  id?: string;
+  planId: string;
+  status?: 'active' | 'canceled' | 'past_due' | 'pending' | 'incomplete';
+  currentPeriodStart: string;
+  currentPeriodEnd: string;
+  cancelAtPeriodEnd: boolean;
+  tier: UserTier;
 }
 
+// Comprehensive user profile
 export interface UserProfile {
   id: string;
   username: string;
@@ -69,55 +161,48 @@ export interface UserProfile {
   tier: UserTier;
   team: TeamColor;
   rank: number;
-  amountSpent: number;
-  totalSpent?: number;
-  walletBalance: number;
   previousRank: number;
-  cosmetics: UserCosmeticState;
+  walletBalance: number;
+  totalSpent: number;
+  amountSpent: number;
+  spentAmount?: number;
   settings: UserSettings;
-  followers: number;
-  following: number;
-  isVerified: boolean;
-  isFounder: boolean;
-  profileImages?: ProfileImage[];
-  socialLinks?: SocialLink[];
-  profileBoosts?: ProfileBoost[];
-  lastActive?: string;
-  createdAt?: string;
-  joinedAt?: string; // For backward compatibility
+  cosmetics: UserCosmeticState;
   subscription?: UserSubscription;
+  profileBoosts: ProfileBoost[];
+  supporters?: number;
+  supporting?: number;
+  socialLinks?: SocialLink[];
+  profileLinks?: ProfileLink[];
+  images?: ProfileImage[];
   spendStreak?: number;
-  purchasedFeatures?: string[];
-  role?: string;
-  gender?: string;
-  walletAddress?: string;
-  certificateNFT?: any; // Replace with proper type when defined
   profileViews?: number;
   profileClicks?: number;
+  isVIP?: boolean;
+  isFounder: boolean;
+  isVerified?: boolean;
+  activeTitle?: string;
 }
 
+// Basic user information
 export interface User {
   id: string;
   username: string;
-  displayName?: string;
-  profileImage?: string;
-  bio?: string;
-  email?: string;
-  createdAt?: string;
-  joinDate?: string;
+  displayName: string;
+  email: string;
+  profileImage: string;
+  bio: string;
+  joinDate: string;
   tier: UserTier;
   team: TeamColor;
   rank: number;
-  amountSpent: number;
-  walletBalance: number;
   previousRank: number;
-  totalSpent?: number;
-  followers?: number;
-  following?: number;
-  isVerified?: boolean;
-  isVIP?: boolean;
-  isAdmin?: boolean;
-  avatarUrl?: string;
+  walletBalance: number;
+  totalSpent: number;
+  amountSpent: number;
+  spendStreak?: number;
+  joinedAt?: string;
+  createdAt?: string;
 }
 
 export type { UserTier, ProfileImage, ProfileBoost, SocialLink };
