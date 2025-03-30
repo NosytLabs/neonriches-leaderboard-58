@@ -1,6 +1,6 @@
 
-import React from 'react';
-import { useAuth } from '@/hooks/useAuth';
+import React, { useEffect } from 'react';
+import { useAuth } from '@/contexts/auth';
 import Shell from '@/components/Shell';
 import PageSEO from '@/components/common/PageSEO';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -15,12 +15,19 @@ import usePageTracking from '@/hooks/usePageTracking';
 
 const SignIn = () => {
   usePageTracking();
-  const { login } = useAuth();
+  const { login, isAuthenticated, user } = useAuth();
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [isLoading, setIsLoading] = React.useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
+
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      navigate('/dashboard');
+    }
+  }, [isAuthenticated, user, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -42,7 +49,7 @@ const SignIn = () => {
         title: "Welcome back, noble!",
         description: "The court welcomes your return.",
       });
-      navigate('/profile');
+      navigate('/dashboard');
     } catch (error) {
       toast({
         title: "Access denied",

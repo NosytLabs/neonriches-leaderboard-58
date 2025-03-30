@@ -3,13 +3,14 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/auth';
 import { Link } from 'react-router-dom';
-import { Icon } from '@/components/ui/icon';
+import { LogIn, LogOut, UserPlus } from 'lucide-react';
 
 interface AuthButtonProps {
   className?: string;
+  variant?: 'default' | 'compact';
 }
 
-const AuthButton: React.FC<AuthButtonProps> = ({ className }) => {
+const AuthButton: React.FC<AuthButtonProps> = ({ className, variant = 'default' }) => {
   const { isAuthenticated, logout } = useAuth();
   
   if (isAuthenticated) {
@@ -20,9 +21,27 @@ const AuthButton: React.FC<AuthButtonProps> = ({ className }) => {
         onClick={() => logout()}
         className={className}
       >
-        <Icon name="LogOut" size="xs" className="mr-2" />
+        <LogOut className="mr-2 h-4 w-4" />
         Logout
       </Button>
+    );
+  }
+  
+  if (variant === 'compact') {
+    return (
+      <div className="flex space-x-2">
+        <Button
+          variant="outline"
+          size="sm"
+          asChild
+          className={className}
+        >
+          <Link to="/login">
+            <LogIn className="mr-2 h-4 w-4" />
+            Login
+          </Link>
+        </Button>
+      </div>
     );
   }
   
@@ -35,19 +54,19 @@ const AuthButton: React.FC<AuthButtonProps> = ({ className }) => {
         className={className}
       >
         <Link to="/login">
-          <Icon name="LogIn" size="xs" className="mr-2" />
+          <LogIn className="mr-2 h-4 w-4" />
           Login
         </Link>
       </Button>
       
       <Button
-        variant="royalGold"
+        variant="default"
         size="sm"
         asChild
         className={className}
       >
         <Link to="/register">
-          <Icon name="UserPlus" size="xs" className="mr-2" />
+          <UserPlus className="mr-2 h-4 w-4" />
           Register
         </Link>
       </Button>

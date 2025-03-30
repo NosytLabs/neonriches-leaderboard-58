@@ -10,11 +10,20 @@ import ThroneBackground from '@/components/ui/throne-background';
 import RoyalDivider from '@/components/ui/royal-divider';
 import useNotificationSounds from '@/hooks/use-notification-sounds';
 import { motion } from 'framer-motion';
+import { useAuth } from '@/contexts/auth';
 
 const Auth = () => {
   const [activeTab, setActiveTab] = useState<'login' | 'register'>('login');
   const navigate = useNavigate();
   const { playSound } = useNotificationSounds();
+  const { user, isAuthenticated } = useAuth();
+  
+  // Check if user is already authenticated
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      navigate('/dashboard');
+    }
+  }, [isAuthenticated, user, navigate]);
   
   // Play sound effect when component mounts
   useEffect(() => {
@@ -28,7 +37,7 @@ const Auth = () => {
 
   const handleAuthSuccess = () => {
     playSound('success');
-    navigate('/');
+    navigate('/dashboard');
   };
   
   return (

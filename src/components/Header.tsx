@@ -3,12 +3,12 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button } from './ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
-import { useAuth } from '@/hooks/useAuth';
+import { useAuth } from '@/contexts/auth';
 import { formatCurrency } from '@/utils/formatters';
 import { MenuIcon, X } from 'lucide-react';
-import { User } from '@/types/user';
 import { useToast } from '@/hooks/use-toast';
 import Crown from '@/components/ui/icons/Crown';
+import AuthButton from './auth/AuthButton';
 
 interface HeaderProps {
   transparent?: boolean;
@@ -16,12 +16,11 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ transparent = false }) => {
   const location = useLocation();
-  const { isAuthenticated, user, isLoading, logout } = useAuth();
+  const { user, isAuthenticated, isLoading, logout } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
-  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   
   useEffect(() => {
     const handleScroll = () => {
@@ -54,11 +53,7 @@ const Header: React.FC<HeaderProps> = ({ transparent = false }) => {
     }
   };
   
-  const isActive = (path: string) => {
-    return location.pathname === path;
-  };
-  
-  const renderUserInfo = (user: User) => (
+  const renderUserInfo = (user) => (
     <div className="flex items-center gap-2">
       <div className="hidden md:block text-right">
         <p className="text-sm font-medium">
@@ -107,13 +102,8 @@ const Header: React.FC<HeaderProps> = ({ transparent = false }) => {
                 </div>
               </>
             ) : (
-              <div className="hidden md:flex space-x-2">
-                <Link to="/auth/signin">
-                  <Button variant="outline" size="sm">Sign In</Button>
-                </Link>
-                <Link to="/auth/signup">
-                  <Button size="sm">Join Court</Button>
-                </Link>
+              <div className="hidden md:block">
+                <AuthButton />
               </div>
             )}
             
@@ -134,56 +124,60 @@ const Header: React.FC<HeaderProps> = ({ transparent = false }) => {
           <div className="space-y-1 px-2 pt-2 pb-3">
             <Link 
               to="/leaderboard" 
-              onClick={() => setIsMenuOpen(false)}
               className="block px-3 py-2 text-base font-medium text-white/90 hover:text-royal-gold"
             >
               Leaderboard
             </Link>
             <Link 
               to="/features" 
-              onClick={() => setIsMenuOpen(false)}
               className="block px-3 py-2 text-base font-medium text-white/90 hover:text-royal-gold"
             >
               Features
             </Link>
             <Link 
               to="/teams" 
-              onClick={() => setIsMenuOpen(false)}
               className="block px-3 py-2 text-base font-medium text-white/90 hover:text-royal-gold"
             >
               Teams
             </Link>
             <Link 
               to="/status-through-history" 
-              onClick={() => setIsMenuOpen(false)}
               className="block px-3 py-2 text-base font-medium text-white/90 hover:text-royal-gold"
             >
               Status History
             </Link>
             <Link 
               to="/about" 
-              onClick={() => setIsMenuOpen(false)}
               className="block px-3 py-2 text-base font-medium text-white/90 hover:text-royal-gold"
             >
               About
             </Link>
-            {isAuthenticated && (
+            {isAuthenticated ? (
               <>
                 <Link 
                   to="/profile" 
-                  onClick={() => setIsMenuOpen(false)}
                   className="block px-3 py-2 text-base font-medium text-white/90 hover:text-royal-gold"
                 >
                   Profile
                 </Link>
                 <Link 
                   to="/wallet" 
-                  onClick={() => setIsMenuOpen(false)}
                   className="block px-3 py-2 text-base font-medium text-white/90 hover:text-royal-gold"
                 >
                   Wallet
                 </Link>
+                <Button 
+                  variant="outline"
+                  className="w-full mt-2"
+                  onClick={handleLogout}
+                >
+                  Logout
+                </Button>
               </>
+            ) : (
+              <div className="pt-2">
+                <AuthButton />
+              </div>
             )}
           </div>
         </div>
