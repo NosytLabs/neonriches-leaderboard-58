@@ -19,44 +19,44 @@ export function useToast() {
       baseToast({ 
         ...props, 
         variant: "default",
-        title: ensureString(props.title) || "",
-        description: ensureString(props.description) || ""
+        title: props.title || "",
+        description: props.description || ""
       }),
     success: (props: ExtendedToastProps) => 
       baseToast({ 
         ...props, 
         variant: "success",
-        title: ensureString(props.title) || "",
-        description: ensureString(props.description) || ""
+        title: props.title || "",
+        description: props.description || ""
       }),
     error: (props: ExtendedToastProps) => 
       baseToast({ 
         ...props, 
         variant: "destructive",
-        title: ensureString(props.title) || "",
-        description: ensureString(props.description) || ""
+        title: props.title || "",
+        description: props.description || ""
       }),
     warning: (props: ExtendedToastProps) => 
       baseToast({ 
         ...props, 
         variant: "destructive",
-        title: ensureString(props.title) || "",
-        description: ensureString(props.description) || ""
+        title: props.title || "",
+        description: props.description || ""
       }),
     royal: (props: ExtendedToastProps) => 
       baseToast({ 
         ...props, 
         // For now, use default variant since royal isn't available in the component
         variant: "default",
-        title: ensureString(props.title) || "",
-        description: ensureString(props.description) || ""
+        title: props.title || "",
+        description: props.description || ""
       }),
     loading: (props: ExtendedToastProps) => 
       baseToast({
         ...props,
         variant: "default",
-        title: ensureString(props.title || "Loading..."),
-        description: ensureString(props.description || "Please wait while we process your request.")
+        title: props.title || "Loading...",
+        description: props.description || "Please wait while we process your request."
       })
   };
 }

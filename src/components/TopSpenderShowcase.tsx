@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Trophy, CrownIcon, TrendingUp, Users, DollarSign } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
@@ -12,7 +13,6 @@ interface TopSpenderShowcaseProps {
 }
 
 const TopSpenderShowcase: React.FC<TopSpenderShowcaseProps> = ({ user, className = '' }) => {
-  // The user object now properly supports the followers property
   return (
     <div className={`max-w-lg mx-auto ${className}`}>
       <div className="text-center mb-6">

@@ -6,7 +6,7 @@ import { ButtonProps } from '@/components/ui/button';
 
 interface RoyalButtonProps extends Omit<ButtonProps, 'variant'> {
   variant?: 'default' | 'gold' | 'purple' | 'crimson' | 'royalGold' | 'glass';
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'sm' | 'md' | 'lg' | 'default' | 'icon';
   glow?: boolean;
   animated?: boolean;
 }
@@ -15,7 +15,7 @@ const RoyalButton: React.FC<RoyalButtonProps> = ({
   children,
   className,
   variant = 'default',
-  size = 'md',
+  size = 'default',
   glow = false,
   animated = false,
   ...props
@@ -39,6 +39,8 @@ const RoyalButton: React.FC<RoyalButtonProps> = ({
         return 'px-3 py-1 text-sm';
       case 'lg':
         return 'px-6 py-3 text-lg';
+      case 'icon':
+        return 'h-10 w-10';
       default:
         return 'px-4 py-2';
     }
@@ -63,6 +65,7 @@ const RoyalButton: React.FC<RoyalButtonProps> = ({
         className
       )}
       variant={buttonVariant as ButtonProps['variant']}
+      size={size}
       {...props}
     >
       {children}

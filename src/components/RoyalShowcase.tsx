@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -20,7 +21,7 @@ const RoyalShowcase: React.FC<RoyalShowcaseProps> = ({ className = '' }) => {
     rank: 1,
     joinedAt: new Date(),
     displayName: 'Money Bags',
-    gender: 'male' as any,
+    gender: 'male',
     profileImage: 'https://api.dicebear.com/6.x/personas/svg?seed=moneybags',
     amountSpent: 5000,
     totalSpent: 5000,
@@ -28,7 +29,7 @@ const RoyalShowcase: React.FC<RoyalShowcaseProps> = ({ className = '' }) => {
     team: 'red',
     walletBalance: 10000,
     spendStreak: 30,
-    followers: 150  // Now this is valid in the UserProfile type
+    followers: 150
   };
 
   return (

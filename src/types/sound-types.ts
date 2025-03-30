@@ -32,7 +32,9 @@ export type SoundType =
   | 'advertisement'
   | 'parchmentUnfurl'
   | 'wish'
-  | 'coin';
+  | 'coin'
+  | 'hover'
+  | 'pageChange';
 
 export interface AudioLoaderReturn {
   play: (sound: SoundType) => void;
@@ -59,6 +61,8 @@ export interface UseSoundOptions {
   loop?: boolean;
   interrupt?: boolean;
   onEnd?: () => void;
+  baseVolume?: number;
+  disableCache?: boolean;
 }
 
 export interface UseSoundReturn {
@@ -66,4 +70,5 @@ export interface UseSoundReturn {
   stop: (sound?: SoundType) => void;
   isPlaying: boolean;
   duration: number;
+  playSound?: (sound: SoundType) => void;
 }
