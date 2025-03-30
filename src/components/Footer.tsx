@@ -1,67 +1,43 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Facebook, Twitter, Instagram, Youtube, Linkedin, Github } from 'lucide-react';
 
 const Footer = () => {
   return (
-    <footer className="bg-black/30 text-white py-8 backdrop-blur-sm border-t border-white/10">
-      <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+    <footer className="py-8 border-t border-gray-800 bg-black">
+      <div className="container mx-auto px-4 text-center text-gray-500 text-sm">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
           <div>
-            <h3 className="text-xl font-bold mb-4">SpendThrone</h3>
-            <p className="text-sm text-white/70">The ultimate pay-to-win social experiment. Spend your way to royal status and watch as your rank rises with every dollar spent.</p>
+            <h3 className="text-white font-semibold mb-4">SpendThrone</h3>
+            <p className="text-gray-400">
+              A persistent, ranked leaderboard where rank = total $ spent.
+              The leaderboard never resets. $1 spent equals 1 unit of rank.
+            </p>
           </div>
           
           <div>
-            <h3 className="text-lg font-bold mb-4">Navigation</h3>
-            <ul className="space-y-2 text-sm text-white/70">
-              <li><Link to="/" className="hover:text-royal-gold transition-colors">Home</Link></li>
-              <li><Link to="/leaderboard" className="hover:text-royal-gold transition-colors">Leaderboard</Link></li>
-              <li><Link to="/features" className="hover:text-royal-gold transition-colors">Features</Link></li>
-              <li><Link to="/teams" className="hover:text-royal-gold transition-colors">Teams</Link></li>
-              <li><Link to="/status-through-history" className="hover:text-royal-gold transition-colors">Status Through History</Link></li>
+            <h3 className="text-white font-semibold mb-4">Links</h3>
+            <ul className="space-y-2">
+              <li><Link to="/" className="text-gray-400 hover:text-royal-gold transition-colors">Home</Link></li>
+              <li><Link to="/leaderboard" className="text-gray-400 hover:text-royal-gold transition-colors">Leaderboard</Link></li>
+              <li><Link to="/about" className="text-gray-400 hover:text-royal-gold transition-colors">About</Link></li>
+              <li><Link to="/terms" className="text-gray-400 hover:text-royal-gold transition-colors">Terms</Link></li>
+              <li><Link to="/privacy" className="text-gray-400 hover:text-royal-gold transition-colors">Privacy</Link></li>
             </ul>
           </div>
           
           <div>
-            <h3 className="text-lg font-bold mb-4">Legal</h3>
-            <ul className="space-y-2 text-sm text-white/70">
-              <li><Link to="/terms" className="hover:text-royal-gold transition-colors">Terms of Service</Link></li>
-              <li><Link to="/privacy" className="hover:text-royal-gold transition-colors">Privacy Policy</Link></li>
-              <li><Link to="/about" className="hover:text-royal-gold transition-colors">About Us</Link></li>
+            <h3 className="text-white font-semibold mb-4">Connect</h3>
+            <ul className="space-y-2">
+              <li><a href="https://twitter.com/spendthrone" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-royal-gold transition-colors">Twitter</a></li>
+              <li><a href="https://discord.gg/spendthrone" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-royal-gold transition-colors">Discord</a></li>
+              <li><a href="mailto:info@spendthrone.com" className="text-gray-400 hover:text-royal-gold transition-colors">Contact</a></li>
             </ul>
-          </div>
-          
-          <div>
-            <h3 className="text-lg font-bold mb-4">Connect</h3>
-            <div className="flex space-x-4 mb-4">
-              <a href="#" className="text-white/70 hover:text-royal-gold transition-colors">
-                <Facebook size={20} />
-              </a>
-              <a href="#" className="text-white/70 hover:text-royal-gold transition-colors">
-                <Twitter size={20} />
-              </a>
-              <a href="#" className="text-white/70 hover:text-royal-gold transition-colors">
-                <Instagram size={20} />
-              </a>
-              <a href="#" className="text-white/70 hover:text-royal-gold transition-colors">
-                <Youtube size={20} />
-              </a>
-              <a href="#" className="text-white/70 hover:text-royal-gold transition-colors">
-                <Linkedin size={20} />
-              </a>
-              <a href="#" className="text-white/70 hover:text-royal-gold transition-colors">
-                <Github size={20} />
-              </a>
-            </div>
           </div>
         </div>
         
-        <div className="border-t border-white/10 mt-8 pt-6 text-center text-sm text-white/50">
-          <p>© {new Date().getFullYear()} SpendThrone. All rights reserved.</p>
-          <p className="mt-2">A satirical social experiment exploring how wealth affects status in digital spaces.</p>
-        </div>
+        <p className="mt-6">SPEND THRONE — A satirical take on pay-to-win mechanics and digital status.</p>
+        <p className="mt-2">© {new Date().getFullYear()} SpendThrone.com</p>
       </div>
     </footer>
   );

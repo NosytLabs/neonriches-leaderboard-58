@@ -1,8 +1,10 @@
 
 import React, { createContext, useContext, ReactNode, useState, useEffect } from 'react';
-import { signInWithEmail, signUpWithEmail, signOut } from '@/services/authService';
+import { User, Session } from '@supabase/supabase-js';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
 
-interface User {
+interface UserProfile {
   id: string;
   email: string;
   username: string;
@@ -10,19 +12,20 @@ interface User {
   walletBalance: number;
   rank: number;
   team?: 'red' | 'green' | 'blue' | null;
-  joined: Date;
-  spentTotal: number;
+  tier?: string;
+  totalSpent: number;
   profileImage?: string;
+  joinedAt: Date;
 }
 
 interface AuthContextType {
-  user: User | null;
+  user: UserProfile | null;
   isAuthenticated: boolean;
   isLoading: boolean;
-  login: (email: string, password: string) => Promise<void>;
-  register: (username: string, email: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<boolean>;
+  register: (username: string, email: string, password: string) => Promise<boolean>;
   logout: () => Promise<void>;
-  updateUserProfile?: (updates: Partial<User>) => Promise<void>;
+  updateUserProfile?: (updates: Partial<UserProfile>) => Promise<void>;
 }
 
 // Create the context with a default value
@@ -30,9 +33,9 @@ export const AuthContext = createContext<AuthContextType>({
   user: null,
   isAuthenticated: false,
   isLoading: true,
-  login: async () => {},
-  register: async () => {},
-  logout: () => {},
+  login: async () => false,
+  register: async () => false,
+  logout: async () => {},
 });
 
 // Create a provider component
@@ -41,52 +44,109 @@ export interface AuthProviderProps {
 }
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<UserProfile | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const { toast } = useToast();
 
   useEffect(() => {
-    // Check for stored user data on component mount
-    const storedUser = localStorage.getItem('spendthrone_user');
-    
-    if (storedUser) {
-      try {
-        setUser(JSON.parse(storedUser));
-      } catch (error) {
-        console.error('Failed to parse stored user data:', error);
-        localStorage.removeItem('spendthrone_user');
+    // Set up auth state listener FIRST
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, currentSession) => {
+        setSession(currentSession);
+        if (currentSession) {
+          fetchUserProfile(currentSession.user);
+        } else {
+          setUser(null);
+        }
       }
-    }
-    
-    setIsLoading(false);
+    );
+
+    // THEN check for existing session
+    supabase.auth.getSession().then(({ data: { session: currentSession } }) => {
+      setSession(currentSession);
+      if (currentSession) {
+        fetchUserProfile(currentSession.user);
+      }
+      setIsLoading(false);
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
   }, []);
+
+  const fetchUserProfile = async (authUser: User) => {
+    try {
+      const { data, error } = await supabase
+        .from('users')
+        .select('*')
+        .eq('id', authUser.id)
+        .single();
+      
+      if (error) {
+        console.error('Error fetching user profile:', error);
+        return;
+      }
+      
+      // Transform to UserProfile format
+      if (data) {
+        const userProfile: UserProfile = {
+          id: data.id,
+          email: authUser.email || '',
+          username: data.username,
+          displayName: data.display_name,
+          walletBalance: 0, // This should come from your database or be calculated
+          rank: 0, // This should come from your database or be calculated
+          team: data.team,
+          tier: data.tier,
+          totalSpent: 0, // This should come from your database or be calculated
+          profileImage: data.profile_image,
+          joinedAt: new Date(data.joined_at)
+        };
+        
+        setUser(userProfile);
+      } else {
+        console.log('No user profile found');
+      }
+    } catch (error) {
+      console.error('Error in fetchUserProfile:', error);
+    }
+  };
 
   const login = async (email: string, password: string) => {
     try {
       setIsLoading(true);
-      const success = await signInWithEmail(email, password);
       
-      if (success) {
-        // Simulate user data fetch from API
-        const mockUser: User = {
-          id: 'user_' + Date.now(),
-          email,
-          username: email.split('@')[0],
-          displayName: email.split('@')[0].charAt(0).toUpperCase() + email.split('@')[0].slice(1),
-          walletBalance: 100,
-          rank: Math.floor(Math.random() * 100) + 1,
-          team: Math.random() > 0.5 ? (Math.random() > 0.5 ? 'red' : 'green') : 'blue',
-          joined: new Date(),
-          spentTotal: 0
-        };
-        
-        setUser(mockUser);
-        localStorage.setItem('spendthrone_user', JSON.stringify(mockUser));
-      } else {
-        throw new Error('Login failed');
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password
+      });
+      
+      if (error) {
+        console.error('Login error:', error.message);
+        toast({
+          title: "Login failed",
+          description: error.message,
+          variant: "destructive",
+        });
+        return false;
       }
+      
+      toast({
+        title: "Login successful",
+        description: "Welcome back!",
+      });
+      
+      return true;
     } catch (error) {
-      console.error('Login error:', error);
-      throw error;
+      console.error('Unexpected login error:', error);
+      toast({
+        title: "Login failed",
+        description: "An unexpected error occurred",
+        variant: "destructive",
+      });
+      return false;
     } finally {
       setIsLoading(false);
     }
@@ -95,29 +155,67 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const register = async (username: string, email: string, password: string) => {
     try {
       setIsLoading(true);
-      const success = await signUpWithEmail(email, password);
       
-      if (success) {
-        // Simulate user data creation
-        const mockUser: User = {
-          id: 'user_' + Date.now(),
-          email,
-          username,
-          displayName: username,
-          walletBalance: 50, // New users get starting balance
-          rank: Math.floor(Math.random() * 1000) + 100, // Initial rank
-          joined: new Date(),
-          spentTotal: 0
-        };
-        
-        setUser(mockUser);
-        localStorage.setItem('spendthrone_user', JSON.stringify(mockUser));
-      } else {
-        throw new Error('Registration failed');
+      // First, register the user with Supabase Auth
+      const { error: signUpError, data } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            username
+          }
+        }
+      });
+      
+      if (signUpError) {
+        console.error('Registration error:', signUpError.message);
+        toast({
+          title: "Registration failed",
+          description: signUpError.message,
+          variant: "destructive",
+        });
+        return false;
       }
+      
+      // If the user is created, create a profile in the users table
+      if (data.user) {
+        const { error: profileError } = await supabase
+          .from('users')
+          .insert([
+            {
+              id: data.user.id,
+              username,
+              email,
+              display_name: username,
+              tier: 'basic',
+              joined_at: new Date().toISOString()
+            }
+          ]);
+          
+        if (profileError) {
+          console.error('Profile creation error:', profileError);
+          toast({
+            title: "Profile creation failed",
+            description: "Your account was created but we couldn't set up your profile",
+            variant: "destructive",
+          });
+        }
+      }
+      
+      toast({
+        title: "Registration successful",
+        description: "Welcome to SpendThrone!",
+      });
+      
+      return true;
     } catch (error) {
-      console.error('Registration error:', error);
-      throw error;
+      console.error('Unexpected registration error:', error);
+      toast({
+        title: "Registration failed",
+        description: "An unexpected error occurred",
+        variant: "destructive",
+      });
+      return false;
     } finally {
       setIsLoading(false);
     }
@@ -125,28 +223,94 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const logout = async () => {
     try {
-      setIsLoading(true);
-      await signOut();
+      const { error } = await supabase.auth.signOut();
+      
+      if (error) {
+        console.error('Logout error:', error.message);
+        toast({
+          title: "Logout failed",
+          description: error.message,
+          variant: "destructive",
+        });
+        return;
+      }
+      
       setUser(null);
-      localStorage.removeItem('spendthrone_user');
+      setSession(null);
+      
+      toast({
+        title: "Logged out",
+        description: "You have been successfully logged out",
+      });
     } catch (error) {
-      console.error('Logout error:', error);
-      throw error;
-    } finally {
-      setIsLoading(false);
+      console.error('Unexpected logout error:', error);
+      toast({
+        title: "Logout failed",
+        description: "An unexpected error occurred",
+        variant: "destructive",
+      });
     }
   };
 
-  const updateUserProfile = async (updates: Partial<User>) => {
+  const updateUserProfile = async (updates: Partial<UserProfile>) => {
     try {
-      if (!user) throw new Error('No user to update');
-      const updatedUser = { ...user, ...updates };
-      setUser(updatedUser);
-      localStorage.setItem('spendthrone_user', JSON.stringify(updatedUser));
-      return Promise.resolve();
+      if (!user || !session) {
+        toast({
+          title: "Profile update failed",
+          description: "You must be logged in to update your profile",
+          variant: "destructive",
+        });
+        return;
+      }
+      
+      // Transform UserProfile updates to database format
+      const dbUpdates = {
+        username: updates.username,
+        display_name: updates.displayName,
+        profile_image: updates.profileImage,
+        team: updates.team,
+        tier: updates.tier,
+        // Add other fields as needed
+      };
+      
+      // Remove undefined values
+      Object.keys(dbUpdates).forEach(key => {
+        if (dbUpdates[key] === undefined) {
+          delete dbUpdates[key];
+        }
+      });
+      
+      if (Object.keys(dbUpdates).length > 0) {
+        const { error } = await supabase
+          .from('users')
+          .update(dbUpdates)
+          .eq('id', user.id);
+          
+        if (error) {
+          console.error('Profile update error:', error);
+          toast({
+            title: "Profile update failed",
+            description: error.message,
+            variant: "destructive",
+          });
+          return;
+        }
+        
+        // Update local state
+        setUser({ ...user, ...updates });
+        
+        toast({
+          title: "Profile updated",
+          description: "Your profile has been successfully updated",
+        });
+      }
     } catch (error) {
-      console.error('Update profile error:', error);
-      throw error;
+      console.error('Unexpected profile update error:', error);
+      toast({
+        title: "Profile update failed",
+        description: "An unexpected error occurred",
+        variant: "destructive",
+      });
     }
   };
 
@@ -154,7 +318,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     <AuthContext.Provider
       value={{
         user,
-        isAuthenticated: !!user,
+        isAuthenticated: !!session,
         isLoading,
         login,
         register,
