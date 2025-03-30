@@ -1,16 +1,5 @@
 
-export interface NotificationSoundOptions {
-  volume?: number;
-  loop?: boolean;
-  delay?: number;
-}
-
-export interface UseSoundOptions {
-  volume?: number;
-  interrupt?: boolean;
-}
-
-export type SoundType =
+export type SoundType = 
   | 'click'
   | 'coins'
   | 'coins_drop'
@@ -23,18 +12,26 @@ export type SoundType =
   | 'rankUp'
   | 'button'
   | 'hover'
-  | 'bell'
-  | 'toast'
-  | 'level'
-  | 'chime'
-  | 'ping'
-  | 'bonus'
-  | 'claim'
-  | 'reward'
-  | 'shame'
-  | 'levelUp'
   | 'fanfare'
-  | 'wish';
+  | 'wish'
+  | 'levelUp'
+  | 'crown'
+  | 'ding'
+  | 'sparkle'
+  | 'sweep'
+  | 'tada'
+  | 'thud'
+  | 'tier_up'
+  | 'rank_up'
+  | 'rank_down'
+  | 'shame';
+
+export interface UseSoundOptions {
+  volume?: number;
+  loop?: boolean;
+  interrupt?: boolean;
+  [key: string]: any; // Allow string indexing for flexibility
+}
 
 export interface AudioLoaderReturn {
   audio: Record<SoundType, HTMLAudioElement>;
@@ -55,11 +52,5 @@ export interface PremiumSoundPackDetails {
   previewSound: SoundType;
   sounds: SoundType[];
   features: string[];
-  tags: string[];
-  isPurchased?: boolean;
-}
-
-export interface CacheOptions {
-  ttl?: number;
-  staleWhileRevalidate?: boolean;
+  tags: string[]; // Added required property
 }

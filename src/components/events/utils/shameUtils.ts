@@ -11,7 +11,7 @@ export { getMockeryCost as getShameActionPrice };
 
 // Get the icon for a shame action
 export const getShameActionIcon = (action: ShameAction): string => {
-  const icons: Record<ShameAction, string> = {
+  const icons: Record<string, string> = {
     tomatoes: '🍅',
     eggs: '🥚',
     shame: '😱',
@@ -47,7 +47,7 @@ export const getShameActionIcon = (action: ShameAction): string => {
 
 // Get the title for a shame action
 export const getShameActionTitle = (action: ShameAction): string => {
-  const titles: Record<ShameAction, string> = {
+  const titles: Record<string, string> = {
     tomatoes: 'Throw Tomatoes',
     eggs: 'Throw Eggs',
     shame: 'Public Shame',
@@ -83,7 +83,7 @@ export const getShameActionTitle = (action: ShameAction): string => {
 
 // Get the description for a shame action
 export const getShameActionDescription = (action: ShameAction): string => {
-  const descriptions: Record<ShameAction, string> = {
+  const descriptions: Record<string, string> = {
     tomatoes: 'Pelt the user with virtual tomatoes as a sign of disapproval',
     eggs: 'Throw rotten eggs at the user for all to see',
     shame: 'Ring the shame bell and parade the user through the town',

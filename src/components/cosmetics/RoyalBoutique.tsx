@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -30,7 +31,8 @@ const RoyalBoutique = () => {
       return;
     }
 
-    const success = await awardCosmetic(item.id, item.category, item.rarity, 'boutique');
+    // Corrected to match expected parameter count (item.id, item.category, item.rarity)
+    const success = await awardCosmetic(item.id, item.category, item.rarity);
 
     if (success) {
       toast({
@@ -55,7 +57,7 @@ const RoyalBoutique = () => {
       type: 'premium',
       rarity: 'rare',
       cssClass: 'border-gold',
-      image: '/images/cosmetics/border-gold.png'
+      imageSrc: '/images/cosmetics/border-gold.png'
     },
     {
       id: 'border-2',
@@ -66,7 +68,7 @@ const RoyalBoutique = () => {
       type: 'standard',
       rarity: 'uncommon',
       cssClass: 'border-silver',
-      image: '/images/cosmetics/border-silver.png'
+      imageSrc: '/images/cosmetics/border-silver.png'
     },
     {
       id: 'border-3',
@@ -77,7 +79,7 @@ const RoyalBoutique = () => {
       type: 'exclusive',
       rarity: 'epic',
       cssClass: 'border-dragon-scale',
-      image: '/images/cosmetics/border-dragon.png'
+      imageSrc: '/images/cosmetics/border-dragon.png'
     },
   ];
 
@@ -91,7 +93,7 @@ const RoyalBoutique = () => {
       type: 'premium',
       rarity: 'epic',
       cssClass: 'text-royal-purple',
-      image: '/images/cosmetics/color-purple.png'
+      imageSrc: '/images/cosmetics/color-purple.png'
     },
     {
       id: 'color-2',
@@ -102,7 +104,7 @@ const RoyalBoutique = () => {
       type: 'standard',
       rarity: 'uncommon',
       cssClass: 'text-emerald-green',
-      image: '/images/cosmetics/color-emerald.png'
+      imageSrc: '/images/cosmetics/color-emerald.png'
     },
     {
       id: 'color-3',
@@ -113,7 +115,7 @@ const RoyalBoutique = () => {
       type: 'exclusive',
       rarity: 'rare',
       cssClass: 'text-golden-yellow',
-      image: '/images/cosmetics/color-gold.png'
+      imageSrc: '/images/cosmetics/color-gold.png'
     },
   ];
 
@@ -127,7 +129,7 @@ const RoyalBoutique = () => {
       type: 'premium',
       rarity: 'legendary',
       cssClass: 'font-medieval',
-      image: '/images/cosmetics/font-medieval.png'
+      imageSrc: '/images/cosmetics/font-medieval.png'
     },
     {
       id: 'font-2',
@@ -138,7 +140,7 @@ const RoyalBoutique = () => {
       type: 'standard',
       rarity: 'rare',
       cssClass: 'font-elegant-serif',
-      image: '/images/cosmetics/font-serif.png'
+      imageSrc: '/images/cosmetics/font-serif.png'
     },
     {
       id: 'font-3',
@@ -149,20 +151,27 @@ const RoyalBoutique = () => {
       type: 'standard',
       rarity: 'uncommon',
       cssClass: 'font-bold-sans',
-      image: '/images/cosmetics/font-sans.png'
+      imageSrc: '/images/cosmetics/font-sans.png'
     },
   ];
 
+  // Create empty arrays for remaining categories
+  const emptyArray: CosmeticItem[] = [];
+  
+  // Updated to include all required categories
   const allCosmetics: Record<CosmeticCategory, CosmeticItem[]> = {
     border: bordersCategory,
     color: colorsCategory,
     font: fontsCategory,
-    emoji: [],
-    title: [],
-    background: [],
-    effect: [],
-    badge: [],
-    theme: [],
+    emoji: emptyArray,
+    title: emptyArray,
+    background: emptyArray,
+    effect: emptyArray,
+    badge: emptyArray,
+    theme: emptyArray,
+    appearance: emptyArray,
+    profile: emptyArray,
+    interaction: emptyArray
   };
 
   return (
@@ -177,51 +186,56 @@ const RoyalBoutique = () => {
         <CardContent>
           <ScrollArea className="h-[600px] w-full">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {Object.entries(allCosmetics).map(([category, items]) => (
-                <div key={category} className="space-y-4">
-                  <h3 className="text-xl font-semibold capitalize">{category}</h3>
-                  <div className="grid grid-cols-1 gap-4">
-                    {items.map((item) => (
-                      <Card key={item.id} className="glass-morphism border-white/10">
-                        <CardHeader>
-                          <CardTitle className="flex items-center justify-between">
-                            <span>{item.name}</span>
-                            <Badge variant="secondary">
-                              {formatCurrency(item.price)}
-                            </Badge>
-                          </CardTitle>
-                          <CardDescription>{item.description}</CardDescription>
-                        </CardHeader>
-                        <CardContent className="flex items-center justify-between">
-                          <img
-                            src={item.imageSrc || item.image}
-                            alt={item.name}
-                            className="w-20 h-20 object-cover rounded-md"
-                          />
-                          <Button onClick={() => handlePurchase(item)} disabled={!user}>
-                            {user ? (
-                              user.cosmetics && user.cosmetics[category as CosmeticCategory]?.includes(item.id) ? (
-                                <Check className="mr-2 h-4 w-4" />
+              {Object.entries(allCosmetics).map(([category, items]) => {
+                // Skip empty categories
+                if (items.length === 0) return null;
+                
+                return (
+                  <div key={category} className="space-y-4">
+                    <h3 className="text-xl font-semibold capitalize">{category}</h3>
+                    <div className="grid grid-cols-1 gap-4">
+                      {items.map((item) => (
+                        <Card key={item.id} className="glass-morphism border-white/10">
+                          <CardHeader>
+                            <CardTitle className="flex items-center justify-between">
+                              <span>{item.name}</span>
+                              <Badge variant="secondary">
+                                {formatCurrency(item.price)}
+                              </Badge>
+                            </CardTitle>
+                            <CardDescription>{item.description}</CardDescription>
+                          </CardHeader>
+                          <CardContent className="flex items-center justify-between">
+                            <img
+                              src={item.imageSrc || '/images/cosmetics/default.png'}
+                              alt={item.name}
+                              className="w-20 h-20 object-cover rounded-md"
+                            />
+                            <Button onClick={() => handlePurchase(item)} disabled={!user}>
+                              {user ? (
+                                user.cosmetics && user.cosmetics[item.category]?.includes(item.id) ? (
+                                  <Check className="mr-2 h-4 w-4" />
+                                ) : (
+                                  <DollarSign className="mr-2 h-4 w-4" />
+                                )
+                              ) : null}
+                              {user ? (
+                                user.cosmetics && user.cosmetics[item.category]?.includes(item.id) ? (
+                                  "Owned"
+                                ) : (
+                                  "Purchase"
+                                )
                               ) : (
-                                <DollarSign className="mr-2 h-4 w-4" />
-                              )
-                            ) : null}
-                            {user ? (
-                              user.cosmetics && user.cosmetics[category as CosmeticCategory]?.includes(item.id) ? (
-                                "Owned"
-                              ) : (
-                                "Purchase"
-                              )
-                            ) : (
-                              "Login to purchase"
-                            )}
-                          </Button>
-                        </CardContent>
-                      </Card>
-                    ))}
+                                "Login to purchase"
+                              )}
+                            </Button>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </ScrollArea>
         </CardContent>

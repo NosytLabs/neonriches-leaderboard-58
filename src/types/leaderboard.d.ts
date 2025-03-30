@@ -3,7 +3,7 @@ import { TeamColor, UserTier } from './user';
 
 export interface LeaderboardUser {
   id: string;
-  userId?: string;
+  userId: string; // Added as required
   username: string;
   displayName?: string;
   profileImage?: string;
@@ -17,7 +17,7 @@ export interface LeaderboardUser {
   avatarUrl?: string;    // For backward compatibility
   isVIP?: boolean;
   isVerified?: boolean;
-  isProtected?: boolean;
+  isProtected?: boolean; // Added missing property
   isFounder?: boolean;
   spendStreak?: number;
   joinedAt?: string;
