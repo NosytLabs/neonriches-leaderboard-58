@@ -1,6 +1,7 @@
 
 import React from 'react';
-import { UserProfile } from '@/contexts/AuthContext';
+import { useAuth } from '@/hooks/useAuth';
+import { UserProfile } from '@/types/user';
 import InteractiveLeaderboard from '@/components/dashboard/InteractiveLeaderboard';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Coins, CrownIcon, Users, TrendingUp } from 'lucide-react';

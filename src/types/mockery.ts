@@ -1,7 +1,5 @@
 
-// Mockery types
-
-// Define MockeryAction as a string literal union type to match how it's used in shameUtils
+// Define MockeryAction as a string literal union type
 export type MockeryAction = 
   | 'tomatoes'
   | 'eggs' 
@@ -34,6 +32,9 @@ export type MockeryAction =
   | 'jokeCrown'
   | 'memeFrame';
 
+// Make ShameAction an alias of MockeryAction for backward compatibility
+export type ShameAction = MockeryAction;
+
 export type MockeryTier = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary' | 'basic' | 'premium' | 'bronze' | 'silver' | 'gold' | 'platinum' | 'diamond';
 
 export interface MockeryActionData {
@@ -52,12 +53,19 @@ export interface MockeryActionData {
 export interface MockeryEvent {
   id: string;
   actionId: string;
+  action?: MockeryAction; // For backward compatibility
   senderId: string;
+  sourceId?: string; // For backward compatibility
   targetId: string;
+  targetUserId?: string; // For backward compatibility
   timestamp: string;
   duration: number;
   isActive: boolean;
+  active?: boolean; // For backward compatibility
   endTime: string;
+  expiresAt?: string; // For backward compatibility
+  appliedAt?: string; // For backward compatibility
+  appliedById?: string; // For backward compatibility
 }
 
 export interface MockeryEffectData {
@@ -84,6 +92,7 @@ export interface MockUser {
   mockeryCount?: number;
   lastMocked?: string;
   tier?: MockeryTier;
+  team?: string; // Make this optional for backward compatibility
 }
 
 export interface ShameAction {
@@ -94,6 +103,7 @@ export interface ShameAction {
   cost: number;
   effect: string;
   icon: string;
+  duration?: number; // Add duration for compatibility with MockeryAction
 }
 
 export interface ExtendedMockeryAction extends MockeryActionData {

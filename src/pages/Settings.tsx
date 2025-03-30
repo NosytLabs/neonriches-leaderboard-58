@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { useSettingsStore } from '@/stores/settingsStore';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { PaintBrush, Volume2, Bell, Shield, Sparkles } from 'lucide-react';
+import { Paintbrush, Volume2, Bell, Shield, Sparkles } from 'lucide-react';
 import ProfileMarketingSettings from '@/components/profile/ProfileMarketingSettings';
 import { useAuth } from '@/hooks/useAuth';
 
@@ -29,7 +29,7 @@ const Settings: React.FC = () => {
       <Tabs defaultValue="appearance" className="space-y-6">
         <TabsList className="glass-morphism mb-4 grid grid-cols-4">
           <TabsTrigger value="appearance" className="flex items-center gap-2">
-            <PaintBrush size={16} />
+            <Paintbrush size={16} />
             <span className="hidden sm:inline">Appearance</span>
           </TabsTrigger>
           <TabsTrigger value="audio" className="flex items-center gap-2">

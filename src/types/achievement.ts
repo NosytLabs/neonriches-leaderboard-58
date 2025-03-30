@@ -1,38 +1,14 @@
 
-// Achievement types
-
-export type AchievementType = 
-  | 'royal'
-  | 'rank'
-  | 'milestone'
-  | 'deposit'
-  | 'streak'
-  | 'purchase'
-  | 'referral'
-  | 'social'
-  | 'subscription';
-
-export type AchievementTier = 
-  | 'gold'
-  | 'silver'
-  | 'bronze'
-  | 'platinum'
-  | 'diamond';
+export type AchievementType = 'royal' | 'deposit' | 'rank' | 'milestone' | 'streak' | 'purchase';
+export type AchievementTier = 'bronze' | 'silver' | 'gold' | 'platinum' | 'diamond';
 
 export interface Achievement {
   id: string;
   name: string;
   description: string;
   type: AchievementType;
-  icon: 'star' | 'zap' | 'award' | 'trophy' | 'crown' | 'dollar';
   tier: AchievementTier;
+  icon: 'star' | 'zap' | 'award' | 'trophy' | 'crown' | 'dollar';
   unlockedAt: string;
   amountSpent?: number;
-}
-
-export interface AchievementProgress {
-  achievementId: string;
-  progress: number;
-  total: number;
-  isCompleted: boolean;
 }

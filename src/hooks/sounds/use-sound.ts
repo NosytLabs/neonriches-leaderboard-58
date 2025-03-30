@@ -3,7 +3,7 @@ import { useCallback, useState } from 'react';
 import { SoundType } from '@/types/sound-types';
 
 export interface UseSoundReturn {
-  play: (sound: SoundType, volume?: number) => void;
+  play: (sound: SoundType) => void;
   isPlaying: boolean;
   stop: () => void;
 }
@@ -24,13 +24,25 @@ export const useSound = (): UseSoundReturn => {
       shame: 'https://assets.mixkit.co/sfx/preview/mixkit-crowd-boo-and-whistle-733.mp3',
       click: 'https://assets.mixkit.co/sfx/preview/mixkit-click-melodic-tone-1129.mp3',
       royal: 'https://assets.mixkit.co/sfx/preview/mixkit-fairy-arcade-sparkle-866.mp3',
-      levelUp: 'https://assets.mixkit.co/sfx/preview/mixkit-player-boost-recharging-2040.mp3'
+      levelUp: 'https://assets.mixkit.co/sfx/preview/mixkit-player-boost-recharging-2040.mp3',
+      win: 'https://assets.mixkit.co/sfx/preview/mixkit-winning-chimes-2015.mp3',
+      lose: 'https://assets.mixkit.co/sfx/preview/mixkit-losing-bleeps-2026.mp3',
+      reward: 'https://assets.mixkit.co/sfx/preview/mixkit-unlock-game-notification-253.mp3',
+      warning: 'https://assets.mixkit.co/sfx/preview/mixkit-alert-bells-echo-765.mp3',
+      coinDrop: 'https://assets.mixkit.co/sfx/preview/mixkit-coins-handling-1939.mp3',
+      swordClash: 'https://assets.mixkit.co/sfx/preview/mixkit-sword-slash-swoosh-1476.mp3',
+      noblesLaugh: 'https://assets.mixkit.co/sfx/preview/mixkit-crowd-applause-small-439.mp3',
+      seal: 'https://assets.mixkit.co/sfx/preview/mixkit-fairy-arcade-sparkle-866.mp3',
+      medallion: 'https://assets.mixkit.co/sfx/preview/mixkit-achievement-medal-600.mp3',
+      royalAnnouncement: 'https://assets.mixkit.co/sfx/preview/mixkit-medieval-show-fanfare-announcement-226.mp3',
+      trumpet: 'https://assets.mixkit.co/sfx/preview/mixkit-medieval-show-fanfare-announcement-226.mp3',
+      hover: 'https://assets.mixkit.co/sfx/preview/mixkit-click-melodic-tone-1129.mp3'
     };
 
     return soundMap[sound] || soundMap.notification;
   };
 
-  const play = useCallback((sound: SoundType, volume: number = 0.3) => {
+  const play = useCallback((sound: SoundType) => {
     try {
       if (audio) {
         audio.pause();
@@ -38,7 +50,7 @@ export const useSound = (): UseSoundReturn => {
       }
 
       const newAudio = new Audio(getSoundUrl(sound));
-      newAudio.volume = Math.min(1, Math.max(0, volume)); // Clamp volume between 0 and 1
+      newAudio.volume = 0.3; // Default volume
       
       newAudio.onplaying = () => setIsPlaying(true);
       newAudio.onended = () => setIsPlaying(false);

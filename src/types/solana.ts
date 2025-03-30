@@ -1,67 +1,45 @@
 
-// Solana related types
-
-export interface SolanaTransaction {
-  id: string;
-  signature: string;
-  amount: number;
-  timestamp: number;
-  type: 'deposit' | 'withdrawal' | 'spend' | 'transfer';
-  status: 'confirmed' | 'pending' | 'failed';
-  sender?: string;
-  receiver?: string;
+export interface SolanaWallet {
+  publicKey: string;
+  signature?: string;
+  balance?: number;
+  signMessage?: (message: Uint8Array) => Promise<{ signature: Uint8Array }>;
 }
 
 export interface SolanaTreasuryInfo {
-  totalDeposits: number;
-  totalWithdrawals: number;
-  balance: number;
-  lastUpdate: number;
-  lastTransaction?: SolanaTransaction;
-  recentTransactions: SolanaTransaction[];
-  transactions?: SolanaTransaction[];
-  currentBalance?: number;
-  totalDeposited?: number;
-  totalWithdrawn?: number;
+  totalDeposited: number;
+  totalWithdrawn: number;
+  currentBalance: number;
+  depositCount: number;
+  withdrawalCount: number;
+  lastUpdate: string;
 }
 
-export interface SolanaWallet {
-  address: string;
-  balance: number;
-  label?: string;
+export interface SolanaTransaction {
+  signature: string;
+  amount: number;
+  timestamp: string;
+  successful: boolean;
+  type: 'deposit' | 'withdrawal';
+  user?: string;
 }
 
 export interface OnChainLeaderboardEntry {
-  publicKey: string;
-  lamports: number;
-  account: any;
-  id?: string;
-  address?: string;
-  spentAmount?: number;
-  amountSpent?: number;
-  totalDeposited?: number;
-  rank?: number;
-  userId?: string;
-  lastTransaction?: number;
+  pubkey: string;
+  amount: number;
+  timestamp: string;
+  username?: string;
+  totalSpent?: number;
 }
 
 export interface SolanaNftInfo {
+  mintAddress: string;
+  tokenAccount: string;
   name: string;
   symbol: string;
-  uri: string;
-  mint: string;
-  owner: string;
-  metadata?: any;
+  image: string;
+  description: string;
+  attributes: { trait_type: string; value: string }[];
 }
 
-export interface CertificateMetadata {
-  name: string;
-  symbol: string;
-  description: string;
-  image: string;
-  attributes: {
-    trait_type: string;
-    value: string;
-  }[];
-  rank?: number;
-}
+export type LeaderboardEntry = OnChainLeaderboardEntry;

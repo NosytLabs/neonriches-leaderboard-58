@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { UserCircle, CreditCard, Settings, LogOut, Users } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { UserProfile } from '@/contexts/AuthContext';
+import { UserProfile } from '@/types/user';
 import TeamSwitchModal, { TeamColor } from './TeamSwitchModal';
 
 interface ProfileSidebarProps {

@@ -1,18 +1,18 @@
 
-import { User } from '@/types/user';
+import { UserProfile } from './user';
 
 export type TransactionType = 
-  'deposit' | 
-  'withdrawal' | 
-  'purchase' | 
-  'refund' | 
-  'bonus' | 
-  'subscription' | 
-  'mockery' | 
-  'shame' | 
-  'wishing-well' | 
-  'gift' | 
-  'adjustment';
+  | 'deposit'
+  | 'withdrawal'
+  | 'purchase'
+  | 'refund'
+  | 'fee'
+  | 'reward'
+  | 'transfer'
+  | 'royalty'
+  | 'mockery'
+  | 'protection'
+  | 'boost';
 
 export interface Transaction {
   id: string;
@@ -20,38 +20,26 @@ export interface Transaction {
   amount: number;
   type: TransactionType;
   description: string;
-  timestamp: Date;
-  status: 'pending' | 'completed' | 'failed' | 'reversed';
-  referenceId?: string;
+  timestamp: string;
   metadata?: Record<string, any>;
 }
 
 export interface WalletBalance {
-  walletId: string;
-  userId: string;
-  balance: number;
-  lockedAmount: number;
-  lastUpdated: Date;
-  currency: string;
+  available: number;
+  pending: number;
+  total: number;
+  lastUpdated: string;
 }
 
 export interface SpendOptions {
-  description?: string;
-  referenceId?: string;
+  notify?: boolean;
+  includeFees?: boolean;
+  skipConfirmation?: boolean;
   metadata?: Record<string, any>;
-  notifyUser?: boolean;
-  skipHistory?: boolean;
-  skipRankUpdate?: boolean;
-  mockeryType?: string;
-  wishAmount?: number;
 }
 
-// Transaction history for a user
-export interface TransactionHistory {
-  userId: string;
+export interface UserWallet {
+  balance: number;
   transactions: Transaction[];
-  totalSpent: number;
-  totalReceived: number;
-  netAmount: number;
+  depositAddress?: string;
 }
-

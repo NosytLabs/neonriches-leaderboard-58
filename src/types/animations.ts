@@ -32,3 +32,11 @@ export type AnimationConfig =
   | OverlayAnimationConfig
   | ContainerAnimationConfig
   | AccessoryAnimationConfig;
+
+export interface WishResult {
+  status: 'pending' | 'win' | 'lose';
+  message?: string;
+  title?: string;
+  rarity?: string;
+  reward?: any;
+}
