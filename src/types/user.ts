@@ -1,4 +1,3 @@
-
 export type UserTier = 'free' | 'basic' | 'plus' | 'premium' | 'royal' | 'bronze' | 'silver' | 'gold' | 'platinum' | 'diamond' | 'pro';
 export type TeamType = 'none' | 'Red' | 'Green' | 'Blue' | 'red' | 'green' | 'blue';
 export type UserTeam = TeamType;
@@ -12,12 +11,18 @@ export interface SocialLink {
   url: string;
   title?: string;
   label?: string;
+  icon?: string;
+  clicks?: number;
+  username?: string;
 }
+
+export type ProfileLink = SocialLink;
 
 export interface ProfileImage {
   id: string | number;
   url: string;
   caption?: string;
+  isPrimary?: boolean;
 }
 
 export interface ProfileBoost {
@@ -101,6 +106,7 @@ export interface UserCosmetics {
   activeBorder?: string;
   activeColor?: string;
   activeFont?: string;
+  activeEmoji?: string;
 }
 
 export interface UserSettings {

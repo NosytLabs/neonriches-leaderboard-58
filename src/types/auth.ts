@@ -1,7 +1,6 @@
-
 export interface UserSubscription {
   id: string;
-  tier: 'free' | 'pro';
+  plan: string;
   status: 'active' | 'cancelled' | 'expired' | 'trial';
   startDate: Date;
   endDate?: Date;
@@ -11,6 +10,7 @@ export interface UserSubscription {
   price: number;
   interval: 'monthly' | 'yearly' | 'quarterly';
   features: string[];
+  tier: string; // Adding this property
 }
 
 export interface AuthSession {

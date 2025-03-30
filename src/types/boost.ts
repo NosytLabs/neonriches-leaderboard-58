@@ -1,5 +1,22 @@
 
-export type BoostEffectType = 'spotlight' | 'highlight' | 'glitter' | 'aura' | 'halo' | 'sparkle' | 'pulse' | 'shimmer' | 'radiance' | 'glow' | 'crown';
+export type BoostEffectType = 
+  | 'spotlight' 
+  | 'highlight' 
+  | 'glitter' 
+  | 'aura' 
+  | 'halo' 
+  | 'sparkle' 
+  | 'pulse' 
+  | 'shimmer' 
+  | 'radiance' 
+  | 'glow' 
+  | 'crown'
+  | 'visibility'
+  | 'appearance'
+  | 'animation'
+  | 'effect'
+  | 'protection'
+  | 'enhancement';
 
 export interface BoostEffect {
   id: string;
@@ -15,6 +32,9 @@ export interface BoostEffect {
   durationDays?: number;
   previewImage?: string;
   rarity?: string;
+  strength?: number;
+  allowStacking?: boolean;
+  cost?: number;
 }
 
 export interface ProfileBoost {
@@ -27,6 +47,11 @@ export interface ProfileBoost {
   isActive?: boolean;
   type?: string;
   strength?: number;
+  level?: number;
+  status?: 'active' | 'expired' | 'pending';
+  startTime?: number;
+  endTime?: number;
+  duration?: number;
 }
 
 export interface BoostPurchaseResult {

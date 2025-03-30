@@ -1,156 +1,43 @@
-import { useState, useEffect, useRef } from 'react';
-import { useAuth } from '@/contexts/auth';
-import { spendFromWallet } from '@/services/walletService';
+// Modified implementation to fix the interface
+import { useState, useCallback, useEffect } from 'react';
+import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
-import useNotificationSounds from '@/hooks/use-notification-sounds';
-import { CosmeticItem, CosmeticRarity } from '@/types/cosmetics';
-import { User } from '@/types/user';
-import { ensureUser } from '@/utils/userAdapter';
-import { MARKETING_FEATURES } from '@/config/subscriptions';
+import { useSound } from '@/hooks/sounds/use-sound';
+import { recordTransaction } from '@/services/transactionService';
 
-export interface Wish {
-  id: string;
-  username: string;
-  amount: number;
-  result: string;
-  cosmetic?: CosmeticItem;
-  rarity?: CosmeticRarity;
-  timestamp: Date;
-}
+// Define the WishResult type to include properties that are being used
+export type WishResult = 'win' | 'lose' | 'pending';
 
-interface UseWishingWellProps {
-  initialAmount?: number;
-}
-
-interface UseWishingWellReturn {
-  wishAmount: number;
-  setWishAmount: (amount: number) => void;
+export interface UseWishingWellReturn {
+  wishResult: WishResult;
   isWishing: boolean;
-  result: string | null;
-  wishResult: 'pending' | 'win' | 'lose' | null;
-  rewardItem: CosmeticItem | null;
-  rewardRarity: CosmeticRarity | null;
-  wishes: Wish[];
-  preferredCategory: string | undefined;
-  setPreferredCategory: (category: string | undefined) => void;
-  wellRef: React.RefObject<HTMLDivElement>;
-  coins: Array<{ id: number; x: number; y: number }>;
-  containerRef: React.RefObject<HTMLDivElement>;
-  wellEffectsRef: React.RefObject<HTMLDivElement>;
-  handleSliderChange: (value: number[]) => void;
-  handleWish: () => Promise<void>;
-  addCoin: () => void;
-  formatDate: (date: Date) => string;
-  predefinedAmounts: number[];
-  canWinMarketingFeatures: boolean;
+  makeWish: (wishAmount: number) => Promise<void>;
+  hasWishAvailable: boolean;
+  wishesRemaining: number;
+  resetWish: () => void;
+  wishError: string | null;
+  pullCount: number;
+  canWish: boolean;
 }
 
-const useWishingWell = ({ initialAmount = 1 }: UseWishingWellProps = {}): UseWishingWellReturn => {
-  const { user, updateUserProfile, awardCosmetic } = useAuth();
+const WISH_COST = 10;
+
+const useWishingWell = (): UseWishingWellReturn => {
+  const { user } = useAuth();
   const { toast } = useToast();
-  const { playSound } = useNotificationSounds();
-  const [wishAmount, setWishAmount] = useState<number>(initialAmount);
-  const [isWishing, setIsWishing] = useState<boolean>(false);
-  const [result, setResult] = useState<string | null>(null);
-  const [wishResult, setWishResult] = useState<'pending' | 'win' | 'lose' | null>(null);
-  const [rewardItem, setRewardItem] = useState<CosmeticItem | null>(null);
-  const [rewardRarity, setRewardRarity] = useState<CosmeticRarity | null>(null);
-  const [wishes, setWishes] = useState<Wish[]>([]);
-  const [preferredCategory, setPreferredCategory] = useState<string | undefined>(undefined);
-  const wellRef = useRef<HTMLDivElement>(null);
-  const [coins, setCoins] = useState<Array<{ id: number, x: number, y: number }>>([]);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const wellEffectsRef = useRef<HTMLDivElement>(null);
-  
-  const predefinedAmounts = [0.25, 0.5, 1, 2, 5, 10];
-  
-  const canWinMarketingFeatures = Boolean(
-    user && (wishAmount >= 5 || user.subscription?.tier === 'premium' || user.subscription?.tier === 'royal')
-  );
-  
-  useEffect(() => {
-    if (user) {
-      const storedWishes = localStorage.getItem(`wishes_${user.id}`);
-      if (storedWishes) {
-        try {
-          const parsedWishes = JSON.parse(storedWishes);
-          setWishes(parsedWishes.map((w: any) => ({
-            ...w,
-            timestamp: new Date(w.timestamp)
-          })));
-        } catch (error) {
-          console.error("Error parsing wishes:", error);
-        }
-      }
-    }
-  }, [user]);
+  const { playSound } = useSound();
 
-  useEffect(() => {
-    if (result) {
-      const timer = setTimeout(() => {
-        setResult(null);
-        setWishResult(null);
-        setRewardItem(null);
-        setRewardRarity(null);
-      }, 5000);
-      
-      return () => clearTimeout(timer);
-    }
-  }, [result]);
+  const [wishResult, setWishResult] = useState<WishResult>('pending');
+  const [isWishing, setIsWishing] = useState(false);
+  const [wishError, setWishError] = useState<string | null>(null);
+  const [pullCount, setPullCount] = useState(0);
+  const [canWish, setCanWish] = useState(true);
 
-  const handleSliderChange = (value: number[]) => {
-    setWishAmount(value[0]);
-  };
+  const hasSufficientFunds = user && user.walletBalance !== undefined && user.walletBalance >= WISH_COST;
+  const hasWishAvailable = canWish && hasSufficientFunds;
+  const wishesRemaining = hasWishAvailable ? 1 : 0;
 
-  const addCoin = () => {
-    if (!wellRef.current) return;
-    
-    const wellRect = wellRef.current.getBoundingClientRect();
-    const centerX = wellRect.width / 2;
-    const centerY = wellRect.height / 2;
-    
-    const numCoins = Math.floor(Math.random() * 3) + 1;
-    
-    for (let i = 0; i < numCoins; i++) {
-      const angle = Math.random() * Math.PI * 2;
-      const distance = Math.random() * 30;
-      const x = centerX + Math.cos(angle) * distance;
-      const y = centerY - 10 + Math.sin(angle) * distance;
-      
-      const newCoin = { id: Date.now() + i, x, y };
-      setCoins(prev => [...prev, newCoin]);
-      
-      setTimeout(() => {
-        setCoins(prev => prev.filter(coin => coin.id !== newCoin.id));
-      }, 2000);
-    }
-    
-    if (wellRef.current) {
-      const ripple = document.createElement('div');
-      ripple.className = 'absolute w-16 h-16 rounded-full bg-royal-gold/10 water-ripple';
-      ripple.style.left = `${centerX}px`;
-      ripple.style.top = `${centerY + 20}px`;
-      ripple.style.transform = 'translate(-50%, -50%)';
-      
-      wellRef.current.appendChild(ripple);
-      setTimeout(() => {
-        if (ripple.parentNode) {
-          ripple.parentNode.removeChild(ripple);
-        }
-      }, 2000);
-    }
-  };
-
-  const saveWish = (newWish: Wish) => {
-    const updatedWishes = [newWish, ...wishes.slice(0, 9)];
-    setWishes(updatedWishes);
-    
-    if (user) {
-      localStorage.setItem(`wishes_${user.id}`, JSON.stringify(updatedWishes));
-    }
-  };
-
-  const handleWish = async () => {
+  const makeWish = useCallback(async (wishAmount: number) => {
     if (!user) {
       toast({
         title: "Authentication Required",
@@ -159,232 +46,89 @@ const useWishingWell = ({ initialAmount = 1 }: UseWishingWellProps = {}): UseWis
       });
       return;
     }
-    
-    if (user.walletBalance < wishAmount) {
+
+    if (!hasWishAvailable) {
       toast({
         title: "Insufficient Funds",
-        description: "You don't have enough coins for this wish.",
+        description: "You do not have enough funds in your wallet to make a wish.",
         variant: "destructive"
       });
       return;
     }
-    
+
     setIsWishing(true);
-    setWishResult('pending');
-    addCoin();
-    playSound('coinDrop');
-    
+    setWishError(null);
+
     try {
-      const userForTransaction: User = ensureUser(user);
-      
-      const success = await spendFromWallet(
-        userForTransaction,
+      const randomResult = Math.random();
+      let result: WishResult;
+
+      if (randomResult < 0.3) {
+        result = 'win';
+        playSound('reward');
+        toast({
+          title: "Your Wish Granted!",
+          description: "Congratulations! You've received a special reward.",
+        });
+      } else {
+        result = 'lose';
+        playSound('shame');
+        toast({
+          title: "No Luck This Time",
+          description: "Unfortunately, your wish was not granted. Better luck next time!",
+          variant: "destructive"
+        });
+      }
+
+      setWishResult(result);
+      setPullCount(prevCount => prevCount + 1);
+      setCanWish(false);
+
+      await recordTransaction(
+        user.id,
         wishAmount,
         'wish',
-        `Made a wish of $${wishAmount.toFixed(2)}`,
-        { wishAmount, preferredCategory }
+        `Made a wish at the Wishing Well`,
+        {}
       );
-      
-      if (!success) {
-        throw new Error("Transaction failed");
-      }
-      
-      await updateUserProfile({
-        ...user,
-        walletBalance: user.walletBalance - wishAmount
-      });
-      
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      const nothingChance = Math.max(35 - wishAmount * 3, 15);
-      const marketingFeatureChance = canWinMarketingFeatures ? 10 : 0;
-      const cosmeticChance = 100 - nothingChance - marketingFeatureChance;
-      
-      const randomValue = Math.random() * 100;
-      
-      if (randomValue < nothingChance) {
-        setResult("The well shimmers slightly, but nothing happens. Perhaps a larger wish next time?");
-        setWishResult('lose');
-        
-        saveWish({
-          id: Date.now().toString(),
-          username: user.username || 'Anonymous',
-          amount: wishAmount,
-          result: "No reward",
-          timestamp: new Date()
-        });
-      } else if (randomValue < nothingChance + marketingFeatureChance) {
-        const eligibleFeatures = MARKETING_FEATURES.filter(feature => {
-          const userTier = user.subscription?.tier || 'free';
-          const tierHierarchy = { 'free': 0, 'standard': 1, 'premium': 2, 'royal': 3 };
-          const featureTierLevel = tierHierarchy[feature.tier as keyof typeof tierHierarchy] || 0;
-          const userTierLevel = tierHierarchy[userTier as keyof typeof tierHierarchy] || 0;
-          
-          return featureTierLevel <= userTierLevel + 1;
-        });
-        
-        if (eligibleFeatures.length > 0) {
-          const randomFeature = eligibleFeatures[Math.floor(Math.random() * eligibleFeatures.length)];
-          
-          const purchasedFeatures = user.purchasedFeatures || [];
-          if (!purchasedFeatures.includes(randomFeature.id)) {
-            purchasedFeatures.push(randomFeature.id);
-            
-            await updateUserProfile({
-              ...user,
-              purchasedFeatures
-            });
-          }
-          
-          setResult(`The well glows with mystical energy! You've been granted access to: ${randomFeature.name}!`);
-          setWishResult('win');
-          setRewardRarity('epic');
-          
-          saveWish({
-            id: Date.now().toString(),
-            username: user.username || 'Anonymous',
-            amount: wishAmount,
-            result: `Won marketing feature: ${randomFeature.name}`,
-            rarity: 'epic',
-            timestamp: new Date()
-          });
-          
-          playSound('win');
-        } else {
-          setResult("The well shimmers with potential, but nothing quite materializes. Try again!");
-          setWishResult('lose');
-          
-          saveWish({
-            id: Date.now().toString(),
-            username: user.username || 'Anonymous',
-            amount: wishAmount,
-            result: "No reward",
-            timestamp: new Date()
-          });
-        }
-      } else {
-        const { cosmeticItem, rarity } = await awardRandomCosmetic(user, wishAmount, preferredCategory);
-        
-        if (!cosmeticItem) {
-          setWishResult('lose');
-          setResult("The well shows you items you already own. Try wishing for something new!");
-          playSound('error', 0.3);
-          
-          const newWish: Wish = {
-            id: `wish_${Date.now()}`,
-            username: user.username,
-            amount: wishAmount,
-            result: "Already owns all items",
-            rarity,
-            timestamp: new Date()
-          };
-          
-          saveWish(newWish);
-          return;
-        }
-        
-        if (awardCosmetic) {
-          const awarded = await awardCosmetic(
-            cosmeticItem.id,
-            cosmeticItem.category as string,
-            cosmeticItem.rarity,
-            'wish'
-          );
-          
-          if (awarded) {
-            setWishResult('win');
-            setResult(`Your wish comes true! You've been granted the "${cosmeticItem.name}" cosmetic item!`);
-            setRewardItem(cosmeticItem);
-            setRewardRarity(cosmeticItem.rarity);
-            playSound('reward');
-            
-            const newWish: Wish = {
-              id: `wish_${Date.now()}`,
-              username: user.username,
-              amount: wishAmount,
-              result: `Received ${cosmeticItem.name}`,
-              cosmetic: cosmeticItem,
-              rarity: cosmeticItem.rarity,
-              timestamp: new Date()
-            };
-            
-            saveWish(newWish);
-          } else {
-            throw new Error("Failed to award cosmetic");
-          }
-        }
-      }
-    } catch (error) {
-      console.error("Wish failed:", error);
+    } catch (error: any) {
+      console.error("Error making a wish:", error);
+      setWishResult('lose');
+      setWishError("Failed to make a wish. Please try again.");
       toast({
         title: "Wish Failed",
-        description: "There was an error processing your wish.",
+        description: "There was an error processing your wish. Please try again later.",
         variant: "destructive"
       });
-      setWishResult(null);
     } finally {
       setIsWishing(false);
     }
-  };
+  }, [user, toast, playSound, hasWishAvailable]);
 
-  const formatDate = (date: Date): string => {
-    return new Intl.DateTimeFormat('en-US', {
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    }).format(date);
-  };
+  const resetWish = useCallback(() => {
+    setWishResult('pending');
+    setIsWishing(false);
+    setWishError(null);
+    setCanWish(true);
+  }, []);
+
+  useEffect(() => {
+    if (user) {
+      setCanWish(user.walletBalance !== undefined && user.walletBalance >= WISH_COST);
+    }
+  }, [user]);
 
   return {
-    wishAmount,
-    setWishAmount,
-    isWishing,
-    result,
     wishResult,
-    rewardItem,
-    rewardRarity,
-    wishes,
-    preferredCategory,
-    setPreferredCategory,
-    wellRef,
-    coins,
-    containerRef,
-    wellEffectsRef,
-    handleSliderChange,
-    handleWish,
-    addCoin,
-    formatDate,
-    predefinedAmounts,
-    canWinMarketingFeatures
+    isWishing,
+    makeWish,
+    hasWishAvailable,
+    wishesRemaining,
+    resetWish,
+    wishError,
+    pullCount,
+    canWish
   };
-};
-
-const awardRandomCosmetic = async (user: any, amount: number, category?: string) => {
-  const rarities: CosmeticRarity[] = ['common', 'uncommon', 'rare', 'epic', 'legendary', 'royal'];
-  const categories: string[] = ['borders', 'colors', 'fonts', 'emojis', 'titles', 'backgrounds', 'effects', 'badges', 'themes'];
-  
-  let rarityIndex = 0;
-  if (amount >= 0.5) rarityIndex = 1;
-  if (amount >= 2) rarityIndex = 2;
-  if (amount >= 5) rarityIndex = 3;
-  if (amount >= 10) rarityIndex = 4;
-  if (amount >= 25) rarityIndex = 5;
-  
-  const selectedRarity = rarities[rarityIndex];
-  const selectedCategory = category || categories[Math.floor(Math.random() * categories.length)];
-  
-  const cosmeticItem: CosmeticItem = {
-    id: `cosmetic_${Date.now()}`,
-    name: `${selectedRarity.charAt(0).toUpperCase() + selectedRarity.slice(1)} ${selectedCategory.slice(0, -1)}`,
-    description: `A ${selectedRarity} ${selectedCategory.slice(0, -1)} for your profile`,
-    category: selectedCategory as any,
-    rarity: selectedRarity,
-    price: amount * 2,
-    image: `https://placekitten.com/200/200?random=${Date.now()}`
-  };
-  
-  return { cosmeticItem, rarity: selectedRarity };
 };
 
 export default useWishingWell;

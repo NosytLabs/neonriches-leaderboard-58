@@ -16,4 +16,5 @@ export interface TeamSelectionProps {
   selectedTeam: TeamColor | null;
   onTeamSelect: (team: TeamColor) => void;
   teams: TeamData[];
+  user?: any; // Add this property
 }

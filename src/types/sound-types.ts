@@ -26,7 +26,10 @@ export type SoundType =
   | 'warning'
   | 'medallion'
   | 'trumpet'
-  | 'royalAnnouncement';
+  | 'royalAnnouncement'
+  | 'levelUp'
+  | 'wish'
+  | 'seal';
 
 export interface SoundConfig {
   enabled: boolean;
@@ -77,5 +80,5 @@ export interface UseSoundReturn {
   isPlaying: boolean;
   duration: number;
   playSound?: (sound: SoundType) => void;
-  playSuccess?: (sound?: SoundType) => void;
+  playSuccess?: () => void; // Fixing these to not expect a second parameter
 }
