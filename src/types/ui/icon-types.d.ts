@@ -27,13 +27,19 @@ export type MedievalIconName =
   | 'coins'
   | 'wallet'
   | 'seal'
-  | 'sparkles';
+  | 'sparkles'
+  // Add missing icon names found in error messages
+  | 'Crown'
+  | 'Scroll'
+  | 'Seal'
+  | 'Coins';
 
 export interface MedievalIconProps {
   name: MedievalIconName;
   size?: IconSize;
   color?: IconColor;
   className?: string;
+  animate?: boolean;
 }
 
 export type MedievalIconColor = 'gold' | 'silver' | 'crimson' | 'emerald' | 'royal';

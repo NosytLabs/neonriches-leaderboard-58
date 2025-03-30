@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { IconSize, IconColor, MedievalIconName, MedievalIconProps } from '@/types/ui/icon-types';
 
@@ -21,15 +22,15 @@ const iconColors: Record<IconColor, string> = {
   'default': 'text-white'
 };
 
-// Implementation of medieval icon rendering would go here
+// Implementation of medieval icon rendering
 const MedievalIcon: React.FC<MedievalIconProps> = ({ 
   name, 
   size = 'md', 
   color = 'default',
   className = '',
+  animate = false
 }) => {
   // This would be implemented with actual icon SVGs
-  // For now, return a placeholder 
   return (
     <div className={`medieval-icon medieval-icon-${name} ${iconColors[color]} ${className}`}>
       {/* Icon SVG would go here */}
@@ -39,5 +40,5 @@ const MedievalIcon: React.FC<MedievalIconProps> = ({
 };
 
 // Export type and component
-export { MedievalIconName, MedievalIconProps };
+export type { MedievalIconName, MedievalIconProps };
 export default MedievalIcon;

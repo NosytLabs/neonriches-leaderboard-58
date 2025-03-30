@@ -1,10 +1,10 @@
 
 import { ReactNode } from 'react';
+import { IconSize, DecorationColor, MedievalIconColor } from '@/types/ui/icon-types';
 
 export type DecorationSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl';
 export type DecorationColor = 'gold' | 'silver' | 'crimson' | 'emerald' | 'royal' | 'default';
-export type IconSize = DecorationSize;
-export type MedievalIconColor = 'gold' | 'silver' | 'crimson' | 'emerald' | 'royal';
+export type MedievalIconSize = DecorationSize;
 
 export interface DecorationProps {
   size?: DecorationSize;
@@ -13,6 +13,9 @@ export interface DecorationProps {
   position?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right' | 'center';
   children?: ReactNode;
 }
+
+// Alias for backward compatibility
+export type BaseDecorationProps = DecorationProps;
 
 export type DecorationType = 
   | 'royal-insignia'

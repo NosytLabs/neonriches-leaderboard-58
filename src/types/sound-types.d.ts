@@ -1,38 +1,50 @@
 
-export type SoundType = 
-  | 'click' 
-  | 'hover' 
-  | 'success' 
-  | 'error' 
-  | 'notification' 
-  | 'purchase' 
-  | 'rankUp' 
-  | 'coinDrop' 
-  | 'achievement' 
-  | 'trumpets' 
-  | 'fanfare' 
-  | 'shame' 
-  | 'parchment' 
-  | 'pageFlip' 
-  | 'medal' 
-  | 'coin' 
-  | 'info' 
-  | 'warning' 
-  | 'seal' 
-  | 'deposit' 
-  | 'reward' 
-  | 'advertisement' 
-  | 'message' 
-  | 'royal'
-  | 'levelUp'
-  | 'wish'
-  | 'pageChange';
+export interface NotificationSoundOptions {
+  volume?: number;
+  loop?: boolean;
+  delay?: number;
+}
 
-export interface SoundConfig {
+export interface UseSoundOptions {
+  volume?: number;
+  interrupt?: boolean;
+}
+
+export type SoundType =
+  | 'click'
+  | 'coins'
+  | 'coins_drop'
+  | 'success'
+  | 'error'
+  | 'purchase'
+  | 'trumpets'
+  | 'notification'
+  | 'achievement'
+  | 'rankUp'
+  | 'button'
+  | 'hover'
+  | 'bell'
+  | 'toast'
+  | 'level'
+  | 'chime'
+  | 'ping'
+  | 'bonus'
+  | 'claim'
+  | 'reward'
+  | 'shame'
+  | 'levelUp'
+  | 'fanfare'
+  | 'wish';
+
+export interface AudioLoaderReturn {
+  audio: Record<SoundType, HTMLAudioElement>;
   volume: number;
-  enabled: boolean;
-  isMuted: boolean;
-  premium: boolean;
+  setVolume: (volume: number) => void;
+  isEnabled: boolean;
+  setEnabled: (enabled: boolean) => void;
+  isPremium: boolean;
+  setPremium: (premium: boolean) => void;
+  isLoaded: boolean;
 }
 
 export interface PremiumSoundPackDetails {
@@ -45,47 +57,9 @@ export interface PremiumSoundPackDetails {
   features: string[];
   tags: string[];
   isPurchased?: boolean;
-  includes?: string[];
-}
-
-export interface NotificationSoundOptions {
-  volume?: number;
-  loop?: boolean;
-  delay?: number;
-}
-
-export interface UseSoundOptions {
-  volume?: number;
-  interrupt?: boolean;
-  soundEnabled?: boolean;
-  onComplete?: () => void;
-  baseVolume?: number;
-  loop?: boolean;
-  onEnd?: () => void;
-  disableCache?: boolean;
-}
-
-export interface UseSoundReturn {
-  play: (options?: UseSoundOptions) => void;
-  stop: () => void;
-  isPlaying: boolean;
-  duration?: number; 
-  playSound?: (sound: SoundType) => void;
-  playSuccess?: (sound?: SoundType) => void;
-}
-
-export interface AudioLoaderReturn {
-  audio: Record<SoundType, HTMLAudioElement>;
-  volume: number;
-  setVolume: (volume: number) => void;
-  isEnabled: boolean;
-  setEnabled: (enabled: boolean) => void;
-  isPremium: boolean;
-  setPremium: (isPremium: boolean) => void;
-  isLoaded: boolean;
 }
 
 export interface CacheOptions {
-  maxAge?: number;
+  ttl?: number;
   staleWhileRevalidate?: boolean;
 }

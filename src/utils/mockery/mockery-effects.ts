@@ -1,74 +1,37 @@
 
 import { MockeryAction } from '@/types/mockery';
 
-/**
- * Get CSS class for active mockery effect
- */
 export const getActiveMockeryClass = (action: MockeryAction): string => {
-  switch (action) {
-    case 'tomatoes':
-      return 'mockery-tomatoes';
-    case 'eggs':
-      return 'mockery-eggs';
-    case 'stocks':
-      return 'mockery-stocks';
-    case 'dunce':
-      return 'mockery-dunce';
-    case 'jester':
-      return 'mockery-jester';
-    case 'crown':
-      return 'mockery-crown';
-    case 'taunt':
-      return 'mockery-taunt';
-    case 'shame':
-      return 'mockery-shame';
-    case 'putridEggs':
-      return 'mockery-putrid-eggs';
-    case 'silence':
-      return 'mockery-silence';
-    case 'courtJester':
-      return 'mockery-court-jester';
-    case 'smokeBomb':
-      return 'mockery-smoke-bomb';
-    case 'protection':
-      return 'mockery-protection';
-    case 'jest':
-      return 'mockery-jest';
-    case 'glitterBomb':
-      return 'mockery-glitter-bomb';
-    case 'royalPie':
-      return 'mockery-royal-pie';
-    case 'jokeCrown':
-      return 'mockery-joke-crown';
-    case 'memeFrame':
-      return 'mockery-meme-frame';
-    case 'roast':
-      return 'mockery-roast';
-    case 'ridicule':
-      return 'mockery-ridicule';
-    case 'humiliate':
-      return 'mockery-humiliate';
-    case 'expose':
-      return 'mockery-expose';
-    case 'mock':
-      return 'mockery-mock';
-    case 'guillotine':
-      return 'mockery-guillotine';
-    case 'dungeons':
-      return 'mockery-dungeons';
-    case 'removal':
-      return 'mockery-removal';
-    case 'challenge':
-      return 'mockery-challenge';
-    case 'target':
-      return 'mockery-target';
-    case 'defeat':
-      return 'mockery-defeat';
-    case 'immune':
-      return 'mockery-immune';
-    default:
-      return '';
-  }
+  const effects: Record<MockeryAction, string> = {
+    tomatoes: 'mockery-effect-tomatoes',
+    eggs: 'mockery-effect-eggs',
+    shame: 'mockery-effect-shame',
+    dungeons: 'mockery-effect-dungeons',
+    immune: 'mockery-effect-immune',
+    crown: 'mockery-effect-crown',
+    stocks: 'mockery-effect-stocks',
+    dunce: 'mockery-effect-dunce',
+    jester: 'mockery-effect-jester',
+    fool: 'mockery-effect-fool',
+    troll: 'mockery-effect-troll',
+    peasant: 'mockery-effect-peasant',
+    rat: 'mockery-effect-rat',
+    ghost: 'mockery-effect-ghost',
+    skeleton: 'mockery-effect-skeleton',
+    zombie: 'mockery-effect-zombie',
+    witch: 'mockery-effect-witch',
+    monster: 'mockery-effect-monster',
+    demon: 'mockery-effect-demon',
+    dragon: 'mockery-effect-dragon',
+    king: 'mockery-effect-king',
+    queen: 'mockery-effect-queen',
+    knight: 'mockery-effect-knight',
+    bishop: 'mockery-effect-bishop',
+    rook: 'mockery-effect-rook',
+    pawn: 'mockery-effect-pawn',
+    target: 'mockery-effect-target',
+    challenge: 'mockery-effect-challenge'
+  };
+  
+  return effects[action] || 'mockery-effect-none';
 };
-
-export default getActiveMockeryClass;

@@ -3,7 +3,7 @@ import { ProfileBoost } from './profile-boost';
 import { UserCosmeticState } from './cosmetics';
 
 export type TeamColor = 'red' | 'blue' | 'green' | 'gold' | 'purple' | 'none' | 'neutral';
-export type TeamType = 'red' | 'blue' | 'green' | 'gold';
+export type TeamType = 'red' | 'blue' | 'green' | 'gold' | 'none';
 
 export type UserTier = 
   | 'free'
@@ -15,7 +15,9 @@ export type UserTier =
   | 'platinum'
   | 'diamond'
   | 'gold'
-  | 'silver';
+  | 'silver'
+  | 'bronze'
+  | 'vip';
 
 export interface UserSettings {
   profileVisibility: 'public' | 'private' | 'friends';
@@ -35,6 +37,7 @@ export interface UserSettings {
   darkMode?: boolean; // For backward compatibility
   language?: string;
   shameAlerts?: boolean;
+  publicProfile?: boolean;
 }
 
 export interface UserProfile {
@@ -59,6 +62,7 @@ export interface UserProfile {
   isVerified?: boolean;
   isVIP?: boolean;
   isProtected?: boolean;
+  isAdmin?: boolean;
   spendStreak?: number;
   lastActive?: string;
   lastLogin?: string;
@@ -76,12 +80,14 @@ export interface UserProfile {
   activeTitle?: string;
   certificateNFT?: any;
   avatarUrl?: string; // For backward compatibility
+  gender?: string;
+  profileImages?: ProfileImage[];
 }
 
 export interface User extends UserProfile {}
 
 export interface ProfileLink {
-  id: string;
+  id: string | number;
   url: string;
   platform: string;
   title: string;
@@ -91,12 +97,12 @@ export interface ProfileLink {
 }
 
 export interface ProfileImage {
-  id: string;
+  id: string | number;
   url: string;
   isPrimary: boolean;
   type: string;
   caption?: string;
 }
 
-// Export TeamColor and TeamType
-export { TeamColor, TeamType };
+// Re-export types
+export type { TeamColor, TeamType };

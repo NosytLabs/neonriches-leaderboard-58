@@ -52,7 +52,7 @@ export interface MockedUser {
   username: string;
   displayName?: string;
   profileImage?: string;
-  mockedReason: string;
+  mockedReason?: string;
   mockedTimestamp: string;
   mockedBy: string;
   mockedTier?: string;

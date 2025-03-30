@@ -1,4 +1,19 @@
 
+// Define the CosmeticItem type
+export interface CosmeticItem {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  type: string;
+  category: CosmeticCategory;
+  cssClass: string;
+  rarity: string;
+  image?: string;
+  imageSrc?: string;
+  cost?: number; // Added for backward compatibility
+}
+
 export type CosmeticCategory = 
   | 'border'
   | 'color'
@@ -13,26 +28,7 @@ export type CosmeticCategory =
   | 'profile'
   | 'interaction';
 
-export type CosmeticRarity = 
-  | 'common'
-  | 'uncommon'
-  | 'rare'
-  | 'epic'
-  | 'legendary';
-
-export interface CosmeticItem {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  category: CosmeticCategory;
-  type: string;
-  rarity: string;
-  cssClass?: string;
-  imageSrc?: string;
-  image?: string;
-  cost?: number; // For backward compatibility
-}
+export type CosmeticRarity = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary' | 'royal' | 'unique';
 
 export interface UserCosmeticState {
   border: string[];
@@ -44,39 +40,15 @@ export interface UserCosmeticState {
   effect: string[];
   badge: string[];
   theme: string[];
-  unlockedBorders?: string[];
-  unlockedColors?: string[];
-  unlockedFonts?: string[];
-  unlockedEmojis?: string[];
-  unlockedTitles?: string[];
-  unlockedBackgrounds?: string[];
-  unlockedEffects?: string[];
-  unlockedBadges?: string[];
-  unlockedThemes?: string[];
-  borders?: string[];
-  colors?: string[];
-  fonts?: string[];
-  emojis?: string[];
-  titles?: string[];
-  backgrounds?: string[];
-  effects?: string[];
-  badges?: string[];
-  themes?: string[];
+  activeBorder?: string;
+  activeColor?: string;
+  activeFont?: string;
+  activeEmoji?: string;
+  activeTitle?: string;
+  activeBackground?: string;
+  activeEffect?: string;
+  activeBadge?: string;
+  activeTheme?: string;
 }
 
-export interface Cosmetic {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  type: string;
-  rarity: string;
-}
-
-export interface CosmeticPurchaseResult {
-  success: boolean;
-  message: string;
-  item?: CosmeticItem;
-}
-
-export type UserCosmetics = UserCosmeticState;
+export type CosmeticType = keyof UserCosmeticState;

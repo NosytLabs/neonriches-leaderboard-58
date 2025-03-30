@@ -1,7 +1,11 @@
 
 import { CosmeticItem } from './cosmetics';
 
-export type WishResultType = 'success' | 'failure' | 'jackpot';
+export enum WishResultType {
+  SUCCESS = 'success',
+  FAILURE = 'failure',
+  JACKPOT = 'jackpot'
+}
 
 export interface WishResult {
   type: WishResultType;
@@ -24,4 +28,5 @@ export interface WishResultModalProps {
   title: string;
   message: string;
   onClose: () => void;
+  onOpenChange?: (open: boolean) => void;
 }
