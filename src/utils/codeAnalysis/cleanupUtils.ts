@@ -1,5 +1,5 @@
 
-import { AnalysisResult, FileInfo, ImportInfo, VariableInfo, DependencyInfo } from './types';
+import { AnalysisResult, FileInfo, ImportInfo, VariableInfo } from './types';
 
 /**
  * Categorizes issues by severity
@@ -58,8 +58,10 @@ export const categorizeIssuesBySeverity = (result: AnalysisResult) => {
   }
 
   // Categorize unused dependencies
-  for (const dep of result.unusedDependencies) {
-    mediumImpact.push({ type: 'dependency', item: dep });
+  if (result.unusedDependencies) {
+    for (const dep of result.unusedDependencies) {
+      mediumImpact.push({ type: 'dependency', item: dep });
+    }
   }
 
   return {
@@ -91,24 +93,24 @@ export const generateCleanupPlan = (result: AnalysisResult) => {
   }
 
   // Step 2: Low-risk changes
-  if ((result.unusedFiles?.length || 0) > 0 || result.unusedDependencies.length > 0) {
+  if ((result.unusedFiles?.length || 0) > 0 || (result.unusedDependencies?.length || 0) > 0) {
     plan.push({
       title: "Remove Low-Risk Items",
       description: "These changes require some testing to ensure they don't break functionality",
       steps: [
         (result.unusedFiles?.length || 0) > 0 ? `Remove ${result.unusedFiles?.length} unused files` : null,
-        result.unusedDependencies.length > 0 ? `Remove ${result.unusedDependencies.length} unused dependencies` : null
+        (result.unusedDependencies?.length || 0) > 0 ? `Remove ${result.unusedDependencies?.length} unused dependencies` : null
       ].filter(Boolean)
     });
   }
 
   // Step 3: Medium-risk changes
-  if (result.deadCode.length > 0) {
+  if ((result.deadCode?.length || 0) > 0) {
     plan.push({
       title: "Remove Dead Code",
       description: "These changes require careful testing as they involve removing functional code",
       steps: [
-        `Remove ${result.deadCode.length} dead code paths`
+        `Remove ${result.deadCode?.length} dead code paths`
       ]
     });
   }

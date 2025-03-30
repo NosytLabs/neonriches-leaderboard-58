@@ -7,10 +7,10 @@ import { Package } from 'lucide-react';
 import EmptyState from '@/components/ui/empty-state';
 
 interface UnusedDependenciesSectionProps {
-  unusedDependencies: string[];
+  unusedDependencies?: string[];
 }
 
-const UnusedDependenciesSection: React.FC<UnusedDependenciesSectionProps> = ({ unusedDependencies }) => {
+const UnusedDependenciesSection: React.FC<UnusedDependenciesSectionProps> = ({ unusedDependencies = [] }) => {
   if (unusedDependencies.length === 0) {
     return (
       <Card className="glass-morphism border-white/10 mb-6">

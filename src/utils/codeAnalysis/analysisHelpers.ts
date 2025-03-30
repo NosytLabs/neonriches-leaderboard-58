@@ -86,8 +86,8 @@ export const filterHighImpactIssues = (result: AnalysisResult): AnalysisResult =
     unusedFiles: (result.unusedFiles || []).filter(file => file.impact === 'high'),
     unusedImports: result.unusedImports.filter(imp => imp.impact === 'high'),
     unusedVariables: result.unusedVariables.filter(variable => variable.impact === 'high'),
-    deadCode: result.deadCode.filter(code => code.description?.includes('high')),
-    performanceIssues: result.performanceIssues.filter(issue => issue.severity === 'high'),
+    deadCode: (result.deadCode || []).filter(code => code.description?.includes('high')),
+    performanceIssues: (result.performanceIssues || []).filter(issue => issue.severity === 'high'),
     complexCode: result.complexCode.filter(code => 
       (code.cyclomaticComplexity || code.complexity || 0) > 15
     )
@@ -119,9 +119,9 @@ export const generateRecommendations = (result: AnalysisResult): string[] => {
   }
   
   // Dependency recommendations
-  if (result.unusedDependencies.length > 0) {
+  if ((result.unusedDependencies?.length || 0) > 0) {
     recommendations.push(
-      `Remove ${result.unusedDependencies.length} unused dependencies to reduce project dependencies and potential security vulnerabilities.`
+      `Remove ${result.unusedDependencies?.length} unused dependencies to reduce project dependencies and potential security vulnerabilities.`
     );
   }
   

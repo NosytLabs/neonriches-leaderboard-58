@@ -1,10 +1,18 @@
 
-import { AnalysisResult } from './types';
+import { 
+  AnalysisResult, 
+  ImportIssue, 
+  VariableIssue, 
+  FileIssue, 
+  DuplicateCodeIssue,
+  ComplexCodeIssue,
+  DeadCodeIssue,
+  PerformanceIssue
+} from './types';
 import { calculateSavings } from './analysisHelpers';
-import { formatFileSize } from '../formatters';
 
 /**
- * Generates a comprehensive analysis report in markdown format
+ * Creates a report of all the unused code and potential cleanup opportunities
  */
 export const generateAnalysisReport = (result: AnalysisResult): string => {
   const {
@@ -230,6 +238,13 @@ export const saveReportToFile = (content: string, filename: string): void => {
 };
 
 // Helper functions
+function formatFileSize(bytes: number): string {
+  if (bytes < 1024) return `${bytes} B`;
+  else if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+  else if (bytes < 1024 * 1024 * 1024) return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+  else return `${(bytes / (1024 * 1024 * 1024)).toFixed(1)} GB`;
+}
+
 function getComplexityRecommendation(complexity: number): string {
   if (complexity > 20) {
     return 'Split this function into multiple smaller functions with clear single responsibilities. Consider using design patterns to simplify the logic structure.';

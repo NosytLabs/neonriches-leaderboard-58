@@ -1,6 +1,12 @@
 
 import React, { useState, useEffect } from 'react';
 import { ArrowLeft, Code, AlertTriangle, Download, Zap, FileCode, Copy } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Link } from 'react-router-dom';
+import { useToast } from '@/hooks/use-toast';
+import { getAnalysisResults } from '@/components/codeAnalysis/runAnalysis';
+import { AnalysisResult } from '@/utils/codeAnalysis/types';
 import AnalysisLayout from '@/components/codeAnalysis/shared/AnalysisLayout';
 import AnalysisControls from '@/components/codeAnalysis/AnalysisControls';
 import UnusedFilesSection from '@/components/codeAnalysis/sections/UnusedFilesSection';
@@ -12,13 +18,7 @@ import DeadCodePathsSection from '@/components/codeAnalysis/sections/DeadCodePat
 import DuplicateCodeSection from '@/components/codeAnalysis/sections/DuplicateCodeSection';
 import ComplexCodeSection from '@/components/codeAnalysis/sections/ComplexCodeSection';
 import UnusedCodeReport from '@/components/codeAnalysis/UnusedCodeReport';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Button } from '@/components/ui/button';
-import { getAnalysisResults } from '@/components/codeAnalysis/runAnalysis';
-import { AnalysisResult } from '@/utils/codeAnalysis/types';
-import { useToast } from '@/hooks/use-toast';
 import { generateAnalysisReport, exportAnalysisReportAsMarkdown, saveReportToFile } from '@/utils/codeAnalysis/reportGenerator';
-import { Link } from 'react-router-dom';
 import { formatFileSize } from '@/utils/formatters';
 
 const CodeAnalysis: React.FC = () => {
