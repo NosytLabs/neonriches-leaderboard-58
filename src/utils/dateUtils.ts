@@ -1,99 +1,23 @@
 
-import { format, formatDistance, differenceInDays } from 'date-fns';
-
 /**
- * Format a date to a human readable string
+ * Format a date into a human-readable string
+ * @param dateStr Date string to format
+ * @returns Formatted date string
  */
-export const formatDate = (date: string | Date): string => {
-  try {
-    const dateObj = typeof date === 'string' ? new Date(date) : date;
-    return format(dateObj, 'PPP');
-  } catch (error) {
-    console.error('Error formatting date:', error);
-    return 'Invalid date';
-  }
-};
-
-/**
- * Format a date as a relative time (e.g. "2 days ago")
- */
-export const formatRelativeTime = (date: string | Date): string => {
-  try {
-    const dateObj = typeof date === 'string' ? new Date(date) : date;
-    return formatDistance(dateObj, new Date(), { addSuffix: true });
-  } catch (error) {
-    console.error('Error formatting relative time:', error);
-    return 'Unknown time';
-  }
-};
-
-/**
- * Calculate days until a future date
- */
-export const daysUntil = (futureDate: string | Date): number => {
-  try {
-    const dateObj = typeof futureDate === 'string' ? new Date(futureDate) : futureDate;
-    return Math.max(0, differenceInDays(dateObj, new Date()));
-  } catch (error) {
-    console.error('Error calculating days until:', error);
-    return 0;
-  }
-};
-
-/**
- * Check if a date is in the past
- */
-export const isPastDate = (date: string | Date): boolean => {
-  try {
-    const dateObj = typeof date === 'string' ? new Date(date) : date;
-    return dateObj < new Date();
-  } catch (error) {
-    console.error('Error checking if date is past:', error);
-    return false;
-  }
-};
-
-/**
- * Check if a date is in the future
- */
-export const isFutureDate = (date: string | Date): boolean => {
-  try {
-    const dateObj = typeof date === 'string' ? new Date(date) : date;
-    return dateObj > new Date();
-  } catch (error) {
-    console.error('Error checking if date is future:', error);
-    return false;
-  }
-};
-
-/**
- * Format a date as a time (e.g. "3:30 PM")
- */
-export const formatTime = (date: string | Date): string => {
-  try {
-    const dateObj = typeof date === 'string' ? new Date(date) : date;
-    return format(dateObj, 'p');
-  } catch (error) {
-    console.error('Error formatting time:', error);
-    return 'Invalid time';
-  }
-};
-
-/**
- * Format a date and time together
- */
-export const formatDateTime = (date: string | Date): string => {
-  try {
-    const dateObj = typeof date === 'string' ? new Date(date) : date;
-    return format(dateObj, 'PPp');
-  } catch (error) {
-    console.error('Error formatting date and time:', error);
-    return 'Invalid date/time';
-  }
+export const formatDate = (dateStr: string | Date): string => {
+  const date = new Date(dateStr);
+  return date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric'
+  });
 };
 
 /**
  * Check if an event is currently active based on start and end dates
+ * @param startDate Start date of the event
+ * @param endDate End date of the event
+ * @returns Boolean indicating if the event is currently active
  */
 export const isEventActive = (startDate: string | Date, endDate: string | Date): boolean => {
   try {
@@ -108,13 +32,44 @@ export const isEventActive = (startDate: string | Date, endDate: string | Date):
   }
 };
 
+/**
+ * Format a date and time into a human-readable string
+ * @param dateStr Date string to format
+ * @returns Formatted date and time string
+ */
+export const formatDateTime = (dateStr: string | Date): string => {
+  const date = new Date(dateStr);
+  return date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+};
+
+/**
+ * Calculate days until a given date
+ * @param dateStr Target date
+ * @returns Number of days until the target date
+ */
+export const daysUntil = (dateStr: string | Date): number => {
+  const now = new Date();
+  const targetDate = new Date(dateStr);
+  
+  // Reset time part for accurate day calculation
+  now.setHours(0, 0, 0, 0);
+  targetDate.setHours(0, 0, 0, 0);
+  
+  const diffTime = targetDate.getTime() - now.getTime();
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  
+  return diffDays;
+};
+
 export default {
   formatDate,
-  formatRelativeTime,
-  daysUntil,
-  isPastDate,
-  isFutureDate,
-  formatTime,
+  isEventActive,
   formatDateTime,
-  isEventActive
+  daysUntil
 };

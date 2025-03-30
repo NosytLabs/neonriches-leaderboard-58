@@ -1,57 +1,43 @@
 
-import { UserProfile, TeamType, UserTier, UserGender } from '@/types/user';
+import { UserProfile } from '@/types/user';
+import { LeaderboardUser } from '@/types/leaderboard';
+import { v4 as uuidv4 } from 'uuid';
 
-export const generateMockUser = (): UserProfile => {
-  const id = 'user_' + Date.now();
-  const randomUsername = 'noble_' + Math.random().toString(36).substring(2, 8);
-  const joinedAt = new Date().toISOString();
+/**
+ * Generate a mock leaderboard of users
+ */
+export const generateMockLeaderboard = (count: number = 20): LeaderboardUser[] => {
+  const users: LeaderboardUser[] = [];
   
-  // Generate random rank between 1 and 100
-  const rank = Math.floor(Math.random() * 100) + 1;
+  const teams = ['red', 'blue', 'green', 'gold'] as const;
+  const tiers = ['free', 'basic', 'premium', 'royal'] as const;
   
-  // Generate random spent amount between $1 and $1000
-  const totalSpent = Math.floor(Math.random() * 1000) + 1;
+  for (let i = 0; i < count; i++) {
+    const id = uuidv4();
+    const rank = i + 1;
+    const previousRank = Math.max(1, rank + (Math.random() > 0.7 ? Math.floor(Math.random() * 3) - 1 : 0));
+    
+    const amountSpent = Math.floor(10000 / rank) * (0.9 + Math.random() * 0.2);
+    
+    users.push({
+      id,
+      username: `User${rank}`,
+      displayName: `User ${rank}`,
+      profileImage: `https://source.unsplash.com/random/100x100?face=${rank}`,
+      rank,
+      previousRank,
+      team: teams[Math.floor(Math.random() * teams.length)],
+      tier: tiers[Math.floor(Math.random() * tiers.length)],
+      totalSpent: amountSpent,
+      amountSpent,
+      spentAmount: amountSpent,
+      joinDate: new Date(2023, 0, 1 + (rank * 3)).toISOString(),
+      isVerified: Math.random() > 0.8,
+      isProtected: Math.random() > 0.9
+    });
+  }
   
-  // Determine tier based on spending
-  let tier: UserTier = 'bronze';
-  if (totalSpent >= 500) tier = 'gold';
-  else if (totalSpent >= 100) tier = 'silver';
-  else if (totalSpent >= 50) tier = 'bronze';
-  else tier = 'free';
-  
-  // Randomly assign to a team
-  const teams: TeamType[] = ['red', 'green', 'blue', 'none'];
-  const randomTeam = teams[Math.floor(Math.random() * teams.length)];
-  
-  // Generate wallet balance between $10 and $500
-  const walletBalance = Math.floor(Math.random() * 490) + 10;
-  
-  return {
-    id,
-    username: randomUsername,
-    displayName: randomUsername.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase()),
-    email: `${randomUsername}@example.com`,
-    profileImage: `https://api.dicebear.com/6.x/personas/svg?seed=${randomUsername}`,
-    bio: 'A noble adventurer in the SpendThrone realm!',
-    totalSpent,
-    amountSpent: totalSpent,
-    rank,
-    previousRank: rank + Math.floor(Math.random() * 10) - 5,
-    team: randomTeam,
-    joinedAt,
-    walletBalance,
-    tier,
-    gender: 'neutral' as UserGender,
-    cosmetics: {
-      badges: [],
-      titles: ['newcomer'],
-      borders: ['basic'],
-      effects: [],
-      emojis: []
-    },
-    activeTitle: 'newcomer'
-  };
+  return users;
 };
 
-// Export the function
-export default generateMockUser;
+export default { generateMockLeaderboard };

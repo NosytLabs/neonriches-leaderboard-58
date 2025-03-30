@@ -6,7 +6,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Search, Crown, ShoppingCart, Bell, Gift, ChevronRight, Star, BadgeCheck } from 'lucide-react';
 import { Input } from '@/components/ui/input';
-import { CosmeticItem, CosmeticRarity, SocialLink } from '@/types/cosmetics';
+import { CosmeticItem, CosmeticRarity } from '@/types/cosmetics';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';

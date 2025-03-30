@@ -1,5 +1,5 @@
 
-import { CosmeticRarity, CosmeticCategory } from '@/types/cosmetics';
+import { CosmeticRarity, CosmeticCategory, CosmeticItem, UserCosmeticState } from '@/types/cosmetics';
 
 /**
  * Get the color class for a specific rarity
@@ -89,22 +89,16 @@ export const getCosmeticClassForType = (type: CosmeticCategory, value: string): 
 export const isCosmeticUnlocked = (
   cosmeticId: string, 
   cosmeticType: CosmeticCategory, 
-  userCosmetics: Record<string, any>
+  userCosmetics: UserCosmeticState
 ): boolean => {
-  const unlockedKey = `unlocked${cosmeticType.charAt(0).toUpperCase() + cosmeticType.slice(1)}s`;
-  const legacyKey = `${cosmeticType}s`;
+  const unlockedKey = `unlocked${cosmeticType.charAt(0).toUpperCase() + cosmeticType.slice(1)}s` as keyof UserCosmeticState;
+  const legacyKey = `${cosmeticType}s` as keyof UserCosmeticState;
+  
+  const unlockedArray = userCosmetics[unlockedKey] as string[] | undefined;
+  const legacyArray = userCosmetics[legacyKey] as string[] | undefined;
   
   return (
-    (Array.isArray(userCosmetics[unlockedKey]) && userCosmetics[unlockedKey].includes(cosmeticId)) ||
-    (Array.isArray(userCosmetics[legacyKey]) && userCosmetics[legacyKey].includes(cosmeticId))
+    (Array.isArray(unlockedArray) && unlockedArray.includes(cosmeticId)) ||
+    (Array.isArray(legacyArray) && legacyArray.includes(cosmeticId))
   );
-};
-
-export default {
-  getRarityColor,
-  getRarityBgColor,
-  getRarityBorderColor,
-  getCategoryDisplayName,
-  getCosmeticClassForType,
-  isCosmeticUnlocked
 };

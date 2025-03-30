@@ -1,52 +1,41 @@
 
 import { useState, useEffect } from 'react';
 import { EventStats } from '@/types/events';
-import { eventStatsData } from '../data';
+import { eventStats } from '../data';
 
-function useEventStatistics(eventId: string) {
-  const [stats, setStats] = useState<EventStats>({
-    id: '',
-    eventId: '',
-    participantsCount: 0,
-    totalSpent: 0,
-    totalPrizes: 0,
-    averageSpent: 0,
-    prizePool: 0,
-    totalPokes: 0,
-    mostPoked: []
-  });
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
+/**
+ * Custom hook to fetch and manage event statistics
+ * @param eventId The ID of the event to fetch statistics for
+ */
+export const useEventStatistics = (eventId: string) => {
+  const [stats, setStats] = useState<EventStats | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchEventStats = async () => {
       setIsLoading(true);
+      setError(null);
+
       try {
-        // In a real application, this would be an API call
-        // For this demo, we'll use the mock data
-        await new Promise(resolve => setTimeout(resolve, 500)); // Simulate network delay
+        // In a real app, this would be an API call
+        // For demo purposes, we're using mock data
+        const mockStats = eventStats[eventId];
         
-        // Simulate API response with mock data
-        if (eventId === eventStatsData.eventId) {
-          setStats(eventStatsData);
+        if (mockStats) {
+          // Simulate network delay
+          setTimeout(() => {
+            setStats(mockStats);
+            setIsLoading(false);
+          }, 500);
         } else {
-          // Create empty stats object for events without data
-          setStats({
-            id: `stats-${eventId}`,
-            eventId,
-            participantsCount: 0,
-            totalSpent: 0,
-            totalPrizes: 0,
-            averageSpent: 0,
-            prizePool: 0,
-            totalPokes: 0,
-            mostPoked: []
-          });
+          setError(`Stats not found for event ${eventId}`);
+          setIsLoading(false);
         }
       } catch (err) {
-        setError(err instanceof Error ? err : new Error('Failed to fetch event statistics'));
-      } finally {
+        setError('Failed to load event statistics');
         setIsLoading(false);
+        console.error('Error fetching event stats:', err);
       }
     };
 
@@ -56,6 +45,6 @@ function useEventStatistics(eventId: string) {
   }, [eventId]);
 
   return { stats, isLoading, error };
-}
+};
 
 export default useEventStatistics;

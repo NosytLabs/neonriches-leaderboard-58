@@ -31,14 +31,22 @@ const EventDetailsModal: React.FC<EventDetailsModalProps> = ({
   const durationDays = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
   
   // Check if the event has a long description (indicates it's an EventDetails)
-  const hasDetailedInfo = 'longDescription' in event || 'rules' in event || 'prizes' in event;
+  const hasDetailedInfo = ('rules' in event) || ('prizes' in event);
+  
+  // Get the event image from appropriate property
+  const eventImage = ('image' in event && event.image) || 
+                     ('imageUrl' in event && event.imageUrl) || 
+                     '/placeholder.jpg';
+  
+  // Get the event status from the event object
+  const eventStatus = 'status' in event ? event.status : 'upcoming';
   
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="glass-morphism border-white/10 max-w-3xl">
         <DialogHeader>
           <div className="flex items-center justify-between">
-            <DialogTitle className="text-xl font-bold">{event.title}</DialogTitle>
+            <DialogTitle className="text-xl font-bold">{event.title || ('name' in event ? event.name : '')}</DialogTitle>
             <DialogClose asChild>
               <Button variant="ghost" size="icon" className="text-white/70 hover:text-white">
                 <X className="h-5 w-5" />
@@ -52,8 +60,8 @@ const EventDetailsModal: React.FC<EventDetailsModalProps> = ({
           <div>
             <div className="rounded-lg overflow-hidden mb-4">
               <Image
-                src={event.image || ('imageUrl' in event ? event.imageUrl : '/placeholder.jpg')}
-                alt={event.title}
+                src={eventImage}
+                alt={event.title || ('name' in event ? event.name : 'Event')}
                 aspectRatio="16:9"
                 className="w-full"
               />
@@ -61,18 +69,19 @@ const EventDetailsModal: React.FC<EventDetailsModalProps> = ({
             
             <div className="flex flex-wrap gap-2 mb-4">
               <Badge variant="outline" className={`
-                ${event.type === 'treasure' ? 'bg-royal-gold/20 border-royal-gold/40' : ''} 
-                ${event.type === 'shame' ? 'bg-royal-crimson/20 border-royal-crimson/40' : ''}
-                ${event.type === 'team' ? 'bg-royal-navy/20 border-royal-navy/40' : ''}
+                ${'type' in event && event.type === 'treasure' ? 'bg-royal-gold/20 border-royal-gold/40' : ''} 
+                ${'type' in event && event.type === 'shame' ? 'bg-royal-crimson/20 border-royal-crimson/40' : ''}
+                ${'type' in event && event.type === 'team' ? 'bg-royal-navy/20 border-royal-navy/40' : ''}
               `}>
-                {event.type.charAt(0).toUpperCase() + event.type.slice(1)}
+                {'type' in event ? event.type.charAt(0).toUpperCase() + event.type.slice(1) : 'Event'}
               </Badge>
+              
               <Badge variant="outline" className={`
-                ${event.status === 'active' ? 'bg-emerald-500/20 border-emerald-500/40' : ''} 
-                ${event.status === 'upcoming' ? 'bg-blue-500/20 border-blue-500/40' : ''}
-                ${event.status === 'completed' ? 'bg-gray-500/20 border-gray-500/40' : ''}
+                ${eventStatus === 'active' ? 'bg-emerald-500/20 border-emerald-500/40' : ''} 
+                ${eventStatus === 'upcoming' ? 'bg-blue-500/20 border-blue-500/40' : ''}
+                ${eventStatus === 'completed' ? 'bg-gray-500/20 border-gray-500/40' : ''}
               `}>
-                {event.status.charAt(0).toUpperCase() + event.status.slice(1)}
+                {eventStatus.charAt(0).toUpperCase() + eventStatus.slice(1)}
               </Badge>
             </div>
             
@@ -94,20 +103,13 @@ const EventDetailsModal: React.FC<EventDetailsModalProps> = ({
               <div className="flex items-center gap-2 text-white/70">
                 <Trophy className="h-4 w-4 text-royal-gold" />
                 <span>
-                  <strong>Rewards:</strong> {event.rewards?.length || 0} rewards available
+                  <strong>Rewards:</strong> {(event.rewards && event.rewards.length) || 0} rewards available
                 </span>
               </div>
             </div>
           </div>
           
           <div className="space-y-4">
-            {hasDetailedInfo && 'longDescription' in event && (
-              <div>
-                <h3 className="text-lg font-semibold mb-2">Details</h3>
-                <p className="text-white/70 text-sm">{event.longDescription}</p>
-              </div>
-            )}
-            
             {hasDetailedInfo && 'rules' in event && event.rules && (
               <div>
                 <h3 className="text-lg font-semibold mb-2">Rules</h3>
@@ -150,12 +152,12 @@ const EventDetailsModal: React.FC<EventDetailsModalProps> = ({
           <Button variant="outline" onClick={onClose}>
             Close
           </Button>
-          {event.status === 'active' && (
+          {eventStatus === 'active' && (
             <Button variant="default" className="bg-royal-gold hover:bg-royal-gold/90 text-black">
               Participate Now
             </Button>
           )}
-          {event.status === 'upcoming' && (
+          {eventStatus === 'upcoming' && (
             <Button variant="outline" className="border-royal-gold/40 text-royal-gold">
               Remind Me
             </Button>

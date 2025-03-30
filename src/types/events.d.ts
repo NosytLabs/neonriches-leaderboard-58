@@ -47,7 +47,8 @@ export interface EventDetails {
   id: string;
   eventId: string;
   description: string;
-  rules: string;
+  rules: string[];
+  prizes?: string[];
   prizePool: number;
   startDate: string;
   endDate: string;

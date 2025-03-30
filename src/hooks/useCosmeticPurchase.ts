@@ -1,6 +1,6 @@
 
 import { useCallback } from 'react';
-import { CosmeticItem } from '@/types/cosmetics';
+import { CosmeticItem, UserCosmeticState } from '@/types/cosmetics';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 import { useSound } from '@/hooks/sounds/use-sound';
@@ -37,19 +37,37 @@ export const useCosmeticPurchase = () => {
     const newBalance = (user.walletBalance || 0) - item.price;
     
     // Update user cosmetics
-    const unlockedKey = `unlocked${item.category.charAt(0).toUpperCase() + item.category.slice(1)}s`;
-    const legacyKey = `${item.category}s`;
+    const currentCosmetics = user.cosmetics || {
+      unlockedBorders: [],
+      unlockedColors: [],
+      unlockedFonts: [],
+      unlockedEmojis: [],
+      unlockedTitles: [],
+      unlockedBackgrounds: [],
+      unlockedEffects: [],
+      unlockedBadges: [],
+      unlockedThemes: [],
+      borders: [],
+      colors: [],
+      fonts: [],
+      emojis: [],
+      titles: [],
+      backgrounds: [],
+      effects: [],
+      badges: [],
+      themes: []
+    };
+    
+    const unlockedKey = `unlocked${item.category.charAt(0).toUpperCase() + item.category.slice(1)}s` as keyof UserCosmeticState;
+    const legacyKey = `${item.category}s` as keyof UserCosmeticState;
+    
+    const unlockedArray = [...(currentCosmetics[unlockedKey] as string[] || []), item.id];
+    const legacyArray = [...(currentCosmetics[legacyKey] as string[] || []), item.id];
     
     const updatedCosmetics = {
-      ...user.cosmetics || {},
-      [unlockedKey]: [
-        ...(user.cosmetics?.[unlockedKey as keyof typeof user.cosmetics] as string[] || []),
-        item.id
-      ],
-      [legacyKey]: [
-        ...(user.cosmetics?.[legacyKey as keyof typeof user.cosmetics] as string[] || []),
-        item.id
-      ]
+      ...currentCosmetics,
+      [unlockedKey]: unlockedArray,
+      [legacyKey]: legacyArray
     };
     
     updateUser({

@@ -18,6 +18,19 @@ export type CosmeticRarity =
   | 'epic' 
   | 'legendary';
 
+export interface SocialLink {
+  id: string | number;
+  platform: string;
+  url: string;
+  username?: string;
+  display?: string;
+  icon?: string;
+  verified?: boolean;
+  primary?: boolean;
+  clicks?: number;
+  price?: number; // Added for cosmetic purchases
+}
+
 export interface CosmeticItem {
   id: string;
   name: string;
@@ -25,8 +38,10 @@ export interface CosmeticItem {
   price: number;
   type: string;
   category: CosmeticCategory;
-  rarity: string;
+  rarity: CosmeticRarity;
   imageSrc?: string;
+  image?: string;
+  cssClass?: string;
 }
 
 export interface UserCosmeticState {
@@ -62,6 +77,7 @@ export interface UserCosmeticState {
   effects?: string[];
   badges?: string[];
   themes?: string[];
+  foundersPass?: boolean;
 }
 
 export interface CosmeticSet {
@@ -97,14 +113,3 @@ export interface CosmeticShopState {
   loading: boolean;
   error: string | null;
 }
-
-// Use export type to avoid TS1205 errors
-export type {
-  CosmeticCategory,
-  CosmeticRarity,
-  CosmeticItem,
-  UserCosmeticState,
-  CosmeticSet,
-  CosmeticShopItem,
-  CosmeticShopState
-};
