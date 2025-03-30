@@ -1,322 +1,191 @@
 
 import React from 'react';
-import { Container } from '@/components/ui/container';
+import Shell from '@/components/Shell';
 import PageSEO from '@/components/common/PageSEO';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Crown, Star, Award, Lightbulb, BookOpen, BriefcaseBusiness, Swords, Youtube, DollarSign, Trophy, ExternalLink } from 'lucide-react';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
+import RoyalDivider from '@/components/ui/royal-divider';
+import MedievalFrame from '@/components/ui/medieval-frame';
+import { Scroll, Crown, Coins, Users } from 'lucide-react';
+import ParchmentTexture from '@/components/ui/parchment-texture';
+import usePageTracking from '@/hooks/usePageTracking';
 
 const StatusThroughHistory = () => {
+  usePageTracking();
+  
   return (
-    <>
+    <Shell>
       <PageSEO 
-        title="Status Through History" 
-        description="Explore how wealth, status, and prestige have manifested throughout human history, from ancient civilizations to modern digital economies."
-        canonicalUrl="/status-through-history"
+        title="Status Through History - A Satirical Timeline of Wealth & Power" 
+        description="Explore the absurd historical parallels between SpendThrone's digital status buying and humanity's long tradition of purchasing power and influence."
       />
       
-      <Header />
-      
-      <Container className="py-10">
-        <h1 className="text-4xl font-bold mb-2 royal-gradient text-center">Status Through History</h1>
-        <p className="text-white/70 text-center mb-10 max-w-3xl mx-auto">
-          Throughout human civilization, the pursuit of status and prestige has taken many forms. 
-          This satirical exploration shows how SpendThrone reflects ancient patterns in a modern digital context.
-        </p>
-        
-        <Tabs defaultValue="ancient" className="w-full">
-          <TabsList className="grid grid-cols-4 max-w-3xl mx-auto mb-6">
-            <TabsTrigger value="ancient">Ancient World</TabsTrigger>
-            <TabsTrigger value="medieval">Medieval</TabsTrigger>
-            <TabsTrigger value="industrial">Industrial</TabsTrigger>
-            <TabsTrigger value="digital">Digital Age</TabsTrigger>
-          </TabsList>
+      <div className="container mx-auto px-4 py-12">
+        <div className="max-w-4xl mx-auto">
+          <h1 className="text-4xl md:text-5xl font-bold mb-4 royal-gradient text-center">
+            The Noble Timeline of Buying Status
+          </h1>
+          <p className="text-xl text-white/70 text-center mb-8">
+            A satirical journey through humanity's long tradition of purchasing power, influence, and social standing
+          </p>
           
-          {/* Ancient World Timeline */}
-          <TabsContent value="ancient">
-            <Card className="glass-morphism border-white/10">
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <BookOpen className="mr-2 h-5 w-5 text-royal-gold" />
-                  Ancient Status Symbols
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-6">
-                  <div className="border-l-2 border-royal-gold/30 pl-6 py-2">
-                    <h3 className="text-lg font-semibold flex items-center">
-                      <Crown className="h-4 w-4 mr-2 text-royal-gold" />
-                      Ancient Egypt (3100-30 BCE)
-                    </h3>
-                    <p className="text-white/70 mt-2">
-                      Pharaohs displayed wealth through massive pyramids and golden artifacts. The size of one's tomb and quality of burial goods directly indicated status.
-                    </p>
-                    <p className="mt-2 text-sm italic text-royal-gold/80">
-                      Digital parallel: Profile customization and virtual badges serve as modern "burial goods" - expressions of digital afterlife.
-                    </p>
-                  </div>
-                  
-                  <div className="border-l-2 border-royal-gold/30 pl-6 py-2">
-                    <h3 className="text-lg font-semibold flex items-center">
-                      <Swords className="h-4 w-4 mr-2 text-royal-gold" />
-                      Roman Empire (27 BCE-476 CE)
-                    </h3>
-                    <p className="text-white/70 mt-2">
-                      Romans displayed status through lavish homes, slaves, public games, and political offices. Patrons supported clients in exchange for loyalty.
-                    </p>
-                    <p className="mt-2 text-sm italic text-royal-gold/80">
-                      Digital parallel: Subscription tiers and public displays of spending create a modern patronage system in the digital realm.
-                    </p>
-                  </div>
-                  
-                  <div className="border-l-2 border-royal-gold/30 pl-6 py-2">
-                    <h3 className="text-lg font-semibold flex items-center">
-                      <Star className="h-4 w-4 mr-2 text-royal-gold" />
-                      Han Dynasty China (206 BCE-220 CE)
-                    </h3>
-                    <p className="text-white/70 mt-2">
-                      The scholar-official class displayed status through knowledge of classics, calligraphy, and civil service examination ranks.
-                    </p>
-                    <p className="mt-2 text-sm italic text-royal-gold/80">
-                      Digital parallel: Badges, titles, and special access serve as modern insignia of rank and achievement in the digital meritocracy.
-                    </p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
+          <RoyalDivider variant="scroll" label="HISTORICAL PARALLELS" color="gold" />
           
-          {/* Medieval Timeline */}
-          <TabsContent value="medieval">
-            <Card className="glass-morphism border-white/10">
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <Crown className="mr-2 h-5 w-5 text-royal-gold" />
-                  Medieval Status Symbols
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-6">
-                  <div className="border-l-2 border-royal-gold/30 pl-6 py-2">
-                    <h3 className="text-lg font-semibold flex items-center">
-                      <Crown className="h-4 w-4 mr-2 text-royal-gold" />
-                      European Feudalism (9th-15th century)
-                    </h3>
-                    <p className="text-white/70 mt-2">
-                      Nobles displayed status through land ownership, castles, and private armies. Titles were inherited and determined one's place in society.
-                    </p>
-                    <p className="mt-2 text-sm italic text-royal-gold/80">
-                      Digital parallel: Premium profiles and exclusive digital spaces serve as virtual "castles" in the digital landscape.
-                    </p>
-                  </div>
-                  
-                  <div className="border-l-2 border-royal-gold/30 pl-6 py-2">
-                    <h3 className="text-lg font-semibold flex items-center">
-                      <Award className="h-4 w-4 mr-2 text-royal-gold" />
-                      Medieval Guilds (12th-16th century)
-                    </h3>
-                    <p className="text-white/70 mt-2">
-                      Craftsmen displayed status through guild membership, quality of work, and apprentice numbers. Guild masters held significant social status.
-                    </p>
-                    <p className="mt-2 text-sm italic text-royal-gold/80">
-                      Digital parallel: Team affiliations and mockery privileges reflect guild hierarchies, where some users gain power to judge and mock others.
-                    </p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-          
-          {/* Industrial Timeline */}
-          <TabsContent value="industrial">
-            <Card className="glass-morphism border-white/10">
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <BriefcaseBusiness className="mr-2 h-5 w-5 text-royal-gold" />
-                  Industrial Age Status Symbols
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-6">
-                  <div className="border-l-2 border-royal-gold/30 pl-6 py-2">
-                    <h3 className="text-lg font-semibold flex items-center">
-                      <BriefcaseBusiness className="h-4 w-4 mr-2 text-royal-gold" />
-                      Victorian Era (1837-1901)
-                    </h3>
-                    <p className="text-white/70 mt-2">
-                      The new industrial wealthy displayed status through elaborate homes, servants, fashionable clothing, and leisure activities.
-                    </p>
-                    <p className="mt-2 text-sm italic text-royal-gold/80">
-                      Digital parallel: Profile customization options and visitation statistics mirror the Victorian obsession with displays of consumption.
-                    </p>
-                  </div>
-                  
-                  <div className="border-l-2 border-royal-gold/30 pl-6 py-2">
-                    <h3 className="text-lg font-semibold flex items-center">
-                      <Award className="h-4 w-4 mr-2 text-royal-gold" />
-                      Gilded Age America (1870s-1900)
-                    </h3>
-                    <p className="text-white/70 mt-2">
-                      Robber barons displayed status through conspicuous consumption, elaborate mansions, philanthropy, and exclusive social clubs.
-                    </p>
-                    <p className="mt-2 text-sm italic text-royal-gold/80">
-                      Digital parallel: Leaderboards and public spending totals recreate the Gilded Age's ostentatious displays of wealth and competition.
-                    </p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-          
-          {/* Digital Age Timeline - Now includes MrBeast content */}
-          <TabsContent value="digital">
-            <Card className="glass-morphism border-white/10">
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <Lightbulb className="mr-2 h-5 w-5 text-royal-gold" />
-                  Digital Age Status Symbols
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-6">
-                  <div className="border-l-2 border-royal-gold/30 pl-6 py-2">
-                    <h3 className="text-lg font-semibold flex items-center">
-                      <Lightbulb className="h-4 w-4 mr-2 text-royal-gold" />
-                      Social Media Era (2000s-present)
-                    </h3>
-                    <p className="text-white/70 mt-2">
-                      Digital citizens display status through follower counts, engagement metrics, verified badges, and exclusive account features.
-                    </p>
-                    <p className="mt-2 text-sm italic text-royal-gold/80">
-                      Digital parallel: SpendThrone directly quantifies digital status through spending, creating a transparent hierarchy based on financial contribution.
-                    </p>
-                  </div>
-                  
-                  {/* MrBeast section - moved from separate tab to Digital Age */}
-                  <div className="border-l-2 border-royal-gold/30 pl-6 py-2">
-                    <h3 className="text-lg font-semibold flex items-center">
-                      <Youtube className="h-4 w-4 mr-2 text-red-500" />
-                      The MrBeast Revolution (2017-Present)
-                    </h3>
-                    <p className="text-white/70 mt-2">
-                      MrBeast (Jimmy Donaldson) revolutionized online status by transforming excessive spending into content and philanthropy. His videos featuring extravagant giveaways and challenges with six-figure budgets created a new form of status: the benevolent spender.
-                    </p>
-                    <div className="mt-2 text-sm text-white/80">
-                      <span className="font-semibold">Key innovations:</span>
-                      <ul className="mt-1 space-y-2">
-                        <li className="flex items-start">
-                          <DollarSign className="h-4 w-4 mr-2 text-green-500 mt-1 flex-shrink-0" />
-                          <div>
-                            <span className="font-medium">Monetized Philanthropy:</span> Transformed excessive spending into content and philanthropy, where giving away money generates more revenue and status.
-                            <a href="https://www.forbes.com/profile/mrbeast/" className="flex items-center text-blue-400 hover:text-blue-300 mt-1 text-xs">
-                              <ExternalLink className="h-3 w-3 mr-1" />
-                              Forbes: MrBeast Net Worth
-                            </a>
-                          </div>
-                        </li>
-                        <li className="flex items-start">
-                          <Trophy className="h-4 w-4 mr-2 text-royal-gold mt-1 flex-shrink-0" />
-                          <div>
-                            <span className="font-medium">Extreme Challenge Economy:</span> "Last To Leave" challenges and "Spend $1,000,000 in 24 Hours" videos created a new economy where spending becomes public entertainment.
-                            <a href="https://www.youtube.com/watch?v=OjXlp0-SZCs" className="flex items-center text-blue-400 hover:text-blue-300 mt-1 text-xs">
-                              <ExternalLink className="h-3 w-3 mr-1" />
-                              MrBeast: I Spent $1,000,000 In 24 Hours
-                            </a>
-                          </div>
-                        </li>
-                        <li className="flex items-start">
-                          <Star className="h-4 w-4 mr-2 text-yellow-400 mt-1 flex-shrink-0" />
-                          <div>
-                            <span className="font-medium">Meta-Spending Philosophy:</span> Created a system where spending money generates more money, transforming "costs" into investments with incredible ROI.
-                            <a href="https://www.businessinsider.com/how-much-does-mrbeast-make-per-video-youtube-earnings-merch-2023-1" className="flex items-center text-blue-400 hover:text-blue-300 mt-1 text-xs">
-                              <ExternalLink className="h-3 w-3 mr-1" />
-                              Business Insider: MrBeast's Earnings Model
-                            </a>
-                          </div>
-                        </li>
-                      </ul>
+          <div className="space-y-12 mt-12">
+            {/* Ancient Era */}
+            <section>
+              <h2 className="text-3xl font-bold mb-4 flex items-center">
+                <Crown className="mr-3 text-royal-gold" />
+                Ancient Status Merchants (3000 BCE - 500 CE)
+              </h2>
+              
+              <div className="grid md:grid-cols-2 gap-8">
+                <MedievalFrame variant="parchment">
+                  <div className="p-6">
+                    <h3 className="text-xl font-semibold mb-3 text-royal-crimson">Roman Equestrians</h3>
+                    <p className="mb-4">The Roman "Equestrian Order" required a minimum net worth of 400,000 sesterces. Simply buy your way into the second-highest social rank! (Knights were just the original Silver Tier subscribers.)</p>
+                    <div className="text-sm italic text-royal-navy/70 mt-4">
+                      "For a modest 1.5 million sesterces, enjoy exclusive access to the Senate Chambers and Premium Chariot Parking." - Flavius Monetarius, Roman Status Consultant
                     </div>
-                    <p className="mt-2 text-sm italic text-royal-gold/80">
-                      SpendThrone parallel: Our platform's public spending model turns financial transactions into entertainment, much like MrBeast turned excessive spending into watchable content.
-                    </p>
                   </div>
-                  
-                  <div className="border-l-2 border-royal-gold/30 pl-6 py-2">
-                    <h3 className="text-lg font-semibold flex items-center">
-                      <Crown className="h-4 w-4 mr-2 text-royal-gold" />
-                      SpendThrone Era (Present)
-                    </h3>
-                    <p className="text-white/70 mt-2">
-                      The ultimate culmination of status displays: a direct, unapologetic correlation between spending and status, with added mockery dynamics reminiscent of ancient court jesters.
-                    </p>
-                    <p className="mt-2 text-sm italic text-royal-gold/80">
-                      Meta parallel: By explicitly gamifying status through spending, SpendThrone satirizes all previous status systems throughout human history.
-                    </p>
+                </MedievalFrame>
+                
+                <MedievalFrame variant="parchment">
+                  <div className="p-6">
+                    <h3 className="text-xl font-semibold mb-3 text-royal-crimson">Egyptian Burial Upgrades</h3>
+                    <p className="mb-4">Upgrade your sarcophagus to PREMIUM GOLD for just 50 more grain harvests! (Mummification DLC sold separately. Afterlife results may vary.)</p>
+                    <div className="text-sm italic text-royal-navy/70 mt-4">
+                      "Would you like to add Pyramid Protection to your Eternal Package? Only 10,000 additional slaves required!" - Ancient Egyptian Afterlife Sales Specialist
+                    </div>
+                  </div>
+                </MedievalFrame>
+              </div>
+            </section>
+            
+            {/* Medieval Era */}
+            <section>
+              <h2 className="text-3xl font-bold mb-4 flex items-center">
+                <Scroll className="mr-3 text-royal-gold" />
+                Medieval Rank Purchasers (500 - 1500 CE)
+              </h2>
+              
+              <ParchmentTexture className="p-6 mb-8" seal>
+                <h3 className="text-2xl font-medieval-title text-center mb-4 text-royal-crimson">ROYAL INDULGENCES</h3>
+                <p className="text-center mb-6">The Catholic Church's revolutionary "Pay-to-Heaven" model allowed sinners to purchase forgiveness with Indulgence Certificates.</p>
+                
+                <div className="border-2 border-dashed border-royal-crimson/50 p-4 text-center font-medieval-script">
+                  <p className="text-lg">⚜️ PREMIUM SALVATION CERTIFICATE ⚜️</p>
+                  <p className="my-2">This document certifies that Lord Moneybags has purchased DIVINE FORGIVENESS (Platinum Tier) for the sin of:</p>
+                  <p className="font-bold my-2 text-royal-crimson">EXCESSIVE PRIDE & CONSPICUOUS CONSUMPTION</p>
+                  <p className="mt-4 text-sm">*Terms and conditions apply. Salvation not guaranteed. Offer not valid in Protestant territories.</p>
+                </div>
+              </ParchmentTexture>
+              
+              <div className="grid md:grid-cols-2 gap-8">
+                <MedievalFrame>
+                  <div className="p-6">
+                    <h3 className="text-xl font-semibold mb-3">Letters Patent</h3>
+                    <p className="mb-4">Kings sold noble titles to wealthy merchants for quick cash. (The original pay-to-win rank system.)</p>
+                    <p className="text-sm italic text-white/70">"Congratulations on your purchase of 'Earl'! Would you like to add the 'Count' expansion pack for just 3 more estates?" - Royal Title Sales Department, 1348</p>
+                  </div>
+                </MedievalFrame>
+                
+                <MedievalFrame>
+                  <div className="p-6">
+                    <h3 className="text-xl font-semibold mb-3">Sumptuary Laws</h3>
+                    <p className="mb-4">Laws that restricted luxury clothing to certain classes—the original "premium skins" that were rank-locked.</p>
+                    <p className="text-sm italic text-white/70">"Sorry peasant, purple dye is for Diamond Tier nobility only. Please upgrade your social package to unlock this color." - Royal Fashion Police</p>
+                  </div>
+                </MedievalFrame>
+              </div>
+            </section>
+            
+            {/* Renaissance & Industrial Era */}
+            <section>
+              <h2 className="text-3xl font-bold mb-4 flex items-center">
+                <Coins className="mr-3 text-royal-gold" />
+                Industrial Status Climbers (1500 - 1900 CE)
+              </h2>
+              
+              <div className="mb-8">
+                <MedievalFrame variant="noble">
+                  <div className="p-6">
+                    <h3 className="text-xl font-semibold mb-3">American "Dollar Nobility"</h3>
+                    <p className="mb-4">New Money industrialists built gaudy mansions on Fifth Avenue and married their daughters to cash-poor European nobility.</p>
+                    <div className="grid md:grid-cols-2 gap-4 mt-6">
+                      <div className="glass-morphism p-4 rounded-lg">
+                        <h4 className="font-medium mb-2 text-royal-gold">The Platinum Package (1890)</h4>
+                        <ul className="text-sm space-y-2">
+                          <li>✓ One impoverished but authentic European title</li>
+                          <li>✓ Entry to exactly 3 exclusive social clubs</li>
+                          <li>✓ Your name in the newspaper society pages</li>
+                          <li>✓ A daughter who will be thoroughly miserable abroad</li>
+                        </ul>
+                      </div>
+                      <div className="glass-morphism p-4 rounded-lg">
+                        <h4 className="font-medium mb-2 text-royal-gold">Nouveau Riche Bundle (1880)</h4>
+                        <ul className="text-sm space-y-2">
+                          <li>✓ Obscenely large mansion with gold everything</li>
+                          <li>✓ Increasingly uncomfortable old-money neighbors</li>
+                          <li>✓ Art collection you don't understand</li>
+                          <li>✓ Constant reminders you don't "really" belong</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </MedievalFrame>
+              </div>
+            </section>
+            
+            {/* Modern Era */}
+            <section>
+              <h2 className="text-3xl font-bold mb-4 flex items-center">
+                <Users className="mr-3 text-royal-gold" />
+                Modern Prestige Purchasers (1900 - Present)
+              </h2>
+              
+              <div className="glass-morphism border-royal-gold/20 p-6 rounded-lg mb-8">
+                <h3 className="text-xl font-semibold mb-3 text-center">The Digital Status Marketplace</h3>
+                <p className="text-center mb-6">From university donations to blue checkmarks to virtual goods—we've perfected the art of purchasing status without even the pretense of actual nobility.</p>
+                
+                <div className="grid md:grid-cols-3 gap-4">
+                  <div className="bg-black/30 p-4 rounded-lg">
+                    <h4 className="font-medium mb-2 text-royal-gold">NFT Profile Pictures</h4>
+                    <p className="text-sm text-white/70">Spend $250,000 on a badly drawn monkey to show the internet you have more money than sense.</p>
+                  </div>
+                  <div className="bg-black/30 p-4 rounded-lg">
+                    <h4 className="font-medium mb-2 text-royal-gold">University Buildings</h4>
+                    <p className="text-sm text-white/70">"For just $50 million, students can hate capitalism inside a building with YOUR name on it!"</p>
+                  </div>
+                  <div className="bg-black/30 p-4 rounded-lg">
+                    <h4 className="font-medium mb-2 text-royal-gold">SpendThrone Leaderboard</h4>
+                    <p className="text-sm text-white/70">The most honest status system yet—just directly buy your rank with zero pretense about "value" or "contribution"!</p>
                   </div>
                 </div>
-                
-                {/* Sources and Further Reading Section */}
-                <div className="mt-8 pt-6 border-t border-white/10">
-                  <h3 className="text-lg font-semibold mb-3 flex items-center">
-                    <BookOpen className="h-4 w-4 mr-2 text-royal-gold" />
-                    Sources & Further Reading
-                  </h3>
-                  <ul className="space-y-2 text-sm">
-                    <li className="flex items-center">
-                      <ExternalLink className="h-4 w-4 mr-2 text-blue-400" />
-                      <a href="https://www.businessofapps.com/data/most-expensive-youtube-videos/" className="text-blue-400 hover:underline">
-                        Business of Apps: Most Expensive YouTube Videos (2023)
-                      </a>
-                    </li>
-                    <li className="flex items-center">
-                      <ExternalLink className="h-4 w-4 mr-2 text-blue-400" />
-                      <a href="https://www.cnbc.com/2023/01/13/how-mrbeast-became-the-first-person-to-reach-100-million-youtube-subs.html" className="text-blue-400 hover:underline">
-                        CNBC: How MrBeast Became YouTube's First 100M Subscriber Creator
-                      </a>
-                    </li>
-                    <li className="flex items-center">
-                      <ExternalLink className="h-4 w-4 mr-2 text-blue-400" />
-                      <a href="https://www.nytimes.com/2022/05/29/style/youtube-mrbeast-philanthropy.html" className="text-blue-400 hover:underline">
-                        New York Times: The Philanthropy of MrBeast, YouTube's Top Creator
-                      </a>
-                    </li>
-                    <li className="flex items-center">
-                      <ExternalLink className="h-4 w-4 mr-2 text-blue-400" />
-                      <a href="https://www.forbes.com/sites/abrambrown/2022/09/23/beast-philanthropy-jimmy-donaldson-youtube-mrbeast-charity/" className="text-blue-400 hover:underline">
-                        Forbes: MrBeast's Charitable Revolution
-                      </a>
-                    </li>
-                    <li className="flex items-center">
-                      <ExternalLink className="h-4 w-4 mr-2 text-blue-400" />
-                      <a href="https://www.theatlantic.com/technology/archive/2018/05/inside-the-gilded-age-history-of-internet-moderation/555485/" className="text-blue-400 hover:underline">
-                        The Atlantic: Status in Digital Communities
-                      </a>
-                    </li>
-                  </ul>
+              </div>
+              
+              <MedievalFrame variant="royal" seal>
+                <div className="p-6 text-center">
+                  <h3 className="text-2xl font-bold mb-4 royal-gradient">The Circle of Status Continues</h3>
+                  <p className="mb-4">From Roman senators to NFT collectors, the tradition of spending vast sums to appear important has remained humanity's most consistent endeavor.</p>
+                  <p className="text-sm italic text-white/70">SpendThrone: At least we're honest about it.</p>
                 </div>
-                
-                <div className="mt-8 p-4 bg-green-900/10 rounded-lg border border-green-500/20">
-                  <p className="text-white font-bold flex items-center">
-                    <Award className="h-5 w-5 mr-2 text-green-400" />
-                    The MrBeast Effect on SpendThrone
-                  </p>
-                  <p className="mt-2 text-white/90">
-                    "What MrBeast did for YouTube, SpendThrone does for social status. We've created a platform where spending isn't just consumption—it's content, it's competition, it's community. In the attention economy, visible spending is the ultimate currency."
-                  </p>
-                  <p className="mt-1 text-white/70 italic text-right">
-                    — SpendThrone Founder
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
-      </Container>
-      
-      <Footer />
-    </>
+              </MedievalFrame>
+            </section>
+          </div>
+          
+          <RoyalDivider variant="quill" label="SPEND & ASCEND" color="gold" className="my-12" />
+          
+          <div className="text-center">
+            <h2 className="text-2xl font-bold mb-4">Join The Illustrious Ranks</h2>
+            <p className="text-white/70 mb-8">Why follow centuries of tradition when you can simply purchase your importance now?</p>
+            <div className="glass-morphism border-royal-gold/30 p-8 rounded-lg inline-block">
+              <p className="text-xl mb-4 font-medieval-title">Current Royal Exchange Rate:</p>
+              <p className="text-3xl font-bold royal-gradient">1 DOLLAR = 1 STATUS POINT</p>
+              <p className="text-sm mt-2 text-white/50">Simplicity befitting our absurd times.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </Shell>
   );
 };
 

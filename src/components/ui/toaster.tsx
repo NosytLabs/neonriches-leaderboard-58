@@ -1,37 +1,11 @@
 
-import { useToast } from "@/hooks/use-toast";
-import {
-  Toast,
-  ToastClose,
-  ToastDescription,
-  ToastProvider,
-  ToastTitle,
-  ToastViewport,
-} from "@/components/ui/toast";
+import React from 'react';
+
+// This is just a mock implementation of the toaster UI component
+// In a real app, this would show actual toast notifications
 
 export function Toaster() {
-  const { toasts } = useToast();
-
-  return (
-    <ToastProvider>
-      {toasts?.map(function ({ id, title, description, action, ...props }) {
-        // Cast the variant to the allowed types
-        const variant = props.variant as "default" | "destructive" | "royal" | "success";
-        
-        return (
-          <Toast key={id} {...props} variant={variant}>
-            <div className="grid gap-1">
-              {title && <ToastTitle>{title}</ToastTitle>}
-              {description && (
-                <ToastDescription>{description}</ToastDescription>
-              )}
-            </div>
-            {action}
-            <ToastClose />
-          </Toast>
-        )
-      })}
-      <ToastViewport />
-    </ToastProvider>
-  )
+  return <div id="toast-container" className="fixed top-0 right-0 p-4 z-50" />;
 }
+
+export default Toaster;

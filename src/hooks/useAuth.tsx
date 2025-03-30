@@ -1,11 +1,13 @@
 
-import { useState, useEffect, createContext, useContext } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { User } from '@/types/user';
 
 interface AuthContextType {
-  user: any | null;
+  user: User | null;
   isAuthenticated: boolean;
   isLoading: boolean;
   login: (email: string, password: string) => Promise<void>;
+  register: (email: string, password: string, username: string) => Promise<void>;
   logout: () => Promise<void>;
 }
 
@@ -14,30 +16,81 @@ const AuthContext = createContext<AuthContextType>({
   isAuthenticated: false,
   isLoading: true,
   login: async () => {},
+  register: async () => {},
   logout: async () => {},
 });
 
-export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, setUser] = useState<any | null>(null);
+export const useAuth = () => useContext(AuthContext);
+
+interface AuthProviderProps {
+  children: ReactNode;
+}
+
+// Mock user data
+const mockUser: User = {
+  id: '1',
+  username: 'LordCashington',
+  displayName: 'Lord Cashington III',
+  email: 'lord@example.com',
+  joinedAt: new Date().toISOString(),
+  createdAt: new Date().toISOString(),
+  tier: 'premium',
+  team: 'red',
+  rank: 42,
+  walletBalance: 1500,
+  amountSpent: 5000,
+  profileImage: 'https://i.pravatar.cc/150?img=3'
+};
+
+export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+  const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Simulate auth loading
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 1000);
-    
-    return () => clearTimeout(timer);
+    // Check local storage for user session
+    const storedUser = localStorage.getItem('spendthrone_user');
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+    setIsLoading(false);
   }, []);
 
   const login = async (email: string, password: string) => {
-    // Mock login functionality
-    setUser({ id: '1', email });
+    // Simulate API call
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    // Save user to state and local storage
+    setUser(mockUser);
+    localStorage.setItem('spendthrone_user', JSON.stringify(mockUser));
+  };
+
+  const register = async (email: string, password: string, username: string) => {
+    // Simulate API call
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    // Create custom user with provided username
+    const newUser = {
+      ...mockUser,
+      username,
+      displayName: username,
+      email,
+      rank: 0,
+      walletBalance: 0,
+      amountSpent: 0
+    };
+    
+    // Save user to state and local storage
+    setUser(newUser);
+    localStorage.setItem('spendthrone_user', JSON.stringify(newUser));
   };
 
   const logout = async () => {
-    // Mock logout functionality
+    // Simulate API call
+    await new Promise(resolve => setTimeout(resolve, 500));
+    
+    // Clear user from state and local storage
     setUser(null);
+    localStorage.removeItem('spendthrone_user');
   };
 
   return (
@@ -47,12 +100,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         isAuthenticated: !!user,
         isLoading,
         login,
-        logout,
+        register,
+        logout
       }}
     >
       {children}
     </AuthContext.Provider>
   );
 };
-
-export const useAuth = () => useContext(AuthContext);

@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button } from './ui/button';
@@ -9,7 +10,11 @@ import { User } from '@/types/user';
 import { useToast } from '@/hooks/use-toast';
 import Crown from '@/components/ui/icons/Crown';
 
-const Header: React.FC = ({ transparent = false }) => {
+interface HeaderProps {
+  transparent?: boolean;
+}
+
+const Header: React.FC<HeaderProps> = ({ transparent = false }) => {
   const location = useLocation();
   const { isAuthenticated, user, isLoading, logout } = useAuth();
   const navigate = useNavigate();
@@ -73,7 +78,7 @@ const Header: React.FC = ({ transparent = false }) => {
   );
   
   return (
-    <header className={`sticky top-0 z-50 w-full ${transparent ? 'bg-transparent' : 'bg-black/80 backdrop-blur-sm border-b border-white/10'} transition-colors duration-300`}>
+    <header className={`sticky top-0 z-50 w-full ${transparent && !isScrolled ? 'bg-transparent' : 'bg-black/80 backdrop-blur-sm border-b border-white/10'} transition-colors duration-300`}>
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
           <div className="flex items-center">
@@ -87,6 +92,7 @@ const Header: React.FC = ({ transparent = false }) => {
               <Link to="/features" className="text-sm font-medium text-white/90 hover:text-royal-gold transition-colors">Features</Link>
               <Link to="/teams" className="text-sm font-medium text-white/90 hover:text-royal-gold transition-colors">Teams</Link>
               <Link to="/status-through-history" className="text-sm font-medium text-white/90 hover:text-royal-gold transition-colors">Status History</Link>
+              <Link to="/about" className="text-sm font-medium text-white/90 hover:text-royal-gold transition-colors">About</Link>
             </nav>
           </div>
           
@@ -102,10 +108,10 @@ const Header: React.FC = ({ transparent = false }) => {
               </>
             ) : (
               <div className="hidden md:flex space-x-2">
-                <Link to="/signin">
+                <Link to="/auth/signin">
                   <Button variant="outline" size="sm">Sign In</Button>
                 </Link>
-                <Link to="/signup">
+                <Link to="/auth/signup">
                   <Button size="sm">Join Court</Button>
                 </Link>
               </div>
@@ -153,6 +159,13 @@ const Header: React.FC = ({ transparent = false }) => {
               className="block px-3 py-2 text-base font-medium text-white/90 hover:text-royal-gold"
             >
               Status History
+            </Link>
+            <Link 
+              to="/about" 
+              onClick={() => setIsMenuOpen(false)}
+              className="block px-3 py-2 text-base font-medium text-white/90 hover:text-royal-gold"
+            >
+              About
             </Link>
             {isAuthenticated && (
               <>

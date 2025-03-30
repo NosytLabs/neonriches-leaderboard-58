@@ -1,108 +1,128 @@
 
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { RoyalDivider } from '@/components/ui/royal-divider';
+import { useAuth } from '@/hooks/useAuth';
 import Shell from '@/components/Shell';
-import { useAuth } from '@/contexts/auth';
+import PageSEO from '@/components/common/PageSEO';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { Shield } from 'lucide-react';
+import RoyalDivider from '@/components/ui/royal-divider';
+import { Crown } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useToast } from '@/hooks/use-toast';
+import usePageTracking from '@/hooks/usePageTracking';
 
-const SignIn: React.FC = () => {
-  const navigate = useNavigate();
-  const { signin } = useAuth();
+const SignIn = () => {
+  usePageTracking();
+  const { login } = useAuth();
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
-  const [loading, setLoading] = React.useState(false);
-  
+  const [isLoading, setIsLoading] = React.useState(false);
+  const { toast } = useToast();
+  const navigate = useNavigate();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
+    
+    if (!email || !password) {
+      toast({
+        title: "Missing credentials",
+        description: "Please provide both email and password to enter the royal court.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    setIsLoading(true);
     
     try {
-      // Simulate signin
-      console.log('Signin with:', { email, password });
-      
-      // In a real app, we would call the signin function
-      // await signin(email, password);
-      
-      // Redirect to dashboard or home
-      navigate('/dashboard');
+      await login(email, password);
+      toast({
+        title: "Welcome back, noble!",
+        description: "The court welcomes your return.",
+      });
+      navigate('/profile');
     } catch (error) {
-      console.error('Signin failed:', error);
+      toast({
+        title: "Access denied",
+        description: "The royal guards do not recognize your credentials.",
+        variant: "destructive",
+      });
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
-  
+
   return (
     <Shell>
-      <div className="flex items-center justify-center min-h-[80vh] bg-background p-4">
-        <Card className="w-full max-w-md glass-morphism border-white/10">
-          <CardHeader>
-            <div className="flex items-center justify-center mb-2">
-              <Shield className="h-6 w-6 text-royal-gold mr-2" />
-              <CardTitle className="text-2xl font-royal tracking-wide">Royal Court Access</CardTitle>
-            </div>
-            <RoyalDivider variant="line" className="my-2" />
-            <CardDescription className="text-center">
-              Enter your credentials to access the royal leaderboard
-            </CardDescription>
-          </CardHeader>
+      <PageSEO 
+        title="Sign In to Your Noble Account" 
+        description="Return to the royal court and continue your ascension through the ranks. Your throne awaits."
+      />
+      
+      <div className="container mx-auto px-4 py-12">
+        <div className="max-w-md mx-auto">
+          <div className="text-center mb-8">
+            <Crown className="h-12 w-12 text-royal-gold mx-auto mb-4" />
+            <h1 className="text-3xl font-bold royal-gradient">Return to Court</h1>
+            <p className="text-white/70 mt-2">Resume your noble ascension</p>
+          </div>
           
-          <CardContent className="space-y-4">
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="email">Royal Decree Address</Label>
-                <Input 
-                  id="email" 
-                  type="email" 
-                  placeholder="your@royal-email.com"
-                  value={email} 
-                  onChange={(e) => setEmail(e.target.value)} 
-                  required 
-                />
+          <Card className="glass-morphism border-white/10">
+            <CardHeader>
+              <CardTitle>Royal Authentication</CardTitle>
+              <CardDescription>Enter your credentials to access your throne</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={handleSubmit}>
+                <div className="grid gap-4">
+                  <div className="grid gap-2">
+                    <Label htmlFor="email">Email</Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="noble@example.com"
+                    />
+                  </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor="password">Password</Label>
+                    <Input
+                      id="password"
+                      type="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      placeholder="Your secret royal code"
+                    />
+                  </div>
+                  <Button type="submit" className="w-full" disabled={isLoading}>
+                    {isLoading ? "Verifying..." : "Enter the Court"}
+                  </Button>
+                </div>
+              </form>
+            </CardContent>
+            <CardFooter className="flex flex-col space-y-4">
+              <RoyalDivider variant="line" />
+              <div className="text-center text-sm text-white/70">
+                <p>Not yet a member of the nobility?</p>
+                <Link to="/auth/signup" className="text-royal-gold hover:underline">
+                  Purchase Your Title
+                </Link>
               </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="password">Secret Password</Label>
-                <Input 
-                  id="password" 
-                  type="password" 
-                  placeholder="Your royal secret"
-                  value={password} 
-                  onChange={(e) => setPassword(e.target.value)} 
-                  required 
-                />
-              </div>
-              
-              <Button 
-                type="submit" 
-                className="w-full bg-royal-gold hover:bg-royal-gold/90 text-black"
-                disabled={loading}
-              >
-                {loading ? 'Verifying Royal Seal...' : 'Enter the Court'}
-              </Button>
-            </form>
-            
-            <RoyalDivider variant="fancy" />
-            
-            <div className="text-center">
-              <p className="mb-4">Don't have a royal account yet?</p>
-              <Button variant="outline" className="w-full" asChild>
-                <Link to="/signup">Create Account</Link>
-              </Button>
-            </div>
-          </CardContent>
+            </CardFooter>
+          </Card>
           
-          <CardFooter className="flex justify-center">
-            <Button variant="link" asChild>
-              <Link to="/">Return to the Royal Court</Link>
-            </Button>
-          </CardFooter>
-        </Card>
+          <div className="text-center mt-8 text-sm text-white/50">
+            <p>By signing in, you agree to our ridiculous</p>
+            <div className="flex justify-center space-x-2">
+              <Link to="/terms" className="text-royal-gold/70 hover:text-royal-gold">Terms of Service</Link>
+              <span>and</span>
+              <Link to="/privacy" className="text-royal-gold/70 hover:text-royal-gold">Privacy Policy</Link>
+            </div>
+          </div>
+        </div>
       </div>
     </Shell>
   );

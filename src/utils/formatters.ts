@@ -1,75 +1,40 @@
 
 /**
- * Format a number as a dollar amount
+ * Formats a number as a currency string
+ * @param amount Number to format as currency
+ * @param currency Currency code (default: USD)
+ * @returns Formatted currency string
  */
-export const formatCurrency = (amount: number): string => {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
+export const formatCurrency = (amount: number, currency = 'USD'): string => {
+  return amount.toLocaleString('en-US', {
+    style: 'decimal',
     minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(amount);
+    maximumFractionDigits: 0
+  });
 };
 
 /**
- * Format a dollar amount with compact notation (e.g., $1K, $1M)
+ * Formats a number as a compact currency representation (e.g., $1.2K, $5M)
  */
-export const formatDollarAmount = (amount: number): string => {
-  if (amount >= 1000000) {
-    return `$${(amount / 1000000).toFixed(1)}M`;
-  } else if (amount >= 1000) {
-    return `$${(amount / 1000).toFixed(1)}K`;
-  } else {
-    return `$${amount}`;
+export const formatCompactCurrency = (amount: number): string => {
+  if (amount >= 1_000_000) {
+    return `$${(amount / 1_000_000).toFixed(1)}M`;
+  } else if (amount >= 1_000) {
+    return `$${(amount / 1_000).toFixed(1)}K`;
   }
+  return `$${amount}`;
 };
 
 /**
- * Format a number with compact notation (e.g., 1K, 1M)
+ * Formats a date as a relative time (e.g., "2 days ago")
  */
-export const formatCompactNumber = (num: number): string => {
-  return new Intl.NumberFormat('en-US', {
-    notation: 'compact',
-    compactDisplay: 'short',
-  }).format(num);
-};
-
-/**
- * Format an address to display first and last few characters with ellipsis in between
- */
-export const formatAddress = (address: string, firstChars: number = 4, lastChars: number = 4): string => {
-  if (!address) return '';
-  if (address.length <= firstChars + lastChars) return address;
-  
-  return `${address.slice(0, firstChars)}...${address.slice(-lastChars)}`;
-};
-
-/**
- * Format a date string
- */
-export const formatDate = (dateString: string): string => {
-  if (!dateString) return '';
-  
-  const date = new Date(dateString);
-  return new Intl.DateTimeFormat('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  }).format(date);
-};
-
-/**
- * Format a date to a relative time (e.g., "2 days ago")
- */
-export const formatRelativeTime = (dateString: string): string => {
-  if (!dateString) return '';
-  
-  const date = new Date(dateString);
+export const formatRelativeTime = (date: string | Date): string => {
   const now = new Date();
-  const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+  const then = new Date(date);
+  const diffInSeconds = Math.floor((now.getTime() - then.getTime()) / 1000);
   
   if (diffInSeconds < 60) {
-    return `${diffInSeconds} second${diffInSeconds !== 1 ? 's' : ''} ago`;
+    return 'just now';
   }
   
   const diffInMinutes = Math.floor(diffInSeconds / 60);
@@ -94,4 +59,34 @@ export const formatRelativeTime = (dateString: string): string => {
   
   const diffInYears = Math.floor(diffInMonths / 12);
   return `${diffInYears} year${diffInYears !== 1 ? 's' : ''} ago`;
+};
+
+/**
+ * Format a number with appropriate suffix (e.g., 1st, 2nd, 3rd)
+ */
+export const formatOrdinal = (n: number): string => {
+  const s = ['th', 'st', 'nd', 'rd'];
+  const v = n % 100;
+  return n + (s[(v - 20) % 10] || s[v] || s[0]);
+};
+
+/**
+ * Format a rank with special coloring and naming based on position
+ */
+export const formatRankTitle = (rank: number): { title: string, color: string } => {
+  if (rank === 1) {
+    return { title: 'Sovereign', color: 'text-royal-gold' };
+  } else if (rank === 2) {
+    return { title: 'Grand Duke', color: 'text-amber-300' };
+  } else if (rank === 3) {
+    return { title: 'High Lord', color: 'text-zinc-300' };
+  } else if (rank <= 10) {
+    return { title: 'Noble Lord', color: 'text-royal-purple' };
+  } else if (rank <= 50) {
+    return { title: 'Lesser Lord', color: 'text-royal-navy' };
+  } else if (rank <= 100) {
+    return { title: 'Knight', color: 'text-royal-crimson' };
+  } else {
+    return { title: 'Commoner', color: 'text-gray-400' };
+  }
 };
