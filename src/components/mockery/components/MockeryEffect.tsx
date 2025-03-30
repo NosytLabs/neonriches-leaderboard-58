@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MockeryAction } from '@/types/mockery';
-import { renderMockeryIcon } from '@/utils/mockeryUtils';
+import { renderMockeryIcon } from '@/utils/mockeryIcons';
 import { getMockeryActionIcon } from '@/utils/mockery/mockery-icons';
 
 interface MockeryEffectProps {
