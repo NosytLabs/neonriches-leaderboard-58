@@ -1,299 +1,145 @@
 
-:root {
-  /* Core Royal Colors */
-  --royal-gold: rgb(212, 175, 55);
-  --royal-gold-bright: rgb(255, 215, 0);
-  --royal-gold-dark: rgb(184, 134, 11);
-  
-  --royal-crimson: rgb(155, 35, 53);
-  --royal-crimson-bright: rgb(196, 30, 58);
-  --royal-crimson-dark: rgb(128, 0, 32);
-  
-  --royal-navy: rgb(31, 71, 136);
-  --royal-navy-bright: rgb(42, 94, 161);
-  --royal-navy-dark: rgb(13, 43, 84);
-  
-  --royal-purple: rgb(106, 13, 173);
-  --royal-purple-bright: rgb(138, 43, 226);
-  --royal-purple-dark: rgb(75, 0, 130);
-  
-  --royal-emerald: rgb(44, 120, 74);
-  --royal-emerald-bright: rgb(72, 187, 120);
-  --royal-emerald-dark: rgb(30, 94, 56);
-  
-  /* Background Colors */
-  --bg-dark: rgb(13, 13, 32);
-  --bg-dark-lighter: rgb(20, 20, 40);
-  --bg-dark-lightest: rgb(30, 30, 60);
-  
-  /* Text Colors */
-  --text-primary: rgb(255, 255, 255);
-  --text-secondary: rgba(255, 255, 255, 0.7);
-  --text-muted: rgba(255, 255, 255, 0.5);
-  
-  /* Team Colors */
-  --team-red: var(--royal-crimson);
-  --team-green: var(--royal-gold);
-  --team-blue: var(--royal-navy);
-  
-  /* Certificate Colors */
-  --certificate-red: var(--royal-crimson);
-  --certificate-green: var(--royal-gold);
-  --certificate-blue: var(--royal-navy);
-  --certificate-purple: var(--royal-purple);
-  --certificate-parchment: rgb(245, 230, 202);
-  --certificate-ink: rgb(51, 51, 51);
-  
-  /* Tier Colors */
-  --tier-whale: var(--royal-purple);
-  --tier-shark: var(--royal-crimson);
-  --tier-dolphin: var(--royal-navy);
-  --tier-fish: rgb(70, 130, 180);
-  --tier-octopus: rgb(128, 0, 128);
-  --tier-crab: rgb(205, 127, 50);
-  
-  /* Rank Colors */
-  --rank-1: var(--royal-gold);
-  --rank-2: rgb(192, 192, 192);
-  --rank-3: rgb(205, 127, 50);
-  --rank-top-10: var(--royal-purple);
-  --rank-top-50: rgb(70, 130, 180);
-  --rank-top-100: rgb(46, 139, 87);
-  
-  /* Gradients */
-  --gradient-royal-gold: linear-gradient(
-    to right,
-    var(--royal-gold-dark) 0%,
-    var(--royal-gold) 50%,
-    var(--royal-gold-bright) 100%
-  );
-  
-  --gradient-royal-crimson: linear-gradient(
-    to right,
-    var(--royal-crimson-dark) 0%,
-    var(--royal-crimson) 50%,
-    var(--royal-crimson-bright) 100%
-  );
-  
-  --gradient-royal-navy: linear-gradient(
-    to right,
-    var(--royal-navy-dark) 0%,
-    var(--royal-navy) 50%,
-    var(--royal-navy-bright) 100%
-  );
-  
-  --gradient-royal-purple: linear-gradient(
-    to right,
-    var(--royal-purple-dark) 0%,
-    var(--royal-purple) 50%,
-    var(--royal-purple-bright) 100%
-  );
-  
-  --gradient-royal-emerald: linear-gradient(
-    to right,
-    var(--royal-emerald-dark) 0%,
-    var(--royal-emerald) 50%,
-    var(--royal-emerald-bright) 100%
-  );
-  
-  --gradient-bg: linear-gradient(
-    135deg,
-    var(--bg-dark) 0%,
-    var(--bg-dark-lighter) 50%,
-    var(--bg-dark-lightest) 100%
-  );
-  
-  /* Shadows */
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  --shadow-gold: 0 0 15px rgba(212, 175, 55, 0.3);
-  --shadow-crimson: 0 0 15px rgba(155, 35, 53, 0.3);
-  --shadow-navy: 0 0 15px rgba(31, 71, 136, 0.3);
-  
-  /* Certificate Shadows */
-  --shadow-certificate-gold: 0 0 20px rgba(212, 175, 55, 0.5);
-  --shadow-certificate-silver: 0 0 15px rgba(192, 192, 192, 0.5);
-  --shadow-certificate-bronze: 0 0 15px rgba(205, 127, 50, 0.5);
-  --shadow-certificate-royal: 0 0 15px rgba(106, 13, 173, 0.5);
-  
-  /* Glass Effects */
-  --glass-bg: rgba(20, 20, 40, 0.6);
-  --glass-border: rgba(255, 255, 255, 0.1);
-  --glass-blur: 8px;
-  
-  /* Animations */
-  --transition-fast: 150ms;
-  --transition-normal: 300ms;
-  --transition-slow: 500ms;
-  
-  /* Z-indices */
-  --z-dropdown: 10;
-  --z-sticky: 20;
-  --z-fixed: 30;
-  --z-modal: 40;
-  --z-popover: 50;
-  --z-tooltip: 60;
-  
-  /* Border Radius */
-  --radius-sm: 0.25rem;
-  --radius-md: 0.5rem;
-  --radius-lg: 0.75rem;
-  --radius-xl: 1rem;
-  --radius-full: 9999px;
-}
+/* Royal Theme */
 
-/* Dark mode (default) */
-.dark, :root {
-  color-scheme: dark;
-  --bg-body: var(--bg-dark);
-  --text-body: var(--text-primary);
-}
-
-/* Light mode */
-.light {
-  color-scheme: light;
-  --bg-body: rgb(248, 250, 252);
-  --text-body: rgb(15, 23, 42);
-  --text-muted: rgba(15, 23, 42, 0.65);
-  --glass-bg: rgba(255, 255, 255, 0.7);
-}
-
-body {
-  background-color: var(--bg-body);
-  color: var(--text-body);
-}
-
-/* Royal Gradients */
-.royal-gold-gradient {
-  background: var(--gradient-royal-gold);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+/* Base Styles */
+.royal-gradient {
+  @apply bg-gradient-to-r from-royal-gold via-amber-500 to-royal-gold bg-clip-text text-transparent;
 }
 
 .royal-crimson-gradient {
-  background: var(--gradient-royal-crimson);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  @apply bg-gradient-to-r from-royal-crimson via-red-600 to-royal-crimson bg-clip-text text-transparent;
 }
 
 .royal-navy-gradient {
-  background: var(--gradient-royal-navy);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  @apply bg-gradient-to-r from-royal-navy via-blue-600 to-royal-navy bg-clip-text text-transparent;
 }
 
 .royal-purple-gradient {
-  background: var(--gradient-royal-purple);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  @apply bg-gradient-to-r from-royal-purple via-purple-600 to-royal-purple bg-clip-text text-transparent;
 }
 
-.royal-emerald-gradient {
-  background: var(--gradient-royal-emerald);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+.font-royal {
+  @apply font-medieval tracking-wide;
 }
 
-/* Team Color Text Classes */
+/* Buttons */
+.royal-button {
+  @apply relative overflow-hidden transition-all duration-300;
+}
+
+.royal-button::before {
+  content: '';
+  @apply absolute inset-0 bg-gradient-to-r from-royal-gold via-amber-600 to-royal-gold bg-[length:200%_100%] animate-royal-shine opacity-0 transition-opacity duration-300;
+}
+
+.royal-button:hover::before {
+  @apply opacity-100;
+}
+
+.royal-button span {
+  @apply relative z-10;
+}
+
+/* Animations */
+.animate-royal-entrance {
+  animation: royal-entrance 0.8s ease-out forwards;
+}
+
+.animation-delay-100 {
+  animation-delay: 0.1s;
+}
+
+.animation-delay-200 {
+  animation-delay: 0.2s;
+}
+
+.animation-delay-300 {
+  animation-delay: 0.3s;
+}
+
+.animation-delay-400 {
+  animation-delay: 0.4s;
+}
+
+.animation-delay-500 {
+  animation-delay: 0.5s;
+}
+
+.animation-delay-600 {
+  animation-delay: 0.6s;
+}
+
+@keyframes royal-entrance {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-floating-coin {
+  animation: float-coin 6s ease-in-out infinite;
+}
+
+@keyframes float-coin {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.7;
+  }
+  50% {
+    transform: translateY(-20px) rotate(180deg);
+    opacity: 0.3;
+  }
+  90% {
+    opacity: 0.1;
+  }
+}
+
+/* Background Utilities */
+.bg-radial-gradient {
+  background: radial-gradient(circle, rgba(0,0,0,0) 0%, rgba(0,0,0,0.8) 100%);
+}
+
+.bg-royal-dark {
+  background-color: #0A0A1A;
+}
+
+.bg-royal-darker {
+  background-color: #050510;
+}
+
+/* Team colors */
 .text-team-red {
-  color: var(--royal-crimson);
+  @apply text-red-500;
 }
 
 .text-team-green {
-  color: var(--royal-gold);
+  @apply text-emerald-500;
 }
 
 .text-team-blue {
-  color: var(--royal-navy);
+  @apply text-blue-500;
 }
 
-/* Team Color Background Classes */
 .bg-team-red {
-  background-color: var(--royal-crimson);
+  @apply bg-red-500;
 }
 
 .bg-team-green {
-  background-color: var(--royal-gold);
+  @apply bg-emerald-500;
 }
 
 .bg-team-blue {
-  background-color: var(--royal-navy);
+  @apply bg-blue-500;
 }
 
-/* Team Color Border Classes */
-.border-team-red {
-  border-color: var(--royal-crimson);
-}
-
-.border-team-green {
-  border-color: var(--royal-gold);
-}
-
-.border-team-blue {
-  border-color: var(--royal-navy);
-}
-
-/* Certificate-specific styles */
-.certificate-text-red {
-  color: var(--royal-crimson);
-}
-
-.certificate-text-green {
-  color: var(--royal-gold);
-}
-
-.certificate-text-blue {
-  color: var(--royal-navy);
-}
-
-.certificate-bg-red {
-  background-color: var(--certificate-parchment);
-  border-color: var(--royal-crimson);
-}
-
-.certificate-bg-green {
-  background-color: var(--certificate-parchment);
-  border-color: var(--royal-gold);
-}
-
-.certificate-bg-blue {
-  background-color: var(--certificate-parchment);
-  border-color: var(--royal-navy);
-}
-
-/* Rank badge styles */
-.rank-badge-1 {
-  background-color: var(--royal-gold);
-  color: black;
-}
-
-.rank-badge-2 {
-  background-color: rgb(192, 192, 192);
-  color: black;
-}
-
-.rank-badge-3 {
-  background-color: rgb(205, 127, 50);
-  color: white;
-}
-
-.rank-badge-top-10 {
-  background-color: var(--royal-purple);
-  color: white;
-}
-
-.rank-badge-top-50 {
-  background-color: var(--royal-navy);
-  color: white;
-}
-
-.rank-badge-top-100 {
-  background-color: var(--royal-emerald);
-  color: white;
+/* Glass effects */
+.glass-morphism {
+  @apply bg-black/30 backdrop-blur-sm border border-white/10 rounded-lg shadow-lg;
 }

@@ -1,290 +1,589 @@
 
-import React, { useState, useEffect } from 'react';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
-import { useAuth } from '@/contexts/auth';
-import TeamOverview from '@/components/teams/TeamOverview';
-import TeamSelection from '@/components/teams/TeamSelection';
+import React, { useState } from 'react';
+import { motion } from 'framer-motion';
+import Layout from '@/components/layouts/Layout';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Flame, Coins, CreditCard, Scroll, Trophy, Users, Shield, Crown, ArrowRight } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useAuth } from '@/contexts';
+import { Separator } from '@/components/ui/separator';
+import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
-import Loading from '@/components/Loading';
-import { TeamColor } from '@/types/teams';
-import { Scroll, Crown, Coins, CreditCard, Flame, Trophy, ShieldAlert, Lock } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
-import { getTeamNFTJoke, getTeamCryptoRoast, getTeamSecurityGuarantee } from '@/utils/teamUtils';
 
-const Teams = () => {
-  const { user, isLoading, updateUserProfile } = useAuth();
+type TeamColor = 'red' | 'green' | 'blue';
+
+interface TeamInfo {
+  id: TeamColor;
+  name: string;
+  icon: React.ReactNode;
+  color: string;
+  bgColor: string;
+  description: string;
+  motto: string;
+  benefit: string;
+  memberCount: number;
+  totalSpent: number;
+  absurdStat: string;
+}
+
+// Helper functions for team data
+const getTeamMotto = (team: TeamColor): string => {
+  switch (team) {
+    case 'red':
+      return '"Through Fire and Gold, We Reign Supreme!"';
+    case 'green':
+      return '"Our Wealth Grows Like the Ancient Forest!"';
+    case 'blue':
+      return '"Deep As the Ocean, Vast As Our Coffers!"';
+    default:
+      return '';
+  }
+};
+
+const getTeamBenefit = (team: TeamColor): string => {
+  switch (team) {
+    case 'red':
+      return '10% boost to all mockery effects and shame actions';
+    case 'green':
+      return '5% discount on all profile boost purchases';
+    case 'blue':
+      return 'Special team-colored profile frames and effects';
+    default:
+      return '';
+  }
+};
+
+const getTeamAbsurdStat = (team: TeamColor): string => {
+  switch (team) {
+    case 'red':
+      return 'Collectively burned 15,482 rival banners';
+    case 'green':
+      return 'Planted 8,241 money trees in the royal garden';
+    case 'blue':
+      return 'Filled 3 royal pools with gold coins for swimming';
+    default:
+      return '';
+  }
+};
+
+// Team data
+const teams: TeamInfo[] = [
+  {
+    id: 'red',
+    name: 'House Crimson',
+    icon: <Flame className="h-8 w-8" />,
+    color: 'text-team-red',
+    bgColor: 'bg-team-red',
+    description: 'The house of ambition and aggression. Crimson nobles are competitive and fierce, always seeking to dominate the leaderboard through aggressive spending.',
+    motto: getTeamMotto('red'),
+    benefit: getTeamBenefit('red'),
+    memberCount: 425,
+    totalSpent: 280000,
+    absurdStat: getTeamAbsurdStat('red')
+  },
+  {
+    id: 'green',
+    name: 'House Emerald',
+    icon: <Shield className="h-8 w-8" />,
+    color: 'text-team-green',
+    bgColor: 'bg-team-green',
+    description: 'The house of growth and prosperity. Emerald nobles value strategic spending and long-term investments in their royal status.',
+    motto: getTeamMotto('green'),
+    benefit: getTeamBenefit('green'),
+    memberCount: 380,
+    totalSpent: 240000,
+    absurdStat: getTeamAbsurdStat('green')
+  },
+  {
+    id: 'blue',
+    name: 'House Sapphire',
+    icon: <CreditCard className="h-8 w-8" />,
+    color: 'text-team-blue',
+    bgColor: 'bg-team-blue',
+    description: 'The house of loyalty and tradition. Sapphire nobles are steadfast in their commitment to maintaining their noble status through consistent spending.',
+    motto: getTeamMotto('blue'),
+    benefit: getTeamBenefit('blue'),
+    memberCount: 410,
+    totalSpent: 260000,
+    absurdStat: getTeamAbsurdStat('blue')
+  }
+];
+
+interface TeamSelectionProps {
+  teams: TeamInfo[];
+  user?: any;
+  onTeamSelect: (team: TeamColor) => Promise<boolean>;
+}
+
+const TeamSelection: React.FC<TeamSelectionProps> = ({ teams, user, onTeamSelect }) => {
+  const [selectedTeam, setSelectedTeam] = useState<TeamColor | null>(null);
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
-  const [activeTab, setActiveTab] = useState(user?.team ? 'overview' : 'selection');
   
-  useEffect(() => {
-    if (user?.team) {
-      setActiveTab('overview');
-    } else {
-      setActiveTab('selection');
-    }
-  }, [user?.team]);
-  
-  const handleTeamSelect = async (team: TeamColor): Promise<boolean> => {
+  const handleSelectTeam = async () => {
+    if (!selectedTeam) return;
+    
+    setIsLoading(true);
     try {
-      await updateUserProfile({ team });
-      toast({
-        title: "Faction Joined!",
-        description: `Your financial allegiance to the ${getTeamFullName(team)} has been recorded in our glorious ledger of paying customers!`,
-      });
-      setActiveTab('overview');
-      return true;
+      const success = await onTeamSelect(selectedTeam);
+      if (success) {
+        toast({
+          title: `Welcome to House ${selectedTeam === 'red' ? 'Crimson' : selectedTeam === 'green' ? 'Emerald' : 'Sapphire'}!`,
+          description: `You have successfully joined your new royal house.`,
+          variant: "success",
+        });
+        setIsConfirmOpen(false);
+      }
     } catch (error) {
-      console.error("Error updating team:", error);
       toast({
-        title: "Failed to join faction",
-        description: "We couldn't process your allegiance. Our blockchain validators are probably on lunch break.",
-        variant: "destructive"
+        title: "Failed to join team",
+        description: "There was an error joining the team. Please try again.",
+        variant: "destructive",
       });
-      return false;
+    } finally {
+      setIsLoading(false);
     }
   };
-  
-  const getTeamFullName = (team: TeamColor): string => {
-    switch(team) {
-      case 'red': return 'Royal Order of Reckless Spending';
-      case 'green': return 'Emerald Exchequer Cabaret';
-      case 'blue': return 'Cobalt Credit Cartel';
-      default: return 'Unknown Faction';
-    }
-  }
-  
-  const getTeamShortName = (team: TeamColor): string => {
-    switch(team) {
-      case 'red': return 'RORS';
-      case 'green': return 'EEC';
-      case 'blue': return 'CCC';
-      default: return 'Unknown';
-    }
-  }
-
-  // Generate absurd team statistics
-  const getAbsurdTeamStat = (team: string): string => {
-    switch(team) {
-      case 'red': 
-        return 'Members have collectively clicked "Purchase" 8,742 times before checking their bank balance';
-      case 'green': 
-        return 'Spend an average of 3.7 hours per week creating spreadsheets to justify their spending';
-      case 'blue': 
-        return '97% claim to have a "system" for optimal spending, yet none can explain what it is';
-      default: 
-        return '';
-    }
-  };
-  
-  if (isLoading) {
-    return <Loading />;
-  }
   
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <title>Financial Factions | SpendThrone</title>
+    <div className="space-y-8">
+      <div className="text-center">
+        <h2 className="text-3xl font-bold royal-gradient mb-3">Choose Your Royal House</h2>
+        <p className="text-white/70 max-w-2xl mx-auto">
+          Pledge your allegiance to one of three noble houses, each with their own unique benefits and collective goals.
+        </p>
+      </div>
       
-      <Header />
-      
-      <main className="container mx-auto px-4 py-10 pt-24">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-8">
-            <h1 className="text-3xl font-medieval mb-4">Financial Factions of the Realm</h1>
-            <div className="flex items-center justify-center gap-2 mb-4">
-              <Scroll className="h-5 w-5 text-royal-gold" />
-              <span className="text-lg font-medium text-royal-gold">The Completely Meaningless Leaderboard</span>
-            </div>
-            <p className="text-white/70 max-w-2xl mx-auto">
-              Join a spending faction and compete in a kingdom-wide competition for wealth, mockery, and digital significance that means absolutely nothing in the real world.
-            </p>
-          </div>
-        
-          <div className="p-4 glass-morphism border-royal-gold/20 rounded-lg mb-8">
-            <div className="flex items-start">
-              <Scroll className="text-royal-gold h-6 w-6 mr-3 mt-1 flex-shrink-0" />
-              <div>
-                <h3 className="text-royal-gold text-lg font-medium mb-2">A Message from the Royal Treasury</h3>
-                <p className="text-white/80 italic">
-                  "Our digital kingdom is protected by an impenetrable moat of encryption and a drawbridge of two-factor authentication. Just like medieval castles, which were famously never breached, your data is absolutely secure. Disclaimer: actual security may vary, much like the value of your contributions."
-                </p>
-                <p className="text-white/60 text-sm mt-2">
-                  <span className="text-amber-400">*</span> Let's be honest, you're not here for the benefits but for the same reason people buy NFTs of rocks: digital bragging rights.
-                </p>
-              </div>
-            </div>
-          </div>
-          
-          <Card className="glass-morphism border-white/10">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {teams.map((team) => (
+          <motion.div
+            key={team.id}
+            className={cn(
+              "glass-morphism border rounded-xl overflow-hidden transition-all duration-300",
+              selectedTeam === team.id 
+                ? `border-${team.id === 'red' ? 'team-red' : team.id === 'green' ? 'team-green' : 'team-blue'}/70` 
+                : "border-white/10 hover:border-white/30"
+            )}
+            whileHover={{ y: -5 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <div className={cn(
+              "h-2",
+              team.id === 'red' ? 'bg-team-red' : team.id === 'green' ? 'bg-team-green' : 'bg-team-blue'
+            )} />
+            
             <CardHeader>
-              <CardTitle className="text-2xl font-medieval">Choose Your Financial Folly</CardTitle>
-              <CardDescription>
-                Align yourself with one of the three factions competing for monetary supremacy and digital bragging rights. None of this matters in the slightest, but neither does most of what you spend money on anyway.
-              </CardDescription>
+              <div className="flex items-center space-x-3">
+                <div className={cn(
+                  "w-10 h-10 rounded-full flex items-center justify-center",
+                  team.id === 'red' ? 'bg-team-red/20' : team.id === 'green' ? 'bg-team-green/20' : 'bg-team-blue/20'
+                )}>
+                  {team.icon}
+                </div>
+                <div>
+                  <CardTitle className={cn(
+                    team.id === 'red' ? 'text-team-red' : team.id === 'green' ? 'text-team-green' : 'text-team-blue'
+                  )}>
+                    {team.name}
+                  </CardTitle>
+                  <CardDescription>
+                    {team.memberCount} members
+                  </CardDescription>
+                </div>
+              </div>
             </CardHeader>
             
-            <CardContent>
-              <Tabs value={activeTab} onValueChange={setActiveTab}>
-                <TabsList className="glass-morphism mb-6">
-                  <TabsTrigger value="overview" disabled={!user?.team}>Faction Overview</TabsTrigger>
-                  <TabsTrigger value="selection">Choose Your Faction</TabsTrigger>
-                  <TabsTrigger value="leaderboard">Faction Rankings</TabsTrigger>
-                </TabsList>
-                
-                <TabsContent value="overview">
-                  {user && <TeamOverview user={user} />}
-                </TabsContent>
-                
-                <TabsContent value="selection">
-                  {user && (
-                    <TeamSelection 
-                      user={user}
-                      onTeamSelect={handleTeamSelect}
-                    />
-                  )}
-                </TabsContent>
-                
-                <TabsContent value="leaderboard">
-                  <div className="text-center py-6">
-                    <h3 className="text-xl font-medieval mb-2">Faction Spending Rankings</h3>
-                    <p className="text-white/70 mb-6">The current standings in the battle for who can waste the most money on digital prestige</p>
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                      {/* RORS */}
-                      <Card className="glass-morphism border-team-red/30 bg-team-red/5">
-                        <CardHeader className="pb-2">
-                          <div className="flex justify-between items-center">
-                            <CardTitle className="text-team-red flex items-center gap-2">
-                              <Flame className="h-5 w-5" />
-                              RORS
-                            </CardTitle>
-                            <Badge variant="outline" className="bg-red-500/10 border-red-500/30 text-red-400">
-                              #1
-                            </Badge>
-                          </div>
-                          <CardDescription>
-                            Total Squandered: $254,387
-                          </CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                          <p className="text-xs text-white/60 italic mb-3">"Buy First, Think Never"</p>
-                          <div className="text-sm text-white/80 glass-morphism border-white/5 p-3 rounded-lg">
-                            <p className="mb-2">Absurd Faction Statistic:</p>
-                            <p className="text-xs text-white/60 italic">
-                              {getAbsurdTeamStat('red')}
-                            </p>
-                          </div>
-                          <div className="mt-3 p-3 glass-morphism border-white/5 rounded-lg">
-                            <div className="flex items-center gap-2">
-                              <Lock className="h-4 w-4 text-red-400" />
-                              <p className="text-xs text-white/80 font-medium">Security Guarantee:</p>
-                            </div>
-                            <p className="text-xs text-white/60 mt-1 italic">
-                              {getTeamSecurityGuarantee('red').substring(0, 80)}...
-                            </p>
-                          </div>
-                          <div className="text-sm text-white/60 mt-3">362 members</div>
-                        </CardContent>
-                      </Card>
-                      
-                      {/* EEC */}
-                      <Card className="glass-morphism border-team-green/30 bg-team-green/5">
-                        <CardHeader className="pb-2">
-                          <div className="flex justify-between items-center">
-                            <CardTitle className="text-team-green flex items-center gap-2">
-                              <Coins className="h-5 w-5" />
-                              EEC
-                            </CardTitle>
-                            <Badge variant="outline" className="bg-green-500/10 border-green-500/30 text-green-400">
-                              #2
-                            </Badge>
-                          </div>
-                          <CardDescription>
-                            Total Squandered: $196,502
-                          </CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                          <p className="text-xs text-white/60 italic mb-3">"Wealth So Strategic, It's Almost Pathetic"</p>
-                          <div className="text-sm text-white/80 glass-morphism border-white/5 p-3 rounded-lg">
-                            <p className="mb-2">Absurd Faction Statistic:</p>
-                            <p className="text-xs text-white/60 italic">
-                              {getAbsurdTeamStat('green')}
-                            </p>
-                          </div>
-                          <div className="mt-3 p-3 glass-morphism border-white/5 rounded-lg">
-                            <div className="flex items-center gap-2">
-                              <ShieldAlert className="h-4 w-4 text-green-400" />
-                              <p className="text-xs text-white/80 font-medium">NFT Investment Strategy:</p>
-                            </div>
-                            <p className="text-xs text-white/60 mt-1 italic">
-                              {getTeamNFTJoke('green').substring(0, 80)}...
-                            </p>
-                          </div>
-                          <div className="text-sm text-white/60 mt-3">285 members</div>
-                        </CardContent>
-                      </Card>
-                      
-                      {/* CCC */}
-                      <Card className="glass-morphism border-team-blue/30 bg-team-blue/5">
-                        <CardHeader className="pb-2">
-                          <div className="flex justify-between items-center">
-                            <CardTitle className="text-team-blue flex items-center gap-2">
-                              <CreditCard className="h-5 w-5" />
-                              CCC
-                            </CardTitle>
-                            <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-400">
-                              #3
-                            </Badge>
-                          </div>
-                          <CardDescription>
-                            Total Squandered: $167,935
-                          </CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                          <p className="text-xs text-white/60 italic mb-3">"Patience in Spending, Unbridled in Pretending"</p>
-                          <div className="text-sm text-white/80 glass-morphism border-white/5 p-3 rounded-lg">
-                            <p className="mb-2">Absurd Faction Statistic:</p>
-                            <p className="text-xs text-white/60 italic">
-                              {getAbsurdTeamStat('blue')}
-                            </p>
-                          </div>
-                          <div className="mt-3 p-3 glass-morphism border-white/5 rounded-lg">
-                            <div className="flex items-center gap-2">
-                              <Crown className="h-4 w-4 text-blue-400" />
-                              <p className="text-xs text-white/80 font-medium">Crypto Philosophy:</p>
-                            </div>
-                            <p className="text-xs text-white/60 mt-1 italic">
-                              {getTeamCryptoRoast('blue').substring(0, 80)}...
-                            </p>
-                          </div>
-                          <div className="text-sm text-white/60 mt-3">241 members</div>
-                        </CardContent>
-                      </Card>
-                    </div>
-
-                    <div className="mt-8 glass-morphism border-white/10 p-4 rounded-lg max-w-2xl mx-auto">
-                      <p className="text-sm text-white/70 italic">
-                        "The competition between factions is as fierce as it is meaningless. Members of each team regularly accuse the others of 'cheating' by spending more money, which is literally the only rule of the game."
-                      </p>
-                      <p className="text-xs text-white/50 mt-2">
-                        — Anonymous Financial Historian
-                      </p>
-                      <p className="text-xs text-white/40 mt-3 border-t border-white/10 pt-2">
-                        Breaking the 4th wall: Yes, we know this entire site is ridiculous. No, we don't plan to make it less ridiculous. You're still reading this, so clearly it's working.
-                      </p>
-                    </div>
-                  </div>
-                </TabsContent>
-              </Tabs>
+            <CardContent className="space-y-4">
+              <p>{team.description}</p>
+              
+              <div className="bg-black/30 p-3 rounded-lg">
+                <p className={cn(
+                  "italic font-semibold",
+                  team.id === 'red' ? 'text-team-red' : team.id === 'green' ? 'text-team-green' : 'text-team-blue'
+                )}>
+                  {team.motto}
+                </p>
+              </div>
+              
+              <div className="space-y-2">
+                <h4 className="font-semibold">Team Benefits:</h4>
+                <p className="text-sm text-white/70">{team.benefit}</p>
+              </div>
+              
+              <div className="text-sm text-white/50 italic">
+                {team.absurdStat}
+              </div>
+              
+              <Button 
+                className={cn(
+                  "w-full",
+                  team.id === 'red' 
+                    ? 'bg-team-red hover:bg-team-red/90' 
+                    : team.id === 'green' 
+                      ? 'bg-team-green hover:bg-team-green/90' 
+                      : 'bg-team-blue hover:bg-team-blue/90'
+                )}
+                onClick={() => setSelectedTeam(team.id)}
+                disabled={user?.team === team.id}
+              >
+                {user?.team === team.id ? 'Current House' : 'Select House'}
+              </Button>
             </CardContent>
-          </Card>
-        </div>
-      </main>
+          </motion.div>
+        ))}
+      </div>
       
-      <Footer />
+      {selectedTeam && (
+        <div className="text-center mt-10">
+          <Button 
+            size="lg" 
+            onClick={() => setIsConfirmOpen(true)}
+            className={cn(
+              "px-8 py-6",
+              selectedTeam === 'red' 
+                ? 'bg-team-red hover:bg-team-red/90' 
+                : selectedTeam === 'green' 
+                  ? 'bg-team-green hover:bg-team-green/90' 
+                  : 'bg-team-blue hover:bg-team-blue/90'
+            )}
+          >
+            <Crown className="mr-2 h-5 w-5" />
+            Join House {selectedTeam === 'red' ? 'Crimson' : selectedTeam === 'green' ? 'Emerald' : 'Sapphire'}
+          </Button>
+          
+          <p className="mt-4 text-white/60 text-sm">
+            Note: You can only change your house once every 30 days
+          </p>
+        </div>
+      )}
+      
+      {isConfirmOpen && (
+        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
+          <div className="glass-morphism border border-white/10 p-6 rounded-xl max-w-md w-full">
+            <h3 className="text-xl font-bold mb-4">Confirm Your Allegiance</h3>
+            <p className="mb-6">
+              Are you sure you want to join House {selectedTeam === 'red' ? 'Crimson' : selectedTeam === 'green' ? 'Emerald' : 'Sapphire'}? This choice will affect your profile appearance and team benefits.
+            </p>
+            <div className="flex space-x-4">
+              <Button variant="outline" className="w-full" onClick={() => setIsConfirmOpen(false)}>
+                Cancel
+              </Button>
+              <Button 
+                className={cn(
+                  "w-full",
+                  selectedTeam === 'red' 
+                    ? 'bg-team-red hover:bg-team-red/90' 
+                    : selectedTeam === 'green' 
+                      ? 'bg-team-green hover:bg-team-green/90' 
+                      : 'bg-team-blue hover:bg-team-blue/90'
+                )}
+                onClick={handleSelectTeam}
+                disabled={isLoading}
+              >
+                {isLoading ? 'Processing...' : 'Confirm'}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
+  );
+};
+
+const TeamLeaderboard = () => {
+  return (
+    <div className="space-y-6">
+      <div className="text-center">
+        <h2 className="text-3xl font-bold royal-gradient mb-3">House Leaderboard</h2>
+        <p className="text-white/70 max-w-2xl mx-auto">
+          The ongoing battle between royal houses for supremacy and glory.
+        </p>
+      </div>
+      
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <Card className="glass-morphism border-team-red/30">
+          <CardHeader className="bg-team-red/10 border-b border-team-red/20">
+            <div className="flex items-center space-x-3">
+              <div className="bg-team-red/20 w-10 h-10 rounded-full flex items-center justify-center">
+                <Flame className="text-team-red h-6 w-6" />
+              </div>
+              <div>
+                <CardTitle className="text-team-red">House Crimson</CardTitle>
+                <CardDescription>425 members</CardDescription>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent className="pt-6 space-y-4">
+            <div className="flex justify-between items-center">
+              <span className="text-white/70">Total Spent:</span>
+              <span className="text-xl font-bold text-team-red">$280,000</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-white/70">Avg. Per Member:</span>
+              <span>$658.82</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-white/70">Top Spender:</span>
+              <span>LordFirebrand ($12,450)</span>
+            </div>
+            <div className="p-3 bg-black/30 rounded-lg mt-4">
+              <p className="text-team-red font-semibold text-center italic">
+                "Through Fire and Gold, We Reign Supreme!"
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Card className="glass-morphism border-team-green/30">
+          <CardHeader className="bg-team-green/10 border-b border-team-green/20">
+            <div className="flex items-center space-x-3">
+              <div className="bg-team-green/20 w-10 h-10 rounded-full flex items-center justify-center">
+                <Shield className="text-team-green h-6 w-6" />
+              </div>
+              <div>
+                <CardTitle className="text-team-green">House Emerald</CardTitle>
+                <CardDescription>380 members</CardDescription>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent className="pt-6 space-y-4">
+            <div className="flex justify-between items-center">
+              <span className="text-white/70">Total Spent:</span>
+              <span className="text-xl font-bold text-team-green">$240,000</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-white/70">Avg. Per Member:</span>
+              <span>$631.58</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-white/70">Top Spender:</span>
+              <span>EmberGardener ($10,800)</span>
+            </div>
+            <div className="p-3 bg-black/30 rounded-lg mt-4">
+              <p className="text-team-green font-semibold text-center italic">
+                "Our Wealth Grows Like the Ancient Forest!"
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Card className="glass-morphism border-team-blue/30">
+          <CardHeader className="bg-team-blue/10 border-b border-team-blue/20">
+            <div className="flex items-center space-x-3">
+              <div className="bg-team-blue/20 w-10 h-10 rounded-full flex items-center justify-center">
+                <CreditCard className="text-team-blue h-6 w-6" />
+              </div>
+              <div>
+                <CardTitle className="text-team-blue">House Sapphire</CardTitle>
+                <CardDescription>410 members</CardDescription>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent className="pt-6 space-y-4">
+            <div className="flex justify-between items-center">
+              <span className="text-white/70">Total Spent:</span>
+              <span className="text-xl font-bold text-team-blue">$260,000</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-white/70">Avg. Per Member:</span>
+              <span>$634.15</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-white/70">Top Spender:</span>
+              <span>OceanMonarch ($11,250)</span>
+            </div>
+            <div className="p-3 bg-black/30 rounded-lg mt-4">
+              <p className="text-team-blue font-semibold text-center italic">
+                "Deep As the Ocean, Vast As Our Coffers!"
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+      
+      <div className="text-center mt-8">
+        <Button variant="outline" className="border-royal-gold/30 text-royal-gold hover:bg-royal-gold/10">
+          <Trophy className="mr-2 h-4 w-4" />
+          View Detailed House Statistics
+        </Button>
+      </div>
+    </div>
+  );
+};
+
+const TeamActivities = () => {
+  return (
+    <div className="space-y-6">
+      <div className="text-center">
+        <h2 className="text-3xl font-bold royal-gradient mb-3">House Activities</h2>
+        <p className="text-white/70 max-w-2xl mx-auto">
+          Participate in royal activities and events to earn glory for your house.
+        </p>
+      </div>
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <Card className="glass-morphism border-white/10 hover:border-royal-gold/30 transition-all duration-300">
+          <CardHeader>
+            <CardTitle className="flex items-center">
+              <Flame className="h-5 w-5 mr-2 text-royal-gold" />
+              Royal House Wars
+            </CardTitle>
+            <CardDescription>Starts in 3 days</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <p>A week-long competition where houses battle to contribute the most to the royal treasury.</p>
+            <div className="flex items-center space-x-3 text-sm text-white/70">
+              <Users className="h-4 w-4" />
+              <span>42 participants registered</span>
+            </div>
+            <Button className="w-full">Register for Battle</Button>
+          </CardContent>
+        </Card>
+        
+        <Card className="glass-morphism border-white/10 hover:border-royal-gold/30 transition-all duration-300">
+          <CardHeader>
+            <CardTitle className="flex items-center">
+              <Scroll className="h-5 w-5 mr-2 text-royal-gold" />
+              Royal Decree Challenge
+            </CardTitle>
+            <CardDescription>Ongoing</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <p>Complete royal tasks and challenges to earn bonus points for your house.</p>
+            <div className="flex items-center space-x-3 text-sm text-white/70">
+              <Users className="h-4 w-4" />
+              <span>128 active participants</span>
+            </div>
+            <Button className="w-full">View Challenges</Button>
+          </CardContent>
+        </Card>
+        
+        <Card className="glass-morphism border-white/10 hover:border-royal-gold/30 transition-all duration-300">
+          <CardHeader>
+            <CardTitle className="flex items-center">
+              <Trophy className="h-5 w-5 mr-2 text-royal-gold" />
+              Weekly House Tournaments
+            </CardTitle>
+            <CardDescription>Every Sunday</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <p>Represent your house in weekly spending tournaments to win exclusive rewards.</p>
+            <div className="flex items-center space-x-3 text-sm text-white/70">
+              <Users className="h-4 w-4" />
+              <span>Last winner: House Crimson</span>
+            </div>
+            <Button className="w-full">View Tournament Schedule</Button>
+          </CardContent>
+        </Card>
+        
+        <Card className="glass-morphism border-white/10 hover:border-royal-gold/30 transition-all duration-300">
+          <CardHeader>
+            <CardTitle className="flex items-center">
+              <Coins className="h-5 w-5 mr-2 text-royal-gold" />
+              House Contribution Bonus
+            </CardTitle>
+            <CardDescription>Daily</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <p>Receive bonus rank points for contributing to your house's daily spending goal.</p>
+            <div className="flex items-center space-x-3 text-sm text-white/70">
+              <Users className="h-4 w-4" />
+              <span>Today's bonus: 5% extra points</span>
+            </div>
+            <Button className="w-full">Contribute Now</Button>
+          </CardContent>
+        </Card>
+      </div>
+      
+      <div className="text-center mt-8">
+        <Button variant="outline" className="border-royal-gold/30 text-royal-gold hover:bg-royal-gold/10">
+          <Scroll className="mr-2 h-4 w-4" />
+          View All House Activities
+        </Button>
+      </div>
+    </div>
+  );
+};
+
+const Teams: React.FC = () => {
+  const { user } = useAuth();
+  
+  const handleTeamSelect = async (team: TeamColor): Promise<boolean> => {
+    // This would typically call an API to update the user's team
+    // For now, we'll just simulate a successful response
+    return Promise.resolve(true);
+  };
+  
+  return (
+    <Layout title="Royal Houses">
+      <div className="container mx-auto px-4 py-12">
+        <motion.div 
+          className="text-center mb-12"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7 }}
+        >
+          <h1 className="text-4xl font-bold royal-gradient mb-4">Royal Houses of SpendThrone</h1>
+          <p className="text-xl text-white/70 max-w-3xl mx-auto">
+            Join one of our three noble houses and compete for collective glory, prestige, and special rewards.
+          </p>
+        </motion.div>
+        
+        <Tabs defaultValue="houses" className="max-w-5xl mx-auto">
+          <TabsList className="grid grid-cols-3 w-full mb-8">
+            <TabsTrigger value="houses" className="text-sm md:text-base">
+              <Shield className="h-4 w-4 mr-2 md:inline-block" />
+              <span className="hidden md:inline">Royal</span> Houses
+            </TabsTrigger>
+            <TabsTrigger value="leaderboard" className="text-sm md:text-base">
+              <Trophy className="h-4 w-4 mr-2 md:inline-block" />
+              <span className="hidden md:inline">House</span> Leaderboard
+            </TabsTrigger>
+            <TabsTrigger value="activities" className="text-sm md:text-base">
+              <Flame className="h-4 w-4 mr-2 md:inline-block" />
+              <span className="hidden md:inline">House</span> Activities
+            </TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="houses">
+            <TeamSelection teams={teams} user={user} onTeamSelect={handleTeamSelect} />
+          </TabsContent>
+          
+          <TabsContent value="leaderboard">
+            <TeamLeaderboard />
+          </TabsContent>
+          
+          <TabsContent value="activities">
+            <TeamActivities />
+          </TabsContent>
+        </Tabs>
+        
+        <motion.div 
+          className="glass-morphism border border-royal-gold/20 p-6 rounded-xl max-w-3xl mx-auto mt-16"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7 }}
+          viewport={{ once: true }}
+        >
+          <h3 className="text-xl font-bold mb-3 royal-gradient">Royal House Lore</h3>
+          <p className="text-white/80 mb-4">
+            Legend has it that SpendThrone's three royal houses were founded by ancient nobility who discovered that true power comes not from wisdom or strength, but from the size of one's treasury.
+          </p>
+          <p className="text-white/80 mb-4">
+            House Crimson was established by the fierce Lord Goldflame, who believed that wealth should be flaunted with dramatic flair.
+            House Emerald was founded by Lady Moneyleaf, who viewed spending as an art form that should grow organically over time.
+            House Sapphire came from Sir Coinwave, who believed in the steady current of consistent spending to maintain one's status.
+          </p>
+          <p className="text-white/80">
+            To this day, these houses continue their absurd traditions, competing to see which philosophy of wasteful spending will ultimately prevail.
+          </p>
+        </motion.div>
+      </div>
+    </Layout>
   );
 };
 

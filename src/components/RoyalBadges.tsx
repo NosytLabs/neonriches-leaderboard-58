@@ -1,140 +1,168 @@
 
 import React from 'react';
-import RoyalDivider from '@/components/ui/royal-divider';
-import MedievalIcon from '@/components/ui/medieval-icon';
-import { Icon } from '@/components/ui/icon';
+import { motion } from 'framer-motion';
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Crown, Trophy, Shield, Award, Star, Gem, Zap, Medal, ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { cn } from '@/lib/utils';
 
+interface BadgeProps {
+  icon: React.ReactNode;
+  name: string;
+  description: string;
+  color: string;
+  bgColor: string;
+  borderColor: string;
+  delay?: number;
+}
+
+const Badge: React.FC<BadgeProps> = ({ 
+  icon, name, description, color, bgColor, borderColor, delay = 0 
+}) => {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay }}
+      viewport={{ once: true }}
+      whileHover={{ y: -5, transition: { duration: 0.2 } }}
+    >
+      <Card className={cn(
+        "glass-morphism overflow-hidden transition-all duration-300",
+        borderColor
+      )}>
+        <div className={cn("h-1", bgColor)}></div>
+        <CardContent className="p-6 text-center">
+          <div className="mb-4 flex justify-center">
+            <div className={cn("w-16 h-16 rounded-full flex items-center justify-center", bgColor)}>
+              {icon}
+            </div>
+          </div>
+          <h3 className={cn("text-lg font-bold mb-2", color)}>{name}</h3>
+          <p className="text-sm text-white/70">{description}</p>
+        </CardContent>
+      </Card>
+    </motion.div>
+  );
+};
+
+// Badge definitions
 const badges = [
   {
-    name: "Peasant's Pittance",
-    tier: "Peasant Tier",
-    icon: <Icon name="User" size="lg" className="text-gray-400" />,
-    amount: "$0 - $5",
-    description: "The humble commoner, contributing what little they have to the royal treasury.",
-    color: "gray-400",
-    glow: false
+    icon: <Crown className="h-8 w-8 text-royal-gold animate-pulse-slow" />,
+    name: "Royal Patron",
+    description: "Awarded to nobles who have contributed over $10,000 to the royal treasury.",
+    color: "text-royal-gold",
+    bgColor: "bg-royal-gold/20",
+    borderColor: "border-royal-gold/30"
   },
   {
-    name: "Merchant's Contribution",
-    tier: "Merchant Tier",
-    icon: <Icon name="Coins" size="lg" className="text-amber-700" />,
-    amount: "$5 - $15",
-    description: "A respectable trader making modest contributions to gain standing in the court.",
-    color: "amber-700", 
-    glow: false
+    icon: <Trophy className="h-8 w-8 text-team-red animate-pulse-slow" />,
+    name: "Crimson Champion",
+    description: "Awarded to the top contributor in House Crimson each month.",
+    color: "text-team-red",
+    bgColor: "bg-team-red/20",
+    borderColor: "border-team-red/30"
   },
   {
-    name: "Knight's Honor",
-    tier: "Knight Tier",
-    icon: <Icon name="Swords" size="lg" className="text-blue-500" />,
-    amount: "$15 - $30",
-    description: "A loyal servant of the crown, sworn to uphold the royal status.",
-    color: "blue-500",
-    glow: false
+    icon: <Shield className="h-8 w-8 text-team-green animate-pulse-slow" />,
+    name: "Emerald Guardian",
+    description: "Awarded to the top contributor in House Emerald each month.",
+    color: "text-team-green",
+    bgColor: "bg-team-green/20",
+    borderColor: "border-team-green/30"
   },
   {
-    name: "Baron's Patronage",
-    tier: "Baron Tier",
-    icon: <Icon name="Shield" size="lg" className="text-royal-purple" />,
-    amount: "$30 - $75",
-    description: "A noble with land and title, regularly contributing to royal projects.",
-    color: "royal-purple",
-    glow: true
+    icon: <Medal className="h-8 w-8 text-team-blue animate-pulse-slow" />,
+    name: "Sapphire Sovereign",
+    description: "Awarded to the top contributor in House Sapphire each month.",
+    color: "text-team-blue",
+    bgColor: "bg-team-blue/20",
+    borderColor: "border-team-blue/30"
   },
   {
-    name: "Duke's Fortune",
-    tier: "Duke Tier",
-    icon: <Icon name="Gem" size="lg" className="text-royal-gold" />,
-    amount: "$75 - $150",
-    description: "A powerful noble, second only to the royal family in wealth and influence.",
-    color: "royal-gold",
-    glow: true
+    icon: <Star className="h-8 w-8 text-purple-400 animate-pulse-slow" />,
+    name: "Founding Noble",
+    description: "Awarded to the earliest members who helped establish the royal court.",
+    color: "text-purple-400",
+    bgColor: "bg-purple-400/20",
+    borderColor: "border-purple-400/30"
   },
   {
-    name: "Royal Benefactor",
-    tier: "Royal Tier",
-    icon: <Icon name="Crown" size="lg" className="text-royal-blue" />,
-    amount: "$150+",
-    description: "A true royal patron whose exceptional contributions sustain the entire kingdom.",
-    color: "royal-blue",
-    glow: true
+    icon: <Award className="h-8 w-8 text-amber-400 animate-pulse-slow" />,
+    name: "Golden Streak",
+    description: "Awarded for maintaining a spending streak of 30 days or more.",
+    color: "text-amber-400",
+    bgColor: "bg-amber-400/20",
+    borderColor: "border-amber-400/30"
+  },
+  {
+    icon: <Gem className="h-8 w-8 text-emerald-400 animate-pulse-slow" />,
+    name: "Emerald Benefactor",
+    description: "Awarded for significant contributions to community events and activities.",
+    color: "text-emerald-400",
+    bgColor: "bg-emerald-400/20",
+    borderColor: "border-emerald-400/30"
+  },
+  {
+    icon: <Zap className="h-8 w-8 text-blue-400 animate-pulse-slow" />,
+    name: "Royal Trendsetter",
+    description: "Awarded to nobles who set new records in single spending transactions.",
+    color: "text-blue-400",
+    bgColor: "bg-blue-400/20",
+    borderColor: "border-blue-400/30"
   }
 ];
 
-const RoyalBadges = () => {
+const RoyalBadges: React.FC = () => {
   return (
-    <section className="w-full py-20 px-6 relative overflow-hidden throne-bg">
-      <div className="absolute inset-0 z-0">
-        <div className="absolute -top-1/4 -left-1/4 w-96 h-96 rounded-full bg-royal-purple/20 filter blur-[100px] animate-pulse-slow"></div>
-        <div className="absolute bottom-1/3 -right-1/4 w-96 h-96 rounded-full bg-royal-blue/20 filter blur-[100px] animate-pulse-slow" 
-             style={{ animationDelay: '1s' }}></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 rounded-full bg-royal-gold/20 filter blur-[100px] animate-pulse-slow" 
-             style={{ animationDelay: '2s' }}></div>
-      </div>
-      
-      <div className="max-w-7xl mx-auto relative z-10">
-        <div className="text-center mb-16">
-          <div className="inline-block mb-4">
-            <div className="relative">
-              <MedievalIcon name="Crown" size="md" color="gold" />
-              <div className="absolute -inset-4 bg-royal-gold/20 blur-xl rounded-full"></div>
-            </div>
-          </div>
-          <h2 className="text-4xl font-royal royal-gradient mb-4">Royal Insignias</h2>
-          <p className="text-white/70 max-w-2xl mx-auto font-serif">
-            Your contributions to the royal treasury determine your standing in court.
-            Each tier of patronage grants cosmetic distinctions reflecting your status.
+    <section className="py-16 bg-gradient-to-b from-background/90 to-background/80">
+      <div className="container mx-auto px-4">
+        <motion.div 
+          className="text-center mb-12"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7 }}
+          viewport={{ once: true }}
+        >
+          <h2 className="text-3xl md:text-4xl font-bold royal-gradient mb-4">Royal Badges of Honor</h2>
+          <p className="text-white/70 max-w-2xl mx-auto">
+            Showcase your status with exclusive badges earned through spending milestones and noble achievements.
           </p>
-        </div>
+        </motion.div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-10">
           {badges.map((badge, index) => (
-            <div 
-              key={index} 
-              className={`royal-card rounded-2xl p-8 border border-${badge.color}/30 hover:border-${badge.color}/50 transition-all duration-300 hover:transform hover:scale-[1.03] relative group overflow-hidden`}
-            >
-              {badge.glow && (
-                <div className={`absolute inset-0 bg-${badge.color}/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500`}></div>
-              )}
-              
-              <div className="flex items-center justify-between mb-6">
-                <div className={`w-16 h-16 rounded-full flex items-center justify-center bg-${badge.color}/10 border border-${badge.color}/30 ${badge.glow ? `group-hover:ring-2 group-hover:ring-${badge.color}/30 transition-all duration-300` : ''}`}>
-                  {badge.icon}
-                </div>
-                <div className="glass-morphism px-3 py-1 rounded-full">
-                  <span className="text-white/80 text-sm font-royal">{badge.amount}</span>
-                </div>
-              </div>
-              
-              <h3 className={`text-xl font-royal ${badge.glow ? `text-${badge.color} group-hover:text-${badge.color} transition-colors duration-300` : ''} mb-1`}>
-                {badge.name}
-              </h3>
-              <div className="text-xs text-white/50 font-royal uppercase tracking-wider mb-4">{badge.tier}</div>
-              
-              <p className="text-white/70 font-serif">{badge.description}</p>
-            </div>
+            <Badge
+              key={badge.name}
+              {...badge}
+              delay={index * 0.1}
+            />
           ))}
         </div>
-
-        <div className="mt-16 glass-morphism rounded-xl p-8 border border-royal-gold/30">
-          <div className="flex flex-col md:flex-row items-center">
-            <div className="mb-6 md:mb-0 md:mr-8">
-              <div className="relative">
-                <MedievalIcon name="Seal" size="lg" color="gold" />
-              </div>
-            </div>
-            <div className="text-center md:text-left">
-              <h3 className="text-2xl font-royal royal-gradient mb-2">Founder's Pass - Limited Time Offer</h3>
-              <p className="text-white/70 font-serif mb-4">
-                For a limited time, secure your place in court history with the Founder's Pass. 
-                $100 grants you exclusive permanent profile features, including the prestigious "Founder" title, animated borders, and extended profile customization.
-              </p>
-              <div className="text-sm text-white/50 italic">
-                "All cosmetic enhancements are purely ornamental and have no effect on gameplay mechanics."
-              </div>
-            </div>
+        
+        <motion.div 
+          className="glass-morphism border border-royal-gold/20 p-6 rounded-lg max-w-3xl mx-auto"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.5 }}
+          viewport={{ once: true }}
+        >
+          <div className="text-center">
+            <h3 className="text-xl font-bold royal-gradient mb-4">Collect Them All</h3>
+            <p className="text-white/80 mb-6">
+              These badges aren't just pretty decorations—they're a testament to your commitment to frivolous spending and status-seeking behavior in our satirical kingdom. Display them proudly on your profile!
+            </p>
+            <Link to="/badges">
+              <Button className="bg-gradient-to-r from-royal-gold to-amber-600 text-black hover:opacity-90 group">
+                <Crown className="mr-2 h-4 w-4 group-hover:rotate-12 transition-transform duration-300" />
+                Explore All Royal Badges
+                <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" />
+              </Button>
+            </Link>
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );
