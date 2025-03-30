@@ -3,17 +3,27 @@ import React from 'react';
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { FileIcon, Code, Package, Trash2, FileText, Folder } from 'lucide-react';
-import { AnalysisResult } from '@/types/codeAnalysis/types';
+import { AnalysisResult } from '@/utils/codeAnalysis/types';
 import EmptyState from '@/components/ui/empty-state';
 
 interface UnusedCodeReportProps {
-  analysisResult: AnalysisResult;
+  analysisResult?: AnalysisResult;
 }
 
-const UnusedCodeReport: React.FC<UnusedCodeReportProps> = ({ analysisResult }) => {
+const UnusedCodeReport: React.FC<UnusedCodeReportProps> = ({ analysisResult = {
+  unusedImports: [],
+  unusedVariables: [],
+  unusedFiles: [],
+  unusedSelectors: [],
+  unusedDependencies: [],
+  unusedFunctions: [],
+  deadCode: [],
+  duplicateCode: [],
+  complexCode: []
+} }) => {
   const {
-    unusedImports,
-    unusedVariables,
+    unusedImports = [],
+    unusedVariables = [],
     unusedFiles = [],
     unusedSelectors = [],
     unusedDependencies = [],

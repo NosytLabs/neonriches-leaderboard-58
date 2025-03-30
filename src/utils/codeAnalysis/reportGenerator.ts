@@ -3,13 +3,13 @@ import { AnalysisResult } from './types';
 
 export const generateAnalysisReport = (analysis: AnalysisResult): string => {
   const { 
-    unusedImports, 
-    unusedVariables, 
-    unusedFiles, 
-    unusedSelectors, 
-    deadCode, 
-    duplicateCode, 
-    complexCode, 
+    unusedImports = [], 
+    unusedVariables = [], 
+    unusedFiles = [], 
+    unusedSelectors = [], 
+    deadCode = [], 
+    duplicateCode = [], 
+    complexCode = [], 
     unusedDependencies = [],
     performanceIssues = [],
     metrics
@@ -40,7 +40,7 @@ ${metrics ? `
 ${unusedFiles && unusedFiles.length > 0 ? `
 Found ${unusedFiles.length} unused files that can be safely removed:
 
-${unusedFiles.map(file => `- \`${file}\``).join('\n')}
+${unusedFiles.map(file => `- \`${file.path}\``).join('\n')}
 ` : 'No unused files detected.'}
 
 ### 2. Unused Imports
@@ -64,7 +64,7 @@ ${unusedVariables.map(v => `- \`${v.name}${v.type ? ': ' + v.type : ''}\` in \`$
 ${unusedSelectors && unusedSelectors.length > 0 ? `
 Found ${unusedSelectors.length} unused CSS selectors:
 
-${unusedSelectors.map(s => `- \`${s.selector}\` in \`${s.file}\` (line ${s.line})`).join('\n')}
+${unusedSelectors.map(s => `- \`${s.name}\` in \`${s.file}\` (line ${s.line})`).join('\n')}
 ` : 'No unused CSS selectors detected.'}
 
 ### 5. Dead Code Paths
