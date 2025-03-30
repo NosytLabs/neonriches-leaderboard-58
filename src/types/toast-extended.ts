@@ -6,6 +6,6 @@ export interface ExtendedToastProps {
   title?: React.ReactNode;
   description?: React.ReactNode;
   action?: ToastActionElement;
-  variant?: 'default' | 'destructive' | 'success' | 'royal';
+  variant?: 'default' | 'destructive' | 'success';
   duration?: number;
 }

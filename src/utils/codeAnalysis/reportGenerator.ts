@@ -1,157 +1,114 @@
 
 import { AnalysisResult } from './types';
 
+/**
+ * Generates a formatted markdown report based on the analysis results
+ */
 export const generateAnalysisReport = (analysis: AnalysisResult): string => {
-  const { 
-    unusedImports = [], 
-    unusedVariables = [], 
-    unusedFiles = [], 
-    unusedSelectors = [], 
-    deadCode = [], 
-    duplicateCode = [], 
-    complexCode = [], 
+  const {
+    unusedImports = [],
+    unusedVariables = [],
+    unusedFiles = [],
+    unusedSelectors = [],
     unusedDependencies = [],
-    performanceIssues = [],
-    metrics
+    deadCode = [],
+    duplicateCode = [],
+    complexCode = []
   } = analysis;
 
-  const deadCodePaths = analysis.deadCodePaths || deadCode;
-  
-  const report = `# Code Analysis Report
+  return `# Code Analysis Report
 
-## Summary
+## Overview
+${getTotalIssuesCount(analysis)} issues were found in the codebase.
 
-This analysis identified several opportunities for code cleanup and optimization in the project. Addressing these issues can improve performance, maintainability, and reduce bundle size.
+## Unused Code Issues
+- ${unusedImports.length} unused imports
+- ${unusedVariables.length} unused variables
+- ${Array.isArray(unusedFiles) ? unusedFiles.length : 0} unused files
+- ${unusedSelectors?.length || 0} unused CSS selectors
+- ${unusedDependencies?.length || 0} unused dependencies
+- ${deadCode?.length || 0} dead code paths
 
-${metrics ? `
-### Project Metrics
+## Code Quality Issues
+- ${duplicateCode.length} instances of duplicate code
+- ${complexCode.length} complex functions
 
-| Metric | Before Cleanup | After Cleanup (Est.) | Reduction |
-|--------|----------------|---------------------|-----------|
-| Project Size | ${metrics.beforeCleanup?.projectSize || 0} KB | ${metrics.afterCleanup?.projectSize || 0} KB | ${metrics.beforeCleanup?.projectSize && metrics.afterCleanup?.projectSize ? (metrics.beforeCleanup.projectSize - metrics.afterCleanup.projectSize) : 0} KB (${metrics.beforeCleanup?.projectSize ? ((metrics.beforeCleanup.projectSize - (metrics.afterCleanup?.projectSize || 0)) / metrics.beforeCleanup.projectSize * 100).toFixed(1) : 0}%) |
-| File Count | ${metrics.beforeCleanup?.fileCount || 0} | ${metrics.afterCleanup?.fileCount || 0} | ${metrics.beforeCleanup?.fileCount && metrics.afterCleanup?.fileCount ? (metrics.beforeCleanup.fileCount - metrics.afterCleanup.fileCount) : 0} files |
-| Dependencies | ${metrics.beforeCleanup?.dependencyCount || 0} | ${metrics.afterCleanup?.dependencyCount || 0} | ${metrics.beforeCleanup?.dependencyCount && metrics.afterCleanup?.dependencyCount ? (metrics.beforeCleanup.dependencyCount - metrics.afterCleanup.dependencyCount) : 0} packages |
-` : ''}
+## Detailed Findings
 
-## Findings
+### Unused Imports
+${unusedImports.map(item => `- \`${item.name}\` from \`${item.path}\` in \`${item.file}:${item.line}\``).join('\n')}
 
-### 1. Unused Files
+### Unused Variables
+${unusedVariables.map(item => `- \`${item.name}\` (${item.type}) in \`${item.file}:${item.line}\``).join('\n')}
 
-${unusedFiles && unusedFiles.length > 0 ? `
-Found ${unusedFiles.length} unused files that can be safely removed:
+### Unused Files
+${Array.isArray(unusedFiles) ? unusedFiles.map(file => {
+    const path = typeof file === 'string' ? file : file.path;
+    const size = typeof file === 'string' ? '?' : `${file.size}KB`;
+    return `- \`${path}\` (${size})`;
+  }).join('\n') : 'No unused files found'}
 
-${unusedFiles.map(file => `- \`${file.path}\``).join('\n')}
-` : 'No unused files detected.'}
+### Complex Code
+${complexCode.map(item => `- \`${item.name}\` in \`${item.file}:${item.line}\` (complexity: ${item.complexity})`).join('\n')}
 
-### 2. Unused Imports
-
-${unusedImports.length > 0 ? `
-Found ${unusedImports.length} unused imports:
-
-${unusedImports.map(imp => `- \`${imp.name}\` from \`${imp.path}\` in \`${imp.file}\` (line ${imp.line})`).join('\n')}
-` : 'No unused imports detected.'}
-
-### 3. Unused Variables
-
-${unusedVariables.length > 0 ? `
-Found ${unusedVariables.length} unused variables:
-
-${unusedVariables.map(v => `- \`${v.name}${v.type ? ': ' + v.type : ''}\` in \`${v.file}\` (line ${v.line})`).join('\n')}
-` : 'No unused variables detected.'}
-
-### 4. Unused CSS Selectors
-
-${unusedSelectors && unusedSelectors.length > 0 ? `
-Found ${unusedSelectors.length} unused CSS selectors:
-
-${unusedSelectors.map(s => `- \`${s.name}\` in \`${s.file}\` (line ${s.line})`).join('\n')}
-` : 'No unused CSS selectors detected.'}
-
-### 5. Dead Code Paths
-
-${deadCodePaths && deadCodePaths.length > 0 ? `
-Found ${deadCodePaths.length} dead code paths:
-
-${deadCodePaths.map(d => `- ${d.description} in \`${d.file}\` (line ${d.line})`).join('\n')}
-` : 'No dead code paths detected.'}
-
-### 6. Duplicate Code
-
-${duplicateCode.length > 0 ? `
-Found ${duplicateCode.length} instances of duplicate code:
-
-${duplicateCode.map(d => `#### Duplicate Code #${d.id}
-- Similarity: ${Math.round(d.similarity * 100)}%
-- Found in: ${d.files.map(f => '`' + f.path + '`').join(', ')}
-- Lines: ${d.lines || d.linesCount || 'N/A'}
-${d.recommendation ? `- Recommendation: ${d.recommendation}` : ''}
-`).join('\n')}
-` : 'No duplicate code detected.'}
-
-### 7. Complex Code
-
-${complexCode.length > 0 ? `
-Found ${complexCode.length} instances of overly complex code:
-
-${complexCode.map(c => `#### ${c.name || 'Unnamed function'} in \`${c.file}\`
-- Complexity score: ${c.complexity}
-- Line: ${c.line}
-- Issue: ${c.explanation || 'High cyclomatic complexity'}
-`).join('\n')}
-` : 'No overly complex code detected.'}
-
-### 8. Unused Dependencies
-
-${unusedDependencies && unusedDependencies.length > 0 ? `
-Found ${unusedDependencies.length} unused dependencies:
-
-${unusedDependencies.map(d => `- \`${d}\``).join('\n')}
-` : 'No unused dependencies detected.'}
-
-### 9. Performance Issues
-
-${performanceIssues && performanceIssues.length > 0 ? `
-Found ${performanceIssues.length} performance issues:
-
-${performanceIssues.map(p => `#### ${p.description}
-- File: \`${p.file}\` (line ${p.lineNumber})
-- Severity: ${p.severity}
-- Recommendation: ${p.recommendation}
-`).join('\n')}
-` : 'No performance issues detected.'}
+### Duplicate Code
+${duplicateCode.map(item => `- Pattern #${item.id} (${Math.round(item.similarity * 100)}% similarity, ${item.lines} lines)
+  Found in: ${item.files.map(f => `\`${f.path}\``).join(', ')}`).join('\n')}
 
 ## Recommendations
-
-1. Start with removing unused imports and variables as these changes are low risk
-2. Remove unused CSS selectors to reduce stylesheet size
-3. Address duplicate code by creating shared utilities
-4. Refactor complex code into smaller, more manageable functions
-5. Finally, remove unused files and dependencies
-
-## Notes
-
-- Always test thoroughly after each change
-- Consider updating tests when removing or refactoring code
-- Document any removed public APIs that might have been used by consumers
+1. Remove unused imports and variables for cleaner code.
+2. Delete or archive unused files to reduce project size.
+3. Refactor complex functions to improve maintainability.
+4. Extract duplicate code into shared functions or components.
+5. Review and clean up unused dependencies to reduce bundle size.
 `;
-
-  return report;
 };
 
-// Helper function to export the report as markdown
+/**
+ * Export the analysis report as a markdown file
+ */
 export const exportAnalysisReportAsMarkdown = (analysis: AnalysisResult): string => {
   return generateAnalysisReport(analysis);
 };
 
-// Helper function to save the report to a file
-export const saveReportToFile = (content: string, filename: string) => {
+/**
+ * Save the report to a file
+ */
+export const saveReportToFile = (content: string, filename: string): void => {
   const blob = new Blob([content], { type: 'text/markdown' });
   const url = URL.createObjectURL(blob);
+  
   const a = document.createElement('a');
   a.href = url;
   a.download = filename;
-  document.body.appendChild(a);
   a.click();
-  document.body.removeChild(a);
+  
   URL.revokeObjectURL(url);
+};
+
+/**
+ * Count total issues found
+ */
+const getTotalIssuesCount = (analysis: AnalysisResult): number => {
+  const {
+    unusedImports = [],
+    unusedVariables = [],
+    unusedFiles = [],
+    unusedSelectors = [],
+    unusedDependencies = [],
+    deadCode = [],
+    duplicateCode = [],
+    complexCode = []
+  } = analysis;
+
+  return (
+    unusedImports.length +
+    unusedVariables.length +
+    (Array.isArray(unusedFiles) ? unusedFiles.length : 0) +
+    (unusedSelectors?.length || 0) +
+    (unusedDependencies?.length || 0) +
+    (deadCode?.length || 0) +
+    duplicateCode.length +
+    complexCode.length
+  );
 };

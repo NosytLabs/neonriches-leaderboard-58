@@ -9,7 +9,7 @@ export function useToast() {
   // Convert ReactNode to string if needed
   const ensureString = (value: any): string => {
     if (value === null || value === undefined) return "";
-    return value.toString();
+    return String(value);
   };
   
   return {

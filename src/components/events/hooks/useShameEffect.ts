@@ -31,7 +31,7 @@ export const useShameEffect = (options?: ShameEffectOptions): ShameEffectState =
   const [shameEffects, setShameEffects] = useState<Record<number | string, ShameEffect | null>>({});
   const [shameCooldown, setShameCooldown] = useState<Record<number | string, number>>({});
   const [shameCount, setShameCount] = useState<Record<number | string, number>>({});
-  const { toast } = useToast();
+  const toast = useToast();
 
   const getShameCount = useCallback((userId: number | string) => {
     return shameCount[userId] || 0;

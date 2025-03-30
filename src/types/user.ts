@@ -46,6 +46,7 @@ export interface UserCosmetics {
   activeFont?: string;
   foundersPass?: boolean;
   activeEmoji?: string;
+  activeTitle?: string;
 }
 
 // User settings
@@ -141,8 +142,6 @@ export interface UserProfile {
   referralCode?: string;
   referredBy?: string;
   referralCount?: number;
-  activeTitle?: string;
-  certificateNFT?: any;
   spendStreak?: number;
   followers?: number;
   following?: number;
@@ -176,4 +175,5 @@ export interface ProfileLink {
   url: string;
   label: string;
   title?: string;
+  platform?: string;
 }

@@ -74,5 +74,6 @@ export interface AuthAction {
   payload?: any;
 }
 
-// Re-export UserProfile from types
-export type { UserProfile } from '@/types/user';
+// Import UserProfile from types
+import type { UserProfile } from '@/types/user';
+export type { UserProfile };
