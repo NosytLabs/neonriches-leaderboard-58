@@ -2,63 +2,29 @@
 // Mockery-related types
 export type MockeryAction = 
   | 'tomatoes' 
-  | 'putridEggs' 
+  | 'eggs' 
   | 'stocks' 
   | 'dunce' 
-  | 'silence'
+  | 'jester' 
+  | 'crown' 
   | 'taunt'
-  | 'courtJester'
-  | 'smokeBomb'
-  | 'protection'
-  // Additional mockery types for compatibility
-  | 'jest'
-  | 'eggs'
-  | 'glitterBomb'
-  | 'crown'
-  | 'challenge'
-  | 'defeat'
-  | 'immune'
-  | 'guillotine'
-  | 'dungeons'
-  | 'removal'
-  | 'roast'
-  | 'royalPie'
-  | 'jokeCrown'
-  | 'memeFrame'
-  | 'target'
-  // Include ShameAction types in MockeryAction for compatibility
   | 'shame'
-  | 'mock'
-  | 'ridicule'
-  | 'humiliate'
-  | 'expose'
-  | 'jester';
+  | 'protection';
 
 export type MockeryTier = 
-  | 'basic' 
-  | 'premium' 
-  | 'royal'
+  | 'common' 
+  | 'uncommon' 
+  | 'rare' 
+  | 'epic' 
   | 'legendary'
-  // Additional tiers for compatibility
-  | 'common'
-  | 'uncommon'
-  | 'rare'
-  | 'epic'
+  | 'basic'
+  | 'premium'
   | 'bronze'
   | 'silver'
   | 'gold'
   | 'platinum'
-  | 'diamond';
-
-export type ShameAction = 
-  | 'shame' 
-  | 'mock' 
-  | 'ridicule' 
-  | 'humiliate'
-  | 'expose'
-  | 'jester';
-
-export type ExtendedMockeryAction = MockeryAction | ShameAction;
+  | 'diamond'
+  | 'royal';
 
 export interface MockeryEvent {
   id: string;
@@ -66,19 +32,19 @@ export interface MockeryEvent {
   targetUserId: string;
   mockeryType: MockeryAction;
   appliedAt: string;
+  duration: number;
   expiresAt: string;
-  createdAt: string;
   isActive: boolean;
+  createdAt: string;
+  // Additional fields
   sourceId?: string;
   sourceName?: string;
-  targetId?: string;
   targetName?: string;
   action?: MockeryAction;
+  tier?: MockeryTier;
   appliedById?: string;
-  duration?: number;
   active?: boolean;
   cost?: number;
-  tier?: MockeryTier;
 }
 
 export interface MockUser {
@@ -86,53 +52,56 @@ export interface MockUser {
   username: string;
   displayName?: string;
   profileImage?: string;
-  tier?: string;
-  lastMocked?: string;
-  mockeryCount?: number;
-  rank?: number;
-  team?: string;
+  tier: string;
+  rank: number;
 }
 
-export interface MockedUser {
-  id: string;
-  userId: string;
-  username: string;
-  displayName: string;
-  profileImage: string;
-  mockedReason: string;
-  mockedTimestamp: string;
-  mockedBy: string;
-  mockedTier: string;
-  mockeryCount: number;
-  lastMocked?: string;
-  team?: string;
-  rank?: number;
+export interface MockedUser extends MockUser {
+  activeEffects: MockeryEvent[];
+  hasProtection: boolean;
+  protectionEnds?: string;
 }
+
+// For backward compatibility
+export type ShameAction = 'tomatoes' | 'eggs' | 'stocks';
+
+export type ExtendedMockeryAction = MockeryAction | string;
 
 export interface MockeryEffectData {
-  username: string;
-  action: MockeryAction;
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+  duration: number;
+  price: number;
+  tier: MockeryTier;
+  cssClass: string;
 }
 
 export interface UserMockeryStatus {
-  isProtected: boolean;
-  protectionExpiresAt?: string;
-  isMocked: boolean;
-  mockeryExpiresAt?: string;
-  mockeryType?: MockeryAction;
-  mockeryCount: number;
-  lastMockedAt?: string;
+  activeEffects: {
+    action: MockeryAction;
+    timestamp: number;
+    until: number;
+  }[];
+  protection: {
+    active: boolean;
+    until: number;
+  };
 }
 
-// Use export type to avoid TS1205 errors
-export type { 
-  MockeryAction, 
-  MockeryEvent, 
-  MockeryTier, 
-  MockUser, 
-  MockedUser, 
-  ShameAction, 
-  ExtendedMockeryAction,
-  MockeryEffectData,
-  UserMockeryStatus
-};
+// Utility function for ShameAction conversion
+export function isShameAction(action: string): action is ShameAction {
+  return ['tomatoes', 'eggs', 'stocks'].includes(action);
+}
+
+// Re-export types with 'export type' syntax for TS modules
+export type { MockeryAction };
+export type { MockeryEvent };
+export type { MockeryTier };
+export type { MockUser };
+export type { MockedUser };
+export type { ShameAction };
+export type { ExtendedMockeryAction };
+export type { MockeryEffectData };
+export type { UserMockeryStatus };

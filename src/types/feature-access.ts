@@ -1,36 +1,41 @@
 
-// Feature access types
-import { UserTier } from './user-types';
-
+// Feature access types for subscription and tier-based feature gating
 export type Feature = 
+  | 'advanced_mockery'
+  | 'premium_cosmetics'
+  | 'team_benefits'
+  | 'enhanced_profile'
+  | 'royal_certificate'
+  | 'custom_titles'
   | 'premium_analytics'
-  | 'custom_profile'
+  | 'royal_protection'
+  | 'throne_room'
   | 'marketing_dashboard'
-  | 'advanced_stats'
-  | 'tracking_links' 
-  | 'profile_followers'
-  | 'rank_certificates' 
-  | 'profile_boosts' 
-  | 'auto_promotions'
-  | 'advertising_slots'
-  | 'premium_support';
+  | 'custom_domain'
+  | 'advanced_profile'
+  | 'ai_integration'
+  | 'data_export'
+  | 'api_access';
 
 export interface FeatureRequirements {
-  tier?: UserTier;
-  rank?: number;
-  spendAmount?: number;
-  isMember?: boolean;
-  isPro?: boolean;
+  tier?: string[];
+  subscription?: string[];
+  minRank?: number;
+  teamRequired?: boolean;
+  isFounder?: boolean;
+  isVIP?: boolean;
 }
 
 export interface FeatureAccess {
-  isLoading: boolean;
-  canAccessFeature: (feature: Feature) => boolean;
-  getUpgradeUrl: (feature: Feature) => string;
-  isUserPro: () => boolean;
-  getMarketingFeaturePriceId: (feature: Feature) => string;
-  purchaseFeatureIndividually: (feature: Feature) => Promise<any>;
+  feature: Feature;
+  name: string;
+  description: string;
+  icon: string;
+  requirements: FeatureRequirements;
+  alternateAccess?: string;
 }
 
-// Export types
-export { Feature, FeatureRequirements, FeatureAccess };
+// Make sure to use 'export type' syntax for module interoperability
+export type { Feature };
+export type { FeatureRequirements };
+export type { FeatureAccess };

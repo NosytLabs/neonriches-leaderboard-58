@@ -1,5 +1,13 @@
 
-import { ShameAction } from '../hooks/useShameEffect';
+import { ShameAction } from '../../../types/mockery';
+import { 
+  Egg, 
+  TrendingDown, 
+  Tomato, 
+  Crown, 
+  Laugh, 
+  Shield 
+} from 'lucide-react';
 
 // Get the current weekly discounted action (would normally come from API/backend)
 export const getWeeklyDiscountedAction = (): ShameAction => {
@@ -36,9 +44,58 @@ export const getDiscountedShamePrice = (action: ShameAction): number => {
   return getShameActionPrice(action) * 0.5;
 };
 
+// New helper functions for shame action metadata
+export const getShameActionIcon = (action: ShameAction) => {
+  switch (action) {
+    case 'tomatoes': return Tomato;
+    case 'eggs': return Egg;
+    case 'stocks': return TrendingDown;
+    default: return Tomato;
+  }
+};
+
+export const getShameActionTitle = (action: ShameAction): string => {
+  switch (action) {
+    case 'tomatoes': return 'Throw Tomatoes';
+    case 'eggs': return 'Throw Eggs';
+    case 'stocks': return 'Tank Stocks';
+    default: return 'Unknown Action';
+  }
+};
+
+export const getShameActionDescription = (action: ShameAction): string => {
+  switch (action) {
+    case 'tomatoes': 
+      return 'Shower your target with virtual tomatoes, showing your disagreement in the most medieval way possible.';
+    case 'eggs': 
+      return 'Nothing says disapproval like eggs. Digital and mess-free but gets the point across.';
+    case 'stocks': 
+      return 'Tank their virtual status by showing everyone their stocks are falling.';
+    default: 
+      return 'Take action against this user.';
+  }
+};
+
+// Check if we're in a fire sale month
+export const isFireSaleMonth = (): boolean => {
+  const currentMonth = new Date().getMonth();
+  // Fire sale during summer months (June, July, August)
+  return [5, 6, 7].includes(currentMonth);
+};
+
+// Get fire sale discount percentage
+export const getFireSaleDiscountPercentage = (): number => {
+  return isFireSaleMonth() ? 40 : 0;
+};
+
 export default {
   getWeeklyDiscountedAction,
   hasWeeklyDiscount,
   getShameActionPrice,
-  getDiscountedShamePrice
+  getDiscountedShamePrice,
+  getShameActionIcon,
+  getShameActionTitle,
+  getShameActionDescription,
+  isFireSaleMonth,
+  getFireSaleDiscountPercentage
 };

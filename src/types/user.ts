@@ -1,23 +1,5 @@
 
-// User profile related types
-import { UserTier, UserTeam, UserSettings } from './user-types';
-import { TeamType } from './team';
-import { SocialLink } from './social-links';
-import { UserCosmeticState } from './cosmetics';
-import { ProfileBoost } from './profile-boost';
-
-// Certificate type
-export interface CertificateNFT {
-  id: string;
-  userId: string;
-  mintAddress: string;
-  imageUrl: string;
-  metadataUrl: string;
-  certificateType: string;
-  issuedAt: string;
-}
-
-// User profile
+// User-related types
 export interface UserProfile {
   id: string;
   username: string;
@@ -28,73 +10,160 @@ export interface UserProfile {
   joinDate?: string;
   joinedAt?: string;
   createdAt?: string;
-  updatedAt?: string;
+  team?: TeamType;
   tier: UserTier;
   rank?: number;
   previousRank?: number;
-  team?: TeamType;
   walletBalance?: number;
-  amountSpent?: number;
-  spentAmount?: number;
   totalSpent?: number;
-  totalDeposited?: number;
-  withdrawalLimit?: number;
-  lastWithdrawal?: string;
-  subscriptionId?: string;
-  subscription?: any;
-  referrerId?: string;
-  referralCode?: string;
-  referralCount?: number;
-  referralEarnings?: number;
-  profileBoosts?: ProfileBoost[];
-  settings?: UserSettings;
+  spentAmount?: number;
+  supporters?: number;
+  supporting?: number;
+  lastActive?: string | Date;
+  achievements?: Achievement[];
   socialLinks?: SocialLink[];
-  cosmetics?: UserCosmeticState;
-  achievements?: string[];
-  isMember?: boolean;
+  badges?: string[];
   isVIP?: boolean;
-  isVerified?: boolean;
   isFounder?: boolean;
+  isVerified?: boolean;
   isAdmin?: boolean;
-  certificateId?: string;
-  certificateNFT?: CertificateNFT;
-  // Additional properties
-  spendStreak?: number;
-  lastActive?: string;
-  lastLogin?: string;
-  activeTitle?: string;
-  purchasedFeatures?: string[];
-  gender?: string;
-  role?: string;
-  followers?: number;
-  following?: number;
-  profileViews?: number;
-  profileClicks?: number;
-  profileImages?: ProfileImage[];
+  isModerator?: boolean;
+  isBanned?: boolean;
+  cosmetics: UserCosmeticState;
+  settings: UserSettings;
+  notifications?: Notification[];
+  profileBoosts?: ProfileBoost[];
+  subscription?: UserSubscription;
+  reputation?: number;
+  referralCode?: string;
+  referredBy?: string;
+  certificateIds?: string[];
+  mockeryStatus?: UserMockeryStatus;
+  teamContributions?: number;
+  hasCompletedOnboarding?: boolean;
+  hasPurchasedCosmetics?: boolean;
   isOnline?: boolean;
 }
 
-// Profile Image type
+export interface UserSettings {
+  profileVisibility: "public" | "private" | "friends";
+  allowProfileLinks: boolean;
+  theme: "light" | "dark" | "royal" | "system";
+  notifications: boolean;
+  emailNotifications: boolean;
+  marketingEmails: boolean;
+  showRank: boolean;
+  showTeam: boolean;
+  showSpending: boolean;
+  showBadges: boolean;
+  showAchievements: boolean;
+  showBalance: boolean;
+  rankChangeAlerts: boolean;
+  teamNotifications: boolean;
+  language: string;
+  spendAlerts: boolean;
+}
+
+export type UserTier = "free" | "basic" | "premium" | "royal" | "founder";
+export type TeamType = "red" | "blue" | "green" | "gold";
+
+export interface UserSubscription {
+  id: string;
+  tier: UserTier;
+  startDate: string | Date;
+  endDate: string | Date;
+  isActive: boolean;
+  autoRenew: boolean;
+  features: string[];
+}
+
 export interface ProfileImage {
-  id: string | number;
   url: string;
-  caption?: string;
-  isPrimary?: boolean;
+  thumbnail: string;
+  alt: string;
 }
 
-// Profile Link type
 export interface ProfileLink {
-  id: number;
+  id: string;
+  title: string;
   url: string;
-  label: string;
-  title?: string;
+  icon: string;
 }
 
-// Alias for UserCosmetics
-export type UserCosmetics = UserCosmeticState;
+export interface UserTeam {
+  id: string;
+  name: string;
+  color: TeamType;
+  members: number;
+  totalContribution: number;
+  rank: number;
+  benefits: TeamBenefit[];
+}
 
-// Alias for User to maintain backward compatibility
-export type User = UserProfile;
+export interface Achievement {
+  id: string;
+  title: string;
+  description: string;
+  icon: string;
+  dateEarned: string | Date;
+  rarity: string;
+}
 
-// Export properly
-export { UserProfile, ProfileImage, ProfileLink, UserCosmetics, User, CertificateNFT };
+export interface Notification {
+  id: string;
+  userId: string;
+  type: string;
+  message: string;
+  read: boolean;
+  createdAt: string | Date;
+  data?: Record<string, any>;
+}
+
+export interface UserMockeryStatus {
+  activeEffects: {
+    action: MockeryAction;
+    timestamp: number;
+    until: number;
+  }[];
+  protection: {
+    active: boolean;
+    until: number;
+  };
+}
+
+// Re-export types using 'export type' syntax
+export type { SocialLink } from './social-links';
+export type { ProfileBoost } from './profile-boost';
+export type { UserCosmeticState } from './cosmetics';
+export type { MockeryAction } from './mockery';
+export type { CertificateNFT } from './certificates';
+
+// Simple User object for basic operations
+export interface User {
+  id: string;
+  username: string;
+  email?: string;
+  profileImage?: string;
+  tier: UserTier;
+}
+
+// Team-related types
+export interface Team {
+  id: string;
+  name: string;
+  color: TeamType;
+  description: string;
+  members: number;
+  power: number;
+  rank: number;
+}
+
+export interface TeamBenefit {
+  id: string;
+  name: string;
+  description: string;
+  requiredLevel: number;
+  unlocked: boolean;
+}
+
+export type TeamColor = 'red' | 'blue' | 'green' | 'gold';

@@ -1,49 +1,57 @@
 
-import { TeamType } from './team';
-import { UserTier } from './user-types';
+import { TeamType, UserTier } from './user';
 
 export interface LeaderboardUser {
   id: string;
   username: string;
   displayName?: string;
   profileImage?: string;
-  tier: UserTier | string;
-  team: TeamType;
+  tier: UserTier;
+  team?: TeamType;
   rank: number;
   previousRank?: number;
-  amountSpent: number;
-  totalSpent?: number;
-  joinDate?: string;
-  joinedAt?: string;
-  isVIP?: boolean;
-  avatarUrl?: string;
-  totalDeposited?: number;
-  isVerified?: boolean;
   walletBalance?: number;
+  totalSpent: number;
+  spentAmount: number;
+  supporters?: number;
+  supporting?: number;
+  isVIP?: boolean;
+  isFounder?: boolean;
+  isVerified?: boolean;
 }
 
-export type LeaderboardSortOption = 
-  | "rank"
-  | "amountSpent"
-  | "totalSpent"
-  | "joinDate"
-  | "username";
+export interface LeaderboardEntry {
+  user: LeaderboardUser;
+  position: number;
+  previousPosition?: number;
+  change?: number;
+  score: number;
+}
 
-export type LeaderboardSortDirection = "asc" | "desc";
-
-export type LeaderboardTimeFrame = 
-  | "all" 
-  | "today" 
-  | "week" 
-  | "month" 
-  | "year";
+export interface TeamLeaderboard {
+  id: string;
+  name: string;
+  color: TeamType;
+  members: number;
+  totalContribution: number;
+  rank: number;
+  previousRank?: number;
+  change?: number;
+}
 
 export interface LeaderboardFilter {
-  timeFrame: string;
-  timespan: string;
-  sortBy: string;
-  sortDirection: LeaderboardSortDirection;
+  timeframe?: 'all' | 'day' | 'week' | 'month' | 'year';
   team?: TeamType;
+  tier?: UserTier;
+  search?: string;
+  limit?: number;
 }
 
-export type LeaderboardEntry = LeaderboardUser;
+export interface LeaderboardState {
+  users: LeaderboardUser[];
+  teams: TeamLeaderboard[];
+  loading: boolean;
+  error: string | null;
+  filters: LeaderboardFilter;
+  timestamp: string;
+}

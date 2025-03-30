@@ -1,42 +1,43 @@
 
-// Profile boost types
+import { LucideIcon } from "lucide-react";
+
+// Profile boost related types
 export type BoostEffectType = 
-  | 'glow' 
-  | 'sparkle' 
-  | 'shine' 
-  | 'pulse' 
-  | 'royal' 
-  | 'diamond' 
-  | 'gold' 
   | 'aura' 
   | 'highlight' 
-  | 'shadow'
+  | 'background' 
+  | 'nameEffect'
+  | 'profileGlow'
   | 'crown'
   | 'sparkle'
   | 'glow';
 
 export type BoostStrength = 'low' | 'medium' | 'high' | 'extreme';
 
-export type BoostTier = 'basic' | 'premium' | 'royal' | 'elite';
+export type BoostTier = 'basic' | 'premium' | 'royal' | 'legendary';
 
 export interface BoostEffect {
+  id: string;
+  name: string;
+  description: string;
+  icon: string | LucideIcon;
   type: BoostEffectType;
-  strength: BoostStrength;
-  color?: string;
+  cssClass: string;
+  tier: BoostTier | string;
   duration: number;
-  icon: string;
+  price: number;
+  durationDays?: number; // for backward compatibility
+  previewImage?: string;
 }
 
 export interface ProfileBoost {
   id: string;
   userId: string;
-  type: BoostEffectType;
-  tier: BoostTier;
-  startDate: string;
-  endDate: string;
-  active: boolean;
-  strength: BoostStrength;
-  level?: string;
+  effectId: string;
+  startDate: string | Date;
+  endDate: string | Date;
+  isActive: boolean;
+  purchaseDate: string | Date;
 }
 
 export interface ProfileBoostData {
@@ -44,12 +45,19 @@ export interface ProfileBoostData {
   name: string;
   description: string;
   type: BoostEffectType;
-  tier: BoostTier;
-  strength: BoostStrength;
   duration: number;
   price: number;
-  icon: string;
-  startDate?: string;
+  cssClass: string;
+  tier: string;
+  startDate?: string | Date;
+  endDate?: string | Date;
+  isActive?: boolean;
 }
 
-export type { ProfileBoost, BoostEffect, BoostEffectType, BoostStrength, BoostTier, ProfileBoostData };
+// Re-export types with 'export type' syntax for TS modules
+export type { ProfileBoost };
+export type { BoostEffect };
+export type { BoostEffectType };
+export type { BoostStrength };
+export type { BoostTier };
+export type { ProfileBoostData };

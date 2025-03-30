@@ -1,51 +1,10 @@
 
 // Cosmetics-related types
-export type CosmeticCategory = 
-  | 'border' 
-  | 'color' 
-  | 'font' 
-  | 'emoji' 
-  | 'title' 
-  | 'background' 
-  | 'effect' 
-  | 'badge' 
-  | 'theme';
-
-export type CosmeticRarity = 
-  | 'common' 
-  | 'uncommon' 
-  | 'rare' 
-  | 'epic' 
-  | 'legendary';
-
-export interface SocialLink {
-  id: string | number;
-  platform: string;
-  url: string;
-  username?: string;
-  display?: string;
-  icon?: string;
-  verified?: boolean;
-  primary?: boolean;
-  clicks?: number;
-  price?: number; // Added for cosmetic purchases
-}
-
-export interface CosmeticItem {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  type: string;
-  category: CosmeticCategory;
-  rarity: CosmeticRarity;
-  imageSrc?: string;
-  image?: string;
-  cssClass?: string;
-}
+export type CosmeticCategory = 'border' | 'color' | 'font' | 'emoji' | 'title' | 'background' | 'effect' | 'badge' | 'theme';
+export type CosmeticRarity = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary' | 'mythic' | 'unique' | 'royal';
 
 export interface UserCosmeticState {
-  // Currently active cosmetics
+  // Active selections
   activeBorder?: string;
   activeColor?: string;
   activeFont?: string;
@@ -56,7 +15,7 @@ export interface UserCosmeticState {
   activeEffect?: string;
   activeTheme?: string;
   
-  // Unlocked cosmetics
+  // Unlocked items
   unlockedBorders: string[];
   unlockedColors: string[];
   unlockedFonts: string[];
@@ -67,49 +26,59 @@ export interface UserCosmeticState {
   unlockedBadges: string[];
   unlockedThemes: string[];
   
-  // For legacy support
-  borders?: string[];
-  colors?: string[];
-  fonts?: string[];
-  emojis?: string[];
-  titles?: string[];
-  backgrounds?: string[];
-  effects?: string[];
-  badges?: string[];
-  themes?: string[];
+  // Also include arrays for compatibility
+  borders: string[];
+  colors: string[];
+  fonts: string[];
+  emojis: string[];
+  titles: string[];
+  backgrounds: string[];
+  effects: string[];
+  badges: string[];
+  themes: string[];
+
+  // Special flags
   foundersPass?: boolean;
+}
+
+export interface CosmeticItem {
+  id: string;
+  name: string;
+  category: CosmeticCategory;
+  description: string;
+  rarity: CosmeticRarity;
+  price: number;
+  isPurchasable: boolean;
+  isLimited: boolean;
+  requiredTier?: string;
+  requiredRank?: number;
+  requiredTeam?: string;
+  cssClass?: string;
+  previewUrl?: string;
+}
+
+export interface CosmeticPurchase {
+  id: string;
+  userId: string;
+  cosmeticId: string;
+  purchaseDate: string | Date;
+  price: number;
+  method: string;
+}
+
+export interface CosmeticUnlock {
+  userId: string;
+  cosmeticId: string;
+  category: CosmeticCategory;
+  unlockDate: string | Date;
+  method: 'purchase' | 'reward' | 'achievement' | 'event' | 'admin';
 }
 
 export interface CosmeticSet {
   id: string;
   name: string;
   description: string;
-  price: number;
   items: CosmeticItem[];
-  discount: number;
-  rarity: CosmeticRarity;
-  limited: boolean;
-  expiresAt?: string;
-}
-
-export interface CosmeticShopItem {
-  id: string;
-  name: string;
-  description: string;
   price: number;
-  type: CosmeticCategory;
-  rarity: CosmeticRarity;
-  imageSrc?: string;
-  isPurchased: boolean;
-  isEquipped: boolean;
-  isLimited?: boolean;
-  expiresAt?: string;
-}
-
-export interface CosmeticShopState {
-  items: CosmeticShopItem[];
-  sets: CosmeticSet[];
-  featured: CosmeticShopItem[];
-  loading: boolean;
-  error: string | null;
+  discountPercent: number;
 }
