@@ -1,117 +1,94 @@
 
-/**
- * Utility functions for formatting values consistently throughout the application
- */
+// Format functions for different data types
 
-/**
- * Format a currency value with dollar sign
- */
-export const formatCurrency = (value: number | undefined | null): string => {
-  if (value === undefined || value === null) return '$0.00';
+// Format number as currency
+export const formatCurrency = (amount: number): string => {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
     minimumFractionDigits: 2,
     maximumFractionDigits: 2
-  }).format(value);
+  }).format(amount);
 };
 
-/**
- * Format a currency value without dollar sign
- */
-export const formatDollarAmount = (value: number | undefined | null): string => {
-  if (value === undefined || value === null) return '0.00';
-  return new Intl.NumberFormat('en-US', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2
-  }).format(value);
+// Format as dollar amount with no cents for large numbers
+export const formatDollarAmount = (amount: number): string => {
+  if (amount >= 1000) {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
+    }).format(amount);
+  }
+  return formatCurrency(amount);
 };
 
-/**
- * Format a date in a human-readable format
- */
-export const formatDate = (date: Date | string | null | undefined): string => {
-  if (!date) return 'N/A';
-  
+// Format date with options
+export const formatDate = (date: Date | string, format: 'short' | 'medium' | 'long' = 'medium'): string => {
   const dateObj = typeof date === 'string' ? new Date(date) : date;
   
-  return new Intl.DateTimeFormat('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  }).format(dateObj);
-};
-
-/**
- * Format a historical monetary value with adjustments
- */
-export const formatHistoricalValue = (
-  value: number, 
-  year: number, 
-  currentYear = new Date().getFullYear()
-): string => {
-  // Simple inflation adjustment (very approximate)
-  const averageInflation = 0.03; // 3% per year
-  const yearsDifference = currentYear - year;
-  const adjustmentFactor = Math.pow(1 + averageInflation, yearsDifference);
-  const adjustedValue = value * adjustmentFactor;
+  const options: Intl.DateTimeFormatOptions = {
+    short: { month: 'numeric', day: 'numeric', year: '2-digit' },
+    medium: { month: 'short', day: 'numeric', year: 'numeric' },
+    long: { month: 'long', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' }
+  }[format];
   
-  return formatCurrency(adjustedValue);
+  return new Intl.DateTimeFormat('en-US', options).format(dateObj);
 };
 
-/**
- * Format a wallet address for display
- */
-export const formatAddress = (address: string | null | undefined): string => {
-  if (!address) return 'Unknown Address';
-  return `${address.substring(0, 4)}...${address.substring(address.length - 4)}`;
+// Format historical value (e.g., "2 days ago")
+export const formatHistoricalValue = (date: Date | string): string => {
+  const dateObj = typeof date === 'string' ? new Date(date) : date;
+  const now = new Date();
+  const diffInMs = now.getTime() - dateObj.getTime();
+  const diffInSecs = Math.floor(diffInMs / 1000);
+  const diffInMins = Math.floor(diffInSecs / 60);
+  const diffInHours = Math.floor(diffInMins / 60);
+  const diffInDays = Math.floor(diffInHours / 24);
+  
+  if (diffInSecs < 60) return 'just now';
+  if (diffInMins < 60) return `${diffInMins} ${diffInMins === 1 ? 'minute' : 'minutes'} ago`;
+  if (diffInHours < 24) return `${diffInHours} ${diffInHours === 1 ? 'hour' : 'hours'} ago`;
+  if (diffInDays < 30) return `${diffInDays} ${diffInDays === 1 ? 'day' : 'days'} ago`;
+  
+  return formatDate(dateObj, 'short');
 };
 
-/**
- * Format a number with commas
- */
-export const formatNumber = (value: number | undefined | null): string => {
-  if (value === undefined || value === null) return '0';
-  return new Intl.NumberFormat('en-US').format(value);
+// Format address to shorter form
+export const formatAddress = (address: string, startChars = 4, endChars = 4): string => {
+  if (!address) return '';
+  if (address.length <= startChars + endChars) return address;
+  return `${address.substring(0, startChars)}...${address.substring(address.length - endChars)}`;
 };
 
-/**
- * Format a file size in bytes to a human-readable format
- */
-export const formatFileSize = (bytes: number | undefined | null): string => {
-  if (bytes === undefined || bytes === null) return '0 Bytes';
+// Format number with commas and optional decimal places
+export const formatNumber = (num: number, decimals = 0): string => {
+  return new Intl.NumberFormat('en-US', {
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals
+  }).format(num);
+};
+
+// Format file size
+export const formatFileSize = (bytes: number): string => {
   if (bytes === 0) return '0 Bytes';
   
+  const k = 1024;
   const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
-  const i = Math.floor(Math.log(bytes) / Math.log(1024));
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
   
-  return parseFloat((bytes / Math.pow(1024, i)).toFixed(2)) + ' ' + sizes[i];
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
 };
 
-/**
- * Format a time duration in seconds to a human-readable format
- */
-export const formatDuration = (seconds: number | undefined | null): string => {
-  if (seconds === undefined || seconds === null) return '0s';
-  
-  const minutes = Math.floor(seconds / 60);
-  const remainingSeconds = seconds % 60;
-  
-  if (minutes === 0) {
-    return `${remainingSeconds}s`;
-  }
-  
-  return `${minutes}m ${remainingSeconds}s`;
+// Format duration (seconds to MM:SS)
+export const formatDuration = (seconds: number): string => {
+  const mins = Math.floor(seconds / 60);
+  const secs = Math.floor(seconds % 60);
+  return `${mins}:${secs.toString().padStart(2, '0')}`;
 };
 
-/**
- * Format a percentage with a specific number of decimal places
- */
-export const formatPercentage = (
-  value: number | undefined | null, 
-  decimalPlaces = 2
-): string => {
-  if (value === undefined || value === null) return '0%';
-  
-  return value.toFixed(decimalPlaces) + '%';
+// Format percentage
+export const formatPercentage = (value: number, decimals = 1): string => {
+  return `${value.toFixed(decimals)}%`;
 };

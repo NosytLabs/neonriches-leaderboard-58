@@ -1,8 +1,7 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import Icon from '@/components/ui/icon';
+import Icon from '@/components/Icon';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/contexts/auth';
 import SpendThroneLogo from '@/components/brand/SpendThroneLogo';
@@ -24,7 +23,6 @@ const RoyalHero: React.FC<RoyalHeroProps> = ({
   const [ctaText, setCtaText] = useState<string>(generateAbsurdCTA(absurdityLevel));
   const [showFact, setShowFact] = useState<boolean>(false);
   
-  // Change CTA text randomly every 5 seconds for absurdity
   useEffect(() => {
     const interval = setInterval(() => {
       setCtaText(generateAbsurdCTA(absurdityLevel));
@@ -33,7 +31,6 @@ const RoyalHero: React.FC<RoyalHeroProps> = ({
     return () => clearInterval(interval);
   }, [absurdityLevel]);
   
-  // Show random fact after 3 seconds
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowFact(true);
@@ -47,10 +44,8 @@ const RoyalHero: React.FC<RoyalHeroProps> = ({
       'relative py-20 overflow-hidden',
       className
     )}>
-      {/* Background gradient and texture */}
       <div className="absolute inset-0 bg-gradient-to-b from-black to-gray-900 opacity-80" />
       
-      {/* Animated coin effects */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
         {Array.from({ length: 12 }).map((_, i) => (
           <motion.div 
@@ -80,14 +75,13 @@ const RoyalHero: React.FC<RoyalHeroProps> = ({
             }}
           >
             <Icon 
-              name="coin" 
-              size={Math.random() > 0.5 ? 'md' : 'lg'} 
+              name="Coins" 
+              size={Math.random() > 0.5 ? 24 : 32} 
             />
           </motion.div>
         ))}
       </div>
       
-      {/* Floating credit cards for absurdity */}
       {absurdityLevel !== 'mild' && (
         <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
           {Array.from({ length: 5 }).map((_, i) => (
@@ -125,7 +119,6 @@ const RoyalHero: React.FC<RoyalHeroProps> = ({
       
       <div className="container relative z-10 mx-auto px-4 py-12">
         <div className="flex flex-col items-center text-center mb-8">
-          {/* Logo with animation */}
           <div className="mb-6 animate-royal-entrance">
             <SpendThroneLogo variant="full" size="2xl" className="h-24 md:h-32" animated />
           </div>
@@ -156,7 +149,6 @@ const RoyalHero: React.FC<RoyalHeroProps> = ({
             The ultimate pay-to-win social experience where your status is determined by how much you spend!
           </motion.p>
           
-          {/* Absurd money counter */}
           {absurdityLevel !== 'mild' && (
             <motion.div
               className="mt-6 text-lg md:text-xl text-royal-gold"
@@ -175,7 +167,6 @@ const RoyalHero: React.FC<RoyalHeroProps> = ({
             </motion.div>
           )}
           
-          {/* CTA buttons */}
           <div className="flex flex-col sm:flex-row gap-4 mt-8 animate-royal-entrance animation-delay-300">
             {!isAuthenticated ? (
               <>
@@ -191,7 +182,7 @@ const RoyalHero: React.FC<RoyalHeroProps> = ({
                       animate={{ scale: [1, 1.03, 1] }}
                       transition={{ duration: 1.5, repeat: Infinity }}
                     >
-                      <Icon name="crown" size="sm" className="mr-2" />
+                      <Icon name="Crown" size={16} className="mr-2" />
                       Claim Your Throne
                     </motion.span>
                   </Button>
@@ -202,7 +193,7 @@ const RoyalHero: React.FC<RoyalHeroProps> = ({
                     size="lg" 
                     className="border-royal-gold/50 text-royal-gold hover:bg-royal-gold/10 hover:text-royal-gold/90"
                   >
-                    <Icon name="trophy" size="sm" className="mr-2" />
+                    <Icon name="Trophy" size={16} className="mr-2" />
                     View Leaderboard
                   </Button>
                 </Link>
@@ -222,7 +213,7 @@ const RoyalHero: React.FC<RoyalHeroProps> = ({
                         scale: absurdityLevel === 'ridiculous' || absurdityLevel === 'unhinged' ? 1.2 : 1.05
                       }}
                     >
-                      <Icon name="coin" size="sm" className="mr-2" />
+                      <Icon name="Coins" size={16} className="mr-2" />
                       {ctaText}
                     </motion.span>
                   </Button>
@@ -233,7 +224,7 @@ const RoyalHero: React.FC<RoyalHeroProps> = ({
                     size="lg" 
                     className="border-royal-gold/50 text-royal-gold hover:bg-royal-gold/10 hover:text-royal-gold/90"
                   >
-                    <Icon name="trophy" size="sm" className="mr-2" />
+                    <Icon name="Trophy" size={16} className="mr-2" />
                     View Your Rank
                   </Button>
                 </Link>
@@ -242,7 +233,6 @@ const RoyalHero: React.FC<RoyalHeroProps> = ({
           </div>
         </div>
         
-        {/* Features section */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
           <motion.div 
             className="bg-black/30 backdrop-blur-sm rounded-lg p-6 border border-white/10 animate-royal-entrance animation-delay-400"
@@ -252,7 +242,7 @@ const RoyalHero: React.FC<RoyalHeroProps> = ({
             whileHover={{ y: -5, transition: { duration: 0.2 } }}
           >
             <div className="rounded-full w-12 h-12 flex items-center justify-center bg-gradient-to-br from-amber-400 to-yellow-600 mb-4">
-              <Icon name="crown" size="md" />
+              <Icon name="Crown" size={24} />
             </div>
             <h3 className="text-xl font-bold mb-2">Pay To Win</h3>
             <p className="text-white/70">Your rank is determined solely by how much you spend. It's that simple.</p>
@@ -287,7 +277,6 @@ const RoyalHero: React.FC<RoyalHeroProps> = ({
           </motion.div>
         </div>
         
-        {/* Random absurd fact */}
         <AnimatePresence>
           {showFact && (
             <div className="mt-12 flex justify-center">

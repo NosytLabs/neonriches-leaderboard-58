@@ -1,50 +1,32 @@
 
-/**
- * Types for the sound system
- */
-
 export type SoundType = 
   | 'click'
-  | 'hover'
-  | 'notification'
-  | 'success'
-  | 'error'
-  | 'purchase'
-  | 'deposit'
-  | 'withdraw'
-  | 'rank-up'
-  | 'achievement'
-  | 'royal-decree'
-  | 'message'
-  | 'coin-drop'
-  | 'crown-click'
-  | 'pageTransition'
-  | 'shame'
-  | 'win'
-  | 'lose'
-  | 'reward'
-  | 'seal'
-  | 'parchmentUnfurl'
-  | 'swordClash'
   | 'coinDrop'
+  | 'purchase'
   | 'royalAnnouncement'
-  | 'tomatoes'
-  | 'eggs'
-  | 'stocks'
-  | 'silence'
-  | 'courtJester';
+  | 'pageTransition'
+  | 'reward'
+  | 'win'
+  | 'message'
+  | 'shame'
+  | 'swordClash'
+  | 'seal'
+  | 'parchmentUnfurl';
 
-export interface SoundAsset {
-  id: string;
-  url: string;
-  volume?: number;
-  loop?: boolean;
-  duration?: number;
+export interface AudioLoaderReturn {
+  play: (soundType: SoundType) => void;
+  stop: (soundType: SoundType) => void;
+  pauseAll: () => void;
+  resumeAll: () => void;
+  isPlaying: (soundType: SoundType) => boolean;
+  setVolume: (volume: number) => void;
 }
 
-export interface SoundOptions {
-  volume?: number;
-  loop?: boolean;
-  playbackRate?: number;
-  delay?: number;
+export interface PremiumSoundPackDetails {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  previewUrl: string;
+  includes: SoundType[];
 }

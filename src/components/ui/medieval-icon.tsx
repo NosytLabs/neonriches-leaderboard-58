@@ -1,93 +1,81 @@
 
 import React from 'react';
-import { cn } from '@/lib/utils';
-import { Icon, IconName } from '@/components/ui/icon';
-
-// Map medieval icon names to our Icon component names
-const medievalIconMap: Record<MedievalIconName, IconName> = {
-  crown: 'crown',
-  shield: 'shield',
-  sword: 'sword',
-  scroll: 'scroll',
-  coins: 'coin',
-  castle: 'landmark',
-  dragon: 'warning', // We'll use a warning icon for dragon
-  goblet: 'wine',
-  potion: 'flask',
-  map: 'map',
-  key: 'key',
-  wallet: 'wallet',
-  medal: 'medal',
-  heart: 'heart',
-  trophy: 'trophy',
-  seal: 'medal',
-  sparkles: 'sparkles',
-  flame: 'flame',
-  sunburst: 'sun',
-  water: 'droplets',
-  user: 'user',
-  message: 'message-square',
-  gem: 'gem'
-};
+import Icon from '@/components/Icon';
+import { IconName } from '@/components/Icon';
 
 export type MedievalIconName = 
-  'crown' | 'shield' | 'sword' | 'scroll' | 'coins' | 
-  'castle' | 'dragon' | 'goblet' | 'potion' | 'map' | 
-  'key' | 'wallet' | 'medal' | 'heart' | 'trophy' | 
-  'seal' | 'sparkles' | 'flame' | 'sunburst' | 'water' |
-  'user' | 'message' | 'gem';
+  | 'Crown'
+  | 'Shield'
+  | 'Sword'
+  | 'Scroll'
+  | 'Coins'
+  | 'Landmark'
+  | 'AlertTriangle'
+  | 'Wine'
+  | 'Flask'
+  | 'Map'
+  | 'Key'
+  | 'Wallet'
+  | 'Medal'
+  | 'Heart'
+  | 'Trophy'
+  | 'Sparkles'
+  | 'Flame'
+  | 'Sun'
+  | 'Droplets'
+  | 'User'
+  | 'MessageSquare'
+  | 'Gem';
 
-export type MedievalIconSize = 
-  'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+export type MedievalIconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+export type MedievalIconColor = 'default' | 'gold' | 'silver' | 'royal' | 'crimson' | 'success' | 'warning' | 'info';
 
-export type MedievalIconColor = 
-  'gold' | 'silver' | 'purple' | 'red' | 'blue' | 'green' | 
-  'amber' | 'crimson' | 'navy' | 'copper' | 'emerald' | 'default' | 'white' | 'bronze';
-
-export interface MedievalIconProps {
+interface MedievalIconProps {
   name: MedievalIconName;
   size?: MedievalIconSize;
   color?: MedievalIconColor;
   className?: string;
-  animate?: boolean;
+  onClick?: () => void;
 }
 
-const MedievalIcon: React.FC<MedievalIconProps> = ({
-  name,
-  size = 'md',
-  color = 'gold',
+const sizeMap: Record<MedievalIconSize, number> = {
+  xs: 16,
+  sm: 20,
+  md: 24,
+  lg: 32,
+  xl: 40
+};
+
+const colorMap: Record<MedievalIconColor, string> = {
+  default: 'currentColor',
+  gold: '#d4af37',
+  silver: '#c0c0c0',
+  royal: '#7851a9',
+  crimson: '#dc143c',
+  success: '#10b981',
+  warning: '#f59e0b',
+  info: '#3b82f6'
+};
+
+const MedievalIcon: React.FC<MedievalIconProps> = ({ 
+  name, 
+  size = 'md', 
+  color = 'default',
   className,
-  animate = false
+  onClick
 }) => {
-  // Convert color to a CSS variable or color value
-  const colorMap: Record<MedievalIconColor, string> = {
-    gold: 'text-royal-gold',
-    silver: 'text-gray-300',
-    purple: 'text-purple-400',
-    red: 'text-red-500',
-    blue: 'text-blue-400',
-    green: 'text-green-500',
-    amber: 'text-amber-400',
-    crimson: 'text-royal-crimson',
-    navy: 'text-royal-navy',
-    copper: 'text-amber-600',
-    emerald: 'text-emerald-400',
-    default: 'text-white',
-    white: 'text-white',
-    bronze: 'text-amber-800'
-  };
-  
-  const animationClass = animate ? 'animate-bounce-subtle' : '';
+  // Convert MedievalIconName to IconName
+  const iconName = name as IconName;
+  const iconSize = sizeMap[size];
+  const iconColor = colorMap[color];
   
   return (
-    <Icon 
-      name={medievalIconMap[name]}
-      size={size}
-      className={cn(
-        colorMap[color],
-        animationClass,
-        className
-      )}
+    <Icon
+      name={iconName}
+      size={iconSize}
+      color={iconColor}
+      className={className}
+      onClick={onClick}
     />
   );
 };

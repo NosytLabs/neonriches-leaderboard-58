@@ -1,10 +1,13 @@
 
 import React from 'react';
-import { IconName, IconSize } from '@/components/ui/icon';
-import { LucideIcon } from 'lucide-react';
 import * as LucideIcons from 'lucide-react';
+import { LucideIcon, LucideProps } from 'lucide-react';
 
-interface IconProps {
+// Define icon name and size types
+export type IconName = keyof typeof LucideIcons;
+export type IconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+
+export interface IconProps {
   name: IconName;
   size?: number;
   color?: string;
@@ -19,28 +22,28 @@ const Icon: React.FC<IconProps> = ({
   className, 
   onClick 
 }) => {
-  // Convert size from number to the size format expected by the UI icon
-  const getIconSize = (size: number): IconSize => {
-    if (size <= 16) return 'xs';
-    if (size <= 20) return 'sm';
-    if (size <= 24) return 'md';
-    if (size <= 32) return 'lg';
-    return 'xl';
-  };
-  
   // Convert kebab-case to PascalCase for Lucide icons
-  const formatIconName = (name: string): string => {
-    return name
+  const formatIconName = (name: string): IconName => {
+    // If name is already PascalCase, return it
+    if (name in LucideIcons) {
+      return name as IconName;
+    }
+    
+    // Handle kebab-case conversion to PascalCase
+    const pascalCase = name
       .split('-')
       .map(part => part.charAt(0).toUpperCase() + part.slice(1))
       .join('');
+    
+    return pascalCase as IconName;
   };
   
   // Get the icon component
-  const LucideIcon = LucideIcons[formatIconName(name) as keyof typeof LucideIcons] as LucideIcon;
+  const formattedName = formatIconName(name);
+  const LucideIcon = LucideIcons[formattedName];
   
   if (!LucideIcon) {
-    console.error(`Icon "${name}" not found`);
+    console.error(`Icon "${name}" not found, formatted as "${formattedName}"`);
     return null;
   }
 

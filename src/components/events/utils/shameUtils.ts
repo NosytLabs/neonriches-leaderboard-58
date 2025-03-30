@@ -8,7 +8,8 @@ import {
   Crown, 
   Flame,
   Cloud,
-  Sparkles
+  Sparkles,
+  Milestone
 } from 'lucide-react';
 
 // Shame action prices
@@ -24,6 +25,7 @@ export const getShameActionPrice = (action: ShameAction): number => {
     case 'jester': return 20;
     case 'ridicule': return 15;
     case 'shame': return 75;
+    case 'smokeBomb': return 75;
     default: return 10;
   }
 };
@@ -57,9 +59,10 @@ export const getShameActionIcon = (action: ShameAction) => {
     case 'silence': return VolumeX;
     case 'courtJester': 
     case 'jester': return Crown;
-    case 'dunce': return Target;
+    case 'dunce': return Milestone;
     case 'ridicule': return Target;
     case 'shame': return Target;
+    case 'smokeBomb': return Cloud;
     default: return Target;
   }
 };
@@ -77,6 +80,7 @@ export const getShameActionTitle = (action: ShameAction): string => {
     case 'jester': return 'Jester Mark';
     case 'ridicule': return 'Public Ridicule';
     case 'shame': return 'Public Shaming';
+    case 'smokeBomb': return 'Royal Smoke Bomb';
     default: return 'Unknown Action';
   }
 };
@@ -94,6 +98,7 @@ export const getShameActionDescription = (action: ShameAction): string => {
     case 'jester': return 'Mark the user with the symbol of the royal jester.';
     case 'ridicule': return 'Subject the user to public ridicule on their profile.';
     case 'shame': return 'Shame the user publicly on their profile and leaderboard.';
+    case 'smokeBomb': return 'Completely obscure the user\'s profile with dramatic smoke for 8 hours.';
     default: return 'No description available';
   }
 };
@@ -115,4 +120,15 @@ export const getWeeklyDiscountedAction = (): ShameAction => {
   const weekOfYear = Math.floor(Date.now() / (7 * 24 * 60 * 60 * 1000));
   const actions: ShameAction[] = ['tomatoes', 'eggs', 'putridEggs'];
   return actions[weekOfYear % actions.length];
+};
+
+// Convert MockeryAction to ShameAction safely
+export const convertMockeryToShameAction = (action: MockeryAction): ShameAction | undefined => {
+  // Only convert if the action exists in ShameAction type
+  const shameActions: ShameAction[] = [
+    'tomatoes', 'eggs', 'putridEggs', 'stocks', 'silence', 
+    'courtJester', 'dunce', 'jester', 'ridicule', 'shame', 'smokeBomb'
+  ];
+  
+  return shameActions.includes(action as any) ? action as ShameAction : undefined;
 };
