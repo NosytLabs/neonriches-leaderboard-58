@@ -1,6 +1,7 @@
 
-export type UserTier = 'royal' | 'premium' | 'free' | 'pro' | 'basic' | 'bronze' | 'silver' | 'gold' | 'platinum';
-export type TeamType = 'red' | 'green' | 'blue' | 'none';
+export type UserTier = 'free' | 'bronze' | 'silver' | 'gold' | 'platinum' | 'royal' | 'premium' | 'pro' | 'basic';
+export type TeamType = 'red' | 'green' | 'blue' | 'none' | null;
+export type UserTeam = 'red' | 'green' | 'blue';
 export type GenderType = 'king' | 'queen' | 'neutral' | 'jester' | 'noble' | 'male' | 'female';
 
 export interface SocialLink {
@@ -9,6 +10,10 @@ export interface SocialLink {
   label?: string;
   icon?: string;
   platform?: string;
+  username?: string;
+  verified?: boolean;
+  clicks?: number;
+  title?: string;
 }
 
 export interface ProfileLink {
@@ -17,6 +22,7 @@ export interface ProfileLink {
   title: string;
   icon?: string;
   platform?: string;
+  label?: string;
 }
 
 export interface ProfileImage {
@@ -24,6 +30,8 @@ export interface ProfileImage {
   url: string;
   type: 'avatar' | 'banner' | 'background';
   default?: boolean;
+  isPrimary?: boolean;
+  caption?: string;
 }
 
 export interface UserSettings {
@@ -38,27 +46,45 @@ export interface UserSettings {
     emailUpdates: boolean;
     featuredInShowcase: boolean;
   };
+  profileVisibility?: boolean;
+  allowProfileLinks?: boolean;
+  showRank?: boolean;
+  showTeam?: boolean;
+  showSpending?: boolean;
+  publicProfile?: boolean;
+  allowMessages?: boolean;
+  emailNotifications?: boolean;
+  darkMode?: boolean;
+  language?: string;
 }
 
 export interface UserCosmetics {
-  borders: CosmeticItem[];
-  colors: CosmeticItem[];
-  fonts: CosmeticItem[];
-  emojis: CosmeticItem[];
-  titles: CosmeticItem[];
-  backgrounds: CosmeticItem[];
-  effects: CosmeticItem[];
+  borders?: CosmeticItem[];
+  colors?: CosmeticItem[];
+  fonts?: CosmeticItem[];
+  emojis?: CosmeticItem[];
+  titles?: CosmeticItem[];
+  backgrounds?: CosmeticItem[];
+  effects?: CosmeticItem[];
   badges?: string[];
   themes?: CosmeticItem[];
   foundersPass?: boolean;
+  activeBorder?: string | null;
+  activeColor?: string | null;
+  activeFont?: string | null;
+  socialLinks?: Record<string, string>;
 }
 
-export interface UserTeam {
+export interface ProfileBoost {
   id: string;
-  name: string;
-  color: string;
-  members: number;
-  rank: number;
+  startDate: string;
+  endDate: string;
+  type?: string;
+  level?: number;
+  strength?: number;
+  appliedBy: string;
+  effectId?: string;
+  effects?: string[];
 }
 
 export interface UserProfile {
@@ -66,74 +92,105 @@ export interface UserProfile {
   username: string;
   displayName?: string;
   email?: string;
-  profileImage?: string;
   bio?: string;
+  profileImage?: string;
+  joinedAt: string;
+  createdAt?: string;
   tier: UserTier;
-  team: TeamType | null;
-  rank: number;
+  team?: TeamType;
+  role?: string;
+  rank?: number;
   previousRank?: number;
-  currency?: number;
   walletBalance?: number;
   amountSpent?: number;
   totalSpent?: number;
   spentAmount?: number;
-  joinedAt: string;
-  joinDate?: string;
-  lastActive?: string;
-  gender?: GenderType;
-  socialLinks?: SocialLink[];
-  profileLinks?: ProfileLink[];
-  profileImages?: ProfileImage[];
-  cosmetics?: UserCosmetics;
-  subscription?: string;
-  subscriptions?: string[];
-  badges?: string[];
-  settings?: UserSettings;
-  achievements?: string[];
-  isVIP?: boolean;
-  role?: string;
-  certificateNFT?: any;
+  spendStreak?: number;
   followers?: number;
   following?: number;
+  lastActive?: string;
+  gender?: GenderType;
   profileViews?: number;
   profileClicks?: number;
-  purchasedFeatures?: string[];
+  activeTitle?: string | null;
+  cosmetics?: UserCosmetics;
+  subscription?: UserSubscription;
+  socialLinks?: SocialLink[];
   profileBoosts?: ProfileBoost[];
+  profileImages?: ProfileImage[];
+  walletAddress?: string;
+  isVIP?: boolean;
+  isAuthenticated?: boolean;
+  isAdmin?: boolean;
+  isVerified?: boolean;
+  lastLogin?: string;
+  certificateNFT?: {
+    mintAddress: string;
+  };
+}
+
+export interface UserSubscription {
+  plan?: string;
+  status?: 'active' | 'canceled' | 'past_due';
+  currentPeriodEnd?: string;
+  cancelAtPeriodEnd?: boolean;
+  tier?: UserTier;
+  startDate?: string;
+  endDate?: string | null;
+  autoRenew?: boolean;
+  price?: number;
 }
 
 export interface User extends UserProfile {
-  // Additional fields specific to users
-}
-
-export interface ProfileBoost {
-  id: string;
-  effectId: string;
-  duration: number;
-  startDate?: string;
-  endDate?: string;
-  active: boolean;
+  joinDate?: string;
+  settings?: UserSettings;
+  notifications?: UserNotificationSettings;
   level?: number;
-  type?: string;
-  effects?: string[];
+  experience?: number;
+  purchasedFeatures?: string[];
 }
 
-export interface BoostEffect {
-  id: string;
-  name: string;
-  description: string;
-  duration: number;
-  price: number;
-  icon: string;
-  type?: string;
-  cssClass?: string;
-  minTier?: UserTier;
-  allowStacking?: boolean;
+export interface UserNotificationSettings {
+  email: boolean;
+  marketing: boolean;
+  rankChanges: boolean;
+  teamUpdates: boolean;
+}
+
+export interface LeaderboardUser extends UserProfile {
+  rankChange?: number;
+  spendChange?: number;
+  avatarUrl?: string;
+  isVIP?: boolean;
 }
 
 export interface Badge {
   id: string;
   name: string;
-  icon: string;
   description: string;
-  tier: string;
+  icon: string;
+  color?: string;
+  earnedAt?: string;
+}
+
+export interface Achievement {
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+  progress: number;
+  maxProgress: number;
+  earnedAt?: string;
+  category?: string;
+}
+
+export interface CosmeticItem {
+  id: string;
+  name: string;
+  description?: string;
+  type?: string;
+  tier?: string;
+  cost?: number;
+  cssClass?: string;
+  imageSrc?: string;
 }

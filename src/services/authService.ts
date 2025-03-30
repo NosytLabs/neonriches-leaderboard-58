@@ -1,92 +1,55 @@
 
-/**
- * Mock authentication service
- */
-
-// Simulated user storage
-const users: Record<string, { email: string; password: string }> = {
-  'user@example.com': { email: 'user@example.com', password: 'password123' }
-};
-
-/**
- * Sign in with email and password
- */
+// Implement authentication services
 export const signInWithEmail = async (email: string, password: string): Promise<boolean> => {
-  // Simulate API delay
-  await new Promise(resolve => setTimeout(resolve, 500));
-  
-  // Check if user exists and password matches
-  const user = users[email];
-  if (user && user.password === password) {
-    return true;
-  }
-  
-  return false;
+  // Simulate API call
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(true);
+    }, 1000);
+  });
 };
 
-/**
- * Sign up with email and password
- */
 export const signUpWithEmail = async (email: string, password: string): Promise<boolean> => {
-  // Simulate API delay
-  await new Promise(resolve => setTimeout(resolve, 700));
-  
-  // Check if user already exists
-  if (users[email]) {
-    return false;
-  }
-  
-  // Create new user
-  users[email] = { email, password };
-  return true;
+  // Simulate API call
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(true);
+    }, 1000);
+  });
 };
 
-/**
- * Sign out the current user
- */
 export const signOut = async (): Promise<boolean> => {
-  // Simulate API delay
-  await new Promise(resolve => setTimeout(resolve, 300));
-  
-  return true;
+  // Simulate API call
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(true);
+    }, 500);
+  });
 };
 
-/**
- * Reset password for a user
- */
-export const resetPassword = async (email: string): Promise<boolean> => {
-  // Simulate API delay
-  await new Promise(resolve => setTimeout(resolve, 800));
-  
-  // Check if user exists
-  return !!users[email];
+export const signInWithGoogle = async (): Promise<boolean> => {
+  // Simulate API call
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(true);
+    }, 800);
+  });
 };
 
-/**
- * Update user profile
- */
-export const updateUserProfile = async (userId: string, userData: any): Promise<boolean> => {
-  // Simulate API delay
-  await new Promise(resolve => setTimeout(resolve, 600));
-  
-  return true;
+export const signInWithMagicLink = async (email: string): Promise<boolean> => {
+  // Simulate API call
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(true);
+    }, 800);
+  });
 };
 
-/**
- * Verify email address
- */
-export const verifyEmail = async (token: string): Promise<boolean> => {
-  // Simulate API delay
-  await new Promise(resolve => setTimeout(resolve, 500));
-  
-  return true;
-};
-
-export default {
-  signInWithEmail,
-  signUpWithEmail,
-  signOut,
-  resetPassword,
-  updateUserProfile,
-  verifyEmail
+export const verifyMfaCode = async (code: string): Promise<boolean> => {
+  // Simulate API call
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(code.length === 6);
+    }, 800);
+  });
 };

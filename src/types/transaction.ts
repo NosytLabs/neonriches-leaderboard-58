@@ -1,7 +1,7 @@
 
 import { User } from './user';
 
-export type TransactionType = 'deposit' | 'withdrawal' | 'purchase' | 'refund' | 'bonus' | 'transfer' | 'subscription' | 'mockery' | 'boost' | 'cosmetic';
+export type TransactionType = 'deposit' | 'withdrawal' | 'purchase' | 'refund' | 'bonus' | 'transfer' | 'subscription' | 'mockery' | 'boost' | 'cosmetic' | 'wish' | 'spend';
 
 export interface Transaction {
   id: string;
@@ -24,6 +24,9 @@ export interface SpendOptions {
   skipConfirmation?: boolean;
   skipBalanceCheck?: boolean;
   metadata?: Record<string, any>;
+  itemId?: string;
+  category?: string;
+  targetUser?: string;
 }
 
 export interface TransactionResult {

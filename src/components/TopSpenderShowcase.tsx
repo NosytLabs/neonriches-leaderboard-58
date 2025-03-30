@@ -61,7 +61,7 @@ const TopSpenderShowcase: React.FC<TopSpenderShowcaseProps> = ({ user, className
                     <DollarSign className="h-5 w-5 text-green-400 mr-2" />
                     <div>
                       <div className="text-sm text-white/60">Total Spent</div>
-                      <div className="text-xl font-bold">{formatCurrency(user.totalSpent)}</div>
+                      <div className="text-xl font-bold">{formatCurrency(user.totalSpent || 0)}</div>
                     </div>
                   </div>
                 </div>

@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -19,7 +20,7 @@ interface ChatMessage {
   username: string;
   displayName?: string;
   profileImage?: string;
-  team: UserTeam;
+  team: UserTeam | null;
   timestamp: string;
   isSystem?: boolean;
 }
@@ -184,7 +185,7 @@ const TeamChat: React.FC<TeamChatProps> = ({ user, limit = 50 }) => {
   }, [messages, activeTab]);
   
   const isUserInTop50 = () => {
-    return user && user.rank <= 50;
+    return user && user.rank !== undefined && user.rank <= 50;
   };
   
   const handleSendMessage = () => {
@@ -200,7 +201,7 @@ const TeamChat: React.FC<TeamChatProps> = ({ user, limit = 50 }) => {
         username: user.username,
         displayName: user.displayName || user.username,
         profileImage: user.profileImage,
-        team: user.team || null,
+        team: user.team && ['red', 'green', 'blue'].includes(user.team) ? user.team as UserTeam : null,
         timestamp: new Date().toISOString()
       };
       
@@ -231,9 +232,9 @@ const TeamChat: React.FC<TeamChatProps> = ({ user, limit = 50 }) => {
       return isUserInTop50();
     }
     
-    if (channel === 'red' || channel === 'green' || channel === 'blue') {
+    if (['red', 'green', 'blue'].includes(channel)) {
       if (!user || !user.team) return false;
-      return user.team === channel || user.amountSpent > 1000;
+      return user.team === channel || (user.amountSpent || 0) > 1000;
     }
     
     return false;
@@ -249,7 +250,7 @@ const TeamChat: React.FC<TeamChatProps> = ({ user, limit = 50 }) => {
       return;
     }
     
-    if ((value === 'red' || value === 'green' || value === 'blue') && user?.team !== value && user?.amountSpent <= 1000) {
+    if (['red', 'green', 'blue'].includes(value) && user?.team !== value && (user?.amountSpent || 0) <= 1000) {
       toast({
         title: "Team Restricted",
         description: `Only members of the ${value.charAt(0).toUpperCase() + value.slice(1)} Team can access this channel.`,
@@ -296,13 +297,16 @@ const TeamChat: React.FC<TeamChatProps> = ({ user, limit = 50 }) => {
       setIsJoined(true);
       setIsLoading(false);
       
+      // Only add to the message array if user.team is a valid UserTeam ('red', 'green', 'blue')
+      const userTeam = user.team && ['red', 'green', 'blue'].includes(user.team) ? user.team as UserTeam : null;
+      
       const joinMessage: ChatMessage = {
         id: `join-${Date.now()}`,
         text: `${user.displayName || user.username} has joined the chat.`,
         userId: 'system',
         username: 'System',
         displayName: 'Royal Announcer',
-        team: user.team || null,
+        team: userTeam,
         timestamp: new Date().toISOString(),
         isSystem: true
       };
@@ -438,7 +442,7 @@ const TeamChat: React.FC<TeamChatProps> = ({ user, limit = 50 }) => {
                         {msg.userId === user.id && !msg.isSystem && (
                           <Avatar className="h-8 w-8 ml-2">
                             <AvatarImage src={user.profileImage} alt={user.displayName || user.username} />
-                            <AvatarFallback className={getTeamColor(user.team || null)}>
+                            <AvatarFallback className={getTeamColor(user.team as UserTeam)}>
                               {(user.displayName || user.username).charAt(0).toUpperCase()}
                             </AvatarFallback>
                           </Avatar>

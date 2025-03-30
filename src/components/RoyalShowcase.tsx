@@ -29,6 +29,7 @@ const RoyalShowcase: React.FC<RoyalShowcaseProps> = ({ className = '' }) => {
     tier: 'royal',
     team: 'red',
     walletBalance: 10000,
+    // Adding spendStreak property
     spendStreak: 30
   };
 
@@ -72,13 +73,13 @@ const RoyalShowcase: React.FC<RoyalShowcaseProps> = ({ className = '' }) => {
                   <div className="glass-morphism border-white/10 p-3 rounded-lg flex flex-col items-center">
                     <DollarSign className="h-5 w-5 text-green-400" />
                     <div className="text-sm text-white/60">Total Spent</div>
-                    <div className="font-bold">{formatCurrency(topSpender.totalSpent)}</div>
+                    <div className="font-bold">{formatCurrency(topSpender.totalSpent || 0)}</div>
                   </div>
 
                   <div className="glass-morphism border-white/10 p-3 rounded-lg flex flex-col items-center">
                     <TrendingUp className="h-5 w-5 text-blue-400" />
                     <div className="text-sm text-white/60">Streak</div>
-                    <div className="font-bold">{topSpender.spendStreak} days</div>
+                    <div className="font-bold">{topSpender.spendStreak || 0} days</div>
                   </div>
 
                   <div className="glass-morphism border-white/10 p-3 rounded-lg flex flex-col items-center">
