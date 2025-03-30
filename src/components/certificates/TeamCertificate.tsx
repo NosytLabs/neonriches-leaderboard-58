@@ -1,3 +1,4 @@
+
 import React, { useRef, useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
@@ -174,10 +175,10 @@ const TeamCertificate: React.FC<TeamCertificateProps> = ({
         await navigator.share({
           title: `${user.displayName || user.username}'s SpendThrone Certificate`,
           text: `I am officially ranked #${user.rank} in the SpendThrone hierarchy. Behold my digital nobility!`,
-          url: certificate.shareUrl || window.location.href,
+          url: certificate.shareUrl || certificate.imageUrl || window.location.href,
         });
       } else {
-        const shareUrl = certificate.shareUrl || window.location.href;
+        const shareUrl = certificate.shareUrl || certificate.imageUrl || window.location.href;
         await navigator.clipboard.writeText(shareUrl);
         
         toast({

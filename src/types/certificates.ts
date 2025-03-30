@@ -1,5 +1,5 @@
 
-export type CertificateType = 'noble' | 'royal' | 'knight' | 'founder';
+export type CertificateType = 'noble' | 'royal' | 'knight' | 'founder' | 'nobility';
 
 export interface Certificate {
   id: string;
@@ -14,6 +14,14 @@ export interface Certificate {
   createdAt: string;
   rank?: number;
   amountSpent?: number;
+  
+  // Add missing properties that components are using
+  team?: string;
+  title?: string;
+  description?: string;
+  imageUrl?: string; // Alias for imageUri for backward compatibility
+  shareUrl?: string;
+  style?: string;
 }
 
 export interface CertificateTemplate {
@@ -22,9 +30,11 @@ export interface CertificateTemplate {
   description: string;
   type: CertificateType;
   imageUrl: string;
+  previewUrl?: string; // Adding this since it's being used
   availableForTier?: string;
   availableForRank?: number;
   requiresFounder?: boolean;
+  style?: string;
 }
 
 export interface CertificateMetadata {
@@ -33,4 +43,16 @@ export interface CertificateMetadata {
   image: string;
   attributes: { trait_type: string; value: string | number }[];
   rank?: number;
+}
+
+// These types are referenced but missing, so let's add them
+export interface CertificateRepository {
+  getCertificateById: (id: string) => Promise<Certificate | null>;
+  updateCertificate: (certificate: Certificate) => Promise<boolean>;
+  getCertificatesForUser: (userId: string) => Promise<Certificate[]>;
+  getMintedCertificatesForUser: (userId: string) => Promise<Certificate[]>;
+}
+
+export interface CertificateTemplateFactory {
+  getTemplatesForUser: (user: any) => Promise<CertificateTemplate[]>;
 }

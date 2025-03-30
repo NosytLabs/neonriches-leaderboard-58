@@ -49,7 +49,7 @@ const CertificateDisplay = ({
         <div className="flex flex-col space-y-4">
           <div className="text-center">
             <h2 className={`text-2xl font-bold ${getTeamColor(certificate.team)}`}>
-              {certificate.title}
+              {certificate.title || `${certificate.type} Certificate`}
             </h2>
             {certificate.description && (
               <p className="text-white/70 mt-2">{certificate.description}</p>
@@ -68,11 +68,11 @@ const CertificateDisplay = ({
             </Badge>
           </div>
 
-          {certificate.imageUrl && (
+          {(certificate.imageUrl || certificate.imageUri) && (
             <div className="mt-4 rounded-lg overflow-hidden">
               <img 
-                src={certificate.imageUrl} 
-                alt={certificate.title} 
+                src={certificate.imageUrl || certificate.imageUri} 
+                alt={certificate.title || certificate.type} 
                 className="w-full object-contain"
               />
             </div>

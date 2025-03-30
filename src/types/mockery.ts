@@ -1,123 +1,78 @@
 
-// Define MockeryAction as a string literal union type
+// Define the mockery action types
 export type MockeryAction = 
   | 'tomatoes'
-  | 'eggs' 
-  | 'putridEggs'
+  | 'eggs'
   | 'stocks'
+  | 'protection'
+  | 'putridEggs'
   | 'dunce'
   | 'silence'
   | 'courtJester'
-  | 'jester'
-  | 'smokeBomb'
-  | 'glitterBomb'
+  | 'shame'
   | 'taunt'
   | 'ridicule'
-  | 'shame'
+  | 'jester'
   | 'mock'
   | 'humiliate'
   | 'expose'
   | 'guillotine'
   | 'dungeons'
   | 'removal'
-  | 'crown'
-  | 'target'
-  | 'challenge'
-  | 'jest'
-  | 'protection'
-  | 'immune'
-  | 'defeat'
   | 'roast'
   | 'royalPie'
   | 'jokeCrown'
   | 'memeFrame';
 
-// Make ShameAction an alias of MockeryAction for backward compatibility
-export type ShameAction = MockeryAction;
+// Define the mockery tier levels
+export type MockeryTier = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
 
-export type MockeryTier = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary' | 'basic' | 'premium' | 'bronze' | 'silver' | 'gold' | 'platinum' | 'diamond';
+// Define the mockery target types
+export type MockeryTargetType = 'user' | 'team' | 'all';
 
-export interface MockeryActionData {
-  id: string;
-  name: string;
-  description: string;
-  cost: number;
-  effect: string;
-  duration: number;
-  icon: string;
-  targetId?: string;
-  targetUsername?: string;
-  tier?: MockeryTier;
-}
-
+// Define a mockery event structure
 export interface MockeryEvent {
   id: string;
-  actionId: string;
-  action?: MockeryAction; // For backward compatibility
-  senderId: string;
-  sourceId?: string; // For backward compatibility
-  targetId: string;
-  targetUserId?: string; // For backward compatibility
-  timestamp: string;
-  duration: number;
+  action: MockeryAction;
+  sourceUserId: string;
+  targetUserId: string;
+  timestamp: number;
+  expiresAt: number;
   isActive: boolean;
-  active?: boolean; // For backward compatibility
-  endTime: string;
-  expiresAt?: string; // For backward compatibility
-  appliedAt?: string; // For backward compatibility
-  appliedById?: string; // For backward compatibility
+  metadata?: Record<string, any>;
+  // Added property for sourceName
+  sourceName?: string;
 }
 
-export interface MockeryEffectData {
-  id: string;
-  targetId: string;
-  effect: string;
-  durationRemaining: number;
-  senderName: string;
-  actionName: string;
-}
-
-export interface UserMockeryStatus {
+// Define mockery protection structure
+export interface MockeryProtection {
   userId: string;
-  activeEffects: MockeryEffectData[];
-  lastMocked: string | null;
+  expiresAt: number;
+  type: 'basic' | 'advanced' | 'royal';
+  isActive: boolean;
 }
 
-export interface MockUser {
-  id: string;
-  username: string;
-  displayName?: string;
-  profileImage?: string;
-  rank: number;
-  mockeryCount?: number;
-  lastMocked?: string;
-  tier?: MockeryTier;
-  team?: string; // Make this optional for backward compatibility
+// Define user mockery stats
+export interface UserMockeryStats {
+  userId: string;
+  mockeriesReceived: number;
+  mockeriesSent: number;
+  protectionsPurchased: number;
+  lastMocked?: number;
+  lastMockedBy?: string;
+  mockeryHistory: MockeryEvent[];
 }
 
-export interface ShameAction {
-  id: string;
-  name: string;
-  description: string;
-  tier: MockeryTier;
-  cost: number;
-  effect: string;
-  icon: string;
-  duration?: number; // Add duration for compatibility with MockeryAction
+// Define a hook return type for mockery functionality
+export interface UseMockeryReturn {
+  mockUsers: any[];
+  isUserProtected: (username: string) => boolean;
+  protectUser: (username: string) => void;
+  isUserShamed: (username: string) => boolean;
+  mockUser: (user: any, targetUsername: string, action: MockeryAction) => void;
+  getUserMockeryCount: (username: string) => number;
+  getUserMockedOthersCount: (username: string) => number;
+  getActiveMockery: (username: string) => MockeryEvent | null;
 }
 
-export interface ExtendedMockeryAction extends MockeryActionData {
-  tier: MockeryTier;
-  targetUser?: MockUser;
-}
-
-export interface MockedUser {
-  username: string;
-  displayName: string;
-  avatarUrl?: string;
-  mockedReason: string;
-  mockedTimestamp: string;
-  mockedBy: string;
-  mockedTier?: string;
-  mockeryCount: number;
-}
+// No duplicate ShameAction export here

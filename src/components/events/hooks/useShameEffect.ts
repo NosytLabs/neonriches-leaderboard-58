@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useCallback } from 'react';
 import { AnimationConfig } from '@/types/animations';
 import { useSound } from '@/hooks/sounds/use-sound';
@@ -235,6 +234,3 @@ export const useShameEffect = (options = { cooldownPeriod: 24 * 60 * 60 * 1000 }
     getShameCount
   };
 };
-
-// Re-export the type
-export type { ShameAction };
