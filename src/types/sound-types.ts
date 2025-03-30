@@ -1,48 +1,49 @@
 
+// Sound type definitions
+
 export type SoundType = 
-  | 'coinDrop' 
-  | 'reward' 
-  | 'notification' 
-  | 'click' 
-  | 'success' 
-  | 'error' 
-  | 'royalAnnouncement' 
-  | 'levelUp' 
-  | 'purchase' 
-  | 'shame' 
-  | 'swordClash' 
-  | 'pageTransition' 
-  | 'win' 
-  | 'message' 
-  | 'seal' 
-  | 'applause' 
-  | 'throne' 
-  | 'mockery' 
-  | 'deposit' 
-  | 'rankUp' 
-  | 'royal' 
-  | 'rankChange' 
-  | 'smoke' 
-  | 'tab' 
+  | 'success'
+  | 'error'
+  | 'warning'
+  | 'info'
+  | 'notification'
   | 'achievement'
+  | 'purchase'
+  | 'levelUp'
+  | 'royal'
   | 'trumpets'
-  | 'scroll'
-  | 'potion'
-  | 'boost'
-  | 'advertisement'
-  | 'parchmentUnfurl'
-  | 'wish'
-  | 'coin'
+  | 'fanfare'
+  | 'coins'
+  | 'spend'
+  | 'deposit'
+  | 'withdrawal'
+  | 'click'
   | 'hover'
-  | 'pageChange';
+  | 'tab'
+  | 'shame'
+  | 'taunt'
+  | 'mockery'
+  | 'shatter'
+  | 'sweep'
+  | 'pop'
+  | 'swoosh'
+  | 'chime'
+  | 'bell'
+  | 'alert'
+  | 'drum'
+  | 'throne'
+  | 'applause'
+  | 'boo'
+  | 'medal'
+  | 'medallion'
+  | 'certificate';
 
 export interface AudioLoaderReturn {
-  play: (sound: SoundType) => void;
-  stop: (sound: SoundType) => void;
+  isLoading: boolean;
   isReady: boolean;
-  sounds: Record<SoundType, string>;
-  volumes: Record<SoundType, number>;
-  loading?: boolean;
+  soundLibrary: Record<SoundType, string>;
+  playSound: (sound: SoundType) => void;
+  error: Error | null;
 }
 
 export interface PremiumSoundPackDetails {
@@ -53,22 +54,5 @@ export interface PremiumSoundPackDetails {
   previewSound: SoundType;
   sounds: SoundType[];
   features: string[];
-  includes: string[];
-}
-
-export interface UseSoundOptions {
-  volume?: number;
-  loop?: boolean;
-  interrupt?: boolean;
-  onEnd?: () => void;
-  baseVolume?: number;
-  disableCache?: boolean;
-}
-
-export interface UseSoundReturn {
-  play: (sound?: SoundType) => void;
-  stop: (sound?: SoundType) => void;
-  isPlaying: boolean;
-  duration: number;
-  playSound?: (sound: SoundType) => void;
+  includes: SoundType[];
 }

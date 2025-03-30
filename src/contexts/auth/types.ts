@@ -1,5 +1,5 @@
 
-import { User } from '@/types/user';
+import { User, UserProfile } from '@/types/user';
 
 export interface RegisterData {
   username: string;
@@ -74,6 +74,4 @@ export interface AuthAction {
   payload?: any;
 }
 
-// Import UserProfile from types
-import type { UserProfile } from '@/types/user';
-export type { UserProfile };
+export { UserProfile };

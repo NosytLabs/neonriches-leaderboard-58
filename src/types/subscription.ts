@@ -1,45 +1,51 @@
 
-export type SubscriptionTier = 'free' | 'premium' | 'royal';
-export type SubscriptionPeriod = 'monthly' | 'yearly';
-export type SubscriptionStatus = 'active' | 'canceled' | 'expired' | 'paused';
+// Subscription types
+
+import { UserTier } from './user';
+
+export interface SubscriptionTier {
+  id: string;
+  name: string;
+  tier: UserTier;
+  price: number;
+  interval: 'month' | 'year';
+  features: string[];
+  description: string;
+  isPopular?: boolean;
+  ctaText?: string;
+  color?: string;
+  tag?: string;
+}
 
 export interface SubscriptionPlan {
   id: string;
   name: string;
-  tier: SubscriptionTier;
+  description: string;
   price: number;
-  yearlyPrice?: number;
+  interval: 'month' | 'year';
+  tier: UserTier;
   features: string[];
-  description: string;
-  priceId?: string;
-  yearlyPriceId?: string;
-  popular?: boolean;
-  color?: string;
+  isPopular?: boolean;
 }
 
-export interface UserSubscription {
-  id: string;
-  userId: string;
-  tier: SubscriptionTier;
-  startDate: string;
-  endDate: string;
-  status: SubscriptionStatus;
-  period: SubscriptionPeriod;
-  autoRenew: boolean;
-  stripeCustomerId?: string;
-  stripeSubscriptionId?: string;
-  cancelAt?: string;
-  price: number;
+export interface SubscriptionResponse {
+  success: boolean;
+  subscriptionId?: string;
+  error?: string;
+  url?: string;
 }
 
-export interface Feature {
-  id: string;
-  name: string;
-  description: string;
-  tier: SubscriptionTier;
-  icon?: string;
+export interface CancelSubscriptionResponse {
+  success: boolean;
+  message?: string;
+  error?: string;
 }
 
-export interface FeatureInfo extends Feature {
-  category: string;
+export interface SubscriptionContext {
+  tiers: Record<UserTier, SubscriptionTier>;
+  currentTier: UserTier | null;
+  subscribe: (tierId: string) => Promise<SubscriptionResponse>;
+  cancelSubscription: () => Promise<CancelSubscriptionResponse>;
+  isSubscribing: boolean;
+  error: string | null;
 }

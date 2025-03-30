@@ -1,190 +1,232 @@
 
-import { MockeryAction, MockeryTier, ShameAction } from '@/types/mockery';
-import { Icon } from '@/components/ui/icon';
-import type { CosmeticRarity } from '@/types/cosmetics';
+import { MockeryAction, MockeryTier } from '@/types/mockery';
 import { renderIcon } from './iconUtils';
+import { cn } from '@/lib/utils';
+import { CosmeticRarity } from '@/types/cosmetics';
 
-// Convert mockery actions to associated costs
-export const getMockeryCosts = (action: MockeryAction): number => {
-  const costMap: Partial<Record<MockeryAction, number>> = {
-    tomatoes: 5,
-    eggs: 10,
-    putridEggs: 25,
-    stocks: 25,
-    silence: 50,
-    courtJester: 100,
-    jester: 75,
-    dunce: 35,
-    roast: 15,
-    ridicule: 20,
-    taunt: 30,
-    protection: 100,
-    removal: 150
+// Define mockery action costs
+export const getShameActionPrice = (action: MockeryAction): number => {
+  const prices: Partial<Record<MockeryAction, number>> = {
+    tomatoes: 0.25,
+    eggs: 0.50,
+    shame: 0.30,
+    taunt: 0.30,
+    jest: 0.40,
+    crown: 1.00,
+    challenge: 0.75,
+    defeat: 1.50,
+    protection: 2.00,
+    // Extended actions
+    putridEggs: 0.75,
+    stocks: 1.00,
+    dunce: 0.50,
+    silence: 0.80,
+    courtJester: 1.20,
+    smokeBomb: 1.25,
+    glitterBomb: 1.00,
+    jester: 0.90,
+    immune: 2.50,
+    jokeCrown: 1.25,
+    memeFrame: 0.85,
+    roast: 0.45,
+    ridicule: 0.35,
+    humiliate: 0.60,
+    expose: 0.70,
+    mock: 0.40,
+    guillotine: 1.50,
+    dungeons: 1.80,
+    removal: 2.50,
+    royalPie: 1.00,
   };
   
-  return costMap[action] || 10;
+  return prices[action] || 0.25;
 };
 
-// Get durations for mockery effects in milliseconds
-export const getMockeryDurations = (action: MockeryAction): number => {
-  const durationMap: Partial<Record<MockeryAction, number>> = {
-    tomatoes: 3600000, // 1 hour
-    eggs: 7200000, // 2 hours
-    putridEggs: 7200000, // 2 hours
-    stocks: 14400000, // 4 hours
-    silence: 28800000, // 8 hours
-    courtJester: 86400000, // 24 hours
-    jester: 43200000, // 12 hours
-    dunce: 21600000, // 6 hours
-    roast: 10800000, // 3 hours
-    ridicule: 14400000, // 4 hours
-    taunt: 18000000, // 5 hours
-    protection: 604800000, // 7 days
-    removal: 0 // Immediate effect
+// Define mockery durations (in hours)
+export const getShameActionDuration = (action: MockeryAction): number => {
+  const durations: Partial<Record<MockeryAction, number>> = {
+    tomatoes: 1,
+    eggs: 2,
+    shame: 3,
+    taunt: 2,
+    jest: 3,
+    crown: 24,
+    challenge: 6,
+    defeat: 12,
+    protection: 48,
+    // Extended actions
+    putridEggs: 4,
+    stocks: 6,
+    dunce: 8,
+    silence: 12,
+    courtJester: 24,
+    smokeBomb: 4,
+    glitterBomb: 3,
+    jester: 12,
+    immune: 72,
+    jokeCrown: 12,
+    memeFrame: 6,
+    roast: 3,
+    ridicule: 4,
+    humiliate: 8,
+    expose: 12,
+    mock: 4,
+    guillotine: 24,
+    dungeons: 48,
+    removal: 72,
+    royalPie: 6,
   };
   
-  return durationMap[action] || 3600000;
+  return durations[action] || 1;
 };
 
-// Get icons for mockery actions
-export const getMockeryIcons = (action: MockeryAction) => {
-  const iconMap: Partial<Record<MockeryAction | string, string>> = {
-    tomatoes: 'warning',
-    eggs: 'egg',
-    putridEggs: 'egg',
-    stocks: 'lock',
-    silence: 'mute',
-    courtJester: 'crown',
-    jester: 'crown',
-    common: 'info',
-    uncommon: 'gift',
-    rare: 'star',
-    epic: 'sparkles',
-    legendary: 'trophy',
-    protected: 'shield',
-    immune: 'shield',
-    dunce: 'help',
-    roast: 'flame',
-    ridicule: 'message',
-    taunt: 'message',
-    protection: 'shield',
-    removal: 'trash'
+// Get action description
+export const getShameActionDescription = (action: MockeryAction, username?: string): string => {
+  const targetName = username ? username : 'your target';
+  
+  const descriptions: Partial<Record<MockeryAction, string>> = {
+    tomatoes: `Pelt ${targetName} with rotten tomatoes. A classic form of public ridicule.`,
+    eggs: `Hurl rotten eggs at ${targetName}. The visual stench will follow them for a day.`,
+    shame: `Publicly shame ${targetName} with a mark of disgrace.`,
+    taunt: `Taunt ${targetName} with jeers and mockery.`,
+    jest: `Subject ${targetName} to your witty jests and playful mockery.`,
+    crown: `Place a jester's crown on ${targetName}'s profile.`,
+    challenge: `Challenge ${targetName} to a duel of honor.`,
+    defeat: `Declare your victory over ${targetName} for all to see.`,
+    protection: `Shield yourself from mockery for 24 hours.`,
+    // Extended actions
+    putridEggs: `Throw particularly foul eggs that leave a lasting smell on ${targetName}.`,
+    stocks: `Place ${targetName} in the public stocks. The ultimate medieval humiliation.`,
+    dunce: `Force ${targetName} to wear a dunce cap for all to see.`,
+    silence: `Mute ${targetName} from public discussion.`,
+    courtJester: `Turn ${targetName} into the court's fool.`,
+    smokeBomb: `Engulf ${targetName}'s profile in smoke and confusion.`,
+    glitterBomb: `Cover ${targetName} in sparkly glitter that won't wash off easily.`,
+    jester: `Make ${targetName} perform as the jester for your amusement.`,
+    jokeCrown: `Place a jester's crown on ${targetName}.`,
+    memeFrame: `Frame ${targetName} in a ridiculous meme for all to see.`,
+    roast: `Roast ${targetName} with witty, biting remarks.`,
+    ridicule: `Subject ${targetName} to public ridicule.`,
+    humiliate: `Humiliate ${targetName} before the entire kingdom.`,
+    expose: `Expose ${targetName}'s secrets to the whole court.`,
+    mock: `Mock ${targetName} openly in the court.`,
+    guillotine: `Sentence ${targetName} to a symbolic guillotine display.`,
+    dungeons: `Send ${targetName} to the virtual dungeons for a time.`,
+    removal: `Remove ${targetName}'s royal privileges temporarily.`,
+    royalPie: `Hit ${targetName} with a royal cream pie.`,
   };
   
-  return renderIcon(iconMap[action] || 'info');
+  return descriptions[action] || `Apply this mysterious action to ${targetName}.`;
 };
 
-// Get display names for mockery actions
-export const getMockeryActionNames = (action: MockeryAction): string => {
-  const nameMap: Partial<Record<MockeryAction, string>> = {
-    tomatoes: 'Throw Tomatoes',
-    eggs: 'Throw Eggs',
-    putridEggs: 'Throw Putrid Eggs',
-    stocks: 'Put in Stocks',
-    silence: 'Silence User',
-    courtJester: 'Court Jester',
-    jester: 'Jester Hat',
-    dunce: 'Dunce Cap',
-    roast: 'Royal Roast',
-    ridicule: 'Public Ridicule',
-    taunt: 'Royal Taunt',
-    protection: 'Mockery Protection',
-    removal: 'Mockery Removal'
+// Get action icon
+export const getShameActionIcon = (action: MockeryAction): string => {
+  const icons: Partial<Record<MockeryAction, string>> = {
+    tomatoes: '🍅',
+    eggs: '🥚',
+    shame: '😱',
+    taunt: '😜',
+    jest: '🤡',
+    crown: '👑',
+    challenge: '⚔️',
+    defeat: '💀',
+    protection: '🛡️',
+    // Extended actions
+    putridEggs: '🥚',
+    stocks: '🪵',
+    dunce: '🎭',
+    silence: '🤐',
+    courtJester: '🃏',
+    smokeBomb: '💨',
+    glitterBomb: '✨',
+    jester: '🤹',
+    immune: '✨',
+    jokeCrown: '👑',
+    memeFrame: '🖼️',
+    roast: '🔥',
+    ridicule: '🤣',
+    humiliate: '😵',
+    expose: '👀',
+    mock: '👻',
+    guillotine: '⚔️',
+    dungeons: '🏰',
+    removal: '❌',
+    royalPie: '🥧',
   };
   
-  return nameMap[action] || action;
+  return icons[action] || '❓';
 };
 
-// Get descriptions for mockery actions
-export const getMockeryDescriptions = (action: MockeryAction): string => {
-  const descriptionMap: Partial<Record<MockeryAction, string>> = {
-    tomatoes: 'Throw virtual tomatoes at this user for 1 hour.',
-    eggs: 'Throw virtual eggs at this user for 2 hours.',
-    putridEggs: 'Throw putrid eggs at this user for 2 hours.',
-    stocks: 'Put this user in virtual stocks for 4 hours.',
-    silence: 'Silence this user in public chats for 8 hours.',
-    courtJester: 'Make this user a court jester for 24 hours.',
-    jester: 'Force this user to wear a jester hat for 12 hours.',
-    dunce: 'Make this user wear a dunce cap for 6 hours.',
-    roast: 'Subject this user to a royal roasting for 3 hours.',
-    ridicule: 'Publicly ridicule this user for 4 hours.',
-    taunt: 'Taunt this user with royal insults for 5 hours.',
-    protection: 'Protect yourself from mockery for 7 days.',
-    removal: 'Remove all active mockery effects from yourself.'
-  };
-  
-  return descriptionMap[action] || `Apply ${action} effect to the user.`;
-};
-
-// Get tiers for mockery actions
+// Get mockery tier based on action
 export const getMockeryTier = (action: MockeryAction): MockeryTier => {
-  const tierMap: Partial<Record<MockeryAction, MockeryTier>> = {
-    tomatoes: 'common',
-    eggs: 'common',
-    putridEggs: 'uncommon',
-    stocks: 'uncommon',
-    silence: 'rare',
-    courtJester: 'legendary',
-    jester: 'epic',
-    dunce: 'uncommon',
-    roast: 'common',
-    ridicule: 'uncommon',
-    taunt: 'rare',
-    protection: 'premium',
-    removal: 'premium'
-  };
+  // Common tier actions
+  if (['tomatoes', 'eggs', 'taunt', 'shame'].includes(action)) {
+    return 'common';
+  }
   
-  return tierMap[action] || 'common';
+  // Uncommon tier actions 
+  if (['jest', 'crown', 'challenge'].includes(action)) {
+    return 'uncommon';
+  }
+  
+  // Rare tier actions
+  if (['defeat', 'putridEggs', 'dunce', 'jester'].includes(action)) {
+    return 'rare';
+  }
+  
+  // Epic tier actions
+  if (['stocks', 'silence', 'courtJester', 'jokeCrown', 'smokeBomb', 'glitterBomb', 'memeFrame'].includes(action)) {
+    return 'epic';
+  }
+  
+  // Legendary tier actions
+  if (['protection', 'guillotine', 'dungeons', 'removal', 'immune'].includes(action)) {
+    return 'legendary';
+  }
+  
+  return 'common';
 };
 
-// Get colors for mockery tiers
+// Get tier color
 export const getMockeryTierColor = (tier: MockeryTier): string => {
-  const colorMap: Partial<Record<MockeryTier, string>> = {
-    common: 'text-gray-400',
+  const colors: Record<MockeryTier, string> = {
+    common: 'text-gray-300',
     uncommon: 'text-green-400',
     rare: 'text-blue-400',
     epic: 'text-purple-400',
-    legendary: 'text-amber-400',
-    premium: 'text-rose-400',
+    legendary: 'text-yellow-400',
     basic: 'text-gray-300',
-    elite: 'text-indigo-400',
-    royal: 'text-royal-gold'
+    premium: 'text-purple-400',
+    bronze: 'text-amber-600',
+    silver: 'text-gray-300',
+    gold: 'text-yellow-400',
+    platinum: 'text-blue-300',
+    diamond: 'text-indigo-300'
   };
   
-  return colorMap[tier] || 'text-gray-400';
+  return colors[tier] || colors.common;
 };
 
-// Convert mockery tier to cosmetic rarity
-export const mockeryTierToRarity = (tier: MockeryTier): CosmeticRarity => {
-  const rarityMap: Record<MockeryTier, CosmeticRarity> = {
-    'common': 'common',
-    'uncommon': 'uncommon',
-    'rare': 'rare',
-    'epic': 'epic',
-    'legendary': 'legendary',
-    'premium': 'legendary',
-    'basic': 'common',
-    'elite': 'epic',
-    'royal': 'legendary'
+// Get rarity based on tier
+export const getTierRarity = (tier: MockeryTier): CosmeticRarity => {
+  const rarities: Record<MockeryTier, CosmeticRarity> = {
+    common: 'common',
+    uncommon: 'uncommon',
+    rare: 'rare',
+    epic: 'epic',
+    legendary: 'legendary',
+    basic: 'common',
+    'premium': 'rare',
+    bronze: 'uncommon',
+    silver: 'rare',
+    gold: 'epic',
+    platinum: 'legendary',
+    diamond: 'legendary'
   };
   
-  return rarityMap[tier] || 'common';
+  return rarities[tier] || 'common';
 };
 
-// Check if a mockery action is a shame action
-export const isShameAction = (action: MockeryAction): action is ShameAction => {
-  const shameActions: ShameAction[] = [
-    'eggs', 
-    'tomatoes', 
-    'putridEggs',
-    'dunce', 
-    'stocks',
-    'ridicule',
-    'shame',
-    'silence',
-    'courtJester',
-    'jester'
-  ];
-  
-  return shameActions.includes(action as ShameAction);
+export const getMockeryDescription = (action: MockeryAction): string => {
+  return getShameActionDescription(action);
 };

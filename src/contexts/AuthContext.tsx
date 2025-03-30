@@ -1,142 +1,219 @@
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useReducer, useContext, useEffect } from 'react';
+import { AuthContextType, AuthProviderProps, AuthState, AuthAction } from './auth/types';
+import { authReducer } from './auth/authReducer';
+import { 
+  fetchUserProfile, 
+  loginWithEmail, 
+  registerWithEmail, 
+  logoutUser,
+  updateUserData,
+  awardCosmeticItem 
+} from './auth/authService';
 import { UserProfile } from '@/types/user';
-import { AuthContextType } from '@/types/auth-context';
-import { useToast } from '@/hooks/use-toast';
 
-// Create a mock initial user
-const mockUser: UserProfile = {
-  id: '1',
-  username: 'royaluser',
-  displayName: 'Royal User',
-  profileImage: '/images/avatars/default.png',
-  email: 'user@spendthrone.com',
-  bio: 'A loyal supporter of the throne',
-  totalSpent: 1500,
-  amountSpent: 1500,
-  walletBalance: 500,
-  rank: 42,
-  previousRank: 45,
-  tier: 'silver',
-  joinedAt: new Date().toISOString(),
-  team: 'blue',
-};
+// Create context with default values
+const AuthContext = createContext<AuthContextType>({
+  user: null,
+  isAuthenticated: false,
+  isLoading: false,
+  signIn: async () => false,
+  login: async () => false,
+  logout: () => {},
+  signOut: () => {},
+  register: async () => false,
+  updateUser: async () => false,
+  updateUserProfile: async () => false,
+  awardCosmetic: async () => false,
+});
 
-// Create auth context with default values
-export const AuthContext = createContext<AuthContextType>({
+const initialState: AuthState = {
   user: null,
   isAuthenticated: false,
   isLoading: true,
-  login: async () => false,
-  logout: async () => {},
-  register: async () => false,
-  updateUserProfile: async () => {},
-  awardCosmetic: async () => false,
-  signIn: async () => false,
-  signOut: async () => {},
-});
+  error: null,
+};
 
-// Provider component
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<UserProfile | null>(mockUser);
-  const [isLoading, setIsLoading] = useState(false);
-  const { toast } = useToast();
+export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+  const [state, dispatch] = useReducer(authReducer, initialState);
 
-  // Mock login implementation
+  useEffect(() => {
+    // Check if user is already logged in
+    const checkAuth = async () => {
+      dispatch({ type: 'AUTH_START' });
+      try {
+        const token = localStorage.getItem('authToken');
+        if (token) {
+          const userData = await fetchUserProfile();
+          if (userData) {
+            dispatch({ 
+              type: 'AUTH_SUCCESS', 
+              payload: userData 
+            });
+          } else {
+            localStorage.removeItem('authToken');
+            dispatch({ type: 'AUTH_FAIL' });
+          }
+        } else {
+          dispatch({ type: 'AUTH_FAIL' });
+        }
+      } catch (error) {
+        console.error('Authentication error:', error);
+        dispatch({ type: 'AUTH_FAIL' });
+      }
+    };
+
+    checkAuth();
+  }, []);
+
   const login = async (email: string, password: string): Promise<boolean> => {
-    setIsLoading(true);
+    dispatch({ type: 'AUTH_START' });
     try {
-      console.log('Login attempt with:', email);
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      setUser(mockUser);
-      return true;
+      const response = await loginWithEmail(email, password);
+      if (response.success && response.user) {
+        dispatch({ 
+          type: 'AUTH_SUCCESS', 
+          payload: {
+            ...response.user,
+            lastLogin: new Date().toISOString()
+          } 
+        });
+        return true;
+      } else {
+        dispatch({ 
+          type: 'AUTH_FAIL', 
+          payload: response.error || 'Login failed' 
+        });
+        return false;
+      }
     } catch (error) {
       console.error('Login error:', error);
-      return false;
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  // Mock register implementation
-  const register = async (username: string, email: string, password: string): Promise<boolean> => {
-    setIsLoading(true);
-    try {
-      console.log('Register attempt with:', username, email);
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      setUser({
-        ...mockUser,
-        username,
-        email,
+      dispatch({ 
+        type: 'AUTH_FAIL', 
+        payload: 'Login failed. Please try again.' 
       });
-      return true;
-    } catch (error) {
-      console.error('Register error:', error);
       return false;
-    } finally {
-      setIsLoading(false);
     }
   };
 
-  // Mock logout implementation
-  const logout = async (): Promise<void> => {
-    setUser(null);
+  const register = async (username: string, email: string, password: string): Promise<boolean> => {
+    dispatch({ type: 'AUTH_START' });
+    try {
+      const response = await registerWithEmail(username, email, password);
+      if (response.success && response.user) {
+        dispatch({ 
+          type: 'AUTH_SUCCESS', 
+          payload: response.user 
+        });
+        return true;
+      } else {
+        dispatch({ 
+          type: 'AUTH_FAIL', 
+          payload: response.error || 'Registration failed' 
+        });
+        return false;
+      }
+    } catch (error) {
+      console.error('Registration error:', error);
+      dispatch({ 
+        type: 'AUTH_FAIL', 
+        payload: 'Registration failed. Please try again.' 
+      });
+      return false;
+    }
   };
 
-  // Mock update user implementation
+  const logout = () => {
+    logoutUser();
+    dispatch({ type: 'AUTH_LOGOUT' });
+  };
+
   const updateUser = async (userData: Partial<UserProfile>): Promise<boolean> => {
-    setIsLoading(true);
+    if (!state.user) return false;
+    
     try {
-      console.log('Updating user:', userData);
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 500));
-      setUser(prev => prev ? { ...prev, ...userData } : null);
-      return true;
+      const updatedUser = await updateUserData({
+        ...state.user,
+        ...userData
+      });
+      
+      if (updatedUser) {
+        dispatch({ 
+          type: 'UPDATE_USER', 
+          payload: updatedUser 
+        });
+        return true;
+      }
+      return false;
     } catch (error) {
       console.error('Update user error:', error);
       return false;
-    } finally {
-      setIsLoading(false);
     }
   };
 
-  // Award cosmetic items to user
   const awardCosmetic = async (category: string, itemId: string, notify = true): Promise<boolean> => {
-    console.log(`Awarding cosmetic: ${category} - ${itemId}, notify: ${notify}`);
-    return true;
+    if (!state.user) return false;
+    
+    try {
+      const success = await awardCosmeticItem(state.user.id, category, itemId, notify);
+      
+      if (success) {
+        // Update the local user state with the new cosmetic
+        const updatedCosmetics = { 
+          ...state.user.cosmetics
+        };
+        
+        // Make sure the category exists and is an array
+        if (!updatedCosmetics[category]) {
+          updatedCosmetics[category] = [];
+        }
+        
+        // Add the item if it doesn't already exist
+        if (Array.isArray(updatedCosmetics[category]) && 
+            !updatedCosmetics[category].includes(itemId)) {
+          updatedCosmetics[category] = [...updatedCosmetics[category], itemId];
+        }
+        
+        dispatch({
+          type: 'UPDATE_USER',
+          payload: {
+            ...state.user,
+            cosmetics: updatedCosmetics
+          }
+        });
+        
+        return true;
+      }
+      
+      return false;
+    } catch (error) {
+      console.error('Award cosmetic error:', error);
+      return false;
+    }
   };
 
-  // Alias methods for backward compatibility
-  const signIn = login;
-  const signOut = logout;
-  const updateUserProfile = async (updates: Partial<UserProfile>): Promise<void> => {
-    await updateUser(updates);
+  const contextValue: AuthContextType = {
+    user: state.user,
+    isAuthenticated: state.isAuthenticated,
+    isLoading: state.isLoading,
+    signIn: login,
+    login,
+    logout,
+    signOut: logout,
+    register,
+    updateUser,
+    updateUserProfile: updateUser,
+    awardCosmetic,
   };
 
   return (
-    <AuthContext.Provider
-      value={{
-        user,
-        isAuthenticated: !!user,
-        isLoading,
-        login,
-        logout,
-        register,
-        updateUserProfile,
-        awardCosmetic,
-        signIn,
-        signOut,
-      }}
-    >
+    <AuthContext.Provider value={contextValue}>
       {children}
     </AuthContext.Provider>
   );
 };
 
-// Hook to use auth context
+// Custom hook to use the auth context
 export const useAuth = () => useContext(AuthContext);
 
-// Export UserProfile for typechecking
-export type { UserProfile };
+export default AuthContext;

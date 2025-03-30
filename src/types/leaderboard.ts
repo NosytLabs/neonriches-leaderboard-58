@@ -1,43 +1,39 @@
 
+import { TeamType, UserTier } from './user';
+import { MockeryAction } from './mockery';
+
 export interface LeaderboardEntry {
-  id: string;
   userId: string;
   username: string;
-  displayName?: string;
-  rank: number;
-  previousRank?: number;
+  publicKey?: string;
   amountSpent: number;
   totalDeposited: number;
-  spendingStreak?: number;
+  rank: number;
   joinDate: string;
-  avatarUrl?: string;
-  team?: string;
-  lastTransaction?: string;
-  onChain?: boolean;
-  isVerified?: boolean;
-  badges?: string[];
-  tier?: string;
+  displayName?: string;
+  profileImage?: string;
+  tier?: UserTier;
+  team?: TeamType;
+  walletBalance?: number;
 }
 
-export interface TeamLeaderboardEntry {
+export type LeaderboardUser = {
   id: string;
-  name: string;
-  color: string;
-  rank: number;
-  previousRank: number;
-  memberCount: number;
-  totalSpent: number;
-  averageSpent: number;
-  topContributor?: {
-    userId: string;
-    username: string;
-    amount: number;
-  };
-}
+  username: string;
+  displayName?: string;
+  profileImage?: string;
+  rank?: number;
+  tier?: UserTier;
+  team?: TeamType;
+  amountSpent?: number;
+  walletBalance?: number;
+  joinedAt?: string;
+};
 
 export interface LeaderboardFilter {
-  team?: string;
-  timeFrame?: 'all' | 'week' | 'month' | 'year';
-  sortBy?: 'rank' | 'amountSpent' | 'joinDate';
-  sortDirection?: 'asc' | 'desc';
+  timespan: 'all' | 'day' | 'week' | 'month' | 'year';
+  team?: TeamType;
+  tier?: UserTier;
 }
+
+export { MockeryAction };

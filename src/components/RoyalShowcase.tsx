@@ -1,134 +1,102 @@
 
 import React from 'react';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { Crown, DollarSign, TrendingUp, Users } from 'lucide-react';
-import RoyalTrophyModel from './3d/RoyalTrophyModel';
-import { UserProfile } from '@/types/user';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
+import { Crown, Medal, Rocket, Trophy, Users } from 'lucide-react';
 import { formatCurrency } from '@/utils/formatters';
+import { Button } from '@/components/ui/button';
+import { UserProfile } from '@/types/user';
+import { cn } from '@/lib/utils';
+
+// Sample data for demonstration (in a real app, this would come from an API)
+const topUsers = [
+  {
+    id: '1',
+    username: 'EliteSpender',
+    displayName: 'Elite Spender',
+    profileImage: '/path/to/profile1.jpg',
+    amountSpent: 15000,
+    followers: 156,
+    joinedAt: '2023-01-15T00:00:00Z', // Use string instead of Date
+  },
+  {
+    id: '2',
+    username: 'RoyalThrower',
+    displayName: 'Royal Thrower',
+    profileImage: '/path/to/profile2.jpg',
+    amountSpent: 10500,
+    followers: 78,
+    joinedAt: '2023-04-20T00:00:00Z', // Use string instead of Date
+  },
+  {
+    id: '3',
+    username: 'MoneyKing',
+    displayName: 'Money King',
+    profileImage: '/path/to/profile3.jpg',
+    amountSpent: 8750,
+    followers: 92,
+    joinedAt: '2023-03-10T00:00:00Z', // Use string instead of Date
+  }
+];
 
 interface RoyalShowcaseProps {
+  user?: UserProfile | null;
   className?: string;
 }
 
-const RoyalShowcase: React.FC<RoyalShowcaseProps> = ({ className = '' }) => {
-  // Mock top spender data
-  const topSpender: UserProfile = {
-    id: 'user-1',
-    username: 'moneybags',
-    email: 'money@example.com',
-    rank: 1,
-    joinedAt: new Date(),
-    displayName: 'Money Bags',
-    gender: 'other',
-    profileImage: 'https://api.dicebear.com/6.x/personas/svg?seed=moneybags',
-    amountSpent: 5000,
-    totalSpent: 5000,
-    tier: 'royal',
-    team: 'red',
-    walletBalance: 10000,
-    spendStreak: 30,
-    followers: 150
-  };
-
+const RoyalShowcase: React.FC<RoyalShowcaseProps> = ({ user, className }) => {
   return (
-    <div className={`${className} max-w-4xl mx-auto`}>
-      <div className="text-center mb-8">
-        <h2 className="text-3xl font-bold mb-2 royal-gradient">The Royal Throne</h2>
-        <p className="text-white/70">
-          Our top spender sits on the throne of honor and glory
-        </p>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div className="flex flex-col justify-center">
-          <Card className="glass-morphism border-white/10 overflow-hidden">
-            <CardContent className="pt-6 pb-4 px-6">
-              <div className="flex flex-col items-center">
-                <div className="relative">
-                  <div className="absolute -top-2 left-1/2 transform -translate-x-1/2">
-                    <Crown className="h-7 w-7 text-yellow-400" />
+    <Card className={cn("glass-morphism bg-gradient-to-br from-royal-dark/60 to-black shadow-xl border-royal-gold/20", className)}>
+      <CardHeader className="border-b border-royal-gold/10 pb-3">
+        <div className="flex items-center space-x-2">
+          <Crown className="text-royal-gold h-5 w-5" />
+          <CardTitle className="text-lg font-royal royal-gradient">Top Spenders</CardTitle>
+        </div>
+        <CardDescription>
+          The most elite members of the SpendThrone nobility
+        </CardDescription>
+      </CardHeader>
+      
+      <CardContent className="pt-4">
+        <div className="space-y-4">
+          {topUsers.map((topUser, index) => (
+            <div key={topUser.id} className="flex items-center gap-4 p-3 rounded-lg glass-morphism border border-white/5 hover:border-royal-gold/20 transition-all duration-300">
+              <div className="flex-shrink-0 w-12 h-12 rounded-full bg-gradient-to-br from-royal-gold/20 to-royal-gold/5 flex items-center justify-center border border-royal-gold/20">
+                {index === 0 ? (
+                  <Trophy className="h-6 w-6 text-royal-gold" />
+                ) : index === 1 ? (
+                  <Medal className="h-6 w-6 text-royal-silver" />
+                ) : (
+                  <Medal className="h-6 w-6 text-royal-bronze" />
+                )}
+              </div>
+              
+              <div className="flex-1 min-w-0">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <h3 className="font-medium text-white truncate">{topUser.displayName}</h3>
+                    <p className="text-gray-400 text-sm">@{topUser.username}</p>
                   </div>
-                  <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-yellow-400 mb-2">
-                    <img
-                      src={topSpender.profileImage}
-                      alt={topSpender.displayName}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                </div>
-
-                <h3 className="text-xl font-bold mt-2">{topSpender.displayName}</h3>
-                <p className="text-white/60 text-sm">@{topSpender.username}</p>
-
-                <div className="flex items-center mt-2">
-                  <Badge variant="outline" className="bg-yellow-500/10 border-yellow-500/20 text-yellow-400">
-                    <Crown size={14} className="mr-1" /> Rank #{topSpender.rank || 0}
-                  </Badge>
-                </div>
-
-                <div className="grid grid-cols-3 gap-3 w-full mt-4">
-                  <div className="glass-morphism border-white/10 p-3 rounded-lg flex flex-col items-center">
-                    <DollarSign className="h-5 w-5 text-green-400" />
-                    <div className="text-sm text-white/60">Total Spent</div>
-                    <div className="font-bold">{formatCurrency(topSpender.totalSpent || 0)}</div>
-                  </div>
-
-                  <div className="glass-morphism border-white/10 p-3 rounded-lg flex flex-col items-center">
-                    <TrendingUp className="h-5 w-5 text-blue-400" />
-                    <div className="text-sm text-white/60">Streak</div>
-                    <div className="font-bold">{topSpender.spendStreak || 0} days</div>
-                  </div>
-
-                  <div className="glass-morphism border-white/10 p-3 rounded-lg flex flex-col items-center">
-                    <Users className="h-5 w-5 text-purple-400" />
-                    <div className="text-sm text-white/60">Followers</div>
-                    <div className="font-bold">{topSpender.followers || 0}</div>
-                  </div>
-                </div>
-
-                <div className="mt-4 glass-morphism border-white/10 p-3 rounded-lg w-full">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <div className="text-sm text-white/60">Member Since</div>
-                      <div className="font-medium">
-                        {new Date(topSpender.joinedAt || "").toLocaleDateString()}
-                      </div>
-                    </div>
-                    <div>
-                      <div className="text-sm text-white/60">Team</div>
-                      <div className="font-medium capitalize">
-                        {topSpender.team || 'None'}
-                      </div>
+                  <div className="text-right">
+                    <div className="font-bold royal-gradient">{formatCurrency(topUser.amountSpent)}</div>
+                    <div className="text-xs text-gray-400 flex items-center justify-end gap-1">
+                      <Users className="h-3 w-3" />
+                      <span>{topUser.followers} followers</span>
                     </div>
                   </div>
-                </div>
-
-                <div className="flex justify-between w-full mt-4">
-                  <Button variant="outline" className="glass-morphism border-white/10 hover:bg-white/10">
-                    View Profile
-                  </Button>
-                  <Button className="bg-royal-gold text-black hover:bg-royal-gold/90">
-                    Claim Throne
-                  </Button>
                 </div>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          ))}
         </div>
-
-        <div className="flex items-center justify-center">
-          <div className="w-full h-80">
-            <RoyalTrophyModel
-              rank={topSpender.rank}
-              username={topSpender.username}
-              rotationSpeed={0.01}
-            />
-          </div>
+        
+        <div className="mt-6 text-center">
+          <Button variant="outline" className="border-royal-gold/20 text-royal-gold hover:bg-royal-gold/10 w-full">
+            <Rocket className="h-4 w-4 mr-2" />
+            View Full Leaderboard
+          </Button>
         </div>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 };
 

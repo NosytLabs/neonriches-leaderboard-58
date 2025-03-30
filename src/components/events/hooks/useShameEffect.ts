@@ -2,8 +2,11 @@
 import { useState, useEffect, useCallback } from 'react';
 import { AnimationConfig } from '@/types/animations';
 import { useSound } from '@/hooks/sounds/use-sound';
-import { SoundType } from '@/types/sound';
-import { ShameAction } from '@/types/mockery';
+import { SoundType } from '@/types/sound-types';
+import { MockeryAction } from '@/types/mockery';
+
+// Use MockeryAction as ShameAction for compatibility
+export type ShameAction = MockeryAction;
 
 // Define a state type for our shame effect
 type ShameEffectState = {
@@ -227,4 +230,4 @@ export const useShameEffect = (options = { cooldownPeriod: 24 * 60 * 60 * 1000 }
   };
 };
 
-export type { ShameAction };
+export { ShameAction };

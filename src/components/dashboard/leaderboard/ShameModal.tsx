@@ -1,5 +1,6 @@
 
 import React, { useState } from 'react';
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -8,15 +9,12 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { LeaderboardEntry } from '@/types/leaderboard';
 import { MockeryAction } from '@/types/mockery';
-import { ArrowRight, DollarSign } from 'lucide-react';
-import { formatCurrency } from '@/utils/formatters';
+import { LeaderboardUser } from '@/types/leaderboard';
+import { getShameActionDescription, getShameActionIcon } from '@/utils/mockeryHelpers';
 
 export interface ShameModalProps {
-  targetUser: LeaderboardEntry;
+  targetUser: LeaderboardUser;
   shameAmount: number;
   shameType: MockeryAction;
   onClose: () => void;
@@ -28,60 +26,51 @@ const ShameModal: React.FC<ShameModalProps> = ({
   shameAmount,
   shameType,
   onClose,
-  onConfirm
+  onConfirm,
 }) => {
-  const [confirmed, setConfirmed] = useState(false);
-  
+  const [isConfirming, setIsConfirming] = useState(false);
+
   const handleConfirm = () => {
-    setConfirmed(true);
+    setIsConfirming(true);
     onConfirm();
+    setTimeout(() => {
+      setIsConfirming(false);
+      onClose();
+    }, 1000);
   };
-  
+
   return (
     <Dialog open={true} onOpenChange={onClose}>
-      <DialogContent className="glass-morphism border-crimson/40">
+      <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="text-crimson">Confirm Public Shaming</DialogTitle>
+          <DialogTitle>Royal Shaming Confirmation</DialogTitle>
           <DialogDescription>
-            You are about to publicly shame {targetUser.displayName || targetUser.username} with {shameType}
+            You are about to publicly shame {targetUser.username} with {getShameActionIcon(shameType)}.
           </DialogDescription>
         </DialogHeader>
         
-        <div className="space-y-4 py-4">
-          <div className="flex items-center justify-between">
-            <span className="text-sm text-muted-foreground">Target:</span>
-            <span className="font-medium">{targetUser.displayName || targetUser.username}</span>
-          </div>
-          
-          <div className="flex items-center justify-between">
-            <span className="text-sm text-muted-foreground">Mockery Type:</span>
-            <span className="font-medium capitalize">{shameType.replace(/([A-Z])/g, ' $1')}</span>
-          </div>
-          
-          <div className="flex items-center justify-between">
-            <span className="text-sm text-muted-foreground">Cost:</span>
-            <span className="font-medium flex items-center">
-              <DollarSign className="h-4 w-4 mr-1" />
-              {formatCurrency(shameAmount)}
-            </span>
-          </div>
-          
-          <div className="rounded-md bg-amber-950/20 p-3 mt-2">
-            <p className="text-amber-300 text-sm">
-              Warning: This action will be visible on the public leaderboard and cannot be undone.
-            </p>
-          </div>
+        <div className="p-4 bg-black/20 rounded-md mt-2 mb-4">
+          <p className="text-sm text-white/70">
+            {getShameActionDescription(shameType, targetUser.username)}
+          </p>
+          <p className="mt-2 text-sm font-semibold">
+            This will cost ${shameAmount.toFixed(2)} from your wallet.
+          </p>
+          <p className="mt-1 text-xs text-white/60 italic">
+            This action is purely cosmetic and for entertainment purposes. It has no impact on rankings.
+          </p>
         </div>
-        
-        <DialogFooter>
-          <Button variant="outline" onClick={onClose}>Cancel</Button>
+
+        <DialogFooter className="flex space-x-2 sm:space-x-0">
+          <Button variant="outline" onClick={onClose}>
+            Cancel
+          </Button>
           <Button 
-            className="bg-gradient-to-r from-crimson to-crimson/80 hover:from-crimson/90 hover:to-crimson/70"
-            onClick={handleConfirm}
-            disabled={confirmed}
+            onClick={handleConfirm} 
+            disabled={isConfirming}
+            className="bg-royal-crimson hover:bg-royal-crimson/90 text-white"
           >
-            {confirmed ? "Processing..." : "Confirm"} 
-            <ArrowRight className="ml-2 h-4 w-4" />
+            {isConfirming ? 'Processing...' : 'Confirm Shaming'}
           </Button>
         </DialogFooter>
       </DialogContent>

@@ -117,7 +117,7 @@ export const formatISODate = (date: Date): string => {
   return date.toISOString().split('T')[0];
 };
 
-// Add missing functions
+// Check if event is active
 export const isEventActive = (startDate: string | Date, endDate: string | Date): boolean => {
   const now = new Date();
   const start = typeof startDate === 'string' ? new Date(startDate) : startDate;
@@ -126,6 +126,7 @@ export const isEventActive = (startDate: string | Date, endDate: string | Date):
   return now >= start && now <= end;
 };
 
+// Calculate days until a target date
 export const daysUntil = (date: string | Date): number => {
   const target = typeof date === 'string' ? new Date(date) : date;
   const now = new Date();

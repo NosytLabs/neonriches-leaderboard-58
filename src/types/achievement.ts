@@ -22,7 +22,7 @@ export interface Achievement {
   id: string;
   name: string;
   description: string;
-  type: AchievementType;
+  type: 'royal' | 'rank' | 'milestone' | 'deposit' | 'streak';
   icon: 'star' | 'zap' | 'award' | 'trophy' | 'crown' | 'dollar';
   tier: AchievementTier;
   unlockedAt: string;

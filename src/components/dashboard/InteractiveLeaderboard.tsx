@@ -1,15 +1,17 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Crown, Scroll } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
-import { LeaderboardUser, mockLeaderboardData } from './leaderboard/LeaderboardUtils';
+import { mockLeaderboardData } from './leaderboard/LeaderboardUtils';
 import LeaderboardItem from './leaderboard/LeaderboardItem';
 import ShameModal from './leaderboard/ShameModal';
 import LeaderboardActions from './leaderboard/LeaderboardActions';
 import { getShameActionPrice } from '@/components/events/utils/shameUtils';
 import { ShameAction } from '@/components/events/hooks/useShameEffect';
-import { MockeryAction } from '@/types/leaderboard';
+import { LeaderboardUser } from '@/types/leaderboard';
+import { MockeryAction } from '@/types/mockery';
 
 const InteractiveLeaderboard: React.FC = () => {
   const { toast } = useToast();
@@ -103,7 +105,7 @@ const InteractiveLeaderboard: React.FC = () => {
     }, 1000);
   };
 
-  const openShameModal = (user: LeaderboardEntry) => {
+  const openShameModal = (user: LeaderboardUser) => {
     setSelectedUser(user);
     setModalType('shame');
   };
