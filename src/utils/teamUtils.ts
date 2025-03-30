@@ -163,13 +163,13 @@ export const getTeamAbsurdStat = (team: TeamType): string => {
 export const getTeamNFTJoke = (team: TeamType): string => {
   switch (team) {
     case 'red':
-      return 'Our NFTs are so exclusive, they refuse to be right-clicked';
+      return "Our NFTs are so exclusive, they refuse to be right-clicked";
     case 'green':
-      return 'Our NFTs appreciate faster than our members' egos';
+      return "Our NFTs appreciate faster than our members' egos";
     case 'blue':
-      return 'Our NFTs come with mathematical proofs of their worthlessness';
+      return "Our NFTs come with mathematical proofs of their worthlessness";
     default:
-      return 'What's an NFT? We prefer actual art';
+      return "What's an NFT? We prefer actual art";
   }
 };
 
@@ -179,13 +179,13 @@ export const getTeamNFTJoke = (team: TeamType): string => {
 export const getTeamSecurityGuarantee = (team: TeamType): string => {
   switch (team) {
     case 'red':
-      return 'Protected by royal guards who definitely won't steal your jewels';
+      return "Protected by royal guards who definitely won't steal your jewels";
     case 'green':
-      return 'Secured by expert accountants who've never lost a penny (that was reported)';
+      return "Secured by expert accountants who've never lost a penny (that was reported)";
     case 'blue':
-      return 'Defended by an armada of ships that exist only on paper';
+      return "Defended by an armada of ships that exist only on paper";
     default:
-      return 'No security needed when you have nothing to lose';
+      return "No security needed when you have nothing to lose";
   }
 };
 
@@ -195,13 +195,13 @@ export const getTeamSecurityGuarantee = (team: TeamType): string => {
 export const getTeamCryptoRoast = (team: TeamType): string => {
   switch (team) {
     case 'red':
-      return 'We'd invest in luna NFTs if they looked fancy enough';
+      return "We'd invest in luna NFTs if they looked fancy enough";
     case 'green':
-      return 'We invented buy high, sell low before it was cool';
+      return "We invented buy high, sell low before it was cool";
     case 'blue':
-      return 'We have 17 whitepapers explaining why our losses are actually strategic';
+      return "We have 17 whitepapers explaining why our losses are actually strategic";
     default:
-      return 'We still use cash and sleep well at night';
+      return "We still use cash and sleep well at night";
   }
 };
 
