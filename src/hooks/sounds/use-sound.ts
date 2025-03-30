@@ -47,23 +47,25 @@ const useSound = (
     seal: 0.7,
     deposit: 0.7,
     reward: 0.8,
-    win: 0.9,
-    warning: 0.6,
-    medallion: 0.7,
-    trumpet: 0.8,
-    royalAnnouncement: 1.0,
+    unlock: 0.7,
+    team: 0.7,
+    applause: 0.8,
     levelUp: 0.9,
-    wish: 0.7,
+    boost: 0.8,
+    curse: 0.7,
+    laugh: 0.7,
+    magic: 0.8,
+    celebration: 0.9,
     message: 0.6,
     pageChange: 0.5,
     swordClash: 0.8,
     coins: 0.7,
-    noblesLaugh: 0.8,
-    smoke: 0.7,
-    tab: 0.5,
-    mockery: 0.8,
-    cosmetic: 0.7,
-    inkScribble: 0.7
+    trumpet: 0.8,
+    medallion: 0.7,
+    coin: 0.7,
+    warning: 0.6,
+    bell: 0.7,
+    royalAnnouncement: 1.0
   };
 
   // Cleanup function
@@ -86,7 +88,7 @@ const useSound = (
     if (!config.enabled || config.muted) return 0;
     
     // Get the base volume for the sound type (normalized to 0-1)
-    const baseAmp = amplitudes[sound] || 0.7;
+    const baseAmp = amplitudes[sound as keyof typeof amplitudes] || 0.7;
     
     // Combine the configuration volume with options volume
     const configVolume = config.volume;
@@ -165,11 +167,15 @@ const useSound = (
     }
   }, []);
 
+  // For backward compatibility
+  const playSound = (sound: SoundType) => play(sound);
+
   return {
     play,
     stop,
     isPlaying,
-    duration
+    duration,
+    playSound
   };
 };
 
