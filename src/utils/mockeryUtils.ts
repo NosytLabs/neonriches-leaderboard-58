@@ -290,4 +290,3 @@ export const getMockeryActionDescription = (action: MockeryAction): string => {
 export const getMockeryActionPrice = (action: MockeryAction): number => {
   return getMockeryCost(action);
 };
-
