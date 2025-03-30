@@ -24,7 +24,7 @@ const iconNameMap: Record<string, string> = {
 export const formatIconName = (name: string): string => {
   if (!name) return '';
   
-  // Handle kebab-case or snake_case
+  // Handle kebab-case or snake_case - fixed regex
   const camelCase = name.replace(/[-_](.)/g, (_, char) => char.toUpperCase());
   
   // Convert first character to uppercase for PascalCase
