@@ -1,20 +1,36 @@
+
 import React from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { ShameAction } from '@/types/mockery';
 import { getShameActionIcon, getShameActionTitle, getShameActionPrice, getShameActionDescription } from '@/components/events/utils/shameUtils';
-import { Crown, ArrowRight } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Target, Shield, Crown, Scroll } from 'lucide-react';
 import { getTeamColor } from '@/utils/teamUtils';
 import RoyalButton from '@/components/ui/royal-button';
+import RoyalDivider from '@/components/ui/royal-divider';
 import { PaymentModalProps } from '@/types/payment';
+import { useNotificationSounds } from '@/hooks/use-notification-sounds';
 
-interface PaymentModalProps {
-  title: string;
-  description: string;
-  amount: number;
-  onSuccess: () => void; 
-  trigger: React.ReactNode;
+interface LeaderboardUser {
+  id: string;
+  username: string;
+  displayName?: string;
+  profileImage?: string;
+  rank: number;
+  team?: 'red' | 'green' | 'blue' | null;
+  tier?: string;
+  totalSpent: number;
+  spendStreak?: number;
+}
+
+interface ShameModalProps {
+  selectedUser: LeaderboardUser;
+  shameAmount: number;
+  shameType: string;
+  onClose: () => void;
+  onConfirm: () => void;
 }
 
 const PaymentModal = ({ title, description, amount, onSuccess, trigger }: PaymentModalProps) => {
@@ -24,14 +40,6 @@ const PaymentModal = ({ title, description, amount, onSuccess, trigger }: Paymen
     </Button>
   );
 };
-
-interface ShameModalProps {
-  selectedUser: LeaderboardUser;
-  shameAmount: number;
-  shameType: string;
-  onClose: () => void;
-  onConfirm: () => void;
-}
 
 const ShameModal: React.FC<ShameModalProps> = ({ 
   selectedUser, 

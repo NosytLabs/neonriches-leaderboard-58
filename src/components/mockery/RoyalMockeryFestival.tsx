@@ -17,7 +17,7 @@ import MockeryTabContent from './components/MockeryTabContent';
 
 const RoyalMockeryFestival = () => {
   const { user } = useAuth();
-  const { toast, default: defaultToast, success } = useToast();
+  const { toast } = useToast();
   const [activeTab, setActiveTab] = useState('mockery');
   const [selectedAction, setSelectedAction] = useState<MockeryAction | null>(null);
   const [targetUser, setTargetUser] = useState<string>('');
@@ -45,7 +45,7 @@ const RoyalMockeryFestival = () => {
   
   const handleMockery = (username: string, action: string, amount: number) => {
     if (!user) {
-      defaultToast({
+      toast({
         title: "Authentication Required",
         description: "You must be logged in to perform mockery actions."
       });
@@ -53,7 +53,7 @@ const RoyalMockeryFestival = () => {
     }
     
     if (!username || !action) {
-      defaultToast({
+      toast({
         title: "Missing Information",
         description: "Please select a user and mockery action to proceed."
       });
@@ -81,7 +81,7 @@ const RoyalMockeryFestival = () => {
       
       return true;
     } else {
-      defaultToast({
+      toast({
         title: "Mockery Failed",
         description: "Your digital treasury is insufficient to finance this mockery. Consider adding more funds to your account."
       });
@@ -108,12 +108,13 @@ const RoyalMockeryFestival = () => {
     if (success) {
       protectUser(user.username);
       
-      success({
+      toast({
         title: "Royal Protection Purchased",
-        description: "You are now protected from mockery for 7 days. Your digital fortress is secure, with moat filled and drawbridge raised!"
+        description: "You are now protected from mockery for 7 days. Your digital fortress is secure, with moat filled and drawbridge raised!",
+        variant: "success"
       });
     } else {
-      defaultToast({
+      toast({
         title: "Purchase Failed",
         description: "You do not have enough funds to buy protection. Your digital castle remains vulnerable."
       });
@@ -123,9 +124,10 @@ const RoyalMockeryFestival = () => {
   const handleEffectComplete = () => {
     setShowMockeryEffect(false);
     
-    success({
+    toast({
         title: "Mockery Successful",
-        description: `You have successfully subjected ${mockeryEffectData.username} to ${mockeryEffectData.action}! Your digital moat of superiority grows deeper.`
+        description: `You have successfully subjected ${mockeryEffectData.username} to ${mockeryEffectData.action}! Your digital moat of superiority grows deeper.`,
+        variant: "success"
     });
   };
 

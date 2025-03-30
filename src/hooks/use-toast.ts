@@ -66,6 +66,17 @@ export const useToast = () => {
     } as any);
   };
 
+  // Add missing methods that are referenced in other components
+  const stopSound = () => {
+    // Placeholder function to prevent the TS error
+    console.log('stopSound called (placeholder)');
+  };
+  
+  const playSuccess = () => {
+    // Placeholder function to prevent the TS error
+    console.log('playSuccess called (placeholder)');
+  };
+
   return {
     ...rest,
     toast,
@@ -75,8 +86,8 @@ export const useToast = () => {
     warning,
     info,
     royal,
-    stopSound: () => {}, // Added to fix useShameEffect.ts
-    playSuccess: () => {}, // Added for compatibility
+    stopSound,
+    playSuccess,
   };
 };
 

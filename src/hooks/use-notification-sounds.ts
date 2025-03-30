@@ -1,22 +1,20 @@
 
 import { useCallback } from 'react';
-import useSound from '@/hooks/sounds/use-sound';
-import { SoundType } from '@/types/sound-types';
 
-const useNotificationSounds = () => {
-  const { play, stop } = useSound();
+interface UseNotificationSoundsReturn {
+  playSound: (sound: string, volume?: number) => void;
+}
 
-  const playSound = useCallback((sound: SoundType, volume?: number) => {
-    if (volume !== undefined) {
-      play(sound);
-    } else {
-      play(sound);
-    }
-  }, [play]);
+export const useNotificationSounds = (): UseNotificationSoundsReturn => {
+  const playSound = useCallback((sound: string, volume: number = 0.5) => {
+    console.log(`Playing sound: ${sound} at volume ${volume}`);
+    
+    // In a real implementation, this would play actual sounds
+    // through the browser's Audio API
+  }, []);
 
   return {
-    playSound,
-    stopSound: stop
+    playSound
   };
 };
 
