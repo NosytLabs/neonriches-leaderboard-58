@@ -10,7 +10,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Shield, Target, AlertTriangle, LucideIcon, User as UserIcon, Crown, Bell } from 'lucide-react';
 import { MOCKERY_COSTS, getActiveMockeryClass } from '@/utils/mockeryUtils';
 import { useToast } from '@/hooks/use-toast';
-import PaymentModal from '@/components/shop/PaymentModal';
+import PaymentModal from '@/components/PaymentModal';
 
 interface MockeryUserCardProps {
   user: User;
