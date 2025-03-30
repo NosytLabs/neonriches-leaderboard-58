@@ -1,5 +1,5 @@
 
-// Define types for profile boosts
+// Profile boost related types
 export type BoostStrength = 'low' | 'medium' | 'high' | 'extreme';
 export type BoostTier = 'basic' | 'premium' | 'royal' | 'legendary';
 export type BoostEffectType = 
@@ -52,4 +52,5 @@ export interface ProfileBoostData {
   previewImage?: string;
 }
 
-export type { ProfileBoost, BoostEffect, BoostEffectType, BoostStrength, BoostTier, ProfileBoostData };
+// Export types explicitly
+export { ProfileBoost, BoostEffect, BoostEffectType, BoostStrength, BoostTier, ProfileBoostData };

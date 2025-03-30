@@ -32,4 +32,5 @@ export type Team = {
   benefits: TeamBenefit[];
 };
 
-export type { TeamType, TeamColor, UserTeam, Team };
+// Export these types properly
+export type { TeamType, TeamColor, UserTeam, Team, TeamBenefit };

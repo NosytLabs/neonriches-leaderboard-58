@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -134,16 +135,28 @@ const RoyalMockeryFestival = () => {
   const mockedUsers: MockedUser[] = mockUsers
     .filter(user => isUserShamed(user.username))
     .map(user => ({
+      id: user.id || `generated-${user.username}`,
       userId: user.id,
       username: user.username,
       displayName: user.displayName || user.username,
-      profileImage: user.profileImage,
+      profileImage: user.profileImage || '',
       mockedReason: `Subjected to ${user.tier || 'unknown'} mockery`,
       mockedTimestamp: user.lastMocked ? user.lastMocked : new Date().toISOString(),
       mockedBy: 'Unknown user',
-      mockedTier: user.tier,
-      mockeryCount: user.mockeryCount || 1
+      mockedTier: user.tier || 'basic',
+      mockeryCount: user.mockeryCount || 1,
+      lastMocked: user.lastMocked,
+      team: user.team
     }));
+  
+  // Adjust the type signature for getActiveMockery
+  const getActiveMockeryWrapper = (username: string): MockeryAction => {
+    const mockeryEvent = getActiveMockery(username);
+    if (mockeryEvent && typeof mockeryEvent === 'object' && 'action' in mockeryEvent) {
+      return mockeryEvent.action as MockeryAction || 'tomatoes';
+    }
+    return 'tomatoes';
+  };
   
   return (
     <>
@@ -199,7 +212,7 @@ const RoyalMockeryFestival = () => {
                 getUserMockeryCount={getUserMockeryCount}
                 getUserMockedOthersCount={getUserMockedOthersCount}
                 isUserProtected={isUserProtected}
-                getActiveMockery={getActiveMockery}
+                getActiveMockery={getActiveMockeryWrapper}
                 onMockery={handleMockery}
               />
             </TabsContent>

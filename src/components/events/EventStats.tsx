@@ -1,74 +1,82 @@
 
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { useEventStatistics } from './hooks/useEventStatistics';
-import { Users, Trophy, Zap } from 'lucide-react';
-import { EventStats as EventStatsType } from '@/types/events';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Users, DollarSign, Award, Target } from 'lucide-react';
+import { formatCurrency } from '@/utils/formatters';
+import { EventStats } from '@/types/events';
 
-const EventStats: React.FC = () => {
-  const { stats, isLoading } = useEventStatistics();
-  
-  if (isLoading) {
-    return <div className="animate-pulse">Loading event statistics...</div>;
-  }
-  
+interface EventStatsCardProps {
+  stats: EventStats;
+  className?: string;
+}
+
+const EventStatsCard: React.FC<EventStatsCardProps> = ({ stats, className }) => {
   return (
-    <Card className="glass-morphism border-white/10">
+    <Card className={`glass-morphism border-white/10 ${className || ''}`}>
       <CardHeader>
-        <CardTitle className="text-xl">Current Event Statistics</CardTitle>
+        <CardTitle className="text-xl">Event Statistics</CardTitle>
       </CardHeader>
-      <CardContent>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <StatCard 
-            title="Prize Pool" 
-            value={`$${stats.prizePool.toLocaleString()}`}
-            icon={<Trophy className="h-5 w-5 text-royal-gold" />}
-          />
-          
-          <StatCard 
-            title="Participants" 
-            value={stats.participantsCount.toLocaleString()}
-            icon={<Users className="h-5 w-5 text-royal-navy" />}
-          />
-          
-          <StatCard 
-            title="Total Pokes" 
-            value={stats.totalPokes.toLocaleString()}
-            icon={<Zap className="h-5 w-5 text-royal-crimson" />}
-          />
-          
-          {stats.mostPoked && (
-            <div className="col-span-full glass-morphism border-white/10 p-4 rounded-lg">
-              <div className="text-sm text-white/70 mb-1">Most Poked Noble</div>
-              <div className="flex items-center">
-                <span className="font-bold text-royal-crimson">{stats.mostPoked.username}</span>
-                <span className="mx-2 text-white/40">•</span>
-                <span>{stats.mostPoked.pokeCount} pokes</span>
-              </div>
+      <CardContent className="space-y-4">
+        <div className="grid grid-cols-2 gap-4">
+          <div className="flex flex-col p-4 bg-black/20 rounded-lg">
+            <div className="flex items-center gap-2 mb-1 text-royal-gold">
+              <DollarSign className="h-5 w-5" />
+              <span className="font-semibold">Prize Pool</span>
             </div>
+            <span className="text-2xl font-bold">{formatCurrency(stats.prizePool)}</span>
+          </div>
+          
+          <div className="flex flex-col p-4 bg-black/20 rounded-lg">
+            <div className="flex items-center gap-2 mb-1 text-royal-gold">
+              <Users className="h-5 w-5" />
+              <span className="font-semibold">Participants</span>
+            </div>
+            <span className="text-2xl font-bold">{stats.participantsCount}</span>
+          </div>
+          
+          <div className="flex flex-col p-4 bg-black/20 rounded-lg">
+            <div className="flex items-center gap-2 mb-1 text-royal-gold">
+              <Target className="h-5 w-5" />
+              <span className="font-semibold">Total Pokes</span>
+            </div>
+            <span className="text-2xl font-bold">{stats.totalPokes}</span>
+          </div>
+          
+          <div className="flex flex-col p-4 bg-black/20 rounded-lg">
+            <div className="flex items-center gap-2 mb-1 text-royal-gold">
+              <Award className="h-5 w-5" />
+              <span className="font-semibold">Total Spent</span>
+            </div>
+            <span className="text-2xl font-bold">{formatCurrency(stats.totalSpent)}</span>
+          </div>
+        </div>
+        
+        <div className="p-4 bg-black/20 rounded-lg">
+          <h3 className="font-semibold mb-2 text-royal-gold flex items-center gap-2">
+            <Target className="h-4 w-4" />
+            Most Poked
+          </h3>
+          {stats.mostPoked && stats.mostPoked.length > 0 ? (
+            <ul className="space-y-2">
+              {stats.mostPoked.map((user, index) => (
+                <li key={index} className="flex items-center justify-between">
+                  <span className="text-white/80">@{user.username}</span>
+                  <span className="font-mono bg-black/30 px-2 py-1 rounded text-sm">
+                    {user.pokeCount} pokes
+                  </span>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-white/60">No poke data available yet.</p>
           )}
         </div>
       </CardContent>
+      <CardFooter className="flex justify-center pt-0">
+        <p className="text-xs text-white/50">Stats update every 15 minutes</p>
+      </CardFooter>
     </Card>
   );
 };
 
-interface StatCardProps {
-  title: string;
-  value: string;
-  icon: React.ReactNode;
-}
-
-const StatCard: React.FC<StatCardProps> = ({ title, value, icon }) => {
-  return (
-    <div className="glass-morphism border-white/10 p-4 rounded-lg">
-      <div className="flex items-center justify-between mb-2">
-        <div className="text-sm text-white/70">{title}</div>
-        {icon}
-      </div>
-      <div className="text-2xl font-bold">{value}</div>
-    </div>
-  );
-};
-
-export default EventStats;
+export default EventStatsCard;

@@ -1,4 +1,5 @@
 
+// Social media related types
 export type SocialPlatform = 
   | "twitter" 
   | "instagram" 
@@ -21,5 +22,5 @@ export interface SocialLink {
   id?: string;
 }
 
-// Export these types
-export type { SocialPlatform, SocialLink };
+// Export these types properly
+export { SocialPlatform, SocialLink };

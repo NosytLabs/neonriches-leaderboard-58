@@ -1,4 +1,5 @@
 
+// Event-related types
 import { TeamType } from './team';
 
 export type EventType = 
@@ -41,10 +42,7 @@ export interface EventStats {
   averageSpent: number;
   prizePool: number;
   totalPokes: number;
-  mostPoked: {
-    username: string;
-    pokeCount: number;
-  }[];
+  mostPoked: { username: string; pokeCount: number; }[];
 }
 
 export interface EventParticipant {
@@ -73,7 +71,10 @@ export interface EventDetails {
   eligibility: string[];
   participationRequirements: string[];
   specialRules: string[];
+  startDate?: string;
+  endDate?: string;
   createdAt?: string;
+  type?: EventType;
 }
 
 export interface EventReward {
@@ -89,4 +90,5 @@ export interface EventReward {
   amountRequired?: number;
 }
 
-export type { EventType, EventStatus, EventStats, EventDetails };
+// Export all types
+export { EventType, EventStatus, Event, EventStats, EventParticipant, EventDetails, EventReward };

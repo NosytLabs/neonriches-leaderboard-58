@@ -1,4 +1,5 @@
 
+// Feature access types
 import { UserTier } from './user-types';
 
 export type Feature = 
@@ -31,4 +32,5 @@ export interface FeatureAccess {
   purchaseFeatureIndividually: (feature: Feature) => Promise<any>;
 }
 
-export type { Feature, FeatureAccess };
+// Export types
+export { Feature, FeatureRequirements, FeatureAccess };

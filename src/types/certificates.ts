@@ -1,69 +1,47 @@
 
+// Certificate related types
 import { TeamType } from './team';
-import { UserTier } from './user-types';
 
 export type CertificateType = 
   | 'rank' 
-  | 'team' 
-  | 'spending' 
-  | 'achievement'
-  | 'nobility'
-  | 'royal';
+  | 'achievement' 
+  | 'membership'
+  | 'royal'
+  | 'special'
+  | 'event'
+  | 'milestone'
+  | 'team'
+  | 'nobility';
 
 export type CertificateStyle = 
+  | 'royal' 
+  | 'gilded' 
   | 'classic' 
   | 'modern' 
-  | 'medieval' 
-  | 'royal' 
-  | 'gothic' 
-  | 'elegant'
-  | 'basic'
-  | 'fantasy'
-  | 'minimalist';
+  | 'minimalist'
+  | 'ornate'
+  | 'parchment'
+  | 'elite'
+  | 'vip';
 
-export type CertificateTeam = TeamType;
+export type CertificateTeam = TeamType | 'neutral';
 
 export interface Certificate {
   id: string;
   userId: string;
+  userDisplayName: string;
   type: CertificateType;
-  issueDate: string;
-  expireDate?: string;
+  style: CertificateStyle;
   imageUrl: string;
   nftMintAddress?: string;
-  isNFT?: boolean;
-  rank?: number;
   team?: CertificateTeam;
+  createdAt: string;
+  updatedAt?: string;
   title?: string;
   description?: string;
-  style?: CertificateStyle;
-  // New properties
-  createdAt?: string;
   isMinted?: boolean;
   mintedAt?: string;
-  mintAddress?: string;
   shareUrl?: string;
-  updatedAt?: string;
-}
-
-export interface RankCertificateMetadata {
-  title: string;
-  description: string;
-  issueDate: string;
-  userName: string;
-  userRank: number;
-  displayName?: string;
-  rank?: number;
-  amountSpent?: number;
-}
-
-export interface CertificateRepository {
-  getCertificateById: (id: string) => Promise<Certificate | null>;
-  getCertificatesByUserId: (userId: string) => Promise<Certificate[]>;
-  createCertificate: (certificate: Certificate) => Promise<Certificate>;
-  updateCertificate: (certificate: Certificate) => Promise<boolean>;
-  deleteCertificate: (id: string) => Promise<boolean>;
-  getMintedCertificatesForUser?: (userId: string) => Promise<Certificate[]>;
 }
 
 export interface CertificateTemplate {
@@ -72,28 +50,38 @@ export interface CertificateTemplate {
   type: CertificateType;
   style: CertificateStyle;
   team: CertificateTeam;
+  previewUrl: string;
   imageUrl: string;
-  previewUrl?: string;
   description: string;
   requiresFounder?: boolean;
   availableForTier?: string[];
   availableForRank?: number[];
 }
 
-export interface CertificateTemplateFactory {
-  createTemplate: (options: any) => CertificateTemplate;
-  getTemplateById: (id: string) => CertificateTemplate | null;
-  getAllTemplates: () => CertificateTemplate[];
-  getTemplatesByType: (type: CertificateType) => CertificateTemplate[];
-  getTemplatesForUser?: (user: any) => Promise<CertificateTemplate[]>;
+export interface RankCertificateMetadata {
+  rank: number;
+  userName: string;
+  userId: string;
+  certId: string;
+  timestamp: number;
+  amountSpent?: number;
 }
 
-export interface CertificateWithUser extends Certificate {
-  user: {
-    id: string;
-    username: string;
-    displayName?: string;
-    tier?: UserTier;
-    team?: TeamType;
-  };
+export interface CertificateRepository {
+  getCertificateById(id: string): Promise<Certificate | null>;
+  getCertificatesByUserId(userId: string): Promise<Certificate[]>;
+  getMintedCertificatesForUser(userId: string): Promise<Certificate[]>;
+  createCertificate(certificate: Certificate): Promise<Certificate>;
+  updateCertificate(certificate: Certificate): Promise<boolean>;
+  deleteCertificate(id: string): Promise<boolean>;
 }
+
+export interface CertificateTemplateFactory {
+  getTemplatesForUser(userId: string, user: any): CertificateTemplate[];
+  createTemplate(type: CertificateType, style: CertificateStyle, team: CertificateTeam): CertificateTemplate;
+  getTemplateById(id: string): CertificateTemplate | null;
+  getAllTemplates(): CertificateTemplate[];
+  getTemplatesByType(type: CertificateType): CertificateTemplate[];
+}
+
+export { CertificateType, CertificateStyle, CertificateTeam, Certificate, CertificateTemplate, RankCertificateMetadata, CertificateRepository, CertificateTemplateFactory };

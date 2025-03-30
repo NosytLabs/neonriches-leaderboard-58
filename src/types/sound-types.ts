@@ -1,54 +1,48 @@
 
+// Sound types
 export type SoundType = 
-  | 'click'
-  | 'hover'
-  | 'success'
-  | 'error'
-  | 'notification'
-  | 'purchase'
-  | 'rankUp'
-  | 'coinDrop'
-  | 'achievement'
-  | 'trumpets'
-  | 'fanfare'
+  | 'click' 
+  | 'hover' 
+  | 'success' 
+  | 'error' 
+  | 'notification' 
+  | 'purchase' 
+  | 'rankUp' 
+  | 'coinDrop' 
+  | 'achievement' 
+  | 'trumpets' 
+  | 'fanfare' 
   | 'shame'
   | 'parchment'
-  | 'treasure'
-  | 'royal'
   | 'crown'
-  | 'pageTransition'
-  | 'parchmentUnfurl'
+  | 'royal'
+  | 'medieval'
+  | 'award'
   | 'info'
+  | 'warning'
   | 'seal'
   | 'deposit'
   | 'reward'
-  | 'win'
-  | 'warning'
-  | 'medallion'
-  | 'trumpet'
-  | 'royalAnnouncement'
+  | 'unlock'
+  | 'team'
+  | 'applause'
   | 'levelUp'
-  | 'wish'
+  | 'boost'
+  | 'curse'
+  | 'laugh'
+  | 'magic'
+  | 'celebration'
   | 'message'
-  | 'pageChange'
-  | 'swordClash'
-  | 'coins'
-  | 'noblesLaugh'
-  | 'smoke'
-  | 'tab'
-  | 'mockery'
-  | 'cosmetic'
-  | 'inkScribble';
+  | 'treasure'
+  | 'bell';
 
-export interface SoundConfig {
-  enabled: boolean;
-  volume: number;
-  muted: boolean;
-  themeSound: string;
-  effectsVolume: number;
-  musicVolume: number;
-  notificationsVolume: number;
-  uiVolume: number;
+export interface AudioLoaderReturn {
+  audios: Record<SoundType, HTMLAudioElement>;
+  playSound: (sound: SoundType) => void;
+  stopSound: (sound: SoundType) => void;
+  isPlaying: (sound: SoundType) => boolean;
+  setVolume: (sound: SoundType, volume: number) => void;
+  loadingComplete: boolean;
 }
 
 export interface PremiumSoundPackDetails {
@@ -60,34 +54,7 @@ export interface PremiumSoundPackDetails {
   sounds: SoundType[];
   features: string[];
   tags: string[];
-  royalSounds?: Record<SoundType, string>;
-  gameSounds?: Record<SoundType, string>;
-  isUnlocked?: boolean;
-  includes?: string[];
+  isPurchased?: boolean;
 }
 
-export interface AudioLoaderReturn {
-  sounds: Record<SoundType, HTMLAudioElement | null>;
-  loadingComplete: boolean;
-  loadingError: boolean;
-  loading: boolean;
-  loadSound: (type: SoundType) => Promise<HTMLAudioElement | null>;
-}
-
-export interface UseSoundOptions {
-  volume?: number;
-  loop?: boolean;
-  interrupt?: boolean;
-  onEnd?: () => void;
-  baseVolume?: number;
-  disableCache?: boolean;
-}
-
-export interface UseSoundReturn {
-  play: (sound?: SoundType) => void;
-  stop: (sound?: SoundType) => void;
-  isPlaying: boolean;
-  duration: number;
-  playSound?: (sound: SoundType) => void;
-  playSuccess?: (sound?: SoundType) => void;
-}
+export { SoundType, AudioLoaderReturn, PremiumSoundPackDetails };

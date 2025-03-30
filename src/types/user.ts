@@ -1,4 +1,5 @@
 
+// User profile related types
 import { UserTier, UserTeam, UserSettings } from './user-types';
 import { TeamType } from './team';
 import { SocialLink } from './social-links';
@@ -95,5 +96,5 @@ export type UserCosmetics = UserCosmeticState;
 // Alias for User to maintain backward compatibility
 export type User = UserProfile;
 
-// Export using export type to fix isolation module errors
-export type { UserProfile, ProfileImage, ProfileLink, UserCosmetics, User };
+// Export properly
+export { UserProfile, ProfileImage, ProfileLink, UserCosmetics, User, CertificateNFT };

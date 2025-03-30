@@ -1,4 +1,5 @@
 
+// User role and status types
 export type UserRole = 'user' | 'admin' | 'moderator' | 'vip' | 'developer';
 export type UserStatus = 'active' | 'inactive' | 'suspended' | 'banned';
 export type UserTier = 
@@ -71,5 +72,5 @@ export interface UserSettings {
   spendingAlerts?: boolean; // Alternative to spendAlerts for compatibility
 }
 
-// Export all types using export type to avoid isolatedModules error
-export type { UserRole, UserStatus, UserTier, UserGender, UserTeam };
+// Export all types explicitly
+export { UserRole, UserStatus, UserTier, UserGender, UserTeam, UserPreferences, UserStats, UserSubscription, UserSettings };

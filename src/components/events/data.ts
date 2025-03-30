@@ -1,221 +1,134 @@
-import { Event, EventType, EventStatus, EventDetails, EventStats } from '@/types/events';
 
-// Mock user data for shame targets
-export const topUsers = [
+import { Event, EventDetails, EventStats } from '@/types/events';
+
+// Mock events data
+export const eventsData: Event[] = [
   {
-    id: 1,
-    username: "LordCashington",
-    profileImage: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=300&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
-    rank: 1,
-    team: "red",
-    amountSpent: 10450
+    id: "evt-001",
+    title: "Spring Fire Sale",
+    name: "Spring Fire Sale",
+    description: "A limited-time event where you can ascend through the ranks at a discounted price!",
+    image: "/images/events/firesale.jpg",
+    imageUrl: "/images/events/firesale.jpg",
+    startDate: "2023-03-15T00:00:00Z",
+    endDate: "2023-03-22T00:00:00Z",
+    type: "firesale",
+    status: "completed",
+    createdAt: "2023-02-15T00:00:00Z",
+    updatedAt: "2023-03-22T00:00:00Z"
   },
   {
-    id: 2,
-    username: "DuchessDigits",
-    profileImage: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=300&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
-    rank: 2,
-    team: "blue",
-    amountSpent: 8750
+    id: "evt-002",
+    title: "Summer Tournament of Champions",
+    name: "Summer Tournament of Champions",
+    description: "Compete against other nobles to prove your worth and earn exclusive rewards!",
+    image: "/images/events/tournament.jpg",
+    imageUrl: "/images/events/tournament.jpg",
+    startDate: "2023-07-01T00:00:00Z",
+    endDate: "2023-07-15T00:00:00Z",
+    type: "tournament",
+    status: "upcoming",
+    createdAt: "2023-05-15T00:00:00Z",
+    updatedAt: "2023-05-15T00:00:00Z"
   },
   {
-    id: 3,
-    username: "Sir_Spends_A_Lot",
-    profileImage: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
-    rank: 3,
-    team: "green",
-    amountSpent: 6320
+    id: "evt-003",
+    title: "100K Spending Challenge",
+    name: "100K Spending Challenge",
+    description: "Can you spend $100,000 before anyone else? Special rewards await those who dare!",
+    image: "/images/events/challenge.jpg",
+    imageUrl: "/images/events/challenge.jpg",
+    startDate: "2023-05-15T00:00:00Z",
+    endDate: "2023-06-15T00:00:00Z",
+    type: "challenge",
+    status: "active",
+    createdAt: "2023-04-01T00:00:00Z",
+    updatedAt: "2023-05-15T00:00:00Z"
   },
   {
-    id: 4,
-    username: "CountessCoin",
-    profileImage: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=300&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
-    rank: 4,
-    team: "blue",
-    amountSpent: 5430
-  },
-  {
-    id: 5,
-    username: "BaronBankroll",
-    profileImage: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=300&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
-    rank: 5,
-    team: "red",
-    amountSpent: 4750
-  },
-  {
-    id: 6,
-    username: "LadyLuxury",
-    profileImage: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=300&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
-    rank: 6,
-    team: "green",
-    amountSpent: 3680
+    id: "evt-004",
+    title: "Royal Mockery Festival",
+    name: "Royal Mockery Festival",
+    description: "A delightful opportunity to shame your rivals and assert dominance in the royal court!",
+    image: "/images/events/mockery.jpg",
+    imageUrl: "/images/events/mockery.jpg",
+    startDate: "2023-09-01T00:00:00Z",
+    endDate: "2023-09-15T00:00:00Z",
+    type: "shame",
+    status: "upcoming",
+    createdAt: "2023-07-15T00:00:00Z",
+    updatedAt: "2023-07-15T00:00:00Z"
   }
 ];
 
-// Update the upcomingEvents array to include updatedAt
-export const upcomingEvents: Event[] = [
+// Mock event details data
+export const eventDetailsData: EventDetails[] = [
   {
-    id: "public-shaming",
-    title: "Public Shaming Festival",
-    name: "Public Shaming Festival", // For backward compatibility
-    description: "Monthly medieval-style event where nobles can publicly shame others with tomatoes, eggs, or stocks. Discounted rates for all shaming actions!",
-    image: "https://images.unsplash.com/photo-1472396961693-142e6e269027?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
-    imageUrl: "https://images.unsplash.com/photo-1472396961693-142e6e269027?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
-    startDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString(), // 14 days from now
-    endDate: new Date(Date.now() + 17 * 24 * 60 * 60 * 1000).toISOString(), // 17 days from now
-    type: "shame" as EventType,
-    status: "upcoming" as EventStatus,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString()
+    id: "evt-001",
+    title: "Spring Fire Sale",
+    name: "Spring Fire Sale",
+    description: "A limited-time event where you can ascend through the ranks at a discounted price!",
+    image: "/images/events/firesale.jpg",
+    longDescription: "The Spring Fire Sale is a semi-annual event that allows all nobles to climb the ranks with special discounted spending. During this event, every dollar spent counts as 1.5 dollars towards your rank progress. This is the perfect opportunity to boost your standing in the royal court without emptying your treasury.",
+    rules: [
+      "All spending during the event period counts as 1.5x towards rank progression",
+      "Minimum spend of $50 required to participate",
+      "Bonus rank progress is calculated at the end of the event",
+      "Purchases of Royal Subscription packages receive an additional 10% bonus"
+    ],
+    rewards: [
+      "Top spender receives exclusive 'Spring Sovereign' title and profile decoration",
+      "All participants who spend $500+ receive a special Spring Fire Sale commemorative certificate",
+      "Random rewards distributed daily to active participants"
+    ],
+    rewardTypes: ["Titles", "Certificates", "Profile Decorations", "Rank Boosts"],
+    eligibility: ["All active members are eligible to participate", "Account must be in good standing"],
+    participationRequirements: ["Minimum spend of $50 during the event period"],
+    specialRules: ["Rank boosts do not apply to team contribution calculations"],
+    createdAt: "2023-02-15T00:00:00Z"
   },
   {
-    id: "team-conquest",
-    title: "Team Conquest",
-    name: "Team Conquest", // For backward compatibility
-    description: "Join forces with your team to dominate the leaderboard and claim territories on the kingdom map. The winning team earns exclusive badges and bonuses.",
-    image: "https://images.unsplash.com/photo-1466721591366-2d5fba72006d?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
-    imageUrl: "https://images.unsplash.com/photo-1466721591366-2d5fba72006d?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
-    startDate: new Date(Date.now() + 21 * 24 * 60 * 60 * 1000).toISOString(), // 21 days from now
-    endDate: new Date(Date.now() + 28 * 24 * 60 * 60 * 1000).toISOString(), // 28 days from now
-    type: "team" as EventType,
-    status: "upcoming" as EventStatus,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString()
+    id: "evt-002",
+    title: "Summer Tournament of Champions",
+    name: "Summer Tournament of Champions",
+    description: "Compete against other nobles to prove your worth and earn exclusive rewards!",
+    image: "/images/events/tournament.jpg",
+    longDescription: "The Summer Tournament of Champions is our premier competitive event where nobles can compete directly against each other in a series of spending challenges. Each day brings a new opportunity to climb the tournament leaderboard. Glory, titles, and exclusive rewards await those who demonstrate their commitment to the royal treasury.",
+    rules: [
+      "Tournament runs for two weeks with daily challenges",
+      "Daily spending is tracked on separate leaderboards",
+      "Overall tournament ranking is based on cumulative spending",
+      "Minimum daily participation of $10 required to qualify for rewards"
+    ],
+    rewards: [
+      "Tournament Champion receives the 'Champion's Crown' profile effect (permanent)",
+      "Top 10 finishers receive 'Champion's Circle' title (permanent)",
+      "Top 50 finishers receive special tournament certificate",
+      "Daily challenge winners receive 24-hour profile boosts"
+    ],
+    rewardTypes: ["Profile Effects", "Titles", "Certificates", "Profile Boosts"],
+    eligibility: ["All members of Basic tier and above", "Account must be at least 30 days old"],
+    participationRequirements: ["Minimum daily spend of $10 to qualify for daily challenges"],
+    specialRules: ["Tournament spending does not receive Fire Sale multipliers or other event bonuses"],
+    createdAt: "2023-05-15T00:00:00Z"
   }
 ];
 
-// Event details data - removing Treasure Hunt
-export const eventDetailsData: Record<string, EventDetails> = {
-  "public-shaming": {
-    id: "public-shaming",
-    name: "Public Shaming Festival",
-    title: "Public Shaming Festival",
-    description: "Monthly medieval-style event where nobles can publicly shame others with tomatoes, eggs, or stocks. Discounted rates for all shaming actions!",
-    image: "https://images.unsplash.com/photo-1472396961693-142e6e269027?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
-    startDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString(),
-    endDate: new Date(Date.now() + 17 * 24 * 60 * 60 * 1000).toISOString(),
-    type: "shame" as EventType,
-    status: "upcoming" as EventStatus,
-    createdAt: new Date().toISOString(),
-    rewardTypes: ["Shame Trophies", "Special Effects", "Humiliator Badges"],
-    eligibility: "Users who have spent at least $1 can participate",
-    participationRequirements: [
-      "Pay a small fee to shame other nobles",
-      "Choose from tomatoes, eggs, or stocks",
-      "Target any noble on the leaderboard",
-      "Most shamings performed earns special recognition"
-    ],
-    specialRules: [
-      "25% discount on all shaming actions during festival",
-      "Purely visual effects that last 24 hours",
-      "Cooldown period between shaming the same user",
-      "Does not affect actual leaderboard rankings"
-    ]
-  },
-  "team-conquest": {
-    id: "team-conquest",
-    name: "Team Conquest",
-    title: "Team Conquest",
-    description: "Join forces with your team to dominate the leaderboard and claim territories on the kingdom map. The winning team earns exclusive badges and bonuses.",
-    image: "https://images.unsplash.com/photo-1466721591366-2d5fba72006d?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
-    startDate: new Date(Date.now() + 21 * 24 * 60 * 60 * 1000).toISOString(),
-    endDate: new Date(Date.now() + 28 * 24 * 60 * 60 * 1000).toISOString(),
-    type: "team" as EventType,
-    status: "upcoming" as EventStatus,
-    createdAt: new Date().toISOString(),
-    rewardTypes: ["Team Territories", "Conquest Badges", "Team Bonuses", "Individual Rewards"],
-    eligibility: "All users who have joined a team",
-    participationRequirements: [
-      "Be a member of one of the three teams",
-      "Contribute spending during the event period",
-      "Participate in team-based challenges",
-      "Help claim and defend territories"
-    ],
-    specialRules: [
-      "Territories are claimed based on team spending",
-      "Special bonuses for holding strategic locations",
-      "Daily challenges offer bonus points",
-      "Winning team gets 10% bonus to all member rankings for 1 week"
-    ]
-  }
-};
-
-// Update the eventStatsData to include the missing properties
+// Mock event stats data
 export const eventStatsData: EventStats = {
-  totalParticipants: 128,
-  topPrize: 500,
-  totalPrizes: 2500,
-  daysRemaining: 3,
-  hoursRemaining: 72,
-  prizePool: 5000,
-  participantsCount: 128,
-  totalPokes: 247,
-  mostPoked: "LordCashington"
+  id: "stats-001",
+  eventId: "evt-001",
+  participantsCount: 1247,
+  totalSpent: 157892.50,
+  totalPrizes: 15000,
+  averageSpent: 126.62,
+  prizePool: 25000,
+  totalPokes: 3456,
+  mostPoked: [
+    { username: "lordcashington", pokeCount: 342 },
+    { username: "countesswealth", pokeCount: 289 },
+    { username: "dukespender", pokeCount: 215 }
+  ]
 };
 
-// Updated current event to Public Shaming instead of Treasure Hunt
-export const currentEvent: Event = {
-  id: "public-shaming",
-  title: "Public Shaming Festival",
-  name: "Public Shaming Festival", // For backward compatibility
-  description: "Monthly medieval-style event where nobles can publicly shame others. Discounted rates for all shaming actions!",
-  image: "https://images.unsplash.com/photo-1472396961693-142e6e269027?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
-  imageUrl: "https://images.unsplash.com/photo-1472396961693-142e6e269027?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
-  startDate: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(), // 2 days ago
-  endDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(), // 5 days from now
-  type: "shame" as EventType,
-  status: "active" as EventStatus,
-  createdAt: new Date().toISOString(),
-  updatedAt: new Date().toISOString()
-};
-
-export const eventStats: EventStats[] = [
-  {
-    id: "stats1",
-    eventId: "event1",
-    participantsCount: 253,
-    totalSpent: 25678,
-    totalPrizes: 10000,
-    averageSpent: 101.49,
-    prizePool: 15000,
-    totalPokes: 1256,
-    mostPoked: [
-      {
-        username: "spendaholic123",
-        pokeCount: 156
-      },
-      {
-        username: "royalBurner",
-        pokeCount: 129
-      },
-      {
-        username: "eliteSpender",
-        pokeCount: 98
-      }
-    ]
-  },
-  {
-    id: "stats2",
-    eventId: "event2",
-    participantsCount: 187,
-    totalSpent: 19850,
-    totalPrizes: 7500,
-    averageSpent: 106.15,
-    prizePool: 12000,
-    totalPokes: 876,
-    mostPoked: [
-      {
-        username: "kingSpender",
-        pokeCount: 112
-      },
-      {
-        username: "moneyBurner",
-        pokeCount: 95
-      },
-      {
-        username: "wealthyUser",
-        pokeCount: 81
-      }
-    ]
-  }
-];
+export { eventsData, eventDetailsData, eventStatsData };

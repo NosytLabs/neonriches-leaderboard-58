@@ -1,23 +1,47 @@
 
-import { TeamType } from './team';
-
+// Mockery-related types
 export type MockeryAction = 
   | 'tomatoes' 
   | 'putridEggs' 
   | 'stocks' 
   | 'dunce' 
   | 'silence'
-  | 'shame'
   | 'taunt'
   | 'courtJester'
   | 'smokeBomb'
-  | 'protection';
+  | 'protection'
+  // Additional mockery types for compatibility
+  | 'jest'
+  | 'eggs'
+  | 'glitterBomb'
+  | 'crown'
+  | 'challenge'
+  | 'defeat'
+  | 'immune'
+  | 'guillotine'
+  | 'dungeons'
+  | 'removal'
+  | 'roast'
+  | 'royalPie'
+  | 'jokeCrown'
+  | 'memeFrame'
+  | 'target';
 
 export type MockeryTier = 
   | 'basic' 
   | 'premium' 
   | 'royal'
-  | 'legendary';
+  | 'legendary'
+  // Additional tiers for compatibility
+  | 'common'
+  | 'uncommon'
+  | 'rare'
+  | 'epic'
+  | 'bronze'
+  | 'silver'
+  | 'gold'
+  | 'platinum'
+  | 'diamond';
 
 export type ShameAction = 
   | 'shame' 
@@ -58,7 +82,7 @@ export interface MockUser {
   lastMocked?: string;
   mockeryCount?: number;
   rank?: number;
-  team?: TeamType;
+  team?: string;
 }
 
 export interface MockedUser {
@@ -73,7 +97,7 @@ export interface MockedUser {
   mockedTier: string;
   mockeryCount: number;
   lastMocked?: string;
-  team?: TeamType;
+  team?: string;
   rank?: number;
 }
 
@@ -92,7 +116,8 @@ export interface UserMockeryStatus {
   lastMockedAt?: string;
 }
 
-export type { 
+// Export types properly
+export { 
   MockeryAction, 
   MockeryEvent, 
   MockeryTier, 
