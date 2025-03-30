@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Scroll, DollarSign, Sparkles } from 'lucide-react';
 import { topUsers } from './data';
 import { useShameEffect } from './hooks/useShameEffect';
@@ -9,7 +8,7 @@ import RankingDisclaimer from '@/components/shared/RankingDisclaimer';
 import RoyalDivider from '@/components/ui/royal-divider';
 import { Dialog } from '@/components/ui/dialog';
 import ShameModal from './components/ShameModal';
-import { ShameAction } from '@/types/mockery'; // Use this import instead
+import { ShameAction } from '@/types/mockery';
 import useNotificationSounds from '@/hooks/use-notification-sounds';
 import { 
   hasWeeklyDiscount, 
@@ -90,7 +89,7 @@ const PublicShamingFestival = () => {
         ? getDiscountedShamePrice(selectedAction) 
         : getShameActionPrice(selectedAction);
         
-      handleShame(numericId, user.username, selectedAction, finalPrice);
+      handleShame(numericId, user.username, selectedAction);
       playSound('shame', 0.3);
     }
     

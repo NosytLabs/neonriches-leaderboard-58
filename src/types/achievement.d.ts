@@ -4,8 +4,8 @@ export type AchievementType =
   'deposit' | 
   'rank' | 
   'milestone' | 
-  'streak' | 
-  'purchase'; // Added 'purchase' type
+  'streak' |
+  'purchase'; 
 
 export type AchievementTier = 
   'bronze' | 

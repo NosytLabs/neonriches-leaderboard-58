@@ -17,7 +17,7 @@ export type CosmeticRarity =
   | 'rare' 
   | 'epic' 
   | 'legendary' 
-  | 'mythic'  // Added additional rarities
+  | 'mythic'
   | 'unique'
   | 'royal';
 

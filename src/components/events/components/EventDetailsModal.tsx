@@ -1,220 +1,199 @@
-
-import React, { useState } from 'react';
-import { 
-  Dialog, 
-  DialogContent, 
-  DialogHeader, 
+import React from 'react';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
   DialogTitle,
   DialogDescription,
   DialogFooter,
 } from '@/components/ui/dialog';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { 
-  Calendar, 
-  Users, 
-  Trophy, 
-  Clock, 
-  Award,
-  CheckCircle2, 
-  XCircle,
-  Flame
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import {
+  CalendarDays,
+  Trophy,
+  Users,
+  Clock,
+  Calendar,
+  Activity,
+  Info,
+  AlertCircle,
 } from 'lucide-react';
-import { formatDate } from '@/utils/dateUtils';
 import { Event, EventDetails } from '@/types/events';
+import { formatDate, formatDateRange } from '@/utils/formatters';
+import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
-import { eventDetails } from '../data';
+import RoyalDivider from '@/components/ui/royal-divider';
 
 interface EventDetailsModalProps {
-  event: Event;
+  event: Event | EventDetails;
   isOpen: boolean;
   onClose: () => void;
-  onJoin?: () => void;
-  onLeave?: () => void;
-  isParticipating?: boolean;
+  onParticipate?: () => void;
 }
 
 const EventDetailsModal: React.FC<EventDetailsModalProps> = ({
   event,
   isOpen,
   onClose,
-  onJoin,
-  onLeave,
-  isParticipating = false
+  onParticipate,
 }) => {
-  const [activeTab, setActiveTab] = useState('details');
-  
-  // Fetch the event details based on the event ID
-  const details = eventDetails[event.id] || null;
-  
-  const getEventType = (type: string): { label: string; color: string } => {
-    switch (type) {
-      case 'tournament':
-        return { label: 'Tournament', color: 'bg-blue-500/20 text-blue-400 border-blue-500/20' };
-      case 'challenge':
-        return { label: 'Challenge', color: 'bg-green-500/20 text-green-400 border-green-500/20' };
-      case 'team':
-        return { label: 'Team Event', color: 'bg-sky-500/20 text-sky-400 border-sky-500/20' };
-      case 'shame':
-        return { label: 'Festival', color: 'bg-pink-500/20 text-pink-400 border-pink-500/20' };
-      case 'treasure':
-        return { label: 'Treasure Hunt', color: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/20' };
-      default:
-        return { label: 'Special', color: 'bg-purple-500/20 text-purple-400 border-purple-500/20' };
-    }
-  };
-  
+  if (!event) return null;
+
   const getStatusBadge = () => {
-    if ('status' in event) {
-      if (event.status === 'upcoming') {
-        return <Badge variant="outline" className="bg-blue-500/20 text-blue-400 border-blue-500/20">Upcoming</Badge>;
-      } else if (event.status === 'active') {
-        return <Badge variant="outline" className="bg-green-500/20 text-green-400 border-green-500/20">Active</Badge>;
-      } else if (event.status === 'completed') {
-        return <Badge variant="outline" className="bg-gray-500/20 text-gray-300 border-gray-500/20">Completed</Badge>;
-      } else {
-        return <Badge variant="outline" className={`bg-${event.status === 'cancelled' ? 'red' : 'gray'}-500/20 text-${event.status === 'cancelled' ? 'red' : 'gray'}-400 border-${event.status === 'cancelled' ? 'red' : 'gray'}-500/20`}>{event.status.charAt(0).toUpperCase() + event.status.slice(1)}</Badge>;
-      }
+    // Using optional chaining to safely access status
+    const status = 'status' in event ? event.status : undefined;
+    
+    if (status === 'active') {
+      return <Badge className="bg-green-500">Active</Badge>;
+    } else if (status === 'upcoming') {
+      return <Badge className="bg-blue-500">Upcoming</Badge>;
+    } else if (status === 'completed' || status === 'cancelled') {
+      return <Badge className="bg-gray-500">{status === 'cancelled' ? 'Cancelled' : 'Completed'}</Badge>;
     }
     return null;
   };
-  
-  const eventTypeInfo = getEventType(event.type);
-  
+
+  const hasRewards = 'rewards' in event && event.rewards && Array.isArray(event.rewards) && event.rewards.length > 0;
+
+  const getEventTime = () => {
+    const startDate = new Date(event.startDate);
+    const endDate = new Date(event.endDate);
+
+    const formattedStartDate = formatDate(startDate);
+    const formattedEndDate = formatDate(endDate);
+
+    if (formattedStartDate === formattedEndDate) {
+      return (
+        <div className="flex items-center text-sm text-white/60">
+          <Calendar className="mr-2 h-4 w-4" />
+          {formattedStartDate}
+        </div>
+      );
+    } else {
+      return (
+        <div className="flex items-center text-sm text-white/60">
+          <CalendarDays className="mr-2 h-4 w-4" />
+          {formatDateRange(startDate, endDate)}
+        </div>
+      );
+    }
+  };
+
+  const getEventDuration = () => {
+    const startDate = new Date(event.startDate);
+    const endDate = new Date(event.endDate);
+    const durationMs = endDate.getTime() - startDate.getTime();
+    const durationDays = Math.ceil(durationMs / (1000 * 60 * 60 * 24));
+
+    return (
+      <div className="flex items-center text-sm text-white/60">
+        <Clock className="mr-2 h-4 w-4" />
+        {durationDays} days
+      </div>
+    );
+  };
+
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="glass-morphism border-royal-gold/20 min-w-[90vw] md:min-w-[80vw] lg:min-w-[70vw] max-w-5xl">
+    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
+      <DialogContent className="glass-morphism border-white/10 max-w-3xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <div className="flex items-center justify-between">
-            <DialogTitle className="flex items-center">
-              <span className="text-royal-gold mr-2">{event.title}</span>
-              {getStatusBadge()}
+            <DialogTitle className="text-2xl font-bold royal-gradient">
+              {event.title || event.name}
             </DialogTitle>
-            <div className="flex gap-2">
-              <Badge variant="outline" className={cn("px-2 py-1 text-xs", eventTypeInfo.color)}>
-                {eventTypeInfo.label}
-              </Badge>
-            </div>
+            {getStatusBadge()}
           </div>
-          <DialogDescription>
+          <DialogDescription className="text-white/70">
             {event.description}
           </DialogDescription>
         </DialogHeader>
-        
-        <Tabs defaultValue="details" value={activeTab} onValueChange={setActiveTab} className="mt-5">
-          <TabsList className="grid w-full grid-cols-3 glass-morphism">
+
+        <Tabs defaultValue="overview" className="mt-4">
+          <TabsList className="glass-morphism border-white/10 grid grid-cols-3 mb-4">
+            <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="details">Details</TabsTrigger>
-            <TabsTrigger value="rules">Rules</TabsTrigger>
-            <TabsTrigger value="rewards">Rewards</TabsTrigger>
+            {hasRewards && (
+              <TabsTrigger value="rewards">Rewards</TabsTrigger>
+            )}
           </TabsList>
-          
-          <TabsContent value="details" className="py-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="col-span-2 md:col-span-1">
-                <div className="space-y-4">
-                  <div className="flex items-center gap-2">
-                    <Calendar className="h-5 w-5 text-royal-gold" />
-                    <span>Start Date: {formatDate(event.startDate)}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Clock className="h-5 w-5 text-royal-gold" />
-                    <span>End Date: {formatDate(event.endDate)}</span>
-                  </div>
-                  {details && (
-                    <div className="text-white/70 mt-4">
-                      <h3 className="text-white font-medium mb-2">Event Description</h3>
-                      <p>{details.description}</p>
-                    </div>
-                  )}
-                </div>
-              </div>
-              
-              <div className="col-span-2 md:col-span-1">
-                <div className="rounded-lg overflow-hidden h-48">
-                  <img 
-                    src={event.image || '/event-placeholder.jpg'} 
-                    alt={event.title}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              </div>
+
+          <TabsContent value="overview" className="space-y-4">
+            <div className="flex items-center text-sm text-white/60">
+              <Activity className="mr-2 h-4 w-4" />
+              {event.type} Event
             </div>
+
+            {getEventTime()}
+            {getEventDuration()}
+
+            <Separator className="bg-white/10" />
+
+            <div className="text-white/80">{event.description}</div>
           </TabsContent>
-          
-          <TabsContent value="rules" className="py-4">
-            {details && details.rules ? (
-              <div className="space-y-4">
-                <h3 className="text-white font-medium">Event Rules</h3>
-                <ul className="list-disc pl-5 space-y-2">
-                  {details.rules.map((rule, index) => (
-                    <li key={index} className="text-white/70">{rule}</li>
-                  ))}
-                </ul>
-              </div>
-            ) : (
-              <div className="text-center py-8 text-white/60">
-                No specific rules available for this event.
-              </div>
-            )}
-          </TabsContent>
-          
-          <TabsContent value="rewards" className="py-4">
-            {(details && details.rewards && details.rewards.length > 0) ? (
-              <div className="space-y-6">
-                <h3 className="text-white font-medium">Event Rewards</h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  {details.rewards && details.rewards.map((reward, index) => (
-                    <div 
-                      key={index}
-                      className="glass-morphism border-white/10 p-4 rounded-lg"
-                    >
-                      <div className="flex items-center gap-2 mb-2">
-                        <Award className="h-5 w-5 text-royal-gold" />
-                        <h4 className="font-medium">{reward}</h4>
-                      </div>
-                      {details.rewardTypes && details.rewardTypes[index] && (
-                        <Badge variant="outline" className="bg-royal-gold/10 text-royal-gold border-royal-gold/20">
-                          {details.rewardTypes[index]}
-                        </Badge>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ) : (
-              <div className="text-center py-8 text-white/60">
-                No rewards information available for this event.
-              </div>
-            )}
-          </TabsContent>
-        </Tabs>
-        
-        <DialogFooter className="gap-2">
-          {('status' in event) && event.status === 'active' && (
-            <>
-              {isParticipating ? (
-                <Button 
-                  variant="outline" 
-                  onClick={onLeave}
-                >
-                  <XCircle className="h-4 w-4 mr-2" />
-                  Leave Event
-                </Button>
+
+          <TabsContent value="details" className="space-y-4">
+            <div className="flex items-center text-sm text-white/60">
+              <Info className="mr-2 h-4 w-4" />
+              Event Details
+            </div>
+
+            <ul className="list-disc list-inside text-white/80">
+              {('rules' in event && event.rules) ? (
+                event.rules.map((rule, index) => (
+                  <li key={index}>{rule}</li>
+                ))
               ) : (
-                <Button 
-                  className="bg-royal-gold hover:bg-royal-gold/90 text-black" 
-                  onClick={onJoin}
-                >
-                  <CheckCircle2 className="h-4 w-4 mr-2" />
-                  Join Event
-                </Button>
+                <li>No specific rules provided for this event.</li>
               )}
-            </>
+            </ul>
+          </TabsContent>
+
+          {hasRewards && (
+            <TabsContent value="rewards" className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {event.rewards?.map((reward: any, index: number) => (
+                  <div
+                    key={index}
+                    className="p-4 glass-morphism border-royal-gold/20 rounded-lg"
+                  >
+                    <div className="flex items-center">
+                      <Trophy className="mr-2 h-5 w-5 text-royal-gold" />
+                      <h4 className="text-lg font-semibold">{reward.name}</h4>
+                    </div>
+                    <p className="text-sm text-white/70 mt-1">{reward.description}</p>
+                  </div>
+                ))}
+              </div>
+            </TabsContent>
+          )}
+        </Tabs>
+
+        <RoyalDivider variant="line" className="my-4" />
+
+        <DialogFooter className="flex flex-col sm:flex-row gap-2">
+          {('status' in event && event.status === 'active') && (
+            <Button 
+              className="w-full sm:w-auto bg-royal-gold hover:bg-royal-gold/90 text-black" 
+              onClick={onParticipate}
+            >
+              Participate Now
+            </Button>
+          )}
+          
+          {('status' in event && event.status === 'upcoming') && (
+            <Button 
+              className="w-full sm:w-auto bg-royal-purple hover:bg-royal-purple/90" 
+              onClick={onParticipate}
+            >
+              Register Interest
+            </Button>
           )}
           
           <Button 
-            variant="ghost" 
+            variant="outline" 
+            className="w-full sm:w-auto" 
             onClick={onClose}
           >
             Close

@@ -60,6 +60,15 @@ const EnhancedDashboard = () => {
           icon: 'star',
           tier: 'silver',
           unlockedAt: new Date().toISOString()
+        },
+        {
+          id: 'premium-purchase',
+          name: 'Premium Buyer',
+          description: 'Purchase premium features',
+          type: 'purchase',
+          icon: 'star',
+          tier: 'gold',
+          unlockedAt: new Date().toISOString()
         }
       ];
       

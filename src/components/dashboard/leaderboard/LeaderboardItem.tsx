@@ -45,8 +45,10 @@ const LeaderboardItem: React.FC<LeaderboardItemProps> = ({
     totalSpent = 0,
     amountSpent = 0,
     spentAmount = 0,
-    avatarUrl
   } = userData;
+  
+  // Use the profileImage if avatarUrl is not available
+  const avatarSrc = userData.avatarUrl || profileImage;
   
   const teamColor = getTeamColor(team);
   const actualSpentAmount = totalSpent || amountSpent || spentAmount || 0;
@@ -84,6 +86,12 @@ const LeaderboardItem: React.FC<LeaderboardItemProps> = ({
 
   // The userTier is safely converted here to ensure TypeScript validation
   const userTier = tier as UserTier | undefined;
+  
+  // Determine if user is verified (with fallback)
+  const isVerified = userData.isVerified || false;
+  
+  // Determine if user is protected (with fallback)
+  const isProtected = userData.isProtected || false;
   
   return (
     <motion.div
@@ -143,7 +151,7 @@ const LeaderboardItem: React.FC<LeaderboardItemProps> = ({
           className="h-12 w-12 border-2 border-white/10 cursor-pointer hover:border-royal-gold/50 transition-colors"
           onClick={handleProfileClick}
         >
-          <AvatarImage src={avatarUrl || profileImage} alt={displayName || username} />
+          <AvatarImage src={avatarSrc} alt={displayName || username} />
           <AvatarFallback className="bg-gradient-to-br from-gray-800 to-gray-900">
             {getInitials()}
           </AvatarFallback>
@@ -158,7 +166,7 @@ const LeaderboardItem: React.FC<LeaderboardItemProps> = ({
             >
               {displayName || username}
             </h3>
-            {userData.isVerified && (
+            {isVerified && (
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
@@ -212,9 +220,9 @@ const LeaderboardItem: React.FC<LeaderboardItemProps> = ({
                       variant="ghost" 
                       className="h-8 w-8 bg-black/20 hover:bg-black/30 hover:text-royal-crimson"
                       onClick={handleShameClick}
-                      disabled={isOnCooldown || userData.isProtected}
+                      disabled={isOnCooldown || isProtected}
                     >
-                      {userData.isProtected ? (
+                      {isProtected ? (
                         <Shield className="h-4 w-4 text-royal-navy" />
                       ) : (
                         <Flame className="h-4 w-4" />
@@ -222,7 +230,7 @@ const LeaderboardItem: React.FC<LeaderboardItemProps> = ({
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent>
-                    {userData.isProtected 
+                    {isProtected 
                       ? "This user is protected from mockery" 
                       : isOnCooldown 
                         ? "You're on cooldown" 

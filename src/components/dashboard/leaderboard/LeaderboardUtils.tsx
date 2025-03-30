@@ -25,6 +25,9 @@ export interface LeaderboardUser {
   previousRank?: number;
   walletBalance?: number;
   totalSpent?: number;
+  isVerified?: boolean;
+  isProtected?: boolean;
+  avatarUrl?: string;
 }
 
 export const mockLeaderboardData: LeaderboardUser[] = [

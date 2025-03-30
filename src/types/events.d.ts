@@ -1,21 +1,38 @@
 
-export type EventType = 'tournament' | 'sale' | 'challenge' | 'team' | 'shame' | 'treasure';
-export type EventStatus = 'upcoming' | 'active' | 'completed' | 'cancelled';
+export type EventType = 'social' | 'competition' | 'giveaway' | 'exclusive' | 'seasonal' | 'team' | 'shame' | 'treasure';
+export type EventStatus = 'upcoming' | 'active' | 'completed' | 'cancelled' | 'canceled'; // Added 'cancelled' and 'canceled'
 
 export interface Event {
   id: string;
   name: string;
-  title: string; 
+  title?: string;
   description: string;
   type: EventType;
   startDate: string;
   endDate: string;
-  status: EventStatus;
   imageUrl: string;
   image?: string;
   createdAt: string;
   updatedAt: string;
+  status?: EventStatus;
   rewards?: EventReward[];
+}
+
+export interface EventDetails {
+  id: string;
+  name: string;
+  title?: string;
+  description: string;
+  type: EventType;
+  startDate: string;
+  endDate: string;
+  imageUrl: string;
+  image?: string;
+  status?: EventStatus;
+  rewards?: EventReward[];
+  rules: string[];
+  prizes?: any[];
+  eventId?: string;
 }
 
 export interface EventStats {
@@ -23,50 +40,33 @@ export interface EventStats {
   eventId: string;
   participantsCount: number;
   totalSpent: number;
-  topContribution: number;
-  avgContribution: number;
-  medianContribution: number;
-  minContribution: number;
-  maxContribution: number;
-  createdAt?: string;
-  updatedAt?: string;
+  topContributors: string[];
+  participantCount?: number; // Alias for participantsCount
+  averageSpend: number;
+  highestSpend: number;
+  lowestSpend: number;
+  duration: number;
+  topContribution?: number;
 }
 
 export interface EventParticipant {
   id: string;
   eventId: string;
   userId: string;
-  username: string;
-  amount: number;
+  joinedAt: string;
+  contribution: number;
   rank: number;
-  joined: string;
-  rewards?: EventReward[];
-}
-
-export interface EventDetails {
-  id: string;
-  eventId: string;
-  description: string;
-  rules: string[];
-  prizes?: string[];
-  prizePool: number;
-  startDate: string;
-  endDate: string;
-  status: EventStatus;
-  createdAt?: string;
-  updatedAt?: string;
-  rewards?: EventReward[];
+  rewards: EventReward[];
 }
 
 export interface EventReward {
   id: string;
-  eventId: string;
   name: string;
   description: string;
   type: string;
-  tier: string;
   value: number;
-  imageUrl?: string;
-  minRank?: number;
-  maxRank?: number;
+  imageUrl: string;
+  rarity: string;
 }
+
+export { EventType, EventStatus, Event, EventStats, EventParticipant, EventDetails, EventReward };
