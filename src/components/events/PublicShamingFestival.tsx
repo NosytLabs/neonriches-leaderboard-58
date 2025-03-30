@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Scroll, DollarSign, Sparkles } from 'lucide-react';
 import { topUsers } from './data';
@@ -16,6 +17,7 @@ import {
   getDiscountedShamePrice 
 } from './utils/shameUtils';
 import MedievalIcon from '@/components/ui/medieval-icon';
+import { MockeryAction } from '@/types/mockery';
 
 const formatUserForShameCard = (user: any) => ({
   id: user.id,
@@ -60,7 +62,7 @@ const PublicShamingDescription = () => {
 
 const PublicShamingFestival = () => {
   const { playSound } = useNotificationSounds();
-  const { shameCooldown, shameEffects, shameCount, getShameCount, handleShame } = useShameEffect();
+  const { shameCooldown, shameEffects, shameCount, getShameCount, handleShame, getActiveMockery } = useShameEffect();
   const [showModal, setShowModal] = React.useState(false);
   const [selectedUser, setSelectedUser] = React.useState<any>(null);
   const [selectedAction, setSelectedAction] = React.useState<ShameAction>('tomatoes');
@@ -88,27 +90,16 @@ const PublicShamingFestival = () => {
         ? getDiscountedShamePrice(selectedAction) 
         : getShameActionPrice(selectedAction);
         
-      handleShame(numericId, selectedAction);
+      handleShame(numericId, user.username, selectedAction);
       playSound('shame', 0.3);
     }
     
     setShowModal(false);
   };
 
-  const getActiveMockeryWrapper = (username: string): { action: MockeryAction; timestamp: number; until: number } => {
-    const mockeryEvent = shameEffects[parseInt(username, 10)];
-    if (mockeryEvent) {
-      return {
-        action: mockeryEvent,
-        timestamp: Date.now(),
-        until: Date.now() + (24 * 60 * 60 * 1000) // 24 hours
-      };
-    }
-    return {
-      action: 'tomatoes',
-      timestamp: 0,
-      until: 0
-    };
+  const getActiveMockeryWrapper = (userId: number): { action: ShameAction | MockeryAction; timestamp: number; until: number } => {
+    const mockeryInfo = getActiveMockery(userId);
+    return mockeryInfo;
   };
 
   return (

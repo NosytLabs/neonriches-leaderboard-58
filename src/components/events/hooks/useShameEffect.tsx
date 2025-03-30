@@ -1,7 +1,10 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
-import { ShameAction } from '@/types/mockery';
+import { MockeryAction } from '@/types/mockery';
+
+// Define ShameAction type explicitly and export it
+export type ShameAction = 'tomatoes' | 'eggs' | 'stocks';
 
 export interface ShameEffectProps {
   type: ShameAction;
@@ -26,9 +29,11 @@ export const ShameEffect: React.FC<ShameEffectProps> = ({
       const rotation = Math.random() * 360;
       const scale = 0.5 + Math.random() * 1;
       
-      // Using type comparison but with string literals for the ShameAction
-      const emoji = type === ('tomatoes' as ShameAction) ? '🍅' : 
-                    type === ('eggs' as ShameAction) ? '🥚' : '🪵';
+      // Using a type guard to ensure type is a valid ShameAction
+      const emoji = 
+        type === 'tomatoes' ? '🍅' : 
+        type === 'eggs' ? '🥚' : 
+        type === 'stocks' ? '🪵' : '🍅';
       
       newElements.push(
         <motion.div
@@ -70,6 +75,12 @@ export const ShameEffect: React.FC<ShameEffectProps> = ({
   return <>{elements}</>;
 };
 
+export interface MockeryActionInfo {
+  action: ShameAction | MockeryAction;
+  timestamp: number;
+  until: number;
+}
+
 export const useShameEffect = () => {
   const [shameEffects, setShameEffects] = useState<Record<number, ShameAction>>({});
   const [shameCooldown, setShameCooldown] = useState<Record<number, boolean>>({});
@@ -108,7 +119,7 @@ export const useShameEffect = () => {
     return shameCount[userId] || 0;
   }, [shameCount]);
   
-  const getActiveMockery = useCallback((userId: number): { action: ShameAction; timestamp: number; until: number } => {
+  const getActiveMockery = useCallback((userId: number): MockeryActionInfo => {
     const action = shameEffects[userId];
     if (action) {
       return {

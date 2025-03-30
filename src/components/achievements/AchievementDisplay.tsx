@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Star, Zap, Award, Trophy, Crown, DollarSign } from 'lucide-react';
@@ -25,7 +26,7 @@ export interface Achievement {
   description: string;
   type: AchievementType;
   tier: AchievementTier;
-  icon: 'star' | 'zap' | 'award' | 'trophy' | 'crown' | 'dollar';
+  icon: "star" | "zap" | "award" | "trophy" | "crown" | "dollar";
   unlockedAt?: string;
   amountSpent?: number;
 }

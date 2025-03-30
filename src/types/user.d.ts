@@ -87,5 +87,5 @@ export interface UserProfile {
 
 export type User = UserProfile;
 
-// Explicitly export these types to make them available
+// Make sure to export these types explicitly
 export { UserTier, TeamType, UserTeam, UserSettings, ProfileBoost, SocialLink };

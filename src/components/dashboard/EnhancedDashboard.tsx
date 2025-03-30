@@ -7,7 +7,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import { Trophy, Crown, Target, Users, Activity, Zap, DollarSign } from 'lucide-react';
 import { UserProfile } from '@/types/user';
-import { Achievement } from '@/types/achievement';
+import { Achievement } from '@/components/achievements/AchievementDisplay';
 import AchievementDisplay from '@/components/achievements/AchievementDisplay';
 import RankProgressChart from '@/components/dashboard/RankProgressChart';
 import TeamStatusCard from '@/components/dashboard/TeamStatusCard';
@@ -96,11 +96,6 @@ const EnhancedDashboard = () => {
       variant: "success"
     });
   };
-  
-  // The achievements are already in the right format for the components
-  const achievementsToDisplay = achievements.map(achievement => ({
-    ...achievement
-  }));
 
   return (
     <div className="container mx-auto px-4 py-6">
@@ -173,7 +168,7 @@ const EnhancedDashboard = () => {
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {achievementsToDisplay.map((achievement) => (
+                  {achievements.map((achievement) => (
                     <AchievementDisplay 
                       key={achievement.id}
                       achievement={achievement}
