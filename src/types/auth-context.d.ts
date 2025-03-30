@@ -3,9 +3,14 @@ import { UserProfile } from './user';
 
 export interface AuthContextType {
   user: UserProfile | null;
-  signin: (email: string, password: string) => Promise<void>;
-  signup: (email: string, password: string, username: string) => Promise<void>;
-  signout: () => Promise<void>;
   isAuthenticated: boolean;
   isLoading: boolean;
+  login: (email: string, password: string) => Promise<boolean>;
+  signIn: (email: string, password: string) => Promise<boolean>;
+  register: (username: string, email: string, password: string) => Promise<boolean>;
+  logout: () => Promise<void>;
+  signOut: () => Promise<void>;
+  updateUserProfile: (userData: Partial<UserProfile>) => Promise<void>;
+  updateUser: (userData: Partial<UserProfile>) => Promise<boolean>;
+  awardCosmetic: (category: string, itemId: string, notify?: boolean) => Promise<boolean>;
 }

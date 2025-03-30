@@ -6,7 +6,7 @@ import { type ButtonProps } from '@/components/ui/button';
 
 interface RoyalButtonProps extends Omit<ButtonProps, "variant"> {
   variant?: 'default' | 'gold' | 'purple' | 'crimson' | 'royalGold' | 'glass';
-  size?: 'sm' | 'md' | 'lg' | 'default' | 'icon';
+  size?: 'default' | 'sm' | 'lg' | 'icon';
   glow?: boolean;
   animated?: boolean;
 }

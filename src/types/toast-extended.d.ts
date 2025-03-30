@@ -1,10 +1,10 @@
 
 import { ReactNode } from 'react';
-import { ToastProps } from '@/components/ui/toast';
+import { Toast } from '@/components/ui/use-toast';
 
-export interface ExtendedToastProps extends Partial<ToastProps> {
-  title?: string | ReactNode;
-  description?: string | ReactNode;
-  duration?: number;
-  variant?: 'default' | 'destructive' | 'success' | 'royal';
+export interface ExtendedToastProps extends Omit<Toast, 'title' | 'description'> {
+  title?: ReactNode;
+  description?: ReactNode;
+  variant?: 'default' | 'destructive' | 'success' | 'outline' | 'secondary' | 'royal';
+  className?: string;
 }

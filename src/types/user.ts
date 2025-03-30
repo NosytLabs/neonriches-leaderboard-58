@@ -1,7 +1,7 @@
 
 export type TeamType = 'red' | 'green' | 'blue' | 'none';
-export type UserTier = 'free' | 'basic' | 'bronze' | 'silver' | 'gold' | 'platinum' | 'diamond' | 'royal' | 'founder' | 'pro' | 'premium' | 'whale';
-export type GenderType = 'king' | 'queen' | 'none';
+export type UserTier = 'free' | 'basic' | 'bronze' | 'silver' | 'gold' | 'platinum' | 'diamond' | 'royal' | 'founder' | 'pro' | 'premium' | 'whale' | 'shark' | 'dolphin' | 'standard';
+export type GenderType = 'king' | 'queen' | 'none' | 'noble' | 'other' | 'male' | 'female';
 
 export interface UserCosmetics {
   badges: string[];
@@ -12,6 +12,13 @@ export interface UserCosmetics {
   fonts: string[];
   colors: string[];
   backgrounds: string[];
+  themes?: string[];
+  foundersPass?: boolean;
+  activeBorder?: string;
+  activeColor?: string;
+  activeFont?: string;
+  activeBackground?: string;
+  socialLinks?: Record<string, string>;
 }
 
 export interface SocialLink {
@@ -21,20 +28,23 @@ export interface SocialLink {
   username: string;
   isVerified: boolean;
   isPublic: boolean;
+  clicks?: number;
 }
 
 export interface ProfileBoost {
   id: string;
   userId: string;
   effectId: string;
-  startDate: string;
-  endDate: string;
+  startDate?: string;
+  endDate?: string;
+  startTime?: Date;
+  endTime?: Date;
   duration: number;
-  type: string;
-  level: number;
-  strength: number;
-  appliedBy: string;
   isActive: boolean;
+  level: number;
+  type: string;
+  strength?: number;
+  appliedBy: string;
 }
 
 export interface UserSettings {
@@ -59,6 +69,7 @@ export interface UserSettings {
   showRank?: boolean;
   showTeam?: boolean;
   showSpending?: boolean;
+  newFollowerAlerts?: boolean;
 }
 
 export interface UserSubscription {
@@ -71,6 +82,7 @@ export interface UserSubscription {
   cancelAtPeriodEnd: boolean;
   price: number;
   interval: 'month' | 'year';
+  plan?: string;
 }
 
 export interface UserProfile {
@@ -79,10 +91,12 @@ export interface UserProfile {
   displayName?: string;
   email?: string;
   profileImage?: string;
+  profileImages?: ProfileImage[];
   walletAddress?: string;
   walletBalance?: number;
   amountSpent?: number;
   totalSpent?: number;
+  spentAmount?: number;
   rank?: number;
   previousRank?: number;
   team?: TeamType;
@@ -101,9 +115,59 @@ export interface UserProfile {
   activeTitle?: string;
   joinDate?: string;
   lastMocked?: string;
+  role?: string;
+  lastActive?: Date | string;
+  profileViews?: number;
+  profileClicks?: number;
+  followers?: number;
+  following?: number;
+  isVIP?: boolean;
+  purchasedFeatures?: string[];
   certificateNFT?: {
     mintAddress: string;
     mintedAt: string;
     tokenId: string;
   };
 }
+
+export interface ProfileImage {
+  url: string;
+  alt?: string;
+  type: string;
+}
+
+export interface User extends UserProfile {
+  id: string;
+  username: string;
+  email: string;
+  displayName: string;
+  profileImage: string;
+  walletBalance: number;
+  rank: number;
+  team: TeamType | null;
+  tier: UserTier;
+  totalSpent: number;
+  spentAmount: number;
+  amountSpent: number;
+  joinDate: string;
+  createdAt: string;
+  updatedAt: string;
+  isVerified: boolean;
+  cosmetics: UserCosmetics;
+  activeTitle: string;
+  spendStreak: number;
+  gender: GenderType;
+  profileViews: number;
+  profileClicks: number;
+  followers: number;
+  following: number;
+  isVIP: boolean;
+  settings: UserSettings;
+  profileBoosts: ProfileBoost[];
+}
+
+export type UserRole = 'user' | 'admin' | 'moderator' | 'developer' | 'founder';
+export type UserStatus = 'active' | 'inactive' | 'suspended' | 'banned';
+export type UserTeam = 'red' | 'green' | 'blue' | 'Red' | 'Green' | 'Blue' | 'none';
+export type Team = UserTeam;
+export type UserGender = GenderType;

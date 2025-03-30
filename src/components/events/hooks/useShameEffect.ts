@@ -1,7 +1,7 @@
-
-import { useState, useCallback } from 'react';
-import { useAuth } from '@/hooks/useAuth';
+import { useEffect, useState } from 'react';
+import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
+import useNotificationSounds from '@/hooks/use-notification-sounds';
 import { MockeryAction, MockeryTier } from '@/types/mockery';
 import { ShameAction } from '@/types/mockery';
 
@@ -32,6 +32,7 @@ export const useShameEffect = (options?: ShameEffectOptions): ShameEffectState =
   const [shameCooldown, setShameCooldown] = useState<Record<number | string, number>>({});
   const [shameCount, setShameCount] = useState<Record<number | string, number>>({});
   const toast = useToast();
+  const notificationSounds = useNotificationSounds();
 
   const getShameCount = useCallback((userId: number | string) => {
     return shameCount[userId] || 0;
@@ -108,6 +109,8 @@ export const useShameEffect = (options?: ShameEffectOptions): ShameEffectState =
         description: `The ${action} action has been applied successfully`
       });
       
+      notificationSounds.playShameEffectSound();
+      
       return true;
     } catch (error) {
       console.error("Error applying shame effect:", error);
@@ -117,7 +120,7 @@ export const useShameEffect = (options?: ShameEffectOptions): ShameEffectState =
       });
       return false;
     }
-  }, [user, canShameUser, toast]);
+  }, [user, canShameUser, toast, notificationSounds]);
 
   return {
     shameEffects,
