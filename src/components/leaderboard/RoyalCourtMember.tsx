@@ -2,17 +2,17 @@
 import React from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { Crown } from '@/utils/icons';
-import { TeamColor, UserTier } from '@/types/team';
+import { Crown } from 'lucide-react';
+import { TeamColor } from '@/types/team';
+import { UserTier } from '@/types/team';
 
-// Fix the interface - don't extend from a member prop
 export interface RoyalCourtMemberProps {
   id: string;
   username: string;
   displayName: string;
   profileImage: string;
-  tier: UserTier;
-  team: TeamColor;
+  tier: string | UserTier;
+  team: string | TeamColor;
   isAdmin: boolean;
 }
 

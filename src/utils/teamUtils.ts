@@ -1,56 +1,78 @@
 
-import { TeamColor, TeamType } from '@/types/team';
-import teamService from '@/services/TeamService';
+import { TeamColor } from '@/types/team';
 
 /**
- * Team color utility functions
- * This file maintains the original API for backward compatibility
- * It delegates all actual logic to the TeamService
+ * Get the CSS color class for a team
  */
-export const getTeamColor = (team: TeamType | TeamColor): string => {
-  return teamService.getTeamColor(team);
-};
+export function getTeamColor(team: TeamColor): string {
+  switch (team) {
+    case 'red':
+      return 'text-red-500 border-red-500';
+    case 'blue':
+      return 'text-blue-500 border-blue-500';
+    case 'green':
+      return 'text-green-500 border-green-500';
+    case 'gold':
+      return 'text-yellow-500 border-yellow-500';
+    case 'purple':
+      return 'text-purple-500 border-purple-500';
+    case 'neutral':
+      return 'text-gray-400 border-gray-400';
+    case 'none':
+    default:
+      return 'text-gray-400 border-gray-400';
+  }
+}
 
-// Alias for getTeamColor to support existing code
-export const getTeamBorderColor = getTeamColor;
+/**
+ * Get the display name for a team
+ */
+export function getTeamName(team: TeamColor): string {
+  switch (team) {
+    case 'red':
+      return 'Red Dynasty';
+    case 'blue':
+      return 'Blue Monarchy';
+    case 'green':
+      return 'Green Kingdom';
+    case 'gold':
+      return 'Gold Empire';
+    case 'purple':
+      return 'Purple Realm';
+    case 'neutral':
+      return 'Neutral Territory';
+    case 'none':
+    default:
+      return 'Unaffiliated';
+  }
+}
 
-export const getTeamName = (team: TeamType | TeamColor): string => {
-  return teamService.getTeamName(team);
-};
+/**
+ * Safely converts any string to TeamColor type
+ */
+export function asTeamColor(team: string | TeamColor | null | undefined): TeamColor {
+  if (!team) return 'none';
+  
+  // Check if the string is a valid TeamColor
+  const validTeamColors: TeamColor[] = ['red', 'blue', 'green', 'gold', 'purple', 'none', 'neutral'];
+  if (validTeamColors.includes(team as TeamColor)) {
+    return team as TeamColor;
+  }
+  
+  // Default to 'none' if not valid
+  return 'none';
+}
 
-export const getTeamMotto = (team: TeamType | TeamColor): string => {
-  return teamService.getTeamMotto(team);
-};
+/**
+ * Get the display name for a team
+ */
+export function getTeamDisplayName(team: string | TeamColor): string {
+  return getTeamName(asTeamColor(team));
+}
 
-export const getTeamBenefit = (team: TeamType | TeamColor): string[] => {
-  return teamService.getTeamBenefit(team);
-};
-
-export const getTeamSecurityGuarantee = (team: TeamType | TeamColor): string => {
-  return teamService.getTeamSecurityGuarantee(team);
-};
-
-export const getTeamAbsurdStat = (team: TeamType | TeamColor): string => {
-  return teamService.getTeamAbsurdStat(team);
-};
-
-export const getTeamHistoricalNote = (team: TeamType | TeamColor): string => {
-  return teamService.getTeamHistoricalNote(team);
-};
-
-export const getTeamNFTJoke = (team: TeamType | TeamColor): string => {
-  return teamService.getTeamNFTJoke(team);
-};
-
-export const getTeamCryptoRoast = (team: TeamType | TeamColor): string => {
-  return teamService.getTeamCryptoRoast(team);
-};
-
-// Additional utility functions that leverage TeamService
-export const getTeamTheme = (team: TeamType | TeamColor) => {
-  return teamService.getTeamTheme(team);
-};
-
-export const getAllTeams = () => {
-  return teamService.getAllTeams();
-};
+/**
+ * Get the CSS color class for a team
+ */
+export function getTeamColorClass(team: string | TeamColor): string {
+  return getTeamColor(asTeamColor(team));
+}

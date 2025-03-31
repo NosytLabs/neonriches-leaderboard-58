@@ -3,8 +3,7 @@ import React from 'react';
 import { TeamColor } from '@/types/team';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
-import useTeam from '@/hooks/useTeam';
-import { asTeamColor } from '@/components/leaderboard/TeamUtils';
+import { asTeamColor, getTeamColor, getTeamName } from '@/utils/teamUtils';
 
 interface TeamBadgeProps {
   team: string | TeamColor;
@@ -24,11 +23,10 @@ export const TeamBadge: React.FC<TeamBadgeProps> = ({
 }) => {
   // Convert to proper TeamColor type
   const teamColor = asTeamColor(team);
-  const { getTeamTheme, getTeamName } = useTeam();
   
-  // Get team name
+  // Get team name and color
   const teamName = getTeamName(teamColor);
-  const theme = getTeamTheme(teamColor);
+  const colorClass = getTeamColor(teamColor);
   
   // Size classes
   const sizeClasses = {
@@ -39,21 +37,14 @@ export const TeamBadge: React.FC<TeamBadgeProps> = ({
   
   return (
     <Badge
+      variant="outline"
       className={cn(
         "relative overflow-hidden rounded-full",
+        colorClass,
         sizeClasses[size],
         className
       )}
-      style={{
-        backgroundColor: theme ? theme.background : undefined,
-        color: theme ? theme.text : undefined,
-        borderColor: theme ? theme.border : undefined
-      }}
     >
-      <span 
-        className="absolute inset-0 opacity-20" 
-        style={{ backgroundColor: theme ? theme.primary : undefined }}
-      />
       <span className="relative">
         {showName ? teamName : teamColor.toUpperCase()}
       </span>

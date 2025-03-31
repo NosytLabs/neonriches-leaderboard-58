@@ -1,15 +1,10 @@
 
 import { LeaderboardUser } from '@/types/leaderboard';
-import { TeamColor as UserTeamColor } from '@/types/user';
+import { TeamColor } from '@/types/team';
+import { asTeamColor } from '@/utils/teamUtils';
 
 // Export the type properly
 export type { LeaderboardUser };
-
-// Type conversion function to safely handle TeamColor differences
-const asUserTeamColor = (team: string | null | undefined): UserTeamColor | undefined => {
-  if (!team) return undefined;
-  return team as UserTeamColor;
-};
 
 // Mock leaderboard data
 export const mockLeaderboardData: LeaderboardUser[] = [
@@ -19,7 +14,7 @@ export const mockLeaderboardData: LeaderboardUser[] = [
     displayName: "King Midas",
     profileImage: "https://randomuser.me/api/portraits/men/1.jpg",
     tier: "royal",
-    team: asUserTeamColor("gold"),
+    team: asTeamColor("gold"),
     rank: 1,
     previousRank: 1,
     totalSpent: 15000,
@@ -35,7 +30,7 @@ export const mockLeaderboardData: LeaderboardUser[] = [
     displayName: "Sir Spend-A-Lot",
     profileImage: "https://randomuser.me/api/portraits/men/2.jpg",
     tier: "premium",
-    team: asUserTeamColor("red"),
+    team: asTeamColor("red"),
     rank: 2,
     previousRank: 4,
     totalSpent: 12000,
@@ -51,7 +46,7 @@ export const mockLeaderboardData: LeaderboardUser[] = [
     displayName: "Lady Fortune",
     profileImage: "https://randomuser.me/api/portraits/women/3.jpg",
     tier: "premium",
-    team: asUserTeamColor("blue"),
+    team: asTeamColor("blue"),
     rank: 3,
     previousRank: 2,
     totalSpent: 10000,
@@ -67,7 +62,7 @@ export const mockLeaderboardData: LeaderboardUser[] = [
     displayName: "Gold Hoarder",
     profileImage: "https://randomuser.me/api/portraits/men/4.jpg",
     tier: "pro",
-    team: asUserTeamColor("green"),
+    team: asTeamColor("green"),
     rank: 4,
     previousRank: 3,
     totalSpent: 7500,
@@ -83,7 +78,7 @@ export const mockLeaderboardData: LeaderboardUser[] = [
     displayName: "Royal Spender",
     profileImage: "https://randomuser.me/api/portraits/women/5.jpg",
     tier: "basic",
-    team: asUserTeamColor("blue"),
+    team: asTeamColor("blue"),
     rank: 5,
     previousRank: 5,
     totalSpent: 5000,

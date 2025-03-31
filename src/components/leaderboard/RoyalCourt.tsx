@@ -5,7 +5,6 @@ import { Crown, Users } from 'lucide-react';
 import { TeamColor, UserTier } from '@/types/team';
 import RoyalCourtMember from './RoyalCourtMember';
 import useNotificationSounds from '@/hooks/sounds/use-notification-sounds';
-import { SoundOptions } from '@/types/sound-types';
 
 interface RoyalCourtProps {
   user: any;
@@ -111,7 +110,8 @@ const RoyalCourt: React.FC<RoyalCourtProps> = ({ user }) => {
         </CardDescription>
         <div className="grid gap-4 py-4">
           {displayedMembers.map((member) => (
-            <RoyalCourtMember key={member.id} 
+            <RoyalCourtMember 
+              key={member.id}
               id={member.id}
               username={member.username}
               displayName={member.displayName}

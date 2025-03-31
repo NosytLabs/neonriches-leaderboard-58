@@ -1,34 +1,28 @@
 
 /**
- * Team types definition file
+ * Team types for the application
  */
 
-// Team color options
+// Define valid team colors
 export type TeamColor = 'red' | 'blue' | 'green' | 'gold' | 'purple' | 'none' | 'neutral';
 
-// Team type is an alias of TeamColor for backward compatibility
-export type TeamType = TeamColor;
+// TeamType is an alias of TeamColor for backward compatibility
+export type TeamType = 'red' | 'blue' | 'green' | 'gold' | 'purple';
 
-// Team data structure
-export interface TeamData {
-  id: TeamColor;
-  name: string;
-  motto: string;
-  color: string;
-  benefits: string[];
-  securityGuarantee: string;
-  absurdStat: string;
-  historicalNote: string;
-  nftJoke: string;
-  cryptoRoast: string;
-}
-
-// Team theme interface for styling
-export interface TeamTheme {
-  primary: string;
-  secondary: string;
-  accent: string;
-  text: string;
-  border: string;
-  background: string;
-}
+// User tier types
+export type UserTier = 
+  | 'basic' 
+  | 'premium' 
+  | 'royal' 
+  | 'elite' 
+  | 'legendary' 
+  | 'founder'
+  | 'free'
+  | 'pro'
+  | 'vip'
+  | 'standard'
+  | 'silver'
+  | 'gold'
+  | 'platinum'
+  | 'diamond'
+  | 'bronze';
