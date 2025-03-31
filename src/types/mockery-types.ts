@@ -1,6 +1,6 @@
 
 /**
- * Type definitions for the mockery/shame system
+ * Unified type definitions for the mockery/shame system
  */
 
 // Define core mockery action types

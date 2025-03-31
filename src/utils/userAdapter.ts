@@ -1,11 +1,8 @@
 
-import { User, UserProfile } from '@/types/user';
-import { UserCosmetics } from '@/types/cosmetics';
-
 /**
  * Adapts a raw user object to a UserProfile object
  */
-export const adaptUserToProfile = (user: User): UserProfile => {
+export const adaptUserToProfile = (user: any): any => {
   return {
     id: user.id,
     username: user.username,
@@ -31,7 +28,7 @@ export const adaptUserToProfile = (user: User): UserProfile => {
       effect: [],
       badge: [],
       theme: []
-    } as UserCosmetics,
+    },
     settings: {
       profileVisibility: 'public',
       allowProfileLinks: true,
@@ -57,7 +54,7 @@ export const adaptUserToProfile = (user: User): UserProfile => {
 /**
  * Adapts a UserProfile object to a User object
  */
-export const adaptProfileToUser = (profile: UserProfile): User => {
+export const adaptProfileToUser = (profile: any): any => {
   return {
     id: profile.id,
     username: profile.username,

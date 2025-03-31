@@ -87,16 +87,6 @@ export const formatRank = (rank: number): string => {
   }
 };
 
-// Format historical value with inflation adjustment
-export const formatHistoricalValue = (
-  amount: number, 
-  currency: string, 
-  year: number, 
-  todayEquivalent: number
-): string => {
-  return `${formatNumber(amount)} ${currency} (${year}) ≈ ${formatDollarAmount(todayEquivalent)} today`;
-};
-
 // Get a human-readable tier name
 export const formatTierName = (tier: string): string => {
   return tier.charAt(0).toUpperCase() + tier.slice(1).replace(/([A-Z])/g, ' $1');
@@ -124,7 +114,6 @@ export default {
   formatTimeAgo,
   formatFileSize,
   formatDuration,
-  formatHistoricalValue,
   formatRank,
   formatTierName,
   formatSpendTier

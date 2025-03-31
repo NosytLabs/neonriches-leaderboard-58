@@ -1,7 +1,5 @@
 
-import { TeamType, UserTier } from '@/types/user';
-import { LeaderboardUser } from '@/types/leaderboard';
-import { ShameAction, MockeryAction } from '@/types/mockery-types';
+import { MockeryAction, ShameAction } from '@/types/mockery-types';
 
 /**
  * Safely converts a string to number, returning a default value if invalid
@@ -23,17 +21,17 @@ export function safeStringConversion(value: any): string {
 /**
  * Converts a value to a TeamType, ensuring it's a valid value
  */
-export function toTeamType(value: string): TeamType {
-  const validTypes: TeamType[] = ['red', 'blue', 'green', 'gold'];
-  return validTypes.includes(value as TeamType) ? value as TeamType : 'red';
+export function toTeamType(value: string): string {
+  const validTypes = ['red', 'blue', 'green', 'gold'];
+  return validTypes.includes(value) ? value : 'red';
 }
 
 /**
  * Converts a value to a UserTier, ensuring it's a valid value
  */
-export function toUserTier(value: string): UserTier {
-  const validTiers: UserTier[] = ['free', 'basic', 'premium', 'royal', 'founder'];
-  return validTiers.includes(value as UserTier) ? value as UserTier : 'free';
+export function toUserTier(value: string): string {
+  const validTiers = ['free', 'basic', 'premium', 'royal', 'founder'];
+  return validTiers.includes(value) ? value : 'free';
 }
 
 /**
@@ -53,7 +51,7 @@ export function convertMockeryToShame(action: MockeryAction): ShameAction | unde
 /**
  * Creates a properly typed LeaderboardUser object
  */
-export function createLeaderboardUser(data: Partial<LeaderboardUser>): LeaderboardUser {
+export function createLeaderboardUser(data: Partial<any>): any {
   return {
     id: data.id || '',
     username: data.username || '',
