@@ -1,8 +1,9 @@
 
-import { UserCosmeticState as UserCosmetics } from './cosmetics';
+import { UserCosmetics } from './cosmetics';
 
 export type TeamColor = 'red' | 'blue' | 'green' | 'gold' | 'purple' | 'none' | 'neutral';
 export type TeamType = 'red' | 'blue' | 'green' | 'gold' | 'none' | 'neutral';
+export type Gender = 'male' | 'female' | 'other' | 'prefer-not-to-say';
 
 export type UserTier = 
   | 'free'
@@ -129,7 +130,7 @@ export interface UserProfile {
     isVerified?: boolean;
   };
   avatarUrl?: string; // For backward compatibility
-  gender?: 'male' | 'female' | 'other' | 'prefer-not-to-say';
+  gender?: Gender;
   profileImages?: ProfileImage[];
 }
 

@@ -2,7 +2,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Github, Twitter, Mail } from 'lucide-react';
-import { Shell } from './ui/shell';
+import Shell from './ui/shell';
 
 const Footer = () => {
   return (

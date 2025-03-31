@@ -1,19 +1,18 @@
 
-export type RoyalDecorationType = 'divider' | 'corner' | 'banner' | 'crest' | 'shield' | 'crown' | 'top' | 'bottom' | 'left' | 'right';
+/**
+ * Types for the Royal Divider component
+ */
 
-export type RoyalButtonVariant = 
-  | 'default' 
-  | 'royal' 
-  | 'gold' 
-  | 'crimson'
-  | 'royalGold'
-  | 'royalPurple'
-  | 'royalNavy'
-  | 'royalCrimson'
-  | 'glass'
-  | 'outline'
-  | 'goldOutline'
-  | 'crimsonOutline'
-  | 'navyOutline'
-  | 'mahogany'
-  | 'purple';
+export type RoyalDividerVariant = 'line' | 'double' | 'fancy' | 'ornate' | 'crown' | 'simple';
+export type RoyalDividerColor = 'default' | 'royal' | 'gold' | 'crimson' | 'navy' | 'purple';
+export type RoyalDividerSize = 'sm' | 'md' | 'lg' | 'xl';
+
+export interface RoyalDividerProps {
+  variant?: RoyalDividerVariant;
+  color?: RoyalDividerColor;
+  className?: string;
+  size?: RoyalDividerSize;
+  label?: string;
+  icon?: React.ReactNode;
+  fullWidth?: boolean;
+}

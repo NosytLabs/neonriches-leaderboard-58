@@ -1,6 +1,6 @@
 
 import { User, UserProfile } from '@/types/user';
-import { UserCosmeticState as UserCosmetics } from '@/types/cosmetics';
+import { UserCosmetics } from '@/types/cosmetics';
 
 /**
  * Adapts a raw user object to a UserProfile object

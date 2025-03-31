@@ -53,7 +53,8 @@ const RoyalMockeryFestival = () => {
   
   // Modified getActiveMockeryWrapper to return a boolean instead of an object
   const getActiveMockeryBooleanWrapper = (username: string): boolean => {
-    return !!getActiveMockery(username); // Convert to boolean
+    const activeMockery = getActiveMockery(username);
+    return activeMockery !== null;
   };
   
   return (
