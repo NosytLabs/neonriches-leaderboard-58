@@ -3,18 +3,18 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Trophy } from 'lucide-react';
 import LeaderboardEntry from '@/components/leaderboard/components/LeaderboardEntry';
-import { Team } from '@/types/team';
+import { TeamColor, TeamType } from '@/types/team';
 import { UserProfile, User } from '@/types/user-types';
 import { cn } from '@/lib/utils';
 
 const dummyUsers: User[] = [
   {
-    id: '1',
-    username: 'RoyalThroneGuru',
-    displayName: 'Royal Guru',
-    email: 'guru@example.com',
+    id: "1",
+    username: "RoyalThroneGuru",
+    displayName: "Royal Guru",
+    email: "guru@example.com",
     profileImage: '/throne-assets/crown-icon.svg',
-    bio: 'Founder of SpendThrone',
+    bio: "Founder of SpendThrone",
     joinDate: '2023-01-01',
     tier: 'founder',
     team: 'red',
@@ -41,18 +41,18 @@ const dummyUsers: User[] = [
       soundEffects: true,
       showRank: true,
       showTeam: true,
-      showBadges: true
+      showSpending: true
     },
     isFounder: true,
     socialLinks: []
   },
   {
-    id: '2',
-    username: 'ThroneMaster',
-    displayName: 'Throne Master',
-    email: 'master@example.com',
+    id: "2",
+    username: "ThroneMaster",
+    displayName: "Throne Master",
+    email: "master@example.com",
     profileImage: '/throne-assets/throne-icon.svg',
-    bio: 'Throne Master',
+    bio: "Throne Master",
     joinDate: '2023-01-02',
     tier: 'founder',
     team: 'blue',
@@ -79,18 +79,18 @@ const dummyUsers: User[] = [
       soundEffects: true,
       showRank: true,
       showTeam: true,
-      showBadges: true
+      showSpending: true
     },
     isFounder: true,
     socialLinks: []
   },
   {
-    id: '3',
-    username: 'RichGamer99',
-    displayName: 'Rich Gamer',
-    email: 'rich@example.com',
+    id: "3",
+    username: "RichGamer99",
+    displayName: "Rich Gamer",
+    email: "rich@example.com",
     profileImage: '/throne-assets/coin-stack.svg',
-    bio: 'I just like spending money',
+    bio: "I just like spending money",
     joinDate: '2023-01-03',
     tier: 'basic',
     team: 'green',
@@ -117,18 +117,18 @@ const dummyUsers: User[] = [
       soundEffects: true,
       showRank: true,
       showTeam: true,
-      showBadges: true
+      showSpending: true
     },
     isFounder: false,
     socialLinks: []
   },
   {
-    id: '4',
-    username: 'EpicWhaler',
-    displayName: 'Epic Whaler',
-    email: 'whale@example.com',
+    id: "4",
+    username: "EpicWhaler",
+    displayName: "Epic Whaler",
+    email: "whale@example.com",
     profileImage: '/throne-assets/treasure-chest.svg',
-    bio: 'Big whale, big heart',
+    bio: "Big whale, big heart",
     joinDate: '2023-01-04',
     tier: 'basic',
     team: 'red',
@@ -155,18 +155,18 @@ const dummyUsers: User[] = [
       soundEffects: true,
       showRank: true,
       showTeam: true,
-      showBadges: true
+      showSpending: true
     },
     isFounder: false,
     socialLinks: []
   },
   {
-    id: '5',
-    username: 'MedievalSpender',
-    displayName: 'Medieval Spender',
-    email: 'medieval@example.com',
+    id: "5",
+    username: "MedievalSpender",
+    displayName: "Medieval Spender",
+    email: "medieval@example.com",
     profileImage: '/throne-assets/shield-emblem.svg',
-    bio: 'I love medieval themes',
+    bio: "I love medieval themes",
     joinDate: '2023-01-05',
     tier: 'basic',
     team: 'blue',
@@ -193,7 +193,7 @@ const dummyUsers: User[] = [
       soundEffects: true,
       showRank: true,
       showTeam: true,
-      showBadges: true
+      showSpending: true
     },
     isFounder: false,
     socialLinks: []

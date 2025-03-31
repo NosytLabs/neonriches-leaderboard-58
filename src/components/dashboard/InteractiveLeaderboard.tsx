@@ -9,8 +9,8 @@ import LeaderboardItem from './leaderboard/LeaderboardItem';
 import ShameModal from './leaderboard/ShameModal';
 import LeaderboardActions from './leaderboard/LeaderboardActions';
 import { getShameActionPrice } from '@/components/events/utils/shameUtils';
-import { MockeryAction } from '@/types/mockery-types';
-import { TeamColor } from '@/types/mockery-types';
+import { MockeryAction } from '@/types/mockery';
+import { TeamColor } from '@/types/team';
 
 const InteractiveLeaderboard: React.FC = () => {
   const { toast } = useToast();

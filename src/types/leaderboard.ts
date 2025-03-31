@@ -19,6 +19,10 @@ export interface LeaderboardUser {
   rankChange?: number;
   joinedAt?: string;
   walletBalance?: number;
+  isVerified?: boolean;
+  spendStreak?: number;
+  isProtected?: boolean;
+  amountSpent?: number; // For backward compatibility
 }
 
 /**
@@ -39,7 +43,8 @@ export interface TypedLeaderboardFilter {
   timeFrame?: string;
 }
 
-export default {
+// Export as a named export instead of default export
+export {
   LeaderboardUser,
   SortByOptions,
   TypedLeaderboardFilter

@@ -21,7 +21,6 @@ export const mockLeaderboardData: LeaderboardUser[] = [
     walletBalance: 5000,
     isVerified: true,
     isProtected: false,
-    avatarUrl: "https://randomuser.me/api/portraits/men/1.jpg",
     spendStreak: 5
   },
   {
@@ -37,7 +36,6 @@ export const mockLeaderboardData: LeaderboardUser[] = [
     walletBalance: 3000,
     isVerified: true,
     isProtected: true,
-    avatarUrl: "https://randomuser.me/api/portraits/men/2.jpg",
     spendStreak: 3
   },
   {
@@ -53,7 +51,6 @@ export const mockLeaderboardData: LeaderboardUser[] = [
     walletBalance: 4500,
     isVerified: true,
     isProtected: false,
-    avatarUrl: "https://randomuser.me/api/portraits/women/3.jpg",
     spendStreak: 0
   },
   {
@@ -69,7 +66,6 @@ export const mockLeaderboardData: LeaderboardUser[] = [
     walletBalance: 2000,
     isVerified: false,
     isProtected: false,
-    avatarUrl: "https://randomuser.me/api/portraits/men/4.jpg",
     spendStreak: 0
   },
   {
@@ -85,7 +81,6 @@ export const mockLeaderboardData: LeaderboardUser[] = [
     walletBalance: 1000,
     isVerified: false,
     isProtected: false,
-    avatarUrl: "https://randomuser.me/api/portraits/women/5.jpg",
     spendStreak: 0
   }
 ];

@@ -1,9 +1,8 @@
-
 import { UserCosmetics } from './cosmetics';
 
 export type TeamColor = 'red' | 'blue' | 'green' | 'gold' | 'purple' | 'none' | 'neutral';
 export type TeamType = 'red' | 'blue' | 'green' | 'gold' | 'none' | 'neutral';
-export type Gender = 'male' | 'female' | 'other' | 'prefer-not-to-say';
+export type Gender = 'male' | 'female' | 'other' | 'prefer-not-to-say' | 'neutral' | 'unspecified' | 'king' | 'queen';
 
 export type UserTier = 
   | 'free'
@@ -18,7 +17,7 @@ export type UserTier =
   | 'silver'
   | 'bronze'
   | 'vip'
-  | 'whale'  // Adding 'whale' to the UserTier type
+  | 'whale'
   | 'standard'
   | 'elite'
   | 'legendary';
@@ -37,7 +36,7 @@ export interface ProfileBoost {
   price?: number;
   icon?: string;
   isActive: boolean;
-  effectId?: string; // Adding effectId property
+  effectId?: string;
 }
 
 export interface SocialLink {
@@ -60,7 +59,7 @@ export interface ProfileImage {
   url: string;
   isPrimary: boolean;
   caption?: string;
-  type?: string; // Adding type property
+  type?: string;
 }
 
 export interface UserSettings {
@@ -83,6 +82,7 @@ export interface UserSettings {
   showTeam: boolean;
   showSpending: boolean;
   allowMessages?: boolean;
+  showBadges?: boolean; // Added missing property for showBadges
 }
 
 export interface UserProfile {

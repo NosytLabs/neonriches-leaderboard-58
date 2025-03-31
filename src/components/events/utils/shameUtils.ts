@@ -1,95 +1,91 @@
 
 import { MockeryAction, MockeryTier } from '@/types/mockery';
-import { getMockeryTier } from '@/utils/mockeryUtils';
 
 /**
- * Get the price for a mockery action
- * @param action The mockery action
- * @returns The price for the action
+ * Get the price for a shame action
+ * @param action The mockery action to get the price for
+ * @returns The price in dollars/coins
  */
 export const getShameActionPrice = (action: MockeryAction): number => {
-  switch (action) {
-    case 'tomatoes': return 0.25;
-    case 'eggs': return 0.5;
-    case 'stocks': return 0.75;
-    case 'putridEggs': return 0.75;
-    case 'jester': return 1.5;
-    case 'courtJester': return 1.5;
-    case 'silence': return 1.5;
-    case 'smokeBomb': return 0.75;
-    case 'crown': return 3.0;
-    case 'shame': return 0.25;
-    case 'protection': return 3.0;
-    default: return 0.25;
-  }
+  const prices: Record<MockeryAction, number> = {
+    'tomatoes': 5,
+    'eggs': 10,
+    'stocks': 20,
+    'crown': 100,
+    'jester': 15,
+    'putridEggs': 25,
+    'silence': 30,
+    'courtJester': 50,
+    'smokeBomb': 15,
+    'shame': 10,
+    'protection': 75
+  };
+
+  return prices[action] || 5;
 };
 
 /**
- * Get the weekly discounted action
- * @returns The mockery action that is discounted this week
+ * Get the tier of a mockery action
+ * @param action The mockery action to get the tier for
+ * @returns The tier as a MockeryTier
  */
-export const getWeeklyDiscountedAction = (): MockeryAction => {
-  // In a real application, this would be fetched from API or determined through a rotation
-  // For now, we'll return a static value - this should be updated in a real implementation
-  const weekNumber = Math.floor(Date.now() / (7 * 24 * 60 * 60 * 1000));
-  const actions: MockeryAction[] = ['tomatoes', 'eggs', 'stocks', 'crown', 'jester'];
-  return actions[weekNumber % actions.length];
+export const getShameActionTier = (action: MockeryAction): MockeryTier => {
+  const tiers: Record<MockeryAction, MockeryTier> = {
+    'tomatoes': 'common',
+    'eggs': 'common',
+    'jester': 'common',
+    'stocks': 'uncommon',
+    'shame': 'uncommon',
+    'smokeBomb': 'uncommon',
+    'putridEggs': 'rare',
+    'silence': 'rare',
+    'courtJester': 'rare',
+    'crown': 'legendary',
+    'protection': 'legendary'
+  };
+
+  return tiers[action] || 'common';
 };
 
 /**
- * Check if an action has a weekly discount
- * @param action The mockery action to check
- * @returns True if the action has a discount this week
- */
-export const hasWeeklyDiscount = (action: MockeryAction): boolean => {
-  return action === getWeeklyDiscountedAction();
-};
-
-/**
- * Get the discounted price for a mockery action
+ * Get the cooldown time for a mockery action in milliseconds
  * @param action The mockery action
- * @returns The discounted price (50% off)
+ * @returns Cooldown time in milliseconds
  */
-export const getDiscountedShamePrice = (action: MockeryAction): number => {
-  return getShameActionPrice(action) * 0.5;
-};
-
-/**
- * Get the duration for a mockery action in hours
- * @param action The mockery action
- * @returns The duration in hours
- */
-export const getShameDuration = (action: MockeryAction): number => {
-  const tier = getMockeryTier(action);
+export const getShameActionCooldown = (action: MockeryAction): number => {
+  const baseCooldown = 30 * 1000; // 30 seconds base cooldown
+  const multipliers: Record<MockeryTier, number> = {
+    'common': 1,
+    'uncommon': 2,
+    'rare': 3,
+    'legendary': 5
+  };
   
-  switch (tier) {
-    case 'common': return 24;
-    case 'uncommon': return 48;
-    case 'rare': return 72;
-    case 'epic': return 96;
-    case 'legendary': return 168; // 7 days
-    default: return 24;
-  }
+  const tier = getShameActionTier(action);
+  return baseCooldown * multipliers[tier];
 };
 
 /**
- * Maps shame action to CSS class for styling
+ * Get the duration a shame effect stays applied in milliseconds
  * @param action The mockery action
- * @returns CSS class for styling
+ * @returns Duration in milliseconds
  */
-export const getShameActionClass = (action: MockeryAction): string => {
-  switch (action) {
-    case 'tomatoes': return 'shame-tomatoes';
-    case 'eggs': return 'shame-eggs';
-    case 'stocks': return 'shame-stocks';
-    case 'putridEggs': return 'shame-putrid-eggs';
-    case 'jester': return 'shame-jester';
-    case 'courtJester': return 'shame-court-jester';
-    case 'silence': return 'shame-silence';
-    case 'smokeBomb': return 'shame-smoke-bomb';
-    case 'crown': return 'shame-crown';
-    case 'shame': return 'shame-generic';
-    case 'protection': return 'shame-protection';
-    default: return 'shame-generic';
-  }
+export const getShameActionDuration = (action: MockeryAction): number => {
+  const baseDuration = 3600 * 1000; // 1 hour base duration
+  const multipliers: Record<MockeryTier, number> = {
+    'common': 1,      // 1 hour
+    'uncommon': 3,    // 3 hours
+    'rare': 6,        // 6 hours
+    'legendary': 24   // 24 hours
+  };
+  
+  const tier = getShameActionTier(action);
+  return baseDuration * multipliers[tier];
+};
+
+export default {
+  getShameActionPrice,
+  getShameActionTier,
+  getShameActionCooldown,
+  getShameActionDuration
 };
