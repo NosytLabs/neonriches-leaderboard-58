@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Certificate, CertificateType, CertificateStyle } from '@/types/certificate';
-import { TeamColor } from '@/types/user';
+import { TeamColor } from '@/types/user-types';
 import { formatDate } from '@/utils/dateUtils';
 import { cn } from '@/lib/utils';
 
@@ -24,7 +24,7 @@ const CertificateDisplay: React.FC<CertificateDisplayProps> = ({
     team,
     style = 'royal',
     imageUrl,
-    dateIssued = certificate.createdAt || new Date().toISOString()
+    createdAt
   } = certificate;
 
   // Get display values from certificate metadata or defaults
@@ -32,6 +32,7 @@ const CertificateDisplay: React.FC<CertificateDisplayProps> = ({
   const description = certificate.description || certificate.metadata?.description || 'A prestigious certificate of recognition';
   const signature = certificate.signature || 'Royal Treasury';
   const userDisplayName = certificate.userDisplayName || certificate.displayName || certificate.username || 'Esteemed Noble';
+  const dateIssued = certificate.dateIssued || certificate.issuedAt || createdAt || new Date().toISOString();
 
   const sizeClasses = {
     sm: 'w-64 h-48',

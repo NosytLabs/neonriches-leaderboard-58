@@ -88,6 +88,10 @@ module.exports = {
           "0%, 100%": { backgroundPosition: "0% 50%" },
           "50%": { backgroundPosition: "100% 50%" },
         },
+        "shimmer": {
+          "0%": { backgroundPosition: "-200%" },
+          "100%": { backgroundPosition: "200%" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -96,6 +100,7 @@ module.exports = {
         "pulse-slow": "pulse-slow 3s ease-in-out infinite",
         "float": "float 3s ease-in-out infinite",
         "border-pulse-flame": "border-pulse-flame 3s ease-in-out infinite",
+        "shimmer": "shimmer 3s linear infinite",
       },
       fontFamily: {
         medieval: ['Playfair Display', 'serif'],
