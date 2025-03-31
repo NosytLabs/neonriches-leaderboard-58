@@ -2,167 +2,155 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
-import { Crown, Medal, Trophy, Users, ArrowRight } from 'lucide-react';
-import { formatCurrency } from '@/utils/formatters';
-import { Button } from '@/components/ui/button';
-import { UserProfile } from '@/types/user';
-import { cn } from '@/lib/utils';
+import { Card } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Crown, Trophy, ArrowRight } from 'lucide-react';
+import { formatCurrency } from '@/utils/formatters';
+import { cn } from '@/lib/utils';
 
-// Sample data for demonstration (in a real app, this would come from an API)
-const topUsers = [
+// Sample data for demonstration
+const topSpenders = [
   {
     id: '1',
-    username: 'EliteSpender',
-    displayName: 'Lord Goldhand',
-    profileImage: '/images/avatars/elite-spender.jpg',
-    amountSpent: 15000,
-    followers: 156,
-    joinedAt: '2023-01-15T00:00:00Z',
+    username: 'LordGoldfinger',
+    displayName: 'Lord Goldfinger',
+    profileImage: '',
+    amountSpent: 25000,
+    rank: 1,
     team: 'red',
   },
   {
     id: '2',
-    username: 'RoyalThrower',
-    displayName: 'Duchess Moneybags',
-    profileImage: '/images/avatars/royal-thrower.jpg',
-    amountSpent: 10500,
-    followers: 78,
-    joinedAt: '2023-04-20T00:00:00Z',
+    username: 'CountessWealth',
+    displayName: 'Countess of Wealth',
+    profileImage: '',
+    amountSpent: 18500,
+    rank: 2,
     team: 'blue',
   },
   {
     id: '3',
-    username: 'MoneyKing',
-    displayName: 'Count Cashflow',
-    profileImage: '/images/avatars/money-king.jpg',
-    amountSpent: 8750,
-    followers: 92,
-    joinedAt: '2023-03-10T00:00:00Z',
+    username: 'DukeCashington',
+    displayName: 'Duke Cashington',
+    profileImage: '',
+    amountSpent: 12750,
+    rank: 3,
     team: 'green',
   }
 ];
 
-interface RoyalShowcaseProps {
-  user?: UserProfile | null;
-  className?: string;
-}
+const teamColors = {
+  red: {
+    bg: 'bg-red-500',
+    text: 'text-red-500',
+    border: 'hover:border-red-500/50',
+    highlight: 'from-red-500/20 to-red-500/5'
+  },
+  blue: {
+    bg: 'bg-blue-500',
+    text: 'text-blue-500',
+    border: 'hover:border-blue-500/50',
+    highlight: 'from-blue-500/20 to-blue-500/5'
+  },
+  green: {
+    bg: 'bg-green-500',
+    text: 'text-green-500',
+    border: 'hover:border-green-500/50',
+    highlight: 'from-green-500/20 to-green-500/5'
+  },
+};
 
-const RoyalShowcase: React.FC<RoyalShowcaseProps> = ({ user, className }) => {
-  const getTeamColor = (team: string) => {
-    switch(team) {
-      case 'red': return 'text-team-red';
-      case 'green': return 'text-team-green';
-      case 'blue': return 'text-team-blue';
-      default: return 'text-white';
-    }
-  };
-  
-  const getTeamBgColor = (team: string) => {
-    switch(team) {
-      case 'red': return 'bg-team-red';
-      case 'green': return 'bg-team-green';
-      case 'blue': return 'bg-team-blue';
-      default: return 'bg-gray-700';
-    }
-  };
-
+const RoyalShowcase: React.FC = () => {
   return (
-    <Card className={cn("glass-morphism bg-gradient-to-br from-royal-dark/60 to-black shadow-xl border-royal-gold/20", className)}>
-      <CardHeader className="border-b border-royal-gold/10 pb-3">
-        <div className="flex items-center space-x-2">
-          <Crown className="text-royal-gold h-5 w-5 animate-pulse-slow" />
-          <CardTitle className="text-lg font-royal royal-gradient">The Royal Court Elite</CardTitle>
-        </div>
-        <CardDescription>
-          Behold the most esteemed nobles of the SpendThrone realm
-        </CardDescription>
-      </CardHeader>
-      
-      <CardContent className="pt-4">
-        <div className="space-y-4">
-          {topUsers.map((topUser, index) => (
-            <motion.div 
-              key={topUser.id}
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.4, delay: index * 0.1 }}
-              whileHover={{ 
-                scale: 1.02,
-                transition: { duration: 0.2 }
-              }}
-              className="relative"
-            >
-              <Link to={`/profile/${topUser.username}`}>
-                <div className="flex items-center gap-4 p-4 rounded-lg glass-morphism border border-white/5 hover:border-royal-gold/20 transition-all duration-300 group">
-                  {/* Ranking Medal */}
-                  <div className="absolute -left-2 -top-2 z-10">
-                    {index === 0 ? (
-                      <div className="w-7 h-7 rounded-full bg-royal-gold flex items-center justify-center text-black font-bold text-xs animate-crown-glow">1</div>
-                    ) : index === 1 ? (
-                      <div className="w-7 h-7 rounded-full bg-gray-300 flex items-center justify-center text-black font-bold text-xs">2</div>
-                    ) : (
-                      <div className="w-7 h-7 rounded-full bg-amber-700 flex items-center justify-center text-black font-bold text-xs">3</div>
-                    )}
+    <div className="royal-showcase mb-10">
+      {/* Top Royalty Section */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        {topSpenders.map((spender, index) => (
+          <motion.div
+            key={spender.id}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: index * 0.2 }}
+            whileHover={{ y: -8, transition: { duration: 0.2 } }}
+          >
+            <Link to={`/profile/${spender.username}`}>
+              <Card className={cn(
+                "glass-morphism relative border-white/10 overflow-hidden h-full group",
+                teamColors[spender.team as keyof typeof teamColors].border
+              )}>
+                {/* Team color indicator */}
+                <div className={cn(
+                  "h-1.5",
+                  teamColors[spender.team as keyof typeof teamColors].bg
+                )}></div>
+                
+                {/* Rank indicator for top 3 */}
+                <div className="absolute top-3 right-3">
+                  <div className={cn(
+                    "w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold",
+                    index === 0 
+                      ? "bg-royal-gold text-black" 
+                      : index === 1 
+                        ? "bg-gray-300 text-gray-800" 
+                        : "bg-amber-700 text-white"
+                  )}>
+                    {spender.rank}
+                  </div>
+                </div>
+                
+                <div className="p-6 flex flex-col items-center">
+                  <Avatar className="w-24 h-24 mb-4 border-2 group-hover:border-4 border-white/10 group-hover:border-royal-gold/50 transition-all duration-300">
+                    <AvatarImage src={spender.profileImage} alt={spender.displayName} />
+                    <AvatarFallback className="bg-gradient-to-br from-royal-gold/30 to-royal-gold/10 text-2xl font-bold">
+                      {spender.displayName.charAt(0)}
+                    </AvatarFallback>
+                  </Avatar>
+                  
+                  <div className="text-center mb-4">
+                    <h3 className="text-xl font-bold group-hover:text-royal-gold transition-colors duration-300">
+                      {spender.displayName}
+                    </h3>
+                    <p className={cn(
+                      "text-sm",
+                      teamColors[spender.team as keyof typeof teamColors].text
+                    )}>
+                      @{spender.username}
+                    </p>
                   </div>
                   
-                  {/* User Avatar */}
-                  <div className="relative">
-                    <Avatar className="h-12 w-12 border-2 border-white/10 group-hover:border-royal-gold/50 transition-all duration-300">
-                      <AvatarImage src={topUser.profileImage} alt={topUser.displayName} />
-                      <AvatarFallback className="bg-royal-gold/20">
-                        {topUser.displayName.charAt(0)}
-                      </AvatarFallback>
-                    </Avatar>
-                    
-                    {/* Team Indicator */}
-                    <div className={cn(
-                      "absolute -bottom-1 -right-1 w-4 h-4 rounded-full border border-white/20",
-                      getTeamBgColor(topUser.team)
-                    )}></div>
-                  </div>
-                  
-                  <div className="flex-1 min-w-0">
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <h3 className="font-medium text-white truncate flex items-center group-hover:text-royal-gold transition-colors duration-300">
-                          {topUser.displayName}
-                          {index === 0 && (
-                            <Crown className="h-4 w-4 ml-1 text-royal-gold" />
-                          )}
-                        </h3>
-                        <p className={cn("text-gray-400 text-sm", getTeamColor(topUser.team))}>@{topUser.username}</p>
+                  <div className="mt-auto w-full">
+                    <div className="flex items-center justify-between pt-4 border-t border-white/10">
+                      <div className="flex items-center">
+                        <Crown className="h-5 w-5 text-royal-gold mr-2" />
+                        <span>Rank #{spender.rank}</span>
                       </div>
                       <div className="text-right">
-                        <div className="font-bold royal-gradient">{formatCurrency(topUser.amountSpent)}</div>
-                        <div className="text-xs text-gray-400 flex items-center justify-end gap-1">
-                          <Users className="h-3 w-3" />
-                          <span>{topUser.followers} followers</span>
+                        <div className="font-bold text-royal-gold">
+                          {formatCurrency(spender.amountSpent)}
                         </div>
+                        <div className="text-xs text-white/60">Total Spent</div>
                       </div>
                     </div>
                   </div>
-                  
-                  {/* Hover effect */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent to-royal-gold/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg pointer-events-none"></div>
                 </div>
-              </Link>
-            </motion.div>
-          ))}
-        </div>
-        
-        <div className="mt-6 text-center">
-          <Link to="/leaderboard">
-            <Button variant="outline" className="border-royal-gold/20 text-royal-gold hover:bg-royal-gold/10 w-full group">
-              <Trophy className="h-4 w-4 mr-2 group-hover:rotate-12 transition-transform duration-300" />
-              View Full Leaderboard
-              <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform duration-300" />
-            </Button>
-          </Link>
-        </div>
-      </CardContent>
-    </Card>
+                
+                {/* Hover effect */}
+                <div className="absolute inset-0 bg-gradient-to-t opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+              </Card>
+            </Link>
+          </motion.div>
+        ))}
+      </div>
+      
+      {/* View All Link */}
+      <div className="text-center">
+        <Link to="/leaderboard" className="inline-flex items-center text-royal-gold hover:underline group">
+          <Trophy className="h-4 w-4 mr-2" />
+          <span>View Complete Leaderboard</span>
+          <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" />
+        </Link>
+      </div>
+    </div>
   );
 };
 

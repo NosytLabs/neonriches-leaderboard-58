@@ -23,6 +23,7 @@ import Settings from '@/pages/Settings';
 import Events from '@/pages/Events';
 import Mockery from '@/pages/Mockery';
 import StatusThroughHistory from '@/pages/StatusThroughHistory';
+import Index from '@/pages/index';
 
 function App() {
   return (
@@ -31,8 +32,11 @@ function App() {
         <AuthProvider>
           <Router>
             <Routes>
-              {/* Public Pages */}
-              <Route path="/" element={<Home />} />
+              {/* Landing Page */}
+              <Route path="/" element={<Index />} />
+              
+              {/* Main App Pages */}
+              <Route path="/home" element={<Home />} />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<SignUp />} />
               <Route path="/leaderboard" element={<Leaderboard />} />

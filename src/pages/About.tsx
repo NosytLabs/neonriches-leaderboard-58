@@ -51,13 +51,13 @@ const About = () => {
               <div className="p-8">
                 <h2 className="text-3xl font-bold mb-6 royal-gradient text-center">The Satirical Vision of SpendThrone</h2>
                 <p className="text-lg mb-5 leading-relaxed">
-                  SpendThrone is a daring social experiment that deliberately takes the "pay-to-win" concept to its logical conclusion. We've created a transparent system where your rank is determined solely by how much money you spend - no hidden algorithms, no pretense about "merit" or "contribution."
+                  SpendThrone is a persistent, ranked leaderboard that fearlessly explores the dynamics of wealth and competition. Users ascend through the ranks, their position determined solely by their monetary contributions. It is a social experiment, a mirror reflecting the extremes of ambition and the allure of digital prestige.
                 </p>
                 <p className="text-lg mb-5 leading-relaxed">
-                  Our leaderboard never resets, creating a persistent hierarchy where your position directly reflects your financial investment. Think of it as medieval nobility for the digital age - where your wallet is your royal bloodline.
+                  Our platform embraces the "pay-to-win" concept with a self-aware, medieval-themed twist. We've created a transparent system where your rank is determined solely by how much money you spend - $1 spent equals 1 unit of rank.
                 </p>
                 <p className="text-lg leading-relaxed">
-                  This absurdist take on digital status serves as both entertainment and a mirror reflecting our complex relationship with wealth, competition, and online prestige.
+                  This audacious take on digital status serves as both entertainment and a mirror reflecting our complex relationship with wealth, competition, and online prestige in the most satirical and edgy way possible.
                 </p>
               </div>
             </MedievalFrame>

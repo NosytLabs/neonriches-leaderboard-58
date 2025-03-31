@@ -41,6 +41,7 @@ import React from 'react';
  */
 export const renderMockeryIcon = (action: MockeryAction, className = "h-4 w-4") => {
   const IconComponent = getMockeryActionIcon(action);
+  if (!IconComponent) return null;
   return React.createElement(IconComponent, { className });
 };
 

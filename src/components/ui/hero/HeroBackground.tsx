@@ -1,129 +1,125 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
+import { cn } from '@/lib/utils';
 
-interface HeroBackgroundProps {
-  isVisible?: boolean;
+type ParticleProps = {
   intensity?: 'low' | 'medium' | 'high';
   color?: 'gold' | 'purple' | 'blue' | 'red' | 'green';
-}
+  animated?: boolean;
+  className?: string;
+};
 
-const HeroBackground: React.FC<HeroBackgroundProps> = ({
-  isVisible = true,
-  intensity = 'medium',
-  color = 'gold'
+const HeroBackground: React.FC<ParticleProps> = ({ 
+  intensity = 'medium', 
+  color = 'gold',
+  animated = true,
+  className 
 }) => {
-  const [particles, setParticles] = useState<Array<{
-    id: number;
-    x: number;
-    y: number;
-    size: number;
-    rotation: number;
-    duration: number;
-    delay: number;
-  }>>([]);
+  const containerRef = useRef<HTMLDivElement>(null);
   
-  useEffect(() => {
-    if (!isVisible) return;
+  // Number of particles based on intensity
+  const particleCount = {
+    low: 30,
+    medium: 60,
+    high: 90
+  }[intensity];
+  
+  // Particle color based on color prop
+  const particleColor = {
+    gold: 'from-amber-300 to-yellow-500',
+    purple: 'from-purple-400 to-violet-600',
+    blue: 'from-blue-400 to-indigo-600',
+    red: 'from-red-400 to-rose-600',
+    green: 'from-emerald-400 to-green-600',
+  }[color];
+  
+  // Generate particles
+  const particles = Array.from({ length: particleCount }).map((_, i) => {
+    const size = Math.random() * 4 + 1;
+    const opacity = Math.random() * 0.4 + 0.1;
+    const duration = Math.random() * 15 + 10;
+    const delay = Math.random() * 5;
     
-    const particleCount = intensity === 'low' ? 15 : intensity === 'medium' ? 25 : 40;
-    
-    const newParticles = Array.from({ length: particleCount }).map((_, i) => ({
+    return {
       id: i,
+      size,
+      opacity,
+      duration,
+      delay,
       x: Math.random() * 100,
       y: Math.random() * 100,
-      size: Math.random() * 10 + 5,
-      rotation: Math.random() * 360,
-      duration: Math.random() * 20 + 20,
-      delay: Math.random() * 10
-    }));
+    };
+  });
+  
+  // Add floating coins animation
+  useEffect(() => {
+    if (!animated || !containerRef.current) return;
     
-    setParticles(newParticles);
-  }, [isVisible, intensity]);
-  
-  if (!isVisible) return null;
-  
-  // Determine color values based on the color prop
-  const getColorClass = () => {
-    switch (color) {
-      case 'purple':
-        return 'from-purple-900/40 via-purple-800/10 to-purple-900/40';
-      case 'blue':
-        return 'from-blue-900/40 via-blue-800/10 to-blue-900/40';
-      case 'red':
-        return 'from-red-900/40 via-red-800/10 to-red-900/40';
-      case 'green':
-        return 'from-green-900/40 via-green-800/10 to-green-900/40';
-      case 'gold':
-      default:
-        return 'from-amber-900/40 via-amber-800/10 to-amber-900/40';
-    }
-  };
-  
-  const getParticleColor = () => {
-    switch (color) {
-      case 'purple':
-        return 'bg-purple-400';
-      case 'blue':
-        return 'bg-blue-400';
-      case 'red':
-        return 'bg-red-400';
-      case 'green':
-        return 'bg-green-400';
-      case 'gold':
-      default:
-        return 'bg-royal-gold';
-    }
-  };
+    // Animation logic could be added here if needed
+    
+    return () => {
+      // Cleanup if needed
+    };
+  }, [animated]);
   
   return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      {/* Gradient overlay */}
-      <div className={`absolute inset-0 bg-gradient-to-b ${getColorClass()} opacity-30`}></div>
+    <div 
+      ref={containerRef}
+      className={cn(
+        "absolute inset-0 overflow-hidden z-0",
+        className
+      )}
+    >
+      {/* Background gradient overlay */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/60 to-transparent z-10"></div>
       
-      {/* Pattern overlay */}
-      <div className="absolute inset-0 bg-[url('/images/noise-pattern.png')] opacity-10"></div>
+      {/* Dark radial gradient for depth */}
+      <div className="absolute inset-0 bg-radial-gradient"></div>
       
-      {/* Vignette effect */}
-      <div className="absolute inset-0 bg-radial-gradient opacity-80"></div>
+      {/* Particle elements */}
+      {particles.map((particle) => (
+        <motion.div
+          key={particle.id}
+          className={cn(
+            "absolute rounded-full bg-gradient-to-br",
+            particleColor
+          )}
+          style={{
+            width: `${particle.size}px`,
+            height: `${particle.size}px`,
+            opacity: particle.opacity,
+            left: `${particle.x}%`,
+            top: `${particle.y}%`,
+          }}
+          animate={animated ? {
+            y: [0, -50, 0],
+            opacity: [particle.opacity, particle.opacity * 1.5, particle.opacity],
+          } : {}}
+          transition={{
+            duration: particle.duration,
+            repeat: Infinity,
+            delay: particle.delay,
+            ease: "easeInOut",
+          }}
+        />
+      ))}
       
-      {/* Particles */}
-      <div className="absolute inset-0">
-        {particles.map(particle => (
-          <motion.div
-            key={particle.id}
-            className={`absolute rounded-full ${getParticleColor()} opacity-20`}
-            style={{
-              left: `${particle.x}%`,
-              top: `${particle.y}%`,
-              width: particle.size,
-              height: particle.size,
-            }}
-            animate={{
-              y: [0, -100],
-              x: [0, particle.id % 2 === 0 ? 20 : -20],
-              opacity: [0, 0.3, 0],
-              rotate: [0, particle.rotation],
-            }}
-            transition={{
-              duration: particle.duration,
-              repeat: Infinity,
-              delay: particle.delay,
-              ease: "linear"
-            }}
-          />
-        ))}
-      </div>
-      
-      {/* Royal crown silhouette */}
-      <div className="absolute inset-0 flex items-center justify-center opacity-5">
-        <svg width="300" height="300" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full max-w-xl">
-          <path d="M20,75 L30,40 L50,60 L70,40 L80,75 L20,75 Z M40,35 L45,25 L50,35 L55,25 L60,35 M30,40 L40,35 M60,35 L70,40" stroke="currentColor" strokeWidth="2" />
-          <circle cx="30" cy="40" r="3" fill="currentColor" />
-          <circle cx="50" cy="60" r="3" fill="currentColor" />
-          <circle cx="70" cy="40" r="3" fill="currentColor" />
-        </svg>
-      </div>
+      {/* Larger glowing orbs for depth */}
+      {intensity === 'high' && (
+        <>
+          <div className={cn(
+            "absolute w-64 h-64 rounded-full bg-gradient-to-br opacity-10 blur-3xl",
+            particleColor,
+            color === 'gold' ? "top-1/4 -left-20" : "top-1/2 -left-20"
+          )}/>
+          <div className={cn(
+            "absolute w-80 h-80 rounded-full bg-gradient-to-br opacity-5 blur-3xl",
+            particleColor,
+            color === 'gold' ? "bottom-1/4 -right-20" : "bottom-1/3 -right-20"
+          )}/>
+        </>
+      )}
     </div>
   );
 };
