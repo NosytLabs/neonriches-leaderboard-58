@@ -142,9 +142,9 @@ export const getShameActionMessage = (action: MockeryAction, username: string): 
   const messages: Record<string, string> = {
     'tomatoes': `You've thrown rotten tomatoes at ${username}!`,
     'eggs': `You've pelted ${username} with rotten eggs!`,
-    'crown': `You've placed a fool's crown on ${username}!`,
+    'crown': `You've placed a fool\'s crown on ${username}!`,
     'stocks': `You've locked ${username} in the public stocks!`,
-    'jester': `You've made ${username} wear the jester's hat!`,
+    'jester': `You've made ${username} wear the jester\'s hat!`,
     'protection': `You've bought royal protection for yourself!`,
     'shame': `You've publicly shamed ${username}!`
   };

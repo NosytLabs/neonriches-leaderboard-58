@@ -33,18 +33,10 @@ export const getMockeryActionIcon = (action: MockeryAction): LucideIcon | React.
     'stocks': Lock,
     'jester': Target,
     'protection': Target,
-    'shame': Target,
-    'putridEggs': Egg,
-    'silence': CircleAlert,
-    'courtJester': Target,
-    'smokeBomb': CircleAlert,
-    'glitterBomb': CircleAlert,
-    'dunce': CircleAlert,
-    'target': Target,
-    'default': CircleAlert
+    'shame': Target
   };
   
-  return icons[action] || icons['default'];
+  return icons[action] || CircleAlert;
 };
 
 // Get color for the mockery action icon
@@ -56,21 +48,13 @@ export const getMockeryActionIconColor = (action: MockeryAction): string => {
     'stocks': 'text-gray-500',
     'jester': 'text-purple-500',
     'protection': 'text-green-500',
-    'shame': 'text-red-500',
-    'putridEggs': 'text-yellow-800',
-    'silence': 'text-blue-500',
-    'courtJester': 'text-purple-400',
-    'smokeBomb': 'text-gray-500',
-    'glitterBomb': 'text-pink-400',
-    'dunce': 'text-orange-500',
-    'target': 'text-red-500',
-    'default': 'text-gray-500'
+    'shame': 'text-red-500'
   };
   
-  return colors[action] || colors['default'];
+  return colors[action] || 'text-gray-500';
 };
 
-// Export getMockeryIcon for compatibility with usages in other files
+// Export aliases for compatibility
 export const getMockeryIcon = getMockeryActionIcon;
 export const getMockeryIconColor = getMockeryActionIconColor;
 

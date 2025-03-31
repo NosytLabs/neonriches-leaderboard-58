@@ -2,7 +2,6 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { useSolana } from '@/contexts/SolanaContext';
-import { formatAddress } from '@/utils/formatters';
 import { Loader2 } from 'lucide-react';
 
 interface SolanaWalletButtonProps {
@@ -23,22 +22,19 @@ export const SolanaWalletButton: React.FC<SolanaWalletButtonProps> = ({
     try {
       setIsLoading(true);
       await connect();
-    } catch (error) {
-      console.error('Failed to connect wallet:', error);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleDisconnectClick = async () => {
-    try {
-      setIsLoading(true);
-      await disconnect();
-    } catch (error) {
-      console.error('Failed to disconnect wallet:', error);
-    } finally {
-      setIsLoading(false);
-    }
+  const handleDisconnectClick = () => {
+    disconnect();
+  };
+
+  // Format address for display
+  const formatAddress = (address: string): string => {
+    if (!address) return '';
+    return `${address.substring(0, 4)}...${address.substring(address.length - 4)}`;
   };
 
   if (connected && walletAddress) {
@@ -48,11 +44,7 @@ export const SolanaWalletButton: React.FC<SolanaWalletButtonProps> = ({
         size={size} 
         className={className}
         onClick={handleDisconnectClick}
-        disabled={isLoading}
       >
-        {isLoading ? (
-          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-        ) : null}
         {formatAddress(walletAddress)}
       </Button>
     );
