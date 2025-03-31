@@ -1,4 +1,3 @@
-
 // Re-export utility functions
 import { cn } from '@/lib/utils';
 import { 
@@ -33,7 +32,9 @@ import {
   getMockeryActionIcon,
   getMockeryActionIconColor,
   getMockeryActionName,
+  getMockeryActionTitle,
   getMockeryActionDescription,
+  getMockeryActionPrice,
   getMockeryActionEffect
 } from './mockeryUtils';
 

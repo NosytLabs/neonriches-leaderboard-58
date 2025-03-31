@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { Toaster } from "@/components/ui/toaster";
 import { AuthProvider } from '@/contexts/auth/AuthProvider';
@@ -18,52 +18,52 @@ import Privacy from '@/pages/Privacy';
 import Terms from '@/pages/Terms';
 import Profile from '@/pages/Profile';
 import ProtectedRoute from '@/components/auth/ProtectedRoute';
+import StatusCenter from '@/pages/StatusCenter'; // Import StatusCenter page
 
 function App() {
   return (
     <HelmetProvider>
       <ThemeProvider defaultTheme="dark" storageKey="spendthrone-theme">
         <AuthProvider>
-          <Router>
-            <Routes>
-              {/* Landing Page */}
-              <Route path="/" element={<Home />} />
-              
-              {/* Main App Pages */}
-              <Route path="/login" element={<Login />} />
-              <Route path="/signup" element={<SignUp />} />
-              <Route path="/leaderboard" element={<Leaderboard />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/privacy" element={<Privacy />} />
-              <Route path="/terms" element={<Terms />} />
-              
-              {/* Protected User Pages */}
-              <Route 
-                path="/dashboard" 
-                element={
-                  <ProtectedRoute>
-                    <Dashboard />
-                  </ProtectedRoute>
-                } 
-              />
-              <Route 
-                path="/profile" 
-                element={
-                  <ProtectedRoute>
-                    <Profile />
-                  </ProtectedRoute>
-                } 
-              />
-              <Route path="/profile/:username" element={<Profile />} />
-              
-              {/* Redirection routes for backwards compatibility */}
-              <Route path="/home" element={<Navigate to="/" replace />} />
-              
-              {/* Catch-all for 404 */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-            <Toaster />
-          </Router>
+          <Routes>
+            {/* Landing Page */}
+            <Route path="/" element={<Home />} />
+            
+            {/* Main App Pages */}
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<SignUp />} />
+            <Route path="/leaderboard" element={<Leaderboard />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/privacy" element={<Privacy />} />
+            <Route path="/terms" element={<Terms />} />
+            <Route path="/status-through-history" element={<StatusCenter />} />
+            
+            {/* Protected User Pages */}
+            <Route 
+              path="/dashboard" 
+              element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/profile" 
+              element={
+                <ProtectedRoute>
+                  <Profile />
+                </ProtectedRoute>
+              } 
+            />
+            <Route path="/profile/:username" element={<Profile />} />
+            
+            {/* Redirection routes for backwards compatibility */}
+            <Route path="/home" element={<Navigate to="/" replace />} />
+            
+            {/* Catch-all for 404 */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+          <Toaster />
         </AuthProvider>
       </ThemeProvider>
     </HelmetProvider>
