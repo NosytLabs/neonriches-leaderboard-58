@@ -1,3 +1,4 @@
+
 /**
  * Centralized utility functions for mockery functionality
  */
@@ -19,28 +20,31 @@ import {
 /**
  * Custom tomato icon component
  */
-export const TomatoIcon: React.FC<{ size?: number; className?: string }> = ({ 
+export const TomatoIcon = ({ 
   size = 24, 
   className = '' 
+}: { 
+  size?: number; 
+  className?: string 
 }) => {
-  return (
-    <svg 
-      xmlns="http://www.w3.org/2000/svg" 
-      width={size} 
-      height={size} 
-      viewBox="0 0 24 24" 
-      fill="none" 
-      stroke="currentColor" 
-      strokeWidth="2" 
-      strokeLinecap="round" 
-      strokeLinejoin="round" 
-      className={className}
-    >
-      <path d="M12 2c0 4-8 4-8 4s0-4 8-4z" />
-      <circle cx="12" cy="14" r="8" />
-      <path d="M12 6v4" />
-      <path d="M15 9h-6" />
-    </svg>
+  return React.createElement(
+    'svg',
+    {
+      xmlns: "http://www.w3.org/2000/svg",
+      width: size,
+      height: size,
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "currentColor",
+      strokeWidth: "2",
+      strokeLinecap: "round",
+      strokeLinejoin: "round",
+      className: className
+    },
+    React.createElement('path', { d: "M12 2c0 4-8 4-8 4s0-4 8-4z" }),
+    React.createElement('circle', { cx: "12", cy: "14", r: "8" }),
+    React.createElement('path', { d: "M12 6v4" }),
+    React.createElement('path', { d: "M15 9h-6" })
   );
 };
 
