@@ -20,7 +20,9 @@ interface ProfileEmojisProps {
 }
 
 const ProfileEmojis: React.FC<ProfileEmojisProps> = ({ onPurchase, user }) => {
-  const userEmojis = user?.cosmetics?.emoji || []; // Changed from emojis to emoji
+  // Fixed array check for userEmojis
+  const userEmojis = user?.cosmetics?.emoji ? 
+    (Array.isArray(user.cosmetics.emoji) ? user.cosmetics.emoji : []) : [];
 
   const getRarityClass = (rarity: string) => {
     switch (rarity) {
@@ -117,7 +119,8 @@ const ProfileEmojis: React.FC<ProfileEmojisProps> = ({ onPurchase, user }) => {
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
         {emojis.map((item) => {
-          const isOwned = userEmojis.includes(item.id);
+          // Fixed check for owned items
+          const isOwned = userEmojis.some(emoji => emoji === item.id);
           
           return (
             <div key={item.id} className="glass-morphism border-white/10 rounded-lg p-4 transition-all duration-300 hover:border-royal-gold/30">

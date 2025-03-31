@@ -59,11 +59,15 @@ const ShameModalWrapper: React.FC<ShameModalWrapperProps> = ({
     ? team as TeamColor 
     : 'red' as TeamColor;
 
+  // Fix for the string | number error - convert IDs to string
+  const userId = typeof selectedUser.id === 'number' ? 
+    selectedUser.id.toString() : selectedUser.id.toString();
+
   return (
     <Dialog open={showModal} onOpenChange={onOpenChange}>
       <ShameModal
         targetUser={{
-          userId: selectedUser.id.toString(),
+          userId: userId,
           username: selectedUser.username,
           profileImage: selectedUser.profileImage || '/placeholder.svg',
           totalSpent: selectedUser.totalSpent || selectedUser.amountSpent || 0,
@@ -73,7 +77,7 @@ const ShameModalWrapper: React.FC<ShameModalWrapperProps> = ({
           spendStreak: selectedUser.spendStreak || 0
         }}
         shameType={shameAction}
-        onConfirm={() => onConfirm(selectedUser.id, shameAction)}
+        onConfirm={() => onConfirm(userId, shameAction)}
         onCancel={() => onOpenChange(false)}
         hasDiscount={false}
       />

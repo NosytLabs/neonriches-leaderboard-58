@@ -28,7 +28,9 @@ const ProfileFonts: React.FC<ProfileFontsProps> = ({
   onSelectFont,
   activeFont
 }) => {
-  const userFonts = user?.cosmetics?.font || []; // Changed from fonts to font
+  // Fixed array check for userFonts
+  const userFonts = user?.cosmetics?.font ? 
+    (Array.isArray(user.cosmetics.font) ? user.cosmetics.font : []) : [];
 
   const fonts: FontItem[] = [
     {
@@ -98,7 +100,8 @@ const ProfileFonts: React.FC<ProfileFontsProps> = ({
       
       <div className="grid grid-cols-1 gap-4 mt-6">
         {fonts.map((item) => {
-          const isOwned = userFonts.includes(item.id);
+          // Fixed check for owned items
+          const isOwned = userFonts.some(font => font === item.id);
           const isActive = activeFont === item.id;
           
           return (

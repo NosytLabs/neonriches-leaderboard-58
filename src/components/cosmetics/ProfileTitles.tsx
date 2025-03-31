@@ -122,7 +122,9 @@ const ProfileTitles: React.FC<ProfileTitlesProps> = ({
   onSelectTitle,
   activeTitle 
 }) => {
-  const userTitles = user?.cosmetics?.title || []; // Changed from titles to title
+  // Fixed array check for userTitles
+  const userTitles = user?.cosmetics?.title ? 
+    (Array.isArray(user.cosmetics.title) ? user.cosmetics.title : []) : [];
   
   const handlePurchase = (title: typeof titles[0]) => {
     onPurchase(title.name, title.price, 'title', title.id);
@@ -137,7 +139,8 @@ const ProfileTitles: React.FC<ProfileTitlesProps> = ({
   return (
     <div className="space-y-4">
       {titles.map((title) => {
-        const isOwned = userTitles.includes(title.id);
+        // Fixed check for owned items
+        const isOwned = userTitles.some(t => t === title.id);
         const isActive = activeTitle === title.id;
         
         return (

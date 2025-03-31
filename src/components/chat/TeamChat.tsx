@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -224,7 +223,7 @@ const TeamChat: React.FC<TeamChatProps> = ({ user, limit = 50 }) => {
       const newMessage: ChatMessage = {
         id: `msg-${Date.now()}`,
         text: message,
-        userId: user.id,
+        userId: typeof user.id === 'number' ? user.id.toString() : user.id,
         username: user.username,
         displayName: user.displayName || user.username,
         profileImage: user.profileImage,

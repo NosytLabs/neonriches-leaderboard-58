@@ -112,10 +112,9 @@ const ProfileColors: React.FC = () => {
     
     // Safe check if color is in cosmetics array
     if (typeof cosmetics === 'object') {
-      const colorArray = cosmetics.color || [];
-      if (Array.isArray(colorArray)) {
-        return colorArray.includes(colorId);
-      }
+      const colorArray = Array.isArray(cosmetics.color) ? cosmetics.color : [];
+      // Fix for the includes error - check if array includes the colorId
+      return colorArray.some(item => item === colorId);
     }
     
     return colorId === 'royal-gold'; // Default fallback

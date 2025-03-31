@@ -52,6 +52,19 @@ const UserMenu: React.FC<UserMenuProps> = () => {
     navigate('/');
   };
 
+  // Create a safer wrapper around the user's tier to handle the potential type mismatch
+  // This function ensures we only pass a valid tier string to UserBadge
+  const getTierForBadge = () => {
+    // Only return tiers that match the expected types in UserBadge
+    const validTiers = [
+      'free', 'basic', 'premium', 'royal', 'legendary',
+      'founder', 'whale', 'pro', 'standard', 'elite',
+      'silver', 'gold', 'platinum', 'diamond', 'bronze', 'vip'
+    ];
+    
+    return validTiers.includes(user.tier) ? user.tier : 'free';
+  };
+
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
@@ -69,7 +82,7 @@ const UserMenu: React.FC<UserMenuProps> = () => {
           <ChevronDown className="h-4 w-4 text-muted-foreground" />
           <UserBadge
             type="tier"
-            value={user.tier}
+            value={getTierForBadge()}
             size="sm"
             className="absolute -top-2 -right-2"
           />

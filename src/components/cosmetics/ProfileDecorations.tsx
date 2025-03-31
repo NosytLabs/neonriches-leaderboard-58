@@ -28,7 +28,9 @@ const ProfileDecorations: React.FC<ProfileDecorationsProps> = ({
   onSelectBorder,
   activeBorder 
 }) => {
-  const userBorders = user?.cosmetics?.border || []; // Changed from borders to border
+  // Fixed array check for userBorders
+  const userBorders = user?.cosmetics?.border ? 
+    (Array.isArray(user.cosmetics.border) ? user.cosmetics.border : []) : [];
 
   const getRarityClass = (rarity: string) => {
     switch (rarity) {
@@ -98,7 +100,8 @@ const ProfileDecorations: React.FC<ProfileDecorationsProps> = ({
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
         {borders.map((item) => {
-          const isOwned = userBorders.includes(item.id);
+          // Fixed check for owned items
+          const isOwned = userBorders.some(border => border === item.id);
           const isActive = activeBorder === item.id;
           
           return (

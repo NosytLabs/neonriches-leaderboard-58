@@ -2,10 +2,13 @@
 import { UserCosmetics, UserCosmeticState } from './cosmetics';
 
 // Define team colors
-export type TeamColor = 'red' | 'blue' | 'green' | 'gold' | 'purple' | 'none' | 'neutral';
+export type TeamColor = 
+  | 'red' | 'blue' | 'green' | 'gold' | 'purple' | 'none' | 'neutral' 
+  | '#dc2626' | '#2563eb' | '#16a34a' | '#eab308' | '#9333ea' | '#6b7280'; // Add hex values to fix teamData.ts
+
 export type TeamType = 'red' | 'blue' | 'green' | 'gold' | 'purple' | 'none' | 'neutral';
 
-// Define user tiers
+// Define user tiers - add 'basic' to fix tierData.ts errors
 export type UserTier = 
   | 'free'
   | 'basic'
@@ -43,6 +46,8 @@ export interface SocialLink {
   url: string;
   icon?: string;
   clicks?: number;
+  title?: string;  // Added to fix LinksEditor issues
+  label?: string;  // Added to fix LinksEditor issues
 }
 
 // Define profile image type
@@ -87,7 +92,7 @@ export interface UserSettings {
   rankChangeAlerts?: boolean;
   language?: string;
   shameAlerts?: boolean;
-  showBadges?: boolean; // Added for CombinedLeaderboard.tsx
+  showBadges?: boolean; // For CombinedLeaderboard.tsx
 }
 
 // Define profile link type (alias for SocialLink to fix editor import errors)
