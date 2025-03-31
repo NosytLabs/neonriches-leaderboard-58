@@ -14,6 +14,7 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import { LeaderboardUser, LeaderboardFilter } from '@/types/leaderboard';
 import { useAuth } from '@/hooks/useAuth';
+import { TeamType, UserTier } from '@/types/user';
 
 const PersistentLeaderboard: React.FC = () => {
   const { toast } = useToast();
@@ -25,15 +26,16 @@ const PersistentLeaderboard: React.FC = () => {
     tier: 'all',
     search: '',
     limit: 50,
-    timeFrame: 'all', // Added timeFrame
-    sortBy: 'rank', // Added sortBy
-    sortDirection: 'asc' // Added sortDirection
+    timeFrame: 'all',
+    sortBy: 'rank',
+    sortDirection: 'asc'
   });
   
   // Mocked users - in a real app, this would come from an API
   const mockUsers: LeaderboardUser[] = [
     {
       id: "1",
+      userId: "1",
       username: "KingMidas",
       displayName: "King Midas",
       profileImage: "https://randomuser.me/api/portraits/men/1.jpg",
@@ -44,12 +46,13 @@ const PersistentLeaderboard: React.FC = () => {
       totalSpent: 15000,
       walletBalance: 5000,
       isVerified: true,
-      isProtected: false,
+      isProtected: true,
       avatarUrl: "https://randomuser.me/api/portraits/men/1.jpg",
-      spentAmount: 15000
+      spendStreak: 5
     },
     {
       id: "2",
+      userId: "2",
       username: "SirSpendALot",
       displayName: "Sir Spend-A-Lot",
       profileImage: "https://randomuser.me/api/portraits/men/2.jpg",
@@ -62,10 +65,11 @@ const PersistentLeaderboard: React.FC = () => {
       isVerified: true,
       isProtected: true,
       avatarUrl: "https://randomuser.me/api/portraits/men/2.jpg",
-      spentAmount: 12000
+      spendStreak: 3
     },
     {
       id: "3",
+      userId: "3",
       username: "LadyFortune",
       displayName: "Lady Fortune",
       profileImage: "https://randomuser.me/api/portraits/women/3.jpg",
@@ -78,10 +82,11 @@ const PersistentLeaderboard: React.FC = () => {
       isVerified: true,
       isProtected: false,
       avatarUrl: "https://randomuser.me/api/portraits/women/3.jpg",
-      spentAmount: 10000
+      spendStreak: 0
     },
     {
       id: "4",
+      userId: "4",
       username: "GoldHoarder",
       displayName: "Gold Hoarder",
       profileImage: "https://randomuser.me/api/portraits/men/4.jpg",
@@ -94,10 +99,11 @@ const PersistentLeaderboard: React.FC = () => {
       isVerified: false,
       isProtected: false,
       avatarUrl: "https://randomuser.me/api/portraits/men/4.jpg",
-      spentAmount: 7500
+      spendStreak: 0
     },
     {
       id: "5",
+      userId: "5",
       username: "RoyalSpender",
       displayName: "Royal Spender",
       profileImage: "https://randomuser.me/api/portraits/women/5.jpg",
@@ -110,9 +116,62 @@ const PersistentLeaderboard: React.FC = () => {
       isVerified: false,
       isProtected: false,
       avatarUrl: "https://randomuser.me/api/portraits/women/5.jpg",
-      spentAmount: 5000
+      spendStreak: 0
     }
   ];
+  
+  useEffect(() => {
+    const loadLeaderboard = async () => {
+      setLoading(true);
+      const data = await fetchLeaderboard(filter);
+      setLeaderboardData(data);
+      setLoading(false);
+    };
+    
+    loadLeaderboard();
+  }, [filter]);
+
+  const handleTeamChange = (team: string) => {
+    setFilter(prevFilter => ({
+      ...prevFilter,
+      team: team as TeamType
+    }));
+  };
+
+  const handleTierChange = (tier: string) => {
+    setFilter(prevFilter => ({
+      ...prevFilter,
+      tier: tier as UserTier
+    }));
+  };
+
+  const handleSortChange = (sortBy: string) => {
+    setFilter(prevFilter => ({
+      ...prevFilter,
+      sortBy: sortBy as 'rank' | 'totalSpent' | 'username' | 'joined'
+    }));
+  };
+
+  const handleSortDirectionChange = (direction: string) => {
+    setFilter(prevFilter => ({
+      ...prevFilter,
+      sortDirection: direction as 'asc' | 'desc'
+    }));
+  };
+
+  const handleSearchChange = (search: string) => {
+    setFilter(prevFilter => ({
+      ...prevFilter,
+      search: search
+    }));
+  };
+
+  const handleLimitChange = (limit: number) => {
+    setFilter(prevFilter => ({
+      ...prevFilter,
+      limit: limit
+    }));
+  };
   
   // Mock function to simulate API request
   const fetchLeaderboard = async (filterParams: LeaderboardFilter) => {
@@ -190,7 +249,32 @@ const PersistentLeaderboard: React.FC = () => {
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFilter(prev => ({ ...prev, search: event.target.value }));
   };
-  
+
+  // Filter users based on current filters
+  const filteredUsers = leaderboardData
+    .filter(user => {
+      const matchesTeam = filter.team === 'all' || user.team === filter.team;
+      const matchesTier = filter.tier === 'all' || user.tier === filter.tier;
+      const matchesSearch = !filter.search || 
+        user.username.toLowerCase().includes(filter.search.toLowerCase()) ||
+        (user.displayName && user.displayName.toLowerCase().includes(filter.search.toLowerCase()));
+      
+      return matchesTeam && matchesTier && matchesSearch;
+    })
+    .sort((a, b) => {
+      if (filter.sortBy === 'rank') {
+        return filter.sortDirection === 'asc' ? a.rank - b.rank : b.rank - a.rank;
+      } else if (filter.sortBy === 'totalSpent') {
+        return filter.sortDirection === 'asc' ? a.totalSpent - b.totalSpent : b.totalSpent - a.totalSpent;
+      } else if (filter.sortBy === 'username') {
+        return filter.sortDirection === 'asc' 
+          ? a.username.localeCompare(b.username) 
+          : b.username.localeCompare(a.username);
+      }
+      return 0;
+    })
+    .slice(0, filter.limit || 50);
+
   return (
     <Card className="glass-morphism border-white/10">
       <CardHeader className="pb-3">
@@ -222,11 +306,11 @@ const PersistentLeaderboard: React.FC = () => {
               <DropdownMenuContent align="end">
                 <DropdownMenuLabel>Select Team</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => handleFilterChange('team', 'all')}>All</DropdownMenuItem>
-                <DropdownMenuItem onClick={() => handleFilterChange('team', 'red')}>Red</DropdownMenuItem>
-                <DropdownMenuItem onClick={() => handleFilterChange('team', 'blue')}>Blue</DropdownMenuItem>
-                <DropdownMenuItem onClick={() => handleFilterChange('team', 'green')}>Green</DropdownMenuItem>
-                <DropdownMenuItem onClick={() => handleFilterChange('team', 'gold')}>Gold</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => handleTeamChange('all')}>All</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => handleTeamChange('red')}>Red</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => handleTeamChange('blue')}>Blue</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => handleTeamChange('green')}>Green</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => handleTeamChange('gold')}>Gold</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
             
@@ -241,11 +325,11 @@ const PersistentLeaderboard: React.FC = () => {
               <DropdownMenuContent align="end">
                 <DropdownMenuLabel>Select Tier</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => handleFilterChange('tier', 'all')}>All</DropdownMenuItem>
-                <DropdownMenuItem onClick={() => handleFilterChange('tier', 'basic')}>Basic</DropdownMenuItem>
-                <DropdownMenuItem onClick={() => handleFilterChange('tier', 'pro')}>Pro</DropdownMenuItem>
-                <DropdownMenuItem onClick={() => handleFilterChange('tier', 'premium')}>Premium</DropdownMenuItem>
-                <DropdownMenuItem onClick={() => handleFilterChange('tier', 'royal')}>Royal</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => handleTierChange('all')}>All</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => handleTierChange('basic')}>Basic</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => handleTierChange('pro')}>Pro</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => handleTierChange('premium')}>Premium</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => handleTierChange('royal')}>Royal</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
             
@@ -260,13 +344,13 @@ const PersistentLeaderboard: React.FC = () => {
               <DropdownMenuContent align="end">
                 <DropdownMenuLabel>Sort By</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => handleSort('rank')}>
+                <DropdownMenuItem onClick={() => handleSortChange('rank')}>
                   Rank {filter.sortBy === 'rank' && (filter.sortDirection === 'asc' ? <SortAsc size={16} /> : <SortDesc size={16} />)}
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => handleSort('username')}>
+                <DropdownMenuItem onClick={() => handleSortChange('username')}>
                   Username {filter.sortBy === 'username' && (filter.sortDirection === 'asc' ? <SortAsc size={16} /> : <SortDesc size={16} />)}
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => handleSort('totalSpent')}>
+                <DropdownMenuItem onClick={() => handleSortChange('totalSpent')}>
                   Total Spent {filter.sortBy === 'totalSpent' && (filter.sortDirection === 'asc' ? <SortAsc size={16} /> : <SortDesc size={16} />)}
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -280,7 +364,7 @@ const PersistentLeaderboard: React.FC = () => {
           </div>
         ) : (
           <div className="space-y-3">
-            {leaderboardData.map((user, index) => (
+            {filteredUsers.map((user, index) => (
               <div key={user.id} className="glass-morphism border-white/10 rounded-lg p-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center">

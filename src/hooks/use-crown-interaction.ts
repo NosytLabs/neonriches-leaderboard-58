@@ -1,15 +1,16 @@
-
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { SoundType } from '@/hooks/sounds/types';
 import useNotificationSounds from '@/hooks/use-notification-sounds';
 import { useToastContext } from "@/contexts/ToastContext";
+import { NotificationSoundOptions } from '@/types/mockery';
+import useNotificationSound from '@/hooks/useNotificationSound';
 
 export function useCrownInteraction() {
   const { addToast } = useToastContext();
   const { playSound } = useNotificationSounds();
   const [hasInteracted, setHasInteracted] = useState(false);
 
-  const handleCrownClick = (containerRef: React.RefObject<HTMLElement>) => {
+  const handleCrownClick = useCallback((containerRef: React.RefObject<HTMLElement>) => {
     setHasInteracted(true);
     playSound('royalAnnouncement', 0.2);
     
@@ -40,7 +41,7 @@ export function useCrownInteraction() {
         sparkleContainer.remove();
       }, 5000);
     }
-  };
+  }, []);
 
   return {
     hasInteracted,

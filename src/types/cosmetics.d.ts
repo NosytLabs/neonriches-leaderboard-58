@@ -1,5 +1,7 @@
 
-// Define the CosmeticItem type
+export type CosmeticCategory = 'border' | 'color' | 'font' | 'emoji' | 'title' | 'background' | 'effect' | 'badge' | 'theme';
+export type CosmeticRarity = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary' | 'mythic' | 'unique';
+
 export interface CosmeticItem {
   id: string;
   name: string;
@@ -7,28 +9,11 @@ export interface CosmeticItem {
   price: number;
   category: CosmeticCategory;
   cssClass: string;
-  rarity: string | CosmeticRarity;
-  type?: string;
-  image?: string;
+  type: string;
+  rarity: CosmeticRarity;
   imageSrc?: string;
-  cost?: number; // For backward compatibility
+  image?: string;
 }
-
-export type CosmeticCategory = 
-  | 'border'
-  | 'color'
-  | 'font'
-  | 'emoji'
-  | 'title'
-  | 'background'
-  | 'effect'
-  | 'badge'
-  | 'theme'
-  | 'appearance'
-  | 'profile'
-  | 'interaction';
-
-export type CosmeticRarity = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary' | 'royal' | 'unique' | 'mythic';
 
 export interface UserCosmeticState {
   border: string[];
@@ -51,4 +36,9 @@ export interface UserCosmeticState {
   activeTheme?: string;
 }
 
-export type CosmeticType = keyof UserCosmeticState;
+export interface CosmeticPurchaseResult {
+  success: boolean;
+  message: string;
+  item?: CosmeticItem;
+  updatedCosmetics?: UserCosmeticState;
+}

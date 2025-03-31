@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { formatCurrency } from '@/utils/formatters';
-import { MockeryAction } from '@/types/mockery';
+import { MockeryActionType } from '@/types/mockery';
 import { TeamColor } from '@/types/team';
 
 export interface ShameModalProps {
@@ -19,14 +19,14 @@ export interface ShameModalProps {
     tier?: string;
     spendStreak?: number;
   };
-  shameType: MockeryAction;
+  shameType: MockeryActionType;
   onConfirm: () => void;
   onCancel: () => void;
   hasDiscount?: boolean;
 }
 
-const getMockeryActionDescription = (action: MockeryAction): string => {
-  const descriptions: Record<MockeryAction, string> = {
+const getMockeryActionDescription = (action: MockeryActionType): string => {
+  const descriptions: Record<string, string> = {
     tomatoes: 'Pelt with rotten tomatoes',
     eggs: 'Throw rotten eggs at them',
     shame: 'Ring the bell of shame',
@@ -60,8 +60,8 @@ const getMockeryActionDescription = (action: MockeryAction): string => {
   return descriptions[action] || 'Apply mockery';
 };
 
-const getMockeryActionIcon = (action: MockeryAction): string => {
-  const icons: Record<MockeryAction, string> = {
+const getMockeryActionIcon = (action: MockeryActionType): string => {
+  const icons: Record<string, string> = {
     tomatoes: '🍅',
     eggs: '🥚',
     shame: '🔔',

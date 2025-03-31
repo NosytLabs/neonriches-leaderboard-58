@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -8,6 +7,7 @@ import { Users, Copy, Share2, Link } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { getUserReferralCode } from '@/services/referralService';
 import useNotificationSounds from '@/hooks/use-notification-sounds';
+import { NotificationSoundOptions } from '@/types/mockery';
 
 interface ReferralCardProps {
   userId: string;

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -11,6 +10,7 @@ import RoyalDivider from '@/components/ui/royal-divider';
 import useNotificationSounds from '@/hooks/use-notification-sounds';
 import { motion } from 'framer-motion';
 import { useAuth } from '@/contexts/auth';
+import { NotificationSoundOptions } from '@/types/mockery';
 
 const Auth = () => {
   const [activeTab, setActiveTab] = useState<'login' | 'register'>('login');
@@ -18,14 +18,12 @@ const Auth = () => {
   const { playSound } = useNotificationSounds();
   const { user, isAuthenticated } = useAuth();
   
-  // Check if user is already authenticated
   useEffect(() => {
     if (isAuthenticated && user) {
       navigate('/dashboard');
     }
   }, [isAuthenticated, user, navigate]);
   
-  // Play sound effect when component mounts
   useEffect(() => {
     playSound('royalAnnouncement', 0.3);
   }, []);
@@ -44,7 +42,6 @@ const Auth = () => {
     <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
       <ThroneBackground variant="royal" particles />
 
-      {/* Floating crown animations */}
       <motion.div 
         className="absolute top-20 left-[10%] text-royal-gold/30 transform -rotate-12"
         animate={{ 

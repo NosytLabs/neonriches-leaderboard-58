@@ -47,7 +47,7 @@ const LeaderboardItem: React.FC<LeaderboardItemProps> = ({
   } = userData;
   
   // Use the profileImage if available, fall back to avatarUrl
-  const avatarSrc = profileImage || userData.avatarUrl;
+  const avatarSrc = profileImage || userData.avatarUrl || '';
   
   const teamColor = getTeamColor(team);
   const actualSpentAmount = totalSpent || spentAmount || 0;

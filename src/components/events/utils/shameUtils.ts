@@ -1,121 +1,137 @@
 
-import { MockeryAction, MockeryTier } from '@/types/mockery';
-import { getMockeryCost } from '@/utils/mockery/mockery-costs';
-import { hasWeeklyDiscount, getWeeklyDiscountedAction, getDiscountedShamePrice } from '@/utils/mockery/shame-discount-utils';
+import { MockeryActionType } from '@/types/mockery';
 
-// Re-export the discount utilities
-export { hasWeeklyDiscount, getWeeklyDiscountedAction, getDiscountedShamePrice };
-
-// Re-export the price function
-export { getMockeryCost as getShameActionPrice };
-
-// Get the icon for a shame action
-export const getShameActionIcon = (action: ShameAction): string => {
-  const icons: Record<string, string> = {
-    tomatoes: '🍅',
-    eggs: '🥚',
-    shame: '😱',
-    dungeons: '🏰',
-    immune: '🛡️',
-    crown: '👑',
-    stocks: '🪵',
-    dunce: '🧢',
-    jester: '🃏',
-    fool: '🤡',
-    troll: '👹',
-    peasant: '👨‍🌾',
-    rat: '🐀',
-    ghost: '👻',
-    skeleton: '💀',
-    zombie: '🧟',
-    witch: '🧙‍♀️',
-    monster: '👾',
-    demon: '😈',
-    dragon: '🐉',
-    king: '🤴',
-    queen: '👸',
-    knight: '🗡️',
-    bishop: '♗',
-    rook: '♖',
-    pawn: '♙',
-    target: '🎯',
-    challenge: '⚔️'
+/**
+ * Get the shame action price based on the action type
+ */
+export const getShameActionPrice = (action: MockeryActionType): number => {
+  const prices: Record<string, number> = {
+    tomatoes: 1,
+    eggs: 2,
+    stocks: 5,
+    shame: 1,
+    dungeons: 10,
+    immune: 25,
+    crown: 15,
+    dunce: 3,
+    jester: 10,
+    troll: 3,
+    peasant: 5,
+    rat: 3,
+    ghost: 10,
+    skeleton: 10,
+    zombie: 15,
+    witch: 10,
+    monster: 15,
+    demon: 15,
+    dragon: 25,
+    king: 20,
+    queen: 20,
+    knight: 12,
+    bishop: 18,
+    rook: 12,
+    pawn: 3,
+    target: 10,
+    challenge: 18
   };
-
-  return icons[action] || '❓';
+  
+  return prices[action] || 1;
 };
 
-// Get the title for a shame action
-export const getShameActionTitle = (action: ShameAction): string => {
-  const titles: Record<string, string> = {
-    tomatoes: 'Throw Tomatoes',
-    eggs: 'Throw Eggs',
-    shame: 'Public Shame',
-    dungeons: 'Send to Dungeons',
-    immune: 'Grant Immunity',
-    crown: 'Steal Crown',
-    stocks: 'Put in Stocks',
-    dunce: 'Dunce Cap',
-    jester: 'Make a Jester',
-    fool: 'Label as Fool',
-    troll: 'Mark as Troll',
-    peasant: 'Demote to Peasant',
-    rat: 'Turn into Rat',
-    ghost: 'Make Ghostly',
-    skeleton: 'Skeletonize',
-    zombie: 'Zombify',
-    witch: 'Accuse of Witchcraft',
-    monster: 'Turn into Monster',
-    demon: 'Demonize',
-    dragon: 'Dragon Transformation',
-    king: 'Crown as King',
-    queen: 'Crown as Queen',
-    knight: 'Knight Them',
-    bishop: 'Make Bishop',
-    rook: 'Castle Them',
-    pawn: 'Reduce to Pawn',
-    target: 'Mark as Target',
-    challenge: 'Royal Challenge'
+/**
+ * Get shame action cooldown in milliseconds
+ */
+export const getShameActionCooldown = (action: MockeryActionType): number => {
+  const baseCooldown = 30000; // 30 seconds base cooldown
+  
+  const cooldownMultipliers: Record<string, number> = {
+    tomatoes: 1,
+    eggs: 1.2,
+    stocks: 2,
+    shame: 1,
+    dungeons: 3,
+    immune: 4,
+    crown: 3,
+    dunce: 1.5,
+    jester: 2,
+    troll: 1.5,
+    peasant: 2,
+    rat: 1.5,
+    ghost: 2.5,
+    skeleton: 2.5,
+    zombie: 3,
+    witch: 2.5,
+    monster: 3,
+    demon: 3,
+    dragon: 4,
+    king: 3.5,
+    queen: 3.5,
+    knight: 2.5,
+    bishop: 3,
+    rook: 2.5,
+    pawn: 1.5,
+    target: 2.5,
+    challenge: 3
   };
-
-  return titles[action] || 'Unknown Action';
+  
+  const multiplier = cooldownMultipliers[action] || 1;
+  
+  return baseCooldown * multiplier;
 };
 
-// Get the description for a shame action
-export const getShameActionDescription = (action: ShameAction): string => {
-  const descriptions: Record<string, string> = {
-    tomatoes: 'Pelt the user with virtual tomatoes as a sign of disapproval',
-    eggs: 'Throw rotten eggs at the user for all to see',
-    shame: 'Ring the shame bell and parade the user through the town',
-    dungeons: 'Banish the user to the royal dungeons',
-    immune: 'Grant immunity from mockery for a period of time',
-    crown: 'Temporarily steal the user\'s crown and dignity',
-    stocks: 'Place the user in the stocks for public ridicule',
-    dunce: 'Make the user wear a dunce cap for their foolishness',
-    jester: 'Appoint the user as the court jester',
-    fool: 'Officially declare the user a fool',
-    troll: 'Label the user as a common internet troll',
-    peasant: 'Demote the user to lowly peasant status',
-    rat: 'Transform the user into a scurrying rat',
-    ghost: 'Turn the user into a transparent ghost',
-    skeleton: 'Reduce the user to a mere skeleton',
-    zombie: 'Turn the user into a shambling zombie',
-    witch: 'Accuse the user of witchcraft',
-    monster: 'Transform the user into a hideous monster',
-    demon: 'Turn the user into a demonic entity',
-    dragon: 'Transform the user into a fearsome dragon',
-    king: 'Sarcastically crown the user as the king',
-    queen: 'Mockingly crown the user as the queen',
-    knight: 'Knight the user in an ironic ceremony',
-    bishop: 'Appoint the user as a bishop of folly',
-    rook: 'Turn the user into a living castle',
-    pawn: 'Reduce the user to a mere pawn',
-    target: 'Mark the user as a target for future mockery',
-    challenge: 'Issue a royal challenge to the user'
-  };
-
-  return descriptions[action] || 'Apply a mysterious effect to the user';
+/**
+ * Check if shame action is premium (requires subscription)
+ */
+export const isShameActionPremium = (action: MockeryActionType): boolean => {
+  const premiumActions: MockeryActionType[] = [
+    'dungeons', 'immune', 'crown', 
+    'zombie', 'monster', 'demon', 'dragon',
+    'king', 'queen', 'bishop', 'challenge'
+  ];
+  
+  return premiumActions.includes(action);
 };
 
-// Alias type for backward compatibility
-export type ShameAction = MockeryAction;
+/**
+ * Get shame action tier level (1-5, with 5 being highest)
+ */
+export const getShameActionTier = (action: MockeryActionType): number => {
+  const tiers: Record<string, number> = {
+    tomatoes: 1,
+    eggs: 1,
+    shame: 1,
+    stocks: 2,
+    dungeons: 3,
+    immune: 5,
+    crown: 4,
+    dunce: 1,
+    jester: 3,
+    troll: 1,
+    peasant: 2,
+    rat: 1,
+    ghost: 3,
+    skeleton: 3,
+    zombie: 4,
+    witch: 3,
+    monster: 4,
+    demon: 4,
+    dragon: 5,
+    king: 4,
+    queen: 4,
+    knight: 3,
+    bishop: 4,
+    rook: 3,
+    pawn: 1,
+    target: 3,
+    challenge: 4
+  };
+  
+  return tiers[action] || 1;
+};
+
+export default {
+  getShameActionPrice,
+  getShameActionCooldown,
+  isShameActionPremium,
+  getShameActionTier
+};

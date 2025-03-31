@@ -3,7 +3,7 @@ import { TeamColor } from './user';
 
 export interface LeaderboardUser {
   id: string;
-  userId: string;
+  userId?: string;
   username: string;
   displayName?: string;
   profileImage: string;
@@ -22,9 +22,9 @@ export interface LeaderboardUser {
 }
 
 export interface LeaderboardFilter {
-  team?: string;
+  team?: string | 'all';
   timeFrame?: 'all' | 'day' | 'week' | 'month' | 'year';
-  tier?: string;
+  tier?: string | 'all';
   search?: string;
   limit?: number;
   sortBy?: 'rank' | 'totalSpent' | 'username' | 'joined';
@@ -59,6 +59,12 @@ export interface OnChainLeaderboardEntry {
   amount: number;
   timestamp: number;
   username?: string;
+  userId?: string;
+  publicKey?: string;
+  amountSpent?: number; 
+  totalDeposited?: number;
+  rank?: number;
+  joinDate?: number;
 }
 
 export interface SolanaTransaction {

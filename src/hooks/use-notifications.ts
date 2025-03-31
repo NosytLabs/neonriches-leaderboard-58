@@ -1,8 +1,7 @@
-
-import { useState, useEffect } from 'react';
-import useNotificationSounds from '@/hooks/use-notification-sounds';
-import { useAuth } from '@/contexts/auth';
-import { v4 as uuidv4 } from 'uuid';
+import { useCallback, useState } from 'react';
+import { useToast } from '@/hooks/use-toast';
+import { NotificationSoundOptions } from '@/types/mockery';
+import useNotificationSound, { SoundType } from '@/hooks/useNotificationSound';
 
 export interface Notification {
   id: string;
@@ -34,17 +33,16 @@ interface UseNotificationsReturn {
 export const useNotifications = (): UseNotificationsReturn => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [open, setOpen] = useState(false);
-  const { playSound } = useNotificationSounds();
+  const { playSound } = useNotificationSound();
   const { user } = useAuth();
-  
-  // Load notifications from local storage on mount
+  const { toast } = useToast();
+
   useEffect(() => {
     if (user) {
       const savedNotifications = localStorage.getItem(`notifications_${user.id}`);
       if (savedNotifications) {
         try {
           const parsed = JSON.parse(savedNotifications);
-          // Convert string timestamps back to Date objects
           const formattedNotifications = parsed.map((notification: any) => ({
             ...notification,
             timestamp: new Date(notification.timestamp)
@@ -57,15 +55,13 @@ export const useNotifications = (): UseNotificationsReturn => {
       }
     }
   }, [user?.id]);
-  
-  // Save notifications to local storage when they change
+
   useEffect(() => {
     if (user && notifications.length > 0) {
       localStorage.setItem(`notifications_${user.id}`, JSON.stringify(notifications));
     }
   }, [notifications, user?.id]);
-  
-  // Add a new notification
+
   const addNotification = (notification: Omit<Notification, 'id' | 'read' | 'timestamp'>) => {
     const newNotification: Notification = {
       ...notification,
@@ -73,10 +69,9 @@ export const useNotifications = (): UseNotificationsReturn => {
       read: false,
       timestamp: new Date()
     };
-    
-    setNotifications(prev => [newNotification, ...prev].slice(0, 50)); // Keep only the 50 most recent
-    
-    // Play notification sound based on the type
+
+    setNotifications(prev => [newNotification, ...prev].slice(0, 50));
+
     switch (notification.type) {
       case 'rank_change':
         playSound('rankChange', 0.4);
@@ -95,8 +90,7 @@ export const useNotifications = (): UseNotificationsReturn => {
         playSound('notification', 0.3);
     }
   };
-  
-  // Mark a notification as read
+
   const handleMarkAsRead = (id: string) => {
     setNotifications(prev => 
       prev.map(notification => 
@@ -104,20 +98,17 @@ export const useNotifications = (): UseNotificationsReturn => {
       )
     );
   };
-  
-  // Mark all notifications as read
+
   const handleMarkAllAsRead = () => {
     setNotifications(prev => 
       prev.map(notification => ({ ...notification, read: true }))
     );
   };
-  
-  // Delete a notification
+
   const handleDeleteNotification = (id: string) => {
     setNotifications(prev => prev.filter(notification => notification.id !== id));
   };
-  
-  // Format timestamp for display
+
   const formatTimestamp = (timestamp: Date) => {
     const now = new Date();
     const diff = now.getTime() - timestamp.getTime();
@@ -125,7 +116,7 @@ export const useNotifications = (): UseNotificationsReturn => {
     const minutes = Math.floor(seconds / 60);
     const hours = Math.floor(minutes / 60);
     const days = Math.floor(hours / 24);
-    
+
     if (seconds < 60) {
       return 'Just now';
     } else if (minutes < 60) {
@@ -138,10 +129,9 @@ export const useNotifications = (): UseNotificationsReturn => {
       return timestamp.toLocaleDateString();
     }
   };
-  
-  // Count unread notifications
+
   const unreadCount = notifications.filter(n => !n.read).length;
-  
+
   return {
     notifications,
     unreadCount,

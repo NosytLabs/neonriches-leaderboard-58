@@ -1,6 +1,7 @@
+
 import { LeaderboardUser } from '@/types/leaderboard';
 
-// Export the type properly using 'export type'
+// Export the type properly
 export type { LeaderboardUser };
 
 // Mock leaderboard data
@@ -53,7 +54,8 @@ export const mockLeaderboardData: LeaderboardUser[] = [
     walletBalance: 4500,
     isVerified: true,
     isProtected: false,
-    avatarUrl: "https://randomuser.me/api/portraits/women/3.jpg"
+    avatarUrl: "https://randomuser.me/api/portraits/women/3.jpg",
+    spendStreak: 0
   },
   {
     id: "4",
@@ -69,7 +71,8 @@ export const mockLeaderboardData: LeaderboardUser[] = [
     walletBalance: 2000,
     isVerified: false,
     isProtected: false,
-    avatarUrl: "https://randomuser.me/api/portraits/men/4.jpg"
+    avatarUrl: "https://randomuser.me/api/portraits/men/4.jpg",
+    spendStreak: 0
   },
   {
     id: "5",
@@ -85,6 +88,7 @@ export const mockLeaderboardData: LeaderboardUser[] = [
     walletBalance: 1000,
     isVerified: false,
     isProtected: false,
-    avatarUrl: "https://randomuser.me/api/portraits/women/5.jpg"
+    avatarUrl: "https://randomuser.me/api/portraits/women/5.jpg",
+    spendStreak: 0
   }
 ];

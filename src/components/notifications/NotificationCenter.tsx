@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Bell } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -12,6 +11,7 @@ import NotificationItem from './NotificationItem';
 import EmptyNotifications from './EmptyNotifications';
 import NotificationHeader from './NotificationHeader';
 import { useNotifications } from './useNotifications';
+import { NotificationSoundOptions } from '@/types/mockery';
 
 export interface Notification {
   id: string;

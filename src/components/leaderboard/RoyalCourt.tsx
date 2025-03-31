@@ -12,6 +12,7 @@ import RoyalButton from '@/components/ui/royal-button';
 import useNotificationSounds from '@/hooks/use-notification-sounds';
 import RoyalDivider from '@/components/ui/royal-divider';
 import RoyalDecrees from '@/components/dashboard/RoyalDecrees';
+import { NotificationSoundOptions } from '@/types/mockery';
 
 const mockRoyalUsers: User[] = [
   {

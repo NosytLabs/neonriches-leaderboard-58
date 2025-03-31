@@ -9,7 +9,7 @@ import LeaderboardItem from './leaderboard/LeaderboardItem';
 import ShameModal from './leaderboard/ShameModal';
 import LeaderboardActions from './leaderboard/LeaderboardActions';
 import { getShameActionPrice } from '@/components/events/utils/shameUtils';
-import { MockeryAction } from '@/types/mockery';
+import { MockeryActionType } from '@/types/mockery';
 
 const InteractiveLeaderboard: React.FC = () => {
   const { toast } = useToast();
@@ -18,7 +18,7 @@ const InteractiveLeaderboard: React.FC = () => {
   const [showShameModal, setShowShameModal] = useState<boolean>(false);
   const [selectedUser, setSelectedUser] = useState<LeaderboardUser | null>(null);
   const [isOnCooldown, setIsOnCooldown] = useState<boolean>(false);
-  const [shameType, setShameType] = useState<MockeryAction>('tomatoes');
+  const [shameType, setShameType] = useState<MockeryActionType>('tomatoes');
   const [modalType, setModalType] = useState<string | null>(null);
 
   useEffect(() => {
@@ -38,7 +38,7 @@ const InteractiveLeaderboard: React.FC = () => {
 
   const handleShameUser = (user: LeaderboardUser, type: string = 'tomatoes') => {
     setSelectedUser(user);
-    setShameType(type as MockeryAction);
+    setShameType(type as MockeryActionType);
     setShowShameModal(true);
     
     // Play subtle royal sound effect
@@ -136,14 +136,14 @@ const InteractiveLeaderboard: React.FC = () => {
           {modalType === 'shame' && selectedUser && (
             <ShameModal
               targetUser={{
-                userId: selectedUser.userId,
+                userId: selectedUser.userId || selectedUser.id,
                 username: selectedUser.username,
                 profileImage: selectedUser.profileImage,
                 totalSpent: selectedUser.totalSpent,
                 rank: selectedUser.rank,
                 team: selectedUser.team,
                 tier: selectedUser.tier,
-                spendStreak: selectedUser.spendStreak
+                spendStreak: selectedUser.spendStreak || 0
               }}
               shameType={shameType}
               onConfirm={handleShameConfirm}

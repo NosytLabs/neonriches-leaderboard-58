@@ -1,68 +1,124 @@
 
-import { useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { NotificationSoundOptions } from '@/types/mockery';
 
-interface UseNotificationSoundResult {
-  playSound: (sound: string, options?: NotificationSoundOptions) => void;
-  stopSound: () => void;
-}
+// Define the supported sound types
+export type SoundType = 
+  | 'click' 
+  | 'coins' 
+  | 'coins_drop' 
+  | 'success' 
+  | 'error' 
+  | 'purchase' 
+  | 'levelUp'
+  | 'fanfare'
+  | 'wish'
+  | 'trumpets' 
+  | 'notification' 
+  | 'achievement' 
+  | 'rankUp' 
+  | 'button' 
+  | 'hover' 
+  | 'confetti' 
+  | 'bell' 
+  | 'fanfare' 
+  | 'pop' 
+  | 'whoosh'
+  | 'magic' 
+  | 'chime' 
+  | 'royalty' 
+  | 'pageChange' 
+  | 'payment' 
+  | 'reward' 
+  | 'clap' 
+  | 'surprise' 
+  | 'shame';
 
-export const useNotificationSound = (): UseNotificationSoundResult => {
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  
-  // Clean up on unmount
+const DEFAULT_VOLUME = 0.5;
+
+/**
+ * Custom hook for playing notification sounds with volume control
+ */
+const useNotificationSound = () => {
+  const [isMuted, setIsMuted] = useState<boolean>(false);
+  const [masterVolume, setMasterVolume] = useState<number>(0.5);
+  const [lastPlayed, setLastPlayed] = useState<string | null>(null);
+
+  // Load user's sound preferences from localStorage on init
   useEffect(() => {
-    return () => {
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current = null;
-      }
-    };
-  }, []);
-  
-  const playSound = useCallback((sound: string, options?: NotificationSoundOptions) => {
-    // First stop any current sound
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current = null;
+    const savedMuted = localStorage.getItem('sound_muted');
+    const savedVolume = localStorage.getItem('sound_volume');
+    
+    if (savedMuted !== null) {
+      setIsMuted(savedMuted === 'true');
     }
     
+    if (savedVolume !== null) {
+      setMasterVolume(parseFloat(savedVolume));
+    }
+  }, []);
+
+  // Save preferences to localStorage when they change
+  useEffect(() => {
+    localStorage.setItem('sound_muted', isMuted.toString());
+    localStorage.setItem('sound_volume', masterVolume.toString());
+  }, [isMuted, masterVolume]);
+
+  const playSound = useCallback((soundType: SoundType, options?: NotificationSoundOptions) => {
+    if (isMuted) return;
+    
     try {
-      // Create a new audio element
-      const audio = new Audio(sound);
-      audioRef.current = audio;
+      // Get the sound URL - placeholder for now, would be part of an asset system
+      const soundUrl = `/sounds/${soundType}.mp3`;
       
-      // Set volume if provided
-      if (options?.volume !== undefined) {
-        audio.volume = Math.min(Math.max(options.volume, 0), 1); // Clamp between 0 and 1
+      // Create the audio element
+      const audio = new Audio(soundUrl);
+      
+      // Set volume (apply master volume × individual sound volume)
+      const soundVolume = options?.volume !== undefined ? options.volume : DEFAULT_VOLUME;
+      audio.volume = Math.min(masterVolume * soundVolume, 1.0);
+      
+      // Set other options
+      if (options?.loop) {
+        audio.loop = true;
       }
       
-      // Set loop if provided
-      if (options?.loop !== undefined) {
-        audio.loop = options.loop;
-      }
-      
-      // Handle delay if provided
-      if (options?.delay && options.delay > 0) {
-        setTimeout(() => {
-          audio.play().catch(err => console.error('Error playing notification sound:', err));
-        }, options.delay);
+      // Play the sound (with optional delay)
+      const delay = options?.delay || 0;
+      if (delay > 0) {
+        setTimeout(() => audio.play().catch(e => console.warn('Sound play error:', e)), delay * 1000);
       } else {
-        audio.play().catch(err => console.error('Error playing notification sound:', err));
+        audio.play().catch(e => console.warn('Sound play error:', e));
       }
+      
+      // Update last played sound type
+      setLastPlayed(soundType);
+      
+      // Return audio object for external control
+      return audio;
     } catch (error) {
-      console.error('Error setting up notification sound:', error);
+      console.warn('Failed to play sound:', error);
+      return null;
     }
+  }, [isMuted, masterVolume]);
+
+  const toggleMute = useCallback(() => {
+    setIsMuted(prevMuted => !prevMuted);
   }, []);
-  
-  const stopSound = useCallback(() => {
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current = null;
-    }
+
+  const setVolume = useCallback((volume: number) => {
+    const clampedVolume = Math.max(0, Math.min(1, volume));
+    setMasterVolume(clampedVolume);
   }, []);
-  
-  return { playSound, stopSound };
+
+  return {
+    playSound,
+    toggleMute,
+    setVolume,
+    isMuted,
+    masterVolume,
+    lastPlayed
+  };
 };
 
 export default useNotificationSound;
