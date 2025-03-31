@@ -1,8 +1,8 @@
 
-import { MockeryAction, ExtendedMockeryAction } from '@/types/mockery-types';
+import { MockeryAction } from '@/types/mockery-types';
 
 // Get the description for a mockery action
-export const getMockeryActionDescription = (action: MockeryAction | ExtendedMockeryAction): string => {
+export const getMockeryActionDescription = (action: MockeryAction): string => {
   const descriptions: Record<string, string> = {
     tomatoes: 'Pelt the user with rotten tomatoes - a classic form of public ridicule.',
     eggs: 'Throw rotten eggs at the user - a stinky visual embarrassment.',

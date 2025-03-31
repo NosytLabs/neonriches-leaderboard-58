@@ -13,25 +13,14 @@ export const getMockeryEffectClass = (action: MockeryAction): string => {
     jester: 'shame-effect-jester', 
     mockery: 'shame-effect-general',
     protection: 'protection-effect',
-    shame: 'shame-effect-general'
+    shame: 'shame-effect-general',
+    silence: 'shame-effect-silence',
+    courtJester: 'shame-effect-court-jester',
+    smokeBomb: 'shame-effect-smoke',
+    glitterBomb: 'shame-effect-glitter',
+    guillotine: 'shame-effect-guillotine',
+    royalPie: 'shame-effect-pie'
   };
 
   return effectClasses[action] || 'shame-effect-general';
-};
-
-// Get duration for mockery effect in hours
-export const getMockeryEffectDuration = (action: MockeryAction): number => {
-  if (action === 'protection') {
-    return 168; // 7 days in hours
-  }
-  
-  if (['putridEggs', 'courtJester', 'guillotine', 'dragon', 'demon'].includes(action)) {
-    return 36; // 1.5 days
-  }
-  
-  if (['dungeons', 'immune', 'humiliate', 'expose', 'removal'].includes(action)) {
-    return 48; // 2 days
-  }
-  
-  return 24; // Default duration: 24 hours
 };

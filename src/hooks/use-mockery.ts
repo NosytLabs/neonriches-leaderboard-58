@@ -1,17 +1,34 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { UserProfile } from '@/types/user';
-import { MockeryAction, MockeryEvent, MockUser } from '@/types/mockery';
-import { fetchMockeryEvents } from '@/services/mockeryService';
+import { 
+  MockeryAction, 
+  MockeryEvent, 
+  MockedUser, 
+  UseMockeryReturn 
+} from '@/types/mockery-types';
+import { useToast } from '@/hooks/use-toast';
+import { useSound } from '@/hooks/use-sound';
+import { useAuth } from '@/hooks/useAuth';
+import {
+  getMockeryActionTitle,
+  getMockeryActionPrice,
+  getMockeryTier,
+  getMockeryEffectDuration,
+  getMockeryCooldown
+} from '@/utils/mockery';
+import { adaptUserProfileToUser } from '@/utils/userAdapter';
+import { spendFromWallet } from '@/services/walletService';
 
 // Mock data for testing
-const mockUsers: MockUser[] = [
+const mockUsers: MockedUser[] = [
   {
     id: '1',
     username: 'user1',
     displayName: 'User One',
     profileImage: '/avatars/user1.png',
-    rank: 5,
+    mockedBy: 'system',
+    mockedUntil: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
     team: 'red',
     tier: 'gold',
     lastMocked: new Date().toISOString(),
@@ -22,7 +39,8 @@ const mockUsers: MockUser[] = [
     username: 'user2',
     displayName: 'User Two',
     profileImage: '/avatars/user2.png',
-    rank: 10,
+    mockedBy: 'system',
+    mockedUntil: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
     team: 'green',
     tier: 'silver',
     lastMocked: new Date().toISOString(),
@@ -33,78 +51,41 @@ const mockUsers: MockUser[] = [
     username: 'user3',
     displayName: 'User Three',
     profileImage: '/avatars/user3.png',
-    rank: 15,
+    mockedBy: 'system',
+    mockedUntil: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
     team: 'blue',
     tier: 'bronze',
     lastMocked: new Date().toISOString(),
     mockeryCount: 2
-  },
-  {
-    id: '4',
-    username: 'user4',
-    displayName: 'User Four',
-    profileImage: '/avatars/user4.png',
-    rank: 20,
-    team: 'red',
-    tier: 'platinum',
-    lastMocked: new Date().toISOString(),
-    mockeryCount: 0
-  },
-  {
-    id: '5',
-    username: 'user5',
-    displayName: 'User Five',
-    profileImage: '/avatars/user5.png',
-    rank: 25,
-    team: 'green',
-    tier: 'diamond',
-    lastMocked: new Date().toISOString(),
-    mockeryCount: 5
   }
 ];
 
 const mockEvents: MockeryEvent[] = [
   {
     id: '1',
-    sourceId: '1',
-    sourceName: 'User One',
     targetId: '2',
-    targetName: 'User Two',
+    appliedBy: '1',
     action: 'tomatoes',
-    appliedAt: new Date().toISOString(),
+    createdAt: new Date().toISOString(),
     expiresAt: new Date(Date.now() + 86400000).toISOString(), // 24 hours from now
     isActive: true
   },
   {
     id: '2',
-    sourceId: '3',
-    sourceName: 'User Three',
     targetId: '1',
-    targetName: 'User One',
+    appliedBy: '3',
     action: 'dunce',
-    appliedAt: new Date().toISOString(),
+    createdAt: new Date().toISOString(),
     expiresAt: new Date(Date.now() + 172800000).toISOString(), // 48 hours from now
     isActive: true
   }
 ];
 
-interface UseMockeryReturn {
-  mockUsers: MockUser[];
-  mockeryEvents: MockeryEvent[];
-  isLoading: boolean;
-  error: string | null;
-  mockUser: (user: UserProfile, targetUsername: string, action: MockeryAction) => boolean;
-  protectUser: (username: string) => boolean;
-  isUserProtected: (username: string) => boolean;
-  isUserShamed: (username: string) => boolean;
-  canUserBeMocked: (username: string) => boolean;
-  getActiveMockery: (username: string) => MockeryEvent | null;
-  getUserMockeryCount: (username: string) => number;
-  getUserMockedOthersCount: (username: string) => number;
-}
-
 const useMockery = (): UseMockeryReturn => {
-  const [users, setUsers] = useState<MockUser[]>(mockUsers);
+  const { user } = useAuth();
+  const { toast } = useToast();
+  const sound = useSound();
+  const [users, setUsers] = useState<MockedUser[]>(mockUsers);
   const [events, setEvents] = useState<MockeryEvent[]>(mockEvents);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -113,8 +94,19 @@ const useMockery = (): UseMockeryReturn => {
     const loadMockeryData = async () => {
       setIsLoading(true);
       try {
-        const fetchedEvents = await fetchMockeryEvents();
-        setEvents(fetchedEvents || mockEvents);
+        // In a real implementation, you'd fetch data from an API or database
+        // For now, we'll just use the mock data
+        
+        // Clear expired events
+        const now = new Date();
+        const activeEvents = events.filter(event => 
+          new Date(event.expiresAt) > now
+        );
+        
+        if (activeEvents.length !== events.length) {
+          setEvents(activeEvents);
+        }
+        
       } catch (err) {
         setError('Error loading mockery data');
         console.error(err);
@@ -124,10 +116,18 @@ const useMockery = (): UseMockeryReturn => {
     };
     
     loadMockeryData();
+    
+    // Set up interval to periodically clear expired events
+    const interval = setInterval(() => {
+      const now = new Date();
+      setEvents(prev => prev.filter(event => new Date(event.expiresAt) > now));
+    }, 60000); // Check every minute
+    
+    return () => clearInterval(interval);
   }, []);
   
   // Check if a user is currently protected from mockery
-  const isUserProtected = (username: string): boolean => {
+  const isUserProtected = useCallback((username: string): boolean => {
     const protectionEvent = events.find(event => 
       event.targetId === username && 
       event.action === 'protection' && 
@@ -135,10 +135,10 @@ const useMockery = (): UseMockeryReturn => {
     );
     
     return !!protectionEvent;
-  };
+  }, [events]);
   
   // Check if a user is currently shamed
-  const isUserShamed = (username: string): boolean => {
+  const isUserShamed = useCallback((username: string): boolean => {
     const userEvents = events.filter(event => 
       event.targetId === username && 
       event.action !== 'protection' && 
@@ -146,15 +146,15 @@ const useMockery = (): UseMockeryReturn => {
     );
     
     return userEvents.length > 0;
-  };
+  }, [events]);
   
   // Check if a user can be mocked (not protected)
-  const canUserBeMocked = (username: string): boolean => {
+  const canUserBeMocked = useCallback((username: string): boolean => {
     return !isUserProtected(username);
-  };
+  }, [isUserProtected]);
   
   // Get active mockery event for a user
-  const getActiveMockery = (username: string): MockeryEvent | null => {
+  const getActiveMockery = useCallback((username: string): MockeryEvent | null => {
     const mockery = events.find(event => 
       event.targetId === username && 
       event.action !== 'protection' && 
@@ -162,24 +162,27 @@ const useMockery = (): UseMockeryReturn => {
     );
     
     return mockery || null;
-  };
+  }, [events]);
   
   // Apply mockery to a user
-  const mockUser = (user: UserProfile, targetUsername: string, action: MockeryAction): boolean => {
+  const mockUser = useCallback((userId: string, targetUsername: string, action: MockeryAction): boolean => {
     if (!canUserBeMocked(targetUsername)) {
+      toast({
+        title: "Protected User",
+        description: "This user is currently protected from mockery.",
+        variant: "destructive"
+      });
       return false;
     }
     
     // Create a new mockery event
     const newEvent: MockeryEvent = {
       id: Math.random().toString(36).substring(2, 9),
-      sourceId: user.id,
-      sourceName: user.displayName || user.username,
       targetId: targetUsername,
-      targetName: targetUsername,
+      appliedBy: userId,
       action,
-      appliedAt: new Date().toISOString(),
-      expiresAt: new Date(Date.now() + 86400000).toISOString(), // 24 hours
+      createdAt: new Date().toISOString(),
+      expiresAt: new Date(Date.now() + getMockeryEffectDuration(action) * 3600000).toISOString(),
       isActive: true
     };
     
@@ -198,20 +201,21 @@ const useMockery = (): UseMockeryReturn => {
       return u;
     }));
     
+    // Play mockery sound
+    sound.playSound('mockery', { volume: 0.5 });
+    
     return true;
-  };
+  }, [canUserBeMocked, sound, toast]);
   
   // Protect a user from mockery
-  const protectUser = (username: string): boolean => {
+  const protectUser = useCallback((username: string): boolean => {
     // Create a new protection event
     const newEvent: MockeryEvent = {
       id: Math.random().toString(36).substring(2, 9),
-      sourceId: username,
-      sourceName: username,
       targetId: username,
-      targetName: username,
+      appliedBy: username,
       action: 'protection',
-      appliedAt: new Date().toISOString(),
+      createdAt: new Date().toISOString(),
       expiresAt: new Date(Date.now() + 7 * 86400000).toISOString(), // 7 days
       isActive: true
     };
@@ -219,19 +223,89 @@ const useMockery = (): UseMockeryReturn => {
     // Add the new protection event
     setEvents(prev => [...prev, newEvent]);
     
+    // Play protection sound
+    sound.playSound('protection', { volume: 0.5 });
+    
     return true;
-  };
+  }, [sound]);
   
   // Get number of times a user has been mocked
-  const getUserMockeryCount = (username: string): number => {
+  const getUserMockeryCount = useCallback((username: string): number => {
     const user = users.find(u => u.username === username);
     return user?.mockeryCount || 0;
-  };
+  }, [users]);
   
   // Get number of times a user has mocked others
-  const getUserMockedOthersCount = (username: string): number => {
-    return events.filter(event => event.sourceId === username).length;
-  };
+  const getUserMockedOthersCount = useCallback((username: string): number => {
+    return events.filter(event => event.appliedBy === username).length;
+  }, [events]);
+  
+  // Apply mockery with cost handling
+  const applyMockery = useCallback(async (targetId: string, action: MockeryAction): Promise<boolean> => {
+    if (!user) {
+      toast({
+        title: "Authentication Required",
+        description: "You must be logged in to perform mockery actions."
+      });
+      return false;
+    }
+    
+    if (!targetId || !action) {
+      toast({
+        title: "Missing Information",
+        description: "Please select a user and mockery action to proceed."
+      });
+      return false;
+    }
+    
+    const tier = getMockeryTier(action);
+    const cost = getMockeryActionPrice(action);
+    const fullUser = adaptUserProfileToUser(user);
+    
+    const successResult = spendFromWallet(
+      fullUser,
+      cost,
+      'mockery',
+      `${getMockeryActionTitle(action)} mockery`,
+      { targetUser: targetId, mockeryType: action }
+    );
+    
+    if (successResult) {
+      const result = mockUser(user.id, targetId, action);
+      
+      if (result) {
+        sound.playSound('mockery', { volume: 0.5 });
+        
+        toast({
+          title: "Mockery Applied",
+          description: `You have successfully applied ${getMockeryActionTitle(action)} to the user.`,
+          variant: "success"
+        });
+      }
+      
+      return result;
+    } else {
+      toast({
+        title: "Insufficient Funds",
+        description: `You need at least ${cost.toFixed(2)} to perform this mockery.`,
+        variant: "destructive"
+      });
+      
+      return false;
+    }
+  }, [user, mockUser, sound, toast]);
+  
+  // Remove mockery
+  const removeMockery = useCallback(async (targetId: string): Promise<boolean> => {
+    setEvents(prev => prev.map(event => {
+      if (event.targetId === targetId && event.isActive && event.action !== 'protection') {
+        return { ...event, isActive: false };
+      }
+      return event;
+    }));
+    
+    return true;
+  }, []);
   
   return {
     mockUsers: users,
@@ -245,7 +319,9 @@ const useMockery = (): UseMockeryReturn => {
     canUserBeMocked,
     getActiveMockery,
     getUserMockeryCount,
-    getUserMockedOthersCount
+    getUserMockedOthersCount,
+    applyMockery,
+    removeMockery
   };
 };
 

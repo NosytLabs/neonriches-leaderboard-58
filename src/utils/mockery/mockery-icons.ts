@@ -13,17 +13,20 @@ import {
   Rat, 
   UserX, 
   Zap,
-  Flame
+  Flame,
+  MessageSquare,
+  Egg,
+  Book
 } from 'lucide-react';
 import { MockeryAction } from '@/types/mockery-types';
 import type { LucideIcon } from 'lucide-react';
 
-// Get the appropriate icon component for a mockery action
+// Get the appropriate icon for a mockery action
 export const getMockeryActionIcon = (action: MockeryAction): LucideIcon => {
   const iconMap: Record<string, LucideIcon> = {
     tomatoes: Target,
-    eggs: Target,
-    putridEggs: Target,
+    eggs: Egg,
+    putridEggs: Egg,
     dungeons: UserX,
     immune: Shield,
     crown: Crown,
@@ -45,7 +48,7 @@ export const getMockeryActionIcon = (action: MockeryAction): LucideIcon => {
     king: Crown,
     queen: Crown,
     knight: Shield,
-    bishop: Crown,
+    bishop: Book,
     rook: Shield,
     pawn: ThumbsDown,
     target: Target,
@@ -60,7 +63,7 @@ export const getMockeryActionIcon = (action: MockeryAction): LucideIcon => {
     humiliate: ThumbsDown,
     expose: AlertCircle,
     mock: ThumbsDown,
-    taunt: ThumbsDown,
+    taunt: MessageSquare,
     guillotine: Skull,
     defeat: ThumbsDown,
     removal: UserX,
@@ -87,8 +90,13 @@ export const getMockeryActionIconColor = (action: MockeryAction): string => {
     courtJester: 'text-royal-purple',
     jest: 'text-fuchsia-500',
     protection: 'text-emerald-500',
-    shame: 'text-red-700'
-    // Add more as needed
+    shame: 'text-red-700',
+    silence: 'text-blue-400',
+    taunt: 'text-orange-400',
+    defeat: 'text-red-600',
+    guillotine: 'text-red-900',
+    smokeBomb: 'text-gray-500',
+    glitterBomb: 'text-pink-400'
   };
 
   return colorClasses[action] || 'text-gray-400';

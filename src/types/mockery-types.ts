@@ -1,5 +1,5 @@
 
-// Consolidated mockery types to replace inconsistent definitions across the codebase
+// Unified mockery types for the entire application
 
 // Mockery action types
 export type MockeryAction = 
@@ -48,11 +48,10 @@ export type MockeryAction =
   | 'guillotine'
   | 'defeat'
   | 'removal'
-  | 'shame';  // For backward compatibility
+  | 'shame';  
 
 // For backwards compatibility
 export type ShameAction = MockeryAction;
-export type ExtendedMockeryAction = MockeryAction;
 
 // Mockery tiers for categorizing actions
 export type MockeryTier = 
@@ -62,24 +61,22 @@ export type MockeryTier =
   | 'legendary'
   | 'rare'
   | 'epic'
-  | 'silver'
   | 'common'
-  | 'uncommon';
-
-// Extended mockery tiers for broader categorization
-export type ExtendedMockeryTier = MockeryTier;
+  | 'uncommon'
+  | 'silver';
 
 // User who has been mocked
 export interface MockedUser {
-  id?: string;
+  id: string;
   userId?: string;
   username: string;
   displayName: string;
   profileImage?: string;
+  mockedBy: string;
+  mockedAction?: MockeryAction;
+  mockedUntil: string;
   mockedReason?: string;
   mockedTimestamp?: string;
-  mockedUntil: string;
-  mockedBy: string;
   mockedTier?: string;
   mockeryCount?: number;
   lastMocked?: string;
@@ -99,9 +96,6 @@ export interface MockeryEvent {
   expiresAt: string;
   duration?: number;
   metadata?: Record<string, any>;
-  sourceId?: string; // For backward compatibility
-  timestamp?: string; // For backward compatibility
-  tier?: string; // For backward compatibility
 }
 
 // Sound options for mockery effects
@@ -117,4 +111,22 @@ export interface MockeryData {
   events: MockeryEvent[];
   protectedUsers: string[];
   cooldowns: Record<string, string>;
+}
+
+// Mockery hook return type
+export interface UseMockeryReturn {
+  mockUsers: MockedUser[];
+  mockeryEvents: MockeryEvent[];
+  isLoading: boolean;
+  error: string | null;
+  mockUser: (userId: string, targetUsername: string, action: MockeryAction) => boolean;
+  protectUser: (username: string) => boolean;
+  isUserProtected: (username: string) => boolean;
+  isUserShamed: (username: string) => boolean;
+  canUserBeMocked: (username: string) => boolean;
+  getActiveMockery: (username: string) => MockeryEvent | null;
+  getUserMockeryCount: (username: string) => number;
+  getUserMockedOthersCount: (username: string) => number;
+  applyMockery: (targetId: string, action: MockeryAction) => Promise<boolean>;
+  removeMockery: (targetId: string) => Promise<boolean>;
 }

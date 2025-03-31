@@ -84,7 +84,12 @@ export const getActiveMockeryClass = (action: MockeryAction): string => {
     jester: 'mockery-jester',
     courtJester: 'mockery-court-jester',
     protection: 'mockery-protection',
-    shame: 'mockery-shame'
+    shame: 'mockery-shame',
+    silence: 'mockery-silence',
+    smokeBomb: 'mockery-smoke',
+    glitterBomb: 'mockery-glitter',
+    guillotine: 'mockery-guillotine',
+    royalPie: 'mockery-pie'
   };
 
   return mockeryClasses[action] || 'mockery-default';

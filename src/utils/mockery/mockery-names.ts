@@ -1,8 +1,8 @@
 
-import { MockeryAction, ExtendedMockeryAction } from '@/types/mockery-types';
+import { MockeryAction } from '@/types/mockery-types';
 
 // Get the display title for a mockery action
-export const getMockeryActionTitle = (action: MockeryAction | ExtendedMockeryAction): string => {
+export const getMockeryActionTitle = (action: MockeryAction): string => {
   const titles: Record<string, string> = {
     tomatoes: 'Rotten Tomatoes',
     eggs: 'Rotten Eggs',

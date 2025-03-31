@@ -1,8 +1,8 @@
 
-import { MockeryAction, ExtendedMockeryAction } from '@/types/mockery-types';
+import { MockeryAction, MockeryTier } from '@/types/mockery-types';
 
 // Get the cost for a mockery action
-export const getMockeryActionPrice = (action: MockeryAction | ExtendedMockeryAction): number => {
+export const getMockeryActionPrice = (action: MockeryAction): number => {
   const prices: Record<string, number> = {
     tomatoes: 1.25,
     eggs: 1.5,
@@ -47,10 +47,37 @@ export const getMockeryActionPrice = (action: MockeryAction | ExtendedMockeryAct
     guillotine: 6.0,
     defeat: 4.0,
     removal: 7.5,
-    protection: 50.0
+    protection: 50.0,
+    silence: 3.0,
+    shame: 2.0
   };
 
   return prices[action] || 2.0;
+};
+
+// Get price multiplier based on tier
+export const getTierPriceMultiplier = (tier: MockeryTier): number => {
+  const multipliers: Record<MockeryTier, number> = {
+    basic: 1,
+    premium: 1.5,
+    royal: 2.5,
+    legendary: 5,
+    rare: 1.5,
+    epic: 2,
+    common: 1,
+    uncommon: 1.25,
+    silver: 1.25
+  };
+  
+  return multipliers[tier] || 1;
+};
+
+// Combined function to get total price
+export const getMockeryPrice = (action: MockeryAction, tier: MockeryTier): number => {
+  const basePrice = getMockeryActionPrice(action);
+  const multiplier = getTierPriceMultiplier(tier);
+  
+  return basePrice * multiplier;
 };
 
 // Re-export with alternative name for backward compatibility
