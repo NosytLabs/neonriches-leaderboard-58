@@ -8,7 +8,7 @@ import { MockeryAction } from '@/types/mockery';
 import { getMockeryName, getMockeryDescription, getMockeryCost, getMockeryActionIcon } from '@/utils/mockery';
 import { useToast } from '@/hooks/use-toast';
 
-// Simplified to 4 core mockery actions
+// Core mockery actions
 const MOCKERY_ACTIONS: MockeryAction[] = ['tomatoes', 'eggs', 'crown', 'stocks'];
 
 const LightweightMockeryPanel = () => {

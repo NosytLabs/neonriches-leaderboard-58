@@ -1,15 +1,16 @@
+
 import { UserProfile, UserTier, TeamType } from './user-types';
 import { FC } from 'react';
 import { LucideIcon } from 'lucide-react';
 
-// Simplify mockery actions to just 4 core actions
+// Core mockery actions
 export type MockeryAction = 
   | 'tomatoes'
   | 'eggs' 
   | 'crown'
   | 'stocks';
 
-// Keep the mockery tiers relatively simple
+// Mockery tiers
 export type MockeryTier = 
   | 'common'
   | 'uncommon'
@@ -71,16 +72,6 @@ export interface NotificationSoundOptions {
   volume?: number;
   playbackRate?: number;
   delay?: number;
-}
-
-// Hook interface for mockery functionality
-export interface UseMockery {
-  mockUser: (userId: string, action: MockeryAction, reason?: string) => Promise<boolean>;
-  removeMockery: (userId: string) => Promise<boolean>;
-  getMockedUsers: () => MockedUser[];
-  isUserMocked: (userId: string) => boolean;
-  getUserMockeryDetails: (userId: string) => MockedUser | null;
-  isUserImmune: (userId: string) => boolean;
 }
 
 // Helper function to check if a string is a valid MockeryAction

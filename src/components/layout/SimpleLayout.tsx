@@ -13,9 +13,6 @@ interface SimpleLayoutProps {
   className?: string;
 }
 
-/**
- * A simplified layout component
- */
 const SimpleLayout: React.FC<SimpleLayoutProps> = ({
   children,
   title,

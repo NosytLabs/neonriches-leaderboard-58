@@ -4,7 +4,8 @@ import {
   AlertCircle, 
   Egg, 
   Crown, 
-  Lock
+  Lock,
+  Target
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
@@ -36,7 +37,7 @@ export const getMockeryActionIcon = (action: MockeryAction): LucideIcon => {
     'crown': Crown,
     'stocks': Lock
   };
-  return icons[action] || AlertCircle;
+  return icons[action] || Target;
 };
 
 // Get display name for a mockery action
