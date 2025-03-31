@@ -7,8 +7,8 @@ import { Copy, Check, UserPlus, Gift } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import { formatCurrency } from '@/utils/formatters';
-import { useNotificationSounds } from '@/hooks/sounds/use-notification-sounds';
-import { AudioOptions } from '@/types/sound-types';
+import useNotificationSounds from '@/hooks/sounds/use-notification-sounds';
+import { SoundOptions } from '@/types/sound-types';
 
 const ReferralCard = () => {
   const { user } = useAuth();

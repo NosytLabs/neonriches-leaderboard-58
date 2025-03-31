@@ -1,85 +1,89 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Slider } from '@/components/ui/slider';
+import { Volume2, VolumeX, Music } from 'lucide-react';
+import { Label } from '@/components/ui/label';
 import { useSoundsConfig } from '@/hooks/sounds/use-sounds-config';
-import { useSound } from '@/hooks/use-sound';
 
-const AudioSettings = () => {
-  const { config, toggleEnabled, toggleMute, setVolume, togglePremium } = useSoundsConfig();
-  const sound = useSound();
+const AudioSettings: React.FC = () => {
+  const { soundConfig, setVolume, toggleSounds, toggleMuted, togglePremium } = useSoundsConfig();
+  const [sliderValue, setSliderValue] = useState(soundConfig.volume * 100);
   
   const handleVolumeChange = (value: number[]) => {
-    setVolume(value[0]);
-    sound.playSound('click');
+    const newValue = value[0];
+    setSliderValue(newValue);
+    setVolume(newValue / 100);
   };
-  
+
   return (
-    <Card className="glass-morphism border-white/10">
+    <Card className="shadow-lg">
       <CardHeader>
-        <CardTitle>Sound Settings</CardTitle>
+        <CardTitle className="text-xl flex items-center">
+          <Volume2 className="mr-2 h-5 w-5" />
+          Audio Settings
+        </CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
-        <div className="flex items-center justify-between">
-          <div className="space-y-1">
-            <Label htmlFor="sound-effects">Sound Effects</Label>
-            <p className="text-sm text-white/70">Enable sound effects throughout the app</p>
+        <div className="space-y-4">
+          <div className="flex justify-between items-center">
+            <Label htmlFor="sound-enabled" className="flex items-center">
+              <Music className="mr-2 h-4 w-4" />
+              Enable Game Sounds
+            </Label>
+            <Switch 
+              id="sound-enabled" 
+              checked={soundConfig.enabled} 
+              onCheckedChange={toggleSounds}
+            />
           </div>
-          <Switch 
-            id="sound-effects" 
-            checked={config.enabled} 
-            onCheckedChange={toggleEnabled} 
-          />
-        </div>
-        
-        <div className="flex items-center justify-between">
-          <div className="space-y-1">
-            <Label htmlFor="sound-mute">Mute All Sounds</Label>
-            <p className="text-sm text-white/70">Temporarily disable all sounds</p>
+          
+          <div className="flex justify-between items-center">
+            <Label htmlFor="sound-muted" className="flex items-center">
+              <VolumeX className="mr-2 h-4 w-4" />
+              Mute All Sounds
+            </Label>
+            <Switch 
+              id="sound-muted" 
+              checked={soundConfig.muted} 
+              onCheckedChange={toggleMuted}
+              disabled={!soundConfig.enabled}
+            />
           </div>
-          <Switch 
-            id="sound-mute" 
-            checked={config.muted} 
-            onCheckedChange={toggleMute}
-            disabled={!config.enabled}
-          />
-        </div>
-        
-        <div className="space-y-3">
-          <div className="space-y-1">
-            <Label>Sound Volume</Label>
-            <p className="text-sm text-white/70">Adjust the volume of all sounds</p>
+          
+          <div className="space-y-2">
+            <Label htmlFor="volume-slider" className="flex items-center mb-1">
+              <Volume2 className="mr-2 h-4 w-4" />
+              Volume Control
+            </Label>
+            <div className="flex items-center gap-2">
+              <Slider
+                id="volume-slider"
+                value={[sliderValue]}
+                min={0}
+                max={100}
+                step={1}
+                onValueChange={handleVolumeChange}
+                disabled={!soundConfig.enabled || soundConfig.muted}
+                className="flex-1"
+              />
+              <span className="min-w-[40px] text-center text-sm">{Math.round(sliderValue)}%</span>
+            </div>
           </div>
-          <Slider
-            defaultValue={[config.volume]}
-            max={1}
-            min={0}
-            step={0.1}
-            onValueChange={handleVolumeChange}
-            disabled={!config.enabled || config.muted}
-            aria-label="Volume"
-          />
-          <div className="flex justify-between text-xs text-white/50">
-            <span>0%</span>
-            <span>50%</span>
-            <span>100%</span>
+          
+          <div className="flex justify-between items-center">
+            <Label htmlFor="premium-sounds" className="flex items-center">
+              <Music className="mr-2 h-4 w-4" />
+              Premium Sound Pack
+            </Label>
+            <Switch 
+              id="premium-sounds" 
+              checked={soundConfig.premium} 
+              onCheckedChange={togglePremium}
+              disabled={!soundConfig.enabled}
+            />
           </div>
-        </div>
-        
-        {/* Premium Sound Pack Option */}
-        <div className="flex items-center justify-between pt-4 border-t border-white/10">
-          <div className="space-y-1">
-            <Label htmlFor="premium-sounds">Premium Sound Pack</Label>
-            <p className="text-sm text-white/70">Use enhanced sound effects</p>
-          </div>
-          <Switch 
-            id="premium-sounds" 
-            checked={config.premium} 
-            onCheckedChange={togglePremium}
-            disabled={!config.enabled}
-          />
         </div>
       </CardContent>
     </Card>

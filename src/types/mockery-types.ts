@@ -1,7 +1,7 @@
 
 import { LucideIcon } from 'lucide-react';
 import { User, UserProfile } from './user';
-import { AudioOptions } from './sound-types';
+import { SoundOptions } from './sound-types';
 
 export type MockeryTier = 
   | 'basic' 
@@ -71,7 +71,7 @@ export type MockeryAction = ExtendedMockeryAction;
 // Simplified subset for shame actions
 export type ShameAction = ExtendedMockeryAction;
 
-export type NotificationSoundOptions = AudioOptions;
+export type NotificationSoundOptions = SoundOptions;
 
 export interface MockeryEvent {
   id: string;
@@ -84,6 +84,7 @@ export interface MockeryEvent {
   isActive: boolean;
   cost: number;
   tier?: MockeryTier;
+  type?: string;
 }
 
 export interface MockedUser {
@@ -107,7 +108,7 @@ export interface MockedUser {
 // Alias for backward compatibility
 export type MockUser = MockedUser;
 
-export interface ShameAction {
+export interface ShameActionType {
   type: MockeryAction;
   name: string;
   description: string;

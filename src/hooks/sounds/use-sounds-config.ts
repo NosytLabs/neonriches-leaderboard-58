@@ -1,5 +1,5 @@
 
-import { useState, useCallback } from 'react';
+import { useCallback } from 'react';
 import { useLocalStorage } from '@/hooks/use-local-storage';
 import { SoundConfig } from '@/types/sound-types';
 

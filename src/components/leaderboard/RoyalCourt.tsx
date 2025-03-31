@@ -4,7 +4,7 @@ import { Crown, Users } from 'lucide-react';
 import { TeamColor, UserTier, Gender } from '@/types/user';
 import RoyalCourtMember from './RoyalCourtMember';
 import useNotificationSounds from '@/hooks/sounds/use-notification-sounds';
-import { NotificationSoundOptions } from '@/types/sound-types';
+import { SoundOptions } from '@/types/sound-types';
 
 interface RoyalCourtProps {
   user: any;

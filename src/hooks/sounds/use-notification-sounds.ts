@@ -1,7 +1,7 @@
 
 import { useCallback } from 'react';
 import { useSound } from './use-sound';
-import { SoundOptions } from '@/types/sound-types';
+import { SoundOptions, SoundType } from '@/types/sound-types';
 
 /**
  * Hook for playing notification sounds in the application
@@ -55,8 +55,8 @@ const useNotificationSounds = () => {
   }, [sound]);
 
   // General playSound method that can be used for any sound type
-  const playSound = useCallback((type: string, options?: SoundOptions) => {
-    sound.playSound(type as any, options);
+  const playSound = useCallback((type: SoundType, options?: SoundOptions) => {
+    sound.playSound(type, options);
   }, [sound]);
 
   return {

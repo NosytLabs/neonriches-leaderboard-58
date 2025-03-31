@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Crown, Scroll } from 'lucide-react';
@@ -9,7 +8,8 @@ import LeaderboardItem from './leaderboard/LeaderboardItem';
 import ShameModal from './leaderboard/ShameModal';
 import LeaderboardActions from './leaderboard/LeaderboardActions';
 import { getShameActionPrice } from '@/components/events/utils/shameUtils';
-import { MockeryActionType } from '@/types/mockery';
+import { MockeryAction } from '@/types/mockery-types';
+import { TeamColor } from '@/types/user';
 
 const InteractiveLeaderboard: React.FC = () => {
   const { toast } = useToast();
@@ -18,7 +18,7 @@ const InteractiveLeaderboard: React.FC = () => {
   const [showShameModal, setShowShameModal] = useState<boolean>(false);
   const [selectedUser, setSelectedUser] = useState<LeaderboardUser | null>(null);
   const [isOnCooldown, setIsOnCooldown] = useState<boolean>(false);
-  const [shameType, setShameType] = useState<MockeryActionType>('tomatoes');
+  const [shameType, setShameType] = useState<MockeryAction>('tomatoes');
   const [modalType, setModalType] = useState<string | null>(null);
 
   useEffect(() => {
@@ -38,7 +38,7 @@ const InteractiveLeaderboard: React.FC = () => {
 
   const handleShameUser = (user: LeaderboardUser, type: string = 'tomatoes') => {
     setSelectedUser(user);
-    setShameType(type as MockeryActionType);
+    setShameType(type as MockeryAction);
     setShowShameModal(true);
     
     // Play subtle royal sound effect
@@ -136,13 +136,13 @@ const InteractiveLeaderboard: React.FC = () => {
           {modalType === 'shame' && selectedUser && (
             <ShameModal
               targetUser={{
-                userId: selectedUser.userId || selectedUser.id,
+                userId: selectedUser.id.toString(),
                 username: selectedUser.username,
-                profileImage: selectedUser.profileImage,
+                profileImage: selectedUser.profileImage || '',
                 totalSpent: selectedUser.totalSpent,
                 rank: selectedUser.rank,
-                team: selectedUser.team,
-                tier: selectedUser.tier,
+                team: (selectedUser.team as TeamColor) || 'red',
+                tier: selectedUser.tier || 'free',
                 spendStreak: selectedUser.spendStreak || 0
               }}
               shameType={shameType}

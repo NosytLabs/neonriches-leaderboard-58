@@ -3,20 +3,10 @@ import React from 'react';
 import { Volume2, VolumeX } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useSoundsConfig } from '@/hooks/sounds/use-sounds-config';
-import { useSound } from '@/hooks/use-sound';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 export function SoundToggle() {
-  const { config, toggleMute } = useSoundsConfig();
-  const sound = useSound();
-  
-  const handleToggle = () => {
-    toggleMute();
-    if (config.muted) {
-      // If currently muted, will be unmuted after toggle
-      sound.playSound('click');
-    }
-  };
+  const { soundConfig, toggleMuted } = useSoundsConfig();
   
   return (
     <TooltipProvider>
@@ -24,24 +14,24 @@ export function SoundToggle() {
         <TooltipTrigger asChild>
           <Button
             variant="ghost"
-            size="icon"
-            className="rounded-full"
-            onClick={handleToggle}
-            aria-label={config.muted ? "Unmute sounds" : "Mute sounds"}
+            size="sm"
+            className="h-8 w-8 p-0"
+            onClick={toggleMuted}
           >
-            {config.muted ? (
-              <VolumeX className="h-5 w-5" />
+            <span className="sr-only">
+              {soundConfig.muted ? 'Unmute' : 'Mute'} sounds
+            </span>
+            {soundConfig.muted ? (
+              <VolumeX className="h-4 w-4" />
             ) : (
-              <Volume2 className="h-5 w-5" />
+              <Volume2 className="h-4 w-4" />
             )}
           </Button>
         </TooltipTrigger>
         <TooltipContent>
-          {config.muted ? "Unmute sounds" : "Mute sounds"}
+          <p>{soundConfig.muted ? 'Unmute' : 'Mute'} sounds</p>
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>
   );
 }
-
-export default SoundToggle;

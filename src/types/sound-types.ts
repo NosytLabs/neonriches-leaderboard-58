@@ -22,7 +22,15 @@ export type SoundType =
   | 'boost'
   | 'reward'
   | 'rank_up'
-  | 'royal';
+  | 'royal'
+  | 'coinDrop';
+
+// Audio options for sounds
+export interface AudioOptions {
+  volume?: number;
+  loop?: boolean;
+  playbackRate?: number;
+}
 
 // Options for playing sounds
 export interface SoundOptions {
@@ -37,8 +45,8 @@ export interface SoundOptions {
 export interface SoundConfig {
   volume: number;
   enabled: boolean;
-  muted: boolean; // Add this property
-  premium: boolean; // Add this property
+  muted: boolean;
+  premium: boolean;
 }
 
 export interface UseSoundHook {
@@ -57,3 +65,6 @@ export interface PremiumSoundPackDetails {
   previewSound: SoundType;
   sounds: SoundType[];
 }
+
+// Define alias for backward compatibility
+export type NotificationSoundOptions = SoundOptions;

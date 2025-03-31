@@ -43,8 +43,8 @@ const ShameModalWrapper: React.FC<ShameModalWrapperProps> = ({
           tier: selectedUser.tier || 'free',
           spendStreak: selectedUser.spendStreak || 0
         }}
-        shameType={shameAction}
-        onConfirm={() => onConfirm(selectedUser.id, shameAction)}
+        shameType={shameAction as MockeryAction}
+        onConfirm={() => onConfirm(selectedUser.id, shameAction as MockeryAction)}
         onCancel={() => onOpenChange(false)}
         hasDiscount={false}
       />
