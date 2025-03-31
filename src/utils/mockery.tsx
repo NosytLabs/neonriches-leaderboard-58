@@ -65,7 +65,7 @@ export const getMockeryTier = (action: MockeryAction): MockeryTier => {
 
 // Get the CSS class for a mockery tier
 export const getMockeryTierColorClass = (tier: MockeryTier): string => {
-  const colors: Record<MockeryTier, string> = {
+  const colors: Record<string, string> = {
     'common': 'text-gray-400',
     'uncommon': 'text-green-400',
     'rare': 'text-blue-400',
@@ -83,7 +83,7 @@ export const getMockeryTierColorClass = (tier: MockeryTier): string => {
 
 // Get the rarity for a mockery tier
 export const getMockeryTierRarity = (tier: MockeryTier): string => {
-  const rarities: Record<MockeryTier, string> = {
+  const rarities: Record<string, string> = {
     'common': 'Common',
     'uncommon': 'Uncommon',
     'rare': 'Rare',
@@ -142,9 +142,9 @@ export const getShameActionMessage = (action: MockeryAction, username: string): 
   const messages: Record<string, string> = {
     'tomatoes': `You've thrown rotten tomatoes at ${username}!`,
     'eggs': `You've pelted ${username} with rotten eggs!`,
-    'crown': `You've placed a fool\'s crown on ${username}!`,
+    'crown': `You've placed a fool's crown on ${username}!`,
     'stocks': `You've locked ${username} in the public stocks!`,
-    'jester': `You've made ${username} wear the jester\'s hat!`,
+    'jester': `You've made ${username} wear the jester's hat!`,
     'protection': `You've bought royal protection for yourself!`,
     'shame': `You've publicly shamed ${username}!`
   };
@@ -174,3 +174,8 @@ export const renderMockeryIcon = (action: MockeryAction, size = 24): JSX.Element
   
   return <Icon className={`${color}`} size={size} />;
 };
+
+// Additional exports to match component imports
+export const getMockeryActionTitle = getMockeryName;
+export const getMockeryActionDescription = getMockeryDescription;
+export const getMockeryActionPrice = getShameActionPrice;

@@ -1,5 +1,5 @@
 
-// Core mockery actions - simplified definition
+// Core mockery actions - expanded definition
 export type MockeryAction = 
   | 'tomatoes'
   | 'eggs' 
@@ -7,15 +7,57 @@ export type MockeryAction =
   | 'stocks'
   | 'jester'
   | 'protection'
-  | 'shame';
+  | 'shame'
+  | 'target'
+  | 'putridEggs'
+  | 'silence'
+  | 'courtJester'
+  | 'smokeBomb'
+  | 'immune'
+  | 'dunce'
+  | 'glitterBomb'
+  | 'royalPie'
+  | 'jokeCrown'
+  | 'memeFrame'
+  | 'roast'
+  | 'ridicule'
+  | 'humiliate'
+  | 'expose'
+  | 'mock'
+  | 'taunt'
+  | 'guillotine'
+  | 'dungeons'
+  | 'removal'
+  | 'troll'
+  | 'peasant'
+  | 'rat'
+  | 'ghost'
+  | 'skeleton'
+  | 'zombie'
+  | 'witch'
+  | 'monster'
+  | 'dragon'
+  | 'jest'
+  | 'challenge'
+  | 'defeat'
+  | 'laughing';
 
-// Mockery tiers - simplified definition
+// Export ShameAction as alias of MockeryAction to fix imports
+export type ShameAction = MockeryAction;
+export type ExtendedMockeryAction = MockeryAction;
+
+// Mockery tiers - expanded definition
 export type MockeryTier = 
   | 'common'
   | 'uncommon'
   | 'rare'
   | 'epic'
-  | 'legendary';
+  | 'legendary'
+  | 'basic'
+  | 'premium'
+  | 'royal'
+  | 'silver'
+  | 'bronze';
 
 // Team colors
 export type TeamColor = 
@@ -39,7 +81,7 @@ export interface MockeryEvent {
   isActive: boolean;
   cost?: number;
   tier?: MockeryTier;
-  timestamp?: string;
+  timestamp: string;
 }
 
 // Represents a user who has been mocked
@@ -66,10 +108,20 @@ export interface MockeryEffectData {
 
 // Helper function to check if a string is a valid MockeryAction
 export const isValidMockeryAction = (action: string): action is MockeryAction => {
-  return ['tomatoes', 'eggs', 'crown', 'stocks', 'jester', 'protection', 'shame'].includes(action as MockeryAction);
+  return [
+    'tomatoes', 'eggs', 'crown', 'stocks', 'jester', 'protection', 'shame',
+    'target', 'putridEggs', 'silence', 'courtJester', 'smokeBomb', 'immune',
+    'dunce', 'glitterBomb', 'royalPie', 'jokeCrown', 'memeFrame', 'roast',
+    'ridicule', 'humiliate', 'expose', 'mock', 'taunt', 'guillotine', 'dungeons',
+    'removal', 'troll', 'peasant', 'rat', 'ghost', 'skeleton', 'zombie', 'witch',
+    'monster', 'dragon', 'jest', 'challenge', 'defeat', 'laughing'
+  ].includes(action as MockeryAction);
 };
 
 // Helper function to check if a string is a valid MockeryTier
 export const isValidMockeryTier = (tier: string): tier is MockeryTier => {
-  return ['common', 'uncommon', 'rare', 'epic', 'legendary'].includes(tier as MockeryTier);
+  return [
+    'common', 'uncommon', 'rare', 'epic', 'legendary', 
+    'basic', 'premium', 'royal', 'silver', 'bronze'
+  ].includes(tier as MockeryTier);
 };
