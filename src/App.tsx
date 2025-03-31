@@ -21,8 +21,7 @@ import Profile from '@/pages/Profile';
 import Wallet from '@/pages/Wallet';
 import Settings from '@/pages/Settings';
 import Events from '@/pages/Events';
-import Mockery from '@/pages/Mockery';
-import StatusThroughHistory from '@/pages/StatusThroughHistory';
+import StatusCenter from '@/pages/StatusCenter';
 
 function App() {
   return (
@@ -42,8 +41,7 @@ function App() {
               <Route path="/about" element={<About />} />
               <Route path="/privacy" element={<Privacy />} />
               <Route path="/terms" element={<Terms />} />
-              <Route path="/mockery" element={<Mockery />} />
-              <Route path="/status-through-history" element={<StatusThroughHistory />} />
+              <Route path="/status" element={<StatusCenter />} />
               
               {/* Protected User Pages */}
               <Route 
@@ -93,6 +91,10 @@ function App() {
               
               {/* Feature Pages */}
               <Route path="/events" element={<Events />} />
+              
+              {/* Backwards compatibility redirects */}
+              <Route path="/mockery" element={<StatusCenter />} />
+              <Route path="/status-through-history" element={<StatusCenter />} />
               
               {/* Catch-all for 404 */}
               <Route path="*" element={<NotFound />} />
