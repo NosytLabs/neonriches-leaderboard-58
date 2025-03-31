@@ -312,3 +312,24 @@ export function renderMockeryIcon(action: MockeryAction, size = 16, className = 
     className: `${colorClass} ${className}`
   };
 }
+
+/**
+ * Get mockery effect function for UI components
+ */
+export function getMockeryActionEffect(action: MockeryAction): string {
+  const effects: Record<MockeryAction, string> = {
+    tomatoes: 'tomato-splatter',
+    eggs: 'egg-splatter',
+    crown: 'mock-crown',
+    stocks: 'stocks-prison',
+    jester: 'jester-hat',
+    putridEggs: 'putrid-stench',
+    silence: 'silenced-mark',
+    courtJester: 'court-jester-outfit',
+    smokeBomb: 'smoke-effect',
+    shame: 'shame-mark',
+    protection: 'shield-aura'
+  };
+  
+  return effects[action] || 'default-effect';
+}
