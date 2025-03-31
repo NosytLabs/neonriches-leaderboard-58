@@ -1,13 +1,13 @@
 
 import React from 'react';
-import { ShameAction } from '@/types/mockery';
+import { ShameAction, MockeryAction } from '@/types/mockery';
 import { getShameActionIcon } from './shameUtils';
 
 export const ShameIcon: React.FC<{ action: ShameAction; size?: 'sm' | 'md' | 'lg' }> = ({ 
   action, 
   size = 'md' 
 }) => {
-  const icon = getShameActionIcon(action);
+  const IconComponent = getShameActionIcon(action as MockeryAction);
   
   const sizeClass = {
     sm: 'text-lg',
@@ -17,7 +17,7 @@ export const ShameIcon: React.FC<{ action: ShameAction; size?: 'sm' | 'md' | 'lg
   
   return (
     <span className={sizeClass[size]}>
-      {icon}
+      {IconComponent && <IconComponent />}
     </span>
   );
 };

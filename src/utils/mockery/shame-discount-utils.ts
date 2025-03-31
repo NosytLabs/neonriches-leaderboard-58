@@ -1,77 +1,61 @@
 
 import { MockeryAction } from '@/types/mockery';
-import { getMockeryActionPrice } from './mockery-costs';
-
-// Current active discounted action, changes weekly
-// Could be stored in a database or configuration in a real app
-const currentDiscountedAction: MockeryAction = 'eggs';
-const discountPercentage = 0.5; // 50% discount
 
 /**
- * Check if a mockery action is currently discounted
+ * Checks if there's a weekly discount available
  */
-export const hasWeeklyDiscount = (action: MockeryAction): boolean => {
-  return action === currentDiscountedAction;
+export const hasWeeklyDiscount = (): boolean => {
+  // Weekly discounts are randomly determined based on day of week
+  const day = new Date().getDay();
+  return day === 3 || day === 6; // Wed or Sat
 };
 
 /**
- * Get the currently discounted action for this week
+ * Get the weekly discounted action
  */
 export const getWeeklyDiscountedAction = (): MockeryAction => {
-  return currentDiscountedAction;
+  // Rotate weekly discounted actions
+  const discountActions: MockeryAction[] = ['tomatoes', 'eggs', 'stocks'];
+  const weekNumber = Math.floor(Date.now() / (7 * 24 * 60 * 60 * 1000));
+  return discountActions[weekNumber % discountActions.length];
 };
 
 /**
- * Get the discounted price for a mockery action
+ * Get the discounted price for a shame action
  */
 export const getDiscountedShamePrice = (action: MockeryAction): number => {
-  if (!hasWeeklyDiscount(action)) {
-    return getMockeryActionPrice(action);
-  }
-  
-  const originalPrice = getMockeryActionPrice(action);
-  return Math.round((originalPrice * (1 - discountPercentage)) * 100) / 100;
+  const regularPrice = getShameActionPrice(action);
+  return Math.floor(regularPrice * 0.7); // 30% discount
 };
 
 /**
- * Get the shame action price (alias for getMockeryActionPrice)
+ * Get the price for a shame action
  */
 export const getShameActionPrice = (action: MockeryAction): number => {
-  return getMockeryActionPrice(action);
-};
-
-// Generate messages for different shame actions
-export const getShameActionMessage = (action: MockeryAction, username: string): string => {
-  const messages: Record<MockeryAction, string> = {
-    tomatoes: `${username} has been pelted with rotten tomatoes!`,
-    eggs: `${username} has been hit with rotten eggs!`,
-    shame: `${username} has been publicly shamed!`,
-    dungeons: `${username} has been thrown in the dungeons!`,
-    immune: `${username} has gained immunity from mockery!`,
-    crown: `${username} has been crowned with the crown of mockery!`,
-    stocks: `${username} has been placed in the village stocks!`,
-    dunce: `${username} has been forced to wear the dunce cap!`,
-    jester: `${username} has been appointed the court jester!`,
-    // 'fool': `${username} has been labeled the village fool!`,
-    troll: `${username} has been marked as a digital troll!`,
-    peasant: `${username} has been demoted to peasant status!`,
-    rat: `${username} has been marked with the plague rat symbol!`,
-    ghost: `${username} now appears as a ghost in the digital realm!`,
-    skeleton: `${username} has been turned into a skeleton!`,
-    zombie: `${username} has been infected with the digital plague!`,
-    witch: `${username} is now subject to a witch trial!`,
-    monster: `${username} has been labeled a digital monster!`,
-    demon: `${username} has been marked with demonic symbols!`,
-    dragon: `${username} is now the target of a dragon's wrath!`,
-    king: `${username} has been declared a false king!`,
-    queen: `${username} has been declared a false queen!`,
-    knight: `${username} has been branded a tarnished knight!`,
-    bishop: `${username} has been marked as a fallen bishop!`,
-    rook: `${username} has been labeled a damaged rook!`,
-    pawn: `${username} has been demoted to a mere pawn!`,
-    target: `${username} is now the royal target!`,
-    challenge: `${username} has been challenged to a gauntlet of digital trials!`
+  const prices: Record<string, number> = {
+    tomatoes: 10,
+    eggs: 15,
+    shame: 25,
+    stocks: 20,
+    dunce: 25,
+    jester: 30
   };
   
-  return messages[action] || `${username} has been mocked!`;
+  return prices[action] || 25; // Default price
+};
+
+/**
+ * Get shame action message
+ */
+export const getShameActionMessage = (action: MockeryAction, username: string): string => {
+  const messages: Record<string, string> = {
+    tomatoes: `${username} is being pelted with rotten tomatoes!`,
+    eggs: `${username} is having rotten eggs thrown at them!`,
+    shame: `${username} is being shamed in the town square!`,
+    stocks: `${username} has been placed in the public stocks!`,
+    dunce: `${username} has been forced to wear the dunce cap!`,
+    jester: `${username} has been appointed as the court jester!`
+  };
+  
+  return messages[action] || `${username} is being mocked!`;
 };

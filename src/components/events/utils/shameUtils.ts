@@ -1,7 +1,8 @@
 
 import { 
   MockeryAction, 
-  MockeryTier 
+  MockeryTier,
+  ShameAction
 } from '@/types/mockery';
 import { 
   hasWeeklyDiscount as checkWeeklyDiscount,
@@ -9,13 +10,13 @@ import {
   getDiscountedShamePrice as getDiscountPrice,
   getShameActionPrice as getActionPrice,
   getShameActionMessage as getActionMessage,
-  getMockeryActionTitle as getMockeryName,
-  getMockeryActionDescription as getMockeryDescription,
+  getMockeryName,
+  getMockeryDescription,
   getMockeryActionIcon as getMockeryIcon,
   getMockeryTier as getActionTier,
   getMockeryTierColorClass as getTierColorClass,
   getActiveMockeryClass as getActiveClass
-} from '@/utils/mockery';
+} from '@/utils/shameUtils';
 
 export const getShameActionIcon = getMockeryIcon;
 export const getShameActionTitle = getMockeryName;
@@ -30,17 +31,14 @@ export const getMockeryTierColorClass = getTierColorClass;
 export const getActiveMockeryClass = getActiveClass;
 
 // Define available mockery actions
-export const availableShameActions: MockeryAction[] = [
+export const availableShameActions: ShameAction[] = [
   'tomatoes',
   'eggs',
-  'shame',
-  'stocks',
-  'dunce',
-  'jester'
+  'stocks'
 ];
 
 // Weekly discounted items rotation
-export const weeklyDiscountedActions: MockeryAction[] = [
+export const weeklyDiscountedActions: ShameAction[] = [
   'tomatoes',
   'eggs',
   'stocks'

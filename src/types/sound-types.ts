@@ -26,13 +26,22 @@ export type SoundType =
   | 'click'
   | 'trumpets'
   | 'coinDrop'
-  | 'royal';
+  | 'royal'
+  | 'coin'
+  | 'reward'
+  | 'royalAnnouncement'
+  | 'trumpet'
+  | 'seal'
+  | 'medallion';
 
-export interface NotificationSoundOptions {
+export interface AudioOptions {
   volume?: number;
+  interrupt?: boolean;
   loop?: boolean;
   delay?: number;
 }
+
+export type NotificationSoundOptions = AudioOptions;
 
 export interface AudioLoaderReturn {
   audio: Record<SoundType, HTMLAudioElement>;
@@ -46,20 +55,16 @@ export interface AudioLoaderReturn {
 }
 
 export interface UseSoundReturn {
-  play: (options?: { volume?: number; interrupt?: boolean }) => void;
-  stop: () => void;
-  isPlaying: boolean;
-  duration: number;
-}
-
-export interface UseSoundOptions {
-  volume?: number;
-  interrupt?: boolean;
+  play: (sound: SoundType, options?: AudioOptions) => void;
+  stop: (sound: SoundType) => void;
+  stopAll: () => void;
 }
 
 export interface PremiumSoundPackDetails {
+  id?: string;
   name: string;
   description: string;
   price: number;
   sounds: SoundType[];
+  previewSound?: SoundType;
 }

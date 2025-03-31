@@ -15,7 +15,6 @@ export type MockeryAction =
   | 'stocks' 
   | 'dunce' 
   | 'jester' 
-  // | 'fool' // Removed as it's causing issues
   | 'troll' 
   | 'peasant' 
   | 'rat' 
@@ -33,7 +32,8 @@ export type MockeryAction =
   | 'rook' 
   | 'pawn' 
   | 'target' 
-  | 'challenge';
+  | 'challenge'
+  | 'protection';
 
 export type ShameAction = 'tomatoes' | 'eggs' | 'stocks';
 
@@ -43,10 +43,11 @@ export interface MockeryEvent {
   targetName?: string;
   appliedBy: string;
   action: MockeryAction;
-  timestamp: number;
-  duration: number;
+  timestamp: string;
+  duration?: number;
+  expiresAt: string;
   isActive: boolean;
-  expiresAt: number;
+  cost?: number;
 }
 
 export interface MockedUser {
@@ -54,7 +55,7 @@ export interface MockedUser {
   userId?: string;
   username: string;
   displayName?: string;
-  profileImage: string;
+  profileImage?: string;
   mockedReason?: string;
   mockedTimestamp?: string;
   mockedBy?: string;
@@ -63,9 +64,10 @@ export interface MockedUser {
   lastMocked?: string;
   team?: string;
   tier?: string;
+  mockedUntil: string;
 }
 
-export type MockeryTier = 'basic' | 'premium' | 'royal' | 'silver' | 'legendary';
+export type MockeryTier = 'basic' | 'premium' | 'royal' | 'silver' | 'legendary' | 'epic' | 'rare';
 
 // Add a consistent type alias to support legacy code
 export type MockeryActionType = MockeryAction;
