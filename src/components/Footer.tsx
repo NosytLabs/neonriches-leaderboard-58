@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { GitHub, Twitter, Mail } from 'lucide-react';
-import { Shell } from './Shell';
+import { Github, Twitter, Mail } from 'lucide-react';
+import Shell from './Shell';
 
 const Footer = () => {
   return (
@@ -49,7 +49,7 @@ const Footer = () => {
               <h4 className="text-lg font-semibold mb-4">Connect</h4>
               <div className="flex items-center space-x-4">
                 <a href="https://github.com/example" target="_blank" rel="noopener noreferrer" className="text-white/70 hover:text-white transition-colors">
-                  <GitHub className="h-5 w-5" />
+                  <Github className="h-5 w-5" />
                 </a>
                 <a href="https://twitter.com/example" target="_blank" rel="noopener noreferrer" className="text-white/70 hover:text-white transition-colors">
                   <Twitter className="h-5 w-5" />
