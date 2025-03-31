@@ -1,4 +1,3 @@
-
 /**
  * Centralized formatting utility functions
  */
