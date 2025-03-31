@@ -1,6 +1,6 @@
 
 import { useState, useCallback } from 'react';
-import { MockeryAction } from '@/types/mockery-types';
+import { MockeryAction, MockeryEvent } from '@/types/mockery-types';
 
 // This is a mock implementation of the useShameEffect hook
 // In a real application, this would integrate with a backend
@@ -13,7 +13,7 @@ const useShameEffect = () => {
     return shameCount[userId] || 0;
   }, [shameCount]);
   
-  const getActiveMockery = useCallback((userId: number) => {
+  const getActiveMockery = useCallback((userId: number): MockeryEvent | null => {
     if (!shameEffects[userId]) return null;
     
     return {
@@ -24,7 +24,8 @@ const useShameEffect = () => {
       appliedAt: new Date().toISOString(),
       expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
       duration: 24,
-      isActive: true
+      isActive: true,
+      timestamp: new Date().toISOString()
     };
   }, [shameEffects]);
   

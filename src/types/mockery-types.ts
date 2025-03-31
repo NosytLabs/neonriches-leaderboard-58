@@ -28,7 +28,19 @@ export type MockeryAction =
   | 'defeat'
   | 'taunt'
   | 'target'
-  | 'immune';
+  | 'immune'
+  | 'royalPie'
+  | 'jokeCrown'
+  | 'memeFrame'
+  | 'roast'
+  | 'ridicule'
+  | 'humiliate'
+  | 'expose'
+  | 'mock'
+  | 'guillotine'
+  | 'dungeons'
+  | 'removal'
+  | 'laughing';
 
 // Mockery tiers - unified definition
 export type MockeryTier = 
@@ -71,6 +83,7 @@ export interface MockeryEvent {
   isActive: boolean;
   cost?: number;
   tier?: MockeryTier;
+  timestamp?: string;
 }
 
 // Represents a user who has been mocked
@@ -102,7 +115,9 @@ export const isValidMockeryAction = (action: string): action is MockeryAction =>
     'putridEggs', 'silence', 'courtJester', 'smokeBomb', 'glitterBomb',
     'dunce', 'troll', 'peasant', 'rat', 'ghost', 'skeleton', 'zombie',
     'witch', 'monster', 'dragon', 'jest', 'challenge', 'defeat', 'taunt',
-    'target', 'immune'
+    'target', 'immune', 'royalPie', 'jokeCrown', 'memeFrame', 'roast', 
+    'ridicule', 'humiliate', 'expose', 'mock', 'guillotine', 'dungeons',
+    'removal', 'laughing'
   ].includes(action as MockeryAction);
 };
 

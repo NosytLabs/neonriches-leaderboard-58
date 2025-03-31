@@ -1,112 +1,114 @@
+
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { Crown, DollarSign, TrendingUp, TrendingDown } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { formatCurrency } from '@/utils/formatters';
-import { UserProfile } from '@/types/user-types';
-import { useNavigate } from 'react-router-dom';
-import { Trophy, CrownIcon } from 'lucide-react';
-import { UserTier, TeamType } from '@/types/user-types';
+import { UserProfile } from '@/types/user';
+import { getTeamColor } from '@/utils/teamUtils';
+import { TeamColor } from '@/types/mockery-types';
 
-const TopSpenderShowcase: React.FC = () => {
-  const navigate = useNavigate();
-  
-  // Simplified top spenders
-  const topSpenders = [
-    {
-      id: '1',
-      username: 'ThroneMaster',
-      displayName: 'Throne Master',
-      profileImage: '/images/avatars/top1.jpg',
-      rank: 1,
-      tier: 'royal' as UserTier,
-      team: 'gold' as TeamType,
-      totalSpent: 25000,
-      achievements: ['Royal Patron', 'Crown Holder', 'Fortune Throne']
-    },
-    {
-      id: '2',
-      username: 'GoldBaronX',
-      displayName: 'Gold Baron',
-      profileImage: '/images/avatars/top2.jpg',
-      rank: 2,
-      tier: 'platinum' as UserTier,
-      team: 'blue' as TeamType,
-      totalSpent: 18750, 
-      achievements: ['Platinum Patron', 'Elite Donor']
-    },
-    {
-      id: '3',
-      username: 'DigitalNoble',
-      displayName: 'Digital Noble',
-      profileImage: '/images/avatars/top3.jpg',
-      rank: 3,
-      tier: 'platinum' as UserTier,
-      team: 'red' as TeamType,
-      totalSpent: 12500,
-      achievements: ['Gold Patron', 'Legacy Builder']
+// Mock data for top spenders
+const mockTopSpenders = [
+  {
+    id: '1',
+    username: 'RoyalWhale',
+    displayName: 'Lord Spendthrift',
+    profileImage: '/placeholder.svg',
+    amount: 12500.0,
+    rank: 1,
+    team: 'gold' as TeamColor,
+    isVIP: true
+  },
+  {
+    id: '2',
+    username: 'EliteDonor',
+    displayName: 'Sir Moneybags',
+    profileImage: '/placeholder.svg',
+    amount: 8750.0,
+    rank: 2,
+    team: 'purple' as TeamColor,
+    isVIP: true
+  },
+  {
+    id: '3',
+    username: 'SpendingTitan',
+    displayName: 'Duke of Dollars',
+    profileImage: '/placeholder.svg',
+    amount: 6200.0,
+    rank: 3,
+    team: 'red' as TeamColor,
+    isVIP: false
+  }
+];
+
+interface TopSpenderShowcaseProps {
+  topUsers?: UserProfile[];
+  loading?: boolean;
+  onUserClick?: (userId: string) => void;
+}
+
+const TopSpenderShowcase: React.FC<TopSpenderShowcaseProps> = ({
+  topUsers = mockTopSpenders,
+  loading = false,
+  onUserClick
+}) => {
+  const handleUserClick = (userId: string) => {
+    if (onUserClick) {
+      onUserClick(userId);
     }
-  ];
-  
+  };
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-      {topSpenders.map((spender) => (
-        <Card key={spender.id} className="bg-black/30 border-white/10 overflow-hidden">
-          <CardHeader>
-            <CardTitle className={`h-1 ${spender.rank === 1 ? 'bg-yellow-500' : spender.rank === 2 ? 'bg-gray-400' : 'bg-amber-700'}`}></CardTitle>
-          </CardHeader>
-          <CardContent className="p-4">
-            <div className="flex justify-between items-start mb-4">
-              <div className="flex items-center">
+    <Card className="glass-morphism border-royal-gold/20">
+      <CardHeader>
+        <CardTitle className="flex items-center justify-between">
+          <span>Top Spenders</span>
+          <Badge variant="outline" className="text-royal-gold">Royal Court</Badge>
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-4">
+          {topUsers.map((user, index) => (
+            <div key={user.id} className="flex items-center justify-between p-2 rounded-lg bg-black/20 hover:bg-black/30 transition-colors">
+              <div className="flex items-center space-x-3">
+                <div className="font-bold text-lg w-6 text-center">{index + 1}</div>
                 <div className="relative">
-                  <Avatar className="h-14 w-14 border-2 border-white/20">
-                    <AvatarImage src={spender.profileImage} alt={spender.username} />
-                    <AvatarFallback>{spender.username[0].toUpperCase()}</AvatarFallback>
-                  </Avatar>
-                  <div className="absolute -top-1 -right-1">
-                    <Badge variant="outline" className="bg-black border-none flex items-center h-6 px-2">
-                      <Trophy className={`h-3 w-3 mr-1 ${spender.rank === 1 ? 'text-yellow-500' : spender.rank === 2 ? 'text-gray-400' : 'text-amber-700'}`} />
-                      <span className="text-xs font-bold">#{spender.rank}</span>
-                    </Badge>
+                  <img
+                    src={user.profileImage || '/placeholder.svg'}
+                    alt={user.username}
+                    className="w-10 h-10 rounded-full object-cover"
+                  />
+                  {user.team && (
+                    <div className={`absolute -bottom-1 -right-1 w-3 h-3 rounded-full ${getTeamColor(user.team).replace('text-', 'bg-')}`} />
+                  )}
+                </div>
+                <div>
+                  <div className="font-medium">{user.displayName || user.username}</div>
+                  <div className="text-sm text-white/70">
+                    {user.isVIP && <Badge variant="outline" className="text-xs mr-1 bg-royal-gold/10">VIP</Badge>}
+                    <span className="text-xs">{formatCurrency(user.amount)}</span>
                   </div>
                 </div>
-                <div className="ml-3">
-                  <h3 className="font-bold text-sm">{spender.displayName}</h3>
-                  <p className="text-xs text-white/60">@{spender.username}</p>
-                </div>
               </div>
-              <UserBadge type="tier" value={spender.tier} size="sm" />
-            </div>
-            
-            <div className="mb-4">
-              <div className="text-xs text-white/60 mb-1">Total Spent</div>
-              <div className="text-lg font-bold">${formatCurrency(spender.totalSpent)}</div>
-            </div>
-            
-            <div className="grid grid-cols-2 gap-2">
               <Button
-                variant="outline"
+                variant="ghost"
                 size="sm"
-                className="w-full"
-                onClick={() => navigate(`/profile/${spender.username}`)}
+                onClick={() => handleUserClick(user.id)}
+                className="text-royal-gold hover:text-royal-gold/80"
               >
-                View Profile
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                className="w-full bg-black/30 hover:bg-black/50"
-                onClick={() => navigate(`/leaderboard?highlight=${spender.id}`)}
-              >
-                <CrownIcon className="h-3 w-3 mr-1" />
-                Leaderboard
+                View
               </Button>
             </div>
-          </CardContent>
-        </Card>
-      ))}
-    </div>
+          ))}
+          <div className="flex justify-center mt-4">
+            <Button variant="outline" className="w-full">
+              View Full Leaderboard
+            </Button>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
   );
 };
 

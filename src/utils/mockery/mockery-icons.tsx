@@ -70,4 +70,8 @@ export const getMockeryActionIconColor = (action: MockeryAction): string => {
   return colors[action] || colors['default'];
 };
 
+// Export getMockeryIcon for compatibility with usages in other files
+export const getMockeryIcon = getMockeryActionIcon;
+export const getMockeryIconColor = getMockeryActionIconColor;
+
 export type { LucideIcon };

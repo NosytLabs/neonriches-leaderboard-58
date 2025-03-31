@@ -8,6 +8,7 @@ import MockeryTabs from './components/MockeryTabs';
 import MockeryHeader from './components/MockeryHeader';
 import useMockeryActions from './hooks/useMockeryActions';
 import useMockedUsers from './hooks/useMockedUsers';
+import { MockeryAction } from '@/types/mockery-types';
 
 const RoyalMockeryFestival = () => {
   const { user } = useAuth();
@@ -43,7 +44,7 @@ const RoyalMockeryFestival = () => {
   
   // Create a non-async wrapper to satisfy the expected function signature
   const onMockery = (username: string, action: string, amount: number) => {
-    handleMockery(username, action, amount).catch(error => {
+    handleMockery(username, action as MockeryAction, amount).catch(error => {
       console.error("Error in mockery action:", error);
       return false;
     });
