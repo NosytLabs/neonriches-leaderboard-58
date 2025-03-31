@@ -1,6 +1,11 @@
 
 // Re-export shame functions from the mockery utilities
 import { 
+  hasWeeklyDiscount,
+  getWeeklyDiscountedAction,
+  getDiscountedShamePrice,
+  getShameActionPrice,
+  getShameActionMessage,
   getMockeryName,
   getMockeryDescription,
   getMockeryCost,
@@ -8,15 +13,7 @@ import {
   getMockeryTierColorClass,
   getMockeryActionIcon,
   getActiveMockeryClass,
-  getMockeryActionDescription,
-  getMockeryActionTitle,
-  getMockeryActionPrice,
-  // These are now properly imported from mockery/index.ts
-  hasWeeklyDiscount,
-  getWeeklyDiscountedAction,
-  getDiscountedShamePrice,
-  getShameActionPrice,
-  getShameActionMessage
+  getMockeryActionDescription
 } from '@/utils/mockery';
 
 import { MockeryAction, ShameAction } from '@/types/mockery';

@@ -13,5 +13,4 @@ const useNotificationSound = () => {
   return { playSound };
 };
 
-// Re-export the unified sound hook for backward compatibility
 export default useNotificationSound;
