@@ -1,93 +1,64 @@
 
-import { UserProfile, UserTier, TeamColor } from '@/types/user';
+import { TeamType, UserTier } from './user';
+
+export type MockeryTier = 'standard' | 'premium' | 'royal';
 
 export type MockeryAction = 
-  | 'tomatoes'
-  | 'eggs'
-  | 'crown'
-  | 'jester'
-  | 'stocks'    // Adding stocks as part of MockeryAction
-  | 'shame'     // Adding shame as part of MockeryAction
-  | 'protection'; // Adding protection as part of MockeryAction
-
-export type ExtendedMockeryAction = MockeryAction | string;
-
-export type MockeryTier = 
-  | 'common'
-  | 'uncommon'
-  | 'rare'
-  | 'epic'
-  | 'legendary';
-
-export type ShameAction = MockeryAction; // All mockery actions can be used for shaming
-
-export interface MockeryEvent {
-  id: string;
-  action: MockeryAction;
-  targetId: string;
-  appliedBy: string;
-  appliedAt: string;
-  expiresAt: string;
-  duration?: number;
-  isActive: boolean;
-  cost?: number;
-  tier?: MockeryTier;
-  type?: string;
-  metadata?: Record<string, any>;
-}
+  | 'tomatoes' 
+  | 'eggs' 
+  | 'crown' 
+  | 'jester' 
+  | 'stocks'
+  | 'protection';
 
 export interface MockedUser {
   id: string;
   username: string;
-  action: MockeryAction;
-  appliedAt: string;
-  appliedBy: string | { id: string; username: string; };
-  expiresAt: string;
-  userId?: string;
   displayName?: string;
   profileImage?: string;
-  mockedReason?: string;
-  mockedTimestamp?: string;
-  mockedUntil?: string;
-  mockedBy?: string;
-  mockedTier?: string;
+  userId: string;
+  tier: UserTier;
+  team: TeamType;
+  action: MockeryAction;
+  appliedBy: string;
+  appliedAt: string;
+  expiresAt: string;
+  reason?: string;
   mockeryCount?: number;
-  lastMocked?: string;
-  team?: string;
-  tier?: string;
-  mockedAction?: MockeryAction;
+}
+
+export interface MockeryEvent {
+  id: string;
+  targetId: string;
+  actorId: string;
+  action: MockeryAction;
+  appliedAt: string;
+  expiresAt: string;
+  tier: MockeryTier;
+  cost: number;
 }
 
 export interface ShameEffectData {
   username: string;
   action: MockeryAction;
-  tier?: MockeryTier;
-  duration?: number;
   isActive: boolean;
   timestamp?: string;
-  type?: ShameAction;
 }
 
-export interface MockeryEffectData {
-  username: string;
-  action: MockeryAction;
-}
-
-export interface NotificationSoundOptions {
+export type NotificationSoundOptions = {
   volume?: number;
-  pitch?: number;
   loop?: boolean;
-  playbackRate?: number;
-  delay?: number;
+  rate?: number;
 }
 
-export interface UseMockery {
-  mockUsers: MockedUser[];
-  isUserProtected: (username: string) => boolean;
-  protectUser: (username: string) => Promise<boolean>;
-  isUserShamed: (username: string) => boolean;
-  mockUser: (targetId: string, action: MockeryAction) => Promise<boolean>;
-  getUserMockeryCount: (username: string) => number;
-  getUserMockedOthersCount: (username: string) => number;
-  getActiveMockery: (username: string) => MockeryAction | null;
-}
+// Helper function to check if a string is a valid MockeryAction
+export const isValidMockeryAction = (action: string): action is MockeryAction => {
+  const validActions: MockeryAction[] = ['tomatoes', 'eggs', 'crown', 'jester', 'stocks', 'protection'];
+  return validActions.includes(action as MockeryAction);
+};
+
+// Helper function to check if a string is a valid MockeryTier
+export const isValidMockeryTier = (tier: string): tier is MockeryTier => {
+  const validTiers: MockeryTier[] = ['standard', 'premium', 'royal'];
+  return validTiers.includes(tier as MockeryTier);
+};

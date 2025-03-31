@@ -44,7 +44,6 @@ function App() {
               <Route path="/terms" element={<Terms />} />
               <Route path="/mockery" element={<Mockery />} />
               <Route path="/status-through-history" element={<StatusThroughHistory />} />
-              <Route path="/teams" element={<Leaderboard />} />
               
               {/* Protected User Pages */}
               <Route 
