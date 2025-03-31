@@ -8,7 +8,6 @@ import {
   Shield, 
   ThumbsDown, 
   Target,
-  LucideIcon
 } from 'lucide-react';
 import { FC } from 'react';
 

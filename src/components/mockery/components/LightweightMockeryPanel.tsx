@@ -8,6 +8,7 @@ import { MockeryAction } from '@/types/mockery';
 import { getMockeryName, getMockeryDescription, getMockeryCost } from '@/utils/mockery';
 import { useToast } from '@/hooks/use-toast';
 
+// Simplified to 4 core mockery actions
 const MOCKERY_ACTIONS: MockeryAction[] = ['tomatoes', 'eggs', 'crown', 'stocks'];
 
 const LightweightMockeryPanel = () => {
@@ -33,7 +34,7 @@ const LightweightMockeryPanel = () => {
   };
   
   return (
-    <Card className="glass-morphism border-white/10">
+    <Card className="border-white/10">
       <CardHeader>
         <CardTitle className="flex items-center">
           <Target className="mr-2 h-5 w-5 text-royal-crimson" />
@@ -50,7 +51,6 @@ const LightweightMockeryPanel = () => {
                 onChange={(e) => setUsername(e.target.value)}
                 placeholder="Enter username"
                 className="bg-background/50"
-                prefix={<User className="h-4 w-4 text-muted-foreground" />}
               />
             </div>
           </div>
@@ -66,11 +66,6 @@ const LightweightMockeryPanel = () => {
                   className="justify-start text-left h-auto py-2"
                   onClick={() => setSelectedAction(action)}
                 >
-                  {action === 'crown' ? (
-                    <Crown className="mr-2 h-4 w-4" />
-                  ) : (
-                    <Target className="mr-2 h-4 w-4" />
-                  )}
                   <div className="flex flex-col items-start">
                     <span className="text-sm font-medium">{getMockeryName(action)}</span>
                     <span className="text-xs text-muted-foreground">${getMockeryCost(action)}</span>

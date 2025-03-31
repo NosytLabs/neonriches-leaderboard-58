@@ -2,14 +2,24 @@
 import React, { useState } from 'react';
 import SimpleLayout from '@/components/layout/SimpleLayout';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Crown, History, Target } from 'lucide-react';
+import { Crown, History, Target, Info } from 'lucide-react';
 import PageHeader from '@/components/layout/PageHeader';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import LightweightMockeryPanel from '@/components/mockery/components/LightweightMockeryPanel';
+import { useToast } from '@/hooks/use-toast';
 
 const StatusCenter = () => {
   const [activeTab, setActiveTab] = useState('mockery');
+  const { toast } = useToast();
+  
+  const handleHelp = () => {
+    toast({
+      title: "Royal Status Center",
+      description: "Mock other users to lower their status, or protect yourself from mockery.",
+      variant: "default"
+    });
+  };
   
   return (
     <SimpleLayout>
@@ -19,7 +29,10 @@ const StatusCenter = () => {
           description="Manage your standing and interact with other nobles"
           icon={<Crown className="h-8 w-8 text-royal-gold" />}
         >
-          <Button variant="outline">Help</Button>
+          <Button variant="outline" onClick={handleHelp}>
+            <Info className="h-4 w-4 mr-2" />
+            Help
+          </Button>
         </PageHeader>
         
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
@@ -40,28 +53,30 @@ const StatusCenter = () => {
           
           <TabsContent value="history">
             <Card>
-              <CardContent className="pt-6">
-                <div className="text-center py-6">
-                  <h3 className="text-xl font-medium mb-2">Status History</h3>
-                  <p className="text-muted-foreground">
+              <CardHeader>
+                <CardTitle className="text-lg">Status History</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-center py-4">
+                  <p className="text-muted-foreground mb-4">
                     Track your historical standing in the kingdom.
                   </p>
                   
-                  <div className="mt-6 space-y-4">
+                  <div className="space-y-4">
                     {Array.from({ length: 3 }).map((_, i) => (
-                      <div key={i} className="flex items-center p-4 rounded-md bg-background/50 border">
-                        <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center mr-4">
+                      <div key={i} className="flex items-center p-3 rounded-md bg-background/50 border">
+                        <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center mr-3">
                           {i % 2 === 0 ? (
-                            <Crown className="h-6 w-6 text-royal-gold" />
+                            <Crown className="h-5 w-5 text-royal-gold" />
                           ) : (
-                            <Target className="h-6 w-6 text-royal-crimson" />
+                            <Target className="h-5 w-5 text-royal-crimson" />
                           )}
                         </div>
                         <div>
                           <p className="font-medium">
                             {i % 2 === 0 ? 'Achieved Royal Status' : 'Mocked by LordUser'}
                           </p>
-                          <p className="text-sm text-muted-foreground">
+                          <p className="text-xs text-muted-foreground">
                             {new Date(Date.now() - i * 86400000).toLocaleDateString()}
                           </p>
                         </div>

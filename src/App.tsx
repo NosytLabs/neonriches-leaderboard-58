@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { Toaster } from "@/components/ui/toaster";
 import { AuthProvider } from '@/contexts/auth/AuthProvider';
@@ -92,9 +92,9 @@ function App() {
               {/* Feature Pages */}
               <Route path="/events" element={<Events />} />
               
-              {/* Backwards compatibility redirects */}
-              <Route path="/mockery" element={<StatusCenter />} />
-              <Route path="/status-through-history" element={<StatusCenter />} />
+              {/* Redirection routes for backwards compatibility */}
+              <Route path="/mockery" element={<Navigate to="/status" replace />} />
+              <Route path="/status-through-history" element={<Navigate to="/status" replace />} />
               
               {/* Catch-all for 404 */}
               <Route path="*" element={<NotFound />} />
