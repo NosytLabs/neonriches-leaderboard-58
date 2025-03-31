@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Certificate, CertificateType } from '@/types/certificate';
+import { Certificate, CertificateType, CertificateStyle } from '@/types/certificate';
 import { TeamColor } from '@/types/user';
 import { formatDate } from '@/utils/dateUtils';
 import { cn } from '@/lib/utils';
@@ -51,8 +51,10 @@ const CertificateDisplay: React.FC<CertificateDisplayProps> = ({
     }
   };
 
-  const getStyleClasses = (style: string) => {
-    switch (style) {
+  const getStyleClasses = (certStyle?: CertificateStyle | string) => {
+    if (!certStyle) return 'border-gray-400 bg-gray-900/20 text-gray-200';
+    
+    switch (certStyle) {
       case 'royal': return 'border-amber-400 bg-amber-900/20 text-amber-200';
       case 'gold': return 'border-yellow-400 bg-yellow-900/20 text-yellow-200';
       case 'silver': return 'border-gray-400 bg-gray-900/20 text-gray-200';
@@ -63,22 +65,34 @@ const CertificateDisplay: React.FC<CertificateDisplayProps> = ({
     }
   };
 
-  const getTypeIcon = (certType: CertificateType) => {
+  const getTypeIcon = (certType?: string) => {
+    if (!certType) return '📜';
+    
     switch (certType) {
-      case 'membership':
-        return '🏅';
-      case 'royal':
-        return '👑';
-      case 'special':
-        return '🌟';
-      case 'achievement':
-        return '🏆';
-      case 'milestone':
-        return '📊';
       case 'rank':
         return '⚔️';
+      case 'royal':
+        return '👑';
+      case 'achievement':
+        return '🏆';
+      case 'membership':
+        return '🏅';
+      case 'special':
+        return '🌟';
+      case 'milestone':
+        return '📊';
       case 'nobility':
         return '🛡️';
+      case 'team':
+        return '🏹';
+      case 'founder':
+        return '🏛️';
+      case 'seasonal':
+        return '🌙';
+      case 'event':
+        return '🎭';
+      case 'custom':
+        return '✨';
       default:
         return '📜';
     }
@@ -101,19 +115,19 @@ const CertificateDisplay: React.FC<CertificateDisplayProps> = ({
       
       <div className="relative z-10 flex flex-col h-full">
         <div className="flex justify-between items-start mb-2">
-          <h3 className="font-medieval text-lg font-bold">{title}</h3>
-          <span className="text-2xl">{getTypeIcon(type as CertificateType)}</span>
+          <h3 className="font-medieval text-lg font-bold">{title || 'Certificate'}</h3>
+          <span className="text-2xl">{getTypeIcon(type)}</span>
         </div>
         
         {userDisplayName && (
           <p className="font-medieval text-sm mb-1">Awarded to: {userDisplayName}</p>
         )}
         
-        <p className="text-sm opacity-80 mb-auto">{description}</p>
+        <p className="text-sm opacity-80 mb-auto">{description || 'A prestigious certificate of recognition'}</p>
         
         <div className="mt-2 flex justify-between items-end text-xs opacity-70">
           <span>№{id.substring(0, 8)}</span>
-          <span>{formatDate(dateIssued)}</span>
+          <span>{dateIssued ? formatDate(dateIssued) : 'Unknown date'}</span>
         </div>
         
         {signature && (

@@ -1,88 +1,79 @@
 
-import { format, formatDistanceToNow, isValid, parse, parseISO } from "date-fns";
+/**
+ * Date utility functions
+ */
 
-export const formatDate = (date: string | Date): string => {
-  if (!date) return '';
-  
-  const dateObj = typeof date === 'string' ? new Date(date) : date;
-  return format(dateObj, 'MMM d, yyyy');
-};
+export function formatDate(dateString: string): string {
+  try {
+    const date = new Date(dateString);
+    
+    // Check if date is valid
+    if (isNaN(date.getTime())) {
+      return 'Invalid date';
+    }
+    
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    });
+  } catch (error) {
+    console.error('Error formatting date:', error);
+    return 'Invalid date';
+  }
+}
 
-export const formatDateTime = (date: string | Date): string => {
-  if (!date) return '';
-  
-  const dateObj = typeof date === 'string' ? new Date(date) : date;
-  return format(dateObj, 'MMM d, yyyy h:mm a');
-};
+export function getRelativeTime(dateString: string): string {
+  try {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffSeconds = Math.floor(diffMs / 1000);
+    const diffMinutes = Math.floor(diffSeconds / 60);
+    const diffHours = Math.floor(diffMinutes / 60);
+    const diffDays = Math.floor(diffHours / 24);
+    
+    if (diffDays > 30) {
+      return formatDate(dateString);
+    } else if (diffDays > 0) {
+      return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
+    } else if (diffHours > 0) {
+      return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
+    } else if (diffMinutes > 0) {
+      return `${diffMinutes} minute${diffMinutes > 1 ? 's' : ''} ago`;
+    } else {
+      return 'just now';
+    }
+  } catch (error) {
+    console.error('Error calculating relative time:', error);
+    return 'unknown time ago';
+  }
+}
 
-export const formatTime = (date: string | Date): string => {
-  if (!date) return '';
-  
-  const dateObj = typeof date === 'string' ? new Date(date) : date;
-  return format(dateObj, 'h:mm a');
-};
+export function getDaysInMonth(month: number, year: number): number {
+  return new Date(year, month + 1, 0).getDate();
+}
 
-export const isEventActive = (startDate: string, endDate: string): boolean => {
-  const now = new Date();
-  const start = new Date(startDate);
-  const end = new Date(endDate);
-  
-  return now >= start && now <= end;
-};
+export function isDateInPast(date: Date): boolean {
+  return date < new Date();
+}
 
-export const isEventUpcoming = (startDate: string): boolean => {
-  const now = new Date();
-  const start = new Date(startDate);
-  
-  return now < start;
-};
+export function isDateInFuture(date: Date): boolean {
+  return date > new Date();
+}
 
-export const isEventPast = (endDate: string): boolean => {
-  const now = new Date();
-  const end = new Date(endDate);
-  
-  return now > end;
-};
+export function isDateToday(date: Date): boolean {
+  const today = new Date();
+  return date.getDate() === today.getDate() && 
+         date.getMonth() === today.getMonth() && 
+         date.getFullYear() === today.getFullYear();
+}
 
-export const getTimeUntilEvent = (startDate: string): string => {
-  const now = new Date();
-  const start = new Date(startDate);
-  
-  if (now >= start) return 'Started';
-  
-  return formatDistanceToNow(start, { addSuffix: true });
-};
-
-export const getTimeRemaining = (endDate: string): string => {
-  const now = new Date();
-  const end = new Date(endDate);
-  
-  if (now >= end) return 'Ended';
-  
-  return formatDistanceToNow(end, { addSuffix: true });
-};
-
-export const getRelativeTimeString = (date: string | Date): string => {
-  const now = new Date();
-  const then = new Date(date);
-  const diff = Math.max(1, Math.floor((now.getTime() - then.getTime()) / 1000));
-  
-  if (diff < 60) return `${diff}s ago`;
-  if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
-  if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
-  if (diff < 2592000) return `${Math.floor(diff / 86400)}d ago`;
-  if (diff < 31536000) return `${Math.floor(diff / 2592000)}mo ago`;
-  return `${Math.floor(diff / 31536000)}y ago`;
-};
-
-export default { 
+export default {
   formatDate,
-  formatDateTime,
-  formatTime,
-  isEventActive,
-  isEventUpcoming,
-  isEventPast,
-  getTimeUntilEvent,
-  getTimeRemaining,
-  getRelativeTimeString
+  getRelativeTime,
+  getDaysInMonth,
+  isDateInPast,
+  isDateInFuture,
+  isDateToday
 };
