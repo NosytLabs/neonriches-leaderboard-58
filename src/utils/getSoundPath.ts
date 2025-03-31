@@ -1,8 +1,8 @@
 
-import { SoundType } from '@/hooks/sounds/types';
+import { SoundType } from '@/types/sound-types';
 
-// Map sound types to their file paths
-const SOUND_PATHS: Record<SoundType, string> = {
+// Define the sound paths for each sound type
+const soundPaths: Record<SoundType, string> = {
   coin: '/sounds/coin.mp3',
   success: '/sounds/success.mp3',
   error: '/sounds/error.mp3',
@@ -16,16 +16,30 @@ const SOUND_PATHS: Record<SoundType, string> = {
   levelUp: '/sounds/level-up.mp3',
   shame: '/sounds/shame.mp3',
   protection: '/sounds/protection.mp3',
-  sparkle: '/sounds/sparkle.mp3'
+  sparkle: '/sounds/sparkle.mp3',
+  royalAnnouncement: '/sounds/royal-announcement.mp3',
+  trumpet: '/sounds/trumpet.mp3',
+  medallion: '/sounds/medallion.mp3',
+  seal: '/sounds/seal.mp3',
+  coinDrop: '/sounds/coin-drop.mp3',
+  swordClash: '/sounds/sword-clash.mp3',
+  noblesLaugh: '/sounds/nobles-laugh.mp3',
+  // Legacy mappings for backward compatibility
+  boost: '/sounds/boost.mp3',
+  level_up: '/sounds/level_up.mp3',
+  message: '/sounds/message.mp3',
+  rank_up: '/sounds/rank_up.mp3',
+  reward: '/sounds/reward.mp3',
+  royal: '/sounds/royal.mp3',
+  trumpets: '/sounds/trumpets.mp3',
+  withdrawal: '/sounds/withdrawal.mp3',
 };
 
 /**
- * Gets the file path for a given sound type
- * @param type The type of sound to play
- * @returns The path to the sound file or undefined if not found
+ * Get the file path for a specific sound
  */
-export const getSoundPath = (type: SoundType): string | undefined => {
-  return SOUND_PATHS[type];
+export const getSoundPath = (type: SoundType): string => {
+  return soundPaths[type] || '/sounds/notification.mp3';
 };
 
 export default getSoundPath;

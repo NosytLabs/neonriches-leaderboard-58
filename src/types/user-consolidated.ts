@@ -1,84 +1,206 @@
 
-import { UserCosmetics } from './cosmetics';
-import { ProfileBoost } from './boost';
+/**
+ * Consolidated type definitions file for user-related types
+ * This file serves as the single source of truth for user profile types
+ */
 
-// Common user tiers used throughout the application
+// User tier types
 export type UserTier = 
-  | 'basic' 
-  | 'standard'
+  | 'free'
+  | 'basic'
   | 'premium'
   | 'royal'
-  | 'elite'
   | 'legendary'
   | 'founder'
-  | 'pro'
-  | 'diamond'
-  | 'gold'
-  | 'silver'
-  | 'bronze'
-  | 'free'
-  | 'platinum'
-  | 'vip'
+  | 'noble'
+  | 'knight'
+  | 'baron'
+  | 'viscount'
+  | 'earl'
+  | 'duke'
+  | 'prince'
+  | 'king'
+  | 'emperor'
   | 'whale';
 
-// Team types definition that will be used across the app
-export type TeamType = 'red' | 'blue' | 'green' | 'gold' | 'purple' | 'none' | 'neutral';
-export type TeamColor = TeamType;
-export type Team = TeamType;
+// Team type definitions
+export type TeamType = 
+  | 'red'
+  | 'blue'
+  | 'green'
+  | 'gold'
+  | 'purple'
+  | 'neutral'
+  | 'none';
 
-// Gender types with "neutral" added
-export type Gender = 'male' | 'female' | 'other' | 'prefer-not-to-say' | 'unspecified' | 'neutral' | 'king' | 'queen' | 'jester' | 'noble';
+export type TeamColor = 
+  | 'red'
+  | 'blue'
+  | 'green'
+  | 'gold'
+  | 'purple'
+  | 'gray';
 
-// Social link interface
-export interface SocialLink {
-  id?: string | number;
-  platform?: string;
-  url: string;
-  username?: string;
-  display?: string;
-  icon?: string;
-  verified?: boolean;
-  primary?: boolean;
-  clicks?: number;
-  title?: string;
-  label?: string;
-  type?: string;
-}
-
-// Profile image interface
+// Profile image type
 export interface ProfileImage {
-  id?: string;
+  id: string;
   url: string;
   isPrimary: boolean;
   caption?: string;
-  type?: string;
+  type: 'profile' | 'banner' | 'background';
 }
 
-// User settings interface
+// User statistics
+export interface UserStats {
+  totalDeposits: number;
+  depositCount: number;
+  highestDeposit: number;
+  lastDeposit?: string;
+  firstDeposit?: string;
+  rankHistory: number[];
+  spendingHistory: number[];
+  teamHistory?: TeamType[];
+  achievements?: string[] | Achievement[];
+  rankImprovements?: number;
+  consecutiveDeposits?: number;
+  timeAsKing?: number; // Time in seconds
+  referrals?: number;
+  mockeries?: number;
+  mockeriesReceived?: number;
+  specialEvents?: number;
+}
+
+// Achievement definition
+export interface Achievement {
+  id: string;
+  name: string;
+  description: string;
+  type: string;
+  icon: string;
+  tier: string;
+  unlockedAt: string;
+  amountSpent?: number;
+}
+
+// Social link definition
+export interface SocialLink {
+  id: string;
+  platform: string;
+  url: string;
+  icon?: string;
+  isVerified?: boolean;
+}
+
+// User settings
 export interface UserSettings {
   profileVisibility: 'public' | 'private' | 'friends';
   allowProfileLinks: boolean;
   theme: 'light' | 'dark' | 'royal' | 'system';
   notifications: boolean;
   emailNotifications: boolean;
-  marketingEmails: boolean;
-  soundEffects: boolean;
-  showEmailOnProfile: boolean;
   rankChangeAlerts: boolean;
-  newFollowerAlerts?: boolean;
-  teamNotifications?: boolean;
+  marketingEmails: boolean;
+  newFollowerAlerts: boolean;
+  teamNotifications: boolean;
+  soundEffects: boolean;
   showRank: boolean;
-  darkMode?: boolean; // For backward compatibility
-  language?: string;
-  shameAlerts?: boolean;
-  publicProfile?: boolean;
   showTeam: boolean;
   showSpending: boolean;
+  publicProfile: boolean;
+  language: string;
+  showBadges?: boolean;
   allowMessages?: boolean;
-  showBadges?: boolean; // Added property for showing badges
+  darkMode?: boolean;
 }
 
-// User profile interface - consolidated from multiple sources
+// Certificate NFT
+export interface CertificateNFT {
+  id?: string;
+  mintAddress?: string;
+  imageUrl?: string;
+  dateIssued?: string;
+  type?: string;
+  issuer?: string;
+  rarity?: string;
+}
+
+// User cosmetics
+export interface UserCosmetics {
+  borders?: string[];
+  colors?: string[];
+  fonts?: string[];
+  emojis?: string[];
+  titles?: string[];
+  backgrounds?: string[];
+  effects?: string[];
+  badges?: string[];
+  themes?: string[];
+  border?: string[];
+  color?: string[];
+  font?: string[];
+  emoji?: string[];
+  title?: string[];
+  background?: string[];
+  effect?: string[];
+  badge?: string[];
+  theme?: string[];
+  activeBorder?: string;
+  activeColor?: string;
+  activeFont?: string;
+  activeEmoji?: string;
+  activeTitle?: string;
+  activeBackground?: string;
+  activeEffect?: string;
+  activeBadge?: string;
+  activeTheme?: string;
+  socialLinks?: Record<string, string>;
+}
+
+// User cosmetic state
+export interface UserCosmeticState {
+  border: string[];
+  color: string[];
+  font: string[];
+  emoji: string[];
+  title: string[];
+  background: string[];
+  effect: string[];
+  badge: string[];
+  theme: string[];
+  [key: string]: string[] | string | Record<string, string> | undefined;
+}
+
+// Subscription status
+export interface SubscriptionStatus {
+  plan: string;
+  isActive: boolean;
+  renewalDate?: string;
+  canceledAt?: string;
+  trialEndsAt?: string;
+  interval?: 'month' | 'year';
+  status?: 'active' | 'canceled' | 'past_due' | 'trialing';
+  tier?: UserTier;
+}
+
+// Profile boost type
+export interface ProfileBoost {
+  id: string;
+  type: string;
+  level?: number;
+  startDate: string;
+  endDate: string;
+  appliedBy?: string;
+  strength?: number;
+  name?: string;
+  description?: string;
+  duration?: number;
+  price?: number;
+  icon?: string;
+  isActive: boolean;
+  effectId?: string;
+}
+
+// Main UserProfile type
 export interface UserProfile {
   id: string;
   username: string;
@@ -91,68 +213,61 @@ export interface UserProfile {
   totalSpent?: number;
   walletBalance?: number;
   tier: UserTier;
-  team?: TeamColor;
+  team?: TeamType;
   joinDate?: string;
   joinedAt?: string;
-  joinedDate?: string;
-  createdAt?: string;
-  lastActive?: string;
   lastLogin?: string;
-  isAdmin?: boolean;
   isVerified?: boolean;
   isBanned?: boolean;
-  isFounder?: boolean;
-  isVIP?: boolean;
-  isProtected?: boolean;
   spendStreak?: number;
-  achievements?: string[];
-  cosmetics?: UserCosmetics;
+  amountSpent?: number;
+  profileImages?: ProfileImage[];
+  stats?: UserStats;
+  achievements?: string[] | Achievement[];
   settings?: UserSettings;
+  cosmetics?: UserCosmetics;
+  subscription?: SubscriptionStatus;
+  certificateNFT?: CertificateNFT;
+  socialLinks?: SocialLink[] | Record<string, string>;
+  profileBoosts?: ProfileBoost[];
   referralCode?: string;
   referredBy?: string;
-  referralCount?: number;
-  socialLinks?: SocialLink[] | Record<string, string>;
-  profileViews?: number;
-  profileClicks?: number;
-  followers?: string[] | number;
-  following?: string[] | number;
-  profileBoosts?: ProfileBoost[];
-  teamRank?: number;
-  amountSpent?: number; // For backward compatibility
-  spentAmount?: number; // For backward compatibility
-  gender?: Gender;
-  avatarUrl?: string; // For backward compatibility
-  role?: string;
+  badges?: string[];
   activeTitle?: string;
-  profileImages?: ProfileImage[];
-  purchasedFeatures?: string[];
-  subscription?: any;
-  subscriptionTier?: string;
-  certificateNFT?: {
-    id?: string;
-    mintAddress?: string;
-    imageUrl?: string;
-    dateIssued?: string;
-    type?: string;
-    isVerified?: boolean;
-  };
+  isProtected?: boolean;
+  protectionExpiresAt?: string;
+  notificationPreferences?: Record<string, boolean>;
+  isFollowing?: boolean;
+  followersCount?: number;
+  followingCount?: number;
+  totalTransactions?: number;
+  specialRights?: string[];
+  roleIds?: string[];
+  phoneNumber?: string;
+  address?: string;
+  city?: string;
+  country?: string;
+  title?: string;
+  gender?: string;
 }
 
-// Export aliases for backward compatibility
-export type User = UserProfile;
-export type ProfileLink = SocialLink;
-
-// For compatibility with AuthContext
+// Auth context type for simplified access
 export interface AuthContextType {
   user: UserProfile | null;
   isAuthenticated: boolean;
   isLoading: boolean;
   login: (email: string, password: string) => Promise<boolean>;
-  signIn?: (email: string, password: string) => Promise<boolean>;
+  signIn: (email: string, password: string) => Promise<boolean>;
   register: (username: string, email: string, password: string) => Promise<boolean>;
   logout: () => Promise<void>;
-  signOut?: () => Promise<void> | void;
-  updateUser?: (updates: Partial<UserProfile>) => Promise<boolean>;
-  updateUserProfile?: (updates: Partial<UserProfile>) => Promise<boolean>;
+  signOut: () => Promise<void>;
+  updateProfile?: (updates: Partial<UserProfile>) => Promise<boolean>;
+  updateUser: (updates: Partial<UserProfile>) => Promise<boolean>;
+  updateUserProfile: (updates: Partial<UserProfile>) => Promise<boolean>;
+  refreshUser?: () => Promise<void>;
+  forgotPassword?: (email: string) => Promise<boolean>;
+  resetPassword?: (token: string, password: string) => Promise<boolean>;
+  verifyEmail?: (token: string) => Promise<boolean>;
+  loginWithProvider?: (provider: string) => Promise<boolean>;
   awardCosmetic?: (category: string, itemId: string, notify?: boolean) => Promise<boolean>;
 }

@@ -1,74 +1,153 @@
 
-import { UserTier } from '@/contexts/auth/types';
+import { UserTier } from '@/types/user-consolidated';
 
 /**
- * Get badge element for user tier
- * @param tier User tier
- * @returns Element or string representing the tier badge
+ * Get the icon name for a user tier
  */
-export const getTierBadge = (tier: UserTier): JSX.Element | string => {
+export const getTierIcon = (tier: UserTier): string => {
   switch (tier) {
     case 'free':
-      return 'Free';
-    case 'bronze':
-      return 'Bronze';
-    case 'silver':
-      return 'Silver';
-    case 'gold':
-      return 'Gold';
-    case 'platinum':
-      return 'Platinum';
-    case 'pro':
-      return 'Pro';
+      return 'User';
+    case 'basic':
+      return 'Badge';
+    case 'premium':
+      return 'Crown';
+    case 'royal':
+      return 'Crown';
+    case 'legendary':
+      return 'Award';
+    case 'founder':
+      return 'Star';
+    case 'noble':
+      return 'Shield';
+    case 'knight':
+      return 'Shield';
+    case 'baron':
+      return 'Crown';
+    case 'viscount':
+      return 'Crown';
+    case 'earl':
+      return 'Crown';
+    case 'duke':
+      return 'Crown';
+    case 'prince':
+      return 'Crown';
+    case 'king':
+      return 'Crown';
+    case 'emperor':
+      return 'Globe';
+    case 'whale':
+      return 'TrendingUp';
     default:
-      return 'Free';
+      return 'User';
   }
 };
 
 /**
- * Get color for user tier
- * @param tier User tier
- * @returns CSS color class for the tier
+ * Get tier color class
  */
-export const getTierColor = (tier: UserTier): string => {
+export const getTierColorClass = (tier: UserTier): string => {
   switch (tier) {
     case 'free':
-      return 'text-white/70';
-    case 'bronze':
-      return 'text-amber-600';
-    case 'silver':
-      return 'text-gray-300';
-    case 'gold':
+      return 'text-gray-400';
+    case 'basic':
+      return 'text-blue-400';
+    case 'premium':
+      return 'text-purple-400';
+    case 'royal':
       return 'text-royal-gold';
-    case 'platinum':
-      return 'text-blue-300';
-    case 'pro':
-      return 'text-royal-purple';
+    case 'legendary':
+      return 'text-amber-500';
+    case 'founder':
+      return 'text-green-500';
+    case 'noble':
+      return 'text-indigo-400';
+    case 'knight':
+      return 'text-cyan-400';
+    case 'baron':
+      return 'text-pink-400';
+    case 'viscount':
+      return 'text-rose-400';
+    case 'earl':
+      return 'text-amber-400';
+    case 'duke':
+      return 'text-emerald-400';
+    case 'prince':
+      return 'text-violet-400';
+    case 'king':
+      return 'text-yellow-500';
+    case 'emperor':
+      return 'text-royal-gold';
+    case 'whale':
+      return 'text-blue-500';
     default:
-      return 'text-white/70';
+      return 'text-gray-400';
   }
 };
 
 /**
- * Get background color for user tier
- * @param tier User tier
- * @returns CSS background color class for the tier
+ * Get next tier for a user
  */
-export const getTierBgColor = (tier: UserTier): string => {
-  switch (tier) {
-    case 'free':
-      return 'bg-gray-700';
-    case 'bronze':
-      return 'bg-amber-900';
-    case 'silver':
-      return 'bg-gray-600';
-    case 'gold':
-      return 'bg-royal-gold/20';
-    case 'platinum':
-      return 'bg-blue-900';
-    case 'pro':
-      return 'bg-royal-purple/20';
-    default:
-      return 'bg-gray-700';
+export const getNextTier = (currentTier: UserTier): UserTier | null => {
+  const tierProgression: UserTier[] = [
+    'free',
+    'basic',
+    'premium',
+    'royal',
+    'legendary',
+    'noble',
+    'knight',
+    'baron',
+    'viscount',
+    'earl',
+    'duke',
+    'prince',
+    'king',
+    'emperor'
+  ];
+  
+  const currentIndex = tierProgression.indexOf(currentTier);
+  
+  if (currentIndex === -1 || currentIndex === tierProgression.length - 1) {
+    return null;
   }
+  
+  return tierProgression[currentIndex + 1];
+};
+
+/**
+ * Get the cost to upgrade to the next tier
+ */
+export const getUpgradeCost = (currentTier: UserTier): number => {
+  const tierCosts: Record<UserTier, number> = {
+    'free': 9.99,
+    'basic': 19.99,
+    'premium': 49.99,
+    'royal': 99.99,
+    'legendary': 199.99,
+    'founder': 0,
+    'noble': 299.99,
+    'knight': 499.99,
+    'baron': 799.99,
+    'viscount': 1299.99,
+    'earl': 1999.99,
+    'duke': 2999.99,
+    'prince': 4999.99,
+    'king': 9999.99,
+    'emperor': 0,
+    'whale': 0
+  };
+  
+  const nextTier = getNextTier(currentTier);
+  if (!nextTier) return 0;
+  
+  return tierCosts[nextTier];
+};
+
+/**
+ * Format tier name for display
+ */
+export const formatTierName = (tier: UserTier): string => {
+  // Capitalize first letter and replace hyphens with spaces
+  return tier.charAt(0).toUpperCase() + tier.slice(1).replace(/-/g, ' ');
 };

@@ -6,6 +6,7 @@ export const authReducer = (state: AuthState, action: AuthAction): AuthState => 
     case 'LOGIN_START':
     case 'REGISTER_START':
     case 'AUTH_START':
+    case 'REFRESH_USER_START':
       return {
         ...state,
         isLoading: true,
@@ -15,6 +16,7 @@ export const authReducer = (state: AuthState, action: AuthAction): AuthState => 
     case 'LOGIN_SUCCESS':
     case 'REGISTER_SUCCESS':
     case 'AUTH_SUCCESS':
+    case 'REFRESH_USER_SUCCESS':
       return {
         ...state,
         user: action.payload,
@@ -26,6 +28,7 @@ export const authReducer = (state: AuthState, action: AuthAction): AuthState => 
     case 'LOGIN_FAILURE':
     case 'REGISTER_FAILURE':
     case 'AUTH_FAIL':
+    case 'REFRESH_USER_FAILURE':
       return {
         ...state,
         user: null,

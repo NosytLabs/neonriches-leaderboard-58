@@ -8,7 +8,10 @@ export type CosmeticCategory =
   | 'background'
   | 'effect'
   | 'badge'
-  | 'theme';
+  | 'theme'
+  | 'appearance'
+  | 'profile'
+  | 'interaction';
 
 export type CosmeticRarity = 
   | 'common'
@@ -17,7 +20,8 @@ export type CosmeticRarity =
   | 'epic'
   | 'legendary'
   | 'mythic'
-  | 'royal';
+  | 'royal'
+  | 'unique';
 
 export interface CosmeticItem {
   id: string;
@@ -32,6 +36,9 @@ export interface CosmeticItem {
   cost?: number; // For backward compatibility
   previewImage?: string; // Alternative to previewUrl
   image?: string; // For backward compatibility
+  imageSrc?: string; // Alternative to image
+  cssClass?: string; // For styling purposes
+  type?: string; // For compatibility
 }
 
 export interface UserCosmetics {
@@ -77,4 +84,13 @@ export interface UserCosmeticState {
   badge: string[];
   theme: string[];
   [key: string]: string[] | string | Record<string, string> | undefined;
+}
+
+// SocialLink type for user profile
+export interface SocialLink {
+  id: string;
+  platform: string;
+  url: string;
+  icon?: string;
+  isVerified?: boolean;
 }

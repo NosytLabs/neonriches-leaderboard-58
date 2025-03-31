@@ -5,10 +5,11 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { UserProfile } from '@/types/user';
+import { UserProfile } from '@/types/user-consolidated';
 import { useToast } from '@/components/ui/use-toast';
 import { ToastAction } from '@/components/ui/toast';
 import { Sparkles, Crown, Star, Zap, Clock, Tag } from 'lucide-react';
+import { BoostEffect } from '@/types/boost';
 
 interface ProfileBoostStoreProps {
   user: UserProfile;
@@ -75,8 +76,8 @@ const ProfileBoostStore: React.FC<ProfileBoostStoreProps> = ({ user, onBoostAppl
         
         <TabsContent value={activeTab}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {getFilteredBoosts().map((boost) => {
-              const price = boost.cost;
+            {getFilteredBoosts().map((boost: BoostEffect) => {
+              const price = boost.price;
               
               // Check if user can access this tier
               const userSubscriptionTier = user.subscription?.tier;
@@ -108,46 +109,37 @@ const ProfileBoostStore: React.FC<ProfileBoostStoreProps> = ({ user, onBoostAppl
                         variant="outline" 
                         className={`
                           ${boost.tier === 'basic' 
-                            ? 'bg-gray-700' 
-                            : boost.tier === 'premium' 
-                              ? 'bg-royal-purple' 
-                              : 'bg-royal-gold text-black'
-                          } border-none
+                            ? 'bg-gray-500/20 text-gray-300 border-gray-500/30' 
+                            : boost.tier === 'premium'
+                              ? 'bg-royal-purple/20 text-royal-purple border-royal-purple/30'
+                              : 'bg-royal-gold/20 text-royal-gold border-royal-gold/30'
+                          }
                         `}
                       >
-                        {boost.tier ? boost.tier.toUpperCase() : 'BASIC'}
+                        {boost.tier.charAt(0).toUpperCase() + boost.tier.slice(1)}
                       </Badge>
                     </div>
                     
-                    <div className="mt-4 flex items-center justify-between">
-                      <div className="flex items-center gap-1 text-white/60 text-sm">
-                        <Clock className="h-3.5 w-3.5" />
-                        <span>{boost.duration / 24} days</span>
+                    <div className="mt-4 flex justify-between items-center">
+                      <div className="text-sm flex items-center text-white/60">
+                        <Clock className="h-4 w-4 mr-1" />
+                        {boost.durationDays} days
                       </div>
-                      
-                      <div className="flex items-center gap-2">
-                        <div className="text-right">
-                          <div className="flex items-center gap-1">
-                            <Tag className="h-3.5 w-3.5 text-royal-gold" />
-                            <span className="font-bold">${price}</span>
-                          </div>
-                        </div>
-                        
-                        <Button 
-                          size="sm" 
-                          disabled={!canAccess}
-                          onClick={() => handlePurchaseBoost(boost.id, price)}
-                        >
-                          {canAccess ? 'Purchase' : 'Locked'}
-                        </Button>
+                      <div className="text-sm flex items-center text-white/60">
+                        <Tag className="h-4 w-4 mr-1" />
+                        ${price}
                       </div>
                     </div>
                     
-                    {!canAccess && (
-                      <div className="mt-2 text-xs text-white/50 bg-black/20 p-2 rounded">
-                        Upgrade your subscription to {boost.tier === 'premium' ? 'Premium' : 'Royal'} tier to unlock this boost.
-                      </div>
-                    )}
+                    <div className="mt-4">
+                      <Button 
+                        className="w-full"
+                        onClick={() => handlePurchaseBoost(boost.id, price)}
+                        disabled={!canAccess}
+                      >
+                        {canAccess ? 'Apply Boost' : 'Requires Upgrade'}
+                      </Button>
+                    </div>
                   </CardContent>
                 </Card>
               );

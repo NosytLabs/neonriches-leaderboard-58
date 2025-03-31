@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { UserProfile } from '@/types/user-consolidated';
-import { ProfileBoost } from '@/types/boost';
+import { ProfileBoost, BoostEffect } from '@/types/boost';
 import useProfileBoost from '@/hooks/use-profile-boost';
 import { Icon } from '@/components/ui/icon';
 
@@ -40,7 +40,7 @@ const ProfileBoostDisplay: React.FC<ProfileBoostDisplayProps> = ({
           if (!boostEffect) return 'Star';
           
           // Check if boostEffect has a type property
-          const effectType = (boostEffect as any).type || 'visibility';
+          const effectType = (boostEffect as BoostEffect)?.type || 'visibility';
           
           switch (effectType) {
             case 'visibility': return 'Eye';

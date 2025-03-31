@@ -1,78 +1,47 @@
 
-import { TeamColor, TeamType, UserTier } from './user-types';
-
 export type CertificateType = 
-  | 'rank' 
-  | 'achievement' 
-  | 'founder' 
-  | 'event' 
-  | 'membership' 
-  | 'royal' 
-  | 'special' 
-  | 'milestone' 
-  | 'nobility' 
-  | 'seasonal'
+  | 'spending'
+  | 'rank'
+  | 'royal'
+  | 'legendary'
   | 'team'
-  | 'custom'
-  | 'noble' 
-  | 'elite' 
-  | 'legendary';
+  | 'achievement'
+  | 'special';
 
-export type CertificateStyle = 
-  | 'royal' 
-  | 'classic' 
-  | 'modern' 
-  | 'gothic'
-  | 'default' 
-  | 'medieval'
-  | 'minimalist' 
-  | 'vintage'
+export type CertificateStyle =
   | 'ornate'
-  | 'luxury'
-  | 'gold'
-  | 'silver'
-  | 'platinum'
-  | 'diamond';
+  | 'minimalist'
+  | 'royal'
+  | 'modern'
+  | 'vintage';
 
-export type CertificateTeam = TeamType | 'neutral';
+export type CertificateTeam =
+  | 'red'
+  | 'blue'
+  | 'green'
+  | 'gold'
+  | 'purple'
+  | 'none';
 
 export interface Certificate {
   id: string;
   userId: string;
-  templateId?: string;
-  username: string;
-  displayName?: string;
+  title: string;
+  description: string;
+  imageUrl: string;
   type: CertificateType;
-  team?: TeamColor | CertificateTeam;
-  rank?: number;
-  totalSpent?: number;
-  createdAt: string;
-  title?: string;
-  description?: string;
-  style?: CertificateStyle;
-  signature?: string;
-  userDisplayName?: string;
-  dateIssued?: string;
-  issuedAt?: string;
-  imageUrl?: string;
-  image?: string;
-  bgImage?: string;
-  shareUrl?: string;
-  isMinted?: boolean;
-  nftMintAddress?: string;
+  dateIssued: string;
+  issuer: string;
   mintAddress?: string;
-  mintDate?: string;
-  expiresAt?: string;
-  profileImage?: string;
-  tier?: string;
-  tokenId?: string;
-  metadata?: {
-    rank?: number;
-    tier?: string;
-    name?: string;
-    achievements?: string[];
-    description?: string;
-  };
+  isMinted?: boolean;
+  rarity?: string;
+  team?: CertificateTeam;
+  amount?: number;
+  rank?: number;
+  signature?: string;
+  recipientName?: string;
+  style?: CertificateStyle;
+  createdAt?: string;
 }
 
 export interface CertificateTemplate {
@@ -80,51 +49,39 @@ export interface CertificateTemplate {
   name: string;
   type: CertificateType;
   style: CertificateStyle;
-  team: TeamType;
+  team: CertificateTeam;
   previewUrl: string;
   imageUrl: string;
   description: string;
   availableForTier: string[];
   availableForRank?: number[];
   requiresFounder?: boolean;
-  isPremium?: boolean;
-  isLimited?: boolean;
-  price?: number;
-  availableFrom?: string;
-  availableUntil?: string;
-  previewImage?: string;
 }
 
 export interface CertificateRepository {
-  getCertificatesByUserId: (userId: string) => Promise<Certificate[]>;
-  getMintedCertificatesForUser: (userId: string) => Promise<Certificate[]>;
-  createCertificate: (certificate: Certificate) => Promise<Certificate>;
-  getCertificate: (id: string) => Promise<Certificate | null>;
-  getCertificateById?: (id: string) => Promise<Certificate | null>;
-  getCertificatesForUser?: (userId: string) => Promise<Certificate[]>;
-  updateCertificate: (certificate: Certificate) => Promise<boolean>;
-  deleteCertificate: (id: string) => Promise<boolean>;
+  getAllCertificates(userId: string): Promise<Certificate[]>;
+  getCertificateById(id: string): Promise<Certificate | null>;
+  createCertificate(certificate: Certificate): Promise<Certificate>;
+  updateCertificate(id: string, certificate: Partial<Certificate>): Promise<Certificate>;
+  deleteCertificate(id: string): Promise<boolean>;
 }
+
+export type CertificateFilter = 
+  | 'all'
+  | 'minted'
+  | 'not-minted'
+  | 'spending'
+  | 'rank'
+  | 'royal'
+  | 'legendary'
+  | 'team'
+  | 'achievement'
+  | 'special';
 
 export interface CertificateTemplateFactory {
-  getTemplatesForUser: (userId: string, user: any) => CertificateTemplate[];
-  createTemplate: (templateData: Partial<CertificateTemplate>) => CertificateTemplate;
-  getTemplateById: (id: string) => CertificateTemplate | null;
-  getAllTemplates: () => CertificateTemplate[];
-  getTemplatesByType: (type: CertificateType) => CertificateTemplate[];
+  getTemplatesByType(type: CertificateType): CertificateTemplate[];
+  getTemplateById(id: string): CertificateTemplate | null;
+  getTemplatesByTeam(team: CertificateTeam): CertificateTemplate[];
+  getTemplatesByTier(tier: string): CertificateTemplate[];
+  getTemplatesByRank(rank: number): CertificateTemplate[];
 }
-
-export interface RankCertificateMetadata {
-  userName: string;
-  userRank: number;
-  userTeam: CertificateTeam | null;
-  certificateId: string;
-  issuedDate: string;
-  amountSpent: number;
-}
-
-// For backward compatibility
-export { 
-  type CertificateType as CertificateCategory,
-  type CertificateTeam as CertificateTeamType
-};

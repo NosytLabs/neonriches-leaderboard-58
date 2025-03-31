@@ -28,6 +28,8 @@ export interface BoostEffect {
   durationDays: number;
   icon: string;
   previewImage: string;
+  strength?: number;
+  cost?: number; // For backward compatibility
 }
 
 export type BoostEffectType = 

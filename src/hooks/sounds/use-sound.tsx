@@ -16,7 +16,7 @@ const SoundContext = createContext<UseSoundHook>({
 
 export const SoundProvider: React.FC<SoundProviderProps> = ({ children }) => {
   const [isSoundEnabled, setSoundEnabled] = useState<boolean>(true);
-  const [volume, setVolume] = useState<number>(0.5);
+  const [volume, setVolumeState] = useState<number>(0.5);
   
   // Map to store currently playing sounds
   const audioMap = React.useRef<Map<SoundType, HTMLAudioElement>>(new Map());
@@ -81,6 +81,47 @@ export const SoundProvider: React.FC<SoundProviderProps> = ({ children }) => {
     }
   }, []);
   
+  const pauseSound = useCallback((type?: SoundType) => {
+    if (type) {
+      // Pause specific sound
+      const audio = audioMap.current.get(type);
+      if (audio) {
+        audio.pause();
+      }
+    } else {
+      // Pause all sounds
+      audioMap.current.forEach((audio) => {
+        audio.pause();
+      });
+    }
+  }, []);
+  
+  const resumeSound = useCallback((type?: SoundType) => {
+    if (!isSoundEnabled) return;
+
+    if (type) {
+      // Resume specific sound
+      const audio = audioMap.current.get(type);
+      if (audio) {
+        audio.play().catch(err => {
+          console.warn(`Error resuming sound (${type}):`, err);
+        });
+      }
+    } else {
+      // Resume all sounds
+      audioMap.current.forEach(audio => {
+        audio.play().catch(err => {
+          console.warn(`Error resuming sound:`, err);
+        });
+      });
+    }
+  }, [isSoundEnabled]);
+  
+  const isPlaying = useCallback((type: SoundType): boolean => {
+    const audio = audioMap.current.get(type);
+    return !!(audio && !audio.paused);
+  }, []);
+  
   const toggleSounds = useCallback(() => {
     setSoundEnabled(prev => !prev);
     
@@ -90,6 +131,19 @@ export const SoundProvider: React.FC<SoundProviderProps> = ({ children }) => {
     }
   }, [isSoundEnabled, stopSound]);
   
+  const setVolume = useCallback((newVolume: number) => {
+    setVolumeState(prev => {
+      const clampedVolume = Math.min(Math.max(newVolume, 0), 1);
+      
+      // Update volume for all currently loaded audio instances
+      audioMap.current.forEach(audio => {
+        audio.volume = clampedVolume;
+      });
+      
+      return clampedVolume;
+    });
+  }, []);
+  
   // For backward compatibility
   const play = useCallback((type: SoundType, options?: SoundOptions) => {
     playSound(type, options);
@@ -98,9 +152,13 @@ export const SoundProvider: React.FC<SoundProviderProps> = ({ children }) => {
   const value = {
     playSound,
     stopSound,
+    pauseSound,
+    resumeSound,
+    isPlaying,
     toggleSounds,
     isSoundEnabled,
     setVolume,
+    currentVolume: volume,
     play,
   };
   
