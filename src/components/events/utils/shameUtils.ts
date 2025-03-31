@@ -43,13 +43,15 @@ export const getShameActionTitle = (action: MockeryAction) => {
   return getMockeryName(action);
 };
 
+interface ShameIconProps {
+  action: ShameAction; 
+  size?: 'sm' | 'md' | 'lg';
+}
+
 export const ShameIcon = ({ 
   action, 
   size = 'md' 
-}: { 
-  action: ShameAction; 
-  size?: 'sm' | 'md' | 'lg' 
-}) => {
+}: ShameIconProps) => {
   // Convert ShameAction to MockeryAction explicitly through unknown to avoid type error
   const actionType = action as unknown as MockeryAction;
   const IconComponent = getShameActionIcon(actionType);

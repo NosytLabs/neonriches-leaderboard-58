@@ -17,6 +17,10 @@ import {
   getShameActionPrice,
   getShameActionMessage 
 } from './shame-discount-utils';
+import {
+  getMockeryEffectClass,
+  getMockeryEffectDuration
+} from './mockery-effects';
 
 // Export everything for backward compatibility
 export {
@@ -40,6 +44,10 @@ export {
   getMockeryTierColorClass,
   getMockeryTierRarity,
   getActiveMockeryClass,
+  
+  // Effects and durations
+  getMockeryEffectClass,
+  getMockeryEffectDuration,
   
   // Shame and discount utilities
   hasWeeklyDiscount,
