@@ -167,6 +167,12 @@ export const getShameActionMessage = (action: string, username: string): string 
   return messages[action] || `You've publicly mocked ${username}!`;
 };
 
+// Render the appropriate icon for a mockery action
+export const renderMockeryIcon = (action: MockeryAction, className: string = "h-4 w-4") => {
+  const IconComponent = getMockeryActionIcon(action);
+  return <IconComponent className={className} />;
+};
+
 // For backward compatibility
 export const getMockeryActionTitle = getMockeryName;
 export const getMockeryActionDescription = getMockeryDescription;
