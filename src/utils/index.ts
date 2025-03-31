@@ -1,3 +1,4 @@
+
 // Re-export utility functions
 import { cn } from '@/lib/utils';
 import { 
@@ -31,10 +32,12 @@ import {
 import {
   getMockeryActionIcon,
   getMockeryActionIconColor,
-  getMockeryActionName,
-  getMockeryActionTitle,
+  getMockeryName as getMockeryActionName,
+  getMockeryName,
+  getMockeryDescription,
+  getMockeryCost as getMockeryActionPrice,
   getMockeryActionDescription,
-  getMockeryActionPrice,
+  getMockeryActionTitle,
   getMockeryActionEffect
 } from './mockeryUtils';
 
@@ -70,7 +73,9 @@ export {
   getMockeryActionIcon,
   getMockeryActionIconColor,
   getMockeryActionName,
+  getMockeryActionTitle,
   getMockeryActionDescription,
+  getMockeryActionPrice,
   getMockeryActionEffect
 };
 
