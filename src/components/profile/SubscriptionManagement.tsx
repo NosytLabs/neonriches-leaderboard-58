@@ -1,347 +1,298 @@
-
-import React, { useState, useEffect } from 'react';
-import { UserProfile, UserTier } from '@/types/user';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Check, Copy, CreditCard, HelpCircle, Lock, Mail, ShieldCheck, UserCheck, X } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
-import { useAuth } from '@/contexts/AuthContext';
-import { formatCurrency, formatDate } from '@/utils/formatters';
-import { Separator } from '@/components/ui/separator';
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Switch } from '@/components/ui/switch';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { useConfettiStore } from '@/stores/use-confetti-store';
-import { useSubscription } from '@/hooks/useSubscription';
+import { ShieldCheck, CreditCard, CalendarCheck, AlertTriangle, Clock, ArrowRight, CheckCircle } from 'lucide-react';
+import { formatDate, formatTimeAgo } from '@/utils/formatters/dateFormatters';
+import { Subscription } from '@/types/subscription';
+import { useAuth } from '@/contexts/AuthContext';
+import { useToast } from '@/hooks/use-toast';
+import { AlertDestructive } from '@/components/ui/alert-destructive';
 
 interface SubscriptionManagementProps {
-  user: UserProfile;
+  subscription?: Subscription;
+  onUpgrade?: () => void;
+  onCancel?: () => Promise<boolean>;
+  onRenew?: () => Promise<boolean>;
 }
 
-const SubscriptionManagement: React.FC<SubscriptionManagementProps> = ({ user }) => {
+const SubscriptionManagement: React.FC<SubscriptionManagementProps> = ({
+  subscription,
+  onUpgrade,
+  onCancel,
+  onRenew
+}) => {
+  const { user, updateUserProfile } = useAuth();
   const { toast } = useToast();
-  const { updateUserProfile } = useAuth();
-  const { isSubscribed, subscription, isLoading, manageSubscription } = useSubscription();
-  const [isCancelling, setIsCancelling] = useState(false);
-  const [isActivating, setIsActivating] = useState(false);
-  const [interval, setInterval] = useState<string | null>(null);
-  const [tier, setTier] = useState<UserTier | null>(null);
-  const [autoRenew, setAutoRenew] = useState<boolean>(true);
-  const [isEditing, setIsEditing] = useState(false);
-  const [profile, setProfile] = useState<UserProfile>(user);
-  const [isSaving, setIsSaving] = useState(false);
-  const { fire } = useConfettiStore();
+  const [isLoading, setIsLoading] = useState(false);
+  const [showCancelConfirm, setShowCancelConfirm] = useState(false);
   
-  useEffect(() => {
-    if (subscription) {
-      setInterval(subscription.interval);
-      setTier(subscription.tier);
-      setAutoRenew(subscription.autoRenew);
-    }
-  }, [subscription]);
+  if (!user) return null;
+  
+  const isActive = subscription?.status === 'active';
+  const isCancelled = subscription?.status === 'cancelled';
+  const isExpired = subscription?.status === 'expired';
+  const isPaused = subscription?.status === 'paused';
   
   const handleCancelSubscription = async () => {
-    setIsCancelling(true);
+    if (!onCancel) return;
     
+    setIsLoading(true);
     try {
-      // Simulate API call to cancel subscription
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      toast({
-        title: "Subscription Cancelled",
-        description: "Your subscription has been cancelled. You will retain access until the end of your current billing cycle.",
-        variant: "default"
-      });
+      const success = await onCancel();
+      if (success) {
+        toast({
+          title: "Subscription Cancelled",
+          description: "Your subscription has been cancelled but will remain active until the end of the billing period.",
+        });
+        setShowCancelConfirm(false);
+      } else {
+        toast({
+          title: "Error",
+          description: "Failed to cancel subscription. Please try again or contact support.",
+          variant: "destructive"
+        });
+      }
     } catch (error) {
+      console.error("Error cancelling subscription:", error);
       toast({
         title: "Error",
-        description: "Failed to cancel subscription. Please try again.",
+        description: "An unexpected error occurred. Please try again later.",
         variant: "destructive"
       });
     } finally {
-      setIsCancelling(false);
+      setIsLoading(false);
     }
   };
   
-  const handleActivateSubscription = async () => {
-    setIsActivating(true);
+  const handleRenewSubscription = async () => {
+    if (!onRenew) return;
     
+    setIsLoading(true);
     try {
-      // Simulate API call to activate subscription
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      toast({
-        title: "Subscription Reactivated",
-        description: "Your subscription has been reactivated.",
-        variant: "default"
-      });
+      const success = await onRenew();
+      if (success) {
+        toast({
+          title: "Subscription Renewed",
+          description: "Your subscription has been successfully renewed.",
+        });
+      } else {
+        toast({
+          title: "Error",
+          description: "Failed to renew subscription. Please try again or contact support.",
+          variant: "destructive"
+        });
+      }
     } catch (error) {
+      console.error("Error renewing subscription:", error);
       toast({
         title: "Error",
-        description: "Failed to reactivate subscription. Please try again.",
+        description: "An unexpected error occurred. Please try again later.",
         variant: "destructive"
       });
     } finally {
-      setIsActivating(false);
+      setIsLoading(false);
     }
-  };
-  
-  const handleSaveProfile = async () => {
-    setIsSaving(true);
-    
-    try {
-      // Simulate API call to save profile
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      await updateUserProfile(profile);
-      
-      toast({
-        title: "Profile Updated",
-        description: "Your profile has been updated successfully.",
-        variant: "default"
-      });
-      
-      setIsEditing(false);
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to update profile. Please try again.",
-        variant: "destructive"
-      });
-    } finally {
-      setIsSaving(false);
-    }
-  };
-  
-  const handleCopyReferralLink = () => {
-    navigator.clipboard.writeText(`https://p2w.fun/referral/${user.id}`);
-    toast({
-      title: "Referral Link Copied",
-      description: "Share this link with your friends to earn rewards!",
-    });
   };
   
   return (
-    <Card className="glass-morphism border-royal-gold/20">
-      <CardHeader>
-        <div className="flex items-center">
-          <ShieldCheck className="mr-3 h-6 w-6 text-royal-gold" />
-          <CardTitle>Subscription Management</CardTitle>
-        </div>
-        <CardDescription>
-          Manage your subscription and profile settings
-        </CardDescription>
-      </CardHeader>
-      
-      <CardContent className="space-y-6">
-        {isLoading ? (
-          <div className="text-center text-white/70 italic">Loading subscription data...</div>
-        ) : (
-          <>
-            {isSubscribed ? (
-              <div className="space-y-4">
-                <div className="p-4 bg-black/20 rounded-lg">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-sm font-medium text-white/80">
-                      Subscription Details
-                    </h3>
-                    <Badge variant="outline">Active</Badge>
-                  </div>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                    <div className="flex items-center">
-                      <Label className="text-white/70 mr-2">Tier:</Label>
-                      <span className="font-medium">{subscription?.tier}</span>
-                    </div>
-                    <div className="flex items-center">
-                      <Label className="text-white/70 mr-2">Interval:</Label>
-                      <span className="font-medium">{subscription?.interval}</span>
-                    </div>
-                    <div className="flex items-center">
-                      <Label className="text-white/70 mr-2">Start Date:</Label>
-                      <span className="font-medium">{formatDate(subscription?.startDate || '')}</span>
-                    </div>
-                    <div className="flex items-center">
-                      <Label className="text-white/70 mr-2">End Date:</Label>
-                      <span className="font-medium">{formatDate(subscription?.endDate || '')}</span>
-                    </div>
-                    <div className="flex items-center">
-                      <Label className="text-white/70 mr-2">Auto Renew:</Label>
-                      <Switch 
-                        checked={autoRenew} 
-                        onCheckedChange={(checked) => {
-                          setAutoRenew(checked);
-                          // Simulate API call to update auto renew setting
-                          toast({
-                            title: "Auto Renew Updated",
-                            description: `Auto renew has been ${checked ? 'enabled' : 'disabled'}.`,
-                            variant: "default"
-                          });
-                        }}
-                      />
-                    </div>
-                  </div>
+    <div className="space-y-4">
+      {subscription ? (
+        <Card className="glass-morphism border-white/10">
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle className="text-xl">Your Subscription</CardTitle>
+                <CardDescription>
+                  Manage your current subscription plan
+                </CardDescription>
+              </div>
+              <Badge 
+                className={`
+                  ${isActive ? 'bg-green-500/20 text-green-400 border-green-500/30' : ''}
+                  ${isCancelled ? 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30' : ''}
+                  ${isExpired ? 'bg-red-500/20 text-red-400 border-red-500/30' : ''}
+                  ${isPaused ? 'bg-blue-500/20 text-blue-400 border-blue-500/30' : ''}
+                `}
+              >
+                {isActive && 'Active'}
+                {isCancelled && 'Cancelled'}
+                {isExpired && 'Expired'}
+                {isPaused && 'Paused'}
+              </Badge>
+            </div>
+          </CardHeader>
+          
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="p-3 bg-black/20 rounded-lg">
+                <div className="flex items-center text-sm text-white/70 mb-1">
+                  <ShieldCheck className="h-4 w-4 mr-2 text-royal-gold" />
+                  <span>Plan</span>
                 </div>
-                
-                <div className="p-4 bg-black/20 rounded-lg">
-                  <h3 className="text-sm font-medium text-white/80 mb-2">
-                    Subscription Actions
-                  </h3>
-                  
-                  {autoRenew ? (
-                    <Button 
-                      variant="destructive" 
-                      className="w-full"
-                      onClick={handleCancelSubscription}
-                      disabled={isCancelling}
-                    >
-                      {isCancelling ? "Cancelling..." : "Cancel Subscription"}
-                    </Button>
-                  ) : (
-                    <Button 
-                      variant="secondary" 
-                      className="w-full"
-                      onClick={handleActivateSubscription}
-                      disabled={isActivating}
-                    >
-                      {isActivating ? "Reactivating..." : "Reactivate Subscription"}
-                    </Button>
-                  )}
+                <div className="text-lg font-medium">{subscription.planName}</div>
+              </div>
+              
+              <div className="p-3 bg-black/20 rounded-lg">
+                <div className="flex items-center text-sm text-white/70 mb-1">
+                  <CreditCard className="h-4 w-4 mr-2 text-royal-gold" />
+                  <span>Price</span>
+                </div>
+                <div className="text-lg font-medium">
+                  ${subscription.price.toFixed(2)}/{subscription.interval}
                 </div>
               </div>
-            ) : (
-              <div className="text-center text-white/70 italic">
-                You are not currently subscribed. <a href="/pricing" className="text-royal-gold hover:underline">View Pricing</a>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="p-3 bg-black/20 rounded-lg">
+                <div className="flex items-center text-sm text-white/70 mb-1">
+                  <CalendarCheck className="h-4 w-4 mr-2 text-royal-gold" />
+                  <span>Started</span>
+                </div>
+                <div className="text-sm">
+                  {formatDate(subscription.startDate)}
+                  <span className="text-white/50 ml-2">
+                    ({formatTimeAgo(subscription.startDate)})
+                  </span>
+                </div>
+              </div>
+              
+              <div className="p-3 bg-black/20 rounded-lg">
+                <div className="flex items-center text-sm text-white/70 mb-1">
+                  <Clock className="h-4 w-4 mr-2 text-royal-gold" />
+                  <span>{isCancelled ? 'Expires' : 'Next Billing'}</span>
+                </div>
+                <div className="text-sm">
+                  {formatDate(subscription.nextBillingDate)}
+                  <span className="text-white/50 ml-2">
+                    ({formatTimeAgo(subscription.nextBillingDate)})
+                  </span>
+                </div>
+              </div>
+            </div>
+            
+            {isCancelled && (
+              <div className="p-3 bg-yellow-500/10 border border-yellow-500/20 rounded-lg">
+                <div className="flex items-start">
+                  <AlertTriangle className="h-5 w-5 text-yellow-400 mr-2 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <p className="text-sm font-medium text-yellow-400">Subscription Cancelled</p>
+                    <p className="text-xs text-white/70 mt-1">
+                      Your subscription will remain active until {formatDate(subscription.nextBillingDate)}, 
+                      after which you'll lose access to premium features.
+                    </p>
+                  </div>
+                </div>
               </div>
             )}
             
-            <Separator className="bg-white/10" />
-            
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <h3 className="text-sm font-medium text-white/80">
-                  Profile Information
-                </h3>
-                <Button 
-                  variant="ghost" 
-                  size="sm"
-                  onClick={() => {
-                    setIsEditing(true);
-                    setProfile(user);
-                  }}
-                >
-                  Edit Profile
-                </Button>
-              </div>
-              
-              {isEditing ? (
-                <div className="space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="displayName">Display Name</Label>
-                      <Input 
-                        type="text" 
-                        id="displayName" 
-                        value={profile.displayName || ''}
-                        onChange={(e) => setProfile({ ...profile, displayName: e.target.value })}
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="username">Username</Label>
-                      <Input 
-                        type="text" 
-                        id="username" 
-                        value={profile.username}
-                        onChange={(e) => setProfile({ ...profile, username: e.target.value })}
-                        disabled
-                      />
-                    </div>
-                  </div>
-                  
+            {isExpired && (
+              <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-lg">
+                <div className="flex items-start">
+                  <AlertTriangle className="h-5 w-5 text-red-400 mr-2 flex-shrink-0 mt-0.5" />
                   <div>
-                    <Label htmlFor="bio">Bio</Label>
-                    <Textarea 
-                      id="bio" 
-                      placeholder="Tell us about yourself" 
-                      value={profile.bio || ''}
-                      onChange={(e) => setProfile({ ...profile, bio: e.target.value })}
-                    />
-                  </div>
-                  
-                  <div className="flex justify-end">
-                    <Button 
-                      variant="secondary" 
-                      className="mr-2"
-                      onClick={() => setIsEditing(false)}
-                    >
-                      Cancel
-                    </Button>
-                    <Button 
-                      className="bg-royal-gold hover:bg-royal-gold/90 text-black"
-                      onClick={handleSaveProfile}
-                      disabled={isSaving}
-                    >
-                      {isSaving ? "Saving..." : "Save Changes"}
-                    </Button>
+                    <p className="text-sm font-medium text-red-400">Subscription Expired</p>
+                    <p className="text-xs text-white/70 mt-1">
+                      Your subscription has expired. Renew now to regain access to premium features.
+                    </p>
                   </div>
                 </div>
-              ) : (
-                <div className="space-y-2">
-                  <div className="flex items-center">
-                    <Label className="text-white/70 mr-2">Display Name:</Label>
-                    <span className="font-medium">{user.displayName || 'N/A'}</span>
-                  </div>
-                  <div className="flex items-center">
-                    <Label className="text-white/70 mr-2">Username:</Label>
-                    <span className="font-medium">{user.username}</span>
-                  </div>
-                  <div className="flex items-start">
-                    <Label className="text-white/70 mr-2">Bio:</Label>
-                    <span className="font-medium">{user.bio || 'N/A'}</span>
-                  </div>
-                </div>
-              )}
-            </div>
-            
-            <Separator className="bg-white/10" />
-            
-            <div className="space-y-4">
-              <h3 className="text-sm font-medium text-white/80">
-                Referral Program
-              </h3>
-              <p className="text-white/70">
-                Share your referral link with friends and earn rewards!
-              </p>
-              <div className="flex items-center justify-between p-3 bg-black/20 rounded-lg">
-                <Input 
-                  type="text" 
-                  value={`https://p2w.fun/referral/${user.id}`} 
-                  readOnly 
-                  className="bg-transparent border-none focus-visible:ring-0 text-white/70"
-                />
-                <Button 
-                  variant="secondary"
-                  size="sm"
-                  onClick={handleCopyReferralLink}
-                >
-                  <Copy className="mr-2 h-4 w-4" />
-                  Copy Link
-                </Button>
               </div>
-            </div>
+            )}
+          </CardContent>
+          
+          <CardFooter className="flex flex-col sm:flex-row gap-3">
+            {isActive && !showCancelConfirm && (
+              <>
+                <Button 
+                  variant="outline" 
+                  className="w-full sm:w-auto"
+                  onClick={() => setShowCancelConfirm(true)}
+                >
+                  Cancel Subscription
+                </Button>
+                
+                <Button 
+                  className="w-full sm:w-auto bg-royal-gold hover:bg-royal-gold/90 text-black"
+                  onClick={onUpgrade}
+                >
+                  Upgrade Plan
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </>
+            )}
             
-            <Separator className="bg-white/10" />
+            {showCancelConfirm && (
+              <>
+                <div className="w-full p-3 bg-red-500/10 border border-red-500/20 rounded-lg mb-3">
+                  <p className="text-sm text-white/90">Are you sure you want to cancel your subscription?</p>
+                  <p className="text-xs text-white/70 mt-1">
+                    You'll still have access until the end of your current billing period.
+                  </p>
+                </div>
+                
+                <div className="flex flex-col sm:flex-row gap-3 w-full">
+                  <Button 
+                    variant="outline" 
+                    className="w-full sm:w-auto"
+                    onClick={() => setShowCancelConfirm(false)}
+                    disabled={isLoading}
+                  >
+                    Keep Subscription
+                  </Button>
+                  
+                  <Button 
+                    variant="destructive" 
+                    className="w-full sm:w-auto"
+                    onClick={handleCancelSubscription}
+                    disabled={isLoading}
+                  >
+                    {isLoading ? 'Cancelling...' : 'Confirm Cancellation'}
+                  </Button>
+                </div>
+              </>
+            )}
             
-            <div className="text-white/50 text-sm">
-              Need help? <a href="/support" className="text-royal-gold hover:underline">Contact Support</a>
+            {(isCancelled || isExpired) && (
+              <Button 
+                className="w-full sm:w-auto bg-royal-gold hover:bg-royal-gold/90 text-black"
+                onClick={handleRenewSubscription}
+                disabled={isLoading}
+              >
+                <CheckCircle className="mr-2 h-4 w-4" />
+                {isLoading ? 'Processing...' : 'Renew Subscription'}
+              </Button>
+            )}
+          </CardFooter>
+        </Card>
+      ) : (
+        <Card className="glass-morphism border-white/10">
+          <CardHeader>
+            <CardTitle className="text-xl">No Active Subscription</CardTitle>
+            <CardDescription>
+              Upgrade to a premium plan to unlock exclusive features
+            </CardDescription>
+          </CardHeader>
+          
+          <CardContent>
+            <div className="p-4 bg-black/20 rounded-lg text-center">
+              <p className="text-white/70 mb-4">
+                You currently don't have an active subscription. Upgrade to access premium features.
+              </p>
+              
+              <Button 
+                className="bg-royal-gold hover:bg-royal-gold/90 text-black"
+                onClick={onUpgrade}
+              >
+                <ShieldCheck className="mr-2 h-4 w-4" />
+                View Premium Plans
+              </Button>
             </div>
-          </>
-        )}
-      </CardContent>
-    </Card>
+          </CardContent>
+        </Card>
+      )}
+    </div>
   );
 };
 

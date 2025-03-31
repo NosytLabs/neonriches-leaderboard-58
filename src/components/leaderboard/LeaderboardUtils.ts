@@ -1,121 +1,136 @@
+import { LeaderboardUser } from '@/types/leaderboard';
+import { User } from '@/types/user';
+import { formatDate } from '@/utils/formatters/dateFormatters'; // Fixed import
 
-import { UserProfile } from '@/types/user';
-import { formatCurrency, formatDate } from '@/utils/formatters';
+/**
+ * Utility functions for leaderboard components
+ */
 
-export interface LeaderboardUser extends UserProfile {
-  rankChange?: number;
-  spendChange?: number;
+/**
+ * Sort users by total spent in descending order
+ */
+export function sortByTotalSpent(users: LeaderboardUser[]): LeaderboardUser[] {
+  return [...users].sort((a, b) => (b.totalSpent || 0) - (a.totalSpent || 0));
 }
 
 /**
- * Calculates the change in a user's rank
- * @param user - The user profile
- * @returns Change in rank (positive means improved rank)
+ * Sort users by rank in ascending order
  */
-export const calculateRankChange = (user: UserProfile): number => {
-  if (!user || !user.previousRank) return 0;
-  
-  // Positive means improved rank (moved up)
-  return user.previousRank - user.rank;
-};
+export function sortByRank(users: LeaderboardUser[]): LeaderboardUser[] {
+  return [...users].sort((a, b) => (a.rank || 0) - (b.rank || 0));
+}
 
 /**
- * Formats a rank change for display
- * @param change - The rank change value
- * @returns Formatted rank change string
+ * Filter users by tier
  */
-export const formatRankChange = (change: number): string => {
-  if (change === 0) return "0";
-  return change > 0 ? `+${change}` : `${change}`;
-};
-
-/**
- * Gets the appropriate color for a rank change
- * @param change - The rank change value
- * @returns CSS color class
- */
-export const getRankChangeColor = (change: number): string => {
-  if (change === 0) return "text-gray-400";
-  return change > 0 ? "text-green-500" : "text-red-500";
-};
-
-/**
- * Gets the appropriate icon for a rank change
- * @param change - The rank change value
- * @returns Icon string
- */
-export const getRankChangeIcon = (change: number): string => {
-  if (change === 0) return "➝";
-  return change > 0 ? "↑" : "↓";
-};
-
-/**
- * Gets the color for a team
- * @param team - The team name
- * @returns CSS color class
- */
-export const getTeamColor = (team: string | null | undefined) => {
-  switch (team) {
-    case 'red': return 'text-red-500';
-    case 'green': return 'text-green-500';
-    case 'blue': return 'text-blue-500';
-    default: return 'text-white/60';
+export function filterByTier(users: LeaderboardUser[], tier: string): LeaderboardUser[] {
+  if (tier === 'all') {
+    return users;
   }
-};
+  return users.filter(user => user.tier === tier);
+}
 
 /**
- * Sorts a list of users based on a sort criteria
- * @param users - List of user profiles
- * @param sortBy - Sort criteria
- * @returns Sorted list of users
+ * Filter users by team
  */
-export const sortLeaderboard = (users: UserProfile[], sortBy: string = 'rank'): UserProfile[] => {
-  return [...users].sort((a, b) => {
-    switch(sortBy) {
-      case 'rank':
-        return a.rank - b.rank;
-      case 'totalSpent':
-        return (b.totalSpent || 0) - (a.totalSpent || 0);
-      case 'username':
-        return a.username.localeCompare(b.username);
-      case 'joinDate':
-        return new Date(a.joinedAt).getTime() - new Date(b.joinedAt).getTime();
-      default:
-        return a.rank - b.rank;
-    }
-  });
-};
+export function filterByTeam(users: LeaderboardUser[], team: string): LeaderboardUser[] {
+  if (team === 'all') {
+    return users;
+  }
+  return users.filter(user => user.team === team);
+}
 
 /**
- * Filters a list of users based on a filter criteria
- * @param users - List of user profiles
- * @param filter - Filter type
- * @param value - Filter value
- * @returns Filtered list of users
+ * Search users by username or display name
  */
-export const filterLeaderboard = (users: UserProfile[], filter: string, value: string): UserProfile[] => {
-  if (!filter || !value) return users;
-  
-  return users.filter(user => {
-    switch(filter) {
-      case 'team':
-        return user.team === value;
-      case 'tier':
-        return user.tier === value;
-      case 'joinDate':
-        // Filter by month/year
-        const userDate = new Date(user.joinedAt);
-        const [month, year] = value.split('/');
-        return userDate.getMonth() + 1 === parseInt(month) && 
-               userDate.getFullYear() === parseInt(year);
-      default:
-        return true;
-    }
-  });
-};
+export function searchUsers(users: LeaderboardUser[], query: string): LeaderboardUser[] {
+  const searchTerm = query.toLowerCase();
+  return users.filter(user =>
+    user.username.toLowerCase().includes(searchTerm) ||
+    (user.displayName && user.displayName.toLowerCase().includes(searchTerm)) || false
+  );
+}
 
-// Re-export formatters for convenience
-export {
-  formatCurrency,
-  formatDate
-};
+/**
+ * Get the change in rank compared to the previous rank
+ */
+export function getRankChange(user: LeaderboardUser): number {
+  return (user.previousRank || 0) - (user.rank || 0);
+}
+
+/**
+ * Get the formatted join date
+ */
+export function getFormattedJoinDate(user: LeaderboardUser): string {
+  return formatDate(user.joinDate || '');
+}
+
+/**
+ * Get the user's profile URL
+ */
+export function getUserProfileUrl(user: LeaderboardUser): string {
+  return `/profile/${user.username}`;
+}
+
+/**
+ * Get the user's display name or username
+ */
+export function getUserDisplayName(user: LeaderboardUser): string {
+  return user.displayName || user.username;
+}
+
+/**
+ * Check if the user is verified
+ */
+export function isUserVerified(user: LeaderboardUser): boolean {
+  return user.isVerified || false;
+}
+
+/**
+ * Check if the user is protected
+ */
+export function isUserProtected(user: LeaderboardUser): boolean {
+  return user.isProtected || false;
+}
+
+/**
+ * Get the user's spend streak
+ */
+export function getSpendStreak(user: LeaderboardUser): number {
+  return user.spendStreak || 0;
+}
+
+/**
+ * Get the user's wallet balance
+ */
+export function getWalletBalance(user: LeaderboardUser): number {
+  return user.walletBalance || 0;
+}
+
+/**
+ * Get the user's total spent
+ */
+export function getTotalSpent(user: LeaderboardUser): number {
+  return user.totalSpent || 0;
+}
+
+/**
+ * Get the user's tier
+ */
+export function getUserTier(user: LeaderboardUser): string {
+  return user.tier || 'basic';
+}
+
+/**
+ * Get the user's team
+ */
+export function getUserTeam(user: LeaderboardUser): string {
+  return user.team || 'none';
+}
+
+/**
+ * Get the user's profile image
+ */
+export function getUserProfileImage(user: LeaderboardUser): string {
+  return user.profileImage || '/images/default-profile.png';
+}

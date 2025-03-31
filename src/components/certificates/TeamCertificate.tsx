@@ -1,4 +1,5 @@
 
+// This is a partial update focusing on the formatDate import issue
 import React, { useRef, useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
@@ -6,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Download, Share2, Award, Crown, Shield, Wallet, ExternalLink } from 'lucide-react';
 import { UserProfile } from '@/types/user';
 import { Certificate } from '@/types/certificate';
-import { formatDate } from '@/utils/formatters';
+import { formatDate } from '@/utils/formatters/dateFormatters'; // Fixed import
 import { getTeamName, getTeamColor, getTeamBorderColor } from '@/utils/teamUtils';
 import { useSolana } from '@/contexts/SolanaContext';
 import html2canvas from 'html2canvas';

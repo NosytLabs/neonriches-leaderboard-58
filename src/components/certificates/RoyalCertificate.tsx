@@ -1,6 +1,4 @@
-
 import React, { useRef, useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
@@ -13,7 +11,7 @@ import RoyalDecoration from '@/components/ui/royal-decoration';
 import { SpendAmount } from '@/components/ui/theme-components';
 import { motion } from 'framer-motion';
 import MedievalIcon from '@/components/ui/medieval-icon';
-import { formatDate } from '@/utils/formatters';
+import { formatDate } from '@/utils/formatters/dateFormatters';
 
 interface RoyalCertificateProps {
   user: UserProfile;

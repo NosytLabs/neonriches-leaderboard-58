@@ -15,9 +15,11 @@ import * as currencyFormatters from './currencyFormatters';
 import * as stringFormatters from './stringFormatters';
 import * as iconFormatters from './iconFormatters';
 
-export default {
+const formatters = {
   ...dateFormatters,
   ...currencyFormatters,
   ...stringFormatters,
   ...iconFormatters
 };
+
+export default formatters;
