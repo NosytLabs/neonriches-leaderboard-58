@@ -73,6 +73,8 @@ export {
   getMockeryActionIcon,
   getMockeryActionIconColor,
   getMockeryActionName,
+  getMockeryName,
+  getMockeryDescription,
   getMockeryActionTitle,
   getMockeryActionDescription,
   getMockeryActionPrice,

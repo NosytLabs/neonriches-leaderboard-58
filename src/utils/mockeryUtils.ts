@@ -1,4 +1,3 @@
-
 /**
  * Centralized utility functions for mockery functionality
  */
