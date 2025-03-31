@@ -1,30 +1,25 @@
 
 import React, { useState, useEffect } from 'react';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Trophy, Filter, Users, Search } from 'lucide-react';
-import { Input } from '@/components/ui/input';
-import { User } from '@/types/user-types';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '@/contexts/auth';
-import LeaderboardList from './components/LeaderboardList';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Trophy } from 'lucide-react';
+import LeaderboardEntry from '@/components/leaderboard/components/LeaderboardEntry';
+import { Team } from '@/types/team';
+import { UserProfile, User } from '@/types/user-types';
+import { cn } from '@/lib/utils';
 
-// Create mock data that conforms to User interface
-const mockUsers: User[] = [
+const dummyUsers: User[] = [
   {
     id: '1',
-    username: 'RoyalSpender',
-    displayName: 'Royal Spender',
-    profileImage: 'https://api.dicebear.com/6.x/personas/svg?seed=RoyalSpender',
+    username: 'RoyalThroneGuru',
+    displayName: 'Royal Guru',
+    email: 'guru@example.com',
+    profileImage: '/throne-assets/crown-icon.svg',
+    bio: 'Founder of SpendThrone',
+    joinDate: '2023-01-01',
     tier: 'founder',
     team: 'red',
-    totalSpent: 10000,
+    totalSpent: 1000,
     rank: 1,
-    email: 'royal@spendthrone.com',
-    bio: 'Always spending for the throne',
-    joinDate: '2023-01-01T00:00:00Z',
-    isVerified: true,
-    isFounder: true,
     cosmetics: {
       border: [],
       color: [],
@@ -39,29 +34,30 @@ const mockUsers: User[] = [
     settings: {
       profileVisibility: 'public',
       allowProfileLinks: true,
-      theme: 'royal',
+      theme: 'dark',
       notifications: true,
       emailNotifications: true,
       marketingEmails: true,
       soundEffects: true,
+      showRank: true,
+      showTeam: true,
       showBadges: true
     },
+    isFounder: true,
     socialLinks: []
   },
   {
     id: '2',
-    username: 'CrownCollector',
-    displayName: 'Crown Collector',
-    profileImage: 'https://api.dicebear.com/6.x/personas/svg?seed=CrownCollector',
+    username: 'ThroneMaster',
+    displayName: 'Throne Master',
+    email: 'master@example.com',
+    profileImage: '/throne-assets/throne-icon.svg',
+    bio: 'Throne Master',
+    joinDate: '2023-01-02',
     tier: 'founder',
     team: 'blue',
-    totalSpent: 8500,
+    totalSpent: 950,
     rank: 2,
-    email: 'crown@spendthrone.com',
-    bio: 'Collecting crowns since day one',
-    joinDate: '2023-01-05T00:00:00Z',
-    isVerified: true,
-    isFounder: true,
     cosmetics: {
       border: [],
       color: [],
@@ -76,29 +72,30 @@ const mockUsers: User[] = [
     settings: {
       profileVisibility: 'public',
       allowProfileLinks: true,
-      theme: 'royal',
+      theme: 'dark',
       notifications: true,
       emailNotifications: true,
       marketingEmails: true,
       soundEffects: true,
+      showRank: true,
+      showTeam: true,
       showBadges: true
     },
+    isFounder: true,
     socialLinks: []
   },
   {
     id: '3',
-    username: 'ThroneSeeker',
-    displayName: 'Throne Seeker',
-    profileImage: 'https://api.dicebear.com/6.x/personas/svg?seed=ThroneSeeker',
+    username: 'RichGamer99',
+    displayName: 'Rich Gamer',
+    email: 'rich@example.com',
+    profileImage: '/throne-assets/coin-stack.svg',
+    bio: 'I just like spending money',
+    joinDate: '2023-01-03',
     tier: 'basic',
     team: 'green',
-    totalSpent: 6000,
+    totalSpent: 800,
     rank: 3,
-    email: 'throne@spendthrone.com',
-    bio: 'Seeking the throne through spending',
-    joinDate: '2023-01-10T00:00:00Z',
-    isVerified: true,
-    isFounder: false,
     cosmetics: {
       border: [],
       color: [],
@@ -113,29 +110,30 @@ const mockUsers: User[] = [
     settings: {
       profileVisibility: 'public',
       allowProfileLinks: true,
-      theme: 'royal',
+      theme: 'dark',
       notifications: true,
       emailNotifications: true,
       marketingEmails: true,
       soundEffects: true,
+      showRank: true,
+      showTeam: true,
       showBadges: true
     },
+    isFounder: false,
     socialLinks: []
   },
   {
     id: '4',
-    username: 'RegalDonor',
-    displayName: 'Regal Donor',
-    profileImage: 'https://api.dicebear.com/6.x/personas/svg?seed=RegalDonor',
+    username: 'EpicWhaler',
+    displayName: 'Epic Whaler',
+    email: 'whale@example.com',
+    profileImage: '/throne-assets/treasure-chest.svg',
+    bio: 'Big whale, big heart',
+    joinDate: '2023-01-04',
     tier: 'basic',
     team: 'red',
-    totalSpent: 4500,
+    totalSpent: 700,
     rank: 4,
-    email: 'regal@spendthrone.com',
-    bio: 'Donating regally every day',
-    joinDate: '2023-01-15T00:00:00Z',
-    isVerified: true,
-    isFounder: false,
     cosmetics: {
       border: [],
       color: [],
@@ -150,29 +148,30 @@ const mockUsers: User[] = [
     settings: {
       profileVisibility: 'public',
       allowProfileLinks: true,
-      theme: 'royal',
+      theme: 'dark',
       notifications: true,
       emailNotifications: true,
       marketingEmails: true,
       soundEffects: true,
+      showRank: true,
+      showTeam: true,
       showBadges: true
     },
+    isFounder: false,
     socialLinks: []
   },
   {
     id: '5',
-    username: 'NobleCash',
-    displayName: 'Noble Cash',
-    profileImage: 'https://api.dicebear.com/6.x/personas/svg?seed=NobleCash',
+    username: 'MedievalSpender',
+    displayName: 'Medieval Spender',
+    email: 'medieval@example.com',
+    profileImage: '/throne-assets/shield-emblem.svg',
+    bio: 'I love medieval themes',
+    joinDate: '2023-01-05',
     tier: 'basic',
     team: 'blue',
-    totalSpent: 3200,
+    totalSpent: 600,
     rank: 5,
-    email: 'noble@spendthrone.com',
-    bio: 'Cash is king, and I am noble',
-    joinDate: '2023-01-20T00:00:00Z',
-    isVerified: true,
-    isFounder: false,
     cosmetics: {
       border: [],
       color: [],
@@ -187,96 +186,79 @@ const mockUsers: User[] = [
     settings: {
       profileVisibility: 'public',
       allowProfileLinks: true,
-      theme: 'royal',
+      theme: 'dark',
       notifications: true,
       emailNotifications: true,
       marketingEmails: true,
       soundEffects: true,
+      showRank: true,
+      showTeam: true,
       showBadges: true
     },
+    isFounder: false,
     socialLinks: []
-  }
+  },
 ];
 
-const CombinedLeaderboard: React.FC = () => {
-  const navigate = useNavigate();
-  const { user } = useAuth();
-  const [searchQuery, setSearchQuery] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [filteredUsers, setFilteredUsers] = useState<User[]>(mockUsers);
-  
-  // Filter users on search query change
+interface CombinedLeaderboardProps {
+  limit?: number;
+  className?: string;
+  showHeader?: boolean;
+  onUserClick?: (user: User, action: string) => void;
+}
+
+const CombinedLeaderboard: React.FC<CombinedLeaderboardProps> = ({
+  limit = 5,
+  className,
+  showHeader = true,
+  onUserClick
+}) => {
+  const [users, setUsers] = useState<User[]>([]);
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
-    if (!searchQuery) {
-      setFilteredUsers(mockUsers);
-      return;
+    // In a real app, you would fetch this data from an API
+    setUsers(dummyUsers.slice(0, limit));
+    setLoading(false);
+  }, [limit]);
+
+  const handleUserClick = (user: UserProfile, action: string) => {
+    if (onUserClick) {
+      onUserClick(user as User, action);
     }
-    
-    const lowercaseQuery = searchQuery.toLowerCase();
-    const filtered = mockUsers.filter(user => 
-      user.username.toLowerCase().includes(lowercaseQuery)
-    );
-    
-    setFilteredUsers(filtered);
-  }, [searchQuery]);
-  
-  const handleProfileClick = (userId: string, username: string) => {
-    navigate(`/profile/${username}`);
   };
-  
-  const handleShameUser = (user: User, action: string) => {
-    console.log(`Applied ${action} to user ${user.username}`);
-    // Show toast or notification
-  };
-  
-  return (
-    <div className="space-y-6">
+
+  if (loading) {
+    return (
       <Card className="glass-morphism border-white/10">
-        <CardHeader>
-          <CardTitle className="flex items-center">
-            <Trophy className="mr-2 h-5 w-5 text-royal-gold" />
-            Royal Spending Leaderboard
-          </CardTitle>
-          <CardDescription>
-            Where nobles compete for rank and glory through monetary sacrifice
-          </CardDescription>
-        </CardHeader>
-        
-        <CardContent className="p-0">
-          <div className="p-4 border-b border-white/10">
-            <div className="flex items-center gap-2">
-              <div className="relative flex-grow">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-white/50" />
-                <Input
-                  placeholder="Search nobles..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-9 glass-morphism border-white/10"
-                />
-              </div>
-              
-              <Button variant="outline" size="icon" className="glass-morphism border-white/10">
-                <Filter className="h-4 w-4" />
-              </Button>
-              
-              <Button variant="outline" size="sm" className="gap-1 glass-morphism border-white/10">
-                <Users className="h-4 w-4" />
-                <span className="hidden sm:inline">Teams</span>
-              </Button>
-            </div>
-          </div>
-          
-          <LeaderboardList
-            users={filteredUsers}
-            loading={isLoading}
-            limit={10}
-            currentUserId={user?.id}
-            onProfileClick={handleProfileClick}
-            onShameUser={handleShameUser}
-          />
-        </CardContent>
+        <CardContent className="p-4">Loading leaderboard...</CardContent>
       </Card>
-    </div>
+    );
+  }
+
+  return (
+    <Card className={cn("glass-morphism border-white/10", className)}>
+      {showHeader && (
+        <CardHeader className="border-b border-white/10 pb-3">
+          <CardTitle className="flex items-center text-xl">
+            <Trophy className="w-5 h-5 mr-2 text-royal-gold" />
+            Top Spenders
+          </CardTitle>
+        </CardHeader>
+      )}
+      <CardContent className="p-0">
+        <div className="divide-y divide-white/10">
+          {users.map((user, index) => (
+            <LeaderboardEntry
+              key={user.id}
+              user={user}
+              rank={index + 1}
+              onClick={handleUserClick}
+            />
+          ))}
+        </div>
+      </CardContent>
+    </Card>
   );
 };
 

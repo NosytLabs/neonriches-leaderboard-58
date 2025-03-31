@@ -1,47 +1,46 @@
 
-import { TeamColor, UserTier } from './team';
+import { TeamColor, UserTier } from './user';
 
 /**
- * Leaderboard user interface
+ * LeaderboardUser type representing a user in the leaderboard
  */
 export interface LeaderboardUser {
   id: string;
+  userId?: string; // Add userId property for compatibility
   username: string;
-  displayName: string;
-  profileImage: string;
-  tier: UserTier | string;
-  team: TeamColor | string;
+  displayName?: string;
+  profileImage?: string;
+  tier?: UserTier;
+  team?: TeamColor;
   rank: number;
-  previousRank: number;
-  walletBalance: number;
+  previousRank?: number;
   totalSpent: number;
-  isVerified: boolean;
-  isProtected: boolean;
-  avatarUrl?: string;
-  spendStreak?: number;
-  joined?: string;
-  changePercent?: number;
-  badges?: string[];
-  spentAmount?: number;
+  spendChange?: number;
+  rankChange?: number;
+  joinedAt?: string;
+  walletBalance?: number;
 }
 
-export interface LeaderboardFilter {
-  sortBy: "rank" | "totalSpent" | "spent" | "username" | "joined";
-  sortDirection: "asc" | "desc";
-  team: "all" | TeamColor;
-  tier: "all" | UserTier;
+/**
+ * Options for sorting the leaderboard
+ */
+export type SortByOptions = 'rank' | 'totalSpent' | 'username' | 'joinDate';
+
+/**
+ * Typed leaderboard filter
+ */
+export interface TypedLeaderboardFilter {
+  tier: UserTier | 'all';
+  sortBy: SortByOptions;
+  team: TeamColor | 'all';
   search: string;
   limit?: number;
+  sortDirection: 'desc' | 'asc';
   timeFrame?: string;
 }
 
-export type LeaderboardSortOption = {
-  value: string;
-  label: string;
-  timeEnabled?: boolean;
-};
-
-export type LeaderboardTimeFrame = {
-  value: string;
-  label: string;
+export default {
+  LeaderboardUser,
+  SortByOptions,
+  TypedLeaderboardFilter
 };

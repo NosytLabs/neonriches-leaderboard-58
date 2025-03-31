@@ -7,7 +7,9 @@ export interface ShameEffect {
   userId: number;
   username: string;
   action: MockeryAction;
+  type: MockeryAction; // Add type for compatibility with existing code
   appliedAt: string;
+  timestamp: string; // Add timestamp for compatibility
   expiresAt: string;
 }
 
@@ -76,7 +78,9 @@ const useShameEffect = () => {
       userId,
       username,
       action,
+      type: action, // Set type to same as action for compatibility
       appliedAt: now.toISOString(),
+      timestamp: now.toISOString(), // Set timestamp to same as appliedAt for compatibility
       expiresAt: expiresAt.toISOString()
     };
     

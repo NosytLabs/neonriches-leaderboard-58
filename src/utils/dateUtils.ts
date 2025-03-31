@@ -1,114 +1,88 @@
 
-import { formatDistance, format, formatRelative, subDays } from 'date-fns';
+/**
+ * Date utility functions
+ */
 
 /**
- * Format a date string to a readable format
- * @param dateString ISO date string
- * @param formatStr Format string
- * @returns Formatted date string
+ * Format a date to a readable string
  */
-export const formatDate = (dateString: string, formatStr: string = 'MMM dd, yyyy'): string => {
-  try {
-    const date = new Date(dateString);
-    return format(date, formatStr);
-  } catch (error) {
-    console.error('Error formatting date:', error);
-    return 'Invalid date';
-  }
+export const formatDate = (date: Date | string): string => {
+  const d = typeof date === 'string' ? new Date(date) : date;
+  return d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
 };
 
 /**
- * Get relative time from now (e.g. "2 days ago", "3 hours ago")
- * @param dateString ISO date string
- * @returns Relative time string
+ * Format a date to a relative time string (e.g., "2 days ago")
  */
-export const getRelativeTime = (dateString: string): string => {
-  try {
-    const date = new Date(dateString);
-    const now = new Date();
-    return formatDistance(date, now, { addSuffix: true });
-  } catch (error) {
-    console.error('Error getting relative time:', error);
-    return 'Unknown time';
-  }
+export const getRelativeTime = (date: Date | string): string => {
+  const d = typeof date === 'string' ? new Date(date) : date;
+  const now = new Date();
+  const diffInSeconds = Math.floor((now.getTime() - d.getTime()) / 1000);
+  
+  if (diffInSeconds < 60) return `${diffInSeconds} seconds ago`;
+  if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)} minutes ago`;
+  if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)} hours ago`;
+  if (diffInSeconds < 2592000) return `${Math.floor(diffInSeconds / 86400)} days ago`;
+  if (diffInSeconds < 31536000) return `${Math.floor(diffInSeconds / 2592000)} months ago`;
+  return `${Math.floor(diffInSeconds / 31536000)} years ago`;
 };
 
 /**
- * Alias for getRelativeTime for backward compatibility
+ * Get the number of days in a month
  */
+export const getDaysInMonth = (month: number, year: number): number => {
+  return new Date(year, month, 0).getDate();
+};
+
+/**
+ * Check if a date is today
+ */
+export const isDateToday = (date: Date | string): boolean => {
+  const d = typeof date === 'string' ? new Date(date) : date;
+  const today = new Date();
+  return d.getDate() === today.getDate() &&
+    d.getMonth() === today.getMonth() &&
+    d.getFullYear() === today.getFullYear();
+};
+
+/**
+ * Format a date with time
+ */
+export const formatDateTime = (date: Date | string): string => {
+  const d = typeof date === 'string' ? new Date(date) : date;
+  return d.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+};
+
+/**
+ * Get the first day of the month
+ */
+export const getFirstDayOfMonth = (date: Date): Date => {
+  return new Date(date.getFullYear(), date.getMonth(), 1);
+};
+
+/**
+ * Get the last day of the month
+ */
+export const getLastDayOfMonth = (date: Date): Date => {
+  return new Date(date.getFullYear(), date.getMonth() + 1, 0);
+};
+
+// Alias for getRelativeTime to maintain compatibility with existing code
 export const getRelativeTimeString = getRelativeTime;
 
-/**
- * Format a date relative to the current date
- * @param dateString ISO date string
- * @returns Relative date format
- */
-export const getRelativeDate = (dateString: string): string => {
-  try {
-    const date = new Date(dateString);
-    const now = new Date();
-    return formatRelative(date, now);
-  } catch (error) {
-    console.error('Error getting relative date:', error);
-    return 'Unknown date';
-  }
-};
-
-/**
- * Get a date in the past
- * @param days Number of days in the past
- * @returns Date object
- */
-export const getPastDate = (days: number): Date => {
-  return subDays(new Date(), days);
-};
-
-/**
- * Check if a date is in the past
- * @param dateString ISO date string
- * @returns Boolean indicating if date is in the past
- */
-export const isDateInPast = (dateString: string): boolean => {
-  try {
-    const date = new Date(dateString);
-    const now = new Date();
-    return date < now;
-  } catch (error) {
-    console.error('Error checking if date is in past:', error);
-    return false;
-  }
-};
-
-/**
- * Check if a date is in the future
- * @param dateString ISO date string
- * @returns Boolean indicating if date is in the future
- */
-export const isDateInFuture = (dateString: string): boolean => {
-  try {
-    const date = new Date(dateString);
-    const now = new Date();
-    return date > now;
-  } catch (error) {
-    console.error('Error checking if date is in future:', error);
-    return false;
-  }
-};
-
-/**
- * Get the difference in days between two dates
- * @param date1 ISO date string
- * @param date2 ISO date string (defaults to now)
- * @returns Number of days difference
- */
-export const getDaysDifference = (date1: string, date2?: string): number => {
-  try {
-    const firstDate = new Date(date1);
-    const secondDate = date2 ? new Date(date2) : new Date();
-    const diffTime = Math.abs(secondDate.getTime() - firstDate.getTime());
-    return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-  } catch (error) {
-    console.error('Error calculating days difference:', error);
-    return 0;
-  }
+export default {
+  formatDate,
+  getRelativeTime,
+  getRelativeTimeString,
+  getDaysInMonth,
+  isDateToday,
+  formatDateTime,
+  getFirstDayOfMonth,
+  getLastDayOfMonth
 };
