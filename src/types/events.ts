@@ -10,7 +10,8 @@ export type EventType =
   | 'shame'
   | 'team'
   | 'auction'
-  | 'mockery';
+  | 'mockery'
+  | 'tournament';
 
 export type EventStatus = 
   | 'upcoming'
@@ -35,6 +36,7 @@ export interface Event {
   leaderboardUrl?: string;
   participationCost?: number;
   maxParticipants?: number;
+  createdAt?: string;
   
   // Additional properties for compatibility
   name?: string;
@@ -82,6 +84,12 @@ export interface EventStats {
     pokeCount: number;
   }[];
   id?: string;
+  usersParticipating?: number;
+  totalContributed?: number;
+  topContributor?: string;
+  daysRemaining?: number;
+  teamsParticipating?: number;
+  leadingTeam?: string;
 }
 
 export interface EventReward {
@@ -98,10 +106,22 @@ export interface EventReward {
     rank: string;
     reward: string;
   };
+  tier?: string;
+  rarity?: string;
 }
 
 export interface EventLeaderboard {
   eventId: string;
   participants: EventParticipant[];
   lastUpdated: string;
+}
+
+// Add EventDetails interface for compatibility
+export interface EventDetails extends Event {
+  rules: string[];
+  prizes: Array<{
+    rank: string;
+    reward: string;
+  }>;
+  rewards?: EventReward[];
 }

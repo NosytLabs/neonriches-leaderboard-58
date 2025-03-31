@@ -83,6 +83,7 @@ export interface MockeryEvent {
   type?: string;
   timestamp?: string;
   tier?: string;
+  createdAt?: string;
 }
 
 // Define the mocked user interface
@@ -142,7 +143,7 @@ export interface UseMockery {
   getUserMockeryCount: (userId: string) => number;
   getUserMockedOthersCount: (userId: string) => number;
   isUserMocked?: (userId: string) => boolean;
-  applyMockery?: (targetId: string, action: MockeryAction) => Promise<boolean>;
+  applyMockery?: (targetId: string, targetName: string, action: MockeryAction) => Promise<boolean>;
 }
 
 // Additional type definitions for notification sound options

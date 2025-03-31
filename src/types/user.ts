@@ -1,5 +1,5 @@
 
-export type TeamColor = 'red' | 'green' | 'blue' | 'purple' | 'gold';
+export type TeamColor = 'red' | 'green' | 'blue' | 'purple' | 'gold' | 'none' | 'neutral';
 
 // For backward compatibility
 export type TeamType = TeamColor;
@@ -33,6 +33,7 @@ export interface ProfileImage {
   isDefault?: boolean;
   isPrimary: boolean;
   caption?: string;
+  type?: string; // Added to support ProfileImage needs in ImagesEditor
 }
 
 // Define profile boost type
@@ -51,6 +52,7 @@ export interface ProfileBoost {
   duration?: number;
   price?: number;
   icon?: string;
+  effectId?: string; // Added to support AdvertisementBanner
 }
 
 // Define user cosmetics state - ensuring both the versions work
@@ -63,6 +65,7 @@ export interface UserCosmetics {
   emojis?: string[];
   fonts?: string[];
   effects?: string[];
+  badges?: string[]; // Added to support UserCosmetics needs
   // Used in newer components
   title?: string[];
   color?: string[];
@@ -71,6 +74,8 @@ export interface UserCosmetics {
   emoji?: string[];
   font?: string[];
   effect?: string[];
+  badge?: string[]; // Added to support UserCosmetics needs
+  theme?: string[]; // Added to support UserCosmetics needs
   // Active cosmetics
   activeTitle?: string;
   activeColor?: string;
@@ -79,6 +84,8 @@ export interface UserCosmetics {
   activeEmoji?: string;
   activeFont?: string;
   activeEffect?: string;
+  activeBadge?: string; // Added to support UserCosmetics needs
+  activeTheme?: string; // Added to support UserCosmetics needs
 }
 
 // Define user settings
@@ -162,3 +169,12 @@ export type User = UserProfile;
 
 // ProfileLink alias for backward compatibility
 export type ProfileLink = SocialLink;
+
+// Export a Team interface for backwards compatibility
+export interface Team {
+  id: string;
+  name: string;
+  color: TeamColor;
+  description: string;
+  members: number;
+}

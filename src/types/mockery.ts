@@ -65,7 +65,7 @@ export type MockeryAction =
   | 'fool';
 
 // Simplified subset for shame actions using actual MockeryAction
-export type ShameActions = MockeryAction; 
+export type ShameAction = MockeryAction; 
 
 // Alias for backward compatibility
 export type MockeryActionType = MockeryAction;
@@ -87,6 +87,7 @@ export interface MockeryEvent {
   reason?: string;
   type?: string;
   tier?: string;
+  createdAt?: string;
 }
 
 export interface MockedUser {

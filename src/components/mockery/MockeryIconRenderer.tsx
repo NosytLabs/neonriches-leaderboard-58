@@ -1,46 +1,35 @@
 
 import React from 'react';
-import { ShieldAlert, Sword, Crown, AlertCircle, ThumbsDown, Laugh, Target, Skull, Map } from 'lucide-react';
 import { MockeryAction } from '@/types/mockery';
-import { getMockeryActionIconColor } from '@/utils/mockeryUtils';
+import { getMockeryActionIcon } from '@/utils/mockery/mockery-icons';
+import { getMockeryActionIconColor } from '@/utils/mockery/mockery-icons';
 import { cn } from '@/lib/utils';
 
-interface MockeryIconProps {
+interface MockeryIconRendererProps {
   action: MockeryAction;
+  size?: 'sm' | 'md' | 'lg';
   className?: string;
-  size?: number;
 }
 
-const MockeryIconRenderer: React.FC<MockeryIconProps> = ({ action, className, size = 24 }) => {
-  const iconColor = getMockeryActionIconColor(action);
+const MockeryIconRenderer: React.FC<MockeryIconRendererProps> = ({
+  action,
+  size = 'md',
+  className
+}) => {
+  const IconComponent = getMockeryActionIcon(action);
   
-  // Map action to the corresponding icon component
-  const renderIcon = () => {
-    switch(action) {
-      case 'shame':
-        return <AlertCircle size={size} className={cn(iconColor, className)} />;
-      case 'taunt':
-        return <ThumbsDown size={size} className={cn(iconColor, className)} />;
-      case 'crown':
-        return <Crown size={size} className={cn(iconColor, className)} />;
-      case 'challenge':
-        return <Sword size={size} className={cn(iconColor, className)} />;
-      case 'protection':
-        return <ShieldAlert size={size} className={cn(iconColor, className)} />;
-      case 'jest':
-        return <Laugh size={size} className={cn(iconColor, className)} />;
-      case 'target':
-        return <Target size={size} className={cn(iconColor, className)} />;
-      case 'defeat':
-        return <Skull size={size} className={cn(iconColor, className)} />;
-      case 'expose':
-        return <Map size={size} className={cn(iconColor, className)} />;
-      default:
-        return <Laugh size={size} className={cn(iconColor, className)} />;
-    }
+  const sizeClasses = {
+    sm: 'h-4 w-4',
+    md: 'h-5 w-5',
+    lg: 'h-6 w-6'
   };
   
-  return renderIcon();
+  // Get appropriate color class
+  const colorClass = getMockeryActionIconColor(action);
+  
+  return (
+    <IconComponent className={cn(sizeClasses[size], colorClass, className)} />
+  );
 };
 
 export default MockeryIconRenderer;

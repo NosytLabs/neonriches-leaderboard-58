@@ -57,7 +57,7 @@ export const getMockeryEffectDuration = (action: MockeryAction): number => {
 
 // Get the duration multiplier based on tier
 export const getTierDurationMultiplier = (tier: MockeryTier): number => {
-  const multipliers: Record<MockeryTier, number> = {
+  const multipliers: Record<string, number> = {
     basic: 1,
     premium: 1.5,
     royal: 2,
@@ -66,7 +66,8 @@ export const getTierDurationMultiplier = (tier: MockeryTier): number => {
     epic: 1.75,
     common: 1,
     uncommon: 1.25,
-    silver: 1
+    silver: 1,
+    bronze: 1
   };
   
   return multipliers[tier] || 1;
@@ -79,3 +80,6 @@ export const getMockeryDuration = (action: MockeryAction, tier: MockeryTier): nu
   
   return Math.round(baseDuration * multiplier);
 };
+
+// Export an alias with the name expected by other components
+export const getMockeryActionDuration = getMockeryDuration;

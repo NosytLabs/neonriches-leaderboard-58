@@ -1,58 +1,50 @@
 
 import { MockeryAction } from '@/types/mockery-types';
-import { getMockeryActionPrice } from './mockery-costs';
 
-// Base discount percentage for weekly special actions
-export const WEEKLY_DISCOUNT_PERCENTAGE = 0.5; // 50% discount
-
-// Current weekly discounted action
-export const WEEKLY_DISCOUNTED_ACTION: MockeryAction = 'tomatoes';
-
-/**
- * Checks if an action has a weekly discount
- */
+// Get weekly discount status for a mockery action
 export const hasWeeklyDiscount = (action: MockeryAction): boolean => {
-  return action === WEEKLY_DISCOUNTED_ACTION;
+  const discountedActions: MockeryAction[] = ['tomatoes', 'eggs'];
+  return discountedActions.includes(action);
 };
 
-/**
- * Get the current weekly discounted action
- */
+// Get the current weekly discounted mockery action
 export const getWeeklyDiscountedAction = (): MockeryAction => {
-  return WEEKLY_DISCOUNTED_ACTION;
+  return 'tomatoes';
 };
 
-/**
- * Get the price for a shame action (legacy API)
- */
+// Get price for a shame action
 export const getShameActionPrice = (action: MockeryAction): number => {
-  return getMockeryActionPrice(action);
+  const prices: Record<MockeryAction, number> = {
+    tomatoes: 0.25,
+    eggs: 0.50,
+    putridEggs: 0.75,
+    stocks: 1.00,
+    shame: 0.25
+  } as Record<MockeryAction, number>;
+  
+  return prices[action] || 0.25;
 };
 
-/**
- * Get the discounted price for a shame action (legacy API)
- */
+// Get discounted price for a shame action
 export const getDiscountedShamePrice = (action: MockeryAction): number => {
-  const basePrice = getShameActionPrice(action);
-  return hasWeeklyDiscount(action)
-    ? basePrice * (1 - WEEKLY_DISCOUNT_PERCENTAGE)
-    : basePrice;
+  const regularPrice = getShameActionPrice(action);
+  const WEEKLY_DISCOUNT_PERCENT = 50;
+  const discountMultiplier = (100 - WEEKLY_DISCOUNT_PERCENT) / 100;
+  
+  return hasWeeklyDiscount(action) 
+    ? Number((regularPrice * discountMultiplier).toFixed(2)) 
+    : regularPrice;
 };
 
-/**
- * Get the customized message for a shame action (legacy API)
- */
+// Get message for a shame action
 export const getShameActionMessage = (action: MockeryAction, username: string): string => {
-  const messages: Record<string, string> = {
-    tomatoes: `${username} has been pelted with rotten tomatoes!`,
-    eggs: `${username} has been egged by the royal court!`,
-    stocks: `${username} has been placed in the public stocks!`,
-    dunce: `${username} has been forced to wear the dunce cap!`,
-    jester: `${username} has been made the court jester!`,
-    shame: `${username} has been publicly shamed!`,
-    crown: `${username} has had their crown stolen!`,
-    silence: `${username} has been silenced by royal decree!`
-  };
-
-  return messages[action] || `${username} has been subjected to public mockery!`;
+  const messages: Record<MockeryAction, string> = {
+    tomatoes: `You've pelted ${username} with rotten tomatoes!`,
+    eggs: `You've egged ${username} with eggs!`,
+    putridEggs: `You've pelted ${username} with putrid eggs!`,
+    stocks: `You've locked ${username} in the public stocks!`,
+    shame: `You've publicly shamed ${username}!`
+  } as Record<MockeryAction, string>;
+  
+  return messages[action] || `You've mocked ${username}!`;
 };
