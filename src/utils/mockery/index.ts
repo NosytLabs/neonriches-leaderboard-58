@@ -23,5 +23,5 @@ import { getMockeryActionIcon } from './mockery-icons';
  */
 export const renderMockeryIcon = (action: MockeryAction, className: string = "h-4 w-4") => {
   const IconComponent = getMockeryActionIcon(action);
-  return <IconComponent className={className} />;
+  return React.createElement(IconComponent, { className });
 };
