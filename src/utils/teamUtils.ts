@@ -47,15 +47,43 @@ export const getTeamMotto = (team: TeamType | TeamColor): string => {
   return mottoMap[team] || mottoMap.none;
 };
 
-export const getTeamBenefit = (team: TeamType | TeamColor): string => {
-  const benefitMap: Record<string, string> = {
-    red: '+15% attack power in mockery battles',
-    blue: '+10% increased wallet interest rate',
-    green: '-20% cost on profile boosts',
-    gold: '+25% bonus on first monthly deposit',
-    purple: 'Royal cosmetics unlock at rank 10 instead of 50',
-    none: 'Freedom to change teams at any time',
-    neutral: 'Balanced benefits across all features'
+export const getTeamBenefit = (team: TeamType | TeamColor): string[] => {
+  const benefitMap: Record<string, string[]> = {
+    red: [
+      '+15% attack power in mockery battles',
+      'Exclusive crimson profile frames',
+      'Bonus daily rank points during conquests'
+    ],
+    blue: [
+      '+10% increased wallet interest rate',
+      'Reduced cooldown on profile boosts',
+      'Special team cosmetic unlocks'
+    ],
+    green: [
+      '-20% cost on profile boosts',
+      'Enhanced growth-themed animations',
+      'Special monthly rewards'
+    ],
+    gold: [
+      '+25% bonus on first monthly deposit',
+      'Exclusive golden profile effects',
+      'Special status indicators'
+    ],
+    purple: [
+      'Royal cosmetics unlock at rank 10 instead of 50',
+      'Special royal titles available',
+      'Extended protection duration'
+    ],
+    none: [
+      'Freedom to change teams at any time',
+      'No team-specific restrictions',
+      'Independent rewards system'
+    ],
+    neutral: [
+      'Balanced benefits across all features',
+      'Universal compatibility bonuses',
+      'Special mediator status'
+    ]
   };
   
   return benefitMap[team] || benefitMap.none;
