@@ -15,7 +15,8 @@ export type UserTier =
   | 'vip' 
   | 'legendary'
   | 'free'
-  | 'founder';
+  | 'founder'
+  | 'plus';
 
 // Team types used throughout the application
 export type TeamType = 'red' | 'green' | 'blue' | 'gold' | 'purple' | 'none' | 'neutral';
@@ -123,6 +124,21 @@ export interface UserCosmetics {
   activeEffect?: string;
   activeBadge?: string;
   activeTheme?: string;
+}
+
+// ProfileImage type for editor contexts
+export interface ProfileImage {
+  id: string;
+  url: string;
+  type: string;
+}
+
+// ProfileLink type for editor contexts
+export interface ProfileLink {
+  id: string;
+  url: string;
+  title: string;
+  icon?: string;
 }
 
 // TeamColor type alias for backward compatibility

@@ -1,26 +1,28 @@
 
-// This file is updated to import from the new structure
-import {
-  getMockeryActionTitle,
-  getMockeryActionDescription,
+import { 
+  MockeryAction, 
+  MockeryTier 
+} from '@/types/mockery';
+import { 
+  getMockeryActionTitle, 
+  getMockeryActionDescription, 
   getMockeryActionPrice,
-  getMockeryTier,
-  getMockeryTierColorClass,
-  getMockeryActionIcon,
   getActiveMockeryClass
 } from '@/utils/mockery';
 
-// Re-export for components to use
+// Export for easy access
 export {
   getMockeryActionTitle,
   getMockeryActionDescription,
   getMockeryActionPrice,
-  getMockeryTier,
-  getMockeryTierColorClass,
-  getMockeryActionIcon,
-  getActiveMockeryClass,
-  // Add aliases for backward compatibility
-  getMockeryActionTitle as getMockeryName,
-  getMockeryActionDescription as getMockeryDescription,
-  getMockeryActionPrice as getMockeryCost
+  getActiveMockeryClass
+};
+
+// Add any component-specific utility functions here
+export const getMockeryDisplayInfo = (action: MockeryAction) => {
+  return {
+    title: getMockeryActionTitle(action),
+    description: getMockeryActionDescription(action),
+    price: getMockeryActionPrice(action)
+  };
 };

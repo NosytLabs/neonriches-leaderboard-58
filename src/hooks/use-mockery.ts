@@ -1,167 +1,178 @@
 
-import { useState, useEffect, useCallback } from 'react';
-import { useToast } from './use-toast';
-import { useSound } from './sounds/use-sound';
-import { useAuth } from './useAuth';
-import { MockeryAction, MockeryEvent, MockedUser, UseMockery } from '@/types/mockery-types';
+import { useState, useCallback } from 'react';
+import { MockeryAction, MockedUser, UseMockery, MockeryEvent } from '@/types/mockery';
+import { useSound } from '@/hooks/use-sound';
 
+/**
+ * Hook to manage mockery functionality
+ */
 const useMockery = (): UseMockery => {
-  const { toast } = useToast();
-  const sound = useSound();
-  const { user } = useAuth();
-  
-  const [mockedUsers, setMockedUsers] = useState<MockedUser[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
-  
-  // Fetch mocked users on component mount
-  useEffect(() => {
-    if (user) {
-      // In a real app, this would fetch from an API
-      const mockMockedUsers: MockedUser[] = [
-        {
-          id: '1',
-          username: 'MockedUser1',
-          mockedBy: user.id,
-          mockedAction: 'tomatoes',
-          mockedTimestamp: new Date().toISOString(),
-          mockedUntil: new Date(Date.now() + 3600000).toISOString(),
-          tier: 'basic'
-        },
-        {
-          id: '2',
-          username: 'MockedUser2',
-          mockedBy: user.id,
-          mockedAction: 'eggs',
-          mockedTimestamp: new Date().toISOString(),
-          mockedUntil: new Date(Date.now() + 7200000).toISOString(),
-          tier: 'premium'
-        }
-      ];
-      
-      setMockedUsers(mockMockedUsers);
+  const [mockUsers, setMockUsers] = useState<MockedUser[]>([
+    {
+      id: '1',
+      userId: '1',
+      username: 'WealthyUser',
+      displayName: 'Sir Money Bags',
+      profileImage: '/images/avatars/money-bags.jpg',
+      tier: 'royal',
+      team: 'gold',
+      action: 'tomatoes',
+      appliedBy: 'MockingUser',
+      appliedAt: new Date().toISOString(),
+      expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
+      mockedBy: 'MockingUser',
+      mockedAction: 'tomatoes',
+      mockedTimestamp: new Date().toISOString(),
+      mockedUntil: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
+    },
+    {
+      id: '2',
+      userId: '2',
+      username: 'BigSpender',
+      displayName: 'Lady Royal',
+      profileImage: '/images/avatars/royal-spender.jpg',
+      tier: 'premium',
+      team: 'purple',
+      action: 'eggs',
+      appliedBy: 'JesterUser',
+      appliedAt: new Date().toISOString(),
+      expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
+      mockedBy: 'JesterUser',
+      mockedAction: 'eggs',
+      mockedTimestamp: new Date().toISOString(),
+      mockedUntil: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
     }
-  }, [user]);
+  ]);
   
-  // Apply mockery to a user
-  const applyMockery = useCallback(async (targetId: string, targetName: string, action: MockeryAction): Promise<boolean> => {
-    setIsLoading(true);
-    setError(null);
-    
+  const sound = useSound();
+  
+  // Mock a user
+  const mockUser = useCallback(async (userId: string, action: MockeryAction, reason?: string): Promise<boolean> => {
     try {
-      // In a real app, this would make an API call
+      // Mock API call
+      await new Promise((resolve) => setTimeout(resolve, 500));
       
-      // Play mockery sound
-      sound.playSound('mockery');
-      
-      // Add to mocked users list
-      const newMockedUser: MockedUser = {
-        id: targetId,
-        username: targetName,
-        mockedBy: user?.id || 'unknown',
+      // Add to mocked users
+      const mockedUser: MockedUser = {
+        id: userId,
+        userId: userId,
+        username: `User${userId}`,
+        displayName: `User ${userId}`,
+        profileImage: '/images/avatars/default.jpg',
+        tier: 'basic',
+        team: 'red',
+        action: action,
+        appliedBy: 'CurrentUser',
+        appliedAt: new Date().toISOString(),
+        expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
+        mockedBy: 'CurrentUser',
         mockedAction: action,
         mockedTimestamp: new Date().toISOString(),
-        mockedUntil: new Date(Date.now() + 3600000).toISOString(),
-        tier: 'basic'
+        mockedUntil: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
       };
       
-      setMockedUsers(prev => [...prev, newMockedUser]);
+      setMockUsers(prev => [...prev, mockedUser]);
       
-      // Show success toast
-      toast({
-        title: 'Mockery Applied',
-        description: `You have mocked ${targetName} with ${action}`,
-        variant: 'success'
-      });
+      // Play sound effect
+      sound.playSound('mockery', { volume: 0.5 });
       
       return true;
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
-      setError(errorMessage);
-      
-      // Show error toast
-      toast({
-        title: 'Mockery Failed',
-        description: errorMessage,
-        variant: 'destructive'
-      });
-      
+    } catch (error) {
+      console.error('Error mocking user:', error);
       return false;
-    } finally {
-      setIsLoading(false);
     }
-  }, [sound, toast, user]);
+  }, [sound]);
   
   // Remove mockery from a user
-  const removeMockery = useCallback(async (targetId: string): Promise<boolean> => {
-    setIsLoading(true);
-    
+  const removeMockery = useCallback(async (userId: string): Promise<boolean> => {
     try {
-      // In a real app, this would make an API call
+      // Mock API call
+      await new Promise((resolve) => setTimeout(resolve, 500));
       
-      // Remove from mocked users list
-      setMockedUsers(prev => prev.filter(user => user.id !== targetId));
-      
-      // Show success toast
-      toast({
-        title: 'Mockery Removed',
-        description: 'The mockery has been removed',
-        variant: 'success'
-      });
+      // Remove from mocked users
+      setMockUsers(prev => prev.filter(user => user.id !== userId));
       
       return true;
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
-      setError(errorMessage);
-      
-      // Show error toast
-      toast({
-        title: 'Failed to Remove Mockery',
-        description: errorMessage,
-        variant: 'destructive'
-      });
-      
+    } catch (error) {
+      console.error('Error removing mockery:', error);
       return false;
-    } finally {
-      setIsLoading(false);
     }
-  }, [toast]);
+  }, []);
+  
+  // Get all mocked users
+  const getMockedUsers = useCallback(() => {
+    return mockUsers;
+  }, [mockUsers]);
+  
+  // Check if user is mocked
+  const isUserMocked = useCallback((userId: string) => {
+    return mockUsers.some(user => user.id === userId);
+  }, [mockUsers]);
+  
+  // Get mockery details for a user
+  const getUserMockeryDetails = useCallback((userId: string) => {
+    return mockUsers.find(user => user.id === userId) || null;
+  }, [mockUsers]);
+  
+  // Check if user is immune to mockery
+  const isUserImmune = useCallback((userId: string) => {
+    return false; // Mock implementation
+  }, []);
+  
+  // Check if user is protected from mockery
+  const isUserProtected = useCallback((username: string) => {
+    return false; // Mock implementation
+  }, []);
+  
+  // Protect a user from mockery
+  const protectUser = useCallback(async (username: string) => {
+    return true; // Mock implementation
+  }, []);
+  
+  // Check if user is publicly shamed
+  const isUserShamed = useCallback((username: string) => {
+    return mockUsers.some(user => user.username === username);
+  }, [mockUsers]);
+  
+  // Get number of times user has been mocked
+  const getUserMockeryCount = useCallback((username: string) => {
+    return mockUsers.filter(user => user.username === username).length;
+  }, [mockUsers]);
+  
+  // Get number of times user has mocked others
+  const getUserMockedOthersCount = useCallback((username: string) => {
+    return mockUsers.filter(user => user.mockedBy === username).length;
+  }, [mockUsers]);
   
   // Get active mockery for a user
-  const getActiveMockery = useCallback((targetId: string): MockeryEvent | null => {
-    const mockedUser = mockedUsers.find(user => user.id === targetId);
-    
+  const getActiveMockery = useCallback((username: string): MockeryEvent | null => {
+    const mockedUser = mockUsers.find(user => user.username === username);
     if (!mockedUser) return null;
     
     return {
-      id: `mockery-${mockedUser.id}`,
-      targetId: mockedUser.id.toString(),
-      appliedBy: mockedUser.mockedBy || 'unknown',
-      type: mockedUser.mockedAction || 'tomatoes',
-      timestamp: mockedUser.mockedTimestamp,
-      expiresAt: mockedUser.mockedUntil,
-      isActive: new Date(mockedUser.mockedUntil) > new Date(),
-      createdAt: mockedUser.mockedTimestamp
+      id: mockedUser.id,
+      action: mockedUser.action,
+      targetId: mockedUser.id,
+      appliedBy: mockedUser.appliedBy,
+      expiresAt: mockedUser.expiresAt,
+      isActive: true
     };
-  }, [mockedUsers]);
-  
-  // Check if a user is currently mocked
-  const isUserMocked = useCallback((targetId: string): boolean => {
-    return mockedUsers.some(user => 
-      user.id === targetId && 
-      new Date(user.mockedUntil) > new Date()
-    );
-  }, [mockedUsers]);
+  }, [mockUsers]);
   
   return {
-    applyMockery,
+    mockUser,
     removeMockery,
-    getActiveMockery,
+    getMockedUsers,
     isUserMocked,
-    mockedUsers,
-    mockedCount: mockedUsers.length,
-    isLoading,
-    error
+    getUserMockeryDetails,
+    isUserImmune,
+    mockUsers,
+    isUserProtected,
+    protectUser,
+    isUserShamed,
+    getUserMockeryCount,
+    getUserMockedOthersCount,
+    getActiveMockery
   };
 };
 

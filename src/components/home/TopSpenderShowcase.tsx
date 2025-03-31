@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -12,42 +11,42 @@ interface TopSpenderShowcaseProps {
 
 const TopSpenderShowcase: React.FC<TopSpenderShowcaseProps> = ({ highlightTop = true }) => {
   // Mock data for top spenders
-  const topSpenders: User[] = [
+  const users: User[] = [
     {
       id: '1',
-      username: 'JeffBezos',
-      displayName: 'Lord Moneybags',
-      profileImage: 'https://i.pravatar.cc/150?img=1',
+      username: 'MrMoneyBags',
+      displayName: 'Sir Money Bags III',
+      profileImage: '/images/avatars/money-bags.jpg',
       rank: 1,
-      team: 'blue',
-      tier: 'diamond',
-      amountSpent: 1250000,
-      walletBalance: 75000,
-      joinedAt: '2023-01-15T00:00:00.000Z'
+      amountSpent: 25000,
+      joinDate: '2023-02-15',
+      tier: 'legendary' as UserTier,
+      team: 'gold' as TeamType,
+      achievements: ['First Million', 'Golden Throne', 'Emperor']
     },
     {
       id: '2',
-      username: 'ElonTusk',
-      displayName: 'The Rocket Baron',
-      profileImage: 'https://i.pravatar.cc/150?img=2',
+      username: 'RoyalSpender',
+      displayName: 'Lady Royal',
+      profileImage: '/images/avatars/royal-spender.jpg',
       rank: 2,
-      team: 'red',
-      tier: 'platinum',
-      amountSpent: 980000,
-      walletBalance: 45000,
-      joinedAt: '2023-02-10T00:00:00.000Z'
+      amountSpent: 18500,
+      joinDate: '2023-03-01',
+      tier: 'royal' as UserTier,
+      team: 'purple' as TeamType,
+      achievements: ['Silver Throne', 'Duchess']
     },
     {
       id: '3',
-      username: 'WallStWolf',
-      displayName: 'Duke of Dividends',
-      profileImage: 'https://i.pravatar.cc/150?img=3',
+      username: 'DiamondHands',
+      displayName: 'Diamond Dave',
+      profileImage: '/images/avatars/diamond-hands.jpg',
       rank: 3,
-      team: 'green',
-      tier: 'platinum',
-      amountSpent: 750000,
-      walletBalance: 30000,
-      joinedAt: '2023-01-22T00:00:00.000Z'
+      amountSpent: 12300,
+      joinDate: '2023-03-10',
+      tier: 'diamond' as UserTier,
+      team: 'blue' as TeamType,
+      achievements: ['Bronze Throne', 'Viscount']
     }
   ];
 
@@ -61,9 +60,9 @@ const TopSpenderShowcase: React.FC<TopSpenderShowcaseProps> = ({ highlightTop = 
       </CardHeader>
       <CardContent>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {topSpenders.map((spender, index) => (
+          {users.map((user, index) => (
             <motion.div
-              key={spender.id}
+              key={user.id}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
@@ -98,22 +97,22 @@ const TopSpenderShowcase: React.FC<TopSpenderShowcaseProps> = ({ highlightTop = 
                     'border-amber-700'
                   }`}>
                     <img
-                      src={spender.profileImage}
-                      alt={spender.displayName}
+                      src={user.profileImage}
+                      alt={user.displayName}
                       className="h-full w-full object-cover"
                     />
                   </div>
                   
                   <div className="ml-4">
-                    <h3 className="font-bold text-lg">{spender.displayName}</h3>
-                    <p className="text-white/60">@{spender.username}</p>
+                    <h3 className="font-bold text-lg">{user.displayName}</h3>
+                    <p className="text-white/60">@{user.username}</p>
                     <div className="flex items-center mt-1">
                       <div className={`h-2 w-2 rounded-full mr-1 ${
-                        spender.team === 'red' ? 'bg-red-500' :
-                        spender.team === 'green' ? 'bg-green-500' :
+                        user.team === 'red' ? 'bg-red-500' :
+                        user.team === 'green' ? 'bg-green-500' :
                         'bg-blue-500'
                       }`}></div>
-                      <span className="text-xs text-white/70 capitalize">{spender.team} Team</span>
+                      <span className="text-xs text-white/70 capitalize">{user.team} Team</span>
                     </div>
                   </div>
                 </div>
@@ -129,20 +128,20 @@ const TopSpenderShowcase: React.FC<TopSpenderShowcaseProps> = ({ highlightTop = 
                     <span className="text-white/70">Total Spent:</span>
                     <span className="font-bold text-lg flex items-center">
                       <DollarSign className="h-4 w-4 mr-1 text-royal-gold" />
-                      {formatCurrency(spender.amountSpent).replace('$', '')}
+                      {formatCurrency(user.amountSpent).replace('$', '')}
                     </span>
                   </div>
                   
                   <div className="flex justify-between items-center mt-1">
                     <span className="text-white/70">Rank:</span>
-                    <span className="font-bold">{spender.rank}</span>
+                    <span className="font-bold">{user.rank}</span>
                   </div>
                   
                   <div className="flex justify-between items-center mt-1">
                     <span className="text-white/70">Tier:</span>
                     <span className="flex items-center capitalize">
                       <Star className="h-3 w-3 text-royal-gold mr-1" />
-                      {spender.tier}
+                      {user.tier}
                     </span>
                   </div>
                 </div>
@@ -153,13 +152,13 @@ const TopSpenderShowcase: React.FC<TopSpenderShowcaseProps> = ({ highlightTop = 
                       "I've spent more money on this platform than I'd care to admit, but seeing my name at the top 
                       of the leaderboard gives me a rush that my other investments just can't match."
                     </p>
-                    <p className="text-right text-xs text-royal-gold mt-2">— {spender.displayName}</p>
+                    <p className="text-right text-xs text-royal-gold mt-2">— {user.displayName}</p>
                   </div>
                 )}
                 
                 <div className="mt-auto pt-4">
                   <a 
-                    href={`/profile/${spender.username}`}
+                    href={`/profile/${user.username}`}
                     className={`
                       text-sm flex items-center justify-center py-2 rounded-md
                       ${index === 0 ? 'text-black bg-royal-gold hover:bg-royal-gold/90' : 

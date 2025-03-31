@@ -3,7 +3,7 @@ import { UserProfile, UserTier, TeamType } from './user-types';
 import { FC } from 'react';
 import { LucideIcon } from 'lucide-react';
 
-// Core mockery action types
+// Core mockery action types - expanded to include all used values
 export type MockeryAction = 
   | 'tomatoes'
   | 'eggs'
@@ -44,7 +44,9 @@ export type MockeryAction =
   | 'dragon'
   | 'jest'
   | 'challenge'
-  | 'defeat';
+  | 'defeat'
+  | 'fool'
+  | 'demon';
 
 export type ExtendedMockeryAction = MockeryAction | string;
 
@@ -59,7 +61,9 @@ export type MockeryTier =
   | 'legendary'
   | 'standard'
   | 'premium'
-  | 'royal';
+  | 'royal'
+  | 'basic'
+  | 'silver';
 
 export type ShameAction = MockeryAction;
 
