@@ -1,179 +1,164 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { useSettingsStore } from '@/stores/settingsStore';
-import { useSoundsConfig } from '@/hooks/sounds/use-sounds-config';
-import { useTheme } from '@/providers/ThemeProvider';
-import { UserSettings, SettingsContextType } from '@/types/settings';
-import { useAuth } from '@/hooks/useAuth';
-import { useToast } from '@/hooks/use-toast';
+import { UserSettings, SettingsContextType, SoundConfig } from '@/types/settings';
 
-const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
+// Default settings
+const defaultSettings: UserSettings = {
+  profileVisibility: 'public',
+  allowProfileLinks: true,
+  theme: 'royal',
+  notifications: true,
+  emailNotifications: false,
+  soundEffects: true,
+  showEmailOnProfile: false,
+  rankChangeAlerts: true,
+  teamChangeAlerts: true,
+  achievementAlerts: true,
+  purchaseNotifications: true,
+  depositNotifications: true,
+  leaderboardUpdates: true,
+  newFeatureAlerts: true,
+  eventNotifications: true,
+  marketingEmails: false,
+  showBadges: true,
+  showAchievements: true,
+  showSpendingAmount: true,
+  showLastActive: true,
+  showRank: true,
+  showTeam: true,
+  showSpending: true,
+  publicProfile: true,
+  allowMessages: true,
+  language: 'en'
+};
+
+// Default sound config
+const defaultSoundConfig: SoundConfig = {
+  enabled: true,
+  muted: false,
+  volume: 0.7,
+  premium: false
+};
+
+const SettingsContext = createContext<SettingsContextType>({
+  userSettings: defaultSettings,
+  updateSettings: () => {},
+  resetSettings: () => {},
+  isDarkTheme: true,
+  theme: 'dark',
+  setTheme: () => {},
+  soundConfig: defaultSoundConfig,
+  toggleSounds: () => {},
+  toggleMuted: () => {},
+  togglePremium: () => {},
+  setVolume: () => {}
+});
+
+export const useSettings = () => useContext(SettingsContext);
 
 export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { theme, setTheme, isDarkTheme } = useTheme();
-  const { soundConfig, toggleSounds, toggleMuted, setVolume, togglePremium } = useSoundsConfig();
-  const { notifications, toggleNotifications } = useSettingsStore();
-  const { user, updateUserProfile } = useAuth();
-  const { toast } = useToast();
-  const [isLoading, setIsLoading] = useState(false);
+  // Load saved settings from localStorage
+  const [userSettings, setUserSettings] = useState<UserSettings>(() => {
+    const savedSettings = localStorage.getItem('user-settings');
+    return savedSettings ? { ...defaultSettings, ...JSON.parse(savedSettings) } : defaultSettings;
+  });
   
-  // Extract profile settings from user.settings
-  const profileSettings = {
-    showRank: user?.settings?.showRank ?? true,
-    showTeam: user?.settings?.showTeam ?? true,
-    showSpending: user?.settings?.showSpending ?? true,
-    publicProfile: user?.settings?.publicProfile ?? true,
-    showEmailOnProfile: user?.settings?.showEmailOnProfile ?? false,
-  };
+  // Theme state
+  const [theme, setTheme] = useState<'light' | 'dark' | 'royal' | 'system'>(() => {
+    const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | 'royal' | 'system';
+    return savedTheme || defaultSettings.theme;
+  });
   
-  // Extract accessibility settings
-  const accessibilitySettings = {
-    textSize: user?.settings?.textSize ?? 100,
-    highContrast: user?.settings?.highContrast ?? false,
-    reducedMotion: user?.settings?.reducedMotion ?? false,
-    reducedTransparency: user?.settings?.reducedTransparency ?? false,
-  };
+  // Sound configuration
+  const [soundConfig, setSoundConfig] = useState<SoundConfig>(() => {
+    const savedConfig = localStorage.getItem('sound-settings');
+    return savedConfig ? { ...defaultSoundConfig, ...JSON.parse(savedConfig) } : defaultSoundConfig;
+  });
   
-  // Extract marketing settings
-  const marketingSettings = {
-    allowProfileLinks: user?.settings?.allowProfileLinks ?? true,
-    showEmailOnProfile: user?.settings?.showEmailOnProfile ?? false,
-    marketingEmails: user?.settings?.marketingEmails ?? false,
-  };
-  
-  const updateProfileSettings = async (settings: Partial<UserSettings>): Promise<boolean> => {
-    if (!user) return false;
-    
-    setIsLoading(true);
-    try {
-      const updatedSettings = {
-        ...user.settings,
-        ...settings
-      };
-      
-      const success = await updateUserProfile({
-        settings: updatedSettings
-      });
-      
-      if (success) {
-        toast({
-          title: "Settings updated",
-          description: "Your profile settings have been updated successfully.",
-        });
-      }
-      
-      return !!success;
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to update settings. Please try again.",
-        variant: "destructive",
-      });
-      return false;
-    } finally {
-      setIsLoading(false);
+  // Calculate if theme is dark
+  const isDarkTheme = React.useMemo(() => {
+    if (theme === 'dark') return true;
+    if (theme === 'light') return false;
+    if (theme === 'system') {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches;
     }
-  };
+    return theme === 'royal'; // Royal theme is dark by default
+  }, [theme]);
   
-  const updateAccessibilitySettings = async (settings: Partial<UserSettings>): Promise<boolean> => {
-    if (!user) return false;
+  // Save settings to localStorage when they change
+  useEffect(() => {
+    localStorage.setItem('user-settings', JSON.stringify(userSettings));
+  }, [userSettings]);
+  
+  // Save theme to localStorage when it changes
+  useEffect(() => {
+    localStorage.setItem('theme', theme);
     
-    setIsLoading(true);
-    try {
-      const updatedSettings = {
-        ...user.settings,
-        ...settings
-      };
-      
-      const success = await updateUserProfile({
-        settings: updatedSettings
-      });
-      
-      if (success) {
-        toast({
-          title: "Accessibility settings updated",
-          description: "Your accessibility preferences have been updated successfully.",
-        });
-      }
-      
-      return !!success;
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to update accessibility settings. Please try again.",
-        variant: "destructive",
-      });
-      return false;
-    } finally {
-      setIsLoading(false);
-    }
-  };
-  
-  const updateMarketingSettings = async (settings: Partial<UserSettings>): Promise<boolean> => {
-    if (!user) return false;
+    // Apply theme class to document
+    const root = window.document.documentElement;
+    root.classList.remove('light', 'dark', 'royal');
     
-    setIsLoading(true);
-    try {
-      const updatedSettings = {
-        ...user.settings,
-        ...settings
-      };
-      
-      const success = await updateUserProfile({
-        settings: updatedSettings
-      });
-      
-      if (success) {
-        toast({
-          title: "Marketing settings updated",
-          description: "Your marketing preferences have been updated successfully.",
-        });
-      }
-      
-      return !!success;
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to update marketing settings. Please try again.",
-        variant: "destructive",
-      });
-      return false;
-    } finally {
-      setIsLoading(false);
+    if (theme === 'system') {
+      const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      root.classList.add(systemTheme);
+    } else {
+      root.classList.add(theme);
     }
+  }, [theme]);
+  
+  // Save sound config to localStorage when it changes
+  useEffect(() => {
+    localStorage.setItem('sound-settings', JSON.stringify(soundConfig));
+  }, [soundConfig]);
+  
+  // Update settings
+  const updateSettings = (newSettings: Partial<UserSettings>) => {
+    setUserSettings(prev => ({ ...prev, ...newSettings }));
   };
   
-  const value: SettingsContextType = {
-    // Theme settings
-    theme,
-    setTheme,
+  // Reset settings to defaults
+  const resetSettings = () => {
+    setUserSettings(defaultSettings);
+    setTheme(defaultSettings.theme);
+  };
+  
+  // Toggle sound effects
+  const toggleSounds = () => {
+    setSoundConfig(prev => ({ ...prev, enabled: !prev.enabled }));
+  };
+  
+  // Toggle mute
+  const toggleMuted = () => {
+    setSoundConfig(prev => ({ ...prev, muted: !prev.muted }));
+  };
+  
+  // Toggle premium sounds
+  const togglePremium = () => {
+    setSoundConfig(prev => ({ ...prev, premium: !prev.premium }));
+  };
+  
+  // Set volume level
+  const setVolume = (volume: number) => {
+    setSoundConfig(prev => ({ ...prev, volume: Math.min(Math.max(volume, 0), 1) }));
+  };
+  
+  // Update theme
+  const handleThemeChange = (newTheme: 'light' | 'dark' | 'royal' | 'system') => {
+    setTheme(newTheme);
+  };
+  
+  const value = {
+    userSettings,
+    updateSettings,
+    resetSettings,
     isDarkTheme,
-    
-    // Sound settings
+    theme,
+    setTheme: handleThemeChange,
     soundConfig,
     toggleSounds,
     toggleMuted,
-    setVolume,
     togglePremium,
-    
-    // Notification settings
-    notifications,
-    toggleNotifications,
-    
-    // Profile settings
-    profileSettings,
-    updateProfileSettings,
-    
-    // Accessibility settings
-    accessibilitySettings,
-    updateAccessibilitySettings,
-    
-    // Marketing settings
-    marketingSettings,
-    updateMarketingSettings,
-    
-    // Loading state
-    isLoading
+    setVolume
   };
   
   return (
@@ -181,12 +166,4 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       {children}
     </SettingsContext.Provider>
   );
-};
-
-export const useSettings = (): SettingsContextType => {
-  const context = useContext(SettingsContext);
-  if (context === undefined) {
-    throw new Error('useSettings must be used within a SettingsProvider');
-  }
-  return context;
 };

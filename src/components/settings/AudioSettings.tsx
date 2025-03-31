@@ -1,13 +1,14 @@
 
 import React, { useState, useEffect } from 'react';
-import { Volume2, VolumeX, Music, VolumeX as VolumeMute } from 'lucide-react';
+import { Volume2, VolumeX, Music, VolumeX as VolumeMute, Crown } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import { Slider } from '@/components/ui/slider';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import SettingsLayout from './SettingsLayout';
 import { useSettings } from '@/contexts/SettingsContext';
-import { useSound } from '@/hooks/use-sound';
+import { useSound } from '@/hooks/sounds/use-sound';
+import { Badge } from '@/components/ui/badge';
 
 const AudioSettings: React.FC = () => {
   const { soundConfig, toggleSounds, toggleMuted, setVolume, togglePremium } = useSettings();
@@ -26,7 +27,7 @@ const AudioSettings: React.FC = () => {
 
   const playTestSound = () => {
     if (soundConfig.enabled && !soundConfig.muted) {
-      sound.playSound('button');
+      sound.playSound('click');
     }
   };
 
@@ -86,8 +87,11 @@ const AudioSettings: React.FC = () => {
           <div className="flex justify-between items-center">
             <div className="space-y-1">
               <Label htmlFor="premium-sounds" className="flex items-center">
-                <Music className="mr-2 h-4 w-4" />
+                <Crown className="mr-2 h-4 w-4 text-royal-gold" />
                 Premium Sound Pack
+                <Badge variant="outline" className="ml-2 text-xs bg-royal-gold/10 text-royal-gold border-royal-gold/30">
+                  Royal
+                </Badge>
               </Label>
               <p className="text-sm text-white/60">Unlock special royal sound effects</p>
             </div>
@@ -107,6 +111,7 @@ const AudioSettings: React.FC = () => {
                 variant="outline" 
                 onClick={playTestSound}
                 disabled={!soundConfig.enabled || soundConfig.muted}
+                className="bg-black/30 hover:bg-black/50"
               >
                 <Volume2 className="h-4 w-4 mr-2" />
                 Play Test Sound
