@@ -1,13 +1,14 @@
 
 import { useState, useCallback } from 'react';
-import { MockeryAction, MockedUser, UseMockery } from '@/types/mockery';
+import { MockeryAction, MockedUser } from '@/types/mockery';
 import { useSound } from '@/hooks/use-sound';
 import { useToast } from '@/hooks/use-toast';
+import { getMockeryName } from '@/utils/mockery';
 
 /**
  * Hook to manage mockery functionality
  */
-const useMockery = (): UseMockery => {
+const useMockery = () => {
   const [mockUsers, setMockUsers] = useState<MockedUser[]>([
     {
       id: '1',
@@ -69,7 +70,7 @@ const useMockery = (): UseMockery => {
       
       toast({
         title: "Mockery Applied",
-        description: `You've successfully applied mockery to User${userId}`,
+        description: `You've successfully applied ${getMockeryName(action)} to User${userId}`,
         variant: "default"
       });
       

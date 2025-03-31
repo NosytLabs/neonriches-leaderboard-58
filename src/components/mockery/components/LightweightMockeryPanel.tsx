@@ -1,97 +1,87 @@
 
-import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Target } from 'lucide-react';
-import { Input } from '@/components/ui/input';
+import React from 'react';
+import { Card } from '@/components/ui/card';
+import useMockery from '@/hooks/use-mockery';
+import { useAuth } from '@/hooks/useAuth';
 import { MockeryAction } from '@/types/mockery';
-import { getMockeryName, getMockeryDescription, getMockeryCost, getMockeryActionIcon } from '@/utils/mockery';
-import { useToast } from '@/hooks/use-toast';
-
-// Core mockery actions
-const MOCKERY_ACTIONS: MockeryAction[] = ['tomatoes', 'eggs', 'crown', 'stocks'];
+import { Button } from '@/components/ui/button';
+import { Shield, Target, Crown, Egg } from 'lucide-react';
+import { getMockeryName, getMockeryDescription } from '@/utils/mockery';
 
 const LightweightMockeryPanel = () => {
-  const [username, setUsername] = useState('');
-  const [selectedAction, setSelectedAction] = useState<MockeryAction>('tomatoes');
-  const { toast } = useToast();
+  const { user } = useAuth();
+  const { 
+    isUserProtected, 
+    protectUser,
+    mockUser 
+  } = useMockery();
   
-  const handleMockery = () => {
-    if (!username) {
-      toast({
-        title: "Username required",
-        description: "Please enter a username to mock",
-        variant: "destructive"
-      });
-      return;
-    }
+  const isProtected = user ? isUserProtected(user.username) : false;
+  
+  const mockeryOptions: MockeryAction[] = ['tomatoes', 'eggs', 'crown'];
+  
+  const handleApplyMockery = async (action: MockeryAction) => {
+    if (!user) return;
     
-    toast({
-      title: "Mockery Applied",
-      description: `You've applied ${getMockeryName(selectedAction)} to ${username}`,
-      variant: "default"
-    });
+    await mockUser('target-user-id', action);
+  };
+  
+  const handleBuyProtection = async () => {
+    if (!user) return;
+    
+    await protectUser(user.username);
   };
   
   return (
-    <Card className="border-white/10">
-      <CardHeader>
-        <CardTitle className="flex items-center">
-          <Target className="mr-2 h-5 w-5 text-royal-crimson" />
-          Royal Mockery
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-4">
-          <div>
-            <label className="text-sm font-medium mb-1 block">Target Username</label>
-            <Input
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              placeholder="Enter username"
-              className="bg-background/50"
-            />
-          </div>
-          
-          <div>
-            <label className="text-sm font-medium mb-1 block">Select Mockery Type</label>
-            <div className="grid grid-cols-2 gap-2">
-              {MOCKERY_ACTIONS.map(action => {
-                const Icon = getMockeryActionIcon(action);
-                return (
-                  <Button
-                    key={action}
-                    type="button"
-                    variant={selectedAction === action ? "default" : "outline"}
-                    className="justify-start text-left h-auto py-2"
-                    onClick={() => setSelectedAction(action)}
-                  >
-                    <div className="flex flex-col items-start">
-                      <div className="flex items-center">
-                        {Icon && <Icon className="h-4 w-4 mr-1" />}
-                        <span className="text-sm font-medium">{getMockeryName(action)}</span>
-                      </div>
-                      <span className="text-xs text-muted-foreground">${getMockeryCost(action)}</span>
-                    </div>
-                  </Button>
-                );
-              })}
-            </div>
-          </div>
-          
-          <div className="bg-background/50 p-3 rounded-md text-sm">
-            {getMockeryDescription(selectedAction)}
-          </div>
-          
+    <div className="space-y-6">
+      <Card className="p-4 border border-royal-gold/20 bg-gradient-to-b from-black/50 to-royal-purple/5">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-lg font-medium">Royal Protection</h3>
+          <Shield className="h-5 w-5 text-royal-gold" />
+        </div>
+        
+        <p className="text-sm text-muted-foreground mb-4">
+          Purchase royal protection to shield yourself from mockery and public shame.
+        </p>
+        
+        <div className="flex justify-end">
           <Button 
-            className="w-full" 
-            onClick={handleMockery}
+            variant="outline" 
+            className="border-royal-gold/30 text-royal-gold hover:bg-royal-gold/10"
+            onClick={handleBuyProtection}
+            disabled={isProtected}
           >
-            Apply Mockery
+            {isProtected ? 'Protected' : 'Buy Protection ($5.00)'}
           </Button>
         </div>
-      </CardContent>
-    </Card>
+      </Card>
+      
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {mockeryOptions.map((action) => (
+          <Card key={action} className="p-4 border border-gray-800">
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="font-medium">{getMockeryName(action)}</h3>
+              {action === 'tomatoes' && <Target className="h-5 w-5 text-red-500" />}
+              {action === 'eggs' && <Egg className="h-5 w-5 text-yellow-500" />}
+              {action === 'crown' && <Crown className="h-5 w-5 text-amber-500" />}
+            </div>
+            
+            <p className="text-xs text-muted-foreground mb-3">
+              {getMockeryDescription(action)}
+            </p>
+            
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="w-full border border-gray-800"
+              onClick={() => handleApplyMockery(action)}
+            >
+              Apply ($0.25)
+            </Button>
+          </Card>
+        ))}
+      </div>
+    </div>
   );
 };
 

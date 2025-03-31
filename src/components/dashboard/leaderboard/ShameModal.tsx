@@ -6,7 +6,8 @@ import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { formatCurrency } from '@/utils/formatters';
 import { MockeryAction } from '@/types/mockery';
-import { TeamColor } from '@/types/user';
+import { TeamColor } from '@/types/mockery';
+import { getMockeryDescription, getMockeryName } from '@/utils/mockery';
 
 export interface ShameModalProps {
   targetUser: {
@@ -24,19 +25,6 @@ export interface ShameModalProps {
   onCancel: () => void;
   hasDiscount?: boolean;
 }
-
-const getMockeryActionDescription = (action: MockeryAction): string => {
-  const descriptions: Record<string, string> = {
-    tomatoes: 'Pelt with rotten tomatoes',
-    eggs: 'Throw rotten eggs at them',
-    shame: 'Ring the bell of shame',
-    stocks: 'Place in the stocks',
-    crown: 'Add a mock crown',
-    jester: 'Dress as a court jester',
-    protection: 'Grant royal immunity'
-  };
-  return descriptions[action] || 'Apply mockery';
-};
 
 const getMockeryActionIcon = (action: MockeryAction): string => {
   const icons: Record<string, string> = {
@@ -66,10 +54,10 @@ const ShameModal: React.FC<ShameModalProps> = ({
       <DialogHeader>
         <DialogTitle className="text-xl flex items-center">
           <span className="mr-2 text-xl">{getMockeryActionIcon(shameType)}</span>
-          {getMockeryActionDescription(shameType)}
+          {getMockeryName(shameType)}
         </DialogTitle>
         <DialogDescription>
-          The target will be subjected to this mockery effect for 24 hours
+          {getMockeryDescription(shameType)}
         </DialogDescription>
       </DialogHeader>
       

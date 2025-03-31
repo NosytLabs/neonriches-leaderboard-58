@@ -1,108 +1,79 @@
 
 import React, { useEffect, useState } from 'react';
+import { MockeryAction } from '@/types/mockery';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MockeryAction, ExtendedMockeryAction } from '@/types/mockery';
-import { getMockeryActionIcon } from '@/utils/mockery';
+import { getMockeryName } from '@/utils/mockery';
 
 interface MockeryEffectProps {
   username: string;
-  action: MockeryAction | ExtendedMockeryAction;
+  action: MockeryAction;
   isActive: boolean;
   onComplete: () => void;
 }
 
-const MockeryEffect: React.FC<MockeryEffectProps> = ({
-  username,
-  action,
-  isActive,
-  onComplete
+const MockeryEffect: React.FC<MockeryEffectProps> = ({ 
+  username, 
+  action, 
+  isActive, 
+  onComplete 
 }) => {
-  const [elements, setElements] = useState<React.ReactNode[]>([]);
+  const [showEffect, setShowEffect] = useState(false);
   
+  // Handle animation lifecycle
   useEffect(() => {
-    if (!isActive) return;
-    
-    // Determine count based on action type
-    const count = (action === 'tomatoes' || action === 'eggs') ? 20 : 10;
-    const duration = 3000;
-    const newElements = [];
-    
-    // Create animation elements
-    for (let i = 0; i < count; i++) {
-      const delay = Math.random() * 1000;
-      const xPosition = Math.random() * 100;
-      const rotation = Math.random() * 360;
-      const scale = 0.5 + Math.random() * 1;
+    if (isActive) {
+      setShowEffect(true);
       
-      const IconComponent = getMockeryActionIcon(action as MockeryAction);
+      // Auto-hide effect after animation completes
+      const timer = setTimeout(() => {
+        setShowEffect(false);
+        
+        // Notify parent when animation is completely done
+        setTimeout(onComplete, 500);
+      }, 3000);
       
-      newElements.push(
-        <motion.div
-          key={`mockery-${action}-${i}`}
-          initial={{ 
-            opacity: 0, 
-            y: -100, 
-            x: `${xPosition}vw`,
-            rotate: rotation,
-            scale
-          }}
-          animate={{ 
-            opacity: [0, 1, 1, 0],
-            y: ['0vh', '100vh'],
-            rotate: [rotation, rotation + 360]
-          }}
-          transition={{ 
-            duration: 3,
-            delay: delay / 1000,
-            times: [0, 0.1, 0.9, 1]
-          }}
-          className="fixed z-50 text-4xl pointer-events-none"
-        >
-          <IconComponent className="h-12 w-12" />
-        </motion.div>
-      );
+      return () => clearTimeout(timer);
     }
-    
-    setElements(newElements);
-    
-    // Clean up and trigger the completion callback
-    const timer = setTimeout(() => {
-      setElements([]);
-      if (onComplete) onComplete();
-    }, duration);
-    
-    return () => clearTimeout(timer);
-  }, [isActive, action, username, onComplete]);
+  }, [isActive, onComplete]);
   
-  if (!isActive) return null;
+  const getEffectClass = () => {
+    const classes: Record<MockeryAction, string> = {
+      tomatoes: 'bg-red-500/20',
+      eggs: 'bg-yellow-500/20',
+      crown: 'bg-amber-500/20',
+      stocks: 'bg-gray-500/20',
+      jester: 'bg-purple-500/20',
+      shame: 'bg-red-800/20',
+      protection: 'bg-green-500/20'
+    };
+    
+    return classes[action] || 'bg-red-500/20';
+  };
   
   return (
     <AnimatePresence>
-      {isActive && (
-        <div className="fixed inset-0 z-50 pointer-events-none">
-          <motion.div 
-            className="absolute inset-0 bg-black/50"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+      {showEffect && (
+        <motion.div
+          className="fixed inset-0 flex items-center justify-center z-50 pointer-events-none"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+        >
+          <motion.div
+            className={`rounded-lg p-8 ${getEffectClass()} text-center max-w-md border shadow-lg`}
+            initial={{ scale: 0.5, y: 100 }}
+            animate={{ scale: 1, y: 0 }}
+            exit={{ scale: 0.5, y: 100 }}
           >
-            <motion.div 
-              className="absolute top-1/3 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-center"
-              initial={{ scale: 0.5, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.5, opacity: 0 }}
-            >
-              <h2 className="text-2xl font-bold mb-2">{username} is being subjected to:</h2>
-              <div className="text-4xl font-bold royal-gradient">
-                {action.charAt(0).toUpperCase() + action.slice(1)}
-              </div>
-            </motion.div>
+            <h2 className="text-2xl font-bold mb-2">{getMockeryName(action)}!</h2>
+            <p className="text-lg mb-4">
+              {username} has been subjected to {getMockeryName(action).toLowerCase()}!
+            </p>
           </motion.div>
-          {elements}
-        </div>
+        </motion.div>
       )}
     </AnimatePresence>
   );
 };
 
-export default React.memo(MockeryEffect);
+export default MockeryEffect;

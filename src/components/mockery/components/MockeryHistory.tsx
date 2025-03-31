@@ -1,48 +1,38 @@
 
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { MockedUser } from '@/types/mockery';
-import { formatDistanceToNow } from 'date-fns';
+import { Card, CardContent } from '@/components/ui/card';
 
 interface MockeryHistoryProps {
   mockedUsers: MockedUser[];
 }
 
 const MockeryHistory: React.FC<MockeryHistoryProps> = ({ mockedUsers }) => {
-  // Sort by most recent first
-  const sortedUsers = [...mockedUsers].sort((a, b) => {
-    const dateA = new Date(a.appliedAt || a.mockedTimestamp || '');
-    const dateB = new Date(b.appliedAt || b.mockedTimestamp || '');
-    return dateB.getTime() - dateA.getTime();
-  });
-
   return (
-    <Card className="glass-morphism border-white/10">
-      <CardHeader>
-        <CardTitle className="text-lg">Mockery History</CardTitle>
-      </CardHeader>
-      <CardContent>
-        {sortedUsers.length > 0 ? (
-          <div className="space-y-3">
-            {sortedUsers.map((user, index) => (
-              <div key={`${user.id}-${index}`} className="p-3 bg-black/30 rounded-lg">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <h3 className="font-medium">{user.username}</h3>
-                    <p className="text-xs text-white/60">
-                      {user.mockedAction || user.action} by {user.mockedBy || (user.appliedBy?.username || 'Unknown')}
-                    </p>
-                  </div>
-                  <div className="text-xs text-white/60">
-                    {formatDistanceToNow(new Date(user.appliedAt || user.mockedTimestamp || ''), { addSuffix: true })}
-                  </div>
+    <Card>
+      <CardContent className="p-4">
+        <h3 className="font-medium mb-4">Mockery History</h3>
+        
+        {mockedUsers.length === 0 ? (
+          <p className="text-sm text-muted-foreground">No mockery history found.</p>
+        ) : (
+          <div className="space-y-2">
+            {mockedUsers.map((user) => (
+              <div
+                key={user.id}
+                className="p-2 rounded-md border border-gray-800 flex items-center justify-between"
+              >
+                <div>
+                  <span className="font-medium">{user.username}</span>
+                  <p className="text-xs text-muted-foreground">
+                    {user.mockedReason || "Mockery applied"}
+                  </p>
+                </div>
+                <div className="text-xs text-muted-foreground">
+                  {new Date(user.appliedAt || user.mockedTimestamp || Date.now()).toLocaleDateString()}
                 </div>
               </div>
             ))}
-          </div>
-        ) : (
-          <div className="text-center py-10 text-white/60">
-            <p>No mockery history available.</p>
           </div>
         )}
       </CardContent>
