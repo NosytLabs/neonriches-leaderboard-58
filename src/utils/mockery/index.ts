@@ -41,7 +41,7 @@ import React from 'react';
  */
 export const renderMockeryIcon = (action: MockeryAction, className = "h-4 w-4") => {
   const IconComponent = getMockeryActionIcon(action);
-  return <IconComponent className={className} />;
+  return React.createElement(IconComponent, { className });
 };
 
 // Create a price function that combines tier and action
