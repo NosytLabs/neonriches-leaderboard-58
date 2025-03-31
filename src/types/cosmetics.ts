@@ -32,9 +32,35 @@ export interface CosmeticItem {
   price: number;
   category: CosmeticCategory;
   cssClass: string;
-  rarity: CosmeticRarity;
+  rarity: CosmeticRarity | string;
   type?: string;
+  image?: string;
+  imageSrc?: string;
+  cost?: number; // For backward compatibility
 }
+
+export interface UserCosmeticState {
+  border: string[];
+  color: string[];
+  font: string[];
+  emoji: string[];
+  title: string[];
+  background: string[];
+  effect: string[];
+  badge: string[];
+  theme: string[];
+  activeBorder?: string;
+  activeColor?: string;
+  activeFont?: string;
+  activeEmoji?: string;
+  activeTitle?: string;
+  activeBackground?: string;
+  activeEffect?: string;
+  activeBadge?: string;
+  activeTheme?: string;
+}
+
+export type CosmeticType = keyof UserCosmeticState;
 
 export interface SocialLink {
   id: string;
@@ -42,6 +68,7 @@ export interface SocialLink {
   url: string;
   title: string;
   icon: string;
+  label: string;
   clicks: number;
 }
 
@@ -60,7 +87,7 @@ export interface BoostEffect {
   name: string;
   description: string;
   cssClass: string;
-  type: BoostEffectType;
+  type: BoostEffectType | string;
   tier: string;
   price: number;
   duration: number;
@@ -70,7 +97,7 @@ export interface BoostEffect {
 export interface ProfileBoost {
   id: string;
   userId: string;
-  type: BoostEffectType;
+  type: BoostEffectType | string;
   name: string;
   description: string;
   startDate?: string;

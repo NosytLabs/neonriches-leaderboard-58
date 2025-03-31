@@ -1,6 +1,9 @@
 
 import { LeaderboardUser } from '@/types/leaderboard';
 
+// Export the type we're using
+export type { LeaderboardUser };
+
 // Mock leaderboard data
 export const mockLeaderboardData: LeaderboardUser[] = [
   {
@@ -14,7 +17,6 @@ export const mockLeaderboardData: LeaderboardUser[] = [
     rank: 1,
     previousRank: 1,
     totalSpent: 15000,
-    spentAmount: 15000,
     walletBalance: 5000,
     isVerified: true,
     isProtected: false,
@@ -31,7 +33,6 @@ export const mockLeaderboardData: LeaderboardUser[] = [
     rank: 2,
     previousRank: 4,
     totalSpent: 12000,
-    spentAmount: 12000,
     walletBalance: 3000,
     isVerified: true,
     isProtected: true,
@@ -48,7 +49,6 @@ export const mockLeaderboardData: LeaderboardUser[] = [
     rank: 3,
     previousRank: 2,
     totalSpent: 10000,
-    spentAmount: 10000,
     walletBalance: 4500,
     isVerified: true,
     isProtected: false,
@@ -65,7 +65,6 @@ export const mockLeaderboardData: LeaderboardUser[] = [
     rank: 4,
     previousRank: 3,
     totalSpent: 7500,
-    spentAmount: 7500,
     walletBalance: 2000,
     isVerified: false,
     isProtected: false,
@@ -82,7 +81,6 @@ export const mockLeaderboardData: LeaderboardUser[] = [
     rank: 5,
     previousRank: 5,
     totalSpent: 5000,
-    spentAmount: 5000,
     walletBalance: 1000,
     isVerified: false,
     isProtected: false,

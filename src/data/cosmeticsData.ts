@@ -9,8 +9,8 @@ export const cosmeticsData: CosmeticItem[] = [
     category: "appearance",
     type: "border",
     rarity: "legendary",
-    cost: 100,
-    price: 100, // Added required price field
+    price: 100,
+    cost: 100, // Kept for backward compatibility
     imageSrc: "/assets/cosmetics/borders/royal-gold.png",
     cssClass: "border-royal-gold animate-border-shine"
   },
@@ -21,8 +21,8 @@ export const cosmeticsData: CosmeticItem[] = [
     category: "appearance",
     type: "color",
     rarity: "epic",
-    cost: 75,
-    price: 75, // Added required price field
+    price: 75,
+    cost: 75, // Kept for backward compatibility
     cssClass: "text-royal-purple"
   },
   {
@@ -32,8 +32,8 @@ export const cosmeticsData: CosmeticItem[] = [
     category: "appearance",
     type: "font",
     rarity: "rare",
-    cost: 50,
-    price: 50, // Added required price field
+    price: 50,
+    cost: 50, // Kept for backward compatibility
     cssClass: "font-medieval"
   },
   {
@@ -43,8 +43,9 @@ export const cosmeticsData: CosmeticItem[] = [
     category: "profile",
     type: "title",
     rarity: "epic",
-    cost: 200,
-    price: 200 // Added required price field
+    price: 200,
+    cost: 200, // Kept for backward compatibility
+    cssClass: "title-lord"
   },
   {
     id: "title_lady",
@@ -53,8 +54,9 @@ export const cosmeticsData: CosmeticItem[] = [
     category: "profile",
     type: "title",
     rarity: "epic",
-    cost: 200,
-    price: 200 // Added required price field
+    price: 200,
+    cost: 200, // Kept for backward compatibility
+    cssClass: "title-lady"
   },
   {
     id: "emoji_diamond",
@@ -63,8 +65,9 @@ export const cosmeticsData: CosmeticItem[] = [
     category: "interaction",
     type: "emoji",
     rarity: "uncommon",
-    cost: 25,
-    price: 25 // Added required price field
+    price: 25,
+    cost: 25, // Kept for backward compatibility
+    cssClass: "emoji-diamond"
   },
   {
     id: "border_flame",
@@ -73,8 +76,8 @@ export const cosmeticsData: CosmeticItem[] = [
     category: "appearance",
     type: "border",
     rarity: "rare",
-    cost: 80,
-    price: 80, // Added required price field
+    price: 80,
+    cost: 80, // Kept for backward compatibility
     cssClass: "border-gradient-fire"
   },
   {
@@ -84,8 +87,8 @@ export const cosmeticsData: CosmeticItem[] = [
     category: "appearance",
     type: "effect",
     rarity: "uncommon",
-    cost: 60,
-    price: 60, // Added required price field
+    price: 60,
+    cost: 60, // Kept for backward compatibility
     cssClass: "animate-sparkle"
   },
   {
@@ -95,8 +98,9 @@ export const cosmeticsData: CosmeticItem[] = [
     category: "profile",
     type: "badge",
     rarity: "legendary",
-    cost: 500,
-    price: 500, // Added required price field
+    price: 500,
+    cost: 500, // Kept for backward compatibility
+    cssClass: "badge-whale",
     imageSrc: "/assets/cosmetics/badges/whale.png"
   },
   {
@@ -106,8 +110,9 @@ export const cosmeticsData: CosmeticItem[] = [
     category: "appearance",
     type: "background",
     rarity: "epic",
-    cost: 300,
-    price: 300, // Added required price field
+    price: 300,
+    cost: 300, // Kept for backward compatibility
+    cssClass: "bg-throne-room",
     imageSrc: "/assets/cosmetics/backgrounds/throne-room.png"
   }
 ];

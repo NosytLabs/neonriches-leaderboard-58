@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -55,6 +54,38 @@ const makeWish = async (userId: string, amount: number) => {
   }
   
   return { success, reward, rarity };
+};
+
+export const getPotentialRewards = () => {
+  return [
+    {
+      id: "borders_reward",
+      name: "Royal Border",
+      description: "A luxurious border to adorn your profile",
+      category: "border",
+      rarity: "rare",
+      chance: 0.05,
+      value: 100
+    },
+    {
+      id: "color_reward",
+      name: "Gem-Tone Color",
+      description: "Make your username shine with a rare color",
+      category: "color",
+      rarity: "uncommon",
+      chance: 0.1,
+      value: 50
+    },
+    {
+      id: "effect_reward",
+      name: "Glowing Aura",
+      description: "A special effect to make your profile stand out",
+      category: "effect",
+      rarity: "epic",
+      chance: 0.02,
+      value: 200
+    }
+  ];
 };
 
 const EnhancedWishingWell: React.FC = () => {

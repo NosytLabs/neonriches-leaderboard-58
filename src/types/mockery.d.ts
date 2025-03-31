@@ -53,12 +53,13 @@ export type MockeryAction =
   | 'pawn';
 
 // Union of tiers for mockery actions
-export type MockeryTier = 'basic' | 'premium' | 'royal' | 'legendary' | 'common' | 'uncommon' | 'rare' | 'epic' | 'bronze' | 'silver'; // Added 'silver'
+export type MockeryTier = 'basic' | 'premium' | 'royal' | 'legendary' | 'common' | 'uncommon' | 'rare' | 'epic' | 'bronze' | 'silver';
 
 export interface MockeryEvent {
   id: string;
   targetId: string;
   targetUsername: string;
+  targetName?: string; // Added this
   action: MockeryAction;
   appliedBy: string;
   appliedAt: string;
@@ -67,7 +68,6 @@ export interface MockeryEvent {
   isActive: boolean;
   sourceId?: string;
   sourceName?: string;
-  targetName?: string; // Added missing property
 }
 
 export interface MockedUser {
@@ -76,7 +76,7 @@ export interface MockedUser {
   username: string;
   displayName: string;
   profileImage: string;
-  mockedReason?: string; // Made optional to resolve the conflict
+  mockedReason?: string; // Made it optional
   mockedTimestamp: string;
   mockedBy: string;
   mockedTier: string;
@@ -122,5 +122,12 @@ export interface MockeryActionInfo {
 
 export type ShameAction = MockeryAction;
 
-// Export NotificationSoundOptions for useShameEffect.ts
-export { NotificationSoundOptions } from './sound-types';
+// Type alias for mocked user
+export type MockUser = MockedUser;
+
+// Add NotificationSoundOptions interface
+export interface NotificationSoundOptions {
+  volume?: number;
+  loop?: boolean;
+  delay?: number;
+}

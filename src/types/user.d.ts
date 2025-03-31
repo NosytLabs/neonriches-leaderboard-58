@@ -61,7 +61,7 @@ export interface UserSettings {
   spendAlerts?: boolean;
   spendingAlerts?: boolean;
   publicProfile?: boolean;
-  allowMessages?: boolean; // Add missing property
+  allowMessages?: boolean; // Added missing property
   language?: string;
   showBalance?: boolean;
   showAchievements?: boolean;

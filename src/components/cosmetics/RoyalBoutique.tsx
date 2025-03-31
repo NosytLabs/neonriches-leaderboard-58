@@ -31,7 +31,7 @@ const RoyalBoutique = () => {
       return;
     }
 
-    // Fixed: Changed the parameters to match expected number of arguments (item.id, item.category) and removed the third argument
+    // Call awardCosmetic with the right number of parameters (itemId, category)
     const success = await awardCosmetic(item.id, item.category);
 
     if (success) {
@@ -54,9 +54,9 @@ const RoyalBoutique = () => {
       description: 'A luxurious gold border for your profile',
       price: 50,
       category: 'border',
-      type: 'premium',
-      rarity: 'rare',
       cssClass: 'border-gold',
+      rarity: 'rare',
+      type: 'premium',
       imageSrc: '/images/cosmetics/border-gold.png'
     },
     {
@@ -65,9 +65,9 @@ const RoyalBoutique = () => {
       description: 'An elegant silver border with delicate filigree',
       price: 35,
       category: 'border',
-      type: 'standard',
-      rarity: 'uncommon',
       cssClass: 'border-silver',
+      rarity: 'uncommon',
+      type: 'standard',
       imageSrc: '/images/cosmetics/border-silver.png'
     },
     {
@@ -76,9 +76,9 @@ const RoyalBoutique = () => {
       description: 'A border with a pattern resembling crimson dragon scales',
       price: 65,
       category: 'border',
-      type: 'exclusive',
-      rarity: 'epic',
       cssClass: 'border-dragon-scale',
+      rarity: 'epic',
+      type: 'exclusive',
       imageSrc: '/images/cosmetics/border-dragon.png'
     },
   ];
@@ -90,9 +90,9 @@ const RoyalBoutique = () => {
       description: 'The color of royalty',
       price: 75,
       category: 'color',
-      type: 'premium',
-      rarity: 'epic',
       cssClass: 'text-royal-purple',
+      rarity: 'epic',
+      type: 'premium',
       imageSrc: '/images/cosmetics/color-purple.png'
     },
     {
@@ -101,9 +101,9 @@ const RoyalBoutique = () => {
       description: 'A vibrant emerald green color',
       price: 45,
       category: 'color',
-      type: 'standard',
-      rarity: 'uncommon',
       cssClass: 'text-emerald-green',
+      rarity: 'uncommon',
+      type: 'standard',
       imageSrc: '/images/cosmetics/color-emerald.png'
     },
     {
@@ -112,9 +112,9 @@ const RoyalBoutique = () => {
       description: 'A bright and cheerful golden yellow color',
       price: 55,
       category: 'color',
-      type: 'exclusive',
-      rarity: 'rare',
       cssClass: 'text-golden-yellow',
+      rarity: 'rare',
+      type: 'exclusive',
       imageSrc: '/images/cosmetics/color-gold.png'
     },
   ];
@@ -126,9 +126,9 @@ const RoyalBoutique = () => {
       description: 'An authentic medieval script font',
       price: 100,
       category: 'font',
-      type: 'premium',
-      rarity: 'legendary',
       cssClass: 'font-medieval',
+      rarity: 'legendary',
+      type: 'premium',
       imageSrc: '/images/cosmetics/font-medieval.png'
     },
     {
@@ -137,9 +137,9 @@ const RoyalBoutique = () => {
       description: 'A refined serif font for formal occasions',
       price: 60,
       category: 'font',
-      type: 'standard',
-      rarity: 'rare',
       cssClass: 'font-elegant-serif',
+      rarity: 'rare',
+      type: 'standard',
       imageSrc: '/images/cosmetics/font-serif.png'
     },
     {
@@ -148,9 +148,9 @@ const RoyalBoutique = () => {
       description: 'A modern and bold sans-serif font',
       price: 40,
       category: 'font',
-      type: 'standard',
-      rarity: 'uncommon',
       cssClass: 'font-bold-sans',
+      rarity: 'uncommon',
+      type: 'standard',
       imageSrc: '/images/cosmetics/font-sans.png'
     },
   ];
