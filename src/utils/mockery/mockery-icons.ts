@@ -1,4 +1,3 @@
-
 import { MockeryAction, MockeryTier } from '@/types/mockery-types';
 import type { LucideIcon } from 'lucide-react';
 import {
@@ -111,7 +110,7 @@ export const getMockeryActionIconColor = (action: MockeryAction): string => {
 // React component for mockery action icons
 export const getMockeryActionIconComponent = (action: MockeryAction): React.ReactNode => {
   const Icon = getMockeryActionIcon(action);
-  return <Icon className="h-4 w-4" />;
+  return React.createElement(Icon, { className: "h-4 w-4" });
 };
 
 // Import mockery tier for convenience
