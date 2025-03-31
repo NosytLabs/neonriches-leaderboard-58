@@ -4,7 +4,7 @@ export { useAuth } from './useAuth';
 
 // Sounds
 export { default as useSound } from './sounds/use-sound';
-export { default as useNotificationSounds } from './sounds/use-notification-sounds';
+export { default as useNotificationSounds } from './hooks/sounds/use-notification-sounds';
 export { default as usePremiumSounds } from './use-premium-sounds';
 
 // UI Hooks

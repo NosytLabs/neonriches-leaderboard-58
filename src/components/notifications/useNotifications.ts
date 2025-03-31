@@ -1,7 +1,7 @@
 
 import { useState } from 'react';
 import { Notification } from './NotificationCenter';
-import useNotificationSounds from '@/hooks/use-notification-sounds';
+import { useSound } from '@/hooks/sounds/use-sound';
 
 // Mock notifications
 const mockNotifications: Notification[] = [
@@ -62,7 +62,7 @@ const mockNotifications: Notification[] = [
 export const useNotifications = () => {
   const [notifications, setNotifications] = useState<Notification[]>(mockNotifications);
   const [open, setOpen] = useState(false);
-  const { playSound } = useNotificationSounds();
+  const { play } = useSound();
   
   const unreadCount = notifications.filter(n => !n.read).length;
   
@@ -73,7 +73,7 @@ export const useNotifications = () => {
         read: true
       }))
     );
-    playSound('notification', 0.3);
+    play('notification', 0.3);
   };
   
   const handleMarkAsRead = (id: string) => {
@@ -107,6 +107,10 @@ export const useNotifications = () => {
     if (diffInDays < 7) return `${diffInDays} day${diffInDays > 1 ? 's' : ''} ago`;
     
     return date.toLocaleDateString();
+  };
+
+  const playSound = (soundType: string, volume = 0.5) => {
+    play(soundType as any, { volume });
   };
 
   return {

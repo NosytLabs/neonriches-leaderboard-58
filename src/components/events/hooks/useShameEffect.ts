@@ -1,7 +1,8 @@
+
 import { useState, useEffect } from 'react';
 import { useLocalStorage } from '@/hooks/use-local-storage';
 import { MockeryAction } from '@/types/mockery';
-import { useNotificationSounds } from '@/hooks/sounds/use-notification-sounds';
+import { useSound } from '@/hooks/sounds/use-sound';
 
 interface ShameEffectData {
   type: MockeryAction;
@@ -15,7 +16,7 @@ const SHAME_DURATION = 24;
 const SHAME_COOLDOWN = 1;
 
 const useShameEffect = () => {
-  const { playSound } = useNotificationSounds();
+  const { play } = useSound();
   const [shameEffects, setShameEffects] = useLocalStorage<Record<number, ShameEffectData>>('shame-effects', {});
   const [shameCooldown, setShameCooldown] = useLocalStorage<Record<number, boolean>>('shame-cooldown', {});
   const [shameCount, setShameCount] = useLocalStorage<Record<number, number>>('shame-count', {});
@@ -91,7 +92,7 @@ const useShameEffect = () => {
       }));
 
       // Play shame sound
-      playSound('shame');
+      play('shame');
 
       return true;
     } catch (error) {

@@ -10,8 +10,8 @@ import {
 import NotificationItem from './NotificationItem';
 import EmptyNotifications from './EmptyNotifications';
 import NotificationHeader from './NotificationHeader';
-import { useNotifications } from './useNotifications';
-import { NotificationSoundOptions } from '@/types/mockery';
+import { useNotifications } from '@/hooks/use-notifications';
+import { SoundType } from '@/types/sound-types';
 
 export interface Notification {
   id: string;

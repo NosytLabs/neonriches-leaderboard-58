@@ -1,12 +1,9 @@
-
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
-import { NotificationSoundOptions } from '@/types/mockery';
 import { useSound } from '@/hooks/sounds/use-sound';
 import { SoundType } from '@/types/sound-types';
 import { v4 as uuidv4 } from 'uuid';
 import { useAuth } from '@/hooks/useAuth';
-import { useEffect } from 'react';
 
 export interface Notification {
   id: string;
@@ -79,20 +76,20 @@ export const useNotifications = (): UseNotificationsReturn => {
 
     switch (notification.type) {
       case 'rank_change':
-        playSound('rankChange', 0.4);
+        play('rankChange', 0.4);
         break;
       case 'achievement':
       case 'milestone':
-        playSound('achievement', 0.5);
+        play('achievement', 0.5);
         break;
       case 'royal':
-        playSound('royal', 0.4);
+        play('royal', 0.4);
         break;
       case 'deposit':
-        playSound('coin', 0.4);
+        play('coin', 0.4);
         break;
       default:
-        playSound('notification', 0.3);
+        play('notification', 0.3);
     }
   };
 
