@@ -39,6 +39,10 @@ export const getShameActionIcon = (action: MockeryAction) => {
   return getMockeryActionIcon(action);
 };
 
+export const getShameActionTitle = (action: MockeryAction) => {
+  return getMockeryName(action);
+};
+
 export const ShameIcon: React.FC<{ action: ShameAction; size?: 'sm' | 'md' | 'lg' }> = ({ 
   action, 
   size = 'md' 
