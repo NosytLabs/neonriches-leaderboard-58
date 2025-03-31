@@ -27,25 +27,16 @@ export const getShameActionMessage = (action: ShameAction, username: string): st
 // Import Lucide icons for shame actions
 import { AlertCircle, Egg, Crown, Lock, Target } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
-import { TomatoIcon } from '@/utils/mockery';
+import { TomatoIcon, getMockeryActionIcon } from '@/utils/mockery';
 
 // Get icon for a shame action
-export const getShameActionIcon = (action: ShameAction): LucideIcon => {
-  const icons: Record<string, LucideIcon> = {
-    'tomatoes': TomatoIcon,
-    'eggs': Egg,
-    'crown': Crown,
-    'stocks': Lock,
-    'jester': AlertCircle,
-    'protection': AlertCircle,
-    'shame': AlertCircle
-  };
-  return icons[action] || Target;
+export const getShameActionIcon = (action: ShameAction): LucideIcon | React.FC<{ className?: string; size?: number }> => {
+  return getMockeryActionIcon(action);
 };
 
 // Get title for a shame action
 export const getShameActionTitle = (action: ShameAction): string => {
-  const titles: Record<ShameAction, string> = {
+  const titles: Record<string, string> = {
     tomatoes: 'Rotten Tomatoes',
     eggs: 'Rotten Eggs',
     crown: 'Mock Crown',
@@ -60,13 +51,13 @@ export const getShameActionTitle = (action: ShameAction): string => {
 
 // Get description for a shame action
 export const getShameActionDescription = (action: ShameAction): string => {
-  const descriptions: Record<ShameAction, string> = {
+  const descriptions: Record<string, string> = {
     tomatoes: 'Throw rotten tomatoes at this user to humiliate them publicly.',
     eggs: 'Throw rotten eggs at this user to make them stink of shame.',
     crown: 'Place a ridiculous crown on their head to mock their achievements.',
-    stocks: 'Lock them in the public stocks for all to ridicule.',
-    jester: 'Turn them into the court jester, mocked by all.',
-    protection: 'Protect yourself from mockery with royal immunity.',
+    stocks: 'Lock them in the royal stocks for public ridicule.',
+    jester: 'Force them to wear the court jester outfit for all to see.',
+    protection: 'Buy protection against mockery for yourself.',
     shame: 'Publicly shame this user for all to see.'
   };
   

@@ -1,5 +1,5 @@
 
-import { TeamType } from '@/types/user';
+import { TeamType } from '@/types/team';
 import { getTeamColor, getTeamName } from '@/utils/teamUtils';
 
 export { getTeamColor, getTeamName };

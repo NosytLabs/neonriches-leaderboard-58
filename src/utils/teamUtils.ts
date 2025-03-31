@@ -1,105 +1,91 @@
 
-import { TeamType, TeamColor } from '@/types/user-types';
+import { TeamColor, TeamType } from '@/types/team';
 
-/**
- * Gets the display name for a team
- */
-export const getTeamName = (team?: TeamType | null): string => {
-  if (!team) return 'No Team';
+// Get the display name for a team
+export const getTeamName = (team?: TeamType): string => {
+  if (!team) return 'Unaffiliated';
   
-  switch (team) {
-    case 'red': return 'Red Knights';
-    case 'blue': return 'Blue Mages';
-    case 'green': return 'Green Rangers';
-    default: return `Team ${team.charAt(0).toUpperCase() + team.slice(1)}`;
-  }
+  const names: Record<TeamType, string> = {
+    'red': 'House Crimson',
+    'blue': 'House Azure',
+    'green': 'House Emerald',
+    'gold': 'House Aureate',
+    'purple': 'House Violet',
+    'none': 'Unaffiliated',
+    'neutral': 'Neutral'
+  };
+  
+  return names[team] || 'Unaffiliated';
 };
 
-/**
- * Gets the color class for a team
- */
-export const getTeamColor = (team?: TeamType | TeamColor | null): string => {
+// Get CSS color class for a team
+export const getTeamColor = (team?: TeamType): string => {
   if (!team) return 'text-gray-400';
   
-  switch (team) {
-    case 'red': return 'text-red-500';
-    case 'blue': return 'text-blue-500';
-    case 'green': return 'text-green-500';
-    default: return 'text-gray-400';
-  }
-};
-
-/**
- * Gets the background color class for a team
- */
-export const getTeamBgColor = (team?: TeamType | TeamColor | null): string => {
-  if (!team) return 'bg-gray-800/50';
-  
-  switch (team) {
-    case 'red': return 'bg-red-500/20';
-    case 'blue': return 'bg-blue-500/20';
-    case 'green': return 'bg-green-500/20';
-    default: return 'bg-gray-800/50';
-  }
-};
-
-/**
- * Gets the border color class for a team
- */
-export const getTeamBorderColor = (team?: TeamType | TeamColor | null): string => {
-  if (!team) return 'border-gray-700';
-  
-  switch (team) {
-    case 'red': return 'border-red-500/70';
-    case 'blue': return 'border-blue-500/70';
-    case 'green': return 'border-green-500/70';
-    default: return 'border-gray-700';
-  }
-};
-
-/**
- * Gets the team icon name
- */
-export const getTeamIcon = (team?: TeamType | TeamColor | null): string => {
-  if (!team) return 'users';
-  
-  switch (team) {
-    case 'red': return 'sword';
-    case 'blue': return 'wand';
-    case 'green': return 'bow-arrow';
-    default: return 'users';
-  }
-};
-
-// Additional utility functions for teams
-export const getTeamMotto = (team: TeamType): string => {
-  const mottos: Record<TeamType, string> = {
-    'red': 'Buy First, Think Never',
-    'green': 'Wealth So Strategic, It\'s Almost Pathetic',
-    'blue': 'Patience in Spending, Unbridled in Pretending'
+  const colors: Record<TeamType, string> = {
+    'red': 'text-red-500',
+    'blue': 'text-blue-500',
+    'green': 'text-green-500',
+    'gold': 'text-yellow-400',
+    'purple': 'text-purple-500',
+    'none': 'text-gray-400',
+    'neutral': 'text-gray-400'
   };
-  return mottos[team] || 'No motto available';
+  
+  return colors[team] || 'text-gray-400';
 };
 
-export const getTeamBenefit = (team: TeamType): string[] => {
-  const benefits: Record<TeamType, string[]> = {
-    'red': ['Royal Crimson profile effects', 'Dynasty badges and titles'],
-    'green': ['Emerald Empire profile effects', 'Wealth architect badges'],
-    'blue': ['Sapphire Sovereign profile effects', 'Alliance nobility badges']
+// Get border color class for a team
+export const getTeamBorderColor = (team?: TeamType): string => {
+  if (!team) return 'border-gray-400';
+  
+  const borderColors: Record<TeamType, string> = {
+    'red': 'border-red-500',
+    'blue': 'border-blue-500',
+    'green': 'border-green-500',
+    'gold': 'border-yellow-400',
+    'purple': 'border-purple-500',
+    'none': 'border-gray-400',
+    'neutral': 'border-gray-400'
   };
-  return benefits[team] || ['No benefits available'];
+  
+  return borderColors[team] || 'border-gray-400';
 };
 
-export const getTeamSecurityGuarantee = (team: TeamType): string => {
-  const guarantees: Record<TeamType, string> = {
-    'red': 'Your data is secured with the same level of care as a dragon guards its hoard of gold.',
-    'green': 'Your information is protected by mathematical encryption that would take centuries to break.',
-    'blue': 'Your privacy is ensured by a magical agreement that cannot be broken.'
+// Get background color class for a team
+export const getTeamBgColor = (team?: TeamType): string => {
+  if (!team) return 'bg-gray-400';
+  
+  const bgColors: Record<TeamType, string> = {
+    'red': 'bg-red-500',
+    'blue': 'bg-blue-500',
+    'green': 'bg-green-500',
+    'gold': 'bg-yellow-400',
+    'purple': 'bg-purple-500',
+    'none': 'bg-gray-400',
+    'neutral': 'bg-gray-400'
   };
-  return guarantees[team] || 'No security guarantee available';
+  
+  return bgColors[team] || 'bg-gray-400';
+};
+
+// Get team points cost factor (some teams pay more to join)
+export const getTeamCostFactor = (team: TeamType): number => {
+  const factors: Record<TeamType, number> = {
+    'red': 1.0,
+    'blue': 1.0,
+    'green': 1.0,
+    'gold': 1.5,
+    'purple': 1.25,
+    'none': 0,
+    'neutral': 0
+  };
+  
+  return factors[team] || 1.0;
 };
 
 // For backward compatibility
+export const getTeamDisplayName = getTeamName;
 export const getTeamColorClass = getTeamColor;
-export const getTeamBgColorClass = getTeamBgColor;
 export const getTeamBorderColorClass = getTeamBorderColor;
+export const getTeamBackgroundColorClass = getTeamBgColor;

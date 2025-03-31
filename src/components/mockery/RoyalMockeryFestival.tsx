@@ -41,6 +41,15 @@ const RoyalMockeryFestival = () => {
     getActiveMockery
   );
   
+  // Create a non-async wrapper to satisfy the expected function signature
+  const onMockery = (username: string, action: string, amount: number) => {
+    handleMockery(username, action, amount).catch(error => {
+      console.error("Error in mockery action:", error);
+      return false;
+    });
+    return true;
+  };
+  
   return (
     <>
       <Card className="glass-morphism border-royal-crimson/20">
@@ -59,7 +68,7 @@ const RoyalMockeryFestival = () => {
             getUserMockedOthersCount={getUserMockedOthersCount}
             isUserProtected={isUserProtected}
             getActiveMockery={getActiveMockeryWrapper}
-            onMockery={handleMockery}
+            onMockery={onMockery}
             onPurchaseProtection={handleBuyProtection}
           />
         </CardContent>

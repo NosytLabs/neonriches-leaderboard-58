@@ -7,7 +7,28 @@ export type MockeryAction =
   | 'stocks'
   | 'jester'
   | 'protection'
-  | 'shame';
+  | 'shame'
+  | 'putridEggs'
+  | 'silence'
+  | 'courtJester'
+  | 'smokeBomb'
+  | 'glitterBomb'
+  | 'dunce'
+  | 'troll'
+  | 'peasant'
+  | 'rat'
+  | 'ghost'
+  | 'skeleton'
+  | 'zombie'
+  | 'witch'
+  | 'monster'
+  | 'dragon'
+  | 'jest'
+  | 'challenge'
+  | 'defeat'
+  | 'taunt'
+  | 'target'
+  | 'immune';
 
 // Mockery tiers - unified definition
 export type MockeryTier = 
@@ -18,15 +39,12 @@ export type MockeryTier =
   | 'legendary'
   | 'basic'
   | 'premium'
-  | 'royal';
+  | 'royal'
+  | 'silver'
+  | 'bronze';
 
 // For extended actions used in the UI but not in the core system
-export type ExtendedMockeryAction = MockeryAction 
-  | 'putridEggs'
-  | 'silence'
-  | 'courtJester'
-  | 'smokeBomb'
-  | 'glitterBomb';
+export type ExtendedMockeryAction = MockeryAction;
 
 // Team colors
 export type TeamColor = 
@@ -34,7 +52,9 @@ export type TeamColor =
   | 'blue'
   | 'green'
   | 'gold'
-  | 'purple';
+  | 'purple'
+  | 'none'
+  | 'neutral';
 
 // Alias for backward compatibility 
 export type ShameAction = MockeryAction;
@@ -77,10 +97,16 @@ export interface MockeryEffectData {
 
 // Helper function to check if a string is a valid MockeryAction
 export const isValidMockeryAction = (action: string): action is MockeryAction => {
-  return ['tomatoes', 'eggs', 'crown', 'stocks', 'jester', 'protection', 'shame'].includes(action as MockeryAction);
+  return [
+    'tomatoes', 'eggs', 'crown', 'stocks', 'jester', 'protection', 'shame',
+    'putridEggs', 'silence', 'courtJester', 'smokeBomb', 'glitterBomb',
+    'dunce', 'troll', 'peasant', 'rat', 'ghost', 'skeleton', 'zombie',
+    'witch', 'monster', 'dragon', 'jest', 'challenge', 'defeat', 'taunt',
+    'target', 'immune'
+  ].includes(action as MockeryAction);
 };
 
 // Helper function to check if a string is a valid MockeryTier
 export const isValidMockeryTier = (tier: string): tier is MockeryTier => {
-  return ['common', 'uncommon', 'rare', 'epic', 'legendary', 'basic', 'premium', 'royal'].includes(tier as MockeryTier);
+  return ['common', 'uncommon', 'rare', 'epic', 'legendary', 'basic', 'premium', 'royal', 'silver', 'bronze'].includes(tier as MockeryTier);
 };

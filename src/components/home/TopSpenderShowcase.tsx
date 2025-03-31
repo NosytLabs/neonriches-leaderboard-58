@@ -1,9 +1,10 @@
-
 import React from 'react';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
-import UserBadge from '@/components/ui/user-badge';
+import { Badge } from '@/components/ui/badge';
+import { Crown, DollarSign, TrendingUp, TrendingDown } from 'lucide-react';
+import { formatCurrency } from '@/utils/formatters';
+import { UserProfile } from '@/types/user-types';
 import { useNavigate } from 'react-router-dom';
 import { Trophy, CrownIcon } from 'lucide-react';
 import { UserTier, TeamType } from '@/types/user-types';
@@ -52,7 +53,9 @@ const TopSpenderShowcase: React.FC = () => {
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
       {topSpenders.map((spender) => (
         <Card key={spender.id} className="bg-black/30 border-white/10 overflow-hidden">
-          <div className={`h-1 ${spender.rank === 1 ? 'bg-yellow-500' : spender.rank === 2 ? 'bg-gray-400' : 'bg-amber-700'}`}></div>
+          <CardHeader>
+            <CardTitle className={`h-1 ${spender.rank === 1 ? 'bg-yellow-500' : spender.rank === 2 ? 'bg-gray-400' : 'bg-amber-700'}`}></CardTitle>
+          </CardHeader>
           <CardContent className="p-4">
             <div className="flex justify-between items-start mb-4">
               <div className="flex items-center">
@@ -78,7 +81,7 @@ const TopSpenderShowcase: React.FC = () => {
             
             <div className="mb-4">
               <div className="text-xs text-white/60 mb-1">Total Spent</div>
-              <div className="text-lg font-bold">${spender.totalSpent.toLocaleString()}</div>
+              <div className="text-lg font-bold">${formatCurrency(spender.totalSpent)}</div>
             </div>
             
             <div className="grid grid-cols-2 gap-2">

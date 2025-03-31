@@ -4,7 +4,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Download, Share2, Award, Crown, Shield, Wallet, ExternalLink } from 'lucide-react';
-import { UserProfile } from '@/types/user';
+import { UserProfile } from '@/types/user-types';
 import { Certificate } from '@/types/certificate';
 import { formatDate } from '@/utils/formatters';
 import { getTeamName, getTeamColor, getTeamBorderColor } from '@/utils/teamUtils';
@@ -33,9 +33,11 @@ const TeamCertificate: React.FC<TeamCertificateProps> = ({
   const [isSharing, setIsSharing] = useState(false);
   const certificateRef = useRef<HTMLDivElement>(null);
   
-  const teamName = getTeamName(user.team);
-  const teamColor = getTeamColor(user.team);
-  const teamBorder = getTeamBorderColor(user.team);
+  // Make sure to check for undefined team to prevent type errors
+  const userTeam = user.team || 'none';
+  const teamName = getTeamName(userTeam);
+  const teamColor = getTeamColor(userTeam);
+  const teamBorder = getTeamBorderColor(userTeam);
   const createdDate = certificate?.createdAt || new Date().toISOString();
   
   const getCertificateTitle = () => {
@@ -67,13 +69,17 @@ const TeamCertificate: React.FC<TeamCertificateProps> = ({
   };
   
   const getTeamMotto = () => {
-    switch (user.team) {
+    switch (userTeam) {
       case 'red':
         return "Blood and Gold Above All";
       case 'green':
         return "Fortune Favors the Bold";
       case 'blue':
         return "Honor Through Knowledge and Service";
+      case 'gold':
+        return "Glory Through Golden Prosperity";
+      case 'purple':
+        return "Power Through Royal Bloodlines";
       default:
         return "Status Through Spending";
     }
@@ -252,12 +258,12 @@ const TeamCertificate: React.FC<TeamCertificateProps> = ({
               <div className="border rounded p-3">
                 <div className="text-sm text-gray-600">Contributions</div>
                 <div className="text-xl font-bold">
-                  ${user.amountSpent?.toLocaleString() || '0'}
+                  ${user.totalSpent?.toLocaleString() || '0'}
                 </div>
               </div>
               <div className="border rounded p-3">
                 <div className="text-sm text-gray-600">Joined</div>
-                <div className="text-sm font-medium">{formatDate(user.joinDate || '')}</div>
+                <div className="text-sm font-medium">{formatDate(user.joinedDate || '')}</div>
               </div>
             </div>
             

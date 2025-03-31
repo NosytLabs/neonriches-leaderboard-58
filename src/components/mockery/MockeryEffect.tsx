@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MockeryAction } from '@/types/mockery';
+import { MockeryAction } from '@/types/mockery-types';
 import { cn } from '@/lib/utils';
 import { getMockeryDescription } from '@/utils/mockery/mockery-descriptions';
 
@@ -104,29 +104,23 @@ const MockeryEffect: React.FC<MockeryEffectProps> = ({
     if (!isActive) return;
     
     let particleCount = 20;
-    let particleType = 'standard';
     
     switch (action) {
       case 'tomatoes':
         particleCount = 25;
-        particleType = 'tomato';
         break;
       case 'eggs':
       case 'putridEggs':
         particleCount = 15;
-        particleType = 'egg';
         break;
       case 'smokeBomb':
         particleCount = 40;
-        particleType = 'smoke';
         break;
       case 'courtJester':
         particleCount = 30;
-        particleType = 'confetti';
         break;
       default:
         particleCount = 20;
-        particleType = 'standard';
     }
     
     const newParticles = Array.from({ length: particleCount }, (_, i) => ({

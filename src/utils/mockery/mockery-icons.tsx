@@ -1,11 +1,11 @@
 
 import React from 'react';
 import { MockeryAction } from '@/types/mockery-types';
-import { Egg, Crown, Lock, Target } from 'lucide-react';
+import { Egg, Crown, Lock, Target, CircleAlert } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
 // TomatoIcon component
-export const TomatoIcon = ({ className = "", size = 24 }) => (
+export const TomatoIcon: React.FC<{ className?: string; size?: number }> = ({ className = "", size = 24 }) => (
   <svg 
     xmlns="http://www.w3.org/2000/svg" 
     width={size} 
@@ -25,15 +25,49 @@ export const TomatoIcon = ({ className = "", size = 24 }) => (
 );
 
 // Get mockery action icon
-export const getMockeryActionIcon = (action: MockeryAction): LucideIcon => {
-  const icons: Record<string, LucideIcon> = {
+export const getMockeryActionIcon = (action: MockeryAction): LucideIcon | React.FC<{ className?: string; size?: number }> => {
+  const icons: Record<string, LucideIcon | React.FC<{ className?: string; size?: number }>> = {
     'tomatoes': TomatoIcon,
     'eggs': Egg,
     'crown': Crown,
     'stocks': Lock,
     'jester': Target,
     'protection': Target,
-    'shame': Target
+    'shame': Target,
+    'putridEggs': Egg,
+    'silence': CircleAlert,
+    'courtJester': Target,
+    'smokeBomb': CircleAlert,
+    'glitterBomb': CircleAlert,
+    'dunce': CircleAlert,
+    'target': Target,
+    'default': CircleAlert
   };
-  return icons[action] || Target;
+  
+  return icons[action] || icons['default'];
 };
+
+// Get color for the mockery action icon
+export const getMockeryActionIconColor = (action: MockeryAction): string => {
+  const colors: Record<string, string> = {
+    'tomatoes': 'text-red-500',
+    'eggs': 'text-yellow-500',
+    'crown': 'text-yellow-400',
+    'stocks': 'text-gray-500',
+    'jester': 'text-purple-500',
+    'protection': 'text-green-500',
+    'shame': 'text-red-500',
+    'putridEggs': 'text-yellow-800',
+    'silence': 'text-blue-500',
+    'courtJester': 'text-purple-400',
+    'smokeBomb': 'text-gray-500',
+    'glitterBomb': 'text-pink-400',
+    'dunce': 'text-orange-500',
+    'target': 'text-red-500',
+    'default': 'text-gray-500'
+  };
+  
+  return colors[action] || colors['default'];
+};
+
+export type { LucideIcon };

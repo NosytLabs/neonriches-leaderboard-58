@@ -2,11 +2,23 @@
 // Common user tiers used throughout the application
 export type UserTier = 
   | 'basic' 
-  | 'standard' 
-  | 'premium';
+  | 'standard'
+  | 'premium'
+  | 'royal'
+  | 'elite'
+  | 'legendary'
+  | 'founder'
+  | 'pro'
+  | 'diamond'
+  | 'gold'
+  | 'silver'
+  | 'bronze'
+  | 'free'
+  | 'platinum'
+  | 'vip';
 
-// Simplify team types to just 3 basic ones
-export type TeamType = 'red' | 'green' | 'blue';
+// Team types definition that will be used across the app
+export type TeamType = 'red' | 'green' | 'blue' | 'gold' | 'purple' | 'none' | 'neutral';
 
 // User profile interface
 export interface UserProfile {
@@ -113,7 +125,7 @@ export interface UserCosmetics {
   activeTheme?: string;
 }
 
-// TeamColor type alias for backward compatibility
+// For backward compatibility
 export type TeamColor = TeamType;
 
 // Gender enum for profiles
