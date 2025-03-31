@@ -1,7 +1,7 @@
 
 import type { LucideIcon } from 'lucide-react';
 
-// Mockery action types
+// Mockery action types - comprehensive list of all possible actions
 export type MockeryAction = 
   | 'tomatoes' 
   | 'eggs'
@@ -13,7 +13,33 @@ export type MockeryAction =
   | 'guillotine'
   | 'dragon'
   | 'demon'
-  | 'courtJester';
+  | 'courtJester'
+  | 'putridEggs'
+  | 'smokeBomb'
+  | 'glitterBomb'
+  | 'royalPie'
+  | 'jokeCrown'
+  | 'memeFrame'
+  | 'roast'
+  | 'ridicule'
+  | 'humiliate'
+  | 'expose'
+  | 'mock'
+  | 'taunt'
+  | 'jest'
+  | 'defeat'
+  | 'dunce'
+  | 'jester'
+  | 'troll'
+  | 'peasant'
+  | 'target'
+  | 'challenge'
+  | 'ghost'
+  | 'dungeons'
+  | 'immune'
+  | 'rat'
+  | 'skeleton'
+  | 'pawn';
 
 // Shame actions (subset of mockery actions)
 export type ShameAction = 'tomatoes' | 'eggs' | 'stocks';
@@ -28,7 +54,8 @@ export type MockeryTier =
   | 'epic'
   | 'common'
   | 'uncommon'
-  | 'silver';
+  | 'silver'
+  | 'bronze';
 
 // Extended mockery action with additional metadata
 export interface ExtendedMockeryAction {
@@ -47,5 +74,36 @@ export interface ExtendedMockeryAction {
   expiresAt?: string;
 }
 
+// Users who have been mocked
+export interface MockedUser {
+  id: string | number;
+  userId?: string;
+  username: string;
+  displayName?: string;
+  profileImage?: string;
+  mockedReason?: string;
+  mockedTimestamp: string;
+  mockedUntil: string;
+  mockedBy?: string;
+  mockedTier?: MockeryTier;
+  mockeryCount?: number;
+  lastMocked?: string;
+  team?: string;
+  tier?: string;
+}
+
+// Mockery event 
+export interface MockeryEvent {
+  id: string;
+  type: MockeryAction;
+  appliedBy: string;
+  targetId: string;
+  isActive: boolean;
+  createdAt: string;
+  expiresAt: string;
+  tier?: MockeryTier;
+}
+
 // For backward compatibility
 export { type MockeryAction as MockeryType };
+

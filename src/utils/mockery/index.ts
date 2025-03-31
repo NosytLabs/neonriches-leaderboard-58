@@ -9,6 +9,9 @@ export * from './mockery-effects';
 export * from './mockery-durations';
 export * from './shame-discount-utils';
 
+// Import types from our consolidated type definition
+import { MockeryAction, MockeryTier, ExtendedMockeryAction } from '@/types/mockery-types';
+
 // Helper function to get mockery cooldown in seconds
 export const getMockeryCooldown = (action: MockeryAction, tier?: MockeryTier): number => {
   // Basic cooldowns by tier
@@ -21,7 +24,8 @@ export const getMockeryCooldown = (action: MockeryAction, tier?: MockeryTier): n
     'epic': 600,
     'common': 60,
     'uncommon': 120,
-    'silver': 180
+    'silver': 180,
+    'bronze': 240
   };
   
   // Action-specific cooldowns (overrides tier cooldowns)
@@ -37,9 +41,6 @@ export const getMockeryCooldown = (action: MockeryAction, tier?: MockeryTier): n
   // Return action-specific cooldown if available, otherwise tier cooldown
   return actionCooldowns[action] || tierCooldowns[tier || 'basic'] || 60;
 };
-
-// Import types from our consolidated type definition
-import { MockeryAction, MockeryTier, ExtendedMockeryAction } from '@/types/mockery-types';
 
 // Re-export types for consuming components
 export type { MockeryAction, MockeryTier, ExtendedMockeryAction };

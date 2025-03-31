@@ -1,59 +1,55 @@
 
-import { lazy, ComponentType, Suspense, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 
 /**
- * A hook for lazy loading components with performance tracking
- * @param factory Function that imports the component
- * @param fallback Component to display while loading
- * @returns The lazy loaded component wrapped in Suspense
+ * A hook to conditionally render components only when they become visible in the viewport.
+ * This is useful for performance optimization by delaying loading of off-screen components.
+ *
+ * @param {Object} options - Hook configuration options
+ * @param {boolean} options.enabled - Whether the lazy loading is enabled
+ * @param {number} options.threshold - The percentage of the component that must be visible to trigger loading (0-1)
+ * @param {number} options.rootMargin - Margin around the root (in pixels)
+ * @returns {[React.RefObject<any>, boolean]} A tuple containing a ref to attach to the container and a boolean showing if the component is visible
  */
-export function useLazyLoad<T extends ComponentType<any>>(
-  factory: () => Promise<{ default: T }>,
-  fallback: React.ReactNode = null
-) {
-  const [loadTime, setLoadTime] = useState<number | null>(null);
-  const startTime = performance.now();
-  
-  const LazyComponent = lazy(() => {
-    return factory().then(module => {
-      const endTime = performance.now();
-      setLoadTime(endTime - startTime);
-      return module;
-    });
-  });
-  
-  // Log performance metrics
+export const useLazyLoad = (
+  options = { enabled: true, threshold: 0.1, rootMargin: '0px' }
+) => {
+  const [visible, setVisible] = useState(!options.enabled);
+  const ref = React.useRef<HTMLDivElement>(null);
+
   useEffect(() => {
-    if (loadTime !== null) {
-      console.info(`Component loaded in ${loadTime.toFixed(2)}ms`);
+    if (!options.enabled) {
+      setVisible(true);
+      return;
     }
-  }, [loadTime]);
-  
-  // Create a function component that wraps the lazy component in Suspense
-  const Component = (props: React.ComponentProps<T>) => (
-    <Suspense fallback={fallback || <div className="animate-pulse h-20 w-full bg-gray-200 rounded-md"></div>}>
-      <LazyComponent {...props} />
-    </Suspense>
-  );
-  
-  return Component;
-}
 
-/**
- * A utility for code splitting by route
- * @param factory Function that imports the page component
- * @returns The lazy loaded page component
- */
-export function lazyLoadPage<T extends ComponentType<any>>(factory: () => Promise<{ default: T }>) {
-  const startTime = performance.now();
-  
-  const LazyPage = lazy(() => {
-    return factory().then(module => {
-      const endTime = performance.now();
-      console.info(`Page loaded in ${endTime - startTime}ms`);
-      return module;
-    });
-  });
-  
-  return LazyPage;
-}
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+          if (ref.current) {
+            observer.unobserve(ref.current);
+          }
+        }
+      },
+      {
+        threshold: options.threshold,
+        rootMargin: options.rootMargin
+      }
+    );
+
+    if (ref.current) {
+      observer.observe(ref.current);
+    }
+
+    return () => {
+      if (ref.current) {
+        observer.unobserve(ref.current);
+      }
+    };
+  }, [options.enabled, options.threshold, options.rootMargin]);
+
+  return [ref, visible];
+};
+
+export default useLazyLoad;

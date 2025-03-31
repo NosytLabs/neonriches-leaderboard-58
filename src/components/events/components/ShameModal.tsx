@@ -9,8 +9,6 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { MockeryAction } from '@/types/mockery';
-import { UserProfile } from '@/types/user';
 import { Coins } from 'lucide-react';
 import { formatCurrency } from '@/utils/formatters';
 import { 
@@ -20,6 +18,7 @@ import {
   getShameActionPrice,
   getDiscountedShamePrice
 } from '@/components/events/utils/shameUtils';
+import { ShameAction } from '@/types/mockery-types';
 
 interface ShameModalProps {
   targetUser: {
@@ -32,7 +31,7 @@ interface ShameModalProps {
     tier?: string;
     spendStreak?: number;
   };
-  shameType: MockeryAction;
+  shameType: ShameAction;
   onConfirm: (userId: string) => void;
   onCancel: () => void;
   hasDiscount?: boolean;

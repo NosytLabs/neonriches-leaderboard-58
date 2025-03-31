@@ -54,6 +54,6 @@ export const getMockeryName = getMockeryActionTitle;
 export const getMockeryDescription = getMockeryActionDescription;
 export const getMockeryCost = getMockeryActionPrice;
 
-// Re-export types
-import { MockeryAction, MockeryTier, ExtendedMockeryAction } from '@/types/mockery-types';
-export type { MockeryAction, MockeryTier, ExtendedMockeryAction };
+// Re-export types from our consolidated type definition
+import { MockeryAction, MockeryTier, ExtendedMockeryAction, ShameAction } from '@/types/mockery-types';
+export type { MockeryAction, MockeryTier, ExtendedMockeryAction, ShameAction };

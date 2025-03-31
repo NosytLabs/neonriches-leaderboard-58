@@ -1,7 +1,7 @@
+
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { MockeryAction } from '@/types/mockery';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Shield } from 'lucide-react';
 import { 
@@ -11,6 +11,7 @@ import {
   getShameActionPrice
 } from '@/components/events/utils/shameUtils';
 import { formatCurrency } from '@/utils/formatters';
+import { ShameAction } from '@/types/mockery-types';
 
 interface ShameUserCardProps {
   user: {
@@ -21,11 +22,11 @@ interface ShameUserCardProps {
     team?: string;
     amountSpent: number;
   };
-  isShamed: { type: MockeryAction; timestamp: string } | null;
+  isShamed: { type: ShameAction; timestamp: string } | null;
   isOnCooldown: boolean;
   shameCount: number;
-  onShame: (userId: number, action: MockeryAction) => boolean;
-  featuredAction?: MockeryAction;
+  onShame: (userId: number, action: ShameAction) => boolean;
+  featuredAction?: ShameAction;
 }
 
 const ShameUserCard: React.FC<ShameUserCardProps> = ({

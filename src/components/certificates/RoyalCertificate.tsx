@@ -1,3 +1,4 @@
+
 import React, { useRef, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -181,7 +182,7 @@ const RoyalCertificate: React.FC<RoyalCertificateProps> = ({
                   <span className="text-sm text-white/70">Contribution</span>
                 </div>
                 <div className="text-xl font-bold">
-                  <SpendAmount amount={user.amountSpent} />
+                  <SpendAmount amount={user.totalSpent || user.amountSpent || 0} />
                 </div>
               </div>
               

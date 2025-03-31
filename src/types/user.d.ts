@@ -116,7 +116,14 @@ export interface UserProfile {
   subscription?: any;
   role?: string;
   activeTitle?: string;
-  certificateNFT?: any;
+  certificateNFT?: {
+    id?: string;
+    mintAddress?: string;
+    imageUrl?: string;
+    dateIssued?: string;
+    type?: string;
+    isVerified?: boolean;
+  };
   avatarUrl?: string; // For backward compatibility
   gender?: string;
   profileImages?: ProfileImage[];

@@ -2,8 +2,8 @@
 import React from 'react';
 import { Dialog } from '@/components/ui/dialog';
 import ShameModal from '@/components/events/components/ShameModal';
-import { ShameAction } from '@/components/events/hooks/useShameEffect';
-import { User, TeamType } from '@/types/user';
+import { User, TeamColor } from '@/types/user';
+import { ShameAction } from '@/types/mockery-types';
 
 interface ShameModalWrapperProps {
   showModal: boolean;
@@ -34,7 +34,7 @@ const ShameModalWrapper: React.FC<ShameModalWrapperProps> = ({
           userId: selectedUser.id.toString(),
           username: selectedUser.username,
           profileImage: selectedUser.profileImage || '/placeholder.svg',
-          totalSpent: selectedUser.amountSpent || 0,
+          totalSpent: selectedUser.totalSpent || selectedUser.amountSpent || 0,
           rank: selectedUser.rank || 0,
           team: validTeam,
           tier: selectedUser.tier || 'free',
