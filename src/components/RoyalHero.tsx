@@ -12,24 +12,20 @@ import { formatCurrency } from '@/utils/formatters';
 
 interface RoyalHeroProps {
   className?: string;
-  absurdityLevel?: 'mild' | 'medium' | 'extreme' | 'ridiculous' | 'unhinged';
 }
 
-const RoyalHero: React.FC<RoyalHeroProps> = ({ 
-  className,
-  absurdityLevel = 'medium'
-}) => {
+const RoyalHero: React.FC<RoyalHeroProps> = ({ className }) => {
   const { isAuthenticated, user } = useAuth();
-  const [ctaText, setCtaText] = useState<string>(generateAbsurdCTA(absurdityLevel));
+  const [ctaText, setCtaText] = useState<string>(generateAbsurdCTA());
   const [showFact, setShowFact] = useState<boolean>(false);
   
   useEffect(() => {
     const interval = setInterval(() => {
-      setCtaText(generateAbsurdCTA(absurdityLevel));
+      setCtaText(generateAbsurdCTA());
     }, 5000);
     
     return () => clearInterval(interval);
-  }, [absurdityLevel]);
+  }, []);
   
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -82,41 +78,6 @@ const RoyalHero: React.FC<RoyalHeroProps> = ({
         ))}
       </div>
       
-      {absurdityLevel !== 'mild' && (
-        <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-          {Array.from({ length: 5 }).map((_, i) => (
-            <motion.div 
-              key={`card-${i}`}
-              className="absolute h-12 w-20 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-xl flex items-center justify-center text-white text-xs font-bold"
-              style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-              }}
-              initial={{ 
-                opacity: 0, 
-                scale: 0.5, 
-                y: 100, 
-                rotate: Math.random() * 20 - 10
-              }}
-              animate={{ 
-                opacity: [0, 0.7, 0],
-                scale: [0.7, 1, 0.7],
-                y: [100, -100],
-                rotate: [Math.random() * 20 - 10, Math.random() * 20 - 10]
-              }}
-              transition={{ 
-                duration: 7 + Math.random() * 6,
-                repeat: Infinity,
-                delay: Math.random() * 5,
-                repeatDelay: Math.random() * 4
-              }}
-            >
-              CREDIT CARD
-            </motion.div>
-          ))}
-        </div>
-      )}
-      
       <div className="container relative z-10 mx-auto px-4 py-12">
         <div className="flex flex-col items-center text-center mb-8">
           <div className="mb-6 animate-royal-entrance">
@@ -141,7 +102,7 @@ const RoyalHero: React.FC<RoyalHeroProps> = ({
           </motion.h1>
           
           <motion.p 
-            className="text-xl md:text-2xl text-white/70 max-w-3xl animate-royal-entrance animation-delay-200"
+            className="text-xl md:text-2xl text-white/70 max-w-3xl mx-auto animate-royal-entrance animation-delay-200"
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.4, duration: 0.8 }}
@@ -149,23 +110,21 @@ const RoyalHero: React.FC<RoyalHeroProps> = ({
             The ultimate pay-to-win social experience where your status is determined by how much you spend!
           </motion.p>
           
-          {absurdityLevel !== 'mild' && (
-            <motion.div
-              className="mt-6 text-lg md:text-xl text-royal-gold"
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.6, duration: 0.5 }}
+          <motion.div
+            className="mt-6 text-lg md:text-xl text-royal-gold"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.6, duration: 0.5 }}
+          >
+            <span className="font-medium">Total Money Wasted: </span>
+            <motion.span
+              className="font-bold"
+              animate={{ scale: [1, 1.05, 1] }}
+              transition={{ duration: 2, repeat: Infinity }}
             >
-              <span className="font-medium">Total Money Wasted: </span>
-              <motion.span
-                className="font-bold"
-                animate={{ scale: [1, 1.05, 1] }}
-                transition={{ duration: 2, repeat: Infinity }}
-              >
-                {formatCurrency(Math.floor(Math.random() * 1000000) + 500000)}
-              </motion.span>
-            </motion.div>
-          )}
+              {formatCurrency(Math.floor(Math.random() * 1000000) + 500000)}
+            </motion.span>
+          </motion.div>
           
           <div className="flex flex-col sm:flex-row gap-4 mt-8 animate-royal-entrance animation-delay-300">
             {!isAuthenticated ? (
@@ -210,7 +169,7 @@ const RoyalHero: React.FC<RoyalHeroProps> = ({
                     <motion.span 
                       className="relative flex items-center"
                       whileHover={{ 
-                        scale: absurdityLevel === 'ridiculous' || absurdityLevel === 'unhinged' ? 1.2 : 1.05
+                        scale: 1.05
                       }}
                     >
                       <Icon name="Coins" size={16} className="mr-2" />

@@ -5,7 +5,10 @@ export type MockeryAction =
   | 'tomatoes'
   | 'eggs'
   | 'crown'
-  | 'jester';
+  | 'jester'
+  | 'stocks'    // Adding stocks as part of MockeryAction
+  | 'shame'     // Adding shame as part of MockeryAction
+  | 'protection'; // Adding protection as part of MockeryAction
 
 export type ExtendedMockeryAction = MockeryAction | string;
 

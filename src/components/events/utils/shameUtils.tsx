@@ -57,3 +57,22 @@ export const getShameActionMessage = (action: ShameAction, username: string): st
   };
   return messages[action] || `You've publicly mocked ${username}!`;
 };
+
+// Added missing functions that were causing errors
+export const hasWeeklyDiscount = (action: ShameAction): boolean => {
+  // Weekly discounted actions (for simplicity, just eggs)
+  const discountedActions: ShameAction[] = ['eggs'];
+  return discountedActions.includes(action);
+};
+
+export const getWeeklyDiscountedAction = (): ShameAction => {
+  // For fixed content, always return eggs as the discounted action
+  return 'eggs';
+};
+
+export const getDiscountedShamePrice = (action: ShameAction): number => {
+  const originalPrice = getShameActionPrice(action);
+  // Apply a 50% discount
+  return originalPrice * 0.5;
+};
+

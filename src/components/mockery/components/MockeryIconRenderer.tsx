@@ -1,8 +1,10 @@
 
 import React from 'react';
 import { MockeryAction } from '@/types/mockery-types';
-import { getMockeryActionIcon, getMockeryTier, getMockeryActionIconColor } from '@/utils/mockery';
+import { getMockeryTier, getMockeryTierColorClass } from '@/utils/mockery';
 import { cn } from '@/lib/utils';
+// Import specific icons from lucide-react
+import { AlertCircle, Egg, Crown, Theater, Target } from 'lucide-react';
 
 interface MockeryIconRendererProps {
   action: MockeryAction;
@@ -15,7 +17,21 @@ const MockeryIconRenderer: React.FC<MockeryIconRendererProps> = ({
   size = 'md',
   className
 }) => {
-  const IconComponent = getMockeryActionIcon(action);
+  // Get the appropriate icon based on the action
+  const getIconComponent = (actionType: MockeryAction) => {
+    switch (actionType) {
+      case 'tomatoes': return AlertCircle;
+      case 'eggs': return Egg;
+      case 'crown': return Crown;
+      case 'jester': return Theater;
+      case 'stocks': return AlertCircle;
+      case 'shame': return AlertCircle;
+      case 'protection': return Crown;
+      default: return Target;
+    }
+  };
+  
+  const IconComponent = getIconComponent(action);
   
   const sizeClasses = {
     sm: 'h-4 w-4',
@@ -24,7 +40,8 @@ const MockeryIconRenderer: React.FC<MockeryIconRendererProps> = ({
   };
   
   // Get appropriate color class
-  const colorClass = getMockeryActionIconColor(action);
+  const tier = getMockeryTier(action);
+  const colorClass = getMockeryTierColorClass(tier);
   
   return (
     <IconComponent className={cn(sizeClasses[size], colorClass, className)} />
