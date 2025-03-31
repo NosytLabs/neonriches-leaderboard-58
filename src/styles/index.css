@@ -4,7 +4,7 @@
 @import './unified-theme.css';
 @import './cosmetics/index.css';
 @import './utilities/index.css';
-@import './animations/index.css';
+@import './animations/consolidated.css';
 @import './animations/utility-classes.css';
 @import './theme/index.css';
 

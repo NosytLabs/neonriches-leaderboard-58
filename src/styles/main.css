@@ -22,7 +22,7 @@
 @import './theme/royal-theme.css';
 
 /* Animation system - consolidated */
-@import './consolidated-animations.css';
+@import './animations/consolidated.css';
 
 /* Specific components & utilities */
 @import './utilities/decorative-effects.css';
