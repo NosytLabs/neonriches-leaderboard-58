@@ -34,6 +34,16 @@ export interface UserCosmeticState {
   activeEffect?: string;
   activeBadge?: string;
   activeTheme?: string;
+  // Legacy compatibility fields - these should not be used in new code
+  borders?: string[];
+  colors?: string[];
+  fonts?: string[];
+  emojis?: string[];
+  titles?: string[];
+  backgrounds?: string[];
+  effects?: string[];
+  badges?: string[];
+  themes?: string[];
 }
 
 export interface CosmeticPurchaseResult {

@@ -9,9 +9,4 @@
 @import './rank-badges.css';
 @import './shame-effects.css';
 @import './scrollbar.css';
-
-/* Base body styles */
-body {
-  background-color: #0D0D20;
-  color: #FFFFFF;
-}
+@import './royal-theme.css';

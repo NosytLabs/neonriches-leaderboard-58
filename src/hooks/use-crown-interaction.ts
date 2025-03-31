@@ -1,8 +1,8 @@
+
 import { useState, useCallback } from 'react';
 import { SoundType } from '@/hooks/sounds/types';
 import useNotificationSounds from '@/hooks/use-notification-sounds';
 import { useToastContext } from "@/contexts/ToastContext";
-import { NotificationSoundOptions } from '@/types/mockery';
 import useNotificationSound from '@/hooks/useNotificationSound';
 
 export function useCrownInteraction() {
@@ -12,7 +12,7 @@ export function useCrownInteraction() {
 
   const handleCrownClick = useCallback((containerRef: React.RefObject<HTMLElement>) => {
     setHasInteracted(true);
-    playSound('royalAnnouncement', 0.2);
+    playSound('royalAnnouncement', { volume: 0.2 });
     
     addToast({
       title: "Royal Decree",

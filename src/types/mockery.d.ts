@@ -14,7 +14,7 @@ export interface MockeryAction {
   isActive: boolean;
 }
 
-export type MockeryActionType = 
+export type MockeryAction = 
   | 'tomatoes' 
   | 'eggs' 
   | 'shame' 
@@ -49,7 +49,7 @@ export interface MockeryEvent {
   targetId: string;
   targetName?: string;
   appliedBy: string;
-  action: MockeryActionType;
+  action: MockeryAction;
   timestamp: number;
   duration: number;
   isActive: boolean;

@@ -9,8 +9,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Theme system */
-@import './theme/royal-theme.css';
+/* Combined theme system */
 @import './theme/royal-variables.css';
 @import './theme/royal-gradients.css';
 @import './theme/royal-text.css';
@@ -20,18 +19,102 @@
 @import './theme/rank-badges.css';
 @import './theme/shame-effects.css';
 @import './theme/scrollbar.css';
+@import './theme/royal-theme.css';
 
-/* Animation system */
-@import './animations/index.css';
+/* Animation system - consolidated */
+@import './consolidated-animations.css';
 
 /* Specific components & utilities */
-@import './utilities/royal-theme.css';
 @import './utilities/decorative-effects.css';
 @import './utilities/glass-effects.css';
 @import './utilities/hover-effects.css';
+@import './utilities/royal-theme.css';
+@import './utilities/transitions.css';
+@import './utilities/responsive.css';
+@import './utilities/loading.css';
+@import './utilities/mobile.css';
+
+/* Cosmetics */
+@import './cosmetics/index.css';
 
 /* Base body styles */
 body {
   background-color: #0D0D20;
   color: #FFFFFF;
+}
+
+/* Glass morphism effects */
+.glass-morphism {
+  @apply bg-white/5 backdrop-blur-sm;
+}
+
+.glass-card {
+  @apply glass-morphism rounded-lg border border-white/10;
+}
+
+.glass-input {
+  @apply bg-white/5 border-white/10 focus:border-white/20 focus:bg-white/10;
+}
+
+/* Royal theme colors */
+:root {
+  --royal-gold: 212, 175, 55;
+  --royal-purple: 128, 0, 128;
+  --royal-blue: 0, 35, 102;
+  --royal-red: 179, 0, 0;
+  --royal-green: 0, 102, 0;
+  --royal-crimson: 153, 0, 51;
+  
+  --team-red: 220, 38, 38;
+  --team-green: 34, 197, 94; 
+  --team-blue: 59, 130, 246;
+}
+
+/* Team color utilities */
+.text-team-red {
+  color: rgb(var(--team-red));
+}
+
+.bg-team-red {
+  background-color: rgb(var(--team-red));
+}
+
+.text-team-green {
+  color: rgb(var(--team-green));
+}
+
+.bg-team-green {
+  background-color: rgb(var(--team-green));
+}
+
+.text-team-blue {
+  color: rgb(var(--team-blue));
+}
+
+.bg-team-blue {
+  background-color: rgb(var(--team-blue));
+}
+
+.text-royal-gold {
+  color: rgb(var(--royal-gold));
+}
+
+.bg-royal-gold {
+  background-color: rgb(var(--royal-gold));
+}
+
+.text-royal-purple {
+  color: rgb(var(--royal-purple));
+}
+
+.bg-royal-purple {
+  background-color: rgb(var(--royal-purple));
+}
+
+.text-royal-crimson {
+  color: rgb(var(--royal-crimson));
+}
+
+.bg-royal-crimson {
+  background-color: rgb(var(--royal-crimson));
 }

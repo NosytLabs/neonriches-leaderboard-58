@@ -1,23 +1,30 @@
 
-import { ProfileBoost } from './profile-boost';
 import { UserCosmeticState } from './cosmetics';
 
-export type TeamColor = 'red' | 'blue' | 'green' | 'gold' | 'purple' | 'none' | 'neutral';
-export type TeamType = 'red' | 'blue' | 'green' | 'gold' | 'none';
+export type UserTier = 'free' | 'basic' | 'premium' | 'pro' | 'royal' | 'founder' | 'gold' | 'platinum' | 'silver' | 'diamond';
+export type TeamColor = 'red' | 'green' | 'blue' | 'purple' | 'gold';
+export type TeamType = 'red' | 'green' | 'blue';
 
-export type UserTier = 
-  | 'free'
-  | 'basic'
-  | 'pro'
-  | 'premium'
-  | 'royal'
-  | 'founder'
-  | 'platinum'
-  | 'diamond'
-  | 'gold'
-  | 'silver'
-  | 'bronze'
-  | 'vip';
+export interface ProfileBoost {
+  id: string;
+  type: string;
+  startDate: string;
+  endDate: string;
+  isActive: boolean;
+}
+
+export interface ProfileImage {
+  id: string;
+  url: string;
+  isPrimary: boolean;
+}
+
+export interface SocialLink {
+  type: string;
+  url: string;
+}
+
+export type ProfileLink = SocialLink;
 
 export interface UserSettings {
   profileVisibility: 'public' | 'private' | 'friends';
@@ -26,21 +33,18 @@ export interface UserSettings {
   notifications: boolean;
   emailNotifications: boolean;
   marketingEmails: boolean;
-  soundEffects: boolean;
-  showEmailOnProfile: boolean;
   rankChangeAlerts: boolean;
   newFollowerAlerts: boolean;
   teamNotifications: boolean;
+  soundEffects: boolean;
+  darkMode: boolean;
   showRank: boolean;
   showTeam: boolean;
   showSpending: boolean;
-  darkMode?: boolean; // For backward compatibility
-  language?: string;
-  shameAlerts?: boolean;
-  publicProfile?: boolean;
+  showEmailOnProfile: boolean;
 }
 
-export interface UserProfile {
+export interface User {
   id: string;
   username: string;
   displayName: string;
@@ -48,61 +52,27 @@ export interface UserProfile {
   profileImage: string;
   bio: string;
   joinDate: string;
-  joinedAt?: string;
-  createdAt?: string;
-  tier: UserTier;
-  team: TeamColor;
-  rank: number;
   previousRank: number;
+  rank: number;
+  team: TeamColor;
+  tier: UserTier;
+  isFounder: boolean;
+  walletBalance: number;
   totalSpent: number;
+  settings: UserSettings;
+  cosmetics: UserCosmeticState;
+  profileBoosts: ProfileBoost[];
+  socialLinks?: SocialLink[];
+  profileImages?: ProfileImage[];
+  createdAt?: string;
+  joinedAt?: string;
   amountSpent?: number; // For backward compatibility
   spentAmount?: number; // For backward compatibility
-  walletBalance?: number;
-  isFounder: boolean;
-  isVerified?: boolean;
-  isVIP?: boolean;
-  isProtected?: boolean;
-  isAdmin?: boolean;
-  spendStreak?: number;
-  lastActive?: string;
-  lastLogin?: string;
-  following?: string[];
-  followers?: string[];
-  cosmetics: UserCosmeticState;
-  settings: UserSettings;
-  profileBoosts: ProfileBoost[];
-  socialLinks?: ProfileLink[];
-  profileViews?: number;
-  profileClicks?: number;
-  purchasedFeatures?: string[];
-  subscription?: any;
-  role?: string;
-  activeTitle?: string;
-  certificateNFT?: any;
-  avatarUrl?: string; // For backward compatibility
-  gender?: string;
-  profileImages?: ProfileImage[];
 }
 
-export interface User extends UserProfile {}
+export type UserProfile = User;
 
-export interface ProfileLink {
-  id: string | number;
-  url: string;
-  platform: string;
-  title: string;
-  icon: string;
-  label: string;
-  clicks: number;
-}
-
-export interface ProfileImage {
-  id: string | number;
-  url: string;
-  isPrimary: boolean;
-  type: string;
-  caption?: string;
-}
-
-// Re-export types
-export type { TeamColor, TeamType };
+// Export compatible types for the project
+// Remove conflicting exports
+// export type TeamColor = 'red' | 'green' | 'blue';
+// export type TeamType = 'red' | 'green' | 'blue';
