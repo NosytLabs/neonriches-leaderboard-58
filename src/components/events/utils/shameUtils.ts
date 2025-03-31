@@ -58,6 +58,7 @@ export const getShameActionCooldown = (action: MockeryAction): number => {
     'common': 1,
     'uncommon': 2,
     'rare': 3,
+    'epic': 4,
     'legendary': 5
   };
   
@@ -76,6 +77,7 @@ export const getShameActionDuration = (action: MockeryAction): number => {
     'common': 1,      // 1 hour
     'uncommon': 3,    // 3 hours
     'rare': 6,        // 6 hours
+    'epic': 12,       // 12 hours 
     'legendary': 24   // 24 hours
   };
   
@@ -83,9 +85,92 @@ export const getShameActionDuration = (action: MockeryAction): number => {
   return baseDuration * multipliers[tier];
 };
 
+/**
+ * Check if the action has a weekly discount
+ * @param action The mockery action
+ * @returns Whether the action has a weekly discount
+ */
+export const hasWeeklyDiscount = (action: MockeryAction): boolean => {
+  // For demo purposes, let's say stocks is discounted this week
+  const discountedAction = getWeeklyDiscountedAction();
+  return action === discountedAction;
+};
+
+/**
+ * Get the action that is discounted this week
+ * @returns The discounted action
+ */
+export const getWeeklyDiscountedAction = (): MockeryAction => {
+  // This would typically be fetched from an API or database
+  // For now, let's hardcode it to 'stocks'
+  return 'stocks';
+};
+
+/**
+ * Get the discounted price for a shame action
+ * @param action The mockery action
+ * @returns The discounted price
+ */
+export const getDiscountedShamePrice = (action: MockeryAction): number => {
+  const regularPrice = getShameActionPrice(action);
+  // 50% discount
+  return regularPrice * 0.5;
+};
+
+/**
+ * Get mockery name for display
+ * @param action The mockery action
+ * @returns A human-readable name for the mockery action
+ */
+export const getMockeryName = (action: MockeryAction): string => {
+  const names: Record<MockeryAction, string> = {
+    'tomatoes': 'Rotten Tomatoes',
+    'eggs': 'Rancid Eggs',
+    'stocks': 'Public Stocks',
+    'crown': 'Fool\'s Crown',
+    'jester': 'Jester\'s Hat',
+    'putridEggs': 'Putrid Eggs',
+    'silence': 'Royal Silence',
+    'courtJester': 'Court Jester',
+    'smokeBomb': 'Smoke Bomb',
+    'shame': 'Public Shame',
+    'protection': 'Royal Protection'
+  };
+
+  return names[action] || action;
+};
+
+/**
+ * Get mockery description for display
+ * @param action The mockery action
+ * @returns A description of what the mockery action does
+ */
+export const getMockeryDescription = (action: MockeryAction): string => {
+  const descriptions: Record<MockeryAction, string> = {
+    'tomatoes': 'Splatter their profile with rotten tomatoes for 24 hours',
+    'eggs': 'Pelt their profile with rancid eggs for 24 hours',
+    'stocks': 'Lock them in the public stocks for all to see for 3 days',
+    'crown': 'Force them to wear a fool\'s crown for a week',
+    'jester': 'Dress them as a court jester for 24 hours',
+    'putridEggs': 'Assault them with the most putrid eggs in the kingdom for 3 days',
+    'silence': 'Prevent them from speaking in public forums for 12 hours',
+    'courtJester': 'Assign them as your personal jester for 3 days',
+    'smokeBomb': 'Drop a smoke bomb on their profile for 24 hours',
+    'shame': 'Ring the bell of shame on their profile for 24 hours',
+    'protection': 'Protect yourself from mockery for 3 days'
+  };
+
+  return descriptions[action] || 'Apply a mysterious effect';
+};
+
 export default {
   getShameActionPrice,
   getShameActionTier,
   getShameActionCooldown,
-  getShameActionDuration
+  getShameActionDuration,
+  hasWeeklyDiscount,
+  getWeeklyDiscountedAction,
+  getDiscountedShamePrice,
+  getMockeryName,
+  getMockeryDescription
 };

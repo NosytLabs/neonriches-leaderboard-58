@@ -1,264 +1,233 @@
 
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Trophy } from 'lucide-react';
-import LeaderboardEntry from '@/components/leaderboard/components/LeaderboardEntry';
-import { TeamColor, TeamType } from '@/types/team';
-import { UserProfile, User } from '@/types/user-types';
-import { cn } from '@/lib/utils';
+import React, { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Button } from '@/components/ui/button';
+import LeaderboardCard from './LeaderboardCard';
+import FilterLeaderboard from './FilterLeaderboard';
+import { Team } from '@/types/team';
+import { User, UserSettings } from '@/types/user';
+import { LeaderboardUser } from '@/types/leaderboard';
+import { useMockLeaderboard } from '@/hooks/useMockLeaderboard';
 
-const dummyUsers: User[] = [
-  {
-    id: "1",
-    username: "RoyalThroneGuru",
-    displayName: "Royal Guru",
-    email: "guru@example.com",
-    profileImage: '/throne-assets/crown-icon.svg',
-    bio: "Founder of SpendThrone",
-    joinDate: '2023-01-01',
-    tier: 'founder',
-    team: 'red',
-    totalSpent: 1000,
-    rank: 1,
-    cosmetics: {
-      border: [],
-      color: [],
-      font: [],
-      emoji: [],
-      title: [],
-      background: [],
-      effect: [],
-      badge: [],
-      theme: []
-    },
-    settings: {
-      profileVisibility: 'public',
-      allowProfileLinks: true,
-      theme: 'dark',
-      notifications: true,
-      emailNotifications: true,
-      marketingEmails: true,
-      soundEffects: true,
-      showRank: true,
-      showTeam: true,
-      showSpending: true
-    },
-    isFounder: true,
-    socialLinks: []
-  },
-  {
-    id: "2",
-    username: "ThroneMaster",
-    displayName: "Throne Master",
-    email: "master@example.com",
-    profileImage: '/throne-assets/throne-icon.svg',
-    bio: "Throne Master",
-    joinDate: '2023-01-02',
-    tier: 'founder',
-    team: 'blue',
-    totalSpent: 950,
-    rank: 2,
-    cosmetics: {
-      border: [],
-      color: [],
-      font: [],
-      emoji: [],
-      title: [],
-      background: [],
-      effect: [],
-      badge: [],
-      theme: []
-    },
-    settings: {
-      profileVisibility: 'public',
-      allowProfileLinks: true,
-      theme: 'dark',
-      notifications: true,
-      emailNotifications: true,
-      marketingEmails: true,
-      soundEffects: true,
-      showRank: true,
-      showTeam: true,
-      showSpending: true
-    },
-    isFounder: true,
-    socialLinks: []
-  },
-  {
-    id: "3",
-    username: "RichGamer99",
-    displayName: "Rich Gamer",
-    email: "rich@example.com",
-    profileImage: '/throne-assets/coin-stack.svg',
-    bio: "I just like spending money",
-    joinDate: '2023-01-03',
-    tier: 'basic',
-    team: 'green',
-    totalSpent: 800,
-    rank: 3,
-    cosmetics: {
-      border: [],
-      color: [],
-      font: [],
-      emoji: [],
-      title: [],
-      background: [],
-      effect: [],
-      badge: [],
-      theme: []
-    },
-    settings: {
-      profileVisibility: 'public',
-      allowProfileLinks: true,
-      theme: 'dark',
-      notifications: true,
-      emailNotifications: true,
-      marketingEmails: true,
-      soundEffects: true,
-      showRank: true,
-      showTeam: true,
-      showSpending: true
-    },
-    isFounder: false,
-    socialLinks: []
-  },
-  {
-    id: "4",
-    username: "EpicWhaler",
-    displayName: "Epic Whaler",
-    email: "whale@example.com",
-    profileImage: '/throne-assets/treasure-chest.svg',
-    bio: "Big whale, big heart",
-    joinDate: '2023-01-04',
-    tier: 'basic',
-    team: 'red',
-    totalSpent: 700,
-    rank: 4,
-    cosmetics: {
-      border: [],
-      color: [],
-      font: [],
-      emoji: [],
-      title: [],
-      background: [],
-      effect: [],
-      badge: [],
-      theme: []
-    },
-    settings: {
-      profileVisibility: 'public',
-      allowProfileLinks: true,
-      theme: 'dark',
-      notifications: true,
-      emailNotifications: true,
-      marketingEmails: true,
-      soundEffects: true,
-      showRank: true,
-      showTeam: true,
-      showSpending: true
-    },
-    isFounder: false,
-    socialLinks: []
-  },
-  {
-    id: "5",
-    username: "MedievalSpender",
-    displayName: "Medieval Spender",
-    email: "medieval@example.com",
-    profileImage: '/throne-assets/shield-emblem.svg',
-    bio: "I love medieval themes",
-    joinDate: '2023-01-05',
-    tier: 'basic',
-    team: 'blue',
-    totalSpent: 600,
-    rank: 5,
-    cosmetics: {
-      border: [],
-      color: [],
-      font: [],
-      emoji: [],
-      title: [],
-      background: [],
-      effect: [],
-      badge: [],
-      theme: []
-    },
-    settings: {
-      profileVisibility: 'public',
-      allowProfileLinks: true,
-      theme: 'dark',
-      notifications: true,
-      emailNotifications: true,
-      marketingEmails: true,
-      soundEffects: true,
-      showRank: true,
-      showTeam: true,
-      showSpending: true
-    },
-    isFounder: false,
-    socialLinks: []
-  },
+const userTeams = [
+  { id: '1', name: 'Red Team', color: 'red', members: 120, totalContribution: 35000 },
+  { id: '2', name: 'Blue Team', color: 'blue', members: 150, totalContribution: 42000 },
+  { id: '3', name: 'Green Team', color: 'green', members: 90, totalContribution: 28000 },
+  { id: '4', name: 'Gold Team', color: 'gold', members: 60, totalContribution: 18000 },
 ];
 
-interface CombinedLeaderboardProps {
-  limit?: number;
-  className?: string;
-  showHeader?: boolean;
-  onUserClick?: (user: User, action: string) => void;
-}
+const completeUserSettings: UserSettings = {
+  profileVisibility: "public",
+  allowProfileLinks: true,
+  theme: "dark",
+  notifications: true,
+  emailNotifications: true,
+  marketingEmails: true,
+  soundEffects: true,
+  showEmailOnProfile: false,
+  rankChangeAlerts: true,
+  showRank: true,
+  showTeam: true,
+  showSpending: true,
+  showBadges: true,
+};
 
-const CombinedLeaderboard: React.FC<CombinedLeaderboardProps> = ({
-  limit = 5,
-  className,
-  showHeader = true,
-  onUserClick
-}) => {
-  const [users, setUsers] = useState<User[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    // In a real app, you would fetch this data from an API
-    setUsers(dummyUsers.slice(0, limit));
-    setLoading(false);
-  }, [limit]);
-
-  const handleUserClick = (user: UserProfile, action: string) => {
-    if (onUserClick) {
-      onUserClick(user as User, action);
-    }
+const CombinedLeaderboard: React.FC = () => {
+  const { mockLeaderboardData } = useMockLeaderboard();
+  const [filter, setFilter] = useState({ tier: 'all', team: 'all', searchQuery: '' });
+  
+  // Global leaderboard
+  const globalLeaderboard = mockLeaderboardData;
+  
+  // Weekly leaderboard (could be fetched from a different API endpoint)
+  const weeklyLeaderboard: LeaderboardUser[] = [
+    {
+      id: "10",
+      username: "NewRiser",
+      displayName: "New Riser",
+      profileImage: "https://randomuser.me/api/portraits/men/10.jpg",
+      tier: "basic",
+      team: "red",
+      rank: 1,
+      previousRank: 5,
+      totalSpent: 4500,
+      walletBalance: 1500,
+      isVerified: true,
+      isProtected: false,
+      spendStreak: 2
+    },
+    // ... more users
+  ];
+  
+  // Monthly leaderboard
+  const monthlyLeaderboard: LeaderboardUser[] = [
+    {
+      id: "20",
+      username: "MonthlyChamp",
+      displayName: "Monthly Champion",
+      profileImage: "https://randomuser.me/api/portraits/men/20.jpg",
+      tier: "premium",
+      team: "blue",
+      rank: 1,
+      previousRank: 2,
+      totalSpent: 25000,
+      walletBalance: 8000,
+      isVerified: true,
+      isProtected: true,
+      spendStreak: 4
+    },
+    // ... more users
+  ];
+  
+  // Yearly leaderboard
+  const yearlyLeaderboard: LeaderboardUser[] = [
+    {
+      id: "30",
+      username: "YearlyDominator",
+      displayName: "Yearly Dominator",
+      profileImage: "https://randomuser.me/api/portraits/women/30.jpg",
+      tier: "royal",
+      team: "gold",
+      rank: 1,
+      previousRank: 1,
+      totalSpent: 150000,
+      walletBalance: 50000,
+      isVerified: true,
+      isProtected: true,
+      spendStreak: 52
+    },
+    // ... more users
+  ];
+  
+  // Team leaderboard
+  const teamLeaderboard: LeaderboardUser[] = [
+    {
+      id: "40",
+      username: "TeamLeader",
+      displayName: "Team Leader",
+      profileImage: "https://randomuser.me/api/portraits/men/40.jpg",
+      tier: "royal",
+      team: "green",
+      rank: 1,
+      previousRank: 1,
+      totalSpent: 75000,
+      walletBalance: 25000,
+      isVerified: true,
+      isProtected: false,
+      spendStreak: 10
+    },
+    // ... more users
+  ];
+  
+  // Mock user
+  const user: User = {
+    id: "1",
+    username: "CurrentUser",
+    displayName: "Current User",
+    email: "user@example.com",
+    profileImage: "https://randomuser.me/api/portraits/men/1.jpg",
+    bio: "I am a user of this platform",
+    joinDate: "2023-01-01",
+    tier: "basic",
+    team: "red",
+    rank: 150,
+    previousRank: 160,
+    totalSpent: 1000,
+    walletBalance: 500,
+    isFounder: false,
+    isVerified: true,
+    settings: completeUserSettings,
+    cosmetics: {
+      border: [],
+      color: [],
+      font: [],
+      emoji: [],
+      title: [],
+      background: [],
+      effect: [],
+      badge: [],
+      theme: []
+    },
+    profileBoosts: []
   };
-
-  if (loading) {
-    return (
-      <Card className="glass-morphism border-white/10">
-        <CardContent className="p-4">Loading leaderboard...</CardContent>
-      </Card>
-    );
-  }
-
+  
+  const handleFilter = (newFilter: { tier: string; team: string; searchQuery: string }) => {
+    setFilter(newFilter);
+  };
+  
   return (
-    <Card className={cn("glass-morphism border-white/10", className)}>
-      {showHeader && (
-        <CardHeader className="border-b border-white/10 pb-3">
-          <CardTitle className="flex items-center text-xl">
-            <Trophy className="w-5 h-5 mr-2 text-royal-gold" />
-            Top Spenders
-          </CardTitle>
-        </CardHeader>
-      )}
-      <CardContent className="p-0">
-        <div className="divide-y divide-white/10">
-          {users.map((user, index) => (
-            <LeaderboardEntry
-              key={user.id}
-              user={user}
-              rank={index + 1}
-              onClick={handleUserClick}
-            />
-          ))}
-        </div>
-      </CardContent>
-    </Card>
+    <div className="space-y-6">
+      <FilterLeaderboard onFilter={handleFilter} />
+      
+      <Tabs defaultValue="global" className="w-full">
+        <TabsList className="grid grid-cols-5 mb-4">
+          <TabsTrigger value="global">Global</TabsTrigger>
+          <TabsTrigger value="weekly">Weekly</TabsTrigger>
+          <TabsTrigger value="monthly">Monthly</TabsTrigger>
+          <TabsTrigger value="yearly">Yearly</TabsTrigger>
+          <TabsTrigger value="team">Team</TabsTrigger>
+        </TabsList>
+        
+        <TabsContent value="global">
+          <LeaderboardCard 
+            title="Global Rank"
+            users={globalLeaderboard}
+            filter={filter}
+            currentUser={user as User}
+          />
+        </TabsContent>
+        
+        <TabsContent value="weekly">
+          <LeaderboardCard 
+            title="Weekly Rank"
+            users={weeklyLeaderboard}
+            filter={filter}
+            currentUser={user as User}
+          />
+        </TabsContent>
+        
+        <TabsContent value="monthly">
+          <LeaderboardCard 
+            title="Monthly Rank"
+            users={monthlyLeaderboard}
+            filter={filter}
+            currentUser={user as User}
+          />
+        </TabsContent>
+        
+        <TabsContent value="yearly">
+          <LeaderboardCard 
+            title="Yearly Rank"
+            users={yearlyLeaderboard}
+            filter={filter}
+            currentUser={user as User}
+          />
+        </TabsContent>
+        
+        <TabsContent value="team">
+          <div className="mb-4 grid grid-cols-4 gap-4">
+            {userTeams.map(team => (
+              <Button 
+                key={team.id}
+                variant="outline"
+                className={`border-${team.color}-500/30 hover:border-${team.color}-500/60`}
+                onClick={() => handleFilter({ ...filter, team: team.color })}
+              >
+                {team.name}
+              </Button>
+            ))}
+          </div>
+          
+          <LeaderboardCard 
+            title="Team Rank"
+            users={teamLeaderboard.filter(u => filter.team === 'all' || u.team === filter.team)}
+            filter={filter}
+            currentUser={user as User}
+          />
+        </TabsContent>
+      </Tabs>
+    </div>
   );
 };
 

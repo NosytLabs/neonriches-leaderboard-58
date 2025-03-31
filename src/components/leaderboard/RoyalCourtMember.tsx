@@ -2,74 +2,64 @@
 import React from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { Crown } from 'lucide-react';
-import { TeamColor } from '@/types/team';
-import { UserTier } from '@/types/team';
+import { Button } from '@/components/ui/button';
+import { Crown, Sparkles } from 'lucide-react';
+import { UserTier } from '@/types/user';
 
-export interface RoyalCourtMemberProps {
-  id: string;
-  username: string;
-  displayName: string;
-  profileImage: string;
-  tier: string | UserTier;
-  team: string | TeamColor;
-  isAdmin: boolean;
+interface RoyalCourtMemberProps {
+  user: {
+    id: string;
+    username: string;
+    displayName?: string;
+    profileImage?: string;
+    tier: UserTier;
+    rank: number;
+    totalSpent: number;
+    joinDate: string;
+  };
+  position: number;
 }
 
-const RoyalCourtMember: React.FC<RoyalCourtMemberProps> = ({
-  id,
-  username,
-  displayName,
-  profileImage,
-  tier,
-  team,
-  isAdmin
-}) => {
+const RoyalCourtMember: React.FC<RoyalCourtMemberProps> = ({ user, position }) => {
+  const getPositionBadge = () => {
+    if (position === 1) return '👑';
+    if (position === 2) return '🥈';
+    if (position === 3) return '🥉';
+    return position;
+  };
+  
   return (
-    <div className="flex items-center space-x-4 p-4 bg-black/20 rounded-lg border border-white/10">
-      <div className="relative">
-        <Avatar className="h-12 w-12">
-          <AvatarImage src={profileImage} alt={displayName} />
-          <AvatarFallback>{username.substring(0, 2).toUpperCase()}</AvatarFallback>
-        </Avatar>
-        {isAdmin && (
-          <div className="absolute -top-1 -right-1 bg-royal-gold rounded-full p-0.5">
-            <Crown className="h-3 w-3 text-black" />
-          </div>
-        )}
+    <div className="flex items-center p-2 rounded-lg hover:bg-white/5 transition-colors">
+      <div className="w-8 h-8 flex items-center justify-center font-bold text-royal-gold mr-2">
+        {getPositionBadge()}
       </div>
+      
+      <Avatar className="h-10 w-10 mr-3 border border-royal-gold/30">
+        <AvatarImage src={user.profileImage} alt={user.username} />
+        <AvatarFallback className="bg-royal-gold/20 text-royal-gold">
+          {user.username.substring(0, 2).toUpperCase()}
+        </AvatarFallback>
+      </Avatar>
+      
       <div className="flex-1">
-        <div className="font-medium">{displayName}</div>
-        <div className="text-sm text-gray-400">@{username}</div>
+        <div className="font-medium flex items-center">
+          {user.displayName || user.username}
+          {user.tier === 'royal' && (
+            <Crown className="ml-1 h-3 w-3 text-royal-gold" />
+          )}
+        </div>
+        <div className="text-xs text-gray-400">
+          ${user.totalSpent.toLocaleString()}
+        </div>
       </div>
-      <div className="flex items-center space-x-2">
-        <Badge 
-          variant="outline" 
-          className={`
-            ${team === 'red' ? 'border-red-500 text-red-400' : ''}
-            ${team === 'blue' ? 'border-blue-500 text-blue-400' : ''}
-            ${team === 'green' ? 'border-green-500 text-green-400' : ''}
-            ${team === 'gold' ? 'border-yellow-500 text-yellow-400' : ''}
-            ${team === 'purple' ? 'border-purple-500 text-purple-400' : ''}
-            ${team === 'none' ? 'border-gray-500 text-gray-400' : ''}
-            ${team === 'neutral' ? 'border-gray-500 text-gray-400' : ''}
-          `}
-        >
-          {team}
-        </Badge>
-        <Badge 
-          variant="secondary" 
-          className={`
-            ${tier === 'free' ? 'bg-gray-700' : ''}
-            ${tier === 'basic' ? 'bg-blue-900' : ''}
-            ${tier === 'premium' ? 'bg-purple-900' : ''}
-            ${tier === 'royal' ? 'bg-amber-900' : ''}
-            ${tier === 'elite' ? 'bg-emerald-900' : ''}
-          `}
-        >
-          {tier}
-        </Badge>
-      </div>
+      
+      <Button 
+        variant="ghost" 
+        size="icon" 
+        className="h-8 w-8 rounded-full text-royal-gold hover:bg-royal-gold/10"
+      >
+        <Sparkles className="h-4 w-4" />
+      </Button>
     </div>
   );
 };

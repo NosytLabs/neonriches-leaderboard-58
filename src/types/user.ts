@@ -1,8 +1,9 @@
+
 import { UserCosmetics } from './cosmetics';
 
 export type TeamColor = 'red' | 'blue' | 'green' | 'gold' | 'purple' | 'none' | 'neutral';
 export type TeamType = 'red' | 'blue' | 'green' | 'gold' | 'none' | 'neutral';
-export type Gender = 'male' | 'female' | 'other' | 'prefer-not-to-say' | 'neutral' | 'unspecified' | 'king' | 'queen';
+export type Gender = 'male' | 'female' | 'other' | 'prefer-not-to-say' | 'neutral' | 'unspecified' | 'king' | 'queen' | 'jester';
 
 export type UserTier = 
   | 'free'
@@ -82,7 +83,7 @@ export interface UserSettings {
   showTeam: boolean;
   showSpending: boolean;
   allowMessages?: boolean;
-  showBadges?: boolean; // Added missing property for showBadges
+  showBadges?: boolean; // Added property for showing badges
 }
 
 export interface UserProfile {

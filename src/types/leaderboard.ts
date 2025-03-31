@@ -1,5 +1,5 @@
 
-import { TeamColor, UserTier } from './user';
+import { TeamColor, UserTier } from '@/types/user';
 
 /**
  * LeaderboardUser type representing a user in the leaderboard
@@ -10,6 +10,7 @@ export interface LeaderboardUser {
   username: string;
   displayName?: string;
   profileImage?: string;
+  avatarUrl?: string; // Adding this for compatibility with existing code
   tier?: UserTier;
   team?: TeamColor;
   rank: number;
@@ -23,6 +24,7 @@ export interface LeaderboardUser {
   spendStreak?: number;
   isProtected?: boolean;
   amountSpent?: number; // For backward compatibility
+  spentAmount?: number; // Another name used in some places
 }
 
 /**
@@ -43,9 +45,5 @@ export interface TypedLeaderboardFilter {
   timeFrame?: string;
 }
 
-// Export as a named export instead of default export
-export {
-  LeaderboardUser,
-  SortByOptions,
-  TypedLeaderboardFilter
-};
+// Use type exports to avoid conflicts with isolatedModules
+export type { LeaderboardUser, SortByOptions, TypedLeaderboardFilter };

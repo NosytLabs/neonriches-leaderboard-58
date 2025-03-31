@@ -1,43 +1,42 @@
 
 import React from 'react';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
-import { ArrowDown, ArrowUp, Filter, RefreshCw, Scroll } from 'lucide-react';
-import PublicShamingFeature from '@/components/leaderboard/PublicShamingFeature';
+import { MoreHorizontal, Crown, Target, Shield, Flag } from 'lucide-react';
+import { LeaderboardUser } from '@/types/leaderboard';
 
-const LeaderboardActions: React.FC = () => {
+interface LeaderboardActionsProps {
+  user: LeaderboardUser;
+  onAction: (action: string, user: LeaderboardUser) => void;
+}
+
+const LeaderboardActions: React.FC<LeaderboardActionsProps> = ({ user, onAction }) => {
   return (
-    <div className="flex flex-wrap gap-2 mt-4 justify-between items-center">
-      <div className="flex flex-wrap gap-2">
-        <Button variant="outline" size="sm" className="glass-morphism border-white/10 hover:bg-white/10">
-          <Filter className="mr-2 h-3 w-3" />
-          Filter
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" size="sm" className="p-0 h-8 w-8">
+          <MoreHorizontal className="h-4 w-4" />
         </Button>
-        
-        <Button variant="outline" size="sm" className="glass-morphism border-white/10 hover:bg-white/10">
-          <ArrowUp className="mr-2 h-3 w-3" />
-          Ascending
-        </Button>
-        
-        <Button variant="outline" size="sm" className="glass-morphism border-white/10 hover:bg-white/10">
-          <ArrowDown className="mr-2 h-3 w-3" />
-          Descending
-        </Button>
-      </div>
-      
-      <div className="flex flex-wrap gap-2">
-        <Button variant="outline" size="sm" className="glass-morphism border-white/10 hover:bg-white/10">
-          <RefreshCw className="mr-2 h-3 w-3" />
-          Refresh
-        </Button>
-        
-        <PublicShamingFeature>
-          <Button variant="outline" size="sm" className="glass-morphism border-white/10 hover:bg-white/10">
-            <Scroll className="mr-2 h-3 w-3" />
-            Public Shaming
-          </Button>
-        </PublicShamingFeature>
-      </div>
-    </div>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuItem onClick={() => onAction('view', user)}>
+          <Crown className="h-4 w-4 mr-2" />
+          View Profile
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => onAction('mock', user)}>
+          <Target className="h-4 w-4 mr-2" />
+          Mock User
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => onAction('protect', user)}>
+          <Shield className="h-4 w-4 mr-2" />
+          Protect User
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => onAction('report', user)}>
+          <Flag className="h-4 w-4 mr-2" />
+          Report User
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 };
 

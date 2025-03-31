@@ -1,9 +1,7 @@
 
 import React from 'react';
+import { Egg, Lock, Target, Flame } from 'lucide-react';
 import { MockeryAction } from '@/types/mockery';
-import { cn } from '@/lib/utils';
-import { getMockeryTier, getMockeryTierColorClass } from '@/utils/mockeryUtils';
-import { getMockeryActionIcon } from '@/utils/mockery/mockery-icons';
 
 interface MockeryIconRendererProps {
   action: MockeryAction;
@@ -11,27 +9,45 @@ interface MockeryIconRendererProps {
   className?: string;
 }
 
-const MockeryIconRenderer: React.FC<MockeryIconRendererProps> = ({
-  action,
+const MockeryIconRenderer: React.FC<MockeryIconRendererProps> = ({ 
+  action, 
   size = 'md',
-  className
+  className = '' 
 }) => {
-  // Get the appropriate icon based on the action
-  const IconComponent = getMockeryActionIcon(action);
-  
-  const sizeClasses = {
-    sm: 'h-4 w-4',
-    md: 'h-5 w-5',
-    lg: 'h-6 w-6'
+  const sizeMap = {
+    'sm': 16,
+    'md': 20,
+    'lg': 24
   };
   
-  // Get appropriate color class
-  const tier = getMockeryTier(action);
-  const colorClass = getMockeryTierColorClass(tier);
+  const iconSize = sizeMap[size];
   
-  return (
-    <IconComponent className={cn(sizeClasses[size], colorClass, className)} />
-  );
+  switch (action) {
+    case 'tomatoes':
+      return <Flame size={iconSize} className={`text-red-500 ${className}`} />;
+    case 'eggs':
+      return <Egg size={iconSize} className={`text-amber-300 ${className}`} />;
+    case 'stocks':
+      return <Lock size={iconSize} className={`text-slate-400 ${className}`} />;
+    case 'crown':
+      return <Target size={iconSize} className={`text-royal-gold ${className}`} />;
+    case 'jester':
+      return <Target size={iconSize} className={`text-purple-400 ${className}`} />;
+    case 'putridEggs':
+      return <Egg size={iconSize} className={`text-green-400 ${className}`} />;
+    case 'silence':
+      return <Target size={iconSize} className={`text-blue-400 ${className}`} />;
+    case 'courtJester':
+      return <Target size={iconSize} className={`text-pink-400 ${className}`} />;
+    case 'smokeBomb':
+      return <Target size={iconSize} className={`text-gray-400 ${className}`} />;
+    case 'shame':
+      return <Target size={iconSize} className={`text-red-400 ${className}`} />;
+    case 'protection':
+      return <Target size={iconSize} className={`text-emerald-400 ${className}`} />;
+    default:
+      return <Target size={iconSize} className={`text-gray-400 ${className}`} />;
+  }
 };
 
 export default MockeryIconRenderer;

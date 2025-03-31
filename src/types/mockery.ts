@@ -16,7 +16,7 @@ export type MockeryAction =
   | 'protection';
 
 // Tiers of mockery items
-export type MockeryTier = 'common' | 'uncommon' | 'rare' | 'legendary';
+export type MockeryTier = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
 
 // Mockery action result
 export interface MockeryResult {
@@ -58,21 +58,5 @@ export interface MockeryColorTheme {
   text: string;
 }
 
-// Team colors for the SpendThrone app
-export type TeamColor = 'red' | 'blue' | 'green' | 'gold' | 'purple' | 'none' | 'neutral';
-
-// Team types for the SpendThrone app
-export type TeamType = 'red' | 'blue' | 'green' | 'gold' | 'none' | 'neutral';
-
-// Sound options for notification sounds
-export interface NotificationSoundOptions {
-  volume?: number;
-  onEnd?: () => void;
-}
-
-// Export types
-export type {
-  TeamColor,
-  TeamType,
-  NotificationSoundOptions
-};
+// For compatibility with other modules
+export type { TeamColor, TeamType, NotificationSoundOptions } from '@/types/team';
