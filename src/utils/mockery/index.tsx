@@ -17,10 +17,7 @@ import {
   getShameActionPrice,
   getShameActionMessage,
   getActiveMockeryClass,
-  renderMockeryIcon,
-  getMockeryActionTitle,
-  getMockeryActionDescription,
-  getMockeryActionPrice
+  renderMockeryIcon
 } from '../mockery';
 
 // Export mockery action functions
@@ -40,15 +37,27 @@ export {
   getActiveMockeryClass,
   renderMockeryIcon,
   getMockeryActionIcon,
-  getMockeryActionIconColor,
-  getMockeryActionTitle,
-  getMockeryActionDescription,
-  getMockeryActionPrice
+  getMockeryActionIconColor
 };
 
 // Helper function to get display name for mockery action (alias for compatibility)
 export const getMockeryActionName = (action: MockeryAction): string => {
   return getMockeryName(action);
+};
+
+// Helper function to get title for a mockery action (alias for compatibility)
+export const getMockeryActionTitle = (action: MockeryAction): string => {
+  return getMockeryName(action);
+};
+
+// Helper function to get description for a mockery action (alias for compatibility)
+export const getMockeryActionDescription = (action: MockeryAction): string => {
+  return getMockeryDescription(action);
+};
+
+// Helper function to get price for a mockery action (alias for compatibility)
+export const getMockeryActionPrice = (action: MockeryAction): number => {
+  return getMockeryCost(action);
 };
 
 // Helper function to determine the appropriate mockery icon color based on mockery type

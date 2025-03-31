@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { MockeryAction } from '@/types/mockery-types';
-import { Egg, Crown, Lock, Target, CircleAlert } from 'lucide-react';
+import { Egg, Crown, Lock, Target, CircleAlert, Shield } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
 // TomatoIcon component
@@ -32,14 +32,14 @@ export const getMockeryActionIcon = (action: MockeryAction): LucideIcon | React.
     'crown': Crown,
     'stocks': Lock,
     'jester': Target,
-    'protection': Target,
+    'protection': Shield,
     'shame': Target,
     'target': Target,
     'putridEggs': Egg,
     'silence': Target,
     'courtJester': Target,
     'smokeBomb': Target,
-    'immune': Target,
+    'immune': Shield,
     'dunce': Target,
     'glitterBomb': Target,
     'royalPie': Target,
