@@ -1,88 +1,87 @@
 
 import React from 'react';
+import { UserProfile, UserTier } from '@/types/user';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { UserProfile } from '@/types/user';
-import { CrownIcon, Users, Medal } from 'lucide-react';
+import { getInitials } from '@/utils/stringUtils';
+import { getTierColor, getTierIcon } from '@/utils/tierUtils';
+import { formatDollarAmount } from '@/utils/formatters';
 
 interface ProfileBannerProps {
   user: UserProfile;
+  isSubscriber?: boolean;
+  isCurrentUser?: boolean;
+  showSpendingAmount?: boolean;
 }
 
-const ProfileBanner: React.FC<ProfileBannerProps> = ({ user }) => {
-  const { username, displayName, profileImage, tier, rank } = user;
-
-  const renderTierBadge = () => {
-    switch (tier) {
-      case 'premium':
-        return (
-          <Badge className="bg-gradient-to-r from-amber-400 to-amber-600 text-black">
-            Premium
-          </Badge>
-        );
-      case 'royal':
-        return (
-          <Badge className="bg-gradient-to-r from-purple-500 to-indigo-600">
-            Royal
-          </Badge>
-        );
-      case 'noble':
-        return (
-          <Badge className="bg-gradient-to-r from-emerald-400 to-teal-500">
-            Noble
-          </Badge>
-        );
-      default:
-        return (
-          <Badge className="bg-gray-700">
-            Basic
-          </Badge>
-        );
+const ProfileBanner: React.FC<ProfileBannerProps> = ({
+  user,
+  isSubscriber = false,
+  isCurrentUser = false,
+  showSpendingAmount = true
+}) => {
+  // Get the tier display properties
+  const tierColor = getTierColor(user.tier);
+  const TierIcon = getTierIcon(user.tier);
+  
+  // Function to handle tier display, accommodating 'noble' or other custom tiers
+  const getDisplayTier = (tier: UserTier | string): string => {
+    // Handle 'noble' or other custom tiers not in the UserTier type
+    const validTiers: string[] = [
+      'free', 'basic', 'pro', 'premium', 'royal', 'founder', 
+      'platinum', 'diamond', 'gold', 'silver', 'bronze', 
+      'vip', 'whale', 'standard', 'elite', 'legendary', 'noble'
+    ];
+    
+    if (validTiers.includes(tier)) {
+      return tier.charAt(0).toUpperCase() + tier.slice(1);
     }
+    
+    return 'Standard';
   };
-
+  
   return (
-    <div className="relative bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 rounded-lg p-6 shadow-lg border border-white/10">
-      <div className="flex flex-col sm:flex-row items-center gap-6">
-        <div className="relative">
-          <Avatar className="h-24 w-24 border-2 border-white/20">
-            <AvatarImage src={profileImage} alt={username} />
-            <AvatarFallback className="bg-gradient-to-br from-gray-800 to-gray-900 text-white">
-              {username?.charAt(0).toUpperCase() || 'U'}
-            </AvatarFallback>
-          </Avatar>
-          {tier !== 'basic' && (
-            <div className="absolute -bottom-2 -right-2 bg-royal-gold rounded-full p-1 shadow-lg">
-              <CrownIcon className="h-5 w-5 text-black" />
-            </div>
+    <div className="flex items-center">
+      <Avatar className="h-14 w-14 mr-4 border-2 border-white/20">
+        <AvatarImage src={user.profileImage} alt={user.displayName || user.username} />
+        <AvatarFallback>{getInitials(user.displayName || user.username)}</AvatarFallback>
+      </Avatar>
+      
+      <div>
+        <div className="flex items-center space-x-2">
+          <h2 className="text-xl font-bold">{user.displayName || user.username}</h2>
+          {user.isVerified && (
+            <Badge variant="outline" className="bg-blue-500/20 text-blue-300 border-blue-500/30">
+              <svg className="h-3 w-3 mr-1" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+              Verified
+            </Badge>
           )}
         </div>
         
-        <div className="text-center sm:text-left space-y-2 flex-1">
-          <div className="flex flex-col sm:flex-row sm:items-center gap-2">
-            <h1 className="text-2xl md:text-3xl font-bold">{displayName || username}</h1>
-            <div className="flex items-center justify-center sm:justify-start gap-2">
-              {renderTierBadge()}
-              
-              <Badge variant="outline" className="border-white/20 gap-1">
-                <Medal className="h-3.5 w-3.5 text-royal-gold" />
-                Rank #{rank}
-              </Badge>
+        <div className="flex items-center space-x-3 mt-1 text-sm">
+          <div className="flex items-center text-white/70">
+            <span>@{user.username}</span>
+          </div>
+          
+          <div className="flex items-center">
+            <Badge 
+              variant="outline" 
+              className={`bg-${tierColor}-500/20 text-${tierColor}-300 border-${tierColor}-500/30`}
+            >
+              {TierIcon && <TierIcon className="h-3 w-3 mr-1" />}
+              {getDisplayTier(user.tier)}
+            </Badge>
+          </div>
+          
+          {showSpendingAmount && user.totalSpent > 0 && (
+            <div className="flex items-center text-white/50">
+              <span className="text-xs">
+                {formatDollarAmount(user.totalSpent || 0)} spent
+              </span>
             </div>
-          </div>
-          
-          <p className="text-muted-foreground text-sm">{user.bio || "No bio provided"}</p>
-          
-          <div className="flex items-center justify-center sm:justify-start gap-4 mt-4">
-            <Button variant="outline" size="sm" className="gap-1.5 border-white/20">
-              <Users className="h-4 w-4" />
-              Follow
-            </Button>
-            <Button variant="outline" size="sm" className="gap-1.5 border-white/20">
-              Message
-            </Button>
-          </div>
+          )}
         </div>
       </div>
     </div>

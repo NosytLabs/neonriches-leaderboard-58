@@ -1,16 +1,23 @@
+
 import React from 'react';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Calendar, ArrowUpRight, Award, Users, Clock } from 'lucide-react';
-import { MarketingEvent } from '@/types/marketing';
-import { formatDate } from '@/utils/formatters/dateFormatters';
-
-interface MarketingEventsProps {
-  events: MarketingEvent[];
-}
+import { MarketingEvent, MarketingEventsProps } from '@/types/marketing';
+import { formatDate } from '@/utils/formatters';
 
 const MarketingEvents: React.FC<MarketingEventsProps> = ({ events }) => {
+  if (!events || events.length === 0) {
+    return (
+      <div className="text-center py-8">
+        <Calendar className="h-12 w-12 mx-auto text-gray-400 mb-4" />
+        <h3 className="text-lg font-semibold mb-2">No Marketing Events</h3>
+        <p className="text-white/60">There are no active marketing events at this time.</p>
+      </div>
+    );
+  }
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       {events.map((event) => (

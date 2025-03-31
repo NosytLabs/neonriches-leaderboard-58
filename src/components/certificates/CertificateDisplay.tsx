@@ -54,10 +54,12 @@ const CertificateDisplay: React.FC<CertificateDisplayProps> = ({
     }
   };
 
-  // Convert the date to string if it's a Date object
-  const formattedDate = typeof certificate.dateIssued === 'string' 
-    ? formatDate(certificate.dateIssued) 
-    : formatDate(certificate.dateIssued.toString());
+  // Handle the dateIssued safely to avoid toString on never error
+  const formattedDate = certificate.dateIssued 
+    ? typeof certificate.dateIssued === 'string' 
+      ? formatDate(certificate.dateIssued) 
+      : formatDate(new Date(certificate.dateIssued).toISOString())
+    : 'No date';
 
   return (
     <Card className="glass-morphism border-white/10 overflow-hidden">

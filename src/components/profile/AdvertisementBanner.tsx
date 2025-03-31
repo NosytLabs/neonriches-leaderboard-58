@@ -1,73 +1,81 @@
-// Import all required dependencies and types
-import React, { useState, useEffect } from 'react';
+
+import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Clock, ArrowUpRight, X } from 'lucide-react';
+import { formatTimeLeft } from '@/utils/dateUtils';
 import { ProfileBoost } from '@/types/user';
-import { cn } from '@/lib/utils';
 
 interface AdvertisementBannerProps {
-  boosts: ProfileBoost[];
+  title: string;
+  description: string;
+  imageUrl?: string;
+  cta?: string;
+  onDismiss?: () => void;
+  onClickCta?: () => void;
+  expiresAt?: string;
+  boost?: ProfileBoost;
 }
 
-const AdvertisementBanner: React.FC<AdvertisementBannerProps> = ({ boosts }) => {
-  const [activeBoost, setActiveBoost] = useState<ProfileBoost | null>(null);
-
-  useEffect(() => {
-    if (boosts && boosts.length > 0) {
-      // Find the most potent active boost
-      const now = new Date();
-      const active = boosts
-        .filter(boost => new Date(boost.startDate) <= now && new Date(boost.endDate) >= now)
-        .sort((a, b) => b.level - a.level)[0];
-
-      setActiveBoost(active || null);
-    } else {
-      setActiveBoost(null);
-    }
-  }, [boosts]);
-
-  const getBoostMessage = (boost: ProfileBoost): string => {
-    if (!boost) return "No active boosts.";
-
-    const endDate = new Date(boost.endDate);
-    const timeLeft = endDate.getTime() - Date.now();
-    const daysLeft = Math.ceil(timeLeft / (1000 * 3600 * 24));
-
-    return `Profile boosted! Enjoy ${boost.strength}x visibility for ${daysLeft} more days.`;
-  };
-
-  const createNewProfileBoost = (): ProfileBoost => {
-    return {
-      id: `boost-${Date.now()}`, // Generate an ID for the new boost
-      startDate: new Date().toISOString(),
-      endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(), // 7 days from now
-      level: 1,
-      effectId: "default-boost",
-      type: "visibility",
-      strength: 1.5,
-      appliedBy: "user"
-    };
-  };
-
-  const handleUpdateBoost = () => {
-    const newBoost: ProfileBoost = createNewProfileBoost();
-    // Logic for updating the boost
-  };
-
+const AdvertisementBanner: React.FC<AdvertisementBannerProps> = ({
+  title,
+  description,
+  imageUrl,
+  cta = "Learn More",
+  onDismiss,
+  onClickCta,
+  expiresAt,
+  boost
+}) => {
+  const timeLeft = expiresAt ? formatTimeLeft(new Date(expiresAt)) : '';
+  
   return (
-    <Card className="glass-morphism border-white/10">
-      <CardContent className="p-4">
-        <div className="flex items-center justify-between">
-          <div>
-            <h3 className="text-sm font-bold mb-1">Profile Visibility Boost</h3>
-            <p className={cn(
-              "text-xs text-white/70",
-              activeBoost ? "text-green-400" : "text-white/70"
-            )}>
-              {activeBoost ? getBoostMessage(activeBoost) : "No active boost. Purchase one to increase visibility!"}
-            </p>
-          </div>
-          {/* You can add a button here to purchase a boost */}
+    <Card className="glass-morphism border-royal-gold/20 overflow-hidden relative">
+      {/* Background glow effect */}
+      <div className="absolute inset-0 bg-gradient-to-b from-royal-gold/10 to-purple-500/5 pointer-events-none"></div>
+      
+      {/* Optional promotional image */}
+      {imageUrl && (
+        <div className="relative h-32 overflow-hidden">
+          <img src={imageUrl} alt={title} className="w-full h-full object-cover" />
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/60"></div>
         </div>
+      )}
+      
+      <CardContent className={`p-4 ${imageUrl ? '-mt-8 relative z-10 rounded-t-xl bg-black/40 backdrop-blur-sm' : ''}`}>
+        {/* Close button */}
+        {onDismiss && (
+          <button 
+            onClick={onDismiss}
+            className="absolute top-2 right-2 p-1 rounded-full hover:bg-white/10 text-white/60 hover:text-white"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        )}
+        
+        <h3 className="text-lg font-bold text-royal-gold">{title}</h3>
+        <p className="text-sm text-white/80 mt-1">{description}</p>
+        
+        {(boost || expiresAt) && (
+          <div className="flex items-center mt-3 mb-3 text-xs text-white/50">
+            <Clock className="h-3.5 w-3.5 mr-1.5" />
+            <span>
+              {boost 
+                ? `Boost Level ${boost.level} - ${formatTimeLeft(new Date(boost.endDate))}`
+                : timeLeft
+                  ? `Expires in ${timeLeft}`
+                  : 'Limited time offer'
+              }
+            </span>
+          </div>
+        )}
+        
+        <Button 
+          onClick={onClickCta} 
+          className="w-full mt-2 bg-gradient-to-r from-royal-gold/90 to-royal-gold hover:opacity-90 text-black"
+        >
+          {cta} <ArrowUpRight className="h-4 w-4 ml-1" />
+        </Button>
       </CardContent>
     </Card>
   );

@@ -30,7 +30,9 @@ const ProfileBoostDisplay: React.FC<ProfileBoostDisplayProps> = ({
   return (
     <div className={`space-y-4 ${className}`}>
       {activeBoosts.map((boost: ProfileBoost) => {
-        const boostEffect = getBoostEffect(boost.effectId || '');
+        // Fix type issue with getBoostEffect by checking if effectId exists and using string
+        const effectId = boost.effectId || boost.id || '';
+        const boostEffect = getBoostEffect(effectId);
         const timeLeft = getBoostTimeLeft(boost);
         
         // Map boost effect types to appropriate icons

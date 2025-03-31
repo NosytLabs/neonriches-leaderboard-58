@@ -1,136 +1,81 @@
+
 import { LeaderboardUser } from '@/types/leaderboard';
-import { User } from '@/types/user';
-import { formatDate } from '@/utils/formatters/dateFormatters'; // Fixed import
+import { formatTimeAgo } from '@/utils/formatters';
 
 /**
- * Utility functions for leaderboard components
+ * Sort leaderboard users by various criteria
  */
-
-/**
- * Sort users by total spent in descending order
- */
-export function sortByTotalSpent(users: LeaderboardUser[]): LeaderboardUser[] {
-  return [...users].sort((a, b) => (b.totalSpent || 0) - (a.totalSpent || 0));
-}
-
-/**
- * Sort users by rank in ascending order
- */
-export function sortByRank(users: LeaderboardUser[]): LeaderboardUser[] {
-  return [...users].sort((a, b) => (a.rank || 0) - (b.rank || 0));
-}
-
-/**
- * Filter users by tier
- */
-export function filterByTier(users: LeaderboardUser[], tier: string): LeaderboardUser[] {
-  if (tier === 'all') {
-    return users;
+export const sortLeaderboardUsers = (
+  users: LeaderboardUser[],
+  sortBy: string = 'rank'
+): LeaderboardUser[] => {
+  switch (sortBy) {
+    case 'rank':
+      return [...users].sort((a, b) => a.rank - b.rank);
+    case 'totalSpent':
+      return [...users].sort((a, b) => b.totalSpent - a.totalSpent);
+    case 'username':
+      return [...users].sort((a, b) => a.username.localeCompare(b.username));
+    case 'mostRecent':
+      return [...users].sort((a, b) => {
+        const dateA = a.joinedAt ? new Date(a.joinedAt).getTime() : 0;
+        const dateB = b.joinedAt ? new Date(b.joinedAt).getTime() : 0;
+        return dateB - dateA;
+      });
+    default:
+      return users;
   }
-  return users.filter(user => user.tier === tier);
-}
+};
 
 /**
- * Filter users by team
+ * Filter leaderboard users by various criteria
  */
-export function filterByTeam(users: LeaderboardUser[], team: string): LeaderboardUser[] {
-  if (team === 'all') {
-    return users;
+export const filterLeaderboardUsers = (
+  users: LeaderboardUser[],
+  filter: {
+    team?: string;
+    tier?: string;
+    search?: string;
   }
-  return users.filter(user => user.team === team);
-}
+): LeaderboardUser[] => {
+  let filtered = [...users];
+  
+  if (filter.team && filter.team !== 'all') {
+    filtered = filtered.filter((user) => user.team === filter.team);
+  }
+  
+  if (filter.tier && filter.tier !== 'all') {
+    filtered = filtered.filter((user) => user.tier === filter.tier);
+  }
+  
+  if (filter.search) {
+    const search = filter.search.toLowerCase();
+    filtered = filtered.filter(
+      (user) =>
+        user.username.toLowerCase().includes(search) ||
+        (user.displayName && user.displayName.toLowerCase().includes(search))
+    );
+  }
+  
+  return filtered;
+};
 
 /**
- * Search users by username or display name
+ * Format the date when a user joined for display
  */
-export function searchUsers(users: LeaderboardUser[], query: string): LeaderboardUser[] {
-  const searchTerm = query.toLowerCase();
-  return users.filter(user =>
-    user.username.toLowerCase().includes(searchTerm) ||
-    (user.displayName && user.displayName.toLowerCase().includes(searchTerm)) || false
-  );
-}
+export const formatJoinDate = (user: LeaderboardUser): string => {
+  // Use joinedAt property instead of joinDate 
+  return user.joinedAt ? formatTimeAgo(user.joinedAt) : 'Unknown';
+};
 
 /**
- * Get the change in rank compared to the previous rank
+ * Get the trend indicator based on rank change
  */
-export function getRankChange(user: LeaderboardUser): number {
-  return (user.previousRank || 0) - (user.rank || 0);
-}
-
-/**
- * Get the formatted join date
- */
-export function getFormattedJoinDate(user: LeaderboardUser): string {
-  return formatDate(user.joinDate || '');
-}
-
-/**
- * Get the user's profile URL
- */
-export function getUserProfileUrl(user: LeaderboardUser): string {
-  return `/profile/${user.username}`;
-}
-
-/**
- * Get the user's display name or username
- */
-export function getUserDisplayName(user: LeaderboardUser): string {
-  return user.displayName || user.username;
-}
-
-/**
- * Check if the user is verified
- */
-export function isUserVerified(user: LeaderboardUser): boolean {
-  return user.isVerified || false;
-}
-
-/**
- * Check if the user is protected
- */
-export function isUserProtected(user: LeaderboardUser): boolean {
-  return user.isProtected || false;
-}
-
-/**
- * Get the user's spend streak
- */
-export function getSpendStreak(user: LeaderboardUser): number {
-  return user.spendStreak || 0;
-}
-
-/**
- * Get the user's wallet balance
- */
-export function getWalletBalance(user: LeaderboardUser): number {
-  return user.walletBalance || 0;
-}
-
-/**
- * Get the user's total spent
- */
-export function getTotalSpent(user: LeaderboardUser): number {
-  return user.totalSpent || 0;
-}
-
-/**
- * Get the user's tier
- */
-export function getUserTier(user: LeaderboardUser): string {
-  return user.tier || 'basic';
-}
-
-/**
- * Get the user's team
- */
-export function getUserTeam(user: LeaderboardUser): string {
-  return user.team || 'none';
-}
-
-/**
- * Get the user's profile image
- */
-export function getUserProfileImage(user: LeaderboardUser): string {
-  return user.profileImage || '/images/default-profile.png';
-}
+export const getTrendIndicator = (
+  user: LeaderboardUser
+): 'up' | 'down' | 'neutral' => {
+  if (!user.previousRank) return 'neutral';
+  if (user.rank < user.previousRank) return 'up';
+  if (user.rank > user.previousRank) return 'down';
+  return 'neutral';
+};

@@ -1,13 +1,14 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { ScrollText, Megaphone, BarChart3, Users, Link } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAuth } from '@/contexts';
-import useFeatureAccess from '@/hooks/use-feature-access';
+import { useFeatureAccess } from '@/hooks/use-feature-access';
 import MarketingFeatureShop from './MarketingFeatureShop';
 import MarketingEvents from './MarketingEvents';
 import ProfileBillboardGuide from './ProfileBillboardGuide';
+import { MarketingEvent } from '@/types/marketing';
 
 const MarketingHub: React.FC = () => {
   const { user } = useAuth();
@@ -15,6 +16,41 @@ const MarketingHub: React.FC = () => {
   
   const userTier = user?.tier || 'basic';
   const userSubscription = user?.subscription;
+  
+  // Sample marketing events data
+  const marketingEvents: MarketingEvent[] = [
+    {
+      id: "event-1",
+      title: "Royal Tournament",
+      description: "Compete for the crown in this exclusive royal tournament.",
+      type: "tournament",
+      startDate: "2023-12-01",
+      endDate: "2023-12-15",
+      participants: 128,
+      rewards: "Crown Jewels",
+      imageUrl: "/assets/events/tournament.jpg"
+    },
+    {
+      id: "event-2",
+      title: "Golden Giveaway",
+      description: "Participate in our golden ticket giveaway for a chance to win exclusive cosmetics.",
+      type: "giveaway",
+      startDate: "2023-12-10",
+      endDate: "2023-12-20",
+      participants: 356,
+      rewards: "Premium Cosmetics"
+    },
+    {
+      id: "event-3",
+      title: "Holiday Promotion",
+      description: "Special holiday discounts on all Royal tier upgrades.",
+      type: "promotion",
+      startDate: "2023-12-15",
+      endDate: "2023-12-31",
+      participants: 203,
+      rewards: "Discounted Upgrades"
+    }
+  ];
   
   return (
     <div className="space-y-6">
@@ -95,7 +131,7 @@ const MarketingHub: React.FC = () => {
             </TabsContent>
             
             <TabsContent value="events">
-              <MarketingEvents />
+              <MarketingEvents events={marketingEvents} />
             </TabsContent>
             
             <TabsContent value="shop">
