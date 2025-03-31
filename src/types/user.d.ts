@@ -27,6 +27,7 @@ export interface ProfileImage {
   id: string | number;
   url: string;
   caption?: string;
+  type: string; // Add required type property
 }
 
 export interface ProfileBoost {
@@ -60,7 +61,7 @@ export interface UserSettings {
   spendAlerts?: boolean;
   spendingAlerts?: boolean;
   publicProfile?: boolean;
-  allowMessages?: boolean;
+  allowMessages?: boolean; // Add missing property
   language?: string;
   showBalance?: boolean;
   showAchievements?: boolean;

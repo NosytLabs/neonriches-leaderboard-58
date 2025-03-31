@@ -135,11 +135,22 @@ const InteractiveLeaderboard: React.FC = () => {
           
           {modalType === 'shame' && selectedUser && (
             <ShameModal
-              targetUser={selectedUser}
+              targetUser={{
+                userId: selectedUser.userId,
+                username: selectedUser.username,
+                profileImage: selectedUser.profileImage,
+                totalSpent: selectedUser.totalSpent,
+                rank: selectedUser.rank,
+                team: selectedUser.team,
+                tier: selectedUser.tier,
+                spendStreak: selectedUser.spendStreak
+              }}
               shameAmount={shameAmount}
               shameType={shameType as MockeryAction}
               onClose={() => setModalType(null)}
               onConfirm={handleShameConfirm}
+              onCancel={() => setModalType(null)}
+              hasDiscount={false}
             />
           )}
         </CardContent>

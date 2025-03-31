@@ -5,13 +5,13 @@ export interface CosmeticItem {
   name: string;
   description: string;
   price: number;
-  type: string;
   category: CosmeticCategory;
   cssClass: string;
-  rarity: string;
+  rarity: string | CosmeticRarity;
+  type?: string;
   image?: string;
   imageSrc?: string;
-  cost?: number; // Added for backward compatibility
+  cost?: number; // For backward compatibility
 }
 
 export type CosmeticCategory = 
@@ -28,7 +28,7 @@ export type CosmeticCategory =
   | 'profile'
   | 'interaction';
 
-export type CosmeticRarity = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary' | 'royal' | 'unique';
+export type CosmeticRarity = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary' | 'royal' | 'unique' | 'mythic';
 
 export interface UserCosmeticState {
   border: string[];

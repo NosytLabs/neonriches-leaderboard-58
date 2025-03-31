@@ -1,17 +1,39 @@
 
-import { CosmeticRarity } from './cosmetics';
-import { NotificationSoundOptions } from './sound-types';
+/**
+ * Types for the mockery and shame system
+ */
 
 export type MockeryAction = 
-  | 'tomatoes'
-  | 'eggs'
+  | 'tomatoes' 
+  | 'eggs' 
+  | 'stocks' 
+  | 'dunce' 
+  | 'jester' 
+  | 'crown' 
+  | 'taunt' 
   | 'shame'
+  | 'putridEggs'
+  | 'silence'
+  | 'courtJester'
+  | 'smokeBomb'
+  | 'protection'
+  | 'jest'
+  | 'glitterBomb'
+  | 'royalPie'
+  | 'jokeCrown'
+  | 'memeFrame'
+  | 'roast'
+  | 'ridicule'
+  | 'humiliate'
+  | 'expose'
+  | 'mock'
+  | 'guillotine'
   | 'dungeons'
+  | 'removal'
+  | 'challenge'
+  | 'target'
+  | 'defeat'
   | 'immune'
-  | 'crown'
-  | 'stocks'
-  | 'dunce'
-  | 'jester'
   | 'fool' // Added missing action
   | 'troll'
   | 'peasant'
@@ -28,51 +50,77 @@ export type MockeryAction =
   | 'knight'
   | 'bishop'
   | 'rook'
-  | 'pawn'
-  | 'target'
-  | 'challenge';
+  | 'pawn';
 
-export type MockeryTier = 
-  | 'common'
-  | 'rare'
-  | 'epic'
-  | 'legendary'
-  | 'silver' // Added missing tier
-  | 'basic'
-  | 'premium'
-  | 'royal'
-  | 'elite';
-
-export interface MockeryEffect {
-  type: MockeryAction;
-  targetId: string;
-  appliedBy: string;
-  expiry: number;
-  isActive: boolean;
-  tier: MockeryTier;
-}
+// Union of tiers for mockery actions
+export type MockeryTier = 'basic' | 'premium' | 'royal' | 'legendary' | 'common' | 'uncommon' | 'rare' | 'epic' | 'bronze' | 'silver'; // Added 'silver'
 
 export interface MockeryEvent {
   id: string;
-  type: MockeryAction;
   targetId: string;
-  targetUsername?: string;
+  targetUsername: string;
+  action: MockeryAction;
   appliedBy: string;
-  appliedByUsername?: string;
-  timestamp: number;
-  expiry: number;
-  isActive: boolean;
+  appliedAt: string;
+  expiresAt: string;
   tier: MockeryTier;
+  isActive: boolean;
+  sourceId?: string;
+  sourceName?: string;
+  targetName?: string; // Added missing property
 }
 
 export interface MockedUser {
   id: string;
+  userId?: string;
   username: string;
-  profileImage?: string;
-  rank?: number;
-  mockeryType?: MockeryAction;
-  expiry?: number;
-  mockedReason?: string; // Make this optional to resolve type conflicts
-  mockedBy?: string;
-  timestamp?: number;
+  displayName: string;
+  profileImage: string;
+  mockedReason?: string; // Made optional to resolve the conflict
+  mockedTimestamp: string;
+  mockedBy: string;
+  mockedTier: string;
+  mockeryCount: number;
+  lastMocked?: string;
+  team: string;
+  tier: string;
 }
+
+export interface MockeryProtection {
+  id: string;
+  userId: string;
+  startDate: string;
+  endDate: string;
+  type: 'basic' | 'premium' | 'royal';
+  isActive: boolean;
+}
+
+export interface MockeryStats {
+  totalMockeries: number;
+  mostPopularAction: MockeryAction;
+  mostMockedUser: string;
+  mostActiveUser: string;
+  protectedUsers: number;
+  totalPokes?: number;
+  mostPoked?: string;
+  prizePool?: number;
+  totalPrizes?: number;
+  totalSpent?: number;
+  usersParticipating?: number;
+  participantCount?: number;
+  participantsCount?: number;
+}
+
+export interface MockeryActionInfo {
+  icon: string;
+  title: string;
+  description: string;
+  tier: MockeryTier;
+  price: number;
+  duration: number;
+}
+
+export type ShameAction = MockeryAction;
+
+// Export NotificationSoundOptions for useShameEffect.ts
+export { NotificationSoundOptions } from './sound-types';

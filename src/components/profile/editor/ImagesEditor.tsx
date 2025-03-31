@@ -23,7 +23,7 @@ const ImagesEditor: React.FC<ImagesEditorProps> = ({ images, onImagesChange }) =
       url: 'https://source.unsplash.com/random/300x300',
       isPrimary: images.length === 0,
       caption: 'New Image',
-      type: 'profile' // Add required type property
+      type: 'profile' // Added required type property
     };
     
     onImagesChange([...images, newImage]);

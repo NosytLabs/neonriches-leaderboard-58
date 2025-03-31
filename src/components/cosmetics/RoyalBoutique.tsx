@@ -31,8 +31,8 @@ const RoyalBoutique = () => {
       return;
     }
 
-    // Corrected the parameter count and boolean parameter
-    const success = await awardCosmetic(item.id, item.category, item.rarity);
+    // Fixed: Changed the parameters to match expected number of arguments (item.id, item.category) and removed the third argument
+    const success = await awardCosmetic(item.id, item.category);
 
     if (success) {
       toast({
