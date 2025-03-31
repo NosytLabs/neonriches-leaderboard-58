@@ -12,15 +12,18 @@ import {
   getMockeryTier,
   getMockeryTierColorClass,
   getMockeryDuration,
-  getMockeryActionIcon,
   getActiveMockeryClass,
   hasWeeklyDiscount,
   getWeeklyDiscountedAction,
   getDiscountedShamePrice,
   getShameActionPrice,
-  getShameActionMessage,
-  renderMockeryIcon
+  getShameActionMessage
 } from './mockery';
+
+import { 
+  getMockeryActionIcon, 
+  getMockeryActionIconColor 
+} from './mockery/mockery-icons';
 
 // Re-export everything
 export {
@@ -31,21 +34,20 @@ export {
   getMockeryTierColorClass,
   getMockeryDuration,
   getMockeryActionIcon,
+  getMockeryActionIconColor,
   getActiveMockeryClass,
   hasWeeklyDiscount,
   getWeeklyDiscountedAction,
   getDiscountedShamePrice,
   getShameActionPrice,
-  getShameActionMessage,
-  renderMockeryIcon
+  getShameActionMessage
 };
 
 // Aliased exports for backward compatibility
 export const getMockeryActionTitle = getMockeryName;
 export const getMockeryActionDescription = getMockeryDescription;
 export const getMockeryActionPrice = getMockeryCost;
-export const getMockeryIconColor = getMockeryActionIcon;
-export const getMockeryActionIconColor = getMockeryActionIcon;
+export const getMockeryIconColor = getMockeryActionIconColor;
 
 // Export types
 export type { MockeryAction, MockeryTier };

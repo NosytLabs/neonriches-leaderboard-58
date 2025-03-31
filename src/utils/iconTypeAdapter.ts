@@ -11,32 +11,40 @@ export function adaptIconName(name: string): string {
     .replace(/[-_]/g, '');
   
   // Capitalize first letter
-  const capitalizedName = camelCase.charAt(0).toUpperCase() + camelCase.slice(1);
+  return camelCase.charAt(0).toUpperCase() + camelCase.slice(1);
+}
+
+/**
+ * Maps common icon names to their proper format
+ */
+export function toMedievalIconName(name: string): MedievalIconName {
+  // Lowercase all inputs for consistency
+  const lowerName = name.toLowerCase();
   
-  // Map common medieval icons to their correct names
+  // Map common medieval icons to their correct MedievalIconName values
   const iconMap: Record<string, MedievalIconName> = {
-    'crown': 'Crown',
-    'shield': 'Shield',
-    'sword': 'Sword',
-    'scroll': 'Scroll',
-    'heart': 'Heart',
-    'medal': 'Medal',
-    'trophy': 'Trophy',
-    'key': 'Key',
-    'coins': 'Coins',
-    'coin': 'Coins',
-    'wallet': 'Wallet',
-    'gem': 'Gem',
-    'seal': 'Seal',
+    'crown': 'crown',
+    'shield': 'shield',
+    'sword': 'sword',
+    'scroll': 'scroll',
+    'heart': 'heart',
+    'medal': 'medal',
+    'trophy': 'trophy',
+    'key': 'key',
+    'coins': 'coins',
+    'coin': 'coins',
+    'gem': 'gem',
+    'seal': 'seal'
   };
 
-  return iconMap[name.toLowerCase()] || capitalizedName;
+  return iconMap[lowerName] || 'crown';
 }
 
 /**
  * Adapts icon color
  */
-export function adaptIconColor(color: string): IconColor {
+export function toMedievalIconColor(color: string): IconColor {
+  const lowerColor = (color || '').toLowerCase();
   const colorMap: Record<string, IconColor> = {
     'default': 'default',
     'gold': 'gold',
@@ -49,10 +57,10 @@ export function adaptIconColor(color: string): IconColor {
     'primary': 'primary',
     'secondary': 'secondary',
     'muted': 'muted',
-    'accent': 'accent',
+    'accent': 'accent'
   };
 
-  return colorMap[color.toLowerCase()] || 'default';
+  return colorMap[lowerColor] || 'default';
 }
 
 /**
@@ -69,7 +77,7 @@ export function adaptIconSize(size: IconSize | number): IconSize | number {
     'md': 'md',
     'lg': 'lg',
     'xl': 'xl',
-    '2xl': '2xl',
+    '2xl': '2xl'
   };
 
   return sizeMap[size] || 'md';

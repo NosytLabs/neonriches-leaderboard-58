@@ -1,83 +1,93 @@
 
 import React from 'react';
-import Layout from '@/components/layout/Layout';
-import { termsContent } from '@/data/termsContent';
-import { motion } from 'framer-motion';
-import { Scroll, Shield, Swords, Scroll as ScrollIcon } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
+import { Shell } from '@/components/shell';
 
-const Terms: React.FC = () => {
+const Terms = () => {
   return (
-    <Layout>
-      <div className="container mx-auto px-4 py-12">
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="max-w-4xl mx-auto"
-        >
-          <div className="text-center mb-10">
-            <h1 className="text-4xl font-bold mb-4 royal-gradient font-medieval">Royal Decree & Terms of Service</h1>
-            <p className="text-white/70">Last Updated: {new Date().toLocaleDateString()}</p>
-          </div>
-          
-          <Card className="glass-morphism border-white/10 p-8 rounded-lg mb-8">
-            <CardHeader className="p-0 mb-6">
-              <CardTitle className="flex items-center text-xl text-royal-gold">
-                <Scroll className="mr-3 h-6 w-6" />
-                Royal Proclamation
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-0">
-              <p className="text-white/90 italic mb-6 text-lg">
-                By order of the Crown, all visitors to these digital lands are bound by the following terms. Read carefully, lest ye be banished to the digital dungeons.
-              </p>
-              
-              {termsContent.sections.map((section, index) => (
-                <div key={index} className="mb-8">
-                  <div className="flex items-center mb-4">
-                    {index === 0 ? (
-                      <ScrollIcon className="text-royal-gold mr-2 h-5 w-5" />
-                    ) : index === 1 ? (
-                      <Shield className="text-royal-gold mr-2 h-5 w-5" />
-                    ) : (
-                      <Swords className="text-royal-gold mr-2 h-5 w-5" />
-                    )}
-                    <h2 className="text-xl font-semibold">{section.title}</h2>
-                  </div>
-                  
-                  <div className="space-y-3 ml-7">
-                    {section.content.map((paragraph, pIndex) => (
-                      <p key={pIndex} className="text-white/80">
-                        {paragraph}
-                      </p>
-                    ))}
-                  </div>
-                  
-                  {index < termsContent.sections.length - 1 && (
-                    <Separator className="my-6 bg-white/10" />
-                  )}
-                </div>
-              ))}
-              
-              <div className="mt-10 p-6 bg-black/30 rounded-lg border border-royal-gold/20">
-                <h3 className="text-lg font-semibold text-royal-gold mb-3">Royal Decree Simplified</h3>
-                <p className="text-white/90">
-                  In plain English: SpendThrone is a satirical performance art project about status, wealth, and digital consumption. When you spend money here, you're paying for entertainment with absolutely no financial return. Your purchases are non-refundable, and the digital status you receive has no value except what you assign to it.
-                </p>
-                <p className="mt-3 text-white/90">
-                  If that makes you uncomfortable, congratulations on having a healthy perspective! Perhaps consider donating to charity instead.
-                </p>
-                <p className="mt-3 italic text-royal-gold/80">
-                  "But the emperor has nothing on at all!" cried a little child at last... "But he has nothing on!" the whole town cried out at last. The Emperor shivered, for he suspected they were right. But he thought, "This procession has got to go on."
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
+    <Shell>
+      <div className="container mx-auto py-8 px-4">
+        <h1 className="text-3xl font-bold mb-6 royal-gradient">Terms of Service</h1>
+        
+        <Card className="mb-8 glass-morphism border-white/10">
+          <CardHeader>
+            <CardTitle>Welcome to SpendThrone.com</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <p>
+              Welcome to SpendThrone.com, a satirical platform that explores the dynamics of wealth and competition through a persistent, ranked leaderboard. By accessing or using our services, you agree to these Terms of Service.
+            </p>
+            
+            <h2 className="text-xl font-semibold mt-4">1. Acceptance of Terms</h2>
+            <p>
+              By accessing or using SpendThrone.com, you agree to be bound by these Terms of Service and all applicable laws and regulations. If you do not agree with any of these terms, you are prohibited from using or accessing this site.
+            </p>
+            
+            <h2 className="text-xl font-semibold mt-4">2. The Concept</h2>
+            <p>
+              SpendThrone.com is a persistent, ranked leaderboard where your position is determined solely by your monetary contributions. One dollar spent equals one unit of rank. The leaderboard never resets.
+            </p>
+            
+            <h2 className="text-xl font-semibold mt-4">3. Payments and Rank</h2>
+            <ul className="list-disc pl-5 space-y-2">
+              <li>All payments made to SpendThrone.com are final and non-refundable.</li>
+              <li>Your rank is determined solely by the total amount you have spent on the platform.</li>
+              <li>We reserve the right to adjust ranks in cases of payment disputes, fraud, or technical errors.</li>
+              <li>Currency conversions are handled at the time of payment based on current exchange rates.</li>
+            </ul>
+            
+            <h2 className="text-xl font-semibold mt-4">4. Royal Mockery Festival</h2>
+            <p>
+              The Royal Mockery Festival is a feature that allows users to apply cosmetic effects to other users' profiles for a fee:
+            </p>
+            <ul className="list-disc pl-5 space-y-2">
+              <li>Mockery effects are purely cosmetic and do not affect a user's rank or standing.</li>
+              <li>All mockery effects expire after a predetermined period (24-72 hours).</li>
+              <li>We reserve the right to remove inappropriate mockery at our discretion.</li>
+              <li>Payments for mockery features are non-refundable.</li>
+            </ul>
+            
+            <h2 className="text-xl font-semibold mt-4">5. User Conduct</h2>
+            <p>
+              Users agree not to:
+            </p>
+            <ul className="list-disc pl-5 space-y-2">
+              <li>Use the service for any illegal purpose</li>
+              <li>Harass, abuse, or harm other users</li>
+              <li>Attempt to manipulate the ranking system through fraudulent payments</li>
+              <li>Create multiple accounts to artificially boost rankings</li>
+              <li>Misrepresent your identity or affiliation with any person or organization</li>
+            </ul>
+            
+            <h2 className="text-xl font-semibold mt-4">6. Intellectual Property</h2>
+            <p>
+              The SpendThrone.com name, logo, website design, graphics, text, and other materials are owned by or licensed to SpendThrone.com. Unauthorized use of these materials is prohibited.
+            </p>
+            
+            <h2 className="text-xl font-semibold mt-4">7. Limitation of Liability</h2>
+            <p>
+              SpendThrone.com is provided on an "as is" and "as available" basis. We make no warranties, expressed or implied, regarding the operation of the site or the information, content, or materials included.
+            </p>
+            
+            <h2 className="text-xl font-semibold mt-4">8. Changes to Terms</h2>
+            <p>
+              We reserve the right to modify these terms at any time. We will provide notice of significant changes by updating the "Last Updated" date at the top of this page.
+            </p>
+            
+            <h2 className="text-xl font-semibold mt-4">9. Contact Information</h2>
+            <p>
+              If you have any questions about these Terms, please contact us at:
+              <br />
+              <a href="mailto:support@spendthrone.com" className="text-royal-gold hover:underline">support@spendthrone.com</a>
+            </p>
+            
+            <div className="text-sm text-white/60 mt-6">
+              Last Updated: June 15, 2023
+            </div>
+          </CardContent>
+        </Card>
       </div>
-    </Layout>
+    </Shell>
   );
 };
 

@@ -3,7 +3,7 @@ import React from 'react';
 import { Dialog } from '@/components/ui/dialog';
 import ShameModal from '@/components/events/components/ShameModal';
 import { User } from '@/types/user';
-import { MockeryAction, TeamColor } from '@/types/mockery';
+import { MockeryAction, TeamColor } from '@/types/mockery-types';
 
 interface ShameModalWrapperProps {
   showModal: boolean;
@@ -25,7 +25,9 @@ const ShameModalWrapper: React.FC<ShameModalWrapperProps> = ({
   // Convert undefined team to null to avoid the TeamType error
   const team = selectedUser.team || null;
   // Make sure team is one of the allowed values or provide a fallback
-  const validTeam = (team === 'red' || team === 'blue' || team === 'green' || team === 'gold') ? team as TeamColor : 'red' as TeamColor;
+  const validTeam = (team === 'red' || team === 'blue' || team === 'green' || team === 'gold' || team === 'purple' || team === 'none' || team === 'neutral') 
+    ? team as TeamColor 
+    : 'red' as TeamColor;
 
   return (
     <Dialog open={showModal} onOpenChange={onOpenChange}>

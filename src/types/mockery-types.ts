@@ -15,7 +15,6 @@ export type {
 
 // Also export ShameAction as an alias of MockeryAction
 export type ShameAction = MockeryAction;
-export type ExtendedMockeryAction = MockeryAction;
 
 // Re-export the helper functions
 export { isValidMockeryAction, isValidMockeryTier };

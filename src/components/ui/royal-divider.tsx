@@ -2,74 +2,41 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 
-export type RoyalDividerVariant = 
-  | 'line' 
-  | 'double' 
-  | 'fancy' 
-  | 'ornate' 
-  | 'simple' 
-  | 'treasure' 
-  | 'quill'
-  | 'crown';
-
-export type RoyalDividerColor = 
-  | 'default' 
-  | 'royal' 
-  | 'gold' 
-  | 'crimson' 
-  | 'silver' 
-  | 'navy' 
-  | 'purple';
+type RoyalDividerVariant = 'line' | 'double' | 'fancy';
+type RoyalDividerColor = 'default' | 'royal' | 'gold' | 'crimson';
 
 interface RoyalDividerProps {
   variant?: RoyalDividerVariant;
-  label?: string;
   color?: RoyalDividerColor;
   className?: string;
 }
 
 const RoyalDivider: React.FC<RoyalDividerProps> = ({
   variant = 'line',
-  label,
   color = 'default',
-  className
+  className,
 }) => {
-  const getColorClass = () => {
-    switch (color) {
-      case 'royal': return 'text-royal-purple';
-      case 'gold': return 'text-royal-gold';
-      case 'crimson': return 'text-royal-crimson';
-      case 'silver': return 'text-gray-300';
-      case 'navy': return 'text-royal-navy';
-      case 'purple': return 'text-purple-500';
-      default: return 'text-gray-500';
-    }
+  const colorClasses = {
+    default: 'from-white/20 via-white/40 to-white/20',
+    royal: 'from-royal-blue/20 via-royal-blue/60 to-royal-blue/20',
+    gold: 'from-royal-gold/20 via-royal-gold/60 to-royal-gold/20',
+    crimson: 'from-royal-crimson/20 via-royal-crimson/60 to-royal-crimson/20',
   };
 
-  const getLineClass = () => {
-    switch (variant) {
-      case 'double': return 'h-[3px] border-t-2 border-b-[1px] border-current opacity-60';
-      case 'fancy': return 'h-[1px] bg-gradient-to-r from-transparent via-current to-transparent';
-      case 'ornate': return 'h-[4px] bg-gradient-to-r from-transparent via-current to-transparent border-t border-b border-current opacity-40';
-      case 'simple': return 'h-[1px] bg-current opacity-40';
-      case 'treasure': return 'h-[2px] bg-gradient-to-r from-royal-gold/20 via-royal-gold to-royal-gold/20 border-t border-royal-gold/40';
-      case 'quill': return 'h-[1px] bg-gradient-to-r from-royal-purple/20 via-royal-purple to-royal-purple/20';
-      case 'crown': return 'h-[2px] bg-gradient-to-r from-royal-gold/30 via-royal-gold to-royal-gold/30 border-dashed border-t border-royal-gold/50';
-      default: return 'h-[1px] bg-current opacity-40';
-    }
+  const variants = {
+    line: `h-px bg-gradient-to-r ${colorClasses[color]}`,
+    double: `h-[3px] bg-double-line relative ${colorClasses[color]}`,
+    fancy: `h-[5px] bg-gradient-to-r ${colorClasses[color]} relative`
   };
 
   return (
-    <div className={cn('flex items-center w-full', className)}>
-      <div className={cn('flex-1', getColorClass(), getLineClass())} />
-      
-      {label && (
-        <div className={cn('px-4 text-sm font-medium uppercase tracking-wider', getColorClass())}>
-          {label}
-        </div>
+    <div className={cn('w-full my-4', variants[variant], className)}>
+      {variant === 'fancy' && (
+        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-3 bg-black border-x border-t rounded-t-full" />
       )}
-      
-      <div className={cn('flex-1', getColorClass(), getLineClass())} />
+      {variant === 'double' && (
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-black to-transparent h-full w-full" />
+      )}
     </div>
   );
 };

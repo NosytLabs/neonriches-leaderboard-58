@@ -45,7 +45,7 @@ const MockeryHowItWorks: React.FC<MockeryHowItWorksProps> = ({ className }) => {
                 <div key={action} className="glass-morphism border-white/10 rounded-lg p-3">
                   <div className="flex justify-between items-center mb-2">
                     <h3 className="font-medium">{getMockeryName(action)}</h3>
-                    <Badge variant="outline" className="font-mono">${getMockeryCost(action).toFixed(2)}</Badge>
+                    <Badge variant="outline" className="font-mono">${Number(getMockeryCost(action)).toFixed(2)}</Badge>
                   </div>
                   <p className="text-sm text-white/70">{getMockeryDescription(action)}</p>
                 </div>

@@ -1,6 +1,6 @@
 
 import { useState, useCallback } from 'react';
-import { MockeryAction, MockedUser } from '@/types/mockery';
+import { MockeryAction, MockedUser, MockeryEvent } from '@/types/mockery-types';
 import { useSound } from '@/hooks/use-sound';
 import { useToast } from '@/hooks/use-toast';
 import { getMockeryName } from '@/utils/mockery';
@@ -154,8 +154,14 @@ const useMockery = () => {
   }, [toast]);
   
   // Check if user is publicly shamed
-  const isUserShamed = useCallback((username: string) => {
-    return mockUsers.some(user => user.username === username);
+  const isUserShamed = useCallback((username: string): { type: MockeryAction; timestamp: string } | null => {
+    const mockedUser = mockUsers.find(user => user.username === username);
+    if (!mockedUser || !mockedUser.action) return null;
+    
+    return {
+      type: mockedUser.action,
+      timestamp: mockedUser.appliedAt || new Date().toISOString()
+    };
   }, [mockUsers]);
   
   // Get number of times user has been mocked
@@ -169,17 +175,21 @@ const useMockery = () => {
   }, [mockUsers]);
   
   // Get active mockery for a user
-  const getActiveMockery = useCallback((username: string) => {
+  const getActiveMockery = useCallback((username: string): MockeryEvent | null => {
     const mockedUser = mockUsers.find(user => user.username === username);
     if (!mockedUser) return null;
     
     return {
       id: mockedUser.id,
+      type: mockedUser.action,
       action: mockedUser.action,
       targetId: mockedUser.id,
       appliedBy: mockedUser.appliedBy,
+      appliedAt: mockedUser.appliedAt,
       expiresAt: mockedUser.expiresAt,
-      isActive: true
+      isActive: true,
+      active: true,
+      timestamp: mockedUser.appliedAt
     };
   }, [mockUsers]);
   

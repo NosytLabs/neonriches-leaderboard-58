@@ -1,10 +1,9 @@
-
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogTitle, DialogDescription, DialogHeader, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { MockeryAction, MockeryTier } from '@/types/mockery';
+import { MockeryAction, MockeryTier } from '@/types/mockery-types';
 import { getMockeryName, getMockeryDescription, getMockeryCost, getMockeryTier } from '@/utils/mockery';
 import { getMockeryActionIcon } from '@/utils/mockery/mockery-icons';
 
@@ -34,7 +33,6 @@ const MockeryModal: React.FC<MockeryModalProps> = ({
     onConfirm();
   };
   
-  // Helper function to get tier color
   const getTierColor = (actionName: MockeryAction) => {
     const tier = getMockeryTier(actionName);
     const colorObj: Record<string, string> = {
