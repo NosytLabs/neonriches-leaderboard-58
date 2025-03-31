@@ -23,7 +23,10 @@ export type SoundType =
   | 'reward'
   | 'rank_up'
   | 'royal'
-  | 'coinDrop';
+  | 'coinDrop'
+  | 'swordClash'
+  | 'noblesLaugh'
+  | 'message';
 
 // Audio options for sounds
 export interface AudioOptions {

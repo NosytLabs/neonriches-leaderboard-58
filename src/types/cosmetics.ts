@@ -1,29 +1,23 @@
 
-import { UserTier } from './user';
+// Types related to user cosmetics and profile customization
 
-export type CosmeticRarity = 
-  | 'common' 
-  | 'uncommon' 
-  | 'rare' 
-  | 'epic' 
-  | 'legendary' 
-  | 'mythic'
-  | 'unique'
-  | 'royal';
-
-export type CosmeticCategory = 
-  | 'border' 
-  | 'color' 
-  | 'font' 
-  | 'emoji' 
-  | 'title' 
-  | 'background' 
-  | 'effect' 
+export type CosmeticCategory =
+  | 'border'
+  | 'color'
+  | 'font'
+  | 'emoji'
+  | 'title'
+  | 'background'
+  | 'effect'
   | 'badge'
-  | 'theme'
-  | 'appearance'
-  | 'profile'
-  | 'interaction';
+  | 'theme';
+
+export type CosmeticRarity =
+  | 'common'
+  | 'uncommon'
+  | 'rare'
+  | 'epic'
+  | 'legendary';
 
 export interface CosmeticItem {
   id: string;
@@ -31,87 +25,106 @@ export interface CosmeticItem {
   description: string;
   price: number;
   category: CosmeticCategory;
+  rarity: CosmeticRarity;
   cssClass: string;
-  rarity: CosmeticRarity | string;
   type?: string;
-  image?: string;
-  imageSrc?: string;
-  cost?: number; // For backward compatibility
 }
 
-export interface UserCosmeticState {
-  border: string[];
-  color: string[];
-  font: string[];
-  emoji: string[];
-  title: string[];
-  background: string[];
-  effect: string[];
-  badge: string[];
-  theme: string[];
-  activeBorder?: string;
-  activeColor?: string;
-  activeFont?: string;
-  activeEmoji?: string;
-  activeTitle?: string;
-  activeBackground?: string;
-  activeEffect?: string;
-  activeBadge?: string;
-  activeTheme?: string;
-}
-
-export type CosmeticType = keyof UserCosmeticState;
-
-export interface SocialLink {
-  id: string;
-  platform: string;
-  url: string;
-  title: string;
-  icon: string;
-  label: string;
-  clicks: number;
-}
-
-export type BoostEffectType = 
-  | 'visibility' 
-  | 'highlight' 
-  | 'premium' 
-  | 'featured' 
-  | 'priority' 
-  | 'glow'
+export type BoostEffectType =
+  | 'aura'
+  | 'particles'
+  | 'glimmer'
+  | 'ripple'
+  | 'border'
+  | 'shadow'
+  | 'pulse'
+  | 'crown'
   | 'sparkle'
-  | 'crown';
+  | 'glow';
 
 export interface BoostEffect {
   id: string;
   name: string;
   description: string;
   cssClass: string;
-  type: BoostEffectType | string;
+  type: string;
   tier: string;
   price: number;
-  duration: number;
+  duration: number; // in days
+  durationDays?: number; // for compatibility
   icon: string;
+  previewImage?: string;
 }
 
 export interface ProfileBoost {
   id: string;
-  userId: string;
-  type: BoostEffectType | string;
-  name: string;
-  description: string;
+  type: string;
+  appliedBy: string;
   startDate?: string;
   endDate?: string;
+  level: number;
+  strength: number;
   isActive: boolean;
-  duration: number;
-  price: number;
+  effectId?: string;
+}
+
+export interface ProfileBoostData {
+  id: string;
+  name: string;
+  description: string;
   cssClass: string;
+  type: string;
   tier: string;
+  price: number;
+  duration: number; // in days
+  startDate?: string;
+  endDate?: string;
+  isActive?: boolean;
 }
 
-export interface ProfileBoostData extends ProfileBoost {
-  strength?: number;
-  level?: number;
+export interface UserCosmeticState {
+  title: string[];
+  color: string[];
+  border: string[];
+  background: string[];
+  emoji: string[];
+  font: string[];
+  effect: string[];
+  badge: string[];
+  theme: string[];
+  activeTitle?: string;
+  activeColor?: string;
+  activeBorder?: string;
+  activeBackground?: string;
+  activeEmoji?: string;
+  activeFont?: string;
+  activeEffect?: string;
+  activeBadge?: string;
+  activeTheme?: string;
 }
 
-export type BoostDuration = 'day' | 'week' | 'month';
+// Type alias for backward compatibility
+export type UserCosmetics = UserCosmeticState;
+
+export interface SocialLink {
+  type: string;
+  url: string;
+  title?: string;
+  icon?: string;
+  clicks?: number;
+}
+
+export interface ProfileTheme {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  preview: string;
+  rarity: CosmeticRarity;
+  cssClasses: {
+    background: string;
+    text: string;
+    accent: string;
+    border: string;
+  };
+}

@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Volume2, VolumeX } from 'lucide-react';
+import { Volume2, VolumeX } from '@/utils/icons';
 import { Button } from '@/components/ui/button';
 import { useSoundsConfig } from '@/hooks/sounds/use-sounds-config';
 import { useSound } from '@/hooks/sounds/use-sound';

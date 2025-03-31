@@ -1,72 +1,110 @@
+
 import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { useNotificationSounds } from '@/hooks/sounds/use-notification-sounds';
+import { useSound } from '@/hooks/sounds/use-sound';
+import { Scroll } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { useNotificationSounds } from '@/hooks/sounds/use-notification-sounds';
 
-interface RoyalDecree {
-  id: string;
-  title: string;
-  description: string;
-  date: string;
-  status: 'active' | 'inactive';
-}
-
-const mockDecrees: RoyalDecree[] = [
+const mockDecrees = [
   {
     id: '1',
-    title: 'New Royal Tax Implemented',
-    description: 'All nobles are now required to contribute an additional 10% of their earnings to the royal treasury.',
-    date: '2024-04-01',
-    status: 'active',
+    title: 'A Royal Decree on Spending',
+    content: 'Hear ye, hear ye! The Royal Court has decreed that all citizens must display utmost enthusiasm when contributing to the royal coffers. Remember, each coin spent elevates your status in the realm!',
+    date: '2023-10-15',
+    isNew: true
   },
   {
     id: '2',
-    title: 'Grand Tournament Announced',
-    description: 'A grand tournament will be held next month with exclusive rewards for the top participants.',
-    date: '2024-03-15',
-    status: 'active',
+    title: 'New Titles for Loyal Subjects',
+    content: 'The Crown announces new honorific titles for those who demonstrate exceptional spending patterns. Ascend from "Eager Coin-Tosser" to "Grand Exchequer of the Realm" through diligent economic participation!',
+    date: '2023-10-10',
+    isNew: false
   },
   {
     id: '3',
-    title: 'Luxury Spending Encouraged',
-    description: 'Nobles are encouraged to spend lavishly to stimulate the royal economy. Bonus points will be awarded for extravagant purchases.',
-    date: '2024-02-28',
-    status: 'inactive',
-  },
+    title: 'The Knights of the Golden Card',
+    content: 'Let it be known that those who reach the highest spending tiers shall be inducted into the prestigious order of the Knights of the Golden Card, with all associated privileges and bragging rights!',
+    date: '2023-10-05',
+    isNew: false
+  }
 ];
 
-const RoyalDecrees = () => {
-  const [decrees, setDecrees] = useState<RoyalDecree[]>(mockDecrees);
-  const { playSound } = useNotificationSounds();
+export default function RoyalDecrees() {
+  const [decrees, setDecrees] = useState(mockDecrees);
+  const [expandedDecree, setExpandedDecree] = useState<string | null>(null);
+  const sounds = useNotificationSounds();
+  
+  const toggleDecree = (id: string) => {
+    sounds.playClick();
+    if (expandedDecree === id) {
+      setExpandedDecree(null);
+    } else {
+      setExpandedDecree(id);
+      
+      // Mark decree as read if it's new
+      if (decrees.find(d => d.id === id && d.isNew)) {
+        setDecrees(prevDecrees => 
+          prevDecrees.map(d => 
+            d.id === id ? { ...d, isNew: false } : d
+          )
+        );
+      }
+    }
+  };
 
   return (
-    <Card className="glass-morphism border-white/10">
+    <Card className="glass-morphism border-royal-gold/20">
       <CardHeader>
-        <CardTitle>Royal Decrees</CardTitle>
-        <CardDescription>Stay informed about the latest royal proclamations</CardDescription>
+        <div className="flex items-center">
+          <Scroll className="mr-2 h-5 w-5 text-royal-gold" />
+          <CardTitle>Royal Decrees</CardTitle>
+        </div>
+        <CardDescription>Official announcements from the Royal Court</CardDescription>
       </CardHeader>
-      <CardContent className="p-0">
-        <ScrollArea className="h-[300px] w-full">
-          <div className="p-4">
-            {decrees.map((decree) => (
-              <div key={decree.id} className="mb-4 p-3 bg-black/20 rounded-md border border-white/10">
-                <div className="flex justify-between items-center mb-2">
-                  <h4 className="text-sm font-semibold">{decree.title}</h4>
-                  <Badge variant="secondary" className="text-xs">
-                    {decree.status === 'active' ? 'Active' : 'Inactive'}
-                  </Badge>
-                </div>
-                <p className="text-xs text-white/60">{decree.description}</p>
-                <p className="text-xs text-white/40 mt-2">Date: {decree.date}</p>
+      <CardContent className="space-y-4">
+        {decrees.map((decree) => (
+          <div key={decree.id} className="space-y-2">
+            <div 
+              className={`
+                p-3 rounded-lg cursor-pointer transition-colors
+                ${decree.isNew ? 'bg-royal-gold/10 border border-royal-gold/30' : 'bg-black/20 border border-white/10 hover:bg-black/30'}
+                ${expandedDecree === decree.id ? 'bg-black/30' : ''}
+              `}
+              onClick={() => toggleDecree(decree.id)}
+            >
+              <div className="flex justify-between items-center">
+                <h4 className="font-medium text-white">
+                  {decree.title}
+                  {decree.isNew && (
+                    <span className="ml-2 text-xs bg-royal-gold text-black px-2 py-0.5 rounded-full">
+                      New
+                    </span>
+                  )}
+                </h4>
+                <span className="text-xs text-gray-400">
+                  {new Date(decree.date).toLocaleDateString()}
+                </span>
               </div>
-            ))}
+              
+              {expandedDecree === decree.id && (
+                <div className="mt-2 text-sm text-gray-300">
+                  {decree.content}
+                </div>
+              )}
+            </div>
           </div>
-        </ScrollArea>
+        ))}
+        
+        <Button 
+          variant="link" 
+          size="sm" 
+          className="text-royal-gold w-full mt-2"
+          onClick={() => sounds.playClick()}
+        >
+          View All Royal Decrees
+        </Button>
       </CardContent>
     </Card>
   );
-};
-
-export default RoyalDecrees;
+}

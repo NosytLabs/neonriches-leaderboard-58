@@ -1,125 +1,109 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Event, EventDetails } from '@/types/events';
-import { Button } from '@/components/ui/button';
-import { Calendar, ChevronRight } from 'lucide-react';
-import { format } from 'date-fns';
-import { cn } from '@/lib/utils';
-import EventDetailsModal from './components/EventDetailsModal';
-import { events, eventDetails } from './data';
+import { Calendar } from 'lucide-react';
+import { EventDetails } from '@/types/events';
 
 interface UpcomingEventsProps {
-  maxEvents?: number;
+  events: EventDetails[];
+  onSelectEvent?: (event: EventDetails) => void;
 }
 
-const UpcomingEvents: React.FC<UpcomingEventsProps> = ({ maxEvents = 3 }) => {
-  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
-  const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
-  
-  // Filter to show only upcoming events
-  const upcomingEvents = events
-    .filter(event => event.status === 'upcoming' || event.status === 'active')
-    .slice(0, maxEvents);
-  
-  const handleViewDetails = (event: Event) => {
-    setSelectedEvent(event);
-    setIsDetailsModalOpen(true);
-  };
-  
-  const handleCloseModal = () => {
-    setIsDetailsModalOpen(false);
-    setSelectedEvent(null);
-  };
-  
-  const getEventTypeColor = (type: string) => {
-    switch (type) {
-      case 'firesale': return 'bg-red-500/20 text-red-400 border-red-500/20';
-      case 'tournament': return 'bg-blue-500/20 text-blue-400 border-blue-500/20';
-      case 'challenge': return 'bg-green-500/20 text-green-400 border-green-500/20';
-      case 'seasonal': return 'bg-amber-500/20 text-amber-400 border-amber-500/20';
-      case 'special': return 'bg-purple-500/20 text-purple-400 border-purple-500/20';
-      case 'treasure': return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/20';
-      case 'shame': return 'bg-pink-500/20 text-pink-400 border-pink-500/20';
-      case 'team': return 'bg-sky-500/20 text-sky-400 border-sky-500/20';
-      default: return 'bg-gray-500/20 text-gray-300 border-gray-500/20';
-    }
-  };
-  
-  // Helper function to convert Event to EventDetails
-  const getEventDetails = (event: Event): EventDetails => {
-    // Find matching event details or create default
-    const details = eventDetails.find(detail => detail.id === event.id) || {
-      ...event,
-      rules: ['No specific rules available for this event.'],
-      prizes: []
-    };
-    
-    return details;
-  };
-  
+const UpcomingEvents: React.FC<UpcomingEventsProps> = ({ events, onSelectEvent }) => {
+  // Sort events by start date
+  const sortedEvents = [...events].sort((a, b) => 
+    new Date(a.startDate).getTime() - new Date(b.startDate).getTime()
+  );
+
+  // Only show upcoming events (events that have not ended)
+  const upcomingEvents = sortedEvents.filter(event => 
+    new Date(event.endDate) > new Date()
+  );
+
+  // Show at most 3 events
+  const displayEvents = upcomingEvents.slice(0, 3);
+
   return (
-    <Card className="border-royal-gold/20 glass-morphism">
+    <Card>
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Calendar className="h-5 w-5 text-royal-gold" />
+        <CardTitle className="flex items-center text-xl">
+          <Calendar className="h-5 w-5 mr-2" />
           Upcoming Events
         </CardTitle>
       </CardHeader>
-      <CardContent className="p-4">
-        {upcomingEvents.length === 0 ? (
-          <div className="text-center py-8 text-white/60">
+      <CardContent>
+        {displayEvents.length === 0 ? (
+          <div className="text-center py-6 text-gray-400">
             No upcoming events at this time. Check back soon!
           </div>
         ) : (
           <div className="space-y-4">
-            {upcomingEvents.map((event) => (
-              <div 
-                key={event.id} 
-                className="flex items-center justify-between p-3 rounded-lg bg-black/20 hover:bg-black/30 transition-colors"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="hidden sm:block w-12 h-12 rounded overflow-hidden">
-                    <img 
-                      src={event.image || '/event-placeholder.jpg'} 
-                      alt={event.title} 
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div>
-                    <h4 className="font-medium">{event.title}</h4>
-                    <div className="flex flex-wrap gap-2 items-center mt-1">
-                      <span className={cn("px-2 py-0.5 rounded-full text-xs", getEventTypeColor(event.type))}>
-                        {event.type.charAt(0).toUpperCase() + event.type.slice(1)}
-                      </span>
-                      <span className="text-xs text-white/60">
-                        {format(new Date(event.startDate), 'MMM d, yyyy')}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  className="text-royal-gold hover:text-royal-gold/80"
-                  onClick={() => handleViewDetails(event)}
+            {displayEvents.map((event) => {
+              // Format dates
+              const startDate = new Date(event.startDate).toLocaleDateString();
+              const endDate = new Date(event.endDate).toLocaleDateString();
+              
+              // Find the event detail (compatible with old pattern)
+              const findEventDetail = (searchId: string) => {
+                return events.find(detail => detail.id === searchId);
+              };
+              
+              return (
+                <div 
+                  key={event.id}
+                  className="border border-gray-700 rounded-lg p-4 hover:bg-black/20 cursor-pointer transition-colors"
+                  onClick={() => onSelectEvent && onSelectEvent(event)}
                 >
-                  <span className="sr-only sm:not-sr-only mr-1 text-sm">View</span>
-                  <ChevronRight className="h-4 w-4" />
-                </Button>
+                  <div className="flex items-center justify-between mb-2">
+                    <h3 className="font-semibold text-lg">{event.name}</h3>
+                    <span className={`
+                      px-2 py-1 text-xs rounded-full
+                      ${event.status === 'upcoming' ? 'bg-blue-900 text-blue-200' : ''}
+                      ${event.status === 'active' ? 'bg-green-900 text-green-200' : ''}
+                      ${event.status === 'ended' ? 'bg-gray-700 text-gray-300' : ''}
+                      ${event.status === 'cancelled' ? 'bg-red-900 text-red-200' : ''}
+                    `}>
+                      {event.status.charAt(0).toUpperCase() + event.status.slice(1)}
+                    </span>
+                  </div>
+                  
+                  <p className="text-sm text-gray-400 mb-2">
+                    {startDate === endDate 
+                      ? `${startDate}` 
+                      : `${startDate} - ${endDate}`
+                    }
+                  </p>
+                  
+                  <p className="text-sm text-gray-300 line-clamp-2">
+                    {event.description}
+                  </p>
+                  
+                  {event.rewards && event.rewards.length > 0 && (
+                    <div className="mt-2">
+                      <p className="text-xs font-medium text-gray-400">Rewards:</p>
+                      <div className="flex flex-wrap gap-1 mt-1">
+                        {event.rewards.map((reward, index) => (
+                          <span key={index} className="text-xs bg-black/40 border border-gray-700 px-2 py-0.5 rounded-full">
+                            {reward}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+            
+            {upcomingEvents.length > 3 && (
+              <div className="text-center">
+                <button className="text-sm text-blue-400 hover:text-blue-300 transition-colors">
+                  View All Events ({upcomingEvents.length})
+                </button>
               </div>
-            ))}
+            )}
           </div>
         )}
       </CardContent>
-      
-      {selectedEvent && (
-        <EventDetailsModal
-          isOpen={isDetailsModalOpen}
-          onClose={handleCloseModal}
-          event={getEventDetails(selectedEvent)}
-        />
-      )}
     </Card>
   );
 };

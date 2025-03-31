@@ -41,7 +41,7 @@ export interface LeaderboardFilter {
 export interface OnChainLeaderboardEntry {
   pubkey: string;
   amount: number;
-  timestamp: number;
+  timestamp: number | string;
   username?: string;
   publicKey?: string;
   amountSpent?: number;
@@ -73,4 +73,5 @@ export interface SolanaTransaction {
   sender?: string;
   recipient?: string;
   signature?: string;
+  receiver?: string; // Adding for compatibility
 }
