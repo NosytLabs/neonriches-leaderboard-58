@@ -58,8 +58,30 @@ export const formatPercent = (value: number | string, decimals = 1): string => {
   return `${numValue.toFixed(decimals)}%`;
 };
 
+/**
+ * Format a date string into a human-readable format
+ */
+export const formatDate = (dateString: string): string => {
+  if (!dateString) {
+    return 'N/A';
+  }
+  
+  try {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    });
+  } catch (error) {
+    console.error('Error formatting date:', error);
+    return 'Invalid date';
+  }
+};
+
 export default {
   formatCurrency,
   formatNumber,
-  formatPercent
+  formatPercent,
+  formatDate
 };

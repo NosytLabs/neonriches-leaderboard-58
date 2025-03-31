@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import Header from '@/components/Header';
@@ -40,7 +41,7 @@ const ProfilePage: React.FC = () => {
         <main className="container mx-auto px-4 py-10 pt-24">
           <div className="text-center py-10">
             <h2 className="text-2xl font-bold mb-4">Profile Not Found</h2>
-            <p className="mb-6">Error: {error}</p>
+            <p className="mb-6">Error: {error.message || String(error)}</p>
           </div>
         </main>
         <Footer />
