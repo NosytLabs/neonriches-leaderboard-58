@@ -112,10 +112,15 @@ const PublicShamingFestival = () => {
   const getActiveShameEffect = (userId: number) => {
     const mockeryInfo = getActiveMockery(userId);
     if (mockeryInfo) {
-      // Ensure we return a valid ShameAction
+      // Fix for the TypeScript error - create a properly formatted object
       const validShameActions: ShameAction[] = ['tomatoes', 'eggs', 'stocks', 'shame', 'crown', 'jester', 'protection'];
-      if (validShameActions.includes(mockeryInfo.type as ShameAction)) {
-        return mockeryInfo;
+      const actionType = mockeryInfo.type || mockeryInfo.action;
+      
+      if (actionType && validShameActions.includes(actionType as ShameAction)) {
+        return {
+          type: actionType as ShameAction,
+          timestamp: mockeryInfo.timestamp || mockeryInfo.appliedAt || new Date().toISOString()
+        };
       }
     }
     return null;
@@ -222,7 +227,7 @@ const PublicShamingFestival = () => {
             >
               <ShameUserCard
                 user={formatUserForShameCard(targetUser)}
-                isShamed={getActiveShameEffect(targetUser.id) || null}
+                isShamed={getActiveShameEffect(targetUser.id)}
                 isOnCooldown={!!shameCooldown[targetUser.id]}
                 shameCount={getShameCount(targetUser.id)}
                 onShame={handleShameUser}

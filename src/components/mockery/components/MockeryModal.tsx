@@ -5,7 +5,8 @@ import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { MockeryAction, MockeryTier } from '@/types/mockery';
-import { getMockeryActionIcon, getMockeryTier, getMockeryActionTitle, getMockeryActionDescription, getMockeryActionPrice } from '@/utils/mockery';
+import { getMockeryName, getMockeryDescription, getMockeryCost, getMockeryTier } from '@/utils/mockery';
+import { getMockeryActionIcon } from '@/utils/mockery/mockery-icons';
 
 interface MockeryModalProps {
   isOpen: boolean;
@@ -48,9 +49,9 @@ const MockeryModal: React.FC<MockeryModalProps> = ({
   };
   
   const ActionIcon = getMockeryActionIcon(action);
-  const actionTitle = getMockeryActionTitle(action);
-  const actionDescription = getMockeryActionDescription(action);
-  const actionPrice = getMockeryActionPrice(action);
+  const actionTitle = getMockeryName(action);
+  const actionDescription = getMockeryDescription(action);
+  const actionPrice = getMockeryCost(action);
   const actionTier = getMockeryTier(action);
   
   return (
