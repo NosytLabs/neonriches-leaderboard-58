@@ -7,13 +7,15 @@ import {
   UserRoundX, Skull, Feather, Angry, 
   Flame, Swords, LinkIcon, Crosshair, 
   Lightbulb, Unplug, Cloud, Sparkles, 
-  Scissors, Maximize2, Egg, Hammer
+  Scissors, Maximize2, Egg, Hammer,
+  ThumbsDown
 } from 'lucide-react';
+import React from 'react';
 
 // Get the appropriate icon for a mockery action
 export const getMockeryActionIcon = (action: MockeryAction): LucideIcon => {
   const icons: Record<string, LucideIcon> = {
-    tomatoes: Ban,
+    tomatoes: ThumbsDown,
     eggs: Egg,
     putridEggs: ShieldAlert,
     dungeons: UserX,
@@ -104,6 +106,12 @@ export const getMockeryActionIconColor = (action: MockeryAction): string => {
 
   // Return specific color or tier-based color  
   return colorClasses[action] || tierColors[getMockeryTier(action)] || 'text-gray-400';
+};
+
+// React component for mockery action icons
+export const getMockeryActionIconComponent = (action: MockeryAction): React.ReactNode => {
+  const Icon = getMockeryActionIcon(action);
+  return <Icon className="h-4 w-4" />;
 };
 
 // Import mockery tier for convenience

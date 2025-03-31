@@ -27,20 +27,6 @@ const ProfileBoostDisplay: React.FC<ProfileBoostDisplayProps> = ({
     );
   }
 
-  // Helper function to get the proper capitalized icon name
-  const getIconName = (iconNameLowerCase: string): string => {
-    const iconMap: Record<string, string> = {
-      'eye': 'Eye',
-      'image': 'Image',
-      'play': 'Play',
-      'sparkles': 'Sparkles',
-      'star': 'Star',
-      'clock': 'Clock'
-    };
-    
-    return iconMap[iconNameLowerCase] || 'Star';
-  };
-
   return (
     <div className={`space-y-4 ${className}`}>
       {activeBoosts.map((boost: ProfileBoost) => {
