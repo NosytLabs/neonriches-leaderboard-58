@@ -1,7 +1,12 @@
+
 import { useCallback, useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { NotificationSoundOptions } from '@/types/mockery';
-import useNotificationSound, { SoundType } from '@/hooks/useNotificationSound';
+import { useSound } from '@/hooks/sounds/use-sound';
+import { SoundType } from '@/types/sound-types';
+import { v4 as uuidv4 } from 'uuid';
+import { useAuth } from '@/hooks/useAuth';
+import { useEffect } from 'react';
 
 export interface Notification {
   id: string;
@@ -27,13 +32,13 @@ interface UseNotificationsReturn {
   handleMarkAsRead: (id: string) => void;
   handleDeleteNotification: (id: string) => void;
   formatTimestamp: (timestamp: Date) => string;
-  playSound: (sound: string, volume?: number) => void;
+  playSound: (sound: SoundType, volume?: number) => void;
 }
 
 export const useNotifications = (): UseNotificationsReturn => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [open, setOpen] = useState(false);
-  const { playSound } = useNotificationSound();
+  const { play } = useSound();
   const { user } = useAuth();
   const { toast } = useToast();
 
@@ -128,6 +133,10 @@ export const useNotifications = (): UseNotificationsReturn => {
     } else {
       return timestamp.toLocaleDateString();
     }
+  };
+
+  const playSound = (sound: SoundType, volume?: number) => {
+    play(sound, { volume });
   };
 
   const unreadCount = notifications.filter(n => !n.read).length;

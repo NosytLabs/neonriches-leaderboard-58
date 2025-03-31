@@ -1,3 +1,4 @@
+
 // Modified implementation to fix the interface
 import { useState, useCallback, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
@@ -25,7 +26,7 @@ const WISH_COST = 10;
 const useWishingWell = (): UseWishingWellReturn => {
   const { user } = useAuth();
   const { toast } = useToast();
-  const { playSound } = useSound();
+  const { play } = useSound();
 
   const [wishResult, setWishResult] = useState<WishResult>('pending');
   const [isWishing, setIsWishing] = useState(false);
@@ -65,14 +66,14 @@ const useWishingWell = (): UseWishingWellReturn => {
 
       if (randomResult < 0.3) {
         result = 'win';
-        playSound('reward');
+        play('reward');
         toast({
           title: "Your Wish Granted!",
           description: "Congratulations! You've received a special reward.",
         });
       } else {
         result = 'lose';
-        playSound('shame');
+        play('shame');
         toast({
           title: "No Luck This Time",
           description: "Unfortunately, your wish was not granted. Better luck next time!",
@@ -103,7 +104,7 @@ const useWishingWell = (): UseWishingWellReturn => {
     } finally {
       setIsWishing(false);
     }
-  }, [user, toast, playSound, hasWishAvailable]);
+  }, [user, toast, play, hasWishAvailable]);
 
   const resetWish = useCallback(() => {
     setWishResult('pending');
