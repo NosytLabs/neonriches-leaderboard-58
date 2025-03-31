@@ -68,6 +68,25 @@ export const formatDuration = (seconds: number): string => {
   return `${mins}:${secs.toString().padStart(2, '0')}`;
 };
 
+// Format a rank with appropriate ordinal suffix
+export const formatRank = (rank: number): string => {
+  if (rank === 0) return "Unranked";
+  
+  const lastDigit = rank % 10;
+  const lastTwoDigits = rank % 100;
+  
+  if (lastTwoDigits >= 11 && lastTwoDigits <= 13) {
+    return `${rank}th`;
+  }
+  
+  switch (lastDigit) {
+    case 1: return `${rank}st`;
+    case 2: return `${rank}nd`;
+    case 3: return `${rank}rd`;
+    default: return `${rank}th`;
+  }
+};
+
 // Format historical value with inflation adjustment
 export const formatHistoricalValue = (
   amount: number, 
@@ -76,6 +95,23 @@ export const formatHistoricalValue = (
   todayEquivalent: number
 ): string => {
   return `${formatNumber(amount)} ${currency} (${year}) ≈ ${formatDollarAmount(todayEquivalent)} today`;
+};
+
+// Get a human-readable tier name
+export const formatTierName = (tier: string): string => {
+  return tier.charAt(0).toUpperCase() + tier.slice(1).replace(/([A-Z])/g, ' $1');
+};
+
+// Format money spent with appropriate tier label
+export const formatSpendTier = (amount: number): string => {
+  if (amount >= 10000) return "Whale";
+  if (amount >= 5000) return "Royal Patron";
+  if (amount >= 1000) return "Viscount";
+  if (amount >= 500) return "Baron";
+  if (amount >= 100) return "Knight";
+  if (amount >= 50) return "Squire";
+  if (amount >= 10) return "Peasant";
+  return "Commoner";
 };
 
 export default {
@@ -88,5 +124,8 @@ export default {
   formatTimeAgo,
   formatFileSize,
   formatDuration,
-  formatHistoricalValue
+  formatHistoricalValue,
+  formatRank,
+  formatTierName,
+  formatSpendTier
 };

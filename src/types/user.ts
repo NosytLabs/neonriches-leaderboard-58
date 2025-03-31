@@ -1,110 +1,110 @@
 
-export type TeamColor = 'red' | 'green' | 'blue' | 'purple' | 'gold' | 'none' | 'neutral';
+// User-related type definitions
 
-// For backward compatibility
-export type TeamType = TeamColor;
+export type UserTier = 
+  | 'basic' 
+  | 'premium' 
+  | 'royal' 
+  | 'elite' 
+  | 'legendary' 
+  | 'founder'
+  | 'pro'
+  | 'diamond'
+  | 'gold'
+  | 'silver'
+  | 'bronze'
+  | 'free';
 
-export type UserTier = 'free' | 'basic' | 'premium' | 'pro' | 'royal' | 'elite' | 'founder' | 'diamond' | 'platinum' | 'gold' | 'silver' | 'bronze' | 'vip' | 'whale';
+export type TeamType = 'red' | 'blue' | 'green' | 'gold' | 'purple';
+export type TeamColor = TeamType;
 
-// Define gender types that include royal titles for compatibility
-export type Gender = 'male' | 'female' | 'other' | 'prefer-not-to-say' | 'king' | 'queen' | 'jester' | 'neutral' | 'noble' | 'unspecified';
-
-// Define social link type
 export interface SocialLink {
-  id: string | number;
-  platform?: string;
+  id?: string;
+  platform: string;
   url: string;
   username?: string;
-  display?: string;
-  icon?: string;
-  verified?: boolean;
-  primary?: boolean;
-  clicks?: number;
-  title?: string;
-  label?: string;
-  type?: string;
-  isVisible?: boolean;
+  isPublic?: boolean;
 }
 
-// Define profile image type
-export interface ProfileImage {
-  id?: string;
-  url: string;
-  isDefault?: boolean;
-  isPrimary: boolean;
-  caption?: string;
-  type?: string; // Added to support ProfileImage needs in ImagesEditor
+export interface UserCosmetics {
+  border?: string[];
+  color?: string[];
+  font?: string[];
+  emoji?: string[];
+  title?: string[];
+  background?: string[];
+  effect?: string[];
+  badge?: string[];
+  theme?: string[];
+  activeBorder?: string;
+  activeColor?: string;
+  activeFont?: string;
+  activeEmoji?: string;
+  activeTitle?: string;
+  activeBackground?: string;
+  activeEffect?: string;
+  activeBadge?: string;
+  activeTheme?: string;
 }
 
-// Define profile boost type
+export interface UserCosmeticState {
+  border: string[];
+  color: string[];
+  font: string[];
+  emoji: string[];
+  title: string[];
+  background: string[];
+  effect: string[];
+  badge: string[];
+  theme: string[];
+  activeBorder: string;
+  activeColor: string;
+  activeFont: string;
+  activeEmoji: string;
+  activeTitle: string;
+  activeBackground: string;
+  activeEffect: string;
+  activeBadge: string;
+  activeTheme: string;
+}
+
 export interface ProfileBoost {
   id: string;
-  type: string;
   startDate: string;
   endDate: string;
-  expiresAt?: string;
+  level: number;
+  effectId?: string;
+  type: string;
+  strength: number;
+  appliedBy: string;
   isActive: boolean;
-  appliedBy?: string;
-  level?: number;
-  strength?: number;
-  name?: string;
-  description?: string;
-  duration?: number;
-  price?: number;
+  status?: string;
+}
+
+export interface UserStats {
+  totalSpent: number;
+  highestRank: number;
+  currentRank: number;
+  daysActive: number;
+  totalMockeries: number;
+  mockeryReceived: number;
+  achievementsUnlocked: number;
+  referrals: number;
+  teamContribution: number;
+}
+
+export interface Achievement {
+  id: string;
+  name: string;
+  description: string;
+  image?: string;
   icon?: string;
-  effectId?: string; // Added to support AdvertisementBanner
-}
-
-// Define user cosmetics state - ensuring both the versions work
-export interface UserCosmetics {
-  // Used in some components
-  titles?: string[];
-  colors?: string[];
-  borders?: string[];
-  backgrounds?: string[];
-  emojis?: string[];
-  fonts?: string[];
-  effects?: string[];
-  badges?: string[]; // Added to support UserCosmetics needs
-  // Used in newer components
-  title?: string[];
-  color?: string[];
-  border?: string[];
-  background?: string[];
-  emoji?: string[];
-  font?: string[];
-  effect?: string[];
-  badge?: string[]; // Added to support UserCosmetics needs
-  theme?: string[]; // Added to support UserCosmetics needs
-  // Active cosmetics
-  activeTitle?: string;
-  activeColor?: string;
-  activeBorder?: string;
-  activeBackground?: string;
-  activeEmoji?: string;
-  activeFont?: string;
-  activeEffect?: string;
-  activeBadge?: string; // Added to support UserCosmetics needs
-  activeTheme?: string; // Added to support UserCosmetics needs
-}
-
-// Define user settings
-export interface UserSettings {
-  profileVisibility: 'public' | 'private' | 'friends';
-  allowProfileLinks: boolean;
-  theme: 'dark' | 'light' | 'system';
-  notifications: boolean;
-  emailNotifications: boolean;
-  marketingEmails: boolean;
-  soundEffects: boolean;
-  showEmailOnProfile: boolean;
-  showJoinDate: boolean;
-  showTeam: boolean;
-  showTier: boolean;
-  darkMode: boolean;
-  useCrownEffect: boolean;
-  useSpecialEffects: boolean;
-  showSpending: boolean;
+  unlockedAt: string;
+  progress?: number;
+  maxProgress?: number;
+  tier?: string;
+  type?: string;
+  amountSpent?: number;
 }
 
 export interface UserProfile {
@@ -117,64 +117,63 @@ export interface UserProfile {
   rank?: number;
   previousRank?: number;
   totalSpent?: number;
-  amountSpent?: number; // Alternative for totalSpent
-  spentAmount?: number; // Alternative for totalSpent
   walletBalance?: number;
-  tier?: UserTier;
+  tier: UserTier;
   team?: TeamColor;
+  joinedAt?: string;
   joinDate?: string;
-  joinedAt?: string; // Alternative for joinDate
-  createdAt?: string; // Alternative for joinDate
-  updatedAt?: string;
-  isVerified?: boolean;
-  isProtected?: boolean;
-  isAdmin?: boolean;
-  avatarUrl?: string;
-  spendStreak?: number;
   lastActive?: string;
-  certificateNFT?: {
-    id: string;
-    mintAddress?: string;
-    tokenId?: string;
-    imageUrl?: string;
-  };
+  isAdmin?: boolean;
+  isVerified?: boolean;
+  cosmetics?: UserCosmetics;
+  achievements?: Achievement[];
+  stats?: UserStats;
+  profileBoosts?: ProfileBoost[];
+  referralCode?: string;
+  referredBy?: string;
+  settings?: Record<string, any>;
   subscription?: {
     tier: string;
-    expiresAt: string;
-    isActive: boolean;
-    status?: string;
-    id?: string;
+    status: string;
+    nextBillingDate?: string;
   };
-  gender?: Gender;
-  isVIP?: boolean;
-  isFounder?: boolean;
+  purchasedFeatures?: string[];
+  socialLinks?: SocialLink[] | Record<string, string>;
+  activeTitle?: string;
+  followers?: number;
+  following?: number;
   profileViews?: number;
   profileClicks?: number;
-  purchasedFeatures?: string[];
-  
-  // Add the missing properties that components are trying to access
-  cosmetics?: UserCosmetics;
-  activeTitle?: string;
-  socialLinks?: SocialLink[];
-  profileImages?: ProfileImage[];
-  profileBoosts?: ProfileBoost[];
-  followers?: number | string[];
-  following?: number | string[];
-  role?: string;
-  settings?: Record<string, any>;
+  [key: string]: any;
 }
 
-// For backward compatibility
-export type User = UserProfile;
+export interface User extends UserProfile {
+  // Additional properties specific to authenticated user instances
+  token?: string;
+  refreshToken?: string;
+  accessToken?: string;
+}
 
-// ProfileLink alias for backward compatibility
-export type ProfileLink = SocialLink;
+export interface AuthState {
+  isAuthenticated: boolean;
+  user: UserProfile | null;
+  isLoading: boolean;
+  error: string | null;
+}
 
-// Export a Team interface for backwards compatibility
-export interface Team {
-  id: string;
-  name: string;
-  color: TeamColor;
-  description: string;
-  members: number;
+export interface AuthContextType extends AuthState {
+  login: (email: string, password: string) => Promise<boolean>;
+  signIn: (email: string, password: string) => Promise<boolean>;
+  register: (username: string, email: string, password: string) => Promise<boolean>;
+  logout: () => Promise<void>;
+  signOut: () => void;
+  updateProfile: (updates: Partial<UserProfile>) => Promise<boolean>;
+  updateUser: (updates: Partial<UserProfile>) => Promise<boolean>;
+  updateUserProfile: (updates: Partial<UserProfile>) => Promise<boolean>;
+  refreshUser: () => Promise<void>;
+  forgotPassword: (email: string) => Promise<boolean>;
+  resetPassword: (token: string, password: string) => Promise<boolean>;
+  verifyEmail: (token: string) => Promise<boolean>;
+  loginWithProvider: (provider: string) => Promise<boolean>;
+  awardCosmetic: (itemId: string, category: string) => Promise<boolean>;
 }

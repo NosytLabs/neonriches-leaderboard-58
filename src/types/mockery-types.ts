@@ -48,7 +48,18 @@ export type MockeryAction =
   | 'defeat'
   | 'removal'
   | 'dungeons'
-  | 'fool';
+  | 'fool'
+  | 'banned'
+  | 'scarlet'
+  | 'cursed'
+  | 'laughing'
+  | 'poor'
+  | 'muted'
+  | 'exile'
+  | 'knighthood'
+  | 'tarAndFeather'
+  | 'rotten'
+  | 'pillory';
 
 export type ExtendedMockeryAction = MockeryAction | string;
 
@@ -64,27 +75,21 @@ export type MockeryTier =
   | 'silver'
   | 'bronze';
 
-export type ShameAction = 
-  | 'tomatoes'
-  | 'eggs'
-  | 'stocks'
-  | 'shame'
-  | 'crown'
-  | 'jester'
-  | 'protection'; // Ensure 'protection' is included for type safety
+export type ShameAction = MockeryAction; // All mockery actions can be used for shaming
 
 export interface MockeryEvent {
   id: string;
   action: MockeryAction;
   targetId: string;
-  appliedAt: string;
   appliedBy: string;
-  duration: number;
+  appliedAt: string;
   expiresAt: string;
+  duration?: number;
   isActive: boolean;
   cost?: number;
   tier?: MockeryTier;
   type?: string;
+  metadata?: Record<string, any>;
 }
 
 export interface MockedUser {
@@ -110,8 +115,13 @@ export interface MockedUser {
 }
 
 export interface ShameEffectData {
-  type: ShameAction;
-  timestamp: string;
+  username: string;
+  action: MockeryAction;
+  tier?: MockeryTier;
+  duration?: number;
+  isActive: boolean;
+  timestamp?: string;
+  type?: ShameAction;
 }
 
 export interface MockeryEffectData {
@@ -123,6 +133,8 @@ export interface NotificationSoundOptions {
   volume?: number;
   pitch?: number;
   loop?: boolean;
+  playbackRate?: number;
+  delay?: number;
 }
 
 export interface UseMockery {

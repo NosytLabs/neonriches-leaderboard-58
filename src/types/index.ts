@@ -19,4 +19,4 @@ export * from './codeAnalysis/types';
 export * from './common';
 
 // Type organization helpers
-export * from './auth/types';
+// No longer needed as we've consolidated auth types into user.ts

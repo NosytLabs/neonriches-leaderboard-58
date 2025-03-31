@@ -1,5 +1,5 @@
 
-// Generate absurd CTAs for the hero section
+// Generate absurd CTAs for the hero section and other satirical content
 
 export type AbsurdityLevel = 'mild' | 'medium' | 'extreme' | 'ridiculous' | 'unhinged';
 
@@ -12,6 +12,8 @@ const mildCtas = [
   "Elevate Your Position",
   "Secure Your Place",
   "Rise in the Ranks",
+  "Climb the Hierarchy",
+  "Advance Your Status",
 ];
 
 const mediumCtas = [
@@ -23,6 +25,9 @@ const mediumCtas = [
   "Convert Cash to Prestige",
   "Trade Currency for Rank",
   "Secure Your Digital Crown",
+  "Invest in Vanity Points",
+  "Acquire Status Tokens",
+  "Lease Some Dignity",
 ];
 
 const extremeCtas = [
@@ -34,6 +39,9 @@ const extremeCtas = [
   "Waste Money for Validation",
   "Throw Cash into the Void",
   "Feed the Status Algorithm",
+  "Convert Life Energy to Numbers",
+  "Transform Labor into Pixels",
+  "Upgrade Your Digital Self-Worth",
 ];
 
 const ridiculousCtas = [
@@ -45,6 +53,9 @@ const ridiculousCtas = [
   "Convert Life Energy to a Number",
   "Participate in Economic Self-Flagellation",
   "Monetize Your Insecurities",
+  "Purchase Digital Snake Oil",
+  "Accelerate Your Financial Entropy",
+  "Trade Your Future for a Leaderboard Position",
 ];
 
 const unhingedCtas = [
@@ -56,6 +67,9 @@ const unhingedCtas = [
   "ABANDON FISCAL RESPONSIBILITY",
   "PURSUE RUINOUS DIGITAL VANITY",
   "EXCHANGE REAL VALUE FOR IMAGINARY STATUS",
+  "CONVERT YOUR LIFE SAVINGS TO NOTHING",
+  "ACHIEVE FINANCIAL IMPLOSION FOR STATUS",
+  "OBLITERATE RESOURCES FOR DIGITAL RECOGNITION",
 ];
 
 export const generateAbsurdCTA = (level: AbsurdityLevel): string => {
@@ -78,6 +92,38 @@ export const generateAbsurdCTA = (level: AbsurdityLevel): string => {
       return getRandomCta(mediumCtas);
   }
 };
+
+// Generate absurd team names for the royal orders
+export const royalOrderNames = [
+  "Royal Order of Status Seekers",
+  "Knights of the Digital Realm",
+  "Order of the Empty Wallet",
+  "Brotherhood of the Burning Credit Card",
+  "Sisterhood of Spending Superiority",
+  "Loyal Legion of Leaderboard Climbers",
+  "The Prestigious Paupers",
+  "The Bankrupt Barons",
+  "Grand Order of Meaningless Measurements",
+  "The Nouveau Niche",
+  "The Order of Illusory Importance",
+  "Cult of Currency Converters",
+  "Fellowship of Fiscal Folly",
+  "The Sacred Order of Self-Importance",
+];
+
+// Random team descriptions that explain their satirical "mission"
+export const royalOrderDescriptions = [
+  "Dedicated to the proposition that all dollars are created to be spent for status.",
+  "Boldly going where no wallet has gone before — usually empty.",
+  "Proving that the more you spend, the more you're worth (to our shareholders).",
+  "Transforming financial responsibility into digital prestige since 2023.",
+  "Where your bank account goes to die, but your status lives forever.",
+  "Converting tangible assets into intangible validation since we launched.",
+  "Specializing in the alchemy of turning money into meaningless metrics.",
+  "Experts at transmuting cash into social confirmation.",
+  "Upholding the noble tradition of spending money you don't have on things you don't need.",
+  "The premier fellowship for those who value digital numbers over retirement planning.",
+];
 
 // Generate absurd facts about status and wealth
 const absurdFacts = [
@@ -123,10 +169,54 @@ const absurdFacts = [
   "Studies show wearing luxury brands in job interviews increases chances of being hired by 30%, regardless of qualifications.",
   "One Russian oligarch spent $35,000 on a gold-plated fidget spinner in 2017. It was used exactly twice.",
   "The most expensive domain name ever sold was Cars.com for $872 million. At least we're selling something more substantial: your ego.",
+  "A tech CEO spent $10 million on a digital yacht in a metaverse game that shut down 6 months later.",
+  "The average person spends 2 years of their life choosing filters for social media posts to appear more attractive and wealthy.",
+  "A 2022 study found that 65% of teenagers would rather be internet famous than win a Nobel Prize.",
+  "Guests at the Met Gala wore outfits worth more than $12 million collectively, then discussed global inequality during dinner.",
+  "An NFT collector spent their child's college fund on digital art, explaining 'This is a better investment in their future.'",
+  "A social media influencer charged fans $1,000 to watch them unbox luxury products on a private livestream.",
+  "The world's most expensive virtual real estate sold for $4.3 million. Its only difference from cheaper land was its location.",
+  "A dating app for 'elite singles' charges $10,000 per year, but a data leak revealed 82% of members earned less than six figures.",
+  "One startup raised $85 million to create a premium blockchain-based social network. It shut down after 3 months with 41 users.",
+  "SpendThrone was almost named 'Honest Social Media' because we admit we're exploiting your status anxiety.",
+  "In the 1890s, people would rent pineapples as table centerpieces to signal wealth, returning them the next day. Not much has changed.",
+  "Psychologists estimate we waste 27% of our mental energy comparing ourselves to others we perceive as having higher status.",
+  "One SpendThrone user created 12 different accounts to compete with themselves on the leaderboard.",
+  "93% of Lamborghini owners admit their purchase was primarily motivated by what others would think of them.",
+  "A fashion brand sold a paper shopping bag for $290. It sold out in 3 days.",
+  "A study found that 41% of people have pretended to be on an important call to appear busier and more important in public.",
+  "The inventor of the pet rock made $15 million selling literal rocks in custom cardboard boxes.",
+  "A virtual sword in an online game sold for $330,000. The game shut down 2 years later.",
+  "Scientists estimate that humans evolved status-seeking behaviors 40,000 years ago. SpendThrone just made it more efficient.",
+  "A survey of luxury homeowners found 17% had rooms they had never entered after the initial tour.",
 ];
 
 export const getRandomAbsurdFact = (): string => {
   return absurdFacts[Math.floor(Math.random() * absurdFacts.length)];
 };
 
-export default { generateAbsurdCTA, getRandomAbsurdFact };
+// Generate satirical quotes about status and wealth
+export const statusQuotes = [
+  { quote: "The Emperor's New Clothes were very expensive indeed - but at least we're honest about selling you nothing but status.", author: "SpendThrone Philosophy" },
+  { quote: "When everyone is special, no one is. That's why we have a leaderboard.", author: "SpendThrone Design Team" },
+  { quote: "Money can't buy happiness, but it can buy a higher position on our leaderboard, which is basically the same thing.", author: "Economic Wisdom" },
+  { quote: "We've gamified capitalism so you can see exactly how much your life is worth.", author: "SpendThrone Mission Statement" },
+  { quote: "The greatest innovation of SpendThrone is removing the pretense that social media isn't just a giant status game.", author: "Digital Anthropology Journal" },
+  { quote: "In a world of endless status games, we just made the scoring system transparent.", author: "SpendThrone Founder" },
+  { quote: "It's not about the money you spend, it's about the envy you generate.", author: "Marketing Department" },
+  { quote: "Your grandparents saved for retirement. You're saving for a better position on our leaderboard. Evolution is beautiful.", author: "Financial Advisor" },
+  { quote: "If people weren't willing to spend money on nothing, the entire luxury goods industry would collapse overnight.", author: "Status Economics" },
+  { quote: "We didn't invent status anxiety, we just monetized it more efficiently.", author: "SpendThrone Business Model" },
+];
+
+export const getRandomStatusQuote = () => {
+  return statusQuotes[Math.floor(Math.random() * statusQuotes.length)];
+};
+
+export default { 
+  generateAbsurdCTA, 
+  getRandomAbsurdFact,
+  getRandomStatusQuote,
+  royalOrderNames,
+  royalOrderDescriptions
+};
