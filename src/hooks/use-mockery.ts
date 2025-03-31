@@ -1,7 +1,8 @@
 
 import { useState, useCallback } from 'react';
-import { MockeryAction, MockedUser, UseMockery, MockeryEvent } from '@/types/mockery';
+import { MockeryAction, MockedUser, UseMockery } from '@/types/mockery';
 import { useSound } from '@/hooks/use-sound';
+import { useToast } from '@/hooks/use-toast';
 
 /**
  * Hook to manage mockery functionality
@@ -19,11 +20,7 @@ const useMockery = (): UseMockery => {
       action: 'tomatoes',
       appliedBy: 'MockingUser',
       appliedAt: new Date().toISOString(),
-      expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
-      mockedBy: 'MockingUser',
-      mockedAction: 'tomatoes',
-      mockedTimestamp: new Date().toISOString(),
-      mockedUntil: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
+      expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
     },
     {
       id: '2',
@@ -36,15 +33,12 @@ const useMockery = (): UseMockery => {
       action: 'eggs',
       appliedBy: 'JesterUser',
       appliedAt: new Date().toISOString(),
-      expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
-      mockedBy: 'JesterUser',
-      mockedAction: 'eggs',
-      mockedTimestamp: new Date().toISOString(),
-      mockedUntil: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
+      expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
     }
   ]);
   
   const sound = useSound();
+  const { toast } = useToast();
   
   // Mock a user
   const mockUser = useCallback(async (userId: string, action: MockeryAction, reason?: string): Promise<boolean> => {
@@ -65,10 +59,7 @@ const useMockery = (): UseMockery => {
         appliedBy: 'CurrentUser',
         appliedAt: new Date().toISOString(),
         expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
-        mockedBy: 'CurrentUser',
-        mockedAction: action,
-        mockedTimestamp: new Date().toISOString(),
-        mockedUntil: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
+        reason: reason
       };
       
       setMockUsers(prev => [...prev, mockedUser]);
@@ -76,12 +67,25 @@ const useMockery = (): UseMockery => {
       // Play sound effect
       sound.playSound('mockery', { volume: 0.5 });
       
+      toast({
+        title: "Mockery Applied",
+        description: `You've successfully applied mockery to User${userId}`,
+        variant: "default"
+      });
+      
       return true;
     } catch (error) {
       console.error('Error mocking user:', error);
+      
+      toast({
+        title: "Mockery Failed",
+        description: "There was an error applying the mockery",
+        variant: "destructive"
+      });
+      
       return false;
     }
-  }, [sound]);
+  }, [sound, toast]);
   
   // Remove mockery from a user
   const removeMockery = useCallback(async (userId: string): Promise<boolean> => {
@@ -92,12 +96,25 @@ const useMockery = (): UseMockery => {
       // Remove from mocked users
       setMockUsers(prev => prev.filter(user => user.id !== userId));
       
+      toast({
+        title: "Mockery Removed",
+        description: "The mockery has been successfully removed",
+        variant: "default"
+      });
+      
       return true;
     } catch (error) {
       console.error('Error removing mockery:', error);
+      
+      toast({
+        title: "Action Failed",
+        description: "There was an error removing the mockery",
+        variant: "destructive"
+      });
+      
       return false;
     }
-  }, []);
+  }, [toast]);
   
   // Get all mocked users
   const getMockedUsers = useCallback(() => {
@@ -126,8 +143,14 @@ const useMockery = (): UseMockery => {
   
   // Protect a user from mockery
   const protectUser = useCallback(async (username: string) => {
+    toast({
+      title: "Protection Purchased",
+      description: `${username} is now protected from mockery`,
+      variant: "default"
+    });
+    
     return true; // Mock implementation
-  }, []);
+  }, [toast]);
   
   // Check if user is publicly shamed
   const isUserShamed = useCallback((username: string) => {
@@ -141,11 +164,11 @@ const useMockery = (): UseMockery => {
   
   // Get number of times user has mocked others
   const getUserMockedOthersCount = useCallback((username: string) => {
-    return mockUsers.filter(user => user.mockedBy === username).length;
+    return mockUsers.filter(user => user.appliedBy === username).length;
   }, [mockUsers]);
   
   // Get active mockery for a user
-  const getActiveMockery = useCallback((username: string): MockeryEvent | null => {
+  const getActiveMockery = useCallback((username: string) => {
     const mockedUser = mockUsers.find(user => user.username === username);
     if (!mockedUser) return null;
     

@@ -83,3 +83,20 @@ export const isValidMockeryAction = (action: string): action is MockeryAction =>
 export const isValidMockeryTier = (tier: string): tier is MockeryTier => {
   return ['common', 'uncommon', 'rare', 'epic', 'legendary'].includes(tier as MockeryTier);
 };
+
+// Interface for the use-mockery hook
+export interface UseMockery {
+  mockUser: (userId: string, action: MockeryAction, reason?: string) => Promise<boolean>;
+  removeMockery: (userId: string) => Promise<boolean>;
+  getMockedUsers: () => MockedUser[];
+  isUserMocked: (userId: string) => boolean;
+  getUserMockeryDetails: (userId: string) => MockedUser | null;
+  isUserImmune: (userId: string) => boolean;
+  mockUsers: MockedUser[];
+  isUserProtected: (username: string) => boolean;
+  protectUser: (username: string) => Promise<boolean>;
+  isUserShamed: (username: string) => boolean;
+  getUserMockeryCount: (username: string) => number;
+  getUserMockedOthersCount: (username: string) => number;
+  getActiveMockery: (username: string) => MockeryEvent | null;
+}

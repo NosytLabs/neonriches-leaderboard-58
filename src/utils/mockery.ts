@@ -127,6 +127,46 @@ export const getActiveMockeryClass = (action: MockeryAction | null): string => {
   return classes[action] || 'bg-red-500/20 border-red-500/40';
 };
 
+// Weekly discount utilities
+export const hasWeeklyDiscount = (action: string): boolean => {
+  return action === 'eggs';
+};
+
+export const getWeeklyDiscountedAction = (): string => {
+  return 'eggs';
+};
+
+export const getDiscountedShamePrice = (action: string): number => {
+  const originalPrice = typeof action === 'string' ? 
+    parseFloat(action) : 
+    getShameActionPrice(action);
+    
+  // Apply a 50% discount
+  return originalPrice * 0.5;
+};
+
+export const getShameActionPrice = (action: string): number => {
+  const prices: Record<string, number> = {
+    'tomatoes': 0.25,
+    'eggs': 0.50,
+    'crown': 1.00,
+    'stocks': 0.50
+  };
+  
+  return prices[action] || 0.25;
+};
+
+export const getShameActionMessage = (action: string, username: string): string => {
+  const messages: Record<string, string> = {
+    'tomatoes': `You've pelted ${username} with rotten tomatoes!`,
+    'eggs': `You've egged ${username}!`,
+    'crown': `You've mocked ${username} with a ridiculous crown!`,
+    'stocks': `You've placed ${username} in the stocks!`
+  };
+  
+  return messages[action] || `You've publicly mocked ${username}!`;
+};
+
 // For backward compatibility
 export const getMockeryActionTitle = getMockeryName;
 export const getMockeryActionDescription = getMockeryDescription;
