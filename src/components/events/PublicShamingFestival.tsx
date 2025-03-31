@@ -9,13 +9,13 @@ import RankingDisclaimer from '@/components/shared/RankingDisclaimer';
 import RoyalDivider from '@/components/ui/royal-divider';
 import { Dialog } from '@/components/ui/dialog';
 import ShameModal from './components/ShameModal';
-import useNotificationSounds from '@/hooks/useNotificationSounds';
+import { useSound } from '@/hooks/sounds/use-sound';
 import { 
   hasWeeklyDiscount, 
   getWeeklyDiscountedAction, 
   getShameActionPrice, 
   getDiscountedShamePrice 
-} from '../events/utils/shameUtils';
+} from './utils/shameUtils';
 import MedievalIcon from '@/components/ui/medieval-icon';
 
 const formatUserForShameCard = (user: any) => ({
@@ -60,7 +60,7 @@ const PublicShamingDescription = () => {
 };
 
 const PublicShamingFestival = () => {
-  const { playSound } = useNotificationSounds();
+  const { play } = useSound();
   const { shameCooldown, shameEffects, shameCount, getShameCount, handleShame, getActiveMockery } = useShameEffect();
   const [showModal, setShowModal] = React.useState(false);
   const [selectedUser, setSelectedUser] = React.useState<any>(null);
@@ -76,7 +76,7 @@ const PublicShamingFestival = () => {
     setSelectedAction(action);
     setShowModal(true);
     
-    playSound('notification', { volume: 0.3 });
+    play('notification', { volume: 0.3 });
     return true;
   };
   
@@ -90,7 +90,7 @@ const PublicShamingFestival = () => {
         : getShameActionPrice(selectedAction);
         
       handleShame(numericId, user.username, selectedAction);
-      playSound('shame', { volume: 0.3 });
+      play('shame', { volume: 0.3 });
     }
     
     setShowModal(false);

@@ -1,36 +1,25 @@
 
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { supabase } from '@/integrations/supabase/client';
-import { useAuth } from '@/contexts/auth';
 
 /**
- * Hook to track page views in Supabase analytics
+ * Hook to track page views
  */
-export const usePageTracking = () => {
+const usePageTracking = () => {
   const location = useLocation();
-  const { user } = useAuth();
   
   useEffect(() => {
-    const trackPageView = async () => {
-      try {
-        // Record page view in analytics
-        await supabase
-          .from('page_views')
-          .insert({
-            path: location.pathname,
-            user_id: user?.id || null,
-            referrer: document.referrer || null,
-            user_agent: navigator.userAgent
-          });
-      } catch (error) {
-        // Silent fail - don't break the app if analytics fails
-        console.error('Analytics error:', error);
-      }
-    };
+    // Log page view to console (in a real app, this would send to analytics)
+    console.log(`Page view: ${location.pathname}`);
     
-    trackPageView();
-  }, [location.pathname, user?.id]);
+    // You could implement real analytics tracking here
+    // Example: send to Google Analytics, Supabase, etc.
+    
+    // Track page title
+    const pageTitle = document.title;
+    console.log(`Page title: ${pageTitle}`);
+    
+  }, [location.pathname]);
 };
 
 export default usePageTracking;

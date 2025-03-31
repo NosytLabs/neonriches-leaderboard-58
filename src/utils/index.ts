@@ -13,7 +13,6 @@ export * from './stringUtils';
 export * from './timeUtils';
 export * from './typeUtils';
 export * from './eventHelpers';
-export * from './shameUtils';
 export * from './performanceMonitoring';
 export * from './cacheUtils';
 export * from './booleanUtils';

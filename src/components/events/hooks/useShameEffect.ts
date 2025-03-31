@@ -92,7 +92,7 @@ const useShameEffect = () => {
       }));
 
       // Play shame sound
-      play('shame');
+      play('shame', { volume: 0.4 });
 
       return true;
     } catch (error) {

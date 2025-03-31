@@ -26,7 +26,7 @@ export const getMockeryActionIconComponent = (action: MockeryAction, className: 
   // Get the icon component from mockery-icons
   const IconComponent = getMockeryActionIcon(action);
   // Then render the component with the provided class
-  return <IconComponent className={className} />;
+  return IconComponent ? <IconComponent className={className} /> : null;
 };
 
 // Re-export other mockery utils for convenience

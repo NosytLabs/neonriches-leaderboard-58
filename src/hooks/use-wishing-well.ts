@@ -66,14 +66,14 @@ const useWishingWell = (): UseWishingWellReturn => {
 
       if (randomResult < 0.3) {
         result = 'win';
-        play('reward');
+        play('reward', { volume: 0.5 });
         toast({
           title: "Your Wish Granted!",
           description: "Congratulations! You've received a special reward.",
         });
       } else {
         result = 'lose';
-        play('shame');
+        play('shame', { volume: 0.4 });
         toast({
           title: "No Luck This Time",
           description: "Unfortunately, your wish was not granted. Better luck next time!",
