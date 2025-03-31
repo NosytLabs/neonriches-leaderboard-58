@@ -1,6 +1,6 @@
 
-import { UserProfile } from '@/types/user';
-import { LoginResponse } from './types';
+import { UserProfile } from '@/types/user-consolidated';
+import { LoginResponse, RegisterResponse } from './types';
 
 // Mock data for development
 const mockUser: UserProfile = {
@@ -17,51 +17,20 @@ const mockUser: UserProfile = {
   previousRank: 45,
   tier: 'silver',
   team: 'blue',
-  joinedAt: new Date().toISOString(),
-  cosmetics: {
-    badges: [],
-    titles: ['Loyal Subject'],
-    borders: ['silver-border'],
-    effects: [],
-    emojis: [],
-    fonts: [],
-    colors: [],
-    backgrounds: [],
-    themes: []
-  },
+  joinDate: new Date().toISOString(),
+  isVerified: true,
   spendStreak: 0,
-  followers: 0,
-  following: 0,
-  profileViews: 0,
-  profileClicks: 0,
-  socialLinks: [],
-  isVIP: false,
-  subscription: {
-    id: '',
-    active: false,
-    tier: 'basic',
-    startDate: '',
-    endDate: '',
-    nextBillingDate: '',
-    plan: ''
-  },
-  purchasedFeatures: [],
-  settings: {
-    profileVisibility: 'public',
-    allowProfileLinks: true,
-    emailNotifications: true,
-    rankChangeAlerts: true,
-    newFollowerAlerts: true,
-    teamNotifications: true,
-    darkMode: false,
-    showRank: true,
-    showTeam: true
-  },
-  lastActive: new Date().toISOString(),
-  role: 'user',
-  gender: 'unspecified',
-  certificateNFT: null,
-  profileBoosts: []
+  cosmetics: {
+    border: ['starter-border'],
+    color: ['starter-color'],
+    font: [],
+    emoji: [],
+    title: ['newcomer'],
+    background: [],
+    effect: [],
+    badge: [],
+    theme: []
+  }
 };
 
 /**
@@ -73,6 +42,34 @@ export const fetchUserProfile = async (): Promise<UserProfile | null> => {
   if (!token) return null;
   
   // For the mock version, simply return the mockUser
+  return mockUser;
+};
+
+/**
+ * Create new user in the database
+ */
+export const createUser = async (userData: Partial<UserProfile>): Promise<UserProfile> => {
+  // In a real implementation, this would make an API call to create the user in the database
+  console.log('Creating user:', userData);
+  
+  // For the mock version, just return a merged version of mock user with the provided data
+  return {
+    ...mockUser,
+    ...userData
+  };
+};
+
+/**
+ * Get user data by ID
+ */
+export const getUser = async (userId: string): Promise<UserProfile | null> => {
+  // In a real implementation, this would make an API call to get the user by ID
+  console.log('Getting user by ID:', userId);
+  
+  // For the mock version, just return the mockUser if there's a token
+  const token = localStorage.getItem('authToken');
+  if (!token) return null;
+  
   return mockUser;
 };
 
@@ -105,7 +102,7 @@ export const registerWithEmail = async (
   username: string, 
   email: string, 
   password: string
-): Promise<LoginResponse> => {
+): Promise<RegisterResponse> => {
   // In a real implementation, this would make an API call to register the user
   console.log('Registering new user:', username, email);
   
@@ -141,17 +138,15 @@ export const updateUserData = async (userData: UserProfile): Promise<UserProfile
 };
 
 /**
- * Award a cosmetic item to a user
+ * Update user in database
  */
-export const awardCosmeticItem = async (
-  userId: string, 
-  category: string, 
-  itemId: string, 
-  notify: boolean = true
-): Promise<boolean> => {
-  // In a real implementation, this would make an API call to add the item to the user's collection
-  console.log(`Awarding ${category} item ${itemId} to user ${userId}, notify: ${notify}`);
+export const updateUser = async (userId: string, updates: Partial<UserProfile>): Promise<UserProfile> => {
+  // In a real implementation, this would make an API call to update the user in the database
+  console.log('Updating user:', userId, updates);
   
-  // For the mock version, always succeed
-  return true;
+  // For the mock version, just return a merged version of mock user with the provided updates
+  return {
+    ...mockUser,
+    ...updates
+  };
 };

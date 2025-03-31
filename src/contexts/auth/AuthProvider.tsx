@@ -1,28 +1,16 @@
-import React, { useState, useEffect, useReducer, useCallback } from 'react';
+
+import React, { useState, useEffect, useReducer } from 'react';
 import { AuthContext } from './index';
 import { authReducer } from './authReducer';
-import {
-  getAuth,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signOut as firebaseSignOut,
-  updateProfile as firebaseUpdateProfile,
-  sendPasswordResetEmail,
-  applyActionCode,
-  sendEmailVerification,
-  signInWithPopup,
-  GoogleAuthProvider,
-  FacebookAuthProvider,
-  TwitterAuthProvider,
-  GithubAuthProvider,
-} from 'firebase/auth';
-import { initializeApp } from 'firebase/app';
 import { AuthProviderProps, AuthState, UserProfile } from './types';
 import { useNavigate } from 'react-router-dom';
-import { createUser, getUser, updateUser } from './authService';
-import { generateRandomName } from '@/utils/nameGenerator';
-import { getInitials } from '@/utils/stringUtils';
-import { auth as firebaseAuth } from '@/lib/firebase';
+import { 
+  loginWithEmail, 
+  registerWithEmail, 
+  logoutUser, 
+  updateUserData,
+  fetchUserProfile 
+} from './authService';
 
 const initialState: AuthState = {
   user: null,
@@ -36,57 +24,66 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const unsubscribe = firebaseAuth.onAuthStateChanged(async (firebaseUser) => {
-      if (firebaseUser) {
-        try {
-          dispatch({ type: 'AUTH_START' });
-          const user = await getUser(firebaseUser.uid);
-
+    // Check for stored auth token on initial load
+    const checkAuth = async () => {
+      dispatch({ type: 'AUTH_START' });
+      
+      try {
+        const token = localStorage.getItem('authToken');
+        if (token) {
+          const user = await fetchUserProfile();
+          
           if (user) {
-            dispatch({ type: 'AUTH_SUCCESS', payload: user });
+            dispatch({ 
+              type: 'AUTH_SUCCESS', 
+              payload: user 
+            });
           } else {
-            // User exists in Firebase but not in our database, create the user
-            const newUser: UserProfile = {
-              id: firebaseUser.uid,
-              username: firebaseUser.displayName || generateRandomName(),
-              displayName: firebaseUser.displayName || getInitials(firebaseUser.email || 'New User'),
-              email: firebaseUser.email || '',
-              profileImage: firebaseUser.photoURL || '',
-              isVerified: firebaseUser.emailVerified,
-            };
-            const createdUser = await createUser(newUser);
-            dispatch({ type: 'AUTH_SUCCESS', payload: createdUser });
+            dispatch({ type: 'AUTH_LOGOUT' });
+            localStorage.removeItem('authToken');
           }
-        } catch (error: any) {
-          console.error("Authentication Error:", error);
-          dispatch({ type: 'AUTH_FAIL', payload: error.message || 'Failed to authenticate' });
-        } finally {
-          dispatch({ type: 'CLEAR_ERROR' });
+        } else {
+          dispatch({ type: 'AUTH_LOGOUT' });
         }
-      } else {
-        dispatch({ type: 'AUTH_LOGOUT' });
+      } catch (error) {
+        console.error("Authentication Error:", error);
+        dispatch({ 
+          type: 'AUTH_FAIL', 
+          payload: error.message || 'Failed to authenticate'
+        });
+      } finally {
+        dispatch({ type: 'CLEAR_ERROR' });
       }
-    });
+    };
 
-    return () => unsubscribe();
+    checkAuth();
   }, []);
 
   const login = async (email: string, password: string): Promise<boolean> => {
     dispatch({ type: 'LOGIN_START' });
+    
     try {
-      const userCredential = await signInWithEmailAndPassword(firebaseAuth, email, password);
-      const firebaseUser = userCredential.user;
-      const user = await getUser(firebaseUser.uid);
-
-      if (user) {
-        dispatch({ type: 'LOGIN_SUCCESS', payload: user });
+      const response = await loginWithEmail(email, password);
+      
+      if (response.success && response.user) {
+        dispatch({ 
+          type: 'LOGIN_SUCCESS', 
+          payload: response.user 
+        });
         return true;
       } else {
-        dispatch({ type: 'LOGIN_FAILURE', payload: 'User not found in database' });
+        dispatch({ 
+          type: 'LOGIN_FAILURE', 
+          payload: 'Invalid credentials' 
+        });
         return false;
       }
     } catch (error: any) {
-      dispatch({ type: 'LOGIN_FAILURE', payload: error.message || 'Login failed' });
+      console.error('Login error:', error);
+      dispatch({ 
+        type: 'LOGIN_FAILURE', 
+        payload: error.message || 'Login failed' 
+      });
       return false;
     } finally {
       dispatch({ type: 'CLEAR_ERROR' });
@@ -95,33 +92,29 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const register = async (username: string, email: string, password: string): Promise<boolean> => {
     dispatch({ type: 'REGISTER_START' });
+    
     try {
-      const userCredential = await createUserWithEmailAndPassword(firebaseAuth, email, password);
-      const firebaseUser = userCredential.user;
-
-      await firebaseUpdateProfile(firebaseUser, {
-        displayName: username,
-      });
-
-      const newUser: UserProfile = {
-        id: firebaseUser.uid,
-        username: username,
-        displayName: username,
-        email: email,
-        isVerified: firebaseUser.emailVerified,
-      };
-
-      const user = await createUser(newUser);
-
-      if (user) {
-        dispatch({ type: 'REGISTER_SUCCESS', payload: user });
+      const response = await registerWithEmail(username, email, password);
+      
+      if (response.success && response.user) {
+        dispatch({ 
+          type: 'REGISTER_SUCCESS', 
+          payload: response.user 
+        });
         return true;
       } else {
-        dispatch({ type: 'REGISTER_FAILURE', payload: 'Failed to create user in database' });
+        dispatch({ 
+          type: 'REGISTER_FAILURE', 
+          payload: 'Registration failed' 
+        });
         return false;
       }
     } catch (error: any) {
-      dispatch({ type: 'REGISTER_FAILURE', payload: error.message || 'Registration failed' });
+      console.error('Registration error:', error);
+      dispatch({ 
+        type: 'REGISTER_FAILURE', 
+        payload: error.message || 'Registration failed' 
+      });
       return false;
     } finally {
       dispatch({ type: 'CLEAR_ERROR' });
@@ -130,46 +123,26 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const updateUserProfile = async (updates: Partial<UserProfile>): Promise<boolean> => {
     if (!state.user) return false;
-
+    
     try {
       dispatch({ type: 'AUTH_START' });
-      const updatedUser = await updateUser(state.user.id, updates);
-
-      if (updatedUser) {
-        dispatch({ type: 'UPDATE_PROFILE_SUCCESS', payload: updatedUser });
-        return true;
-      } else {
-        console.error("Update failed: User update returned null");
-        dispatch({ type: 'AUTH_FAIL', payload: 'Failed to update profile' });
-        return false;
-      }
+      const updatedUser = await updateUserData({
+        ...state.user,
+        ...updates
+      });
+      
+      dispatch({ 
+        type: 'UPDATE_PROFILE_SUCCESS', 
+        payload: updatedUser 
+      });
+      
+      return true;
     } catch (error: any) {
-      console.error("Update error:", error);
-      dispatch({ type: 'AUTH_FAIL', payload: error.message || 'Failed to update profile' });
-      return false;
-    } finally {
-      dispatch({ type: 'CLEAR_ERROR' });
-    }
-  };
-
-  const updateUser = async (updates: Partial<UserProfile>): Promise<boolean> => {
-    if (!state.user) return false;
-
-    try {
-      dispatch({ type: 'AUTH_START' });
-      const updatedUser = await updateUser(state.user.id, updates);
-
-      if (updatedUser) {
-        dispatch({ type: 'UPDATE_USER', payload: updatedUser });
-        return true;
-      } else {
-        console.error("Update failed: User update returned null");
-        dispatch({ type: 'AUTH_FAIL', payload: 'Failed to update profile' });
-        return false;
-      }
-    } catch (error: any) {
-      console.error("Update error:", error);
-      dispatch({ type: 'AUTH_FAIL', payload: error.message || 'Failed to update profile' });
+      console.error('Profile update error:', error);
+      dispatch({ 
+        type: 'AUTH_FAIL', 
+        payload: error.message || 'Failed to update profile' 
+      });
       return false;
     } finally {
       dispatch({ type: 'CLEAR_ERROR' });
@@ -177,11 +150,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   const logout = async (): Promise<void> => {
+    logoutUser();
     dispatch({ type: 'LOGOUT' });
     return Promise.resolve();
   };
 
   const signOut = async (): Promise<void> => {
+    logoutUser();
     dispatch({ type: 'AUTH_LOGOUT' });
     return Promise.resolve();
   };
@@ -197,8 +172,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         register,
         logout,
         signOut,
-        updateUser,
-        updateUserProfile: updateUser,
+        updateUser: updateUserProfile,
+        updateUserProfile: updateUserProfile,
       }}
     >
       {children}

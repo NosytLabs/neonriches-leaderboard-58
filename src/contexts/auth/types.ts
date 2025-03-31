@@ -36,14 +36,8 @@ export interface AuthContextType {
   register: (username: string, email: string, password: string) => Promise<boolean>;
   logout: () => Promise<void>;
   signOut: () => Promise<void>;
-  updateProfile?: (updates: Partial<UserProfile>) => Promise<boolean>;
   updateUser: (updates: Partial<UserProfile>) => Promise<boolean>;
   updateUserProfile: (updates: Partial<UserProfile>) => Promise<boolean>;
-  refreshUser?: () => Promise<void>;
-  forgotPassword?: (email: string) => Promise<boolean>;
-  resetPassword?: (token: string, password: string) => Promise<boolean>;
-  verifyEmail?: (token: string) => Promise<boolean>;
-  loginWithProvider?: (provider: string) => Promise<boolean>;
   awardCosmetic?: (category: string, itemId: string, notify?: boolean) => Promise<boolean>;
 }
 
