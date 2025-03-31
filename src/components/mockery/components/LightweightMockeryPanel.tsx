@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Crown, Target, User } from 'lucide-react';
+import { Target } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { MockeryAction } from '@/types/mockery';
 import { getMockeryName, getMockeryDescription, getMockeryCost } from '@/utils/mockery';
@@ -45,14 +45,12 @@ const LightweightMockeryPanel = () => {
         <div className="space-y-4">
           <div>
             <label className="text-sm font-medium mb-1 block">Target Username</label>
-            <div className="flex gap-2">
-              <Input
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder="Enter username"
-                className="bg-background/50"
-              />
-            </div>
+            <Input
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              placeholder="Enter username"
+              className="bg-background/50"
+            />
           </div>
           
           <div>

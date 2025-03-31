@@ -1,13 +1,10 @@
 
 import { MockeryAction, MockeryTier } from '@/types/mockery';
-import { CosmeticRarity } from '@/types/cosmetics';
 import { 
   Crown, 
   Egg, 
   Lock, 
-  Shield, 
   ThumbsDown, 
-  Target,
 } from 'lucide-react';
 import { FC } from 'react';
 

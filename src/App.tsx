@@ -80,14 +80,6 @@ function App() {
                   </ProtectedRoute>
                 } 
               />
-              <Route 
-                path="/deposit" 
-                element={
-                  <ProtectedRoute>
-                    <Wallet />
-                  </ProtectedRoute>
-                } 
-              />
               
               {/* Feature Pages */}
               <Route path="/events" element={<Events />} />

@@ -2,24 +2,13 @@
 import React, { useState } from 'react';
 import SimpleLayout from '@/components/layout/SimpleLayout';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Crown, History, Target, Info } from 'lucide-react';
+import { Crown, History, Target } from 'lucide-react';
 import PageHeader from '@/components/layout/PageHeader';
-import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import LightweightMockeryPanel from '@/components/mockery/components/LightweightMockeryPanel';
-import { useToast } from '@/hooks/use-toast';
 
 const StatusCenter = () => {
   const [activeTab, setActiveTab] = useState('mockery');
-  const { toast } = useToast();
-  
-  const handleHelp = () => {
-    toast({
-      title: "Royal Status Center",
-      description: "Mock other users to lower their status, or protect yourself from mockery.",
-      variant: "default"
-    });
-  };
   
   return (
     <SimpleLayout>
@@ -28,12 +17,7 @@ const StatusCenter = () => {
           title="Royal Status Center"
           description="Manage your standing and interact with other nobles"
           icon={<Crown className="h-8 w-8 text-royal-gold" />}
-        >
-          <Button variant="outline" onClick={handleHelp}>
-            <Info className="h-4 w-4 mr-2" />
-            Help
-          </Button>
-        </PageHeader>
+        />
         
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="w-full grid grid-cols-2 mb-6">
