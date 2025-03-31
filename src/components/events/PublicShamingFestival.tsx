@@ -1,274 +1,158 @@
-
 import React, { useState } from 'react';
-import { Scroll, DollarSign, Sparkles } from 'lucide-react';
-import { topUsers } from './data';
-import useShameEffect from './hooks/useShameEffect';
-import { ShameAction } from '@/types/mockery-types';
-import ShameUserCard from './components/ShameUserCard';
-import { TooltipProvider } from '@/components/ui/tooltip';
-import RankingDisclaimer from '@/components/shared/RankingDisclaimer';
-import RoyalDivider from '@/components/ui/royal-divider';
-import { Dialog } from '@/components/ui/dialog';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Dialog, DialogTrigger } from '@/components/ui/dialog';
+import { Flame, Clock, Medal, Star, Crown, Badge, Shield } from 'lucide-react';
+import { MockeryAction } from '@/types/mockery';
+import { LeaderboardUser } from '@/types/leaderboard';
 import ShameModal from './components/ShameModal';
-import { useSound } from '@/hooks/use-sound';
-import { 
-  hasWeeklyDiscount, 
-  getWeeklyDiscountedAction, 
-  getShameActionPrice, 
-  getDiscountedShamePrice 
-} from './utils/shameUtils';
-import MedievalIcon from '@/components/ui/medieval-icon';
 
-const formatUserForShameCard = (user: any) => ({
-  id: user.id,
-  username: user.username,
-  profileImage: user.profileImage,
-  rank: user.rank,
-  team: user.team,
-  amountSpent: user.amountSpent
-});
+// Import properly from shameUtils
+import { hasWeeklyDiscount } from '@/utils/shameUtils';
+import { getWeeklyDiscountedAction } from '@/utils/shameUtils';
+import { getMockeryName } from '@/utils/mockeryUtils';
+import { getDiscountedShamePrice } from '@/utils/shameUtils';
 
-// Update the weekly discounted action to ensure it's a valid ShameAction
-const getWeeklyDiscountedShameAction = (): ShameAction => {
-  // Filter to make sure we return a valid ShameAction type
+interface PublicShamingFestivalProps {
+  leaderboardUsers: LeaderboardUser[];
+  onShameApplied: (userId: string, shameType: MockeryAction) => void;
+}
+
+const PublicShamingFestival: React.FC<PublicShamingFestivalProps> = ({ leaderboardUsers, onShameApplied }) => {
+  const [selectedUser, setSelectedUser] = useState<LeaderboardUser | null>(null);
+  const [selectedShame, setSelectedShame] = useState<MockeryAction | null>(null);
+  
+  const hasDiscount = hasWeeklyDiscount();
   const discountedAction = getWeeklyDiscountedAction();
-  // Ensure it's a valid ShameAction by checking against allowed values
-  const validShameActions: ShameAction[] = ['tomatoes', 'eggs', 'stocks', 'shame', 'crown', 'jester', 'protection'];
   
-  return validShameActions.includes(discountedAction as ShameAction)
-    ? discountedAction as ShameAction
-    : 'tomatoes';
-};
-
-const PublicShamingDescription = () => {
-  const discountedAction = getWeeklyDiscountedShameAction();
-  const regularPrice = getShameActionPrice(discountedAction);
-  const discountedPrice = getDiscountedShamePrice(discountedAction);
-  const discountPercentage = Math.round((1 - (discountedPrice / regularPrice)) * 100);
-  
-  return (
-    <div className="flex flex-col md:flex-row justify-between items-center mb-6">
-      <div>
-        <h2 className="text-2xl font-bold royal-gradient mb-2 flex items-center">
-          <MedievalIcon name="scroll" color="gold" className="mr-2 animate-pulse-slow" />
-          Royal Public Shaming Festival
-        </h2>
-        <p className="text-white/70">
-          Engage in medieval-style cosmetic shaming by visually marking nobles with rotten tomatoes, eggs, or placing them in stocks. A satirical feature with <strong>purely visual effects</strong> that don't affect leaderboard ranks.
-        </p>
-      </div>
-      
-      <div className="flex items-center space-x-2 mt-4 md:mt-0">
-        <div className="glass-morphism border-white/10 rounded-full px-3 py-1.5 text-sm text-white/70 hover:border-royal-purple/20 transition-all">
-          <Scroll size={14} className="inline-block mr-1.5 text-royal-purple" />
-          24h visual effect
-        </div>
-        <div className="glass-morphism border-white/10 rounded-full px-3 py-1.5 text-sm text-white/70 hover:border-royal-gold/20 transition-all">
-          <DollarSign size={14} className="inline-block mr-1.5 text-royal-gold" />
-          $0.25 - $1.00
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const PublicShamingFestival = () => {
-  const sound = useSound();
-  const { shameCooldown, shameEffects, shameCount, getShameCount, handleShame, getActiveMockery } = useShameEffect();
-  const [showModal, setShowModal] = React.useState(false);
-  const [selectedUser, setSelectedUser] = React.useState<any>(null);
-  const [selectedAction, setSelectedAction] = React.useState<ShameAction>('tomatoes');
-  
-  const discountedAction = getWeeklyDiscountedShameAction();
-  
-  const handleShameUser = (userId: number, action: ShameAction) => {
-    const user = topUsers.find(u => u.id === userId);
-    if (!user) return false;
-    
+  const handleShame = (user: LeaderboardUser, shameType: MockeryAction) => {
     setSelectedUser(user);
-    setSelectedAction(action);
-    setShowModal(true);
-    
-    sound.playSound('notification', { volume: 0.3 });
-    return true;
+    setSelectedShame(shameType);
   };
   
-  const confirmShame = (userId: string) => {
-    const numericId = parseInt(userId, 10);
-    const user = topUsers.find(u => u.id === numericId);
-    
-    if (user) {
-      const finalPrice = hasWeeklyDiscount(selectedAction) 
-        ? getDiscountedShamePrice(selectedAction) 
-        : getShameActionPrice(selectedAction);
-        
-      handleShame(numericId, user.username, selectedAction);
-      sound.playSound('shame', { volume: 0.3 });
+  const handleConfirmShame = (userId: string) => {
+    if (selectedShame) {
+      onShameApplied(userId, selectedShame);
+      setSelectedUser(null);
+      setSelectedShame(null);
     }
-    
-    setShowModal(false);
   };
-
-  const getActiveShameEffect = (userId: number) => {
-    const mockeryInfo = getActiveMockery(userId);
-    if (mockeryInfo) {
-      // Fix for the TypeScript error - create a properly formatted object
-      const validShameActions: ShameAction[] = ['tomatoes', 'eggs', 'stocks', 'shame', 'crown', 'jester', 'protection'];
-      const actionType = mockeryInfo.type || mockeryInfo.action;
-      
-      if (actionType && validShameActions.includes(actionType as ShameAction)) {
-        return {
-          type: actionType as ShameAction,
-          timestamp: mockeryInfo.timestamp || mockeryInfo.appliedAt || new Date().toISOString()
-        };
-      }
-    }
-    return null;
+  
+  const handleCancelShame = () => {
+    setSelectedUser(null);
+    setSelectedShame(null);
   };
-
+  
   return (
-    <TooltipProvider>
-      <div className="mb-12 relative">
-        <div className="absolute -inset-1 bg-gradient-to-r from-royal-crimson/5 via-royal-gold/5 to-royal-navy/5 blur-lg -z-10 rounded-xl"></div>
-        
-        <PublicShamingDescription />
-        
-        <RankingDisclaimer 
-          className="mb-6" 
-          messagePrefix="Important:" 
-          variant="info" 
-          message="All shaming effects are purely cosmetic and do not affect a user's actual rank or standing. These are visual entertainment features only."
-        />
-        
-        <div className="mb-6 p-4 glass-morphism border-white/10 rounded-lg">
-          <h3 className="font-medium royal-gradient flex items-center mb-3">
-            <MedievalIcon name="scroll" className="mr-2" /> Medieval Public Shaming Options
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className={`p-3 glass-morphism ${hasWeeklyDiscount('tomatoes') ? 'border-royal-gold/40 shadow-gold' : 'border-royal-crimson/20'} rounded-lg relative overflow-hidden`}>
-              {hasWeeklyDiscount('tomatoes') && (
-                <div className="absolute -right-6 -top-1 transform rotate-45 bg-royal-gold text-black px-6 py-1 text-xs font-bold shadow-md">
-                  50% OFF
+    <Card className="glass-morphism border-white/10">
+      <CardHeader>
+        <CardTitle className="flex items-center">
+          <Flame className="mr-2 h-4 w-4 text-royal-crimson" />
+          Public Shaming Festival
+        </CardTitle>
+      </CardHeader>
+      
+      <CardContent className="grid gap-4">
+        {leaderboardUsers.map((user) => (
+          <div key={user.userId} className="flex items-center justify-between p-3 rounded-lg bg-black/20 border border-white/10">
+            <div className="flex items-center space-x-3">
+              <div className="relative">
+                <div className="absolute -top-1 -left-1 w-5 h-5 flex items-center justify-center bg-background text-xs font-semibold rounded-full border border-border">
+                  {user.rank}
                 </div>
-              )}
-              <div className="flex items-center mb-2">
-                <div className="text-xl mr-2">🍅</div>
-                <div className="font-medium">Throw Tomatoes</div>
-                <div className="ml-auto text-royal-gold">
-                  {hasWeeklyDiscount('tomatoes') ? (
-                    <span className="flex flex-col items-end">
-                      <span className="text-xs line-through text-white/50">${getShameActionPrice('tomatoes').toFixed(2)}</span>
-                      <span>${getDiscountedShamePrice('tomatoes').toFixed(2)}</span>
-                    </span>
-                  ) : (
-                    <span>${getShameActionPrice('tomatoes').toFixed(2)}</span>
-                  )}
+                <div className="h-10 w-10 rounded-full bg-muted overflow-hidden">
+                  <img
+                    src={user.profileImage}
+                    alt={user.username}
+                    className="h-full w-full object-cover"
+                  />
                 </div>
               </div>
-              <p className="text-white/70 text-sm">Pelt your target with rotten tomatoes. A classic form of public ridicule (visual effect only).</p>
+              <div>
+                <div className="font-medium">{user.username}</div>
+                <div className="text-xs text-muted-foreground">
+                  Spent: ${user.totalSpent.toLocaleString()}
+                </div>
+              </div>
             </div>
             
-            <div className={`p-3 glass-morphism ${hasWeeklyDiscount('eggs') ? 'border-royal-gold/40 shadow-gold' : 'border-royal-gold/20'} rounded-lg relative overflow-hidden`}>
-              {hasWeeklyDiscount('eggs') && (
-                <div className="absolute -right-6 -top-1 transform rotate-45 bg-royal-gold text-black px-6 py-1 text-xs font-bold shadow-md">
-                  50% OFF
-                </div>
-              )}
-              <div className="flex items-center mb-2">
-                <div className="text-xl mr-2">🥚</div>
-                <div className="font-medium">Throw Rotten Eggs</div>
-                <div className="ml-auto text-royal-gold">
-                  {hasWeeklyDiscount('eggs') ? (
-                    <span className="flex flex-col items-end">
-                      <span className="text-xs line-through text-white/50">${getShameActionPrice('eggs').toFixed(2)}</span>
-                      <span>${getDiscountedShamePrice('eggs').toFixed(2)}</span>
-                    </span>
-                  ) : (
-                    <span>${getShameActionPrice('eggs').toFixed(2)}</span>
+            <div className="flex items-center space-x-2">
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => handleShame(user, 'tomatoes')}
+                    className="border-royal-crimson/30 hover:bg-royal-crimson/10"
+                  >
+                    <Clock className="h-3 w-3 mr-1" />
+                    Tomatoes
+                  </Button>
+                </DialogTrigger>
+                {selectedUser?.userId === user.userId && selectedShame === 'tomatoes' && (
+                  <ShameModal 
+                    targetUser={user}
+                    shameType="tomatoes"
+                    onConfirm={handleConfirmShame}
+                    onCancel={handleCancelShame}
+                  />
+                )}
+              </Dialog>
+              
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => handleShame(user, 'eggs')}
+                    className="border-royal-crimson/30 hover:bg-royal-crimson/10"
+                  >
+                    <Medal className="h-3 w-3 mr-1" />
+                    Eggs
+                  </Button>
+                </DialogTrigger>
+                {selectedUser?.userId === user.userId && selectedShame === 'eggs' && (
+                  <ShameModal 
+                    targetUser={user}
+                    shameType="eggs"
+                    onConfirm={handleConfirmShame}
+                    onCancel={handleCancelShame}
+                  />
+                )}
+              </Dialog>
+              
+              {hasDiscount && discountedAction && (
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => handleShame(user, discountedAction)}
+                      className="border-emerald-400/30 hover:bg-emerald-400/10"
+                    >
+                      <Star className="h-3 w-3 mr-1" />
+                      {getMockeryName(discountedAction)}
+                      <Badge className="ml-1 bg-emerald-500/20 text-emerald-400 text-[0.6rem]">
+                        50% OFF
+                      </Badge>
+                    </Button>
+                  </DialogTrigger>
+                  {selectedUser?.userId === user.userId && selectedShame === discountedAction && (
+                    <ShameModal 
+                      targetUser={user}
+                      shameType={discountedAction}
+                      onConfirm={handleConfirmShame}
+                      onCancel={handleCancelShame}
+                      hasDiscount
+                    />
                   )}
-                </div>
-              </div>
-              <p className="text-white/70 text-sm">Hurl rotten eggs at your target. The visual stench will follow them for a day.</p>
-            </div>
-            
-            <div className={`p-3 glass-morphism ${hasWeeklyDiscount('stocks') ? 'border-royal-gold/40 shadow-gold' : 'border-royal-purple/20'} rounded-lg relative overflow-hidden`}>
-              {hasWeeklyDiscount('stocks') && (
-                <div className="absolute -right-6 -top-1 transform rotate-45 bg-royal-gold text-black px-6 py-1 text-xs font-bold shadow-md">
-                  50% OFF
-                </div>
+                </Dialog>
               )}
-              <div className="flex items-center mb-2">
-                <div className="text-xl mr-2">🪵</div>
-                <div className="font-medium">Place in Stocks</div>
-                <div className="ml-auto text-royal-gold">
-                  {hasWeeklyDiscount('stocks') ? (
-                    <span className="flex flex-col items-end">
-                      <span className="text-xs line-through text-white/50">${getShameActionPrice('stocks').toFixed(2)}</span>
-                      <span>${getDiscountedShamePrice('stocks').toFixed(2)}</span>
-                    </span>
-                  ) : (
-                    <span>${getShameActionPrice('stocks').toFixed(2)}</span>
-                  )}
-                </div>
-              </div>
-              <p className="text-white/70 text-sm">Place your target in the public stocks. The ultimate medieval visual humiliation.</p>
             </div>
           </div>
-        </div>
-        
-        <RoyalDivider variant="line" label="CURRENT TARGETS" color="royal" className="my-8" />
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {topUsers.map((targetUser, index) => (
-            <div 
-              key={targetUser.id}
-              className="animate-fade-in"
-              style={{ animationDelay: `${index * 150}ms` }}
-            >
-              <ShameUserCard
-                user={formatUserForShameCard(targetUser)}
-                isShamed={getActiveShameEffect(targetUser.id)}
-                isOnCooldown={!!shameCooldown[targetUser.id]}
-                shameCount={getShameCount(targetUser.id)}
-                onShame={handleShameUser}
-                featuredAction={discountedAction}
-              />
-            </div>
-          ))}
-        </div>
-        
-        <div className="mt-8 p-4 glass-morphism border-white/10 rounded-lg">
-          <h3 className="font-medium royal-gradient flex items-center mb-3">
-            <Sparkles className="mr-2 h-4 w-4" /> Historical Context
-          </h3>
-          <p className="text-white/70 text-sm">
-            Public shaming was a common form of punishment in medieval societies. People would throw rotten food at those placed in the stocks or pillory, 
-            turning punishment into a communal entertainment. This feature is a satirical and harmless take on these historical practices with <strong>purely visual effects</strong>.
-          </p>
-        </div>
-        
-        <Dialog open={showModal} onOpenChange={setShowModal}>
-          {selectedUser && (
-            <ShameModal
-              targetUser={{
-                userId: selectedUser.id.toString(),
-                username: selectedUser.username,
-                profileImage: selectedUser.profileImage,
-                totalSpent: selectedUser.amountSpent,
-                rank: selectedUser.rank,
-                team: selectedUser.team,
-                tier: 'free',
-                spendStreak: 0
-              }}
-              shameType={selectedAction}
-              onConfirm={confirmShame}
-              onCancel={() => setShowModal(false)}
-              hasDiscount={hasWeeklyDiscount(selectedAction)}
-            />
-          )}
-        </Dialog>
-      </div>
-    </TooltipProvider>
+        ))}
+      </CardContent>
+    </Card>
   );
 };
 

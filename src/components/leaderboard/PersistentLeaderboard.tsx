@@ -95,10 +95,12 @@ const PersistentLeaderboard = () => {
     }
   ];
 
-  // Simulate data fetching
-  const { data: users = globalUsers, isLoading } = useQuery(['leaderboard', filter], 
-    () => Promise.resolve(globalUsers)
-  );
+  // Use proper TanStack Query configuration
+  const { data: users = globalUsers, isLoading } = useQuery({
+    queryKey: ['leaderboard', filter],
+    queryFn: () => Promise.resolve(globalUsers),
+    staleTime: 60000 // 1 minute
+  });
   
   return (
     <Card>
@@ -124,7 +126,7 @@ const PersistentLeaderboard = () => {
                   </div>
                   <div className="w-10 h-10 rounded-full overflow-hidden mr-3 bg-background">
                     <img 
-                      src={user.profileImage || user.avatarUrl} 
+                      src={user.profileImage} 
                       alt={user.username} 
                       className="w-full h-full object-cover"
                     />

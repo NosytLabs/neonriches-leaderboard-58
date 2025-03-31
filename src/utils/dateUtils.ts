@@ -4,7 +4,40 @@
  */
 
 /**
- * Format a date as a relative time string (e.g., "2 days ago")
+ * Format a date as a string representation
+ */
+export const formatDate = (date: string | Date | null | undefined, formatString: string = 'MMM d, yyyy'): string => {
+  if (!date) return 'N/A';
+  
+  const dateObj = typeof date === 'string' ? new Date(date) : date;
+  
+  if (isNaN(dateObj.getTime())) return 'Invalid date';
+  
+  // Simple formatter implementation
+  const year = dateObj.getFullYear();
+  const month = dateObj.getMonth();
+  const day = dateObj.getDate();
+  
+  // Array of month names
+  const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const monthNamesLong = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  
+  let result = formatString;
+  
+  // Replace tokens with actual values
+  result = result.replace('yyyy', year.toString());
+  result = result.replace('MM', (month + 1).toString().padStart(2, '0'));
+  result = result.replace('M', (month + 1).toString());
+  result = result.replace('MMMM', monthNamesLong[month]);
+  result = result.replace('MMM', monthNames[month]);
+  result = result.replace('dd', day.toString().padStart(2, '0'));
+  result = result.replace('d', day.toString());
+  
+  return result;
+};
+
+/**
+ * Format a date to a relative time string (e.g., "2 days ago")
  */
 export const getRelativeTimeString = (date: string | Date): string => {
   const targetDate = new Date(date);
@@ -77,6 +110,7 @@ export const isDateInFuture = (date: string | Date): boolean => {
 
 // Export all utility functions
 export default {
+  formatDate,
   getRelativeTimeString,
   getDaysInMonth,
   isDateToday,

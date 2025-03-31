@@ -1,178 +1,162 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Crown, Scroll } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
-import { useAuth } from '@/contexts/AuthContext';
-import { mockLeaderboardData, LeaderboardUser } from './leaderboard/LeaderboardUtils';
-import LeaderboardItem from './leaderboard/LeaderboardItem';
-import ShameModal from './leaderboard/ShameModal';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { ArrowUp, ArrowDown, Minus } from 'lucide-react';
+import { LeaderboardUser } from '@/types/leaderboard';
 import LeaderboardActions from './leaderboard/LeaderboardActions';
-import { getShameActionPrice } from '@/components/events/utils/shameUtils';
-import { MockeryAction } from '@/types/mockery';
-import { TeamColor } from '@/types/team';
+
+// Mock data for leaderboard
+const mockLeaderboardData: LeaderboardUser[] = [
+  {
+    id: "1",
+    username: "KingMidas",
+    displayName: "King Midas",
+    profileImage: "https://randomuser.me/api/portraits/men/1.jpg",
+    tier: "royal",
+    team: "gold",
+    rank: 1,
+    previousRank: 2,
+    totalSpent: 15000,
+    spendChange: 2500,
+    rankChange: 1,
+    walletBalance: 5000,
+    isVerified: true,
+    spendStreak: 5,
+    isProtected: true
+  },
+  {
+    id: "2",
+    username: "EliteSpender",
+    displayName: "Elite Spender",
+    profileImage: "https://randomuser.me/api/portraits/women/2.jpg",
+    tier: "elite",
+    team: "red",
+    rank: 2,
+    previousRank: 1,
+    totalSpent: 12000,
+    spendChange: 1000,
+    rankChange: -1,
+    walletBalance: 3000,
+    isVerified: true,
+    spendStreak: 8,
+    isProtected: false
+  },
+  {
+    id: "3",
+    username: "RoyalCollector",
+    displayName: "Royal Collector",
+    profileImage: "https://randomuser.me/api/portraits/men/3.jpg",
+    tier: "premium",
+    team: "blue",
+    rank: 3,
+    previousRank: 3,
+    totalSpent: 10000,
+    spendChange: 1500,
+    rankChange: 0,
+    walletBalance: 2500,
+    isVerified: false,
+    spendStreak: 3,
+    isProtected: false
+  }
+];
 
 const InteractiveLeaderboard: React.FC = () => {
-  const { toast } = useToast();
-  const { user } = useAuth();
   const [leaderboardData, setLeaderboardData] = useState<LeaderboardUser[]>(mockLeaderboardData);
-  const [showShameModal, setShowShameModal] = useState<boolean>(false);
-  const [selectedUser, setSelectedUser] = useState<LeaderboardUser | null>(null);
-  const [isOnCooldown, setIsOnCooldown] = useState<boolean>(false);
-  const [shameType, setShameType] = useState<MockeryAction>('tomatoes');
-  const [modalType, setModalType] = useState<string | null>(null);
 
-  useEffect(() => {
-    // In a real app, fetch leaderboard data from API
-  }, []);
-
-  const handleProfileClick = (userId: string) => {
-    // In a real app, navigate to user profile
-    console.log(`View profile of user ${userId}`);
-    toast({
-      title: "Royal Intelligence",
-      description: `You are now spying on another noble's profile. How delightfully scandalous!`,
-      duration: 2000,
-    });
-    // navigate(`/profile/${userId}`);
-  };
-
-  const handleShameUser = (user: LeaderboardUser, type: string = 'tomatoes') => {
-    setSelectedUser(user);
-    // Make sure type is a valid ShameAction
-    const validShameType = ['tomatoes', 'eggs', 'stocks', 'shame', 'crown', 'jester', 'protection'].includes(type) 
-      ? type as MockeryAction 
-      : 'tomatoes';
-    setShameType(validShameType);
-    setShowShameModal(true);
-    
-    // Play subtle royal sound effect
-    const audio = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-fairy-arcade-sparkle-866.mp3');
-    audio.volume = 0.2;
-    audio.play().catch(e => console.log('Audio playback error:', e));
-  };
-
-  const handleShameConfirm = () => {
-    if (!selectedUser || isOnCooldown) return;
-    
-    // Get shame emoji based on type
-    const getShameEmoji = () => {
-      switch (shameType) {
-        case 'tomatoes': return '🍅';
-        case 'eggs': return '🥚';
-        case 'stocks': return '🪵';
-        default: return '📜';
-      }
-    };
-    
-    // Get title based on type
-    const getShameTitle = () => {
-      switch (shameType) {
-        case 'tomatoes': return 'Throw Tomatoes';
-        case 'eggs': return 'Throw Rotten Eggs';
-        case 'stocks': return 'Place in Stocks';
-        default: return 'Public Shaming';
-      }
-    };
-    
-    // Calculate the shame amount
-    const shameAmount = getShameActionPrice(shameType);
-    
-    // Simulate API call for shame action
-    setTimeout(() => {
-      toast({
-        title: "Royal Shaming Complete!",
-        description: `You spent $${shameAmount} to ${getShameTitle().toLowerCase()} at ${selectedUser.username}. ${getShameEmoji()} How delightfully medieval!`,
-      });
-      
-      // Update shame count
-      const userShameKey = `user_shame_count_${selectedUser.id}`;
-      const currentCount = parseInt(localStorage.getItem(userShameKey) || '0');
-      localStorage.setItem(userShameKey, (currentCount + 1).toString());
-      
-      // Store last shame time
-      localStorage.setItem(`lastShame_${selectedUser.id}`, Date.now().toString());
-      
-      setShowShameModal(false);
-      setSelectedUser(null);
-      setIsOnCooldown(true);
-      
-      // Set cooldown for shame action
-      setTimeout(() => {
-        setIsOnCooldown(false);
-        toast({
-          title: "Royal Mischief Ready",
-          description: "Your ability to shame other nobles has been replenished!",
-          duration: 2000,
-        });
-      }, 30000); // 30-second cooldown for demo
-    }, 1000);
-  };
-
-  const openShameModal = (user: LeaderboardUser) => {
-    setSelectedUser(user);
-    setModalType('shame');
-  };
-  
-  const handleLeaderboardAction = (action: string, user: LeaderboardUser) => {
-    console.log(`Action ${action} on user ${user.username}`);
-    if (action === 'mock') {
-      handleShameUser(user);
-    } else if (action === 'view') {
-      handleProfileClick(user.id);
-    }
+  const handleLeaderboardAction = (action: 'protect' | 'challenge' | 'reward', userId: string) => {
+    console.log(`Action ${action} on user ${userId}`);
+    // Implement action logic here
   };
 
   return (
-    <div>
-      <Card className="glass-morphism border-white/10">
-        <CardHeader className="pb-3">
-          <CardTitle className="text-lg font-royal royal-gradient flex items-center">
-            <Crown size={18} className="text-royal-gold mr-2" />
-            Royal Court Standings
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          {leaderboardData.map((userData, index) => (
-            <LeaderboardItem
-              key={userData.id}
-              userData={userData}
-              index={index}
-              currentUserId={user?.id}
-              isOnCooldown={isOnCooldown}
-              onProfileClick={handleProfileClick}
-              onShameUser={handleShameUser}
-            />
+    <Card className="w-full">
+      <CardHeader>
+        <CardTitle className="text-lg font-semibold">Royal Leaderboard</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-2">
+          {leaderboardData.map((user) => (
+            <div
+              key={user.id}
+              className="p-3 rounded-lg bg-card/50 shadow-sm border border-border/50 hover:bg-card/70 transition-colors"
+            >
+              <div className="flex justify-between items-center">
+                <div className="flex items-center space-x-3">
+                  <div className="relative">
+                    <div className="absolute -top-1 -left-1 w-5 h-5 flex items-center justify-center bg-background text-xs font-semibold rounded-full border border-border">
+                      {user.rank}
+                    </div>
+                    <div className="h-12 w-12 rounded-full bg-muted overflow-hidden">
+                      <img
+                        src={user.profileImage}
+                        alt={user.username}
+                        className="h-full w-full object-cover"
+                      />
+                    </div>
+                    {user.rankChange !== 0 && (
+                      <div className={`absolute -bottom-1 -right-1 w-5 h-5 flex items-center justify-center text-xs rounded-full border 
+                        ${user.rankChange > 0
+                          ? 'text-green-500 border-green-500 bg-green-500/10'
+                          : user.rankChange < 0
+                            ? 'text-red-500 border-red-500 bg-red-500/10'
+                            : 'text-yellow-500 border-yellow-500 bg-yellow-500/10'
+                        }`}
+                      >
+                        {user.rankChange > 0 ? (
+                          <ArrowUp className="h-3 w-3" />
+                        ) : user.rankChange < 0 ? (
+                          <ArrowDown className="h-3 w-3" />
+                        ) : (
+                          <Minus className="h-3 w-3" />
+                        )}
+                      </div>
+                    )}
+                  </div>
+                  <div>
+                    <div className="font-medium text-sm flex items-center">
+                      {user.displayName || user.username}
+                      {user.isVerified && (
+                        <Badge variant="outline" className="ml-2 px-1 py-0 h-4 text-[10px] bg-blue-500/10 text-blue-400 border-blue-500/20">
+                          Verified
+                        </Badge>
+                      )}
+                      {user.isProtected && (
+                        <Badge variant="outline" className="ml-1 px-1 py-0 h-4 text-[10px] bg-emerald-500/10 text-emerald-400 border-emerald-500/20">
+                          Protected
+                        </Badge>
+                      )}
+                    </div>
+                    <div className="text-xs text-muted-foreground mt-0.5">
+                      ${user.totalSpent.toLocaleString()} spent
+                      <span className="inline-flex items-center ml-1.5">
+                        <span className={`text-[10px] ${
+                          user.spendChange > 0 ? 'text-green-400' : 'text-muted-foreground'
+                        }`}>
+                          +${user.spendChange?.toLocaleString() || 0}
+                        </span>
+                      </span>
+                    </div>
+                    {user.spendStreak > 0 && (
+                      <div className="text-[10px] text-amber-400 mt-0.5">
+                        🔥 {user.spendStreak} day streak
+                      </div>
+                    )}
+                  </div>
+                </div>
+                <div className="flex items-center">
+                  <LeaderboardActions 
+                    user={user} 
+                    onAction={handleLeaderboardAction}
+                  />
+                </div>
+              </div>
+            </div>
           ))}
-          
-          {selectedUser && (
-            <LeaderboardActions 
-              user={selectedUser} 
-              onAction={handleLeaderboardAction} 
-            />
-          )}
-          
-          {modalType === 'shame' && selectedUser && (
-            <ShameModal
-              targetUser={{
-                userId: selectedUser.id.toString(),
-                username: selectedUser.username,
-                profileImage: selectedUser.profileImage || '',
-                totalSpent: selectedUser.totalSpent,
-                rank: selectedUser.rank,
-                team: (selectedUser.team as TeamColor) || 'red',
-                tier: selectedUser.tier || 'free',
-                spendStreak: selectedUser.spendStreak || 0
-              }}
-              shameType={shameType}
-              onConfirm={handleShameConfirm}
-              onCancel={() => setModalType(null)}
-              hasDiscount={false}
-            />
-          )}
-        </CardContent>
-      </Card>
-    </div>
+        </div>
+      </CardContent>
+    </Card>
   );
 };
 

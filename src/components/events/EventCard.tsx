@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Calendar, Clock, Users, Trophy } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
@@ -39,7 +38,6 @@ const EventCard: React.FC<EventCardProps> = ({
   const eventName = event.title || event.name || '';
   const eventImage = event.imageUrl || event.image || '';
   
-  // Helper function to check if event is active
   function isEventActive(event: Event): boolean {
     const now = new Date();
     const startDate = new Date(event.startDate);
@@ -124,7 +122,6 @@ const EventCard: React.FC<EventCardProps> = ({
   );
 };
 
-// Helper function to get the appropriate icon based on event type
 function getEventIcon(type: EventType) {
   if (type === 'treasure') {
     return <Trophy size={18} className="text-royal-gold" />;

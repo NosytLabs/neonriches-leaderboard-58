@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Certificate } from '@/types/certificate';
 import { Button } from '@/components/ui/button';

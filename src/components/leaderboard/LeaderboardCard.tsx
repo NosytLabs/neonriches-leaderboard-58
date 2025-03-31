@@ -1,144 +1,116 @@
 
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { LeaderboardUser } from '@/types/leaderboard';
-import { User } from '@/types/user';
-import { Crown, ChevronUp, ChevronDown, Minus } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
+import { Shield, Crown, ArrowUp, ArrowDown, Minus } from 'lucide-react';
 
 interface LeaderboardCardProps {
-  title: string;
   users: LeaderboardUser[];
-  filter: {
-    tier: string;
-    team: string;
-    searchQuery: string;
-  };
-  currentUser: User;
+  title: string;
+  description?: string;
+  limit?: number;
+  showActions?: boolean;
+  onUserClick?: (user: LeaderboardUser) => void;
+  loading?: boolean;
 }
 
-const LeaderboardCard: React.FC<LeaderboardCardProps> = ({ title, users, filter, currentUser }) => {
-  // Apply filters
-  const filteredUsers = users.filter(user => {
-    // Apply tier filter
-    if (filter.tier !== 'all' && user.tier !== filter.tier) {
-      return false;
-    }
-    
-    // Apply team filter
-    if (filter.team !== 'all' && user.team !== filter.team) {
-      return false;
-    }
-    
-    // Apply search filter
-    if (filter.searchQuery && !user.username.toLowerCase().includes(filter.searchQuery.toLowerCase()) &&
-        (!user.displayName || !user.displayName.toLowerCase().includes(filter.searchQuery.toLowerCase()))) {
-      return false;
-    }
-    
-    return true;
-  });
+const LeaderboardCard: React.FC<LeaderboardCardProps> = ({
+  users,
+  title,
+  description,
+  limit = 5,
+  showActions = false,
+  onUserClick,
+  loading = false
+}) => {
+  const displayUsers = users.slice(0, limit);
   
-  const getRankChangeIcon = (change?: number) => {
-    if (!change || change === 0) return <Minus className="h-3 w-3 text-gray-400" />;
-    if (change > 0) return <ChevronUp className="h-3 w-3 text-green-500" />;
-    return <ChevronDown className="h-3 w-3 text-red-500" />;
-  };
-  
-  const formatNumber = (num: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'decimal',
-      maximumFractionDigits: 0,
-    }).format(num);
-  };
+  if (loading) {
+    return (
+      <Card className="glass-morphism border-white/10">
+        <CardHeader className="pb-2">
+          <CardTitle className="text-lg">{title}</CardTitle>
+          {description && <p className="text-sm text-white/70">{description}</p>}
+        </CardHeader>
+        <CardContent>
+          <div className="flex justify-center py-10">
+            <div className="w-8 h-8 rounded-full border-2 border-white/10 border-t-white/60 animate-spin"></div>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
   
   return (
     <Card className="glass-morphism border-white/10">
       <CardHeader className="pb-2">
-        <CardTitle className="text-lg font-medium">{title}</CardTitle>
+        <CardTitle className="text-lg">{title}</CardTitle>
+        {description && <p className="text-sm text-white/70">{description}</p>}
       </CardHeader>
       <CardContent>
-        {filteredUsers.length === 0 ? (
-          <div className="text-center py-8 text-white/60">
-            No users match your filters
+        {displayUsers.length === 0 ? (
+          <div className="text-center py-6 text-white/50">
+            <Shield className="w-8 h-8 mx-auto mb-2 opacity-30" />
+            <p>No users found</p>
           </div>
         ) : (
           <div className="space-y-2">
-            {filteredUsers.map((user, index) => (
+            {displayUsers.map((user, index) => (
               <div
                 key={user.id}
-                className={cn(
-                  "flex items-center py-2 border-b border-white/10 last:border-0",
-                  currentUser.id === user.id && "bg-white/5 rounded-md p-2"
-                )}
+                className="p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-colors cursor-pointer"
+                onClick={() => onUserClick && onUserClick(user)}
               >
-                <div className="flex-shrink-0 w-8 text-center text-white/70">
-                  {index < 3 ? (
-                    <Crown className={cn(
-                      "h-5 w-5 mx-auto",
-                      index === 0 && "text-yellow-500",
-                      index === 1 && "text-gray-400",
-                      index === 2 && "text-amber-700"
-                    )} />
-                  ) : (
-                    <span>{user.rank}</span>
-                  )}
-                </div>
-                
-                <div className="flex-shrink-0 mr-1">
-                  <div className="flex items-center">
-                    {getRankChangeIcon(user.rankChange)}
-                    {user.rankChange !== 0 && (
-                      <span className={cn(
-                        "text-xs",
-                        user.rankChange > 0 && "text-green-500",
-                        user.rankChange < 0 && "text-red-500"
-                      )}>
-                        {Math.abs(user.rankChange || 0)}
-                      </span>
+                <div className="flex items-center">
+                  <div className="w-8 h-8 flex items-center justify-center font-semibold mr-2">
+                    {user.rank}
+                  </div>
+                  <div className="relative w-8 h-8 rounded-full overflow-hidden bg-black/20 mr-3">
+                    <img
+                      src={user.profileImage}
+                      alt={user.username}
+                      className="w-full h-full object-cover"
+                    />
+                    {user.rankChange !== undefined && user.rankChange !== 0 && (
+                      <div
+                        className={`absolute -bottom-1 -right-1 w-4 h-4 flex items-center justify-center rounded-full text-xs
+                          ${
+                            user.rankChange > 0
+                              ? 'bg-green-500 text-white'
+                              : 'bg-red-500 text-white'
+                          }`}
+                      >
+                        {user.rankChange > 0 ? (
+                          <ArrowUp className="h-3 w-3" />
+                        ) : (
+                          <ArrowDown className="h-3 w-3" />
+                        )}
+                      </div>
                     )}
                   </div>
-                </div>
-                
-                <Avatar className="h-10 w-10 mr-3">
-                  <AvatarImage src={user.profileImage} alt={user.username} />
-                  <AvatarFallback>
-                    {user.username.substring(0, 2).toUpperCase()}
-                  </AvatarFallback>
-                </Avatar>
-                
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center">
-                    <span className="font-medium truncate">{user.displayName || user.username}</span>
+                  <div className="flex-1 min-w-0">
+                    <div className="font-medium truncate">{user.displayName || user.username}</div>
+                    <div className="text-xs text-white/60 flex items-center">
+                      <span>${user.totalSpent.toLocaleString()}</span>
+                      {user.spendChange !== undefined && user.spendChange > 0 && (
+                        <span className="ml-1 text-green-400">
+                          +${user.spendChange.toLocaleString()}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                  <div className="flex items-center space-x-1 ml-2">
                     {user.isVerified && (
-                      <Badge variant="outline" className="ml-2 border-blue-500 text-blue-400 text-xs">Verified</Badge>
+                      <Badge variant="outline" className="bg-blue-500/10 text-blue-400 border-blue-500/20">
+                        Verified
+                      </Badge>
+                    )}
+                    {user.tier === 'royal' && (
+                      <Crown className="h-4 w-4 text-royal-gold" />
                     )}
                   </div>
-                  <div className="text-sm text-white/60 flex items-center">
-                    <Badge variant="outline" className={cn(
-                      "mr-2 text-xs",
-                      user.tier === 'royal' && "border-yellow-500 text-yellow-400",
-                      user.tier === 'elite' && "border-purple-500 text-purple-400",
-                      user.tier === 'premium' && "border-blue-500 text-blue-400",
-                      user.tier === 'standard' && "border-green-500 text-green-400",
-                      user.tier === 'basic' && "border-gray-500 text-gray-400"
-                    )}>
-                      {user.tier}
-                    </Badge>
-                    <span>${formatNumber(user.totalSpent)}</span>
-                  </div>
                 </div>
-                
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="ml-2"
-                >
-                  Profile
-                </Button>
               </div>
             ))}
           </div>

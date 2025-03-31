@@ -1,42 +1,50 @@
 
 import React from 'react';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
-import { MoreHorizontal, Crown, Target, Shield, Flag } from 'lucide-react';
+import { Shield, AlertTriangle, Award, ArrowUpRight } from 'lucide-react';
 import { LeaderboardUser } from '@/types/leaderboard';
 
-interface LeaderboardActionsProps {
+export interface LeaderboardActionsProps {
   user: LeaderboardUser;
-  onAction: (action: string, user: LeaderboardUser) => void;
+  onAction: (action: 'protect' | 'challenge' | 'reward', userId: string) => void;
+  children?: React.ReactNode;
 }
 
-const LeaderboardActions: React.FC<LeaderboardActionsProps> = ({ user, onAction }) => {
+const LeaderboardActions: React.FC<LeaderboardActionsProps> = ({ user, onAction, children }) => {
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="sm" className="p-0 h-8 w-8">
-          <MoreHorizontal className="h-4 w-4" />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={() => onAction('view', user)}>
-          <Crown className="h-4 w-4 mr-2" />
-          View Profile
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => onAction('mock', user)}>
-          <Target className="h-4 w-4 mr-2" />
-          Mock User
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => onAction('protect', user)}>
-          <Shield className="h-4 w-4 mr-2" />
-          Protect User
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => onAction('report', user)}>
-          <Flag className="h-4 w-4 mr-2" />
-          Report User
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <div className="flex items-center gap-2">
+      <Button 
+        variant="outline" 
+        size="sm" 
+        className="h-8 text-xs border-muted-foreground/20"
+        onClick={() => onAction('protect', user.id)}
+      >
+        <Shield className="h-3 w-3 mr-1" />
+        Protect
+      </Button>
+      
+      <Button 
+        variant="outline" 
+        size="sm" 
+        className="h-8 text-xs border-muted-foreground/20"
+        onClick={() => onAction('challenge', user.id)}
+      >
+        <AlertTriangle className="h-3 w-3 mr-1" />
+        Challenge
+      </Button>
+      
+      <Button 
+        variant="outline" 
+        size="sm" 
+        className="h-8 text-xs border-muted-foreground/20"
+        onClick={() => onAction('reward', user.id)}
+      >
+        <Award className="h-3 w-3 mr-1" />
+        Reward
+      </Button>
+      
+      {children}
+    </div>
   );
 };
 
