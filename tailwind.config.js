@@ -114,6 +114,10 @@ module.exports = {
           "0%, 100%": { opacity: 0.5 },
           "50%": { opacity: 1 }
         },
+        "shimmer": {
+          "0%": { backgroundPosition: "-200%" },
+          "100%": { backgroundPosition: "200%" }
+        },
         "royal-shine": {
           "0%": { backgroundPosition: "0% 50%" },
           "50%": { backgroundPosition: "100% 50%" },
@@ -159,6 +163,7 @@ module.exports = {
         "accordion-up": "accordion-up 0.2s ease-out",
         "crown-glow": "crown-glow 2s ease-in-out infinite",
         "pulse-slow": "pulse-slow 3s ease-in-out infinite",
+        "shimmer": "shimmer 3s linear infinite",
         "royal-shine": "royal-shine 3s linear infinite",
         "float": "float 3s ease-in-out infinite",
         "float-rotate": "float-rotate 4s ease-in-out infinite",
