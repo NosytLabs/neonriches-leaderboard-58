@@ -1,6 +1,7 @@
 
-import { LucideIcon, Egg, Tomato, Crown, Smile, Lock, Skull, VolumeX, Glasses, Cloud, Shield } from 'lucide-react';
+import { LucideIcon, Egg, Crown, Smile, Lock, Skull, VolumeX, Glasses, Cloud, Shield } from 'lucide-react';
 import { MockeryAction } from '@/types/mockery';
+import Tomato from '@/components/icons/Tomato';
 
 export const getMockeryActionIcon = (action: MockeryAction): LucideIcon => {
   switch (action) {

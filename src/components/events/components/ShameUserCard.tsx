@@ -1,31 +1,28 @@
 
-import React, { useState } from 'react';
-import { Card, CardContent } from '@/components/ui/card';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
+import React from 'react';
+import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Shield, Crown, Zap, Lock } from 'lucide-react';
 import { MockeryAction } from '@/types/mockery';
-import { getShameActionPrice, getDiscountedShamePrice, hasWeeklyDiscount } from '@/components/events/utils/shameUtils';
-import { formatRelative } from 'date-fns';
-import { Crown, Egg, Scroll, Tomato, Lock } from 'lucide-react';
-
-interface User {
-  id: string | number;
-  username: string;
-  profileImage: string;
-  rank: number;
-  team: string;
-  amountSpent: number;
-}
-
-interface ShameEffect {
-  type: MockeryAction;
-  timestamp: string;
-}
+import { cn } from '@/lib/utils';
+import { useSound } from '@/hooks/use-sound';
+import Tomato from '@/components/icons/Tomato';
+import { Egg } from 'lucide-react';
 
 interface ShameUserCardProps {
-  user: User;
-  isShamed: ShameEffect | null;
+  user: {
+    id: string | number;
+    username: string;
+    profileImage: string;
+    rank: number;
+    team: string;
+    amountSpent: number;
+  };
+  isShamed: {
+    type: MockeryAction;
+    timestamp: string;
+  } | null;
   isOnCooldown: boolean;
   shameCount: number;
   onShame: (userId: number, action: MockeryAction) => boolean;
@@ -40,135 +37,117 @@ const ShameUserCard: React.FC<ShameUserCardProps> = ({
   onShame,
   featuredAction = 'tomatoes'
 }) => {
-  const [hovered, setHovered] = useState(false);
+  const sound = useSound();
   
-  // Convert user.id to a number
-  const userId = typeof user.id === 'string' ? parseInt(user.id, 10) : user.id;
-  
-  // Get the display for active shame
-  const getActiveShameDisplay = (effect: ShameEffect) => {
-    const relativeTime = formatRelative(new Date(effect.timestamp), new Date());
-    
-    let icon;
-    let description;
-    
-    switch (effect.type) {
-      case 'tomatoes':
-        icon = <Tomato className="h-5 w-5 text-red-500" />;
-        description = 'Pelted with tomatoes';
-        break;
-      case 'eggs':
-        icon = <Egg className="h-5 w-5 text-yellow-500" />;
-        description = 'Egged';
-        break;
-      case 'stocks':
-        icon = <Lock className="h-5 w-5 text-gray-500" />;
-        description = 'In the stocks';
-        break;
-      case 'crown':
-        icon = <Crown className="h-5 w-5 text-royal-gold" />;
-        description = 'Crowned';
-        break;
-      default:
-        icon = <Scroll className="h-5 w-5 text-gray-500" />;
-        description = 'Shamed';
+  const handleShameClick = (action: MockeryAction) => {
+    if (isOnCooldown) {
+      sound.playSound('error', { volume: 0.2 });
+      return;
     }
-    
-    return (
-      <div className="flex items-center space-x-1 text-sm">
-        {icon}
-        <span>{description}</span>
-        <span className="text-white/50">({relativeTime})</span>
-      </div>
-    );
+    onShame(Number(user.id), action);
   };
-  
-  // Get the team class
-  const getTeamClass = (team: string) => {
-    switch (team) {
-      case 'red': return 'border-red-500/30';
-      case 'blue': return 'border-blue-500/30';
-      case 'green': return 'border-green-500/30';
-      case 'gold': return 'border-yellow-500/30';
-      case 'purple': return 'border-purple-500/30';
-      default: return 'border-gray-500/30';
-    }
-  };
-  
-  // Get the regular action buttons
-  const actionButtons = [
-    { action: 'tomatoes' as MockeryAction, icon: <Tomato className="h-4 w-4" />, label: 'Tomatoes', price: getShameActionPrice('tomatoes') },
-    { action: 'eggs' as MockeryAction, icon: <Egg className="h-4 w-4" />, label: 'Eggs', price: getShameActionPrice('eggs') },
-    { action: 'stocks' as MockeryAction, icon: <Lock className="h-4 w-4" />, label: 'Stocks', price: getShameActionPrice('stocks') }
-  ];
-  
-  // Find featured action data
-  const featuredActionData = actionButtons.find(b => b.action === featuredAction) || actionButtons[0];
   
   return (
-    <Card 
-      className={`glass-morphism border-white/10 relative overflow-hidden ${getTeamClass(user.team)} ${hovered ? 'bg-white/10' : ''}`}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-    >
+    <Card className={cn(
+      "p-4 bg-black/40 glass-morphism border-white/10 relative overflow-hidden transition-all duration-300",
+      isShamed ? "border-royal-crimson/50" : "hover:border-white/20"
+    )}>
       {isShamed && (
-        <div className="absolute top-0 left-0 w-full h-1 bg-red-500"></div>
+        <div className="absolute top-0 right-0 px-2 py-1 bg-royal-crimson text-white text-xs">
+          Mocked
+        </div>
       )}
       
-      <CardContent className="p-4">
-        <div className="flex justify-between items-center">
-          <div className="flex items-center space-x-3">
-            <Avatar className="h-12 w-12">
-              <AvatarImage src={user.profileImage} alt={user.username} />
-              <AvatarFallback>{user.username.substring(0, 2).toUpperCase()}</AvatarFallback>
-            </Avatar>
-            
-            <div>
-              <div className="font-medium">{user.username}</div>
-              <div className="text-sm text-white/70">
-                Rank: #{user.rank} · ${user.amountSpent.toLocaleString()}
-              </div>
-              
-              {isShamed && getActiveShameDisplay(isShamed)}
-            </div>
-          </div>
-          
-          <Badge variant="outline" className="bg-transparent border-white/20">
-            {shameCount > 0 ? `${shameCount} shames` : 'No shames'}
-          </Badge>
-        </div>
+      <div className="flex items-center space-x-4 mb-4">
+        <Avatar className={cn(
+          "h-12 w-12 ring-2",
+          user.team === 'red' ? "ring-red-500" :
+          user.team === 'blue' ? "ring-blue-500" :
+          user.team === 'green' ? "ring-green-500" :
+          user.team === 'gold' ? "ring-amber-500" :
+          "ring-white/20"
+        )}>
+          <AvatarImage src={user.profileImage} alt={user.username} />
+          <AvatarFallback>{user.username.charAt(0).toUpperCase()}</AvatarFallback>
+        </Avatar>
         
-        {!isShamed && (
-          <div className="mt-4 flex flex-wrap gap-2">
-            {hasWeeklyDiscount(featuredAction) && (
-              <div className="w-full mb-1 text-center">
-                <Badge variant="outline" className="bg-royal-gold/10 border-royal-gold/30 text-royal-gold">
-                  50% OFF {featuredActionData.label} today!
-                </Badge>
+        <div>
+          <h3 className="font-medium">{user.username}</h3>
+          <div className="flex items-center space-x-3 text-sm text-white/60">
+            <div className="flex items-center">
+              <Crown className="h-3.5 w-3.5 text-royal-gold mr-1" />
+              <span>Rank #{user.rank}</span>
+            </div>
+            
+            {shameCount > 0 && (
+              <div className="flex items-center">
+                <Zap className="h-3.5 w-3.5 text-royal-crimson mr-1" />
+                <span>{shameCount} mocks</span>
               </div>
             )}
-            
-            {actionButtons.map((btn) => (
-              <Button
-                key={btn.action}
-                size="sm"
-                variant={btn.action === featuredAction ? "default" : "outline"}
-                onClick={() => onShame(userId, btn.action)}
-                disabled={isOnCooldown}
-                className={btn.action === featuredAction 
-                  ? "glass-morphism border-royal-gold/30 bg-black/30 hover:bg-black/50" 
-                  : "glass-morphism border-white/10 bg-transparent hover:bg-white/10"}
-              >
-                {btn.icon}
-                <span className="ml-1">{btn.action === featuredAction && hasWeeklyDiscount(featuredAction) 
-                  ? `$${getDiscountedShamePrice(btn.action).toFixed(2)}` 
-                  : `$${btn.price.toFixed(2)}`
-                }</span>
-              </Button>
-            ))}
           </div>
-        )}
-      </CardContent>
+        </div>
+      </div>
+      
+      <div className="grid grid-cols-3 gap-2 mt-3">
+        <Button 
+          variant="outline" 
+          size="sm"
+          className={cn(
+            "flex items-center justify-center gap-1", 
+            isOnCooldown ? "opacity-50 cursor-not-allowed" : "hover:border-red-500/50",
+            featuredAction === 'tomatoes' ? "border-royal-gold/50 bg-black/30" : ""
+          )}
+          onClick={() => handleShameClick('tomatoes')}
+          disabled={isOnCooldown}
+        >
+          <Tomato className="h-3.5 w-3.5 text-red-500" />
+          <span className="sr-only sm:not-sr-only sm:text-xs">Tomatoes</span>
+        </Button>
+        
+        <Button 
+          variant="outline" 
+          size="sm"
+          className={cn(
+            "flex items-center justify-center gap-1", 
+            isOnCooldown ? "opacity-50 cursor-not-allowed" : "hover:border-yellow-500/50",
+            featuredAction === 'eggs' ? "border-royal-gold/50 bg-black/30" : ""
+          )}
+          onClick={() => handleShameClick('eggs')}
+          disabled={isOnCooldown}
+        >
+          <Egg className="h-3.5 w-3.5 text-yellow-500" />
+          <span className="sr-only sm:not-sr-only sm:text-xs">Eggs</span>
+        </Button>
+        
+        <Button 
+          variant="outline" 
+          size="sm"
+          className={cn(
+            "flex items-center justify-center gap-1", 
+            isOnCooldown ? "opacity-50 cursor-not-allowed" : "hover:border-indigo-500/50",
+            featuredAction === 'stocks' ? "border-royal-gold/50 bg-black/30" : ""
+          )}
+          onClick={() => handleShameClick('stocks')}
+          disabled={isOnCooldown}
+        >
+          <Lock className="h-3.5 w-3.5 text-indigo-500" />
+          <span className="sr-only sm:not-sr-only sm:text-xs">Stocks</span>
+        </Button>
+      </div>
+      
+      {isOnCooldown && (
+        <div className="mt-3 text-center text-xs text-white/50">
+          <Shield className="inline-block h-3.5 w-3.5 mr-1 text-indigo-400" />
+          <span>On cooldown - try again later</span>
+        </div>
+      )}
+      
+      {isShamed && (
+        <div className="mt-3 text-center text-xs text-white/60">
+          <span>Currently mocked with {isShamed.type}</span>
+        </div>
+      )}
     </Card>
   );
 };

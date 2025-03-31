@@ -4,13 +4,13 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/com
 import { Button } from '@/components/ui/button';
 import { Trophy, Filter, Users, Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
-import { UserProfile } from '@/types/user-types';
+import { User } from '@/types/user-types';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/auth';
 import LeaderboardList from './components/LeaderboardList';
 
-// Create some mock data that conforms to UserProfile
-const mockUsers: UserProfile[] = [
+// Create mock data that conforms to User interface
+const mockUsers: User[] = [
   {
     id: '1',
     username: 'RoyalSpender',
@@ -24,7 +24,29 @@ const mockUsers: UserProfile[] = [
     bio: 'Always spending for the throne',
     joinDate: '2023-01-01T00:00:00Z',
     isVerified: true,
-    isFounder: true
+    isFounder: true,
+    cosmetics: {
+      border: [],
+      color: [],
+      font: [],
+      emoji: [],
+      title: [],
+      background: [],
+      effect: [],
+      badge: [],
+      theme: []
+    },
+    settings: {
+      profileVisibility: 'public',
+      allowProfileLinks: true,
+      theme: 'royal',
+      notifications: true,
+      emailNotifications: true,
+      marketingEmails: true,
+      soundEffects: true,
+      showBadges: true
+    },
+    socialLinks: []
   },
   {
     id: '2',
@@ -39,7 +61,29 @@ const mockUsers: UserProfile[] = [
     bio: 'Collecting crowns since day one',
     joinDate: '2023-01-05T00:00:00Z',
     isVerified: true,
-    isFounder: true
+    isFounder: true,
+    cosmetics: {
+      border: [],
+      color: [],
+      font: [],
+      emoji: [],
+      title: [],
+      background: [],
+      effect: [],
+      badge: [],
+      theme: []
+    },
+    settings: {
+      profileVisibility: 'public',
+      allowProfileLinks: true,
+      theme: 'royal',
+      notifications: true,
+      emailNotifications: true,
+      marketingEmails: true,
+      soundEffects: true,
+      showBadges: true
+    },
+    socialLinks: []
   },
   {
     id: '3',
@@ -54,7 +98,29 @@ const mockUsers: UserProfile[] = [
     bio: 'Seeking the throne through spending',
     joinDate: '2023-01-10T00:00:00Z',
     isVerified: true,
-    isFounder: false
+    isFounder: false,
+    cosmetics: {
+      border: [],
+      color: [],
+      font: [],
+      emoji: [],
+      title: [],
+      background: [],
+      effect: [],
+      badge: [],
+      theme: []
+    },
+    settings: {
+      profileVisibility: 'public',
+      allowProfileLinks: true,
+      theme: 'royal',
+      notifications: true,
+      emailNotifications: true,
+      marketingEmails: true,
+      soundEffects: true,
+      showBadges: true
+    },
+    socialLinks: []
   },
   {
     id: '4',
@@ -69,7 +135,29 @@ const mockUsers: UserProfile[] = [
     bio: 'Donating regally every day',
     joinDate: '2023-01-15T00:00:00Z',
     isVerified: true,
-    isFounder: false
+    isFounder: false,
+    cosmetics: {
+      border: [],
+      color: [],
+      font: [],
+      emoji: [],
+      title: [],
+      background: [],
+      effect: [],
+      badge: [],
+      theme: []
+    },
+    settings: {
+      profileVisibility: 'public',
+      allowProfileLinks: true,
+      theme: 'royal',
+      notifications: true,
+      emailNotifications: true,
+      marketingEmails: true,
+      soundEffects: true,
+      showBadges: true
+    },
+    socialLinks: []
   },
   {
     id: '5',
@@ -84,7 +172,29 @@ const mockUsers: UserProfile[] = [
     bio: 'Cash is king, and I am noble',
     joinDate: '2023-01-20T00:00:00Z',
     isVerified: true,
-    isFounder: false
+    isFounder: false,
+    cosmetics: {
+      border: [],
+      color: [],
+      font: [],
+      emoji: [],
+      title: [],
+      background: [],
+      effect: [],
+      badge: [],
+      theme: []
+    },
+    settings: {
+      profileVisibility: 'public',
+      allowProfileLinks: true,
+      theme: 'royal',
+      notifications: true,
+      emailNotifications: true,
+      marketingEmails: true,
+      soundEffects: true,
+      showBadges: true
+    },
+    socialLinks: []
   }
 ];
 
@@ -93,7 +203,7 @@ const CombinedLeaderboard: React.FC = () => {
   const { user } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [filteredUsers, setFilteredUsers] = useState<UserProfile[]>(mockUsers);
+  const [filteredUsers, setFilteredUsers] = useState<User[]>(mockUsers);
   
   // Filter users on search query change
   useEffect(() => {
@@ -114,7 +224,7 @@ const CombinedLeaderboard: React.FC = () => {
     navigate(`/profile/${username}`);
   };
   
-  const handleShameUser = (user: UserProfile, action: string) => {
+  const handleShameUser = (user: User, action: string) => {
     console.log(`Applied ${action} to user ${user.username}`);
     // Show toast or notification
   };
