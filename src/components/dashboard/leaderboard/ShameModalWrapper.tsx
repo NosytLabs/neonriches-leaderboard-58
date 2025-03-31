@@ -1,9 +1,25 @@
 
 import React from 'react';
 import { Dialog } from '@/components/ui/dialog';
-import ShameModal from '@/components/events/components/ShameModal';
 import { User } from '@/types/user';
-import { MockeryAction, TeamColor } from '@/types/mockery-types';
+import { MockeryAction, TeamColor } from '@/types/mockery';
+
+interface ShameModalProps {
+  targetUser: {
+    userId: string;
+    username: string;
+    profileImage: string;
+    totalSpent: number;
+    rank: number;
+    team: TeamColor;
+    tier: string;
+    spendStreak: number;
+  };
+  shameType: MockeryAction;
+  onConfirm: (userId: string) => void;
+  onCancel: () => void;
+  hasDiscount?: boolean;
+}
 
 interface ShameModalWrapperProps {
   showModal: boolean;
@@ -12,6 +28,20 @@ interface ShameModalWrapperProps {
   onOpenChange: (open: boolean) => void;
   onConfirm: (userId: string, type: MockeryAction) => void;
 }
+
+const ShameModal: React.FC<ShameModalProps> = (props) => {
+  // This is a placeholder implementation - replace with actual component when available
+  return (
+    <div className="p-4">
+      <h2>Mockery Confirmation</h2>
+      <p>Are you sure you want to mock {props.targetUser.username}?</p>
+      <div className="flex justify-end space-x-2 mt-4">
+        <button onClick={props.onCancel}>Cancel</button>
+        <button onClick={() => props.onConfirm(props.targetUser.userId)}>Confirm</button>
+      </div>
+    </div>
+  );
+};
 
 const ShameModalWrapper: React.FC<ShameModalWrapperProps> = ({
   showModal,

@@ -1,16 +1,22 @@
 
 import React from 'react';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { ShieldAlert } from 'lucide-react';
-import { User } from '@/types/user';
-import { MockeryAction } from '@/types/mockery-types';
+import { MockeryAction } from '@/types/mockery';
 import { useToast } from '@/hooks/use-toast';
-import { formatDistanceToNow } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { getActiveMockeryClass } from '@/utils/mockeryUtils';
+
+interface User {
+  id: string;
+  username: string;
+  displayName?: string;
+  profileImage?: string;
+  rank?: number;
+}
 
 interface MockeryUserCardProps {
   user: User;
@@ -90,11 +96,8 @@ export const MockeryUserCard: React.FC<MockeryUserCardProps> = ({
               <Badge 
                 variant={
                   activeEffect === 'shame' ? 'destructive' :
-                  activeEffect === 'taunt' ? 'destructive' :
-                  activeEffect === 'jest' ? 'destructive' :
-                  activeEffect === 'crown' ? 'destructive' :
                   activeEffect === 'challenge' ? 'destructive' :
-                  activeEffect === 'defeat' ? 'destructive' :
+                  activeEffect === 'crown' ? 'destructive' :
                   activeEffect === 'protection' ? 'default' : 'default'
                 }
                 className="text-xs animate-pulse"

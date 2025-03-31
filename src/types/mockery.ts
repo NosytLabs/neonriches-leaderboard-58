@@ -42,7 +42,9 @@ export type MockeryAction =
   | 'putridEggs'
   | 'silence'
   | 'courtJester'
-  | 'smokeBomb';
+  | 'smokeBomb'
+  | 'dunce'
+  | 'laughing';
 
 // Mockery tier types
 export type MockeryTier = 
@@ -65,12 +67,12 @@ export interface MockedUser {
   username: string;
   displayName: string;
   profileImage: string;
-  totalSpent: number;
-  rank: number;
-  tier: string;
-  team: string;
-  isMocked: boolean;
-  isProtected: boolean;
+  totalSpent?: number;
+  rank?: number;
+  tier?: string;
+  team?: string;
+  isMocked?: boolean;
+  isProtected?: boolean;
 }
 
 /**
@@ -86,6 +88,7 @@ export interface MockeryEvent {
   duration: number;
   isActive: boolean;
   timestamp: string;
+  action?: MockeryAction; // For backward compatibility
 }
 
 /**
@@ -110,7 +113,7 @@ export const isValidMockeryAction = (action: string): action is MockeryAction =>
   const validActions: MockeryAction[] = [
     'tomatoes', 'eggs', 'crown', 'stocks', 'jester', 
     'protection', 'shame', 'target', 'challenge', 'ghost', 
-    'putridEggs', 'silence', 'courtJester', 'smokeBomb'
+    'putridEggs', 'silence', 'courtJester', 'smokeBomb', 'dunce', 'laughing'
   ];
   return validActions.includes(action as MockeryAction);
 };

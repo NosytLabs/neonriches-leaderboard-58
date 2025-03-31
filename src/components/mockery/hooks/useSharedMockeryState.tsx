@@ -1,6 +1,6 @@
 
 import { create } from 'zustand';
-import { MockeryAction, MockeryEffectData } from '@/types/mockery-types';
+import { MockeryAction, MockeryEffectData } from '@/types/mockery';
 
 interface MockeryState {
   selectedAction: MockeryAction | null;

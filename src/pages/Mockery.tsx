@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import Shell from '@/components/Shell';
 import PageSEO from '@/components/common/PageSEO';
@@ -20,21 +21,18 @@ import {
   Laugh, 
   Shield, 
   BadgeInfo, 
-  History, 
-  ChevronsUp 
+  History
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { 
   getMockeryActionIcon, 
   getMockeryActionIconColor, 
-  getMockeryActionTitle, 
-  getMockeryActionDescription, 
+  getMockeryName, 
+  getMockeryDescription, 
   getMockeryTierColorClass 
-} from '@/utils/mockery';
+} from '@/utils/mockeryUtils';
 import { MockeryAction, MockeryTier } from '@/types/mockery';
 
 const mockUsers = [
@@ -112,10 +110,7 @@ const availableMockeryActions: MockeryAction[] = [
   'eggs',
   'shame',
   'jester',
-  'dunce',
-  'crown',
-  'laughing',
-  'protection'
+  'crown'
 ];
 
 const Mockery: React.FC = () => {
@@ -138,7 +133,7 @@ const Mockery: React.FC = () => {
     
     toast({
       title: "Mockery Applied!",
-      description: `You have applied ${getMockeryActionTitle(selectedAction)} to ${targetUser?.displayName}`,
+      description: `You have applied ${getMockeryName(selectedAction)} to ${targetUser?.displayName}`,
       variant: "success",
     });
     
@@ -239,190 +234,108 @@ const Mockery: React.FC = () => {
               </TabsTrigger>
             </TabsList>
             
-            <TabsContent value="actions" className="mt-6">
-              <Card className="glass-morphism border-white/10">
+            {/* Actions tab content */}
+            <TabsContent value="actions">
+              <Card>
                 <CardHeader>
-                  <CardTitle>Available Mockery Actions</CardTitle>
-                  <CardDescription>
-                    Select an action to apply to your chosen target
-                  </CardDescription>
+                  <CardTitle>Mockery Actions</CardTitle>
+                  <CardDescription>Select an action to apply to your target</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                     {availableMockeryActions.map((action) => {
-                      const ActionIcon = getMockeryActionIcon(action);
-                      const iconColor = getMockeryActionIconColor(action);
-                      const isSelected = selectedAction === action;
+                      const IconComponent = getMockeryActionIcon(action);
+                      const colorClass = getMockeryActionIconColor(action);
                       
                       return (
-                        <motion.div
+                        <Card 
                           key={action}
-                          whileHover={{ scale: 1.03 }}
-                          className={`
-                            p-4 rounded-lg cursor-pointer border 
-                            ${isSelected 
-                              ? 'border-royal-gold bg-royal-gold/10' 
-                              : 'border-white/10 bg-black/20 hover:bg-black/30'
-                            }
-                          `}
+                          className={`cursor-pointer transition-all duration-300 ${selectedAction === action ? 'ring-2 ring-primary' : ''}`}
                           onClick={() => setSelectedAction(action)}
                         >
-                          <div className="flex flex-col items-center text-center">
-                            <div className="h-12 w-12 flex items-center justify-center mb-3">
-                              {ActionIcon && <ActionIcon className={`h-10 w-10 ${iconColor}`} />}
+                          <CardContent className="p-4">
+                            <div className="flex items-center mb-2">
+                              <IconComponent className={`h-5 w-5 mr-2 ${colorClass}`} />
+                              <h3 className="font-medium">{getMockeryName(action)}</h3>
                             </div>
-                            <h3 className="font-semibold mb-1">{getMockeryActionTitle(action)}</h3>
-                            <p className="text-xs text-white/70">{getMockeryActionDescription(action)}</p>
-                          </div>
-                        </motion.div>
+                            <p className="text-sm text-white/70">
+                              {getMockeryDescription(action)}
+                            </p>
+                          </CardContent>
+                        </Card>
                       );
                     })}
-                  </div>
-                  
-                  <Separator className="my-6" />
-                  
-                  <div className="flex justify-between items-center">
-                    <div>
-                      {selectedAction && (
-                        <div className="flex items-center">
-                          <span className="text-white/70 mr-2">Selected:</span>
-                          <Badge className="bg-royal-gold/80">
-                            {getMockeryActionTitle(selectedAction)}
-                          </Badge>
-                        </div>
-                      )}
-                    </div>
-                    <Button 
-                      disabled={!selectedAction || !selectedUser} 
-                      onClick={handleMockerySubmit}
-                      className="bg-royal-gold hover:bg-royal-gold/90"
-                    >
-                      Apply Mockery
-                    </Button>
                   </div>
                 </CardContent>
               </Card>
             </TabsContent>
             
-            <TabsContent value="targets" className="mt-6">
-              <Card className="glass-morphism border-white/10">
+            {/* Targets tab content */}
+            <TabsContent value="targets">
+              <Card>
                 <CardHeader>
-                  <CardTitle>Select Your Target</CardTitle>
-                  <CardDescription>
-                    Choose a noble to receive your mockery
-                  </CardDescription>
+                  <CardTitle>Select Target</CardTitle>
+                  <CardDescription>Choose a user to apply mockery to</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-4">
-                    {mockUsers.map((user) => {
-                      const isSelected = selectedUser === user.id;
-                      
-                      return (
-                        <motion.div
-                          key={user.id}
-                          whileHover={{ scale: 1.01 }}
-                          className={`
-                            p-4 rounded-lg cursor-pointer border flex items-center justify-between
-                            ${isSelected 
-                              ? 'border-royal-gold bg-royal-gold/10' 
-                              : 'border-white/10 bg-black/20 hover:bg-black/30'
-                            }
-                          `}
-                          onClick={() => setSelectedUser(user.id)}
-                        >
-                          <div className="flex items-center">
-                            <Avatar className="h-12 w-12 mr-4">
-                              <AvatarImage src={user.profileImage} alt={user.displayName} />
-                              <AvatarFallback className="bg-royal-gold/30">
-                                {user.displayName.charAt(0)}
-                              </AvatarFallback>
-                            </Avatar>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {mockUsers.map((user) => (
+                      <Card 
+                        key={user.id}
+                        className={`cursor-pointer transition-all duration-300 ${selectedUser === user.id ? 'ring-2 ring-primary' : ''}`}
+                        onClick={() => setSelectedUser(user.id)}
+                      >
+                        <CardContent className="p-4">
+                          <div className="flex justify-between items-center">
                             <div>
-                              <p className="font-semibold">{user.displayName}</p>
+                              <h3 className="font-medium">{user.displayName}</h3>
                               <p className="text-sm text-white/70">@{user.username}</p>
                             </div>
+                            <Badge variant="outline">
+                              Rank #{user.rank}
+                            </Badge>
                           </div>
-                          <div className="flex items-center">
-                            <div className="mr-4 text-right">
-                              <Badge className={getMockeryTierColorClass(user.tier as MockeryTier)}>
-                                {user.tier}
-                              </Badge>
-                              <p className="text-sm text-white/70 mt-1">Rank #{user.rank}</p>
-                            </div>
-                            {isSelected && (
-                              <ChevronsUp className="h-5 w-5 text-royal-gold" />
-                            )}
-                          </div>
-                        </motion.div>
-                      );
-                    })}
-                  </div>
-                  
-                  <Separator className="my-6" />
-                  
-                  <div className="flex justify-between items-center">
-                    <div>
-                      {selectedUser && (
-                        <div className="flex items-center">
-                          <span className="text-white/70 mr-2">Target:</span>
-                          <Badge className="bg-royal-gold/80">
-                            {mockUsers.find(u => u.id === selectedUser)?.displayName}
-                          </Badge>
-                        </div>
-                      )}
-                    </div>
-                    <Button 
-                      disabled={!selectedAction || !selectedUser} 
-                      onClick={handleMockerySubmit}
-                      className="bg-royal-gold hover:bg-royal-gold/90"
-                    >
-                      Apply Mockery
-                    </Button>
+                        </CardContent>
+                      </Card>
+                    ))}
                   </div>
                 </CardContent>
               </Card>
             </TabsContent>
             
-            <TabsContent value="history" className="mt-6">
-              <Card className="glass-morphism border-white/10">
+            {/* History tab content */}
+            <TabsContent value="history">
+              <Card>
                 <CardHeader>
-                  <CardTitle>Recent Mockery History</CardTitle>
-                  <CardDescription>
-                    Witness the latest public shamings in the kingdom
-                  </CardDescription>
+                  <CardTitle>Mockery History</CardTitle>
+                  <CardDescription>Recent mockery events in the kingdom</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    {mockeryHistory.map((item) => {
-                      const ActionIcon = getMockeryActionIcon(item.action);
-                      const iconColor = getMockeryActionIconColor(item.action);
-                      const date = new Date(item.date);
+                    {mockeryHistory.map((history) => {
+                      const IconComponent = getMockeryActionIcon(history.action);
+                      const colorClass = getMockeryActionIconColor(history.action);
+                      const tierColorClass = getMockeryTierColorClass(history.tier);
                       
                       return (
-                        <div 
-                          key={item.id}
-                          className="p-4 rounded-lg border border-white/10 bg-black/20"
-                        >
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center">
-                              <div className="h-10 w-10 flex items-center justify-center mr-4">
-                                {ActionIcon && <ActionIcon className={`h-8 w-8 ${iconColor}`} />}
-                              </div>
-                              <div>
-                                <p className="font-medium">
-                                  <span className="text-royal-gold">@{item.appliedByUsername}</span>
-                                  {" applied "}
-                                  <span className="font-semibold">{getMockeryActionTitle(item.action)}</span>
-                                  {" to "}
-                                  <span className="text-royal-gold">@{item.targetUsername}</span>
-                                </p>
-                                <p className="text-sm text-white/70">
-                                  {date.toLocaleDateString()} at {date.toLocaleTimeString()}
-                                </p>
-                              </div>
+                        <div key={history.id} className="p-3 border border-white/10 rounded-lg">
+                          <div className="flex items-center mb-2">
+                            <IconComponent className={`h-5 w-5 mr-2 ${colorClass}`} />
+                            <div>
+                              <span className="font-medium">{history.appliedByUsername}</span>
+                              <span className="text-white/70"> applied </span>
+                              <span className={`font-medium ${colorClass}`}>{getMockeryName(history.action)}</span>
+                              <span className="text-white/70"> to </span>
+                              <span className="font-medium">{history.targetUsername}</span>
                             </div>
-                            <Badge className={getMockeryTierColorClass(item.tier)}>
-                              {item.tier}
+                          </div>
+                          
+                          <div className="flex justify-between items-center text-sm">
+                            <span className="text-white/50">
+                              {new Date(history.date).toLocaleDateString()}
+                            </span>
+                            <Badge variant="outline" className={`${tierColorClass}`}>
+                              {history.tier.toUpperCase()}
                             </Badge>
                           </div>
                         </div>
@@ -434,11 +347,14 @@ const Mockery: React.FC = () => {
             </TabsContent>
           </Tabs>
           
-          <div className="p-6 rounded-lg glass-morphism border-white/10 max-w-3xl mx-auto">
-            <p className="text-lg text-center text-white/90 italic">
-              "In a world where social media platforms hide behind algorithms,
-              at least we're honest about our pettiness."
-            </p>
+          <div className="flex justify-end">
+            <Button 
+              size="lg" 
+              disabled={!selectedUser || !selectedAction}
+              onClick={handleMockerySubmit}
+            >
+              Apply Mockery
+            </Button>
           </div>
         </motion.div>
       </div>

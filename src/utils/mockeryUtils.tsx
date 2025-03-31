@@ -2,6 +2,7 @@
 /**
  * Centralized utility functions for mockery functionality
  */
+import React from 'react';
 import { MockeryAction, MockeryTier } from '@/types/mockery';
 import type { LucideIcon } from 'lucide-react';
 import { 
@@ -12,7 +13,6 @@ import {
   AlertCircle, 
   Ghost,
   Volume2,
-  UserX,
   Sparkles,
   Cloud
 } from 'lucide-react';

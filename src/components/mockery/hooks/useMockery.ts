@@ -1,10 +1,8 @@
 
 import { useState, useCallback } from 'react';
+import { MockeryAction } from '@/types/mockery';
 
-export type MockeryAction = 'tomatoes' | 'eggs' | 'stocks' | 'silence' | 'courtJester';
-export type MockeryTier = 'basic' | 'advanced' | 'royal';
-
-interface UseMockeryOptions {
+export interface UseMockeryOptions {
   onSuccess?: (userId: string, action: MockeryAction) => void;
   onError?: (error: Error) => void;
 }
