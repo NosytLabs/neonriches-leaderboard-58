@@ -4,25 +4,9 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-    <link rel="manifest" href="/site.webmanifest">
-    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#0d0d20">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
     <meta name="theme-color" content="#0d0d20" />
     <meta name="description" content="Join SpendThrone, the satirical social platform where your rank is determined by your spending. A unique pay-to-win experiment that parodies digital status." />
-    
-    <!-- Add DNS prefetch and preconnect for key domains -->
-    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
-    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
-    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://cdn.gpteng.co" crossorigin>
-    
-    <!-- Preload critical assets -->
-    <link rel="preload" href="/throne-assets/crown-icon.svg" as="image" type="image/svg+xml">
-    <link rel="preload" href="/main.js" as="script">
     
     <!-- Primary Meta Tags -->
     <meta name="title" content="SpendThrone | The Ultimate Pay-to-Win Social Experiment" />
@@ -43,57 +27,8 @@
     <meta property="twitter:description" content="Join SpendThrone, the satirical social platform where your rank is determined by your spending. A unique pay-to-win experiment that parodies digital status." />
     <meta property="twitter:image" content="/og-image.jpg" />
     
-    <!-- Fonts - with display swap for better performance -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&family=Cinzel:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-    
-    <!-- Inline critical CSS -->
-    <style>
-      /* Critical CSS to ensure the page displays properly before full CSS loads */
-      body {
-        margin: 0;
-        padding: 0;
-        background-color: #0d0d20;
-        color: #fff;
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      }
-      
-      #root {
-        display: flex;
-        flex-direction: column;
-        min-height: 100vh;
-      }
-      
-      .loading-indicator {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background-color: #0d0d20;
-        z-index: 9999;
-        transition: opacity 0.3s ease;
-      }
-      
-      .loading-indicator.loaded {
-        opacity: 0;
-      }
-      
-      .spinner {
-        width: 40px;
-        height: 40px;
-        border: 3px solid rgba(255, 255, 255, 0.1);
-        border-radius: 50%;
-        border-top-color: #d4af37;
-        animation: spin 1s ease-in-out infinite;
-      }
-      
-      @keyframes spin {
-        to { transform: rotate(360deg); }
-      }
-    </style>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&family=Cinzel:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <title>SpendThrone | The Ultimate Pay-to-Win Social Experiment</title>
   </head>
@@ -106,20 +41,5 @@
     </div>
     <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
     <script type="module" src="/src/main.tsx"></script>
-    
-    <!-- Register service worker for offline support -->
-    <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/service-worker.js')
-            .then(registration => {
-              console.log('ServiceWorker registration successful');
-            })
-            .catch(error => {
-              console.log('ServiceWorker registration failed:', error);
-            });
-        });
-      }
-    </script>
   </body>
 </html>

@@ -12,16 +12,12 @@ import Login from '@/pages/Login';
 import SignUp from '@/pages/SignUp';
 import Dashboard from '@/pages/Dashboard';
 import Leaderboard from '@/pages/Leaderboard';
-import ProtectedRoute from '@/components/auth/ProtectedRoute';
 import NotFound from '@/pages/NotFound';
 import About from '@/pages/About';
 import Privacy from '@/pages/Privacy';
 import Terms from '@/pages/Terms';
 import Profile from '@/pages/Profile';
-import Wallet from '@/pages/Wallet';
-import Settings from '@/pages/Settings';
-import Events from '@/pages/Events';
-import StatusCenter from '@/pages/StatusCenter';
+import ProtectedRoute from '@/components/auth/ProtectedRoute';
 
 function App() {
   return (
@@ -40,8 +36,6 @@ function App() {
               <Route path="/about" element={<About />} />
               <Route path="/privacy" element={<Privacy />} />
               <Route path="/terms" element={<Terms />} />
-              <Route path="/status" element={<StatusCenter />} />
-              <Route path="/events" element={<Events />} />
               
               {/* Protected User Pages */}
               <Route 
@@ -61,25 +55,8 @@ function App() {
                 } 
               />
               <Route path="/profile/:username" element={<Profile />} />
-              <Route 
-                path="/wallet" 
-                element={
-                  <ProtectedRoute>
-                    <Wallet />
-                  </ProtectedRoute>
-                } 
-              />
-              <Route 
-                path="/settings" 
-                element={
-                  <ProtectedRoute>
-                    <Settings />
-                  </ProtectedRoute>
-                } 
-              />
               
               {/* Redirection routes for backwards compatibility */}
-              <Route path="/mockery" element={<Navigate to="/status" replace />} />
               <Route path="/home" element={<Navigate to="/" replace />} />
               
               {/* Catch-all for 404 */}
