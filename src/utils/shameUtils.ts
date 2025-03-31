@@ -1,5 +1,20 @@
 
 // Re-export shame functions from the mockery utilities
+import { 
+  getMockeryActionTitle as getMockeryName,
+  getMockeryActionDescription as getMockeryDescription,
+  getMockeryActionPrice as getMockeryCost,
+  getMockeryTier,
+  getMockeryTierColorClass,
+  getMockeryActionIcon,
+  getActiveMockeryClass,
+  hasWeeklyDiscount,
+  getWeeklyDiscountedAction,
+  getDiscountedShamePrice,
+  getShameActionPrice,
+  getShameActionMessage
+} from './mockery';
+
 export { 
   getMockeryName,
   getMockeryDescription,
@@ -7,12 +22,10 @@ export {
   getMockeryTier,
   getMockeryTierColorClass,
   getMockeryActionIcon,
-  getActiveMockeryClass
-} from './mockery';
-
-// Re-export discount functions
-export {
+  getActiveMockeryClass,
   hasWeeklyDiscount,
   getWeeklyDiscountedAction,
-  getDiscountedShamePrice
-} from './mockery/shame-discount-utils';
+  getDiscountedShamePrice,
+  getShameActionPrice,
+  getShameActionMessage
+};

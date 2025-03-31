@@ -2,61 +2,70 @@
 import { MockeryAction, MockeryTier } from '@/types/mockery';
 import { CosmeticRarity } from '@/types/cosmetics';
 
+// Get the tier/level of a mockery action
 export const getMockeryTier = (action: MockeryAction): MockeryTier => {
   const tiers: Record<MockeryAction, MockeryTier> = {
     tomatoes: 'basic',
     eggs: 'basic',
-    shame: 'basic',
-    dungeons: 'premium',
+    shame: 'premium',
+    dungeons: 'royal',
     immune: 'royal',
-    crown: 'premium',
+    crown: 'royal',
     stocks: 'basic',
     dunce: 'basic',
-    jester: 'basic',
-    fool: 'basic',
-    troll: 'basic',
-    peasant: 'basic',
-    rat: 'basic',
+    jester: 'premium',
+    // fool: 'premium',
+    troll: 'premium',
+    peasant: 'premium',
+    rat: 'premium',
     ghost: 'premium',
     skeleton: 'premium',
-    zombie: 'premium',
-    witch: 'premium',
-    monster: 'premium',
+    zombie: 'royal',
+    witch: 'royal',
+    monster: 'royal',
     demon: 'royal',
     dragon: 'royal',
     king: 'royal',
     queen: 'royal',
-    knight: 'premium',
-    bishop: 'premium',
-    rook: 'premium',
+    knight: 'royal',
+    bishop: 'royal',
+    rook: 'royal',
     pawn: 'basic',
-    target: 'basic',
+    target: 'premium',
     challenge: 'premium'
   };
   
   return tiers[action] || 'basic';
 };
 
+// Get CSS classes for each tier
 export const getMockeryTierColorClass = (tier: MockeryTier): string => {
-  const colors: Record<MockeryTier, string> = {
-    basic: 'text-gray-400',
-    premium: 'text-royal-purple',
-    royal: 'text-royal-gold',
-    legendary: 'text-royal-crimson',
-    silver: 'text-gray-300'
+  const colorClasses: Record<MockeryTier, string> = {
+    basic: 'text-gray-300 border-gray-300',
+    premium: 'text-royal-purple border-royal-purple',
+    royal: 'text-royal-gold border-royal-gold',
+    silver: 'text-gray-400 border-gray-400',
+    legendary: 'text-orange-500 border-orange-500'
   };
   
-  return colors[tier] || 'text-gray-400';
+  return colorClasses[tier] || 'text-gray-300 border-gray-300';
 };
 
+// Get rarity equivalent for each tier
 export const getMockeryTierRarity = (tier: MockeryTier): CosmeticRarity => {
   const rarities: Record<MockeryTier, CosmeticRarity> = {
     basic: 'common',
-    premium: 'rare',
-    royal: 'epic',
-    legendary: 'legendary',
-    silver: 'uncommon'
+    premium: 'uncommon',
+    royal: 'rare',
+    silver: 'epic',
+    legendary: 'legendary'
   };
   
   return rarities[tier] || 'common';
+};
+
+// Get active mockery class
+export const getActiveMockeryClass = (action: MockeryAction): string => {
+  const tier = getMockeryTier(action);
+  return getMockeryTierColorClass(tier);
 };

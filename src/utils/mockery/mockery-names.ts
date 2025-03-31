@@ -12,7 +12,7 @@ export const getMockeryActionTitle = (action: MockeryAction): string => {
     stocks: 'Village Stocks',
     dunce: 'Dunce Cap',
     jester: 'Court Jester',
-    fool: 'Royal Fool',
+    // fool: 'Royal Fool',
     troll: 'Troll Label',
     peasant: 'Peasant Demotion',
     rat: 'Plague Rat',

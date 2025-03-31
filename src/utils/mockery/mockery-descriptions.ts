@@ -1,41 +1,40 @@
 
-import { MockeryActionType } from '@/types/mockery';
+import { MockeryAction } from '@/types/mockery';
 
-/**
- * Get the description for a mockery action
- */
-export const getMockeryActionDescription = (action: MockeryActionType): string => {
-  const descriptions: Record<string, string> = {
-    tomatoes: 'Throw rotten tomatoes at this user, covering their profile with virtual tomato splatter.',
-    eggs: 'Fling digital rotten eggs at this user\'s profile, creating a messy, eggy overlay.',
-    shame: 'Ring the shame bell, alerting the entire kingdom to this user\'s dishonorable behavior.',
-    dungeons: 'Temporarily banish this user to the digital dungeons, where they shall reflect upon their actions.',
-    immune: 'Grant royal immunity to this user, protecting them from mockery for a limited time.',
-    crown: 'Place a ridiculous oversized crown on their profile, marking them as a pretender to the throne.',
-    stocks: 'Lock this user in the digital stocks, subjecting them to public ridicule.',
-    dunce: 'Place a dunce cap on this user\'s profile, marking them as lacking in wisdom.',
-    jester: 'Dress this user as the court jester, complete with bells and a multi-colored outfit.',
-    troll: 'Transform this user into a digital bridge troll, lurking under the castle\'s pathways.',
-    peasant: 'Demote this user to a lowly peasant, removing all signs of nobility.',
-    rat: 'Turn this user into a plague rat, scurrying through the digital castle.',
-    ghost: 'Transform this user into a ghostly apparition, haunting their own profile.',
-    skeleton: 'Replace this user\'s profile with a skeletal version, rattling through the halls of the castle.',
-    zombie: 'Turn this user into a shuffling zombie, groaning through the royal court.',
-    witch: 'Accuse this user of witchcraft, marking their profile with symbols of the occult.',
-    monster: 'Transform this user into a terrifying monster, frightening the other nobles.',
-    demon: 'Mark this user as possessed by a mischievous demon, wreaking havoc in the kingdom.',
-    dragon: 'Turn this user into a fearsome dragon, breathing digital fire throughout the castle.',
-    king: 'Crown this user as a false king, with a gaudy and obviously fake royal regalia.',
-    queen: 'Make this user a pretender queen, with an exaggerated crown and royal attire.',
-    knight: 'Dub this user a rusty knight, weighed down by creaking digital armor.',
-    bishop: 'Name this user a corrupt bishop, selling digital indulgences to all who pass by.',
-    rook: 'Turn this user into a crumbling rook, standing guard over nothing important.',
-    pawn: 'Expose this user as a mere pawn in the greater game of royal politics.',
-    target: 'Make this user a target for royal archery practice, with digital arrows hitting their profile.',
-    challenge: 'Issue a royal challenge to this user, demanding they prove their worth in coin.'
+export const getMockeryActionDescription = (action: MockeryAction): string => {
+  const descriptions: Record<MockeryAction, string> = {
+    tomatoes: 'Pelt your target with rotten tomatoes. A classic form of public ridicule.',
+    eggs: 'Hurl rotten eggs at your target. The stench will follow them for a day.',
+    shame: 'Subject your target to public ridicule and shame.',
+    dungeons: 'Condemn your target to the digital dungeons for their offenses.',
+    immune: 'Grant yourself immunity from mockery for a period of time.',
+    crown: 'Place a mock crown upon the head of your target, making them a false king/queen.',
+    stocks: 'Place your target in the virtual stocks for public display.',
+    dunce: 'Make your target wear a dunce cap, marking their foolishness.',
+    jester: 'Turn your target into a court jester, forced to entertain the nobles.',
+    // fool: 'Label your target as the village fool.',
+    troll: 'Mark your target as a digital troll for all to see.',
+    peasant: 'Demote your target to peasant status, regardless of their spending.',
+    rat: 'Curse your target with the mark of the plague rat.',
+    ghost: 'Make your target appear as a ghost, haunting the digital realm.',
+    skeleton: 'Turn your target into a skeleton, a reminder of their digital mortality.',
+    zombie: 'Mark your target as infected with the digital plague.',
+    witch: 'Subject your target to a virtual witch trial.',
+    monster: 'Label your target as a digital monster, feared by all.',
+    demon: 'Mark your target with demonic symbols for their digital sins.',
+    dragon: 'Make your target the target of a virtual dragon\'s wrath.',
+    king: 'Declare your target a false king, unworthy of their title.',
+    queen: 'Declare your target a false queen, unworthy of their title.',
+    knight: 'Brand your target as a tarnished knight, fallen from grace.',
+    bishop: 'Mark your target as a fallen bishop, their digital piety questioned.',
+    rook: 'Label your target as a damaged rook, their defenses crumbling.',
+    pawn: 'Demote your target to a mere pawn in the digital game.',
+    target: 'Mark your target as the royal target, the focus of the court\'s ridicule.',
+    challenge: 'Challenge your target to a gauntlet of digital trials and tribulations.'
   };
   
-  return descriptions[action] || 'Apply a mysterious and malicious effect to this user\'s profile.';
+  return descriptions[action] || 'Subject your target to mockery.';
 };
 
-export default getMockeryActionDescription;
+// For backward compatibility
+export const getMockeryDescription = getMockeryActionDescription;

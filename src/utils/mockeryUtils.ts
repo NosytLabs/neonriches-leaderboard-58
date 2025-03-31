@@ -19,16 +19,3 @@ export {
   getMockeryTierColorClass,
   getActiveMockeryClass
 };
-
-// Helper functions for UI components that need to render mockery icons
-export const renderMockeryIcon = (iconName: string, className: string = "h-4 w-4") => {
-  // In a full implementation, this would retrieve and render the appropriate icon component
-  return `<span class="${className}">${iconName}</span>`;
-};
-
-export const getMockeryActionIconComponent = (action: any, className: string = "h-4 w-4") => {
-  // Get the icon name from mockery-icons
-  const iconName = getMockeryActionIcon(action);
-  // Then render the icon
-  return renderMockeryIcon(iconName, className);
-};

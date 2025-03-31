@@ -2,7 +2,7 @@
 import React from 'react';
 import { MockeryAction } from '@/types/mockery';
 import { cn } from '@/lib/utils';
-import { LucideProps } from 'lucide-react';
+import { getMockeryActionIcon, getMockeryTierColorClass, getMockeryTier } from '@/utils/mockery';
 
 interface MockeryIconProps {
   action: MockeryAction;
@@ -15,11 +15,9 @@ const MockeryIcon: React.FC<MockeryIconProps> = ({
   size = 16,
   className
 }) => {
-  // Import dynamically to avoid circular dependencies
-  const { getMockeryActionIcon, getMockeryActionIconColor } = require('@/components/mockery/utils/mockeryUtils');
-  
   const IconComponent = getMockeryActionIcon(action);
-  const colorClass = getMockeryActionIconColor(action);
+  const tier = getMockeryTier(action);
+  const colorClass = getMockeryTierColorClass(tier);
   
   return (
     <IconComponent 

@@ -15,7 +15,7 @@ export type MockeryAction =
   | 'stocks' 
   | 'dunce' 
   | 'jester' 
-  | 'fool' 
+  // | 'fool' // Removed as it's causing issues
   | 'troll' 
   | 'peasant' 
   | 'rat' 

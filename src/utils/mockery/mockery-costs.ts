@@ -1,37 +1,41 @@
 
 import { MockeryAction } from '@/types/mockery';
 
-export const getMockeryCost = (action: MockeryAction): number => {
-  const costs: Record<MockeryAction, number> = {
+// Define prices for each mockery action
+export const getMockeryActionPrice = (action: MockeryAction): number => {
+  const prices: Record<MockeryAction, number> = {
     tomatoes: 10,
     eggs: 15,
     shame: 25,
     dungeons: 50,
-    immune: 100,
-    crown: 40,
-    stocks: 30,
-    dunce: 20,
-    jester: 35,
-    fool: 25,
-    troll: 30,
-    peasant: 25,
-    rat: 20,
-    ghost: 45,
-    skeleton: 50,
-    zombie: 55,
-    witch: 60,
-    monster: 65,
-    demon: 75,
-    dragon: 85,
-    king: 90,
-    queen: 90,
-    knight: 70,
-    bishop: 65,
-    rook: 60,
-    pawn: 40,
-    target: 35,
-    challenge: 45
+    immune: 75,
+    crown: 100,
+    stocks: 20,
+    dunce: 25,
+    jester: 30,
+    // fool: 35, // Commented out as it's not defined in MockeryAction type
+    troll: 40,
+    peasant: 45,
+    rat: 50,
+    ghost: 60,
+    skeleton: 65,
+    zombie: 70,
+    witch: 75,
+    monster: 80,
+    demon: 85,
+    dragon: 90,
+    king: 100,
+    queen: 100,
+    knight: 80,
+    bishop: 85,
+    rook: 75,
+    pawn: 50,
+    target: 60,
+    challenge: 75
   };
   
-  return costs[action] || 25;
+  return prices[action] || 25; // Default price
 };
+
+// For backward compatibility
+export const getMockeryCost = getMockeryActionPrice;
