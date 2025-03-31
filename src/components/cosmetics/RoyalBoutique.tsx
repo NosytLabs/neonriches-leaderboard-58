@@ -183,6 +183,17 @@ const RoyalBoutique = () => {
     interaction: emptyArray
   };
 
+  // Helper function to check if a user owns a cosmetic
+  const userOwnsCosmetic = (category: string, itemId: string): boolean => {
+    if (!user || !user.cosmetics) return false;
+    
+    const categoryItems = user.cosmetics[category];
+    if (!categoryItems) return false;
+    
+    // Check if the category items is an array and contains the item id
+    return Array.isArray(categoryItems) && categoryItems.indexOf(itemId) !== -1;
+  };
+
   return (
     <div className="container mx-auto py-10">
       <Card className="glass-morphism border-white/10">
@@ -222,18 +233,14 @@ const RoyalBoutique = () => {
                             />
                             <Button onClick={() => handlePurchase(item)} disabled={!user}>
                               {user ? (
-                                user.cosmetics && user.cosmetics[item.category] && 
-                                Array.isArray(user.cosmetics[item.category]) && 
-                                user.cosmetics[item.category].includes(item.id) ? (
+                                userOwnsCosmetic(item.category, item.id) ? (
                                   <Check className="mr-2 h-4 w-4" />
                                 ) : (
                                   <DollarSign className="mr-2 h-4 w-4" />
                                 )
                               ) : null}
                               {user ? (
-                                user.cosmetics && user.cosmetics[item.category] && 
-                                Array.isArray(user.cosmetics[item.category]) && 
-                                user.cosmetics[item.category].includes(item.id) ? (
+                                userOwnsCosmetic(item.category, item.id) ? (
                                   "Owned"
                                 ) : (
                                   "Purchase"

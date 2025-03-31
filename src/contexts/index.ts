@@ -1,7 +1,7 @@
 
 import { createContext, useContext } from 'react';
 import { AuthContextType } from '@/types/auth-context';
-import { UserProfile, User } from '@/types/user';
+import { UserProfile } from '@/types/user-consolidated';
 
 // Create a context with a default value
 export const AuthContext = createContext<AuthContextType>({
@@ -13,7 +13,7 @@ export const AuthContext = createContext<AuthContextType>({
   register: async () => false,
   logout: async () => {},
   signOut: async () => {},
-  updateUserProfile: async () => {},
+  updateUserProfile: async () => false,
   updateUser: async () => false,
   awardCosmetic: async () => false,
 });
@@ -22,7 +22,7 @@ export const AuthContext = createContext<AuthContextType>({
 export const useAuth = () => useContext(AuthContext);
 
 // Export types
-export type { UserProfile, User, AuthContextType };
+export type { UserProfile, AuthContextType };
 
 // Export the AuthProvider component
 export { AuthProvider } from './auth/AuthProvider';

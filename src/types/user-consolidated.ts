@@ -1,49 +1,72 @@
 
-export type TeamColor = 
-  | 'red' 
-  | 'blue' 
-  | 'green' 
-  | 'gold' 
-  | 'purple' 
-  | 'none'
-  | 'neutral'; // Added for backward compatibility
+import { UserCosmetics, UserCosmeticState } from './cosmetics';
 
-export type TeamType = 
-  | 'red' 
-  | 'blue' 
-  | 'green' 
-  | 'purple' 
-  | 'gold' 
-  | 'neutral' 
-  | 'none';
+// Define team colors
+export type TeamColor = 'red' | 'blue' | 'green' | 'gold' | 'purple' | 'none' | 'neutral';
+export type TeamType = 'red' | 'blue' | 'green' | 'gold' | 'purple' | 'none' | 'neutral';
 
+// Define user tiers
 export type UserTier = 
-  | 'free' 
-  | 'basic' 
-  | 'premium' 
-  | 'royal' 
-  | 'legendary' 
+  | 'free'
+  | 'basic'
+  | 'premium'
+  | 'royal'
+  | 'legendary'
   | 'founder'
-  | 'noble' 
-  | 'knight' 
-  | 'baron' 
-  | 'viscount' 
-  | 'earl' 
-  | 'duke' 
-  | 'prince' 
-  | 'king' 
-  | 'emperor' 
+  | 'noble'
+  | 'knight'
+  | 'baron'
+  | 'viscount'
+  | 'earl'
+  | 'duke'
+  | 'prince'
+  | 'king'
+  | 'emperor'
   | 'whale'
-  | 'pro' // Added for backward compatibility
-  | 'standard' // Added for backward compatibility
-  | 'elite' // Added for backward compatibility
-  | 'silver' // Added for backward compatibility
-  | 'gold' // Added for backward compatibility
-  | 'platinum' // Added for backward compatibility
-  | 'diamond' // Added for backward compatibility
-  | 'bronze' // Added for backward compatibility
-  | 'vip'; // Added for backward compatibility
+  | 'pro'
+  | 'standard'
+  | 'elite'
+  | 'silver' 
+  | 'gold'
+  | 'platinum'
+  | 'diamond'
+  | 'bronze'
+  | 'vip';
 
+// Define gender type
+export type Gender = 'king' | 'queen' | 'neutral' | 'jester' | 'noble';
+
+// Define social link type
+export interface SocialLink {
+  id: string | number;
+  platform: string;
+  url: string;
+  icon?: string;
+  clicks?: number;
+}
+
+// Define profile image type
+export interface ProfileImage {
+  id: string;
+  url: string;
+  isPrimary: boolean;
+  caption?: string;
+  type: string;
+}
+
+// Define profile boost type
+export interface ProfileBoost {
+  id: string;
+  startDate: string;
+  endDate: string;
+  level: number;
+  type: string;
+  strength: number;
+  appliedBy: string;
+  isActive: boolean;
+}
+
+// Define user settings
 export interface UserSettings {
   profileVisibility: 'public' | 'private' | 'friends';
   allowProfileLinks: boolean;
@@ -51,70 +74,64 @@ export interface UserSettings {
   notifications: boolean;
   emailNotifications: boolean;
   marketingEmails: boolean;
+  showRank: boolean;
+  darkMode: boolean;
   soundEffects: boolean;
-  showEmailOnProfile?: boolean; // Added for backward compatibility
-  rankChangeAlerts: boolean;
   newFollowerAlerts: boolean;
   teamNotifications: boolean;
-  showRank: boolean;
   showTeam: boolean;
   showSpending: boolean;
-  darkMode?: boolean; // Added for backward compatibility
 }
 
+// Define the user profile properties
 export interface UserProfile {
-  id: string;
+  id: string | number;
   username: string;
   displayName?: string;
   email?: string;
   profileImage?: string;
-  coverImage?: string;
   bio?: string;
-  joinDate?: string;
-  joinedDate?: string; // Added for backward compatibility
-  tier?: UserTier;
-  team?: TeamColor;
+  joinedDate?: string;
   rank?: number;
-  previousRank?: number;
+  amountSpent?: number;
   totalSpent?: number;
   walletBalance?: number;
-  amountSpent?: number; // Added for backward compatibility
-  spentAmount?: number; // Added for backward compatibility
-  isFounder?: boolean;
+  tier: UserTier;
+  team?: TeamColor | null;
   isVerified?: boolean;
-  isVIP?: boolean; // Added for backward compatibility
+  isVIP?: boolean;
+  cosmetics?: UserCosmetics | UserCosmeticState | Record<string, string[] | string | Record<string, string>>;
   settings?: UserSettings;
-  cosmetics?: UserCosmeticState;
   profileBoosts?: ProfileBoost[];
-  socialLinks?: SocialLink[];
-  spendStreak?: number;
+  socialLinks?: SocialLink[] | Record<string, string>;
+  profileImages?: ProfileImage[];
+  lastActive?: string;
+  followers?: number;
+  following?: number;
   isFollowing?: boolean;
-  followers?: number; // Added for backward compatibility
-  following?: number; // Added for backward compatibility
-  lastActive?: string; // Added for backward compatibility
-  profileViews?: number; // Added for backward compatibility
-  profileClicks?: number; // Added for backward compatibility
-  purchasedFeatures?: string[]; // Added for backward compatibility
-  role?: string; // Added for backward compatibility
-  teamRank?: number; // Added for backward compatibility
-  certificateNFT?: {
-    mintAddress?: string;
-  };
+  roleLevel?: number;
+  activeTitle?: string;
+  gender?: Gender;
+  role?: string;
 }
 
-// Import necessary types from other modules
-import { ProfileBoost } from './boost';
-import { SocialLink, UserCosmeticState } from './cosmetics';
+// Legacy User interface for backward compatibility
+export type User = UserProfile;
 
+// Define auth context type
 export interface AuthContextType {
   user: UserProfile | null;
   isAuthenticated: boolean;
   isLoading: boolean;
   login: (email: string, password: string) => Promise<boolean>;
-  signIn: (email: string, password: string) => Promise<boolean>;
   register: (username: string, email: string, password: string) => Promise<boolean>;
   logout: () => Promise<void>;
-  signOut: () => Promise<void>;
-  updateUser: (updates: Partial<UserProfile>) => Promise<boolean>;
   updateUserProfile: (updates: Partial<UserProfile>) => Promise<boolean>;
+  signIn?: (email: string, password: string) => Promise<boolean>;
+  signOut?: () => Promise<void>;
+  updateUser?: (userData: Partial<UserProfile>) => Promise<boolean>;
+  awardCosmetic: (category: string, itemId: string, notify?: boolean) => Promise<boolean>;
 }
+
+// Export everything from this file as the main user types
+export * from './user';

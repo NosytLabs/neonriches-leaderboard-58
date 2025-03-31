@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -31,33 +30,72 @@ const EnhancedWishingWell: React.FC<EnhancedWishingWellProps> = ({ className }) 
       name: 'Golden Border',
       description: 'A luxurious golden border for your profile',
       price: 50,
-      category: 'border', // Changed from borders to border
+      category: 'border',
       cssClass: 'border-golden',
       rarity: 'rare',
       type: 'border',
-      image: '/images/cosmetics/golden-border.png'
+      image: '/images/cosmetics/golden-border.png',
+      enabled: true
     },
     {
       id: 'royal-purple',
       name: 'Royal Purple Theme',
       description: 'The color of royalty',
       price: 75,
-      category: 'color', // Changed from colors to color
+      category: 'color',
       cssClass: 'theme-royal-purple',
       rarity: 'epic',
       type: 'color',
-      image: '/images/cosmetics/royal-purple.png'
+      image: '/images/cosmetics/royal-purple.png',
+      enabled: true
     },
     {
       id: 'sparkling-aura',
       name: 'Sparkling Aura',
       description: 'A dazzling effect that surrounds your profile',
       price: 100,
-      category: 'effect', // Changed from effects to effect
+      category: 'effect',
       cssClass: 'effect-sparkling',
       rarity: 'legendary',
       type: 'effect',
-      image: '/images/cosmetics/sparkling-aura.png'
+      image: '/images/cosmetics/sparkling-aura.png',
+      enabled: true
+    },
+    {
+      id: 'border-royal',
+      name: 'Royal Border',
+      description: 'A magnificent royal border for your profile',
+      price: 100,
+      category: 'border',
+      cssClass: 'border-royal',
+      rarity: 'rare',
+      type: 'border',
+      image: '/images/cosmetics/royal-border.png',
+      enabled: true
+    },
+    {
+      id: 'color-mythic',
+      name: 'Mythic Aura',
+      description: 'A mythical purple aura for your name',
+      price: 150,
+      category: 'color',
+      cssClass: 'text-mythic',
+      rarity: 'epic',
+      type: 'color',
+      image: '/images/cosmetics/mythic-aura.png',
+      enabled: true
+    },
+    {
+      id: 'effect-stardust',
+      name: 'Stardust Trail',
+      description: 'Leave a trail of stardust as you move',
+      price: 200,
+      category: 'effect',
+      cssClass: 'effect-stardust',
+      rarity: 'legendary',
+      type: 'effect',
+      image: '/images/cosmetics/stardust-trail.png',
+      enabled: true
     }
   ];
   

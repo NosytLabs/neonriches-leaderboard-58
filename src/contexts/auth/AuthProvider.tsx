@@ -167,23 +167,25 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
     try {
       // Update user's cosmetics
-      const userCosmetics = {...state.user.cosmetics};
+      const userCosmetics = state.user.cosmetics || {};
       
-      // Ensure the category exists
+      // Ensure the category exists as an array
       if (!userCosmetics[category]) {
         userCosmetics[category] = [];
       }
       
       // Add the item if it doesn't exist
-      if (Array.isArray(userCosmetics[category]) && !userCosmetics[category].includes(itemId)) {
-        userCosmetics[category] = [...userCosmetics[category], itemId];
+      const categoryItems = userCosmetics[category];
+      if (Array.isArray(categoryItems) && categoryItems.indexOf(itemId) === -1) {
+        // Create a new array with the new item (to maintain immutability)
+        userCosmetics[category] = [...categoryItems, itemId];
       }
 
       // Update user profile with new cosmetics
       const updatedUser = {
         ...state.user,
         cosmetics: userCosmetics,
-        // Deduct the cost from wallet balance in a real app
+        // In a real app, we would deduct the cost from wallet balance
         // walletBalance: state.user.walletBalance - itemPrice
       };
 

@@ -12,7 +12,8 @@ export const cosmeticsData: CosmeticItem[] = [
     price: 100,
     cost: 100, // Kept for backward compatibility
     imageSrc: "/assets/cosmetics/borders/royal-gold.png",
-    cssClass: "border-royal-gold animate-border-shine"
+    cssClass: "border-royal-gold animate-border-shine",
+    enabled: true
   },
   {
     id: "color_royal_purple",
@@ -23,7 +24,8 @@ export const cosmeticsData: CosmeticItem[] = [
     rarity: "epic",
     price: 75,
     cost: 75, // Kept for backward compatibility
-    cssClass: "text-royal-purple"
+    cssClass: "text-royal-purple",
+    enabled: true
   },
   {
     id: "font_medieval_script",
@@ -34,7 +36,8 @@ export const cosmeticsData: CosmeticItem[] = [
     rarity: "rare",
     price: 50,
     cost: 50, // Kept for backward compatibility
-    cssClass: "font-medieval"
+    cssClass: "font-medieval",
+    enabled: true
   },
   {
     id: "title_lord",
@@ -45,7 +48,8 @@ export const cosmeticsData: CosmeticItem[] = [
     rarity: "epic",
     price: 200,
     cost: 200, // Kept for backward compatibility
-    cssClass: "title-lord"
+    cssClass: "title-lord",
+    enabled: true
   },
   {
     id: "title_lady",
@@ -56,7 +60,8 @@ export const cosmeticsData: CosmeticItem[] = [
     rarity: "epic",
     price: 200,
     cost: 200, // Kept for backward compatibility
-    cssClass: "title-lady"
+    cssClass: "title-lady",
+    enabled: true
   },
   {
     id: "emoji_diamond",
@@ -67,7 +72,8 @@ export const cosmeticsData: CosmeticItem[] = [
     rarity: "uncommon",
     price: 25,
     cost: 25, // Kept for backward compatibility
-    cssClass: "emoji-diamond"
+    cssClass: "emoji-diamond",
+    enabled: true
   },
   {
     id: "border_flame",
@@ -78,7 +84,8 @@ export const cosmeticsData: CosmeticItem[] = [
     rarity: "rare",
     price: 80,
     cost: 80, // Kept for backward compatibility
-    cssClass: "border-gradient-fire"
+    cssClass: "border-gradient-fire",
+    enabled: true
   },
   {
     id: "effect_sparkle",
@@ -89,7 +96,8 @@ export const cosmeticsData: CosmeticItem[] = [
     rarity: "uncommon",
     price: 60,
     cost: 60, // Kept for backward compatibility
-    cssClass: "animate-sparkle"
+    cssClass: "animate-sparkle",
+    enabled: true
   },
   {
     id: "badge_whale",
@@ -101,7 +109,8 @@ export const cosmeticsData: CosmeticItem[] = [
     price: 500,
     cost: 500, // Kept for backward compatibility
     cssClass: "badge-whale",
-    imageSrc: "/assets/cosmetics/badges/whale.png"
+    imageSrc: "/assets/cosmetics/badges/whale.png",
+    enabled: true
   },
   {
     id: "background_throne",
@@ -113,7 +122,8 @@ export const cosmeticsData: CosmeticItem[] = [
     price: 300,
     cost: 300, // Kept for backward compatibility
     cssClass: "bg-throne-room",
-    imageSrc: "/assets/cosmetics/backgrounds/throne-room.png"
+    imageSrc: "/assets/cosmetics/backgrounds/throne-room.png",
+    enabled: true
   }
 ];
 
