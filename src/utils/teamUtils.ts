@@ -1,4 +1,3 @@
-
 import { TeamColor } from '@/types/mockery-types';
 
 // Get the display name for a team
