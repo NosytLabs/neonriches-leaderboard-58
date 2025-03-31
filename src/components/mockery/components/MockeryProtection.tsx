@@ -1,9 +1,10 @@
 
 import React from 'react';
-import { Card } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Shield } from 'lucide-react';
 import { UserProfile } from '@/types/user';
+import { getMockeryCost } from '@/utils/mockery';
 
 interface MockeryProtectionProps {
   user: UserProfile | null;
@@ -16,56 +17,45 @@ const MockeryProtection: React.FC<MockeryProtectionProps> = ({
   isProtected,
   onPurchaseProtection
 }) => {
+  // Get the cost of protection
+  const protectionCost = getMockeryCost('protection');
+  
   return (
-    <Card className="p-4 border border-royal-gold/20 bg-gradient-to-b from-black/50 to-royal-purple/5">
-      <div className="flex items-center mb-4">
-        <Shield className="h-8 w-8 text-royal-gold mr-3" />
-        <h3 className="text-lg font-medium">Royal Protection</h3>
+    <Card className="p-6">
+      <div className="text-center mb-6">
+        <div className="w-16 h-16 mx-auto bg-royal-gold/20 rounded-full flex items-center justify-center mb-4">
+          <Shield className="h-8 w-8 text-royal-gold" />
+        </div>
+        <h3 className="text-xl font-semibold mb-2">Royal Protection</h3>
+        <p className="text-white/70 text-sm">
+          Purchase royal protection to shield yourself from mockery for 72 hours.
+        </p>
       </div>
       
-      <p className="text-sm text-muted-foreground mb-6">
-        Purchase royal protection to shield yourself from mockery and public shame.
-        Protection lasts for 7 days and prevents others from applying mockery effects to your profile.
-      </p>
-      
-      {isProtected ? (
-        <div className="bg-green-900/20 border border-green-500/30 rounded-md p-3 text-sm mb-4">
-          <p className="font-medium text-green-400">Protected Status Active</p>
-          <p className="text-muted-foreground text-xs mt-1">
-            Your royal protection is currently active. You are safe from mockery.
-          </p>
-        </div>
-      ) : (
-        <div className="bg-yellow-900/20 border border-yellow-500/30 rounded-md p-3 text-sm mb-4">
-          <p className="font-medium text-yellow-400">Vulnerable Status</p>
-          <p className="text-muted-foreground text-xs mt-1">
-            You are currently vulnerable to mockery from other nobles.
-          </p>
-        </div>
-      )}
-      
-      <div className="flex flex-col space-y-2">
-        <div className="flex items-center justify-between pb-2 border-b border-gray-800">
-          <span className="text-sm">Protection Cost:</span>
-          <span className="font-mono">$5.00</span>
-        </div>
+      <CardContent className="space-y-4 px-0 pt-4">
+        {isProtected ? (
+          <div className="p-4 bg-green-500/10 border border-green-500/30 rounded-lg text-center">
+            <p className="font-medium text-green-400">You are currently protected from mockery</p>
+            <p className="text-sm text-white/70 mt-1">Your royal immunity shields you from public ridicule</p>
+          </div>
+        ) : (
+          <div className="p-4 bg-royal-gold/10 border border-royal-gold/20 rounded-lg flex flex-col items-center">
+            <p className="mb-4 text-white/80">
+              Prevent others from mocking you with royal immunity
+            </p>
+            <Button 
+              onClick={onPurchaseProtection}
+              className="bg-royal-gold hover:bg-royal-gold/90"
+            >
+              Purchase Protection (${protectionCost.toFixed(2)})
+            </Button>
+          </div>
+        )}
         
-        <div className="flex items-center justify-between pb-2 border-b border-gray-800">
-          <span className="text-sm">Protection Duration:</span>
-          <span className="font-mono">7 days</span>
+        <div className="text-sm text-white/50 italic text-center mt-4">
+          Protection is a premium feature that prevents other users from applying mockery effects to your profile.
         </div>
-      </div>
-      
-      <div className="mt-6 flex justify-center">
-        <Button 
-          variant="outline" 
-          className="border-royal-gold/30 text-royal-gold hover:bg-royal-gold/10"
-          onClick={onPurchaseProtection}
-          disabled={isProtected}
-        >
-          {isProtected ? 'Already Protected' : 'Purchase Protection ($5.00)'}
-        </Button>
-      </div>
+      </CardContent>
     </Card>
   );
 };

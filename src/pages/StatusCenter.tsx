@@ -40,7 +40,7 @@ const StatusCenter = () => {
           </TabsContent>
           
           <TabsContent value="history">
-            <Card>
+            <Card className="glass-morphism border-royal-crimson/20">
               <CardHeader>
                 <CardTitle className="text-lg">Status History</CardTitle>
               </CardHeader>
