@@ -14,6 +14,7 @@ export { useTabState } from './useTabState';
 export { useResponsive } from './use-responsive';
 export { useIntersectionObserver } from './use-intersection-observer';
 export { useLazyComponent } from './use-lazy-component';
+export { useLazyLoad } from './use-lazy-load';
 
 // Feature Hooks
 export { useMockery } from './useMockery';

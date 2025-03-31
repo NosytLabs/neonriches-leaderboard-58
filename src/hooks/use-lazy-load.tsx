@@ -9,7 +9,7 @@ import { lazy, ComponentType, Suspense, useState, useEffect } from 'react';
  */
 export function useLazyLoad<T extends ComponentType<any>>(
   factory: () => Promise<{ default: T }>,
-  fallback: React.ReactNode = <div className="animate-pulse h-20 w-full bg-gray-200 rounded-md"></div>
+  fallback: React.ReactNode = null
 ) {
   const [loadTime, setLoadTime] = useState<number | null>(null);
   const startTime = performance.now();
@@ -29,8 +29,9 @@ export function useLazyLoad<T extends ComponentType<any>>(
     }
   }, [loadTime]);
   
+  // Create a function component that wraps the lazy component in Suspense
   const Component = (props: React.ComponentProps<T>) => (
-    <Suspense fallback={fallback}>
+    <Suspense fallback={fallback || <div className="animate-pulse h-20 w-full bg-gray-200 rounded-md"></div>}>
       <LazyComponent {...props} />
     </Suspense>
   );
