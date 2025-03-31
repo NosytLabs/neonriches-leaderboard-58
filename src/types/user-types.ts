@@ -1,73 +1,140 @@
 
-// User role and status types
-export type UserRole = 'user' | 'admin' | 'moderator' | 'vip' | 'developer';
-export type UserStatus = 'active' | 'inactive' | 'suspended' | 'banned';
+import { TeamColor } from './team';
+import { ProfileBoost } from './boost';
+import { UserCosmeticState } from './cosmetics';
+
+// User tiers
 export type UserTier = 
   | 'free' 
   | 'basic' 
-  | 'plus' 
   | 'premium' 
   | 'royal' 
-  | 'diamond'
-  | 'pro'
-  | 'gold'
-  | 'silver'
-  | 'bronze'
-  | 'platinum';
-export type UserGender = 'male' | 'female' | 'non-binary' | 'other' | 'prefer-not-to-say';
-export type UserTeam = 'red' | 'green' | 'blue' | 'none';
+  | 'gold' 
+  | 'silver' 
+  | 'platinum' 
+  | 'diamond' 
+  | 'founder' 
+  | 'vip' 
+  | 'pro';
 
-export interface UserPreferences {
-  theme: 'light' | 'dark' | 'system';
-  language: string;
-  timezone: string;
-  currency: string;
+// User role types
+export type UserRole = 'user' | 'admin' | 'moderator' | 'founder';
+
+// User gender
+export type UserGender = 'male' | 'female' | 'other' | 'prefer-not-to-say';
+
+// Social link structure
+export interface SocialLink {
+  url: string;
+  title?: string;
+  label?: string;
+  platform?: string;
+  icon?: string;
+  id?: string;
+  clicks?: number;
 }
 
-export interface UserStats {
-  totalSpent: number;
-  highestRank: number;
-  lowestRank: number;
-  consecutiveLoginDays: number;
-  joinDate: string;
-  lastLogin: string;
-  referrals: number;
-}
-
-export interface UserSubscription {
-  id: string;
-  tier: UserTier;
-  startDate: string;
-  endDate: string;
-  isActive: boolean;
-  autoRenew: boolean;
-  price: number;
-}
-
+// User settings structure
 export interface UserSettings {
-  profileVisibility: "public" | "private" | "friends";
+  profileVisibility: 'public' | 'private' | 'friends';
   allowProfileLinks: boolean;
-  theme: "light" | "dark" | "royal" | "system";
+  theme: 'light' | 'dark' | 'royal' | 'system';
   notifications: boolean;
   emailNotifications: boolean;
   marketingEmails: boolean;
-  showRank: boolean;
-  showSpending: boolean;
-  showBalance: boolean;
-  showAchievements: boolean;
-  showBadges: boolean;
-  spendAlerts: boolean;
-  rankChangeAlerts: boolean;
-  teamNotifications?: boolean;
-  showTeam: boolean;
   soundEffects: boolean;
-  darkMode?: boolean;
-  language?: string;
-  allowMessages?: boolean;
-  showEmailOnProfile?: boolean;
-  shameAlerts?: boolean;
-  newFollowerAlerts?: boolean;
-  publicProfile?: boolean;
-  teamChangeAlerts?: boolean;
-  spendingAlerts?: boolean; // Alternative to spendAlerts for compatibility
+  darkMode: boolean;
+  showEmailOnProfile: boolean;
+  showRank: boolean;
+  showTeam: boolean;
+  showSpending: boolean;
+  newFollowerAlerts: boolean;
+  teamNotifications: boolean;
+  rankChangeAlerts?: boolean;
 }
+
+// Profile image
+export interface ProfileImage {
+  url: string;
+  type: 'avatar' | 'banner' | 'gallery';
+  isPrimary?: boolean;
+  caption?: string;
+}
+
+// Certificate information
+export interface CertificateNFT {
+  id: string;
+  mintAddress: string;
+  type: string;
+  imageUrl: string;
+  dateIssued: string;
+  isVerified: boolean;
+}
+
+// Main User interface
+export interface User {
+  id: string;
+  username: string;
+  displayName: string;
+  email: string;
+  profileImage: string;
+  bio: string;
+  joinDate: string;
+  previousRank: number;
+  rank: number;
+  team: TeamColor;
+  tier: UserTier;
+  settings: UserSettings;
+  socialLinks: SocialLink[];
+  cosmetics: UserCosmeticState;
+  isFounder: boolean;
+  walletBalance: number;
+  totalSpent: number;
+  spentAmount?: number;
+  profileBoosts: ProfileBoost[];
+  
+  // Additional properties for backward compatibility
+  gender?: UserGender;
+  role?: UserRole;
+  isVerified?: boolean;
+  isVIP?: boolean;
+  activeTitle?: string;
+  followers?: number;
+  following?: number;
+  profileImages?: ProfileImage[];
+  profileViews?: number;
+  profileClicks?: number;
+  lastActive?: string;
+  spendStreak?: number;
+  certificateNFT?: CertificateNFT;
+  subscription?: string;
+  purchasedFeatures?: string[];
+  avatarUrl?: string;
+}
+
+// Simplified user profile type
+export interface UserProfile {
+  id: string;
+  username: string;
+  displayName: string;
+  profileImage: string;
+  bio?: string;
+  team?: TeamColor;
+  tier?: UserTier;
+  rank?: number;
+  totalSpent?: number;
+  isFounder?: boolean;
+  
+  // Additional properties for compatibility
+  spendStreak?: number;
+  walletBalance?: number;
+  joined?: string;
+  subscription?: string;
+}
+
+export type ExtendedUserProfile = UserProfile & {
+  socialLinks?: SocialLink[];
+  settings?: Partial<UserSettings>;
+  cosmetics?: Partial<UserCosmeticState>;
+  profileBoosts?: ProfileBoost[];
+};

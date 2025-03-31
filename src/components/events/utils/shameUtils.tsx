@@ -3,7 +3,25 @@ import React from 'react';
 import { cn } from '@/lib/utils';
 import { LucideIcon } from 'lucide-react';
 import { ShieldAlert, Ban, Music2, UserX, CloudFog, UserRoundX, Crown, Skull } from 'lucide-react';
-import { MockeryAction, ShameAction as ShameActionType } from '@/types/mockery';
+import { MockeryAction } from '@/types/mockery-types';
+import { 
+  getShameActionPrice, 
+  getDiscountedShamePrice, 
+  getShameActionMessage 
+} from '@/utils/mockery/shame-discount-utils';
+import { 
+  getMockeryActionTitle, 
+  getMockeryActionDescription 
+} from '@/utils/mockery';
+
+// Re-export for compatibility
+export { 
+  getShameActionPrice, 
+  getDiscountedShamePrice, 
+  getShameActionMessage,
+  getMockeryActionTitle as getShameActionTitle,
+  getMockeryActionDescription as getShameActionDescription
+};
 
 /**
  * Get the appropriate icon for a shame action
@@ -66,42 +84,6 @@ export const getWeeklyDiscountedAction = (): MockeryAction => {
   return WEEKLY_DISCOUNTED_ACTION;
 };
 
-/**
- * Get the shame action price
- */
-export const getShameActionPrice = (action: MockeryAction): number => {
-  const prices: Record<string, number> = {
-    tomatoes: 0.25,
-    eggs: 0.50,
-    stocks: 1.00,
-    shame: 0.75
-  };
-  
-  return prices[action] || 0.25;
-};
-
-/**
- * Get the discounted price for an action
- */
-export const getDiscountedShamePrice = (action: MockeryAction): number => {
-  const basePrice = getShameActionPrice(action);
-  return basePrice * (1 - DISCOUNT_PERCENTAGE);
-};
-
-/**
- * Get a custom message for shame actions
- */
-export const getShameActionMessage = (action: MockeryAction, username: string): string => {
-  const messages: Record<string, string> = {
-    tomatoes: `${username} has been pelted with rotten tomatoes!`,
-    eggs: `${username} has been pelted with rotten eggs!`,
-    shame: `${username} has been rung with the bell of shame!`,
-    stocks: `${username} has been locked in the stocks for public ridicule!`
-  };
-  
-  return messages[action] || `${username} has been mocked!`;
-};
-
 export default {
   getShameActionIcon,
   renderShameActionIcon,
@@ -109,5 +91,7 @@ export default {
   getWeeklyDiscountedAction,
   getShameActionPrice,
   getDiscountedShamePrice,
-  getShameActionMessage
+  getShameActionMessage,
+  getShameActionTitle: getMockeryActionTitle,
+  getShameActionDescription: getMockeryActionDescription
 };

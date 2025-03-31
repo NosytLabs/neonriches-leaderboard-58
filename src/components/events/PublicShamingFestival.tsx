@@ -1,15 +1,16 @@
+
 import React, { useState } from 'react';
 import { Scroll, DollarSign, Sparkles } from 'lucide-react';
 import { topUsers } from './data';
 import useShameEffect from './hooks/useShameEffect';
-import { MockeryAction } from '@/types/mockery';
+import { MockeryAction } from '@/types/mockery-types';
 import ShameUserCard from './components/ShameUserCard';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import RankingDisclaimer from '@/components/shared/RankingDisclaimer';
 import RoyalDivider from '@/components/ui/royal-divider';
 import { Dialog } from '@/components/ui/dialog';
 import ShameModal from './components/ShameModal';
-import { useSound } from '@/hooks/sounds/use-sound';
+import { useSound } from '@/hooks/use-sound';
 import { 
   hasWeeklyDiscount, 
   getWeeklyDiscountedAction, 
@@ -60,7 +61,7 @@ const PublicShamingDescription = () => {
 };
 
 const PublicShamingFestival = () => {
-  const { play } = useSound();
+  const sound = useSound();
   const { shameCooldown, shameEffects, shameCount, getShameCount, handleShame, getActiveMockery } = useShameEffect();
   const [showModal, setShowModal] = React.useState(false);
   const [selectedUser, setSelectedUser] = React.useState<any>(null);
@@ -76,7 +77,7 @@ const PublicShamingFestival = () => {
     setSelectedAction(action);
     setShowModal(true);
     
-    play('notification', { volume: 0.3 });
+    sound.playSound('notification', { volume: 0.3 });
     return true;
   };
   
@@ -90,7 +91,7 @@ const PublicShamingFestival = () => {
         : getShameActionPrice(selectedAction);
         
       handleShame(numericId, user.username, selectedAction);
-      play('shame', { volume: 0.3 });
+      sound.playSound('shame', { volume: 0.3 });
     }
     
     setShowModal(false);

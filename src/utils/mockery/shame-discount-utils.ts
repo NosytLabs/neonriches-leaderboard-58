@@ -1,59 +1,80 @@
 
 import { MockeryAction } from '@/types/mockery-types';
-import { getMockeryActionPrice } from './mockery-costs';
+
+// Discount percentage (e.g., 0.5 for 50% off)
+const DISCOUNT_PERCENTAGE = 0.5;
+
+// Weekly discounted action (can be rotated)
+const WEEKLY_DISCOUNTED_ACTION: MockeryAction = 'tomatoes';
 
 /**
- * Check if there's a weekly discount for shame actions
+ * Checks if an action has a weekly discount
+ * @param action The mockery action to check
+ * @returns Boolean indicating if the action is discounted
  */
-export const hasWeeklyDiscount = (): boolean => {
-  // Check if today is the discount day (e.g., Thursdays)
-  const today = new Date();
-  return today.getDay() === 4; // Thursday
+export const hasWeeklyDiscount = (action: MockeryAction): boolean => {
+  return action === WEEKLY_DISCOUNTED_ACTION;
 };
 
 /**
- * Get the weekly discounted shame action
+ * Get the current weekly discounted action
+ * @returns The mockery action that is currently discounted
  */
 export const getWeeklyDiscountedAction = (): MockeryAction => {
-  // Simplified implementation - could rotate based on week number
-  const weekNumber = Math.floor((new Date().getTime() / (7 * 24 * 60 * 60 * 1000)));
-  const actions: MockeryAction[] = ['tomatoes', 'eggs', 'stocks', 'dunce', 'crown'];
-  return actions[weekNumber % actions.length];
+  return WEEKLY_DISCOUNTED_ACTION;
 };
 
 /**
- * Get the discounted price for a shame action
- */
-export const getDiscountedShamePrice = (action: MockeryAction): number => {
-  const basePrice = getMockeryActionPrice(action);
-  return hasWeeklyDiscount() && action === getWeeklyDiscountedAction()
-    ? basePrice * 0.75 // 25% discount
-    : basePrice;
-};
-
-/**
- * Get the price for a shame action (with potential discount)
+ * Get the shame action price
+ * @param action The mockery action
+ * @returns The price of the action
  */
 export const getShameActionPrice = (action: MockeryAction): number => {
-  return getDiscountedShamePrice(action);
+  const prices: Record<string, number> = {
+    tomatoes: 0.25,
+    eggs: 0.50,
+    stocks: 1.00,
+    shame: 0.75,
+    // Add other prices as needed
+    dunce: 1.00,
+    jester: 1.25
+  };
+  
+  return prices[action] || 0.25;
 };
 
 /**
- * Get the message for a shame action
+ * Get the discounted price for an action
+ * @param action The mockery action
+ * @returns The discounted price
  */
-export const getShameActionMessage = (action: MockeryAction): string => {
+export const getDiscountedShamePrice = (action: MockeryAction): number => {
+  const basePrice = getShameActionPrice(action);
+  return basePrice * (1 - DISCOUNT_PERCENTAGE);
+};
+
+/**
+ * Get a custom message for shame actions
+ * @param action The mockery action
+ * @param username The username to include in the message
+ * @returns A formatted message
+ */
+export const getShameActionMessage = (action: MockeryAction, username: string): string => {
   const messages: Record<string, string> = {
-    tomatoes: 'You have been pelted with rotten tomatoes!',
-    eggs: 'You have been hit with rotten eggs!',
-    stocks: 'You have been placed in the public stocks!',
-    dunce: 'You have been given a dunce cap!',
-    crown: 'You have been given a mock crown!',
-    jester: 'You have been dressed as a court jester!',
-    troll: 'You have been declared a bridge troll!',
-    peasant: 'You have been demoted to a lowly peasant!',
-    dungeons: 'You have been sent to the royal dungeons!',
-    challenge: 'You have been issued a royal challenge!'
+    tomatoes: `${username} has been pelted with rotten tomatoes!`,
+    eggs: `${username} has been pelted with rotten eggs!`,
+    shame: `${username} has been rung with the bell of shame!`,
+    stocks: `${username} has been locked in the stocks for public ridicule!`
   };
   
-  return messages[action] || 'You have been mocked by the royal court!';
+  return messages[action] || `${username} has been mocked!`;
+};
+
+// Export all functions
+export default {
+  hasWeeklyDiscount,
+  getWeeklyDiscountedAction,
+  getShameActionPrice,
+  getDiscountedShamePrice,
+  getShameActionMessage
 };

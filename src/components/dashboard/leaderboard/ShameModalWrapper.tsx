@@ -2,7 +2,7 @@
 import React from 'react';
 import { Dialog } from '@/components/ui/dialog';
 import ShameModal from '@/components/dashboard/leaderboard/ShameModal';
-import { MockeryAction } from '@/types/mockery';
+import { MockeryAction } from '@/types/mockery-types';
 import { TeamColor, TeamType } from '@/types/team';
 import { UserProfile } from '@/types/user';
 

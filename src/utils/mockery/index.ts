@@ -13,3 +13,15 @@ import { MockeryAction, ExtendedMockeryAction, MockeryTier, ShameAction } from '
 
 // Re-export types
 export type { MockeryAction, ExtendedMockeryAction, MockeryTier, ShameAction };
+
+// Create a helper function to render mockery icons with React
+import React from 'react';
+import { getMockeryActionIcon } from './mockery-icons';
+
+/**
+ * Render a mockery action icon with the given size and className
+ */
+export const renderMockeryIcon = (action: MockeryAction, className: string = "h-4 w-4") => {
+  const IconComponent = getMockeryActionIcon(action);
+  return <IconComponent className={className} />;
+};

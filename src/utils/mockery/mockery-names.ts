@@ -1,57 +1,59 @@
 
 import { MockeryAction, ExtendedMockeryAction } from '@/types/mockery-types';
 
-// Get the display name for a mockery action
+// Get the display title for a mockery action
 export const getMockeryActionTitle = (action: MockeryAction | ExtendedMockeryAction): string => {
-  const names: Record<string, string> = {
+  const titles: Record<string, string> = {
     tomatoes: 'Rotten Tomatoes',
     eggs: 'Rotten Eggs',
     putridEggs: 'Putrid Eggs',
     dungeons: 'Royal Dungeons',
     immune: 'Royal Immunity',
-    crown: 'Mock Crown',
+    crown: 'Stolen Crown',
     stocks: 'Public Stocks',
     dunce: 'Dunce Cap',
     jester: 'Court Jester',
-    courtJester: 'Court Jester',
+    courtJester: 'Royal Court Jester',
     jest: 'Royal Jest',
-    troll: 'Bridge Troll',
+    troll: 'Village Troll',
     peasant: 'Lowly Peasant',
-    rat: 'Plague Rat',
-    ghost: 'Palace Ghost',
-    skeleton: 'Royal Skeleton',
-    zombie: 'Undead Zombie',
-    witch: 'Accused Witch',
-    monster: 'Royal Monster',
-    demon: 'Court Demon',
-    dragon: 'Village Dragon',
+    rat: 'Castle Rat',
+    ghost: 'Royal Ghost',
+    skeleton: 'Skeleton Crew',
+    zombie: 'Royal Zombie',
+    witch: 'Royal Witch',
+    monster: 'Castle Monster',
+    demon: 'Royal Demon',
+    dragon: 'Royal Dragon',
     king: 'False King',
     queen: 'False Queen',
-    knight: 'Rusty Knight',
+    knight: 'Fallen Knight',
     bishop: 'Corrupt Bishop',
-    rook: 'Crumbling Rook',
+    rook: 'Fallen Rook',
     pawn: 'Mere Pawn',
-    target: 'Target Practice',
+    target: 'Royal Target',
     challenge: 'Royal Challenge',
     smokeBomb: 'Smoke Bomb',
     glitterBomb: 'Glitter Bomb',
-    royalPie: 'Royal Pie',
-    jokeCrown: 'Joke Crown',
+    royalPie: 'Royal Pie Face',
+    jokeCrown: 'Joker Crown',
     memeFrame: 'Meme Frame',
     roast: 'Royal Roast',
     ridicule: 'Public Ridicule',
-    humiliate: 'Royal Humiliation',
-    expose: 'Public Expose',
-    mock: 'Royal Mockery',
+    humiliate: 'Public Humiliation',
+    expose: 'Royal Exposure',
+    mock: 'Public Mockery',
     taunt: 'Royal Taunt',
-    guillotine: 'Mockery Guillotine',
+    guillotine: 'Guillotine',
     defeat: 'Royal Defeat',
-    removal: 'Content Removal',
-    protection: 'Royal Protection'
+    removal: 'Banishment',
+    protection: 'Royal Protection',
+    silence: 'Royal Silence',
+    shame: 'Public Shame'
   };
 
-  return names[action] || 'Unknown Mockery';
+  return titles[action] || 'Unknown Mockery';
 };
 
-// Re-export with alternative name for backward compatibility
+// For backward compatibility
 export const getMockeryName = getMockeryActionTitle;

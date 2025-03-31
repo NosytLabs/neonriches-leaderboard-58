@@ -3,7 +3,8 @@
 export { useAuth } from './useAuth';
 
 // Sounds
-export { useSound, default as useSound } from './sounds/use-sound';
+export { useSound } from './sounds/use-sound';
+export { default as useSound } from './sounds/use-sound';
 
 // UI Hooks
 export { useToast } from './use-toast';

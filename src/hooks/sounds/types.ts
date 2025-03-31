@@ -15,7 +15,15 @@ export type SoundType =
   | 'levelUp'
   | 'shame'
   | 'protection'
-  | 'sparkle';
+  | 'sparkle'
+  // Premium sound types
+  | 'royalAnnouncement'
+  | 'trumpet'
+  | 'medallion'
+  | 'seal'
+  | 'coinDrop'
+  | 'swordClash'
+  | 'noblesLaugh';
 
 export interface SoundCategory {
   name: string;
@@ -64,4 +72,13 @@ export interface UseSoundHook {
   toggleSounds: () => void;
   isSoundEnabled: boolean;
   setVolume: (volume: number) => void;
+  play?: (type: SoundType, options?: SoundOptions) => void;  // For backward compatibility
 }
+
+// Audio-specific types
+export type AudioOptions = {
+  volume?: number;
+  loop?: boolean;
+  playbackRate?: number;
+  onEnd?: () => void;
+};

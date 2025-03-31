@@ -5,12 +5,15 @@
 export type MockeryAction = 
   | 'tomatoes' 
   | 'eggs' 
+  | 'putridEggs'
   | 'dungeons' 
   | 'immune' 
   | 'crown' 
   | 'stocks' 
   | 'dunce' 
   | 'jester' 
+  | 'courtJester'
+  | 'jest'
   | 'troll' 
   | 'peasant' 
   | 'rat' 
@@ -29,14 +32,8 @@ export type MockeryAction =
   | 'pawn' 
   | 'target' 
   | 'challenge'
-  | 'protection';
-
-// Additional mockery actions for extended functionality
-export type ExtendedMockeryAction = MockeryAction 
-  | 'putridEggs'
+  | 'protection'
   | 'silence'
-  | 'courtJester'
-  | 'jest'
   | 'smokeBomb'
   | 'glitterBomb'
   | 'royalPie'
@@ -50,10 +47,12 @@ export type ExtendedMockeryAction = MockeryAction
   | 'taunt'
   | 'guillotine'
   | 'defeat'
-  | 'removal';
+  | 'removal'
+  | 'shame';  // For backward compatibility
 
 // For backwards compatibility
 export type ShameAction = MockeryAction;
+export type ExtendedMockeryAction = MockeryAction;
 
 // Mockery tiers for categorizing actions
 export type MockeryTier = 
@@ -63,12 +62,12 @@ export type MockeryTier =
   | 'legendary'
   | 'rare'
   | 'epic'
-  | 'silver';
-
-// Extended mockery tiers for broader categorization
-export type ExtendedMockeryTier = MockeryTier
+  | 'silver'
   | 'common'
   | 'uncommon';
+
+// Extended mockery tiers for broader categorization
+export type ExtendedMockeryTier = MockeryTier;
 
 // User who has been mocked
 export interface MockedUser {
@@ -78,7 +77,7 @@ export interface MockedUser {
   displayName: string;
   profileImage?: string;
   mockedReason?: string;
-  mockedTimestamp: string;
+  mockedTimestamp?: string;
   mockedUntil: string;
   mockedBy: string;
   mockedTier?: string;
@@ -86,6 +85,7 @@ export interface MockedUser {
   lastMocked?: string;
   team?: string;
   tier?: string;
+  rank?: number;
 }
 
 // Active mockery event
@@ -99,6 +99,9 @@ export interface MockeryEvent {
   expiresAt: string;
   duration?: number;
   metadata?: Record<string, any>;
+  sourceId?: string; // For backward compatibility
+  timestamp?: string; // For backward compatibility
+  tier?: string; // For backward compatibility
 }
 
 // Sound options for mockery effects

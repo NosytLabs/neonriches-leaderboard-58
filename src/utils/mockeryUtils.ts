@@ -12,7 +12,8 @@ import {
   getShameActionPrice,
   getShameActionMessage,
   getMockeryEffectClass,
-  getMockeryEffectDuration
+  getMockeryEffectDuration,
+  renderMockeryIcon
 } from './mockery';
 
 // Re-export types
@@ -48,5 +49,6 @@ export {
   getShameActionPrice,
   getShameActionMessage,
   getMockeryEffectClass,
-  getMockeryEffectDuration
+  getMockeryEffectDuration,
+  renderMockeryIcon
 };

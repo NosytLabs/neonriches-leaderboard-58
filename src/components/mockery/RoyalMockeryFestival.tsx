@@ -5,7 +5,7 @@ import { Target, Bell } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 import useMockery from '@/hooks/use-mockery';
-import { MockeryAction, MockedUser } from '@/types/mockery';
+import { MockeryAction, MockedUser } from '@/types/mockery-types';
 import MockeryEffect from '@/components/mockery/components/MockeryEffect';
 import { Link } from 'react-router-dom';
 import { adaptUserProfileToUser } from '@/utils/userAdapter';
@@ -136,6 +136,7 @@ const RoyalMockeryFestival = () => {
     });
   };
 
+  // Convert users from our mockUsers array to MockedUser format
   const mockedUsers: MockedUser[] = mockUsers
     .filter(user => isUserShamed(user.username))
     .map(user => ({
@@ -146,6 +147,9 @@ const RoyalMockeryFestival = () => {
       profileImage: user.profileImage || '',
       mockedReason: `Subjected to ${user.tier || 'unknown'} mockery`,
       mockedTimestamp: user.lastMocked ? user.lastMocked : new Date().toISOString(),
+      mockedUntil: user.lastMocked 
+        ? new Date(new Date(user.lastMocked).getTime() + 24 * 60 * 60 * 1000).toISOString() 
+        : new Date(new Date().getTime() + 24 * 60 * 60 * 1000).toISOString(),
       mockedBy: 'Unknown user',
       mockedTier: user.mockeryCount ? user.tier : 'basic',
       mockeryCount: user.mockeryCount || 1,

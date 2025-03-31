@@ -1,57 +1,65 @@
 
-import { TeamType, UserTier } from './user';
+import { TeamColor } from './team';
+import { UserTier } from './user-types';
 
 export interface LeaderboardUser {
   id: string;
   username: string;
-  displayName?: string;
-  profileImage?: string;
+  displayName: string;
+  rank: number;
+  previousRank?: number;
   tier: UserTier;
-  team?: TeamType;
-  rank: number;
-  previousRank?: number;
-  walletBalance?: number;
+  team: TeamColor;
   totalSpent: number;
-  spentAmount: number;
-  supporters?: number;
-  supporting?: number;
-  isVIP?: boolean;
-  isFounder?: boolean;
+  walletBalance?: number;
+  profileImage?: string;
+  
+  // Additional fields needed by various components
+  avatarUrl?: string;
   isVerified?: boolean;
-}
-
-export interface LeaderboardEntry {
-  user: LeaderboardUser;
-  position: number;
-  previousPosition?: number;
-  change?: number;
-  score: number;
-}
-
-export interface TeamLeaderboard {
-  id: string;
-  name: string;
-  color: TeamType;
-  members: number;
-  totalContribution: number;
-  rank: number;
-  previousRank?: number;
-  change?: number;
+  isProtected?: boolean;
+  spendStreak?: number;
+  userId?: string;
 }
 
 export interface LeaderboardFilter {
-  timeframe?: 'all' | 'day' | 'week' | 'month' | 'year';
-  team?: TeamType;
-  tier?: UserTier;
-  search?: string;
-  limit?: number;
+  team: TeamColor | 'all';
+  tier: UserTier | 'all';
+  search: string;
+  sortBy?: 'rank' | 'spent' | 'username';
+  sortDirection?: 'asc' | 'desc';
 }
 
-export interface LeaderboardState {
-  users: LeaderboardUser[];
-  teams: TeamLeaderboard[];
-  loading: boolean;
-  error: string | null;
-  filters: LeaderboardFilter;
+export interface LeaderboardEntry {
+  id: string;
+  userId: string;
+  username: string;
+  position: number;
+  amount: number;
   timestamp: string;
+  avatarUrl?: string;
+  teamColor?: TeamColor;
+}
+
+export interface LeaderboardResponse {
+  entries: LeaderboardEntry[];
+  total: number;
+  page: number;
+  limit: number;
+}
+
+export interface OnChainLeaderboardEntry {
+  pubkey: string;
+  amount: number;
+  timestamp: string;
+  username?: string;
+}
+
+export interface SolanaTransaction {
+  id: string;
+  type: 'deposit' | 'withdrawal';
+  amount: number;
+  timestamp: string;
+  signature: string;
+  account: string;
 }

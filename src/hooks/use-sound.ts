@@ -1,16 +1,20 @@
 
-import { useSoundHook } from './sounds/use-sound';
-import { SoundType, AudioOptions, UseSoundReturn } from '@/types/sound-types';
+import { useSound as useSoundHook } from './sounds/use-sound';
+import type { SoundOptions, SoundType, UseSoundHook } from './sounds/types';
 
 /**
- * A wrapper around the sound hook to provide a simplified API
- * This maintains backward compatibility while using the new system
+ * Enhanced useSound hook with backward compatibility
+ * This is a wrapper around the core sound hook that provides
+ * backward compatibility with both naming conventions
  */
-export const useSound = (
-  defaultSound?: SoundType,
-  options?: AudioOptions
-): UseSoundReturn => {
-  return useSoundHook(defaultSound, options);
+export const useSound = (): UseSoundHook => {
+  const sound = useSoundHook();
+  
+  // Add backward compatibility for play method
+  return {
+    ...sound,
+    play: sound.playSound
+  };
 };
 
 export default useSound;

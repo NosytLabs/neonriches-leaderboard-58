@@ -12,16 +12,14 @@ import {
   Feather, 
   Rat, 
   UserX, 
-  Zap, 
-  Dragon,
-  Dices,
+  Zap,
   Flame
 } from 'lucide-react';
-import { MockeryAction, ExtendedMockeryAction } from '@/types/mockery-types';
+import { MockeryAction } from '@/types/mockery-types';
 import type { LucideIcon } from 'lucide-react';
 
 // Get the appropriate icon component for a mockery action
-export const getMockeryActionIcon = (action: MockeryAction | ExtendedMockeryAction): LucideIcon => {
+export const getMockeryActionIcon = (action: MockeryAction): LucideIcon => {
   const iconMap: Record<string, LucideIcon> = {
     tomatoes: Target,
     eggs: Target,
@@ -33,7 +31,7 @@ export const getMockeryActionIcon = (action: MockeryAction | ExtendedMockeryActi
     dunce: AlertCircle,
     jester: Feather,
     courtJester: Feather,
-    jest: Dices,
+    jest: Feather,
     troll: ThumbsDown,
     peasant: ThumbsDown,
     rat: Rat,
@@ -41,9 +39,9 @@ export const getMockeryActionIcon = (action: MockeryAction | ExtendedMockeryActi
     skeleton: Skull,
     zombie: Skull,
     witch: Flame,
-    monster: Dragon,
+    monster: Skull,
     demon: Flame,
-    dragon: Dragon,
+    dragon: Flame,
     king: Crown,
     queen: Crown,
     knight: Shield,
@@ -66,8 +64,32 @@ export const getMockeryActionIcon = (action: MockeryAction | ExtendedMockeryActi
     guillotine: Skull,
     defeat: ThumbsDown,
     removal: UserX,
-    protection: Shield
+    protection: Shield,
+    silence: Bell,
+    shame: Bell
   };
 
   return iconMap[action] || ThumbsDown;
+};
+
+// Define color classes for mockery action icons
+export const getMockeryActionIconColor = (action: MockeryAction): string => {
+  const colorClasses: Record<string, string> = {
+    tomatoes: 'text-red-500',
+    eggs: 'text-yellow-500',
+    putridEggs: 'text-green-500',
+    dungeons: 'text-gray-700',
+    immune: 'text-blue-500',
+    crown: 'text-royal-gold',
+    stocks: 'text-amber-700',
+    dunce: 'text-orange-500',
+    jester: 'text-purple-500',
+    courtJester: 'text-royal-purple',
+    jest: 'text-fuchsia-500',
+    protection: 'text-emerald-500',
+    shame: 'text-red-700'
+    // Add more as needed
+  };
+
+  return colorClasses[action] || 'text-gray-400';
 };

@@ -1,8 +1,8 @@
 
-import { MockeryAction, ExtendedMockeryAction } from '@/types/mockery-types';
+import { MockeryAction } from '@/types/mockery-types';
 
 // Get CSS class for mockery effect
-export const getMockeryEffectClass = (action: MockeryAction | ExtendedMockeryAction): string => {
+export const getMockeryEffectClass = (action: MockeryAction): string => {
   const effectClasses: Record<string, string> = {
     tomatoes: 'shame-effect-tomatoes',
     eggs: 'shame-effect-eggs',
@@ -12,14 +12,15 @@ export const getMockeryEffectClass = (action: MockeryAction | ExtendedMockeryAct
     dunce: 'shame-effect-dunce',
     jester: 'shame-effect-jester', 
     mockery: 'shame-effect-general',
-    protection: 'protection-effect'
+    protection: 'protection-effect',
+    shame: 'shame-effect-general'
   };
 
   return effectClasses[action] || 'shame-effect-general';
 };
 
 // Get duration for mockery effect in hours
-export const getMockeryEffectDuration = (action: MockeryAction | ExtendedMockeryAction): number => {
+export const getMockeryEffectDuration = (action: MockeryAction): number => {
   if (action === 'protection') {
     return 168; // 7 days in hours
   }
