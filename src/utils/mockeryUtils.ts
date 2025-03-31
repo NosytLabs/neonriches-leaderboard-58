@@ -67,5 +67,5 @@ import type { LucideIcon } from 'lucide-react';
  */
 export const getMockeryActionIconComponent = (action: MockeryAction | ExtendedMockeryAction, className: string = "h-4 w-4") => {
   const IconComponent = getMockeryActionIcon(action as MockeryAction);
-  return IconComponent ? <IconComponent className={className} /> : null;
+  return React.createElement(IconComponent, { className });
 };
