@@ -39,7 +39,7 @@ const MarketingEvents: React.FC<MarketingEventsProps> = ({ events }) => {
             <div className="flex items-center space-x-2 mt-2">
               <Users className="h-4 w-4 text-white/60" />
               <span className="text-xs text-white/60">
-                {event.participants} Participants
+                {event.participants || 0} Participants
               </span>
             </div>
           </CardContent>
@@ -50,7 +50,7 @@ const MarketingEvents: React.FC<MarketingEventsProps> = ({ events }) => {
             </Button>
             <Badge variant="outline">
               <Award className="h-4 w-4 mr-2" />
-              {event.rewards}
+              {event.rewards || 'None'}
             </Badge>
           </CardFooter>
         </Card>

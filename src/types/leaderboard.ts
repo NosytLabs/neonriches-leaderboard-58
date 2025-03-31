@@ -10,8 +10,8 @@ export interface LeaderboardUser {
   displayName?: string;
   profileImage?: string;
   avatarUrl?: string;
-  tier: UserTier;
-  team?: TeamColor | null;
+  tier: UserTier | string;
+  team?: TeamColor | string | null;
   rank: number;
   previousRank?: number;
   walletBalance?: number;
@@ -72,5 +72,5 @@ export interface SortByOption {
   label: string;
 }
 
-// Export types to avoid conflicts
-export { LeaderboardUser, LeaderboardFilter };
+// Export types with export type to avoid conflicts
+export type { LeaderboardUser, LeaderboardFilter };

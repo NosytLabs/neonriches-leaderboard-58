@@ -3,12 +3,12 @@ import React, { useState } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { ScrollText, Megaphone, BarChart3, Users, Link } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useAuth } from '@/hooks/useAuth'; // Updated import
+import { useAuth } from '@/hooks/useAuth';
 import { useFeatureAccess } from '@/hooks/use-feature-access';
 import MarketingFeatureShop from './MarketingFeatureShop';
 import MarketingEvents from './MarketingEvents';
 import ProfileBillboardGuide from './ProfileBillboardGuide';
-import { MarketingEvent } from '@/types/marketing'; // Importing from new type file
+import { MarketingEvent } from '@/types/marketing'; 
 
 const MarketingHub: React.FC = () => {
   const { user } = useAuth();
@@ -26,9 +26,9 @@ const MarketingHub: React.FC = () => {
       type: "tournament",
       startDate: "2023-12-01",
       endDate: "2023-12-15",
+      imageUrl: "/assets/events/tournament.jpg",
       participants: 128,
-      rewards: "Crown Jewels",
-      imageUrl: "/assets/events/tournament.jpg"
+      rewards: "Crown Jewels"
     },
     {
       id: "event-2",

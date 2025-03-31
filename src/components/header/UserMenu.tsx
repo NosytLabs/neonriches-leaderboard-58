@@ -64,8 +64,9 @@ const UserMenu: React.FC<UserMenuProps> = () => {
     ];
     
     // Check if user.tier is a valid UserTier
-    if (user.tier && validTiers.includes(user.tier as UserTier)) {
-      return user.tier;
+    const userTier = user.tier as UserTier;
+    if (userTier && validTiers.includes(userTier)) {
+      return userTier;
     }
     
     // Default to 'free' if the tier isn't valid
@@ -73,9 +74,17 @@ const UserMenu: React.FC<UserMenuProps> = () => {
   };
 
   // Handle team value safely for team badge
-  const getTeamForBadge = (): string => {
+  const getTeamForBadge = (): TeamColor => {
     if (!user.team) return 'neutral';
-    return String(user.team);
+    
+    const validTeams: TeamColor[] = ['red', 'blue', 'green', 'gold', 'purple', 'none', 'neutral'];
+    const userTeam = user.team as TeamColor;
+    
+    if (validTeams.includes(userTeam)) {
+      return userTeam;
+    }
+    
+    return 'neutral';
   };
 
   return (

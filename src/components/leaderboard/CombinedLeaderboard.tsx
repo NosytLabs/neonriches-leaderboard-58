@@ -51,7 +51,7 @@ const CombinedLeaderboard: React.FC = () => {
         
         // Ensure all data is properly formatted as LeaderboardUser objects
         const formattedData: LeaderboardUser[] = data.map((item: any): LeaderboardUser => ({
-          id: typeof item.id === 'number' ? item.id.toString() : String(item.id),
+          id: typeof item.id === 'string' ? item.id : String(item.id),
           username: item.username,
           displayName: item.displayName || item.username,
           profileImage: item.profileImage || '/assets/default-avatar.png',

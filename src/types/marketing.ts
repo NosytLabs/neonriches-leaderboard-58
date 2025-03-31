@@ -10,8 +10,28 @@ export interface MarketingEvent {
   startDate: string;
   endDate: string;
   imageUrl?: string;
-  participants?: number;  // Add for MarketingEvents & MarketingHub
-  rewards?: string;       // Add for MarketingEvents & MarketingHub
+  participants?: number;  // Added for MarketingEvents & MarketingHub
+  rewards?: string;       // Added for MarketingEvents & MarketingHub
+}
+
+/**
+ * Props for the MarketingEvents component
+ */
+export interface MarketingEventsProps {
+  events: MarketingEvent[];
+}
+
+/**
+ * Marketing feature interface
+ */
+export interface MarketingFeature {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  tier: string;
+  active: boolean;
+  icon: string;
 }
 
 /**
@@ -36,9 +56,3 @@ export interface MarketingBenefit {
   iconName: string;
   available: boolean;
 }
-
-export default {
-  MarketingEvent,
-  MarketingFeaturePrice,
-  MarketingBenefit
-};

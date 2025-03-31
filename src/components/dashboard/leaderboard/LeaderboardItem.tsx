@@ -2,16 +2,27 @@
 import React from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'; 
 import { Shield, MoreVertical, Crown } from 'lucide-react';
-import { TeamColor } from '@/types/team';
-import { asTeamColor } from '@/utils/teamUtils';
+import { TeamColor } from '@/types/user-consolidated';
+import { LeaderboardUser } from '@/types/leaderboard';
+
+// Helper function to convert any team value to a safe team color
+const asTeamColor = (team: TeamColor | string | null): TeamColor => {
+  const validTeams: TeamColor[] = ['red', 'blue', 'green', 'gold', 'purple', 'none', 'neutral'];
+  
+  if (team && validTeams.includes(team as TeamColor)) {
+    return team as TeamColor;
+  }
+  
+  return 'neutral';
+};
 
 interface LeaderboardItemProps {
-  userData: any;
+  userData: LeaderboardUser;
   index: number;
   currentUserId?: string;
   isOnCooldown?: boolean;
   onProfileClick: (userId: string) => void;
-  onShameUser: (user: any, type?: string) => void;
+  onShameUser: (user: LeaderboardUser, type?: string) => void;
 }
 
 const LeaderboardItem: React.FC<LeaderboardItemProps> = ({
