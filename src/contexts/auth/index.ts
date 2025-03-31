@@ -14,6 +14,7 @@ export const AuthContext = createContext<AuthContextType>({
   signOut: async () => {},
   updateUser: async () => false,
   updateUserProfile: async () => false,
+  awardCosmetic: async () => false,
 });
 
 // Export the UserProfile type

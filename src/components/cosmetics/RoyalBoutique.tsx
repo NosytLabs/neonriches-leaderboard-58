@@ -31,8 +31,8 @@ const RoyalBoutique = () => {
       return;
     }
 
-    // Call awardCosmetic with the right number of parameters (itemId, category)
-    const success = await awardCosmetic(item.id, item.category);
+    // Call awardCosmetic with the right parameters
+    const success = await awardCosmetic(item.category, item.id);
 
     if (success) {
       toast({
@@ -57,7 +57,8 @@ const RoyalBoutique = () => {
       cssClass: 'border-gold',
       rarity: 'rare',
       type: 'premium',
-      imageSrc: '/images/cosmetics/border-gold.png'
+      imageSrc: '/images/cosmetics/border-gold.png',
+      enabled: true
     },
     {
       id: 'border-2',
@@ -68,7 +69,8 @@ const RoyalBoutique = () => {
       cssClass: 'border-silver',
       rarity: 'uncommon',
       type: 'standard',
-      imageSrc: '/images/cosmetics/border-silver.png'
+      imageSrc: '/images/cosmetics/border-silver.png',
+      enabled: true
     },
     {
       id: 'border-3',
@@ -79,7 +81,8 @@ const RoyalBoutique = () => {
       cssClass: 'border-dragon-scale',
       rarity: 'epic',
       type: 'exclusive',
-      imageSrc: '/images/cosmetics/border-dragon.png'
+      imageSrc: '/images/cosmetics/border-dragon.png',
+      enabled: true
     },
   ];
 
@@ -93,7 +96,8 @@ const RoyalBoutique = () => {
       cssClass: 'text-royal-purple',
       rarity: 'epic',
       type: 'premium',
-      imageSrc: '/images/cosmetics/color-purple.png'
+      imageSrc: '/images/cosmetics/color-purple.png',
+      enabled: true
     },
     {
       id: 'color-2',
@@ -104,7 +108,8 @@ const RoyalBoutique = () => {
       cssClass: 'text-emerald-green',
       rarity: 'uncommon',
       type: 'standard',
-      imageSrc: '/images/cosmetics/color-emerald.png'
+      imageSrc: '/images/cosmetics/color-emerald.png',
+      enabled: true
     },
     {
       id: 'color-3',
@@ -115,7 +120,8 @@ const RoyalBoutique = () => {
       cssClass: 'text-golden-yellow',
       rarity: 'rare',
       type: 'exclusive',
-      imageSrc: '/images/cosmetics/color-gold.png'
+      imageSrc: '/images/cosmetics/color-gold.png',
+      enabled: true
     },
   ];
 
@@ -129,7 +135,8 @@ const RoyalBoutique = () => {
       cssClass: 'font-medieval',
       rarity: 'legendary',
       type: 'premium',
-      imageSrc: '/images/cosmetics/font-medieval.png'
+      imageSrc: '/images/cosmetics/font-medieval.png',
+      enabled: true
     },
     {
       id: 'font-2',
@@ -140,7 +147,8 @@ const RoyalBoutique = () => {
       cssClass: 'font-elegant-serif',
       rarity: 'rare',
       type: 'standard',
-      imageSrc: '/images/cosmetics/font-serif.png'
+      imageSrc: '/images/cosmetics/font-serif.png',
+      enabled: true
     },
     {
       id: 'font-3',
@@ -151,7 +159,8 @@ const RoyalBoutique = () => {
       cssClass: 'font-bold-sans',
       rarity: 'uncommon',
       type: 'standard',
-      imageSrc: '/images/cosmetics/font-sans.png'
+      imageSrc: '/images/cosmetics/font-sans.png',
+      enabled: true
     },
   ];
 
@@ -213,14 +222,18 @@ const RoyalBoutique = () => {
                             />
                             <Button onClick={() => handlePurchase(item)} disabled={!user}>
                               {user ? (
-                                user.cosmetics && user.cosmetics[item.category]?.includes(item.id) ? (
+                                user.cosmetics && user.cosmetics[item.category] && 
+                                Array.isArray(user.cosmetics[item.category]) && 
+                                user.cosmetics[item.category].includes(item.id) ? (
                                   <Check className="mr-2 h-4 w-4" />
                                 ) : (
                                   <DollarSign className="mr-2 h-4 w-4" />
                                 )
                               ) : null}
                               {user ? (
-                                user.cosmetics && user.cosmetics[item.category]?.includes(item.id) ? (
+                                user.cosmetics && user.cosmetics[item.category] && 
+                                Array.isArray(user.cosmetics[item.category]) && 
+                                user.cosmetics[item.category].includes(item.id) ? (
                                   "Owned"
                                 ) : (
                                   "Purchase"

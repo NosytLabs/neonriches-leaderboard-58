@@ -38,7 +38,7 @@ export interface AuthContextType {
   signOut: () => Promise<void>;
   updateUser: (updates: Partial<UserProfile>) => Promise<boolean>;
   updateUserProfile: (updates: Partial<UserProfile>) => Promise<boolean>;
-  awardCosmetic?: (category: string, itemId: string, notify?: boolean) => Promise<boolean>;
+  awardCosmetic: (category: string, itemId: string, notify?: boolean) => Promise<boolean>;
 }
 
 export interface RegisterResponse {

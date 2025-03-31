@@ -161,6 +161,44 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     return Promise.resolve();
   };
 
+  // Add awardCosmetic function to handle cosmetic purchases
+  const awardCosmetic = async (category: string, itemId: string, notify: boolean = true): Promise<boolean> => {
+    if (!state.user) return false;
+
+    try {
+      // Update user's cosmetics
+      const userCosmetics = {...state.user.cosmetics};
+      
+      // Ensure the category exists
+      if (!userCosmetics[category]) {
+        userCosmetics[category] = [];
+      }
+      
+      // Add the item if it doesn't exist
+      if (Array.isArray(userCosmetics[category]) && !userCosmetics[category].includes(itemId)) {
+        userCosmetics[category] = [...userCosmetics[category], itemId];
+      }
+
+      // Update user profile with new cosmetics
+      const updatedUser = {
+        ...state.user,
+        cosmetics: userCosmetics,
+        // Deduct the cost from wallet balance in a real app
+        // walletBalance: state.user.walletBalance - itemPrice
+      };
+
+      dispatch({
+        type: 'UPDATE_USER',
+        payload: updatedUser
+      });
+
+      return true;
+    } catch (error: any) {
+      console.error('Award cosmetic error:', error);
+      return false;
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -173,7 +211,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         logout,
         signOut,
         updateUser: updateUserProfile,
-        updateUserProfile: updateUserProfile,
+        updateUserProfile,
+        awardCosmetic,
       }}
     >
       {children}
