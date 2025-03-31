@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -121,10 +122,10 @@ const ProfileTitles: React.FC<ProfileTitlesProps> = ({
   onSelectTitle,
   activeTitle 
 }) => {
-  const userTitles = user?.cosmetics?.titles || [];
+  const userTitles = user?.cosmetics?.title || []; // Changed from titles to title
   
   const handlePurchase = (title: typeof titles[0]) => {
-    onPurchase(title.name, title.price, 'titles', title.id);
+    onPurchase(title.name, title.price, 'title', title.id);
   };
   
   const handleSelectTitle = (titleId: string) => {

@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { UserProfile } from '@/types/user';
 import { Type } from 'lucide-react';
@@ -27,7 +28,7 @@ const ProfileFonts: React.FC<ProfileFontsProps> = ({
   onSelectFont,
   activeFont
 }) => {
-  const userFonts = user?.cosmetics?.fonts || [];
+  const userFonts = user?.cosmetics?.font || []; // Changed from fonts to font
 
   const fonts: FontItem[] = [
     {
@@ -142,7 +143,7 @@ const ProfileFonts: React.FC<ProfileFontsProps> = ({
                   disabled={isOwned && !onSelectFont}
                   onClick={() => isOwned && onSelectFont ? 
                     onSelectFont(item.id) : 
-                    onPurchase(item.name, item.price, 'fonts', item.id)}
+                    onPurchase(item.name, item.price, 'font', item.id)}
                 >
                   {isOwned ? 
                     (onSelectFont ? (isActive ? 'Selected' : 'Select Font') : 'Already Owned') : 

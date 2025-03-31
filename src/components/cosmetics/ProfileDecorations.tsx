@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { UserProfile } from '@/types/user';
 import { Award } from 'lucide-react';
@@ -27,7 +28,7 @@ const ProfileDecorations: React.FC<ProfileDecorationsProps> = ({
   onSelectBorder,
   activeBorder 
 }) => {
-  const userBorders = user?.cosmetics?.borders || [];
+  const userBorders = user?.cosmetics?.border || []; // Changed from borders to border
 
   const getRarityClass = (rarity: string) => {
     switch (rarity) {
@@ -144,7 +145,7 @@ const ProfileDecorations: React.FC<ProfileDecorationsProps> = ({
                   disabled={isOwned && !onSelectBorder}
                   onClick={() => isOwned && onSelectBorder ? 
                     onSelectBorder(item.id) : 
-                    onPurchase(item.name, item.price, 'borders', item.id)}
+                    onPurchase(item.name, item.price, 'border', item.id)}
                 >
                   {isOwned ? 
                     (onSelectBorder ? (isActive ? 'Selected' : 'Select Border') : 'Already Owned') : 

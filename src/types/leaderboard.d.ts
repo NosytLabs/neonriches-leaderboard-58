@@ -3,7 +3,7 @@ import { TeamColor } from './user';
 
 export interface LeaderboardUser {
   id: string;
-  userId?: string; // Added this to fix errors
+  userId: string; // Added this to fix errors
   username: string;
   displayName?: string;
   profileImage: string;

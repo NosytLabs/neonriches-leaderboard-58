@@ -1,71 +1,68 @@
 
-import { useState, useCallback, useEffect } from 'react';
-import { SoundType, NotificationSoundOptions } from '@/types/sound-types';
+import { useEffect, useRef, useCallback } from 'react';
+import { NotificationSoundOptions } from '@/types/mockery';
 
-interface UseNotificationSoundOptions {
-  volume?: number;
-  defaultEnabled?: boolean;
+interface UseNotificationSoundResult {
+  playSound: (sound: string, options?: NotificationSoundOptions) => void;
+  stopSound: () => void;
 }
 
-export const useNotificationSound = (options: UseNotificationSoundOptions = { volume: 0.5, defaultEnabled: true }) => {
-  const [isEnabled, setIsEnabled] = useState(options.defaultEnabled ?? true);
-  const [volume, setVolume] = useState(options.volume ?? 0.5);
-
-  const playSound = useCallback((sound: SoundType, soundOptions?: NotificationSoundOptions) => {
-    if (!isEnabled) return;
-
-    try {
-      const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
-      const soundPath = `/sounds/${sound}.mp3`;
-      
-      fetch(soundPath)
-        .then(response => response.arrayBuffer())
-        .then(arrayBuffer => audioContext.decodeAudioData(arrayBuffer))
-        .then(audioBuffer => {
-          const source = audioContext.createBufferSource();
-          source.buffer = audioBuffer;
-          
-          const gainNode = audioContext.createGain();
-          gainNode.gain.value = soundOptions?.volume ?? volume;
-          
-          source.connect(gainNode);
-          gainNode.connect(audioContext.destination);
-          
-          source.loop = soundOptions?.loop ?? false;
-          
-          if (soundOptions?.delay) {
-            setTimeout(() => source.start(0), soundOptions.delay);
-          } else {
-            source.start(0);
-          }
-          
-          if (!source.loop) {
-            source.onended = () => {
-              source.disconnect();
-              gainNode.disconnect();
-            };
-          }
-        })
-        .catch(error => {
-          console.error('Error loading sound:', error);
-        });
-    } catch (error) {
-      console.error('Error playing sound:', error);
-    }
-  }, [isEnabled, volume]);
-
-  const toggleSound = useCallback(() => {
-    setIsEnabled(prev => !prev);
+export const useNotificationSound = (): UseNotificationSoundResult => {
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  
+  // Clean up on unmount
+  useEffect(() => {
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+    };
   }, []);
-
-  return {
-    playSound,
-    isEnabled,
-    setIsEnabled,
-    toggleSound,
-    volume,
-    setVolume
-  };
+  
+  const playSound = useCallback((sound: string, options?: NotificationSoundOptions) => {
+    // First stop any current sound
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current = null;
+    }
+    
+    try {
+      // Create a new audio element
+      const audio = new Audio(sound);
+      audioRef.current = audio;
+      
+      // Set volume if provided
+      if (options?.volume !== undefined) {
+        audio.volume = Math.min(Math.max(options.volume, 0), 1); // Clamp between 0 and 1
+      }
+      
+      // Set loop if provided
+      if (options?.loop !== undefined) {
+        audio.loop = options.loop;
+      }
+      
+      // Handle delay if provided
+      if (options?.delay && options.delay > 0) {
+        setTimeout(() => {
+          audio.play().catch(err => console.error('Error playing notification sound:', err));
+        }, options.delay);
+      } else {
+        audio.play().catch(err => console.error('Error playing notification sound:', err));
+      }
+    } catch (error) {
+      console.error('Error setting up notification sound:', error);
+    }
+  }, []);
+  
+  const stopSound = useCallback(() => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current = null;
+    }
+  }, []);
+  
+  return { playSound, stopSound };
 };
 
 export default useNotificationSound;

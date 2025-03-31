@@ -4,23 +4,21 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Crown, Scroll } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
-import { mockLeaderboardData, LeaderboardUser as LeaderboardUserType } from './leaderboard/LeaderboardUtils';
+import { mockLeaderboardData, LeaderboardUser } from './leaderboard/LeaderboardUtils';
 import LeaderboardItem from './leaderboard/LeaderboardItem';
 import ShameModal from './leaderboard/ShameModal';
 import LeaderboardActions from './leaderboard/LeaderboardActions';
 import { getShameActionPrice } from '@/components/events/utils/shameUtils';
-import { ShameAction } from '@/components/events/hooks/useShameEffect';
 import { MockeryAction } from '@/types/mockery';
 
 const InteractiveLeaderboard: React.FC = () => {
   const { toast } = useToast();
   const { user } = useAuth();
-  const [leaderboardData, setLeaderboardData] = useState<LeaderboardUserType[]>(mockLeaderboardData);
+  const [leaderboardData, setLeaderboardData] = useState<LeaderboardUser[]>(mockLeaderboardData);
   const [showShameModal, setShowShameModal] = useState<boolean>(false);
-  const [selectedUser, setSelectedUser] = useState<LeaderboardUserType | null>(null);
+  const [selectedUser, setSelectedUser] = useState<LeaderboardUser | null>(null);
   const [isOnCooldown, setIsOnCooldown] = useState<boolean>(false);
-  const [shameType, setShameType] = useState<ShameAction>('tomatoes');
-  const [shameAmount, setShameAmount] = useState<number>(getShameActionPrice('tomatoes'));
+  const [shameType, setShameType] = useState<MockeryAction>('tomatoes');
   const [modalType, setModalType] = useState<string | null>(null);
 
   useEffect(() => {
@@ -38,10 +36,9 @@ const InteractiveLeaderboard: React.FC = () => {
     // navigate(`/profile/${userId}`);
   };
 
-  const handleShameUser = (user: LeaderboardUserType, type: string = 'tomatoes') => {
+  const handleShameUser = (user: LeaderboardUser, type: string = 'tomatoes') => {
     setSelectedUser(user);
-    setShameType(type as ShameAction);
-    setShameAmount(getShameActionPrice(type as ShameAction));
+    setShameType(type as MockeryAction);
     setShowShameModal(true);
     
     // Play subtle royal sound effect
@@ -72,6 +69,9 @@ const InteractiveLeaderboard: React.FC = () => {
         default: return 'Public Shaming';
       }
     };
+    
+    // Calculate the shame amount
+    const shameAmount = getShameActionPrice(shameType);
     
     // Simulate API call for shame action
     setTimeout(() => {
@@ -104,7 +104,7 @@ const InteractiveLeaderboard: React.FC = () => {
     }, 1000);
   };
 
-  const openShameModal = (user: LeaderboardUserType) => {
+  const openShameModal = (user: LeaderboardUser) => {
     setSelectedUser(user);
     setModalType('shame');
   };
@@ -145,9 +145,7 @@ const InteractiveLeaderboard: React.FC = () => {
                 tier: selectedUser.tier,
                 spendStreak: selectedUser.spendStreak
               }}
-              shameAmount={shameAmount}
-              shameType={shameType as MockeryAction}
-              onClose={() => setModalType(null)}
+              shameType={shameType}
               onConfirm={handleShameConfirm}
               onCancel={() => setModalType(null)}
               hasDiscount={false}

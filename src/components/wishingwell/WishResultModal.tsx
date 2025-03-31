@@ -5,12 +5,14 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { CosmeticItem } from '@/types/cosmetics';
 import { formatCurrency } from '@/utils/formatters';
 
-interface WishResultModalProps {
+export type WishResultType = 'success' | 'failure' | 'jackpot';
+
+export interface WishResultModalProps {
   isOpen: boolean;
   onClose: () => void;
   title: string;
   description: string;
-  resultType: 'success' | 'failure' | 'jackpot';
+  resultType: WishResultType;
   amount?: number;
   winAmount?: number;
   cosmeticItem?: CosmeticItem;

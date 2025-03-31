@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { UserProfile } from '@/types/user';
 import { Palette } from 'lucide-react';
@@ -26,7 +27,7 @@ const ProfileColors: React.FC<ProfileColorsProps> = ({
   onSelectColor,
   activeColor 
 }) => {
-  const userColors = user?.cosmetics?.colors || [];
+  const userColors = user?.cosmetics?.color || []; // Changed from colors to color
 
   const getRarityClass = (rarity: string) => {
     switch (rarity) {
@@ -137,7 +138,7 @@ const ProfileColors: React.FC<ProfileColorsProps> = ({
                 size="sm"
                 className="w-full"
                 disabled={isOwned && !onSelectColor}
-                onClick={() => isOwned && onSelectColor ? onSelectColor(item.id) : onPurchase(item.name, item.price, 'colors', item.id)}
+                onClick={() => isOwned && onSelectColor ? onSelectColor(item.id) : onPurchase(item.name, item.price, 'color', item.id)}
               >
                 {isOwned ? (onSelectColor ? (isActive ? 'Selected' : 'Select Color') : 'Already Owned') : `Purchase for $${item.price}`}
               </RoyalButton>

@@ -1,8 +1,8 @@
 
 import { LeaderboardUser } from '@/types/leaderboard';
 
-// Export the type we're using
-export type { LeaderboardUser };
+// Export the type
+export { LeaderboardUser };
 
 // Mock leaderboard data
 export const mockLeaderboardData: LeaderboardUser[] = [

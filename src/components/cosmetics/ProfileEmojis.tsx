@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { UserProfile } from '@/types/user';
 import { Sparkles } from 'lucide-react';
@@ -19,7 +20,7 @@ interface ProfileEmojisProps {
 }
 
 const ProfileEmojis: React.FC<ProfileEmojisProps> = ({ onPurchase, user }) => {
-  const userEmojis = user?.cosmetics?.emojis || [];
+  const userEmojis = user?.cosmetics?.emoji || []; // Changed from emojis to emoji
 
   const getRarityClass = (rarity: string) => {
     switch (rarity) {
@@ -152,7 +153,7 @@ const ProfileEmojis: React.FC<ProfileEmojisProps> = ({ onPurchase, user }) => {
                   variant="royalGold"
                   size="sm"
                   className="w-full"
-                  onClick={() => onPurchase(item.name, item.price, 'emojis', item.id)}
+                  onClick={() => onPurchase(item.name, item.price, 'emoji', item.id)}
                 >
                   Purchase for ${item.price}
                 </RoyalButton>

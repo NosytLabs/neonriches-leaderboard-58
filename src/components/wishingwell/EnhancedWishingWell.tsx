@@ -1,291 +1,318 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Sparkles, Coins, Info } from 'lucide-react';
-import { useAuth } from '@/contexts';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Sparkles, Coins, Gift } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/hooks/useAuth';
 import { CosmeticItem } from '@/types/cosmetics';
-import WishResultModal, { WishResultType } from './WishResultModal';
-import useNotificationSounds from '@/hooks/use-notification-sounds';
-import { motion, AnimatePresence } from 'framer-motion';
-import { formatCurrency } from '@/utils/formatters';
+import WishResultModal from './WishResultModal';
 
-// Mock function to simulate wishing
-const makeWish = async (userId: string, amount: number) => {
-  // Simulate API call delay
-  await new Promise(resolve => setTimeout(resolve, 1000));
+export type WishResultType = 'success' | 'failure' | 'jackpot';
+
+interface EnhancedWishingWellProps {
+  className?: string;
+}
+
+const EnhancedWishingWell: React.FC<EnhancedWishingWellProps> = ({ className }) => {
+  const { toast } = useToast();
+  const { user, updateUser } = useAuth();
+  const [isWishing, setIsWishing] = useState<boolean>(false);
+  const [wishAmount, setWishAmount] = useState<number>(0);
+  const [showResult, setShowResult] = useState<boolean>(false);
+  const [wishResult, setWishResult] = useState<WishResultType>('failure');
+  const [winAmount, setWinAmount] = useState<number>(0);
+  const [rewardItem, setRewardItem] = useState<CosmeticItem | null>(null);
   
-  // 70% chance of common, 20% chance of rare, 10% chance of legendary
-  const rand = Math.random();
-  const success = true;
-  let rarity = 'common';
-  let reward: CosmeticItem = {
-    id: 'coin-border',
-    name: 'Coin Border',
-    description: 'A border made of shining coins to show off your wealth.',
-    price: 0,
-    category: 'borders',
-    rarity: 'common',
-    cssClass: 'border-coin'
-  };
-  
-  if (rand > 0.9) {
-    rarity = 'legendary';
-    reward = {
-      id: 'royal-crown',
-      name: 'Royal Crown',
-      description: 'A majestic crown fit for royalty.',
-      price: 0,
-      category: 'borders',
-      rarity: 'legendary',
-      cssClass: 'border-crown'
-    };
-  } else if (rand > 0.7) {
-    rarity = 'rare';
-    reward = {
-      id: 'gem-sparkle',
-      name: 'Gem Sparkle',
-      description: 'Add a sparkling gem effect to your profile.',
-      price: 0,
-      category: 'effects',
+  // Sample cosmetic rewards
+  const cosmeticRewards: CosmeticItem[] = [
+    {
+      id: 'golden-border',
+      name: 'Golden Border',
+      description: 'A luxurious golden border for your profile',
+      price: 50,
+      category: 'border', // Changed from borders to border
+      cssClass: 'border-golden',
       rarity: 'rare',
-      cssClass: 'effect-sparkle'
-    };
-  }
-  
-  return { success, reward, rarity };
-};
-
-export const getPotentialRewards = () => {
-  return [
-    {
-      id: "borders_reward",
-      name: "Royal Border",
-      description: "A luxurious border to adorn your profile",
-      category: "border",
-      rarity: "rare",
-      chance: 0.05,
-      value: 100
+      type: 'border',
+      image: '/images/cosmetics/golden-border.png'
     },
     {
-      id: "color_reward",
-      name: "Gem-Tone Color",
-      description: "Make your username shine with a rare color",
-      category: "color",
-      rarity: "uncommon",
-      chance: 0.1,
-      value: 50
+      id: 'royal-purple',
+      name: 'Royal Purple Theme',
+      description: 'The color of royalty',
+      price: 75,
+      category: 'color', // Changed from colors to color
+      cssClass: 'theme-royal-purple',
+      rarity: 'epic',
+      type: 'color',
+      image: '/images/cosmetics/royal-purple.png'
     },
     {
-      id: "effect_reward",
-      name: "Glowing Aura",
-      description: "A special effect to make your profile stand out",
-      category: "effect",
-      rarity: "epic",
-      chance: 0.02,
-      value: 200
+      id: 'sparkling-aura',
+      name: 'Sparkling Aura',
+      description: 'A dazzling effect that surrounds your profile',
+      price: 100,
+      category: 'effect', // Changed from effects to effect
+      cssClass: 'effect-sparkling',
+      rarity: 'legendary',
+      type: 'effect',
+      image: '/images/cosmetics/sparkling-aura.png'
     }
   ];
-};
-
-const EnhancedWishingWell: React.FC = () => {
-  const { user } = useAuth();
-  const { toast } = useToast();
-  const [isWishing, setIsWishing] = useState(false);
-  const [coins, setCoins] = useState<number[]>([]);
-  const [showResult, setShowResult] = useState(false);
-  const [wishResult, setWishResult] = useState<WishResultType>('success');
-  const [reward, setReward] = useState<CosmeticItem | null>(null);
-  const [rarity, setRarity] = useState('common');
-  const coinContainerRef = useRef<HTMLDivElement>(null);
-  const { playSound } = useNotificationSounds();
   
-  const handleWish = async () => {
+  const makeWish = () => {
     if (!user) {
       toast({
-        title: "Authentication Required",
-        description: "You must be logged in to make a wish.",
-        variant: "destructive"
+        title: "Please log in",
+        description: "You must be logged in to use the Wishing Well",
       });
       return;
     }
     
-    if ((user.walletBalance || 0) < 10) {
+    if (wishAmount <= 0) {
+      toast({
+        title: "Invalid Amount",
+        description: "Please enter a valid amount to wish"
+      });
+      return;
+    }
+    
+    if (user.walletBalance < wishAmount) {
       toast({
         title: "Insufficient Funds",
-        description: "You need at least $10 to make a wish.",
-        variant: "destructive"
+        description: "You don't have enough funds to make this wish"
       });
       return;
     }
     
     setIsWishing(true);
-    playCoinAnimation();
-    playSound('coins');
     
-    try {
-      const result = await makeWish(user.id, 10);
+    // Simulate API call
+    setTimeout(() => {
+      const random = Math.random();
       
-      if (result.success) {
-        setWishResult('success');
-        setReward(result.reward);
-        setRarity(result.rarity);
+      // Update user balance
+      if (user && updateUser) {
+        updateUser({
+          walletBalance: user.walletBalance - wishAmount
+        });
+      }
+      
+      // Determine outcome
+      if (random < 0.1) {
+        // Jackpot - win a cosmetic item
+        const randomItemIndex = Math.floor(Math.random() * cosmeticRewards.length);
+        const reward = cosmeticRewards[randomItemIndex];
+        setRewardItem(reward);
+        setWishResult('jackpot');
         
-        // Show result after coin animation finishes
-        setTimeout(() => {
-          setShowResult(true);
+        // Add item to user's cosmetics if possible
+        if (user && updateUser && user.cosmetics) {
+          const category = reward.category as keyof typeof user.cosmetics;
+          const updatedCosmetics = { ...user.cosmetics };
           
-          if (result.rarity === 'legendary') {
-            setWishResult('jackpot');
-            playSound('trumpets');
-          } else {
-            playSound('success');
+          if (Array.isArray(updatedCosmetics[category])) {
+            // @ts-ignore - We've already checked it's an array
+            updatedCosmetics[category] = [...updatedCosmetics[category], reward.id];
+            updateUser({ cosmetics: updatedCosmetics });
           }
-        }, 2000);
+        }
+        
+        toast({
+          title: "Incredible Fortune!",
+          description: `You've won a rare ${reward.name}!`,
+          variant: "success"
+        });
+      } 
+      else if (random < 0.4) {
+        // Success - win some money
+        const multiplier = 1 + Math.random();
+        const amount = Math.floor(wishAmount * multiplier);
+        setWishResult('success');
+        setWinAmount(amount);
+        
+        // Update user balance
+        if (user && updateUser) {
+          updateUser({
+            walletBalance: user.walletBalance + amount
+          });
+        }
         
         toast({
           title: "Wish Granted!",
-          description: `You received a ${result.rarity} reward: ${result.reward.name}`,
+          description: `You've won $${amount}!`,
+          variant: "success"
         });
-      } else {
+      } 
+      else {
+        // Failure - lose money
         setWishResult('failure');
-        setShowResult(true);
-        playSound('error');
         
         toast({
-          title: "Wish Failed",
-          description: "The well didn't grant your wish this time.",
+          title: "Wish Denied",
+          description: "The well has taken your offering, but granted no wish.",
           variant: "destructive"
         });
       }
-    } catch (error) {
-      console.error("Error making wish:", error);
-      toast({
-        title: "Error",
-        description: "Something went wrong with your wish.",
-        variant: "destructive"
-      });
-    } finally {
-      setTimeout(() => {
-        setIsWishing(false);
-      }, 2000);
-    }
+      
+      setShowResult(true);
+      setIsWishing(false);
+    }, 1500);
   };
   
-  const playCoinAnimation = () => {
-    if (!coinContainerRef.current) return;
-    
-    const containerWidth = coinContainerRef.current.offsetWidth;
-    const numCoins = 20;
-    const newCoins = [];
-    
-    for (let i = 0; i < numCoins; i++) {
-      newCoins.push(Math.floor(Math.random() * containerWidth));
-    }
-    
-    setCoins(newCoins);
-    
-    // Clear coins after animation
-    setTimeout(() => {
-      setCoins([]);
-    }, 2000);
-  };
-  
-  const handleCloseResult = () => {
+  const handleModalClose = () => {
     setShowResult(false);
-    setReward(null);
+    setWishAmount(0);
+    setRewardItem(null);
   };
   
   return (
-    <div className="relative">
-      <Card className="glass-morphism border-white/10 overflow-hidden">
-        <div 
-          className="absolute inset-0 bg-cover bg-center opacity-20"
-          style={{ backgroundImage: "url('/images/wishing-well-bg.jpg')" }}
-        />
-        
-        <div className="relative z-10">
-          <CardHeader>
-            <CardTitle className="flex items-center">
-              <Sparkles className="h-5 w-5 mr-2 text-royal-gold" />
-              Royal Wishing Well
-            </CardTitle>
-          </CardHeader>
+    <Card className={`glass-morphism border-royal-blue/20 ${className}`}>
+      <CardHeader className="space-y-1">
+        <CardTitle className="text-xl flex items-center">
+          <Sparkles className="h-5 w-5 mr-2 text-royal-gold" />
+          Royal Wishing Well
+        </CardTitle>
+        <CardDescription>
+          Toss your coins into the magical well and receive fortunes beyond your imagination
+        </CardDescription>
+      </CardHeader>
+      
+      <CardContent>
+        <div className="relative rounded-lg overflow-hidden mb-6">
+          <div className="absolute inset-0 bg-gradient-to-b from-royal-blue/30 to-royal-purple/30 z-10" />
           
-          <CardContent className="text-center">
-            <div className="rounded-full w-48 h-48 mx-auto bg-gradient-to-br from-blue-900/40 to-black/40 border border-white/10 flex items-center justify-center mb-6 overflow-hidden relative">
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-32 h-32 rounded-full bg-blue-500/20 animate-pulse" />
-              </div>
-              
-              <div className="w-40 h-40 rounded-full bg-gradient-to-br from-royal-gold/20 to-royal-gold/5 flex items-center justify-center z-10 relative border border-royal-gold/30">
-                <Sparkles className="h-12 w-12 text-royal-gold animate-pulse" />
-              </div>
-              
-              <div 
-                ref={coinContainerRef}
-                className="absolute inset-0 overflow-hidden"
-              >
-                <AnimatePresence>
-                  {coins.map((left, index) => (
-                    <motion.div
-                      key={`coin-${index}`}
-                      initial={{ y: -20, x: left, opacity: 1 }}
-                      animate={{ y: 200, opacity: 0 }}
-                      exit={{ opacity: 0 }}
-                      transition={{ duration: 2, ease: "easeIn" }}
-                      className="absolute"
-                    >
-                      <Coins className="h-6 w-6 text-royal-gold" />
-                    </motion.div>
-                  ))}
-                </AnimatePresence>
-              </div>
+          <div className="relative z-20 py-8 px-4 text-center">
+            <div className="w-24 h-24 rounded-full bg-royal-gold/20 flex items-center justify-center mx-auto mb-4">
+              <Coins className="h-12 w-12 text-royal-gold" />
             </div>
             
-            <div className="space-y-4 max-w-md mx-auto">
-              <h3 className="text-xl font-bold">Make a Wish</h3>
-              
-              <p className="text-white/70">
-                Toss a coin into the wishing well and receive a random cosmetic reward. 
-                Each wish costs {formatCurrency(10)}.
-              </p>
-              
-              <div className="flex items-center justify-center space-x-2 text-white/60 text-sm">
-                <Info className="h-4 w-4" />
-                <span>Your wallet balance: {formatCurrency(user?.walletBalance || 0)}</span>
+            <h3 className="text-lg font-semibold mb-1">Cast Your Wish</h3>
+            <p className="text-sm text-white/70 max-w-md mx-auto mb-4">
+              The magic of the well grows stronger with larger offerings. Rare treasures await the most generous nobles.
+            </p>
+            
+            <div className="flex flex-col sm:flex-row gap-3 justify-center items-center max-w-xs mx-auto">
+              <div className="relative w-full">
+                <input
+                  type="number"
+                  value={wishAmount}
+                  onChange={(e) => setWishAmount(parseFloat(e.target.value) || 0)}
+                  className="bg-black/20 border border-royal-blue/30 rounded-lg px-4 py-2 w-full text-center"
+                  placeholder="Amount"
+                  min="1"
+                  max={user?.walletBalance || 9999}
+                />
+                <span className="absolute left-3 top-2.5 text-white/50">$</span>
               </div>
+              
+              <Button
+                onClick={makeWish}
+                disabled={isWishing || wishAmount <= 0 || (user ? wishAmount > user.walletBalance : true)}
+                className="bg-royal-gold text-black hover:bg-royal-gold/90 min-w-[120px]"
+              >
+                {isWishing ? (
+                  <span className="flex items-center">
+                    <span className="animate-pulse">Wishing...</span>
+                  </span>
+                ) : (
+                  "Make a Wish"
+                )}
+              </Button>
             </div>
-          </CardContent>
-          
-          <CardFooter className="flex justify-center">
-            <Button
-              disabled={isWishing || (user?.walletBalance || 0) < 10}
-              onClick={handleWish}
-              className={`text-black transition-all duration-300 ${isWishing ? 'bg-gray-400' : 'bg-royal-gold hover:bg-royal-gold/90'}`}
-            >
-              {isWishing ? 'Making Wish...' : 'Make a Wish'}
-            </Button>
-          </CardFooter>
+            
+            <div className="flex justify-between text-xs text-white/60 mt-2 px-2 max-w-xs mx-auto">
+              <button 
+                className="hover:text-white transition-colors" 
+                onClick={() => user && setWishAmount(5)}
+              >
+                $5
+              </button>
+              <button 
+                className="hover:text-white transition-colors" 
+                onClick={() => user && setWishAmount(10)}
+              >
+                $10
+              </button>
+              <button 
+                className="hover:text-white transition-colors" 
+                onClick={() => user && setWishAmount(25)}
+              >
+                $25
+              </button>
+              <button 
+                className="hover:text-white transition-colors" 
+                onClick={() => user && setWishAmount(50)}
+              >
+                $50
+              </button>
+              <button 
+                className="hover:text-white transition-colors" 
+                onClick={() => user && setWishAmount(100)}
+              >
+                $100
+              </button>
+              <button 
+                className="hover:text-white transition-colors" 
+                onClick={() => user && user.walletBalance && setWishAmount(user.walletBalance)}
+              >
+                All
+              </button>
+            </div>
+          </div>
         </div>
-      </Card>
+        
+        <div className="text-sm text-white/60">
+          <h4 className="font-medium text-white mb-2 flex items-center">
+            <Gift className="h-4 w-4 mr-1 text-royal-gold" />
+            Possible Rewards
+          </h4>
+          <ul className="list-disc pl-5 space-y-1">
+            <li>Regular Wins: 1-2x your wished amount</li>
+            <li>Rare Cosmetics: Exclusive profile enhancements</li>
+            <li>Special Titles: Unique titles to display your luck</li>
+          </ul>
+          <p className="mt-3 text-xs italic">
+            The well favors the brave. Higher wishes have greater chances of special rewards.
+          </p>
+        </div>
+      </CardContent>
       
-      {reward && (
+      {showResult && rewardItem && wishResult === 'jackpot' && (
         <WishResultModal
-          open={showResult}
-          onOpenChange={setShowResult}
-          result={wishResult}
-          reward={reward}
-          rarity={rarity}
-          title={wishResult === 'jackpot' ? 'Incredible Fortune!' : 
-                wishResult === 'success' ? 'Wish Granted!' : 'Better Luck Next Time'}
-          message={wishResult === 'jackpot' ? 'You received an extremely rare reward!' : 
-                  wishResult === 'success' ? 'The wishing well has blessed you with a gift.' : 
-                  'Your coin sank into the well, but no reward appeared.'}
-          onClose={handleCloseResult}
+          isOpen={showResult}
+          onClose={handleModalClose}
+          title="Incredible Fortune!"
+          description={`You've received a rare ${rewardItem.name}!`}
+          resultType="jackpot"
+          cosmeticItem={rewardItem}
         />
       )}
-    </div>
+      
+      {showResult && wishResult === 'success' && (
+        <WishResultModal
+          isOpen={showResult}
+          onClose={handleModalClose}
+          title="Wish Granted!"
+          description="The well has smiled upon you and multiplied your offering."
+          resultType="success"
+          amount={wishAmount}
+          winAmount={winAmount}
+        />
+      )}
+      
+      {showResult && wishResult === 'failure' && (
+        <WishResultModal
+          isOpen={showResult}
+          onClose={handleModalClose}
+          title="Wish Denied"
+          description="The well has taken your offering, but granted no wish."
+          resultType="failure"
+          amount={wishAmount}
+        />
+      )}
+    </Card>
   );
 };
 
