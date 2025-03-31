@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Card } from '@/components/ui/card';
-import { MockedUser } from '@/types/mockery-types';
+import { MockedUser } from '@/types/mockery';
 
 interface MockeryHistoryProps {
   mockedUsers: MockedUser[];

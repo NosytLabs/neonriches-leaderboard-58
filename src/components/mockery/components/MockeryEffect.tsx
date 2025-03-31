@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from 'react';
-import { MockeryAction } from '@/types/mockery-types';
-import { getActiveMockeryClass, getMockeryName } from '@/utils/mockery';
+import { MockeryAction } from '@/types/mockery';
+import { getActiveMockeryClass, getMockeryName } from '@/utils/mockeryUtils';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface MockeryEffectProps {

@@ -1,8 +1,7 @@
-
 // Re-export all types from individual type files
 export * from './achievement';
 export * from './cosmetics';
-export * from './mockery-types';
+export * from './mockery';
 export * from './leaderboard';
 export * from './user';
 export * from './certificate';

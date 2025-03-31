@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { UserProfile } from '@/types/user';
-import { MockeryAction, MockedUser } from '@/types/mockery-types';
+import { MockeryAction, MockedUser } from '@/types/mockery';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { getMockeryName } from '@/utils/mockeryUtils';

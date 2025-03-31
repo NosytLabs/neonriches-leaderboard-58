@@ -2,7 +2,7 @@
 import React from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { UserProfile } from '@/types/user';
-import { MockeryAction, MockedUser } from '@/types/mockery-types';
+import { MockeryAction, MockedUser } from '@/types/mockery';
 import MockeryTabContent from './MockeryTabContent';
 import MockeryHistory from './MockeryHistory';
 import MockeryProtection from './MockeryProtection';

@@ -6,12 +6,12 @@ import { Target } from 'lucide-react';
 const MockeryHeader: React.FC = () => {
   return (
     <CardHeader>
-      <CardTitle className="flex items-center gap-2">
-        <Target className="h-5 w-5 text-royal-crimson" />
-        Royal Mockery Festival
+      <CardTitle className="flex items-center">
+        <Target className="h-5 w-5 text-royal-crimson mr-2" />
+        <span>Royal Mockery Festival</span>
       </CardTitle>
       <CardDescription>
-        Engage in the medieval tradition of mockery and status games
+        Engage in the time-honored tradition of publicly mocking other nobles
       </CardDescription>
     </CardHeader>
   );

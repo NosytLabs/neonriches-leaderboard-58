@@ -1,56 +1,55 @@
 
-import { UserProfile, UserTier, TeamType } from './user-types';
-import { LucideIcon } from 'lucide-react';
+/**
+ * Core mockery type definitions for SpendThrone
+ */
 
-// Core mockery actions - updated to include all used values across the codebase
+// Valid team colors
+export type TeamColor = 'red' | 'blue' | 'green' | 'gold' | 'purple' | 'none' | 'neutral';
+
+// TeamType is an alias of TeamColor for backward compatibility
+export type TeamType = 'red' | 'blue' | 'green' | 'gold' | 'purple';
+
+// User tier types
+export type UserTier = 
+  | 'basic' 
+  | 'premium' 
+  | 'royal' 
+  | 'elite' 
+  | 'legendary' 
+  | 'founder'
+  | 'free'
+  | 'pro'
+  | 'vip'
+  | 'standard'
+  | 'silver'
+  | 'gold'
+  | 'platinum'
+  | 'diamond'
+  | 'bronze';
+
+// Mockery action types - consolidated from all sources
 export type MockeryAction = 
-  | 'tomatoes'
+  | 'tomatoes' 
   | 'eggs' 
-  | 'crown'
+  | 'crown' 
   | 'stocks'
-  | 'jester'
+  | 'jester' 
+  | 'protection' 
   | 'shame'
-  | 'protection'
   | 'target'
+  | 'challenge'
+  | 'ghost'
   | 'putridEggs'
   | 'silence'
   | 'courtJester'
-  | 'smokeBomb'
-  | 'immune'
-  | 'dunce'
-  | 'glitterBomb'
-  | 'royalPie'
-  | 'jokeCrown'
-  | 'memeFrame'
-  | 'roast'
-  | 'ridicule'
-  | 'humiliate'
-  | 'expose'
-  | 'mock'
-  | 'taunt'
-  | 'guillotine'
-  | 'dungeons'
-  | 'removal'
-  | 'troll'
-  | 'peasant'
-  | 'rat'
-  | 'ghost'
-  | 'skeleton'
-  | 'zombie'
-  | 'witch'
-  | 'monster'
-  | 'dragon'
-  | 'jest'
-  | 'challenge'
-  | 'defeat'
-  | 'laughing';
+  | 'smokeBomb';
 
-// Mockery tiers
+// Mockery tier types
 export type MockeryTier = 
-  | 'common'
-  | 'uncommon'
-  | 'rare'
-  | 'epic'
+  | 'common' 
+  | 'uncommon' 
+  | 'rare' 
+  | 'epic' 
   | 'legendary'
   | 'basic'
   | 'premium'
@@ -58,94 +57,60 @@ export type MockeryTier =
   | 'silver'
   | 'bronze';
 
-// Team colors
-export type TeamColor = 
-  | 'red'
-  | 'blue'
-  | 'green'
-  | 'gold'
-  | 'purple'
-  | 'none'
-  | 'neutral';
+/**
+ * Interface for a user who can be mocked
+ */
+export interface MockedUser {
+  id: string; 
+  username: string;
+  displayName: string;
+  profileImage: string;
+  totalSpent: number;
+  rank: number;
+  tier: string;
+  team: string;
+  isMocked: boolean;
+  isProtected: boolean;
+}
 
-// Alias for backward compatibility 
-export type ShameAction = MockeryAction;
-
-// Mockery event represents an instance of mockery applied to a user
+/**
+ * Represents a mockery event applied to a user
+ */
 export interface MockeryEvent {
   id: string;
-  type?: MockeryAction;
-  action?: MockeryAction;
-  targetId?: string;
-  targetUserId?: string;
-  appliedBy?: string;
-  appliedById?: string;
-  appliedAt?: string;
-  createdAt?: string;
+  type: MockeryAction;
+  targetId: string;
+  appliedBy: string;
+  appliedAt: string;
   expiresAt: string;
-  duration?: number;
+  duration: number;
   isActive: boolean;
-  active?: boolean;
-  cost?: number;
-  tier?: MockeryTier;
-  timestamp?: string;
-  metadata?: Record<string, any>;
+  timestamp: string;
 }
 
-// Represents a user who has been mocked
-export interface MockedUser {
-  id: string;
-  userId?: string;
-  username: string;
-  displayName?: string;
-  profileImage?: string;
-  tier?: UserTier;
-  team?: TeamColor;
-  action?: MockeryAction;
-  appliedBy?: string;
-  appliedAt?: string;
-  mockedBy?: string;
-  mockedReason?: string;
-  mockedTimestamp?: string;
-  mockedUntil?: string;
-  mockedTier?: MockeryTier;
-  mockeryCount?: number;
-  lastMocked?: string;
-  expiresAt?: string;
-  reason?: string;
-}
-
-// Data structure for visual effects
-export interface ShameEffectData {
-  username?: string;
-  type?: MockeryAction;
-  action?: MockeryAction;
-  tier?: MockeryTier;
-  duration?: number;
-  isActive?: boolean;
-  timestamp?: string;
-}
-
+/**
+ * Data needed for mockery effect display
+ */
 export interface MockeryEffectData {
   username: string;
   action: MockeryAction;
 }
 
+/**
+ * Sound options for mockery notifications
+ */
 export interface NotificationSoundOptions {
   volume?: number;
+  loop?: boolean;
   playbackRate?: number;
-  delay?: number;
 }
 
 // Helper function to check if a string is a valid MockeryAction
 export const isValidMockeryAction = (action: string): action is MockeryAction => {
   const validActions: MockeryAction[] = [
-    'tomatoes', 'eggs', 'crown', 'stocks', 'jester', 'shame', 'protection',
-    'target', 'putridEggs', 'silence', 'courtJester', 'smokeBomb', 'immune',
-    'dunce', 'glitterBomb', 'royalPie', 'jokeCrown', 'memeFrame', 'roast',
-    'ridicule', 'humiliate', 'expose', 'mock', 'taunt', 'guillotine', 'dungeons',
-    'removal', 'troll', 'peasant', 'rat', 'ghost', 'skeleton', 'zombie', 'witch',
-    'monster', 'dragon', 'jest', 'challenge', 'defeat', 'laughing'
+    'tomatoes', 'eggs', 'crown', 'stocks', 'jester', 
+    'protection', 'shame', 'target', 'challenge', 'ghost', 
+    'putridEggs', 'silence', 'courtJester', 'smokeBomb'
   ];
   return validActions.includes(action as MockeryAction);
 };

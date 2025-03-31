@@ -1,37 +1,26 @@
 
-import { MockeryAction } from '@/types/mockery-types';
+import { MockeryAction } from '@/types/mockery';
 import { 
-  hasWeeklyDiscount as baseHasWeeklyDiscount,
-  getWeeklyDiscountedAction as baseGetWeeklyDiscountedAction,
-  getDiscountedShamePrice as baseGetDiscountedPrice,
-  getShameActionPrice as baseGetShamePrice,
-  getShameActionMessage as baseGetShameMessage
-} from '@/utils/mockery';
+  hasWeeklyDiscount,
+  getWeeklyDiscountedAction,
+  getDiscountedShamePrice,
+  getShameActionPrice,
+  getShameActionMessage,
+  getMockeryActionIcon,
+  getMockeryActionIconColor
+} from '@/utils/mockeryUtils';
+
+// Re-export these utilities with type safety
+export const getShameActionIcon = getMockeryActionIcon;
+export const getShameIconColor = getMockeryActionIconColor;
 
 // We can simply re-export these utilities with type safety
-export const hasWeeklyDiscount = (action: MockeryAction): boolean => 
-  baseHasWeeklyDiscount(action);
-
-export const getWeeklyDiscountedAction = (): MockeryAction => 
-  baseGetWeeklyDiscountedAction() as MockeryAction;
-
-export const getDiscountedShamePrice = (action: MockeryAction): number => 
-  baseGetDiscountedPrice(action);
-
-export const getShameActionPrice = (action: MockeryAction): number => 
-  baseGetShamePrice(action);
-
-export const getShameActionMessage = (action: MockeryAction, username: string): string => 
-  baseGetShameMessage(action, username);
-
-// Import Lucide icons for shame actions
-import { AlertCircle, Egg, Crown, Lock, Target } from 'lucide-react';
-import type { LucideIcon } from 'lucide-react';
-import { TomatoIcon, getMockeryActionIcon, getMockeryActionIconColor } from '@/utils/mockery/mockery-icons';
-
-// Get icon for a shame action
-export const getShameActionIcon = (action: MockeryAction): LucideIcon | React.FC<{ className?: string; size?: number }> => {
-  return getMockeryActionIcon(action);
+export { 
+  hasWeeklyDiscount, 
+  getWeeklyDiscountedAction, 
+  getDiscountedShamePrice, 
+  getShameActionPrice, 
+  getShameActionMessage 
 };
 
 // Get title for a shame action

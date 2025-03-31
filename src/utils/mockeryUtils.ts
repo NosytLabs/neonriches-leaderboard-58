@@ -1,5 +1,97 @@
 
-import { MockeryAction, MockeryTier } from '@/types/mockery-types'; 
+/**
+ * Centralized utility functions for mockery functionality
+ */
+import { MockeryAction, MockeryTier } from '@/types/mockery';
+import type { LucideIcon } from 'lucide-react';
+import { 
+  Target, 
+  Egg, 
+  Crown, 
+  Lock, 
+  AlertCircle, 
+  Ghost,
+  Volume2,
+  UserX,
+  Sparkles,
+  Cloud
+} from 'lucide-react';
+
+/**
+ * Custom tomato icon component
+ */
+export const TomatoIcon: React.FC<{ size?: number; className?: string }> = ({ 
+  size = 24, 
+  className = '' 
+}) => {
+  return (
+    <svg 
+      xmlns="http://www.w3.org/2000/svg" 
+      width={size} 
+      height={size} 
+      viewBox="0 0 24 24" 
+      fill="none" 
+      stroke="currentColor" 
+      strokeWidth="2" 
+      strokeLinecap="round" 
+      strokeLinejoin="round" 
+      className={className}
+    >
+      <path d="M12 2c0 4-8 4-8 4s0-4 8-4z" />
+      <circle cx="12" cy="14" r="8" />
+      <path d="M12 6v4" />
+      <path d="M15 9h-6" />
+    </svg>
+  );
+};
+
+/**
+ * Get the appropriate icon for a mockery action
+ */
+export function getMockeryActionIcon(action: MockeryAction): LucideIcon | React.FC<{ className?: string; size?: number }> {
+  const icons: Record<string, LucideIcon | React.FC<{ className?: string; size?: number }>> = {
+    'tomatoes': TomatoIcon,
+    'eggs': Egg,
+    'crown': Crown,
+    'stocks': Lock,
+    'jester': Sparkles,
+    'protection': Lock,
+    'shame': AlertCircle,
+    'target': Target,
+    'challenge': AlertCircle,
+    'ghost': Ghost,
+    'putridEggs': Egg,
+    'silence': Volume2,
+    'courtJester': Sparkles,
+    'smokeBomb': Cloud
+  };
+  
+  return icons[action] || AlertCircle;
+}
+
+/**
+ * Get the color class for a mockery action icon
+ */
+export function getMockeryActionIconColor(action: MockeryAction): string {
+  const colors: Record<string, string> = {
+    'tomatoes': 'text-red-500',
+    'eggs': 'text-yellow-500',
+    'crown': 'text-yellow-400',
+    'stocks': 'text-gray-500',
+    'jester': 'text-purple-500',
+    'protection': 'text-green-500',
+    'shame': 'text-red-500',
+    'target': 'text-red-400',
+    'challenge': 'text-blue-500',
+    'ghost': 'text-blue-200',
+    'putridEggs': 'text-green-600',
+    'silence': 'text-indigo-400',
+    'courtJester': 'text-purple-400',
+    'smokeBomb': 'text-gray-400'
+  };
+  
+  return colors[action] || 'text-gray-400';
+}
 
 /**
  * Get display name for a mockery action
@@ -141,10 +233,27 @@ export function getActiveMockeryClass(action: MockeryAction): string {
   return classes[action] || '';
 }
 
-// Compatibility aliases
-export const getMockeryActionTitle = getMockeryName;
-export const getMockeryActionDescription = getMockeryDescription;
-export const getMockeryActionPrice = getMockeryCost;
+/**
+ * Get the duration for a mockery action in hours
+ */
+export function getMockeryDuration(action: MockeryAction): number {
+  const durations: Record<string, number> = {
+    tomatoes: 24,
+    eggs: 48,
+    crown: 72,
+    stocks: 24,
+    jester: 48,
+    protection: 168, // 7 days
+    shame: 24,
+    target: 24,
+    putridEggs: 48,
+    silence: 12,
+    courtJester: 72,
+    smokeBomb: 6
+  };
+  
+  return durations[action] || 24;
+}
 
 // Weekly discount helpers
 export function hasWeeklyDiscount(action: MockeryAction): boolean {
@@ -187,3 +296,16 @@ export function getShameActionMessage(action: MockeryAction, username: string): 
   
   return messages[action] || `${username} has been mocked!`;
 }
+
+// Export aliases for backward compatibility
+export const getMockeryActionTitle = getMockeryName;
+export const getMockeryActionDescription = getMockeryDescription;
+export const getMockeryActionPrice = getMockeryCost;
+
+// Helper function to render mockery icon with proper color
+export const renderMockeryIcon = (action: MockeryAction, size = 16, className = '') => {
+  const IconComponent = getMockeryActionIcon(action);
+  const colorClass = getMockeryActionIconColor(action);
+  
+  return <IconComponent size={size} className={`${colorClass} ${className}`} />;
+};

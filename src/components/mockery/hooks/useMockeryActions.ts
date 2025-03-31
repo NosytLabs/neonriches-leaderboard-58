@@ -1,7 +1,10 @@
 
 import { useState, useCallback } from 'react';
-import { MockeryAction, MockeryEffectData } from '@/types/mockery-types';
+import { MockeryAction, MockeryEffectData } from '@/types/mockery';
 
+/**
+ * Hook to manage mockery action selection and effects
+ */
 const useMockeryActions = (
   mockUser: (userId: string, action: MockeryAction, reason?: string) => Promise<boolean>,
   protectUser: (username: string) => Promise<boolean>
@@ -14,12 +17,12 @@ const useMockeryActions = (
     action: 'tomatoes'
   });
   
-  const handleSelectAction = useCallback((action: MockeryAction) => {
+  const handleSelectAction = useCallback((action: MockeryAction): boolean => {
     setSelectedAction(action);
     return true;
   }, []);
   
-  const handleMockery = useCallback(async (username: string, action: string, amount: number) => {
+  const handleMockery = useCallback(async (username: string, action: string, amount: number): Promise<boolean> => {
     if (!selectedAction) return false;
     
     const success = await mockUser(username, selectedAction);
@@ -36,7 +39,7 @@ const useMockeryActions = (
     return success;
   }, [selectedAction, mockUser]);
   
-  const handleBuyProtection = useCallback(async () => {
+  const handleBuyProtection = useCallback(async (): Promise<boolean> => {
     return await protectUser(targetUser || 'current-user');
   }, [protectUser, targetUser]);
   
