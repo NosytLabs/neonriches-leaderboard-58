@@ -14,8 +14,8 @@ interface TopSpenderShowcaseProps {
 
 const TopSpenderShowcase: React.FC<TopSpenderShowcaseProps> = ({ user, className = '' }) => {
   // Calculate custom values that might not exist on user
-  const spendStreak = 0; // Default value
-  const followers = 0; // Default value
+  const spendStreak = user.spendStreak || 0;
+  const followers = user.followers || 0;
 
   return (
     <div className={`max-w-lg mx-auto ${className}`}>
@@ -75,7 +75,7 @@ const TopSpenderShowcase: React.FC<TopSpenderShowcaseProps> = ({ user, className
                     <TrendingUp className="h-5 w-5 text-blue-400 mr-2" />
                     <div>
                       <div className="text-sm text-white/60">Spending Streak</div>
-                      <div className="text-xl font-bold">{spendStreak || 0} days</div>
+                      <div className="text-xl font-bold">{spendStreak} days</div>
                     </div>
                   </div>
                 </div>
@@ -85,7 +85,7 @@ const TopSpenderShowcase: React.FC<TopSpenderShowcaseProps> = ({ user, className
                     <Users className="h-5 w-5 text-purple-400 mr-2" />
                     <div>
                       <div className="text-sm text-white/60">Followers</div>
-                      <div className="text-xl font-bold">{followers || 0}</div>
+                      <div className="text-xl font-bold">{followers}</div>
                     </div>
                   </div>
                 </div>
@@ -98,7 +98,7 @@ const TopSpenderShowcase: React.FC<TopSpenderShowcaseProps> = ({ user, className
                 <div>
                   <div className="text-sm text-white/60">Member Since</div>
                   <div className="font-medium">
-                    {new Date(user.joinDate || '').toLocaleDateString()}
+                    {new Date(user.joinedDate || '').toLocaleDateString()}
                   </div>
                 </div>
                 <div>
@@ -138,4 +138,3 @@ const TopSpenderShowcase: React.FC<TopSpenderShowcaseProps> = ({ user, className
 };
 
 export default TopSpenderShowcase;
-

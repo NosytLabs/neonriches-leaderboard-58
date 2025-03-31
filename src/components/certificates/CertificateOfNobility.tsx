@@ -27,7 +27,8 @@ const CertificateOfNobility: React.FC<CertificateProps> = ({
   const sound = useSound();
   
   // Generate a unique certificate ID if not provided
-  const uniqueCertId = certificateId || `STATUS-${Math.floor(10000 + Math.random() * 90000)}-${user.id.substring(0, 5)}`;
+  const userId = typeof user.id === 'number' ? user.id.toString() : user.id;
+  const uniqueCertId = certificateId || `STATUS-${Math.floor(10000 + Math.random() * 90000)}-${userId.substring(0, 5)}`;
   
   const handleVerify = () => {
     setIsVerifying(true);
@@ -53,197 +54,120 @@ const CertificateOfNobility: React.FC<CertificateProps> = ({
   };
   
   const today = new Date();
-  const statusTitle = user.amountSpent >= 1000 ? 'Digital Elite' : 
-                     user.amountSpent >= 500 ? 'Status Influencer' : 
-                     user.amountSpent >= 100 ? 'Social Climber' : 'Status Seeker';
+  const statusTitle = user.amountSpent ? (
+      user.amountSpent >= 1000 ? 'Digital Elite' : 
+      user.amountSpent >= 500 ? 'Status Influencer' : 
+      user.amountSpent >= 100 ? 'Aspiring Influencer' : 'Status Seeker'
+    ) : 'Status Seeker';
   
   return (
-    <div className="relative max-w-4xl mx-auto">
-      <motion.div
-        initial={{ scale: 0.9, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        exit={{ scale: 0.9, opacity: 0 }}
-        transition={{ duration: 0.5, type: 'spring' }}
-        className="certificate-parchment"
-      >
-        <div className="p-8 sm:p-12 relative z-10">
-          <div className="text-center mb-8">
-            <h1 className="text-2xl sm:text-3xl font-bold mb-2 royal-gradient">Certificate of Digital Status</h1>
-            <div className="text-xs sm:text-sm text-gray-600 uppercase tracking-widest">SpendThrone Official Document</div>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="relative max-w-3xl mx-auto my-6 bg-gradient-to-br from-slate-900 to-slate-800 rounded-xl border-4 border-yellow-600 shadow-xl certificate-container"
+    >
+      <div className="absolute inset-0 bg-certificate-pattern opacity-10"></div>
+      
+      <div className="relative p-10">
+        <div className="flex justify-between items-start mb-8">
+          <div>
+            <h1 className="text-xl font-bold uppercase tracking-wider text-gray-300">Certificate of Nobility</h1>
+            <p className="text-sm text-gray-400">Platform for Digital Status</p>
           </div>
-          
-          <div className="mb-8 text-center">
-            <p className="text-lg sm:text-xl mb-4">This certifies that</p>
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold royal-gradient mb-4">
-              {user.displayName || user.username}
-            </h2>
-            <p className="text-base">
-              has demonstrated exceptional financial commitment to digital status through contributions 
-              totaling <span className="font-semibold">${user.amountSpent?.toLocaleString()}</span>, 
-              thereby earning the rank of <span className="font-semibold">#{user.rank}</span> 
-              on the SpendThrone leaderboard.
-            </p>
-          </div>
-          
-          <div className="mb-8">
-            <div className="border-t border-b border-gray-300 py-4 grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
-              <div>
-                <div className="text-sm text-gray-600">Date of Issuance</div>
-                <div>{format(today, 'MMMM dd, yyyy')}</div>
-              </div>
-              <div>
-                <div className="text-sm text-gray-600">Certificate Number</div>
-                <div className="font-mono text-xs sm:text-sm">{uniqueCertId}</div>
-              </div>
-              <div>
-                <div className="text-sm text-gray-600">Status Title</div>
-                <div>{statusTitle}</div>
-              </div>
+          <div className="flex items-center">
+            <div className="h-16 w-16 rounded-full bg-gradient-to-br from-yellow-400 to-yellow-600 flex items-center justify-center">
+              <Medal className="h-8 w-8 text-black" />
             </div>
-          </div>
-          
-          <div className="flex flex-col sm:flex-row justify-between items-center mb-8">
-            <div className="mb-6 sm:mb-0">
-              <div className="text-xs text-gray-600 mb-1">Official Seal</div>
-              <div className="relative">
-                <Medal size={60} className="text-royal-gold animate-pulse-slow" />
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="text-[8px] text-center leading-tight">
-                    <div>VERIFIED</div>
-                    <div>DIGITAL STATUS</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            <div className="text-right">
-              <div className="text-xs text-gray-600 mb-1">Signature of the CEO</div>
-              <div className="font-signature text-lg sm:text-xl text-purple-800">
-                {user.rank === 1 ? `${user.displayName || user.username}` : 'Grand Sage of the Treasury'}
-              </div>
-            </div>
-          </div>
-          
-          <div className="text-xs text-gray-500 text-center italic mb-6">
-            This certificate affirms digital status in the SpendThrone platform, though it holds no legal value, 
-            authority, or meaning in the physical world. It is merely a testament to one's willingness 
-            to exchange actual currency for digital status points.
-          </div>
-          
-          <div className="flex flex-col sm:flex-row justify-center sm:justify-between gap-4">
-            <RoyalButton
-              onClick={handleVerify}
-              disabled={isVerified || isVerifying}
-              variant="royalGold"
-              className="w-full sm:w-auto"
-              icon={
-                isVerified ? (
-                  <CheckCircle size={18} className="text-emerald-400" />
-                ) : isVerifying ? (
-                  <div className="animate-spin h-4 w-4 border-2 border-white rounded-full border-t-transparent" />
-                ) : (
-                  <HelpCircle size={18} />
-                )
-              }
-            >
-              {isVerified 
-                ? 'Verified Authentic' 
-                : isVerifying
-                  ? 'Verifying...'
-                  : 'Verify Authenticity'}
-            </RoyalButton>
-            
-            <RoyalButton
-              onClick={handleDownload}
-              variant="outline"
-              className="w-full sm:w-auto"
-              icon={<Download size={18} />}
-            >
-              Download Certificate
-            </RoyalButton>
-            
-            <RoyalButton
-              onClick={handleDismiss}
-              variant="outline"
-              className="w-full sm:w-auto"
-              icon={<XCircle size={18} />}
-            >
-              Dismiss Certificate
-            </RoyalButton>
           </div>
         </div>
-      </motion.div>
-      
-      <style>
-        {`
-          @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap');
+        
+        <div className="mb-8 text-center">
+          <h2 className="text-2xl font-serif mb-1">This certifies that</h2>
+          <h1 className="text-3xl font-bold text-yellow-400 font-serif">{user.displayName || user.username}</h1>
+          <div className="mt-4 flex justify-center items-center space-x-2">
+            <span className="px-3 py-1 bg-purple-900/30 text-purple-400 text-sm rounded-full">
+              Rank #{user.rank || '-'}
+            </span>
+            <span className="px-3 py-1 bg-green-900/30 text-green-400 text-sm rounded-full">
+              ${user.totalSpent?.toLocaleString() || user.amountSpent?.toLocaleString() || '0'}
+            </span>
+          </div>
+        </div>
+        
+        <div className="mb-8 text-center">
+          <p className="text-gray-300">has earned the esteemed title of</p>
+          <h2 className="text-2xl font-bold text-yellow-400 mt-2 mb-3 font-serif">{statusTitle}</h2>
+          <p className="text-sm text-gray-400 italic">
+            "In the realm of digital hierarchy, wealth determines status and status determines influence."
+          </p>
+        </div>
+        
+        <div className="grid grid-cols-2 gap-6 mb-8">
+          <div className="text-center p-4 border border-gray-700 rounded-lg">
+            <p className="text-sm text-gray-400 mb-1">Certificate ID</p>
+            <p className="text-yellow-400 font-mono">{uniqueCertId}</p>
+          </div>
+          <div className="text-center p-4 border border-gray-700 rounded-lg">
+            <p className="text-sm text-gray-400 mb-1">Issued On</p>
+            <p className="text-yellow-400">{format(today, 'MMMM d, yyyy')}</p>
+          </div>
+        </div>
+        
+        <div className="flex justify-between items-center mb-6">
+          <div>
+            <div className="h-20 w-20 relative">
+              <div className="absolute inset-0 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full opacity-20 animate-pulse"></div>
+              <div className="absolute inset-2 flex items-center justify-center">
+                <Award className="h-10 w-10 text-yellow-400" />
+              </div>
+            </div>
+          </div>
           
-          .certificate-parchment {
-            background-color: #f9f2e0;
-            background-image: 
-              url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23d1b278' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E"),
-              linear-gradient(to bottom, rgba(249,242,224,1) 0%, rgba(239,227,200,1) 100%);
-            color: #442c1e;
-            border-radius: 0.5rem;
-            box-shadow: 
-              0 1px 3px rgba(0, 0, 0, 0.1),
-              0 20px 40px rgba(0, 0, 0, 0.2),
-              inset 0 0 0 1px rgba(255, 255, 255, 0.5);
-            position: relative;
-            overflow: hidden;
-          }
+          <div className="text-center">
+            <div className="text-sm text-gray-400 mb-1">Verification Status</div>
+            {isVerified ? (
+              <div className="flex items-center text-green-400">
+                <CheckCircle className="h-5 w-5 mr-1" />
+                <span>Verified</span>
+              </div>
+            ) : isVerifying ? (
+              <div className="flex items-center text-blue-400">
+                <HelpCircle className="h-5 w-5 mr-1 animate-spin" />
+                <span>Verifying...</span>
+              </div>
+            ) : (
+              <div className="flex items-center text-gray-400">
+                <XCircle className="h-5 w-5 mr-1" />
+                <span>Unverified</span>
+              </div>
+            )}
+          </div>
           
-          .certificate-parchment::before,
-          .certificate-parchment::after {
-            content: '';
-            position: absolute;
-            pointer-events: none;
-          }
+          <div className="text-right">
+            <p className="text-xs text-gray-500 italic">Made Possible By</p>
+            <p className="text-sm text-gray-300">SpendThrone</p>
+          </div>
+        </div>
+        
+        <div className="flex justify-center space-x-4 mt-8">
+          {!isVerified && (
+            <RoyalButton onClick={handleVerify} disabled={isVerifying}>
+              {isVerifying ? "Verifying..." : "Verify Certificate"}
+            </RoyalButton>
+          )}
           
-          .certificate-parchment::before {
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 100px;
-            background: linear-gradient(to bottom, 
-              rgba(209, 178, 120, 0.2) 0%, 
-              rgba(209, 178, 120, 0) 100%);
-            z-index: 1;
-          }
+          <RoyalButton variant="secondary" onClick={handleDownload}>
+            <Download className="h-4 w-4 mr-2" />
+            Download
+          </RoyalButton>
           
-          .certificate-parchment::after {
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 100px;
-            background: linear-gradient(to top, 
-              rgba(209, 178, 120, 0.2) 0%, 
-              rgba(209, 178, 120, 0) 100%);
-            z-index: 1;
-          }
-          
-          .royal-gradient {
-            background: linear-gradient(to right, #b8860b, #d4af37, #b8860b);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-          }
-          
-          @keyframes pulse-slow {
-            0%, 100% { opacity: 0.7; }
-            50% { opacity: 1; }
-          }
-          
-          .animate-pulse-slow {
-            animation: pulse-slow 3s ease-in-out infinite;
-          }
-          
-          .font-signature {
-            font-family: 'Brush Script MT', cursive;
-          }
-        `}
-      </style>
-    </div>
+          <RoyalButton variant="outline" onClick={handleDismiss}>
+            Dismiss
+          </RoyalButton>
+        </div>
+      </div>
+    </motion.div>
   );
 };
 

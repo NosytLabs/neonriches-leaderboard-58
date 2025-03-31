@@ -1,6 +1,5 @@
-
 import React, { useState, useEffect, useReducer } from 'react';
-import { AuthContext } from './index';
+import { AuthContext } from '../index';
 import { authReducer } from './authReducer';
 import { AuthProviderProps, AuthState, UserProfile } from './types';
 import { useNavigate } from 'react-router-dom';
@@ -161,7 +160,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     return Promise.resolve();
   };
 
-  // Add awardCosmetic function to handle cosmetic purchases
   const awardCosmetic = async (category: string, itemId: string, notify: boolean = true): Promise<boolean> => {
     if (!state.user) return false;
 
@@ -174,11 +172,17 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         userCosmetics[category] = [];
       }
       
-      // Add the item if it doesn't exist
+      // Add the item if it doesn't exist - fixed type issue by ensuring categoryItems is an array before using indexOf
       const categoryItems = userCosmetics[category];
-      if (Array.isArray(categoryItems) && categoryItems.indexOf(itemId) === -1) {
-        // Create a new array with the new item (to maintain immutability)
-        userCosmetics[category] = [...categoryItems, itemId];
+      if (Array.isArray(categoryItems)) {
+        const itemExists = categoryItems.findIndex(item => item === itemId) !== -1;
+        if (!itemExists) {
+          // Create a new array with the new item (to maintain immutability)
+          userCosmetics[category] = [...categoryItems, itemId];
+        }
+      } else {
+        // Handle the case where categoryItems is not an array
+        userCosmetics[category] = [itemId];
       }
 
       // Update user profile with new cosmetics

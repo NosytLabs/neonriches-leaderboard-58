@@ -1,3 +1,4 @@
+
 import React, { useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -139,7 +140,7 @@ const RoyalCertificate: React.FC<RoyalCertificateProps> = ({
     window.open(url, '_blank');
   };
   
-  const formattedDate = formatDate(user.joinDate !== undefined ? user.joinDate : new Date());
+  const formattedDate = formatDate(user.joinedDate !== undefined ? user.joinedDate : new Date().toString());
   
   return (
     <div className="space-y-6">

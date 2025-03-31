@@ -1,5 +1,3 @@
-
-// This is a partial update focusing on the formatDate import issue
 import React, { useRef, useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
@@ -7,7 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Download, Share2, Award, Crown, Shield, Wallet, ExternalLink } from 'lucide-react';
 import { UserProfile } from '@/types/user';
 import { Certificate } from '@/types/certificate';
-import { formatDate } from '@/utils/formatters/dateFormatters'; // Fixed import
+import { formatDate } from '@/utils/formatters/dateFormatters';
 import { getTeamName, getTeamColor, getTeamBorderColor } from '@/utils/teamUtils';
 import { useSolana } from '@/contexts/SolanaContext';
 import html2canvas from 'html2canvas';
@@ -34,7 +32,6 @@ const TeamCertificate: React.FC<TeamCertificateProps> = ({
   const [isSharing, setIsSharing] = useState(false);
   const certificateRef = useRef<HTMLDivElement>(null);
   
-  // Make sure to check for undefined team to prevent type errors
   const userTeam = user.team || 'none';
   const teamName = getTeamName(userTeam);
   const teamColor = getTeamColor(userTeam);
@@ -141,8 +138,6 @@ const TeamCertificate: React.FC<TeamCertificateProps> = ({
     setIsMinting(true);
     
     try {
-      // This would normally call a mint function
-      // Simulating a successful mint with a fake mint address
       const mintAddress = `mint${Math.random().toString(36).substring(2, 15)}`;
       
       toast({
@@ -179,7 +174,6 @@ const TeamCertificate: React.FC<TeamCertificateProps> = ({
         throw new Error("No certificate to share");
       }
       
-      // Simulating a shareable image URL
       const shareImageUrl = certificate.imageUrl || "/assets/default-certificate.png";
       
       if (navigator.share) {
@@ -264,7 +258,7 @@ const TeamCertificate: React.FC<TeamCertificateProps> = ({
               </div>
               <div className="border rounded p-3">
                 <div className="text-sm text-gray-600">Joined</div>
-                <div className="text-sm font-medium">{formatDate(user.joinDate || '')}</div>
+                <div className="text-sm font-medium">{formatDate(user.joinedDate || '')}</div>
               </div>
             </div>
             

@@ -34,7 +34,7 @@ export type UserTier =
   | 'vip';
 
 // Define gender type
-export type Gender = 'king' | 'queen' | 'neutral' | 'jester' | 'noble';
+export type Gender = 'king' | 'queen' | 'neutral' | 'jester' | 'noble' | 'male' | 'female';
 
 // Define social link type
 export interface SocialLink {
@@ -81,6 +81,12 @@ export interface UserSettings {
   teamNotifications: boolean;
   showTeam: boolean;
   showSpending: boolean;
+  showEmailOnProfile?: boolean;
+  publicProfile?: boolean;
+  allowMessages?: boolean;
+  rankChangeAlerts?: boolean;
+  language?: string;
+  shameAlerts?: boolean;
 }
 
 // Define the user profile properties
@@ -113,6 +119,22 @@ export interface UserProfile {
   activeTitle?: string;
   gender?: Gender;
   role?: string;
+  previousRank?: number;
+  spendStreak?: number;
+  profileViews?: number;
+  profileClicks?: number;
+  subscription?: any;
+  purchasedFeatures?: string[];
+  teamRank?: number;
+  spentAmount?: number;
+  certificateNFT?: {
+    id?: string;
+    mintAddress?: string;
+    imageUrl?: string;
+    dateIssued?: string;
+    type?: string;
+    isVerified?: boolean;
+  };
 }
 
 // Legacy User interface for backward compatibility
