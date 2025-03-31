@@ -1,4 +1,28 @@
 
+export interface Certificate {
+  id: string;
+  userId: string;
+  title: string;
+  description: string;
+  imageUrl: string;
+  type: CertificateType;
+  dateIssued: string;
+  issuer?: string;
+  mintAddress?: string;
+  isMinted?: boolean;
+  rarity?: string;
+  team?: CertificateTeam;
+  amount?: number;
+  rank?: number;
+  signature?: string;
+  recipientName?: string;
+  style?: CertificateStyle;
+  createdAt?: string;
+  nftMintAddress?: string; // Added for compatibility
+  shareUrl?: string; // Added for compatibility
+  username?: string; // Added for compatibility with certificates.ts
+}
+
 export type CertificateType = 
   | 'spending'
   | 'rank'
@@ -22,41 +46,6 @@ export type CertificateTeam =
   | 'gold'
   | 'purple'
   | 'none';
-
-export interface Certificate {
-  id: string;
-  userId: string;
-  title: string;
-  description: string;
-  imageUrl: string;
-  type: CertificateType;
-  dateIssued: string;
-  issuer: string;
-  mintAddress?: string;
-  isMinted?: boolean;
-  rarity?: string;
-  team?: CertificateTeam;
-  amount?: number;
-  rank?: number;
-  signature?: string;
-  recipientName?: string;
-  style?: CertificateStyle;
-  createdAt?: string;
-}
-
-export interface CertificateTemplate {
-  id: string;
-  name: string;
-  type: CertificateType;
-  style: CertificateStyle;
-  team: CertificateTeam;
-  previewUrl: string;
-  imageUrl: string;
-  description: string;
-  availableForTier: string[];
-  availableForRank?: number[];
-  requiresFounder?: boolean;
-}
 
 export interface CertificateRepository {
   getAllCertificates(userId: string): Promise<Certificate[]>;
@@ -84,4 +73,18 @@ export interface CertificateTemplateFactory {
   getTemplatesByTeam(team: CertificateTeam): CertificateTemplate[];
   getTemplatesByTier(tier: string): CertificateTemplate[];
   getTemplatesByRank(rank: number): CertificateTemplate[];
+}
+
+export interface CertificateTemplate {
+  id: string;
+  name: string;
+  type: CertificateType;
+  style: CertificateStyle;
+  team: CertificateTeam;
+  previewUrl: string;
+  imageUrl: string;
+  description: string;
+  availableForTier: string[];
+  availableForRank?: number[];
+  requiresFounder?: boolean;
 }

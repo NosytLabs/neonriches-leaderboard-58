@@ -1,128 +1,76 @@
 
-import { UserTier } from './user-consolidated';
-
 export interface MarketingFeature {
   id: string;
   name: string;
   description: string;
   price: number;
-  includedInTiers: UserTier[];
   icon: string;
-  type: MarketingFeatureType;
-  benefits: string[];
-  isIndividuallyPurchasable: boolean;
+  tier?: string; // Added for compatibility
+  active?: boolean; // Added for compatibility
+  type?: string;
+  category?: string;
+  enabled?: boolean;
+  benefits?: string[];
+  requirements?: string[];
+  popularity?: number;
+  isPopular?: boolean;
 }
 
-export type MarketingFeatureType = 
-  | 'analytics'
-  | 'links'
-  | 'visibility'
-  | 'marketing'
-  | 'automation'
-  | 'targeting'
-  | 'personalization'
-  | 'optimization';
-
-export interface MarketingSettings {
-  allowMarketingEmails: boolean;
-  allowProductEmails: boolean;
-  allowEventEmails: boolean;
-  allowPartnerEmails: boolean;
-  emailFrequency: 'daily' | 'weekly' | 'monthly' | 'never';
-  emailFormat: 'html' | 'text';
-  trackAnalytics: boolean;
-  allowPersonalization: boolean;
-  allowTargetedAds: boolean;
-  allowCookies: boolean;
-  allowThirdPartySharing: boolean;
-}
-
-export interface MarketingPlan {
+export interface MarketingEvent {
   id: string;
-  name: string;
+  title: string;
   description: string;
-  price: number;
-  features: string[]; // IDs of included features
-  tier: UserTier;
-  isPopular: boolean;
-  isFeatured: boolean;
-  savings?: number; // Percentage saved compared to buying features individually
+  startDate: string;
+  endDate: string;
+  type: string;
+  status: string;
+  imageUrl?: string;
+  link?: string;
+  target?: string;
+  isRegistered?: boolean;
+  registrationCount?: number;
+  maxRegistrations?: number;
 }
 
-export interface MarketingStats {
-  impressions: number;
-  clicks: number;
-  conversions: number;
-  clickThroughRate: number;
-  conversionRate: number;
-  averageTimeOnProfile: number;
-  totalVisitors: number;
-  uniqueVisitors: number;
-  referrals: number;
-  referralConversions: number;
+export interface MarketingEventsProps {
+  events?: MarketingEvent[];
+  onRegister?: (eventId: string) => Promise<boolean>;
+  onUnregister?: (eventId: string) => Promise<boolean>;
+  onViewDetails?: (eventId: string) => void;
 }
 
 export interface MarketingCampaign {
   id: string;
   name: string;
   description: string;
+  status: 'active' | 'paused' | 'completed' | 'draft';
   startDate: string;
   endDate: string;
-  status: 'active' | 'scheduled' | 'completed' | 'paused' | 'draft';
   budget: number;
   spent: number;
-  impressions: number;
-  clicks: number;
   conversions: number;
-  targetAudience: string[];
-  features: string[]; // IDs of marketing features used
+  clicks: number;
+  impressions: number;
 }
 
-export interface MarketingBenefit {
-  id: string;
-  name: string;
+export interface MarketingPerformance {
+  profileViews: number;
+  profileClicks: number;
+  conversionRate: number;
+  followers: number;
+  engagement: number;
+  period: 'day' | 'week' | 'month' | 'year';
+  compareToLastPeriod: number;
+}
+
+export interface MarketingRecommendation {
+  type: 'feature' | 'setting' | 'campaign' | 'content';
+  title: string;
   description: string;
-  tier: UserTier;
-  isHighlighted: boolean;
-}
-
-export interface MarketingBenefits {
-  free: MarketingBenefit[];
-  basic: MarketingBenefit[];
-  premium: MarketingBenefit[];
-  royal: MarketingBenefit[];
-}
-
-// Define feature access tiers
-export interface FeatureAccessTiers {
-  analytics: {
-    free: string;
-    basic: string;
-    premium: string;
-    royal: string;
-  };
-  links: {
-    free: string;
-    basic: string;
-    premium: string;
-    royal: string;
-  };
-  visibility: {
-    free: string;
-    basic: string;
-    premium: string;
-    royal: string;
-  };
-  marketing: {
-    free: string;
-    basic: string;
-    premium: string;
-    royal: string;
-  };
-}
-
-export interface FeatureAccessHook {
-  hasAccess: (feature: string) => boolean;
-  getUpgradeTier: (feature: string) => UserTier | null;
-  getFeatureValue: (feature: string) => string | number | boolean;
+  priority: 'high' | 'medium' | 'low';
+  actionUrl?: string;
+  actionText?: string;
+  impact?: number;
+  difficulty?: number;
+  imageUrl?: string;
 }

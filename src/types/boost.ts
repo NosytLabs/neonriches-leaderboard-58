@@ -30,6 +30,7 @@ export interface BoostEffect {
   previewImage: string;
   strength?: number;
   cost?: number; // For backward compatibility
+  allowStacking?: boolean; // Added for compatibility with data/boostEffects.ts
 }
 
 export type BoostEffectType = 

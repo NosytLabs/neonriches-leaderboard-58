@@ -240,9 +240,15 @@ const RoyalHero: React.FC<RoyalHeroProps> = ({ className }) => {
           {showFact && (
             <div className="mt-12 flex justify-center">
               <RandomAbsurdFact 
-                variant="banner" 
-                className="max-w-2xl" 
-                refreshInterval={15000}
+                facts={[
+                  "Despite all evidence to the contrary, some nobles still believe that throwing more money at the throne will eventually bring them happiness.",
+                  "Studies show that 9 out of 10 royal economists agree: paying for digital status is definitely a sound financial decision.",
+                  "The average noble spends more on digital crowns than on their actual retirement plan.",
+                  "Legend says if you send enough money to SpendThrone, you'll develop an immunity to buyer's remorse.",
+                  "Royal psychologists confirm that watching your rank number decrease is more addictive than any known substance."
+                ]}
+                interval={15000}
+                className="max-w-2xl"
                 onClose={() => setShowFact(false)}
               />
             </div>

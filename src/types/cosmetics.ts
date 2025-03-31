@@ -93,4 +93,5 @@ export interface SocialLink {
   url: string;
   icon?: string;
   isVerified?: boolean;
+  clicks?: number; // Added for compatibility
 }

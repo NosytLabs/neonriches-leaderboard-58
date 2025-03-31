@@ -2,18 +2,24 @@
 import React, { useState, useEffect } from 'react';
 
 interface RandomAbsurdFactProps {
-  facts: string[];
+  facts?: string[];
   interval?: number;
   className?: string;
+  variant?: string;
+  refreshInterval?: number;
+  onClose?: () => void;
 }
 
 /**
  * Component that displays a random absurd fact and cycles through them
  */
 export const RandomAbsurdFact: React.FC<RandomAbsurdFactProps> = ({
-  facts,
+  facts = [],
   interval = 10000,
   className = '',
+  variant = 'default',
+  refreshInterval,
+  onClose,
 }) => {
   const [currentFact, setCurrentFact] = useState<string>('');
   const [factIndex, setFactIndex] = useState<number>(0);
@@ -31,18 +37,27 @@ export const RandomAbsurdFact: React.FC<RandomAbsurdFactProps> = ({
         setCurrentFact(facts[newIndex]);
         return newIndex;
       });
-    }, interval);
+    }, refreshInterval || interval);
     
     // Clean up interval on unmount
     return () => clearInterval(timer);
-  }, [facts, interval]);
+  }, [facts, interval, refreshInterval]);
 
   if (!facts || facts.length === 0) {
     return null;
   }
 
   return (
-    <div className={`italic text-sm ${className}`}>
+    <div className={`italic text-sm ${className} ${variant !== 'default' ? `variant-${variant}` : ''}`}>
+      {onClose && (
+        <button 
+          onClick={onClose}
+          className="ml-2 text-white/50 hover:text-white/80 transition-colors"
+          aria-label="Close"
+        >
+          ✕
+        </button>
+      )}
       "{currentFact}"
     </div>
   );
