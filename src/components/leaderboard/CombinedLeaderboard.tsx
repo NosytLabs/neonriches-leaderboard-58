@@ -4,57 +4,87 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/com
 import { Button } from '@/components/ui/button';
 import { Trophy, Filter, Users, Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
-import { User } from '@/types/user';
+import { UserProfile } from '@/types/user-types';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/auth';
 import LeaderboardList from './components/LeaderboardList';
 
-// Create some mock data
-const mockUsers: User[] = [
+// Create some mock data that conforms to UserProfile
+const mockUsers: UserProfile[] = [
   {
     id: '1',
     username: 'RoyalSpender',
+    displayName: 'Royal Spender',
     profileImage: 'https://api.dicebear.com/6.x/personas/svg?seed=RoyalSpender',
     tier: 'founder',
     team: 'red',
     totalSpent: 10000,
-    rank: 1
+    rank: 1,
+    email: 'royal@spendthrone.com',
+    bio: 'Always spending for the throne',
+    joinDate: '2023-01-01T00:00:00Z',
+    isVerified: true,
+    isFounder: true
   },
   {
     id: '2',
     username: 'CrownCollector',
+    displayName: 'Crown Collector',
     profileImage: 'https://api.dicebear.com/6.x/personas/svg?seed=CrownCollector',
     tier: 'founder',
     team: 'blue',
     totalSpent: 8500,
-    rank: 2
+    rank: 2,
+    email: 'crown@spendthrone.com',
+    bio: 'Collecting crowns since day one',
+    joinDate: '2023-01-05T00:00:00Z',
+    isVerified: true,
+    isFounder: true
   },
   {
     id: '3',
     username: 'ThroneSeeker',
+    displayName: 'Throne Seeker',
     profileImage: 'https://api.dicebear.com/6.x/personas/svg?seed=ThroneSeeker',
     tier: 'basic',
     team: 'green',
     totalSpent: 6000,
-    rank: 3
+    rank: 3,
+    email: 'throne@spendthrone.com',
+    bio: 'Seeking the throne through spending',
+    joinDate: '2023-01-10T00:00:00Z',
+    isVerified: true,
+    isFounder: false
   },
   {
     id: '4',
     username: 'RegalDonor',
+    displayName: 'Regal Donor',
     profileImage: 'https://api.dicebear.com/6.x/personas/svg?seed=RegalDonor',
     tier: 'basic',
     team: 'red',
     totalSpent: 4500,
-    rank: 4
+    rank: 4,
+    email: 'regal@spendthrone.com',
+    bio: 'Donating regally every day',
+    joinDate: '2023-01-15T00:00:00Z',
+    isVerified: true,
+    isFounder: false
   },
   {
     id: '5',
     username: 'NobleCash',
+    displayName: 'Noble Cash',
     profileImage: 'https://api.dicebear.com/6.x/personas/svg?seed=NobleCash',
     tier: 'basic',
     team: 'blue',
     totalSpent: 3200,
-    rank: 5
+    rank: 5,
+    email: 'noble@spendthrone.com',
+    bio: 'Cash is king, and I am noble',
+    joinDate: '2023-01-20T00:00:00Z',
+    isVerified: true,
+    isFounder: false
   }
 ];
 
@@ -63,7 +93,7 @@ const CombinedLeaderboard: React.FC = () => {
   const { user } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [filteredUsers, setFilteredUsers] = useState<User[]>(mockUsers);
+  const [filteredUsers, setFilteredUsers] = useState<UserProfile[]>(mockUsers);
   
   // Filter users on search query change
   useEffect(() => {
@@ -84,7 +114,7 @@ const CombinedLeaderboard: React.FC = () => {
     navigate(`/profile/${username}`);
   };
   
-  const handleShameUser = (user: User, action: string) => {
+  const handleShameUser = (user: UserProfile, action: string) => {
     console.log(`Applied ${action} to user ${user.username}`);
     // Show toast or notification
   };

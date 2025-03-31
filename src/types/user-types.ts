@@ -22,8 +22,8 @@ export type UserTier =
 export type TeamType = 'red' | 'green' | 'blue' | 'gold' | 'purple' | 'none' | 'neutral';
 export type TeamColor = TeamType;
 
-// Gender types
-export type Gender = 'male' | 'female' | 'other' | 'prefer-not-to-say' | 'unspecified';
+// Gender types with "neutral" added
+export type Gender = 'male' | 'female' | 'other' | 'prefer-not-to-say' | 'unspecified' | 'neutral';
 
 // User profile interface
 export interface UserProfile {
@@ -207,6 +207,13 @@ export type SoundType =
   | 'royalAnnouncement'
   | 'medallion';
 
+// Sound options for playback
+export interface SoundOptions {
+  volume?: number;
+  playbackRate?: number;
+  onEnd?: () => void;
+}
+
 // Boost effect for user profiles
 export interface BoostEffect {
   id: string;
@@ -254,6 +261,7 @@ export interface CosmeticItem {
   enabled: boolean;
   unlockRequirement?: string;
   cost?: number; // For backward compatibility
+  previewImage?: string; // Alternative to previewUrl
   image?: string; // For backward compatibility
 }
 
@@ -275,4 +283,6 @@ export type CosmeticRarity =
   | 'uncommon'
   | 'rare'
   | 'epic'
-  | 'legendary';
+  | 'legendary'
+  | 'mythic'
+  | 'royal';

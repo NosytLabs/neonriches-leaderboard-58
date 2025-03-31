@@ -63,7 +63,7 @@ const CertificateDisplay: React.FC<CertificateDisplayProps> = ({
       case 'silver': return 'border-gray-400 bg-gray-900/20 text-gray-200';
       case 'bronze': return 'border-orange-400 bg-orange-900/20 text-orange-200';
       case 'platinum': return 'border-blue-400 bg-blue-900/20 text-blue-200';
-      case 'special': return 'border-purple-400 bg-purple-900/20 text-purple-200';
+      case 'diamond': return 'border-cyan-400 bg-cyan-900/20 text-cyan-200';
       default: return 'border-gray-400 bg-gray-900/20 text-gray-200';
     }
   };

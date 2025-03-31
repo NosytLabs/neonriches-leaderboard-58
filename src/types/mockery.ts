@@ -1,5 +1,5 @@
 
-import { TeamColor } from './user-types';
+import { TeamColor, TeamType, UserTier } from './user-types';
 
 // Define core mockery action types
 export type MockeryAction = 
@@ -62,6 +62,14 @@ export interface MockedUser {
 // For backward compatibility
 export type ShameAction = MockeryAction;
 export type ShameEvent = MockeryEvent;
+export { TeamColor, TeamType }; // Explicitly re-export these types
+
+// Sound options for notifications
+export interface NotificationSoundOptions {
+  volume?: number;
+  playbackRate?: number;
+  onEnd?: () => void;
+}
 
 // Mockery description utilities
 export const getMockeryName = (action: MockeryAction): string => {
