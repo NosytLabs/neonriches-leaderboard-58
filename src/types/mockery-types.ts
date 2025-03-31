@@ -1,75 +1,23 @@
 
 /**
- * Unified type definitions for the mockery/shame system
+ * Simplified mockery type definitions
  */
 
-// Define core mockery action types
-export type MockeryAction = 
-  | 'tomatoes' 
-  | 'eggs' 
-  | 'crown' 
-  | 'stocks' 
-  | 'jester' 
-  | 'protection' 
-  | 'shame';
+// Define core mockery action types - reducing to only essential ones
+export type MockeryAction = 'tomatoes' | 'eggs' | 'crown';
 
-// For backwards compatibility  
-export type ShameAction = MockeryAction;
-
-// Define mockery event structure
+// Simple mockery event structure
 export interface MockeryEvent {
   id: string;
   type: MockeryAction;
   targetId: string;
   appliedBy: string;
-  appliedAt: string;
-  expiresAt: string;
-  duration: number;
-  isActive: boolean;
   timestamp: string;
+  isActive: boolean;
 }
 
-// Active mockery effects map by user ID
-export interface MockeryEffects {
-  [userId: string]: {
-    action: MockeryAction;
-    timestamp: number;
-  }
-}
-
-// Mockery cooldown tracker
-export interface MockeryCooldown {
-  [userId: string]: boolean;
-}
-
-// Mockery count tracker
-export interface MockeryCount {
-  [userId: string]: number;
-}
-
-// Basic mockery application options
+// Mockery application options
 export interface MockeryOptions {
-  duration?: number;
   message?: string;
   anonymous?: boolean;
-}
-
-// Premium mockery options
-export interface PremiumMockeryOptions extends MockeryOptions {
-  effect?: 'standard' | 'enhanced' | 'royal';
-  visibility?: 'normal' | 'highlighted' | 'featured';
-}
-
-// User who has been mocked
-export interface MockedUser {
-  id: string;
-  username: string;
-  displayName?: string;
-  profileImage?: string;
-  totalSpent: number;
-  rank: number;
-  tier: string;
-  team: string;
-  isMocked: boolean;
-  isProtected: boolean;
 }

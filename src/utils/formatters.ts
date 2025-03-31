@@ -87,7 +87,7 @@ export const formatRank = (rank: number): string => {
   }
 };
 
-// Get a human-readable tier name
+// Format tier name
 export const formatTierName = (tier: string): string => {
   return tier.charAt(0).toUpperCase() + tier.slice(1).replace(/([A-Z])/g, ' $1');
 };

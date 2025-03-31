@@ -1,5 +1,7 @@
 
-import { MockeryAction, ShameAction } from '@/types/mockery-types';
+/**
+ * Utility functions for type conversions and safety
+ */
 
 /**
  * Safely converts a string to number, returning a default value if invalid
@@ -19,7 +21,7 @@ export function safeStringConversion(value: any): string {
 }
 
 /**
- * Converts a value to a TeamType, ensuring it's a valid value
+ * Converts a value to a valid team type
  */
 export function toTeamType(value: string): string {
   const validTypes = ['red', 'blue', 'green', 'gold'];
@@ -27,47 +29,9 @@ export function toTeamType(value: string): string {
 }
 
 /**
- * Converts a value to a UserTier, ensuring it's a valid value
+ * Converts a value to a valid user tier
  */
 export function toUserTier(value: string): string {
   const validTiers = ['free', 'basic', 'premium', 'royal', 'founder'];
   return validTiers.includes(value) ? value : 'free';
-}
-
-/**
- * Convert ShameAction to MockeryAction and vice versa
- */
-export function convertShameToMockery(action: ShameAction): MockeryAction {
-  return action as MockeryAction;
-}
-
-export function convertMockeryToShame(action: MockeryAction): ShameAction | undefined {
-  if (['tomatoes', 'eggs', 'stocks'].includes(action)) {
-    return action as ShameAction;
-  }
-  return undefined;
-}
-
-/**
- * Creates a properly typed LeaderboardUser object
- */
-export function createLeaderboardUser(data: Partial<any>): any {
-  return {
-    id: data.id || '',
-    username: data.username || '',
-    displayName: data.displayName,
-    profileImage: data.profileImage,
-    tier: data.tier || 'free',
-    team: data.team,
-    rank: data.rank || 0,
-    previousRank: data.previousRank,
-    walletBalance: data.walletBalance,
-    totalSpent: data.totalSpent || 0,
-    spentAmount: data.spentAmount || 0,
-    supporters: data.supporters,
-    supporting: data.supporting,
-    isVIP: data.isVIP,
-    isFounder: data.isFounder,
-    isVerified: data.isVerified
-  };
 }

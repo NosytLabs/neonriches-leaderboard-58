@@ -1,5 +1,9 @@
 
 /**
+ * Simple adapters for user objects
+ */
+
+/**
  * Adapts a raw user object to a UserProfile object
  */
 export const adaptUserToProfile = (user: any): any => {
@@ -18,34 +22,14 @@ export const adaptUserToProfile = (user: any): any => {
     totalSpent: user.totalSpent || user.amountSpent || 0,
     walletBalance: user.walletBalance || 0,
     previousRank: user.previousRank || 0,
-    cosmetics: user.cosmetics || {
-      border: [],
-      color: [],
-      font: [],
-      emoji: [],
-      title: [],
-      background: [],
-      effect: [],
-      badge: [],
-      theme: []
-    },
     settings: {
-      profileVisibility: 'public',
-      allowProfileLinks: true,
       theme: 'dark',
       notifications: true,
-      emailNotifications: false,
-      marketingEmails: false,
       showRank: true,
       darkMode: true,
-      soundEffects: true,
-      showEmailOnProfile: false,
-      rankChangeAlerts: false,
       showTeam: true,
       showSpending: true
     },
-    followers: user.followers || 0,
-    following: user.following || 0,
     isVerified: user.isVerified || false,
     isFounder: user.isVIP || false
   };
@@ -69,11 +53,8 @@ export const adaptProfileToUser = (profile: any): any => {
     amountSpent: profile.amountSpent,
     walletBalance: profile.walletBalance,
     previousRank: profile.previousRank,
-    followers: profile.followers,
-    following: profile.following,
     isVerified: profile.isVerified,
-    isVIP: profile.isFounder,
-    cosmetics: profile.cosmetics
+    isVIP: profile.isFounder
   };
 };
 
