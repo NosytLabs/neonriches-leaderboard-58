@@ -22,5 +22,5 @@ export type ShameAction = MockeryAction;
 // Re-export the helper functions
 export { isValidMockeryAction, isValidMockeryTier };
 
-// Team color options
+// Team color options - update to match the TeamColor type from mockery.ts
 export type TeamType = 'red' | 'blue' | 'green' | 'gold' | 'purple' | 'none' | 'neutral';

@@ -1,6 +1,6 @@
 
 import { User, UserProfile } from '@/types/user';
-import { UserCosmeticState } from '@/types/cosmetics';
+import { UserCosmeticState as UserCosmetics } from '@/types/cosmetics';
 
 /**
  * Adapts a raw user object to a UserProfile object
@@ -31,7 +31,7 @@ export const adaptUserToProfile = (user: User): UserProfile => {
       effect: [],
       badge: [],
       theme: []
-    } as UserCosmeticState,
+    } as UserCosmetics,
     settings: {
       profileVisibility: 'public',
       allowProfileLinks: true,

@@ -1,8 +1,8 @@
 
-import { UserCosmeticState } from './cosmetics';
+import { UserCosmeticState as UserCosmetics } from './cosmetics';
 
 export type TeamColor = 'red' | 'blue' | 'green' | 'gold' | 'purple' | 'none' | 'neutral';
-export type TeamType = 'red' | 'blue' | 'green' | 'gold' | 'none';
+export type TeamType = 'red' | 'blue' | 'green' | 'gold' | 'none' | 'neutral';
 
 export type UserTier = 
   | 'free'
@@ -17,7 +17,10 @@ export type UserTier =
   | 'silver'
   | 'bronze'
   | 'vip'
-  | 'whale';
+  | 'whale'
+  | 'standard'
+  | 'elite'
+  | 'legendary';
 
 export interface ProfileBoost {
   id: string;
@@ -32,6 +35,7 @@ export interface ProfileBoost {
   duration?: number;
   price?: number;
   icon?: string;
+  isActive: boolean;
 }
 
 export interface SocialLink {
@@ -66,8 +70,8 @@ export interface UserSettings {
   soundEffects: boolean;
   showEmailOnProfile: boolean;
   rankChangeAlerts: boolean;
-  newFollowerAlerts: boolean;
-  teamNotifications: boolean;
+  newFollowerAlerts?: boolean;
+  teamNotifications?: boolean;
   showRank: boolean;
   darkMode?: boolean; // For backward compatibility
   language?: string;
@@ -106,10 +110,10 @@ export interface UserProfile {
   lastLogin?: string;
   following?: string[] | number;
   followers?: string[] | number;
-  cosmetics: UserCosmeticState;
+  cosmetics: UserCosmetics;
   settings: UserSettings;
-  profileBoosts: ProfileBoost[];
-  socialLinks?: SocialLink[];
+  profileBoosts?: ProfileBoost[];
+  socialLinks?: SocialLink[] | Record<string, string>;
   profileViews?: number;
   profileClicks?: number;
   purchasedFeatures?: string[];
@@ -125,7 +129,7 @@ export interface UserProfile {
     isVerified?: boolean;
   };
   avatarUrl?: string; // For backward compatibility
-  gender?: string;
+  gender?: 'male' | 'female' | 'other' | 'prefer-not-to-say';
   profileImages?: ProfileImage[];
 }
 

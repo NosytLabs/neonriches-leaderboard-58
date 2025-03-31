@@ -1,107 +1,132 @@
 
-import { TeamColor, TeamType } from '@/types/mockery-types';
+import { TeamColor, TeamType } from "@/types/mockery-types";
 
-// Get the display name for a team
-export function getTeamName(team: TeamColor | TeamType | string): string {
-  const teamNames: Record<string, string> = {
-    'red': 'Royal Order of Reckless Spending',
-    'blue': 'Cobalt Credit Cartel',
-    'green': 'Emerald Exchequer Cabaret',
-    'gold': 'Golden Elite',
-    'purple': 'Amethyst Alliance',
-    'none': 'Unaffiliated',
-    'neutral': 'Neutral'
+// Team color utility functions
+export const getTeamColor = (team: TeamType | TeamColor): string => {
+  const colorMap: Record<string, string> = {
+    red: '#dc2626',
+    blue: '#2563eb',
+    green: '#16a34a',
+    gold: '#eab308',
+    purple: '#9333ea',
+    none: '#6b7280',
+    neutral: '#6b7280'
   };
   
-  return teamNames[team] || 'Unknown Team';
-}
+  return colorMap[team] || colorMap.none;
+};
 
-// Get the color class for a team
-export function getTeamColor(team: TeamColor | TeamType | string): string {
-  const colorClasses: Record<string, string> = {
-    'red': 'text-red-500',
-    'blue': 'text-blue-500',
-    'green': 'text-emerald-500',
-    'gold': 'text-yellow-500',
-    'purple': 'text-purple-500',
-    'none': 'text-gray-400',
-    'neutral': 'text-white'
+// Alias for getTeamColor to support existing code
+export const getTeamBorderColor = getTeamColor;
+
+export const getTeamName = (team: TeamType | TeamColor): string => {
+  const nameMap: Record<string, string> = {
+    red: 'Crimson Order',
+    blue: 'Azure Legion',
+    green: 'Emerald Dynasty',
+    gold: 'Golden Empire',
+    purple: 'Royal Court',
+    none: 'Unaligned',
+    neutral: 'Neutral'
   };
   
-  return colorClasses[team] || 'text-gray-400';
-}
+  return nameMap[team] || nameMap.none;
+};
 
-// Get team security guarantee (for humor)
-export function getTeamSecurityGuarantee(team: TeamColor | TeamType | string): string {
-  const guarantees: Record<string, string> = {
-    'red': "We guarantee your data's security with the same care we apply to our spending habits: none whatsoever.",
-    'blue': "Your financial information is secured with our patented 'Cross Your Fingers' encryption technology.",
-    'green': "We keep your data safer than you keep your savings account.",
-    'gold': "Our security is like our team name: purely decorative.",
-    'purple': "Protected by royal decree and a very stern-looking emoji: 🧐",
-    'none': "Security? What's that?",
-    'neutral': "Neither secure nor insecure - perfectly balanced."
+export const getTeamMotto = (team: TeamType | TeamColor): string => {
+  const mottoMap: Record<string, string> = {
+    red: 'Fortune favors the bold',
+    blue: 'Knowledge is true power',
+    green: 'Growth through harmony',
+    gold: 'Prosperity above all',
+    purple: 'Divine right to rule',
+    none: 'Chart your own path',
+    neutral: 'Balance in all things'
   };
   
-  return guarantees[team] || "Security unclear. Much like our spending policies.";
-}
+  return mottoMap[team] || mottoMap.none;
+};
 
-// Get ridiculous team stat
-export function getTeamAbsurdStat(team: TeamColor | TeamType | string): string {
-  const stats: Record<string, string> = {
-    'red': "Average member spends 3.7 times their monthly income on digital status symbols",
-    'blue': "Collectively wasted enough money to fund a small space program",
-    'green': "Team members have a 95% chance of checking their rank while on first dates",
-    'gold': "Has spent more on virtual badges than on real food this quarter",
-    'purple': "Members average 17 hours per day staring at the leaderboard",
-    'none': "Has achieved perfect financial zen through refusing to participate",
-    'neutral': "Statistically most likely to be secretly hoarding real wealth"
+export const getTeamBenefit = (team: TeamType | TeamColor): string => {
+  const benefitMap: Record<string, string> = {
+    red: '+15% attack power in mockery battles',
+    blue: '+10% increased wallet interest rate',
+    green: '-20% cost on profile boosts',
+    gold: '+25% bonus on first monthly deposit',
+    purple: 'Royal cosmetics unlock at rank 10 instead of 50',
+    none: 'Freedom to change teams at any time',
+    neutral: 'Balanced benefits across all features'
   };
   
-  return stats[team] || "No statistics available - they spent the research budget";
-}
+  return benefitMap[team] || benefitMap.none;
+};
 
-// Get ridiculous historical note
-export function getTeamHistoricalNote(team: TeamColor | TeamType | string): string {
-  const notes: Record<string, string> = {
-    'red': "Founded by a consortium of former lottery winners who missed the thrill of losing money quickly",
-    'blue': "Originally a support group for people with expensive taste and limited impulse control",
-    'green': "Started as a book club that somehow devolved into competitive spending",
-    'gold': "Rumored to be bankrolled by a time-traveling aristocrat with too many dubloons",
-    'purple': "Created when several members simultaneously had midlife crises",
-    'none': "The Switzerland of SpendThrone - neutral in spending wars but secretly profiting",
-    'neutral': "Maintains ancient scrolls documenting all historical spending regrets"
+export const getTeamSecurityGuarantee = (team: TeamType | TeamColor): string => {
+  const securityMap: Record<string, string> = {
+    red: 'Protected by unbreakable battle oaths',
+    blue: 'Safeguarded by ancient wisdom',
+    green: 'Secured by natural balance',
+    gold: 'Ensured by prosperity pacts',
+    purple: 'Protected by royal decree',
+    none: 'Self-reliance is your shield',
+    neutral: 'Universal protection through balance'
   };
   
-  return notes[team] || "Historical records lost in a tragic spreadsheet accident";
-}
+  return securityMap[team] || securityMap.none;
+};
 
-// Get NFT joke
-export function getTeamNFTJoke(team: TeamColor | TeamType | string): string {
-  const jokes: Record<string, string> = {
-    'red': "Team Red's NFT collection: just screenshots of their bank account declining transactions",
-    'blue': "Team Blue mints NFTs of their credit card statements as performance art",
-    'green': "Their NFT strategy: buy high, sell never, cry often",
-    'gold': "Has an NFT of their team logo that cost more than the actual website",
-    'purple': "Turned their collection of purchase receipts into an NFT series called 'Regrets'",
-    'none': "The only team whose NFTs might actually appreciate in value (because they don't exist)",
-    'neutral': "Secretly believes right-click-save is legitimate ownership"
+export const getTeamAbsurdStat = (team: TeamType | TeamColor): string => {
+  const statMap: Record<string, string> = {
+    red: '87% of members claim to have fought a digital dragon',
+    blue: '42% believe they can predict market movements by reading tea leaves',
+    green: '63% claim their plants grow faster when they wear team colors',
+    gold: '91% sleep with their crypto wallets under their pillows',
+    purple: '79% address themselves with royal titles in private',
+    none: '96% believe they're actually NPCs in someone else's game',
+    neutral: '50% of statistics are made up on the spot'
   };
   
-  return jokes[team] || "NFT collection currently experiencing technical difficulties";
-}
+  return statMap[team] || statMap.none;
+};
 
-// Get crypto roast
-export function getTeamCryptoRoast(team: TeamColor | TeamType | string): string {
-  const roasts: Record<string, string> = {
-    'red': "Still waiting for their LUNA investment to recover",
-    'blue': "Thinks 'cold storage' means keeping their laptop in the refrigerator",
-    'green': "Has more crypto wallet passwords than actual crypto",
-    'gold': "Their crypto strategy: buy mysterious coins from people who DM them",
-    'purple': "Proudly announces every transaction in the team Slack channel",
-    'none': "Still trying to figure out if Bitcoin is a physical coin",
-    'neutral': "Secretly believes blockchain is just a fancy spreadsheet"
+export const getTeamHistoricalNote = (team: TeamType | TeamColor): string => {
+  const noteMap: Record<string, string> = {
+    red: 'Founded by a former video game speed-runner who believed real life needed a leaderboard',
+    blue: 'Started as a book club that evolved into a competitive wealth philosophy',
+    green: 'Originally a gardening discord that pivoted to wealth generation',
+    gold: 'Created by former poker players who missed the thrill of high stakes',
+    purple: 'Established by cosplay enthusiasts with a particular love for royal characters',
+    none: 'Not a team at all, but a philosophical stance against arbitrary grouping',
+    neutral: 'Founded by professional mediators seeking balance in all things'
   };
   
-  return roasts[team] || "Error 404: Crypto knowledge not found";
-}
+  return noteMap[team] || noteMap.none;
+};
+
+export const getTeamNFTJoke = (team: TeamType | TeamColor): string => {
+  const jokeMap: Record<string, string> = {
+    red: 'Our NFTs are so exclusive they don't actually exist',
+    blue: 'We invented a blockchain that runs on pure intellectual superiority',
+    green: 'Our NFTs are sustainably farmed and 100% organic',
+    gold: 'Each NFT comes with a virtual butler who ignores you',
+    purple: 'Our NFTs are royalty-free, but still expect to be treated like royalty',
+    none: 'We believe in NFTs: Nice Friendly Thoughts',
+    neutral: 'Our NFTs are perfectly balanced - they're worth exactly what you paid'
+  };
+  
+  return jokeMap[team] || jokeMap.none;
+};
+
+export const getTeamCryptoRoast = (team: TeamType | TeamColor): string => {
+  const roastMap: Record<string, string> = {
+    red: 'People who think pressing buy faster makes the price go up',
+    blue: 'Overthinking every trade until the opportunity has passed',
+    green: 'Believes staring at plants helps portfolio growth',
+    gold: 'The only thing more inflated than their wallets is their ego',
+    purple: 'Expects their crypto to curtsy before being traded',
+    none: 'Can't even commit to a blockchain, let alone a team',
+    neutral: 'Too afraid to have an opinion on whether crypto will go up or down'
+  };
+  
+  return roastMap[team] || roastMap.none;
+};
