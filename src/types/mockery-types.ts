@@ -47,7 +47,8 @@ export type MockeryAction =
   | 'guillotine'
   | 'defeat'
   | 'removal'
-  | 'dungeons';
+  | 'dungeons'
+  | 'fool'; // Added 'fool' to make all the components compatible
 
 export type ExtendedMockeryAction = MockeryAction | string;
 
@@ -67,7 +68,10 @@ export type ShameAction =
   | 'tomatoes'
   | 'eggs'
   | 'stocks'
-  | 'shame';
+  | 'shame'
+  | 'crown'
+  | 'jester'
+  | 'protection'; // Added 'crown' and 'protection' to fix type errors
 
 export interface MockeryEvent {
   id: string;
@@ -80,6 +84,7 @@ export interface MockeryEvent {
   isActive: boolean;
   cost?: number;
   tier?: MockeryTier;
+  type?: string; // Added to fix type errors
 }
 
 export interface MockedUser {
@@ -87,7 +92,7 @@ export interface MockedUser {
   username: string;
   action: MockeryAction;
   appliedAt: string;
-  appliedBy: string;
+  appliedBy: string | { id: string; username: string; }; // Support both string and object format
   expiresAt: string;
   userId?: string;
   displayName?: string;

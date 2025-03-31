@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Scroll, DollarSign, Sparkles } from 'lucide-react';
 import { topUsers } from './data';
 import useShameEffect from './hooks/useShameEffect';
-import { ShameAction } from '@/types/mockery';
+import { ShameAction } from '@/types/mockery-types';
 import ShameUserCard from './components/ShameUserCard';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import RankingDisclaimer from '@/components/shared/RankingDisclaimer';
@@ -32,15 +32,12 @@ const formatUserForShameCard = (user: any) => ({
 const getWeeklyDiscountedShameAction = (): ShameAction => {
   // Filter to make sure we return a valid ShameAction type
   const discountedAction = getWeeklyDiscountedAction();
-  // Ensure it's a valid ShameAction
-  return (discountedAction === 'tomatoes' || 
-          discountedAction === 'eggs' || 
-          discountedAction === 'stocks' || 
-          discountedAction === 'shame' || 
-          discountedAction === 'crown' || 
-          discountedAction === 'jester') 
-        ? discountedAction as ShameAction 
-        : 'tomatoes';
+  // Ensure it's a valid ShameAction by checking against allowed values
+  const validShameActions: ShameAction[] = ['tomatoes', 'eggs', 'stocks', 'shame', 'crown', 'jester', 'protection'];
+  
+  return validShameActions.includes(discountedAction as ShameAction)
+    ? discountedAction as ShameAction
+    : 'tomatoes';
 };
 
 const PublicShamingDescription = () => {
@@ -116,8 +113,8 @@ const PublicShamingFestival = () => {
     const mockeryInfo = getActiveMockery(userId);
     if (mockeryInfo) {
       // Ensure we return a valid ShameAction
-      const validShameActions: ShameAction[] = ['tomatoes', 'eggs', 'stocks', 'shame', 'crown', 'jester'];
-      if (validShameActions.includes(mockeryInfo.type as any)) {
+      const validShameActions: ShameAction[] = ['tomatoes', 'eggs', 'stocks', 'shame', 'crown', 'jester', 'protection'];
+      if (validShameActions.includes(mockeryInfo.type as ShameAction)) {
         return mockeryInfo;
       }
     }

@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Crown, Scroll } from 'lucide-react';
@@ -8,7 +9,7 @@ import LeaderboardItem from './leaderboard/LeaderboardItem';
 import ShameModal from './leaderboard/ShameModal';
 import LeaderboardActions from './leaderboard/LeaderboardActions';
 import { getShameActionPrice } from '@/components/events/utils/shameUtils';
-import { MockeryAction } from '@/types/mockery-types';
+import { MockeryAction, ShameAction } from '@/types/mockery-types';
 import { TeamColor } from '@/types/user';
 
 const InteractiveLeaderboard: React.FC = () => {
@@ -18,7 +19,7 @@ const InteractiveLeaderboard: React.FC = () => {
   const [showShameModal, setShowShameModal] = useState<boolean>(false);
   const [selectedUser, setSelectedUser] = useState<LeaderboardUser | null>(null);
   const [isOnCooldown, setIsOnCooldown] = useState<boolean>(false);
-  const [shameType, setShameType] = useState<MockeryAction>('tomatoes');
+  const [shameType, setShameType] = useState<ShameAction>('tomatoes');
   const [modalType, setModalType] = useState<string | null>(null);
 
   useEffect(() => {
@@ -38,7 +39,11 @@ const InteractiveLeaderboard: React.FC = () => {
 
   const handleShameUser = (user: LeaderboardUser, type: string = 'tomatoes') => {
     setSelectedUser(user);
-    setShameType(type as MockeryAction);
+    // Make sure type is a valid ShameAction
+    const validShameType = ['tomatoes', 'eggs', 'stocks', 'shame', 'crown', 'jester', 'protection'].includes(type) 
+      ? type as ShameAction 
+      : 'tomatoes';
+    setShameType(validShameType);
     setShowShameModal(true);
     
     // Play subtle royal sound effect
