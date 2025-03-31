@@ -17,15 +17,18 @@ const MockeryActionIcon: React.FC<MockeryActionIconProps> = ({
   const getIcon = (actionType: MockeryAction): string => {
     switch (actionType) {
       case 'tomatoes': return '🍅';
-      case 'putridEggs': return '🥚';
       case 'eggs': return '🥚';
+      case 'crown': return '👑';
+      case 'jester': return '🎭';
       case 'stocks': return '🪵';
+      case 'protection': return '🛡️';
+      case 'shame': return '😳';
+      case 'target': return '🎯';
+      case 'putridEggs': return '🥚';
       case 'silence': return '🔇';
       case 'courtJester': return '🃏';
       case 'smokeBomb': return '💨';
-      case 'protection': return '🛡️';
-      case 'immune': return '👑';
-      case 'jester': return '🎭';
+      case 'immune': return '🔰';
       case 'dunce': return '📝';
       case 'glitterBomb': return '✨';
       case 'royalPie': return '🥧';
@@ -36,11 +39,22 @@ const MockeryActionIcon: React.FC<MockeryActionIconProps> = ({
       case 'humiliate': return '😱';
       case 'expose': return '👁️';
       case 'mock': return '🤡';
-      case 'shame': return '😳';
       case 'taunt': return '👈';
       case 'guillotine': return '🪓';
       case 'dungeons': return '🏰';
       case 'removal': return '🗑️';
+      case 'troll': return '👹';
+      case 'peasant': return '👨‍🌾';
+      case 'rat': return '🐀';
+      case 'ghost': return '👻';
+      case 'skeleton': return '💀';
+      case 'zombie': return '🧟';
+      case 'witch': return '🧙';
+      case 'monster': return '👾';
+      case 'dragon': return '🐉';
+      case 'jest': return '🤣';
+      case 'challenge': return '⚔️';
+      case 'defeat': return '🏳️';
       default: return '❓';
     }
   };

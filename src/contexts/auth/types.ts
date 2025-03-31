@@ -1,5 +1,6 @@
 
 // Auth context types
+import { UserCosmetics, ProfileBoost, SocialLink } from '@/types/user-types';
 
 export type UserTier = 
   | 'basic' 
@@ -7,9 +8,18 @@ export type UserTier =
   | 'royal' 
   | 'elite' 
   | 'legendary' 
-  | 'founder';
+  | 'founder'
+  | 'free'
+  | 'pro'
+  | 'vip'
+  | 'standard'
+  | 'silver'
+  | 'gold'
+  | 'platinum'
+  | 'diamond'
+  | 'bronze';
 
-export type TeamType = 'red' | 'blue' | 'green';
+export type TeamType = 'red' | 'blue' | 'green' | 'gold' | 'purple' | 'none' | 'neutral';
 export type TeamColor = TeamType;
 
 export interface UserProfile {
@@ -36,62 +46,8 @@ export interface UserProfile {
   referralCode?: string;
   referredBy?: string;
   settings?: Record<string, any>;
+  socialLinks?: SocialLink[];
   [key: string]: any;
-}
-
-export interface UserCosmetics {
-  border?: string[];
-  color?: string[];
-  font?: string[];
-  emoji?: string[];
-  title?: string[];
-  background?: string[];
-  effect?: string[];
-  badge?: string[];
-  theme?: string[];
-  activeBorder?: string;
-  activeColor?: string;
-  activeFont?: string;
-  activeEmoji?: string;
-  activeTitle?: string;
-  activeBackground?: string;
-  activeEffect?: string;
-  activeBadge?: string;
-  activeTheme?: string;
-}
-
-export interface UserCosmeticState {
-  border: string[];
-  color: string[];
-  font: string[];
-  emoji: string[];
-  title: string[];
-  background: string[];
-  effect: string[];
-  badge: string[];
-  theme: string[];
-  activeBorder: string;
-  activeColor: string;
-  activeFont: string;
-  activeEmoji: string;
-  activeTitle: string;
-  activeBackground: string;
-  activeEffect: string;
-  activeBadge: string;
-  activeTheme: string;
-}
-
-export interface ProfileBoost {
-  id: string;
-  startDate: string;
-  endDate: string;
-  level: number;
-  effectId?: string;
-  type: string;
-  strength: number;
-  appliedBy: string;
-  isActive: boolean;
-  status?: string;
 }
 
 export interface UserStats {
@@ -137,9 +93,27 @@ export interface AuthContextType extends AuthState {
   awardCosmetic: (itemId: string, category: string) => Promise<boolean>;
 }
 
-export interface SocialLink {
-  platform: string;
-  url: string;
-  username?: string;
-  isPublic?: boolean;
+export interface AuthProviderProps {
+  children: React.ReactNode;
+}
+
+export type AuthAction = 
+  | { type: 'LOGIN_START' }
+  | { type: 'LOGIN_SUCCESS'; payload: UserProfile }
+  | { type: 'LOGIN_FAILURE'; payload: string }
+  | { type: 'REGISTER_START' }
+  | { type: 'REGISTER_SUCCESS'; payload: UserProfile }
+  | { type: 'REGISTER_FAILURE'; payload: string }
+  | { type: 'LOGOUT' }
+  | { type: 'REFRESH_USER_START' }
+  | { type: 'REFRESH_USER_SUCCESS'; payload: UserProfile }
+  | { type: 'REFRESH_USER_FAILURE'; payload: string }
+  | { type: 'UPDATE_PROFILE_SUCCESS'; payload: UserProfile }
+  | { type: 'CLEAR_ERROR' };
+
+export interface LoginResponse {
+  success: boolean;
+  user?: UserProfile;
+  error?: string;
+  token?: string;
 }

@@ -1,11 +1,24 @@
 
-import { UserCosmetics } from './cosmetics';
-
 // Common user tiers used throughout the application
-export type UserTier = 'basic' | 'standard' | 'premium' | 'elite' | 'royal' | 'silver' | 'gold' | 'platinum' | 'diamond' | 'bronze' | 'pro' | 'vip' | 'legendary';
+export type UserTier = 
+  | 'basic' 
+  | 'standard' 
+  | 'premium' 
+  | 'elite' 
+  | 'royal' 
+  | 'silver' 
+  | 'gold' 
+  | 'platinum' 
+  | 'diamond' 
+  | 'bronze' 
+  | 'pro' 
+  | 'vip' 
+  | 'legendary'
+  | 'free'
+  | 'founder';
 
 // Team types used throughout the application
-export type TeamType = 'red' | 'green' | 'blue' | 'none';
+export type TeamType = 'red' | 'green' | 'blue' | 'gold' | 'purple' | 'none' | 'neutral';
 
 // User profile interface
 export interface UserProfile {
@@ -37,6 +50,7 @@ export interface UserProfile {
   profileClicks?: number;
   followers?: number;
   profileBoosts?: ProfileBoost[];
+  spendStreak?: number;
 }
 
 // Profile boost interface
@@ -88,3 +102,28 @@ export interface PrivacySettings {
   showActivity: boolean;
   allowMockery: boolean;
 }
+
+// User cosmetics interface
+export interface UserCosmetics {
+  border?: string[];
+  color?: string[];
+  font?: string[];
+  emoji?: string[];
+  title?: string[];
+  background?: string[];
+  effect?: string[];
+  badge?: string[];
+  theme?: string[];
+  activeBorder?: string;
+  activeColor?: string;
+  activeFont?: string;
+  activeEmoji?: string;
+  activeTitle?: string;
+  activeBackground?: string;
+  activeEffect?: string;
+  activeBadge?: string;
+  activeTheme?: string;
+}
+
+// TeamColor type alias for backward compatibility
+export type TeamColor = TeamType;
