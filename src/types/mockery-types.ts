@@ -4,76 +4,17 @@ import { UserProfile, UserTier, TeamColor } from '@/types/user';
 export type MockeryAction = 
   | 'tomatoes'
   | 'eggs'
-  | 'stocks'
   | 'crown'
-  | 'dragon'
-  | 'demon'
-  | 'dunce'
-  | 'jester'
-  | 'troll'
-  | 'peasant'
-  | 'rat'
-  | 'skeleton'
-  | 'zombie'
-  | 'witch'
-  | 'monster'
-  | 'knight'
-  | 'bishop'
-  | 'rook'
-  | 'pawn'
-  | 'king'
-  | 'queen'
-  | 'ghost'
-  | 'target'
-  | 'challenge'
-  | 'immune'
-  | 'shame'
-  | 'protection'
-  | 'putridEggs'
-  | 'silence'
-  | 'courtJester'
-  | 'jest'
-  | 'smokeBomb'
-  | 'glitterBomb'
-  | 'royalPie'
-  | 'jokeCrown'
-  | 'memeFrame'
-  | 'roast'
-  | 'ridicule'
-  | 'humiliate'
-  | 'expose'
-  | 'mock'
-  | 'taunt'
-  | 'guillotine'
-  | 'defeat'
-  | 'removal'
-  | 'dungeons'
-  | 'fool'
-  | 'banned'
-  | 'scarlet'
-  | 'cursed'
-  | 'laughing'
-  | 'poor'
-  | 'muted'
-  | 'exile'
-  | 'knighthood'
-  | 'tarAndFeather'
-  | 'rotten'
-  | 'pillory';
+  | 'jester';
 
 export type ExtendedMockeryAction = MockeryAction | string;
 
 export type MockeryTier = 
-  | 'basic'
-  | 'premium'
-  | 'royal'
-  | 'legendary'
-  | 'rare'
-  | 'epic'
   | 'common'
   | 'uncommon'
-  | 'silver'
-  | 'bronze';
+  | 'rare'
+  | 'epic'
+  | 'legendary';
 
 export type ShameAction = MockeryAction; // All mockery actions can be used for shaming
 
@@ -147,7 +88,3 @@ export interface UseMockery {
   getUserMockedOthersCount: (username: string) => number;
   getActiveMockery: (username: string) => MockeryAction | null;
 }
-
-// Export all mockery types from this file for reuse elsewhere
-export type { MockeryAction, MockeryTier, ShameAction };
-export type { MockeryEvent, MockedUser, ShameEffectData, MockeryEffectData, NotificationSoundOptions };
