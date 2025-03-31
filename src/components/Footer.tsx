@@ -38,6 +38,11 @@ const Footer = () => {
                   </Link>
                 </li>
                 <li>
+                  <Link to="/mockery" className="hover:text-white transition-colors">
+                    Royal Mockery
+                  </Link>
+                </li>
+                <li>
                   <Link to="/about" className="hover:text-white transition-colors">
                     About Us
                   </Link>
@@ -49,13 +54,13 @@ const Footer = () => {
             <div>
               <h4 className="text-lg font-semibold mb-3">Connect</h4>
               <div className="flex items-center space-x-4">
-                <a href="https://github.com/example" target="_blank" rel="noopener noreferrer" className="text-white/70 hover:text-white transition-colors">
+                <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="text-white/70 hover:text-white transition-colors">
                   <Github className="h-5 w-5" />
                 </a>
-                <a href="https://twitter.com/example" target="_blank" rel="noopener noreferrer" className="text-white/70 hover:text-white transition-colors">
+                <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="text-white/70 hover:text-white transition-colors">
                   <Twitter className="h-5 w-5" />
                 </a>
-                <a href="mailto:contact@example.com" className="text-white/70 hover:text-white transition-colors">
+                <a href="mailto:contact@spendthrone.com" className="text-white/70 hover:text-white transition-colors">
                   <Mail className="h-5 w-5" />
                 </a>
               </div>

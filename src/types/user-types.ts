@@ -2,10 +2,10 @@
 import { UserCosmetics } from './cosmetics';
 
 // Common user tiers used throughout the application
-export type UserTier = 'basic' | 'standard' | 'premium' | 'elite' | 'royal';
+export type UserTier = 'basic' | 'standard' | 'premium' | 'elite' | 'royal' | 'silver' | 'gold' | 'platinum' | 'diamond' | 'bronze' | 'pro' | 'vip' | 'legendary';
 
 // Team types used throughout the application
-export type TeamType = 'red' | 'green' | 'blue';
+export type TeamType = 'red' | 'green' | 'blue' | 'none';
 
 // User profile interface
 export interface UserProfile {
@@ -35,6 +35,21 @@ export interface UserProfile {
   socialLinks?: SocialLink[];
   profileViews?: number;
   profileClicks?: number;
+  followers?: number;
+  profileBoosts?: ProfileBoost[];
+}
+
+// Profile boost interface
+export interface ProfileBoost {
+  id: string;
+  type: string;
+  level: number;
+  strength: number;
+  isActive: boolean;
+  startDate: string;
+  endDate: string;
+  appliedBy: string;
+  effectId?: string;
 }
 
 // Social link interface
@@ -44,6 +59,7 @@ export interface SocialLink {
   url: string;
   icon?: string;
   isVisible?: boolean;
+  clicks?: number;
 }
 
 // User settings interface
