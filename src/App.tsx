@@ -23,7 +23,6 @@ import Settings from '@/pages/Settings';
 import Events from '@/pages/Events';
 import Mockery from '@/pages/Mockery';
 import StatusThroughHistory from '@/pages/StatusThroughHistory';
-import Index from '@/pages/index';
 
 function App() {
   return (
@@ -33,7 +32,7 @@ function App() {
           <Router>
             <Routes>
               {/* Landing Page */}
-              <Route path="/" element={<Index />} />
+              <Route path="/" element={<Home />} />
               
               {/* Main App Pages */}
               <Route path="/home" element={<Home />} />
@@ -45,6 +44,8 @@ function App() {
               <Route path="/terms" element={<Terms />} />
               <Route path="/mockery" element={<Mockery />} />
               <Route path="/status-through-history" element={<StatusThroughHistory />} />
+              <Route path="/features" element={<StatusThroughHistory />} />
+              <Route path="/teams" element={<Leaderboard />} />
               
               {/* Protected User Pages */}
               <Route 
@@ -64,6 +65,10 @@ function App() {
                 } 
               />
               <Route 
+                path="/profile/:username" 
+                element={<Profile />} 
+              />
+              <Route 
                 path="/wallet" 
                 element={
                   <ProtectedRoute>
@@ -76,6 +81,14 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <Settings />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/deposit" 
+                element={
+                  <ProtectedRoute>
+                    <Wallet />
                   </ProtectedRoute>
                 } 
               />

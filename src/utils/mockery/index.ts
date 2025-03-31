@@ -28,7 +28,7 @@ export {
 };
 
 // Import types from mockery-types.ts
-import { MockeryAction, ExtendedMockeryAction, MockeryTier, ShameAction } from '@/types/mockery-types';
+import { MockeryAction, ExtendedMockeryAction, MockeryTier, ShameAction } from '@/types/mockery';
 
 // Re-export types
 export type { MockeryAction, ExtendedMockeryAction, MockeryTier, ShameAction };
@@ -42,6 +42,8 @@ import React from 'react';
 export const renderMockeryIcon = (action: MockeryAction, className = "h-4 w-4") => {
   const IconComponent = getMockeryActionIcon(action);
   if (!IconComponent) return null;
+  
+  // Use React.createElement instead of JSX to avoid syntax issues
   return React.createElement(IconComponent, { className });
 };
 

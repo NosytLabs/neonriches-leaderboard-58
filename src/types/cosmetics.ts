@@ -1,5 +1,5 @@
 
-// Types related to user cosmetics and profile customization
+// Types for cosmetic items and related functionality
 
 export type CosmeticCategory = 
   | 'border' 
@@ -7,12 +7,12 @@ export type CosmeticCategory =
   | 'font' 
   | 'emoji' 
   | 'title' 
-  | 'background'
-  | 'effect'
-  | 'badge'
-  | 'theme'
-  | 'appearance'
-  | 'profile'
+  | 'background' 
+  | 'effect' 
+  | 'badge' 
+  | 'theme' 
+  | 'appearance' 
+  | 'profile' 
   | 'interaction';
 
 export type CosmeticRarity = 
@@ -21,9 +21,15 @@ export type CosmeticRarity =
   | 'rare' 
   | 'epic' 
   | 'legendary' 
-  | 'mythic' 
-  | 'unique' 
-  | 'royal';
+  | 'unique';
+
+export type CosmeticType = 
+  | 'standard' 
+  | 'premium' 
+  | 'exclusive' 
+  | 'limited' 
+  | 'event' 
+  | 'achievement';
 
 export interface CosmeticItem {
   id: string;
@@ -33,22 +39,22 @@ export interface CosmeticItem {
   category: CosmeticCategory;
   cssClass: string;
   rarity: string;
-  type?: string;
+  type: string;
   imageSrc?: string;
-  image?: string;
-  cost?: number; // For backward compatibility
+  unlockRequirement?: string;
+  duration?: string | number;
+  effectStrength?: number;
+  isAnimated?: boolean;
 }
 
-export type BoostEffectType =
-  | 'aura'
-  | 'particles'
-  | 'glimmer'
-  | 'ripple'
-  | 'border'
-  | 'shadow'
-  | 'pulse'
-  | 'crown'
-  | 'sparkle'
+export type BoostEffectType = 
+  | 'aura' 
+  | 'particles' 
+  | 'border' 
+  | 'background' 
+  | 'nameplate' 
+  | 'crown' 
+  | 'sparkle' 
   | 'glow';
 
 export interface BoostEffect {
@@ -56,84 +62,59 @@ export interface BoostEffect {
   name: string;
   description: string;
   cssClass: string;
-  type: string;
+  duration: number;
+  type: BoostEffectType;
   tier: string;
   price: number;
-  duration: number; // in days
-  durationDays?: number; // for compatibility
   icon: string;
+  durationDays?: number;
   previewImage?: string;
 }
 
 export interface ProfileBoost {
   id: string;
-  type: string;
-  appliedBy: string;
-  startDate?: string;
-  endDate?: string;
+  startDate: string;
+  endDate: string;
   level: number;
-  strength: number;
-  isActive: boolean;
   effectId?: string;
-}
-
-export interface ProfileBoostData {
-  id: string;
-  name: string;
-  description: string;
-  cssClass: string;
   type: string;
-  tier: string;
-  price: number;
-  duration: number; // in days
-  startDate?: string;
-  endDate?: string;
-  isActive?: boolean;
+  strength: number;
+  appliedBy: string;
+  isActive: boolean;
+  status?: string;
 }
 
-export interface UserCosmeticState {
-  title: string[];
-  color: string[];
-  border: string[];
-  background: string[];
-  emoji: string[];
-  font: string[];
-  effect: string[];
-  badge: string[];
-  theme: string[];
-  activeTitle?: string;
-  activeColor?: string;
+export interface ProfileBoostData extends ProfileBoost {
+  name?: string;
+  description?: string;
+  cssClass: string;
+  tier: string;
+}
+
+export interface SocialLink {
+  platform: string;
+  url: string;
+  username?: string;
+  isPublic?: boolean;
+}
+
+export interface UserCosmetics {
+  border?: string[];
+  color?: string[];
+  font?: string[];
+  emoji?: string[];
+  title?: string[];
+  background?: string[];
+  effect?: string[];
+  badge?: string[];
+  theme?: string[];
   activeBorder?: string;
-  activeBackground?: string;
-  activeEmoji?: string;
+  activeColor?: string;
   activeFont?: string;
+  activeEmoji?: string;
+  activeTitle?: string;
+  activeBackground?: string;
   activeEffect?: string;
   activeBadge?: string;
   activeTheme?: string;
-}
-
-// Type alias for backward compatibility
-export type UserCosmetics = UserCosmeticState;
-
-export interface SocialLink {
-  type: string;
-  url: string;
-  title?: string;
-  icon?: string;
-  clicks?: number;
-}
-
-export interface ProfileTheme {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  preview: string;
-  rarity: CosmeticRarity;
-  cssClasses: {
-    background: string;
-    text: string;
-    accent: string;
-    border: string;
-  };
 }
