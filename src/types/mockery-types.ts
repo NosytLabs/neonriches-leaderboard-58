@@ -26,7 +26,6 @@ export type MockeryAction =
   | 'pawn'
   | 'immune'
   | 'protection'
-  // Additional mockery actions that were causing errors
   | 'putridEggs'
   | 'silence'
   | 'courtJester'
@@ -45,7 +44,10 @@ export type MockeryAction =
   | 'taunt'
   | 'guillotine'
   | 'removal'
-  | 'fool';
+  | 'fool'
+  | 'shame'
+  | 'challenge'
+  | 'dungeons';
 
 // Define extended mockery action type
 export type ExtendedMockeryAction = MockeryAction;
@@ -79,6 +81,8 @@ export interface MockeryEvent {
   cost?: number;
   reason?: string;
   type?: string;
+  timestamp?: string;
+  tier?: string;
 }
 
 // Define the mocked user interface
@@ -92,7 +96,20 @@ export interface MockedUser {
     id: string;
     username: string;
   };
+  // Additional properties for compatibility
+  userId?: string;
+  displayName?: string;
+  profileImage?: string;
   mockedAction?: MockeryAction;
+  mockedBy?: string;
+  mockedReason?: string;
+  mockedTimestamp?: string;
+  mockedTier?: string;
+  mockeryCount?: number;
+  lastMocked?: string;
+  team?: string;
+  tier?: string;
+  mockedUntil?: string;
 }
 
 // Define the user mockery state
@@ -125,6 +142,7 @@ export interface UseMockery {
   getUserMockeryCount: (userId: string) => number;
   getUserMockedOthersCount: (userId: string) => number;
   isUserMocked?: (userId: string) => boolean;
+  applyMockery?: (targetId: string, action: MockeryAction) => Promise<boolean>;
 }
 
 // Additional type definitions for notification sound options

@@ -5,7 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Event, EventType } from '@/types/events';
-import { formatDate, isEventActive } from '@/utils/dateUtils';
+import { formatDate } from '@/utils/dateUtils';
 import { Image } from '@/components/ui/image';
 import { cn } from '@/lib/utils';
 import { useIntersectionObserver } from '@/hooks/use-intersection-observer';
@@ -35,9 +35,17 @@ const EventCard: React.FC<EventCardProps> = ({
     once: true
   });
   
-  const isActive = active || isEventActive(event.startDate, event.endDate);
-  const eventName = event.name || event.title;
-  const eventImage = event.image || event.imageUrl;
+  const isActive = active || isEventActive(event);
+  const eventName = event.title || event.name || '';
+  const eventImage = event.imageUrl || event.image || '';
+  
+  // Helper function to check if event is active
+  function isEventActive(event: Event): boolean {
+    const now = new Date();
+    const startDate = new Date(event.startDate);
+    const endDate = new Date(event.endDate);
+    return now >= startDate && now <= endDate;
+  }
   
   return (
     <Card 
@@ -118,15 +126,14 @@ const EventCard: React.FC<EventCardProps> = ({
 
 // Helper function to get the appropriate icon based on event type
 function getEventIcon(type: EventType) {
-  switch(type) {
-    case 'treasure':
-      return <Trophy size={18} className="text-royal-gold" />;
-    case 'shame':
-      return <Users size={18} className="text-royal-crimson" />;
-    case 'team':
-      return <Trophy size={18} className="text-royal-navy" />;
-    default:
-      return <Calendar size={18} className="text-white/60" />;
+  if (type === 'treasure') {
+    return <Trophy size={18} className="text-royal-gold" />;
+  } else if (type === 'shame') {
+    return <Users size={18} className="text-royal-crimson" />;
+  } else if (type === 'team') {
+    return <Trophy size={18} className="text-royal-navy" />;
+  } else {
+    return <Calendar size={18} className="text-white/60" />;
   }
 }
 

@@ -47,16 +47,16 @@ const EventStatsCard: React.FC<EventStatsCardProps> = ({ stats, className }) => 
               <Award className="h-5 w-5" />
               <span className="font-semibold">Total Spent</span>
             </div>
-            <span className="text-2xl font-bold">{formatCurrency(stats.totalSpent)}</span>
+            <span className="text-2xl font-bold">{formatCurrency(stats.totalSpent || 0)}</span>
           </div>
         </div>
         
-        <div className="p-4 bg-black/20 rounded-lg">
-          <h3 className="font-semibold mb-2 text-royal-gold flex items-center gap-2">
-            <Target className="h-4 w-4" />
-            Most Poked
-          </h3>
-          {stats.mostPoked && stats.mostPoked.length > 0 ? (
+        {stats.mostPoked && stats.mostPoked.length > 0 && (
+          <div className="p-4 bg-black/20 rounded-lg">
+            <h3 className="font-semibold mb-2 text-royal-gold flex items-center gap-2">
+              <Target className="h-4 w-4" />
+              Most Poked
+            </h3>
             <ul className="space-y-2">
               {stats.mostPoked.map((user, index) => (
                 <li key={index} className="flex items-center justify-between">
@@ -67,10 +67,8 @@ const EventStatsCard: React.FC<EventStatsCardProps> = ({ stats, className }) => 
                 </li>
               ))}
             </ul>
-          ) : (
-            <p className="text-white/60">No poke data available yet.</p>
-          )}
-        </div>
+          </div>
+        )}
       </CardContent>
       <CardFooter className="flex justify-center pt-0">
         <p className="text-xs text-white/50">Stats update every 15 minutes</p>

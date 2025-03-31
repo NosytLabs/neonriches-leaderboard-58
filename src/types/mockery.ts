@@ -10,7 +10,10 @@ export type MockeryTier =
   | 'silver' 
   | 'epic' 
   | 'rare' 
-  | 'legendary';
+  | 'legendary'
+  | 'common'
+  | 'uncommon'
+  | 'bronze';
 
 export type MockeryAction = 
   | 'tomatoes'
@@ -40,10 +43,29 @@ export type MockeryAction =
   | 'pawn'
   | 'target'
   | 'challenge'
-  | 'protection';
+  | 'protection'
+  | 'putridEggs'
+  | 'silence'
+  | 'courtJester'
+  | 'jest'
+  | 'defeat'
+  | 'smokeBomb'
+  | 'glitterBomb'
+  | 'royalPie'
+  | 'jokeCrown'
+  | 'memeFrame'
+  | 'roast'
+  | 'ridicule'
+  | 'humiliate'
+  | 'expose'
+  | 'mock'
+  | 'taunt'
+  | 'guillotine'
+  | 'removal'
+  | 'fool';
 
-// Simplified subset for shame actions
-export type ShameAction = 'tomatoes' | 'eggs' | 'stocks' | 'shame';
+// Simplified subset for shame actions using actual MockeryAction
+export type ShameActions = MockeryAction; 
 
 // Alias for backward compatibility
 export type MockeryActionType = MockeryAction;
@@ -56,10 +78,15 @@ export interface MockeryEvent {
   targetName?: string;
   appliedBy: string;
   action: MockeryAction;
-  timestamp: string;
+  timestamp?: string;
   expiresAt: string;
   isActive: boolean;
-  cost: number;
+  duration: number;
+  appliedAt?: string;
+  cost?: number;
+  reason?: string;
+  type?: string;
+  tier?: string;
 }
 
 export interface MockedUser {
@@ -68,11 +95,18 @@ export interface MockedUser {
   username: string;
   displayName?: string;
   profileImage?: string;
-  mockedBy: string;
+  action: MockeryAction;
+  expiresAt: string;
+  appliedAt: string;
+  appliedBy: {
+    id: string;
+    username: string;
+  };
   mockedAction?: MockeryAction;
-  mockedUntil: string;
+  mockedBy?: string;
   mockedReason?: string;
   mockedTimestamp?: string;
+  mockedUntil?: string;
   mockedTier?: string;
   mockeryCount?: number;
   lastMocked?: string;
@@ -95,12 +129,19 @@ export interface ShameAction {
 export interface UseMockery {
   applyMockery: (targetId: string, targetName: string, action: MockeryAction) => Promise<boolean>;
   removeMockery: (targetId: string) => Promise<boolean>;
-  getActiveMockery: (targetId: string) => MockeryEvent | null;
-  isUserMocked: (targetId: string) => boolean;
+  getActiveMockery: (userId: string) => MockeryEvent | null;
+  isUserMocked: (userId: string) => boolean;
   mockedUsers: MockedUser[];
   mockedCount: number;
   isLoading: boolean;
   error: string | null;
+  mockUsers?: (targetId: string, action: MockeryAction) => Promise<boolean>;
+  isUserProtected?: (userId: string) => boolean;
+  protectUser?: (userId: string) => Promise<boolean>;
+  mockUser?: (targetId: string, action: MockeryAction) => Promise<boolean>;
+  isUserShamed?: (userId: string) => boolean;
+  getUserMockeryCount?: (userId: string) => number;
+  getUserMockedOthersCount?: (userId: string) => number;
 }
 
 export interface UseShameEffectReturn {
@@ -117,4 +158,11 @@ export interface UseShameEffectReturn {
   shameCooldown: Record<number, boolean>;
   shameCount: Record<number, number>;
   isMocking: boolean;
+}
+
+// Additional type definitions for notification sound options
+export interface NotificationSoundOptions {
+  volume?: number;
+  playbackRate?: number;
+  loop?: boolean;
 }

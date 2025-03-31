@@ -1,3 +1,4 @@
+
 // Types related to user cosmetics and profile customization
 
 export type CosmeticCategory = 
@@ -14,7 +15,15 @@ export type CosmeticCategory =
   | 'profile'
   | 'interaction';
 
-export type CosmeticRarity = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary' | 'mythic' | 'unique' | 'royal';
+export type CosmeticRarity = 
+  | 'common' 
+  | 'uncommon' 
+  | 'rare' 
+  | 'epic' 
+  | 'legendary' 
+  | 'mythic' 
+  | 'unique' 
+  | 'royal';
 
 export interface CosmeticItem {
   id: string;
@@ -27,6 +36,7 @@ export interface CosmeticItem {
   type?: string;
   imageSrc?: string;
   image?: string;
+  cost?: number; // For backward compatibility
 }
 
 export type BoostEffectType =

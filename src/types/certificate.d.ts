@@ -1,12 +1,35 @@
 
-export type CertificateType = 'rank' | 'achievement' | 'founder' | 'event' | 'membership' | 'royal' | 'special' | 'milestone' | 'nobility' | 'seasonal';
-export type CertificateStyle = 'royal' | 'classic' | 'modern' | 'gothic';
+export type CertificateType = 
+  | 'rank' 
+  | 'achievement' 
+  | 'founder' 
+  | 'event' 
+  | 'membership' 
+  | 'royal' 
+  | 'special' 
+  | 'milestone' 
+  | 'nobility' 
+  | 'seasonal'
+  | 'team'
+  | 'custom';
+
+export type CertificateStyle = 
+  | 'royal' 
+  | 'classic' 
+  | 'modern' 
+  | 'gothic'
+  | 'default' 
+  | 'medieval'
+  | 'minimalist' 
+  | 'vintage'
+  | 'ornate';
+
 export type CertificateTeam = 'red' | 'blue' | 'green' | 'gold' | 'neutral';
 
 export interface Certificate {
   id: string;
   userId: string;
-  templateId: string;
+  templateId?: string;
   dateIssued: string;
   title?: string;
   description?: string;
@@ -24,11 +47,23 @@ export interface Certificate {
   mintAddress?: string;
   imageUrl?: string;
   
-  // Add missing properties that are causing errors
+  // Properties needed for compatibility
   isMinted?: boolean;
   nftMintAddress?: string;
   shareUrl?: string;
   createdAt?: string;
+  username?: string;
+  displayName?: string;
+  image?: string;
+  bgImage?: string;
+  issuedAt?: string;
+  expiresAt?: string;
+  profileImage?: string;
+  tier?: string;
+  tokenId?: string;
+  mintDate?: string;
+  rank?: number;
+  totalSpent?: number;
 }
 
 export interface CertificateTemplate {
@@ -43,6 +78,12 @@ export interface CertificateTemplate {
   availableForTier?: string[];
   availableForRank?: number[];
   requiresFounder?: boolean;
+  isPremium?: boolean;
+  isLimited?: boolean;
+  price?: number;
+  availableFrom?: string;
+  availableUntil?: string;
+  previewImage?: string;
 }
 
 export interface CertificateRepository {
@@ -63,3 +104,18 @@ export interface CertificateTemplateFactory {
   getAllTemplates: () => CertificateTemplate[];
   getTemplatesByType: (type: CertificateType) => CertificateTemplate[];
 }
+
+export interface RankCertificateMetadata {
+  userName: string;
+  userRank: number;
+  userTeam: CertificateTeam | null;
+  certificateId: string;
+  issuedDate: string;
+  amountSpent: number;
+}
+
+// For backward compatibility
+export { 
+  type CertificateType as CertificateCategory,
+  type CertificateTeam as CertificateTeamType
+};
