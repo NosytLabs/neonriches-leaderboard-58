@@ -3,9 +3,10 @@ import React from 'react';
 import Layout from '@/components/layout/Layout';
 import { privacyContent } from '@/data/privacyContent';
 import { motion } from 'framer-motion';
-import { Scroll, Shield, Lock, Eye } from 'lucide-react';
+import { Scroll, Shield, Lock, Eye, AlertTriangle, Crown } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+import RandomAbsurdFact from '@/components/ui/random-absurd-fact';
 
 const Privacy: React.FC = () => {
   return (
@@ -33,6 +34,10 @@ const Privacy: React.FC = () => {
               <p className="text-white/90 italic mb-6 text-lg">
                 While we may jest about your financial choices, we take the protection of your personal information quite seriously. The Crown's digital scribes have prepared this document to explain how we safeguard your royal data.
               </p>
+              
+              <div className="mb-6">
+                <RandomAbsurdFact variant="banner" className="w-full" />
+              </div>
               
               {privacyContent.sections.map((section, index) => (
                 <div key={index} className="mb-8">
@@ -62,16 +67,24 @@ const Privacy: React.FC = () => {
               ))}
               
               <div className="mt-10 p-6 bg-black/30 rounded-lg border border-royal-gold/20">
-                <h3 className="text-lg font-semibold text-royal-gold mb-3">A Knight's Promise</h3>
+                <h3 className="text-lg font-semibold text-royal-gold mb-3 flex items-center">
+                  <Crown className="mr-2 h-5 w-5" />
+                  A Knight's Promise
+                </h3>
                 <p className="text-white/90">
                   We may be satirical, but our data protection is serious business. Your personal information is stored in a digital fortress guarded by the finest encryption dragons in the realm. We collect only what we need to run our kingdom and will never sell your data to neighboring realms.
                 </p>
                 <p className="mt-3 text-white/90">
                   And remember, while your rank on SpendThrone may be public (that's rather the point), your payment information is kept securely locked in the royal vault.
                 </p>
-                <p className="mt-3 italic text-royal-gold/80">
-                  The Emperor's New Clothes were very expensive indeed - but at least we're honest about selling you nothing but status.
-                </p>
+                <div className="mt-6 p-4 bg-black/50 rounded border border-royal-gold/30">
+                  <div className="flex items-start">
+                    <AlertTriangle className="text-royal-gold flex-shrink-0 mt-1 mr-3 h-5 w-5" />
+                    <p className="text-royal-gold/90 italic">
+                      "The Emperor's New Clothes were very expensive indeed - but at least we're honest about selling you nothing but status."
+                    </p>
+                  </div>
+                </div>
               </div>
             </CardContent>
           </Card>

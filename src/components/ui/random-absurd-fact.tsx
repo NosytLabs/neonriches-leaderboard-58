@@ -20,6 +20,7 @@ const RandomAbsurdFact: React.FC<RandomAbsurdFactProps> = ({
   onClose
 }) => {
   const [fact, setFact] = useState<string>(getRandomAbsurdFact());
+  const [isVisible, setIsVisible] = useState<boolean>(true);
 
   useEffect(() => {
     if (refreshInterval) {
@@ -42,66 +43,77 @@ const RandomAbsurdFact: React.FC<RandomAbsurdFactProps> = ({
     return icons[Math.floor(Math.random() * icons.length)];
   };
 
+  const handleClose = () => {
+    setIsVisible(false);
+    if (onClose) {
+      setTimeout(() => {
+        onClose();
+      }, 300);
+    }
+  };
+
   return (
     <AnimatePresence>
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -10 }}
-        className={className}
-      >
-        {variant === 'banner' && (
-          <Card className="bg-black/30 border-royal-gold/20 overflow-hidden">
-            <CardContent className="p-4 relative">
+      {isVisible && (
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -10 }}
+          className={className}
+        >
+          {variant === 'banner' && (
+            <Card className="bg-black/30 border-royal-gold/20 overflow-hidden">
+              <CardContent className="p-4 relative">
+                <div className="flex">
+                  <div className="flex-shrink-0 mr-3 mt-1">
+                    {getFactIcon()}
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-semibold text-royal-gold mb-1">Status Absurdity</h4>
+                    <p className="text-white/80 text-sm">{fact}</p>
+                  </div>
+                </div>
+                
+                {onClose && (
+                  <button 
+                    onClick={handleClose}
+                    className="absolute top-2 right-2 text-white/40 hover:text-white/80 transition-colors"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                )}
+              </CardContent>
+            </Card>
+          )}
+          
+          {variant === 'card' && (
+            <Card className={cn("overflow-hidden", className)}>
+              <CardContent className="p-4">
+                <div className="flex items-start">
+                  <div className="flex-shrink-0 mr-3 mt-1">
+                    {getFactIcon()}
+                  </div>
+                  <p className="text-white/80">{fact}</p>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+          
+          {variant === 'toast' && (
+            <div className="bg-black/70 backdrop-blur-sm border border-royal-gold/20 rounded-lg p-3 shadow-lg">
               <div className="flex">
-                <div className="flex-shrink-0 mr-3 mt-1">
+                <div className="flex-shrink-0 mr-3">
                   {getFactIcon()}
                 </div>
                 <div>
-                  <h4 className="text-sm font-semibold text-royal-gold mb-1">Status Absurdity</h4>
+                  <h4 className="text-sm font-semibold text-royal-gold">Did You Know?</h4>
                   <p className="text-white/80 text-sm">{fact}</p>
                 </div>
               </div>
-              
-              {onClose && (
-                <button 
-                  onClick={onClose}
-                  className="absolute top-2 right-2 text-white/40 hover:text-white/80 transition-colors"
-                >
-                  <X className="h-4 w-4" />
-                </button>
-              )}
-            </CardContent>
-          </Card>
-        )}
-        
-        {variant === 'card' && (
-          <Card className={cn("overflow-hidden", className)}>
-            <CardContent className="p-4">
-              <div className="flex items-start">
-                <div className="flex-shrink-0 mr-3 mt-1">
-                  {getFactIcon()}
-                </div>
-                <p className="text-white/80">{fact}</p>
-              </div>
-            </CardContent>
-          </Card>
-        )}
-        
-        {variant === 'toast' && (
-          <div className="bg-black/70 backdrop-blur-sm border border-royal-gold/20 rounded-lg p-3 shadow-lg">
-            <div className="flex">
-              <div className="flex-shrink-0 mr-3">
-                {getFactIcon()}
-              </div>
-              <div>
-                <h4 className="text-sm font-semibold text-royal-gold">Did You Know?</h4>
-                <p className="text-white/80 text-sm">{fact}</p>
-              </div>
             </div>
-          </div>
-        )}
-      </motion.div>
+          )}
+        </motion.div>
+      )}
     </AnimatePresence>
   );
 };

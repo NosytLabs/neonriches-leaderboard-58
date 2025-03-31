@@ -5,9 +5,10 @@ import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
 import { Separator } from '@/components/ui/separator';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Scroll, Crown, Coins, Trophy, Shield, Users, Laugh, ExternalLink, AlertTriangle, ChevronsRight } from 'lucide-react';
+import { Scroll, Crown, Coins, Trophy, Shield, Users, Laugh, ExternalLink, AlertTriangle, ChevronsRight, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
+import RandomAbsurdFact from '@/components/ui/random-absurd-fact';
 
 const About: React.FC = () => {
   return (
@@ -62,6 +63,10 @@ const About: React.FC = () => {
               <p>
                 Consider us a mirror reflecting the often uncomfortable reality of how status is bought and sold online. We're just honest enough to admit it.
               </p>
+              
+              <div className="mt-6">
+                <RandomAbsurdFact variant="banner" className="w-full" />
+              </div>
             </CardContent>
           </Card>
           

@@ -106,6 +106,23 @@ const absurdFacts = [
   "Psychological studies show status anxiety has increased 43% since the rise of social media.",
   "A SpendThrone user once sold their car to move up 3 positions on our leaderboard.",
   "There is no difference between SpendThrone and other social media - we're just honest about the business model.",
+  "MrBeast spent $3.5 million to recreate Squid Game, yet somehow we're the ones called absurd.",
+  "A luxury watch company once charged $45,000 extra for a limited edition that was identical except for the color.",
+  "Tech billionaires wear $10 t-shirts while selling you $1,000 phones. At least we're honest about the markup.",
+  "The Emperor's New Clothes were very expensive indeed - but at least we're honest about selling you nothing but status.",
+  "A study found people are willing to pay up to 400% more for items with visible luxury branding than the exact same item without.",
+  "Digital influencers spend thousands on outfits just for Instagram photos, then return them to the store. We call that 'renting status'.",
+  "The world's most expensive NFT sold for $91.8 million. The buyer later admitted they 'mostly wanted to see the reaction'.",
+  "People pay $8/month for a Twitter verification check. At least our leaderboard numbers have more digits.",
+  "One crypto enthusiast spent $450,000 to be Snoop Dogg's neighbor in the metaverse. The real Snoop has never visited.",
+  "Studies show social media users experience a dopamine hit when their status updates receive engagement. We just skip the middleman.",
+  "A survey of luxury car owners found 78% admitted they rarely use most of the premium features they paid for.",
+  "Kim Kardashian earned $1 million per minute during her makeup line launch. Her products cost 300% more than chemically identical alternatives.",
+  "In one experiment, subjects consistently rated the same water as 'smoother' and 'purer' when told it was an expensive brand.",
+  "One SpendThrone royal spent $5,000 to have their profile displayed for 6 hours, during which time they were actually asleep.",
+  "Studies show wearing luxury brands in job interviews increases chances of being hired by 30%, regardless of qualifications.",
+  "One Russian oligarch spent $35,000 on a gold-plated fidget spinner in 2017. It was used exactly twice.",
+  "The most expensive domain name ever sold was Cars.com for $872 million. At least we're selling something more substantial: your ego.",
 ];
 
 export const getRandomAbsurdFact = (): string => {
