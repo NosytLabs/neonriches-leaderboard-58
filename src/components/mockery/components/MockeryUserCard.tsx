@@ -6,7 +6,7 @@ import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { ShieldAlert } from 'lucide-react';
 import { User } from '@/types/user';
-import { MockeryAction } from '@/types/mockery';
+import { MockeryAction } from '@/types/mockery-types';
 import { useToast } from '@/hooks/use-toast';
 import { formatDistanceToNow } from 'date-fns';
 import { cn } from '@/lib/utils';
@@ -89,11 +89,11 @@ export const MockeryUserCard: React.FC<MockeryUserCardProps> = ({
             {hasActiveEffect && activeEffect && (
               <Badge 
                 variant={
-                  activeEffect === 'shame' || 
-                  activeEffect === 'taunt' || 
-                  activeEffect === 'jest' ||
-                  activeEffect === 'crown' ||
-                  activeEffect === 'challenge' || 
+                  activeEffect === 'shame' ? 'destructive' :
+                  activeEffect === 'taunt' ? 'destructive' :
+                  activeEffect === 'jest' ? 'destructive' :
+                  activeEffect === 'crown' ? 'destructive' :
+                  activeEffect === 'challenge' ? 'destructive' :
                   activeEffect === 'defeat' ? 'destructive' :
                   activeEffect === 'protection' ? 'default' : 'default'
                 }
@@ -127,7 +127,7 @@ export const MockeryUserCard: React.FC<MockeryUserCardProps> = ({
               variant="secondary" 
               size="sm" 
               className="text-xs" 
-              onClick={isProtected ? handleProtectedClick : () => handleMockery('jest')}
+              onClick={isProtected ? handleProtectedClick : () => handleMockery('jester')}
               disabled={isProtected}
             >
               {isProtected ? 'Protected' : 'Mock'}

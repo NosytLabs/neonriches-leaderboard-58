@@ -62,7 +62,7 @@ export const getMockeryActionPrice = (action: MockeryAction): number => {
 
 // Helper function to determine the appropriate mockery icon color based on mockery type
 export const getMockeryClassForAction = (action: MockeryAction): string => {
-  const mockeryClasses: Record<MockeryAction, string> = {
+  const mockeryClasses: Record<string, string> = {
     'tomatoes': 'mockery-tomatoes',
     'eggs': 'mockery-eggs',
     'crown': 'mockery-crown',

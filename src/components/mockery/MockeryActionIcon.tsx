@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { MockeryAction } from '@/types/mockery';
+import { MockeryAction } from '@/types/mockery-types';
 
 interface MockeryActionIconProps {
   action: MockeryAction;
@@ -15,48 +15,50 @@ const MockeryActionIcon: React.FC<MockeryActionIconProps> = ({
   className
 }) => {
   const getIcon = (actionType: MockeryAction): string => {
-    switch (actionType) {
-      case 'tomatoes': return '🍅';
-      case 'eggs': return '🥚';
-      case 'crown': return '👑';
-      case 'jester': return '🎭';
-      case 'stocks': return '🪵';
-      case 'protection': return '🛡️';
-      case 'shame': return '😳';
-      case 'target': return '🎯';
-      case 'putridEggs': return '🥚';
-      case 'silence': return '🔇';
-      case 'courtJester': return '🃏';
-      case 'smokeBomb': return '💨';
-      case 'immune': return '🔰';
-      case 'dunce': return '📝';
-      case 'glitterBomb': return '✨';
-      case 'royalPie': return '🥧';
-      case 'jokeCrown': return '👑';
-      case 'memeFrame': return '🖼️';
-      case 'roast': return '🔥';
-      case 'ridicule': return '😂';
-      case 'humiliate': return '😱';
-      case 'expose': return '👁️';
-      case 'mock': return '🤡';
-      case 'taunt': return '👈';
-      case 'guillotine': return '🪓';
-      case 'dungeons': return '🏰';
-      case 'removal': return '🗑️';
-      case 'troll': return '👹';
-      case 'peasant': return '👨‍🌾';
-      case 'rat': return '🐀';
-      case 'ghost': return '👻';
-      case 'skeleton': return '💀';
-      case 'zombie': return '🧟';
-      case 'witch': return '🧙';
-      case 'monster': return '👾';
-      case 'dragon': return '🐉';
-      case 'jest': return '🤣';
-      case 'challenge': return '⚔️';
-      case 'defeat': return '🏳️';
-      default: return '❓';
-    }
+    const icons: Record<string, string> = {
+      'tomatoes': '🍅',
+      'eggs': '🥚',
+      'crown': '👑',
+      'jester': '🎭',
+      'stocks': '🪵',
+      'protection': '🛡️',
+      'shame': '😳',
+      'target': '🎯',
+      'putridEggs': '🥚',
+      'silence': '🔇',
+      'courtJester': '🃏',
+      'smokeBomb': '💨',
+      'immune': '🔰',
+      'dunce': '📝',
+      'glitterBomb': '✨',
+      'royalPie': '🥧',
+      'jokeCrown': '👑',
+      'memeFrame': '🖼️',
+      'roast': '🔥',
+      'ridicule': '😂',
+      'humiliate': '😱',
+      'expose': '👁️',
+      'mock': '🤡',
+      'taunt': '👈',
+      'guillotine': '🪓',
+      'dungeons': '🏰',
+      'removal': '🗑️',
+      'troll': '👹',
+      'peasant': '👨‍🌾',
+      'rat': '🐀',
+      'ghost': '👻',
+      'skeleton': '💀',
+      'zombie': '🧟',
+      'witch': '🧙',
+      'monster': '👾',
+      'dragon': '🐉',
+      'jest': '🤣',
+      'challenge': '⚔️',
+      'defeat': '🏳️',
+      'laughing': '😂'
+    };
+
+    return icons[actionType] || '❓';
   };
 
   return (

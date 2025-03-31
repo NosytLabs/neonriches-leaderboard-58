@@ -2,7 +2,7 @@
 import { UserProfile, UserTier, TeamType } from './user-types';
 import { LucideIcon } from 'lucide-react';
 
-// Core mockery actions
+// Core mockery actions - updated to include all used values across the codebase
 export type MockeryAction = 
   | 'tomatoes'
   | 'eggs' 
@@ -10,7 +10,40 @@ export type MockeryAction =
   | 'stocks'
   | 'jester'
   | 'shame'
-  | 'protection';
+  | 'protection'
+  | 'target'
+  | 'putridEggs'
+  | 'silence'
+  | 'courtJester'
+  | 'smokeBomb'
+  | 'immune'
+  | 'dunce'
+  | 'glitterBomb'
+  | 'royalPie'
+  | 'jokeCrown'
+  | 'memeFrame'
+  | 'roast'
+  | 'ridicule'
+  | 'humiliate'
+  | 'expose'
+  | 'mock'
+  | 'taunt'
+  | 'guillotine'
+  | 'dungeons'
+  | 'removal'
+  | 'troll'
+  | 'peasant'
+  | 'rat'
+  | 'ghost'
+  | 'skeleton'
+  | 'zombie'
+  | 'witch'
+  | 'monster'
+  | 'dragon'
+  | 'jest'
+  | 'challenge'
+  | 'defeat'
+  | 'laughing';
 
 // Mockery tiers
 export type MockeryTier = 
@@ -31,7 +64,9 @@ export type TeamColor =
   | 'blue'
   | 'green'
   | 'gold'
-  | 'purple';
+  | 'purple'
+  | 'none'
+  | 'neutral';
 
 // Alias for backward compatibility 
 export type ShameAction = MockeryAction;
@@ -53,6 +88,7 @@ export interface MockeryEvent {
   active?: boolean;
   cost?: number;
   tier?: MockeryTier;
+  timestamp?: string;
   metadata?: Record<string, any>;
 }
 
@@ -103,12 +139,22 @@ export interface NotificationSoundOptions {
 
 // Helper function to check if a string is a valid MockeryAction
 export const isValidMockeryAction = (action: string): action is MockeryAction => {
-  return ['tomatoes', 'eggs', 'crown', 'stocks', 'jester', 'shame', 'protection'].includes(action as MockeryAction);
+  const validActions: MockeryAction[] = [
+    'tomatoes', 'eggs', 'crown', 'stocks', 'jester', 'shame', 'protection',
+    'target', 'putridEggs', 'silence', 'courtJester', 'smokeBomb', 'immune',
+    'dunce', 'glitterBomb', 'royalPie', 'jokeCrown', 'memeFrame', 'roast',
+    'ridicule', 'humiliate', 'expose', 'mock', 'taunt', 'guillotine', 'dungeons',
+    'removal', 'troll', 'peasant', 'rat', 'ghost', 'skeleton', 'zombie', 'witch',
+    'monster', 'dragon', 'jest', 'challenge', 'defeat', 'laughing'
+  ];
+  return validActions.includes(action as MockeryAction);
 };
 
 // Helper function to check if a string is a valid MockeryTier
 export const isValidMockeryTier = (tier: string): tier is MockeryTier => {
-  return ['common', 'uncommon', 'rare', 'epic', 'legendary', 'basic', 'premium', 'royal', 'silver', 'bronze'].includes(tier as MockeryTier);
+  const validTiers: MockeryTier[] = [
+    'common', 'uncommon', 'rare', 'epic', 'legendary', 
+    'basic', 'premium', 'royal', 'silver', 'bronze'
+  ];
+  return validTiers.includes(tier as MockeryTier);
 };
-
-// Remove the interface for use-mockery since we'll be exporting the actual implementation
