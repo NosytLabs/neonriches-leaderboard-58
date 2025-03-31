@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { MockeryAction } from '@/types/mockery';
+import { MockeryAction } from '@/types/mockery-types';
 import { cn } from '@/lib/utils';
 import { getMockeryActionIcon, getMockeryTierColorClass, getMockeryTier } from '@/utils/mockery';
 
@@ -17,7 +17,7 @@ const MockeryIcon: React.FC<MockeryIconProps> = ({
 }) => {
   const IconComponent = getMockeryActionIcon(action);
   const tier = getMockeryTier(action);
-  const colorClass = getMockeryTierColorClass(tier).split(' ')[0]; // Get just the text color class
+  const colorClass = getMockeryTierColorClass(tier);
   
   return (
     <IconComponent 

@@ -4,11 +4,15 @@ import SimpleLayout from '@/components/layout/SimpleLayout';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Crown, History, Target } from 'lucide-react';
 import PageHeader from '@/components/layout/PageHeader';
+import RoyalMockeryFestival from '@/components/mockery/RoyalMockeryFestival';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import LightweightMockeryPanel from '@/components/mockery/components/LightweightMockeryPanel';
+import { usePageTracking } from '@/hooks/usePageTracking';
 
 const StatusCenter = () => {
   const [activeTab, setActiveTab] = useState('mockery');
+  
+  // Track page view
+  usePageTracking();
   
   return (
     <SimpleLayout>
@@ -32,7 +36,7 @@ const StatusCenter = () => {
           </TabsList>
           
           <TabsContent value="mockery">
-            <LightweightMockeryPanel />
+            <RoyalMockeryFestival />
           </TabsContent>
           
           <TabsContent value="history">

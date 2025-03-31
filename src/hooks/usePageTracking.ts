@@ -5,7 +5,7 @@ import { useLocation } from 'react-router-dom';
 /**
  * Hook to track page views and scroll to top on page change
  */
-const usePageTracking = () => {
+export const usePageTracking = () => {
   const location = useLocation();
   
   useEffect(() => {
