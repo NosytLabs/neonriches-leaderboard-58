@@ -9,9 +9,9 @@ import { LeaderboardUser, TypedLeaderboardFilter } from '@/types/leaderboard';
 
 const PersistentLeaderboard = () => {
   const [filter, setFilter] = useState<TypedLeaderboardFilter>({
-    tier: 'all',
+    tier: null,
     sortBy: 'rank',
-    team: 'all',
+    team: null,
     search: '',
     sortDirection: 'asc'
   });

@@ -24,7 +24,7 @@ import { useNavigate } from 'react-router-dom';
 import { Badge } from '@/components/ui/badge';
 import UserBadge from '@/components/ui/user-badge';
 import { formatCurrency } from '@/utils/formatters';
-import { UserTier } from '@/types/user-consolidated';
+import { UserTier, TeamColor } from '@/types/user-consolidated';
 
 interface UserMenuProps {
   // Add any props as needed
@@ -63,8 +63,19 @@ const UserMenu: React.FC<UserMenuProps> = () => {
       'platinum', 'diamond', 'bronze', 'vip'
     ];
     
+    // Check if user.tier is a valid UserTier
+    if (user.tier && validTiers.includes(user.tier as UserTier)) {
+      return user.tier;
+    }
+    
     // Default to 'free' if the tier isn't valid
-    return validTiers.includes(user.tier) ? user.tier : 'free';
+    return 'free';
+  };
+
+  // Handle team value safely for team badge
+  const getTeamForBadge = (): string => {
+    if (!user.team) return 'neutral';
+    return String(user.team);
   };
 
   return (
@@ -109,7 +120,7 @@ const UserMenu: React.FC<UserMenuProps> = () => {
             <span>Profile</span>
           </div>
           {user.team && (
-            <UserBadge type="team" value={(user.team as string)} size="sm" showLabel={false} />
+            <UserBadge type="team" value={getTeamForBadge()} size="sm" showLabel={false} />
           )}
         </DropdownMenuItem>
         <DropdownMenuItem

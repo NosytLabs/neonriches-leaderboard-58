@@ -8,7 +8,7 @@ export type TeamColor =
 
 export type TeamType = 'red' | 'blue' | 'green' | 'gold' | 'purple' | 'none' | 'neutral';
 
-// Define user tiers - add 'basic' and 'noble' to fix errors
+// Define user tiers - add 'noble' and all other needed values
 export type UserTier = 
   | 'free'
   | 'basic'
@@ -34,7 +34,8 @@ export type UserTier =
   | 'platinum'
   | 'diamond'
   | 'bronze'
-  | 'vip';
+  | 'vip'
+  | 'all'; // Add 'all' as a valid filter value
 
 // Define gender type
 export type Gender = 'king' | 'queen' | 'neutral' | 'jester' | 'noble' | 'male' | 'female';
@@ -106,6 +107,8 @@ export interface CertificateNFT {
   dateIssued?: string;
   type?: string;
   isVerified?: boolean;
+  isMinted?: boolean; // Added for certificate repository
+  createdAt?: string; // Added for certificate repository
 }
 
 // Define the user profile properties
@@ -119,6 +122,7 @@ export interface UserProfile {
   joinedDate?: string;
   joinedAt?: string; // Added for components that use this
   joinDate?: string; // Added for backward compatibility
+  createdAt?: string; // Added for profile data
   rank?: number;
   amountSpent?: number;
   totalSpent?: number;
@@ -154,6 +158,7 @@ export interface UserProfile {
   // Add rankChange and spendChange for components that use them
   rankChange?: number;
   spendChange?: number;
+  isProtected?: boolean; // Added for LeaderboardItem
 }
 
 // Legacy User interface for backward compatibility

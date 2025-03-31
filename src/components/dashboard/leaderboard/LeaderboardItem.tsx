@@ -36,6 +36,8 @@ const LeaderboardItem: React.FC<LeaderboardItemProps> = ({
     return <span className="text-gray-500 text-xs">-</span>;
   };
   
+  const safeTeamColor = asTeamColor(userData.team);
+  
   return (
     <div className={`relative flex items-center justify-between p-3 mb-2 rounded-lg 
       ${userData.id === currentUserId ? 'bg-white/10' : 'bg-white/5 hover:bg-white/10'} 
@@ -51,7 +53,7 @@ const LeaderboardItem: React.FC<LeaderboardItemProps> = ({
       <div className="flex-1 flex items-center" onClick={() => onProfileClick(userData.id)}>
         <Avatar className="h-10 w-10 mr-3">
           <AvatarImage src={userData.profileImage || userData.avatarUrl} />
-          <AvatarFallback className={`bg-${asTeamColor(userData.team)}-900/30`}>
+          <AvatarFallback className={`bg-${safeTeamColor}-900/30`}>
             {userData.username.substring(0, 2).toUpperCase()}
           </AvatarFallback>
         </Avatar>
@@ -86,7 +88,7 @@ const LeaderboardItem: React.FC<LeaderboardItemProps> = ({
       {/* Team indicator */}
       {userData.team && (
         <div 
-          className={`absolute top-0 right-0 h-1 w-1/4 rounded-tr-lg bg-${asTeamColor(userData.team)}-500/50`}
+          className={`absolute top-0 right-0 h-1 w-1/4 rounded-tr-lg bg-${safeTeamColor}-500/50`}
         />
       )}
     </div>

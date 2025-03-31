@@ -3,12 +3,12 @@ import React, { useState } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { ScrollText, Megaphone, BarChart3, Users, Link } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useAuth } from '@/contexts';
+import { useAuth } from '@/hooks/useAuth'; // Updated import
 import { useFeatureAccess } from '@/hooks/use-feature-access';
 import MarketingFeatureShop from './MarketingFeatureShop';
 import MarketingEvents from './MarketingEvents';
 import ProfileBillboardGuide from './ProfileBillboardGuide';
-import { MarketingEvent } from '@/types/marketing';
+import { MarketingEvent } from '@/types/marketing'; // Importing from new type file
 
 const MarketingHub: React.FC = () => {
   const { user } = useAuth();

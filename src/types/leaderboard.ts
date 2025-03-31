@@ -24,6 +24,8 @@ export interface LeaderboardUser {
   spendChange?: number;  // Added for components that need it
   rankChange?: number;   // Added for components that need it
   isProtected?: boolean; // Added for components that need it
+  userId?: string;       // Added for Events.tsx
+  joinDate?: string;     // Added for Events.tsx
 }
 
 /**
@@ -35,13 +37,15 @@ export type SortByOptions = 'rank' | 'spent' | 'change' | 'streak';
  * Filter for typed leaderboard queries
  */
 export interface TypedLeaderboardFilter {
-  team?: TeamColor | null;
-  tier?: UserTier | null;
+  team?: TeamColor | string | null;
+  tier?: UserTier | string | null;
   minSpent?: number;
   maxSpent?: number;
   minRank?: number;
   maxRank?: number;
   search?: string;
+  sortBy?: string;
+  sortDirection?: 'asc' | 'desc';
 }
 
 /**
@@ -49,5 +53,24 @@ export interface TypedLeaderboardFilter {
  */
 export type LeaderboardTab = 'all' | 'team' | 'friends' | 'events';
 
-// This prevents TS error with multiple exports
-export {};
+/**
+ * Leaderboard filter interface
+ */
+export interface LeaderboardFilter {
+  team?: string;
+  tier?: string;
+  timeFrame?: 'all' | 'day' | 'week' | 'month' | 'year';
+  search?: string;
+  sort?: string;
+}
+
+/**
+ * Sort options for the leaderboard
+ */
+export interface SortByOption {
+  value: string;
+  label: string;
+}
+
+// Export types to avoid conflicts
+export { LeaderboardUser, LeaderboardFilter };
