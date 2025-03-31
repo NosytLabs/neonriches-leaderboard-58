@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { MockeryAction } from '@/types/mockery';
+import { MockeryAction, ExtendedMockeryAction } from '@/types/mockery-types';
 import { 
   getMockeryActionIcon,
   getMockeryActionPrice,
@@ -10,19 +10,26 @@ import {
   getMockeryActionTitle,
   getMockeryActionDescription
 } from '@/utils/mockery';
+import type { LucideIcon } from 'lucide-react';
 
 /**
  * Render the appropriate icon for a mockery action
  */
-export const renderMockeryIcon = (iconName: string, className: string = "h-4 w-4") => {
-  // In a full implementation, this would retrieve and render the appropriate icon component
-  return <span className={className}>{iconName}</span>;
+export const renderMockeryIcon = (iconName: string | LucideIcon, className: string = "h-4 w-4") => {
+  if (typeof iconName === 'string') {
+    // In a full implementation, this would retrieve and render the appropriate icon component
+    return <span className={className}>{iconName}</span>;
+  }
+  
+  // If iconName is already a component, render it
+  const IconComponent = iconName;
+  return <IconComponent className={className} />;
 };
 
 /**
  * Get the appropriate icon component for a mockery action
  */
-export const getMockeryActionIconComponent = (action: MockeryAction, className: string = "h-4 w-4") => {
+export const getMockeryActionIconComponent = (action: MockeryAction | ExtendedMockeryAction, className: string = "h-4 w-4") => {
   // Get the icon component from mockery-icons
   const IconComponent = getMockeryActionIcon(action);
   // Then render the component with the provided class

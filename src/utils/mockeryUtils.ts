@@ -1,5 +1,5 @@
 
-// Re-export mockery utility functions from the organized structure
+// Re-export from the new organized structure
 import {
   getMockeryActionTitle,
   getMockeryActionDescription,
@@ -7,15 +7,46 @@ import {
   getMockeryActionIcon,
   getMockeryTier,
   getMockeryTierColorClass,
-  getActiveMockeryClass
+  getActiveMockeryClass,
+  getDiscountedShamePrice,
+  getShameActionPrice,
+  getShameActionMessage,
+  getMockeryEffectClass,
+  getMockeryEffectDuration
 } from './mockery';
 
+// Re-export types
+import type { 
+  MockeryAction, 
+  ExtendedMockeryAction, 
+  MockeryTier, 
+  ShameAction 
+} from '@/types/mockery-types';
+
+export type { 
+  MockeryAction, 
+  ExtendedMockeryAction, 
+  MockeryTier, 
+  ShameAction 
+};
+
+// Backward compatibility re-exports
+export const getMockeryName = getMockeryActionTitle;
+export const getMockeryDescription = getMockeryActionDescription;
+export const getMockeryCost = getMockeryActionPrice;
+
+// Re-export all other functions
 export {
-  getMockeryActionTitle as getMockeryName,
-  getMockeryActionDescription as getMockeryDescription,
-  getMockeryActionPrice as getMockeryCost,
+  getMockeryActionTitle,
+  getMockeryActionDescription,
+  getMockeryActionPrice,
   getMockeryActionIcon,
   getMockeryTier,
   getMockeryTierColorClass,
-  getActiveMockeryClass
+  getActiveMockeryClass,
+  getDiscountedShamePrice,
+  getShameActionPrice,
+  getShameActionMessage,
+  getMockeryEffectClass,
+  getMockeryEffectDuration
 };

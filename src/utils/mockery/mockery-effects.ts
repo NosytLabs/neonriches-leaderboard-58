@@ -1,47 +1,36 @@
 
-import { MockeryAction } from '@/types/mockery';
+import { MockeryAction, ExtendedMockeryAction } from '@/types/mockery-types';
 
-// Define mockery effects (animations, visuals, etc.)
-export const getMockeryEffectClass = (action: MockeryAction): string => {
+// Get CSS class for mockery effect
+export const getMockeryEffectClass = (action: MockeryAction | ExtendedMockeryAction): string => {
   const effectClasses: Record<string, string> = {
     tomatoes: 'shame-effect-tomatoes',
     eggs: 'shame-effect-eggs',
-    shame: 'shame-effect-bell',
-    dungeons: 'shame-effect-dungeon',
+    putridEggs: 'shame-effect-putrid-eggs',
+    dungeons: 'shame-effect-dungeons',
     stocks: 'shame-effect-stocks',
-    crown: 'shame-effect-crown',
-    troll: 'shame-effect-troll',
-    rat: 'shame-effect-rat',
-    ghost: 'shame-effect-ghost',
-    zombie: 'shame-effect-zombie',
-    witch: 'shame-effect-witch',
-    monster: 'shame-effect-monster',
-    dragon: 'shame-effect-dragon',
-    knight: 'shame-effect-knight',
-    target: 'shame-effect-target'
+    dunce: 'shame-effect-dunce',
+    jester: 'shame-effect-jester', 
+    mockery: 'shame-effect-general',
+    protection: 'protection-effect'
   };
-  
-  return effectClasses[action] || 'shame-effect-default';
+
+  return effectClasses[action] || 'shame-effect-general';
 };
 
-export const getMockeryEffectDuration = (action: MockeryAction): number => {
-  const durations: Record<string, number> = {
-    tomatoes: 24,     // hours
-    eggs: 24,
-    shame: 12,
-    dungeons: 48,
-    stocks: 48,
-    immune: 168,      // 7 days
-    crown: 72,
-    troll: 36,
-    dragon: 72,
-    witch: 48
-  };
+// Get duration for mockery effect in hours
+export const getMockeryEffectDuration = (action: MockeryAction | ExtendedMockeryAction): number => {
+  if (action === 'protection') {
+    return 168; // 7 days in hours
+  }
   
-  return durations[action] || 24; // Default 24 hours
-};
-
-export default {
-  getMockeryEffectClass,
-  getMockeryEffectDuration
+  if (['putridEggs', 'courtJester', 'guillotine', 'dragon', 'demon'].includes(action)) {
+    return 36; // 1.5 days
+  }
+  
+  if (['dungeons', 'immune', 'humiliate', 'expose', 'removal'].includes(action)) {
+    return 48; // 2 days
+  }
+  
+  return 24; // Default duration: 24 hours
 };

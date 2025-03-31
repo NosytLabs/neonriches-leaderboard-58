@@ -1,13 +1,13 @@
 
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MockeryAction } from '@/types/mockery';
-import { renderMockeryIcon } from '@/utils/mockeryIcons';
-import { getMockeryActionIcon } from '@/utils/mockery/mockery-icons';
+import { MockeryAction, ExtendedMockeryAction } from '@/types/mockery-types';
+import { renderMockeryIcon } from '@/utils/mockeryUtils';
+import { getMockeryActionIcon } from '@/utils/mockery';
 
 interface MockeryEffectProps {
   username: string;
-  action: MockeryAction;
+  action: MockeryAction | ExtendedMockeryAction;
   isActive: boolean;
   onComplete: () => void;
 }
@@ -23,17 +23,19 @@ const MockeryEffect: React.FC<MockeryEffectProps> = ({
   useEffect(() => {
     if (!isActive) return;
     
-    const count = action === 'tomatoes' || action === 'eggs' ? 20 : 10;
+    // Determine count based on action type
+    const count = (action === 'tomatoes' || action === 'eggs') ? 20 : 10;
     const duration = 3000;
     const newElements = [];
     
+    // Create animation elements
     for (let i = 0; i < count; i++) {
       const delay = Math.random() * 1000;
       const xPosition = Math.random() * 100;
       const rotation = Math.random() * 360;
       const scale = 0.5 + Math.random() * 1;
       
-      const iconName = getMockeryActionIcon(action);
+      const IconComponent = getMockeryActionIcon(action);
       
       newElements.push(
         <motion.div
@@ -57,7 +59,7 @@ const MockeryEffect: React.FC<MockeryEffectProps> = ({
           }}
           className="fixed z-50 text-4xl pointer-events-none"
         >
-          {renderMockeryIcon(iconName, "h-12 w-12")}
+          <IconComponent className="h-12 w-12" />
         </motion.div>
       );
     }
@@ -104,4 +106,4 @@ const MockeryEffect: React.FC<MockeryEffectProps> = ({
   );
 };
 
-export default MockeryEffect;
+export default React.memo(MockeryEffect);

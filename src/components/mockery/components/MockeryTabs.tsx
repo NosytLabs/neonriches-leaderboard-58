@@ -3,7 +3,7 @@ import React from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Target, Shield, Crown, Info } from 'lucide-react';
 import { User } from '@/types/user';
-import { MockeryAction, MockedUser } from '@/types/mockery';
+import { MockeryAction, MockedUser } from '@/types/mockery-types';
 import MockeryTabContent from './MockeryTabContent';
 import MockeryProtectionCard from './MockeryProtectionCard';
 import HallOfShame from './HallOfShame';
@@ -84,7 +84,7 @@ const MockeryTabs: React.FC<MockeryTabsProps> = ({
       </TabsContent>
       
       <TabsContent value="hall" className="mt-4">
-        <HallOfShame mockedUsers={mockedUsers} />
+        <HallOfShame mockedUsers={mockedUsers.slice(0)} />
       </TabsContent>
       
       <TabsContent value="howto" className="mt-4">

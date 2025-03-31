@@ -1,44 +1,73 @@
 
-import { MockeryAction } from '@/types/mockery';
 import { 
-  Target, Egg, Crown, Castle, Shield, 
-  UserCog, UserMinus, Rat, Ghost, Skull, 
-  Zap, Flame, Sword, User, Info
+  Target, 
+  Bell, 
+  Shield, 
+  Crown, 
+  AlertCircle, 
+  ThumbsDown, 
+  Skull, 
+  Ghost, 
+  Bomb, 
+  Feather, 
+  Rat, 
+  UserX, 
+  Zap, 
+  Dragon,
+  Dices,
+  Flame
 } from 'lucide-react';
+import { MockeryAction, ExtendedMockeryAction } from '@/types/mockery-types';
 import type { LucideIcon } from 'lucide-react';
 
-export const getMockeryActionIcon = (action: MockeryAction): LucideIcon => {
-  const icons: Record<string, LucideIcon> = {
+// Get the appropriate icon component for a mockery action
+export const getMockeryActionIcon = (action: MockeryAction | ExtendedMockeryAction): LucideIcon => {
+  const iconMap: Record<string, LucideIcon> = {
     tomatoes: Target,
-    eggs: Egg,
-    shame: UserMinus,
-    dungeons: Castle,
+    eggs: Target,
+    putridEggs: Target,
+    dungeons: UserX,
     immune: Shield,
     crown: Crown,
-    stocks: Castle,
-    dunce: Info,
-    jester: UserCog,
-    troll: UserMinus,
-    peasant: UserMinus,
+    stocks: AlertCircle,
+    dunce: AlertCircle,
+    jester: Feather,
+    courtJester: Feather,
+    jest: Dices,
+    troll: ThumbsDown,
+    peasant: ThumbsDown,
     rat: Rat,
     ghost: Ghost,
     skeleton: Skull,
-    zombie: Zap,
+    zombie: Skull,
     witch: Flame,
-    monster: Flame,
+    monster: Dragon,
     demon: Flame,
-    dragon: Flame,
+    dragon: Dragon,
     king: Crown,
     queen: Crown,
-    knight: Sword,
-    bishop: UserCog,
-    rook: Castle,
-    pawn: User,
+    knight: Shield,
+    bishop: Crown,
+    rook: Shield,
+    pawn: ThumbsDown,
     target: Target,
-    challenge: Sword
+    challenge: Zap,
+    smokeBomb: Bomb,
+    glitterBomb: Bomb,
+    royalPie: Target,
+    jokeCrown: Crown,
+    memeFrame: AlertCircle,
+    roast: Flame,
+    ridicule: ThumbsDown,
+    humiliate: ThumbsDown,
+    expose: AlertCircle,
+    mock: ThumbsDown,
+    taunt: ThumbsDown,
+    guillotine: Skull,
+    defeat: ThumbsDown,
+    removal: UserX,
+    protection: Shield
   };
-  
-  return icons[action] || Target;
-};
 
-export default getMockeryActionIcon;
+  return iconMap[action] || ThumbsDown;
+};

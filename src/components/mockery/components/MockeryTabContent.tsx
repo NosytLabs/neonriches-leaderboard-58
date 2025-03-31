@@ -5,8 +5,9 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Search } from 'lucide-react';
 import { UserProfile } from '@/types/user';
-import { MockeryAction, MockedUser } from '@/types/mockery';
-import { getMockeryName, getMockeryDescription, getMockeryCost, getMockeryActionIcon } from '@/utils/mockeryUtils';
+import { MockeryAction, MockedUser } from '@/types/mockery-types';
+import { getMockeryName, getMockeryDescription, getMockeryCost, getMockeryActionIcon } from '@/utils/mockery';
+import type { LucideIcon } from 'lucide-react';
 
 interface MockeryTabContentProps {
   user: UserProfile | null;
@@ -36,13 +37,14 @@ const MockeryTabContent: React.FC<MockeryTabContentProps> = ({
   const [targetUsername, setTargetUsername] = useState(targetUser || '');
   const [selectedMockeryAction, setSelectedMockeryAction] = useState<MockeryAction | null>(selectedAction);
   
+  // Allowed mockery actions
   const mockeryActions: MockeryAction[] = [
     'tomatoes',
     'eggs',
     'stocks',
     'dunce',
-    'smokeBomb',
-    'glitterBomb'
+    'jester',
+    'troll'
   ];
   
   const handleSelectAction = (action: MockeryAction) => {
@@ -168,4 +170,4 @@ const MockeryTabContent: React.FC<MockeryTabContentProps> = ({
   );
 };
 
-export default MockeryTabContent;
+export default React.memo(MockeryTabContent);

@@ -1,10 +1,25 @@
 
 import React from 'react';
-import { MockeryAction } from '@/types/mockery';
-import { Target, Shield, Bomb, Crown, AlertCircle, Feather, Skull, ThumbsDown } from 'lucide-react';
+import { MockeryAction, ExtendedMockeryAction } from '@/types/mockery-types';
+import { 
+  Target, 
+  Shield, 
+  Bomb, 
+  Crown, 
+  AlertCircle, 
+  Feather, 
+  Skull, 
+  ThumbsDown,
+  Ghost,
+  Rat,
+  Zap,
+  UserX,
+  Flame,
+  Dragon
+} from 'lucide-react';
 
 interface MockeryIconRendererProps {
-  action: MockeryAction;
+  action: MockeryAction | ExtendedMockeryAction;
   size?: number;
   className?: string;
 }
@@ -20,27 +35,60 @@ const MockeryIconRenderer: React.FC<MockeryIconRendererProps> = ({
       case 'tomatoes':
       case 'eggs':
       case 'putridEggs':
+      case 'target':
         return <Target size={size} />;
+      
       case 'stocks':
       case 'dunce':
-      case 'silence':
         return <AlertCircle size={size} />;
+      
+      case 'jester':
       case 'courtJester':
-      case 'jest':
         return <Feather size={size} />;
+      
       case 'smokeBomb':
       case 'glitterBomb':
         return <Bomb size={size} />;
+      
       case 'protection':
       case 'immune':
+      case 'knight':
+      case 'rook':
         return <Shield size={size} />;
+      
       case 'guillotine':
       case 'dungeons':
+      case 'skeleton':
+      case 'zombie':
         return <Skull size={size} />;
+      
       case 'crown':
-      case 'target':
-      case 'challenge':
+      case 'king':
+      case 'queen':
+      case 'bishop':
         return <Crown size={size} />;
+      
+      case 'ghost':
+        return <Ghost size={size} />; 
+      
+      case 'rat':
+        return <Rat size={size} />;
+        
+      case 'challenge':
+        return <Zap size={size} />;
+      
+      case 'removal':
+        return <UserX size={size} />;
+        
+      case 'witch':
+      case 'demon':
+      case 'roast':
+        return <Flame size={size} />;
+        
+      case 'dragon':
+      case 'monster':
+        return <Dragon size={size} />;
+      
       default:
         return <ThumbsDown size={size} />;
     }
@@ -53,4 +101,4 @@ const MockeryIconRenderer: React.FC<MockeryIconRendererProps> = ({
   );
 };
 
-export default MockeryIconRenderer;
+export default React.memo(MockeryIconRenderer);

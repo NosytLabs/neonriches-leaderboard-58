@@ -1,58 +1,15 @@
 
-// Re-export mockery utility functions from the organized structure
-import { getMockeryActionTitle, getMockeryName } from './mockery-names';
-import { getMockeryActionDescription, getMockeryDescription } from './mockery-descriptions';
-import { getMockeryActionPrice, getMockeryCost } from './mockery-costs';
-import { getMockeryActionIcon } from './mockery-icons';
-import { 
-  getMockeryTier, 
-  getMockeryTierColorClass, 
-  getMockeryTierRarity,
-  getActiveMockeryClass 
-} from './mockery-tiers';
-import { 
-  hasWeeklyDiscount, 
-  getWeeklyDiscountedAction, 
-  getDiscountedShamePrice,
-  getShameActionPrice,
-  getShameActionMessage 
-} from './shame-discount-utils';
-import {
-  getMockeryEffectClass,
-  getMockeryEffectDuration
-} from './mockery-effects';
+// Re-export all mockery utility functions from the organized structure
+export * from './mockery-names';
+export * from './mockery-descriptions';
+export * from './mockery-costs';
+export * from './mockery-icons';
+export * from './mockery-tiers';
+export * from './mockery-effects';
+export * from './shame-discount-utils';
 
-// Export everything for backward compatibility
-export {
-  // Names and titles
-  getMockeryActionTitle,
-  getMockeryName,
-  
-  // Descriptions
-  getMockeryActionDescription,
-  getMockeryDescription,
-  
-  // Costs and prices
-  getMockeryActionPrice,
-  getMockeryCost,
-  
-  // Icons
-  getMockeryActionIcon,
-  
-  // Tiers and classes
-  getMockeryTier,
-  getMockeryTierColorClass,
-  getMockeryTierRarity,
-  getActiveMockeryClass,
-  
-  // Effects and durations
-  getMockeryEffectClass,
-  getMockeryEffectDuration,
-  
-  // Shame and discount utilities
-  hasWeeklyDiscount,
-  getWeeklyDiscountedAction,
-  getDiscountedShamePrice,
-  getShameActionPrice,
-  getShameActionMessage
-};
+// Import types
+import { MockeryAction, ExtendedMockeryAction, MockeryTier, ShameAction } from '@/types/mockery-types';
+
+// Re-export types
+export type { MockeryAction, ExtendedMockeryAction, MockeryTier, ShameAction };
