@@ -1,5 +1,5 @@
 
-import { MockeryAction, MockeryTier } from '@/types/mockery-types';
+import { MockeryAction, MockeryTier } from '@/types/mockery';
 
 // Get color class for a mockery tier
 export const getMockeryTierColorClass = (tier: MockeryTier): string => {
@@ -60,7 +60,8 @@ export const getActiveMockeryClass = (action: MockeryAction): string => {
     guillotine: 'mockery-guillotine',
     defeat: 'mockery-defeat',
     removal: 'mockery-removal',
-    dungeons: 'mockery-dungeons'
+    dungeons: 'mockery-dungeons',
+    fool: 'mockery-fool'
   };
   
   return mockeryClasses[action] || 'mockery-default';

@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Scroll, DollarSign, Sparkles } from 'lucide-react';
 import { topUsers } from './data';
 import useShameEffect from './hooks/useShameEffect';
-import { MockeryAction } from '@/types/mockery-types';
+import { ShameAction } from '@/types/mockery';
 import ShameUserCard from './components/ShameUserCard';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import RankingDisclaimer from '@/components/shared/RankingDisclaimer';
@@ -28,8 +28,23 @@ const formatUserForShameCard = (user: any) => ({
   amountSpent: user.amountSpent
 });
 
-const PublicShamingDescription = () => {
+// Update the weekly discounted action to ensure it's a valid ShameAction
+const getWeeklyDiscountedShameAction = (): ShameAction => {
+  // Filter to make sure we return a valid ShameAction type
   const discountedAction = getWeeklyDiscountedAction();
+  // Ensure it's a valid ShameAction
+  return (discountedAction === 'tomatoes' || 
+          discountedAction === 'eggs' || 
+          discountedAction === 'stocks' || 
+          discountedAction === 'shame' || 
+          discountedAction === 'crown' || 
+          discountedAction === 'jester') 
+        ? discountedAction as ShameAction 
+        : 'tomatoes';
+};
+
+const PublicShamingDescription = () => {
+  const discountedAction = getWeeklyDiscountedShameAction();
   const regularPrice = getShameActionPrice(discountedAction);
   const discountedPrice = getDiscountedShamePrice(discountedAction);
   const discountPercentage = Math.round((1 - (discountedPrice / regularPrice)) * 100);
@@ -65,11 +80,11 @@ const PublicShamingFestival = () => {
   const { shameCooldown, shameEffects, shameCount, getShameCount, handleShame, getActiveMockery } = useShameEffect();
   const [showModal, setShowModal] = React.useState(false);
   const [selectedUser, setSelectedUser] = React.useState<any>(null);
-  const [selectedAction, setSelectedAction] = React.useState<MockeryAction>('tomatoes');
+  const [selectedAction, setSelectedAction] = React.useState<ShameAction>('tomatoes');
   
-  const discountedAction = getWeeklyDiscountedAction();
+  const discountedAction = getWeeklyDiscountedShameAction();
   
-  const handleShameUser = (userId: number, action: MockeryAction) => {
+  const handleShameUser = (userId: number, action: ShameAction) => {
     const user = topUsers.find(u => u.id === userId);
     if (!user) return false;
     
@@ -97,9 +112,16 @@ const PublicShamingFestival = () => {
     setShowModal(false);
   };
 
-  const getActiveMockeryWrapper = (userId: number) => {
+  const getActiveShameEffect = (userId: number) => {
     const mockeryInfo = getActiveMockery(userId);
-    return mockeryInfo;
+    if (mockeryInfo) {
+      // Ensure we return a valid ShameAction
+      const validShameActions: ShameAction[] = ['tomatoes', 'eggs', 'stocks', 'shame', 'crown', 'jester'];
+      if (validShameActions.includes(mockeryInfo.type as any)) {
+        return mockeryInfo;
+      }
+    }
+    return null;
   };
 
   return (
@@ -203,7 +225,7 @@ const PublicShamingFestival = () => {
             >
               <ShameUserCard
                 user={formatUserForShameCard(targetUser)}
-                isShamed={shameEffects[targetUser.id] || null}
+                isShamed={getActiveShameEffect(targetUser.id) || null}
                 isOnCooldown={!!shameCooldown[targetUser.id]}
                 shameCount={getShameCount(targetUser.id)}
                 onShame={handleShameUser}

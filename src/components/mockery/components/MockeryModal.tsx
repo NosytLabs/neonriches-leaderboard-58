@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { MockeryAction, MockeryTier } from '@/types/mockery';
-import { getMockeryActionIcon, getMockeryTier, getMockeryActionTitle, getMockeryActionDescription, getMockeryActionPrice } from '@/components/mockery/utils/mockeryUtils';
+import { getMockeryActionIcon, getMockeryTier, getMockeryActionTitle, getMockeryActionDescription, getMockeryActionPrice } from '@/utils/mockery';
 
 interface MockeryModalProps {
   isOpen: boolean;
@@ -36,15 +36,15 @@ const MockeryModal: React.FC<MockeryModalProps> = ({
   // Helper function to get tier color
   const getTierColor = (actionName: MockeryAction) => {
     const tier = getMockeryTier(actionName);
-    const colorObj = {
+    const colorObj: Record<string, string> = {
       legendary: 'text-royal-gold',
       epic: 'text-purple-400',
       rare: 'text-blue-400',
       uncommon: 'text-green-400',
       common: 'text-gray-300'
-    }[tier];
+    };
     
-    return colorObj || 'text-gray-300';
+    return colorObj[tier] || 'text-gray-300';
   };
   
   const ActionIcon = getMockeryActionIcon(action);

@@ -1,85 +1,81 @@
 
-import { MockeryAction, MockeryTier } from '@/types/mockery-types';
+import { MockeryAction, MockeryTier } from '@/types/mockery';
 
-// Get the duration for a mockery effect in hours
-export const getMockeryEffectDuration = (action: MockeryAction): number => {
-  const durations: Record<string, number> = {
-    tomatoes: 24,
-    eggs: 24,
-    putridEggs: 36,
-    dungeons: 48,
-    immune: 48,
-    crown: 24,
-    stocks: 24,
-    dunce: 24,
-    jester: 24,
-    courtJester: 36,
-    jest: 24,
-    troll: 24,
-    peasant: 24,
-    rat: 24,
-    ghost: 24,
-    skeleton: 24,
-    zombie: 24,
-    witch: 24,
-    monster: 24,
-    demon: 36,
-    dragon: 36,
-    king: 24,
-    queen: 24,
-    knight: 24,
-    bishop: 24,
-    rook: 24,
-    pawn: 24,
-    target: 24,
-    challenge: 24,
-    smokeBomb: 24,
-    glitterBomb: 24,
-    royalPie: 24,
-    jokeCrown: 24,
-    memeFrame: 24,
-    roast: 24,
-    ridicule: 24,
-    humiliate: 48,
-    expose: 48,
-    mock: 24,
-    taunt: 24,
-    guillotine: 36,
-    defeat: 24,
-    removal: 48,
-    protection: 168, // 7 days
-    silence: 24,
-    shame: 24
-  };
-
-  return durations[action] || 24;
+// Base duration in hours for different mockery actions
+const BASE_DURATIONS: Record<MockeryAction, number> = {
+  tomatoes: 24,
+  eggs: 24,
+  stocks: 48,
+  crown: 72,
+  dragon: 168,
+  demon: 120,
+  dunce: 24,
+  jester: 48,
+  troll: 36,
+  peasant: 24,
+  rat: 24,
+  skeleton: 48,
+  zombie: 48,
+  witch: 72,
+  monster: 72,
+  knight: 48,
+  bishop: 48,
+  rook: 48,
+  pawn: 24,
+  king: 96,
+  queen: 96,
+  ghost: 48,
+  target: 24,
+  challenge: 72,
+  immune: 168,
+  shame: 24,
+  protection: 168,
+  putridEggs: 36,
+  silence: 72,
+  courtJester: 72,
+  jest: 48,
+  smokeBomb: 48,
+  glitterBomb: 48,
+  royalPie: 36,
+  jokeCrown: 72,
+  memeFrame: 48,
+  roast: 24,
+  ridicule: 48,
+  humiliate: 72,
+  expose: 96,
+  mock: 24,
+  taunt: 36,
+  guillotine: 96,
+  defeat: 72,
+  removal: 168,
+  dungeons: 120,
+  fool: 24
 };
 
-// Get the duration multiplier based on tier
+// Tier multipliers for duration
+const TIER_MULTIPLIERS: Record<MockeryTier, number> = {
+  basic: 1,
+  premium: 1.5,
+  royal: 2,
+  legendary: 3,
+  rare: 1.25,
+  epic: 2,
+  common: 1,
+  uncommon: 1.25,
+  silver: 1.5,
+  bronze: 1
+};
+
+// Get duration multiplier based on tier
 export const getTierDurationMultiplier = (tier: MockeryTier): number => {
-  const multipliers: Record<string, number> = {
-    basic: 1,
-    premium: 1.5,
-    royal: 2,
-    legendary: 3,
-    rare: 1.25,
-    epic: 1.75,
-    common: 1,
-    uncommon: 1.25,
-    silver: 1,
-    bronze: 1
-  };
-  
-  return multipliers[tier] || 1;
+  return TIER_MULTIPLIERS[tier] || 1;
 };
 
-// Combined function to get total duration
-export const getMockeryDuration = (action: MockeryAction, tier: MockeryTier): number => {
-  const baseDuration = getMockeryEffectDuration(action);
+// Get duration in hours for a mockery action
+export const getMockeryDuration = (action: MockeryAction, tier?: MockeryTier): number => {
+  const baseDuration = BASE_DURATIONS[action] || 24;
+  if (!tier) tier = 'basic';
   const multiplier = getTierDurationMultiplier(tier);
   
   return Math.round(baseDuration * multiplier);
 };
-
-// Export an alias with the name expected by other components
-export const getMockeryActionDuration = getMockeryDuration;

@@ -64,8 +64,14 @@ export type MockeryAction =
   | 'removal'
   | 'fool';
 
-// Simplified subset for shame actions using actual MockeryAction
-export type ShameAction = MockeryAction; 
+// Define ShameAction as a subset of MockeryAction
+export type ShameAction = 
+  | 'tomatoes'
+  | 'eggs'
+  | 'shame'
+  | 'stocks'
+  | 'crown'
+  | 'jester';
 
 // Alias for backward compatibility
 export type MockeryActionType = MockeryAction;
@@ -118,13 +124,9 @@ export interface MockedUser {
 // Alias type for backward compatibility
 export type MockUser = MockedUser;
 
-export interface ShameAction {
-  type: MockeryAction;
-  name: string;
-  description: string;
-  icon: LucideIcon;
-  price: number;
-  tier: MockeryTier;
+export interface ShameEffectData {
+  type: ShameAction;
+  timestamp: string;
 }
 
 export interface UseMockery {
@@ -146,16 +148,10 @@ export interface UseMockery {
 }
 
 export interface UseShameEffectReturn {
-  handleShame: (userId: number, username: string, type: MockeryAction, amount?: number) => boolean;
+  handleShame: (userId: number, username: string, type: ShameAction, amount?: number) => boolean;
   getShameCount: (userId: number) => number;
-  getActiveMockery: (userId: number) => {
-    type: MockeryAction;
-    timestamp: string;
-  } | null;
-  shameEffects: Record<number, {
-    type: MockeryAction;
-    timestamp: string;
-  }>;
+  getActiveMockery: (userId: number) => ShameEffectData | null;
+  shameEffects: Record<number, ShameEffectData>;
   shameCooldown: Record<number, boolean>;
   shameCount: Record<number, number>;
   isMocking: boolean;

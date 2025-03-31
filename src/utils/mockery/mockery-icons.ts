@@ -1,5 +1,5 @@
 
-import { MockeryAction, MockeryTier } from '@/types/mockery-types';
+import { MockeryAction, MockeryTier } from '@/types/mockery';
 import type { LucideIcon } from 'lucide-react';
 import {
   AlertCircle, ShieldAlert, User, Crown, 
@@ -12,10 +12,31 @@ import {
 } from 'lucide-react';
 import React from 'react';
 
+// Custom tomato icon since Lucide doesn't have one
+export const TomatoIcon: React.FC<{ className?: string; size?: number }> = ({ className = "", size = 24 }) => (
+  <svg 
+    xmlns="http://www.w3.org/2000/svg" 
+    viewBox="0 0 24 24" 
+    width={size} 
+    height={size} 
+    fill="none" 
+    stroke="currentColor" 
+    strokeWidth="2" 
+    strokeLinecap="round" 
+    strokeLinejoin="round" 
+    className={className}
+  >
+    <circle cx="12" cy="14" r="8" />
+    <path d="M12 6v4" />
+    <path d="M8 4l2 2" />
+    <path d="M16 4l-2 2" />
+  </svg>
+);
+
 // Get the appropriate icon for a mockery action
-export const getMockeryActionIcon = (action: MockeryAction): LucideIcon => {
+export const getMockeryIcon = (action: MockeryAction): LucideIcon => {
   const icons: Record<string, LucideIcon> = {
-    tomatoes: ThumbsDown,
+    tomatoes: TomatoIcon,
     eggs: Egg,
     putridEggs: ShieldAlert,
     dungeons: UserX,
@@ -68,7 +89,7 @@ export const getMockeryActionIcon = (action: MockeryAction): LucideIcon => {
 };
 
 // Get the color for a mockery action icon
-export const getMockeryActionIconColor = (action: MockeryAction): string => {
+export const getMockeryIconColor = (action: MockeryAction): string => {
   const colorClasses: Record<string, string> = {
     tomatoes: 'text-red-500',
     eggs: 'text-yellow-500',
@@ -87,10 +108,14 @@ export const getMockeryActionIconColor = (action: MockeryAction): string => {
     royalPie: 'text-white',
     protection: 'text-green-400',
     defeat: 'text-red-600',
-    taunt: 'text-orange-500'
+    taunt: 'text-orange-500',
+    fool: 'text-purple-300'
   };
 
-  // Default based on tier
+  // Get the tier to use for default coloring
+  const tier = getMockeryTier(action);
+
+  // Default tier-based colors
   const tierColors: Record<MockeryTier, string> = {
     basic: 'text-gray-400',
     common: 'text-gray-300',
@@ -105,16 +130,14 @@ export const getMockeryActionIconColor = (action: MockeryAction): string => {
   };
 
   // Return specific color or tier-based color  
-  return colorClasses[action] || tierColors[getMockeryTier(action)] || 'text-gray-400';
+  return colorClasses[action] || tierColors[tier] || 'text-gray-400';
 };
 
-// React component for mockery action icons
-export const getMockeryActionIconComponent = (action: MockeryAction): React.ReactNode => {
-  const Icon = getMockeryActionIcon(action);
-  return React.createElement(Icon, { className: "h-4 w-4" });
-};
+// Import mockery tier function for convenience
+import { getMockeryTier } from './mockery-actions';
 
-// Import mockery tier for convenience
-import { getMockeryTier } from './mockery-tiers';
+// Create aliased exports for backward compatibility
+export const getMockeryActionIcon = getMockeryIcon;
+export const getMockeryActionIconColor = getMockeryIconColor;
 
-export default getMockeryActionIcon;
+export default getMockeryIcon;

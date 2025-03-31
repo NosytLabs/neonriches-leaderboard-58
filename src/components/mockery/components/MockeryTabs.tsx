@@ -1,18 +1,16 @@
 
 import React from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Target, Shield, Crown, Info } from 'lucide-react';
-import { User } from '@/types/user';
-import { MockeryAction, MockedUser } from '@/types/mockery-types';
+import { UserProfile } from '@/types/user';
+import { MockeryAction, MockedUser } from '@/types/mockery';
 import MockeryTabContent from './MockeryTabContent';
-import MockeryProtectionCard from './MockeryProtectionCard';
-import HallOfShame from './HallOfShame';
-import MockeryHowToGuide from './MockeryHowToGuide';
+import MockeryHistory from './MockeryHistory';
+import MockeryProtection from './MockeryProtection';
 
 interface MockeryTabsProps {
   activeTab: string;
-  setActiveTab: (tab: string) => void;
-  user: User | null;
+  setActiveTab: (value: string) => void;
+  user: UserProfile | null;
   targetUser: string;
   selectedAction: MockeryAction | null;
   onSelectAction: (action: MockeryAction) => boolean;
@@ -20,7 +18,7 @@ interface MockeryTabsProps {
   getUserMockeryCount: (username: string) => number;
   getUserMockedOthersCount: (username: string) => number;
   isUserProtected: (username: string) => boolean;
-  getActiveMockery: (username: string) => MockeryAction;
+  getActiveMockery: (username: string) => MockeryAction | null;
   onMockery: (username: string, action: string, amount: number) => boolean;
   onPurchaseProtection: () => void;
 }
@@ -41,28 +39,21 @@ const MockeryTabs: React.FC<MockeryTabsProps> = ({
   onPurchaseProtection
 }) => {
   return (
-    <Tabs defaultValue="mockery" value={activeTab} onValueChange={setActiveTab}>
-      <TabsList className="glass-morphism border-white/10 grid grid-cols-4">
-        <TabsTrigger value="mockery" className="flex items-center gap-2">
-          <Target size={16} />
-          <span>Mock Others</span>
+    <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+      <TabsList className="grid grid-cols-3 mb-6">
+        <TabsTrigger value="mockery" className="data-[state=active]:bg-royal-purple/20">
+          Mockery
         </TabsTrigger>
-        <TabsTrigger value="protection" className="flex items-center gap-2">
-          <Shield size={16} />
-          <span>Protection</span>
+        <TabsTrigger value="history" className="data-[state=active]:bg-royal-purple/20">
+          History
         </TabsTrigger>
-        <TabsTrigger value="hall" className="flex items-center gap-2">
-          <Crown size={16} />
-          <span>Hall of Shame</span>
-        </TabsTrigger>
-        <TabsTrigger value="howto" className="flex items-center gap-2">
-          <Info size={16} />
-          <span>How It Works</span>
+        <TabsTrigger value="protection" className="data-[state=active]:bg-royal-purple/20">
+          Protection
         </TabsTrigger>
       </TabsList>
       
-      <TabsContent value="mockery" className="space-y-4 mt-4">
-        <MockeryTabContent 
+      <TabsContent value="mockery" className="mt-0">
+        <MockeryTabContent
           user={user}
           targetUser={targetUser}
           selectedAction={selectedAction}
@@ -76,22 +67,21 @@ const MockeryTabs: React.FC<MockeryTabsProps> = ({
         />
       </TabsContent>
       
-      <TabsContent value="protection" className="mt-4">
-        <MockeryProtectionCard 
-          isProtected={user ? isUserProtected(user.username) : false}
-          onPurchase={onPurchaseProtection}
+      <TabsContent value="history" className="mt-0">
+        <MockeryHistory 
+          mockedUsers={mockedUsers}
         />
       </TabsContent>
       
-      <TabsContent value="hall" className="mt-4">
-        <HallOfShame mockedUsers={mockedUsers.slice(0)} />
-      </TabsContent>
-      
-      <TabsContent value="howto" className="mt-4">
-        <MockeryHowToGuide />
+      <TabsContent value="protection" className="mt-0">
+        <MockeryProtection 
+          user={user}
+          isProtected={user ? isUserProtected(user.username) : false}
+          onPurchaseProtection={onPurchaseProtection}
+        />
       </TabsContent>
     </Tabs>
   );
 };
 
-export default React.memo(MockeryTabs);
+export default MockeryTabs;

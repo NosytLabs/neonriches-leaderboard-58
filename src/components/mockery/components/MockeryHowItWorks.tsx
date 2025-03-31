@@ -1,21 +1,25 @@
 
 import React from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { getMockeryDescription, getMockeryName, getMockeryCost } from '@/utils/mockeryUtils';
-import { MockeryAction } from '@/types/mockery';
+import { MockeryAction, MockeryTier } from '@/types/mockery';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import MockeryIconRenderer from '../MockeryIconRenderer';
+import { getMockeryActionTitle, getMockeryTier, getMockeryActionDescription, getMockeryActionPrice } from '@/utils/mockery';
 
-const MOCKERY_TYPES: MockeryAction[] = [
+const availableActions: MockeryAction[] = [
   'tomatoes',
   'eggs',
-  'putridEggs',
   'stocks',
   'dunce',
-  'silence',
-  'courtJester',
-  'jest',
-  'smokeBomb',
-  'glitterBomb'
+  'jester',
+  'troll',
+  'peasant',
+  'rat',
+  'ghost',
+  'skeleton',
+  'zombie',
+  'witch',
+  'monster',
+  'dragon'
 ];
 
 const MockeryHowItWorks: React.FC = () => {
@@ -23,46 +27,35 @@ const MockeryHowItWorks: React.FC = () => {
     <Card className="glass-morphism border-white/10">
       <CardHeader>
         <CardTitle>How Mockery Works</CardTitle>
-        <CardDescription>
-          Learn how to shame, ridicule, and humiliate your fellow nobles
-        </CardDescription>
       </CardHeader>
-      
-      <CardContent>
-        <ScrollArea className="h-[300px] pr-4">
-          <div className="space-y-4">
-            <p className="text-white/70">
-              Mockery is a way to express your disapproval of other users' spending habits in a fun, satirical way. 
-              Choose from a variety of mockery actions to affect how others appear on the leaderboard.
-            </p>
-            
-            <h3 className="text-lg font-semibold mt-4">Available Mockery Actions</h3>
-            
-            <div className="space-y-3">
-              {MOCKERY_TYPES.map(type => (
-                <div key={type} className="p-3 rounded-md bg-white/5">
-                  <div className="flex justify-between items-center">
-                    <h4 className="font-medium">{getMockeryName(type)}</h4>
-                    <span className="text-royal-gold text-sm">${getMockeryCost(type)}</span>
+      <CardContent className="space-y-4">
+        <div className="text-sm text-white/70">
+          <p>Mockery allows you to apply cosmetic effects to other users, giving their profile a visual "status" that others can see on the leaderboard.</p>
+        </div>
+        
+        <div className="space-y-2">
+          <h3 className="text-sm font-semibold">Available Mockery Actions:</h3>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+            {availableActions.map((action) => {
+              const tier = getMockeryTier(action);
+              
+              return (
+                <div key={action} className="p-2 bg-black/20 rounded flex items-center space-x-2">
+                  <MockeryIconRenderer action={action} size="sm" />
+                  <div>
+                    <p className="text-xs font-medium">{getMockeryActionTitle(action)}</p>
+                    <p className="text-xs text-white/60">${getMockeryActionPrice(action)} - {tier}</p>
                   </div>
-                  <p className="text-sm text-white/70 mt-1">
-                    {getMockeryDescription(type)}
-                  </p>
                 </div>
-              ))}
-            </div>
-            
-            <h3 className="text-lg font-semibold mt-4">Mockery Rules</h3>
-            
-            <ul className="list-disc pl-5 space-y-2 text-white/70">
-              <li>Each mockery action costs money, which is added to the total spend of the person applying it.</li>
-              <li>Mockery effects last for a limited time, depending on the type of mockery.</li>
-              <li>Users can purchase protection to prevent being mocked for a period of time.</li>
-              <li>Mockery is visible to all users on the leaderboard.</li>
-              <li>Users can only have one active mockery effect at a time.</li>
-            </ul>
+              );
+            })}
           </div>
-        </ScrollArea>
+        </div>
+        
+        <div className="text-sm text-white/70 mt-4">
+          <p className="font-semibold">Important Note:</p>
+          <p>All mockery effects are purely cosmetic and do not affect a user's actual rank or standing. These are visual entertainment features only.</p>
+        </div>
       </CardContent>
     </Card>
   );

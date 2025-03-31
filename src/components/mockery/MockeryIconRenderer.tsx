@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { MockeryAction } from '@/types/mockery';
-import { getMockeryIcon, getMockeryIconColor } from '@/utils/mockery/mockery-icons';
+import { getMockeryActionIcon, getMockeryActionIconColor } from '@/utils/mockery';
 import { cn } from '@/lib/utils';
 
 interface MockeryIconRendererProps {
@@ -15,7 +15,7 @@ const MockeryIconRenderer: React.FC<MockeryIconRendererProps> = ({
   size = 'md',
   className
 }) => {
-  const IconComponent = getMockeryIcon(action);
+  const IconComponent = getMockeryActionIcon(action);
   
   const sizeClasses = {
     sm: 'h-4 w-4',
@@ -24,7 +24,7 @@ const MockeryIconRenderer: React.FC<MockeryIconRendererProps> = ({
   };
   
   // Get appropriate color class
-  const colorClass = getMockeryIconColor(action);
+  const colorClass = getMockeryActionIconColor(action);
   
   return (
     <IconComponent className={cn(sizeClasses[size], colorClass, className)} />

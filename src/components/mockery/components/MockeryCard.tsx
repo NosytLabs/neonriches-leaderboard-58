@@ -3,16 +3,16 @@ import React from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { MockeryAction } from '@/types/mockery';
+import { MockeryAction, MockeryTier } from '@/types/mockery';
 import { getMockeryIcon, getMockeryIconColor } from '@/utils/mockery/mockery-icons';
 import { cn } from '@/lib/utils';
-import { getMockeryCost, getMockeryTierColorClass } from '@/utils/mockeryUtils';
+import { getMockeryCost, getMockeryTierColorClass } from '@/utils/mockery';
 
 interface MockeryCardProps {
   action: MockeryAction;
   name: string;
   description: string;
-  tier: string;
+  tier: MockeryTier;
   onClick: (action: MockeryAction) => void;
   disabled?: boolean;
   isSelected?: boolean;
@@ -44,7 +44,7 @@ const MockeryCard: React.FC<MockeryCardProps> = ({
         "overflow-hidden transition-all duration-300",
         isSelected ? "border-primary ring-2 ring-primary/20" : "border-white/10",
         disabled ? "opacity-60" : "hover:border-primary/50 cursor-pointer",
-        getMockeryTierColorClass(tier as any),
+        getMockeryTierColorClass(tier),
         className
       )}
       onClick={handleClick}

@@ -5,9 +5,9 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Search } from 'lucide-react';
 import { UserProfile } from '@/types/user';
-import { MockeryAction, MockedUser } from '@/types/mockery-types';
-import { getMockeryName, getMockeryDescription, getMockeryCost, getMockeryActionIcon } from '@/utils/mockery';
-import type { LucideIcon } from 'lucide-react';
+import { MockeryAction, MockedUser } from '@/types/mockery';
+import { getMockeryName, getMockeryDescription, getMockeryCost } from '@/utils/mockery';
+import { getMockeryActionIcon } from '@/utils/mockery/index';
 
 interface MockeryTabContentProps {
   user: UserProfile | null;
@@ -146,7 +146,7 @@ const MockeryTabContent: React.FC<MockeryTabContentProps> = ({
       {mockedUsers.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
           {mockedUsers.slice(0, 6).map((mockedUser) => (
-            <Card key={mockedUser.userId || mockedUser.username} className="glass-morphism border-white/10 p-3">
+            <Card key={mockedUser.id} className="glass-morphism border-white/10 p-3">
               <div className="flex items-center">
                 <div className="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center">
                   {mockedUser.profileImage ? (

@@ -2,16 +2,16 @@
 import React from 'react';
 import { Dialog } from '@/components/ui/dialog';
 import ShameModal from '@/components/dashboard/leaderboard/ShameModal';
-import { ExtendedMockeryAction } from '@/types/mockery-types';
+import { MockeryAction, ShameAction } from '@/types/mockery';
 import { TeamColor, TeamType } from '@/types/team';
 import { UserProfile } from '@/types/user';
 
 interface ShameModalWrapperProps {
   showModal: boolean;
   selectedUser: UserProfile | null;
-  shameAction: ExtendedMockeryAction;
+  shameAction: ShameAction;
   onOpenChange: (open: boolean) => void;
-  onConfirm: (userId: string, type: ExtendedMockeryAction) => void;
+  onConfirm: (userId: string, type: ShameAction) => void;
 }
 
 const ShameModalWrapper: React.FC<ShameModalWrapperProps> = ({
@@ -43,7 +43,7 @@ const ShameModalWrapper: React.FC<ShameModalWrapperProps> = ({
           tier: selectedUser.tier || 'free',
           spendStreak: selectedUser.spendStreak || 0
         }}
-        shameType={shameAction}
+        shameType={shameAction as ShameAction}
         onConfirm={() => onConfirm(selectedUser.id, shameAction)}
         onCancel={() => onOpenChange(false)}
         hasDiscount={false}

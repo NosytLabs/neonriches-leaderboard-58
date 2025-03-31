@@ -1,9 +1,9 @@
 
-import { MockeryAction, MockeryTier } from '@/types/mockery-types';
+import { MockeryAction, MockeryTier } from '@/types/mockery';
 
 // Get display title for a mockery action
 export const getMockeryActionTitle = (action: MockeryAction): string => {
-  const titles: Record<MockeryAction, string> = {
+  const titles: Record<string, string> = {
     tomatoes: 'Rotten Tomatoes',
     eggs: 'Egg Attack',
     stocks: 'The Stocks',
@@ -49,15 +49,16 @@ export const getMockeryActionTitle = (action: MockeryAction): string => {
     guillotine: 'The Guillotine',
     defeat: 'Royal Defeat',
     removal: 'Royal Removal',
-    dungeons: 'Royal Dungeons'
-  } as Record<MockeryAction, string>;
+    dungeons: 'Royal Dungeons',
+    fool: 'Royal Fool'
+  };
   
   return titles[action] || 'Unknown Mockery';
 };
 
 // Get description for a mockery action
 export const getMockeryActionDescription = (action: MockeryAction): string => {
-  const descriptions: Record<MockeryAction, string> = {
+  const descriptions: Record<string, string> = {
     tomatoes: 'Pelt the user with virtual rotten tomatoes, leaving a messy splatter effect.',
     eggs: 'Throw eggs at the user, displaying a humorous broken egg effect.',
     stocks: 'Lock the user in the public stocks for all to mock.',
@@ -103,15 +104,16 @@ export const getMockeryActionDescription = (action: MockeryAction): string => {
     guillotine: 'Subject the user to a virtual guillotine.',
     defeat: 'Mark the user as royally defeated.',
     removal: 'Remove the user from royal consideration.',
-    dungeons: 'Send the user to the royal dungeons.'
-  } as Record<MockeryAction, string>;
+    dungeons: 'Send the user to the royal dungeons.',
+    fool: 'Make the user look like a royal fool.'
+  };
   
   return descriptions[action] || 'An unknown form of mockery';
 };
 
 // Get the price of a mockery action
 export const getMockeryActionPrice = (action: MockeryAction): number => {
-  const prices: Record<MockeryAction, number> = {
+  const prices: Record<string, number> = {
     tomatoes: 0.25,
     eggs: 0.50,
     stocks: 1.00,
@@ -157,15 +159,16 @@ export const getMockeryActionPrice = (action: MockeryAction): number => {
     guillotine: 3.50,
     defeat: 2.00,
     removal: 5.00,
-    dungeons: 4.00
-  } as Record<MockeryAction, number>;
+    dungeons: 4.00,
+    fool: 0.75
+  };
   
   return prices[action] || 0.25;
 };
 
 // Get the tier of a mockery action
 export const getMockeryTier = (action: MockeryAction): MockeryTier => {
-  const tiers: Record<MockeryAction, MockeryTier> = {
+  const tiers: Record<string, MockeryTier> = {
     tomatoes: 'basic',
     eggs: 'basic',
     stocks: 'premium',
@@ -211,8 +214,9 @@ export const getMockeryTier = (action: MockeryAction): MockeryTier => {
     guillotine: 'royal',
     defeat: 'epic',
     removal: 'legendary',
-    dungeons: 'royal'
-  } as Record<MockeryAction, MockeryTier>;
+    dungeons: 'royal',
+    fool: 'basic'
+  };
   
   return tiers[action] || 'basic';
 };
