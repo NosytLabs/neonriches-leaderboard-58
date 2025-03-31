@@ -6,24 +6,24 @@ export const getMockeryTier = (action: MockeryAction): MockeryTier => {
   const tiers: Record<string, MockeryTier> = {
     tomatoes: 'basic',
     eggs: 'basic',
-    putridEggs: 'premium',
+    putridEggs: 'uncommon',
     dungeons: 'premium',
     immune: 'royal',
-    crown: 'premium',
-    stocks: 'premium',
+    crown: 'rare',
+    stocks: 'basic',
     dunce: 'basic',
-    jester: 'premium',
-    courtJester: 'premium',
-    jest: 'basic',
-    troll: 'basic',
-    peasant: 'basic',
-    rat: 'basic',
-    ghost: 'premium',
-    skeleton: 'premium',
-    zombie: 'premium',
-    witch: 'premium',
-    monster: 'premium',
-    demon: 'royal',
+    jester: 'uncommon',
+    courtJester: 'rare',
+    jest: 'uncommon',
+    troll: 'common',
+    peasant: 'common',
+    rat: 'common',
+    ghost: 'uncommon',
+    skeleton: 'uncommon',
+    zombie: 'rare',
+    witch: 'rare',
+    monster: 'rare',
+    demon: 'epic',
     dragon: 'legendary',
     king: 'royal',
     queen: 'royal',
@@ -33,64 +33,66 @@ export const getMockeryTier = (action: MockeryAction): MockeryTier => {
     pawn: 'basic',
     target: 'basic',
     challenge: 'premium',
-    smokeBomb: 'premium',
-    glitterBomb: 'royal',
-    royalPie: 'basic',
-    jokeCrown: 'premium',
-    memeFrame: 'basic',
-    roast: 'premium',
-    ridicule: 'premium',
-    humiliate: 'royal',
-    expose: 'royal',
+    smokeBomb: 'uncommon',
+    glitterBomb: 'rare',
+    royalPie: 'uncommon',
+    jokeCrown: 'rare',
+    memeFrame: 'uncommon',
+    roast: 'basic',
+    ridicule: 'uncommon',
+    humiliate: 'rare',
+    expose: 'epic',
     mock: 'basic',
     taunt: 'basic',
     guillotine: 'legendary',
-    defeat: 'premium',
+    defeat: 'epic',
     removal: 'legendary',
     protection: 'royal',
-    silence: 'premium',
+    silence: 'rare',
     shame: 'basic'
   };
 
   return tiers[action] || 'basic';
 };
 
-// Get the color class for a mockery tier
+// Get the CSS class for a mockery tier
 export const getMockeryTierColorClass = (tier: MockeryTier): string => {
-  const colorClasses: Record<MockeryTier, string> = {
-    basic: 'text-gray-400 border-gray-400',
-    premium: 'text-purple-500 border-purple-500',
-    royal: 'text-royal-gold border-royal-gold',
-    legendary: 'text-red-500 border-red-500',
-    rare: 'text-blue-500 border-blue-500',
-    epic: 'text-pink-500 border-pink-500',
-    silver: 'text-gray-300 border-gray-300',
-    common: 'text-green-500 border-green-500',
-    uncommon: 'text-yellow-500 border-yellow-500'
+  const classes: Record<MockeryTier, string> = {
+    basic: 'border-gray-400',
+    common: 'border-gray-300',
+    uncommon: 'border-green-400',
+    premium: 'border-blue-400',
+    silver: 'border-gray-300',
+    rare: 'border-purple-400',
+    epic: 'border-pink-500',
+    royal: 'border-yellow-400',
+    legendary: 'border-red-500'
   };
 
-  return colorClasses[tier] || colorClasses.basic;
+  return classes[tier] || 'border-gray-400';
 };
 
-// Get the CSS class for an active mockery effect
+// Get CSS class for active mockery
 export const getActiveMockeryClass = (action: MockeryAction): string => {
-  const mockeryClasses: Record<string, string> = {
-    tomatoes: 'mockery-tomatoes',
-    eggs: 'mockery-eggs',
-    putridEggs: 'mockery-putrid-eggs',
-    dungeons: 'mockery-dungeons',
-    stocks: 'mockery-stocks',
-    dunce: 'mockery-dunce',
-    jester: 'mockery-jester',
-    courtJester: 'mockery-court-jester',
-    protection: 'mockery-protection',
-    shame: 'mockery-shame',
-    silence: 'mockery-silence',
-    smokeBomb: 'mockery-smoke',
-    glitterBomb: 'mockery-glitter',
-    guillotine: 'mockery-guillotine',
-    royalPie: 'mockery-pie'
+  const classes: Record<string, string> = {
+    tomatoes: 'tomato-overlay',
+    eggs: 'egg-overlay',
+    putridEggs: 'egg-overlay putrid-overlay',
+    dungeons: 'dungeon-overlay',
+    stocks: 'stocks-overlay',
+    dunce: 'dunce-overlay',
+    jester: 'jester-overlay',
+    courtJester: 'court-jester-overlay',
+    mockery: 'mockery-overlay',
+    protection: 'shadow-royal-protection',
+    shame: 'shame-overlay',
+    silence: 'silence-overlay',
+    smokeBomb: 'smoke-bomb-overlay',
+    glitterBomb: 'glitter-bomb-overlay',
+    royalPie: 'royal-pie-overlay',
+    jokeCrown: 'joke-crown-overlay',
+    memeFrame: 'meme-frame-overlay'
   };
 
-  return mockeryClasses[action] || 'mockery-default';
+  return classes[action] || 'mockery-overlay';
 };

@@ -1,5 +1,5 @@
 
-// Central export file for all mockery utilities
+// Re-export all mockery utility functions from the organized structure
 export * from './mockery-names';
 export * from './mockery-descriptions';
 export * from './mockery-costs';
@@ -7,11 +7,7 @@ export * from './mockery-icons';
 export * from './mockery-tiers';
 export * from './mockery-effects';
 export * from './mockery-durations';
-
-import type { MockeryAction, MockeryTier, MockeryEvent, MockedUser } from '@/types/mockery-types';
-
-// Re-export types for convenience
-export type { MockeryAction, MockeryTier, MockeryEvent, MockedUser };
+export * from './shame-discount-utils';
 
 // Helper function to get mockery cooldown in seconds
 export const getMockeryCooldown = (action: MockeryAction, tier?: MockeryTier): number => {
@@ -40,4 +36,22 @@ export const getMockeryCooldown = (action: MockeryAction, tier?: MockeryTier): n
   
   // Return action-specific cooldown if available, otherwise tier cooldown
   return actionCooldowns[action] || tierCooldowns[tier || 'basic'] || 60;
+};
+
+// Import types needed by components that use these utilities
+import { MockeryAction, MockeryTier, ExtendedMockeryAction } from '@/types/mockery-types';
+
+// Re-export types for consuming components
+export type { MockeryAction, MockeryTier, ExtendedMockeryAction };
+
+// Create a helper function to render mockery icons with React
+import React from 'react';
+import { getMockeryActionIcon } from './mockery-icons';
+
+/**
+ * Render a mockery action icon with the given size and className
+ */
+export const renderMockeryIcon = (action: MockeryAction, className: string = "h-4 w-4") => {
+  const IconComponent = getMockeryActionIcon(action);
+  return <IconComponent className={className} />;
 };

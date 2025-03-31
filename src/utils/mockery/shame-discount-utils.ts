@@ -1,16 +1,15 @@
 
 import { MockeryAction } from '@/types/mockery-types';
+import { getMockeryActionPrice } from './mockery-costs';
 
-// Discount percentage (e.g., 0.5 for 50% off)
-const DISCOUNT_PERCENTAGE = 0.5;
+// Base discount percentage for weekly special actions
+export const WEEKLY_DISCOUNT_PERCENTAGE = 0.5; // 50% discount
 
-// Weekly discounted action (can be rotated)
-const WEEKLY_DISCOUNTED_ACTION: MockeryAction = 'tomatoes';
+// Current weekly discounted action
+export const WEEKLY_DISCOUNTED_ACTION: MockeryAction = 'tomatoes';
 
 /**
  * Checks if an action has a weekly discount
- * @param action The mockery action to check
- * @returns Boolean indicating if the action is discounted
  */
 export const hasWeeklyDiscount = (action: MockeryAction): boolean => {
   return action === WEEKLY_DISCOUNTED_ACTION;
@@ -18,63 +17,42 @@ export const hasWeeklyDiscount = (action: MockeryAction): boolean => {
 
 /**
  * Get the current weekly discounted action
- * @returns The mockery action that is currently discounted
  */
 export const getWeeklyDiscountedAction = (): MockeryAction => {
   return WEEKLY_DISCOUNTED_ACTION;
 };
 
 /**
- * Get the shame action price
- * @param action The mockery action
- * @returns The price of the action
+ * Get the price for a shame action (legacy API)
  */
 export const getShameActionPrice = (action: MockeryAction): number => {
-  const prices: Record<string, number> = {
-    tomatoes: 0.25,
-    eggs: 0.50,
-    stocks: 1.00,
-    shame: 0.75,
-    // Add other prices as needed
-    dunce: 1.00,
-    jester: 1.25
-  };
-  
-  return prices[action] || 0.25;
+  return getMockeryActionPrice(action);
 };
 
 /**
- * Get the discounted price for an action
- * @param action The mockery action
- * @returns The discounted price
+ * Get the discounted price for a shame action (legacy API)
  */
 export const getDiscountedShamePrice = (action: MockeryAction): number => {
   const basePrice = getShameActionPrice(action);
-  return basePrice * (1 - DISCOUNT_PERCENTAGE);
+  return hasWeeklyDiscount(action)
+    ? basePrice * (1 - WEEKLY_DISCOUNT_PERCENTAGE)
+    : basePrice;
 };
 
 /**
- * Get a custom message for shame actions
- * @param action The mockery action
- * @param username The username to include in the message
- * @returns A formatted message
+ * Get the customized message for a shame action (legacy API)
  */
 export const getShameActionMessage = (action: MockeryAction, username: string): string => {
   const messages: Record<string, string> = {
     tomatoes: `${username} has been pelted with rotten tomatoes!`,
-    eggs: `${username} has been pelted with rotten eggs!`,
-    shame: `${username} has been rung with the bell of shame!`,
-    stocks: `${username} has been locked in the stocks for public ridicule!`
+    eggs: `${username} has been egged by the royal court!`,
+    stocks: `${username} has been placed in the public stocks!`,
+    dunce: `${username} has been forced to wear the dunce cap!`,
+    jester: `${username} has been made the court jester!`,
+    shame: `${username} has been publicly shamed!`,
+    crown: `${username} has had their crown stolen!`,
+    silence: `${username} has been silenced by royal decree!`
   };
-  
-  return messages[action] || `${username} has been mocked!`;
-};
 
-// Export all functions
-export default {
-  hasWeeklyDiscount,
-  getWeeklyDiscountedAction,
-  getShameActionPrice,
-  getDiscountedShamePrice,
-  getShameActionMessage
+  return messages[action] || `${username} has been subjected to public mockery!`;
 };

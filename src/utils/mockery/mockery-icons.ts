@@ -1,103 +1,109 @@
 
-import { 
-  Target, 
-  Bell, 
-  Shield, 
-  Crown, 
-  AlertCircle, 
-  ThumbsDown, 
-  Skull, 
-  Ghost, 
-  Bomb, 
-  Feather, 
-  Rat, 
-  UserX, 
-  Zap,
-  Flame,
-  MessageSquare,
-  Egg,
-  Book
-} from 'lucide-react';
-import { MockeryAction } from '@/types/mockery-types';
+import { MockeryAction, MockeryTier } from '@/types/mockery-types';
 import type { LucideIcon } from 'lucide-react';
+import {
+  Target, ShieldAlert, Skull, Crown, Prison, UserX, 
+  MessageSquareOff, UserRoundX, Ban, Theatre, User, Rat, 
+  Ghost, Candy, Skull, Angry, Flame, Swords, King, 
+  Queen, Shield, ScrollText, Crosshair, Lightbulb, 
+  Laugh, Frown, XCircle, Trash2, Sparkles, Cloud, 
+  Snowflake, Megaphone, Unplug, Palette, Aperture, 
+  CloudLightning, Bomb, Scissors, Maximize2
+} from 'lucide-react';
 
 // Get the appropriate icon for a mockery action
 export const getMockeryActionIcon = (action: MockeryAction): LucideIcon => {
-  const iconMap: Record<string, LucideIcon> = {
-    tomatoes: Target,
-    eggs: Egg,
-    putridEggs: Egg,
-    dungeons: UserX,
+  const icons: Record<string, LucideIcon> = {
+    tomatoes: Ban,
+    eggs: ShieldAlert,
+    putridEggs: Ban,
+    dungeons: Prison,
     immune: Shield,
     crown: Crown,
-    stocks: AlertCircle,
-    dunce: AlertCircle,
-    jester: Feather,
-    courtJester: Feather,
-    jest: Feather,
-    troll: ThumbsDown,
-    peasant: ThumbsDown,
+    stocks: UserX,
+    dunce: UserRoundX,
+    jester: Theatre,
+    courtJester: Theatre,
+    jest: Laugh,
+    troll: Angry,
+    peasant: User,
     rat: Rat,
     ghost: Ghost,
     skeleton: Skull,
     zombie: Skull,
-    witch: Flame,
-    monster: Skull,
+    witch: Candy,
+    monster: Flame,
     demon: Flame,
     dragon: Flame,
-    king: Crown,
-    queen: Crown,
-    knight: Shield,
-    bishop: Book,
+    king: King,
+    queen: Queen,
+    knight: Swords,
+    bishop: ScrollText,
     rook: Shield,
-    pawn: ThumbsDown,
-    target: Target,
-    challenge: Zap,
-    smokeBomb: Bomb,
-    glitterBomb: Bomb,
+    pawn: User,
+    target: Crosshair,
+    challenge: Lightbulb,
+    smokeBomb: Cloud,
+    glitterBomb: Sparkles,
     royalPie: Target,
     jokeCrown: Crown,
-    memeFrame: AlertCircle,
+    memeFrame: Aperture,
     roast: Flame,
-    ridicule: ThumbsDown,
-    humiliate: ThumbsDown,
-    expose: AlertCircle,
-    mock: ThumbsDown,
-    taunt: MessageSquare,
-    guillotine: Skull,
-    defeat: ThumbsDown,
-    removal: UserX,
+    ridicule: Laugh,
+    humiliate: Frown,
+    expose: XCircle,
+    mock: Laugh,
+    taunt: Megaphone,
+    guillotine: Scissors,
+    defeat: UserRoundX,
+    removal: Trash2,
     protection: Shield,
-    silence: Bell,
-    shame: Bell
+    silence: MessageSquareOff,
+    shame: Ban
   };
 
-  return iconMap[action] || ThumbsDown;
+  return icons[action] || Ban;
 };
 
-// Define color classes for mockery action icons
+// Get the color for a mockery action icon
 export const getMockeryActionIconColor = (action: MockeryAction): string => {
   const colorClasses: Record<string, string> = {
     tomatoes: 'text-red-500',
     eggs: 'text-yellow-500',
     putridEggs: 'text-green-500',
     dungeons: 'text-gray-700',
-    immune: 'text-blue-500',
-    crown: 'text-royal-gold',
-    stocks: 'text-amber-700',
-    dunce: 'text-orange-500',
-    jester: 'text-purple-500',
-    courtJester: 'text-royal-purple',
-    jest: 'text-fuchsia-500',
-    protection: 'text-emerald-500',
-    shame: 'text-red-700',
-    silence: 'text-blue-400',
-    taunt: 'text-orange-400',
+    immune: 'text-blue-400',
+    crown: 'text-yellow-400',
+    stocks: 'text-brown-500',
+    dunce: 'text-orange-400',
+    jester: 'text-purple-400',
+    courtJester: 'text-purple-600',
+    jest: 'text-purple-300',
+    silence: 'text-gray-400',
+    smokeBomb: 'text-gray-600',
+    glitterBomb: 'text-pink-400',
+    royalPie: 'text-white',
+    protection: 'text-green-400',
     defeat: 'text-red-600',
-    guillotine: 'text-red-900',
-    smokeBomb: 'text-gray-500',
-    glitterBomb: 'text-pink-400'
+    taunt: 'text-orange-500'
   };
 
-  return colorClasses[action] || 'text-gray-400';
+  // Default based on tier
+  const tierColors: Record<MockeryTier, string> = {
+    basic: 'text-gray-400',
+    common: 'text-gray-300',
+    uncommon: 'text-green-400',
+    premium: 'text-blue-400',
+    silver: 'text-gray-300',
+    rare: 'text-purple-400',
+    epic: 'text-pink-500',
+    royal: 'text-yellow-400',
+    legendary: 'text-red-500'
+  };
+
+  // Get tier for the action
+  const tier = getMockeryTier(action);
+  
+  // Return specific color or tier-based color
+  return colorClasses[action] || tierColors[tier] || 'text-gray-400';
 };

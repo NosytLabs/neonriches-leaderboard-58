@@ -11,7 +11,8 @@ import {
 } from '@/utils/mockery/shame-discount-utils';
 import { 
   getMockeryActionTitle, 
-  getMockeryActionDescription 
+  getMockeryActionDescription,
+  getMockeryActionIcon
 } from '@/utils/mockery';
 
 // Re-export for compatibility
@@ -27,25 +28,7 @@ export {
  * Get the appropriate icon for a shame action
  */
 export const getShameActionIcon = (action: MockeryAction): LucideIcon => {
-  switch (action) {
-    case 'tomatoes':
-      return Ban;
-    case 'eggs':
-      return ShieldAlert;
-    case 'dungeons':
-      return UserX;
-    case 'jester':
-      return Music2;
-    case 'witch':
-      return CloudFog;
-    case 'crown':
-      return Crown;
-    case 'skeleton':
-    case 'ghost':
-      return Skull;
-    default:
-      return UserRoundX;
-  }
+  return getMockeryActionIcon(action);
 };
 
 /**

@@ -1,7 +1,7 @@
 
 // Unified mockery types for the entire application
 
-// Mockery action types
+// Mockery action types - comprehensive list of all possible actions
 export type MockeryAction = 
   | 'tomatoes' 
   | 'eggs' 
@@ -97,6 +97,9 @@ export interface MockeryEvent {
   duration?: number;
   metadata?: Record<string, any>;
 }
+
+// Extended mockery action type for broader compatibility
+export type ExtendedMockeryAction = MockeryAction | string;
 
 // Sound options for mockery effects
 export interface NotificationSoundOptions {

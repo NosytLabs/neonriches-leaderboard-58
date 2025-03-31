@@ -17,8 +17,14 @@ import {
   getMockeryEffectDuration,
   getMockeryCooldown,
   getMockeryDuration,
-  getMockeryPrice
-} from './mockery';
+  getMockeryPrice,
+  hasWeeklyDiscount,
+  getWeeklyDiscountedAction,
+  getShameActionPrice,
+  getDiscountedShamePrice,
+  getShameActionMessage,
+  renderMockeryIcon
+} from './mockery/index';
 
 // Re-export all functions for backward compatibility
 export {
@@ -34,10 +40,32 @@ export {
   getMockeryEffectDuration,
   getMockeryCooldown,
   getMockeryDuration,
-  getMockeryPrice
+  getMockeryPrice,
+  hasWeeklyDiscount,
+  getWeeklyDiscountedAction,
+  getShameActionPrice,
+  getDiscountedShamePrice,
+  getShameActionMessage,
+  renderMockeryIcon
 };
 
 // Provide legacy function names for backward compatibility
 export const getMockeryName = getMockeryActionTitle;
 export const getMockeryDescription = getMockeryActionDescription;
 export const getMockeryCost = getMockeryActionPrice;
+
+// Re-export types
+import { MockeryAction, MockeryTier, ExtendedMockeryAction } from '@/types/mockery-types';
+export type { MockeryAction, MockeryTier, ExtendedMockeryAction };
+
+// React specific exports
+import React from 'react';
+import type { LucideIcon } from 'lucide-react';
+
+/**
+ * Get the appropriate icon component for a mockery action and render it
+ */
+export const getMockeryActionIconComponent = (action: MockeryAction | ExtendedMockeryAction, className: string = "h-4 w-4") => {
+  const IconComponent = getMockeryActionIcon(action as MockeryAction);
+  return IconComponent ? <IconComponent className={className} /> : null;
+};
