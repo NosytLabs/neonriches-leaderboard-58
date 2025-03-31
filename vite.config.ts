@@ -79,8 +79,6 @@ export default defineConfig(({ mode }) => ({
       // Add any packages that cause issues when pre-bundled
     ],
   },
-  // Automatically prefetch modules during development
-  // This helps to reduce any loading flickering
   define: {
     // Any global constants to define for the application
     __APP_VERSION__: JSON.stringify(process.env.npm_package_version),
