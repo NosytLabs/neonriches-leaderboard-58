@@ -1,3 +1,4 @@
+
 import { useCallback, useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { useSound } from '@/hooks/sounds/use-sound';
@@ -76,20 +77,20 @@ export const useNotifications = (): UseNotificationsReturn => {
 
     switch (notification.type) {
       case 'rank_change':
-        play('rankChange', 0.4);
+        play('rankChange', { volume: 0.4 });
         break;
       case 'achievement':
       case 'milestone':
-        play('achievement', 0.5);
+        play('achievement', { volume: 0.5 });
         break;
       case 'royal':
-        play('royal', 0.4);
+        play('royal', { volume: 0.4 });
         break;
       case 'deposit':
-        play('coin', 0.4);
+        play('coin', { volume: 0.4 });
         break;
       default:
-        play('notification', 0.3);
+        play('notification', { volume: 0.3 });
     }
   };
 
@@ -105,6 +106,7 @@ export const useNotifications = (): UseNotificationsReturn => {
     setNotifications(prev => 
       prev.map(notification => ({ ...notification, read: true }))
     );
+    play('notification', { volume: 0.3 });
   };
 
   const handleDeleteNotification = (id: string) => {
