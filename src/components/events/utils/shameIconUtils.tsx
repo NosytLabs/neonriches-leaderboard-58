@@ -7,7 +7,9 @@ export const ShameIcon: React.FC<{ action: ShameAction; size?: 'sm' | 'md' | 'lg
   action, 
   size = 'md' 
 }) => {
-  const IconComponent = getShameActionIcon(action as MockeryAction);
+  // Convert ShameAction to MockeryAction explicitly through unknown to avoid type error
+  const actionType = action as unknown as MockeryAction;
+  const IconComponent = getShameActionIcon(actionType);
   
   const sizeClass = {
     sm: 'text-lg',

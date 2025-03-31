@@ -28,18 +28,55 @@ export type MedievalIconName =
   | 'wallet'
   | 'seal'
   | 'sparkles'
-  // Add missing icon names found in error messages
+  | 'user'
+  | 'users'
   | 'Crown'
   | 'Scroll'
-  | 'Seal'
-  | 'Coins';
+  | 'Coins'
+  | 'Shield'
+  | 'Sparkles'
+  | 'Trophy'
+  | 'Users'
+  | 'User';
+
+export type MedievalIconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl';
+export type MedievalIconColor = 'gold' | 'silver' | 'crimson' | 'emerald' | 'royal' | 'default';
+
+export interface IconProps {
+  name: MedievalIconName;
+  size?: MedievalIconSize | number;
+  color?: MedievalIconColor;
+  className?: string;
+  style?: 'default' | 'medieval';
+  animated?: boolean;
+  [key: string]: any;
+}
 
 export interface MedievalIconProps {
   name: MedievalIconName;
-  size?: IconSize;
-  color?: IconColor;
+  size?: MedievalIconSize;
+  color?: MedievalIconColor;
   className?: string;
   animate?: boolean;
 }
 
-export type MedievalIconColor = 'gold' | 'silver' | 'crimson' | 'emerald' | 'royal';
+// Icon size mapping
+export const iconSizeMap: Record<MedievalIconSize, string> = {
+  'xs': 'w-3 h-3',
+  'sm': 'w-4 h-4',
+  'md': 'w-6 h-6',
+  'lg': 'w-8 h-8',
+  'xl': 'w-10 h-10',
+  '2xl': 'w-12 h-12',
+  '3xl': 'w-16 h-16'
+};
+
+// Icon color mapping
+export const iconColorMap: Record<MedievalIconColor, string> = {
+  'default': 'text-white',
+  'gold': 'text-royal-gold',
+  'silver': 'text-gray-300',
+  'crimson': 'text-royal-crimson',
+  'emerald': 'text-emerald-500',
+  'royal': 'text-royal-purple'
+};

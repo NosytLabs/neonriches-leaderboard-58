@@ -1,7 +1,6 @@
 
 import { 
   MockeryAction, 
-  MockeryTier,
   ShameAction
 } from '@/types/mockery';
 import { 
@@ -16,7 +15,7 @@ import {
   getMockeryTier as getActionTier,
   getMockeryTierColorClass as getTierColorClass,
   getActiveMockeryClass as getActiveClass
-} from '@/utils/shameUtils';
+} from '@/utils/mockery';
 
 export const getShameActionIcon = getMockeryIcon;
 export const getShameActionTitle = getMockeryName;

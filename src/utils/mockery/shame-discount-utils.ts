@@ -1,5 +1,5 @@
 
-import { MockeryAction } from '@/types/mockery';
+import { MockeryAction, ShameAction } from '@/types/mockery';
 
 /**
  * Checks if there's a weekly discount available
@@ -13,9 +13,9 @@ export const hasWeeklyDiscount = (): boolean => {
 /**
  * Get the weekly discounted action
  */
-export const getWeeklyDiscountedAction = (): MockeryAction => {
+export const getWeeklyDiscountedAction = (): ShameAction => {
   // Rotate weekly discounted actions
-  const discountActions: MockeryAction[] = ['tomatoes', 'eggs', 'stocks'];
+  const discountActions: ShameAction[] = ['tomatoes', 'eggs', 'stocks'];
   const weekNumber = Math.floor(Date.now() / (7 * 24 * 60 * 60 * 1000));
   return discountActions[weekNumber % discountActions.length];
 };

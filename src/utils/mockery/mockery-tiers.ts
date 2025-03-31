@@ -4,7 +4,7 @@ import { CosmeticRarity } from '@/types/cosmetics';
 
 // Get the tier/level of a mockery action
 export const getMockeryTier = (action: MockeryAction): MockeryTier => {
-  const tiers: Record<MockeryAction, MockeryTier> = {
+  const tiers: Record<string, MockeryTier> = {
     tomatoes: 'basic',
     eggs: 'basic',
     shame: 'premium',
@@ -14,7 +14,6 @@ export const getMockeryTier = (action: MockeryAction): MockeryTier => {
     stocks: 'basic',
     dunce: 'basic',
     jester: 'premium',
-    // fool: 'premium',
     troll: 'premium',
     peasant: 'premium',
     rat: 'premium',
@@ -32,7 +31,8 @@ export const getMockeryTier = (action: MockeryAction): MockeryTier => {
     rook: 'royal',
     pawn: 'basic',
     target: 'premium',
-    challenge: 'premium'
+    challenge: 'premium',
+    protection: 'royal'
   };
   
   return tiers[action] || 'basic';
@@ -40,11 +40,13 @@ export const getMockeryTier = (action: MockeryAction): MockeryTier => {
 
 // Get CSS classes for each tier
 export const getMockeryTierColorClass = (tier: MockeryTier): string => {
-  const colorClasses: Record<MockeryTier, string> = {
+  const colorClasses: Record<string, string> = {
     basic: 'text-gray-300 border-gray-300',
     premium: 'text-royal-purple border-royal-purple',
     royal: 'text-royal-gold border-royal-gold',
     silver: 'text-gray-400 border-gray-400',
+    epic: 'text-purple-400 border-purple-400',
+    rare: 'text-blue-400 border-blue-400',
     legendary: 'text-orange-500 border-orange-500'
   };
   
@@ -53,11 +55,13 @@ export const getMockeryTierColorClass = (tier: MockeryTier): string => {
 
 // Get rarity equivalent for each tier
 export const getMockeryTierRarity = (tier: MockeryTier): CosmeticRarity => {
-  const rarities: Record<MockeryTier, CosmeticRarity> = {
+  const rarities: Record<string, CosmeticRarity> = {
     basic: 'common',
     premium: 'uncommon',
     royal: 'rare',
     silver: 'epic',
+    epic: 'epic',
+    rare: 'rare',
     legendary: 'legendary'
   };
   

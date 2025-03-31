@@ -3,18 +3,17 @@ import { useCallback } from 'react';
 import { useSounds } from './useSounds';
 import { SoundType } from '@/types/sound-types';
 
-export interface UseNotificationSoundsReturn {
-  playSound: (sound: SoundType) => void;
-}
-
-export function useNotificationSounds(): UseNotificationSoundsReturn {
-  const { playSound } = useSounds();
+/**
+ * Hook for playing notification sounds - redirecting to useSounds for a unified implementation
+ */
+export function useNotificationSounds() {
+  const sounds = useSounds();
   
-  const wrappedPlaySound = useCallback((sound: SoundType) => {
-    playSound(sound);
-  }, [playSound]);
+  const playSound = useCallback((sound: SoundType) => {
+    sounds.play(sound);
+  }, [sounds]);
   
-  return { playSound: wrappedPlaySound };
+  return { playSound };
 }
 
 export default useNotificationSounds;

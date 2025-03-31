@@ -1,16 +1,37 @@
 
 export type SoundType = 
-  | 'click'
-  | 'coins'
-  | 'coins_drop'
-  | 'success'
-  | 'error'
-  | 'purchase'
-  | 'trumpets'
-  | 'notification'
   | 'achievement'
-  | 'rankUp'
-  | 'button'
+  | 'boost'
+  | 'button_click'
+  | 'challenge'
+  | 'coins_drop'
+  | 'coins_multiple'
+  | 'deposit'
+  | 'error'
+  | 'level_up'
+  | 'message'
+  | 'mockery'
+  | 'notification'
+  | 'purchase'
+  | 'rank_change'
+  | 'rank_up'
+  | 'shame'
+  | 'success'
+  | 'team_join'
+  | 'transaction'
+  | 'upgrade'
+  | 'wishingwell'
+  | 'parchment'
+  | 'click'
+  | 'trumpets'
+  | 'coinDrop'
+  | 'royal'
+  | 'coin'
+  | 'reward'
+  | 'royalAnnouncement'
+  | 'trumpet'
+  | 'seal'
+  | 'medallion'
   | 'hover'
   | 'fanfare'
   | 'wish'
@@ -21,25 +42,18 @@ export type SoundType =
   | 'sweep'
   | 'tada'
   | 'thud'
-  | 'tier_up'
-  | 'rank_up'
-  | 'rank_down'
-  | 'shame';
+  | 'tier_up';
 
-export interface UseSoundOptions {
+export interface AudioOptions {
   volume?: number;
-  loop?: boolean;
   interrupt?: boolean;
-  [key: string]: any; // Allow string indexing for flexibility
-}
-
-export interface NotificationSoundOptions {
-  volume?: number;
   loop?: boolean;
   delay?: number;
-  interrupt?: boolean;
-  [key: string]: any; // Allow string indexing for flexibility
+  soundEnabled?: boolean;
+  onComplete?: () => void;
 }
+
+export type NotificationSoundOptions = AudioOptions;
 
 export interface AudioLoaderReturn {
   audio: Record<SoundType, HTMLAudioElement>;
@@ -52,6 +66,20 @@ export interface AudioLoaderReturn {
   isLoaded: boolean;
 }
 
+export interface UseSoundOptions extends AudioOptions {
+  [key: string]: any; // Allow string indexing for flexibility
+}
+
+export interface UseSoundReturn {
+  play: (sound: SoundType | string, options?: UseSoundOptions) => void;
+  stop: (sound: SoundType) => void;
+  isPlaying?: boolean;
+  duration?: number;
+  playSound: (sound: SoundType) => void;
+  playSuccess: (sound?: SoundType) => void;
+  stopAll?: () => void;
+}
+
 export interface PremiumSoundPackDetails {
   id: string;
   name: string;
@@ -60,5 +88,6 @@ export interface PremiumSoundPackDetails {
   previewSound: SoundType;
   sounds: SoundType[];
   features: string[];
-  tags: string[]; // Added required property
+  tags: string[];
+  includes?: string[];
 }

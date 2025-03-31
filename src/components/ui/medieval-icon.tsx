@@ -1,14 +1,6 @@
-
 import React from 'react';
-import { MedievalIconName, MedievalIconColor, MedievalIconSize, iconSizeMap, iconColorMap } from '@/types/ui/icon-types';
-
-export interface MedievalIconProps {
-  name: MedievalIconName;
-  size?: MedievalIconSize | number;
-  color?: MedievalIconColor;
-  className?: string;
-  animate?: boolean;
-}
+import { MedievalIconProps, MedievalIconSize, MedievalIconColor, iconSizeMap, iconColorMap } from '@/types/ui/icon-types';
+import { cn } from '@/lib/utils';
 
 const MedievalIcon: React.FC<MedievalIconProps> = ({ 
   name, 
@@ -22,12 +14,11 @@ const MedievalIcon: React.FC<MedievalIconProps> = ({
   const animationClass = animate ? 'animate-pulse' : '';
 
   return (
-    <div className={`medieval-icon medieval-icon-${name} ${colorClass} ${sizeClass} ${animationClass} ${className}`}>
+    <div className={cn(`medieval-icon medieval-icon-${name}`, colorClass, sizeClass, animationClass, className)}>
       {/* Icon SVG would go here */}
       <span className="sr-only">{name} icon</span>
     </div>
   );
 };
 
-export { MedievalIconProps, MedievalIconName, MedievalIconColor, MedievalIconSize };
 export default MedievalIcon;

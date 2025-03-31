@@ -13,6 +13,7 @@ import {
   getShameActionMessage 
 } from './shame-discount-utils';
 
+// Export the functions from the modular files
 export {
   getMockeryActionTitle,
   getMockeryActionDescription,
@@ -28,3 +29,7 @@ export {
   getShameActionPrice,
   getShameActionMessage
 };
+
+// For backward compatibility, provide aliases
+export const getMockeryName = getMockeryActionTitle;
+export const getMockeryDescription = getMockeryActionDescription;

@@ -1,9 +1,10 @@
+
 import React from 'react';
 import { IconProps, MedievalIconName, MedievalIconColor, MedievalIconSize, iconSizeMap, iconColorMap } from '@/types/ui/icon-types';
 import { cn } from '@/lib/utils';
 
 const IconSystem = React.forwardRef<SVGSVGElement, IconProps>(
-  ({ name, size = 'md', color = 'default', className, animated, ...props }, ref) => {
+  ({ name, size = 'md', color = 'default', className, animated, style = 'default', ...props }, ref) => {
     // Handle size - can be a string type or a number
     let sizeClass: string;
     if (typeof size === 'string') {
