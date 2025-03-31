@@ -1,66 +1,24 @@
 
-import { format, formatDistanceToNow, formatRelative } from 'date-fns';
+/**
+ * Utility functions for formatting values
+ */
 
 /**
- * Format a number as US currency
+ * Format a number as USD currency
  */
-export const formatCurrency = (amount: number | undefined): string => {
-  if (amount === undefined || amount === null) return '$0.00';
-  return new Intl.NumberFormat('en-US', { 
-    style: 'currency', 
+export const formatCurrency = (value: number): string => {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
     currency: 'USD',
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2
-  }).format(amount);
+    maximumFractionDigits: 0
+  }).format(value);
 };
 
 /**
- * Format a dollar amount with comma separators and decimals
+ * Format a dollar amount with commas and dollar sign
  */
-export const formatDollarAmount = (amount: number | undefined): string => {
-  if (amount === undefined || amount === null) return '$0.00';
-  return `$${amount.toLocaleString(undefined, { 
-    minimumFractionDigits: 2, 
-    maximumFractionDigits: 2 
-  })}`;
-};
-
-/**
- * Format a number with comma separators
- */
-export const formatNumber = (num: number | undefined): string => {
-  if (num === undefined || num === null) return '0';
-  return num.toLocaleString();
-};
-
-/**
- * Format a date string in a standard format
- */
-export const formatDate = (dateString: string | Date | undefined): string => {
-  if (!dateString) return '';
-  
-  try {
-    const date = typeof dateString === 'string' ? new Date(dateString) : dateString;
-    return format(date, 'MMM d, yyyy');
-  } catch (e) {
-    console.error('Error formatting date:', e);
-    return '';
-  }
-};
-
-/**
- * Format a date string as a relative time (e.g., "2 days ago")
- */
-export const formatRelativeTime = (dateString: string | Date | undefined): string => {
-  if (!dateString) return '';
-  
-  try {
-    const date = typeof dateString === 'string' ? new Date(dateString) : dateString;
-    return formatDistanceToNow(date, { addSuffix: true });
-  } catch (e) {
-    console.error('Error formatting relative time:', e);
-    return '';
-  }
+export const formatDollarAmount = (amount: number): string => {
+  return `$${amount.toLocaleString('en-US', { maximumFractionDigits: 2 })}`;
 };
 
 /**
@@ -69,43 +27,57 @@ export const formatRelativeTime = (dateString: string | Date | undefined): strin
 export const formatFileSize = (bytes: number): string => {
   if (bytes === 0) return '0 Bytes';
   
-  const k = 1024;
   const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  const i = Math.floor(Math.log(bytes) / Math.log(1024));
   
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  return `${(bytes / Math.pow(1024, i)).toFixed(2)} ${sizes[i]}`;
 };
 
 /**
- * Format a percentage value
+ * Format a date as a relative time (e.g., "2 days ago")
+ */
+export const formatRelativeTime = (date: string | Date): string => {
+  const now = new Date();
+  const past = new Date(date);
+  const diffMs = now.getTime() - past.getTime();
+  const diffSec = Math.round(diffMs / 1000);
+  const diffMin = Math.round(diffSec / 60);
+  const diffHour = Math.round(diffMin / 60);
+  const diffDay = Math.round(diffHour / 24);
+  
+  if (diffSec < 60) return `${diffSec} seconds ago`;
+  if (diffMin < 60) return `${diffMin} minutes ago`;
+  if (diffHour < 24) return `${diffHour} hours ago`;
+  if (diffDay < 30) return `${diffDay} days ago`;
+  
+  // For older dates, return the formatted date
+  return past.toLocaleDateString();
+};
+
+/**
+ * Format a number with abbreviations (K, M, B)
+ */
+export const formatCompactNumber = (num: number): string => {
+  if (num < 1000) return num.toString();
+  
+  const suffixes = ['', 'K', 'M', 'B', 'T'];
+  const magnitude = Math.floor(Math.log10(num) / 3);
+  
+  return (num / Math.pow(1000, magnitude)).toFixed(1).replace(/\.0$/, '') + suffixes[magnitude];
+};
+
+/**
+ * Format a number as a percentage
  */
 export const formatPercentage = (value: number): string => {
-  return `${value.toFixed(1)}%`;
+  return `${(value * 100).toFixed(1)}%`;
 };
 
-/**
- * Format a date in a short format
- */
-export const formatShortDate = (dateString: string | Date | undefined): string => {
-  if (!dateString) return '';
-  
-  try {
-    const date = typeof dateString === 'string' ? new Date(dateString) : dateString;
-    return format(date, 'MM/dd/yyyy');
-  } catch (e) {
-    console.error('Error formatting short date:', e);
-    return '';
-  }
-};
-
-// Export all formatters as both named exports and default object
 export default {
   formatCurrency,
   formatDollarAmount,
-  formatNumber,
-  formatDate,
-  formatRelativeTime,
   formatFileSize,
-  formatPercentage,
-  formatShortDate
+  formatRelativeTime,
+  formatCompactNumber,
+  formatPercentage
 };

@@ -1,140 +1,68 @@
 
-import { UserCosmeticState } from './cosmetics';
+export type TeamColor = 'red' | 'green' | 'blue' | 'purple' | 'gold';
 
-export type UserTier = 
-  | 'free' 
-  | 'basic' 
-  | 'premium' 
-  | 'pro' 
-  | 'royal' 
-  | 'founder' 
-  | 'gold' 
-  | 'platinum' 
-  | 'silver' 
-  | 'diamond' 
-  | 'bronze' 
-  | 'vip' 
-  | 'whale';
+// For backward compatibility
+export type TeamType = TeamColor;
 
-export type TeamColor = 'red' | 'blue' | 'green' | 'gold' | 'purple' | 'none' | 'neutral';
-export type TeamType = 'red' | 'blue' | 'green' | 'gold' | 'none';
+export type UserTier = 'free' | 'basic' | 'premium' | 'pro' | 'royal' | 'elite' | 'founder' | 'diamond' | 'platinum' | 'gold' | 'silver' | 'bronze';
 
-export interface ProfileBoost {
+export interface UserProfile {
   id: string;
-  type: string;
-  level?: number;
-  startDate: string;
-  endDate: string;
-  appliedBy?: string;
-  strength?: number;
-  name?: string;
-  description?: string;
-  duration?: number;
-  price?: number;
-  icon?: string;
+  username: string;
+  displayName?: string;
+  email?: string;
+  profileImage?: string;
+  bio?: string;
+  rank?: number;
+  previousRank?: number;
+  totalSpent?: number;
+  amountSpent?: number; // Alternative for totalSpent
+  spentAmount?: number; // Alternative for totalSpent
+  walletBalance?: number;
+  tier?: UserTier;
+  team?: TeamColor;
+  joinDate?: string;
+  joinedAt?: string; // Alternative for joinDate
+  isVerified?: boolean;
+  isProtected?: boolean;
+  avatarUrl?: string;
+  spendStreak?: number;
+  lastActive?: string;
+  certificateNFT?: {
+    id: string;
+    mintAddress?: string;
+    tokenId?: string;
+    imageUrl?: string;
+  };
+  subscription?: {
+    tier: string;
+    expiresAt: string;
+    isActive: boolean;
+  };
+  gender?: 'male' | 'female' | 'other' | 'prefer-not-to-say';
+  isVIP?: boolean;
+  profileViews?: number;
+  profileClicks?: number;
+  purchasedFeatures?: string[];
 }
 
-export interface SocialLink {
-  id?: string | number;
-  platform?: string;
-  url: string;
-  username?: string;
-  display?: string;
-  icon?: string;
-  verified?: boolean;
-  primary?: boolean;
-  clicks?: number;
-  title?: string;
-  label?: string;
-  type?: string;
-}
-
-export interface ProfileImage {
-  id?: string;
-  url: string;
-  isPrimary: boolean;
-  caption?: string;
-}
+// For backward compatibility
+export type User = UserProfile;
 
 export interface UserSettings {
   profileVisibility: 'public' | 'private' | 'friends';
   allowProfileLinks: boolean;
-  theme: 'light' | 'dark' | 'royal' | 'system';
+  theme: 'dark' | 'light' | 'system';
   notifications: boolean;
   emailNotifications: boolean;
   marketingEmails: boolean;
   soundEffects: boolean;
   showEmailOnProfile: boolean;
-  darkMode: boolean; // Keep for compatibility
-  rankChangeAlerts?: boolean;
-  newFollowerAlerts?: boolean;
-  teamNotifications?: boolean;
-  language?: string;
-  shameAlerts?: boolean;
-  publicProfile?: boolean;
-  showRank: boolean;
+  showJoinDate: boolean;
   showTeam: boolean;
+  showTier: boolean;
+  darkMode: boolean;
+  useCrownEffect: boolean;
+  useSpecialEffects: boolean;
   showSpending: boolean;
-  allowMessages?: boolean;
 }
-
-export interface CertificateNFT {
-  id?: string;
-  mintAddress?: string;
-  imageUrl?: string;
-  dateIssued?: string;
-  type?: string;
-  isVerified?: boolean;
-}
-
-export interface UserProfile {
-  id: string;
-  username: string;
-  displayName: string;
-  email: string;
-  profileImage: string;
-  bio: string;
-  joinDate: string;
-  joinedAt?: string;
-  createdAt?: string;
-  tier: UserTier;
-  team: TeamColor;
-  rank: number;
-  previousRank: number;
-  totalSpent: number;
-  amountSpent?: number; // For backward compatibility
-  spentAmount?: number; // For backward compatibility
-  walletBalance?: number;
-  isFounder: boolean;
-  isVerified?: boolean;
-  isVIP?: boolean;
-  isProtected?: boolean;
-  isAdmin?: boolean;
-  spendStreak?: number;
-  lastActive?: string;
-  lastLogin?: string;
-  following?: string[] | number;
-  followers?: string[] | number;
-  cosmetics: UserCosmeticState;
-  settings: UserSettings;
-  profileBoosts: ProfileBoost[];
-  socialLinks?: SocialLink[];
-  profileViews?: number;
-  profileClicks?: number;
-  purchasedFeatures?: string[];
-  subscription?: any;
-  role?: string;
-  activeTitle?: string;
-  certificateNFT?: CertificateNFT;
-  avatarUrl?: string; // For backward compatibility
-  gender?: string;
-  profileImages?: ProfileImage[];
-}
-
-export interface User extends UserProfile {}
-
-export type ProfileLink = SocialLink;
-
-// Ensure these interfaces import from the main User definition 
-// instead of being redefined elsewhere
-export { UserProfile as ExtendedUserProfile };

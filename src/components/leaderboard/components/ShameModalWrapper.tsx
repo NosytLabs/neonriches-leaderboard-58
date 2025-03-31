@@ -3,14 +3,14 @@ import React from 'react';
 import { Dialog } from '@/components/ui/dialog';
 import ShameModal from '@/components/events/components/ShameModal';
 import { User, TeamColor } from '@/types/user';
-import { ShameAction } from '@/types/mockery-types';
+import { MockeryAction } from '@/types/mockery-types';
 
 interface ShameModalWrapperProps {
   showModal: boolean;
   selectedUser: User | null;
-  shameAction: ShameAction;
+  shameAction: MockeryAction;
   onOpenChange: (open: boolean) => void;
-  onConfirm: (userId: string, type: ShameAction) => void;
+  onConfirm: (userId: string, type: MockeryAction) => void;
 }
 
 const ShameModalWrapper: React.FC<ShameModalWrapperProps> = ({

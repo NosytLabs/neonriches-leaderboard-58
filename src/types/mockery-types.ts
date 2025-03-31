@@ -2,7 +2,7 @@
 import type { LucideIcon } from 'lucide-react';
 import { TeamColor, UserTier } from './user';
 
-// Comprehensive list of all mockery actions to ensure compatibility
+// Comprehensive list of all mockery actions
 export type MockeryAction = 
   | 'tomatoes' 
   | 'eggs'
@@ -40,13 +40,21 @@ export type MockeryAction =
   | 'immune'
   | 'rat'
   | 'skeleton'
+  | 'zombie'
+  | 'witch'
+  | 'monster'
   | 'pawn'
+  | 'bishop'
+  | 'rook'
+  | 'knight'
+  | 'king'
+  | 'queen'
   | 'shame'; // Legacy support
 
 // Simplified subset for shame actions
 export type ShameAction = 'tomatoes' | 'eggs' | 'stocks' | 'shame';
 
-// Mockery tier definitions - consolidated from multiple sources
+// Mockery tier definitions
 export type MockeryTier = 
   | 'basic'
   | 'premium'
@@ -83,6 +91,7 @@ export interface MockedUser {
   username: string;
   displayName?: string;
   profileImage?: string;
+  mockedAction?: MockeryAction;
   mockedReason?: string;
   mockedTimestamp: string;
   mockedUntil: string;
@@ -115,21 +124,11 @@ export interface MockeryEvent {
 }
 
 // For backward compatibility
-export { 
-  type MockeryAction as MockeryType,
-  type MockeryAction as MockeryActionType,
-  type MockedUser as MockUser
-};
+export type MockeryType = MockeryAction;
+export type MockeryActionType = MockeryAction;
+export type MockUser = MockedUser;
 
-// Audio-specific types for mockery sounds
-export type AudioOptions = {
-  volume?: number;
-  loop?: boolean;
-  playbackRate?: number;
-  onEnd?: () => void;
-};
-
-// Compatibility with both versions of useMockery hook
+// Hook interface
 export interface UseMockery {
   applyMockery: (targetId: string, targetName: string, action: MockeryAction) => Promise<boolean>;
   removeMockery: (targetId: string) => Promise<boolean>;
@@ -156,3 +155,11 @@ export interface UseShameEffectReturn {
   shameCount: Record<number, number>;
   isMocking: boolean;
 }
+
+// Audio-specific types for mockery sounds
+export type AudioOptions = {
+  volume?: number;
+  loop?: boolean;
+  playbackRate?: number;
+  onEnd?: () => void;
+};

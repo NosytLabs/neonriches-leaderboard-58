@@ -1,13 +1,13 @@
 
 import { useCallback } from 'react';
-import { useSoundHook } from './use-sound';
+import { useSound } from './use-sound';
 import { SoundOptions } from '@/types/sound-types';
 
 /**
  * Hook for playing notification sounds in the application
  */
-export const useNotificationSounds = () => {
-  const sound = useSoundHook();
+const useNotificationSounds = () => {
+  const sound = useSound();
 
   // Play notification sound
   const playNotification = useCallback((options?: SoundOptions) => {
@@ -49,6 +49,11 @@ export const useNotificationSounds = () => {
     sound.playSound('levelUp', options);
   }, [sound]);
 
+  // Play shame sound
+  const playShame = useCallback((options?: SoundOptions) => {
+    sound.playSound('shame', options);
+  }, [sound]);
+
   return {
     playNotification,
     playSuccess,
@@ -58,6 +63,7 @@ export const useNotificationSounds = () => {
     playClick,
     playFanfare,
     playLevelUp,
+    playShame,
     // Pass through the sound utility
     toggleSounds: sound.toggleSounds,
     isSoundEnabled: sound.isSoundEnabled

@@ -1,8 +1,8 @@
 
 import { useState, useEffect } from 'react';
 import { useLocalStorage } from '@/hooks/use-local-storage';
-import { MockeryAction } from '@/types/mockery';
-import { useSound } from '@/hooks/use-sound';
+import { MockeryAction } from '@/types/mockery-types';
+import { useSound } from '@/hooks/sounds/use-sound';
 
 interface ShameEffectData {
   type: MockeryAction;
