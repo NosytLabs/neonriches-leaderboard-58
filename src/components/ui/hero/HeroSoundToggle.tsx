@@ -1,16 +1,18 @@
 
 import React from 'react';
-import { Volume2, VolumeX } from '@/utils/icons';
+import { Volume2, VolumeX } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useSoundsConfig } from '@/hooks/sounds/use-sounds-config';
-import { useSound } from '@/hooks/sounds/use-sound';
+import useSound from '@/hooks/useSound';
 
 export default function HeroSoundToggle() {
   const { soundConfig, toggleMuted } = useSoundsConfig();
   const sound = useSound();
   
   const handleToggle = () => {
-    sound.playSound('click');
+    if (!soundConfig.muted) {
+      sound.playSound('click');
+    }
     toggleMuted();
   };
   

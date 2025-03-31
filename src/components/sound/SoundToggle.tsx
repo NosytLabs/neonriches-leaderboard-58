@@ -4,9 +4,18 @@ import { Volume2, VolumeX } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useSoundsConfig } from '@/hooks/sounds/use-sounds-config';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import useSound from '@/hooks/useSound';
 
 export function SoundToggle() {
   const { soundConfig, toggleMuted } = useSoundsConfig();
+  const sound = useSound();
+  
+  const handleToggle = () => {
+    if (!soundConfig.muted) {
+      sound.playSound('click');
+    }
+    toggleMuted();
+  };
   
   return (
     <TooltipProvider>
@@ -16,7 +25,7 @@ export function SoundToggle() {
             variant="ghost"
             size="sm"
             className="h-8 w-8 p-0"
-            onClick={toggleMuted}
+            onClick={handleToggle}
           >
             <span className="sr-only">
               {soundConfig.muted ? 'Unmute' : 'Mute'} sounds
