@@ -2,8 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useLocalStorage } from '@/hooks/use-local-storage';
 import { MockeryAction } from '@/types/mockery';
-import { NotificationSoundOptions } from '@/types/sound-types';
-import useNotificationSounds from '@/hooks/useNotificationSounds';
+import { useNotificationSounds } from '@/hooks/useNotificationSounds';
 
 interface ShameEffectData {
   type: MockeryAction;
@@ -93,7 +92,7 @@ const useShameEffect = () => {
       }));
 
       // Play shame sound
-      playSound('shame', { volume: 0.5 });
+      playSound('shame');
 
       return true;
     } catch (error) {

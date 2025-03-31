@@ -7,6 +7,15 @@ export type SoundType =
   'level_up' | 'coin' | 'shame' | 'mockery' | 'boost' | 
   'throne' | 'royal' | 'click';
 
+export interface AudioOptions {
+  volume?: number;
+  interrupt?: boolean;
+  loop?: boolean;
+  delay?: number;
+}
+
+export type NotificationSoundOptions = AudioOptions;
+
 export interface AudioLoaderReturn {
   audio: Record<SoundType, HTMLAudioElement>;
   volume: number;
@@ -18,17 +27,17 @@ export interface AudioLoaderReturn {
   isLoaded: boolean;
 }
 
-export interface UseSoundsOptions {
-  volume?: number;
-  interrupt?: boolean;
-  soundEnabled?: boolean;
-  onComplete?: () => void;
-  loop?: boolean;
+export interface UseSoundReturn {
+  play: (sound: SoundType, options?: AudioOptions) => void;
+  stop: (sound: SoundType) => void;
+  stopAll: () => void;
 }
 
-export interface UseSoundReturn {
-  play: (options?: UseSoundsOptions) => void;
-  stop: () => void;
-  playSound: (sound: SoundType) => void;
-  playSuccess: (sound?: SoundType) => void;
+export interface PremiumSoundPackDetails {
+  id?: string;
+  name: string;
+  description: string;
+  price: number;
+  sounds: SoundType[];
+  previewSound?: SoundType;
 }

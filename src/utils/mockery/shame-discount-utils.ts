@@ -3,9 +3,9 @@ import { MockeryAction, ShameAction } from '@/types/mockery';
 
 // Map of weekly discount actions
 const WEEKLY_DISCOUNT_ACTIONS: Record<string, ShameAction> = {
-  week1: 'tomatoes',
-  week2: 'eggs',
-  week3: 'stocks',
+  week1: 'tomatoes' as ShameAction,
+  week2: 'eggs' as ShameAction,
+  week3: 'stocks' as ShameAction,
 };
 
 // Whether there's a weekly discount active

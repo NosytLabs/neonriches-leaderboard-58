@@ -1,44 +1,66 @@
 
+// Re-export shame functions from the mockery utilities
 import { 
-  MockeryAction, 
-  ShameAction
-} from '@/types/mockery';
-import { 
-  hasWeeklyDiscount as checkWeeklyDiscount,
-  getWeeklyDiscountedAction as getDiscountAction,
-  getDiscountedShamePrice as getDiscountPrice,
-  getShameActionPrice as getActionPrice,
-  getShameActionMessage as getActionMessage,
   getMockeryName,
   getMockeryDescription,
-  getMockeryActionIcon as getMockeryIcon,
-  getMockeryTier as getActionTier,
-  getMockeryTierColorClass as getTierColorClass,
-  getActiveMockeryClass as getActiveClass
+  getMockeryCost,
+  getMockeryTier,
+  getMockeryTierColorClass,
+  getMockeryActionIcon,
+  getActiveMockeryClass,
+  getMockeryActionDescription,
+  getMockeryActionTitle,
+  getMockeryActionPrice,
+  // These are now properly imported from mockery/index.ts
+  hasWeeklyDiscount,
+  getWeeklyDiscountedAction,
+  getDiscountedShamePrice,
+  getShameActionPrice,
+  getShameActionMessage
 } from '@/utils/mockery';
 
-export const getShameActionIcon = getMockeryIcon;
-export const getShameActionTitle = getMockeryName;
-export const getShameActionDescription = getMockeryDescription;
-export const getShameActionTier = getActionTier;
-export const hasWeeklyDiscount = checkWeeklyDiscount;
-export const getWeeklyDiscountedAction = getDiscountAction;
-export const getDiscountedShamePrice = getDiscountPrice;
-export const getShameActionPrice = getActionPrice;
-export const getShameActionMessage = getActionMessage;
-export const getMockeryTierColorClass = getTierColorClass;
-export const getActiveMockeryClass = getActiveClass;
+import { MockeryAction, ShameAction } from '@/types/mockery';
+import { cn } from '@/lib/utils';
 
-// Define available mockery actions
-export const availableShameActions: ShameAction[] = [
-  'tomatoes',
-  'eggs',
-  'stocks'
-];
+export { 
+  hasWeeklyDiscount,
+  getWeeklyDiscountedAction,
+  getDiscountedShamePrice,
+  getShameActionPrice,
+  getShameActionMessage,
+  getMockeryName,
+  getMockeryDescription,
+  getMockeryActionDescription,
+  getMockeryCost,
+  getMockeryTier,
+  getMockeryTierColorClass,
+  getMockeryActionIcon,
+  getActiveMockeryClass
+};
 
-// Weekly discounted items rotation
-export const weeklyDiscountedActions: ShameAction[] = [
-  'tomatoes',
-  'eggs',
-  'stocks'
-];
+export const getShameActionIcon = (action: MockeryAction) => {
+  return getMockeryActionIcon(action);
+};
+
+export const ShameIcon: React.FC<{ action: ShameAction; size?: 'sm' | 'md' | 'lg' }> = ({ 
+  action, 
+  size = 'md' 
+}) => {
+  // Convert ShameAction to MockeryAction explicitly through unknown to avoid type error
+  const actionType = action as unknown as MockeryAction;
+  const IconComponent = getShameActionIcon(actionType);
+  
+  const sizeClass = {
+    sm: 'text-lg',
+    md: 'text-2xl',
+    lg: 'text-3xl'
+  };
+  
+  return (
+    <span className={cn(sizeClass[size])}>
+      {IconComponent && <IconComponent />}
+    </span>
+  );
+};
+
+export default ShameIcon;

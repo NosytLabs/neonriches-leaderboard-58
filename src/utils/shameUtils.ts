@@ -8,6 +8,7 @@ import {
   getShameActionMessage,
   getMockeryName,
   getMockeryDescription,
+  getMockeryActionDescription,
   getMockeryCost,
   getMockeryTier,
   getMockeryTierColorClass,
