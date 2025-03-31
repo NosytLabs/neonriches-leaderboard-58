@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { Crown, ArrowUpRight, Trophy, DollarSign, Sparkles } from 'lucide-react';
 
 interface Announcement {
@@ -13,7 +13,8 @@ interface Announcement {
   };
 }
 
-const mockAnnouncements: Announcement[] = [
+// Fixed announcements that everyone will see
+const announcements: Announcement[] = [
   {
     id: '1',
     type: 'rank_change',
@@ -39,22 +40,7 @@ const mockAnnouncements: Announcement[] = [
     type: 'event',
     message: 'Poke Party event starts in 2 hours! Get ready to drop ranks and create chaos!',
     timestamp: new Date(Date.now() - 7200000),
-  },
-  {
-    id: '4',
-    type: 'achievement',
-    message: 'CryptoWhale has earned the "Money Mountain" badge for 10 consecutive weeks of spending!',
-    timestamp: new Date(Date.now() - 14400000),
-    user: {
-      username: 'CryptoWhale',
-    }
-  },
-  {
-    id: '5',
-    type: 'promotion',
-    message: 'Royal sale: 20% bonus rank points on all contributions in the next 24 hours!',
-    timestamp: new Date(Date.now() - 28800000),
-  },
+  }
 ];
 
 const getAnnouncementIcon = (type: Announcement['type']) => {
@@ -92,38 +78,8 @@ const getAnnouncementColor = (type: Announcement['type']) => {
 };
 
 const AnnouncementTicker: React.FC = () => {
-  const [announcements, setAnnouncements] = useState<Announcement[]>(mockAnnouncements);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const tickerRef = useRef<HTMLDivElement>(null);
-  
-  // Auto-scroll through announcements
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentIndex((prevIndex) => (prevIndex + 1) % announcements.length);
-    }, 8000);
-    
-    return () => clearInterval(interval);
-  }, [announcements.length]);
-  
-  // Add animation when current announcement changes
-  useEffect(() => {
-    if (tickerRef.current) {
-      tickerRef.current.classList.add('animate-fade-out');
-      
-      setTimeout(() => {
-        if (tickerRef.current) {
-          tickerRef.current.classList.remove('animate-fade-out');
-          tickerRef.current.classList.add('animate-fade-in');
-          
-          setTimeout(() => {
-            if (tickerRef.current) {
-              tickerRef.current.classList.remove('animate-fade-in');
-            }
-          }, 500);
-        }
-      }, 500);
-    }
-  }, [currentIndex]);
+  // Always show the first announcement for consistency
+  const [currentIndex] = useState(0);
   
   const currentAnnouncement = announcements[currentIndex];
   
@@ -132,10 +88,7 @@ const AnnouncementTicker: React.FC = () => {
   return (
     <div className="w-full bg-black/50 backdrop-blur-sm border-b border-royal-gold/20 py-2 overflow-hidden">
       <div className="container mx-auto px-4">
-        <div 
-          ref={tickerRef}
-          className="flex items-center justify-center text-sm md:text-base"
-        >
+        <div className="flex items-center justify-center text-sm md:text-base">
           {getAnnouncementIcon(currentAnnouncement.type)}
           <span className={`mx-2 ${getAnnouncementColor(currentAnnouncement.type)}`}>
             {currentAnnouncement.message}

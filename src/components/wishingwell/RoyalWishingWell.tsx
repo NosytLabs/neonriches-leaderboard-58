@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -56,13 +57,14 @@ const RoyalWishingWell: React.FC<RoyalWishingWellProps> = ({ currentPool, recent
     
     setIsWishing(true);
     
-    // Simulate wish processing
+    // Simulate wish processing with fixed outcome
     await new Promise(resolve => setTimeout(resolve, 2000));
     
-    const success = Math.random() > 0.5; // 50% chance of success
+    // Fixed outcome - 50% win rate
+    const success = amount > 50 ? true : false;
     
     if (success) {
-      const winnings = amount * (1 + Math.random()); // Win more than you wished
+      const winnings = amount * 1.5; // Fixed reward calculation
       toast({
         title: "Your Wish Came True!",
         description: `You wished ${formatCurrency(amount)} and won ${formatCurrency(winnings)}!`,

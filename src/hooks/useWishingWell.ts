@@ -57,11 +57,11 @@ const useWishingWell = (): UseWishingWellReturn => {
       // Simulate API call for making a wish
       await new Promise(resolve => setTimeout(resolve, 1500));
       
-      // Determine if the wish is successful
-      const random = Math.random();
+      // Determine result based on amount for consistency
+      // Higher amounts have better rewards
       let wishResult: WishResultDetails;
       
-      if (random < 0.05) { // 5% chance for legendary
+      if (amount >= 75) { 
         wishResult = {
           status: 'win',
           title: 'Legendary Prize!',
@@ -71,7 +71,7 @@ const useWishingWell = (): UseWishingWellReturn => {
           itemId: 'royal-title-legendary',
           itemCategory: 'titles'
         };
-      } else if (random < 0.15) { // 10% chance for epic
+      } else if (amount >= 50) {
         wishResult = {
           status: 'win',
           title: 'Epic Prize!',
@@ -81,7 +81,7 @@ const useWishingWell = (): UseWishingWellReturn => {
           itemId: 'border-epic-gold',
           itemCategory: 'borders'
         };
-      } else if (random < 0.35) { // 20% chance for rare
+      } else if (amount >= 25) {
         wishResult = {
           status: 'win',
           title: 'Rare Prize!',
@@ -91,7 +91,7 @@ const useWishingWell = (): UseWishingWellReturn => {
           itemId: 'effect-rare-sparkle',
           itemCategory: 'effects'
         };
-      } else if (random < 0.65) { // 30% chance for common
+      } else if (amount >= 10) {
         wishResult = {
           status: 'win',
           title: 'Common Prize!',
@@ -101,7 +101,7 @@ const useWishingWell = (): UseWishingWellReturn => {
           itemId: 'emoji-common-crown',
           itemCategory: 'emojis'
         };
-      } else { // 35% chance to lose
+      } else {
         wishResult = {
           status: 'lose',
           title: 'No luck this time',

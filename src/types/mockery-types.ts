@@ -147,3 +147,7 @@ export interface UseMockery {
   getUserMockedOthersCount: (username: string) => number;
   getActiveMockery: (username: string) => MockeryAction | null;
 }
+
+// Export all mockery types from this file for reuse elsewhere
+export type { MockeryAction, MockeryTier, ShameAction };
+export type { MockeryEvent, MockedUser, ShameEffectData, MockeryEffectData, NotificationSoundOptions };
