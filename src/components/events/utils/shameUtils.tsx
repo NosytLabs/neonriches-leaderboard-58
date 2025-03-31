@@ -18,6 +18,7 @@ import {
 
 import { MockeryAction, ShameAction } from '@/types/mockery';
 import { cn } from '@/lib/utils';
+import React from 'react';
 
 export { 
   hasWeeklyDiscount,
@@ -48,10 +49,10 @@ interface ShameIconProps {
   size?: 'sm' | 'md' | 'lg';
 }
 
-export const ShameIcon = ({ 
+export const ShameIcon: React.FC<ShameIconProps> = ({ 
   action, 
   size = 'md' 
-}: ShameIconProps) => {
+}) => {
   // Convert ShameAction to MockeryAction explicitly through unknown to avoid type error
   const actionType = action as unknown as MockeryAction;
   const IconComponent = getShameActionIcon(actionType);
