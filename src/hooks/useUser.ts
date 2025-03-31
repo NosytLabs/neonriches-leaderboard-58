@@ -19,7 +19,7 @@ export const useUser = (userId?: string): UseUserResult => {
   const { profileData, loading, error } = useProfileData(userId || '');
 
   useEffect(() => {
-    // Logic to determine if this is the current user's profile could be added here
+    // Logic to determine if this is the current user's profile
     if (userId && profileData && profileData.id === userId) {
       setIsOwnProfile(true);
     }

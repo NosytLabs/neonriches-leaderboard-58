@@ -1,156 +1,184 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogTrigger } from '@/components/ui/dialog';
-import { Flame, Clock, Medal, Star, Crown, Badge, Shield } from 'lucide-react';
-import { MockeryAction } from '@/types/mockery';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
+import { formatCurrency } from '@/utils/formatters';
+import { TeamColor } from '@/types/team';
+import { Bell, Flame, ShieldAlert, UserX } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 import { LeaderboardUser } from '@/types/leaderboard';
-import ShameModal from './components/ShameModal';
 
-// Import properly from shameUtils
-import { hasWeeklyDiscount } from '@/utils/shameUtils';
-import { getWeeklyDiscountedAction } from '@/utils/shameUtils';
-import { getMockeryName } from '@/utils/mockeryUtils';
-import { getDiscountedShamePrice } from '@/utils/shameUtils';
-
-interface PublicShamingFestivalProps {
-  leaderboardUsers: LeaderboardUser[];
-  onShameApplied: (userId: string, shameType: MockeryAction) => void;
+export interface PublicShamingFestivalProps {
+  leaderboardUsers?: LeaderboardUser[];
+  onShameApplied?: (userId: string, action: string) => void;
 }
 
-const PublicShamingFestival: React.FC<PublicShamingFestivalProps> = ({ leaderboardUsers, onShameApplied }) => {
-  const [selectedUser, setSelectedUser] = useState<LeaderboardUser | null>(null);
-  const [selectedShame, setSelectedShame] = useState<MockeryAction | null>(null);
+const PublicShamingFestival: React.FC<PublicShamingFestivalProps> = ({ 
+  leaderboardUsers = [], // Default to empty array if not provided
+  onShameApplied = () => {} // Default no-op function if not provided
+}) => {
+  const { toast } = useToast();
+  const [selectedUser, setSelectedUser] = useState<string | null>(null);
+  const [isShaming, setIsShaming] = useState(false);
   
-  const hasDiscount = hasWeeklyDiscount();
-  const discountedAction = getWeeklyDiscountedAction();
+  // Mock users for display if none provided
+  const usersToDisplay = leaderboardUsers.length > 0 ? leaderboardUsers : [
+    {
+      id: '1',
+      userId: '1',
+      username: 'GoldenKing',
+      profileImage: '/avatars/user1.png',
+      totalSpent: 5000,
+      rank: 1,
+      team: 'gold' as TeamColor,
+      tier: 'royal',
+      spendStreak: 7,
+      displayName: 'Golden King',
+      walletBalance: 10000,
+      previousRank: 2,
+      joinDate: '2023-01-15T00:00:00.000Z',
+      isVerified: true
+    },
+    {
+      id: '2',
+      userId: '2',
+      username: 'DiamondDuchess',
+      profileImage: '/avatars/user2.png',
+      totalSpent: 3800,
+      rank: 2,
+      team: 'purple' as TeamColor,
+      tier: 'elite',
+      spendStreak: 5,
+      displayName: 'Diamond Duchess',
+      walletBalance: 7500,
+      previousRank: 3,
+      joinDate: '2023-02-10T00:00:00.000Z',
+      isVerified: true
+    },
+    {
+      id: '3',
+      userId: '3',
+      username: 'SilverSage',
+      profileImage: '/avatars/user3.png',
+      totalSpent: 2500,
+      rank: 3,
+      team: 'blue' as TeamColor,
+      tier: 'platinum',
+      spendStreak: 3,
+      displayName: 'Silver Sage',
+      walletBalance: 5000,
+      previousRank: 5,
+      joinDate: '2023-03-22T00:00:00.000Z',
+      isVerified: true
+    }
+  ];
   
-  const handleShame = (user: LeaderboardUser, shameType: MockeryAction) => {
-    setSelectedUser(user);
-    setSelectedShame(shameType);
+  const handleShameUser = (userId: string, action: string) => {
+    setIsShaming(true);
+    
+    // Simulate API call
+    setTimeout(() => {
+      onShameApplied(userId, action);
+      
+      setIsShaming(false);
+      setSelectedUser(null);
+      
+      toast({
+        title: "Public Shaming Applied",
+        description: "Your mockery has been recorded in the royal ledger!",
+        variant: "success"
+      });
+    }, 1000);
   };
   
-  const handleConfirmShame = (userId: string) => {
-    if (selectedShame) {
-      onShameApplied(userId, selectedShame);
-      setSelectedUser(null);
-      setSelectedShame(null);
+  const getShameActionLabel = (actionId: string) => {
+    switch(actionId) {
+      case 'tomato': return 'Throw Tomatoes';
+      case 'mock': return 'Public Mockery';
+      case 'denounce': return 'Royal Denouncement';
+      default: return 'Shame';
     }
   };
   
-  const handleCancelShame = () => {
-    setSelectedUser(null);
-    setSelectedShame(null);
+  const getShameActionIcon = (actionId: string) => {
+    switch(actionId) {
+      case 'tomato': return <Flame className="h-4 w-4 mr-2" />;
+      case 'mock': return <UserX className="h-4 w-4 mr-2" />;
+      case 'denounce': return <ShieldAlert className="h-4 w-4 mr-2" />;
+      default: return <Bell className="h-4 w-4 mr-2" />;
+    }
   };
   
   return (
-    <Card className="glass-morphism border-white/10">
+    <Card className="glass-morphism border-royal-gold/20">
       <CardHeader>
         <CardTitle className="flex items-center">
-          <Flame className="mr-2 h-4 w-4 text-royal-crimson" />
+          <Bell className="h-5 w-5 text-royal-gold mr-2" />
           Public Shaming Festival
         </CardTitle>
+        <p className="text-sm text-muted-foreground mt-1">
+          Shame those who spend less than you! Choose a peasant below to mock.
+        </p>
       </CardHeader>
       
-      <CardContent className="grid gap-4">
-        {leaderboardUsers.map((user) => (
-          <div key={user.userId} className="flex items-center justify-between p-3 rounded-lg bg-black/20 border border-white/10">
-            <div className="flex items-center space-x-3">
-              <div className="relative">
-                <div className="absolute -top-1 -left-1 w-5 h-5 flex items-center justify-center bg-background text-xs font-semibold rounded-full border border-border">
-                  {user.rank}
-                </div>
-                <div className="h-10 w-10 rounded-full bg-muted overflow-hidden">
-                  <img
-                    src={user.profileImage}
-                    alt={user.username}
-                    className="h-full w-full object-cover"
-                  />
-                </div>
-              </div>
-              <div>
-                <div className="font-medium">{user.username}</div>
-                <div className="text-xs text-muted-foreground">
-                  Spent: ${user.totalSpent.toLocaleString()}
+      <CardContent>
+        <div className="space-y-4">
+          {usersToDisplay.map((user) => (
+            <div key={user.id || user.userId} className="flex items-center justify-between p-3 rounded-lg bg-black/20 border border-white/5 hover:border-royal-gold/30 hover:bg-black/30 transition-all">
+              <div className="flex items-center space-x-3">
+                <Avatar>
+                  <AvatarImage src={user.profileImage} alt={user.username} />
+                  <AvatarFallback>{user.username?.[0]?.toUpperCase() || 'U'}</AvatarFallback>
+                </Avatar>
+                <div>
+                  <div className="font-medium flex items-center">
+                    {user.username}
+                    <Badge variant="outline" className="ml-2 text-xs">Rank #{user.rank}</Badge>
+                  </div>
+                  <div className="text-xs text-white/60">
+                    Spent: ${formatCurrency(user.totalSpent || 0)}
+                  </div>
                 </div>
               </div>
-            </div>
-            
-            <div className="flex items-center space-x-2">
-              <Dialog>
-                <DialogTrigger asChild>
-                  <Button 
-                    variant="outline" 
-                    size="sm"
-                    onClick={() => handleShame(user, 'tomatoes')}
-                    className="border-royal-crimson/30 hover:bg-royal-crimson/10"
-                  >
-                    <Clock className="h-3 w-3 mr-1" />
-                    Tomatoes
-                  </Button>
-                </DialogTrigger>
-                {selectedUser?.userId === user.userId && selectedShame === 'tomatoes' && (
-                  <ShameModal 
-                    targetUser={user}
-                    shameType="tomatoes"
-                    onConfirm={handleConfirmShame}
-                    onCancel={handleCancelShame}
-                  />
-                )}
-              </Dialog>
               
-              <Dialog>
-                <DialogTrigger asChild>
-                  <Button 
-                    variant="outline" 
-                    size="sm"
-                    onClick={() => handleShame(user, 'eggs')}
-                    className="border-royal-crimson/30 hover:bg-royal-crimson/10"
-                  >
-                    <Medal className="h-3 w-3 mr-1" />
-                    Eggs
-                  </Button>
-                </DialogTrigger>
-                {selectedUser?.userId === user.userId && selectedShame === 'eggs' && (
-                  <ShameModal 
-                    targetUser={user}
-                    shameType="eggs"
-                    onConfirm={handleConfirmShame}
-                    onCancel={handleCancelShame}
-                  />
-                )}
-              </Dialog>
-              
-              {hasDiscount && discountedAction && (
-                <Dialog>
-                  <DialogTrigger asChild>
+              {selectedUser === (user.id || user.userId) ? (
+                <div className="flex space-x-2">
+                  {['tomato', 'mock', 'denounce'].map((action) => (
                     <Button 
-                      variant="outline" 
-                      size="sm"
-                      onClick={() => handleShame(user, discountedAction)}
-                      className="border-emerald-400/30 hover:bg-emerald-400/10"
+                      key={action}
+                      size="sm" 
+                      variant="outline"
+                      onClick={() => handleShameUser(user.id || user.userId || '', action)}
+                      disabled={isShaming}
+                      className="glass-morphism border-white/10 text-xs"
                     >
-                      <Star className="h-3 w-3 mr-1" />
-                      {getMockeryName(discountedAction)}
-                      <Badge className="ml-1 bg-emerald-500/20 text-emerald-400 text-[0.6rem]">
-                        50% OFF
-                      </Badge>
+                      {getShameActionIcon(action)}
+                      {getShameActionLabel(action)}
                     </Button>
-                  </DialogTrigger>
-                  {selectedUser?.userId === user.userId && selectedShame === discountedAction && (
-                    <ShameModal 
-                      targetUser={user}
-                      shameType={discountedAction}
-                      onConfirm={handleConfirmShame}
-                      onCancel={handleCancelShame}
-                      hasDiscount
-                    />
-                  )}
-                </Dialog>
+                  ))}
+                </div>
+              ) : (
+                <Button 
+                  size="sm" 
+                  variant="outline" 
+                  onClick={() => setSelectedUser(user.id || user.userId || '')}
+                  className="glass-morphism border-white/10"
+                >
+                  <Bell className="h-4 w-4 mr-2" />
+                  Shame
+                </Button>
               )}
             </div>
+          ))}
+          
+          <div className="text-center mt-6 pt-4 border-t border-white/10">
+            <p className="text-xs text-white/50">
+              Public shaming is a time-honored tradition in the SpendThrone kingdom. Shame users below your rank at your own peril.
+            </p>
           </div>
-        ))}
+        </div>
       </CardContent>
     </Card>
   );

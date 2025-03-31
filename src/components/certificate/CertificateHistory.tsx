@@ -1,82 +1,56 @@
 
 import React from 'react';
-import { Certificate } from '@/types/certificate';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Certificate } from '@/types/certificates';
 import { formatDate } from '@/utils/dateUtils';
-import { Crown, Award, Calendar, CircleDollarSign, ShieldCheck } from 'lucide-react';
+import { formatCurrency } from '@/utils/formatters';
+import { History, Award } from 'lucide-react';
 
 interface CertificateHistoryProps {
-  certificate: Certificate;
+  certificates: Certificate[];
 }
 
-const CertificateHistory: React.FC<CertificateHistoryProps> = ({ certificate }) => {
-  // Generate some mock history events based on the certificate
-  const historyEvents = [
-    {
-      id: '1',
-      type: 'created',
-      date: certificate.createdAt || new Date().toISOString(),
-      description: `Certificate was created for achieving ${certificate.type} status`
-    },
-    {
-      id: '2',
-      type: 'milestone',
-      date: new Date(new Date(certificate.createdAt || new Date()).getTime() - 86400000).toISOString(), // 1 day before
-      description: `Spent $${certificate.amount || 1000} to reach this milestone`
-    },
-    {
-      id: '3',
-      type: 'rank',
-      date: new Date(new Date(certificate.createdAt || new Date()).getTime() - 86400000 * 3).toISOString(), // 3 days before
-      description: `Achieved rank #${certificate.rank || 100} in the leaderboard`
-    }
-  ];
-  
-  if (certificate.isMinted) {
-    historyEvents.unshift({
-      id: '0',
-      type: 'minted',
-      date: new Date().toISOString(),
-      description: `Certificate was minted as an NFT with address ${certificate.mintAddress?.substring(0, 12)}...`
-    });
-  }
-  
-  // Get the appropriate icon for each event type
-  const getEventIcon = (type: string) => {
-    switch (type) {
-      case 'created':
-        return <Award className="h-5 w-5 text-royal-gold" />;
-      case 'milestone':
-        return <CircleDollarSign className="h-5 w-5 text-royal-gold" />;
-      case 'rank':
-        return <Crown className="h-5 w-5 text-royal-gold" />;
-      case 'minted':
-        return <ShieldCheck className="h-5 w-5 text-royal-gold" />;
-      default:
-        return <Calendar className="h-5 w-5 text-royal-gold" />;
-    }
-  };
-  
+const CertificateHistory: React.FC<CertificateHistoryProps> = ({ certificates }) => {
   return (
-    <div className="space-y-6">
-      <Card className="glass-morphism border-white/10">
-        <CardContent className="pt-6">
-          <div className="relative pl-8 before:absolute before:left-4 before:top-0 before:bottom-0 before:w-0.5 before:bg-white/10">
-            {historyEvents.map((event, index) => (
-              <div key={event.id} className={`relative pb-6 ${index === historyEvents.length - 1 ? '' : ''}`}>
-                <div className="absolute -left-4 p-1 bg-background border border-white/10 rounded-full">
-                  {getEventIcon(event.type)}
+    <Card className="glass-morphism border-white/10">
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2 text-lg">
+          <History className="h-5 w-5 text-royal-gold" />
+          Certificate History
+        </CardTitle>
+      </CardHeader>
+      
+      <CardContent>
+        <ScrollArea className="h-[300px] pr-4">
+          {certificates.length === 0 ? (
+            <div className="flex flex-col items-center justify-center h-full text-center p-6">
+              <Award className="h-12 w-12 text-white/20 mb-2" />
+              <p className="text-white/40">No certificates yet</p>
+              <p className="text-xs text-white/30 mt-1">Your certificates will appear here</p>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {certificates.map((cert) => (
+                <div 
+                  key={cert.id} 
+                  className="p-3 bg-white/5 rounded-lg border border-white/10 hover:border-royal-gold/30 transition-colors"
+                >
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <p className="font-medium">{cert.title}</p>
+                      <p className="text-xs text-white/60 mt-0.5">
+                        Issued: {formatDate(cert.dateIssued)}
+                      </p>
+                    </div>
+                  </div>
                 </div>
-                <div className="relative">
-                  <p className="mb-1 text-sm font-medium">{formatDate(event.date)}</p>
-                  <p className="text-white/70">{event.description}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-    </div>
+              ))}
+            </div>
+          )}
+        </ScrollArea>
+      </CardContent>
+    </Card>
   );
 };
 

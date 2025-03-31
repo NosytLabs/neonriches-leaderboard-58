@@ -1,98 +1,58 @@
+// Re-export utility functions
+import { cn } from '@/lib/utils';
+import { 
+  formatCurrency, 
+  formatNumber, 
+  formatPercent 
+} from './formatters';
 
-/**
- * Main utilities export file
- * Only exports functions that actually exist
- */
-
-// Export formatters
-export { formatCurrency, formatNumber, formatDate } from './formatters';
-
-// Export string utilities 
-export { capitalizeFirstLetter, truncateString, generateUUID } from './stringUtils';
-
-// Export number utilities
-export { generateRandomInteger } from './numberUtils';
-
-// Export shadcn utility
-export { cn } from './shadcn';
-
-// Export date utilities
-export { 
-  getRelativeTime,
+import { 
+  formatDate,
+  getRelativeTimeString,
   getDaysInMonth,
   isDateInPast,
   isDateInFuture,
   isDateToday
 } from './dateUtils';
 
-// Export array utilities
+// Common UI utilities
 export {
-  sortArrayByDate,
-  filterArrayByDateRange,
-  sortArrayByNumber,
-  filterArrayByNumberRange,
-  sortArrayByString,
-  filterArrayByString,
-  groupArrayByProperty,
-  getRandomElementFromArray,
-  shuffleArray,
-  chunkArray
-} from './arrayUtils';
-
-// Export object utilities
-export {
-  omit,
-  pick,
-  deepClone,
-  mergeObjects,
-  isObjectEmpty,
-  areObjectsEqual
-} from './objectUtils';
-
-// Export type utilities
-export {
-  safeNumberConversion,
-  safeStringConversion,
-  toTeamType,
-  toUserTier,
-  convertShameToMockery,
-  convertMockeryToShame,
-  createLeaderboardUser
-} from './typeUtils';
-
-// Export validation utilities
-export {
-  validateEmail,
-  validatePassword,
-  validateUsername
-} from './validationUtils';
-
-// Export browser utilities
-export { isMobile, isTablet, isDesktop } from './deviceUtils';
-
-// Export storage utilities
-export {
-  getLocalStorageItem,
-  setLocalStorageItem,
-  removeLocalStorageItem,
-  clearLocalStorage
-} from './storageUtils';
-
-// Export default for convenience
-import * as formatters from './formatters';
-import * as stringUtils from './stringUtils';
-import * as numberUtils from './numberUtils';
-import * as dateUtils from './dateUtils';
-import * as arrayUtils from './arrayUtils';
-import * as objectUtils from './objectUtils';
-import * as typeUtils from './typeUtils';
-
-export default {
-  ...formatters,
-  ...stringUtils,
-  ...numberUtils,
-  ...dateUtils,
-  ...arrayUtils,
-  ...objectUtils,
-  ...typeUtils
+  cn,
+  formatCurrency,
+  formatNumber,
+  formatPercent,
+  formatDate,
+  getRelativeTimeString,
+  getDaysInMonth,
+  isDateInPast,
+  isDateInFuture,
+  isDateToday
 };
+
+// Export any other type of utilities needed
+
+export const capitalize = (string: string): string => {
+  if (!string) return '';
+  return string.charAt(0).toUpperCase() + string.slice(1);
+};
+
+export const truncate = (text: string, length: number): string => {
+  if (!text) return '';
+  if (text.length <= length) return text;
+  return text.slice(0, length) + '...';
+};
+
+export const generateId = (length: number = 8): string => {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let result = '';
+  for (let i = 0; i < length; i++) {
+    result += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return result;
+};
+
+export const sleep = (ms: number): Promise<void> => {
+  return new Promise(resolve => setTimeout(resolve, ms));
+};
+
+// Add any other common utility functions here

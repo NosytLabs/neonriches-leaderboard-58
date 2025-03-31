@@ -44,7 +44,32 @@ export const getRelativeTimeString = (dateString: string): string => {
   }
 };
 
+export const getDaysInMonth = (date: Date): number => {
+  return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
+};
+
+export const isDateInPast = (date: string | Date): boolean => {
+  const compareDate = new Date(date);
+  const today = new Date();
+  return compareDate < today;
+};
+
+export const isDateInFuture = (date: string | Date): boolean => {
+  const compareDate = new Date(date);
+  const today = new Date();
+  return compareDate > today;
+};
+
+export const isDateToday = (date: string | Date): boolean => {
+  const compareDate = new Date(date);
+  return isToday(compareDate);
+};
+
 export default {
   formatDate,
-  getRelativeTimeString
+  getRelativeTimeString,
+  getDaysInMonth,
+  isDateInPast,
+  isDateInFuture,
+  isDateToday
 };

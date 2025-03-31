@@ -1,139 +1,162 @@
 
 import React, { useState } from 'react';
-import { Certificate } from '@/types/certificate';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Twitter, Facebook, Linkedin, Mail, Link, Copy, Check } from 'lucide-react';
+import { 
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from '@/components/ui/dialog';
+import { Share2, Copy, Twitter, Facebook, Download } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
+import { Certificate } from '@/types/certificates';
 
 interface CertificateSharingProps {
   certificate: Certificate;
+  shareableImage?: string;
+  shareableUrl?: string;
 }
 
-const CertificateSharing: React.FC<CertificateSharingProps> = ({ certificate }) => {
-  const [copied, setCopied] = useState(false);
-  const [activeTab, setActiveTab] = useState('link');
+const CertificateSharing: React.FC<CertificateSharingProps> = ({
+  certificate,
+  shareableImage,
+  shareableUrl = 'https://spendthrone.com/certificates/share/12345',
+}) => {
+  const { toast } = useToast();
+  const [isShareOpen, setIsShareOpen] = useState(false);
   
-  // Generate sharing URLs
-  const shareUrl = `${window.location.origin}/certificate/${certificate.id}`;
-  const shareTitle = `Check out my ${certificate.title || 'Royal Certificate'} at SpendThrone!`;
-  const shareText = `I earned a ${certificate.type} certificate at SpendThrone. Come join the royal competition!`;
+  const handleCopyLink = () => {
+    navigator.clipboard.writeText(shareableUrl);
+    toast({
+      title: "Link Copied",
+      description: "Share link copied to clipboard",
+      variant: "success",
+    });
+  };
   
-  const twitterUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareTitle)}`;
-  const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`;
-  const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`;
-  const mailUrl = `mailto:?subject=${encodeURIComponent(shareTitle)}&body=${encodeURIComponent(shareText + '\n\n' + shareUrl)}`;
+  const handleShareTwitter = () => {
+    const text = `Check out my SpendThrone Certificate: ${certificate.title}`;
+    const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(shareableUrl)}`;
+    window.open(url, '_blank');
+  };
   
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(shareUrl);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+  const handleShareFacebook = () => {
+    const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareableUrl)}`;
+    window.open(url, '_blank');
+  };
+  
+  const handleDownloadImage = () => {
+    if (!shareableImage) {
+      toast({
+        title: "Download Failed",
+        description: "No image available to download",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    // Create an anchor element and set the href to the image source
+    const link = document.createElement('a');
+    link.href = shareableImage;
+    link.download = `SpendThrone-Certificate-${certificate.id}.png`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    toast({
+      title: "Download Started",
+      description: "Your certificate image is downloading",
+      variant: "success",
+    });
   };
   
   return (
-    <div className="space-y-6">
-      <Tabs defaultValue="link" value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid grid-cols-4 w-full">
-          <TabsTrigger value="link">Link</TabsTrigger>
-          <TabsTrigger value="social">Social</TabsTrigger>
-          <TabsTrigger value="embed">Embed</TabsTrigger>
-          <TabsTrigger value="qr">QR Code</TabsTrigger>
-        </TabsList>
+    <>
+      <Card className="glass-morphism border-white/10">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-lg">
+            <Share2 className="h-5 w-5 text-royal-gold" />
+            Share Certificate
+          </CardTitle>
+        </CardHeader>
         
-        <TabsContent value="link" className="space-y-4">
-          <Card className="glass-morphism border-white/10">
-            <CardContent className="pt-6">
-              <div className="flex space-x-2">
-                <Input
-                  value={shareUrl}
-                  readOnly
-                  className="bg-black/20 border-white/10"
-                />
-                <Button variant="outline" onClick={copyToClipboard}>
-                  {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-        
-        <TabsContent value="social" className="space-y-4">
-          <Card className="glass-morphism border-white/10">
-            <CardContent className="pt-6">
-              <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-                <a href={twitterUrl} target="_blank" rel="noopener noreferrer">
-                  <Button variant="outline" className="w-full">
-                    <Twitter className="h-4 w-4 mr-2" />
-                    Twitter
-                  </Button>
-                </a>
-                <a href={facebookUrl} target="_blank" rel="noopener noreferrer">
-                  <Button variant="outline" className="w-full">
-                    <Facebook className="h-4 w-4 mr-2" />
-                    Facebook
-                  </Button>
-                </a>
-                <a href={linkedinUrl} target="_blank" rel="noopener noreferrer">
-                  <Button variant="outline" className="w-full">
-                    <Linkedin className="h-4 w-4 mr-2" />
-                    LinkedIn
-                  </Button>
-                </a>
-                <a href={mailUrl}>
-                  <Button variant="outline" className="w-full">
-                    <Mail className="h-4 w-4 mr-2" />
-                    Email
-                  </Button>
-                </a>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-        
-        <TabsContent value="embed" className="space-y-4">
-          <Card className="glass-morphism border-white/10">
-            <CardContent className="pt-6">
-              <p className="text-sm text-white/70 mb-2">Copy this code to embed your certificate in a website:</p>
-              <div className="flex space-x-2">
-                <Input
-                  value={`<iframe src="${shareUrl}/embed" width="100%" height="400" frameborder="0"></iframe>`}
-                  readOnly
-                  className="bg-black/20 border-white/10 font-mono text-xs"
-                />
-                <Button variant="outline" onClick={() => {
-                  navigator.clipboard.writeText(`<iframe src="${shareUrl}/embed" width="100%" height="400" frameborder="0"></iframe>`);
-                  setCopied(true);
-                  setTimeout(() => setCopied(false), 2000);
-                }}>
-                  {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-        
-        <TabsContent value="qr" className="space-y-4">
-          <Card className="glass-morphism border-white/10">
-            <CardContent className="pt-6 flex flex-col items-center">
-              <div className="bg-white p-3 rounded-lg mb-3">
-                {/* QR code could be generated here with a library or an API */}
-                <div className="w-48 h-48 bg-gray-200 flex items-center justify-center">
-                  <p className="text-black">QR Code for Certificate</p>
-                </div>
-              </div>
-              <Button variant="outline" onClick={() => {
-                // In a real app, this would download the QR code
-                alert('QR Code download feature coming soon');
-              }}>
+        <CardContent>
+          <p className="text-sm text-white/70 mb-4">
+            Share your achievement with the world and show off your royal status.
+          </p>
+          
+          <Button 
+            variant="default" 
+            className="w-full bg-royal-gold text-black hover:bg-royal-gold/90"
+            onClick={() => setIsShareOpen(true)}
+          >
+            <Share2 className="h-4 w-4 mr-2" />
+            Share Certificate
+          </Button>
+        </CardContent>
+      </Card>
+      
+      <Dialog open={isShareOpen} onOpenChange={setIsShareOpen}>
+        <DialogContent className="glass-morphism border-white/10 sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Share Your Certificate</DialogTitle>
+            <DialogDescription>
+              Show off your achievement and royal status to your network.
+            </DialogDescription>
+          </DialogHeader>
+          
+          {shareableImage && (
+            <div className="rounded-lg overflow-hidden border border-white/10 mb-4">
+              <img 
+                src={shareableImage} 
+                alt={certificate.title} 
+                className="w-full h-auto"
+              />
+            </div>
+          )}
+          
+          <div className="flex items-center gap-2 mb-4">
+            <Input 
+              value={shareableUrl} 
+              readOnly 
+              className="glass-morphism border-white/10"
+            />
+            <Button size="sm" onClick={handleCopyLink} variant="outline" className="glass-morphism border-white/10">
+              <Copy className="h-4 w-4" />
+            </Button>
+          </div>
+          
+          <div className="flex flex-wrap gap-2">
+            <Button variant="outline" className="glass-morphism border-white/10" onClick={handleShareTwitter}>
+              <Twitter className="h-4 w-4 mr-2" />
+              Twitter
+            </Button>
+            
+            <Button variant="outline" className="glass-morphism border-white/10" onClick={handleShareFacebook}>
+              <Facebook className="h-4 w-4 mr-2" />
+              Facebook
+            </Button>
+            
+            {shareableImage && (
+              <Button variant="outline" className="glass-morphism border-white/10" onClick={handleDownloadImage}>
                 <Download className="h-4 w-4 mr-2" />
-                Download QR Code
+                Download
               </Button>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
-    </div>
+            )}
+          </div>
+          
+          <DialogFooter className="sm:justify-start">
+            <p className="text-xs text-white/50">
+              Certificate ID: {certificate.id.substring(0, 8)}...
+            </p>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 };
 

@@ -1,112 +1,134 @@
 
 import React from 'react';
-import { Certificate } from '@/types/certificate';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Certificate } from '@/types/certificates';
+import { UserProfile } from '@/types/user';
 import { formatDate } from '@/utils/dateUtils';
-import { Badge } from '@/components/ui/badge';
-import { Crown, Download, Globe, Shield } from 'lucide-react';
+import { Download, Share2, Award, Clock } from 'lucide-react';
 
 interface CertificateDisplayProps {
   certificate: Certificate;
-  onMint?: (certificate: Certificate) => Promise<any>;
-  onShare?: (certificate: Certificate) => void;
-  onDownload?: (certificate: Certificate) => void;
+  user: UserProfile;
+  onMint?: (cert: Certificate) => Promise<boolean>;
+  onShare?: (cert: Certificate) => Promise<string>;
+  onDownload?: (cert: Certificate) => void;
   isMinting?: boolean;
 }
 
-const CertificateDisplay: React.FC<CertificateDisplayProps> = ({ 
-  certificate, 
-  onMint, 
-  onShare, 
+const CertificateDisplay: React.FC<CertificateDisplayProps> = ({
+  certificate,
+  user,
+  onMint,
+  onShare,
   onDownload,
   isMinting = false
 }) => {
+  const handleMint = async () => {
+    if (onMint) {
+      try {
+        await onMint(certificate);
+      } catch (error) {
+        console.error("Error minting certificate:", error);
+      }
+    }
+  };
+
+  const handleShare = async () => {
+    if (onShare) {
+      try {
+        await onShare(certificate);
+      } catch (error) {
+        console.error("Error sharing certificate:", error);
+      }
+    }
+  };
+
+  const handleDownload = () => {
+    if (onDownload) {
+      try {
+        onDownload(certificate);
+      } catch (error) {
+        console.error("Error downloading certificate:", error);
+      }
+    }
+  };
+
   return (
     <Card className="glass-morphism border-white/10 overflow-hidden">
-      <CardHeader className="pb-2">
-        <CardTitle className="flex items-center text-xl">
-          <Crown className="h-5 w-5 mr-2 text-royal-gold" />
-          {certificate.title || "Royal Certificate"}
-          {certificate.isMinted && (
-            <Badge className="ml-2 bg-royal-gold text-black">Minted</Badge>
-          )}
+      <div className="relative">
+        <img 
+          src={certificate.imageUrl} 
+          alt={certificate.title} 
+          className="w-full h-auto object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+        <div className="absolute bottom-0 left-0 p-4">
+          <p className="text-xs text-white/60">Issued on {formatDate(certificate.dateIssued.toString())}</p>
+        </div>
+      </div>
+      
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <Award className="h-5 w-5 text-royal-gold" />
+          {certificate.title}
         </CardTitle>
+        <p className="text-sm text-white/70">{certificate.description}</p>
       </CardHeader>
       
       <CardContent>
-        <div className="relative aspect-[4/3] overflow-hidden rounded-lg border border-white/10 mb-4">
-          <div className="absolute inset-0 bg-gradient-to-b from-black/0 to-black/60 z-10"></div>
-          <img 
-            src={certificate.imageUrl || "/images/certificates/default.jpg"} 
-            alt={certificate.title || "Certificate"} 
-            className="absolute inset-0 w-full h-full object-cover"
-          />
-          
-          <div className="absolute bottom-4 left-4 right-4 z-20">
-            <div className="flex items-center">
-              <div className="h-10 w-10 rounded-full bg-royal-gold/20 backdrop-blur-sm border border-royal-gold/30 flex items-center justify-center">
-                <Shield className="h-5 w-5 text-royal-gold" />
-              </div>
-              <div className="ml-3">
-                <p className="text-xs text-white/70">Awarded to</p>
-                <p className="font-medium text-white">{certificate.userDisplayName || certificate.username}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <div className="space-y-3">
-          <div>
-            <h3 className="text-sm font-medium text-white/70">Description</h3>
-            <p className="text-sm">{certificate.description || "A royal certificate of achievement."}</p>
-          </div>
-          
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <h3 className="text-sm font-medium text-white/70">Type</h3>
-              <p className="text-sm capitalize">{certificate.type}</p>
-            </div>
-            <div>
-              <h3 className="text-sm font-medium text-white/70">Issued On</h3>
-              <p className="text-sm">{formatDate(certificate.createdAt || new Date())}</p>
-            </div>
-          </div>
-          
-          {certificate.isMinted && certificate.mintAddress && (
-            <div>
-              <h3 className="text-sm font-medium text-white/70">NFT Address</h3>
-              <p className="text-xs text-white/60 truncate">{certificate.mintAddress}</p>
-            </div>
-          )}
-        </div>
-      </CardContent>
-      
-      <CardFooter className="flex justify-between pt-2 border-t border-white/5">
-        {onMint && !certificate.isMinted && (
+        <div className="flex flex-wrap gap-2 mt-4">
           <Button 
-            className="bg-gradient-to-r from-royal-gold to-royal-gold/80 text-black hover:from-royal-gold/90 hover:to-royal-gold/70" 
-            onClick={() => onMint(certificate)}
-            disabled={isMinting}
+            variant="outline" 
+            size="sm" 
+            className="glass-morphism border-white/10" 
+            onClick={handleMint}
+            disabled={isMinting || Boolean(certificate.mintAddress)}
           >
-            {isMinting ? "Minting..." : "Mint as NFT"}
+            {isMinting ? (
+              <>
+                <div className="h-4 w-4 mr-2 border-2 border-current border-t-transparent rounded-full animate-spin"></div>
+                Minting...
+              </>
+            ) : certificate.mintAddress ? (
+              <>
+                <Award className="h-4 w-4 mr-2" />
+                Minted
+              </>
+            ) : (
+              <>
+                <Award className="h-4 w-4 mr-2" />
+                Mint Certificate
+              </>
+            )}
           </Button>
-        )}
-        
-        {onShare && (
-          <Button variant="outline" onClick={() => onShare(certificate)}>
-            <Globe className="h-4 w-4 mr-2" />
+          
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="glass-morphism border-white/10"
+            onClick={handleShare}
+          >
+            <Share2 className="h-4 w-4 mr-2" />
             Share
           </Button>
-        )}
-        
-        {onDownload && (
-          <Button variant="outline" onClick={() => onDownload(certificate)}>
+          
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="glass-morphism border-white/10"
+            onClick={handleDownload}
+          >
             <Download className="h-4 w-4 mr-2" />
             Download
           </Button>
-        )}
-      </CardFooter>
+        </div>
+        
+        <div className="flex items-center gap-2 mt-6 text-xs text-white/50">
+          <Clock className="h-3 w-3" />
+          <span>Certificate ID: {certificate.id.substring(0, 8)}...</span>
+        </div>
+      </CardContent>
     </Card>
   );
 };

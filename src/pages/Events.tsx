@@ -9,9 +9,55 @@ import { Calendar } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import RoyalDivider from '@/components/ui/royal-divider';
 import { events, eventDetails } from '@/components/events/data';
+import { useToast } from '@/hooks/use-toast';
 
 export default function EventsPage() {
   const allEvents = events;
+  const { toast } = useToast();
+  
+  // Mock leaderboard users data for PublicShamingFestival
+  const mockLeaderboardUsers = [
+    {
+      id: '1',
+      userId: '1',
+      username: 'GoldenKing',
+      profileImage: '/avatars/user1.png',
+      totalSpent: 5000,
+      rank: 1,
+      team: 'gold',
+      tier: 'royal',
+      spendStreak: 7,
+      displayName: 'Golden King',
+      walletBalance: 10000,
+      previousRank: 2,
+      joinDate: '2023-01-15T00:00:00.000Z',
+      isVerified: true
+    },
+    {
+      id: '2',
+      userId: '2',
+      username: 'DiamondDuchess',
+      profileImage: '/avatars/user2.png',
+      totalSpent: 3800,
+      rank: 2,
+      team: 'purple',
+      tier: 'elite',
+      spendStreak: 5,
+      displayName: 'Diamond Duchess',
+      walletBalance: 7500,
+      previousRank: 3,
+      joinDate: '2023-02-10T00:00:00.000Z',
+      isVerified: true
+    }
+  ];
+  
+  const handleShameApplied = (userId: string, action: string) => {
+    toast({
+      title: "Shame Applied",
+      description: `You have ${action}ed user ${userId}`,
+      variant: "success"
+    });
+  };
   
   return (
     <Shell>
@@ -24,11 +70,17 @@ export default function EventsPage() {
       <div className="container max-w-7xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2">
-            <PublicShamingFestival />
+            <PublicShamingFestival 
+              leaderboardUsers={mockLeaderboardUsers}
+              onShameApplied={handleShameApplied}
+            />
           </div>
           
           <div className="lg:col-span-1 space-y-8">
-            <UpcomingEvents events={allEvents} maxEvents={4} />
+            <UpcomingEvents events={allEvents.map(event => ({
+              ...event,
+              rules: event.rules || [] // Ensure rules property exists
+            }))} maxEvents={4} />
             
             <Card className="border-royal-gold/20 glass-morphism">
               <CardHeader>
