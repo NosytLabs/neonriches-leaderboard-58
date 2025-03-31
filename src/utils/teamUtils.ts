@@ -1,5 +1,5 @@
 
-import { TeamType, TeamColor } from '@/types/user';
+import { TeamType, TeamColor } from '@/types/user-types';
 
 /**
  * Gets the display name for a team
@@ -11,8 +11,6 @@ export const getTeamName = (team?: TeamType | null): string => {
     case 'red': return 'Red Knights';
     case 'blue': return 'Blue Mages';
     case 'green': return 'Green Rangers';
-    case 'gold': return 'Gold Monarchs';
-    case 'purple': return 'Purple Assassins';
     default: return `Team ${team.charAt(0).toUpperCase() + team.slice(1)}`;
   }
 };
@@ -27,8 +25,6 @@ export const getTeamColor = (team?: TeamType | TeamColor | null): string => {
     case 'red': return 'text-red-500';
     case 'blue': return 'text-blue-500';
     case 'green': return 'text-green-500';
-    case 'gold': return 'text-royal-gold';
-    case 'purple': return 'text-purple-500';
     default: return 'text-gray-400';
   }
 };
@@ -43,8 +39,6 @@ export const getTeamBgColor = (team?: TeamType | TeamColor | null): string => {
     case 'red': return 'bg-red-500/20';
     case 'blue': return 'bg-blue-500/20';
     case 'green': return 'bg-green-500/20';
-    case 'gold': return 'bg-amber-500/20';
-    case 'purple': return 'bg-purple-500/20';
     default: return 'bg-gray-800/50';
   }
 };
@@ -59,8 +53,6 @@ export const getTeamBorderColor = (team?: TeamType | TeamColor | null): string =
     case 'red': return 'border-red-500/70';
     case 'blue': return 'border-blue-500/70';
     case 'green': return 'border-green-500/70';
-    case 'gold': return 'border-amber-500/70';
-    case 'purple': return 'border-purple-500/70';
     default: return 'border-gray-700';
   }
 };
@@ -75,10 +67,36 @@ export const getTeamIcon = (team?: TeamType | TeamColor | null): string => {
     case 'red': return 'sword';
     case 'blue': return 'wand';
     case 'green': return 'bow-arrow';
-    case 'gold': return 'crown';
-    case 'purple': return 'dagger';
     default: return 'users';
   }
+};
+
+// Additional utility functions for teams
+export const getTeamMotto = (team: TeamType): string => {
+  const mottos: Record<TeamType, string> = {
+    'red': 'Buy First, Think Never',
+    'green': 'Wealth So Strategic, It\'s Almost Pathetic',
+    'blue': 'Patience in Spending, Unbridled in Pretending'
+  };
+  return mottos[team] || 'No motto available';
+};
+
+export const getTeamBenefit = (team: TeamType): string[] => {
+  const benefits: Record<TeamType, string[]> = {
+    'red': ['Royal Crimson profile effects', 'Dynasty badges and titles'],
+    'green': ['Emerald Empire profile effects', 'Wealth architect badges'],
+    'blue': ['Sapphire Sovereign profile effects', 'Alliance nobility badges']
+  };
+  return benefits[team] || ['No benefits available'];
+};
+
+export const getTeamSecurityGuarantee = (team: TeamType): string => {
+  const guarantees: Record<TeamType, string> = {
+    'red': 'Your data is secured with the same level of care as a dragon guards its hoard of gold.',
+    'green': 'Your information is protected by mathematical encryption that would take centuries to break.',
+    'blue': 'Your privacy is ensured by a magical agreement that cannot be broken.'
+  };
+  return guarantees[team] || 'No security guarantee available';
 };
 
 // For backward compatibility

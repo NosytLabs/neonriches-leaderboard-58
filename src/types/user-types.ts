@@ -3,23 +3,10 @@
 export type UserTier = 
   | 'basic' 
   | 'standard' 
-  | 'premium' 
-  | 'elite' 
-  | 'royal' 
-  | 'silver' 
-  | 'gold' 
-  | 'platinum' 
-  | 'diamond' 
-  | 'bronze' 
-  | 'pro' 
-  | 'vip' 
-  | 'legendary'
-  | 'free'
-  | 'founder'
-  | 'plus';
+  | 'premium';
 
-// Simplify team types to just a few basic ones
-export type TeamType = 'red' | 'green' | 'blue' | 'gold' | 'purple' | 'none' | 'neutral';
+// Simplify team types to just 3 basic ones
+export type TeamType = 'red' | 'green' | 'blue';
 
 // User profile interface
 export interface UserProfile {
@@ -65,21 +52,6 @@ export interface ProfileBoost {
   endDate: string;
   appliedBy: string;
   effectId?: string;
-}
-
-// Profile Image type for editor contexts
-export interface ProfileImage {
-  id: string;
-  url: string;
-  type: string;
-}
-
-// ProfileLink type for editor contexts
-export interface ProfileLink {
-  id: string;
-  url: string;
-  title: string;
-  icon?: string;
 }
 
 // Social link interface

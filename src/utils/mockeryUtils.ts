@@ -13,8 +13,7 @@ import {
   getMockeryActionTitle,
   getMockeryActionDescription,
   getMockeryActionPrice,
-  getMockeryActionIconColor,
-  getMockeryCooldown
+  getMockeryActionIconColor
 } from './mockery';
 
 // Re-export everything
@@ -31,14 +30,13 @@ export {
   getMockeryActionTitle,
   getMockeryActionDescription,
   getMockeryActionPrice,
-  getMockeryActionIconColor,
-  getMockeryCooldown
+  getMockeryActionIconColor
 };
 
 // Export a mockery registry to make sure there's a centralized place for types
 export type { MockeryAction, MockeryTier } from '@/types/mockery';
 
-// Add weekly discount functions
+// Add weekly discount functions - simplified
 export const hasWeeklyDiscount = (action: string): boolean => {
   // Weekly discounted actions (for simplicity, just eggs)
   return action === 'eggs';
@@ -58,31 +56,25 @@ export const getDiscountedShamePrice = (action: string): number => {
   return originalPrice * 0.5;
 };
 
+// Simplify to just our 4 core actions
 export const getShameActionPrice = (action: string): number => {
   const prices: Record<string, number> = {
     'tomatoes': 0.25,
     'eggs': 0.50,
     'crown': 1.00,
-    'jester': 0.75,
-    'stocks': 0.50,
-    'protection': 5.00,
-    'target': 0.50,
-    'shame': 0.25
+    'stocks': 0.50
   };
   
   return prices[action] || 0.25;
 };
 
+// Simplify messages to just our 4 core actions
 export const getShameActionMessage = (action: string, username: string): string => {
   const messages: Record<string, string> = {
     'tomatoes': `You've pelted ${username} with rotten tomatoes!`,
     'eggs': `You've egged ${username}!`,
     'crown': `You've mocked ${username} with a ridiculous crown!`,
-    'jester': `You've made ${username} the court jester!`,
-    'stocks': `You've placed ${username} in the stocks!`,
-    'shame': `You've publicly shamed ${username}!`,
-    'protection': `You've granted ${username} royal protection!`,
-    'target': `You've marked ${username} as a target!`
+    'stocks': `You've placed ${username} in the stocks!`
   };
   
   return messages[action] || `You've publicly mocked ${username}!`;

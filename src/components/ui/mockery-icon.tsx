@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { MockeryAction } from '@/types/mockery-types';
+import { MockeryAction } from '@/types/mockery';
 import { cn } from '@/lib/utils';
 import { getMockeryActionIcon, getMockeryTierColorClass, getMockeryTier } from '@/utils/mockery';
 

@@ -1,5 +1,5 @@
 
-import { useState, useCallback } from 'react';
+import { useCallback } from 'react';
 import { MockedUser, MockeryAction } from '@/types/mockery';
 
 interface UseMockedUsersOptions {
