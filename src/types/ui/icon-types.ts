@@ -1,58 +1,20 @@
 
-import { CSSProperties } from 'react';
-import { LucideProps } from 'lucide-react';
+import { ComponentPropsWithoutRef } from 'react';
 
-export type IconType = 
-  | 'crown'
-  | 'coins'
-  | 'throne'
-  | 'shield'
-  | 'sword'
-  | 'scroll'
-  | 'chalice'
-  | 'key'
-  | 'seal'
-  | 'quill'
-  | 'treasure'
-  | 'medal'
-  | 'certificate'
-  | 'flag'
-  | 'banner'
-  | 'helm'
-  | 'dragon'
-  | 'castle'
-  | 'knight'
-  | 'king'
-  | 'queen'
-  | 'jester'
-  | 'wizard'
-  | 'torch'
-  | 'medieval';
+export type IconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl';
+export type IconColor = 'default' | 'primary' | 'secondary' | 'destructive' | 'muted' | 'accent' | 'royal' | 'gold' | 'crimson' | string;
+export type IconStyle = 'default' | 'medieval' | 'outline' | 'solid' | 'duotone';
 
-export type IconStyle = 
-  | 'default'
-  | 'solid'
-  | 'outline'
-  | 'duotone'
-  | 'royal'
-  | 'pixel'
-  | 'medieval'
-  | 'vintage';
-
-export type IconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' | number;
-
-export interface IconProps {
-  type?: IconType;
+export interface IconProps extends ComponentPropsWithoutRef<'svg'> {
   name?: string;
-  style?: IconStyle | CSSProperties;
-  size?: IconSize;
-  color?: string;
-  secondaryColor?: string;
+  type?: string;
+  size?: IconSize | number;
+  color?: IconColor;
   className?: string;
+  style?: IconStyle;
   animate?: boolean;
-  animated?: boolean;
 }
 
-export type MedievalIconName = string;
-export type IconColor = string;
-export type MedievalIconColor = string;
+export interface MedievalIconProps extends IconProps {
+  medieval?: boolean;
+}

@@ -1,12 +1,7 @@
 
 import { useCallback } from 'react';
+import { NotificationSoundOptions } from '@/types/sound-types';
 import getSoundPath from '@/utils/getSoundPath';
-
-interface NotificationSoundOptions {
-  volume?: number;
-  loop?: boolean;
-  delay?: number;
-}
 
 /**
  * Hook for playing notification sounds with configurable options
@@ -18,7 +13,7 @@ const useNotificationSound = () => {
   const playSound = useCallback((soundName: string, options: NotificationSoundOptions = {}) => {
     try {
       const soundPath = getSoundPath(soundName);
-      if (!soundPath) return;
+      if (!soundPath) return null;
       
       const audio = new Audio(soundPath);
       

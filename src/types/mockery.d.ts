@@ -5,15 +5,6 @@ export interface NotificationSoundOptions {
   delay?: number;
 }
 
-export interface MockeryAction {
-  type: string;
-  target: string;
-  appliedBy: string;
-  timestamp: number;
-  duration: number;
-  isActive: boolean;
-}
-
 export type MockeryAction = 
   | 'tomatoes' 
   | 'eggs' 
@@ -43,6 +34,8 @@ export type MockeryAction =
   | 'pawn' 
   | 'target' 
   | 'challenge';
+
+export type ShameAction = 'tomatoes' | 'eggs' | 'stocks';
 
 export interface MockeryEvent {
   id: string;

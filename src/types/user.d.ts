@@ -22,7 +22,7 @@ export type UserTier =
 export interface ProfileBoost {
   id: string;
   type: string;
-  level: number;
+  level?: number;
   startDate: string;
   endDate: string;
   appliedBy?: string;
@@ -35,8 +35,8 @@ export interface ProfileBoost {
 }
 
 export interface SocialLink {
-  id: string | number;
-  platform: string;
+  id?: string | number;
+  platform?: string;
   url: string;
   username?: string;
   display?: string;
@@ -44,6 +44,16 @@ export interface SocialLink {
   verified?: boolean;
   primary?: boolean;
   clicks?: number;
+  title?: string;
+  label?: string;
+  type?: string;
+}
+
+export interface ProfileImage {
+  id?: string;
+  url: string;
+  isPrimary: boolean;
+  caption?: string;
 }
 
 export interface UserSettings {
@@ -94,8 +104,8 @@ export interface UserProfile {
   spendStreak?: number;
   lastActive?: string;
   lastLogin?: string;
-  following?: string[];
-  followers?: string[];
+  following?: string[] | number;
+  followers?: string[] | number;
   cosmetics: UserCosmeticState;
   settings: UserSettings;
   profileBoosts: ProfileBoost[];
@@ -109,10 +119,9 @@ export interface UserProfile {
   certificateNFT?: any;
   avatarUrl?: string; // For backward compatibility
   gender?: string;
-  profileImages?: any[];
+  profileImages?: ProfileImage[];
 }
 
 export interface User extends UserProfile {}
 
-// Re-export types for backward compatibility
-export { ProfileBoost, SocialLink, TeamColor, TeamType };
+export type ProfileLink = SocialLink;

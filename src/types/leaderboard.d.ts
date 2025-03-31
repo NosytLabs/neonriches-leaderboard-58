@@ -1,57 +1,44 @@
 
-import { TeamColor } from './user';
-
-export interface LeaderboardUser {
-  id: string;
-  userId?: string;
-  username: string;
-  displayName?: string;
-  profileImage: string;
-  tier: string;
-  team: TeamColor;
-  rank: number;
-  previousRank?: number;
-  totalSpent: number;
-  walletBalance?: number;
-  isVerified?: boolean;
-  isProtected?: boolean;
-  spendStreak?: number;
-  avatarUrl?: string;
-  spentAmount?: number; // For backward compatibility
-  amountSpent?: number; // For backward compatibility
-}
-
-export interface LeaderboardFilter {
-  team?: string | 'all';
-  timeFrame?: 'all' | 'day' | 'week' | 'month' | 'year';
-  tier?: string | 'all';
-  search?: string;
-  limit?: number;
-  sortBy?: 'rank' | 'totalSpent' | 'username' | 'joined';
-  sortDirection?: 'asc' | 'desc';
-}
-
-export interface LeaderboardStats {
-  totalUsers: number;
-  totalSpent: number;
-  topSpender: {
-    username: string;
-    amount: number;
-  };
-  teamStats: Record<string, {
-    users: number;
-    spent: number;
-  }>;
-}
+import { TeamColor, UserTier } from './user';
 
 export interface LeaderboardEntry {
   id: string;
   username: string;
   rank: number;
   totalSpent: number;
-  team: string;
-  tier: string;
+  team?: TeamColor;
+  tier?: UserTier;
+}
+
+export interface LeaderboardUser {
+  id: string;
+  username: string;
+  displayName?: string;
+  profileImage?: string;
+  tier?: UserTier;
+  team?: TeamColor;
+  rank: number;
+  previousRank?: number;
+  walletBalance?: number;
+  totalSpent: number;
+  spentAmount?: number;
+  supporters?: number;
+  supporting?: number;
+  isVIP?: boolean;
+  isFounder?: boolean;
+  isVerified?: boolean;
   avatarUrl?: string;
+  userId?: string;
+  spendStreak?: number;
+  isProtected?: boolean;
+}
+
+export interface LeaderboardFilter {
+  team: TeamColor | 'all';
+  tier: UserTier | 'all';
+  sortBy: 'rank' | 'totalSpent' | 'username';
+  sortDirection: 'asc' | 'desc';
+  query: string;
 }
 
 export interface OnChainLeaderboardEntry {
@@ -59,21 +46,14 @@ export interface OnChainLeaderboardEntry {
   amount: number;
   timestamp: number;
   username?: string;
-  userId?: string;
-  publicKey?: string;
-  amountSpent?: number; 
-  totalDeposited?: number;
-  rank?: number;
-  joinDate?: number;
 }
 
 export interface SolanaTransaction {
-  signature: string;
-  amount: number;
+  id: string;
   sender: string;
-  recipient: string;
+  receiver: string;
+  amount: number;
   timestamp: number;
-  blockTime: number;
-  status: 'confirmed' | 'pending' | 'failed';
-  type: 'deposit' | 'withdrawal' | 'spend' | 'transfer';
+  transactionHash: string;
+  status: 'pending' | 'confirmed' | 'failed';
 }

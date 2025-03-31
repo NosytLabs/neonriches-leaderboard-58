@@ -1,9 +1,10 @@
 
-/**
- * Sound types for the platform sound system
- */
+export interface NotificationSoundOptions {
+  volume?: number;
+  loop?: boolean;
+  delay?: number;
+}
 
-// Sound type represents all available sound effects
 export type SoundType = 
   | 'click'
   | 'coins'
@@ -17,37 +18,20 @@ export type SoundType =
   | 'rankUp'
   | 'button'
   | 'hover'
-  | 'medieval'
-  | 'royal'
-  | 'parchment'
   | 'deposit'
-  | 'message'
-  | 'royalAnnouncement'
-  | 'trumpet'
-  | 'seal'
-  | 'medallion'
-  | 'coinDrop'
-  | 'swordClash'
-  | 'noblesLaugh'
-  | 'parchmentUnfurl'
-  | 'rankChange'
-  | 'coin'
-  | 'reward'
-  | 'pageTransition'
-  | 'shame'
+  | 'withdraw'
   | 'levelUp'
   | 'fanfare'
-  | 'wish'; // Add missing sound types
+  | 'wish'
+  | 'royalAnnouncement'
+  | 'victory'
+  | 'defeat'
+  | 'upgrade'
+  | 'shame';
 
-export interface AudioLoaderReturn {
-  audio: Record<SoundType, HTMLAudioElement>;
-  volume: number;
-  setVolume: (volume: number) => void;
-  isEnabled: boolean;
-  setEnabled: (enabled: boolean) => void;
-  isPremium: boolean;
-  setPremium: (isPremium: boolean) => void;
-  isLoaded: boolean;
+export interface UseSoundOptions {
+  volume?: number;
+  interrupt?: boolean;
 }
 
 export interface PremiumSoundPackDetails {
@@ -58,36 +42,5 @@ export interface PremiumSoundPackDetails {
   previewSound: SoundType;
   sounds: SoundType[];
   features: string[];
-  tags: string[]; // Add missing property
-  isPurchased?: boolean;
-  includes?: string[];
-}
-
-export interface CacheOptions {
-  maxAge?: number;
-  staleWhileRevalidate?: boolean;
-}
-
-export interface UseSoundOptions {
-  volume?: number;
-  interrupt?: boolean;
-  soundEnabled?: boolean;
-  onComplete?: () => void;
-  baseVolume?: number;
-  loop?: boolean;
-  onEnd?: () => void;
-  disableCache?: boolean;
-}
-
-export interface UseSoundReturn {
-  play: (options?: UseSoundOptions) => void;
-  stop: () => void;
-  isPlaying: boolean;
-  duration?: number; 
-  playSound?: (sound: SoundType) => void;
-  playSuccess?: (sound?: SoundType) => void;
-}
-
-export interface NotificationSoundOptions {
-  volume?: number;
+  tags: string[];
 }

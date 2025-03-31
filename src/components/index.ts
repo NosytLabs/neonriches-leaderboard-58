@@ -1,5 +1,5 @@
 
-// Re-export main components for easier imports
+// Core components
 export { default as Header } from './Header';
 export { default as Footer } from './Footer';
 export { default as Layout } from './layout/Layout';
@@ -10,13 +10,16 @@ export { default as PaymentModal } from './PaymentModal';
 export { default as ErrorFallback } from './ErrorFallback';
 
 // UI Components
-export { default as Button } from './ui/button';
-export { default as Card } from './ui/card';
-export { default as Badge } from './ui/badge-module';
-export { default as Input } from './ui/input';
-export { default as Tooltip } from './ui/tooltip';
-export { default as Select } from './ui/select';
-export { default as Avatar } from './ui/avatar';
+export { 
+  Button,
+  Card,
+  Badge,
+  Input,
+  Tooltip,
+  Select,
+  Avatar
+} from './ui';
+
 export { default as EmptyState } from './ui/empty-state';
 export { default as RoyalButton } from './ui/royal-button';
 export { default as OptimizedImage } from './ui/optimized-image';
