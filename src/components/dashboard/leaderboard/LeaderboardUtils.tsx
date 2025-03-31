@@ -1,8 +1,7 @@
-
 import { LeaderboardUser } from '@/types/leaderboard';
 
-// Export the type
-export { LeaderboardUser };
+// Export the type properly using 'export type'
+export type { LeaderboardUser };
 
 // Mock leaderboard data
 export const mockLeaderboardData: LeaderboardUser[] = [
@@ -20,7 +19,8 @@ export const mockLeaderboardData: LeaderboardUser[] = [
     walletBalance: 5000,
     isVerified: true,
     isProtected: false,
-    avatarUrl: "https://randomuser.me/api/portraits/men/1.jpg"
+    avatarUrl: "https://randomuser.me/api/portraits/men/1.jpg",
+    spendStreak: 5
   },
   {
     id: "2",
@@ -36,7 +36,8 @@ export const mockLeaderboardData: LeaderboardUser[] = [
     walletBalance: 3000,
     isVerified: true,
     isProtected: true,
-    avatarUrl: "https://randomuser.me/api/portraits/men/2.jpg"
+    avatarUrl: "https://randomuser.me/api/portraits/men/2.jpg",
+    spendStreak: 3
   },
   {
     id: "3",

@@ -1,22 +1,60 @@
 
 import { useState, useEffect } from 'react';
-import { CACHE_DURATION, localStorageCache } from '@/utils/cacheUtils';
 
-interface UseCachedRequestOptions {
-  ttl?: number;
+interface CacheOptions {
+  ttl?: number; // Time to live in milliseconds
   revalidateOnFocus?: boolean;
-  dedupingInterval?: number;
 }
+
+const CACHE_DURATION = {
+  SHORT: 60 * 1000, // 1 minute
+  MEDIUM: 5 * 60 * 1000, // 5 minutes
+  LONG: 30 * 60 * 1000, // 30 minutes
+  DAY: 24 * 60 * 60 * 1000 // 24 hours
+};
+
+// Simple storage with expiration
+const localStorageCache = {
+  get<T>(key: string): T | null {
+    try {
+      const item = localStorage.getItem(key);
+      if (!item) return null;
+      
+      const { value, expiry } = JSON.parse(item);
+      if (expiry && Date.now() > expiry) {
+        localStorage.removeItem(key);
+        return null;
+      }
+      
+      return value as T;
+    } catch (error) {
+      console.error('Cache retrieval error:', error);
+      return null;
+    }
+  },
+  
+  set<T>(key: string, value: T, ttl: number): void {
+    try {
+      const item = {
+        value,
+        expiry: Date.now() + ttl
+      };
+      localStorage.setItem(key, JSON.stringify(item));
+    } catch (error) {
+      console.error('Cache set error:', error);
+    }
+  },
+  
+  remove(key: string): void {
+    localStorage.removeItem(key);
+  }
+};
 
 export function useCachedRequest<T>(
   url: string,
-  options: UseCachedRequestOptions = {}
+  options: CacheOptions = {}
 ) {
-  const {
-    ttl = CACHE_DURATION.MEDIUM,
-    revalidateOnFocus = false,
-    dedupingInterval = 2000,
-  } = options;
+  const { ttl = CACHE_DURATION.MEDIUM, revalidateOnFocus = false } = options;
   
   const [data, setData] = useState<T | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -37,8 +75,8 @@ export function useCachedRequest<T>(
       }
     }
     
-    // Check deduping interval to avoid multiple fetches in short time
-    if (now - lastFetchTime < dedupingInterval && !forceFetch) {
+    // Dedupe requests if they happen closely together
+    if (now - lastFetchTime < 2000 && !forceFetch) {
       return;
     }
     
@@ -79,5 +117,15 @@ export function useCachedRequest<T>(
     }
   }, [url]);
   
-  return { data, isLoading, error, refetch: () => fetchData(true) };
+  // Export CACHE_DURATION and localStorageCache for use elsewhere
+  return { 
+    data, 
+    isLoading, 
+    error, 
+    refetch: () => fetchData(true),
+    cache: { CACHE_DURATION, localStorageCache }
+  };
 }
+
+// Export these for direct use in other components
+export { CACHE_DURATION, localStorageCache };

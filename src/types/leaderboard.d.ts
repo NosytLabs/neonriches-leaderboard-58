@@ -3,7 +3,7 @@ import { TeamColor } from './user';
 
 export interface LeaderboardUser {
   id: string;
-  userId: string; // Added this to fix errors
+  userId: string;
   username: string;
   displayName?: string;
   profileImage: string;
@@ -14,10 +14,11 @@ export interface LeaderboardUser {
   totalSpent: number;
   walletBalance?: number;
   isVerified?: boolean;
-  isProtected?: boolean; // Added this
+  isProtected?: boolean;
   spendStreak?: number;
-  avatarUrl?: string; // Added this
+  avatarUrl?: string;
   spentAmount?: number; // For backward compatibility
+  amountSpent?: number; // For backward compatibility
 }
 
 export interface LeaderboardFilter {
@@ -57,7 +58,7 @@ export interface OnChainLeaderboardEntry {
   pubkey: string;
   amount: number;
   timestamp: number;
-  username?: string; // Added this property
+  username?: string;
 }
 
 export interface SolanaTransaction {

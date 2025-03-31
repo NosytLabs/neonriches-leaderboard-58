@@ -90,7 +90,7 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
     
     let isMounted = true;
     
-    if (imgRef.current) {
+    if (imgRef.current && typeof IntersectionObserver !== 'undefined') {
       observerRef.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting && isMounted) {
           // Start actual image loading when coming into view
@@ -180,6 +180,31 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
       .join(', ');
   };
   
+  // Use modern image formats where supported, with fallbacks
+  const getPictureElement = () => {
+    if (format === 'auto' || !imgSrc || error) {
+      return null;
+    }
+    
+    return (
+      <picture>
+        {format === 'avif' && (
+          <source 
+            type="image/avif" 
+            srcSet={`${imgSrc}${imgSrc.includes('?') ? '&' : '?'}format=avif&q=${quality}`} 
+            sizes={sizes}
+          />
+        )}
+        <source 
+          type="image/webp" 
+          srcSet={`${imgSrc}${imgSrc.includes('?') ? '&' : '?'}format=webp&q=${quality}`} 
+          sizes={sizes}
+        />
+        {/* Fallback to original image format handled by img tag */}
+      </picture>
+    );
+  };
+  
   return (
     <div 
       className={cn(
@@ -193,6 +218,8 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
         backgroundColor: isLoading && placeholderColor ? placeholderColor : undefined 
       }}
     >
+      {getPictureElement()}
+      
       {/* Only render image once src is available */}
       {imgSrc && (
         <img

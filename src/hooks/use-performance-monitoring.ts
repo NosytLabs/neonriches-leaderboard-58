@@ -1,6 +1,6 @@
 
 import { useEffect, useRef } from 'react';
-import { initPerformanceMonitoring } from '@/utils/performanceMonitoring';
+import { markComponentRenderStart, markComponentRenderEnd, initPerformanceMonitoring } from '@/utils/performanceMonitoring';
 
 export const usePerformanceMonitoring = () => {
   const isInitialized = useRef(false);
@@ -23,13 +23,19 @@ export const usePerformanceMonitoring = () => {
             }
             
             // Track Largest Contentful Paint
-            const lcpObserver = new PerformanceObserver((entryList) => {
-              const entries = entryList.getEntries();
-              const lastEntry = entries[entries.length - 1];
-              console.info(`[Performance] LCP: ${lastEntry.startTime.toFixed(2)}ms`);
-            });
-            
-            lcpObserver.observe({ type: 'largest-contentful-paint', buffered: true });
+            if ('PerformanceObserver' in window) {
+              try {
+                const lcpObserver = new PerformanceObserver((entryList) => {
+                  const entries = entryList.getEntries();
+                  const lastEntry = entries[entries.length - 1];
+                  console.info(`[Performance] LCP: ${lastEntry.startTime.toFixed(2)}ms`);
+                });
+                
+                lcpObserver.observe({ type: 'largest-contentful-paint', buffered: true });
+              } catch (error) {
+                console.warn('[Performance] LCP monitoring not supported in this browser');
+              }
+            }
           }, 0);
         });
       }
@@ -40,5 +46,10 @@ export const usePerformanceMonitoring = () => {
     };
   }, []);
 
-  return null;
+  return {
+    markStart: markComponentRenderStart,
+    markEnd: markComponentRenderEnd
+  };
 };
+
+export default usePerformanceMonitoring;

@@ -53,7 +53,7 @@ const WishResultModal: React.FC<WishResultModalProps> = ({
             <div className="flex flex-col items-center">
               <div className="w-32 h-32 mb-4 bg-black/20 rounded-lg p-2 flex items-center justify-center">
                 <img 
-                  src={cosmeticItem.imageSrc || cosmeticItem.image || '/images/cosmetics/default.png'} 
+                  src={cosmeticItem.image || '/images/cosmetics/default.png'} 
                   alt={cosmeticItem.name} 
                   className="max-w-full max-h-full object-contain"
                 />
