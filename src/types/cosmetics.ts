@@ -1,23 +1,20 @@
-
 // Types related to user cosmetics and profile customization
 
-export type CosmeticCategory =
-  | 'border'
-  | 'color'
-  | 'font'
-  | 'emoji'
-  | 'title'
+export type CosmeticCategory = 
+  | 'border' 
+  | 'color' 
+  | 'font' 
+  | 'emoji' 
+  | 'title' 
   | 'background'
   | 'effect'
   | 'badge'
-  | 'theme';
+  | 'theme'
+  | 'appearance'
+  | 'profile'
+  | 'interaction';
 
-export type CosmeticRarity =
-  | 'common'
-  | 'uncommon'
-  | 'rare'
-  | 'epic'
-  | 'legendary';
+export type CosmeticRarity = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary' | 'mythic' | 'unique' | 'royal';
 
 export interface CosmeticItem {
   id: string;
@@ -25,9 +22,11 @@ export interface CosmeticItem {
   description: string;
   price: number;
   category: CosmeticCategory;
-  rarity: CosmeticRarity;
   cssClass: string;
+  rarity: string;
   type?: string;
+  imageSrc?: string;
+  image?: string;
 }
 
 export type BoostEffectType =

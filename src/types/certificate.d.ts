@@ -1,5 +1,5 @@
 
-export type CertificateType = 'rank' | 'achievement' | 'founder' | 'event' | 'membership' | 'royal' | 'special' | 'milestone' | 'nobility';
+export type CertificateType = 'rank' | 'achievement' | 'founder' | 'event' | 'membership' | 'royal' | 'special' | 'milestone' | 'nobility' | 'seasonal';
 export type CertificateStyle = 'royal' | 'classic' | 'modern' | 'gothic';
 export type CertificateTeam = 'red' | 'blue' | 'green' | 'gold' | 'neutral';
 
@@ -23,6 +23,12 @@ export interface Certificate {
   };
   mintAddress?: string;
   imageUrl?: string;
+  
+  // Add missing properties that are causing errors
+  isMinted?: boolean;
+  nftMintAddress?: string;
+  shareUrl?: string;
+  createdAt?: string;
 }
 
 export interface CertificateTemplate {
@@ -44,6 +50,8 @@ export interface CertificateRepository {
   getMintedCertificatesForUser: (userId: string) => Promise<Certificate[]>;
   createCertificate: (certificate: Certificate) => Promise<Certificate>;
   getCertificate: (id: string) => Promise<Certificate | null>;
+  getCertificateById?: (id: string) => Promise<Certificate | null>;
+  getCertificatesForUser?: (userId: string) => Promise<Certificate[]>;
   updateCertificate: (certificate: Certificate) => Promise<boolean>;
   deleteCertificate: (id: string) => Promise<boolean>;
 }

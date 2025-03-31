@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Download, Share2, Award, Crown, Shield, Wallet, ExternalLink } from 'lucide-react';
 import { UserProfile } from '@/types/user';
-import { Certificate } from '@/types/certificates';
+import { Certificate } from '@/types/certificate';
 import { formatDate } from '@/utils/formatters';
 import { getTeamName, getTeamColor, getTeamBorderColor } from '@/utils/teamUtils';
 import { useSolana } from '@/contexts/SolanaContext';
@@ -277,11 +277,11 @@ const TeamCertificate: React.FC<TeamCertificateProps> = ({
               Certificate #{certificate?.id || user.id}
             </div>
             
-            {certificate?.isMinted && certificate?.nftMintAddress && (
+            {certificate?.isMinted && certificate?.mintAddress && (
               <div className="flex justify-center mt-2">
                 <Badge variant="outline" className="bg-green-500/20 text-green-600">
                   <Shield className="h-3 w-3 mr-1" />
-                  Verified On-Chain: {certificate.nftMintAddress.substring(0, 6)}...
+                  Verified On-Chain: {certificate.mintAddress.substring(0, 6)}...
                 </Badge>
               </div>
             )}
@@ -322,11 +322,11 @@ const TeamCertificate: React.FC<TeamCertificateProps> = ({
           </Button>
         )}
         
-        {certificate?.isMinted && certificate?.nftMintAddress && (
+        {certificate?.isMinted && certificate?.mintAddress && (
           <Button
             variant="outline"
             className="glass-morphism border-white/10 bg-purple-500/10"
-            onClick={() => window.open(`https://explorer.solana.com/address/${certificate.nftMintAddress}`, '_blank')}
+            onClick={() => window.open(`https://explorer.solana.com/address/${certificate.mintAddress}`, '_blank')}
           >
             <ExternalLink className="mr-2 h-4 w-4" />
             View NFT on Solana
