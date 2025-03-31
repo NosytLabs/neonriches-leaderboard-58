@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import Shell from '@/components/Shell';
 import PageSEO from '@/components/common/PageSEO';
@@ -30,15 +29,14 @@ import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { 
-  getMockeryIcon, 
-  getMockeryIconColor, 
+  getMockeryActionIcon, 
+  getMockeryActionIconColor, 
   getMockeryActionTitle, 
   getMockeryActionDescription, 
   getMockeryTierColorClass 
 } from '@/utils/mockery';
 import { MockeryAction, MockeryTier } from '@/types/mockery';
 
-// Sample data - in a real app these would come from API/context
 const mockUsers = [
   {
     id: '1',
@@ -144,7 +142,6 @@ const Mockery: React.FC = () => {
       variant: "success",
     });
     
-    // Reset selections
     setSelectedUser(null);
     setSelectedAction(null);
   };
@@ -253,8 +250,8 @@ const Mockery: React.FC = () => {
                 <CardContent>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                     {availableMockeryActions.map((action) => {
-                      const ActionIcon = getMockeryIcon(action);
-                      const iconColor = getMockeryIconColor(action);
+                      const ActionIcon = getMockeryActionIcon(action);
+                      const iconColor = getMockeryActionIconColor(action);
                       const isSelected = selectedAction === action;
                       
                       return (
@@ -397,8 +394,8 @@ const Mockery: React.FC = () => {
                 <CardContent>
                   <div className="space-y-4">
                     {mockeryHistory.map((item) => {
-                      const ActionIcon = getMockeryIcon(item.action);
-                      const iconColor = getMockeryIconColor(item.action);
+                      const ActionIcon = getMockeryActionIcon(item.action);
+                      const iconColor = getMockeryActionIconColor(item.action);
                       const date = new Date(item.date);
                       
                       return (

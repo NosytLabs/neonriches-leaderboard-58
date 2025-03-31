@@ -5,8 +5,8 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { formatCurrency } from '@/utils/formatters';
-import { MockeryActionType } from '@/types/mockery';
-import { TeamColor } from '@/types/team';
+import { MockeryAction } from '@/types/mockery';
+import { TeamColor } from '@/types/user';
 
 export interface ShameModalProps {
   targetUser: {
@@ -19,79 +19,35 @@ export interface ShameModalProps {
     tier?: string;
     spendStreak?: number;
   };
-  shameType: MockeryActionType;
+  shameType: MockeryAction;
   onConfirm: () => void;
   onCancel: () => void;
   hasDiscount?: boolean;
 }
 
-const getMockeryActionDescription = (action: MockeryActionType): string => {
+const getMockeryActionDescription = (action: MockeryAction): string => {
   const descriptions: Record<string, string> = {
     tomatoes: 'Pelt with rotten tomatoes',
     eggs: 'Throw rotten eggs at them',
     shame: 'Ring the bell of shame',
-    dungeons: 'Send to the royal dungeons',
-    immune: 'Grant royal immunity',
-    crown: 'Add a mock crown',
     stocks: 'Place in the stocks',
-    dunce: 'Put on a dunce cap',
+    crown: 'Add a mock crown',
     jester: 'Dress as a court jester',
-    fool: 'Label as village fool',
-    troll: 'Declare a bridge troll',
-    peasant: 'Demote to lowly peasant',
-    rat: 'Name a plague rat',
-    ghost: 'Turn into a ghost',
-    skeleton: 'Transform into skeleton',
-    zombie: 'Convert to a zombie',
-    witch: 'Accuse of witchcraft',
-    monster: 'Label a monster',
-    demon: 'Expose as a demon',
-    dragon: 'Identify as a dragon',
-    king: 'Crown as a false king',
-    queen: 'Crown as a false queen',
-    knight: 'Dub a rusty knight',
-    bishop: 'Name corrupt bishop',
-    rook: 'Declare a crumbling rook',
-    pawn: 'Expose as a mere pawn',
-    target: 'Make a target practice',
-    challenge: 'Issue a royal challenge'
+    protection: 'Grant royal immunity'
   };
-  
   return descriptions[action] || 'Apply mockery';
 };
 
-const getMockeryActionIcon = (action: MockeryActionType): string => {
+const getMockeryActionIcon = (action: MockeryAction): string => {
   const icons: Record<string, string> = {
     tomatoes: '🍅',
     eggs: '🥚',
     shame: '🔔',
-    dungeons: '⛓️',
-    immune: '🛡️',
-    crown: '👑',
     stocks: '🪵',
-    dunce: '🎭',
-    jester: '🃏',
-    fool: '😵',
-    troll: '👹',
-    peasant: '👨‍🌾',
-    rat: '🐀',
-    ghost: '👻',
-    skeleton: '💀',
-    zombie: '🧟',
-    witch: '🧙',
-    monster: '👾',
-    demon: '😈',
-    dragon: '🐉',
-    king: '🤴',
-    queen: '👸',
-    knight: '🐴',
-    bishop: '♗',
-    rook: '♖',
-    pawn: '♟️',
-    target: '🎯',
-    challenge: '⚔️'
+    crown: '👑',
+    jester: '🎭',
+    protection: '🛡️'
   };
-  
   return icons[action] || '🎭';
 };
 

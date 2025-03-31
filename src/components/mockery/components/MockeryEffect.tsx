@@ -1,9 +1,8 @@
 
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MockeryAction, ExtendedMockeryAction } from '@/types/mockery-types';
-import { AlertCircle, Egg, Crown, Theater, Target } from 'lucide-react';
-import { getMockeryActionDescription } from '@/utils/mockery';
+import { MockeryAction, ExtendedMockeryAction } from '@/types/mockery';
+import { getMockeryActionIcon } from '@/utils/mockery';
 
 interface MockeryEffectProps {
   username: string;
@@ -20,22 +19,6 @@ const MockeryEffect: React.FC<MockeryEffectProps> = ({
 }) => {
   const [elements, setElements] = useState<React.ReactNode[]>([]);
   
-  // Get the appropriate icon component based on the action
-  const getIconComponent = (actionType: MockeryAction | string) => {
-    const actionAsString = actionType as string;
-    
-    switch (actionAsString) {
-      case 'tomatoes': return AlertCircle;
-      case 'eggs': return Egg;
-      case 'crown': return Crown;
-      case 'jester': return Theater;
-      case 'stocks': return AlertCircle;
-      case 'shame': return AlertCircle;
-      case 'protection': return Crown;
-      default: return Target;
-    }
-  };
-  
   useEffect(() => {
     if (!isActive) return;
     
@@ -51,7 +34,7 @@ const MockeryEffect: React.FC<MockeryEffectProps> = ({
       const rotation = Math.random() * 360;
       const scale = 0.5 + Math.random() * 1;
       
-      const IconComponent = getIconComponent(action as MockeryAction);
+      const IconComponent = getMockeryActionIcon(action as MockeryAction);
       
       newElements.push(
         <motion.div

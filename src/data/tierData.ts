@@ -3,7 +3,7 @@ import { TierDetails } from "@/types/tier";
 
 export const tiers: TierDetails[] = [
   {
-    name: 'basic',     // Changed from 'free' to match UserTier
+    name: 'basic',
     label: 'Free',
     minSpend: 0,
     maxSpend: 99,
