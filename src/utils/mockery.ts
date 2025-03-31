@@ -37,5 +37,5 @@ export {
 };
 
 // Re-export types
-import { MockeryAction, MockeryTier, ShameAction } from '@/types/mockery';
+import { MockeryAction, MockeryTier, ShameAction } from '@/types/mockery-types';
 export type { MockeryAction, MockeryTier, ShameAction };

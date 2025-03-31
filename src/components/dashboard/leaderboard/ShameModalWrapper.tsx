@@ -3,7 +3,7 @@ import React from 'react';
 import { Dialog } from '@/components/ui/dialog';
 import ShameModal from '@/components/events/components/ShameModal';
 import { User, TeamColor } from '@/types/user';
-import { ShameAction } from '@/types/mockery';
+import { ShameAction } from '@/types/mockery-types';
 
 interface ShameModalWrapperProps {
   showModal: boolean;

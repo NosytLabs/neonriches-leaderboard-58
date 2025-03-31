@@ -159,4 +159,8 @@ export const getMockeryIconColor = (action: MockeryAction): string => {
   return colorMap[action] || 'text-gray-400';
 };
 
+// For backward compatibility
+export const getMockeryActionIcon = getMockeryIcon;
+export const getMockeryActionIconColor = getMockeryIconColor;
+
 export default getMockeryIcon;
