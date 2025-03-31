@@ -1,9 +1,5 @@
 
 import React from 'react';
-import { 
-  Target, Bell, Shield, Crown, AlertCircle, ThumbsDown, 
-  Skull, Ghost, Bomb, Feather, Rat, UserX, Zap, Flame
-} from 'lucide-react';
 import { MockeryAction } from '@/types/mockery-types';
 import { getMockeryActionIcon, getMockeryTier } from '@/utils/mockery';
 import { cn } from '@/lib/utils';

@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { MockeryAction } from '@/types/mockery';
+import { MockeryAction } from '@/types/mockery-types';
 import { 
   Tomato, 
   Egg, 

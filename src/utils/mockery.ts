@@ -4,15 +4,11 @@
 
 import {
   getMockeryActionTitle,
-  getMockeryName,
   getMockeryActionDescription,
-  getMockeryDescription,
   getMockeryActionPrice,
-  getMockeryCost,
   getMockeryActionIcon,
   getMockeryTier,
   getMockeryTierColorClass,
-  getMockeryTierRarity,
   getActiveMockeryClass,
   hasWeeklyDiscount,
   getWeeklyDiscountedAction,
@@ -20,21 +16,18 @@ import {
   getShameActionPrice,
   getShameActionMessage,
   getMockeryEffectClass,
-  getMockeryEffectDuration
+  getMockeryEffectDuration,
+  renderMockeryIcon
 } from './mockery/index';
 
 // Re-export everything
 export {
   getMockeryActionTitle,
-  getMockeryName,
   getMockeryActionDescription,
-  getMockeryDescription,
   getMockeryActionPrice,
-  getMockeryCost,
   getMockeryActionIcon,
   getMockeryTier,
   getMockeryTierColorClass,
-  getMockeryTierRarity,
   getActiveMockeryClass,
   hasWeeklyDiscount,
   getWeeklyDiscountedAction,
@@ -42,8 +35,14 @@ export {
   getShameActionPrice,
   getShameActionMessage,
   getMockeryEffectClass,
-  getMockeryEffectDuration
+  getMockeryEffectDuration,
+  renderMockeryIcon
 };
+
+// Backward compatibility
+export const getMockeryName = getMockeryActionTitle;
+export const getMockeryDescription = getMockeryActionDescription;
+export const getMockeryCost = getMockeryActionPrice;
 
 /**
  * Get mockery action price with tier multiplier

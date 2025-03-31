@@ -1,5 +1,5 @@
 
-import { useSound as useSoundHook } from './sounds/use-sound';
+import { useSoundHook } from './sounds/use-sound';
 import type { SoundOptions, SoundType, UseSoundHook } from './sounds/types';
 
 /**
@@ -10,10 +10,9 @@ import type { SoundOptions, SoundType, UseSoundHook } from './sounds/types';
 export const useSound = (): UseSoundHook => {
   const sound = useSoundHook();
   
-  // Add backward compatibility for play method
   return {
     ...sound,
-    play: sound.playSound
+    play: sound.playSound // Add backward compatibility for play method
   };
 };
 
