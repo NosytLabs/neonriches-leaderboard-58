@@ -1,14 +1,10 @@
 
-import { useSounds } from './useSounds';
+import { useNotificationSounds } from './sounds/use-notification-sounds';
 import { SoundType } from '@/types/sound-types';
 
 // Simple wrapper for backward compatibility
 const useNotificationSound = () => {
-  const { play } = useSounds();
-  
-  const playSound = (sound: SoundType) => {
-    play(sound);
-  };
+  const { playSound } = useNotificationSounds();
   
   return { playSound };
 };
