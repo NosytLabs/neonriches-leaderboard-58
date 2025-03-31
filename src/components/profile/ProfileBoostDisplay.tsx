@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { UserProfile } from '@/types/user';
+import { UserProfile } from '@/types/user-consolidated';
 import { ProfileBoost } from '@/types/boost';
 import useProfileBoost from '@/hooks/use-profile-boost';
 import { Icon } from '@/components/ui/icon';
@@ -77,7 +77,7 @@ const ProfileBoostDisplay: React.FC<ProfileBoostDisplayProps> = ({
               
               <div className="flex flex-col items-end">
                 <span className={`px-2 py-0.5 rounded text-xs bg-purple-500/20 text-purple-300`}>
-                  Level {boost.level}
+                  Level {boost.level || 1}
                 </span>
               </div>
             </div>

@@ -1,6 +1,6 @@
 
 import { createContext, useContext } from 'react';
-import { AuthContextType, UserProfile } from '@/types/user';
+import { AuthContextType, UserProfile } from '@/types/user-consolidated';
 
 // Create a context with a default value
 export const AuthContext = createContext<AuthContextType>({

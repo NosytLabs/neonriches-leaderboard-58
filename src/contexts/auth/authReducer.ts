@@ -3,6 +3,8 @@ import { AuthState, AuthAction } from './types';
 
 export const authReducer = (state: AuthState, action: AuthAction): AuthState => {
   switch (action.type) {
+    case 'LOGIN_START':
+    case 'REGISTER_START':
     case 'AUTH_START':
       return {
         ...state,
@@ -10,6 +12,8 @@ export const authReducer = (state: AuthState, action: AuthAction): AuthState => 
         error: null
       };
 
+    case 'LOGIN_SUCCESS':
+    case 'REGISTER_SUCCESS':
     case 'AUTH_SUCCESS':
       return {
         ...state,
@@ -19,6 +23,8 @@ export const authReducer = (state: AuthState, action: AuthAction): AuthState => 
         error: null
       };
 
+    case 'LOGIN_FAILURE':
+    case 'REGISTER_FAILURE':
     case 'AUTH_FAIL':
       return {
         ...state,
@@ -28,6 +34,7 @@ export const authReducer = (state: AuthState, action: AuthAction): AuthState => 
         error: action.payload || null
       };
 
+    case 'LOGOUT':
     case 'AUTH_LOGOUT':
       return {
         ...state,
@@ -38,9 +45,16 @@ export const authReducer = (state: AuthState, action: AuthAction): AuthState => 
       };
 
     case 'UPDATE_USER':
+    case 'UPDATE_PROFILE_SUCCESS':
       return {
         ...state,
         user: action.payload,
+      };
+
+    case 'CLEAR_ERROR':
+      return {
+        ...state,
+        error: null
       };
 
     default:
