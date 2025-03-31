@@ -1,6 +1,6 @@
 
 import { useMemo } from 'react';
-import { MockedUser, MockeryAction } from '@/types/mockery';
+import { MockedUser, MockeryAction } from '@/types/mockery-types';
 
 const useMockedUsers = (
   mockUsers: MockedUser[], 

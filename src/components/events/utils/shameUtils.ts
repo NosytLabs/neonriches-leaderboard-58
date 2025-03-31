@@ -1,5 +1,5 @@
 
-import { MockeryAction } from '@/types/mockery';
+import { MockeryAction } from '@/types/mockery-types';
 import { 
   hasWeeklyDiscount,
   getWeeklyDiscountedAction,

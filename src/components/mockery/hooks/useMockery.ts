@@ -1,6 +1,6 @@
 
 import { useState, useCallback } from 'react';
-import { MockeryAction } from '@/types/mockery';
+import { MockeryAction } from '@/types/mockery-types';
 
 export interface UseMockeryOptions {
   onSuccess?: (userId: string, action: MockeryAction) => void;

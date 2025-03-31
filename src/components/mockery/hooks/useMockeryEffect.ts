@@ -1,8 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import { MockeryAction } from '@/types/mockery';
-
-export type { MockeryAction } from '@/types/mockery';
+import { MockeryAction } from '@/types/mockery-types';
 
 export interface MockeryProtection {
   userId: number;

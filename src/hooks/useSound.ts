@@ -1,7 +1,7 @@
 
-import { useState, useEffect, useCallback } from 'react';
-import { SoundType, SoundOptions } from '@/types/sound-types';
 import { useSettings } from '@/contexts/SettingsContext';
+import { SoundType, SoundOptions } from '@/types/sound-types';
+import { useCallback } from 'react';
 
 // Sound mapping - centralized to avoid duplication
 const SOUND_FILES: Record<SoundType, string> = {
@@ -27,7 +27,7 @@ const SOUND_FILES: Record<SoundType, string> = {
   'royal': '/sounds/royal.mp3',
   'withdrawal': '/sounds/withdrawal.mp3',
   'royalAnnouncement': '/sounds/royal-announcement.mp3',
-  'trumpet': '/sounds/trumpet.mp3',
+  'trumpet': '/sounds/trumpet.mp3', 
   'trumpets': '/sounds/trumpets.mp3',
   'medallion': '/sounds/medallion.mp3',
   'seal': '/sounds/seal.mp3',
@@ -70,7 +70,6 @@ const audioInstances: Record<string, HTMLAudioElement> = {};
 
 /**
  * Unified hook for playing sound effects in the application
- * Uses settings context for configuration
  */
 export const useSound = () => {
   const { soundConfig } = useSettings();

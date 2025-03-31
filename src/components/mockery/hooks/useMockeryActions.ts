@@ -1,6 +1,11 @@
 
 import { useState, useCallback } from 'react';
-import { MockeryAction, MockeryEffectData } from '@/types/mockery';
+import { MockeryAction } from '@/types/mockery-types';
+
+interface MockeryEffectData {
+  username: string;
+  action: MockeryAction;
+}
 
 /**
  * Hook to manage mockery action selection and effects

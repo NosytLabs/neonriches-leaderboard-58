@@ -1,7 +1,7 @@
 
 import { TeamType, UserTier } from '@/types/user';
 import { LeaderboardUser } from '@/types/leaderboard';
-import { ShameAction, MockeryAction } from '@/types/mockery';
+import { ShameAction, MockeryAction } from '@/types/mockery-types';
 
 /**
  * Safely converts a string to number, returning a default value if invalid
@@ -72,31 +72,4 @@ export function createLeaderboardUser(data: Partial<LeaderboardUser>): Leaderboa
     isFounder: data.isFounder,
     isVerified: data.isVerified
   };
-}
-
-/**
- * Function to generate mock data for the leaderboard to help with development
- */
-export function generateMockLeaderboardUsers(count: number = 10): LeaderboardUser[] {
-  const tiers: UserTier[] = ['free', 'basic', 'premium', 'royal', 'founder'];
-  const teams: TeamType[] = ['red', 'blue', 'green', 'gold'];
-  
-  return Array.from({ length: count }).map((_, index) => ({
-    id: `user-${index + 1}`,
-    username: `user${index + 1}`,
-    displayName: `User ${index + 1}`,
-    profileImage: `https://randomuser.me/api/portraits/${index % 2 ? 'men' : 'women'}/${index + 1}.jpg`,
-    tier: tiers[Math.floor(Math.random() * tiers.length)],
-    team: teams[Math.floor(Math.random() * teams.length)],
-    rank: index + 1,
-    previousRank: Math.floor(Math.random() * 20) + 1,
-    walletBalance: Math.floor(Math.random() * 1000),
-    totalSpent: (1000 - index * 50),
-    spentAmount: (1000 - index * 50),
-    supporters: Math.floor(Math.random() * 100),
-    supporting: Math.floor(Math.random() * 20),
-    isVIP: Math.random() > 0.8,
-    isFounder: Math.random() > 0.95,
-    isVerified: Math.random() > 0.7
-  }));
 }
