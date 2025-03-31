@@ -1,4 +1,3 @@
-
 /**
  * Centralized utility functions for mockery functionality
  */
@@ -324,12 +323,15 @@ export function getMockeryActionEffect(action: MockeryAction): string {
     crown: 'mock-crown',
     stocks: 'stocks-prison',
     jester: 'jester-hat',
+    protection: 'shield-aura',
+    shame: 'shame-mark',
+    target: 'bullseye-target',
+    challenge: 'challenge-duel',
+    ghost: 'ghostly-appearance',
     putridEggs: 'putrid-stench',
     silence: 'silenced-mark',
     courtJester: 'court-jester-outfit',
-    smokeBomb: 'smoke-effect',
-    shame: 'shame-mark',
-    protection: 'shield-aura'
+    smokeBomb: 'smoke-effect'
   };
   
   return effects[action] || 'default-effect';

@@ -6,7 +6,7 @@ import { Crown, History, Target } from 'lucide-react';
 import PageHeader from '@/components/layout/PageHeader';
 import RoyalMockeryFestival from '@/components/mockery/RoyalMockeryFestival';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { usePageTracking } from '@/hooks/usePageTracking';
+import usePageTracking from '@/hooks/usePageTracking';
 
 const StatusCenter = () => {
   const [activeTab, setActiveTab] = useState('mockery');
@@ -17,8 +17,8 @@ const StatusCenter = () => {
   return (
     <SimpleLayout>
       <div className="container mx-auto px-4 py-6">
-        <PageHeader
-          title="Royal Status Center"
+        <PageHeader 
+          title="Royal Status Center" 
           description="Manage your standing and interact with other nobles"
           icon={<Crown className="h-8 w-8 text-royal-gold" />}
         />

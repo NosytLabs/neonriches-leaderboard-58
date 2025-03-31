@@ -18,7 +18,9 @@ import Privacy from '@/pages/Privacy';
 import Terms from '@/pages/Terms';
 import Profile from '@/pages/Profile';
 import ProtectedRoute from '@/components/auth/ProtectedRoute';
-import StatusCenter from '@/pages/StatusCenter'; // Import StatusCenter page
+import StatusCenter from '@/pages/StatusCenter';
+import Mockery from '@/pages/Mockery';
+import Features from '@/pages/Features';
 
 function App() {
   return (
@@ -37,6 +39,8 @@ function App() {
             <Route path="/privacy" element={<Privacy />} />
             <Route path="/terms" element={<Terms />} />
             <Route path="/status-through-history" element={<StatusCenter />} />
+            <Route path="/mockery" element={<Mockery />} />
+            <Route path="/features" element={<Features />} />
             
             {/* Protected User Pages */}
             <Route 
