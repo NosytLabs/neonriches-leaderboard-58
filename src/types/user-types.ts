@@ -18,7 +18,7 @@ export type UserTier =
   | 'founder'
   | 'plus';
 
-// Team types used throughout the application
+// Simplify team types to just a few basic ones
 export type TeamType = 'red' | 'green' | 'blue' | 'gold' | 'purple' | 'none' | 'neutral';
 
 // User profile interface
@@ -65,6 +65,21 @@ export interface ProfileBoost {
   endDate: string;
   appliedBy: string;
   effectId?: string;
+}
+
+// Profile Image type for editor contexts
+export interface ProfileImage {
+  id: string;
+  url: string;
+  type: string;
+}
+
+// ProfileLink type for editor contexts
+export interface ProfileLink {
+  id: string;
+  url: string;
+  title: string;
+  icon?: string;
 }
 
 // Social link interface
@@ -126,20 +141,13 @@ export interface UserCosmetics {
   activeTheme?: string;
 }
 
-// ProfileImage type for editor contexts
-export interface ProfileImage {
-  id: string;
-  url: string;
-  type: string;
-}
-
-// ProfileLink type for editor contexts
-export interface ProfileLink {
-  id: string;
-  url: string;
-  title: string;
-  icon?: string;
-}
-
 // TeamColor type alias for backward compatibility
 export type TeamColor = TeamType;
+
+// Gender enum for profiles
+export enum Gender {
+  Male = 'male',
+  Female = 'female',
+  Other = 'other',
+  Unspecified = 'unspecified'
+}

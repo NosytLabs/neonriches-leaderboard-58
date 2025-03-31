@@ -1,10 +1,8 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { useAuth } from '@/contexts/auth';
+
+import React, { useState } from 'react';
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -12,112 +10,131 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { UserTier, UserProfile } from '@/contexts/auth/types';
-import { Icon } from '@/components/ui/icon';
+import {
+  LogOut,
+  User,
+  Settings,
+  Crown,
+  CreditCard,
+  Bell,
+  ChevronDown,
+} from 'lucide-react';
+import { useAuth } from '@/hooks/useAuth';
+import { useNavigate } from 'react-router-dom';
+import { Badge } from '@/components/ui/badge';
 import UserBadge from '@/components/ui/user-badge';
+import { formatCurrency } from '@/utils/formatters';
+
+// Update specific imports here as needed
 
 interface UserMenuProps {
-  user: UserProfile | null;
+  // Add any props as needed
 }
 
-const UserMenu: React.FC<UserMenuProps> = ({ user }) => {
-  const { logout } = useAuth();
-  
-  if (!user) return null;
-  
-  const getInitials = (name: string) => {
-    return name
-      .split(' ')
-      .map(part => part[0])
-      .join('')
-      .toUpperCase()
-      .substring(0, 2);
-  };
-  
+const UserMenu: React.FC<UserMenuProps> = () => {
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
+
+  if (!user) {
+    return (
+      <div className="flex items-center gap-4">
+        <Button variant="outline" onClick={() => navigate('/login')}>
+          Login
+        </Button>
+        <Button onClick={() => navigate('/register')}>Register</Button>
+      </div>
+    );
+  }
+
   const handleLogout = async () => {
     await logout();
+    navigate('/');
   };
-  
+
   return (
-    <DropdownMenu>
+    <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+        <Button
+          variant="ghost"
+          className="relative h-10 rounded-full border border-white/10 pr-2 flex items-center"
+        >
           <Avatar className="h-8 w-8">
-            <AvatarImage src={user.profileImage} alt={user.displayName} />
-            <AvatarFallback>{getInitials(user.displayName)}</AvatarFallback>
+            <AvatarImage src={user.profileImage} alt={user.username} />
+            <AvatarFallback>
+              {user.username.charAt(0).toUpperCase()}
+            </AvatarFallback>
           </Avatar>
+          <span className="ml-2 mr-1 max-w-32 truncate">{user.username}</span>
+          <ChevronDown className="h-4 w-4 text-muted-foreground" />
+          <UserBadge
+            type="tier"
+            value={user.tier}
+            size="sm"
+            className="absolute -top-2 -right-2"
+          />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56 mt-1" align="end" forceMount>
+      <DropdownMenuContent align="end" className="w-56 mt-2">
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none">{user.displayName}</p>
-            <p className="text-xs leading-none text-muted-foreground">
-              @{user.username}
+            <p className="text-sm font-medium">{user.username}</p>
+            <p className="text-xs text-muted-foreground truncate">
+              {user.email}
             </p>
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuGroup>
-          <DropdownMenuItem className="flex justify-between">
-            <div className="flex items-center">
-              <Icon name="trophy" size="xs" className="mr-2" />
-              <span>Rank</span>
-            </div>
-            <span className="font-semibold">{user.rank || 'N/A'}</span>
-          </DropdownMenuItem>
-          <DropdownMenuItem className="flex justify-between">
-            <div className="flex items-center">
-              <Icon name="coins" size="xs" className="mr-2" />
-              <span>Total Spent</span>
-            </div>
-            <span className="font-semibold">${user.totalSpent.toLocaleString()}</span>
-          </DropdownMenuItem>
-          <DropdownMenuItem className="flex justify-between">
-            <div className="flex items-center">
-              <Icon name="CrownIcon" size="xs" className="mr-2" />
-              <span>Tier</span>
-            </div>
-            <UserBadge tier={user.tier} size="xs" showLabel={false} />
-          </DropdownMenuItem>
-          <DropdownMenuItem className="flex justify-between">
-            <div className="flex items-center">
-              <Icon name="Users" size="xs" className="mr-2" />
-              <span>Team</span>
-            </div>
-            <UserBadge team={user.team} size="xs" showLabel={false} />
-          </DropdownMenuItem>
-        </DropdownMenuGroup>
+        <DropdownMenuItem
+          className="cursor-pointer flex justify-between"
+          onClick={() => navigate('/profile')}
+        >
+          <div className="flex items-center">
+            <User className="mr-2 h-4 w-4" />
+            <span>Profile</span>
+          </div>
+          <UserBadge type="team" value={user.team} size="sm" showLabel={false} />
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          className="cursor-pointer"
+          onClick={() => navigate('/wallet')}
+        >
+          <CreditCard className="mr-2 h-4 w-4" />
+          <span>Wallet</span>
+          <span className="ml-auto text-xs opacity-60">
+            {formatCurrency(user.walletBalance || 0)}
+          </span>
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          className="cursor-pointer"
+          onClick={() => navigate('/leaderboard')}
+        >
+          <Crown className="mr-2 h-4 w-4" />
+          <span>Rank</span>
+          <Badge
+            variant="outline"
+            className="ml-auto text-xs bg-black/20 px-1 py-0 h-5"
+          >
+            #{user.rank || '?'}
+          </Badge>
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          className="cursor-pointer"
+          onClick={() => navigate('/notifications')}
+        >
+          <Bell className="mr-2 h-4 w-4" />
+          <span>Notifications</span>
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          className="cursor-pointer"
+          onClick={() => navigate('/settings')}
+        >
+          <Settings className="mr-2 h-4 w-4" />
+          <span>Settings</span>
+        </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuGroup>
-          <DropdownMenuItem asChild>
-            <Link to={`/profile/${user.username}`} className="cursor-pointer">
-              <Icon name="User" size="xs" className="mr-2" />
-              <span>Profile</span>
-            </Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem asChild>
-            <Link to="/deposit" className="cursor-pointer">
-              <Icon name="coins" size="xs" className="mr-2" />
-              <span>Deposit</span>
-            </Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem asChild>
-            <Link to="/profile-enhancements" className="cursor-pointer">
-              <Icon name="SparklesIcon" size="xs" className="mr-2" />
-              <span>Enhancements</span>
-            </Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem asChild>
-            <Link to="/settings" className="cursor-pointer">
-              <Icon name="Settings" size="xs" className="mr-2" />
-              <span>Settings</span>
-            </Link>
-          </DropdownMenuItem>
-        </DropdownMenuGroup>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={handleLogout} className="cursor-pointer">
-          <Icon name="LogOut" size="xs" className="mr-2" />
+        <DropdownMenuItem className="cursor-pointer" onClick={handleLogout}>
+          <LogOut className="mr-2 h-4 w-4" />
           <span>Log out</span>
         </DropdownMenuItem>
       </DropdownMenuContent>

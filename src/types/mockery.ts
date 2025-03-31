@@ -3,56 +3,18 @@ import { UserProfile, UserTier, TeamType } from './user-types';
 import { FC } from 'react';
 import { LucideIcon } from 'lucide-react';
 
-// Core mockery action types - expanded to include all used values
+// Simplify mockery actions to a core set
 export type MockeryAction = 
   | 'tomatoes'
-  | 'eggs'
+  | 'eggs' 
   | 'crown'
   | 'jester'
   | 'stocks'
   | 'shame'
   | 'protection'
-  | 'target'
-  | 'putridEggs'
-  | 'silence'
-  | 'courtJester'
-  | 'smokeBomb'
-  | 'immune'
-  | 'dunce'
-  | 'glitterBomb'
-  | 'royalPie'
-  | 'jokeCrown'
-  | 'memeFrame'
-  | 'roast'
-  | 'ridicule'
-  | 'humiliate'
-  | 'expose'
-  | 'mock'
-  | 'taunt'
-  | 'guillotine'
-  | 'dungeons'
-  | 'removal'
-  | 'laughing'
-  | 'troll'
-  | 'peasant'
-  | 'rat'
-  | 'ghost'
-  | 'skeleton'
-  | 'zombie'
-  | 'witch'
-  | 'monster'
-  | 'dragon'
-  | 'jest'
-  | 'challenge'
-  | 'defeat'
-  | 'fool'
-  | 'demon';
+  | 'target';
 
-export type ExtendedMockeryAction = MockeryAction | string;
-
-export type MockeryActionType = MockeryAction;
-
-// Mockery tiers for different levels of mockery
+// Simplify mockery tiers for different levels
 export type MockeryTier = 
   | 'common'
   | 'uncommon'
@@ -90,8 +52,8 @@ export interface MockeryEvent {
 // Represents a user who has been mocked
 export interface MockedUser {
   id: string;
+  userId: string;
   username: string;
-  userId?: string;
   displayName?: string;
   profileImage?: string;
   tier?: UserTier;
@@ -155,10 +117,10 @@ export interface UseMockery {
 
 // Helper function to check if a string is a valid MockeryAction
 export const isValidMockeryAction = (action: string): action is MockeryAction => {
-  return true; // Simplified for now, should be implemented properly
+  return ['tomatoes', 'eggs', 'crown', 'jester', 'stocks', 'shame', 'protection', 'target'].includes(action as MockeryAction);
 };
 
 // Helper function to check if a string is a valid MockeryTier
 export const isValidMockeryTier = (tier: string): tier is MockeryTier => {
-  return true; // Simplified for now, should be implemented properly
+  return ['common', 'uncommon', 'rare', 'epic', 'legendary', 'standard', 'premium', 'royal', 'basic', 'silver'].includes(tier as MockeryTier);
 };

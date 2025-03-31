@@ -36,7 +36,7 @@ const UserBadge: React.FC<UserBadgeProps> = ({
     lg: 'px-3 py-1 text-base'
   };
 
-  const tierBadges: Record<UserTier, { bg: string; icon: React.ReactNode; label: string }> = {
+  const tierBadges: Record<string, { bg: string; icon: React.ReactNode; label: string }> = {
     free: { bg: 'bg-gray-100 text-gray-800', icon: <User size={14} />, label: 'Free' },
     basic: { bg: 'bg-gray-200 text-gray-800', icon: <User size={14} />, label: 'Basic' },
     bronze: { bg: 'bg-amber-700/80 text-white', icon: <Award size={14} />, label: 'Bronze' },
@@ -55,7 +55,7 @@ const UserBadge: React.FC<UserBadgeProps> = ({
     plus: { bg: 'bg-green-500 text-white', icon: <Coins size={14} />, label: 'Plus' }
   };
 
-  const teamBadges: Record<TeamType, { bg: string; icon: React.ReactNode; label: string }> = {
+  const teamBadges: Record<string, { bg: string; icon: React.ReactNode; label: string }> = {
     red: { bg: 'bg-red-500 text-white', icon: <Shield size={14} className="text-white" />, label: 'Red' },
     green: { bg: 'bg-green-500 text-white', icon: <Shield size={14} className="text-white" />, label: 'Green' },
     blue: { bg: 'bg-blue-500 text-white', icon: <Shield size={14} className="text-white" />, label: 'Blue' },
@@ -67,9 +67,9 @@ const UserBadge: React.FC<UserBadgeProps> = ({
 
   const getBadgeDetails = () => {
     if (type === 'tier') {
-      return tierBadges[value as UserTier] || tierBadges.basic;
+      return tierBadges[value as string] || tierBadges.basic;
     } else if (type === 'team') {
-      return teamBadges[value as TeamType] || teamBadges.none;
+      return teamBadges[value as string] || teamBadges.none;
     }
     return { bg: 'bg-gray-500 text-white', icon: <User size={14} />, label: 'Unknown' };
   };
