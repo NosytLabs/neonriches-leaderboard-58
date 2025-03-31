@@ -1,15 +1,15 @@
 
 import { MockeryAction, MockeryTier } from '@/types/mockery';
 import { 
-  Crown, 
+  AlertCircle, 
   Egg, 
-  Lock, 
-  ThumbsDown, 
+  Crown, 
+  Lock
 } from 'lucide-react';
-import { FC } from 'react';
+import type { LucideIcon } from 'lucide-react';
 
 // TomatoIcon component
-export const TomatoIcon: FC<{className?: string; size?: number}> = ({className = "", size = 24}) => (
+export const TomatoIcon = ({ className = "", size = 24 }) => (
   <svg 
     xmlns="http://www.w3.org/2000/svg" 
     width={size} 
@@ -28,7 +28,18 @@ export const TomatoIcon: FC<{className?: string; size?: number}> = ({className =
   </svg>
 );
 
-// Get display name for a mockery action - SIMPLIFIED to 4 core actions
+// Get mockery action icon
+export const getMockeryActionIcon = (action: MockeryAction): LucideIcon => {
+  const icons: Record<string, LucideIcon> = {
+    'tomatoes': TomatoIcon,
+    'eggs': Egg,
+    'crown': Crown,
+    'stocks': Lock
+  };
+  return icons[action] || AlertCircle;
+};
+
+// Get display name for a mockery action
 export const getMockeryName = (action: MockeryAction): string => {
   const names: Record<MockeryAction, string> = {
     tomatoes: 'Rotten Tomatoes',
@@ -40,7 +51,7 @@ export const getMockeryName = (action: MockeryAction): string => {
   return names[action] || 'Unknown Mockery';
 };
 
-// Get description for a mockery action - SIMPLIFIED to 4 core actions
+// Get description for a mockery action
 export const getMockeryDescription = (action: MockeryAction): string => {
   const descriptions: Record<MockeryAction, string> = {
     tomatoes: 'Throw rotten tomatoes at this user to humiliate them publicly.',
@@ -52,7 +63,7 @@ export const getMockeryDescription = (action: MockeryAction): string => {
   return descriptions[action] || 'A mysterious form of mockery.';
 };
 
-// Get cost for a mockery action - SIMPLIFIED to 4 core actions
+// Get cost for a mockery action
 export const getMockeryCost = (action: MockeryAction): number => {
   const costs: Record<MockeryAction, number> = {
     tomatoes: 0.25,
@@ -64,7 +75,7 @@ export const getMockeryCost = (action: MockeryAction): number => {
   return costs[action] || 0.25;
 };
 
-// Get tier for a mockery action - SIMPLIFIED to 4 core actions
+// Get tier for a mockery action
 export const getMockeryTier = (action: MockeryAction): MockeryTier => {
   const tiers: Record<MockeryAction, MockeryTier> = {
     tomatoes: 'common',
@@ -89,7 +100,7 @@ export const getMockeryTierColorClass = (tier: MockeryTier): string => {
   return colors[tier] || 'text-gray-400';
 };
 
-// Get duration of mockery in hours - SIMPLIFIED to 4 core actions
+// Get duration of mockery in hours
 export const getMockeryDuration = (action: MockeryAction): number => {
   const durations: Record<MockeryAction, number> = {
     tomatoes: 24,
@@ -101,27 +112,10 @@ export const getMockeryDuration = (action: MockeryAction): number => {
   return durations[action] || 24;
 };
 
-// Get mockery action icon component - SIMPLIFIED to 4 core actions
-export const getMockeryActionIcon = (action: MockeryAction): FC<any> => {
-  const icons: Record<MockeryAction, FC<any>> = {
-    tomatoes: TomatoIcon,
-    eggs: Egg,
-    crown: Crown,
-    stocks: Lock
-  };
-  
-  return icons[action] || ThumbsDown;
-};
-
-// For backward compatibility
-export const getMockeryActionTitle = getMockeryName;
-export const getMockeryActionDescription = getMockeryDescription;
-export const getMockeryActionPrice = getMockeryCost;
-export const getMockeryIconColor = getMockeryActionIcon;
-export const getMockeryActionIconColor = getMockeryActionIcon;
-
 // Define a simple function to get class for mockery that is active
-export const getActiveMockeryClass = (action: MockeryAction): string => {
+export const getActiveMockeryClass = (action: MockeryAction | null): string => {
+  if (!action) return '';
+  
   const classes: Record<MockeryAction, string> = {
     tomatoes: 'bg-red-500/20 border-red-500/40',
     eggs: 'bg-yellow-500/20 border-yellow-500/40',
@@ -132,21 +126,9 @@ export const getActiveMockeryClass = (action: MockeryAction): string => {
   return classes[action] || 'bg-red-500/20 border-red-500/40';
 };
 
-// Helper function for backward compatibility
-export const getMockeryCooldown = (action: string): number => {
-  return 3600; // Default 1 hour cooldown
-};
-
-// Create a price function that combines tier and action
-export const getMockeryPrice = (action: MockeryAction, tier: MockeryTier): number => {
-  const basePrice = getMockeryActionPrice(action);
-  const tierMultiplier = {
-    common: 1,
-    uncommon: 1.5,
-    rare: 2,
-    epic: 2.5,
-    legendary: 3
-  }[tier] || 1;
-  
-  return basePrice * tierMultiplier;
-};
+// For backward compatibility
+export const getMockeryActionTitle = getMockeryName;
+export const getMockeryActionDescription = getMockeryDescription;
+export const getMockeryActionPrice = getMockeryCost;
+export const getMockeryIconColor = getMockeryActionIcon;
+export const getMockeryActionIconColor = getMockeryActionIcon;

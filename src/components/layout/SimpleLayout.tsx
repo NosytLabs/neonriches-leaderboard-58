@@ -3,7 +3,7 @@ import React from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { cn } from '@/lib/utils';
-import { usePageTracking } from '@/hooks/usePageTracking';
+import usePageTracking from '@/hooks/usePageTracking';
 
 interface SimpleLayoutProps {
   children: React.ReactNode;
@@ -14,7 +14,7 @@ interface SimpleLayoutProps {
 }
 
 /**
- * A simplified layout component for better performance
+ * A simplified layout component
  */
 const SimpleLayout: React.FC<SimpleLayoutProps> = ({
   children,

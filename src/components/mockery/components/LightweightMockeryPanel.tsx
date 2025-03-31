@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Target } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { MockeryAction } from '@/types/mockery';
-import { getMockeryName, getMockeryDescription, getMockeryCost } from '@/utils/mockery';
+import { getMockeryName, getMockeryDescription, getMockeryCost, getMockeryActionIcon } from '@/utils/mockery';
 import { useToast } from '@/hooks/use-toast';
 
 // Simplified to 4 core mockery actions
@@ -56,20 +56,26 @@ const LightweightMockeryPanel = () => {
           <div>
             <label className="text-sm font-medium mb-1 block">Select Mockery Type</label>
             <div className="grid grid-cols-2 gap-2">
-              {MOCKERY_ACTIONS.map(action => (
-                <Button
-                  key={action}
-                  type="button"
-                  variant={selectedAction === action ? "default" : "outline"}
-                  className="justify-start text-left h-auto py-2"
-                  onClick={() => setSelectedAction(action)}
-                >
-                  <div className="flex flex-col items-start">
-                    <span className="text-sm font-medium">{getMockeryName(action)}</span>
-                    <span className="text-xs text-muted-foreground">${getMockeryCost(action)}</span>
-                  </div>
-                </Button>
-              ))}
+              {MOCKERY_ACTIONS.map(action => {
+                const Icon = getMockeryActionIcon(action);
+                return (
+                  <Button
+                    key={action}
+                    type="button"
+                    variant={selectedAction === action ? "default" : "outline"}
+                    className="justify-start text-left h-auto py-2"
+                    onClick={() => setSelectedAction(action)}
+                  >
+                    <div className="flex flex-col items-start">
+                      <div className="flex items-center">
+                        {Icon && <Icon className="h-4 w-4 mr-1" />}
+                        <span className="text-sm font-medium">{getMockeryName(action)}</span>
+                      </div>
+                      <span className="text-xs text-muted-foreground">${getMockeryCost(action)}</span>
+                    </div>
+                  </Button>
+                );
+              })}
             </div>
           </div>
           

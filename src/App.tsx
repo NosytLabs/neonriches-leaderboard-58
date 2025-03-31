@@ -34,7 +34,6 @@ function App() {
               <Route path="/" element={<Home />} />
               
               {/* Main App Pages */}
-              <Route path="/home" element={<Home />} />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<SignUp />} />
               <Route path="/leaderboard" element={<Leaderboard />} />
@@ -42,6 +41,7 @@ function App() {
               <Route path="/privacy" element={<Privacy />} />
               <Route path="/terms" element={<Terms />} />
               <Route path="/status" element={<StatusCenter />} />
+              <Route path="/events" element={<Events />} />
               
               {/* Protected User Pages */}
               <Route 
@@ -60,10 +60,7 @@ function App() {
                   </ProtectedRoute>
                 } 
               />
-              <Route 
-                path="/profile/:username" 
-                element={<Profile />} 
-              />
+              <Route path="/profile/:username" element={<Profile />} />
               <Route 
                 path="/wallet" 
                 element={
@@ -81,12 +78,9 @@ function App() {
                 } 
               />
               
-              {/* Feature Pages */}
-              <Route path="/events" element={<Events />} />
-              
               {/* Redirection routes for backwards compatibility */}
               <Route path="/mockery" element={<Navigate to="/status" replace />} />
-              <Route path="/status-through-history" element={<Navigate to="/status" replace />} />
+              <Route path="/home" element={<Navigate to="/" replace />} />
               
               {/* Catch-all for 404 */}
               <Route path="*" element={<NotFound />} />
