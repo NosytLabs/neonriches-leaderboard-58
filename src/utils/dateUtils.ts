@@ -1,113 +1,85 @@
 
 /**
- * Check if a date is in the past
- * @param date The date to check
- * @returns true if the date is in the past
+ * Date utility functions for the SpendThrone app
  */
-export const isDateInPast = (date: Date | string): boolean => {
-  const checkDate = typeof date === 'string' ? new Date(date) : date;
-  return checkDate < new Date();
+
+/**
+ * Format a date as a relative time string (e.g., "2 days ago")
+ */
+export const getRelativeTimeString = (date: string | Date): string => {
+  const targetDate = new Date(date);
+  const now = new Date();
+  
+  const diffMs = now.getTime() - targetDate.getTime();
+  const diffSecs = Math.floor(diffMs / 1000);
+  const diffMins = Math.floor(diffSecs / 60);
+  const diffHours = Math.floor(diffMins / 60);
+  const diffDays = Math.floor(diffHours / 24);
+  const diffWeeks = Math.floor(diffDays / 7);
+  const diffMonths = Math.floor(diffDays / 30);
+  const diffYears = Math.floor(diffDays / 365);
+
+  if (diffSecs < 60) {
+    return 'just now';
+  } else if (diffMins < 60) {
+    return `${diffMins} ${diffMins === 1 ? 'minute' : 'minutes'} ago`;
+  } else if (diffHours < 24) {
+    return `${diffHours} ${diffHours === 1 ? 'hour' : 'hours'} ago`;
+  } else if (diffDays < 7) {
+    return `${diffDays} ${diffDays === 1 ? 'day' : 'days'} ago`;
+  } else if (diffWeeks < 4) {
+    return `${diffWeeks} ${diffWeeks === 1 ? 'week' : 'weeks'} ago`;
+  } else if (diffMonths < 12) {
+    return `${diffMonths} ${diffMonths === 1 ? 'month' : 'months'} ago`;
+  } else {
+    return `${diffYears} ${diffYears === 1 ? 'year' : 'years'} ago`;
+  }
+};
+
+/**
+ * Get the number of days in a month
+ */
+export const getDaysInMonth = (year: number, month: number): number => {
+  return new Date(year, month + 1, 0).getDate();
+};
+
+/**
+ * Check if a date is today
+ */
+export const isDateToday = (date: string | Date): boolean => {
+  const targetDate = new Date(date);
+  const today = new Date();
+  
+  return (
+    targetDate.getDate() === today.getDate() &&
+    targetDate.getMonth() === today.getMonth() &&
+    targetDate.getFullYear() === today.getFullYear()
+  );
+};
+
+/**
+ * Check if a date is in the past
+ */
+export const isDateInPast = (date: string | Date): boolean => {
+  const targetDate = new Date(date);
+  const now = new Date();
+  return targetDate.getTime() < now.getTime();
 };
 
 /**
  * Check if a date is in the future
- * @param date The date to check
- * @returns true if the date is in the future
  */
-export const isDateInFuture = (date: Date | string): boolean => {
-  const checkDate = typeof date === 'string' ? new Date(date) : date;
-  return checkDate > new Date();
-};
-
-/**
- * Format a date as a relative time (e.g. "2 hours ago")
- * @param date The date to format
- * @returns A string representing the relative time
- */
-export const formatRelativeTime = (date: Date | string): string => {
+export const isDateInFuture = (date: string | Date): boolean => {
+  const targetDate = new Date(date);
   const now = new Date();
-  const then = typeof date === 'string' ? new Date(date) : date;
-  const diffInSeconds = Math.floor((now.getTime() - then.getTime()) / 1000);
-  
-  if (diffInSeconds < 60) {
-    return `${diffInSeconds} seconds ago`;
-  }
-  
-  const diffInMinutes = Math.floor(diffInSeconds / 60);
-  if (diffInMinutes < 60) {
-    return `${diffInMinutes} minutes ago`;
-  }
-  
-  const diffInHours = Math.floor(diffInMinutes / 60);
-  if (diffInHours < 24) {
-    return `${diffInHours} hours ago`;
-  }
-  
-  const diffInDays = Math.floor(diffInHours / 24);
-  if (diffInDays < 30) {
-    return `${diffInDays} days ago`;
-  }
-  
-  const diffInMonths = Math.floor(diffInDays / 30);
-  if (diffInMonths < 12) {
-    return `${diffInMonths} months ago`;
-  }
-  
-  const diffInYears = Math.floor(diffInMonths / 12);
-  return `${diffInYears} years ago`;
+  return targetDate.getTime() > now.getTime();
 };
 
-/**
- * Format a time duration in milliseconds to a human-readable string
- * @param durationMs Duration in milliseconds
- * @returns Formatted duration string
- */
-export const formatDuration = (durationMs: number): string => {
-  const seconds = Math.floor(durationMs / 1000);
-  const minutes = Math.floor(seconds / 60);
-  const hours = Math.floor(minutes / 60);
-  const days = Math.floor(hours / 24);
-  
-  if (days > 0) {
-    return `${days} day${days > 1 ? 's' : ''}`;
-  }
-  
-  if (hours > 0) {
-    return `${hours} hour${hours > 1 ? 's' : ''}`;
-  }
-  
-  if (minutes > 0) {
-    return `${minutes} minute${minutes > 1 ? 's' : ''}`;
-  }
-  
-  return `${seconds} second${seconds !== 1 ? 's' : ''}`;
-};
-
-/**
- * Format a date to a readable string
- * @param date The date to format
- * @param includeTime Whether to include the time
- * @returns A formatted date string
- */
-export const formatDate = (date: Date | string, includeTime: boolean = false): string => {
-  const options: Intl.DateTimeFormatOptions = { 
-    year: 'numeric', 
-    month: 'long', 
-    day: 'numeric'
-  };
-  
-  if (includeTime) {
-    options.hour = '2-digit';
-    options.minute = '2-digit';
-  }
-  
-  return new Date(date).toLocaleDateString('en-US', options);
-};
-
+// Export all utility functions
 export default {
+  getRelativeTimeString,
+  getDaysInMonth,
+  isDateToday,
   isDateInPast,
   isDateInFuture,
-  formatRelativeTime,
-  formatDuration,
-  formatDate
 };

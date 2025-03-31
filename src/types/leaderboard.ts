@@ -45,5 +45,5 @@ export interface TypedLeaderboardFilter {
   timeFrame?: string;
 }
 
-// Use type exports to avoid conflicts with isolatedModules
+// Export types using 'export type' to avoid conflicts with isolatedModules
 export type { LeaderboardUser, SortByOptions, TypedLeaderboardFilter };

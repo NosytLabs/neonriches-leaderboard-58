@@ -113,6 +113,15 @@ const InteractiveLeaderboard: React.FC = () => {
     setSelectedUser(user);
     setModalType('shame');
   };
+  
+  const handleLeaderboardAction = (action: string, user: LeaderboardUser) => {
+    console.log(`Action ${action} on user ${user.username}`);
+    if (action === 'mock') {
+      handleShameUser(user);
+    } else if (action === 'view') {
+      handleProfileClick(user.id);
+    }
+  };
 
   return (
     <div>
@@ -136,7 +145,12 @@ const InteractiveLeaderboard: React.FC = () => {
             />
           ))}
           
-          <LeaderboardActions />
+          {selectedUser && (
+            <LeaderboardActions 
+              user={selectedUser} 
+              onAction={handleLeaderboardAction} 
+            />
+          )}
           
           {modalType === 'shame' && selectedUser && (
             <ShameModal

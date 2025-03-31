@@ -1,10 +1,143 @@
 
-import { MockeryAction, MockeryTier } from '@/types/mockery';
+import { MockeryAction, MockeryTier, MockeryColorTheme } from '@/types/mockery';
 
 /**
- * Get the name of a mockery action
+ * Get the price for a mockery action
+ * @param action The mockery action to get the price for
+ * @returns The price in dollars/coins
+ */
+export const getShameActionPrice = (action: MockeryAction): number => {
+  const prices: Record<MockeryAction, number> = {
+    'tomatoes': 5,
+    'eggs': 10,
+    'stocks': 20,
+    'crown': 100,
+    'jester': 15,
+    'putridEggs': 25,
+    'silence': 30,
+    'courtJester': 50,
+    'smokeBomb': 15,
+    'shame': 10,
+    'protection': 75
+  };
+
+  return prices[action] || 5;
+};
+
+/**
+ * Get the tier of a mockery action
+ * @param action The mockery action to get the tier for
+ * @returns The tier as a MockeryTier
+ */
+export const getShameActionTier = (action: MockeryAction): MockeryTier => {
+  const tiers: Record<MockeryAction, MockeryTier> = {
+    'tomatoes': 'common',
+    'eggs': 'common',
+    'jester': 'common',
+    'stocks': 'uncommon',
+    'shame': 'uncommon',
+    'smokeBomb': 'uncommon',
+    'putridEggs': 'rare',
+    'silence': 'rare',
+    'courtJester': 'rare',
+    'crown': 'legendary',
+    'protection': 'legendary'
+  };
+
+  return tiers[action] || 'common';
+};
+
+/**
+ * Get the cooldown time for a mockery action in milliseconds
  * @param action The mockery action
- * @returns A human-readable name
+ * @returns Cooldown time in milliseconds
+ */
+export const getShameActionCooldown = (action: MockeryAction): number => {
+  const baseCooldown = 30 * 1000; // 30 seconds base cooldown
+  const multipliers: Record<MockeryTier, number> = {
+    'common': 1,
+    'uncommon': 2,
+    'rare': 3,
+    'epic': 4,
+    'legendary': 5
+  };
+  
+  const tier = getShameActionTier(action);
+  return baseCooldown * multipliers[tier];
+};
+
+/**
+ * Get the duration a mockery effect stays applied in milliseconds
+ * @param action The mockery action
+ * @returns Duration in milliseconds
+ */
+export const getShameActionDuration = (action: MockeryAction): number => {
+  const baseDuration = 3600 * 1000; // 1 hour base duration
+  const multipliers: Record<MockeryTier, number> = {
+    'common': 1,      // 1 hour
+    'uncommon': 3,    // 3 hours
+    'rare': 6,        // 6 hours
+    'epic': 12,       // 12 hours 
+    'legendary': 24   // 24 hours
+  };
+  
+  const tier = getShameActionTier(action);
+  return baseDuration * multipliers[tier];
+};
+
+/**
+ * Check if the action has a weekly discount
+ * @param action The mockery action
+ * @returns Whether the action has a weekly discount
+ */
+export const hasWeeklyDiscount = (action: MockeryAction): boolean => {
+  // For demo purposes, let's say stocks is discounted this week
+  const discountedAction = getWeeklyDiscountedAction();
+  return action === discountedAction;
+};
+
+/**
+ * Get the action that is discounted this week
+ * @returns The discounted action
+ */
+export const getWeeklyDiscountedAction = (): MockeryAction => {
+  // This would typically be fetched from an API or database
+  // For now, let's hardcode it to 'stocks'
+  return 'stocks';
+};
+
+/**
+ * Get the discounted price for a mockery action
+ * @param action The mockery action
+ * @returns The discounted price
+ */
+export const getDiscountedShamePrice = (action: MockeryAction): number => {
+  const regularPrice = getShameActionPrice(action);
+  // 50% discount
+  return regularPrice * 0.5;
+};
+
+/**
+ * Get the color theme for a mockery tier
+ * @param tier The mockery tier
+ * @returns A color theme object
+ */
+export const getMockeryTierColorClass = (tier: MockeryTier): string => {
+  const colorClasses: Record<MockeryTier, string> = {
+    'common': 'text-gray-400 bg-gray-800/50 border-gray-500/30',
+    'uncommon': 'text-green-400 bg-green-900/30 border-green-500/30',
+    'rare': 'text-blue-400 bg-blue-900/30 border-blue-500/30',
+    'epic': 'text-purple-400 bg-purple-900/30 border-purple-500/30',
+    'legendary': 'text-yellow-400 bg-yellow-900/30 border-yellow-500/30'
+  };
+
+  return colorClasses[tier] || colorClasses.common;
+};
+
+/**
+ * Get mockery name for display
+ * @param action The mockery action
+ * @returns A human-readable name for the mockery action
  */
 export const getMockeryName = (action: MockeryAction): string => {
   const names: Record<MockeryAction, string> = {
@@ -25,7 +158,7 @@ export const getMockeryName = (action: MockeryAction): string => {
 };
 
 /**
- * Get the description of a mockery action
+ * Get mockery description for display
  * @param action The mockery action
  * @returns A description of what the mockery action does
  */
@@ -47,74 +180,15 @@ export const getMockeryDescription = (action: MockeryAction): string => {
   return descriptions[action] || 'Apply a mysterious effect';
 };
 
-/**
- * Get the icon color for a mockery action
- * @param action The mockery action
- * @returns A color string for the icon
- */
-export const getMockeryActionIconColor = (action: MockeryAction): string => {
-  const colors: Record<MockeryAction, string> = {
-    'tomatoes': '#ef4444',
-    'eggs': '#eab308',
-    'stocks': '#6b7280',
-    'crown': '#f59e0b',
-    'jester': '#8b5cf6',
-    'putridEggs': '#84cc16',
-    'silence': '#3b82f6',
-    'courtJester': '#ec4899',
-    'smokeBomb': '#0ea5e9',
-    'shame': '#dc2626',
-    'protection': '#10b981'
-  };
-
-  return colors[action] || '#6b7280';
-};
-
-/**
- * Get the tier of a mockery action
- * @param action The mockery action
- * @returns The rarity tier
- */
-export const getMockeryActionTier = (action: MockeryAction): MockeryTier => {
-  const tiers: Record<MockeryAction, MockeryTier> = {
-    'tomatoes': 'common',
-    'eggs': 'common',
-    'jester': 'common',
-    'stocks': 'uncommon',
-    'shame': 'uncommon',
-    'smokeBomb': 'uncommon',
-    'putridEggs': 'rare',
-    'silence': 'rare',
-    'courtJester': 'rare',
-    'crown': 'legendary',
-    'protection': 'legendary'
-  };
-
-  return tiers[action] || 'common';
-};
-
-/**
- * Get the price of a mockery action
- * @param action The mockery action
- * @returns The price in dollars
- */
-export const getMockeryActionPrice = (action: MockeryAction): number => {
-  const prices: Record<MockeryTier, number> = {
-    'common': 5,
-    'uncommon': 10,
-    'rare': 20,
-    'epic': 50,
-    'legendary': 100
-  };
-
-  const tier = getMockeryActionTier(action);
-  return prices[tier];
-};
-
 export default {
+  getShameActionPrice,
+  getShameActionTier,
+  getShameActionCooldown,
+  getShameActionDuration,
+  hasWeeklyDiscount,
+  getWeeklyDiscountedAction,
+  getDiscountedShamePrice,
   getMockeryName,
   getMockeryDescription,
-  getMockeryActionIconColor,
-  getMockeryActionTier,
-  getMockeryActionPrice
+  getMockeryTierColorClass
 };

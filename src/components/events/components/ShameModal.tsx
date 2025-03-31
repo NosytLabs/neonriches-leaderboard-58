@@ -4,8 +4,13 @@ import { DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/compon
 import { Button } from '@/components/ui/button';
 import { MockeryAction, TeamColor } from '@/types/mockery';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { getMockeryName, getMockeryDescription, getShameActionPrice, getDiscountedShamePrice } from '@/utils/mockeryUtils';
 import { Crown, ShieldCheck, Coins } from 'lucide-react';
+import { 
+  getShameActionPrice, 
+  getDiscountedShamePrice,
+  getMockeryName, 
+  getMockeryDescription 
+} from '@/utils/mockeryUtils';
 
 interface ShameModalProps {
   targetUser: {

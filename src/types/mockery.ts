@@ -1,5 +1,5 @@
 
-// Define mockery types for the SpendThrone app
+import { TeamColor, TeamType } from '@/types/team';
 
 // Types of mockery actions
 export type MockeryAction = 
@@ -58,5 +58,6 @@ export interface MockeryColorTheme {
   text: string;
 }
 
-// For compatibility with other modules
-export type { TeamColor, TeamType, NotificationSoundOptions } from '@/types/team';
+// For compatibility with other modules - using explicit type exports
+export type { TeamColor, TeamType } from '@/types/team';
+export type { NotificationSoundOptions } from '@/types/user';
