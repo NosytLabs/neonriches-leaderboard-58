@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { UserProfile, SocialLink, ProfileImage as UserProfileImage, TeamType } from '@/types/user';
+import { UserProfile, SocialLink, ProfileImage as UserProfileImage, TeamType, Gender } from '@/types/user';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Crown, User, Image, Link as LinkIcon, Palette, Settings, Shield } from 'lucide-react';
@@ -25,7 +25,9 @@ const ProfileEditor: React.FC<ProfileEditorProps> = ({ user, onProfileUpdate }) 
   const [displayName, setDisplayName] = useState(user.displayName || '');
   const [bio, setBio] = useState(user.bio || '');
   const [gender, setGender] = useState<GenderType>((user.gender as GenderType) || 'neutral');
-  const [socialLinks, setSocialLinks] = useState<SocialLink[]>(user.socialLinks || []);
+  const [socialLinks, setSocialLinks] = useState<SocialLink[]>(
+    Array.isArray(user.socialLinks) ? user.socialLinks : []
+  );
   const [profileImages, setProfileImages] = useState<UserProfileImage[]>(
     user.profileImages || []
   );
@@ -39,7 +41,7 @@ const ProfileEditor: React.FC<ProfileEditorProps> = ({ user, onProfileUpdate }) 
     setDisplayName(user.displayName || '');
     setBio(user.bio || '');
     setGender((user.gender as GenderType) || 'neutral');
-    setSocialLinks(user.socialLinks || []);
+    setSocialLinks(Array.isArray(user.socialLinks) ? user.socialLinks : []);
     setProfileImages(user.profileImages || []);
     setSelectedTeam(user.team === null ? null : (user.team as 'red' | 'green' | 'blue' | null));
   }, [user]);
@@ -59,7 +61,7 @@ const ProfileEditor: React.FC<ProfileEditorProps> = ({ user, onProfileUpdate }) 
       const updatedProfile: Partial<UserProfile> = {
         displayName,
         bio,
-        gender,
+        gender: gender as Gender,
         socialLinks,
         profileImages,
         team: selectedTeam, // Can be null or a team color

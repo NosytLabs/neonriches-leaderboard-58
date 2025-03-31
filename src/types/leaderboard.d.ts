@@ -15,6 +15,7 @@ export interface LeaderboardUser {
   amountSpent?: number;  // Legacy field - use totalSpent instead
   isVerified?: boolean;
   spendStreak?: number;
+  joinedAt?: string;     // Add joinedAt as an optional property
 }
 
 export interface LeaderboardFilter {
@@ -22,4 +23,17 @@ export interface LeaderboardFilter {
   tier?: string;
   timeFrame?: 'all' | 'day' | 'week' | 'month' | 'year';
   search?: string;
+}
+
+// Re-export to avoid conflicts in index.ts
+export type { LeaderboardUser, LeaderboardFilter };
+
+// Additional types used in the codebase
+export interface SortByOptions {
+  value: string;
+  label: string;
+}
+
+export interface TypedLeaderboardFilter extends LeaderboardFilter {
+  sort?: string;
 }

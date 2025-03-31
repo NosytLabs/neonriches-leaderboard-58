@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -149,7 +150,7 @@ const RoyalMockeryFestival = () => {
                 
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                   {mockeryActions.map((action) => {
-                    const ActionIcon = getMockeryActionIcon(action as any);
+                    const IconComponent = getMockeryActionIcon(action as any);
                     const name = getMockeryName(action as any);
                     const tier = getMockeryTier(action as any);
                     const price = getMockeryCost(action as any);
@@ -166,10 +167,8 @@ const RoyalMockeryFestival = () => {
                         onClick={() => setSelectedAction(action)}
                       >
                         <div className="flex items-center mb-2">
-                          {typeof ActionIcon === 'function' ? (
-                            <ActionIcon className="h-5 w-5 mr-2" />
-                          ) : (
-                            <ActionIcon className="h-5 w-5 mr-2" />
+                          {IconComponent && (
+                            <IconComponent className="h-5 w-5 mr-2" />
                           )}
                           <h4 className="font-medium text-sm">{name}</h4>
                         </div>

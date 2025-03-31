@@ -3,7 +3,7 @@ import { UserCosmetics } from './cosmetics';
 
 export type TeamColor = 'red' | 'blue' | 'green' | 'gold' | 'purple' | 'none' | 'neutral';
 export type TeamType = 'red' | 'blue' | 'green' | 'gold' | 'none' | 'neutral';
-export type Gender = 'male' | 'female' | 'other' | 'prefer-not-to-say';
+export type Gender = 'male' | 'female' | 'other' | 'prefer-not-to-say' | 'king' | 'queen' | 'jester' | 'noble';
 
 export type UserTier = 
   | 'free'
