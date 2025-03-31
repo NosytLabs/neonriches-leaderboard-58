@@ -3,52 +3,9 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useSettingsStore } from '@/stores/settingsStore';
 import { useSoundsConfig } from '@/hooks/sounds/use-sounds-config';
 import { useTheme } from '@/providers/ThemeProvider';
-import { UserSettings } from '@/types/settings';
+import { UserSettings, SettingsContextType } from '@/types/settings';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
-
-interface SettingsContextType {
-  // Theme settings
-  theme: 'dark' | 'light' | 'system';
-  setTheme: (theme: 'dark' | 'light' | 'system') => void;
-  isDarkTheme: boolean;
-  
-  // Sound settings
-  soundConfig: {
-    enabled: boolean;
-    muted: boolean;
-    volume: number;
-    premium: boolean;
-  };
-  toggleSounds: () => void;
-  toggleMuted: () => void;
-  setVolume: (volume: number) => void;
-  togglePremium: () => void;
-  
-  // Notification settings
-  notifications: boolean;
-  toggleNotifications: () => void;
-  
-  // Profile settings
-  profileSettings: {
-    showRank: boolean;
-    showTeam: boolean;
-    showSpending: boolean;
-    publicProfile: boolean;
-  };
-  updateProfileSettings: (settings: Partial<UserSettings>) => Promise<boolean>;
-  
-  // Marketing settings
-  marketingSettings: {
-    allowProfileLinks: boolean;
-    showEmailOnProfile: boolean;
-    marketingEmails: boolean;
-  };
-  updateMarketingSettings: (settings: Partial<UserSettings>) => Promise<boolean>;
-
-  // Loading states
-  isLoading: boolean;
-}
 
 const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
 
@@ -66,9 +23,18 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     showTeam: user?.settings?.showTeam ?? true,
     showSpending: user?.settings?.showSpending ?? true,
     publicProfile: user?.settings?.publicProfile ?? true,
+    showEmailOnProfile: user?.settings?.showEmailOnProfile ?? false,
   };
   
-  // Extract marketing settings from user.settings
+  // Extract accessibility settings
+  const accessibilitySettings = {
+    textSize: user?.settings?.textSize ?? 100,
+    highContrast: user?.settings?.highContrast ?? false,
+    reducedMotion: user?.settings?.reducedMotion ?? false,
+    reducedTransparency: user?.settings?.reducedTransparency ?? false,
+  };
+  
+  // Extract marketing settings
   const marketingSettings = {
     allowProfileLinks: user?.settings?.allowProfileLinks ?? true,
     showEmailOnProfile: user?.settings?.showEmailOnProfile ?? false,
@@ -96,11 +62,45 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         });
       }
       
-      return success;
+      return !!success;
     } catch (error) {
       toast({
         title: "Error",
         description: "Failed to update settings. Please try again.",
+        variant: "destructive",
+      });
+      return false;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  
+  const updateAccessibilitySettings = async (settings: Partial<UserSettings>): Promise<boolean> => {
+    if (!user) return false;
+    
+    setIsLoading(true);
+    try {
+      const updatedSettings = {
+        ...user.settings,
+        ...settings
+      };
+      
+      const success = await updateUserProfile({
+        settings: updatedSettings
+      });
+      
+      if (success) {
+        toast({
+          title: "Accessibility settings updated",
+          description: "Your accessibility preferences have been updated successfully.",
+        });
+      }
+      
+      return !!success;
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to update accessibility settings. Please try again.",
         variant: "destructive",
       });
       return false;
@@ -130,7 +130,7 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         });
       }
       
-      return success;
+      return !!success;
     } catch (error) {
       toast({
         title: "Error",
@@ -143,7 +143,7 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     }
   };
   
-  const value = {
+  const value: SettingsContextType = {
     // Theme settings
     theme,
     setTheme,
@@ -163,6 +163,10 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     // Profile settings
     profileSettings,
     updateProfileSettings,
+    
+    // Accessibility settings
+    accessibilitySettings,
+    updateAccessibilitySettings,
     
     // Marketing settings
     marketingSettings,

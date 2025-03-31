@@ -11,7 +11,9 @@ import ProfileMarketingSettings from '@/components/profile/ProfileMarketingSetti
 import PrivacySettings from '@/components/settings/PrivacySettings';
 import AccessibilitySettings from '@/components/settings/AccessibilitySettings';
 import { SettingsProvider } from '@/contexts/SettingsContext';
+import SettingsLayout from '@/components/settings/SettingsLayout';
 import { useAuth } from '@/hooks/useAuth';
+import { motion } from 'framer-motion';
 
 const Settings: React.FC = () => {
   const { user, updateUserProfile } = useAuth();
@@ -23,13 +25,23 @@ const Settings: React.FC = () => {
     }
   };
   
+  const fadeIn = {
+    hidden: { opacity: 0, y: 10 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.4 } }
+  };
+  
   return (
     <SettingsProvider>
       <PageContainer>
         <div className="max-w-4xl mx-auto">
-          <h1 className="text-3xl font-bold mb-6 royal-gradient">
+          <motion.h1 
+            className="text-3xl font-bold mb-6 royal-gradient"
+            initial="hidden"
+            animate="visible"
+            variants={fadeIn}
+          >
             Royal Settings Chamber
-          </h1>
+          </motion.h1>
           
           <Tabs 
             value={activeTab} 
@@ -67,7 +79,13 @@ const Settings: React.FC = () => {
               </TabsTrigger>
             </TabsList>
             
-            <div className="animate-fade-in">
+            <motion.div 
+              className="animate-fade-in"
+              initial="hidden"
+              animate="visible"
+              variants={fadeIn}
+              key={activeTab}
+            >
               <TabsContent value="appearance">
                 <AppearanceSettings />
               </TabsContent>
@@ -108,7 +126,7 @@ const Settings: React.FC = () => {
                   </p>
                 </SettingsLayout>
               </TabsContent>
-            </div>
+            </motion.div>
           </Tabs>
         </div>
       </PageContainer>

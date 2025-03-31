@@ -7,7 +7,7 @@ import SettingsLayout from './SettingsLayout';
 import { useSettings } from '@/contexts/SettingsContext';
 import { Button } from '@/components/ui/button';
 
-const PrivacySettings = () => {
+const PrivacySettings: React.FC = () => {
   const { profileSettings, updateProfileSettings, isLoading } = useSettings();
   
   const saveChanges = async () => {
@@ -47,7 +47,7 @@ const PrivacySettings = () => {
         <div className="flex items-center justify-between">
           <div className="space-y-1">
             <Label htmlFor="show-rank" className="flex items-center">
-              <Crown className="mr-2 h-4 w-4" />
+              <Users className="mr-2 h-4 w-4" />
               Show Rank
             </Label>
             <p className="text-sm text-white/70">Display your ranking on your profile</p>
@@ -93,6 +93,28 @@ const PrivacySettings = () => {
               showSpending: !profileSettings.showSpending 
             })} 
           />
+        </div>
+        
+        <div className="p-4 rounded-lg bg-black/20">
+          <h3 className="font-medium mb-2">Privacy Summary</h3>
+          <ul className="space-y-2 text-sm text-white/70">
+            <li className="flex items-center">
+              <div className={`h-2 w-2 rounded-full mr-2 ${profileSettings.publicProfile ? 'bg-green-500' : 'bg-red-500'}`}></div>
+              Your profile is {profileSettings.publicProfile ? 'visible to all users' : 'private'}
+            </li>
+            <li className="flex items-center">
+              <div className={`h-2 w-2 rounded-full mr-2 ${profileSettings.showRank ? 'bg-green-500' : 'bg-red-500'}`}></div>
+              Your rank is {profileSettings.showRank ? 'visible' : 'hidden'} on your profile
+            </li>
+            <li className="flex items-center">
+              <div className={`h-2 w-2 rounded-full mr-2 ${profileSettings.showTeam ? 'bg-green-500' : 'bg-red-500'}`}></div>
+              Your team affiliation is {profileSettings.showTeam ? 'visible' : 'hidden'} 
+            </li>
+            <li className="flex items-center">
+              <div className={`h-2 w-2 rounded-full mr-2 ${profileSettings.showSpending ? 'bg-green-500' : 'bg-red-500'}`}></div>
+              Your spending amount is {profileSettings.showSpending ? 'visible' : 'hidden'}
+            </li>
+          </ul>
         </div>
       </div>
     </SettingsLayout>

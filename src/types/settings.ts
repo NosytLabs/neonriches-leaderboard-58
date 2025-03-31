@@ -1,4 +1,3 @@
-
 export interface UserSettings {
   profileVisibility: 'public' | 'private' | 'friends';
   allowProfileLinks: boolean;

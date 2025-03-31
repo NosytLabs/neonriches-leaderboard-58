@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 
 interface SettingsLayoutProps {
@@ -37,9 +37,9 @@ const SettingsLayout: React.FC<SettingsLayoutProps> = ({
         {children}
       </CardContent>
       {footerContent && (
-        <div className="border-t border-white/10 p-4 flex justify-end">
+        <CardFooter className="border-t border-white/10 p-4 flex justify-end">
           {footerContent}
-        </div>
+        </CardFooter>
       )}
     </Card>
   );

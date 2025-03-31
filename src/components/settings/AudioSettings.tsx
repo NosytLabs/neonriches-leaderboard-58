@@ -1,20 +1,33 @@
 
-import React, { useState } from 'react';
-import { Volume2, VolumeX, Music } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Volume2, VolumeX, Music, VolumeX as VolumeMute } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import { Slider } from '@/components/ui/slider';
 import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
 import SettingsLayout from './SettingsLayout';
 import { useSettings } from '@/contexts/SettingsContext';
+import { useSound } from '@/hooks/use-sound';
 
 const AudioSettings: React.FC = () => {
   const { soundConfig, toggleSounds, toggleMuted, setVolume, togglePremium } = useSettings();
   const [sliderValue, setSliderValue] = useState(soundConfig.volume * 100);
+  const sound = useSound();
+  
+  useEffect(() => {
+    setSliderValue(soundConfig.volume * 100);
+  }, [soundConfig.volume]);
   
   const handleVolumeChange = (value: number[]) => {
     const newValue = value[0];
     setSliderValue(newValue);
     setVolume(newValue / 100);
+  };
+
+  const playTestSound = () => {
+    if (soundConfig.enabled && !soundConfig.muted) {
+      sound.playSound('button');
+    }
   };
 
   return (
@@ -39,7 +52,7 @@ const AudioSettings: React.FC = () => {
           
           <div className="flex justify-between items-center">
             <Label htmlFor="sound-muted" className="flex items-center">
-              <VolumeX className="mr-2 h-4 w-4" />
+              <VolumeMute className="mr-2 h-4 w-4" />
               Mute All Sounds
             </Label>
             <Switch 
@@ -84,6 +97,21 @@ const AudioSettings: React.FC = () => {
               onCheckedChange={togglePremium}
               disabled={!soundConfig.enabled}
             />
+          </div>
+          
+          <div className="mt-6 p-4 bg-black/20 rounded-lg">
+            <div className="flex justify-between items-center">
+              <span className="text-sm font-medium">Test sound settings</span>
+              <Button 
+                size="sm" 
+                variant="outline" 
+                onClick={playTestSound}
+                disabled={!soundConfig.enabled || soundConfig.muted}
+              >
+                <Volume2 className="h-4 w-4 mr-2" />
+                Play Test Sound
+              </Button>
+            </div>
           </div>
         </div>
       </div>
