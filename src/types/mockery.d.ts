@@ -1,114 +1,59 @@
 
+import { TeamColor, UserTier } from './user';
 import { LucideIcon } from 'lucide-react';
-import { SoundType, AudioOptions } from './sound-types';
+import { SoundType } from './sound-types';
 
-export type MockeryTier = 'basic' | 'premium' | 'royal' | 'silver' | 'epic' | 'rare' | 'legendary';
-
+// Mockery action types
 export type MockeryAction = 
-  | 'tomatoes'
-  | 'eggs'
-  | 'shame'
-  | 'dungeons'
-  | 'immune'
-  | 'crown'
-  | 'stocks'
-  | 'dunce'
-  | 'jester'
-  | 'troll'
-  | 'peasant'
-  | 'rat'
-  | 'ghost'
-  | 'skeleton'
-  | 'zombie'
-  | 'witch'
-  | 'monster'
-  | 'demon'
-  | 'dragon'
-  | 'king'
-  | 'queen'
-  | 'knight'
-  | 'bishop'
-  | 'rook'
-  | 'pawn'
-  | 'target'
-  | 'challenge'
-  | 'protection';
+  'tomatoes' | 'eggs' | 'stocks' | 'dunce' | 'jester' | 'troll' | 
+  'peasant' | 'rat' | 'ghost' | 'skeleton' | 'zombie' | 'witch' | 
+  'monster' | 'dragon' | 'demon' | 'curse' | 'crown' | 'challenge' | 
+  'target' | 'dungeons' | 'immune' | 'pawn';
 
-// Alias for backward compatibility
-export type MockeryActionType = MockeryAction;
-
-// Define the subset of mockery actions that are specifically for shame actions
+// Simplified subset for shame actions
 export type ShameAction = 'tomatoes' | 'eggs' | 'stocks';
 
-export type MockeryDuration = 'short' | 'medium' | 'long' | 'permanent';
+// Mockery tiers
+export type MockeryTier = 'common' | 'uncommon' | 'rare' | 'epic';
 
+// Event for a mockery action
 export interface MockeryEvent {
   id: string;
-  targetId: string;
-  targetName?: string;
-  appliedBy: string;
   action: MockeryAction;
+  targetId: string;
+  appliedBy: string;
   timestamp: string;
   expiresAt: string;
   isActive: boolean;
-  cost: number;
-  duration?: number;
+  message?: string;
 }
 
+// User that has been mocked
 export interface MockedUser {
   id: string;
-  userId?: string;
+  userId: string;
   username: string;
-  displayName?: string;
-  profileImage?: string;
-  mockedReason?: string;
-  mockedBy?: string;
-  mockedTier?: string;
-  mockeryCount?: number;
-  lastMocked?: string;
-  team?: string;
-  tier?: string;
-  mockedUntil: string;
-  mockedTimestamp?: string;
+  mockedBy: string;
+  mockedAction: MockeryAction;
+  mockedUntil: number;
 }
 
-// Alias type for backward compatibility
-export type MockUser = MockedUser;
-
-export interface ShameActionDetails {
-  type: MockeryAction;
-  name: string;
-  description: string;
-  icon: LucideIcon;
-  price: number;
-  tier: MockeryTier;
+// Options for notification sounds
+export interface NotificationSoundOptions {
+  volume?: number;
+  interrupt?: boolean;
 }
 
-export interface UseMockery {
-  applyMockery: (targetId: string, targetName: string, action: MockeryAction) => Promise<boolean>;
-  removeMockery: (targetId: string) => Promise<boolean>;
-  getActiveMockery: (targetId: string) => MockeryEvent | null;
-  isUserMocked: (targetId: string) => boolean;
+// Mockery state
+export interface MockeryState {
   mockedUsers: MockedUser[];
-  mockedCount: number;
-  isLoading: boolean;
-  error: string | null;
+  events: MockeryEvent[];
+  loading: boolean;
+  activeUserTab: string;
 }
 
-export interface UseShameEffectReturn {
-  handleShame: (userId: number, username: string, type: MockeryAction, amount?: number) => boolean;
-  getShameCount: (userId: number) => number;
-  getActiveMockery: (userId: number) => {
-    type: MockeryAction;
-    timestamp: string;
-  } | null;
-  shameEffects: Record<number, {
-    type: MockeryAction;
-    timestamp: string;
-  }>;
-  shameCooldown: Record<number, boolean>;
-  shameCount: Record<number, number>;
-  isMocking: boolean;
+// Function to get mockery tier from action
+export function getMockeryActionTier(action: MockeryAction): MockeryTier {
+  // Implementation would go here
+  return 'common';
 }
-
-export type NotificationSoundOptions = AudioOptions;

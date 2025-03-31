@@ -1,59 +1,11 @@
 
+import { RefObject } from 'react';
+
 export type SoundType = 
-  | 'achievement'
-  | 'boost'
-  | 'button_click'
-  | 'challenge'
-  | 'coins_drop'
-  | 'coins_multiple'
-  | 'deposit'
-  | 'error'
-  | 'level_up'
-  | 'message'
-  | 'mockery'
-  | 'notification'
-  | 'purchase'
-  | 'rank_change'
-  | 'rank_up'
-  | 'shame'
-  | 'success'
-  | 'team_join'
-  | 'transaction'
-  | 'upgrade'
-  | 'wishingwell'
-  | 'parchment'
-  | 'click'
-  | 'trumpets'
-  | 'coinDrop'
-  | 'royal'
-  | 'coin'
-  | 'reward'
-  | 'royalAnnouncement'
-  | 'trumpet'
-  | 'seal'
-  | 'medallion'
-  | 'hover'
-  | 'fanfare'
-  | 'wish'
-  | 'levelUp'
-  | 'crown'
-  | 'ding'
-  | 'sparkle'
-  | 'sweep'
-  | 'tada'
-  | 'thud'
-  | 'tier_up';
-
-export interface AudioOptions {
-  volume?: number;
-  interrupt?: boolean;
-  loop?: boolean;
-  delay?: number;
-  soundEnabled?: boolean;
-  onComplete?: () => void;
-}
-
-export type NotificationSoundOptions = AudioOptions;
+  'success' | 'error' | 'notification' | 'purchase' | 
+  'achievement' | 'deposit' | 'withdrawal' | 'rank_up' | 
+  'level_up' | 'coin' | 'shame' | 'mockery' | 'boost' | 
+  'throne' | 'royal' | 'click';
 
 export interface AudioLoaderReturn {
   audio: Record<SoundType, HTMLAudioElement>;
@@ -66,28 +18,17 @@ export interface AudioLoaderReturn {
   isLoaded: boolean;
 }
 
-export interface UseSoundOptions extends AudioOptions {
-  [key: string]: any; // Allow string indexing for flexibility
+export interface UseSoundsOptions {
+  volume?: number;
+  interrupt?: boolean;
+  soundEnabled?: boolean;
+  onComplete?: () => void;
+  loop?: boolean;
 }
 
 export interface UseSoundReturn {
-  play: (sound: SoundType | string, options?: UseSoundOptions) => void;
-  stop: (sound: SoundType) => void;
-  isPlaying?: boolean;
-  duration?: number;
+  play: (options?: UseSoundsOptions) => void;
+  stop: () => void;
   playSound: (sound: SoundType) => void;
   playSuccess: (sound?: SoundType) => void;
-  stopAll?: () => void;
-}
-
-export interface PremiumSoundPackDetails {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  previewSound: SoundType;
-  sounds: SoundType[];
-  features: string[];
-  tags: string[];
-  includes?: string[];
 }

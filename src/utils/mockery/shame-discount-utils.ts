@@ -1,61 +1,58 @@
 
 import { MockeryAction, ShameAction } from '@/types/mockery';
 
-/**
- * Checks if there's a weekly discount available
- */
+// Map of weekly discount actions
+const WEEKLY_DISCOUNT_ACTIONS: Record<string, ShameAction> = {
+  week1: 'tomatoes',
+  week2: 'eggs',
+  week3: 'stocks',
+};
+
+// Whether there's a weekly discount active
 export const hasWeeklyDiscount = (): boolean => {
-  // Weekly discounts are randomly determined based on day of week
-  const day = new Date().getDay();
-  return day === 3 || day === 6; // Wed or Sat
+  // For demo purposes, always return true
+  return true;
 };
 
-/**
- * Get the weekly discounted action
- */
+// Get the current discounted action
 export const getWeeklyDiscountedAction = (): ShameAction => {
-  // Rotate weekly discounted actions
-  const discountActions: ShameAction[] = ['tomatoes', 'eggs', 'stocks'];
-  const weekNumber = Math.floor(Date.now() / (7 * 24 * 60 * 60 * 1000));
-  return discountActions[weekNumber % discountActions.length];
+  // Calculate which week we're in for the rotation
+  const weekNumber = Math.floor(Date.now() / (7 * 24 * 60 * 60 * 1000)) % 3;
+  const weekKey = `week${weekNumber + 1}` as keyof typeof WEEKLY_DISCOUNT_ACTIONS;
+  
+  return WEEKLY_DISCOUNT_ACTIONS[weekKey];
 };
 
-/**
- * Get the discounted price for a shame action
- */
-export const getDiscountedShamePrice = (action: MockeryAction): number => {
+// Get the discounted price for a shame action
+export const getDiscountedShamePrice = (action: ShameAction): number => {
   const regularPrice = getShameActionPrice(action);
-  return Math.floor(regularPrice * 0.7); // 30% discount
+  return Math.floor(regularPrice * 0.75); // 25% discount
 };
 
-/**
- * Get the price for a shame action
- */
-export const getShameActionPrice = (action: MockeryAction): number => {
-  const prices: Record<string, number> = {
-    tomatoes: 10,
-    eggs: 15,
-    shame: 25,
-    stocks: 20,
-    dunce: 25,
-    jester: 30
-  };
-  
-  return prices[action] || 25; // Default price
+// Get the regular price for a shame action
+export const getShameActionPrice = (action: ShameAction): number => {
+  switch (action) {
+    case 'tomatoes':
+      return 5;
+    case 'eggs':
+      return 10;
+    case 'stocks':
+      return 15;
+    default:
+      return 10;
+  }
 };
 
-/**
- * Get shame action message
- */
-export const getShameActionMessage = (action: MockeryAction, username: string): string => {
-  const messages: Record<string, string> = {
-    tomatoes: `${username} is being pelted with rotten tomatoes!`,
-    eggs: `${username} is having rotten eggs thrown at them!`,
-    shame: `${username} is being shamed in the town square!`,
-    stocks: `${username} has been placed in the public stocks!`,
-    dunce: `${username} has been forced to wear the dunce cap!`,
-    jester: `${username} has been appointed as the court jester!`
-  };
-  
-  return messages[action] || `${username} is being mocked!`;
+// Get a message for a shame action
+export const getShameActionMessage = (action: ShameAction): string => {
+  switch (action) {
+    case 'tomatoes':
+      return 'Splat! You threw tomatoes at this user!';
+    case 'eggs':
+      return 'Crack! You pelted this user with eggs!';
+    case 'stocks':
+      return 'Locked! You put this user in the stocks!';
+    default:
+      return 'You mocked this user!';
+  }
 };
