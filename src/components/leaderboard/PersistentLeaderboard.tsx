@@ -14,14 +14,21 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import { LeaderboardUser, LeaderboardFilter } from '@/types/leaderboard';
 import { useAuth } from '@/hooks/useAuth';
-import { TeamType, UserTier } from '@/types/user';
+import { TeamColor } from '@/types/team';
+import { UserTier } from '@/types/user';
+
+type SortByOptions = 'rank' | 'totalSpent' | 'username' | 'joined' | 'spent';
+
+interface TypedLeaderboardFilter extends Omit<LeaderboardFilter, 'sortBy'> {
+  sortBy: SortByOptions;
+}
 
 const PersistentLeaderboard: React.FC = () => {
   const { toast } = useToast();
   const { user } = useAuth();
   const [leaderboardData, setLeaderboardData] = useState<LeaderboardUser[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [filter, setFilter] = useState<LeaderboardFilter>({
+  const [filter, setFilter] = useState<TypedLeaderboardFilter>({
     team: 'all',
     tier: 'all',
     search: '',
@@ -31,7 +38,6 @@ const PersistentLeaderboard: React.FC = () => {
     sortDirection: 'asc'
   });
   
-  // Mocked users - in a real app, this would come from an API
   const mockUsers: LeaderboardUser[] = [
     {
       id: "1",
@@ -134,21 +140,21 @@ const PersistentLeaderboard: React.FC = () => {
   const handleTeamChange = (team: string) => {
     setFilter(prevFilter => ({
       ...prevFilter,
-      team: team as TeamType
+      team: team as TeamColor | 'all'
     }));
   };
 
   const handleTierChange = (tier: string) => {
     setFilter(prevFilter => ({
       ...prevFilter,
-      tier: tier as UserTier
+      tier: tier as UserTier | 'all'
     }));
   };
 
   const handleSortChange = (sortBy: string) => {
     setFilter(prevFilter => ({
       ...prevFilter,
-      sortBy: sortBy as 'rank' | 'totalSpent' | 'username' | 'joined'
+      sortBy: sortBy as SortByOptions
     }));
   };
 
@@ -173,27 +179,21 @@ const PersistentLeaderboard: React.FC = () => {
     }));
   };
   
-  // Mock function to simulate API request
   const fetchLeaderboard = async (filterParams: LeaderboardFilter) => {
     setLoading(true);
     
-    // In a real application, this would be a fetch to your API endpoint
     return new Promise<LeaderboardUser[]>((resolve) => {
       setTimeout(() => {
-        // Filter and sort the data based on filter params
         let filteredData = [...mockUsers];
         
-        // Apply team filter
         if (filterParams.team && filterParams.team !== 'all') {
           filteredData = filteredData.filter(user => user.team === filterParams.team);
         }
         
-        // Apply tier filter
         if (filterParams.tier && filterParams.tier !== 'all') {
           filteredData = filteredData.filter(user => user.tier === filterParams.tier);
         }
         
-        // Apply search filter
         if (filterParams.search) {
           const searchTerm = filterParams.search.toLowerCase();
           filteredData = filteredData.filter(user => 
@@ -202,7 +202,6 @@ const PersistentLeaderboard: React.FC = () => {
           );
         }
         
-        // Apply sorting
         if (filterParams.sortBy) {
           filteredData.sort((a, b) => {
             const propA = a[filterParams.sortBy as keyof LeaderboardUser];
@@ -224,7 +223,6 @@ const PersistentLeaderboard: React.FC = () => {
           });
         }
         
-        // Apply limit
         if (filterParams.limit) {
           filteredData = filteredData.slice(0, filterParams.limit);
         }
@@ -234,11 +232,11 @@ const PersistentLeaderboard: React.FC = () => {
     });
   };
   
-  const handleFilterChange = (key: keyof LeaderboardFilter, value: any) => {
+  const handleFilterChange = (key: keyof TypedLeaderboardFilter, value: any) => {
     setFilter(prev => ({ ...prev, [key]: value }));
   };
   
-  const handleSort = (sortBy: string) => {
+  const handleSort = (sortBy: SortByOptions) => {
     setFilter(prev => ({
       ...prev,
       sortBy: sortBy,
@@ -250,7 +248,6 @@ const PersistentLeaderboard: React.FC = () => {
     setFilter(prev => ({ ...prev, search: event.target.value }));
   };
 
-  // Filter users based on current filters
   const filteredUsers = leaderboardData
     .filter(user => {
       const matchesTeam = filter.team === 'all' || user.team === filter.team;

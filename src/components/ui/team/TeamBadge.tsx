@@ -4,9 +4,10 @@ import { TeamColor } from '@/types/team';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 import useTeam from '@/hooks/useTeam';
+import { asTeamColor } from '@/components/leaderboard/TeamUtils';
 
 interface TeamBadgeProps {
-  team: TeamColor;
+  team: string | TeamColor;
   showName?: boolean;
   className?: string;
   size?: 'sm' | 'md' | 'lg';
@@ -21,10 +22,13 @@ export const TeamBadge: React.FC<TeamBadgeProps> = ({
   className,
   size = 'md'
 }) => {
-  const { theme, getTeamName } = useTeam();
+  // Convert to proper TeamColor type
+  const teamColor = asTeamColor(team);
+  const { getTeamTheme, getTeamName } = useTeam();
   
   // Get team name
-  const teamName = getTeamName(team);
+  const teamName = getTeamName(teamColor);
+  const theme = getTeamTheme(teamColor);
   
   // Size classes
   const sizeClasses = {
@@ -51,7 +55,7 @@ export const TeamBadge: React.FC<TeamBadgeProps> = ({
         style={{ backgroundColor: theme ? theme.primary : undefined }}
       />
       <span className="relative">
-        {showName ? teamName : team.toUpperCase()}
+        {showName ? teamName : teamColor.toUpperCase()}
       </span>
     </Badge>
   );

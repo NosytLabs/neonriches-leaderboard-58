@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Trophy, Users, ArrowUp, ArrowDown, DollarSign, Crown, Scroll } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { getTeamColor, getTeamName } from './TeamUtils';
+import { asTeamColor, getTeamColor, getTeamName } from './TeamUtils';
 import { useToastContext } from '@/contexts/ToastContext';
 import useNotificationSounds from '@/hooks/sounds/use-notification-sounds';
 import { UserProfile } from '@/types/user';
@@ -55,8 +55,8 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
         <tbody>
           {users.map((user, index) => {
             const rankChange = user.previousRank ? user.previousRank - user.rank : 0;
-            const teamColor = getTeamColor(user.team as string);
-            const teamName = getTeamName(user.team as string);
+            const teamColor = getTeamColorClass(user.team as string);
+            const teamName = getTeamDisplayName(user.team as string);
             
             return (
               <motion.tr 

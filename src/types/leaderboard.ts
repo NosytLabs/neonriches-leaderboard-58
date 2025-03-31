@@ -1,77 +1,40 @@
 
-import { TeamColor, UserTier } from './user';
+import { TeamColor } from './team';
+import { UserTier } from './user';
 
+// Define the LeaderboardUser interface
 export interface LeaderboardUser {
   id: string;
-  userId?: string; // Adding this for compatibility
+  userId?: string;
   username: string;
   displayName?: string;
   profileImage?: string;
-  tier?: UserTier;
-  team?: TeamColor;
+  tier: UserTier | string;
+  team: TeamColor | string;
   rank: number;
   previousRank?: number;
   totalSpent: number;
-  spentAmount?: number; // Adding this for compatibility
-  joinDate?: string;
+  walletBalance?: number;
   isVerified?: boolean;
   isProtected?: boolean;
   avatarUrl?: string;
-  walletBalance?: number;
   spendStreak?: number;
-  lastActive?: string;
-  activeTitle?: string;
+  spentAmount?: number;
   isVIP?: boolean;
-  isFounder?: boolean;
-  supporters?: number;
-  supporting?: number;
-  amountSpent?: number; // Adding this for compatibility
+  joinDate?: string;
+  joinedAt?: string;
 }
 
+// Define valid sort options for the leaderboard
+export type LeaderboardSortOption = 'rank' | 'totalSpent' | 'username' | 'joined' | 'spent';
+
+// Define the LeaderboardFilter interface
 export interface LeaderboardFilter {
-  team: 'all' | TeamColor;
-  tier: 'all' | UserTier;
+  team: TeamColor | 'all';
+  tier: UserTier | 'all';
   search: string;
-  sortBy?: 'username' | 'rank' | 'spent' | 'totalSpent' | 'joined';
-  sortDirection?: 'asc' | 'desc';
-  limit?: number; // Adding this for compatibility
-  timeFrame?: string; // Adding this for compatibility
-}
-
-export interface OnChainLeaderboardEntry {
-  pubkey: string;
-  amount: number;
-  timestamp: number | string;
-  username?: string;
-  publicKey?: string;
-  amountSpent?: number;
-  totalDeposited?: number;
-  rank?: number; 
-  joinDate?: number | string;
-  userId?: string;
-}
-
-export interface LeaderboardStats {
-  totalUsers: number;
-  totalSpent: number;
-  averageSpent: number;
-  highestIndividualSpent: number;
-  usersSpendingLast24h: number;
-  totalSpentLast24h: number;
-}
-
-// Define an alias for backward compatibility
-export type LeaderboardEntry = LeaderboardUser;
-
-// Define Solana Transaction type
-export interface SolanaTransaction {
-  id: string;
-  amount: number;
-  timestamp: string | number;
-  type: 'deposit' | 'withdrawal' | 'purchase';
-  status: 'pending' | 'completed' | 'failed';
-  sender?: string;
-  recipient?: string;
-  signature?: string;
-  receiver?: string; // Adding for compatibility
+  limit?: number;
+  timeFrame?: string;
+  sortBy: LeaderboardSortOption;
+  sortDirection: 'asc' | 'desc';
 }

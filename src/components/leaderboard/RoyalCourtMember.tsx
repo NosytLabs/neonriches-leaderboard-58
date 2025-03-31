@@ -3,8 +3,9 @@ import React from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Crown } from '@/utils/icons';
-import { TeamColor, UserTier, UserProfile } from '@/types/user';
+import { TeamColor, UserTier } from '@/types/team';
 
+// Fix the interface - don't extend from a member prop
 export interface RoyalCourtMemberProps {
   id: string;
   username: string;
@@ -49,6 +50,9 @@ const RoyalCourtMember: React.FC<RoyalCourtMemberProps> = ({
             ${team === 'blue' ? 'border-blue-500 text-blue-400' : ''}
             ${team === 'green' ? 'border-green-500 text-green-400' : ''}
             ${team === 'gold' ? 'border-yellow-500 text-yellow-400' : ''}
+            ${team === 'purple' ? 'border-purple-500 text-purple-400' : ''}
+            ${team === 'none' ? 'border-gray-500 text-gray-400' : ''}
+            ${team === 'neutral' ? 'border-gray-500 text-gray-400' : ''}
           `}
         >
           {team}

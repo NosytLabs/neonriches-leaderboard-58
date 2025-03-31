@@ -1,7 +1,8 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Crown, Users } from 'lucide-react';
-import { TeamColor, UserTier, Gender } from '@/types/user';
+import { TeamColor, UserTier } from '@/types/team';
 import RoyalCourtMember from './RoyalCourtMember';
 import useNotificationSounds from '@/hooks/sounds/use-notification-sounds';
 import { SoundOptions } from '@/types/sound-types';
@@ -110,7 +111,15 @@ const RoyalCourt: React.FC<RoyalCourtProps> = ({ user }) => {
         </CardDescription>
         <div className="grid gap-4 py-4">
           {displayedMembers.map((member) => (
-            <RoyalCourtMember key={member.id} member={member} />
+            <RoyalCourtMember key={member.id} 
+              id={member.id}
+              username={member.username}
+              displayName={member.displayName}
+              profileImage={member.profileImage}
+              tier={member.tier}
+              team={member.team}
+              isAdmin={member.isAdmin}
+            />
           ))}
         </div>
         {courtMembers.length > 3 && (
