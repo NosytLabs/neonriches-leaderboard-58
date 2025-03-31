@@ -39,9 +39,10 @@ import {
   Volume2,
   VolumeX
 } from 'lucide-react';
+import React from 'react';
 
 // Create a custom Tomato icon since it's not available in lucide-react
-const Tomato = (props: any) => {
+const Tomato: React.FC<React.SVGProps<SVGSVGElement>> = (props) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
