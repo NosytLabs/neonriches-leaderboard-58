@@ -27,7 +27,7 @@ const CertificateOfNobility: React.FC<CertificateProps> = ({
   const sound = useSound();
   
   // Generate a unique certificate ID if not provided
-  const userId = typeof user.id === 'number' ? user.id.toString() : user.id;
+  const userId = typeof user.id === 'number' ? user.id.toString() : user.id || '';
   const uniqueCertId = certificateId || `STATUS-${Math.floor(10000 + Math.random() * 90000)}-${userId.substring(0, 5)}`;
   
   const handleVerify = () => {
@@ -157,7 +157,7 @@ const CertificateOfNobility: React.FC<CertificateProps> = ({
             </RoyalButton>
           )}
           
-          <RoyalButton variant="secondary" onClick={handleDownload}>
+          <RoyalButton variant="outline" onClick={handleDownload}>
             <Download className="h-4 w-4 mr-2" />
             Download
           </RoyalButton>

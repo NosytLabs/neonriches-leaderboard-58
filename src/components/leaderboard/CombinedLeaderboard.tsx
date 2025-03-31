@@ -1,232 +1,207 @@
 
-import React, { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import React, { useState, useEffect } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Button } from '@/components/ui/button';
+import { useAuth } from '@/hooks/useAuth';
+import { useToast } from '@/hooks/use-toast';
+import { LeaderboardUser, SortByOptions } from '@/types/leaderboard';
 import LeaderboardCard from './LeaderboardCard';
-import FilterLeaderboard from './FilterLeaderboard';
-import { Team } from '@/types/team';
-import { User, UserSettings } from '@/types/user';
-import { LeaderboardUser } from '@/types/leaderboard';
-import { useMockLeaderboard } from '@/hooks/useMockLeaderboard';
-
-const userTeams = [
-  { id: '1', name: 'Red Team', color: 'red', members: 120, totalContribution: 35000 },
-  { id: '2', name: 'Blue Team', color: 'blue', members: 150, totalContribution: 42000 },
-  { id: '3', name: 'Green Team', color: 'green', members: 90, totalContribution: 28000 },
-  { id: '4', name: 'Gold Team', color: 'gold', members: 60, totalContribution: 18000 },
-];
-
-const completeUserSettings: UserSettings = {
-  profileVisibility: "public",
-  allowProfileLinks: true,
-  theme: "dark",
-  notifications: true,
-  emailNotifications: true,
-  marketingEmails: true,
-  soundEffects: true,
-  showEmailOnProfile: false,
-  rankChangeAlerts: true,
-  showRank: true,
-  showTeam: true,
-  showSpending: true,
-  showBadges: true,
-};
+import { fetchLeaderboard } from '@/services/leaderboardService';
+import { Button } from '@/components/ui/button';
+import { ChevronLeft, ChevronRight, Crown } from 'lucide-react';
+import { UserProfile, UserSettings } from '@/types/user-consolidated';
 
 const CombinedLeaderboard: React.FC = () => {
-  const { mockLeaderboardData } = useMockLeaderboard();
-  const [filter, setFilter] = useState({ tier: 'all', team: 'all', searchQuery: '' });
+  const { user } = useAuth();
+  const { toast } = useToast();
+  const [users, setUsers] = useState<LeaderboardUser[]>([]);
+  const [filteredUsers, setFilteredUsers] = useState<LeaderboardUser[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [sortBy, setSortBy] = useState<SortByOptions>('rank');
+  const [teamFilter, setTeamFilter] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<string>('all');
   
-  // Global leaderboard
-  const globalLeaderboard = mockLeaderboardData;
-  
-  // Weekly leaderboard (could be fetched from a different API endpoint)
-  const weeklyLeaderboard: LeaderboardUser[] = [
-    {
-      id: "10",
-      username: "NewRiser",
-      displayName: "New Riser",
-      profileImage: "https://randomuser.me/api/portraits/men/10.jpg",
-      tier: "basic",
-      team: "red",
-      rank: 1,
-      previousRank: 5,
-      totalSpent: 4500,
-      walletBalance: 1500,
-      isVerified: true,
-      isProtected: false,
-      spendStreak: 2
-    },
-    // ... more users
-  ];
-  
-  // Monthly leaderboard
-  const monthlyLeaderboard: LeaderboardUser[] = [
-    {
-      id: "20",
-      username: "MonthlyChamp",
-      displayName: "Monthly Champion",
-      profileImage: "https://randomuser.me/api/portraits/men/20.jpg",
-      tier: "premium",
-      team: "blue",
-      rank: 1,
-      previousRank: 2,
-      totalSpent: 25000,
-      walletBalance: 8000,
-      isVerified: true,
-      isProtected: true,
-      spendStreak: 4
-    },
-    // ... more users
-  ];
-  
-  // Yearly leaderboard
-  const yearlyLeaderboard: LeaderboardUser[] = [
-    {
-      id: "30",
-      username: "YearlyDominator",
-      displayName: "Yearly Dominator",
-      profileImage: "https://randomuser.me/api/portraits/women/30.jpg",
-      tier: "royal",
-      team: "gold",
-      rank: 1,
-      previousRank: 1,
-      totalSpent: 150000,
-      walletBalance: 50000,
-      isVerified: true,
-      isProtected: true,
-      spendStreak: 52
-    },
-    // ... more users
-  ];
-  
-  // Team leaderboard
-  const teamLeaderboard: LeaderboardUser[] = [
-    {
-      id: "40",
-      username: "TeamLeader",
-      displayName: "Team Leader",
-      profileImage: "https://randomuser.me/api/portraits/men/40.jpg",
-      tier: "royal",
-      team: "green",
-      rank: 1,
-      previousRank: 1,
-      totalSpent: 75000,
-      walletBalance: 25000,
-      isVerified: true,
-      isProtected: false,
-      spendStreak: 10
-    },
-    // ... more users
-  ];
-  
-  // Mock user
-  const user: User = {
-    id: "1",
-    username: "CurrentUser",
-    displayName: "Current User",
-    email: "user@example.com",
-    profileImage: "https://randomuser.me/api/portraits/men/1.jpg",
-    bio: "I am a user of this platform",
-    joinDate: "2023-01-01",
-    tier: "basic",
-    team: "red",
-    rank: 150,
-    previousRank: 160,
-    totalSpent: 1000,
-    walletBalance: 500,
-    isFounder: false,
-    isVerified: true,
-    settings: completeUserSettings,
-    cosmetics: {
-      border: [],
-      color: [],
-      font: [],
-      emoji: [],
-      title: [],
-      background: [],
-      effect: [],
-      badge: [],
-      theme: []
-    },
-    profileBoosts: []
+  // Default user settings if not available
+  const defaultSettings: UserSettings = {
+    profileVisibility: 'public',
+    allowProfileLinks: true,
+    theme: 'dark',
+    notifications: true,
+    emailNotifications: true,
+    marketingEmails: false,
+    showRank: true,
+    darkMode: true,
+    soundEffects: true,
+    newFollowerAlerts: true,
+    teamNotifications: true,
+    showTeam: true,
+    showSpending: true,
+    showBadges: true,
   };
   
-  const handleFilter = (newFilter: { tier: string; team: string; searchQuery: string }) => {
-    setFilter(newFilter);
+  const settings = user?.settings || defaultSettings;
+  
+  useEffect(() => {
+    const loadLeaderboard = async () => {
+      setLoading(true);
+      try {
+        const data = await fetchLeaderboard(sortBy, teamFilter);
+        setUsers(data);
+        setFilteredUsers(data.slice(0, 10));
+        setTotalPages(Math.ceil(data.length / 10));
+      } catch (error) {
+        console.error("Error fetching leaderboard:", error);
+        toast({
+          title: "Error loading leaderboard",
+          description: "Please try again later",
+          variant: "destructive"
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    loadLeaderboard();
+  }, [sortBy, teamFilter, toast]);
+  
+  useEffect(() => {
+    const start = (page - 1) * 10;
+    const end = start + 10;
+    setFilteredUsers(users.slice(start, end));
+  }, [page, users]);
+  
+  const handlePageChange = (newPage: number) => {
+    if (newPage > 0 && newPage <= totalPages) {
+      setPage(newPage);
+    }
+  };
+  
+  const handleTabChange = (value: string) => {
+    setActiveTab(value);
+    if (value === 'all') {
+      setTeamFilter(null);
+    } else {
+      setTeamFilter(value);
+    }
+    setPage(1);
+  };
+  
+  // Create mock user (represents current user)
+  const currentUser: UserProfile = {
+    id: user?.id || '0',
+    username: user?.username || 'You',
+    displayName: user?.displayName || 'You',
+    profileImage: user?.profileImage || '/assets/default-avatar.png',
+    tier: user?.tier || 'free',
+    team: user?.team || null,
+    rank: user?.rank || 0,
+    totalSpent: user?.totalSpent || 0,
+    joinedDate: user?.joinedDate || new Date().toISOString(),
+    isVerified: user?.isVerified || false,
+    walletBalance: user?.walletBalance || 0,
+    previousRank: user?.previousRank || 0,
+    spendStreak: user?.spendStreak || 0
   };
   
   return (
-    <div className="space-y-6">
-      <FilterLeaderboard onFilter={handleFilter} />
-      
-      <Tabs defaultValue="global" className="w-full">
-        <TabsList className="grid grid-cols-5 mb-4">
-          <TabsTrigger value="global">Global</TabsTrigger>
-          <TabsTrigger value="weekly">Weekly</TabsTrigger>
-          <TabsTrigger value="monthly">Monthly</TabsTrigger>
-          <TabsTrigger value="yearly">Yearly</TabsTrigger>
-          <TabsTrigger value="team">Team</TabsTrigger>
-        </TabsList>
+    <div className="w-full">
+      <Card className="glass-morphism border-white/10">
+        <CardHeader>
+          <CardTitle className="flex items-center">
+            <Crown className="h-5 w-5 mr-2 text-royal-gold" />
+            Throne Leaderboard
+          </CardTitle>
+        </CardHeader>
         
-        <TabsContent value="global">
-          <LeaderboardCard 
-            title="Global Rank"
-            users={globalLeaderboard}
-            filter={filter}
-            currentUser={user as User}
-          />
-        </TabsContent>
-        
-        <TabsContent value="weekly">
-          <LeaderboardCard 
-            title="Weekly Rank"
-            users={weeklyLeaderboard}
-            filter={filter}
-            currentUser={user as User}
-          />
-        </TabsContent>
-        
-        <TabsContent value="monthly">
-          <LeaderboardCard 
-            title="Monthly Rank"
-            users={monthlyLeaderboard}
-            filter={filter}
-            currentUser={user as User}
-          />
-        </TabsContent>
-        
-        <TabsContent value="yearly">
-          <LeaderboardCard 
-            title="Yearly Rank"
-            users={yearlyLeaderboard}
-            filter={filter}
-            currentUser={user as User}
-          />
-        </TabsContent>
-        
-        <TabsContent value="team">
-          <div className="mb-4 grid grid-cols-4 gap-4">
-            {userTeams.map(team => (
-              <Button 
-                key={team.id}
-                variant="outline"
-                className={`border-${team.color}-500/30 hover:border-${team.color}-500/60`}
-                onClick={() => handleFilter({ ...filter, team: team.color })}
-              >
-                {team.name}
-              </Button>
-            ))}
-          </div>
+        <CardContent className="p-0">
+          <Tabs defaultValue="all" value={activeTab} onValueChange={handleTabChange} className="w-full">
+            <div className="px-6 pb-2">
+              <TabsList className="w-full grid-cols-5">
+                <TabsTrigger value="all">All</TabsTrigger>
+                <TabsTrigger value="red">Crimson</TabsTrigger>
+                <TabsTrigger value="blue">Azure</TabsTrigger>
+                <TabsTrigger value="green">Emerald</TabsTrigger>
+                <TabsTrigger value="gold">Gold</TabsTrigger>
+              </TabsList>
+            </div>
+            
+            <TabsContent value="all" className="m-0">
+              <LeaderboardCard
+                users={filteredUsers}
+                loading={loading}
+                currentUser={user ? currentUser : undefined}
+                settings={settings}
+              />
+            </TabsContent>
+            
+            <TabsContent value="red" className="m-0">
+              <LeaderboardCard
+                users={filteredUsers}
+                loading={loading}
+                currentUser={user?.team === 'red' ? currentUser : undefined}
+                settings={settings}
+              />
+            </TabsContent>
+            
+            <TabsContent value="blue" className="m-0">
+              <LeaderboardCard
+                users={filteredUsers}
+                loading={loading}
+                currentUser={user?.team === 'blue' ? currentUser : undefined}
+                settings={settings}
+              />
+            </TabsContent>
+            
+            <TabsContent value="green" className="m-0">
+              <LeaderboardCard
+                users={filteredUsers}
+                loading={loading}
+                currentUser={user?.team === 'green' ? currentUser : undefined}
+                settings={settings}
+              />
+            </TabsContent>
+            
+            <TabsContent value="gold" className="m-0">
+              <LeaderboardCard
+                users={filteredUsers}
+                loading={loading}
+                currentUser={user?.team === 'gold' ? currentUser : undefined}
+                settings={settings}
+              />
+            </TabsContent>
+          </Tabs>
           
-          <LeaderboardCard 
-            title="Team Rank"
-            users={teamLeaderboard.filter(u => filter.team === 'all' || u.team === filter.team)}
-            filter={filter}
-            currentUser={user as User}
-          />
-        </TabsContent>
-      </Tabs>
+          <div className="flex justify-between items-center p-4 border-t border-white/10">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => handlePageChange(page - 1)}
+              disabled={page === 1}
+              className="text-xs"
+            >
+              <ChevronLeft className="h-4 w-4 mr-1" />
+              Previous
+            </Button>
+            
+            <div className="text-xs text-muted-foreground">
+              Page {page} of {totalPages}
+            </div>
+            
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => handlePageChange(page + 1)}
+              disabled={page === totalPages}
+              className="text-xs"
+            >
+              Next
+              <ChevronRight className="h-4 w-4 ml-1" />
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };

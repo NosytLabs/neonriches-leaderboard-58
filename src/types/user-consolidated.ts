@@ -87,6 +87,20 @@ export interface UserSettings {
   rankChangeAlerts?: boolean;
   language?: string;
   shameAlerts?: boolean;
+  showBadges?: boolean; // Added for CombinedLeaderboard.tsx
+}
+
+// Define profile link type (alias for SocialLink to fix editor import errors)
+export interface ProfileLink extends SocialLink {}
+
+// Define the certificate NFT type
+export interface CertificateNFT {
+  id?: string;
+  mintAddress?: string;
+  imageUrl?: string;
+  dateIssued?: string;
+  type?: string;
+  isVerified?: boolean;
 }
 
 // Define the user profile properties
@@ -110,6 +124,7 @@ export interface UserProfile {
   settings?: UserSettings;
   profileBoosts?: ProfileBoost[];
   socialLinks?: SocialLink[] | Record<string, string>;
+  profileLinks?: ProfileLink[]; // Added for LinksEditor.tsx
   profileImages?: ProfileImage[];
   lastActive?: string;
   followers?: number;
@@ -127,14 +142,7 @@ export interface UserProfile {
   purchasedFeatures?: string[];
   teamRank?: number;
   spentAmount?: number;
-  certificateNFT?: {
-    id?: string;
-    mintAddress?: string;
-    imageUrl?: string;
-    dateIssued?: string;
-    type?: string;
-    isVerified?: boolean;
-  };
+  certificateNFT?: CertificateNFT;
 }
 
 // Legacy User interface for backward compatibility

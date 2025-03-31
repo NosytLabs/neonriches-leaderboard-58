@@ -1,150 +1,170 @@
 
 import React from 'react';
-import { UserProfile } from '@/types/user';
-import { Palette } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
-import RoyalButton from '@/components/ui/royal-button';
+import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
+import { Card, CardContent } from '@/components/ui/card';
+import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/hooks/useAuth';
+import { Check } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
-interface ColorItem {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  previewColors: string[];
-  rarity: 'common' | 'rare' | 'legendary';
-}
+const colors = [
+  {
+    id: 'royal-gold',
+    name: 'Royal Gold',
+    description: 'The color of royalty and wealth',
+    price: 0,
+    cssClass: 'bg-gradient-to-r from-yellow-500 to-amber-600',
+    textClass: 'text-yellow-400'
+  },
+  {
+    id: 'emerald',
+    name: 'Emerald',
+    description: 'Deep green like precious gemstones',
+    price: 25,
+    cssClass: 'bg-gradient-to-r from-emerald-600 to-emerald-800',
+    textClass: 'text-emerald-400'
+  },
+  {
+    id: 'royal-blue',
+    name: 'Royal Blue',
+    description: 'The elegant blue of nobility',
+    price: 25,
+    cssClass: 'bg-gradient-to-r from-blue-700 to-indigo-800',
+    textClass: 'text-blue-400'
+  },
+  {
+    id: 'crimson',
+    name: 'Crimson',
+    description: 'Bold and powerful red',
+    price: 25,
+    cssClass: 'bg-gradient-to-r from-red-700 to-rose-800',
+    textClass: 'text-red-400'
+  },
+  {
+    id: 'royal-purple',
+    name: 'Royal Purple',
+    description: 'The mystic color of wisdom',
+    price: 50,
+    cssClass: 'bg-gradient-to-r from-purple-700 to-purple-900',
+    textClass: 'text-purple-400'
+  },
+  {
+    id: 'cosmic',
+    name: 'Cosmic',
+    description: 'Like a nebula in deep space',
+    price: 100,
+    cssClass: 'bg-gradient-to-r from-violet-600 via-fuchsia-700 to-pink-700',
+    textClass: 'text-fuchsia-400'
+  },
+  {
+    id: 'abyssal',
+    name: 'Abyssal',
+    description: 'Dark and mysterious like the deep sea',
+    price: 75,
+    cssClass: 'bg-gradient-to-r from-slate-800 to-cyan-900',
+    textClass: 'text-cyan-400'
+  },
+  {
+    id: 'sunset',
+    name: 'Sunset',
+    description: 'Warm colors of the setting sun',
+    price: 75,
+    cssClass: 'bg-gradient-to-r from-orange-600 to-amber-700',
+    textClass: 'text-orange-400'
+  }
+];
 
-interface ProfileColorsProps {
-  onPurchase: (name: string, price: number, category: string, itemId: string) => Promise<void>;
-  user: UserProfile | null;
-  onSelectColor: (colorId: string | null) => Promise<void>;
-  activeColor?: string | null;
-}
-
-const ProfileColors: React.FC<ProfileColorsProps> = ({ 
-  onPurchase, 
-  user, 
-  onSelectColor,
-  activeColor 
-}) => {
-  const userColors = user?.cosmetics?.color || []; // Changed from colors to color
-
-  const getRarityClass = (rarity: string) => {
-    switch (rarity) {
-      case 'common':
-        return 'bg-gray-500/20 text-gray-300 border-gray-500/40';
-      case 'rare':
-        return 'bg-royal-navy/20 text-blue-300 border-royal-navy/40';
-      case 'legendary':
-        return 'bg-royal-gold/20 text-royal-gold border-royal-gold/40';
-      default:
-        return 'bg-gray-500/20 text-gray-300 border-gray-500/40';
+const ProfileColors: React.FC = () => {
+  const { user, awardCosmetic } = useAuth();
+  const { toast } = useToast();
+  
+  const handleSelect = async (colorId: string) => {
+    if (!user) {
+      toast({
+        title: "Not signed in",
+        description: "Please sign in to select a color theme",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    const success = await awardCosmetic('color', colorId);
+    
+    if (success) {
+      toast({
+        title: "Color selected",
+        description: "Your profile color has been updated",
+      });
+    } else {
+      toast({
+        title: "Error",
+        description: "Failed to update color theme",
+        variant: "destructive"
+      });
     }
   };
-
-  const colors: ColorItem[] = [
-    {
-      id: 'crimson-theme',
-      name: 'Crimson Theme',
-      description: 'A bold theme with deep red accents',
-      price: 30,
-      previewColors: ['#370617', '#9D0208', '#F2B880'],
-      rarity: 'common'
-    },
-    {
-      id: 'navy-theme',
-      name: 'Navy Theme',
-      description: 'A classic theme with deep blue hues',
-      price: 30,
-      previewColors: ['#03045E', '#0077B6', '#90E0EF'],
-      rarity: 'common'
-    },
-    {
-      id: 'emerald-theme',
-      name: 'Emerald Theme',
-      description: 'A vibrant theme with lush green tones',
-      price: 40,
-      previewColors: ['#1B4332', '#3D8361', '#A7D1AB'],
-      rarity: 'rare'
-    },
-    {
-      id: 'gold-theme',
-      name: 'Golden Theme',
-      description: 'A luxurious theme with rich gold accents',
-      price: 50,
-      previewColors: ['#795500', '#FFC857', '#FFF8E1'],
-      rarity: 'legendary'
-    },
-    {
-      id: 'purple-theme',
-      name: 'Amethyst Theme',
-      description: 'A mystical theme with deep purple shades',
-      price: 40,
-      previewColors: ['#4C1D95', '#6D28D9', '#EDE9FE'],
-      rarity: 'rare'
+  
+  const isColorOwned = (colorId: string): boolean => {
+    if (!user || !user.cosmetics) return colorId === 'royal-gold'; // Default is always owned
+    
+    const { cosmetics } = user;
+    
+    // Safe check if color is in cosmetics array
+    if (typeof cosmetics === 'object') {
+      const colorArray = cosmetics.color || [];
+      if (Array.isArray(colorArray)) {
+        return colorArray.includes(colorId);
+      }
     }
-  ];
-
+    
+    return colorId === 'royal-gold'; // Default fallback
+  };
+  
   return (
     <div className="space-y-4">
-      <h3 className="text-lg font-bold royal-gradient font-medieval">Noble Colors</h3>
-      <p className="text-white/70">Express your status with exclusive color schemes for your profile.</p>
+      <h3 className="text-lg font-medium">Profile Colors</h3>
+      <p className="text-muted-foreground text-sm">
+        Choose a color theme for your profile
+      </p>
       
-      <div className="grid grid-cols-1 gap-4 mt-6">
-        {colors.map((item) => {
-          const isOwned = userColors.includes(item.id);
-          const isActive = activeColor === item.id;
-          
-          return (
-            <div key={item.id} className="glass-morphism border-white/10 rounded-lg p-4 transition-all duration-300 hover:border-royal-gold/30">
-              <div className="flex justify-between items-start mb-3">
-                <div className="flex items-center">
-                  <div className="w-10 h-10 rounded-full flex items-center justify-center bg-royal-gold/10 mr-3">
-                    <Palette className="h-5 w-5 text-royal-gold" />
-                  </div>
-                  <div>
-                    <h4 className="font-medium">{item.name}</h4>
-                    <p className="text-xs text-white/60">${item.price}</p>
-                  </div>
+      <Separator />
+      
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-4">
+        {colors.map((color) => (
+          <Card 
+            key={color.id}
+            className={cn(
+              "overflow-hidden cursor-pointer transition-all hover:scale-105 hover:shadow-md",
+              isColorOwned(color.id) ? "border-yellow-500/50" : "border-white/10"
+            )}
+            onClick={() => handleSelect(color.id)}
+          >
+            <div className={cn("h-12", color.cssClass)}></div>
+            <CardContent className="p-4">
+              <div className="flex justify-between items-start">
+                <div>
+                  <h4 className={cn("font-medium", color.textClass)}>{color.name}</h4>
+                  <p className="text-xs text-muted-foreground">{color.description}</p>
                 </div>
-                <div className="flex items-center">
-                  <Badge className={getRarityClass(item.rarity)}>
-                    {item.rarity.charAt(0).toUpperCase() + item.rarity.slice(1)}
-                  </Badge>
-                  {isOwned && isActive && (
-                    <Badge variant="outline" className="ml-2 bg-royal-gold/20 border-royal-gold/40 text-royal-gold">
-                      Active
-                    </Badge>
-                  )}
-                </div>
+                
+                {isColorOwned(color.id) ? (
+                  <div className="text-green-500">
+                    <Check className="h-5 w-5" />
+                  </div>
+                ) : (
+                  <div className="text-amber-500 text-xs font-medium">
+                    {color.price > 0 ? `${color.price} coins` : 'Free'}
+                  </div>
+                )}
               </div>
-              
-              <p className="text-sm text-white/70 mb-4">
-                {item.description}
-              </p>
-              
-              <div className="flex space-x-2 mb-4">
-                {item.previewColors.map((color, index) => (
-                  <div 
-                    key={index} 
-                    className="w-8 h-8 rounded-full" 
-                    style={{ backgroundColor: color }} 
-                  />
-                ))}
-              </div>
-              
-              <RoyalButton
-                variant={isOwned ? "outline" : "royalGold"}
-                size="sm"
-                className="w-full"
-                disabled={isOwned && !onSelectColor}
-                onClick={() => isOwned && onSelectColor ? onSelectColor(item.id) : onPurchase(item.name, item.price, 'color', item.id)}
-              >
-                {isOwned ? (onSelectColor ? (isActive ? 'Selected' : 'Select Color') : 'Already Owned') : `Purchase for $${item.price}`}
-              </RoyalButton>
-            </div>
-          );
-        })}
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+      
+      <div className="text-xs text-muted-foreground mt-4">
+        Note: The Royal Gold theme is available to all users.
       </div>
     </div>
   );

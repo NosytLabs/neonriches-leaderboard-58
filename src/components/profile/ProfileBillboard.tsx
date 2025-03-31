@@ -1,144 +1,174 @@
 
-import { Card } from '@/components/ui/card';
+import React from 'react';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { UserProfile, SocialLink } from '@/types/user';
-import { ExternalLink, Users, Calendar, ArrowUpRight, Share2, Trophy, Sparkles } from 'lucide-react';
-import React from 'react';
+import { Card, CardContent } from '@/components/ui/card';
+import { UserProfile } from '@/types/user';
+import { SocialLink } from '@/types/user-consolidated';
+import { formatCurrency } from '@/utils/formatters';
+import { formatDate } from '@/utils/dateUtils';
+import { getInitials } from '@/utils/stringUtils';
+import { Clock, CreditCard, Share, Star, ThumbsUp, Users } from 'lucide-react';
 
-export interface ProfileBillboardProps {
+interface ProfileBillboardProps {
   user: UserProfile;
-  isOwnProfile: boolean;
+  onFollow?: () => void;
+  isCurrentUser?: boolean;
 }
 
-const ProfileBillboard: React.FC<ProfileBillboardProps> = ({ user, isOwnProfile }) => {
-  const formattedJoinDate = user.joinedAt 
-    ? new Date(user.joinedAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+const ProfileBillboard: React.FC<ProfileBillboardProps> = ({ user, onFollow, isCurrentUser = false }) => {
+  const joinDate = user.joinedDate ? formatDate(user.joinedDate) : 'Unknown';
+  const memberSince = user.joinedDate 
+    ? new Date(user.joinedDate).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long'
+      })
     : 'Unknown';
-  
-  const socialIcons: Record<string, React.ReactNode> = {
-    twitter: <span className="text-blue-400">𝕏</span>,
-    instagram: <span className="text-pink-500">📸</span>,
-    facebook: <span className="text-blue-600">ⓕ</span>,
-    youtube: <span className="text-red-500">▶</span>,
-    twitch: <span className="text-purple-500">🎮</span>,
-    tiktok: <span className="text-black">🎵</span>,
-    linkedin: <span className="text-blue-700">in</span>,
-    github: <span className="text-gray-800">🐙</span>,
-    default: <ExternalLink size={14} />
-  };
 
   return (
-    <Card className="glass-morphism border-royal-gold/30 relative overflow-hidden">
-      {/* Background pattern/effect */}
-      <div className="absolute inset-0 bg-gradient-to-br from-royal-gold/5 to-transparent pointer-events-none opacity-30" />
-      
-      {/* Rank display */}
-      <div className="absolute top-4 right-4">
-        <Badge variant="outline" className="border-royal-gold bg-royal-gold/10 text-royal-gold font-bold px-3 py-1">
-          <Trophy className="w-4 h-4 mr-1" /> 
-          Rank #{user.rank}
-        </Badge>
+    <Card className="glass-morphism border-white/10 overflow-hidden">
+      <div className="relative h-32 md:h-40 bg-gradient-to-r from-purple-900/50 to-blue-900/50">
+        <div className="absolute inset-0 bg-pattern-grid opacity-20"></div>
       </div>
       
-      <div className="p-5 sm:p-6">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center">
-          {/* Profile Image */}
-          <Avatar className="h-20 w-20 rounded-lg border-2 border-royal-gold/50 shadow-royal">
-            <AvatarImage src={user.profileImage} alt={user.displayName} />
-            <AvatarFallback className="bg-royal-gold/20 text-white">
-              {user.displayName?.substring(0, 2) || user.username.substring(0, 2)}
-            </AvatarFallback>
-          </Avatar>
-          
-          {/* Profile Info */}
-          <div className="mt-4 sm:mt-0 sm:ml-6 flex-1">
-            <div className="flex flex-col sm:flex-row sm:items-center gap-2">
-              <h2 className="text-2xl font-bold flex items-center gap-2">
-                {user.displayName || user.username}
-                {user.isVerified && (
-                  <Badge className="bg-royal-gold h-5 w-5 p-0 flex items-center justify-center rounded-full">
-                    <Sparkles className="h-3 w-3 text-black" />
-                  </Badge>
-                )}
-              </h2>
+      <CardContent className="p-0">
+        <div className="relative px-4 pb-4 -mt-12 md:-mt-16">
+          <div className="flex flex-col md:flex-row md:items-end md:justify-between">
+            {/* Avatar and name section */}
+            <div className="flex flex-col items-center md:items-start md:flex-row">
+              <Avatar className="h-24 w-24 md:h-32 md:w-32 border-4 border-background">
+                <AvatarImage 
+                  src={user.profileImage || `/placeholder-avatar.png`}
+                  alt={user.displayName || user.username}
+                />
+                <AvatarFallback className="text-2xl">
+                  {getInitials(user.displayName || user.username)}
+                </AvatarFallback>
+              </Avatar>
               
-              {user.activeTitle && (
-                <span className="text-white/70 text-sm font-medium italic">
-                  {user.activeTitle}
-                </span>
-              )}
+              <div className="mt-3 md:mt-0 md:ml-4 text-center md:text-left mb-4 md:mb-0">
+                <div className="flex flex-col md:flex-row md:items-center gap-1 md:gap-2">
+                  <h2 className="text-2xl font-bold">
+                    {user.displayName || user.username}
+                  </h2>
+                  
+                  {user.isVerified && (
+                    <Badge variant="outline" className="bg-blue-500/20 text-blue-300 border-blue-500/30 h-5">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-3 w-3 mr-1">
+                        <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2z"></path>
+                        <path d="m9 12 2 2 4-4"></path>
+                      </svg>
+                      Verified
+                    </Badge>
+                  )}
+                </div>
+                
+                <div className="text-lg text-muted-foreground">@{user.username}</div>
+                
+                {user.activeTitle && (
+                  <div className="mt-1">
+                    <Badge className="bg-royal-gold/20 text-royal-gold border-royal-gold/30">
+                      {user.activeTitle}
+                    </Badge>
+                  </div>
+                )}
+              </div>
             </div>
             
-            <p className="text-white/70 mt-1">@{user.username}</p>
-            
-            {user.bio && (
-              <p className="mt-2 text-sm text-white/80 line-clamp-2">
-                {user.bio}
-              </p>
-            )}
-            
-            {/* Stats and Join Date */}
-            <div className="mt-3 flex flex-wrap gap-x-4 gap-y-2 text-sm text-white/60">
-              {user.followers !== undefined && (
-                <div className="flex items-center">
-                  <Users className="h-4 w-4 mr-1" />
-                  <span>{user.followers.toLocaleString()} followers</span>
-                </div>
+            {/* Action buttons */}
+            <div className="flex flex-col md:flex-row gap-2 mt-4 md:mt-0">
+              {!isCurrentUser && (
+                <Button 
+                  variant="outline" 
+                  className="glass-morphism border-white/10"
+                  onClick={onFollow}
+                >
+                  {user.isFollowing ? (
+                    <>
+                      <ThumbsUp className="h-4 w-4 mr-2" />
+                      Following
+                    </>
+                  ) : (
+                    <>
+                      <Users className="h-4 w-4 mr-2" />
+                      Follow
+                    </>
+                  )}
+                </Button>
               )}
-              <div className="flex items-center">
-                <Calendar className="h-4 w-4 mr-1" />
-                <span>Joined {formattedJoinDate}</span>
-              </div>
-              {user.totalSpent !== undefined && (
-                <div className="flex items-center">
-                  <Trophy className="h-4 w-4 mr-1" />
-                  <span>${user.totalSpent.toLocaleString()} contributed</span>
-                </div>
-              )}
+              
+              <Button variant="outline" className="glass-morphism border-white/10">
+                <Share className="h-4 w-4 mr-2" />
+                Share
+              </Button>
             </div>
           </div>
           
-          {/* Action Buttons */}
-          <div className="mt-4 sm:mt-0 flex flex-col sm:items-end gap-2">
-            {!isOwnProfile && (
-              <Button className="bg-royal-gold hover:bg-royal-gold/90 text-black border-none">
-                <Share2 className="h-4 w-4 mr-2" />
-                Share Profile
-              </Button>
+          {/* Stats section */}
+          <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="glass-morphism border-white/10 rounded-lg p-3 text-center">
+              <div className="text-lg font-bold">
+                #{user.rank || 'N/A'}
+              </div>
+              <div className="text-xs text-muted-foreground">Current Rank</div>
+            </div>
+            
+            <div className="glass-morphism border-white/10 rounded-lg p-3 text-center">
+              <div className="text-lg font-bold">
+                {formatCurrency(user.totalSpent || user.amountSpent || 0)}
+              </div>
+              <div className="text-xs text-muted-foreground">Total Spent</div>
+            </div>
+            
+            <div className="glass-morphism border-white/10 rounded-lg p-3 text-center">
+              <div className="text-lg font-bold">
+                {user.followers && typeof user.followers === 'number' ? user.followers.toLocaleString() : '0'}
+              </div>
+              <div className="text-xs text-muted-foreground">Followers</div>
+            </div>
+            
+            <div className="glass-morphism border-white/10 rounded-lg p-3 text-center">
+              <div className="text-lg font-bold capitalize">
+                {user.tier}
+              </div>
+              <div className="text-xs text-muted-foreground">Status Tier</div>
+            </div>
+          </div>
+          
+          {/* Bio and social links */}
+          <div className="mt-6">
+            {user.bio && (
+              <div className="mb-4">
+                <p className="text-sm">{user.bio}</p>
+              </div>
             )}
             
-            {isOwnProfile && (
-              <Button variant="outline" className="border-royal-gold/30 hover:bg-royal-gold/10">
-                Edit Billboard
-              </Button>
+            <div className="flex items-center text-sm text-muted-foreground">
+              <Clock className="h-4 w-4 mr-1" />
+              <span>Member since {memberSince}</span>
+              
+              {user.team && (
+                <Badge className="ml-3 bg-gray-500/20" variant="outline">
+                  Team {user.team}
+                </Badge>
+              )}
+            </div>
+            
+            {user.socialLinks && Array.isArray(user.socialLinks) && user.socialLinks.length > 0 && (
+              <div className="flex flex-wrap gap-2 mt-3">
+                {user.socialLinks.map((link) => (
+                  <Button key={link.id} size="sm" variant="outline" asChild className="h-8">
+                    <a href={link.url} target="_blank" rel="noopener noreferrer">
+                      <span>{link.platform}</span>
+                    </a>
+                  </Button>
+                ))}
+              </div>
             )}
           </div>
         </div>
-        
-        {/* Social Links */}
-        {user.socialLinks && user.socialLinks.length > 0 && (
-          <div className="mt-5 pt-5 border-t border-white/10">
-            <h3 className="text-sm font-medium mb-3">Connect with {isOwnProfile ? 'me' : user.displayName || user.username}</h3>
-            <div className="flex flex-wrap gap-2">
-              {user.socialLinks.map((link, index) => (
-                <a 
-                  key={link.id || index} 
-                  href={link.url} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="bg-white/5 hover:bg-white/10 px-3 py-1.5 rounded-md text-sm flex items-center transition-colors duration-200"
-                >
-                  {socialIcons[link.platform] || socialIcons.default}
-                  <span className="ml-2">{link.platform}</span>
-                  <ArrowUpRight className="ml-1 h-3 w-3 opacity-70" />
-                </a>
-              ))}
-            </div>
-          </div>
-        )}
-      </div>
+      </CardContent>
     </Card>
   );
 };

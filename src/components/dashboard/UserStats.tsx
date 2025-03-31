@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis } from 'recharts';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -66,7 +67,7 @@ const UserStats: React.FC<UserStatsProps> = ({ user }) => {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">{formatCurrency(user.totalSpent || user.amountSpent || 0)}</div>
-                <p className="text-xs text-white/60 mt-1">Joined {formatDate(user.joinDate)} ({getRelativeTimeString(user.joinDate)})</p>
+                <p className="text-xs text-white/60 mt-1">Joined {formatDate(user.joinedDate)} ({getRelativeTimeString(user.joinedDate)})</p>
               </CardContent>
             </Card>
             

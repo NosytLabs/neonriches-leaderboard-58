@@ -1,219 +1,236 @@
 
-import React, { createContext, useReducer, useEffect } from 'react';
-import { authReducer } from './auth/authReducer';
+import React, { createContext, useEffect, useState } from 'react';
 import { AuthContextType, UserProfile } from '@/types/user-consolidated';
 
+// Create Auth Context
 export const AuthContext = createContext<AuthContextType>({
   user: null,
   isAuthenticated: false,
   isLoading: true,
-  login: async () => false,
-  signIn: async () => false,
-  register: async () => false,
-  logout: async () => {},
-  signOut: async () => {},
-  updateUser: async () => false,
-  updateUserProfile: async () => false,
+  login: () => Promise.resolve(false),
+  signIn: () => Promise.resolve(false),
+  register: () => Promise.resolve(false),
+  logout: () => Promise.resolve(),
+  signOut: () => Promise.resolve(),
+  updateUser: () => Promise.resolve(false),
+  updateUserProfile: () => Promise.resolve(false),
+  awardCosmetic: () => Promise.resolve(false),
 });
 
-interface AuthProviderProps {
-  children: React.ReactNode;
-}
-
-export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const initialState = {
-    user: null,
-    isAuthenticated: false,
-    isLoading: true,
-    error: null
-  };
-
-  const [state, dispatch] = useReducer(authReducer, initialState);
+// Create Provider
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [user, setUser] = useState<UserProfile | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Check for stored auth token on initial load
-    const checkAuth = async () => {
-      dispatch({ type: 'LOGIN_START' });
+    // Check if user is stored in localStorage
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
       try {
-        const token = localStorage.getItem('authToken');
-        if (token) {
-          // In a real app, this would validate the token with the server
-          const userData = localStorage.getItem('userData');
-          if (userData) {
-            const user = JSON.parse(userData);
-            dispatch({ 
-              type: 'LOGIN_SUCCESS', 
-              payload: user 
-            });
-          } else {
-            dispatch({ type: 'LOGIN_FAILURE' });
-          }
-        } else {
-          dispatch({ type: 'LOGIN_FAILURE' });
-        }
+        const parsedUser = JSON.parse(storedUser);
+        setUser(parsedUser);
+        setIsAuthenticated(true);
       } catch (error) {
-        console.error('Auth check failed:', error);
-        dispatch({ type: 'LOGIN_FAILURE' });
+        console.error('Error parsing stored user:', error);
+        localStorage.removeItem('user');
       }
-    };
-
-    checkAuth();
+    }
+    setIsLoading(false);
   }, []);
 
-  // Login function
   const login = async (email: string, password: string): Promise<boolean> => {
-    dispatch({ type: 'LOGIN_START' });
+    setIsLoading(true);
     
     try {
-      // This is a mock implementation - in a real app, you'd call an API
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Mock successful login for demo
+      // Mock login logic
       if (email && password) {
+        // In a real app, this would make an API call
         const mockUser: UserProfile = {
           id: '1',
-          username: 'royalSpender',
-          displayName: 'Royal Spender',
+          username: 'royal_user',
+          displayName: 'Royal User',
           email: email,
-          rank: 1,
-          tier: 'royal',
-          team: 'red',
-          totalSpent: 10000,
-          joinDate: new Date().toISOString(),
+          profileImage: 'https://api.dicebear.com/6.x/personas/svg?seed=royal_user',
+          joinedDate: new Date().toISOString(),
+          rank: 42,
+          totalSpent: 1500,
+          walletBalance: 100,
+          tier: 'premium',
+          team: 'blue',
           isVerified: true,
-          profileImage: 'https://i.pravatar.cc/150?img=3'
+          isVIP: false,
+          settings: {
+            profileVisibility: 'public',
+            allowProfileLinks: true,
+            theme: 'dark',
+            notifications: true,
+            emailNotifications: true,
+            marketingEmails: false,
+            showRank: true,
+            darkMode: true,
+            soundEffects: true,
+            newFollowerAlerts: true,
+            teamNotifications: true,
+            showTeam: true,
+            showSpending: true
+          },
+          previousRank: 48,
+          spendStreak: 7,
+          profileViews: 324,
+          profileClicks: 85
         };
         
-        localStorage.setItem('authToken', 'mock-token-xyz');
-        localStorage.setItem('userData', JSON.stringify(mockUser));
-        
-        dispatch({ 
-          type: 'LOGIN_SUCCESS', 
-          payload: mockUser 
-        });
-        
+        setUser(mockUser);
+        setIsAuthenticated(true);
+        localStorage.setItem('user', JSON.stringify(mockUser));
         return true;
       }
-      
-      dispatch({ 
-        type: 'LOGIN_FAILURE',
-        payload: 'Invalid credentials'
-      });
-      
       return false;
     } catch (error) {
-      console.error('Login failed:', error);
-      dispatch({ 
-        type: 'LOGIN_FAILURE',
-        payload: 'Login failed. Please try again.'
-      });
-      
+      console.error('Login error:', error);
       return false;
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  // Register function
   const register = async (username: string, email: string, password: string): Promise<boolean> => {
-    dispatch({ type: 'REGISTER_START' });
+    setIsLoading(true);
     
     try {
-      // This is a mock implementation - in a real app, you'd call an API
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Mock successful registration for demo
+      // Mock registration logic
       if (username && email && password) {
+        // In a real app, this would make an API call
         const mockUser: UserProfile = {
-          id: '1',
-          username,
-          email,
-          tier: 'free',
-          joinDate: new Date().toISOString(),
-          totalSpent: 0,
+          id: '2',
+          username: username,
+          displayName: username,
+          email: email,
+          profileImage: `https://api.dicebear.com/6.x/personas/svg?seed=${username}`,
+          joinedDate: new Date().toISOString(),
           rank: 999,
+          totalSpent: 0,
+          walletBalance: 50, // Initial free credit
+          tier: 'free',
+          team: null,
+          isVerified: false,
+          isVIP: false,
+          settings: {
+            profileVisibility: 'public',
+            allowProfileLinks: true,
+            theme: 'dark',
+            notifications: true,
+            emailNotifications: true,
+            marketingEmails: false,
+            showRank: true,
+            darkMode: true,
+            soundEffects: true,
+            newFollowerAlerts: true,
+            teamNotifications: true,
+            showTeam: true,
+            showSpending: true
+          }
         };
         
-        localStorage.setItem('authToken', 'mock-token-xyz');
-        localStorage.setItem('userData', JSON.stringify(mockUser));
-        
-        dispatch({ 
-          type: 'REGISTER_SUCCESS', 
-          payload: mockUser 
-        });
-        
+        setUser(mockUser);
+        setIsAuthenticated(true);
+        localStorage.setItem('user', JSON.stringify(mockUser));
         return true;
       }
-      
-      dispatch({ 
-        type: 'REGISTER_FAILURE',
-        payload: 'Registration failed. Please try again.'
-      });
-      
       return false;
     } catch (error) {
-      console.error('Registration failed:', error);
-      dispatch({ 
-        type: 'REGISTER_FAILURE',
-        payload: 'Registration failed. Please try again.'
-      });
-      
+      console.error('Registration error:', error);
+      return false;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const logout = async (): Promise<void> => {
+    setUser(null);
+    setIsAuthenticated(false);
+    localStorage.removeItem('user');
+    return Promise.resolve();
+  };
+
+  const signOut = async (): Promise<void> => {
+    return logout();
+  };
+
+  const updateUser = async (userData: Partial<UserProfile>): Promise<boolean> => {
+    if (!user) return false;
+    
+    try {
+      const updatedUser = { ...user, ...userData };
+      setUser(updatedUser);
+      localStorage.setItem('user', JSON.stringify(updatedUser));
+      return true;
+    } catch (error) {
+      console.error('Update user error:', error);
       return false;
     }
   };
 
-  // Logout function
-  const logout = async (): Promise<void> => {
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('userData');
-    
-    dispatch({ type: 'LOGOUT' });
+  const updateUserProfile = async (userData: Partial<UserProfile>): Promise<boolean> => {
+    return updateUser(userData);
   };
 
-  // Update user function
-  const updateUser = async (userData: Partial<UserProfile>): Promise<boolean> => {
+  const awardCosmetic = async (category: string, itemId: string, notify: boolean = true): Promise<boolean> => {
+    if (!user) return false;
+
     try {
-      if (!state.user) return false;
+      // Update user's cosmetics
+      const userCosmetics = user.cosmetics || {};
       
-      // In a real app, you'd call an API to update the user data
+      // Ensure the category exists as an array
+      if (!userCosmetics[category]) {
+        userCosmetics[category] = [];
+      }
+      
+      // Add the item if it doesn't exist
+      const categoryItems = userCosmetics[category];
+      if (Array.isArray(categoryItems)) {
+        if (!categoryItems.includes(itemId)) {
+          userCosmetics[category] = [...categoryItems, itemId];
+        }
+      } else {
+        userCosmetics[category] = [itemId];
+      }
+
+      // Update user profile with new cosmetics
       const updatedUser = {
-        ...state.user,
-        ...userData
+        ...user,
+        cosmetics: userCosmetics,
       };
-      
-      localStorage.setItem('userData', JSON.stringify(updatedUser));
-      
-      dispatch({ 
-        type: 'UPDATE_PROFILE_SUCCESS', 
-        payload: updatedUser 
-      });
+
+      setUser(updatedUser);
+      localStorage.setItem('user', JSON.stringify(updatedUser));
       
       return true;
     } catch (error) {
-      console.error('User update failed:', error);
+      console.error('Award cosmetic error:', error);
       return false;
     }
   };
 
-  // Create the context value object with all the functions and state
-  const contextValue: AuthContextType = {
-    user: state.user,
-    isAuthenticated: state.isAuthenticated,
-    isLoading: state.isLoading,
-    login,
-    signIn: login,  // Alias for login
-    register,
-    logout,
-    signOut: logout,  // Alias for logout
-    updateUser,
-    updateUserProfile: updateUser,  // Alias for updateUser
-  };
-
   return (
-    <AuthContext.Provider value={contextValue}>
+    <AuthContext.Provider
+      value={{
+        user,
+        isAuthenticated,
+        isLoading,
+        login,
+        signIn: login,
+        register,
+        logout,
+        signOut,
+        updateUser,
+        updateUserProfile,
+        awardCosmetic,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
 };
-
-export default AuthProvider;
