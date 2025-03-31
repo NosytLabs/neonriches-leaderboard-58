@@ -1,100 +1,56 @@
-import React, { useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import React from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Link } from 'react-router-dom';
-import { Copy, Check, UserPlus, Gift } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
-import { useAuth } from '@/contexts/AuthContext';
+import { Copy, Share } from 'lucide-react';
 import { formatCurrency } from '@/utils/formatters';
-import useNotificationSounds from '@/hooks/sounds/use-notification-sounds';
-import { SoundOptions } from '@/types/sound-types';
+import { useAuth } from '@/hooks/useAuth';
 
-const ReferralCard = () => {
+const ReferralCard: React.FC = () => {
   const { user } = useAuth();
-  const { toast } = useToast();
-  const [isCopied, setIsCopied] = useState(false);
-  const { playSound } = useNotificationSounds();
-  
-  const referralLink = `${window.location.origin}/register?referral=${user?.id}`;
-  const discountAmount = 10;
-  
+  const referralCode = user?.username || 'N/A';
+  const referralLink = `${window.location.origin}/signup?referral=${referralCode}`;
+  const bonusAmount = 5;
+
   const handleCopyClick = () => {
-    if (!user) {
-      toast({
-        title: "Authentication Required",
-        description: "You must be logged in to get a referral link.",
-        variant: "destructive"
-      });
-      return;
-    }
-    
     navigator.clipboard.writeText(referralLink);
-    setIsCopied(true);
-    playSound('click');
-    
-    setTimeout(() => {
-      setIsCopied(false);
-    }, 2000);
+  };
+
+  const handleShareClick = () => {
+    if (navigator.share) {
+      navigator.share({
+        title: 'Join SpendThrone!',
+        text: `Use my referral code ${referralCode} to get a bonus!`,
+        url: referralLink,
+      });
+    } else {
+      alert('Web Share API not supported, please copy the link manually.');
+    }
   };
 
   return (
-    <Card className="glass-morphism border-royal-gold/20">
+    <Card className="w-full">
       <CardHeader>
-        <div className="flex items-center">
-          <UserPlus className="mr-3 h-6 w-6 text-royal-gold" />
-          <CardTitle>Refer a Noble</CardTitle>
-        </div>
-        <CardDescription>
-          Share the royal court with your friends and earn rewards
-        </CardDescription>
+        <CardTitle>Referral Program</CardTitle>
       </CardHeader>
-      
       <CardContent className="space-y-4">
-        <div className="flex items-center space-x-2">
-          <Input
-            type="text"
-            value={referralLink}
-            readOnly
-            className="flex-1"
-          />
-          <Button 
-            variant="outline" 
-            onClick={handleCopyClick}
-            disabled={!user}
-          >
-            {isCopied ? (
-              <Check className="h-4 w-4" />
-            ) : (
-              <Copy className="h-4 w-4" />
-            )}
+        <p>
+          Invite your friends to join SpendThrone and you'll both receive{' '}
+          {formatCurrency(bonusAmount)}!
+        </p>
+        <div className="flex items-center justify-between">
+          <div className="flex-1 truncate">
+            <p className="text-sm font-medium">Your Referral Link:</p>
+            <p className="text-xs text-muted-foreground truncate">{referralLink}</p>
+          </div>
+          <Button variant="outline" size="sm" onClick={handleCopyClick} className="ml-2">
+            <Copy className="h-4 w-4 mr-2" />
+            Copy
           </Button>
         </div>
-        
-        <div className="bg-black/20 p-4 rounded-lg">
-          <h4 className="mb-2 flex items-center text-sm font-medium">
-            <Gift className="mr-2 h-4 w-4" />
-            Referral Rewards
-          </h4>
-          
-          <p className="text-xs text-white/70">
-            When a friend uses your referral link, they'll receive {formatCurrency(discountAmount)} off their first purchase.
-          </p>
-          
-          <p className="text-xs text-white/70 mt-2">
-            As a thank you, you'll receive a special badge on your profile and a small boost to your royal rank.
-          </p>
-        </div>
-        
-        {!user && (
-          <div className="text-center">
-            <Link to="/login">
-              <Button variant="link" className="text-sm">
-                Sign In to Get Referral Link
-              </Button>
-            </Link>
-          </div>
-        )}
+        <Button className="w-full" onClick={handleShareClick}>
+          <Share className="h-4 w-4 mr-2" />
+          Share Referral Link
+        </Button>
       </CardContent>
     </Card>
   );

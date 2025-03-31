@@ -1,148 +1,102 @@
-
 import React, { useState } from 'react';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Sparkles, History, Coins } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { Crown, Coins, ChevronsUp } from 'lucide-react';
+import { formatCurrency } from '@/utils/formatters';
 import { useToast } from '@/hooks/use-toast';
-import { formatCurrency } from '@/lib/utils';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/hooks/useAuth';
 
-export interface RoyalWishingWellProps {
-  currentPool: number;
-  recentWishes: Array<{
-    username: string;
-    amount: number;
-    result: string;
-    timestamp: string;
-  }>;
+interface RoyalWishingWellProps {
+  className?: string;
 }
 
-const RoyalWishingWell: React.FC<RoyalWishingWellProps> = ({ currentPool, recentWishes }) => {
-  const [wishAmount, setWishAmount] = useState('');
-  const [isWishing, setIsWishing] = useState(false);
+const RoyalWishingWell: React.FC<RoyalWishingWellProps> = ({ className }) => {
+  const [donationAmount, setDonationAmount] = useState<number | string>('');
   const { toast } = useToast();
-  const { user } = useAuth();
-  
-  const handleWish = async () => {
+  const { user, updateUserProfile } = useAuth();
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    // Allow only numbers
+    if (/^\d*$/.test(value)) {
+      setDonationAmount(value);
+    }
+  };
+
+  const handleDonate = async () => {
     if (!user) {
       toast({
-        title: "Authentication Required",
-        description: "You must be logged in to make a wish.",
-        variant: "destructive"
+        title: 'Not authenticated.',
+        description: 'You must be logged in to donate.',
+        variant: 'destructive',
       });
       return;
     }
-    
-    const amount = parseFloat(wishAmount);
-    
+
+    const amount = Number(donationAmount);
+
     if (isNaN(amount) || amount <= 0) {
       toast({
-        title: "Invalid Wish Amount",
-        description: "Please enter a valid amount greater than zero.",
-        variant: "destructive"
+        title: 'Invalid donation amount.',
+        description: 'Please enter a valid amount greater than zero.',
+        variant: 'destructive',
       });
       return;
     }
-    
-    if (amount > 100) {
-      toast({
-        title: "Wish Amount Exceeded",
-        description: "The maximum wish amount is 100.",
-        variant: "destructive"
-      });
-      return;
-    }
-    
-    setIsWishing(true);
-    
-    // Simulate wish processing with fixed outcome
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    // Fixed outcome - 50% win rate
-    const success = amount > 50 ? true : false;
-    
+
+    // Optimistically update the user's totalSpent
+    const newTotalSpent = (user.totalSpent || 0) + amount;
+
+    const success = await updateUserProfile({
+      totalSpent: newTotalSpent,
+    });
+
     if (success) {
-      const winnings = amount * 1.5; // Fixed reward calculation
       toast({
-        title: "Your Wish Came True!",
-        description: `You wished ${formatCurrency(amount)} and won ${formatCurrency(winnings)}!`,
+        title: 'Thank you for your donation!',
+        description: `You have donated ${formatCurrency(amount)} to the Royal Wishing Well.`,
       });
     } else {
       toast({
-        title: "Alas, Your Wish Was Not Granted",
-        description: `You wished ${formatCurrency(amount)} but the well demands a greater sacrifice.`,
-        variant: "destructive"
+        title: 'Donation failed.',
+        description: 'There was an error processing your donation. Please try again.',
+        variant: 'destructive',
       });
     }
-    
-    setIsWishing(false);
-    setWishAmount('');
+
+    // Clear the input field after donation
+    setDonationAmount('');
   };
 
   return (
-    <Card className="glass-morphism border-royal-gold/20">
-      <CardHeader>
-        <div className="flex items-center">
-          <Sparkles className="mr-3 h-6 w-6 text-royal-gold" />
-          <CardTitle>Royal Wishing Well</CardTitle>
-        </div>
-        <CardDescription>
-          Cast your desires into the mystical well
-        </CardDescription>
+    <Card className={className}>
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+        <CardTitle className="text-sm font-medium flex items-center">
+          <Crown className="mr-2 h-4 w-4 text-yellow-500" />
+          Royal Wishing Well
+        </CardTitle>
+        <Coins className="h-4 w-4 text-yellow-500" />
       </CardHeader>
-      
-      <CardContent className="space-y-4">
-        <div className="flex items-center justify-between">
-          <p className="text-sm text-white/70">Current Pool:</p>
-          <span className="font-medium text-royal-gold">{formatCurrency(currentPool)}</span>
+      <CardContent>
+        <div className="mb-4 text-sm text-muted-foreground">
+          Donate to the Royal Wishing Well and increase your total spending. Every coin counts towards your
+          ascension!
         </div>
-        
-        <div className="flex space-x-2">
-          <Input 
-            type="number" 
-            placeholder="Enter wish amount (max 100)" 
-            value={wishAmount}
-            onChange={(e) => setWishAmount(e.target.value)}
-            disabled={isWishing}
+        <div className="flex items-center space-x-2">
+          <Input
+            type="number"
+            placeholder="0.00"
+            value={donationAmount}
+            onChange={handleInputChange}
+            className="w-32"
           />
-          <Button onClick={handleWish} disabled={isWishing}>
-            {isWishing ? (
-              <motion.div
-                className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white"
-                animate={{ rotate: 360 }}
-                transition={{ loop: Infinity, duration: 1 }}
-              />
-            ) : "Make a Wish"}
+          <Button onClick={handleDonate} className="bg-yellow-500 text-black hover:bg-yellow-500/90">
+            <ChevronsUp className="mr-2 h-4 w-4" />
+            Donate
           </Button>
         </div>
       </CardContent>
-      
-      <CardFooter>
-        <div className="w-full">
-          <h4 className="mb-2 flex items-center text-sm font-medium">
-            <History className="mr-2 h-4 w-4" />
-            Recent Wishes
-          </h4>
-          
-          <ul className="space-y-2">
-            {recentWishes.map((wish, index) => (
-              <li key={index} className="flex items-center justify-between text-xs">
-                <div className="flex items-center">
-                  <Coins className="mr-2 h-3 w-3 text-yellow-500" />
-                  <span className="font-medium">{wish.username}</span>
-                </div>
-                
-                <div className="text-right">
-                  <span className="text-white/60">{formatCurrency(wish.amount)}</span>
-                  <span className="ml-1 text-green-500">{wish.result}</span>
-                </div>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </CardFooter>
     </Card>
   );
 };

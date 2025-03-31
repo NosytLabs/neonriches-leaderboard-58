@@ -1,7 +1,7 @@
 
 export type TeamColor = 
-  | 'red' | 'blue' | 'green' | 'gold' | 'purple' | 'none' | 'neutral'
-  | '#dc2626' | '#2563eb' | '#16a34a' | '#eab308' | '#9333ea' | '#6b7280'; // Add hex values
+  | 'red' | 'green' | 'blue' | 'gold' | 'purple' | 'none' | 'neutral'
+  | '#dc2626' | '#2563eb' | '#16a34a' | '#eab308' | '#9333ea' | '#6b7280';
 
 export type TeamType = 'red' | 'blue' | 'green' | 'gold' | 'purple' | 'none' | 'neutral';
 

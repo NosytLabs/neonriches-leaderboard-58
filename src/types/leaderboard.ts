@@ -9,13 +9,21 @@ export interface LeaderboardUser {
   username: string;
   displayName?: string;
   profileImage?: string;
+  avatarUrl?: string;
   tier: UserTier;
   team?: TeamColor | null;
   rank: number;
-  totalSpent: number;
-  walletBalance?: number;
   previousRank?: number;
+  walletBalance?: number;
+  totalSpent: number;
+  spentAmount?: number;  // Legacy field - use totalSpent instead
+  amountSpent?: number;  // Legacy field - use totalSpent instead
+  isVerified?: boolean;
   spendStreak?: number;
+  joinedAt?: string;
+  spendChange?: number;  // Added for components that need it
+  rankChange?: number;   // Added for components that need it
+  isProtected?: boolean; // Added for components that need it
 }
 
 /**

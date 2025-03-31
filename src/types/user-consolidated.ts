@@ -1,14 +1,14 @@
 
 import { UserCosmetics, UserCosmeticState } from './cosmetics';
 
-// Define team colors
+// Define team colors - updated to include hex values as proper TeamColor types
 export type TeamColor = 
   | 'red' | 'blue' | 'green' | 'gold' | 'purple' | 'none' | 'neutral' 
   | '#dc2626' | '#2563eb' | '#16a34a' | '#eab308' | '#9333ea' | '#6b7280'; // Add hex values to fix teamData.ts
 
 export type TeamType = 'red' | 'blue' | 'green' | 'gold' | 'purple' | 'none' | 'neutral';
 
-// Define user tiers - add 'basic' to fix tierData.ts errors
+// Define user tiers - add 'basic' and 'noble' to fix errors
 export type UserTier = 
   | 'free'
   | 'basic'
@@ -117,6 +117,8 @@ export interface UserProfile {
   profileImage?: string;
   bio?: string;
   joinedDate?: string;
+  joinedAt?: string; // Added for components that use this
+  joinDate?: string; // Added for backward compatibility
   rank?: number;
   amountSpent?: number;
   totalSpent?: number;
@@ -149,6 +151,9 @@ export interface UserProfile {
   spentAmount?: number;
   certificateNFT?: CertificateNFT;
   boostCount?: number; // Add missing property for KingmakerFeature.tsx
+  // Add rankChange and spendChange for components that use them
+  rankChange?: number;
+  spendChange?: number;
 }
 
 // Legacy User interface for backward compatibility

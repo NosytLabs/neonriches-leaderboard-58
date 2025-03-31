@@ -9,7 +9,7 @@ interface MobileProfileViewProps {
 
 const MobileProfileView: React.FC<MobileProfileViewProps> = ({ user }) => {
   // Fix the joinDate property to use joinedDate properly
-  const joinDate = user.joinedDate || new Date().toISOString();
+  const joinDate = user.joinedDate || user.joinDate || user.joinedAt || new Date().toISOString();
 
   return (
     <div className="mobile-profile-view">

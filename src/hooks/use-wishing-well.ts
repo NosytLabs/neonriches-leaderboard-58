@@ -1,134 +1,92 @@
+import { useState } from 'react';
+import { useToast } from './use-toast';
+import { useAuth } from './useAuth';
+import useSound from './useSound';
 
-// Modified implementation to use the new sound system
-import { useState, useCallback, useEffect } from 'react';
-import { useAuth } from '@/contexts/AuthContext';
-import { useToast } from '@/hooks/use-toast';
-import { useSound } from '@/hooks/use-sound';
-import { recordTransaction } from '@/services/transactionService';
-
-// Define the WishResult type to include properties that are being used
-export type WishResult = 'win' | 'lose' | 'pending';
-
-export interface UseWishingWellReturn {
-  wishResult: WishResult;
-  isWishing: boolean;
-  makeWish: (wishAmount: number) => Promise<void>;
-  hasWishAvailable: boolean;
-  wishesRemaining: number;
-  resetWish: () => void;
-  wishError: string | null;
-  pullCount: number;
-  canWish: boolean;
+interface WishingWellHookResult {
+  amount: number;
+  setAmount: (amount: number) => void;
+  isSubmitting: boolean;
+  handleSubmit: () => Promise<void>;
 }
 
-const WISH_COST = 10;
-
-const useWishingWell = (): UseWishingWellReturn => {
-  const { user } = useAuth();
+const useWishingWell = (): WishingWellHookResult => {
+  const [amount, setAmount] = useState<number>(0);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const { toast } = useToast();
-  const sound = useSound();
+  const { user, updateUserProfile } = useAuth();
+  const playSound = useSound('coinDrop');
 
-  const [wishResult, setWishResult] = useState<WishResult>('pending');
-  const [isWishing, setIsWishing] = useState(false);
-  const [wishError, setWishError] = useState<string | null>(null);
-  const [pullCount, setPullCount] = useState(0);
-  const [canWish, setCanWish] = useState(true);
-
-  const hasSufficientFunds = user && user.walletBalance !== undefined && user.walletBalance >= WISH_COST;
-  const hasWishAvailable = canWish && hasSufficientFunds;
-  const wishesRemaining = hasWishAvailable ? 1 : 0;
-
-  const makeWish = useCallback(async (wishAmount: number) => {
+  const handleSubmit = async (): Promise<void> => {
     if (!user) {
       toast({
-        title: "Authentication Required",
-        description: "You must be logged in to make a wish.",
-        variant: "destructive"
+        title: 'Not authenticated',
+        description: 'You must be logged in to use the Wishing Well.',
+        variant: 'destructive',
       });
       return;
     }
 
-    if (!hasWishAvailable) {
+    if (amount <= 0) {
       toast({
-        title: "Insufficient Funds",
-        description: "You do not have enough funds in your wallet to make a wish.",
-        variant: "destructive"
+        title: 'Invalid amount',
+        description: 'Please enter a valid amount greater than zero.',
+        variant: 'destructive',
       });
       return;
     }
 
-    setIsWishing(true);
-    setWishError(null);
+    if (amount > (user?.walletBalance || 0)) {
+      toast({
+        title: 'Insufficient funds',
+        description: 'You do not have enough funds in your wallet.',
+        variant: 'destructive',
+      });
+      return;
+    }
 
+    setIsSubmitting(true);
     try {
-      const randomResult = Math.random();
-      let result: WishResult;
+      // Simulate a successful transaction
+      await new Promise((resolve) => setTimeout(resolve, 1500));
 
-      if (randomResult < 0.3) {
-        result = 'win';
-        sound.playSound('reward', { volume: 0.5 });
+      // Update the user's wallet balance
+      const newBalance = (user.walletBalance || 0) - amount;
+      const updatedUser = { ...user, walletBalance: newBalance };
+
+      // Optimistically update the user's profile
+      const success = await updateUserProfile({ walletBalance: newBalance });
+
+      if (success) {
         toast({
-          title: "Your Wish Granted!",
-          description: "Congratulations! You've received a special reward.",
+          title: 'Wishing Well Success',
+          description: `You threw ${amount} coins into the Wishing Well!`,
         });
+        playSound();
       } else {
-        result = 'lose';
-        sound.playSound('shame', { volume: 0.4 });
         toast({
-          title: "No Luck This Time",
-          description: "Unfortunately, your wish was not granted. Better luck next time!",
-          variant: "destructive"
+          title: 'Wishing Well Error',
+          description: `Failed to update your profile. Please try again.`,
+          variant: 'destructive',
         });
       }
-
-      setWishResult(result);
-      setPullCount(prevCount => prevCount + 1);
-      setCanWish(false);
-
-      await recordTransaction(
-        user.id,
-        wishAmount,
-        'wish',
-        `Made a wish at the Wishing Well`,
-        {}
-      );
     } catch (error: any) {
-      console.error("Error making a wish:", error);
-      setWishResult('lose');
-      setWishError("Failed to make a wish. Please try again.");
+      console.error('Wishing Well error:', error);
       toast({
-        title: "Wish Failed",
-        description: "There was an error processing your wish. Please try again later.",
-        variant: "destructive"
+        title: 'Wishing Well Error',
+        description: error.message || 'An error occurred. Please try again.',
+        variant: 'destructive',
       });
     } finally {
-      setIsWishing(false);
+      setIsSubmitting(false);
     }
-  }, [user, toast, sound, hasWishAvailable]);
-
-  const resetWish = useCallback(() => {
-    setWishResult('pending');
-    setIsWishing(false);
-    setWishError(null);
-    setCanWish(true);
-  }, []);
-
-  useEffect(() => {
-    if (user) {
-      setCanWish(user.walletBalance !== undefined && user.walletBalance >= WISH_COST);
-    }
-  }, [user]);
+  };
 
   return {
-    wishResult,
-    isWishing,
-    makeWish,
-    hasWishAvailable,
-    wishesRemaining,
-    resetWish,
-    wishError,
-    pullCount,
-    canWish
+    amount,
+    setAmount: (value: number) => setAmount(value),
+    isSubmitting,
+    handleSubmit,
   };
 };
 

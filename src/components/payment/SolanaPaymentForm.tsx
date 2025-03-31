@@ -1,9 +1,9 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { useAuth } from '@/contexts/AuthContext';
+import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/hooks/useAuth';
 import { wallet } from '@/services/walletService';
 import { formatCurrency } from '@/utils/formatters';
 
@@ -19,6 +19,7 @@ const SolanaPaymentForm: React.FC<SolanaPaymentFormProps> = ({
   className
 }) => {
   const { user } = useAuth();
+  const { toast } = useToast();
   const [amount, setAmount] = useState<string>('');
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -35,11 +36,13 @@ const SolanaPaymentForm: React.FC<SolanaPaymentFormProps> = ({
   const handlePayment = async () => {
     if (!user) {
       setError('You must be logged in to make a deposit');
+      toast.error('You must be logged in to make a deposit');
       return;
     }
 
     if (!amount || parseFloat(amount) <= 0) {
       setError('Please enter a valid amount');
+      toast.error('Please enter a valid amount');
       return;
     }
 
@@ -63,10 +66,12 @@ const SolanaPaymentForm: React.FC<SolanaPaymentFormProps> = ({
         }
       } else {
         setError(result.error || 'Payment failed');
+        toast.error('Payment failed');
       }
     } catch (err) {
       console.error('Payment error:', err);
       setError('An unexpected error occurred. Please try again.');
+      toast.error('An unexpected error occurred. Please try again.');
     } finally {
       setIsProcessing(false);
     }
