@@ -5,7 +5,9 @@ import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
 import { Separator } from '@/components/ui/separator';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Scroll, Crown, Coins, Trophy, Shield, Users, Laugh } from 'lucide-react';
+import { Scroll, Crown, Coins, Trophy, Shield, Users, Laugh, ExternalLink, AlertTriangle, ChevronsRight } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Link } from 'react-router-dom';
 
 const About: React.FC = () => {
   return (
@@ -44,8 +46,9 @@ const About: React.FC = () => {
               
               <div className="my-6 p-4 bg-black/30 border border-white/10 rounded-lg italic">
                 <p className="text-royal-gold">
-                  "SpendThrone: Where we've gamified capitalism to its logical extreme, and we're completely self-aware about it."
+                  "But the emperor has nothing on at all!" cried a little child at last... "But he has nothing on!" the whole town cried out at last. The Emperor shivered, for he suspected they were right. But he thought, "This procession has got to go on."
                 </p>
+                <p className="text-white/70 text-right mt-2">— Hans Christian Andersen, <span className="not-italic">The Emperor's New Clothes</span></p>
               </div>
               
               <p>
@@ -127,6 +130,66 @@ const About: React.FC = () => {
             </motion.div>
           </div>
           
+          <Card className="glass-morphism border-white/10 mb-12">
+            <CardHeader>
+              <CardTitle className="text-xl flex items-center">
+                <AlertTriangle className="h-5 w-5 text-yellow-500 mr-2" />
+                Breaking the Fourth Wall
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="mb-4">
+                Let's drop the medieval act for a moment and be completely straightforward: SpendThrone is satire. We're poking fun at the digital status economies that have emerged across social media, gaming, and web3.
+              </p>
+              
+              <div className="grid md:grid-cols-3 gap-4 my-6">
+                <div className="bg-black/30 p-4 rounded-lg border border-white/10">
+                  <h3 className="font-semibold flex items-center mb-2">
+                    <Trophy className="h-4 w-4 text-royal-gold mr-2" />
+                    MrBeast Economy
+                  </h3>
+                  <p className="text-sm text-white/70">
+                    Jimmy Donaldson spends millions on spectacles, turning money itself into content. Is that any different from what we're doing?
+                  </p>
+                </div>
+                
+                <div className="bg-black/30 p-4 rounded-lg border border-white/10">
+                  <h3 className="font-semibold flex items-center mb-2">
+                    <Trophy className="h-4 w-4 text-royal-gold mr-2" />
+                    Blue Check Economics
+                  </h3>
+                  <p className="text-sm text-white/70">
+                    People pay $8/month for a Twitter verification mark. At least our digital status symbols are honest.
+                  </p>
+                </div>
+                
+                <div className="bg-black/30 p-4 rounded-lg border border-white/10">
+                  <h3 className="font-semibold flex items-center mb-2">
+                    <Trophy className="h-4 w-4 text-royal-gold mr-2" />
+                    NFT Profile Pictures
+                  </h3>
+                  <p className="text-sm text-white/70">
+                    $200,000+ for cartoon apes used as profile pictures. Is our leaderboard really that different?
+                  </p>
+                </div>
+              </div>
+              
+              <p className="mb-4">
+                The uncomfortable truth is that all digital status symbols - from blue checks to rare skins to NFT profile pictures - are essentially meaningless. They derive value solely from our collective agreement to treat them as valuable.
+              </p>
+              
+              <p className="mb-4">
+                SpendThrone is both a participation in and critique of this phenomenon. We're selling nothing but status - exactly like everyone else. We're just more honest about it.
+              </p>
+              
+              <div className="p-4 bg-black/30 border border-royal-gold/20 rounded-lg italic mt-6">
+                <p className="text-royal-gold/90">
+                  "The Emperor's New Clothes" isn't just a fairy tale - it's the business model of the entire digital status economy. At SpendThrone, we're selling you invisible clothes too, but at least we admit they're invisible.
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+          
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
             <Card className="glass-morphism border-white/10">
               <CardHeader>
@@ -137,7 +200,7 @@ const About: React.FC = () => {
               </CardHeader>
               <CardContent>
                 <p className="text-white/80">
-                  Simple, transparent mechanics. Your position is determined solely by how much you've spent.
+                  Simple, transparent mechanics. Your position is determined solely by how much you've spent. No algorithms, no engagement metrics - just cold, hard cash.
                 </p>
               </CardContent>
             </Card>
@@ -160,12 +223,12 @@ const About: React.FC = () => {
               <CardHeader>
                 <CardTitle className="flex items-center text-lg">
                   <Shield className="mr-2 h-5 w-5 text-royal-gold" />
-                  <span>Noble Houses</span>
+                  <span>Join RORS</span>
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-white/80">
-                  Join one of three feudal factions and contribute to your house's standing in our perpetual power struggle.
+                  Join one of our Royal Orders (RORS) - Crimson, Emerald, or Sapphire - and contribute to your order's standing in our perpetual power struggle.
                 </p>
               </CardContent>
             </Card>
@@ -211,6 +274,15 @@ const About: React.FC = () => {
               <p className="italic text-white/70">
                 And if you're wondering if this is all an elaborate performance art piece or a genuinely profitable business model — it might just be both.
               </p>
+              
+              <div className="flex justify-center mt-8">
+                <Link to="/status-through-history">
+                  <Button variant="outline" className="border-royal-gold/50 text-royal-gold hover:bg-royal-gold/10">
+                    Explore Status Through History
+                    <ChevronsRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </Link>
+              </div>
             </CardContent>
           </Card>
         </motion.div>

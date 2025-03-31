@@ -1,196 +1,186 @@
 
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { User } from '@/types/user';
+import { Badge } from '@/components/ui/badge';
+import { motion } from 'framer-motion';
+import { Crown, ChevronsUp, ChevronsDown, Minus } from 'lucide-react';
+import { useAuth } from '@/hooks/useAuth';
+import { cn } from '@/lib/utils';
 import { formatCurrency } from '@/utils/formatters';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Crown, Award, DollarSign, ChevronDown, ChevronUp } from 'lucide-react';
 
-interface RealTimeLeaderboardProps {
-  limit?: number;
-}
+// Mock data for the leaderboard
+const mockLeaderboardData = [
+  { id: '1', username: 'LordMoneybags', rank: 1, previousRank: 1, totalSpent: 150000, team: 'red', tier: 'royal' },
+  { id: '2', username: 'StatusSeeker', rank: 2, previousRank: 3, totalSpent: 120000, team: 'blue', tier: 'premium' },
+  { id: '3', username: 'WealthFlaunter', rank: 3, previousRank: 2, totalSpent: 100000, team: 'green', tier: 'royal' },
+  { id: '4', username: 'DigitalNoble', rank: 4, previousRank: 4, totalSpent: 80000, team: 'red', tier: 'premium' },
+  { id: '5', username: 'VirtualEmperor', rank: 5, previousRank: 7, totalSpent: 65000, team: 'green', tier: 'premium' },
+  { id: '6', username: 'RoyalSpender', rank: 6, previousRank: 5, totalSpent: 50000, team: 'blue', tier: 'basic' },
+  { id: '7', username: 'EagerPeasant', rank: 7, previousRank: 6, totalSpent: 40000, team: 'red', tier: 'basic' },
+  { id: '8', username: 'AspiringNoble', rank: 8, previousRank: 9, totalSpent: 25000, team: 'green', tier: 'basic' },
+  { id: '9', username: 'HumbleFlexer', rank: 9, previousRank: 8, totalSpent: 15000, team: 'blue', tier: 'basic' },
+  { id: '10', username: 'WannabeLord', rank: 10, previousRank: 10, totalSpent: 10000, team: 'red', tier: 'basic' },
+];
 
-const RealTimeLeaderboard: React.FC<RealTimeLeaderboardProps> = ({ limit = 10 }) => {
-  const [leaderboardData, setLeaderboardData] = useState<User[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [expanded, setExpanded] = useState(false);
-  
-  // Simulated data loading - would be replaced with an actual API call
-  useEffect(() => {
-    const fetchLeaderboard = async () => {
-      setLoading(true);
-      
-      // Mock data
-      const mockUsers: User[] = Array.from({ length: 20 }).map((_, index) => {
-        const rank = index + 1;
-        const amountSpent = Math.floor(10000 / rank) * 1000 + Math.floor(Math.random() * 5000);
-        
-        return {
-          id: `user-${index}`,
-          username: `Noble${rank}`,
-          displayName: `Lord Spender ${rank}`,
-          rank,
-          amountSpent,
-          tier: rank <= 3 ? 'platinum' : rank <= 10 ? 'gold' : 'silver',
-          team: ['red', 'green', 'blue'][Math.floor(Math.random() * 3)] as 'red' | 'green' | 'blue',
-          walletBalance: Math.floor(Math.random() * 5000),
-          joinedAt: new Date(Date.now() - Math.floor(Math.random() * 10000000000)).toISOString(),
-          profileImage: `https://i.pravatar.cc/150?img=${index}`
-        };
-      });
-      
-      setLeaderboardData(mockUsers);
-      setLoading(false);
-    };
-    
-    fetchLeaderboard();
-  }, []);
-  
-  const displayedUsers = expanded ? leaderboardData : leaderboardData.slice(0, limit);
-  
-  if (loading) {
-    return (
-      <Card className="glass-morphism border-white/10">
-        <CardHeader>
-          <CardTitle className="flex items-center">
-            <Crown className="mr-2 h-5 w-5 text-royal-gold" />
-            Royal Leaderboard
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pt-0">
-          <div className="space-y-4">
-            {Array.from({ length: limit }).map((_, index) => (
-              <div key={index} className="flex items-center gap-4 p-3 bg-white/5 rounded-md animate-pulse">
-                <div className="w-8 h-8 bg-white/10 rounded-full"></div>
-                <div className="flex-1">
-                  <div className="h-4 bg-white/10 rounded w-1/3 mb-2"></div>
-                  <div className="h-3 bg-white/10 rounded w-1/4"></div>
-                </div>
-                <div className="h-4 bg-white/10 rounded w-16"></div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-    );
+const getTeamColor = (team: string) => {
+  switch (team) {
+    case 'red':
+      return 'bg-red-500/20 text-red-400 border-red-500/30';
+    case 'blue':
+      return 'bg-blue-500/20 text-blue-400 border-blue-500/30';
+    case 'green':
+      return 'bg-green-500/20 text-green-400 border-green-500/30';
+    default:
+      return 'bg-gray-500/20 text-gray-400 border-gray-500/30';
   }
+};
+
+const getTierColor = (tier: string) => {
+  switch (tier) {
+    case 'royal':
+      return 'bg-purple-500/20 text-purple-400 border-purple-500/30';
+    case 'premium':
+      return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30';
+    case 'basic':
+      return 'bg-gray-500/20 text-gray-400 border-gray-500/30';
+    default:
+      return 'bg-gray-500/20 text-gray-400 border-gray-500/30';
+  }
+};
+
+const getRankChangeIcon = (currentRank: number, previousRank: number) => {
+  if (currentRank < previousRank) {
+    return <ChevronsUp className="text-green-500 h-4 w-4" />;
+  } else if (currentRank > previousRank) {
+    return <ChevronsDown className="text-red-500 h-4 w-4" />;
+  } else {
+    return <Minus className="text-gray-500 h-4 w-4" />;
+  }
+};
+
+const RealTimeLeaderboard: React.FC<{ maxItems?: number }> = ({ maxItems = 10 }) => {
+  const { user } = useAuth();
+  const [leaderboardData, setLeaderboardData] = useState(mockLeaderboardData);
+  const [isUpdating, setIsUpdating] = useState(false);
   
-  return (
-    <Card className="glass-morphism border-white/10">
-      <CardHeader>
-        <CardTitle className="flex items-center">
-          <Crown className="mr-2 h-5 w-5 text-royal-gold" />
-          Royal Leaderboard
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="pt-0">
-        <div className="space-y-1">
-          <AnimatePresence>
-            {displayedUsers.map((user, index) => (
-              <motion.div
-                key={user.id}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, height: 0 }}
-                transition={{ duration: 0.3, delay: index * 0.05 }}
-                className={`flex items-center p-3 rounded-md ${
-                  index === 0 ? 'bg-gradient-to-r from-royal-gold/30 to-royal-gold/5' :
-                  index === 1 ? 'bg-gradient-to-r from-gray-300/30 to-gray-300/5' :
-                  index === 2 ? 'bg-gradient-to-r from-amber-700/30 to-amber-700/5' :
-                  'bg-white/5 hover:bg-white/10'
-                } transition-colors`}
-              >
-                <div className="w-8 text-center font-bold">
-                  {index === 0 ? (
-                    <Crown className="h-5 w-5 text-royal-gold mx-auto" />
-                  ) : (
-                    <span className={
-                      index === 1 ? 'text-gray-300' :
-                      index === 2 ? 'text-amber-700' :
-                      'text-white/70'
-                    }>
-                      {index + 1}
-                    </span>
-                  )}
-                </div>
-                
-                <div className="flex-shrink-0 mx-3">
-                  <div className={`w-10 h-10 rounded-full overflow-hidden border-2 ${
-                    index === 0 ? 'border-royal-gold' :
-                    index === 1 ? 'border-gray-300' :
-                    index === 2 ? 'border-amber-700' :
-                    'border-transparent'
-                  }`}>
-                    <img 
-                      src={user.profileImage || `https://i.pravatar.cc/150?img=${index}`} 
-                      alt={user.displayName || user.username} 
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                </div>
-                
-                <div className="flex-1">
-                  <div className="font-medium">
-                    {user.displayName || user.username}
-                    {index < 3 && (
-                      <span className="ml-2">
-                        {index === 0 ? (
-                          <Award className="h-4 w-4 text-royal-gold inline" />
-                        ) : index === 1 ? (
-                          <Award className="h-4 w-4 text-gray-300 inline" />
-                        ) : (
-                          <Award className="h-4 w-4 text-amber-700 inline" />
-                        )}
-                      </span>
-                    )}
-                  </div>
-                  <div className="text-sm text-white/60 flex items-center">
-                    <span className={`inline-block w-2 h-2 rounded-full mr-1 ${
-                      user.team === 'red' ? 'bg-red-500' :
-                      user.team === 'green' ? 'bg-green-500' :
-                      'bg-blue-500'
-                    }`}></span>
-                    <span className="capitalize">{user.team}</span>
-                    <span className="mx-1">•</span>
-                    <span className="capitalize">{user.tier}</span>
-                  </div>
-                </div>
-                
-                <div className="text-right">
-                  <div className="font-bold flex items-center justify-end">
-                    <DollarSign className="h-3 w-3 text-royal-gold" />
-                    <span>{formatCurrency(user.amountSpent).replace('$', '')}</span>
-                  </div>
-                  <div className="text-xs text-white/60">spent</div>
-                </div>
-              </motion.div>
-            ))}
-          </AnimatePresence>
-        </div>
+  // Mock data fetching
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIsUpdating(true);
+      setTimeout(() => {
+        // Simulate random fluctuations in the leaderboard
+        const updatedData = [...leaderboardData].map(entry => {
+          if (Math.random() > 0.7) {
+            return {
+              ...entry,
+              totalSpent: entry.totalSpent + Math.floor(Math.random() * 1000),
+            };
+          }
+          return entry;
+        });
         
-        {leaderboardData.length > limit && (
-          <div className="mt-4 text-center">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setExpanded(!expanded)}
-              className="text-white/70 hover:text-white"
-            >
-              {expanded ? (
-                <>
-                  <ChevronUp className="h-4 w-4 mr-1" />
-                  Show Less
-                </>
-              ) : (
-                <>
-                  <ChevronDown className="h-4 w-4 mr-1" />
-                  Show More
-                </>
-              )}
-            </Button>
+        // Sort by total spent
+        updatedData.sort((a, b) => b.totalSpent - a.totalSpent);
+        
+        // Update ranks
+        updatedData.forEach((entry, index) => {
+          entry.previousRank = entry.rank;
+          entry.rank = index + 1;
+        });
+        
+        setLeaderboardData(updatedData);
+        setIsUpdating(false);
+      }, 1000);
+    }, 10000); // Update every 10 seconds
+    
+    return () => clearInterval(interval);
+  }, [leaderboardData]);
+
+  return (
+    <Card className="glass-morphism border-white/10 shadow-lg">
+      <CardHeader className="border-b border-white/10 pb-4">
+        <div className="flex justify-between items-center">
+          <CardTitle className="flex items-center">
+            <Crown className="text-royal-gold h-5 w-5 mr-2" />
+            <span>Royal Leaderboard</span>
+          </CardTitle>
+          <div className="flex items-center">
+            <div className={cn(
+              "w-2 h-2 rounded-full mr-2",
+              isUpdating ? "bg-green-500 animate-pulse" : "bg-green-500"
+            )} />
+            <span className="text-sm text-white/60">
+              {isUpdating ? "Updating..." : "Live"}
+            </span>
           </div>
-        )}
+        </div>
+      </CardHeader>
+      <CardContent className="p-0">
+        <div className="overflow-hidden">
+          <table className="w-full">
+            <thead className="bg-black/30">
+              <tr>
+                <th className="px-4 py-2 text-left text-white/60 text-sm">Rank</th>
+                <th className="px-4 py-2 text-left text-white/60 text-sm">Noble</th>
+                <th className="px-4 py-2 text-left text-white/60 text-sm">Order</th>
+                <th className="px-4 py-2 text-left text-white/60 text-sm">Status</th>
+                <th className="px-4 py-2 text-right text-white/60 text-sm">Contribution</th>
+              </tr>
+            </thead>
+            <tbody>
+              {leaderboardData.slice(0, maxItems).map((entry, index) => (
+                <motion.tr 
+                  key={entry.id}
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.05 }}
+                  className={cn(
+                    "border-b border-white/5 hover:bg-white/5 transition-colors",
+                    user?.id === entry.id && "bg-royal-gold/10"
+                  )}
+                >
+                  <td className="px-4 py-3 flex items-center">
+                    <div className="flex items-center">
+                      <span className="font-medium">#{entry.rank}</span>
+                      <span className="ml-2">{getRankChangeIcon(entry.rank, entry.previousRank)}</span>
+                    </div>
+                  </td>
+                  <td className="px-4 py-3">
+                    <div className="flex items-center">
+                      {entry.rank <= 3 && (
+                        <Crown className={cn(
+                          "h-4 w-4 mr-2",
+                          entry.rank === 1 ? "text-yellow-400" : 
+                          entry.rank === 2 ? "text-gray-400" : 
+                          "text-amber-700"
+                        )} />
+                      )}
+                      <span className={user?.id === entry.id ? "font-semibold text-royal-gold" : ""}>{entry.username}</span>
+                    </div>
+                  </td>
+                  <td className="px-4 py-3">
+                    <Badge className={cn("border", getTeamColor(entry.team))}>
+                      {entry.team === 'red' ? 'Crimson' : entry.team === 'blue' ? 'Sapphire' : 'Emerald'}
+                    </Badge>
+                  </td>
+                  <td className="px-4 py-3">
+                    <Badge className={cn("border", getTierColor(entry.tier))}>
+                      {entry.tier}
+                    </Badge>
+                  </td>
+                  <td className="px-4 py-3 text-right font-mono">
+                    {formatCurrency(entry.totalSpent)}
+                  </td>
+                </motion.tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <div className="p-3 bg-black/20 flex justify-center border-t border-white/10">
+          <span className="text-sm text-white/60 italic">
+            Updated {new Date().toLocaleTimeString()}
+          </span>
+        </div>
       </CardContent>
     </Card>
   );

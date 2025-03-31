@@ -69,6 +69,9 @@ const Privacy: React.FC = () => {
                 <p className="mt-3 text-white/90">
                   And remember, while your rank on SpendThrone may be public (that's rather the point), your payment information is kept securely locked in the royal vault.
                 </p>
+                <p className="mt-3 italic text-royal-gold/80">
+                  The Emperor's New Clothes were very expensive indeed - but at least we're honest about selling you nothing but status.
+                </p>
               </div>
             </CardContent>
           </Card>

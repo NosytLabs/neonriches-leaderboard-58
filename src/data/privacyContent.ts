@@ -2,71 +2,62 @@
 export const privacyContent = {
   sections: [
     {
-      title: 'Privacy Policy',
+      title: 'Information We Collect',
       content: [
-        'Last Updated: March 29, 2025',
-        'This Privacy Policy describes how SpendThrone ("we", "our", or "us") collects, uses, and shares your personal information when you use our website and services.'
+        'While we joyfully accept your money, we also collect certain information:',
+        '• Account information (username, email, password)',
+        '• Payment details (processed through secure third parties)',
+        '• Usage data (how often you check your rank, because we know you do)',
+        '• Device information (so we can optimize your status-checking experience)',
+        'Rest assured, your embarrassing search history is safe with us... because we don\'t collect it.'
       ]
     },
     {
-      title: '1. Information We Collect',
+      title: 'How We Use Your Information',
       content: [
-        'We collect information you provide directly to us when you:',
-        '• Create an account',
-        '• Make a payment',
-        '• Customize your profile',
-        '• Participate in team competitions',
-        '• Use our mockery features',
-        '• Contact customer support',
-        'This information may include your name, email address, username, payment information, profile customization choices, and any other information you choose to provide.'
+        'We use your information to:',
+        '• Maintain your account and position on our leaderboard',
+        '• Process your payments (our favorite part)',
+        '• Communicate with you about your rank and new ways to spend money',
+        '• Improve our services (though some might argue the concept can\'t be improved)',
+        '• Comply with legal obligations (even satirical kingdoms have lawyers)',
+        'We do NOT use your information to:',
+        '• Judge your financial choices (that\'s what the leaderboard is for)',
+        '• Sell to data brokers (your spending habits are too embarrassing to share)'
       ]
     },
     {
-      title: '2. How We Use Your Information',
+      title: 'Data Security',
       content: [
-        'We use the information we collect to:',
-        '• Provide, maintain, and improve our services',
-        '• Process payments and maintain leaderboards',
-        '• Communicate with you about updates, security alerts, and support',
-        '• Personalize your experience',
-        '• Monitor and analyze usage patterns',
-        '• Prevent fraudulent transactions and monitor for other illegal activity',
-        '• Comply with legal obligations'
+        'We protect your data with:',
+        '• Industry-standard encryption (better than medieval ciphers)',
+        '• Regular security audits (our court jesters are also certified hackers)',
+        '• Access controls (not even our royal guards can see your payment details)',
+        '• Physical security measures (our servers are kept in an actual fortress)',
+        'In the unlikely event of a data breach, we will notify affected users faster than a town crier can shout "Hear ye! Hear ye!"'
       ]
     },
     {
-      title: '3. Sharing of Information',
+      title: 'Your Privacy Rights',
       content: [
-        'We may share your information in the following circumstances:',
-        '• With third-party service providers who perform services on our behalf',
-        '• To comply with legal obligations',
-        '• In connection with a merger, sale, or acquisition',
-        '• With your consent or at your direction',
-        'We do not sell your personal information to third parties for marketing purposes.'
+        'Depending on your location, you may have rights to:',
+        '• Access the personal data we hold about you',
+        '• Correct inaccurate information (though your rank is accurate—you really did spend that much)',
+        '• Delete your account (though your contributions to the realm are non-refundable)',
+        '• Restrict certain types of processing',
+        '• Obtain a copy of your data',
+        'To exercise these rights, contact our Privacy Knight at privacy@spendthrone.com.'
       ]
     },
     {
-      title: '4. Data Retention',
+      title: 'Cookies and Tracking',
       content: [
-        'We retain your information for as long as your account is active or as needed to provide you services. We may retain certain information even after you deactivate your account if retention is necessary to comply with our legal obligations, resolve disputes, or enforce our agreements.'
-      ]
-    },
-    {
-      title: '5. Your Rights',
-      content: [
-        'Depending on your location, you may have certain rights regarding your personal information, including:',
-        '• Accessing your information',
-        '• Correcting inaccuracies in your information',
-        '• Deleting your information',
-        '• Objecting to or restricting certain processing',
-        '• Data portability',
-        'To exercise these rights, please contact us at privacy@spendthrone.com.'
-      ]
-    },
-    {
-      title: '6. Contact Information',
-      content: [
-        'If you have any questions about this Privacy Policy, please contact us at privacy@spendthrone.com.'
+        'We use cookies to:',
+        '• Keep you logged in (so you can obsessively check your rank)',
+        '• Remember your preferences',
+        '• Track site usage (how many times you visit the leaderboard daily)',
+        '• Enable certain site functions',
+        'You can adjust your cookie settings in your browser, but some site features may not function properly without cookies. Much like society without status indicators, it just doesn\'t work as well.'
       ]
     }
   ]

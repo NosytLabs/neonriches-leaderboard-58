@@ -27,11 +27,11 @@ export {
   getMockeryActionIconColor
 };
 
-// Import types from mockery-types.ts
-import { MockeryAction, ExtendedMockeryAction, MockeryTier, ShameAction } from '@/types/mockery';
+// Import types from mockery types
+import { MockeryAction, MockeryTier, ShameAction } from '@/types/mockery';
 
 // Re-export types
-export type { MockeryAction, ExtendedMockeryAction, MockeryTier, ShameAction };
+export type { MockeryAction, MockeryTier, ShameAction };
 
 // Create a helper function to render mockery icons with React
 import React from 'react';

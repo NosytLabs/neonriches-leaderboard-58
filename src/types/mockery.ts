@@ -69,3 +69,20 @@ export interface MockedUser {
 }
 
 export type ShameAction = MockeryAction;
+
+// Add notification sound options
+export interface NotificationSoundOptions {
+  volume?: number;
+  playbackRate?: number;
+  loop?: boolean;
+  delay?: number;
+}
+
+// Add shame effect data
+export interface ShameEffectData {
+  username: string;
+  action: MockeryAction;
+  tier?: MockeryTier;
+  duration?: number;
+  isActive: boolean;
+}

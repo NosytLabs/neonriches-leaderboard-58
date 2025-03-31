@@ -3,7 +3,7 @@ import React from 'react';
 import Layout from '@/components/layout/Layout';
 import { termsContent } from '@/data/termsContent';
 import { motion } from 'framer-motion';
-import { Scroll, Shield, Swords, Scroll2 } from 'lucide-react';
+import { Scroll, Shield, Swords, Scroll as ScrollIcon } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 
@@ -38,7 +38,7 @@ const Terms: React.FC = () => {
                 <div key={index} className="mb-8">
                   <div className="flex items-center mb-4">
                     {index === 0 ? (
-                      <Scroll2 className="text-royal-gold mr-2 h-5 w-5" />
+                      <ScrollIcon className="text-royal-gold mr-2 h-5 w-5" />
                     ) : index === 1 ? (
                       <Shield className="text-royal-gold mr-2 h-5 w-5" />
                     ) : (
@@ -68,6 +68,9 @@ const Terms: React.FC = () => {
                 </p>
                 <p className="mt-3 text-white/90">
                   If that makes you uncomfortable, congratulations on having a healthy perspective! Perhaps consider donating to charity instead.
+                </p>
+                <p className="mt-3 italic text-royal-gold/80">
+                  "But the emperor has nothing on at all!" cried a little child at last... "But he has nothing on!" the whole town cried out at last. The Emperor shivered, for he suspected they were right. But he thought, "This procession has got to go on."
                 </p>
               </div>
             </CardContent>

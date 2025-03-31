@@ -8,9 +8,13 @@ import {
   CardContent, 
   CardDescription, 
   CardHeader, 
-  CardTitle 
+  CardTitle,
+  CardFooter
 } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Separator } from '@/components/ui/separator';
 import { 
   Scroll, 
   Crown, 
@@ -21,21 +25,33 @@ import {
   Coins, 
   LandPlot,
   Feather,
-  Wine
+  Wine,
+  Bitcoin,
+  Youtube,
+  Instagram,
+  Smartphone,
+  Rocket,
+  ExternalLink
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
-import { Badge } from '@/components/ui/badge';
 import HeroBackground from '@/components/ui/hero/HeroBackground';
+import { cn } from '@/lib/utils';
+
+type ArticleLink = {
+  title: string;
+  url: string;
+  source: string;
+  description: string;
+};
 
 const StatusThroughHistory: React.FC = () => {
   const { toast } = useToast();
-  const [activeEra, setActiveEra] = useState('medieval');
+  const [activeEra, setActiveEra] = useState('digital');
   
-  const showToast = (era: string) => {
+  const showToast = (era: string, fact: string) => {
     toast({
-      title: "Historical Insight",
-      description: `In the ${era} era, social status was often tied directly to wealth and display.`,
+      title: `${era.charAt(0).toUpperCase()}${era.slice(1)} Era Fact`,
+      description: fact,
       variant: "default",
     });
   };
@@ -44,7 +60,7 @@ const StatusThroughHistory: React.FC = () => {
     <Layout>
       <Helmet>
         <title>Status Through History | SpendThrone</title>
-        <meta name="description" content="Explore how social status has been bought and sold throughout human history, and how SpendThrone continues this grand tradition." />
+        <meta name="description" content="Explore how social status has been bought and sold throughout human history, from ancient displays of wealth to modern NFTs and social media influence." />
       </Helmet>
 
       <div className="relative min-h-screen">
@@ -61,12 +77,15 @@ const StatusThroughHistory: React.FC = () => {
               <Badge className="mb-4 bg-royal-purple/30 text-white border-royal-purple/50 py-1 px-3">Historical Perspective</Badge>
               <h1 className="text-4xl md:text-5xl font-bold royal-gradient mb-4 font-medieval">Status Through History</h1>
               <p className="text-xl text-white/80 max-w-3xl mx-auto">
-                A satirical exploration of how humans have always paid for social standing, from medieval indulgences to modern Instagram influencers.
+                A satirical exploration of how humans have always paid for social standing, from medieval indulgences to MrBeast's million-dollar spectacles.
+              </p>
+              <p className="mt-2 italic text-white/60 max-w-2xl mx-auto">
+                "Throughout history, people have always worn their wealth. Only the medium changes." — <span className="not-italic font-medium">The SpendThrone Royal Historian</span>
               </p>
             </div>
 
             <Tabs defaultValue={activeEra} onValueChange={setActiveEra} className="mb-12">
-              <div className="flex justify-center mb-8">
+              <div className="flex justify-center mb-8 overflow-x-auto pb-2">
                 <TabsList className="bg-black/30 border border-white/10">
                   <TabsTrigger value="ancient" className="data-[state=active]:bg-royal-purple/20">
                     <Shell className="mr-2 h-4 w-4" />
@@ -88,6 +107,10 @@ const StatusThroughHistory: React.FC = () => {
                     <Gem className="mr-2 h-4 w-4" />
                     Modern
                   </TabsTrigger>
+                  <TabsTrigger value="digital" className="data-[state=active]:bg-royal-purple/20">
+                    <Bitcoin className="mr-2 h-4 w-4" />
+                    Digital
+                  </TabsTrigger>
                 </TabsList>
               </div>
 
@@ -103,7 +126,21 @@ const StatusThroughHistory: React.FC = () => {
                     "The ultimate ancient flex? Sponsoring public buildings and games, as immortalized on stone tablets."
                   ]}
                   absurdFact="The Roman Emperor Caligula made his horse a senator. We've come a long way... or have we?"
-                  onLearnMore={() => showToast("ancient")}
+                  onLearnMore={() => showToast("ancient", "Wealthy Romans would sometimes hire professional mourners for their funerals - the more mourners, the more important you appeared to be.")}
+                  links={[
+                    {
+                      title: "Purple: The Color of Royalty",
+                      url: "https://www.smithsonianmag.com/smart-news/in-ancient-rome-purple-dye-was-made-from-snails-180980897/",
+                      source: "Smithsonian Magazine",
+                      description: "How a dye made from thousands of sea snails created the ancient world's most exclusive color"
+                    },
+                    {
+                      title: "Conspicuous Consumption in Ancient Rome",
+                      url: "https://www.worldhistory.org/article/999/roman-luxury/",
+                      source: "World History Encyclopedia",
+                      description: "The extreme displays of wealth that would make even modern billionaires blush"
+                    }
+                  ]}
                 />
               </TabsContent>
               
@@ -119,7 +156,21 @@ const StatusThroughHistory: React.FC = () => {
                     "Can't afford real nobility? No problem! Many medieval merchants simply purchased titles."
                   ]}
                   absurdFact="In 1517, the Catholic Church sold 'Premium Heaven Passes' (indulgences) that promised to reduce time in purgatory. SpendThrone's spiritual ancestor?"
-                  onLearnMore={() => showToast("medieval")}
+                  onLearnMore={() => showToast("medieval", "Medieval people would sometimes spend more on a single feast than they would on a year's worth of food, just to show off their wealth to guests.")}
+                  links={[
+                    {
+                      title: "The Selling of Indulgences",
+                      url: "https://www.christianitytoday.com/history/issues/issue-14/selling-of-indulgences.html",
+                      source: "Christianity Today",
+                      description: "How the medieval church monetized salvation in ways eerily similar to modern microtransactions"
+                    },
+                    {
+                      title: "Medieval Sumptuary Laws",
+                      url: "https://daily.jstor.org/sumptuary-laws-kept-people-in-their-place/",
+                      source: "JSTOR Daily",
+                      description: "Legal codes that regulated who could wear what, based on social status"
+                    }
+                  ]}
                 />
               </TabsContent>
               
@@ -135,7 +186,21 @@ const StatusThroughHistory: React.FC = () => {
                     "The ultimate renaissance flex? Having your family inserted into religious paintings."
                   ]}
                   absurdFact="The Medici family essentially bought their way into heaven by funding church art. Think of it as the original 'pay-to-win' spiritual strategy."
-                  onLearnMore={() => showToast("renaissance")}
+                  onLearnMore={() => showToast("renaissance", "Renaissance elites would commission portraits with objects symbolizing their wealth, like exotic fruits, that most viewers would never have seen in real life.")}
+                  links={[
+                    {
+                      title: "How the Medici Made and Lost Their Fortune",
+                      url: "https://www.history.com/news/medici-family-rise-and-fall",
+                      source: "History.com",
+                      description: "Banking, art patronage, and using cultural capital to wash away the sins of usury"
+                    },
+                    {
+                      title: "Status Symbols in Renaissance Art",
+                      url: "https://www.metmuseum.org/toah/hd/rpor/hd_rpor.htm",
+                      source: "Metropolitan Museum of Art",
+                      description: "How wealthy patrons used specific clothing, jewelry, and backgrounds to flex in their portraits"
+                    }
+                  ]}
                 />
               </TabsContent>
               
@@ -151,23 +216,166 @@ const StatusThroughHistory: React.FC = () => {
                     "The social season was designed primarily to show who could host the most lavish parties."
                   ]}
                   absurdFact="Cornelius Vanderbilt built a 250-room mansion just to show the old money families that his railroad fortune could buy better status. It was basically an 1890s version of a flex on social media."
-                  onLearnMore={() => showToast("industrial")}
+                  onLearnMore={() => showToast("industrial", "The term 'Keeping up with the Joneses' originated in this era, referring to the pressure to match your neighbors' conspicuous consumption.")}
+                  links={[
+                    {
+                      title: "The Theory of the Leisure Class",
+                      url: "https://www.gutenberg.org/files/833/833-h/833-h.htm",
+                      source: "Thorstein Veblen (1899)",
+                      description: "The original critique of conspicuous consumption that identified how wealth is performatively displayed"
+                    },
+                    {
+                      title: "America's Gilded Age",
+                      url: "https://www.pbs.org/wgbh/americanexperience/features/carnegie-gilded/",
+                      source: "PBS",
+                      description: "How industrial titans flaunted their wealth during America's most unequal era"
+                    }
+                  ]}
                 />
               </TabsContent>
               
               <TabsContent value="modern" className="focus-visible:outline-none focus-visible:ring-0">
                 <StatusEraCard 
-                  title="Digital Status Economy"
-                  description="When luxury watch Instagram posts and NFT profile pictures became the new coat of arms."
+                  title="Celebrity Status Economy"
+                  description="When luxury watches, private jets, and designer fashion became the new coat of arms."
                   icon={<Gem className="h-8 w-8 text-royal-gold" />}
                   facts={[
-                    "Social media 'verification' badges have become the digital equivalent of noble titles.",
-                    "NFT profile pictures sold for millions simply to signal wealth and exclusivity online.",
-                    "Influencers stage fake private jet photos to create the illusion of wealth and status.",
-                    "Streaming donation systems let viewers literally pay for attention and recognition."
+                    "Celebrities wear outfits worth hundreds of thousands for events that last hours.",
+                    "Luxury watches serve no practical purpose a $10 digital watch doesn't - they're pure status symbols.",
+                    "Private jets burn 40x more carbon per passenger than commercial flights, but signal ultimate status.",
+                    "Designer brands intentionally raise prices to maintain exclusivity, not because of production costs."
                   ]}
-                  absurdFact="People spent over $400 million on Bored Ape NFTs primarily to display as profile pictures, making them possibly the most expensive social media avatars in history."
-                  onLearnMore={() => showToast("modern")}
+                  absurdFact="Kim Kardashian once spent $10,000 on a golden toilet. At least on SpendThrone, we don't pretend your money is buying anything but status."
+                  onLearnMore={() => showToast("modern", "Some luxury car manufacturers artificially limit production to ensure their vehicles remain exclusive, even when they could produce more and make higher profits.")}
+                  links={[
+                    {
+                      title: "The Psychology of Luxury",
+                      url: "https://www.psychologytoday.com/us/blog/the-science-behind-behavior/201912/why-luxury-brands-are-psychology-gold-mine",
+                      source: "Psychology Today",
+                      description: "How luxury brands manipulate our desire for status and exclusivity"
+                    },
+                    {
+                      title: "The Kardashian Economy",
+                      url: "https://www.forbes.com/sites/maddieberg/2016/11/16/inside-the-business-of-kardashian-jenner-fame-and-fortune/",
+                      source: "Forbes",
+                      description: "How one family turned being famous for being famous into a multi-billion dollar empire"
+                    }
+                  ]}
+                />
+              </TabsContent>
+              
+              <TabsContent value="digital" className="focus-visible:outline-none focus-visible:ring-0">
+                <StatusEraCard 
+                  title="Digital Status Economy"
+                  description="When NFT profile pictures, crypto wallets, and follower counts became the new status currency."
+                  icon={<Bitcoin className="h-8 w-8 text-royal-gold" />}
+                  facts={[
+                    "People spent millions on NFTs primarily to display as profile pictures.",
+                    "MrBeast spent $3.5 million recreating Squid Game just for YouTube views and status.",
+                    "Social media verification badges have become the digital equivalent of noble titles.",
+                    "Influencers stage fake private jet photos for the illusion of wealth and status."
+                  ]}
+                  absurdFact="A JPEG of a rock sold for $1.3 million as an NFT. At least SpendThrone is honest about selling you nothing but digital status."
+                  onLearnMore={() => showToast("digital", "Some crypto investors bought expensive NFTs solely to use as profile pictures, spending more on a digital image than most people spend on a house.")}
+                  links={[
+                    {
+                      title: "MrBeast: Philanthropy or Performance?",
+                      url: "https://www.nytimes.com/2021/05/14/style/mrbeast-youtube.html",
+                      source: "New York Times",
+                      description: "How YouTube's biggest star turned spending money into content and status"
+                    },
+                    {
+                      title: "The $69 Million JPEG",
+                      url: "https://www.theverge.com/2021/3/11/22325054/beeple-christies-nft-sale-cost-everydays-69-million",
+                      source: "The Verge",
+                      description: "How Beeple's 'Everydays' NFT sold for $69 million despite being freely viewable by anyone"
+                    },
+                    {
+                      title: "The Economics of Clout",
+                      url: "https://www.theatlantic.com/technology/archive/2019/04/influencers-status-instagram-and-future-fame/587803/",
+                      source: "The Atlantic",
+                      description: "How social media has created an entire economy around digital status"
+                    },
+                    {
+                      title: "Inside the Fake Instagram Jets",
+                      url: "https://www.businessinsider.com/instagrammers-are-taking-fake-private-jet-photos-la-studio-2019-9",
+                      source: "Business Insider",
+                      description: "How influencers pay $64 to fake photos on private jets they don't actually own"
+                    }
+                  ]}
+                  extraContent={
+                    <div className="mt-8 bg-black/30 rounded-lg p-6 border border-royal-gold/20">
+                      <h3 className="text-xl font-semibold mb-4 text-royal-gold">The Emperor's New Digital Clothes</h3>
+                      
+                      <div className="space-y-4">
+                        <p>
+                          While we at SpendThrone satirize the concept of paying for digital status, we're merely holding up a mirror to what already happens across the digital landscape:
+                        </p>
+                        
+                        <div className="grid md:grid-cols-2 gap-4">
+                          <Card className="bg-black/30 border-white/10">
+                            <CardHeader className="pb-2">
+                              <CardTitle className="text-lg flex items-center">
+                                <Youtube className="h-5 w-5 text-red-500 mr-2" />
+                                MrBeast Economy
+                              </CardTitle>
+                            </CardHeader>
+                            <CardContent className="pt-0">
+                              <p className="text-sm text-white/70">
+                                Jimmy Donaldson (MrBeast) spends millions on elaborate stunts for views, turning money itself into content. His "$1,000,000 challenge" videos monetize spectacles of wealth in ways that would make medieval kings envious.
+                              </p>
+                            </CardContent>
+                          </Card>
+                          
+                          <Card className="bg-black/30 border-white/10">
+                            <CardHeader className="pb-2">
+                              <CardTitle className="text-lg flex items-center">
+                                <Instagram className="h-5 w-5 text-pink-500 mr-2" />
+                                Influencer Illusions
+                              </CardTitle>
+                            </CardHeader>
+                            <CardContent className="pt-0">
+                              <p className="text-sm text-white/70">
+                                From renting designer bags for photoshoots to staging fake private jet photos, influencers create elaborate illusions of wealth and status that exist only on their feeds.
+                              </p>
+                            </CardContent>
+                          </Card>
+                          
+                          <Card className="bg-black/30 border-white/10">
+                            <CardHeader className="pb-2">
+                              <CardTitle className="text-lg flex items-center">
+                                <Bitcoin className="h-5 w-5 text-yellow-500 mr-2" />
+                                Crypto Flexing
+                              </CardTitle>
+                            </CardHeader>
+                            <CardContent className="pt-0">
+                              <p className="text-sm text-white/70">
+                                "Web3" millionaires spent fortunes on cartoon apes and pixelated punks purely for profile picture status. The $24 million Cryptopunk #5822 exists solely as a status symbol.
+                              </p>
+                            </CardContent>
+                          </Card>
+                          
+                          <Card className="bg-black/30 border-white/10">
+                            <CardHeader className="pb-2">
+                              <CardTitle className="text-lg flex items-center">
+                                <Smartphone className="h-5 w-5 text-blue-500 mr-2" />
+                                Digital Microtransactions
+                              </CardTitle>
+                            </CardHeader>
+                            <CardContent className="pt-0">
+                              <p className="text-sm text-white/70">
+                                People spend billions on virtual items in games and apps - skins, emotes, and virtual currency that exist only as pixels and status. At least we're honest about it.
+                              </p>
+                            </CardContent>
+                          </Card>
+                        </div>
+                        
+                        <p className="italic text-white/60 mt-6">
+                          "At SpendThrone, we've merely removed the pretense that digital status isn't directly purchasable. We're not creating a new paradigm - we're just being refreshingly blunt about the existing one."
+                        </p>
+                      </div>
+                    </div>
+                  }
                 />
               </TabsContent>
             </Tabs>
@@ -189,73 +397,47 @@ const StatusThroughHistory: React.FC = () => {
                 <p className="mb-4">
                   SpendThrone merely continues this grand tradition, with a refreshingly honest approach. We've simply removed the pretense that your digital status isn't directly tied to your willingness to spend.
                 </p>
-                <p className="italic text-white/70">
-                  At least we're transparent about it. No algorithmic complications, no pretending it's about "engagement" or "quality content" — just cold, hard cash translated directly into digital prestige.
+                <p className="italic text-white/70 mb-6">
+                  At least we're transparent about it. No algorithmic complications, no pretending it's about "engagement" or "quality content" — just cold, hard cash translated directly to status.
                 </p>
+                
+                <div className="p-4 bg-black/20 rounded-lg border border-royal-gold/10">
+                  <h3 className="text-lg font-semibold text-royal-gold mb-2">The Emperor's New Clothes: Digital Edition</h3>
+                  <p className="text-white/80">
+                    "But the emperor has nothing on at all!" cried a little child. In Hans Christian Andersen's tale, the emperor paraded in invisible clothes that swindlers claimed only the worthy could see.
+                  </p>
+                  <p className="text-white/80 mt-2">
+                    Today's digital status economy is much the same - we're all admiring NFTs, verification badges, and follower counts as if they have inherent value, when they're merely collective illusions we've agreed to respect.
+                  </p>
+                  <p className="text-white/80 mt-2">
+                    SpendThrone is both a participation in and critique of this grand tradition. We're selling nothing but status - exactly like everyone else, just more honest about it.
+                  </p>
+                </div>
               </CardContent>
             </Card>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-              <Card className="glass-morphism border-white/10">
-                <CardHeader>
-                  <CardTitle className="flex items-center text-lg">
-                    <Medal className="mr-2 h-5 w-5 text-royal-gold" />
-                    <span>Social Status</span>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-white/80">
-                    Throughout history, humans have paid for recognition, admiration, and exclusivity. We're just more honest about the transaction.
-                  </p>
-                </CardContent>
-              </Card>
-              
-              <Card className="glass-morphism border-white/10">
-                <CardHeader>
-                  <CardTitle className="flex items-center text-lg">
-                    <LandPlot className="mr-2 h-5 w-5 text-royal-gold" />
-                    <span>Digital Estates</span>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-white/80">
-                    From medieval land holdings to digital profile enhancements, humans have always paid for territory others can see and envy.
-                  </p>
-                </CardContent>
-              </Card>
-              
-              <Card className="glass-morphism border-white/10">
-                <CardHeader>
-                  <CardTitle className="flex items-center text-lg">
-                    <Wine className="mr-2 h-5 w-5 text-royal-gold" />
-                    <span>Conspicuous Consumption</span>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-white/80">
-                    From royal feasts to Instagram lifestyle posts, spending visibly has always been the quickest path to social recognition.
-                  </p>
-                </CardContent>
-              </Card>
-            </div>
-
-            <div className="text-center">
-              <p className="text-xl text-white/80 mb-8 italic">
-                "SpendThrone didn't invent pay-to-win status — we just perfected it for the digital age."
-              </p>
-              <Button 
-                size="lg" 
-                className="bg-royal-purple hover:bg-royal-purple/90"
-                onClick={() => {
-                  toast({
-                    title: "Historical Truth",
-                    description: "Throughout human history, status has always been purchasable. We're just more honest about it.",
-                  });
-                }}
+            
+            <div className="mt-8 text-center space-y-4">
+              <motion.div
+                className="inline-block"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
               >
-                <Coins className="mr-2 h-5 w-5" />
-                Embrace Tradition, Join SpendThrone
-              </Button>
+                <Button 
+                  variant="default" 
+                  className="bg-royal-gold text-black hover:bg-royal-gold/90"
+                  onClick={() => {
+                    window.open('/leaderboard', '_self');
+                  }}
+                >
+                  <Rocket className="mr-2 h-4 w-4" />
+                  Join The Status Race
+                </Button>
+              </motion.div>
+              
+              <p className="text-white/60 text-sm italic">
+                Self-aware enough to critique status games, not self-aware enough to stop playing them? <br/>
+                Welcome to SpendThrone. At least we're honest about it.
+              </p>
             </div>
           </motion.div>
         </div>
@@ -264,6 +446,7 @@ const StatusThroughHistory: React.FC = () => {
   );
 };
 
+// StatusEraCard Component
 interface StatusEraCardProps {
   title: string;
   description: string;
@@ -271,6 +454,8 @@ interface StatusEraCardProps {
   facts: string[];
   absurdFact: string;
   onLearnMore: () => void;
+  links?: ArticleLink[];
+  extraContent?: React.ReactNode;
 }
 
 const StatusEraCard: React.FC<StatusEraCardProps> = ({ 
@@ -279,45 +464,82 @@ const StatusEraCard: React.FC<StatusEraCardProps> = ({
   icon, 
   facts, 
   absurdFact, 
-  onLearnMore 
+  onLearnMore,
+  links,
+  extraContent
 }) => {
   return (
     <motion.div
+      className="glass-morphism rounded-lg border border-royal-gold/20 overflow-hidden"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <Card className="glass-morphism border-white/10">
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              {icon}
-              <div className="ml-3">
-                <CardTitle>{title}</CardTitle>
-                <CardDescription>{description}</CardDescription>
-              </div>
-            </div>
-            <Button variant="outline" size="sm" onClick={onLearnMore}>Learn More</Button>
+      <div className="p-6">
+        <div className="flex items-center mb-4">
+          <div className="bg-royal-gold/20 p-3 rounded-full mr-4">
+            {icon}
           </div>
-        </CardHeader>
-        <CardContent>
-          <ul className="space-y-3 mb-6">
+          <div>
+            <h2 className="text-2xl font-bold">{title}</h2>
+            <p className="text-white/70">{description}</p>
+          </div>
+        </div>
+        
+        <div className="space-y-4 mt-6">
+          <h3 className="text-lg font-medium text-royal-gold">Historical Status Markers</h3>
+          <ul className="space-y-2">
             {facts.map((fact, index) => (
-              <li key={index} className="flex">
-                <span className="text-royal-gold mr-2">•</span>
+              <li key={index} className="flex items-start">
+                <span className="text-royal-gold mr-2 mt-1">•</span>
                 <span className="text-white/80">{fact}</span>
               </li>
             ))}
           </ul>
-          
-          <div className="p-4 bg-black/30 rounded-lg border border-royal-gold/20">
-            <p className="text-white/90 italic">
-              <span className="text-royal-gold font-semibold">Absurd Historical Fact: </span>
-              {absurdFact}
-            </p>
-          </div>
-        </CardContent>
-      </Card>
+        </div>
+        
+        <div className="bg-black/30 p-4 rounded-md my-6">
+          <p className="italic text-royal-gold/90 font-medium">{absurdFact}</p>
+        </div>
+        
+        {links && links.length > 0 && (
+          <>
+            <h3 className="text-lg font-medium text-royal-gold mt-6 mb-3">Historical Deep Dives</h3>
+            <div className="space-y-3">
+              {links.map((link, index) => (
+                <Card key={index} className="bg-black/20 border-white/10">
+                  <CardContent className="p-4">
+                    <h4 className="font-medium flex items-center justify-between">
+                      <span>{link.title}</span>
+                      <a 
+                        href={link.url} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="text-royal-gold/80 hover:text-royal-gold text-sm inline-flex items-center"
+                      >
+                        <span className="mr-1">{link.source}</span>
+                        <ExternalLink size={12} />
+                      </a>
+                    </h4>
+                    <p className="text-sm text-white/70 mt-1">{link.description}</p>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </>
+        )}
+        
+        {extraContent}
+      </div>
+      
+      <CardFooter className="bg-black/40 border-t border-white/10 p-4 flex justify-between items-center">
+        <div className="text-sm text-white/60">
+          <span>Status markers change, human nature doesn't</span>
+        </div>
+        <Button variant="ghost" onClick={onLearnMore} className="hover:bg-white/10">
+          Learn More
+        </Button>
+      </CardFooter>
     </motion.div>
   );
 };
