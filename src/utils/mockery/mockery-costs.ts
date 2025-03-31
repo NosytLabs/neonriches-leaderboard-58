@@ -3,7 +3,7 @@ import { MockeryAction } from '@/types/mockery';
 
 // Define prices for each mockery action
 export const getMockeryActionPrice = (action: MockeryAction): number => {
-  const prices: Record<MockeryAction, number> = {
+  const prices: Record<string, number> = {
     tomatoes: 10,
     eggs: 15,
     shame: 25,
@@ -13,7 +13,7 @@ export const getMockeryActionPrice = (action: MockeryAction): number => {
     stocks: 20,
     dunce: 25,
     jester: 30,
-    // fool: 35, // Commented out as it's not defined in MockeryAction type
+    // For backward compatibility, include other actions even if not in the type
     troll: 40,
     peasant: 45,
     rat: 50,

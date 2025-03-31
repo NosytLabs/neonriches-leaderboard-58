@@ -1,20 +1,41 @@
 
-import { ComponentPropsWithoutRef } from 'react';
+import { SVGProps } from 'react';
 
-export type IconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl';
-export type IconColor = 'default' | 'primary' | 'secondary' | 'destructive' | 'muted' | 'accent' | 'royal' | 'gold' | 'crimson' | string;
-export type IconStyle = 'default' | 'medieval' | 'outline' | 'solid' | 'duotone';
+export type MedievalIconName = 
+  | 'crown' 
+  | 'scroll' 
+  | 'sword' 
+  | 'shield' 
+  | 'castle' 
+  | 'goblet' 
+  | 'dragon' 
+  | 'treasure';
 
-export interface IconProps extends ComponentPropsWithoutRef<'svg'> {
-  name?: string;
-  type?: string;
-  size?: IconSize | number;
-  color?: IconColor;
+export type MedievalIconColor = 'gold' | 'silver' | 'royal' | 'crimson' | 'primary' | 'secondary';
+
+export type MedievalIconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+
+export interface IconProps extends Omit<SVGProps<SVGSVGElement>, 'ref'> {
+  name: MedievalIconName;
+  color?: MedievalIconColor;
+  size?: MedievalIconSize;
+  animated?: boolean;
   className?: string;
-  style?: IconStyle;
-  animate?: boolean;
 }
 
-export interface MedievalIconProps extends IconProps {
-  medieval?: boolean;
-}
+export const iconSizeMap: Record<MedievalIconSize, string> = {
+  'xs': 'w-4 h-4',
+  'sm': 'w-5 h-5',
+  'md': 'w-6 h-6',
+  'lg': 'w-8 h-8',
+  'xl': 'w-10 h-10'
+};
+
+export const iconColorMap: Record<MedievalIconColor, string> = {
+  'gold': 'text-royal-gold',
+  'silver': 'text-gray-300',
+  'royal': 'text-royal-purple',
+  'crimson': 'text-royal-crimson',
+  'primary': 'text-primary',
+  'secondary': 'text-secondary'
+};

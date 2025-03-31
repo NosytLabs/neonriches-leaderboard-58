@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Scroll, DollarSign, Sparkles } from 'lucide-react';
 import { topUsers } from './data';
-import { useShameEffect } from './hooks/useShameEffect';
+import useShameEffect from './hooks/useShameEffect';
 import { MockeryAction } from '@/types/mockery';
 import ShameUserCard from './components/ShameUserCard';
 import { TooltipProvider } from '@/components/ui/tooltip';
@@ -9,13 +9,13 @@ import RankingDisclaimer from '@/components/shared/RankingDisclaimer';
 import RoyalDivider from '@/components/ui/royal-divider';
 import { Dialog } from '@/components/ui/dialog';
 import ShameModal from './components/ShameModal';
-import useNotificationSounds from '@/hooks/use-notification-sounds';
+import useNotificationSounds from '@/hooks/useNotificationSounds';
 import { 
   hasWeeklyDiscount, 
   getWeeklyDiscountedAction, 
   getShameActionPrice, 
   getDiscountedShamePrice 
-} from './utils/shameUtils';
+} from '../events/utils/shameUtils';
 import MedievalIcon from '@/components/ui/medieval-icon';
 
 const formatUserForShameCard = (user: any) => ({
@@ -68,12 +68,12 @@ const PublicShamingFestival = () => {
   
   const discountedAction = getWeeklyDiscountedAction();
   
-  const handleShameUser = (userId: number, type: MockeryAction, amount: number) => {
+  const handleShameUser = (userId: number, action: MockeryAction) => {
     const user = topUsers.find(u => u.id === userId);
     if (!user) return false;
     
     setSelectedUser(user);
-    setSelectedAction(type);
+    setSelectedAction(action);
     setShowModal(true);
     
     playSound('notification', { volume: 0.3 });

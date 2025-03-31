@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { format } from 'date-fns';
 import { UserProfile } from '@/types/user';
 import { Award, CheckCircle, XCircle, HelpCircle, Medal, Download } from 'lucide-react';
-import useNotificationSounds from '@/hooks/use-notification-sounds';
+import useNotificationSounds from '@/hooks/useNotificationSounds';
 import RoyalButton from '@/components/ui/royal-button';
 
 export interface CertificateProps {
@@ -30,7 +30,7 @@ const CertificateOfNobility: React.FC<CertificateProps> = ({
   
   const handleVerify = () => {
     setIsVerifying(true);
-    playSound('trumpets');
+    playSound('notification');
     
     // Simulate verification process
     setTimeout(() => {

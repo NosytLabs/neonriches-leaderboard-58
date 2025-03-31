@@ -1,31 +1,31 @@
 
 // Re-export shame functions from the mockery utilities
 import { 
+  hasWeeklyDiscount,
+  getWeeklyDiscountedAction,
+  getDiscountedShamePrice,
+  getShameActionPrice,
+  getShameActionMessage,
   getMockeryActionTitle as getMockeryName,
   getMockeryActionDescription as getMockeryDescription,
   getMockeryActionPrice as getMockeryCost,
   getMockeryTier,
   getMockeryTierColorClass,
   getMockeryActionIcon,
-  getActiveMockeryClass,
+  getActiveMockeryClass
+} from './mockery';
+
+export { 
   hasWeeklyDiscount,
   getWeeklyDiscountedAction,
   getDiscountedShamePrice,
   getShameActionPrice,
-  getShameActionMessage
-} from './mockery';
-
-export { 
+  getShameActionMessage,
   getMockeryName,
   getMockeryDescription,
   getMockeryCost,
   getMockeryTier,
   getMockeryTierColorClass,
   getMockeryActionIcon,
-  getActiveMockeryClass,
-  hasWeeklyDiscount,
-  getWeeklyDiscountedAction,
-  getDiscountedShamePrice,
-  getShameActionPrice,
-  getShameActionMessage
+  getActiveMockeryClass
 };

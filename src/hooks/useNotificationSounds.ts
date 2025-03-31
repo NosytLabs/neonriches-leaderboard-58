@@ -11,13 +11,16 @@ export interface UseNotificationSoundsReturn {
  * Hook for playing notification sounds
  */
 export function useNotificationSounds(): UseNotificationSoundsReturn {
-  const { playSound } = useSounds();
+  const { playSound: playSoundBase } = useSounds();
   
-  const wrappedPlaySound = useCallback((sound: SoundType, options?: NotificationSoundOptions) => {
-    playSound(sound, options);
-  }, [playSound]);
+  const playSound = useCallback((sound: SoundType, options?: NotificationSoundOptions) => {
+    playSoundBase(sound, {
+      volume: options?.volume,
+      interrupt: true,
+    });
+  }, [playSoundBase]);
   
-  return { playSound: wrappedPlaySound };
+  return { playSound };
 }
 
 export default useNotificationSounds;

@@ -1,11 +1,25 @@
 
 import React from 'react';
-import { Dialog, DialogContent, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
+import { 
+  DialogContent, 
+  DialogHeader, 
+  DialogTitle, 
+  DialogDescription, 
+  DialogFooter 
+} from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { ShameAction } from '@/types/mockery';
-import { getShameActionIcon, getShameActionPrice, getShameActionTitle, getShameActionDescription } from '@/components/events/utils/shameUtils';
-import { User } from '@/types/user';
+import { MockeryAction } from '@/types/mockery';
+import { UserProfile } from '@/types/user';
+import { Coins } from 'lucide-react';
+import { formatCurrency } from '@/utils/formatters';
+import { 
+  getShameActionIcon, 
+  getShameActionTitle, 
+  getShameActionDescription,
+  getShameActionPrice,
+  getDiscountedShamePrice
+} from '@/components/events/utils/shameUtils';
 
 interface ShameModalProps {
   targetUser: {
@@ -18,7 +32,7 @@ interface ShameModalProps {
     tier?: string;
     spendStreak?: number;
   };
-  shameType: ShameAction;
+  shameType: MockeryAction;
   onConfirm: (userId: string) => void;
   onCancel: () => void;
   hasDiscount?: boolean;
@@ -31,78 +45,77 @@ const ShameModal: React.FC<ShameModalProps> = ({
   onCancel,
   hasDiscount = false
 }) => {
-  // Get the action icon, title, description and price
-  const actionIcon = getShameActionIcon(shameType);
-  const actionTitle = getShameActionTitle(shameType);
-  const actionDescription = getShameActionDescription(shameType).replace('the user', targetUser.username);
-  const basePrice = getShameActionPrice(shameType);
-  const price = hasDiscount ? basePrice * 0.5 : basePrice;
-
-  const handleConfirm = () => {
-    onConfirm(targetUser.userId);
-  };
-
+  const ShameIcon = getShameActionIcon(shameType);
+  const shameTitle = getShameActionTitle(shameType);
+  const shameDescription = getShameActionDescription(shameType);
+  
+  const regularPrice = getShameActionPrice(shameType);
+  const discountedPrice = hasDiscount ? getDiscountedShamePrice(shameType) : regularPrice;
+  const discountPercentage = hasDiscount 
+    ? Math.round((1 - discountedPrice / regularPrice) * 100) 
+    : 0;
+  
   return (
-    <DialogContent className="glass-morphism border-white/20 max-w-md mx-auto">
-      <DialogTitle className="text-center flex flex-col items-center gap-2">
-        <span className="text-3xl">{actionIcon}</span>
-        <span>{actionTitle}</span>
-      </DialogTitle>
+    <DialogContent className="glass-morphism border-white/10 max-w-md">
+      <DialogHeader>
+        <DialogTitle className="flex items-center gap-2">
+          {ShameIcon && <ShameIcon size={18} className="text-royal-crimson" />}
+          {shameTitle}
+        </DialogTitle>
+        <DialogDescription>
+          {shameDescription}
+        </DialogDescription>
+      </DialogHeader>
       
-      <div className="my-4 text-center">
-        <Avatar className="h-16 w-16 mx-auto mb-2 border-2 border-white/20">
+      <div className="p-4 bg-black/20 rounded-lg flex items-center gap-4">
+        <Avatar className="h-14 w-14 border-2 border-white/20">
           <AvatarImage src={targetUser.profileImage} alt={targetUser.username} />
-          <AvatarFallback className="bg-gradient-to-br from-gray-700 to-gray-900">
-            {targetUser.username.substring(0, 2).toUpperCase()}
-          </AvatarFallback>
+          <AvatarFallback>{targetUser.username.charAt(0).toUpperCase()}</AvatarFallback>
         </Avatar>
         
-        <h3 className="font-medium">@{targetUser.username}</h3>
+        <div>
+          <h3 className="font-semibold">{targetUser.username}</h3>
+          {targetUser.rank && <p className="text-sm text-white/70">Rank #{targetUser.rank}</p>}
+        </div>
+      </div>
+      
+      <div className="space-y-2">
+        <p className="text-sm text-white/80">
+          This mockery will be visible to everyone visiting the leaderboard for 24 hours.
+        </p>
         
-        {targetUser.rank && (
-          <p className="text-sm text-white/60">Rank #{targetUser.rank}</p>
-        )}
-      </div>
-      
-      <DialogDescription className="text-center">
-        {actionDescription}
-        {targetUser.username !== 'the user' && (
-          <div className="mt-2 text-sm text-white/80">
-            This effect is purely cosmetic and will last for 24 hours.
+        <div className="flex justify-between items-center p-2 bg-black/20 rounded-lg">
+          <span className="text-sm">Cost</span>
+          <div className="flex items-center">
+            <Coins className="h-4 w-4 mr-1 text-royal-gold" />
+            {hasDiscount ? (
+              <div className="flex items-center">
+                <span className="line-through text-white/50 mr-1">${regularPrice.toFixed(2)}</span>
+                <span className="text-royal-gold font-bold">${discountedPrice.toFixed(2)}</span>
+                <span className="ml-1 text-xs px-1.5 py-0.5 bg-royal-gold/20 text-royal-gold rounded-full">
+                  {discountPercentage}% OFF
+                </span>
+              </div>
+            ) : (
+              <span className="font-bold">${regularPrice.toFixed(2)}</span>
+            )}
           </div>
-        )}
-      </DialogDescription>
-      
-      <div className="my-4 px-4 py-3 rounded-lg bg-black/20 text-center">
-        <div className="font-semibold">
-          {hasDiscount ? (
-            <div className="flex items-center justify-center gap-2">
-              <span className="line-through text-white/50">${basePrice.toFixed(2)}</span>
-              <span className="text-royal-gold">${price.toFixed(2)}</span>
-              <span className="text-xs px-2 py-0.5 bg-royal-gold/20 text-royal-gold rounded">50% OFF</span>
-            </div>
-          ) : (
-            <span>${price.toFixed(2)}</span>
-          )}
         </div>
-        <div className="text-xs text-white/60 mt-1">
-          This amount will be deducted from your wallet balance.
-        </div>
+        
+        <p className="text-xs text-white/50 italic">
+          All mockery effects are purely cosmetic and do not affect a user's actual rank or standing.
+        </p>
       </div>
       
-      <DialogFooter className="flex flex-col sm:flex-row gap-2">
-        <Button
-          variant="outline"
-          className="w-full sm:w-auto glass-morphism border-white/10 hover:bg-white/5"
-          onClick={onCancel}
-        >
+      <DialogFooter className="gap-2 sm:gap-0">
+        <Button variant="outline" onClick={onCancel}>
           Cancel
         </Button>
-        <Button
-          className="w-full sm:w-auto bg-royal-crimson hover:bg-royal-crimson/90"
-          onClick={handleConfirm}
+        <Button 
+          className="bg-royal-crimson hover:bg-royal-crimson/90"
+          onClick={() => onConfirm(targetUser.userId)}
         >
-          Confirm {actionTitle}
+          Confirm Mockery
         </Button>
       </DialogFooter>
     </DialogContent>

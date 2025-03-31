@@ -1,105 +1,99 @@
 
-/**
- * Types for the mockery and shame system
- */
+import { LucideIcon } from 'lucide-react';
+import { User, UserProfile } from './user';
+import { NotificationSoundOptions } from './sound-types';
+
+export type MockeryTier = 'basic' | 'premium' | 'royal' | 'silver' | 'epic' | 'rare';
 
 export type MockeryAction = 
-  | 'tomatoes' 
-  | 'eggs' 
-  | 'stocks' 
-  | 'dunce' 
-  | 'jester' 
-  | 'crown' 
-  | 'taunt' 
+  | 'tomatoes'
+  | 'eggs'
   | 'shame'
-  | 'putridEggs'
-  | 'silence'
-  | 'courtJester'
-  | 'smokeBomb'
-  | 'protection'
-  | 'jest'
-  | 'glitterBomb'
-  | 'royalPie'
-  | 'jokeCrown'
-  | 'memeFrame'
-  | 'roast'
-  | 'ridicule'
-  | 'humiliate'
-  | 'expose'
-  | 'mock'
-  | 'guillotine'
   | 'dungeons'
-  | 'removal'
-  | 'challenge'
+  | 'immune'
+  | 'crown'
+  | 'stocks'
+  | 'dunce'
+  | 'jester'
+  | 'troll'
+  | 'peasant'
+  | 'rat'
+  | 'ghost'
+  | 'skeleton'
+  | 'zombie'
+  | 'witch'
+  | 'monster'
+  | 'demon'
+  | 'dragon'
+  | 'king'
+  | 'queen'
+  | 'knight'
+  | 'bishop'
+  | 'rook'
+  | 'pawn'
   | 'target'
-  | 'defeat'
-  | 'immune';
+  | 'challenge';
 
-// Union of tiers for mockery actions
-export type MockeryTier = 'basic' | 'premium' | 'royal' | 'legendary' | 'common' | 'uncommon' | 'rare' | 'epic' | 'bronze';
+// Alias for backward compatibility
+export type MockeryActionType = MockeryAction;
+
+export type MockeryDuration = 'short' | 'medium' | 'long' | 'permanent';
 
 export interface MockeryEvent {
   id: string;
   targetId: string;
-  targetUsername: string;
-  action: MockeryAction;
+  targetName?: string;
   appliedBy: string;
-  appliedAt: string;
+  action: MockeryAction;
+  timestamp: string;
   expiresAt: string;
-  tier: MockeryTier;
   isActive: boolean;
-  sourceId?: string;
-  sourceName?: string;
+  cost: number;
 }
 
 export interface MockedUser {
   id: string;
-  userId?: string;
   username: string;
-  displayName: string;
-  profileImage: string;
-  mockedReason?: string;
-  mockedTimestamp: string;
+  mockedReason: string;
   mockedBy: string;
-  mockedTier: string;
-  mockeryCount: number;
-  lastMocked?: string;
-  team: string;
-  tier: string;
+  mockedUntil: string;
 }
 
-export interface MockeryProtection {
-  id: string;
-  userId: string;
-  startDate: string;
-  endDate: string;
-  type: 'basic' | 'premium' | 'royal';
-  isActive: boolean;
-}
+// Alias type for backward compatibility
+export type MockUser = MockedUser;
 
-export interface MockeryStats {
-  totalMockeries: number;
-  mostPopularAction: MockeryAction;
-  mostMockedUser: string;
-  mostActiveUser: string;
-  protectedUsers: number;
-  totalPokes?: number;
-  mostPoked?: string;
-  prizePool?: number;
-  totalPrizes?: number;
-  totalSpent?: number;
-  usersParticipating?: number;
-  participantCount?: number;
-  participantsCount?: number;
-}
-
-export interface MockeryActionInfo {
-  icon: string;
-  title: string;
+export interface ShameAction {
+  type: MockeryAction;
+  name: string;
   description: string;
-  tier: MockeryTier;
+  icon: LucideIcon;
   price: number;
-  duration: number;
+  tier: MockeryTier;
 }
 
-export type ShameAction = MockeryAction;
+export interface UseMockery {
+  applyMockery: (targetId: string, targetName: string, action: MockeryAction) => Promise<boolean>;
+  removeMockery: (targetId: string) => Promise<boolean>;
+  getActiveMockery: (targetId: string) => MockeryEvent | null;
+  isUserMocked: (targetId: string) => boolean;
+  mockedUsers: MockedUser[];
+  mockedCount: number;
+  isLoading: boolean;
+  error: string | null;
+}
+
+export interface UseShameEffectReturn {
+  handleShame: (userId: number, username: string, type: MockeryAction, amount?: number) => boolean;
+  getShameCount: (userId: number) => number;
+  getActiveMockery: (userId: number) => {
+    type: MockeryAction;
+    timestamp: string;
+  } | null;
+  shameEffects: Record<number, {
+    type: MockeryAction;
+    timestamp: string;
+  }>;
+  shameCooldown: Record<number, boolean>;
+  shameCount: Record<number, number>;
+  isMocking: boolean;
+}

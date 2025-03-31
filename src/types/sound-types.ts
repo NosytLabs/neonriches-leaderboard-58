@@ -22,7 +22,11 @@ export type SoundType =
   | 'transaction'
   | 'upgrade'
   | 'wishingwell'
-  | 'parchment';
+  | 'parchment'
+  | 'click'
+  | 'trumpets'
+  | 'coinDrop'
+  | 'royal';
 
 export interface NotificationSoundOptions {
   volume?: number;
@@ -31,10 +35,14 @@ export interface NotificationSoundOptions {
 }
 
 export interface AudioLoaderReturn {
-  audio: HTMLAudioElement | null;
-  isLoading: boolean;
-  error: Error | null;
-  load: () => void;
+  audio: Record<SoundType, HTMLAudioElement>;
+  volume: number;
+  setVolume: (volume: number) => void;
+  isEnabled: boolean;
+  setEnabled: (enabled: boolean) => void;
+  isPremium: boolean;
+  setPremium: (premium: boolean) => void;
+  isLoaded: boolean;
 }
 
 export interface UseSoundReturn {
@@ -42,4 +50,16 @@ export interface UseSoundReturn {
   stop: () => void;
   isPlaying: boolean;
   duration: number;
+}
+
+export interface UseSoundOptions {
+  volume?: number;
+  interrupt?: boolean;
+}
+
+export interface PremiumSoundPackDetails {
+  name: string;
+  description: string;
+  price: number;
+  sounds: SoundType[];
 }
