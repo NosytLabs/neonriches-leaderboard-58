@@ -2,152 +2,80 @@
 import { UserTier } from '@/types/user-consolidated';
 
 /**
- * Get the icon name for a user tier
+ * Get the CSS color class for a user tier
+ * @param tier The user tier
+ * @returns CSS color class
  */
-export const getTierIcon = (tier: UserTier): string => {
-  switch (tier) {
-    case 'free':
-      return 'User';
-    case 'basic':
-      return 'Badge';
-    case 'premium':
-      return 'Crown';
-    case 'royal':
-      return 'Crown';
-    case 'legendary':
-      return 'Award';
-    case 'founder':
-      return 'Star';
-    case 'noble':
-      return 'Shield';
-    case 'knight':
-      return 'Shield';
-    case 'baron':
-      return 'Crown';
-    case 'viscount':
-      return 'Crown';
-    case 'earl':
-      return 'Crown';
-    case 'duke':
-      return 'Crown';
-    case 'prince':
-      return 'Crown';
-    case 'king':
-      return 'Crown';
-    case 'emperor':
-      return 'Globe';
-    case 'whale':
-      return 'TrendingUp';
-    default:
-      return 'User';
-  }
-};
-
-/**
- * Get tier color class
- */
-export const getTierColorClass = (tier: UserTier): string => {
-  switch (tier) {
-    case 'free':
-      return 'text-gray-400';
-    case 'basic':
-      return 'text-blue-400';
-    case 'premium':
-      return 'text-purple-400';
-    case 'royal':
-      return 'text-royal-gold';
-    case 'legendary':
-      return 'text-amber-500';
-    case 'founder':
-      return 'text-green-500';
-    case 'noble':
-      return 'text-indigo-400';
-    case 'knight':
-      return 'text-cyan-400';
-    case 'baron':
-      return 'text-pink-400';
-    case 'viscount':
-      return 'text-rose-400';
-    case 'earl':
-      return 'text-amber-400';
-    case 'duke':
-      return 'text-emerald-400';
-    case 'prince':
-      return 'text-violet-400';
-    case 'king':
-      return 'text-yellow-500';
-    case 'emperor':
-      return 'text-royal-gold';
-    case 'whale':
-      return 'text-blue-500';
-    default:
-      return 'text-gray-400';
-  }
-};
-
-/**
- * Get next tier for a user
- */
-export const getNextTier = (currentTier: UserTier): UserTier | null => {
-  const tierProgression: UserTier[] = [
-    'free',
-    'basic',
-    'premium',
-    'royal',
-    'legendary',
-    'noble',
-    'knight',
-    'baron',
-    'viscount',
-    'earl',
-    'duke',
-    'prince',
-    'king',
-    'emperor'
-  ];
-  
-  const currentIndex = tierProgression.indexOf(currentTier);
-  
-  if (currentIndex === -1 || currentIndex === tierProgression.length - 1) {
-    return null;
-  }
-  
-  return tierProgression[currentIndex + 1];
-};
-
-/**
- * Get the cost to upgrade to the next tier
- */
-export const getUpgradeCost = (currentTier: UserTier): number => {
-  const tierCosts: Record<UserTier, number> = {
-    'free': 9.99,
-    'basic': 19.99,
-    'premium': 49.99,
-    'royal': 99.99,
-    'legendary': 199.99,
-    'founder': 0,
-    'noble': 299.99,
-    'knight': 499.99,
-    'baron': 799.99,
-    'viscount': 1299.99,
-    'earl': 1999.99,
-    'duke': 2999.99,
-    'prince': 4999.99,
-    'king': 9999.99,
-    'emperor': 0,
-    'whale': 0
+export function getTierColor(tier: UserTier): string {
+  const tierColors: Record<string, string> = {
+    'free': 'text-gray-400',
+    'basic': 'text-green-500',
+    'premium': 'text-purple-500',
+    'royal': 'text-royal-gold',
+    'legendary': 'text-orange-500',
+    'founder': 'text-yellow-300',
+    'noble': 'text-indigo-400',
+    'knight': 'text-blue-400',
+    'baron': 'text-emerald-400',
+    'viscount': 'text-cyan-400',
+    'earl': 'text-amber-400',
+    'duke': 'text-rose-400',
+    'prince': 'text-violet-400',
+    'king': 'text-yellow-400',
+    'emperor': 'text-orange-300',
+    'whale': 'text-teal-300',
+    'pro': 'text-blue-500',
+    'standard': 'text-green-400',
+    'elite': 'text-indigo-500',
+    'silver': 'text-slate-400',
+    'gold': 'text-yellow-500',
+    'platinum': 'text-indigo-400',
+    'diamond': 'text-cyan-300',
+    'bronze': 'text-amber-700',
+    'vip': 'text-purple-400'
   };
-  
-  const nextTier = getNextTier(currentTier);
-  if (!nextTier) return 0;
-  
-  return tierCosts[nextTier];
-};
+
+  return tierColors[tier] || 'text-gray-400';
+}
 
 /**
- * Format tier name for display
+ * Get the background color class for a user tier
+ * @param tier The user tier
+ * @returns CSS background class
  */
-export const formatTierName = (tier: UserTier): string => {
-  // Capitalize first letter and replace hyphens with spaces
-  return tier.charAt(0).toUpperCase() + tier.slice(1).replace(/-/g, ' ');
+export function getTierBgColor(tier: UserTier): string {
+  const tierBgColors: Record<string, string> = {
+    'free': 'bg-gray-800',
+    'basic': 'bg-green-900',
+    'premium': 'bg-purple-900',
+    'royal': 'bg-amber-900',
+    'legendary': 'bg-orange-900',
+    'founder': 'bg-yellow-900',
+    'noble': 'bg-indigo-900',
+    'knight': 'bg-blue-900',
+    'baron': 'bg-emerald-900',
+    'viscount': 'bg-cyan-900',
+    'earl': 'bg-amber-900',
+    'duke': 'bg-rose-900',
+    'prince': 'bg-violet-900',
+    'king': 'bg-yellow-900',
+    'emperor': 'bg-orange-900',
+    'whale': 'bg-teal-900',
+    'pro': 'bg-blue-900',
+    'standard': 'bg-green-800',
+    'elite': 'bg-indigo-900',
+    'silver': 'bg-slate-800',
+    'gold': 'bg-yellow-900',
+    'platinum': 'bg-indigo-800',
+    'diamond': 'bg-cyan-900',
+    'bronze': 'bg-amber-900',
+    'vip': 'bg-purple-800'
+  };
+
+  return tierBgColors[tier] || 'bg-gray-800';
+}
+
+export default {
+  getTierColor,
+  getTierBgColor
 };

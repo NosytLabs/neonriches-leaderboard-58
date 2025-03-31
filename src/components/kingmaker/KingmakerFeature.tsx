@@ -34,7 +34,7 @@ const KingmakerFeature: React.FC<KingmakerFeatureProps> = ({
       bio: "I raise others to glory through my royal generosity.",
       tier: "legendary" as const,
       isVIP: true,
-      boostCount: 154
+      boostCount: 154  // This property is now properly defined in UserProfile
     };
     
     setKingmaker(mockKingmaker);
@@ -54,9 +54,8 @@ const KingmakerFeature: React.FC<KingmakerFeatureProps> = ({
     );
   }
   
-  // Fix string | number error - ensure userId is a string
-  const kingmakerId = typeof kingmaker.id === 'number' ? 
-    kingmaker.id.toString() : kingmaker.id;
+  // Fix string | number id by ensuring it's a string
+  const kingmakerId = kingmaker.id.toString();
   
   return (
     <Card className="border-royal-gold/30 bg-black/40 overflow-hidden">
@@ -101,7 +100,7 @@ const KingmakerFeature: React.FC<KingmakerFeatureProps> = ({
             <div className="flex items-center mt-1">
               <DollarSign className="w-3.5 h-3.5 text-royal-gold mr-1" />
               <span className="text-sm text-royal-gold font-medium">
-                {formatCurrency(kingmaker.totalSpent)}
+                {formatCurrency(kingmaker.totalSpent || 0)}
               </span>
             </div>
           </div>
@@ -114,7 +113,7 @@ const KingmakerFeature: React.FC<KingmakerFeatureProps> = ({
             <p className="text-white/60 text-xs mb-1">Boosts Given</p>
             <div className="flex items-center justify-center">
               <Zap className="w-4 h-4 text-royal-gold mr-1" />
-              <span className="font-bold text-lg">{kingmaker.boostCount}</span>
+              <span className="font-bold text-lg">{kingmaker.boostCount || 0}</span>
             </div>
           </div>
           

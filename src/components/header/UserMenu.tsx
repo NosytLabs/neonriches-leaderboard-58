@@ -24,8 +24,7 @@ import { useNavigate } from 'react-router-dom';
 import { Badge } from '@/components/ui/badge';
 import UserBadge from '@/components/ui/user-badge';
 import { formatCurrency } from '@/utils/formatters';
-
-// Update specific imports here as needed
+import { UserTier } from '@/types/user-consolidated';
 
 interface UserMenuProps {
   // Add any props as needed
@@ -54,14 +53,17 @@ const UserMenu: React.FC<UserMenuProps> = () => {
 
   // Create a safer wrapper around the user's tier to handle the potential type mismatch
   // This function ensures we only pass a valid tier string to UserBadge
-  const getTierForBadge = () => {
+  const getTierForBadge = (): UserTier => {
     // Only return tiers that match the expected types in UserBadge
-    const validTiers = [
+    const validTiers: UserTier[] = [
       'free', 'basic', 'premium', 'royal', 'legendary',
-      'founder', 'whale', 'pro', 'standard', 'elite',
-      'silver', 'gold', 'platinum', 'diamond', 'bronze', 'vip'
+      'founder', 'noble', 'knight', 'baron', 'viscount', 
+      'earl', 'duke', 'prince', 'king', 'emperor', 'whale', 
+      'pro', 'standard', 'elite', 'silver', 'gold', 
+      'platinum', 'diamond', 'bronze', 'vip'
     ];
     
+    // Default to 'free' if the tier isn't valid
     return validTiers.includes(user.tier) ? user.tier : 'free';
   };
 
@@ -106,7 +108,9 @@ const UserMenu: React.FC<UserMenuProps> = () => {
             <User className="mr-2 h-4 w-4" />
             <span>Profile</span>
           </div>
-          <UserBadge type="team" value={user.team} size="sm" showLabel={false} />
+          {user.team && (
+            <UserBadge type="team" value={(user.team as string)} size="sm" showLabel={false} />
+          )}
         </DropdownMenuItem>
         <DropdownMenuItem
           className="cursor-pointer"

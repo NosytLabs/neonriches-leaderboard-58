@@ -3,7 +3,10 @@ import { useContext } from 'react';
 import { AuthContext } from '@/contexts/AuthContext';
 import { AuthContextType } from '@/types/user-consolidated';
 
-// Create a custom hook that uses the AuthContext
+/**
+ * Custom hook for accessing the authentication context
+ * @returns The auth context containing user data and authentication methods
+ */
 export function useAuth(): AuthContextType {
   const context = useContext(AuthContext);
   

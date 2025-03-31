@@ -48,9 +48,25 @@ const CombinedLeaderboard: React.FC = () => {
       setLoading(true);
       try {
         const data = await fetchLeaderboard(sortBy, teamFilter);
-        setUsers(data);
-        setFilteredUsers(data.slice(0, 10));
-        setTotalPages(Math.ceil(data.length / 10));
+        
+        // Ensure all data is properly formatted as LeaderboardUser objects
+        const formattedData: LeaderboardUser[] = data.map((item): LeaderboardUser => ({
+          id: typeof item.id === 'number' ? item.id.toString() : String(item.id),
+          username: item.username,
+          displayName: item.displayName || item.username,
+          profileImage: item.profileImage || '/assets/default-avatar.png',
+          tier: item.tier,
+          team: item.team || null,
+          rank: item.rank || 0,
+          totalSpent: item.totalSpent || 0,
+          walletBalance: item.walletBalance || 0,
+          previousRank: item.previousRank || 0,
+          spendStreak: item.spendStreak || 0
+        }));
+
+        setUsers(formattedData);
+        setFilteredUsers(formattedData.slice(0, 10));
+        setTotalPages(Math.ceil(formattedData.length / 10));
       } catch (error) {
         console.error("Error fetching leaderboard:", error);
         toast({
@@ -88,22 +104,28 @@ const CombinedLeaderboard: React.FC = () => {
     setPage(1);
   };
   
-  // Create mock user (represents current user)
-  const currentUser: UserProfile = {
-    id: user?.id || '0',
-    username: user?.username || 'You',
-    displayName: user?.displayName || 'You',
-    profileImage: user?.profileImage || '/assets/default-avatar.png',
-    tier: user?.tier || 'free',
-    team: user?.team || null,
-    rank: user?.rank || 0,
-    totalSpent: user?.totalSpent || 0,
-    joinedDate: user?.joinedDate || new Date().toISOString(),
-    isVerified: user?.isVerified || false,
-    walletBalance: user?.walletBalance || 0,
-    previousRank: user?.previousRank || 0,
-    spendStreak: user?.spendStreak || 0
+  // Create currentUser object only if user exists
+  const createCurrentUserProfile = (user: UserProfile | null): UserProfile | undefined => {
+    if (!user) return undefined;
+    
+    return {
+      id: user.id,
+      username: user.username,
+      displayName: user.displayName || user.username,
+      profileImage: user.profileImage || '/assets/default-avatar.png',
+      tier: user.tier,
+      team: user.team || null,
+      rank: user.rank || 0,
+      totalSpent: user.totalSpent || 0,
+      joinedDate: user.joinedDate || new Date().toISOString(),
+      isVerified: user.isVerified || false,
+      walletBalance: user.walletBalance || 0,
+      previousRank: user.previousRank || 0,
+      spendStreak: user.spendStreak || 0
+    };
   };
+  
+  const currentUser = createCurrentUserProfile(user);
   
   return (
     <div className="w-full">
@@ -131,7 +153,7 @@ const CombinedLeaderboard: React.FC = () => {
               <LeaderboardCard
                 users={filteredUsers}
                 loading={loading}
-                currentUser={user ? currentUser : undefined}
+                currentUser={currentUser}
                 settings={settings}
               />
             </TabsContent>

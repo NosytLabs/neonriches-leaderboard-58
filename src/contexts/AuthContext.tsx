@@ -1,236 +1,238 @@
 
-import React, { createContext, useEffect, useState } from 'react';
-import { AuthContextType, UserProfile } from '@/types/user-consolidated';
+import React, { createContext, useState, useEffect } from 'react';
+import { UserProfile, AuthContextType } from './auth/types';
 
-// Create Auth Context
-export const AuthContext = createContext<AuthContextType>({
-  user: null,
-  isAuthenticated: false,
-  isLoading: true,
-  login: () => Promise.resolve(false),
-  signIn: () => Promise.resolve(false),
-  register: () => Promise.resolve(false),
-  logout: () => Promise.resolve(),
-  signOut: () => Promise.resolve(),
-  updateUser: () => Promise.resolve(false),
-  updateUserProfile: () => Promise.resolve(false),
-  awardCosmetic: () => Promise.resolve(false),
-});
+// Create the Auth context with default values
+export const AuthContext = createContext<AuthContextType | null>(null);
 
-// Create Provider
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+const AuthContextProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<UserProfile | null>(null);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
+  // Set up initial auth state on component mount
   useEffect(() => {
-    // Check if user is stored in localStorage
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      try {
-        const parsedUser = JSON.parse(storedUser);
-        setUser(parsedUser);
-        setIsAuthenticated(true);
-      } catch (error) {
-        console.error('Error parsing stored user:', error);
-        localStorage.removeItem('user');
+    const checkAuth = async () => {
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
+        try {
+          const parsedUser = JSON.parse(storedUser) as UserProfile;
+          setUser(parsedUser);
+          setIsAuthenticated(true);
+        } catch (error) {
+          console.error("Error parsing user data:", error);
+          localStorage.removeItem('user');
+        }
       }
-    }
-    setIsLoading(false);
+      setIsLoading(false);
+    };
+
+    checkAuth();
   }, []);
 
-  const login = async (email: string, password: string): Promise<boolean> => {
+  // Handle user login
+  const login = async (email: string, password: string) => {
     setIsLoading(true);
-    
     try {
-      // Mock login logic
-      if (email && password) {
-        // In a real app, this would make an API call
-        const mockUser: UserProfile = {
-          id: '1',
-          username: 'royal_user',
-          displayName: 'Royal User',
-          email: email,
-          profileImage: 'https://api.dicebear.com/6.x/personas/svg?seed=royal_user',
-          joinedDate: new Date().toISOString(),
-          rank: 42,
-          totalSpent: 1500,
-          walletBalance: 100,
-          tier: 'premium',
-          team: 'blue',
-          isVerified: true,
-          isVIP: false,
-          settings: {
-            profileVisibility: 'public',
-            allowProfileLinks: true,
-            theme: 'dark',
-            notifications: true,
-            emailNotifications: true,
-            marketingEmails: false,
-            showRank: true,
-            darkMode: true,
-            soundEffects: true,
-            newFollowerAlerts: true,
-            teamNotifications: true,
-            showTeam: true,
-            showSpending: true
-          },
-          previousRank: 48,
-          spendStreak: 7,
-          profileViews: 324,
-          profileClicks: 85
-        };
-        
-        setUser(mockUser);
-        setIsAuthenticated(true);
-        localStorage.setItem('user', JSON.stringify(mockUser));
-        return true;
-      }
-      return false;
-    } catch (error) {
-      console.error('Login error:', error);
-      return false;
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const register = async (username: string, email: string, password: string): Promise<boolean> => {
-    setIsLoading(true);
-    
-    try {
-      // Mock registration logic
-      if (username && email && password) {
-        // In a real app, this would make an API call
-        const mockUser: UserProfile = {
-          id: '2',
-          username: username,
-          displayName: username,
-          email: email,
-          profileImage: `https://api.dicebear.com/6.x/personas/svg?seed=${username}`,
-          joinedDate: new Date().toISOString(),
-          rank: 999,
-          totalSpent: 0,
-          walletBalance: 50, // Initial free credit
-          tier: 'free',
-          team: null,
-          isVerified: false,
-          isVIP: false,
-          settings: {
-            profileVisibility: 'public',
-            allowProfileLinks: true,
-            theme: 'dark',
-            notifications: true,
-            emailNotifications: true,
-            marketingEmails: false,
-            showRank: true,
-            darkMode: true,
-            soundEffects: true,
-            newFollowerAlerts: true,
-            teamNotifications: true,
-            showTeam: true,
-            showSpending: true
-          }
-        };
-        
-        setUser(mockUser);
-        setIsAuthenticated(true);
-        localStorage.setItem('user', JSON.stringify(mockUser));
-        return true;
-      }
-      return false;
-    } catch (error) {
-      console.error('Registration error:', error);
-      return false;
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const logout = async (): Promise<void> => {
-    setUser(null);
-    setIsAuthenticated(false);
-    localStorage.removeItem('user');
-    return Promise.resolve();
-  };
-
-  const signOut = async (): Promise<void> => {
-    return logout();
-  };
-
-  const updateUser = async (userData: Partial<UserProfile>): Promise<boolean> => {
-    if (!user) return false;
-    
-    try {
-      const updatedUser = { ...user, ...userData };
-      setUser(updatedUser);
-      localStorage.setItem('user', JSON.stringify(updatedUser));
-      return true;
-    } catch (error) {
-      console.error('Update user error:', error);
-      return false;
-    }
-  };
-
-  const updateUserProfile = async (userData: Partial<UserProfile>): Promise<boolean> => {
-    return updateUser(userData);
-  };
-
-  const awardCosmetic = async (category: string, itemId: string, notify: boolean = true): Promise<boolean> => {
-    if (!user) return false;
-
-    try {
-      // Update user's cosmetics
-      const userCosmetics = user.cosmetics || {};
+      // Simulating API call for login
+      await new Promise(resolve => setTimeout(resolve, 1000));
       
-      // Ensure the category exists as an array
-      if (!userCosmetics[category]) {
-        userCosmetics[category] = [];
-      }
-      
-      // Add the item if it doesn't exist
-      const categoryItems = userCosmetics[category];
-      if (Array.isArray(categoryItems)) {
-        if (!categoryItems.includes(itemId)) {
-          userCosmetics[category] = [...categoryItems, itemId];
+      // Mock successful login
+      const mockUser: UserProfile = {
+        id: "user123",
+        username: "royal_user",
+        displayName: "Royal User",
+        email: email,
+        profileImage: "https://api.dicebear.com/7.x/personas/svg?seed=royal",
+        bio: "I'm a royal user of SpendThrone!",
+        joinedDate: new Date().toISOString(),
+        rank: 42,
+        totalSpent: 1250,
+        tier: "gold",
+        team: "blue",
+        isVerified: true,
+        walletBalance: 500,
+        followers: 25,
+        following: 15,
+        spendStreak: 7,
+        profileViews: 102,
+        profileClicks: 48,
+        settings: {
+          profileVisibility: "public",
+          allowProfileLinks: true,
+          theme: "dark",
+          notifications: true,
+          emailNotifications: true,
+          marketingEmails: false,
+          darkMode: true,
+          soundEffects: true,
+          newFollowerAlerts: true,
+          teamNotifications: true,
+          showTeam: true,
+          showSpending: true
         }
-      } else {
-        userCosmetics[category] = [itemId];
-      }
-
-      // Update user profile with new cosmetics
-      const updatedUser = {
-        ...user,
-        cosmetics: userCosmetics,
       };
+      
+      setUser(mockUser);
+      setIsAuthenticated(true);
+      localStorage.setItem('user', JSON.stringify(mockUser));
+      return true;
+    } catch (error) {
+      console.error("Login error:", error);
+      return false;
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
+  // Handle user registration
+  const register = async (username: string, email: string, password: string) => {
+    setIsLoading(true);
+    try {
+      // Simulating API call for registration
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Mock successful registration and auto-login
+      const newUser: UserProfile = {
+        id: `user${Date.now()}`,
+        username,
+        email,
+        profileImage: `https://api.dicebear.com/7.x/personas/svg?seed=${username}`,
+        joinedDate: new Date().toISOString(),
+        rank: 9999,
+        totalSpent: 0,
+        tier: "free",
+        isVerified: false,
+        walletBalance: 10, // Starting bonus
+        settings: {
+          profileVisibility: "public",
+          allowProfileLinks: true,
+          theme: "dark",
+          notifications: true,
+          emailNotifications: true,
+          marketingEmails: false,
+          darkMode: true,
+          soundEffects: true,
+          newFollowerAlerts: true,
+          teamNotifications: true,
+          showTeam: true,
+          showSpending: true
+        }
+      };
+      
+      setUser(newUser);
+      setIsAuthenticated(true);
+      localStorage.setItem('user', JSON.stringify(newUser));
+      return true;
+    } catch (error) {
+      console.error("Registration error:", error);
+      return false;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Handle user logout
+  const logout = async () => {
+    setIsLoading(true);
+    try {
+      // Simulating API call for logout
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      setUser(null);
+      setIsAuthenticated(false);
+      localStorage.removeItem('user');
+    } catch (error) {
+      console.error("Logout error:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Update user profile
+  const updateUserProfile = async (updates: Partial<UserProfile>) => {
+    if (!user) return false;
+    
+    try {
+      // Simulating API call for profile update
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      const updatedUser = { ...user, ...updates };
+      setUser(updatedUser);
+      localStorage.setItem('user', JSON.stringify(updatedUser));
+      return true;
+    } catch (error) {
+      console.error("Profile update error:", error);
+      return false;
+    }
+  };
+
+  // Award a cosmetic to the user
+  const awardCosmetic = async (category: string, itemId: string, notify: boolean = true) => {
+    if (!user) return false;
+    
+    try {
+      // Simulate API call to award cosmetic
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      // Update user's cosmetics
+      const currentCosmetics = user.cosmetics || {};
+      const updatedCosmetics = { ...currentCosmetics };
+      
+      // Handle different category structures
+      if (!updatedCosmetics[category]) {
+        updatedCosmetics[category] = [];
+      }
+      
+      if (Array.isArray(updatedCosmetics[category])) {
+        // Only add if it doesn't already exist
+        if (!(updatedCosmetics[category] as string[]).includes(itemId)) {
+          (updatedCosmetics[category] as string[]).push(itemId);
+        }
+      } else if (typeof updatedCosmetics[category] === 'object') {
+        // Handle object structure
+        updatedCosmetics[category] = {
+          ...(updatedCosmetics[category] as Record<string, string>),
+          [itemId]: itemId
+        };
+      }
+      
+      // Update the user with new cosmetics
+      const updatedUser = { 
+        ...user, 
+        cosmetics: updatedCosmetics 
+      };
+      
       setUser(updatedUser);
       localStorage.setItem('user', JSON.stringify(updatedUser));
       
       return true;
     } catch (error) {
-      console.error('Award cosmetic error:', error);
+      console.error("Error awarding cosmetic:", error);
       return false;
     }
+  };
+
+  // Create the context value object to provide to consumers
+  const contextValue: AuthContextType = {
+    user,
+    isAuthenticated,
+    isLoading,
+    login,
+    signIn: login, // Alias for login
+    register,
+    logout,
+    signOut: logout, // Alias for logout
+    updateUser: updateUserProfile, // Alias for updateUserProfile
+    updateUserProfile,
+    awardCosmetic
   };
 
   return (
-    <AuthContext.Provider
-      value={{
-        user,
-        isAuthenticated,
-        isLoading,
-        login,
-        signIn: login,
-        register,
-        logout,
-        signOut,
-        updateUser,
-        updateUserProfile,
-        awardCosmetic,
-      }}
-    >
+    <AuthContext.Provider value={contextValue}>
       {children}
     </AuthContext.Provider>
   );
 };
+
+export default AuthContextProvider;

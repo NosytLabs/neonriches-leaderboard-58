@@ -79,7 +79,7 @@ export interface UserSettings {
   notifications: boolean;
   emailNotifications: boolean;
   marketingEmails: boolean;
-  showRank: boolean;
+  showRank?: boolean;
   darkMode: boolean;
   soundEffects: boolean;
   newFollowerAlerts: boolean;
@@ -148,6 +148,7 @@ export interface UserProfile {
   teamRank?: number;
   spentAmount?: number;
   certificateNFT?: CertificateNFT;
+  boostCount?: number; // Add missing property for KingmakerFeature.tsx
 }
 
 // Legacy User interface for backward compatibility

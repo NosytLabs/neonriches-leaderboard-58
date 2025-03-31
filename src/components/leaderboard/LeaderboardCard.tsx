@@ -1,68 +1,56 @@
 
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { CardContent } from '@/components/ui/card';
 import { LeaderboardUser } from '@/types/leaderboard';
-import { User } from '@/types/user';
-import LeaderboardRow from './LeaderboardRow';
+import { UserProfile, UserSettings } from '@/types/user-consolidated';
 
-export interface LeaderboardCardProps {
-  title: string;
+interface LeaderboardCardProps {
   users: LeaderboardUser[];
-  currentUser: User;
-  filter?: { tier: string; team: string; searchQuery: string }; // Added filter prop
+  currentUser?: UserProfile;
+  settings: UserSettings;
+  loading?: boolean; // Add loading prop to match usage
 }
 
 const LeaderboardCard: React.FC<LeaderboardCardProps> = ({ 
-  title, 
   users, 
-  currentUser,
-  filter = { tier: 'all', team: 'all', searchQuery: '' } // Default filter values
+  currentUser, 
+  settings,
+  loading = false
 }) => {
-  // Apply filters if provided
-  const filteredUsers = users.filter(user => {
-    // Filter by tier
-    if (filter.tier !== 'all' && user.tier !== filter.tier) {
-      return false;
-    }
-    
-    // Filter by team
-    if (filter.team !== 'all' && user.team !== filter.team) {
-      return false;
-    }
-    
-    // Filter by search query (username or displayName)
-    if (filter.searchQuery && !user.username.toLowerCase().includes(filter.searchQuery.toLowerCase()) && 
-        (!user.displayName || !user.displayName.toLowerCase().includes(filter.searchQuery.toLowerCase()))) {
-      return false;
-    }
-    
-    return true;
-  });
-
-  return (
-    <Card className="glass-morphism border-white/10">
-      <CardHeader>
-        <CardTitle className="text-xl font-bold">{title}</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-1">
-          {filteredUsers.length > 0 ? (
-            filteredUsers.map((user, index) => (
-              <LeaderboardRow 
-                key={user.id} 
-                user={user} 
-                position={index + 1} 
-                isCurrentUser={user.id === currentUser.id} 
-              />
-            ))
-          ) : (
-            <div className="py-4 text-center">
-              <p className="text-white/60">No users match your filter criteria.</p>
-            </div>
-          )}
+  if (loading) {
+    return (
+      <CardContent className="p-0">
+        <div className="py-8 text-center">
+          <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent opacity-50"></div>
+          <p className="mt-4 text-gray-400">Loading leaderboard...</p>
         </div>
       </CardContent>
-    </Card>
+    );
+  }
+
+  return (
+    <CardContent className="p-0">
+      <div className="divide-y divide-gray-100/10">
+        {users.map((user, idx) => (
+          <div key={user.id} className="p-4 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <span className="text-lg font-semibold text-gray-400">#{idx + 1}</span>
+              <img 
+                src={user.profileImage || '/placeholder.png'} 
+                alt={user.username}
+                className="w-10 h-10 rounded-full object-cover"
+              />
+              <div>
+                <p className="font-medium">{user.displayName || user.username}</p>
+                {settings.showSpending && (
+                  <p className="text-sm text-gray-400">${user.totalSpent?.toLocaleString()}</p>
+                )}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </CardContent>
   );
 };
 

@@ -1,3 +1,4 @@
+
 import React, { useRef, useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
@@ -9,6 +10,7 @@ import { formatDate } from '@/utils/formatters/dateFormatters';
 import { getTeamName, getTeamColor, getTeamBorderColor } from '@/utils/teamUtils';
 import { useSolana } from '@/contexts/SolanaContext';
 import html2canvas from 'html2canvas';
+import { TeamColor } from '@/types/team'; // Import TeamColor from team.ts instead
 
 interface TeamCertificateProps {
   user: UserProfile;
@@ -32,7 +34,9 @@ const TeamCertificate: React.FC<TeamCertificateProps> = ({
   const [isSharing, setIsSharing] = useState(false);
   const certificateRef = useRef<HTMLDivElement>(null);
   
-  const userTeam = user.team || 'none';
+  // Convert user.team to a valid TeamColor that works with both types
+  const userTeam = (user.team || 'none') as TeamColor;
+  // Get team data using the team utilities
   const teamName = getTeamName(userTeam);
   const teamColor = getTeamColor(userTeam);
   const teamBorder = getTeamBorderColor(userTeam);

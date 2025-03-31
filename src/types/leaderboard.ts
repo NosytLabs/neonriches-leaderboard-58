@@ -1,49 +1,45 @@
 
-import { TeamColor, UserTier } from '@/types/user';
+import { TeamColor, UserTier } from './user-consolidated';
 
 /**
- * LeaderboardUser type representing a user in the leaderboard
+ * User object for leaderboard display
  */
 export interface LeaderboardUser {
   id: string;
-  userId?: string; // Add userId property for compatibility
   username: string;
   displayName?: string;
   profileImage?: string;
-  avatarUrl?: string; // Adding this for compatibility with existing code
-  tier?: UserTier;
-  team?: TeamColor;
+  tier: UserTier;
+  team?: TeamColor | null;
   rank: number;
-  previousRank?: number;
   totalSpent: number;
-  spendChange?: number;
-  rankChange?: number;
-  joinedAt?: string;
   walletBalance?: number;
-  isVerified?: boolean;
+  previousRank?: number;
   spendStreak?: number;
-  isProtected?: boolean;
-  amountSpent?: number; // For backward compatibility
-  spentAmount?: number; // Another name used in some places
 }
 
 /**
- * Options for sorting the leaderboard
+ * Available sort options for the leaderboard
  */
-export type SortByOptions = 'rank' | 'totalSpent' | 'username' | 'joinDate';
+export type SortByOptions = 'rank' | 'spent' | 'change' | 'streak';
 
 /**
- * Typed leaderboard filter
+ * Filter for typed leaderboard queries
  */
 export interface TypedLeaderboardFilter {
-  tier: UserTier | 'all';
-  sortBy: SortByOptions;
-  team: TeamColor | 'all';
-  search: string;
-  limit?: number;
-  sortDirection: 'desc' | 'asc';
-  timeFrame?: string;
+  team?: TeamColor | null;
+  tier?: UserTier | null;
+  minSpent?: number;
+  maxSpent?: number;
+  minRank?: number;
+  maxRank?: number;
+  search?: string;
 }
 
-// Export types using 'export type' to avoid conflicts with isolatedModules
-export type { LeaderboardUser, SortByOptions, TypedLeaderboardFilter };
+/**
+ * The available tabs for the leaderboard
+ */
+export type LeaderboardTab = 'all' | 'team' | 'friends' | 'events';
+
+// This prevents TS error with multiple exports
+export {};
