@@ -1,91 +1,71 @@
 
 /**
- * Currency and number formatting utilities
- */
-
-/**
  * Format a number as currency
+ * @param value - the value to format
+ * @param decimalPlaces - number of decimal places to show (default 2)
+ * @param showCents - whether to show cents (default true)
+ * @returns formatted currency string
  */
-export const formatCurrency = (amount: number | undefined | null, currency: string = 'USD'): string => {
-  if (amount === undefined || amount === null) return '$0.00';
-  
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: currency,
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2
-  }).format(amount);
-};
-
-/**
- * Format a number with thousands separators
- */
-export const formatNumber = (value: number | undefined | null, options?: Intl.NumberFormatOptions): string => {
-  if (value === undefined || value === null) return '0';
-  
-  const defaultOptions: Intl.NumberFormatOptions = {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0
-  };
-  
-  return new Intl.NumberFormat('en-US', options || defaultOptions).format(value);
-};
-
-/**
- * Format a dollar amount with simpler display (e.g., $1,234)
- */
-export const formatDollarAmount = (amount: number): string => {
-  return `$${amount.toLocaleString()}`;
-};
-
-/**
- * Format a percentage value
- */
-export const formatPercentage = (value: number, decimals = 1): string => {
-  return `${value.toFixed(decimals)}%`;
-};
-
-/**
- * Format a percentage (value is between 0 and 1)
- */
-export const formatPercent = (value: number, decimals: number = 2): string => {
-  return `${(value * 100).toFixed(decimals)}%`;
-};
-
-/**
- * Format a currency with a plus or minus sign
- */
-export const formatCurrencyWithSign = (amount: number): string => {
-  const formatted = formatCurrency(Math.abs(amount));
-  return amount >= 0 ? `+${formatted}` : `-${formatted}`;
-};
-
-/**
- * Format a large number with appropriate suffix (K, M, B)
- */
-export const formatLargeNumber = (num: number): string => {
-  if (num >= 1_000_000_000) {
-    return (num / 1_000_000_000).toFixed(1) + 'B';
-  }
-  if (num >= 1_000_000) {
-    return (num / 1_000_000).toFixed(1) + 'M';
-  }
-  if (num >= 1_000) {
-    return (num / 1_000).toFixed(1) + 'K';
-  }
-  return num.toString();
-};
-
-/**
- * Format a historical value with exaggerated units for satirical purposes
- */
-export const formatHistoricalValue = (
+export const formatCurrency = (
   value: number, 
-  unit: string, 
-  exaggeration: number = 1000, 
-  era: string = 'medieval'
+  decimalPlaces: number = 2, 
+  showCents: boolean = true
 ): string => {
-  const exaggeratedValue = value * exaggeration;
-  const formattedValue = formatNumber(exaggeratedValue);
-  return `${formattedValue} ${unit} (${era} equivalent)`;
+  if (typeof value !== 'number' || isNaN(value)) {
+    return '0.00';
+  }
+
+  // If showCents is false, round to integer
+  const places = showCents ? decimalPlaces : 0;
+  const formatter = new Intl.NumberFormat('en-US', {
+    minimumFractionDigits: places,
+    maximumFractionDigits: places,
+  });
+
+  return formatter.format(value);
+};
+
+/**
+ * Format a value with a specific unit
+ * @param value - the number to format
+ * @param unit - the unit to append (e.g., '$', '€', etc.)
+ * @param decimalPlaces - number of decimal places
+ * @returns formatted string with unit
+ */
+export const formatWithUnit = (
+  value: number,
+  unit: string = '$',
+  decimalPlaces: number = 2
+): string => {
+  if (typeof value !== 'number' || isNaN(value)) {
+    return `${unit}0.00`;
+  }
+
+  return `${unit}${formatCurrency(value, decimalPlaces)}`;
+};
+
+/**
+ * Format a large number in a compact way (e.g., 1.5K, 2.3M)
+ * @param value - the number to format
+ * @param unit - the unit to append (default '$')
+ * @returns compact formatted string
+ */
+export const formatCompactNumber = (
+  value: number,
+  unit: string = '$'
+): string => {
+  if (typeof value !== 'number' || isNaN(value)) {
+    return `${unit}0`;
+  }
+
+  const formatter = new Intl.NumberFormat('en-US', {
+    notation: 'compact',
+    compactDisplay: 'short',
+  });
+
+  return `${unit}${formatter.format(value)}`;
+};
+
+export const formatDollarAmount = (amount: number): string => {
+  return formatWithUnit(amount);
 };

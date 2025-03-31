@@ -10,7 +10,7 @@ import useMockLeaderboard from '@/hooks/useMockLeaderboard';
 
 // This component serves as the main landing page
 const Index = () => {
-  const { mockLeaderboardData } = useMockLeaderboard();
+  const { loading, mockLeaderboardData } = useMockLeaderboard();
   const topSpenders = mockLeaderboardData.slice(0, 3);
   
   return (
@@ -71,7 +71,7 @@ const Index = () => {
         </div>
         
         {/* Spotlight Section */}
-        {topSpenders.length > 0 && (
+        {!loading && topSpenders.length > 0 && (
           <SpotlightSection spotlightUsers={topSpenders} />
         )}
         

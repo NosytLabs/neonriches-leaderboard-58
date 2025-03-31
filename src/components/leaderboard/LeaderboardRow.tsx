@@ -19,19 +19,21 @@ const LeaderboardRow: React.FC<LeaderboardRowProps> = ({ user, position, isCurre
   return (
     <Link 
       to={`/profile/${user.username}`} 
-      className={`flex items-center p-2 rounded-md ${isCurrentUser ? 'bg-royal-gold/10 hover:bg-royal-gold/20' : 'hover:bg-white/5'} transition-colors`}
+      className={`flex items-center p-3 rounded-md hover:bg-opacity-75 transition-colors ${
+        isCurrentUser ? 'bg-royal-gold/10 hover:bg-royal-gold/20' : 'hover:bg-white/5'
+      }`}
     >
       <div className="flex-shrink-0 w-8 text-center font-bold">
         {position <= 3 ? (
           <span className="text-royal-gold">
-            {position === 1 ? <Crown className="h-5 w-5 mx-auto" /> : position}
+            {position === 1 ? <Crown className="h-5 w-5 mx-auto animate-crown-glow" /> : position}
           </span>
         ) : (
           <span className="text-white/70">{position}</span>
         )}
       </div>
       
-      <Avatar className="h-10 w-10 mx-3">
+      <Avatar className="h-10 w-10 mx-3 border border-white/20">
         <AvatarImage src={user.profileImage || user.avatarUrl} alt={user.username} />
         <AvatarFallback>
           {user.displayName?.substring(0, 2) || user.username.substring(0, 2)}
@@ -54,7 +56,7 @@ const LeaderboardRow: React.FC<LeaderboardRowProps> = ({ user, position, isCurre
       <div className="text-right">
         <div className="font-bold text-royal-gold">${formatCurrency(user.totalSpent)}</div>
         {rankChange !== 0 && (
-          <div className="flex items-center text-xs">
+          <div className="flex items-center text-xs justify-end">
             {rankChange > 0 ? (
               <>
                 <TrendingUp className="h-3 w-3 text-green-500 mr-1" />

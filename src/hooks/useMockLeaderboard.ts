@@ -1,6 +1,5 @@
 
 import { useState, useEffect } from 'react';
-import { mockLeaderboardData } from '@/services/leaderboardService';
 import { LeaderboardUser } from '@/types/leaderboard';
 
 export const useMockLeaderboard = () => {
@@ -17,7 +16,7 @@ export const useMockLeaderboard = () => {
           username: `User${i + 1}`,
           displayName: `User ${i + 1}`,
           profileImage: `https://randomuser.me/api/portraits/men/${20 + i}.jpg`,
-          tier: i < 3 ? 'royal' : i < 8 ? 'premium' : i < 15 ? 'gold' : 'silver',
+          tier: i < 3 ? 'royal' : i < 8 ? 'gold' : i < 15 ? 'silver' : 'bronze',
           team: i % 4 === 0 ? 'red' : i % 4 === 1 ? 'blue' : i % 4 === 2 ? 'green' : 'gold',
           rank: i + 1,
           previousRank: i + 2,
