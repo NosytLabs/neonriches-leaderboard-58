@@ -1,6 +1,6 @@
 
 import { useState, useCallback } from 'react';
-import { MockeryAction, MockeryEffectData } from '@/types/mockery';
+import { MockeryAction, MockeryEffectData } from '@/types/mockery-types';
 
 const useMockeryActions = (
   mockUser: (userId: string, action: MockeryAction, reason?: string) => Promise<boolean>,

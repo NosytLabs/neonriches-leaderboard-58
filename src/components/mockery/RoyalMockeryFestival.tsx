@@ -3,7 +3,7 @@ import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { useAuth } from '@/hooks/useAuth';
 import useMockery from '@/hooks/use-mockery';
-import MockeryEffect from '@/components/mockery/components/MockeryEffect';
+import MockeryEffect from './components/MockeryEffect';
 import MockeryTabs from './components/MockeryTabs';
 import MockeryHeader from './components/MockeryHeader';
 import useMockeryActions from './hooks/useMockeryActions';
