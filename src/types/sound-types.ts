@@ -1,14 +1,13 @@
 
-// Sound system type definitions
-
+// Sound types used throughout the application
 export type SoundType = 
-  | 'coin' 
-  | 'success' 
-  | 'error' 
-  | 'click' 
-  | 'notification' 
-  | 'achievement' 
-  | 'purchase' 
+  | 'coin'
+  | 'success'
+  | 'error'
+  | 'click'
+  | 'notification'
+  | 'achievement'
+  | 'purchase'
   | 'deposit'
   | 'mockery'
   | 'fanfare'
@@ -16,54 +15,30 @@ export type SoundType =
   | 'shame'
   | 'protection'
   | 'sparkle'
-  // Premium sound types
+  | 'seal'
   | 'royalAnnouncement'
   | 'trumpet'
   | 'medallion'
-  | 'seal'
-  | 'coinDrop'
-  | 'swordClash'
-  | 'noblesLaugh';
+  | 'boost'
+  | 'reward'
+  | 'rank_up'
+  | 'royal';
 
-export interface SoundCategory {
-  name: string;
-  sounds: SoundFile[];
-}
-
-export interface SoundFile {
-  id: string;
-  name: string;
-  file: string;
-  duration?: number;
-  category: string;
-  description?: string;
-}
-
+// Options for playing sounds
 export interface SoundOptions {
   volume?: number;
   loop?: boolean;
   playbackRate?: number;
   onEnd?: () => void;
+  delay?: number;
 }
 
+// Sound configuration state
 export interface SoundConfig {
-  enabled: boolean;
   volume: number;
-  effects: Record<string, boolean>;
-  music: boolean;
-  musicVolume: number;
-}
-
-export interface UseAudioReturn {
-  playSound: (type: SoundType, options?: SoundOptions) => void;
-  stopSound: (type?: SoundType) => void;
-  pauseSound: (type?: SoundType) => void;
-  resumeSound: (type?: SoundType) => void;
-  isPlaying: (type: SoundType) => boolean;
-  toggleSounds: () => void;
-  isSoundEnabled: boolean;
-  setVolume: (volume: number) => void;
-  currentVolume: number;
+  enabled: boolean;
+  muted: boolean; // Add this property
+  premium: boolean; // Add this property
 }
 
 export interface UseSoundHook {
@@ -72,16 +47,13 @@ export interface UseSoundHook {
   toggleSounds: () => void;
   isSoundEnabled: boolean;
   setVolume: (volume: number) => void;
-  play?: (type: SoundType, options?: SoundOptions) => void;  // For backward compatibility
 }
 
-// Audio-specific types
-export type AudioOptions = {
-  volume?: number;
-  loop?: boolean;
-  playbackRate?: number;
-  onEnd?: () => void;
-};
-
-// For backward compatibility
-export type NotificationSoundOptions = SoundOptions;
+export interface PremiumSoundPackDetails {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  previewSound: SoundType;
+  sounds: SoundType[];
+}

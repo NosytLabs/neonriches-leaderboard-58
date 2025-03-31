@@ -54,7 +54,7 @@ const useNotificationSounds = () => {
     sound.playSound('shame', options);
   }, [sound]);
 
-  // For backward compatibility
+  // General playSound method that can be used for any sound type
   const playSound = useCallback((type: string, options?: SoundOptions) => {
     sound.playSound(type as any, options);
   }, [sound]);
@@ -69,7 +69,7 @@ const useNotificationSounds = () => {
     playFanfare,
     playLevelUp,
     playShame,
-    playSound, // Add the direct playSound method for backward compatibility
+    playSound, // Add the direct playSound method for general use
     // Pass through the sound utility
     toggleSounds: sound.toggleSounds,
     isSoundEnabled: sound.isSoundEnabled

@@ -1,6 +1,6 @@
-import { useState, useCallback, useEffect } from 'react';
-import { NotificationSoundOptions } from '@/types/mockery';
-import useNotificationSound from '@/hooks/useNotificationSound';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { NotificationSoundOptions } from '@/types/sound-types';
+import useNotificationSounds from '@/hooks/sounds/use-notification-sounds';
 
 interface Coin {
   id: number;
@@ -31,7 +31,7 @@ const useFloatingCoins = (options?: UseFloatingCoinsOptions): UseFloatingCoinsRe
   const [isActive, setIsActive] = useState(false);
   const [coins, setCoins] = useState<Coin[]>([]);
   const coinsRef = useRef<Coin[]>([]);
-  const { playSound } = useNotificationSound();
+  const { playSound } = useNotificationSounds();
   
   const coinImages = [
     '/assets/coins/gold-coin-1.png',

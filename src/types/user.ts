@@ -4,36 +4,58 @@ export type TeamColor = 'red' | 'green' | 'blue' | 'purple' | 'gold';
 // For backward compatibility
 export type TeamType = TeamColor;
 
-export type UserTier = 'free' | 'basic' | 'premium' | 'pro' | 'royal' | 'elite' | 'founder' | 'diamond' | 'platinum' | 'gold' | 'silver' | 'bronze';
+export type UserTier = 'free' | 'basic' | 'premium' | 'pro' | 'royal' | 'elite' | 'founder' | 'diamond' | 'platinum' | 'gold' | 'silver' | 'bronze' | 'vip' | 'whale';
 
 // Define gender types that include royal titles for compatibility
-export type Gender = 'male' | 'female' | 'other' | 'prefer-not-to-say' | 'king' | 'queen' | 'jester' | 'neutral' | 'noble';
+export type Gender = 'male' | 'female' | 'other' | 'prefer-not-to-say' | 'king' | 'queen' | 'jester' | 'neutral' | 'noble' | 'unspecified';
 
 // Define social link type
 export interface SocialLink {
-  id: string;
-  platform: string;
+  id: string | number;
+  platform?: string;
   url: string;
+  username?: string;
+  display?: string;
+  icon?: string;
+  verified?: boolean;
+  primary?: boolean;
+  clicks?: number;
+  title?: string;
+  label?: string;
+  type?: string;
   isVisible?: boolean;
 }
 
 // Define profile image type
 export interface ProfileImage {
-  id: string;
+  id?: string;
   url: string;
   isDefault?: boolean;
+  isPrimary: boolean;
+  caption?: string;
 }
 
 // Define profile boost type
 export interface ProfileBoost {
   id: string;
   type: string;
-  expiresAt: string;
+  startDate: string;
+  endDate: string;
+  expiresAt?: string;
   isActive: boolean;
+  appliedBy?: string;
+  level?: number;
+  strength?: number;
+  name?: string;
+  description?: string;
+  duration?: number;
+  price?: number;
+  icon?: string;
 }
 
-// Define user cosmetics state
+// Define user cosmetics state - ensuring both the versions work
 export interface UserCosmetics {
+  // Used in some components
   titles?: string[];
   colors?: string[];
   borders?: string[];
@@ -41,6 +63,15 @@ export interface UserCosmetics {
   emojis?: string[];
   fonts?: string[];
   effects?: string[];
+  // Used in newer components
+  title?: string[];
+  color?: string[];
+  border?: string[];
+  background?: string[];
+  emoji?: string[];
+  font?: string[];
+  effect?: string[];
+  // Active cosmetics
   activeTitle?: string;
   activeColor?: string;
   activeBorder?: string;
@@ -87,8 +118,10 @@ export interface UserProfile {
   joinDate?: string;
   joinedAt?: string; // Alternative for joinDate
   createdAt?: string; // Alternative for joinDate
+  updatedAt?: string;
   isVerified?: boolean;
   isProtected?: boolean;
+  isAdmin?: boolean;
   avatarUrl?: string;
   spendStreak?: number;
   lastActive?: string;
@@ -118,11 +151,14 @@ export interface UserProfile {
   socialLinks?: SocialLink[];
   profileImages?: ProfileImage[];
   profileBoosts?: ProfileBoost[];
-  followers?: number;
-  following?: number;
+  followers?: number | string[];
+  following?: number | string[];
   role?: string;
   settings?: Record<string, any>;
 }
 
 // For backward compatibility
 export type User = UserProfile;
+
+// ProfileLink alias for backward compatibility
+export type ProfileLink = SocialLink;

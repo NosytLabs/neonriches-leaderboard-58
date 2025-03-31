@@ -1,298 +1,127 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import LeaderboardHeader from './LeaderboardHeader';
-import LeaderboardFilters from './LeaderboardFilters';
-import LeaderboardTable from './LeaderboardTable';
-import LeaderboardFooter from './LeaderboardFooter';
-import { useToastContext } from '@/contexts/ToastContext';
-import { Crown, Coins, Scroll } from 'lucide-react';
-import useFloatingCoins from '@/hooks/use-floating-coins';
-import { User } from '@/types/user';
-import RoyalButton from '@/components/ui/royal-button';
-import { useNotificationSounds } from '@/hooks/sounds/use-notification-sounds';
-import RoyalDivider from '@/components/ui/royal-divider';
-import RoyalDecrees from '@/components/dashboard/RoyalDecrees';
-import { NotificationSoundOptions } from '@/types/mockery';
-import { AudioOptions } from '@/types/sound-types';
+import React, { useState, useEffect, useRef } from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Crown, Users } from 'lucide-react';
+import { TeamColor, UserTier, Gender } from '@/types/user';
+import RoyalCourtMember from './RoyalCourtMember';
+import useNotificationSounds from '@/hooks/sounds/use-notification-sounds';
+import { NotificationSoundOptions } from '@/types/sound-types';
 
-const mockRoyalUsers: User[] = [
-  {
-    id: '1',
-    username: 'GoldenKing',
-    email: 'king@royal.com',
-    profileImage: 'https://source.unsplash.com/random/300x300?portrait&king',
-    amountSpent: 5000,
-    spentAmount: 5000,
-    walletBalance: 1000,
-    rank: 1,
-    previousRank: 1,
-    spendStreak: 8,
-    tier: 'royal',
-    team: 'red',
-    gender: 'king',
-    joinDate: '2023-01-01T00:00:00Z',
-    socialLinks: [],
-    createdAt: '2023-01-01T00:00:00Z',
-    isAdmin: true,
-    isVerified: true,
-    lastLogin: '2023-01-01T00:00:00Z'
-  },
-  {
-    id: '2',
-    username: 'DiamondDuchess',
-    email: 'duchess@luxury.net',
-    profileImage: 'https://source.unsplash.com/random/300x300?portrait&duchess',
-    amountSpent: 4200,
-    spentAmount: 4200,
-    walletBalance: 800,
-    rank: 2,
-    previousRank: 2,
-    spendStreak: 5,
-    tier: 'premium',
-    team: 'green',
-    gender: 'queen',
-    joinDate: '2023-02-15T00:00:00Z',
-    socialLinks: [],
-    createdAt: '2023-02-15T00:00:00Z',
-    isAdmin: false,
-    isVerified: true,
-    lastLogin: '2023-02-15T00:00:00Z'
-  },
-  {
-    id: '3',
-    username: 'SapphireSultan',
-    email: 'sultan@wealth.org',
-    profileImage: 'https://source.unsplash.com/random/300x300?portrait&sultan',
-    amountSpent: 3500,
-    spentAmount: 3500,
-    walletBalance: 650,
-    rank: 3,
-    previousRank: 3,
-    spendStreak: 3,
-    tier: 'pro',
-    team: 'blue',
-    gender: 'king',
-    joinDate: '2023-03-10T00:00:00Z',
-    socialLinks: [],
-    createdAt: '2023-03-10T00:00:00Z',
-    isAdmin: false,
-    isVerified: false,
-    lastLogin: '2023-03-10T00:00:00Z'
-  },
-  {
-    id: '4',
-    username: 'EmeraldEmpress',
-    email: 'empress@elite.io',
-    profileImage: 'https://source.unsplash.com/random/300x300?portrait&empress',
-    amountSpent: 2800,
-    spentAmount: 2800,
-    walletBalance: 500,
-    rank: 4,
-    previousRank: 4,
-    spendStreak: 10,
-    tier: 'basic',
-    team: 'red',
-    gender: 'queen',
-    joinDate: '2023-04-05T00:00:00Z',
-    socialLinks: [],
-    createdAt: '2023-04-05T00:00:00Z',
-    isAdmin: false,
-    isVerified: false,
-    lastLogin: '2023-04-05T00:00:00Z'
-  },
-  {
-    id: '5',
-    username: 'RubyRuler',
-    email: 'ruler@prestige.com',
-    profileImage: 'https://source.unsplash.com/random/300x300?portrait&ruler',
-    amountSpent: 2100,
-    spentAmount: 2100,
-    walletBalance: 400,
-    rank: 5,
-    previousRank: 5,
-    spendStreak: 6,
-    tier: 'free',
-    team: 'green',
-    gender: 'king',
-    joinDate: '2023-05-20T00:00:00Z',
-    socialLinks: [],
-    createdAt: '2023-05-20T00:00:00Z',
-    isAdmin: false,
-    isVerified: false,
-    lastLogin: '2023-05-20T00:00:00Z'
-  }
-];
+interface RoyalCourtProps {
+  user: any;
+}
 
-const RoyalCourt = () => {
-  const [leaderboardData, setLeaderboardData] = useState<User[]>(mockRoyalUsers);
-  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
-  const [activeFilter, setActiveFilter] = useState<string | null>(null);
-  const [showDecrees, setShowDecrees] = useState<boolean>(false);
-  const { addToast } = useToastContext();
-  const { playSound } = useNotificationSounds();
-  const containerRef = useRef<HTMLElement>(null);
-  
-  const { createBurst, toggle: toggleCoins } = useFloatingCoins();
-  
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      addToast({
-        title: "Royal Decree",
-        description: "Welcome to the Royal Court, where your worth is measured not by your character, but by your credit card limit!",
-        duration: 5000,
-        variant: "royal"
-      });
-      
-      playSound('royalAnnouncement', 0.5);
-    }, 1500);
-    
-    return () => clearTimeout(timer);
-  }, [addToast, playSound]);
-  
-  const handleSort = () => {
-    const newDirection = sortDirection === 'desc' ? 'asc' : 'desc';
-    setSortDirection(newDirection);
-    
-    const sortedData = [...leaderboardData].sort((a, b) => {
-      return newDirection === 'desc' 
-        ? b.amountSpent! - a.amountSpent! 
-        : a.amountSpent! - b.amountSpent!;
-    });
-    
-    setLeaderboardData(sortedData);
-    
-    playSound('click', 0.2);
-  };
-  
-  const handleFilter = (team: string | null) => {
-    setActiveFilter(team);
-    
-    if (team === null) {
-      setLeaderboardData(mockRoyalUsers);
-    } else {
-      const filteredData = mockRoyalUsers.filter(user => user.team === team);
-      setLeaderboardData(filteredData);
+const RoyalCourt: React.FC<RoyalCourtProps> = ({ user }) => {
+  const [courtMembers, setCourtMembers] = useState([
+    {
+      id: '1',
+      username: 'RoyalHighness',
+      displayName: 'King Arthur',
+      profileImage: '/images/avatars/king.jpg',
+      tier: 'royal' as UserTier,
+      team: 'gold' as TeamColor,
+      isAdmin: true
+    },
+    {
+      id: '2',
+      username: 'NobleKnight',
+      displayName: 'Sir Lancelot',
+      profileImage: '/images/avatars/knight.jpg',
+      tier: 'premium' as UserTier,
+      team: 'blue' as TeamColor,
+      isAdmin: false
+    },
+    {
+      id: '3',
+      username: 'WiseWizard',
+      displayName: 'Merlin',
+      profileImage: '/images/avatars/wizard.jpg',
+      tier: 'basic' as UserTier,
+      team: 'red' as TeamColor,
+      isAdmin: false
+    },
+    {
+      id: '4',
+      username: 'FairMaiden',
+      displayName: 'Guinevere',
+      profileImage: '/images/avatars/guinevere.jpg',
+      tier: 'basic' as UserTier,
+      team: 'green' as TeamColor,
+      isAdmin: false
+    },
+    {
+      id: '5',
+      username: 'LoyalSubject',
+      displayName: 'Peasant Pete',
+      profileImage: '/images/avatars/peasant.jpg',
+      tier: 'free' as UserTier,
+      team: 'red' as TeamColor,
+      isAdmin: false
     }
-    
-    const teamMessages: Record<string, string> = {
-      'red': "Ah, the Purple Dynasty! Where the wealthy flaunt their digital status with reckless abandon.",
-      'green': "The Gold Dominion welcomes you! Remember, he who pays the most, shines the brightest.",
-      'blue': "The Azure Order values loyalty... to spending money! Keep those contributions flowing!"
+  ]);
+  const { playSound } = useNotificationSounds();
+  const [showAllMembers, setShowAllMembers] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            playSound('notification', { volume: 0.3 });
+          }
+        });
+      },
+      {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0.5
+      }
+    );
+
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
+    }
+
+    return () => {
+      if (containerRef.current) {
+        observer.unobserve(containerRef.current);
+      }
     };
-    
-    addToast({
-      title: "Royal Attention",
-      description: team && teamMessages[team] ? teamMessages[team] : "Choose your allegiance wisely!",
-      duration: 3000,
-    });
-    
-    playSound('pageTransition', 0.3);
+  }, [playSound]);
+
+  const toggleShowAllMembers = () => {
+    setShowAllMembers(!showAllMembers);
   };
-  
-  const handleCoinBurst = () => {
-    createBurst(20);
-    toggleCoins(true);
-    
-    setTimeout(() => {
-      toggleCoins(false);
-    }, 5000);
-    
-    playSound('coinDrop', 0.6);
-    
-    addToast({
-      title: "Royal Treasury",
-      description: "The kingdom's coffers overflow with the contributions of our loyal subjects!",
-      duration: 3000,
-      variant: "royal"
-    });
-  };
-  
-  const toggleRoyalDecrees = () => {
-    setShowDecrees(prev => !prev);
-    playSound(showDecrees ? 'click' : 'parchmentUnfurl', 0.4);
-  };
-  
+
+  const displayedMembers = showAllMembers ? courtMembers : courtMembers.slice(0, 3);
+
   return (
-    <section ref={containerRef} id="leaderboard" className="w-full py-20 px-6 throne-bg relative">
-      <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
-        <div className="absolute -top-10 left-1/4 w-96 h-96 bg-royal-purple/10 rounded-full filter blur-[100px] animate-pulse-slow"></div>
-        <div className="absolute top-1/3 right-1/4 w-64 h-64 bg-royal-gold/10 rounded-full filter blur-[80px] animate-pulse-slow" style={{ animationDelay: '1s' }}></div>
-        <div className="absolute bottom-10 left-1/3 w-80 h-80 bg-royal-blue/10 rounded-full filter blur-[90px] animate-pulse-slow" style={{ animationDelay: '2s' }}></div>
-      </div>
-      
-      <div className="max-w-7xl mx-auto relative z-10">
-        <div className="absolute -top-16 right-0 text-white/20 italic text-sm">
-          "In the game of thrones, you pay or you fade."
+    <Card className="glass-morphism border-white/10" ref={containerRef}>
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+        <CardTitle className="text-2xl font-bold flex items-center">
+          <Crown className="mr-2 h-5 w-5 text-yellow-500" />
+          Royal Court
+        </CardTitle>
+        <Users className="h-4 w-4 text-muted-foreground" />
+      </CardHeader>
+      <CardContent>
+        <CardDescription>
+          These nobles have sworn fealty to the throne.
+        </CardDescription>
+        <div className="grid gap-4 py-4">
+          {displayedMembers.map((member) => (
+            <RoyalCourtMember key={member.id} member={member} />
+          ))}
         </div>
-        
-        <LeaderboardHeader />
-        
-        <div className="flex justify-between items-center mb-6">
-          <RoyalButton
-            variant="royalPurple"
-            size="sm"
-            icon={<Scroll className="h-4 w-4" />}
-            onClick={toggleRoyalDecrees}
-          >
-            {showDecrees ? "Hide Royal Decrees" : "View Royal Decrees"}
-          </RoyalButton>
-          
-          <RoyalButton
-            variant="royalGold"
-            size="sm"
-            icon={<Coins className="h-4 w-4" />}
-            onClick={handleCoinBurst}
-          >
-            Shower with Riches
-          </RoyalButton>
-        </div>
-        
-        <motion.div
-          initial={{ height: 0, opacity: 0 }}
-          animate={{ 
-            height: showDecrees ? "auto" : 0,
-            opacity: showDecrees ? 1 : 0
-          }}
-          transition={{ duration: 0.3 }}
-          className="overflow-hidden mb-6"
-        >
-          {showDecrees && <RoyalDecrees />}
-        </motion.div>
-        
-        <div className="royal-card rounded-xl overflow-hidden mb-8 glass-morphism border-white/10">
-          <LeaderboardFilters 
-            activeFilter={activeFilter}
-            sortDirection={sortDirection}
-            onFilterChange={handleFilter}
-            onSortChange={handleSort}
-          />
-          
-          <LeaderboardTable users={leaderboardData} currentFilter={activeFilter} />
-        </div>
-        
-        <LeaderboardFooter />
-        
-        <RoyalDivider variant="ornate" color="royal" className="my-8" />
-        
-        <div className="mt-8 text-center glass-morphism border border-white/10 rounded-lg p-6 max-w-3xl mx-auto">
-          <div className="flex justify-center mb-3">
-            <div className="relative">
-              <Crown size={24} className="text-royal-gold" />
-              <div className="absolute -inset-3 bg-royal-gold/10 rounded-full blur-sm"></div>
-            </div>
+        {courtMembers.length > 3 && (
+          <div className="flex justify-center">
+            <button onClick={toggleShowAllMembers} className="text-sm text-muted-foreground hover:text-white transition-colors">
+              {showAllMembers ? 'Show Less' : `Show All ${courtMembers.length} Members`}
+            </button>
           </div>
-          <h3 className="text-lg font-royal mb-2 royal-gradient">The Royal Investment Philosophy</h3>
-          <p className="text-white/70 italic">
-            "Remember, dear nobles, the more you spend, the more meaningful your completely meaningless rank becomes. 
-            Your financial contributions directly validate your sense of self-worth in our delightfully absurd digital aristocracy."
-          </p>
-          <div className="flex items-center justify-center mt-4 text-xs text-white/50">
-            <Coins size={12} className="text-royal-gold mr-1" />
-            <span>Weekly top spender receives an entirely fictional crown!</span>
-          </div>
-        </div>
-      </div>
-    </section>
+        )}
+      </CardContent>
+    </Card>
   );
 };
 

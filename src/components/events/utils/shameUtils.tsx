@@ -1,6 +1,6 @@
 
 import { MockeryAction } from '@/types/mockery-types';
-import { Egg, Hammer, Tomato } from 'lucide-react';
+import { Egg, Hammer, AlertCircle } from 'lucide-react';
 import React from 'react';
 
 // For backward compatibility
@@ -46,12 +46,12 @@ export const getShameActionPrice = (action: MockeryAction): number => {
 // Get shame action icon
 export const getShameActionIcon = (action: MockeryAction) => {
   const icons: Record<string, React.FC<any>> = {
-    'tomatoes': Tomato,
+    'tomatoes': AlertCircle, // Changed from Tomato to AlertCircle
     'eggs': Egg,
     'stocks': Hammer,
-    'shame': Tomato
+    'shame': AlertCircle // Changed from Tomato to AlertCircle
   };
-  return icons[action] || Tomato;
+  return icons[action] || AlertCircle;
 };
 
 // Check if an action has a weekly discount

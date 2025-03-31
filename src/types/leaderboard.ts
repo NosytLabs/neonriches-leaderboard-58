@@ -1,65 +1,58 @@
 
-import { TeamColor } from './team';
-import { UserTier } from './user-types';
+import { TeamColor, UserTier } from './user';
 
 export interface LeaderboardUser {
   id: string;
   username: string;
-  displayName: string;
+  displayName?: string;
+  profileImage?: string;
+  tier?: UserTier;
+  team?: TeamColor;
   rank: number;
   previousRank?: number;
-  tier: UserTier;
-  team: TeamColor;
   totalSpent: number;
-  walletBalance?: number;
-  profileImage?: string;
-  
-  // Additional fields needed by various components
-  avatarUrl?: string;
+  spentAmount?: number; // Adding this for compatibility
+  joinDate?: string;
   isVerified?: boolean;
   isProtected?: boolean;
+  avatarUrl?: string;
+  walletBalance?: number;
   spendStreak?: number;
-  userId?: string;
+  lastActive?: string;
+  activeTitle?: string;
+  isVIP?: boolean;
+  isFounder?: boolean;
+  supporters?: number;
+  supporting?: number;
 }
 
 export interface LeaderboardFilter {
-  team: TeamColor | 'all';
-  tier: UserTier | 'all';
+  team: 'all' | TeamColor;
+  tier: 'all' | UserTier;
   search: string;
-  sortBy?: 'rank' | 'spent' | 'username';
+  sortBy?: 'username' | 'rank' | 'spent' | 'totalSpent' | 'joined';
   sortDirection?: 'asc' | 'desc';
-}
-
-export interface LeaderboardEntry {
-  id: string;
-  userId: string;
-  username: string;
-  position: number;
-  amount: number;
-  timestamp: string;
-  avatarUrl?: string;
-  teamColor?: TeamColor;
-}
-
-export interface LeaderboardResponse {
-  entries: LeaderboardEntry[];
-  total: number;
-  page: number;
-  limit: number;
+  limit?: number; // Adding this for compatibility
 }
 
 export interface OnChainLeaderboardEntry {
   pubkey: string;
   amount: number;
-  timestamp: string;
-  username?: string;
+  timestamp: number;
+  username?: string; // Adding this for compatibility
+  publicKey?: string;
+  amountSpent?: number;
+  totalDeposited?: number;
+  rank?: number; 
+  joinDate?: number;
+  userId?: string;
 }
 
-export interface SolanaTransaction {
-  id: string;
-  type: 'deposit' | 'withdrawal';
-  amount: number;
-  timestamp: string;
-  signature: string;
-  account: string;
+export interface LeaderboardStats {
+  totalUsers: number;
+  totalSpent: number;
+  averageSpent: number;
+  highestIndividualSpent: number;
+  usersSpendingLast24h: number;
+  totalSpentLast24h: number;
 }

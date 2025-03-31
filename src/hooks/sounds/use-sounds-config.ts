@@ -1,47 +1,51 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 import { useLocalStorage } from '@/hooks/use-local-storage';
 import { SoundConfig } from '@/types/sound-types';
 
+const defaultSoundConfig: SoundConfig = {
+  volume: 0.5,
+  enabled: true,
+  muted: false,
+  premium: false
+};
+
 export const useSoundsConfig = () => {
-  const [config, setConfig] = useLocalStorage<SoundConfig>('sound-config', {
-    volume: 0.5,
-    enabled: true,
-    muted: false,
-    premium: false
-  });
+  const [soundConfig, setSoundConfig] = useLocalStorage<SoundConfig>('sound-config', defaultSoundConfig);
 
-  const setVolume = (volume: number) => {
-    setConfig({ ...config, volume });
-    localStorage.setItem('soundVolume', volume.toString());
-  };
+  const setVolume = useCallback((volume: number) => {
+    setSoundConfig(prevConfig => ({
+      ...prevConfig,
+      volume: Math.max(0, Math.min(1, volume))
+    }));
+  }, [setSoundConfig]);
 
-  const toggleEnabled = () => {
-    const newEnabled = !config.enabled;
-    setConfig({ ...config, enabled: newEnabled });
-    localStorage.setItem('soundEnabled', JSON.stringify(newEnabled));
-  };
+  const toggleSounds = useCallback(() => {
+    setSoundConfig(prevConfig => ({
+      ...prevConfig,
+      enabled: !prevConfig.enabled
+    }));
+  }, [setSoundConfig]);
 
-  const toggleMute = () => {
-    const newMuted = !config.muted;
-    setConfig({ ...config, muted: newMuted });
-    localStorage.setItem('soundsMuted', JSON.stringify(newMuted));
-  };
+  const toggleMuted = useCallback(() => {
+    setSoundConfig(prevConfig => ({
+      ...prevConfig,
+      muted: !prevConfig.muted
+    }));
+  }, [setSoundConfig]);
 
-  const togglePremium = () => {
-    const newPremium = !config.premium;
-    setConfig({ ...config, premium: newPremium });
-    localStorage.setItem('premiumSounds', JSON.stringify(newPremium));
-  };
+  const togglePremium = useCallback(() => {
+    setSoundConfig(prevConfig => ({
+      ...prevConfig,
+      premium: !prevConfig.premium
+    }));
+  }, [setSoundConfig]);
 
-  // Return the configuration and functions to update it
   return {
-    config,
+    soundConfig,
     setVolume,
-    toggleEnabled,
-    toggleMute,
+    toggleSounds,
+    toggleMuted,
     togglePremium
   };
 };
-
-export default useSoundsConfig;

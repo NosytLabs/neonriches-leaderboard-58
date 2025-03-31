@@ -12,11 +12,15 @@ import {
 
 // Re-export for components to use
 export {
-  getMockeryActionTitle as getMockeryName,
-  getMockeryActionDescription as getMockeryDescription,
-  getMockeryActionPrice as getMockeryCost,
+  getMockeryActionTitle,
+  getMockeryActionDescription,
+  getMockeryActionPrice,
   getMockeryTier,
   getMockeryTierColorClass,
   getMockeryActionIcon,
-  getActiveMockeryClass
+  getActiveMockeryClass,
+  // Add aliases for backward compatibility
+  getMockeryActionTitle as getMockeryName,
+  getMockeryActionDescription as getMockeryDescription,
+  getMockeryActionPrice as getMockeryCost
 };

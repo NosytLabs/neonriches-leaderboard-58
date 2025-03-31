@@ -49,7 +49,8 @@ export const getMockeryTier = (action: MockeryAction): MockeryTier => {
     removal: 'legendary',
     protection: 'royal',
     silence: 'rare',
-    shame: 'basic'
+    shame: 'basic',
+    fool: 'basic'
   };
 
   return tiers[action] || 'basic';
@@ -66,7 +67,8 @@ export const getMockeryTierColorClass = (tier: MockeryTier): string => {
     rare: 'border-purple-400',
     epic: 'border-pink-500',
     royal: 'border-yellow-400',
-    legendary: 'border-red-500'
+    legendary: 'border-red-500',
+    bronze: 'border-amber-700'
   };
 
   return classes[tier] || 'border-gray-400';

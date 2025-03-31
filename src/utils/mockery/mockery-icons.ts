@@ -2,64 +2,64 @@
 import { MockeryAction, MockeryTier } from '@/types/mockery-types';
 import type { LucideIcon } from 'lucide-react';
 import {
-  Target, ShieldAlert, Skull, Crown, Prison, UserX, 
-  MessageSquareOff, UserRoundX, Ban, Theatre, User, Rat, 
-  Ghost, Candy, Skull, Angry, Flame, Swords, King, 
-  Queen, Shield, ScrollText, Crosshair, Lightbulb, 
-  Laugh, Frown, XCircle, Trash2, Sparkles, Cloud, 
-  Snowflake, Megaphone, Unplug, Palette, Aperture, 
-  CloudLightning, Bomb, Scissors, Maximize2
+  AlertCircle, ShieldAlert, User, Crown, 
+  Shield, UserX, MessageSquare, Ban, 
+  UserRoundX, Skull, Feather, Angry, 
+  Flame, Swords, LinkIcon, Crosshair, 
+  Lightbulb, Unplug, Cloud, Sparkles, 
+  Scissors, Maximize2, Egg, Hammer
 } from 'lucide-react';
 
 // Get the appropriate icon for a mockery action
 export const getMockeryActionIcon = (action: MockeryAction): LucideIcon => {
   const icons: Record<string, LucideIcon> = {
     tomatoes: Ban,
-    eggs: ShieldAlert,
-    putridEggs: Ban,
-    dungeons: Prison,
+    eggs: Egg,
+    putridEggs: ShieldAlert,
+    dungeons: UserX,
     immune: Shield,
     crown: Crown,
-    stocks: UserX,
+    stocks: Hammer,
     dunce: UserRoundX,
-    jester: Theatre,
-    courtJester: Theatre,
-    jest: Laugh,
+    jester: Feather,
+    courtJester: Feather,
+    jest: Feather,
     troll: Angry,
     peasant: User,
-    rat: Rat,
-    ghost: Ghost,
+    rat: User,
+    ghost: Skull,
     skeleton: Skull,
     zombie: Skull,
-    witch: Candy,
+    witch: Flame,
     monster: Flame,
     demon: Flame,
     dragon: Flame,
-    king: King,
-    queen: Queen,
+    king: Crown,
+    queen: Crown,
     knight: Swords,
-    bishop: ScrollText,
+    bishop: Crown,
     rook: Shield,
     pawn: User,
     target: Crosshair,
     challenge: Lightbulb,
     smokeBomb: Cloud,
     glitterBomb: Sparkles,
-    royalPie: Target,
+    royalPie: AlertCircle,
     jokeCrown: Crown,
-    memeFrame: Aperture,
+    memeFrame: Maximize2,
     roast: Flame,
-    ridicule: Laugh,
-    humiliate: Frown,
-    expose: XCircle,
-    mock: Laugh,
-    taunt: Megaphone,
+    ridicule: Feather,
+    humiliate: Feather,
+    expose: AlertCircle,
+    mock: Feather,
+    taunt: Feather,
     guillotine: Scissors,
     defeat: UserRoundX,
-    removal: Trash2,
+    removal: Ban,
     protection: Shield,
-    silence: MessageSquareOff,
-    shame: Ban
+    silence: MessageSquare,
+    shame: Ban,
+    fool: Feather
   };
 
   return icons[action] || Ban;
@@ -98,12 +98,15 @@ export const getMockeryActionIconColor = (action: MockeryAction): string => {
     rare: 'text-purple-400',
     epic: 'text-pink-500',
     royal: 'text-yellow-400',
-    legendary: 'text-red-500'
+    legendary: 'text-red-500',
+    bronze: 'text-amber-700'
   };
 
-  // Get tier for the action
-  const tier = getMockeryTier(action);
-  
-  // Return specific color or tier-based color
-  return colorClasses[action] || tierColors[tier] || 'text-gray-400';
+  // Return specific color or tier-based color  
+  return colorClasses[action] || tierColors[getMockeryTier(action)] || 'text-gray-400';
 };
+
+// Import mockery tier for convenience
+import { getMockeryTier } from './mockery-tiers';
+
+export default getMockeryActionIcon;
