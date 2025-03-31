@@ -11,8 +11,8 @@ export interface LeaderboardUser {
   previousRank?: number;
   walletBalance?: number;
   totalSpent: number;
-  spentAmount?: number;
-  amountSpent?: number;
+  spentAmount?: number;  // Legacy field - use totalSpent instead
+  amountSpent?: number;  // Legacy field - use totalSpent instead
   isVerified?: boolean;
   spendStreak?: number;
 }

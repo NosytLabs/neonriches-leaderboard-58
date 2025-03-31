@@ -11,22 +11,26 @@ export const useMockLeaderboard = () => {
       try {
         // In a real app, we would fetch this data from an API
         // For now, we're using mock data
-        const mockData = Array.from({ length: 20 }).map((_, i) => ({
-          id: `user-${i + 1}`,
-          username: `User${i + 1}`,
-          displayName: `User ${i + 1}`,
-          profileImage: `https://randomuser.me/api/portraits/men/${20 + i}.jpg`,
-          tier: i < 3 ? 'royal' : i < 8 ? 'gold' : i < 15 ? 'silver' : 'bronze',
-          team: i % 4 === 0 ? 'red' : i % 4 === 1 ? 'blue' : i % 4 === 2 ? 'green' : 'gold',
-          rank: i + 1,
-          previousRank: i + 2,
-          walletBalance: Math.round(Math.random() * 100 * 100) / 100,
-          totalSpent: Math.round((10000 - i * 500 + Math.random() * 200) * 100) / 100,
-          spentAmount: Math.round((10000 - i * 500 + Math.random() * 200) * 100) / 100,
-          amountSpent: Math.round((10000 - i * 500 + Math.random() * 200) * 100) / 100,
-          isVerified: i < 10,
-          spendStreak: Math.floor(Math.random() * 20),
-        } as LeaderboardUser));
+        const mockData = Array.from({ length: 20 }).map((_, i) => {
+          const totalSpent = Math.round((10000 - i * 500 + Math.random() * 200) * 100) / 100;
+          
+          return {
+            id: `user-${i + 1}`,
+            username: `User${i + 1}`,
+            displayName: `User ${i + 1}`,
+            profileImage: `https://randomuser.me/api/portraits/men/${20 + i}.jpg`,
+            tier: i < 3 ? 'royal' : i < 8 ? 'gold' : i < 15 ? 'silver' : 'bronze',
+            team: i % 4 === 0 ? 'red' : i % 4 === 1 ? 'blue' : i % 4 === 2 ? 'green' : 'gold',
+            rank: i + 1,
+            previousRank: i + 2,
+            walletBalance: Math.round(Math.random() * 100 * 100) / 100,
+            totalSpent: totalSpent,
+            spentAmount: totalSpent, // For backward compatibility
+            amountSpent: totalSpent, // For backward compatibility
+            isVerified: i < 10,
+            spendStreak: Math.floor(Math.random() * 20),
+          } as LeaderboardUser;
+        });
         
         setMockLeaderboardData(mockData);
         setLoading(false);

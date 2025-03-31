@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { LeaderboardUser } from '@/types/leaderboard';
-import { formatCurrency } from '@/utils/formatters/currencyFormatters';
+import { formatCurrency } from '@/utils/formatters';
 import { Crown, TrendingDown, TrendingUp } from 'lucide-react';
 
 interface LeaderboardRowProps {
