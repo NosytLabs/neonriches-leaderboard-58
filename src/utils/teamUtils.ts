@@ -110,7 +110,7 @@ export const getTeamAbsurdStat = (team: TeamType | TeamColor): string => {
     green: '63% claim their plants grow faster when they wear team colors',
     gold: '91% sleep with their crypto wallets under their pillows',
     purple: '79% address themselves with royal titles in private',
-    none: '96% believe they're actually NPCs in someone else's game',
+    none: '96% believe they\'re actually NPCs in someone else\'s game',
     neutral: '50% of statistics are made up on the spot'
   };
   
@@ -133,13 +133,13 @@ export const getTeamHistoricalNote = (team: TeamType | TeamColor): string => {
 
 export const getTeamNFTJoke = (team: TeamType | TeamColor): string => {
   const jokeMap: Record<string, string> = {
-    red: 'Our NFTs are so exclusive they don't actually exist',
+    red: 'Our NFTs are so exclusive they don\'t actually exist',
     blue: 'We invented a blockchain that runs on pure intellectual superiority',
     green: 'Our NFTs are sustainably farmed and 100% organic',
     gold: 'Each NFT comes with a virtual butler who ignores you',
     purple: 'Our NFTs are royalty-free, but still expect to be treated like royalty',
     none: 'We believe in NFTs: Nice Friendly Thoughts',
-    neutral: 'Our NFTs are perfectly balanced - they're worth exactly what you paid'
+    neutral: 'Our NFTs are perfectly balanced - they\'re worth exactly what you paid'
   };
   
   return jokeMap[team] || jokeMap.none;
@@ -152,7 +152,7 @@ export const getTeamCryptoRoast = (team: TeamType | TeamColor): string => {
     green: 'Believes staring at plants helps portfolio growth',
     gold: 'The only thing more inflated than their wallets is their ego',
     purple: 'Expects their crypto to curtsy before being traded',
-    none: 'Can't even commit to a blockchain, let alone a team',
+    none: 'Can\'t even commit to a blockchain, let alone a team',
     neutral: 'Too afraid to have an opinion on whether crypto will go up or down'
   };
   
