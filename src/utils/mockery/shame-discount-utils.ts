@@ -9,9 +9,15 @@ const WEEKLY_DISCOUNT_ACTIONS: Record<string, ShameAction> = {
 };
 
 // Whether there's a weekly discount active
-export const hasWeeklyDiscount = (): boolean => {
-  // For demo purposes, always return true
-  return true;
+export const hasWeeklyDiscount = (action?: ShameAction): boolean => {
+  // If no action is provided, just check if any discount is active
+  if (!action) {
+    return true; // For demo purposes, always return true
+  }
+  
+  // If an action is provided, check if it's the current discounted action
+  const discountedAction = getWeeklyDiscountedAction();
+  return action === discountedAction;
 };
 
 // Get the current discounted action
@@ -55,4 +61,12 @@ export const getShameActionMessage = (action: ShameAction): string => {
     default:
       return 'You mocked this user!';
   }
+};
+
+export default {
+  hasWeeklyDiscount,
+  getWeeklyDiscountedAction,
+  getDiscountedShamePrice,
+  getShameActionPrice,
+  getShameActionMessage
 };

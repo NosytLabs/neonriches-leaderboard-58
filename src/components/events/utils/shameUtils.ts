@@ -43,9 +43,12 @@ export const getShameActionTitle = (action: MockeryAction) => {
   return getMockeryName(action);
 };
 
-export const ShameIcon: React.FC<{ action: ShameAction; size?: 'sm' | 'md' | 'lg' }> = ({ 
+export const ShameIcon = ({ 
   action, 
   size = 'md' 
+}: { 
+  action: ShameAction; 
+  size?: 'sm' | 'md' | 'lg' 
 }) => {
   // Convert ShameAction to MockeryAction explicitly through unknown to avoid type error
   const actionType = action as unknown as MockeryAction;

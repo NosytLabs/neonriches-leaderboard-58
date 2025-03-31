@@ -2,7 +2,7 @@
 import { MockeryAction } from '@/types/mockery';
 
 export const getMockeryActionDescription = (action: MockeryAction): string => {
-  const descriptions: Record<MockeryAction, string> = {
+  const descriptions: Record<string, string> = {
     tomatoes: 'Pelt your target with rotten tomatoes. A classic form of public ridicule.',
     eggs: 'Hurl rotten eggs at your target. The stench will follow them for a day.',
     shame: 'Subject your target to public ridicule and shame.',
@@ -12,7 +12,6 @@ export const getMockeryActionDescription = (action: MockeryAction): string => {
     stocks: 'Place your target in the virtual stocks for public display.',
     dunce: 'Make your target wear a dunce cap, marking their foolishness.',
     jester: 'Turn your target into a court jester, forced to entertain the nobles.',
-    // fool: 'Label your target as the village fool.',
     troll: 'Mark your target as a digital troll for all to see.',
     peasant: 'Demote your target to peasant status, regardless of their spending.',
     rat: 'Curse your target with the mark of the plague rat.',
@@ -38,3 +37,5 @@ export const getMockeryActionDescription = (action: MockeryAction): string => {
 
 // For backward compatibility
 export const getMockeryDescription = getMockeryActionDescription;
+
+export default getMockeryActionDescription;
