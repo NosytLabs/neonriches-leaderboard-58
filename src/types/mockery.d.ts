@@ -66,3 +66,6 @@ export interface MockedUser {
 }
 
 export type MockeryTier = 'basic' | 'premium' | 'royal' | 'silver' | 'legendary';
+
+// Add a consistent type alias to support legacy code
+export type MockeryActionType = MockeryAction;

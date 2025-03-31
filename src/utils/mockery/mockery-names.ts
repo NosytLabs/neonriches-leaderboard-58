@@ -1,8 +1,8 @@
 
 import { MockeryAction } from '@/types/mockery';
 
-export const getMockeryName = (action: MockeryAction): string => {
-  const names: Record<MockeryAction, string> = {
+export const getMockeryActionTitle = (action: MockeryAction): string => {
+  const names: Record<string, string> = {
     tomatoes: 'Tomato Barrage',
     eggs: 'Rotten Eggs',
     shame: 'Public Shaming',
@@ -35,3 +35,8 @@ export const getMockeryName = (action: MockeryAction): string => {
   
   return names[action] || 'Unknown Mockery';
 };
+
+// Alias for backward compatibility
+export const getMockeryName = getMockeryActionTitle;
+
+export default getMockeryActionTitle;

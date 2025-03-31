@@ -1,8 +1,11 @@
 
 import React from 'react';
 import { MockeryAction } from '@/types/mockery';
-import { getActiveMockeryClass } from '@/utils/mockery/mockery-effects';
-import { getMockeryTier, getMockeryTierColorClass } from '@/utils/mockery/mockery-tiers';
+import { 
+  getActiveMockeryClass,
+  getMockeryTier, 
+  getMockeryTierColorClass 
+} from '@/utils/mockery/mockery-effects';
 import { getMockeryActionIcon } from '@/utils/mockery/mockery-icons';
 import { getMockeryActionPrice } from '@/utils/mockery/mockery-costs';
 

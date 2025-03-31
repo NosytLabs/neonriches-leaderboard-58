@@ -1,10 +1,10 @@
 
-import { MockeryActionType } from '@/types/mockery';
+import { MockeryAction } from '@/types/mockery';
 
 /**
  * Get the shame action price based on the action type
  */
-export const getShameActionPrice = (action: MockeryActionType): number => {
+export const getShameActionPrice = (action: MockeryAction): number => {
   const prices: Record<string, number> = {
     tomatoes: 1,
     eggs: 2,
@@ -15,6 +15,7 @@ export const getShameActionPrice = (action: MockeryActionType): number => {
     crown: 15,
     dunce: 3,
     jester: 10,
+    fool: 3,
     troll: 3,
     peasant: 5,
     rat: 3,
@@ -41,7 +42,7 @@ export const getShameActionPrice = (action: MockeryActionType): number => {
 /**
  * Get shame action cooldown in milliseconds
  */
-export const getShameActionCooldown = (action: MockeryActionType): number => {
+export const getShameActionCooldown = (action: MockeryAction): number => {
   const baseCooldown = 30000; // 30 seconds base cooldown
   
   const cooldownMultipliers: Record<string, number> = {
@@ -54,6 +55,7 @@ export const getShameActionCooldown = (action: MockeryActionType): number => {
     crown: 3,
     dunce: 1.5,
     jester: 2,
+    fool: 1.5,
     troll: 1.5,
     peasant: 2,
     rat: 1.5,
@@ -82,8 +84,8 @@ export const getShameActionCooldown = (action: MockeryActionType): number => {
 /**
  * Check if shame action is premium (requires subscription)
  */
-export const isShameActionPremium = (action: MockeryActionType): boolean => {
-  const premiumActions: MockeryActionType[] = [
+export const isShameActionPremium = (action: MockeryAction): boolean => {
+  const premiumActions: MockeryAction[] = [
     'dungeons', 'immune', 'crown', 
     'zombie', 'monster', 'demon', 'dragon',
     'king', 'queen', 'bishop', 'challenge'
@@ -95,7 +97,7 @@ export const isShameActionPremium = (action: MockeryActionType): boolean => {
 /**
  * Get shame action tier level (1-5, with 5 being highest)
  */
-export const getShameActionTier = (action: MockeryActionType): number => {
+export const getShameActionTier = (action: MockeryAction): number => {
   const tiers: Record<string, number> = {
     tomatoes: 1,
     eggs: 1,
@@ -106,6 +108,7 @@ export const getShameActionTier = (action: MockeryActionType): number => {
     crown: 4,
     dunce: 1,
     jester: 3,
+    fool: 1,
     troll: 1,
     peasant: 2,
     rat: 1,
