@@ -1,6 +1,6 @@
 
-export type RoyalDividerVariant = 'line' | 'double' | 'fancy' | 'ornate' | 'simple';
-export type RoyalDividerColor = 'default' | 'royal' | 'gold' | 'crimson' | 'purple';
+export type RoyalDividerVariant = 'line' | 'double' | 'fancy' | 'ornate' | 'simple' | 'crown' | 'scroll';
+export type RoyalDividerColor = 'default' | 'royal' | 'gold' | 'crimson' | 'purple' | 'navy' | 'emerald';
 
 export interface RoyalDividerProps {
   variant?: RoyalDividerVariant;

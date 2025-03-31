@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Shell } from '@/components/shell';
+import Shell from '@/components/Shell';
 
 const Terms = () => {
   return (

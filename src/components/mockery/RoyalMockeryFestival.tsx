@@ -51,6 +51,12 @@ const RoyalMockeryFestival = () => {
     return true;
   };
   
+  // Modified getActiveMockeryWrapper to return a boolean instead of an object
+  const getActiveMockeryBooleanWrapper = (username: string): boolean => {
+    const mockery = getActiveMockery(username);
+    return !!mockery; // Convert to boolean
+  };
+  
   return (
     <>
       <Card className="glass-morphism border-royal-crimson/20">
@@ -68,7 +74,7 @@ const RoyalMockeryFestival = () => {
             getUserMockeryCount={getUserMockeryCount}
             getUserMockedOthersCount={getUserMockedOthersCount}
             isUserProtected={isUserProtected}
-            getActiveMockery={getActiveMockeryWrapper}
+            getActiveMockery={getActiveMockeryBooleanWrapper}
             onMockery={onMockery}
             onPurchaseProtection={handleBuyProtection}
           />

@@ -13,8 +13,14 @@ export type {
   NotificationSoundOptions
 };
 
+// Define ExtendedMockeryAction for backward compatibility
+export type ExtendedMockeryAction = MockeryAction;
+
 // Also export ShameAction as an alias of MockeryAction
 export type ShameAction = MockeryAction;
 
 // Re-export the helper functions
 export { isValidMockeryAction, isValidMockeryTier };
+
+// Team color options
+export type TeamType = 'red' | 'blue' | 'green' | 'gold' | 'purple' | 'none' | 'neutral';

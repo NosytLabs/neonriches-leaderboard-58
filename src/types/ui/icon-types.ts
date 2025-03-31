@@ -3,7 +3,7 @@ import { LucideProps } from 'lucide-react';
 
 export type IconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 export type IconStyle = 'default' | 'medieval' | 'pixel' | 'outlined';
-export type IconColor = 'default' | 'primary' | 'secondary' | 'accent' | 'muted' | 'gold' | 'silver' | 'royal' | 'crimson' | 'navy' | 'bronze' | 'purple';
+export type IconColor = 'default' | 'primary' | 'secondary' | 'accent' | 'muted' | 'gold' | 'silver' | 'royal' | 'crimson' | 'navy' | 'bronze' | 'purple' | 'emerald';
 
 export interface IconProps {
   name: string;
@@ -11,6 +11,7 @@ export interface IconProps {
   color?: IconColor;
   className?: string;
   style?: IconStyle;
+  animated?: boolean;
 }
 
 export type MedievalIconName = 
@@ -24,7 +25,14 @@ export type MedievalIconName =
   | 'key'
   | 'coins'
   | 'gem'
-  | 'seal';
+  | 'seal'
+  | 'castle'
+  | 'chalice'
+  | 'dragon'
+  | 'flag'
+  | 'throne'
+  | 'tower'
+  | 'treasure-chest';
 
 export type MedievalIconSize = IconSize;
 export type MedievalIconColor = IconColor;
@@ -58,5 +66,6 @@ export const iconColorMap = {
   'crimson': 'text-royal-crimson',
   'navy': 'text-royal-navy',
   'bronze': 'text-amber-700',
-  'purple': 'text-purple-500'
+  'purple': 'text-purple-500',
+  'emerald': 'text-emerald-500'
 };
