@@ -2,7 +2,7 @@
 import React from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { UserProfile } from '@/types/user';
-import { MockeryAction, MockedUser } from '@/types/mockery';
+import { MockeryAction, MockedUser } from '@/types/mockery-types';
 import MockeryTabContent from './MockeryTabContent';
 import MockeryHistory from './MockeryHistory';
 import MockeryProtection from './MockeryProtection';
@@ -20,7 +20,7 @@ interface MockeryTabsProps {
   isUserProtected: (username: string) => boolean;
   getActiveMockery: (username: string) => MockeryAction | null;
   onMockery: (username: string, action: string, amount: number) => boolean;
-  onPurchaseProtection: () => void;
+  onPurchaseProtection: () => boolean;
 }
 
 const MockeryTabs: React.FC<MockeryTabsProps> = ({

@@ -4,7 +4,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Download, Share2, Award, Crown, Shield, Wallet, ExternalLink } from 'lucide-react';
-import { UserProfile } from '@/types/user-types';
+import { UserProfile } from '@/types/user';
 import { Certificate } from '@/types/certificate';
 import { formatDate } from '@/utils/formatters';
 import { getTeamName, getTeamColor, getTeamBorderColor } from '@/utils/teamUtils';

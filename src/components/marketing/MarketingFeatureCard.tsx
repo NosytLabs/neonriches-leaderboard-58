@@ -5,8 +5,8 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Lock, Star, Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useAuth } from '@/contexts';
-import useFeatureAccess from '@/hooks/use-feature-access';
+import { useAuth } from '@/hooks';
+import useFeatureAccess, { Feature } from '@/hooks/use-feature-access';
 
 interface MarketingFeatureCardProps {
   id: string;
@@ -116,7 +116,7 @@ const MarketingFeatureCard: React.FC<MarketingFeatureCardProps> = ({
         ) : (
           <Button 
             className="w-full bg-royal-gold hover:bg-royal-gold/90 text-black"
-            onClick={() => window.location.href = getUpgradeUrl(id)}
+            onClick={() => window.location.href = getUpgradeUrl(id as Feature)}
           >
             {!isUserPro && <Lock className="h-4 w-4 mr-2" />}
             {isUserPro ? 'Change Plan' : 'Upgrade Now'}

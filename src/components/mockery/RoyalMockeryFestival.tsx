@@ -25,10 +25,10 @@ const RoyalMockeryFestival = () => {
     return false;
   };
   
-  // Simplified getActiveMockery function that returns a boolean
-  const getActiveMockery = (username: string): boolean => {
+  // Simplified getActiveMockery function that returns a MockeryAction or null
+  const getActiveMockery = (username: string): MockeryAction | null => {
     // In real app, check if user has active mockery
-    return false;
+    return null;
   };
   
   // Mock counts
@@ -36,20 +36,21 @@ const RoyalMockeryFestival = () => {
   const getUserMockedOthersCount = (username: string): number => 0;
   
   // Simplified handlers
-  const handleSelectAction = (action: MockeryAction) => {
+  const handleSelectAction = (action: MockeryAction): boolean => {
     setSelectedAction(action);
+    return true;
   };
   
-  const handleMockery = async (username: string, action: MockeryAction, amount: number) => {
+  const handleMockery = async (username: string, action: string, amount: number): boolean => {
     setMockeryEffectData({
       username,
-      action
+      action: action as MockeryAction
     });
     setShowMockeryEffect(true);
     return true;
   };
   
-  const handleBuyProtection = async () => {
+  const handleBuyProtection = async (): boolean => {
     return true;
   };
   
@@ -60,6 +61,7 @@ const RoyalMockeryFestival = () => {
   // Prepare mocked users
   const mockedUsers = [
     {
+      id: "user1", // Added id field
       username: 'KingMidas',
       displayName: 'King Midas',
       profileImage: 'https://randomuser.me/api/portraits/men/1.jpg',

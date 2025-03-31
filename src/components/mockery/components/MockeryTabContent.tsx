@@ -1,10 +1,10 @@
 
 import React from 'react';
 import { UserProfile } from '@/types/user';
-import { MockeryAction, MockedUser } from '@/types/mockery';
+import { MockeryAction, MockedUser } from '@/types/mockery-types';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { getMockeryName } from '@/utils/mockery';
+import { getMockeryName } from '@/utils/mockeryUtils';
 
 interface MockeryTabContentProps {
   user: UserProfile | null;

@@ -1,105 +1,114 @@
 
-import { UserProfile } from '@/types/user';
-import { UserTier } from '@/types/user-types';
+import { useState, useEffect } from 'react';
+import { useAuth } from '@/hooks/useAuth';
+import { UserTier } from '@/types/team';
 
 export type Feature = 
-  | 'profile-links'
-  | 'profile-stats'
-  | 'profile-views'
-  | 'profile-badges'
-  | 'profile-cosmetics'
-  | 'profile-marketing'
-  | 'profile-analytics'
-  | 'profile-boost'
-  | 'profile-verification';
+  | 'premium_mockery'
+  | 'advanced_analytics'
+  | 'custom_profile'
+  | 'royal_certificate'
+  | 'priority_support'
+  | 'exclusive_cosmetics'
+  | 'team_benefits'
+  | 'mockery_protection'
+  | 'marketing_dashboard';
 
-export interface FeatureRequirements {
-  [key: string]: UserTier;
+interface FeatureAccessHook {
+  isUserPro: boolean;
+  canAccessFeature: (feature: Feature) => boolean;
+  getUpgradeUrl: (featureId?: string) => string;
+  getPricingForTier: (tier: UserTier) => number;
 }
 
-export const featureRequirements: FeatureRequirements = {
-  'profile-links': 'basic' as UserTier,
-  'profile-stats': 'premium' as UserTier,
-  'profile-views': 'basic' as UserTier,
-  'profile-badges': 'premium' as UserTier,
-  
-  'profile-cosmetics': 'basic' as UserTier,
-  'profile-marketing': 'premium' as UserTier,
-  'profile-analytics': 'premium' as UserTier,
-  'profile-boost': 'premium' as UserTier,
-  
-  'profile-verification': 'premium' as UserTier,
-  'profile-custom-domain': 'premium' as UserTier,
-  
-  'chat-access': 'basic' as UserTier,
-  'chat-premium': 'premium' as UserTier,
+// Feature tiers map
+const FEATURE_TIERS: Record<Feature, UserTier[]> = {
+  premium_mockery: ['premium', 'royal', 'elite', 'legendary', 'founder'],
+  advanced_analytics: ['premium', 'royal', 'elite', 'legendary', 'founder'],
+  custom_profile: ['basic', 'premium', 'royal', 'elite', 'legendary', 'founder'],
+  royal_certificate: ['royal', 'elite', 'legendary', 'founder'],
+  priority_support: ['premium', 'royal', 'elite', 'legendary', 'founder'],
+  exclusive_cosmetics: ['premium', 'royal', 'elite', 'legendary', 'founder'],
+  team_benefits: ['basic', 'premium', 'royal', 'elite', 'legendary', 'founder'],
+  mockery_protection: ['premium', 'royal', 'elite', 'legendary', 'founder'],
+  marketing_dashboard: ['premium', 'royal', 'elite', 'legendary', 'founder']
 };
 
-export interface FeatureAccess {
-  hasFeature: (feature: Feature) => boolean;
-  getRequiredTier: (feature: Feature) => UserTier;
-  getUserTier: () => UserTier;
-  isUserPro?: (user: UserProfile) => boolean;
-  getUpgradeUrl?: (feature: Feature) => string;
-  canAccessFeature?: (feature: Feature) => boolean;
-  isLoading?: boolean;
-  purchaseFeatureIndividually?: (featureId: string) => Promise<boolean>;
-  getMarketingFeaturePriceId?: (featureId: string) => string;
-}
-
-export const tierValues: Record<UserTier, number> = {
-  'free': 0,
-  'basic': 1,
-  'plus': 2,
-  'premium': 3,
-  'royal': 4,
-  'diamond': 5,
-  'pro': 3,
-  'gold': 4,
-  'silver': 2,
-  'bronze': 1,
-  'platinum': 5
+// Tier pricing
+const TIER_PRICING: Record<UserTier, number> = {
+  free: 0,
+  basic: 9.99,
+  premium: 19.99,
+  royal: 49.99,
+  elite: 99.99,
+  legendary: 199.99,
+  founder: 499.99,
+  pro: 29.99,
+  vip: 149.99,
+  standard: 14.99,
+  silver: 79.99,
+  gold: 129.99,
+  platinum: 249.99,
+  diamond: 299.99,
+  bronze: 39.99
 };
 
-export const useFeatureAccess = (user: UserProfile | null): FeatureAccess => {
-  const getUserTier = (): UserTier => {
-    return user?.tier || 'free';
-  };
-
-  const getRequiredTier = (feature: Feature): UserTier => {
-    return featureRequirements[feature] || 'free';
-  };
-
-  const hasFeature = (feature: Feature): boolean => {
-    if (!user) return false;
-    
-    const userTier = getUserTier();
-    const requiredTier = getRequiredTier(feature);
-    
-    return tierValues[userTier] >= tierValues[requiredTier];
-  };
-
-  const isUserPro = (userToCheck: UserProfile): boolean => {
-    return tierValues[userToCheck?.tier || 'free'] >= tierValues['premium'];
-  };
-
-  const getUpgradeUrl = (feature: Feature): string => {
-    return `/subscription?feature=${feature}`;
-  };
-
+/**
+ * Hook for checking feature access based on user tier
+ */
+const useFeatureAccess = (): FeatureAccessHook => {
+  const { user } = useAuth();
+  const [isUserPro, setIsUserPro] = useState<boolean>(false);
+  
+  useEffect(() => {
+    // Determine if user is a pro user (has any paid tier)
+    if (user && user.tier) {
+      setIsUserPro(user.tier !== 'free' && user.tier !== 'basic');
+    } else {
+      setIsUserPro(false);
+    }
+  }, [user]);
+  
+  /**
+   * Check if the user can access a specific feature
+   */
   const canAccessFeature = (feature: Feature): boolean => {
-    return hasFeature(feature);
+    if (!user || !user.tier) return false;
+    
+    // If feature isn't in the map, default to false
+    if (!FEATURE_TIERS[feature]) return false;
+    
+    // Check if user's tier is included in the feature's allowed tiers
+    return FEATURE_TIERS[feature].includes(user.tier as UserTier);
   };
-
+  
+  /**
+   * Get the pricing page URL, optionally filtered to a specific feature
+   */
+  const getUpgradeUrl = (featureId?: string): string => {
+    let url = '/pricing';
+    
+    if (featureId) {
+      url += `?feature=${featureId}`;
+    }
+    
+    return url;
+  };
+  
+  /**
+   * Get the price for a specific tier
+   */
+  const getPricingForTier = (tier: UserTier): number => {
+    return TIER_PRICING[tier] || 0;
+  };
+  
   return {
-    hasFeature,
-    getRequiredTier,
-    getUserTier,
     isUserPro,
-    getUpgradeUrl,
     canAccessFeature,
-    isLoading: false
+    getUpgradeUrl,
+    getPricingForTier
   };
 };
 
 export default useFeatureAccess;
+export { useFeatureAccess };

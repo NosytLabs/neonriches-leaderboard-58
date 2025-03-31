@@ -1,179 +1,86 @@
 
-// User-related type definitions
+import { TeamColor, TeamType, UserTier } from './team';
 
-export type UserTier = 
-  | 'basic' 
-  | 'premium' 
-  | 'royal' 
-  | 'elite' 
-  | 'legendary' 
-  | 'founder'
-  | 'pro'
-  | 'diamond'
-  | 'gold'
-  | 'silver'
-  | 'bronze'
-  | 'free';
-
-export type TeamType = 'red' | 'blue' | 'green' | 'gold' | 'purple';
-export type TeamColor = TeamType;
-
-export interface SocialLink {
-  id?: string;
-  platform: string;
-  url: string;
-  username?: string;
-  isPublic?: boolean;
-}
-
-export interface UserCosmetics {
-  border?: string[];
-  color?: string[];
-  font?: string[];
-  emoji?: string[];
-  title?: string[];
-  background?: string[];
-  effect?: string[];
-  badge?: string[];
-  theme?: string[];
-  activeBorder?: string;
-  activeColor?: string;
-  activeFont?: string;
-  activeEmoji?: string;
-  activeTitle?: string;
-  activeBackground?: string;
-  activeEffect?: string;
-  activeBadge?: string;
-  activeTheme?: string;
-}
-
-export interface UserCosmeticState {
-  border: string[];
-  color: string[];
-  font: string[];
-  emoji: string[];
-  title: string[];
-  background: string[];
-  effect: string[];
-  badge: string[];
-  theme: string[];
-  activeBorder: string;
-  activeColor: string;
-  activeFont: string;
-  activeEmoji: string;
-  activeTitle: string;
-  activeBackground: string;
-  activeEffect: string;
-  activeBadge: string;
-  activeTheme: string;
-}
-
-export interface ProfileBoost {
-  id: string;
-  startDate: string;
-  endDate: string;
-  level: number;
-  effectId?: string;
-  type: string;
-  strength: number;
-  appliedBy: string;
-  isActive: boolean;
-  status?: string;
-}
-
-export interface UserStats {
-  totalSpent: number;
-  highestRank: number;
-  currentRank: number;
-  daysActive: number;
-  totalMockeries: number;
-  mockeryReceived: number;
-  achievementsUnlocked: number;
-  referrals: number;
-  teamContribution: number;
-}
-
-export interface Achievement {
-  id: string;
-  name: string;
-  description: string;
-  image?: string;
-  icon?: string;
-  unlockedAt: string;
-  progress?: number;
-  maxProgress?: number;
-  tier?: string;
-  type?: string;
-  amountSpent?: number;
-}
-
-export interface UserProfile {
+// Basic user interface
+export interface User {
   id: string;
   username: string;
   displayName?: string;
   email?: string;
   profileImage?: string;
   bio?: string;
+  joinedDate?: string;
+}
+
+// Profile image type
+export interface ProfileImage {
+  id: string;
+  url: string;
+  isPrimary: boolean;
+  caption?: string;
+  type: 'profile' | 'banner' | 'background';
+}
+
+// Social link profile type
+export interface SocialLink {
+  id?: string;
+  platform: string;
+  url: string;
+  title?: string;
+  icon?: string;
+  isActive?: boolean;
+  position?: number;
+}
+
+// Profile link type
+export interface ProfileLink {
+  id: string;
+  url: string;
+  title: string;
+  description?: string;
+  isActive: boolean;
+  position: number;
+  clicks?: number;
+}
+
+// Full user profile
+export interface UserProfile extends User {
   rank?: number;
   previousRank?: number;
   totalSpent?: number;
   walletBalance?: number;
-  tier: UserTier;
+  tier?: UserTier;
   team?: TeamColor;
-  joinedAt?: string;
-  joinDate?: string;
-  lastActive?: string;
-  isAdmin?: boolean;
   isVerified?: boolean;
-  cosmetics?: UserCosmetics;
-  achievements?: Achievement[];
-  stats?: UserStats;
-  profileBoosts?: ProfileBoost[];
-  referralCode?: string;
-  referredBy?: string;
-  settings?: Record<string, any>;
-  subscription?: {
-    tier: string;
-    status: string;
-    nextBillingDate?: string;
-  };
-  purchasedFeatures?: string[];
+  isVIP?: boolean;
   socialLinks?: SocialLink[] | Record<string, string>;
-  activeTitle?: string;
-  followers?: number;
-  following?: number;
-  profileViews?: number;
+  profileLinks?: ProfileLink[];
+  profileImage?: string;
+  profileImages?: ProfileImage[];
+  badges?: string[];
+  streak?: number;
+  lastActive?: string;
+  subscriptionTier?: string;
+  isProtected?: boolean;
+  joinDate?: string;
+  amountSpent?: number;
   profileClicks?: number;
-  [key: string]: any;
 }
 
-export interface User extends UserProfile {
-  // Additional properties specific to authenticated user instances
-  token?: string;
-  refreshToken?: string;
-  accessToken?: string;
-}
-
-export interface AuthState {
-  isAuthenticated: boolean;
-  user: UserProfile | null;
-  isLoading: boolean;
-  error: string | null;
-}
-
-export interface AuthContextType extends AuthState {
-  login: (email: string, password: string) => Promise<boolean>;
-  signIn: (email: string, password: string) => Promise<boolean>;
-  register: (username: string, email: string, password: string) => Promise<boolean>;
-  logout: () => Promise<void>;
-  signOut: () => void;
-  updateProfile: (updates: Partial<UserProfile>) => Promise<boolean>;
-  updateUser: (updates: Partial<UserProfile>) => Promise<boolean>;
-  updateUserProfile: (updates: Partial<UserProfile>) => Promise<boolean>;
-  refreshUser: () => Promise<void>;
-  forgotPassword: (email: string) => Promise<boolean>;
-  resetPassword: (token: string, password: string) => Promise<boolean>;
-  verifyEmail: (token: string) => Promise<boolean>;
-  loginWithProvider: (provider: string) => Promise<boolean>;
-  awardCosmetic: (itemId: string, category: string) => Promise<boolean>;
+// User settings interface
+export interface UserSettings {
+  theme: 'dark' | 'light' | 'system';
+  notifications: {
+    email: boolean;
+    push: boolean;
+    rankChanges: boolean;
+    promotions: boolean;
+  };
+  privacy: {
+    showEmail: boolean;
+    showWallet: boolean;
+    showSpending: boolean;
+  };
+  language: string;
+  currency: string;
 }

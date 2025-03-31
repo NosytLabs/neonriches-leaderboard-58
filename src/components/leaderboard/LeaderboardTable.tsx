@@ -1,6 +1,8 @@
+
 import React from 'react';
 import { LeaderboardUser } from '@/types/leaderboard';
 import { getTeamColorClass, getTeamDisplayName, asTeamColor } from '@/utils/teamUtils';
+import { TeamColor } from '@/types/team';
 
 interface LeaderboardTableProps {
   users: LeaderboardUser[];
@@ -40,8 +42,8 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({ users, currentUserI
                 </div>
               </td>
               <td className="p-3">
-                <span className={`inline-block px-2 py-1 rounded text-xs ${getTeamColorClass(user.team)}`}>
-                  {getTeamDisplayName(asTeamColor(user.team))}
+                <span className={`inline-block px-2 py-1 rounded text-xs ${getTeamColorClass(asTeamColor(user.team))}`}>
+                  {getTeamDisplayName(asTeamColor(user.team as TeamColor))}
                 </span>
               </td>
               <td className="p-3 text-right font-medium">
