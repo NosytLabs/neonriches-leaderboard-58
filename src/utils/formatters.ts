@@ -73,11 +73,50 @@ export const formatPercentage = (value: number): string => {
   return `${(value * 100).toFixed(1)}%`;
 };
 
+/**
+ * Format a date to a readable string format
+ */
+export const formatDate = (date: string | Date): string => {
+  if (!date) return '';
+  const dateObj = typeof date === 'string' ? new Date(date) : date;
+  return dateObj.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+};
+
+/**
+ * Format a number with commas
+ */
+export const formatNumber = (num: number): string => {
+  return num.toLocaleString('en-US');
+};
+
+/**
+ * Format an address (like a wallet address) to show only beginning and ending
+ */
+export const formatAddress = (address: string, start: number = 6, end: number = 4): string => {
+  if (!address || address.length <= start + end) return address || '';
+  return `${address.slice(0, start)}...${address.slice(-end)}`;
+};
+
+/**
+ * Format a historical value with appropriate period style
+ */
+export const formatHistoricalValue = (value: number, unit: string = 'coins'): string => {
+  return `${formatNumber(value)} ${unit}`;
+};
+
 export default {
   formatCurrency,
   formatDollarAmount,
   formatFileSize,
   formatRelativeTime,
   formatCompactNumber,
-  formatPercentage
+  formatPercentage,
+  formatDate,
+  formatNumber,
+  formatAddress,
+  formatHistoricalValue
 };
