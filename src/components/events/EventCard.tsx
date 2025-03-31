@@ -128,7 +128,7 @@ const EventCard: React.FC<EventCardProps> = ({
 function getEventIcon(type: EventType) {
   if (type === 'treasure') {
     return <Trophy size={18} className="text-royal-gold" />;
-  } else if (type === 'shame') {
+  } else if (type === 'shame' || type === 'mockery') {
     return <Users size={18} className="text-royal-crimson" />;
   } else if (type === 'team') {
     return <Trophy size={18} className="text-royal-navy" />;

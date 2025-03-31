@@ -1,123 +1,162 @@
 
-import { MockeryAction, MockeryTier } from '@/types/mockery-types';
-import type { LucideIcon } from 'lucide-react';
-import {
-  AlertCircle, ShieldAlert, User, Crown, 
-  Shield, UserX, MessageSquare, Ban, 
-  UserRoundX, Skull, Feather, Angry, 
-  Flame, Swords, LinkIcon, Crosshair, 
-  Lightbulb, Unplug, Cloud, Sparkles, 
-  Scissors, Maximize2, Egg, Hammer,
-  ThumbsDown
-} from 'lucide-react';
 import React from 'react';
+import { 
+  Egg, 
+  MessageCircle, 
+  Lock, 
+  Crown, 
+  ThumbsDown, 
+  HelpCircle,
+  Music,
+  Zap,
+  Award,
+  Shield,
+  Flame
+} from 'lucide-react';
+import { MockeryAction } from '@/types/mockery-types';
+import { LucideIcon } from 'lucide-react';
 
-// Get the appropriate icon for a mockery action
-export const getMockeryActionIcon = (action: MockeryAction): LucideIcon => {
-  const icons: Record<string, LucideIcon> = {
-    tomatoes: ThumbsDown,
+// Custom tomato icon since Lucide doesn't have one
+export const TomatoIcon: React.FC<{ className?: string; size?: number }> = ({ className = "", size = 24 }) => (
+  <svg 
+    xmlns="http://www.w3.org/2000/svg" 
+    viewBox="0 0 24 24" 
+    width={size} 
+    height={size} 
+    fill="none" 
+    stroke="currentColor" 
+    strokeWidth="2" 
+    strokeLinecap="round" 
+    strokeLinejoin="round" 
+    className={className}
+  >
+    <circle cx="12" cy="14" r="8" />
+    <path d="M12 6v4" />
+    <path d="M8 4l2 2" />
+    <path d="M16 4l-2 2" />
+  </svg>
+);
+
+// Custom hat/dunce icon
+export const HatIcon: React.FC<{ className?: string; size?: number }> = ({ className = "", size = 24 }) => (
+  <svg 
+    xmlns="http://www.w3.org/2000/svg" 
+    viewBox="0 0 24 24" 
+    width={size} 
+    height={size} 
+    fill="none" 
+    stroke="currentColor" 
+    strokeWidth="2" 
+    strokeLinecap="round" 
+    strokeLinejoin="round" 
+    className={className}
+  >
+    <path d="M12 4l-9 6 9 6 9-6-9-6z" />
+    <path d="M12 16v4" />
+  </svg>
+);
+
+// Custom jester icon
+export const JesterIcon: React.FC<{ className?: string; size?: number }> = ({ className = "", size = 24 }) => (
+  <svg 
+    xmlns="http://www.w3.org/2000/svg" 
+    viewBox="0 0 24 24" 
+    width={size} 
+    height={size} 
+    fill="none" 
+    stroke="currentColor" 
+    strokeWidth="2" 
+    strokeLinecap="round" 
+    strokeLinejoin="round" 
+    className={className}
+  >
+    <path d="M4 10c0-4 4-8 8-8s8 4 8 8-4 4-4 4H8s-4 0-4-4z" />
+    <path d="M9 16c0 1 .5 2 2 2s2-1 2-2" />
+    <path d="M5 10c0-2 1-3 3-3s3 1 3 3" />
+    <path d="M13 10c0-2 1-3 3-3s3 1 3 3" />
+  </svg>
+);
+
+// Custom egg-rotten icon
+export const RottenEggIcon: React.FC<{ className?: string; size?: number }> = ({ className = "", size = 24 }) => (
+  <svg 
+    xmlns="http://www.w3.org/2000/svg" 
+    viewBox="0 0 24 24" 
+    width={size} 
+    height={size} 
+    fill="none" 
+    stroke="currentColor" 
+    strokeWidth="2" 
+    strokeLinecap="round" 
+    strokeLinejoin="round" 
+    className={className}
+  >
+    <ellipse cx="12" cy="14" rx="8" ry="10" />
+    <path d="M10 4c0-1.5.5-2 2-2s2 .5 2 2" />
+    <path d="M8 16l8-4" />
+    <path d="M16 16l-8-4" />
+  </svg>
+);
+
+// Custom troll icon
+export const TrollIcon: React.FC<{ className?: string; size?: number }> = ({ className = "", size = 24 }) => (
+  <svg 
+    xmlns="http://www.w3.org/2000/svg" 
+    viewBox="0 0 24 24" 
+    width={size} 
+    height={size} 
+    fill="none" 
+    stroke="currentColor" 
+    strokeWidth="2" 
+    strokeLinecap="round" 
+    strokeLinejoin="round" 
+    className={className}
+  >
+    <circle cx="12" cy="8" r="6" />
+    <path d="M8 14l-4 4" />
+    <path d="M16 14l4 4" />
+    <path d="M8 8v2" />
+    <path d="M16 8v2" />
+    <path d="M9 12h6" />
+  </svg>
+);
+
+// Map mockery actions to their respective icons
+export const getMockeryIcon = (action: MockeryAction): LucideIcon => {
+  const iconMap: Record<string, LucideIcon> = {
+    tomatoes: TomatoIcon,
     eggs: Egg,
-    putridEggs: ShieldAlert,
-    dungeons: UserX,
-    immune: Shield,
+    putridEggs: RottenEggIcon,
+    stocks: Lock,
     crown: Crown,
-    stocks: Hammer,
-    dunce: UserRoundX,
-    jester: Feather,
-    courtJester: Feather,
-    jest: Feather,
-    troll: Angry,
-    peasant: User,
-    rat: User,
-    ghost: Skull,
-    skeleton: Skull,
-    zombie: Skull,
-    witch: Flame,
-    monster: Flame,
-    demon: Flame,
-    dragon: Flame,
-    king: Crown,
-    queen: Crown,
-    knight: Swords,
-    bishop: Crown,
-    rook: Shield,
-    pawn: User,
-    target: Crosshair,
-    challenge: Lightbulb,
-    smokeBomb: Cloud,
-    glitterBomb: Sparkles,
-    royalPie: AlertCircle,
-    jokeCrown: Crown,
-    memeFrame: Maximize2,
-    roast: Flame,
-    ridicule: Feather,
-    humiliate: Feather,
-    expose: AlertCircle,
-    mock: Feather,
-    taunt: Feather,
-    guillotine: Scissors,
-    defeat: UserRoundX,
-    removal: Ban,
+    jester: JesterIcon,
+    dunce: HatIcon,
+    troll: TrollIcon,
     protection: Shield,
-    silence: MessageSquare,
-    shame: Ban,
-    fool: Feather
+    shame: ThumbsDown,
+    challenge: Flame,
   };
 
-  return icons[action] || Ban;
+  return iconMap[action] || HelpCircle;
 };
 
-// Get the color for a mockery action icon
-export const getMockeryActionIconColor = (action: MockeryAction): string => {
-  const colorClasses: Record<string, string> = {
+// Get color for mockery action
+export const getMockeryIconColor = (action: MockeryAction): string => {
+  const colorMap: Record<string, string> = {
     tomatoes: 'text-red-500',
-    eggs: 'text-yellow-500',
-    putridEggs: 'text-green-500',
-    dungeons: 'text-gray-700',
-    immune: 'text-blue-400',
-    crown: 'text-yellow-400',
-    stocks: 'text-brown-500',
-    dunce: 'text-orange-400',
+    eggs: 'text-yellow-300',
+    putridEggs: 'text-green-400',
+    stocks: 'text-gray-400',
+    crown: 'text-yellow-500',
     jester: 'text-purple-400',
-    courtJester: 'text-purple-600',
-    jest: 'text-purple-300',
-    silence: 'text-gray-400',
-    smokeBomb: 'text-gray-600',
-    glitterBomb: 'text-pink-400',
-    royalPie: 'text-white',
-    protection: 'text-green-400',
-    defeat: 'text-red-600',
-    taunt: 'text-orange-500'
+    dunce: 'text-orange-400',
+    troll: 'text-teal-400',
+    protection: 'text-blue-400',
+    shame: 'text-red-400',
+    challenge: 'text-amber-500',
   };
 
-  // Default based on tier
-  const tierColors: Record<MockeryTier, string> = {
-    basic: 'text-gray-400',
-    common: 'text-gray-300',
-    uncommon: 'text-green-400',
-    premium: 'text-blue-400',
-    silver: 'text-gray-300',
-    rare: 'text-purple-400',
-    epic: 'text-pink-500',
-    royal: 'text-yellow-400',
-    legendary: 'text-red-500',
-    bronze: 'text-amber-700'
-  };
-
-  // Return specific color or tier-based color  
-  return colorClasses[action] || tierColors[getMockeryTier(action)] || 'text-gray-400';
+  return colorMap[action] || 'text-gray-400';
 };
 
-// React component for mockery action icons
-export const getMockeryActionIconComponent = (action: MockeryAction): React.ReactNode => {
-  const Icon = getMockeryActionIcon(action);
-  return React.createElement(Icon, { className: "h-4 w-4" });
-};
-
-// Import mockery tier for convenience
-import { getMockeryTier } from './mockery-tiers';
-
-// Backwards compatibility export
-export const getMockeryIcon = getMockeryActionIcon;
-
-export default getMockeryActionIcon;
+export default getMockeryIcon;

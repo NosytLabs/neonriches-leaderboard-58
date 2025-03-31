@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Calendar } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import RoyalDivider from '@/components/ui/royal-divider';
-import { events } from '@/components/events/data';
+import { events, eventDetails } from '@/components/events/data';
 
 export default function EventsPage() {
   const allEvents = events;
@@ -28,7 +28,7 @@ export default function EventsPage() {
           </div>
           
           <div className="lg:col-span-1 space-y-8">
-            <UpcomingEvents maxEvents={4} />
+            <UpcomingEvents events={allEvents} maxEvents={4} />
             
             <Card className="border-royal-gold/20 glass-morphism">
               <CardHeader>
@@ -49,7 +49,7 @@ export default function EventsPage() {
                     <div className="space-y-2">
                       {allEvents.map(event => (
                         <div key={event.id} className="p-3 bg-black/20 rounded-lg hover:bg-black/30 transition">
-                          <div className="font-medium">{event.title}</div>
+                          <div className="font-medium">{event.title || event.name}</div>
                           <div className="text-sm text-white/60">{event.description.substring(0, 60)}...</div>
                         </div>
                       ))}
@@ -60,7 +60,7 @@ export default function EventsPage() {
                     <div className="space-y-2">
                       {allEvents.filter(e => e.status === 'active').map(event => (
                         <div key={event.id} className="p-3 bg-black/20 rounded-lg hover:bg-black/30 transition">
-                          <div className="font-medium">{event.title}</div>
+                          <div className="font-medium">{event.title || event.name}</div>
                           <div className="text-sm text-white/60">{event.description.substring(0, 60)}...</div>
                         </div>
                       ))}
@@ -71,7 +71,7 @@ export default function EventsPage() {
                     <div className="space-y-2">
                       {allEvents.filter(e => e.status === 'upcoming').map(event => (
                         <div key={event.id} className="p-3 bg-black/20 rounded-lg hover:bg-black/30 transition">
-                          <div className="font-medium">{event.title}</div>
+                          <div className="font-medium">{event.title || event.name}</div>
                           <div className="text-sm text-white/60">{event.description.substring(0, 60)}...</div>
                         </div>
                       ))}
@@ -96,13 +96,13 @@ export default function EventsPage() {
               <Card key={event.id} className="glass-morphism border-white/10">
                 <div className="h-40 overflow-hidden">
                   <img 
-                    src={event.image || '/event-placeholder.jpg'} 
-                    alt={event.title} 
+                    src={event.imageUrl || event.image || '/event-placeholder.jpg'} 
+                    alt={event.title || event.name || ''} 
                     className="w-full h-full object-cover"
                   />
                 </div>
                 <CardContent className="pt-4">
-                  <h3 className="font-bold">{event.title}</h3>
+                  <h3 className="font-bold">{event.title || event.name}</h3>
                   <p className="text-sm text-white/60 mt-1">{event.description.substring(0, 100)}...</p>
                 </CardContent>
               </Card>

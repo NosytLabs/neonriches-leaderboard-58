@@ -1,63 +1,44 @@
 
-// Export mockery related utilities
-import { getMockeryActionTitle, getMockeryActionDescription } from './mockery-actions';
-import { getMockeryTier, getMockeryTierColorClass } from './mockery-tiers';
-import { getMockeryActionPrice } from './mockery-costs';
-import { getMockeryActionDuration } from './mockery-durations';
-import getMockeryActionIcon from './mockery-icons';
+// Export all mockery utilities from their respective files
+import { getMockeryIcon, getMockeryIconColor } from './mockery-icons';
+import { getMockeryDuration, getTierDurationMultiplier } from './mockery-durations';
+import { getMockeryActionTitle, getMockeryActionDescription, getMockeryTier, getMockeryActionPrice } from './mockery-actions';
+import { getMockeryTierColorClass, getActiveMockeryClass } from './mockery-effects';
 
-// Export all the mockery utility functions
+// Re-export everything
 export {
+  getMockeryIcon,
+  getMockeryIconColor,
+  getMockeryDuration,
+  getTierDurationMultiplier,
   getMockeryActionTitle,
   getMockeryActionDescription,
-  getMockeryActionPrice,
   getMockeryTier,
-  getMockeryTierColorClass,
-  getMockeryActionIcon,
-  getMockeryActionDuration
-};
-
-// Additional functions needed for compatibility
-export const getActiveMockeryClass = (action: string): string => {
-  const classes: Record<string, string> = {
-    'tomatoes': 'mockery-tomatoes',
-    'eggs': 'mockery-eggs',
-    'putridEggs': 'mockery-putrid-eggs',
-    'stocks': 'mockery-stocks',
-    'dunce': 'mockery-dunce',
-    'jester': 'mockery-jester',
-    'crown': 'mockery-crown',
-    'silence': 'mockery-silence',
-    'courtJester': 'mockery-jester',
-    'jest': 'mockery-jest',
-    'smokeBomb': 'mockery-smoke',
-    'glitterBomb': 'mockery-glitter',
-    'protection': 'mockery-protected',
-    'immune': 'mockery-immune'
-  };
-  
-  return classes[action] || 'mockery-default';
-};
-
-// For backward compatibility
-export const getMockeryName = getMockeryActionTitle;
-export const getMockeryDescription = getMockeryActionDescription;
-export const getMockeryCost = getMockeryActionPrice;
-export const getMockeryDuration = getMockeryActionDuration;
-
-// Export as default for components that import it directly
-export default {
-  getMockeryActionTitle,
-  getMockeryActionDescription,
   getMockeryActionPrice,
-  getMockeryTier,
   getMockeryTierColorClass,
-  getMockeryActionIcon,
-  getMockeryActionDuration,
   getActiveMockeryClass,
-  // For backward compatibility
-  getMockeryName,
-  getMockeryDescription,
-  getMockeryCost,
-  getMockeryDuration
+  
+  // Legacy exports with aliases for backward compatibility
+  getMockeryDuration as getMockeryActionDuration,
+  getMockeryActionTitle as getMockeryName,
+  getMockeryActionDescription as getMockeryDescription,
+  getMockeryActionPrice as getMockeryCost
+};
+
+// Default export for convenience
+export default {
+  getMockeryIcon,
+  getMockeryIconColor,
+  getMockeryDuration,
+  getTierDurationMultiplier,
+  getMockeryActionTitle,
+  getMockeryActionDescription,
+  getMockeryTier,
+  getMockeryActionPrice,
+  getMockeryTierColorClass,
+  getActiveMockeryClass,
+  getMockeryActionDuration: getMockeryDuration,
+  getMockeryName: getMockeryActionTitle,
+  getMockeryDescription: getMockeryActionDescription,
+  getMockeryCost: getMockeryActionPrice
 };

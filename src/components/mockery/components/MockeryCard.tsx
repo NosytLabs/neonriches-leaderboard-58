@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { MockeryAction } from '@/types/mockery';
-import { getMockeryIcon, getMockeryActionIconColor } from '@/utils/mockery/mockery-icons';
+import { getMockeryIcon, getMockeryIconColor } from '@/utils/mockery/mockery-icons';
 import { cn } from '@/lib/utils';
 import { getMockeryCost, getMockeryTierColorClass } from '@/utils/mockeryUtils';
 
@@ -35,13 +35,16 @@ const MockeryCard: React.FC<MockeryCardProps> = ({
     }
   };
   
+  const IconComponent = getMockeryIcon(action);
+  const iconColorClass = getMockeryIconColor(action);
+  
   return (
     <Card 
       className={cn(
         "overflow-hidden transition-all duration-300",
         isSelected ? "border-primary ring-2 ring-primary/20" : "border-white/10",
         disabled ? "opacity-60" : "hover:border-primary/50 cursor-pointer",
-        getMockeryTierColorClass(tier),
+        getMockeryTierColorClass(tier as any),
         className
       )}
       onClick={handleClick}
@@ -49,8 +52,8 @@ const MockeryCard: React.FC<MockeryCardProps> = ({
       <CardHeader className="p-4 pb-2">
         <div className="flex items-center justify-between">
           <CardTitle className="text-base font-semibold flex items-center">
-            <span className={getMockeryActionIconColor(action)}>
-              {getMockeryIcon(action)}
+            <span className={iconColorClass}>
+              <IconComponent className="h-4 w-4" />
             </span>
             <span className="ml-2">{name}</span>
           </CardTitle>

@@ -17,6 +17,7 @@ export type EventStatus =
   | 'upcoming'
   | 'active'
   | 'past'
+  | 'cancelled'
   | 'canceled'
   | 'completed';
 
@@ -29,7 +30,7 @@ export interface Event {
   type: EventType;
   status: EventStatus;
   prizes?: any[];
-  rewards?: any[];
+  rewards?: EventReward[];
   imageUrl?: string;
   totalParticipants?: number;
   userParticipating?: boolean;
@@ -122,6 +123,6 @@ export interface EventDetails extends Event {
   prizes: Array<{
     rank: string;
     reward: string;
-  }>;
-  rewards?: EventReward[];
+  }> | string[];
+  rewards?: EventReward[] | string[];
 }

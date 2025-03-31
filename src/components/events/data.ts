@@ -5,6 +5,7 @@ export const events: Event[] = [
   {
     id: "1",
     name: "Royal Tournament",
+    title: "Royal Tournament",
     description: "Compete for glory and riches in our first tournament",
     startDate: "2023-06-01",
     endDate: "2023-06-30",
@@ -16,6 +17,7 @@ export const events: Event[] = [
   {
     id: "2",
     name: "Summer Auction",
+    title: "Summer Auction",
     description: "Bid on exclusive items and special privileges",
     startDate: "2023-07-15",
     endDate: "2023-07-18",
@@ -29,6 +31,7 @@ export const events: Event[] = [
 export const mockEventDetails: EventDetails = {
   id: "1",
   name: "Royal Tournament",
+  title: "Royal Tournament",
   description: "Compete for glory and riches in our first tournament",
   startDate: "2023-06-01",
   endDate: "2023-06-30",
@@ -53,7 +56,8 @@ export const mockEventDetails: EventDetails = {
       type: "cosmetic",
       tier: "legendary",
       imageUrl: "/images/rewards/crown.png",
-      rarity: "legendary"
+      rarity: "legendary",
+      value: 1000
     },
     {
       id: "2",
@@ -62,7 +66,8 @@ export const mockEventDetails: EventDetails = {
       type: "badge",
       tier: "epic",
       imageUrl: "/images/rewards/silver-badge.png",
-      rarity: "epic"
+      rarity: "epic",
+      value: 500
     }
   ],
   createdAt: "2023-05-15"
@@ -82,6 +87,17 @@ export const eventStats: EventStats = {
   participantCount: 128,
   totalPokes: 562,
   totalSpent: 25600,
+  averageSpent: 200,
+  highestSpender: {
+    userId: "user-1",
+    username: "WhaleKing",
+    amount: 5000
+  },
+  activeTeams: [
+    { id: "team-1", name: "Red Team", count: 45 },
+    { id: "team-2", name: "Blue Team", count: 42 },
+    { id: "team-3", name: "Green Team", count: 41 }
+  ],
   mostPoked: [
     { username: "PoorGuy", pokeCount: 45 },
     { username: "EasyTarget", pokeCount: 32 },

@@ -7,9 +7,10 @@ import { EventDetails } from '@/types/events';
 interface UpcomingEventsProps {
   events: EventDetails[];
   onSelectEvent?: (event: EventDetails) => void;
+  maxEvents?: number;
 }
 
-const UpcomingEvents: React.FC<UpcomingEventsProps> = ({ events, onSelectEvent }) => {
+const UpcomingEvents: React.FC<UpcomingEventsProps> = ({ events, onSelectEvent, maxEvents = 3 }) => {
   // Sort events by start date
   const sortedEvents = [...events].sort((a, b) => 
     new Date(a.startDate).getTime() - new Date(b.startDate).getTime()
@@ -20,8 +21,8 @@ const UpcomingEvents: React.FC<UpcomingEventsProps> = ({ events, onSelectEvent }
     new Date(event.endDate) > new Date()
   );
 
-  // Show at most 3 events
-  const displayEvents = upcomingEvents.slice(0, 3);
+  // Show at most maxEvents events
+  const displayEvents = upcomingEvents.slice(0, maxEvents);
 
   return (
     <Card>
@@ -55,12 +56,12 @@ const UpcomingEvents: React.FC<UpcomingEventsProps> = ({ events, onSelectEvent }
                   onClick={() => onSelectEvent && onSelectEvent(event)}
                 >
                   <div className="flex items-center justify-between mb-2">
-                    <h3 className="font-semibold text-lg">{event.name}</h3>
+                    <h3 className="font-semibold text-lg">{event.name || event.title}</h3>
                     <span className={`
                       px-2 py-1 text-xs rounded-full
                       ${event.status === 'upcoming' ? 'bg-blue-900 text-blue-200' : ''}
                       ${event.status === 'active' ? 'bg-green-900 text-green-200' : ''}
-                      ${event.status === 'ended' ? 'bg-gray-700 text-gray-300' : ''}
+                      ${event.status === 'completed' ? 'bg-gray-700 text-gray-300' : ''}
                       ${event.status === 'cancelled' ? 'bg-red-900 text-red-200' : ''}
                     `}>
                       {event.status.charAt(0).toUpperCase() + event.status.slice(1)}
@@ -84,7 +85,7 @@ const UpcomingEvents: React.FC<UpcomingEventsProps> = ({ events, onSelectEvent }
                       <div className="flex flex-wrap gap-1 mt-1">
                         {event.rewards.map((reward, index) => (
                           <span key={index} className="text-xs bg-black/40 border border-gray-700 px-2 py-0.5 rounded-full">
-                            {reward}
+                            {typeof reward === 'string' ? reward : reward.name}
                           </span>
                         ))}
                       </div>
@@ -94,7 +95,7 @@ const UpcomingEvents: React.FC<UpcomingEventsProps> = ({ events, onSelectEvent }
               );
             })}
             
-            {upcomingEvents.length > 3 && (
+            {upcomingEvents.length > maxEvents && (
               <div className="text-center">
                 <button className="text-sm text-blue-400 hover:text-blue-300 transition-colors">
                   View All Events ({upcomingEvents.length})
