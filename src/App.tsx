@@ -22,6 +22,7 @@ import Wallet from '@/pages/Wallet';
 import Settings from '@/pages/Settings';
 import Events from '@/pages/Events';
 import Mockery from '@/pages/Mockery';
+import StatusThroughHistory from '@/pages/StatusThroughHistory';
 
 function App() {
   return (
@@ -39,6 +40,7 @@ function App() {
               <Route path="/privacy" element={<Privacy />} />
               <Route path="/terms" element={<Terms />} />
               <Route path="/mockery" element={<Mockery />} />
+              <Route path="/status-through-history" element={<StatusThroughHistory />} />
               
               {/* Protected User Pages */}
               <Route 

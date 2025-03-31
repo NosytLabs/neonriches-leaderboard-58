@@ -29,7 +29,7 @@ const About = () => {
               The Royal Manifesto of SpendThrone
             </h1>
             <p className="text-xl text-white/70 italic mb-6">
-              A Brazenly Honest Declaration of Our Kingdom's Intentions (Yeah, We're Talking to You)
+              A Brazenly Honest Declaration of Our Kingdom's Intentions
             </p>
             
             <div className="flex justify-center mb-8">
@@ -49,9 +49,15 @@ const About = () => {
           <div className="mt-12 mb-16">
             <MedievalFrame variant="royal" seal>
               <div className="p-8">
-                <h2 className="text-3xl font-bold mb-6 royal-gradient text-center">The Vision of SpendThrone</h2>
+                <h2 className="text-3xl font-bold mb-6 royal-gradient text-center">The Satirical Vision of SpendThrone</h2>
                 <p className="text-lg mb-5 leading-relaxed">
-                  To create the world's most transparent status hierarchy where wealth directly equals rank, with zero pretense about "merit" or "contribution." Come on, you know online status often boils down to who's spending the most anyway. SpendThrone just makes it hilariously obvious. See who's really calling the shots (with their wallets!)
+                  SpendThrone is a daring social experiment that deliberately takes the "pay-to-win" concept to its logical conclusion. We've created a transparent system where your rank is determined solely by how much money you spend - no hidden algorithms, no pretense about "merit" or "contribution."
+                </p>
+                <p className="text-lg mb-5 leading-relaxed">
+                  Our leaderboard never resets, creating a persistent hierarchy where your position directly reflects your financial investment. Think of it as medieval nobility for the digital age - where your wallet is your royal bloodline.
+                </p>
+                <p className="text-lg leading-relaxed">
+                  This absurdist take on digital status serves as both entertainment and a mirror reflecting our complex relationship with wealth, competition, and online prestige.
                 </p>
               </div>
             </MedievalFrame>
@@ -65,10 +71,10 @@ const About = () => {
               </h2>
               <div className="glass-morphism p-6 rounded-lg h-full">
                 <p className="mb-4">
-                  SpendThrone began as a thought experiment, kind of like when you realize everyone's doing something but pretending they're not. We thought, "What if we just made it the point to buy status?"
+                  SpendThrone began as a thought experiment about the mechanics of online status. We noticed how many digital platforms implicitly equate status with spending power, while pretending otherwise.
                 </p>
                 <p>
-                  Like a medieval lord upgrading his armor with gold – except here, your credit card is your royal decree. Welcome to the digital aristocracy where we're at least honest about what's for sale.
+                  We thought, "What if we just made the relationship between money and status explicit?" Like a medieval lord openly purchasing his title rather than claiming divine right - at least we're honest about it.
                 </p>
               </div>
             </div>
@@ -82,19 +88,19 @@ const About = () => {
                 <ul className="space-y-4">
                   <li className="flex">
                     <span className="text-royal-gold mr-2">⚜️</span>
-                    <span><strong>Radical Transparency:</strong> Your rank = your spending. No sneaky algorithms here.</span>
+                    <span><strong>Radical Transparency:</strong> Your rank = your spending. No algorithms or hidden mechanics.</span>
                   </li>
                   <li className="flex">
                     <span className="text-royal-gold mr-2">⚜️</span>
-                    <span><strong>Glorious Absurdity:</strong> We fully embrace the delightful ridiculousness of paying for online bragging rights.</span>
+                    <span><strong>Satirical Self-Awareness:</strong> We embrace the absurdity of paying for digital status while poking fun at the entire concept.</span>
                   </li>
                   <li className="flex">
                     <span className="text-royal-gold mr-2">⚜️</span>
-                    <span><strong>Equal Opportunity:</strong> Anyone with the coin can climb our digital feudal system.</span>
+                    <span><strong>Equal Opportunity Status:</strong> Anyone with money can climb our digital feudal system. Democracy of the wallet!</span>
                   </li>
                   <li className="flex">
                     <span className="text-royal-gold mr-2">⚜️</span>
-                    <span><strong>Team Rivalry:</strong> Because humans love a good drama (and spending more to win).</span>
+                    <span><strong>Medieval Mockery:</strong> Our aesthetic and features draw from medieval status symbols to emphasize how little has changed.</span>
                   </li>
                 </ul>
               </div>
@@ -108,15 +114,15 @@ const About = () => {
               The Coin-Operated Kingdom
             </h2>
             <h3 className="text-lg text-center text-white/70 italic mb-6">
-              (It's Simpler Than Understanding Crypto, Promise)
+              (Pay-to-Win Without The Pretense)
             </h3>
             
             <p className="mb-6">
-              Each shilling spent equals one rank point. Think of it as tossing a coin into our virtual wishing well for status. We'll deck you out with visual flair so everyone knows your spending level – like a medieval lord with a really, really big hat.
+              Each dollar spent equals one rank point. Think of it as tossing gold coins into our digital treasury for status. We'll deck you out with visual flair so everyone knows your spending level – like a medieval lord with an increasingly ornate hat.
             </p>
             
             <p className="mb-6">
-              Join noble houses (your online crew) and collectively outspend the competition for ultimate bragging rights. Think of our top-ranked users as the ultimate endorsements – their digital spending speaks volumes (literally!).
+              Join noble houses (teams) and collectively outspend rival factions for ultimate bragging rights. Our top-ranked users serve as the ultimate evidence of the relationship between digital status and spending.
             </p>
             
             <div className="grid grid-cols-3 gap-4 mt-8">
@@ -139,9 +145,9 @@ const About = () => {
             <div className="flex items-start">
               <AlertTriangle className="text-royal-crimson mt-1 mr-4 flex-shrink-0" />
               <div>
-                <h3 className="text-xl font-bold mb-2">Royal Disclaimer: The "Seriously Though, Don't Empty Your Piggy Bank" Legal Nudge</h3>
+                <h3 className="text-xl font-bold mb-2">Royal Disclaimer: The "Please Don't Spend Your Rent Money" Notice</h3>
                 <p className="mb-4">
-                  SpendThrone is satire, folks. We're holding a mirror up to the internet's obsession with status and the role of money. This isn't financial advice, so please don't sell your actual kingdom for a digital one. We're not responsible for your instant noodle habit.
+                  SpendThrone is satire, folks. We're examining the relationship between money and digital status by making explicit what many platforms do implicitly. This isn't financial advice, and we're not responsible for your ramen noodle diet if you spend unwisely.
                 </p>
                 <p className="mb-4">
                   For the real, boring (but important) rules, check out our{" "}
@@ -152,32 +158,32 @@ const About = () => {
                   <Link to="/privacy" className="text-royal-gold hover:underline">
                     Privacy Policy
                   </Link>
-                  . Seriously, give 'em a peek.
+                  .
                 </p>
               </div>
             </div>
           </div>
           
-          <RoyalDivider variant="quill" label="THE ROYAL COURT" color="gold" className="mb-12" />
+          <RoyalDivider variant="quill" label="HISTORICAL CONTEXT" color="gold" className="mb-12" />
           
-          <div className="text-center mb-16">
-            <h2 className="text-2xl font-bold mb-6">The Minds Behind The Throne (Just Like You, Probably)</h2>
-            <div className="max-w-2xl mx-auto glass-morphism border-royal-gold/20 p-6 rounded-lg">
-              <p className="text-lg mb-6">
-                We built SpendThrone as both entertainment and a bit of social commentary. We're just a bunch of internet folks who noticed the emperor had no clothes (or maybe just a really expensive skin).
-              </p>
-              <p className="italic">
-                "We thought, 'Why not point it out and maybe collect a few shillings along the way?' Consider us the medieval jesters of the digital age."
-              </p>
-              <p className="mt-4 text-right text-royal-gold">— The Royal Chroniclers</p>
+          <div className="text-center mb-10">
+            <h2 className="text-2xl font-bold mb-4">Status Economics Through History</h2>
+            <p className="max-w-2xl mx-auto">
+              The relationship between wealth and status is nothing new - from Roman patricians to Renaissance merchants to modern digital platforms, money has always bought influence and recognition.
+            </p>
+            <div className="mt-6">
+              <Link to="/status-through-history" className="inline-flex items-center text-royal-gold hover:underline">
+                <span>Explore Status Through History</span>
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
             </div>
           </div>
           
           <div className="glass-morphism border-royal-gold/20 p-8 rounded-lg mb-16 text-center">
-            <h2 className="text-2xl font-bold mb-4 royal-gradient">One Last Thought (You Know You're Intrigued):</h2>
+            <h2 className="text-2xl font-bold mb-4 royal-gradient">Ready to Claim Your Place in the Hierarchy?</h2>
             <p className="text-xl italic mb-8">
-              Free social network where everyone pretends status is earned? Cute.<br />
-              Honest one where spending equals status? What are you waiting for?
+              Free platforms where everyone pretends status is earned through "merit"? Please.<br />
+              An honest one where spending equals status? At least we're transparent.
             </p>
             
             <div className="flex flex-col md:flex-row justify-center gap-6 mt-10">
