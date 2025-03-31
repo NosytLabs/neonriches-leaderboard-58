@@ -1,88 +1,87 @@
 
-/**
- * Core sound types for the application
- */
+// Sound system type definitions
 
-/**
- * Available sound types in the system
- */
-export type SoundType =
-  | 'achievement'
-  | 'boost'
-  | 'click'
-  | 'coin'
-  | 'coinDrop'
+export type SoundType = 
+  | 'coin' 
+  | 'success' 
+  | 'error' 
+  | 'click' 
+  | 'notification' 
+  | 'achievement' 
+  | 'purchase' 
   | 'deposit'
-  | 'error'
-  | 'level_up'
-  | 'message'
   | 'mockery'
-  | 'notification'
-  | 'purchase'
-  | 'rank_up'
-  | 'reward'
-  | 'royal'
-  | 'royalAnnouncement'
-  | 'seal'
+  | 'fanfare'
+  | 'levelUp'
   | 'shame'
-  | 'success'
+  | 'protection'
+  | 'sparkle'
+  // Premium sound types
+  | 'royalAnnouncement'
   | 'trumpet'
-  | 'trumpets'
-  | 'withdrawal';
+  | 'medallion'
+  | 'seal'
+  | 'coinDrop'
+  | 'swordClash'
+  | 'noblesLaugh';
 
-/**
- * Sound configuration state
- */
-export interface SoundConfig {
-  volume: number;
-  enabled: boolean;
-  muted: boolean;
-  premium: boolean;
-}
-
-/**
- * Options for sound playback
- */
-export interface AudioOptions {
-  volume?: number;
-  interrupt?: boolean;
-  loop?: boolean;
-  onComplete?: () => void;
-  delay?: number;
-}
-
-// Alias for backward compatibility
-export type NotificationSoundOptions = AudioOptions;
-
-/**
- * Return type for useSound hook
- */
-export interface UseSoundReturn {
-  play: (options?: AudioOptions | string) => void;
-  playSound: (sound: SoundType, options?: AudioOptions) => void;
-  stop: () => void;
-  isPlaying: boolean;
-  duration?: number;
-  playSuccess: (options?: AudioOptions) => void;
-  playError: (options?: AudioOptions) => void;
-  playNotification: (options?: AudioOptions) => void;
-  playClick: (options?: AudioOptions) => void;
-}
-
-/**
- * Options for the useSound hook
- */
-export interface UseSoundOptions extends AudioOptions {}
-
-/**
- * Premium sound pack details
- */
-export interface PremiumSoundPackDetails {
-  id?: string;
+export interface SoundCategory {
   name: string;
-  description: string;
-  price: number;
-  sounds: SoundType[];
-  previewSound?: SoundType;
-  features?: string[];
+  sounds: SoundFile[];
 }
+
+export interface SoundFile {
+  id: string;
+  name: string;
+  file: string;
+  duration?: number;
+  category: string;
+  description?: string;
+}
+
+export interface SoundOptions {
+  volume?: number;
+  loop?: boolean;
+  playbackRate?: number;
+  onEnd?: () => void;
+}
+
+export interface SoundConfig {
+  enabled: boolean;
+  volume: number;
+  effects: Record<string, boolean>;
+  music: boolean;
+  musicVolume: number;
+}
+
+export interface UseAudioReturn {
+  playSound: (type: SoundType, options?: SoundOptions) => void;
+  stopSound: (type?: SoundType) => void;
+  pauseSound: (type?: SoundType) => void;
+  resumeSound: (type?: SoundType) => void;
+  isPlaying: (type: SoundType) => boolean;
+  toggleSounds: () => void;
+  isSoundEnabled: boolean;
+  setVolume: (volume: number) => void;
+  currentVolume: number;
+}
+
+export interface UseSoundHook {
+  playSound: (type: SoundType, options?: SoundOptions) => void;
+  stopSound: (type?: SoundType) => void;
+  toggleSounds: () => void;
+  isSoundEnabled: boolean;
+  setVolume: (volume: number) => void;
+  play?: (type: SoundType, options?: SoundOptions) => void;  // For backward compatibility
+}
+
+// Audio-specific types
+export type AudioOptions = {
+  volume?: number;
+  loop?: boolean;
+  playbackRate?: number;
+  onEnd?: () => void;
+};
+
+// For backward compatibility
+export type NotificationSoundOptions = SoundOptions;

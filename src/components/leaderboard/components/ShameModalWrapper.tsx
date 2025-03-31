@@ -25,7 +25,7 @@ const ShameModalWrapper: React.FC<ShameModalWrapperProps> = ({
   // Convert undefined team to null to avoid the TeamType error
   const team = selectedUser.team || null;
   // Make sure team is one of the allowed values or provide a fallback
-  const validTeam = (team === 'red' || team === 'blue' || team === 'green' || team === 'gold') ? team : 'red';
+  const validTeam = (team === 'red' || team === 'blue' || team === 'green' || team === 'gold') ? team as TeamColor : 'red' as TeamColor;
 
   return (
     <Dialog open={showModal} onOpenChange={onOpenChange}>

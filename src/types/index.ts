@@ -1,5 +1,5 @@
 
-// Re-export all types
+// Re-export all types from individual type files
 export * from './achievement';
 export * from './cosmetics';
 export * from './mockery-types';
@@ -17,3 +17,6 @@ export * from './ui-types';
 export * from './sound-types';
 export * from './codeAnalysis/types';
 export * from './common';
+
+// Type organization helpers
+export * from './auth/types';
