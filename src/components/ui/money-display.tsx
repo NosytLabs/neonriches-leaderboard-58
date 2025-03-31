@@ -53,7 +53,7 @@ const MoneyDisplay: React.FC<MoneyDisplayProps> = ({
   };
 
   const iconName = currencyIcons[currency];
-  const formattedAmount = formatCurrency(amount, currency);
+  const formattedAmount = formatCurrency(amount);
 
   return (
     <div 

@@ -1,6 +1,5 @@
 
 // Export utility functions
-export * from './formatters';
 export * from './dateUtils';
 export * from './authUtils';
 export * from './userAdapter';
@@ -24,3 +23,5 @@ export * from './iconTypeAdapter';
 export * from './mobileUtils';
 export * from './getSoundPath';
 export * from './formatTimeAgo';
+export * from './formatters';
+

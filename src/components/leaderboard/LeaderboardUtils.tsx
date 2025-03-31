@@ -1,5 +1,6 @@
 
 import { UserProfile } from '@/types/user';
+import { formatCurrency, formatDate } from '@/utils/formatters';
 
 export const getPositionChangeColor = (user: UserProfile) => {
   if (!user.previousRank) return 'text-white/60';
@@ -33,8 +34,5 @@ export const formatMoney = (amount: number | undefined) => {
   return `$${amount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 };
 
-export const formatDate = (dateString: string) => {
-  if (!dateString) return '-';
-  const date = new Date(dateString);
-  return date.toLocaleDateString();
-};
+// Re-export formatters from the main utility for convenience
+export { formatCurrency, formatDate };
