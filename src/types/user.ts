@@ -18,7 +18,7 @@ export type UserTier =
   | 'silver'
   | 'bronze'
   | 'vip'
-  | 'whale'
+  | 'whale'  // Adding 'whale' to the UserTier type
   | 'standard'
   | 'elite'
   | 'legendary';
@@ -37,6 +37,7 @@ export interface ProfileBoost {
   price?: number;
   icon?: string;
   isActive: boolean;
+  effectId?: string; // Adding effectId property
 }
 
 export interface SocialLink {
@@ -59,6 +60,7 @@ export interface ProfileImage {
   url: string;
   isPrimary: boolean;
   caption?: string;
+  type?: string; // Adding type property
 }
 
 export interface UserSettings {
@@ -125,6 +127,7 @@ export interface UserProfile {
   activeTitle?: string;
   gender?: Gender;
   profileImages?: ProfileImage[];
+  teamRank?: number; // Adding teamRank property
   certificateNFT?: {
     id?: string;
     mintAddress?: string;

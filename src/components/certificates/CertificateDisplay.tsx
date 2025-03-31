@@ -20,16 +20,18 @@ const CertificateDisplay: React.FC<CertificateDisplayProps> = ({
 }) => {
   const {
     id,
-    title,
-    description,
-    imageUrl,
-    style,
+    type = 'achievement',
     team,
-    dateIssued,
-    signature,
-    type,
-    userDisplayName
+    style = 'royal',
+    imageUrl,
+    dateIssued = certificate.createdAt || new Date().toISOString()
   } = certificate;
+
+  // Get display values from certificate metadata or defaults
+  const title = certificate.title || certificate.metadata?.name || 'Royal Certificate';
+  const description = certificate.description || certificate.metadata?.description || 'A prestigious certificate of recognition';
+  const signature = certificate.signature || 'Royal Treasury';
+  const userDisplayName = certificate.userDisplayName || certificate.displayName || certificate.username || 'Esteemed Noble';
 
   const sizeClasses = {
     sm: 'w-64 h-48',
@@ -75,22 +77,22 @@ const CertificateDisplay: React.FC<CertificateDisplayProps> = ({
         return '👑';
       case 'achievement':
         return '🏆';
-      case 'membership':
-        return '🏅';
-      case 'special':
-        return '🌟';
-      case 'milestone':
-        return '📊';
-      case 'nobility':
-        return '🛡️';
-      case 'team':
-        return '🏹';
       case 'founder':
         return '🏛️';
       case 'seasonal':
         return '🌙';
       case 'event':
         return '🎭';
+      case 'team':
+        return '🏹';
+      case 'nobility':
+        return '🛡️';
+      case 'milestone':
+        return '📊';
+      case 'membership':
+        return '🏅';
+      case 'special':
+        return '🌟';
       case 'custom':
         return '✨';
       default:
@@ -115,7 +117,7 @@ const CertificateDisplay: React.FC<CertificateDisplayProps> = ({
       
       <div className="relative z-10 flex flex-col h-full">
         <div className="flex justify-between items-start mb-2">
-          <h3 className="font-medieval text-lg font-bold">{title || 'Certificate'}</h3>
+          <h3 className="font-medieval text-lg font-bold">{title}</h3>
           <span className="text-2xl">{getTypeIcon(type)}</span>
         </div>
         
@@ -123,7 +125,7 @@ const CertificateDisplay: React.FC<CertificateDisplayProps> = ({
           <p className="font-medieval text-sm mb-1">Awarded to: {userDisplayName}</p>
         )}
         
-        <p className="text-sm opacity-80 mb-auto">{description || 'A prestigious certificate of recognition'}</p>
+        <p className="text-sm opacity-80 mb-auto">{description}</p>
         
         <div className="mt-2 flex justify-between items-end text-xs opacity-70">
           <span>№{id.substring(0, 8)}</span>

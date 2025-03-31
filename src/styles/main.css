@@ -1,3 +1,4 @@
+
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap');
@@ -145,10 +146,12 @@ body {
   @apply bg-clip-text text-transparent bg-gradient-to-r from-royal-gold to-yellow-500;
 }
 
+/* Use Tailwind's shimmer animation */
 .royal-text-shimmer {
   @apply bg-clip-text text-transparent bg-gradient-to-r from-royal-gold via-yellow-500 to-royal-gold bg-[length:200%_100%] animate-shimmer;
 }
 
+/* Definition for shimmer animation - this should match what's in tailwind.config.js */
 @keyframes shimmer {
   0% { background-position: -200%; }
   100% { background-position: 200%; }
