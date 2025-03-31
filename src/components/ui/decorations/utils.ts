@@ -2,7 +2,7 @@
 import { MedievalColor, Size } from '@/types/common';
 import { MedievalIconColor, MedievalIconSize } from '@/types/ui/decorations/types';
 
-export const sizeClasses: Record<MedievalIconSize, string> = {
+export const sizeClasses: Record<Size, string> = {
   'xs': 'w-4 h-4',
   'sm': 'w-6 h-6',
   'md': 'w-8 h-8',
@@ -27,7 +27,7 @@ export const toMedievalIconColor = (color: MedievalIconColor): string => {
     'crimson': 'text-royal-crimson'
   };
   
-  return colorMap[color] || colorMap.default;
+  return colorMap[color as MedievalColor] || colorMap.default;
 };
 
 export const getColorClass = (color: MedievalIconColor): string => {
@@ -44,5 +44,5 @@ export const getColorClass = (color: MedievalIconColor): string => {
     'crimson': 'border-royal-crimson text-royal-crimson'
   };
   
-  return colorMap[color] || colorMap.default;
+  return colorMap[color as MedievalColor] || colorMap.default;
 };

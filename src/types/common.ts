@@ -1,24 +1,63 @@
 
-/**
- * Shared common types used across the application
- */
+// Common utility types used across the application
 
-/**
- * Common types for working with arrays and collections
- */
-export type KeysOfType<T, V> = { [K in keyof T]: T[K] extends V ? K : never }[keyof T];
-
-/**
- * Common color types
- */
-export type MedievalColor = 'default' | 'bronze' | 'silver' | 'gold' | 'royal' | 'purple' | 'green' | 'red' | 'blue' | 'crimson';
-
-/**
- * Common size types
- */
+// Common UI sizes
 export type Size = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl';
 
-/**
- * Common tier types - shared to ensure consistency
- */
-export type CommonTier = 'free' | 'basic' | 'pro' | 'premium' | 'royal' | 'founder' | 'vip';
+// Common colors used in the medieval theme
+export type MedievalColor = 
+  | 'default'
+  | 'bronze'
+  | 'silver'
+  | 'gold'
+  | 'royal'
+  | 'purple'
+  | 'green'
+  | 'red'
+  | 'blue'
+  | 'crimson';
+
+// Common theme variants
+export type ThemeVariant = 'light' | 'dark' | 'royal' | 'system';
+
+// Positioning options
+export type Position = 
+  | 'top'
+  | 'bottom'
+  | 'left'
+  | 'right'
+  | 'top-left'
+  | 'top-right'
+  | 'bottom-left'
+  | 'bottom-right'
+  | 'center';
+
+// Alignment options
+export type Alignment = 'start' | 'center' | 'end';
+
+// Direction options
+export type Direction = 'horizontal' | 'vertical';
+
+// Status types
+export type Status = 'idle' | 'loading' | 'success' | 'error';
+
+// ID type that can be string or number
+export type ID = string | number;
+
+// Generic record with string keys
+export type StringRecord<T = any> = Record<string, T>;
+
+// Animation variants
+export type AnimationVariant = 'fade' | 'slide' | 'scale' | 'bounce' | 'spin' | 'none';
+
+// Animation durations
+export type AnimationDuration = 'fast' | 'normal' | 'slow' | number;
+
+// Base props interface with common properties
+export interface BaseProps {
+  className?: string;
+  style?: React.CSSProperties;
+  id?: string;
+  children?: React.ReactNode;
+  [key: string]: any;
+}

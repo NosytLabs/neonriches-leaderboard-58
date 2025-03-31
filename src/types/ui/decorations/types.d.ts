@@ -1,10 +1,11 @@
 
 import { ReactNode } from 'react';
-import { IconSize, DecorationColor, MedievalIconColor } from '@/types/ui/icon-types';
+import { Size, MedievalColor } from '@/types/common';
 
-export type DecorationSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl';
+export type DecorationSize = Size;
 export type DecorationColor = 'gold' | 'silver' | 'crimson' | 'emerald' | 'royal' | 'default';
-export type MedievalIconSize = DecorationSize;
+export type MedievalIconSize = Size;
+export type MedievalIconColor = MedievalColor;
 
 export interface DecorationProps {
   size?: DecorationSize;
@@ -26,7 +27,7 @@ export type DecorationType =
   | 'border-pattern';
 
 // Helper functions for decoration components
-export const sizeClasses = {
+export const sizeClasses: Record<Size, string> = {
   'xs': 'h-4 w-4',
   'sm': 'h-6 w-6',
   'md': 'h-8 w-8',
@@ -37,8 +38,8 @@ export const sizeClasses = {
   '4xl': 'h-40 w-40'
 };
 
-export const getColorClass = (color: DecorationColor) => {
-  const colorClasses = {
+export const getColorClass = (color: DecorationColor): string => {
+  const colorClasses: Record<DecorationColor, string> = {
     'gold': 'text-royal-gold',
     'silver': 'text-gray-300',
     'crimson': 'text-royal-crimson',

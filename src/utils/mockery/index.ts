@@ -38,7 +38,7 @@ export const getMockeryCooldown = (action: MockeryAction, tier?: MockeryTier): n
   return actionCooldowns[action] || tierCooldowns[tier || 'basic'] || 60;
 };
 
-// Import types needed by components that use these utilities
+// Import types from our consolidated type definition
 import { MockeryAction, MockeryTier, ExtendedMockeryAction } from '@/types/mockery-types';
 
 // Re-export types for consuming components
