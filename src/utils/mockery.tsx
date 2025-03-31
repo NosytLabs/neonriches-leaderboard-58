@@ -1,24 +1,16 @@
 
-import React from 'react';
 import { MockeryAction, MockeryTier } from '@/types/mockery';
 import { 
   AlertCircle, 
   Egg, 
   Crown, 
-  Theater, 
-  Target, 
-  Shield, 
-  Bell, 
-  MessageSquare, 
-  Ban, 
-  UserX, 
-  Angry, 
-  Feather 
+  Lock,
+  Target
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
 // TomatoIcon component
-export const TomatoIcon: React.FC<{ className?: string; size?: number }> = ({ className = "", size = 24 }) => (
+export const TomatoIcon = ({ className = "", size = 24 }) => (
   <svg 
     xmlns="http://www.w3.org/2000/svg" 
     width={size} 
@@ -43,10 +35,7 @@ export const getMockeryActionIcon = (action: MockeryAction): LucideIcon => {
     'tomatoes': TomatoIcon,
     'eggs': Egg,
     'crown': Crown,
-    'jester': Theater,
-    'stocks': UserX,
-    'shame': Bell,
-    'protection': Shield
+    'stocks': Lock
   };
   return icons[action] || Target;
 };
@@ -57,10 +46,7 @@ export const getMockeryName = (action: MockeryAction): string => {
     tomatoes: 'Rotten Tomatoes',
     eggs: 'Rotten Eggs',
     crown: 'Mock Crown',
-    stocks: 'Public Stocks',
-    jester: 'Court Jester',
-    shame: 'Public Shame',
-    protection: 'Royal Protection'
+    stocks: 'Public Stocks'
   };
   
   return names[action] || 'Unknown Mockery';
@@ -72,10 +58,7 @@ export const getMockeryDescription = (action: MockeryAction): string => {
     tomatoes: 'Throw rotten tomatoes at this user to humiliate them publicly.',
     eggs: 'Throw rotten eggs at this user to make them stink of shame.',
     crown: 'Place a ridiculous crown on their head to mock their achievements.',
-    stocks: 'Lock them in the public stocks for all to ridicule.',
-    jester: 'Mark them as the court jester, subjecting them to ridicule.',
-    shame: 'Subject this user to public mockery and shame.',
-    protection: 'Grant royal protection against mockery for 7 days.'
+    stocks: 'Lock them in the public stocks for all to ridicule.'
   };
   
   return descriptions[action] || 'A mysterious form of mockery.';
@@ -87,10 +70,7 @@ export const getMockeryCost = (action: MockeryAction): number => {
     tomatoes: 0.25,
     eggs: 0.50,
     crown: 1.00,
-    stocks: 0.50,
-    jester: 0.60,
-    shame: 1.25,
-    protection: 5.00
+    stocks: 0.50
   };
   
   return costs[action] || 0.25;
@@ -102,10 +82,7 @@ export const getMockeryTier = (action: MockeryAction): MockeryTier => {
     tomatoes: 'common',
     eggs: 'common',
     crown: 'uncommon',
-    stocks: 'common',
-    jester: 'uncommon',
-    shame: 'rare',
-    protection: 'legendary'
+    stocks: 'common'
   };
   
   return tiers[action] || 'common';
@@ -118,12 +95,7 @@ export const getMockeryTierColorClass = (tier: MockeryTier): string => {
     uncommon: 'text-cyan-400',
     rare: 'text-indigo-400',
     epic: 'text-pink-400',
-    legendary: 'text-emerald-400',
-    basic: 'text-gray-400',
-    premium: 'text-blue-500',
-    royal: 'text-royal-gold',
-    silver: 'text-gray-300',
-    bronze: 'text-amber-700'
+    legendary: 'text-emerald-400'
   };
   
   return colors[tier] || 'text-gray-400';
@@ -135,10 +107,7 @@ export const getMockeryDuration = (action: MockeryAction): number => {
     tomatoes: 24,
     eggs: 24,
     crown: 48,
-    stocks: 36,
-    jester: 48,
-    shame: 24,
-    protection: 168 // 7 days
+    stocks: 36
   };
   
   return durations[action] || 24;
@@ -152,39 +121,47 @@ export const getActiveMockeryClass = (action: MockeryAction | null): string => {
     tomatoes: 'bg-red-500/20 border-red-500/40',
     eggs: 'bg-yellow-500/20 border-yellow-500/40',
     crown: 'bg-amber-500/20 border-amber-500/40',
-    stocks: 'bg-gray-500/20 border-gray-500/40',
-    jester: 'bg-purple-500/20 border-purple-500/40',
-    shame: 'bg-red-800/20 border-red-800/40',
-    protection: 'bg-green-500/20 border-green-500/40'
+    stocks: 'bg-gray-500/20 border-gray-500/40'
   };
   
   return classes[action] || 'bg-red-500/20 border-red-500/40';
 };
 
 // Weekly discount utilities
-export const hasWeeklyDiscount = (action: MockeryAction): boolean => {
+export const hasWeeklyDiscount = (action: string): boolean => {
   return action === 'eggs';
 };
 
-export const getWeeklyDiscountedAction = (): MockeryAction => {
+export const getWeeklyDiscountedAction = (): string => {
   return 'eggs';
 };
 
-export const getDiscountedShamePrice = (action: MockeryAction): number => {
-  const originalPrice = getMockeryCost(action);
+export const getDiscountedShamePrice = (action: string): number => {
+  const originalPrice = typeof action === 'string' ? 
+    parseFloat(action) : 
+    getShameActionPrice(action);
+    
   // Apply a 50% discount
   return originalPrice * 0.5;
 };
 
-export const getShameActionMessage = (action: MockeryAction, username: string): string => {
-  const messages: Record<MockeryAction, string> = {
+export const getShameActionPrice = (action: string): number => {
+  const prices: Record<string, number> = {
+    'tomatoes': 0.25,
+    'eggs': 0.50,
+    'crown': 1.00,
+    'stocks': 0.50
+  };
+  
+  return prices[action] || 0.25;
+};
+
+export const getShameActionMessage = (action: string, username: string): string => {
+  const messages: Record<string, string> = {
     'tomatoes': `You've pelted ${username} with rotten tomatoes!`,
     'eggs': `You've egged ${username}!`,
     'crown': `You've mocked ${username} with a ridiculous crown!`,
-    'stocks': `You've placed ${username} in the stocks!`,
-    'jester': `You've made ${username} the court jester!`,
-    'shame': `You've publicly shamed ${username}!`,
-    'protection': `You've granted ${username} royal protection!`
+    'stocks': `You've placed ${username} in the stocks!`
   };
   
   return messages[action] || `You've publicly mocked ${username}!`;
@@ -200,4 +177,5 @@ export const renderMockeryIcon = (action: MockeryAction, className: string = "h-
 export const getMockeryActionTitle = getMockeryName;
 export const getMockeryActionDescription = getMockeryDescription;
 export const getMockeryActionPrice = getMockeryCost;
-export const getShameActionPrice = getMockeryCost;
+export const getMockeryIconColor = getMockeryActionIcon;
+export const getMockeryActionIconColor = getMockeryActionIcon;

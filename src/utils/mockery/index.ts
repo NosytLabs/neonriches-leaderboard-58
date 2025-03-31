@@ -1,3 +1,3 @@
 
-// Re-export all utilities from the mockery.ts file
+// Re-export all utilities from the mockery.tsx file
 export * from '@/utils/mockery';
