@@ -1,6 +1,12 @@
 
-// Define the types of sounds available in the application
-export type SoundType = 
+/**
+ * Core sound types for the application
+ */
+
+/**
+ * Available sound types in the system
+ */
+export type SoundType =
   | 'achievement'
   | 'boost'
   | 'click'
@@ -24,24 +30,29 @@ export type SoundType =
   | 'trumpets'
   | 'withdrawal';
 
+/**
+ * Sound configuration state
+ */
+export interface SoundConfig {
+  volume: number;
+  enabled: boolean;
+  muted: boolean;
+  premium: boolean;
+}
+
+/**
+ * Options for sound playback
+ */
 export interface AudioOptions {
   volume?: number;
   interrupt?: boolean;
   loop?: boolean;
-  delay?: number;
   onComplete?: () => void;
 }
 
-export interface UseSoundOptions {
-  baseUrl?: string;
-  volume?: number;
-  disabled?: boolean;
-  soundEnabled?: boolean;
-  loop?: boolean;
-  interrupt?: boolean;
-  onComplete?: () => void;
-}
-
+/**
+ * Return type for useSound hook
+ */
 export interface UseSoundReturn {
   play: (options?: AudioOptions | string) => void;
   playSound: (sound: SoundType, options?: AudioOptions) => void;
@@ -54,33 +65,7 @@ export interface UseSoundReturn {
   playClick: (options?: AudioOptions) => void;
 }
 
-export interface AudioLoaderReturn {
-  audio: Record<SoundType, HTMLAudioElement>;
-  volume: number;
-  setVolume: (volume: number) => void;
-  isEnabled: boolean;
-  setEnabled: (enabled: boolean) => void;
-  isPremium: boolean;
-  setPremium: (premium: boolean) => void;
-  isLoaded: boolean;
-}
-
-export interface SoundConfig {
-  volume: number;
-  enabled: boolean;
-  muted: boolean;
-  premium: boolean;
-}
-
-export interface PremiumSoundPackDetails {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  sounds: SoundType[];
-  previewSound?: SoundType;
-  features?: string[];
-  includes?: string[];
-  tags?: string[];
-  isPurchased?: boolean;
-}
+/**
+ * Options for the useSound hook
+ */
+export interface UseSoundOptions extends AudioOptions {}

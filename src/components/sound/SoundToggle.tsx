@@ -43,3 +43,5 @@ export function SoundToggle() {
     </TooltipProvider>
   );
 }
+
+export default SoundToggle;

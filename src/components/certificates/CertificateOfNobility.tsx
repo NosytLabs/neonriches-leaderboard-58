@@ -1,9 +1,10 @@
+
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { format } from 'date-fns';
 import { UserProfile } from '@/types/user';
 import { Award, CheckCircle, XCircle, HelpCircle, Medal, Download } from 'lucide-react';
-import useNotificationSounds from '@/hooks/useNotificationSounds';
+import { useSound } from '@/hooks/use-sound';
 import RoyalButton from '@/components/ui/royal-button';
 
 export interface CertificateProps {
@@ -23,31 +24,31 @@ const CertificateOfNobility: React.FC<CertificateProps> = ({
 }) => {
   const [isVerified, setIsVerified] = useState(false);
   const [isVerifying, setIsVerifying] = useState(false);
-  const { playSound } = useNotificationSounds();
+  const sound = useSound();
   
   // Generate a unique certificate ID if not provided
   const uniqueCertId = certificateId || `STATUS-${Math.floor(10000 + Math.random() * 90000)}-${user.id.substring(0, 5)}`;
   
   const handleVerify = () => {
     setIsVerifying(true);
-    playSound('notification');
+    sound.playSound('notification');
     
     // Simulate verification process
     setTimeout(() => {
       setIsVerified(true);
       setIsVerifying(false);
-      playSound('success');
+      sound.playSound('success');
       if (onVerify) onVerify();
     }, 2000);
   };
   
   const handleDismiss = () => {
-    playSound('notification');
+    sound.playSound('notification');
     if (onDismiss) onDismiss();
   };
 
   const handleDownload = () => {
-    playSound('success');
+    sound.playSound('success');
     if (onDownload) onDownload();
   };
   

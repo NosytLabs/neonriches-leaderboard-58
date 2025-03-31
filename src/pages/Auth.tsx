@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Shield, Crown, Sparkles } from 'lucide-react';
@@ -7,10 +7,10 @@ import LoginForm from '@/components/auth/LoginForm';
 import RegisterForm from '@/components/auth/RegisterForm';
 import ThroneBackground from '@/components/ui/throne-background';
 import RoyalDivider from '@/components/ui/royal-divider';
-import useNotificationSounds from '@/hooks/use-notification-sounds';
+import { useNotificationSounds } from '@/hooks/sounds/use-notification-sounds';
+import { AudioOptions } from '@/types/sound-types';
 import { motion } from 'framer-motion';
 import { useAuth } from '@/contexts/auth';
-import { NotificationSoundOptions } from '@/types/mockery';
 
 const Auth = () => {
   const [activeTab, setActiveTab] = useState<'login' | 'register'>('login');

@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -7,10 +6,9 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Progress } from '@/components/ui/progress';
 import { useToast } from '@/hooks/use-toast';
-import useNotificationSounds from '@/hooks/use-notification-sounds';
+import { useNotificationSounds } from '@/hooks/sounds/use-notification-sounds';
 import { motion } from 'framer-motion';
 
-// Mock proposal data
 const mockProposals = [
   {
     id: 1,
@@ -81,9 +79,7 @@ const CommunityVoting: React.FC = () => {
   const { playSound } = useNotificationSounds();
   
   const handleVote = (proposalId: number, voteType: 'up' | 'down') => {
-    // Check if user already voted the same way
     if (userVotes[proposalId] === voteType) {
-      // Remove vote
       setUserVotes(prev => ({
         ...prev,
         [proposalId]: null
@@ -95,7 +91,6 @@ const CommunityVoting: React.FC = () => {
         description: "Your vote has been removed from this proposal.",
       });
     } else {
-      // Set new vote
       setUserVotes(prev => ({
         ...prev,
         [proposalId]: voteType

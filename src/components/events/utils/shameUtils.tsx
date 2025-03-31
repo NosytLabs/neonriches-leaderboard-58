@@ -1,70 +1,68 @@
 
-// Re-export shame functions from the mockery utilities
-import { 
-  hasWeeklyDiscount,
-  getWeeklyDiscountedAction,
-  getDiscountedShamePrice,
-  getShameActionPrice,
-  getShameActionMessage,
-  getMockeryName,
-  getMockeryDescription,
-  getMockeryCost,
-  getMockeryTier,
-  getMockeryTierColorClass,
-  getMockeryActionIcon,
-  getActiveMockeryClass,
-  getMockeryActionDescription
-} from '@/utils/mockery';
-
-import { MockeryAction, ShameAction } from '@/types/mockery';
-import { cn } from '@/lib/utils';
 import React from 'react';
+import { cn } from '@/lib/utils';
+import { LucideIcon } from 'lucide-react';
+import { ShieldAlert, Ban, Music2, UserX, CloudFog, UserRoundX, Crown, Skull } from 'lucide-react';
 
-export { 
-  hasWeeklyDiscount,
-  getWeeklyDiscountedAction,
-  getDiscountedShamePrice,
-  getShameActionPrice,
-  getShameActionMessage,
-  getMockeryName,
-  getMockeryDescription,
-  getMockeryActionDescription,
-  getMockeryCost,
-  getMockeryTier,
-  getMockeryTierColorClass,
-  getMockeryActionIcon,
-  getActiveMockeryClass
+/**
+ * Types of shame actions available
+ */
+export type ShameAction = 
+  | 'tomatoes' 
+  | 'eggs' 
+  | 'dungeons' 
+  | 'stocks' 
+  | 'dunce' 
+  | 'jester' 
+  | 'troll' 
+  | 'peasant' 
+  | 'rat' 
+  | 'ghost' 
+  | 'skeleton' 
+  | 'zombie' 
+  | 'witch' 
+  | 'monster' 
+  | 'demon' 
+  | 'target' 
+  | 'challenge' 
+  | 'crown' 
+  | 'pawn';
+
+/**
+ * Get the appropriate icon for a shame action
+ */
+export const getShameActionIcon = (action: ShameAction): LucideIcon => {
+  switch (action) {
+    case 'tomatoes':
+      return Ban;
+    case 'eggs':
+      return ShieldAlert;
+    case 'dungeons':
+      return UserX;
+    case 'jester':
+      return Music2;
+    case 'smoke':
+    case 'witch':
+      return CloudFog;
+    case 'crown':
+      return Crown;
+    case 'skeleton':
+    case 'ghost':
+      return Skull;
+    default:
+      return UserRoundX;
+  }
 };
 
-export const getShameActionIcon = (action: MockeryAction) => {
-  return getMockeryActionIcon(action);
-};
-
-export const getShameActionTitle = (action: MockeryAction) => {
-  return getMockeryName(action);
-};
-
-export const getShameActionDescription = (action: MockeryAction) => {
-  return getMockeryActionDescription(action);
-};
-
-interface ShameIconProps {
-  action: ShameAction; 
-  size?: 'sm' | 'md' | 'lg';
-}
-
-export const ShameIcon: React.FC<ShameIconProps> = ({ 
-  action, 
-  size = 'md' 
-}) => {
-  // Convert ShameAction to MockeryAction explicitly through unknown to avoid type error
-  const actionType = action as unknown as MockeryAction;
-  const IconComponent = getShameActionIcon(actionType);
-  
+/**
+ * Render a shame action icon with the given size
+ */
+export const renderShameActionIcon = (action: ShameAction, size: 'sm' | 'md' | 'lg' = 'md') => {
+  const IconComponent = getShameActionIcon(action);
   const sizeClass = {
-    sm: 'text-lg',
-    md: 'text-2xl',
-    lg: 'text-3xl'
+    sm: 'w-4 h-4',
+    md: 'w-5 h-5',
+    lg: 'w-6 h-6'
   };
   
   return (
@@ -74,4 +72,7 @@ export const ShameIcon: React.FC<ShameIconProps> = ({
   );
 };
 
-export default ShameIcon;
+export default {
+  getShameActionIcon,
+  renderShameActionIcon
+};

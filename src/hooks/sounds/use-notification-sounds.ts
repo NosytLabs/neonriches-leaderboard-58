@@ -9,8 +9,8 @@ import { SoundType, AudioOptions } from '@/types/sound-types';
 export function useNotificationSounds() {
   const sound = useSound();
   
-  const playSound = useCallback((sound: SoundType, options?: AudioOptions) => {
-    sound.playSound(sound, options);
+  const playSound = useCallback((soundType: SoundType, options?: AudioOptions) => {
+    sound.playSound(soundType, options);
   }, [sound]);
   
   return { 

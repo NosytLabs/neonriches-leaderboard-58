@@ -1,8 +1,10 @@
 
 import { SoundType } from '@/types/sound-types';
 
-// Define sound asset paths for regular and premium sound packs
-export const soundAssets: Record<string, string> = {
+/**
+ * Standard sound assets paths
+ */
+export const soundAssets: Record<SoundType, string> = {
   achievement: '/sounds/achievement.mp3',
   boost: '/sounds/boost.mp3',
   click: '/sounds/click.mp3',
@@ -27,7 +29,10 @@ export const soundAssets: Record<string, string> = {
   withdrawal: '/sounds/withdrawal.mp3'
 };
 
-export const premiumSoundAssets: Record<string, string> = {
+/**
+ * Premium sound assets paths
+ */
+export const premiumSoundAssets: Record<SoundType, string> = {
   achievement: '/sounds/premium/achievement.mp3',
   boost: '/sounds/premium/boost.mp3',
   click: '/sounds/premium/click.mp3',
@@ -52,28 +57,30 @@ export const premiumSoundAssets: Record<string, string> = {
   withdrawal: '/sounds/premium/withdrawal.mp3'
 };
 
-// Define volume levels for different sounds
-export const soundVolumes: Record<string, number> = {
-  achievement: 0.7,
-  boost: 0.6,
-  click: 0.5,
-  coin: 0.6,
-  coinDrop: 0.7,
-  deposit: 0.7,
+/**
+ * Default volume levels for different sound types
+ */
+export const soundVolumes: Record<SoundType, number> = {
+  achievement: 0.6,
+  boost: 0.5,
+  click: 0.4,
+  coin: 0.5,
+  coinDrop: 0.5,
+  deposit: 0.6,
   error: 0.5,
-  level_up: 0.8,
-  message: 0.6,
-  mockery: 0.7,
-  notification: 0.6,
-  purchase: 0.7,
-  rank_up: 0.8,
-  reward: 0.7,
-  royal: 0.7,
-  royalAnnouncement: 0.8,
-  seal: 0.6,
-  shame: 0.7,
-  success: 0.6,
-  trumpet: 0.7,
-  trumpets: 0.8,
-  withdrawal: 0.7
+  level_up: 0.6,
+  message: 0.4,
+  mockery: 0.5,
+  notification: 0.5,
+  purchase: 0.6,
+  rank_up: 0.7,
+  reward: 0.6,
+  royal: 0.6,
+  royalAnnouncement: 0.7,
+  seal: 0.5,
+  shame: 0.4,
+  success: 0.5,
+  trumpet: 0.5,
+  trumpets: 0.6,
+  withdrawal: 0.5
 };

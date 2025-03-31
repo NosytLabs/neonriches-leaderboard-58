@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import LeaderboardHeader from './LeaderboardHeader';
 import LeaderboardFilters from './LeaderboardFilters';
@@ -9,10 +9,11 @@ import { Crown, Coins, Scroll } from 'lucide-react';
 import useFloatingCoins from '@/hooks/use-floating-coins';
 import { User } from '@/types/user';
 import RoyalButton from '@/components/ui/royal-button';
-import useNotificationSounds from '@/hooks/use-notification-sounds';
+import { useNotificationSounds } from '@/hooks/sounds/use-notification-sounds';
 import RoyalDivider from '@/components/ui/royal-divider';
 import RoyalDecrees from '@/components/dashboard/RoyalDecrees';
 import { NotificationSoundOptions } from '@/types/mockery';
+import { AudioOptions } from '@/types/sound-types';
 
 const mockRoyalUsers: User[] = [
   {

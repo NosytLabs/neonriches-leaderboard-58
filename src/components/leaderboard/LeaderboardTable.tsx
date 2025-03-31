@@ -1,11 +1,10 @@
-
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Trophy, Users, ArrowUp, ArrowDown, DollarSign, Crown, Scroll } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { getTeamColor, getTeamName } from './TeamUtils';
 import { useToastContext } from '@/contexts/ToastContext';
-import useNotificationSounds from '@/hooks/use-notification-sounds';
+import useNotificationSounds from '@/hooks/sounds/use-notification-sounds';
 import { UserProfile } from '@/types/user';
 import { motion } from 'framer-motion';
 

@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -7,7 +6,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { AlertCircle, CheckCircle, Loader2 } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import useNotificationSounds from '@/hooks/use-notification-sounds';
+import useNotificationSounds from '@/hooks/sounds/use-notification-sounds';
 
 const SuggestionForm: React.FC = () => {
   const [title, setTitle] = useState('');

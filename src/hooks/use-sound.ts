@@ -1,5 +1,5 @@
 
-import { useSound as useSoundHook } from './sounds/use-sound';
+import { useSoundHook } from './sounds/use-sound';
 import { SoundType, AudioOptions, UseSoundReturn } from '@/types/sound-types';
 
 /**
