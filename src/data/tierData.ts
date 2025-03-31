@@ -13,6 +13,11 @@ export const tiers: TierDetails[] = [
       'Standard leaderboard visibility',
       'Participation in public events'
     ],
+    marketingBenefits: [
+      'Basic profile visibility',
+      'Standard click tracking',
+      'Public profile page'
+    ],
     icon: 'user'
   },
   {
@@ -26,6 +31,12 @@ export const tiers: TierDetails[] = [
       'Team chat access',
       'Bronze profile banner',
       'One mockery action per week'
+    ],
+    marketingBenefits: [
+      'Enhanced profile visibility',
+      'Basic click analytics',
+      'Social media links',
+      'Custom profile banner'
     ],
     icon: 'shield'
   },
@@ -41,6 +52,12 @@ export const tiers: TierDetails[] = [
       'Advanced profile customization',
       'Three mockery actions per week'
     ],
+    marketingBenefits: [
+      'Increased profile visibility',
+      'Detailed click analytics',
+      'Weekly visibility in Spotlight',
+      'Custom profile effects'
+    ],
     icon: 'sword'
   },
   {
@@ -55,6 +72,30 @@ export const tiers: TierDetails[] = [
       'Royal council voting power',
       'Unlimited mockery actions'
     ],
+    marketingBenefits: [
+      'Premium homepage Spotlight placement',
+      'Full analytics dashboard',
+      'Custom animated effects',
+      'Exclusive profile customization',
+      'Priority placement in all leaderboards'
+    ],
     icon: 'crown'
   }
 ];
+
+// Export user benefits based on spending amount
+export const getUserTier = (amountSpent: number): TierDetails => {
+  for (let i = tiers.length - 1; i >= 0; i--) {
+    const tier = tiers[i];
+    if (amountSpent >= tier.minSpend && (tier.maxSpend === null || amountSpent <= tier.maxSpend)) {
+      return tier;
+    }
+  }
+  return tiers[0]; // Default to basic tier
+};
+
+// Get marketing benefit description by tier name
+export const getMarketingBenefitsByTier = (tierName: string): string[] => {
+  const tier = tiers.find(t => t.name === tierName) || tiers[0];
+  return tier.marketingBenefits || [];
+};
