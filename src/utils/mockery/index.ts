@@ -1,6 +1,6 @@
 
 // Export all mockery utilities from their respective files
-import { getMockeryIcon, getMockeryIconColor } from './mockery-icons';
+import getMockeryIcon, { getMockeryIconColor } from './mockery-icons';
 import { getMockeryDuration, getTierDurationMultiplier } from './mockery-durations';
 import { getMockeryActionTitle, getMockeryActionDescription, getMockeryTier, getMockeryActionPrice } from './mockery-actions';
 import { getMockeryTierColorClass, getActiveMockeryClass } from './mockery-effects';
