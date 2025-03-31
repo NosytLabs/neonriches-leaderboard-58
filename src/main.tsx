@@ -1,25 +1,15 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { BrowserRouter } from 'react-router-dom';
 import App from './App';
-import './styles/main.css';
-import { HelmetProvider } from 'react-helmet-async';
+import './index.css';
+import './styles/animations.css'; // Use our consolidated animations file
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
+ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-    <HelmetProvider>
+    <BrowserRouter>
       <App />
-    </HelmetProvider>
+    </BrowserRouter>
   </React.StrictMode>
 );
-
-// Remove the loading indicator once app is loaded
-window.addEventListener('load', () => {
-  const loadingIndicator = document.querySelector('.loading-indicator');
-  if (loadingIndicator) {
-    loadingIndicator.classList.add('loaded');
-    setTimeout(() => {
-      loadingIndicator.remove();
-    }, 300);
-  }
-});

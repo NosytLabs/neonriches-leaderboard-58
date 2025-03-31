@@ -1,9 +1,14 @@
+
 // Re-export utility functions
 import { cn } from '@/lib/utils';
 import { 
   formatCurrency, 
   formatNumber, 
-  formatPercent 
+  formatPercent,
+  formatDollarAmount,
+  formatFileSize,
+  formatRankWithSuffix,
+  formatDuration
 } from './formatters';
 
 import { 
@@ -15,22 +20,60 @@ import {
   isDateToday
 } from './dateUtils';
 
+import {
+  randomDelay,
+  randomDuration,
+  getAnimationClass,
+  getAnimationStyle,
+  getStaggeredDelays,
+  getShameEffectClass
+} from './animationUtils';
+
+import {
+  getMockeryActionIcon,
+  getMockeryActionIconColor,
+  getMockeryActionName,
+  getMockeryActionDescription,
+  getMockeryActionEffect
+} from './mockeryUtils';
+
 // Common UI utilities
 export {
   cn,
+  // Formatters
   formatCurrency,
   formatNumber,
   formatPercent,
+  formatDollarAmount,
+  formatFileSize,
+  formatRankWithSuffix,
+  formatDuration,
+  
+  // Date utilities
   formatDate,
   getRelativeTimeString,
   getDaysInMonth,
   isDateInPast,
   isDateInFuture,
-  isDateToday
+  isDateToday,
+  
+  // Animation utilities
+  randomDelay,
+  randomDuration,
+  getAnimationClass,
+  getAnimationStyle,
+  getStaggeredDelays,
+  getShameEffectClass,
+  
+  // Mockery utilities
+  getMockeryActionIcon,
+  getMockeryActionIconColor,
+  getMockeryActionName,
+  getMockeryActionDescription,
+  getMockeryActionEffect
 };
 
-// Export any other type of utilities needed
-
+// Common string utilities
 export const capitalize = (string: string): string => {
   if (!string) return '';
   return string.charAt(0).toUpperCase() + string.slice(1);

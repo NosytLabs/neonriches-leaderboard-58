@@ -1,194 +1,151 @@
 
-import { MockeryAction, MockeryTier, MockeryColorTheme } from '@/types/mockery';
+import { Egg, Drumstick, Bone, Flame, Skull, Trash2, Frown, SkullIcon } from 'lucide-react';
 
 /**
- * Get the price for a mockery action
- * @param action The mockery action to get the price for
- * @returns The price in dollars/coins
+ * Utilities for mockery-related functions
  */
-export const getShameActionPrice = (action: MockeryAction): number => {
-  const prices: Record<MockeryAction, number> = {
-    'tomatoes': 5,
-    'eggs': 10,
-    'stocks': 20,
-    'crown': 100,
-    'jester': 15,
-    'putridEggs': 25,
-    'silence': 30,
-    'courtJester': 50,
-    'smokeBomb': 15,
-    'shame': 10,
-    'protection': 75
-  };
 
-  return prices[action] || 5;
+export type MockeryAction = 
+  | 'tomato' 
+  | 'egg' 
+  | 'stocks' 
+  | 'roast' 
+  | 'bone' 
+  | 'flame' 
+  | 'shame'
+  | 'disgrace';
+
+/**
+ * Get icon component for a mockery action
+ */
+export const getMockeryActionIcon = (action: MockeryAction) => {
+  switch (action) {
+    case 'tomato':
+      return Trash2;
+    case 'egg':
+      return Egg;
+    case 'stocks':
+      return Frown;
+    case 'roast':
+      return Drumstick;
+    case 'bone':
+      return Bone;
+    case 'flame':
+      return Flame;
+    case 'shame':
+    case 'disgrace':
+      return SkullIcon;
+    default:
+      return Trash2;
+  }
 };
 
 /**
- * Get the tier of a mockery action
- * @param action The mockery action to get the tier for
- * @returns The tier as a MockeryTier
+ * Get color for mockery action icon
  */
-export const getShameActionTier = (action: MockeryAction): MockeryTier => {
-  const tiers: Record<MockeryAction, MockeryTier> = {
-    'tomatoes': 'common',
-    'eggs': 'common',
-    'jester': 'common',
-    'stocks': 'uncommon',
-    'shame': 'uncommon',
-    'smokeBomb': 'uncommon',
-    'putridEggs': 'rare',
-    'silence': 'rare',
-    'courtJester': 'rare',
-    'crown': 'legendary',
-    'protection': 'legendary'
-  };
-
-  return tiers[action] || 'common';
+export const getMockeryActionIconColor = (action: MockeryAction): string => {
+  switch (action) {
+    case 'tomato':
+      return 'text-red-500';
+    case 'egg':
+      return 'text-yellow-200';
+    case 'stocks':
+      return 'text-gray-400';
+    case 'roast':
+      return 'text-amber-500';
+    case 'bone':
+      return 'text-gray-300';
+    case 'flame':
+      return 'text-orange-500';
+    case 'shame':
+    case 'disgrace':
+      return 'text-purple-400';
+    default:
+      return 'text-gray-500';
+  }
 };
 
 /**
- * Get the cooldown time for a mockery action in milliseconds
- * @param action The mockery action
- * @returns Cooldown time in milliseconds
+ * Get display name for mockery action
  */
-export const getShameActionCooldown = (action: MockeryAction): number => {
-  const baseCooldown = 30 * 1000; // 30 seconds base cooldown
-  const multipliers: Record<MockeryTier, number> = {
-    'common': 1,
-    'uncommon': 2,
-    'rare': 3,
-    'epic': 4,
-    'legendary': 5
-  };
-  
-  const tier = getShameActionTier(action);
-  return baseCooldown * multipliers[tier];
+export const getMockeryActionName = (action: MockeryAction): string => {
+  switch (action) {
+    case 'tomato':
+      return 'Throw Tomatoes';
+    case 'egg':
+      return 'Throw Eggs';
+    case 'stocks':
+      return 'Put in Stocks';
+    case 'roast':
+      return 'Public Roast';
+    case 'bone':
+      return 'Throw Bones';
+    case 'flame':
+      return 'Flame Online';
+    case 'shame':
+      return 'Ring Bell of Shame';
+    case 'disgrace':
+      return 'Mark as Disgrace';
+    default:
+      return 'Mock';
+  }
 };
 
 /**
- * Get the duration a mockery effect stays applied in milliseconds
- * @param action The mockery action
- * @returns Duration in milliseconds
+ * Get description for mockery action
  */
-export const getShameActionDuration = (action: MockeryAction): number => {
-  const baseDuration = 3600 * 1000; // 1 hour base duration
-  const multipliers: Record<MockeryTier, number> = {
-    'common': 1,      // 1 hour
-    'uncommon': 3,    // 3 hours
-    'rare': 6,        // 6 hours
-    'epic': 12,       // 12 hours 
-    'legendary': 24   // 24 hours
-  };
-  
-  const tier = getShameActionTier(action);
-  return baseDuration * multipliers[tier];
+export const getMockeryActionDescription = (action: MockeryAction): string => {
+  switch (action) {
+    case 'tomato':
+      return 'Throw virtual tomatoes at this user's profile';
+    case 'egg':
+      return 'Egg this user's profile page';
+    case 'stocks':
+      return 'Put this user in the virtual stocks for public ridicule';
+    case 'roast':
+      return 'Publicly roast this user with medieval-themed jokes';
+    case 'bone':
+      return 'Throw virtual bones at this user's profile';
+    case 'flame':
+      return 'Publicly flame this user online';
+    case 'shame':
+      return 'Ring the bell of shame on this user's profile';
+    case 'disgrace':
+      return 'Mark this user with the symbol of disgrace';
+    default:
+      return 'Mock this user publicly';
+  }
 };
 
 /**
- * Check if the action has a weekly discount
- * @param action The mockery action
- * @returns Whether the action has a weekly discount
+ * Get animation effect for mockery action
  */
-export const hasWeeklyDiscount = (action: MockeryAction): boolean => {
-  // For demo purposes, let's say stocks is discounted this week
-  const discountedAction = getWeeklyDiscountedAction();
-  return action === discountedAction;
-};
-
-/**
- * Get the action that is discounted this week
- * @returns The discounted action
- */
-export const getWeeklyDiscountedAction = (): MockeryAction => {
-  // This would typically be fetched from an API or database
-  // For now, let's hardcode it to 'stocks'
-  return 'stocks';
-};
-
-/**
- * Get the discounted price for a mockery action
- * @param action The mockery action
- * @returns The discounted price
- */
-export const getDiscountedShamePrice = (action: MockeryAction): number => {
-  const regularPrice = getShameActionPrice(action);
-  // 50% discount
-  return regularPrice * 0.5;
-};
-
-/**
- * Get the color theme for a mockery tier
- * @param tier The mockery tier
- * @returns A color theme object
- */
-export const getMockeryTierColorClass = (tier: MockeryTier): string => {
-  const colorClasses: Record<MockeryTier, string> = {
-    'common': 'text-gray-400 bg-gray-800/50 border-gray-500/30',
-    'uncommon': 'text-green-400 bg-green-900/30 border-green-500/30',
-    'rare': 'text-blue-400 bg-blue-900/30 border-blue-500/30',
-    'epic': 'text-purple-400 bg-purple-900/30 border-purple-500/30',
-    'legendary': 'text-yellow-400 bg-yellow-900/30 border-yellow-500/30'
-  };
-
-  return colorClasses[tier] || colorClasses.common;
-};
-
-/**
- * Get mockery name for display
- * @param action The mockery action
- * @returns A human-readable name for the mockery action
- */
-export const getMockeryName = (action: MockeryAction): string => {
-  const names: Record<MockeryAction, string> = {
-    'tomatoes': 'Rotten Tomatoes',
-    'eggs': 'Rancid Eggs',
-    'stocks': 'Public Stocks',
-    'crown': 'Fool\'s Crown',
-    'jester': 'Jester\'s Hat',
-    'putridEggs': 'Putrid Eggs',
-    'silence': 'Royal Silence',
-    'courtJester': 'Court Jester',
-    'smokeBomb': 'Smoke Bomb',
-    'shame': 'Public Shame',
-    'protection': 'Royal Protection'
-  };
-
-  return names[action] || action;
-};
-
-/**
- * Get mockery description for display
- * @param action The mockery action
- * @returns A description of what the mockery action does
- */
-export const getMockeryDescription = (action: MockeryAction): string => {
-  const descriptions: Record<MockeryAction, string> = {
-    'tomatoes': 'Splatter their profile with rotten tomatoes for 24 hours',
-    'eggs': 'Pelt their profile with rancid eggs for 24 hours',
-    'stocks': 'Lock them in the public stocks for all to see for 3 days',
-    'crown': 'Force them to wear a fool\'s crown for a week',
-    'jester': 'Dress them as a court jester for 24 hours',
-    'putridEggs': 'Assault them with the most putrid eggs in the kingdom for 3 days',
-    'silence': 'Prevent them from speaking in public forums for 12 hours',
-    'courtJester': 'Assign them as your personal jester for 3 days',
-    'smokeBomb': 'Drop a smoke bomb on their profile for 24 hours',
-    'shame': 'Ring the bell of shame on their profile for 24 hours',
-    'protection': 'Protect yourself from mockery for 3 days'
-  };
-
-  return descriptions[action] || 'Apply a mysterious effect';
+export const getMockeryActionEffect = (action: MockeryAction): string => {
+  switch (action) {
+    case 'tomato':
+      return 'shame-effect-tomatoes';
+    case 'egg':
+      return 'shame-effect-eggs';
+    case 'stocks':
+      return 'shame-effect-stocks';
+    case 'roast':
+      return 'shame-effect-tomatoes';
+    case 'bone':
+      return 'shame-effect-eggs';
+    case 'flame':
+      return 'shame-effect-tomatoes';
+    case 'shame':
+    case 'disgrace':
+      return 'shame-effect-stocks';
+    default:
+      return 'shame-effect-tomatoes';
+  }
 };
 
 export default {
-  getShameActionPrice,
-  getShameActionTier,
-  getShameActionCooldown,
-  getShameActionDuration,
-  hasWeeklyDiscount,
-  getWeeklyDiscountedAction,
-  getDiscountedShamePrice,
-  getMockeryName,
-  getMockeryDescription,
-  getMockeryTierColorClass
+  getMockeryActionIcon,
+  getMockeryActionIconColor,
+  getMockeryActionName,
+  getMockeryActionDescription,
+  getMockeryActionEffect
 };
