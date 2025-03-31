@@ -10,8 +10,8 @@ export interface MarketingEvent {
   startDate: string;
   endDate: string;
   imageUrl?: string;
-  participants?: number;  // Added for MarketingEvents & MarketingHub
-  rewards?: string;       // Added for MarketingEvents & MarketingHub
+  participants?: number;
+  rewards?: string;
 }
 
 /**
@@ -56,3 +56,8 @@ export interface MarketingBenefit {
   iconName: string;
   available: boolean;
 }
+
+// Export type instances to avoid "used as value" errors
+export const MarketingEvent: any = undefined;
+export const MarketingFeaturePrice: any = undefined;
+export const MarketingBenefit: any = undefined;

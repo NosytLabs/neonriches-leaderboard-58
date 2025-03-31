@@ -80,8 +80,8 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({ users, currentUserI
                 </div>
               </td>
               <td className="p-3">
-                <span className={`inline-block px-2 py-1 rounded text-xs ${getTeamColor(asTeamColor(user.team as TeamColor))}`}>
-                  {getTeamName(asTeamColor(user.team as TeamColor))}
+                <span className={`inline-block px-2 py-1 rounded text-xs ${getTeamColor(asTeamColor(user.team as string))}`}>
+                  {getTeamName(asTeamColor(user.team as string))}
                 </span>
               </td>
               <td className="p-3 text-right font-medium">

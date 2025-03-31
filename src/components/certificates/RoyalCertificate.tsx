@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { Crown, Award, Calendar, Shield, Download, Twitter, ExternalLink, Wallet, Trophy, Coins } from 'lucide-react';
-import { UserProfile } from '@/types/user';
+import { UserProfile } from '@/types/user-consolidated';
 import { generateCertificateMetadata } from '@/services/solanaService';
 import { useSolana } from '@/contexts/SolanaContext';
 import html2canvas from 'html2canvas';
@@ -31,6 +31,9 @@ const RoyalCertificate: React.FC<RoyalCertificateProps> = ({
   const [isMinting, setIsMinting] = useState(false);
   const [mintSuccess, setMintSuccess] = useState(false);
   const certificateRef = useRef<HTMLDivElement>(null);
+  
+  // Use optional chaining and prepare certificate NFT data
+  const certificateNFT = user?.certificateNFT || null;
   
   const getTeamColor = (team: string | null) => {
     switch (team) {
@@ -157,11 +160,11 @@ const RoyalCertificate: React.FC<RoyalCertificateProps> = ({
               <div className="text-lg font-medium">This certifies that</div>
               <div className="text-2xl font-royal text-royal-gold mt-1">{user.displayName || user.username}</div>
               <div className="flex items-center justify-center mt-2 space-x-2">
-                <Badge variant="outline" className={`${getTeamColor(user.team)}`}>
-                  {getTeamName(user.team)}
+                <Badge variant="outline" className={`${getTeamColor(user.team as string | null)}`}>
+                  {getTeamName(user.team as string | null)}
                 </Badge>
                 <Badge variant="outline" className="bg-purple-500/20 text-purple-300">
-                  {getTierName(user.tier)}
+                  {getTierName(user.tier as string)}
                 </Badge>
               </div>
             </div>
@@ -198,15 +201,15 @@ const RoyalCertificate: React.FC<RoyalCertificateProps> = ({
               "In the grand hierarchy of digital nobility, one's worth is measured not by character, but by the depth of their pockets."
             </div>
             
-            {(hasNFT || (user.certificateNFT && user.certificateNFT.mintAddress)) && (
+            {(hasNFT || certificateNFT?.mintAddress) && (
               <div className="flex items-center justify-center space-x-2">
                 <Badge variant="outline" className="bg-green-500/20 text-green-400 border-green-500/30">
                   <Shield className="h-3 w-3 mr-1" />
                   Verified On-Chain
                 </Badge>
-                {user.certificateNFT?.mintAddress && (
+                {certificateNFT?.mintAddress && (
                   <Badge variant="outline" className="bg-purple-500/20 text-purple-300 border-purple-500/30 text-xs">
-                    {user.certificateNFT.mintAddress.slice(0, 4)}...{user.certificateNFT.mintAddress.slice(-4)}
+                    {certificateNFT.mintAddress.slice(0, 4)}...{certificateNFT.mintAddress.slice(-4)}
                   </Badge>
                 )}
               </div>
@@ -242,7 +245,7 @@ const RoyalCertificate: React.FC<RoyalCertificateProps> = ({
           Share on Twitter
         </Button>
         
-        {!hasNFT && !mintSuccess && !(user.certificateNFT?.mintAddress) && (
+        {!hasNFT && !mintSuccess && !certificateNFT?.mintAddress && (
           <Button
             variant="outline"
             className="glass-morphism border-white/10 group"
@@ -257,11 +260,11 @@ const RoyalCertificate: React.FC<RoyalCertificateProps> = ({
           </Button>
         )}
         
-        {(hasNFT || mintSuccess || user.certificateNFT?.mintAddress) && (
+        {(hasNFT || mintSuccess || certificateNFT?.mintAddress) && (
           <Button
             variant="outline"
             className="glass-morphism border-white/10 bg-purple-500/10"
-            onClick={() => window.open(`https://explorer.solana.com/address/${user.certificateNFT?.mintAddress || ''}`, '_blank')}
+            onClick={() => window.open(`https://explorer.solana.com/address/${certificateNFT?.mintAddress || ''}`, '_blank')}
           >
             <ExternalLink className="mr-2 h-4 w-4" />
             View NFT on Solana

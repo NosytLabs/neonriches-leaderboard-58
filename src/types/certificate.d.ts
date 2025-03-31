@@ -11,7 +11,10 @@ export type CertificateType =
   | 'nobility' 
   | 'seasonal'
   | 'team'
-  | 'custom';
+  | 'custom'
+  | 'spending'
+  | 'legendary'
+  | 'authentic';
 
 export type CertificateStyle = 
   | 'royal' 
@@ -24,7 +27,7 @@ export type CertificateStyle =
   | 'vintage'
   | 'ornate';
 
-export type CertificateTeam = 'red' | 'blue' | 'green' | 'gold' | 'neutral';
+export type CertificateTeam = 'red' | 'blue' | 'green' | 'gold' | 'neutral' | 'purple' | 'none';
 
 export interface Certificate {
   id: string;
@@ -46,12 +49,12 @@ export interface Certificate {
   };
   mintAddress?: string;
   imageUrl?: string;
+  isMinted?: boolean;
+  createdAt?: string;
   
   // Properties needed for compatibility
-  isMinted?: boolean;
   nftMintAddress?: string;
   shareUrl?: string;
-  createdAt?: string;
   username?: string;
   displayName?: string;
   image?: string;
@@ -64,6 +67,10 @@ export interface Certificate {
   mintDate?: string;
   rank?: number;
   totalSpent?: number;
+  recipientName?: string;
+  amount?: number;
+  rarity?: string;
+  issuer?: string;
 }
 
 export interface CertificateTemplate {

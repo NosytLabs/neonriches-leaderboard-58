@@ -47,6 +47,7 @@ const CombinedLeaderboard: React.FC = () => {
     const loadLeaderboard = async () => {
       setLoading(true);
       try {
+        // Pass teamFilter as string, let the service handle conversion
         const data = await fetchLeaderboard(sortBy, teamFilter);
         
         // Ensure all data is properly formatted as LeaderboardUser objects

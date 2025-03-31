@@ -1,6 +1,6 @@
 
 import React, { createContext, useState, useEffect } from 'react';
-import { UserProfile, AuthContextType } from './auth/types';
+import { UserProfile, AuthContextType } from '@/types/user-consolidated';
 
 // Create the Auth context with default values
 export const AuthContext = createContext<AuthContextType | null>(null);
@@ -69,7 +69,9 @@ const AuthContextProvider: React.FC<{ children: React.ReactNode }> = ({ children
           newFollowerAlerts: true,
           teamNotifications: true,
           showTeam: true,
-          showSpending: true
+          showSpending: true,
+          showRank: true,
+          showBadges: true
         }
       };
       
@@ -116,7 +118,9 @@ const AuthContextProvider: React.FC<{ children: React.ReactNode }> = ({ children
           newFollowerAlerts: true,
           teamNotifications: true,
           showTeam: true,
-          showSpending: true
+          showSpending: true,
+          showRank: true,
+          showBadges: true
         }
       };
       

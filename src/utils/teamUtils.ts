@@ -1,315 +1,221 @@
 
-import { TeamColor, TeamType } from '@/types/team';
+import { TeamColor } from '@/types/user-consolidated';
 
 /**
- * Get the display name for a team
- * @param team The team color/id
- * @returns The human-readable team name
+ * Convert a string to a TeamColor type if valid, otherwise return a default
+ * @param team The team string to convert
+ * @returns A valid TeamColor value
  */
-export function getTeamName(team: TeamColor): string {
-  const teamNames: Record<string, string> = {
-    'red': 'Crimson Order',
-    '#dc2626': 'Crimson Order',
-    'blue': 'Azure Legion',
-    '#2563eb': 'Azure Legion',
-    'green': 'Emerald Dynasty',
-    '#16a34a': 'Emerald Dynasty',
-    'gold': 'Golden Empire',
-    '#eab308': 'Golden Empire',
-    'purple': 'Royal Court',
-    '#9333ea': 'Royal Court',
-    'none': 'Unaligned',
-    '#6b7280': 'Unaligned',
-    'neutral': 'Neutral'
-  };
-
-  return teamNames[team] || 'Neutral';
-}
-
-/**
- * Get the CSS color class for a team
- * @param team The team color/id
- * @returns CSS class for the team color
- */
-export function getTeamColor(team: TeamColor): string {
-  const colorClasses: Record<string, string> = {
-    'red': 'text-red-600',
-    '#dc2626': 'text-red-600',
-    'blue': 'text-blue-600',
-    '#2563eb': 'text-blue-600', 
-    'green': 'text-green-600',
-    '#16a34a': 'text-green-600',
-    'gold': 'text-yellow-500',
-    '#eab308': 'text-yellow-500',
-    'purple': 'text-purple-600',
-    '#9333ea': 'text-purple-600',
-    'none': 'text-gray-400',
-    '#6b7280': 'text-gray-400',
-    'neutral': 'text-gray-400'
-  };
-
-  return colorClasses[team] || 'text-gray-400';
-}
-
-/**
- * Get the CSS border color class for a team
- * @param team The team color/id
- * @returns CSS class for the team border
- */
-export function getTeamBorderColor(team: TeamColor): string {
-  const borderClasses: Record<string, string> = {
-    'red': 'border-red-600/70',
-    '#dc2626': 'border-red-600/70',
-    'blue': 'border-blue-600/70',
-    '#2563eb': 'border-blue-600/70',
-    'green': 'border-green-600/70',
-    '#16a34a': 'border-green-600/70',
-    'gold': 'border-yellow-500/70',
-    '#eab308': 'border-yellow-500/70',
-    'purple': 'border-purple-600/70',
-    '#9333ea': 'border-purple-600/70',
-    'none': 'border-gray-400/70',
-    '#6b7280': 'border-gray-400/70',
-    'neutral': 'border-gray-400/70'
-  };
-
-  return borderClasses[team] || 'border-gray-400/70';
-}
-
-/**
- * Get the raw color value for a team
- * @param team The team color/id
- * @returns HEX color code
- */
-export function getTeamRawColor(team: TeamColor): string {
-  const rawColors: Record<string, string> = {
-    'red': '#dc2626',
-    '#dc2626': '#dc2626',
-    'blue': '#2563eb',
-    '#2563eb': '#2563eb',
-    'green': '#16a34a',
-    '#16a34a': '#16a34a',
-    'gold': '#eab308',
-    '#eab308': '#eab308',
-    'purple': '#9333ea',
-    '#9333ea': '#9333ea',
-    'none': '#6b7280',
-    '#6b7280': '#6b7280',
-    'neutral': '#6b7280'
-  };
-
-  return rawColors[team] || '#6b7280';
-}
-
-/**
- * Safely converts any string to TeamColor type
- * This provides a safeguard for when we receive team values as strings
- */
-export function asTeamColor(team: string | TeamColor | null | undefined): TeamColor {
-  if (!team) return 'none';
+export const asTeamColor = (team: TeamColor | string | null): TeamColor => {
+  const validTeams: TeamColor[] = ['red', 'blue', 'green', 'gold', 'purple', 'none', 'neutral'];
   
-  // Check if the string is a valid TeamColor
-  const validTeamColors: TeamColor[] = [
-    'red', 'blue', 'green', 'gold', 'purple', 'none', 'neutral',
-    '#dc2626', '#2563eb', '#16a34a', '#eab308', '#9333ea', '#6b7280'
-  ];
-  
-  if (validTeamColors.includes(team as TeamColor)) {
+  if (team && validTeams.includes(team as TeamColor)) {
     return team as TeamColor;
   }
   
-  // Default to 'none' if not valid
-  return 'none';
-}
+  return 'neutral';
+};
+
+/**
+ * Get the text and background color for a team
+ * @param team The team to get color for
+ * @returns CSS classes for the team color
+ */
+export const getTeamColor = (team: TeamColor | string | null): string => {
+  const teamMap: Record<string, string> = {
+    'red': 'text-red-400 bg-red-500/20',
+    'blue': 'text-blue-400 bg-blue-500/20',
+    'green': 'text-green-400 bg-green-500/20',
+    'gold': 'text-yellow-400 bg-yellow-500/20',
+    'purple': 'text-purple-400 bg-purple-500/20',
+    'none': 'text-gray-400 bg-gray-500/20',
+    'neutral': 'text-gray-400 bg-gray-500/20'
+  };
+  
+  return teamMap[team as string] || 'text-gray-400 bg-gray-500/20';
+};
 
 /**
  * Get the display name for a team
+ * @param team The team to get name for
+ * @returns The display name for the team
  */
-export function getTeamDisplayName(team: string | TeamColor): string {
-  return getTeamName(asTeamColor(team));
-}
-
-/**
- * Get the CSS color class for a team
- */
-export function getTeamColorClass(team: string | TeamColor): string {
-  return getTeamColor(asTeamColor(team));
-}
-
-/**
- * Get team motto from team data
- */
-export function getTeamMotto(team: TeamColor): string {
-  const mottos: Record<TeamColor, string> = {
-    'red': "Victory through strength",
-    '#dc2626': "Victory through strength",
-    'blue': "Knowledge is power",
-    '#2563eb': "Knowledge is power",
-    'green': "Growth leads to prosperity",
-    '#16a34a': "Growth leads to prosperity",
-    'gold': "Wealth brings glory",
-    '#eab308': "Wealth brings glory",
-    'purple': "Rule with wisdom",
-    '#9333ea': "Rule with wisdom",
-    'none': "Free from allegiance",
-    '#6b7280': "Free from allegiance",
-    'neutral': "Balance in all things"
+export const getTeamName = (team: TeamColor | string | null): string => {
+  const teamMap: Record<string, string> = {
+    'red': 'Crimson',
+    'blue': 'Azure',
+    'green': 'Emerald',
+    'gold': 'Gold',
+    'purple': 'Royal',
+    'none': 'Neutral',
+    'neutral': 'Neutral'
   };
   
-  return mottos[team] || "Choose your path";
-}
+  return teamMap[team as string] || 'Neutral';
+};
 
 /**
- * Get team benefit description
+ * Get the display name for a team
+ * @param team The team to get name for
+ * @returns The display name for the team
  */
-export function getTeamBenefit(team: TeamColor): string {
-  const benefits: Record<TeamColor, string> = {
-    'red': "10% bonus to all attack actions",
-    '#dc2626': "10% bonus to all attack actions",
-    'blue': "15% reduction in cooldown times",
-    '#2563eb': "15% reduction in cooldown times",
-    'green': "20% higher yield from all investments",
-    '#16a34a': "20% higher yield from all investments",
-    'gold': "5% rebate on all transactions",
-    '#eab308': "5% rebate on all transactions",
-    'purple': "Special access to royal privileges",
-    '#9333ea': "Special access to royal privileges",
-    'none': "No team-specific benefits",
-    '#6b7280': "No team-specific benefits",
-    'neutral': "Balanced benefits across all actions"
-  };
-  
-  return benefits[team] || "Choose a team to unlock benefits";
-}
+export const getTeamDisplayName = getTeamName;
 
 /**
- * Get team security guarantee
+ * Get the color class for a team
+ * @param team The team to get color class for
+ * @returns CSS class for the team color
  */
-export function getTeamSecurityGuarantee(team: TeamColor): string {
-  const guarantees: Record<TeamColor, string> = {
-    'red': "Protected by the might of our armies",
-    '#dc2626': "Protected by the might of our armies",
-    'blue': "Safeguarded by advanced magical wards",
-    '#2563eb': "Safeguarded by advanced magical wards",
-    'green': "Natural defenses and organic protection",
-    '#16a34a': "Natural defenses and organic protection",
-    'gold': "The best mercenaries money can buy",
-    '#eab308': "The best mercenaries money can buy",
-    'purple': "Royal guard protection at all times",
-    '#9333ea': "Royal guard protection at all times",
-    'none': "You're on your own (but free!)",
-    '#6b7280': "You're on your own (but free!)",
-    'neutral': "Balanced defensive capabilities"
-  };
-  
-  return guarantees[team] || "Select a team for protection";
-}
+export const getTeamColorClass = getTeamColor;
 
 /**
- * Get team absurd stat
+ * Get the border color for a team
+ * @param team The team to get border color for
+ * @returns CSS border color class for the team
  */
-export function getTeamAbsurdStat(team: TeamColor): string {
-  const stats: Record<TeamColor, string> = {
-    'red': "Can defeat 10,000 enemies with a single war cry",
-    '#dc2626': "Can defeat 10,000 enemies with a single war cry",
-    'blue': "Libraries contain 4.2 million spellbooks",
-    '#2563eb': "Libraries contain 4.2 million spellbooks",
-    'green': "Trees grow 500% faster in our territories",
-    '#16a34a': "Trees grow 500% faster in our territories",
-    'gold': "Treasury contains more gold than 17 other kingdoms combined",
-    '#eab308': "Treasury contains more gold than 17 other kingdoms combined",
-    'purple': "Royal bloodline traces back to ancient celestial beings",
-    '#9333ea': "Royal bloodline traces back to ancient celestial beings",
-    'none': "100% free of team bureaucracy",
-    '#6b7280': "100% free of team bureaucracy",
-    'neutral': "Perfectly balanced in all metrics (supposedly)"
+export const getTeamBorderColor = (team: TeamColor | string | null): string => {
+  const teamMap: Record<string, string> = {
+    'red': 'border-red-500/30',
+    'blue': 'border-blue-500/30',
+    'green': 'border-green-500/30',
+    'gold': 'border-yellow-500/30',
+    'purple': 'border-purple-500/30',
+    'none': 'border-gray-500/30',
+    'neutral': 'border-gray-500/30'
   };
   
-  return stats[team] || "Stats loading...";
-}
+  return teamMap[team as string] || 'border-gray-500/30';
+};
 
 /**
- * Get team historical note
+ * Get a team motto
+ * @param team The team to get motto for
+ * @returns The motto for the team
  */
-export function getTeamHistoricalNote(team: TeamColor): string {
-  const notes: Record<TeamColor, string> = {
-    'red': "Founded by the legendary warrior Crimson Blade in the First Age",
-    '#dc2626': "Founded by the legendary warrior Crimson Blade in the First Age",
-    'blue': "Established by the Archmage Council during the Great Enlightenment",
-    '#2563eb': "Established by the Archmage Council during the Great Enlightenment",
-    'green': "Grew from humble farming communities into a mighty federation",
-    '#16a34a': "Grew from humble farming communities into a mighty federation",
-    'gold': "Built on ancient trading routes that connected distant realms",
-    '#eab308': "Built on ancient trading routes that connected distant realms",
-    'purple': "Ruled by the same dynasty for over 1,000 years",
-    '#9333ea': "Ruled by the same dynasty for over 1,000 years",
-    'none': "A recent refuge for those seeking independence",
-    '#6b7280': "A recent refuge for those seeking independence",
-    'neutral': "Historically maintains peace between warring factions"
+export const getTeamMotto = (team: TeamColor | string | null): string => {
+  const teamMap: Record<string, string> = {
+    'red': 'Blood and Gold Above All',
+    'blue': 'Honor Through Knowledge and Service',
+    'green': 'Fortune Favors the Bold',
+    'gold': 'Glory Through Golden Prosperity',
+    'purple': 'Power Through Royal Bloodlines',
+    'none': 'Status Through Spending',
+    'neutral': 'Status Through Spending'
   };
   
-  return notes[team] || "History yet to be written";
-}
+  return teamMap[team as string] || 'Status Through Spending';
+};
 
 /**
- * Get team NFT joke
+ * Get a benefit for the team
+ * @param team The team to get benefit for
+ * @returns The benefit description
  */
-export function getTeamNFTJoke(team: TeamColor): string {
-  const jokes: Record<TeamColor, string> = {
-    'red': "Our NFTs actually fight your battles for you",
-    '#dc2626': "Our NFTs actually fight your battles for you",
-    'blue': "NFTs infused with real magical properties (terms apply)",
-    '#2563eb': "NFTs infused with real magical properties (terms apply)",
-    'green': "Eco-friendly NFTs that plant virtual trees",
-    '#16a34a': "Eco-friendly NFTs that plant virtual trees",
-    'gold': "NFTs backed by real gold (metaphorically speaking)",
-    '#eab308': "NFTs backed by real gold (metaphorically speaking)",
-    'purple': "Royal decree: Our NFTs have inherent nobility",
-    '#9333ea': "Royal decree: Our NFTs have inherent nobility",
-    'none': "Not Falling for This NFTs",
-    '#6b7280': "Not Falling for This NFTs",
-    'neutral': "NFTs that somehow exist in all chains simultaneously"
+export const getTeamBenefit = (team: TeamColor | string | null): string => {
+  const teamMap: Record<string, string> = {
+    'red': '+5% Bonus on direct spend-to-rank conversion',
+    'blue': '+10% Visibility boosts on leaderboard',
+    'green': '+3% Chance of bonus rewards from spending',
+    'gold': 'Access to exclusive gold team cosmetics',
+    'purple': 'Royal titles and special badges',
+    'none': 'No team-specific benefits',
+    'neutral': 'No team-specific benefits'
   };
   
-  return jokes[team] || "Join to unlock exclusive NFT opportunities";
-}
+  return teamMap[team as string] || 'No team-specific benefits';
+};
 
 /**
- * Get team crypto roast
+ * Get a historical note for the team
+ * @param team The team to get historical note for
+ * @returns The historical note
  */
-export function getTeamCryptoRoast(team: TeamColor): string {
-  const roasts: Record<TeamColor, string> = {
-    'red': "Other chains claim to be fast, but have you seen our warriors' attack speed?",
-    '#dc2626': "Other chains claim to be fast, but have you seen our warriors' attack speed?",
-    'blue': "While they're still figuring out consensus, we've already reached enlightenment",
-    '#2563eb': "While they're still figuring out consensus, we've already reached enlightenment",
-    'green': "Their chains die in bear markets, our ecosystem thrives in all seasons",
-    '#16a34a': "Their chains die in bear markets, our ecosystem thrives in all seasons",
-    'gold': "They call it decentralization, we call it disorganized banking",
-    '#eab308': "They call it decentralization, we call it disorganized banking",
-    'purple': "The only royal blockchain with actual royalty",
-    '#9333ea': "The only royal blockchain with actual royalty",
-    'none': "We don't need a blockchain, we have actual chains",
-    '#6b7280': "We don't need a blockchain, we have actual chains",
-    'neutral': "Blockchains fight for supremacy while we maintain perfect balance"
+export const getTeamHistoricalNote = (team: TeamColor | string | null): string => {
+  const teamMap: Record<string, string> = {
+    'red': 'Founded by the first spenders who believed might makes right',
+    'blue': 'Established by scholars who saw wealth as a means to enlightenment',
+    'green': 'Created by risk-takers who gambled their fortunes for glory',
+    'gold': 'The oldest team, founded by the original aristocrats of the platform',
+    'purple': 'A secretive cabal formed by the platform\'s earliest investors',
+    'none': 'Those who walk their own path, free from team politics',
+    'neutral': 'Those who walk their own path, free from team politics'
   };
   
-  return roasts[team] || "Choose a team to unlock savage crypto roasts";
-}
+  return teamMap[team as string] || 'Those who walk their own path, free from team politics';
+};
 
-export default {
-  getTeamName,
-  getTeamColor,
-  getTeamBorderColor,
-  getTeamRawColor,
-  asTeamColor,
-  getTeamDisplayName,
-  getTeamColorClass,
-  getTeamMotto,
-  getTeamBenefit,
-  getTeamSecurityGuarantee,
-  getTeamAbsurdStat,
-  getTeamHistoricalNote,
-  getTeamNFTJoke,
-  getTeamCryptoRoast
+/**
+ * Get a security guarantee for the team
+ * @param team The team to get security guarantee for
+ * @returns The security guarantee
+ */
+export const getTeamSecurityGuarantee = (team: TeamColor | string | null): string => {
+  const teamMap: Record<string, string> = {
+    'red': 'Protected by the Crimson Guard, our elite spending enforcers',
+    'blue': 'Safeguarded by Azure Protocols, the most secure spending algorithm',
+    'green': 'Fortune favors the bold, but we still use 256-bit encryption',
+    'gold': 'Your gold is secured in our digital treasury vaults',
+    'purple': 'Royal protection extends to all your transactions',
+    'none': 'Standard platform security applies',
+    'neutral': 'Standard platform security applies'
+  };
+  
+  return teamMap[team as string] || 'Standard platform security applies';
+};
+
+/**
+ * Get an absurd statistic for the team
+ * @param team The team to get statistic for
+ * @returns The absurd statistic
+ */
+export const getTeamAbsurdStat = (team: TeamColor | string | null): string => {
+  const teamMap: Record<string, string> = {
+    'red': 'Members spend an average of 3.7x their monthly rent on digital status',
+    'blue': 'Collectively written 42 academic papers justifying their spending',
+    'green': 'Has won 73% of all team spending competitions through sheer luck',
+    'gold': 'Members have spent enough to buy a small island nation',
+    'purple': 'Royal members own 87% of all premium cosmetic items',
+    'none': 'Independent spenders save 0% by not being in a team',
+    'neutral': 'Independent spenders save 0% by not being in a team'
+  };
+  
+  return teamMap[team as string] || 'Independent spenders save 0% by not being in a team';
+};
+
+/**
+ * Get an NFT-related joke for the team
+ * @param team The team to get joke for
+ * @returns The NFT joke
+ */
+export const getTeamNFTJoke = (team: TeamColor | string | null): string => {
+  const teamMap: Record<string, string> = {
+    'red': 'Our NFTs are literally on fire (this is not financial advice)',
+    'blue': 'We've proven mathematically that our NFTs will be worth more (peer review pending)',
+    'green': 'Our NFTs have a 50% chance of being worth something someday!',
+    'gold': 'Gold team NFTs are backed by digital gold (which is backed by nothing)',
+    'purple': 'Royal NFTs come with a certificate of authenticity (also an NFT)',
+    'none': 'No team? No problem! Solo NFTs are also completely worthless',
+    'neutral': 'No team? No problem! Solo NFTs are also completely worthless'
+  };
+  
+  return teamMap[team as string] || 'No team? No problem! Solo NFTs are also completely worthless';
+};
+
+/**
+ * Get a cryptocurrency roast for the team
+ * @param team The team to get roast for
+ * @returns The crypto roast
+ */
+export const getTeamCryptoRoast = (team: TeamColor | string | null): string => {
+  const teamMap: Record<string, string> = {
+    'red': 'Red team: putting the "burning" in burning through crypto since 2023',
+    'blue': 'Blue team thinks a white paper makes their spending intellectually superior',
+    'green': 'Green team: gambling their crypto away faster than a faulty smart contract',
+    'gold': 'Gold team: converting real gold into fake gold since inception',
+    'purple': 'Royal team believes their crypto has divine right to rule your wallet',
+    'none': 'No team is the crypto equivalent of "I'm just holding for the technology"',
+    'neutral': 'No team is the crypto equivalent of "I'm just holding for the technology"'
+  };
+  
+  return teamMap[team as string] || 'No team is the crypto equivalent of "I'm just holding for the technology"';
 };

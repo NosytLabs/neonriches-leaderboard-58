@@ -72,5 +72,5 @@ export interface SortByOption {
   label: string;
 }
 
-// Export types with export type to avoid conflicts
-export type { LeaderboardUser, LeaderboardFilter };
+// Export types using export type syntax to avoid conflicts
+export type { LeaderboardFilter, LeaderboardUser };

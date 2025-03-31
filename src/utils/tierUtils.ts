@@ -1,81 +1,153 @@
 
 import { UserTier } from '@/types/user-consolidated';
+import { Crown, Award, Shield, Star, Sparkles, User, Gem, Medal, Zap } from 'lucide-react';
 
 /**
- * Get the CSS color class for a user tier
+ * Get the icon component for a user tier
  * @param tier The user tier
- * @returns CSS color class
+ * @returns The icon component for the tier
  */
-export function getTierColor(tier: UserTier): string {
-  const tierColors: Record<string, string> = {
-    'free': 'text-gray-400',
-    'basic': 'text-green-500',
-    'premium': 'text-purple-500',
-    'royal': 'text-royal-gold',
-    'legendary': 'text-orange-500',
-    'founder': 'text-yellow-300',
-    'noble': 'text-indigo-400',
-    'knight': 'text-blue-400',
-    'baron': 'text-emerald-400',
-    'viscount': 'text-cyan-400',
-    'earl': 'text-amber-400',
-    'duke': 'text-rose-400',
-    'prince': 'text-violet-400',
-    'king': 'text-yellow-400',
-    'emperor': 'text-orange-300',
-    'whale': 'text-teal-300',
-    'pro': 'text-blue-500',
-    'standard': 'text-green-400',
-    'elite': 'text-indigo-500',
-    'silver': 'text-slate-400',
-    'gold': 'text-yellow-500',
-    'platinum': 'text-indigo-400',
-    'diamond': 'text-cyan-300',
-    'bronze': 'text-amber-700',
-    'vip': 'text-purple-400'
-  };
-
-  return tierColors[tier] || 'text-gray-400';
-}
+export const getTierIcon = (tier: UserTier | string) => {
+  switch (tier) {
+    case 'founder':
+    case 'king':
+    case 'emperor':
+    case 'royal':
+      return Crown;
+    case 'legendary':
+    case 'whale':
+      return Sparkles;
+    case 'premium':
+    case 'gold':
+    case 'platinum':
+      return Star;
+    case 'noble':
+    case 'knight':
+    case 'baron':
+    case 'viscount':
+    case 'earl':
+    case 'duke':
+    case 'prince':
+      return Shield;
+    case 'elite':
+    case 'pro':
+    case 'diamond':
+      return Gem;
+    case 'silver':
+    case 'bronze':
+      return Medal;
+    case 'standard':
+    case 'vip':
+      return Award;
+    case 'basic':
+    case 'free':
+    default:
+      return User;
+  }
+};
 
 /**
- * Get the background color class for a user tier
+ * Get color classes for a user tier
  * @param tier The user tier
- * @returns CSS background class
+ * @returns CSS classes for the tier colors
  */
-export function getTierBgColor(tier: UserTier): string {
-  const tierBgColors: Record<string, string> = {
-    'free': 'bg-gray-800',
-    'basic': 'bg-green-900',
-    'premium': 'bg-purple-900',
-    'royal': 'bg-amber-900',
-    'legendary': 'bg-orange-900',
-    'founder': 'bg-yellow-900',
-    'noble': 'bg-indigo-900',
-    'knight': 'bg-blue-900',
-    'baron': 'bg-emerald-900',
-    'viscount': 'bg-cyan-900',
-    'earl': 'bg-amber-900',
-    'duke': 'bg-rose-900',
-    'prince': 'bg-violet-900',
-    'king': 'bg-yellow-900',
-    'emperor': 'bg-orange-900',
-    'whale': 'bg-teal-900',
-    'pro': 'bg-blue-900',
-    'standard': 'bg-green-800',
-    'elite': 'bg-indigo-900',
-    'silver': 'bg-slate-800',
-    'gold': 'bg-yellow-900',
-    'platinum': 'bg-indigo-800',
-    'diamond': 'bg-cyan-900',
-    'bronze': 'bg-amber-900',
-    'vip': 'bg-purple-800'
-  };
+export const getTierColor = (tier: UserTier | string): string => {
+  switch (tier) {
+    case 'founder':
+    case 'king':
+    case 'emperor':
+    case 'royal':
+      return 'text-purple-400 bg-purple-600/20';
+    case 'legendary':
+    case 'whale':
+      return 'text-amber-400 bg-amber-500/20';
+    case 'premium':
+    case 'gold':
+      return 'text-yellow-400 bg-yellow-500/20';
+    case 'platinum':
+    case 'diamond':
+      return 'text-cyan-400 bg-cyan-500/20';
+    case 'noble':
+    case 'knight':
+    case 'baron':
+    case 'viscount':
+    case 'earl':
+    case 'duke':
+    case 'prince':
+      return 'text-indigo-400 bg-indigo-500/20';
+    case 'elite':
+    case 'pro':
+    case 'silver':
+      return 'text-blue-400 bg-blue-500/20';
+    case 'standard':
+    case 'vip':
+    case 'bronze':
+      return 'text-green-400 bg-green-500/20';
+    case 'basic':
+    case 'free':
+    default:
+      return 'text-gray-400 bg-gray-500/20';
+  }
+};
 
-  return tierBgColors[tier] || 'bg-gray-800';
-}
-
-export default {
-  getTierColor,
-  getTierBgColor
+/**
+ * Get display name for a user tier
+ * @param tier The user tier
+ * @returns The display name for the tier
+ */
+export const getTierName = (tier: UserTier | string): string => {
+  switch (tier) {
+    case 'founder':
+      return 'Founder';
+    case 'king':
+      return 'King';
+    case 'emperor':
+      return 'Emperor';
+    case 'royal':
+      return 'Royal';
+    case 'legendary':
+      return 'Legendary';
+    case 'whale':
+      return 'Whale';
+    case 'premium':
+      return 'Premium';
+    case 'gold':
+      return 'Gold';
+    case 'platinum':
+      return 'Platinum';
+    case 'noble':
+      return 'Noble';
+    case 'knight':
+      return 'Knight';
+    case 'baron':
+      return 'Baron';
+    case 'viscount':
+      return 'Viscount';
+    case 'earl':
+      return 'Earl';
+    case 'duke':
+      return 'Duke';
+    case 'prince':
+      return 'Prince';
+    case 'elite':
+      return 'Elite';
+    case 'pro':
+      return 'Pro';
+    case 'diamond':
+      return 'Diamond';
+    case 'silver':
+      return 'Silver';
+    case 'bronze':
+      return 'Bronze';
+    case 'standard':
+      return 'Standard';
+    case 'vip':
+      return 'VIP';
+    case 'basic':
+      return 'Basic';
+    case 'free':
+      return 'Free';
+    default:
+      return 'Member';
+  }
 };

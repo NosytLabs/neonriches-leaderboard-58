@@ -59,6 +59,8 @@ export interface UserSettings {
   showTeam: boolean;
   showSpending: boolean;
   showBadges: boolean;
+  showEmailOnProfile?: boolean;
+  rankChangeAlerts?: boolean;
 }
 
 /**
@@ -105,6 +107,21 @@ export interface UserProfile {
   isVIP?: boolean;
   isProtected?: boolean;
   avatarUrl?: string;
+  role?: string;
+  activeTitle?: string;
+  teamRank?: number;
+  certificateNFT?: {
+    id?: string;
+    mintAddress?: string;
+    imageUrl?: string;
+    dateIssued?: string;
+    type?: string;
+    isVerified?: boolean;
+  };
+  socialLinks?: any[] | Record<string, string>;
+  profileImages?: any[];
+  purchasedFeatures?: string[];
+  boostCount?: number;
 }
 
 /**
@@ -123,3 +140,48 @@ export interface AuthContextType {
   updateUserProfile: (updates: Partial<UserProfile>) => Promise<boolean>;
   awardCosmetic: (category: string, itemId: string, notify?: boolean) => Promise<boolean>;
 }
+
+// Re-export User for compatibility
+export type User = UserProfile;
+
+// Re-export SocialLink and ProfileImage for components that need them
+export interface SocialLink {
+  id?: string | number;
+  platform?: string;
+  url: string;
+  username?: string;
+  display?: string;
+  icon?: string;
+  verified?: boolean;
+  primary?: boolean;
+  clicks?: number;
+  title?: string;
+  label?: string;
+  type?: string;
+}
+
+export interface ProfileImage {
+  id?: string;
+  url: string;
+  isPrimary: boolean;
+  caption?: string;
+}
+
+export interface ProfileBoost {
+  id: string;
+  type: string;
+  level?: number;
+  startDate: string;
+  endDate: string;
+  appliedBy?: string;
+  strength?: number;
+  name?: string;
+  description?: string;
+  duration?: number;
+  price?: number;
+  icon?: string;
+  isActive: boolean;
+  effectId?: string;
+}
+
+export type ProfileLink = SocialLink;
