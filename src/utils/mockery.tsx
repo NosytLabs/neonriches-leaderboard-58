@@ -8,7 +8,7 @@ export const getMockeryName = (action: MockeryAction): string => {
   const names: Record<string, string> = {
     'tomatoes': 'Rotten Tomatoes',
     'eggs': 'Rotten Eggs',
-    'crown': 'Fool's Crown',
+    'crown': 'Fool\'s Crown',
     'stocks': 'Public Stocks',
     'jester': 'Court Jester',
     'protection': 'Royal Protection',
@@ -25,7 +25,7 @@ export const getMockeryDescription = (action: MockeryAction): string => {
     'eggs': 'Pelt this user with rotten eggs',
     'crown': 'Place a ridiculous crown on their profile',
     'stocks': 'Lock them in the public stocks',
-    'jester': 'Make them wear the jester's hat',
+    'jester': 'Make them wear the jester\'s hat',
     'protection': 'Protect yourself from mockery',
     'shame': 'Publicly shame this user'
   };

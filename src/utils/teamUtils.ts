@@ -167,8 +167,8 @@ export const getTeamNFTJoke = (team: TeamColor): string => {
     'blue': 'Our NFTs are waterproof (terms and conditions apply)',
     'green': 'Our NFTs are sustainably minted using recycled pixels',
     'gold': 'Our NFTs appreciate faster than your mortgage',
-    'purple': 'Our NFTs may or may not exist depending on who's observing',
-    'none': 'What's an NFT? Exactly.',
+    'purple': 'Our NFTs may or may not exist depending on who\'s observing',
+    'none': 'What\'s an NFT? Exactly.',
     'neutral': 'Our NFTs are perfectly balanced, as all things should be'
   };
   
@@ -182,7 +182,7 @@ export const getTeamCryptoRoast = (team: TeamColor): string => {
     'green': 'Grows organically at -20% per month',
     'gold': 'The only crypto with real inflation',
     'purple': 'Magically disappears from your wallet',
-    'none': 'At least you're not losing anything',
+    'none': 'At least you\'re not losing anything',
     'neutral': 'Permanently stuck at exactly the same value'
   };
   
