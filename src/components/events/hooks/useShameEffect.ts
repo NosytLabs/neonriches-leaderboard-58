@@ -1,10 +1,11 @@
+
 import { useState, useEffect } from 'react';
 import { useLocalStorage } from '@/hooks/use-local-storage';
-import { ShameAction } from '../utils/shameUtils';
+import { MockeryAction } from '@/types/mockery';
 import { useSound } from '@/hooks/use-sound';
 
 interface ShameEffectData {
-  type: ShameAction;
+  type: MockeryAction;
   timestamp: string;
 }
 
@@ -58,7 +59,7 @@ const useShameEffect = () => {
   }, [shameEffects, shameCooldown, setShameEffects, setShameCooldown]);
 
   // Apply shame effect to a user
-  const handleShame = (userId: number, username: string, type: ShameAction): boolean => {
+  const handleShame = (userId: number, username: string, type: MockeryAction): boolean => {
     if (shameCooldown[userId] || shameEffects[userId]) {
       return false;
     }

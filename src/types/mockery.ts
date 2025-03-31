@@ -1,9 +1,16 @@
 
 import { LucideIcon } from 'lucide-react';
 import { User, UserProfile } from './user';
-import { NotificationSoundOptions } from './sound-types';
+import { AudioOptions } from './sound-types';
 
-export type MockeryTier = 'basic' | 'premium' | 'royal' | 'silver' | 'epic' | 'rare';
+export type MockeryTier = 
+  | 'basic' 
+  | 'premium' 
+  | 'royal' 
+  | 'silver' 
+  | 'epic' 
+  | 'rare' 
+  | 'legendary';
 
 export type MockeryAction = 
   | 'tomatoes'
@@ -32,7 +39,11 @@ export type MockeryAction =
   | 'rook'
   | 'pawn'
   | 'target'
-  | 'challenge';
+  | 'challenge'
+  | 'protection';
+
+// Simplified subset for shame actions
+export type ShameAction = 'tomatoes' | 'eggs' | 'stocks' | 'shame';
 
 // Alias for backward compatibility
 export type MockeryActionType = MockeryAction;
@@ -53,10 +64,20 @@ export interface MockeryEvent {
 
 export interface MockedUser {
   id: string;
+  userId?: string;
   username: string;
-  mockedReason: string;
+  displayName?: string;
+  profileImage?: string;
   mockedBy: string;
+  mockedAction?: MockeryAction;
   mockedUntil: string;
+  mockedReason?: string;
+  mockedTimestamp?: string;
+  mockedTier?: string;
+  mockeryCount?: number;
+  lastMocked?: string;
+  team?: string;
+  tier?: string;
 }
 
 // Alias type for backward compatibility

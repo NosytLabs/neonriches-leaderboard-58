@@ -48,7 +48,11 @@ export interface AudioOptions {
   interrupt?: boolean;
   loop?: boolean;
   onComplete?: () => void;
+  delay?: number;
 }
+
+// Alias for backward compatibility
+export type NotificationSoundOptions = AudioOptions;
 
 /**
  * Return type for useSound hook
@@ -69,3 +73,16 @@ export interface UseSoundReturn {
  * Options for the useSound hook
  */
 export interface UseSoundOptions extends AudioOptions {}
+
+/**
+ * Premium sound pack details
+ */
+export interface PremiumSoundPackDetails {
+  id?: string;
+  name: string;
+  description: string;
+  price: number;
+  sounds: SoundType[];
+  previewSound?: SoundType;
+  features?: string[];
+}

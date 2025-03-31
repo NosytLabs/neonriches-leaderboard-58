@@ -18,7 +18,9 @@ import {
   getWeeklyDiscountedAction,
   getDiscountedShamePrice,
   getShameActionPrice,
-  getShameActionMessage
+  getShameActionMessage,
+  getMockeryEffectClass,
+  getMockeryEffectDuration
 } from './mockery/index';
 
 // Re-export everything
@@ -38,7 +40,9 @@ export {
   getWeeklyDiscountedAction,
   getDiscountedShamePrice,
   getShameActionPrice,
-  getShameActionMessage
+  getShameActionMessage,
+  getMockeryEffectClass,
+  getMockeryEffectDuration
 };
 
 /**

@@ -4,35 +4,36 @@ import { MockeryAction } from '@/types/mockery';
 export const getMockeryActionDescription = (action: MockeryAction): string => {
   const descriptions: Record<string, string> = {
     tomatoes: 'Pelt your target with rotten tomatoes. A classic form of public ridicule.',
-    eggs: 'Hurl rotten eggs at your target. The stench will follow them for a day.',
-    shame: 'Subject your target to public ridicule and shame.',
-    dungeons: 'Condemn your target to the digital dungeons for their offenses.',
-    immune: 'Grant yourself immunity from mockery for a period of time.',
-    crown: 'Place a mock crown upon the head of your target, making them a false king/queen.',
-    stocks: 'Place your target in the virtual stocks for public display.',
-    dunce: 'Make your target wear a dunce cap, marking their foolishness.',
-    jester: 'Turn your target into a court jester, forced to entertain the nobles.',
-    troll: 'Mark your target as a digital troll for all to see.',
-    peasant: 'Demote your target to peasant status, regardless of their spending.',
-    rat: 'Curse your target with the mark of the plague rat.',
-    ghost: 'Make your target appear as a ghost, haunting the digital realm.',
-    skeleton: 'Turn your target into a skeleton, a reminder of their digital mortality.',
-    zombie: 'Mark your target as infected with the digital plague.',
-    witch: 'Subject your target to a virtual witch trial.',
-    monster: 'Label your target as a digital monster, feared by all.',
-    demon: 'Mark your target with demonic symbols for their digital sins.',
-    dragon: 'Make your target the target of a virtual dragon\'s wrath.',
-    king: 'Declare your target a false king, unworthy of their title.',
-    queen: 'Declare your target a false queen, unworthy of their title.',
-    knight: 'Brand your target as a tarnished knight, fallen from grace.',
-    bishop: 'Mark your target as a fallen bishop, their digital piety questioned.',
-    rook: 'Label your target as a damaged rook, their defenses crumbling.',
-    pawn: 'Demote your target to a mere pawn in the digital game.',
-    target: 'Mark your target as the royal target, the focus of the court\'s ridicule.',
-    challenge: 'Challenge your target to a gauntlet of digital trials and tribulations.'
+    eggs: 'Throw rotten eggs at your target. The visual stench will follow them for a day.',
+    shame: 'Ring the bell of shame to announce their misdeeds to the entire kingdom.',
+    dungeons: 'Throw them into the royal dungeons for all to see.',
+    immune: 'Grant immunity from mockery for a limited time.',
+    crown: 'Force them to wear a mock crown, a symbol of false authority.',
+    stocks: 'Lock them in the public stocks for all to ridicule.',
+    dunce: 'Force them to wear a dunce cap in the town square.',
+    jester: 'Make them the court jester, dancing for your amusement.',
+    troll: 'Turn them into a bridge troll, scaring away visitors.',
+    peasant: 'Reduce them to a lowly peasant status.',
+    rat: 'Transform them into a plague rat scurrying through the streets.',
+    ghost: 'Make them appear as a ghost, haunting the kingdom.',
+    skeleton: 'Turn them into a skeleton, rattling through the halls.',
+    zombie: 'Transform them into a zombie, shambling aimlessly.',
+    witch: 'Accuse them of witchcraft, marking them for all to see.',
+    monster: 'Turn them into a monster feared by all.',
+    demon: 'Make them appear as a demon from the underworld.',
+    dragon: 'Transform them into a fearsome dragon.',
+    king: 'Crown them as a false king, mocking royal authority.',
+    queen: 'Crown them as a false queen, mocking royal authority.',
+    knight: 'Equip them with rusty armor, a mockery of knighthood.',
+    bishop: 'Dress them as a corrupt bishop, mocking religious authority.',
+    rook: 'Turn them into a crumbling rook, a shadow of a fortress.',
+    pawn: 'Reduce them to a mere pawn in the game of thrones.',
+    target: 'Mark them as a royal target for public mockery.',
+    challenge: 'Issue a royal challenge to test their worth.',
+    protection: 'Grant royal protection from mockery.'
   };
   
-  return descriptions[action] || 'Subject your target to mockery.';
+  return descriptions[action] || 'Apply a mysterious mockery effect.';
 };
 
 // For backward compatibility

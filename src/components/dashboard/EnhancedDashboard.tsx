@@ -1,30 +1,22 @@
 
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Button } from '@/components/ui/button';
-import { Trophy, Crown, Target, Users, Activity, Zap, DollarSign } from 'lucide-react';
-import { UserProfile } from '@/types/user';
+import { Trophy, Crown, Users, Activity, Zap } from 'lucide-react';
 import { Achievement } from '@/components/achievements/AchievementDisplay';
-import AchievementDisplay from '@/components/achievements/AchievementDisplay';
-import RankProgressChart from '@/components/dashboard/RankProgressChart';
 import TeamStatusCard from '@/components/dashboard/TeamStatusCard';
-import SpendingVisualizer from '@/components/dashboard/SpendingVisualizer';
-import UserStats from '@/components/dashboard/UserStats';
-import RankStatusCard from '@/components/dashboard/RankStatusCard';
 import CashThroneUpgrade from '@/components/dashboard/CashThroneUpgrade';
 import { DashboardWelcome } from '@/components/dashboard/DashboardWelcome';
-import BriberyBanner from '@/components/dashboard/BriberyBanner';
-import { cn } from '@/lib/utils';
-import { getAchievementIcon } from '@/utils/formatters';
 import { useToast } from '@/hooks/use-toast';
-import RoyalDivider from '@/components/ui/royal-divider';
+import { useSound } from '@/hooks/use-sound';
+import OverviewTab from './tabs/OverviewTab';
+import RankTab from './tabs/RankTab';
+import AchievementsTab from './tabs/AchievementsTab';
 
 const EnhancedDashboard = () => {
   const { user } = useAuth();
   const { toast } = useToast();
+  const sound = useSound();
   const [activeTab, setActiveTab] = useState('overview');
   
   const [achievements, setAchievements] = useState<Achievement[]>([]);
@@ -80,13 +72,12 @@ const EnhancedDashboard = () => {
     return null;
   }
 
-  const totalSpent = user.totalSpent || user.amountSpent || 0;
-
   const handleSpend = () => {
     toast({
       title: "Spending action",
       description: "This would trigger a spending action in a real app."
     });
+    sound.playSound('click');
   };
 
   const handlePaymentSuccess = () => {
@@ -95,6 +86,7 @@ const EnhancedDashboard = () => {
       description: "Your rank has been temporarily boosted for cosmetic display purposes.",
       variant: "success"
     });
+    sound.playSound('success');
   };
 
   return (
@@ -126,69 +118,27 @@ const EnhancedDashboard = () => {
         </TabsList>
         
         <div className="mt-6">
-          <TabsContent value="overview" className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <RankStatusCard user={user} />
-              <UserStats user={user} />
-            </div>
-            
-            <div className="space-y-6">
-              <SpendingVisualizer user={user} onSpend={handleSpend} />
-              <BriberyBanner user={user} onPaymentSuccess={handlePaymentSuccess} />
-            </div>
+          <TabsContent value="overview">
+            <OverviewTab 
+              user={user} 
+              onSpend={handleSpend} 
+              onPaymentSuccess={handlePaymentSuccess} 
+            />
           </TabsContent>
           
-          <TabsContent value="rank" className="space-y-6">
-            <Card className="glass-morphism border-white/10">
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <Trophy className="mr-2 h-5 w-5 text-royal-gold" />
-                  Rank Progress
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="h-80">
-                  <RankProgressChart />
-                </div>
-              </CardContent>
-            </Card>
+          <TabsContent value="rank">
+            <RankTab />
           </TabsContent>
           
-          <TabsContent value="team" className="space-y-6">
+          <TabsContent value="team">
             <TeamStatusCard user={user} />
           </TabsContent>
           
-          <TabsContent value="achievements" className="space-y-6">
-            <Card className="glass-morphism border-white/10">
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <Crown className="mr-2 h-5 w-5 text-royal-gold" />
-                  Your Achievements
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {achievements.map((achievement) => (
-                    <AchievementDisplay 
-                      key={achievement.id}
-                      achievement={achievement}
-                    />
-                  ))}
-                  
-                  {achievements.length === 0 && (
-                    <div className="col-span-full text-center py-8">
-                      <p className="text-white/60">No achievements unlocked yet.</p>
-                      <Button variant="outline" className="mt-4">
-                        View Available Achievements
-                      </Button>
-                    </div>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
+          <TabsContent value="achievements">
+            <AchievementsTab achievements={achievements} />
           </TabsContent>
           
-          <TabsContent value="upgrade" className="space-y-6">
+          <TabsContent value="upgrade">
             <CashThroneUpgrade user={user} />
           </TabsContent>
         </div>

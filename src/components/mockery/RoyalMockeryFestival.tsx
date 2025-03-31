@@ -1,23 +1,22 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Target, Shield, Crown, Info, Bell } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Target, Bell } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 import useMockery from '@/hooks/use-mockery';
 import { MockeryAction, MockedUser } from '@/types/mockery';
-import MockeryProtectionCard from '@/components/mockery/components/MockeryProtectionCard';
-import HallOfShame from '@/components/mockery/components/HallOfShame';
 import MockeryEffect from '@/components/mockery/components/MockeryEffect';
 import { Link } from 'react-router-dom';
 import { adaptUserProfileToUser } from '@/utils/userAdapter';
 import { spendFromWallet } from '@/services/walletService';
-import MockeryTabContent from './components/MockeryTabContent';
+import MockeryTabs from './components/MockeryTabs';
+import { useSound } from '@/hooks/use-sound';
 
 const RoyalMockeryFestival = () => {
   const { user } = useAuth();
   const { toast } = useToast();
+  const sound = useSound();
   const [activeTab, setActiveTab] = useState('mockery');
   const [selectedAction, setSelectedAction] = useState<MockeryAction | null>(null);
   const [targetUser, setTargetUser] = useState<string>('');
@@ -79,6 +78,8 @@ const RoyalMockeryFestival = () => {
       });
       setShowMockeryEffect(true);
       
+      sound.playSound('mockery', { volume: 0.5 });
+      
       return true;
     } else {
       toast({
@@ -113,11 +114,15 @@ const RoyalMockeryFestival = () => {
         description: "You are now protected from mockery for 7 days. Your digital fortress is secure, with moat filled and drawbridge raised!",
         variant: "success"
       });
+      
+      sound.playSound('success', { volume: 0.5 });
     } else {
       toast({
         title: "Purchase Failed",
         description: "You do not have enough funds to buy protection. Your digital castle remains vulnerable."
       });
+      
+      sound.playSound('error', { volume: 0.5 });
     }
   };
   
@@ -181,67 +186,21 @@ const RoyalMockeryFestival = () => {
             </p>
           </div>
           
-          <Tabs defaultValue="mockery" value={activeTab} onValueChange={setActiveTab}>
-            <TabsList className="glass-morphism border-white/10 grid grid-cols-4">
-              <TabsTrigger value="mockery" className="flex items-center gap-2">
-                <Target size={16} />
-                <span>Mock Others</span>
-              </TabsTrigger>
-              <TabsTrigger value="protection" className="flex items-center gap-2">
-                <Shield size={16} />
-                <span>Protection</span>
-              </TabsTrigger>
-              <TabsTrigger value="hall" className="flex items-center gap-2">
-                <Crown size={16} />
-                <span>Hall of Shame</span>
-              </TabsTrigger>
-              <TabsTrigger value="howto" className="flex items-center gap-2">
-                <Info size={16} />
-                <span>How It Works</span>
-              </TabsTrigger>
-            </TabsList>
-            
-            <TabsContent value="mockery" className="space-y-4 mt-4">
-              <MockeryTabContent 
-                user={user}
-                targetUser={targetUser}
-                selectedAction={selectedAction}
-                onSelectAction={handleSelectAction}
-                mockedUsers={mockedUsers}
-                getUserMockeryCount={getUserMockeryCount}
-                getUserMockedOthersCount={getUserMockedOthersCount}
-                isUserProtected={isUserProtected}
-                getActiveMockery={getActiveMockeryWrapper}
-                onMockery={handleMockery}
-              />
-            </TabsContent>
-            
-            <TabsContent value="protection" className="mt-4">
-              <MockeryProtectionCard 
-                isProtected={user ? isUserProtected(user.username) : false}
-                onPurchase={handleBuyProtection}
-              />
-            </TabsContent>
-            
-            <TabsContent value="hall" className="mt-4">
-              <HallOfShame mockedUsers={mockedUsers} />
-            </TabsContent>
-            
-            <TabsContent value="howto" className="mt-4">
-              <div className="text-center p-6 glass-morphism border-white/10 rounded-lg">
-                <h3 className="text-xl font-bold mb-4">How the Royal Mockery Festival Works</h3>
-                <p className="text-white/70 mb-6">
-                  The Royal Mockery Festival allows you to apply purely cosmetic effects to other users' profiles.
-                  These effects are entirely visual and have no impact on rankings or functionality.
-                </p>
-                <Link to="/features#mockery-section">
-                  <Button className="bg-royal-purple hover:bg-royal-purple/90">
-                    View Complete Mockery Guide
-                  </Button>
-                </Link>
-              </div>
-            </TabsContent>
-          </Tabs>
+          <MockeryTabs
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
+            user={user}
+            targetUser={targetUser}
+            selectedAction={selectedAction}
+            onSelectAction={handleSelectAction}
+            mockedUsers={mockedUsers}
+            getUserMockeryCount={getUserMockeryCount}
+            getUserMockedOthersCount={getUserMockedOthersCount}
+            isUserProtected={isUserProtected}
+            getActiveMockery={getActiveMockeryWrapper}
+            onMockery={handleMockery}
+            onPurchaseProtection={handleBuyProtection}
+          />
         </CardContent>
       </Card>
       
