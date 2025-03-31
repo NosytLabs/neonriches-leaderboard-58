@@ -3,18 +3,21 @@ import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
 /**
- * Hook to track page views and scroll to top on page change
+ * Custom hook to track page views
  */
-export const usePageTracking = () => {
+const usePageTracking = () => {
   const location = useLocation();
   
   useEffect(() => {
-    // Log basic page view information
-    console.log(`Page view: ${location.pathname}`);
+    // Log the page view
+    console.info(`Page view: ${location.pathname}`);
     
-    // Scroll to top on page change
-    window.scrollTo(0, 0);
-  }, [location.pathname]);
+    // In a real app, this would send analytics data to a service
+    // Example:
+    // analytics.logPageView(location.pathname);
+  }, [location]);
+  
+  return null;
 };
 
 export default usePageTracking;

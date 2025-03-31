@@ -21,6 +21,11 @@ import ProtectedRoute from '@/components/auth/ProtectedRoute';
 import StatusCenter from '@/pages/StatusCenter';
 import Mockery from '@/pages/Mockery';
 import Features from '@/pages/Features';
+import Teams from '@/pages/Teams';
+import Deposit from '@/pages/Deposit';
+import Stats from '@/pages/Stats';
+import ProfileEnhancements from '@/pages/ProfileEnhancements';
+import Marketing from '@/pages/Marketing';
 
 function App() {
   return (
@@ -41,6 +46,11 @@ function App() {
             <Route path="/status-through-history" element={<StatusCenter />} />
             <Route path="/mockery" element={<Mockery />} />
             <Route path="/features" element={<Features />} />
+            <Route path="/teams" element={<Teams />} />
+            <Route path="/deposit" element={<Deposit />} />
+            <Route path="/stats" element={<Stats />} />
+            <Route path="/profile-enhancements" element={<ProfileEnhancements />} />
+            <Route path="/marketing" element={<Marketing />} />
             
             {/* Protected User Pages */}
             <Route 

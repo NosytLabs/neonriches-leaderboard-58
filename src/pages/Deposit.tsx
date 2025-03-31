@@ -1,516 +1,277 @@
 
 import React, { useState } from 'react';
-import Shell from '@/components/Shell';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import Layout from '@/components/layout/Layout';
+import PageHeader from '@/components/layout/PageHeader';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
-import { Separator } from '@/components/ui/separator';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Badge } from '@/components/ui/badge';
-import { DollarSign, CreditCard, Wallet, Coins, ChevronUp } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { CreditCard, DollarSign, TrendingUp, History, Crown } from 'lucide-react';
+import { Slider } from '@/components/ui/slider';
 import { useToast } from '@/hooks/use-toast';
-import processPayment from '@/services/paymentService';
-import { useAuth } from '@/hooks/useAuth';
-import { useSolana } from '@/contexts/SolanaContext';
-import RoyalDivider from '@/components/ui/royal-divider';
-import SpendingVisualizer from '@/components/dashboard/SpendingVisualizer';
-import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/contexts/auth';
+import usePageTracking from '@/hooks/usePageTracking';
 
 const Deposit = () => {
-  const [activeTab, setActiveTab] = useState<string>('credit-card');
-  const [amount, setAmount] = useState<number>(100);
-  const [customAmount, setCustomAmount] = useState<string>('');
-  const [isProcessing, setIsProcessing] = useState<boolean>(false);
-  const [autoDeposit, setAutoDeposit] = useState<boolean>(false);
-  const [monthlySpendLimit, setMonthlySpendLimit] = useState<string>('500');
   const { toast } = useToast();
-  const { user, updateUserProfile } = useAuth();
-  const navigate = useNavigate();
-  const { connected, walletBalance, connect, sendSol } = useSolana();
+  const { user } = useAuth();
+  const [amount, setAmount] = useState(50);
+  const [paymentMethod, setPaymentMethod] = useState('credit-card');
   
-  const predefinedAmounts = [10, 50, 100, 500, 1000];
+  // Track page view
+  usePageTracking();
   
-  const handleAmountSelect = (value: number) => {
-    setAmount(value);
-    setCustomAmount('');
+  const handleDeposit = () => {
+    // Implementation would connect to payment processor
+    toast({
+      title: "Deposit Successful",
+      description: `Your royal treasury has been increased by $${amount}.`,
+    });
   };
   
-  const handleCustomAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.replace(/[^0-9.]/g, '');
-    setCustomAmount(value);
-  };
+  const predefinedAmounts = [10, 25, 50, 100, 250];
   
-  const handleCreditCardDeposit = async () => {
-    if (!user) {
-      toast({
-        title: "Authentication Required",
-        description: "Please log in to make a deposit",
-        variant: "destructive"
-      });
-      return;
-    }
-    
-    try {
-      setIsProcessing(true);
-      
-      const finalAmount = customAmount ? parseFloat(customAmount) : amount;
-      
-      if (isNaN(finalAmount) || finalAmount <= 0) {
-        throw new Error("Invalid amount");
-      }
-      
-      const success = await processPayment(
-        user, 
-        finalAmount, 
-        'deposit', 
-        `Credit card deposit of $${finalAmount.toFixed(2)}`
-      );
-      
-      if (success) {
-        // Update user's wallet balance
-        await updateUserProfile({
-          ...user,
-          walletBalance: (user.walletBalance || 0) + finalAmount,
-          amountSpent: (user.amountSpent || 0) + finalAmount,
-          rank: calculateNewRank(user.amountSpent || 0, finalAmount)
-        });
-        
-        toast({
-          title: "Deposit Successful",
-          description: `$${finalAmount.toFixed(2)} has been added to your account!`,
-        });
-        
-        // Reset form
-        setCustomAmount('');
-      }
-    } catch (error) {
-      console.error("Deposit error:", error);
-      toast({
-        title: "Deposit Failed",
-        description: "There was an error processing your deposit. Please try again.",
-        variant: "destructive"
-      });
-    } finally {
-      setIsProcessing(false);
-    }
-  };
-  
-  const handleSolanaDeposit = async () => {
-    if (!user) return;
-    
-    try {
-      setIsProcessing(true);
-      
-      if (!connected) {
-        await connect();
-        return;
-      }
-      
-      const finalAmount = customAmount ? parseFloat(customAmount) : amount;
-      
-      if (isNaN(finalAmount) || finalAmount <= 0) {
-        throw new Error("Invalid amount");
-      }
-      
-      // Calculate SOL amount (mock conversion rate: $1 = 0.01 SOL)
-      const solAmount = finalAmount * 0.01;
-      
-      // Check wallet balance
-      if (walletBalance < solAmount) {
-        toast({
-          title: "Insufficient Balance",
-          description: `You need at least ${solAmount.toFixed(2)} SOL for this deposit.`,
-          variant: "destructive"
-        });
-        return;
-      }
-      
-      // Mock SOL transaction
-      const txId = await sendSol?.('SpendThroneTreasury', solAmount);
-      
-      if (txId) {
-        // Update user's wallet balance
-        await updateUserProfile({
-          ...user,
-          walletBalance: (user.walletBalance || 0) + finalAmount,
-          amountSpent: (user.amountSpent || 0) + finalAmount,
-          rank: calculateNewRank(user.amountSpent || 0, finalAmount)
-        });
-        
-        toast({
-          title: "Deposit Successful",
-          description: `$${finalAmount.toFixed(2)} has been added to your account!`,
-        });
-        
-        // Reset form
-        setCustomAmount('');
-      }
-    } catch (error) {
-      console.error("Solana deposit error:", error);
-      toast({
-        title: "Deposit Failed",
-        description: "There was an error processing your Solana deposit.",
-        variant: "destructive"
-      });
-    } finally {
-      setIsProcessing(false);
-    }
-  };
-  
-  const calculateNewRank = (currentSpent: number, additionalAmount: number): number => {
-    // In a real app, you might make a server call to calculate this
-    // For our mock, we'll use a simple algorithm
-    const totalSpent = currentSpent + additionalAmount;
-    
-    // Simplified rank calculation - 1 rank per $100 spent
-    // Lower numbers are better ranks (1 is the top rank)
-    // This is overly simplified - a real app would compare against all other users
-    const estimatedRank = Math.max(1, Math.ceil(100 - (totalSpent / 100)));
-    
-    return estimatedRank;
-  };
-  
-  const handleSpend = async (spendAmount: number) => {
-    if (!user) return;
-    
-    try {
-      setIsProcessing(true);
-      
-      const success = await processPayment(
-        user, 
-        spendAmount, 
-        'purchase', 
-        `Spent $${spendAmount.toFixed(2)} to increase rank`
-      );
-      
-      if (success) {
-        // Update user's wallet balance
-        await updateUserProfile({
-          ...user,
-          walletBalance: (user.walletBalance || 0) - spendAmount,
-          amountSpent: (user.amountSpent || 0) + spendAmount,
-          rank: calculateNewRank(user.amountSpent || 0, spendAmount)
-        });
-        
-        toast({
-          title: "Purchase Successful",
-          description: `$${spendAmount.toFixed(2)} spent to increase your rank!`,
-        });
-      }
-    } catch (error) {
-      console.error("Spend error:", error);
-      toast({
-        title: "Transaction Failed",
-        description: "There was an error processing your transaction.",
-        variant: "destructive"
-      });
-    } finally {
-      setIsProcessing(false);
-    }
-  };
-
   return (
-    <Shell>
-      <div className="container mx-auto p-4 py-8">
-        <div className="flex flex-col space-y-4 lg:flex-row lg:space-y-0 lg:space-x-8">
-          <div className="w-full lg:w-2/3">
-            <div className="mb-6">
-              <h1 className="text-3xl font-bold royal-gradient">Royal Treasury</h1>
-              <p className="text-gray-400 mt-2">
-                Add funds to your account to increase your rank and unlock premium features.
-              </p>
-            </div>
-            
-            <Card className="glass-morphism border-white/10 mb-8">
+    <Layout>
+      <div className="container mx-auto px-4 py-6">
+        <PageHeader 
+          title="Royal Treasury" 
+          description="Increase your status and influence by expanding your royal coffers"
+          icon={<Crown className="h-8 w-8 text-royal-gold" />}
+        />
+        
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+          <div className="md:col-span-2">
+            <Card className="glass-morphism border-white/10">
               <CardHeader>
-                <CardTitle>Add Funds</CardTitle>
-                <CardDescription>
-                  Choose your preferred payment method to contribute to the royal treasury.
-                </CardDescription>
+                <CardTitle className="text-xl font-bold">Expand Your Influence</CardTitle>
               </CardHeader>
               <CardContent>
-                <Tabs defaultValue={activeTab} onValueChange={setActiveTab}>
-                  <TabsList className="glass-morphism">
-                    <TabsTrigger value="credit-card" className="text-sm">
-                      <CreditCard className="h-4 w-4 mr-2" />
-                      Credit Card
-                    </TabsTrigger>
-                    <TabsTrigger value="crypto" className="text-sm">
-                      <Wallet className="h-4 w-4 mr-2" />
-                      Solana
-                    </TabsTrigger>
-                  </TabsList>
+                <div className="space-y-6">
+                  <div className="p-4 rounded-lg bg-gradient-to-br from-royal-gold/20 to-royal-crimson/20 border border-white/10 text-center">
+                    <p className="mb-2 text-white/70">Current Rank</p>
+                    <div className="text-4xl font-bold royal-gradient mb-2">#{user?.rank || 'N/A'}</div>
+                    <p className="text-sm text-white/70">
+                      {user?.tier === 'royal' 
+                        ? 'You have achieved royal status!' 
+                        : 'Every dollar spent increases your rank permanently'}
+                    </p>
+                  </div>
                   
-                  <div className="mt-8 mb-4">
-                    <Label htmlFor="amount" className="text-sm text-white/70">Amount</Label>
-                    <div className="grid grid-cols-6 gap-2 mt-2">
-                      {predefinedAmounts.map((predefinedAmount) => (
+                  <div className="space-y-4">
+                    <h3 className="font-bold">Select Amount</h3>
+                    
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      {predefinedAmounts.map((value) => (
                         <Button
-                          key={predefinedAmount}
-                          variant={amount === predefinedAmount && !customAmount ? "default" : "outline"}
-                          onClick={() => handleAmountSelect(predefinedAmount)}
-                          className={amount === predefinedAmount && !customAmount ? 
-                            "bg-royal-gold text-black border-transparent hover:bg-royal-gold/90" : 
-                            "glass-morphism border-white/10"}
+                          key={value}
+                          variant={amount === value ? "default" : "outline"}
+                          onClick={() => setAmount(value)}
+                          className={amount === value ? "bg-royal-gold text-black" : ""}
                         >
-                          ${predefinedAmount}
+                          ${value}
                         </Button>
                       ))}
-                      <div className="relative col-span-6 mt-2">
-                        <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/50" />
-                        <Input
-                          id="custom-amount"
-                          placeholder="Custom amount"
-                          value={customAmount}
-                          onChange={handleCustomAmountChange}
-                          className="pl-8 glass-morphism border-white/10"
-                        />
+                      <Button
+                        variant={!predefinedAmounts.includes(amount) ? "default" : "outline"}
+                        onClick={() => setAmount(500)}
+                        className={!predefinedAmounts.includes(amount) ? "bg-royal-gold text-black" : ""}
+                      >
+                        Custom
+                      </Button>
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <div className="flex justify-between">
+                        <span className="text-sm text-white/70">$10</span>
+                        <span className="text-sm text-white/70">$500+</span>
+                      </div>
+                      <Slider
+                        value={[amount]}
+                        min={10}
+                        max={500}
+                        step={5}
+                        onValueChange={(value) => setAmount(value[0])}
+                        className="py-4"
+                      />
+                    </div>
+                    
+                    <div className="flex items-center">
+                      <div className="flex-1">
+                        <label htmlFor="custom-amount" className="sr-only">Custom amount</label>
+                        <div className="relative">
+                          <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 text-white/50" />
+                          <Input
+                            id="custom-amount"
+                            type="number"
+                            value={amount}
+                            onChange={(e) => setAmount(Number(e.target.value))}
+                            className="pl-9"
+                            min={1}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="p-4 rounded-lg bg-black/20 border border-white/10">
+                      <div className="flex justify-between mb-2">
+                        <span>Amount</span>
+                        <span>${amount}</span>
+                      </div>
+                      <div className="flex justify-between mb-2">
+                        <span>Rank Increase</span>
+                        <span>~{amount} positions</span>
+                      </div>
+                      <div className="flex justify-between font-bold text-lg">
+                        <span>Total</span>
+                        <span>${amount}</span>
                       </div>
                     </div>
                   </div>
                   
-                  <TabsContent value="credit-card" className="mt-0">
-                    <div className="space-y-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="card-number" className="text-sm text-white/70">Card Number</Label>
-                        <Input id="card-number" placeholder="1234 5678 9012 3456" className="glass-morphism border-white/10" />
-                      </div>
-                      
-                      <div className="grid grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                          <Label htmlFor="expiry" className="text-sm text-white/70">Expiry Date</Label>
-                          <Input id="expiry" placeholder="MM/YY" className="glass-morphism border-white/10" />
-                        </div>
-                        <div className="space-y-2">
-                          <Label htmlFor="cvc" className="text-sm text-white/70">CVC</Label>
-                          <Input id="cvc" placeholder="123" className="glass-morphism border-white/10" />
-                        </div>
-                      </div>
-                      
-                      <div className="space-y-2">
-                        <Label htmlFor="name" className="text-sm text-white/70">Name on Card</Label>
-                        <Input id="name" placeholder="John Doe" className="glass-morphism border-white/10" />
-                      </div>
-                      
-                      <div className="flex items-center space-x-2 mt-4">
-                        <Switch
-                          id="auto-deposit"
-                          checked={autoDeposit}
-                          onCheckedChange={setAutoDeposit}
-                        />
-                        <Label htmlFor="auto-deposit" className="text-sm text-white/70">
-                          Enable auto-deposit when balance is low
-                        </Label>
-                      </div>
-                      
-                      {autoDeposit && (
-                        <div className="bg-white/5 p-3 rounded-md space-y-2">
-                          <div className="flex items-center justify-between">
-                            <Label htmlFor="spend-limit" className="text-sm text-white/70">
-                              Monthly spending limit
-                            </Label>
-                            <div className="flex items-center">
-                              <DollarSign className="h-4 w-4 text-white/50 mr-1" />
-                              <Input
-                                id="spend-limit"
-                                value={monthlySpendLimit}
-                                onChange={(e) => setMonthlySpendLimit(e.target.value.replace(/[^0-9]/g, ''))}
-                                className="w-24 h-8 glass-morphism border-white/10"
-                              />
-                            </div>
+                  <Tabs value={paymentMethod} onValueChange={setPaymentMethod}>
+                    <TabsList className="grid grid-cols-2 mb-4">
+                      <TabsTrigger value="credit-card" className="flex items-center gap-2">
+                        <CreditCard className="h-4 w-4" />
+                        Credit Card
+                      </TabsTrigger>
+                      <TabsTrigger value="crypto" className="flex items-center gap-2">
+                        <DollarSign className="h-4 w-4" />
+                        Crypto
+                      </TabsTrigger>
+                    </TabsList>
+                    
+                    <TabsContent value="credit-card">
+                      <div className="space-y-4">
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="space-y-2">
+                            <label className="text-sm font-medium">Card Number</label>
+                            <Input placeholder="1234 5678 9012 3456" />
                           </div>
-                          <p className="text-xs text-white/50 italic">
-                            Auto-deposit will trigger when your balance falls below $25
+                          <div className="space-y-2">
+                            <label className="text-sm font-medium">Name on Card</label>
+                            <Input placeholder="John Doe" />
+                          </div>
+                        </div>
+                        
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="space-y-2">
+                            <label className="text-sm font-medium">Expiry Date</label>
+                            <Input placeholder="MM/YY" />
+                          </div>
+                          <div className="space-y-2">
+                            <label className="text-sm font-medium">CVV</label>
+                            <Input placeholder="123" />
+                          </div>
+                        </div>
+                        
+                        <Button 
+                          onClick={handleDeposit} 
+                          className="w-full bg-gradient-to-r from-royal-gold to-royal-crimson text-black font-bold"
+                        >
+                          Deposit ${amount}
+                        </Button>
+                      </div>
+                    </TabsContent>
+                    
+                    <TabsContent value="crypto">
+                      <div className="space-y-4">
+                        <div className="p-4 rounded-lg bg-black/20 border border-white/10 text-center">
+                          <p className="mb-2">Send ${amount} equivalent to:</p>
+                          <div className="font-mono bg-black/40 p-2 rounded text-sm mb-2 break-all">
+                            1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa
+                          </div>
+                          <p className="text-sm text-white/60">
+                            Funds will be credited after 1 confirmation
                           </p>
                         </div>
-                      )}
-                    </div>
-                    
-                    <div className="mt-6">
-                      <Button 
-                        onClick={handleCreditCardDeposit}
-                        disabled={isProcessing || (customAmount === '' && !amount)}
-                        className="w-full bg-royal-gold text-black hover:bg-royal-gold/90"
-                      >
-                        {isProcessing ? (
-                          <>
-                            <div className="h-4 w-4 mr-2 border-2 border-black border-t-transparent rounded-full animate-spin"></div>
-                            Processing...
-                          </>
-                        ) : (
-                          <>
-                            <DollarSign className="h-4 w-4 mr-2" />
-                            Deposit {customAmount ? `$${parseFloat(customAmount).toFixed(2)}` : `$${amount.toFixed(2)}`}
-                          </>
-                        )}
-                      </Button>
-                    </div>
-                  </TabsContent>
-                  
-                  <TabsContent value="crypto" className="mt-0">
-                    <div className="space-y-4">
-                      <div className="bg-black/20 rounded-md p-4 border border-white/10">
-                        <div className="flex items-center justify-between mb-2">
-                          <span className="text-sm text-white/70">Current SOL Balance:</span>
-                          <span className="font-mono">
-                            {connected ? `${walletBalance.toFixed(2)} SOL` : 'Not connected'}
-                          </span>
-                        </div>
-                        <div className="flex items-center justify-between mb-2">
-                          <span className="text-sm text-white/70">Equivalent USD:</span>
-                          <span className="font-mono">
-                            {connected ? `$${(walletBalance * 100).toFixed(2)}` : '-'}
-                          </span>
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <span className="text-sm text-white/70">Deposit Amount:</span>
-                          <div className="flex items-center">
-                            <span className="font-mono">
-                              {customAmount ? 
-                                `${(parseFloat(customAmount) * 0.01).toFixed(2)} SOL` : 
-                                `${(amount * 0.01).toFixed(2)} SOL`}
-                            </span>
-                            <Badge className="ml-2 bg-royal-purple/20 text-royal-purple hover:bg-royal-purple/30">
-                              = {customAmount ? `$${parseFloat(customAmount).toFixed(2)}` : `$${amount.toFixed(2)}`}
-                            </Badge>
-                          </div>
-                        </div>
+                        
+                        <Button 
+                          variant="outline" 
+                          className="w-full"
+                          onClick={() => {
+                            navigator.clipboard.writeText("1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa");
+                            toast({
+                              title: "Address Copied",
+                              description: "Cryptocurrency address copied to clipboard",
+                            });
+                          }}
+                        >
+                          Copy Address
+                        </Button>
                       </div>
-                      
-                      <div className="text-xs text-white/50 italic p-2">
-                        <p>Exchange rate: 1 SOL = $100 USD (mock rate for demonstration)</p>
-                      </div>
-                    </div>
-                    
-                    <div className="mt-6">
-                      <Button 
-                        onClick={handleSolanaDeposit}
-                        disabled={isProcessing || (customAmount === '' && !amount)}
-                        className="w-full bg-royal-gold text-black hover:bg-royal-gold/90"
-                      >
-                        {isProcessing ? (
-                          <>
-                            <div className="h-4 w-4 mr-2 border-2 border-black border-t-transparent rounded-full animate-spin"></div>
-                            Processing...
-                          </>
-                        ) : connected ? (
-                          <>
-                            <Coins className="h-4 w-4 mr-2" />
-                            Deposit with Solana
-                          </>
-                        ) : (
-                          <>
-                            <Wallet className="h-4 w-4 mr-2" />
-                            Connect Wallet
-                          </>
-                        )}
-                      </Button>
-                    </div>
-                  </TabsContent>
-                </Tabs>
-              </CardContent>
-              <CardFooter className="flex justify-between">
-                <div className="text-xs text-white/50">
-                  All payments are processed securely
+                    </TabsContent>
+                  </Tabs>
                 </div>
-                <Button variant="ghost" size="sm" className="text-royal-gold hover:text-royal-gold/80 hover:bg-transparent"
-                  onClick={() => navigate('/faq')}>
-                  Need help?
-                </Button>
-              </CardFooter>
+              </CardContent>
             </Card>
-            
-            <motion.div
-              className="mb-8"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3, duration: 0.5 }}
-            >
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="text-xl font-bold">Transaction History</h2>
-                <Button variant="outline" size="sm" className="glass-morphism border-white/10">
-                  <ChevronUp className="h-4 w-4 mr-2" />
-                  Export
-                </Button>
-              </div>
-              
-              <Card className="glass-morphism border-white/10">
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-lg">Recent Transactions</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <ScrollArea className="h-64 w-full pr-4">
-                    {/* Mock transaction data - replace with real data in a production app */}
-                    {user && user.amountSpent > 0 ? (
-                      <div className="space-y-2">
-                        <div className="flex justify-between items-center p-3 rounded-md bg-white/5 border border-white/5">
-                          <div>
-                            <p className="font-medium">Rank Increase</p>
-                            <p className="text-xs text-white/50">{new Date().toLocaleDateString()}</p>
-                          </div>
-                          <div className="text-right">
-                            <p className="text-green-400">+$100.00</p>
-                            <p className="text-xs text-white/50">Credit Card</p>
-                          </div>
-                        </div>
-                        
-                        <div className="flex justify-between items-center p-3 rounded-md bg-white/5 border border-white/5">
-                          <div>
-                            <p className="font-medium">Premium Profile Features</p>
-                            <p className="text-xs text-white/50">{new Date(Date.now() - 86400000).toLocaleDateString()}</p>
-                          </div>
-                          <div className="text-right">
-                            <p className="text-red-400">-$25.00</p>
-                            <p className="text-xs text-white/50">Wallet Balance</p>
-                          </div>
-                        </div>
-                        
-                        <div className="flex justify-between items-center p-3 rounded-md bg-white/5 border border-white/5">
-                          <div>
-                            <p className="font-medium">Rank Increase</p>
-                            <p className="text-xs text-white/50">{new Date(Date.now() - 172800000).toLocaleDateString()}</p>
-                          </div>
-                          <div className="text-right">
-                            <p className="text-green-400">+$50.00</p>
-                            <p className="text-xs text-white/50">Solana</p>
-                          </div>
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="flex flex-col items-center justify-center h-full text-center">
-                        <DollarSign className="h-12 w-12 text-white/20 mb-2" />
-                        <p className="text-white/40">No transactions yet</p>
-                        <p className="text-xs text-white/30 mt-1">Your transaction history will appear here</p>
-                      </div>
-                    )}
-                  </ScrollArea>
-                </CardContent>
-              </Card>
-            </motion.div>
           </div>
           
-          <div className="w-full lg:w-1/3">
-            <RoyalDivider className="lg:hidden my-8" />
+          <div className="space-y-6">
+            <Card className="glass-morphism border-white/10">
+              <CardHeader>
+                <CardTitle className="text-lg flex items-center">
+                  <TrendingUp className="h-5 w-5 mr-2 text-royal-gold" />
+                  Rank Projection
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="p-3 rounded-lg bg-black/30">
+                    <p className="text-sm text-white/70">Current Rank</p>
+                    <p className="text-2xl font-bold">#{user?.rank || 'N/A'}</p>
+                  </div>
+                  
+                  <div className="p-3 rounded-lg bg-black/30">
+                    <p className="text-sm text-white/70">Projected Rank</p>
+                    <p className="text-2xl font-bold">#{user?.rank ? Math.max(1, user.rank - amount) : 'N/A'}</p>
+                  </div>
+                  
+                  <div className="h-20 w-full bg-black/20 rounded-lg relative overflow-hidden">
+                    <div className="absolute bottom-0 left-0 w-1/3 h-1/2 bg-royal-gold/50 rounded-tr-lg"></div>
+                    <div className="absolute bottom-0 left-1/3 w-1/3 h-2/3 bg-royal-gold/70 rounded-tr-lg"></div>
+                    <div className="absolute bottom-0 left-2/3 w-1/3 h-full bg-royal-gold rounded-tr-lg"></div>
+                    
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <p className="text-sm font-medium">Rank Progress</p>
+                    </div>
+                  </div>
+                  
+                  <p className="text-sm text-white/70">
+                    With a deposit of ${amount}, you could move up approximately {amount} positions on the leaderboard.
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
             
-            {user && (
-              <SpendingVisualizer 
-                user={user} 
-                onSpend={handleSpend} 
-                topSpenders={[
-                  { username: "GoldenKing", amountSpent: 5000, rank: 1 },
-                  { username: "DiamondDuchess", amountSpent: 4200, rank: 2 },
-                  { username: "SapphireSultan", amountSpent: 3500, rank: 3 },
-                ]}
-              />
-            )}
+            <Card className="glass-morphism border-white/10">
+              <CardHeader>
+                <CardTitle className="text-lg flex items-center">
+                  <History className="h-5 w-5 mr-2 text-royal-gold" />
+                  Recent Transactions
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-2">
+                  {Array.from({ length: 3 }).map((_, i) => (
+                    <div key={i} className="flex justify-between p-2 border-b border-white/10 last:border-0">
+                      <div>
+                        <p className="font-medium">Deposit</p>
+                        <p className="text-xs text-white/60">{new Date(Date.now() - i * 86400000).toLocaleDateString()}</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="font-medium text-royal-gold">+${25 * (i + 1)}</p>
+                        <p className="text-xs text-white/60">Processed</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </div>
-    </Shell>
+    </Layout>
   );
 };
 

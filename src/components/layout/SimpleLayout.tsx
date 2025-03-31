@@ -1,44 +1,26 @@
 
-import React from 'react';
+import React, { ReactNode } from 'react';
 import Header from '@/components/Header';
-import Footer from '@/components/Footer';
-import { cn } from '@/lib/utils';
-import usePageTracking from '@/hooks/usePageTracking';
+import { useAuth } from '@/contexts/auth';
 
 interface SimpleLayoutProps {
-  children: React.ReactNode;
-  title?: string;
-  fullWidth?: boolean;
-  showFooter?: boolean;
-  className?: string;
+  children: ReactNode;
 }
 
-const SimpleLayout: React.FC<SimpleLayoutProps> = ({
-  children,
-  title,
-  fullWidth = false,
-  showFooter = true,
-  className
-}) => {
-  // Track page views
-  usePageTracking();
+const SimpleLayout: React.FC<SimpleLayoutProps> = ({ children }) => {
+  const { isAuthenticated } = useAuth();
   
   return (
-    <div className="flex flex-col min-h-screen bg-gradient-to-b from-bg-dark to-bg-dark-lighter">
+    <div className="min-h-screen bg-background flex flex-col">
       <Header />
-      
-      <main className={cn(
-        "flex-grow pt-16 pb-8 px-4",
-        !fullWidth && "container mx-auto",
-        className
-      )}>
-        {title && (
-          <h1 className="text-2xl font-bold mb-6">{title}</h1>
-        )}
+      <main className="flex-1 py-4">
         {children}
       </main>
-      
-      {showFooter && <Footer />}
+      <footer className="py-4 px-6 border-t border-white/10 text-center text-sm text-white/60">
+        <div className="container mx-auto">
+          <p>&copy; {new Date().getFullYear()} SpendThrone | All rights reserved</p>
+        </div>
+      </footer>
     </div>
   );
 };
