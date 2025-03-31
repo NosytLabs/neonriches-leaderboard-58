@@ -1,14 +1,13 @@
 
 import React from 'react';
 import { Dialog } from '@/components/ui/dialog';
-import ShameModal from '@/components/dashboard/leaderboard/ShameModal';
-import { MockeryAction, ShameAction } from '@/types/mockery';
-import { TeamColor, TeamType } from '@/types/team';
-import { UserProfile } from '@/types/user';
+import ShameModal from '@/components/events/components/ShameModal';
+import { User, TeamColor } from '@/types/user';
+import { ShameAction } from '@/types/mockery';
 
 interface ShameModalWrapperProps {
   showModal: boolean;
-  selectedUser: UserProfile | null;
+  selectedUser: User | null;
   shameAction: ShameAction;
   onOpenChange: (open: boolean) => void;
   onConfirm: (userId: string, type: ShameAction) => void;
@@ -26,9 +25,7 @@ const ShameModalWrapper: React.FC<ShameModalWrapperProps> = ({
   // Convert undefined team to null to avoid the TeamType error
   const team = selectedUser.team || null;
   // Make sure team is one of the allowed values or provide a fallback
-  const validTeam = (team === 'red' || team === 'blue' || team === 'green' || team === 'gold') 
-    ? team as TeamColor 
-    : 'red' as TeamColor;
+  const validTeam = (team === 'red' || team === 'blue' || team === 'green' || team === 'gold') ? team as TeamColor : 'red' as TeamColor;
 
   return (
     <Dialog open={showModal} onOpenChange={onOpenChange}>
@@ -37,13 +34,13 @@ const ShameModalWrapper: React.FC<ShameModalWrapperProps> = ({
           userId: selectedUser.id.toString(),
           username: selectedUser.username,
           profileImage: selectedUser.profileImage || '/placeholder.svg',
-          totalSpent: selectedUser.totalSpent || 0,
+          totalSpent: selectedUser.totalSpent || selectedUser.amountSpent || 0,
           rank: selectedUser.rank || 0,
           team: validTeam,
           tier: selectedUser.tier || 'free',
           spendStreak: selectedUser.spendStreak || 0
         }}
-        shameType={shameAction as ShameAction}
+        shameType={shameAction}
         onConfirm={() => onConfirm(selectedUser.id, shameAction)}
         onCancel={() => onOpenChange(false)}
         hasDiscount={false}

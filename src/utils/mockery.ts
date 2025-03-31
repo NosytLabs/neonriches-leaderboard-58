@@ -13,7 +13,8 @@ import {
   getMockeryTier,
   getMockeryTierColorClass,
   getActiveMockeryClass,
-  getMockeryDuration
+  getMockeryDuration,
+  getMockeryDuration as getMockeryActionDuration
 } from './mockery/index';
 
 // Re-export all functions for backward compatibility
@@ -27,6 +28,7 @@ export {
   getMockeryTierColorClass,
   getActiveMockeryClass,
   getMockeryDuration,
+  getMockeryActionDuration,
   
   // Legacy aliases
   getMockeryActionTitle as getMockeryName,

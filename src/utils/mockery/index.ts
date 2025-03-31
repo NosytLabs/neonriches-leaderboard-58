@@ -1,6 +1,6 @@
 
 // Export all mockery utilities from their respective files
-import getMockeryIcon, { getMockeryIconColor, getMockeryActionIcon, getMockeryActionIconColor } from './mockery-icons';
+import { getMockeryIcon, getMockeryIconColor } from './mockery-icons';
 import { getMockeryDuration, getTierDurationMultiplier } from './mockery-durations';
 import { getMockeryActionTitle, getMockeryActionDescription, getMockeryTier, getMockeryActionPrice } from './mockery-actions';
 import { getMockeryTierColorClass, getActiveMockeryClass } from './mockery-effects';
@@ -9,8 +9,6 @@ import { getMockeryTierColorClass, getActiveMockeryClass } from './mockery-effec
 export {
   getMockeryIcon,
   getMockeryIconColor,
-  getMockeryActionIcon,
-  getMockeryActionIconColor,
   getMockeryDuration,
   getTierDurationMultiplier,
   getMockeryActionTitle,
@@ -24,15 +22,15 @@ export {
   getMockeryDuration as getMockeryActionDuration,
   getMockeryActionTitle as getMockeryName,
   getMockeryActionDescription as getMockeryDescription,
-  getMockeryActionPrice as getMockeryCost
+  getMockeryActionPrice as getMockeryCost,
+  getMockeryIcon as getMockeryActionIcon,
+  getMockeryIconColor as getMockeryActionIconColor
 };
 
 // Default export for convenience
 export default {
   getMockeryIcon,
   getMockeryIconColor,
-  getMockeryActionIcon,
-  getMockeryActionIconColor,
   getMockeryDuration,
   getTierDurationMultiplier,
   getMockeryActionTitle,
@@ -44,5 +42,7 @@ export default {
   getMockeryActionDuration: getMockeryDuration,
   getMockeryName: getMockeryActionTitle,
   getMockeryDescription: getMockeryActionDescription,
-  getMockeryCost: getMockeryActionPrice
+  getMockeryCost: getMockeryActionPrice,
+  getMockeryActionIcon: getMockeryIcon,
+  getMockeryActionIconColor: getMockeryIconColor
 };

@@ -112,10 +112,7 @@ export const getMockeryIconColor = (action: MockeryAction): string => {
     fool: 'text-purple-300'
   };
 
-  // Get the tier to use for default coloring
-  const tier = getMockeryTier(action);
-
-  // Default tier-based colors
+  // Import mockery tier function for convenience
   const tierColors: Record<MockeryTier, string> = {
     basic: 'text-gray-400',
     common: 'text-gray-300',
@@ -128,6 +125,9 @@ export const getMockeryIconColor = (action: MockeryAction): string => {
     legendary: 'text-red-500',
     bronze: 'text-amber-700'
   };
+
+  // Get the tier to use for default coloring
+  const tier = getMockeryTier(action);
 
   // Return specific color or tier-based color  
   return colorClasses[action] || tierColors[tier] || 'text-gray-400';
