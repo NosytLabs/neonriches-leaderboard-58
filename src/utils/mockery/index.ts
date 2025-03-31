@@ -39,7 +39,7 @@ import React from 'react';
 /**
  * Render a mockery action icon with the given size and className
  */
-export const renderMockeryIcon = (action: MockeryAction, className: string = "h-4 w-4") => {
+export const renderMockeryIcon = (action: MockeryAction, className = "h-4 w-4") => {
   const IconComponent = getMockeryActionIcon(action);
   return <IconComponent className={className} />;
 };
