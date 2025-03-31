@@ -23,6 +23,7 @@
 
 /* Animation system - consolidated */
 @import './animations/consolidated.css';
+@import './animations/fade-in.css';
 
 /* Specific components & utilities */
 @import './utilities/decorative-effects.css';
@@ -118,3 +119,4 @@ body {
 .bg-royal-crimson {
   background-color: rgb(var(--royal-crimson));
 }
+

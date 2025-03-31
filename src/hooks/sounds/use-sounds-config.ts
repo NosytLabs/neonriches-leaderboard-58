@@ -1,7 +1,13 @@
 
 import { useCallback } from 'react';
 import { useLocalStorage } from '@/hooks/use-local-storage';
-import { SoundConfig } from '@/types/sound-types';
+
+export interface SoundConfig {
+  volume: number;
+  enabled: boolean;
+  muted: boolean;
+  premium: boolean;
+}
 
 const defaultSoundConfig: SoundConfig = {
   volume: 0.5,
@@ -11,7 +17,7 @@ const defaultSoundConfig: SoundConfig = {
 };
 
 export const useSoundsConfig = () => {
-  const [soundConfig, setSoundConfig] = useLocalStorage<SoundConfig>('sound-config', defaultSoundConfig);
+  const [soundConfig, setSoundConfig] = useLocalStorage<SoundConfig>('spendthrone-sound-config', defaultSoundConfig);
 
   const setVolume = useCallback((volume: number) => {
     setSoundConfig(prevConfig => ({
@@ -41,11 +47,16 @@ export const useSoundsConfig = () => {
     }));
   }, [setSoundConfig]);
 
+  const resetToDefaults = useCallback(() => {
+    setSoundConfig(defaultSoundConfig);
+  }, [setSoundConfig]);
+
   return {
     soundConfig,
     setVolume,
     toggleSounds,
     toggleMuted,
-    togglePremium
+    togglePremium,
+    resetToDefaults
   };
 };

@@ -1,14 +1,14 @@
 
 import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Volume2, VolumeX, Music } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import { Slider } from '@/components/ui/slider';
-import { Volume2, VolumeX, Music } from 'lucide-react';
 import { Label } from '@/components/ui/label';
-import { useSoundsConfig } from '@/hooks/sounds/use-sounds-config';
+import SettingsLayout from './SettingsLayout';
+import { useSettings } from '@/contexts/SettingsContext';
 
 const AudioSettings: React.FC = () => {
-  const { soundConfig, setVolume, toggleSounds, toggleMuted, togglePremium } = useSoundsConfig();
+  const { soundConfig, toggleSounds, toggleMuted, setVolume, togglePremium } = useSettings();
   const [sliderValue, setSliderValue] = useState(soundConfig.volume * 100);
   
   const handleVolumeChange = (value: number[]) => {
@@ -18,14 +18,12 @@ const AudioSettings: React.FC = () => {
   };
 
   return (
-    <Card className="shadow-lg">
-      <CardHeader>
-        <CardTitle className="text-xl flex items-center">
-          <Volume2 className="mr-2 h-5 w-5" />
-          Audio Settings
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-6">
+    <SettingsLayout
+      title="Audio Settings"
+      description="Control sound effects and volume"
+      icon={<Volume2 className="h-5 w-5 text-purple-400" />}
+    >
+      <div className="space-y-6">
         <div className="space-y-4">
           <div className="flex justify-between items-center">
             <Label htmlFor="sound-enabled" className="flex items-center">
@@ -73,10 +71,13 @@ const AudioSettings: React.FC = () => {
           </div>
           
           <div className="flex justify-between items-center">
-            <Label htmlFor="premium-sounds" className="flex items-center">
-              <Music className="mr-2 h-4 w-4" />
-              Premium Sound Pack
-            </Label>
+            <div className="space-y-1">
+              <Label htmlFor="premium-sounds" className="flex items-center">
+                <Music className="mr-2 h-4 w-4" />
+                Premium Sound Pack
+              </Label>
+              <p className="text-sm text-white/60">Unlock special royal sound effects</p>
+            </div>
             <Switch 
               id="premium-sounds" 
               checked={soundConfig.premium} 
@@ -85,8 +86,8 @@ const AudioSettings: React.FC = () => {
             />
           </div>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </SettingsLayout>
   );
 };
 
