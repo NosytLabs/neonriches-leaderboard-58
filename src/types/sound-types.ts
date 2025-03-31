@@ -3,10 +3,9 @@
 export type SoundType = 
   | 'achievement'
   | 'boost'
-  | 'button_click'
-  | 'challenge'
-  | 'coins_drop'
-  | 'coins_multiple'
+  | 'click'
+  | 'coin'
+  | 'coinDrop'
   | 'deposit'
   | 'error'
   | 'level_up'
@@ -14,34 +13,46 @@ export type SoundType =
   | 'mockery'
   | 'notification'
   | 'purchase'
-  | 'rank_change'
   | 'rank_up'
+  | 'reward'
+  | 'royal'
+  | 'royalAnnouncement'
+  | 'seal'
   | 'shame'
   | 'success'
-  | 'team_join'
-  | 'transaction'
-  | 'upgrade'
-  | 'wishingwell'
-  | 'parchment'
-  | 'click'
-  | 'trumpets'
-  | 'coinDrop'
-  | 'royal'
-  | 'coin'
-  | 'reward'
-  | 'royalAnnouncement'
   | 'trumpet'
-  | 'seal'
-  | 'medallion';
+  | 'trumpets'
+  | 'withdrawal';
 
 export interface AudioOptions {
   volume?: number;
   interrupt?: boolean;
   loop?: boolean;
   delay?: number;
+  onComplete?: () => void;
 }
 
-export type NotificationSoundOptions = AudioOptions;
+export interface UseSoundOptions {
+  baseUrl?: string;
+  volume?: number;
+  disabled?: boolean;
+  soundEnabled?: boolean;
+  loop?: boolean;
+  interrupt?: boolean;
+  onComplete?: () => void;
+}
+
+export interface UseSoundReturn {
+  play: (options?: AudioOptions | string) => void;
+  playSound: (sound: SoundType, options?: AudioOptions) => void;
+  stop: () => void;
+  isPlaying: boolean;
+  duration?: number;
+  playSuccess: (options?: AudioOptions) => void;
+  playError: (options?: AudioOptions) => void;
+  playNotification: (options?: AudioOptions) => void;
+  playClick: (options?: AudioOptions) => void;
+}
 
 export interface AudioLoaderReturn {
   audio: Record<SoundType, HTMLAudioElement>;
@@ -54,17 +65,22 @@ export interface AudioLoaderReturn {
   isLoaded: boolean;
 }
 
-export interface UseSoundReturn {
-  play: (sound: SoundType, options?: AudioOptions) => void;
-  stop: (sound: SoundType) => void;
-  stopAll: () => void;
+export interface SoundConfig {
+  volume: number;
+  enabled: boolean;
+  muted: boolean;
+  premium: boolean;
 }
 
 export interface PremiumSoundPackDetails {
-  id?: string;
+  id: string;
   name: string;
   description: string;
   price: number;
   sounds: SoundType[];
   previewSound?: SoundType;
+  features?: string[];
+  includes?: string[];
+  tags?: string[];
+  isPurchased?: boolean;
 }

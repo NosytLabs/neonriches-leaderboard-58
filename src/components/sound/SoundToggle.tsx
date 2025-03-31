@@ -3,18 +3,18 @@ import React from 'react';
 import { Volume2, VolumeX } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useSoundsConfig } from '@/hooks/sounds/use-sounds-config';
-import { useSound } from '@/hooks/sounds/use-sound';
+import { useSound } from '@/hooks/use-sound';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 export function SoundToggle() {
   const { config, toggleMute } = useSoundsConfig();
-  const { play } = useSound();
+  const sound = useSound();
   
   const handleToggle = () => {
     toggleMute();
     if (config.muted) {
       // If currently muted, will be unmuted after toggle
-      play('click');
+      sound.playSound('click');
     }
   };
   

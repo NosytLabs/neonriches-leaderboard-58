@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useLocalStorage } from '@/hooks/use-local-storage';
 import { MockeryAction } from '@/types/mockery';
-import { useSound } from '@/hooks/sounds/use-sound';
+import { useSound } from '@/hooks/use-sound';
 
 interface ShameEffectData {
   type: MockeryAction;
@@ -16,7 +16,7 @@ const SHAME_DURATION = 24;
 const SHAME_COOLDOWN = 1;
 
 const useShameEffect = () => {
-  const { play } = useSound();
+  const sound = useSound();
   const [shameEffects, setShameEffects] = useLocalStorage<Record<number, ShameEffectData>>('shame-effects', {});
   const [shameCooldown, setShameCooldown] = useLocalStorage<Record<number, boolean>>('shame-cooldown', {});
   const [shameCount, setShameCount] = useLocalStorage<Record<number, number>>('shame-count', {});
@@ -92,7 +92,7 @@ const useShameEffect = () => {
       }));
 
       // Play shame sound
-      play('shame', { volume: 0.4 });
+      sound.playSound('shame', { volume: 0.4 });
 
       return true;
     } catch (error) {

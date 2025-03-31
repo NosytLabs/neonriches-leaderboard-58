@@ -1,7 +1,7 @@
 
 import { useCallback, useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
-import { useSound } from '@/hooks/sounds/use-sound';
+import { useSound } from '@/hooks/use-sound';
 import { SoundType } from '@/types/sound-types';
 import { v4 as uuidv4 } from 'uuid';
 import { useAuth } from '@/hooks/useAuth';
@@ -36,7 +36,7 @@ interface UseNotificationsReturn {
 export const useNotifications = (): UseNotificationsReturn => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [open, setOpen] = useState(false);
-  const { play } = useSound();
+  const sound = useSound();
   const { user } = useAuth();
   const { toast } = useToast();
 
@@ -75,23 +75,21 @@ export const useNotifications = (): UseNotificationsReturn => {
 
     setNotifications(prev => [newNotification, ...prev].slice(0, 50));
 
-    switch (notification.type) {
-      case 'rank_change':
-        play('rankChange', { volume: 0.4 });
-        break;
-      case 'achievement':
-      case 'milestone':
-        play('achievement', { volume: 0.5 });
-        break;
-      case 'royal':
-        play('royal', { volume: 0.4 });
-        break;
-      case 'deposit':
-        play('coin', { volume: 0.4 });
-        break;
-      default:
-        play('notification', { volume: 0.3 });
-    }
+    // Map notification types to sounds
+    const notificationSounds: Record<string, SoundType> = {
+      'rank_change': 'rank_up',
+      'achievement': 'achievement',
+      'royal': 'royal',
+      'deposit': 'coin',
+      'milestone': 'achievement',
+      'event': 'notification',
+      'poke': 'notification',
+      'system': 'notification'
+    };
+
+    // Play the appropriate sound
+    const soundType = notificationSounds[notification.type] || 'notification';
+    sound.playSound(soundType, { volume: 0.4 });
   };
 
   const handleMarkAsRead = (id: string) => {
@@ -106,7 +104,7 @@ export const useNotifications = (): UseNotificationsReturn => {
     setNotifications(prev => 
       prev.map(notification => ({ ...notification, read: true }))
     );
-    play('notification', { volume: 0.3 });
+    sound.playSound('notification', { volume: 0.3 });
   };
 
   const handleDeleteNotification = (id: string) => {
@@ -134,8 +132,8 @@ export const useNotifications = (): UseNotificationsReturn => {
     }
   };
 
-  const playSound = (sound: SoundType, volume?: number) => {
-    play(sound, { volume });
+  const playSound = (soundType: SoundType, volume?: number) => {
+    sound.playSound(soundType, { volume });
   };
 
   const unreadCount = notifications.filter(n => !n.read).length;

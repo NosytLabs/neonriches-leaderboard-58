@@ -1,60 +1,47 @@
 
 import { useState, useEffect } from 'react';
-
-interface SoundConfig {
-  enabled: boolean;
-  muted: boolean;
-  volume: number;
-}
+import { useLocalStorage } from '@/hooks/use-local-storage';
+import { SoundConfig } from '@/types/sound-types';
 
 export const useSoundsConfig = () => {
-  // Default configuration
-  const [config, setConfig] = useState<SoundConfig>({
+  const [config, setConfig] = useLocalStorage<SoundConfig>('sound-config', {
+    volume: 0.5,
     enabled: true,
     muted: false,
-    volume: 0.7
+    premium: false
   });
 
-  // Load config from localStorage on mount
-  useEffect(() => {
-    try {
-      const savedConfig = localStorage.getItem('sound_config');
-      if (savedConfig) {
-        setConfig(JSON.parse(savedConfig));
-      }
-    } catch (error) {
-      console.error('Error loading sound configuration:', error);
-    }
-  }, []);
-
-  // Save config to localStorage when it changes
-  useEffect(() => {
-    try {
-      localStorage.setItem('sound_config', JSON.stringify(config));
-    } catch (error) {
-      console.error('Error saving sound configuration:', error);
-    }
-  }, [config]);
-
-  // Toggle sound on/off
-  const toggleEnabled = () => {
-    setConfig(prev => ({ ...prev, enabled: !prev.enabled }));
-  };
-
-  // Toggle mute on/off
-  const toggleMute = () => {
-    setConfig(prev => ({ ...prev, muted: !prev.muted }));
-  };
-
-  // Set volume (0-1)
   const setVolume = (volume: number) => {
-    setConfig(prev => ({ ...prev, volume: Math.min(Math.max(volume, 0), 1) }));
+    setConfig({ ...config, volume });
+    localStorage.setItem('soundVolume', volume.toString());
   };
 
+  const toggleEnabled = () => {
+    const newEnabled = !config.enabled;
+    setConfig({ ...config, enabled: newEnabled });
+    localStorage.setItem('soundEnabled', JSON.stringify(newEnabled));
+  };
+
+  const toggleMute = () => {
+    const newMuted = !config.muted;
+    setConfig({ ...config, muted: newMuted });
+    localStorage.setItem('soundsMuted', JSON.stringify(newMuted));
+  };
+
+  const togglePremium = () => {
+    const newPremium = !config.premium;
+    setConfig({ ...config, premium: newPremium });
+    localStorage.setItem('premiumSounds', JSON.stringify(newPremium));
+  };
+
+  // Return the configuration and functions to update it
   return {
     config,
+    setVolume,
     toggleEnabled,
     toggleMute,
-    setVolume
+    togglePremium
   };
 };
+
+export default useSoundsConfig;

@@ -3,10 +3,9 @@
 export { useAuth } from './useAuth';
 
 // Sounds
-export { default as useSound } from './sounds/use-sound';
-// Ensure we're using the correct path for notification sounds
+export { default as useSound } from './use-sound';
 export { default as useNotificationSounds } from './sounds/use-notification-sounds';
-export { default as usePremiumSounds } from './use-premium-sounds';
+export { useSoundsConfig } from './sounds/use-sounds-config';
 
 // UI Hooks
 export { default as useToast } from './use-toast';

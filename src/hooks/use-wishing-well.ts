@@ -1,9 +1,9 @@
 
-// Modified implementation to fix the interface
+// Modified implementation to use the new sound system
 import { useState, useCallback, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
-import { useSound } from '@/hooks/sounds/use-sound';
+import { useSound } from '@/hooks/use-sound';
 import { recordTransaction } from '@/services/transactionService';
 
 // Define the WishResult type to include properties that are being used
@@ -26,7 +26,7 @@ const WISH_COST = 10;
 const useWishingWell = (): UseWishingWellReturn => {
   const { user } = useAuth();
   const { toast } = useToast();
-  const { play } = useSound();
+  const sound = useSound();
 
   const [wishResult, setWishResult] = useState<WishResult>('pending');
   const [isWishing, setIsWishing] = useState(false);
@@ -66,14 +66,14 @@ const useWishingWell = (): UseWishingWellReturn => {
 
       if (randomResult < 0.3) {
         result = 'win';
-        play('reward', { volume: 0.5 });
+        sound.playSound('reward', { volume: 0.5 });
         toast({
           title: "Your Wish Granted!",
           description: "Congratulations! You've received a special reward.",
         });
       } else {
         result = 'lose';
-        play('shame', { volume: 0.4 });
+        sound.playSound('shame', { volume: 0.4 });
         toast({
           title: "No Luck This Time",
           description: "Unfortunately, your wish was not granted. Better luck next time!",
@@ -104,7 +104,7 @@ const useWishingWell = (): UseWishingWellReturn => {
     } finally {
       setIsWishing(false);
     }
-  }, [user, toast, play, hasWishAvailable]);
+  }, [user, toast, sound, hasWishAvailable]);
 
   const resetWish = useCallback(() => {
     setWishResult('pending');

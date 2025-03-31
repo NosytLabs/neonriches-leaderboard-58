@@ -44,6 +44,10 @@ export const getShameActionTitle = (action: MockeryAction) => {
   return getMockeryName(action);
 };
 
+export const getShameActionDescription = (action: MockeryAction) => {
+  return getMockeryActionDescription(action);
+};
+
 interface ShameIconProps {
   action: ShameAction; 
   size?: 'sm' | 'md' | 'lg';

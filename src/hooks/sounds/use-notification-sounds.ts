@@ -1,20 +1,25 @@
 
 import { useCallback } from 'react';
-import { useSounds } from '@/hooks/useSounds';
-import { SoundType } from '@/types/sound-types';
+import { useSound } from '@/hooks/use-sound';
+import { SoundType, AudioOptions } from '@/types/sound-types';
 
 /**
  * Hook for playing notification sounds
  */
 export function useNotificationSounds() {
-  const { play } = useSounds();
+  const sound = useSound();
   
-  const playSound = useCallback((sound: SoundType) => {
-    // Forward to the correct sound type
-    play(sound);
-  }, [play]);
+  const playSound = useCallback((sound: SoundType, options?: AudioOptions) => {
+    sound.playSound(sound, options);
+  }, [sound]);
   
-  return { playSound };
+  return { 
+    playSound,
+    playNotification: () => sound.playSound('notification'),
+    playSuccess: () => sound.playSound('success'),
+    playError: () => sound.playSound('error'),
+    playAchievement: () => sound.playSound('achievement')
+  };
 }
 
 export type UseNotificationSoundsReturn = ReturnType<typeof useNotificationSounds>;

@@ -5,15 +5,15 @@ import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Slider } from '@/components/ui/slider';
 import { useSoundsConfig } from '@/hooks/sounds/use-sounds-config';
-import { useSound } from '@/hooks/sounds/use-sound';
+import { useSound } from '@/hooks/use-sound';
 
 const AudioSettings = () => {
-  const { config, toggleEnabled, toggleMute, setVolume } = useSoundsConfig();
-  const { play } = useSound();
+  const { config, toggleEnabled, toggleMute, setVolume, togglePremium } = useSoundsConfig();
+  const sound = useSound();
   
   const handleVolumeChange = (value: number[]) => {
     setVolume(value[0]);
-    play('click');
+    sound.playSound('click');
   };
   
   return (
@@ -66,6 +66,20 @@ const AudioSettings = () => {
             <span>50%</span>
             <span>100%</span>
           </div>
+        </div>
+        
+        {/* Premium Sound Pack Option */}
+        <div className="flex items-center justify-between pt-4 border-t border-white/10">
+          <div className="space-y-1">
+            <Label htmlFor="premium-sounds">Premium Sound Pack</Label>
+            <p className="text-sm text-white/70">Use enhanced sound effects</p>
+          </div>
+          <Switch 
+            id="premium-sounds" 
+            checked={config.premium} 
+            onCheckedChange={togglePremium}
+            disabled={!config.enabled}
+          />
         </div>
       </CardContent>
     </Card>
