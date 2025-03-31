@@ -1,5 +1,5 @@
 
-import { TeamColor } from '@/types/mockery-types';
+import { TeamColor } from '@/types/team';
 import { getTeamColor, getTeamName } from '@/utils/teamUtils';
 
 export { getTeamColor, getTeamName };

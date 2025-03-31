@@ -1,37 +1,34 @@
 
+/**
+ * Team types definition file
+ */
+
+// Team color options
 export type TeamColor = 'red' | 'blue' | 'green' | 'gold' | 'purple' | 'none' | 'neutral';
 
-export type TeamFeature = 
-  | 'boost'
-  | 'discount'
-  | 'protection'
-  | 'visibility'
-  | 'collaboration'
-  | 'influence'
-  | 'rewards'
-  | 'perks';
-
-export interface TeamStats {
-  members: number;
-  totalSpent: number;
-  avgSpent: number;
-  topSpender: string;
-  topSpenderAmount: number;
-  ranking: number;
-  dailyGrowth: number;
-}
-
-export interface Team {
-  id: string;
-  name: string;
-  description: string;
-  color: TeamColor;
-  motto: string;
-  features: TeamFeature[];
-  stats: TeamStats;
-  imageUrl: string;
-  leaderUsername?: string;
-}
-
-// For backward compatibility
+// Team type is an alias of TeamColor for backward compatibility
 export type TeamType = TeamColor;
+
+// Team data structure
+export interface TeamData {
+  id: TeamColor;
+  name: string;
+  motto: string;
+  color: string;
+  benefits: string[];
+  securityGuarantee: string;
+  absurdStat: string;
+  historicalNote: string;
+  nftJoke: string;
+  cryptoRoast: string;
+}
+
+// Team theme interface for styling
+export interface TeamTheme {
+  primary: string;
+  secondary: string;
+  accent: string;
+  text: string;
+  border: string;
+  background: string;
+}
