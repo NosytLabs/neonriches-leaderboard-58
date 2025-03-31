@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button } from './ui/button';
@@ -86,7 +85,7 @@ const Header: React.FC<HeaderProps> = ({ transparent = false }) => {
               <Link to="/leaderboard" className="text-sm font-medium text-white/90 hover:text-royal-gold transition-colors">Leaderboard</Link>
               <Link to="/features" className="text-sm font-medium text-white/90 hover:text-royal-gold transition-colors">Features</Link>
               <Link to="/teams" className="text-sm font-medium text-white/90 hover:text-royal-gold transition-colors">Teams</Link>
-              <Link to="/status-through-history" className="text-sm font-medium text-white/90 hover:text-royal-gold transition-colors">Status History</Link>
+              <Link to="/status-through-history" className="text-sm font-medium text-white/90 hover:text-royal-gold transition-colors">History of Status</Link>
               <Link to="/about" className="text-sm font-medium text-white/90 hover:text-royal-gold transition-colors">About</Link>
             </nav>
           </div>
@@ -144,7 +143,7 @@ const Header: React.FC<HeaderProps> = ({ transparent = false }) => {
               to="/status-through-history" 
               className="block px-3 py-2 text-base font-medium text-white/90 hover:text-royal-gold"
             >
-              Status History
+              History of Status
             </Link>
             <Link 
               to="/about" 

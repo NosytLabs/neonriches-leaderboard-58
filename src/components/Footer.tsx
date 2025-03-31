@@ -1,42 +1,74 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { GitHub, Twitter, Mail } from 'lucide-react';
+import { Shell } from './Shell';
 
-const Footer: React.FC = () => {
+const Footer = () => {
   return (
-    <footer className="py-8 border-t border-gray-800 bg-black">
-      <div className="container mx-auto px-4 text-center text-gray-500 text-sm">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-          <div>
-            <h3 className="text-white font-semibold mb-4">SpendThrone</h3>
-            <p className="text-gray-400">
-              A persistent, ranked leaderboard where rank = total $ spent.
-              The leaderboard never resets. $1 spent equals 1 unit of rank.
+    <footer className="bg-black/40 border-t border-white/10 py-12">
+      <Shell>
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* About Section */}
+            <div>
+              <h4 className="text-lg font-semibold mb-4">About SpendThrone</h4>
+              <p className="text-white/70">
+                SpendThrone is a satirical platform exploring the absurdity of status in the digital age.
+              </p>
+            </div>
+
+            {/* Quick Links Section */}
+            <div>
+              <h4 className="text-lg font-semibold mb-4">Quick Links</h4>
+              <ul className="text-white/70 space-y-2">
+                <li>
+                  <Link to="/" className="hover:text-white transition-colors">
+                    Home
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/leaderboard" className="hover:text-white transition-colors">
+                    Leaderboard
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/status-through-history" className="hover:text-white transition-colors">
+                    History of Status
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/about" className="hover:text-white transition-colors">
+                    About Us
+                  </Link>
+                </li>
+              </ul>
+            </div>
+
+            {/* Contact & Social Section */}
+            <div>
+              <h4 className="text-lg font-semibold mb-4">Connect</h4>
+              <div className="flex items-center space-x-4">
+                <a href="https://github.com/example" target="_blank" rel="noopener noreferrer" className="text-white/70 hover:text-white transition-colors">
+                  <GitHub className="h-5 w-5" />
+                </a>
+                <a href="https://twitter.com/example" target="_blank" rel="noopener noreferrer" className="text-white/70 hover:text-white transition-colors">
+                  <Twitter className="h-5 w-5" />
+                </a>
+                <a href="mailto:contact@example.com" className="text-white/70 hover:text-white transition-colors">
+                  <Mail className="h-5 w-5" />
+                </a>
+              </div>
+            </div>
+          </div>
+
+          {/* Copyright Section */}
+          <div className="mt-12 text-center">
+            <p className="text-white/50 text-sm">
+              © {new Date().getFullYear()} SpendThrone. All rights reserved.
             </p>
           </div>
-          
-          <div>
-            <h3 className="text-white font-semibold mb-4">Links</h3>
-            <ul className="space-y-2">
-              <li><Link to="/" className="text-gray-400 hover:text-royal-gold transition-colors">Home</Link></li>
-              <li><Link to="/leaderboard" className="text-gray-400 hover:text-royal-gold transition-colors">Leaderboard</Link></li>
-              <li><Link to="/about" className="text-gray-400 hover:text-royal-gold transition-colors">About</Link></li>
-            </ul>
-          </div>
-          
-          <div>
-            <h3 className="text-white font-semibold mb-4">Connect</h3>
-            <ul className="space-y-2">
-              <li><a href="#" className="text-gray-400 hover:text-royal-gold transition-colors">Twitter</a></li>
-              <li><a href="#" className="text-gray-400 hover:text-royal-gold transition-colors">Discord</a></li>
-              <li><a href="#" className="text-gray-400 hover:text-royal-gold transition-colors">Contact</a></li>
-            </ul>
-          </div>
         </div>
-        
-        <p className="mt-6">SPEND THRONE — A satirical take on pay-to-win mechanics and digital status.</p>
-        <p className="mt-2">© {new Date().getFullYear()} SpendThrone.com</p>
-      </div>
+      </Shell>
     </footer>
   );
 };

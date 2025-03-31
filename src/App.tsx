@@ -23,7 +23,6 @@ import Settings from '@/pages/Settings';
 import Events from '@/pages/Events';
 import Mockery from '@/pages/Mockery';
 import StatusThroughHistory from '@/pages/StatusThroughHistory';
-import HistoricalAbsurdities from '@/pages/HistoricalAbsurdities';
 
 function App() {
   return (
@@ -45,7 +44,6 @@ function App() {
               <Route path="/terms" element={<Terms />} />
               <Route path="/mockery" element={<Mockery />} />
               <Route path="/status-through-history" element={<StatusThroughHistory />} />
-              <Route path="/historical-absurdities" element={<HistoricalAbsurdities />} />
               <Route path="/teams" element={<Leaderboard />} />
               
               {/* Protected User Pages */}
