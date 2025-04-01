@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { DecorationProps } from '@/types/ui/decorations/types';
+import { DecorationProps, DecorationSize } from '@/types/ui/decorations/types';
 
 const RoyalDecoration: React.FC<DecorationProps> = ({
   size = 'md',
@@ -33,7 +33,7 @@ const RoyalDecoration: React.FC<DecorationProps> = ({
   };
 
   const getSizeClasses = () => {
-    switch (size) {
+    switch (size as DecorationSize) {
       case 'xs': return 'h-4 w-4';
       case 'sm': return 'h-6 w-6';
       case 'md': return 'h-8 w-8';
