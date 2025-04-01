@@ -7,10 +7,13 @@ export interface Certificate {
   imageUrl: string;
   mintAddress?: string;
   dateIssued?: string;
-  issuedAt: string; // Add this property
-  status: string;   // Add this property
+  issuedAt: string;
+  status: string;
   type: string;
   tier: string;
+  createdAt?: string;
+  isMinted?: boolean;
+  mintedAt?: string;
 }
 
 export type CertificateType = 
@@ -20,7 +23,8 @@ export type CertificateType =
   | 'team' 
   | 'founder' 
   | 'event' 
-  | 'royal';
+  | 'royal'
+  | 'nobility';
 
 export type CertificateStyle = 
   | 'modern'

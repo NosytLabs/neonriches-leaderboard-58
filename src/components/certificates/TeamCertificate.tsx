@@ -40,7 +40,7 @@ const TeamCertificate: React.FC<TeamCertificateProps> = ({
   const teamName = getTeamName(userTeam);
   const teamColor = getTeamColor(userTeam);
   const teamBorder = getTeamBorderColor(userTeam);
-  const createdDate = certificate?.createdAt || new Date().toISOString();
+  const createdDate = certificate?.issuedAt || new Date().toISOString();
   
   const getCertificateTitle = () => {
     if (user.rank === 1) {
@@ -286,7 +286,7 @@ const TeamCertificate: React.FC<TeamCertificateProps> = ({
               Certificate #{certificate?.id || user.id}
             </div>
             
-            {certificate?.isMinted && certificate?.mintAddress && (
+            {certificate && certificate.isMinted && certificate.mintAddress && (
               <div className="flex justify-center mt-2">
                 <Badge variant="outline" className="bg-green-500/20 text-green-600">
                   <Shield className="h-3 w-3 mr-1" />
@@ -319,7 +319,7 @@ const TeamCertificate: React.FC<TeamCertificateProps> = ({
           {isSharing ? "Sharing..." : "Share Certificate"}
         </Button>
         
-        {!certificate?.isMinted && (
+        {certificate && !certificate.isMinted && (
           <Button
             variant="outline"
             className="glass-morphism border-white/10"
@@ -331,7 +331,7 @@ const TeamCertificate: React.FC<TeamCertificateProps> = ({
           </Button>
         )}
         
-        {certificate?.isMinted && certificate?.mintAddress && (
+        {certificate && certificate.isMinted && certificate.mintAddress && (
           <Button
             variant="outline"
             className="glass-morphism border-white/10 bg-purple-500/10"

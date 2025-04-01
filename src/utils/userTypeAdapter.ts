@@ -37,7 +37,7 @@ export const adaptToStandardUserProfile = (user: UserProfile & { totalSpent: num
     team: user.team || 'none',
     profileBoosts: adaptedProfileBoosts,
     // Use joinedDate as the standard field for when user joined
-    joinedDate: user.joinedDate || user.joinDate || user.createdAt || new Date().toISOString()
+    joinedDate: user.joinedDate || (user.joinDate as string) || new Date().toISOString()
   };
 };
 

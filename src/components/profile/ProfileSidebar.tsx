@@ -1,120 +1,172 @@
 
 import React, { useState } from 'react';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { UserCircle, CreditCard, Settings, LogOut, Users } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
 import { UserProfile } from '@/types/user';
-import TeamSwitchModal, { TeamColor } from './TeamSwitchModal';
+import { CalendarDays, Medal, Users, Shield, Edit, Crown, Gem } from 'lucide-react';
+import { formatDate } from '@/utils/formatters';
+import TeamSwitchModal from './TeamSwitchModal';
+import { TeamColor } from '@/types/user'; // Import TeamColor from user.ts
 
 interface ProfileSidebarProps {
   user: UserProfile;
-  onLogout: () => Promise<void>;
-  onUpdateProfile: (profileData: Partial<UserProfile>) => Promise<void>;
+  isOwnProfile: boolean;
+  onEditProfile?: () => void;
+  onTeamChange?: (team: TeamColor) => Promise<void>;
 }
 
-const ProfileSidebar = ({ user, onLogout, onUpdateProfile }: ProfileSidebarProps) => {
-  const navigate = useNavigate();
-  const [teamModalOpen, setTeamModalOpen] = useState(false);
-
-  const handleLogout = async () => {
-    await onLogout();
-    navigate('/');
-  };
-
+const ProfileSidebar: React.FC<ProfileSidebarProps> = ({
+  user,
+  isOwnProfile,
+  onEditProfile,
+  onTeamChange
+}) => {
+  const [isTeamModalOpen, setIsTeamModalOpen] = useState(false);
+  
+  // Calculate how long ago the user joined
+  const joinedDate = user.joinedDate ? new Date(user.joinedDate) : null;
+  const joinedDaysAgo = joinedDate ? Math.floor((Date.now() - joinedDate.getTime()) / (1000 * 60 * 60 * 24)) : null;
+  
+  // Handle team change if the user is allowed to change teams
   const handleTeamChange = async (team: TeamColor) => {
-    await onUpdateProfile({ team });
+    if (onTeamChange) {
+      await onTeamChange(team);
+      setIsTeamModalOpen(false);
+    }
   };
-
-  return (
-    <div className="glass-morphism rounded-xl p-6 sticky top-24">
-      <div className="text-center mb-6">
-        <div className="w-24 h-24 mx-auto rounded-full overflow-hidden border-4 border-background mb-4">
-          <img 
-            src={user.profileImage || "https://i.pravatar.cc/150?img=1"} 
-            alt={user.username} 
-            className="w-full h-full object-cover"
-          />
-        </div>
-        <h2 className="text-xl font-bold">{user.username}</h2>
-        <div className="mt-1 text-xs bg-white/10 px-2 py-0.5 rounded-full text-white/70 inline-block">
-          {user.tier === 'pro' ? 'Pro Tier' : 'Free Tier'}
-        </div>
-      </div>
-      
-      <div className="space-y-2 mb-6">
-        <div className="flex justify-between items-center">
-          <span className="text-white/70">Rank</span>
-          <span className="font-mono font-bold">#{user.rank}</span>
-        </div>
-        <div className="flex justify-between items-center">
-          <span className="text-white/70">Total Spent</span>
-          <span className="font-mono font-bold">${user.amountSpent}</span>
-        </div>
-        <div className="flex justify-between items-center">
-          <span className="text-white/70">Team</span>
-          <div className="flex items-center">
-            {user.team ? (
-              <span className={`font-bold text-team-${user.team || 'red'}`}>
-                {user.team.charAt(0).toUpperCase()}{user.team.slice(1)}
-              </span>
-            ) : (
-              <span className="text-white/50">None</span>
-            )}
-            <Button
-              variant="ghost"
-              size="sm"
-              className="ml-1 px-1.5 h-6 text-white/50 hover:text-white hover:bg-white/10"
-              onClick={() => setTeamModalOpen(true)}
-            >
-              Change
-            </Button>
+  
+  // Determine what tier badge to show
+  const getTierBadge = () => {
+    const tier = user.tier?.toLowerCase() || 'basic';
+    
+    switch (tier) {
+      case 'royal':
+        return (
+          <div className="flex items-center gap-1 text-royal-gold">
+            <Crown className="h-4 w-4" /> 
+            <span>Royal</span>
           </div>
-        </div>
-        <div className="flex justify-between items-center">
-          <span className="text-white/70">Spend Streak</span>
-          <span className="font-mono font-bold">{user.spendStreak} weeks</span>
-        </div>
-      </div>
+        );
+      case 'premium':
+      case 'gold':
+        return (
+          <div className="flex items-center gap-1 text-amber-400">
+            <Gem className="h-4 w-4" /> 
+            <span>Premium</span>
+          </div>
+        );
+      case 'pro':
+      case 'silver':
+        return (
+          <div className="flex items-center gap-1 text-blue-400">
+            <Shield className="h-4 w-4" /> 
+            <span>Pro</span>
+          </div>
+        );
+      default:
+        return (
+          <div className="flex items-center gap-1 text-gray-400">
+            <Shield className="h-4 w-4" /> 
+            <span>Basic</span>
+          </div>
+        );
+    }
+  };
+  
+  return (
+    <div className="space-y-4">
+      {/* Profile Quick Actions */}
+      {isOwnProfile && (
+        <Card className="glass-morphism border-white/10">
+          <CardContent className="p-4">
+            <h3 className="font-medium mb-3">Profile Actions</h3>
+            <div className="flex flex-col gap-2">
+              <Button 
+                variant="outline" 
+                className="w-full justify-start glass-morphism border-white/10"
+                onClick={onEditProfile}
+              >
+                <Edit className="h-4 w-4 mr-2" />
+                Edit Profile
+              </Button>
+              
+              <Button 
+                variant="outline" 
+                className="w-full justify-start glass-morphism border-white/10"
+                onClick={() => setIsTeamModalOpen(true)}
+              >
+                <Users className="h-4 w-4 mr-2" />
+                Change Team
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      )}
       
-      <div className="space-y-2">
-        <Button variant="outline" size="sm" className="w-full glass-morphism border-white/10 text-white hover:bg-white/10">
-          <UserCircle size={14} className="mr-2" />
-          Your Profile
-        </Button>
-        <Button 
-          variant="outline" 
-          size="sm" 
-          className="w-full glass-morphism border-white/10 text-white hover:bg-white/10"
-          onClick={() => setTeamModalOpen(true)}
-        >
-          <Users size={14} className="mr-2" />
-          Change Team
-        </Button>
-        <Button variant="outline" size="sm" className="w-full glass-morphism border-white/10 text-white hover:bg-white/10">
-          <CreditCard size={14} className="mr-2" />
-          Payment Methods
-        </Button>
-        <Button variant="outline" size="sm" className="w-full glass-morphism border-white/10 text-white hover:bg-white/10">
-          <Settings size={14} className="mr-2" />
-          Settings
-        </Button>
-        <Button 
-          variant="outline" 
-          size="sm" 
-          className="w-full glass-morphism border-white/10 text-white hover:bg-white/10"
-          onClick={handleLogout}
-        >
-          <LogOut size={14} className="mr-2" />
-          Sign Out
-        </Button>
-      </div>
-
-      <TeamSwitchModal 
-        open={teamModalOpen} 
-        onOpenChange={setTeamModalOpen} 
-        user={user} 
-        onTeamChange={handleTeamChange} 
-      />
+      {/* Profile Stats */}
+      <Card className="glass-morphism border-white/10">
+        <CardContent className="p-4">
+          <h3 className="font-medium mb-3">Profile Info</h3>
+          
+          <div className="space-y-3">
+            {/* Tier */}
+            <div className="flex items-center justify-between">
+              <div className="text-sm text-white/70 flex items-center gap-2">
+                <Crown className="h-4 w-4" />
+                Tier
+              </div>
+              <div className="font-medium">
+                {getTierBadge()}
+              </div>
+            </div>
+            
+            {/* Rank */}
+            {user.rank && (
+              <div className="flex items-center justify-between">
+                <div className="text-sm text-white/70 flex items-center gap-2">
+                  <Medal className="h-4 w-4" />
+                  Rank
+                </div>
+                <div className="font-medium">#{user.rank.toLocaleString()}</div>
+              </div>
+            )}
+            
+            {/* Team */}
+            <div className="flex items-center justify-between">
+              <div className="text-sm text-white/70 flex items-center gap-2">
+                <Users className="h-4 w-4" />
+                Team
+              </div>
+              <div className="font-medium capitalize">
+                {user.team || 'None'}
+              </div>
+            </div>
+            
+            {/* Joined */}
+            {joinedDate && (
+              <div className="flex items-center justify-between">
+                <div className="text-sm text-white/70 flex items-center gap-2">
+                  <CalendarDays className="h-4 w-4" />
+                  Joined
+                </div>
+                <div className="font-medium text-sm">
+                  {formatDate(user.joinedDate)}
+                  {joinedDaysAgo && <span className="ml-1 text-xs text-white/50">({joinedDaysAgo} days ago)</span>}
+                </div>
+              </div>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+      
+      {isOwnProfile && onTeamChange && (
+        <TeamSwitchModal 
+          open={isTeamModalOpen}
+          onOpenChange={setIsTeamModalOpen}
+          user={user}
+          onTeamChange={handleTeamChange}
+        />
+      )}
     </div>
   );
 };
