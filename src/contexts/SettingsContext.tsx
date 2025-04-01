@@ -1,38 +1,6 @@
 
 import React, { createContext, useState, useEffect, useContext } from 'react';
-import { SoundConfig } from '@/types/sound-types';
-
-interface SettingsContextType {
-  theme: 'light' | 'dark' | 'system';
-  isDarkTheme: boolean;
-  setTheme: (theme: 'light' | 'dark' | 'system') => void;
-  userSettings: {
-    theme: string;
-    notifications: boolean;
-    emailNotifications: boolean;
-    soundEffects: boolean;
-    profileVisibility: string;
-    showBadges: boolean;
-    showTeam: boolean;
-    showSpending: boolean;
-    showRank: boolean;
-    allowProfileLinks: boolean;
-    marketingEmails: boolean;
-    showEmailOnProfile: boolean;
-    rankChangeAlerts: boolean;
-  };
-  updateSettings: (settings: Partial<SettingsContextType['userSettings']>) => void;
-  isLoading: boolean;
-  soundConfig: SoundConfig;
-  toggleSounds: () => void;
-  toggleMuted: () => void;
-  setVolume: (volume: number) => void;
-  togglePremium: () => void;
-  profileSettings: any;
-  updateProfileSettings: (settings: any) => void;
-  notifications: boolean;
-  toggleNotifications: () => void;
-}
+import { SoundConfig, AccessibilitySettings, ThemeType, ProfileSettings, SettingsContextType } from '@/types/settings';
 
 const defaultSettings: SettingsContextType = {
   theme: 'system',
@@ -54,6 +22,7 @@ const defaultSettings: SettingsContextType = {
     rankChangeAlerts: true
   },
   updateSettings: () => {},
+  resetSettings: () => {},
   isLoading: false,
   soundConfig: {
     enabled: true,
@@ -67,10 +36,26 @@ const defaultSettings: SettingsContextType = {
   toggleMuted: () => {},
   setVolume: () => {},
   togglePremium: () => {},
-  profileSettings: {},
+  profileSettings: {
+    publicProfile: true,
+    showRank: true,
+    showTeam: true,
+    showSpending: true,
+    rankChangeAlerts: true,
+    teamChangeAlerts: true,
+    achievementAlerts: true,
+    showEmailOnProfile: false
+  },
   updateProfileSettings: () => {},
   notifications: true,
-  toggleNotifications: () => {}
+  toggleNotifications: () => {},
+  accessibilitySettings: {
+    textSize: 100,
+    highContrast: false,
+    reducedMotion: false,
+    reducedTransparency: false
+  },
+  updateAccessibilitySettings: () => {}
 };
 
 export const SettingsContext = createContext<SettingsContextType>(defaultSettings);
@@ -81,9 +66,9 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     return savedSettings ? JSON.parse(savedSettings) : defaultSettings.userSettings;
   });
   
-  const [theme, setThemeState] = useState<'light' | 'dark' | 'system'>(() => {
+  const [theme, setThemeState] = useState<ThemeType>(() => {
     const savedTheme = localStorage.getItem('theme');
-    return (savedTheme as any) || 'system';
+    return (savedTheme as ThemeType) || 'system';
   });
   
   const [soundConfig, setSoundConfig] = useState<SoundConfig>(() => {
@@ -93,10 +78,14 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   
   const [isLoading, setIsLoading] = useState(false);
   
-  const [profileSettings, setProfileSettings] = useState({
-    visibility: 'public',
-    allowLinks: true,
-    showEmail: false
+  const [profileSettings, setProfileSettings] = useState<ProfileSettings>(() => {
+    const savedProfileSettings = localStorage.getItem('profileSettings');
+    return savedProfileSettings ? JSON.parse(savedProfileSettings) : defaultSettings.profileSettings;
+  });
+
+  const [accessibilitySettings, setAccessibilitySettings] = useState<AccessibilitySettings>(() => {
+    const savedAccessibilitySettings = localStorage.getItem('accessibilitySettings');
+    return savedAccessibilitySettings ? JSON.parse(savedAccessibilitySettings) : defaultSettings.accessibilitySettings;
   });
 
   useEffect(() => {
@@ -118,11 +107,27 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     localStorage.setItem('soundConfig', JSON.stringify(soundConfig));
   }, [soundConfig]);
   
+  useEffect(() => {
+    localStorage.setItem('profileSettings', JSON.stringify(profileSettings));
+  }, [profileSettings]);
+
+  useEffect(() => {
+    localStorage.setItem('accessibilitySettings', JSON.stringify(accessibilitySettings));
+  }, [accessibilitySettings]);
+  
   const updateSettings = (newSettings: Partial<SettingsContextType['userSettings']>) => {
     setSettings(prev => ({ ...prev, ...newSettings }));
   };
+
+  const resetSettings = () => {
+    setSettings(defaultSettings.userSettings);
+    setThemeState('system');
+    setSoundConfig(defaultSettings.soundConfig);
+    setProfileSettings(defaultSettings.profileSettings);
+    setAccessibilitySettings(defaultSettings.accessibilitySettings);
+  };
   
-  const setTheme = (newTheme: 'light' | 'dark' | 'system') => {
+  const setTheme = (newTheme: ThemeType) => {
     setThemeState(newTheme);
   };
   
@@ -158,12 +163,16 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     }));
   };
   
-  const updateProfileSettings = (newSettings: any) => {
+  const updateProfileSettings = (newSettings: Partial<ProfileSettings>) => {
     setProfileSettings(prev => ({ ...prev, ...newSettings }));
   };
   
   const toggleNotifications = () => {
     updateSettings({ notifications: !settings.notifications });
+  };
+
+  const updateAccessibilitySettings = (newSettings: Partial<AccessibilitySettings>) => {
+    setAccessibilitySettings(prev => ({ ...prev, ...newSettings }));
   };
   
   return (
@@ -174,6 +183,7 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         setTheme,
         userSettings: settings,
         updateSettings,
+        resetSettings,
         isLoading,
         soundConfig,
         toggleSounds,
@@ -183,7 +193,9 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         profileSettings,
         updateProfileSettings,
         notifications: settings.notifications,
-        toggleNotifications
+        toggleNotifications,
+        accessibilitySettings,
+        updateAccessibilitySettings
       }}
     >
       {children}

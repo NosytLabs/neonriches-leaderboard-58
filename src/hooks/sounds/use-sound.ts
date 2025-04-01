@@ -1,12 +1,12 @@
 
 import { useState, useCallback } from 'react';
-import { SoundType, SoundOptions, UseSoundHook } from '@/types/sound-types';
+import { SoundType, SoundOptions } from '@/types/sound-types';
 import { useSoundsConfig } from './use-sounds-config';
 
 /**
  * Custom hook for playing sound effects
  */
-export const useSound = (): UseSoundHook => {
+export const useSound = () => {
   const { soundConfig, toggleSounds } = useSoundsConfig();
   const [volume, setVolumeState] = useState(soundConfig.volume || 0.5);
   
@@ -28,7 +28,6 @@ export const useSound = (): UseSoundHook => {
     boost: '/sounds/boost.mp3',
     coinDrop: '/sounds/coin-drop.mp3',
     message: '/sounds/message.mp3',
-    level_up: '/sounds/level-up.mp3',
     royal: '/sounds/royal.mp3',
     withdrawal: '/sounds/withdrawal.mp3',
     sparkle: '/sounds/sparkle.mp3',
@@ -38,7 +37,6 @@ export const useSound = (): UseSoundHook => {
     noblesLaugh: '/sounds/nobles-laugh.mp3',
     team: '/sounds/team.mp3',
     rank_up: '/sounds/rank-up.mp3',
-    trumpets: '/sounds/trumpets.mp3',
     trumpet: '/sounds/trumpet.mp3',
     medallion: '/sounds/medallion.mp3',
     seal: '/sounds/seal.mp3',
@@ -101,7 +99,9 @@ export const useSound = (): UseSoundHook => {
     stopSound,
     toggleSounds,
     isSoundEnabled: !soundConfig.muted && soundConfig.enabled,
-    currentVolume: volume
+    currentVolume: volume,
+    toggleMuted: () => {}, // Added stub for toggleMuted
+    setVolume: () => {} // Added stub for setVolume
   };
 };
 

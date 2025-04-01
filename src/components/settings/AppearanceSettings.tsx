@@ -5,7 +5,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 import SettingsLayout from './SettingsLayout';
-import { useSettings } from '@/hooks/useSettings';
+import { useSettings } from '@/contexts/SettingsContext';
 import { motion } from 'framer-motion';
 import { ThemeType } from '@/types/settings';
 
@@ -40,7 +40,7 @@ const AppearanceSettings: React.FC = () => {
           <div className="space-y-1">
             <Label htmlFor="theme">Theme</Label>
             <p className="text-sm text-white/70">
-              Choose between light, dark, or system preference
+              Choose between light, dark, system, or royal theme
             </p>
           </div>
           <Select value={theme} onValueChange={handleThemeChange}>
@@ -102,7 +102,7 @@ const AppearanceSettings: React.FC = () => {
           <div className="flex flex-col space-y-2">
             <div className="grid grid-cols-2 gap-4">
               <div 
-                className={`p-4 rounded-lg cursor-pointer border-2 transition-all ${theme === 'dark' || (theme === 'system' && isDarkTheme) ? 'border-royal-gold/80' : 'border-transparent'}`}
+                className={`p-4 rounded-lg cursor-pointer border-2 transition-all ${theme === 'dark' ? 'border-royal-gold/80' : 'border-transparent'}`}
                 onClick={() => setTheme('dark')}
               >
                 <div className="h-20 bg-black rounded-md mb-2 shadow-md flex items-center justify-center">
@@ -114,7 +114,7 @@ const AppearanceSettings: React.FC = () => {
               </div>
               
               <div 
-                className={`p-4 rounded-lg cursor-pointer border-2 transition-all ${theme === 'light' || (theme === 'system' && !isDarkTheme) ? 'border-royal-gold/80' : 'border-transparent'}`}
+                className={`p-4 rounded-lg cursor-pointer border-2 transition-all ${theme === 'light' ? 'border-royal-gold/80' : 'border-transparent'}`}
                 onClick={() => setTheme('light')}
               >
                 <div className="h-20 bg-white rounded-md mb-2 shadow-md flex items-center justify-center">

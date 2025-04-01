@@ -2,6 +2,20 @@
 import { UserProfile } from "@/types/user";
 
 // Mock authentication service
+export const loginWithEmail = async (email: string, password: string) => {
+  // Simulate network request
+  await new Promise(resolve => setTimeout(resolve, 1000));
+  
+  const user = await mockAuthLogin(email, password);
+  
+  return {
+    success: true,
+    user,
+    token: "mock-jwt-token"
+  };
+};
+
+// Mock authentication service
 export const mockAuthLogin = async (email: string, password: string): Promise<UserProfile> => {
   // Simulate network request
   await new Promise(resolve => setTimeout(resolve, 1000));
@@ -20,8 +34,7 @@ export const mockAuthLogin = async (email: string, password: string): Promise<Us
     previousRank: 47,
     tier: "gold",
     team: "blue",
-    joinedDate: new Date().toISOString(), // Added joinedDate
-    createdAt: new Date().toISOString(),
+    joinedDate: new Date().toISOString(), 
     cosmetics: {
       border: ["gold-border", "premium-border"],
       color: ["royal-blue", "gold"],
@@ -48,28 +61,14 @@ export const mockAuthLogin = async (email: string, password: string): Promise<Us
       darkMode: true,
       rankChangeAlerts: true,
       emailNotifications: true,
-      notifications: true, // Added
-      profileVisibility: "public", // Added
-      allowProfileLinks: true, // Added
-      theme: "dark", // Added
-      marketingEmails: false, // Added
-      soundEffects: true, // Added
-      showBadges: true // Added
+      notifications: true,
+      profileVisibility: "public",
+      allowProfileLinks: true,
+      theme: "dark",
+      marketingEmails: false,
+      soundEffects: true,
+      showBadges: true
     }
-  };
-};
-
-// Add the missing exports that AuthProvider is trying to import
-export const loginWithEmail = async (email: string, password: string) => {
-  // Simulate network request
-  await new Promise(resolve => setTimeout(resolve, 1000));
-  
-  const user = await mockAuthLogin(email, password);
-  
-  return {
-    success: true,
-    user,
-    token: "mock-jwt-token"
   };
 };
 
@@ -92,7 +91,6 @@ export const registerWithEmail = async (username: string, email: string, passwor
     tier: "bronze",
     team: "none",
     joinedDate: new Date().toISOString(),
-    createdAt: new Date().toISOString(),
     cosmetics: {
       border: ["starter-border"],
       color: ["starter-color"],
@@ -171,7 +169,6 @@ export const fetchUserProfile = async (): Promise<UserProfile | null> => {
     tier: "gold",
     team: "blue",
     joinedDate: new Date().toISOString(),
-    createdAt: new Date().toISOString(),
     cosmetics: {
       border: ["gold-border", "premium-border"],
       color: ["royal-blue", "gold"],

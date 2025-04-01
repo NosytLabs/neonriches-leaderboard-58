@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Accessibility, Type, Zap, Eye } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';

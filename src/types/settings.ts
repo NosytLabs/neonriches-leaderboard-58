@@ -15,6 +15,7 @@ export interface UserSettings {
   marketingEmails: boolean;
   showEmailOnProfile: boolean;
   rankChangeAlerts: boolean;
+  allowMessages?: boolean; // Adding this optional property
 }
 
 // Sound Configuration
@@ -23,6 +24,9 @@ export interface SoundConfig {
   muted: boolean;
   volume: number;
   premium: boolean;
+  music?: boolean;
+  musicVolume?: number;
+  effects?: Record<string, boolean>;
 }
 
 // Profile Settings
