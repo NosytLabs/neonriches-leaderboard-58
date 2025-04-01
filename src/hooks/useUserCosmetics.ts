@@ -1,7 +1,6 @@
 
 import { UserProfile } from '@/types/user';
-import { CosmeticRarity } from '@/types/cosmetics';
-import { BoostEffectType } from '@/hooks/use-profile-boost';
+import { UserCosmetics, CosmeticRarity } from '@/types/cosmetics';
 
 /**
  * Hook for handling user cosmetics operations
@@ -22,27 +21,44 @@ export const useUserCosmetics = (
     try {
       if (!user) return false;
       
-      const userCosmetics = user.cosmetics || { 
-        borders: [], 
-        colors: [], 
-        fonts: [], 
-        emojis: [], 
-        titles: [],
-        backgrounds: [],
-        effects: [],
-        badges: [],
-        themes: []
+      const userCosmetics: UserCosmetics = user.cosmetics || { 
+        border: [], 
+        color: [], 
+        font: [], 
+        emoji: [], 
+        title: [],
+        background: [],
+        effect: [],
+        badge: [],
+        theme: []
       };
       
-      const categoryItems = userCosmetics[category as keyof typeof userCosmetics] || [];
+      // Map legacy category names to the current property names
+      const categoryMap: Record<string, keyof UserCosmetics> = {
+        'borders': 'border',
+        'colors': 'color',
+        'fonts': 'font',
+        'emojis': 'emoji',
+        'titles': 'title',
+        'backgrounds': 'background',
+        'effects': 'effect',
+        'badges': 'badge',
+        'themes': 'theme'
+      };
       
-      if (Array.isArray(categoryItems) && categoryItems.includes(cosmeticId)) {
+      // Get the correct property name
+      const propertyName = categoryMap[category] || category as keyof UserCosmetics;
+      
+      const items = userCosmetics[propertyName] || [];
+      
+      // Check if cosmetic already exists
+      if (Array.isArray(items) && items.includes(cosmeticId)) {
         return false;
       }
       
       const updatedCosmetics = {
         ...userCosmetics,
-        [category]: Array.isArray(categoryItems) ? [...categoryItems, cosmeticId] : [cosmeticId]
+        [propertyName]: Array.isArray(items) ? [...items, cosmeticId] : [cosmeticId]
       };
       
       await updateUserProfile({
@@ -70,31 +86,16 @@ export const useUserCosmetics = (
       // Generate a unique ID for this boost
       const boostId = `boost_${Date.now()}`;
       
-      // Select a boost effect based on the level
-      let effectId: BoostEffectType;
-      switch (level) {
-        case 3:
-          effectId = 'crown';
-          break;
-        case 2:
-          effectId = 'sparkle';
-          break;
-        case 1:
-        default:
-          effectId = 'glow';
-          break;
-      }
-      
-      // Create the boost object with required properties for ProfileBoost type
+      // Create the boost object with required properties
       const newBoost = {
         id: boostId,
-        effectId: effectId,
         startDate: new Date().toISOString(),
         endDate: new Date(endTime).toISOString(),
         level,
         type: 'visibility',
         strength: level,
-        appliedBy: user.id
+        appliedBy: user.id,
+        isActive: true
       };
       
       // Get existing boosts or initialize empty array
@@ -106,7 +107,7 @@ export const useUserCosmetics = (
       // Update user profile
       await updateUserProfile({
         profileBoosts: updatedBoosts
-      } as Partial<UserProfile>); // Using type assertion to fix the error
+      });
       
       return true;
     } catch (error) {

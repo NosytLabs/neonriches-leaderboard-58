@@ -1,5 +1,6 @@
+
 import { useState, useEffect } from 'react';
-import { UserProfile, Team } from '@/types/user';
+import { UserProfile, TeamColor } from '@/types/user';
 
 interface ProfileDataResult {
   profileData: UserProfile | null;
@@ -36,7 +37,7 @@ export const useProfileData = (userId: string, userContext?: UserProfile | null)
         // In a real app, this would be an API call to get user profile data
         setTimeout(() => {
           // Mock data for simulation
-          const teamOptions: Team[] = ['red', 'green', 'blue', null];
+          const teamOptions: TeamColor[] = ['red', 'green', 'blue', 'none'];
           const randomTeamIndex = Math.floor(Math.random() * 3); // Only pick from first 3 options to avoid null
           const selectedTeam = teamOptions[randomTeamIndex];
           
@@ -49,28 +50,30 @@ export const useProfileData = (userId: string, userContext?: UserProfile | null)
             rank: Math.floor(Math.random() * 100) + 1,
             amountSpent: Math.floor(Math.random() * 5000),
             spentAmount: Math.floor(Math.random() * 5000),
+            totalSpent: Math.floor(Math.random() * 5000),
             walletBalance: Math.floor(Math.random() * 1000),
             tier: Math.random() > 0.7 ? 'pro' : 'basic',
             team: selectedTeam,
-            joinDate: new Date(Date.now() - Math.random() * 10000000000).toISOString(),
-            joinedAt: new Date(Date.now() - Math.random() * 10000000000).toISOString(),
+            joinedDate: new Date(Date.now() - Math.random() * 10000000000).toISOString(),
             profileViews: Math.floor(Math.random() * 1000),
             profileClicks: Math.floor(Math.random() * 200),
-            followers: Math.floor(Math.random() * 50),
+            followers: [],
+            following: [],
             cosmetics: {
-              borders: [],
-              colors: [],
-              fonts: [],
-              emojis: [],
-              titles: [],
-              backgrounds: [],
-              effects: [],
-              badges: [],
-              themes: []
+              border: [],
+              color: [],
+              font: [],
+              emoji: [],
+              title: [],
+              background: [],
+              effect: [],
+              badge: [],
+              theme: []
             },
             socialLinks: [],
             profileImages: [],
-            createdAt: new Date(Date.now() - Math.random() * 10000000000).toISOString() // Add createdAt
+            createdAt: new Date(Date.now() - Math.random() * 10000000000).toISOString(),
+            profileBoosts: []
           };
 
           setProfileData(mockUserProfile);

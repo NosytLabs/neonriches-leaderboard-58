@@ -29,7 +29,7 @@ export const useNotificationSounds = () => {
         sound.playSound('error', soundOptions);
         break;
       case 'reward':
-        sound.playSound('reward', soundOptions);
+        sound.playSound('notification', soundOptions); // Fallback to notification for now
         break;
       default:
         sound.playSound('notification', soundOptions);
@@ -37,7 +37,7 @@ export const useNotificationSounds = () => {
     }
   };
 
-  // Directly call sound.playSound instead of recursive call
+  // Fixed direct call to sound.playSound
   const playSound = (type: SoundType, options?: SoundOptions) => {
     sound.playSound(type, options);
   };

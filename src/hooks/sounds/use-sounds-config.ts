@@ -4,20 +4,14 @@ import { useSettings } from '@/contexts/SettingsContext';
 // This hook is a wrapper around the sound settings portion of useSettings
 // for compatibility with existing components
 export const useSoundsConfig = () => {
-  const { 
-    soundConfig,
-    toggleSounds,
-    toggleMuted,
-    setVolume,
-    togglePremium
-  } = useSettings();
+  const settings = useSettings();
   
   return {
-    soundConfig,
-    toggleSounds,
-    toggleMuted,
-    setVolume,
-    togglePremium
+    soundConfig: settings.soundConfig,
+    toggleSounds: settings.toggleSounds,
+    toggleMuted: settings.toggleMuted,
+    setVolume: settings.setVolume,
+    togglePremium: settings.togglePremium
   };
 };
 

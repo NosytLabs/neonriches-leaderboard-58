@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { Session } from '@supabase/supabase-js';
 import { UserProfile } from '@/types/user';
+import { ProfileBoost } from '@/types/user';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { addProfileBoostWithDays, addCosmeticByCategoryString } from './authUtils';
@@ -165,10 +166,13 @@ export const useAuthMethods = (
     try {
       if (!user) return false;
       
+      // Convert days to string for the API
+      const daysStr = String(days);
+      
       const newBoosts = addProfileBoostWithDays(user, days, level);
       
-      // Fix the error by creating a proper updated user object with the correct type
-      const updatedUser = {
+      // Create a properly typed updated user object
+      const updatedUser: UserProfile = {
         ...user,
         profileBoosts: newBoosts
       };

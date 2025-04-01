@@ -1,31 +1,31 @@
-import { User } from '@/types/user';
+
+import { UserProfile } from '@/types/user';
 import { UserCosmetics } from '@/types/cosmetics';
 import { ProfileBoost } from '@/types/user';
 
 /**
  * Creates a default user object with initial values
  */
-export const getDefaultUser = (email: string, username: string): User => {
+export const getDefaultUser = (email: string, username: string): UserProfile => {
   const now = new Date().toISOString();
   
   // Initialize cosmetics with empty arrays for each category
   const cosmetics: UserCosmetics = {
-    borders: [],
-    colors: [],
-    fonts: [],
-    emojis: [],
-    titles: [],
-    backgrounds: [],
-    effects: [],
-    badges: [],
-    themes: [],
-    socialLinks: {}
+    border: [],
+    color: [],
+    font: [],
+    emoji: [],
+    title: [],
+    background: [],
+    effect: [],
+    badge: [],
+    theme: []
   };
   
   // Add some starter cosmetics for new users
-  cosmetics.borders.push('starter-border');
-  cosmetics.colors.push('starter-color');
-  cosmetics.titles.push('newcomer');
+  cosmetics.border.push('starter-border');
+  cosmetics.color.push('starter-color');
+  cosmetics.title.push('newcomer');
   
   return {
     id: `user-${Date.now()}`,
@@ -42,7 +42,7 @@ export const getDefaultUser = (email: string, username: string): User => {
     totalSpent: 0,
     spentAmount: 0,
     amountSpent: 0,
-    joinDate: now,
+    joinedDate: now,
     createdAt: now,
     updatedAt: now,
     isVerified: false,
@@ -52,18 +52,19 @@ export const getDefaultUser = (email: string, username: string): User => {
     gender: 'male',
     profileViews: 0,
     profileClicks: 0,
-    followers: 0,
-    following: 0,
+    followers: [] as string[],
+    following: [] as string[],
     isVIP: false,
     settings: {
       showRank: true,
       showTeam: true,
       showSpending: true,
-      publicProfile: true,
+      showEmailOnProfile: false,
       allowMessages: true,
       emailNotifications: false,
       darkMode: true,
-      language: 'en'
+      language: 'en',
+      rankChangeAlerts: false
     },
     profileBoosts: []
   };
@@ -72,8 +73,8 @@ export const getDefaultUser = (email: string, username: string): User => {
 /**
  * Adds a profile boost with specified duration in days
  */
-export const addProfileBoostWithDays = (user: User, days: number, type: string = 'general', strength: number = 1): User => {
-  if (!user) return user;
+export const addProfileBoostWithDays = (user: UserProfile, days: number, strength: number = 1, type: string = 'general'): ProfileBoost[] => {
+  if (!user) return [];
   
   const now = new Date();
   const endDate = new Date();
@@ -86,59 +87,65 @@ export const addProfileBoostWithDays = (user: User, days: number, type: string =
     level: strength,
     type,
     strength,
-    appliedBy: 'user'
+    appliedBy: 'user',
+    isActive: true
   };
   
   const profileBoosts = user.profileBoosts || [];
-  profileBoosts.push(profileBoost);
-  
-  return {
-    ...user,
-    profileBoosts
-  };
+  return [...profileBoosts, profileBoost];
 };
 
 /**
  * Adds a cosmetic to a user by category string
  */
-export const addCosmeticByCategoryString = (user: User, cosmeticId: string, category: string): User => {
-  if (!user || !cosmeticId || !category) return user;
+export const addCosmeticByCategoryString = (user: UserProfile, cosmeticId: string, category: string): UserCosmetics => {
+  if (!user || !cosmeticId || !category) return user.cosmetics || {};
   
-  const cosmetics = user.cosmetics || {
-    borders: [],
-    colors: [],
-    fonts: [],
-    emojis: [],
-    titles: [],
-    backgrounds: [],
-    effects: [],
-    badges: [],
-    themes: []
+  const cosmetics = { ...(user.cosmetics || {}) } as UserCosmetics;
+  
+  // Map legacy category names to the current property names
+  const categoryMap: Record<string, keyof UserCosmetics> = {
+    'borders': 'border',
+    'colors': 'color',
+    'fonts': 'font',
+    'emojis': 'emoji',
+    'titles': 'title',
+    'backgrounds': 'background',
+    'effects': 'effect',
+    'badges': 'badge',
+    'themes': 'theme',
+    'border': 'border',
+    'color': 'color',
+    'font': 'font',
+    'emoji': 'emoji',
+    'title': 'title',
+    'background': 'background',
+    'effect': 'effect',
+    'badge': 'badge',
+    'theme': 'theme'
   };
   
-  // Convert category to a valid key
-  const cosmeticKey = category as keyof typeof cosmetics;
+  // Get the correct property name
+  const propertyName = categoryMap[category] || category as keyof UserCosmetics;
   
-  // Ensure the category exists and is an array
-  if (!cosmetics[cosmeticKey] || !Array.isArray(cosmetics[cosmeticKey])) {
-    cosmetics[cosmeticKey] = [];
+  // Initialize the property as an array if it doesn't exist
+  if (!cosmetics[propertyName]) {
+    cosmetics[propertyName] = [];
   }
   
   // Add cosmetic if it doesn't already exist
-  if (!(cosmetics[cosmeticKey] as string[]).includes(cosmeticId)) {
-    (cosmetics[cosmeticKey] as string[]).push(cosmeticId);
+  const currentItems = cosmetics[propertyName] as string[];
+  if (!currentItems.includes(cosmeticId)) {
+    cosmetics[propertyName] = [...currentItems, cosmeticId];
   }
   
-  return {
-    ...user,
-    cosmetics
-  };
+  return cosmetics;
 };
 
 /**
  * Calculates user tier based on spending
  */
-export const calculateUserTier = (totalSpent: number): User['tier'] => {
+export const calculateUserTier = (totalSpent: number): UserProfile['tier'] => {
   if (totalSpent >= 1000) return 'royal';
   if (totalSpent >= 500) return 'platinum';
   if (totalSpent >= 200) return 'gold';
@@ -149,7 +156,7 @@ export const calculateUserTier = (totalSpent: number): User['tier'] => {
 /**
  * Gets the background CSS class for a user tier
  */
-export const getTierBackgroundClass = (tier: User['tier']): string => {
+export const getTierBackgroundClass = (tier: UserProfile['tier']): string => {
   switch (tier) {
     case 'bronze': return 'bg-amber-900/20';
     case 'silver': return 'bg-slate-400/20';
@@ -167,7 +174,7 @@ export const getTierBackgroundClass = (tier: User['tier']): string => {
 /**
  * Gets the text color CSS class for a user tier
  */
-export const getTierTextClass = (tier: User['tier']): string => {
+export const getTierTextClass = (tier: UserProfile['tier']): string => {
   switch (tier) {
     case 'bronze': return 'text-amber-600';
     case 'silver': return 'text-slate-400';
@@ -185,7 +192,7 @@ export const getTierTextClass = (tier: User['tier']): string => {
 /**
  * Gets the border color CSS class for a user tier
  */
-export const getTierBorderClass = (tier: User['tier']): string => {
+export const getTierBorderClass = (tier: UserProfile['tier']): string => {
   switch (tier) {
     case 'bronze': return 'border-amber-600/30';
     case 'silver': return 'border-slate-400/30';
@@ -203,7 +210,7 @@ export const getTierBorderClass = (tier: User['tier']): string => {
 /**
  * Gets amount needed to reach next tier
  */
-export const getAmountToNextTier = (totalSpent: number): { amount: number; nextTier: User['tier'] } => {
+export const getAmountToNextTier = (totalSpent: number): { amount: number; nextTier: UserProfile['tier'] } => {
   if (totalSpent < 50) {
     return { amount: 50 - totalSpent, nextTier: 'silver' };
   } else if (totalSpent < 200) {
@@ -217,7 +224,7 @@ export const getAmountToNextTier = (totalSpent: number): { amount: number; nextT
   return { amount: 0, nextTier: 'royal' };
 };
 
-export const mockProfileBoost = (overrides = {}) => {
+export const mockProfileBoost = (overrides = {}): ProfileBoost => {
   return {
     id: `boost_${Math.random().toString(36).substr(2, 9)}`,
     startDate: new Date().toISOString(),
