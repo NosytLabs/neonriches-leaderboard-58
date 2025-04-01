@@ -35,7 +35,7 @@ export function getTeamAbsurdStat(team: TeamColor | string | null | undefined): 
     'red': '93% of Crimson Knights members have accidentally set fire to money while trying to spend it faster.',
     'blue': 'Azure Guardians members spend an average of 42 minutes analyzing the optimal time to click the "deposit" button.',
     'green': 'Emerald Seekers have collectively grown enough virtual trees to offset the carbon footprint of all cryptocurrency mining.',
-    'gold': 'Golden Crown members have spent more on golden toilet paper than most countries' annual GDP.',
+    'gold': 'Golden Crown members have spent more on golden toilet paper than most countries annual GDP.',
     'purple': 'Royal Purple members practice spending in their sleep and report 37% more spending-related dreams.',
     'none': 'Independent spenders are 76% more likely to claim they "meant to do that" after accidental purchases.',
     'neutral': 'Independent spenders are 76% more likely to claim they "meant to do that" after accidental purchases.'
