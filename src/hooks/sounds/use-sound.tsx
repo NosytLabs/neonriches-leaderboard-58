@@ -24,6 +24,7 @@ export const useSound = (): UseSoundHook => {
     deposit: '/sounds/deposit.mp3',
     withdrawal: '/sounds/withdrawal.mp3',
     levelUp: '/sounds/level-up.mp3',
+    level_up: '/sounds/level-up.mp3',
     boost: '/sounds/boost.mp3',
     message: '/sounds/message.mp3',
     mockery: '/sounds/mockery.mp3',
@@ -41,7 +42,15 @@ export const useSound = (): UseSoundHook => {
     unlock: '/sounds/unlock.mp3',
     team: '/sounds/team.mp3',
     rank_up: '/sounds/rank-up.mp3',
-    reward: '/sounds/reward.mp3'
+    reward: '/sounds/reward.mp3',
+    swordClash: '/sounds/sword-clash.mp3',
+    noblesLaugh: '/sounds/nobles-laugh.mp3',
+    parchmentUnfurl: '/sounds/parchment-unfurl.mp3',
+    pageChange: '/sounds/page-change.mp3',
+    wish: '/sounds/wish.mp3',
+    inkScribble: '/sounds/ink-scribble.mp3',
+    hover: '/sounds/hover.mp3',
+    advertisement: '/sounds/advertisement.mp3'
   };
   
   // Cleanup audio elements when component unmounts
@@ -211,7 +220,7 @@ export const useSound = (): UseSoundHook => {
     isPlaying: isSoundPlaying,
     isSoundEnabled: !soundConfig.muted && soundConfig.enabled,
     toggleSounds,
-    toggleMuted,
+    toggleMuted, // Use the correct name, not toggleMute
     setVolume,
     currentVolume: soundConfig.volume
   };

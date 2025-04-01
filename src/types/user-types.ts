@@ -6,6 +6,7 @@ export interface SoundOptions {
   volume?: number;
   playbackRate?: number;
   onEnd?: () => void;
+  loop?: boolean;
   [key: string]: any; // Allow any additional properties to be passed
 }
 
@@ -27,6 +28,9 @@ export type UserTier =
   | 'bronze'
   | 'vip'
   | 'whale'
+  | 'shark'
+  | 'dolphin'
+  | 'noble'
   | 'standard'
   | 'elite'
   | 'legendary';
@@ -36,3 +40,27 @@ export type { UserProfile as User } from './user';
 
 // Gender options
 export type Gender = 'male' | 'female' | 'other' | 'prefer-not-to-say' | 'king' | 'queen' | 'jester' | 'noble';
+
+// User settings interface
+export interface UserSettings {
+  theme: string;
+  notifications: boolean;
+  emailNotifications: boolean;
+  soundEffects: boolean;
+  profileVisibility: 'public' | 'friends' | 'private';
+  showBadges: boolean;
+  showRank: boolean;
+  darkMode: boolean;
+  showTeam: boolean;
+  showSpending: boolean;
+  allowProfileLinks: boolean;
+  marketingEmails: boolean;
+  showEmailOnProfile: boolean;
+  rankChangeAlerts: boolean;
+  allowMessages?: boolean;
+  newFollowerAlerts?: boolean;
+  teamNotifications?: boolean;
+  language?: string;
+  publicProfile?: boolean;
+  shameAlerts?: boolean;
+}

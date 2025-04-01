@@ -8,6 +8,8 @@ export const premiumSoundPacks = [
     name: 'Royal Court',
     description: 'Elegant sounds fit for nobility',
     price: 5.99,
+    icon: '/images/sound-packs/royal.png',
+    preview: '/sounds/previews/royal-preview.mp3',
     previewSound: 'royalAnnouncement' as SoundType,
     sounds: ['royalAnnouncement', 'trumpet', 'medallion', 'seal'] as SoundType[],
     features: ['4 premium sounds', 'High quality audio', 'Exclusive to nobility']
@@ -17,6 +19,8 @@ export const premiumSoundPacks = [
     name: 'Medieval Tavern',
     description: 'Rustic sounds from a bygone era',
     price: 3.99,
+    icon: '/images/sound-packs/medieval.png',
+    preview: '/sounds/previews/medieval-preview.mp3',
     previewSound: 'coinDrop' as SoundType,
     sounds: ['coinDrop', 'swordClash', 'noblesLaugh'] as SoundType[],
     features: ['3 premium sounds', 'Ambient background options', 'Authentic medieval feel']
@@ -35,7 +39,7 @@ export const premiumSoundAssets: Record<string, string> = {
 };
 
 // Volume presets for premium sounds
-export const premiumVolumePresets: Record<SoundType, number> = {
+export const premiumVolumePresets: Partial<Record<SoundType, number>> = {
   coinDrop: 0.6,
   reward: 0.5,
   notification: 0.4,
@@ -47,15 +51,8 @@ export const premiumVolumePresets: Record<SoundType, number> = {
   purchase: 0.5,
   shame: 0.5,
   swordClash: 0.5,
-  pageTransition: 0.4,
-  wish: 0.5,
-  pageChange: 0.4,
-  parchmentUnfurl: 0.6,
-  seal: 0.6,
-  medallion: 0.7,
-  trumpet: 0.8,
   noblesLaugh: 0.7,
-  inkScribble: 0.5,
-  hover: 0.3,
-  advertisement: 0.6
+  trumpet: 0.8,
+  medallion: 0.7,
+  seal: 0.6
 };

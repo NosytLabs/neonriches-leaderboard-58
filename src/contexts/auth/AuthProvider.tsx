@@ -10,12 +10,32 @@ import {
   updateUserData,
   fetchUserProfile 
 } from './authService';
+import { TeamColor } from '@/types/user-types';
 
 const initialState: AuthState = {
   user: null,
   isAuthenticated: false,
   isLoading: true,
   error: null,
+};
+
+// Fix for the login success handler with proper TeamColor type
+const handleLoginSuccess = (user: any): UserProfile => {
+  // Convert string team to TeamColor
+  const teamValue = user.team as string;
+  const validTeamColors: TeamColor[] = ['red', 'blue', 'green', 'gold', 'purple', 'none', 'neutral', 'silver', 'bronze'];
+  
+  // Ensure the team is a valid TeamColor
+  const team: TeamColor = validTeamColors.includes(teamValue as TeamColor) 
+    ? teamValue as TeamColor 
+    : 'none';
+    
+  return {
+    ...user,
+    team,
+    // Ensure socialLinks is treated as an array if it's not already
+    socialLinks: Array.isArray(user.socialLinks) ? user.socialLinks : []
+  };
 };
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
@@ -67,7 +87,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       if (response.success && response.user) {
         dispatch({ 
           type: 'LOGIN_SUCCESS', 
-          payload: response.user 
+          payload: handleLoginSuccess(response.user)
         });
         return true;
       } else {

@@ -1,150 +1,78 @@
 
-import { useState, useEffect } from 'react';
-import { premiumSoundPacks, premiumSoundAssets, premiumVolumePresets } from './sounds/premium-sound-assets';
-import { PremiumSoundPackDetails, SoundType } from './sounds/types';
-import { useToast } from './use-toast';
+import { useState, useEffect, useCallback } from 'react';
+import { useAuth } from '@/contexts/auth';
+import { useToast } from '@/hooks/use-toast';
+import { SoundType } from '@/hooks/sounds/types';
+import { PremiumSoundPackDetails } from '@/types/sound-types';
+import { premiumSoundPacks } from '@/hooks/sounds/premium-sound-assets';
 
-// Create a safe cast function to convert string to SoundType when needed
-const asSoundType = (sound: string): SoundType => {
-  // This cast is safe because we control the values in the premium sound packs
-  return sound as SoundType;
+// Helper function to adapt premium sound packs to the required interface
+const adaptSoundPacks = (): PremiumSoundPackDetails[] => {
+  return premiumSoundPacks.map(pack => ({
+    id: pack.id,
+    name: pack.name,
+    description: pack.description,
+    price: pack.price,
+    icon: pack.icon || `/images/sound-packs/${pack.id}.png`,
+    preview: pack.preview || `/sounds/previews/${pack.id}-preview.mp3`,
+    previewSound: pack.previewSound,
+    sounds: pack.sounds,
+    features: pack.features
+  }));
 };
 
 export const usePremiumSounds = () => {
-  const [soundPacks, setSoundPacks] = useState<PremiumSoundPackDetails[]>(premiumSoundPacks);
+  const [soundPacks, setSoundPacks] = useState<PremiumSoundPackDetails[]>(adaptSoundPacks());
   const [purchasedPacks, setPurchasedPacks] = useState<string[]>([]);
-  const [audioElements, setAudioElements] = useState<Record<string, HTMLAudioElement>>({});
-  const [loading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const { user } = useAuth();
   const { toast } = useToast();
 
-  // Load premium sound packs from localStorage on mount
   useEffect(() => {
-    const loadPurchasedPacks = () => {
+    const fetchPurchasedSoundPacks = async () => {
+      setIsLoading(true);
       try {
-        const savedPacks = localStorage.getItem('purchased_sound_packs');
-        if (savedPacks) {
-          const parsedPacks = JSON.parse(savedPacks);
-          setPurchasedPacks(parsedPacks);
+        // Simulate fetching purchased packs
+        await new Promise(resolve => setTimeout(resolve, 500));
+        const userPacks = user?.purchasedFeatures?.filter(f => f.startsWith('sound_pack_')) || [];
+        
+        if (userPacks.length > 0) {
+          setPurchasedPacks(userPacks.map(p => p.replace('sound_pack_', '')));
           
-          // Update the isPurchased flag for each pack
-          const updatedPacks = premiumSoundPacks.map(pack => ({
+          // Update sound packs with purchase status
+          const updatedPacks = soundPacks.map(pack => ({
             ...pack,
-            isPurchased: parsedPacks.includes(pack.id)
+            isPurchased: userPacks.includes(`sound_pack_${pack.id}`)
           }));
           
           setSoundPacks(updatedPacks);
         }
       } catch (error) {
-        console.error('Error loading purchased sound packs:', error);
+        console.error('Error fetching premium sound packs:', error);
+      } finally {
+        setIsLoading(false);
       }
-      
-      setLoading(false);
     };
-    
-    loadPurchasedPacks();
-  }, []);
 
-  // Preload sound files for purchased packs
-  useEffect(() => {
-    const preloadSounds = async () => {
-      const newAudioElements: Record<string, HTMLAudioElement> = {};
-      
-      for (const packId of purchasedPacks) {
-        const pack = soundPacks.find(p => p.id === packId);
-        if (pack && pack.sounds) {
-          for (const soundName of pack.sounds) {
-            const assetKey = `${packId}.${soundName}`;
-            const assetPath = premiumSoundAssets[assetKey];
-            
-            if (assetPath) {
-              const audio = new Audio(assetPath);
-              await audio.load();
-              newAudioElements[assetKey] = audio;
-            }
-          }
-        }
-      }
-      
-      setAudioElements(newAudioElements);
-    };
-    
-    if (purchasedPacks.length > 0) {
-      preloadSounds();
+    if (user) {
+      fetchPurchasedSoundPacks();
     }
-  }, [purchasedPacks, soundPacks]);
+  }, [user]);
 
-  // Play a premium sound if available
-  const playPremiumSound = (sound: SoundType, packId?: string) => {
+  const purchaseSoundPack = useCallback(async (packId: string): Promise<boolean> => {
     try {
-      // If packId is provided, try to play from that pack
-      if (packId && purchasedPacks.includes(packId)) {
-        const assetKey = `${packId}.${sound}`;
-        const audio = audioElements[assetKey];
-        
-        if (audio) {
-          // Set volume based on presets or default
-          const volume = premiumVolumePresets[asSoundType(sound)] || 0.5;
-          audio.volume = volume;
-          
-          // Reset and play
-          audio.currentTime = 0;
-          return audio.play();
-        }
-      }
+      setIsLoading(true);
       
-      // If packId not provided or sound not found, try all purchased packs
-      for (const id of purchasedPacks) {
-        const assetKey = `${id}.${sound}`;
-        const audio = audioElements[assetKey];
-        
-        if (audio) {
-          // Set volume based on presets or default
-          const volume = premiumVolumePresets[asSoundType(sound)] || 0.5;
-          audio.volume = volume;
-          
-          // Reset and play
-          audio.currentTime = 0;
-          return audio.play();
-        }
-      }
+      // Simulate API call for purchasing
+      await new Promise(resolve => setTimeout(resolve, 1000));
       
-      return Promise.resolve(); // Return resolved promise if no sound played
-    } catch (error) {
-      console.error('Error playing premium sound:', error);
-      return Promise.resolve(); // Return resolved promise on error
-    }
-  };
-
-  // Purchase a sound pack
-  const purchaseSoundPack = (packId: string): boolean => {
-    try {
-      if (purchasedPacks.indexOf(packId) !== -1) {
-        toast({
-          title: "Already Purchased",
-          description: "You already own this sound pack.",
-          variant: "default"
-        });
-        return false;
-      }
+      // Update local state
+      setPurchasedPacks(prev => [...prev, packId]);
       
-      // Add to purchased packs
-      const newPurchasedPacks = [...purchasedPacks, packId];
-      setPurchasedPacks(newPurchasedPacks);
-      
-      // Update localStorage
-      localStorage.setItem('purchased_sound_packs', JSON.stringify(newPurchasedPacks));
-      
-      // Update the packs state
-      const updatedPacks = soundPacks.map(pack => ({
-        ...pack,
-        isPurchased: newPurchasedPacks.includes(pack.id)
-      }));
-      
-      setSoundPacks(updatedPacks);
-      
+      // Show success message
       toast({
         title: "Purchase Successful",
-        description: "Your new sound pack is ready to use!",
+        description: "You have successfully purchased the sound pack.",
         variant: "success"
       });
       
@@ -154,36 +82,22 @@ export const usePremiumSounds = () => {
       
       toast({
         title: "Purchase Failed",
-        description: "There was an error processing your purchase.",
+        description: "There was an error processing your purchase. Please try again.",
         variant: "destructive"
       });
       
       return false;
+    } finally {
+      setIsLoading(false);
     }
-  };
-
-  // Preview a sound from a pack
-  const previewSoundPack = (packId: string) => {
-    const pack = soundPacks.find(p => p.id === packId);
-    if (pack && pack.previewSound) {
-      const assetKey = `${packId}.${pack.previewSound}`;
-      const assetPath = premiumSoundAssets[assetKey];
-      
-      if (assetPath) {
-        const audio = new Audio(assetPath);
-        audio.volume = 0.5;
-        audio.play();
-      }
-    }
-  };
+  }, [toast]);
 
   return {
     soundPacks,
     purchasedPacks,
-    loading,
-    playPremiumSound,
+    isLoading,
     purchaseSoundPack,
-    previewSoundPack
+    isPurchased: (packId: string) => purchasedPacks.includes(packId)
   };
 };
 
