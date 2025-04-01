@@ -1,3 +1,4 @@
+
 import { User, UserProfile } from '@/types/user';
 import { Certificate, CertificateType, CertificateTeam, CertificateRepository, CertificateTemplateFactory, CertificateTemplate } from '@/types/certificates';
 import { createCertificateRepository } from '@/repositories/certificateRepository';
@@ -71,8 +72,7 @@ export const mintCertificateAsNFT = async (
       const updatedCertificate = {
         ...certificate,
         isMinted: true,
-        mintAddress: result.mintAddress,
-        mintedAt: new Date().toISOString()
+        mintAddress: result.mintAddress
       };
       
       // Save the updated certificate

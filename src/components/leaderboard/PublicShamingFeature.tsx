@@ -43,13 +43,14 @@ const PublicShamingFeature: React.FC = () => {
     sound.playSound('purchase');
   };
   
-  // Generate popularity data for each mockery action
-  const mockeryStats: Record<MockeryAction, number> = {
+  // Generate popularity data for each mockery action - ensuring we include all mockery actions
+  const mockeryStats: Partial<Record<MockeryAction, number>> = {
     tomatoes: 256,
     eggs: 189,
     stocks: 124,
     crown: 78,
     jester: 143,
+    fish: 102, // Add the missing 'fish' action
     putridEggs: 52,
     silence: 31,
     courtJester: 20,
@@ -60,7 +61,10 @@ const PublicShamingFeature: React.FC = () => {
     taunt: 42,
     mock: 96,
     joust: 30,
-    duel: 12
+    duel: 12,
+    thumbsDown: 85,
+    gift: 47,
+    carrot: 23
   };
   
   return (
@@ -101,7 +105,7 @@ const PublicShamingFeature: React.FC = () => {
                 <p className="text-xs text-white/60">{getMockeryDescription(action)}</p>
                 <div className="flex justify-between items-center mt-2">
                   <span className="text-xs text-white/50">
-                    Used {mockeryStats[action]} times
+                    Used {mockeryStats[action] || 0} times
                   </span>
                   <span className="text-sm font-bold">${Math.floor(15 + Math.random() * 50)}</span>
                 </div>

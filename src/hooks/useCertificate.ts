@@ -77,15 +77,20 @@ export const useCertificate = ({ user, certificateId }: UseCertificateProps) => 
           setCertificate({
             ...certificate,
             isMinted: true,
-            mintAddress: result.mintAddress,
-            mintedAt: new Date().toISOString()
+            mintAddress: result.mintAddress
+            // We can't add mintedAt here since it's not in the Certificate type
           });
         }
         
         // Update the user certificates list
         const updatedCerts = userCertificates.map(cert => 
           cert.id === certificateToMint.id 
-            ? { ...cert, isMinted: true, mintAddress: result.mintAddress, mintedAt: new Date().toISOString() }
+            ? { 
+                ...cert, 
+                isMinted: true, 
+                mintAddress: result.mintAddress
+                // We can't add mintedAt here since it's not in the Certificate type
+              }
             : cert
         );
         setUserCertificates(updatedCerts);

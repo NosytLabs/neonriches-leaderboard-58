@@ -127,7 +127,6 @@ export const getMockeryActionIcon = (action: MockeryAction) => {
     'crown': Crown,
     'gift': Gift,
     'carrot': Carrot,
-    // Add other icons for remaining actions
     'putridEggs': Egg,
     'stocks': ThumbsDown,
     'jester': Crown,
@@ -155,7 +154,20 @@ export const getMockeryActionIconColor = (action: MockeryAction): string => {
     'thumbsDown': 'text-gray-400',
     'gift': 'text-purple-400',
     'crown': 'text-yellow-400',
-    'carrot': 'text-orange-400'
+    'carrot': 'text-orange-400',
+    'putridEggs': 'text-green-500',
+    'stocks': 'text-amber-600',
+    'jester': 'text-purple-500',
+    'shame': 'text-royal-crimson',
+    'silence': 'text-gray-400',
+    'courtJester': 'text-indigo-400',
+    'smokeBomb': 'text-gray-600',
+    'protection': 'text-green-400',
+    'taunt': 'text-orange-500',
+    'mock': 'text-blue-500',
+    'challenge': 'text-teal-500',
+    'joust': 'text-indigo-600',
+    'duel': 'text-red-600'
   };
   
   return colors[action] || 'text-gray-400';
@@ -168,7 +180,12 @@ export const getMockeryTierColorClass = (tier: MockeryTier): string => {
     'uncommon': 'text-green-400',
     'rare': 'text-blue-400',
     'epic': 'text-purple-400',
-    'legendary': 'text-royal-gold'
+    'legendary': 'text-royal-gold',
+    'royal': 'text-royal-gold',
+    'basic': 'text-gray-300',
+    'premium': 'text-purple-400',
+    'silver': 'text-gray-400',
+    'bronze': 'text-amber-600'
   };
   
   return colorClasses[tier] || 'text-gray-300';

@@ -23,7 +23,11 @@ export const getMockeryDescription = (action: MockeryAction): string => {
     mock: 'Mock someone with formalized ridicule.',
     challenge: 'Formally challenge someone to a contest.',
     joust: 'Challenge someone to a virtual joust for honor.',
-    duel: 'Demand satisfaction through a gentlemanly duel.'
+    duel: 'Demand satisfaction through a gentlemanly duel.',
+    fish: 'Slap them with a stinky fish from the royal pond.',
+    thumbsDown: 'Express your royal disapproval of their spending habits.',
+    gift: 'Give them a mysterious gift (it might not be pleasant).',
+    carrot: 'Award them a golden carrot for their ridiculous spending.'
   };
   
   return descriptions[action] || 'No description available.';
@@ -51,7 +55,11 @@ export const getMockeryName = (action: MockeryAction): string => {
     mock: 'Mock',
     challenge: 'Challenge',
     joust: 'Joust',
-    duel: 'Duel'
+    duel: 'Duel',
+    fish: 'Stinky Fish',
+    thumbsDown: 'Royal Disapproval',
+    gift: 'Dubious Gift',
+    carrot: 'Golden Carrot'
   };
   
   return names[action] || 'Unknown Action';

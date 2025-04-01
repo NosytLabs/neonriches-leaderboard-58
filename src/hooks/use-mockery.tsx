@@ -13,7 +13,7 @@ const useMockery = () => {
     {
       id: '1',
       username: 'WealthyUser',
-      displayName: 'Sir Money Bags', // We keep this as it's now added to the MockedUser interface
+      displayName: 'Sir Money Bags',
       profileImage: '/images/avatars/money-bags.jpg',
       tier: 'royal',
       team: 'gold',
@@ -25,7 +25,7 @@ const useMockery = () => {
     {
       id: '2',
       username: 'BigSpender',
-      displayName: 'Lady Royal', // We keep this as it's now added to the MockedUser interface
+      displayName: 'Lady Royal',
       profileImage: '/images/avatars/royal-spender.jpg',
       tier: 'premium',
       team: 'purple',
@@ -49,7 +49,7 @@ const useMockery = () => {
       const mockedUser: MockedUser = {
         id: userId,
         username: `User${userId}`,
-        displayName: `User ${userId}`, // We keep this as it's now added to the MockedUser interface
+        displayName: `User ${userId}`,
         profileImage: '/images/avatars/default.jpg',
         tier: 'basic',
         team: 'red',
@@ -187,7 +187,7 @@ const useMockery = () => {
       expiresAt: mockedUser.expiresAt,
       isActive: true,
       active: true,
-      targetId: mockedUser.id // Added for compatibility
+      targetId: mockedUser.id
     };
   }, [mockUsers]);
   
