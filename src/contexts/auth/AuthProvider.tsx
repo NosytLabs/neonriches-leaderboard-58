@@ -1,8 +1,9 @@
-import React, { ReactNode, useState, useEffect } from 'react';
-import { AuthContext } from '../AuthContext';
+
+import React, { createContext, ReactNode, useState, useEffect } from 'react';
 import { UserProfile } from '@/types/user-consolidated';
 import { TeamColor } from '@/types/team';
 import { toTeamColor } from '@/utils/typeConverters';
+import { AuthContextType } from '@/types/auth-context';
 
 // Create a context for auth state
 export const AuthContext = createContext<AuthContextType | null>(null);

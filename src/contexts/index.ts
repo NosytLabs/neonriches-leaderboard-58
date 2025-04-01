@@ -1,10 +1,8 @@
 
-import { AuthContext } from './AuthContext';
-import AuthContextProvider from './AuthContext';
-import { useAuth } from '@/hooks/useAuth';
+import { AuthContext, AuthProvider, useAuth } from './auth';
 
 export { 
   AuthContext,
-  AuthContextProvider as AuthProvider,
+  AuthProvider,
   useAuth
 };
