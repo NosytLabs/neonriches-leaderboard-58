@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
@@ -10,6 +9,7 @@ import { formatCurrency } from '@/utils/formatters';
 import { formatDate } from '@/utils/dateUtils';
 import { getInitials } from '@/utils/stringUtils';
 import { Clock, CreditCard, Share, Star, ThumbsUp, Users } from 'lucide-react';
+import { safeToLocaleString } from '@/utils/stringUtils';
 
 interface ProfileBillboardProps {
   user: UserProfile;
@@ -116,7 +116,7 @@ const ProfileBillboard: React.FC<ProfileBillboardProps> = ({ user, onFollow, isC
             
             <div className="glass-morphism border-white/10 rounded-lg p-3 text-center">
               <div className="text-lg font-bold">
-                {formatCurrency(user.totalSpent || user.amountSpent || 0)}
+                ${safeToLocaleString(user.totalSpent || user.amountSpent || 0)} spent
               </div>
               <div className="text-xs text-muted-foreground">Total Spent</div>
             </div>

@@ -11,6 +11,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useToast } from '@/hooks/use-toast';
 import useNotificationSounds from '@/hooks/sounds/use-notification-sounds';
 import { format } from 'date-fns';
+import { safeToString } from '@/utils/stringUtils';
 
 interface ChatMessage {
   id: string;
@@ -223,7 +224,7 @@ const TeamChat: React.FC<TeamChatProps> = ({ user, limit = 50 }) => {
       const newMessage: ChatMessage = {
         id: `msg-${Date.now()}`,
         text: message,
-        userId: typeof user.id === 'number' ? user.id.toString() : user.id,
+        userId: safeToString(user.id),
         username: user.username,
         displayName: user.displayName || user.username,
         profileImage: user.profileImage,

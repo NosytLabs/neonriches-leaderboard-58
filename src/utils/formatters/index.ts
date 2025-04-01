@@ -8,4 +8,7 @@ export * from './numberFormatters';
 export * from './stringFormatters';
 export * from './currencyFormatters';
 export * from './addressFormatters';
-export * from './dollarFormatters';
+
+// Re-export dollarFormatters explicitly to avoid naming conflicts
+import { formatDollarAmount as formatDollarAmountFromDollar } from './dollarFormatters';
+export { formatDollarAmountFromDollar as formatDollarFromModule };

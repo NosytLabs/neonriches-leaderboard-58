@@ -1,30 +1,11 @@
 
-import { TeamColor } from './mockery';
+import { TeamColor } from './team';
 
-export type UserTier = 
-  | 'free' 
-  | 'basic' 
-  | 'premium' 
-  | 'royal' 
-  | 'legendary' 
-  | 'founder' 
-  | 'whale' 
-  | 'pro' 
-  | 'standard' 
-  | 'elite' 
-  | 'diamond' 
-  | 'vip'
-  | 'bronze'
-  | 'silver'
-  | 'gold'
-  | 'platinum'
-  | 'none';
+// Re-export TeamColor for backward compatibility
+export type { TeamColor };
 
-// Re-export TeamColor to avoid conflicts
-export { TeamColor };
-export type TeamType = TeamColor;
-
-export type Gender = 'male' | 'female' | 'other' | 'prefer-not-to-say' | 'king' | 'queen' | 'jester' | 'noble';
+// Export using 'export type' syntax to avoid isolatedModules error
+export type Gender = 'male' | 'female' | 'other' | 'prefer-not-to-say';
 
 export interface ProfileBoost {
   id: string;
@@ -58,76 +39,6 @@ export interface UserCosmetics {
   activeTheme?: string;
 }
 
-export interface SocialLink {
-  id?: string | number;
-  platform?: string;
-  url: string;
-  username?: string;
-  display?: string;
-  icon?: string;
-  verified?: boolean;
-  primary?: boolean;
-  clicks?: number;
-  title?: string;
-  label?: string;
-  type?: string;
-}
-
-export interface ProfileImage {
-  id?: string | number;
-  url: string;
-  isPrimary: boolean;
-  caption?: string;
-  type?: string;
-}
-
-export interface User {
-  id: string;
-  username: string;
-  displayName?: string;
-  email?: string;
-  profileImage?: string;
-  rank?: number;
-  previousRank?: number;
-  amountSpent: number;
-  totalSpent: number;
-  spentAmount?: number;
-  walletBalance?: number;
-  joinedDate: Date;
-  team?: TeamColor;
-  tier?: UserTier;
-  subscription?: 'free' | 'premium' | 'royal';
-  profileViews?: number;
-  profileClicks?: number;
-  following?: string[];
-  followers?: string[];
-  spendStreak?: number;
-  gender?: Gender;
-  role?: string;
-  isVerified?: boolean;
-  isVIP?: boolean;
-  isFounder?: boolean;
-  activeTitle?: string;
-  lastActive?: string;
-  cosmetics?: UserCosmetics;
-  purchasedFeatures?: string[];
-  profileImages?: ProfileImage[];
-  profileBoosts?: ProfileBoost[];
-  socialLinks?: SocialLink[] | Record<string, string>;
-  settings?: UserSettings;
-}
-
-export interface UserProfile extends User {
-  bio?: string;
-  location?: string;
-  achievements?: string[];
-  badges?: string[];
-  mockeryStats?: {
-    received: number;
-    deployed: number;
-  };
-}
-
 export interface UserSettings {
   profileVisibility: 'public' | 'private' | 'friends';
   allowProfileLinks: boolean;
@@ -136,15 +47,60 @@ export interface UserSettings {
   emailNotifications: boolean;
   marketingEmails: boolean;
   showRank: boolean;
-  showBadges: boolean;
   darkMode: boolean;
   soundEffects: boolean;
-  showEmailOnProfile: boolean;
-  rankChangeAlerts: boolean;
+  showBadges: boolean;
+  showEmailOnProfile?: boolean;
+  rankChangeAlerts?: boolean;
   newFollowerAlerts?: boolean;
   teamNotifications?: boolean;
-  showTeam: boolean;
-  showSpending: boolean;
+  showTeam?: boolean;
+  showSpending?: boolean;
 }
 
-export type ProfileLink = SocialLink;
+export interface SocialLink {
+  id: string;
+  platform: string;
+  url: string;
+  visible: boolean;
+}
+
+export interface UserProfile {
+  id: string | number;
+  username: string;
+  displayName?: string;
+  profileImage?: string;
+  bio?: string;
+  location?: string;
+  joinedDate: string;
+  isVerified?: boolean;
+  following?: string[];
+  followers?: string[];
+  achievements?: string[];
+  badges?: string[];
+  team?: TeamColor;
+  tier?: string;
+  rank?: number;
+  previousRank?: number;
+  totalSpent?: number;
+  amountSpent?: number;
+  walletBalance?: number;
+  cosmetics?: UserCosmetics;
+  settings?: UserSettings;
+  socialLinks?: SocialLink[];
+  profileBoosts?: ProfileBoost[];
+  spendStreak?: number;
+  mockeryStats?: {
+    received: number;
+    deployed: number;
+  };
+  certificateNFT?: {
+    mintAddress: string;
+    mintDate: string;
+  };
+}
+
+export interface User extends UserProfile {
+  amountSpent: number;
+  joinedDate: string;
+}

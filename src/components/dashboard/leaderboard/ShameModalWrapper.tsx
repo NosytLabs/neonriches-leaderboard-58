@@ -1,8 +1,8 @@
-
 import React from 'react';
 import { Dialog } from '@/components/ui/dialog';
 import { User } from '@/types/user';
 import { MockeryAction, TeamColor } from '@/types/mockery';
+import { safeToString } from '@/utils/stringUtils';
 
 interface ShameModalProps {
   targetUser: {
@@ -60,8 +60,7 @@ const ShameModalWrapper: React.FC<ShameModalWrapperProps> = ({
     : 'red' as TeamColor;
 
   // Fix for the string | number error - convert IDs to string
-  const userId = typeof selectedUser.id === 'number' ? 
-    selectedUser.id.toString() : selectedUser.id.toString();
+  const userId = safeToString(selectedUser.id);
 
   return (
     <Dialog open={showModal} onOpenChange={onOpenChange}>
