@@ -9,6 +9,7 @@ interface TeamBadgeProps {
   size?: 'sm' | 'md' | 'lg';
   showLabel?: boolean;
   className?: string;
+  showName?: boolean; // Added this prop to fix errors in consuming components
 }
 
 /**
@@ -18,7 +19,8 @@ const TeamBadge: React.FC<TeamBadgeProps> = ({
   team, 
   size = 'md', 
   showLabel = true,
-  className = ''
+  className = '',
+  showName = true // Default to true for backwards compatibility
 }) => {
   if (!team || team === 'none' || team === 'neutral') {
     return null;
@@ -50,8 +52,8 @@ const TeamBadge: React.FC<TeamBadgeProps> = ({
   };
   
   // Get team display name
-  const getTeamName = (teamColor: TeamColor) => {
-    const teamNames: Record<TeamColor, string> = {
+  const getTeamName = (teamColor: TeamColor | string): string => {
+    const teamNames: Record<string, string> = {
       red: 'Red Crown',
       blue: 'Blue Legion',
       green: 'Green Order',
@@ -82,7 +84,7 @@ const TeamBadge: React.FC<TeamBadgeProps> = ({
       )}
       variant="default"
     >
-      {showLabel ? getTeamName(normalizedTeam) : ''}
+      {(showLabel || showName) ? getTeamName(normalizedTeam) : ''}
     </Badge>
   );
 };

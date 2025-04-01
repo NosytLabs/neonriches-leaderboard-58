@@ -5,14 +5,15 @@ import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { Crown, Award, Calendar, Shield, Download, Twitter, ExternalLink, Wallet, Trophy, Coins } from 'lucide-react';
 import { UserProfile } from '@/types/user-consolidated';
-import { generateCertificateMetadata } from '@/services/solanaService';
-import { useSolana } from '@/contexts/SolanaContext';
+import { formatDate } from '@/utils/formatters';
+import { safeToString } from '@/utils/safeToString';
 import html2canvas from 'html2canvas';
 import RoyalDecoration from '@/components/ui/royal-decoration';
 import { SpendAmount } from '@/components/ui/theme-components';
 import { motion } from 'framer-motion';
 import MedievalIcon from '@/components/ui/medieval-icon';
-import { formatDate } from '@/utils/formatters/dateFormatters';
+import { generateCertificateMetadata } from '@/services/solanaService';
+import { convertToLegacyUser } from '@/utils/typeConversion';
 
 interface RoyalCertificateProps {
   user: UserProfile;
@@ -26,7 +27,6 @@ const RoyalCertificate: React.FC<RoyalCertificateProps> = ({
   hasNFT = false
 }) => {
   const { toast } = useToast();
-  const { connected, publicKey } = useSolana();
   const [isGenerating, setIsGenerating] = useState(false);
   const [isMinting, setIsMinting] = useState(false);
   const [mintSuccess, setMintSuccess] = useState(false);
@@ -102,19 +102,12 @@ const RoyalCertificate: React.FC<RoyalCertificateProps> = ({
   };
   
   const handleMintNFT = async () => {
-    if (!connected) {
-      toast({
-        title: "Wallet Not Connected",
-        description: "Please connect your Solana wallet to mint this certificate as an NFT.",
-        variant: "destructive"
-      });
-      return;
-    }
-    
     setIsMinting(true);
     
     try {
-      const metadata = generateCertificateMetadata(user);
+      // Convert user to legacy format for the service
+      const userForService = user;
+      const metadata = generateCertificateMetadata(userForService);
       console.log('NFT Metadata:', metadata);
       
       await new Promise(resolve => setTimeout(resolve, 2000));
@@ -143,7 +136,9 @@ const RoyalCertificate: React.FC<RoyalCertificateProps> = ({
     window.open(url, '_blank');
   };
   
-  const formattedDate = formatDate(user.joinedDate !== undefined ? user.joinedDate : new Date().toString());
+  // Safely handle date formatting
+  const joinedDate = user.joinedDate || user.joinDate || user.createdAt || new Date().toString();
+  const formattedDate = formatDate(joinedDate);
   
   return (
     <div className="space-y-6">
@@ -218,7 +213,7 @@ const RoyalCertificate: React.FC<RoyalCertificateProps> = ({
           
           <div className="mt-8 flex items-center justify-between text-xs text-white/50">
             <div>Issued on {formatDate(new Date().toISOString())}</div>
-            <div>Certificate #{user.id}</div>
+            <div>Certificate #{safeToString(user.id)}</div>
           </div>
           
           <RoyalDecoration type="bottom" className="w-40 h-12 mx-auto mt-4" />
@@ -250,7 +245,7 @@ const RoyalCertificate: React.FC<RoyalCertificateProps> = ({
             variant="outline"
             className="glass-morphism border-white/10 group"
             onClick={handleMintNFT}
-            disabled={!connected || isMinting}
+            disabled={isMinting}
           >
             <span className="relative">
               <Wallet className="mr-2 h-4 w-4 inline-block group-hover:opacity-0 transition-opacity duration-200" />
@@ -271,13 +266,6 @@ const RoyalCertificate: React.FC<RoyalCertificateProps> = ({
           </Button>
         )}
       </div>
-      
-      {!connected && !hasNFT && (
-        <div className="text-center text-white/60 text-sm">
-          <Wallet className="h-4 w-4 inline mr-1" />
-          Connect your Solana wallet to mint this certificate as an NFT
-        </div>
-      )}
     </div>
   );
 };

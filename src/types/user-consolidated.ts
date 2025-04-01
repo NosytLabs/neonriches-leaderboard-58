@@ -58,13 +58,17 @@ export interface UserSettings {
   showRank: boolean;
   darkMode: boolean;
   soundEffects: boolean;
-  newFollowerAlerts: boolean;
-  teamNotifications: boolean;
+  newFollowerAlerts?: boolean;
+  teamNotifications?: boolean;
   showTeam: boolean;
   showSpending: boolean;
   showBadges: boolean;
   showEmailOnProfile?: boolean;
   rankChangeAlerts?: boolean;
+  language?: string;
+  publicProfile?: boolean;
+  shameAlerts?: boolean;
+  allowMessages?: boolean;
 }
 
 /**
@@ -122,6 +126,7 @@ export interface UserProfile {
   profileImage?: string;
   bio?: string;
   joinedDate?: string;
+  joinDate?: string;
   joinedAt?: string;
   createdAt?: string;
   totalSpent: number;
@@ -146,7 +151,6 @@ export interface UserProfile {
   subscription?: any;
   settings?: UserSettings;
   gender?: string;
-  joinDate?: string;
   followers?: number | string[];
   following?: number | string[];
   badges?: string[];
@@ -158,6 +162,8 @@ export interface UserProfile {
   isOnline?: boolean;
   isPro?: boolean;
   teamRank?: number;
+  isFollowing?: boolean;
+  purchasedFeatures?: string[];
   certificateNFT?: {
     id?: string;
     mintAddress?: string;
@@ -168,9 +174,6 @@ export interface UserProfile {
   };
   socialLinks?: any[] | Record<string, string>;
   profileImages?: any[];
-  purchasedFeatures?: string[];
-  boostCount?: number;
-  isFollowing?: boolean;
 }
 
 /**
@@ -228,3 +231,12 @@ export type Gender =
   | 'queen'
   | 'jester'
   | 'noble';
+
+/**
+ * Mockery stats
+ */
+export interface MockeryStats {
+  received: Record<MockeryAction, number>;
+  deployed: Record<MockeryAction, number>;
+  [key: string]: any;
+}

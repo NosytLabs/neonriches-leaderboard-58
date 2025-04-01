@@ -201,7 +201,7 @@ const SolanaPaymentForm: React.FC<SolanaPaymentFormProps> = ({
         <Button 
           onClick={handlePayment} 
           disabled={isProcessing || !amount || parseFloat(amount) <= 0}
-          className="w-full"
+          className={!amount || parseFloat(amount) <= 0 ? "opacity-50" : ""}
         >
           {isProcessing ? 'Processing...' : 'Deposit Funds'}
         </Button>

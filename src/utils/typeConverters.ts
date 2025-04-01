@@ -1,172 +1,107 @@
 
-import { safeToString } from './stringUtils';
-import { TeamColor } from '@/types/mockery';
+import { TeamColor } from '@/types/user-consolidated';
+import { safeToString } from '@/utils/safeToString';
 
 /**
- * Safely converts a value to a number
- * @param value The value to convert
- * @param defaultValue The default value if conversion fails
- * @returns A number
- */
-export const toNumber = (value: any, defaultValue: number = 0): number => {
-  if (value === null || value === undefined || value === '') {
-    return defaultValue;
-  }
-  
-  const num = Number(value);
-  return isNaN(num) ? defaultValue : num;
-};
-
-/**
- * Safely converts a value to a boolean
- * @param value The value to convert
- * @param defaultValue The default value if conversion is ambiguous
- * @returns A boolean
- */
-export const toBoolean = (value: any, defaultValue: boolean = false): boolean => {
-  if (value === null || value === undefined) {
-    return defaultValue;
-  }
-  
-  if (typeof value === 'boolean') {
-    return value;
-  }
-  
-  if (typeof value === 'string') {
-    const lowercased = value.toLowerCase().trim();
-    if (lowercased === 'true' || lowercased === 'yes' || lowercased === '1') {
-      return true;
-    }
-    if (lowercased === 'false' || lowercased === 'no' || lowercased === '0') {
-      return false;
-    }
-  }
-  
-  if (typeof value === 'number') {
-    return value !== 0;
-  }
-  
-  return defaultValue;
-};
-
-/**
- * Safely converts a mixed type ID (string|number) to a string
- * @param id The ID to convert
- * @returns A string representation of the ID
- */
-export const idToString = (id: string | number | undefined): string => {
-  if (id === undefined || id === null) {
-    return '';
-  }
-  return safeToString(id);
-};
-
-/**
- * Safely converts a TeamColor value or null to a valid TeamColor
+ * Convert any value to a TeamColor
  * @param team The team value to convert
- * @param defaultTeam The default team if null/invalid
- * @returns A valid TeamColor
+ * @returns A valid TeamColor or null
  */
-export const toTeamColor = (team: string | null | undefined, defaultTeam: TeamColor = 'red'): TeamColor => {
-  if (!team) return defaultTeam;
-  
-  const validTeams: TeamColor[] = ['red', 'blue', 'green', 'gold', 'purple'];
-  
-  return validTeams.includes(team as TeamColor) 
-    ? (team as TeamColor) 
-    : defaultTeam;
-};
-
-/**
- * Safely converts a string to a TeamColor or returns null if invalid
- * @param team The team string to validate
- * @returns TeamColor or null
- */
-export const validateTeamColor = (team: string | null | undefined): TeamColor | null => {
+export const toTeamColor = (team: any): TeamColor | null => {
   if (!team) return null;
   
-  const validTeams: TeamColor[] = ['red', 'blue', 'green', 'gold', 'purple'];
+  const teamString = String(team).toLowerCase();
+  const validTeams: TeamColor[] = ['red', 'blue', 'green', 'gold', 'purple', 'none', 'neutral', 'silver', 'bronze'];
   
-  return validTeams.includes(team as TeamColor) 
-    ? (team as TeamColor) 
-    : null;
+  if (validTeams.includes(teamString as TeamColor)) {
+    return teamString as TeamColor;
+  }
+  
+  // Map some common variations
+  const teamMap: Record<string, TeamColor> = {
+    'crimson': 'red',
+    'azure': 'blue', 
+    'emerald': 'green',
+    'golden': 'gold',
+    'violet': 'purple',
+    'neutral': 'none',
+    'none': 'none',
+    'unaffiliated': 'none',
+    'independent': 'neutral'
+  };
+  
+  return teamMap[teamString] || null;
 };
 
 /**
- * Converts array-like objects to actual arrays
- * @param obj The array-like object
- * @returns A proper array
+ * Makes sure that user IDs are handled consistently as strings
+ * @param id The ID to convert to string
+ * @returns The string representation of the ID
  */
-export const toArray = <T>(obj: any): T[] => {
-  if (!obj) return [];
-  if (Array.isArray(obj)) return obj;
-  
-  try {
-    return Array.from(obj);
-  } catch (e) {
-    return [obj] as T[];
-  }
+export const ensureStringId = (id: string | number | undefined | null): string => {
+  if (id === undefined || id === null) return '';
+  return String(id);
 };
 
 /**
- * Ensures a value is an array, wrapping non-arrays in an array
- * @param value The value to ensure is an array
- * @returns An array containing the value, or the original array
+ * Convert an array of values to strings
+ * @param values Array of values to convert
+ * @returns Array of strings
  */
-export const ensureArray = <T>(value: T | T[] | null | undefined): T[] => {
-  if (value === null || value === undefined) {
-    return [];
-  }
+export const arrayToStringArray = (values: any[] | undefined | null): string[] => {
+  if (!values) return [];
+  if (!Array.isArray(values)) return [];
   
-  return Array.isArray(value) ? value : [value];
+  return values.map(value => safeToString(value));
 };
 
 /**
- * Safely parses a JSON string, returning a default value if parsing fails
- * @param jsonString The JSON string to parse
- * @param defaultValue The default value if parsing fails
- * @returns The parsed object or default value
+ * Convert a user tier to a standardized string format
+ * @param tier The tier to convert
+ * @returns A standardized tier string
  */
-export const safeJsonParse = <T>(jsonString: string, defaultValue: T): T => {
-  try {
-    return JSON.parse(jsonString) as T;
-  } catch (e) {
-    return defaultValue;
+export const normalizeTier = (tier: string | undefined | null): string => {
+  if (!tier) return 'free';
+  
+  const tierString = String(tier).toLowerCase();
+  const validTiers = [
+    'free', 'basic', 'premium', 'royal', 'founder', 
+    'noble', 'legendary', 'whale', 'pro', 'standard', 
+    'elite', 'platinum', 'diamond', 'gold', 'silver', 
+    'bronze', 'vip', 'knight', 'baron', 'viscount', 
+    'earl', 'duke', 'prince', 'king', 'emperor'
+  ];
+  
+  if (validTiers.includes(tierString)) {
+    return tierString;
   }
+  
+  // Map some common variations
+  const tierMap: Record<string, string> = {
+    'f': 'free',
+    'b': 'basic',
+    'p': 'premium',
+    'r': 'royal',
+    'vip': 'royal',
+    'king': 'royal',
+    'queen': 'royal',
+    'standard': 'basic',
+    'advanced': 'premium',
+    'ultra': 'royal'
+  };
+  
+  return tierMap[tierString] || 'basic';
 };
 
 /**
- * Ensures a value is a string array, handling different input types
- * @param value The value to convert to a string array
- * @returns A string array
+ * Convert a numeric or string value to a boolean
+ * @param value The value to convert
+ * @param defaultValue The default value if conversion fails
+ * @returns A boolean value
  */
-export const ensureStringArray = (value: any): string[] => {
-  if (!value) return [];
-  
-  if (Array.isArray(value)) {
-    return value.map(safeToString);
-  }
-  
-  if (typeof value === 'number') {
-    return [value.toString()];
-  }
-  
-  if (typeof value === 'string') {
-    return [value];
-  }
-  
-  return [];
-};
-
-/**
- * Ensures an ID is represented as a string
- * @param id The ID that might be a number or string
- * @returns The ID as a string
- */
-export const ensureStringId = (id: string | number | undefined): string => {
-  if (id === undefined || id === null) {
-    return '';
-  }
-  
-  return typeof id === 'number' ? id.toString() : id;
+export const toBoolean = (value: any, defaultValue: boolean = false): boolean => {
+  if (typeof value === 'boolean') return value;
+  if (value === 'true' || value === '1' || value === 1) return true;
+  if (value === 'false' || value === '0' || value === 0) return false;
+  return defaultValue;
 };
