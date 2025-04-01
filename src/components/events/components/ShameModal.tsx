@@ -8,9 +8,9 @@ import { Crown, ShieldCheck, Coins } from 'lucide-react';
 import { 
   getMockeryName, 
   getMockeryDescription,
-  getMockeryActionPrice,
-  getDiscountedShamePrice 
+  getMockeryActionPrice 
 } from '@/utils/mockeryUtils';
+import { getDiscountedShamePrice } from '@/utils/shameUtils';
 import { getInitials } from '@/utils/stringUtils';
 
 interface ShameModalProps {
@@ -38,7 +38,9 @@ const ShameModal: React.FC<ShameModalProps> = ({
   hasDiscount = false
 }) => {
   const regularPrice = getMockeryActionPrice(shameType);
-  const finalPrice = hasDiscount ? getDiscountedShamePrice(shameType, targetUser.tier) : regularPrice;
+  const finalPrice = hasDiscount 
+    ? getDiscountedShamePrice(shameType, targetUser.tier) 
+    : regularPrice;
   
   return (
     <DialogContent className="sm:max-w-md glass-morphism border-white/10">

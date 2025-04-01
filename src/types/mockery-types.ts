@@ -1,106 +1,65 @@
 
-/**
- * Types of mockery actions that can be performed
- */
+// MockeryAction represents the different types of mockery actions available
 export type MockeryAction = 
-  | 'tomatoes'
-  | 'eggs'
-  | 'putridEggs'
-  | 'crown'
-  | 'stocks'
+  | 'tomatoes' 
+  | 'eggs' 
+  | 'crown' 
+  | 'stocks' 
   | 'jester'
-  | 'shame'
+  | 'putridEggs'
   | 'silence'
   | 'courtJester'
   | 'smokeBomb'
+  | 'shame'
   | 'protection'
+  | 'challenge'
   | 'taunt'
   | 'mock'
-  | 'challenge'
   | 'joust'
   | 'duel';
 
-/**
- * Mockery tier types for rarity and quality
- */
-export type MockeryTier = 
-  | 'common'
-  | 'uncommon'
-  | 'rare'
-  | 'epic'
-  | 'legendary'
-  | 'royal'
-  | 'basic'
-  | 'premium'
-  | 'silver'
-  | 'bronze';
+// MockeryTier represents the rarity/quality of mockery actions
+export type MockeryTier = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary' | 'royal';
 
-/**
- * Mockery target types
- */
-export interface MockeryTarget {
-  id: string;
-  username: string;
-  displayName?: string;
-  profileImage?: string;
-  rank?: number;
-  tier?: string;
-}
+// TeamColor represents the different team colors available
+export type TeamColor = 'red' | 'blue' | 'green' | 'gold' | 'purple' | 'silver' | 'bronze' | 'none' | 'neutral';
 
-/**
- * Mocked user data
- */
+// MockedUser interface for storing basic user information that has been mocked
 export interface MockedUser {
   id: string;
   username: string;
-  displayName?: string;
   profileImage?: string;
-  rank?: number;
   tier?: string;
   team?: TeamColor;
+  rank?: number;
+  displayName?: string;
+  userId?: string;
+  action?: MockeryAction;
+  appliedAt?: string;
+  expiresAt?: string;
+  appliedBy?: string;
 }
 
-/**
- * Mockery event interface
- */
+// MockeryEvent interface for storing mockery events
 export interface MockeryEvent {
   id: string;
+  targetUserId: string;
+  sourceUserId: string;
   action: MockeryAction;
-  targetId: string;
-  fromId: string;
   timestamp: string;
-  isAnonymous: boolean;
-  message?: string;
-  duration?: number;
+  expiresAt?: string;
   type?: string;
+  appliedBy?: string;
 }
 
-/**
- * Available mockery effects
- */
-export interface MockeryEffect {
-  id: string;
-  name: string;
-  action: MockeryAction;
-  description: string;
-  price: number;
-  tier: string;
-  requiredRank?: number;
-  duration?: number;
-  icon?: string;
-  cssClass?: string;
+// Mock timing details
+export interface MockeryTiming {
+  duration: number; // in hours
+  cooldown: number; // in hours
 }
 
-/**
- * Team color types for users and groups
- */
-export type TeamColor = 
-  | 'red' 
-  | 'blue' 
-  | 'green' 
-  | 'gold' 
-  | 'purple' 
-  | 'none' 
-  | 'neutral'
-  | 'silver'
-  | 'bronze';
+// Price structure for mockery actions
+export type MockeryPrices = Record<MockeryAction, number>;
+
+// Duration structure for mockery actions
+export type MockeryDurations = Record<MockeryAction, number>;

@@ -47,8 +47,12 @@ const CombinedLeaderboard: React.FC = () => {
     const loadLeaderboard = async () => {
       setLoading(true);
       try {
-        // Pass teamFilter as string, let the service handle conversion
-        const data = await fetchLeaderboard(sortBy, teamFilter);
+        // Convert teamFilter to number if it's a numeric string, otherwise pass null or string
+        const teamFilterParam = teamFilter ? 
+                               (isNaN(Number(teamFilter)) ? teamFilter : Number(teamFilter)) : 
+                               null;
+        
+        const data = await fetchLeaderboard(sortBy, teamFilterParam);
         
         // Ensure all data is properly formatted as LeaderboardUser objects
         const formattedData: LeaderboardUser[] = data.map((item: any): LeaderboardUser => ({
@@ -62,7 +66,8 @@ const CombinedLeaderboard: React.FC = () => {
           totalSpent: item.totalSpent || 0,
           walletBalance: item.walletBalance || 0,
           previousRank: item.previousRank || 0,
-          spendStreak: item.spendStreak || 0
+          spendStreak: item.spendStreak || 0,
+          amountSpent: item.amountSpent || item.totalSpent || 0
         }));
 
         setUsers(formattedData);
@@ -122,7 +127,8 @@ const CombinedLeaderboard: React.FC = () => {
       isVerified: user.isVerified || false,
       walletBalance: user.walletBalance || 0,
       previousRank: user.previousRank || 0,
-      spendStreak: user.spendStreak || 0
+      spendStreak: user.spendStreak || 0,
+      amountSpent: user.amountSpent || user.totalSpent || 0
     };
   };
   

@@ -16,8 +16,14 @@ const DashboardStatsOverview: React.FC<DashboardStatsOverviewProps> = ({ user })
   // Create a compatible user object for ProfileBoostedContent
   const compatibleUser: UserProfile = {
     ...user,
-    id: typeof user.id === 'number' ? user.id.toString() : user.id,
+    id: typeof user.id === 'number' ? String(user.id) : user.id,
     team: user.team || null
+  };
+  
+  // Helper function for safe string conversion
+  const safeString = (value: any): string => {
+    if (value === null || value === undefined) return '';
+    return String(value);
   };
   
   return (
@@ -49,7 +55,7 @@ const DashboardStatsOverview: React.FC<DashboardStatsOverviewProps> = ({ user })
             <div>
               <p className="text-sm text-white/70">Current Rank</p>
               <ProfileBoostedContent user={compatibleUser} type="text">
-                <p className="text-2xl font-bold">#{user.rank || 'N/A'}</p>
+                <p className="text-2xl font-bold">#{safeString(user.rank || 'N/A')}</p>
               </ProfileBoostedContent>
             </div>
           </div>

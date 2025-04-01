@@ -24,21 +24,22 @@ const KingmakerFeature: React.FC<KingmakerFeatureProps> = ({
   // Mocked data
   useEffect(() => {
     // In a real implementation, this would fetch from an API
-    const mockKingmaker: UserProfile = {
+    const mockKingmaker: Partial<UserProfile> = {
       id: "king123",
       username: "RoyaltySupreme",
       displayName: "The Benevolent",
       profileImage: "/images/avatars/kingmaker.jpg",
       rank: 1,
       totalSpent: 25000,
-      amountSpent: 25000, // Adding required field
-      joinedDate: "2023-01-01", // Adding required field
+      amountSpent: 25000,
+      joinedDate: "2023-01-01",
       bio: "I raise others to glory through my royal generosity.",
       tier: "legendary",
       team: "red",
       boostCount: 154
     };
     
+    // Type assertion after ensuring required fields are present
     setKingmaker(mockKingmaker as UserProfile);
   }, []);
   

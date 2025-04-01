@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Crown, Shield, AlertTriangle } from 'lucide-react';
 import { 
   getMockeryName, 
-  getMockeryDescription, 
+  getMockeryDescription,
   getMockeryActionPrice,
   getMockeryTier,
   getMockeryTierColorClass,

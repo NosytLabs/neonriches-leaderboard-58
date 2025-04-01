@@ -1,11 +1,34 @@
 
-import { TeamColor } from './team';
+export interface ProfileImage {
+  id: string;
+  url: string;
+  caption?: string;
+  isPrimary?: boolean;
+  type: 'profile' | 'banner' | 'gallery';
+  uploadedAt?: string;
+}
 
-// Re-export TeamColor for backward compatibility
-export type { TeamColor };
+export interface ProfileLink {
+  id: string;
+  platform: string;
+  url: string;
+  title?: string;
+  label?: string;
+  icon?: string;
+  clicks?: number;
+}
 
-// Export using 'export type' syntax to avoid isolatedModules error
-export type Gender = 'male' | 'female' | 'other' | 'prefer-not-to-say';
+export interface SocialLink {
+  id: string;
+  platform: string;
+  url: string;
+  icon?: string;
+  clicks?: number;
+}
+
+export type TeamType = 'red' | 'blue' | 'green' | 'gold' | 'purple';
+
+export type UserTier = 'free' | 'basic' | 'premium' | 'pro' | 'royal' | 'legendary' | 'founder' | 'whale' | 'shark' | 'dolphin' | 'noble' | 'standard' | 'elite' | 'platinum' | 'diamond' | 'vip';
 
 export interface ProfileBoost {
   id: string;
@@ -16,6 +39,7 @@ export interface ProfileBoost {
   strength: number;
   appliedBy: string;
   isActive: boolean;
+  cssClass?: string;
 }
 
 export interface UserCosmetics {
@@ -49,24 +73,17 @@ export interface UserSettings {
   showRank: boolean;
   darkMode: boolean;
   soundEffects: boolean;
-  showBadges: boolean;
-  showEmailOnProfile?: boolean;
-  rankChangeAlerts?: boolean;
   newFollowerAlerts?: boolean;
   teamNotifications?: boolean;
   showTeam?: boolean;
   showSpending?: boolean;
-}
-
-export interface SocialLink {
-  id: string;
-  platform: string;
-  url: string;
-  visible: boolean;
+  showBadges?: boolean;
+  showEmailOnProfile?: boolean;
+  rankChangeAlerts?: boolean;
 }
 
 export interface UserProfile {
-  id: string | number;
+  id: string;
   username: string;
   displayName?: string;
   profileImage?: string;
@@ -76,31 +93,42 @@ export interface UserProfile {
   isVerified?: boolean;
   following?: string[];
   followers?: string[];
-  achievements?: string[];
-  badges?: string[];
-  team?: TeamColor;
+  team?: string | null;
   tier?: string;
   rank?: number;
-  previousRank?: number;
   totalSpent?: number;
-  amountSpent?: number;
+  amountSpent: number;
   walletBalance?: number;
-  cosmetics?: UserCosmetics;
-  settings?: UserSettings;
-  socialLinks?: SocialLink[];
-  profileBoosts?: ProfileBoost[];
+  previousRank?: number;
   spendStreak?: number;
-  mockeryStats?: {
-    received: number;
-    deployed: number;
-  };
+  profileBoosts?: ProfileBoost[];
+  settings?: UserSettings;
+  cosmetics?: UserCosmetics;
   certificateNFT?: {
     mintAddress: string;
     mintDate: string;
   };
+  gender?: string;
+  profileViews?: number;
+  profileClicks?: number;
+  purchasedFeatures?: string[];
+  subscription?: any;
+  activeTitle?: string;
+  lastActive?: string;
+  isVIP?: boolean;
+  role?: string;
+  email?: string;
+  boostCount?: number;
 }
 
-export interface User extends UserProfile {
-  amountSpent: number;
-  joinedDate: string;
+// Extend with additional types as needed
+export interface Team {
+  id: string;
+  name: string;
+  color: string;
+  members: number;
+  leader?: string;
+  totalSpent?: number;
+  rank?: number;
+  description?: string;
 }
