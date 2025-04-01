@@ -53,9 +53,9 @@ const UserMenu: React.FC<UserMenuProps> = () => {
 
   // Create a safer wrapper around the user's tier to handle the potential type mismatch
   // This function ensures we only pass a valid tier string to UserBadge
-  const getTierForBadge = (): UserTier => {
+  const getTierForBadge = (): string => {
     // Only return tiers that match the expected types
-    const validTiers: UserTier[] = [
+    const validTiers: string[] = [
       'free', 'basic', 'premium', 'royal', 'legendary',
       'founder', 'noble', 'knight', 'baron', 'viscount', 
       'earl', 'duke', 'prince', 'king', 'emperor', 'whale', 
@@ -63,10 +63,10 @@ const UserMenu: React.FC<UserMenuProps> = () => {
       'platinum', 'diamond', 'bronze', 'vip'
     ];
     
-    // Check if user.tier is a valid UserTier
+    // Check if user.tier is a valid tier
     const userTier = user.tier as string;
-    if (userTier && validTiers.includes(userTier as UserTier)) {
-      return userTier as UserTier;
+    if (userTier && validTiers.includes(userTier)) {
+      return userTier;
     }
     
     // Default to 'free' if the tier isn't valid
@@ -74,14 +74,14 @@ const UserMenu: React.FC<UserMenuProps> = () => {
   };
 
   // Handle team value safely for team badge
-  const getTeamForBadge = (): TeamColor => {
+  const getTeamForBadge = (): string => {
     if (!user.team) return 'neutral';
     
-    const validTeams: TeamColor[] = ['red', 'blue', 'green', 'gold', 'purple', 'none', 'neutral'];
+    const validTeams: string[] = ['red', 'blue', 'green', 'gold', 'purple', 'none', 'neutral'];
     const userTeam = user.team as string;
     
-    if (validTeams.includes(userTeam as TeamColor)) {
-      return userTeam as TeamColor;
+    if (validTeams.includes(userTeam)) {
+      return userTeam;
     }
     
     return 'neutral';
@@ -104,7 +104,7 @@ const UserMenu: React.FC<UserMenuProps> = () => {
           <ChevronDown className="h-4 w-4 text-muted-foreground" />
           <UserBadge
             type="tier"
-            value={getTierForBadge()}
+            value={getTierForBadge() as any}
             size="sm"
             className="absolute -top-2 -right-2"
           />
@@ -129,7 +129,7 @@ const UserMenu: React.FC<UserMenuProps> = () => {
             <span>Profile</span>
           </div>
           {user.team && (
-            <UserBadge type="team" value={getTeamForBadge()} size="sm" showLabel={false} />
+            <UserBadge type="team" value={getTeamForBadge() as any} size="sm" showLabel={false} />
           )}
         </DropdownMenuItem>
         <DropdownMenuItem

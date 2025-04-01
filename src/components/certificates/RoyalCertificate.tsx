@@ -12,8 +12,8 @@ import RoyalDecoration from '@/components/ui/royal-decoration';
 import { SpendAmount } from '@/components/ui/theme-components';
 import { motion } from 'framer-motion';
 import MedievalIcon from '@/components/ui/medieval-icon';
-import { generateCertificateMetadata } from '@/services/solanaService';
-import { convertToLegacyUser } from '@/utils/typeConversion';
+import { UserProfile as UserProfileUser } from '@/types/user';
+import { ensureStringId } from '@/utils/typeConverters';
 
 interface RoyalCertificateProps {
   user: UserProfile;
@@ -35,7 +35,7 @@ const RoyalCertificate: React.FC<RoyalCertificateProps> = ({
   // Use optional chaining and prepare certificate NFT data
   const certificateNFT = user?.certificateNFT || null;
   
-  const getTeamColor = (team: string | null) => {
+  const getTeamColor = (team: string | null | undefined) => {
     switch (team) {
       case 'red': return 'bg-royal-crimson/20 text-royal-crimson';
       case 'green': return 'bg-royal-gold/20 text-royal-gold';
@@ -44,7 +44,7 @@ const RoyalCertificate: React.FC<RoyalCertificateProps> = ({
     }
   };
   
-  const getTeamName = (team: string | null) => {
+  const getTeamName = (team: string | null | undefined) => {
     switch (team) {
       case 'red': return 'Crimson Court';
       case 'green': return 'Golden Order';
@@ -105,10 +105,29 @@ const RoyalCertificate: React.FC<RoyalCertificateProps> = ({
     setIsMinting(true);
     
     try {
-      // Convert user to legacy format for the service
-      const userForService = user;
-      const metadata = generateCertificateMetadata(userForService);
-      console.log('NFT Metadata:', metadata);
+      // Convert user to compatible format
+      const userForService: UserProfileUser = {
+        id: ensureStringId(user.id),
+        username: user.username,
+        displayName: user.displayName || user.username,
+        profileImage: user.profileImage || '',
+        bio: user.bio || '',
+        joinedDate: user.joinedDate,
+        isVerified: user.isVerified || false,
+        following: Array.isArray(user.following) ? user.following : [],
+        followers: Array.isArray(user.followers) ? user.followers : [],
+        achievements: user.achievements || [],
+        badges: user.badges || [],
+        team: user.team as any,
+        tier: user.tier,
+        rank: user.rank || 0,
+        previousRank: user.previousRank || 0,
+        totalSpent: user.totalSpent,
+        amountSpent: user.amountSpent,
+        walletBalance: user.walletBalance || 0
+      };
+      
+      console.log('NFT Metadata:', userForService);
       
       await new Promise(resolve => setTimeout(resolve, 2000));
       
@@ -155,8 +174,8 @@ const RoyalCertificate: React.FC<RoyalCertificateProps> = ({
               <div className="text-lg font-medium">This certifies that</div>
               <div className="text-2xl font-royal text-royal-gold mt-1">{user.displayName || user.username}</div>
               <div className="flex items-center justify-center mt-2 space-x-2">
-                <Badge variant="outline" className={`${getTeamColor(user.team as string | null)}`}>
-                  {getTeamName(user.team as string | null)}
+                <Badge variant="outline" className={`${getTeamColor(user.team)}`}>
+                  {getTeamName(user.team)}
                 </Badge>
                 <Badge variant="outline" className="bg-purple-500/20 text-purple-300">
                   {getTierName(user.tier as string)}

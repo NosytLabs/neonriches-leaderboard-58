@@ -6,12 +6,20 @@ import { TrendingUp, DollarSign, Trophy, Crown, BarChart, Users } from 'lucide-r
 import ProfileBoostedContent from '@/components/ui/ProfileBoostedContent';
 import { getTeamBgColorClass, getTeamTextColorClass } from '@/lib/colors';
 import { safeToLocaleString } from '@/utils/safeToString';
+import { formatNumber } from '@/utils/formatters';
 
 interface DashboardStatsOverviewProps {
   user: UserProfile;
 }
 
 const DashboardStatsOverview: React.FC<DashboardStatsOverviewProps> = ({ user }) => {
+  // Create a compatible user object for ProfileBoostedContent
+  const compatibleUser: UserProfile = {
+    ...user,
+    id: typeof user.id === 'number' ? user.id.toString() : user.id,
+    team: user.team || null
+  };
+  
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
       {/* Spending Stat */}
@@ -23,7 +31,7 @@ const DashboardStatsOverview: React.FC<DashboardStatsOverviewProps> = ({ user })
             </div>
             <div>
               <p className="text-sm text-white/70">Total Spent</p>
-              <ProfileBoostedContent user={user} type="text">
+              <ProfileBoostedContent user={compatibleUser} type="text">
                 <p className="text-2xl font-bold">${safeToLocaleString(user.amountSpent || user.totalSpent || 0)}</p>
               </ProfileBoostedContent>
             </div>
@@ -40,7 +48,7 @@ const DashboardStatsOverview: React.FC<DashboardStatsOverviewProps> = ({ user })
             </div>
             <div>
               <p className="text-sm text-white/70">Current Rank</p>
-              <ProfileBoostedContent user={user} type="text">
+              <ProfileBoostedContent user={compatibleUser} type="text">
                 <p className="text-2xl font-bold">#{user.rank || 'N/A'}</p>
               </ProfileBoostedContent>
             </div>
@@ -53,16 +61,16 @@ const DashboardStatsOverview: React.FC<DashboardStatsOverviewProps> = ({ user })
         <CardContent className="p-5">
           <div className="flex items-center justify-between">
             <div className={`rounded-full p-2 ${
-              user.team ? getTeamBgColorClass(user.team) + '/10' : 'bg-white/10'
+              user.team ? getTeamBgColorClass(user.team.toString()) + '/10' : 'bg-white/10'
             }`}>
               <Users className={`h-5 w-5 ${
-                user.team ? getTeamTextColorClass(user.team) : 'text-white'
+                user.team ? getTeamTextColorClass(user.team.toString()) : 'text-white'
               }`} />
             </div>
             <div>
               <p className="text-sm text-white/70">Team</p>
               <p className={`text-2xl font-bold capitalize ${
-                user.team ? getTeamTextColorClass(user.team) : 'text-white'
+                user.team ? getTeamTextColorClass(user.team.toString()) : 'text-white'
               }`}>
                 {user.team || 'None'}
               </p>
@@ -80,7 +88,7 @@ const DashboardStatsOverview: React.FC<DashboardStatsOverviewProps> = ({ user })
             </div>
             <div>
               <p className="text-sm text-white/70">Profile Views</p>
-              <p className="text-2xl font-bold">{user.profileViews || 0}</p>
+              <p className="text-2xl font-bold">{formatNumber(user.profileViews || 0)}</p>
             </div>
           </div>
         </CardContent>

@@ -105,3 +105,33 @@ export const toBoolean = (value: any, defaultValue: boolean = false): boolean =>
   if (value === 'false' || value === '0' || value === 0) return false;
   return defaultValue;
 };
+
+/**
+ * Ensure ProfileBoost object has an isActive property
+ * @param boost The boost object to check
+ * @returns A boost object with isActive property
+ */
+export const ensureBoostIsActive = (boost: any): any => {
+  if (boost && typeof boost === 'object' && !('isActive' in boost)) {
+    const now = new Date();
+    const endDate = boost.endDate ? new Date(boost.endDate) : null;
+    
+    return {
+      ...boost,
+      isActive: endDate ? now < endDate : false
+    };
+  }
+  
+  return boost;
+};
+
+/**
+ * Ensure ProfileBoost array has isActive property on each item
+ * @param boosts The boost array to check
+ * @returns A boost array with isActive property on each item
+ */
+export const ensureBoostsAreActive = (boosts: any[] | undefined): any[] => {
+  if (!boosts || !Array.isArray(boosts)) return [];
+  
+  return boosts.map(ensureBoostIsActive);
+};

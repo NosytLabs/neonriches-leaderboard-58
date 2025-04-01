@@ -24,20 +24,22 @@ const KingmakerFeature: React.FC<KingmakerFeatureProps> = ({
   // Mocked data
   useEffect(() => {
     // In a real implementation, this would fetch from an API
-    const mockKingmaker = {
+    const mockKingmaker: UserProfile = {
       id: "king123",
       username: "RoyaltySupreme",
       displayName: "The Benevolent",
       profileImage: "/images/avatars/kingmaker.jpg",
       rank: 1,
       totalSpent: 25000,
+      amountSpent: 25000, // Adding required field
+      joinedDate: "2023-01-01", // Adding required field
       bio: "I raise others to glory through my royal generosity.",
-      tier: "legendary" as const,
-      isVIP: true,
-      boostCount: 154  // This property is now properly defined in UserProfile
+      tier: "legendary",
+      team: "red",
+      boostCount: 154
     };
     
-    setKingmaker(mockKingmaker);
+    setKingmaker(mockKingmaker as UserProfile);
   }, []);
   
   if (!kingmaker) {
