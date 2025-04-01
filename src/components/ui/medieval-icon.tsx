@@ -1,7 +1,16 @@
 
 import React from 'react';
-import { MedievalIconProps } from '@/types/ui/icon-types';
 import { cn } from '@/lib/utils';
+import { MedievalIconName, MedievalIconColor, IconSize } from '@/types/ui/icon-types';
+
+interface MedievalIconProps {
+  name: MedievalIconName;
+  size?: IconSize;
+  color?: MedievalIconColor | string;
+  className?: string;
+  animated?: boolean;
+  style?: 'default' | 'outline' | 'solid';
+}
 
 const MedievalIcon: React.FC<MedievalIconProps> = ({
   name,
@@ -16,10 +25,12 @@ const MedievalIcon: React.FC<MedievalIconProps> = ({
     sm: 'w-6 h-6',
     md: 'w-8 h-8',
     lg: 'w-10 h-10',
-    xl: 'w-12 h-12'
+    xl: 'w-12 h-12',
+    '2xl': 'w-16 h-16'
   };
   
   const colorClasses = {
+    default: 'text-white',
     gold: 'text-royal-gold',
     royal: 'text-royal-purple',
     silver: 'text-gray-300',
@@ -40,7 +51,7 @@ const MedievalIcon: React.FC<MedievalIconProps> = ({
   
   return (
     <div className={cn(
-      sizeClasses[size],
+      sizeClasses[size as keyof typeof sizeClasses],
       colorClasses[color as keyof typeof colorClasses] || colorClasses.gold,
       styleClasses[style],
       animationClasses,

@@ -35,8 +35,8 @@ const MedievalShowcase = () => {
                 <p className="mt-2 text-sm text-white/70">Seal</p>
               </div>
               <div className="text-center">
-                <MedievalIcon name="coins" size="lg" />
-                <p className="mt-2 text-sm text-white/70">Coins</p>
+                <MedievalIcon name="coin" size="lg" />
+                <p className="mt-2 text-sm text-white/70">Coin</p>
               </div>
             </div>
             

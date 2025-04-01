@@ -55,7 +55,7 @@ export type MedievalIconName =
   | 'queen'
   | 'jester'
   | 'wizard'
-  | 'coin'
+  | 'coin'  // Correct name is 'coin' not 'coins'
   | 'treasure'
   | 'horse'
   | 'fleur'
@@ -70,7 +70,9 @@ export type MedievalIconName =
   | 'flag'
   | 'axe'
   | 'mace'
-  | 'tower';  // Add missing tower icon
+  | 'tower'
+  | 'key'  // Add missing icon types
+  | 'treasure-chest';
 
 export interface MedievalIconProps extends BaseIconProps {
   name: MedievalIconName;

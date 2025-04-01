@@ -36,10 +36,10 @@ export interface SoundOptions {
 export interface SoundFunction {
   playSound: (type: SoundType, options?: SoundOptions) => void;
   stopSound: (type?: SoundType) => void;
-  setMuted: (muted: boolean) => void;
-  setVolume: (volume: number) => void;
-  toggleMuted: () => boolean;
-  isMuted: boolean;
+  setMuted?: (muted: boolean) => void;
+  setVolume?: (volume: number) => void;
+  toggleMuted?: () => boolean;
+  isMuted?: boolean;
   play?: (type: SoundType, options?: SoundOptions) => void;
   pauseSound?: (type?: SoundType) => void;
   resumeSound?: (type?: SoundType) => void;
@@ -62,4 +62,11 @@ export interface PremiumSoundPackDetails {
 export interface UseSoundHook extends SoundFunction {
   toggleSounds: () => void;
   isSoundEnabled: boolean;
+}
+
+export interface SoundConfig {
+  enabled: boolean;
+  muted: boolean;
+  volume: number;
+  premium: boolean;
 }

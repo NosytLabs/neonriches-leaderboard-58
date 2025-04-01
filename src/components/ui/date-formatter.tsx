@@ -1,28 +1,40 @@
 
 import React from 'react';
-import { formatDate } from '@/utils/formatters';
+import { format, formatDistanceToNow } from 'date-fns';
 
 interface DateFormatterProps {
   date: string | Date;
-  format?: Intl.DateTimeFormatOptions;
+  formatString?: string;
+  relative?: boolean;
   className?: string;
 }
 
-const DateFormatter: React.FC<DateFormatterProps> = ({ 
-  date, 
-  format,
-  className = ''
+const DateFormatter: React.FC<DateFormatterProps> = ({
+  date,
+  formatString = 'PPP',
+  relative = false,
+  className
 }) => {
-  const dateString = typeof date === 'string' ? date : date.toISOString();
-  
-  return (
-    <time 
-      dateTime={dateString} 
-      className={className}
-    >
-      {formatDate(dateString, format)}
-    </time>
-  );
+  if (!date) {
+    return <span className={className}>Invalid date</span>;
+  }
+
+  try {
+    const dateObj = typeof date === 'string' ? new Date(date) : date;
+    
+    if (isNaN(dateObj.getTime())) {
+      return <span className={className}>Invalid date</span>;
+    }
+    
+    if (relative) {
+      return <span className={className}>{formatDistanceToNow(dateObj, { addSuffix: true })}</span>;
+    }
+    
+    return <span className={className}>{format(dateObj, formatString)}</span>;
+  } catch (error) {
+    console.error('Error formatting date:', error);
+    return <span className={className}>Invalid date</span>;
+  }
 };
 
 export default DateFormatter;
