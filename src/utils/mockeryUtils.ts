@@ -143,7 +143,7 @@ export const getMockeryTier = (action: MockeryAction): string => {
   }
 };
 
-// Additional functions for ShameModal.tsx
+// Add the missing functions - these were referenced in errors but didn't exist
 export const getShameActionPrice = (action: MockeryAction): number => {
   return getMockeryCost(action);
 };
@@ -155,13 +155,11 @@ export const getDiscountedShamePrice = (action: MockeryAction): number => {
 
 export const hasWeeklyDiscount = (): boolean => {
   // This would typically check some server state or time-based logic
-  // For now, return a static value
   return true;
 };
 
 export const getWeeklyDiscountedAction = (): MockeryAction => {
   // This would typically be determined by server logic
-  // For now, return a static value
   return 'shame';
 };
 
@@ -180,4 +178,10 @@ export const getMockeryTierColorClass = (tier: string): string => {
     default:
       return 'text-gray-400';
   }
+};
+
+// Add this utility function for MockeryEffectsShowcase.tsx
+export const getMockeryActionIconColor = (action: MockeryAction): string => {
+  const tier = getMockeryTier(action);
+  return getMockeryTierColorClass(tier);
 };

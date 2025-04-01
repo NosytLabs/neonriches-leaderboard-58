@@ -3,6 +3,7 @@ import { UserProfile as ConsolidatedUserProfile } from '@/types/user-consolidate
 import { UserProfile as UserProfileType } from '@/types/user';
 import { User } from '@/types/user';
 import { safeToString } from '@/utils/stringUtils';
+import { toTeamColor } from '@/utils/typeConverters';
 
 /**
  * Convert between different user types in the application
@@ -16,7 +17,7 @@ import { safeToString } from '@/utils/stringUtils';
  */
 export const convertToLegacyUser = (user: ConsolidatedUserProfile): User => {
   return {
-    id: user.id,
+    id: safeToString(user.id),
     username: user.username,
     displayName: user.displayName || user.username,
     profileImage: user.profileImage || '',
@@ -28,7 +29,7 @@ export const convertToLegacyUser = (user: ConsolidatedUserProfile): User => {
     followers: Array.isArray(user.followers) ? user.followers : [],
     achievements: user.achievements || [],
     badges: user.badges || [],
-    team: user.team || null,
+    team: toTeamColor(user.team),
     tier: user.tier || 'basic',
     rank: user.rank || 0,
     previousRank: user.previousRank || 0,
@@ -125,7 +126,7 @@ export const convertToConsolidatedUser = (user: User): ConsolidatedUserProfile =
  */
 export const ensureUserHasRequiredProps = (user: Partial<User>): User => {
   return {
-    id: user.id || '',
+    id: safeToString(user.id) || '',
     username: user.username || '',
     displayName: user.displayName || user.username || '',
     profileImage: user.profileImage || '',

@@ -90,3 +90,40 @@ export const safeToLocaleString = (value: any, options?: Intl.NumberFormatOption
     return String(value);
   }
 };
+
+/**
+ * Formats a number as currency
+ * @param amount The amount to format
+ * @param currency The currency code
+ * @returns Formatted currency string
+ */
+export const formatCurrency = (amount: number | string, currency: string = 'USD'): string => {
+  const numAmount = safeToNumber(amount);
+  return safeToLocaleString(numAmount, {
+    style: 'currency',
+    currency,
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  });
+};
+
+/**
+ * Capitalizes the first letter of a string
+ * @param str The string to capitalize
+ * @returns The capitalized string
+ */
+export const capitalize = (str: string): string => {
+  if (!str) return '';
+  return str.charAt(0).toUpperCase() + str.slice(1);
+};
+
+/**
+ * Formats a number of items with the correct plural form
+ * @param count The number of items
+ * @param singular The singular form of the word
+ * @param plural The plural form of the word
+ * @returns Formatted count with the correct word form
+ */
+export const pluralize = (count: number, singular: string, plural: string): string => {
+  return `${count} ${count === 1 ? singular : plural}`;
+};
