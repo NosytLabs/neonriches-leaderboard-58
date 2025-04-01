@@ -1,8 +1,32 @@
 
 import { TeamColor } from '@/types/team';
 import { toTeamColor } from '@/utils/typeConverters';
-import { teamNames } from '@/utils/team/teamNames';
-import { teamMottos } from '@/utils/team/teamMottos';
+
+// Team names mapping
+const teamNames = {
+  red: 'Crimson Crown',
+  blue: 'Azure Knights',
+  green: 'Emerald Order',
+  gold: 'Golden Dynasty',
+  purple: 'Royal Purple',
+  silver: 'Silver Alliance',
+  bronze: 'Bronze Brigade',
+  none: 'Unaffiliated',
+  neutral: 'Neutral Observer'
+};
+
+// Team mottos mapping
+const teamMottos = {
+  red: 'Victory Through Power',
+  blue: 'Wisdom and Strategy',
+  green: 'Growth and Prosperity',
+  gold: 'Wealth Above All',
+  purple: 'Royal Blood Rules',
+  silver: 'Defense and Honor',
+  bronze: 'Strength and Craftsmanship',
+  none: 'Independent and Free',
+  neutral: 'Balance In All Things'
+};
 
 /**
  * Convert any value to TeamColor and ensure it's a valid team color
