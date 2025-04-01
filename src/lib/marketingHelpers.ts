@@ -3,7 +3,8 @@
  * Marketing helpers for the profile billboard functionality
  */
 
-import { UserProfile, UserTier } from "@/types/user";
+import { UserProfile } from "@/types/user";
+import { UserTier } from "@/types/user";
 
 /**
  * Calculate visibility score based on user rank
@@ -25,10 +26,13 @@ export const calculateVisibilityScore = (rank?: number): number => {
  * Get featured time allocation based on user tier
  * Premium tiers get longer featured time on homepage and other high-traffic areas
  */
-export const getFeaturedTimeAllocation = (tier?: UserTier): number => {
+export const getFeaturedTimeAllocation = (tier?: UserTier | string): number => {
   if (!tier) return 0;
   
-  switch (tier) {
+  // Cast string to UserTier for type safety, or use as is if it's already UserTier
+  const userTier = tier as UserTier;
+  
+  switch (userTier) {
     case 'royal':
     case 'diamond':
       return 24; // 24 hours per week
@@ -49,10 +53,13 @@ export const getFeaturedTimeAllocation = (tier?: UserTier): number => {
 /**
  * Get maximum number of links allowed based on user tier
  */
-export const getMaxLinksAllowed = (tier?: UserTier): number => {
+export const getMaxLinksAllowed = (tier?: UserTier | string): number => {
   if (!tier) return 1;
   
-  switch (tier) {
+  // Cast string to UserTier for type safety, or use as is if it's already UserTier
+  const userTier = tier as UserTier;
+  
+  switch (userTier) {
     case 'royal':
     case 'diamond':
       return 10;
@@ -97,8 +104,8 @@ export const formatProfileForMarketing = (user: UserProfile) => {
     tier: user.tier || 'basic',
     rank: user.rank || 0,
     visibilityScore: calculateVisibilityScore(user.rank),
-    featuredTime: getFeaturedTimeAllocation(user.tier as UserTier),
-    maxLinks: getMaxLinksAllowed(user.tier as UserTier),
+    featuredTime: getFeaturedTimeAllocation(user.tier),
+    maxLinks: getMaxLinksAllowed(user.tier),
     followers: user.followers ? user.followers.length : 0,
     impressions: user.profileViews || 0,
     clicks: user.profileClicks || 0,

@@ -15,6 +15,7 @@ export interface Certificate {
   isMinted?: boolean; // Added for compatibility
   mintedAt?: string;
   team?: string;
+  style?: string; // Add missing style property
 }
 
 export type CertificateType = 

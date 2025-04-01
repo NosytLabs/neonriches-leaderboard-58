@@ -21,6 +21,7 @@ export const useUserCosmetics = (
     try {
       if (!user) return false;
       
+      // Cast to our defined UserCosmetics type with required fields
       const userCosmetics: UserCosmetics = user.cosmetics || { 
         border: [], 
         color: [], 
@@ -56,10 +57,11 @@ export const useUserCosmetics = (
         return false;
       }
       
+      // Create a new cosmetics object with the updated array
       const updatedCosmetics = {
         ...userCosmetics,
         [propertyName]: Array.isArray(items) ? [...items, cosmeticId] : [cosmeticId]
-      };
+      } as UserCosmetics;
       
       await updateUserProfile({
         cosmetics: updatedCosmetics

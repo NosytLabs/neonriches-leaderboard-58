@@ -28,7 +28,8 @@ export interface CosmeticItem {
   cssClass?: string;
   restrictedTo?: string[];
   icon?: string;
-  imageSrc?: string; // Add this to fix imageSrc property errors
+  imageSrc?: string;
+  imageUrl?: string; // Add this to fix imageUrl property errors
   cost?: number; // Add this for backward compatibility
   image?: string; // Add this for backward compatibility
 }
