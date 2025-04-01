@@ -1,7 +1,9 @@
 
-import { TeamColor, MockeryAction } from './mockery';
+import { TeamColor as MockeryTeamColor, MockeryAction as MockeryActionType } from './mockery';
 
-export { TeamColor, MockeryAction };
+// Export types properly with export type
+export type TeamColor = MockeryTeamColor;
+export type MockeryAction = MockeryActionType;
 
 export interface MockedUser {
   id: string;
@@ -26,3 +28,15 @@ export interface MockeryEvent {
   appliedBy: string;
   timestamp?: string;
 }
+
+export type MockeryTier = 
+  | 'common' 
+  | 'uncommon' 
+  | 'rare' 
+  | 'epic' 
+  | 'legendary'
+  | 'royal'
+  | 'basic'
+  | 'premium'
+  | 'silver'
+  | 'bronze';

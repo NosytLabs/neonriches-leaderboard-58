@@ -1,5 +1,5 @@
 
-import { TeamColor, MockeryAction } from '@/types/mockery';
+import { MockeryAction } from '@/types/mockery';
 
 /**
  * User tier types for the application
@@ -30,6 +30,20 @@ export type UserTier =
   | 'diamond' 
   | 'bronze' 
   | 'vip';
+
+/**
+ * TeamColor for the application
+ */
+export type TeamColor = 
+  | 'red' 
+  | 'blue' 
+  | 'green' 
+  | 'gold' 
+  | 'purple' 
+  | 'none' 
+  | 'neutral'
+  | 'silver'
+  | 'bronze';
 
 /**
  * User settings interface
@@ -156,6 +170,7 @@ export interface UserProfile {
   profileImages?: any[];
   purchasedFeatures?: string[];
   boostCount?: number;
+  isFollowing?: boolean;
 }
 
 /**
@@ -202,3 +217,14 @@ export interface ProfileImage {
 }
 
 export type ProfileLink = SocialLink;
+
+// Gender type
+export type Gender = 
+  | 'male' 
+  | 'female' 
+  | 'other' 
+  | 'prefer-not-to-say'
+  | 'king'
+  | 'queen'
+  | 'jester'
+  | 'noble';

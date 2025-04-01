@@ -41,7 +41,19 @@ export interface SoundOptions {
   onEnd?: () => void;
 }
 
-export const useSound = () => {
+// Create a function that will be returned by the hook
+export type SoundFunction = (type: SoundType, options?: SoundOptions) => void;
+
+// The main hook interface
+export interface SoundHook {
+  playSound: SoundFunction;
+  stopSound: (type?: SoundType) => void;
+  play: SoundFunction;
+  isSoundEnabled: boolean;
+  currentVolume: number;
+}
+
+export const useSound = (): SoundHook => {
   const playSound = useCallback((type: SoundType, options?: SoundOptions) => {
     console.log(`Playing sound: ${type} with options:`, options);
     // Actual sound implementation would go here
@@ -65,4 +77,10 @@ export const useSound = () => {
   };
 };
 
-export default useSound;
+// Also export default as a function that returns the hook result
+const defaultUseSound = (): SoundFunction => {
+  const { play } = useSound();
+  return play;
+};
+
+export default defaultUseSound;

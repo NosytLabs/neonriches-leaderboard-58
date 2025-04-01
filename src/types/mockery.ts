@@ -37,7 +37,9 @@ export type TeamColor =
   | 'gold' 
   | 'purple' 
   | 'none' 
-  | 'neutral';
+  | 'neutral'
+  | 'silver'
+  | 'bronze';
 
 export interface MockeryItem {
   id: string;

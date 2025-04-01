@@ -1,98 +1,124 @@
 
 import React from 'react';
 import { cn } from '@/lib/utils';
+import { Crown } from 'lucide-react';
 
-type RoyalDividerVariant = 'line' | 'double' | 'fancy' | 'ornate' | 'simple' | 'scroll';
-type RoyalDividerColor = 'default' | 'royal' | 'crimson' | 'gold' | 'purple';
+export type RoyalDividerVariant = 'line' | 'double' | 'fancy' | 'ornate' | 'simple' | 'crown' | 'scroll';
+export type RoyalDividerColor = 'default' | 'royal' | 'gold' | 'crimson' | 'purple' | 'navy';
 
-interface RoyalDividerProps {
+export interface RoyalDividerProps {
   variant?: RoyalDividerVariant;
+  label?: string;
   color?: RoyalDividerColor;
   className?: string;
-  withIcon?: boolean;
-  iconClassName?: string;
+  icon?: React.ReactNode;
   text?: string;
-  textClassName?: string;
 }
-
-const getColorClass = (color: RoyalDividerColor) => {
-  switch (color) {
-    case 'royal': return 'from-royal-navy via-royal-blue to-royal-navy';
-    case 'crimson': return 'from-crimson-dark via-crimson to-crimson-dark';
-    case 'gold': return 'from-royal-gold/60 via-royal-gold to-royal-gold/60';
-    case 'purple': return 'from-purple-900 via-purple-600 to-purple-900';
-    default: return 'from-gray-700 via-gray-500 to-gray-700';
-  }
-};
 
 const RoyalDivider: React.FC<RoyalDividerProps> = ({
   variant = 'line',
+  label,
   color = 'default',
-  className = '',
-  withIcon = false,
-  iconClassName = '',
-  text,
-  textClassName = ''
+  className,
+  icon,
+  text
 }) => {
-  const colorClass = getColorClass(color);
+  const colorClasses = {
+    gold: 'border-royal-gold/50 text-royal-gold',
+    royal: 'border-royal-purple/50 text-royal-purple',
+    crimson: 'border-royal-crimson/50 text-royal-crimson',
+    purple: 'border-purple-500/50 text-purple-500',
+    navy: 'border-blue-900/50 text-blue-900',
+    default: 'border-white/20 text-white/50'
+  };
   
-  const renderLine = () => (
-    <div className={cn('h-px bg-gradient-to-r', colorClass, className)} />
-  );
+  const colorClass = colorClasses[color] || colorClasses.default;
   
-  const renderDouble = () => (
-    <div className={cn('flex flex-col space-y-1', className)}>
-      <div className={cn('h-px bg-gradient-to-r', colorClass)} />
-      <div className={cn('h-px bg-gradient-to-r', colorClass)} />
-    </div>
-  );
-  
-  const renderFancy = () => (
-    <div className={cn('relative flex items-center', className)}>
-      <div className="flex-grow h-px bg-gradient-to-r from-transparent via-gray-500 to-transparent" />
-      <div className={cn('absolute left-1/2 -translate-x-1/2 w-8 h-8 flex items-center justify-center', iconClassName)}>
-        <div className="w-3 h-3 rotate-45 bg-gradient-to-br from-royal-gold to-amber-500" />
+  if (variant === 'line' && (label || text)) {
+    return (
+      <div className={cn("flex items-center", className)}>
+        <div className={cn("flex-grow border-t", colorClass)} />
+        <div className="flex-shrink mx-3 flex items-center space-x-2">
+          {icon || (color === 'gold' && <Crown className="h-4 w-4 text-royal-gold" />)}
+          <span className={cn("text-sm font-medium", colorClass)}>{label || text}</span>
+        </div>
+        <div className={cn("flex-grow border-t", colorClass)} />
       </div>
-    </div>
-  );
+    );
+  }
   
-  const renderOrnate = () => (
-    <div className={cn('relative flex items-center', className)}>
-      <div className={cn('flex-grow h-px bg-gradient-to-r', colorClass)} />
-      {withIcon && (
-        <div className={cn('absolute left-1/2 -translate-x-1/2 w-8 h-8 flex items-center justify-center', iconClassName)}>
-          <svg className="w-6 h-6 text-royal-gold" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 2L15 6L19 7L17 11L19 15L15 16L12 20L9 16L5 15L7 11L5 7L9 6L12 2Z" stroke="currentColor" strokeWidth="2" />
-          </svg>
+  if (variant === 'crown') {
+    return (
+      <div className={cn("relative flex items-center my-6", className)}>
+        <div className={cn("w-full border-t", colorClass)} />
+        <div className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 bg-background px-4">
+          <Crown className={cn("h-6 w-6", color === 'gold' ? 'text-royal-gold' : color === 'crimson' ? 'text-royal-crimson' : color === 'royal' ? 'text-royal-purple' : color === 'purple' ? 'text-purple-500' : color === 'navy' ? 'text-blue-900' : 'text-white/50')} />
         </div>
-      )}
-    </div>
-  );
+        {(label || text) && (
+          <div className="absolute left-1/2 -translate-x-1/2 translate-y-4 px-2 text-xs">
+            <span className={cn("font-medium", colorClass)}>{label || text}</span>
+          </div>
+        )}
+      </div>
+    );
+  }
   
-  const renderSimple = () => (
-    <div className={cn('h-px bg-gray-700', className)} />
-  );
-  
-  const renderScroll = () => (
-    <div className={cn('relative flex items-center my-4', className)}>
-      <div className={cn('flex-grow h-px bg-gradient-to-r', colorClass)} />
-      {text && (
-        <div className={cn('absolute left-1/2 -translate-x-1/2 px-4 py-1 bg-gray-900 text-royal-gold font-medieval', textClassName)}>
-          {text}
+  if (variant === 'fancy') {
+    return (
+      <div className={cn("relative flex items-center justify-center my-6", className)}>
+        <div className={cn("w-full border-t", colorClass)} />
+        <div className="absolute bg-background px-4 flex items-center">
+          <div className={cn("w-2 h-2 rounded-full", colorClass.replace('border-', 'bg-').split(' ')[0])} />
+          {(label || text) && (
+            <span className={cn("mx-2 text-sm font-medium", colorClass)}>{label || text}</span>
+          )}
+          <div className={cn("w-2 h-2 rounded-full", colorClass.replace('border-', 'bg-').split(' ')[0])} />
         </div>
-      )}
-      <div className="absolute left-0 -top-1 w-4 h-4 bg-gray-900 rounded-full border border-royal-gold/50" />
-      <div className="absolute right-0 -top-1 w-4 h-4 bg-gray-900 rounded-full border border-royal-gold/50" />
-    </div>
-  );
+      </div>
+    );
+  }
   
-  if (variant === 'double') return renderDouble();
-  if (variant === 'fancy') return renderFancy();
-  if (variant === 'ornate') return renderOrnate();
-  if (variant === 'simple') return renderSimple();
-  if (variant === 'scroll') return renderScroll();
+  if (variant === 'double') {
+    return (
+      <div className={cn("space-y-1", className)}>
+        <div className={cn("w-full border-t", colorClass)} />
+        <div className={cn("w-full border-t", colorClass)} />
+      </div>
+    );
+  }
+
+  if (variant === 'ornate') {
+    return (
+      <div className={cn("relative flex items-center my-6", className)}>
+        <div className={cn("w-full border-t", colorClass)} />
+        <div className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 bg-background px-6">
+          <div className="flex items-center space-x-2">
+            <div className={cn("w-2 h-2 rotate-45", colorClass.replace('border-', 'bg-').split(' ')[0])} />
+            {(label || text) && <span className={cn("text-sm font-medium", colorClass)}>{label || text}</span>}
+            <div className={cn("w-2 h-2 rotate-45", colorClass.replace('border-', 'bg-').split(' ')[0])} />
+          </div>
+        </div>
+      </div>
+    );
+  }
   
-  return renderLine();
+  if (variant === 'scroll') {
+    return (
+      <div className={cn("relative flex items-center my-4", className)}>
+        <div className={cn("flex-grow h-px bg-gradient-to-r", colorClass)} />
+        {(label || text) && (
+          <div className={cn("absolute left-1/2 -translate-x-1/2 px-4 py-1 bg-gray-900 text-royal-gold font-medieval", textClassName)}>
+            {label || text}
+          </div>
+        )}
+        <div className="absolute left-0 -top-1 w-4 h-4 bg-gray-900 rounded-full border border-royal-gold/50" />
+        <div className="absolute right-0 -top-1 w-4 h-4 bg-gray-900 rounded-full border border-royal-gold/50" />
+      </div>
+    );
+  }
+  
+  // Default: simple line
+  return <div className={cn("w-full border-t", colorClass, className)} />;
 };
 
 export default RoyalDivider;
