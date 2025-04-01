@@ -1,4 +1,3 @@
-
 import { UserProfile } from '@/types/user-consolidated';
 import { ProfileBoost } from '@/types/boost';
 import { TeamColor } from '@/types/team';

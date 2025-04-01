@@ -1,3 +1,4 @@
+
 import { useState, useCallback } from 'react';
 import { MockeryAction, MockedUser, MockeryEvent } from '@/types/mockery-types';
 import { useSound } from '@/hooks/use-sound';
@@ -12,6 +13,7 @@ const useMockery = () => {
     {
       id: '1',
       username: 'WealthyUser',
+      displayName: 'Sir Money Bags', // We keep this as it's now added to the MockedUser interface
       profileImage: '/images/avatars/money-bags.jpg',
       tier: 'royal',
       team: 'gold',
@@ -23,6 +25,7 @@ const useMockery = () => {
     {
       id: '2',
       username: 'BigSpender',
+      displayName: 'Lady Royal', // We keep this as it's now added to the MockedUser interface
       profileImage: '/images/avatars/royal-spender.jpg',
       tier: 'premium',
       team: 'purple',
@@ -46,6 +49,7 @@ const useMockery = () => {
       const mockedUser: MockedUser = {
         id: userId,
         username: `User${userId}`,
+        displayName: `User ${userId}`, // We keep this as it's now added to the MockedUser interface
         profileImage: '/images/avatars/default.jpg',
         tier: 'basic',
         team: 'red',
@@ -182,7 +186,8 @@ const useMockery = () => {
       appliedAt: mockedUser.appliedAt,
       expiresAt: mockedUser.expiresAt,
       isActive: true,
-      active: true
+      active: true,
+      targetId: mockedUser.id // Added for compatibility
     };
   }, [mockUsers]);
   

@@ -1,128 +1,121 @@
-
-// Authentication utility functions and constants
-import { UserTier, UserProfile, TeamColor } from '@/types/user';
+import { UserProfile } from '@/types/user-consolidated';
 import { ProfileBoost } from '@/types/boost';
+import { TeamColor } from '@/types/team';
 import { UserCosmetics } from '@/types/cosmetics';
 import { UserSettings } from '@/types/user-consolidated';
+import { UserTier } from '@/types/user';
+import { toTeamColor } from '@/utils/typeConverters';
 
-// Default notifications configuration for new users
-export const defaultNotifications = {
-  email: true,
-  push: true,
-  in_app: true,
-  rankChanges: true
-};
+interface ProcessUserOptions {
+  // Add any options for processing user data
+  includePrivateData?: boolean;
+}
 
-// Update the notifications object to include in_app
-export const updateNotifications = (notifications: any) => {
-  return {
-    ...notifications,
-    in_app: notifications.in_app ?? true
+/**
+ * Process user data from the server to match the frontend User type
+ * @param userData - Raw user data from the server
+ * @param options - Processing options
+ * @returns - Processed user data
+ */
+export const processUser = (
+  userData: any, 
+  options: ProcessUserOptions = {}
+): UserProfile | null => {
+  if (!userData) return null;
+  
+  // Normalize the data fields from various possible sources
+  const user: UserProfile = {
+    id: userData.id || userData.userId || '',
+    username: userData.username || '',
+    displayName: userData.displayName || userData.userName || userData.username || '',
+    email: userData.email || '',
+    profileImage: userData.profileImage || userData.avatar || '',
+    bio: userData.bio || '',
+    joinedDate: userData.joinedDate || userData.joinDate || userData.createdAt || new Date().toISOString(),
+    isVerified: Boolean(userData.isVerified),
+    team: userData.team ? toTeamColor(userData.team) : 'none' as TeamColor,
+    tier: userData.tier || 'free',
+    rank: userData.rank || 0,
+    previousRank: userData.previousRank || 0,
+    walletBalance: userData.walletBalance || 0,
+    totalSpent: userData.totalSpent || userData.amountSpent || 0,
+    amountSpent: userData.amountSpent || userData.totalSpent || 0,
+    // Add other fields as needed
   };
-};
-
-// User authentication states
-export const AUTH_STATES = {
-  AUTHENTICATED: 'authenticated',
-  UNAUTHENTICATED: 'unauthenticated',
-  LOADING: 'loading'
-};
-
-// Parse JWT token
-export const parseJwt = (token: string) => {
-  try {
-    return JSON.parse(atob(token.split('.')[1]));
-  } catch (e) {
-    return null;
+  
+  // Optional fields
+  if (userData.followers) {
+    user.followers = Array.isArray(userData.followers) ? userData.followers : [];
   }
-};
-
-// Check if token is expired
-export const isTokenExpired = (token: string) => {
-  const decodedToken = parseJwt(token);
-  if (!decodedToken) return true;
   
-  const currentTime = Date.now() / 1000;
-  return decodedToken.exp < currentTime;
-};
-
-// Format display name from user data
-export const formatDisplayName = (user: UserProfile | null) => {
-  if (!user) return '';
-  return user.displayName || user.username || 'Anonymous User';
-};
-
-// Get user initials for avatars
-export const getUserInitials = (user: UserProfile | null) => {
-  if (!user) return 'U';
+  if (userData.following) {
+    user.following = Array.isArray(userData.following) ? userData.following : [];
+  }
   
-  const displayName = formatDisplayName(user);
-  return displayName
-    .split(' ')
-    .map(part => part.charAt(0).toUpperCase())
-    .slice(0, 2)
-    .join('');
+  if (userData.cosmetics) {
+    user.cosmetics = userData.cosmetics;
+  }
+  
+  if (userData.achievements) {
+    user.achievements = userData.achievements;
+  }
+  
+  if (userData.settings) {
+    user.settings = userData.settings;
+  }
+  
+  return user;
 };
 
 /**
- * Creates a default user object with initial values
+ * Sanitize user data for storage or transmission
+ * @param user - User data to sanitize
+ * @returns Sanitized user data
  */
-export const getDefaultUser = (email: string, username: string): UserProfile => {
-  const now = new Date().toISOString();
+export const sanitizeUserData = (user: UserProfile): Partial<UserProfile> => {
+  if (!user) return {};
   
-  return {
-    id: `user-${Date.now()}`,
-    email,
-    username,
-    displayName: username,
-    profileImage: `https://api.dicebear.com/7.x/personas/svg?seed=${username}`,
-    bio: '',
-    tier: 'basic' as UserTier,
-    team: 'none' as TeamColor,
-    rank: 0,
-    walletBalance: 5.00, // Starting balance
-    totalSpent: 0,
-    amountSpent: 0,
-    joinedDate: now,
-    createdAt: now, // Add createdAt instead of joinDate
-    isVerified: false,
-    cosmetics: {
-      border: ['starter-border'],
-      color: ['starter-color'],
-      font: [],
-      emoji: [],
-      title: ['newcomer'],
-      background: [],
-      effect: [],
-      badge: [],
-      theme: []
-    } as UserCosmetics,
-    settings: {
-      profileVisibility: 'public',
-      allowProfileLinks: true,
-      theme: 'dark',
-      notifications: true,
-      emailNotifications: false,
-      marketingEmails: false,
-      showRank: true,
-      darkMode: true,
-      soundEffects: true,
-      showEmailOnProfile: false,
-      rankChangeAlerts: false,
-      showTeam: true,
-      showSpending: true,
-      showBadges: true
-    },
-    followers: [] as string[], // Fix type for followers
-    following: [] as string[], // Fix type for following
-    spendStreak: 0
-  };
+  // Create a copy without sensitive information
+  const sanitizedUser = { ...user };
+  
+  // Remove sensitive information
+  delete (sanitizedUser as any).token;
+  delete (sanitizedUser as any).refreshToken;
+  delete (sanitizedUser as any).passwordHash;
+  
+  return sanitizedUser;
+};
+
+/**
+ * Check if the user has the required permissions
+ * @param user - User to check
+ * @param requiredPermissions - Permissions needed
+ * @returns Boolean indicating if user has permission
+ */
+export const hasPermission = (
+  user: UserProfile | null, 
+  requiredPermissions: string[]
+): boolean => {
+  if (!user) return false;
+  
+  // If no permissions are required, grant access
+  if (!requiredPermissions || requiredPermissions.length === 0) {
+    return true;
+  }
+  
+  // Check if user has the permissions
+  const userPermissions = (user as any).permissions || [];
+  
+  // Check if any of the required permissions match the user's permissions
+  return requiredPermissions.some(permission => 
+    userPermissions.includes(permission)
+  );
 };
 
 /**
  * Adds a profile boost with specified duration in days
  */
-export const addProfileBoostWithDays = (user: UserProfile, days: number, strength: number = 1, type: string = 'general'): ProfileBoost[] => {
+export const addProfileBoostWithDays = (user: UserProfile, days: number, level: number = 1, type: string = 'general'): ProfileBoost[] => {
   if (!user) return [];
   
   const now = new Date();
@@ -133,11 +126,11 @@ export const addProfileBoostWithDays = (user: UserProfile, days: number, strengt
     id: `boost-${Date.now()}`,
     startDate: now.toISOString(),
     endDate: endDate.toISOString(),
-    level: strength,
+    level,
     type,
-    strength,
+    strength: level,
     appliedBy: 'user',
-    isActive: true // Add the missing isActive property
+    isActive: true
   };
   
   const profileBoosts = user.profileBoosts || [];
@@ -148,9 +141,9 @@ export const addProfileBoostWithDays = (user: UserProfile, days: number, strengt
  * Adds a cosmetic to a user by category string
  */
 export const addCosmeticByCategoryString = (user: UserProfile, cosmeticId: string, category: string): UserCosmetics => {
-  if (!user || !cosmeticId || !category) return user.cosmetics as UserCosmetics;
+  if (!user || !cosmeticId || !category) return user.cosmetics || {} as UserCosmetics;
   
-  const cosmetics = { ...user.cosmetics } as UserCosmetics;
+  const cosmetics = { ...(user.cosmetics || {}) } as UserCosmetics;
   
   // Handle legacy field names
   let fieldName = category;
@@ -169,6 +162,7 @@ export const addCosmeticByCategoryString = (user: UserProfile, cosmeticId: strin
   
   // Ensure the category exists and is an array
   if (!cosmetics[cosmeticKey]) {
+    // Create an empty array for this category
     if (Array.isArray(cosmetics[cosmeticKey])) {
       // If it's already an array but falsy (e.g. empty), leave it as is
       // This is to prevent TypeScript errors about assigning to a string & string[]
@@ -178,7 +172,7 @@ export const addCosmeticByCategoryString = (user: UserProfile, cosmeticId: strin
   }
   
   // Add cosmetic if it doesn't already exist
-  if (cosmetics[cosmeticKey] && !cosmetics[cosmeticKey].includes(cosmeticId)) {
+  if (Array.isArray(cosmetics[cosmeticKey]) && !cosmetics[cosmeticKey].includes(cosmeticId)) {
     // Using type assertion to ensure TypeScript understands this is a string array
     const currentItems = cosmetics[cosmeticKey] as string[];
     (cosmetics as any)[cosmeticKey] = [...currentItems, cosmeticId];
@@ -238,85 +232,4 @@ export const getTierTextClass = (tier: UserTier): string => {
     case 'vip': return 'text-pink-500';
     default: return 'text-gray-400';
   }
-};
-
-/**
- * Gets the border color CSS class for a user tier
- */
-export const getTierBorderClass = (tier: UserTier): string => {
-  switch (tier) {
-    case 'bronze': return 'border-amber-600/30';
-    case 'silver': return 'border-slate-400/30';
-    case 'gold': return 'border-yellow-500/30';
-    case 'platinum': return 'border-indigo-400/30';
-    case 'royal': return 'border-royal-gold/30';
-    case 'premium': return 'border-purple-500/30';
-    case 'pro': return 'border-blue-500/30';
-    case 'basic': return 'border-green-500/30';
-    case 'free': return 'border-gray-400/30';
-    case 'diamond': return 'border-cyan-500/30';
-    case 'founder': return 'border-emerald-500/30';
-    case 'vip': return 'border-pink-500/30';
-    default: return 'border-gray-400/30';
-  }
-};
-
-/**
- * Gets amount needed to reach next tier
- */
-export const getAmountToNextTier = (totalSpent: number): { amount: number; nextTier: UserTier } => {
-  if (totalSpent < 50) {
-    return { amount: 50 - totalSpent, nextTier: 'silver' };
-  } else if (totalSpent < 200) {
-    return { amount: 200 - totalSpent, nextTier: 'gold' };
-  } else if (totalSpent < 500) {
-    return { amount: 500 - totalSpent, nextTier: 'platinum' };
-  } else if (totalSpent < 1000) {
-    return { amount: 1000 - totalSpent, nextTier: 'royal' };
-  }
-  // Already at highest tier
-  return { amount: 0, nextTier: 'royal' };
-};
-
-export const createMockUser = (overrides = {}) => {
-  return {
-    id: `user_${Math.random().toString(36).substr(2, 9)}`,
-    username: `user_${Math.random().toString(36).substr(2, 5)}`,
-    displayName: 'Test User',
-    profileImage: `https://api.dicebear.com/7.x/personas/svg?seed=${Math.random()}`,
-    bio: 'This is a test user account',
-    joinedDate: new Date().toISOString(),
-    rank: Math.floor(Math.random() * 1000) + 1,
-    previousRank: Math.floor(Math.random() * 1000) + 1,
-    totalSpent: Math.floor(Math.random() * 10000),
-    amountSpent: Math.floor(Math.random() * 10000),
-    walletBalance: Math.floor(Math.random() * 5000),
-    tier: 'basic',
-    team: 'blue',
-    isVerified: Math.random() > 0.5,
-    isVIP: Math.random() > 0.8,
-    followers: [] as string[], // Fix the type for followers
-    following: [] as string[], // Fix the type for following
-    profileViews: Math.floor(Math.random() * 500),
-    profileClicks: Math.floor(Math.random() * 200),
-    spendStreak: Math.floor(Math.random() * 10),
-    lastActive: new Date().toISOString(),
-    settings: {
-      profileVisibility: "public",
-      allowProfileLinks: true,
-      theme: "dark",
-      notifications: true,
-      emailNotifications: false,
-      marketingEmails: false,
-      showRank: true,
-      darkMode: true,
-      soundEffects: true,
-      showEmailOnProfile: false,
-      rankChangeAlerts: false,
-      showTeam: true,
-      showSpending: true,
-      showBadges: true
-    },
-    ...overrides
-  };
 };

@@ -11,7 +11,20 @@ export const getMockeryName = (action: MockeryAction): string => {
     'tomatoes': 'Rotten Tomatoes',
     'crown': 'Tilted Crown',
     'gift': 'Dubious Gift',
-    'carrot': 'Golden Carrot'
+    'carrot': 'Golden Carrot',
+    'putridEggs': 'Putrid Eggs',
+    'stocks': 'Public Stocks',
+    'jester': 'Jester Mockery',
+    'shame': 'Public Shame',
+    'silence': 'Royal Silence',
+    'courtJester': 'Court Jester',
+    'smokeBomb': 'Smoke Bomb',
+    'protection': 'Royal Protection',
+    'taunt': 'Royal Taunt',
+    'mock': 'Public Mockery',
+    'challenge': 'Royal Challenge',
+    'joust': 'Royal Joust',
+    'duel': 'Royal Duel'
   };
   
   return mockeryNames[action] || 'Unknown Mockery';
@@ -26,7 +39,20 @@ export const getMockeryDescription = (action: MockeryAction): string => {
     'tomatoes': 'Classic! Throw some rotten tomatoes their way',
     'crown': 'Tilt their crown to show they are unworthy',
     'gift': 'Give them a mysterious gift (it might not be pleasant)',
-    'carrot': 'Award them a golden carrot for their ridiculous spending'
+    'carrot': 'Award them a golden carrot for their ridiculous spending',
+    'putridEggs': 'Throw the foulest eggs at your target',
+    'stocks': 'Lock someone in the public stocks for all to see',
+    'jester': 'Turn someone into the court jester for a day',
+    'shame': 'Publicly shame someone for their actions',
+    'silence': 'Silence someone from certain channels temporarily',
+    'courtJester': 'Make someone the official court jester',
+    'smokeBomb': 'Deploy a smoke bomb to disappear from view',
+    'protection': 'Grant royal protection against mockery actions',
+    'taunt': 'Issue a formal taunt to challenge someone',
+    'mock': 'Mock someone with formalized ridicule',
+    'challenge': 'Formally challenge someone to a contest',
+    'joust': 'Challenge someone to a virtual joust for honor',
+    'duel': 'Demand satisfaction through a gentlemanly duel'
   };
   
   return descriptions[action] || 'A mysterious form of mockery';
@@ -41,7 +67,20 @@ export const getMockeryTier = (action: MockeryAction): MockeryTier => {
     'thumbsDown': 'uncommon',
     'gift': 'rare',
     'crown': 'epic',
-    'carrot': 'legendary'
+    'carrot': 'legendary',
+    'putridEggs': 'uncommon',
+    'stocks': 'rare',
+    'jester': 'rare',
+    'shame': 'epic',
+    'silence': 'rare',
+    'courtJester': 'epic',
+    'smokeBomb': 'uncommon',
+    'protection': 'legendary',
+    'taunt': 'common',
+    'mock': 'common',
+    'challenge': 'uncommon',
+    'joust': 'epic',
+    'duel': 'legendary'
   };
   
   return tiers[action] || 'common';
@@ -56,7 +95,20 @@ export const getMockeryActionPrice = (action: MockeryAction): number => {
     'thumbsDown': 20,
     'gift': 30,
     'crown': 50,
-    'carrot': 100
+    'carrot': 100,
+    'putridEggs': 20,
+    'stocks': 35,
+    'jester': 40,
+    'shame': 60,
+    'silence': 45,
+    'courtJester': 55,
+    'smokeBomb': 25,
+    'protection': 75,
+    'taunt': 15,
+    'mock': 10,
+    'challenge': 30,
+    'joust': 50,
+    'duel': 80
   };
   
   return costs[action] || 10;
@@ -74,7 +126,21 @@ export const getMockeryActionIcon = (action: MockeryAction) => {
     'tomatoes': ThumbsDown, // Using ThumbsDown as placeholder since Tomato isn't available
     'crown': Crown,
     'gift': Gift,
-    'carrot': Carrot
+    'carrot': Carrot,
+    // Add other icons for remaining actions
+    'putridEggs': Egg,
+    'stocks': ThumbsDown,
+    'jester': Crown,
+    'shame': ThumbsDown,
+    'silence': ThumbsDown,
+    'courtJester': Crown,
+    'smokeBomb': ThumbsDown,
+    'protection': Crown,
+    'taunt': ThumbsDown,
+    'mock': ThumbsDown,
+    'challenge': Crown,
+    'joust': Crown,
+    'duel': Crown
   };
   
   return icons[action] || ThumbsDown;

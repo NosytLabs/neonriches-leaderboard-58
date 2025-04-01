@@ -20,7 +20,8 @@ export type MockeryAction =
   | 'mock'
   | 'challenge'
   | 'joust'
-  | 'duel';
+  | 'duel'
+  | 'fish'; // Adding 'fish' action that's used in mockeryUtils.ts
 
 /**
  * Mockery tiers define rarity and price levels
@@ -68,14 +69,15 @@ export interface MockeryEvent {
   id: string;
   action: MockeryAction;
   appliedAt: string;
-  fromId: string; // Changed from userId to fromId
-  isAnonymous: boolean; // Required property
+  fromId: string; 
+  isAnonymous: boolean;
   timestamp: string;
   expiresAt: string;
   visible?: boolean;
   appliedBy?: string;
   isActive?: boolean;
   active?: boolean;
+  targetId?: string; // Added for compatibility with some components
 }
 
 /**
@@ -92,6 +94,7 @@ export interface MockedUser {
   reason?: string;
   tier?: string;
   team?: string;
+  displayName?: string; // Added for compatibility with existing code
 }
 
 /**

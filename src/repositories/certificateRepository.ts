@@ -5,20 +5,11 @@ import { Certificate, CertificateRepository } from '@/types/certificates';
 export class MockCertificateRepository implements CertificateRepository {
   private certificates: Certificate[] = [];
 
-  async getCertificateById(id: string): Promise<Certificate | null> {
-    const certificate = this.certificates.find(cert => cert.id === id);
-    return certificate || null;
-  }
-
-  async getCertificatesForUser(userId: string): Promise<Certificate[]> {
+  async getCertificatesByUserId(userId: string): Promise<Certificate[]> {
     return this.certificates.filter(cert => cert.userId === userId);
   }
 
-  async getMintedCertificatesForUser(userId: string): Promise<Certificate[]> {
-    return this.certificates.filter(cert => cert.userId === userId && cert.isMinted);
-  }
-
-  async saveCertificate(certificate: Certificate): Promise<Certificate> {
+  async createCertificate(certificate: Certificate): Promise<Certificate> {
     const newCertificate = {
       ...certificate,
       id: certificate.id || `cert-${Date.now()}`,
@@ -29,15 +20,38 @@ export class MockCertificateRepository implements CertificateRepository {
     return newCertificate;
   }
 
-  async updateCertificate(certificate: Certificate): Promise<Certificate> {
+  async getCertificateById(id: string): Promise<Certificate | null> {
+    const certificate = this.certificates.find(cert => cert.id === id);
+    return certificate || null;
+  }
+
+  async getCertificate(id: string): Promise<Certificate | null> {
+    return this.getCertificateById(id);
+  }
+
+  async getCertificatesForUser(userId: string): Promise<Certificate[]> {
+    return this.certificates.filter(cert => cert.userId === userId);
+  }
+
+  async getMintedCertificatesForUser(userId: string): Promise<Certificate[]> {
+    return this.certificates.filter(cert => cert.userId === userId && cert.isMinted);
+  }
+
+  async updateCertificate(certificate: Certificate): Promise<boolean> {
     const index = this.certificates.findIndex(cert => cert.id === certificate.id);
     
     if (index === -1) {
-      throw new Error(`Certificate with id ${certificate.id} not found`);
+      return false;
     }
     
     this.certificates[index] = certificate;
-    return certificate;
+    return true;
+  }
+
+  async deleteCertificate(id: string): Promise<boolean> {
+    const initialLength = this.certificates.length;
+    this.certificates = this.certificates.filter(cert => cert.id !== id);
+    return initialLength > this.certificates.length;
   }
 }
 
