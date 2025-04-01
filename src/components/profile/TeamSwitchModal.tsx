@@ -1,195 +1,134 @@
 
 import React, { useState } from 'react';
-import { Shield, Info, Check, CreditCard, Scroll, Flame, Coins, Lock } from 'lucide-react';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
-import { useAuth } from '@/contexts/auth';
-import { UserProfile } from '@/contexts/AuthContext';
-import { Separator } from '@/components/ui/separator';
-import { getTeamMotto, getTeamBenefit, getTeamSecurityGuarantee } from '@/utils/teamUtils';
+import { Shield } from 'lucide-react';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Label } from '@/components/ui/label';
+import { toast } from '@/hooks/use-toast';
+import { useAuth } from '@/hooks/useAuth';
+import { TeamColor } from '@/types/user';
 
-// Define team color type
-export type TeamColor = 'red' | 'green' | 'blue';
-
-// Define team data
-const teamData = [
-  {
-    id: 'red',
-    name: 'Royal Order of Reckless Spending',
-    shortName: 'RORS',
-    motto: 'Buy First, Think Never',
-    color: 'text-team-red',
-    bgColor: 'bg-team-red/10',
-    icon: <Flame className="h-5 w-5 text-team-red" />,
-    description: 'Masters of mindless monetary mayhem, the RORS believe that one must spend with reckless abandon to assert digital dominance.',
-    members: 423,
-    rank: 1
-  },
-  {
-    id: 'green',
-    name: 'Emerald Exchequer Cabaret',
-    shortName: 'EEC',
-    motto: 'Wealth So Strategic, It\'s Almost Pathetic',
-    color: 'text-team-green',
-    bgColor: 'bg-team-green/10',
-    icon: <Coins className="h-5 w-5 text-team-green" />,
-    description: 'The calculating gold-hoarders of the EEC believe that strategic spending is the key to digital nobility.',
-    members: 387,
-    rank: 2
-  },
-  {
-    id: 'blue',
-    name: 'Cobalt Credit Cartel',
-    shortName: 'CCC',
-    motto: 'Patience in Spending, Unbridled in Pretending',
-    color: 'text-team-blue',
-    bgColor: 'bg-team-blue/10',
-    icon: <CreditCard className="h-5 w-5 text-team-blue" />,
-    description: 'The intellectual elite of digital aristocracy, the CCC members pride themselves on timing their purchases for maximum social impact.',
-    members: 341,
-    rank: 3
-  }
-];
-
-export interface TeamSwitchModalProps {
-  open: boolean;
+interface TeamSwitchModalProps {
+  isOpen: boolean;
   onOpenChange: (open: boolean) => void;
-  user: UserProfile;
-  onTeamChange: (team: TeamColor) => Promise<void>;
-  trigger?: React.ReactNode;
+  currentTeam: TeamColor | null;
+  onTeamSwitch: (team: TeamColor) => Promise<void>;
 }
 
-const TeamSwitchModal: React.FC<TeamSwitchModalProps> = ({ 
-  open, 
+const TeamSwitchModal: React.FC<TeamSwitchModalProps> = ({
+  isOpen,
   onOpenChange,
-  user,
-  onTeamChange,
-  trigger
+  currentTeam,
+  onTeamSwitch
 }) => {
-  const [selectedTeam, setSelectedTeam] = useState<TeamColor | null>(user?.team as TeamColor || null);
-  const [isChanging, setIsChanging] = useState(false);
+  const [selectedTeam, setSelectedTeam] = useState<TeamColor>(currentTeam || 'red');
+  const [isLoading, setIsLoading] = useState(false);
   
-  const handleTeamSelect = (teamId: TeamColor) => {
-    setSelectedTeam(teamId);
-  };
-  
-  const handleTeamChange = async () => {
-    if (!selectedTeam || selectedTeam === user?.team) return;
+  const handleSubmit = async () => {
+    if (selectedTeam === currentTeam) {
+      onOpenChange(false);
+      return;
+    }
     
-    setIsChanging(true);
+    setIsLoading(true);
+    
     try {
-      await onTeamChange(selectedTeam);
+      await onTeamSwitch(selectedTeam);
+      
+      toast({
+        title: "Team Changed",
+        description: `You've successfully joined the ${
+          selectedTeam === 'red' ? 'Crimson Crown' :
+          selectedTeam === 'green' ? 'Golden Order' :
+          selectedTeam === 'blue' ? 'Azure Knights' :
+          'No Team'
+        }!`,
+        variant: "success"
+      });
+      
       onOpenChange(false);
     } catch (error) {
-      console.error('Error changing team:', error);
+      toast({
+        title: "Error",
+        description: "Failed to change team. Please try again.",
+        variant: "destructive"
+      });
     } finally {
-      setIsChanging(false);
+      setIsLoading(false);
     }
-  };
-
-  // Get absurd benefits for each team
-  const getTeamBenefits = (teamId: TeamColor): string[] => {
-    return getTeamBenefit(teamId);
-  };
-  
-  // Get security guarantee for each team
-  const getSecurityGuarantee = (teamId: TeamColor): string => {
-    return getTeamSecurityGuarantee(teamId);
   };
   
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      {trigger && <div onClick={() => onOpenChange(true)}>{trigger}</div>}
-      <DialogContent className="sm:max-w-[500px] glass-morphism">
+    <Dialog open={isOpen} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="text-xl font-bold">Choose Your Financial Allegiance</DialogTitle>
+          <DialogTitle>Switch Team</DialogTitle>
           <DialogDescription>
-            Select the spending faction that best represents your fiscal philosophy. Or, more realistically, whichever one has the colors you like best.
+            Choose a new team to join. This will affect your rankings and available rewards.
           </DialogDescription>
         </DialogHeader>
         
-        <div className="space-y-4 my-4">
-          {teamData.map((team) => (
-            <div 
-              key={team.id} 
-              className={`rounded-lg p-4 border transition-all cursor-pointer ${
-                selectedTeam === team.id 
-                  ? `border-${team.id} ${team.bgColor}` 
-                  : 'border-white/10 hover:border-white/20'
-              }`}
-              onClick={() => handleTeamSelect(team.id as TeamColor)}
-            >
-              <div className="flex items-start">
-                <div className="mr-3 mt-0.5">
-                  {team.icon}
+        <div className="py-4">
+          <RadioGroup 
+            defaultValue={currentTeam || 'red'} 
+            onValueChange={(value) => setSelectedTeam(value as TeamColor)}
+            className="grid gap-4"
+          >
+            <div className={`relative flex items-center space-x-3 rounded-lg border p-4 shadow-sm transition-all ${
+              selectedTeam === 'red' ? 'border-royal-crimson/50 bg-royal-crimson/5' : 'border-border'
+            }`}>
+              <RadioGroupItem value="red" id="team-red" className="sr-only" />
+              <Shield className="h-6 w-6 text-royal-crimson" />
+              <Label htmlFor="team-red" className="cursor-pointer flex-1">
+                <div>
+                  <div className="font-medium">Crimson Crown</div>
+                  <div className="text-sm text-muted-foreground">Warriors & Fighters</div>
                 </div>
-                <div className="flex-1">
-                  <h3 className={`font-bold ${team.color}`}>{team.name}</h3>
-                  <p className="text-xs text-white/60 mt-0.5 italic">"{getTeamMotto(team.id as TeamColor)}"</p>
-                  <p className="text-sm text-white/70 mt-1">{team.description}</p>
-                </div>
-                {selectedTeam === team.id && (
-                  <div className="ml-2">
-                    <Check className={`h-5 w-5 ${team.color}`} />
-                  </div>
-                )}
-              </div>
-              
-              <div className="mt-3 space-y-1">
-                <p className="text-xs font-medium text-white/80">Alleged "Benefits":</p>
-                <ul className="text-xs text-white/60 space-y-1">
-                  {getTeamBenefits(team.id as TeamColor).slice(0, 1).map((benefit, i) => (
-                    <li key={i} className="flex items-start">
-                      <span className="text-xs mr-1 mt-1">•</span> {benefit}
-                    </li>
-                  ))}
-                  <li className="flex items-start">
-                    <span className="text-xs mr-1 mt-1">•</span> <span className="italic">...and other equally ludicrous "advantages"</span>
-                  </li>
-                </ul>
-              </div>
-              
-              <div className="mt-3 flex items-start border-t border-white/10 pt-2">
-                <Lock className={`h-4 w-4 mr-1 ${team.color}`} />
-                <p className="text-xs text-white/60 italic">
-                  {getSecurityGuarantee(team.id as TeamColor).substring(0, 60)}...
-                </p>
-              </div>
-              
-              <div className="flex justify-between mt-3 text-xs text-white/50">
-                <span>Members: {team.members}</span>
-                <span>Rank: #{team.rank}</span>
-              </div>
+              </Label>
             </div>
-          ))}
+            
+            <div className={`relative flex items-center space-x-3 rounded-lg border p-4 shadow-sm transition-all ${
+              selectedTeam === 'green' ? 'border-royal-gold/50 bg-royal-gold/5' : 'border-border'
+            }`}>
+              <RadioGroupItem value="green" id="team-green" className="sr-only" />
+              <Shield className="h-6 w-6 text-royal-gold" />
+              <Label htmlFor="team-green" className="cursor-pointer flex-1">
+                <div>
+                  <div className="font-medium">Golden Order</div>
+                  <div className="text-sm text-muted-foreground">Merchants & Nobles</div>
+                </div>
+              </Label>
+            </div>
+            
+            <div className={`relative flex items-center space-x-3 rounded-lg border p-4 shadow-sm transition-all ${
+              selectedTeam === 'blue' ? 'border-royal-navy/50 bg-royal-navy/5' : 'border-border'
+            }`}>
+              <RadioGroupItem value="blue" id="team-blue" className="sr-only" />
+              <Shield className="h-6 w-6 text-royal-navy" />
+              <Label htmlFor="team-blue" className="cursor-pointer flex-1">
+                <div>
+                  <div className="font-medium">Azure Knights</div>
+                  <div className="text-sm text-muted-foreground">Strategists & Scholars</div>
+                </div>
+              </Label>
+            </div>
+          </RadioGroup>
         </div>
         
-        <Separator className="my-2" />
-        
-        <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-3 text-sm flex items-start">
-          <Info className="h-4 w-4 text-blue-400 mr-2 mt-0.5" />
-          <p className="text-white/80">
-            Look, let's break the 4th wall here: these teams are entirely meaningless. Your choice is solely aesthetic and about as consequential as picking a profile picture for a service you'll forget in a month.
-          </p>
-        </div>
-        
-        <DialogFooter className="mt-4">
-          <Button variant="outline" onClick={() => onOpenChange(false)}>
+        <DialogFooter>
+          <Button 
+            variant="outline" 
+            onClick={() => onOpenChange(false)}
+            disabled={isLoading}
+          >
             Cancel
           </Button>
           <Button 
-            onClick={handleTeamChange}
-            disabled={!selectedTeam || selectedTeam === user?.team || isChanging}
-            className={selectedTeam ? `bg-team-${selectedTeam} hover:bg-team-${selectedTeam}/80` : ''}
+            onClick={handleSubmit}
+            disabled={isLoading || selectedTeam === currentTeam}
           >
-            {isChanging ? 'Changing...' : 'Pledge Financial Allegiance'}
+            {isLoading ? "Switching Team..." : "Confirm Switch"}
           </Button>
         </DialogFooter>
       </DialogContent>

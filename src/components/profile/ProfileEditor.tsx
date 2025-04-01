@@ -27,7 +27,7 @@ const ProfileEditor: React.FC<ProfileEditorProps> = ({
     displayName: user.displayName || '',
     bio: user.bio || '',
     profileImage: user.profileImage || '',
-    team: user.team || 'none',
+    team: (user.team as "red" | "blue" | "green") || 'red',
   });
   
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -190,6 +190,7 @@ const ProfileEditor: React.FC<ProfileEditorProps> = ({
               
               <div className="mt-4">
                 <TeamSelector 
+                  team={formData.team as "red" | "blue" | "green"}
                   onTeamChange={handleTeamChange} 
                 />
               </div>

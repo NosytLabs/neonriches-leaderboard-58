@@ -7,12 +7,13 @@ import { Shield } from "lucide-react";
 
 interface TeamSelectorProps {
   onTeamChange: (team: "red" | "blue" | "green") => void;
+  team?: "red" | "blue" | "green";
 }
 
-const TeamSelector: React.FC<TeamSelectorProps> = ({ onTeamChange }) => {
+const TeamSelector: React.FC<TeamSelectorProps> = ({ onTeamChange, team = "red" }) => {
   return (
     <RadioGroup 
-      defaultValue="red" 
+      defaultValue={team}
       onValueChange={(value) => onTeamChange(value as "red" | "blue" | "green")}
       className="grid grid-cols-1 md:grid-cols-3 gap-4"
     >

@@ -74,10 +74,11 @@ const EnhancedDashboard = () => {
     return null;
   }
 
-  // Ensure user has totalSpent and amountSpent properties
-  const processedUser = ensureTotalSpent(user);
+  // Ensure user has all required properties and properly typed
+  // First ensure totalSpent and amountSpent properties
+  const processedUser = ensureTotalSpent(user as unknown as UserProfile);
   
-  // Convert to UserProfile type that TeamStatusCard expects
+  // Then adapt to ensure all other properties are correctly set
   const standardUser = adaptToStandardUserProfile(processedUser);
 
   const handleSpend = () => {

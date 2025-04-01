@@ -1,6 +1,7 @@
 
 import { UserProfile } from '@/types/user';
 import { ProfileBoost } from '@/types/user';
+import { MockeryTier } from '@/types/mockery-types';
 
 /**
  * Ensures the user profile has totalSpent and amountSpent properties
@@ -8,13 +9,14 @@ import { ProfileBoost } from '@/types/user';
 export const ensureTotalSpent = (user: UserProfile): UserProfile & { totalSpent: number; amountSpent: number } => {
   return {
     ...user,
-    totalSpent: typeof user.totalSpent === 'number' ? user.totalSpent : 0,
+    totalSpent: typeof user.totalSpent === 'number' ? user.totalSpent : (user.amountSpent || 0),
     amountSpent: typeof user.amountSpent === 'number' ? user.amountSpent : (user.totalSpent || 0),
   };
 };
 
 /**
  * Adapts the user profile from the consolidated format to the standard format
+ * by ensuring profile boosts have required properties
  */
 export const adaptToStandardUserProfile = (user: UserProfile & { totalSpent: number; amountSpent: number }): UserProfile => {
   // Ensure profileBoosts is an array and each boost has required properties
@@ -35,7 +37,7 @@ export const adaptToStandardUserProfile = (user: UserProfile & { totalSpent: num
     team: user.team || 'none',
     profileBoosts: adaptedProfileBoosts,
     // Use joinedDate as the standard field for when user joined
-    joinedDate: user.joinedDate || new Date().toISOString()
+    joinedDate: user.joinedDate || user.joinDate || new Date().toISOString()
   };
 };
 

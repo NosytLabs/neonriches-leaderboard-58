@@ -102,7 +102,7 @@ const ProfilePage: React.FC = () => {
               <CardContent>
                 <h3 className="text-lg font-semibold mb-4">About</h3>
                 <p className="text-muted-foreground">
-                  Joined on {formatDate(userProfile.joinDate)}
+                  Joined on {formatDate(userProfile.joinedDate)}
                 </p>
               </CardContent>
             </Card>
