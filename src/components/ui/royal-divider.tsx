@@ -1,125 +1,59 @@
 
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { Crown } from 'lucide-react';
-import { RoyalDividerProps } from '@/types/royal-divider-types';
 
-const RoyalDivider: React.FC<RoyalDividerProps> = ({
+export type RoyalDividerVariant = 'line' | 'double' | 'fancy' | 'ornate' | 'crown' | 'simple';
+export type RoyalDividerColor = 'default' | 'royal' | 'gold' | 'crimson' | 'purple';
+
+export interface RoyalDividerProps {
+  variant?: RoyalDividerVariant;
+  color?: RoyalDividerColor;
+  className?: string;
+  label?: string;
+}
+
+const RoyalDivider: React.FC<RoyalDividerProps> = ({ 
   variant = 'line',
-  label,
   color = 'default',
-  className,
-  icon,
-  size = 'md',
-  fullWidth = false
+  className = '',
+  label
 }) => {
   const colorClasses = {
-    gold: 'border-royal-gold/50 text-royal-gold',
-    royal: 'border-royal-purple/50 text-royal-purple',
-    crimson: 'border-royal-crimson/50 text-royal-crimson',
-    navy: 'border-royal-navy/50 text-royal-navy',
-    purple: 'border-purple-500/50 text-purple-500',
-    default: 'border-white/20 text-white/50'
+    default: 'border-white/20',
+    royal: 'border-royal-purple/50',
+    gold: 'border-royal-gold/50',
+    crimson: 'border-royal-crimson/50',
+    purple: 'border-purple-500/50'
   };
   
-  const sizeClasses = {
-    sm: 'border-t',
-    md: 'border-t-2',
-    lg: 'border-t-3',
-    xl: 'border-t-4'
+  const variantClasses = {
+    line: 'h-px',
+    double: 'h-0.5 border-t-2 border-b-2 border-t-white/10 border-b-white/5',
+    fancy: 'h-px bg-gradient-to-r from-transparent via-white/20 to-transparent',
+    ornate: 'h-px bg-[repeating-linear-gradient(90deg,transparent,white/5_1px,transparent_2px,white/20_3px)]',
+    crown: 'h-px relative',
+    simple: 'h-px'
   };
   
-  const colorClass = colorClasses[color] || colorClasses.default;
-  const sizeClass = sizeClasses[size] || sizeClasses.md;
-  const widthClass = fullWidth ? 'w-full' : 'max-w-4xl mx-auto';
+  const baseClass = cn(
+    'w-full my-4',
+    variantClasses[variant] || variantClasses.line,
+    colorClasses[color] || colorClasses.default,
+    className
+  );
   
-  if (variant === 'line' && label) {
+  if (label) {
     return (
-      <div className={cn("flex items-center", widthClass, className)}>
-        <div className={cn("flex-grow", sizeClass, colorClass)} />
-        <div className="flex-shrink mx-3 flex items-center space-x-2">
-          {icon || (color === 'gold' && <Crown className="h-4 w-4 text-royal-gold" />)}
-          <span className={cn("text-sm font-medium", colorClass)}>{label}</span>
-        </div>
-        <div className={cn("flex-grow", sizeClass, colorClass)} />
-      </div>
-    );
-  }
-  
-  if (variant === 'fancy') {
-    return (
-      <div className={cn("relative flex items-center justify-center my-6", widthClass, className)}>
-        <div className={cn("w-full", sizeClass, colorClass)} />
-        <div className="absolute bg-background px-4 flex items-center">
-          <div className={cn("w-2 h-2 rounded-full", colorClass.replace('border-', 'bg-').split(' ')[0])} />
-          {label && (
-            <span className={cn("mx-2 text-sm font-medium", colorClass)}>{label}</span>
-          )}
-          <div className={cn("w-2 h-2 rounded-full", colorClass.replace('border-', 'bg-').split(' ')[0])} />
-        </div>
+      <div className="relative flex items-center w-full py-2">
+        <div className={baseClass}></div>
+        <span className="absolute px-2 left-1/2 transform -translate-x-1/2 bg-background text-sm text-muted-foreground">
+          {label}
+        </span>
       </div>
     );
   }
   
-  if (variant === 'double') {
-    return (
-      <div className={cn("space-y-1", widthClass, className)}>
-        <div className={cn("w-full", sizeClass, colorClass)} />
-        <div className={cn("w-full", sizeClass, colorClass)} />
-        {label && (
-          <div className="text-center mt-2">
-            <span className={cn("text-sm font-medium", colorClass)}>{label}</span>
-          </div>
-        )}
-      </div>
-    );
-  }
-
-  if (variant === 'crown') {
-    return (
-      <div className={cn("flex items-center", widthClass, className)}>
-        <div className={cn("flex-grow", sizeClass, colorClass)} />
-        <div className="flex-shrink mx-3 flex items-center space-x-2">
-          <Crown className={cn("h-5 w-5", colorClass)} />
-          {label && <span className={cn("text-sm font-medium", colorClass)}>{label}</span>}
-        </div>
-        <div className={cn("flex-grow", sizeClass, colorClass)} />
-      </div>
-    );
-  }
-
-  if (variant === 'ornate') {
-    return (
-      <div className={cn("relative flex items-center", widthClass, className)}>
-        <div className={cn("flex-grow", sizeClass, colorClass)} />
-        <div className="mx-2">
-          <div className={cn("h-4 w-4 rounded-full border-2", colorClass.replace('text-', 'border-'))} />
-        </div>
-        {label && (
-          <span className={cn("absolute left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 bg-background px-4 text-sm font-medium", colorClass)}>
-            {label}
-          </span>
-        )}
-        <div className={cn("flex-grow", sizeClass, colorClass)} />
-      </div>
-    );
-  }
-
-  if (variant === 'simple') {
-    return (
-      <div className={cn("relative", widthClass, className)}>
-        <div className={cn("w-full", sizeClass, colorClass)} />
-        {label && (
-          <div className="absolute inset-0 flex items-center justify-center">
-            <span className={cn("bg-background px-4 text-sm font-medium", colorClass)}>{label}</span>
-          </div>
-        )}
-      </div>
-    );
-  }
-  
-  // Default: simple line
-  return <div className={cn("w-full", sizeClass, colorClass, widthClass, className)} />;
+  return <div className={baseClass}></div>;
 };
 
 export default RoyalDivider;

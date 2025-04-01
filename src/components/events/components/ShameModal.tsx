@@ -11,6 +11,7 @@ import {
   getShameActionPrice,
   getDiscountedShamePrice 
 } from '@/utils/mockeryUtils';
+import { getInitials } from '@/utils/stringUtils';
 
 interface ShameModalProps {
   targetUser: {
@@ -49,7 +50,7 @@ const ShameModal: React.FC<ShameModalProps> = ({
         <div className="flex items-center space-x-4">
           <Avatar className="h-12 w-12 ring-2 ring-white/20">
             <AvatarImage src={targetUser.profileImage} alt={targetUser.username} />
-            <AvatarFallback>{targetUser.username.charAt(0).toUpperCase()}</AvatarFallback>
+            <AvatarFallback>{getInitials(targetUser.username, 1)}</AvatarFallback>
           </Avatar>
           
           <div>

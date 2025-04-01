@@ -51,3 +51,42 @@ export const formatHandle = (username: string): string => {
   if (!username) return '';
   return username.startsWith('@') ? username : `@${username}`;
 };
+
+/**
+ * Gets initials from a name string
+ * @param name The name to get initials from
+ * @param count The maximum number of initials to return
+ * @returns The initials
+ */
+export const getInitials = (name: string, count: number = 2): string => {
+  if (!name) return '';
+  
+  return name
+    .split(' ')
+    .map(part => part.charAt(0))
+    .filter(char => char.length > 0)
+    .slice(0, count)
+    .join('')
+    .toUpperCase();
+};
+
+/**
+ * Safely converts a value to a locale string
+ * @param value The value to convert
+ * @param options Intl.NumberFormatOptions
+ * @returns The formatted string
+ */
+export const safeToLocaleString = (value: any, options?: Intl.NumberFormatOptions): string => {
+  if (value === null || value === undefined) {
+    return '';
+  }
+  
+  const num = typeof value === 'string' ? parseFloat(value) : value;
+  if (isNaN(num)) return '';
+  
+  try {
+    return num.toLocaleString(undefined, options);
+  } catch (error) {
+    return String(value);
+  }
+};

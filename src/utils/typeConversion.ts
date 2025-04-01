@@ -2,6 +2,7 @@
 import { UserProfile as ConsolidatedUserProfile } from '@/types/user-consolidated';
 import { UserProfile as UserProfileType } from '@/types/user';
 import { User } from '@/types/user';
+import { safeToString } from '@/utils/stringUtils';
 
 /**
  * Convert between different user types in the application
@@ -23,8 +24,8 @@ export const convertToLegacyUser = (user: ConsolidatedUserProfile): User => {
     // Ensure joinedDate is always set
     joinedDate: user.joinedDate || user.joinDate || user.createdAt || new Date().toISOString(),
     isVerified: user.isVerified || false,
-    following: user.following || [],
-    followers: user.followers || [],
+    following: Array.isArray(user.following) ? user.following : [],
+    followers: Array.isArray(user.followers) ? user.followers : [],
     achievements: user.achievements || [],
     badges: user.badges || [],
     team: user.team || null,
@@ -60,11 +61,14 @@ export const convertToLegacyUser = (user: ConsolidatedUserProfile): User => {
       showTeam: true,
       showSpending: true
     },
-    socialLinks: user.socialLinks || [],
+    socialLinks: Array.isArray(user.socialLinks) ? user.socialLinks : [],
     profileBoosts: user.profileBoosts || [],
     spendStreak: user.spendStreak || 0,
-    mockeryStats: user.mockeryStats || { received: 0, deployed: 0 },
-    certificateNFT: user.certificateNFT || undefined
+    mockeryStats: { received: 0, deployed: 0 },
+    certificateNFT: user.certificateNFT?.mintAddress ? {
+      mintAddress: user.certificateNFT.mintAddress,
+      mintDate: user.certificateNFT.dateIssued || new Date().toISOString()
+    } : undefined
   };
 };
 
@@ -73,10 +77,10 @@ export const convertToLegacyUser = (user: ConsolidatedUserProfile): User => {
  */
 export const convertToConsolidatedUser = (user: User): ConsolidatedUserProfile => {
   return {
-    id: typeof user.id === 'number' ? String(user.id) : user.id,
+    id: safeToString(user.id),
     username: user.username,
     displayName: user.displayName,
-    email: user.email,
+    email: '', // Default empty string for email
     profileImage: user.profileImage,
     bio: user.bio || '',
     joinedDate: user.joinedDate,
@@ -88,9 +92,24 @@ export const convertToConsolidatedUser = (user: User): ConsolidatedUserProfile =
     tier: user.tier || 'basic',
     team: user.team,
     isVerified: user.isVerified || false,
-    isFounder: user.isFounder || false,
+    isFounder: false, // Default value
     cosmetics: user.cosmetics,
-    settings: user.settings,
+    settings: {
+      profileVisibility: user.settings?.profileVisibility || 'public',
+      allowProfileLinks: user.settings?.allowProfileLinks || true,
+      theme: user.settings?.theme || 'dark',
+      notifications: user.settings?.notifications || true,
+      emailNotifications: user.settings?.emailNotifications || false,
+      marketingEmails: user.settings?.marketingEmails || false,
+      showRank: user.settings?.showRank || true,
+      darkMode: user.settings?.darkMode || true,
+      soundEffects: user.settings?.soundEffects || true,
+      showBadges: user.settings?.showBadges || true,
+      newFollowerAlerts: user.settings?.newFollowerAlerts || false,
+      teamNotifications: user.settings?.teamNotifications || false,
+      showTeam: user.settings?.showTeam || true,
+      showSpending: user.settings?.showSpending || true
+    },
     profileBoosts: user.profileBoosts || [],
     socialLinks: user.socialLinks || [],
     followers: user.followers || [],

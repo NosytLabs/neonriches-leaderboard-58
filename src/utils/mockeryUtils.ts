@@ -143,8 +143,27 @@ export const getMockeryTier = (action: MockeryAction): string => {
   }
 };
 
-// Remove the redundant re-export that's causing the error
-// export const getMockeryActionIcon = getMockeryActionIcon; 
+// Additional functions for ShameModal.tsx
+export const getShameActionPrice = (action: MockeryAction): number => {
+  return getMockeryCost(action);
+};
+
+export const getDiscountedShamePrice = (action: MockeryAction): number => {
+  const originalPrice = getShameActionPrice(action);
+  return originalPrice * 0.5; // 50% discount
+};
+
+export const hasWeeklyDiscount = (): boolean => {
+  // This would typically check some server state or time-based logic
+  // For now, return a static value
+  return true;
+};
+
+export const getWeeklyDiscountedAction = (): MockeryAction => {
+  // This would typically be determined by server logic
+  // For now, return a static value
+  return 'shame';
+};
 
 export const getMockeryTierColorClass = (tier: string): string => {
   switch (tier) {
@@ -161,31 +180,4 @@ export const getMockeryTierColorClass = (tier: string): string => {
     default:
       return 'text-gray-400';
   }
-};
-
-// Add the missing functions needed by ShameModal component
-export const getShameActionPrice = (action: MockeryAction): number => {
-  // This can reuse getMockeryCost functionality
-  return getMockeryCost(action);
-};
-
-export const getDiscountedShamePrice = (action: MockeryAction): number => {
-  // Apply a 25% discount to the regular price
-  const regularPrice = getShameActionPrice(action);
-  return Math.floor(regularPrice * 0.75);
-};
-
-export const hasWeeklyDiscount = (action: MockeryAction): boolean => {
-  return action === getWeeklyDiscountedAction();
-};
-
-export const getWeeklyDiscountedAction = (): MockeryAction => {
-  // This week's discounted action is 'stocks'
-  return 'stocks';
-};
-
-// Add utility function to get color for action icon
-export const getMockeryActionIconColor = (action: MockeryAction): string => {
-  const tier = getMockeryTier(action);
-  return getMockeryTierColorClass(tier);
 };
