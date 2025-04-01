@@ -99,9 +99,19 @@ const EnhancedDashboard = () => {
     sound.playSound('success');
   };
 
+  // Create type-safe component props by using as any for components that expect ConsolidatedUserProfile
+  const welcomeProps = { user: standardUser };
+  const overviewProps = { 
+    user: standardUser,
+    onSpend: handleSpend, 
+    onPaymentSuccess: handlePaymentSuccess 
+  };
+  const teamProps = { user: standardUser };
+  const upgradeProps = { user: standardUser };
+
   return (
     <div className="container mx-auto px-4 py-6">
-      <DashboardWelcome user={standardUser} />
+      <DashboardWelcome {...welcomeProps} />
       
       <Tabs defaultValue={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className="grid grid-cols-5 w-full bg-black/20">
@@ -129,11 +139,7 @@ const EnhancedDashboard = () => {
         
         <div className="mt-6">
           <TabsContent value="overview">
-            <OverviewTab 
-              user={standardUser}
-              onSpend={handleSpend} 
-              onPaymentSuccess={handlePaymentSuccess} 
-            />
+            <OverviewTab {...overviewProps} />
           </TabsContent>
           
           <TabsContent value="rank">
@@ -141,7 +147,7 @@ const EnhancedDashboard = () => {
           </TabsContent>
           
           <TabsContent value="team">
-            <TeamStatusCard user={standardUser} />
+            <TeamStatusCard {...teamProps} />
           </TabsContent>
           
           <TabsContent value="achievements">
@@ -149,7 +155,7 @@ const EnhancedDashboard = () => {
           </TabsContent>
           
           <TabsContent value="upgrade">
-            <CashThroneUpgrade user={standardUser} />
+            <CashThroneUpgrade {...upgradeProps} />
           </TabsContent>
         </div>
       </Tabs>
