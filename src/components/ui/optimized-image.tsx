@@ -1,180 +1,200 @@
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, ImgHTMLAttributes } from 'react';
 import { cn } from '@/lib/utils';
 
-interface OptimizedImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
+// Define the props interface for our component
+export interface OptimizedImageProps extends Omit<ImgHTMLAttributes<HTMLImageElement>, 'src'> {
   src: string;
   alt: string;
   width?: number;
   height?: number;
-  objectFit?: 'contain' | 'cover' | 'fill' | 'none' | 'scale-down';
   className?: string;
-  placeholder?: string;
-  blurDataURL?: string;
-  loadingStrategy?: 'eager' | 'lazy';
-  placeholderColor?: string;
-  priority?: boolean;
+  objectFit?: 'cover' | 'contain' | 'fill' | 'none' | 'scale-down';
   quality?: number;
-  format?: 'auto' | 'webp' | 'avif';
+  format?: 'webp' | 'jpeg' | 'png' | 'avif' | 'original';
+  loading?: 'lazy' | 'eager';
+  priority?: boolean;
+  placeholderColor?: string;
+  blur?: boolean;
+  threshold?: number;
   sizes?: string;
+  fetchpriority?: 'high' | 'low' | 'auto';
+  importance?: 'high' | 'low' | 'auto';
   onLoad?: () => void;
-  importance?: 'auto' | 'high' | 'low';
 }
 
 /**
- * Performance optimized image component that supports:
- * - Lazy loading with IntersectionObserver
- * - Responsive image loading with srcSet
- * - Blur-up loading
- * - Modern image formats (WebP/AVIF)
- * - Proper aspect ratio
- * - Resource priority hints
+ * A heavily optimized image component that implements best practices for image loading
  */
-const OptimizedImage: React.FC<OptimizedImageProps> = ({
+export const OptimizedImage: React.FC<OptimizedImageProps> = ({
   src,
   alt,
   width,
   height,
-  objectFit = 'cover',
   className,
-  placeholder = '/placeholder.svg',
-  blurDataURL,
-  loadingStrategy = 'lazy',
-  placeholderColor,
+  objectFit = 'cover',
+  quality = 85,
+  format = 'original',
+  loading = 'lazy',
   priority = false,
-  quality = 80,
-  format = 'auto',
+  placeholderColor,
+  blur = false,
+  threshold = 0.1,
   sizes,
-  onLoad,
+  fetchpriority,
   importance,
-  ...props
+  onLoad,
+  ...rest
 }) => {
-  const [imgSrc, setImgSrc] = useState<string>(priority ? src : blurDataURL || placeholder);
-  const [isLoading, setIsLoading] = useState<boolean>(!priority);
-  const [error, setError] = useState<boolean>(false);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [error, setError] = useState(false);
   const imgRef = useRef<HTMLImageElement>(null);
   const observerRef = useRef<IntersectionObserver | null>(null);
-  
-  // Reset state when src changes
+
   useEffect(() => {
-    setImgSrc(priority ? src : blurDataURL || placeholder);
-    setError(false);
-    setIsLoading(!priority);
-  }, [src, priority, blurDataURL, placeholder]);
-  
-  // Set up intersection observer for lazy loading
-  useEffect(() => {
-    if (priority || !imgRef.current || typeof IntersectionObserver === 'undefined') {
-      // Skip observer for priority images or when IntersectionObserver isn't available
-      if (priority && imgSrc !== src) {
-        setImgSrc(src);
-      }
+    // Skip for priority images or if loading is eager
+    if (priority || loading === 'eager') {
       return;
     }
-    
-    if (observerRef.current) {
-      observerRef.current.disconnect();
-    }
-    
-    let observer = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting) {
-        // Load the real image when it enters the viewport
-        setImgSrc(src);
-        setIsLoading(true);
-        observer.disconnect();
-        observerRef.current = null;
+
+    // Function to load image
+    const loadImage = () => {
+      if (!imgRef.current) return;
+      
+      const img = imgRef.current;
+      
+      // Set src attribute which triggers loading
+      if (img.dataset.src) {
+        img.src = img.dataset.src;
+        delete img.dataset.src;
       }
-    }, { 
-      rootMargin: '200px', // Start loading before the image is visible
-      threshold: 0.01
-    });
-    
-    observer.observe(imgRef.current);
-    observerRef.current = observer;
-    
+    };
+
+    // Setup intersection observer for lazy loading
+    observerRef.current = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            loadImage();
+            // Disconnect once loaded
+            if (observerRef.current) {
+              observerRef.current.disconnect();
+            }
+          }
+        });
+      },
+      { threshold }
+    );
+
+    // Start observing
+    if (imgRef.current) {
+      observerRef.current.observe(imgRef.current);
+    }
+
     return () => {
       if (observerRef.current) {
         observerRef.current.disconnect();
       }
     };
-  }, [src, priority, imgSrc]);
-  
-  const handleError = () => {
-    setError(true);
-    setImgSrc(placeholder);
-    setIsLoading(false);
-  };
-  
-  const handleLoad = () => {
-    setIsLoading(false);
+  }, [priority, loading, threshold]);
+
+  // Clean up observer on unmount
+  useEffect(() => {
+    return () => {
+      if (observerRef.current) {
+        observerRef.current.disconnect();
+      }
+    };
+  }, []);
+
+  // Format processed source URL (in a real implementation, this would transform the URL for CDN optimization)
+  const processedSrc = (() => {
+    // In a real app, you'd transform the URL for your image CDN or optimization service
+    // Here we just return the original src or add format conversion parameters if needed
+    if (format === 'original') {
+      return src;
+    }
+    
+    // Simple URL parameter approach (this is just a placeholder)
+    const hasParams = src.includes('?');
+    const separator = hasParams ? '&' : '?';
+    return `${src}${separator}format=${format}&quality=${quality}`;
+  })();
+
+  const handleImageLoad = () => {
+    setIsLoaded(true);
     if (onLoad) onLoad();
   };
-  
-  // Create srcSet for responsive images when width is provided
-  const getSrcSet = () => {
-    if (!width || src === placeholder) return undefined;
-    
-    // Generate srcSet at different widths (1x, 1.5x, 2x)
-    const widths = [width, width * 1.5, width * 2].map(Math.floor);
-    const params = `?q=${quality}${format !== 'auto' ? `&fm=${format}` : ''}`;
-    
-    return widths
-      .map(w => `${src}${params}&w=${w} ${w}w`)
-      .join(', ');
+
+  const handleImageError = () => {
+    setError(true);
+    console.error(`Failed to load image: ${src}`);
   };
+
+  // Determine if we should use lazy loading or not
+  const loadingStrategy = priority ? 'eager' : loading;
   
-  // Pre-calculate aspect ratio for proper layout
-  const aspectRatio = width && height ? { aspectRatio: `${width} / ${height}` } : {};
-  const finalSrc = imgSrc === placeholder && !error ? placeholder : imgSrc;
+  // For the actual fetchpriority attribute
+  const fetchPriority = priority ? 'high' : fetchpriority || 'auto';
   
+  // For the actual importance attribute (which is non-standard but used by browsers)
+  const imageImportance = priority ? 'high' : importance || 'auto';
+
   return (
-    <div 
+    <div
       className={cn(
-        'overflow-hidden relative',
-        isLoading && 'animate-pulse bg-muted/10',
+        'relative overflow-hidden',
+        objectFit === 'contain' ? 'flex items-center justify-center' : '',
         className
       )}
-      style={{ 
+      style={{
         width: width ? `${width}px` : '100%',
         height: height ? `${height}px` : 'auto',
-        backgroundColor: isLoading && placeholderColor ? placeholderColor : undefined,
-        ...aspectRatio
+        backgroundColor: placeholderColor || 'transparent',
       }}
     >
-      {/* Support next-gen formats if requested */}
-      {format !== 'auto' && !error && (
-        <picture>
-          {format === 'avif' && (
-            <source type="image/avif" srcSet={`${src}?fm=avif&q=${quality}`} />
-          )}
-          <source type="image/webp" srcSet={`${src}?fm=webp&q=${quality}`} />
-          {/* The img element below serves as fallback */}
-        </picture>
+      {/* Show placeholder color until image loads */}
+      {!isLoaded && placeholderColor && (
+        <div
+          className="absolute inset-0 bg-current"
+          style={{ backgroundColor: placeholderColor }}
+        />
       )}
-      
+
+      {/* The actual image */}
       <img
         ref={imgRef}
-        src={finalSrc}
+        src={priority || loading === 'eager' ? processedSrc : undefined}
+        data-src={!priority && loading !== 'eager' ? processedSrc : undefined}
         alt={alt}
-        srcSet={getSrcSet()}
-        sizes={sizes}
-        loading={priority ? "eager" : loadingStrategy}
-        onError={handleError}
-        onLoad={handleLoad}
+        width={width}
+        height={height}
+        onLoad={handleImageLoad}
+        onError={handleImageError}
+        loading={loadingStrategy}
+        fetchPriority={fetchPriority}
         className={cn(
           'transition-opacity duration-300',
-          objectFit === 'cover' && 'object-cover',
-          objectFit === 'contain' && 'object-contain',
-          objectFit === 'fill' && 'object-fill',
+          isLoaded ? 'opacity-100' : 'opacity-0',
+          error ? 'hidden' : 'block',
+          objectFit === 'cover' && 'object-cover w-full h-full',
+          objectFit === 'contain' && 'object-contain max-w-full max-h-full',
+          objectFit === 'fill' && 'object-fill w-full h-full',
           objectFit === 'none' && 'object-none',
           objectFit === 'scale-down' && 'object-scale-down',
-          isLoading ? 'opacity-0' : 'opacity-100',
-          'w-full h-full'
+          blur && !isLoaded && 'blur'
         )}
-        importance={importance}
-        fetchpriority={priority ? "high" : "auto"}
-        {...props}
+        sizes={sizes}
+        importance={imageImportance}
+        {...rest}
       />
+
+      {/* Show error state */}
+      {error && (
+        <div className="absolute inset-0 flex items-center justify-center bg-gray-100 text-gray-500">
+          <span className="text-sm">Failed to load image</span>
+        </div>
+      )}
     </div>
   );
 };

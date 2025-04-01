@@ -64,5 +64,5 @@ export interface MockeryStats {
   };
 }
 
-// Import TeamColor from team types
-import { TeamColor } from './team';
+// Export TeamColor so it's available when importing from this file
+export type TeamColor = 'red' | 'blue' | 'green' | 'gold' | 'purple' | 'none' | 'neutral';

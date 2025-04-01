@@ -1,61 +1,60 @@
 
 /**
- * Team color options available in the application
+ * Team-related type definitions
  */
+
+// TeamColor defines the available team colors in the system
 export type TeamColor = 'red' | 'blue' | 'green' | 'gold' | 'purple' | 'none' | 'neutral';
 
-/**
- * Team theme properties
- */
-export interface TeamTheme {
-  primary: string;
-  text: string;
-  border: string;
-  background: string;
-  accent: string;
-  hover: string;
-  gradient: string;
-}
+// TeamType is an alias for backward compatibility
+export type TeamType = TeamColor;
 
-/**
- * Team data structure
- */
-export interface Team {
+// TeamData represents information about a team
+export interface TeamData {
   id: string;
   name: string;
   color: TeamColor;
-  displayName: string;
-  slogan: string;
+  members: number;
+  totalSpent: number;
   description: string;
   icon: string;
-  memberCount: number;
-  totalSpent: number;
-  theme: TeamTheme;
-  foundedDate: string;
   leaderUsername?: string;
-  insignia?: string;
+  leaderId?: string;
+  crest?: string;
+  motto?: string;
+  achievements?: string[];
+  rank?: number;
+  theme?: TeamTheme;
 }
 
-/**
- * Team leaderboard entry
- */
-export interface TeamLeaderboardEntry {
-  teamId: string;
-  teamName: string;
-  teamColor: TeamColor;
-  totalSpent: number;
-  rank: number;
-  memberCount: number;
-  weeklyChange: number;
+// TeamTheme represents theme information for a team
+export interface TeamTheme {
+  primary: string;
+  text: string;
+  background: string;
+  accent: string;
+  secondary?: string;
 }
 
-/**
- * Team stats
- */
+// TeamStats represents statistical information about a team
 export interface TeamStats {
+  totalMembers: number;
+  activeMembers: number;
   totalSpent: number;
-  memberCount: number;
-  avgSpendPerMember: number;
-  weeklyGrowth: number;
+  avgSpent: number;
   rank: number;
+  wins: number;
+  achievements: number;
+}
+
+// TeamMember represents a member of a team
+export interface TeamMember {
+  id: string;
+  username: string;
+  displayName?: string;
+  profileImage?: string;
+  joinedAt: string;
+  contribution: number;
+  rank: number;
+  role?: 'leader' | 'officer' | 'member';
 }

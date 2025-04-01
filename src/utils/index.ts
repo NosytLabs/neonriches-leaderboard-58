@@ -1,109 +1,127 @@
 
-// Re-export utility functions
+// Re-export utility functions for easier imports
+
+// Basic utilities
 import { cn } from '@/lib/utils';
+
+// Formatters
 import { 
-  formatCurrency, 
   formatNumber, 
-  formatPercent,
-  formatDollarAmount,
-  formatFileSize,
-  formatRankWithSuffix,
-  formatDuration
+  formatPercent, 
+  formatDollarAmount, 
+  formatFileSize, 
+  formatRankWithSuffix, 
+  formatDuration,
+  formatTimeAgo
 } from './formatters';
 
+// Auth utilities
 import { 
-  formatDate,
-  getRelativeTimeString,
-  getDaysInMonth,
-  isDateInPast,
-  isDateInFuture,
-  isDateToday
-} from './dateUtils';
+  parseUserRole, 
+  getUserSettings, 
+  getUserRank, 
+  getVerifiedStatus,
+  generateUsername
+} from './authUtils';
 
-import {
-  randomDelay,
-  randomDuration,
-  getAnimationClass,
-  getAnimationStyle,
-  getStaggeredDelays,
-  getShameEffectClass
+// Data transformation
+import { 
+  sortByKey, 
+  filterByValue, 
+  groupByKey 
+} from './dataUtils';
+
+// Animation and effects
+import { 
+  applyAnimation, 
+  removeAnimation, 
+  getTransitionClass 
 } from './animationUtils';
 
+// Mockery utilities
 import {
-  getMockeryActionIcon,
-  getMockeryActionIconColor,
-  getMockeryName as getMockeryActionName,
   getMockeryName,
   getMockeryDescription,
-  getMockeryCost as getMockeryActionPrice,
-  getMockeryActionDescription,
-  getMockeryActionTitle,
-  getMockeryActionEffect
+  getMockeryActionPrice,
+  getMockeryTier,
+  getMockeryActionIcon,
+  getMockeryActionIconColor,
+  getDiscountedShamePrice,
+  hasWeeklyDiscount,
+  getWeeklyDiscountedAction,
+  getShameActionPrice,
+  getMockeryCost
 } from './mockeryUtils';
 
-// Common UI utilities
+// Performance monitoring
+import {
+  markComponentRenderStart,
+  markComponentRenderEnd,
+  initPerformanceMonitoring
+} from './performanceMonitoring';
+
+// Resource loading
+import {
+  preloadCriticalAssets,
+  preloadImage,
+  addPreloadLink,
+  addPreconnect,
+  preloadAboveTheFoldImages
+} from './resourcePreload';
+
+// Export everything
 export {
+  // Basic utilities
   cn,
+
   // Formatters
-  formatCurrency,
   formatNumber,
   formatPercent,
   formatDollarAmount,
   formatFileSize,
   formatRankWithSuffix,
   formatDuration,
-  
-  // Date utilities
-  formatDate,
-  getRelativeTimeString,
-  getDaysInMonth,
-  isDateInPast,
-  isDateInFuture,
-  isDateToday,
-  
-  // Animation utilities
-  randomDelay,
-  randomDuration,
-  getAnimationClass,
-  getAnimationStyle,
-  getStaggeredDelays,
-  getShameEffectClass,
-  
+  formatTimeAgo,
+
+  // Auth utilities
+  parseUserRole,
+  getUserSettings,
+  getUserRank,
+  getVerifiedStatus,
+  generateUsername,
+
+  // Data transformation
+  sortByKey,
+  filterByValue,
+  groupByKey,
+
+  // Animation and effects
+  applyAnimation,
+  removeAnimation,
+  getTransitionClass,
+
   // Mockery utilities
-  getMockeryActionIcon,
-  getMockeryActionIconColor,
-  getMockeryActionName,
   getMockeryName,
   getMockeryDescription,
-  getMockeryActionTitle,
-  getMockeryActionDescription,
   getMockeryActionPrice,
-  getMockeryActionEffect
-};
+  getMockeryTier,
+  getMockeryActionIcon,
+  getMockeryActionIconColor,
+  getDiscountedShamePrice,
+  hasWeeklyDiscount,
+  getWeeklyDiscountedAction,
+  getShameActionPrice,
+  getMockeryCost,
 
-// Common string utilities
-export const capitalize = (string: string): string => {
-  if (!string) return '';
-  return string.charAt(0).toUpperCase() + string.slice(1);
-};
+  // Performance monitoring
+  markComponentRenderStart,
+  markComponentRenderEnd,
+  initPerformanceMonitoring,
 
-export const truncate = (text: string, length: number): string => {
-  if (!text) return '';
-  if (text.length <= length) return text;
-  return text.slice(0, length) + '...';
+  // Resource loading
+  preloadCriticalAssets,
+  preloadImage,
+  addPreloadLink,
+  addPreconnect,
+  preloadAboveTheFoldImages
 };
-
-export const generateId = (length: number = 8): string => {
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  let result = '';
-  for (let i = 0; i < length; i++) {
-    result += chars.charAt(Math.floor(Math.random() * chars.length));
-  }
-  return result;
-};
-
-export const sleep = (ms: number): Promise<void> => {
-  return new Promise(resolve => setTimeout(resolve, ms));
-};
-
-// Add any other common utility functions here
