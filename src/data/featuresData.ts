@@ -170,7 +170,7 @@ const featuresData: Record<Feature, FeatureInfo> = {
   notifications: {
     id: 'notifications',
     title: 'Status Alerts',
-    description: 'Get notified when your rank changes or when you're close to a milestone.',
+    description: 'Get notified when your rank changes or when you\'re close to a milestone.',
     category: 'engagement',
     icon: React.createElement(Bell, { className: "h-6 w-6" }),
     isPremium: false,
