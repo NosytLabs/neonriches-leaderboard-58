@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { ThemeProvider } from './components/ThemeProvider';
+import { ThemeProvider } from './providers/ThemeProvider';
 import { Toaster } from './components/ui/toaster';
 import { AuthProvider } from './contexts/auth/AuthProvider';
 import HomePage from './pages/Home';

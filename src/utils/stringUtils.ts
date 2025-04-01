@@ -55,3 +55,15 @@ export const kebabToCamelCase = (str: string): string => {
 export const camelToKebabCase = (str: string): string => {
   return str.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
 };
+
+/**
+ * Ensure a value is a number
+ */
+export const ensureNumber = (value: any, defaultValue: number = 0): number => {
+  if (typeof value === 'number') return value;
+  if (typeof value === 'string') {
+    const parsed = parseFloat(value);
+    return isNaN(parsed) ? defaultValue : parsed;
+  }
+  return defaultValue;
+};

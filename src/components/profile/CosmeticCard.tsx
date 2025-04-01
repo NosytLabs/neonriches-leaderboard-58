@@ -2,87 +2,85 @@
 import React from 'react';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Star, Lock, Check } from 'lucide-react';
-import { CosmeticItem } from '@/types/user-types';
+import { formatCurrency } from '@/utils/formatters';
+import { Lock, Check } from 'lucide-react';
 
-interface CosmeticCardProps {
-  cosmetic: CosmeticItem;
+export interface CosmeticCardProps {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  type: string;
+  rarity: string;
   isUnlocked: boolean;
   isActive: boolean;
-  onActivate?: () => void;
-  onPurchase?: () => void;
+  onPurchase: () => void;
+  onApply: () => void;
 }
 
 const CosmeticCard: React.FC<CosmeticCardProps> = ({
-  cosmetic,
+  id,
+  name,
+  description,
+  price,
+  type,
+  rarity,
   isUnlocked,
   isActive,
-  onActivate,
-  onPurchase
+  onPurchase,
+  onApply
 }) => {
-  // Get color based on rarity
-  const getRarityColor = () => {
-    switch (cosmetic.rarity) {
-      case 'legendary': return 'bg-gradient-to-r from-amber-500 to-yellow-300 text-black';
-      case 'epic': return 'bg-purple-600';
-      case 'rare': return 'bg-blue-600';
-      case 'uncommon': return 'bg-green-600';
-      default: return 'bg-gray-600'; // common
-    }
+  // Get color class based on rarity
+  const getRarityColorClass = (rarity: string): string => {
+    const colorClasses: Record<string, string> = {
+      'common': 'border-gray-400 bg-gray-800/40',
+      'uncommon': 'border-green-500 bg-green-900/30',
+      'rare': 'border-blue-400 bg-blue-900/30',
+      'epic': 'border-purple-400 bg-purple-900/30',
+      'legendary': 'border-orange-400 bg-amber-900/30'
+    };
+    
+    return colorClasses[rarity] || colorClasses.common;
   };
 
   return (
-    <Card className="overflow-hidden border-white/10 bg-black/40 backdrop-blur-sm">
-      <div className={`h-1 ${getRarityColor()}`}></div>
-      <CardContent className="p-4">
-        <div className="flex justify-between items-start mb-2">
-          <h3 className="font-semibold">{cosmetic.name}</h3>
-          <Badge variant="outline" className={`uppercase text-xs ${
-            cosmetic.rarity === 'legendary' ? 'text-yellow-400 border-yellow-400/30' :
-            cosmetic.rarity === 'epic' ? 'text-purple-400 border-purple-400/30' :
-            cosmetic.rarity === 'rare' ? 'text-blue-400 border-blue-400/30' :
-            cosmetic.rarity === 'uncommon' ? 'text-green-400 border-green-400/30' :
-            'text-gray-400 border-gray-400/30'
-          }`}>
-            {cosmetic.rarity}
-          </Badge>
+    <Card className={`${getRarityColorClass(rarity)} relative overflow-hidden hover:shadow-md transition-all duration-300 h-full flex flex-col`}>
+      <CardContent className="pt-4 pb-2 flex-grow">
+        <div className="flex items-start justify-between mb-2">
+          <h3 className="font-medium text-sm">{name}</h3>
+          <div className="px-2 py-0.5 text-xs rounded bg-black/20 capitalize">
+            {rarity}
+          </div>
         </div>
-        
-        <p className="text-sm text-gray-400 mb-4">{cosmetic.description}</p>
-        
-        <div className="flex items-center justify-between">
-          {isUnlocked ? (
-            <Badge variant="outline" className="bg-green-500/10 text-green-400 border-green-500/20">
-              <Check className="h-3 w-3 mr-1" />
-              Unlocked
-            </Badge>
-          ) : (
-            <div className="flex items-center">
-              <Star className="h-4 w-4 text-yellow-400 mr-1" />
-              <span>${cosmetic.price}</span>
-            </div>
-          )}
-        </div>
+        <p className="text-xs text-white/70 mb-2">{description}</p>
+        <div className="text-xs text-white/50 mt-auto">Type: {type}</div>
       </CardContent>
       
-      <CardFooter className="bg-black/30 p-3">
+      <CardFooter className="px-4 py-3 border-t border-white/10 bg-black/20">
         {isUnlocked ? (
           <Button 
-            variant={isActive ? "secondary" : "outline"} 
-            className={`w-full ${isActive ? "bg-green-600 hover:bg-green-700" : ""}`}
-            onClick={onActivate}
+            size="sm" 
+            variant={isActive ? "default" : "outline"} 
+            className="w-full flex items-center justify-center" 
+            onClick={onApply}
             disabled={isActive}
           >
-            {isActive ? "Active" : "Activate"}
+            {isActive ? (
+              <>
+                <Check className="h-3 w-3 mr-1" />
+                Applied
+              </>
+            ) : 'Apply'}
           </Button>
         ) : (
           <Button 
-            className="w-full" 
+            size="sm" 
+            variant="outline" 
+            className="w-full flex items-center justify-center" 
             onClick={onPurchase}
           >
-            <Lock className="h-4 w-4 mr-2" />
-            Purchase
+            <Lock className="h-3 w-3 mr-1" />
+            Buy for {formatCurrency(price)}
           </Button>
         )}
       </CardFooter>
