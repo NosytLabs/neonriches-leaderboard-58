@@ -140,7 +140,7 @@ export {
   Toggle,
   Tooltip,
   TooltipContent,
-  TooltProvider: TooltipProvider,
+  TooltipProvider,
   TooltipTrigger,
   UserAvatar,
   MedievalIcon,
