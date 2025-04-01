@@ -14,7 +14,6 @@ import RankTab from './tabs/RankTab';
 import AchievementsTab from './tabs/AchievementsTab';
 import { adaptToStandardUserProfile, ensureTotalSpent } from '@/utils/userTypeAdapter';
 import { UserProfile } from '@/types/user';
-import { UserProfile as ConsolidatedUserProfile } from '@/types/user-consolidated';
 
 const EnhancedDashboard = () => {
   const { user } = useAuth();
@@ -75,14 +74,13 @@ const EnhancedDashboard = () => {
     return null;
   }
 
-  // First ensure totalSpent and amountSpent properties
-  const userWithRequired = ensureTotalSpent(user as unknown as UserProfile);
+  // First ensure totalSpent and amountSpent properties are present
+  const userWithRequired = ensureTotalSpent(user as UserProfile);
   
   // Then adapt to ensure all other properties are correctly set
-  // Convert to the ConsolidatedUserProfile type to match the components' expectations
-  const standardUser = adaptToStandardUserProfile(userWithRequired) as unknown as ConsolidatedUserProfile;
+  const standardUser = adaptToStandardUserProfile(userWithRequired);
 
-  // Now the profile boosts should have the correct types and required properties
+  // Now enhance the profile boosts with required properties
   const enhancedUserForProps = {
     ...standardUser,
     profileBoosts: standardUser.profileBoosts?.map(boost => ({
@@ -112,8 +110,7 @@ const EnhancedDashboard = () => {
     sound.playSound('success');
   };
 
-  // Get the proper user type for each component by casting to UserProfile from @/types/user
-  // This ensures compatibility with all component prop types
+  // Explicitly cast to UserProfile type to ensure compatibility with component props
   const userForComponents = enhancedUserForProps as unknown as UserProfile;
 
   return (

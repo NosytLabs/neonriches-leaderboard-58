@@ -104,7 +104,7 @@ export interface ProfileBoost {
   level: number; // Required to match user.d.ts
   startDate: string;
   endDate: string;
-  appliedBy: string; // Changed from optional to required to match user.d.ts
+  appliedBy: string; // Required to match user.d.ts
   strength: number; // Required to match user.d.ts
   name?: string;
   description?: string;
@@ -130,7 +130,7 @@ export interface UserProfile {
   joinDate?: string;
   joinedAt?: string;
   createdAt?: string;
-  totalSpent: number;
+  totalSpent: number;  // Required to match User type
   amountSpent: number;  // Required to match User type
   spentAmount?: number;  // Legacy field - use totalSpent instead
   walletBalance?: number;
@@ -174,6 +174,7 @@ export interface UserProfile {
     dateIssued?: string;
     type?: string;
     isVerified?: boolean;
+    mintDate?: string; // Added to match user.ts
   };
   socialLinks?: any[] | Record<string, string>;
 }

@@ -37,7 +37,10 @@ export const adaptToStandardUserProfile = (user: UserProfile & { totalSpent: num
     team: user.team || 'none',
     profileBoosts: adaptedProfileBoosts,
     // Use joinedDate as the standard field for when user joined
-    joinedDate: user.joinedDate || new Date().toISOString() // Removed references to joinDate, joinedAt, createdAt
+    joinedDate: user.joinedDate || new Date().toISOString(), // Removed references to joinDate, joinedAt, createdAt
+    // Ensure totalSpent and amountSpent are set
+    totalSpent: user.totalSpent,
+    amountSpent: user.amountSpent
   };
 };
 

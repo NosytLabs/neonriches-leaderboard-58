@@ -25,6 +25,7 @@ export interface SocialLink {
   id: string;
   platform: string;
   url: string;
+  title: string; // Make title required to match usage in components
   icon?: string;
   clicks?: number;
 }
@@ -40,7 +41,7 @@ export interface ProfileBoost {
   level: number;
   type: string;
   strength: number;
-  appliedBy: string;
+  appliedBy: string; // Make this required to match
   isActive: boolean;
   cssClass?: string;
 }
@@ -99,8 +100,8 @@ export interface UserProfile {
   team?: string | null;
   tier?: string;
   rank?: number;
-  totalSpent?: number;
-  amountSpent: number;
+  totalSpent: number; // Make this required to match
+  amountSpent: number; // Make this required to match
   walletBalance?: number;
   previousRank?: number;
   spendStreak?: number;
@@ -123,6 +124,8 @@ export interface UserProfile {
   email?: string;
   boostCount?: number;
   socialLinks?: SocialLink[];
+  badges?: string[]; // Add badges property
+  achievements?: string[]; // Add achievements property
 }
 
 // Adding User type alias to fix import errors
