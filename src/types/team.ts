@@ -1,60 +1,63 @@
 
-/**
- * Team-related type definitions
- */
-
-// TeamColor defines the available team colors in the system
+// Team color options
 export type TeamColor = 'red' | 'blue' | 'green' | 'gold' | 'purple' | 'none' | 'neutral';
 
-// TeamType is an alias for backward compatibility
-export type TeamType = TeamColor;
+// Team type definitions
+export type TeamType = 'red' | 'blue' | 'green' | 'gold' | 'purple';
 
-// TeamData represents information about a team
+// Team data structure
 export interface TeamData {
-  id: string;
+  id: TeamType;
   name: string;
-  color: TeamColor;
+  description: string;
+  color: string;
+  secondaryColor: string;
+  icon: string;
+  banner: string;
+  motto: string;
+  benefits: string[];
   members: number;
   totalSpent: number;
-  description: string;
-  icon: string;
-  leaderUsername?: string;
-  leaderId?: string;
-  crest?: string;
-  motto?: string;
-  achievements?: string[];
-  rank?: number;
-  theme?: TeamTheme;
-}
-
-// TeamTheme represents theme information for a team
-export interface TeamTheme {
-  primary: string;
-  text: string;
-  background: string;
-  accent: string;
-  secondary?: string;
-}
-
-// TeamStats represents statistical information about a team
-export interface TeamStats {
-  totalMembers: number;
-  activeMembers: number;
-  totalSpent: number;
-  avgSpent: number;
   rank: number;
-  wins: number;
-  achievements: number;
+  joinCriteria?: string;
 }
 
-// TeamMember represents a member of a team
+// Team member structure
 export interface TeamMember {
   id: string;
   username: string;
-  displayName?: string;
+  displayName: string;
   profileImage?: string;
+  role: 'leader' | 'officer' | 'member';
   joinedAt: string;
   contribution: number;
   rank: number;
-  role?: 'leader' | 'officer' | 'member';
+}
+
+// Team stats structure
+export interface TeamStats {
+  totalMembers: number;
+  totalSpent: number;
+  rank: number;
+  averageSpend: number;
+  highestContributor: {
+    id: string;
+    username: string;
+    amount: number;
+  };
+  recentJoins: number;
+  growthRate: number;
+}
+
+// Team theme colors and styling
+export interface TeamTheme {
+  primary: string;
+  secondary: string;
+  accent: string;
+  background: string;
+  backgroundSecondary: string;
+  text: string;
+  border: string;
+  hoverBg: string;
+  activeBg: string;
 }

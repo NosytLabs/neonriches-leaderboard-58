@@ -1,6 +1,7 @@
 
 import { MockeryAction, MockeryTier } from '@/types/mockery';
-import { Egg, Crown, Smile, Lock, Skull, VolumeX, Glasses, Cloud, Shield, Target, LucideIcon } from 'lucide-react';
+import { Egg, Crown, Smile, Lock, Skull, VolumeX, Glasses, Cloud, Shield, Target } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import React from 'react';
 
 // Icon component for tomatoes

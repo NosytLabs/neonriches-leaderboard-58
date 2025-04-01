@@ -35,6 +35,18 @@ export const formatCurrency = (amount: number): string => {
 };
 
 /**
+ * Format a date to a specific format
+ */
+export const formatDate = (date: string | Date): string => {
+  const dateObj = new Date(date);
+  return dateObj.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric'
+  });
+};
+
+/**
  * Format a file size in bytes to a human-readable size
  */
 export const formatFileSize = (bytes: number): string => {
