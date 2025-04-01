@@ -163,13 +163,13 @@ export const getTeamBenefits = (team: string): string[] => {
     case 'bronze':
       return [
         'Sturdy foundation: +15% max health',
-        'Craftsman's touch: 10% reduced crafting costs',
+        'Craftsman\'s touch: 10% reduced crafting costs',
         'Access to Bronze exclusive mining areas'
       ];
     
     case 'neutral':
       return [
-        'Diplomatic immunity: Can't be attacked in certain zones',
+        'Diplomatic immunity: Can\'t be attacked in certain zones',
         'Flexibility: Can temporarily join any team event',
         'Access to Neutral-only quests and missions'
       ];
