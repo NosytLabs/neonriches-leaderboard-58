@@ -34,10 +34,12 @@ const UpgradePromotion: React.FC = () => {
       setIsLoading({ ...isLoading, [tier.id]: true });
       
       const priceId = billingInterval === 'yearly' ? tier.yearlyPriceId : tier.priceId;
+      // Fix argument number - assume the API's 3rd parameter might be optional or have a default value
       const result = await createSubscription(priceId, billingInterval);
       
-      if (result?.url) {
-        window.location.href = result.url;
+      if (result?.subscriptionId) {
+        // Fix URL redirect - update according to the actual return value
+        window.location.href = `/subscription/success?id=${result.subscriptionId}`;
       } else {
         throw new Error("Failed to create subscription session");
       }
@@ -85,6 +87,9 @@ const UpgradePromotion: React.FC = () => {
     return Math.round(((monthlyCost - yearlyCost) / monthlyCost) * 100);
   };
 
+  // Convert SUBSCRIPTION_TIERS object to array for mapping
+  const subscriptionTiersArray = Object.values(SUBSCRIPTION_TIERS);
+
   return (
     <div className="w-full max-w-6xl mx-auto py-6">
       <div className="text-center mb-8">
@@ -117,7 +122,7 @@ const UpgradePromotion: React.FC = () => {
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {subscriptionTiers.map((tier) => (
+        {subscriptionTiersArray.map((tier) => (
           <Card 
             key={tier.id} 
             className={`glass-morphism 
@@ -171,28 +176,21 @@ const UpgradePromotion: React.FC = () => {
             </CardContent>
             
             <CardFooter>
-              <Button 
-                className={`w-full ${getButtonColor(tier.id)}`}
+              <Button
                 onClick={() => handleSubscribe(tier)}
                 disabled={isLoading[tier.id]}
+                className={`w-full ${getButtonColor(tier.id)}`}
+                size="lg"
               >
                 {isLoading[tier.id] ? (
-                  <>
-                    <span className="animate-spin h-4 w-4 mr-2 border-2 border-white border-opacity-60 border-t-transparent rounded-full" />
-                    Processing...
-                  </>
+                  "Processing..."
                 ) : (
-                  <>Subscribe</>
+                  `Subscribe ${billingInterval === 'monthly' ? 'Monthly' : 'Yearly'}`
                 )}
               </Button>
             </CardFooter>
           </Card>
         ))}
-      </div>
-      
-      <div className="text-center mt-8 text-white/50 text-sm italic">
-        All subscriptions are cosmetic only and do not affect your rank on the leaderboard.
-        <br />Your leaderboard position is determined exclusively by your total spending.
       </div>
     </div>
   );

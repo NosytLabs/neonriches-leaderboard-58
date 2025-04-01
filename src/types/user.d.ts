@@ -26,7 +26,7 @@ export type UserTier =
 export interface ProfileBoost {
   id: string;
   type: string;
-  level?: number;
+  level: number;
   startDate: string;
   endDate: string;
   appliedBy?: string;
@@ -81,6 +81,7 @@ export interface UserSettings {
   showTeam: boolean;
   showSpending: boolean;
   allowMessages?: boolean;
+  showBadges?: boolean;
 }
 
 export interface UserProfile {
@@ -90,7 +91,8 @@ export interface UserProfile {
   email: string;
   profileImage: string;
   bio: string;
-  joinDate: string;
+  joinedDate: string;
+  joinDate?: string;
   joinedAt?: string;
   createdAt?: string;
   tier: UserTier;
@@ -98,7 +100,7 @@ export interface UserProfile {
   rank: number;
   previousRank: number;
   totalSpent: number;
-  amountSpent?: number; // For backward compatibility
+  amountSpent: number; // Made required
   spentAmount?: number; // For backward compatibility
   walletBalance?: number;
   isFounder: boolean;
@@ -132,6 +134,8 @@ export interface UserProfile {
   avatarUrl?: string; // For backward compatibility
   gender?: Gender;
   profileImages?: ProfileImage[];
+  achievements?: string[]; // Adding achievements
+  badges?: string[]; // Adding badges
 }
 
 export interface User extends UserProfile {}
