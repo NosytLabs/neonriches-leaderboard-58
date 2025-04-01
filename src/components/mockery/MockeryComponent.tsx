@@ -4,10 +4,10 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Crown, Shield, AlertTriangle } from 'lucide-react';
-import { getMockeryName, getMockeryDescription, getMockeryTier, getMockeryActionPrice, getMockeryTierColorClass } from '@/utils/mockeryUtils';
+import { getMockeryName, getMockeryDescription, getMockeryTier, getMockeryCost, getMockeryTierColorClass, getMockeryActionIcon } from '@/utils/mockeryUtils';
 import { MockeryAction } from '@/types/mockery';
 import { useToast } from '@/hooks/use-toast';
-import TomatoIcon from '@/components/icons/TomatoIcon';
+import MockeryIconRenderer from '@/components/mockery/components/MockeryIconRenderer';
 
 const MockeryComponent = () => {
   const { toast } = useToast();
@@ -44,7 +44,7 @@ const MockeryComponent = () => {
             {mockeryActions.map((action) => {
               const name = getMockeryName(action);
               const tier = getMockeryTier(action);
-              const price = getMockeryActionPrice(action);
+              const price = getMockeryCost(action);
               const tierColorClass = getMockeryTierColorClass(tier);
               
               return (
@@ -53,7 +53,10 @@ const MockeryComponent = () => {
                   className="p-3 rounded-md border cursor-pointer transition-colors bg-background/50 border-white/10 hover:bg-royal-crimson/10 hover:border-royal-crimson/20"
                   onClick={() => handleMockery(action)}
                 >
-                  <div className="font-medium text-sm mb-2">{name}</div>
+                  <div className="flex items-center mb-2">
+                    <MockeryIconRenderer action={action} size="sm" className="mr-2" />
+                    <span className="font-medium text-sm">{name}</span>
+                  </div>
                   <div className="flex justify-between items-center">
                     <Badge variant="outline" className={`${tierColorClass} text-xs`}>
                       {tier}

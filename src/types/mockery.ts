@@ -1,6 +1,4 @@
 
-import { TeamColor } from './team';
-
 export type MockeryAction = 
   | 'taunt'
   | 'shame'
@@ -8,7 +6,38 @@ export type MockeryAction =
   | 'mock'
   | 'challenge'
   | 'joust'
-  | 'duel';
+  | 'duel'
+  | 'tomatoes'
+  | 'eggs'
+  | 'crown'
+  | 'stocks'
+  | 'putridEggs'
+  | 'silence'
+  | 'courtJester'
+  | 'smokeBomb'
+  | 'protection';
+
+export type MockeryTier = 
+  | 'common' 
+  | 'uncommon' 
+  | 'rare' 
+  | 'epic' 
+  | 'legendary'
+  | 'royal'
+  | 'basic'
+  | 'premium'
+  | 'silver'
+  | 'bronze';
+
+// Export TeamColor so it's available when importing from this file
+export type TeamColor = 
+  | 'red' 
+  | 'blue' 
+  | 'green' 
+  | 'gold' 
+  | 'purple' 
+  | 'none' 
+  | 'neutral';
 
 export interface MockeryItem {
   id: string;
