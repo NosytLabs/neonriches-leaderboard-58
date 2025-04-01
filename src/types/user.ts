@@ -97,8 +97,8 @@ export interface UserProfile {
   isVerified?: boolean;
   following?: string[];
   followers?: string[];
-  team?: string | null;
-  tier?: string;
+  team?: TeamColor | null;
+  tier: string; // Made tier required to match user-consolidated.ts
   rank?: number;
   totalSpent: number; // Make this required to match
   amountSpent: number; // Make this required to match
@@ -109,8 +109,8 @@ export interface UserProfile {
   settings?: UserSettings;
   cosmetics?: UserCosmetics;
   certificateNFT?: {
-    mintAddress: string;
-    mintDate: string;
+    mintAddress: string; // Make mintAddress required
+    mintDate: string;    // Make mintDate required
   };
   gender?: string;
   profileViews?: number;

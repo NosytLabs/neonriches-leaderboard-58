@@ -136,7 +136,7 @@ export interface UserProfile {
   walletBalance?: number;
   rank?: number;
   previousRank?: number;
-  tier: UserTier | string;
+  tier: UserTier | string;  // Required to match user.ts
   team?: TeamColor | string | null;
   isVerified?: boolean;
   isFollowing?: boolean;
@@ -169,12 +169,12 @@ export interface UserProfile {
   profileImages?: any[];
   certificateNFT?: {
     id?: string;
-    mintAddress?: string;
+    mintAddress: string; // Make mintAddress required to match user.ts
     imageUrl?: string;
     dateIssued?: string;
     type?: string;
     isVerified?: boolean;
-    mintDate?: string; // Added to match user.ts
+    mintDate: string; // Added and required to match user.ts
   };
   socialLinks?: any[] | Record<string, string>;
 }

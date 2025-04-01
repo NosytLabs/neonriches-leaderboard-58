@@ -65,10 +65,10 @@ export const convertToLegacyUser = (user: ConsolidatedUserProfile): User => {
     socialLinks: Array.isArray(user.socialLinks) ? user.socialLinks : [],
     profileBoosts: user.profileBoosts || [],
     spendStreak: user.spendStreak || 0,
-    mockeryStats: { received: 0, deployed: 0 },
+    // Removed mockeryStats - not in UserProfile
     certificateNFT: user.certificateNFT?.mintAddress ? {
       mintAddress: user.certificateNFT.mintAddress,
-      mintDate: user.certificateNFT.dateIssued || new Date().toISOString()
+      mintDate: user.certificateNFT.mintDate || user.certificateNFT.dateIssued || new Date().toISOString()
     } : undefined
   };
 };
@@ -175,7 +175,7 @@ export const ensureUserHasRequiredProps = (user: Partial<User>): User => {
     socialLinks: user.socialLinks || [],
     profileBoosts: user.profileBoosts || [],
     spendStreak: user.spendStreak || 0,
-    mockeryStats: user.mockeryStats || { received: 0, deployed: 0 },
+    // Removed mockeryStats property - doesn't exist in UserProfile
     certificateNFT: user.certificateNFT
   };
 };

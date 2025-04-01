@@ -14,6 +14,7 @@ import RankTab from './tabs/RankTab';
 import AchievementsTab from './tabs/AchievementsTab';
 import { adaptToStandardUserProfile, ensureTotalSpent } from '@/utils/userTypeAdapter';
 import { UserProfile } from '@/types/user';
+import { UserProfile as ConsolidatedUserProfile } from '@/types/user-consolidated';
 
 const EnhancedDashboard = () => {
   const { user } = useAuth();
@@ -75,7 +76,9 @@ const EnhancedDashboard = () => {
   }
 
   // First ensure totalSpent and amountSpent properties are present
-  const userWithRequired = ensureTotalSpent(user as UserProfile);
+  // We need to cast as any first to avoid type errors, since user is from user-consolidated.ts
+  // but we're treating it as a user.ts UserProfile
+  const userWithRequired = ensureTotalSpent(user as any);
   
   // Then adapt to ensure all other properties are correctly set
   const standardUser = adaptToStandardUserProfile(userWithRequired);
@@ -111,6 +114,7 @@ const EnhancedDashboard = () => {
   };
 
   // Explicitly cast to UserProfile type to ensure compatibility with component props
+  // This bridge between the two UserProfile types
   const userForComponents = enhancedUserForProps as unknown as UserProfile;
 
   return (
