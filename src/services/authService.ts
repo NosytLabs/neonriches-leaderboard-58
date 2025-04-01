@@ -110,3 +110,17 @@ export const mockAuthService = {
     return mockUser as UserProfile;
   },
 };
+
+export const refreshSession = async () => {
+  try {
+    const response = await supabase.auth.refreshSession();
+    
+    // Handle both response formats - some versions return { data: { session } } and others return { session } directly
+    const session = response.data?.session || response.session;
+    
+    return session ? true : false;
+  } catch (error) {
+    console.error('Error refreshing session:', error);
+    return false;
+  }
+};

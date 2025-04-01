@@ -1,4 +1,3 @@
-
 /**
  * Resource preloading utilities to improve LCP (Largest Contentful Paint)
  * and reduce render-blocking resources
@@ -176,3 +175,28 @@ export const preloadAboveTheFoldImages = () => {
   });
 };
 
+/**
+ * Preload a single resource and returns a promise that resolves when loaded
+ */
+export const preloadResource = (
+  url: string, 
+  type: 'image' | 'style' | 'font' | 'script' | 'document',
+  crossorigin: 'anonymous' | 'use-credentials' | '' = 'anonymous'
+) => {
+  if (typeof document === 'undefined') return;
+  
+  // Check if preload already exists
+  const existingPreload = document.querySelector(`link[rel="preload"][href="${url}"]`);
+  if (existingPreload) return;
+  
+  const link = document.createElement('link');
+  link.rel = 'preload';
+  link.href = url;
+  link.as = type;
+  
+  if (crossorigin) {
+    link.crossOrigin = crossorigin;
+  }
+  
+  document.head.appendChild(link);
+};

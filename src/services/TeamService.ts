@@ -1,7 +1,7 @@
 
-// Mock TeamService for tests and development
 import { Team, TeamColor, TeamData } from '@/types/team';
 
+// Export all the functions from the original file
 export const getTeams = async (): Promise<Team[]> => {
   return [
     { id: '1', name: 'Red Team', color: 'red', members: 120, rank: 3, totalSpent: 12500 },
@@ -48,3 +48,15 @@ export const leaveTeam = async (userId: string): Promise<boolean> => {
   console.log(`User ${userId} left their team`);
   return true;
 };
+
+// Add a default export with all the functions
+const TeamService = {
+  getTeams,
+  getTeamById,
+  getTeamByColor,
+  getTeamData,
+  joinTeam,
+  leaveTeam
+};
+
+export default TeamService;

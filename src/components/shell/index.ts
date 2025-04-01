@@ -1,7 +1,6 @@
 
-// This is a simple re-export file to handle casing issues on different operating systems
-// Use a consistent re-export to solve casing issues
-import { Shell } from '@/components/ui/Shell';
+// This is a simple re-export file to handle casing issues
+import { Shell } from '@/components/ui/shell';
 export { Shell };
 
 // Make sure we're exporting it as the default too

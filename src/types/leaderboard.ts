@@ -1,76 +1,48 @@
 
-import { TeamColor, UserTier } from './user-consolidated';
+// Remove duplicate exports if they exist
+import { TeamColor } from './team';
 
-/**
- * User object for leaderboard display
- */
 export interface LeaderboardUser {
   id: string;
   username: string;
   displayName?: string;
   profileImage?: string;
-  avatarUrl?: string;
-  tier: UserTier | string;
-  team?: TeamColor | string | null;
+  tier?: string;
+  team?: TeamColor;
   rank: number;
   previousRank?: number;
   walletBalance?: number;
   totalSpent: number;
-  spentAmount?: number;  // Legacy field - use totalSpent instead
-  amountSpent?: number;  // Legacy field - use totalSpent instead
+  spentAmount?: number;  // For backward compatibility
+  amountSpent?: number;  // For backward compatibility
   isVerified?: boolean;
   spendStreak?: number;
-  joinedAt?: string;
-  spendChange?: number;  // Added for components that need it
-  rankChange?: number;   // Added for components that need it
-  isProtected?: boolean; // Added for components that need it
-  userId?: string;       // Added for Events.tsx
-  joinDate?: string;     // Added for Events.tsx
 }
 
-/**
- * Available sort options for the leaderboard
- */
-export type SortByOptions = 'rank' | 'spent' | 'change' | 'streak';
-
-/**
- * Filter for typed leaderboard queries
- */
-export interface TypedLeaderboardFilter {
-  team?: TeamColor | string | null;
-  tier?: UserTier | string | null;
-  minSpent?: number;
-  maxSpent?: number;
-  minRank?: number;
-  maxRank?: number;
-  search?: string;
-  sortBy?: string;
-  sortDirection?: 'asc' | 'desc';
-}
-
-/**
- * The available tabs for the leaderboard
- */
-export type LeaderboardTab = 'all' | 'team' | 'friends' | 'events';
-
-/**
- * Leaderboard filter interface
- */
 export interface LeaderboardFilter {
-  team?: string;
-  tier?: string;
-  timeFrame?: 'all' | 'day' | 'week' | 'month' | 'year';
-  search?: string;
-  sort?: string;
+  timeframe?: 'day' | 'week' | 'month' | 'all';
+  team?: TeamColor | null;
+  limit?: number;
 }
 
-/**
- * Sort options for the leaderboard
- */
-export interface SortByOption {
-  value: string;
-  label: string;
+// Add these types for solanaService
+export interface LeaderboardEntry extends LeaderboardUser {}
+
+export interface OnChainLeaderboardEntry {
+  publicKey: string;
+  amountSpent: number;
+  rank: number;
+  username?: string;
+  profileImage?: string;
 }
 
-// Export types using export type syntax to avoid conflicts
-export type { LeaderboardFilter, LeaderboardUser };
+export interface SolanaTransaction {
+  signature: string;
+  slot: number;
+  timestamp: number;
+  amount: number;
+  sender: string;
+  receiver: string;
+  status: 'confirmed' | 'pending' | 'failed';
+  type: 'spend' | 'deposit' | 'withdrawal' | 'transfer';
+}
