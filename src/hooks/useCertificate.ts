@@ -78,22 +78,21 @@ export const useCertificate = ({ user, certificateId }: UseCertificateProps) => 
             ...certificate,
             isMinted: true,
             mintAddress: result.mintAddress,
-            status: 'minted'
+            status: 'minted' as const
           });
         }
         
         // Update the user certificates list
-        const updatedCerts = userCertificates.map(cert => 
+        setUserCertificates(userCertificates.map(cert => 
           cert.id === certificateToMint.id 
             ? { 
                 ...cert, 
                 isMinted: true, 
                 mintAddress: result.mintAddress,
-                status: 'minted'
+                status: 'minted' as const
               }
             : cert
-        );
-        setUserCertificates(updatedCerts);
+        ));
         
         toast({
           title: 'Certificate Minted',
@@ -173,21 +172,11 @@ export const useCertificate = ({ user, certificateId }: UseCertificateProps) => 
     try {
       const imageUrl = await certificateService.generateShareableImage(certificateToShare, user);
       
-      if (imageUrl) {
-        toast({
-          title: 'Image Generated',
-          description: 'Shareable image has been generated successfully.'
-        });
-        return imageUrl;
-      } else {
-        // Fallback in case no URL is returned
-        toast({
-          title: 'Image Generation Limited',
-          description: 'Using default certificate image.',
-          variant: 'destructive'
-        });
-        return certificateToShare.imageUrl || '/images/certificates/default.png';
-      }
+      toast({
+        title: 'Image Generated',
+        description: 'Shareable image has been generated successfully.'
+      });
+      return imageUrl;
     } catch (error) {
       console.error('Error generating shareable image:', error);
       toast({

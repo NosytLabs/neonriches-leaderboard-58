@@ -162,10 +162,10 @@ export const mintCertificateAsNFT = async (
     
     if (result.success) {
       // Update the certificate with minting information
-      const updatedCertificate = {
+      const updatedCertificate: Certificate = {
         ...certificate,
         isMinted: true,
-        status: 'minted',
+        status: 'minted' as const,
         mintAddress: result.mintAddress
       };
       
